@@ -1,0 +1,296 @@
+{
+  "archives": {
+    "archives/genericrecords-1.0.0.crate": "99eaa1dece5257c17a04f0ebcf3c5ce7cdf8bcb8cb552b4fb5db395d3dc52d53"
+  },
+  "authorRoots": 2,
+  "profiles": [
+    "rust"
+  ],
+  "reports": [
+    {
+      "arrayExports": [
+        "GenericRecords.pushCount",
+        "GenericRecords.rowTotal",
+        "GenericRecords.rowOf",
+        "GenericRecords.rowBoxSum"
+      ],
+      "baseConsumer": {
+        "checks": 1025,
+        "sha256": "6adc6c3e6a5560deffcd99ce816c8633794459d65d0e5c552f9647463f328b14"
+      },
+      "bindingIrSha256": "345386cbcfeaf5455df46060904b83949f37c0dd3574aeb792a5def4296cd967",
+      "cases": [
+        "pushCount nonempty with 2^70 and input unchanged",
+        "pushCount empty",
+        "rowTotal nonempty and empty",
+        "BoxRow alias value unchanged",
+        "rowOf 3, rowTotal of it and rowOf 0",
+        "rowBoxSum nonempty, empty and rowOf field",
+        "negative Nat members do not typecheck: BigUint",
+        "1000 Array rounds"
+      ],
+      "checks": 2034,
+      "compilerFreePath": true,
+      "consumerSha256": "d8f1ff8ec16d08f30b17c0df9157a1eab6324d3e559f17fd338b75e9bd8c1ea4",
+      "expectedChecks": 2034,
+      "instantiations": {
+        "BoxPair": {
+          "arguments": [
+            {
+              "id": "NatBox",
+              "kind": "named"
+            },
+            {
+              "id": "TextBox",
+              "kind": "named"
+            }
+          ],
+          "structure": "Pair"
+        },
+        "MarkerTag": {
+          "arguments": [
+            {
+              "id": "Marker",
+              "kind": "named"
+            }
+          ],
+          "fields": 1,
+          "structure": "Tag"
+        },
+        "MaybeBox": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBoxAgain": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "TaggedNat": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Tagged"
+        },
+        "TextBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            }
+          ],
+          "structure": "Box"
+        },
+        "WordPair": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Pair"
+        },
+        "lean:GenericRecords.ArrayBox": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          ],
+          "structure": "GenericRecords.Box"
+        },
+        "lean:GenericRecords.RowBox": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "id": "lean:GenericRecords.NatBox",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          ],
+          "structure": "GenericRecords.Box"
+        }
+      },
+      "modelSha256": "582e0d3ab695219641c4477b3dd007f82476d98901335bd668255282775d00b9",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51390808,
+              "path": "archives/genericrecords-1.0.0.crate",
+              "sha256": "99eaa1dece5257c17a04f0ebcf3c5ce7cdf8bcb8cb552b4fb5db395d3dc52d53"
+            }
+          ],
+          "ecosystem": "cargo",
+          "name": "genericrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "cargo",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "rust",
+      "receiptSha256": "98e8f68a7c7027832591adc551ce1278864730bd83b2713a2130c84fd4ba054d",
+      "rustTypes": {
+        "rejected": [
+          {
+            "case": "alias",
+            "diagnostics": [
+              {
+                "code": "E0308",
+                "column": 104,
+                "file": "invalid-alias.rs",
+                "line": 2
+              }
+            ],
+            "sourceSha256": "b685d75dd0c26b8c5fa0233d4e9d806529cd5a7f6d7972148e64a2b500347d15"
+          },
+          {
+            "case": "field",
+            "diagnostics": [
+              {
+                "code": "E0308",
+                "column": 42,
+                "file": "invalid-field.rs",
+                "line": 2
+              }
+            ],
+            "sourceSha256": "c9dc0d33ebdfd10d9b9f40b7b28d4ff87a4cf90f96df648af5c30623cd68a845"
+          },
+          {
+            "case": "missing",
+            "diagnostics": [
+              {
+                "code": "E0063",
+                "column": 21,
+                "file": "invalid-missing.rs",
+                "line": 2
+              }
+            ],
+            "sourceSha256": "2cf7d3ecca07b638a9ba8c4d6d11c2cf2f6ec88abe70318e8c1971b4f73db4a9"
+          }
+        ],
+        "repeatExecutionAfterTypeRejection": true
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "4b0ebc7760a53bcfac0dbf1b07e51808f2a8e076ceabf24a7b3120b204fe95ba",
+      "specializations": [
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoNatBox",
+          "types": [
+            "GenericRecords.NatBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoAgain",
+          "types": [
+            "GenericRecords.NatBoxAgain"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoTextBox",
+          "types": [
+            "GenericRecords.TextBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoLeft",
+          "types": [
+            "GenericRecords.Left.LeftBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoRight",
+          "types": [
+            "GenericRecords.Right.RightBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoBoxes",
+          "types": [
+            "GenericRecords.Boxes"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoOptionalBoxes",
+          "types": [
+            "GenericRecords.OptionalBoxes"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoNats",
+          "types": [
+            "GenericRecords.Nats"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoOptionalNat",
+          "types": [
+            "GenericRecords.OptionalNat"
+          ]
+        }
+      ]
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

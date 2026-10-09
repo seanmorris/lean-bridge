@@ -1,0 +1,40 @@
+{"queued":"2026-10-09T11:17:53.621Z","revision":"c92090ffdaa6b309da918b254e7be560f787b33e","freeMiB":4504,"output":"/app/build/vo1439-generic-record-arrays-hosts-c92090f"}
+{"selection":"rust","startedAt":"2026-10-09T11:17:54.407Z","pid":3640647}
+{"selection":"rust","code":0,"signal":null,"stoppedForDisk":false,"minimumFreeMiB":3956,"endedAt":"2026-10-09T11:21:07.525Z","tapSha256":"9aa552f78ec51df04728005629990d289f3a3cfee64a85aa2c3f7a7f9832ae67"}
+{"selection":"rust","report":"array-rust.json","sha256":"a225c31edafc254ef7658dbf16ae7decf5c28a92e8b1fc9646a44a3b43705264","checks":[["rust",2034]]}
+{"selection":"ruby","startedAt":"2026-10-09T11:21:07.552Z","pid":3641819}
+{"selection":"ruby","code":0,"signal":null,"stoppedForDisk":false,"minimumFreeMiB":4148,"endedAt":"2026-10-09T11:23:51.935Z","tapSha256":"3f1309930821610a7415c84ccceabd4d70b579c59c04a1d5a0b755f8052260d1"}
+{"selection":"ruby","report":"array-ruby.json","sha256":"f22f44bf57cb39d1efe7fa0f29f91d95b089cfefbcd086f63e9e2db99478a3d4","checks":[["ruby",2141]]}
+{"selection":"dotnet","startedAt":"2026-10-09T11:23:51.978Z","pid":3642265}
+{"selection":"dotnet","code":0,"signal":null,"stoppedForDisk":false,"minimumFreeMiB":4048,"endedAt":"2026-10-09T11:26:35.869Z","tapSha256":"335e620111ca0d23101fc7d5522ee0c695a8f00c239b5a69bcb14dd6e3bdef37"}
+{"selection":"dotnet","report":"array-dotnet.json","sha256":"f1d337edc83beeac11d59e51dc6cff4f84ec457443a69843a9e63b105c9ebdcf","checks":[["dotnet",2088]]}
+{"selection":"java-kotlin","startedAt":"2026-10-09T11:26:35.880Z","pid":3642883}
+{"selection":"java-kotlin","code":0,"signal":null,"stoppedForDisk":false,"minimumFreeMiB":3592,"endedAt":"2026-10-09T11:30:09.082Z","tapSha256":"772e912f24795b58e3f706c1d614629d3f6dec623a2b47c57d415e82b4565b64"}
+{"selection":"java-kotlin","report":"array-java-kotlin.json","sha256":"4b94d641bcabeb0d7fd42b84fb5e2685de8f4f4dccee0c11e5d963d4316ebf6e","checks":[["java",2105],["kotlin",2067]]}
+{"selection":"php-native","startedAt":"2026-10-09T11:30:09.098Z","pid":3643778}
+{"selection":"php-native","code":0,"signal":null,"stoppedForDisk":false,"minimumFreeMiB":3745,"endedAt":"2026-10-09T11:32:35.700Z","tapSha256":"c8871c08bc51c455b94716f4bbd12eb0adb9b3455a5b27e03ae147ed8b18bb15"}
+{"selection":"php-native","report":"array-php-native.json","sha256":"2cc47733994d11a8c8da64c3778bc5da4f0c30741679d5c3abdf20f31eac2f64","checks":[["php-native",2124]]}
+{"selection":"wit-wasi","startedAt":"2026-10-09T11:32:35.718Z","pid":3644217}
+{"selection":"wit-wasi","code":0,"signal":null,"stoppedForDisk":false,"minimumFreeMiB":4141,"endedAt":"2026-10-09T11:35:03.539Z","tapSha256":"1ba2d6ff36e8adbd5f80d5b364a7198567f34f3fc4821d50c6c35bc5f331e4d6"}
+{"selection":"wit-wasi","report":"array-wit-wasi.json","sha256":"dcee8dffc57e76e31dc22745daf72419c7c251f82ddc418a578d6ee02a92c7ed","checks":[["wit-wasi",2091]]}
+{"selection":"perl-5.36.3-threaded","startedAt":"2026-10-09T11:35:03.580Z","pid":3644664}
+{"selection":"perl-5.36.3-threaded","code":1,"signal":null,"stoppedForDisk":false,"minimumFreeMiB":3856,"endedAt":"2026-10-09T11:36:29.683Z","tapSha256":"f8a9b2bda04ce635d192d0a54c4d553ee9b6d39f76ecb985eefb4714f1d253f6"}
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: perl-5.36.3-threaded
+
+1 !== 0
+
+    at [90mfile:///app/build/[39mrun-vo1439-generic-record-arrays-hosts-c92090f.mjs:167:10
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)[39m {
+  generatedMessage: [33mfalse[39m,
+  code: [32m'ERR_ASSERTION'[39m,
+  actual: [33m1[39m,
+  expected: [33m0[39m,
+  operator: [32m'strictEqual'[39m,
+  diff: [32m'simple'[39m
+}
+
+Node.js v22.23.3

@@ -1,0 +1,146 @@
+import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { execFileSync, spawn } from "node:child_process";
+import { closeSync, existsSync, mkdirSync, openSync, readFileSync, statfsSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+
+// VO #1439 Perl Array retry: serial installed selections on all four pinned Perl ABIs at the corrected fragment source.
+// The c92090f attempt (six passed hosts, failed perl-5.36.3-threaded) stays untouched in its own directory.
+const cwd = "/app/build/worktrees/generic-record-arrays-perl-producer-96840aa";
+const revision = "96840aac297c2fc09b1a3e3daa79684712ad8b58";
+const output = "/app/build/vo1439-generic-record-arrays-perl-96840aa";
+const floorMiB = 2048;
+const sha = bytes => createHash("sha256").update(bytes).digest("hex");
+const git = args => execFileSync("git", args, { cwd, encoding: "utf8", maxBuffer: 16 * 1024 * 1024 }).trim();
+const clean = () => {
+  assert.equal(git(["rev-parse", "HEAD"]), revision);
+  assert.equal(git(["status", "--porcelain", "--untracked-files=no"]), "");
+};
+const freeMiB = () => { const disk = statfsSync(cwd); return Math.floor(disk.bavail * disk.bsize / 1024 ** 2); };
+const tool = (command, args) => execFileSync(command, args, { encoding: "utf8" }).trim().split("\n")[0];
+clean();
+assert.ok(freeMiB() >= floorMiB, "Need at least 2 GiB available before compiling");
+mkdirSync(output);
+const paths = [
+  "tests/generic-record-arrays.test.mjs",
+  "tests/helpers/generic-record-arrays.mjs",
+  "tests/fixtures/generic-record-array-consumers/perl.pl",
+  "tests/fixtures/generic-record-browser/GenericRecordArrays.lean",
+  "tests/fixtures/generic-record-specializations.lean",
+  "tests/fixtures/onboarding/generic-records/GenericRecords.lean",
+  "tests/fixtures/generic-record-consumers/perl.pl",
+  "tests/fixtures/generic-record-specialization-consumers/perl.pl",
+  "tests/helpers/generic-record-browser.mjs",
+  "tests/helpers/generic-record-packages.mjs",
+  "tests/helpers/generic-record-specializations.mjs",
+  "tests/helpers/copied-fixture-install.mjs",
+  "tests/helpers/package-set.mjs",
+  "src/build/canonical-build.mjs",
+  "src/build/native-model.mjs",
+  "src/build/native-graph-model.mjs",
+  "src/backends/perl/generate.mjs",
+  "src/backends/perl/Runtime.xs",
+  "src/backends/perl/copied-graph-runtime.mjs",
+  "src/release/cpan-package.mjs",
+  "src/release/package-set-receipt.mjs"
+];
+const sources = Object.fromEntries(paths.map(path => {
+  const current = readFileSync(join(cwd, path));
+  const committed = execFileSync("git", ["show", `${revision}:${path}`], { cwd, maxBuffer: 16 * 1024 * 1024 });
+  assert.ok(current.equals(committed), path);
+  return [path, sha(current)];
+}));
+// Independently pinned: the composed consumer, its exact check total and the interpreters.
+const expected = {
+  perl: { consumerSha256: "22c12ecf2f82d4a86e69e39396b259b59f426c173c5ec633b694e93cb9a65eb3", checks: 2145 }
+};
+const tools = "/app/.toolchains";
+// Every locally pinned Perl ABI, each with its own report; dots become hyphens in report names.
+const perlAbis = ["5.36.3-threaded", "5.36.3-unthreaded", "5.38.2-threaded", "5.38.2-unthreaded"];
+const perlOf = abi => `${tools}/perl/${abi}/bin/perl`;
+const perlIdentity = abi => {
+  const [version, threads, archname] = execFileSync(perlOf(abi), ["-MConfig", "-e", "print join qq(\\n), $^V, $Config{useithreads} // q(undef), $Config{archname}"], { encoding: "utf8" }).split("\n");
+  assert.equal(version, `v${abi.split("-")[0]}`, abi);
+  assert.equal(threads === "define", abi.endsWith("-threaded"), abi);
+  return { command: perlOf(abi), version, useithreads: threads, archname };
+};
+const selections = perlAbis.map(abi => ({ name: `perl-${abi}`, profiles: ["perl"], report: `array-perl-${abi.replaceAll(".", "-")}.json`, perl: perlIdentity(abi), environment: { LEAN_BRIDGE_CORPUS_PERL: perlOf(abi), LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR: "2.36" } }));
+for (const selection of selections) assert.equal(existsSync(join(output, selection.report)), false, "Refuse a stale report");
+const lean = "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2";
+const common = {
+  NO_COLOR: "1", LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR: "2.36", LEAN_BRIDGE_LEAN_PREFIX: lean,
+  LEAN_NUM_THREADS: "1", OMP_NUM_THREADS: "1", MAKEFLAGS: "-j1"
+};
+const environmentFor = selection => ({
+  ...common, LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES: selection.profiles.join(","),
+  LEAN_BRIDGE_GENERIC_RECORD_ARRAY_REPORT: join(output, selection.report),
+  ...selection.environment
+});
+const base = Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith("LEAN_BRIDGE_") && key !== "FORCE_COLOR"));
+const pattern = "^relocated source-free native packages carry Array fields and results over alias-named generic records$";
+const args = ["-c", "3", process.execPath, "--test", "--test-concurrency=1", "--test-reporter=tap", `--test-name-pattern=${pattern}`, "tests/generic-record-arrays.test.mjs"];
+const queue = { revision, tree: git(["rev-parse", "HEAD^{tree}"]), cwd, queuedAt: new Date().toISOString(), sources, expected,
+  runnerSha256: sha(readFileSync(import.meta.filename)), command: ["/usr/bin/taskset", ...args],
+  selections: selections.map(selection => ({ ...selection, environment: environmentFor(selection) })),
+  unset: ["FORCE_COLOR", "other LEAN_BRIDGE_* variables"],
+  node: process.version, lean: tool(join(lean, "bin/lean"), ["--version"]),
+  glibc: tool("/usr/bin/getconf", ["GNU_LIBC_VERSION"]), cc: tool("/usr/bin/cc", ["--version"]), cxx: tool("/usr/bin/c++", ["--version"]),
+  pkgConfig: tool("/usr/bin/pkg-config", ["--version"]),
+  freeMiB: freeMiB(), stopFloorMiB: floorMiB,
+  supersedes: { revision: "c92090ffdaa6b309da918b254e7be560f787b33e", output: "/app/build/vo1439-generic-record-arrays-hosts-c92090f", failedSelection: "perl-5.36.3-threaded", tapSha256: "f8a9b2bda04ce635d192d0a54c4d553ee9b6d39f76ecb985eefb4714f1d253f6" },
+  scope: "Local ordinary-source installed Perl Array fields and results over alias-named generic records on all four pinned local ABIs, two author roots, glibc 2.36 floors; not hosted or release-floor acceptance" };
+writeFileSync(join(output, "queue.json"), JSON.stringify(queue, null, 2) + "\n", { flag: "wx" });
+console.log(JSON.stringify({ queued: queue.queuedAt, revision, freeMiB: queue.freeMiB, output }));
+
+for (const selection of selections) {
+  // Each selection starts only above the floor; a later one never begins below it between polls.
+  assert.ok(freeMiB() >= floorMiB, `Need at least 2 GiB available before ${selection.name}`);
+  const directory = join(output, selection.name); mkdirSync(directory);
+  // The interpreter that runs must still be the one queued for this selection.
+  assert.deepEqual(perlIdentity(selection.name.slice("perl-".length)), selection.perl, selection.name);
+  const log = openSync(join(directory, "run.tap"), "wx");
+  const startedAt = new Date().toISOString();
+  let minimumFreeMiB = freeMiB(), stoppedForDisk = false, escalation;
+  const child = spawn("/usr/bin/taskset", args, { cwd, env: { ...base, ...environmentFor(selection) }, detached: true, stdio: ["ignore", log, log] });
+  writeFileSync(join(directory, "start.json"), JSON.stringify({ startedAt, pid: child.pid, pgid: child.pid }, null, 2) + "\n", { flag: "wx" });
+  console.log(JSON.stringify({ selection: selection.name, startedAt, pid: child.pid }));
+  const monitor = setInterval(() => {
+    minimumFreeMiB = Math.min(minimumFreeMiB, freeMiB());
+    if (minimumFreeMiB < floorMiB && !stoppedForDisk) {
+      stoppedForDisk = true;
+      process.kill(-child.pid, "SIGTERM");
+      escalation = setTimeout(() => { try { process.kill(-child.pid, "SIGKILL"); } catch {} }, 10000);
+    }
+  }, 5000);
+  const result = await new Promise(resolve => {
+    child.once("error", error => resolve({ code: null, signal: null, error: error.message }));
+    child.once("close", (code, signal) => resolve({ code, signal }));
+  });
+  clearInterval(monitor); clearTimeout(escalation); closeSync(log);
+  minimumFreeMiB = Math.min(minimumFreeMiB, freeMiB());
+  const end = { ...result, stoppedForDisk, minimumFreeMiB, endedAt: new Date().toISOString(), tapSha256: sha(readFileSync(join(directory, "run.tap"))) };
+  writeFileSync(join(directory, "end.json"), JSON.stringify(end, null, 2) + "\n", { flag: "wx" });
+  console.log(JSON.stringify({ selection: selection.name, ...end }));
+  clean();
+  // Stop at the first failure; later selections never run on top of it.
+  assert.equal(stoppedForDisk, false, selection.name);
+  assert.equal(result.code, 0, selection.name);
+  const tap = readFileSync(join(directory, "run.tap"), "utf8").split("\n");
+  for (const line of ["# tests 1", "# pass 1", "# fail 0", "# skipped 0", "# cancelled 0", "# todo 0"]) assert.ok(tap.includes(line), `${selection.name}: ${line}`);
+  const bytes = readFileSync(join(output, selection.report)), report = JSON.parse(bytes);
+  assert.deepEqual([report.schemaVersion, report.profiles, report.reproducible, report.authorRoots], [1, selection.profiles, true, 2]);
+  assert.ok(Object.keys(report.archives).length > 0);
+  assert.deepEqual(report.reports.map(item => item.profile), selection.profiles);
+  for (const item of report.reports) {
+    assert.equal(item.path, "ordinary-source");
+    assert.equal(item.checks, expected[item.profile].checks, item.profile);
+    assert.equal(item.expectedChecks, expected[item.profile].checks, item.profile);
+    assert.equal(item.consumerSha256, expected[item.profile].consumerSha256, item.profile);
+    assert.deepEqual([item.offlineInstall, item.compilerFreePath, item.sourceRemovedBeforeInstallation], [true, true, true], item.profile);
+    assert.deepEqual(Object.keys(item.instantiations).filter(name => ["ArrayBox", "RowBox"].some(suffix => name.endsWith(`.${suffix}`))).sort(), ["lean:GenericRecords.ArrayBox", "lean:GenericRecords.RowBox"]);
+    assert.deepEqual(item.arrayExports, ["GenericRecords.pushCount", "GenericRecords.rowTotal", "GenericRecords.rowOf", "GenericRecords.rowBoxSum"]);
+    for (const field of ["bindingIrSha256", "sourceTreeSha256", "modelSha256", "receiptSha256"]) assert.match(item[field], /^[a-f0-9]{64}$/u, field);
+    assert.equal(Object.hasOwn(item, "python"), false);
+  }
+  console.log(JSON.stringify({ selection: selection.name, report: selection.report, sha256: sha(bytes), checks: report.reports.map(item => [item.profile, item.checks]) }));
+}

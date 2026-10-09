@@ -1,0 +1,181 @@
+{
+  "revision": "4c54801968fb1bc2a8a87e4570d0ce033ba99bb6",
+  "tree": "54e6a3440eb9399caf5a41fe69a380693236b27b",
+  "cwd": "/app/build/worktrees/generic-record-arrays-perl-producer-4c54801",
+  "queuedAt": "2026-10-09T14:20:11.224Z",
+  "sources": {
+    "tests/generic-record-arrays.test.mjs": "536a2d1cad182ee5e66ef09b07ef0363f8205b995dc3d83dfd1c14c111c91a54",
+    "tests/helpers/generic-record-arrays.mjs": "1a8bf5878f33b8839e2181aa3320013b02920f07e277a1d27e6bd78508f14d79",
+    "tests/fixtures/generic-record-array-consumers/perl.pl": "88a89685741dfb47b837cc609044974288265cefcbbc6275808c5ba28d181269",
+    "tests/fixtures/generic-record-browser/GenericRecordArrays.lean": "a372869e7b472ee4fb5db20f2f34984aeddb94d9727fe64d8163559f20ffa7ec",
+    "tests/fixtures/generic-record-specializations.lean": "26e73e3a2f872d4a3399aa313cbb88da96992b36681e383a18818aefd552cce9",
+    "tests/fixtures/onboarding/generic-records/GenericRecords.lean": "01e2a3c3c4d7eb9552a32191d5ae69aad7b713a82607507c8f702a0cc624cf5f",
+    "tests/fixtures/generic-record-consumers/perl.pl": "f83519bdac539b692f4d9f016665629a2534caa239ddb48221506fc4dd756e5c",
+    "tests/fixtures/generic-record-specialization-consumers/perl.pl": "88df9317f1b0398f3b5b669afffdb3204b6f3f290ae29cf1d3950c12be1bb493",
+    "tests/helpers/fin-record-model.mjs": "b6fec1465d78b6e76c1a1646bf30fceb05903b413b2fd5622605f8b280e11bb0",
+    "tests/helpers/generic-record-browser.mjs": "6164fda2a59a4d0ec1cf0bf638570ecbb270ca943fd395f5f3b898b46d1bfcc5",
+    "tests/helpers/generic-record-packages.mjs": "749c6404fde73b89fe03054c40f39b3de20a49c428e8ba3f4e241681546835dd",
+    "tests/helpers/generic-record-specializations.mjs": "a8c06844daddc89b331f65eb330f59f19eaf7e9ab032294a826d5fefe857120f",
+    "tests/helpers/copied-fixture-install.mjs": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+    "tests/helpers/package-set.mjs": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c",
+    "src/build/canonical-build.mjs": "17e88b02d75c81379c0a8f6e6b14ab583fabfaa8b7fdb747174505256ca48e7c",
+    "src/build/native-model.mjs": "aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13",
+    "src/build/native-graph-model.mjs": "14fca0d2c8eb7bfd17dbbd1c2381d7bf0b416576e0cb69d43a2eb628d0b4ded5",
+    "src/backends/perl/generate.mjs": "c7ad599484f0afaf3d7f46886635ac7f203d2653a62a36ff46a540ffb4e6af5d",
+    "src/backends/perl/Runtime.xs": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1",
+    "src/backends/perl/copied-graph-runtime.mjs": "cd2f2b345c66a7f5f1a82f4e75a47985ce5b5dd8dd464f05bc24982e4f2e325f",
+    "src/release/cpan-package.mjs": "304934221a88450709aab2a49d189444215fa4119e0f8473cb5f13c68cd149f9",
+    "src/release/package-set-receipt.mjs": "d0b945554b03e9d0f93149b12ddf808c33243cbb0ff5495a7a8a68e683fc71ed"
+  },
+  "expected": {
+    "perl": {
+      "consumerSha256": "22c12ecf2f82d4a86e69e39396b259b59f426c173c5ec633b694e93cb9a65eb3",
+      "checks": 2145
+    }
+  },
+  "runnerSha256": "8d53f30b03536a9530a3c892d5abe5f7713db4dfb99db80102a5597d6af48d04",
+  "command": [
+    "/usr/bin/taskset",
+    "-c",
+    "3",
+    "/usr/bin/node",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "--test-name-pattern=^relocated source-free native packages carry Array fields and results over alias-named generic records$",
+    "tests/generic-record-arrays.test.mjs"
+  ],
+  "selections": [
+    {
+      "name": "perl-5.36.3-threaded",
+      "profiles": [
+        "perl"
+      ],
+      "report": "array-perl-5-36-3-threaded.json",
+      "perl": {
+        "command": "/app/.toolchains/perl/5.36.3-threaded/bin/perl",
+        "version": "v5.36.3",
+        "useithreads": "define",
+        "archname": "x86_64-linux-thread-multi"
+      },
+      "environment": {
+        "NO_COLOR": "1",
+        "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+        "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+        "LEAN_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MAKEFLAGS": "-j1",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES": "perl",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_REPORT": "/app/build/vo1439-generic-record-arrays-perl-4c54801/array-perl-5-36-3-threaded.json",
+        "LEAN_BRIDGE_CORPUS_PERL": "/app/.toolchains/perl/5.36.3-threaded/bin/perl",
+        "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR": "2.36"
+      }
+    },
+    {
+      "name": "perl-5.36.3-unthreaded",
+      "profiles": [
+        "perl"
+      ],
+      "report": "array-perl-5-36-3-unthreaded.json",
+      "perl": {
+        "command": "/app/.toolchains/perl/5.36.3-unthreaded/bin/perl",
+        "version": "v5.36.3",
+        "useithreads": "undef",
+        "archname": "x86_64-linux"
+      },
+      "environment": {
+        "NO_COLOR": "1",
+        "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+        "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+        "LEAN_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MAKEFLAGS": "-j1",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES": "perl",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_REPORT": "/app/build/vo1439-generic-record-arrays-perl-4c54801/array-perl-5-36-3-unthreaded.json",
+        "LEAN_BRIDGE_CORPUS_PERL": "/app/.toolchains/perl/5.36.3-unthreaded/bin/perl",
+        "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR": "2.36"
+      }
+    },
+    {
+      "name": "perl-5.38.2-threaded",
+      "profiles": [
+        "perl"
+      ],
+      "report": "array-perl-5-38-2-threaded.json",
+      "perl": {
+        "command": "/app/.toolchains/perl/5.38.2-threaded/bin/perl",
+        "version": "v5.38.2",
+        "useithreads": "define",
+        "archname": "x86_64-linux-thread-multi"
+      },
+      "environment": {
+        "NO_COLOR": "1",
+        "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+        "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+        "LEAN_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MAKEFLAGS": "-j1",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES": "perl",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_REPORT": "/app/build/vo1439-generic-record-arrays-perl-4c54801/array-perl-5-38-2-threaded.json",
+        "LEAN_BRIDGE_CORPUS_PERL": "/app/.toolchains/perl/5.38.2-threaded/bin/perl",
+        "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR": "2.36"
+      }
+    },
+    {
+      "name": "perl-5.38.2-unthreaded",
+      "profiles": [
+        "perl"
+      ],
+      "report": "array-perl-5-38-2-unthreaded.json",
+      "perl": {
+        "command": "/app/.toolchains/perl/5.38.2-unthreaded/bin/perl",
+        "version": "v5.38.2",
+        "useithreads": "undef",
+        "archname": "x86_64-linux"
+      },
+      "environment": {
+        "NO_COLOR": "1",
+        "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+        "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+        "LEAN_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MAKEFLAGS": "-j1",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES": "perl",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_REPORT": "/app/build/vo1439-generic-record-arrays-perl-4c54801/array-perl-5-38-2-unthreaded.json",
+        "LEAN_BRIDGE_CORPUS_PERL": "/app/.toolchains/perl/5.38.2-unthreaded/bin/perl",
+        "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR": "2.36"
+      }
+    }
+  ],
+  "unset": [
+    "FORCE_COLOR",
+    "other LEAN_BRIDGE_* variables"
+  ],
+  "node": "v22.23.3",
+  "lean": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)",
+  "glibc": "glibc 2.36",
+  "cc": "cc (Debian 12.2.0-14+deb12u1) 12.2.0",
+  "cxx": "c++ (Debian 12.2.0-14+deb12u1) 12.2.0",
+  "pkgConfig": "1.8.1",
+  "freeMiB": 3116,
+  "stopFloorMiB": 2048,
+  "supersedes": {
+    "revision": "c92090ffdaa6b309da918b254e7be560f787b33e",
+    "output": "/app/build/vo1439-generic-record-arrays-hosts-c92090f",
+    "failedSelection": "perl-5.36.3-threaded",
+    "tapSha256": "f8a9b2bda04ce635d192d0a54c4d553ee9b6d39f76ecb985eefb4714f1d253f6",
+    "unlaunchedRunners": [
+      {
+        "path": "/app/build/run-vo1439-generic-record-arrays-perl-96840aa.mjs",
+        "sha256": "7e1ac3be6f8fc8eea87f9b54e1ea9ded9e09d260287028a6fc1dc24ab7d90d2c",
+        "revision": "96840aac297c2fc09b1a3e3daa79684712ad8b58"
+      },
+      {
+        "path": "/app/build/run-vo1439-generic-record-arrays-perl-dddce15.mjs",
+        "sha256": "c424bce3b5f9215472b9fc862331363a6309e72a05f5eaba5f6cc5ff1dfde970",
+        "revision": "dddce154e6b7b7001c87fc4b6082b5214d9bb8be"
+      }
+    ]
+  },
+  "scope": "Local ordinary-source installed Perl Array fields and results over alias-named generic records on all four pinned local ABIs, two author roots, glibc 2.36 floors; not hosted or release-floor acceptance"
+}

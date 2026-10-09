@@ -1,0 +1,256 @@
+{
+  "archives": {
+    "archives/example-genericrecords-1.0.0-linux-x86_64.zip": "ec9a0fb8beb032d00059e12380e553422b06d11c157f5e2fce390dd7677e0bb7"
+  },
+  "authorRoots": 2,
+  "profiles": [
+    "php-native"
+  ],
+  "reports": [
+    {
+      "arrayExports": [
+        "GenericRecords.pushCount",
+        "GenericRecords.rowTotal",
+        "GenericRecords.rowOf",
+        "GenericRecords.rowBoxSum"
+      ],
+      "baseConsumer": {
+        "checks": 1035,
+        "sha256": "f92290dc943fd5bfdb8ebb0c955b0fb8e9404122b104c6767c6afa9971e74054"
+      },
+      "bindingIrSha256": "385b1a9587b78e4f9e85e16b69e0ca4b1e2b8f6b40c0a364f7a27dc7f5b39b0c",
+      "cases": [
+        "pushCount nonempty with 2^70 and empty",
+        "pushCount input unchanged",
+        "rowTotal nonempty and empty, input unchanged",
+        "rowOf 3 and 0, rowTotal of rowOf",
+        "rowBoxSum nonempty, empty and rowOf field",
+        "ArrayBox.value member -1, int, string and float at 0..2 refused by its constructor with ValueError or TypeError, unchanged, recovered",
+        "BoxRow and RowBox member wrong alias, array, int and null at 0..2 refused with TypeError, unchanged, recovered",
+        "non-list Arrays, negative counts, negative rowOf, wrong records, missing field",
+        "1000 Array rounds"
+      ],
+      "checks": 2124,
+      "compilerFreePath": true,
+      "consumerSha256": "cdca1197f41d137db97a6b1f3343d01001953b2eed539dbcfe0b205661c07d4d",
+      "expectedChecks": 2124,
+      "instantiations": {
+        "BoxPair": {
+          "arguments": [
+            {
+              "id": "NatBox",
+              "kind": "named"
+            },
+            {
+              "id": "TextBox",
+              "kind": "named"
+            }
+          ],
+          "structure": "Pair"
+        },
+        "MarkerTag": {
+          "arguments": [
+            {
+              "id": "Marker",
+              "kind": "named"
+            }
+          ],
+          "fields": 1,
+          "structure": "Tag"
+        },
+        "MaybeBox": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBoxAgain": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "TaggedNat": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Tagged"
+        },
+        "TextBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            }
+          ],
+          "structure": "Box"
+        },
+        "WordPair": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Pair"
+        },
+        "lean:GenericRecords.ArrayBox": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          ],
+          "structure": "GenericRecords.Box"
+        },
+        "lean:GenericRecords.RowBox": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "id": "lean:GenericRecords.NatBox",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          ],
+          "structure": "GenericRecords.Box"
+        }
+      },
+      "modelSha256": "a8b291759a49f6c69bfd226911cad50bba4412f9dc47f978ffa8c725dcef81d3",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51402694,
+              "path": "archives/example-genericrecords-1.0.0-linux-x86_64.zip",
+              "sha256": "ec9a0fb8beb032d00059e12380e553422b06d11c157f5e2fce390dd7677e0bb7"
+            }
+          ],
+          "ecosystem": "composer",
+          "name": "example/genericrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "php-native",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "php-native",
+      "receiptSha256": "4f0c501b84be34ff9377a5454cc2a4065707cdb578a3af537f4e55fa20795b05",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "2c2cedebcd7b038d4c251b11a508520396d87b60cce8ff81018c929cde5bf7fb",
+      "specializations": [
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoNatBox",
+          "types": [
+            "GenericRecords.NatBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoAgain",
+          "types": [
+            "GenericRecords.NatBoxAgain"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoTextBox",
+          "types": [
+            "GenericRecords.TextBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoLeft",
+          "types": [
+            "GenericRecords.Left.LeftBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoRight",
+          "types": [
+            "GenericRecords.Right.RightBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoBoxes",
+          "types": [
+            "GenericRecords.Boxes"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoOptionalBoxes",
+          "types": [
+            "GenericRecords.OptionalBoxes"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoNats",
+          "types": [
+            "GenericRecords.Nats"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoOptionalNat",
+          "types": [
+            "GenericRecords.OptionalNat"
+          ]
+        }
+      ]
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

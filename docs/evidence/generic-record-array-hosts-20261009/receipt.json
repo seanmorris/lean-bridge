@@ -1,0 +1,900 @@
+{
+  "schemaVersion": 1,
+  "kind": "generic-record-array-remaining-native-evidence",
+  "scope": {
+    "route": "ordinary-source",
+    "hosts": [
+      "rust",
+      "ruby",
+      "dotnet",
+      "java",
+      "kotlin",
+      "php-native",
+      "wit-wasi",
+      "perl"
+    ],
+    "localGlibc": "2.36",
+    "local": true,
+    "hostedCi": false,
+    "supportPromotion": false,
+    "retained": "Original run records and selected Git sources; package archives are identified by report-carried digests only"
+  },
+  "attempts": [
+    {
+      "attempt": "hosts-c92090f",
+      "selection": "rust",
+      "outcome": "passed",
+      "report": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/array-rust.json",
+      "sha256": "a225c31edafc254ef7658dbf16ae7decf5c28a92e8b1fc9646a44a3b43705264",
+      "checks": [
+        [
+          "rust",
+          2034
+        ]
+      ]
+    },
+    {
+      "attempt": "hosts-c92090f",
+      "selection": "ruby",
+      "outcome": "passed",
+      "report": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/array-ruby.json",
+      "sha256": "f22f44bf57cb39d1efe7fa0f29f91d95b089cfefbcd086f63e9e2db99478a3d4",
+      "checks": [
+        [
+          "ruby",
+          2141
+        ]
+      ]
+    },
+    {
+      "attempt": "hosts-c92090f",
+      "selection": "dotnet",
+      "outcome": "passed",
+      "report": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/array-dotnet.json",
+      "sha256": "f1d337edc83beeac11d59e51dc6cff4f84ec457443a69843a9e63b105c9ebdcf",
+      "checks": [
+        [
+          "dotnet",
+          2088
+        ]
+      ]
+    },
+    {
+      "attempt": "hosts-c92090f",
+      "selection": "java-kotlin",
+      "outcome": "passed",
+      "report": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/array-java-kotlin.json",
+      "sha256": "4b94d641bcabeb0d7fd42b84fb5e2685de8f4f4dccee0c11e5d963d4316ebf6e",
+      "checks": [
+        [
+          "java",
+          2105
+        ],
+        [
+          "kotlin",
+          2067
+        ]
+      ]
+    },
+    {
+      "attempt": "hosts-c92090f",
+      "selection": "php-native",
+      "outcome": "passed",
+      "report": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/array-php-native.json",
+      "sha256": "2cc47733994d11a8c8da64c3778bc5da4f0c30741679d5c3abdf20f31eac2f64",
+      "checks": [
+        [
+          "php-native",
+          2124
+        ]
+      ]
+    },
+    {
+      "attempt": "hosts-c92090f",
+      "selection": "wit-wasi",
+      "outcome": "passed",
+      "report": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/array-wit-wasi.json",
+      "sha256": "dcee8dffc57e76e31dc22745daf72419c7c251f82ddc418a578d6ee02a92c7ed",
+      "checks": [
+        [
+          "wit-wasi",
+          2091
+        ]
+      ]
+    },
+    {
+      "attempt": "hosts-c92090f",
+      "selection": "perl-5.36.3-threaded",
+      "outcome": "failed"
+    },
+    {
+      "attempt": "hosts-c92090f",
+      "selection": "perl-5.36.3-unthreaded",
+      "outcome": "not-run"
+    },
+    {
+      "attempt": "hosts-c92090f",
+      "selection": "perl-5.38.2-threaded",
+      "outcome": "not-run"
+    },
+    {
+      "attempt": "hosts-c92090f",
+      "selection": "perl-5.38.2-unthreaded",
+      "outcome": "not-run"
+    },
+    {
+      "attempt": "perl-4c54801",
+      "selection": "perl-5.36.3-threaded",
+      "outcome": "passed",
+      "report": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/array-perl-5-36-3-threaded.json",
+      "sha256": "907c5f688a5dd64cc27047186215e78599a95ebb55e5e5d637162beeeef4319c",
+      "checks": [
+        [
+          "perl",
+          2145
+        ]
+      ]
+    },
+    {
+      "attempt": "perl-4c54801",
+      "selection": "perl-5.36.3-unthreaded",
+      "outcome": "passed",
+      "report": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/array-perl-5-36-3-unthreaded.json",
+      "sha256": "d69dbe8741c8cc29d68222a3850f9bbeac32c49752de3e916deacc48aef0a49b",
+      "checks": [
+        [
+          "perl",
+          2145
+        ]
+      ]
+    },
+    {
+      "attempt": "perl-4c54801",
+      "selection": "perl-5.38.2-threaded",
+      "outcome": "passed",
+      "report": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/array-perl-5-38-2-threaded.json",
+      "sha256": "20764292ad37284895ad12a7deaf5b190e4b2643a911fcc604ece0b23935bdd8",
+      "checks": [
+        [
+          "perl",
+          2145
+        ]
+      ]
+    },
+    {
+      "attempt": "perl-4c54801",
+      "selection": "perl-5.38.2-unthreaded",
+      "outcome": "passed",
+      "report": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/array-perl-5-38-2-unthreaded.json",
+      "sha256": "ce10f41a851b36e69add281c3ff57f1c49a161d4668427327acc92a3c184b1bf",
+      "checks": [
+        [
+          "perl",
+          2145
+        ]
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/queue.json",
+      "originalPath": "build/vo1439-generic-record-arrays-hosts-c92090f/queue.json",
+      "sha256": "c0b1337a434621647af8dd325c9105bd3742231755d4daa6ab76c3b61c0c1a2b",
+      "bytes": 16792
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/runner.mjs.txt",
+      "originalPath": "build/run-vo1439-generic-record-arrays-hosts-c92090f.mjs",
+      "sha256": "c5ff9734cf0122f406cf35f12d1edb336d88d3ff98c9557ba0426e2861e1cff7",
+      "bytes": 13763
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/runner-output.txt",
+      "originalPath": "build/vo1439-generic-record-arrays-hosts-c92090f.runner.log",
+      "sha256": "182058d3b3220c22a9df5a4b0d9143a20aa1cd505521d42768876e3c2fd14cf0",
+      "bytes": 3682
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/generic-record-arrays.test.mjs.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/generic-record-arrays.test.mjs",
+      "sha256": "639915b502322f1587210168540ac5f61588938461f4cab81dddba297fabdf54",
+      "bytes": 18863
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/helpers/generic-record-arrays.mjs.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/helpers/generic-record-arrays.mjs",
+      "sha256": "4d4f16610900d0aaa4c774ffe430baff2e48208d0b25e7d7084c977d93c7d2af",
+      "bytes": 24960
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/fixtures/generic-record-array-consumers/rust.rs.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/fixtures/generic-record-array-consumers/rust.rs",
+      "sha256": "26d963d58cd4f781d7515d1cb761521a6c0fcb3675a73865379ef43560d6a643",
+      "bytes": 2631
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/fixtures/generic-record-array-consumers/ruby.rb.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/fixtures/generic-record-array-consumers/ruby.rb",
+      "sha256": "ca9e4be06b6943db23f8988cb83b2b7532b2656b80ff5abc17ed70b2a5ae0d08",
+      "bytes": 4553
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/fixtures/generic-record-array-consumers/dotnet.cs.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/fixtures/generic-record-array-consumers/dotnet.cs",
+      "sha256": "b6d01459a2a169051a9eb15c6ccdb686ef03b70e41ea98ff801e3a177037f7b2",
+      "bytes": 5279
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/fixtures/generic-record-array-consumers/java.java.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/fixtures/generic-record-array-consumers/java.java",
+      "sha256": "abf76fb4cdf160cfcafe042f0e708392496a8811ebf9a35750abb63adb0a3cfe",
+      "bytes": 6174
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/fixtures/generic-record-array-consumers/kotlin.kt.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/fixtures/generic-record-array-consumers/kotlin.kt",
+      "sha256": "c17a017b496e9cd884d916ee973f34a004edda3df812ad8f2b976419ea5226e4",
+      "bytes": 4053
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/fixtures/generic-record-array-consumers/php-native.php.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/fixtures/generic-record-array-consumers/php-native.php",
+      "sha256": "43e6a3e68449655c61599d5728a6c5cd3da880884309d53936cf0a4afe5bf9cf",
+      "bytes": 5864
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/fixtures/generic-record-array-consumers/wit-wasi.c.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/fixtures/generic-record-array-consumers/wit-wasi.c",
+      "sha256": "c3b2ddbcf1d69d367802cc2cfb5bd296d5481d81d57c1b60f65d6d2636bb75e5",
+      "bytes": 7157
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/fixtures/generic-record-array-consumers/perl.pl.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/fixtures/generic-record-array-consumers/perl.pl",
+      "sha256": "e9bd58ca23ed267e1016bef33e4d849fc7f543249d422b70f3ee5f910549f82a",
+      "bytes": 6780
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/fixtures/generic-record-browser/GenericRecordArrays.lean.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/fixtures/generic-record-browser/GenericRecordArrays.lean",
+      "sha256": "a372869e7b472ee4fb5db20f2f34984aeddb94d9727fe64d8163559f20ffa7ec",
+      "bytes": 717
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/fixtures/generic-record-specializations.lean.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/fixtures/generic-record-specializations.lean",
+      "sha256": "26e73e3a2f872d4a3399aa313cbb88da96992b36681e383a18818aefd552cce9",
+      "bytes": 525
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/fixtures/onboarding/generic-records/GenericRecords.lean.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/fixtures/onboarding/generic-records/GenericRecords.lean",
+      "sha256": "01e2a3c3c4d7eb9552a32191d5ae69aad7b713a82607507c8f702a0cc624cf5f",
+      "bytes": 2184
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/fixtures/generic-record-consumers/rust.rs.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/fixtures/generic-record-consumers/rust.rs",
+      "sha256": "3ad3f7766e48cb7b2cc45e9cf25cd0799cad933e2cb7090ee500eb6909d38a75",
+      "bytes": 2936
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/fixtures/generic-record-specialization-consumers/rust.rs.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/fixtures/generic-record-specialization-consumers/rust.rs",
+      "sha256": "0f9d4af92b823b74fc2eeec907378b8a73453b6e7d5d95b80c1ec3bf32ef7469",
+      "bytes": 1544
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/fixtures/generic-record-consumers/ruby.rb.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/fixtures/generic-record-consumers/ruby.rb",
+      "sha256": "5ed93b95395da55cda2b9035568d2e816ed40d01dc20f2cbf0c052dcd00e95c6",
+      "bytes": 2923
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/fixtures/generic-record-specialization-consumers/ruby.rb.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/fixtures/generic-record-specialization-consumers/ruby.rb",
+      "sha256": "76a3af4daeeabf3062e0031fa6866ff976b51c3a6540ffb198fc4190a0ee51a5",
+      "bytes": 1394
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/fixtures/generic-record-consumers/dotnet.cs.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/fixtures/generic-record-consumers/dotnet.cs",
+      "sha256": "6e5d9bd86f7a668ce57462c2637c82f1c8523df26f9fbeae5aecbc8a9af37a91",
+      "bytes": 2999
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/fixtures/generic-record-specialization-consumers/dotnet.cs.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/fixtures/generic-record-specialization-consumers/dotnet.cs",
+      "sha256": "0263a40f3f0dbd66c5820b65f9bc9e7028808a48b990e35e0768facc5ac38f05",
+      "bytes": 1695
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/fixtures/generic-record-consumers/java.java.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/fixtures/generic-record-consumers/java.java",
+      "sha256": "4c5c5b20637e263e8c14e59cb4827bea6055d9d66051eba5e1b886f7ec76c357",
+      "bytes": 3241
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/fixtures/generic-record-specialization-consumers/java.java.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/fixtures/generic-record-specialization-consumers/java.java",
+      "sha256": "495593fe8f7cbde0b74281e8b7c1a98ec8d92151dcf608eb8cacad8a06686163",
+      "bytes": 1826
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/fixtures/generic-record-consumers/kotlin.kt.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/fixtures/generic-record-consumers/kotlin.kt",
+      "sha256": "538252f21fd680f808e4aa91ff246c46fe675752bc609bfb4ced4211d1ea74b5",
+      "bytes": 2542
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/fixtures/generic-record-specialization-consumers/kotlin.kt.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/fixtures/generic-record-specialization-consumers/kotlin.kt",
+      "sha256": "caf243b73787a3c07d35c5889dfe4394b22ddd93bbe4615483d124c9fb30032d",
+      "bytes": 1598
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/fixtures/generic-record-consumers/php-native.php.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/fixtures/generic-record-consumers/php-native.php",
+      "sha256": "f2931f59779911f5ddb76cad20b8e7ac8120465e9d4f73f573ab9fbb173adfac",
+      "bytes": 3500
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/fixtures/generic-record-specialization-consumers/php-native.php.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/fixtures/generic-record-specialization-consumers/php-native.php",
+      "sha256": "873f4a796f48dc92181b7a92142ad19e922d8800673e65a1fd354f87e6f3ea77",
+      "bytes": 1801
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/fixtures/generic-record-consumers/wit-wasi.c.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/fixtures/generic-record-consumers/wit-wasi.c",
+      "sha256": "c311efc21745a457af7eb9eadd1b44425a1474bb703167d93b7a39f7e354bb38",
+      "bytes": 8900
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/fixtures/generic-record-specialization-consumers/wit-wasi.c.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/fixtures/generic-record-specialization-consumers/wit-wasi.c",
+      "sha256": "c9f733fcd3689097e5dd086c498bb3839370d0eaf07806a7be8787b403bb1f2d",
+      "bytes": 3456
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/fixtures/generic-record-consumers/perl.pl.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/fixtures/generic-record-consumers/perl.pl",
+      "sha256": "f83519bdac539b692f4d9f016665629a2534caa239ddb48221506fc4dd756e5c",
+      "bytes": 4625
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/fixtures/generic-record-specialization-consumers/perl.pl.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/fixtures/generic-record-specialization-consumers/perl.pl",
+      "sha256": "88df9317f1b0398f3b5b669afffdb3204b6f3f290ae29cf1d3950c12be1bb493",
+      "bytes": 2172
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/helpers/generic-record-browser.mjs.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/helpers/generic-record-browser.mjs",
+      "sha256": "6164fda2a59a4d0ec1cf0bf638570ecbb270ca943fd395f5f3b898b46d1bfcc5",
+      "bytes": 13430
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/helpers/generic-record-packages.mjs.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/helpers/generic-record-packages.mjs",
+      "sha256": "749c6404fde73b89fe03054c40f39b3de20a49c428e8ba3f4e241681546835dd",
+      "bytes": 16720
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/helpers/generic-record-specializations.mjs.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/helpers/generic-record-specializations.mjs",
+      "sha256": "a8c06844daddc89b331f65eb330f59f19eaf7e9ab032294a826d5fefe857120f",
+      "bytes": 7480
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/helpers/copied-fixture-install.mjs.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+      "bytes": 12888
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/helpers/package-set.mjs.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/helpers/package-set.mjs",
+      "sha256": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c",
+      "bytes": 5283
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/src/build/canonical-build.mjs.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:src/build/canonical-build.mjs",
+      "sha256": "17e88b02d75c81379c0a8f6e6b14ab583fabfaa8b7fdb747174505256ca48e7c",
+      "bytes": 43813
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/src/build/native-model.mjs.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:src/build/native-model.mjs",
+      "sha256": "aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13",
+      "bytes": 42596
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/helpers/generic-record-rust.mjs.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/helpers/generic-record-rust.mjs",
+      "sha256": "c85b411d0a23981209c949ce2ec11a182c8a10c8b9893c5755863d8bd9de5549",
+      "bytes": 4199
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/helpers/generic-record-managed-types.mjs.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/helpers/generic-record-managed-types.mjs",
+      "sha256": "33d25bf1b040a9e3b71f6bb3d5a9b3e8de5a660bb33699284bf9d220883e2716",
+      "bytes": 7969
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/tests/helpers/type-corpus-rust.mjs.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:tests/helpers/type-corpus-rust.mjs",
+      "sha256": "7203661ed2553808eba8d3b36af92c1cd3b881f0ec5158cb37ea34b247b8ea53",
+      "bytes": 11591
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/src/backends/rust/copied-values.mjs.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:src/backends/rust/copied-values.mjs",
+      "sha256": "e3c604b3c9a70cbfa664053dc4b6aa4bcee6c6aa80d1738929af8639cb0fbac1",
+      "bytes": 17147
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/src/backends/ruby/copied-conversions.mjs.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:src/backends/ruby/copied-conversions.mjs",
+      "sha256": "ce15adec396be01282ccb353fc486359693d032ccc46442dbe897d80e45fb52a",
+      "bytes": 12944
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/src/backends/dotnet/copied-conversions.mjs.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:src/backends/dotnet/copied-conversions.mjs",
+      "sha256": "c61e403a86d9dfbd76f6e28a96eb3006c5ea360192e92928b7d05d26ae3b5e77",
+      "bytes": 14044
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/src/backends/jvm/copied-conversions.mjs.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:src/backends/jvm/copied-conversions.mjs",
+      "sha256": "d41050ddcad1ebbbe19c74d681f311903764128ebed212616b0f6098b4fbefbe",
+      "bytes": 13442
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/src/backends/jvm/copied-values.mjs.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:src/backends/jvm/copied-values.mjs",
+      "sha256": "b4ab3f1bc62f8d1a16abc768e7abcc3c9e2ae6dd768904891f658128f0318fab",
+      "bytes": 15051
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/src/backends/php/copied-conversions.mjs.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:src/backends/php/copied-conversions.mjs",
+      "sha256": "025ecb45d698eb18520392a304d5771792c2df2c616e45dc591ee3a0938637c1",
+      "bytes": 13542
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/src/backends/perl/copied-graph-runtime.mjs.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:src/backends/perl/copied-graph-runtime.mjs",
+      "sha256": "cd2f2b345c66a7f5f1a82f4e75a47985ce5b5dd8dd464f05bc24982e4f2e325f",
+      "bytes": 12260
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/sources/src/release/package-set-receipt.mjs.txt",
+      "originalPath": "git:c92090ffdaa6b309da918b254e7be560f787b33e:src/release/package-set-receipt.mjs",
+      "sha256": "d0b945554b03e9d0f93149b12ddf808c33243cbb0ff5495a7a8a68e683fc71ed",
+      "bytes": 14878
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/rust/start.json",
+      "originalPath": "build/vo1439-generic-record-arrays-hosts-c92090f/rust/start.json",
+      "sha256": "2dd65c67ecb68ffb53fe16bda9d22a7eb4c8b7393a58757ef704a7f1352cd233",
+      "bytes": 83
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/rust/end.json",
+      "originalPath": "build/vo1439-generic-record-arrays-hosts-c92090f/rust/end.json",
+      "sha256": "3a01080079b3f895f08e98e8ed751740c2316a0f5266a993fdb881401b59944b",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/rust/run.tap",
+      "originalPath": "build/vo1439-generic-record-arrays-hosts-c92090f/rust/run.tap",
+      "sha256": "9aa552f78ec51df04728005629990d289f3a3cfee64a85aa2c3f7a7f9832ae67",
+      "bytes": 485
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/array-rust.json",
+      "originalPath": "build/vo1439-generic-record-arrays-hosts-c92090f/array-rust.json",
+      "sha256": "a225c31edafc254ef7658dbf16ae7decf5c28a92e8b1fc9646a44a3b43705264",
+      "bytes": 8031
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/ruby/start.json",
+      "originalPath": "build/vo1439-generic-record-arrays-hosts-c92090f/ruby/start.json",
+      "sha256": "10ff705f5b07dff46462e9a5fa765273ef614b46785d1316c94d17c5ab79759b",
+      "bytes": 83
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/ruby/end.json",
+      "originalPath": "build/vo1439-generic-record-arrays-hosts-c92090f/ruby/end.json",
+      "sha256": "c996c27fd76d61c46decfbb7fbe812cd269a592bb9e6fce753cad87f46c2dfbc",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/ruby/run.tap",
+      "originalPath": "build/vo1439-generic-record-arrays-hosts-c92090f/ruby/run.tap",
+      "sha256": "3f1309930821610a7415c84ccceabd4d70b579c59c04a1d5a0b755f8052260d1",
+      "bytes": 485
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/array-ruby.json",
+      "originalPath": "build/vo1439-generic-record-arrays-hosts-c92090f/array-ruby.json",
+      "sha256": "f22f44bf57cb39d1efe7fa0f29f91d95b089cfefbcd086f63e9e2db99478a3d4",
+      "bytes": 7181
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/dotnet/start.json",
+      "originalPath": "build/vo1439-generic-record-arrays-hosts-c92090f/dotnet/start.json",
+      "sha256": "04f4656a301eb8ffd762f592988339dd6b25705532a99b67b1e3e3f9ec2582ea",
+      "bytes": 83
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/dotnet/end.json",
+      "originalPath": "build/vo1439-generic-record-arrays-hosts-c92090f/dotnet/end.json",
+      "sha256": "9bb6167fa925f45be54918f3589fde71db05bfcaf3d76026b5f4ca96094565bf",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/dotnet/run.tap",
+      "originalPath": "build/vo1439-generic-record-arrays-hosts-c92090f/dotnet/run.tap",
+      "sha256": "335e620111ca0d23101fc7d5522ee0c695a8f00c239b5a69bcb14dd6e3bdef37",
+      "bytes": 491
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/array-dotnet.json",
+      "originalPath": "build/vo1439-generic-record-arrays-hosts-c92090f/array-dotnet.json",
+      "sha256": "f1d337edc83beeac11d59e51dc6cff4f84ec457443a69843a9e63b105c9ebdcf",
+      "bytes": 8542
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/java-kotlin/start.json",
+      "originalPath": "build/vo1439-generic-record-arrays-hosts-c92090f/java-kotlin/start.json",
+      "sha256": "44a663fedecd9e1a77038154973315998f39117809ddada43e4b8f14d43f0b62",
+      "bytes": 83
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/java-kotlin/end.json",
+      "originalPath": "build/vo1439-generic-record-arrays-hosts-c92090f/java-kotlin/end.json",
+      "sha256": "1b6ddfa130840e5b5ec8d84db7e7408a4827e7f477b923cd43d80dc42a169cf6",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/java-kotlin/run.tap",
+      "originalPath": "build/vo1439-generic-record-arrays-hosts-c92090f/java-kotlin/run.tap",
+      "sha256": "772e912f24795b58e3f706c1d614629d3f6dec623a2b47c57d415e82b4565b64",
+      "bytes": 544
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/array-java-kotlin.json",
+      "originalPath": "build/vo1439-generic-record-arrays-hosts-c92090f/array-java-kotlin.json",
+      "sha256": "4b94d641bcabeb0d7fd42b84fb5e2685de8f4f4dccee0c11e5d963d4316ebf6e",
+      "bytes": 18636
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/php-native/start.json",
+      "originalPath": "build/vo1439-generic-record-arrays-hosts-c92090f/php-native/start.json",
+      "sha256": "d536d168814e8a9324f4ceb91be6d6170cce0e29a7199108b266cf795f074e48",
+      "bytes": 83
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/php-native/end.json",
+      "originalPath": "build/vo1439-generic-record-arrays-hosts-c92090f/php-native/end.json",
+      "sha256": "599b19f7047a40de289dbb36dc50d1adf59326431b5d2de64d37c4991eb3c73c",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/php-native/run.tap",
+      "originalPath": "build/vo1439-generic-record-arrays-hosts-c92090f/php-native/run.tap",
+      "sha256": "c8871c08bc51c455b94716f4bbd12eb0adb9b3455a5b27e03ae147ed8b18bb15",
+      "bytes": 503
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/array-php-native.json",
+      "originalPath": "build/vo1439-generic-record-arrays-hosts-c92090f/array-php-native.json",
+      "sha256": "2cc47733994d11a8c8da64c3778bc5da4f0c30741679d5c3abdf20f31eac2f64",
+      "bytes": 7179
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/wit-wasi/start.json",
+      "originalPath": "build/vo1439-generic-record-arrays-hosts-c92090f/wit-wasi/start.json",
+      "sha256": "ec9b209af9e838ff6e2b90175f8683074896563b80fdd505bb6229ed07b9f362",
+      "bytes": 83
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/wit-wasi/end.json",
+      "originalPath": "build/vo1439-generic-record-arrays-hosts-c92090f/wit-wasi/end.json",
+      "sha256": "9989fd534e0ef1a0c48b23a2cc793b7ba8c66da4b5088c171c573c81e7ef51de",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/wit-wasi/run.tap",
+      "originalPath": "build/vo1439-generic-record-arrays-hosts-c92090f/wit-wasi/run.tap",
+      "sha256": "1ba2d6ff36e8adbd5f80d5b364a7198567f34f3fc4821d50c6c35bc5f331e4d6",
+      "bytes": 496
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/array-wit-wasi.json",
+      "originalPath": "build/vo1439-generic-record-arrays-hosts-c92090f/array-wit-wasi.json",
+      "sha256": "dcee8dffc57e76e31dc22745daf72419c7c251f82ddc418a578d6ee02a92c7ed",
+      "bytes": 7028
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/perl-5.36.3-threaded/start.json",
+      "originalPath": "build/vo1439-generic-record-arrays-hosts-c92090f/perl-5.36.3-threaded/start.json",
+      "sha256": "beee966076d4fd737d8c57d6d01b89411d9c85a991292818eb6b7acd1d14fb60",
+      "bytes": 83
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/perl-5.36.3-threaded/end.json",
+      "originalPath": "build/vo1439-generic-record-arrays-hosts-c92090f/perl-5.36.3-threaded/end.json",
+      "sha256": "8ce1eecc25b66d5828baf306200450b8e8cd94c293a0760faa813f9da7936cc3",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/hosts-c92090f/perl-5.36.3-threaded/run.tap",
+      "originalPath": "build/vo1439-generic-record-arrays-hosts-c92090f/perl-5.36.3-threaded/run.tap",
+      "sha256": "f8a9b2bda04ce635d192d0a54c4d553ee9b6d39f76ecb985eefb4714f1d253f6",
+      "bytes": 1269
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/queue.json",
+      "originalPath": "build/vo1439-generic-record-arrays-perl-4c54801/queue.json",
+      "sha256": "d0f0fb8997e2d0ad1d2892a89138b46c8b3b560ac512e601aa89dedd0aa203f4",
+      "bytes": 8792
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/runner.mjs.txt",
+      "originalPath": "build/run-vo1439-generic-record-arrays-perl-4c54801.mjs",
+      "sha256": "8d53f30b03536a9530a3c892d5abe5f7713db4dfb99db80102a5597d6af48d04",
+      "bytes": 10886
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/runner-output.txt",
+      "originalPath": "build/vo1439-generic-record-arrays-perl-4c54801.runner.log",
+      "sha256": "9c39c26c8d6ce3158f207563b5288c4aa978ffbabfebe360ac682cf776593797",
+      "bytes": 2169
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/sources/tests/generic-record-arrays.test.mjs.txt",
+      "originalPath": "git:4c54801968fb1bc2a8a87e4570d0ce033ba99bb6:tests/generic-record-arrays.test.mjs",
+      "sha256": "536a2d1cad182ee5e66ef09b07ef0363f8205b995dc3d83dfd1c14c111c91a54",
+      "bytes": 20884
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/sources/tests/helpers/generic-record-arrays.mjs.txt",
+      "originalPath": "git:4c54801968fb1bc2a8a87e4570d0ce033ba99bb6:tests/helpers/generic-record-arrays.mjs",
+      "sha256": "1a8bf5878f33b8839e2181aa3320013b02920f07e277a1d27e6bd78508f14d79",
+      "bytes": 27944
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/sources/tests/fixtures/generic-record-array-consumers/perl.pl.txt",
+      "originalPath": "git:4c54801968fb1bc2a8a87e4570d0ce033ba99bb6:tests/fixtures/generic-record-array-consumers/perl.pl",
+      "sha256": "88a89685741dfb47b837cc609044974288265cefcbbc6275808c5ba28d181269",
+      "bytes": 6956
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/sources/tests/fixtures/generic-record-browser/GenericRecordArrays.lean.txt",
+      "originalPath": "git:4c54801968fb1bc2a8a87e4570d0ce033ba99bb6:tests/fixtures/generic-record-browser/GenericRecordArrays.lean",
+      "sha256": "a372869e7b472ee4fb5db20f2f34984aeddb94d9727fe64d8163559f20ffa7ec",
+      "bytes": 717
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/sources/tests/fixtures/generic-record-specializations.lean.txt",
+      "originalPath": "git:4c54801968fb1bc2a8a87e4570d0ce033ba99bb6:tests/fixtures/generic-record-specializations.lean",
+      "sha256": "26e73e3a2f872d4a3399aa313cbb88da96992b36681e383a18818aefd552cce9",
+      "bytes": 525
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/sources/tests/fixtures/onboarding/generic-records/GenericRecords.lean.txt",
+      "originalPath": "git:4c54801968fb1bc2a8a87e4570d0ce033ba99bb6:tests/fixtures/onboarding/generic-records/GenericRecords.lean",
+      "sha256": "01e2a3c3c4d7eb9552a32191d5ae69aad7b713a82607507c8f702a0cc624cf5f",
+      "bytes": 2184
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/sources/tests/fixtures/generic-record-consumers/perl.pl.txt",
+      "originalPath": "git:4c54801968fb1bc2a8a87e4570d0ce033ba99bb6:tests/fixtures/generic-record-consumers/perl.pl",
+      "sha256": "f83519bdac539b692f4d9f016665629a2534caa239ddb48221506fc4dd756e5c",
+      "bytes": 4625
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/sources/tests/fixtures/generic-record-specialization-consumers/perl.pl.txt",
+      "originalPath": "git:4c54801968fb1bc2a8a87e4570d0ce033ba99bb6:tests/fixtures/generic-record-specialization-consumers/perl.pl",
+      "sha256": "88df9317f1b0398f3b5b669afffdb3204b6f3f290ae29cf1d3950c12be1bb493",
+      "bytes": 2172
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/sources/tests/helpers/fin-record-model.mjs.txt",
+      "originalPath": "git:4c54801968fb1bc2a8a87e4570d0ce033ba99bb6:tests/helpers/fin-record-model.mjs",
+      "sha256": "b6fec1465d78b6e76c1a1646bf30fceb05903b413b2fd5622605f8b280e11bb0",
+      "bytes": 4766
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/sources/tests/helpers/generic-record-browser.mjs.txt",
+      "originalPath": "git:4c54801968fb1bc2a8a87e4570d0ce033ba99bb6:tests/helpers/generic-record-browser.mjs",
+      "sha256": "6164fda2a59a4d0ec1cf0bf638570ecbb270ca943fd395f5f3b898b46d1bfcc5",
+      "bytes": 13430
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/sources/tests/helpers/generic-record-packages.mjs.txt",
+      "originalPath": "git:4c54801968fb1bc2a8a87e4570d0ce033ba99bb6:tests/helpers/generic-record-packages.mjs",
+      "sha256": "749c6404fde73b89fe03054c40f39b3de20a49c428e8ba3f4e241681546835dd",
+      "bytes": 16720
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/sources/tests/helpers/generic-record-specializations.mjs.txt",
+      "originalPath": "git:4c54801968fb1bc2a8a87e4570d0ce033ba99bb6:tests/helpers/generic-record-specializations.mjs",
+      "sha256": "a8c06844daddc89b331f65eb330f59f19eaf7e9ab032294a826d5fefe857120f",
+      "bytes": 7480
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/sources/tests/helpers/copied-fixture-install.mjs.txt",
+      "originalPath": "git:4c54801968fb1bc2a8a87e4570d0ce033ba99bb6:tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+      "bytes": 12888
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/sources/tests/helpers/package-set.mjs.txt",
+      "originalPath": "git:4c54801968fb1bc2a8a87e4570d0ce033ba99bb6:tests/helpers/package-set.mjs",
+      "sha256": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c",
+      "bytes": 5283
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/sources/src/build/canonical-build.mjs.txt",
+      "originalPath": "git:4c54801968fb1bc2a8a87e4570d0ce033ba99bb6:src/build/canonical-build.mjs",
+      "sha256": "17e88b02d75c81379c0a8f6e6b14ab583fabfaa8b7fdb747174505256ca48e7c",
+      "bytes": 43813
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/sources/src/build/native-model.mjs.txt",
+      "originalPath": "git:4c54801968fb1bc2a8a87e4570d0ce033ba99bb6:src/build/native-model.mjs",
+      "sha256": "aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13",
+      "bytes": 42596
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/sources/src/build/native-graph-model.mjs.txt",
+      "originalPath": "git:4c54801968fb1bc2a8a87e4570d0ce033ba99bb6:src/build/native-graph-model.mjs",
+      "sha256": "14fca0d2c8eb7bfd17dbbd1c2381d7bf0b416576e0cb69d43a2eb628d0b4ded5",
+      "bytes": 11579
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/sources/src/backends/perl/generate.mjs.txt",
+      "originalPath": "git:4c54801968fb1bc2a8a87e4570d0ce033ba99bb6:src/backends/perl/generate.mjs",
+      "sha256": "c7ad599484f0afaf3d7f46886635ac7f203d2653a62a36ff46a540ffb4e6af5d",
+      "bytes": 40059
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/sources/src/backends/perl/Runtime.xs.txt",
+      "originalPath": "git:4c54801968fb1bc2a8a87e4570d0ce033ba99bb6:src/backends/perl/Runtime.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1",
+      "bytes": 11859
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/sources/src/backends/perl/copied-graph-runtime.mjs.txt",
+      "originalPath": "git:4c54801968fb1bc2a8a87e4570d0ce033ba99bb6:src/backends/perl/copied-graph-runtime.mjs",
+      "sha256": "cd2f2b345c66a7f5f1a82f4e75a47985ce5b5dd8dd464f05bc24982e4f2e325f",
+      "bytes": 12260
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/sources/src/release/cpan-package.mjs.txt",
+      "originalPath": "git:4c54801968fb1bc2a8a87e4570d0ce033ba99bb6:src/release/cpan-package.mjs",
+      "sha256": "304934221a88450709aab2a49d189444215fa4119e0f8473cb5f13c68cd149f9",
+      "bytes": 20458
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/sources/src/release/package-set-receipt.mjs.txt",
+      "originalPath": "git:4c54801968fb1bc2a8a87e4570d0ce033ba99bb6:src/release/package-set-receipt.mjs",
+      "sha256": "d0b945554b03e9d0f93149b12ddf808c33243cbb0ff5495a7a8a68e683fc71ed",
+      "bytes": 14878
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/perl-5.36.3-threaded/start.json",
+      "originalPath": "build/vo1439-generic-record-arrays-perl-4c54801/perl-5.36.3-threaded/start.json",
+      "sha256": "9397b447d0835e9dcf7dff6573b4fdabfee433d261397a2a8d5d394f27c33e7b",
+      "bytes": 83
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/perl-5.36.3-threaded/end.json",
+      "originalPath": "build/vo1439-generic-record-arrays-perl-4c54801/perl-5.36.3-threaded/end.json",
+      "sha256": "2a765f11c8062464ea5a883a970c426f952c3ace85069949563643887f4477f7",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/perl-5.36.3-threaded/run.tap",
+      "originalPath": "build/vo1439-generic-record-arrays-perl-4c54801/perl-5.36.3-threaded/run.tap",
+      "sha256": "4fa0da84f8dd407a9c0766388a2eb0c28cad3866bc7ae80c819db45c595e4347",
+      "bytes": 485
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/array-perl-5-36-3-threaded.json",
+      "originalPath": "build/vo1439-generic-record-arrays-perl-4c54801/array-perl-5-36-3-threaded.json",
+      "sha256": "907c5f688a5dd64cc27047186215e78599a95ebb55e5e5d637162beeeef4319c",
+      "bytes": 8373
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/perl-5.36.3-unthreaded/start.json",
+      "originalPath": "build/vo1439-generic-record-arrays-perl-4c54801/perl-5.36.3-unthreaded/start.json",
+      "sha256": "b90f34c9b290b0522dcc0a9c572b22c5f44f35eb724e06b17b6b0b2f77e682e6",
+      "bytes": 83
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/perl-5.36.3-unthreaded/end.json",
+      "originalPath": "build/vo1439-generic-record-arrays-perl-4c54801/perl-5.36.3-unthreaded/end.json",
+      "sha256": "b5af27472487f662532ab9e2f7c0d9ba5a415ffa8ffcb3a4cfe2fcd3e4f5c134",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/perl-5.36.3-unthreaded/run.tap",
+      "originalPath": "build/vo1439-generic-record-arrays-perl-4c54801/perl-5.36.3-unthreaded/run.tap",
+      "sha256": "dd8e330b15ed7d63d57b40cdc8a38dc2fe4b076c92ff70ece551d3612c3a77da",
+      "bytes": 485
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/array-perl-5-36-3-unthreaded.json",
+      "originalPath": "build/vo1439-generic-record-arrays-perl-4c54801/array-perl-5-36-3-unthreaded.json",
+      "sha256": "d69dbe8741c8cc29d68222a3850f9bbeac32c49752de3e916deacc48aef0a49b",
+      "bytes": 8373
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/perl-5.38.2-threaded/start.json",
+      "originalPath": "build/vo1439-generic-record-arrays-perl-4c54801/perl-5.38.2-threaded/start.json",
+      "sha256": "d66114fca697e1b949a65c6d6d16930c730aa4fc35d888bb0aa55a7518e079d6",
+      "bytes": 83
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/perl-5.38.2-threaded/end.json",
+      "originalPath": "build/vo1439-generic-record-arrays-perl-4c54801/perl-5.38.2-threaded/end.json",
+      "sha256": "cddc9e2a1db1f15eb481465e47afc9de067c530515a2f338d15259efcd8038ff",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/perl-5.38.2-threaded/run.tap",
+      "originalPath": "build/vo1439-generic-record-arrays-perl-4c54801/perl-5.38.2-threaded/run.tap",
+      "sha256": "6366e93636c293d8cb58b328bfb9f6412428b53691ba648d7a453107e90932db",
+      "bytes": 485
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/array-perl-5-38-2-threaded.json",
+      "originalPath": "build/vo1439-generic-record-arrays-perl-4c54801/array-perl-5-38-2-threaded.json",
+      "sha256": "20764292ad37284895ad12a7deaf5b190e4b2643a911fcc604ece0b23935bdd8",
+      "bytes": 8373
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/perl-5.38.2-unthreaded/start.json",
+      "originalPath": "build/vo1439-generic-record-arrays-perl-4c54801/perl-5.38.2-unthreaded/start.json",
+      "sha256": "81c43536737e9737976a591a02eeb8901db0c1a47b1409b3cdfe44d1f6d7fa40",
+      "bytes": 83
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/perl-5.38.2-unthreaded/end.json",
+      "originalPath": "build/vo1439-generic-record-arrays-perl-4c54801/perl-5.38.2-unthreaded/end.json",
+      "sha256": "3c14e92029918a545c1d38d1df54f004ea723f8f96ca34cfe88a0da823353e46",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/perl-5.38.2-unthreaded/run.tap",
+      "originalPath": "build/vo1439-generic-record-arrays-perl-4c54801/perl-5.38.2-unthreaded/run.tap",
+      "sha256": "0d16567ee5c499b7bb3a772ce5b3acc7280cc87df4bce8bf070864107c315fc0",
+      "bytes": 485
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/array-perl-5-38-2-unthreaded.json",
+      "originalPath": "build/vo1439-generic-record-arrays-perl-4c54801/array-perl-5-38-2-unthreaded.json",
+      "sha256": "ce10f41a851b36e69add281c3ff57f1c49a161d4668427327acc92a3c184b1bf",
+      "bytes": 8373
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/unlaunched/run-vo1439-generic-record-arrays-perl-96840aa.mjs.txt",
+      "originalPath": "build/run-vo1439-generic-record-arrays-perl-96840aa.mjs",
+      "sha256": "7e1ac3be6f8fc8eea87f9b54e1ea9ded9e09d260287028a6fc1dc24ab7d90d2c",
+      "bytes": 10417
+    },
+    {
+      "path": "docs/evidence/generic-record-array-hosts-20261009/perl-4c54801/unlaunched/run-vo1439-generic-record-arrays-perl-dddce15.mjs.txt",
+      "originalPath": "build/run-vo1439-generic-record-arrays-perl-dddce15.mjs",
+      "sha256": "c424bce3b5f9215472b9fc862331363a6309e72a05f5eaba5f6cc5ff1dfde970",
+      "bytes": 10679
+    }
+  ]
+}

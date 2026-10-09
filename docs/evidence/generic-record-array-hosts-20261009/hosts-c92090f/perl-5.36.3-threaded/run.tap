@@ -1,0 +1,29 @@
+TAP version 13
+# Subtest: relocated source-free native packages carry Array fields and results over alias-named generic records
+not ok 1 - relocated source-free native packages carry Array fields and results over alias-named generic records
+  ---
+  duration_ms: 85162.833618
+  type: 'test'
+  location: '/app/build/worktrees/generic-record-arrays-hosts-producer-c92090f/tests/generic-record-arrays.test.mjs:251:1'
+  failureType: 'testCodeFailure'
+  error: '/app/.toolchains/perl/5.36.3-threaded/bin/perl exited with status 255: {"command":"/app/.toolchains/perl/5.36.3-threaded/bin/perl","args":["consumer.pl"],"stderr":"Generic record mismatch at line 106\\n","stdout":""}'
+  code: 'build-command-failed'
+  name: 'CanonicalBuildError'
+  stack: |-
+    ChildProcess.<anonymous> (file:///app/build/worktrees/generic-record-arrays-hosts-producer-c92090f/src/build/process-runner.mjs:77:21)
+    Object.onceWrapper (node:events:634:26)
+    ChildProcess.emit (node:events:519:28)
+    maybeClose (node:internal/child_process:1101:16)
+    ChildProcess._handle.onexit (node:internal/child_process:304:5)
+  ...
+# array build 0: perl
+# installing and checking Arrays in perl
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 86046.086976

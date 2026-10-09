@@ -1,0 +1,334 @@
+{
+  "revision": "c92090ffdaa6b309da918b254e7be560f787b33e",
+  "tree": "af1f06bbfec4a939f8e04610d4dcfa181af2a685",
+  "cwd": "/app/build/worktrees/generic-record-arrays-hosts-producer-c92090f",
+  "queuedAt": "2026-10-09T11:17:53.621Z",
+  "sources": {
+    "tests/generic-record-arrays.test.mjs": "639915b502322f1587210168540ac5f61588938461f4cab81dddba297fabdf54",
+    "tests/helpers/generic-record-arrays.mjs": "4d4f16610900d0aaa4c774ffe430baff2e48208d0b25e7d7084c977d93c7d2af",
+    "tests/fixtures/generic-record-array-consumers/rust.rs": "26d963d58cd4f781d7515d1cb761521a6c0fcb3675a73865379ef43560d6a643",
+    "tests/fixtures/generic-record-array-consumers/ruby.rb": "ca9e4be06b6943db23f8988cb83b2b7532b2656b80ff5abc17ed70b2a5ae0d08",
+    "tests/fixtures/generic-record-array-consumers/dotnet.cs": "b6d01459a2a169051a9eb15c6ccdb686ef03b70e41ea98ff801e3a177037f7b2",
+    "tests/fixtures/generic-record-array-consumers/java.java": "abf76fb4cdf160cfcafe042f0e708392496a8811ebf9a35750abb63adb0a3cfe",
+    "tests/fixtures/generic-record-array-consumers/kotlin.kt": "c17a017b496e9cd884d916ee973f34a004edda3df812ad8f2b976419ea5226e4",
+    "tests/fixtures/generic-record-array-consumers/php-native.php": "43e6a3e68449655c61599d5728a6c5cd3da880884309d53936cf0a4afe5bf9cf",
+    "tests/fixtures/generic-record-array-consumers/wit-wasi.c": "c3b2ddbcf1d69d367802cc2cfb5bd296d5481d81d57c1b60f65d6d2636bb75e5",
+    "tests/fixtures/generic-record-array-consumers/perl.pl": "e9bd58ca23ed267e1016bef33e4d849fc7f543249d422b70f3ee5f910549f82a",
+    "tests/fixtures/generic-record-browser/GenericRecordArrays.lean": "a372869e7b472ee4fb5db20f2f34984aeddb94d9727fe64d8163559f20ffa7ec",
+    "tests/fixtures/generic-record-specializations.lean": "26e73e3a2f872d4a3399aa313cbb88da96992b36681e383a18818aefd552cce9",
+    "tests/fixtures/onboarding/generic-records/GenericRecords.lean": "01e2a3c3c4d7eb9552a32191d5ae69aad7b713a82607507c8f702a0cc624cf5f",
+    "tests/fixtures/generic-record-consumers/rust.rs": "3ad3f7766e48cb7b2cc45e9cf25cd0799cad933e2cb7090ee500eb6909d38a75",
+    "tests/fixtures/generic-record-specialization-consumers/rust.rs": "0f9d4af92b823b74fc2eeec907378b8a73453b6e7d5d95b80c1ec3bf32ef7469",
+    "tests/fixtures/generic-record-consumers/ruby.rb": "5ed93b95395da55cda2b9035568d2e816ed40d01dc20f2cbf0c052dcd00e95c6",
+    "tests/fixtures/generic-record-specialization-consumers/ruby.rb": "76a3af4daeeabf3062e0031fa6866ff976b51c3a6540ffb198fc4190a0ee51a5",
+    "tests/fixtures/generic-record-consumers/dotnet.cs": "6e5d9bd86f7a668ce57462c2637c82f1c8523df26f9fbeae5aecbc8a9af37a91",
+    "tests/fixtures/generic-record-specialization-consumers/dotnet.cs": "0263a40f3f0dbd66c5820b65f9bc9e7028808a48b990e35e0768facc5ac38f05",
+    "tests/fixtures/generic-record-consumers/java.java": "4c5c5b20637e263e8c14e59cb4827bea6055d9d66051eba5e1b886f7ec76c357",
+    "tests/fixtures/generic-record-specialization-consumers/java.java": "495593fe8f7cbde0b74281e8b7c1a98ec8d92151dcf608eb8cacad8a06686163",
+    "tests/fixtures/generic-record-consumers/kotlin.kt": "538252f21fd680f808e4aa91ff246c46fe675752bc609bfb4ced4211d1ea74b5",
+    "tests/fixtures/generic-record-specialization-consumers/kotlin.kt": "caf243b73787a3c07d35c5889dfe4394b22ddd93bbe4615483d124c9fb30032d",
+    "tests/fixtures/generic-record-consumers/php-native.php": "f2931f59779911f5ddb76cad20b8e7ac8120465e9d4f73f573ab9fbb173adfac",
+    "tests/fixtures/generic-record-specialization-consumers/php-native.php": "873f4a796f48dc92181b7a92142ad19e922d8800673e65a1fd354f87e6f3ea77",
+    "tests/fixtures/generic-record-consumers/wit-wasi.c": "c311efc21745a457af7eb9eadd1b44425a1474bb703167d93b7a39f7e354bb38",
+    "tests/fixtures/generic-record-specialization-consumers/wit-wasi.c": "c9f733fcd3689097e5dd086c498bb3839370d0eaf07806a7be8787b403bb1f2d",
+    "tests/fixtures/generic-record-consumers/perl.pl": "f83519bdac539b692f4d9f016665629a2534caa239ddb48221506fc4dd756e5c",
+    "tests/fixtures/generic-record-specialization-consumers/perl.pl": "88df9317f1b0398f3b5b669afffdb3204b6f3f290ae29cf1d3950c12be1bb493",
+    "tests/helpers/generic-record-browser.mjs": "6164fda2a59a4d0ec1cf0bf638570ecbb270ca943fd395f5f3b898b46d1bfcc5",
+    "tests/helpers/generic-record-packages.mjs": "749c6404fde73b89fe03054c40f39b3de20a49c428e8ba3f4e241681546835dd",
+    "tests/helpers/generic-record-specializations.mjs": "a8c06844daddc89b331f65eb330f59f19eaf7e9ab032294a826d5fefe857120f",
+    "tests/helpers/copied-fixture-install.mjs": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+    "tests/helpers/package-set.mjs": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c",
+    "src/build/canonical-build.mjs": "17e88b02d75c81379c0a8f6e6b14ab583fabfaa8b7fdb747174505256ca48e7c",
+    "src/build/native-model.mjs": "aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13",
+    "tests/helpers/generic-record-rust.mjs": "c85b411d0a23981209c949ce2ec11a182c8a10c8b9893c5755863d8bd9de5549",
+    "tests/helpers/generic-record-managed-types.mjs": "33d25bf1b040a9e3b71f6bb3d5a9b3e8de5a660bb33699284bf9d220883e2716",
+    "tests/helpers/type-corpus-rust.mjs": "7203661ed2553808eba8d3b36af92c1cd3b881f0ec5158cb37ea34b247b8ea53",
+    "src/backends/rust/copied-values.mjs": "e3c604b3c9a70cbfa664053dc4b6aa4bcee6c6aa80d1738929af8639cb0fbac1",
+    "src/backends/ruby/copied-conversions.mjs": "ce15adec396be01282ccb353fc486359693d032ccc46442dbe897d80e45fb52a",
+    "src/backends/dotnet/copied-conversions.mjs": "c61e403a86d9dfbd76f6e28a96eb3006c5ea360192e92928b7d05d26ae3b5e77",
+    "src/backends/jvm/copied-conversions.mjs": "d41050ddcad1ebbbe19c74d681f311903764128ebed212616b0f6098b4fbefbe",
+    "src/backends/jvm/copied-values.mjs": "b4ab3f1bc62f8d1a16abc768e7abcc3c9e2ae6dd768904891f658128f0318fab",
+    "src/backends/php/copied-conversions.mjs": "025ecb45d698eb18520392a304d5771792c2df2c616e45dc591ee3a0938637c1",
+    "src/backends/perl/copied-graph-runtime.mjs": "cd2f2b345c66a7f5f1a82f4e75a47985ce5b5dd8dd464f05bc24982e4f2e325f",
+    "src/release/package-set-receipt.mjs": "d0b945554b03e9d0f93149b12ddf808c33243cbb0ff5495a7a8a68e683fc71ed"
+  },
+  "expected": {
+    "rust": {
+      "consumerSha256": "d8f1ff8ec16d08f30b17c0df9157a1eab6324d3e559f17fd338b75e9bd8c1ea4",
+      "checks": 2034
+    },
+    "ruby": {
+      "consumerSha256": "fc52ea895f5733f4d2908219009aadff370a97da6fdaf93c70dd7fb0e8ae61ff",
+      "checks": 2141
+    },
+    "dotnet": {
+      "consumerSha256": "b7b15c948ee9dd28f0331da1f7bf7aa592f7bb31edfa79a8a2f578db42522c73",
+      "checks": 2088
+    },
+    "java": {
+      "consumerSha256": "b07cbb44928acd5611a72e0cd8ea92c7f45f814021d3fdea258a25945a09ddb3",
+      "checks": 2105
+    },
+    "kotlin": {
+      "consumerSha256": "10e345a1c9eb2c0077ac8656ac5c100c40e24d0f11512dd39cdfd3a348755293",
+      "checks": 2067
+    },
+    "php-native": {
+      "consumerSha256": "cdca1197f41d137db97a6b1f3343d01001953b2eed539dbcfe0b205661c07d4d",
+      "checks": 2124
+    },
+    "wit-wasi": {
+      "consumerSha256": "41500a1731583f05707e1194f2a125c3ed63e1506f994ba98d777a644693ada3",
+      "checks": 2091
+    },
+    "perl": {
+      "consumerSha256": "2095aa4c000ac2a064a6187cc9c9fe6758c35c9535b2948a11484e067159a016",
+      "checks": 2145
+    }
+  },
+  "runnerSha256": "c5ff9734cf0122f406cf35f12d1edb336d88d3ff98c9557ba0426e2861e1cff7",
+  "command": [
+    "/usr/bin/taskset",
+    "-c",
+    "3",
+    "/usr/bin/node",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "--test-name-pattern=^relocated source-free native packages carry Array fields and results over alias-named generic records$",
+    "tests/generic-record-arrays.test.mjs"
+  ],
+  "selections": [
+    {
+      "name": "rust",
+      "profiles": [
+        "rust"
+      ],
+      "report": "array-rust.json",
+      "environment": {
+        "NO_COLOR": "1",
+        "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+        "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+        "LEAN_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MAKEFLAGS": "-j1",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES": "rust",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_REPORT": "/app/build/vo1439-generic-record-arrays-hosts-c92090f/array-rust.json"
+      }
+    },
+    {
+      "name": "ruby",
+      "profiles": [
+        "ruby"
+      ],
+      "report": "array-ruby.json",
+      "environment": {
+        "NO_COLOR": "1",
+        "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+        "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+        "LEAN_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MAKEFLAGS": "-j1",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES": "ruby",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_REPORT": "/app/build/vo1439-generic-record-arrays-hosts-c92090f/array-ruby.json",
+        "LEAN_BRIDGE_RUBY": "/app/.toolchains/ruby33/bin/ruby",
+        "LEAN_BRIDGE_GEM": "/app/.toolchains/ruby33/bin/gem"
+      }
+    },
+    {
+      "name": "dotnet",
+      "profiles": [
+        "dotnet"
+      ],
+      "report": "array-dotnet.json",
+      "environment": {
+        "NO_COLOR": "1",
+        "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+        "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+        "LEAN_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MAKEFLAGS": "-j1",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES": "dotnet",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_REPORT": "/app/build/vo1439-generic-record-arrays-hosts-c92090f/array-dotnet.json",
+        "LEAN_BRIDGE_DOTNET": "/app/.toolchains/dotnet/dotnet"
+      }
+    },
+    {
+      "name": "java-kotlin",
+      "profiles": [
+        "java",
+        "kotlin"
+      ],
+      "report": "array-java-kotlin.json",
+      "environment": {
+        "NO_COLOR": "1",
+        "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+        "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+        "LEAN_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MAKEFLAGS": "-j1",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES": "java,kotlin",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_REPORT": "/app/build/vo1439-generic-record-arrays-hosts-c92090f/array-java-kotlin.json",
+        "LEAN_BRIDGE_JAVA": "/app/.toolchains/jdk22/bin/java",
+        "LEAN_BRIDGE_JAVAC": "/app/.toolchains/jdk22/bin/javac",
+        "LEAN_BRIDGE_KOTLINC": "/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlinc"
+      }
+    },
+    {
+      "name": "php-native",
+      "profiles": [
+        "php-native"
+      ],
+      "report": "array-php-native.json",
+      "environment": {
+        "NO_COLOR": "1",
+        "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+        "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+        "LEAN_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MAKEFLAGS": "-j1",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES": "php-native",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_REPORT": "/app/build/vo1439-generic-record-arrays-hosts-c92090f/array-php-native.json"
+      }
+    },
+    {
+      "name": "wit-wasi",
+      "profiles": [
+        "wit-wasi"
+      ],
+      "report": "array-wit-wasi.json",
+      "environment": {
+        "NO_COLOR": "1",
+        "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+        "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+        "LEAN_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MAKEFLAGS": "-j1",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES": "wit-wasi",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_REPORT": "/app/build/vo1439-generic-record-arrays-hosts-c92090f/array-wit-wasi.json",
+        "LEAN_BRIDGE_WASMTIME_C_API": "/app/.toolchains/wasmtime42",
+        "LEAN_BRIDGE_WASM_TOOLS": "/app/.toolchains/wasm-tools/bin/wasm-tools"
+      }
+    },
+    {
+      "name": "perl-5.36.3-threaded",
+      "profiles": [
+        "perl"
+      ],
+      "report": "array-perl-5-36-3-threaded.json",
+      "perl": {
+        "command": "/app/.toolchains/perl/5.36.3-threaded/bin/perl",
+        "version": "v5.36.3",
+        "useithreads": "define",
+        "archname": "x86_64-linux-thread-multi"
+      },
+      "environment": {
+        "NO_COLOR": "1",
+        "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+        "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+        "LEAN_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MAKEFLAGS": "-j1",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES": "perl",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_REPORT": "/app/build/vo1439-generic-record-arrays-hosts-c92090f/array-perl-5-36-3-threaded.json",
+        "LEAN_BRIDGE_CORPUS_PERL": "/app/.toolchains/perl/5.36.3-threaded/bin/perl",
+        "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR": "2.36"
+      }
+    },
+    {
+      "name": "perl-5.36.3-unthreaded",
+      "profiles": [
+        "perl"
+      ],
+      "report": "array-perl-5-36-3-unthreaded.json",
+      "perl": {
+        "command": "/app/.toolchains/perl/5.36.3-unthreaded/bin/perl",
+        "version": "v5.36.3",
+        "useithreads": "undef",
+        "archname": "x86_64-linux"
+      },
+      "environment": {
+        "NO_COLOR": "1",
+        "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+        "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+        "LEAN_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MAKEFLAGS": "-j1",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES": "perl",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_REPORT": "/app/build/vo1439-generic-record-arrays-hosts-c92090f/array-perl-5-36-3-unthreaded.json",
+        "LEAN_BRIDGE_CORPUS_PERL": "/app/.toolchains/perl/5.36.3-unthreaded/bin/perl",
+        "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR": "2.36"
+      }
+    },
+    {
+      "name": "perl-5.38.2-threaded",
+      "profiles": [
+        "perl"
+      ],
+      "report": "array-perl-5-38-2-threaded.json",
+      "perl": {
+        "command": "/app/.toolchains/perl/5.38.2-threaded/bin/perl",
+        "version": "v5.38.2",
+        "useithreads": "define",
+        "archname": "x86_64-linux-thread-multi"
+      },
+      "environment": {
+        "NO_COLOR": "1",
+        "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+        "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+        "LEAN_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MAKEFLAGS": "-j1",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES": "perl",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_REPORT": "/app/build/vo1439-generic-record-arrays-hosts-c92090f/array-perl-5-38-2-threaded.json",
+        "LEAN_BRIDGE_CORPUS_PERL": "/app/.toolchains/perl/5.38.2-threaded/bin/perl",
+        "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR": "2.36"
+      }
+    },
+    {
+      "name": "perl-5.38.2-unthreaded",
+      "profiles": [
+        "perl"
+      ],
+      "report": "array-perl-5-38-2-unthreaded.json",
+      "perl": {
+        "command": "/app/.toolchains/perl/5.38.2-unthreaded/bin/perl",
+        "version": "v5.38.2",
+        "useithreads": "undef",
+        "archname": "x86_64-linux"
+      },
+      "environment": {
+        "NO_COLOR": "1",
+        "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+        "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+        "LEAN_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MAKEFLAGS": "-j1",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES": "perl",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_REPORT": "/app/build/vo1439-generic-record-arrays-hosts-c92090f/array-perl-5-38-2-unthreaded.json",
+        "LEAN_BRIDGE_CORPUS_PERL": "/app/.toolchains/perl/5.38.2-unthreaded/bin/perl",
+        "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR": "2.36"
+      }
+    }
+  ],
+  "unset": [
+    "FORCE_COLOR",
+    "other LEAN_BRIDGE_* variables"
+  ],
+  "node": "v22.23.3",
+  "lean": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)",
+  "glibc": "glibc 2.36",
+  "cc": "cc (Debian 12.2.0-14+deb12u1) 12.2.0",
+  "cxx": "c++ (Debian 12.2.0-14+deb12u1) 12.2.0",
+  "pkgConfig": "1.8.1",
+  "tools": {
+    "ruby": "ruby 3.3.12 (2026-07-16 revision 0581089df9) [x86_64-linux]",
+    "dotnet": "8.0.424",
+    "javac": "javac 22.0.2",
+    "php": "PHP 8.2.33 (cli) (built: Aug 10 2026 16:44:03) (NTS)",
+    "cargo": "cargo 1.90.0 (840b83a10 2025-07-30)"
+  },
+  "freeMiB": 4504,
+  "stopFloorMiB": 2048,
+  "scope": "Local ordinary-source installed Rust, Ruby, .NET, Java, Kotlin, PHP, WIT/WASI and Perl (all four pinned local ABIs) Array fields and results over alias-named generic records, two author roots, glibc 2.36 floors; not hosted or release-floor acceptance"
+}
