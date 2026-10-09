@@ -1,0 +1,9 @@
+gdb: warning: Couldn't determine a path for the index cache directory.
+warning: Error disabling address space randomization: Operation not permitted
+
+Program stopped.
+0x00007f49228f5b70 in ?? () from /lib64/ld-linux-x86-64.so.2
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[Inferior 1 (process 3483501) exited normally]
+exit 0

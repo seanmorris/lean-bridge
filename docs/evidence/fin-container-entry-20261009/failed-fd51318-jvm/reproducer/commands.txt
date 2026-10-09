@@ -1,0 +1,5 @@
+# All on CPU 2, 2026-10-09, cwd = this directory's original scratch copy.
+plain java (3 runs, exit 0):          env -i PATH=/usr/bin:/bin taskset -c 2 gdb -batch -q -nx -x r.py            -> log1.txt log2.txt log3.txt
+Lean runtime preloaded into GDB:      env -i PATH=/usr/bin:/bin LD_PRELOAD=/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2/lib/lean/libleanshared.so taskset -c 2 gdb -batch -q -nx -x r.py   -> pre.txt (status 134, terminate called recursively)
+preload set for the inferior only:    env -i PATH=/usr/bin:/bin taskset -c 2 gdb -batch -q -nx -iex "set environment LD_PRELOAD=/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2/lib/lean/libleanshared.so" -x r2.py -> iex.txt (status 0, libleanshared loaded in the inferior)
+single-threaded /bin/true, both ways: t.py -> t1.txt (GDB preloaded, status 0), t2.txt (inferior only, status 0): the abort needs a multithreaded inferior

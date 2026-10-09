@@ -1,0 +1,88 @@
+import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { execFileSync, spawn } from "node:child_process";
+import { closeSync, mkdirSync, openSync, readFileSync, statfsSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+
+const cwd = "/app/build/worktrees/container-entry-producer-fd51318";
+const revision = "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001";
+const output = "/app/build/vo1438-container-entry-fd51318-dotnet";
+const sha = bytes => createHash("sha256").update(bytes).digest("hex");
+const git = args => execFileSync("git", args, { cwd, encoding: "utf8", maxBuffer: 16 * 1024 * 1024 }).trim();
+const clean = () => {
+  assert.equal(git(["rev-parse", "HEAD"]), revision);
+  assert.equal(git(["status", "--porcelain", "--untracked-files=no"]), "");
+};
+const freeMiB = () => { const disk = statfsSync(cwd); return Math.floor(disk.bavail * disk.bsize / 1024 ** 2); };
+clean();
+assert.ok(freeMiB() >= 2048, "Need at least 2 GiB available before compiling");
+mkdirSync(output);
+const paths = ["tests/native-fin-containers.test.mjs", "src/adoption/test-profiles.mjs",
+  "tests/helpers/fin-container-entry-dispatch.mjs", "tests/helpers/fin-container-entry-probes.mjs",
+  "tests/helpers/fin-container-dispatch-gdb.mjs", "tests/helpers/fin-container-dispatch-gdb-extracted.mjs",
+  "tests/helpers/cpp-fin-container-entry-probe.mjs", "tests/fin-container-entry-dispatch.test.mjs", "tests/cpp-fin-container-entry.test.mjs",
+  "tests/helpers/fin-container-install.mjs", "tests/helpers/copied-fixture-install.mjs", "tests/helpers/fin-container-dispatch.mjs",
+  "tests/helpers/reviewed-fin-container-fixture.mjs", "tests/fixtures/onboarding/native-fin-containers/FinContainers.lean",
+  "tests/fixtures/fin-container-consumers/cpp.cpp", "tests/fixtures/fin-container-consumers/php-native.php",
+  "tests/fixtures/fin-container-consumers/dotnet.cs",
+  "src/build/native-model.mjs", "src/build/native-artifacts.mjs", "src/backends/native/runtime-broker.mjs"];
+const sources = Object.fromEntries(paths.map(path => {
+  const current = readFileSync(join(cwd, path));
+  const committed = execFileSync("git", ["show", `${revision}:${path}`], { cwd, maxBuffer: 16 * 1024 * 1024 });
+  assert.ok(current.equals(committed), path);
+  return [path, sha(current)];
+}));
+const lean = "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2";
+const selectedEnvironment = {
+  NO_COLOR: "1", LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS: "1",
+  LEAN_BRIDGE_FIN_CONTAINER_PROFILES: "dotnet", LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES: "dotnet",
+  LEAN_BRIDGE_FIN_CONTAINER_REPORT: join(output, "dotnet.json"),
+  LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_REPORT: join(output, "reviewed-dotnet.json"),
+  LEAN_BRIDGE_DOTNET: "/app/.toolchains/dotnet/dotnet", LEAN_BRIDGE_GDB: "/usr/bin/gdb",
+  LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR: "2.36", LEAN_BRIDGE_LEAN_PREFIX: lean,
+  LEAN_NUM_THREADS: "1", OMP_NUM_THREADS: "1", MAKEFLAGS: "-j1"
+};
+const environment = { ...Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith("LEAN_BRIDGE_") && key !== "FORCE_COLOR")), ...selectedEnvironment };
+const pattern = "^(relocated source-free native packages check Fin inside arrays, lists and options|independently reviewed native packages check container and alias Fin bounds after source-free installation)$";
+const args = ["-c", "3", process.execPath, "--test", "--test-concurrency=1", "--test-reporter=tap", `--test-name-pattern=${pattern}`, "tests/native-fin-containers.test.mjs"];
+const startedAt = new Date().toISOString();
+const queue = { revision, tree: git(["rev-parse", "HEAD^{tree}"]), parent: "4021820", rootDiffSha256: "1398208d603c685a1b3dd08e95f0a9608b609010a4ac57da35e90877bcf5af3a", cwd, startedAt, sources,
+  runnerSha256: sha(readFileSync(import.meta.filename)), command: ["/usr/bin/taskset", ...args],
+  environment: selectedEnvironment, unset: ["FORCE_COLOR", "other LEAN_BRIDGE_* variables"],
+  node: process.version, lean: execFileSync(join(lean, "bin/lean"), ["--version"], { encoding: "utf8" }).trim(),
+  dotnet: execFileSync("/app/.toolchains/dotnet/dotnet", ["--version"], { encoding: "utf8", env: { ...process.env, DOTNET_CLI_TELEMETRY_OPTOUT: "1", DOTNET_NOLOGO: "1" } }).trim(), gdb: execFileSync("/usr/bin/gdb", ["--version"], { encoding: "utf8" }).split("\n")[0], gdbSha256: sha(readFileSync("/usr/bin/gdb")), dotnetSha256: sha(readFileSync("/app/.toolchains/dotnet/dotnet")),
+
+  glibc: execFileSync("/usr/bin/getconf", ["GNU_LIBC_VERSION"], { encoding: "utf8" }).trim(),
+  freeMiB: freeMiB(), stopFloorMiB: 1024, scope: "Local installed dotnet container entry counters, ordinary and reviewed; not hosted release-floor acceptance" };
+writeFileSync(join(output, "queue.json"), JSON.stringify(queue, null, 2) + "\n", { flag: "wx" });
+const log = openSync(join(output, "run.tap"), "wx");
+let minimumFreeMiB = queue.freeMiB, stoppedForDisk = false, escalation;
+const child = spawn("/usr/bin/taskset", args, { cwd, env: environment, detached: true, stdio: ["ignore", log, log] });
+console.log(JSON.stringify({ startedAt, pid: child.pid, revision, freeMiB: minimumFreeMiB, output }));
+const monitor = setInterval(() => {
+  minimumFreeMiB = Math.min(minimumFreeMiB, freeMiB());
+  if (minimumFreeMiB < 1024 && !stoppedForDisk) {
+    stoppedForDisk = true;
+    process.kill(-child.pid, "SIGTERM");
+    escalation = setTimeout(() => { try { process.kill(-child.pid, "SIGKILL"); } catch {} }, 10000);
+  }
+}, 5000);
+const result = await new Promise(resolve => {
+  child.once("error", error => resolve({ code: null, signal: null, error: error.message }));
+  child.once("close", (code, signal) => resolve({ code, signal }));
+});
+clearInterval(monitor); clearTimeout(escalation); closeSync(log);
+minimumFreeMiB = Math.min(minimumFreeMiB, freeMiB());
+const end = { ...result, stoppedForDisk, minimumFreeMiB, endedAt: new Date().toISOString(), tapSha256: sha(readFileSync(join(output, "run.tap"))) };
+writeFileSync(join(output, "end.json"), JSON.stringify(end, null, 2) + "\n", { flag: "wx" });
+console.log(JSON.stringify(end));
+clean();
+assert.equal(stoppedForDisk, false);
+assert.equal(result.code, 0);
+for (const name of ["dotnet.json", "reviewed-dotnet.json"]) {
+  const bytes = readFileSync(join(output, name)), data = JSON.parse(bytes);
+  const reports = Object.fromEntries(data.reports.map(report => [report.profile, report]));
+  assert.deepEqual(Object.keys(reports).sort(), ["dotnet"]);
+  for (const profile of ["dotnet"]) assert.equal(reports[profile].dispatch.kind, "fin-container-entry-v1", `${name} ${profile}`);
+  console.log(JSON.stringify({ name, sha256: sha(bytes), reproducible: data.reproducible }));
+}

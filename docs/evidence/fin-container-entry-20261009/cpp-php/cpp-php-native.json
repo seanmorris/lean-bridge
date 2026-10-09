@@ -1,0 +1,1686 @@
+{
+  "archives": {
+    "archives/example-fincontainers-1.0.0-linux-x86_64.zip": "659598ab839c76702bd5c6e9ac53fa084284cd474aaff65fc30692f885f47508",
+    "archives/fincontainers-1.0.0-cpp.tar.gz": "0350193aa3692f2a47845ce1506becd0b5bbe5252f892336d7b489cfe5b144b6"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "72217be196722a1dcc9360c53564bcf9fab686f4468037202522fcca5241abbd",
+      "checks": 2039,
+      "compilerFreePath": true,
+      "consumerSha256": "0b1b4a5454c9d7eabc7b9eb81fb6e84a43f9b561a57ed2743e46d3db56542fec",
+      "dispatch": {
+        "columns": [
+          "l_FinContainers_mirrorAll",
+          "l_FinContainers_sumHuge",
+          "l_FinContainers_orDefault",
+          "l_FinContainers_present",
+          "l_FinContainers_label",
+          "lb_aba29fbaeffa9ce68e9e3ae2",
+          "lb_921d0c87bdee631623d4307c",
+          "lb_d6e2d2cd1dc6db4690d6dfb7",
+          "lb_947649dd882592d17d97bd16",
+          "lb_c17e7c3bb2285b12d5e64ccc"
+        ],
+        "componentId": "fincontainers@1.0.0",
+        "kind": "fin-container-entry-v1",
+        "libraries": {
+          "directory": "cpp/lib",
+          "files": {
+            "lib/libcomponent_3acdf22f1550490d7b06.so": {
+              "bytes": 65736,
+              "sha256": "9a0a98be48056cf243f74cda1d73f57f849e359f07fc6dda4e33e93a79042445"
+            },
+            "lib/libfincontainers.so": {
+              "bytes": 39760,
+              "sha256": "2e2e7508ce5809cb4d81ac6e578978fcc35a909ac92301abac19b57f259f3c9a"
+            },
+            "lib/liblean_bridge_native.so": {
+              "bytes": 21464,
+              "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+            },
+            "lib/libleanshared.so": {
+              "bytes": 158401256,
+              "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+            }
+          }
+        },
+        "measuredEntrypoints": [
+          "FinContainers.mirrorAll",
+          "FinContainers.sumHuge",
+          "FinContainers.orDefault",
+          "FinContainers.present",
+          "FinContainers.label"
+        ],
+        "public": {
+          "caller": "public C++ calls of lean_bridge::fincontainers mirror_all, sum_huge, or_default, present and label through fincontainers.hpp, the public C ABI and the checked runtime into the bundled C adapters",
+          "definers": [
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so"
+          ],
+          "executableSha256": "b9e933a2ce733d57176ba782ca9140b7a568388184636917063195a1d7cfcaef",
+          "instrument": "LD_PRELOAD",
+          "interposerSha256": "5a1df2a6775b77b51066a514468ab31f7b77171cebf069720dd1ab046653f96e",
+          "missingInstrumentRefused": true,
+          "observed": [
+            [
+              "start",
+              "ok",
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            [
+              "invalid-array-first",
+              "rejected:arg0:10",
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            [
+              "invalid-array-middle",
+              "rejected:arg0:10",
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            [
+              "invalid-array-last",
+              "rejected:arg0:10",
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            [
+              "invalid-list-wide",
+              "rejected:arg0:1180591620717411303424",
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            [
+              "invalid-option-present",
+              "rejected:arg0:1",
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            [
+              "invalid-nested-present",
+              "rejected:arg0:10",
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            [
+              "invalid-label-late",
+              "rejected:arg1:4",
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            [
+              "valid-array",
+              "ok:9,0",
+              [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            [
+              "valid-list-wide",
+              "ok:1180591620717411303424",
+              [
+                1,
+                1,
+                0,
+                0,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            ],
+            [
+              "valid-option-absent",
+              "ok:7",
+              [
+                1,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                0,
+                0
+              ]
+            ],
+            [
+              "valid-option-present",
+              "ok:0",
+              [
+                1,
+                1,
+                2,
+                0,
+                0,
+                1,
+                1,
+                2,
+                0,
+                0
+              ]
+            ],
+            [
+              "valid-nested-present",
+              "ok:1,9",
+              [
+                1,
+                1,
+                2,
+                1,
+                0,
+                1,
+                1,
+                2,
+                1,
+                0
+              ]
+            ],
+            [
+              "valid-label",
+              "ok:a:1,b:3",
+              [
+                1,
+                1,
+                2,
+                1,
+                1,
+                1,
+                1,
+                2,
+                1,
+                1
+              ]
+            ],
+            [
+              "recovery-invalid-array",
+              "rejected:arg0:10",
+              [
+                1,
+                1,
+                2,
+                1,
+                1,
+                1,
+                1,
+                2,
+                1,
+                1
+              ]
+            ],
+            [
+              "recovery-invalid-list",
+              "rejected:arg0:1180591620717411303424",
+              [
+                1,
+                1,
+                2,
+                1,
+                1,
+                1,
+                1,
+                2,
+                1,
+                1
+              ]
+            ],
+            [
+              "recovery-invalid-option",
+              "rejected:arg0:1",
+              [
+                1,
+                1,
+                2,
+                1,
+                1,
+                1,
+                1,
+                2,
+                1,
+                1
+              ]
+            ],
+            [
+              "recovery-invalid-nested",
+              "rejected:arg0:10",
+              [
+                1,
+                1,
+                2,
+                1,
+                1,
+                1,
+                1,
+                2,
+                1,
+                1
+              ]
+            ],
+            [
+              "recovery-invalid-label",
+              "rejected:arg1:4",
+              [
+                1,
+                1,
+                2,
+                1,
+                1,
+                1,
+                1,
+                2,
+                1,
+                1
+              ]
+            ],
+            [
+              "recovery-valid-array",
+              "ok:",
+              [
+                2,
+                1,
+                2,
+                1,
+                1,
+                2,
+                1,
+                2,
+                1,
+                1
+              ]
+            ],
+            [
+              "recovery-valid-list",
+              "ok:0",
+              [
+                2,
+                2,
+                2,
+                1,
+                1,
+                2,
+                2,
+                2,
+                1,
+                1
+              ]
+            ],
+            [
+              "recovery-valid-option",
+              "ok:7",
+              [
+                2,
+                2,
+                3,
+                1,
+                1,
+                2,
+                2,
+                3,
+                1,
+                1
+              ]
+            ],
+            [
+              "recovery-valid-nested",
+              "ok:",
+              [
+                2,
+                2,
+                3,
+                2,
+                1,
+                2,
+                2,
+                3,
+                2,
+                1
+              ]
+            ],
+            [
+              "recovery-valid-label",
+              "ok:a:0",
+              [
+                2,
+                2,
+                3,
+                2,
+                2,
+                2,
+                2,
+                3,
+                2,
+                2
+              ]
+            ]
+          ],
+          "packageReceiptSha256": "25b0266efb66d139c075a1c033a6bd06b8c795b4b058e87a4ddf114be10927ed",
+          "parameterNames": {
+            "label": [
+              "arg0",
+              "arg1"
+            ],
+            "mirrorAll": [
+              "arg0"
+            ],
+            "orDefault": [
+              "arg0"
+            ],
+            "present": [
+              "arg0"
+            ],
+            "sumHuge": [
+              "arg0"
+            ]
+          },
+          "probeSha256": "afbeffd65a4e81cc00c7b584744ae58f8ca03eff88fd406545c7a13722c89b58",
+          "repeatedColdProcess": true
+        },
+        "rawAdapter": {
+          "caller": "C raw-adapter probe of the same verified installed libraries; not a host-language call",
+          "definers": [
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so"
+          ],
+          "instrument": "LD_PRELOAD",
+          "interposerSha256": "5a1df2a6775b77b51066a514468ab31f7b77171cebf069720dd1ab046653f96e",
+          "missingInstrumentRefused": true,
+          "observed": [
+            [
+              "start",
+              "ok",
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            [
+              "raw-invalid-mirrorAll",
+              "none",
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            [
+              "raw-invalid-sumHuge",
+              "none",
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            ],
+            [
+              "raw-invalid-orDefault",
+              "none",
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                0,
+                0
+              ]
+            ],
+            [
+              "raw-invalid-present",
+              "none",
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                0
+              ]
+            ],
+            [
+              "raw-invalid-label",
+              "none",
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1
+              ]
+            ],
+            [
+              "raw-valid-mirrorAll",
+              "some",
+              [
+                1,
+                0,
+                0,
+                0,
+                0,
+                2,
+                1,
+                1,
+                1,
+                1
+              ]
+            ],
+            [
+              "raw-valid-sumHuge",
+              "some",
+              [
+                1,
+                1,
+                0,
+                0,
+                0,
+                2,
+                2,
+                1,
+                1,
+                1
+              ]
+            ],
+            [
+              "raw-valid-orDefault",
+              "some",
+              [
+                1,
+                1,
+                1,
+                0,
+                0,
+                2,
+                2,
+                2,
+                1,
+                1
+              ]
+            ],
+            [
+              "raw-valid-present",
+              "some",
+              [
+                1,
+                1,
+                1,
+                1,
+                0,
+                2,
+                2,
+                2,
+                2,
+                1
+              ]
+            ],
+            [
+              "raw-valid-label",
+              "some",
+              [
+                1,
+                1,
+                1,
+                1,
+                1,
+                2,
+                2,
+                2,
+                2,
+                2
+              ]
+            ]
+          ],
+          "probeSha256": "45980d909a6245e64762f781acb555298f5f291f258228273dae58c02edc5356"
+        }
+      },
+      "modelSha256": "528f5eb6677eb9dd2d16e81d89b258b58dd2ce57e00a32898fc06c1f3f0e31eb",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51779689,
+              "path": "archives/fincontainers-1.0.0-cpp.tar.gz",
+              "sha256": "0350193aa3692f2a47845ce1506becd0b5bbe5252f892336d7b489cfe5b144b6"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "fincontainers",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "cpp",
+      "receiptSha256": "bcc2997fb7005849d5c044be29963926cb1253767a1acb530257225ddb7f3966",
+      "refinements": {
+        "FinContainers.countNone": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "0",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.flatten": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "10",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "list"
+              }
+            ],
+            "kind": "option"
+          }
+        },
+        "FinContainers.label": {
+          "parameters": [
+            null,
+            {
+              "arguments": [
+                {
+                  "bound": "4",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.mirrorAll": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.orDefault": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "1",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.present": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.sumHuge": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "1180591620717411303424",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.wrapAll": {
+          "parameters": [
+            null
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "7",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        }
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "d979898658ad6135cb68f111d324f266d296df7933070a71b93a614aa2067a3a"
+    },
+    {
+      "bindingIrSha256": "72217be196722a1dcc9360c53564bcf9fab686f4468037202522fcca5241abbd",
+      "checks": 2026,
+      "compilerFreePath": true,
+      "consumerSha256": "e75545085f2ca4da792ec6a9ed5a2198bef9745116bbf6840886f5749b9baac1",
+      "dispatch": {
+        "columns": [
+          "l_FinContainers_mirrorAll",
+          "l_FinContainers_sumHuge",
+          "l_FinContainers_orDefault",
+          "l_FinContainers_present",
+          "l_FinContainers_label",
+          "lb_aba29fbaeffa9ce68e9e3ae2",
+          "lb_921d0c87bdee631623d4307c",
+          "lb_d6e2d2cd1dc6db4690d6dfb7",
+          "lb_947649dd882592d17d97bd16",
+          "lb_c17e7c3bb2285b12d5e64ccc"
+        ],
+        "componentId": "fincontainers@1.0.0",
+        "kind": "fin-container-entry-v1",
+        "libraries": {
+          "directory": "php-native/vendor/example/fincontainers/native/linux-x64",
+          "handoff": "handoff",
+          "sha256": {
+            "libcomponent_3acdf22f1550490d7b06.so": "9a0a98be48056cf243f74cda1d73f57f849e359f07fc6dda4e33e93a79042445",
+            "libfincontainers.so": "2e2e7508ce5809cb4d81ac6e578978fcc35a909ac92301abac19b57f259f3c9a",
+            "liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+            "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+          }
+        },
+        "measuredEntrypoints": [
+          "FinContainers.mirrorAll",
+          "FinContainers.sumHuge",
+          "FinContainers.orDefault",
+          "FinContainers.present",
+          "FinContainers.label"
+        ],
+        "public": {
+          "caller": "public PHP functions LeanFincontainers\\mirror_all, sum_huge, or_default, present and label through Composer autoload and PHP FFI into the bundled C adapters",
+          "definers": [
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so"
+          ],
+          "instrument": "LD_PRELOAD",
+          "interposerSha256": "5a1df2a6775b77b51066a514468ab31f7b77171cebf069720dd1ab046653f96e",
+          "missingInstrumentRefused": true,
+          "observed": [
+            [
+              "start",
+              "ok",
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            [
+              "invalid-array-first",
+              "rejected:arg0:10",
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            [
+              "invalid-array-middle",
+              "rejected:arg0:10",
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            [
+              "invalid-array-last",
+              "rejected:arg0:10",
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            [
+              "invalid-list-wide",
+              "rejected:arg0:1180591620717411303424",
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            [
+              "invalid-option-present",
+              "rejected:arg0:1",
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            [
+              "invalid-nested-present",
+              "rejected:arg0:10",
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            [
+              "invalid-label-late",
+              "rejected:arg1:4",
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            [
+              "valid-array",
+              "ok:9,0",
+              [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            [
+              "valid-list-wide",
+              "ok:1180591620717411303424",
+              [
+                1,
+                1,
+                0,
+                0,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            ],
+            [
+              "valid-option-absent",
+              "ok:7",
+              [
+                1,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                0,
+                0
+              ]
+            ],
+            [
+              "valid-option-present",
+              "ok:0",
+              [
+                1,
+                1,
+                2,
+                0,
+                0,
+                1,
+                1,
+                2,
+                0,
+                0
+              ]
+            ],
+            [
+              "valid-nested-present",
+              "ok:1,9",
+              [
+                1,
+                1,
+                2,
+                1,
+                0,
+                1,
+                1,
+                2,
+                1,
+                0
+              ]
+            ],
+            [
+              "valid-label",
+              "ok:a:1,b:3",
+              [
+                1,
+                1,
+                2,
+                1,
+                1,
+                1,
+                1,
+                2,
+                1,
+                1
+              ]
+            ],
+            [
+              "recovery-invalid-array",
+              "rejected:arg0:10",
+              [
+                1,
+                1,
+                2,
+                1,
+                1,
+                1,
+                1,
+                2,
+                1,
+                1
+              ]
+            ],
+            [
+              "recovery-invalid-list",
+              "rejected:arg0:1180591620717411303424",
+              [
+                1,
+                1,
+                2,
+                1,
+                1,
+                1,
+                1,
+                2,
+                1,
+                1
+              ]
+            ],
+            [
+              "recovery-invalid-option",
+              "rejected:arg0:1",
+              [
+                1,
+                1,
+                2,
+                1,
+                1,
+                1,
+                1,
+                2,
+                1,
+                1
+              ]
+            ],
+            [
+              "recovery-invalid-nested",
+              "rejected:arg0:10",
+              [
+                1,
+                1,
+                2,
+                1,
+                1,
+                1,
+                1,
+                2,
+                1,
+                1
+              ]
+            ],
+            [
+              "recovery-invalid-label",
+              "rejected:arg1:4",
+              [
+                1,
+                1,
+                2,
+                1,
+                1,
+                1,
+                1,
+                2,
+                1,
+                1
+              ]
+            ],
+            [
+              "recovery-valid-array",
+              "ok:",
+              [
+                2,
+                1,
+                2,
+                1,
+                1,
+                2,
+                1,
+                2,
+                1,
+                1
+              ]
+            ],
+            [
+              "recovery-valid-list",
+              "ok:0",
+              [
+                2,
+                2,
+                2,
+                1,
+                1,
+                2,
+                2,
+                2,
+                1,
+                1
+              ]
+            ],
+            [
+              "recovery-valid-option",
+              "ok:7",
+              [
+                2,
+                2,
+                3,
+                1,
+                1,
+                2,
+                2,
+                3,
+                1,
+                1
+              ]
+            ],
+            [
+              "recovery-valid-nested",
+              "ok:",
+              [
+                2,
+                2,
+                3,
+                2,
+                1,
+                2,
+                2,
+                3,
+                2,
+                1
+              ]
+            ],
+            [
+              "recovery-valid-label",
+              "ok:a:0",
+              [
+                2,
+                2,
+                3,
+                2,
+                2,
+                2,
+                2,
+                3,
+                2,
+                2
+              ]
+            ]
+          ],
+          "probeSha256": "5dba33303f0a1bb49e1cbbcf8a0ad562456441f183a0bc37ff0aada220bfba6b"
+        },
+        "rawAdapter": {
+          "caller": "C raw-adapter probe of the same verified installed libraries; not a host-language call",
+          "definers": [
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so",
+            "libcomponent_3acdf22f1550490d7b06.so"
+          ],
+          "instrument": "LD_PRELOAD",
+          "interposerSha256": "5a1df2a6775b77b51066a514468ab31f7b77171cebf069720dd1ab046653f96e",
+          "missingInstrumentRefused": true,
+          "observed": [
+            [
+              "start",
+              "ok",
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            [
+              "raw-invalid-mirrorAll",
+              "none",
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            [
+              "raw-invalid-sumHuge",
+              "none",
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0
+              ]
+            ],
+            [
+              "raw-invalid-orDefault",
+              "none",
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                0,
+                0
+              ]
+            ],
+            [
+              "raw-invalid-present",
+              "none",
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                0
+              ]
+            ],
+            [
+              "raw-invalid-label",
+              "none",
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1
+              ]
+            ],
+            [
+              "raw-valid-mirrorAll",
+              "some",
+              [
+                1,
+                0,
+                0,
+                0,
+                0,
+                2,
+                1,
+                1,
+                1,
+                1
+              ]
+            ],
+            [
+              "raw-valid-sumHuge",
+              "some",
+              [
+                1,
+                1,
+                0,
+                0,
+                0,
+                2,
+                2,
+                1,
+                1,
+                1
+              ]
+            ],
+            [
+              "raw-valid-orDefault",
+              "some",
+              [
+                1,
+                1,
+                1,
+                0,
+                0,
+                2,
+                2,
+                2,
+                1,
+                1
+              ]
+            ],
+            [
+              "raw-valid-present",
+              "some",
+              [
+                1,
+                1,
+                1,
+                1,
+                0,
+                2,
+                2,
+                2,
+                2,
+                1
+              ]
+            ],
+            [
+              "raw-valid-label",
+              "some",
+              [
+                1,
+                1,
+                1,
+                1,
+                1,
+                2,
+                2,
+                2,
+                2,
+                2
+              ]
+            ]
+          ],
+          "probeSha256": "45980d909a6245e64762f781acb555298f5f291f258228273dae58c02edc5356"
+        }
+      },
+      "modelSha256": "528f5eb6677eb9dd2d16e81d89b258b58dd2ce57e00a32898fc06c1f3f0e31eb",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51385753,
+              "path": "archives/example-fincontainers-1.0.0-linux-x86_64.zip",
+              "sha256": "659598ab839c76702bd5c6e9ac53fa084284cd474aaff65fc30692f885f47508"
+            }
+          ],
+          "ecosystem": "composer",
+          "name": "example/fincontainers",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "php-native",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "php-native",
+      "receiptSha256": "bcc2997fb7005849d5c044be29963926cb1253767a1acb530257225ddb7f3966",
+      "refinements": {
+        "FinContainers.countNone": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "0",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.flatten": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "10",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "list"
+              }
+            ],
+            "kind": "option"
+          }
+        },
+        "FinContainers.label": {
+          "parameters": [
+            null,
+            {
+              "arguments": [
+                {
+                  "bound": "4",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.mirrorAll": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.orDefault": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "1",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.present": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.sumHuge": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "1180591620717411303424",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.wrapAll": {
+          "parameters": [
+            null
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "7",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        }
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "d979898658ad6135cb68f111d324f266d296df7933070a71b93a614aa2067a3a"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

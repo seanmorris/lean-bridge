@@ -1,0 +1,48 @@
+TAP version 13
+# Subtest: relocated source-free native packages check Fin inside arrays, lists and options
+not ok 1 - relocated source-free native packages check Fin inside arrays, lists and options
+  ---
+  duration_ms: 81939.138063
+  type: 'test'
+  location: '/app/build/worktrees/container-entry-producer-fd51318/tests/native-fin-containers.test.mjs:298:1'
+  failureType: 'testCodeFailure'
+  error: `/usr/bin/gdb exited with status null: {"command":"/usr/bin/gdb","args":["-batch","-q","-nx","-x","/tmp/lean-bridge-fin-container-consumer-iozeBh/java-entry/gdb/fin-container-extracted.gdb.py"],"stderr":"/usr/bin/gdb: warning: Couldn't determine a path for the index cache directory.\\nterminate called after throwing an instance of 'gdb_exception_error'\\nterminate called recursively\\n\\n\\nFatal signal: Aborted\\n----- Backtrace -----\\nterminate called recursively\\n\\n\\nFatal signal: Aborted\\n----- Backtrace -----\\n0x558a3adc140e ???\\n0x558a3aeca601 ???\\n0x7f741c1c604f ???\\n0x7f741c214eec ???\\n0x7f741c1c5fb1 raise\\n0x7f741c1b0471 abort\\n0x7f741c516e99 _ZN9__gnu_cxx27__verbose_terminate_handlerEv\\n0x7f741c514e19 ???\\n0x7f741c513e88 ???\\n0x7f741c5145a5 __gxx_personality_v0\\n0x7f742660433c ???\\n0x7f7426604127 _Unwind_RaiseException\\n0x7f741c383468 _Unwind_Resume_or_Rethrow\\n0x7f741c51511d __cxa_rethrow\\n0x7f741c509925 ???\\n0x7f741c514e19 ???\\n0x7f741c513e88 ???\\n0x7f741c5145a5 __gxx_personality_v0\\n0x7f742660433c ???\\n0x7f7426604127 _Unwind_RaiseException\\n0x7f741c5150ca __cxa_throw\\n0x558a3ad24311 ???\\n0x558a3b13bcd3 ???\\n0x558a3b2b1bbb ???\\n0x558a3ade84fe ???\\n0x558a3ad3e38f ???\\n0x558a3ad41519 ???\\n0x558a3ad58242 ???\\n0x558a3b0c53e5 ???\\n0x558a3afc5308 ???\\n0x558a3ae53332 ???\\n0x558a3ae5348a ???\\n0x7f741c218056 ???\\n0x558a3b2bbe3c ???\\n0x7f741c5404a2 ???\\n0x7f741c2131f4 ???\\n0x7f741c292b4f __clone\\n0xffffffffffffffff ???\\n---------------------\\nA fatal error internal to GDB has been detected, further\\ndebugging is not possible.  GDB will now terminate.\\n\\nThis is a bug, please report it.  For instructions, see:\\n<https://www.gnu.org/software/gdb/bugs/>.\\n\\n","stdout":"\\nProgram stopped.\\n0x00007fb05046ab70 in ?? () from /lib64/ld-linux-x86-64.so.2\\n[Thread debugging using libthread_db enabled]\\nUsing host libthread_db library \\"/lib/x86_64-linux-gnu/libthread_db.so.1\\".\\n[New Thread 0x7fb0469156c0 (LWP 3482137)]\\n"}`
+  code: 'build-command-failed'
+  name: 'CanonicalBuildError'
+  stack: |-
+    ChildProcess.<anonymous> (file:///app/build/worktrees/container-entry-producer-fd51318/src/build/process-runner.mjs:77:21)
+    Object.onceWrapper (node:events:634:26)
+    ChildProcess.emit (node:events:519:28)
+    maybeClose (node:internal/child_process:1101:16)
+    ChildProcess._handle.onexit (node:internal/child_process:304:5)
+  ...
+# build 0: java, kotlin
+# installing and checking java
+# Subtest: independently reviewed native packages check container and alias Fin bounds after source-free installation
+not ok 2 - independently reviewed native packages check container and alias Fin bounds after source-free installation
+  ---
+  duration_ms: 81584.127705
+  type: 'test'
+  location: '/app/build/worktrees/container-entry-producer-fd51318/tests/native-fin-containers.test.mjs:300:1'
+  failureType: 'testCodeFailure'
+  error: `/usr/bin/gdb exited with status null: {"command":"/usr/bin/gdb","args":["-batch","-q","-nx","-x","/tmp/lean-bridge-fin-container-consumer-r7lwsC/java-entry/gdb/fin-container-extracted.gdb.py"],"stderr":"/usr/bin/gdb: warning: Couldn't determine a path for the index cache directory.\\nterminate called after throwing an instance of 'gdb_exception_error'\\nterminate called recursively\\n\\n\\nFatal signal: Aborted\\n----- Backtrace -----\\nterminate called recursively\\n\\n\\nFatal signal: Aborted\\n----- Backtrace -----\\n0x5589dc24140e ???\\n0x5589dc34a601 ???\\n0x7fd4097bd04f ???\\n0x7fd40980beec ???\\n0x7fd4097bcfb1 raise\\n0x7fd4097a7471 abort\\n0x7fd409b0de99 _ZN9__gnu_cxx27__verbose_terminate_handlerEv\\n0x7fd409b0be19 ???\\n0x7fd409b0ae88 ???\\n0x7fd409b0b5a5 __gxx_personality_v0\\n0x7fd413c0433c ???\\n0x7fd413c04127 _Unwind_RaiseException\\n0x7fd40997a468 _Unwind_Resume_or_Rethrow\\n0x7fd409b0c11d __cxa_rethrow\\n0x7fd409b00925 ???\\n0x7fd409b0be19 ???\\n0x7fd409b0ae88 ???\\n0x7fd409b0b5a5 __gxx_personality_v0\\n0x7fd413c0433c ???\\n0x7fd413c04127 _Unwind_RaiseException\\n0x7fd409b0c0ca __cxa_throw\\n0x5589dc1a4311 ???\\n0x5589dc5bbcd3 ???\\n0x5589dc731bbb ???\\n0x5589dc2684fe ???\\n0x5589dc1be38f ???\\n0x5589dc1c1519 ???\\n0x5589dc1d8242 ???\\n0x5589dc5453e5 ???\\n0x5589dc445308 ???\\n0x5589dc2d3332 ???\\n0x5589dc2d348a ???\\n0x7fd40980f056 ???\\n0x5589dc73be3c ???\\n0x7fd409b374a2 ???\\n0x7fd40980a1f4 ???\\n0x7fd409889b4f __clone\\n0xffffffffffffffff ???\\n---------------------\\nA fatal error internal to GDB has been detected, further\\ndebugging is not possible.  GDB will now terminate.\\n\\nThis is a bug, please report it.  For instructions, see:\\n<https://www.gnu.org/software/gdb/bugs/>.\\n\\n","stdout":"\\nProgram stopped.\\n0x00007f65c3762b70 in ?? () from /lib64/ld-linux-x86-64.so.2\\n[Thread debugging using libthread_db enabled]\\nUsing host libthread_db library \\"/lib/x86_64-linux-gnu/libthread_db.so.1\\".\\n[New Thread 0x7f65b9b3d6c0 (LWP 3482845)]\\n"}`
+  code: 'build-command-failed'
+  name: 'CanonicalBuildError'
+  stack: |-
+    ChildProcess.<anonymous> (file:///app/build/worktrees/container-entry-producer-fd51318/src/build/process-runner.mjs:77:21)
+    Object.onceWrapper (node:events:634:26)
+    ChildProcess.emit (node:events:519:28)
+    maybeClose (node:internal/child_process:1101:16)
+    ChildProcess._handle.onexit (node:internal/child_process:304:5)
+  ...
+# build 0: java, kotlin
+# installing and checking java
+1..2
+# tests 2
+# suites 0
+# pass 0
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 164076.963146

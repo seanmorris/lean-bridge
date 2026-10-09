@@ -1,0 +1,1199 @@
+{
+  "schemaVersion": 1,
+  "kind": "fin-container-entry-acceptance",
+  "revisions": [
+    "e91543d48c316ad3d5abd065c126838b5f0126a5",
+    "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+    "04dc924f707b1ea85acb7792091fec5a0366bb25"
+  ],
+  "attempts": [
+    {
+      "id": "failed-e91543d-cpp-php",
+      "outcome": "failed",
+      "revision": "e91543d48c316ad3d5abd065c126838b5f0126a5",
+      "profiles": [
+        "cpp",
+        "php-native"
+      ]
+    },
+    {
+      "id": "cpp-php",
+      "outcome": "passed",
+      "revision": "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+      "profiles": [
+        "cpp",
+        "php-native"
+      ]
+    },
+    {
+      "id": "ruby-wit",
+      "outcome": "passed",
+      "revision": "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+      "profiles": [
+        "ruby",
+        "wit-wasi"
+      ]
+    },
+    {
+      "id": "dotnet",
+      "outcome": "passed",
+      "revision": "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+      "profiles": [
+        "dotnet"
+      ]
+    },
+    {
+      "id": "failed-fd51318-jvm",
+      "outcome": "failed",
+      "revision": "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+      "profiles": [
+        "java",
+        "kotlin"
+      ]
+    },
+    {
+      "id": "jvm",
+      "outcome": "passed",
+      "revision": "04dc924f707b1ea85acb7792091fec5a0366bb25",
+      "profiles": [
+        "java",
+        "kotlin"
+      ]
+    }
+  ],
+  "scope": {
+    "hosts": [
+      "cpp",
+      "php-native",
+      "wit-wasi",
+      "ruby",
+      "dotnet",
+      "java",
+      "kotlin"
+    ],
+    "routes": [
+      "ordinary-source",
+      "reviewed-ir"
+    ],
+    "measuredEntrypoints": [
+      "FinContainers.mirrorAll",
+      "FinContainers.sumHuge",
+      "FinContainers.orDefault",
+      "FinContainers.present",
+      "FinContainers.label"
+    ],
+    "publicRows": 24,
+    "rawAdapterRows": 11,
+    "instruments": {
+      "LD_PRELOAD": [
+        "cpp",
+        "php-native",
+        "wit-wasi"
+      ],
+      "gdb-breakpoints": [
+        "ruby",
+        "dotnet"
+      ],
+      "gdb-breakpoints-extracted-root": [
+        "java",
+        "kotlin"
+      ]
+    },
+    "rawAdapterCaller": "separate C probe of each host's verified installed libraries; never a host-language call",
+    "localGlibc": "2.36",
+    "hostedCi": false,
+    "installedTreeRelocation": false,
+    "supportPromotion": false,
+    "retained": "Reports, transcripts, queues, runners and Git source snapshots; package archives, installed trees, models and binaries are identified by digest only",
+    "failedAttempts": [
+      {
+        "id": "failed-e91543d-cpp-php",
+        "revision": "e91543d48c316ad3d5abd065c126838b5f0126a5",
+        "reason": "the raw C probe looked up the Wasm adapter-module initializer, so both routes refused with \"component initializer is not visible\" before any raw call"
+      },
+      {
+        "id": "failed-fd51318-jvm",
+        "revision": "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+        "reason": "the preloaded-copies control put the real Lean libraries into GDB's own environment, so GDB 13.1 aborted on its first internal exception while Java started on both routes; Kotlin never ran"
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/failed-e91543d-cpp-php/queue.json",
+      "originalPath": "build/vo1438-container-entry-e91543d/queue.json",
+      "sha256": "35af60b6b44cbd593fa7e178704fc9741fa1fcf61fe2d4a399a9853ff923ab84",
+      "bytes": 4269
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/failed-e91543d-cpp-php/end.json",
+      "originalPath": "build/vo1438-container-entry-e91543d/end.json",
+      "sha256": "324bc8cd7601dfa0c4aea337494ab28c1fe394322f6d04f3b521343a17cbb67e",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/failed-e91543d-cpp-php/run.tap",
+      "originalPath": "build/vo1438-container-entry-e91543d/run.tap",
+      "sha256": "6bf628e02b018e9f7b6330a74bda34c7969ff7c7fc7a2ea0a46c1fa33d52df8c",
+      "bytes": 2372
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/failed-e91543d-cpp-php/runner.mjs.txt",
+      "originalPath": "build/run-vo1438-container-entry-e91543d.mjs",
+      "sha256": "94c799ec4d77aff8b268c30d51efac7778efeffa003b6638d0cc6598127ec184",
+      "bytes": 6297
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/failed-e91543d-cpp-php/runner-output.txt",
+      "originalPath": "build/vo1438-container-entry-e91543d.runner.log",
+      "sha256": "d84b09f1379aada8ff6139500586f2ca0679756bf93a59d00bcc521ae4288c24",
+      "bytes": 892
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/cpp-php/queue.json",
+      "originalPath": "build/vo1438-container-entry-fd51318/queue.json",
+      "sha256": "4a7fc2292747528ea854e9635920dca63dd7c24983479345190ffe3c7bae46c7",
+      "bytes": 4269
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/cpp-php/end.json",
+      "originalPath": "build/vo1438-container-entry-fd51318/end.json",
+      "sha256": "d34614b09844931523e09278a4dff73a860fcefdc7b6112a1a538bdc5c927b69",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/cpp-php/run.tap",
+      "originalPath": "build/vo1438-container-entry-fd51318/run.tap",
+      "sha256": "8c1eb729259d396d3a87a34339290b63137b7d7093875a84bb153eab93837090",
+      "bytes": 887
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/cpp-php/cpp-php-native.json",
+      "originalPath": "build/vo1438-container-entry-fd51318/cpp-php-native.json",
+      "sha256": "e1b9de0a2f17d426b14140ebf55356fc2aae6dad656b91914d82b837b9991b78",
+      "bytes": 39782
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/cpp-php/reviewed-cpp-php-native.json",
+      "originalPath": "build/vo1438-container-entry-fd51318/reviewed-cpp-php-native.json",
+      "sha256": "c9914a37ce4cf4294e36346ea47b49534481103e51caa7d0a7d1ed9c19543777",
+      "bytes": 39970
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/cpp-php/runner.mjs.txt",
+      "originalPath": "build/run-vo1438-container-entry-fd51318.mjs",
+      "sha256": "d642a38ab273476ff70adb258ee11ef4a216bd3c9dbe1d576a170f693165d092",
+      "bytes": 6297
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/cpp-php/runner-output.txt",
+      "originalPath": "build/vo1438-container-entry-fd51318.runner.log",
+      "sha256": "6e828b6a323df3706971ba3324f5b249270681912a58f6769e43879fbee270b8",
+      "bytes": 626
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/ruby-wit/queue.json",
+      "originalPath": "build/vo1438-container-entry-fd51318-ruby-wit/queue.json",
+      "sha256": "9369d0a25b77d0401af2dd2a01b8fd409954fc91cf7b613e519b62db6b074ce9",
+      "bytes": 5114
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/ruby-wit/end.json",
+      "originalPath": "build/vo1438-container-entry-fd51318-ruby-wit/end.json",
+      "sha256": "ab6de08eadbd5124a28ec88f5d3fc5a85a0cafa1275f996dba11dc48235da7cb",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/ruby-wit/run.tap",
+      "originalPath": "build/vo1438-container-entry-fd51318-ruby-wit/run.tap",
+      "sha256": "aabdb606475ded6c6876113f8b62c091560bbc9f4d18964c45f5ca093a390091",
+      "bytes": 882
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/ruby-wit/ruby-wit-wasi.json",
+      "originalPath": "build/vo1438-container-entry-fd51318-ruby-wit/ruby-wit-wasi.json",
+      "sha256": "1f82cd21c4bad984d1fdef5db02b7c9fd275672bf1e4c2eed85291851552b863",
+      "bytes": 41458
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/ruby-wit/reviewed-ruby-wit-wasi.json",
+      "originalPath": "build/vo1438-container-entry-fd51318-ruby-wit/reviewed-ruby-wit-wasi.json",
+      "sha256": "335d17966bd9509268e45cc00f3b44b353aed5600cb9a52daa355986f1ac271b",
+      "bytes": 41646
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/ruby-wit/runner.mjs.txt",
+      "originalPath": "build/run-vo1438-container-entry-fd51318-ruby-wit.mjs",
+      "sha256": "fc0c54535a9e814aa000d359e3e61b2f441641b48362be1855b49160284a7fc3",
+      "bytes": 7031
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/ruby-wit/runner-output.txt",
+      "originalPath": "build/vo1438-container-entry-fd51318-ruby-wit.runner.log",
+      "sha256": "85839e9f112f6544babbbf8e10cab750ab759f2e13077d51c75db260c6639a71",
+      "bytes": 633
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/dotnet/queue.json",
+      "originalPath": "build/vo1438-container-entry-fd51318-dotnet/queue.json",
+      "sha256": "63f44a6f39c5d86977aa973abcbe3a4601d83710b651921804b64d8caf1d7e6a",
+      "bytes": 4630
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/dotnet/end.json",
+      "originalPath": "build/vo1438-container-entry-fd51318-dotnet/end.json",
+      "sha256": "7aa1e31f3569ee046b151d6ae1240708e3bf1ac313a2011d151b1fd32962bed1",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/dotnet/run.tap",
+      "originalPath": "build/vo1438-container-entry-fd51318-dotnet/run.tap",
+      "sha256": "cbbe92f3d74a2a68753937718db9135c30c11531e1943acaf05201902b0ca820",
+      "bytes": 783
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/dotnet/dotnet.json",
+      "originalPath": "build/vo1438-container-entry-fd51318-dotnet/dotnet.json",
+      "sha256": "b8021203060d87586ebfb85beb072a8a63b1a88fa402e126f906d915c71db42f",
+      "bytes": 21947
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/dotnet/reviewed-dotnet.json",
+      "originalPath": "build/vo1438-container-entry-fd51318-dotnet/reviewed-dotnet.json",
+      "sha256": "2a87d5764e9e1338ff347296e9a331b583c00c2835ab01a0d6e3b9b4432b3adb",
+      "bytes": 22041
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/dotnet/runner.mjs.txt",
+      "originalPath": "build/run-vo1438-container-entry-fd51318-dotnet.mjs",
+      "sha256": "161320e615b523380d1bd6c28f12606ed41ccc5205b575b7e8f5e1653d22d9c7",
+      "bytes": 6665
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/dotnet/runner-output.txt",
+      "originalPath": "build/vo1438-container-entry-fd51318-dotnet.runner.log",
+      "sha256": "87e9919b8052a8b36f79d1f20a4c3b0fd948dfff32709bf2b25fc66a98699f43",
+      "bytes": 617
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/failed-fd51318-jvm/queue.json",
+      "originalPath": "build/vo1438-container-entry-fd51318-jvm/queue.json",
+      "sha256": "5a4a39decf4921fbbbf89e39b0d5b8c41d2292252d41551db4ce24b01c8512f2",
+      "bytes": 4998
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/failed-fd51318-jvm/end.json",
+      "originalPath": "build/vo1438-container-entry-fd51318-jvm/end.json",
+      "sha256": "7f440e983dfa45a5b97a6cfb61b497051890880e9d9aadb20d7316dce29ede89",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/failed-fd51318-jvm/run.tap",
+      "originalPath": "build/vo1438-container-entry-fd51318-jvm/run.tap",
+      "sha256": "c9c223f6255676b08f5162912b4758eb4a91aa14392387d160edc4dce1785717",
+      "bytes": 5904
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/failed-fd51318-jvm/runner.mjs.txt",
+      "originalPath": "build/run-vo1438-container-entry-fd51318-jvm.mjs",
+      "sha256": "cd225293120544a739e23ded8ccd8ad196ad2806c0437ad8edba18db260e8d69",
+      "bytes": 7013
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/failed-fd51318-jvm/runner-output.txt",
+      "originalPath": "build/vo1438-container-entry-fd51318-jvm.runner.log",
+      "sha256": "458034ec9a196d78d6a5bf97c1af6a805072e771d1da767663cf368f966e4e38",
+      "bytes": 900
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/failed-fd51318-jvm/reproducer/SHA256SUMS",
+      "originalPath": "build/vo1438-jvm-gdb-preload-repro/SHA256SUMS",
+      "sha256": "8a7ee27668fd59bac20c9d8ed63054566fa6ccf2578ebdcf2fb2a48ff0942db7",
+      "bytes": 888
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/failed-fd51318-jvm/reproducer/commands.txt",
+      "originalPath": "build/vo1438-jvm-gdb-preload-repro/commands.txt",
+      "sha256": "006e3834328c17aef78241e06822f0922eff1fa00c3edb5d7e1620d326c3670e",
+      "bytes": 915
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/failed-fd51318-jvm/reproducer/iex.txt",
+      "originalPath": "build/vo1438-jvm-gdb-preload-repro/iex.txt",
+      "sha256": "a65c02b6986d3b1086880627f7c1ec3d0f80bd983aa81bab34bc250967d25ddb",
+      "bytes": 1467
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/failed-fd51318-jvm/reproducer/log1.txt",
+      "originalPath": "build/vo1438-jvm-gdb-preload-repro/log1.txt",
+      "sha256": "d6a160f96c1bef0b4ba184217834bd7f5f15c29378d7c3e4288b5533aa0bbcba",
+      "bytes": 1349
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/failed-fd51318-jvm/reproducer/log2.txt",
+      "originalPath": "build/vo1438-jvm-gdb-preload-repro/log2.txt",
+      "sha256": "8ca39b57d8119bbffe97147396694c29b314da11d2d460064a630e051a851608",
+      "bytes": 1349
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/failed-fd51318-jvm/reproducer/log3.txt",
+      "originalPath": "build/vo1438-jvm-gdb-preload-repro/log3.txt",
+      "sha256": "3163670d59350c1a7fc3bc23235a72b900b0fc654742f2ba78d577db292daeb1",
+      "bytes": 1349
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/failed-fd51318-jvm/reproducer/pre.txt",
+      "originalPath": "build/vo1438-jvm-gdb-preload-repro/pre.txt",
+      "sha256": "a6f9f4d1646ab90388e799971f3cbd7004e71c389234a2d9f2f874e8684cd68b",
+      "bytes": 1652
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/failed-fd51318-jvm/reproducer/r.py",
+      "originalPath": "build/vo1438-jvm-gdb-preload-repro/r.py",
+      "sha256": "6a03ddac2b71b2634d5616a2bc9b58d3dbe93ebf3e21433a8c7318b102604aa2",
+      "bytes": 416
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/failed-fd51318-jvm/reproducer/r2.py",
+      "originalPath": "build/vo1438-jvm-gdb-preload-repro/r2.py",
+      "sha256": "655bad20acfbb4dd63c4a071fbb018f722f315050d933158de05fcd6ecccd927",
+      "bytes": 523
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/failed-fd51318-jvm/reproducer/t.py",
+      "originalPath": "build/vo1438-jvm-gdb-preload-repro/t.py",
+      "sha256": "19a66ba222fbeb14595c35e778dc9eaec79d1595d9d5a58bc7a352238bcf7d70",
+      "bytes": 220
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/failed-fd51318-jvm/reproducer/t1.txt",
+      "originalPath": "build/vo1438-jvm-gdb-preload-repro/t1.txt",
+      "sha256": "838821aabf84d421f1e2481436a222bd66de57f30b6a7d3ebf044950431bf534",
+      "bytes": 403
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/failed-fd51318-jvm/reproducer/t2.txt",
+      "originalPath": "build/vo1438-jvm-gdb-preload-repro/t2.txt",
+      "sha256": "5f15b0658cdc02987d09b45c9eacd1eae6134ddd5d406576d6320ff766b7a339",
+      "bytes": 403
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/failed-fd51318-jvm/reproducer/tools.txt",
+      "originalPath": "build/vo1438-jvm-gdb-preload-repro/tools.txt",
+      "sha256": "cdbfb64160b639a6f9464e6ac727a4eb5003efdbbd068fd71e4366f6c99e2511",
+      "bytes": 604
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/jvm/queue.json",
+      "originalPath": "build/vo1438-container-entry-04dc924-jvm/queue.json",
+      "sha256": "2d1e091196f7b090915deb9268312f4d45a02e705f63bd33dad41819c3b0c8c0",
+      "bytes": 5085
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/jvm/end.json",
+      "originalPath": "build/vo1438-container-entry-04dc924-jvm/end.json",
+      "sha256": "b904fa3181496640ea6dddebacfff95e5310d414362baef57bb76831bf1110c2",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/jvm/run.tap",
+      "originalPath": "build/vo1438-container-entry-04dc924-jvm/run.tap",
+      "sha256": "bd0ffa3c56cb4cd4047c643931b04e3cee1cc04565d20680a680117fc528df63",
+      "bytes": 870
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/jvm/java-kotlin.json",
+      "originalPath": "build/vo1438-container-entry-04dc924-jvm/java-kotlin.json",
+      "sha256": "825b64306fc32e824c2f7b4522e3584d976d99ac3f60e176374aac35412056bf",
+      "bytes": 45234
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/jvm/reviewed-java-kotlin.json",
+      "originalPath": "build/vo1438-container-entry-04dc924-jvm/reviewed-java-kotlin.json",
+      "sha256": "b6025142401056d0ceceb488649eeca417f4ac31b1ca1f7f233ef72a7e054793",
+      "bytes": 45422
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/jvm/runner.mjs.txt",
+      "originalPath": "build/run-vo1438-container-entry-04dc924-jvm.mjs",
+      "sha256": "e835b9de93840a3913e0d213fbc1eb63e60fd2d1ced781bc57bee14c207f10b3",
+      "bytes": 7096
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/jvm/runner-output.txt",
+      "originalPath": "build/vo1438-container-entry-04dc924-jvm.runner.log",
+      "sha256": "e5bf4abc5a82b72a259d1a5e0f6a726efd5f9903609f3cc4ec4fcaa59c5c2de8",
+      "bytes": 624
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/04dc924/src/adoption/test-profiles.mjs.txt",
+      "originalPath": "git:04dc924f707b1ea85acb7792091fec5a0366bb25:src/adoption/test-profiles.mjs",
+      "sha256": "9dc4626bf623787591c390f6d9de8bcbe5c6ef618285663f70ab8aa53e9f763d",
+      "bytes": 32858
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/04dc924/src/backends/native/runtime-broker.mjs.txt",
+      "originalPath": "git:04dc924f707b1ea85acb7792091fec5a0366bb25:src/backends/native/runtime-broker.mjs",
+      "sha256": "1c9f030f998af5fb4d4641efad9ccb51822443fed7ad5b37635b98aac89287ed",
+      "bytes": 13335
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/04dc924/src/build/native-artifacts.mjs.txt",
+      "originalPath": "git:04dc924f707b1ea85acb7792091fec5a0366bb25:src/build/native-artifacts.mjs",
+      "sha256": "5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4",
+      "bytes": 12720
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/04dc924/src/build/native-model.mjs.txt",
+      "originalPath": "git:04dc924f707b1ea85acb7792091fec5a0366bb25:src/build/native-model.mjs",
+      "sha256": "aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13",
+      "bytes": 42596
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/cpp-fin-container-entry.test.mjs.txt",
+      "originalPath": "git:04dc924f707b1ea85acb7792091fec5a0366bb25:tests/cpp-fin-container-entry.test.mjs",
+      "sha256": "e5f3cbc8fd0947dc180d20508eba86e6f9f514e76519b31702d28ce769b35dcc",
+      "bytes": 5305
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/fin-container-entry-dispatch.test.mjs.txt",
+      "originalPath": "git:04dc924f707b1ea85acb7792091fec5a0366bb25:tests/fin-container-entry-dispatch.test.mjs",
+      "sha256": "872066bd5e9cb48e92c14ea60797c4cf03cf214f6635fb1462d4d402957d3faa",
+      "bytes": 28452
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/fixtures/fin-container-consumers/cpp.cpp.txt",
+      "originalPath": "git:04dc924f707b1ea85acb7792091fec5a0366bb25:tests/fixtures/fin-container-consumers/cpp.cpp",
+      "sha256": "0b1b4a5454c9d7eabc7b9eb81fb6e84a43f9b561a57ed2743e46d3db56542fec",
+      "bytes": 4048
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/fixtures/fin-container-consumers/java.java.txt",
+      "originalPath": "git:04dc924f707b1ea85acb7792091fec5a0366bb25:tests/fixtures/fin-container-consumers/java.java",
+      "sha256": "6c567c87f866dc91c714bcae35fbbbfeaed65f34530e62c456f872b7d752eefa",
+      "bytes": 5196
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/fixtures/fin-container-consumers/kotlin.kt.txt",
+      "originalPath": "git:04dc924f707b1ea85acb7792091fec5a0366bb25:tests/fixtures/fin-container-consumers/kotlin.kt",
+      "sha256": "c32f3cc353d4225e7ccf2c39c07a77c06ab1b59d939aded1b4864e16bfa1a7a7",
+      "bytes": 4054
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/fixtures/fin-container-consumers/php-native.php.txt",
+      "originalPath": "git:04dc924f707b1ea85acb7792091fec5a0366bb25:tests/fixtures/fin-container-consumers/php-native.php",
+      "sha256": "e75545085f2ca4da792ec6a9ed5a2198bef9745116bbf6840886f5749b9baac1",
+      "bytes": 4051
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/fixtures/onboarding/native-fin-containers/FinContainers.lean.txt",
+      "originalPath": "git:04dc924f707b1ea85acb7792091fec5a0366bb25:tests/fixtures/onboarding/native-fin-containers/FinContainers.lean",
+      "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be",
+      "bytes": 1562
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/helpers/copied-fixture-install.mjs.txt",
+      "originalPath": "git:04dc924f707b1ea85acb7792091fec5a0366bb25:tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+      "bytes": 12888
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/helpers/cpp-fin-container-entry-probe.mjs.txt",
+      "originalPath": "git:04dc924f707b1ea85acb7792091fec5a0366bb25:tests/helpers/cpp-fin-container-entry-probe.mjs",
+      "sha256": "445dcadac2d6caea4181457ad7a782732b716c0931ee5155518eda7edbbc0088",
+      "bytes": 11209
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/helpers/fin-container-dispatch-gdb-extracted.mjs.txt",
+      "originalPath": "git:04dc924f707b1ea85acb7792091fec5a0366bb25:tests/helpers/fin-container-dispatch-gdb-extracted.mjs",
+      "sha256": "1374c778c8ba45ab7076a6cfa3c4ce885b1154b66ddd34e1808c1de11d0b174c",
+      "bytes": 23051
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/helpers/fin-container-dispatch-gdb.mjs.txt",
+      "originalPath": "git:04dc924f707b1ea85acb7792091fec5a0366bb25:tests/helpers/fin-container-dispatch-gdb.mjs",
+      "sha256": "a392dc47bb0334e0896539ccbf616d4a88547de283df9c84601d7bd29d631ff7",
+      "bytes": 19931
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/helpers/fin-container-dispatch.mjs.txt",
+      "originalPath": "git:04dc924f707b1ea85acb7792091fec5a0366bb25:tests/helpers/fin-container-dispatch.mjs",
+      "sha256": "b38adb2fb6026e8a8a6808d4a99247997d585344b6d20f7265c1639c671a09c9",
+      "bytes": 4997
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/helpers/fin-container-entry-dispatch.mjs.txt",
+      "originalPath": "git:04dc924f707b1ea85acb7792091fec5a0366bb25:tests/helpers/fin-container-entry-dispatch.mjs",
+      "sha256": "59f31125753bec3206f4cf1497c7bedb5bba4c1eb16d68e0ef18891957976c98",
+      "bytes": 18529
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/helpers/fin-container-entry-probes.mjs.txt",
+      "originalPath": "git:04dc924f707b1ea85acb7792091fec5a0366bb25:tests/helpers/fin-container-entry-probes.mjs",
+      "sha256": "41ecb420db1d1d76e8d8d79c70f7b0509b590334040dd985fc3ddb20cbb876b5",
+      "bytes": 54016
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/helpers/fin-container-install.mjs.txt",
+      "originalPath": "git:04dc924f707b1ea85acb7792091fec5a0366bb25:tests/helpers/fin-container-install.mjs",
+      "sha256": "2024d6c6a44687293750c3ee5c25f092d689065e17beb8d535610963921c9329",
+      "bytes": 2979
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/helpers/reviewed-fin-container-fixture.mjs.txt",
+      "originalPath": "git:04dc924f707b1ea85acb7792091fec5a0366bb25:tests/helpers/reviewed-fin-container-fixture.mjs",
+      "sha256": "5e4d92f9bb4ccff65fb9356cc3a6613f5102665e59dbe38b99868e4804c8a132",
+      "bytes": 2452
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/native-fin-containers.test.mjs.txt",
+      "originalPath": "git:04dc924f707b1ea85acb7792091fec5a0366bb25:tests/native-fin-containers.test.mjs",
+      "sha256": "1e5d74e43c7b74d1db9f735ee2485c9b24e1ee1a7c050a5449fdf65e9b6cd1d5",
+      "bytes": 23636
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/e91543d/src/adoption/test-profiles.mjs.txt",
+      "originalPath": "git:e91543d48c316ad3d5abd065c126838b5f0126a5:src/adoption/test-profiles.mjs",
+      "sha256": "9dc4626bf623787591c390f6d9de8bcbe5c6ef618285663f70ab8aa53e9f763d",
+      "bytes": 32858
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/e91543d/src/backends/native/runtime-broker.mjs.txt",
+      "originalPath": "git:e91543d48c316ad3d5abd065c126838b5f0126a5:src/backends/native/runtime-broker.mjs",
+      "sha256": "1c9f030f998af5fb4d4641efad9ccb51822443fed7ad5b37635b98aac89287ed",
+      "bytes": 13335
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/e91543d/src/build/native-artifacts.mjs.txt",
+      "originalPath": "git:e91543d48c316ad3d5abd065c126838b5f0126a5:src/build/native-artifacts.mjs",
+      "sha256": "5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4",
+      "bytes": 12720
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/e91543d/src/build/native-model.mjs.txt",
+      "originalPath": "git:e91543d48c316ad3d5abd065c126838b5f0126a5:src/build/native-model.mjs",
+      "sha256": "aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13",
+      "bytes": 42596
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/cpp-fin-container-entry.test.mjs.txt",
+      "originalPath": "git:e91543d48c316ad3d5abd065c126838b5f0126a5:tests/cpp-fin-container-entry.test.mjs",
+      "sha256": "e5f3cbc8fd0947dc180d20508eba86e6f9f514e76519b31702d28ce769b35dcc",
+      "bytes": 5305
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/fin-container-entry-dispatch.test.mjs.txt",
+      "originalPath": "git:e91543d48c316ad3d5abd065c126838b5f0126a5:tests/fin-container-entry-dispatch.test.mjs",
+      "sha256": "97722fb158b674ba82a54f4fd56d306c36ad9d8e9d2d1117f7623ee4b6a0074e",
+      "bytes": 25091
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/fixtures/fin-container-consumers/cpp.cpp.txt",
+      "originalPath": "git:e91543d48c316ad3d5abd065c126838b5f0126a5:tests/fixtures/fin-container-consumers/cpp.cpp",
+      "sha256": "0b1b4a5454c9d7eabc7b9eb81fb6e84a43f9b561a57ed2743e46d3db56542fec",
+      "bytes": 4048
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/fixtures/fin-container-consumers/php-native.php.txt",
+      "originalPath": "git:e91543d48c316ad3d5abd065c126838b5f0126a5:tests/fixtures/fin-container-consumers/php-native.php",
+      "sha256": "e75545085f2ca4da792ec6a9ed5a2198bef9745116bbf6840886f5749b9baac1",
+      "bytes": 4051
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/fixtures/onboarding/native-fin-containers/FinContainers.lean.txt",
+      "originalPath": "git:e91543d48c316ad3d5abd065c126838b5f0126a5:tests/fixtures/onboarding/native-fin-containers/FinContainers.lean",
+      "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be",
+      "bytes": 1562
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/helpers/copied-fixture-install.mjs.txt",
+      "originalPath": "git:e91543d48c316ad3d5abd065c126838b5f0126a5:tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+      "bytes": 12888
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/helpers/cpp-fin-container-entry-probe.mjs.txt",
+      "originalPath": "git:e91543d48c316ad3d5abd065c126838b5f0126a5:tests/helpers/cpp-fin-container-entry-probe.mjs",
+      "sha256": "445dcadac2d6caea4181457ad7a782732b716c0931ee5155518eda7edbbc0088",
+      "bytes": 11209
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/helpers/fin-container-dispatch-gdb-extracted.mjs.txt",
+      "originalPath": "git:e91543d48c316ad3d5abd065c126838b5f0126a5:tests/helpers/fin-container-dispatch-gdb-extracted.mjs",
+      "sha256": "dd0cd4187a5fc7e4a2e4361ba99a41f72d845e2578ddb4bd5e021d1e8ea2acb2",
+      "bytes": 21757
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/helpers/fin-container-dispatch-gdb.mjs.txt",
+      "originalPath": "git:e91543d48c316ad3d5abd065c126838b5f0126a5:tests/helpers/fin-container-dispatch-gdb.mjs",
+      "sha256": "a392dc47bb0334e0896539ccbf616d4a88547de283df9c84601d7bd29d631ff7",
+      "bytes": 19931
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/helpers/fin-container-dispatch.mjs.txt",
+      "originalPath": "git:e91543d48c316ad3d5abd065c126838b5f0126a5:tests/helpers/fin-container-dispatch.mjs",
+      "sha256": "b38adb2fb6026e8a8a6808d4a99247997d585344b6d20f7265c1639c671a09c9",
+      "bytes": 4997
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/helpers/fin-container-entry-dispatch.mjs.txt",
+      "originalPath": "git:e91543d48c316ad3d5abd065c126838b5f0126a5:tests/helpers/fin-container-entry-dispatch.mjs",
+      "sha256": "04299f075fd9217c63aa5538e3b8b18733862697e84b74370acbadd8979c1b9b",
+      "bytes": 18417
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/helpers/fin-container-entry-probes.mjs.txt",
+      "originalPath": "git:e91543d48c316ad3d5abd065c126838b5f0126a5:tests/helpers/fin-container-entry-probes.mjs",
+      "sha256": "41ecb420db1d1d76e8d8d79c70f7b0509b590334040dd985fc3ddb20cbb876b5",
+      "bytes": 54016
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/helpers/fin-container-install.mjs.txt",
+      "originalPath": "git:e91543d48c316ad3d5abd065c126838b5f0126a5:tests/helpers/fin-container-install.mjs",
+      "sha256": "2024d6c6a44687293750c3ee5c25f092d689065e17beb8d535610963921c9329",
+      "bytes": 2979
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/helpers/reviewed-fin-container-fixture.mjs.txt",
+      "originalPath": "git:e91543d48c316ad3d5abd065c126838b5f0126a5:tests/helpers/reviewed-fin-container-fixture.mjs",
+      "sha256": "5e4d92f9bb4ccff65fb9356cc3a6613f5102665e59dbe38b99868e4804c8a132",
+      "bytes": 2452
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/native-fin-containers.test.mjs.txt",
+      "originalPath": "git:e91543d48c316ad3d5abd065c126838b5f0126a5:tests/native-fin-containers.test.mjs",
+      "sha256": "1e5d74e43c7b74d1db9f735ee2485c9b24e1ee1a7c050a5449fdf65e9b6cd1d5",
+      "bytes": 23636
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/fd51318/src/adoption/test-profiles.mjs.txt",
+      "originalPath": "git:fd51318cc01a8aae2b0f3fe4e6d0cf529d160001:src/adoption/test-profiles.mjs",
+      "sha256": "9dc4626bf623787591c390f6d9de8bcbe5c6ef618285663f70ab8aa53e9f763d",
+      "bytes": 32858
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/fd51318/src/backends/native/runtime-broker.mjs.txt",
+      "originalPath": "git:fd51318cc01a8aae2b0f3fe4e6d0cf529d160001:src/backends/native/runtime-broker.mjs",
+      "sha256": "1c9f030f998af5fb4d4641efad9ccb51822443fed7ad5b37635b98aac89287ed",
+      "bytes": 13335
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/fd51318/src/build/native-artifacts.mjs.txt",
+      "originalPath": "git:fd51318cc01a8aae2b0f3fe4e6d0cf529d160001:src/build/native-artifacts.mjs",
+      "sha256": "5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4",
+      "bytes": 12720
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/fd51318/src/build/native-model.mjs.txt",
+      "originalPath": "git:fd51318cc01a8aae2b0f3fe4e6d0cf529d160001:src/build/native-model.mjs",
+      "sha256": "aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13",
+      "bytes": 42596
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/cpp-fin-container-entry.test.mjs.txt",
+      "originalPath": "git:fd51318cc01a8aae2b0f3fe4e6d0cf529d160001:tests/cpp-fin-container-entry.test.mjs",
+      "sha256": "e5f3cbc8fd0947dc180d20508eba86e6f9f514e76519b31702d28ce769b35dcc",
+      "bytes": 5305
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/fin-container-entry-dispatch.test.mjs.txt",
+      "originalPath": "git:fd51318cc01a8aae2b0f3fe4e6d0cf529d160001:tests/fin-container-entry-dispatch.test.mjs",
+      "sha256": "d0793c60e616718b4aeefc4512371c82d45c5cdb4d69976d828d370a98632218",
+      "bytes": 25413
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/fixtures/fin-container-consumers/cpp.cpp.txt",
+      "originalPath": "git:fd51318cc01a8aae2b0f3fe4e6d0cf529d160001:tests/fixtures/fin-container-consumers/cpp.cpp",
+      "sha256": "0b1b4a5454c9d7eabc7b9eb81fb6e84a43f9b561a57ed2743e46d3db56542fec",
+      "bytes": 4048
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/fixtures/fin-container-consumers/dotnet.cs.txt",
+      "originalPath": "git:fd51318cc01a8aae2b0f3fe4e6d0cf529d160001:tests/fixtures/fin-container-consumers/dotnet.cs",
+      "sha256": "9a8d0ccd0113f647fa80bd126a3c14ff15cf1600a29ffba395fda342641ec07a",
+      "bytes": 4451
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/fixtures/fin-container-consumers/java.java.txt",
+      "originalPath": "git:fd51318cc01a8aae2b0f3fe4e6d0cf529d160001:tests/fixtures/fin-container-consumers/java.java",
+      "sha256": "6c567c87f866dc91c714bcae35fbbbfeaed65f34530e62c456f872b7d752eefa",
+      "bytes": 5196
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/fixtures/fin-container-consumers/kotlin.kt.txt",
+      "originalPath": "git:fd51318cc01a8aae2b0f3fe4e6d0cf529d160001:tests/fixtures/fin-container-consumers/kotlin.kt",
+      "sha256": "c32f3cc353d4225e7ccf2c39c07a77c06ab1b59d939aded1b4864e16bfa1a7a7",
+      "bytes": 4054
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/fixtures/fin-container-consumers/php-native.php.txt",
+      "originalPath": "git:fd51318cc01a8aae2b0f3fe4e6d0cf529d160001:tests/fixtures/fin-container-consumers/php-native.php",
+      "sha256": "e75545085f2ca4da792ec6a9ed5a2198bef9745116bbf6840886f5749b9baac1",
+      "bytes": 4051
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/fixtures/fin-container-consumers/ruby.rb.txt",
+      "originalPath": "git:fd51318cc01a8aae2b0f3fe4e6d0cf529d160001:tests/fixtures/fin-container-consumers/ruby.rb",
+      "sha256": "839d25393174940365c5a6b4c88f744e8ab5b876bbb955cb4eaa4f83dd500343",
+      "bytes": 3004
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/fixtures/fin-container-consumers/wit-wasi.c.txt",
+      "originalPath": "git:fd51318cc01a8aae2b0f3fe4e6d0cf529d160001:tests/fixtures/fin-container-consumers/wit-wasi.c",
+      "sha256": "428e25d329d19a847e9a195226f0b7dd9775c658a128255bf18c1af371e7d9d6",
+      "bytes": 8886
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/fixtures/onboarding/native-fin-containers/FinContainers.lean.txt",
+      "originalPath": "git:fd51318cc01a8aae2b0f3fe4e6d0cf529d160001:tests/fixtures/onboarding/native-fin-containers/FinContainers.lean",
+      "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be",
+      "bytes": 1562
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/helpers/copied-fixture-install.mjs.txt",
+      "originalPath": "git:fd51318cc01a8aae2b0f3fe4e6d0cf529d160001:tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+      "bytes": 12888
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/helpers/cpp-fin-container-entry-probe.mjs.txt",
+      "originalPath": "git:fd51318cc01a8aae2b0f3fe4e6d0cf529d160001:tests/helpers/cpp-fin-container-entry-probe.mjs",
+      "sha256": "445dcadac2d6caea4181457ad7a782732b716c0931ee5155518eda7edbbc0088",
+      "bytes": 11209
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/helpers/fin-container-dispatch-gdb-extracted.mjs.txt",
+      "originalPath": "git:fd51318cc01a8aae2b0f3fe4e6d0cf529d160001:tests/helpers/fin-container-dispatch-gdb-extracted.mjs",
+      "sha256": "dd0cd4187a5fc7e4a2e4361ba99a41f72d845e2578ddb4bd5e021d1e8ea2acb2",
+      "bytes": 21757
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/helpers/fin-container-dispatch-gdb.mjs.txt",
+      "originalPath": "git:fd51318cc01a8aae2b0f3fe4e6d0cf529d160001:tests/helpers/fin-container-dispatch-gdb.mjs",
+      "sha256": "a392dc47bb0334e0896539ccbf616d4a88547de283df9c84601d7bd29d631ff7",
+      "bytes": 19931
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/helpers/fin-container-dispatch.mjs.txt",
+      "originalPath": "git:fd51318cc01a8aae2b0f3fe4e6d0cf529d160001:tests/helpers/fin-container-dispatch.mjs",
+      "sha256": "b38adb2fb6026e8a8a6808d4a99247997d585344b6d20f7265c1639c671a09c9",
+      "bytes": 4997
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/helpers/fin-container-entry-dispatch.mjs.txt",
+      "originalPath": "git:fd51318cc01a8aae2b0f3fe4e6d0cf529d160001:tests/helpers/fin-container-entry-dispatch.mjs",
+      "sha256": "59f31125753bec3206f4cf1497c7bedb5bba4c1eb16d68e0ef18891957976c98",
+      "bytes": 18529
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/helpers/fin-container-entry-probes.mjs.txt",
+      "originalPath": "git:fd51318cc01a8aae2b0f3fe4e6d0cf529d160001:tests/helpers/fin-container-entry-probes.mjs",
+      "sha256": "41ecb420db1d1d76e8d8d79c70f7b0509b590334040dd985fc3ddb20cbb876b5",
+      "bytes": 54016
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/helpers/fin-container-install.mjs.txt",
+      "originalPath": "git:fd51318cc01a8aae2b0f3fe4e6d0cf529d160001:tests/helpers/fin-container-install.mjs",
+      "sha256": "2024d6c6a44687293750c3ee5c25f092d689065e17beb8d535610963921c9329",
+      "bytes": 2979
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/helpers/reviewed-fin-container-fixture.mjs.txt",
+      "originalPath": "git:fd51318cc01a8aae2b0f3fe4e6d0cf529d160001:tests/helpers/reviewed-fin-container-fixture.mjs",
+      "sha256": "5e4d92f9bb4ccff65fb9356cc3a6613f5102665e59dbe38b99868e4804c8a132",
+      "bytes": 2452
+    },
+    {
+      "path": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/native-fin-containers.test.mjs.txt",
+      "originalPath": "git:fd51318cc01a8aae2b0f3fe4e6d0cf529d160001:tests/native-fin-containers.test.mjs",
+      "sha256": "1e5d74e43c7b74d1db9f735ee2485c9b24e1ee1a7c050a5449fdf65e9b6cd1d5",
+      "bytes": 23636
+    }
+  ],
+  "sources": [
+    {
+      "revision": "04dc924f707b1ea85acb7792091fec5a0366bb25",
+      "path": "src/adoption/test-profiles.mjs",
+      "sha256": "9dc4626bf623787591c390f6d9de8bcbe5c6ef618285663f70ab8aa53e9f763d",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/04dc924/src/adoption/test-profiles.mjs.txt"
+    },
+    {
+      "revision": "04dc924f707b1ea85acb7792091fec5a0366bb25",
+      "path": "src/backends/native/runtime-broker.mjs",
+      "sha256": "1c9f030f998af5fb4d4641efad9ccb51822443fed7ad5b37635b98aac89287ed",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/04dc924/src/backends/native/runtime-broker.mjs.txt"
+    },
+    {
+      "revision": "04dc924f707b1ea85acb7792091fec5a0366bb25",
+      "path": "src/build/native-artifacts.mjs",
+      "sha256": "5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/04dc924/src/build/native-artifacts.mjs.txt"
+    },
+    {
+      "revision": "04dc924f707b1ea85acb7792091fec5a0366bb25",
+      "path": "src/build/native-model.mjs",
+      "sha256": "aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/04dc924/src/build/native-model.mjs.txt"
+    },
+    {
+      "revision": "04dc924f707b1ea85acb7792091fec5a0366bb25",
+      "path": "tests/cpp-fin-container-entry.test.mjs",
+      "sha256": "e5f3cbc8fd0947dc180d20508eba86e6f9f514e76519b31702d28ce769b35dcc",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/cpp-fin-container-entry.test.mjs.txt"
+    },
+    {
+      "revision": "04dc924f707b1ea85acb7792091fec5a0366bb25",
+      "path": "tests/fin-container-entry-dispatch.test.mjs",
+      "sha256": "872066bd5e9cb48e92c14ea60797c4cf03cf214f6635fb1462d4d402957d3faa",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/fin-container-entry-dispatch.test.mjs.txt"
+    },
+    {
+      "revision": "04dc924f707b1ea85acb7792091fec5a0366bb25",
+      "path": "tests/fixtures/fin-container-consumers/cpp.cpp",
+      "sha256": "0b1b4a5454c9d7eabc7b9eb81fb6e84a43f9b561a57ed2743e46d3db56542fec",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/fixtures/fin-container-consumers/cpp.cpp.txt"
+    },
+    {
+      "revision": "04dc924f707b1ea85acb7792091fec5a0366bb25",
+      "path": "tests/fixtures/fin-container-consumers/java.java",
+      "sha256": "6c567c87f866dc91c714bcae35fbbbfeaed65f34530e62c456f872b7d752eefa",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/fixtures/fin-container-consumers/java.java.txt"
+    },
+    {
+      "revision": "04dc924f707b1ea85acb7792091fec5a0366bb25",
+      "path": "tests/fixtures/fin-container-consumers/kotlin.kt",
+      "sha256": "c32f3cc353d4225e7ccf2c39c07a77c06ab1b59d939aded1b4864e16bfa1a7a7",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/fixtures/fin-container-consumers/kotlin.kt.txt"
+    },
+    {
+      "revision": "04dc924f707b1ea85acb7792091fec5a0366bb25",
+      "path": "tests/fixtures/fin-container-consumers/php-native.php",
+      "sha256": "e75545085f2ca4da792ec6a9ed5a2198bef9745116bbf6840886f5749b9baac1",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/fixtures/fin-container-consumers/php-native.php.txt"
+    },
+    {
+      "revision": "04dc924f707b1ea85acb7792091fec5a0366bb25",
+      "path": "tests/fixtures/onboarding/native-fin-containers/FinContainers.lean",
+      "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/fixtures/onboarding/native-fin-containers/FinContainers.lean.txt"
+    },
+    {
+      "revision": "04dc924f707b1ea85acb7792091fec5a0366bb25",
+      "path": "tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/helpers/copied-fixture-install.mjs.txt"
+    },
+    {
+      "revision": "04dc924f707b1ea85acb7792091fec5a0366bb25",
+      "path": "tests/helpers/cpp-fin-container-entry-probe.mjs",
+      "sha256": "445dcadac2d6caea4181457ad7a782732b716c0931ee5155518eda7edbbc0088",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/helpers/cpp-fin-container-entry-probe.mjs.txt"
+    },
+    {
+      "revision": "04dc924f707b1ea85acb7792091fec5a0366bb25",
+      "path": "tests/helpers/fin-container-dispatch-gdb-extracted.mjs",
+      "sha256": "1374c778c8ba45ab7076a6cfa3c4ce885b1154b66ddd34e1808c1de11d0b174c",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/helpers/fin-container-dispatch-gdb-extracted.mjs.txt"
+    },
+    {
+      "revision": "04dc924f707b1ea85acb7792091fec5a0366bb25",
+      "path": "tests/helpers/fin-container-dispatch-gdb.mjs",
+      "sha256": "a392dc47bb0334e0896539ccbf616d4a88547de283df9c84601d7bd29d631ff7",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/helpers/fin-container-dispatch-gdb.mjs.txt"
+    },
+    {
+      "revision": "04dc924f707b1ea85acb7792091fec5a0366bb25",
+      "path": "tests/helpers/fin-container-dispatch.mjs",
+      "sha256": "b38adb2fb6026e8a8a6808d4a99247997d585344b6d20f7265c1639c671a09c9",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/helpers/fin-container-dispatch.mjs.txt"
+    },
+    {
+      "revision": "04dc924f707b1ea85acb7792091fec5a0366bb25",
+      "path": "tests/helpers/fin-container-entry-dispatch.mjs",
+      "sha256": "59f31125753bec3206f4cf1497c7bedb5bba4c1eb16d68e0ef18891957976c98",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/helpers/fin-container-entry-dispatch.mjs.txt"
+    },
+    {
+      "revision": "04dc924f707b1ea85acb7792091fec5a0366bb25",
+      "path": "tests/helpers/fin-container-entry-probes.mjs",
+      "sha256": "41ecb420db1d1d76e8d8d79c70f7b0509b590334040dd985fc3ddb20cbb876b5",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/helpers/fin-container-entry-probes.mjs.txt"
+    },
+    {
+      "revision": "04dc924f707b1ea85acb7792091fec5a0366bb25",
+      "path": "tests/helpers/fin-container-install.mjs",
+      "sha256": "2024d6c6a44687293750c3ee5c25f092d689065e17beb8d535610963921c9329",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/helpers/fin-container-install.mjs.txt"
+    },
+    {
+      "revision": "04dc924f707b1ea85acb7792091fec5a0366bb25",
+      "path": "tests/helpers/reviewed-fin-container-fixture.mjs",
+      "sha256": "5e4d92f9bb4ccff65fb9356cc3a6613f5102665e59dbe38b99868e4804c8a132",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/helpers/reviewed-fin-container-fixture.mjs.txt"
+    },
+    {
+      "revision": "04dc924f707b1ea85acb7792091fec5a0366bb25",
+      "path": "tests/native-fin-containers.test.mjs",
+      "sha256": "1e5d74e43c7b74d1db9f735ee2485c9b24e1ee1a7c050a5449fdf65e9b6cd1d5",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/04dc924/tests/native-fin-containers.test.mjs.txt"
+    },
+    {
+      "revision": "e91543d48c316ad3d5abd065c126838b5f0126a5",
+      "path": "src/adoption/test-profiles.mjs",
+      "sha256": "9dc4626bf623787591c390f6d9de8bcbe5c6ef618285663f70ab8aa53e9f763d",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/e91543d/src/adoption/test-profiles.mjs.txt"
+    },
+    {
+      "revision": "e91543d48c316ad3d5abd065c126838b5f0126a5",
+      "path": "src/backends/native/runtime-broker.mjs",
+      "sha256": "1c9f030f998af5fb4d4641efad9ccb51822443fed7ad5b37635b98aac89287ed",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/e91543d/src/backends/native/runtime-broker.mjs.txt"
+    },
+    {
+      "revision": "e91543d48c316ad3d5abd065c126838b5f0126a5",
+      "path": "src/build/native-artifacts.mjs",
+      "sha256": "5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/e91543d/src/build/native-artifacts.mjs.txt"
+    },
+    {
+      "revision": "e91543d48c316ad3d5abd065c126838b5f0126a5",
+      "path": "src/build/native-model.mjs",
+      "sha256": "aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/e91543d/src/build/native-model.mjs.txt"
+    },
+    {
+      "revision": "e91543d48c316ad3d5abd065c126838b5f0126a5",
+      "path": "tests/cpp-fin-container-entry.test.mjs",
+      "sha256": "e5f3cbc8fd0947dc180d20508eba86e6f9f514e76519b31702d28ce769b35dcc",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/cpp-fin-container-entry.test.mjs.txt"
+    },
+    {
+      "revision": "e91543d48c316ad3d5abd065c126838b5f0126a5",
+      "path": "tests/fin-container-entry-dispatch.test.mjs",
+      "sha256": "97722fb158b674ba82a54f4fd56d306c36ad9d8e9d2d1117f7623ee4b6a0074e",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/fin-container-entry-dispatch.test.mjs.txt"
+    },
+    {
+      "revision": "e91543d48c316ad3d5abd065c126838b5f0126a5",
+      "path": "tests/fixtures/fin-container-consumers/cpp.cpp",
+      "sha256": "0b1b4a5454c9d7eabc7b9eb81fb6e84a43f9b561a57ed2743e46d3db56542fec",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/fixtures/fin-container-consumers/cpp.cpp.txt"
+    },
+    {
+      "revision": "e91543d48c316ad3d5abd065c126838b5f0126a5",
+      "path": "tests/fixtures/fin-container-consumers/php-native.php",
+      "sha256": "e75545085f2ca4da792ec6a9ed5a2198bef9745116bbf6840886f5749b9baac1",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/fixtures/fin-container-consumers/php-native.php.txt"
+    },
+    {
+      "revision": "e91543d48c316ad3d5abd065c126838b5f0126a5",
+      "path": "tests/fixtures/onboarding/native-fin-containers/FinContainers.lean",
+      "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/fixtures/onboarding/native-fin-containers/FinContainers.lean.txt"
+    },
+    {
+      "revision": "e91543d48c316ad3d5abd065c126838b5f0126a5",
+      "path": "tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/helpers/copied-fixture-install.mjs.txt"
+    },
+    {
+      "revision": "e91543d48c316ad3d5abd065c126838b5f0126a5",
+      "path": "tests/helpers/cpp-fin-container-entry-probe.mjs",
+      "sha256": "445dcadac2d6caea4181457ad7a782732b716c0931ee5155518eda7edbbc0088",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/helpers/cpp-fin-container-entry-probe.mjs.txt"
+    },
+    {
+      "revision": "e91543d48c316ad3d5abd065c126838b5f0126a5",
+      "path": "tests/helpers/fin-container-dispatch-gdb-extracted.mjs",
+      "sha256": "dd0cd4187a5fc7e4a2e4361ba99a41f72d845e2578ddb4bd5e021d1e8ea2acb2",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/helpers/fin-container-dispatch-gdb-extracted.mjs.txt"
+    },
+    {
+      "revision": "e91543d48c316ad3d5abd065c126838b5f0126a5",
+      "path": "tests/helpers/fin-container-dispatch-gdb.mjs",
+      "sha256": "a392dc47bb0334e0896539ccbf616d4a88547de283df9c84601d7bd29d631ff7",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/helpers/fin-container-dispatch-gdb.mjs.txt"
+    },
+    {
+      "revision": "e91543d48c316ad3d5abd065c126838b5f0126a5",
+      "path": "tests/helpers/fin-container-dispatch.mjs",
+      "sha256": "b38adb2fb6026e8a8a6808d4a99247997d585344b6d20f7265c1639c671a09c9",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/helpers/fin-container-dispatch.mjs.txt"
+    },
+    {
+      "revision": "e91543d48c316ad3d5abd065c126838b5f0126a5",
+      "path": "tests/helpers/fin-container-entry-dispatch.mjs",
+      "sha256": "04299f075fd9217c63aa5538e3b8b18733862697e84b74370acbadd8979c1b9b",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/helpers/fin-container-entry-dispatch.mjs.txt"
+    },
+    {
+      "revision": "e91543d48c316ad3d5abd065c126838b5f0126a5",
+      "path": "tests/helpers/fin-container-entry-probes.mjs",
+      "sha256": "41ecb420db1d1d76e8d8d79c70f7b0509b590334040dd985fc3ddb20cbb876b5",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/helpers/fin-container-entry-probes.mjs.txt"
+    },
+    {
+      "revision": "e91543d48c316ad3d5abd065c126838b5f0126a5",
+      "path": "tests/helpers/fin-container-install.mjs",
+      "sha256": "2024d6c6a44687293750c3ee5c25f092d689065e17beb8d535610963921c9329",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/helpers/fin-container-install.mjs.txt"
+    },
+    {
+      "revision": "e91543d48c316ad3d5abd065c126838b5f0126a5",
+      "path": "tests/helpers/reviewed-fin-container-fixture.mjs",
+      "sha256": "5e4d92f9bb4ccff65fb9356cc3a6613f5102665e59dbe38b99868e4804c8a132",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/helpers/reviewed-fin-container-fixture.mjs.txt"
+    },
+    {
+      "revision": "e91543d48c316ad3d5abd065c126838b5f0126a5",
+      "path": "tests/native-fin-containers.test.mjs",
+      "sha256": "1e5d74e43c7b74d1db9f735ee2485c9b24e1ee1a7c050a5449fdf65e9b6cd1d5",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/e91543d/tests/native-fin-containers.test.mjs.txt"
+    },
+    {
+      "revision": "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+      "path": "src/adoption/test-profiles.mjs",
+      "sha256": "9dc4626bf623787591c390f6d9de8bcbe5c6ef618285663f70ab8aa53e9f763d",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/fd51318/src/adoption/test-profiles.mjs.txt"
+    },
+    {
+      "revision": "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+      "path": "src/backends/native/runtime-broker.mjs",
+      "sha256": "1c9f030f998af5fb4d4641efad9ccb51822443fed7ad5b37635b98aac89287ed",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/fd51318/src/backends/native/runtime-broker.mjs.txt"
+    },
+    {
+      "revision": "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+      "path": "src/build/native-artifacts.mjs",
+      "sha256": "5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/fd51318/src/build/native-artifacts.mjs.txt"
+    },
+    {
+      "revision": "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+      "path": "src/build/native-model.mjs",
+      "sha256": "aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/fd51318/src/build/native-model.mjs.txt"
+    },
+    {
+      "revision": "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+      "path": "tests/cpp-fin-container-entry.test.mjs",
+      "sha256": "e5f3cbc8fd0947dc180d20508eba86e6f9f514e76519b31702d28ce769b35dcc",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/cpp-fin-container-entry.test.mjs.txt"
+    },
+    {
+      "revision": "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+      "path": "tests/fin-container-entry-dispatch.test.mjs",
+      "sha256": "d0793c60e616718b4aeefc4512371c82d45c5cdb4d69976d828d370a98632218",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/fin-container-entry-dispatch.test.mjs.txt"
+    },
+    {
+      "revision": "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+      "path": "tests/fixtures/fin-container-consumers/cpp.cpp",
+      "sha256": "0b1b4a5454c9d7eabc7b9eb81fb6e84a43f9b561a57ed2743e46d3db56542fec",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/fixtures/fin-container-consumers/cpp.cpp.txt"
+    },
+    {
+      "revision": "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+      "path": "tests/fixtures/fin-container-consumers/dotnet.cs",
+      "sha256": "9a8d0ccd0113f647fa80bd126a3c14ff15cf1600a29ffba395fda342641ec07a",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/fixtures/fin-container-consumers/dotnet.cs.txt"
+    },
+    {
+      "revision": "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+      "path": "tests/fixtures/fin-container-consumers/java.java",
+      "sha256": "6c567c87f866dc91c714bcae35fbbbfeaed65f34530e62c456f872b7d752eefa",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/fixtures/fin-container-consumers/java.java.txt"
+    },
+    {
+      "revision": "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+      "path": "tests/fixtures/fin-container-consumers/kotlin.kt",
+      "sha256": "c32f3cc353d4225e7ccf2c39c07a77c06ab1b59d939aded1b4864e16bfa1a7a7",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/fixtures/fin-container-consumers/kotlin.kt.txt"
+    },
+    {
+      "revision": "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+      "path": "tests/fixtures/fin-container-consumers/php-native.php",
+      "sha256": "e75545085f2ca4da792ec6a9ed5a2198bef9745116bbf6840886f5749b9baac1",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/fixtures/fin-container-consumers/php-native.php.txt"
+    },
+    {
+      "revision": "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+      "path": "tests/fixtures/fin-container-consumers/ruby.rb",
+      "sha256": "839d25393174940365c5a6b4c88f744e8ab5b876bbb955cb4eaa4f83dd500343",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/fixtures/fin-container-consumers/ruby.rb.txt"
+    },
+    {
+      "revision": "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+      "path": "tests/fixtures/fin-container-consumers/wit-wasi.c",
+      "sha256": "428e25d329d19a847e9a195226f0b7dd9775c658a128255bf18c1af371e7d9d6",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/fixtures/fin-container-consumers/wit-wasi.c.txt"
+    },
+    {
+      "revision": "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+      "path": "tests/fixtures/onboarding/native-fin-containers/FinContainers.lean",
+      "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/fixtures/onboarding/native-fin-containers/FinContainers.lean.txt"
+    },
+    {
+      "revision": "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+      "path": "tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/helpers/copied-fixture-install.mjs.txt"
+    },
+    {
+      "revision": "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+      "path": "tests/helpers/cpp-fin-container-entry-probe.mjs",
+      "sha256": "445dcadac2d6caea4181457ad7a782732b716c0931ee5155518eda7edbbc0088",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/helpers/cpp-fin-container-entry-probe.mjs.txt"
+    },
+    {
+      "revision": "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+      "path": "tests/helpers/fin-container-dispatch-gdb-extracted.mjs",
+      "sha256": "dd0cd4187a5fc7e4a2e4361ba99a41f72d845e2578ddb4bd5e021d1e8ea2acb2",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/helpers/fin-container-dispatch-gdb-extracted.mjs.txt"
+    },
+    {
+      "revision": "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+      "path": "tests/helpers/fin-container-dispatch-gdb.mjs",
+      "sha256": "a392dc47bb0334e0896539ccbf616d4a88547de283df9c84601d7bd29d631ff7",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/helpers/fin-container-dispatch-gdb.mjs.txt"
+    },
+    {
+      "revision": "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+      "path": "tests/helpers/fin-container-dispatch.mjs",
+      "sha256": "b38adb2fb6026e8a8a6808d4a99247997d585344b6d20f7265c1639c671a09c9",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/helpers/fin-container-dispatch.mjs.txt"
+    },
+    {
+      "revision": "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+      "path": "tests/helpers/fin-container-entry-dispatch.mjs",
+      "sha256": "59f31125753bec3206f4cf1497c7bedb5bba4c1eb16d68e0ef18891957976c98",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/helpers/fin-container-entry-dispatch.mjs.txt"
+    },
+    {
+      "revision": "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+      "path": "tests/helpers/fin-container-entry-probes.mjs",
+      "sha256": "41ecb420db1d1d76e8d8d79c70f7b0509b590334040dd985fc3ddb20cbb876b5",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/helpers/fin-container-entry-probes.mjs.txt"
+    },
+    {
+      "revision": "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+      "path": "tests/helpers/fin-container-install.mjs",
+      "sha256": "2024d6c6a44687293750c3ee5c25f092d689065e17beb8d535610963921c9329",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/helpers/fin-container-install.mjs.txt"
+    },
+    {
+      "revision": "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+      "path": "tests/helpers/reviewed-fin-container-fixture.mjs",
+      "sha256": "5e4d92f9bb4ccff65fb9356cc3a6613f5102665e59dbe38b99868e4804c8a132",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/helpers/reviewed-fin-container-fixture.mjs.txt"
+    },
+    {
+      "revision": "fd51318cc01a8aae2b0f3fe4e6d0cf529d160001",
+      "path": "tests/native-fin-containers.test.mjs",
+      "sha256": "1e5d74e43c7b74d1db9f735ee2485c9b24e1ee1a7c050a5449fdf65e9b6cd1d5",
+      "snapshot": "docs/evidence/fin-container-entry-20261009/sources/fd51318/tests/native-fin-containers.test.mjs.txt"
+    }
+  ]
+}

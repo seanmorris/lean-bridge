@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "kind": "hosted-container-artifact-membership",
+  "receipt": {
+    "path": "docs/evidence/python-rust-container-dispatch-20261009/receipt.json",
+    "sha256": "4b943a755f29af54ccef6fb59d4973f88470db78c08b520928734bbb998882e1"
+  },
+  "artifacts": [
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/python.zip",
+      "originalPath": "build/vo1436-hosted-container-dispatch-93c60a0/python.zip",
+      "bytes": 993757,
+      "sha256": "461d3e810c8bee043e7f498206f030ec9a18b4d79ca6636896d2b150f5a93b08"
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/rust.zip",
+      "originalPath": "build/vo1436-hosted-container-dispatch-93c60a0/rust.zip",
+      "bytes": 841995,
+      "sha256": "00290557169f1c38a67ba1d06208dbd048912b90d77a336b11a8e74f9c143a9b"
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/capture.json",
+      "originalPath": "build/vo1436-hosted-container-dispatch-93c60a0/capture.json",
+      "bytes": 549,
+      "sha256": "34744e2b5b7dd4cc1e97a8fd2a3995846ed7b568d06eb83ef285a502990a6087"
+    }
+  ],
+  "members": [
+    {
+      "archive": "docs/evidence/python-rust-container-dispatch-20261009/python.zip",
+      "member": "native-fin-containers/python.json",
+      "report": "docs/evidence/python-rust-container-dispatch-20261009/python-container-0.json"
+    },
+    {
+      "archive": "docs/evidence/python-rust-container-dispatch-20261009/python.zip",
+      "member": "native-fin-containers/reviewed-python.json",
+      "report": "docs/evidence/python-rust-container-dispatch-20261009/python-container-1.json"
+    },
+    {
+      "archive": "docs/evidence/python-rust-container-dispatch-20261009/rust.zip",
+      "member": "native-fin-containers/rust.json",
+      "report": "docs/evidence/python-rust-container-dispatch-20261009/rust-container-0.json"
+    },
+    {
+      "archive": "docs/evidence/python-rust-container-dispatch-20261009/rust.zip",
+      "member": "native-fin-containers/reviewed-rust.json",
+      "report": "docs/evidence/python-rust-container-dispatch-20261009/rust-container-1.json"
+    }
+  ]
+}

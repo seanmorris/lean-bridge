@@ -1,0 +1,63 @@
+gdb: warning: Couldn't determine a path for the index cache directory.
+
+Program stopped.
+0x00007f963e8bbb70 in ?? () from /lib64/ld-linux-x86-64.so.2
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+terminate called after throwing an instance of 'gdb_exception_error'
+terminate called recursively
+
+
+Fatal signal: Aborted
+----- Backtrace -----
+terminate called recursively
+
+
+Fatal signal: Aborted
+----- Backtrace -----
+0x55a79625840e ???
+0x55a796361601 ???
+0x7fb03fbde04f ???
+0x7fb03fc2ceec ???
+0x7fb03fbddfb1 raise
+0x7fb03fbc8471 abort
+0x7fb03ff2ee99 _ZN9__gnu_cxx27__verbose_terminate_handlerEv
+0x7fb03ff2ce19 ???
+0x7fb03ff2be88 ???
+0x7fb03ff2c5a5 __gxx_personality_v0
+0x7fb04a00433c ???
+0x7fb04a004127 _Unwind_RaiseException
+0x7fb03fd9b468 _Unwind_Resume_or_Rethrow
+0x7fb03ff2d11d __cxa_rethrow
+0x7fb03ff21925 ???
+0x7fb03ff2ce19 ???
+0x7fb03ff2be88 ???
+0x7fb03ff2c5a5 __gxx_personality_v0
+0x7fb04a00433c ???
+0x7fb04a004127 _Unwind_RaiseException
+0x7fb03ff2d0ca __cxa_throw
+0x55a7961bb311 ???
+0x55a7965d2cd3 ???
+0x55a796748bbb ???
+0x55a79627f4fe ???
+0x55a7961d538f ???
+0x55a7961d8519 ???
+0x55a7961ef242 ???
+0x55a79655c3e5 ???
+0x55a79645c308 ???
+0x55a7962ea332 ???
+0x55a7962ea48a ???
+0x7fb03fc30056 ???
+0x55a796752e3c ???
+0x7fb03ff584a2 ???
+0x7fb03fc2b1f4 ???
+0x7fb03fcaab4f __clone
+0xffffffffffffffff ???
+---------------------
+A fatal error internal to GDB has been detected, further
+debugging is not possible.  GDB will now terminate.
+
+This is a bug, please report it.  For instructions, see:
+<https://www.gnu.org/software/gdb/bugs/>.
+
+timeout: the monitored command dumped core

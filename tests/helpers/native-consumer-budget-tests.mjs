@@ -8,6 +8,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { disableFinContainerEntryWorkflow } from "./fin-container-entry-ci.mjs";
 
 const path = ".github/workflows/consumer-matrix.yml";
 const oldBudget = "    timeout-minutes: 240\n";
@@ -32,11 +33,13 @@ export const nativeConsumerBudgets = job => {
 };
 
 /**
- * The only workflow change is the native job's budget line and its explanatory comment.
+ * The only workflow changes are the native job's budget line with its explanatory comment, and the separately
+ * gated FinContainers entry counters, which are removed exactly before the pinned digests are checked.
  *
- * @param current - Complete workflow being checked.
+ * @param workflow - Complete workflow being checked.
  */
-export const assertNativeConsumerBudget = current => {
+export const assertNativeConsumerBudget = workflow => {
+	const current = disableFinContainerEntryWorkflow(workflow);
 	assert.equal(current.split(newBudget).length, 2, "the reviewed budget appears once");
 	assert.equal(sha256(current.replace(newBudget, oldBudget)), previousSha256, "preserve every native step, report gate, upload, enforcement and other job");
 	const job = nativeJob(current); assert.ok(job);

@@ -1,0 +1,334 @@
+{
+  "schemaVersion": 1,
+  "kind": "hosted-container-dispatch-acceptance",
+  "revision": "93c60a0487d0b2acc0b6d562cd72a3876738a666",
+  "run": 37873560469,
+  "scope": {
+    "profiles": [
+      "python",
+      "rust"
+    ],
+    "routes": [
+      "ordinary-source",
+      "reviewed-ir"
+    ],
+    "rowsPerReport": 9,
+    "measuredEntrypoints": [
+      "FinContainers.mirrorAll",
+      "FinContainers.orDefault"
+    ],
+    "publicAndRawSameHostProcess": true,
+    "sourceFreeOfflineReproducible": true,
+    "pythonGlibcFloor": "2.38",
+    "installedTreeRelocation": false,
+    "overallWorkflowSucceeded": false,
+    "sourceIdentity": "Selected producer sources, not a complete dependency closure",
+    "packageArchiveBytesRetained": false
+  },
+  "artifacts": [
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/python-container-0.json",
+      "originalPath": "build/vo1436-hosted-container-dispatch-93c60a0/python-container-0.json",
+      "sha256": "b077637d30352605c00e51ef30201ac42b4e1f886a3b09732bb74dc2d5696e01",
+      "bytes": 7409
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/python-container-1.json",
+      "originalPath": "build/vo1436-hosted-container-dispatch-93c60a0/python-container-1.json",
+      "sha256": "64c372dd30625a8ae892a398efbd9f8ac5e373222ae148b3f68cebfad4ea0174",
+      "bytes": 7503
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/python.artifact.json",
+      "originalPath": "build/vo1436-hosted-container-dispatch-93c60a0/python.artifact.json",
+      "sha256": "44b519c797e11fad8ca057137075298f55877744f173a66fe6c41bacf6285b9d",
+      "bytes": 759
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/python.job.json",
+      "originalPath": "build/vo1436-hosted-container-dispatch-93c60a0/python.job.json",
+      "sha256": "6923d8813aae778d5ced003e8ba4420abb7eb009489a6dc2d581e07e7fc4d5fe",
+      "bytes": 6417
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/python.job.log",
+      "originalPath": "build/vo1436-hosted-container-dispatch-93c60a0/python.job.log",
+      "sha256": "5d0b3fbc7cf5039bff9ec1e7544a3321ba62c310f28fcc8f70b18cf0d993c5e2",
+      "bytes": 540989
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/rust-container-0.json",
+      "originalPath": "build/vo1436-hosted-container-dispatch-93c60a0/rust-container-0.json",
+      "sha256": "103b7958c4998d35a88200918491e0da254f862f6ebaddee03d818c2e89f4d7e",
+      "bytes": 7351
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/rust-container-1.json",
+      "originalPath": "build/vo1436-hosted-container-dispatch-93c60a0/rust-container-1.json",
+      "sha256": "b90abe4011f42be90e11e2cda638c160f71b0bdaf9e2a54dbf1bcc0ebb597df6",
+      "bytes": 7445
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/rust.artifact.json",
+      "originalPath": "build/vo1436-hosted-container-dispatch-93c60a0/rust.artifact.json",
+      "sha256": "8f7361acdba9310d9e8c42c58a27c560b63f0d4bda722d6fb14159146c2ca362",
+      "bytes": 757
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/rust.job.json",
+      "originalPath": "build/vo1436-hosted-container-dispatch-93c60a0/rust.job.json",
+      "sha256": "9304bff00f833ffa0c404d6cbdc2cf68f7d92186611cbda664ab931ca424502a",
+      "bytes": 6023
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/rust.job.log",
+      "originalPath": "build/vo1436-hosted-container-dispatch-93c60a0/rust.job.log",
+      "sha256": "df26bf71d85c9fa7d2d36f1377bbcadab093a18213e90a97fec849a46dd86361",
+      "bytes": 464910
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/sources/.github/workflows/consumer-matrix.yml.txt",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:.github/workflows/consumer-matrix.yml",
+      "sha256": "f65f2adfde627a7860f4de7449cc4409318c0882bf959c8805106d6337e9dc61",
+      "bytes": 288218
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/sources/tests/native-fin-containers.test.mjs.txt",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/native-fin-containers.test.mjs",
+      "sha256": "7080d24a49f84f8a1e5abd3f51946243e75eb41539ef6ebdf3a33bdcc40b44c5",
+      "bytes": 22948
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/sources/tests/helpers/fin-container-host-dispatch.mjs.txt",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/helpers/fin-container-host-dispatch.mjs",
+      "sha256": "86f5552563e619bb7dcfc4c2c60d7811393adb334724c78921292e8cfbf87c9a",
+      "bytes": 4179
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/sources/tests/helpers/fin-container-host-probes.mjs.txt",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/helpers/fin-container-host-probes.mjs",
+      "sha256": "665ed67f9ae23e42d80d6e7ebac757df9fc2a85a7857f14cf2ac4687d7549284",
+      "bytes": 5830
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/sources/tests/helpers/fin-container-host-dispatch-tests.mjs.txt",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/helpers/fin-container-host-dispatch-tests.mjs",
+      "sha256": "fb3d462b4f17bea1940c5f8a8359317ea8f60eb7de5139d5c19a22f3fbb1d957",
+      "bytes": 1782
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/sources/tests/helpers/fin-container-dispatch.mjs.txt",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/helpers/fin-container-dispatch.mjs",
+      "sha256": "b38adb2fb6026e8a8a6808d4a99247997d585344b6d20f7265c1639c671a09c9",
+      "bytes": 4997
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/sources/tests/helpers/fin-container-install.mjs.txt",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/helpers/fin-container-install.mjs",
+      "sha256": "2024d6c6a44687293750c3ee5c25f092d689065e17beb8d535610963921c9329",
+      "bytes": 2979
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/sources/tests/helpers/copied-fixture-install.mjs.txt",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+      "bytes": 12888
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/sources/tests/helpers/reviewed-fin-container-fixture.mjs.txt",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/helpers/reviewed-fin-container-fixture.mjs",
+      "sha256": "5e4d92f9bb4ccff65fb9356cc3a6613f5102665e59dbe38b99868e4804c8a132",
+      "bytes": 2452
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/sources/tests/fixtures/onboarding/native-fin-containers/FinContainers.lean.txt",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/fixtures/onboarding/native-fin-containers/FinContainers.lean",
+      "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be",
+      "bytes": 1562
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/sources/tests/fixtures/fin-container-consumers/python.py.txt",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/fixtures/fin-container-consumers/python.py",
+      "sha256": "ee267c0ba444e24710624cd1e090cb4d5c8cd6bcad17201bbc7622cb2a780261",
+      "bytes": 3310
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/sources/tests/fixtures/fin-container-consumers/rust.rs.txt",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/fixtures/fin-container-consumers/rust.rs",
+      "sha256": "da7f42bc0719d4f6ca1134bb6be473d5b4e82beece57f91518907d729236278a",
+      "bytes": 3410
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/sources/src/analyze/NativeExports.lean.txt",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:src/analyze/NativeExports.lean",
+      "sha256": "46b46cbb21fe51d166ab700cde2c41583bc3a093f67cecd07d104cdf649f61ce",
+      "bytes": 87953
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/sources/src/analyze/native-types.mjs.txt",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:src/analyze/native-types.mjs",
+      "sha256": "6e3612687fc26c12d8cacc0eb07612598c0bb16eaa61026165dddebdef4ff971",
+      "bytes": 15283
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/sources/src/build/native-model.mjs.txt",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:src/build/native-model.mjs",
+      "sha256": "aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13",
+      "bytes": 42596
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/sources/src/build/native-project.mjs.txt",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:src/build/native-project.mjs",
+      "sha256": "b941e848c291a05a4fab3e93f2d9f5d3a5c9380f9a290c5668378c05ae5b5cf7",
+      "bytes": 17169
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/sources/src/build/component-refinements.mjs.txt",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:src/build/component-refinements.mjs",
+      "sha256": "ee003a614e93bbfa542625357eb5ff752c5af4805f9e2f81ca5168ccd1134df8",
+      "bytes": 6854
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/sources/src/backends/c/native-copied-values.mjs.txt",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:src/backends/c/native-copied-values.mjs",
+      "sha256": "ba14b12ba6d0f7df8ff091f472d70fd74c003e78e1ac6e58dc8170eee2163640",
+      "bytes": 20095
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/sources/src/backends/python/copied-values.mjs.txt",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:src/backends/python/copied-values.mjs",
+      "sha256": "8c0c6432d1bbccca1d6608757d56345ae5f50fa7746ee8e615c212cbf0799cc7",
+      "bytes": 14861
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/sources/src/backends/rust/copied-values.mjs.txt",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:src/backends/rust/copied-values.mjs",
+      "sha256": "e3c604b3c9a70cbfa664053dc4b6aa4bcee6c6aa80d1738929af8639cb0fbac1",
+      "bytes": 17147
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/sources/src/build/native-python-artifacts.mjs.txt",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:src/build/native-python-artifacts.mjs",
+      "sha256": "01fa5c28acb7fdb67d85f00cd1f9f9e6e35344e25aaf2d65c3995d99bb7f99e6",
+      "bytes": 3374
+    },
+    {
+      "path": "docs/evidence/python-rust-container-dispatch-20261009/sources/src/build/native-artifacts.mjs.txt",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:src/build/native-artifacts.mjs",
+      "sha256": "5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4",
+      "bytes": 12720
+    }
+  ],
+  "sources": [
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "sha256": "f65f2adfde627a7860f4de7449cc4409318c0882bf959c8805106d6337e9dc61",
+      "snapshot": "docs/evidence/python-rust-container-dispatch-20261009/sources/.github/workflows/consumer-matrix.yml.txt"
+    },
+    {
+      "path": "tests/native-fin-containers.test.mjs",
+      "sha256": "7080d24a49f84f8a1e5abd3f51946243e75eb41539ef6ebdf3a33bdcc40b44c5",
+      "snapshot": "docs/evidence/python-rust-container-dispatch-20261009/sources/tests/native-fin-containers.test.mjs.txt"
+    },
+    {
+      "path": "tests/helpers/fin-container-host-dispatch.mjs",
+      "sha256": "86f5552563e619bb7dcfc4c2c60d7811393adb334724c78921292e8cfbf87c9a",
+      "snapshot": "docs/evidence/python-rust-container-dispatch-20261009/sources/tests/helpers/fin-container-host-dispatch.mjs.txt"
+    },
+    {
+      "path": "tests/helpers/fin-container-host-probes.mjs",
+      "sha256": "665ed67f9ae23e42d80d6e7ebac757df9fc2a85a7857f14cf2ac4687d7549284",
+      "snapshot": "docs/evidence/python-rust-container-dispatch-20261009/sources/tests/helpers/fin-container-host-probes.mjs.txt"
+    },
+    {
+      "path": "tests/helpers/fin-container-host-dispatch-tests.mjs",
+      "sha256": "fb3d462b4f17bea1940c5f8a8359317ea8f60eb7de5139d5c19a22f3fbb1d957",
+      "snapshot": "docs/evidence/python-rust-container-dispatch-20261009/sources/tests/helpers/fin-container-host-dispatch-tests.mjs.txt"
+    },
+    {
+      "path": "tests/helpers/fin-container-dispatch.mjs",
+      "sha256": "b38adb2fb6026e8a8a6808d4a99247997d585344b6d20f7265c1639c671a09c9",
+      "snapshot": "docs/evidence/python-rust-container-dispatch-20261009/sources/tests/helpers/fin-container-dispatch.mjs.txt"
+    },
+    {
+      "path": "tests/helpers/fin-container-install.mjs",
+      "sha256": "2024d6c6a44687293750c3ee5c25f092d689065e17beb8d535610963921c9329",
+      "snapshot": "docs/evidence/python-rust-container-dispatch-20261009/sources/tests/helpers/fin-container-install.mjs.txt"
+    },
+    {
+      "path": "tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+      "snapshot": "docs/evidence/python-rust-container-dispatch-20261009/sources/tests/helpers/copied-fixture-install.mjs.txt"
+    },
+    {
+      "path": "tests/helpers/reviewed-fin-container-fixture.mjs",
+      "sha256": "5e4d92f9bb4ccff65fb9356cc3a6613f5102665e59dbe38b99868e4804c8a132",
+      "snapshot": "docs/evidence/python-rust-container-dispatch-20261009/sources/tests/helpers/reviewed-fin-container-fixture.mjs.txt"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-containers/FinContainers.lean",
+      "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be",
+      "snapshot": "docs/evidence/python-rust-container-dispatch-20261009/sources/tests/fixtures/onboarding/native-fin-containers/FinContainers.lean.txt"
+    },
+    {
+      "path": "tests/fixtures/fin-container-consumers/python.py",
+      "sha256": "ee267c0ba444e24710624cd1e090cb4d5c8cd6bcad17201bbc7622cb2a780261",
+      "snapshot": "docs/evidence/python-rust-container-dispatch-20261009/sources/tests/fixtures/fin-container-consumers/python.py.txt"
+    },
+    {
+      "path": "tests/fixtures/fin-container-consumers/rust.rs",
+      "sha256": "da7f42bc0719d4f6ca1134bb6be473d5b4e82beece57f91518907d729236278a",
+      "snapshot": "docs/evidence/python-rust-container-dispatch-20261009/sources/tests/fixtures/fin-container-consumers/rust.rs.txt"
+    },
+    {
+      "path": "src/analyze/NativeExports.lean",
+      "sha256": "46b46cbb21fe51d166ab700cde2c41583bc3a093f67cecd07d104cdf649f61ce",
+      "snapshot": "docs/evidence/python-rust-container-dispatch-20261009/sources/src/analyze/NativeExports.lean.txt"
+    },
+    {
+      "path": "src/analyze/native-types.mjs",
+      "sha256": "6e3612687fc26c12d8cacc0eb07612598c0bb16eaa61026165dddebdef4ff971",
+      "snapshot": "docs/evidence/python-rust-container-dispatch-20261009/sources/src/analyze/native-types.mjs.txt"
+    },
+    {
+      "path": "src/build/native-model.mjs",
+      "sha256": "aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13",
+      "snapshot": "docs/evidence/python-rust-container-dispatch-20261009/sources/src/build/native-model.mjs.txt"
+    },
+    {
+      "path": "src/build/native-project.mjs",
+      "sha256": "b941e848c291a05a4fab3e93f2d9f5d3a5c9380f9a290c5668378c05ae5b5cf7",
+      "snapshot": "docs/evidence/python-rust-container-dispatch-20261009/sources/src/build/native-project.mjs.txt"
+    },
+    {
+      "path": "src/build/component-refinements.mjs",
+      "sha256": "ee003a614e93bbfa542625357eb5ff752c5af4805f9e2f81ca5168ccd1134df8",
+      "snapshot": "docs/evidence/python-rust-container-dispatch-20261009/sources/src/build/component-refinements.mjs.txt"
+    },
+    {
+      "path": "src/backends/c/native-copied-values.mjs",
+      "sha256": "ba14b12ba6d0f7df8ff091f472d70fd74c003e78e1ac6e58dc8170eee2163640",
+      "snapshot": "docs/evidence/python-rust-container-dispatch-20261009/sources/src/backends/c/native-copied-values.mjs.txt"
+    },
+    {
+      "path": "src/backends/python/copied-values.mjs",
+      "sha256": "8c0c6432d1bbccca1d6608757d56345ae5f50fa7746ee8e615c212cbf0799cc7",
+      "snapshot": "docs/evidence/python-rust-container-dispatch-20261009/sources/src/backends/python/copied-values.mjs.txt"
+    },
+    {
+      "path": "src/backends/rust/copied-values.mjs",
+      "sha256": "e3c604b3c9a70cbfa664053dc4b6aa4bcee6c6aa80d1738929af8639cb0fbac1",
+      "snapshot": "docs/evidence/python-rust-container-dispatch-20261009/sources/src/backends/rust/copied-values.mjs.txt"
+    },
+    {
+      "path": "src/build/native-python-artifacts.mjs",
+      "sha256": "01fa5c28acb7fdb67d85f00cd1f9f9e6e35344e25aaf2d65c3995d99bb7f99e6",
+      "snapshot": "docs/evidence/python-rust-container-dispatch-20261009/sources/src/build/native-python-artifacts.mjs.txt"
+    },
+    {
+      "path": "src/build/native-artifacts.mjs",
+      "sha256": "5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4",
+      "snapshot": "docs/evidence/python-rust-container-dispatch-20261009/sources/src/build/native-artifacts.mjs.txt"
+    }
+  ]
+}

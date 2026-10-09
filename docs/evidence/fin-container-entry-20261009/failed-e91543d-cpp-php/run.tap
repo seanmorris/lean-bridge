@@ -1,0 +1,48 @@
+TAP version 13
+# Subtest: relocated source-free native packages check Fin inside arrays, lists and options
+not ok 1 - relocated source-free native packages check Fin inside arrays, lists and options
+  ---
+  duration_ms: 133165.815401
+  type: 'test'
+  location: '/app/build/worktrees/container-entry-producer-23d5948/tests/native-fin-containers.test.mjs:298:1'
+  failureType: 'testCodeFailure'
+  error: '/tmp/lean-bridge-fin-container-consumer-PoCcLo/cpp-entry/raw/raw exited with status 3: {"command":"/tmp/lean-bridge-fin-container-consumer-PoCcLo/cpp-entry/raw/raw","args":[],"stderr":"component initializer is not visible\\n","stdout":""}'
+  code: 'build-command-failed'
+  name: 'CanonicalBuildError'
+  stack: |-
+    ChildProcess.<anonymous> (file:///app/build/worktrees/container-entry-producer-23d5948/src/build/process-runner.mjs:77:21)
+    Object.onceWrapper (node:events:634:26)
+    ChildProcess.emit (node:events:519:28)
+    maybeClose (node:internal/child_process:1101:16)
+    ChildProcess._handle.onexit (node:internal/child_process:304:5)
+  ...
+# build 0: cpp, php-native
+# installing and checking cpp
+# Subtest: independently reviewed native packages check container and alias Fin bounds after source-free installation
+not ok 2 - independently reviewed native packages check container and alias Fin bounds after source-free installation
+  ---
+  duration_ms: 133972.920171
+  type: 'test'
+  location: '/app/build/worktrees/container-entry-producer-23d5948/tests/native-fin-containers.test.mjs:300:1'
+  failureType: 'testCodeFailure'
+  error: '/tmp/lean-bridge-fin-container-consumer-adC6it/cpp-entry/raw/raw exited with status 3: {"command":"/tmp/lean-bridge-fin-container-consumer-adC6it/cpp-entry/raw/raw","args":[],"stderr":"component initializer is not visible\\n","stdout":""}'
+  code: 'build-command-failed'
+  name: 'CanonicalBuildError'
+  stack: |-
+    ChildProcess.<anonymous> (file:///app/build/worktrees/container-entry-producer-23d5948/src/build/process-runner.mjs:77:21)
+    Object.onceWrapper (node:events:634:26)
+    ChildProcess.emit (node:events:519:28)
+    maybeClose (node:internal/child_process:1101:16)
+    ChildProcess._handle.onexit (node:internal/child_process:304:5)
+  ...
+# build 0: cpp, php-native
+# installing and checking cpp
+1..2
+# tests 2
+# suites 0
+# pass 0
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 268258.389807

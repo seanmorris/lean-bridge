@@ -152,6 +152,7 @@ import { cppFinDispatchIntegrationChangedPaths } from "./cpp-fin-dispatch-integr
 import { perlRelocatedPromotionChangedPaths } from "./perl-relocated-promotion-source-history.mjs";
 import { perlClosureNativeBudgetChangedPaths } from "./perl-closure-native-budget-source-history.mjs";
 import { finEntryIntegrationChangedPaths } from "./fin-entry-integration-source-history.mjs";
+import { finContainerEvidenceCiChangedPaths } from "./fin-container-evidence-ci-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -769,6 +770,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...perlRelocatedPromotionChangedPaths
 	, ...perlClosureNativeBudgetChangedPaths
 	, ...finEntryIntegrationChangedPaths
+	, ...finContainerEvidenceCiChangedPaths
 ])].sort());
 
 /**

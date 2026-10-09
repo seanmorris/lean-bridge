@@ -1,0 +1,33 @@
+gdb: warning: Couldn't determine a path for the index cache directory.
+
+Program stopped.
+0x00007ff82ca13b70 in ?? () from /lib64/ld-linux-x86-64.so.2
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x7ff822f2b6c0 (LWP 3483324)]
+[New Thread 0x7ff8201846c0 (LWP 3483325)]
+[New Thread 0x7ff81bfff6c0 (LWP 3483326)]
+[New Thread 0x7ff8047ff6c0 (LWP 3483327)]
+[New Thread 0x7ff8046fe6c0 (LWP 3483328)]
+[New Thread 0x7ff8045fd6c0 (LWP 3483329)]
+[New Thread 0x7ff8044fc6c0 (LWP 3483330)]
+[New Thread 0x7ff8043fb6c0 (LWP 3483331)]
+[New Thread 0x7ff8042fa6c0 (LWP 3483332)]
+[New Thread 0x7ff8041f96c0 (LWP 3483333)]
+[New Thread 0x7ff7c2fff6c0 (LWP 3483334)]
+[Thread 0x7ff8201846c0 (LWP 3483325) exited]
+[Thread 0x7ff8045fd6c0 (LWP 3483329) exited]
+[Thread 0x7ff81bfff6c0 (LWP 3483326) exited]
+[Thread 0x7ff8042fa6c0 (LWP 3483332) exited]
+[Thread 0x7ff8043fb6c0 (LWP 3483331) exited]
+[Thread 0x7ff8044fc6c0 (LWP 3483330) exited]
+[Thread 0x7ff8046fe6c0 (LWP 3483328) exited]
+[Thread 0x7ff8047ff6c0 (LWP 3483327) exited]
+[Thread 0x7ff822f2b6c0 (LWP 3483324) exited]
+[Thread 0x7ff822f2c800 (LWP 3483321) exited]
+[Thread 0x7ff8041f96c0 (LWP 3483333) exited]
+[Thread 0x7ff7c2fff6c0 (LWP 3483334) exited]
+[New process 3483321]
+[Inferior 1 (process 3483321) exited normally]
+lean objfiles in inferior: ['/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2/lib/lean/libleanshared.so']
+exit 0

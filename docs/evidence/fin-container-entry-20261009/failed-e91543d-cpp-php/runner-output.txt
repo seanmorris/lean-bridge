@@ -1,0 +1,21 @@
+{"startedAt":"2026-10-09T06:18:21.505Z","pid":3469473,"revision":"e91543d48c316ad3d5abd065c126838b5f0126a5","freeMiB":2756,"output":"/app/build/vo1438-container-entry-e91543d"}
+{"code":1,"signal":null,"stoppedForDisk":false,"minimumFreeMiB":2119,"endedAt":"2026-10-09T06:22:50.605Z","tapSha256":"6bf628e02b018e9f7b6330a74bda34c7969ff7c7fc7a2ea0a46c1fa33d52df8c"}
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+1 !== 0
+
+    at [90mfile:///app/build/[39mrun-vo1438-container-entry-e91543d.mjs:78:8
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)[39m {
+  generatedMessage: [33mtrue[39m,
+  code: [32m'ERR_ASSERTION'[39m,
+  actual: [33m1[39m,
+  expected: [33m0[39m,
+  operator: [32m'strictEqual'[39m,
+  diff: [32m'simple'[39m
+}
+
+Node.js v22.23.3

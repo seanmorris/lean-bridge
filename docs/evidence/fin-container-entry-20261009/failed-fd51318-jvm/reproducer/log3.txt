@@ -1,0 +1,32 @@
+gdb: warning: Couldn't determine a path for the index cache directory.
+
+Program stopped.
+0x00007f6988507b70 in ?? () from /lib64/ld-linux-x86-64.so.2
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x7f6986bff6c0 (LWP 3483145)]
+[New Thread 0x7f69854786c0 (LWP 3483146)]
+[New Thread 0x7f69853776c0 (LWP 3483147)]
+[New Thread 0x7f69852766c0 (LWP 3483148)]
+[New Thread 0x7f69851756c0 (LWP 3483149)]
+[New Thread 0x7f69850746c0 (LWP 3483150)]
+[New Thread 0x7f6984f736c0 (LWP 3483151)]
+[New Thread 0x7f6984e726c0 (LWP 3483152)]
+[New Thread 0x7f6984d716c0 (LWP 3483153)]
+[New Thread 0x7f6984ba06c0 (LWP 3483154)]
+[New Thread 0x7f6984a9f6c0 (LWP 3483155)]
+[Thread 0x7f69854786c0 (LWP 3483146) exited]
+[Thread 0x7f69850746c0 (LWP 3483150) exited]
+[Thread 0x7f69853776c0 (LWP 3483147) exited]
+[Thread 0x7f6984ba06c0 (LWP 3483154) exited]
+[Thread 0x7f6984d716c0 (LWP 3483153) exited]
+[Thread 0x7f6984e726c0 (LWP 3483152) exited]
+[Thread 0x7f6984f736c0 (LWP 3483151) exited]
+[Thread 0x7f69851756c0 (LWP 3483149) exited]
+[Thread 0x7f69852766c0 (LWP 3483148) exited]
+[Thread 0x7f6986bff6c0 (LWP 3483145) exited]
+[Thread 0x7f69882d8040 (LWP 3483142) exited]
+[Thread 0x7f6984a9f6c0 (LWP 3483155) exited]
+[New process 3483142]
+[Inferior 1 (process 3483142) exited normally]
+exit 0
