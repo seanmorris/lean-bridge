@@ -1,5 +1,5 @@
 /**
- * Installed acceptance for the additive native Fin container cases. This development slice is C/C++/Python;
+ * Installed acceptance for the additive native Fin container cases. This slice is C/C++/Python/Rust/Ruby;
  * other native consumers and the separate measured-dispatch supplement remain required under VO #1454.
  *
  * @file
@@ -14,12 +14,33 @@ import { verifyNativeFiles } from "../../src/build/native-artifacts.mjs";
 import { verifyPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { copiedCleanEnvironment, installCopiedConsumer, runCopied } from "./copied-fixture-install.mjs";
 import { finContainerEnvironment, finContainerTargets } from "./fin-container-install.mjs";
-import { finContainerEdgeConsumer, finContainerEdgeRefinements, finContainerEdgeSource, implementedFinContainerEdgeProfiles } from "./fin-container-edges.mjs";
+import { finContainerEdgeConsumer, finContainerEdgeRefinements, finContainerEdgeSource } from "./fin-container-edges.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
+import { prepareRustCorpusDependencies } from "./type-corpus-rust.mjs";
 
 /** Original accepted counts plus the new fragment, including its exact-count assertion. */
-export const finContainerEdgeChecks = Object.freeze({ c: 2041 + 12073, cpp: 2039 + 12060, python: 2029 + 12066 });
+export const finContainerEdgeChecks = Object.freeze({ c: 2041 + 12073, cpp: 2039 + 12060, python: 2029 + 12066, rust: 2027 + 12051, ruby: 2025 + 12069 });
+
+/** Read exactly one receipt directly from the gem's original data member, without extracting a substitute. */
+export const finContainerEdgeGemReceipt = String.raw`require "rubygems"
+require "rubygems/package"
+require "zlib"
+require "stringio"
+payloads = []
+Gem::Package::TarReader.new(File.open(ARGV.fetch(0), "rb")) do |tar|
+  tar.each { |entry| payloads << entry.read if entry.full_name == "data.tar.gz" && entry.file? }
+end
+abort "Expected one gem data member" unless payloads.length == 1
+receipts = []
+Zlib::GzipReader.wrap(StringIO.new(payloads.fetch(0))) do |gzip|
+  Gem::Package::TarReader.new(gzip) do |tar|
+    tar.each { |entry| receipts << entry.read if entry.full_name == "lean-bridge/package-receipt.json" && entry.file? }
+  end
+end
+abort "Expected one gem receipt" unless receipts.length == 1
+print receipts.fetch(0)
+`;
 
 /**
  * Reject missing/unknown/duplicate explicit profiles. Undefined disables the installed gate.
@@ -30,7 +51,7 @@ export const finContainerEdgeSelection = value => {
 	if(value === undefined) return [];
 	assert.equal(typeof value, "string");
 	const profiles = value.split(",").sort();
-	assert.ok(profiles.every(profile => implementedFinContainerEdgeProfiles.includes(profile)), "Unknown, empty or unimplemented Fin edge profile");
+	assert.ok(profiles.every(profile => Object.hasOwn(finContainerEdgeChecks, profile)), "Unknown, empty or unimplemented Fin edge installed profile");
 	assert.equal(new Set(profiles).size, profiles.length, "Duplicate Fin edge profile");
 	return profiles;
 };
@@ -94,7 +115,7 @@ export const prepareFinContainerEdgeExecutable = async ({ profile, root, directo
  * consumer tree, rerun the identical public consumer and verify the same file identities afterward.
  *
  * @param options - Verified archive handoff and installed consumer execution.
- * @param options.profile - C, C++ or Python.
+ * @param options.profile - An implemented installed profile.
  * @param options.consumer - Parent of the installed host directory.
  * @param options.handoff - Archive handoff directory.
  * @param options.packages - Selected verified package-set entries.
@@ -104,6 +125,7 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 	const root = join(consumer, profile), pkg = packages.find(item => item.role === "component");
 	assert.ok(pkg);
 	const archive = join(handoff, pkg.artifacts[0].path);
+	assert.equal(sha256(await readFile(archive)), pkg.artifacts[0].sha256);
 	let installed, receiptPath, archiveBytes, args, python;
 	if(profile === "python")
 	{
@@ -116,6 +138,25 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 		archiveBytes = (await runCopied("/usr/bin/unzip", ["-p", archive, receiptPath], root)).stdout;
 		args = ["-I", "consumer.py"];
 	}
+	else if(profile === "ruby")
+	{
+		const gems = join(root, "gems");
+		const identity = await runCopied(command, ["-e", "print Gem::Specification.find_by_name(ARGV.fetch(0), ARGV.fetch(1)).full_gem_path", pkg.name, pkg.version], root
+			, { ...copiedCleanEnvironment, GEM_HOME: gems, GEM_PATH: gems });
+		installed = identity.stdout;
+		assert.ok(installed.startsWith(`${gems}/gems/`));
+		receiptPath = "lean-bridge/package-receipt.json";
+		archiveBytes = (await runCopied(command, ["--disable-gems", "-e", finContainerEdgeGemReceipt, archive], root)).stdout;
+		args = ["consumer.rb"];
+	}
+	else if(profile === "rust")
+	{
+		const directory = `${pkg.name}-${pkg.version}`;
+		installed = join(root, directory);
+		receiptPath = "lean-bridge/package-receipt.json";
+		archiveBytes = (await runCopied("/usr/bin/tar", ["--use-compress-program=/usr/bin/gzip", "-xOf", archive, `${directory}/${receiptPath}`], root)).stdout;
+		args = [];
+	}
 	else
 	{
 		assert.ok(["c", "cpp"].includes(profile));
@@ -127,9 +168,13 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 	}
 	assert.equal(await readFile(join(installed, receiptPath), "utf8"), archiveBytes, "installed receipt equals original archive member");
 	const receipt = JSON.parse(archiveBytes);
+	assert.equal(receipt.name, pkg.name);
+	assert.equal(receipt.version, pkg.version);
 	await verifyNativeFiles(installed, receipt.files);
-	const executable = profile === "python" ? null : await prepareFinContainerEdgeExecutable({ profile, root, directory: basename(installed), pkgConfig: receipt.pkgConfig });
-	if(executable)
+	const executable = ["c", "cpp"].includes(profile)
+		? await prepareFinContainerEdgeExecutable({ profile, root, directory: basename(installed), pkgConfig: receipt.pkgConfig })
+		: profile === "rust" ? { executableSha256: sha256(await readFile(command)) } : null;
+	if(executable?.runtimeSearchPath)
 	{
 		assert.equal(command, join(root, "consumer"));
 		const before = await runCopied(command, args, root, copiedCleanEnvironment);
@@ -138,16 +183,19 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 		assert.equal(sha256(await readFile(command)), executable.executableSha256);
 	}
 	const moved = `${root}-relocated`;
-	assert.ok(command.startsWith(`${root}/`));
+	assert.ok(profile === "ruby" ? command.startsWith("/") : command.startsWith(`${root}/`));
 	await rename(root, moved);
 	await assert.rejects(access(root), { code: "ENOENT" });
-	const repeated = await runCopied(join(moved, relative(root, command)), args, moved, copiedCleanEnvironment);
+	const movedCommand = profile === "ruby" ? command : join(moved, relative(root, command));
+	const environment = profile === "ruby"
+		? { ...copiedCleanEnvironment, GEM_HOME: join(moved, "gems"), GEM_PATH: join(moved, "gems") } : copiedCleanEnvironment;
+	const repeated = await runCopied(movedCommand, args, moved, environment);
 	assert.equal(repeated.stderr, "");
 	assert.equal(repeated.stdout, `fin-container-ok:${finContainerEdgeChecks[profile]}\n`);
 	const movedInstall = join(moved, relative(root, installed));
 	assert.equal(await readFile(join(movedInstall, receiptPath), "utf8"), archiveBytes);
 	await verifyNativeFiles(movedInstall, receipt.files);
-	if(executable) assert.equal(sha256(await readFile(join(moved, "consumer"))), executable.executableSha256);
+	if(executable) assert.equal(sha256(await readFile(movedCommand)), executable.executableSha256);
 	return { relocatedInstallation: true
 		, repeatExecution: true
 		, installedFilesUnchanged: true
@@ -191,6 +239,8 @@ export const checkInstalledFinContainerEdges = async (t, profiles, reportPath) =
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 		archives.push(Object.fromEntries(receipt.packages.flatMap(pkg => pkg.artifacts.map(artifact => [artifact.path, artifact.sha256]))));
 		const receiptSha256 = sha256(await readFile(join(handoff, "package-set-receipt.json")));
+		const dependencies = attempt === 0 && profiles.includes("rust")
+			? await prepareRustCorpusDependencies({ rustRoot: join(outputRoot, "native/rust"), directory: author, handoff: join(consumer, "dependencies"), environment }) : undefined;
 		await rm(author, { recursive: true, force: true });
 		await assert.rejects(access(author), { code: "ENOENT" });
 		if(attempt === 1) continue;
@@ -199,7 +249,7 @@ export const checkInstalledFinContainerEdges = async (t, profiles, reportPath) =
 			const packages = receipt.packages.filter(pkg => pkg.target === finContainerTargets[profile][0]);
 			const consumerSource = await finContainerEdgeConsumer(profile);
 			const { command, ...observation } = await installCopiedConsumer({ profile
-				, consumer, handoff, packages, environment
+				, consumer, handoff, packages, environment, dependencies
 				, fixture: { source: () => consumerSource, success: "fin-container-ok", expectedChecks: finContainerEdgeChecks[profile] } });
 			const repeated = await repeatFinContainerEdges({ profile, consumer, handoff, packages, command });
 			reports.push({ profile

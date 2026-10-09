@@ -14,10 +14,11 @@ import { generateGmpProjection } from "../src/backends/c/gmp-projection.mjs";
 import { generateCBindingPackage } from "../src/backends/c/generate.mjs";
 import { compilePrimitiveCppModel, renderPrimitiveCppPackage } from "../src/backends/cpp/primitives.mjs";
 import { boostSources } from "../src/backends/cpp/boost.mjs";
+import { generateRustBindingPackage } from "../src/backends/rust/generate.mjs";
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { finContainerEdgeConsumer, finContainerEdgeProfiles, finContainerEdgeRefinements, finContainerEdgeReviewedIr, finContainerEdgeSource, implementedFinContainerEdgeProfiles, insertFinContainerEdgeFragment } from "./helpers/fin-container-edges.mjs";
 import { finContainerRefinements } from "./helpers/fin-container-install.mjs";
-import { checkInstalledFinContainerEdges, finContainerEdgeChecks, finContainerEdgeSelection, prepareFinContainerEdgeExecutable, requireNewFinContainerEdgeReport, writeFinContainerEdgeReport } from "./helpers/fin-container-edge-install.mjs";
+import { checkInstalledFinContainerEdges, finContainerEdgeChecks, finContainerEdgeGemReceipt, finContainerEdgeSelection, prepareFinContainerEdgeExecutable, requireNewFinContainerEdgeReport, writeFinContainerEdgeReport } from "./helpers/fin-container-edge-install.mjs";
 import { finContainerReviewedIr } from "./helpers/reviewed-fin-container-fixture.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 
@@ -68,10 +69,10 @@ test("edge insertion refuses missing, empty, repeated and fragment-supplied mark
 
 test("the development slice does not erase the remaining native hosts or replace old consumers", async () => {
 	assert.deepEqual(finContainerEdgeProfiles, ["c", "cpp", "python", "rust", "ruby", "dotnet", "java", "kotlin", "php-native", "wit-wasi"]);
-	assert.deepEqual(implementedFinContainerEdgeProfiles, ["c", "cpp", "python"]);
-	for(const profile of ["c", "cpp", "python"])
+	assert.deepEqual(implementedFinContainerEdgeProfiles, ["c", "cpp", "python", "rust", "ruby"]);
+	for(const profile of implementedFinContainerEdgeProfiles)
 	{
-		const extension = { c: "c", cpp: "cpp", python: "py" }[profile];
+		const extension = { c: "c", cpp: "cpp", python: "py", rust: "rs", ruby: "rb" }[profile];
 		const base = await readFile(`tests/fixtures/fin-container-consumers/${profile}.${extension}`, "utf8");
 		const fragment = await readFile(`tests/fixtures/fin-container-edge-consumers/${profile}.${extension}`, "utf8");
 		const combined = await finContainerEdgeConsumer(profile);
@@ -82,7 +83,7 @@ test("the development slice does not erase the remaining native hosts or replace
 		assert.match(fragment, /1000/u);
 	}
 	await assert.rejects(finContainerEdgeConsumer("perl"), /not implemented/u);
-	await assert.rejects(finContainerEdgeConsumer("rust"), /not implemented/u);
+	await assert.rejects(finContainerEdgeConsumer("dotnet"), /not implemented/u);
 });
 
 test("structural and negative-Nat controls require their own positive diagnostic, not any bound error", async () => {
@@ -97,6 +98,9 @@ test("structural and negative-Nat controls require their own positive diagnostic
 	assert.ok(cpp.includes('std::string(failure.what()) == "Nat must be nonnegative"'));
 	assert.ok(cpp.includes("failure.code == FINCONTAINERS_ERROR_INVALID_ARGUMENT"));
 	assert.doesNotMatch(cpp, /CHECK\(invalid\(/u);
+	const ruby = await readFile("tests/fixtures/fin-container-edge-consumers/ruby.rb", "utf8");
+	assert.ok(ruby.includes('error.class == RangeError && error.message == "Nat cannot be negative"'));
+	assert.ok(ruby.includes("check(edge_negative.call { API.optional_digits(Some.new(values)) }"));
 });
 
 const sourceChecks = process.env.LEAN_BRIDGE_FIN_CONTAINER_EDGE_SOURCE_TEST === "1";
@@ -138,11 +142,77 @@ test("the complete C++ edge consumer compiles against generated public types wit
 	assert.equal(result.stdout, ""); assert.equal(result.stderr, "");
 });
 
+test("the complete Ruby edge consumer parses without executing a mock algorithm", { skip: !sourceChecks }, async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-fin-edge-ruby-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	await saveLakeFile(root, "consumer.rb", await finContainerEdgeConsumer("ruby"));
+	const ruby = resolve(process.env.LEAN_BRIDGE_RUBY ?? ".toolchains/ruby33/bin/ruby");
+	const result = await runCopied(ruby, ["-c", "consumer.rb"], root);
+	assert.equal(result.stdout, "Syntax OK\n"); assert.equal(result.stderr, "");
+});
+
+test("the complete Rust edge consumer typechecks offline against generated public types", { skip: !sourceChecks }, async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-fin-edge-rust-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const files = generateRustBindingPackage(finContainerEdgeReviewedIr());
+	for(const [path, source] of Object.entries(files)) await saveLakeFile(join(root, "package"), path, source);
+	const name = /^name = "([^"]+)"$/mu.exec(files["Cargo.toml"])[1];
+	await saveLakeFile(root, "Cargo.toml", `[package]\nname="fin-edge-source-check"\nversion="0.0.0"\nedition="2021"\n[dependencies]\nfincontainers={package="${name}",path="package"}\n`);
+	await saveLakeFile(root, "src/main.rs", await finContainerEdgeConsumer("rust"));
+	const cargo = resolve(process.env.LEAN_BRIDGE_CARGO ?? ".toolchains/rust-1.90.0/bin/cargo");
+	const rustc = resolve(process.env.LEAN_BRIDGE_RUSTC ?? ".toolchains/rust-1.90.0/bin/rustc");
+	const result = await runCopied(cargo, ["check", "--offline", "--quiet"], root, { ...process.env, RUSTC: rustc, RUSTFLAGS: "-D warnings", CARGO_NET_OFFLINE: "true", CARGO_TARGET_DIR: join(root, "target") });
+	assert.equal(result.stdout, ""); assert.equal(result.stderr, "");
+});
+
 test("installed edge selection is explicit and checks every assertion, including the old consumer", () => {
 	assert.deepEqual(finContainerEdgeSelection(undefined), []);
 	assert.deepEqual(finContainerEdgeSelection("python,cpp,c"), ["c", "cpp", "python"]);
-	for(const value of ["", "c,c", "c,", "c,perl", "rust", " c", 0, null]) assert.throws(() => finContainerEdgeSelection(value));
-	assert.deepEqual(finContainerEdgeChecks, { c: 14114, cpp: 14099, python: 14095 });
+	assert.deepEqual(finContainerEdgeSelection("rust,ruby"), ["ruby", "rust"]);
+	for(const value of ["", "c,c", "c,", "c,perl", "dotnet", " c", 0, null]) assert.throws(() => finContainerEdgeSelection(value));
+	assert.deepEqual(finContainerEdgeChecks, { c: 14114, cpp: 14099, python: 14095, rust: 14078, ruby: 14094 });
+});
+
+test("Ruby receipt extraction reads original nested gem bytes and refuses missing or repeated members", { skip: !sourceChecks }, async t => {
+	// Format-only controls use no Lean API and do not constitute installed acceptance.
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-fin-edge-gem-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const ruby = resolve(process.env.LEAN_BRIDGE_RUBY ?? ".toolchains/ruby33/bin/ruby");
+	await saveLakeFile(root, "make.rb", `require "rubygems"
+require "rubygems/package"
+require "zlib"
+require "stringio"
+def tar(entries)
+  stream = StringIO.new
+  Gem::Package::TarWriter.new(stream) do |writer|
+    entries.each { |name, bytes| writer.add_file_simple(name, 0644, bytes.bytesize) { |entry| entry.write(bytes) } }
+  end
+  stream.string
+end
+def gzip(bytes)
+  stream = StringIO.new
+  Zlib::GzipWriter.wrap(stream) { |writer| writer.write(bytes) }
+  stream.string
+end
+receipt = ['lean-bridge/package-receipt.json', "{\\"checked\\":true}\\n"]
+valid = ['data.tar.gz', gzip(tar([receipt]))]
+File.binwrite('valid.gem', tar([valid]))
+File.binwrite('no-data.gem', tar([]))
+File.binwrite('two-data.gem', tar([valid, valid]))
+File.binwrite('no-receipt.gem', tar([['data.tar.gz', gzip(tar([]))]]))
+File.binwrite('two-receipts.gem', tar([['data.tar.gz', gzip(tar([receipt, receipt]))]]))
+`);
+	await runCopied(ruby, ["--disable-gems", "make.rb"], root);
+	const read = name => runCopied(ruby, ["--disable-gems", "-e", finContainerEdgeGemReceipt, join(root, name)], root);
+	const valid = await read("valid.gem");
+	assert.equal(valid.stdout, '{"checked":true}\n'); assert.equal(valid.stderr, "");
+	for(const name of ["no-data.gem", "two-data.gem", "no-receipt.gem", "two-receipts.gem"])
+		await assert.rejects(read(name), error => {
+			assert.equal(error.code, "build-command-failed");
+			assert.match(error.details.stderr, /Expected one gem (?:data member|receipt)/u);
+			assert.equal(error.details.stdout, "");
+			return true;
+		});
 });
 
 test("edge C/C++ linkage survives a real directory move without an absolute runtime path", { skip: !sourceChecks }, async t => {
