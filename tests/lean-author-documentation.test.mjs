@@ -5,6 +5,7 @@
  */
 
 import assert from "node:assert/strict";
+import "./helpers/author-refinement-docs-source-history-tests.mjs";
 import { access, readFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import test from "node:test";
@@ -13,6 +14,8 @@ import { generateJavaScriptPackage } from "../src/backends/javascript/generate.m
 import { validateExportConfiguration } from "../src/analyze/export-configuration.mjs";
 import { componentNpmIdentity } from "../src/release/component-package-receipt.mjs";
 import { checkedRecordContracts } from "./helpers/checked-record-fixture.mjs";
+import { checkedRecordPromotionReferences } from "./helpers/checked-record-promotion-references.mjs";
+import { callbackFinPromotionReferences } from "./helpers/callback-fin-promotion-references.mjs";
 
 const fixture = "tests/fixtures/documentation/lean-author";
 const documents = [
@@ -139,12 +142,93 @@ test("checked-record guidance uses the tested payload and per-site constructor c
 	const example = blocks.find(block => block.language === "lean").source;
 	const source = await readFile("tests/fixtures/onboarding/checked-records/CheckedRecords.lean", "utf8");
 	for(const declaration of example.trim().split("\n\n")) assert.ok(source.includes(declaration), declaration);
-	assert.match(section, /Installed-package acceptance for this mapping is pending/);
+	assert.match(section, /checked-records-20261008\/receipt\.json/);
+	assert.match(section, /ordinary-source and reviewed C\/C\+\+ and Node JavaScript packages/);
+	assert.match(section, /Separate ordinary-source result-only packages also pass/);
+	assert.match(section, /Browser execution remains pending/);
+	assert.doesNotMatch(section, /Installed-package acceptance for this mapping is pending|do not establish installed C\/C\+\+/);
 	assert.match(section, /exact names, order and types/);
 	assert.match(section, /result already has its proofs/);
 	assert.match(section, /private ABI 8/);
 	assert.match(section, /Configuration contracts cannot override a review/);
 	assert.match(await readFile("docs/lean/export-decisions.md", "utf8"), /existing-package.md#export-a-record-with-proof-fields/);
+});
+
+test("the checked-record author table agrees with all six retained installed selections", async () => {
+	const document = await readFile("docs/lean/existing-package.md", "utf8");
+	const row = document.split("\n").find(line => line.startsWith("| Record with erased proof fields"));
+	assert.equal(row, "| Record with erased proof fields and a checked input constructor | Node installed; browser pending | C/C++ installed; other hosts rejected | Rejected | Rejected | C/C++ and Node installed; browser pending; other targets rejected |");
+	const references = await checkedRecordPromotionReferences();
+	assert.deepEqual(references.map(item => [item.host, item.route]), [
+		["c-cpp", "ordinary"], ["c-cpp", "reviewed"], ["c-cpp", "result-only"]
+		, ["npm", "ordinary"], ["npm", "reviewed"], ["npm", "result-only"]
+	]);
+	const inventory = JSON.parse(await readFile("docs/type-surface.v1.json"));
+	for(const reference of references) for(const profile of reference.profiles) for(const position of reference.positions)
+	{
+		const observation = inventory.observations.find(item => item.id === `checked-record-${profile}-${reference.sourcePath}-${position}`);
+		assert.equal(observation?.stages.installedExecution.state, "passed");
+		assert.ok(observation.stages.installedExecution.evidence.includes(reference.id));
+	}
+});
+
+test("the author table names structural Fin hosts from retained family and route scopes", async () => {
+	const document = await readFile("docs/lean/existing-package.md", "utf8");
+	const rows = new Map(document.split("\n").filter(line => line.startsWith("| ")).map(line => {
+		const [site, ...cells] = line.split("|").slice(1, -1).map(cell => cell.trim());
+		return [site, cells];
+	}));
+	for(const [path, profiles] of [
+		["fin-python-ruby-20261008/receipt-v2.json", ["python", "ruby"]]
+		, ["fin-rust-20261008/receipt-v2.json", ["rust"]]
+		, ["fin-dotnet-hosted-20261008/receipt.json", ["dotnet"]]
+	]) {
+		assert.ok(document.includes(`../evidence/${path}`));
+		const receipt = JSON.parse(await readFile(`docs/evidence/${path}`));
+		assert.deepEqual(receipt.scope.profiles, profiles);
+		assert.deepEqual(receipt.scope.sourcePaths, ["ordinary-source", "reviewed-ir"]);
+		assert.deepEqual(receipt.scope.families, ["product", "product-array", "record"]);
+	}
+	for(const site of ["`Fin n` inside pairs and `Except`", "`Fin n` inside `Array` of pairs and `Except`"])
+		assert.equal(rows.get(site)[1], "C/C++, Python, Ruby, Rust and .NET installed; others pending");
+	const wit = JSON.parse(await readFile("docs/evidence/fin-wit-records-20261008/receipt.json"));
+	assert.deepEqual(wit.scope.profiles, ["wit-wasi"]); assert.equal(wit.scope.family, "record");
+	assert.deepEqual(wit.scope.sourcePaths, ["ordinary-source", "reviewed-ir"]);
+	assert.equal(rows.get("`Fin n` in record or variant fields")[1], "C/C++, Python, Ruby, Rust, .NET and WIT/WASI installed; Java/Kotlin and native PHP pending");
+	assert.match(document, /Direct WIT product exports, Java\/Kotlin and native PHP products\/fields still need their own installed acceptance/);
+});
+
+test("callback guidance separates installed browser and reviewed directions from remaining host replies", async () => {
+	const document = await readFile("docs/lean/existing-package.md", "utf8");
+	const references = await callbackFinPromotionReferences();
+	const browser = references.find(item => item.id === "browser-callback-fin-ordinary-installed");
+	assert.deepEqual(browser.profiles, ["browser-javascript", "browser-react", "browser-worker"]);
+	assert.equal(browser.sourcePath, "ordinary-source");
+	const reviewed = references.filter(item => item.sourcePath === "reviewed-ir");
+	assert.deepEqual(reviewed.map(item => item.id), ["reviewed-callback-fin-c-cpp-installed", "reviewed-callback-fin-npm-r1-installed", "reviewed-callback-fin-npm-r2-installed"]);
+	assert.match(reviewed[0].scope, /Native host-produced refined replies are not covered/);
+	assert.match(reviewed[2].scope, /scalar Fin 3 host-produced callback reply/);
+	assert.match(document, /Node and browser installed/);
+	assert.match(document, /C\/C\+\+ execute closure inputs, Lean-produced results and arguments sent to host callbacks/);
+	assert.match(document, /Node R2 fixture additionally checks a host-produced `Fin 3` reply/);
+	assert.match(document, /Reviewed browser execution, native host-produced replies, `Fin 0` and wider bounds need separate reviewed acceptance/);
+	assert.doesNotMatch(document, /browser profiles are not yet audited for refined callbacks|Native callbacks with refined signatures are not yet supported|Fresh-Lean and installed reviewed callback acceptance are pending/);
+	const replies = JSON.parse(await readFile("docs/evidence/native-fin-replies-20261008/receipt.json"));
+	assert.equal(replies.scope.sourcePath, "ordinary-source"); assert.equal(replies.scope.reviewedContracts, false);
+	assert.deepEqual(replies.scope.installedChecks, { c: 81, cpp: 74 });
+	assert.match(document, /executes 81 C checks and 74 C\+\+ checks/);
+	assert.match(document, /Reviewed host replies and other native hosts remain pending/);
+});
+
+test("CPAN author guidance keeps the archived passes separate from installed-tree relocation acceptance", async () => {
+	const document = await readFile("docs/lean/existing-package.md", "utf8");
+	const receipt = JSON.parse(await readFile("docs/evidence/perl-refinements-hosted-20261009/receipt.json"));
+	assert.equal(receipt.configurations.length, 4); assert.equal(receipt.scope.supportPromotion, false);
+	assert.match(receipt.scope.reproduction, /none moves the installed tree/);
+	assert.match(document, /also passed ordinary-source containers and checked Subtype consumers/);
+	assert.match(document, /Acceptance of the installed-tree relocation and full-consumer rerun fix remains pending/);
+	assert.match(document, /Both routes executed; relocation retest pending/);
+	assert.match(document, /Four ABIs executed; relocation retest pending/);
 });
 
 test("the installed-package example uses npm and a runnable JavaScript file", async () => {

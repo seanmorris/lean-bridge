@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeAuthorRefinementDocsSource } from "./author-refinement-docs-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeDotnetDispatchIntegrationSource, dotnetDispatchIntegrationChangedPaths, dotnetDispatchIntegrationHistoryPath, dotnetDispatchIntegrationPredecessor, reverseDotnetDispatchIntegrationUpdate } from "./dotnet-dispatch-integration-source-history.mjs";
 
@@ -20,7 +21,7 @@ test(".NET dispatch integration history authenticates exact predecessors and ref
 	assert.deepEqual(record.updates.map(update => update.path), dotnetDispatchIntegrationChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8"), previous = reverseDotnetDispatchIntegrationUpdate(source, update);
+		const source = beforeAuthorRefinementDocsSource(update.path, await readFile(update.path, "utf8")), previous = reverseDotnetDispatchIntegrationUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeDotnetDispatchIntegrationSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -36,7 +37,7 @@ test(".NET dispatch integration history authenticates exact predecessors and ref
 });
 
 test(".NET dispatch integration refreshes exactly 218 source pins without promoting any support cell", async () => {
-	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", text = beforeAuthorRefinementDocsSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(text), previous = JSON.parse(beforeDotnetDispatchIntegrationSource(path, text));
 	const record = JSON.parse(await readFile(dotnetDispatchIntegrationHistoryPath));
 	const updates = new Map(record.updates.map(update => [update.path, update]));
@@ -46,7 +47,7 @@ test(".NET dispatch integration refreshes exactly 218 source pins without promot
 		const update = updates.get(file.path);
 		if(update && file.sha256 === update.previousSha256)
 		{
-			assert.equal(sha256(await readFile(file.path)), update.currentSha256);
+			assert.equal(sha256(beforeAuthorRefinementDocsSource(file.path, await readFile(file.path, "utf8"))), update.currentSha256);
 			file.sha256 = update.currentSha256; pins++;
 		}
 	}
