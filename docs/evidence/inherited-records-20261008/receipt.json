@@ -1,0 +1,202 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1433,
+  "execution": "local",
+  "producers": {
+    "plain": {
+      "revision": "9dae4d07ea723cd0c04effa7d975af25ae301b88",
+      "files": [
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "d18f80ebfbb7d3ae90cdc4690620a6f37b0f9e4b49c1f9f2425dcd3e9d40669f"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "c13f9ece623da722db1499d2349f696f3085e14c22aa89884916290ea3afc2a1"
+        },
+        {
+          "path": "src/analyze/elaborated-metadata.mjs",
+          "sha256": "7769672b3c958999d7736c862af111a1e1b9062b1a5e0dca62e87f88f6ded3e0"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "bebf6cb490043a04c374579f5206a87c55283707024f199770c01f06a005af4a"
+        },
+        {
+          "path": "src/build/native-graph-model.mjs",
+          "sha256": "14fca0d2c8eb7bfd17dbbd1c2381d7bf0b416576e0cb69d43a2eb628d0b4ded5"
+        },
+        {
+          "path": "src/build/native-component.mjs",
+          "sha256": "c4998982fe7d4d11d50d49658e367eb0966d7516f0294eb2bfc05f7eb84d0e53"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227"
+        },
+        {
+          "path": "tests/inherited-records.test.mjs",
+          "sha256": "ab50f3102a87ff2a2ecb76d54ef5cdfbad9bec921afa004a086408177f0a318b"
+        },
+        {
+          "path": "tests/fixtures/onboarding/inherited-records/InheritedRecords.lean",
+          "sha256": "6aafd1b6ab481592e821bdd5d6150e3d5b90c410422ab2258ee42f6554315b83"
+        },
+        {
+          "path": "tests/fixtures/inherited-record-consumers/c.c",
+          "sha256": "cf6223020073d9211177ab5aa628bcd4cad5900b0f31f012e0a4f40e3352169c"
+        },
+        {
+          "path": "tests/fixtures/inherited-record-consumers/cpp.cpp",
+          "sha256": "63e838c5a4204a3c48cee7dccaad2cc28e3ce08ad886b38e2a048bb8d2911c20"
+        }
+      ]
+    },
+    "generic": {
+      "revision": "f9d5ce96eb04ec800209c6a6863092b3bdea6e85",
+      "files": [
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "a314452e860d614b644bd26a4311706ea30557f86c7e9a6b2eaf8cf45db84455"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "c13f9ece623da722db1499d2349f696f3085e14c22aa89884916290ea3afc2a1"
+        },
+        {
+          "path": "src/analyze/elaborated-metadata.mjs",
+          "sha256": "7769672b3c958999d7736c862af111a1e1b9062b1a5e0dca62e87f88f6ded3e0"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "0b2ad37a60f13d240c826ae611b00e2c0725835308a48a5dbb2f3eac526c972d"
+        },
+        {
+          "path": "src/build/native-graph-model.mjs",
+          "sha256": "14fca0d2c8eb7bfd17dbbd1c2381d7bf0b416576e0cb69d43a2eb628d0b4ded5"
+        },
+        {
+          "path": "src/build/native-component.mjs",
+          "sha256": "c4998982fe7d4d11d50d49658e367eb0966d7516f0294eb2bfc05f7eb84d0e53"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227"
+        },
+        {
+          "path": "tests/generic-inheritance-installed.test.mjs",
+          "sha256": "4ae9a2995a54f94a275b6a226d5a0f47fb0b1e9f0155718068963b36d204c52e"
+        },
+        {
+          "path": "tests/helpers/generic-inheritance-packages.mjs",
+          "sha256": "d9044c7998483b6d30b09bb8d2137cb7d7a4ddf30349fab811110e178a8e2069"
+        },
+        {
+          "path": "tests/fixtures/onboarding/generic-inheritance/GenericInheritance.lean",
+          "sha256": "48d2e9626a8e267536fd67710bfd51c1cf2f73b33ac9feaac81a3b8aa223001b"
+        },
+        {
+          "path": "tests/fixtures/generic-inheritance-consumers/c.c",
+          "sha256": "f40a5c74bfee0fcb0f0783c1945790dd0182daca37bccf1646c0e9264f8537cc"
+        },
+        {
+          "path": "tests/fixtures/generic-inheritance-consumers/cpp.cpp",
+          "sha256": "329f9d038d86ce14ebb2cf2e935f079ec75766c698552944afee0772398c6b8f"
+        },
+        {
+          "path": "tests/helpers/refinement-engine.mjs",
+          "sha256": "91e69b67d355d2b436fa699a5e4a4692362bdc4f9536634877b6af41e968d3b4"
+        },
+        {
+          "path": "src/build/component-record-adapters.mjs",
+          "sha256": "3fd03b301b7038ec1101a33ea8626e2aad61446a09385df90ff4493ed3c882ef"
+        }
+      ]
+    }
+  },
+  "artifacts": [
+    {
+      "path": "docs/evidence/inherited-records-20261008/plain-lean.tap",
+      "originalPath": "build/vo1220-inherited-records-9dae4d0-lean.tap",
+      "sha256": "7fbec7c54ec8bb81354446cb0f12060d6447974eff5f22cc8518f5cc5a32e113",
+      "bytes": 937
+    },
+    {
+      "path": "docs/evidence/inherited-records-20261008/plain.queue",
+      "originalPath": "build/vo1220-inherited-records-c-cpp-9dae4d0.queue",
+      "sha256": "be0acd3a877844dff95a06f25746bb428d6f3c761a17e2136cd1ac08092c3146",
+      "bytes": 413
+    },
+    {
+      "path": "docs/evidence/inherited-records-20261008/plain.tap",
+      "originalPath": "build/vo1220-inherited-records-c-cpp-9dae4d0.tap",
+      "sha256": "6f65791f0b03b8d82e7ad4b4baa7132a1840a8565475e919cb54c3b6bc3c8085",
+      "bytes": 496
+    },
+    {
+      "path": "docs/evidence/inherited-records-20261008/plain-native.json",
+      "originalPath": "build/vo1220-inherited-records-c-cpp-9dae4d0.json",
+      "sha256": "f4e5acd512ded48a04e2bc53ae1f052d2b035e1f98cbde183e921f3ea2480c82",
+      "bytes": 2780
+    },
+    {
+      "path": "docs/evidence/inherited-records-20261008/generic.queue",
+      "originalPath": "build/vo1220-generic-inheritance-f9d5ce9.queue",
+      "sha256": "64128afb1cfc285a00f4efbf3f209c70d610b8617317391c157c0774701aac3a",
+      "bytes": 838
+    },
+    {
+      "path": "docs/evidence/inherited-records-20261008/generic.tap",
+      "originalPath": "build/vo1220-generic-inheritance-f9d5ce9.tap",
+      "sha256": "accbdd44f65f0e8a12d3f8025933b7200605fa7bd114e23a03b23bf1ee6225c4",
+      "bytes": 1014
+    },
+    {
+      "path": "docs/evidence/inherited-records-20261008/generic-native.json",
+      "originalPath": "build/vo1220-generic-inheritance-c-cpp-f9d5ce9.json",
+      "sha256": "22ae5b444e4cdb2cacd2ab383495cf1c318a3008016c2b0e8f5c74eabb9875ba",
+      "bytes": 6531
+    },
+    {
+      "path": "docs/evidence/inherited-records-20261008/generic-npm.json",
+      "originalPath": "build/vo1220-generic-inheritance-npm-f9d5ce9.json",
+      "sha256": "f48dc87ea7c3febde4389b41d2ac275bfe597e8bdd7d14669bdca003818145bb",
+      "bytes": 6270
+    }
+  ],
+  "scope": {
+    "sourcePath": "ordinary-source",
+    "plainHosts": [
+      "c",
+      "cpp"
+    ],
+    "genericHosts": [
+      "c",
+      "cpp",
+      "node-javascript",
+      "node-typescript"
+    ],
+    "plain": "Six record layouts and five exports: single, multiple, multilevel and overlapping parents, including a Fin 10 field in a parent and rejection/recovery. C and C++ each pass 2010 checks.",
+    "generic": "Three exports over six closed alias-named inherited records with universe and phantom arguments. Parent subobjects retain their alias types, field order and compiler-resolved origins. C passes 2011 checks, C++ 2007; Node passes 1005 checks and 1006 rejections. Strict TypeScript checks the installed declarations with skipLibCheck disabled.",
+    "isolation": "Two author builds reproduce archives; actual author/build deletion precedes offline installation. Native callers still compile against installed headers with host C/C++ compilers. Node uses a Node-only PATH; strict TypeScript uses the engine checkout's compiler.",
+    "sourceIdentity": "Selected compiler, harness, fixture and caller files recovered from the queue revisions, not a complete dependency closure or a contemporaneous source-pin manifest.",
+    "environment": "Local Node v22.23.3, CPU 3/concurrency 1, native glibc floor override 2.36; npm uses /app/build/lean-link-spike/lazy and build/lean-runtime. Queues record selections and environment, not the complete shell command.",
+    "dispatch": "not measured",
+    "hostedCi": false,
+    "binaryArchivesRetained": false,
+    "exclusions": [
+      "reviewed inheritance",
+      "browser inheritance",
+      "inherited-record instance dictionaries",
+      "open, recursive, indexed or refined generic parents",
+      "source-entry counters",
+      "sanitizer measurements"
+    ]
+  },
+  "freshLean": {
+    "artifact": "plain-lean.tap",
+    "passed": 2,
+    "skipped": 1,
+    "attribution": "No original queue or execution-revision record accompanies this log. The retained filename and matching producer test names attribute it to the earlier plain-inheritance source; this is not independent execution-revision evidence. Its installed gate was skipped. Its generic-inheritance refusal predates the separately installed generic-parent implementation."
+  }
+}

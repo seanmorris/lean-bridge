@@ -1,0 +1,229 @@
+{
+  "archiveSha256": "8ac338439a1ec923fd0165476aa79575c4b57c14e6929f2614e4accaa3cf0317",
+  "bindingIrFileSha256": "14e662ae8a7c537bcf8f7fbe6ea1ad3c90f83c69c2e9cfe5a1181405d3a88fff",
+  "bindingIrSha256": "a35da519aca7e7a0f42c2e7c040eb3a25d6f465713068963f8486eaeeb8896da",
+  "checks": 1005,
+  "compilerFreePath": true,
+  "consumerSha256": "d7ccffacb4d6885efd849a1e813a2fa894f8cdcecda84d9c564554e1adc57652",
+  "dispatch": "not measured",
+  "independentBuilds": 2,
+  "offlineInstall": true,
+  "path": "ordinary-source",
+  "profile": "npm",
+  "receipt": {
+    "bindingIrSha256": "a35da519aca7e7a0f42c2e7c040eb3a25d6f465713068963f8486eaeeb8896da",
+    "component": {
+      "id": "onboarding-small@1.0.0",
+      "name": "onboarding-small",
+      "version": "1.0.0"
+    },
+    "componentArtifactSha256": "5810f028723ed60d2f4cac18df92a4da50aaecde737adcd67f58fbd07b320a4a",
+    "componentBundleSha256": "99c857802474aece2e76797deb0d4e66117e689d8ed19777ea99ae0dd98567e8",
+    "componentIdentitySha256": "f9f8bec36b8e5677bd0be870a3770b5c5e5d595c52eb77751339cd150ee4b1bb",
+    "kind": "lean-bridge-component-package-receipt",
+    "package": {
+      "archive": "onboarding-small-1.0.0.tgz",
+      "package": "onboarding-small@1.0.0",
+      "sha256": "8ac338439a1ec923fd0165476aa79575c4b57c14e6929f2614e4accaa3cf0317"
+    },
+    "policies": {
+      "componentCompiledOnce": true,
+      "nativeCallablesOnly": true,
+      "runtimeBinaryInComponent": false,
+      "runtimeShared": true
+    },
+    "provenanceSha256": "9f4f027a9cd920804069283f88adf32463f981963bf098c5dd96ac4fbf850d20",
+    "runtime": {
+      "archive": "lean-bridge-runtime-0.0.0-abi2.28bc7ead91ccdec242e002053c8b2ef7514281454704d86f5c663ce08bf1cf4a.tgz",
+      "package": "@lean-bridge/runtime@0.0.0-abi2.28bc7ead91ccdec242e002053c8b2ef7514281454704d86f5c663ce08bf1cf4a",
+      "sha256": "adabede49690aa159106e216b7faafd3ec5f184c03f08adcbdba2ccb654074b0"
+    },
+    "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "6c4ffa7dba9124e5d88726d82f690f2fba453e5bd2deb2e6f9a59b6c938dc0d1"
+    },
+    "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+  },
+  "receiptSha256": "e6af3c18eb450390ba850427681c10a3037dc24d026ebe7598eb685e18bba60a",
+  "records": [
+    {
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "id": "lean:OnboardingSmall.Marker",
+      "instantiation": null,
+      "kind": "record"
+    },
+    {
+      "fields": [
+        {
+          "name": "label",
+          "type": {
+            "kind": "primitive",
+            "name": "string"
+          }
+        }
+      ],
+      "id": "lean:OnboardingSmall.MarkerTag",
+      "instantiation": {
+        "arguments": [
+          {
+            "id": "lean:OnboardingSmall.Marker",
+            "kind": "named"
+          }
+        ],
+        "structure": "OnboardingSmall.Tag"
+      },
+      "kind": "record"
+    },
+    {
+      "fields": [
+        {
+          "name": "toTag",
+          "type": {
+            "id": "lean:OnboardingSmall.MarkerTag",
+            "kind": "named"
+          }
+        },
+        {
+          "name": "count",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "id": "lean:OnboardingSmall.MarkerTagged",
+      "instantiation": {
+        "arguments": [
+          {
+            "id": "lean:OnboardingSmall.Marker",
+            "kind": "named"
+          }
+        ],
+        "structure": "OnboardingSmall.Tagged"
+      },
+      "kind": "record"
+    },
+    {
+      "fields": [
+        {
+          "name": "base",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "id": "lean:OnboardingSmall.NatBase",
+      "instantiation": {
+        "arguments": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "structure": "OnboardingSmall.Base"
+      },
+      "kind": "record"
+    },
+    {
+      "fields": [
+        {
+          "name": "toBase",
+          "type": {
+            "id": "lean:OnboardingSmall.NatBase",
+            "kind": "named"
+          }
+        },
+        {
+          "name": "child",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "id": "lean:OnboardingSmall.NatChild",
+      "instantiation": {
+        "arguments": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "structure": "OnboardingSmall.Child"
+      },
+      "kind": "record"
+    },
+    {
+      "fields": [
+        {
+          "name": "value",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "id": "lean:OnboardingSmall.UNatBase",
+      "instantiation": {
+        "arguments": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "structure": "OnboardingSmall.UBase"
+      },
+      "kind": "record"
+    },
+    {
+      "fields": [
+        {
+          "name": "toUBase",
+          "type": {
+            "id": "lean:OnboardingSmall.UNatBase",
+            "kind": "named"
+          }
+        },
+        {
+          "name": "extra",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "id": "lean:OnboardingSmall.UNatChild",
+      "instantiation": {
+        "arguments": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "structure": "OnboardingSmall.UChild"
+      },
+      "kind": "record"
+    }
+  ],
+  "rejections": 1006,
+  "reproducible": true,
+  "runtimeArchiveSha256": "adabede49690aa159106e216b7faafd3ec5f184c03f08adcbdba2ccb654074b0",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true,
+  "typescript": {
+    "declarationsSha256": "9df55d443a72219fc586d15a8bd61c9e8222ae08960e34593a212054ab3dac14",
+    "skipLibCheck": false,
+    "sourceSha256": "5a7a1ea9e4e8842fd9387c23ae2c9aff2e77861c849c2c01e1e209b19c008ac6",
+    "strict": true
+  }
+}

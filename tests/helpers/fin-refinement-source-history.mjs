@@ -132,6 +132,7 @@ import { reviewedInstantiationArchiveChangedPaths } from "./reviewed-instantiati
 import { phpDispatchIntegrationChangedPaths } from "./php-dispatch-integration-source-history.mjs";
 import { reviewedRecordPromotionChangedPaths } from "./reviewed-record-promotion-source-history.mjs";
 import { witDispatchIntegrationChangedPaths } from "./wit-dispatch-integration-source-history.mjs";
+import { inheritedRecordArchiveChangedPaths, inheritedRecordArchiveProducerPins } from "./inherited-record-archive-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -728,6 +729,8 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...phpDispatchIntegrationChangedPaths
 	, ...reviewedRecordPromotionChangedPaths
 	, ...witDispatchIntegrationChangedPaths
+	, ...inheritedRecordArchiveChangedPaths
+	, ...Object.keys(inheritedRecordArchiveProducerPins)
 ])].sort());
 
 /**

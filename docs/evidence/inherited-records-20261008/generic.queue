@@ -1,0 +1,7 @@
+revision=f9d5ce96eb04ec800209c6a6863092b3bdea6e85
+start=2026-10-08T06:14:00Z free=4114MiB node=v22.23.3 cpu=3 concurrency=1 queue=c-cpp,npm build/lean-runtime=/app/build/lean-runtime
+start c-cpp 2026-10-08T06:14:00Z pattern=^relocated source-free C and C env=LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_GENERIC_INHERITANCE_PROFILES=c,cpp LEAN_BRIDGE_GENERIC_INHERITANCE_REPORT=/app/build/vo1220-generic-inheritance-c-cpp-f9d5ce9.json
+end c-cpp 2026-10-08T06:20:22Z exit=0
+start npm 2026-10-08T06:20:22Z pattern=^a relocated source-free npm package env=LEAN_BRIDGE_GENERIC_INHERITANCE_NPM_TEST=1 LEAN_BRIDGE_LAKE_RUNTIME_ROOT=/app/build/lean-link-spike/lazy LEAN_BRIDGE_GENERIC_INHERITANCE_NPM_REPORT=/app/build/vo1220-generic-inheritance-npm-f9d5ce9.json
+end npm 2026-10-08T06:21:35Z exit=0
+all steps passed 2026-10-08T06:21:35Z

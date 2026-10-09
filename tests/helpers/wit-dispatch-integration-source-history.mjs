@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeInheritedRecordArchiveSource } from "./inherited-record-archive-source-history.mjs";
 
 export const witDispatchIntegrationHistoryPath = "docs/evidence/wit-dispatch-integration-source-history-20261008.json";
 export const witDispatchIntegrationPredecessor = "5dd16b52a540f9da88a6611d6877073c1257a0c8";
@@ -54,6 +55,7 @@ export const reverseWitDispatchIntegrationUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeWitDispatchIntegrationSource = (path, source, expected) => {
+	source = beforeInheritedRecordArchiveSource(path, source, expected);
 	if(typeof source !== "string" || !witDispatchIntegrationChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

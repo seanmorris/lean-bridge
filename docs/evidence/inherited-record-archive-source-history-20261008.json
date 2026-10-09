@@ -1,0 +1,297 @@
+{
+  "schemaVersion": 1,
+  "milestone": "inherited-record-archive-v1",
+  "predecessorCommit": "237b9cec854ef74f0643f33f97864738e98803df",
+  "updates": [
+    {
+      "path": "tests/generic-inheritance-installed.test.mjs",
+      "currentSha256": "d936b16d5d55a8b32d65b694cd5ddd5c93d56476fd17bd3208ec63026dae557c",
+      "previousSha256": "4ae9a2995a54f94a275b6a226d5a0f47fb0b1e9f0155718068963b36d204c52e",
+      "edits": [
+        {
+          "start": 427,
+          "previous": "",
+          "current": "import \"./helpers/inherited-record-evidence-tests.mjs\";\nimport \"./helpers/inherited-record-archive-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "3cc983639b6190c3681c5073ccc73f2afaf6b63617143863f3b44065ce898b00",
+      "previousSha256": "e2726ee53c59455c2c08a8027faca342780aa279d144b1714fbc1d541d0816cb",
+      "edits": [
+        {
+          "start": 11952,
+          "previous": "",
+          "current": "import { inheritedRecordArchiveChangedPaths, inheritedRecordArchiveProducerPins } from \"./inherited-record-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 49965,
+          "previous": "",
+          "current": "\t, ...inheritedRecordArchiveChangedPaths\n\t, ...Object.keys(inheritedRecordArchiveProducerPins)\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/wit-dispatch-integration-source-history.mjs",
+      "currentSha256": "02452c9408742aa07bc3ed9ea03be6901757f48b18dcf913d82b74fd0b4d0421",
+      "previousSha256": "7cd1c11ff8512d70565472cbbe57c391d3c4965550579fde6a9725e0cfe9657b",
+      "edits": [
+        {
+          "start": 247,
+          "previous": "",
+          "current": "import { beforeInheritedRecordArchiveSource } from \"./inherited-record-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 2414,
+          "previous": "",
+          "current": "\tsource = beforeInheritedRecordArchiveSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/wit-dispatch-integration-source-history-tests.mjs",
+      "currentSha256": "8629a3bdad85b8566a1e78c3ad9d58be96df79c003fd1cf94ea52199abf435c5",
+      "previousSha256": "b7105bac99dd4aa7edd96960dfef466e3f14c2d02ed95f12a2441dda14d63479",
+      "edits": [
+        {
+          "start": 517,
+          "previous": "",
+          "current": "import { beforeInheritedRecordArchiveSource } from \"./inherited-record-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 1569,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeInheritedRecordArchiveSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2879,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = beforeInheritedRecordArchiveSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 3467,
+          "previous": "\t\t\tassert.equal(sha256(await readFile(file.path)), update.currentSha256);\n",
+          "current": "\t\t\tassert.equal(sha256(beforeInheritedRecordArchiveSource(file.path, await readFile(file.path, \"utf8\"))), update.currentSha256);\n"
+        }
+      ]
+    }
+  ],
+  "producerCommit": "9dae4d07ea723cd0c04effa7d975af25ae301b88",
+  "producerUpdates": [
+    {
+      "path": "src/analyze/NativeExports.lean",
+      "currentSha256": "46b46cbb21fe51d166ab700cde2c41583bc3a093f67cecd07d104cdf649f61ce",
+      "previousSha256": "d18f80ebfbb7d3ae90cdc4690620a6f37b0f9e4b49c1f9f2425dcd3e9d40669f",
+      "edits": [
+        {
+          "start": 5700,
+          "previous": "",
+          "current": "/-- Generic-structure aliases in the request's compiled source closure, grouped by structure. -/\nabbrev ParentAliasIndex := Array (Name × Array Name)\n\n/-- Declarations scanned while indexing aliases for inherited generic parents, per request. -/\ndef parentAliasWorkLimit : Nat := 65536\n\n/-- Request-wide inherited-parent discovery state. The index is built only when a site first needs\ndiscovery, so a request without inherited generic parents never scans. A scan that exceeds the limit\nis attempted once: the request remembers it and every later site refuses with the same diagnostic.\nThe counters are internal: normal metadata never reports them. -/\nstructure ParentAliasCache where\n  limit : Nat := parentAliasWorkLimit\n  index : Option ParentAliasIndex := none\n  resolved : Array (Expr × Name) := #[]\n  attempts : Nat := 0\n  builds : Nat := 0\n  scanned : Nat := 0\n  probes : Nat := 0\n  hits : Nat := 0\n  exhausted : Bool := false\n\n"
+        },
+        {
+          "start": 6709,
+          "previous": "",
+          "current": "  parentAliases : Option (IO.Ref ParentAliasCache) := none\n"
+        },
+        {
+          "start": 7198,
+          "previous": "",
+          "current": "/-- A record with proof fields crosses only at a top-level site. A parameter is built by the\nconfigured checked constructor alone, whose explicit binders are the payload fields by name and\ntype, in Lean order, and whose result is `Option` of the exact record. A result is produced by Lean,\nwhich already holds the proofs, so it takes no constructor. -/\ndef checkedRecordSite (request : Request) (e : Expr) (reference : Json)\n    (payload : Array (Name × Expr)) (depth : Nat) (copied structural : Bool)\n    (checked : Option String) (callbackSite : Option Bool) (hostReply : Bool) : MetaM Json := do\n  if payload.isEmpty then reject e \"checked records need at least one payload field\"\n  unless depth == 0 && !copied && structural && callbackSite.isSome && !hostReply do\n    reject e \"checked records currently require a top-level parameter or result\"\n  if callbackSite == some true then\n    if checked.isSome then reject e \"Lean-produced checked records take no constructor\"\n    return reference\n  let some constructor := checked\n    | reject e \"checked records require a configured checked constructor\"\n  let constructorName := constructor.toName\n  let env ← getEnv\n  let some moduleIndex := env.getModuleIdxFor? constructorName\n    | reject e \"checked record constructor module is unavailable\"\n  unless request.modules.contains env.header.moduleNames[moduleIndex.toNat]!.toString do\n    reject e \"checked record constructor must belong to a selected module\"\n  let constructorType ← inferType (← mkConstWithFreshMVarLevels constructorName)\n  discard <| forallTelescopeReducing constructorType fun arguments result => do\n    unless arguments.size == payload.size do\n      reject e \"checked record constructor must take exactly the payload fields\"\n    for argument in arguments, (field, fieldType) in payload do\n      let declaration ← argument.fvarId!.getDecl\n      unless declaration.binderInfo == .default do\n        reject e \"checked record constructor takes only explicit payload values\"\n      -- Binder names map host payload fields to constructor inputs; an initial convention.\n      unless declaration.userName == field do\n        reject e s!\"checked record constructor input {declaration.userName} must be named {field}\"\n      unless ← isDefEq declaration.type fieldType do\n        reject e s!\"checked record constructor input {field} must equal the payload field type\"\n    unless result.isAppOfArity ``Option 1 && (← isDefEq result.appArg! e) do\n      reject e \"checked record constructor must return Option of the exact record\"\n  discard <| checkBody request constructorName\n  -- The constructor is the only source of the erased proofs, so none of them may be assumed.\n  if (← collectAxioms constructorName).contains ``sorryAx then\n    reject e \"checked record constructor depends on sorry\"\n  return obj [(\"kind\", str \"refinement\"), (\"base\", reference),\n    (\"predicate\", obj [(\"kind\", str \"checked-record\"), (\"constructor\", str constructor)]),\n    (\"abi\", ← abi e)]\n\n"
+        },
+        {
+          "start": 11534,
+          "previous": "",
+          "current": "/-- Index every safe, public, universe-free abbrev of a generic structure in the request's compiled\nsource closure: request.modules, which includes captured dependency modules the project imports.\nUnimported modules and the rest of the environment are never candidates. Returns no index when the\nscan exceeds the limit, with the declarations it scanned either way. -/\ndef buildParentAliasIndex (request : Request) (limit : Nat := parentAliasWorkLimit) : MetaM (Option ParentAliasIndex × Nat) := do\n  let env ← getEnv\n  let mut index : ParentAliasIndex := #[]\n  let mut scanned := 0\n  for position in [0:env.header.moduleNames.size] do\n    unless request.modules.contains env.header.moduleNames[position]!.toString do continue\n    for name in env.header.moduleData[position]!.constNames do\n      scanned := scanned + 1\n      if scanned > limit then return (none, scanned)\n      let some (.defnInfo definition) := env.find? name | continue\n      unless definition.levelParams.isEmpty && definition.safety == .safe && !isPrivateName name &&\n          nativeIdentifier name.toString do continue\n      let some structureName := definition.value.getAppFn.constName? | continue\n      unless (genericStructure? env structureName).isSome do continue\n      index := match index.findIdx? (·.1 == structureName) with\n        | some found => index.modify found fun (key, names) => (key, names.push name)\n        | none => index.push (structureName, #[name])\n  return (some index, scanned)\n\n/-- The one diagnostic for a request whose alias search exceeded its limit. -/\ndef parentAliasExhausted (limit : Nat) : MetaM α :=\n  throwError \"inherited parent alias search exceeds its limit of {limit} declarations\"\n\n/-- Resolve the unnamed type of an inherited generic parent to the one source alias that denotes it.\nEach candidate is probed without keeping metavariable assignments; no match or several matches refuse. -/\ndef resolveParentAlias (request : Request) (child : Name) (e : Expr) : ShapeM Name := do\n  let e ← instantiateMVars e\n  if e.hasMVar || e.hasFVar || e.hasLevelMVar then reject e \"an inherited generic parent must be a closed type\"\n  if (e.find? (·.isConstOf child)).isSome then reject e \"recursive generic records are not admitted\"\n  -- A site without a request-wide cache still discovers, with its own cache.\n  let cache ← match (← get).parentAliases with\n    | some cache => pure cache\n    | none => do\n      let cache ← IO.mkRef ({} : ParentAliasCache)\n      modify fun state => { state with parentAliases := some cache }\n      pure cache\n  if let some (_, name) := (← cache.get).resolved.find? (·.1 == e) then\n    cache.modify fun state => { state with hits := state.hits + 1 }\n    return name\n  let limit := (← cache.get).limit\n  if (← cache.get).exhausted then parentAliasExhausted limit\n  let index ← match (← cache.get).index with\n    | some index => pure index\n    | none => do\n      let (index?, scanned) ← buildParentAliasIndex request limit\n      cache.modify fun state => { state with attempts := state.attempts + 1, scanned := state.scanned + scanned }\n      let some index := index? | do\n        cache.modify fun state => { state with exhausted := true }\n        parentAliasExhausted limit\n      cache.modify fun state => { state with index := some index, builds := state.builds + 1 }\n      pure index\n  let some structureName := e.getAppFn.constName? | reject e \"an inherited generic parent must instantiate a structure\"\n  let candidates := (index.find? (·.1 == structureName)).map (·.2) |>.getD #[]\n  let mut matching := #[]\n  for name in candidates do\n    cache.modify fun state => { state with probes := state.probes + 1 }\n    let denotes : MetaM Bool := withoutModifyingState <| withNewMCtxDepth do\n      return (← whnf (← inferType (mkConst name))).isSort && (← isDefEq (mkConst name) e)\n    if ← denotes then matching := matching.push name\n  match (matching.qsort (·.toString < ·.toString)).toList with\n  | [] => reject e \"name this inherited generic parent with an abbrev in the compiled source\"\n  | [name] =>\n    cache.modify fun state => { state with resolved := state.resolved.push (e, name) }\n    return name\n  | names => reject e s!\"ambiguous inherited generic parent; candidates: {\", \".intercalate (names.map toString)}\"\n\n"
+        },
+        {
+          "start": 17321,
+          "previous": "    -- closure leased to the host, and where Lean itself produces the value for the host.\n    -- A host callback's result would reach running Lean code before any check could refuse\n    -- it, and native packages never substitute a value, so it stays refused.\n",
+          "current": "    -- closure leased to the host, where Lean itself produces the value for the host, and in a\n    -- host callback's structural result. The model admits a host reply only when its failure\n    -- value holds no Fin; other host-reply positions stay refused here.\n"
+        },
+        {
+          "start": 21369,
+          "previous": "              -- Alias spelling does not change the permitted refinement position.\n              let directFin := (← whnf definition.value).isAppOfArity ``Fin 1\n",
+          "current": "              -- Alias spelling does not change the permitted refinement position: a Fin or Subtype\n              -- alias keeps its depth, so an aliased Subtype in a callback argument is not top-level.\n              let unfolded ← whnf definition.value\n              let directFin := unfolded.isAppOfArity ``Fin 1 || unfolded.isAppOfArity ``Subtype 2\n"
+        },
+        {
+          "start": 25171,
+          "previous": "        if induct.numParams != args.size || induct.numIndices != 0 || !info.parentInfo.isEmpty then\n          reject e \"indexed, partially applied and inherited generic records require a reviewed projection\"\n",
+          "current": "        if induct.numParams != args.size || induct.numIndices != 0 then\n          reject e \"indexed and partially applied generic records require a reviewed projection\"\n"
+        },
+        {
+          "start": 25629,
+          "previous": "          unless (← whnf (← inferType argument)).isSort do reject e \"generic record arguments must be types\"\n",
+          "current": "          unless (← whnf (← inferType argument)).isSort do\n            -- A value index is recorded only as instantiation provenance. This slice admits a\n            -- closed Nat literal; other index kinds are refused at their source.\n            unless ← isDefEq (← inferType argument) (mkConst ``Nat) do\n              reject e \"generic record value arguments must be Nat literals\"\n            let .lit (.natVal index) ← whnf argument\n              | reject e \"generic record value arguments must be closed Nat literals\"\n            arguments := arguments.push (obj [(\"kind\", str \"value\"),\n              (\"type\", ← shapeTree request (mkConst ``Nat)), (\"value\", str (toString index))])\n            continue\n"
+        },
+        {
+          "start": 27171,
+          "previous": "        for field in info.fieldNames do\n          let some projection := info.getProjFn? fields.size | reject e \"missing record projection\"\n",
+          "current": "        -- Proof fields are erased: they never cross, and only a checked constructor builds them.\n        let mut erased : Array Name := #[]\n        let mut payload : Array (Name × Expr) := #[]\n        for field in info.fieldNames, position in [0:info.fieldNames.size] do\n          let some projection := info.getProjFn? position | reject e \"missing record projection\"\n"
+        },
+        {
+          "start": 27824,
+          "previous": "          let fieldType ← withLocalDecl `value .default e fun receiver => do\n",
+          "current": "          let (fieldType, proof) ← withLocalDecl `value .default e fun receiver => do\n"
+        },
+        {
+          "start": 28068,
+          "previous": "",
+          "current": "            if ← isProp fieldType then return (fieldType, true)\n"
+        },
+        {
+          "start": 28262,
+          "previous": "            if ← isProp fieldType then reject e s!\"generic record field {field} is a proof\"\n            return fieldType\n",
+          "current": "            return (fieldType, false)\n          if proof then\n            erased := erased.push field\n            continue\n          payload := payload.push (field, fieldType)\n          -- An inherited generic parent is one subobject field whose Lean type is an unnamed\n          -- application; it resolves to the single source alias that denotes it. Fields that a\n          -- program names explicitly never take this path.\n          let parent := info.parentInfo.any fun item => item.subobject && item.projFn == projection\n          let env ← getEnv\n          let generic := fieldType.getAppFn.constName?.any fun head => (genericStructure? env head).isSome\n          let fieldShape ← if parent && fieldType.isApp && generic then\n              shapeTree request (mkConst (← resolveParentAlias request structureName fieldType)) (aliasName :: seen) 0 true none containerFin false\n            else shapeTree request fieldType (aliasName :: seen) 0 true none containerFin false\n"
+        },
+        {
+          "start": 29359,
+          "previous": "            (\"type\", ← shapeTree request fieldType (aliasName :: seen) 0 true none containerFin false)])\n",
+          "current": "            (\"type\", fieldShape)])\n"
+        },
+        {
+          "start": 29750,
+          "previous": "          unless binders.size == fields.size do reject e \"generic record constructor arity disagrees with its projections\"\n",
+          "current": "          unless binders.size == info.fieldNames.size do reject e \"generic record constructor arity disagrees with its projections\"\n"
+        },
+        {
+          "start": 29998,
+          "previous": "          for binder in binders, index in [0:fields.size] do\n",
+          "current": "          for binder in binders, index in [0:binders.size] do\n            -- A proof binder's type mentions earlier binders; only Lean's own constructor holds it.\n            if erased.contains info.fieldNames[index]! then continue\n"
+        },
+        {
+          "start": 30861,
+          "previous": "        return ← rememberShape e aliasName <| obj [(\"kind\", str \"record\"), (\"name\", str aliasName.toString),\n",
+          "current": "        let reference ← rememberShape e aliasName <| obj ([(\"kind\", str \"record\"), (\"name\", str aliasName.toString),\n"
+        },
+        {
+          "start": 31180,
+          "previous": "          (\"fields\", toJson fields), (\"abi\", ← abi e)]\n",
+          "current": "          (\"fields\", toJson fields)] ++ (if erased.isEmpty then [] else [(\"erased\", toJson (erased.map toString))]) ++\n          [(\"abi\", ← abi e)])\n        if erased.isEmpty then return reference\n        return ← checkedRecordSite request e reference payload depth copied structural checked callbackSite hostReply\n"
+        },
+        {
+          "start": 34302,
+          "previous": "      for field in info.fieldNames do\n        let some projection := info.getProjFn? fields.size | reject e \"missing record projection\"\n",
+          "current": "      -- Proof fields are erased: they never cross, and only a checked constructor builds them.\n      let mut erased : Array Name := #[]\n      let mut payload : Array (Name × Expr) := #[]\n      for field in info.fieldNames, position in [0:info.fieldNames.size] do\n        let some projection := info.getProjFn? position | reject e \"missing record projection\"\n"
+        },
+        {
+          "start": 35091,
+          "previous": "",
+          "current": "        let proof ← withLocalDecl `value .default e fun receiver => isProp (fieldType.instantiate1 receiver)\n        if proof then\n          erased := erased.push field\n          continue\n        -- A payload field that depends on another field stays refused as a dependent type.\n        payload := payload.push (field, fieldType)\n"
+        },
+        {
+          "start": 35739,
+          "previous": "      return ← rememberShape e name <| obj [(\"kind\", str \"record\"), (\"name\", str name.toString),\n        (\"lean\", str name.toString), (\"constructor\", str induct.ctors.head!.toString), (\"fields\", toJson fields), (\"abi\", ← abi e)]\n",
+          "current": "      let types := (← get).types\n      if !erased.isEmpty && fields.any (fun field => containsKind types ((field.getObjVal? \"type\").toOption.getD Json.null) \"refinement\") then\n        reject e \"checked record payload fields cannot carry refinements yet\"\n      let reference ← rememberShape e name <| obj ([(\"kind\", str \"record\"), (\"name\", str name.toString),\n        (\"lean\", str name.toString), (\"constructor\", str induct.ctors.head!.toString), (\"fields\", toJson fields)] ++\n        (if erased.isEmpty then [] else [(\"erased\", toJson (erased.map toString))]) ++ [(\"abi\", ← abi e)])\n      if erased.isEmpty then return reference\n      return ← checkedRecordSite request e reference payload depth copied structural checked callbackSite hostReply\n"
+        },
+        {
+          "start": 40646,
+          "previous": "      (\"result\", ← shapeTree request result seen (depth + 1) false none containerFin (callbackSite == some true)\n",
+          "current": "      (\"result\", ← shapeTree request result seen (depth + 1) false none containerFin callbackSite.isSome\n"
+        },
+        {
+          "start": 42386,
+          "previous": "",
+          "current": "  -- A checked record's site keeps its predicate around the inlined record.\n  if kind == \"refinement\" && (value.getObjVal? \"base\" |>.toOption |>.bind fun base => base.getObjValAs? String \"kind\" |>.toOption) == some \"reference\" then\n    return value.setObjVal! \"base\" (← inlineCopiedType types (← ofExcept <| value.getObjVal? \"base\") seen (depth + 1))\n"
+        },
+        {
+          "start": 46878,
+          "previous": "    (callbackSite : Option Bool := none) : MetaM Json := do\n",
+          "current": "    (callbackSite : Option Bool := none) (parentAliases : Option (IO.Ref ParentAliasCache) := none) : MetaM Json := do\n"
+        },
+        {
+          "start": 47280,
+          "previous": "  let (value, state) ← (shapeTree request e (checked := checked) (callbackSite := callbackSite)).run {}\n",
+          "current": "  let (value, state) ← (shapeTree request e (checked := checked) (callbackSite := callbackSite)).run { parentAliases }\n"
+        },
+        {
+          "start": 47624,
+          "previous": "    (index : Nat := 0) : MetaM (Array Json × Json) := do\n",
+          "current": "    (index : Nat := 0) (parentAliases : Option (IO.Ref ParentAliasCache) := none) : MetaM (Array Json × Json) := do\n"
+        },
+        {
+          "start": 47948,
+          "previous": "      let parameter ← shape request argument (checkedParameters[index]?.join) (callbackSite := some false)\n      let (rest, result) ← signature request result limit checkedParameters checkedResult (index + 1)\n",
+          "current": "      let parameter ← shape request argument (checkedParameters[index]?.join) (callbackSite := some false) parentAliases\n      let (rest, result) ← signature request result limit checkedParameters checkedResult (index + 1) parentAliases\n"
+        },
+        {
+          "start": 48275,
+          "previous": "  return (#[], ← shape request e checkedResult (callbackSite := some true))\n",
+          "current": "  return (#[], ← shape request e checkedResult (callbackSite := some true) parentAliases)\n"
+        },
+        {
+          "start": 49945,
+          "previous": "",
+          "current": "  -- A value index is instantiation provenance only, never a host type.\n  if kind == \"value\" then\n    return obj [(\"kind\", str kind), (\"type\", ← componentCopiedType (← ofExcept <| value.getObjVal? \"type\")),\n      (\"value\", ← ofExcept <| value.getObjVal? \"value\")]\n"
+        },
+        {
+          "start": 52335,
+          "previous": "    return obj ([(\"kind\", str \"record\"), (\"name\", ← ofExcept <| value.getObjVal? \"name\")] ++ provenance ++ [(\"fields\", toJson fields)])\n",
+          "current": "    let erased := match value.getObjVal? \"erased\" with | .ok names => [(\"erased\", names)] | .error _ => []\n    return obj ([(\"kind\", str \"record\"), (\"name\", ← ofExcept <| value.getObjVal? \"name\")] ++ provenance ++ [(\"fields\", toJson fields)] ++ erased)\n"
+        },
+        {
+          "start": 57752,
+          "previous": "          (predicate.getObjValAs? String \"kind\").toOption != some \"subtype\" ||\n",
+          "current": "          ![\"subtype\", \"checked-record\"].contains ((predicate.getObjValAs? String \"kind\").toOption.getD \"\") ||\n"
+        },
+        {
+          "start": 65930,
+          "previous": "def describeSignature (request : Request) (name : String) (type : Expr) : MetaM (Array Json × String × Json) := do\n",
+          "current": "def describeSignature (request : Request) (name : String) (type : Expr) (parentAliases : Option (IO.Ref ParentAliasCache) := none) : MetaM (Array Json × String × Json) := do\n"
+        },
+        {
+          "start": 66960,
+          "previous": "    let (nativeParameters, result) ← signature request type arity checkedParameters checkedResult\n",
+          "current": "    let (nativeParameters, result) ← signature request type arity checkedParameters checkedResult (parentAliases := parentAliases)\n"
+        },
+        {
+          "start": 73816,
+          "previous": "def extractSpecialization (request : Request) (source : Json) (selection : Specialization) : MetaM Json := do\n",
+          "current": "def extractSpecialization (request : Request) (source : Json) (selection : Specialization) (parentAliases : Option (IO.Ref ParentAliasCache) := none) : MetaM Json := do\n"
+        },
+        {
+          "start": 74637,
+          "previous": "    let (parameters, resultText, projection) ← describeSignature request selection.name type\n",
+          "current": "    let (parameters, resultText, projection) ← describeSignature request selection.name type parentAliases\n"
+        },
+        {
+          "start": 76055,
+          "previous": "def extractMetadata (request : Request) : MetaM Json := do\n",
+          "current": "def extractMetadata (request : Request) (parentAliases : Option (IO.Ref ParentAliasCache) := none) : MetaM Json := do\n"
+        },
+        {
+          "start": 76457,
+          "previous": "",
+          "current": "  -- One lazily built alias index per request, shared by every site that needs discovery.\n  let parentAliases := some (← match parentAliases with | some cache => pure cache | none => IO.mkRef ({} : ParentAliasCache))\n"
+        },
+        {
+          "start": 79299,
+          "previous": "        let (parameters, resultText, runtimeProjection) ← describeSignature request name.toString info.type\n",
+          "current": "        let (parameters, resultText, runtimeProjection) ← describeSignature request name.toString info.type parentAliases\n"
+        },
+        {
+          "start": 82350,
+          "previous": "        let item ← extractSpecialization request original selection\n",
+          "current": "        let item ← extractSpecialization request original selection parentAliases\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/inherited-records.test.mjs",
+      "currentSha256": "68d8941419aba1e327f83db0c724913aa4d49dc0c41a0f8ee8ed9929d68ff3ce",
+      "previousSha256": "ab50f3102a87ff2a2ecb76d54ef5cdfbad9bec921afa004a086408177f0a318b",
+      "edits": [
+        {
+          "start": 5851,
+          "previous": "test(\"inherited fields that depend on the record value and generic inheritance stay refused at their source\", { skip: !lean, timeout: 900_000 }, async t => {\n",
+          "current": "test(\"inherited fields that depend on the record value, and a generic parent without a source alias, are refused at their source\", { skip: !lean, timeout: 900_000 }, async t => {\n"
+        },
+        {
+          "start": 6408,
+          "previous": "\t\t, [\"generic inheritance\", \"structure Base (α : Type) where\\n  base : α\\nstructure Child (α : Type) extends Base α where\\n  child : Nat\\nabbrev NatChild := Child Nat\\ndef grow (value : NatChild) : Nat := value.child\", \"grow\", /inherited generic records require a reviewed projection/u]];\n",
+          "current": "\t\t, [\"a generic parent with no source alias\", \"structure Base (α : Type) where\\n  base : α\\nstructure Child (α : Type) extends Base α where\\n  child : Nat\\nabbrev NatChild := Child Nat\\ndef grow (value : NatChild) : Nat := value.child\", \"grow\", /name this inherited generic parent with an abbrev in the compiled source/u]];\n"
+        }
+      ]
+    }
+  ]
+}

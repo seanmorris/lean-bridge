@@ -1,0 +1,246 @@
+{
+  "archives": {
+    "archives/genericinheritance-1.0.0-c.tar.gz": "74698234f621a7eb341def6580d80c1de30911983b816076e5b0d3cba6515871",
+    "archives/genericinheritance-1.0.0-cpp.tar.gz": "6af563f5e5080f609bf34c86ea38d7041d917f259d66ab2ac7d4187e15b3d0f6"
+  },
+  "independentBuilds": 2,
+  "records": [
+    {
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "id": "lean:GenericInheritance.Marker",
+      "instantiation": null,
+      "kind": "record"
+    },
+    {
+      "fields": [
+        {
+          "name": "label",
+          "type": {
+            "kind": "primitive",
+            "name": "string"
+          }
+        }
+      ],
+      "id": "lean:GenericInheritance.MarkerTag",
+      "instantiation": {
+        "arguments": [
+          {
+            "id": "lean:GenericInheritance.Marker",
+            "kind": "named"
+          }
+        ],
+        "structure": "GenericInheritance.Tag"
+      },
+      "kind": "record"
+    },
+    {
+      "fields": [
+        {
+          "name": "toTag",
+          "type": {
+            "id": "lean:GenericInheritance.MarkerTag",
+            "kind": "named"
+          }
+        },
+        {
+          "name": "count",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "id": "lean:GenericInheritance.MarkerTagged",
+      "instantiation": {
+        "arguments": [
+          {
+            "id": "lean:GenericInheritance.Marker",
+            "kind": "named"
+          }
+        ],
+        "structure": "GenericInheritance.Tagged"
+      },
+      "kind": "record"
+    },
+    {
+      "fields": [
+        {
+          "name": "base",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "id": "lean:GenericInheritance.NatBase",
+      "instantiation": {
+        "arguments": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "structure": "GenericInheritance.Base"
+      },
+      "kind": "record"
+    },
+    {
+      "fields": [
+        {
+          "name": "toBase",
+          "type": {
+            "id": "lean:GenericInheritance.NatBase",
+            "kind": "named"
+          }
+        },
+        {
+          "name": "child",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "id": "lean:GenericInheritance.NatChild",
+      "instantiation": {
+        "arguments": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "structure": "GenericInheritance.Child"
+      },
+      "kind": "record"
+    },
+    {
+      "fields": [
+        {
+          "name": "value",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "id": "lean:GenericInheritance.UNatBase",
+      "instantiation": {
+        "arguments": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "structure": "GenericInheritance.UBase"
+      },
+      "kind": "record"
+    },
+    {
+      "fields": [
+        {
+          "name": "toUBase",
+          "type": {
+            "id": "lean:GenericInheritance.UNatBase",
+            "kind": "named"
+          }
+        },
+        {
+          "name": "extra",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "id": "lean:GenericInheritance.UNatChild",
+      "instantiation": {
+        "arguments": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "structure": "GenericInheritance.UChild"
+      },
+      "kind": "record"
+    }
+  ],
+  "reports": [
+    {
+      "bindingIrSha256": "e3d5988f15d89938f758f19bfa04e6e21a83d2a23082b7fe02a3eaa655b5e6c9",
+      "checks": 2011,
+      "compilerFreePath": true,
+      "consumerSha256": "f40a5c74bfee0fcb0f0783c1945790dd0182daca37bccf1646c0e9264f8537cc",
+      "modelBindingIrSha256": "e3d5988f15d89938f758f19bfa04e6e21a83d2a23082b7fe02a3eaa655b5e6c9",
+      "modelSha256": "e51f11a555118ad3e48d1f74531c70fc651f81302ddc405ecffc6fa8f6ebaaf1",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 53821080,
+              "path": "archives/genericinheritance-1.0.0-c.tar.gz",
+              "sha256": "74698234f621a7eb341def6580d80c1de30911983b816076e5b0d3cba6515871"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "genericinheritance",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "c",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "c",
+      "receiptSha256": "1b22bc074aaa69a5dab3c11000c5dd0b3c8c733d44272669b9d88685cf400095",
+      "sourceRemovedBeforeInstallation": true
+    },
+    {
+      "bindingIrSha256": "e3d5988f15d89938f758f19bfa04e6e21a83d2a23082b7fe02a3eaa655b5e6c9",
+      "checks": 2007,
+      "compilerFreePath": true,
+      "consumerSha256": "329f9d038d86ce14ebb2cf2e935f079ec75766c698552944afee0772398c6b8f",
+      "modelBindingIrSha256": "e3d5988f15d89938f758f19bfa04e6e21a83d2a23082b7fe02a3eaa655b5e6c9",
+      "modelSha256": "e51f11a555118ad3e48d1f74531c70fc651f81302ddc405ecffc6fa8f6ebaaf1",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51755380,
+              "path": "archives/genericinheritance-1.0.0-cpp.tar.gz",
+              "sha256": "6af563f5e5080f609bf34c86ea38d7041d917f259d66ab2ac7d4187e15b3d0f6"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "genericinheritance",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "cpp",
+      "receiptSha256": "1b22bc074aaa69a5dab3c11000c5dd0b3c8c733d44272669b9d88685cf400095",
+      "sourceRemovedBeforeInstallation": true
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

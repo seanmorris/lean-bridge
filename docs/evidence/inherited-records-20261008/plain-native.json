@@ -1,0 +1,74 @@
+{
+  "archives": {
+    "archives/inheritedrecords-1.0.0-c.tar.gz": "f411eb712bbecd20e00c0112fe2cd727a1dc8a1d654f031ffc0a87e8e90184a0",
+    "archives/inheritedrecords-1.0.0-cpp.tar.gz": "2c93e4a8fc2adb18eff2624f1b0bdf872ca09f6617d83c86ebf0f0053e5360da"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "8873350d7791bbe6c6fc8d9341da69fdba405f0c483be9e9e69018429b8ece70",
+      "checks": 2010,
+      "compilerFreePath": true,
+      "consumerSha256": "cf6223020073d9211177ab5aa628bcd4cad5900b0f31f012e0a4f40e3352169c",
+      "modelSha256": "538c1c9eb950f8fc151340e1d000f29ae956df3322a8100baed6d9806b8bea60",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 53842721,
+              "path": "archives/inheritedrecords-1.0.0-c.tar.gz",
+              "sha256": "f411eb712bbecd20e00c0112fe2cd727a1dc8a1d654f031ffc0a87e8e90184a0"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "inheritedrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "c",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "c",
+      "receiptSha256": "84e2ba74656ef4e9222700c41f3b44fd86773b576f5bbfe75e6de45c98a21928",
+      "sourceRemovedBeforeInstallation": true
+    },
+    {
+      "bindingIrSha256": "8873350d7791bbe6c6fc8d9341da69fdba405f0c483be9e9e69018429b8ece70",
+      "checks": 2010,
+      "compilerFreePath": true,
+      "consumerSha256": "63e838c5a4204a3c48cee7dccaad2cc28e3ce08ad886b38e2a048bb8d2911c20",
+      "modelSha256": "538c1c9eb950f8fc151340e1d000f29ae956df3322a8100baed6d9806b8bea60",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51775598,
+              "path": "archives/inheritedrecords-1.0.0-cpp.tar.gz",
+              "sha256": "2c93e4a8fc2adb18eff2624f1b0bdf872ca09f6617d83c86ebf0f0053e5360da"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "inheritedrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "cpp",
+      "receiptSha256": "84e2ba74656ef4e9222700c41f3b44fd86773b576f5bbfe75e6de45c98a21928",
+      "sourceRemovedBeforeInstallation": true
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}
