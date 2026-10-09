@@ -665,7 +665,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(nodeJob, /node scripts\/check-local-npm-release\.mjs/);
   assert.match(nodeJob, /--backend nix --browsers chromium,firefox,webkit/);
   const nativeJob = workflow.split("  native-consumers:\n")[1].split("\n  managed-consumers:\n")[0];
-  assert.match(nativeJob, /^ {4}timeout-minutes: 240$/m);
+  assert.match(nativeJob, /^ {4}timeout-minutes: \$\{\{ matrix\.profile == 'c-family' && 360 \|\| 240 \}\}$/m);
   const wasiJob = workflow.split("  wasi-consumer:\n")[1].split("\n  docker-engine:\n")[0];
   assert.match(wasiJob, /^ {4}timeout-minutes: 240$/m);
   assert.match(wasiJob, /npm run test:owned-wit-transfers/);

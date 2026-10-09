@@ -9,6 +9,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { assertOwnedJvmEnforced } from "./owned-jvm-job.mjs";
+import { beforeDotnetDispatchIntegrationSource } from "./dotnet-dispatch-integration-source-history.mjs";
 import "./jvm-shard-source-history-tests.mjs";
 
 // The single JVM corpus step, its uploaded paths and its recorded commands before the split.
@@ -74,6 +75,12 @@ const digest = lines => sha256(lines.join("\n"));
  * @param source - Complete consumer-matrix workflow text.
  */
 export const assertJvmShardContract = source => {
+	// The later managed-Fin integration adds GDB to both the executed and recorded command.
+	// Require those live gates before restoring the exact earlier workflow for the split audit.
+	const fin = "LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_JVM_FIN_TEST=1 node --test tests/jvm-fin.test.mjs";
+	for(const line of [`          ${fin}\n`, `              consumer_command="$consumer_command && ${fin}"\n`])
+		assert.equal(source.split(line).length, 2, "the live JVM Fin command retains its debugger");
+	source = beforeDotnetDispatchIntegrationSource(".github/workflows/consumer-matrix.yml", source);
 	const lines = source.split("\n");
 	const managed = jobLines(lines, "managed-consumers"), owned = jobLines(lines, "owned-jvm-values");
 	assert.ok(managed.includes("    timeout-minutes: 240") && owned.includes("    timeout-minutes: 240"));
@@ -123,6 +130,17 @@ export const assertJvmShardContract = source => {
 
 test("the two JVM jobs together keep exactly the former commands, reports, record and evidence", async () => {
 	assertJvmShardContract(await readFile(".github/workflows/consumer-matrix.yml", "utf8"));
+});
+
+test("the JVM split audit rejects losing either live Fin debugger selection", async () => {
+	const source = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	const fin = "LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_JVM_FIN_TEST=1 node --test tests/jvm-fin.test.mjs";
+	for(const line of [`          ${fin}\n`, `              consumer_command="$consumer_command && ${fin}"\n`])
+	{
+		const changed = source.replace(line, line.replace("LEAN_BRIDGE_GDB=/usr/bin/gdb ", ""));
+		assert.notEqual(changed, source);
+		assert.throws(() => assertJvmShardContract(changed), /live JVM Fin command retains its debugger/u);
+	}
 });
 
 test("a skipped or failure-tolerant owned JVM verifier is rejected by both contracts", async () => {

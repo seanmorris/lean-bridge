@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforePerlClosureNativeBudgetSource } from "./perl-closure-native-budget-source-history.mjs";
 import { perlRefinementCases } from "./perl-refinement-hosted-evidence.mjs";
 import { assertPerlRelocatedArchive, perlRelocatedConfigurations, perlRelocatedDirectory, perlRelocatedOriginalReceipt, perlRelocatedRevision } from "./perl-relocated-hosted-evidence.mjs";
 
@@ -39,7 +40,9 @@ export const perlRelocatedPromotionEvidence = async () => {
 		, "tests/helpers/perl-relocated-promotion.mjs"
 		, "tests/perl-relocated-promotion.test.mjs"
 		, ...receipt.files.map(file => file.path)];
-	const files = await Promise.all(paths.map(async path => ({ path, sha256: sha256(await readFile(path)) })));
+	// Preserve the exact promotion milestone when later source-only changes refresh its live pins.
+	const files = await Promise.all(paths.map(async path => ({ path
+		, sha256: sha256(beforePerlClosureNativeBudgetSource(path, await readFile(path, "utf8"))) })));
 	return Promise.all(perlRefinementCases.map(async selected => ({
 		id: evidenceId(selected.id), kind: "installed"
 		, revision: perlRelocatedRevision

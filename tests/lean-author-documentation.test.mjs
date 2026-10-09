@@ -220,15 +220,27 @@ test("callback guidance separates installed browser and reviewed directions from
 	assert.match(document, /Reviewed host replies and other native hosts remain pending/);
 });
 
-test("CPAN author guidance keeps the archived passes separate from installed-tree relocation acceptance", async () => {
+test("CPAN author and publisher guidance cite four-ABI relocation without promoting scalar or reviewed Subtype", async () => {
 	const document = await readFile("docs/lean/existing-package.md", "utf8");
 	const receipt = JSON.parse(await readFile("docs/evidence/perl-refinements-hosted-20261009/receipt.json"));
 	assert.equal(receipt.configurations.length, 4); assert.equal(receipt.scope.supportPromotion, false);
 	assert.match(receipt.scope.reproduction, /none moves the installed tree/);
-	assert.match(document, /also passed ordinary-source containers and checked Subtype consumers/);
-	assert.match(document, /Acceptance of the installed-tree relocation and full-consumer rerun fix remains pending/);
-	assert.match(document, /Both routes executed; relocation retest pending/);
-	assert.match(document, /Four ABIs executed; relocation retest pending/);
+	const moved = JSON.parse(await readFile("docs/evidence/perl-relocated-hosted-20261009/receipt.json"));
+	assert.equal(moved.revision, "93c60a0487d0b2acc0b6d562cd72a3876738a666");
+	assert.deepEqual(moved.configurations.map(item => item.conclusion), ["success", "success", "success", "success"]);
+	assert.match(moved.scope.relocation, /unchanged consumer.pl reruns once/u);
+	assert.match(document, /Four-ABI CPAN acceptance.*perl-refinements-20261009\.md/u);
+	assert.match(document, /Installed, both source routes on four ABIs/u);
+	assert.match(document, /Installed on four ABIs; ordinary source/u);
+	assert.match(document, /This container evidence does not cover the separate top-level scalar relocation gate/u);
+	assert.match(document, /Executed; relocation retest pending/u);
+	assert.match(document, /C\/C\+\+ and Node installed; other profiles pending/u);
+	assert.doesNotMatch(document, /Both routes executed; relocation retest pending|Four ABIs executed; relocation retest pending|their installed acceptance is not yet recorded/u);
+	const publisher = await readFile("docs/publish/cpan.md", "utf8");
+	assert.ok(publisher.includes("checked top-level Subtype constructors"));
+	assert.ok(publisher.includes("../evidence/perl-refinements-20261009.md"));
+	assert.match(publisher, /Retained host callbacks remain unsupported/u);
+	assert.doesNotMatch(publisher, /Declaring a transfer, retained host callback, anchored borrow or checked refinement constructor currently fails/u);
 });
 
 test("the installed-package example uses npm and a runnable JavaScript file", async () => {

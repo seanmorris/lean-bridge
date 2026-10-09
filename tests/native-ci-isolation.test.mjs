@@ -11,6 +11,8 @@ import test from "node:test";
 import { assertNativeCiIsolation, nativeCiJob, nativeCiProfiles, nativeCiRecordScript } from "./helpers/native-ci-isolation.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { runCopied } from "./helpers/copied-fixture-install.mjs";
+import "./helpers/native-consumer-budget-tests.mjs";
+import "./helpers/perl-closure-native-budget-tests.mjs";
 
 const workflow = () => readFile(".github/workflows/consumer-matrix.yml", "utf8");
 const baseline = async () => JSON.parse(await readFile("tests/fixtures/ci/native-acceptance-before-isolation.json"));

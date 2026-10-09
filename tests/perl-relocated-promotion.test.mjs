@@ -12,6 +12,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
+import { beforePerlClosureNativeBudgetSource } from "./helpers/perl-closure-native-budget-source-history.mjs";
 import { perlRelocatedPromotionIds, perlRelocatedReviewedId, promotePerlRelocatedInventory, promotePerlRelocatedObservations } from "./helpers/perl-relocated-promotion.mjs";
 import { beforePerlRelocatedPromotionSource, perlRelocatedPromotionChangedPaths, perlRelocatedPromotionHistoryPath, perlRelocatedPromotionPredecessor, reversePerlRelocatedPromotionUpdate } from "./helpers/perl-relocated-promotion-source-history.mjs";
 
@@ -22,7 +23,7 @@ test("Perl relocated promotion authenticates all exact predecessors and refuses 
 	assert.deepEqual(history.updates.map(update => update.path), perlRelocatedPromotionChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = await readFile(update.path, "utf8"), previous = reversePerlRelocatedPromotionUpdate(current, update);
+		const current = beforePerlClosureNativeBudgetSource(update.path, await readFile(update.path, "utf8")), previous = reversePerlRelocatedPromotionUpdate(current, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforePerlRelocatedPromotionSource(update.path, current), previous);
 		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
@@ -38,7 +39,7 @@ test("Perl relocated promotion authenticates all exact predecessors and refuses 
 });
 
 test("Perl inventory adds only two ordinary observations and reviewed-container relocation", async () => {
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", source = beforePerlClosureNativeBudgetSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(source), previous = JSON.parse(beforePerlRelocatedPromotionSource(path, source));
 	const expected = await promotePerlRelocatedInventory(previous);
 	const history = JSON.parse(await readFile(perlRelocatedPromotionHistoryPath));
@@ -62,7 +63,7 @@ test("Perl inventory adds only two ordinary observations and reviewed-container 
 	}
 	assert.throws(() => promotePerlRelocatedObservations(current.observations), /Already promoted/u);
 	assert.throws(() => promotePerlRelocatedObservations(previous.observations.filter(item => item.id !== perlRelocatedReviewedId)));
-	for(const evidence of current.evidence) for(const file of evidence.files)
+	for(const evidence of JSON.parse(await readFile(path)).evidence) for(const file of evidence.files)
 		assert.equal(sha256(await readFile(file.path)), file.sha256, file.path);
 });
 

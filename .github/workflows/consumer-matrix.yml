@@ -2489,7 +2489,9 @@ jobs:
   native-consumers:
     name: Native consumer (${{ matrix.profile }})
     runs-on: ubuntu-24.04
-    timeout-minutes: 240
+    # Run 37873560469 cut the c-family Compare step off at 240 minutes while it was still
+    # passing tests. Python and Rust keep their 240-minute budget.
+    timeout-minutes: ${{ matrix.profile == 'c-family' && 360 || 240 }}
     strategy:
       fail-fast: false
       matrix:
