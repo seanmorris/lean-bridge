@@ -1,25 +1,20 @@
 /**
- * Preserve exact predecessors when registering the reviewed Wasm entry harness.
+ * Preserve exact predecessors when registering the native Fin edge and generic-record Array harnesses.
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeNativeEdgeArrayHarnessSource } from "./native-edge-array-harness-source-history.mjs";
 
-export const wasmEntryHarnessHistoryPath = "docs/evidence/wasm-entry-harness-source-history-20261009.json";
-export const wasmEntryHarnessPredecessor = "f2dbb3b8e2fe478283357ed16fb2f8979117c99f";
-export const wasmEntryHarnessChangedPaths = [
+export const nativeEdgeArrayHarnessHistoryPath = "docs/evidence/native-edge-array-harness-source-history-20261009.json";
+export const nativeEdgeArrayHarnessPredecessor = "1406d54c0aac77f7cafa0cf73d7a2492ddc1628f";
+export const nativeEdgeArrayHarnessChangedPaths = [
 	"docs/type-surface.v1.json"
-	, ".gitattributes"
 	, "src/adoption/test-profiles.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/wasm-entry-controls-source-history.mjs"
-	, "tests/wasm-entry-controls-history.test.mjs"
-	, "tests/helpers/reviewed-fin-wasm-entry.mjs"
-	, "tests/reviewed-fin-wasm-entry-controls.test.mjs"
-	, "tests/helpers/type-corpus-browser.mjs"
+	, "tests/helpers/wasm-entry-harness-source-history.mjs"
+	, "tests/wasm-entry-harness-history.test.mjs"
 ];
 let history;
 
@@ -29,8 +24,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseWasmEntryHarnessUpdate = (source, update) => {
-	assert.ok(wasmEntryHarnessChangedPaths.includes(update.path));
+export const reverseNativeEdgeArrayHarnessUpdate = (source, update) => {
+	assert.ok(nativeEdgeArrayHarnessChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -50,18 +45,17 @@ export const reverseWasmEntryHarnessUpdate = (source, update) => {
 };
 
 /**
- * Restore the source before the Wasm entry harness integration, stopping at an explicitly requested identity.
+ * Restore the source before the Native edge/Array harness integration, stopping at an explicitly requested identity.
  *
  * @param path - Repository-relative source path.
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeWasmEntryHarnessSource = (path, source, expected) => {
-	source = beforeNativeEdgeArrayHarnessSource(path, source, expected);
-	if(typeof source !== "string" || !wasmEntryHarnessChangedPaths.includes(path)) return source;
+export const beforeNativeEdgeArrayHarnessSource = (path, source, expected) => {
+	if(typeof source !== "string" || !nativeEdgeArrayHarnessChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(wasmEntryHarnessHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(nativeEdgeArrayHarnessHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseWasmEntryHarnessUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseNativeEdgeArrayHarnessUpdate(source, update) : source;
 };

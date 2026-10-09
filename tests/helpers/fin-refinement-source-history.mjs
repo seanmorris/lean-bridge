@@ -156,6 +156,7 @@ import { finContainerEvidenceCiChangedPaths } from "./fin-container-evidence-ci-
 import { hostedContainerInventoryChangedPaths } from "./hosted-container-inventory-source-history.mjs";
 import { wasmEntryControlsChangedPaths } from "./wasm-entry-controls-source-history.mjs";
 import { wasmEntryHarnessChangedPaths } from "./wasm-entry-harness-source-history.mjs";
+import { nativeEdgeArrayHarnessChangedPaths } from "./native-edge-array-harness-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -777,6 +778,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...hostedContainerInventoryChangedPaths
 	, ...wasmEntryControlsChangedPaths
 	, ...wasmEntryHarnessChangedPaths
+	, ...nativeEdgeArrayHarnessChangedPaths
 ])].sort());
 
 /**
