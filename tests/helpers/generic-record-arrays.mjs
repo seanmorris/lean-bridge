@@ -5,7 +5,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { access, cp, mkdtemp, readFile, rm } from "node:fs/promises";
+import { access, cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { basename, dirname, join, relative, resolve } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
@@ -122,6 +122,26 @@ export const genericRecordArrayReportPath = (profiles, configured) => {
 };
 
 /**
+ * Refuse a destination that already holds a report, before any expensive work.
+ *
+ * @param path - Resolved Array report path.
+ */
+export const claimGenericRecordArrayReport = async path => {
+	await assert.rejects(access(path), { code: "ENOENT" }, `an Array report already exists at ${path}`);
+};
+
+/**
+ * Write the final report exclusively, so a concurrent or earlier report is never replaced.
+ *
+ * @param path - Resolved Array report path.
+ * @param report - Complete report.
+ */
+export const writeGenericRecordArrayReport = async (path, report) => {
+	await mkdir(dirname(path), { recursive: true });
+	await writeFile(path, canonicalJson(report), { flag: "wx" });
+};
+
+/**
  * The accepted specialization source with GenericRecordArrays.lean appended, unchanged except for the module name.
  *
  * @param module - Lean module and namespace name.
@@ -235,6 +255,7 @@ const pythonIdentity = async environment => {
  */
 export const checkInstalledGenericRecordArrays = async (t, profiles, reportPath) => {
 	assert.deepEqual(genericRecordArrayProfileSelection(profiles.join(",")), profiles);
+	await claimGenericRecordArrayReport(reportPath);
 	const module = "GenericRecords", reports = [], archives = [], authors = [];
 	const targets = Object.fromEntries(profiles.map(profile => genericRecordTargets[profile]));
 	const environment = genericRecordEnvironment(profiles);
@@ -302,6 +323,6 @@ export const checkInstalledGenericRecordArrays = async (t, profiles, reportPath)
 	assert.equal(new Set(authors).size, 2);
 	assert.deepEqual(archives[1], archives[0]);
 	const report = { schemaVersion: 1, profiles, reports, archives: archives[0], reproducible: true, authorRoots: 2 };
-	await saveLakeFile(dirname(reportPath), basename(reportPath), canonicalJson(report));
+	await writeGenericRecordArrayReport(reportPath, report);
 	return report;
 };

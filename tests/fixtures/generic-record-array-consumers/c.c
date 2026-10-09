@@ -38,10 +38,13 @@
   CHECK(OK(genericrecords_row_box_sum(&row_box, array_sum, &error)) && is_small(array_sum, 9));
   /* A negative GMP member at the first, middle and last position is the generated API's invalid argument; the caller's input is unchanged and the next valid call succeeds. */
 #define ARRAY_REJECTED(call) ((call) == GENERICRECORDS_STATUS_INVALID_ARGUMENT && error.code == GENERICRECORDS_ERROR_INVALID_ARGUMENT)
+  /* A refused call leaves its output exactly as seeded: a sentinel sum, or an empty span beside a sentinel count. */
+#define SUM_REJECTED(call) (mpz_set_ui(array_sum, 77777), ARRAY_REJECTED(call) && is_small(array_sum, 77777))
+#define BOX_REJECTED(call) (mpz_set_ui(array_out.count, 77777), ARRAY_REJECTED(call) && array_out.value.length == 0 && array_out.value.data == NULL && is_small(array_out.count, 77777))
   for (unsigned a = 0; a < 3; ++a) {
     mpz_t saved; mpz_init_set(saved, array_values[a]);
     array_in.value = array_items; mpz_set_ui(array_in.count, 3); mpz_set_si(array_values[a], -1);
-    CHECK(ARRAY_REJECTED(genericrecords_push_count(&array_in, &array_out, &error)) && array_out.value.length == 0 && array_out.value.data == NULL);
+    CHECK(BOX_REJECTED(genericrecords_push_count(&array_in, &array_out, &error)));
     CHECK(mpz_cmp_si(array_values[a], -1) == 0 && array_in.value.data == array_values && array_in.value.length == 3 && is_small(array_in.count, 3));
     mpz_set(array_values[a], saved); mpz_clear(saved);
     CHECK(OK(genericrecords_push_count(&array_in, &array_out, &error)) && array_out.value.length == 4 && mpz_cmp(array_out.value.data[a], array_values[a]) == 0);
@@ -49,9 +52,9 @@
     for (unsigned field = 0; field < 2; ++field) {
       mpz_ptr member = field ? row_items[a].count : row_items[a].value;
       mpz_init_set(saved, member); mpz_set_si(member, -1);
-      CHECK(ARRAY_REJECTED(genericrecords_row_total(&row, array_sum, &error)) && mpz_cmp_si(member, -1) == 0);
+      CHECK(SUM_REJECTED(genericrecords_row_total(&row, array_sum, &error)) && mpz_cmp_si(member, -1) == 0);
       row_box.value = row; mpz_set_ui(row_box.count, 4);
-      CHECK(ARRAY_REJECTED(genericrecords_row_box_sum(&row_box, array_sum, &error)) && mpz_cmp_si(member, -1) == 0 && row_box.value.data == row_items && is_small(row_box.count, 4));
+      CHECK(SUM_REJECTED(genericrecords_row_box_sum(&row_box, array_sum, &error)) && mpz_cmp_si(member, -1) == 0 && row_box.value.data == row_items && is_small(row_box.count, 4));
       mpz_set(member, saved); mpz_clear(saved);
       CHECK(OK(genericrecords_row_total(&row, array_sum, &error)) && mpz_cmp(array_sum, array_expected) == 0);
       CHECK(OK(genericrecords_row_box_sum(&row_box, array_sum, &error)) && mpz_cmp(array_sum, array_expected) == 0);
@@ -59,19 +62,19 @@
   }
   /* A negative count beside an Array field, and NULL data with a nonzero length, are refused too. */
   array_in.value = array_items; mpz_set_si(array_in.count, -1);
-  CHECK(ARRAY_REJECTED(genericrecords_push_count(&array_in, &array_out, &error)) && array_out.value.length == 0);
+  CHECK(BOX_REJECTED(genericrecords_push_count(&array_in, &array_out, &error)));
   row_box.value = row; mpz_set_si(row_box.count, -1);
-  CHECK(ARRAY_REJECTED(genericrecords_row_box_sum(&row_box, array_sum, &error)));
+  CHECK(SUM_REJECTED(genericrecords_row_box_sum(&row_box, array_sum, &error)));
   array_in.value = array_null; mpz_set_ui(array_in.count, 1);
-  CHECK(ARRAY_REJECTED(genericrecords_push_count(&array_in, &array_out, &error)) && array_out.value.length == 0);
-  CHECK(ARRAY_REJECTED(genericrecords_row_total(&null_row, array_sum, &error)));
+  CHECK(BOX_REJECTED(genericrecords_push_count(&array_in, &array_out, &error)));
+  CHECK(SUM_REJECTED(genericrecords_row_total(&null_row, array_sum, &error)));
   row_box.value = null_row; mpz_set_ui(row_box.count, 1);
-  CHECK(ARRAY_REJECTED(genericrecords_row_box_sum(&row_box, array_sum, &error)));
+  CHECK(SUM_REJECTED(genericrecords_row_box_sum(&row_box, array_sum, &error)));
   /* One thousand Array rounds: a rejected member, then valid Array input and result calls, each result cleared. */
   for (unsigned long r = 0; r < 1000; ++r) {
     const unsigned position = (unsigned)(r % 3), size = (unsigned)(r % 4);
     array_in.value = array_items; mpz_set_ui(array_in.count, r); mpz_set_si(array_values[position], -1);
-    int failed = !ARRAY_REJECTED(genericrecords_push_count(&array_in, &array_out, &error)) || array_out.value.length != 0;
+    int failed = !BOX_REJECTED(genericrecords_push_count(&array_in, &array_out, &error));
     mpz_set_ui(array_values[0], 1); mpz_set(array_values[1], array_wide); mpz_set_ui(array_values[2], 3);
     failed = failed || !OK(genericrecords_push_count(&array_in, &array_out, &error)) || array_out.value.length != 4 || !is_small(array_out.value.data[3], r) || !is_small(array_out.count, r + 1);
     genericrecords_array_box_clear(&array_out);
@@ -83,12 +86,18 @@
     failed = failed || !OK(genericrecords_row_box_sum(&made_box, array_sum, &error)) || !is_small(array_sum, r + size * (size ? size - 1 : 0) / 2);
     mpz_clear(made_box.count);
     genericrecords_array_lean_generic_records_nat_box_span_clear(&made);
-    mpz_set_si(row_items[position].value, -1);
-    failed = failed || !ARRAY_REJECTED(genericrecords_row_box_sum(&row_box, array_sum, &error));
+    /* The rejected RowBox holds the real row with one negative member, then that same restored input recovers. */
+    row_box.value = row; mpz_set_ui(row_box.count, r); mpz_set_si(row_items[position].value, -1);
+    failed = failed || !SUM_REJECTED(genericrecords_row_box_sum(&row_box, array_sum, &error))
+      || row_box.value.data != row_items || row_box.value.length != 3 || mpz_cmp_si(row_items[position].value, -1) != 0;
     mpz_set_ui(row_items[0].value, 2); mpz_set(row_items[1].value, array_wide); mpz_set_ui(row_items[2].value, 0);
+    mpz_add_ui(array_expected, array_wide, 2 + r);
+    failed = failed || !OK(genericrecords_row_box_sum(&row_box, array_sum, &error)) || mpz_cmp(array_sum, array_expected) != 0;
     if (failed) { fprintf(stderr, "array round %lu failed\n", r); return 1; }
   }
   checks += 1000;
+#undef BOX_REJECTED
+#undef SUM_REJECTED
 #undef ARRAY_REJECTED
   genericrecords_array_box_clear(&array_out); mpz_clear(array_in.count); mpz_clear(row_box.count);
   for (unsigned a = 0; a < 3; ++a) { mpz_clear(array_values[a]); genericrecords_nat_box_clear(&row_items[a]); }

@@ -5,14 +5,15 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { genericRecordArrayExports } from "./helpers/generic-record-browser.mjs";
 import { genericRecordInstantiations } from "./helpers/generic-record-packages.mjs";
 import { specializedGenericRecordCase, specializedGenericRecordConsumer } from "./helpers/generic-record-specializations.mjs";
-import { assertGenericRecordArrayAdditions, checkInstalledGenericRecordArrays, genericRecordArrayBaseConsumers, genericRecordArrayCases, genericRecordArrayConfiguration, genericRecordArrayConsumer, genericRecordArrayExpectedChecks, genericRecordArrayInstantiations, genericRecordArrayProfileSelection, genericRecordArrayProfiles, genericRecordArrayReportPath, genericRecordArraySource } from "./helpers/generic-record-arrays.mjs";
+import { assertGenericRecordArrayAdditions, checkInstalledGenericRecordArrays, claimGenericRecordArrayReport, genericRecordArrayBaseConsumers, genericRecordArrayCases, genericRecordArrayConfiguration, genericRecordArrayConsumer, genericRecordArrayExpectedChecks, genericRecordArrayInstantiations, genericRecordArrayProfileSelection, genericRecordArrayProfiles, genericRecordArrayReportPath, genericRecordArraySource, writeGenericRecordArrayReport } from "./helpers/generic-record-arrays.mjs";
 
 const profiles = genericRecordArrayProfileSelection(process.env.LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES);
 const extensions = { c: "c", cpp: "cpp", python: "py" };
@@ -79,6 +80,24 @@ test("the old generic-record consumers stay byte-identical and keep their List, 
 	}
 });
 
+test("every C Array refusal seeds its output and the rounds refuse a negative member of the real row", async () => {
+	const fragment = await readFile("tests/fixtures/generic-record-array-consumers/c.c", "utf8");
+	// Each refused call goes through a sentinel-checking macro; none uses the bare status check.
+	assert.doesNotMatch(fragment, /ARRAY_REJECTED\(genericrecords_/u);
+	const sums = fragment.match(/SUM_REJECTED\(genericrecords_row_(total|box_sum)\(/gu) ?? [], boxes = fragment.match(/BOX_REJECTED\(genericrecords_push_count\(/gu) ?? [];
+	assert.deepEqual([sums.length, boxes.length], [6, 4]);
+	assert.ok(fragment.includes("#define SUM_REJECTED(call) (mpz_set_ui(array_sum, 77777), ARRAY_REJECTED(call) && is_small(array_sum, 77777))"));
+	assert.ok(fragment.includes("&& array_out.value.length == 0 && array_out.value.data == NULL && is_small(array_out.count, 77777))"));
+	// In the rounds, the RowBox is reset to the real row before its member is made negative, checked, then recovered.
+	const rounds = fragment.slice(fragment.indexOf("for (unsigned long r = 0; r < 1000; ++r)"), fragment.indexOf("checks += 1000;"));
+	const reset = rounds.indexOf("row_box.value = row; mpz_set_ui(row_box.count, r); mpz_set_si(row_items[position].value, -1);");
+	const refused = rounds.indexOf("!SUM_REJECTED(genericrecords_row_box_sum(&row_box, array_sum, &error))");
+	const recovered = rounds.indexOf("!OK(genericrecords_row_box_sum(&row_box, array_sum, &error)) || mpz_cmp(array_sum, array_expected) != 0");
+	assert.ok(reset > 0 && refused > reset && recovered > refused, "reset, refusal and recovery in order");
+	assert.ok(rounds.slice(refused).includes("row_box.value.data != row_items || row_box.value.length != 3"));
+	assert.ok(!rounds.includes("null_row"));
+});
+
 test("each profile has its expected case list and an exact check total", () => {
 	assert.deepEqual(Object.keys(genericRecordArrayCases).sort(), [...genericRecordArrayProfiles].sort());
 	for(const profile of genericRecordArrayProfiles)
@@ -106,6 +125,20 @@ test("Array reports are written apart from every ordinary and specialized generi
 	for(const path of ["build/generic-records/c-cpp.json", "build/generic-records/specialized-c-cpp.json", "build/generic-records/python312.json", "build/generic-records/report.json"])
 		assert.throws(() => genericRecordArrayReportPath(["c", "cpp"], path), path);
 	assert.throws(() => genericRecordArrayReportPath(["python"], "build/generic-records/specialized-python312.json"));
+});
+
+test("an existing Array report is refused before work and never overwritten", async t => {
+	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-generic-record-arrays-report-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const existing = join(directory, "array-c.json"), fresh = join(directory, "nested/array-cpp.json");
+	await writeFile(existing, "earlier report\n");
+	await assert.rejects(claimGenericRecordArrayReport(existing));
+	await assert.rejects(writeGenericRecordArrayReport(existing, { schemaVersion: 1 }), { code: "EEXIST" });
+	assert.equal(await readFile(existing, "utf8"), "earlier report\n");
+	await claimGenericRecordArrayReport(fresh);
+	await writeGenericRecordArrayReport(fresh, { schemaVersion: 1 });
+	await assert.rejects(writeGenericRecordArrayReport(fresh, { schemaVersion: 2 }), { code: "EEXIST" });
+	assert.deepEqual(JSON.parse(await readFile(fresh, "utf8")), { schemaVersion: 1 });
 });
 
 const named = id => ({ kind: "named", id });
