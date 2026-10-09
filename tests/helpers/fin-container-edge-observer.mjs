@@ -10,13 +10,26 @@ import { basename, dirname, isAbsolute, join, relative, resolve } from "node:pat
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { validateNativeElf, verifyNativeFiles } from "../../src/build/native-artifacts.mjs";
 import { copiedCleanEnvironment, runCopied } from "./copied-fixture-install.mjs";
-import { finContainerEdgeColumns, finContainerEdgeEntries, finContainerEdgeInterposer, finContainerEdgeRawProbe, finContainerEdgeSourceEntries, readFinContainerEdgeRaw } from "./fin-container-edge-dispatch.mjs";
+import { finContainerEdgeColumns, finContainerEdgeEntries, finContainerEdgeInterposer, finContainerEdgePublicSymbols, finContainerEdgeRawProbe, finContainerEdgeSourceEntries, readFinContainerEdgeRaw } from "./fin-container-edge-dispatch.mjs";
 import { finContainerEntryInitializer } from "./fin-container-entry-dispatch.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 
 const shared = /^[A-Za-z0-9_.+-]+\.so(?:\.[0-9]+)*$/u;
 const digest = /^[a-f0-9]{64}$/u;
 const tools = { ...copiedCleanEnvironment, PATH: "/usr/bin:/bin" };
+
+/**
+ * Refuse probes inside the installed package, including through a symlinked parent directory.
+ *
+ * @param installed - Existing installed package root.
+ * @param probeRoot - Fresh probe directory whose parent already exists.
+ */
+export const assertFinContainerEdgeProbeLocation = async (installed, probeRoot) => {
+	const packageRoot = await realpath(installed);
+	const probeParent = await realpath(dirname(resolve(probeRoot)));
+	const location = relative(packageRoot, join(probeParent, basename(resolve(probeRoot))));
+	assert.ok(location.startsWith("../") || isAbsolute(location), "probe directory must be outside the installed package");
+};
 
 /**
  * Bind the installed model and the complete native library directory to the original archive receipt.
@@ -61,12 +74,15 @@ export const verifyFinContainerEdgeDeployment = async ({ installed, receiptPath,
  * Require one real dynamic definition of every counter and both initializer entrypoints.
  *
  * @param deployment - Verified installed model, columns, directory and library names.
+ * @param options - Additional public C definition requirements.
+ * @param options.publicC - Also authenticate the six GMP entrypoints.
  */
-export const finContainerEdgeDefinitions = async deployment => {
+export const finContainerEdgeDefinitions = async (deployment, { publicC = false } = {}) => {
+	assert.equal(typeof publicC, "boolean");
 	const listings = {};
 	for(const name of Object.keys(deployment.libraries))
 		listings[name] = (await runCopied("/usr/bin/nm", ["-D", "--defined-only", join(deployment.directory, name)], deployment.directory, tools)).stdout;
-	const required = [...deployment.columns, "lean_bridge_native_component_initialize", finContainerEntryInitializer(deployment.model.component.id)];
+	const required = [...deployment.columns, "lean_bridge_native_component_initialize", finContainerEntryInitializer(deployment.model.component.id), ...publicC ? finContainerEdgePublicSymbols : []];
 	return Object.fromEntries(required.map(symbol => {
 		const owners = Object.entries(listings).filter(([, text]) => text.split("\n").some(line => new RegExp(`^[0-9a-f]+ [TW] ${symbol}$`, "u").test(line.trim()))).map(([name]) => name);
 		assert.equal(owners.length, 1, `${symbol} must have exactly one verified definition`);
@@ -87,8 +103,7 @@ export const finContainerEdgeDefinitions = async deployment => {
  * @param options.leanPrefix - Matching pinned Lean installation, used only for the raw probe header.
  */
 export const observeFinContainerEdgeRaw = async ({ installed, receiptPath, receiptBytes, expectedModelSha256, probeRoot, leanPrefix }) => {
-	const probeLocation = relative(resolve(installed), resolve(probeRoot));
-	assert.ok(probeLocation.startsWith("../") || isAbsolute(probeLocation), "probe directory must be outside the installed package");
+	await assertFinContainerEdgeProbeLocation(installed, probeRoot);
 	const options = { installed, receiptPath, receiptBytes, expectedModelSha256 };
 	const before = await verifyFinContainerEdgeDeployment(options);
 	const definitions = await finContainerEdgeDefinitions(before);

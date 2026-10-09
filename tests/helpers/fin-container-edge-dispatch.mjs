@@ -12,6 +12,7 @@ import { finContainerEdgeConsumer, finContainerEdgeRefinements, insertFinContain
 export const finContainerEdgeEntries = Object.freeze(["emptyArray", "emptyList", "emptyOption", "optionalDigits", "present", "flatten"]);
 // Fresh codegen controls require these two calls and prove the four identity calls were inlined.
 export const finContainerEdgeSourceEntries = Object.freeze(["present", "flatten"]);
+export const finContainerEdgePublicSymbols = Object.freeze(finContainerEdgeEntries.map(name => `fincontainers_gmp_${name.replace(/[A-Z]/gu, letter => `_${letter.toLowerCase()}`)}`));
 const width = 8;
 const shapes = ["nat", ["array", 0], ["list", 0], ["option", 0], ["option", 2], ["array", 3], ["list", 1]];
 const inputs = [1, 2, 3, 4, 5, 6], outputs = [1, 2, 3, 4, 1, 4];
@@ -112,6 +113,57 @@ export const readFinContainerEdgeRaw = stdout => {
 	});
 	assert.deepEqual(rows, finContainerEdgeRawExpected);
 	return rows;
+};
+
+/** The complete public C consumer's measured call order, independent of its actual output. */
+export const finContainerEdgePublicExpected = freeze((() => {
+	const rows = [], counts = Array(width).fill(0);
+	const add = (method, accepted) => {
+		const index = finContainerEdgeEntries.indexOf(method);
+		if(accepted)
+		{
+			counts[index + 2]++;
+			if(index >= 4) counts[index - 4]++;
+		}
+		rows.push([rows.length + 1, method, accepted ? 0 : 1, [...counts]]);
+	};
+	// Calls already present in the unchanged original consumer.
+	for(const accepted of [true, false, true]) add("present", accepted);
+	for(const accepted of [true, true, false]) add("flatten", accepted);
+	// Additive edge fragment: empty/absent values, zero-bound refusals and optional lists.
+	for(const method of finContainerEdgeEntries.slice(0, 3)) add(method, true);
+	for(let value = 0; value < 3; value++) for(const method of finContainerEdgeEntries.slice(0, 3)) add(method, false);
+	for(let value = 0; value < 3; value++) add("optionalDigits", true);
+	for(let row = 0; row < 3; row++)
+	{
+		add("present", false); add("optionalDigits", false);
+		for(let column = 0; column < 3; column++) add("flatten", false);
+	}
+	for(const method of ["emptyOption", "optionalDigits", "present"]) add(method, true);
+	for(const method of ["emptyOption", "optionalDigits", "emptyArray", "emptyList", "optionalDigits", "flatten"]) add(method, false);
+	for(let cycle = 0; cycle < 1000; cycle++)
+		for(const method of ["emptyArray", "emptyList", "emptyOption", "present", "flatten", "optionalDigits"])
+		{ add(method, false); add(method, true); }
+	return rows;
+})());
+
+/**
+ * Require every public call's status and counters, followed by the unchanged consumer's success line.
+ *
+ * @param stdout - Observed C process output.
+ */
+export const readFinContainerEdgePublic = stdout => {
+	assert.ok(typeof stdout === "string" && stdout.endsWith("\n"));
+	const lines = stdout.slice(0, -1).split("\n");
+	assert.equal(lines.pop(), "fin-container-ok:14114", "the complete original-plus-edge consumer must finish");
+	assert.equal(lines.length, finContainerEdgePublicExpected.length, "every measured public call is retained");
+	return lines.map((line, index) => {
+		assert.match(line, /^edge-public [1-9][0-9]* [A-Za-z]+ [01](?: (?:0|[1-9][0-9]{0,14})){8}$/u);
+		const [, step, method, status, ...counts] = line.split(" ");
+		const row = [Number(step), method, Number(status), counts.map(Number)];
+		assert.deepEqual(row, finContainerEdgePublicExpected[index], `public edge call ${index + 1}`);
+		return row;
+	});
 };
 
 const validatedColumns = (model, component) => finContainerEdgeColumns(model, component);
@@ -269,9 +321,15 @@ ${calls.join("\n")}
  *
  * @param model - Verified installed native model.
  * @param component - Verified receipt component.
+ * @param definitions - Optional absolute defining-library paths of the six public GMP functions.
  */
-export const finContainerEdgePublicProbe = async (model, component) => {
+export const finContainerEdgePublicProbe = async (model, component, definitions) => {
 	validatedColumns(model, component);
+	if(definitions !== undefined)
+	{
+		assert.deepEqual(Object.keys(definitions).sort(), [...finContainerEdgePublicSymbols].sort());
+		for(const path of Object.values(definitions)) assert.ok(typeof path === "string" && isAbsolute(path) && !path.includes("\0"));
+	}
 	const carriers = ["array_nat_span", "list_nat_span", "option_nat_value", "option_list_nat_value", "array_option_nat_span", "list_array_nat_span"];
 	const results = [0, 1, 2, 3, 0, 3];
 	const wrappers = finContainerEdgeEntries.map((method, index) => {
@@ -283,15 +341,24 @@ export const finContainerEdgePublicProbe = async (model, component) => {
     unsigned long delta = status == FINCONTAINERS_STATUS_OK && (${index >= 4 ? `i == ${index - 4} || ` : ""}i == ${index + 2}) ? 1 : 0;
     if (edge_counter(i) != before[i] + delta) { fputs("wrong public edge dispatch count\\n", stderr); exit(5); }
   }
+  printf("edge-public %u ${method} %d", ++edge_step, (int)status);
+  for (unsigned i = 0; i < 8; ++i) printf(" %lu", edge_counter(i));
+  putchar('\\n');
   return status;
 }
 #define fincontainers_${name} edge_audit_${name}`;
 	});
-	const prelude = `#include <dlfcn.h>\n#include <stdlib.h>\nstatic unsigned long (*edge_counter)(unsigned);\n${wrappers.join("\n")}\n`;
+	const prelude = `#include <dlfcn.h>\n#include <stdlib.h>\nstatic unsigned long (*edge_counter)(unsigned);\nstatic unsigned edge_step;\n${wrappers.join("\n")}\n`;
 	let source = insertFinContainerEdgeFragment(await finContainerEdgeConsumer("c"), "int main(void) {", prelude);
 	source = source.replace("int main(void) {", `int main(void) {
   *(void **)&edge_counter = dlsym(RTLD_DEFAULT, "fin_container_edge_count");
   if (!edge_counter) { fputs("edge interposer is not loaded\\n", stderr); return 2; }
-  for (unsigned i = 0; i < 8; ++i) if (edge_counter(i)) { fputs("edge counters are not initially zero\\n", stderr); return 3; }`);
+  for (unsigned i = 0; i < 8; ++i) if (edge_counter(i)) { fputs("edge counters are not initially zero\\n", stderr); return 3; }
+${definitions ? finContainerEdgePublicSymbols.map(symbol => `  {
+    void *function = dlsym(RTLD_DEFAULT, "${symbol}"); Dl_info info;
+    char *actual = function && dladdr(function, &info) ? realpath(info.dli_fname, NULL) : NULL;
+    if (!actual || strcmp(actual, ${JSON.stringify(definitions[symbol])})) { fputs("unexpected public edge definition: ${symbol}\\n", stderr); return 6; }
+    free(actual);
+  }`).join("\n") : ""}`);
 	return source;
 };

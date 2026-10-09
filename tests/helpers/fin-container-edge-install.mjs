@@ -16,6 +16,7 @@ import { copiedCleanEnvironment, installCopiedConsumer, runCopied } from "./copi
 import { finContainerEnvironment, finContainerTargets } from "./fin-container-install.mjs";
 import { finContainerEdgeConsumer, finContainerEdgeRefinements, finContainerEdgeSource } from "./fin-container-edges.mjs";
 import { observeFinContainerEdgeRaw } from "./fin-container-edge-observer.mjs";
+import { observeFinContainerEdgePublic } from "./fin-container-edge-public-observer.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { prepareRustCorpusDependencies } from "./type-corpus-rust.mjs";
@@ -145,7 +146,7 @@ export const prepareFinContainerEdgeExecutable = async ({ profile, root, directo
  * @param options.handoff - Archive handoff directory.
  * @param options.packages - Selected verified package-set entries.
  * @param options.command - Absolute installed consumer command.
- * @param options.measureDispatch - Explicit opt-in to a separate raw C adapter observation.
+ * @param options.measureDispatch - Opt in to raw adapter observation and, for C, the complete public consumer.
  * @param options.expectedModelSha256 - Producer model digest, required for raw observations.
  * @param options.leanPrefix - Matching Lean headers for the test-only raw probe.
  */
@@ -285,6 +286,9 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 		installed: movedInstall, receiptPath, receiptBytes: archiveBytes
 		, expectedModelSha256, leanPrefix
 		, probeRoot: join(consumer, `${profile}-edge-raw`) }) : null;
+	const publicC = measureDispatch && profile === "c" ? await observeFinContainerEdgePublic({
+		installed: movedInstall, receiptPath, receiptBytes: archiveBytes
+		, expectedModelSha256, probeRoot: join(consumer, "c-edge-public") }) : null;
 	return { relocatedInstallation: true
 		, repeatExecution: true
 		, installedFilesUnchanged: true
@@ -294,6 +298,7 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 		, ...(Object.keys(deployed).length ? { deployedFiles: deployed } : {})
 		, ...(profile === "php-native" ? { repeatStrictExecution: true } : {})
 		, ...(rawAdapter ? { rawAdapterDispatch: rawAdapter } : {})
+		, ...(publicC ? { publicHostDispatch: publicC } : {})
 		, ...(python ? { python } : {}) };
 };
 
@@ -354,7 +359,7 @@ export const checkInstalledFinContainerEdges = async (t, profiles, reportPath, {
 						, "present", "flatten", "label", "wrap-all", "empty-array"
 						, "empty-list", "empty-option", "optional-digits"
 					].map(name => new RegExp(`${name}: func\\(`, "u")) } });
-			const { rawAdapterDispatch, ...repeated } = await repeatFinContainerEdges({
+			const { rawAdapterDispatch, publicHostDispatch, ...repeated } = await repeatFinContainerEdges({
 				profile, consumer, handoff, packages, command, measureDispatch
 				, expectedModelSha256: sha256(modelBytes)
 				, leanPrefix: environment.LEAN_BRIDGE_LEAN_PREFIX });
@@ -371,7 +376,7 @@ export const checkInstalledFinContainerEdges = async (t, profiles, reportPath, {
 				, receiptSha256
 				, refinements: finContainerEdgeRefinements
 				, dispatch: rawAdapterDispatch ? { kind: "fin-container-edge-dispatch-v1"
-					, publicHost: { observed: false, reason: "The separate C raw caller does not measure this host's public calls." }
+					, publicHost: publicHostDispatch ?? { observed: false, reason: "The separate C raw caller does not measure this host's public calls." }
 					, rawAdapter: rawAdapterDispatch }
 					: { observed: false, reason: "This supplement measures public behavior. Expanded source/adapter counters remain a separate required gate." } });
 		}
