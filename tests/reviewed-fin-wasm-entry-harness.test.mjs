@@ -8,7 +8,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -19,7 +19,7 @@ import { createComponentPrivateAbi } from "../src/build/component-callable-adapt
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { expectReviewedFinWasmEntry, reviewedFinWasmEntryIr, reviewedFinWasmEntrySymbols } from "./helpers/reviewed-fin-wasm-entry.mjs";
 import { reviewedFinWasmSourceControls } from "./helpers/reviewed-fin-wasm-source-entry.mjs";
-import { accountReviewedFinWasmEntryReport, authenticateReviewedFinWasmEntryPackage, prepareReviewedFinWasmEntryConsumer, recountReviewedFinWasmEntryReport, reviewedFinWasmEntryNodeIndex, runReviewedFinWasmEntryNode, runReviewedFinWasmEntryNodeOutput } from "./helpers/reviewed-fin-wasm-entry-producer.mjs";
+import { accountReviewedFinWasmEntryReport, assertReviewedFinWasmEntryPhases, authenticateReviewedFinWasmEntryPackage, prepareReviewedFinWasmEntryConsumer, recountReviewedFinWasmEntryReport, reviewedFinWasmEntryBrowserPhases, reviewedFinWasmEntryNodeIndex, reviewedFinWasmInstalledManifest, runReviewedFinWasmEntryNode, runReviewedFinWasmEntryNodeOutput } from "./helpers/reviewed-fin-wasm-entry-producer.mjs";
 
 const entryHelper = pathToFileURL(resolve("tests/helpers/reviewed-fin-wasm-entry.mjs")).href;
 // A side module whose named (i32) -> i32 frame exports return 0.
@@ -77,6 +77,8 @@ const consumer = async (t, selection, mode, runtime = "faithful") => {
 	await saveLakeFile(installed, "internal/wasm/component.wasm", bytes);
 	await saveLakeFile(installed, "internal/descriptor.mjs", `export default Object.freeze({ integrity: ${JSON.stringify(sha256(bytes))}, sideModule: new URL("./wasm/component.wasm", import.meta.url), bindingIr: ${JSON.stringify(ir)}, privateAbi: ${JSON.stringify(createComponentPrivateAbi(ir))} });\n`);
 	await saveLakeFile(installed, "internal/runtime.mjs", runtimes[runtime](selection, mode));
+	// The shared runtime package an installation also carries; the stand-in runtime above does its work.
+	await saveLakeFile(root, "node_modules/@lean-bridge/runtime/package.json", canonicalJson({ name: "@lean-bridge/runtime", version: "0.0.0-stand-in", type: "module" }));
 	await saveLakeFile(root, "package.json", canonicalJson({ private: true, type: "module" }));
 	const request = { module: "reviewed-fin", selection, mode, ...mode === "probe" ? { controls: reviewedFinWasmSourceControls.map(([name, values]) => [name, values.map(String)]) } : {} };
 	const selected = await authenticateReviewedFinWasmEntryPackage(root, selection, mode);
@@ -96,10 +98,81 @@ test("each mode's measured Node run is accounted in full through the producer's 
 	}
 });
 
-test("a static package import, as in the strict TypeScript consumer, is still observed from the preload", async t => {
+test("a static package import and its prelude calls, as in the strict TypeScript consumer, are observed and accounted", async t => {
+	for(const mode of ["original", "probe"])
+	{
+		const { root } = await consumer(t, "scalar", mode), expected = await expectReviewedFinWasmEntry("scalar", mode);
+		await writeFile(join(root, "static.mjs"), `import * as api from "reviewed-fin";\nvoid api.mirror(9n);\nvoid api.label("prefix", 0n, "suffix");\n${reviewedFinWasmEntryNodeIndex}`);
+		const report = await runReviewedFinWasmEntryNode(root, "static.mjs");
+		assert.deepEqual(accountReviewedFinWasmEntryReport(expected, report, ["mirror", "label"]).prelude, ["mirror", "label"]);
+		// The prelude's entries are never dropped: an undeclared, partial or extra prelude is refused, and a reordered
+		// one where source lines carry the order. Adapter counters alone cannot order calls.
+		for(const prelude of [[], ["mirror"], ["mirror", "label", "mirror"], ...mode === "probe" ? [["label", "mirror"]] : []])
+			assert.throws(() => accountReviewedFinWasmEntryReport(expected, report, prelude), assert.AssertionError, `${mode} ${prelude}`);
+		const hidden = structuredClone(report); delete hidden.entry.before;
+		assert.throws(() => accountReviewedFinWasmEntryReport(expected, hidden, ["mirror", "label"]), assert.AssertionError);
+	}
+});
+
+test("a failed load, before or after the selected instantiation, restores this realm and keeps the original error", async t => {
 	const { root } = await consumer(t, "scalar", "original");
-	await writeFile(join(root, "static.mjs"), `import * as api from "reviewed-fin";\nvoid api.mirror(9n);\n${reviewedFinWasmEntryNodeIndex}`);
-	accountReviewedFinWasmEntryReport(await expectReviewedFinWasmEntry("scalar", "original"), await runReviewedFinWasmEntryNode(root, "static.mjs"));
+	const observation = await import(pathToFileURL(join(root, "corpus/entry-observation.mjs")));
+	const moduleBytes = await readFile(join(root, "node_modules/reviewed-fin/internal/wasm/component.wasm"));
+	const symbols = reviewedFinWasmEntrySymbols("scalar", "original").map(item => item.symbol);
+	const native = { error: console.error, instantiate: WebAssembly.instantiate, instantiateStreaming: WebAssembly.instantiateStreaming };
+	const unhandled = [];
+	const record = error => unhandled.push(error);
+	process.on("unhandledRejection", record);
+	t.after(() => process.off("unhandledRejection", record));
+	for(const [label, load, expected] of [
+		["before instantiation", async () => { throw new Error("sentinel failed import"); }, /sentinel failed import/u]
+		, ["after instantiation", async () => { await WebAssembly.instantiate(moduleBytes); throw new Error("sentinel failed after load"); }, /sentinel failed after load/u]
+		, ["refused by the observer", async () => WebAssembly.instantiate(new WebAssembly.Module(moduleBytes)), /precompiled Module input/u]
+		, ["never instantiated", async () => ({}), /did not instantiate the selected component/u]
+	]) {
+		observation.startEntryObservation({ mode: "original", moduleBytes, symbols });
+		assert.notEqual(WebAssembly.instantiate, native.instantiate, `${label}: observing`);
+		await assert.rejects(observation.loadUnderObservation(load), expected, label);
+		assert.deepEqual({ error: console.error, instantiate: WebAssembly.instantiate, instantiateStreaming: WebAssembly.instantiateStreaming }, native, `${label}: restored`);
+		assert.equal(globalThis[Symbol.for("lean-bridge.reviewed-fin-wasm-entry")], undefined, `${label}: cleared`);
+	}
+	await new Promise(resolveTick => setImmediate(resolveTick));
+	assert.deepEqual(unhandled, []);
+});
+
+test("observation leaves the whole installation unchanged, and an altered or linked installed file is detected", async t => {
+	const { root, installed } = await consumer(t, "structural", "probe");
+	const before = await reviewedFinWasmInstalledManifest(root);
+	assert.ok(before.files.some(file => file.path === "node_modules/reviewed-fin/internal/wasm/component.wasm"));
+	await runReviewedFinWasmEntryNode(root, "index.mjs");
+	assert.deepEqual(await reviewedFinWasmInstalledManifest(root), before);
+	await writeFile(join(installed, "README.md"), "changed\n");
+	assert.notDeepEqual(await reviewedFinWasmInstalledManifest(root), before);
+	await symlink("/etc/hostname", join(installed, "linked"));
+	await assert.rejects(reviewedFinWasmInstalledManifest(root), /is not a link/u);
+});
+
+test("every browser observation carries its engine, variant and phase, and executions bind to their first run", () => {
+	for(const [profile, { variants, phases }] of Object.entries(reviewedFinWasmEntryBrowserPhases))
+	{
+		const engines = ["chromium", "firefox", "webkit"];
+		const observations = engines.flatMap(engine => variants.flatMap(variant => phases.map(phase => ({ engine, variant, phase, transcriptSha256: sha256(`${engine} ${variant} ${phase}`) }))));
+		const executions = engines.flatMap(engine => variants.map(variant => ({ engine, variant, transcriptSha256: sha256(`${engine} ${variant} first`) })));
+		const context = { profile, engines, observations, executions };
+		assertReviewedFinWasmEntryPhases(context);
+		for(const mutate of [
+			value => { value.observations.pop(); }
+			, value => { value.observations.push(value.observations[0]); }
+			, value => { value.observations.reverse(); }
+			, value => { value.observations[1].phase = "first"; }
+			, value => { value.executions[0].transcriptSha256 = value.observations[1].transcriptSha256; }
+			, value => { value.executions.pop(); }
+			, value => { value.engines.pop(); }
+		]) {
+			const value = structuredClone(context); mutate(value);
+			assert.throws(() => assertReviewedFinWasmEntryPhases(value), assert.AssertionError, profile);
+		}
+	}
 });
 
 test("the harness refuses unobserved, bypassed, altered or mislabelled packages and runs", async t => {
