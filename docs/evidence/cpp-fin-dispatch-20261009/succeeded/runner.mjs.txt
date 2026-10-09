@@ -1,0 +1,101 @@
+import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { execFileSync, spawn } from "node:child_process";
+import { closeSync, mkdirSync, openSync, readFileSync, existsSync, statfsSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+
+const cwd = "/app/build/worktrees/cpp-fin-labels-vo1438";
+const revision = "b9dde6393f8f813157ae582735fc404f04e4de92";
+const output = "/app/build/vo1438-cpp-fin-dispatch-b9dde63";
+const sha = bytes => createHash("sha256").update(bytes).digest("hex");
+const git = args => execFileSync("git", args, { cwd, encoding: "utf8", maxBuffer: 16 * 1024 * 1024 }).trim();
+const clean = () => {
+  assert.equal(git(["rev-parse", "HEAD"]), revision);
+  assert.equal(git(["status", "--porcelain", "--untracked-files=no"]), "");
+};
+const freeMiB = () => { const disk = statfsSync(cwd); return Math.floor(disk.bavail * disk.bsize / 1024 ** 2); };
+clean();
+assert.ok(freeMiB() >= 2048, "Need at least 2 GiB available before compiling");
+mkdirSync(output);
+const paths = ["tests/native-fin.test.mjs", "tests/helpers/cpp-fin-dispatch.mjs",
+  "tests/helpers/cpp-fin-dispatch-tests.mjs", "tests/helpers/native-fin-dispatch.mjs",
+  "tests/helpers/native-fin-consumers.mjs", "tests/helpers/copied-fixture-install.mjs",
+  "tests/helpers/reviewed-fin-fixture.mjs", "tests/fixtures/onboarding/native-fin/NativeFin.lean",
+  "src/build/native-project.mjs", "src/build/native-model.mjs", "src/build/canonical-build.mjs",
+  "src/backends/c/native-copied-values.mjs", "src/backends/cpp/primitives.mjs",
+  "src/release/native-c-family.mjs", "src/build/native-artifacts.mjs",
+  "src/backends/c/generate.mjs", "src/backends/c/primitive-surface.mjs",
+  "tests/helpers/type-corpus-reviewed-ir.mjs"];
+for (const name of ["native.json", "native-reviewed.json"])
+  assert.equal(existsSync(join(cwd, "build/native-fin", name)), false, "Refuse stale producer reports");
+const sources = Object.fromEntries(paths.map(path => {
+  const current = readFileSync(join(cwd, path));
+  const committed = execFileSync("git", ["show", `${revision}:${path}`], { cwd, maxBuffer: 16 * 1024 * 1024 });
+  assert.ok(current.equals(committed), path);
+  return [path, sha(current)];
+}));
+const lean = "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2";
+const selectedEnvironment = {
+  NO_COLOR: "1", LEAN_BRIDGE_NATIVE_FIN_INSTALLED_TEST: "1",
+  LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR: "2.36", LEAN_BRIDGE_LEAN_PREFIX: lean,
+  LEAN_NUM_THREADS: "1", OMP_NUM_THREADS: "1", MAKEFLAGS: "-j1"
+};
+const environment = { ...Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith("LEAN_BRIDGE_") && key !== "FORCE_COLOR")), ...selectedEnvironment };
+const args = ["-c", "3", process.execPath, "--test", "--test-concurrency=1", "--test-reporter=tap", "--test-name-pattern=^(relocated source-free C and C\\+\\+ packages|independently reviewed C and C\\+\\+ Fin packages)", "tests/native-fin.test.mjs"];
+const startedAt = new Date().toISOString();
+const queue = { revision, tree: git(["rev-parse", "HEAD^{tree}"]), cwd, startedAt, sources,
+  runnerSha256: sha(readFileSync(import.meta.filename)), command: ["/usr/bin/taskset", ...args],
+  environment: selectedEnvironment, unset: ["FORCE_COLOR", "other LEAN_BRIDGE_* variables"],
+  node: process.version, lean: execFileSync(join(lean, "bin/lean"), ["--version"], { encoding: "utf8" }).trim(),
+  glibc: execFileSync("/usr/bin/getconf", ["GNU_LIBC_VERSION"], { encoding: "utf8" }).trim(),
+  freeMiB: freeMiB(), stopFloorMiB: 1024, scope: "Local ordinary/reviewed installed C++ public source/adapter counters; separate existing C raw-adapter checks; glibc 2.36, not hosted release-floor acceptance" };
+writeFileSync(join(output, "queue.json"), JSON.stringify(queue, null, 2) + "\n", { flag: "wx" });
+const log = openSync(join(output, "run.tap"), "wx");
+let minimumFreeMiB = queue.freeMiB, stoppedForDisk = false, escalation;
+const child = spawn("/usr/bin/taskset", args, { cwd, env: environment, detached: true, stdio: ["ignore", log, log] });
+console.log(JSON.stringify({ startedAt, pid: child.pid, revision, freeMiB: minimumFreeMiB, output }));
+const monitor = setInterval(() => {
+  minimumFreeMiB = Math.min(minimumFreeMiB, freeMiB());
+  if (minimumFreeMiB < 1024 && !stoppedForDisk) {
+    stoppedForDisk = true;
+    process.kill(-child.pid, "SIGTERM");
+    escalation = setTimeout(() => { try { process.kill(-child.pid, "SIGKILL"); } catch {} }, 10000);
+  }
+}, 5000);
+const result = await new Promise(resolve => {
+  child.once("error", error => resolve({ code: null, signal: null, error: error.message }));
+  child.once("close", (code, signal) => resolve({ code, signal }));
+});
+clearInterval(monitor); clearTimeout(escalation); closeSync(log);
+minimumFreeMiB = Math.min(minimumFreeMiB, freeMiB());
+const end = { ...result, stoppedForDisk, minimumFreeMiB, endedAt: new Date().toISOString(), tapSha256: sha(readFileSync(join(output, "run.tap"))) };
+writeFileSync(join(output, "end.json"), JSON.stringify(end, null, 2) + "\n", { flag: "wx" });
+console.log(JSON.stringify(end));
+for (const name of ["native.json", "native-reviewed.json"]) {
+  const path = join(cwd, "build/native-fin", name);
+  if (existsSync(path)) writeFileSync(join(output, name), readFileSync(path), { flag: "wx" });
+}
+clean();
+assert.equal(stoppedForDisk, false);
+assert.equal(result.code, 0);
+for (const [name, route] of [["native.json", "ordinary-source"], ["native-reviewed.json", "reviewed-ir"]]) {
+  const bytes = readFileSync(join(output, name)), report = JSON.parse(bytes);
+  assert.equal(report.reproducible, true); assert.equal(report.reports.length, 2);
+  for (const item of report.reports) {
+    assert.equal(item.path, route); assert.ok(item.checks >= 2000);
+    assert.equal(item.relocatedInstallation, true); assert.equal(item.repeatExecution, true);
+    assert.equal(item.sourceRemovedBeforeInstallation, true); assert.equal(item.installedFilesUnchanged, true);
+  }
+  const cpp = report.reports.find(item => item.profile === "cpp");
+  assert.equal(cpp.dispatch.kind, "cpp-public-fin-entry-v1");
+  assert.equal(cpp.dispatch.observed.length, 12);
+  const label = route === "ordinary-source" ? "arg" : "value";
+  assert.deepEqual(cpp.dispatch.parameterNames, { mirror: [`${label}0`], impossible: [`${label}0`], label: [`${label}0`, `${label}1`, `${label}2`] });
+  assert.equal(cpp.dispatch.observed[1][1], `invalid:1:1:${label}0:10`);
+  assert.equal(cpp.dispatch.observed[4][1], `invalid:1:1:${label}1:4`);
+  assert.deepEqual(cpp.dispatch.observed.at(-1)[2], [2,0,2,2,0,2]);
+  assert.equal(cpp.dispatch.missingInstrumentRejected, true);
+  assert.equal(cpp.dispatch.repeatedColdProcess, true);
+  assert.equal(cpp.dispatch.installedFilesUnchanged, true);
+  console.log(JSON.stringify({ name, route, sha256: sha(bytes), cppChecks: cpp.checks, countedRows: cpp.dispatch.observed.length }));
+}

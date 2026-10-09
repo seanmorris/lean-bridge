@@ -1,0 +1,110 @@
+import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { execFileSync } from "node:child_process";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+
+const revision = "797d4945a99edea8b3945b5efc2d0a95f5a0b7f4";
+const directory = "/app/build/vo1438-cpp-fin-dispatch-797d494";
+const sha = bytes => createHash("sha256").update(bytes).digest("hex");
+const bytes = async name => readFile(join(directory, name));
+const queueBytes = await bytes("queue.json"), endBytes = await bytes("end.json"), tapBytes = await bytes("run.tap");
+const queue = JSON.parse(queueBytes), end = JSON.parse(endBytes), tap = tapBytes.toString();
+assert.equal(queue.revision, revision);
+assert.equal(queue.tree, execFileSync("git", ["rev-parse", `${revision}^{tree}`], { encoding: "utf8" }).trim());
+assert.equal(queue.cwd, "/app/build/worktrees/cpp-fin-dispatch-vo1438");
+assert.equal(queue.environment.LEAN_BRIDGE_NATIVE_FIN_INSTALLED_TEST, "1");
+assert.equal(queue.environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR, "2.36");
+assert.equal(queue.node, "v22.23.2"); assert.equal(queue.glibc, "glibc 2.36");
+assert.equal(queue.lean, "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)");
+assert.equal(queue.runnerSha256, sha(await readFile("/app/build/run-vo1438-cpp-fin-dispatch-797d494.mjs")));
+assert.deepEqual(queue.command.slice(0, 3), ["/usr/bin/taskset", "-c", "3"]);
+assert.deepEqual(queue.command.slice(4), ["--test", "--test-concurrency=1", "--test-reporter=tap",
+  "--test-name-pattern=^(relocated source-free C and C\\+\\+ packages|independently reviewed C and C\\+\\+ Fin packages)", "tests/native-fin.test.mjs"]);
+assert.equal(end.code, 0); assert.equal(end.signal, null); assert.equal(end.stoppedForDisk, false);
+assert.ok(end.minimumFreeMiB >= 1024); assert.equal(end.tapSha256, sha(tapBytes));
+assert.ok(Date.parse(end.endedAt) > Date.parse(queue.startedAt));
+for (const [key, value] of [["tests", 2], ["pass", 2], ["fail", 0], ["cancelled", 0], ["skipped", 0], ["todo", 0]])
+  assert.match(tap, new RegExp(`^# ${key} ${value}$`, "m"));
+assert.doesNotMatch(tap, /^not ok /m);
+for (const line of [
+  "ok 1 - relocated source-free C and C++ packages check Fin bounds through public and raw adapters",
+  "ok 2 - independently reviewed C and C++ Fin packages preserve bounds through installed public and raw adapters"
+]) assert.ok(tap.split("\n").includes(line), line);
+for (const label of ["build 0: compiling C/GMP and C++ packages", "installing c", "installing cpp", "build 1: compiling C/GMP and C++ packages"])
+  assert.equal(tap.split("\n").filter(line => line === `# ${label}`).length, 2, label);
+for (const [path, digest] of Object.entries(queue.sources)) {
+  const original = execFileSync("git", ["show", `${revision}:${path}`], { maxBuffer: 32 * 1024 * 1024 });
+  assert.equal(sha(original), digest, path);
+  assert.deepEqual(await readFile(join(queue.cwd, path)), original, path);
+}
+assert.equal(Object.keys(queue.sources).length, 15);
+
+const names = ["mirror", "impossible", "label"];
+const columns = [...names.map(name => `l_NativeFin_${name}`), ...names.map(name => `lb_${sha(`native-fin@1.0.0\0NativeFin.${name}`).slice(0, 24)}`)];
+const rows = [
+  ["start", "ok", [0,0,0,0,0,0]],
+  ["invalid-mirror-bound", "invalid:1:1:arg0:10", [0,0,0,0,0,0]],
+  ["invalid-mirror-huge", "invalid:1:1:arg0:10", [0,0,0,0,0,0]],
+  ["invalid-impossible-zero", "invalid:1:1:arg0:0", [0,0,0,0,0,0]],
+  ["invalid-label-late", "invalid:1:1:arg1:4", [0,0,0,0,0,0]],
+  ["valid-mirror", "ok:6", [1,0,0,1,0,0]],
+  ["valid-label", "ok:slot:8", [1,0,1,1,0,1]],
+  ["recovery-invalid-mirror", "invalid:1:1:arg0:10", [1,0,1,1,0,1]],
+  ["recovery-invalid-impossible", "invalid:1:1:arg0:0", [1,0,1,1,0,1]],
+  ["recovery-invalid-label", "invalid:1:1:arg1:4", [1,0,1,1,0,1]],
+  ["recovery-valid-mirror", "ok:0", [2,0,1,2,0,1]],
+  ["recovery-valid-label", "ok:slot:5", [2,0,2,2,0,2]]
+];
+const cRows = [
+  ["start", 0, [0,0,0,0,0,0]], ["public-valid-mirror", 0, [1,0,0,1,0,0]],
+  ["public-invalid-mirror", 1, [1,0,0,1,0,0]], ["public-invalid-impossible", 1, [1,0,0,1,0,0]],
+  ["public-invalid-label", 1, [1,0,0,1,0,0]], ["public-valid-label", 0, [1,0,1,1,0,1]],
+  ["raw-invalid-mirror", 1, [1,0,1,2,0,1]], ["raw-invalid-impossible", 1, [1,0,1,2,1,1]],
+  ["raw-valid-mirror", 1, [2,0,1,3,1,1]], ["raw-invalid-mirror-large", 1, [2,0,1,4,1,1]]
+];
+const observations = [];
+for (const [name, route] of [["native.json", "ordinary-source"], ["native-reviewed.json", "reviewed-ir"]]) {
+  const original = await bytes(name), report = JSON.parse(original);
+  assert.deepEqual(original, await readFile(join(queue.cwd, "build/native-fin", name)));
+  assert.equal(report.schemaVersion, 1); assert.equal(report.reproducible, true);
+  assert.deepEqual(report.reports.map(item => item.profile), ["c", "cpp"]);
+  const [c, cpp] = report.reports;
+  for (const item of report.reports) {
+    assert.equal(item.path, route); assert.equal(item.checks, item.profile === "c" ? 2029 : 2020);
+    for (const flag of ["compilerFreePath", "offlineInstall", "sourceRemovedBeforeInstallation", "relocatedInstallation", "repeatExecution", "installedFilesUnchanged"])
+      assert.equal(item[flag], true, `${route} ${item.profile} ${flag}`);
+    assert.equal(item.packages.length, 1);
+    const pkg = item.packages[0];
+    assert.equal(pkg.name, "native-fin"); assert.equal(pkg.version, "1.0.0"); assert.equal(pkg.target, item.profile);
+    assert.equal(pkg.runtimeDelivery, "embedded"); assert.equal(pkg.profile, "native-library-v1");
+    for (const artifact of pkg.artifacts) assert.equal(report.archives[artifact.path], artifact.sha256);
+    for (const field of ["bindingIrSha256", "sourceTreeSha256", "modelSha256", "receiptSha256", "consumerSha256", "executableSha256", "installedFilesSha256"])
+      assert.match(item[field], /^[a-f0-9]{64}$/);
+    if (route === "reviewed-ir") assert.match(item.reviewedSourceSha256, /^[a-f0-9]{64}$/);
+    else assert.equal(Object.hasOwn(item, "reviewedSourceSha256"), false);
+  }
+  for (const field of ["bindingIrSha256", "sourceTreeSha256", "modelSha256", "receiptSha256"])
+    assert.equal(c[field], cpp[field], field);
+  assert.deepEqual(c.dispatch.columns, columns); assert.deepEqual(c.dispatch.observed, cRows);
+  assert.equal(c.dispatch.interposer, "LD_PRELOAD"); assert.ok(c.dispatch.runtimeTableChecks > 1000);
+  const dispatch = cpp.dispatch;
+  assert.equal(dispatch.kind, "cpp-public-fin-entry-v1"); assert.equal(dispatch.instrument, "LD_PRELOAD");
+  assert.deepEqual(dispatch.columns, columns); assert.deepEqual(dispatch.observed, rows);
+  for (const flag of ["missingInstrumentRejected", "repeatedColdProcess", "installedFilesUnchanged"]) assert.equal(dispatch[flag], true);
+  assert.equal(dispatch.scope, "public C++ scalar Fin calls in two cold C++ processes; no raw-adapter caller in this observation");
+  assert.equal(dispatch.probeSha256, "c56e759d1e92de3c7b4bf0089918cd9bc9dd384c12136423203cac194910bb8d");
+  assert.equal(dispatch.interposerSha256, "a6584dcb1a98f5d517680e475ad039e255d1ff15a1bfdb4e0ab49414651da710");
+  assert.equal(dispatch.definers.length, 6);
+  for (const library of dispatch.definers) assert.ok(Object.hasOwn(dispatch.libraries, library));
+  for (const [path, identity] of Object.entries(dispatch.libraries)) {
+    assert.match(path, /^lib\/[A-Za-z0-9_.-]+\.so(?:\.[0-9]+)*$/);
+    assert.match(identity.sha256, /^[a-f0-9]{64}$/); assert.ok(identity.bytes > 0);
+  }
+  observations.push({ path: route, reportSha256: sha(original), publicCppRows: rows.length,
+    cppChecks: cpp.checks, separateCRows: cRows.length, separateCRuntimeChecks: c.dispatch.runtimeTableChecks,
+    sourceAndAdapterTotalsPerCppProcess: rows.at(-1)[2], libraries: dispatch.libraries });
+}
+console.log(JSON.stringify({ revision, queueSha256: sha(queueBytes), endSha256: sha(endBytes), tapSha256: sha(tapBytes),
+  sourcesCheckedAgainstGit: Object.keys(queue.sources).length, observations,
+  scope: "Local glibc 2.36, ordinary/reviewed public C++ counters and separate C raw observations; not hosted acceptance or C++ raw-adapter measurements" }, null, 2));

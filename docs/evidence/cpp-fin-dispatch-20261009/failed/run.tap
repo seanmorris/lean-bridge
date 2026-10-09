@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: relocated source-free C and C++ packages check Fin bounds through public and raw adapters
+ok 1 - relocated source-free C and C++ packages check Fin bounds through public and raw adapters
+  ---
+  duration_ms: 431150.062245
+  type: 'test'
+  ...
+# build 0: compiling C/GMP and C++ packages
+# installing c
+# installing cpp
+# build 1: compiling C/GMP and C++ packages
+# Subtest: independently reviewed C and C++ Fin packages preserve bounds through installed public and raw adapters
+not ok 2 - independently reviewed C and C++ Fin packages preserve bounds through installed public and raw adapters
+  ---
+  duration_ms: 253233.553541
+  type: 'test'
+  location: '/app/build/worktrees/cpp-fin-dispatch-vo1438/tests/native-fin.test.mjs:327:1'
+  failureType: 'testCodeFailure'
+  error: '/tmp/lean-bridge-native-fin-consumer-hfRQOA/cpp-dispatch/probe exited with status 1: {"command":"/tmp/lean-bridge-native-fin-consumer-hfRQOA/cpp-dispatch/probe","args":[],"stderr":"invalid-mirror-bound: unexpected rejection: value0 is not below its Fin 10 bound\\n","stdout":"start ok 0 0 0 0 0 0\\n"}'
+  code: 'build-command-failed'
+  name: 'CanonicalBuildError'
+  stack: |-
+    ChildProcess.<anonymous> (file:///app/build/worktrees/cpp-fin-dispatch-vo1438/src/build/process-runner.mjs:77:21)
+    Object.onceWrapper (node:events:634:26)
+    ChildProcess.emit (node:events:519:28)
+    maybeClose (node:internal/child_process:1101:16)
+    ChildProcess._handle.onexit (node:internal/child_process:304:5)
+  ...
+# build 0: compiling C/GMP and C++ packages
+# installing c
+# installing cpp
+1..2
+# tests 2
+# suites 0
+# pass 1
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 684947.380515

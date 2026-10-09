@@ -1,0 +1,85 @@
+{
+  "revision": "b9dde6393f8f813157ae582735fc404f04e4de92",
+  "queueSha256": "8a9a4374437be1e719e9a6c9bcf136661f47ee0dda06d13f8de280afdaa39c59",
+  "endSha256": "25e96878a829efce85a906819d52a18040c307a346b9a69c14fa2efa542a719c",
+  "tapSha256": "60b994737373aa6d02e248a4d146fa3a81f1d9f8f35869d0901b5913f03a6b16",
+  "sourcesCheckedAgainstGit": 18,
+  "observations": [
+    {
+      "path": "ordinary-source",
+      "reportSha256": "940637af0c48770cab06cd82fc3b407f50f4507afcc2da0d3950836cff2da2ee",
+      "publicCppRows": 12,
+      "cppChecks": 2020,
+      "separateCRows": 10,
+      "separateCRuntimeChecks": 1544,
+      "sourceAndAdapterTotalsPerCppProcess": [
+        2,
+        0,
+        2,
+        2,
+        0,
+        2
+      ],
+      "libraries": {
+        "lib/libcomponent_3f006a55a2dafabb9196.so": {
+          "bytes": 26656,
+          "sha256": "1dc7c7fefd12e9b23c58a55d588a03213594055c6f27c501eca3fbff0d3de420"
+        },
+        "lib/liblean_bridge_native.so": {
+          "bytes": 21464,
+          "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+        },
+        "lib/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "lib/libnative_fin.so": {
+          "bytes": 26000,
+          "sha256": "a969da07861f6e1074a6b994808e8132ecfa2e05268aa175a076b72fc01c4a9b"
+        }
+      }
+    },
+    {
+      "path": "reviewed-ir",
+      "reportSha256": "3a21a08864c719e2f33efd7d1a368ff439fab6074d5658ec99d5f18df4a3c6b0",
+      "publicCppRows": 12,
+      "cppChecks": 2020,
+      "separateCRows": 10,
+      "separateCRuntimeChecks": 1544,
+      "sourceAndAdapterTotalsPerCppProcess": [
+        2,
+        0,
+        2,
+        2,
+        0,
+        2
+      ],
+      "libraries": {
+        "lib/libcomponent_3f006a55a2dafabb9196.so": {
+          "bytes": 26656,
+          "sha256": "1dc7c7fefd12e9b23c58a55d588a03213594055c6f27c501eca3fbff0d3de420"
+        },
+        "lib/liblean_bridge_native.so": {
+          "bytes": 21464,
+          "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+        },
+        "lib/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "lib/libnative_fin.so": {
+          "bytes": 26000,
+          "sha256": "b4f3bdd9e290df1ce01fff7787e908c5e85f432b3645c3c97155eb709517f055"
+        }
+      }
+    }
+  ],
+  "priorFailedRun": {
+    "directory": "/app/build/vo1438-cpp-fin-dispatch-797d494",
+    "endSha256": "4a095cfb0be9cbcdc98046d5b8152031eed2fcf25b6683af85d4858161b812b3",
+    "tapSha256": "1daf810033f40b447c72cbef8c22060f6953a8de3e9a951d37ed20a5412712f3",
+    "ordinaryReportSha256": "f398b0f6d178f70a72ff168c999057584dfb1404abb8c9808258410d0a573607",
+    "preserved": true
+  },
+  "scope": "Local glibc 2.36, ordinary/reviewed public C++ counters and separate C raw observations; not hosted acceptance or C++ raw-adapter measurements"
+}

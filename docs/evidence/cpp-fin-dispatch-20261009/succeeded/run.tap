@@ -1,0 +1,30 @@
+TAP version 13
+# Subtest: relocated source-free C and C++ packages check Fin bounds through public and raw adapters
+ok 1 - relocated source-free C and C++ packages check Fin bounds through public and raw adapters
+  ---
+  duration_ms: 442734.962018
+  type: 'test'
+  ...
+# build 0: compiling C/GMP and C++ packages
+# installing c
+# installing cpp
+# build 1: compiling C/GMP and C++ packages
+# Subtest: independently reviewed C and C++ Fin packages preserve bounds through installed public and raw adapters
+ok 2 - independently reviewed C and C++ Fin packages preserve bounds through installed public and raw adapters
+  ---
+  duration_ms: 447576.09874
+  type: 'test'
+  ...
+# build 0: compiling C/GMP and C++ packages
+# installing c
+# installing cpp
+# build 1: compiling C/GMP and C++ packages
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 890804.476992

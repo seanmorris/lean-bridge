@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeFinEntryIntegrationSource } from "./fin-entry-integration-source-history.mjs";
 
 export const perlClosureNativeBudgetHistoryPath = "docs/evidence/perl-closure-native-budget-source-history-20261009.json";
 export const perlClosureNativeBudgetPredecessor = "40fc25749a996cfb410a3b96c1268c6a8f1a9775";
@@ -59,6 +60,7 @@ export const reversePerlClosureNativeBudgetUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforePerlClosureNativeBudgetSource = (path, source, expected) => {
+	source = beforeFinEntryIntegrationSource(path, source, expected);
 	if(typeof source !== "string" || !perlClosureNativeBudgetChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

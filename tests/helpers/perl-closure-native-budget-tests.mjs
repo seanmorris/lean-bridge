@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeFinEntryIntegrationSource } from "./fin-entry-integration-source-history.mjs";
 import { beforePerlClosureNativeBudgetSource, perlClosureNativeBudgetChangedPaths, perlClosureNativeBudgetHistoryPath, perlClosureNativeBudgetPredecessor, reversePerlClosureNativeBudgetUpdate } from "./perl-closure-native-budget-source-history.mjs";
 
 test("Perl closure and native budget history authenticates exact predecessors and rejects unrecorded edits", async () => {
@@ -20,7 +21,7 @@ test("Perl closure and native budget history authenticates exact predecessors an
 	assert.deepEqual(record.updates.map(update => update.path), perlClosureNativeBudgetChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8"), previous = reversePerlClosureNativeBudgetUpdate(source, update);
+		const source = beforeFinEntryIntegrationSource(update.path, await readFile(update.path, "utf8")), previous = reversePerlClosureNativeBudgetUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforePerlClosureNativeBudgetSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -36,7 +37,7 @@ test("Perl closure and native budget history authenticates exact predecessors an
 });
 
 test("Perl closure and native budget refreshes source pins without changing any observation or support claim", async () => {
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", source = beforeFinEntryIntegrationSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(source), previous = JSON.parse(beforePerlClosureNativeBudgetSource(path, source));
 	const history = JSON.parse(await readFile(perlClosureNativeBudgetHistoryPath));
 	let pins = 0;

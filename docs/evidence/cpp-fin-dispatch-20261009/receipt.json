@@ -1,0 +1,514 @@
+{
+  "schemaVersion": 1,
+  "kind": "cpp-public-fin-entry-acceptance",
+  "revisions": {
+    "succeeded": "b9dde6393f8f813157ae582735fc404f04e4de92",
+    "failed": "797d4945a99edea8b3945b5efc2d0a95f5a0b7f4"
+  },
+  "scope": {
+    "profiles": [
+      "c",
+      "cpp"
+    ],
+    "routes": [
+      "ordinary-source",
+      "reviewed-ir"
+    ],
+    "cppPublicRows": 12,
+    "separateCRows": 10,
+    "cppRawAdapterCaller": false,
+    "localGlibc": "2.36",
+    "hostedCi": false,
+    "failedAttempts": [
+      {
+        "revision": "797d4945a99edea8b3945b5efc2d0a95f5a0b7f4",
+        "reason": "the reviewed C++ probe assumed arg labels where the reviewed contract publishes value0"
+      }
+    ],
+    "sourceIdentity": "Selected producer sources, not a complete dependency closure"
+  },
+  "artifacts": [
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/succeeded/queue.json",
+      "originalPath": "build/vo1438-cpp-fin-dispatch-b9dde63/queue.json",
+      "sha256": "8a9a4374437be1e719e9a6c9bcf136661f47ee0dda06d13f8de280afdaa39c59",
+      "bytes": 3392
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/succeeded/end.json",
+      "originalPath": "build/vo1438-cpp-fin-dispatch-b9dde63/end.json",
+      "sha256": "25e96878a829efce85a906819d52a18040c307a346b9a69c14fa2efa542a719c",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/succeeded/run.tap",
+      "originalPath": "build/vo1438-cpp-fin-dispatch-b9dde63/run.tap",
+      "sha256": "60b994737373aa6d02e248a4d146fa3a81f1d9f8f35869d0901b5913f03a6b16",
+      "bytes": 897
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/succeeded/native.json",
+      "originalPath": "build/vo1438-cpp-fin-dispatch-b9dde63/native.json",
+      "sha256": "940637af0c48770cab06cd82fc3b407f50f4507afcc2da0d3950836cff2da2ee",
+      "bytes": 11367
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/succeeded/native-reviewed.json",
+      "originalPath": "build/vo1438-cpp-fin-dispatch-b9dde63/native-reviewed.json",
+      "sha256": "3a21a08864c719e2f33efd7d1a368ff439fab6074d5658ec99d5f18df4a3c6b0",
+      "bytes": 11579
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/succeeded/runner.mjs.txt",
+      "originalPath": "build/run-vo1438-cpp-fin-dispatch-b9dde63.mjs",
+      "sha256": "06a26e4a20dab8ae8a3cb87526ae7a1eac5126e3fd5c85292555018ed0a93b90",
+      "bytes": 6870
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/failed/queue.json",
+      "originalPath": "build/vo1438-cpp-fin-dispatch-797d494/queue.json",
+      "sha256": "ff51d22df98b4024cef879c063b723baca4e8a3da27cd562422edad2394aa987",
+      "bytes": 3062
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/failed/end.json",
+      "originalPath": "build/vo1438-cpp-fin-dispatch-797d494/end.json",
+      "sha256": "4a095cfb0be9cbcdc98046d5b8152031eed2fcf25b6683af85d4858161b812b3",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/failed/run.tap",
+      "originalPath": "build/vo1438-cpp-fin-dispatch-797d494/run.tap",
+      "sha256": "1daf810033f40b447c72cbef8c22060f6953a8de3e9a951d37ed20a5412712f3",
+      "bytes": 1694
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/failed/native.json",
+      "originalPath": "build/vo1438-cpp-fin-dispatch-797d494/native.json",
+      "sha256": "f398b0f6d178f70a72ff168c999057584dfb1404abb8c9808258410d0a573607",
+      "bytes": 11124
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/failed/runner.mjs.txt",
+      "originalPath": "build/run-vo1438-cpp-fin-dispatch-797d494.mjs",
+      "sha256": "ca456b1e5bf3503fb804a66bc565ebd7f7c94ba22443aa5968d1c8b9acbba616",
+      "bytes": 6394
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/audit/audit.mjs.txt",
+      "originalPath": "build/audit-vo1438-cpp-fin-dispatch-b9dde63.mjs",
+      "sha256": "4f41459cbcbb9b2c2cdbe92b733f6e1703678d58a1a7bfed35c55fa9cab38982",
+      "bytes": 9776
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/audit/audit.json",
+      "originalPath": "build/vo1438-cpp-fin-dispatch-b9dde63-audit.log",
+      "sha256": "e11be75723123430921c565cfa8362f5c6f758277dcf5a968efd89c091f0ccea",
+      "bytes": 3033
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/audit/failed-audit.mjs.txt",
+      "originalPath": "build/audit-vo1438-cpp-fin-dispatch-797d494.mjs",
+      "sha256": "59df1c5f7de98b811c3b503f2979012f5d0e15b431ae30371ccc40a07c5e3d92",
+      "bytes": 8154
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/tests/native-fin.test.mjs.txt",
+      "originalPath": "git:b9dde6393f8f813157ae582735fc404f04e4de92:tests/native-fin.test.mjs",
+      "sha256": "6641496c3a13b6bb0512c6c5757ebc8bb04be0f9545f67861812c25d4bf78b31",
+      "bytes": 22513
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/tests/helpers/cpp-fin-dispatch.mjs.txt",
+      "originalPath": "git:b9dde6393f8f813157ae582735fc404f04e4de92:tests/helpers/cpp-fin-dispatch.mjs",
+      "sha256": "f19610c6f710366a0ca458eed771810fe7c3f2168c2ced2aff57003e7a1950d3",
+      "bytes": 10895
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/tests/helpers/cpp-fin-dispatch-tests.mjs.txt",
+      "originalPath": "git:b9dde6393f8f813157ae582735fc404f04e4de92:tests/helpers/cpp-fin-dispatch-tests.mjs",
+      "sha256": "3b69bdbcc7f46c22f0525342764537601b46c3c0ae6a4a1eaf8a459acfca8d00",
+      "bytes": 7565
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/tests/helpers/native-fin-dispatch.mjs.txt",
+      "originalPath": "git:b9dde6393f8f813157ae582735fc404f04e4de92:tests/helpers/native-fin-dispatch.mjs",
+      "sha256": "e1b7105b020665d1ff624baa09f0ab62101b3a3eaba5d9f79cc56895105fb0bc",
+      "bytes": 10563
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/tests/helpers/native-fin-consumers.mjs.txt",
+      "originalPath": "git:b9dde6393f8f813157ae582735fc404f04e4de92:tests/helpers/native-fin-consumers.mjs",
+      "sha256": "a0437bc542bfed6a765692cceff76f68b39d5f7e537263d1d1ab8a0d2de556fd",
+      "bytes": 16569
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/tests/helpers/copied-fixture-install.mjs.txt",
+      "originalPath": "git:b9dde6393f8f813157ae582735fc404f04e4de92:tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+      "bytes": 12888
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/tests/helpers/reviewed-fin-fixture.mjs.txt",
+      "originalPath": "git:b9dde6393f8f813157ae582735fc404f04e4de92:tests/helpers/reviewed-fin-fixture.mjs",
+      "sha256": "92f3a2cbc3230bf54b591af49cfa4f1b07defd70073f648a0fd622b5c4aaebc1",
+      "bytes": 1242
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/tests/fixtures/onboarding/native-fin/NativeFin.lean.txt",
+      "originalPath": "git:b9dde6393f8f813157ae582735fc404f04e4de92:tests/fixtures/onboarding/native-fin/NativeFin.lean",
+      "sha256": "7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b",
+      "bytes": 787
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/src/build/native-project.mjs.txt",
+      "originalPath": "git:b9dde6393f8f813157ae582735fc404f04e4de92:src/build/native-project.mjs",
+      "sha256": "b941e848c291a05a4fab3e93f2d9f5d3a5c9380f9a290c5668378c05ae5b5cf7",
+      "bytes": 17169
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/src/build/native-model.mjs.txt",
+      "originalPath": "git:b9dde6393f8f813157ae582735fc404f04e4de92:src/build/native-model.mjs",
+      "sha256": "aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13",
+      "bytes": 42596
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/src/build/canonical-build.mjs.txt",
+      "originalPath": "git:b9dde6393f8f813157ae582735fc404f04e4de92:src/build/canonical-build.mjs",
+      "sha256": "17e88b02d75c81379c0a8f6e6b14ab583fabfaa8b7fdb747174505256ca48e7c",
+      "bytes": 43813
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/src/backends/c/native-copied-values.mjs.txt",
+      "originalPath": "git:b9dde6393f8f813157ae582735fc404f04e4de92:src/backends/c/native-copied-values.mjs",
+      "sha256": "ba14b12ba6d0f7df8ff091f472d70fd74c003e78e1ac6e58dc8170eee2163640",
+      "bytes": 20095
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/src/backends/cpp/primitives.mjs.txt",
+      "originalPath": "git:b9dde6393f8f813157ae582735fc404f04e4de92:src/backends/cpp/primitives.mjs",
+      "sha256": "6aaf142530630bc7a21bdea06b5072d18b190381becadd80933b191d84d61ec9",
+      "bytes": 8384
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/src/release/native-c-family.mjs.txt",
+      "originalPath": "git:b9dde6393f8f813157ae582735fc404f04e4de92:src/release/native-c-family.mjs",
+      "sha256": "5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a",
+      "bytes": 24893
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/src/build/native-artifacts.mjs.txt",
+      "originalPath": "git:b9dde6393f8f813157ae582735fc404f04e4de92:src/build/native-artifacts.mjs",
+      "sha256": "5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4",
+      "bytes": 12720
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/src/backends/c/generate.mjs.txt",
+      "originalPath": "git:b9dde6393f8f813157ae582735fc404f04e4de92:src/backends/c/generate.mjs",
+      "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518",
+      "bytes": 45870
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/src/backends/c/primitive-surface.mjs.txt",
+      "originalPath": "git:b9dde6393f8f813157ae582735fc404f04e4de92:src/backends/c/primitive-surface.mjs",
+      "sha256": "893d7f649bf489c766e5d38f04ce4e1b7cb7967acc8f63bf6f82b9b6f5cd64df",
+      "bytes": 11921
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/tests/helpers/type-corpus-reviewed-ir.mjs.txt",
+      "originalPath": "git:b9dde6393f8f813157ae582735fc404f04e4de92:tests/helpers/type-corpus-reviewed-ir.mjs",
+      "sha256": "621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7",
+      "bytes": 3557
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/tests/native-fin.test.mjs.txt",
+      "originalPath": "git:797d4945a99edea8b3945b5efc2d0a95f5a0b7f4:tests/native-fin.test.mjs",
+      "sha256": "6641496c3a13b6bb0512c6c5757ebc8bb04be0f9545f67861812c25d4bf78b31",
+      "bytes": 22513
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/tests/helpers/cpp-fin-dispatch.mjs.txt",
+      "originalPath": "git:797d4945a99edea8b3945b5efc2d0a95f5a0b7f4:tests/helpers/cpp-fin-dispatch.mjs",
+      "sha256": "dc21591bded978da2da025d7428ff3c601a9692ea0b412a7b4f559bd98e1284b",
+      "bytes": 8923
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/tests/helpers/cpp-fin-dispatch-tests.mjs.txt",
+      "originalPath": "git:797d4945a99edea8b3945b5efc2d0a95f5a0b7f4:tests/helpers/cpp-fin-dispatch-tests.mjs",
+      "sha256": "be12bc6d23c917b44c57f26d510c845cc02a3001851016c6701f600c48d48f1d",
+      "bytes": 4721
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/tests/helpers/native-fin-dispatch.mjs.txt",
+      "originalPath": "git:797d4945a99edea8b3945b5efc2d0a95f5a0b7f4:tests/helpers/native-fin-dispatch.mjs",
+      "sha256": "e1b7105b020665d1ff624baa09f0ab62101b3a3eaba5d9f79cc56895105fb0bc",
+      "bytes": 10563
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/tests/helpers/native-fin-consumers.mjs.txt",
+      "originalPath": "git:797d4945a99edea8b3945b5efc2d0a95f5a0b7f4:tests/helpers/native-fin-consumers.mjs",
+      "sha256": "a0437bc542bfed6a765692cceff76f68b39d5f7e537263d1d1ab8a0d2de556fd",
+      "bytes": 16569
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/tests/helpers/copied-fixture-install.mjs.txt",
+      "originalPath": "git:797d4945a99edea8b3945b5efc2d0a95f5a0b7f4:tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+      "bytes": 12888
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/tests/helpers/reviewed-fin-fixture.mjs.txt",
+      "originalPath": "git:797d4945a99edea8b3945b5efc2d0a95f5a0b7f4:tests/helpers/reviewed-fin-fixture.mjs",
+      "sha256": "92f3a2cbc3230bf54b591af49cfa4f1b07defd70073f648a0fd622b5c4aaebc1",
+      "bytes": 1242
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/tests/fixtures/onboarding/native-fin/NativeFin.lean.txt",
+      "originalPath": "git:797d4945a99edea8b3945b5efc2d0a95f5a0b7f4:tests/fixtures/onboarding/native-fin/NativeFin.lean",
+      "sha256": "7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b",
+      "bytes": 787
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/src/build/native-project.mjs.txt",
+      "originalPath": "git:797d4945a99edea8b3945b5efc2d0a95f5a0b7f4:src/build/native-project.mjs",
+      "sha256": "b941e848c291a05a4fab3e93f2d9f5d3a5c9380f9a290c5668378c05ae5b5cf7",
+      "bytes": 17169
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/src/build/native-model.mjs.txt",
+      "originalPath": "git:797d4945a99edea8b3945b5efc2d0a95f5a0b7f4:src/build/native-model.mjs",
+      "sha256": "aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13",
+      "bytes": 42596
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/src/build/canonical-build.mjs.txt",
+      "originalPath": "git:797d4945a99edea8b3945b5efc2d0a95f5a0b7f4:src/build/canonical-build.mjs",
+      "sha256": "17e88b02d75c81379c0a8f6e6b14ab583fabfaa8b7fdb747174505256ca48e7c",
+      "bytes": 43813
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/src/backends/c/native-copied-values.mjs.txt",
+      "originalPath": "git:797d4945a99edea8b3945b5efc2d0a95f5a0b7f4:src/backends/c/native-copied-values.mjs",
+      "sha256": "ba14b12ba6d0f7df8ff091f472d70fd74c003e78e1ac6e58dc8170eee2163640",
+      "bytes": 20095
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/src/backends/cpp/primitives.mjs.txt",
+      "originalPath": "git:797d4945a99edea8b3945b5efc2d0a95f5a0b7f4:src/backends/cpp/primitives.mjs",
+      "sha256": "6aaf142530630bc7a21bdea06b5072d18b190381becadd80933b191d84d61ec9",
+      "bytes": 8384
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/src/release/native-c-family.mjs.txt",
+      "originalPath": "git:797d4945a99edea8b3945b5efc2d0a95f5a0b7f4:src/release/native-c-family.mjs",
+      "sha256": "5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a",
+      "bytes": 24893
+    },
+    {
+      "path": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/src/build/native-artifacts.mjs.txt",
+      "originalPath": "git:797d4945a99edea8b3945b5efc2d0a95f5a0b7f4:src/build/native-artifacts.mjs",
+      "sha256": "5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4",
+      "bytes": 12720
+    }
+  ],
+  "sources": [
+    {
+      "attempt": "succeeded",
+      "path": "tests/native-fin.test.mjs",
+      "sha256": "6641496c3a13b6bb0512c6c5757ebc8bb04be0f9545f67861812c25d4bf78b31",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/tests/native-fin.test.mjs.txt"
+    },
+    {
+      "attempt": "succeeded",
+      "path": "tests/helpers/cpp-fin-dispatch.mjs",
+      "sha256": "f19610c6f710366a0ca458eed771810fe7c3f2168c2ced2aff57003e7a1950d3",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/tests/helpers/cpp-fin-dispatch.mjs.txt"
+    },
+    {
+      "attempt": "succeeded",
+      "path": "tests/helpers/cpp-fin-dispatch-tests.mjs",
+      "sha256": "3b69bdbcc7f46c22f0525342764537601b46c3c0ae6a4a1eaf8a459acfca8d00",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/tests/helpers/cpp-fin-dispatch-tests.mjs.txt"
+    },
+    {
+      "attempt": "succeeded",
+      "path": "tests/helpers/native-fin-dispatch.mjs",
+      "sha256": "e1b7105b020665d1ff624baa09f0ab62101b3a3eaba5d9f79cc56895105fb0bc",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/tests/helpers/native-fin-dispatch.mjs.txt"
+    },
+    {
+      "attempt": "succeeded",
+      "path": "tests/helpers/native-fin-consumers.mjs",
+      "sha256": "a0437bc542bfed6a765692cceff76f68b39d5f7e537263d1d1ab8a0d2de556fd",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/tests/helpers/native-fin-consumers.mjs.txt"
+    },
+    {
+      "attempt": "succeeded",
+      "path": "tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/tests/helpers/copied-fixture-install.mjs.txt"
+    },
+    {
+      "attempt": "succeeded",
+      "path": "tests/helpers/reviewed-fin-fixture.mjs",
+      "sha256": "92f3a2cbc3230bf54b591af49cfa4f1b07defd70073f648a0fd622b5c4aaebc1",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/tests/helpers/reviewed-fin-fixture.mjs.txt"
+    },
+    {
+      "attempt": "succeeded",
+      "path": "tests/fixtures/onboarding/native-fin/NativeFin.lean",
+      "sha256": "7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/tests/fixtures/onboarding/native-fin/NativeFin.lean.txt"
+    },
+    {
+      "attempt": "succeeded",
+      "path": "src/build/native-project.mjs",
+      "sha256": "b941e848c291a05a4fab3e93f2d9f5d3a5c9380f9a290c5668378c05ae5b5cf7",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/src/build/native-project.mjs.txt"
+    },
+    {
+      "attempt": "succeeded",
+      "path": "src/build/native-model.mjs",
+      "sha256": "aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/src/build/native-model.mjs.txt"
+    },
+    {
+      "attempt": "succeeded",
+      "path": "src/build/canonical-build.mjs",
+      "sha256": "17e88b02d75c81379c0a8f6e6b14ab583fabfaa8b7fdb747174505256ca48e7c",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/src/build/canonical-build.mjs.txt"
+    },
+    {
+      "attempt": "succeeded",
+      "path": "src/backends/c/native-copied-values.mjs",
+      "sha256": "ba14b12ba6d0f7df8ff091f472d70fd74c003e78e1ac6e58dc8170eee2163640",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/src/backends/c/native-copied-values.mjs.txt"
+    },
+    {
+      "attempt": "succeeded",
+      "path": "src/backends/cpp/primitives.mjs",
+      "sha256": "6aaf142530630bc7a21bdea06b5072d18b190381becadd80933b191d84d61ec9",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/src/backends/cpp/primitives.mjs.txt"
+    },
+    {
+      "attempt": "succeeded",
+      "path": "src/release/native-c-family.mjs",
+      "sha256": "5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/src/release/native-c-family.mjs.txt"
+    },
+    {
+      "attempt": "succeeded",
+      "path": "src/build/native-artifacts.mjs",
+      "sha256": "5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/src/build/native-artifacts.mjs.txt"
+    },
+    {
+      "attempt": "succeeded",
+      "path": "src/backends/c/generate.mjs",
+      "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/src/backends/c/generate.mjs.txt"
+    },
+    {
+      "attempt": "succeeded",
+      "path": "src/backends/c/primitive-surface.mjs",
+      "sha256": "893d7f649bf489c766e5d38f04ce4e1b7cb7967acc8f63bf6f82b9b6f5cd64df",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/src/backends/c/primitive-surface.mjs.txt"
+    },
+    {
+      "attempt": "succeeded",
+      "path": "tests/helpers/type-corpus-reviewed-ir.mjs",
+      "sha256": "621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/b9dde63/tests/helpers/type-corpus-reviewed-ir.mjs.txt"
+    },
+    {
+      "attempt": "failed",
+      "path": "tests/native-fin.test.mjs",
+      "sha256": "6641496c3a13b6bb0512c6c5757ebc8bb04be0f9545f67861812c25d4bf78b31",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/tests/native-fin.test.mjs.txt"
+    },
+    {
+      "attempt": "failed",
+      "path": "tests/helpers/cpp-fin-dispatch.mjs",
+      "sha256": "dc21591bded978da2da025d7428ff3c601a9692ea0b412a7b4f559bd98e1284b",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/tests/helpers/cpp-fin-dispatch.mjs.txt"
+    },
+    {
+      "attempt": "failed",
+      "path": "tests/helpers/cpp-fin-dispatch-tests.mjs",
+      "sha256": "be12bc6d23c917b44c57f26d510c845cc02a3001851016c6701f600c48d48f1d",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/tests/helpers/cpp-fin-dispatch-tests.mjs.txt"
+    },
+    {
+      "attempt": "failed",
+      "path": "tests/helpers/native-fin-dispatch.mjs",
+      "sha256": "e1b7105b020665d1ff624baa09f0ab62101b3a3eaba5d9f79cc56895105fb0bc",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/tests/helpers/native-fin-dispatch.mjs.txt"
+    },
+    {
+      "attempt": "failed",
+      "path": "tests/helpers/native-fin-consumers.mjs",
+      "sha256": "a0437bc542bfed6a765692cceff76f68b39d5f7e537263d1d1ab8a0d2de556fd",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/tests/helpers/native-fin-consumers.mjs.txt"
+    },
+    {
+      "attempt": "failed",
+      "path": "tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/tests/helpers/copied-fixture-install.mjs.txt"
+    },
+    {
+      "attempt": "failed",
+      "path": "tests/helpers/reviewed-fin-fixture.mjs",
+      "sha256": "92f3a2cbc3230bf54b591af49cfa4f1b07defd70073f648a0fd622b5c4aaebc1",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/tests/helpers/reviewed-fin-fixture.mjs.txt"
+    },
+    {
+      "attempt": "failed",
+      "path": "tests/fixtures/onboarding/native-fin/NativeFin.lean",
+      "sha256": "7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/tests/fixtures/onboarding/native-fin/NativeFin.lean.txt"
+    },
+    {
+      "attempt": "failed",
+      "path": "src/build/native-project.mjs",
+      "sha256": "b941e848c291a05a4fab3e93f2d9f5d3a5c9380f9a290c5668378c05ae5b5cf7",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/src/build/native-project.mjs.txt"
+    },
+    {
+      "attempt": "failed",
+      "path": "src/build/native-model.mjs",
+      "sha256": "aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/src/build/native-model.mjs.txt"
+    },
+    {
+      "attempt": "failed",
+      "path": "src/build/canonical-build.mjs",
+      "sha256": "17e88b02d75c81379c0a8f6e6b14ab583fabfaa8b7fdb747174505256ca48e7c",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/src/build/canonical-build.mjs.txt"
+    },
+    {
+      "attempt": "failed",
+      "path": "src/backends/c/native-copied-values.mjs",
+      "sha256": "ba14b12ba6d0f7df8ff091f472d70fd74c003e78e1ac6e58dc8170eee2163640",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/src/backends/c/native-copied-values.mjs.txt"
+    },
+    {
+      "attempt": "failed",
+      "path": "src/backends/cpp/primitives.mjs",
+      "sha256": "6aaf142530630bc7a21bdea06b5072d18b190381becadd80933b191d84d61ec9",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/src/backends/cpp/primitives.mjs.txt"
+    },
+    {
+      "attempt": "failed",
+      "path": "src/release/native-c-family.mjs",
+      "sha256": "5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/src/release/native-c-family.mjs.txt"
+    },
+    {
+      "attempt": "failed",
+      "path": "src/build/native-artifacts.mjs",
+      "sha256": "5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4",
+      "snapshot": "docs/evidence/cpp-fin-dispatch-20261009/sources/797d494/src/build/native-artifacts.mjs.txt"
+    }
+  ]
+}

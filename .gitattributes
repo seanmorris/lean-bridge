@@ -1,4 +1,6 @@
 *.patch whitespace=-blank-at-eol
+# Preserve this archived failed runner's authenticated final blank line.
+docs/evidence/cpp-fin-dispatch-20261009/failed/runner.mjs.txt whitespace=-blank-at-eof
 # Preserve the original producer log, including its receipt-authenticated whitespace.
 docs/evidence/php-wasm-fin-20261008/queue.log whitespace=-blank-at-eol
 docs/evidence/native-fin-callbacks-20261008/queue.log whitespace=-blank-at-eol
