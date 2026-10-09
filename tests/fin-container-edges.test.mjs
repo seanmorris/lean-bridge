@@ -5,7 +5,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
@@ -16,6 +16,7 @@ import { boostSources } from "../src/backends/cpp/boost.mjs";
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { finContainerEdgeConsumer, finContainerEdgeProfiles, finContainerEdgeRefinements, finContainerEdgeReviewedIr, finContainerEdgeSource, implementedFinContainerEdgeProfiles, insertFinContainerEdgeFragment } from "./helpers/fin-container-edges.mjs";
 import { finContainerRefinements } from "./helpers/fin-container-install.mjs";
+import { checkInstalledFinContainerEdges, finContainerEdgeChecks, finContainerEdgeSelection, requireNewFinContainerEdgeReport, writeFinContainerEdgeReport } from "./helpers/fin-container-edge-install.mjs";
 import { finContainerReviewedIr } from "./helpers/reviewed-fin-container-fixture.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 
@@ -59,6 +60,8 @@ test("edge insertion refuses missing, empty, repeated and fragment-supplied mark
 	assert.equal(insertFinContainerEdgeFragment("before\nprint\nafter", "print", "extra"), "before\nextra\nprint\nafter");
 	for(const [source, marker, fragment] of [["none", "print", "extra"], ["print print", "print", "extra"], ["print", "", "extra"], ["print", "print", "print"]])
 		assert.throws(() => insertFinContainerEdgeFragment(source, marker, fragment));
+	for(const source of ["prefix print\n", "print suffix\n", "footprint\n"])
+		assert.throws(() => insertFinContainerEdgeFragment(source, "print", "extra"), /complete line/u);
 	assert.equal(insertFinContainerEdgeFragment("print", "print", "$& $` $'"), "$& $` $'\nprint");
 });
 
@@ -79,6 +82,20 @@ test("the development slice does not erase the remaining native hosts or replace
 	}
 	await assert.rejects(finContainerEdgeConsumer("perl"), /not implemented/u);
 	await assert.rejects(finContainerEdgeConsumer("rust"), /not implemented/u);
+});
+
+test("structural and negative-Nat controls require their own positive diagnostic, not any bound error", async () => {
+	const c = await readFile("tests/fixtures/fin-container-edge-consumers/c.c", "utf8");
+	assert.ok(c.includes("edge_error = (fincontainers_error){0}, rejected((call), &edge_error, edge_structural_error)"));
+	assert.equal((c.match(/CHECK\(EDGE_STRUCTURAL_REFUSED\(/gu) ?? []).length, 6);
+	assert.doesNotMatch(c, /!rejected\(/u);
+	const diagnostic = "Invalid copied value, negative Nat or 16 MiB call limit exceeded";
+	assert.ok(c.includes(diagnostic));
+	assert.ok(Object.values(generateGmpProjection(finContainerEdgeReviewedIr()).files).some(source => source.includes(diagnostic)));
+	const cpp = await readFile("tests/fixtures/fin-container-edge-consumers/cpp.cpp", "utf8");
+	assert.ok(cpp.includes('std::string(failure.what()) == "Nat must be nonnegative"'));
+	assert.ok(cpp.includes("failure.code == FINCONTAINERS_ERROR_INVALID_ARGUMENT"));
+	assert.doesNotMatch(cpp, /CHECK\(invalid\(/u);
 });
 
 const sourceChecks = process.env.LEAN_BRIDGE_FIN_CONTAINER_EDGE_SOURCE_TEST === "1";
@@ -118,4 +135,35 @@ test("the complete C++ edge consumer compiles against generated public types wit
 	await saveLakeFile(root, "consumer.cpp", await finContainerEdgeConsumer("cpp"));
 	const result = await runCopied("/usr/bin/c++", ["-std=c++20", "-Wall", "-Wextra", "-Werror", "-fsyntax-only", "-Iinclude", "consumer.cpp"], root);
 	assert.equal(result.stdout, ""); assert.equal(result.stderr, "");
+});
+
+test("installed edge selection is explicit and checks every assertion, including the old consumer", () => {
+	assert.deepEqual(finContainerEdgeSelection(undefined), []);
+	assert.deepEqual(finContainerEdgeSelection("python,cpp,c"), ["c", "cpp", "python"]);
+	for(const value of ["", "c,c", "c,", "c,perl", "rust", " c", 0, null]) assert.throws(() => finContainerEdgeSelection(value));
+	assert.deepEqual(finContainerEdgeChecks, { c: 14114, cpp: 14099, python: 14095 });
+});
+
+test("edge reports refuse old paths, existing bytes and dangling symlinks before any build", async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-fin-edge-report-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const path = join(root, "edges-c.json");
+	await requireNewFinContainerEdgeReport(path);
+	await writeFinContainerEdgeReport(path, { original: true });
+	const original = await readFile(path);
+	await assert.rejects(requireNewFinContainerEdgeReport(path), /already exists/u);
+	await assert.rejects(writeFinContainerEdgeReport(path, { original: false }), /already exists/u);
+	await assert.rejects(checkInstalledFinContainerEdges(t, ["c"], path), /already exists/u);
+	assert.deepEqual(await readFile(path), original);
+	await symlink(join(root, "missing"), join(root, "edges-python.json"));
+	await assert.rejects(requireNewFinContainerEdgeReport(join(root, "edges-python.json")), /already exists/u);
+	await assert.rejects(requireNewFinContainerEdgeReport(join(root, "c.json")), /edges-/u);
+});
+
+const profiles = finContainerEdgeSelection(process.env.LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES);
+test("installed source-free native packages execute zero-bound and nested-position Fin edge cases", { skip: !profiles.length, timeout: 2_400_000 }, async t => {
+	const path = resolve(process.env.LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT ?? `build/native-fin-container-edges/edges-${profiles.join("-")}.json`);
+	const report = await checkInstalledFinContainerEdges(t, profiles, path);
+	assert.deepEqual(report.profiles, profiles);
+	assert.deepEqual(report.reports.map(item => item.profile), profiles);
 });

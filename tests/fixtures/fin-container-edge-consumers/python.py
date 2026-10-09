@@ -39,7 +39,12 @@ check(api.flatten([[], [], []]) == Some(()), 'present empty rows')
 check(raises(TypeError, lambda: api.empty_option(0)), 'unwrapped option')
 check(raises(TypeError, lambda: api.empty_list(0)), 'non-list')
 check(raises(TypeError, lambda: api.optional_digits(Some([1, 'x', 3]))), 'nested wrong element type')
-check(raises(ValueError, lambda: api.optional_digits(Some([1, -1, 3]))), 'nested negative Nat')
+for edge_position in range(3):
+    edge_values = [1, 2, 3]
+    edge_values[edge_position] = -1
+    edge_snapshot = edge_values[:]
+    check(raises(ValueError, lambda: api.optional_digits(Some(edge_values))), 'nested negative Nat')
+    check(edge_values == edge_snapshot, 'negative nested input unchanged')
 
 # Repeat invalid zero-bound and nested calls, then valid recovery for each shape.
 for edge_cycle in range(1000):
@@ -55,4 +60,4 @@ for edge_cycle in range(1000):
     check(api.flatten([[1], [], [9]]) == Some((1, 9)), 'cycle valid nested list')
     check(rejected(lambda: api.optional_digits(Some([1, 10, 9])), 'arg0', '10'), 'cycle invalid optional list')
     check(api.optional_digits(Some([1, 9])) == Some((1, 9)), 'cycle valid optional list')
-check(checks - edge_before == 12060, 'exact edge assertion coverage')
+check(checks - edge_before == 12065, 'exact edge assertion coverage')

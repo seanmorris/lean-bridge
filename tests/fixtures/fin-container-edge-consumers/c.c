@@ -4,6 +4,8 @@
     fincontainers_error edge_error = {0};
     const char *edge_zero_error = "arg0 is not below its Fin 0 bound";
     const char *edge_digit_error = "arg0 is not below its Fin 10 bound";
+    const char *edge_structural_error = "Invalid copied value, negative Nat or 16 MiB call limit exceeded";
+#define EDGE_STRUCTURAL_REFUSED(call) (edge_error = (fincontainers_error){0}, rejected((call), &edge_error, edge_structural_error))
     mpz_t edge_values[3];
     for (unsigned i = 0; i < 3; ++i) mpz_init_set_ui(edge_values[i], i + 1);
     nats edge_array = {edge_values, 1, NULL, NULL}, edge_empty_array = {0}, edge_array_out = {0};
@@ -96,22 +98,22 @@
     fincontainers_array_nat_span_clear(&edge_array_out);
     /* Invalid structural tags and spans must not be mistaken for bound refusals. */
     edge_option.has_value = 2;
-    CHECK(fincontainers_empty_option(&edge_option, &edge_option_out, &edge_error) == FINCONTAINERS_STATUS_INVALID_ARGUMENT && !rejected(FINCONTAINERS_STATUS_INVALID_ARGUMENT, &edge_error, edge_zero_error));
+    CHECK(EDGE_STRUCTURAL_REFUSED(fincontainers_empty_option(&edge_option, &edge_option_out, &edge_error)));
     CHECK(!edge_option_out.has_value && is_small(edge_option.value, 123));
     edge_optional.has_value = 2;
-    CHECK(fincontainers_optional_digits(&edge_optional, &edge_optional_out, &edge_error) == FINCONTAINERS_STATUS_INVALID_ARGUMENT && !rejected(FINCONTAINERS_STATUS_INVALID_ARGUMENT, &edge_error, edge_digit_error));
+    CHECK(EDGE_STRUCTURAL_REFUSED(fincontainers_optional_digits(&edge_optional, &edge_optional_out, &edge_error)));
     CHECK(!edge_optional_out.has_value && !edge_optional_out.value.data);
     nats edge_bad_array = {NULL, 2, NULL, NULL};
     fincontainers_list_nat_span edge_bad_list = {NULL, 2, NULL, NULL};
-    CHECK(fincontainers_empty_array(&edge_bad_array, &edge_array_out, &edge_error) == FINCONTAINERS_STATUS_INVALID_ARGUMENT && !rejected(FINCONTAINERS_STATUS_INVALID_ARGUMENT, &edge_error, edge_zero_error));
+    CHECK(EDGE_STRUCTURAL_REFUSED(fincontainers_empty_array(&edge_bad_array, &edge_array_out, &edge_error)));
     CHECK(!edge_array_out.data && !edge_array_out.length);
-    CHECK(fincontainers_empty_list(&edge_bad_list, &edge_list_out, &edge_error) == FINCONTAINERS_STATUS_INVALID_ARGUMENT && !rejected(FINCONTAINERS_STATUS_INVALID_ARGUMENT, &edge_error, edge_zero_error));
+    CHECK(EDGE_STRUCTURAL_REFUSED(fincontainers_empty_list(&edge_bad_list, &edge_list_out, &edge_error)));
     CHECK(!edge_list_out.data && !edge_list_out.length);
     edge_optional.has_value = 1;
-    CHECK(fincontainers_optional_digits(&edge_optional, &edge_optional_out, &edge_error) == FINCONTAINERS_STATUS_INVALID_ARGUMENT && !rejected(FINCONTAINERS_STATUS_INVALID_ARGUMENT, &edge_error, edge_digit_error));
+    CHECK(EDGE_STRUCTURAL_REFUSED(fincontainers_optional_digits(&edge_optional, &edge_optional_out, &edge_error)));
     CHECK(!edge_optional_out.has_value && !edge_optional_out.value.data);
     edge_rows[1] = edge_bad_array;
-    CHECK(fincontainers_flatten(&edge_table, &edge_optional_out, &edge_error) == FINCONTAINERS_STATUS_INVALID_ARGUMENT && !rejected(FINCONTAINERS_STATUS_INVALID_ARGUMENT, &edge_error, edge_digit_error));
+    CHECK(EDGE_STRUCTURAL_REFUSED(fincontainers_flatten(&edge_table, &edge_optional_out, &edge_error)));
     CHECK(!edge_optional_out.has_value && !edge_optional_out.value.data);
     edge_rows[1] = (nats){edge_cells[1], 3, NULL, NULL};
 
@@ -158,4 +160,5 @@
     fincontainers_option_nat_value_clear(&edge_option);
     fincontainers_option_nat_value_clear(&edge_option_out);
     CHECK(checks - edge_before == 12072);
+#undef EDGE_STRUCTURAL_REFUSED
   }

@@ -36,10 +36,23 @@
     CHECK(api::present({std::nullopt, std::nullopt, std::nullopt}).empty());
     CHECK(api::flatten({{}, {}, {}}) == std::optional<std::vector<Nat>>{std::vector<Nat>{}});
     /* C++ Nat uses signed cpp_int. Negative values must still be refused. */
-    CHECK(invalid([&] { api::empty_array({Nat(-1)}); }));
-    CHECK(invalid([&] { api::empty_list({Nat(-1)}); }));
-    CHECK(invalid([&] { api::empty_option(Nat(-1)); }));
-    CHECK(invalid([&] { api::optional_digits(std::vector<Nat>{1, -1, 3}); }));
+    const auto edge_negative = [](auto call) {
+      try { call(); }
+      catch (const api::Error& failure) {
+        return failure.status == FINCONTAINERS_STATUS_INVALID_ARGUMENT && failure.code == FINCONTAINERS_ERROR_INVALID_ARGUMENT
+          && std::string(failure.what()) == "Nat must be nonnegative";
+      }
+      return false;
+    };
+    CHECK(edge_negative([&] { api::empty_array({Nat(-1)}); }));
+    CHECK(edge_negative([&] { api::empty_list({Nat(-1)}); }));
+    CHECK(edge_negative([&] { api::empty_option(Nat(-1)); }));
+    for (unsigned position = 0; position < 3; ++position) {
+      std::vector<Nat> input = {1, 2, 3}; input[position] = -1;
+      const auto before = input;
+      CHECK(edge_negative([&] { api::optional_digits(input); }));
+      CHECK(input == before);
+    }
     for (unsigned cycle = 0; cycle < 1000; ++cycle) {
       CHECK(rejected([&] { api::empty_array({0}); }, edge_zero_error));
       CHECK(api::empty_array({}).empty());
@@ -54,5 +67,5 @@
       CHECK(rejected([&] { api::optional_digits(std::vector<Nat>{1, 10, 9}); }, edge_digit_error));
       CHECK(api::optional_digits(std::vector<Nat>{1, 9}) == std::optional<std::vector<Nat>>{std::vector<Nat>({1, 9})});
     }
-    CHECK(checks - edge_before == 12054);
+    CHECK(checks - edge_before == 12059);
   }

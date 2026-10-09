@@ -58,6 +58,7 @@ export const insertFinContainerEdgeFragment = (source, marker, fragment) => {
 	assert.ok(typeof marker === "string" && marker.length > 0, "Expected a nonempty insertion marker");
 	const at = source.indexOf(marker);
 	assert.ok(at >= 0 && source.indexOf(marker, at + marker.length) < 0, "Expected exactly one edge consumer insertion marker");
+	assert.ok((at === 0 || source[at - 1] === "\n") && (at + marker.length === source.length || source[at + marker.length] === "\n"), "Insertion marker must occupy a complete line");
 	assert.ok(!fragment.includes(marker), "Edge fragment must not duplicate the insertion marker");
 	return source.slice(0, at) + fragment + "\n" + source.slice(at);
 };
