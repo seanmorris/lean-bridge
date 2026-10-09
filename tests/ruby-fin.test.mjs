@@ -186,12 +186,13 @@ const observeRubyDispatch = async ({ probeRoot, nativeDirectory, componentId, co
 	 * @param root0.root - Directory GDB treats as verified, normally the native directory.
 	 * @param root0.nonce - Run nonce; fresh unless replayed by a control.
 	 * @param root0.before - Optional hook given the record path.
+	 * @param root0.inject - Test-only GDB failure injection, never used by acceptance runs.
 	 */
-	const run = async ({ gdb = true, mode = null, root = nativeDirectory, nonce = randomBytes(16).toString("hex"), before = null } = {}) => {
+	const run = async ({ gdb = true, mode = null, root = nativeDirectory, nonce = randomBytes(16).toString("hex"), before = null, inject = null } = {}) => {
 		const stem = join(probeRoot, `run-${runs++}`), record = `${stem}.record`, armed = `${stem}.armed.json`;
 		if(before) await before(record);
 		const argv = [command, ...args, join(probeRoot, "dispatch.rb"), record, nonce, configSha256, definerIndices.join(","), ...mode ? [mode] : []];
-		const config = { identity, configSha256, root, nonce, record, armed, argv, stdout: `${stem}.stdout`, stderr: `${stem}.stderr` };
+		const config = { identity, configSha256, root, nonce, record, armed, argv, stdout: `${stem}.stdout`, stderr: `${stem}.stderr`, ...inject ? { inject } : {} };
 		await writeFile(`${stem}.json`, canonicalJson(config), { flag: "wx" });
 		const started = gdb
 			? runCopied(gdbCommand, ["-batch", "-q", "-nx", "-x", join(probeRoot, "fin.gdb.py")], cwd, { ...env, LEAN_BRIDGE_FIN_GDB_CONFIG: `${stem}.json` })
@@ -230,8 +231,13 @@ const assertRubyDispatchRecord = async (observer, { record, nonce, armed }, obse
 	assert.deepEqual(mapped.definers, observer.definerIndices);
 	// The entries the probe printed last are the record's bytes after the final call.
 	assert.deepEqual(mapped.entries, observed.at(-1)[2]);
+	// GDB kept the inferior PID, configuration and nonce outside the record when it armed.
+	const manifest = JSON.parse(await readFile(armed, "utf8"));
+	assert.deepEqual([manifest.configSha256, manifest.nonce], [observer.configSha256, nonce]);
+	assert.ok(Number.isSafeInteger(manifest.pid) && manifest.pid > 0);
+	assert.equal(mapped.pid, manifest.pid, "the record belongs to the instrumented inferior");
 	// Each breakpoint sits exactly on its symbol's nm definition in the configured library.
-	const breakpoints = JSON.parse(await readFile(armed, "utf8")).map(({ symbol, library, offset }) => ({ symbol, library, offset }));
+	const breakpoints = manifest.breakpoints.map(({ symbol, library, offset }) => ({ symbol, library, offset }));
 	assert.deepEqual(breakpoints.map(item => [item.symbol, item.library]), identity.columns.map((symbol, k) => [symbol, identity.definers[k]]));
 	for(const { symbol, library, offset } of breakpoints)
 	{
@@ -391,6 +397,20 @@ test("GDB entry breakpoints count a deep-bound Ruby stand-in exactly and refuse 
 	assert.deepEqual(observed, rubyFinDispatchExpected);
 	const breakpoints = await assertRubyDispatchRecord(observer, accepted, observed);
 	assert.equal(breakpoints.length, 6);
+	// A record carrying any other PID than the one GDB armed is refused.
+	const foreignPid = await readFile(accepted.record);
+	foreignPid.writeBigInt64LE(foreignPid.readBigInt64LE(112) + 1n, 112);
+	await writeFile(join(root, "foreign-pid.record"), foreignPid, { flag: "wx" });
+	await assert.rejects(() => assertRubyDispatchRecord(observer, { ...accepted, record: join(root, "foreign-pid.record") }, observed), /the record belongs to the instrumented inferior/u);
+	// A failed count write or arming callback ends the run with 71, so no rows are accepted.
+	const lost = await observer.run({ inject: { write: 3 } });
+	assert.equal(lost.code, nativeFinGdbExit.instrumentation, lost.output);
+	assert.match(lost.output, /fin instrumentation refused: entry count for column \d failed: injected record write failure/u);
+	assert.throws(() => readNativeFinDispatch(lost.stdout ?? "", rubyFinDispatchExpected), TypeError);
+	const unarmed = await observer.run({ inject: { arm: true } });
+	assert.equal(unarmed.code, nativeFinGdbExit.instrumentation, unarmed.output);
+	assert.match(unarmed.output, /fin instrumentation refused: instrumentation callback failed: injected arming failure/u);
+	assert.equal(unarmed.stdout, "");
 	// A computed-address call of the otherwise unreferenced Fin 0 adapter is an actual counted entry.
 	const dynamic = await observer.run({ mode: "dynamic" });
 	assert.equal(dynamic.code, 0, dynamic.output);

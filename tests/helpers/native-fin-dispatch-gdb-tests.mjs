@@ -51,12 +51,19 @@ test("the GDB script records before the inferior runs and arms only exact verifi
 		, "\"offset\": found[0] - base(expected)"
 		, "if definitions(name) != [address]:"
 		, "return False"
+		, "return True"
+		, "if os.pwrite(state[\"fd\"], record, 0) != len(record):"
+		, "if state[\"failure\"] is not None:\n    stop(71, state[\"failure\"])"
+		, "json.dump({\"pid\": state[\"pid\"], \"configSha256\": config[\"configSha256\"], \"nonce\": config[\"nonce\"], \"breakpoints\": armed}, out)"
 		, "handle all nostop noprint pass"
 	])
 		assert.equal(script.split(needle).length, 2, needle);
 	assert.equal(script.split(`stop(${nativeFinGdbExit.refusedRecord}, `).length, 2);
-	assert.equal(script.split(`stop(${nativeFinGdbExit.instrumentation}, `).length, 3);
+	// Start or continue errors and any sticky callback failure end with the instrumentation status.
+	assert.equal(script.split(`stop(${nativeFinGdbExit.instrumentation}, `).length, 4);
 	assert.equal(script.split(`stop(${nativeFinGdbExit.signal}, `).length, 2);
+	// Both callbacks catch every error and turn it into a sticky, fatal failure.
+	assert.equal(script.split("except Exception as error:\n").length, 3);
 	assert.match(script, /struct\.pack\("<8sII64s32sqIIII6Q6i6I6Q", b"LBFINGDB", 1, 6,/u);
 	assert.doesNotMatch(script, /LD_PRELOAD|LD_AUDIT|dlsym/u);
 });

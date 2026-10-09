@@ -97,15 +97,30 @@ config = json.load(open(os.environ["LEAN_BRIDGE_FIN_GDB_CONFIG"]))
 identity = config["identity"]
 columns, definers, libraries = identity["columns"], identity["definers"], identity["libraries"]
 root = os.path.realpath(config["root"])
+# Test-only failure injection: {"write": n} fails the n-th entry write, {"arm": true} fails arming.
+inject = config.get("inject") or {}
 state = {"fd": None, "pid": 0, "attached": 0, "armed": 0, "conflicts": 0, "foreign": 0,
-         "breakpoints": [0] * 6, "definer": [-1] * 6, "entries": [0] * 6, "loaded": set(), "addresses": {}}
+         "breakpoints": [0] * 6, "definer": [-1] * 6, "entries": [0] * 6, "loaded": set(), "addresses": {},
+         "writes": 0, "failure": None}
 
 
 def write():
     record = struct.pack("<8sII64s32sqIIII6Q6i6I6Q", b"LBFINGDB", 1, 6, config["configSha256"].encode(), config["nonce"].encode(),
                          state["pid"], state["attached"], state["armed"], state["conflicts"], state["foreign"],
                          *state["breakpoints"], *state["definer"], *([0] * 6), *state["entries"])
-    os.pwrite(state["fd"], record, 0)
+    if os.pwrite(state["fd"], record, 0) != len(record):
+        raise OSError("short instrumentation record write")
+
+
+def fail(message):
+    # A callback failure is sticky: the record is poisoned for the probe and GDB later exits 71.
+    if state["failure"] is None:
+        state["failure"] = message
+    state["attached"] = 0
+    try:
+        write()
+    except OSError:
+        pass
 
 
 def stop(code, message):
@@ -123,9 +138,17 @@ class Counter(gdb.Breakpoint):
         self.column = column
 
     def stop(self):
-        state["entries"][self.column] += 1
-        write()
-        return False
+        try:
+            state["entries"][self.column] += 1
+            state["writes"] += 1
+            if inject.get("write") == state["writes"]:
+                raise OSError("injected record write failure")
+            write()
+            return False
+        except Exception as error:
+            fail("entry count for column " + str(self.column) + " failed: " + str(error))
+            # Halt the inferior at once; the run then ends with 71.
+            return True
 
 
 def definitions(name):
@@ -168,12 +191,22 @@ def arm():
         state["armed"] |= 1 << column
         state["addresses"][name] = found[0]
         armed.append({"symbol": name, "library": definers[column], "address": found[0], "offset": found[0] - base(expected)})
+    if inject.get("arm"):
+        raise RuntimeError("injected arming failure")
+    # Provenance kept outside the mapped record, for an independent final comparison.
     with open(config["armed"], "x") as out:
-        json.dump(armed, out)
+        json.dump({"pid": state["pid"], "configSha256": config["configSha256"], "nonce": config["nonce"], "breakpoints": armed}, out)
     write()
 
 
 def on_new_objfile(event):
+    try:
+        loaded(event)
+    except Exception as error:
+        fail("instrumentation callback failed: " + str(error))
+
+
+def loaded(event):
     path = os.path.realpath(event.new_objfile.filename)
     if os.path.dirname(path) == root and os.path.basename(path) in libraries:
         state["loaded"].add(os.path.basename(path))
@@ -210,6 +243,8 @@ try:
     gdb.execute("continue")
 except gdb.error as error:
     stop(71, str(error))
+if state["failure"] is not None:
+    stop(71, state["failure"])
 signal, code = gdb.convenience_variable("_exitsignal"), gdb.convenience_variable("_exitcode")
 if signal is not None or code is None or gdb.selected_inferior().pid != 0:
     stop(72, "the inferior did not exit normally")
