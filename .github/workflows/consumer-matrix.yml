@@ -2561,6 +2561,19 @@ jobs:
           npm run test:native-fin
           test -s build/native-fin/native.json
           test -s build/native-fin/native-reviewed.json
+          mkdir -p build/reviewed-fin-refusals
+          set -o pipefail
+          LEAN_BRIDGE_REVIEWED_FIN_REFUSALS=native-fin,fin-containers LEAN_BRIDGE_REVIEWED_FIN_REFUSAL_REPORT_DIR=build/reviewed-fin-refusals node --test --test-reporter=tap --test-concurrency=1 tests/reviewed-fin-refusals.test.mjs 2>&1 | tee build/reviewed-fin-refusals/acceptance.tap
+          rg '^ok [0-9]+ - changed native-fin reviews are refused against fresh Lean beside a publishing control$' build/reviewed-fin-refusals/acceptance.tap
+          rg '^ok [0-9]+ - changed fin-containers reviews are refused against fresh Lean beside a publishing control$' build/reviewed-fin-refusals/acceptance.tap
+          rg '^# tests 23$' build/reviewed-fin-refusals/acceptance.tap
+          rg '^# pass 23$' build/reviewed-fin-refusals/acceptance.tap
+          rg '^# fail 0$' build/reviewed-fin-refusals/acceptance.tap
+          rg '^# cancelled 0$' build/reviewed-fin-refusals/acceptance.tap
+          rg '^# skipped 0$' build/reviewed-fin-refusals/acceptance.tap
+          rg '^# todo 0$' build/reviewed-fin-refusals/acceptance.tap
+          test -s build/reviewed-fin-refusals/native-fin.json
+          test -s build/reviewed-fin-refusals/fin-containers.json
           LEAN_BRIDGE_SPECIALIZATION_PROFILES=c,cpp node --test tests/native-specializations.test.mjs
           test -s build/native-specializations/c-cpp.json
           LEAN_BRIDGE_REVIEWED_SPECIALIZATION_TEST=1 LEAN_BRIDGE_REVIEWED_SPECIALIZATION_PROFILES=c,cpp node --test --test-concurrency=1 tests/reviewed-specializations.test.mjs
@@ -2765,6 +2778,7 @@ jobs:
             build/aliases/native.json
             build/native-fin/native.json
             build/native-fin/native-reviewed.json
+            build/reviewed-fin-refusals/
             build/native-specializations/c-cpp.json
             build/reviewed-specializations/c-cpp.json
             build/native-fin-containers/c-cpp.json
@@ -3165,6 +3179,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_C_TEST=1 node --test tests/native-c-family.test.mjs tests/native-c-copied.test.mjs && npm run test:type-corpus:c-family && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=c,cpp node --test tests/type-corpus-reviewed-native.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_GRAPH_PACKAGE_TEST=1 node --test tests/native-graph-package.test.mjs"
               consumer_command="$consumer_command && npm run test:native-fin"
+              consumer_command="$consumer_command && LEAN_BRIDGE_REVIEWED_FIN_REFUSALS=native-fin,fin-containers LEAN_BRIDGE_REVIEWED_FIN_REFUSAL_REPORT_DIR=build/reviewed-fin-refusals node --test --test-reporter=tap --test-concurrency=1 tests/reviewed-fin-refusals.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_FIN_CALLBACK_LEAN_TEST=1 LEAN_BRIDGE_FIN_CALLBACK_PROFILES=c,cpp LEAN_BRIDGE_NATIVE_FIN_REPLY_TEST=1 LEAN_BRIDGE_FIN_REPLY_PROFILES=c,cpp node --test --test-reporter=tap --test-concurrency=1 tests/native-fin-callbacks.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_SPECIALIZATION_PROFILES=c,cpp node --test tests/native-specializations.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=c,cpp LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=c,cpp node --test tests/native-fin-containers.test.mjs"

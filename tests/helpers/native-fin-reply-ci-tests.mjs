@@ -28,10 +28,8 @@ const validate = workflow => {
 	const gate = steps.find(step => step.id === "type_corpus_c_family");
 	assert.equal(gate.condition, "matrix.profile == 'c-family'");
 	const commands = nativeCiCommands(gate);
-	assert.ok(commands.includes(`          ${command} | tee ${transcript}\n`));
+	assert.ok(commands.includes(`          set -o pipefail\n          ${command} | tee ${transcript}\n`));
 	assert.ok(commands.indexOf("          mkdir -p build/native-fin-replies\n") >= 0);
-	assert.ok(commands.indexOf("          set -o pipefail\n") >= 0);
-	assert.ok(commands.indexOf("          set -o pipefail\n") < commands.indexOf(command));
 	for(const assertion of assertions) assert.ok(commands.includes(assertion));
 	for(const report of reports) assert.ok(commands.includes(`          test -s ${report}\n`));
 	const upload = steps.find(step => step.name === "Upload installed C and C++ corpus observations");

@@ -62,7 +62,8 @@ test("the .NET dispatch integration retains the reviewed source and managed CI h
 		, ".github/workflows/consumer-matrix.yml": "f556c4f9d990fe4c56a94888cab214607e00f831350b12d9a98675e87bef05ed"
 		, "tests/documentation.test.mjs": "1e3b78d25deabb4128c10549620528e5239bf23644bdd1d744a11804619aeba6"
 	};
-	for(const [path, digest] of Object.entries(digests)) assert.equal(sha256(await readFile(path)), digest, path);
+	for(const [path, digest] of Object.entries(digests))
+		assert.equal(sha256(beforeFinRefinementSource(path, await readFile(path, "utf8"), digest)), digest, path);
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	for(const host of ["dotnet", "jvm"])
 	{
