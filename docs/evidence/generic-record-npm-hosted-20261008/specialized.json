@@ -1,0 +1,125 @@
+{
+  "abi": 7,
+  "archiveSha256": "abb8767352822d75c5de46f90fc6869db2b927dc4af6385eec79824236adb00c",
+  "bindingIrFileSha256": "6d9746f76ac7e182fa44250d10fce4e57bef12d8f7bb43c6e892a73aa55e8281",
+  "bindingIrSha256": "5c72b91d01ded7a8ee063a59eec07384670dba4bf83cd84235fd8933c9c9fec6",
+  "checks": 1019,
+  "compilerFreePath": true,
+  "consumerSha256": "c614240aa4237059ded896efd69cf97ee3b6e16a1ff3471eb311a4cb5b5b5e38",
+  "dispatch": "not measured",
+  "independentBuilds": 2,
+  "offlineInstall": true,
+  "profile": "npm",
+  "receipt": {
+    "bindingIrSha256": "5c72b91d01ded7a8ee063a59eec07384670dba4bf83cd84235fd8933c9c9fec6",
+    "component": {
+      "id": "onboarding-small@1.0.0",
+      "name": "onboarding-small",
+      "version": "1.0.0"
+    },
+    "componentArtifactSha256": "26dfb4cfaec761a5733cfa665d069d37dfa38c4804faceb367c6654feaefb268",
+    "componentBundleSha256": "95e6c1c87fa236e7dc29d4927d2b0d86a98cc702fc8dff7dff29dc8cc8edfe0c",
+    "componentIdentitySha256": "98a4f95339c929fa0f50c036b240b36a2fd097e0d6a169505819df1942b9cbfb",
+    "kind": "lean-bridge-component-package-receipt",
+    "package": {
+      "archive": "onboarding-small-1.0.0.tgz",
+      "package": "onboarding-small@1.0.0",
+      "sha256": "abb8767352822d75c5de46f90fc6869db2b927dc4af6385eec79824236adb00c"
+    },
+    "policies": {
+      "componentCompiledOnce": true,
+      "nativeCallablesOnly": true,
+      "runtimeBinaryInComponent": false,
+      "runtimeShared": true
+    },
+    "provenanceSha256": "9805fd3af2e773f7e09e176527f40fabd87cd4521f5ca33707492e16f7955509",
+    "runtime": {
+      "archive": "lean-bridge-runtime-0.0.0-abi2.28bc7ead91ccdec242e002053c8b2ef7514281454704d86f5c663ce08bf1cf4a.tgz",
+      "package": "@lean-bridge/runtime@0.0.0-abi2.28bc7ead91ccdec242e002053c8b2ef7514281454704d86f5c663ce08bf1cf4a",
+      "sha256": "adabede49690aa159106e216b7faafd3ec5f184c03f08adcbdba2ccb654074b0"
+    },
+    "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "7aa0770c80fab959308ae0d9652e3256998ed727e456d5c0aa977e6464caf695"
+    },
+    "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+  },
+  "receiptSha256": "66b1665ef0400e226be2388a8ca488ef495f119a2b2400339df70dd41f9d6ea8",
+  "rejections": 1010,
+  "reproducible": true,
+  "runtimeArchiveSha256": "adabede49690aa159106e216b7faafd3ec5f184c03f08adcbdba2ccb654074b0",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true,
+  "specializations": [
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoNatBox",
+      "types": [
+        "OnboardingSmall.NatBox"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoAgain",
+      "types": [
+        "OnboardingSmall.NatBoxAgain"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoTextBox",
+      "types": [
+        "OnboardingSmall.TextBox"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoLeft",
+      "types": [
+        "OnboardingSmall.Left.LeftBox"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoRight",
+      "types": [
+        "OnboardingSmall.Right.RightBox"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoBoxes",
+      "types": [
+        "OnboardingSmall.Boxes"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoOptionalBoxes",
+      "types": [
+        "OnboardingSmall.OptionalBoxes"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoNats",
+      "types": [
+        "OnboardingSmall.Nats"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoOptionalNat",
+      "types": [
+        "OnboardingSmall.OptionalNat"
+      ]
+    }
+  ],
+  "typescript": {
+    "declarationsSha256": "43b2dc5663eaa42f6e68406e754da4a5933247fe5460d87b36a8b601982d87ad",
+    "skipLibCheck": false,
+    "sourceSha256": "177fc21683740bc1ceee2ba9aa9d95a9196b230039a5e2969f64d220ea0a6e21",
+    "strict": true
+  }
+}

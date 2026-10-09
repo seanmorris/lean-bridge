@@ -1,0 +1,60 @@
+{
+  "abi": 7,
+  "archiveSha256": "84e63aa4141b87b0e3451e3fa272c05f5c3ecc0cf6860ed763f54e2609b8cceb",
+  "bindingIrFileSha256": "95023c05b50866d3a2220df6552e030dc61b3002449607776fff62c6ff8ce46f",
+  "bindingIrSha256": "60ecb77b972c5be8a339bf674c5e644471fe708eba79cbf082b4831bda56cf6b",
+  "checks": 1010,
+  "compilerFreePath": true,
+  "consumerSha256": "b0b3b09c738e9d203f7ee1dfb9bc11f21f858a4492395f0b678d92ccd1a631ac",
+  "dispatch": "not measured",
+  "independentBuilds": 2,
+  "offlineInstall": true,
+  "profile": "npm",
+  "receipt": {
+    "bindingIrSha256": "60ecb77b972c5be8a339bf674c5e644471fe708eba79cbf082b4831bda56cf6b",
+    "component": {
+      "id": "onboarding-small@1.0.0",
+      "name": "onboarding-small",
+      "version": "1.0.0"
+    },
+    "componentArtifactSha256": "3e3e71f6cd972ea88b8c5ba540b696f1c19177fd00ca9be8c34b3f7a79ed856f",
+    "componentBundleSha256": "b9d8539edb226d5bfa4c462f77e1a33579a6e91af44f4874a865f293acd390c1",
+    "componentIdentitySha256": "6772a2e49c47d47e9bd6bfd8d9a6ad497b36ca28d5eee5c7b5a00a9ff63dcf3a",
+    "kind": "lean-bridge-component-package-receipt",
+    "package": {
+      "archive": "onboarding-small-1.0.0.tgz",
+      "package": "onboarding-small@1.0.0",
+      "sha256": "84e63aa4141b87b0e3451e3fa272c05f5c3ecc0cf6860ed763f54e2609b8cceb"
+    },
+    "policies": {
+      "componentCompiledOnce": true,
+      "nativeCallablesOnly": true,
+      "runtimeBinaryInComponent": false,
+      "runtimeShared": true
+    },
+    "provenanceSha256": "c99bf8abbf7a325d056b704857c5d7ac60242c591c859821c9b3173a0c84d723",
+    "runtime": {
+      "archive": "lean-bridge-runtime-0.0.0-abi2.28bc7ead91ccdec242e002053c8b2ef7514281454704d86f5c663ce08bf1cf4a.tgz",
+      "package": "@lean-bridge/runtime@0.0.0-abi2.28bc7ead91ccdec242e002053c8b2ef7514281454704d86f5c663ce08bf1cf4a",
+      "sha256": "adabede49690aa159106e216b7faafd3ec5f184c03f08adcbdba2ccb654074b0"
+    },
+    "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "c1aa77b690a9b795b1273efbc356c735d2ccf9670787b4d31d07944aab48befa"
+    },
+    "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+  },
+  "receiptSha256": "97f252bc83e51c6c125695af450a708eaffa72d186ad07d40872cdbfcd035391",
+  "rejections": 1005,
+  "reproducible": true,
+  "runtimeArchiveSha256": "adabede49690aa159106e216b7faafd3ec5f184c03f08adcbdba2ccb654074b0",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true,
+  "typescript": {
+    "declarationsSha256": "87ac250fb0f40815570465c6e7ee91a612dec16c4f24cadc357ef510fa7fab53",
+    "skipLibCheck": false,
+    "sourceSha256": "0b954fff034a11eb3759be135406c1b5b1b65813508c43c43e11988b8eb25e27",
+    "strict": true
+  }
+}

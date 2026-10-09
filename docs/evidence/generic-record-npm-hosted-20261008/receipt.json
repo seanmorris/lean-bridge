@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1433,
+  "execution": "hosted",
+  "revision": "f9d5ce96eb04ec800209c6a6863092b3bdea6e85",
+  "hosted": {
+    "runId": 37736101772,
+    "jobId": 113176414840,
+    "jobName": "Node and browser npm consumers",
+    "jobConclusion": "success",
+    "selectionStep": "11 Compile locked and dependency-free projects and install relocated npm releases offline",
+    "enforcementStep": "33 Enforce Node support and the browser corpus: skipped, so every guarded acceptance outcome was success",
+    "jobMetadataFetchedAt": "2026-10-09T01:02:24Z",
+    "artifact": {
+      "id": 11536871810,
+      "name": "type-corpus-npm-f9d5ce96eb04ec800209c6a6863092b3bdea6e85",
+      "bytes": 40220906,
+      "sha256": "d41728bf336af16d326a05d97bf468bdc117ff704f58529facedc6bc676debab",
+      "githubDigest": "sha256:d41728bf336af16d326a05d97bf468bdc117ff704f58529facedc6bc676debab",
+      "retained": false
+    }
+  },
+  "scope": {
+    "profiles": [
+      "node-javascript",
+      "node-typescript"
+    ],
+    "sourcePath": "ordinary-source",
+    "cases": [
+      "direct alias-named generic records",
+      "nine configured specializations over record, List and Option aliases in two namespaces"
+    ],
+    "isolation": "Two author builds reproduce the npm archives; the author and build directories are deleted before offline installation, and Node runs with a Node-only PATH. Strict TypeScript checks the installed declarations with skipLibCheck disabled.",
+    "engine": "Hosted ubuntu-24.04 runner; the locked Nix component engine and the CI lazy runtime root, not a local producer.",
+    "dispatch": "not measured",
+    "hostedCi": true,
+    "binaryArchivesRetained": false,
+    "supersedes": "d5705ff's earlier ordinary npm report, which retained author/build inputs; renamed-directory runs are not deletion evidence.",
+    "wholeRun": "Only this successful Node job is archived; other jobs of the run are separate and several failed."
+  },
+  "sourceIdentityScope": "Selected test, harness, fixture, packaging and workflow files at the hosted revision, not a complete dependency closure.",
+  "sourceFiles": [
+    {
+      "path": "tests/generic-records.test.mjs",
+      "sha256": "1e4ed417bcba1f1ab1a35256dbabe2339ed11ac82eb966226f5e9c89458dacd3"
+    },
+    {
+      "path": "tests/helpers/generic-record-packages.mjs",
+      "sha256": "749c6404fde73b89fe03054c40f39b3de20a49c428e8ba3f4e241681546835dd"
+    },
+    {
+      "path": "tests/helpers/generic-record-specializations.mjs",
+      "sha256": "a8c06844daddc89b331f65eb330f59f19eaf7e9ab032294a826d5fefe857120f"
+    },
+    {
+      "path": "tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227"
+    },
+    {
+      "path": "tests/helpers/lake-workspace.mjs",
+      "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082"
+    },
+    {
+      "path": "tests/fixtures/onboarding/generic-records/GenericRecords.lean",
+      "sha256": "01e2a3c3c4d7eb9552a32191d5ae69aad7b713a82607507c8f702a0cc624cf5f"
+    },
+    {
+      "path": "tests/fixtures/onboarding/generic-records/LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "path": "tests/fixtures/onboarding/generic-records/lakefile.toml",
+      "sha256": "f5299a2c7d6d09a3625d273ffb1c4b37bcb2b1b70268a1331d8bb53b72651304"
+    },
+    {
+      "path": "tests/fixtures/onboarding/generic-records/lean-toolchain",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "path": "tests/fixtures/onboarding/generic-records/package.json",
+      "sha256": "f053d9dd340683102e19d38716d8a15074789ee0bdd2be6a282542a5fb4198ac"
+    },
+    {
+      "path": "tests/fixtures/generic-record-specializations.lean",
+      "sha256": "26e73e3a2f872d4a3399aa313cbb88da96992b36681e383a18818aefd552cce9"
+    },
+    {
+      "path": "src/release/component-npm-package.mjs",
+      "sha256": "f7c4e8196814cdb6dafe16173740f762c9bf2208b6fa10650be8855f12b1b3c4"
+    },
+    {
+      "path": "src/release/component-package-receipt.mjs",
+      "sha256": "76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"
+    },
+    {
+      "path": "src/binding-ir/canonical.mjs",
+      "sha256": "28e22e614fc532a99baeeb34ee9d054f3bc6db82239fa89059a9518cb06d3d20"
+    },
+    {
+      "path": "src/build/process-runner.mjs",
+      "sha256": "f1c9d51f97abdbb1fcf0ff04ee5e70b20ffce770ffe6ca7a843d7e35877fdf36"
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "sha256": "b8297b15d9b4f88137bed7406aaa21cb7dd634ac9a78b99aa1027d3cc3b95e84"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/evidence/generic-record-npm-hosted-20261008/job-113176414840.log",
+      "originalPath": "build/vo1433-hosted-npm-f9d5ce9/logs/job-113176414840.log",
+      "sha256": "019093cc68c6ff158ba9e319ca0b94d18f087ce386f898334d2e8359d3347000",
+      "bytes": 618294
+    },
+    {
+      "path": "docs/evidence/generic-record-npm-hosted-20261008/job-113176414840.json",
+      "originalPath": "build/vo1433-hosted-npm-f9d5ce9/metadata/job-113176414840.json",
+      "sha256": "2354cb6d735a45aa2351291e99349d643d97ab8ae32a42ac2a8867f6fb878922",
+      "bytes": 8387
+    },
+    {
+      "path": "docs/evidence/generic-record-npm-hosted-20261008/artifact-11536871810.json",
+      "originalPath": "build/vo1433-hosted-npm-f9d5ce9/metadata/artifact-11536871810.json",
+      "sha256": "b7e6b34caf11608bb52005ccfee6fc95225f18b1df171300692b50b9309c0ccb",
+      "bytes": 758
+    },
+    {
+      "path": "docs/evidence/generic-record-npm-hosted-20261008/direct.json",
+      "originalPath": "build/vo1433-hosted-npm-f9d5ce9/zips/type-corpus-npm-f9d5ce96eb04ec800209c6a6863092b3bdea6e85.zip!generic-records/npm.json",
+      "sha256": "9f3578da2d3f273b0742b04c6d65cd20922c391a766df2458ba6a7f716694cbf",
+      "bytes": 2790
+    },
+    {
+      "path": "docs/evidence/generic-record-npm-hosted-20261008/specialized.json",
+      "originalPath": "build/vo1433-hosted-npm-f9d5ce9/zips/type-corpus-npm-f9d5ce96eb04ec800209c6a6863092b3bdea6e85.zip!generic-records/specialized-npm.json",
+      "sha256": "a715eb737ae37cbacea0598e21a85421db41bcab7af1dae3253ed15454428dea",
+      "bytes": 4292
+    }
+  ]
+}

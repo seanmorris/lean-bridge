@@ -627,6 +627,16 @@ without a runtime type argument. A named `Box Nat` instantiation, for example,
 uses an object such as `{ value: 3n, count: 1n }`. Its `Box String` counterpart
 uses a string for `value`. Each alias keeps its own name in the package descriptor.
 
+The [hosted Node and TypeScript checks](evidence/generic-record-npm-hosted-20261008/receipt.json)
+cover direct record exports and nine configured functions over record, List and
+Option aliases in two namespaces. Two author builds reproduce the archives. The
+harness deletes both author roots and build staging before offline installation,
+then runs Node without compilers on its PATH. Strict TypeScript checks the
+installed declarations with `skipLibCheck` disabled. The direct and specialized
+consumers pass 1010 and 1019 checks, respectively, including recovery after
+invalid inputs. This record fixture has an implicit type argument, but no
+instance dictionary.
+
 The [installed browser checks](evidence/generic-record-browser-20261008/receipt.json)
 cover nine configured specializations over named records, separate namespaces,
 List aliases and Option aliases, plus records with Array fields. The same
@@ -636,8 +646,9 @@ the checks also exercise worker disposal and recovery after an asset-load failur
 
 This browser evidence covers ordinary Lean-source packages and implicit type
 arguments. It does not establish instance-dictionary specialization or reviewed-IR
-browser packages. Node and strict TypeScript have their
-[own specialization checks](evidence/generic-record-specializations-20261007.md).
+browser packages. The hosted Node record checks above supply the source-deletion
+and compiler-free evidence that the [earlier local run](evidence/generic-record-specializations-20261007.md)
+did not establish.
 
 Reviewed packages also expose named generic records and concrete functions over
 record, List and Option aliases. Import the generated interfaces and functions;

@@ -186,6 +186,16 @@ An application that is not named by an alias, in a signature or as an argument o
 
 The [installed checks](../evidence/generic-record-specializations-20261007.md) cover Node/TypeScript, C, C++, Python 3.11 and 3.12, Rust, Ruby, C#, Java, Kotlin, native PHP, WIT/WASI and all four pinned Perl ABIs. They exercise direct record exports and nine configured specializations over record aliases, separate namespaces, lists and options.
 
+The newer [hosted npm acceptance](../evidence/generic-record-npm-hosted-20261008/receipt.json)
+also verifies that consumers need neither the Lean project nor its build staging:
+the harness deletes both before offline installation and runs Node on a Node-only
+PATH. Direct exports pass 1010 checks; the nine configured functions pass 1019.
+Strict TypeScript checks the installed declarations with `skipLibCheck` disabled.
+Both author builds produce identical component and runtime archives. These
+ordinary-source Node results replace the older npm run's retained-input isolation
+claim; the original reports remain available. The record fixture binds an implicit
+type argument and does not exercise an instance dictionary.
+
 The [browser run](../evidence/generic-record-browser-20261008/receipt.json) also covers Array-valued fields, the nine specializations and separate namespaces in Chromium, Firefox and WebKit. Each page, React production/strict and worker execution performs 1025 checks and 1023 rejection checks. The harness verifies the installed descriptor, served Wasm hashes, React cleanup, worker shutdown and recovery after a failed asset request. It removes author/build files before installation and serves only the bundled deployment. [PHP-Wasm direct-record checks](../evidence/php-wasm-generic-records-20261007/receipt.json) are separate: those twelve executions do not include configured function specializations or Array-valued fields. Reviewed generic-record signatures remain unmeasured by these runs.
 
 ### Export inherited records

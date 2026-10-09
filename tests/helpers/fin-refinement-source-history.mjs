@@ -137,6 +137,7 @@ import { perlXsBudgetChangedPaths } from "./perl-xs-budget-source-history.mjs";
 import { genericRefusalFixChangedPaths } from "./generic-refusal-fix-source-history.mjs";
 import { inheritedRecordPromotionChangedPaths } from "./inherited-record-promotion-source-history.mjs";
 import { rubyGdbCiChangedPaths } from "./ruby-gdb-ci-source-history.mjs";
+import { genericNpmClosureChangedPaths } from "./generic-record-npm-closure-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -739,6 +740,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...genericRefusalFixChangedPaths
 	, ...inheritedRecordPromotionChangedPaths
 	, ...rubyGdbCiChangedPaths
+	, ...genericNpmClosureChangedPaths
 ])].sort());
 
 /**
