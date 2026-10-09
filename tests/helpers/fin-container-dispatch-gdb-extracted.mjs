@@ -329,6 +329,26 @@ gdb.execute("quit " + str(int(code)))
 `;
 
 /**
+ * GDB arguments and environment for one run. Control additions reach the inferior only, as explicit settings:
+ * preloading the real Lean libraries into GDB itself replaces its C++ unwinder, and GDB then aborts on its
+ * first internal exception. Each setting stays one exact GDB command.
+ *
+ * @param root0 - One run.
+ * @param root0.script - The instrumentation script.
+ * @param root0.config - The run's configuration file.
+ * @param root0.env - Clean environment of GDB and, through it, the inferior.
+ * @param root0.extra - Test-only inferior environment additions.
+ */
+export const finContainerGdbInvocation = ({ script, config, env, extra = {} }) => {
+	const settings = Object.entries(extra).flatMap(([name, value]) => {
+		if(!/^[A-Za-z_][A-Za-z0-9_]*$/u.test(name)) throw new TypeError(`Invalid inferior environment name: ${JSON.stringify(name)}`);
+		if(typeof value !== "string" || value === "" || /[\0\n\r]/u.test(value) || value.trim() !== value) throw new TypeError(`Invalid inferior environment value for ${name}`);
+		return ["-iex", `set environment ${name}=${value}`];
+	});
+	return { args: ["-batch", "-q", "-nx", ...settings, "-x", script], environment: { ...env, LEAN_BRIDGE_FIN_CONTAINER_GDB_CONFIG: config } };
+};
+
+/**
  * Prepare GDB instrumentation of one host that extracts the verified libraries of resourceDirectory. Every
  * run gets a fresh, empty, canonical parent for the host's temporary directory, plus a new nonce, record,
  * breakpoint manifest and output files.
@@ -364,7 +384,7 @@ export const observeExtractedFinContainerDispatch = async ({ probeRoot, resource
 	 * @param root0.before - Optional hook given the record path and the parent.
 	 * @param root0.tmpdir - Optional host temporary directory other than the parent, for refusal controls.
 	 * @param root0.inject - Test-only GDB failure injection, never used by acceptance runs.
-	 * @param root0.extra - Test-only environment additions for stand-in controls.
+	 * @param root0.extra - Test-only inferior environment additions for refusal controls, never GDB's own.
 	 */
 	const run = async ({ gdb = true, mode = null, nonce = randomBytes(16).toString("hex"), before = null, tmpdir = null, inject = null, extra = {} } = {}) => {
 		const stem = join(probeRoot, `run-${runs++}`), record = `${stem}.record`, armed = `${stem}.armed.json`, parent = `${stem}.parent`;
@@ -375,8 +395,9 @@ export const observeExtractedFinContainerDispatch = async ({ probeRoot, resource
 		const command = argv({ record, nonce, configSha256, definerIndices, mode, tmpdir: tmpdir ?? parent });
 		const config = { identity, configSha256, parent, nonce, record, armed, argv: command, stdout: `${stem}.stdout`, stderr: `${stem}.stderr`, ...inject ? { inject } : {} };
 		await writeFile(`${stem}.json`, canonicalJson(config), { flag: "wx" });
+		const invocation = finContainerGdbInvocation({ script: join(probeRoot, "fin-container-extracted.gdb.py"), config: `${stem}.json`, env, extra });
 		const started = gdb
-			? runCopied(finContainerGdbCommand, ["-batch", "-q", "-nx", "-x", join(probeRoot, "fin-container-extracted.gdb.py")], cwd, { ...env, ...extra, LEAN_BRIDGE_FIN_CONTAINER_GDB_CONFIG: `${stem}.json` })
+			? runCopied(finContainerGdbCommand, invocation.args, cwd, invocation.environment)
 			: runCopied(command[0], command.slice(1), cwd, { ...env, ...extra });
 		let code = 0, stdout, stderr;
 		try

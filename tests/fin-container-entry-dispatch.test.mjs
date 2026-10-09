@@ -20,8 +20,8 @@ import { compileCopiedJvmModel } from "../src/backends/jvm/copied-model.mjs";
 import { renderCopiedJvmPackage } from "../src/backends/jvm/copied-values.mjs";
 import { copiedCleanEnvironment, nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { finContainerSymbol } from "./helpers/fin-container-dispatch.mjs";
-import { assertFinContainerGdbRun, finContainerDefiners, finContainerGdbExit, finContainerGdbIdentity, finContainerGdbRecord, finContainerGdbScript, observeFinContainerGdbDispatch, readFinContainerGdbRecord } from "./helpers/fin-container-dispatch-gdb.mjs";
-import { finContainerGdbExtractedIdentity, finContainerGdbExtractedScript } from "./helpers/fin-container-dispatch-gdb-extracted.mjs";
+import { assertFinContainerGdbRun, finContainerDefiners, finContainerGdbCommand, finContainerGdbExit, finContainerGdbIdentity, finContainerGdbRecord, finContainerGdbScript, observeFinContainerGdbDispatch, readFinContainerGdbRecord } from "./helpers/fin-container-dispatch-gdb.mjs";
+import { finContainerGdbExtractedIdentity, finContainerGdbExtractedScript, finContainerGdbInvocation } from "./helpers/fin-container-dispatch-gdb-extracted.mjs";
 import { finContainerEntryAdapter, finContainerEntryColumns, finContainerEntryExpected, finContainerEntryInitializer, finContainerEntryInterposer, finContainerEntryKind, finContainerEntryMutations, finContainerEntryRawExpected, finContainerEntryRawProbe, finContainerEntryReport, finContainerEntrySources, finContainerEntrySteps, finContainerEntrySymbols, readFinContainerEntry } from "./helpers/fin-container-entry-dispatch.mjs";
 import { dotnetFinContainerEntryProbe, finContainerEntryMissing, finContainerEntryProfiles, finContainerEntryUncovered, finContainerEntryUnattached, finContainerEntryUntriggered, javaFinContainerEntryProbe, kotlinFinContainerEntryProbe, phpFinContainerEntryProbe, rubyFinContainerEntryProbe, witFinContainerEntryProbe } from "./helpers/fin-container-entry-probes.mjs";
 import { nativeFinGdbExtractedScript } from "./helpers/native-fin-dispatch-gdb-extracted.mjs";
@@ -208,6 +208,21 @@ test("each container GDB script is its scalar script with only the width, magic,
 	}
 });
 
+test("extracted-root control environments reach only the inferior, as exact single GDB settings", () => {
+	const run = { script: "/run/fin-container-extracted.gdb.py", config: "/run/run-0.json", env: { PATH: "/usr/bin:/bin", LANG: "C" } };
+	const ordinary = { args: ["-batch", "-q", "-nx", "-x", run.script], environment: { ...run.env, LEAN_BRIDGE_FIN_CONTAINER_GDB_CONFIG: run.config } };
+	assert.deepEqual(finContainerGdbInvocation(run), ordinary);
+	assert.deepEqual(finContainerGdbInvocation({ ...run, extra: {} }), ordinary);
+	// The preloaded-copies control: the debugger's environment is the ordinary one, and the inferior gets the exact list.
+	const preload = "/consumer/lib/libcomponent_x.so:/consumer/lib/libleanshared.so";
+	const controlled = finContainerGdbInvocation({ ...run, extra: { LD_PRELOAD: preload } });
+	assert.deepEqual(controlled.environment, ordinary.environment);
+	assert.equal(Object.hasOwn(controlled.environment, "LD_PRELOAD"), false);
+	assert.deepEqual(controlled.args, ["-batch", "-q", "-nx", "-iex", `set environment LD_PRELOAD=${preload}`, "-x", run.script]);
+	for(const extra of [{ "": "x" }, { "1X": "x" }, { "A=B": "x" }, { "A B": "x" }, { "A\nB": "x" }, { A: "" }, { A: "x\nshell true" }, { A: "x\rquit" }, { A: "x\0y" }, { A: " x" }, { A: 1 }])
+		assert.throws(() => finContainerGdbInvocation({ ...run, extra }), TypeError, JSON.stringify(extra));
+});
+
 test("host probes resolve their instrument before loading, gate lazy loaders and print every step", () => {
 	assert.deepEqual(finContainerEntryProfiles, ["php-native", "wit-wasi", "ruby", "dotnet", "java", "kotlin"]);
 	const sources = {
@@ -311,4 +326,27 @@ int main(int argc, char **argv) {
 	const foreign = await observer.run({ root });
 	assert.equal(foreign.code, 0); assert.equal(foreign.stdout, "0 0 0 0 0 0 0 0 0 0\n");
 	assert.equal(readFinContainerGdbRecord(Buffer.from(await (await import("node:fs/promises")).readFile(foreign.record))).armed, 0);
+});
+
+const java = process.env.LEAN_BRIDGE_JAVA, leanPrefix = process.env.LEAN_BRIDGE_LEAN_PREFIX;
+test("a Lean runtime preload aborts GDB itself but runs in the inferior when set through GDB", { skip: !(gdb && java && leanPrefix) && "set LEAN_BRIDGE_FIN_CONTAINER_GDB_SMOKE=1, LEAN_BRIDGE_JAVA and LEAN_BRIDGE_LEAN_PREFIX where GDB may ptrace", timeout: 300_000 }, async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-fin-container-gdb-preload-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const runtime = join(leanPrefix, "lib", "lean", "libleanshared.so"), script = join(root, "java.gdb.py");
+	// A multithreaded inferior, so GDB raises and catches its own internal exceptions while it starts.
+	await writeFile(script, `import gdb
+for setting in ["pagination off", "confirm off", "breakpoint pending off", "disable-randomization off"]:
+    gdb.execute("set " + setting)
+gdb.execute("handle all nostop noprint pass")
+gdb.execute("file ${java}")
+gdb.execute("starti -version > ${join(root, "out")} 2> ${join(root, "err")}")
+seen = []
+gdb.events.new_objfile.connect(lambda event: seen.append(event.new_objfile.filename))
+gdb.execute("continue")
+gdb.write("preloaded %d exit %s\\n" % (seen.count(${JSON.stringify(runtime)}), gdb.convenience_variable("_exitcode")))
+`);
+	const { args, environment } = finContainerGdbInvocation({ script, config: join(root, "unused.json"), env: tools, extra: { LD_PRELOAD: runtime } });
+	const inferior = await runCopied(finContainerGdbCommand, args, root, environment);
+	assert.match(inferior.stdout, /^preloaded 1 exit 0$/mu);
+	await assert.rejects(() => runCopied(finContainerGdbCommand, ["-batch", "-q", "-nx", "-x", script], root, { ...tools, LD_PRELOAD: runtime }), /terminate called/u);
 });
