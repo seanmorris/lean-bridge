@@ -1,0 +1,269 @@
+{
+  "archives": {
+    "archives/LeanBridge-FinContainers-1.000.tar.gz": "8afa2e79a339ad7e4e0d1686857aadacb5d7eb373286df1b3fbf21ce54163b1a",
+    "archives/LeanBridge-Runtime-0.0021072338727314564978413376084786059360699966616434525968589739297421353356724781.tar.gz": "c7b601ca6de3399e837e49b83e5955746f22e20dc38e04a20ba674db7d74b637"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "906d0bedda9dfaa4797e96968a1a778f202a04e88da49cd196b6a9bfe9ccd408",
+      "checks": 2027,
+      "compilerFreePath": true,
+      "consumerSha256": "7851aed00c573e8c2e019a64f052540329c7cf9026a03895e3a2250142499649",
+      "dispatch": {
+        "columns": [
+          "l_FinContainers_mirrorAll",
+          "l_FinContainers_orDefault",
+          "adapter:FinContainers.mirrorAll",
+          "adapter:FinContainers.orDefault"
+        ],
+        "interposer": "LD_PRELOAD",
+        "observed": [
+          [
+            "valid-mirror",
+            [
+              1,
+              0,
+              1,
+              0
+            ]
+          ],
+          [
+            "valid-absent",
+            [
+              0,
+              1,
+              0,
+              1
+            ]
+          ],
+          [
+            "invalid-only",
+            [
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            "invalid-then-valid",
+            [
+              1,
+              0,
+              1,
+              0
+            ]
+          ]
+        ],
+        "positiveControl": "valid public calls increment the adapter and source counts; direct adapter calls are counted in the C package probe"
+      },
+      "modelSha256": "0dc4a2cbe2c18a9391ac3f0f2ebf8e30f37107b46ba848788e0fc27ecf27841b",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 86578,
+              "path": "archives/LeanBridge-FinContainers-1.000.tar.gz",
+              "sha256": "8afa2e79a339ad7e4e0d1686857aadacb5d7eb373286df1b3fbf21ce54163b1a"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-FinContainers",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0021072338727314564978413376084786059360699966616434525968589739297421353356724781"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51362427,
+              "path": "archives/LeanBridge-Runtime-0.0021072338727314564978413376084786059360699966616434525968589739297421353356724781.tar.gz",
+              "sha256": "c7b601ca6de3399e837e49b83e5955746f22e20dc38e04a20ba674db7d74b637"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "cpan",
+          "version": "0.0021072338727314564978413376084786059360699966616434525968589739297421353356724781"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "perl",
+      "receiptSha256": "05a39612f4c51e38475b15f609c326b484ec346cada6e7db4e05867d05df4e1a",
+      "refinements": {
+        "FinContainers.countNone": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "0",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.flatten": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "10",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "list"
+              }
+            ],
+            "kind": "option"
+          }
+        },
+        "FinContainers.label": {
+          "parameters": [
+            null,
+            {
+              "arguments": [
+                {
+                  "bound": "4",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.mirrorAll": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.orDefault": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "1",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.present": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.sumHuge": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "1180591620717411303424",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.wrapAll": {
+          "parameters": [
+            null
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "7",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        }
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "7d29d17d21eb3e1611814dc585599b74ceef2ab780051179adc5b0301c5d0182"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

@@ -1,23 +1,20 @@
 /**
- * Preserve exact source predecessors when closing the hosted ordinary npm generic-record acceptance.
+ * Preserve exact source predecessors while archiving the hosted Perl refinement corpus.
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforePerlRefinementHostedSource } from "./perl-refinement-hosted-source-history.mjs";
 
-export const genericNpmClosureHistoryPath = "docs/evidence/generic-record-npm-closure-source-history-20261009.json";
-export const genericNpmClosurePredecessor = "5fd19949b5b69d049c922ee5eb2a96efedaf9a79";
-export const genericNpmClosureChangedPaths = [
+export const perlRefinementHostedHistoryPath = "docs/evidence/perl-refinement-hosted-source-history-20261009.json";
+export const perlRefinementHostedPredecessor = "8bcc44f04e8b49010bc6b71d34a5068ff9dd8cfd";
+export const perlRefinementHostedChangedPaths = [
 	"docs/type-surface.v1.json"
 	, "src/adoption/test-profiles.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/ruby-gdb-ci-source-history.mjs"
-	, "tests/helpers/ruby-gdb-ci-source-history-tests.mjs"
-	, "docs/javascript-typescript.md"
-	, "docs/lean/existing-package.md"
+	, "tests/helpers/generic-record-npm-closure-source-history.mjs"
+	, "tests/helpers/generic-record-npm-closure-tests.mjs"
 	, ".gitattributes"
 ];
 let history;
@@ -28,8 +25,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseGenericNpmClosureUpdate = (source, update) => {
-	assert.ok(genericNpmClosureChangedPaths.includes(update.path));
+export const reversePerlRefinementHostedUpdate = (source, update) => {
+	assert.ok(perlRefinementHostedChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -55,12 +52,11 @@ export const reverseGenericNpmClosureUpdate = (source, update) => {
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeGenericNpmClosureSource = (path, source, expected) => {
-	source = beforePerlRefinementHostedSource(path, source, expected);
-	if(typeof source !== "string" || !genericNpmClosureChangedPaths.includes(path)) return source;
+export const beforePerlRefinementHostedSource = (path, source, expected) => {
+	if(typeof source !== "string" || !perlRefinementHostedChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(genericNpmClosureHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(perlRefinementHostedHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseGenericNpmClosureUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reversePerlRefinementHostedUpdate(source, update) : source;
 };

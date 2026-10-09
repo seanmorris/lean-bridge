@@ -12,6 +12,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforePerlRefinementHostedSource } from "./perl-refinement-hosted-source-history.mjs";
 import { beforeGenericNpmClosureSource, genericNpmClosureChangedPaths, genericNpmClosureHistoryPath, genericNpmClosurePredecessor, reverseGenericNpmClosureUpdate } from "./generic-record-npm-closure-source-history.mjs";
 import { genericNpmClosureCells, genericNpmClosureEvidence, genericNpmEvidenceId, reconcileGenericNpmEarlierEvidence, reconcileGenericNpmObservations } from "./generic-record-npm-closure.mjs";
 
@@ -22,7 +23,7 @@ test("hosted npm closure retains exact predecessors and refuses unknown edits", 
 	assert.deepEqual(history.updates.map(update => update.path), genericNpmClosureChangedPaths);
 	for(const update of history.updates)
 	{
-		const source = await readFile(update.path, "utf8"), previous = reverseGenericNpmClosureUpdate(source, update);
+		const source = beforePerlRefinementHostedSource(update.path, await readFile(update.path, "utf8")), previous = reverseGenericNpmClosureUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeGenericNpmClosureSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -38,8 +39,9 @@ test("hosted npm closure retains exact predecessors and refuses unknown edits", 
 });
 
 test("hosted npm reconciliation changes exactly twelve ordinary Node scopes and no stage states", async () => {
-	const { document, ...contracts } = await readTypeSurface();
+	const contracts = await readTypeSurface();
 	const path = "docs/type-surface.v1.json";
+	const document = JSON.parse(beforePerlRefinementHostedSource(path, await readFile(path, "utf8")));
 	const previous = JSON.parse(beforeGenericNpmClosureSource(path, await readFile(path, "utf8")));
 	assert.deepEqual(document.observations, reconcileGenericNpmObservations(previous.observations));
 	const before = typeSurfaceCells(previous, contracts), after = typeSurfaceCells(document, contracts), changed = [];
@@ -68,7 +70,10 @@ test("hosted npm reconciliation changes exactly twelve ordinary Node scopes and 
 		const update = history.updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);
 		if(update) file.sha256 = update.currentSha256;
 	}
-	assert.deepEqual(document.evidence, [...reconcileGenericNpmEarlierEvidence(expected), await genericNpmClosureEvidence()]);
+	const hosted = await genericNpmClosureEvidence();
+	for(const file of hosted.files)
+		file.sha256 = sha256(beforePerlRefinementHostedSource(file.path, await readFile(file.path, "utf8")));
+	assert.deepEqual(document.evidence, [...reconcileGenericNpmEarlierEvidence(expected), hosted]);
 	for(const key of Object.keys(previous).filter(key => !["observations", "evidence"].includes(key)))
 		assert.deepEqual(document[key], previous[key]);
 	assert.equal(document.observations.length, previous.observations.length + 1);

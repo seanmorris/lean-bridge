@@ -1,0 +1,175 @@
+{
+  "archives": {
+    "archives/LeanBridge-PerlRefinements-1.000.tar.gz": "281813bf0d240b70593640ebc42fa37bebd8a889b615df7b9a5d6e734c6b6245",
+    "archives/LeanBridge-Runtime-0.0021072338727314564978413376084786059360699966616434525968589739297421353356724781.tar.gz": "c7b601ca6de3399e837e49b83e5955746f22e20dc38e04a20ba674db7d74b637"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "52eb479828edb979522f176d234d6bc1b29118686371963a5b70a9b8d32d99b3",
+      "checks": 1518,
+      "compilerFreePath": true,
+      "consumerSha256": "dcc356a2bb45d7bc164fe821e0cbda728015fbd022722d546c135d56f2df10a2",
+      "modelSha256": "bd1220035425eb6e9217ea29546a258ef87bde7a48a5f07e24bb43ee8f703719",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 80904,
+              "path": "archives/LeanBridge-PerlRefinements-1.000.tar.gz",
+              "sha256": "281813bf0d240b70593640ebc42fa37bebd8a889b615df7b9a5d6e734c6b6245"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-PerlRefinements",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0021072338727314564978413376084786059360699966616434525968589739297421353356724781"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51362427,
+              "path": "archives/LeanBridge-Runtime-0.0021072338727314564978413376084786059360699966616434525968589739297421353356724781.tar.gz",
+              "sha256": "c7b601ca6de3399e837e49b83e5955746f22e20dc38e04a20ba674db7d74b637"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "cpan",
+          "version": "0.0021072338727314564978413376084786059360699966616434525968589739297421353356724781"
+        }
+      ],
+      "path": "ordinary-source",
+      "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl",
+      "profile": "perl",
+      "receiptSha256": "dee05c6758a1fc133f2f361dc9bdec3f179e0094bcea80bc0d0b368c46e531a5",
+      "refinements": {
+        "PerlRefinements.countAbsent": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "0",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        },
+        "PerlRefinements.emptyRows": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "0",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "result": null
+        },
+        "PerlRefinements.nestedDigits": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "3",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": null
+        },
+        "PerlRefinements.nestedEmpty": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "0",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        },
+        "PerlRefinements.tag": {
+          "parameters": [
+            null,
+            {
+              "constructor": "PerlRefinements.checkedDigit32",
+              "kind": "subtype"
+            }
+          ],
+          "result": null
+        },
+        "PerlRefinements.twice": {
+          "parameters": [
+            {
+              "constructor": "PerlRefinements.checkedDigit32",
+              "kind": "subtype"
+            }
+          ],
+          "result": null
+        },
+        "PerlRefinements.wrap32": {
+          "parameters": [
+            null
+          ],
+          "result": {
+            "constructor": "PerlRefinements.checkedDigit32",
+            "kind": "subtype"
+          }
+        }
+      },
+      "repeatExecution": true,
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "ec9f5a87ca1e9235dfe58af34921c57482bc04ba08c25bc131dd057e9b8f80e4"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

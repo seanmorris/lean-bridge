@@ -1,0 +1,889 @@
+{
+  "schemaVersion": 1,
+  "planNodes": [
+    1431,
+    1432
+  ],
+  "execution": "hosted",
+  "revision": "bf89effc3735069b1f069482c26ccf296026e7db",
+  "runId": 37847248418,
+  "configurations": [
+    {
+      "name": "5.36.3-unthreaded",
+      "job": 113551081838,
+      "corpus": 11585293891,
+      "abi": 11586156044,
+      "conclusion": "success"
+    },
+    {
+      "name": "5.36.3-threaded",
+      "job": 113551081915,
+      "corpus": 11587055294,
+      "abi": 11587115271,
+      "conclusion": "cancelled"
+    },
+    {
+      "name": "5.38.2-unthreaded",
+      "job": 113551081818,
+      "corpus": 11586428535,
+      "abi": 11586059285,
+      "conclusion": "cancelled"
+    },
+    {
+      "name": "5.38.2-threaded",
+      "job": 113551081841,
+      "corpus": 11589071939,
+      "abi": 11588568648,
+      "conclusion": "cancelled"
+    }
+  ],
+  "scope": {
+    "profile": "perl",
+    "ecosystem": "cpan",
+    "selection": "Compare installed Perl corpus packages with fresh Lean results",
+    "ordinary": [
+      "Array/List/Option Fin",
+      "top-level checked Subtype",
+      "unboxed UInt32 Subtype and nested Fin 0"
+    ],
+    "reviewed": [
+      "Array/List/Option Fin"
+    ],
+    "repetition": "Each Subtype/container consumer runs once with 1000 rejection/recovery cycles, followed by four separate counter processes. The supplemental consumer runs twice, each with 500 mixed rejection/recovery cycles.",
+    "dispatch": "Only the named columns in each report are measured. Container countNone is not a measured column. Supplemental dispatch is not measured. Direct typed-adapter controls belong to the separate C probe.",
+    "reproduction": "Two independent author builds per report reproduce archives within that interpreter configuration. No cross-ABI archive equality is claimed. Author/build directories are deleted before offline, compiler-free execution. All four report kinds relocate the handoff archives; none moves the installed tree before another execution.",
+    "interpreter": "The workflow, selected toolchain builder, install harness, log and supplemental report identify each configured interpreter. Raw Perl Config output is not retained. The base-package ABI receipt supplies context, not refinement-package identity.",
+    "identities": "Reports retain source-tree, model, Binding IR and package-set receipt digests. Their complete original model and receipt files are not present, so those digests are not independently recomputed here.",
+    "sourceIdentity": "Selected producer sources are exact snapshots from the hosted Git revision, not a complete dependency closure or a claim about current source.",
+    "wholeRun": "All four Compare steps passed. One complete Perl job passed; three timed out later during owned-value verification. Neither those jobs nor the whole workflow are claimed green.",
+    "binaryArchivesRetained": false,
+    "supportPromotion": false
+  },
+  "refinements": {
+    "subtype": {
+      "Subtypes.clamp": {
+        "parameters": [
+          {
+            "constructor": "Subtypes.checkedBounded",
+            "kind": "subtype"
+          }
+        ],
+        "result": null
+      },
+      "Subtypes.half": {
+        "parameters": [
+          {
+            "constructor": "Subtypes.checkedEven",
+            "kind": "subtype"
+          }
+        ],
+        "result": null
+      },
+      "Subtypes.head": {
+        "parameters": [
+          {
+            "constructor": "Subtypes.checkedPayload",
+            "kind": "subtype"
+          }
+        ],
+        "result": null
+      },
+      "Subtypes.join": {
+        "parameters": [
+          {
+            "constructor": "Subtypes.checkedWord",
+            "kind": "subtype"
+          },
+          {
+            "constructor": "Subtypes.checkedWord",
+            "kind": "subtype"
+          }
+        ],
+        "result": {
+          "constructor": "Subtypes.checkedWord",
+          "kind": "subtype"
+        }
+      },
+      "Subtypes.mix": {
+        "parameters": [
+          {
+            "constructor": "Subtypes.checkedEven",
+            "kind": "subtype"
+          },
+          {
+            "bound": "10",
+            "kind": "fin"
+          }
+        ],
+        "result": null
+      },
+      "Subtypes.pad": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "constructor": "Subtypes.checkedEven",
+          "kind": "subtype"
+        }
+      },
+      "Subtypes.scale": {
+        "parameters": [
+          null,
+          {
+            "constructor": "Subtypes.checkedSmall",
+            "kind": "subtype"
+          }
+        ],
+        "result": null
+      },
+      "Subtypes.shout": {
+        "parameters": [
+          {
+            "constructor": "Subtypes.checkedWord",
+            "kind": "subtype"
+          }
+        ],
+        "result": {
+          "constructor": "Subtypes.checkedWord",
+          "kind": "subtype"
+        }
+      }
+    },
+    "container": {
+      "FinContainers.countNone": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "bound": "0",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        ],
+        "result": null
+      },
+      "FinContainers.flatten": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "10",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "array"
+              }
+            ],
+            "kind": "list"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "kind": "option"
+        }
+      },
+      "FinContainers.label": {
+        "parameters": [
+          null,
+          {
+            "arguments": [
+              {
+                "bound": "4",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        ],
+        "result": null
+      },
+      "FinContainers.mirrorAll": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "bound": "10",
+              "kind": "fin"
+            }
+          ],
+          "kind": "array"
+        }
+      },
+      "FinContainers.orDefault": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "bound": "1",
+                "kind": "fin"
+              }
+            ],
+            "kind": "option"
+          }
+        ],
+        "result": null
+      },
+      "FinContainers.present": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "10",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "option"
+              }
+            ],
+            "kind": "array"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "bound": "10",
+              "kind": "fin"
+            }
+          ],
+          "kind": "array"
+        }
+      },
+      "FinContainers.sumHuge": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "bound": "1180591620717411303424",
+                "kind": "fin"
+              }
+            ],
+            "kind": "list"
+          }
+        ],
+        "result": null
+      },
+      "FinContainers.wrapAll": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "arguments": [
+            {
+              "bound": "7",
+              "kind": "fin"
+            }
+          ],
+          "kind": "array"
+        }
+      }
+    },
+    "supplemental": {
+      "PerlRefinements.countAbsent": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "0",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "option"
+              }
+            ],
+            "kind": "array"
+          }
+        ],
+        "result": null
+      },
+      "PerlRefinements.emptyRows": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "0",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "array"
+              }
+            ],
+            "kind": "option"
+          }
+        ],
+        "result": null
+      },
+      "PerlRefinements.nestedDigits": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "3",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "option"
+              }
+            ],
+            "kind": "list"
+          }
+        ],
+        "result": null
+      },
+      "PerlRefinements.nestedEmpty": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "0",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "array"
+              }
+            ],
+            "kind": "array"
+          }
+        ],
+        "result": null
+      },
+      "PerlRefinements.tag": {
+        "parameters": [
+          null,
+          {
+            "constructor": "PerlRefinements.checkedDigit32",
+            "kind": "subtype"
+          }
+        ],
+        "result": null
+      },
+      "PerlRefinements.twice": {
+        "parameters": [
+          {
+            "constructor": "PerlRefinements.checkedDigit32",
+            "kind": "subtype"
+          }
+        ],
+        "result": null
+      },
+      "PerlRefinements.wrap32": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "constructor": "PerlRefinements.checkedDigit32",
+          "kind": "subtype"
+        }
+      }
+    }
+  },
+  "files": [
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.36.3-unthreaded/fetched-at.txt",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.36.3-unthreaded/fetched-at.txt",
+      "bytes": 25,
+      "sha256": "327d91c291cff2f367d83ab35d9b20bd08e0d37780e282b8d7b849d8d81c6914"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.36.3-unthreaded/job.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.36.3-unthreaded/job.json",
+      "bytes": 3981,
+      "sha256": "256d497bc3c3a655bdf8e9307aaa11a137c397a972645b0346b3235b3f582a59"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.36.3-unthreaded/job.log",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.36.3-unthreaded/job.log",
+      "bytes": 387328,
+      "sha256": "6f422ca51362826850f9d1f11ae451e1929ba9dc2996fe0d6d04364ef5694cde"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.36.3-unthreaded/corpus-artifact.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.36.3-unthreaded/corpus-artifact.json",
+      "bytes": 775,
+      "sha256": "15b3fdc79048ce312d9f3bfd6294e91d1cb33e7437af5a278f6ad79b37b006ca"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.36.3-unthreaded/abi-artifact.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.36.3-unthreaded/abi-artifact.json",
+      "bytes": 765,
+      "sha256": "5736281bfbd5b15d4825c95e271410583ff5e7c8d6482758bb57be59163ef64c"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.36.3-unthreaded/abi-acceptance.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.36.3-unthreaded/abi.zip!5.36.3-unthreaded/acceptance.json",
+      "bytes": 1719,
+      "sha256": "321b54b25d2e8e799ad52185aa7952a478f6164c50b6011637958aa729748fc9"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.36.3-unthreaded/subtype.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.36.3-unthreaded/corpus.zip!native-subtype/perl.json",
+      "bytes": 5924,
+      "sha256": "9c514b69d7a249a6515f7f9b3d36cb538bfe7414bfe5723824a527a050431465"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.36.3-unthreaded/container.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.36.3-unthreaded/corpus.zip!native-fin-containers/perl.json",
+      "bytes": 7312,
+      "sha256": "8f4e16b2ad33d622e58b259d6f333abdee15c43d46aae01a7a82bcce459e26da"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.36.3-unthreaded/reviewed-container.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.36.3-unthreaded/corpus.zip!native-fin-containers/reviewed-perl.json",
+      "bytes": 7406,
+      "sha256": "cdce4ef5c8704d98ab8e1907c6787da9408f284926c8c4358b8d005f7fdcbb59"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.36.3-unthreaded/supplemental.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.36.3-unthreaded/corpus.zip!perl-refinements/perl.json",
+      "bytes": 5496,
+      "sha256": "0a84e07dc5282483054385bf69d131b945669a8f877c5da4aa97fe23cfea8d18"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.36.3-threaded/fetched-at.txt",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.36.3-threaded/fetched-at.txt",
+      "bytes": 25,
+      "sha256": "d27ba0476c3795bb473a840e32723442369e6e3d2ab816ffb148397d23a4f874"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.36.3-threaded/job.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.36.3-threaded/job.json",
+      "bytes": 3983,
+      "sha256": "0921ad89e1ae554bd482950ebb32d50c67a00e37a0542977c8c55d2785129a9f"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.36.3-threaded/job.log",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.36.3-threaded/job.log",
+      "bytes": 386223,
+      "sha256": "3dbb0d57139b77874ed499a70f152762a546498de9c7e83c5043c4248951d27c"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.36.3-threaded/corpus-artifact.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.36.3-threaded/corpus-artifact.json",
+      "bytes": 773,
+      "sha256": "7759e70ad6fb63dd5605dff3b997f2c142a2c5b69083c9e035db234b09e5bc50"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.36.3-threaded/abi-artifact.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.36.3-threaded/abi-artifact.json",
+      "bytes": 763,
+      "sha256": "8fae772f69cd20488ecf09b8feea96036d5a159ce8cf892c2c827a8b6c9366e8"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.36.3-threaded/abi-acceptance.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.36.3-threaded/abi.zip!5.36.3-threaded/acceptance.json",
+      "bytes": 1717,
+      "sha256": "cb41a4cc86d1e29c552c64dc9279155b92e65736cd654917560f0e60d89ff575"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.36.3-threaded/subtype.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.36.3-threaded/corpus.zip!native-subtype/perl.json",
+      "bytes": 5924,
+      "sha256": "c44901a060bf9f7ec27bdd6088153fa35beccd2018866d05e33f6f37069644de"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.36.3-threaded/container.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.36.3-threaded/corpus.zip!native-fin-containers/perl.json",
+      "bytes": 7312,
+      "sha256": "aaba67a22523b9e8ef784b379a73e828f7afff6f0852f4499eaa467b4083e8f7"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.36.3-threaded/reviewed-container.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.36.3-threaded/corpus.zip!native-fin-containers/reviewed-perl.json",
+      "bytes": 7406,
+      "sha256": "53ce922bc3fc6074e03e10730c340ab95b394c0afe6797404351ed446f02cb88"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.36.3-threaded/supplemental.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.36.3-threaded/corpus.zip!perl-refinements/perl.json",
+      "bytes": 5494,
+      "sha256": "4ffd210fb1dadfc1a8e03cfb2bb41ec556ca01e1aca165c946f843014d10ab0f"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.38.2-unthreaded/fetched-at.txt",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.38.2-unthreaded/fetched-at.txt",
+      "bytes": 25,
+      "sha256": "3356149e50d967c2dd9764eaeddd53bc4e323b96ccad6ab9268202e723acf793"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.38.2-unthreaded/job.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.38.2-unthreaded/job.json",
+      "bytes": 3985,
+      "sha256": "282ae9ce82f8e52e44d496dff5a78acad092a884474aff9885b90ac8674fd383"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.38.2-unthreaded/job.log",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.38.2-unthreaded/job.log",
+      "bytes": 373913,
+      "sha256": "9a5931babdffe1deed4a873e02fb8b23882f4a9a567c9af4ac06e31494c881ea"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.38.2-unthreaded/corpus-artifact.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.38.2-unthreaded/corpus-artifact.json",
+      "bytes": 775,
+      "sha256": "4d776b82682750b822e5f795819c5e1c2226ca01e6db2e82fe8ca96909cc53e6"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.38.2-unthreaded/abi-artifact.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.38.2-unthreaded/abi-artifact.json",
+      "bytes": 765,
+      "sha256": "694e4eaa560cddc07b88960c1c3a9b4f8b5c6c0032b7cb0822b9ab06714a8a90"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.38.2-unthreaded/abi-acceptance.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.38.2-unthreaded/abi.zip!5.38.2-unthreaded/acceptance.json",
+      "bytes": 1719,
+      "sha256": "a2a358f4f3c70c5ce929618ecce2ef528acf955d2bbcb19897f1344a22614af1"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.38.2-unthreaded/subtype.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.38.2-unthreaded/corpus.zip!native-subtype/perl.json",
+      "bytes": 5924,
+      "sha256": "7f7dda54addb35fa9c32ee6ee8351c898f2a9d9bace91ca929916c4e7a333d9b"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.38.2-unthreaded/container.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.38.2-unthreaded/corpus.zip!native-fin-containers/perl.json",
+      "bytes": 7312,
+      "sha256": "ee56a55126f60f7798c668ced8b3f89dab0c1c28ff043e1ca648beee8540b345"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.38.2-unthreaded/reviewed-container.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.38.2-unthreaded/corpus.zip!native-fin-containers/reviewed-perl.json",
+      "bytes": 7406,
+      "sha256": "2e0c5ff86507a10808bae6cac9b20e1a646810bbb7b8e3507f618cbabe42ad2f"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.38.2-unthreaded/supplemental.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.38.2-unthreaded/corpus.zip!perl-refinements/perl.json",
+      "bytes": 5496,
+      "sha256": "6c662e4d2a9221fee07adaf10ff56f8dfabf73873196b43deede97e51d6e5ece"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.38.2-threaded/fetched-at.txt",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.38.2-threaded/fetched-at.txt",
+      "bytes": 25,
+      "sha256": "ec470bfb89aae4670f6c0ea4c94f4041c2780c8416c89b30140b0008f2ad23d8"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.38.2-threaded/job.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.38.2-threaded/job.json",
+      "bytes": 3983,
+      "sha256": "9bbb41baa1009470065f297ad8a4c9af35c2f52ae39dc5697969f6a0b2233a0b"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.38.2-threaded/job.log",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.38.2-threaded/job.log",
+      "bytes": 370839,
+      "sha256": "4384d3f8e8e7e9c933effce29aab7a24f6318f7b7a62112b23125f6e58fd651f"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.38.2-threaded/corpus-artifact.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.38.2-threaded/corpus-artifact.json",
+      "bytes": 773,
+      "sha256": "ab827b4f63877604fac12ec151d11b65d87e117b15b2336c487acff991a89aeb"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.38.2-threaded/abi-artifact.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.38.2-threaded/abi-artifact.json",
+      "bytes": 763,
+      "sha256": "5d6938fe292ad170af5c5e66c6e85e6c09d5bb9f18989ba8dd20574911b39f48"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.38.2-threaded/abi-acceptance.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.38.2-threaded/abi.zip!5.38.2-threaded/acceptance.json",
+      "bytes": 1717,
+      "sha256": "e5fec63e9bf6c41c07efda06661d4abb8d55ddd27d3186fc26edc3c46520ba48"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.38.2-threaded/subtype.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.38.2-threaded/corpus.zip!native-subtype/perl.json",
+      "bytes": 5924,
+      "sha256": "eb7bfd2492223e448fa5c813dd7886aba1214427be2fe411e80f4594b5884f2d"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.38.2-threaded/container.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.38.2-threaded/corpus.zip!native-fin-containers/perl.json",
+      "bytes": 7312,
+      "sha256": "9e4c85270e99633206b81188a42066feb46a5fbdd078a8ab8219f4bb8c2be5c9"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.38.2-threaded/reviewed-container.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.38.2-threaded/corpus.zip!native-fin-containers/reviewed-perl.json",
+      "bytes": 7406,
+      "sha256": "989cf73a50beae0a7e84be5167d740ffd9fd8c3b34c53637ca550d529c94d2bc"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/5.38.2-threaded/supplemental.json",
+      "originalPath": "build/vo1431-1432-hosted-bf89eff/5.38.2-threaded/corpus.zip!perl-refinements/perl.json",
+      "bytes": 5494,
+      "sha256": "6185c36d0bf57eeeec300e3b184b9c5d794b1be634dbd3a91bf00e9f81d0d8ac"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/.github/workflows/perl-consumer.yml.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:.github/workflows/perl-consumer.yml",
+      "bytes": 22243,
+      "sha256": "7fb27cfa63b837585db5de7a235f8ff6993564629202743a76a5dfbabd966677"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/scripts/env.sh.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:scripts/env.sh",
+      "bytes": 805,
+      "sha256": "637c5bf7e6792d85e04ca64874346af8e61095756d5412570252c2655ae0a66d"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/scripts/build-perl-toolchains.mjs.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:scripts/build-perl-toolchains.mjs",
+      "bytes": 3547,
+      "sha256": "e7986f05c4a800d403a26b8d97835bbe67e0c9fc8aaf4169f20ab9e505f00ae7"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/scripts/test-perl-consumers.mjs.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:scripts/test-perl-consumers.mjs",
+      "bytes": 5147,
+      "sha256": "d874c45d1381be4691e8284fb4310094f4ab1c5e4d80c300f7f9dc2aa91f13ec"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/perl-native.test.mjs.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/perl-native.test.mjs",
+      "bytes": 50558,
+      "sha256": "074649d7eb57d9786a60e4f415f3b336c3632a71352e7f4b02e44e382fffebdc"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/native-subtype.test.mjs.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/native-subtype.test.mjs",
+      "bytes": 21787,
+      "sha256": "d3a403209f9bfcef0dcf93f489a44c3e854b3b95f63304683f74a3df34555a85"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/native-fin-containers.test.mjs.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/native-fin-containers.test.mjs",
+      "bytes": 22325,
+      "sha256": "e3b35feb66f7c05742913a499e8bc5aeb62069d7448ec008bcf76980e8d2b700"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/perl-fin-containers.test.mjs.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/perl-fin-containers.test.mjs",
+      "bytes": 13601,
+      "sha256": "a00df6c4b1b6118ae619b060cec8979e38c7d3b46253faa6d03a4b14d1d0f523"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/perl-refinements.test.mjs.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/perl-refinements.test.mjs",
+      "bytes": 14016,
+      "sha256": "a4c95ebbc175a3e1f687b2f49bc13c930bece97988bcc129e4501ed5cea22e5b"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/helpers/native-subtype-install.mjs.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/helpers/native-subtype-install.mjs",
+      "bytes": 4083,
+      "sha256": "2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/helpers/fin-container-install.mjs.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/helpers/fin-container-install.mjs",
+      "bytes": 2979,
+      "sha256": "2024d6c6a44687293750c3ee5c25f092d689065e17beb8d535610963921c9329"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/helpers/copied-fixture-install.mjs.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/helpers/copied-fixture-install.mjs",
+      "bytes": 12888,
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/helpers/perl-subtype-dispatch.mjs.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/helpers/perl-subtype-dispatch.mjs",
+      "bytes": 2899,
+      "sha256": "52b5f0b7204f2ea656b2cfcb18b6806c38c2e402542e6eec7a63d8d687857add"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/helpers/perl-fin-container-dispatch.mjs.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/helpers/perl-fin-container-dispatch.mjs",
+      "bytes": 2589,
+      "sha256": "aab2e672f7013118f880a139f407f9e1094a808572cb3b6aa508ad9474ebb5d9"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/helpers/reviewed-fin-container-fixture.mjs.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/helpers/reviewed-fin-container-fixture.mjs",
+      "bytes": 2452,
+      "sha256": "5e4d92f9bb4ccff65fb9356cc3a6613f5102665e59dbe38b99868e4804c8a132"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/helpers/type-corpus-reviewed-ir.mjs.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/helpers/type-corpus-reviewed-ir.mjs",
+      "bytes": 3557,
+      "sha256": "621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/helpers/package-set.mjs.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/helpers/package-set.mjs",
+      "bytes": 5283,
+      "sha256": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/helpers/lake-workspace.mjs.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/helpers/lake-workspace.mjs",
+      "bytes": 9902,
+      "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/fixtures/subtype-consumers/perl.pl.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/fixtures/subtype-consumers/perl.pl",
+      "bytes": 3749,
+      "sha256": "8939a772789f50bd51d0400ef5c4f92e8f817ed2a9396ebf7fb694acd4ab2646"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/fixtures/fin-container-consumers/perl.pl.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/fixtures/fin-container-consumers/perl.pl",
+      "bytes": 4514,
+      "sha256": "7851aed00c573e8c2e019a64f052540329c7cf9026a03895e3a2250142499649"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/fixtures/onboarding/native-subtype/LICENSE.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/fixtures/onboarding/native-subtype/LICENSE",
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/fixtures/onboarding/native-subtype/lakefile.toml.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/fixtures/onboarding/native-subtype/lakefile.toml",
+      "bytes": 67,
+      "sha256": "7cc9357b8eaa2dc868fed6c1ac4c44499eb29ccfe26016e6ed6361e88b5429ba"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/fixtures/onboarding/native-subtype/lean-toolchain.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/fixtures/onboarding/native-subtype/lean-toolchain",
+      "bytes": 25,
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/fixtures/onboarding/native-subtype/package.json.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/fixtures/onboarding/native-subtype/package.json",
+      "bytes": 54,
+      "sha256": "db736971b2c14dc3aa16fc7113d32fd28f89a2abba58f601ece3613d87ffd2ee"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/fixtures/onboarding/native-subtype/Subtypes.lean.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/fixtures/onboarding/native-subtype/Subtypes.lean",
+      "bytes": 2276,
+      "sha256": "bc6065620ea7ba38b270362ae7aa93feb68e8e316b4c0fca196477f62103175c"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/fixtures/onboarding/native-fin-containers/LICENSE.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/fixtures/onboarding/native-fin-containers/LICENSE",
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/fixtures/onboarding/native-fin-containers/lakefile.toml.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/fixtures/onboarding/native-fin-containers/lakefile.toml",
+      "bytes": 77,
+      "sha256": "c6846d4ad1a6d03a46227896f0a40b9fd07e367c168e2c9e51876ba6b4c8d8cc"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/fixtures/onboarding/native-fin-containers/lean-toolchain.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/fixtures/onboarding/native-fin-containers/lean-toolchain",
+      "bytes": 25,
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/fixtures/onboarding/native-fin-containers/package.json.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/fixtures/onboarding/native-fin-containers/package.json",
+      "bytes": 59,
+      "sha256": "b413a6e8f579fe18b487297b33ddaeabd2a44861a55e8ce85ecb0d398e7cc0bf"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/fixtures/onboarding/native-fin-containers/FinContainers.lean.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/fixtures/onboarding/native-fin-containers/FinContainers.lean",
+      "bytes": 1562,
+      "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/fixtures/onboarding/perl-refinements/LICENSE.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/fixtures/onboarding/perl-refinements/LICENSE",
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/fixtures/onboarding/perl-refinements/lakefile.toml.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/fixtures/onboarding/perl-refinements/lakefile.toml",
+      "bytes": 82,
+      "sha256": "7d08345133267305b07f7f2b0344955370d82195581ed868a74ed1ef997ab8de"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/fixtures/onboarding/perl-refinements/lean-toolchain.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/fixtures/onboarding/perl-refinements/lean-toolchain",
+      "bytes": 25,
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/fixtures/onboarding/perl-refinements/package.json.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/fixtures/onboarding/perl-refinements/package.json",
+      "bytes": 62,
+      "sha256": "ec94f422bde7ba3edf897834f27df58385c9fb12b1bb39edf10caf06c76f5e8c"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/tests/fixtures/onboarding/perl-refinements/PerlRefinements.lean.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:tests/fixtures/onboarding/perl-refinements/PerlRefinements.lean",
+      "bytes": 1399,
+      "sha256": "cbb6f11a726fa269d5283c81dcce2a2519a00d5e8cd19dd597d1dd8204f411c2"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/src/backends/perl/generate.mjs.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:src/backends/perl/generate.mjs",
+      "bytes": 40059,
+      "sha256": "c7ad599484f0afaf3d7f46886635ac7f203d2653a62a36ff46a540ffb4e6af5d"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/src/release/cpan-install.mjs.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:src/release/cpan-install.mjs",
+      "bytes": 1923,
+      "sha256": "1b19d72d6926f9b23ff7d5b6f325bc21c60934214d28cdd3f53e2c1fd819a10f"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/src/release/cpan-package.mjs.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:src/release/cpan-package.mjs",
+      "bytes": 20458,
+      "sha256": "304934221a88450709aab2a49d189444215fa4119e0f8473cb5f13c68cd149f9"
+    },
+    {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/source/src/build/process-runner.mjs.source",
+      "originalPath": "git:bf89effc3735069b1f069482c26ccf296026e7db:src/build/process-runner.mjs",
+      "bytes": 2668,
+      "sha256": "f1c9d51f97abdbb1fcf0ff04ee5e70b20ffce770ffe6ca7a843d7e35877fdf36"
+    }
+  ]
+}

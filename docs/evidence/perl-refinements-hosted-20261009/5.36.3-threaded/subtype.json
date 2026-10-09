@@ -1,0 +1,204 @@
+{
+  "archives": {
+    "archives/LeanBridge-Runtime-0.0021003929731850758972973244829406958690725170599882297501769226195507928501733121.tar.gz": "3db6a29d8ceedf1ce19ad0908cbe5f5ad9ddcddff75056f3d8cab5a9aa44f887",
+    "archives/LeanBridge-Subtypes-1.000.tar.gz": "240ccfc21416c1eb2fa41997b0cf1f3d10af8c6c1946232b2ebee32ff0a465c3"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "cd186cbcbb5714719001d969fb069e68fb07350741a56be8a68b7f6449d87d96",
+      "checks": 2017,
+      "compilerFreePath": true,
+      "consumerSha256": "8939a772789f50bd51d0400ef5c4f92e8f817ed2a9396ebf7fb694acd4ab2646",
+      "dispatch": {
+        "columns": [
+          "validator:Subtypes.mix",
+          "adapter:Subtypes.mix",
+          "l_Subtypes_mix",
+          "l_Subtypes_half"
+        ],
+        "interposer": "LD_PRELOAD",
+        "observed": [
+          [
+            "valid-mix",
+            [
+              1,
+              1,
+              1,
+              0
+            ]
+          ],
+          [
+            "fin-before-constructor",
+            [
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            "constructor-rejects",
+            [
+              1,
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            "invalid-then-valid",
+            [
+              2,
+              1,
+              1,
+              1
+            ]
+          ]
+        ],
+        "positiveControl": "a valid public call increments validator, adapter and source; direct adapter calls are counted in the C package probe"
+      },
+      "modelSha256": "89b14c757852d51ed830a7633904fc9a228713d4b447d0dfaa416530fc629cfd",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51362589,
+              "path": "archives/LeanBridge-Runtime-0.0021003929731850758972973244829406958690725170599882297501769226195507928501733121.tar.gz",
+              "sha256": "3db6a29d8ceedf1ce19ad0908cbe5f5ad9ddcddff75056f3d8cab5a9aa44f887"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "cpan",
+          "version": "0.0021003929731850758972973244829406958690725170599882297501769226195507928501733121"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 71477,
+              "path": "archives/LeanBridge-Subtypes-1.000.tar.gz",
+              "sha256": "240ccfc21416c1eb2fa41997b0cf1f3d10af8c6c1946232b2ebee32ff0a465c3"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Subtypes",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0021003929731850758972973244829406958690725170599882297501769226195507928501733121"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "cpan",
+          "version": "1.000"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "perl",
+      "receiptSha256": "7e4cd1cd6e56074015cbd780b3e07e3b7e8dd9ae403c80d4ac5297848770c30d",
+      "refinements": {
+        "Subtypes.clamp": {
+          "parameters": [
+            {
+              "constructor": "Subtypes.checkedBounded",
+              "kind": "subtype"
+            }
+          ],
+          "result": null
+        },
+        "Subtypes.half": {
+          "parameters": [
+            {
+              "constructor": "Subtypes.checkedEven",
+              "kind": "subtype"
+            }
+          ],
+          "result": null
+        },
+        "Subtypes.head": {
+          "parameters": [
+            {
+              "constructor": "Subtypes.checkedPayload",
+              "kind": "subtype"
+            }
+          ],
+          "result": null
+        },
+        "Subtypes.join": {
+          "parameters": [
+            {
+              "constructor": "Subtypes.checkedWord",
+              "kind": "subtype"
+            },
+            {
+              "constructor": "Subtypes.checkedWord",
+              "kind": "subtype"
+            }
+          ],
+          "result": {
+            "constructor": "Subtypes.checkedWord",
+            "kind": "subtype"
+          }
+        },
+        "Subtypes.mix": {
+          "parameters": [
+            {
+              "constructor": "Subtypes.checkedEven",
+              "kind": "subtype"
+            },
+            {
+              "bound": "10",
+              "kind": "fin"
+            }
+          ],
+          "result": null
+        },
+        "Subtypes.pad": {
+          "parameters": [
+            null
+          ],
+          "result": {
+            "constructor": "Subtypes.checkedEven",
+            "kind": "subtype"
+          }
+        },
+        "Subtypes.scale": {
+          "parameters": [
+            null,
+            {
+              "constructor": "Subtypes.checkedSmall",
+              "kind": "subtype"
+            }
+          ],
+          "result": null
+        },
+        "Subtypes.shout": {
+          "parameters": [
+            {
+              "constructor": "Subtypes.checkedWord",
+              "kind": "subtype"
+            }
+          ],
+          "result": {
+            "constructor": "Subtypes.checkedWord",
+            "kind": "subtype"
+          }
+        }
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "6fad434dddecd652ec5ffbf1e259c11fd0186b2b98c23f8e8fa5e985a5e2e0d8"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}
