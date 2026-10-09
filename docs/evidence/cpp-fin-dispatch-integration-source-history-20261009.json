@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "milestone": "cpp-fin-dispatch-integration-v1",
+  "predecessorCommit": "8e627ded0b646c514d8d8ec7c6fc16416c812adb",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "df91522d9ebcd5813a445e355feeedabbac04980c305caffa03f500e5e7ec870",
+      "previousSha256": "6b71640913041a2f90ccb0674dbd124e4e8065140a492f0ba0f8d901361116de",
+      "edits": [
+        {
+          "start": 25964,
+          "previous": "          \"sha256\": \"aad0e6727a0778f10357e81dd772fb8956c28143ce587df2c0f6ed056d10a7de\"\n",
+          "current": "          \"sha256\": \"6641496c3a13b6bb0512c6c5757ebc8bb04be0f9545f67861812c25d4bf78b31\"\n"
+        },
+        {
+          "start": 1496336,
+          "previous": "          \"sha256\": \"aad0e6727a0778f10357e81dd772fb8956c28143ce587df2c0f6ed056d10a7de\"\n",
+          "current": "          \"sha256\": \"6641496c3a13b6bb0512c6c5757ebc8bb04be0f9545f67861812c25d4bf78b31\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/native-fin.test.mjs",
+      "currentSha256": "6641496c3a13b6bb0512c6c5757ebc8bb04be0f9545f67861812c25d4bf78b31",
+      "previousSha256": "aad0e6727a0778f10357e81dd772fb8956c28143ce587df2c0f6ed056d10a7de",
+      "edits": [
+        {
+          "start": 1659,
+          "previous": "",
+          "current": "import \"./helpers/cpp-fin-dispatch-tests.mjs\";\nimport { observeCppFinDispatch } from \"./helpers/cpp-fin-dispatch.mjs\";\n"
+        },
+        {
+          "start": 20715,
+          "previous": "\t\t\tconst dispatch = profile === \"c\" ? await observeDispatch(consumer, packages, environment.LEAN_BRIDGE_LEAN_PREFIX) : null;\n",
+          "current": "\t\t\tlet dispatch = profile === \"c\" ? await observeDispatch(consumer, packages, environment.LEAN_BRIDGE_LEAN_PREFIX) : null;\n"
+        },
+        {
+          "start": 20918,
+          "previous": "",
+          "current": "\t\t\tif(profile === \"cpp\") dispatch = await observeCppFinDispatch({ consumer, packages, model });\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-fin-refusal-ci-source-history.mjs",
+      "currentSha256": "a0a32d640616bd18dd3ccbebe8d5d43a536aa52732e06497a025a8157967974a",
+      "previousSha256": "06f52f10ff9c76539be56ce6dcac1e1c36756da4b09f1c3b4e371c2e3bf499a7",
+      "edits": [
+        {
+          "start": 246,
+          "previous": "",
+          "current": "import { beforeCppFinDispatchIntegrationSource } from \"./cpp-fin-dispatch-integration-source-history.mjs\";\n"
+        },
+        {
+          "start": 2485,
+          "previous": "",
+          "current": "\tsource = beforeCppFinDispatchIntegrationSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-fin-refusal-ci-tests.mjs",
+      "currentSha256": "a5daed225fe5cd987eca19128835fbccc03b696637f468c354360b47f3934556",
+      "previousSha256": "f59cbc59520da1319d18553760cabe252b053626fa2c558c2ca341cd1a9428d2",
+      "edits": [
+        {
+          "start": 528,
+          "previous": "",
+          "current": "import { beforeCppFinDispatchIntegrationSource } from \"./cpp-fin-dispatch-integration-source-history.mjs\";\n"
+        },
+        {
+          "start": 6263,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\"), previous = reverseReviewedFinRefusalCiUpdate(source, update);\n",
+          "current": "\t\tconst source = beforeCppFinDispatchIntegrationSource(update.path, await readFile(update.path, \"utf8\")), previous = reverseReviewedFinRefusalCiUpdate(source, update);\n"
+        },
+        {
+          "start": 7546,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = beforeCppFinDispatchIntegrationSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 8199,
+          "previous": "\tfor(const evidence of current.evidence) for(const file of evidence.files)\n",
+          "current": "\tfor(const evidence of JSON.parse(await readFile(path)).evidence) for(const file of evidence.files)\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "18a72faab54b638f3663c45d5f58c4a2358322e5386cce043bb00f0c53b4e8e5",
+      "previousSha256": "c336a58176a81c6f2dea94002e9b71fac0625de7c0bce4e5456b9f2a28d99986",
+      "edits": [
+        {
+          "start": 13525,
+          "previous": "",
+          "current": "import { cppFinDispatchIntegrationChangedPaths } from \"./cpp-fin-dispatch-integration-source-history.mjs\";\n"
+        },
+        {
+          "start": 52183,
+          "previous": "",
+          "current": "\t, ...cppFinDispatchIntegrationChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/reviewed-fin-refusal-history.test.mjs",
+      "currentSha256": "ca92ab9f1ab577d112570d10d0d12348d29711a587ff8e69219527895e8176ef",
+      "previousSha256": "2741e593d42d286bcc2e42c76706b05098c63ae816767d84f36a9b15eed3bacf",
+      "edits": [
+        {
+          "start": 1128,
+          "previous": "",
+          "current": "import \"./helpers/cpp-fin-dispatch-integration-tests.mjs\";\n"
+        }
+      ]
+    }
+  ]
+}

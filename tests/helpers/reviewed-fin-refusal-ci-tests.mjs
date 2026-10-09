@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeCppFinDispatchIntegrationSource } from "./cpp-fin-dispatch-integration-source-history.mjs";
 import { nativeCiCommands, nativeCiRecordScript, nativeCiSteps } from "./native-ci-isolation.mjs";
 import { beforeReviewedFinRefusalCiSource, reviewedFinRefusalCiChangedPaths, reviewedFinRefusalCiHistoryPath, reviewedFinRefusalCiPredecessor, reverseReviewedFinRefusalCiUpdate } from "./reviewed-fin-refusal-ci-source-history.mjs";
 
@@ -88,7 +89,7 @@ test("native refusal CI history authenticates exact predecessors and rejects unr
 	assert.deepEqual(record.updates.map(update => update.path), reviewedFinRefusalCiChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8"), previous = reverseReviewedFinRefusalCiUpdate(source, update);
+		const source = beforeCppFinDispatchIntegrationSource(update.path, await readFile(update.path, "utf8")), previous = reverseReviewedFinRefusalCiUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeReviewedFinRefusalCiSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -104,7 +105,7 @@ test("native refusal CI history authenticates exact predecessors and rejects unr
 });
 
 test("native refusal CI refreshes source pins without changing any observation or support claim", async () => {
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", source = beforeCppFinDispatchIntegrationSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(source), previous = JSON.parse(beforeReviewedFinRefusalCiSource(path, source));
 	const history = JSON.parse(await readFile(reviewedFinRefusalCiHistoryPath));
 	let pins = 0;
@@ -115,7 +116,7 @@ test("native refusal CI refreshes source pins without changing any observation o
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
 	assert.equal(pins, 117); assert.deepEqual(current, previous);
-	for(const evidence of current.evidence) for(const file of evidence.files)
+	for(const evidence of JSON.parse(await readFile(path)).evidence) for(const file of evidence.files)
 		assert.equal(sha256(await readFile(file.path)), file.sha256, file.path);
 });
 

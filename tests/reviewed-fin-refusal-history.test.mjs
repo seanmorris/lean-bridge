@@ -17,6 +17,7 @@ import { beforeReviewedFinRefusalSource, reviewedFinRefusalChangedPaths, reviewe
 import "./helpers/reviewed-fin-native-refusal-evidence-tests.mjs";
 import "./helpers/reviewed-fin-wasm-refusal-evidence-tests.mjs";
 import "./helpers/reviewed-fin-refusal-ci-tests.mjs";
+import "./helpers/cpp-fin-dispatch-integration-tests.mjs";
 
 test("reviewed Fin refusal history authenticates exact predecessors and refuses unknown edits", async () => {
 	const record = JSON.parse(await readFile(reviewedFinRefusalHistoryPath));

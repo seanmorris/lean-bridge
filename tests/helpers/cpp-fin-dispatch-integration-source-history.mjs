@@ -1,22 +1,19 @@
 /**
- * Preserve exact predecessors when enabling recurring native compiler-refusal acceptance.
+ * Preserve exact predecessors when measuring public C++ scalar Fin entries.
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeCppFinDispatchIntegrationSource } from "./cpp-fin-dispatch-integration-source-history.mjs";
 
-export const reviewedFinRefusalCiHistoryPath = "docs/evidence/reviewed-fin-refusal-ci-source-history-20261009.json";
-export const reviewedFinRefusalCiPredecessor = "5466a9613a115da4769bb47fb69e4fa7c58d6302";
-export const reviewedFinRefusalCiChangedPaths = [
+export const cppFinDispatchIntegrationHistoryPath = "docs/evidence/cpp-fin-dispatch-integration-source-history-20261009.json";
+export const cppFinDispatchIntegrationPredecessor = "8e627ded0b646c514d8d8ec7c6fc16416c812adb";
+export const cppFinDispatchIntegrationChangedPaths = [
 	"docs/type-surface.v1.json"
-	, ".github/workflows/consumer-matrix.yml"
-	, "tests/documentation.test.mjs"
-	, "tests/helpers/dotnet-dispatch-integration-source-history-tests.mjs"
-	, "tests/helpers/native-fin-reply-ci-tests.mjs"
-	, "tests/helpers/reviewed-fin-refusal-source-history.mjs"
+	, "tests/native-fin.test.mjs"
+	, "tests/helpers/reviewed-fin-refusal-ci-source-history.mjs"
+	, "tests/helpers/reviewed-fin-refusal-ci-tests.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
 	, "tests/reviewed-fin-refusal-history.test.mjs"
 ];
@@ -28,8 +25,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseReviewedFinRefusalCiUpdate = (source, update) => {
-	assert.ok(reviewedFinRefusalCiChangedPaths.includes(update.path));
+export const reverseCppFinDispatchIntegrationUpdate = (source, update) => {
+	assert.ok(cppFinDispatchIntegrationChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -49,18 +46,17 @@ export const reverseReviewedFinRefusalCiUpdate = (source, update) => {
 };
 
 /**
- * Restore the source before CI wiring, stopping at an explicitly requested identity.
+ * Restore the source before C++ entry-counter integration, stopping at an explicitly requested identity.
  *
  * @param path - Repository-relative source path.
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeReviewedFinRefusalCiSource = (path, source, expected) => {
-	source = beforeCppFinDispatchIntegrationSource(path, source, expected);
-	if(typeof source !== "string" || !reviewedFinRefusalCiChangedPaths.includes(path)) return source;
+export const beforeCppFinDispatchIntegrationSource = (path, source, expected) => {
+	if(typeof source !== "string" || !cppFinDispatchIntegrationChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(reviewedFinRefusalCiHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(cppFinDispatchIntegrationHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseReviewedFinRefusalCiUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseCppFinDispatchIntegrationUpdate(source, update) : source;
 };
