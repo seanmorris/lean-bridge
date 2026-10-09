@@ -36,7 +36,7 @@ export const observeFinContainerEdgePublic = async ({ installed, receiptPath, re
 		? ["include/fincontainers.h", "include/fincontainers.hpp", ...Object.keys(boostSources()).filter(path => path.startsWith("include/"))]
 		: ["include/fincontainers.h", "include/detail/fincontainers_gmp.h", "include/gmp.h"];
 	for(const path of headers) assert.ok(Object.hasOwn(before.receipt.files, path), `public ${profile} header is not receipt-pinned: ${path}`);
-	const definitions = await finContainerEdgeDefinitions(before, { publicC: !cpp, publicCpp: cpp });
+	const definitions = await finContainerEdgeDefinitions(before, { publicC: !cpp, publicWire: cpp });
 	const select = symbols => Object.fromEntries(symbols.map(symbol => [symbol, definitions[symbol]]));
 	const publicSymbols = cpp ? finContainerEdgeCppSymbols : finContainerEdgePublicSymbols;
 	const source = await (cpp ? finContainerEdgeCppProbe : finContainerEdgePublicProbe)(before.model, before.receipt.component, select(publicSymbols));

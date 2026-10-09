@@ -6,10 +6,10 @@
  */
 import assert from "node:assert/strict";
 import { isAbsolute } from "node:path";
-import { finContainerEdgeColumns, finContainerEdgeEntries } from "./fin-container-edge-dispatch.mjs";
+import { finContainerEdgeColumns, finContainerEdgeEntries, finContainerEdgeWireSymbols } from "./fin-container-edge-dispatch.mjs";
 import { finContainerEdgeConsumer, insertFinContainerEdgeFragment } from "./fin-container-edges.mjs";
 
-export const finContainerEdgeCppSymbols = Object.freeze(finContainerEdgeEntries.map(name => `fincontainers_${name.replace(/[A-Z]/gu, letter => `_${letter.toLowerCase()}`)}`));
+export const finContainerEdgeCppSymbols = finContainerEdgeWireSymbols;
 
 /** Independently enumerate the original consumer and additive fragment's complete call order. */
 export const finContainerEdgeCppExpected = Object.freeze((() => {

@@ -17,6 +17,7 @@ import { finContainerEnvironment, finContainerTargets } from "./fin-container-in
 import { finContainerEdgeConsumer, finContainerEdgeRefinements, finContainerEdgeSource } from "./fin-container-edges.mjs";
 import { observeFinContainerEdgeRaw } from "./fin-container-edge-observer.mjs";
 import { observeFinContainerEdgePublic } from "./fin-container-edge-public-observer.mjs";
+import { observeFinContainerEdgePython } from "./fin-container-edge-python-observer.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { prepareRustCorpusDependencies } from "./type-corpus-rust.mjs";
@@ -146,7 +147,7 @@ export const prepareFinContainerEdgeExecutable = async ({ profile, root, directo
  * @param options.handoff - Archive handoff directory.
  * @param options.packages - Selected verified package-set entries.
  * @param options.command - Absolute installed consumer command.
- * @param options.measureDispatch - Opt in to raw adapter observation and, for C/C++, the complete public consumer.
+ * @param options.measureDispatch - Opt in to raw adapters and full public C/C++/Python entry observation.
  * @param options.expectedModelSha256 - Producer model digest, required for raw observations.
  * @param options.leanPrefix - Matching Lean headers for the test-only raw probe.
  */
@@ -289,7 +290,11 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 	const publicHost = measureDispatch && ["c", "cpp"].includes(profile) ? await observeFinContainerEdgePublic({
 		installed: movedInstall, receiptPath, receiptBytes: archiveBytes
 		, expectedModelSha256, profile
-		, probeRoot: join(consumer, `${profile}-edge-public`) }) : null;
+		, probeRoot: join(consumer, `${profile}-edge-public`) })
+		: measureDispatch && profile === "python" ? await observeFinContainerEdgePython({
+			installed: movedInstall, receiptPath, receiptBytes: archiveBytes
+			, expectedModelSha256, command: movedCommand
+			, probeRoot: join(consumer, "python-edge-public") }) : null;
 	return { relocatedInstallation: true
 		, repeatExecution: true
 		, installedFilesUnchanged: true

@@ -13,6 +13,7 @@ export const finContainerEdgeEntries = Object.freeze(["emptyArray", "emptyList",
 // Fresh codegen controls require these two calls and prove the four identity calls were inlined.
 export const finContainerEdgeSourceEntries = Object.freeze(["present", "flatten"]);
 export const finContainerEdgePublicSymbols = Object.freeze(finContainerEdgeEntries.map(name => `fincontainers_gmp_${name.replace(/[A-Z]/gu, letter => `_${letter.toLowerCase()}`)}`));
+export const finContainerEdgeWireSymbols = Object.freeze(finContainerEdgeEntries.map(name => `fincontainers_${name.replace(/[A-Z]/gu, letter => `_${letter.toLowerCase()}`)}`));
 const width = 8;
 const shapes = ["nat", ["array", 0], ["list", 0], ["option", 0], ["option", 2], ["array", 3], ["list", 1]];
 const inputs = [1, 2, 3, 4, 5, 6], outputs = [1, 2, 3, 4, 1, 4];
