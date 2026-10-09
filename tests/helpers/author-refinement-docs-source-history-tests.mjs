@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforePerlScalarRelocationSource } from "./perl-scalar-relocation-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeAuthorRefinementDocsSource, authorRefinementDocsChangedPaths, authorRefinementDocsHistoryPath, authorRefinementDocsPredecessor, reverseAuthorRefinementDocsUpdate } from "./author-refinement-docs-source-history.mjs";
 
@@ -20,7 +21,7 @@ test("Author refinement docs history authenticates exact predecessors and refuse
 	assert.deepEqual(record.updates.map(update => update.path), authorRefinementDocsChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8"), previous = reverseAuthorRefinementDocsUpdate(source, update);
+		const source = beforePerlScalarRelocationSource(update.path, await readFile(update.path, "utf8")), previous = reverseAuthorRefinementDocsUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeAuthorRefinementDocsSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -36,7 +37,7 @@ test("Author refinement docs history authenticates exact predecessors and refuse
 });
 
 test("Author refinement docs refreshes exactly 18 source pins without promoting any support cell", async () => {
-	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", text = beforePerlScalarRelocationSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(text), previous = JSON.parse(beforeAuthorRefinementDocsSource(path, text));
 	const record = JSON.parse(await readFile(authorRefinementDocsHistoryPath));
 	const updates = new Map(record.updates.map(update => [update.path, update]));
@@ -46,7 +47,7 @@ test("Author refinement docs refreshes exactly 18 source pins without promoting 
 		const update = updates.get(file.path);
 		if(update && file.sha256 === update.previousSha256)
 		{
-			assert.equal(sha256(await readFile(file.path)), update.currentSha256);
+			assert.equal(sha256(beforePerlScalarRelocationSource(file.path, await readFile(file.path, "utf8"))), update.currentSha256);
 			file.sha256 = update.currentSha256; pins++;
 		}
 	}

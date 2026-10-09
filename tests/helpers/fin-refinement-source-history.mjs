@@ -143,6 +143,7 @@ import { perlRelocatedConsumerChangedPaths } from "./perl-relocated-consumer-sou
 import { rubyDispatchIntegrationChangedPaths } from "./ruby-dispatch-integration-source-history.mjs";
 import { dotnetDispatchIntegrationChangedPaths } from "./dotnet-dispatch-integration-source-history.mjs";
 import { authorRefinementDocsChangedPaths } from "./author-refinement-docs-source-history.mjs";
+import { perlScalarRelocationChangedPaths } from "./perl-scalar-relocation-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -751,6 +752,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...rubyDispatchIntegrationChangedPaths
 	, ...dotnetDispatchIntegrationChangedPaths
 	, ...authorRefinementDocsChangedPaths
+	, ...perlScalarRelocationChangedPaths
 ])].sort());
 
 /**

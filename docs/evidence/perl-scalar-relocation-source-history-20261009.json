@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "milestone": "perl-scalar-relocation-v1",
+  "predecessorCommit": "0bc379f365eca14023ce9da2f0c52d059f96edf7",
+  "updates": [
+    {
+      "path": "tests/perl-fin.test.mjs",
+      "currentSha256": "db9417bcdb8cf599252681d4893fc418ca00f907b38d0772a97cd16171fba0bf",
+      "previousSha256": "b86fd81527dda8f481685345a2333b1fde90004323ab03e4d728c934aee188a2",
+      "edits": [
+        {
+          "start": 137,
+          "previous": "",
+          "current": "import { existsSync } from \"node:fs\";\n"
+        },
+        {
+          "start": 335,
+          "previous": "",
+          "current": "import \"./helpers/perl-scalar-relocation-source-history-tests.mjs\";\nimport { relocatePerlConsumer } from \"./helpers/perl-relocated-consumer.mjs\";\n"
+        },
+        {
+          "start": 14209,
+          "previous": "\t\t\tconst installed = join(root, \"perl\"), library = join(installed, \"installed/lib/perl5\");\n",
+          "current": "\t\t\t// The installed tree moves after its first full run; the unchanged consumer reruns there and the counters run in it.\n\t\t\tconst moved = await relocatePerlConsumer({ root: join(root, \"perl\"), command, success: \"perl-fin-ok\", checks: observation.checks });\n\t\t\tconst installed = moved.installed, library = moved.library;\n"
+        },
+        {
+          "start": 15501,
+          "previous": "\t\t\tconst repeated = await runCopied(command, [\"consumer.pl\"], installed, { ...copiedCleanEnvironment, PERL5LIB: library });\n\t\t\tassert.equal(repeated.stderr, \"\"); assert.equal(repeated.stdout.trim(), `perl-fin-ok:${observation.checks}`);\n",
+          "current": "\t\t\tassert.equal(existsSync(join(root, \"perl\")), false, \"the counters ran without the old tree\");\n"
+        },
+        {
+          "start": 16276,
+          "previous": "\t\t\t\t, sourceRemovedBeforeInstallation: true, repeatExecution: true });\n",
+          "current": "\t\t\t\t, sourceRemovedBeforeInstallation: true\n\t\t\t\t, relocatedInstallation: moved.relocatedInstallation\n\t\t\t\t, repeatExecution: moved.repeatExecution });\n"
+        },
+        {
+          "start": 16788,
+          "previous": "",
+          "current": "test(\"both scalar Perl routes rerun the whole consumer and count entries only in the moved installed tree\", async () => {\n\tconst shared = checkInstalledPerlFin.toString();\n\tassert.equal(shared.split(\"await relocatePerlConsumer({ root: join(root, \\\"perl\\\"), command, success: \\\"perl-fin-ok\\\", checks: observation.checks })\").length, 2);\n\tassert.equal(shared.split(\"const installed = moved.installed, library = moved.library;\").length, 2);\n\t// The counters follow the move, no second run uses the old root, and the old root stays absent.\n\tassert.ok(shared.indexOf(\"relocatePerlConsumer(\") < shared.indexOf(\"perlFinInterposer()\"));\n\tassert.doesNotMatch(shared, /runCopied\\(command, \\[\"consumer\\.pl\"\\]/u);\n\tassert.match(shared, /assert\\.equal\\(existsSync\\(join\\(root, \"perl\"\\)\\), false, \"the counters ran without the old tree\"\\);/u);\n\tassert.match(shared, /, relocatedInstallation: moved\\.relocatedInstallation\\n\\s*, repeatExecution: moved\\.repeatExecution \\}\\);/u);\n\t// Both gated routes reach that one installed check.\n\tconst file = await readFile(new URL(import.meta.url), \"utf8\");\n\tfor(const flag of [\"\", \", true\"])\n\t{\n\t\tconst call = `timeout: 2_400_000 }, t => checkInstalledPerlFin(t${flag}));`;\n\t\tassert.equal(file.split(call).length, 2, call);\n\t}\n});\n\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "79cfcf156349f1909a034113dd9671cc5081394d9655dfc352ec49476969a1c4",
+      "previousSha256": "46d90d34cfd12c79c4b44c9d813000976ceafa172803040881333cf9cc9a42ee",
+      "edits": [
+        {
+          "start": 13031,
+          "previous": "",
+          "current": "import { perlScalarRelocationChangedPaths } from \"./perl-scalar-relocation-source-history.mjs\";\n"
+        },
+        {
+          "start": 51477,
+          "previous": "",
+          "current": "\t, ...perlScalarRelocationChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/author-refinement-docs-source-history.mjs",
+      "currentSha256": "7ac4aefd078486ee7b4fa7f07f0002fd5ece272c9faaedde780601bd0b47222f",
+      "previousSha256": "35c6dd81407b16d25f7638fc5cfa3b2e930d6831842e1996ea96eab71bc358c9",
+      "edits": [
+        {
+          "start": 254,
+          "previous": "",
+          "current": "import { beforePerlScalarRelocationSource } from \"./perl-scalar-relocation-source-history.mjs\";\n"
+        },
+        {
+          "start": 2393,
+          "previous": "",
+          "current": "\tsource = beforePerlScalarRelocationSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/author-refinement-docs-source-history-tests.mjs",
+      "currentSha256": "e2339106f5050e2bc508d2ae98dafd43df576d0b4a91b2108669eb16b33bbb87",
+      "previousSha256": "549c2812000d864b91e49114659589ca433bf7891ef25a0159dc866ca282f88b",
+      "edits": [
+        {
+          "start": 452,
+          "previous": "",
+          "current": "import { beforePerlScalarRelocationSource } from \"./perl-scalar-relocation-source-history.mjs\";\n"
+        },
+        {
+          "start": 1361,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\"), previous = reverseAuthorRefinementDocsUpdate(source, update);\n",
+          "current": "\t\tconst source = beforePerlScalarRelocationSource(update.path, await readFile(update.path, \"utf8\")), previous = reverseAuthorRefinementDocsUpdate(source, update);\n"
+        },
+        {
+          "start": 2645,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", text = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", text = beforePerlScalarRelocationSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 3218,
+          "previous": "\t\t\tassert.equal(sha256(await readFile(file.path)), update.currentSha256);\n",
+          "current": "\t\t\tassert.equal(sha256(beforePerlScalarRelocationSource(file.path, await readFile(file.path, \"utf8\"))), update.currentSha256);\n"
+        }
+      ]
+    }
+  ]
+}

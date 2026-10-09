@@ -4,10 +4,13 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
 import { cp, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
+import "./helpers/perl-scalar-relocation-source-history-tests.mjs";
+import { relocatePerlConsumer } from "./helpers/perl-relocated-consumer.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { generatePerlBindingPackage } from "../src/backends/perl/generate.mjs";
 import { createNativeModel, nativeTypeKey } from "../src/build/native-model.mjs";
@@ -205,7 +208,9 @@ const checkInstalledPerlFin = async (t, reviewed = false) => {
 			const fixture = { source: perlFinConsumer, success: "perl-fin-ok" };
 			const selected = { ...environment, LEAN_BRIDGE_CORPUS_PERL: perl };
 			const { command, ...observation } = await installCopiedConsumer({ profile: "perl", consumer: root, handoff, packages: receipt.packages, environment: selected, fixture });
-			const installed = join(root, "perl"), library = join(installed, "installed/lib/perl5");
+			// The installed tree moves after its first full run; the unchanged consumer reruns there and the counters run in it.
+			const moved = await relocatePerlConsumer({ root: join(root, "perl"), command, success: "perl-fin-ok", checks: observation.checks });
+			const installed = moved.installed, library = moved.library;
 			await saveLakeFile(installed, "interposer.c", perlFinInterposer());
 			await runCopied("/usr/bin/cc", ["-std=gnu11", "-Wall", "-Wextra", "-Werror", "-Wno-strict-prototypes", "-shared", "-fPIC", "interposer.c", "-o", "libdispatch.so"], installed
 				, { ...copiedCleanEnvironment, PATH: "/usr/bin:/bin" });
@@ -221,8 +226,7 @@ const checkInstalledPerlFin = async (t, reviewed = false) => {
 				assert.deepEqual(observed, expected, step);
 				dispatch.push([step, observed]);
 			}
-			const repeated = await runCopied(command, ["consumer.pl"], installed, { ...copiedCleanEnvironment, PERL5LIB: library });
-			assert.equal(repeated.stderr, ""); assert.equal(repeated.stdout.trim(), `perl-fin-ok:${observation.checks}`);
+			assert.equal(existsSync(join(root, "perl")), false, "the counters ran without the old tree");
 			reports.push({ profile: "perl", perl
 				, path: reviewed ? "reviewed-ir" : "ordinary-source"
 				, ...observation
@@ -237,7 +241,9 @@ const checkInstalledPerlFin = async (t, reviewed = false) => {
 				, modelSha256: sha256(canonicalJson(model))
 				, receiptSha256: sha256(await readFile(join(handoff, "package-set-receipt.json")))
 				, ...(reviewed ? { reviewedSourceSha256: model.sourceIdentity.reviewedBindingIr.sourceSha256 } : {})
-				, sourceRemovedBeforeInstallation: true, repeatExecution: true });
+				, sourceRemovedBeforeInstallation: true
+				, relocatedInstallation: moved.relocatedInstallation
+				, repeatExecution: moved.repeatExecution });
 		}
 		await rm(consumer, { recursive: true, force: true });
 	}
@@ -245,6 +251,24 @@ const checkInstalledPerlFin = async (t, reviewed = false) => {
 	assert.deepEqual(archives[1], archives[0]);
 	await saveLakeFile("build/native-fin", reviewed ? "perl-reviewed.json" : "perl.json", canonicalJson({ schemaVersion: 1, reports, archives: archives[0], reproducible: true }));
 };
+
+test("both scalar Perl routes rerun the whole consumer and count entries only in the moved installed tree", async () => {
+	const shared = checkInstalledPerlFin.toString();
+	assert.equal(shared.split("await relocatePerlConsumer({ root: join(root, \"perl\"), command, success: \"perl-fin-ok\", checks: observation.checks })").length, 2);
+	assert.equal(shared.split("const installed = moved.installed, library = moved.library;").length, 2);
+	// The counters follow the move, no second run uses the old root, and the old root stays absent.
+	assert.ok(shared.indexOf("relocatePerlConsumer(") < shared.indexOf("perlFinInterposer()"));
+	assert.doesNotMatch(shared, /runCopied\(command, \["consumer\.pl"\]/u);
+	assert.match(shared, /assert\.equal\(existsSync\(join\(root, "perl"\)\), false, "the counters ran without the old tree"\);/u);
+	assert.match(shared, /, relocatedInstallation: moved\.relocatedInstallation\n\s*, repeatExecution: moved\.repeatExecution \}\);/u);
+	// Both gated routes reach that one installed check.
+	const file = await readFile(new URL(import.meta.url), "utf8");
+	for(const flag of ["", ", true"])
+	{
+		const call = `timeout: 2_400_000 }, t => checkInstalledPerlFin(t${flag}));`;
+		assert.equal(file.split(call).length, 2, call);
+	}
+});
 
 test("relocated source-free CPAN packages check Fin bounds before Lean dispatch on every selected ABI", { skip: process.env.LEAN_BRIDGE_PERL_FIN_TEST !== "1", timeout: 2_400_000 }, t => checkInstalledPerlFin(t));
 
