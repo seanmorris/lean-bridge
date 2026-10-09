@@ -422,7 +422,8 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 					: [finEvidence, `native-fin-containers-${specializationEvidence}-installed`
 						, ...finRuntimes.flatMap(runtime => ["product", "product-array"].map(family => `fin-${runtime}-${family}-ordinary-installed`))
 						, ...(["rust", "dotnet"].includes(profile) ? ["product", "product-array"].map(family => `fin-batch-${profile}-${family}-ordinary-installed`) : [])
-						, ...scalarCounters.map(caller => `fin-dispatch-${caller}-ordinary-installed`)]);
+						, ...scalarCounters.map(caller => `fin-dispatch-${caller}-ordinary-installed`)
+						, ...(stageName === "installedExecution" && ["python", "rust"].includes(profile) ? [`hosted-container-${profile}-ordinary-source-dispatch`] : [])]);
 				continue;
 			}
 			if(cell.shape === "subtype")

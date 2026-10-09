@@ -214,6 +214,7 @@ const profileManifest = Object.freeze({
 		, "fin-container-entry-evidence"
 		, "hosted-container-dispatch-evidence"
 		, "fin-container-evidence-ci"
+		, "hosted-container-inventory"
 		, "fin-entry-integration"
 		, "wasm-frame-entry-observer"
 		, "fin-scalar-dispatch-inventory"

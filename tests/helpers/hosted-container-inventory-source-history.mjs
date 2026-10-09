@@ -1,25 +1,24 @@
 /**
- * Preserve exact predecessors when integrating container counter archives and recurring CI checks.
+ * Preserve exact predecessors when attaching hosted container measurements to current coverage.
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeHostedContainerInventorySource } from "./hosted-container-inventory-source-history.mjs";
 
-export const finContainerEvidenceCiHistoryPath = "docs/evidence/fin-container-evidence-ci-source-history-20261009.json";
-export const finContainerEvidenceCiPredecessor = "60c80691ae2d432cfe304906549adbe6dab8bd4b";
-export const finContainerEvidenceCiChangedPaths = [
+export const hostedContainerInventoryHistoryPath = "docs/evidence/hosted-container-inventory-source-history-20261009.json";
+export const hostedContainerInventoryPredecessor = "298a9584fbb8d494418705534e89dafd4a6c5276";
+export const hostedContainerInventoryChangedPaths = [
 	"docs/type-surface.v1.json"
-	, ".gitattributes"
-	, ".github/workflows/consumer-matrix.yml"
+	, "docs/consume/python.md"
+	, "docs/consume/rust.md"
+	, "docs/lean/existing-package.md"
 	, "src/adoption/test-profiles.mjs"
-	, "tests/documentation.test.mjs"
-	, "tests/helpers/native-consumer-budget-tests.mjs"
+	, "tests/type-surface.test.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/fin-entry-integration-source-history.mjs"
-	, "tests/helpers/fin-entry-integration-tests.mjs"
+	, "tests/helpers/fin-container-evidence-ci-source-history.mjs"
+	, "tests/helpers/fin-container-evidence-ci-tests.mjs"
 ];
 let history;
 
@@ -29,8 +28,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseFinContainerEvidenceCiUpdate = (source, update) => {
-	assert.ok(finContainerEvidenceCiChangedPaths.includes(update.path));
+export const reverseHostedContainerInventoryUpdate = (source, update) => {
+	assert.ok(hostedContainerInventoryChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -50,18 +49,17 @@ export const reverseFinContainerEvidenceCiUpdate = (source, update) => {
 };
 
 /**
- * Restore the source before container evidence and CI integration, stopping at an explicitly requested identity.
+ * Restore the source before the hosted container inventory supplement, stopping at an explicitly requested identity.
  *
  * @param path - Repository-relative source path.
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeFinContainerEvidenceCiSource = (path, source, expected) => {
-	source = beforeHostedContainerInventorySource(path, source, expected);
-	if(typeof source !== "string" || !finContainerEvidenceCiChangedPaths.includes(path)) return source;
+export const beforeHostedContainerInventorySource = (path, source, expected) => {
+	if(typeof source !== "string" || !hostedContainerInventoryChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(finContainerEvidenceCiHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(hostedContainerInventoryHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseFinContainerEvidenceCiUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseHostedContainerInventoryUpdate(source, update) : source;
 };

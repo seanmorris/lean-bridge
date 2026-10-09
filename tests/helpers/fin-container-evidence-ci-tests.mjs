@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeHostedContainerInventorySource } from "./hosted-container-inventory-source-history.mjs";
 import { beforeFinContainerEvidenceCiSource, finContainerEvidenceCiChangedPaths, finContainerEvidenceCiHistoryPath, finContainerEvidenceCiPredecessor, reverseFinContainerEvidenceCiUpdate } from "./fin-container-evidence-ci-source-history.mjs";
 
 test("Fin container evidence CI history authenticates exact predecessors and rejects unrecorded edits", async () => {
@@ -20,7 +21,7 @@ test("Fin container evidence CI history authenticates exact predecessors and rej
 	assert.deepEqual(record.updates.map(update => update.path), finContainerEvidenceCiChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8"), previous = reverseFinContainerEvidenceCiUpdate(source, update);
+		const source = beforeHostedContainerInventorySource(update.path, await readFile(update.path, "utf8")), previous = reverseFinContainerEvidenceCiUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeFinContainerEvidenceCiSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -36,7 +37,7 @@ test("Fin container evidence CI history authenticates exact predecessors and rej
 });
 
 test("Fin container evidence CI refreshes source pins without changing any observation or support claim", async () => {
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", source = beforeHostedContainerInventorySource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(source), previous = JSON.parse(beforeFinContainerEvidenceCiSource(path, source));
 	const history = JSON.parse(await readFile(finContainerEvidenceCiHistoryPath));
 	let pins = 0;
