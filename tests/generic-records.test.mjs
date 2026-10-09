@@ -8,6 +8,7 @@ import { access, cp, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import test from "node:test";
+import "./helpers/generic-refusal-fix-source-history-tests.mjs";
 import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
 import { refinementEngineTransport } from "./helpers/refinement-engine.mjs";
 import "./helpers/refinement-engine-tests.mjs";
@@ -217,7 +218,9 @@ test("generic structure instantiations are rejected at the Lean source unless an
 		["an unaliased application in a result", ["swap"], "", /name this instantiation of a generic structure with an abbrev: GenericRecords\.Pair Nat String/]
 		, ["an unaliased application as an argument", ["nested"], "abbrev Nested := Box (Box Nat)\ndef nested (value : Nested) : Nat := value.value.value", /name this instantiation of a generic structure with an abbrev: GenericRecords\.Box Nat/]
 		, ["an inherited parent with ambiguous aliases", ["named"], "structure Named (α : Type) extends Box α where\n  name : String\nabbrev NamedNat := Named Nat\ndef named (value : NamedNat) : Nat := value.value", /ambiguous inherited generic parent; candidates: GenericRecords\.NatBox, GenericRecords\.NatBoxAgain/]
-		, ["a field that depends on the value", ["sized"], "structure Sized (α : Type) where\n  items : List α\n  ok : items.length < 10\nabbrev SizedNat := Sized Nat\ndef sized (value : SizedNat) : Nat := value.items.length", /generic record field ok depends on the record value/]
+		, ["a field that depends on the value", ["sized"], "structure Sized (α : Type) where\n  items : List α\n  slot : Fin (items.length + 1)\nabbrev SizedNat := Sized Nat\ndef sized (value : SizedNat) : Nat := value.items.length", /generic record field slot depends on the record value/]
+		// A proof field is erased into a checked record, which then needs a configured checked constructor.
+		, ["a proof field without a checked constructor", ["sized"], "structure Sized (α : Type) where\n  items : List α\n  ok : items.length < 10\nabbrev SizedNat := Sized Nat\ndef sized (value : SizedNat) : Nat := value.items.length", /checked records require a configured checked constructor: GenericRecords\.Sized Nat/]
 		, ["a callback argument", ["applied"], "abbrev FnBox := Box (Nat → Nat)\ndef applied (value : FnBox) : Nat := value.value value.count", /callbacks inside copied values require a retention policy/]
 		// The native profile checks Fin only at structural positions, so the argument's bound is refused before the argument rule.
 		, ["a refined phantom argument", ["digitTagged"], refinedPhantom, /Fin refinements are not implemented by the native-library profile inside callbacks or generic record instantiations/]];

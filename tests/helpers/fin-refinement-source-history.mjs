@@ -134,6 +134,7 @@ import { reviewedRecordPromotionChangedPaths } from "./reviewed-record-promotion
 import { witDispatchIntegrationChangedPaths } from "./wit-dispatch-integration-source-history.mjs";
 import { inheritedRecordArchiveChangedPaths, inheritedRecordArchiveProducerPins } from "./inherited-record-archive-source-history.mjs";
 import { perlXsBudgetChangedPaths } from "./perl-xs-budget-source-history.mjs";
+import { genericRefusalFixChangedPaths } from "./generic-refusal-fix-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -733,6 +734,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...inheritedRecordArchiveChangedPaths
 	, ...Object.keys(inheritedRecordArchiveProducerPins)
 	, ...perlXsBudgetChangedPaths
+	, ...genericRefusalFixChangedPaths
 ])].sort());
 
 /**

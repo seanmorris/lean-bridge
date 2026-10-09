@@ -1,23 +1,20 @@
 /**
- * Preserve exact source predecessors when increasing the complete Perl XS acceptance job budget.
+ * Preserve exact source predecessors when separating generic value-dependent fields from proof-bearing records.
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeGenericRefusalFixSource } from "./generic-refusal-fix-source-history.mjs";
 
-export const perlXsBudgetHistoryPath = "docs/evidence/perl-xs-budget-source-history-20261009.json";
-export const perlXsBudgetPredecessor = "c6f47e40354d25df27c4d0a415862a623761bdf2";
-export const perlXsBudgetChangedPaths = [
+export const genericRefusalFixHistoryPath = "docs/evidence/generic-refusal-fix-source-history-20261009.json";
+export const genericRefusalFixPredecessor = "eba71ba3b448d49b6573b42b69a867f6ed4118a9";
+export const genericRefusalFixChangedPaths = [
 	"docs/type-surface.v1.json"
-	, ".github/workflows/perl-consumer.yml"
-	, "tests/documentation.test.mjs"
-	, "tests/dotnet-recursive-callable-evidence.test.mjs"
+	, "tests/generic-records.test.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/inherited-record-archive-source-history.mjs"
-	, "tests/helpers/inherited-record-archive-source-history-tests.mjs"
+	, "tests/helpers/perl-xs-budget-source-history.mjs"
+	, "tests/helpers/perl-xs-budget-source-history-tests.mjs"
 ];
 let history;
 
@@ -27,8 +24,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reversePerlXsBudgetUpdate = (source, update) => {
-	assert.ok(perlXsBudgetChangedPaths.includes(update.path));
+export const reverseGenericRefusalFixUpdate = (source, update) => {
+	assert.ok(genericRefusalFixChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -54,12 +51,11 @@ export const reversePerlXsBudgetUpdate = (source, update) => {
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforePerlXsBudgetSource = (path, source, expected) => {
-	source = beforeGenericRefusalFixSource(path, source, expected);
-	if(typeof source !== "string" || !perlXsBudgetChangedPaths.includes(path)) return source;
+export const beforeGenericRefusalFixSource = (path, source, expected) => {
+	if(typeof source !== "string" || !genericRefusalFixChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(perlXsBudgetHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(genericRefusalFixHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reversePerlXsBudgetUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseGenericRefusalFixUpdate(source, update) : source;
 };

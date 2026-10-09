@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 1,
+  "milestone": "generic-refusal-fix-v1",
+  "predecessorCommit": "eba71ba3b448d49b6573b42b69a867f6ed4118a9",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "ab23532d42216e3d7d8fc4080d6707f1847a34579f5b6e30b5f92a86acba88eb",
+      "previousSha256": "bacdc18c83852f5ee2432336e735fd9ae18421e12aed621940acb81a3a432a68",
+      "edits": [
+        {
+          "start": 1466773,
+          "previous": "          \"sha256\": \"1e4ed417bcba1f1ab1a35256dbabe2339ed11ac82eb966226f5e9c89458dacd3\"\n",
+          "current": "          \"sha256\": \"653fd14d0a26c590615fa5cef113578976df32f1fb7581bb356dde05baa5bcb1\"\n"
+        },
+        {
+          "start": 1470708,
+          "previous": "          \"sha256\": \"1e4ed417bcba1f1ab1a35256dbabe2339ed11ac82eb966226f5e9c89458dacd3\"\n",
+          "current": "          \"sha256\": \"653fd14d0a26c590615fa5cef113578976df32f1fb7581bb356dde05baa5bcb1\"\n"
+        },
+        {
+          "start": 1570579,
+          "previous": "          \"sha256\": \"1e4ed417bcba1f1ab1a35256dbabe2339ed11ac82eb966226f5e9c89458dacd3\"\n",
+          "current": "          \"sha256\": \"653fd14d0a26c590615fa5cef113578976df32f1fb7581bb356dde05baa5bcb1\"\n"
+        },
+        {
+          "start": 1575353,
+          "previous": "          \"sha256\": \"1e4ed417bcba1f1ab1a35256dbabe2339ed11ac82eb966226f5e9c89458dacd3\"\n",
+          "current": "          \"sha256\": \"653fd14d0a26c590615fa5cef113578976df32f1fb7581bb356dde05baa5bcb1\"\n"
+        },
+        {
+          "start": 1579908,
+          "previous": "          \"sha256\": \"1e4ed417bcba1f1ab1a35256dbabe2339ed11ac82eb966226f5e9c89458dacd3\"\n",
+          "current": "          \"sha256\": \"653fd14d0a26c590615fa5cef113578976df32f1fb7581bb356dde05baa5bcb1\"\n"
+        },
+        {
+          "start": 1584889,
+          "previous": "          \"sha256\": \"1e4ed417bcba1f1ab1a35256dbabe2339ed11ac82eb966226f5e9c89458dacd3\"\n",
+          "current": "          \"sha256\": \"653fd14d0a26c590615fa5cef113578976df32f1fb7581bb356dde05baa5bcb1\"\n"
+        },
+        {
+          "start": 1589777,
+          "previous": "          \"sha256\": \"1e4ed417bcba1f1ab1a35256dbabe2339ed11ac82eb966226f5e9c89458dacd3\"\n",
+          "current": "          \"sha256\": \"653fd14d0a26c590615fa5cef113578976df32f1fb7581bb356dde05baa5bcb1\"\n"
+        },
+        {
+          "start": 1594151,
+          "previous": "          \"sha256\": \"1e4ed417bcba1f1ab1a35256dbabe2339ed11ac82eb966226f5e9c89458dacd3\"\n",
+          "current": "          \"sha256\": \"653fd14d0a26c590615fa5cef113578976df32f1fb7581bb356dde05baa5bcb1\"\n"
+        },
+        {
+          "start": 1598523,
+          "previous": "          \"sha256\": \"1e4ed417bcba1f1ab1a35256dbabe2339ed11ac82eb966226f5e9c89458dacd3\"\n",
+          "current": "          \"sha256\": \"653fd14d0a26c590615fa5cef113578976df32f1fb7581bb356dde05baa5bcb1\"\n"
+        },
+        {
+          "start": 1602897,
+          "previous": "          \"sha256\": \"1e4ed417bcba1f1ab1a35256dbabe2339ed11ac82eb966226f5e9c89458dacd3\"\n",
+          "current": "          \"sha256\": \"653fd14d0a26c590615fa5cef113578976df32f1fb7581bb356dde05baa5bcb1\"\n"
+        },
+        {
+          "start": 1607145,
+          "previous": "          \"sha256\": \"1e4ed417bcba1f1ab1a35256dbabe2339ed11ac82eb966226f5e9c89458dacd3\"\n",
+          "current": "          \"sha256\": \"653fd14d0a26c590615fa5cef113578976df32f1fb7581bb356dde05baa5bcb1\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/generic-records.test.mjs",
+      "currentSha256": "653fd14d0a26c590615fa5cef113578976df32f1fb7581bb356dde05baa5bcb1",
+      "previousSha256": "1e4ed417bcba1f1ab1a35256dbabe2339ed11ac82eb966226f5e9c89458dacd3",
+      "edits": [
+        {
+          "start": 361,
+          "previous": "",
+          "current": "import \"./helpers/generic-refusal-fix-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 19503,
+          "previous": "\t\t, [\"a field that depends on the value\", [\"sized\"], \"structure Sized (α : Type) where\\n  items : List α\\n  ok : items.length < 10\\nabbrev SizedNat := Sized Nat\\ndef sized (value : SizedNat) : Nat := value.items.length\", /generic record field ok depends on the record value/]\n",
+          "current": "\t\t, [\"a field that depends on the value\", [\"sized\"], \"structure Sized (α : Type) where\\n  items : List α\\n  slot : Fin (items.length + 1)\\nabbrev SizedNat := Sized Nat\\ndef sized (value : SizedNat) : Nat := value.items.length\", /generic record field slot depends on the record value/]\n\t\t// A proof field is erased into a checked record, which then needs a configured checked constructor.\n\t\t, [\"a proof field without a checked constructor\", [\"sized\"], \"structure Sized (α : Type) where\\n  items : List α\\n  ok : items.length < 10\\nabbrev SizedNat := Sized Nat\\ndef sized (value : SizedNat) : Nat := value.items.length\", /checked records require a configured checked constructor: GenericRecords\\.Sized Nat/]\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "7d1fadf45766f19675ceb33969603f6144eb8458a7b9be3bd050d0b79f5468ff",
+      "previousSha256": "00ff5846d5a84784de55132e126cde6513521c4be7d144938a2cf871b1e4aabe",
+      "edits": [
+        {
+          "start": 12168,
+          "previous": "",
+          "current": "import { genericRefusalFixChangedPaths } from \"./generic-refusal-fix-source-history.mjs\";\n"
+        },
+        {
+          "start": 50261,
+          "previous": "",
+          "current": "\t, ...genericRefusalFixChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/perl-xs-budget-source-history.mjs",
+      "currentSha256": "46b9084936fbce41884d37f0caf58e184c84777d9918a9f9071ec2ba37877f54",
+      "previousSha256": "c4387dedbce2d3d3fbb09888bd8db9c0676fee29c471582e84c199fe33966e02",
+      "edits": [
+        {
+          "start": 253,
+          "previous": "",
+          "current": "import { beforeGenericRefusalFixSource } from \"./generic-refusal-fix-source-history.mjs\";\n"
+        },
+        {
+          "start": 2373,
+          "previous": "",
+          "current": "\tsource = beforeGenericRefusalFixSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/perl-xs-budget-source-history-tests.mjs",
+      "currentSha256": "7bbc11bd68b07cc30948c87f983609bf0817474b7de26d3ea02611790fcac461",
+      "previousSha256": "424ac52c295c8fa8cd6c0b074b91c8d446f45ba95219c1054272e491b8ca480b",
+      "edits": [
+        {
+          "start": 525,
+          "previous": "",
+          "current": "import { beforeGenericRefusalFixSource } from \"./generic-refusal-fix-source-history.mjs\";\n"
+        },
+        {
+          "start": 1270,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\"), previous = reversePerlXsBudgetUpdate(source, update);\n",
+          "current": "\t\tconst source = beforeGenericRefusalFixSource(update.path, await readFile(update.path, \"utf8\")), previous = reversePerlXsBudgetUpdate(source, update);\n"
+        },
+        {
+          "start": 2470,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", text = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", text = beforeGenericRefusalFixSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 3032,
+          "previous": "\t\t\tassert.equal(sha256(await readFile(file.path)), update.currentSha256);\n",
+          "current": "\t\t\tassert.equal(sha256(beforeGenericRefusalFixSource(file.path, await readFile(file.path, \"utf8\"))), update.currentSha256);\n"
+        }
+      ]
+    }
+  ]
+}
