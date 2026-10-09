@@ -63,15 +63,20 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 	const archive = join(handoff, pkg.artifacts[0].path);
 	const extension = extensions[profile], source = await fixture.source(profile, extension, 64);
 	await saveLakeFile(root, `consumer.${extension}`, source);
-	let command, args, env = copiedCleanEnvironment;
+	let command, args, pythonPolicy, env = copiedCleanEnvironment;
 	// Optional fixture policy runs before the first package-influenced compilation and again
 	// around execution. Other fixture callers retain their existing install behavior.
 	let verifyPackage = async () => {};
 	if(profile === "python")
 	{
 		command = join(root, "venv/bin/python");
-		await runCopied(environment.LEAN_BRIDGE_PYTHON ?? "/usr/bin/python3", ["-I", "-m", "venv", join(root, "venv")], root);
-		await runCopied(command, ["-I", "-m", "pip", "--isolated", "install", "--no-index", "--no-deps", "--no-cache-dir", archive], root);
+		const baseCommand = environment.LEAN_BRIDGE_PYTHON ?? "/usr/bin/python3";
+		if(fixture.installPython) pythonPolicy = await fixture.installPython({ baseCommand, root, archive, archiveSha256: pkg.artifacts[0].sha256 });
+		else
+		{
+			await runCopied(baseCommand, ["-I", "-m", "venv", join(root, "venv")], root);
+			await runCopied(command, ["-I", "-m", "pip", "--isolated", "install", "--no-index", "--no-deps", "--no-cache-dir", archive], root);
+		}
 		args = ["-I", "consumer.py"];
 	}
 	else if(["c", "cpp", "wit-wasi"].includes(profile))
@@ -176,7 +181,7 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 	}
 	else throw new Error(`Copied consumer not implemented: ${profile}`);
 	await verifyPackage();
-	const result = await runCopied(command, args, root, env);
+	const result = pythonPolicy ? await pythonPolicy.run(["consumer.py"], root, env) : await runCopied(command, args, root, env);
 	await verifyPackage();
 	assert.equal(result.stderr, "");
 	const observation = fixture.parseResult?.(result.stdout);
@@ -188,5 +193,9 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 		assert.equal(checks, fixture.expectedChecks);
 	}
 	else assert.ok(checks >= 100);
-	return { checks, ...(observation ? { result: observation } : {}), consumerSha256: sha256(source), command, offlineInstall: true, compilerFreePath: true };
+	return { checks
+		, ...(observation ? { result: observation } : {})
+		, consumerSha256: sha256(source), command
+		, ...(pythonPolicy ? { pythonEnvironment: pythonPolicy.context } : {})
+		, offlineInstall: true, compilerFreePath: true };
 };

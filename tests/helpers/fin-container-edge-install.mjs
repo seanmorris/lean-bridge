@@ -21,6 +21,7 @@ import { observeFinContainerEdgePython } from "./fin-container-edge-python-obser
 import { observeFinContainerEdgeRust } from "./fin-container-edge-rust-observer.mjs";
 import { observeFinContainerEdgeRuby } from "./fin-container-edge-ruby-observer.mjs";
 import { finContainerEdgeClosedProfiles, verifyFinContainerEdgeArchiveClosure, verifyFinContainerEdgeFileClosure } from "./fin-container-edge-closure.mjs";
+import { installFinContainerEdgePython, runFinContainerEdgePython, verifyFinContainerEdgePythonEnvironment } from "./fin-container-edge-python-closure.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { prepareRustCorpusDependencies } from "./type-corpus-rust.mjs";
@@ -155,8 +156,9 @@ export const prepareFinContainerEdgeExecutable = async ({ profile, root, directo
  * @param options.leanPrefix - Matching Lean headers for the test-only raw probe.
  * @param options.dependencies - Original Rust locked dependency handoff metadata.
  * @param options.toolchainEnvironment - Explicit Cargo and rustc for the test-only Rust caller.
+ * @param options.pythonEnvironment - Python baseline captured before package installation.
  */
-export const repeatFinContainerEdges = async ({ profile, consumer, handoff, packages, command, measureDispatch = false, expectedModelSha256, leanPrefix, dependencies, toolchainEnvironment }) => {
+export const repeatFinContainerEdges = async ({ profile, consumer, handoff, packages, command, measureDispatch = false, expectedModelSha256, leanPrefix, dependencies, toolchainEnvironment, pythonEnvironment }) => {
 	assert.equal(typeof measureDispatch, "boolean");
 	const root = join(consumer, profile), pkg = packages.find(item => item.role === "component");
 	assert.ok(pkg);
@@ -169,14 +171,18 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 	const deployed = {};
 	if(profile === "python")
 	{
-		const identity = await runCopied(command, ["-I", "-c", "import json, pathlib, sys, lean_fincontainers; print(json.dumps({'site':str(pathlib.Path(lean_fincontainers.__file__).parent.parent),'version':sys.version.split()[0]}))"], root);
+		assert.ok(pythonEnvironment, "Python repeat requires the original pre-install baseline");
+		assert.equal(command, join(pythonEnvironment.venv, "bin/python"));
+		receiptPath = "lean_fincontainers/lean_bridge/package-receipt.json";
+		archiveBytes = (await runCopied("/usr/bin/unzip", ["-p", archive, receiptPath], root)).stdout;
+		assert.equal(sha256(archiveBytes), pythonEnvironment.receiptSha256);
+		const identity = await runFinContainerEdgePython(pythonEnvironment, ["-c", "import json, pathlib, sys, lean_fincontainers; print(json.dumps({'site':str(pathlib.Path(lean_fincontainers.__file__).parent.parent),'version':sys.version.split()[0]}))"], root);
 		const parsed = JSON.parse(identity.stdout);
 		installed = parsed.site;
 		assert.ok(installed.startsWith(`${root}/venv/`));
+		assert.equal(installed, join(pythonEnvironment.venv, pythonEnvironment.site));
 		python = parsed.version;
-		receiptPath = "lean_fincontainers/lean_bridge/package-receipt.json";
-		archiveBytes = (await runCopied("/usr/bin/unzip", ["-p", archive, receiptPath], root)).stdout;
-		args = ["-I", "consumer.py"];
+		args = ["consumer.py"];
 	}
 	else if(profile === "ruby")
 	{
@@ -240,7 +246,9 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 	assert.equal(receipt.version, pkg.version);
 	await verifyNativeFiles(installed, receipt.files);
 	const exactFileClosure = finContainerEdgeClosedProfiles.includes(profile);
-	const checkClosure = path => exactFileClosure ? verifyFinContainerEdgeFileClosure({ installed: path, receiptPath, receiptBytes: archiveBytes }) : null;
+	const pythonAt = path => ({ ...pythonEnvironment, venv: resolve(path, relative(join(pythonEnvironment.venv, pythonEnvironment.site), pythonEnvironment.venv)) });
+	const checkClosure = path => profile === "python" ? verifyFinContainerEdgePythonEnvironment(pythonAt(path))
+		: exactFileClosure ? verifyFinContainerEdgeFileClosure({ installed: path, receiptPath, receiptBytes: archiveBytes }) : null;
 	const fileClosure = await checkClosure(installed);
 	if(profile === "dotnet")
 	{
@@ -280,7 +288,8 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 	const environment = profile === "ruby"
 		? { ...copiedCleanEnvironment, GEM_HOME: join(moved, "gems"), GEM_PATH: join(moved, "gems") }
 		: profile === "dotnet" ? { ...copiedCleanEnvironment, DOTNET_ROOT: dirname(command), DOTNET_CLI_HOME: join(moved, "dotnet-home"), DOTNET_CLI_TELEMETRY_OPTOUT: "1", DOTNET_NOLOGO: "1" } : copiedCleanEnvironment;
-	const repeated = await runCopied(movedCommand, args, moved, environment);
+	const repeated = profile === "python" ? await runFinContainerEdgePython(pythonAt(movedInstall), args, moved, environment)
+		: await runCopied(movedCommand, args, moved, environment);
 	assert.deepEqual(await checkClosure(movedInstall), fileClosure, "package file set after relocated execution");
 	assert.equal(repeated.stderr, "");
 	assert.equal(repeated.stdout, `fin-container-ok:${finContainerEdgeChecks[profile]}\n`);
@@ -305,6 +314,7 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 		: measureDispatch && profile === "python" ? await observeFinContainerEdgePython({
 			installed: movedInstall, receiptPath, receiptBytes: archiveBytes
 			, expectedModelSha256, command: movedCommand
+			, pythonEnvironment: pythonAt(movedInstall)
 			, probeRoot: join(consumer, "python-edge-public") })
 			: measureDispatch && profile === "rust" ? await observeFinContainerEdgeRust({
 				installed: movedInstall, receiptPath, receiptBytes: archiveBytes
@@ -319,7 +329,8 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 					, probeRoot: join(consumer, "ruby-edge-public") }) : null;
 	assert.deepEqual(await checkClosure(movedInstall), fileClosure, "package file set after observations");
 	return { relocatedInstallation: true
-		, ...(fileClosure ? { exactPackageFiles: true, packageFileSetSha256: fileClosure.packageFileSetSha256 } : {})
+		, ...(exactFileClosure ? { exactPackageFiles: true, packageFileSetSha256: fileClosure.packageFileSetSha256 } : {})
+		, ...(pythonEnvironment ? { pythonEnvironment: fileClosure, pythonBytecodePolicy: "isolated-empty-prefix" } : {})
 		, repeatExecution: true
 		, installedFilesUnchanged: true
 		, installedFilesSha256: sha256(canonicalJson(receipt.files))
@@ -378,11 +389,12 @@ export const checkInstalledFinContainerEdges = async (t, profiles, reportPath, {
 		{
 			const packages = receipt.packages.filter(pkg => pkg.target === finContainerTargets[profile][0]);
 			const consumerSource = await finContainerEdgeConsumer(profile);
-			const { command, ...observation } = await installCopiedConsumer({ profile
+			const { command, pythonEnvironment, ...observation } = await installCopiedConsumer({ profile
 				, consumer, handoff, packages, environment, dependencies
 				, fixture: {
 					source: () => consumerSource
 					, verifyInstalledPackage: verifyFinContainerEdgeArchiveClosure
+					, installPython: installFinContainerEdgePython
 					, success: "fin-container-ok"
 					, expectedChecks: finContainerEdgeChecks[profile]
 					, wit: [
@@ -391,7 +403,8 @@ export const checkInstalledFinContainerEdges = async (t, profiles, reportPath, {
 						, "empty-list", "empty-option", "optional-digits"
 					].map(name => new RegExp(`${name}: func\\(`, "u")) } });
 			const { rawAdapterDispatch, publicHostDispatch, ...repeated } = await repeatFinContainerEdges({
-				profile, consumer, handoff, packages, command, measureDispatch
+				profile, consumer, handoff, packages, command
+				, measureDispatch, pythonEnvironment
 				, expectedModelSha256: sha256(modelBytes)
 				, leanPrefix: environment.LEAN_BRIDGE_LEAN_PREFIX
 				, dependencies, toolchainEnvironment: environment });

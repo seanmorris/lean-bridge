@@ -5,7 +5,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { cp, mkdtemp, readFile, rename, rm } from "node:fs/promises";
+import { access, cp, mkdtemp, readFile, rename, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
@@ -15,6 +15,7 @@ import { compileFinContainerEdgePythonFixture } from "./helpers/fin-container-ed
 import { finContainerEdgeEntries, finContainerEdgeInterposer, finContainerEdgeWireSymbols } from "./helpers/fin-container-edge-dispatch.mjs";
 import { finContainerEdgePythonExpected, finContainerEdgePythonProbe, readFinContainerEdgePython } from "./helpers/fin-container-edge-python.mjs";
 import { observeFinContainerEdgePython } from "./helpers/fin-container-edge-python-observer.mjs";
+import { attachFinContainerEdgePythonPackage, createFinContainerEdgePythonEnvironment } from "./helpers/fin-container-edge-python-closure.mjs";
 import { finContainerEdgeConsumer } from "./helpers/fin-container-edges.mjs";
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
@@ -103,12 +104,14 @@ test("both Python floors execute the full consumer with measured Lean entries an
 	await saveLakeFile(root, "rejected-entry.py", source.replace(rejection, `                _edge_original.present([])\n${rejection}`));
 	for(const [floor, expectedVersion] of [["311", "3.11.16"], ["312", "3.12.14"]]) await t.test(`Python ${expectedVersion}`, async () => {
 		const base = resolve(`.toolchains/python${floor}/bin/python3`), stage = join(root, `venv-${floor}`), moved = `${stage}-moved`;
-		await runCopied(base, ["-I", "-B", "-m", "venv", "--without-pip", stage], root, environment);
-		const purelib = (await runCopied(join(stage, "bin/python3"), ["-I", "-B", "-c", "import sysconfig; print(sysconfig.get_path('purelib'))"], root, environment)).stdout.trim();
+		const bootstrap = await createFinContainerEdgePythonEnvironment({ baseCommand: base, venv: stage, cwd: root, withPip: false });
+		const purelib = join(stage, bootstrap.site);
 		assert.ok(purelib.startsWith(stage + "/"));
 		await cp(join(site, "lean_fincontainers"), join(purelib, "lean_fincontainers"), { recursive: true });
+		const attached = await attachFinContainerEdgePythonPackage(bootstrap, { receiptPath, receiptBytes });
 		await rename(stage, moved);
-		const command = join(moved, "bin/python3"), installed = moved + purelib.slice(stage.length);
+		const command = join(moved, "bin/python"), installed = moved + purelib.slice(stage.length);
+		const pythonEnvironment = { ...attached, venv: moved };
 		const runtime = { ...copiedCleanEnvironment, LEAN_NUM_THREADS: "1", LD_PRELOAD: join(root, "interposer.so") };
 		const args = ["-I", "-B", "public.py"];
 		await assert.rejects(() => runCopied(command, args, root, copiedCleanEnvironment)
@@ -121,12 +124,20 @@ test("both Python floors execute the full consumer with measured Lean entries an
 					&& error.details.stderr === (label === "nonzero" ? "edge counters are not initially zero\n" : "wrong Python edge dispatch count\n"), label);
 		await assert.rejects(() => runCopied(command, ["-I", "-B", "rejected-entry.py"], root, runtime)
 			, error => /exited with status 5:/u.test(error.message) && error.details.stderr === "wrong Python edge dispatch count\n");
-		const options = { installed, receiptPath, receiptBytes, expectedModelSha256, command, probeRoot: join(root, `receipt-probe-${floor}`) };
+		const options = { installed, receiptPath, receiptBytes, expectedModelSha256, command, pythonEnvironment, probeRoot: join(root, `receipt-probe-${floor}`) };
+		const marker = join(root, `startup-executed-${floor}`), rejectedProbe = join(root, `startup-probe-${floor}`);
+		await saveLakeFile(installed, "injected.pth", `import pathlib; pathlib.Path(${JSON.stringify(marker)}).write_text('executed')\n`);
+		await assert.rejects(observeFinContainerEdgePython({ ...options, probeRoot: rejectedProbe }), /unrecorded or missing Python environment entry/u);
+		await assert.rejects(access(marker), { code: "ENOENT" });
+		await assert.rejects(access(rejectedProbe), { code: "ENOENT" });
+		await rm(join(installed, "injected.pth"));
 		const report = await observeFinContainerEdgePython(options);
 		assert.equal(report.kind, "fin-container-edge-public-python-v1");
 		assert.equal(report.profile, "python"); assert.equal(report.python, expectedVersion);
 		assert.equal(report.observed, true); assert.equal(report.checks, 14095); assert.equal(report.measuredCalls, 12044);
 		assert.equal(report.repeatedColdProcess, true); assert.equal(report.installedFilesUnchanged, true);
+		assert.equal(report.bytecodePolicy, "isolated-empty-prefix");
+		assert.equal(report.pythonEnvironment.environmentSha256, attached.expectedSha256);
 		assert.deepEqual(report.observations, finContainerEdgePythonExpected);
 		const definitions = Object.fromEntries(finContainerEdgeWireSymbols.map(symbol => [symbol, join(report.libraryDirectory, report.definitions[symbol])]));
 		const identity = { definitions, packageDirectory: report.packageDirectory };
@@ -145,7 +156,7 @@ test("both Python floors execute the full consumer with measured Lean entries an
 			, error => /exited with status 6:/u.test(error.message) && error.details.stdout === "" && error.details.stderr === "unexpected Python package location\n");
 		const path = "lean_fincontainers/_native.py", bytes = await readFile(join(installed, path));
 		await saveLakeFile(installed, path, Buffer.concat([bytes, Buffer.from("\n# altered\n")]));
-		await assert.rejects(observeFinContainerEdgePython({ ...options, probeRoot: join(root, `changed-module-${floor}`) }), /native artifact drift/u);
+		await assert.rejects(observeFinContainerEdgePython({ ...options, probeRoot: join(root, `changed-module-${floor}`) }), /Python environment drift: .*lean_fincontainers\/_native.py/u);
 		await saveLakeFile(installed, path, bytes);
 		t.diagnostic(JSON.stringify({ scope: "compiler/runtime source gate, not installed-package acceptance"
 			, python: report.python, checks: report.checks

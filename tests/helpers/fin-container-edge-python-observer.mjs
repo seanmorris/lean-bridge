@@ -12,6 +12,7 @@ import { copiedCleanEnvironment, runCopied } from "./copied-fixture-install.mjs"
 import { finContainerEdgeColumns, finContainerEdgeEntries, finContainerEdgeInterposer, finContainerEdgeSourceEntries, finContainerEdgeWireSymbols } from "./fin-container-edge-dispatch.mjs";
 import { assertFinContainerEdgeProbeLocation, finContainerEdgeDefinitions, verifyFinContainerEdgeDeployment } from "./fin-container-edge-observer.mjs";
 import { finContainerEdgePythonProbe, readFinContainerEdgePython } from "./fin-container-edge-python.mjs";
+import { runFinContainerEdgePython, verifyFinContainerEdgePythonEnvironment } from "./fin-container-edge-python-closure.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 
 /**
@@ -24,10 +25,16 @@ import { saveLakeFile } from "./lake-workspace.mjs";
  * @param options.expectedModelSha256 - Producer model digest.
  * @param options.probeRoot - New directory outside the installation.
  * @param options.command - Absolute moved virtual environment interpreter.
+ * @param options.pythonEnvironment - Original bootstrap inventory plus the receipt-authenticated payload.
  */
-export const observeFinContainerEdgePython = async ({ installed, receiptPath, receiptBytes, expectedModelSha256, probeRoot, command }) => {
+export const observeFinContainerEdgePython = async ({ installed, receiptPath, receiptBytes, expectedModelSha256, probeRoot, command, pythonEnvironment }) => {
 	await assertFinContainerEdgeProbeLocation(installed, probeRoot);
 	assert.ok(typeof command === "string" && isAbsolute(command) && !command.includes("\0"));
+	assert.ok(pythonEnvironment, "Python observer requires a pre-install environment baseline");
+	assert.equal(command, join(pythonEnvironment.venv, "bin/python"));
+	assert.equal(installed, join(pythonEnvironment.venv, pythonEnvironment.site));
+	assert.equal(pythonEnvironment.receiptSha256, sha256(receiptBytes));
+	const environmentIdentity = await verifyFinContainerEdgePythonEnvironment(pythonEnvironment);
 	const options = { installed, receiptPath, receiptBytes, expectedModelSha256 };
 	const before = await verifyFinContainerEdgeDeployment(options);
 	const modules = ["lean_fincontainers/__init__.py", "lean_fincontainers/_native.py"];
@@ -41,16 +48,16 @@ export const observeFinContainerEdgePython = async ({ installed, receiptPath, re
 	await saveLakeFile(probeRoot, "public.py", source);
 	await saveLakeFile(probeRoot, "interposer.c", instrument);
 	await runCopied("/usr/bin/cc", ["-std=c11", "-Wall", "-Wextra", "-Werror", "-shared", "-fPIC", "interposer.c", "-ldl", "-o", "libedge.so"], probeRoot, { ...copiedCleanEnvironment, PATH: "/usr/bin:/bin" });
-	const args = ["-I", "-B", "public.py"];
-	await assert.rejects(() => runCopied(command, args, probeRoot, copiedCleanEnvironment)
+	const args = ["public.py"];
+	await assert.rejects(() => runFinContainerEdgePython(pythonEnvironment, args, probeRoot, copiedCleanEnvironment)
 		, error => /exited with status 2:/u.test(error.message) && error.details.stdout === "" && error.details.stderr === "edge interposer is not loaded\n");
 	const environment = { ...copiedCleanEnvironment, LEAN_NUM_THREADS: "1", LD_PRELOAD: join(probeRoot, "libedge.so") };
-	const run = await runCopied(command, args, probeRoot, environment);
+	const run = await runFinContainerEdgePython(pythonEnvironment, args, probeRoot, environment);
 	assert.equal(run.stderr, "");
 	const observations = readFinContainerEdgePython(run.stdout);
-	const repeat = await runCopied(command, args, probeRoot, environment);
+	const repeat = await runFinContainerEdgePython(pythonEnvironment, args, probeRoot, environment);
 	assert.equal(repeat.stderr, ""); assert.equal(repeat.stdout, run.stdout, "a fresh Python process must repeat the exact transcript");
-	const version = await runCopied(command, ["-I", "-B", "-c", "import sys; print(sys.version.split()[0])"], probeRoot, copiedCleanEnvironment);
+	const version = await runFinContainerEdgePython(pythonEnvironment, ["-c", "import sys; print(sys.version.split()[0])"], probeRoot, copiedCleanEnvironment);
 	assert.equal(version.stderr, ""); assert.match(version.stdout, /^3\.(?:1[1-9]|[2-9][0-9])\.[0-9]+\n$/u);
 	assert.deepEqual(await verifyFinContainerEdgeDeployment(options), before, "Python observation must not alter installed files");
 	return { kind: "fin-container-edge-public-python-v1"
@@ -69,6 +76,8 @@ export const observeFinContainerEdgePython = async ({ installed, receiptPath, re
 		, definitions: Object.fromEntries(Object.entries(definitions).map(([symbol, path]) => [symbol, basename(path)]))
 		, moduleDigests: Object.fromEntries(modules.map(path => [path, before.receipt.files[path].sha256]))
 		, ...before.identity
+		, pythonEnvironment: environmentIdentity
+		, bytecodePolicy: "isolated-empty-prefix"
 		, probeSha256: sha256(source), interposerSha256: sha256(instrument)
 		, stdoutSha256: sha256(run.stdout), missingInstrumentRefused: true
 		, installedFilesUnchanged: true, runtimeDefinitionsChecked: true
