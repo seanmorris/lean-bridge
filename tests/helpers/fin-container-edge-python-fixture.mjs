@@ -9,8 +9,7 @@ import { join } from "node:path";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { generateCopiedPythonPackage } from "../../src/backends/python/copied-values.mjs";
-import { compileFinContainerEdgeFixture } from "./fin-container-edge-compiled-fixture.mjs";
-import { runCopied } from "./copied-fixture-install.mjs";
+import { compileFinContainerEdgeSplitFixture } from "./fin-container-edge-compiled-fixture.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 
 /**
@@ -20,16 +19,8 @@ import { saveLakeFile } from "./lake-workspace.mjs";
  * @param lean - Absolute pinned Lean executable.
  */
 export const compileFinContainerEdgePythonFixture = async (root, lean) => {
-	const compiled = await compileFinContainerEdgeFixture(root, lean);
-	const { model, environment, prefix } = compiled;
-	const runtime = [`-L${join(prefix, "lib/lean")}`, "-lleanshared", `-Wl,-rpath,${join(prefix, "lib/lean")}`];
-	await runCopied("/usr/bin/cc", ["-shared", "-fPIC", "-O2", `-I${join(prefix, "include")}`, "-I.", "broker.c", ...runtime, "-lpthread", "-Wl,-z,defs", "-o", "liblean_bridge_native.so"], root, environment);
-	await runCopied("/usr/bin/cc", [
-		"-shared", "-fPIC", "-O2", `-I${join(prefix, "include")}`
-		, "-I.", "-Iraw/include", "-Iraw/internal", "FinContainers.c", "adapters.c"
-		, "native.c", "raw/src/fincontainers.c", "-L.", "-llean_bridge_native"
-		, ...runtime, "-Wl,-rpath,$ORIGIN", "-Wl,-z,defs", "-o", "libedge-source.so"
-	], root, environment);
+	const compiled = await compileFinContainerEdgeSplitFixture(root, lean);
+	const { model, prefix } = compiled;
 	const site = join(root, "python"), directory = join(site, "lean_fincontainers/native/linux-x64");
 	await mkdir(directory, { recursive: true });
 	const libraries = {};
