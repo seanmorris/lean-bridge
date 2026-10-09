@@ -42,7 +42,8 @@ export const instrumentReviewedFinWasmLean = lean => {
 };
 
 /**
- * The reviewed contract of a probe build: the unchanged reviewed declarations, then the unrefined control.
+ * The reviewed contract of a probe build: the unchanged reviewed declarations, then the unrefined control, which
+ * has no refinement extension.
  *
  * @param selection - Scalar-only or structural corpus.
  */
@@ -51,7 +52,8 @@ export const instrumentReviewedFinWasmIr = selection => {
 	const document = reviewedFinWasmIr(selection);
 	const [control] = corpusReviewedIr({ id: "reviewed-fin" }, [{ name: `ReviewedFin.${reviewedFinWasmSourceControl}`, parameters: ["nat"], result: "nat" }]).declarations;
 	control.parameters.forEach((parameter, position) => { parameter.name = `arg${position}`; });
-	control.source.extensions["lean-lang.org/refinements"] = { parameters: [null], result: null };
+	// An unrefined export carries no refinement extension, as the compiler emits it; an all-null one is refused.
+	assert.equal(Object.hasOwn(control.source.extensions, "lean-lang.org/refinements"), false);
 	const instrumented = { ...document, declarations: [...document.declarations, control] };
 	assert.deepEqual(instrumented.declarations.slice(0, -1), reviewedFinWasmIr(selection).declarations, "reviewed refinements are unchanged");
 	return instrumented;

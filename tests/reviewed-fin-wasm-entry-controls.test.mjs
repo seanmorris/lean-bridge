@@ -13,6 +13,9 @@ import { createComponentPrivateAbi } from "../src/build/component-callable-adapt
 import { accountReviewedFinWasmEntry, expectReviewedFinWasmEntry, reviewedFinWasmEntryMarker, reviewedFinWasmEntrySelection, reviewedFinWasmEntrySymbols } from "./helpers/reviewed-fin-wasm-entry.mjs";
 import { instrumentReviewedFinWasmIr, instrumentReviewedFinWasmLean, reviewedFinWasmSourceControl, reviewedFinWasmSourceControls } from "./helpers/reviewed-fin-wasm-source-entry.mjs";
 import { reviewedFinWasmIr } from "./helpers/reviewed-fin-wasm-fixture.mjs";
+import { reviewedSourceSelection } from "../src/analyze/reviewed-source.mjs";
+import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
+import { canonicalJson } from "../src/capsule/node.mjs";
 import { reviewedFinWasmExpected } from "./helpers/reviewed-fin-wasm-install.mjs";
 import { withWasmFrameEntryObserver } from "./helpers/wasm-frame-entry-observer.mjs";
 import { captureConsoleError, entryBegin, entryEnd, measureCorpus } from "./fixtures/reviewed-fin-wasm/javascript-entry.mjs";
@@ -95,6 +98,7 @@ test("the selection authenticates the installed bytes, contract and private ABI 
 		, ["probe control omitted", changed("scalar", "probe", ir => { ir.declarations.pop(); })]
 		, ["probe control refined", changed("scalar", "probe", ir => { ir.declarations.at(-1).source.extensions["lean-lang.org/refinements"] = { parameters: [{ kind: "fin", bound: "10" }], result: null }; })]
 		, ["probe control substituted", changed("scalar", "probe", ir => { ir.declarations.at(-1).parameters[0].type = { kind: "primitive", name: "int" }; })]
+		, ["probe control with a no-op refinement", changed("scalar", "probe", ir => { ir.declarations.at(-1).source.extensions["lean-lang.org/refinements"] = { parameters: [null], result: null }; })]
 		, ["probe as original", { descriptor: descriptorOf(instrumentReviewedFinWasmIr("scalar")), bytes, selection: "scalar", mode: "original" }]
 		, ["original as probe", { descriptor: descriptorOf(reviewedFinWasmIr("scalar")), bytes, selection: "scalar", mode: "probe" }]
 	]) assert.throws(() => reviewedFinWasmEntrySelection(options), assert.AssertionError, label);
@@ -110,7 +114,18 @@ test("probe inputs add only the markers and the unrefined control", async () => 
 	{
 		const ir = instrumentReviewedFinWasmIr(selection);
 		assert.deepEqual(ir.declarations.slice(0, -1), reviewedFinWasmIr(selection).declarations);
-		assert.deepEqual([ir.declarations.at(-1).name, ir.declarations.at(-1).source.extensions["lean-lang.org/refinements"]], [reviewedFinWasmSourceControl, { parameters: [null], result: null }]);
+		assert.equal(ir.declarations.at(-1).name, reviewedFinWasmSourceControl);
+		assert.equal(Object.hasOwn(ir.declarations.at(-1).source.extensions, "lean-lang.org/refinements"), false);
+		// The production review gate admits the original and probe contracts as captured review inputs.
+		for(const [document, extra] of [[reviewedFinWasmIr(selection), []], [ir, [`ReviewedFin.${reviewedFinWasmSourceControl}`]]])
+		{
+			const source = canonicalJson(document), review = { schemaVersion: 1, path: "api.binding-ir.json", source, sourceSha256: sha256(source), semanticSha256: hashBindingIr(document) };
+			assert.deepEqual(reviewedSourceSelection(review).exports, [...reviewedFinWasmIr(selection).declarations.map(item => item.source.declaration), ...extra].sort());
+		}
+		// An all-null no-op refinement on the control is not a buildable review.
+		const noop = structuredClone(ir); noop.declarations.at(-1).source.extensions["lean-lang.org/refinements"] = { parameters: [null], result: null };
+		const source = canonicalJson(noop);
+		assert.throws(() => reviewedSourceSelection({ schemaVersion: 1, path: "api.binding-ir.json", source, sourceSha256: sha256(source), semanticSha256: hashBindingIr(noop) }));
 	}
 });
 
