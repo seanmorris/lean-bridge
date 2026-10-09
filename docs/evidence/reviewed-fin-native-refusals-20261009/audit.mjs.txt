@@ -1,0 +1,45 @@
+import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
+import { readFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { canonicalJson } from "../src/capsule/node.mjs";
+import { reviewedFinRefusalExpectations, reviewedFinRefusalFixtures } from "../tests/helpers/reviewed-fin-refusals.mjs";
+const sha = bytes => createHash("sha256").update(bytes).digest("hex");
+const root = "/app/build/vo1438-native-refusals-b6b06ef";
+const revision = "b6b06ef9518aa556528e9bd6768a2ee1a648daa6";
+const queueBytes = await readFile(`${root}/queue.json`), endBytes = await readFile(`${root}/end.json`);
+const queue = JSON.parse(queueBytes), end = JSON.parse(endBytes);
+assert.equal(queue.revision, revision);
+assert.equal(queue.environment.LEAN_BRIDGE_REVIEWED_FIN_REFUSALS, "native-fin,fin-containers");
+assert.equal(queue.environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR, "2.36");
+assert.equal(queue.environment.LEAN_BRIDGE_REVIEWED_FIN_REFUSAL_REPORT_DIR, root);
+assert.match(queue.lean, /Lean \(version 4\.32\.2,/u);
+assert.equal(end.code, 0); assert.equal(end.signal, null); assert.equal(end.stoppedForDisk, false);
+assert.ok(end.minimumFreeMiB >= 1024);
+assert.equal(sha(await readFile("build/run-vo1438-native-refusals-b6b06ef.mjs")), queue.runnerSha256);
+for (const [path, digest] of Object.entries(queue.sources)) {
+  const committed = execFileSync("git", ["show", `${revision}:${path}`], { maxBuffer: 16 * 1024 * 1024 });
+  assert.equal(sha(committed), digest, path);
+  assert.equal(sha(await readFile(`${queue.cwd}/${path}`)), digest, path);
+}
+const tap = await readFile(`${root}/run.tap`);
+assert.equal(sha(tap), end.tapSha256);
+for (const [label, count] of [["tests", 23], ["pass", 23], ["fail", 0], ["cancelled", 0], ["skipped", 0], ["todo", 0]])
+  assert.match(tap.toString(), new RegExp(`^# ${label} ${count}$`, "mu"));
+assert.doesNotMatch(tap.toString(), /^\s*not ok /mu);
+const reports = [];
+for (const fixture of reviewedFinRefusalFixtures) {
+  const bytes = await readFile(`${root}/${fixture.label}.json`), report = JSON.parse(bytes);
+  assert.equal(report.schemaVersion, 1); assert.equal(report.fixture, fixture.fixture);
+  assert.equal(report.module, fixture.module); assert.equal(report.target, "c");
+  assert.equal(report.control.published, true);
+  assert.equal(report.control.reviewSha256, sha(canonicalJson(fixture.review())));
+  assert.match(report.control.bindingIrSha256, /^[a-f0-9]{64}$/u);
+  const expected = reviewedFinRefusalExpectations(fixture).map(({ label, field, reviewSha256 }) => ({ label, field, reviewSha256,
+    code: "reviewed-ir-source-mismatch", releaseRoot: "ENOENT" }));
+  assert.deepEqual(report.cases, expected);
+  reports.push({ fixture: fixture.label, cases: report.cases.length, control: report.control, sha256: sha(bytes) });
+}
+console.log(JSON.stringify({ revision, queueSha256: sha(queueBytes), endSha256: sha(endBytes), tapSha256: sha(tap),
+  tests: 23, skipped: 0, sourcePins: Object.keys(queue.sources).length, minimumFreeMiB: end.minimumFreeMiB,
+  scope: "Local glibc 2.36 native fresh-Lean refusals, not hosted release-floor acceptance", reports }, null, 2));

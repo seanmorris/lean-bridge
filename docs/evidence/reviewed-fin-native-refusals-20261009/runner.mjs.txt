@@ -1,0 +1,78 @@
+import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { execFileSync, spawn } from "node:child_process";
+import { closeSync, mkdirSync, openSync, readFileSync, statfsSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+
+const cwd = "/app/build/worktrees/clean-75a5114";
+const revision = "b6b06ef9518aa556528e9bd6768a2ee1a648daa6";
+const output = "/app/build/vo1438-native-refusals-b6b06ef";
+const sha = bytes => createHash("sha256").update(bytes).digest("hex");
+const git = args => execFileSync("git", args, { cwd, encoding: "utf8", maxBuffer: 16 * 1024 * 1024 }).trim();
+const clean = () => {
+  assert.equal(git(["rev-parse", "HEAD"]), revision);
+  assert.equal(git(["status", "--porcelain", "--untracked-files=no"]), "");
+};
+const freeMiB = () => { const disk = statfsSync(cwd); return Math.floor(disk.bavail * disk.bsize / 1024 ** 2); };
+clean();
+assert.ok(freeMiB() >= 2048, "Need at least 2 GiB available before compiling");
+mkdirSync(output);
+const paths = ["tests/reviewed-fin-refusals.test.mjs", "tests/helpers/reviewed-fin-refusals.mjs",
+  "tests/helpers/reviewed-fin-fixture.mjs", "tests/helpers/reviewed-fin-container-fixture.mjs",
+  "tests/helpers/copied-fixture-install.mjs", "tests/helpers/fin-container-install.mjs",
+  "tests/fixtures/onboarding/native-fin/NativeFin.lean", "tests/fixtures/onboarding/native-fin-containers/FinContainers.lean",
+  "src/analyze/reviewed-source.mjs", "src/analyze/semantic-model.mjs", "src/analyze/NativeExports.lean",
+  "src/build/canonical-build.mjs", "src/build/native-project.mjs", "src/build/native-model.mjs"];
+const sources = Object.fromEntries(paths.map(path => {
+  const current = readFileSync(join(cwd, path));
+  const committed = execFileSync("git", ["show", `${revision}:${path}`], { cwd, maxBuffer: 16 * 1024 * 1024 });
+  assert.ok(current.equals(committed), path);
+  return [path, sha(current)];
+}));
+const lean = "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2";
+const selectedEnvironment = {
+  NO_COLOR: "1", LEAN_BRIDGE_REVIEWED_FIN_REFUSALS: "native-fin,fin-containers",
+  LEAN_BRIDGE_REVIEWED_FIN_REFUSAL_REPORT_DIR: output,
+  LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR: "2.36", LEAN_BRIDGE_LEAN_PREFIX: lean,
+  LEAN_NUM_THREADS: "1", OMP_NUM_THREADS: "1", MAKEFLAGS: "-j1"
+};
+const environment = { ...Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith("LEAN_BRIDGE_") && key !== "FORCE_COLOR")), ...selectedEnvironment };
+const args = ["-c", "3", process.execPath, "--test", "--test-concurrency=1", "--test-reporter=tap", "tests/reviewed-fin-refusals.test.mjs"];
+const startedAt = new Date().toISOString();
+const queue = { revision, tree: git(["rev-parse", "HEAD^{tree}"]), cwd, startedAt, sources,
+  runnerSha256: sha(readFileSync(import.meta.filename)), command: ["/usr/bin/taskset", ...args],
+  environment: selectedEnvironment, unset: ["FORCE_COLOR", "other LEAN_BRIDGE_* variables"],
+  node: process.version, lean: execFileSync(join(lean, "bin/lean"), ["--version"], { encoding: "utf8" }).trim(),
+  glibc: execFileSync("/usr/bin/getconf", ["GNU_LIBC_VERSION"], { encoding: "utf8" }).trim(),
+  freeMiB: freeMiB(), stopFloorMiB: 1024, scope: "Local fresh-Lean native refusal gates; not hosted release-floor acceptance" };
+writeFileSync(join(output, "queue.json"), JSON.stringify(queue, null, 2) + "\n", { flag: "wx" });
+const log = openSync(join(output, "run.tap"), "wx");
+let minimumFreeMiB = queue.freeMiB, stoppedForDisk = false, escalation;
+const child = spawn("/usr/bin/taskset", args, { cwd, env: environment, detached: true, stdio: ["ignore", log, log] });
+console.log(JSON.stringify({ startedAt, pid: child.pid, revision, freeMiB: minimumFreeMiB, output }));
+const monitor = setInterval(() => {
+  minimumFreeMiB = Math.min(minimumFreeMiB, freeMiB());
+  if (minimumFreeMiB < 1024 && !stoppedForDisk) {
+    stoppedForDisk = true;
+    process.kill(-child.pid, "SIGTERM");
+    escalation = setTimeout(() => { try { process.kill(-child.pid, "SIGKILL"); } catch {} }, 10000);
+  }
+}, 5000);
+const result = await new Promise(resolve => {
+  child.once("error", error => resolve({ code: null, signal: null, error: error.message }));
+  child.once("close", (code, signal) => resolve({ code, signal }));
+});
+clearInterval(monitor); clearTimeout(escalation); closeSync(log);
+minimumFreeMiB = Math.min(minimumFreeMiB, freeMiB());
+const end = { ...result, stoppedForDisk, minimumFreeMiB, endedAt: new Date().toISOString(), tapSha256: sha(readFileSync(join(output, "run.tap"))) };
+writeFileSync(join(output, "end.json"), JSON.stringify(end, null, 2) + "\n", { flag: "wx" });
+console.log(JSON.stringify(end));
+clean();
+assert.equal(stoppedForDisk, false);
+assert.equal(result.code, 0);
+for (const [label, expected] of [["native-fin", 10], ["fin-containers", 9]]) {
+  const bytes = readFileSync(join(output, `${label}.json`)), report = JSON.parse(bytes);
+  assert.equal(report.control.published, true); assert.equal(report.cases.length, expected);
+  for (const item of report.cases) { assert.equal(item.code, "reviewed-ir-source-mismatch"); assert.equal(item.releaseRoot, "ENOENT"); }
+  console.log(JSON.stringify({ label, cases: report.cases.length, sha256: sha(bytes) }));
+}

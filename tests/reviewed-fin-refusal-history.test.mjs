@@ -13,6 +13,7 @@ import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
 import { beforeReviewedFinRefusalSource, reviewedFinRefusalChangedPaths, reviewedFinRefusalHistoryPath, reviewedFinRefusalPredecessor, reverseReviewedFinRefusalUpdate } from "./helpers/reviewed-fin-refusal-source-history.mjs";
+import "./helpers/reviewed-fin-native-refusal-evidence-tests.mjs";
 
 test("reviewed Fin refusal history authenticates exact predecessors and refuses unknown edits", async () => {
 	const record = JSON.parse(await readFile(reviewedFinRefusalHistoryPath));

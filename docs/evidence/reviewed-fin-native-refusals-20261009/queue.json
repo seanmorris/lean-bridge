@@ -1,0 +1,53 @@
+{
+  "revision": "b6b06ef9518aa556528e9bd6768a2ee1a648daa6",
+  "tree": "b7069ad3c74c463dd3f7e8416d9d224a19aaeb48",
+  "cwd": "/app/build/worktrees/clean-75a5114",
+  "startedAt": "2026-10-09T04:12:55.614Z",
+  "sources": {
+    "tests/reviewed-fin-refusals.test.mjs": "bec62f6158afb23accdb8ec536e2dbff8f918f069c221f6f0ded0548c491f500",
+    "tests/helpers/reviewed-fin-refusals.mjs": "da6cb9e1235c7865edd91029d5c7167389e3319bae1693ebcc1486b3301430cc",
+    "tests/helpers/reviewed-fin-fixture.mjs": "92f3a2cbc3230bf54b591af49cfa4f1b07defd70073f648a0fd622b5c4aaebc1",
+    "tests/helpers/reviewed-fin-container-fixture.mjs": "5e4d92f9bb4ccff65fb9356cc3a6613f5102665e59dbe38b99868e4804c8a132",
+    "tests/helpers/copied-fixture-install.mjs": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+    "tests/helpers/fin-container-install.mjs": "2024d6c6a44687293750c3ee5c25f092d689065e17beb8d535610963921c9329",
+    "tests/fixtures/onboarding/native-fin/NativeFin.lean": "7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b",
+    "tests/fixtures/onboarding/native-fin-containers/FinContainers.lean": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be",
+    "src/analyze/reviewed-source.mjs": "d3a875e4fc6dca6b7a93e70db62980d01f5b2a68f2e5e8999b93bbf0ca04a462",
+    "src/analyze/semantic-model.mjs": "ec175517574f2e76ed346d961b7f5e3bc2eac96e95b6c0b535cf8e25449b3dcc",
+    "src/analyze/NativeExports.lean": "46b46cbb21fe51d166ab700cde2c41583bc3a093f67cecd07d104cdf649f61ce",
+    "src/build/canonical-build.mjs": "17e88b02d75c81379c0a8f6e6b14ab583fabfaa8b7fdb747174505256ca48e7c",
+    "src/build/native-project.mjs": "b941e848c291a05a4fab3e93f2d9f5d3a5c9380f9a290c5668378c05ae5b5cf7",
+    "src/build/native-model.mjs": "aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13"
+  },
+  "runnerSha256": "3a37edea3b9a2a80200fcbc5e34c6dda6ccc5895237f82ea1c752ba71f4db058",
+  "command": [
+    "/usr/bin/taskset",
+    "-c",
+    "3",
+    "/usr/bin/node",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "tests/reviewed-fin-refusals.test.mjs"
+  ],
+  "environment": {
+    "NO_COLOR": "1",
+    "LEAN_BRIDGE_REVIEWED_FIN_REFUSALS": "native-fin,fin-containers",
+    "LEAN_BRIDGE_REVIEWED_FIN_REFUSAL_REPORT_DIR": "/app/build/vo1438-native-refusals-b6b06ef",
+    "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+    "LEAN_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MAKEFLAGS": "-j1"
+  },
+  "unset": [
+    "FORCE_COLOR",
+    "other LEAN_BRIDGE_* variables"
+  ],
+  "node": "v22.23.2",
+  "lean": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)",
+  "glibc": "glibc 2.36",
+  "freeMiB": 4685,
+  "stopFloorMiB": 1024,
+  "scope": "Local fresh-Lean native refusal gates; not hosted release-floor acceptance"
+}

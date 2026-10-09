@@ -1,0 +1,77 @@
+{
+  "cases": [
+    {
+      "code": "reviewed-ir-source-mismatch",
+      "field": "bindingIr.declarations[5].source.extensions.lean-lang.org/refinements.parameters[0].arguments[0].arguments[0].bound",
+      "label": "tightened nested option bound",
+      "releaseRoot": "ENOENT",
+      "reviewSha256": "b40bbd1f70d154c2b33adc5e845fa0a420f09a0d23319663cfd5b5c9fd3eea29"
+    },
+    {
+      "code": "reviewed-ir-source-mismatch",
+      "field": "bindingIr.declarations[6].source.extensions.lean-lang.org/refinements.parameters[0].arguments[0].bound",
+      "label": "changed list bound wider than 64 bits",
+      "releaseRoot": "ENOENT",
+      "reviewSha256": "7146184080d6619b910fb0e56baa4696284f9f287cde58182abc762324b9d9d6"
+    },
+    {
+      "code": "reviewed-ir-source-mismatch",
+      "field": "bindingIr.declarations[0].source.extensions.lean-lang.org/refinements.parameters[0].arguments[0].bound",
+      "label": "inhabited Fin 0 element",
+      "releaseRoot": "ENOENT",
+      "reviewSha256": "9771e4364d3a8edd3e244254326e9adf39919efe5ab4ce2bc7e6aafcaf4e7d9b"
+    },
+    {
+      "code": "reviewed-ir-source-mismatch",
+      "field": "bindingIr.declarations[4].source.extensions.lean-lang.org/refinements",
+      "label": "omitted option bound",
+      "releaseRoot": "ENOENT",
+      "reviewSha256": "409ee63ea34dd38022a5d7d6691a71c7cb7c6a3ad0ddfc8d68d05228b3089243"
+    },
+    {
+      "code": "reviewed-ir-source-mismatch",
+      "field": "bindingIr.declarations[1].source.extensions.lean-lang.org/refinements.result.arguments[0].arguments[0].bound",
+      "label": "changed nested result branch",
+      "releaseRoot": "ENOENT",
+      "reviewSha256": "e4d2184efba8d387b414490eb2df3cc8fc692df05eea659604c8f4b253d9970f"
+    },
+    {
+      "code": "reviewed-ir-source-mismatch",
+      "field": "bindingIr.declarations[2].source.extensions.lean-lang.org/refinements.parameters[1].arguments[0].bound",
+      "label": "loosened second-argument bound",
+      "releaseRoot": "ENOENT",
+      "reviewSha256": "bc03d51706d28556798634aaaca89e5c7493a208abf4fe3d762efaf1c64e6e3e"
+    },
+    {
+      "code": "reviewed-ir-source-mismatch",
+      "field": "bindingIr.declarations[7].source.extensions.lean-lang.org/refinements.parameters[0]",
+      "label": "result bound moved to the parameter",
+      "releaseRoot": "ENOENT",
+      "reviewSha256": "5ed388225bbccb4446fa26a3cee94875b0962e68721be490980f5a340de906a7"
+    },
+    {
+      "code": "reviewed-ir-source-mismatch",
+      "field": "bindingIr.types[0].source.extensions.lean-lang.org/nominal-refinements.target.arguments[0].bound",
+      "label": "tightened alias element bound",
+      "releaseRoot": "ENOENT",
+      "reviewSha256": "694cc225547c56e406b333022c4da20cfd725224de5829f7759aa582f3e82b61"
+    },
+    {
+      "code": "reviewed-ir-source-mismatch",
+      "field": "bindingIr.types[0].source.extensions.lean-lang.org/nominal-refinements",
+      "label": "omitted alias bound",
+      "releaseRoot": "ENOENT",
+      "reviewSha256": "6d67b8c64d64c1cf65d71d9c8bb6afe0fe9b80af933d070e3c86a012f47d3311"
+    }
+  ],
+  "control": {
+    "bindingIrSha256": "ba4b5ca272ca2c0f48de7fe0d85d87b0fbfb54b1d051a552aae2d1ac8df5cc56",
+    "published": true,
+    "reviewSha256": "f118669910537d41255cd615c7fcf7ebce8b031ac5f4abce9f639b7d8a20c1be"
+  },
+  "fixture": "tests/fixtures/onboarding/native-fin-containers",
+  "module": "FinContainers",
+  "schemaVersion": 1,
+  "target": "c"
+}
+

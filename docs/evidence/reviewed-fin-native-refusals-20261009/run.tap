@@ -1,0 +1,150 @@
+TAP version 13
+# Subtest: every changed review is admitted and differs from its unchanged review only in its named bound
+ok 1 - every changed review is admitted and differs from its unchanged review only in its named bound
+  ---
+  duration_ms: 288.898704
+  type: 'test'
+  ...
+# Subtest: the cases cover each bound site the fixtures expose
+ok 2 - the cases cover each bound site the fixtures expose
+  ---
+  duration_ms: 0.321261
+  type: 'test'
+  ...
+# Subtest: changed native-fin reviews are refused against fresh Lean beside a publishing control
+    # Subtest: wrong scalar bound
+    ok 1 - wrong scalar bound
+      ---
+      duration_ms: 21526.125488
+      type: 'test'
+      ...
+    # Subtest: tightened alias bound
+    ok 2 - tightened alias bound
+      ---
+      duration_ms: 20686.01508
+      type: 'test'
+      ...
+    # Subtest: loosened mixed-argument bound
+    ok 3 - loosened mixed-argument bound
+      ---
+      duration_ms: 20965.915214
+      type: 'test'
+      ...
+    # Subtest: inhabited Fin 0
+    ok 4 - inhabited Fin 0
+      ---
+      duration_ms: 21465.763269
+      type: 'test'
+      ...
+    # Subtest: changed bound wider than 64 bits
+    ok 5 - changed bound wider than 64 bits
+      ---
+      duration_ms: 20922.14014
+      type: 'test'
+      ...
+    # Subtest: omitted input bound
+    ok 6 - omitted input bound
+      ---
+      duration_ms: 20062.907863
+      type: 'test'
+      ...
+    # Subtest: omitted result bound
+    ok 7 - omitted result bound
+      ---
+      duration_ms: 17793.915045
+      type: 'test'
+      ...
+    # Subtest: invented input bound
+    ok 8 - invented input bound
+      ---
+      duration_ms: 18135.705727
+      type: 'test'
+      ...
+    # Subtest: result bound moved to the parameter
+    ok 9 - result bound moved to the parameter
+      ---
+      duration_ms: 17683.344306
+      type: 'test'
+      ...
+    # Subtest: whole decision omitted
+    ok 10 - whole decision omitted
+      ---
+      duration_ms: 19839.483378
+      type: 'test'
+      ...
+    1..10
+ok 3 - changed native-fin reviews are refused against fresh Lean beside a publishing control
+  ---
+  duration_ms: 396111.525542
+  type: 'test'
+  ...
+# Subtest: changed fin-containers reviews are refused against fresh Lean beside a publishing control
+    # Subtest: tightened nested option bound
+    ok 1 - tightened nested option bound
+      ---
+      duration_ms: 22836.8039
+      type: 'test'
+      ...
+    # Subtest: changed list bound wider than 64 bits
+    ok 2 - changed list bound wider than 64 bits
+      ---
+      duration_ms: 24088.528906
+      type: 'test'
+      ...
+    # Subtest: inhabited Fin 0 element
+    ok 3 - inhabited Fin 0 element
+      ---
+      duration_ms: 22356.376338
+      type: 'test'
+      ...
+    # Subtest: omitted option bound
+    ok 4 - omitted option bound
+      ---
+      duration_ms: 27968.136716
+      type: 'test'
+      ...
+    # Subtest: changed nested result branch
+    ok 5 - changed nested result branch
+      ---
+      duration_ms: 22914.159662
+      type: 'test'
+      ...
+    # Subtest: loosened second-argument bound
+    ok 6 - loosened second-argument bound
+      ---
+      duration_ms: 20092.134732
+      type: 'test'
+      ...
+    # Subtest: result bound moved to the parameter
+    ok 7 - result bound moved to the parameter
+      ---
+      duration_ms: 21341.177138
+      type: 'test'
+      ...
+    # Subtest: tightened alias element bound
+    ok 8 - tightened alias element bound
+      ---
+      duration_ms: 18800.293369
+      type: 'test'
+      ...
+    # Subtest: omitted alias bound
+    ok 9 - omitted alias bound
+      ---
+      duration_ms: 19978.706923
+      type: 'test'
+      ...
+    1..9
+ok 4 - changed fin-containers reviews are refused against fresh Lean beside a publishing control
+  ---
+  duration_ms: 394670.597295
+  type: 'test'
+  ...
+1..4
+# tests 23
+# suites 0
+# pass 23
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 791472.572903

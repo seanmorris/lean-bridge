@@ -1,0 +1,84 @@
+{
+  "cases": [
+    {
+      "code": "reviewed-ir-source-mismatch",
+      "field": "bindingIr.declarations[2].source.extensions.lean-lang.org/refinements.parameters[0].bound",
+      "label": "wrong scalar bound",
+      "releaseRoot": "ENOENT",
+      "reviewSha256": "6a49b3dc8fbabc7d77193b280b726cfc770e7f50c991ec8f064d7496dae71402"
+    },
+    {
+      "code": "reviewed-ir-source-mismatch",
+      "field": "bindingIr.declarations[5].source.extensions.lean-lang.org/refinements.parameters[0].bound",
+      "label": "tightened alias bound",
+      "releaseRoot": "ENOENT",
+      "reviewSha256": "42a74728b08f30089dbba2be4d718c0ceacd8d5dd102d9f810267a64dda7c098"
+    },
+    {
+      "code": "reviewed-ir-source-mismatch",
+      "field": "bindingIr.declarations[1].source.extensions.lean-lang.org/refinements.parameters[1].bound",
+      "label": "loosened mixed-argument bound",
+      "releaseRoot": "ENOENT",
+      "reviewSha256": "bf9df77a22c295a2b269f16bbfa8e1e55267b1b1f4327e64f8b2f9884ce871c8"
+    },
+    {
+      "code": "reviewed-ir-source-mismatch",
+      "field": "bindingIr.declarations[0].source.extensions.lean-lang.org/refinements.parameters[0].bound",
+      "label": "inhabited Fin 0",
+      "releaseRoot": "ENOENT",
+      "reviewSha256": "b59652193ec79bc81afb972d03d8e952f3350f2d4d5663ed24a78343c9fe8062"
+    },
+    {
+      "code": "reviewed-ir-source-mismatch",
+      "field": "bindingIr.declarations[4].source.extensions.lean-lang.org/refinements.parameters[0].bound",
+      "label": "changed bound wider than 64 bits",
+      "releaseRoot": "ENOENT",
+      "reviewSha256": "f382eff7fb8173daa19696f58ec460f8b2fa226106d4f1aba6e0c4e6e267590e"
+    },
+    {
+      "code": "reviewed-ir-source-mismatch",
+      "field": "bindingIr.declarations[2].source.extensions.lean-lang.org/refinements.parameters[0]",
+      "label": "omitted input bound",
+      "releaseRoot": "ENOENT",
+      "reviewSha256": "1617f4ef6dfe9c63a47a7e4f1e650053aec2bd255d05b096d519c8cab2b6bfaa"
+    },
+    {
+      "code": "reviewed-ir-source-mismatch",
+      "field": "bindingIr.declarations[2].source.extensions.lean-lang.org/refinements.result",
+      "label": "omitted result bound",
+      "releaseRoot": "ENOENT",
+      "reviewSha256": "f85b35ba8e27f2035b0df567e04a4e1a77bd885076cce1bc9123a28f21ffc661"
+    },
+    {
+      "code": "reviewed-ir-source-mismatch",
+      "field": "bindingIr.declarations[6].source.extensions.lean-lang.org/refinements.parameters[0]",
+      "label": "invented input bound",
+      "releaseRoot": "ENOENT",
+      "reviewSha256": "1ab132483d5fa3b2f0ee4a824fb301e83d47265e5da637e24a32fe43b189df5b"
+    },
+    {
+      "code": "reviewed-ir-source-mismatch",
+      "field": "bindingIr.declarations[6].source.extensions.lean-lang.org/refinements.parameters[0]",
+      "label": "result bound moved to the parameter",
+      "releaseRoot": "ENOENT",
+      "reviewSha256": "73ec77c6d1df661d97ed38467101089a7d37fe558e64f1ef0c8fbcd968e986ff"
+    },
+    {
+      "code": "reviewed-ir-source-mismatch",
+      "field": "bindingIr.declarations[2].source.extensions.lean-lang.org/refinements",
+      "label": "whole decision omitted",
+      "releaseRoot": "ENOENT",
+      "reviewSha256": "cd1ee4598367eb529a2f982e8f7b3e5637aa56ffe022ed32d51f67f69c923c14"
+    }
+  ],
+  "control": {
+    "bindingIrSha256": "5326c873df1ad4a1a2fdb14af6b5a998b2fefbdebf2aa8ddb2fa0944134a2821",
+    "published": true,
+    "reviewSha256": "8625ab1359092d863c03b62879905ad7a83db8c5af69d8f5a9ad2d306c3c3d1f"
+  },
+  "fixture": "tests/fixtures/onboarding/native-fin",
+  "module": "NativeFin",
+  "schemaVersion": 1,
+  "target": "c"
+}
+

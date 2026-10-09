@@ -1,0 +1,33 @@
+{
+  "revision": "b6b06ef9518aa556528e9bd6768a2ee1a648daa6",
+  "queueSha256": "9da0c7580b7da60bd5e2f29efcc0671d32cf1ea1121b55f47534baa02db3754a",
+  "endSha256": "d3e16cfc57eec89a36c24bc9538c11545e7e85f5f33e8bf848e33a0e9566b189",
+  "tapSha256": "81e7e0517fc1b0524be8acf6fe7ce52ba7dda207803f6931194c3b2736c1615e",
+  "tests": 23,
+  "skipped": 0,
+  "sourcePins": 14,
+  "minimumFreeMiB": 4039,
+  "scope": "Local glibc 2.36 native fresh-Lean refusals, not hosted release-floor acceptance",
+  "reports": [
+    {
+      "fixture": "native-fin",
+      "cases": 10,
+      "control": {
+        "bindingIrSha256": "5326c873df1ad4a1a2fdb14af6b5a998b2fefbdebf2aa8ddb2fa0944134a2821",
+        "published": true,
+        "reviewSha256": "8625ab1359092d863c03b62879905ad7a83db8c5af69d8f5a9ad2d306c3c3d1f"
+      },
+      "sha256": "1a66679a7b884b367de3238e00433c7d092b3253234ae2155fc898a4dd3d6d7c"
+    },
+    {
+      "fixture": "fin-containers",
+      "cases": 9,
+      "control": {
+        "bindingIrSha256": "ba4b5ca272ca2c0f48de7fe0d85d87b0fbfb54b1d051a552aae2d1ac8df5cc56",
+        "published": true,
+        "reviewSha256": "f118669910537d41255cd615c7fcf7ebce8b031ac5f4abce9f639b7d8a20c1be"
+      },
+      "sha256": "e54fa71b078b66e830c16c1d83e601359102c13f730671be2a649f4ccc6ebd9d"
+    }
+  ]
+}
