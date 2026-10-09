@@ -814,6 +814,8 @@ const profileManifest = Object.freeze({
 		, "reviewed-npm-packaging"
 		, "reviewed-callback-fin"
 		, "native-fin-containers"
+		, "fin-container-entry-dispatch"
+		, "cpp-fin-container-entry"
 		, "native-fin-products"
 		, "native-fin-product-arrays"
 		, "native-fin-records"
