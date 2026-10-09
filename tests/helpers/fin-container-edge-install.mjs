@@ -322,9 +322,11 @@ export const checkInstalledFinContainerEdges = async (t, profiles, reportPath) =
 					source: () => consumerSource
 					, success: "fin-container-ok"
 					, expectedChecks: finContainerEdgeChecks[profile]
-					, wit: ["mirror-all", "count-none", "sum-huge", "or-default"
+					, wit: [
+						"mirror-all", "count-none", "sum-huge", "or-default"
 						, "present", "flatten", "label", "wrap-all", "empty-array"
-						, "empty-list", "empty-option", "optional-digits"].map(name => new RegExp(`${name}: func\\(`, "u")) } });
+						, "empty-list", "empty-option", "optional-digits"
+					].map(name => new RegExp(`${name}: func\\(`, "u")) } });
 			const repeated = await repeatFinContainerEdges({ profile, consumer, handoff, packages, command });
 			reports.push({ profile
 				, path: "ordinary-source"
