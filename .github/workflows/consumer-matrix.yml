@@ -3707,7 +3707,11 @@ jobs:
         timeout-minutes: 20
         if: matrix.profile == 'ruby'
         run: |
-          sudo apt-get install -y python3-venv pkg-config
+          sudo apt-get install -y python3-venv pkg-config gdb
+          # Installed Ruby Fin entry counters run the probe as GDB's own child; record the debugger and ptrace policy.
+          test -x /usr/bin/gdb
+          /usr/bin/gdb --version
+          cat /proc/sys/kernel/yama/ptrace_scope
       - name: Compare installed Ruby corpus packages with fresh Lean results
         if: matrix.profile == 'ruby'
         id: type_corpus_ruby
@@ -3767,7 +3771,7 @@ jobs:
           LEAN_BRIDGE_RUBY_COMPOUND_TEST=1 node --test tests/ruby-compounds.test.mjs tests/ruby-compound-contract.test.mjs
           LEAN_BRIDGE_RUBY_LIST_TEST=1 node --test tests/ruby-lists.test.mjs tests/ruby-list-contract.test.mjs
           LEAN_BRIDGE_RUBY_ALIAS_TEST=1 node --test tests/ruby-aliases.test.mjs
-          LEAN_BRIDGE_RUBY_FIN_TEST=1 node --test tests/ruby-fin.test.mjs
+          LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_RUBY_FIN_TEST=1 node --test tests/ruby-fin.test.mjs
           LEAN_BRIDGE_RUBY_VARIANT_TEST=1 node --test tests/ruby-variants.test.mjs
           LEAN_BRIDGE_RUBY_COLLECTION_TEST=1 node --test tests/ruby-collections.test.mjs tests/ruby-collection-contract.test.mjs
           LEAN_BRIDGE_RUBY_GRAPH_TEST=1 node --test tests/ruby-copied-graph-values.test.mjs
@@ -3947,7 +3951,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_COMPOUND_TEST=1 node --test tests/ruby-compounds.test.mjs tests/ruby-compound-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_LIST_TEST=1 node --test tests/ruby-lists.test.mjs tests/ruby-list-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_ALIAS_TEST=1 node --test tests/ruby-aliases.test.mjs"
-              consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_FIN_TEST=1 node --test tests/ruby-fin.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_RUBY_FIN_TEST=1 node --test tests/ruby-fin.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_SPECIALIZATION_PROFILES=ruby node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=ruby node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=ruby LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=ruby node --test tests/native-fin-containers.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=ruby LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=ruby node --test tests/native-fin-products.test.mjs"

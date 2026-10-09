@@ -12,6 +12,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeRubyGdbCiSource } from "./ruby-gdb-ci-source-history.mjs";
 import { assertInheritedRecordArchive } from "./inherited-record-evidence.mjs";
 import { beforeInheritedRecordPromotionSource, inheritedRecordPromotionChangedPaths, inheritedRecordPromotionHistoryPath, inheritedRecordPromotionPredecessor, reverseInheritedRecordPromotionUpdate } from "./inherited-record-promotion-source-history.mjs";
 import { inheritedRecordEvidenceIds, inheritedRecordPromotedCells, inheritedRecordPromotedEvidence, inheritedRecordReceiptPath, reconcileInheritedRecordObservations } from "./inherited-record-promotion.mjs";
@@ -23,7 +24,7 @@ test("inherited record promotion authenticates exact predecessors and rejects un
 	assert.deepEqual(history.updates.map(update => update.path), inheritedRecordPromotionChangedPaths);
 	for(const update of history.updates)
 	{
-		const source = await readFile(update.path, "utf8"), previous = reverseInheritedRecordPromotionUpdate(source, update);
+		const source = beforeRubyGdbCiSource(update.path, await readFile(update.path, "utf8")), previous = reverseInheritedRecordPromotionUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeInheritedRecordPromotionSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -39,7 +40,8 @@ test("inherited record promotion authenticates exact predecessors and rejects un
 });
 
 test("inherited record reconciliation changes exactly fourteen scopes without changing stage states", async () => {
-	const { document, ...contracts } = await readTypeSurface();
+	const { document: currentDocument, ...contracts } = await readTypeSurface();
+	const document = JSON.parse(beforeRubyGdbCiSource("docs/type-surface.v1.json", JSON.stringify(currentDocument, null, 2) + "\n"));
 	const path = "docs/type-surface.v1.json";
 	const previous = JSON.parse(beforeInheritedRecordPromotionSource(path, await readFile(path, "utf8")));
 	assert.deepEqual(document.observations, reconcileInheritedRecordObservations(previous.observations));
@@ -81,7 +83,10 @@ test("inherited record reconciliation changes exactly fourteen scopes without ch
 		if(update && file.sha256 === update.previousSha256) file.sha256 = update.currentSha256;
 	}
 	assert.deepEqual(document.evidence.slice(0, previous.evidence.length), previous.evidence);
-	assert.deepEqual(document.evidence.slice(previous.evidence.length), await inheritedRecordPromotedEvidence());
+	const evidence = await inheritedRecordPromotedEvidence();
+	for(const entry of evidence) for(const file of entry.files)
+		file.sha256 = sha256(beforeRubyGdbCiSource(file.path, await readFile(file.path, "utf8")));
+	assert.deepEqual(document.evidence.slice(previous.evidence.length), evidence);
 	for(const key of Object.keys(previous).filter(key => !["observations", "evidence"].includes(key)))
 		assert.deepEqual(document[key], previous[key]);
 	assert.equal(document.observations.length, previous.observations.length + 3);

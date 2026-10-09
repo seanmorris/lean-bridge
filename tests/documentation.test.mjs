@@ -11,6 +11,7 @@ import test from "node:test";
 import "./helpers/node-consumer-budget-ci-tests.mjs";
 import "./helpers/node-consumer-budget-source-history-tests.mjs";
 import "./helpers/perl-xs-budget-source-history-tests.mjs";
+import "./helpers/ruby-gdb-ci-source-history-tests.mjs";
 
 import { analyzeLeanProject } from "../src/analyze/lean-project.mjs";
 import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
@@ -623,6 +624,15 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.equal([...toolchainBootstrap.matchAll(/download_archive "\$(?:ELAN|WASM_TOOLS|WABT)_URL"/gu)].length, 3);
   assert.match(toolchainBootstrap, /local partial="\$destination\.part"/);
   assert.match(toolchainBootstrap, /mv "\$partial" "\$destination"/);
+  // Installed Ruby Fin entry counters need a debugger on the hosted image: install, identify and pass it explicitly.
+  const rubyDependencies = workflow.split("      - name: Install dependencies for type_corpus_ruby\n")[1].split("      - name:")[0];
+  assert.match(rubyDependencies, /^ {10}sudo apt-get install -y python3-venv pkg-config gdb$/mu);
+  // The full version output is printed; no pipe can close early and fail setup.
+  assert.match(rubyDependencies, /^ {10}test -x \/usr\/bin\/gdb\n {10}\/usr\/bin\/gdb --version$/mu);
+  assert.doesNotMatch(rubyDependencies, /gdb[^\n]*\|/u);
+  assert.match(rubyDependencies, /^ {10}cat \/proc\/sys\/kernel\/yama\/ptrace_scope$/mu);
+  const rubyCorpus = workflow.split("      - name: Compare installed Ruby corpus packages with fresh Lean results\n")[1].split("      - name:")[0];
+  assert.equal(rubyCorpus.split("\n          LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_RUBY_FIN_TEST=1 node --test tests/ruby-fin.test.mjs\n").length, 2);
   // Each Perl ABI runs the installed Compare and Verify chain in one job; 120 minutes was exhausted.
   const perlJob = perlWorkflow.split("  perl:\n")[1].split("\n  perl-receivers:\n")[0];
   assert.match(perlJob, /^ {4}timeout-minutes: 180$/m);
@@ -922,9 +932,9 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /build\/variants\/ruby\.json\n\s*build\/collections\/ruby\.json\n\s*build\/recursive\/ruby-values\.json\n\s*build\/recursive\/ruby-conversions\.json\n\s*build\/recursive\/ruby-native\.json\n\s*build\/recursive\/ruby-packages\.json\n\s*build\/owned-ruby-runtime\/\n\s*build\/owned-ruby-values\/\n\s*build\/owned-ruby-layout\/\n\s*build\/owned-ruby-conversions\/\n\s*build\/owned-ruby-gmp\/\n\s*build\/owned-ruby-loading\/\n\s*build\/owned-ruby-transfers\/\n\s*build\/owned-ruby-transfer-packaging\/\n\s*build\/owned-ruby-borrows\/\n\s*build\/owned-ruby-borrow-packaging\/\n\s*build\/owned-ruby-borrows\.log\n\s*build\/owned-ruby-receivers\/\n\s*build\/owned-ruby-receivers\.log\n\s*build\/owned-ruby-packaging\/\n\s*if-no-files-found: error/);
   assert.match(workflow, /test -s build\/variants\/ruby\.json/);
   assert.match(workflow, /test -s build\/aliases\/ruby\.json/);
-  assert.match(workflow, /node --test tests\/ruby-aliases\.test\.mjs\n\s*LEAN_BRIDGE_RUBY_FIN_TEST=1 node --test tests\/ruby-fin\.test\.mjs\n/);
+  assert.match(workflow, /node --test tests\/ruby-aliases\.test\.mjs\n\s*LEAN_BRIDGE_GDB=\/usr\/bin\/gdb LEAN_BRIDGE_RUBY_FIN_TEST=1 node --test tests\/ruby-fin\.test\.mjs\n/);
   assert.match(workflow, /test -s build\/aliases\/ruby\.json\n\s*test -s build\/native-fin\/ruby\.json\n/);
-  assert.match(workflow, /consumer_command="\$consumer_command && LEAN_BRIDGE_RUBY_FIN_TEST=1 node --test tests\/ruby-fin\.test\.mjs"/);
+  assert.match(workflow, /consumer_command="\$consumer_command && LEAN_BRIDGE_GDB=\/usr\/bin\/gdb LEAN_BRIDGE_RUBY_FIN_TEST=1 node --test tests\/ruby-fin\.test\.mjs"/);
   assert.match(workflow, /test -s build\/compounds\/ruby\.json/);
   assert.ok(workflow.includes("LEAN_BRIDGE_RUST_CALLABLE_TEST=1 node --test tests/rust-callables.test.mjs"));
   assert.ok(workflow.includes("LEAN_BRIDGE_RUST_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/rust-structured-callables.test.mjs tests/rust-structured-callable-contract.test.mjs"));
