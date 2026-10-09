@@ -1,0 +1,269 @@
+{
+  "archives": {
+    "archives/native-fin-1.0.0-c.tar.gz": "28bf671970c04a27f563b9119bef074f70e29ac8c13f9c3ad4330c13096f0b0a",
+    "archives/native-fin-1.0.0-x86_64-linux.gem": "d6642a6b5476505a67576342e1fcf48faf554b5031af86e0a9c8f21bc95b8532"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "8f06973cdd86426d4c7f4c8fe8802275300d1ae4f3b8cb8e6abd538acc788b5c",
+      "checks": 2029,
+      "compilerFreePath": true,
+      "consumerSha256": "40d6b24387d8e90fe082af78953519874c4a1201db68707edc98eabf736522f4",
+      "dispatch": {
+        "breakpoints": [
+          {
+            "library": "libcomponent_3f006a55a2dafabb9196.so",
+            "offset": "0x23f0",
+            "symbol": "l_NativeFin_mirror"
+          },
+          {
+            "library": "libcomponent_3f006a55a2dafabb9196.so",
+            "offset": "0x22f0",
+            "symbol": "l_NativeFin_impossible"
+          },
+          {
+            "library": "libcomponent_3f006a55a2dafabb9196.so",
+            "offset": "0x2780",
+            "symbol": "l_NativeFin_label"
+          },
+          {
+            "library": "libcomponent_3f006a55a2dafabb9196.so",
+            "offset": "0x2bd0",
+            "symbol": "lb_b703515a10173a97c2e27e46"
+          },
+          {
+            "library": "libcomponent_3f006a55a2dafabb9196.so",
+            "offset": "0x29b0",
+            "symbol": "lb_1d7e0c72a4d6e1cde32466e4"
+          },
+          {
+            "library": "libcomponent_3f006a55a2dafabb9196.so",
+            "offset": "0x2a40",
+            "symbol": "lb_9afacce322a81504ba9eb75b"
+          }
+        ],
+        "columns": [
+          "l_NativeFin_mirror",
+          "l_NativeFin_impossible",
+          "l_NativeFin_label",
+          "lb_b703515a10173a97c2e27e46",
+          "lb_1d7e0c72a4d6e1cde32466e4",
+          "lb_9afacce322a81504ba9eb75b"
+        ],
+        "configSha256": "d50189856993f69a4381f27007017e72bb582219635a83191332234a96946f34",
+        "definers": [
+          "libcomponent_3f006a55a2dafabb9196.so",
+          "libcomponent_3f006a55a2dafabb9196.so",
+          "libcomponent_3f006a55a2dafabb9196.so",
+          "libcomponent_3f006a55a2dafabb9196.so",
+          "libcomponent_3f006a55a2dafabb9196.so",
+          "libcomponent_3f006a55a2dafabb9196.so"
+        ],
+        "gdb": {
+          "sha256": "762f9d48202dd341e170d8302543f35622417b4e39bfce9a270d06943702e754",
+          "version": "GNU gdb (Debian 13.1-3) 13.1"
+        },
+        "instrument": "gdb-breakpoints",
+        "instrumentation": "in-memory int3 breakpoints at each verified definition; deployed files and the production loader are unchanged",
+        "libraries": {
+          "libcomponent_3f006a55a2dafabb9196.so": "1dc7c7fefd12e9b23c58a55d588a03213594055c6f27c501eca3fbff0d3de420",
+          "liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+          "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+          "libnative_fin.so": "a969da07861f6e1074a6b994808e8132ecfa2e05268aa175a076b72fc01c4a9b"
+        },
+        "observed": [
+          [
+            "start",
+            "ok",
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            "invalid-mirror-bound",
+            "rejected:arg0<10",
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            "invalid-mirror-huge",
+            "rejected:arg0<10",
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            "invalid-impossible-zero",
+            "rejected:arg0<0",
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            "invalid-label-late",
+            "rejected:arg1<4",
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            "valid-mirror",
+            "ok:6",
+            [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          ],
+          [
+            "valid-label",
+            "ok:slot:8",
+            [
+              1,
+              0,
+              1,
+              1,
+              0,
+              1
+            ]
+          ],
+          [
+            "recovery-invalid-mirror",
+            "rejected:arg0<10",
+            [
+              1,
+              0,
+              1,
+              1,
+              0,
+              1
+            ]
+          ],
+          [
+            "recovery-invalid-impossible",
+            "rejected:arg0<0",
+            [
+              1,
+              0,
+              1,
+              1,
+              0,
+              1
+            ]
+          ],
+          [
+            "recovery-invalid-label",
+            "rejected:arg1<4",
+            [
+              1,
+              0,
+              1,
+              1,
+              0,
+              1
+            ]
+          ],
+          [
+            "recovery-valid-mirror",
+            "ok:0",
+            [
+              2,
+              0,
+              1,
+              2,
+              0,
+              1
+            ]
+          ],
+          [
+            "recovery-valid-label",
+            "ok:slot:5",
+            [
+              2,
+              0,
+              2,
+              2,
+              0,
+              2
+            ]
+          ]
+        ],
+        "positiveControl": "valid public Ruby calls increment exactly their source and adapter columns; rejected calls, including every Fin 0 call, change no column",
+        "probeSha256": "1738c5f6495587f6eed85ed3bd59932ced2d5adae41ca0bb201c21440a9de5cb",
+        "routes": [
+          "public Ruby methods LeanBridge::NativeFin.mirror, .impossible and .label through the verified RTLD_DEEPBIND gem loader and Fiddle into the bundled C adapter"
+        ],
+        "scope": "local x86_64 Linux with GDB and ptrace",
+        "scriptSha256": "5da0ece193af2ef098a1491a52183864dc97aeb9b271b92720652a5cb1c7d640"
+      },
+      "installedFilesSha256": "f6d8cf1e5a5ada98811ad5de96bf829751ba3c1695e295d372c912f4d98bcbd8",
+      "modelSha256": "17726690fd36a569a1822dec9ca01f6f0d4aaa14927fcc452eeeab07ac80fdf9",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 50083328,
+              "path": "archives/native-fin-1.0.0-x86_64-linux.gem",
+              "sha256": "d6642a6b5476505a67576342e1fcf48faf554b5031af86e0a9c8f21bc95b8532"
+            }
+          ],
+          "ecosystem": "rubygems",
+          "name": "native-fin",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "rubygems",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "ruby",
+      "receiptSha256": "cee63f0296f5813fbd979b26d5afa8fd3a22819e656b84c10ac6cf2d5467d348",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "reviewedSourceSha256": "95c70a9b79f4f4cce574b9d7ce8a3f1dcb32519448820cd52b40a371fd1ecd4c",
+      "sharedNativeLibraries": {
+        "libcomponent_3f006a55a2dafabb9196.so": "1dc7c7fefd12e9b23c58a55d588a03213594055c6f27c501eca3fbff0d3de420",
+        "liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+        "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "libnative_fin.so": "a969da07861f6e1074a6b994808e8132ecfa2e05268aa175a076b72fc01c4a9b"
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "ef74ce360c4ba6723a28c7a5acd5d1fcae1ec53ca9794f1df168cb4a24444b25"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

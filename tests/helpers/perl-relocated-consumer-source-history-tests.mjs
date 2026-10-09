@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeRubyDispatchIntegrationSource } from "./ruby-dispatch-integration-source-history.mjs";
 import { beforePerlRelocatedConsumerSource, perlRelocatedConsumerChangedPaths, perlRelocatedConsumerHistoryPath, perlRelocatedConsumerPredecessor, reversePerlRelocatedConsumerUpdate } from "./perl-relocated-consumer-source-history.mjs";
 
 test("Perl installed relocation history authenticates exact predecessors and refuses unknown edits", async () => {
@@ -20,7 +21,7 @@ test("Perl installed relocation history authenticates exact predecessors and ref
 	assert.deepEqual(record.updates.map(update => update.path), perlRelocatedConsumerChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8"), previous = reversePerlRelocatedConsumerUpdate(source, update);
+		const source = beforeRubyDispatchIntegrationSource(update.path, await readFile(update.path, "utf8")), previous = reversePerlRelocatedConsumerUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforePerlRelocatedConsumerSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -36,7 +37,7 @@ test("Perl installed relocation history authenticates exact predecessors and ref
 });
 
 test("Perl relocation integration refreshes exactly 17 source pins without promoting any support cell", async () => {
-	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", text = beforeRubyDispatchIntegrationSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(text), previous = JSON.parse(beforePerlRelocatedConsumerSource(path, text));
 	const record = JSON.parse(await readFile(perlRelocatedConsumerHistoryPath));
 	const updates = new Map(record.updates.map(update => [update.path, update]));
@@ -46,7 +47,7 @@ test("Perl relocation integration refreshes exactly 17 source pins without promo
 		const update = updates.get(file.path);
 		if(update && file.sha256 === update.previousSha256)
 		{
-			assert.equal(sha256(await readFile(file.path)), update.currentSha256);
+			assert.equal(sha256(beforeRubyDispatchIntegrationSource(file.path, await readFile(file.path, "utf8"))), update.currentSha256);
 			file.sha256 = update.currentSha256; pins++;
 		}
 	}

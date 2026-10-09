@@ -1,0 +1,671 @@
+{
+  "schemaVersion": 1,
+  "milestone": "ruby-dispatch-integration-v1",
+  "predecessorCommit": "93c60a0487d0b2acc0b6d562cd72a3876738a666",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "a59d100669579cd03afa48375ec37d0e0f04ea51ab003f3cb01169bcc368814a",
+      "previousSha256": "cf5b66b45c9662bd03adf766bfc3a0c8dd180657ac3e5d47bdf087898442b79a",
+      "edits": [
+        {
+          "start": 57139,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 79697,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 96900,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 113193,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 145843,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 169072,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 182038,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 196937,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 209870,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 223089,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 231627,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 240058,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 248412,
+          "previous": "          \"sha256\": \"cca1b6c276c599800fe36d743332dfb1bfc2a7d2ee4124c93bd0bf5f2cef5036\"\n",
+          "current": "          \"sha256\": \"20bc5940cc2c14347fbf90c4078190465cf1def04b984645c850945afbbed97a\"\n"
+        },
+        {
+          "start": 249072,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 257738,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 267313,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 276414,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 286263,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 298402,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 308436,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 316988,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 326282,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 338971,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 348222,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 357509,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 366632,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 375495,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 382880,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 390814,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 401464,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 408349,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 415558,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 422654,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 433513,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 440629,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 447007,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 453170,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 459929,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 466771,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 473613,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 482917,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 494151,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 503840,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 513433,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 524963,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 533526,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 544540,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 577070,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 583066,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 593329,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 602642,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 614190,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 622711,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 633667,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 683083,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 693185,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 700045,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 708017,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 722048,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 733261,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 747481,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 758935,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 771006,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 782294,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 790877,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 797335,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 805721,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 813856,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 825828,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 844966,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 900484,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 1016059,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 1073261,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 1081005,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 1087455,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 1094715,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 1102060,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 1109113,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 1116714,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 1126994,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 1140156,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 1150414,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 1158300,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 1169037,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 1179297,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 1193716,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 1226260,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 1256542,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 1289505,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 1330731,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 1356283,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 1378820,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 1398512,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 1419155,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 1451673,
+          "previous": "          \"sha256\": \"b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a\"\n",
+          "current": "          \"sha256\": \"775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2\"\n"
+        },
+        {
+          "start": 1503122,
+          "previous": "          \"sha256\": \"b07188e0779cd752570b3ae77ccb2e2f83019771efc7bac55ab66d994ff1d7ca\"\n",
+          "current": "          \"sha256\": \"85e2317fc13874191d7631eb9f1747ae6d98900e36f102e50e5df623b990e0ef\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "currentSha256": "775e4530062cb1003141c5342a89761dda28af7b38fa3202d7943a011081eec2",
+      "previousSha256": "b35925e589b27b0816b542191c832aae6d080c94d060afb7546b83ca3f41277a",
+      "edits": [
+        {
+          "start": 8009,
+          "previous": "",
+          "current": "\t\t, \"ruby-fin-dispatch-evidence\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/ruby-fin.test.mjs",
+      "currentSha256": "85e2317fc13874191d7631eb9f1747ae6d98900e36f102e50e5df623b990e0ef",
+      "previousSha256": "b07188e0779cd752570b3ae77ccb2e2f83019771efc7bac55ab66d994ff1d7ca",
+      "edits": [
+        {
+          "start": 127,
+          "previous": "import { cp, mkdtemp, readFile, rename, rm } from \"node:fs/promises\";\n",
+          "current": "import { randomBytes } from \"node:crypto\";\nimport { existsSync } from \"node:fs\";\nimport { cp, mkdtemp, readFile, readdir, realpath, rename, rm, writeFile } from \"node:fs/promises\";\n"
+        },
+        {
+          "start": 342,
+          "previous": "import { basename, dirname, join, resolve } from \"node:path\";\n",
+          "current": "import { basename, dirname, join, relative, resolve } from \"node:path\";\n"
+        },
+        {
+          "start": 589,
+          "previous": "",
+          "current": "import { copiedRubyRuntime } from \"../src/backends/ruby/copied-assets.mjs\";\n"
+        },
+        {
+          "start": 747,
+          "previous": "",
+          "current": "import { verifiedRubyAssets } from \"../src/backends/ruby/verified-assets.mjs\";\n"
+        },
+        {
+          "start": 1421,
+          "previous": "",
+          "current": "import { nativeFinAdapterSymbol, nativeFinDispatchExpected, nativeFinDispatchSteps, nativeFinDispatchSymbols, readNativeFinDispatch } from \"./helpers/native-fin-dispatch.mjs\";\nimport { nativeFinDefiners, nativeFinGdbExit, nativeFinGdbIdentity, nativeFinGdbRecord, nativeFinGdbScript, readNativeFinGdbRecord } from \"./helpers/native-fin-dispatch-gdb.mjs\";\n"
+        },
+        {
+          "start": 1915,
+          "previous": "",
+          "current": "import \"./helpers/native-fin-dispatch-gdb-tests.mjs\";\n"
+        },
+        {
+          "start": 5224,
+          "previous": "",
+          "current": "const rubyFinDispatchExpected = nativeFinDispatchExpected(outcome => outcome.rejected ? `rejected:${outcome.rejected[0]}<${outcome.rejected[1]}` : `ok:${outcome.ok}`);\nconst rubyFinDispatchRoutes = [\"public Ruby methods LeanBridge::NativeFin.mirror, .impossible and .label through the verified RTLD_DEEPBIND gem loader and Fiddle into the bundled C adapter\"];\nconst unattached = \"fin dispatch instrumentation is not attached\\n\", uncovered = \"fin dispatch instrumentation did not cover the verified deployment\\n\";\nconst gdbCommand = process.env.LEAN_BRIDGE_GDB ?? \"/usr/bin/gdb\";\n\n/**\n * Ruby probe run under GDB. Before loading the gem it requires a fresh record for this process: the\n * expected identity digest, this invocation's nonce and PID, an attached debugger and nothing armed. After\n * loading it requires a breakpoint on every one of the six verified definitions, including entries that no\n * relocation references, before printing a row; every count comes from the record GDB updates on each hit.\n * The optional dynamic mode adds one owned stand-in step that calls an otherwise unreferenced adapter.\n */\nconst rubyFinDispatchProbe = () => `# frozen_string_literal: true\nRECORD, NONCE, CONFIG, DEFINERS, MODE = ARGV\nEXPECTED = DEFINERS.to_s.split(\",\").map { |index| Integer(index, 10) }\nLAYOUT = ${JSON.stringify(nativeFinGdbRecord.rubyFormat)}\ndef instrumentation\n  bytes = begin\n    ::File.binread(RECORD)\n  rescue ::SystemCallError, ::TypeError\n    nil\n  end\n  bytes && bytes.bytesize == ${nativeFinGdbRecord.size} ? bytes.unpack(LAYOUT) : nil\nend\ndef ours?(record)\n  record && record[0] == ${JSON.stringify(nativeFinGdbRecord.magic)} && record[1] == ${nativeFinGdbRecord.version} && record[2] == 6 && record[3] == CONFIG && record[4] == NONCE && record[5] == ::Process.pid && record[6] == 1\nend\ndef entries(record) = record[28, 6]\nrecord = [4, 5].include?(ARGV.size) && EXPECTED.size == 6 ? instrumentation : nil\nunless ours?(record) && record[7].zero? && record[8].zero? && record[9].zero? && entries(record).all?(&:zero?)\n  $stderr.write(${JSON.stringify(unattached)})\n  exit 2\nend\nrequire \"lean_bridge/native_fin\"\nAPI = LeanBridge::NativeFin\nrecord = instrumentation\nunless ours?(record) && record[7] == 0x3f && record[8].zero? && record[9].zero? && record[10, 6].all? { |count| count == 1 } && record[16, 6] == EXPECTED && entries(record).all?(&:zero?)\n  $stderr.write(${JSON.stringify(uncovered)})\n  exit 3\nend\ndef report(step, status)\n  $stdout.write([step, status, *entries(instrumentation)].join(\" \") + \"\\\\n\")\nend\ndef status\n  value = yield\n  value.instance_of?(Integer) || (value.instance_of?(String) && value.match?(/\\\\A[!-~]+\\\\z/)) ? \"ok:#{value}\" : \"ok:unexpected\"\nrescue ::RangeError => error\n  match = /\\\\A(arg[0-9]+) is not below its Fin ([0-9]+) bound\\\\z/.match(error.message)\n  match ? \"rejected:#{match[1]}<#{match[2]}\" : \"error:RangeError\"\nrescue ::StandardError => error\n  \"error:#{error.class}\"\nend\nreport(\"start\", \"ok\")\n${nativeFinDispatchSteps.slice(1).map(([step, name, args]) => `report(${JSON.stringify(step)}, status { API.${name}(${args.map(value => typeof value === \"string\" ? JSON.stringify(value) : value.toString()).join(\", \")}) })`).join(\"\\n\")}\nreport(\"dynamic-impossible-adapter\", status { API.dynamic_impossible_adapter }) if MODE == \"dynamic\"\n`;\n\n/**\n * Prepare GDB instrumentation of one verified deployment directory and run the probe with or without it.\n * Every counted symbol's single defining library is read from nm before anything runs; each run gets a new\n * nonce, record, breakpoint list and output files. Results carry the probe's own exit status, stdout and\n * stderr; GDB's statuses 70-72 mean the inferior never produced trusted rows.\n *\n * @param root0 - Verified deployment and the Ruby command that loads it.\n * @param root0.probeRoot - Task-owned directory for the script, probe and records.\n * @param root0.nativeDirectory - Directory that holds the verified libraries the gem loads.\n * @param root0.componentId - Component identity that names the counted adapters.\n * @param root0.command - Ruby executable.\n * @param root0.args - Ruby arguments that precede the probe path.\n * @param root0.cwd - Working directory for Ruby.\n * @param root0.env - Clean environment that finds the gem.\n * @param root0.definers - Optional per-column definer override, for refusal controls.\n */\nconst observeRubyDispatch = async ({ probeRoot, nativeDirectory, componentId, command, args = [], cwd, env, definers = null }) => {\n\tconst tools = { ...copiedCleanEnvironment, PATH: \"/usr/bin:/bin\" };\n\tconst libraries = (await readdir(nativeDirectory)).filter(name => /\\.so(?:\\.[0-9]+)*$/u.test(name)).sort();\n\tconst listings = {};\n\tfor(const name of libraries) listings[name] = (await runCopied(\"/usr/bin/nm\", [\"-D\", \"--defined-only\", join(nativeDirectory, name)], nativeDirectory, tools)).stdout;\n\tconst { identity, configSha256, definerIndices } = nativeFinGdbIdentity({ componentId, libraries, definers: definers ?? nativeFinDefiners(componentId, listings) });\n\tawait saveLakeFile(probeRoot, \"dispatch.rb\", rubyFinDispatchProbe());\n\tawait saveLakeFile(probeRoot, \"fin.gdb.py\", nativeFinGdbScript);\n\tlet runs = 0;\n\t/**\n\t * One probe run; before() may plant a file at the record path first.\n\t *\n\t * @param root0 - Run options.\n\t * @param root0.gdb - Run under GDB instrumentation.\n\t * @param root0.mode - Optional probe mode.\n\t * @param root0.root - Directory GDB treats as verified, normally the native directory.\n\t * @param root0.nonce - Run nonce; fresh unless replayed by a control.\n\t * @param root0.before - Optional hook given the record path.\n\t * @param root0.inject - Test-only GDB failure injection, never used by acceptance runs.\n\t */\n\tconst run = async ({ gdb = true, mode = null, root = nativeDirectory, nonce = randomBytes(16).toString(\"hex\"), before = null, inject = null } = {}) => {\n\t\tconst stem = join(probeRoot, `run-${runs++}`), record = `${stem}.record`, armed = `${stem}.armed.json`;\n\t\tif(before) await before(record);\n\t\tconst argv = [command, ...args, join(probeRoot, \"dispatch.rb\"), record, nonce, configSha256, definerIndices.join(\",\"), ...mode ? [mode] : []];\n\t\tconst config = { identity, configSha256, root, nonce, record, armed, argv, stdout: `${stem}.stdout`, stderr: `${stem}.stderr`, ...inject ? { inject } : {} };\n\t\tawait writeFile(`${stem}.json`, canonicalJson(config), { flag: \"wx\" });\n\t\tconst started = gdb\n\t\t\t? runCopied(gdbCommand, [\"-batch\", \"-q\", \"-nx\", \"-x\", join(probeRoot, \"fin.gdb.py\")], cwd, { ...env, LEAN_BRIDGE_FIN_GDB_CONFIG: `${stem}.json` })\n\t\t\t: runCopied(argv[0], argv.slice(1), cwd, env);\n\t\tlet code = 0, stdout, stderr;\n\t\ttry\n\t\t{ ({ stdout, stderr } = await started); }\n\t\tcatch(error)\n\t\t{\n\t\t\tconst status = /exited with status (\\d+)/u.exec(error.message);\n\t\t\tif(!status) throw error;\n\t\t\tcode = Number(status[1]); ({ stdout, stderr } = error.details);\n\t\t}\n\t\tconst read = async path => (existsSync(path) ? readFile(path, \"utf8\") : null);\n\t\t// Under GDB the process streams carry GDB's own messages; the probe's streams are files.\n\t\tif(!gdb) return { record, nonce, armed, code, output: stdout + stderr, stdout, stderr };\n\t\treturn { record, nonce, armed, code, output: stdout + stderr, stdout: await read(config.stdout), stderr: await read(config.stderr) };\n\t};\n\treturn { identity, configSha256, definerIndices, listings, run };\n};\n\n/**\n * Require one accepted run's record and armed breakpoints to match its rows and verified definitions.\n *\n * @param observer - Result of observeRubyDispatch.\n * @param root0 - One run.\n * @param root0.record - Record path.\n * @param root0.nonce - This run's nonce.\n * @param root0.armed - Armed breakpoint list path.\n * @param observed - Parsed rows of the same run.\n */\nconst assertRubyDispatchRecord = async (observer, { record, nonce, armed }, observed) => {\n\tconst mapped = readNativeFinGdbRecord(await readFile(record)), { identity } = observer;\n\tassert.deepEqual([mapped.magic, mapped.version, mapped.columns, mapped.config, mapped.nonce, mapped.attached], [nativeFinGdbRecord.magic, 1, 6, observer.configSha256, nonce, 1]);\n\tassert.deepEqual([mapped.armed, mapped.conflicts, mapped.foreign, mapped.breakpoints], [0x3f, 0, 0, [1, 1, 1, 1, 1, 1]]);\n\tassert.deepEqual(mapped.definers, observer.definerIndices);\n\t// The entries the probe printed last are the record's bytes after the final call.\n\tassert.deepEqual(mapped.entries, observed.at(-1)[2]);\n\t// GDB kept the inferior PID, configuration and nonce outside the record when it armed.\n\tconst manifest = JSON.parse(await readFile(armed, \"utf8\"));\n\tassert.deepEqual([manifest.configSha256, manifest.nonce], [observer.configSha256, nonce]);\n\tassert.ok(Number.isSafeInteger(manifest.pid) && manifest.pid > 0);\n\tassert.equal(mapped.pid, manifest.pid, \"the record belongs to the instrumented inferior\");\n\t// Each breakpoint sits exactly on its symbol's nm definition in the configured library.\n\tconst breakpoints = manifest.breakpoints.map(({ symbol, library, offset }) => ({ symbol, library, offset }));\n\tassert.deepEqual(breakpoints.map(item => [item.symbol, item.library]), identity.columns.map((symbol, k) => [symbol, identity.definers[k]]));\n\tfor(const { symbol, library, offset } of breakpoints)\n\t{\n\t\tconst line = observer.listings[library].split(\"\\n\").find(entry => entry.trim().endsWith(` ${symbol}`));\n\t\tassert.equal(offset, Number.parseInt(line.trim().split(\" \")[0], 16), symbol);\n\t}\n\treturn breakpoints.map(({ symbol, library, offset }) => ({ symbol, library, offset: `0x${offset.toString(16)}` }));\n};\n\nconst standInEvidence = libraries => ({ runtimeIdentity: sha256(\"ruby fin dispatch stand-in\"), componentId: \"native-fin@1.0.0\", library: \"libnative_fin.so\", libraries });\nconst adapter = name => nativeFinAdapterSymbol(\"native-fin@1.0.0\", `NativeFin.${name}`);\n/**\n * A stand-in gem entry that loads through the real generated verified loader with its production flags.\n * The extra dynamic method reaches the otherwise unreferenced Fin 0 adapter by symbol lookup.\n *\n * @param libraries - Basename to SHA-256 of each stand-in library.\n */\nconst standInGem = libraries => `# frozen_string_literal: true\nrequire \"digest\"\nrequire \"digest/sha2\"\nrequire \"fiddle\"\nmodule LeanBridge\n  module NativeFin\n${verifiedRubyAssets(standInEvidence(libraries))}\n      WORD, POINTER, STATUS = ::Fiddle::TYPE_UINTPTR_T, ::Fiddle::TYPE_VOIDP, ::Fiddle::TYPE_INT\n      MIRROR = ::Fiddle::Function.new(LIBRARY[\"native_fin_mirror\"], [WORD, POINTER, POINTER], STATUS)\n      IMPOSSIBLE = ::Fiddle::Function.new(LIBRARY[\"native_fin_impossible\"], [WORD, POINTER, POINTER], STATUS)\n      LABEL = ::Fiddle::Function.new(LIBRARY[\"native_fin_label\"], [WORD, WORD, POINTER, POINTER, POINTER], STATUS)\n      def self.word(value) = value.bit_length > 64 ? (1 << 64) - 1 : value\n      def self.invoke(function, *args)\n        output = ::Fiddle::Pointer.malloc(64, ::Fiddle::RUBY_FREE)\n        error = ::Fiddle::Pointer.malloc(64, ::Fiddle::RUBY_FREE)\n        raise ::RangeError, error.to_s unless function.call(*args, output, error).zero?\n        output\n      end\n      def self.mirror(arg0) = invoke(MIRROR, word(arg0))[0, 8].unpack1(\"Q<\")\n      def self.impossible(arg0) = invoke(IMPOSSIBLE, word(arg0))[0, 8].unpack1(\"Q<\")\n      def self.label(arg0, arg1, arg2) = invoke(LABEL, word(arg0), word(arg1), arg2).to_s\n      def self.dynamic_impossible_adapter = ::Fiddle::Function.new(LIBRARY[${JSON.stringify(adapter(\"impossible\"))}], [POINTER], POINTER).call(0).to_i\n  end\nend\n`;\n/** Stand-in Lean sources and their exported adapters, one library as in the component build. */\nconst standInComponent = () => `#include <stdint.h>\nvoid *l_NativeFin_mirror(void *a0) { return (void *)(9 - (uintptr_t)a0); }\nvoid *l_NativeFin_impossible(void *a0) { return a0; }\nvoid *l_NativeFin_label(void *a0, void *a1, void *a2) { (void)a2; return (void *)((uintptr_t)a0 + (uintptr_t)a1); }\nvoid *${adapter(\"mirror\")}(void *a0) { return l_NativeFin_mirror(a0); }\nvoid *${adapter(\"impossible\")}(void *a0) { return l_NativeFin_impossible(a0); }\nvoid *${adapter(\"label\")}(void *a0, void *a1, void *a2) { return l_NativeFin_label(a0, a1, a2); }\n`;\n/**\n * The checked C entry points in the generated layout: each bound is checked before its adapter, and the\n * Fin 0 entry rejects without referencing its adapter at all. LEAK enters the mirror adapter first.\n */\nconst standInAdapter = () => `#include <stdint.h>\n#include <stdio.h>\nvoid *${adapter(\"mirror\")}(void *);\nvoid *${adapter(\"label\")}(void *, void *, void *);\nstatic volatile uintptr_t fin4 = 4, fin10 = 10;\nstatic int reject(char *error, const char *message) { snprintf(error, 64, \"%s\", message); return 1; }\nint native_fin_mirror(uintptr_t arg0, uintptr_t *out, char *error) {\n#ifdef LEAK\n  if (arg0 >= fin10) (void)${adapter(\"mirror\")}((void *)arg0);\n#endif\n  if (arg0 >= fin10) return reject(error, \"arg0 is not below its Fin 10 bound\");\n  *out = (uintptr_t)${adapter(\"mirror\")}((void *)arg0); return 0;\n}\nint native_fin_impossible(uintptr_t arg0, uintptr_t *out, char *error) { (void)arg0; (void)out; return reject(error, \"arg0 is not below its Fin 0 bound\"); }\nint native_fin_label(uintptr_t arg0, uintptr_t arg1, const char *arg2, char *out, char *error) {\n  if (arg1 >= fin4) return reject(error, \"arg1 is not below its Fin 4 bound\");\n  snprintf(out, 64, \"%s:%lu\", arg2, (unsigned long)(uintptr_t)${adapter(\"label\")}((void *)arg0, (void *)arg1, (void *)arg2)); return 0;\n}\n`;\n\n"
+        },
+        {
+          "start": 20730,
+          "previous": "",
+          "current": "// The configured Ruby, as in the installed acceptance, else the pinned local toolchain.\nconst standInRuby = process.env.LEAN_BRIDGE_RUBY ?? resolve(\".toolchains/ruby33/bin/ruby\");\nconst standInMissing = !existsSync(standInRuby) ? `no Ruby 3.3 at ${standInRuby}`\n\t: process.platform !== \"linux\" || process.arch !== \"x64\" ? \"GDB entry counters target x86_64 Linux\"\n\t\t: !existsSync(gdbCommand) ? `no debugger at ${gdbCommand}; entry-breakpoint controls need GDB with ptrace` : false;\n// The gated installed acceptance requires these controls; only an ungated run may skip them.\nconst standInSkip = process.env.LEAN_BRIDGE_RUBY_FIN_TEST === \"1\" ? false : standInMissing;\ntest(\"GDB entry breakpoints count a deep-bound Ruby stand-in exactly and refuse missing, stale, foreign and leaking runs\", { skip: standInSkip }, async t => {\n\tassert.equal(standInMissing, false, `the gated Ruby Fin acceptance requires its stand-in controls: ${standInMissing}`);\n\tconst root = await mkdtemp(join(tmpdir(), \"lean-bridge-ruby-fin-gdb-\"));\n\tt.after(() => rm(root, { recursive: true, force: true }));\n\tassert.match((await runCopied(standInRuby, [\"-e\", \"print RUBY_VERSION\"], root, copiedCleanEnvironment)).stdout, /^3\\.3\\./u, \"the generated loader requires MRI Ruby 3.3\");\n\tconst tools = { ...copiedCleanEnvironment, PATH: \"/usr/bin:/bin\" }, componentId = \"native-fin@1.0.0\";\n\tconst cc = args => runCopied(\"/usr/bin/cc\", [\"-std=c11\", \"-Wall\", \"-Wextra\", \"-Werror\", \"-O2\", \"-shared\", \"-fPIC\", ...args], root, tools);\n\tawait saveLakeFile(root, \"src/component.c\", standInComponent());\n\tawait saveLakeFile(root, \"src/adapter.c\", standInAdapter());\n\tawait saveLakeFile(root, \"src/runtime.c\", \"int lean_bridge_stand_in_runtime(void) { return 0; }\\n\");\n\tconst gems = {};\n\tfor(const [variant, flags] of [[\"gem\", []], [\"leaking\", [\"-DLEAK\"]]])\n\t{\n\t\tconst lib = join(root, variant, \"lib\"), native = join(lib, \"lean_bridge/native/linux-x64\");\n\t\tawait saveLakeFile(native, \".keep\", \"\");\n\t\tawait cc([join(root, \"src/runtime.c\"), \"-o\", join(native, \"libleanshared.so\")]);\n\t\tawait cc([join(root, \"src/runtime.c\"), \"-o\", join(native, \"liblean_bridge_native.so\")]);\n\t\tawait cc([join(root, \"src/component.c\"), \"-o\", join(native, \"libcomponent_stand_in.so\")]);\n\t\tawait cc([...flags, join(root, \"src/adapter.c\"), \"-L\", native, \"-l:libcomponent_stand_in.so\", \"-Wl,-rpath,$ORIGIN\", \"-o\", join(native, \"libnative_fin.so\")]);\n\t\tawait rm(join(native, \".keep\"));\n\t\tconst libraries = Object.fromEntries(await Promise.all((await readdir(native)).sort().map(async name => [name, sha256(await readFile(join(native, name)))])));\n\t\tawait saveLakeFile(lib, \"lean_bridge/native_fin.rb\", standInGem(libraries));\n\t\tawait saveLakeFile(lib, \"lean_bridge/native_copied_runtime_v1.rb\", copiedRubyRuntime);\n\t\tgems[variant] = { lib, native };\n\t}\n\t// As generated, nothing in the deployment references the Fin 0 adapter.\n\tconst relocations = (await runCopied(\"/usr/bin/readelf\", [\"-rW\", join(gems.gem.native, \"libnative_fin.so\")], root, tools)).stdout;\n\tassert.ok(relocations.includes(adapter(\"mirror\")) && !relocations.includes(adapter(\"impossible\")));\n\tconst observe = (variant, probe, definers = null) => observeRubyDispatch({\n\t\tprobeRoot: join(root, probe)\n\t\t, nativeDirectory: gems[variant].native\n\t\t, componentId\n\t\t, command: standInRuby\n\t\t, args: [\"-I\", gems[variant].lib]\n\t\t, cwd: root\n\t\t, env: copiedCleanEnvironment\n\t\t, definers\n\t});\n\tconst observer = await observe(\"gem\", \"probe\");\n\tassert.deepEqual(observer.identity.definers, Array(6).fill(\"libcomponent_stand_in.so\"));\n\tconst refused = (run, code, stderr) => {\n\t\tassert.equal(run.code, code, run.output);\n\t\tassert.equal(run.stdout ?? \"\", \"\"); if(stderr !== null) assert.equal(run.stderr, stderr);\n\t};\n\t// Without GDB no record exists, and the probe refuses before loading the gem.\n\tconst missing = await observer.run({ gdb: false });\n\trefused(missing, 2, unattached);\n\tassert.equal(existsSync(missing.record), false);\n\t// Under the production deep-bound flags all six entries are armed, including the unreferenced adapter.\n\tconst accepted = await observer.run();\n\tassert.equal(accepted.code, 0, accepted.output); assert.equal(accepted.stderr, \"\");\n\tconst observed = readNativeFinDispatch(accepted.stdout, rubyFinDispatchExpected);\n\tassert.deepEqual(observed, rubyFinDispatchExpected);\n\tconst breakpoints = await assertRubyDispatchRecord(observer, accepted, observed);\n\tassert.equal(breakpoints.length, 6);\n\t// A record carrying any other PID than the one GDB armed is refused.\n\tconst foreignPid = await readFile(accepted.record);\n\tforeignPid.writeBigInt64LE(foreignPid.readBigInt64LE(112) + 1n, 112);\n\tawait writeFile(join(root, \"foreign-pid.record\"), foreignPid, { flag: \"wx\" });\n\tawait assert.rejects(() => assertRubyDispatchRecord(observer, { ...accepted, record: join(root, \"foreign-pid.record\") }, observed), /the record belongs to the instrumented inferior/u);\n\t// A failed count write or arming callback ends the run with 71, so no rows are accepted.\n\tconst lost = await observer.run({ inject: { write: 3 } });\n\tassert.equal(lost.code, nativeFinGdbExit.instrumentation, lost.output);\n\tassert.match(lost.output, /fin instrumentation refused: entry count for column \\d failed: injected record write failure/u);\n\tassert.throws(() => readNativeFinDispatch(lost.stdout ?? \"\", rubyFinDispatchExpected), TypeError);\n\tconst unarmed = await observer.run({ inject: { arm: true } });\n\tassert.equal(unarmed.code, nativeFinGdbExit.instrumentation, unarmed.output);\n\tassert.match(unarmed.output, /fin instrumentation refused: instrumentation callback failed: injected arming failure/u);\n\tassert.equal(unarmed.stdout, \"\");\n\t// A computed-address call of the otherwise unreferenced Fin 0 adapter is an actual counted entry.\n\tconst dynamic = await observer.run({ mode: \"dynamic\" });\n\tassert.equal(dynamic.code, 0, dynamic.output);\n\tconst extended = [...rubyFinDispatchExpected, [\"dynamic-impossible-adapter\", \"ok:0\", [2, 1, 2, 2, 1, 2]]];\n\tassert.equal(dynamic.stdout, extended.map(([step, status, counts]) => `${step} ${status} ${counts.join(\" \")}\\n`).join(\"\"));\n\tassert.deepEqual(readNativeFinGdbRecord(await readFile(dynamic.record)).entries, [2, 1, 2, 2, 1, 2]);\n\t// A stale valid record is never adopted, with a fresh nonce or with its own nonce replayed.\n\tconst stale = await readFile(accepted.record);\n\tfor(const nonce of [undefined, accepted.nonce])\n\t{\n\t\tconst attempt = await observer.run({ nonce, before: path => writeFile(path, stale, { flag: \"wx\" }) });\n\t\trefused(attempt, nativeFinGdbExit.refusedRecord, null);\n\t\tassert.match(attempt.output, /fin instrumentation refused: \\[Errno 17\\] File exists/u);\n\t\tassert.ok((await readFile(attempt.record)).equals(stale), \"the stale record is untouched\");\n\t}\n\t// GDB rooted elsewhere arms nothing in the loaded gem.\n\trefused(await observer.run({ root: gems.leaking.native }), 3, uncovered);\n\t// Adapters configured in the wrong library are reported as foreign and never armed.\n\tconst misplaced = Object.fromEntries(nativeFinDispatchSymbols(componentId).map((symbol, k) => [symbol, k < 3 ? \"libcomponent_stand_in.so\" : \"libnative_fin.so\"]));\n\tconst wrong = await observe(\"gem\", \"wrong\", misplaced);\n\tconst misarmed = await wrong.run();\n\trefused(misarmed, 3, uncovered);\n\tconst partial = readNativeFinGdbRecord(await readFile(misarmed.record));\n\tassert.deepEqual([partial.armed, partial.foreign, partial.breakpoints], [0b000111, 3, [1, 1, 1, 0, 0, 0]]);\n\t// A C entry point that enters its adapter before rejecting is caught at its first invalid row.\n\tconst leaking = await observe(\"leaking\", \"leak\");\n\tconst leak = await leaking.run();\n\tassert.equal(leak.code, 0, leak.output);\n\tassert.match(leak.stdout, /^invalid-mirror-bound rejected:arg0<10 1 0 0 1 0 0$/mu);\n\tassert.throws(() => readNativeFinDispatch(leak.stdout, rubyFinDispatchExpected), /invalid-mirror-bound was rejected but changed counts by 1 0 0 1 0 0/u);\n});\n\n"
+        },
+        {
+          "start": 32513,
+          "previous": "\t\t// instrument; its RTLD_DEEPBIND loader deliberately prevents LD_PRELOAD counters.\n",
+          "current": "\t\t// instrument; its RTLD_DEEPBIND loader bypasses LD_PRELOAD, so entries are counted by GDB breakpoints.\n"
+        },
+        {
+          "start": 33594,
+          "previous": "",
+          "current": "\t\t// The counted adapters are the model's own exports for this component identity.\n\t\tassert.equal(model.component.id, \"native-fin@1.0.0\");\n\t\tfor(const name of [\"mirror\", \"impossible\", \"label\"])\n\t\t\tassert.equal(model.exports.find(item => item.name === `NativeFin.${name}`).symbol, nativeFinAdapterSymbol(model.component.id, `NativeFin.${name}`), name);\n\t\tt.diagnostic(\"per-step source and adapter counts in the relocated Ruby process under GDB entry breakpoints\");\n\t\t// Installed entry counts need GDB with ptrace; their absence fails this gated acceptance, never skips it.\n\t\tassert.ok(existsSync(gdbCommand), `GDB is required at ${gdbCommand} for installed Ruby entry counts; set LEAN_BRIDGE_GDB, and ptrace must be permitted`);\n\t\tconst relocatedGem = join(relocated, relative(root, installed));\n\t\tawait verifyNativeFiles(relocatedGem, gemReceipt.files);\n\t\tconst directories = [...new Set(Object.keys(gemReceipt.files).filter(path => /\\.so(?:\\.[0-9]+)*$/u.test(path)).map(dirname))];\n\t\tassert.equal(directories.length, 1, directories.join(\",\"));\n\t\tconst observer = await observeRubyDispatch({\n\t\t\tprobeRoot: join(consumer, \"dispatch\")\n\t\t\t, nativeDirectory: join(relocatedGem, directories[0])\n\t\t\t, componentId: model.component.id\n\t\t\t, command\n\t\t\t, cwd: relocated\n\t\t\t, env: { ...copiedCleanEnvironment, GEM_HOME: movedGems, GEM_PATH: movedGems }\n\t\t});\n\t\t// Without GDB the probe refuses before loading the gem, and no record appears.\n\t\tconst missing = await observer.run({ gdb: false });\n\t\tassert.equal(missing.code, 2, missing.output); assert.equal(missing.stdout, \"\"); assert.equal(missing.stderr, unattached);\n\t\tassert.equal(existsSync(missing.record), false);\n\t\tconst accepted = await observer.run();\n\t\tassert.equal(accepted.code, 0, `instrumented probe failed (70 stale record, 71 ptrace or instrumentation, 72 signal): ${accepted.output}`);\n\t\tassert.equal(accepted.stderr, \"\");\n\t\tconst observed = readNativeFinDispatch(accepted.stdout, rubyFinDispatchExpected);\n\t\tassert.deepEqual(observed, rubyFinDispatchExpected);\n\t\tconst breakpoints = await assertRubyDispatchRecord(observer, accepted, observed);\n\t\tconst dispatch = {\n\t\t\tcolumns: observer.identity.columns\n\t\t\t, observed\n\t\t\t, instrument: \"gdb-breakpoints\"\n\t\t\t, instrumentation: \"in-memory int3 breakpoints at each verified definition; deployed files and the production loader are unchanged\"\n\t\t\t, routes: rubyFinDispatchRoutes\n\t\t\t, positiveControl: \"valid public Ruby calls increment exactly their source and adapter columns; rejected calls, including every Fin 0 call, change no column\"\n\t\t\t, probeSha256: sha256(rubyFinDispatchProbe())\n\t\t\t, scriptSha256: sha256(nativeFinGdbScript)\n\t\t\t, configSha256: observer.configSha256\n\t\t\t, gdb: { version: (await runCopied(gdbCommand, [\"--version\"], relocated, copiedCleanEnvironment)).stdout.split(\"\\n\")[0], sha256: sha256(await readFile(await realpath(gdbCommand))) }\n\t\t\t, definers: observer.identity.definers\n\t\t\t, breakpoints\n\t\t\t, libraries: Object.fromEntries(observer.identity.libraries.map(name => [name, gemLibraries[name]]))\n\t\t\t, scope: \"local x86_64 Linux with GDB and ptrace\"\n\t\t};\n"
+        },
+        {
+          "start": 36897,
+          "previous": "\t\t\t, dispatch: { observed: false, reason: \"RTLD_DEEPBIND loader isolates verified libraries from LD_PRELOAD interposition; identity with the instrumented C adapter is asserted instead\" }\n",
+          "current": "\t\t\t, dispatch\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "1665a83030426665691054395c200984799a2b35f25aee4b4a12e37d0903af01",
+      "previousSha256": "874aba1f7e8bf57ad8ee19d6c7b78a861c8d2c2294cf2689bff56cdb1f8a65dc",
+      "edits": [
+        {
+          "start": 12727,
+          "previous": "",
+          "current": "import { rubyDispatchIntegrationChangedPaths } from \"./ruby-dispatch-integration-source-history.mjs\";\n"
+        },
+        {
+          "start": 51054,
+          "previous": "",
+          "current": "\t, ...rubyDispatchIntegrationChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/perl-relocated-consumer-source-history.mjs",
+      "currentSha256": "fd30291ff06c946a7f16aee56b899670f063d88ed09678dbca662e56edde5e5e",
+      "previousSha256": "0ccccd00d2abf6127fdac55443aa85b561ea8b7bcfdd86ed2003adc626712f06",
+      "edits": [
+        {
+          "start": 243,
+          "previous": "",
+          "current": "import { beforeRubyDispatchIntegrationSource } from \"./ruby-dispatch-integration-source-history.mjs\";\n"
+        },
+        {
+          "start": 2418,
+          "previous": "",
+          "current": "\tsource = beforeRubyDispatchIntegrationSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/perl-relocated-consumer-source-history-tests.mjs",
+      "currentSha256": "b469c9a971675bb1dafcfd98bee1c657f1ff054910032493f52be9d76a948856",
+      "previousSha256": "4ad8616454e7190fe5f9bb74e679553e296ed20a8f52f2326f92fef1b6cf422f",
+      "edits": [
+        {
+          "start": 526,
+          "previous": "",
+          "current": "import { beforeRubyDispatchIntegrationSource } from \"./ruby-dispatch-integration-source-history.mjs\";\n"
+        },
+        {
+          "start": 1373,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\"), previous = reversePerlRelocatedConsumerUpdate(source, update);\n",
+          "current": "\t\tconst source = beforeRubyDispatchIntegrationSource(update.path, await readFile(update.path, \"utf8\")), previous = reversePerlRelocatedConsumerUpdate(source, update);\n"
+        },
+        {
+          "start": 2673,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", text = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", text = beforeRubyDispatchIntegrationSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 3251,
+          "previous": "\t\t\tassert.equal(sha256(await readFile(file.path)), update.currentSha256);\n",
+          "current": "\t\t\tassert.equal(sha256(beforeRubyDispatchIntegrationSource(file.path, await readFile(file.path, \"utf8\"))), update.currentSha256);\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/ruby.md",
+      "currentSha256": "20bc5940cc2c14347fbf90c4078190465cf1def04b984645c850945afbbed97a",
+      "previousSha256": "cca1b6c276c599800fe36d743332dfb1bfc2a7d2ee4124c93bd0bf5f2cef5036",
+      "edits": [
+        {
+          "start": 32516,
+          "previous": "",
+          "current": "The separate [scalar entry-counter receipt](../evidence/ruby-fin-dispatch-20261009/receipt.json) records both ordinary-source and reviewed-IR gems after source removal, offline installation and relocation. GDB counted the actual Lean source and adapter entries: rejected `mirror`, `impossible` and `label` calls entered neither; valid and recovery calls entered their own source and adapter once. Both consumers passed 2,029 checks on Ruby 3.3.12 with GDB 13.1 on x86-64 Linux and a glibc 2.36 package floor. The measurement leaves the generated loader and installed files unchanged and instruments process memory. It covers these top-level scalar calls, not nested refinements or other platforms.\n\n"
+        }
+      ]
+    }
+  ],
+  "producerCommit": "c3bfecb21af56fcc3d4648d305a577730499a516",
+  "producerUpdates": [
+    {
+      "path": "tests/ruby-fin.test.mjs",
+      "currentSha256": "85e2317fc13874191d7631eb9f1747ae6d98900e36f102e50e5df623b990e0ef",
+      "previousSha256": "817b089ecf718de80e5d2fc6d63f03c881e987c7c2bd76734871c5eb4187716c",
+      "edits": [
+        {
+          "start": 20730,
+          "previous": "const standInRuby = resolve(\".toolchains/ruby33/bin/ruby\");\nconst standInSkip = !existsSync(standInRuby) ? \"the pinned Ruby 3.3 toolchain is not installed\"\n",
+          "current": "// The configured Ruby, as in the installed acceptance, else the pinned local toolchain.\nconst standInRuby = process.env.LEAN_BRIDGE_RUBY ?? resolve(\".toolchains/ruby33/bin/ruby\");\nconst standInMissing = !existsSync(standInRuby) ? `no Ruby 3.3 at ${standInRuby}`\n"
+        },
+        {
+          "start": 21212,
+          "previous": "",
+          "current": "// The gated installed acceptance requires these controls; only an ungated run may skip them.\nconst standInSkip = process.env.LEAN_BRIDGE_RUBY_FIN_TEST === \"1\" ? false : standInMissing;\n"
+        },
+        {
+          "start": 21557,
+          "previous": "",
+          "current": "\tassert.equal(standInMissing, false, `the gated Ruby Fin acceptance requires its stand-in controls: ${standInMissing}`);\n"
+        },
+        {
+          "start": 21812,
+          "previous": "",
+          "current": "\tassert.match((await runCopied(standInRuby, [\"-e\", \"print RUBY_VERSION\"], root, copiedCleanEnvironment)).stdout, /^3\\.3\\./u, \"the generated loader requires MRI Ruby 3.3\");\n"
+        }
+      ]
+    }
+  ]
+}

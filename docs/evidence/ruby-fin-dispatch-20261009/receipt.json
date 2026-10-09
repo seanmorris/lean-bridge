@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1425,
+  "execution": "local",
+  "revision": "c3bfecb21af56fcc3d4648d305a577730499a516",
+  "sources": {
+    "tests/ruby-fin.test.mjs": "817b089ecf718de80e5d2fc6d63f03c881e987c7c2bd76734871c5eb4187716c",
+    "tests/helpers/native-fin-dispatch-gdb.mjs": "71905e87090421e3346652b49ef2a35528e96568e605b84c5e8649a1dd773792",
+    "tests/helpers/native-fin-dispatch-gdb-tests.mjs": "cda3667177fda437c1a8b9af01349ca1399ed3264b31691ed4c5f0a7b92710e7",
+    "tests/helpers/native-fin-dispatch.mjs": "e1b7105b020665d1ff624baa09f0ab62101b3a3eaba5d9f79cc56895105fb0bc",
+    "tests/helpers/copied-fixture-install.mjs": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+    "src/backends/ruby/verified-assets.mjs": "801be5e0c60f3ab8d86e9fc5286657c556a7c2315b557e3dfa62c02ef4ec6b49",
+    "src/backends/ruby/copied-assets.mjs": "501e2ad9936e09d58131f9995164ec27fa28d222bfeeded3ed64ae2b5bda0c4f",
+    "src/backends/ruby/copied-values.mjs": "44580dc2129a996655284ea7df86250cf3a671a0930259c05b58fd6e1d1c51c7",
+    "src/build/native-component.mjs": "2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867"
+  },
+  "scope": {
+    "host": "Ruby ordinary-source and independently reviewed IR gems",
+    "counter": "GDB entry breakpoints at three Lean source definitions and their three C adapter definitions",
+    "routes": [
+      "public Ruby methods LeanBridge::NativeFin.mirror, .impossible and .label through the verified RTLD_DEEPBIND gem loader and Fiddle into the bundled C adapter"
+    ],
+    "environment": "Local Ruby 3.3.12, GDB 13.1, ptrace and a glibc 2.36 package floor on x86_64 Linux",
+    "loader": "The generated RTLD_DEEPBIND loader and deployed library files are unchanged; instrumentation changes process memory",
+    "producer": "c3bfecb produced these installed results; 50d1163 later hardened toolchain selection and gated stand-in requirements",
+    "otherHosts": false,
+    "hostedCi": false,
+    "olderEvidence": "Older observed:false reports remain unchanged; this is a separately dated measurement"
+  },
+  "artifacts": [
+    {
+      "path": "docs/evidence/ruby-fin-dispatch-20261009/queue.json",
+      "originalPath": "build/vo1425-ruby-dispatch-c3bfecb/queue.json",
+      "sha256": "dcc1960042d130905ae77a46ebe52475178ff71d9673a82bd682a3f87651df5d",
+      "bytes": 3156
+    },
+    {
+      "path": "docs/evidence/ruby-fin-dispatch-20261009/run.tap",
+      "originalPath": "build/vo1425-ruby-dispatch-c3bfecb/run.tap",
+      "sha256": "c81085293fb3c8bcc6db27a7ab4dba4a88b2e6ffc1acb384b2de01965dbfdbe9",
+      "bytes": 2648
+    },
+    {
+      "path": "docs/evidence/ruby-fin-dispatch-20261009/end.txt",
+      "originalPath": "build/vo1425-ruby-dispatch-c3bfecb/end.txt",
+      "sha256": "261ceda3a1d4761b7ff71972421966b6e0e7daaa9f84f1fc4e9cf6e7ad4a10f5",
+      "bytes": 46
+    },
+    {
+      "path": "docs/evidence/ruby-fin-dispatch-20261009/ruby.json",
+      "originalPath": "build/vo1425-ruby-dispatch-c3bfecb/ruby.json",
+      "sha256": "9c3a6f0d01142f510ea2f821b6519d58107d220fb214711bc6711e9a620357fd",
+      "bytes": 8048
+    },
+    {
+      "path": "docs/evidence/ruby-fin-dispatch-20261009/ruby-reviewed.json",
+      "originalPath": "build/vo1425-ruby-dispatch-c3bfecb/ruby-reviewed.json",
+      "sha256": "97934b8677a90c7f9ea14eebbed22078efd4d584222db241fa97fdaee20e35a6",
+      "bytes": 8142
+    },
+    {
+      "path": "docs/evidence/ruby-fin-dispatch-20261009/sources/c3bfecb/tests/ruby-fin.test.mjs.source",
+      "originalPath": "git:c3bfecb21af56fcc3d4648d305a577730499a516:tests/ruby-fin.test.mjs",
+      "sha256": "817b089ecf718de80e5d2fc6d63f03c881e987c7c2bd76734871c5eb4187716c",
+      "bytes": 37524
+    },
+    {
+      "path": "docs/evidence/ruby-fin-dispatch-20261009/sources/c3bfecb/tests/helpers/native-fin-dispatch-gdb.mjs.source",
+      "originalPath": "git:c3bfecb21af56fcc3d4648d305a577730499a516:tests/helpers/native-fin-dispatch-gdb.mjs",
+      "sha256": "71905e87090421e3346652b49ef2a35528e96568e605b84c5e8649a1dd773792",
+      "bytes": 11439
+    },
+    {
+      "path": "docs/evidence/ruby-fin-dispatch-20261009/sources/c3bfecb/tests/helpers/native-fin-dispatch-gdb-tests.mjs.source",
+      "originalPath": "git:c3bfecb21af56fcc3d4648d305a577730499a516:tests/helpers/native-fin-dispatch-gdb-tests.mjs",
+      "sha256": "cda3667177fda437c1a8b9af01349ca1399ed3264b31691ed4c5f0a7b92710e7",
+      "bytes": 5853
+    },
+    {
+      "path": "docs/evidence/ruby-fin-dispatch-20261009/sources/c3bfecb/tests/helpers/native-fin-dispatch.mjs.source",
+      "originalPath": "git:c3bfecb21af56fcc3d4648d305a577730499a516:tests/helpers/native-fin-dispatch.mjs",
+      "sha256": "e1b7105b020665d1ff624baa09f0ab62101b3a3eaba5d9f79cc56895105fb0bc",
+      "bytes": 10563
+    },
+    {
+      "path": "docs/evidence/ruby-fin-dispatch-20261009/sources/c3bfecb/tests/helpers/copied-fixture-install.mjs.source",
+      "originalPath": "git:c3bfecb21af56fcc3d4648d305a577730499a516:tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+      "bytes": 12888
+    },
+    {
+      "path": "docs/evidence/ruby-fin-dispatch-20261009/sources/c3bfecb/src/backends/ruby/verified-assets.mjs.source",
+      "originalPath": "git:c3bfecb21af56fcc3d4648d305a577730499a516:src/backends/ruby/verified-assets.mjs",
+      "sha256": "801be5e0c60f3ab8d86e9fc5286657c556a7c2315b557e3dfa62c02ef4ec6b49",
+      "bytes": 5552
+    },
+    {
+      "path": "docs/evidence/ruby-fin-dispatch-20261009/sources/c3bfecb/src/backends/ruby/copied-assets.mjs.source",
+      "originalPath": "git:c3bfecb21af56fcc3d4648d305a577730499a516:src/backends/ruby/copied-assets.mjs",
+      "sha256": "501e2ad9936e09d58131f9995164ec27fa28d222bfeeded3ed64ae2b5bda0c4f",
+      "bytes": 1165
+    },
+    {
+      "path": "docs/evidence/ruby-fin-dispatch-20261009/sources/c3bfecb/src/backends/ruby/copied-values.mjs.source",
+      "originalPath": "git:c3bfecb21af56fcc3d4648d305a577730499a516:src/backends/ruby/copied-values.mjs",
+      "sha256": "44580dc2129a996655284ea7df86250cf3a671a0930259c05b58fd6e1d1c51c7",
+      "bytes": 16925
+    },
+    {
+      "path": "docs/evidence/ruby-fin-dispatch-20261009/sources/c3bfecb/src/build/native-component.mjs.source",
+      "originalPath": "git:c3bfecb21af56fcc3d4648d305a577730499a516:src/build/native-component.mjs",
+      "sha256": "2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867",
+      "bytes": 12579
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "node": 1425,
+  "kind": "Ruby installed Fin with per-step GDB entry-breakpoint dispatch counters (ordinary and reviewed)",
+  "revision": "c3bfecb21af56fcc3d4648d305a577730499a516",
+  "selection": "tests/ruby-fin.test.mjs (both gated tests: ordinary and independently reviewed)",
+  "command": "env -u FORCE_COLOR NO_COLOR=1 LEAN_BRIDGE_RUBY_FIN_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap tests/ruby-fin.test.mjs",
+  "sources": {
+    "tests/ruby-fin.test.mjs": "817b089ecf718de80e5d2fc6d63f03c881e987c7c2bd76734871c5eb4187716c",
+    "tests/helpers/native-fin-dispatch-gdb.mjs": "71905e87090421e3346652b49ef2a35528e96568e605b84c5e8649a1dd773792",
+    "tests/helpers/native-fin-dispatch-gdb-tests.mjs": "cda3667177fda437c1a8b9af01349ca1399ed3264b31691ed4c5f0a7b92710e7",
+    "tests/helpers/native-fin-dispatch.mjs": "e1b7105b020665d1ff624baa09f0ab62101b3a3eaba5d9f79cc56895105fb0bc",
+    "tests/helpers/copied-fixture-install.mjs": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+    "src/backends/ruby/verified-assets.mjs": "801be5e0c60f3ab8d86e9fc5286657c556a7c2315b557e3dfa62c02ef4ec6b49",
+    "src/backends/ruby/copied-assets.mjs": "501e2ad9936e09d58131f9995164ec27fa28d222bfeeded3ed64ae2b5bda0c4f",
+    "src/backends/ruby/copied-values.mjs": "44580dc2129a996655284ea7df86250cf3a671a0930259c05b58fd6e1d1c51c7",
+    "src/build/native-component.mjs": "2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867"
+  },
+  "cpu": "taskset -c 3",
+  "concurrency": 1,
+  "cwd": "/app/build/worktrees/callback-reply-vo1220",
+  "environment": {
+    "NO_COLOR": "1",
+    "FORCE_COLOR": "(unset)",
+    "LEAN_BRIDGE_RUBY_FIN_TEST": "1",
+    "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+    "LEAN_BRIDGE_RUBY": "(unset: .toolchains/ruby33/bin/ruby)",
+    "LEAN_BRIDGE_GDB": "(unset: /usr/bin/gdb)",
+    "TMPDIR": "(unset: /tmp)"
+  },
+  "versions": {
+    "node": "v22.23.3",
+    "lean": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)",
+    "ruby": "ruby 3.3.12 (2026-07-16 revision 0581089df9) [x86_64-linux]",
+    "rubySha256": "28eea9e1f4c7eef2f6812b0535409dce29f71ca86bbbddeccb6df6d3279bf6bb",
+    "gem": "3.5.22",
+    "glibc": "ldd (Debian GLIBC 2.36-9+deb12u14) 2.36",
+    "gdb": "GNU gdb (Debian 13.1-3) 13.1",
+    "gdbSha256": "762f9d48202dd341e170d8302543f35622417b4e39bfce9a270d06943702e754",
+    "ptraceScope": "0",
+    "cc": "cc (Debian 12.2.0-14+deb12u1) 12.2.0",
+    "nm": "GNU nm (GNU Binutils for Debian) 2.40",
+    "readelf": "GNU readelf (GNU Binutils for Debian) 2.40"
+  },
+  "freeSpace": "8494M",
+  "freeSpaceFloor": "1024M (watchdog stops the run below it)",
+  "reports": {
+    "ordinary": "/app/build/worktrees/callback-reply-vo1220/build/native-fin/ruby.json",
+    "reviewed": "/app/build/worktrees/callback-reply-vo1220/build/native-fin/ruby-reviewed.json",
+    "copiedTo": "/app/build/vo1425-ruby-dispatch-c3bfecb/"
+  },
+  "tap": "/app/build/vo1425-ruby-dispatch-c3bfecb/run.tap",
+  "end": "/app/build/vo1425-ruby-dispatch-c3bfecb/end.txt",
+  "startedAt": "2026-10-09T00:48:12.252Z"
+}

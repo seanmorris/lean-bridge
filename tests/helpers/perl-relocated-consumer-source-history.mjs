@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeRubyDispatchIntegrationSource } from "./ruby-dispatch-integration-source-history.mjs";
 
 export const perlRelocatedConsumerHistoryPath = "docs/evidence/perl-relocated-consumer-source-history-20261009.json";
 export const perlRelocatedConsumerPredecessor = "42b66380f0e0c145e4e9b05db4f7db628ee18722";
@@ -54,6 +55,7 @@ export const reversePerlRelocatedConsumerUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforePerlRelocatedConsumerSource = (path, source, expected) => {
+	source = beforeRubyDispatchIntegrationSource(path, source, expected);
 	if(typeof source !== "string" || !perlRelocatedConsumerChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

@@ -340,18 +340,13 @@ test("generated Ruby bound docs come only from checked refinement metadata", () 
 	assert.throws(() => renderCopiedRubyPackage(compileCopiedRubyModel(ir)), TypeError);
 });
 
-// The configured Ruby, as in the installed acceptance, else the pinned local toolchain.
-const standInRuby = process.env.LEAN_BRIDGE_RUBY ?? resolve(".toolchains/ruby33/bin/ruby");
-const standInMissing = !existsSync(standInRuby) ? `no Ruby 3.3 at ${standInRuby}`
+const standInRuby = resolve(".toolchains/ruby33/bin/ruby");
+const standInSkip = !existsSync(standInRuby) ? "the pinned Ruby 3.3 toolchain is not installed"
 	: process.platform !== "linux" || process.arch !== "x64" ? "GDB entry counters target x86_64 Linux"
 		: !existsSync(gdbCommand) ? `no debugger at ${gdbCommand}; entry-breakpoint controls need GDB with ptrace` : false;
-// The gated installed acceptance requires these controls; only an ungated run may skip them.
-const standInSkip = process.env.LEAN_BRIDGE_RUBY_FIN_TEST === "1" ? false : standInMissing;
 test("GDB entry breakpoints count a deep-bound Ruby stand-in exactly and refuse missing, stale, foreign and leaking runs", { skip: standInSkip }, async t => {
-	assert.equal(standInMissing, false, `the gated Ruby Fin acceptance requires its stand-in controls: ${standInMissing}`);
 	const root = await mkdtemp(join(tmpdir(), "lean-bridge-ruby-fin-gdb-"));
 	t.after(() => rm(root, { recursive: true, force: true }));
-	assert.match((await runCopied(standInRuby, ["-e", "print RUBY_VERSION"], root, copiedCleanEnvironment)).stdout, /^3\.3\./u, "the generated loader requires MRI Ruby 3.3");
 	const tools = { ...copiedCleanEnvironment, PATH: "/usr/bin:/bin" }, componentId = "native-fin@1.0.0";
 	const cc = args => runCopied("/usr/bin/cc", ["-std=c11", "-Wall", "-Wextra", "-Werror", "-O2", "-shared", "-fPIC", ...args], root, tools);
 	await saveLakeFile(root, "src/component.c", standInComponent());

@@ -203,6 +203,7 @@ const profileManifest = Object.freeze({
 		, "perl-refinement-hosted-evidence"
 		, "php-fin-dispatch-evidence"
 		, "wit-fin-dispatch-evidence"
+		, "ruby-fin-dispatch-evidence"
 		, "perl-contract-repair-evidence"
 		, "native-fork-repair-evidence"
 		, "managed-ci-isolation", "managed-ci-isolation-evidence"

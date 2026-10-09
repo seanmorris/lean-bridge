@@ -1,0 +1,72 @@
+TAP version 13
+# Subtest: the GDB identity names one verified defining library per counted column
+ok 1 - the GDB identity names one verified defining library per counted column
+  ---
+  duration_ms: 2.894782
+  type: 'test'
+  ...
+# Subtest: nm listings decide each column's single defining library
+ok 2 - nm listings decide each column's single defining library
+  ---
+  duration_ms: 0.805575
+  type: 'test'
+  ...
+# Subtest: the GDB script records before the inferior runs and arms only exact verified definitions
+ok 3 - the GDB script records before the inferior runs and arms only exact verified definitions
+  ---
+  duration_ms: 0.482718
+  type: 'test'
+  ...
+# Subtest: the GDB record reader requires the exact layout
+ok 4 - the GDB record reader requires the exact layout
+  ---
+  duration_ms: 0.562681
+  type: 'test'
+  ...
+# Subtest: Ruby gems are checked Fin consumers beside C, C++, Python and Rust
+ok 5 - Ruby gems are checked Fin consumers beside C, C++, Python and Rust
+  ---
+  duration_ms: 0.147367
+  type: 'test'
+  ...
+# Subtest: generated Ruby bound docs come only from checked refinement metadata
+ok 6 - generated Ruby bound docs come only from checked refinement metadata
+  ---
+  duration_ms: 18.573706
+  type: 'test'
+  ...
+# Subtest: GDB entry breakpoints count a deep-bound Ruby stand-in exactly and refuse missing, stale, foreign and leaking runs
+ok 7 - GDB entry breakpoints count a deep-bound Ruby stand-in exactly and refuse missing, stale, foreign and leaking runs
+  ---
+  duration_ms: 4214.971034
+  type: 'test'
+  ...
+# Subtest: relocated source-free Ruby gems check Fin bounds through the bundled C adapter
+ok 8 - relocated source-free Ruby gems check Fin bounds through the bundled C adapter
+  ---
+  duration_ms: 381358.860572
+  type: 'test'
+  ...
+# build 0: compiling the shared C library and Ruby gem
+# offline gem installation without producer files or compilers
+# per-step source and adapter counts in the relocated Ruby process under GDB entry breakpoints
+# build 1: compiling the shared C library and Ruby gem
+# Subtest: independently reviewed Ruby packages check scalar Fin through installed consumers
+ok 9 - independently reviewed Ruby packages check scalar Fin through installed consumers
+  ---
+  duration_ms: 370930.70384
+  type: 'test'
+  ...
+# build 0: compiling the shared C library and Ruby gem
+# offline gem installation without producer files or compilers
+# per-step source and adapter counts in the relocated Ruby process under GDB entry breakpoints
+# build 1: compiling the shared C library and Ruby gem
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 756884.619751
