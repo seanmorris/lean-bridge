@@ -147,6 +147,25 @@ test("every C Array refusal seeds its output and the rounds refuse a negative me
 	assert.ok(!rounds.includes("null_row"));
 });
 
+test("every Perl Array refusal message is the generated XS text of the package it calls", async () => {
+	const fragment = await readFile("tests/fixtures/generic-record-array-consumers/perl.pl", "utf8");
+	const generated = await readFile("src/backends/perl/generate.mjs", "utf8"), runtime = await readFile("src/backends/perl/Runtime.xs", "utf8");
+	const graph = await readFile("src/backends/perl/copied-graph-runtime.mjs", "utf8");
+	// GenericRecords has no recursive type, so CPAN inlines it: its errors come from generate.mjs and Runtime.xs, never the copied-graph runtime.
+	const record = 'croak("expected ${packageName} with an exact class and plain untied hash")';
+	const sources = new Map([["Nat cannot be negative", [runtime, 'croak("Nat cannot be negative")']]
+		, ["expected Math::BigInt", [runtime, 'croak("expected Math::BigInt")']]
+		, ["Array requires a plain array reference", [generated, 'croak("${list ? "List" : "Array"} requires a plain array reference")']]
+		, ...["NatBox", "ArrayBox", "RowBox"].map(name => [`expected LeanBridge::GenericRecords::${name} with an exact class and plain untied hash`, [generated, record]])]);
+	const used = new Set([...fragment.matchAll(/'([^']+)'\]|array_raises\('([^']+)'/gu)].map(match => match[1] ?? match[2]));
+	assert.deepEqual([...used].sort(), [...sources.keys()].sort());
+	for(const [message, [source, site]] of sources)
+	{
+		assert.ok(source.includes(site), message);
+		if(message !== "Nat cannot be negative") assert.ok(!graph.includes(message), `${message} is not copied-graph text`);
+	}
+});
+
 test("each profile has its expected case list and an exact check total", () => {
 	assert.deepEqual(Object.keys(genericRecordArrayCases).sort(), [...genericRecordArrayProfiles].sort());
 	for(const profile of genericRecordArrayProfiles)

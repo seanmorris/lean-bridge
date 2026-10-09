@@ -20,11 +20,11 @@ my $made = LeanBridge::GenericRecords::row_of(n(3));
 check(@$made == 3 && same_box($made->[0], 0, 3) && same_box($made->[2], 2, 3) && @{LeanBridge::GenericRecords::row_of(n(0))} == 0 && LeanBridge::GenericRecords::row_total($made) == 9);
 check(LeanBridge::GenericRecords::row_box_sum(row_box($row, n(4))) == $row_expected && LeanBridge::GenericRecords::row_box_sum(row_box([], n(9))) == 9 && LeanBridge::GenericRecords::row_box_sum(row_box($made, n(0))) == 3);
 # Invalid members at the first, middle and last position are the generated XS's exact errors; the caller's input is unchanged and the next valid call succeeds.
-my @array_members = ([n(-1), 'Nat cannot be negative'], [1, 'Expected Math::BigInt'], ['1', 'Expected Math::BigInt'], [undef, 'Expected Math::BigInt']);
+my @array_members = ([n(-1), 'Nat cannot be negative'], [1, 'expected Math::BigInt'], ['1', 'expected Math::BigInt'], [undef, 'expected Math::BigInt']);
 my @row_members = ([nat_box(-1, 0), 'Nat cannot be negative'], [nat_box(0, -1), 'Nat cannot be negative']
-  , [LeanBridge::GenericRecords::NatBox->new(value => 1, count => n(0)), 'Expected Math::BigInt']
-  , [LeanBridge::GenericRecords::NatBoxAgain->new(value => n(1), count => n(0)), 'Expected exact LeanBridge::GenericRecords::NatBox']
-  , [[1, 0], 'Expected exact LeanBridge::GenericRecords::NatBox'], [1, 'Expected exact LeanBridge::GenericRecords::NatBox']);
+  , [LeanBridge::GenericRecords::NatBox->new(value => 1, count => n(0)), 'expected Math::BigInt']
+  , [LeanBridge::GenericRecords::NatBoxAgain->new(value => n(1), count => n(0)), 'expected LeanBridge::GenericRecords::NatBox with an exact class and plain untied hash']
+  , [[1, 0], 'expected LeanBridge::GenericRecords::NatBox with an exact class and plain untied hash'], [1, 'expected LeanBridge::GenericRecords::NatBox with an exact class and plain untied hash']);
 for my $position (0 .. 2) {
   for my $case (@array_members) {
     my ($member, $message) = @$case;
@@ -45,16 +45,16 @@ for my $position (0 .. 2) {
 }
 # Non-array Arrays, negative or non-Math::BigInt counts beside Array fields, a negative rowOf argument and wrong records are refused too.
 for my $case (
-  [sub { LeanBridge::GenericRecords::push_count(array_box(5, n(1))) }, 'Expected a plain untied array reference'],
-  [sub { LeanBridge::GenericRecords::row_total(nat_box(1, 0)) }, 'Expected a plain untied array reference'],
-  [sub { LeanBridge::GenericRecords::row_total({ 0 => nat_box(1, 0) }) }, 'Expected a plain untied array reference'],
-  [sub { LeanBridge::GenericRecords::row_box_sum(row_box(nat_box(1, 0), n(1))) }, 'Expected a plain untied array reference'],
+  [sub { LeanBridge::GenericRecords::push_count(array_box(5, n(1))) }, 'Array requires a plain array reference'],
+  [sub { LeanBridge::GenericRecords::row_total(nat_box(1, 0)) }, 'Array requires a plain array reference'],
+  [sub { LeanBridge::GenericRecords::row_total({ 0 => nat_box(1, 0) }) }, 'Array requires a plain array reference'],
+  [sub { LeanBridge::GenericRecords::row_box_sum(row_box(nat_box(1, 0), n(1))) }, 'Array requires a plain array reference'],
   [sub { LeanBridge::GenericRecords::push_count(array_box([n(1)], n(-1))) }, 'Nat cannot be negative'],
   [sub { LeanBridge::GenericRecords::row_box_sum(row_box($row, n(-1))) }, 'Nat cannot be negative'],
-  [sub { LeanBridge::GenericRecords::row_box_sum(row_box($row, 4)) }, 'Expected Math::BigInt'],
+  [sub { LeanBridge::GenericRecords::row_box_sum(row_box($row, 4)) }, 'expected Math::BigInt'],
   [sub { LeanBridge::GenericRecords::row_of(n(-1)) }, 'Nat cannot be negative'],
-  [sub { LeanBridge::GenericRecords::push_count(row_box($row, n(1))) }, 'Expected exact LeanBridge::GenericRecords::ArrayBox'],
-  [sub { LeanBridge::GenericRecords::row_box_sum(array_box([n(1)], n(1))) }, 'Expected exact LeanBridge::GenericRecords::RowBox'],
+  [sub { LeanBridge::GenericRecords::push_count(row_box($row, n(1))) }, 'expected LeanBridge::GenericRecords::ArrayBox with an exact class and plain untied hash'],
+  [sub { LeanBridge::GenericRecords::row_box_sum(array_box([n(1)], n(1))) }, 'expected LeanBridge::GenericRecords::RowBox with an exact class and plain untied hash'],
 ) {
   my ($call, $message) = @$case;
   check(array_raises($message, $call));
