@@ -1,0 +1,26 @@
+TAP version 13
+# Subtest: original ordinary scalar Fin entry is accounted in installed npm packages
+ok 1 - original ordinary scalar Fin entry is accounted in installed npm packages
+  ---
+  duration_ms: 173488.565959
+  type: 'test'
+  ...
+# original ordinary scalar: WASM and npm build 1/2
+# original ordinary scalar: WASM and npm build 2/2
+# Subtest: probe ordinary scalar Fin entry is accounted in installed npm packages
+ok 2 - probe ordinary scalar Fin entry is accounted in installed npm packages
+  ---
+  duration_ms: 165602.448721
+  type: 'test'
+  ...
+# probe ordinary scalar: WASM and npm build 1/2
+# probe ordinary scalar: WASM and npm build 2/2
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 339666.959705

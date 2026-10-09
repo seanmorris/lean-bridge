@@ -1,0 +1,26 @@
+import * as api from "reviewed-fin";
+import { executeCorpus } from "./javascript.mjs";
+import { loadApi, request } from "./package.mjs";
+type Equal<A, B> = (<T>() => T extends A ? 1 : 2) extends (<T>() => T extends B ? 1 : 2) ? true : false;
+type Expect<T extends true> = T;
+type Scalar = (value: bigint) => bigint;
+export type Mirror = Expect<Equal<typeof api.mirror, Scalar>>;
+export type Never = Expect<Equal<typeof api.never, Scalar>>;
+export type Only = Expect<Equal<typeof api.only, Scalar>>;
+export type Huge = Expect<Equal<typeof api.huge, Scalar>>;
+export type Tenth = Expect<Equal<typeof api.tenth, Scalar>>;
+export type Label = Expect<Equal<typeof api.label, (before: string, digit: bigint, after: string) => string>>;
+// Fin bounds are runtime checked; their representation remains Nat's bigint.
+const value: bigint = api.mirror(9n);
+const label: string = api.label("prefix", 0n, "suffix");
+void value; void label;
+if (false) {
+  // @ts-expect-error Fin cannot be passed as a machine number.
+  api.mirror(9);
+  // @ts-expect-error Fin cannot be passed as text.
+  api.huge("9");
+  // @ts-expect-error The later bounded argument retains its static representation.
+  api.label("prefix", 9, "suffix");
+}
+
+console.log(JSON.stringify(executeCorpus(request, await loadApi())));

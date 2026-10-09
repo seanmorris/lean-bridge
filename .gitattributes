@@ -19,3 +19,5 @@ docs/evidence/python-rust-container-dispatch-20261009/python.job.log whitespace=
 docs/evidence/python-rust-container-dispatch-20261009/rust.job.log whitespace=-blank-at-eol
 # Preserve receipt-authenticated hosted specialization logs without rewriting whitespace.
 docs/evidence/hosted-specializations-20261009/*/job.log whitespace=-blank-at-eol
+# Preserve the receipt-authenticated failed Wasm entry smoke TAP without rewriting whitespace.
+docs/evidence/wasm-entry-20261009/failed-ba282ec-node-smoke/run.tap whitespace=-blank-at-eol

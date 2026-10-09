@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeWasmEntryArchiveSource } from "./wasm-entry-archive-source-history.mjs";
 
 export const nativeEdgeArrayHarnessHistoryPath = "docs/evidence/native-edge-array-harness-source-history-20261009.json";
 export const nativeEdgeArrayHarnessPredecessor = "1406d54c0aac77f7cafa0cf73d7a2492ddc1628f";
@@ -52,6 +53,7 @@ export const reverseNativeEdgeArrayHarnessUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeNativeEdgeArrayHarnessSource = (path, source, expected) => {
+	source = beforeWasmEntryArchiveSource(path, source, expected);
 	if(typeof source !== "string" || !nativeEdgeArrayHarnessChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

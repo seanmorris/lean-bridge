@@ -1,0 +1,609 @@
+TAP version 13
+# Subtest: original ordinary scalar Fin entry is accounted in installed npm packages
+not ok 1 - original ordinary scalar Fin entry is accounted in installed npm packages
+  ---
+  duration_ms: 103720.535668
+  type: 'test'
+  location: '/app/build/worktrees/wasm-entry-producer-ba282ec/tests/reviewed-fin-wasm-entry.test.mjs:21:2'
+  failureType: 'testCodeFailure'
+  error: |-
+    the private ABI is the expected contract's
+    + actual - expected
+    ... Skipped lines
+    
+      {
+        dispatch: 'scalar-frame-v2',
+        exports: [
+          {
+    +       bindingId: 'lean:ReviewedFin.huge',
+    -       bindingId: 'lean:ReviewedFin.mirror',
+            parameters: [
+              {
+                kind: 'primitive',
+                name: 'nat'
+              }
+    ...
+            resultMode: 'value',
+    +       symbol: 'lean_bridge_916cd0d95f012837f21bf6be'
+    -       symbol: 'lean_bridge_b161553cced7f81b24dc175c'
+          },
+          {
+    +       bindingId: 'lean:ReviewedFin.label',
+    -       bindingId: 'lean:ReviewedFin.never',
+            parameters: [
+              {
+                kind: 'primitive',
+    +           name: 'string'
+    +         },
+    +         {
+    +           kind: 'primitive',
+                name: 'nat'
+              },
+    +         {
+    +           kind: 'primitive',
+    +           name: 'string'
+    +         }
+            ],
+            result: {
+              kind: 'primitive',
+    +         name: 'string'
+    -         name: 'nat'
+            },
+            resultMode: 'value',
+    +       symbol: 'lean_bridge_bda750115c963771bd2df942'
+    -       symbol: 'lean_bridge_fc12fd7acd61bd0281b4a412'
+          },
+          {
+    +       bindingId: 'lean:ReviewedFin.mirror',
+    -       bindingId: 'lean:ReviewedFin.only',
+            parameters: [
+              {
+                kind: 'primitive',
+                name: 'nat'
+              }
+    ...
+            resultMode: 'value',
+    +       symbol: 'lean_bridge_b161553cced7f81b24dc175c'
+    -       symbol: 'lean_bridge_34ebb760b0cf1255cc3d67c8'
+          },
+          {
+    +       bindingId: 'lean:ReviewedFin.never',
+    -       bindingId: 'lean:ReviewedFin.huge',
+            parameters: [
+              {
+                kind: 'primitive',
+                name: 'nat'
+              }
+    ...
+            resultMode: 'value',
+    +       symbol: 'lean_bridge_fc12fd7acd61bd0281b4a412'
+    -       symbol: 'lean_bridge_916cd0d95f012837f21bf6be'
+          },
+          {
+    +       bindingId: 'lean:ReviewedFin.only',
+    -       bindingId: 'lean:ReviewedFin.tenth',
+            parameters: [
+              {
+                kind: 'primitive',
+                name: 'nat'
+              }
+    ...
+            resultMode: 'value',
+    +       symbol: 'lean_bridge_34ebb760b0cf1255cc3d67c8'
+    -       symbol: 'lean_bridge_cf8015f374ef4d10e25249fa'
+          },
+          {
+    +       bindingId: 'lean:ReviewedFin.tenth',
+    -       bindingId: 'lean:ReviewedFin.label',
+            parameters: [
+              {
+                kind: 'primitive',
+    -           name: 'string'
+    -         },
+    -         {
+    -           kind: 'primitive',
+                name: 'nat'
+              },
+    -         {
+    -           kind: 'primitive',
+    -           name: 'string'
+    -         }
+            ],
+            result: {
+              kind: 'primitive',
+    +         name: 'nat'
+    -         name: 'string'
+            },
+            resultMode: 'value',
+    +       symbol: 'lean_bridge_cf8015f374ef4d10e25249fa'
+    -       symbol: 'lean_bridge_bda750115c963771bd2df942'
+          }
+        ],
+        version: 2
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    version: 2
+    dispatch: 'scalar-frame-v2'
+    exports:
+      0:
+        bindingId: 'lean:ReviewedFin.mirror'
+        symbol: 'lean_bridge_b161553cced7f81b24dc175c'
+        parameters:
+          0:
+            kind: 'primitive'
+            name: 'nat'
+        result:
+          kind: 'primitive'
+          name: 'nat'
+        resultMode: 'value'
+      1:
+        bindingId: 'lean:ReviewedFin.never'
+        symbol: 'lean_bridge_fc12fd7acd61bd0281b4a412'
+        parameters:
+          0:
+            kind: 'primitive'
+            name: 'nat'
+        result:
+          kind: 'primitive'
+          name: 'nat'
+        resultMode: 'value'
+      2:
+        bindingId: 'lean:ReviewedFin.only'
+        symbol: 'lean_bridge_34ebb760b0cf1255cc3d67c8'
+        parameters:
+          0:
+            kind: 'primitive'
+            name: 'nat'
+        result:
+          kind: 'primitive'
+          name: 'nat'
+        resultMode: 'value'
+      3:
+        bindingId: 'lean:ReviewedFin.huge'
+        symbol: 'lean_bridge_916cd0d95f012837f21bf6be'
+        parameters:
+          0:
+            kind: 'primitive'
+            name: 'nat'
+        result:
+          kind: 'primitive'
+          name: 'nat'
+        resultMode: 'value'
+      4:
+        bindingId: 'lean:ReviewedFin.tenth'
+        symbol: 'lean_bridge_cf8015f374ef4d10e25249fa'
+        parameters:
+          0:
+            kind: 'primitive'
+            name: 'nat'
+        result:
+          kind: 'primitive'
+          name: 'nat'
+        resultMode: 'value'
+      5:
+        bindingId: 'lean:ReviewedFin.label'
+        symbol: 'lean_bridge_bda750115c963771bd2df942'
+        parameters:
+          0:
+            kind: 'primitive'
+            name: 'string'
+          1:
+            kind: 'primitive'
+            name: 'nat'
+          2:
+            kind: 'primitive'
+            name: 'string'
+        result:
+          kind: 'primitive'
+          name: 'string'
+        resultMode: 'value'
+  actual:
+    dispatch: 'scalar-frame-v2'
+    exports:
+      0:
+        bindingId: 'lean:ReviewedFin.huge'
+        parameters:
+          0:
+            kind: 'primitive'
+            name: 'nat'
+        result:
+          kind: 'primitive'
+          name: 'nat'
+        resultMode: 'value'
+        symbol: 'lean_bridge_916cd0d95f012837f21bf6be'
+      1:
+        bindingId: 'lean:ReviewedFin.label'
+        parameters:
+          0:
+            kind: 'primitive'
+            name: 'string'
+          1:
+            kind: 'primitive'
+            name: 'nat'
+          2:
+            kind: 'primitive'
+            name: 'string'
+        result:
+          kind: 'primitive'
+          name: 'string'
+        resultMode: 'value'
+        symbol: 'lean_bridge_bda750115c963771bd2df942'
+      2:
+        bindingId: 'lean:ReviewedFin.mirror'
+        parameters:
+          0:
+            kind: 'primitive'
+            name: 'nat'
+        result:
+          kind: 'primitive'
+          name: 'nat'
+        resultMode: 'value'
+        symbol: 'lean_bridge_b161553cced7f81b24dc175c'
+      3:
+        bindingId: 'lean:ReviewedFin.never'
+        parameters:
+          0:
+            kind: 'primitive'
+            name: 'nat'
+        result:
+          kind: 'primitive'
+          name: 'nat'
+        resultMode: 'value'
+        symbol: 'lean_bridge_fc12fd7acd61bd0281b4a412'
+      4:
+        bindingId: 'lean:ReviewedFin.only'
+        parameters:
+          0:
+            kind: 'primitive'
+            name: 'nat'
+        result:
+          kind: 'primitive'
+          name: 'nat'
+        resultMode: 'value'
+        symbol: 'lean_bridge_34ebb760b0cf1255cc3d67c8'
+      5:
+        bindingId: 'lean:ReviewedFin.tenth'
+        parameters:
+          0:
+            kind: 'primitive'
+            name: 'nat'
+        result:
+          kind: 'primitive'
+          name: 'nat'
+        resultMode: 'value'
+        symbol: 'lean_bridge_cf8015f374ef4d10e25249fa'
+    version: 2
+  operator: 'deepStrictEqual'
+  stack: |-
+    reviewedFinWasmEntrySelection (file:///app/build/worktrees/wasm-entry-producer-ba282ec/tests/helpers/reviewed-fin-wasm-entry.mjs:86:9)
+    authenticateReviewedFinWasmEntryPackage (file:///app/build/worktrees/wasm-entry-producer-ba282ec/tests/helpers/reviewed-fin-wasm-entry-producer.mjs:121:22)
+    async checkReviewedFinWasmEntry (file:///app/build/worktrees/wasm-entry-producer-ba282ec/tests/helpers/reviewed-fin-wasm-entry-producer.mjs:343:24)
+    async TestContext.<anonymous> (file:///app/build/worktrees/wasm-entry-producer-ba282ec/tests/reviewed-fin-wasm-entry.test.mjs:22:18)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# original ordinary scalar: WASM and npm build 1/2
+# original ordinary scalar: WASM and npm build 2/2
+# Subtest: probe ordinary scalar Fin entry is accounted in installed npm packages
+not ok 2 - probe ordinary scalar Fin entry is accounted in installed npm packages
+  ---
+  duration_ms: 96404.929839
+  type: 'test'
+  location: '/app/build/worktrees/wasm-entry-producer-ba282ec/tests/reviewed-fin-wasm-entry.test.mjs:21:2'
+  failureType: 'testCodeFailure'
+  error: |-
+    the private ABI is the expected contract's
+    + actual - expected
+    ... Skipped lines
+    
+      {
+        dispatch: 'scalar-frame-v2',
+        exports: [
+          {
+    +       bindingId: 'lean:ReviewedFin.huge',
+    -       bindingId: 'lean:ReviewedFin.mirror',
+            parameters: [
+              {
+                kind: 'primitive',
+                name: 'nat'
+              }
+    ...
+            resultMode: 'value',
+    +       symbol: 'lean_bridge_916cd0d95f012837f21bf6be'
+    -       symbol: 'lean_bridge_b161553cced7f81b24dc175c'
+          },
+          {
+    +       bindingId: 'lean:ReviewedFin.label',
+    -       bindingId: 'lean:ReviewedFin.never',
+            parameters: [
+              {
+                kind: 'primitive',
+    +           name: 'string'
+    +         },
+    +         {
+    +           kind: 'primitive',
+                name: 'nat'
+              },
+    +         {
+    +           kind: 'primitive',
+    +           name: 'string'
+    +         }
+            ],
+            result: {
+              kind: 'primitive',
+    +         name: 'string'
+    -         name: 'nat'
+            },
+            resultMode: 'value',
+    +       symbol: 'lean_bridge_bda750115c963771bd2df942'
+    -       symbol: 'lean_bridge_fc12fd7acd61bd0281b4a412'
+          },
+          {
+    +       bindingId: 'lean:ReviewedFin.mirror',
+    -       bindingId: 'lean:ReviewedFin.only',
+            parameters: [
+              {
+                kind: 'primitive',
+                name: 'nat'
+              }
+    ...
+            resultMode: 'value',
+    +       symbol: 'lean_bridge_b161553cced7f81b24dc175c'
+    -       symbol: 'lean_bridge_34ebb760b0cf1255cc3d67c8'
+          },
+          {
+    +       bindingId: 'lean:ReviewedFin.never',
+    -       bindingId: 'lean:ReviewedFin.huge',
+            parameters: [
+              {
+                kind: 'primitive',
+                name: 'nat'
+              }
+    ...
+            resultMode: 'value',
+    +       symbol: 'lean_bridge_fc12fd7acd61bd0281b4a412'
+    -       symbol: 'lean_bridge_916cd0d95f012837f21bf6be'
+          },
+          {
+    +       bindingId: 'lean:ReviewedFin.only',
+    -       bindingId: 'lean:ReviewedFin.tenth',
+            parameters: [
+              {
+                kind: 'primitive',
+                name: 'nat'
+              }
+    ...
+            resultMode: 'value',
+    +       symbol: 'lean_bridge_34ebb760b0cf1255cc3d67c8'
+    -       symbol: 'lean_bridge_cf8015f374ef4d10e25249fa'
+          },
+          {
+    +       bindingId: 'lean:ReviewedFin.tenth',
+    -       bindingId: 'lean:ReviewedFin.label',
+            parameters: [
+              {
+                kind: 'primitive',
+    -           name: 'string'
+    -         },
+    -         {
+    -           kind: 'primitive',
+                name: 'nat'
+              },
+    -         {
+    -           kind: 'primitive',
+    -           name: 'string'
+    -         }
+            ],
+            result: {
+              kind: 'primitive',
+    +         name: 'nat'
+    -         name: 'string'
+            },
+            resultMode: 'value',
+    +       symbol: 'lean_bridge_cf8015f374ef4d10e25249fa'
+    -       symbol: 'lean_bridge_bda750115c963771bd2df942'
+          },
+          {
+            bindingId: 'lean:ReviewedFin.traceNat',
+            parameters: [
+              {
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    version: 2
+    dispatch: 'scalar-frame-v2'
+    exports:
+      0:
+        bindingId: 'lean:ReviewedFin.mirror'
+        symbol: 'lean_bridge_b161553cced7f81b24dc175c'
+        parameters:
+          0:
+            kind: 'primitive'
+            name: 'nat'
+        result:
+          kind: 'primitive'
+          name: 'nat'
+        resultMode: 'value'
+      1:
+        bindingId: 'lean:ReviewedFin.never'
+        symbol: 'lean_bridge_fc12fd7acd61bd0281b4a412'
+        parameters:
+          0:
+            kind: 'primitive'
+            name: 'nat'
+        result:
+          kind: 'primitive'
+          name: 'nat'
+        resultMode: 'value'
+      2:
+        bindingId: 'lean:ReviewedFin.only'
+        symbol: 'lean_bridge_34ebb760b0cf1255cc3d67c8'
+        parameters:
+          0:
+            kind: 'primitive'
+            name: 'nat'
+        result:
+          kind: 'primitive'
+          name: 'nat'
+        resultMode: 'value'
+      3:
+        bindingId: 'lean:ReviewedFin.huge'
+        symbol: 'lean_bridge_916cd0d95f012837f21bf6be'
+        parameters:
+          0:
+            kind: 'primitive'
+            name: 'nat'
+        result:
+          kind: 'primitive'
+          name: 'nat'
+        resultMode: 'value'
+      4:
+        bindingId: 'lean:ReviewedFin.tenth'
+        symbol: 'lean_bridge_cf8015f374ef4d10e25249fa'
+        parameters:
+          0:
+            kind: 'primitive'
+            name: 'nat'
+        result:
+          kind: 'primitive'
+          name: 'nat'
+        resultMode: 'value'
+      5:
+        bindingId: 'lean:ReviewedFin.label'
+        symbol: 'lean_bridge_bda750115c963771bd2df942'
+        parameters:
+          0:
+            kind: 'primitive'
+            name: 'string'
+          1:
+            kind: 'primitive'
+            name: 'nat'
+          2:
+            kind: 'primitive'
+            name: 'string'
+        result:
+          kind: 'primitive'
+          name: 'string'
+        resultMode: 'value'
+      6:
+        bindingId: 'lean:ReviewedFin.traceNat'
+        symbol: 'lean_bridge_2366ed78cefd61a99f9eeb79'
+        parameters:
+          0:
+            kind: 'primitive'
+            name: 'nat'
+        result:
+          kind: 'primitive'
+          name: 'nat'
+        resultMode: 'value'
+  actual:
+    dispatch: 'scalar-frame-v2'
+    exports:
+      0:
+        bindingId: 'lean:ReviewedFin.huge'
+        parameters:
+          0:
+            kind: 'primitive'
+            name: 'nat'
+        result:
+          kind: 'primitive'
+          name: 'nat'
+        resultMode: 'value'
+        symbol: 'lean_bridge_916cd0d95f012837f21bf6be'
+      1:
+        bindingId: 'lean:ReviewedFin.label'
+        parameters:
+          0:
+            kind: 'primitive'
+            name: 'string'
+          1:
+            kind: 'primitive'
+            name: 'nat'
+          2:
+            kind: 'primitive'
+            name: 'string'
+        result:
+          kind: 'primitive'
+          name: 'string'
+        resultMode: 'value'
+        symbol: 'lean_bridge_bda750115c963771bd2df942'
+      2:
+        bindingId: 'lean:ReviewedFin.mirror'
+        parameters:
+          0:
+            kind: 'primitive'
+            name: 'nat'
+        result:
+          kind: 'primitive'
+          name: 'nat'
+        resultMode: 'value'
+        symbol: 'lean_bridge_b161553cced7f81b24dc175c'
+      3:
+        bindingId: 'lean:ReviewedFin.never'
+        parameters:
+          0:
+            kind: 'primitive'
+            name: 'nat'
+        result:
+          kind: 'primitive'
+          name: 'nat'
+        resultMode: 'value'
+        symbol: 'lean_bridge_fc12fd7acd61bd0281b4a412'
+      4:
+        bindingId: 'lean:ReviewedFin.only'
+        parameters:
+          0:
+            kind: 'primitive'
+            name: 'nat'
+        result:
+          kind: 'primitive'
+          name: 'nat'
+        resultMode: 'value'
+        symbol: 'lean_bridge_34ebb760b0cf1255cc3d67c8'
+      5:
+        bindingId: 'lean:ReviewedFin.tenth'
+        parameters:
+          0:
+            kind: 'primitive'
+            name: 'nat'
+        result:
+          kind: 'primitive'
+          name: 'nat'
+        resultMode: 'value'
+        symbol: 'lean_bridge_cf8015f374ef4d10e25249fa'
+      6:
+        bindingId: 'lean:ReviewedFin.traceNat'
+        parameters:
+          0:
+            kind: 'primitive'
+            name: 'nat'
+        result:
+          kind: 'primitive'
+          name: 'nat'
+        resultMode: 'value'
+        symbol: 'lean_bridge_2366ed78cefd61a99f9eeb79'
+    version: 2
+  operator: 'deepStrictEqual'
+  stack: |-
+    reviewedFinWasmEntrySelection (file:///app/build/worktrees/wasm-entry-producer-ba282ec/tests/helpers/reviewed-fin-wasm-entry.mjs:86:9)
+    authenticateReviewedFinWasmEntryPackage (file:///app/build/worktrees/wasm-entry-producer-ba282ec/tests/helpers/reviewed-fin-wasm-entry-producer.mjs:121:22)
+    async checkReviewedFinWasmEntry (file:///app/build/worktrees/wasm-entry-producer-ba282ec/tests/helpers/reviewed-fin-wasm-entry-producer.mjs:343:24)
+    async TestContext.<anonymous> (file:///app/build/worktrees/wasm-entry-producer-ba282ec/tests/reviewed-fin-wasm-entry.test.mjs:22:18)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# probe ordinary scalar: WASM and npm build 1/2
+# probe ordinary scalar: WASM and npm build 2/2
+1..2
+# tests 2
+# suites 0
+# pass 0
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 200701.974785

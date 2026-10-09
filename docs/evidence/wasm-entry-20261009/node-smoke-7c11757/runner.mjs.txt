@@ -1,0 +1,115 @@
+import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { execFileSync, spawn } from "node:child_process";
+import { closeSync, mkdirSync, openSync, readFileSync, statfsSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+
+const cwd = "/app/build/worktrees/wasm-entry-producer-ba282ec";
+const revision = "7c117573c61696dc93f98ba83c18162517b72d37";
+const output = "/app/build/vo1438-wasm-entry-7c11757-smoke";
+const floorMiB = 2048;
+const sha = bytes => createHash("sha256").update(bytes).digest("hex");
+const git = args => execFileSync("git", args, { cwd, encoding: "utf8", maxBuffer: 16 * 1024 * 1024 }).trim();
+const clean = () => {
+  assert.equal(git(["rev-parse", "HEAD"]), revision);
+  assert.equal(git(["status", "--porcelain", "--untracked-files=no"]), "");
+};
+const freeMiB = () => { const disk = statfsSync(cwd); return Math.floor(disk.bavail * disk.bsize / 1024 ** 2); };
+clean();
+assert.ok(freeMiB() >= floorMiB, "Need at least 2 GiB available before compiling");
+mkdirSync(output);
+const paths = [
+  "tests/reviewed-fin-wasm-entry.test.mjs",
+  "tests/helpers/reviewed-fin-wasm-entry-producer.mjs",
+  "tests/helpers/reviewed-fin-wasm-entry.mjs",
+  "tests/helpers/reviewed-fin-wasm-source-entry.mjs",
+  "tests/helpers/wasm-frame-entry-observer.mjs",
+  "tests/fixtures/reviewed-fin-wasm/javascript.mjs",
+  "tests/fixtures/reviewed-fin-wasm/javascript-entry.mjs",
+  "tests/fixtures/reviewed-fin-wasm/entry-observation.mjs",
+  "tests/helpers/reviewed-fin-wasm-install.mjs",
+  "tests/helpers/reviewed-fin-wasm-fixture.mjs",
+  "tests/helpers/reviewed-fin-wasm-typescript.mjs",
+  "tests/helpers/reviewed-fin-wasm-browser.mjs",
+  "tests/helpers/type-corpus-browser.mjs",
+  "tests/helpers/refinement-engine.mjs",
+  "tests/fixtures/onboarding/reviewed-fin-wasm/ReviewedFin.lean",
+  "src/analyze/reviewed-source.mjs",
+  "src/backends/javascript/generate.mjs",
+  "src/build/component-callable-adapters.mjs",
+  "src/build/lake-entry-engine.mjs",
+  "src/build/component-engine.mjs",
+  "src/release/component-runtime.mjs",
+  "src/release/component-copied-runtime.mjs",
+  "src/release/component-npm-package.mjs"
+];
+const sources = Object.fromEntries(paths.map(path => {
+  const current = readFileSync(join(cwd, path));
+  const committed = execFileSync("git", ["show", `${revision}:${path}`], { cwd, maxBuffer: 16 * 1024 * 1024 });
+  assert.ok(current.equals(committed), path);
+  return [path, sha(current)];
+}));
+const lean = "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2";
+const selectedEnvironment = {
+  NO_COLOR: "1", LEAN_BRIDGE_REVIEWED_FIN_WASM_ENTRY_TEST: "1",
+  LEAN_BRIDGE_REVIEWED_FIN_WASM_ENTRY_REPORT_DIR: output,
+  LEAN_BRIDGE_LAKE_RUNTIME_ROOT: "/app/build/lean-link-spike/lazy",
+  LEAN_BRIDGE_RUNTIME_ROOT: "/app/build/lean-runtime/f3b06c705e6c85f5314019d5d3baab0fec5b580c-743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3-browser",
+  LEAN_BRIDGE_LEAN: join(lean, "bin/lean"),
+  LEAN_NUM_THREADS: "1", OMP_NUM_THREADS: "1", MAKEFLAGS: "-j1"
+};
+const environment = { ...Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith("LEAN_BRIDGE_") && key !== "FORCE_COLOR")), ...selectedEnvironment };
+const pattern = "^(original|probe) ordinary scalar Fin entry is accounted in installed npm packages$";
+const args = ["-c", "3", process.execPath, "--test", "--test-concurrency=1", "--test-reporter=tap", `--test-name-pattern=${pattern}`, "tests/reviewed-fin-wasm-entry.test.mjs"];
+const startedAt = new Date().toISOString();
+const queue = { revision, tree: git(["rev-parse", "HEAD^{tree}"]), cwd, startedAt, sources,
+  runnerSha256: sha(readFileSync(import.meta.filename)), command: ["/usr/bin/taskset", ...args],
+  runtimeInputs: Object.fromEntries([
+    ...["cmake/include/lean/lean.h", "source/src/include/lean/lean.h"].map(path => join(selectedEnvironment.LEAN_BRIDGE_RUNTIME_ROOT, path)),
+    ...["main.mjs", "main.wasm"].map(path => join(selectedEnvironment.LEAN_BRIDGE_LAKE_RUNTIME_ROOT, path))
+  ].map(path => [path, sha(readFileSync(path))])),
+  environment: selectedEnvironment, unset: ["FORCE_COLOR", "LEAN_BRIDGE_REVIEWED_FIN_WASM_ENTRY_BROWSER_TEST", "other LEAN_BRIDGE_* variables"],
+  node: process.version, lean: execFileSync(join(lean, "bin/lean"), ["--version"], { encoding: "utf8" }).trim(),
+  glibc: execFileSync("/usr/bin/getconf", ["GNU_LIBC_VERSION"], { encoding: "utf8" }).trim(),
+  freeMiB: freeMiB(), stopFloorMiB: floorMiB,
+  selected: ["original ordinary scalar", "probe ordinary scalar"], filteredNotAcceptance: 6,
+  scope: "Local in-process real Lean/Wasm compiler smoke: ordinary scalar, original and probe modes, installed Node JavaScript and strict TypeScript only; no browsers, not locked Nix or hosted acceptance" };
+writeFileSync(join(output, "queue.json"), JSON.stringify(queue, null, 2) + "\n", { flag: "wx" });
+const log = openSync(join(output, "run.tap"), "wx");
+let minimumFreeMiB = queue.freeMiB, stoppedForDisk = false, escalation;
+const child = spawn("/usr/bin/taskset", args, { cwd, env: environment, detached: true, stdio: ["ignore", log, log] });
+writeFileSync(join(output, "start.json"), JSON.stringify({ startedAt, pid: child.pid, pgid: child.pid }, null, 2) + "\n", { flag: "wx" });
+console.log(JSON.stringify({ startedAt, pid: child.pid, revision, freeMiB: minimumFreeMiB, output }));
+const monitor = setInterval(() => {
+  minimumFreeMiB = Math.min(minimumFreeMiB, freeMiB());
+  if (minimumFreeMiB < floorMiB && !stoppedForDisk) {
+    stoppedForDisk = true;
+    process.kill(-child.pid, "SIGTERM");
+    escalation = setTimeout(() => { try { process.kill(-child.pid, "SIGKILL"); } catch {} }, 10000);
+  }
+}, 5000);
+const result = await new Promise(resolve => {
+  child.once("error", error => resolve({ code: null, signal: null, error: error.message }));
+  child.once("close", (code, signal) => resolve({ code, signal }));
+});
+clearInterval(monitor); clearTimeout(escalation); closeSync(log);
+minimumFreeMiB = Math.min(minimumFreeMiB, freeMiB());
+const end = { ...result, stoppedForDisk, minimumFreeMiB, endedAt: new Date().toISOString(), tapSha256: sha(readFileSync(join(output, "run.tap"))) };
+writeFileSync(join(output, "end.json"), JSON.stringify(end, null, 2) + "\n", { flag: "wx" });
+console.log(JSON.stringify(end));
+clean();
+assert.equal(stoppedForDisk, false);
+assert.equal(result.code, 0);
+const tap = readFileSync(join(output, "run.tap"), "utf8").split("\n");
+// A name pattern leaves only the selected tests in the TAP summary.
+for (const line of ["# tests 2", "# pass 2", "# fail 0", "# skipped 0", "# cancelled 0", "# todo 0"]) assert.ok(tap.includes(line), line);
+const { recountReviewedFinWasmEntryReport } = await import(join(cwd, "tests/helpers/reviewed-fin-wasm-entry-producer.mjs"));
+const { expectReviewedFinWasmEntry } = await import(join(cwd, "tests/helpers/reviewed-fin-wasm-entry.mjs"));
+for (const mode of ["original", "probe"]) {
+  const bytes = readFileSync(join(output, `${mode}-ordinary-scalar.json`)), report = JSON.parse(bytes);
+  assert.deepEqual([report.mode, report.path, report.selection], [mode, "ordinary-source", "scalar"]);
+  assert.deepEqual(report.contexts.map(context => context.profile), ["node-javascript", "node-typescript"]);
+  assert.deepEqual(report.contexts.map(context => context.prelude), [[], ["mirror", "label"]]);
+  const runs = recountReviewedFinWasmEntryReport(report, await expectReviewedFinWasmEntry("scalar", mode), { engines: [] });
+  console.log(JSON.stringify({ mode, sha256: sha(bytes), runs, calls: report.calls, transcripts: Object.keys(report.transcripts).length }));
+}

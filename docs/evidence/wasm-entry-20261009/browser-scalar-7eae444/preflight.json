@@ -1,0 +1,53 @@
+{
+  "at": "2026-10-09T09:40:42.258Z",
+  "revision": "7eae44484e981a83092bc94fc46585130b3ad733",
+  "node": "v22.23.3",
+  "playwright": "1.62.1",
+  "frameworks": {
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "scheduler": "0.27.0"
+  },
+  "engines": {
+    "chromium": {
+      "version": "151.0.7922.34",
+      "executable": "/app/.toolchains/playwright/chromium-1234/chrome-linux64/chrome",
+      "executableBytes": 290614600,
+      "executableSha256": "0b20b130e7edd9dd51873be867761295fe0cfad490c2b9a64f95bd3cfc08fa71",
+      "probe": {
+        "wasm": "function",
+        "worker": "function",
+        "ok": true
+      }
+    },
+    "firefox": {
+      "version": "153.0",
+      "executable": "/app/.toolchains/playwright/firefox-1538/firefox/firefox",
+      "executableBytes": 576240,
+      "executableSha256": "e23216db6d211b36c9d2ef3d551f33d0fef1eba06ece8801130a5fd6c1bfdf64",
+      "probe": {
+        "wasm": "function",
+        "worker": "function",
+        "ok": true
+      }
+    },
+    "webkit": {
+      "version": "26.5",
+      "executable": "/app/.toolchains/playwright/webkit-2336/pw_run.sh",
+      "executableBytes": 3049,
+      "executableSha256": "a85baad3d8c07173ac387a59b41500c382b21ed692afe0964d29aac247ccc63b",
+      "probe": {
+        "wasm": "function",
+        "worker": "function",
+        "ok": true
+      }
+    }
+  },
+  "runtimeInputs": {
+    "/app/build/lean-runtime/f3b06c705e6c85f5314019d5d3baab0fec5b580c-743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3-browser/cmake/include/lean/lean.h": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2",
+    "/app/build/lean-runtime/f3b06c705e6c85f5314019d5d3baab0fec5b580c-743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3-browser/source/src/include/lean/lean.h": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2",
+    "/app/build/lean-link-spike/lazy/main.mjs": "8b791a4711e58876e29b5e0a7c3fcbab500b02d7550fe6f7c3321020a736be02",
+    "/app/build/lean-link-spike/lazy/main.wasm": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+  },
+  "freeMiB": 6636
+}

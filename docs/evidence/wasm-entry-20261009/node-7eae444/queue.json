@@ -1,0 +1,77 @@
+{
+  "revision": "7eae44484e981a83092bc94fc46585130b3ad733",
+  "tree": "f1aee0bd50d84d79b379a5a6292565ee058b38b5",
+  "cwd": "/app/build/worktrees/wasm-entry-producer-ba282ec",
+  "startedAt": "2026-10-09T09:25:42.592Z",
+  "sources": {
+    "tests/reviewed-fin-wasm-entry.test.mjs": "872a212379b5457992f5c4045054a6c9605d7fc7f28049b531da96c8a0ead89b",
+    "tests/helpers/reviewed-fin-wasm-entry-producer.mjs": "e379ec40739cc5eacac19c7deb812261ebc6687be24665688ef30f7722dd5a37",
+    "tests/helpers/reviewed-fin-wasm-entry.mjs": "f3e7d24c3582f8af0d0b9ee246edf5c41d7e7a6981a7bd12fc004e3d7e3cd216",
+    "tests/helpers/reviewed-fin-wasm-source-entry.mjs": "cd67e53795979d6a5641a2eebef0f605aeba24196b1682850a9c391f9f9cfc41",
+    "tests/helpers/wasm-frame-entry-observer.mjs": "c6677097983d33bb86796837394b44b79a139dd6b0c7ad96f9e1271dfcf37b59",
+    "tests/fixtures/reviewed-fin-wasm/javascript.mjs": "dcab9f420cd1f7b4d8363cf0de7ddf94f6e6cd610a9a885eefe1987aab86be4a",
+    "tests/fixtures/reviewed-fin-wasm/javascript-entry.mjs": "a0bdeedebdf0ace601e96f8dda1fb35200dc3abdd6cf41b0aabbe62adce832af",
+    "tests/fixtures/reviewed-fin-wasm/entry-observation.mjs": "a7b6d8bf99fad5b40df38484f5a19c8eb46b11247e32d70a862816b655454814",
+    "tests/helpers/reviewed-fin-wasm-install.mjs": "8e0bff658d5ff10d8a62d1021562969d7fcb1a9a95ae2b50ba524b2eb0dc5cd8",
+    "tests/helpers/reviewed-fin-wasm-fixture.mjs": "fbbb18d5875d51ffa74b16d62280bd7d28bf11d85f390429737dd9ae8a4a7625",
+    "tests/helpers/reviewed-fin-wasm-typescript.mjs": "cdfb35044fe6e5ccda580dc5b1df1d2161f026b9c2a99e8a9618949d79d31c77",
+    "tests/helpers/reviewed-fin-wasm-browser.mjs": "cccaf1638b72e653fe637a61af8a17fa381a421e171806f7ffbd75e8fe24c639",
+    "tests/helpers/type-corpus-browser.mjs": "ca503281cfeed8d7968cc866fdb5ee8b0728a6efbc5f79acef4fcf992bf6f932",
+    "tests/helpers/refinement-engine.mjs": "91e69b67d355d2b436fa699a5e4a4692362bdc4f9536634877b6af41e968d3b4",
+    "tests/fixtures/onboarding/reviewed-fin-wasm/ReviewedFin.lean": "367274a75a77938d2358e5b7106937cca0737025e3f887578d76544372b9ba07",
+    "src/analyze/reviewed-source.mjs": "d3a875e4fc6dca6b7a93e70db62980d01f5b2a68f2e5e8999b93bbf0ca04a462",
+    "src/backends/javascript/generate.mjs": "893a39db70644e6989e9f2766a55fe68b9ad90bb8ea9efbee88379f1e9a93014",
+    "src/build/component-callable-adapters.mjs": "958e629d9012f0ef7c94b72318b520a4181bb2f585e5558188ddd72503c96425",
+    "src/build/lake-entry-engine.mjs": "4686cd10fa95b0563c383f9820b17be021e7ef01e5ceda21adb921e20124cc21",
+    "src/build/component-engine.mjs": "bb72f15591546201f2bea8dc4f917fad3c6d2325c0405099ca9e6064228662c7",
+    "src/release/component-runtime.mjs": "34e71aed9cbcfa16d4a6641eb310ba03917207435ae4a4ddb9a834f0c05b67ad",
+    "src/release/component-copied-runtime.mjs": "fd2900bab92704b9d877efbc66567fc71037a3c183cd9dfe4a08678e5c3d8e97",
+    "src/release/component-npm-package.mjs": "f7c4e8196814cdb6dafe16173740f762c9bf2208b6fa10650be8855f12b1b3c4"
+  },
+  "runnerSha256": "75dd39d02184d9d71d0a2859ee7df9211aaf89cc916eb26e5a61e9b0622e7520",
+  "command": [
+    "/usr/bin/taskset",
+    "-c",
+    "3",
+    "/usr/bin/node",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "--test-name-pattern=^(original|probe) (independently reviewed scalar|independently reviewed structural|ordinary structural) Fin entry is accounted in installed npm packages$",
+    "tests/reviewed-fin-wasm-entry.test.mjs"
+  ],
+  "runtimeInputs": {
+    "/app/build/lean-runtime/f3b06c705e6c85f5314019d5d3baab0fec5b580c-743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3-browser/cmake/include/lean/lean.h": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2",
+    "/app/build/lean-runtime/f3b06c705e6c85f5314019d5d3baab0fec5b580c-743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3-browser/source/src/include/lean/lean.h": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2",
+    "/app/build/lean-link-spike/lazy/main.mjs": "8b791a4711e58876e29b5e0a7c3fcbab500b02d7550fe6f7c3321020a736be02",
+    "/app/build/lean-link-spike/lazy/main.wasm": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+  },
+  "environment": {
+    "NO_COLOR": "1",
+    "LEAN_BRIDGE_REVIEWED_FIN_WASM_ENTRY_TEST": "1",
+    "LEAN_BRIDGE_REVIEWED_FIN_WASM_ENTRY_REPORT_DIR": "/app/build/vo1438-wasm-entry-7eae444-node",
+    "LEAN_BRIDGE_LAKE_RUNTIME_ROOT": "/app/build/lean-link-spike/lazy",
+    "LEAN_BRIDGE_RUNTIME_ROOT": "/app/build/lean-runtime/f3b06c705e6c85f5314019d5d3baab0fec5b580c-743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3-browser",
+    "LEAN_BRIDGE_LEAN": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2/bin/lean",
+    "LEAN_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MAKEFLAGS": "-j1"
+  },
+  "unset": [
+    "FORCE_COLOR",
+    "LEAN_BRIDGE_REVIEWED_FIN_WASM_ENTRY_BROWSER_TEST",
+    "other LEAN_BRIDGE_* variables"
+  ],
+  "node": "v22.23.3",
+  "lean": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)",
+  "glibc": "glibc 2.36",
+  "freeMiB": 7875,
+  "stopFloorMiB": 2048,
+  "selected": [
+    "original|probe independently reviewed scalar",
+    "original|probe independently reviewed structural",
+    "original|probe ordinary structural"
+  ],
+  "filteredNotAcceptance": 2,
+  "scope": "Local in-process real Lean/Wasm compiler: reviewed scalar, reviewed structural and ordinary structural, original and probe modes, installed Node JavaScript and strict TypeScript only; no browsers, not locked Nix or hosted acceptance"
+}

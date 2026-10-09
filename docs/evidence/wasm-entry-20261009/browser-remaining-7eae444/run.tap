@@ -1,0 +1,58 @@
+TAP version 13
+# Subtest: original independently reviewed scalar Fin entry is accounted in installed npm packages
+ok 1 - original independently reviewed scalar Fin entry is accounted in installed npm packages
+  ---
+  duration_ms: 173280.883058
+  type: 'test'
+  ...
+# original reviewed scalar: WASM and npm build 1/2
+# original reviewed scalar: WASM and npm build 2/2
+# Subtest: original ordinary structural Fin entry is accounted in installed npm packages
+ok 2 - original ordinary structural Fin entry is accounted in installed npm packages
+  ---
+  duration_ms: 195529.879952
+  type: 'test'
+  ...
+# original ordinary structural: WASM and npm build 1/2
+# original ordinary structural: WASM and npm build 2/2
+# Subtest: original independently reviewed structural Fin entry is accounted in installed npm packages
+ok 3 - original independently reviewed structural Fin entry is accounted in installed npm packages
+  ---
+  duration_ms: 195779.319547
+  type: 'test'
+  ...
+# original reviewed structural: WASM and npm build 1/2
+# original reviewed structural: WASM and npm build 2/2
+# Subtest: probe independently reviewed scalar Fin entry is accounted in installed npm packages
+ok 4 - probe independently reviewed scalar Fin entry is accounted in installed npm packages
+  ---
+  duration_ms: 171457.905701
+  type: 'test'
+  ...
+# probe reviewed scalar: WASM and npm build 1/2
+# probe reviewed scalar: WASM and npm build 2/2
+# Subtest: probe ordinary structural Fin entry is accounted in installed npm packages
+ok 5 - probe ordinary structural Fin entry is accounted in installed npm packages
+  ---
+  duration_ms: 195393.256802
+  type: 'test'
+  ...
+# probe ordinary structural: WASM and npm build 1/2
+# probe ordinary structural: WASM and npm build 2/2
+# Subtest: probe independently reviewed structural Fin entry is accounted in installed npm packages
+ok 6 - probe independently reviewed structural Fin entry is accounted in installed npm packages
+  ---
+  duration_ms: 195605.732094
+  type: 'test'
+  ...
+# probe reviewed structural: WASM and npm build 1/2
+# probe reviewed structural: WASM and npm build 2/2
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1127696.626508

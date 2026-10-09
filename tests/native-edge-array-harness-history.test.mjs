@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
+import { beforeWasmEntryArchiveSource } from "./helpers/wasm-entry-archive-source-history.mjs";
 import { beforeNativeEdgeArrayHarnessSource, nativeEdgeArrayHarnessChangedPaths, nativeEdgeArrayHarnessHistoryPath, nativeEdgeArrayHarnessPredecessor, reverseNativeEdgeArrayHarnessUpdate } from "./helpers/native-edge-array-harness-source-history.mjs";
 
 test("Native edge/Array harness history authenticates exact predecessors and rejects unrecorded edits", async () => {
@@ -20,7 +21,7 @@ test("Native edge/Array harness history authenticates exact predecessors and rej
 	assert.deepEqual(record.updates.map(update => update.path), nativeEdgeArrayHarnessChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8"), previous = reverseNativeEdgeArrayHarnessUpdate(source, update);
+		const source = beforeWasmEntryArchiveSource(update.path, await readFile(update.path, "utf8")), previous = reverseNativeEdgeArrayHarnessUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeNativeEdgeArrayHarnessSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -36,7 +37,7 @@ test("Native edge/Array harness history authenticates exact predecessors and rej
 });
 
 test("Native edge/Array harness refresh source pins without changing any observation or support claim", async () => {
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", source = beforeWasmEntryArchiveSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(source), previous = JSON.parse(beforeNativeEdgeArrayHarnessSource(path, source));
 	const history = JSON.parse(await readFile(nativeEdgeArrayHarnessHistoryPath));
 	let pins = 0;
