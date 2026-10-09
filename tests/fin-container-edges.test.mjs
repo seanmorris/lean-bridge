@@ -158,12 +158,24 @@ test("edge C/C++ linkage survives a real directory move without an absolute runt
 		await saveLakeFile(root, `${directory}/lib/pkgconfig/edge-linkage.pc`, `prefix=\${pcfiledir}/../..\nlibdir=\${prefix}/lib\nName: edge-linkage\nDescription: Loader-only control\nVersion: 1.0.0\nLibs: -L\${libdir} -Wl,-rpath,\${libdir} -ledge-linkage\n`);
 		await saveLakeFile(root, `consumer.${profile === "cpp" ? "cpp" : "c"}`, `#include <stdio.h>\n${profile === "cpp" ? 'extern "C" ' : ""}int edge_linkage(void);\nint main(void) { if(edge_linkage() != 42) return 1; puts("linkage-ok"); return 0; }\n`);
 		await runCopied("/usr/bin/cc", ["-std=c11", "-Wall", "-Wextra", "-Werror", "-shared", "-fPIC", "library.c", "-o", `${directory}/lib/libedge-linkage.so`], root, { ...copiedCleanEnvironment, PATH: join(root, "tools") });
+		const compile = { ...copiedCleanEnvironment, PATH: join(root, "tools"), PKG_CONFIG_LIBDIR: join(root, directory, "lib/pkgconfig"), PKG_CONFIG_PATH: "" };
+		const absoluteFlags = (await runCopied("/usr/bin/pkg-config", ["--cflags", "--libs", "edge-linkage"], root, compile)).stdout.trim().split(/\s+/u);
+		await runCopied(profile === "cpp" ? "/usr/bin/c++" : "/usr/bin/cc", [`consumer.${profile === "cpp" ? "cpp" : "c"}`, ...absoluteFlags, "-o", "absolute-consumer"], root, compile);
+		const absoluteBefore = await runCopied(join(root, "absolute-consumer"), [], root);
+		assert.equal(absoluteBefore.stdout, "linkage-ok\n"); assert.equal(absoluteBefore.stderr, "");
 		const executable = await prepareFinContainerEdgeExecutable({ profile, root, directory, pkgConfig: "edge-linkage" });
 		assert.equal(executable.runtimeSearchPath, `$ORIGIN/${directory}/lib`);
 		const before = await runCopied(join(root, "consumer"), [], root);
 		assert.equal(before.stdout, "linkage-ok\n"); assert.equal(before.stderr, "");
 		const moved = `${root}-relocated`;
 		await rename(root, moved); await assert.rejects(access(root), { code: "ENOENT" });
+		await assert.rejects(runCopied(join(moved, "absolute-consumer"), [], moved), error => {
+			assert.equal(error.code, "build-command-failed");
+			assert.match(error.message, /exited with status 127/u);
+			assert.match(error.details.stderr, /libedge-linkage\.so: cannot open shared object file/u);
+			assert.equal(error.details.stdout, "");
+			return true;
+		});
 		const after = await runCopied(join(moved, "consumer"), [], moved);
 		assert.equal(after.stdout, before.stdout); assert.equal(after.stderr, "");
 		assert.equal(sha256(await readFile(join(moved, "consumer"))), executable.executableSha256);
