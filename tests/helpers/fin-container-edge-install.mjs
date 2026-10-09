@@ -19,6 +19,7 @@ import { observeFinContainerEdgeRaw } from "./fin-container-edge-observer.mjs";
 import { observeFinContainerEdgePublic } from "./fin-container-edge-public-observer.mjs";
 import { observeFinContainerEdgePython } from "./fin-container-edge-python-observer.mjs";
 import { observeFinContainerEdgeRust } from "./fin-container-edge-rust-observer.mjs";
+import { observeFinContainerEdgeRuby } from "./fin-container-edge-ruby-observer.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { prepareRustCorpusDependencies } from "./type-corpus-rust.mjs";
@@ -148,7 +149,7 @@ export const prepareFinContainerEdgeExecutable = async ({ profile, root, directo
  * @param options.handoff - Archive handoff directory.
  * @param options.packages - Selected verified package-set entries.
  * @param options.command - Absolute installed consumer command.
- * @param options.measureDispatch - Opt in to raw adapters and full public C/C++/Python/Rust entry observation.
+ * @param options.measureDispatch - Opt in to raw adapters and full public C/C++/Python/Rust/Ruby entry observation.
  * @param options.expectedModelSha256 - Producer model digest, required for raw observations.
  * @param options.leanPrefix - Matching Lean headers for the test-only raw probe.
  * @param options.dependencies - Original Rust locked dependency handoff metadata.
@@ -304,7 +305,11 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 				, dependencyRoot: join(moved, "dependencies")
 				, dependencyArchive: join(consumer, "dependencies", dependencies.archive)
 				, dependencies, environment: toolchainEnvironment
-				, probeRoot: join(consumer, "rust-edge-public") }) : null;
+				, probeRoot: join(consumer, "rust-edge-public") })
+				: measureDispatch && profile === "ruby" ? await observeFinContainerEdgeRuby({
+					installed: movedInstall, receiptPath, receiptBytes: archiveBytes
+					, expectedModelSha256, command: movedCommand
+					, probeRoot: join(consumer, "ruby-edge-public") }) : null;
 	return { relocatedInstallation: true
 		, repeatExecution: true
 		, installedFilesUnchanged: true
