@@ -1,0 +1,55 @@
+{
+  "node": 1425,
+  "kind": ".NET installed Fin with per-step GDB entry-breakpoint dispatch counters after an explicit uncounted load trigger (ordinary and reviewed)",
+  "revision": "75a51146adad19a4fb0f253be66bf980e5fbd965",
+  "go": "board 2211",
+  "selection": "tests/dotnet-fin.test.mjs (all five tests: two ungated unit tests, the gated stand-in controls and both gated installed routes)",
+  "command": "env -u FORCE_COLOR NO_COLOR=1 LEAN_BRIDGE_DOTNET_FIN_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap tests/dotnet-fin.test.mjs",
+  "sources": {
+    "tests/dotnet-fin.test.mjs": "0e875c02e5ec5a1e6c4b00c3d51d919b3db5aabd1037945b3cc613686e787b63",
+    "tests/helpers/native-fin-dispatch-gdb-run.mjs": "edbbfc38de53667bbd09b435ee5d1c73fdf9ce247625f139abe2dcf4b10c4690",
+    "tests/helpers/native-fin-dispatch-gdb.mjs": "71905e87090421e3346652b49ef2a35528e96568e605b84c5e8649a1dd773792",
+    "tests/helpers/native-fin-dispatch.mjs": "e1b7105b020665d1ff624baa09f0ab62101b3a3eaba5d9f79cc56895105fb0bc",
+    "tests/helpers/copied-fixture-install.mjs": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+    "src/backends/dotnet/verified-assets.mjs": "972aa8ddd973f71fa7e8177fcada0eceaf567c1d3b4519da0591157f646332ff",
+    "src/backends/dotnet/copied-values.mjs": "b4ec94f1da85ad3cab476520ca0ce19d1e4807c54dab25fef7370c46295fc82c",
+    "src/backends/dotnet/copied-model.mjs": "ae2c93521614952d4c96748e8d5bdabb803f1a4663299cf3542ddd0add073d4b",
+    "src/build/native-component.mjs": "2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867"
+  },
+  "cpu": "taskset -c 3",
+  "concurrency": 1,
+  "cwd": "/app/build/worktrees/generic-records-hotfix",
+  "environment": {
+    "NO_COLOR": "1",
+    "FORCE_COLOR": "(unset)",
+    "LEAN_BRIDGE_DOTNET_FIN_TEST": "1",
+    "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+    "LEAN_BRIDGE_DOTNET": "(unset: .toolchains/dotnet/dotnet)",
+    "LEAN_BRIDGE_GDB": "(unset: /usr/bin/gdb)",
+    "TMPDIR": "(unset: /tmp)"
+  },
+  "versions": {
+    "node": "v22.23.3",
+    "lean": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)",
+    "dotnetSdk": "8.0.424",
+    "dotnetRuntimes": "Microsoft.AspNetCore.App 8.0.30 [/app/.toolchains/dotnet/shared/Microsoft.AspNetCore.App];Microsoft.NETCore.App 8.0.30 [/app/.toolchains/dotnet/shared/Microsoft.NETCore.App];",
+    "dotnetHostSha256": "c61ff7f8665688b95ad0f34e780daaa67b978d26115b82797c07ea6044c566ed",
+    "glibc": "ldd (Debian GLIBC 2.36-9+deb12u14) 2.36",
+    "gdb": "GNU gdb (Debian 13.1-3) 13.1",
+    "gdbSha256": "762f9d48202dd341e170d8302543f35622417b4e39bfce9a270d06943702e754",
+    "ptraceScope": "0",
+    "cc": "cc (Debian 12.2.0-14+deb12u1) 12.2.0",
+    "nm": "GNU nm (GNU Binutils for Debian) 2.40",
+    "readelf": "GNU readelf (GNU Binutils for Debian) 2.40"
+  },
+  "freeSpace": "7533M",
+  "freeSpaceFloor": "1024M (watchdog stops the run below it)",
+  "reports": {
+    "ordinary": "/app/build/worktrees/generic-records-hotfix/build/native-fin/dotnet.json",
+    "reviewed": "/app/build/worktrees/generic-records-hotfix/build/native-fin/dotnet-reviewed.json",
+    "copiedTo": "/app/build/vo1425-dotnet-dispatch-75a5114/"
+  },
+  "tap": "/app/build/vo1425-dotnet-dispatch-75a5114/run.tap",
+  "end": "/app/build/vo1425-dotnet-dispatch-75a5114/end.txt",
+  "startedAt": "2026-10-09T02:02:37.622Z"
+}

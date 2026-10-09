@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1425,
+  "execution": "local",
+  "revision": "75a51146adad19a4fb0f253be66bf980e5fbd965",
+  "sources": {
+    "tests/dotnet-fin.test.mjs": "0e875c02e5ec5a1e6c4b00c3d51d919b3db5aabd1037945b3cc613686e787b63",
+    "tests/helpers/native-fin-dispatch-gdb-run.mjs": "edbbfc38de53667bbd09b435ee5d1c73fdf9ce247625f139abe2dcf4b10c4690",
+    "tests/helpers/native-fin-dispatch-gdb.mjs": "71905e87090421e3346652b49ef2a35528e96568e605b84c5e8649a1dd773792",
+    "tests/helpers/native-fin-dispatch.mjs": "e1b7105b020665d1ff624baa09f0ab62101b3a3eaba5d9f79cc56895105fb0bc",
+    "tests/helpers/copied-fixture-install.mjs": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+    "src/backends/dotnet/verified-assets.mjs": "972aa8ddd973f71fa7e8177fcada0eceaf567c1d3b4519da0591157f646332ff",
+    "src/backends/dotnet/copied-values.mjs": "b4ec94f1da85ad3cab476520ca0ce19d1e4807c54dab25fef7370c46295fc82c",
+    "src/backends/dotnet/copied-model.mjs": "ae2c93521614952d4c96748e8d5bdabb803f1a4663299cf3542ddd0add073d4b",
+    "src/build/native-component.mjs": "2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867"
+  },
+  "scope": {
+    "host": ".NET (dotnet) installed NuGet packages consumed through a separately built C# probe, ordinary source and independently reviewed IR",
+    "counter": "GDB address breakpoints in the probe process for component native-fin@1.0.0, three Lean source entries and three C adapters, each at its single nm definition in the probe's verified runtimes/linux-x64/native root",
+    "routes": [
+      "public .NET methods LeanBridge.NativeFin.Api.Mirror, .Impossible and .Label through the verified RTLD_DEEPBIND NuGet loader and DllImport into the bundled C adapter"
+    ],
+    "loadTrigger": "Api.Only(0) == 7: a public call outside the six counted columns, after a record with nothing armed and no entries, and before a record with all six armed and still no entries",
+    "missingCounter": "each gated run first requires the probe to refuse a process without GDB; the probe refuses anything armed before its trigger and an uncovered root after it",
+    "environment": "Local .NET SDK 8.0.424 with Microsoft.NETCore.App 8.0.30, GNU gdb 13.1 with Yama ptrace_scope 0 and a glibc 2.36 package floor on x86_64 Linux; no other runtime, debugger, ptrace policy or glibc floor is established",
+    "otherHosts": false,
+    "hostedCi": false,
+    "olderEvidence": "Earlier .NET Fin evidence, including its observed:false dispatch records, is unchanged; this is a separately dated measurement"
+  },
+  "artifacts": [
+    {
+      "path": "docs/evidence/dotnet-fin-dispatch-20261009/queue.json",
+      "originalPath": "build/vo1425-dotnet-dispatch-75a5114/queue.json",
+      "sha256": "00389e1afe26c2cc52c46590753f029b564bf8387644453a58de7badb8080f94",
+      "bytes": 3429
+    },
+    {
+      "path": "docs/evidence/dotnet-fin-dispatch-20261009/run.tap",
+      "originalPath": "build/vo1425-dotnet-dispatch-75a5114/run.tap",
+      "sha256": "c072c582044fd38a331abff46d0f0dfec20c5a318f36c2ff921609b7e1ace9a9",
+      "bytes": 1980
+    },
+    {
+      "path": "docs/evidence/dotnet-fin-dispatch-20261009/end.txt",
+      "originalPath": "build/vo1425-dotnet-dispatch-75a5114/end.txt",
+      "sha256": "83e61ab900998e678376bea045a0184f18d1a2258cd81515a709f15dd08ed740",
+      "bytes": 46
+    },
+    {
+      "path": "docs/evidence/dotnet-fin-dispatch-20261009/dotnet.json",
+      "originalPath": "build/vo1425-dotnet-dispatch-75a5114/dotnet.json",
+      "sha256": "09d07a8ea5b9fe8f4a465f321fc77beba1457f0d0871e0c91013dcedbc0ebaf7",
+      "bytes": 8127
+    },
+    {
+      "path": "docs/evidence/dotnet-fin-dispatch-20261009/dotnet-reviewed.json",
+      "originalPath": "build/vo1425-dotnet-dispatch-75a5114/dotnet-reviewed.json",
+      "sha256": "c401d6c12c99ba205aac261d4a72704bee0248e5a4f311577f4a26e5c0572926",
+      "bytes": 8221
+    },
+    {
+      "path": "docs/evidence/dotnet-fin-dispatch-20261009/sources/75a5114/tests/dotnet-fin.test.mjs.txt",
+      "originalPath": "git:75a51146adad19a4fb0f253be66bf980e5fbd965:tests/dotnet-fin.test.mjs",
+      "sha256": "0e875c02e5ec5a1e6c4b00c3d51d919b3db5aabd1037945b3cc613686e787b63",
+      "bytes": 43394
+    },
+    {
+      "path": "docs/evidence/dotnet-fin-dispatch-20261009/sources/75a5114/tests/helpers/native-fin-dispatch-gdb-run.mjs.txt",
+      "originalPath": "git:75a51146adad19a4fb0f253be66bf980e5fbd965:tests/helpers/native-fin-dispatch-gdb-run.mjs",
+      "sha256": "edbbfc38de53667bbd09b435ee5d1c73fdf9ce247625f139abe2dcf4b10c4690",
+      "bytes": 7119
+    },
+    {
+      "path": "docs/evidence/dotnet-fin-dispatch-20261009/sources/75a5114/tests/helpers/native-fin-dispatch-gdb.mjs.txt",
+      "originalPath": "git:75a51146adad19a4fb0f253be66bf980e5fbd965:tests/helpers/native-fin-dispatch-gdb.mjs",
+      "sha256": "71905e87090421e3346652b49ef2a35528e96568e605b84c5e8649a1dd773792",
+      "bytes": 11439
+    },
+    {
+      "path": "docs/evidence/dotnet-fin-dispatch-20261009/sources/75a5114/tests/helpers/native-fin-dispatch.mjs.txt",
+      "originalPath": "git:75a51146adad19a4fb0f253be66bf980e5fbd965:tests/helpers/native-fin-dispatch.mjs",
+      "sha256": "e1b7105b020665d1ff624baa09f0ab62101b3a3eaba5d9f79cc56895105fb0bc",
+      "bytes": 10563
+    },
+    {
+      "path": "docs/evidence/dotnet-fin-dispatch-20261009/sources/75a5114/tests/helpers/copied-fixture-install.mjs.txt",
+      "originalPath": "git:75a51146adad19a4fb0f253be66bf980e5fbd965:tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+      "bytes": 12888
+    },
+    {
+      "path": "docs/evidence/dotnet-fin-dispatch-20261009/sources/75a5114/src/backends/dotnet/verified-assets.mjs.txt",
+      "originalPath": "git:75a51146adad19a4fb0f253be66bf980e5fbd965:src/backends/dotnet/verified-assets.mjs",
+      "sha256": "972aa8ddd973f71fa7e8177fcada0eceaf567c1d3b4519da0591157f646332ff",
+      "bytes": 11610
+    },
+    {
+      "path": "docs/evidence/dotnet-fin-dispatch-20261009/sources/75a5114/src/backends/dotnet/copied-values.mjs.txt",
+      "originalPath": "git:75a51146adad19a4fb0f253be66bf980e5fbd965:src/backends/dotnet/copied-values.mjs",
+      "sha256": "b4ec94f1da85ad3cab476520ca0ce19d1e4807c54dab25fef7370c46295fc82c",
+      "bytes": 16397
+    },
+    {
+      "path": "docs/evidence/dotnet-fin-dispatch-20261009/sources/75a5114/src/backends/dotnet/copied-model.mjs.txt",
+      "originalPath": "git:75a51146adad19a4fb0f253be66bf980e5fbd965:src/backends/dotnet/copied-model.mjs",
+      "sha256": "ae2c93521614952d4c96748e8d5bdabb803f1a4663299cf3542ddd0add073d4b",
+      "bytes": 6501
+    },
+    {
+      "path": "docs/evidence/dotnet-fin-dispatch-20261009/sources/75a5114/src/build/native-component.mjs.txt",
+      "originalPath": "git:75a51146adad19a4fb0f253be66bf980e5fbd965:src/build/native-component.mjs",
+      "sha256": "2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867",
+      "bytes": 12579
+    }
+  ],
+  "remaining": [
+    "Inventory promotion and source history belong to main.",
+    "Hosted CI needs the separate GDB wiring.",
+    "JVM counters remain."
+  ]
+}

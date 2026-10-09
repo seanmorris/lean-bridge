@@ -12,6 +12,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeRubyDispatchIntegrationSource, rubyDispatchIntegrationChangedPaths, rubyDispatchIntegrationHistoryPath, rubyDispatchIntegrationPredecessor, rubyDispatchIntegrationProducer, rubyDispatchIntegrationProducerPins, reverseRubyDispatchIntegrationUpdate } from "./ruby-dispatch-integration-source-history.mjs";
+import { beforeDotnetDispatchIntegrationSource } from "./dotnet-dispatch-integration-source-history.mjs";
 import { rubyDispatchSnapshot } from "./ruby-fin-dispatch-evidence.mjs";
 
 test("Ruby dispatch integration history authenticates exact predecessors and refuses unknown edits", async () => {
@@ -21,7 +22,7 @@ test("Ruby dispatch integration history authenticates exact predecessors and ref
 	assert.deepEqual(record.updates.map(update => update.path), rubyDispatchIntegrationChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8"), previous = reverseRubyDispatchIntegrationUpdate(source, update);
+		const source = beforeDotnetDispatchIntegrationSource(update.path, await readFile(update.path, "utf8")), previous = reverseRubyDispatchIntegrationUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeRubyDispatchIntegrationSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -37,7 +38,7 @@ test("Ruby dispatch integration history authenticates exact predecessors and ref
 });
 
 test("Ruby dispatch integration refreshes exactly 96 source pins without promoting any support cell", async () => {
-	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", text = beforeDotnetDispatchIntegrationSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(text), previous = JSON.parse(beforeRubyDispatchIntegrationSource(path, text));
 	const record = JSON.parse(await readFile(rubyDispatchIntegrationHistoryPath));
 	const updates = new Map(record.updates.map(update => [update.path, update]));
@@ -47,7 +48,7 @@ test("Ruby dispatch integration refreshes exactly 96 source pins without promoti
 		const update = updates.get(file.path);
 		if(update && file.sha256 === update.previousSha256)
 		{
-			assert.equal(sha256(await readFile(file.path)), update.currentSha256);
+			assert.equal(sha256(beforeDotnetDispatchIntegrationSource(file.path, await readFile(file.path, "utf8"))), update.currentSha256);
 			file.sha256 = update.currentSha256; pins++;
 		}
 	}
@@ -61,7 +62,7 @@ test("Ruby history preserves its installed producer only at an explicit exact di
 	assert.deepEqual(record.producerUpdates.map(item => item.path), Object.keys(rubyDispatchIntegrationProducerPins));
 	for(const update of record.producerUpdates)
 	{
-		const source = await readFile(update.path, "utf8"), original = await readFile(rubyDispatchSnapshot(update.path), "utf8");
+		const source = beforeDotnetDispatchIntegrationSource(update.path, await readFile(update.path, "utf8")), original = await readFile(rubyDispatchSnapshot(update.path), "utf8");
 		assert.equal(update.previousSha256, rubyDispatchIntegrationProducerPins[update.path]);
 		assert.equal(reverseRubyDispatchIntegrationUpdate(source, update), original);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), original);

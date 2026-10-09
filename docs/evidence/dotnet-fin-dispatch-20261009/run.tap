@@ -1,0 +1,48 @@
+TAP version 13
+# Subtest: .NET packages are checked Fin consumers beside C, C++, Python, Rust and Ruby
+ok 1 - .NET packages are checked Fin consumers beside C, C++, Python, Rust and Ruby
+  ---
+  duration_ms: 0.994856
+  type: 'test'
+  ...
+# Subtest: generated .NET bound docs come only from checked refinement metadata
+ok 2 - generated .NET bound docs come only from checked refinement metadata
+  ---
+  duration_ms: 17.827217
+  type: 'test'
+  ...
+# Subtest: GDB entry breakpoints count a deep-bound .NET stand-in after its explicit load trigger and refuse missing, early, stale, foreign and leaking runs
+ok 3 - GDB entry breakpoints count a deep-bound .NET stand-in after its explicit load trigger and refuse missing, early, stale, foreign and leaking runs
+  ---
+  duration_ms: 18385.772187
+  type: 'test'
+  ...
+# Subtest: relocated source-free .NET packages check Fin bounds through the bundled C adapter
+ok 4 - relocated source-free .NET packages check Fin bounds through the bundled C adapter
+  ---
+  duration_ms: 414023.497144
+  type: 'test'
+  ...
+# build 0: compiling the shared C library and NuGet package
+# offline NuGet restore and build without producer files or Lean/C compilers
+# per-step source and adapter counts in a relocated .NET process under GDB entry breakpoints
+# build 1: compiling the shared C library and NuGet package
+# Subtest: independently reviewed Dotnet packages check scalar Fin through installed consumers
+ok 5 - independently reviewed Dotnet packages check scalar Fin through installed consumers
+  ---
+  duration_ms: 437428.532632
+  type: 'test'
+  ...
+# build 0: compiling the shared C library and NuGet package
+# offline NuGet restore and build without producer files or Lean/C compilers
+# per-step source and adapter counts in a relocated .NET process under GDB entry breakpoints
+# build 1: compiling the shared C library and NuGet package
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 870257.670545

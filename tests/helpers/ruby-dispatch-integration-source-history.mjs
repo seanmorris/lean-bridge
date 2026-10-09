@@ -7,6 +7,8 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
 
+import { beforeDotnetDispatchIntegrationSource } from "./dotnet-dispatch-integration-source-history.mjs";
+
 export const rubyDispatchIntegrationHistoryPath = "docs/evidence/ruby-dispatch-integration-source-history-20261009.json";
 export const rubyDispatchIntegrationPredecessor = "93c60a0487d0b2acc0b6d562cd72a3876738a666";
 export const rubyDispatchIntegrationChangedPaths = [
@@ -58,6 +60,7 @@ export const reverseRubyDispatchIntegrationUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeRubyDispatchIntegrationSource = (path, source, expected) => {
+	source = beforeDotnetDispatchIntegrationSource(path, source, expected);
 	if(typeof source !== "string" || !rubyDispatchIntegrationChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

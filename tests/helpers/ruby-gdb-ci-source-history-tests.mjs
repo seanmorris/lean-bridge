@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeDotnetDispatchIntegrationSource } from "./dotnet-dispatch-integration-source-history.mjs";
 import { beforeGenericNpmClosureSource } from "./generic-record-npm-closure-source-history.mjs";
 import { beforeRubyGdbCiSource, rubyGdbCiChangedPaths, rubyGdbCiHistoryPath, rubyGdbCiPredecessor, reverseRubyGdbCiUpdate } from "./ruby-gdb-ci-source-history.mjs";
 
@@ -47,7 +48,7 @@ test("Ruby GDB CI refreshes exactly 119 source pins without changing any support
 		const update = updates.get(file.path);
 		if(update && file.sha256 === update.previousSha256)
 		{
-			assert.equal(sha256(await readFile(file.path)), update.currentSha256);
+			assert.equal(sha256(beforeDotnetDispatchIntegrationSource(file.path, await readFile(file.path, "utf8"))), update.currentSha256);
 			file.sha256 = update.currentSha256; pins++;
 		}
 	}
@@ -56,9 +57,9 @@ test("Ruby GDB CI refreshes exactly 119 source pins without changing any support
 });
 
 test("Ruby GDB CI retains the reviewed two-file handoff and changes no ptrace policy", async () => {
-	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	const workflow = beforeDotnetDispatchIntegrationSource(".github/workflows/consumer-matrix.yml", await readFile(".github/workflows/consumer-matrix.yml", "utf8"));
 	assert.equal(sha256(workflow), "f65f2adfde627a7860f4de7449cc4409318c0882bf959c8805106d6337e9dc61");
-	const source = await readFile("tests/documentation.test.mjs", "utf8");
+	const source = beforeDotnetDispatchIntegrationSource("tests/documentation.test.mjs", await readFile("tests/documentation.test.mjs", "utf8"));
 	const addition = 'import "./helpers/ruby-gdb-ci-source-history-tests.mjs";\n';
 	assert.equal(source.split(addition).length, 2);
 	assert.equal(sha256(source.replace(addition, "")), "14d0c14c45c0bdd0437cab338306f0f3d71b0745153ec4a4bef682dd217f9d92");

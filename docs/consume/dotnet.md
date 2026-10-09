@@ -723,6 +723,8 @@ A Lean `Fin n` parameter or result is a `System.Numerics.BigInteger`, the same a
 
 Both ordinary-source and reviewed-IR packages support Fin through Array/List/Option/Prod/Except compositions, including nonrecursive, nongeneric record and active variant fields. C# products use binary tuples and Except uses generated Result; arrays and lists use typed arrays. Every present bounded leaf is checked. Empty containers, absent options and inactive branches are valid with Fin 0 payload types; a present Fin 0 value is rejected. These runs do not establish callback, recursive, generic, indexed or inherited Fin-field support. See the [structural Fin checks](../evidence/fin-dotnet-hosted-20261008/receipt.json), [scalar checks](../evidence/native-fin-hosts-20261006.md) and [container checks](../evidence/native-fin-containers-20261006.md).
 
+The separate [scalar entry-counter receipt](../evidence/dotnet-fin-dispatch-20261009/receipt.json) records ordinary-source and reviewed-IR NuGet packages after source removal, offline installation and relocation. Rejected `Mirror`, `Impossible` and `Label` calls entered neither the Lean source nor its C adapter. Valid calls, including those after rejected ones, entered their own source and adapter once. Both consumers passed 2,022 checks on .NET SDK 8.0.424 and runtime 8.0.30 with GDB 13.1 on x86-64 Linux and a glibc 2.36 package floor. The measurement instruments process memory without changing the generated loader or deployed files. It covers these top-level scalar calls, not nested refinements or other platforms.
+
 ## Values and cleanup
 
 ### Checked values

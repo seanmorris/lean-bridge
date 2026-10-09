@@ -633,6 +633,24 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(rubyDependencies, /^ {10}cat \/proc\/sys\/kernel\/yama\/ptrace_scope$/mu);
   const rubyCorpus = workflow.split("      - name: Compare installed Ruby corpus packages with fresh Lean results\n")[1].split("      - name:")[0];
   assert.equal(rubyCorpus.split("\n          LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_RUBY_FIN_TEST=1 node --test tests/ruby-fin.test.mjs\n").length, 2);
+  // Installed .NET Fin entry counters need the same explicitly installed, identified and selected debugger.
+  const dotnetDependencies = workflow.split("      - name: Install dependencies for type_corpus_dotnet\n")[1].split("      - name:")[0];
+  assert.match(dotnetDependencies, /^ {10}sudo apt-get install -y python3-venv pkg-config gdb$/mu);
+  assert.match(dotnetDependencies, /^ {10}test -x \/usr\/bin\/gdb\n {10}\/usr\/bin\/gdb --version$/mu);
+  assert.doesNotMatch(dotnetDependencies, /gdb[^\n]*\|/u);
+  assert.match(dotnetDependencies, /^ {10}cat \/proc\/sys\/kernel\/yama\/ptrace_scope$/mu);
+  const dotnetCorpus = workflow.split("      - name: Compare installed NuGet corpus packages with fresh Lean results\n")[1].split("      - name:")[0];
+  assert.equal(dotnetCorpus.split("\n          LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_DOTNET_FIN_TEST=1 node --test tests/dotnet-fin.test.mjs\n").length, 2);
+  assert.equal(workflow.split('consumer_command="$consumer_command && LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_DOTNET_FIN_TEST=1 node --test tests/dotnet-fin.test.mjs"').length, 2);
+  assert.doesNotMatch(workflow, /(?<!LEAN_BRIDGE_GDB=\/usr\/bin\/gdb )LEAN_BRIDGE_DOTNET_FIN_TEST=1/u);
+  // Installed JVM Fin entry counters need the same explicitly installed, identified and selected debugger.
+  const jvmDependencies = workflow.split("      - name: Install dependencies for type_corpus_jvm\n")[1].split("      - name:")[0];
+  assert.match(jvmDependencies, /^ {10}sudo apt-get install -y [^\n]* gdb$/mu);
+  assert.match(jvmDependencies, /^ {10}test -x \/usr\/bin\/gdb\n {10}\/usr\/bin\/gdb --version$/mu);
+  assert.doesNotMatch(jvmDependencies, /gdb[^\n]*\|/u);
+  assert.match(jvmDependencies, /^ {10}cat \/proc\/sys\/kernel\/yama\/ptrace_scope$/mu);
+  assert.equal(workflow.split('consumer_command="$consumer_command && LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_JVM_FIN_TEST=1 node --test tests/jvm-fin.test.mjs"').length, 2);
+  assert.doesNotMatch(workflow, /(?<!LEAN_BRIDGE_GDB=\/usr\/bin\/gdb )LEAN_BRIDGE_JVM_FIN_TEST=1/u);
   // Each Perl ABI runs the installed Compare and Verify chain in one job; 120 minutes was exhausted.
   const perlJob = perlWorkflow.split("  perl:\n")[1].split("\n  perl-receivers:\n")[0];
   assert.match(perlJob, /^ {4}timeout-minutes: 180$/m);
@@ -823,8 +841,8 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /test -s build\/equality\/dotnet\.json/);
   assert.match(workflow, /test -s build\/variants\/dotnet\.json/);
   assert.match(workflow, /test -s build\/aliases\/dotnet\.json/);
-  assert.match(workflow, /node --test tests\/dotnet-aliases\.test\.mjs\n\s*test -s build\/aliases\/dotnet\.json\n\s*LEAN_BRIDGE_DOTNET_FIN_TEST=1 node --test tests\/dotnet-fin\.test\.mjs\n\s*test -s build\/native-fin\/dotnet\.json\n/);
-  assert.match(workflow, /consumer_command="\$consumer_command && LEAN_BRIDGE_DOTNET_FIN_TEST=1 node --test tests\/dotnet-fin\.test\.mjs"/);
+  assert.match(workflow, /node --test tests\/dotnet-aliases\.test\.mjs\n\s*test -s build\/aliases\/dotnet\.json\n\s*LEAN_BRIDGE_GDB=\/usr\/bin\/gdb LEAN_BRIDGE_DOTNET_FIN_TEST=1 node --test tests\/dotnet-fin\.test\.mjs\n\s*test -s build\/native-fin\/dotnet\.json\n/);
+  assert.match(workflow, /consumer_command="\$consumer_command && LEAN_BRIDGE_GDB=\/usr\/bin\/gdb LEAN_BRIDGE_DOTNET_FIN_TEST=1 node --test tests\/dotnet-fin\.test\.mjs"/);
   assert.match(workflow, /build\/lists\/dotnet\.json\n\s*build\/aliases\/dotnet\.json\n\s*build\/native-fin\/dotnet\.json\n\s*build\/native-fin\/dotnet-reviewed\.json\n\s*build\/native-specializations\/dotnet\.json\n\s*build\/generic-records\/dotnet\.json\n\s*build\/generic-records\/specialized-dotnet\.json\n\s*build\/native-fin-containers\/dotnet\.json\n\s*build\/native-fin-containers\/reviewed-dotnet\.json\n\s*build\/native-fin-products\/dotnet\.json\n\s*build\/native-fin-products\/reviewed-dotnet\.json\n\s*build\/native-fin-product-arrays\/dotnet\.json\n\s*build\/native-fin-product-arrays\/reviewed-dotnet\.json\n\s*build\/native-fin-records\/dotnet\.json\n\s*build\/native-fin-records\/reviewed-dotnet\.json\n\s*build\/native-subtype\/dotnet\.json\n\s*build\/variants\/dotnet\.json\n\s*build\/collections\/dotnet-conversions\.json\n\s*build\/collections\/dotnet\.json\n\s*build\/equality\/dotnet\.json\n\s*build\/recursive\/dotnet-values\.json\n\s*build\/recursive\/dotnet-conversions\.json\n\s*build\/recursive\/dotnet-native\.json\n\s*build\/recursive\/dotnet-packages\.json\n\s*build\/recursive\/dotnet-composition\.json\n\s*build\/recursive\/dotnet-reproducibility\.json\n\s*build\/recursive\/dotnet-conflicts\.json\n\s*build\/owned-dotnet-runtime\/\n\s*build\/owned-dotnet-layout\/\n\s*build\/owned-dotnet-values\/\n\s*build\/owned-dotnet-conversions\/\n\s*build\/owned-dotnet-callables\/\n\s*build\/owned-dotnet-callback-signatures\/\n\s*build\/owned-dotnet-loading\/\n\s*build\/owned-dotnet-packaging\/\n\s*build\/owned-dotnet-transfers\/\n\s*build\/owned-dotnet-transfer-packaging\/\n\s*build\/owned-dotnet-borrows\/\n\s*build\/owned-dotnet-borrow-packaging\/\n\s*build\/owned-dotnet-borrows\.log\n\s*build\/owned-dotnet-receivers\/\n\s*build\/owned-dotnet-receivers\.log\n\s*if-no-files-found: error/);
   assert.ok(workflow.includes("LEAN_BRIDGE_JVM_CALLABLE_TEST=1 node --test tests/jvm-callables.test.mjs tests/jvm-callable-contract.test.mjs"));
   assert.ok(workflow.includes("LEAN_BRIDGE_JVM_STRUCTURED_CALLABLE_TEST=1 node --test tests/jvm-structured-callables.test.mjs"));
@@ -841,9 +859,9 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /test -s build\/lists\/jvm\.json/);
   assert.ok(workflow.includes("LEAN_BRIDGE_JVM_ALIAS_TEST=1 node --test tests/jvm-aliases.test.mjs"));
   assert.match(workflow, /test -s build\/aliases\/jvm\.json/);
-  assert.match(workflow, /node --test tests\/jvm-aliases\.test\.mjs\n\s*test -s build\/aliases\/jvm\.json\n\s*LEAN_BRIDGE_JVM_FIN_TEST=1 node --test tests\/jvm-fin\.test\.mjs\n\s*test -s build\/native-fin\/jvm\.json\n/);
+  assert.match(workflow, /node --test tests\/jvm-aliases\.test\.mjs\n\s*test -s build\/aliases\/jvm\.json\n\s*LEAN_BRIDGE_GDB=\/usr\/bin\/gdb LEAN_BRIDGE_JVM_FIN_TEST=1 node --test tests\/jvm-fin\.test\.mjs\n\s*test -s build\/native-fin\/jvm\.json\n/);
   assert.match(workflow, /build\/aliases\/jvm\.json\n\s*build\/native-fin\/jvm\.json\n/);
-  assert.match(workflow, /consumer_command="\$consumer_command && LEAN_BRIDGE_JVM_FIN_TEST=1 node --test tests\/jvm-fin\.test\.mjs"/);
+  assert.match(workflow, /consumer_command="\$consumer_command && LEAN_BRIDGE_GDB=\/usr\/bin\/gdb LEAN_BRIDGE_JVM_FIN_TEST=1 node --test tests\/jvm-fin\.test\.mjs"/);
   assert.ok(workflow.includes("LEAN_BRIDGE_JVM_VARIANT_TEST=1 node --test tests/jvm-variants.test.mjs"));
   assert.match(workflow, /test -s build\/variants\/jvm\.json/);
   assert.ok(workflow.includes("LEAN_BRIDGE_JVM_EQUALITY_TEST=1 node --test tests/jvm-value-equality.test.mjs"));
