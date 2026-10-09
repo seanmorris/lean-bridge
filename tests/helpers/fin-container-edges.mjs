@@ -72,6 +72,7 @@ const consumers = Object.freeze({
 	, dotnet: { extension: "cs", marker: '        Console.WriteLine($"fin-container-ok:{checks}");' }
 	, java: { extension: "java", marker: '        System.out.println("fin-container-ok:" + checks);' }
 	, kotlin: { extension: "kt", marker: '    println("fin-container-ok:$checks")' }
+	, "php-native": { extension: "php", marker: 'echo "fin-container-ok:$checks\\n";' }
 });
 /** Source development is staged; this list is not a support or installed-acceptance claim. */
 export const implementedFinContainerEdgeProfiles = Object.freeze(Object.keys(consumers));

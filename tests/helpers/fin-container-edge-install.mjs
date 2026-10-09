@@ -1,5 +1,5 @@
 /**
- * Installed acceptance for the additive native Fin container cases. Native PHP and WIT/WASI are still owed;
+ * Installed acceptance for the additive native Fin container cases. WIT/WASI is still owed;
  * other native consumers and the separate measured-dispatch supplement remain required under VO #1454.
  *
  * @file
@@ -28,7 +28,8 @@ export const finContainerEdgeChecks = Object.freeze({
 	, ruby: 2025 + 12069
 	, dotnet: 2026 + 12063
 	, java: 2026 + 12063
-	, kotlin: 2025 + 12063 });
+	, kotlin: 2025 + 12063
+	, "php-native": 2026 + 12063 });
 
 /** Read exactly one receipt directly from the gem's original data member, without extracting a substitute. */
 export const finContainerEdgeGemReceipt = String.raw`require "rubygems"
@@ -177,6 +178,14 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 		args = ["out/Consumer.dll"];
 		deployed[args[0]] = sha256(await readFile(join(root, args[0])));
 	}
+	else if(profile === "php-native")
+	{
+		installed = join(root, "vendor", pkg.name);
+		receiptPath = "lean-bridge/package-receipt.json";
+		archiveBytes = (await runCopied("/usr/bin/unzip", ["-p", archive, receiptPath], root)).stdout;
+		args = ["-n", "-d", "extension=ffi", "-d", "ffi.enable=1", "consumer.php"];
+		for(const path of ["consumer.php", "strict.php"]) deployed[path] = sha256(await readFile(join(root, path)));
+	}
 	else if(jvm)
 	{
 		// Verify the exact JAR that the caller loads, then inspect its receipt-pinned members.
@@ -230,7 +239,7 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 		assert.equal(sha256(await readFile(command)), executable.executableSha256);
 	}
 	const moved = `${root}-relocated`;
-	const externalCommand = ["ruby", "dotnet", "java", "kotlin"].includes(profile);
+	const externalCommand = ["ruby", "dotnet", "java", "kotlin", "php-native"].includes(profile);
 	assert.ok(externalCommand ? command.startsWith("/") : command.startsWith(`${root}/`));
 	await rename(root, moved);
 	await assert.rejects(access(root), { code: "ENOENT" });
@@ -241,6 +250,12 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 	const repeated = await runCopied(movedCommand, args, moved, environment);
 	assert.equal(repeated.stderr, "");
 	assert.equal(repeated.stdout, `fin-container-ok:${finContainerEdgeChecks[profile]}\n`);
+	if(profile === "php-native")
+	{
+		const strict = await runCopied(movedCommand, [...args.slice(0, -1), "strict.php"], moved, environment);
+		assert.equal(strict.stderr, "");
+		assert.equal(strict.stdout, repeated.stdout);
+	}
 	const movedInstall = join(moved, relative(root, installed));
 	assert.equal(await readFile(join(movedInstall, receiptPath), "utf8"), archiveBytes);
 	await verifyNativeFiles(movedInstall, receipt.files);
@@ -253,6 +268,7 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 		, installedReceiptSha256: sha256(archiveBytes)
 		, ...executable
 		, ...(Object.keys(deployed).length ? { deployedFiles: deployed } : {})
+		, ...(profile === "php-native" ? { repeatStrictExecution: true } : {})
 		, ...(python ? { python } : {}) };
 };
 

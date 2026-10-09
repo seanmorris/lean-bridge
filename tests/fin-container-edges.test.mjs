@@ -73,10 +73,10 @@ test("edge insertion refuses missing, empty, repeated and fragment-supplied mark
 
 test("the development slice does not erase the remaining native hosts or replace old consumers", async () => {
 	assert.deepEqual(finContainerEdgeProfiles, ["c", "cpp", "python", "rust", "ruby", "dotnet", "java", "kotlin", "php-native", "wit-wasi"]);
-	assert.deepEqual(implementedFinContainerEdgeProfiles, ["c", "cpp", "python", "rust", "ruby", "dotnet", "java", "kotlin"]);
+	assert.deepEqual(implementedFinContainerEdgeProfiles, ["c", "cpp", "python", "rust", "ruby", "dotnet", "java", "kotlin", "php-native"]);
 	for(const profile of implementedFinContainerEdgeProfiles)
 	{
-		const extension = { c: "c", cpp: "cpp", python: "py", rust: "rs", ruby: "rb", dotnet: "cs", java: "java", kotlin: "kt" }[profile];
+		const extension = { c: "c", cpp: "cpp", python: "py", rust: "rs", ruby: "rb", dotnet: "cs", java: "java", kotlin: "kt", "php-native": "php" }[profile];
 		const base = await readFile(`tests/fixtures/fin-container-consumers/${profile}.${extension}`, "utf8");
 		const fragment = await readFile(`tests/fixtures/fin-container-edge-consumers/${profile}.${extension}`, "utf8");
 		const combined = await finContainerEdgeConsumer(profile);
@@ -87,7 +87,7 @@ test("the development slice does not erase the remaining native hosts or replace
 		assert.match(fragment, /1000/u);
 	}
 	await assert.rejects(finContainerEdgeConsumer("perl"), /not implemented/u);
-	await assert.rejects(finContainerEdgeConsumer("php-native"), /not implemented/u);
+	await assert.rejects(finContainerEdgeConsumer("wit-wasi"), /not implemented/u);
 });
 
 test("structural and negative-Nat controls require their own positive diagnostic, not any bound error", async () => {
@@ -155,6 +155,20 @@ test("the complete Ruby edge consumer parses without executing a mock algorithm"
 	assert.equal(result.stdout, "Syntax OK\n"); assert.equal(result.stderr, "");
 });
 
+test("the complete PHP edge consumer parses in both weak and strict modes", { skip: !sourceChecks }, async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-fin-edge-php-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const source = await finContainerEdgeConsumer("php-native");
+	assert.equal(source.split("declare(strict_types=0);").length, 2);
+	for(const mode of [0, 1])
+	{
+		const path = `consumer-${mode}.php`;
+		await saveLakeFile(root, path, source.replace("declare(strict_types=0);", `declare(strict_types=${mode});`));
+		const result = await runCopied(process.env.LEAN_BRIDGE_PHP ?? "/usr/bin/php", ["-n", "-l", path], root);
+		assert.equal(result.stdout, `No syntax errors detected in ${path}\n`); assert.equal(result.stderr, "");
+	}
+});
+
 test("the complete Rust edge consumer typechecks offline against generated public types", { skip: !sourceChecks }, async t => {
 	const root = await mkdtemp(join(tmpdir(), "lean-bridge-fin-edge-rust-"));
 	t.after(() => rm(root, { recursive: true, force: true }));
@@ -208,8 +222,9 @@ test("installed edge selection is explicit and checks every assertion, including
 	assert.deepEqual(finContainerEdgeSelection("python,cpp,c"), ["c", "cpp", "python"]);
 	assert.deepEqual(finContainerEdgeSelection("rust,ruby"), ["ruby", "rust"]);
 	assert.deepEqual(finContainerEdgeSelection("kotlin,dotnet,java"), ["dotnet", "java", "kotlin"]);
-	for(const value of ["", "c,c", "c,", "c,perl", "php-native", " c", 0, null]) assert.throws(() => finContainerEdgeSelection(value));
-	assert.deepEqual(finContainerEdgeChecks, { c: 14114, cpp: 14099, python: 14095, rust: 14078, ruby: 14094, dotnet: 14089, java: 14089, kotlin: 14088 });
+	assert.deepEqual(finContainerEdgeSelection("php-native"), ["php-native"]);
+	for(const value of ["", "c,c", "c,", "c,perl", "wit-wasi", " c", 0, null]) assert.throws(() => finContainerEdgeSelection(value));
+	assert.deepEqual(finContainerEdgeChecks, { c: 14114, cpp: 14099, python: 14095, rust: 14078, ruby: 14094, dotnet: 14089, java: 14089, kotlin: 14088, "php-native": 14089 });
 });
 
 test("Ruby receipt extraction reads original nested gem bytes and refuses missing or repeated members", { skip: !sourceChecks }, async t => {
