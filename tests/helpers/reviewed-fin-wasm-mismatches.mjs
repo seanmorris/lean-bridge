@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
-import { validateReviewedSource } from "../../src/analyze/reviewed-source.mjs";
+import { reviewedContractDifference, validateReviewedSource } from "../../src/analyze/reviewed-source.mjs";
 import { reviewedFinWasmIr, reviewedFinWasmSelections, reviewedFinWasmWide } from "./reviewed-fin-wasm-fixture.mjs";
 
 /**
@@ -47,6 +47,24 @@ export const reviewedFinWasmMismatches = (selection = "structural") => {
 		const source = canonicalJson(ir);
 		validateReviewedSource({ schemaVersion: 1, path: "api.binding-ir.json", source
 			, sourceSha256: sha256(source), semanticSha256: hashBindingIr(ir) });
-		return { label, ir };
+		const expectedField = reviewedContractDifference(ir, reviewedFinWasmIr(selection));
+		assert.match(expectedField, /source\.extensions\.lean-lang\.org\/refinements/u, label);
+		return { label, ir, expectedField };
 	});
+};
+
+/**
+ * Keep the expected difference separate from fields retained by the engine transport.
+ *
+ * @param error - Refusal returned by the real build route.
+ * @param expectedField - Exact difference from the independently authored matching review.
+ */
+export const reviewedFinWasmRefusal = (error, expectedField) => {
+	assert.equal(error.code, "reviewed-ir-source-mismatch");
+	assert.equal(error.message, "Reviewed contract does not match the freshly compiled Lean API");
+	assert.match(expectedField, /source\.extensions\.lean-lang\.org\/refinements/u);
+	const fieldObserved = Object.hasOwn(error.details ?? {}, "field");
+	if(fieldObserved) assert.equal(error.details.field, expectedField);
+	else assert.equal(error.details?.engine?.code, "reviewed-ir-source-mismatch");
+	return { expectedField, fieldObserved };
 };

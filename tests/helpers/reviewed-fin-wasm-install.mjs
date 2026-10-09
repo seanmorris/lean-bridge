@@ -18,7 +18,7 @@ import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
 import { refinementEngineTransport } from "./refinement-engine.mjs";
 import { reviewedFinWasmIr, reviewedFinWasmSelections } from "./reviewed-fin-wasm-fixture.mjs";
 import { reviewedFinWasmTypeScript } from "./reviewed-fin-wasm-typescript.mjs";
-import { reviewedFinWasmMismatches } from "./reviewed-fin-wasm-mismatches.mjs";
+import { reviewedFinWasmMismatches, reviewedFinWasmRefusal } from "./reviewed-fin-wasm-mismatches.mjs";
 import { checkReviewedFinWasmBrowsers } from "./reviewed-fin-wasm-browser.mjs";
 
 const repository = resolve(import.meta.dirname, "../..");
@@ -161,7 +161,7 @@ const installedNode = async (root, selection) => {
 
 const checkMismatches = async (t, producers, selection) => {
 	const observations = [];
-	for(const [index, { label, ir }] of reviewedFinWasmMismatches(selection).entries())
+	for(const [index, { label, ir, expectedField }] of reviewedFinWasmMismatches(selection).entries())
 	{
 		t.diagnostic(`fresh Lean reconciliation: ${label}`);
 		const projectRoot = join(producers, `mismatch-${index}`), outputRoot = join(producers, `rejected-${index}`);
@@ -169,17 +169,15 @@ const checkMismatches = async (t, producers, selection) => {
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson(configuration(selection, true)));
 		const source = canonicalJson(ir);
 		await saveLakeFile(projectRoot, "api.binding-ir.json", source);
+		let refusal;
 		await assert.rejects(build(projectRoot, outputRoot), error => {
-			assert.equal(error.code, "reviewed-ir-source-mismatch", label);
-			assert.equal(error.message, "Reviewed contract does not match the freshly compiled Lean API", label);
-			// Local transport preserves the field; the locked process envelope intentionally omits it.
-			if(error.details.field) assert.match(error.details.field, /source\.extensions\.lean-lang\.org\/refinements/u);
-			else assert.equal(error.details.engine.code, "reviewed-ir-source-mismatch");
+			// The process envelope may omit the field. Do not label a predicted field as observed.
+			refusal = reviewedFinWasmRefusal(error, expectedField);
 			return true;
 		});
 		await assert.rejects(lstat(outputRoot), { code: "ENOENT" });
 		observations.push({ label, reviewedSourceSha256: sha256(source)
-			, code: "reviewed-ir-source-mismatch", outputAbsent: true });
+			, code: "reviewed-ir-source-mismatch", outputAbsent: true, ...refusal });
 	}
 	return observations;
 };

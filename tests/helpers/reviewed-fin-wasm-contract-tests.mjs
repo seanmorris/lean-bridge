@@ -16,7 +16,7 @@ import { executeCorpus } from "../fixtures/reviewed-fin-wasm/javascript.mjs";
 import { reviewedFinWasmBuildFacts, reviewedFinWasmExpected } from "./reviewed-fin-wasm-install.mjs";
 import { reviewedFinWasmTypeScript } from "./reviewed-fin-wasm-typescript.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
-import { reviewedFinWasmMismatches } from "./reviewed-fin-wasm-mismatches.mjs";
+import { reviewedFinWasmMismatches, reviewedFinWasmRefusal } from "./reviewed-fin-wasm-mismatches.mjs";
 import { reviewedFinBrowserProfiles, validateReviewedFinBrowserObservation } from "./reviewed-fin-wasm-browser.mjs";
 
 const input = document => {
@@ -198,16 +198,34 @@ test("Wasm Fin mismatch probes are admissible reviews but differ at exact compil
 		const expected = reviewedFinWasmIr(selection), cases = reviewedFinWasmMismatches(selection);
 		assert.equal(cases.length, selection === "scalar" ? 10 : 8);
 		assert.equal(new Set(cases.map(item => item.label)).size, cases.length);
-		for(const { label, ir } of cases)
+		for(const { label, ir, expectedField } of cases)
 		{
 			validateReviewedSource(input(ir));
 			assert.deepEqual(erased(ir), erased(expected), label);
 			assert.match(reviewedContractDifference(ir, expected), /source\.extensions\.lean-lang\.org\/refinements/u, label);
+			assert.equal(expectedField, reviewedContractDifference(ir, expected), label);
 		}
 		assert.deepEqual(reviewedFinWasmIr(selection), expected);
 	}
 	assert.deepEqual(reviewedFinWasmMismatches(), reviewedFinWasmMismatches("structural"));
 	assert.throws(() => reviewedFinWasmMismatches("missing"), /Unknown Wasm Fin mismatch selection/u);
+});
+
+test("Wasm Fin refusals distinguish observed fields from predicted differences and require exact fields", () => {
+	const expectedField = reviewedFinWasmMismatches("scalar")[0].expectedField;
+	const base = { code: "reviewed-ir-source-mismatch", message: "Reviewed contract does not match the freshly compiled Lean API" };
+	const observed = { ...base, details: { field: expectedField } };
+	const envelope = { ...base, details: { engine: { code: base.code } } };
+	assert.deepEqual(reviewedFinWasmRefusal(observed, expectedField), { expectedField, fieldObserved: true });
+	assert.deepEqual(reviewedFinWasmRefusal(envelope, expectedField), { expectedField, fieldObserved: false });
+	for(const error of [
+		{ ...observed, code: "build-failed" }
+		, { ...observed, message: "another failure" }
+		, { ...observed, details: { field: expectedField + ".other" } }
+		, { ...envelope, details: { ...envelope.details, field: null } }
+		, { ...base, details: {} }
+		, { ...base, details: { engine: { code: "build-failed" } } }
+	]) assert.throws(() => reviewedFinWasmRefusal(error, expectedField));
 });
 
 test("both reviewed Wasm ABIs reconcile changed bounds only after matching review builds and before publication", async () => {
