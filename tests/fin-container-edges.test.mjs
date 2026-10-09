@@ -7,7 +7,7 @@
 import assert from "node:assert/strict";
 import { access, mkdir, mkdtemp, readFile, rename, rm, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { generateGmpProjection } from "../src/backends/c/gmp-projection.mjs";
@@ -15,6 +15,10 @@ import { generateCBindingPackage } from "../src/backends/c/generate.mjs";
 import { compilePrimitiveCppModel, renderPrimitiveCppPackage } from "../src/backends/cpp/primitives.mjs";
 import { boostSources } from "../src/backends/cpp/boost.mjs";
 import { generateRustBindingPackage } from "../src/backends/rust/generate.mjs";
+import { compileCopiedDotnetModel } from "../src/backends/dotnet/copied-model.mjs";
+import { renderCopiedDotnetPackage } from "../src/backends/dotnet/copied-values.mjs";
+import { compileCopiedJvmModel } from "../src/backends/jvm/copied-model.mjs";
+import { renderCopiedJvmPackage } from "../src/backends/jvm/copied-values.mjs";
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { finContainerEdgeConsumer, finContainerEdgeProfiles, finContainerEdgeRefinements, finContainerEdgeReviewedIr, finContainerEdgeSource, implementedFinContainerEdgeProfiles, insertFinContainerEdgeFragment } from "./helpers/fin-container-edges.mjs";
 import { finContainerRefinements } from "./helpers/fin-container-install.mjs";
@@ -69,21 +73,21 @@ test("edge insertion refuses missing, empty, repeated and fragment-supplied mark
 
 test("the development slice does not erase the remaining native hosts or replace old consumers", async () => {
 	assert.deepEqual(finContainerEdgeProfiles, ["c", "cpp", "python", "rust", "ruby", "dotnet", "java", "kotlin", "php-native", "wit-wasi"]);
-	assert.deepEqual(implementedFinContainerEdgeProfiles, ["c", "cpp", "python", "rust", "ruby"]);
+	assert.deepEqual(implementedFinContainerEdgeProfiles, ["c", "cpp", "python", "rust", "ruby", "dotnet", "java", "kotlin"]);
 	for(const profile of implementedFinContainerEdgeProfiles)
 	{
-		const extension = { c: "c", cpp: "cpp", python: "py", rust: "rs", ruby: "rb" }[profile];
+		const extension = { c: "c", cpp: "cpp", python: "py", rust: "rs", ruby: "rb", dotnet: "cs", java: "java", kotlin: "kt" }[profile];
 		const base = await readFile(`tests/fixtures/fin-container-consumers/${profile}.${extension}`, "utf8");
 		const fragment = await readFile(`tests/fixtures/fin-container-edge-consumers/${profile}.${extension}`, "utf8");
 		const combined = await finContainerEdgeConsumer(profile);
 		assert.equal(combined.split(fragment).length, 2);
 		assert.equal(combined.replace(fragment + "\n", ""), base);
-		for(const method of ["empty_array", "empty_list", "empty_option", "optional_digits", "present", "flatten"])
-			assert.ok(fragment.includes(method), `${profile}: ${method}`);
+		for(const method of ["emptyarray", "emptylist", "emptyoption", "optionaldigits", "present", "flatten"])
+			assert.ok(fragment.replaceAll("_", "").toLowerCase().includes(method), `${profile}: ${method}`);
 		assert.match(fragment, /1000/u);
 	}
 	await assert.rejects(finContainerEdgeConsumer("perl"), /not implemented/u);
-	await assert.rejects(finContainerEdgeConsumer("dotnet"), /not implemented/u);
+	await assert.rejects(finContainerEdgeConsumer("php-native"), /not implemented/u);
 });
 
 test("structural and negative-Nat controls require their own positive diagnostic, not any bound error", async () => {
@@ -165,12 +169,47 @@ test("the complete Rust edge consumer typechecks offline against generated publi
 	assert.equal(result.stdout, ""); assert.equal(result.stderr, "");
 });
 
+test("the complete .NET edge consumer compiles against generated public types with strict warnings", { skip: !sourceChecks }, async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-fin-edge-dotnet-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const files = renderCopiedDotnetPackage(compileCopiedDotnetModel(finContainerEdgeReviewedIr()));
+	for(const [path, source] of Object.entries(files).filter(([path]) => path.endsWith(".cs")))
+		await saveLakeFile(join(root, "generated"), path, source);
+	await saveLakeFile(root, "consumer.cs", await finContainerEdgeConsumer("dotnet"));
+	await saveLakeFile(root, "Consumer.csproj", '<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><Nullable>enable</Nullable><AllowUnsafeBlocks>true</AllowUnsafeBlocks><TreatWarningsAsErrors>true</TreatWarningsAsErrors><UseAppHost>false</UseAppHost><NuGetAudit>false</NuGetAudit></PropertyGroup></Project>');
+	await saveLakeFile(root, "NuGet.Config", '<configuration><packageSources><clear/></packageSources><fallbackPackageFolders><clear/></fallbackPackageFolders></configuration>');
+	const dotnet = resolve(process.env.LEAN_BRIDGE_DOTNET ?? ".toolchains/dotnet/dotnet");
+	const env = { ...copiedCleanEnvironment, DOTNET_ROOT: dirname(dotnet), DOTNET_CLI_HOME: join(root, "dotnet-home"), DOTNET_CLI_TELEMETRY_OPTOUT: "1", DOTNET_NOLOGO: "1", NUGET_PACKAGES: join(root, "packages") };
+	await runCopied(dotnet, ["restore", "--configfile", "NuGet.Config"], root, env);
+	const result = await runCopied(dotnet, ["build", "--no-restore", "--disable-build-servers", "-p:UseSharedCompilation=false"], root, env);
+	assert.match(result.stdout, /Build succeeded\./u); assert.equal(result.stderr, "");
+});
+
+test("the complete Java and Kotlin edge consumers compile against generated public types", { skip: !sourceChecks }, async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-fin-edge-jvm-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const files = renderCopiedJvmPackage(compileCopiedJvmModel(finContainerEdgeReviewedIr()));
+	const sources = Object.entries(files).filter(([path]) => path.endsWith(".java"));
+	for(const [path, source] of sources) await saveLakeFile(join(root, "generated"), path, source);
+	await saveLakeFile(root, "consumer.java", await finContainerEdgeConsumer("java"));
+	await saveLakeFile(root, "consumer.kt", await finContainerEdgeConsumer("kotlin"));
+	const javac = resolve(process.env.LEAN_BRIDGE_JAVAC ?? ".toolchains/jdk22/bin/javac");
+	const java = resolve(process.env.LEAN_BRIDGE_JAVA ?? ".toolchains/jdk22/bin/java");
+	const kotlinc = resolve(process.env.LEAN_BRIDGE_KOTLINC ?? ".toolchains/kotlin-2.2.0/kotlinc/bin/kotlinc");
+	const classes = join(root, "classes");
+	const compiled = await runCopied(javac, ["--release", "22", "-Werror", "-d", classes, ...sources.map(([path]) => join(root, "generated", path)), "consumer.java"], root);
+	assert.equal(compiled.stdout, ""); assert.equal(compiled.stderr, "");
+	const kotlin = await runCopied(kotlinc, ["-Werror", "-jvm-target", "22", "-cp", classes, "consumer.kt", "-d", "consumer.jar"], root, { ...copiedCleanEnvironment, PATH: "/usr/bin:/bin", JAVA_HOME: dirname(dirname(java)) });
+	assert.equal(kotlin.stdout, ""); assert.equal(kotlin.stderr, "");
+});
+
 test("installed edge selection is explicit and checks every assertion, including the old consumer", () => {
 	assert.deepEqual(finContainerEdgeSelection(undefined), []);
 	assert.deepEqual(finContainerEdgeSelection("python,cpp,c"), ["c", "cpp", "python"]);
 	assert.deepEqual(finContainerEdgeSelection("rust,ruby"), ["ruby", "rust"]);
-	for(const value of ["", "c,c", "c,", "c,perl", "dotnet", " c", 0, null]) assert.throws(() => finContainerEdgeSelection(value));
-	assert.deepEqual(finContainerEdgeChecks, { c: 14114, cpp: 14099, python: 14095, rust: 14078, ruby: 14094 });
+	assert.deepEqual(finContainerEdgeSelection("kotlin,dotnet,java"), ["dotnet", "java", "kotlin"]);
+	for(const value of ["", "c,c", "c,", "c,perl", "php-native", " c", 0, null]) assert.throws(() => finContainerEdgeSelection(value));
+	assert.deepEqual(finContainerEdgeChecks, { c: 14114, cpp: 14099, python: 14095, rust: 14078, ruby: 14094, dotnet: 14089, java: 14089, kotlin: 14088 });
 });
 
 test("Ruby receipt extraction reads original nested gem bytes and refuses missing or repeated members", { skip: !sourceChecks }, async t => {

@@ -69,6 +69,9 @@ const consumers = Object.freeze({
 	, python: { extension: "py", marker: "print('fin-container-ok:' + str(checks))" }
 	, rust: { extension: "rs", marker: '    println!("fin-container-ok:{checks}");' }
 	, ruby: { extension: "rb", marker: 'puts "fin-container-ok:#{$checks}"' }
+	, dotnet: { extension: "cs", marker: '        Console.WriteLine($"fin-container-ok:{checks}");' }
+	, java: { extension: "java", marker: '        System.out.println("fin-container-ok:" + checks);' }
+	, kotlin: { extension: "kt", marker: '    println("fin-container-ok:$checks")' }
 });
 /** Source development is staged; this list is not a support or installed-acceptance claim. */
 export const implementedFinContainerEdgeProfiles = Object.freeze(Object.keys(consumers));

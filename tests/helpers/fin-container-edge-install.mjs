@@ -1,5 +1,5 @@
 /**
- * Installed acceptance for the additive native Fin container cases. This slice is C/C++/Python/Rust/Ruby;
+ * Installed acceptance for the additive native Fin container cases. Native PHP and WIT/WASI are still owed;
  * other native consumers and the separate measured-dispatch supplement remain required under VO #1454.
  *
  * @file
@@ -20,7 +20,15 @@ import { copyPackageSetHandoff } from "./package-set.mjs";
 import { prepareRustCorpusDependencies } from "./type-corpus-rust.mjs";
 
 /** Original accepted counts plus the new fragment, including its exact-count assertion. */
-export const finContainerEdgeChecks = Object.freeze({ c: 2041 + 12073, cpp: 2039 + 12060, python: 2029 + 12066, rust: 2027 + 12051, ruby: 2025 + 12069 });
+export const finContainerEdgeChecks = Object.freeze({
+	c: 2041 + 12073
+	, cpp: 2039 + 12060
+	, python: 2029 + 12066
+	, rust: 2027 + 12051
+	, ruby: 2025 + 12069
+	, dotnet: 2026 + 12063
+	, java: 2026 + 12063
+	, kotlin: 2025 + 12063 });
 
 /** Read exactly one receipt directly from the gem's original data member, without extracting a substitute. */
 export const finContainerEdgeGemReceipt = String.raw`require "rubygems"
@@ -124,9 +132,13 @@ export const prepareFinContainerEdgeExecutable = async ({ profile, root, directo
 export const repeatFinContainerEdges = async ({ profile, consumer, handoff, packages, command }) => {
 	const root = join(consumer, profile), pkg = packages.find(item => item.role === "component");
 	assert.ok(pkg);
-	const archive = join(handoff, pkg.artifacts[0].path);
-	assert.equal(sha256(await readFile(archive)), pkg.artifacts[0].sha256);
+	const jvm = ["java", "kotlin"].includes(profile);
+	const artifact = jvm ? pkg.artifacts.find(item => item.path.endsWith(".jar")) : pkg.artifacts[0];
+	assert.ok(artifact);
+	const archive = join(handoff, artifact.path);
+	assert.equal(sha256(await readFile(archive)), artifact.sha256);
 	let installed, receiptPath, archiveBytes, args, python;
+	const deployed = {};
 	if(profile === "python")
 	{
 		const identity = await runCopied(command, ["-I", "-c", "import json, pathlib, sys, lean_fincontainers; print(json.dumps({'site':str(pathlib.Path(lean_fincontainers.__file__).parent.parent),'version':sys.version.split()[0]}))"], root);
@@ -157,6 +169,26 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 		archiveBytes = (await runCopied("/usr/bin/tar", ["--use-compress-program=/usr/bin/gzip", "-xOf", archive, `${directory}/${receiptPath}`], root)).stdout;
 		args = [];
 	}
+	else if(profile === "dotnet")
+	{
+		installed = join(root, "packages", pkg.name.toLowerCase(), pkg.version);
+		receiptPath = "lean-bridge/package-receipt.json";
+		archiveBytes = (await runCopied("/usr/bin/unzip", ["-p", archive, receiptPath], root)).stdout;
+		args = ["out/Consumer.dll"];
+		deployed[args[0]] = sha256(await readFile(join(root, args[0])));
+	}
+	else if(jvm)
+	{
+		// Verify the exact JAR that the caller loads, then inspect its receipt-pinned members.
+		assert.equal(sha256(await readFile(join(root, "component.jar"))), artifact.sha256);
+		installed = join(root, "jar-inspection");
+		await runCopied("/usr/bin/unzip", ["-q", join(root, "component.jar"), "-d", installed], root);
+		receiptPath = "META-INF/lean-bridge/package-receipt.json";
+		archiveBytes = (await runCopied("/usr/bin/unzip", ["-p", archive, receiptPath], root)).stdout;
+		args = ["--enable-native-access=ALL-UNNAMED", "-cp", profile === "java" ? "component.jar:." : "component.jar:consumer.jar", profile === "java" ? "Consumer" : "ConsumerKt"];
+		for(const path of ["component.jar", profile === "java" ? "Consumer.class" : "consumer.jar"])
+			deployed[path] = sha256(await readFile(join(root, path)));
+	}
 	else
 	{
 		assert.ok(["c", "cpp"].includes(profile));
@@ -171,6 +203,21 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 	assert.equal(receipt.name, pkg.name);
 	assert.equal(receipt.version, pkg.version);
 	await verifyNativeFiles(installed, receipt.files);
+	if(profile === "dotnet")
+	{
+		// The application loads the copied assembly and native libraries, not the NuGet cache originals.
+		for(const [path, file] of Object.entries(receipt.files))
+		{
+			const target = path.startsWith("lib/net8.0/") && path.endsWith(".dll") ? `out/${basename(path)}`
+				: path.startsWith("runtimes/linux-x64/native/") ? `out/${path}` : null;
+			if(target === null) continue;
+			const bytes = await readFile(join(root, target));
+			assert.equal(bytes.length, file.bytes); assert.equal(sha256(bytes), file.sha256);
+			deployed[target] = file.sha256;
+		}
+		assert.ok(Object.keys(deployed).some(path => path.endsWith(".so")));
+		assert.ok(Object.keys(deployed).some(path => path.endsWith(".dll") && path !== "out/Consumer.dll"));
+	}
 	const executable = ["c", "cpp"].includes(profile)
 		? await prepareFinContainerEdgeExecutable({ profile, root, directory: basename(installed), pkgConfig: receipt.pkgConfig })
 		: profile === "rust" ? { executableSha256: sha256(await readFile(command)) } : null;
@@ -183,12 +230,14 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 		assert.equal(sha256(await readFile(command)), executable.executableSha256);
 	}
 	const moved = `${root}-relocated`;
-	assert.ok(profile === "ruby" ? command.startsWith("/") : command.startsWith(`${root}/`));
+	const externalCommand = ["ruby", "dotnet", "java", "kotlin"].includes(profile);
+	assert.ok(externalCommand ? command.startsWith("/") : command.startsWith(`${root}/`));
 	await rename(root, moved);
 	await assert.rejects(access(root), { code: "ENOENT" });
-	const movedCommand = profile === "ruby" ? command : join(moved, relative(root, command));
+	const movedCommand = externalCommand ? command : join(moved, relative(root, command));
 	const environment = profile === "ruby"
-		? { ...copiedCleanEnvironment, GEM_HOME: join(moved, "gems"), GEM_PATH: join(moved, "gems") } : copiedCleanEnvironment;
+		? { ...copiedCleanEnvironment, GEM_HOME: join(moved, "gems"), GEM_PATH: join(moved, "gems") }
+		: profile === "dotnet" ? { ...copiedCleanEnvironment, DOTNET_ROOT: dirname(command), DOTNET_CLI_HOME: join(moved, "dotnet-home"), DOTNET_CLI_TELEMETRY_OPTOUT: "1", DOTNET_NOLOGO: "1" } : copiedCleanEnvironment;
 	const repeated = await runCopied(movedCommand, args, moved, environment);
 	assert.equal(repeated.stderr, "");
 	assert.equal(repeated.stdout, `fin-container-ok:${finContainerEdgeChecks[profile]}\n`);
@@ -196,12 +245,14 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 	assert.equal(await readFile(join(movedInstall, receiptPath), "utf8"), archiveBytes);
 	await verifyNativeFiles(movedInstall, receipt.files);
 	if(executable) assert.equal(sha256(await readFile(movedCommand)), executable.executableSha256);
+	for(const [path, digest] of Object.entries(deployed)) assert.equal(sha256(await readFile(join(moved, path))), digest);
 	return { relocatedInstallation: true
 		, repeatExecution: true
 		, installedFilesUnchanged: true
 		, installedFilesSha256: sha256(canonicalJson(receipt.files))
 		, installedReceiptSha256: sha256(archiveBytes)
 		, ...executable
+		, ...(Object.keys(deployed).length ? { deployedFiles: deployed } : {})
 		, ...(python ? { python } : {}) };
 };
 
