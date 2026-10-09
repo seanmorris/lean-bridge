@@ -16,7 +16,7 @@ import { specializedGenericRecordCase, specializedGenericRecordConsumer } from "
 import { assertGenericRecordArrayAdditions, checkInstalledGenericRecordArrays, claimGenericRecordArrayReport, genericRecordArrayBaseConsumers, genericRecordArrayCases, genericRecordArrayConfiguration, genericRecordArrayConsumer, genericRecordArrayExpectedChecks, genericRecordArrayInstantiations, genericRecordArrayProfileSelection, genericRecordArrayProfiles, genericRecordArrayReportPath, genericRecordArraySource, writeGenericRecordArrayReport } from "./helpers/generic-record-arrays.mjs";
 
 const profiles = genericRecordArrayProfileSelection(process.env.LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES);
-const extensions = { c: "c", cpp: "cpp", python: "py" };
+const extensions = { c: "c", cpp: "cpp", python: "py", rust: "rs", ruby: "rb", dotnet: "cs", java: "java", kotlin: "kt", perl: "pl", "php-native": "php", "wit-wasi": "c" };
 
 test("the Array source is the accepted specialization source with GenericRecordArrays.lean appended", async () => {
 	const shared = await readFile("tests/fixtures/onboarding/generic-records/GenericRecords.lean", "utf8");
@@ -37,6 +37,57 @@ test("the Array configuration keeps every specialized export and decision and ad
 	assert.deepEqual(Object.keys(configuration).sort(), Object.keys(specialized).sort());
 });
 
+const call = (prefix, names, suffix = "(") => names.map(name => `${prefix}${name}${suffix}`);
+const snake = ["push_count", "row_total", "row_of", "row_box_sum"], camel = ["pushCount", "rowTotal", "rowOf", "rowBoxSum"];
+/** Each host's public Array calls, as its fragment spells them. */
+const exportCalls = { c: call("genericrecords_", snake)
+	, cpp: call("api::", snake)
+	, python: call("api.", snake)
+	, rust: call("api::", snake)
+	, ruby: call("API.", snake)
+	, dotnet: call("Api.", ["PushCount", "RowTotal", "RowOf", "RowBoxSum"])
+	, java: call("Api.", camel)
+	, kotlin: call("Api.", camel)
+	, perl: call("LeanBridge::GenericRecords::", snake)
+	, "php-native": call("LeanGenericrecords\\", snake)
+	, "wit-wasi": call("\"", ["push-count", "row-total", "row-of", "row-box-sum"], "\"") };
+/** Each host's 1000 Array rounds. */
+const roundLoops = { c: /for \(unsigned long r = 0; r < 1000; \+\+r\)/u
+	, cpp: /for \(unsigned r = 0; r < 1000; \+\+r\)/u
+	, python: /^for round_index in range\(1000\):$/mu
+	, rust: /for r in 0\.\.1000u64 \{/u
+	, ruby: /^\(0\.\.\.1000\)\.each do \|round_index\|$/mu
+	, dotnet: /for \(var roundIndex = 0; roundIndex < 1000; \+\+roundIndex\)/u
+	, java: /for \(int roundIndex = 0; roundIndex < 1000; \+\+roundIndex\)/u
+	, kotlin: /for \(roundIndex in 0 until 1000\)/u
+	, perl: /^for my \$round_index \(0 \.\. 999\) \{$/mu
+	, "php-native": /for \(\$roundIndex = 0; \$roundIndex < 1000; \+\+\$roundIndex\)/u
+	, "wit-wasi": /for \(uint64_t r = 0; r < 1000; \+\+r\)/u };
+/** Each host's first, middle and last invalid member positions; Rust's BigUint has no negative member. */
+const positionLoops = { c: /for \(unsigned a = 0; a < 3; \+\+a\)/u
+	, cpp: /for \(unsigned position = 0; position < 3; \+\+position\)/u
+	, python: /^for position in range\(3\):$/mu
+	, rust: null
+	, ruby: /^3\.times do \|position\|$/mu
+	, dotnet: /for \(var position = 0; position < 3; \+\+position\)/u
+	, java: /for \(int position = 0; position < 3; \+\+position\)/u
+	, kotlin: /for \(position in 0 until 3\)/u
+	, perl: /^for my \$position \(0 \.\. 2\) \{$/mu
+	, "php-native": /for \(\$position = 0; \$position < 3; \+\+\$position\)/u
+	, "wit-wasi": /for \(unsigned position = 0; position < 3; \+\+position\)/u };
+/** Calls of the accepted List, Option and nominal-identity checks that still run before the Array fragment. */
+const previousChecks = { c: ["genericrecords_echo_boxes", "genericrecords_echo_optional_nat", "genericrecords_total"]
+	, cpp: ["api::echo_boxes", "api::echo_optional_nat", "api::total"]
+	, python: ["api.echo_boxes", "api.echo_optional_nat", "api.bump(api.NatBoxAgain(1, 2))"]
+	, rust: ["api::echo_boxes", "api::echo_optional_nat", "api::total"]
+	, ruby: ["API.echo_boxes", "API.echo_optional_nat", "API.bump(API::NatBoxAgain"]
+	, dotnet: ["Api.EchoBoxes", "Api.EchoOptionalNat", "Api.Total"]
+	, java: ["Api.echoBoxes", "Api.echoOptionalNat", "Api.total"]
+	, kotlin: ["Api.echoBoxes", "Api.echoOptionalNat", "Api.total"]
+	, perl: ["LeanBridge::GenericRecords::echo_boxes", "LeanBridge::GenericRecords::echo_optional_nat", "LeanBridge::GenericRecords::bump(LeanBridge::GenericRecords::NatBoxAgain"]
+	, "php-native": ["LeanGenericrecords\\echo_boxes", "LeanGenericrecords\\echo_optional_nat", "bump(new NatBoxAgain"]
+	, "wit-wasi": ["\"echo-boxes\"", "\"echo-optional-nat\"", "\"total\""] };
+
 test("each Array consumer is the pinned specialized consumer with one fragment inserted at its marker", async () => {
 	for(const profile of genericRecordArrayProfiles)
 	{
@@ -50,12 +101,10 @@ test("each Array consumer is the pinned specialized consumer with one fragment i
 		assert.equal(composed.replace(`${fragment}\n`, ""), base, profile);
 		assert.equal(composed.split(fragment).length, 2, profile);
 		// Every Array export, Array rejections at three positions and the Array rounds are in the fragment itself.
-		const names = { c: ["genericrecords_push_count", "genericrecords_row_total", "genericrecords_row_of", "genericrecords_row_box_sum"]
-			, cpp: ["api::push_count", "api::row_total", "api::row_of", "api::row_box_sum"]
-			, python: ["api.push_count", "api.row_total", "api.row_of", "api.row_box_sum"] }[profile];
-		for(const name of names) assert.ok(fragment.includes(`${name}(`), `${profile}: ${name}`);
-		assert.match(fragment, { c: /for \(unsigned long r = 0; r < 1000; \+\+r\)/u, cpp: /for \(unsigned r = 0; r < 1000; \+\+r\)/u, python: /^for round_index in range\(1000\):$/mu }[profile]);
-		assert.match(fragment, { c: /for \(unsigned a = 0; a < 3; \+\+a\)/u, cpp: /for \(unsigned position = 0; position < 3; \+\+position\)/u, python: /^for position in range\(3\):$/mu }[profile]);
+		for(const name of exportCalls[profile]) assert.ok(fragment.includes(name), `${profile}: ${name}`);
+		assert.match(fragment, roundLoops[profile]);
+		if(positionLoops[profile]) assert.match(fragment, positionLoops[profile]);
+		else assert.match(fragment, /BigUint cannot hold a negative member/u, `${profile}: an unrepresentable negative is stated`);
 		if(profile === "c")
 		{
 			for(const site of ["mpz_set_si(array_values[a], -1)", "mpz_set_si(member, -1)", "mpz_set_si(array_in.count, -1)", "mpz_set_si(row_box.count, -1)"]) assert.ok(fragment.includes(site), site);
@@ -75,7 +124,7 @@ test("the old generic-record consumers stay byte-identical and keep their List, 
 		const specialization = await readFile(`tests/fixtures/generic-record-specialization-consumers/${profile}.${extensions[profile]}`, "utf8");
 		assert.ok(composed.includes(specialization), profile);
 		for(const line of original.split("\n")) assert.ok(composed.includes(line), `${profile}: ${line}`);
-		for(const name of { c: ["genericrecords_echo_boxes", "genericrecords_echo_optional_nat", "genericrecords_total"], cpp: ["api::echo_boxes", "api::echo_optional_nat", "api::total"], python: ["api.echo_boxes", "api.echo_optional_nat", "api.bump(api.NatBoxAgain(1, 2))"] }[profile])
+		for(const name of previousChecks[profile])
 			assert.ok(composed.includes(name), `${profile}: ${name}`);
 	}
 });
@@ -108,14 +157,14 @@ test("each profile has its expected case list and an exact check total", () => {
 		assert.ok(Number.isSafeInteger(checks) && checks > 1000, profile);
 		assert.equal(genericRecordArrayExpectedChecks(profile), genericRecordArrayBaseConsumers[profile].checks + checks);
 	}
-	assert.deepEqual(genericRecordArrayProfiles.map(genericRecordArrayExpectedChecks), [2078, 2058, 2144]);
+	assert.deepEqual(genericRecordArrayProfiles.map(genericRecordArrayExpectedChecks), [2078, 2058, 2144, 2034, 2141, 2088, 2105, 2067, 2145, 2124, 2091]);
 });
 
 test("Array profile selection accepts only this slice's hosts, each once", () => {
 	assert.deepEqual(genericRecordArrayProfileSelection(undefined), []);
 	assert.deepEqual(genericRecordArrayProfileSelection("python,c"), ["c", "python"]);
 	assert.deepEqual(genericRecordArrayProfileSelection("cpp"), ["cpp"]);
-	for(const value of ["", "rust", "c,rust", "c,c", "c,,cpp", "C", " c"]) assert.throws(() => genericRecordArrayProfileSelection(value), value);
+	for(const value of ["", "go", "c,go", "c,c", "c,,cpp", "C", " c", "wasm"]) assert.throws(() => genericRecordArrayProfileSelection(value), value);
 	assert.throws(() => genericRecordArrayProfileSelection(1));
 });
 
