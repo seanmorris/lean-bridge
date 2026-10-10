@@ -1,0 +1,78 @@
+TAP version 13
+# Subtest: relocated PHP-Wasm packages check Fin before Lean in Node and browser hosts (dispatch not measured)
+ok 1 - relocated PHP-Wasm packages check Fin before Lean in Node and browser hosts (dispatch not measured)
+  ---
+  duration_ms: 389507.858051
+  type: 'test'
+  ...
+# fin-products build 0: wasm32
+# fin-products build 1: wasm32
+# fin-products: PHP-Wasm Node embedded/startup/weak
+# fin-products: PHP-Wasm Node embedded/startup/strict
+# fin-products: PHP-Wasm Node embedded/lazy/weak
+# fin-products: PHP-Wasm Node embedded/lazy/strict
+# fin-products: PHP-Wasm Node composer/startup/weak
+# fin-products: PHP-Wasm Node composer/startup/strict
+# fin-products: PHP-Wasm Node composer/lazy/weak
+# fin-products: PHP-Wasm Node composer/lazy/strict
+# fin-products: PHP-Wasm Chromium bundled/startup/weak
+# fin-products: PHP-Wasm Chromium bundled/startup/strict
+# fin-products: PHP-Wasm Chromium bundled/lazy/weak
+# fin-products: PHP-Wasm Chromium bundled/lazy/strict
+# fin-records build 0: wasm32
+# fin-records build 1: wasm32
+# fin-records: PHP-Wasm Node embedded/startup/weak
+# fin-records: PHP-Wasm Node embedded/startup/strict
+# fin-records: PHP-Wasm Node embedded/lazy/weak
+# fin-records: PHP-Wasm Node embedded/lazy/strict
+# fin-records: PHP-Wasm Node composer/startup/weak
+# fin-records: PHP-Wasm Node composer/startup/strict
+# fin-records: PHP-Wasm Node composer/lazy/weak
+# fin-records: PHP-Wasm Node composer/lazy/strict
+# fin-records: PHP-Wasm Chromium bundled/startup/weak
+# fin-records: PHP-Wasm Chromium bundled/startup/strict
+# fin-records: PHP-Wasm Chromium bundled/lazy/weak
+# fin-records: PHP-Wasm Chromium bundled/lazy/strict
+# Subtest: independently reviewed PHP-Wasm packages check Fin before Lean in Node and browser hosts (dispatch not measured)
+ok 2 - independently reviewed PHP-Wasm packages check Fin before Lean in Node and browser hosts (dispatch not measured)
+  ---
+  duration_ms: 365078.060794
+  type: 'test'
+  ...
+# reviewed-fin-products build 0: wasm32
+# reviewed-fin-products build 1: wasm32
+# reviewed-fin-products: PHP-Wasm Node embedded/startup/weak
+# reviewed-fin-products: PHP-Wasm Node embedded/startup/strict
+# reviewed-fin-products: PHP-Wasm Node embedded/lazy/weak
+# reviewed-fin-products: PHP-Wasm Node embedded/lazy/strict
+# reviewed-fin-products: PHP-Wasm Node composer/startup/weak
+# reviewed-fin-products: PHP-Wasm Node composer/startup/strict
+# reviewed-fin-products: PHP-Wasm Node composer/lazy/weak
+# reviewed-fin-products: PHP-Wasm Node composer/lazy/strict
+# reviewed-fin-products: PHP-Wasm Chromium bundled/startup/weak
+# reviewed-fin-products: PHP-Wasm Chromium bundled/startup/strict
+# reviewed-fin-products: PHP-Wasm Chromium bundled/lazy/weak
+# reviewed-fin-products: PHP-Wasm Chromium bundled/lazy/strict
+# reviewed-fin-records build 0: wasm32
+# reviewed-fin-records build 1: wasm32
+# reviewed-fin-records: PHP-Wasm Node embedded/startup/weak
+# reviewed-fin-records: PHP-Wasm Node embedded/startup/strict
+# reviewed-fin-records: PHP-Wasm Node embedded/lazy/weak
+# reviewed-fin-records: PHP-Wasm Node embedded/lazy/strict
+# reviewed-fin-records: PHP-Wasm Node composer/startup/weak
+# reviewed-fin-records: PHP-Wasm Node composer/startup/strict
+# reviewed-fin-records: PHP-Wasm Node composer/lazy/weak
+# reviewed-fin-records: PHP-Wasm Node composer/lazy/strict
+# reviewed-fin-records: PHP-Wasm Chromium bundled/startup/weak
+# reviewed-fin-records: PHP-Wasm Chromium bundled/startup/strict
+# reviewed-fin-records: PHP-Wasm Chromium bundled/lazy/weak
+# reviewed-fin-records: PHP-Wasm Chromium bundled/lazy/strict
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 757410.238152
