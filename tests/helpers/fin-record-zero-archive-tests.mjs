@@ -42,6 +42,12 @@ const cases = [
 		, revision: "1840da12d270045b1340b16e98a2a8085f002337"
 		, tree: "6da1c6b703b990e7ac8b5934cdb14a4fa06f506f"
 		, outcome: "passed", profiles: ["perl"], perl: "5.36.3-threaded", count: 40 }
+	, { name: "perl5363-unthreaded-floor236-1840da1"
+		, digest: "509e9df47cfec65f8c92771b55cf2964aaa4c377b2ef8c3040c003cfa8a7db70"
+		, revision: "1840da12d270045b1340b16e98a2a8085f002337"
+		, tree: "6da1c6b703b990e7ac8b5934cdb14a4fa06f506f"
+		, outcome: "passed", profiles: ["perl"], perl: "5.36.3-unthreaded"
+		, count: 40 }
 ];
 const inspect = async (item, read = readFile) => {
 	const root = base + item.name + "/", bytes = await read(root + "index.json");
