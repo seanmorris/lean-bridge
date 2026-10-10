@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "subtypes@1.0.0",
+    "name": "subtypes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51372699,
+          "path": "archives/example-subtypes-1.0.0-linux-x86_64.zip",
+          "sha256": "4a30ef62b130ebc085478921bd1f40136118e5c943fa2ba0e709dc156e9d2f8e"
+        }
+      ],
+      "ecosystem": "composer",
+      "name": "example/subtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "php-native",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "33e36925201ad912d43cfc6a4e8ffaadca7a090f8d17b07c5c74fa1dd4685606",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "7e4337219b28294d38ea30863376860f388559caa63b617d9679a14caca37cae"
+  }
+}

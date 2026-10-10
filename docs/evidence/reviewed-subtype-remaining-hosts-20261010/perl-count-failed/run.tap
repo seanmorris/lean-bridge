@@ -1,0 +1,39 @@
+TAP version 13
+# Subtest: installed reviewed native Subtype hosts reproduce and relocate the complete checked corpus
+not ok 1 - installed reviewed native Subtype hosts reproduce and relocate the complete checked corpus
+  ---
+  duration_ms: 113618.767898
+  type: 'test'
+  location: '/app/tests/helpers/reviewed-subtype-host-installed-tests.mjs:54:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    2025 !== 2024
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 2024
+  actual: 2025
+  operator: 'strictEqual'
+  stack: |-
+    installCopiedConsumer (file:///app/tests/helpers/copied-fixture-install.mjs:222:10)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async installReviewedSubtypeHost (file:///app/tests/helpers/reviewed-subtype-host-install.mjs:33:22)
+    async TestContext.<anonymous> (file:///app/tests/helpers/reviewed-subtype-host-installed-tests.mjs:123:23)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# reviewed Subtype author 0: perl
+# reviewed Subtype author 1: perl
+# installing and relocating reviewed perl
+# Retained failed reviewed Subtype host inputs: /tmp/lean-bridge-reviewed-subtype-hosts-CYwWNz
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 114032.593319

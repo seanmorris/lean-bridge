@@ -1,0 +1,76 @@
+{
+  "archives": {
+    "archives/LeanBridge-Runtime-0.0020786926711574380382417250240901665129177177720593006464839539885241349844200381.tar.gz": "0b1b2695e45317b52283ba42f8ac54db15f6fa21158103b54d609f213f9ecf31",
+    "archives/LeanBridge-Subtypes-1.000.tar.gz": "ff42f494b11be92027b1dd5d820e0378b036263192ded3b51f3f428d3490dff5"
+  },
+  "bindingIrSha256": "398c6ce8898c7419cc3c2e1b6788c76e9f340e8930e6a4cb094ed9af09d29465",
+  "checks": 2025,
+  "compilerFreePath": true,
+  "consumerSha256": "5315fa884a0f135af9142282a7a4511b3c2c8ce1e6c8c3486ba60b8033a2b9c1",
+  "dispatch": {
+    "observed": false,
+    "reason": "No host entry counters in this installed acceptance"
+  },
+  "interpreterSha256": "5526d24ded88c1c02c6166a45fe34b064c2f9f6d3e3cfae82525049572d77a3d",
+  "modelSha256": "254e7643c4767908cdeb23651cba3091359eaf219a5792a339817346c90a09d5",
+  "offlineInstall": true,
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51361769,
+          "path": "archives/LeanBridge-Runtime-0.0020786926711574380382417250240901665129177177720593006464839539885241349844200381.tar.gz",
+          "sha256": "0b1b2695e45317b52283ba42f8ac54db15f6fa21158103b54d609f213f9ecf31"
+        }
+      ],
+      "ecosystem": "cpan",
+      "name": "LeanBridge-Runtime",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "runtime",
+      "runtimeDelivery": "provided",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "cpan",
+      "version": "0.0020786926711574380382417250240901665129177177720593006464839539885241349844200381"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 80161,
+          "path": "archives/LeanBridge-Subtypes-1.000.tar.gz",
+          "sha256": "ff42f494b11be92027b1dd5d820e0378b036263192ded3b51f3f428d3490dff5"
+        }
+      ],
+      "ecosystem": "cpan",
+      "name": "LeanBridge-Subtypes",
+      "profile": "native-library-v1",
+      "requires": [
+        {
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "version": "0.0020786926711574380382417250240901665129177177720593006464839539885241349844200381"
+        }
+      ],
+      "role": "component",
+      "runtimeDelivery": "dependency",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "cpan",
+      "version": "1.000"
+    }
+  ],
+  "path": "reviewed-source",
+  "perl": {
+    "archname": "x86_64-linux",
+    "ivsize": "8",
+    "ptrsize": "8",
+    "useithreads": null,
+    "usemultiplicity": null,
+    "version": "5.36.3"
+  },
+  "profile": "perl",
+  "receiptSha256": "1a1d4731486bdbaf134eda668477b25545fd007b2b694234325d3dbc5cc0d479",
+  "relocatedInstallation": true,
+  "repeatExecution": true,
+  "reviewedBindingIrSha256": "a0a9196206d3c230a33473256d48d59575afd3e1e26545dbb79495449dc6fc7a",
+  "sourceRemovedBeforeInstallation": true
+}

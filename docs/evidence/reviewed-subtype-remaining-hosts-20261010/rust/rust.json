@@ -1,0 +1,45 @@
+{
+  "archives": {
+    "archives/subtypes-1.0.0.crate": "3a50cb716332d5f02cfcdc1b7b275d11f11d8bc820e94cb3029fbc00bf7407f2"
+  },
+  "bindingIrSha256": "d391938d386c907c81478a1d995e45313dfce9a8b431fa28b3363341c3d45895",
+  "checks": 2026,
+  "compilerFreePath": true,
+  "compilerFreeReplay": true,
+  "consumerSha256": "6a9231762ca17fc131eb7e49424563acddc62d10253ad59a70c9fa041e4918bb",
+  "dispatch": {
+    "observed": false,
+    "reason": "No host entry counters in this installed acceptance"
+  },
+  "modelSha256": "e1da8b970f7a158e2040357b4ab88e5307d781169c9c0fb52bcadfd8b70992bc",
+  "offlineInstall": true,
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51363248,
+          "path": "archives/subtypes-1.0.0.crate",
+          "sha256": "3a50cb716332d5f02cfcdc1b7b275d11f11d8bc820e94cb3029fbc00bf7407f2"
+        }
+      ],
+      "ecosystem": "cargo",
+      "name": "subtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "cargo",
+      "version": "1.0.0"
+    }
+  ],
+  "path": "reviewed-source",
+  "profile": "rust",
+  "receiptSha256": "45725f02e615a9ebe8c418ccff84a9775495fe16b1c0539cc0447a91b3321c0c",
+  "relocatedInstallation": true,
+  "repeatExecution": true,
+  "repeatedRuns": 1,
+  "reviewedBindingIrSha256": "a0a9196206d3c230a33473256d48d59575afd3e1e26545dbb79495449dc6fc7a",
+  "sourceRemovedBeforeInstallation": true,
+  "sourceUnchangedAfterReplay": true
+}

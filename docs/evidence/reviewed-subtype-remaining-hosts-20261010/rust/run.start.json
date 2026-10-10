@@ -1,0 +1,32 @@
+{
+  "revision": "033dc351633fb87f3cef2e072114c05c0c95a028",
+  "tree": "2815b9f2133455331d3ef3df29f13f925e00f2fd",
+  "cwd": "/app",
+  "startedAt": "2026-10-10T18:04:04.725Z",
+  "runnerSha256": "b564a48a4f13cc4664a94b082d940a0ca042899721edfb01d64277c299cafb54",
+  "scope": "Local two-root reviewed native Subtype acceptance; original corpus plus eight checks, source removal, offline compiler-free installation and relocation. No entry counters. Local glibc floor 2.36.",
+  "command": "/usr/bin/taskset",
+  "args": [
+    "-c",
+    "3",
+    "/usr/bin/node",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "--test-name-pattern=^installed reviewed native Subtype hosts reproduce and relocate the complete checked corpus$",
+    "tests/helpers/reviewed-subtype-host-installed-tests.mjs"
+  ],
+  "output": "/app/build/vo1444-host-rust-r1-033dc35-records",
+  "initialFreeMiB": 2075,
+  "environment": {
+    "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+    "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+    "LEAN_BRIDGE_REVIEWED_SUBTYPE_HOSTS": "rust",
+    "LEAN_BRIDGE_REVIEWED_SUBTYPE_HOST_OUTPUT": "/app/build/vo1444-host-rust-r1-033dc35-records",
+    "LEAN_BRIDGE_PYTHON": "/app/.toolchains/python311/bin/python3",
+    "LEAN_BRIDGE_CORPUS_PERL": "/usr/bin/perl",
+    "LEAN_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MAKEFLAGS": "-j1"
+  }
+}

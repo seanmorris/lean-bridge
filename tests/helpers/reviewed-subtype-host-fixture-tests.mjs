@@ -21,6 +21,8 @@ import { reviewedSubtypeInstalledIr, reviewedSubtypeInstalledSource } from "./re
 import { assertReviewedSubtypeHostDiagnostics, relabelReviewedSubtypeHost, reviewedSubtypeHostConsumer, reviewedSubtypeHostExtensions, reviewedSubtypeHostIr, reviewedSubtypeHostProfiles, reviewedSubtypeHostSource } from "./reviewed-subtype-host-fixture.mjs";
 import { reviewedSubtypeHostSupplements } from "./reviewed-subtype-host-supplements.mjs";
 import { reviewedSubtypeHostChecks } from "./reviewed-subtype-host-install.mjs";
+// Keep original installed-report controls in the registered native-host corpus suite.
+import "./reviewed-subtype-remaining-archive-tests.mjs";
 
 test("reviewed host fixture preserves checked types, constructor choices and all twelve exports under portable names", () => {
 	const old = reviewedSubtypeInstalledIr(), review = reviewedSubtypeHostIr();

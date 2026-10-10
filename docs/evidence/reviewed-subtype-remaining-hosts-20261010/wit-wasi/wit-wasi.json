@@ -1,0 +1,45 @@
+{
+  "archives": {
+    "archives/subtypes-1.0.0-wit-wasi.tar.gz": "cbb8651938666aae9ab0d4682e8a7f96e4588b17b0a20be08f583c7c0d3c9e6a"
+  },
+  "bindingIrSha256": "d5a1c5616b1d6e05faa00f8ebb45ee15d30d50cf6c9563b1e8164e11e12216fd",
+  "checks": 2031,
+  "compilerFreePath": true,
+  "compilerFreeReplay": true,
+  "consumerSha256": "45127bcda26294d7238d82025464b9cc58b61fd4a2b62ce585d07b347ef3a995",
+  "dispatch": {
+    "observed": false,
+    "reason": "No host entry counters in this installed acceptance"
+  },
+  "modelSha256": "5801fb71249c46405978e0d58bd67754dc41a6e9a82ece0f369dc108375589e6",
+  "offlineInstall": true,
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 59238132,
+          "path": "archives/subtypes-1.0.0-wit-wasi.tar.gz",
+          "sha256": "cbb8651938666aae9ab0d4682e8a7f96e4588b17b0a20be08f583c7c0d3c9e6a"
+        }
+      ],
+      "ecosystem": "wit-wasi",
+      "name": "subtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "wit-wasi",
+      "version": "1.0.0"
+    }
+  ],
+  "path": "reviewed-source",
+  "profile": "wit-wasi",
+  "receiptSha256": "0540eb731a7b12b1919edce4a7819496ddf98bc46c640e4643491ba41e16a10b",
+  "relocatedInstallation": true,
+  "repeatExecution": true,
+  "repeatedRuns": 1,
+  "reviewedBindingIrSha256": "a0a9196206d3c230a33473256d48d59575afd3e1e26545dbb79495449dc6fc7a",
+  "sourceRemovedBeforeInstallation": true,
+  "sourceUnchangedAfterReplay": true
+}

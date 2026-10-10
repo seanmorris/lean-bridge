@@ -1,0 +1,300 @@
+{
+  "builds": [
+    {
+      "archives": {
+        "archives/Subtypes.Api.1.0.0.nupkg": "1e566573088fb52543f81b9e7ccc12e1d6ce25c9de9d714607b5fe1d324f7329"
+      },
+      "bindingIrSha256": "dd112bf2d6587d7c4d5918412b64cf5180821ee6aa66b7da030303b6d5150024",
+      "modelSha256": "b2dc824a8de0e0a531043470bd014ace350992c645f548ec8294dd8fb8060403",
+      "receiptSha256": "448778ae1d266b558427f21fd5d401e68a17c0820a4e0b47c8ff2180f73aeba7"
+    },
+    {
+      "archives": {
+        "archives/Subtypes.Api.1.0.0.nupkg": "1e566573088fb52543f81b9e7ccc12e1d6ce25c9de9d714607b5fe1d324f7329"
+      },
+      "bindingIrSha256": "dd112bf2d6587d7c4d5918412b64cf5180821ee6aa66b7da030303b6d5150024",
+      "modelSha256": "b2dc824a8de0e0a531043470bd014ace350992c645f548ec8294dd8fb8060403",
+      "receiptSha256": "448778ae1d266b558427f21fd5d401e68a17c0820a4e0b47c8ff2180f73aeba7"
+    }
+  ],
+  "profiles": [
+    "dotnet"
+  ],
+  "reports": [
+    {
+      "archives": {
+        "archives/Subtypes.Api.1.0.0.nupkg": "1e566573088fb52543f81b9e7ccc12e1d6ce25c9de9d714607b5fe1d324f7329"
+      },
+      "bindingIrSha256": "dd112bf2d6587d7c4d5918412b64cf5180821ee6aa66b7da030303b6d5150024",
+      "checks": 2024,
+      "compilerFreePath": true,
+      "compilerFreeReplay": true,
+      "consumerSha256": "a9e5082f2b3217a874ccf14aa79bf104a41278b0dce15cc22132de71cead10ad",
+      "dispatch": {
+        "observed": false,
+        "reason": "No host entry counters in this installed acceptance"
+      },
+      "dotnetEnvironment": {
+        "archiveName": "Subtypes.Api.1.0.0.nupkg",
+        "buildInputs": {
+          "Consumer.csproj.nuget.dgspec.json": {
+            "bytes": 2279,
+            "sha256": "ac127786e0ae42aaf05a531ac5213788d8668ed7e4f810a1b34bf8f15471f242"
+          },
+          "Consumer.csproj.nuget.g.props": {
+            "bytes": 1243,
+            "sha256": "d5dd904a0b20095db07972c1fca9975ec409fe2a0c9803a42f9c083fd06fee15"
+          },
+          "Consumer.csproj.nuget.g.targets": {
+            "bytes": 149,
+            "sha256": "b14461e0cb1be3f77fcf9fe2fdd62889325ca92523d0f606980ed59eb5c4aa1c"
+          },
+          "project.assets.json": {
+            "bytes": 4997,
+            "sha256": "b1a4f4f1cd930b6e8e7281236822326fd943a709a10b8fdb807b506400298dfb"
+          },
+          "project.nuget.cache": {
+            "bytes": 348,
+            "sha256": "56eec54e0a6dcdc9c81db8c69da290b552e64b69be7f2600f4c9eb1cce08002c"
+          }
+        },
+        "cacheFiles": {
+          "subtypes.api/1.0.0/.nupkg.metadata": {
+            "bytes": 210,
+            "sha256": "107d71b3b5362f6e203276516cbfc49957af89381bafca96644fc95e2b90a6d9"
+          },
+          "subtypes.api/1.0.0/README.md": {
+            "bytes": 5187,
+            "sha256": "054c75cd5b935d91002753106f7fa02cfe4a76858b915d18ead1fa2f3f6b7bbf"
+          },
+          "subtypes.api/1.0.0/lean-bridge/component/allocation-guard.h": {
+            "bytes": 1309,
+            "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+          },
+          "subtypes.api/1.0.0/lean-bridge/component/artifacts.json": {
+            "bytes": 1531,
+            "sha256": "2f6a1fb220875474b3a3f7ba19285631ab85d0ac1a677ecc9b2ea5047064723c"
+          },
+          "subtypes.api/1.0.0/lean-bridge/component/binding-ir.json": {
+            "bytes": 28516,
+            "sha256": "f94a460571f62a5a361e0f9ee96a80435fbb74af5fbd4a0d5646d0e3f54f06b7"
+          },
+          "subtypes.api/1.0.0/lean-bridge/component/component.h": {
+            "bytes": 1806,
+            "sha256": "7e3df09a01631eae2c233fb2316863e65511229f0e46298cd8ee18d20fc1137f"
+          },
+          "subtypes.api/1.0.0/lean-bridge/component/generated.lean": {
+            "bytes": 6524,
+            "sha256": "a3e583d8f1c41fbbb1b576e941fccd3507d15d49d55c8b7740926fc4d8e4b1ae"
+          },
+          "subtypes.api/1.0.0/lean-bridge/component/metadata.json": {
+            "bytes": 48329,
+            "sha256": "1d1e2df9cefb5ffbe2dadaef8e1e4c9f0e6616667d7b18a9a589ed51bc392a2a"
+          },
+          "subtypes.api/1.0.0/lean-bridge/component/model.json": {
+            "bytes": 78974,
+            "sha256": "b2dc824a8de0e0a531043470bd014ace350992c645f548ec8294dd8fb8060403"
+          },
+          "subtypes.api/1.0.0/lean-bridge/component/native-component.json": {
+            "bytes": 32602,
+            "sha256": "6e61b7a96ba68e56d415f4819e987209144e4b4e4d41919065388df8ac21d727"
+          },
+          "subtypes.api/1.0.0/lean-bridge/dotnet/binding-manifest.json": {
+            "bytes": 1160,
+            "sha256": "990e1690e974d167707718f6c2357ef34a7ddb736277d5a5ecbe48e0af315286"
+          },
+          "subtypes.api/1.0.0/lean-bridge/dotnet/global.json": {
+            "bytes": 104,
+            "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+          },
+          "subtypes.api/1.0.0/lean-bridge/dotnet/src/LeanBridge.Subtypes/Api.cs": {
+            "bytes": 3388,
+            "sha256": "9a5cf958433a8d7443af94041f0c73198f462f1f46e813130e1859db1b97ce87"
+          },
+          "subtypes.api/1.0.0/lean-bridge/dotnet/src/LeanBridge.Subtypes/LeanBridge.Subtypes.csproj": {
+            "bytes": 604,
+            "sha256": "39daa48a53c13d6c9d70fbf692224e152156257250a02f63b9bb2b9353b6c60d"
+          },
+          "subtypes.api/1.0.0/lean-bridge/dotnet/src/LeanBridge.Subtypes/Runtime.cs": {
+            "bytes": 26199,
+            "sha256": "275f0ed87742995b3d6dfc1870323016a5e528cf851707b640b79b73a439ae55"
+          },
+          "subtypes.api/1.0.0/lean-bridge/licenses/Lean-LICENSE": {
+            "bytes": 9160,
+            "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+          },
+          "subtypes.api/1.0.0/lean-bridge/licenses/Lean-LICENSES": {
+            "bytes": 81854,
+            "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+          },
+          "subtypes.api/1.0.0/lean-bridge/licenses/LeanBridge-LICENSE": {
+            "bytes": 1093,
+            "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+          },
+          "subtypes.api/1.0.0/lean-bridge/licenses/source-notices.json": {
+            "bytes": 2066,
+            "sha256": "fbbfe0db3435a0e2142d93a9c8014df38962ea11ffb264809487d8d9d29eeac0"
+          },
+          "subtypes.api/1.0.0/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+            "bytes": 1093,
+            "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+          },
+          "subtypes.api/1.0.0/lean-bridge/native-c-adapter.json": {
+            "bytes": 1348,
+            "sha256": "92e60c7214072138fa4615035fb20bacbaa6fbbfeb1ca6adbfece0ea8986fdbd"
+          },
+          "subtypes.api/1.0.0/lean-bridge/native-dotnet.json": {
+            "bytes": 2410,
+            "sha256": "48244986809f707c9f0a0ed6bec7a1ca59189b7f0ae297f487dc9fe62ae1d063"
+          },
+          "subtypes.api/1.0.0/lean-bridge/package-receipt.json": {
+            "bytes": 36015,
+            "sha256": "674d502f0e22a79375bc68030c207a9200d22b070fe294bff830255b7d31bac6"
+          },
+          "subtypes.api/1.0.0/lean-bridge/runtime.json": {
+            "bytes": 1466,
+            "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+          },
+          "subtypes.api/1.0.0/lib/net8.0/LeanBridge.Subtypes.dll": {
+            "bytes": 20480,
+            "sha256": "1aa3e66e9e23307537ceca722b4801ea23bf8966ff4deafc290f3796ad9fbdcf"
+          },
+          "subtypes.api/1.0.0/lib/net8.0/LeanBridge.Subtypes.xml": {
+            "bytes": 3219,
+            "sha256": "022572e65250ffe84ef88a125dc311a4c9cddbea9d9c3647829cc211c36c02e3"
+          },
+          "subtypes.api/1.0.0/runtimes/linux-x64/native/libcomponent_9da28bcf49ab7dd69f45.so": {
+            "bytes": 51056,
+            "sha256": "64891257d664469f456803b18fdecde48feac5538acb7278627f33f0e85a678b"
+          },
+          "subtypes.api/1.0.0/runtimes/linux-x64/native/liblean_bridge_native.so": {
+            "bytes": 21464,
+            "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+          },
+          "subtypes.api/1.0.0/runtimes/linux-x64/native/libleanshared.so": {
+            "bytes": 158401256,
+            "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+          },
+          "subtypes.api/1.0.0/runtimes/linux-x64/native/libsubtypes.so": {
+            "bytes": 48440,
+            "sha256": "fd5f8a1c54595080f08d6d92afb060ee87f432dd3e2b281551e15298ddbcd81a"
+          },
+          "subtypes.api/1.0.0/subtypes.api.1.0.0.nupkg": {
+            "bytes": 51383356,
+            "sha256": "1e566573088fb52543f81b9e7ccc12e1d6ce25c9de9d714607b5fe1d324f7329"
+          },
+          "subtypes.api/1.0.0/subtypes.api.1.0.0.nupkg.sha512": {
+            "bytes": 88,
+            "sha256": "cc2e542755e4d9343573103cab9e1d4b2d44f1e99c43a3ee66218a0810057da1"
+          },
+          "subtypes.api/1.0.0/subtypes.api.nuspec": {
+            "bytes": 470,
+            "sha256": "ff4c1a75d68438f1ac1a0dedbc31d822259ff2701450452ed40ed8c91755c9e5"
+          }
+        },
+        "command": "/app/.toolchains/dotnet/dotnet",
+        "inputs": {
+          "Consumer.csproj": {
+            "bytes": 502,
+            "sha256": "8422c67018bd4e0243f6e2f82727027e900e945dc6309aea76ebc2e16f4af919"
+          },
+          "NuGet.Config": {
+            "bytes": 163,
+            "sha256": "e5dfa74aa48869dd2bafb18e20e440493a866c00eeb4710769f3422d0e6cba25"
+          },
+          "consumer.cs": {
+            "bytes": 4360,
+            "sha256": "a9e5082f2b3217a874ccf14aa79bf104a41278b0dce15cc22132de71cead10ad"
+          },
+          "feed/Subtypes.Api.1.0.0.nupkg": {
+            "bytes": 51383356,
+            "sha256": "1e566573088fb52543f81b9e7ccc12e1d6ce25c9de9d714607b5fe1d324f7329"
+          },
+          "global.json": {
+            "bytes": 104,
+            "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+          }
+        },
+        "interpreter": {
+          "bytes": 68424,
+          "sha256": "c61ff7f8665688b95ad0f34e780daaa67b978d26115b82797c07ea6044c566ed"
+        },
+        "outputs": {
+          "Consumer.deps.json": {
+            "bytes": 1730,
+            "sha256": "3842d5b9e000cfbe35a4279753a039469e611239bdf09bf2b2f9f38ae9a568ac"
+          },
+          "Consumer.dll": {
+            "bytes": 10240,
+            "sha256": "e48f38ba760752e7d7e63c9dd97511d233a3c2571806345aef7e1ec8fc9a0241"
+          },
+          "Consumer.pdb": {
+            "bytes": 11656,
+            "sha256": "239d22aa27c47b5e4350cdae593e676a83e6c29224989812e19412e36d5c1cd1"
+          },
+          "Consumer.runtimeconfig.json": {
+            "bytes": 257,
+            "sha256": "088bcc1a867d80d3923a812855f7ae9297fc8ac3d844cf9a83510bd8d1352af8"
+          },
+          "LeanBridge.Subtypes.dll": {
+            "bytes": 20480,
+            "sha256": "1aa3e66e9e23307537ceca722b4801ea23bf8966ff4deafc290f3796ad9fbdcf"
+          },
+          "runtimes/linux-x64/native/libcomponent_9da28bcf49ab7dd69f45.so": {
+            "bytes": 51056,
+            "sha256": "64891257d664469f456803b18fdecde48feac5538acb7278627f33f0e85a678b"
+          },
+          "runtimes/linux-x64/native/liblean_bridge_native.so": {
+            "bytes": 21464,
+            "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+          },
+          "runtimes/linux-x64/native/libleanshared.so": {
+            "bytes": 158401256,
+            "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+          },
+          "runtimes/linux-x64/native/libsubtypes.so": {
+            "bytes": 48440,
+            "sha256": "fd5f8a1c54595080f08d6d92afb060ee87f432dd3e2b281551e15298ddbcd81a"
+          }
+        },
+        "packageDirectory": "subtypes.api/1.0.0",
+        "packageFileSetSha256": "037f498d895bd8ea7a105342f98bff5ed638659f7d432c467df36e6a6eabbe5a",
+        "receiptBytes": "{\n  \"assembly\": \"LeanBridge.Subtypes\",\n  \"bindingIrSha256\": \"dd112bf2d6587d7c4d5918412b64cf5180821ee6aa66b7da030303b6d5150024\",\n  \"compiledProjectionSha256\": \"48244986809f707c9f0a0ed6bec7a1ca59189b7f0ae297f487dc9fe62ae1d063\",\n  \"component\": {\n    \"id\": \"subtypes@1.0.0\",\n    \"name\": \"subtypes\",\n    \"version\": \"1.0.0\"\n  },\n  \"ecosystem\": \"nuget\",\n  \"files\": {\n    \"README.md\": {\n      \"bytes\": 5187,\n      \"sha256\": \"054c75cd5b935d91002753106f7fa02cfe4a76858b915d18ead1fa2f3f6b7bbf\"\n    },\n    \"Subtypes.Api.nuspec\": {\n      \"bytes\": 470,\n      \"sha256\": \"ff4c1a75d68438f1ac1a0dedbc31d822259ff2701450452ed40ed8c91755c9e5\"\n    },\n    \"[Content_Types].xml\": {\n      \"bytes\": 939,\n      \"sha256\": \"f40a2ae0edf63af7046ff54e97e247dd6b2cf07e5d650a8b6d9c51370378b42b\"\n    },\n    \"_rels/.rels\": {\n      \"bytes\": 256,\n      \"sha256\": \"8c1f3f87a2d7dbff6734e303ca814bfa724d03b14674e060ec6056b73b10b143\"\n    },\n    \"lean-bridge/component/allocation-guard.h\": {\n      \"bytes\": 1309,\n      \"sha256\": \"f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83\"\n    },\n    \"lean-bridge/component/artifacts.json\": {\n      \"bytes\": 1531,\n      \"sha256\": \"2f6a1fb220875474b3a3f7ba19285631ab85d0ac1a677ecc9b2ea5047064723c\"\n    },\n    \"lean-bridge/component/binding-ir.json\": {\n      \"bytes\": 28516,\n      \"sha256\": \"f94a460571f62a5a361e0f9ee96a80435fbb74af5fbd4a0d5646d0e3f54f06b7\"\n    },\n    \"lean-bridge/component/component.h\": {\n      \"bytes\": 1806,\n      \"sha256\": \"7e3df09a01631eae2c233fb2316863e65511229f0e46298cd8ee18d20fc1137f\"\n    },\n    \"lean-bridge/component/generated.lean\": {\n      \"bytes\": 6524,\n      \"sha256\": \"a3e583d8f1c41fbbb1b576e941fccd3507d15d49d55c8b7740926fc4d8e4b1ae\"\n    },\n    \"lean-bridge/component/metadata.json\": {\n      \"bytes\": 48329,\n      \"sha256\": \"1d1e2df9cefb5ffbe2dadaef8e1e4c9f0e6616667d7b18a9a589ed51bc392a2a\"\n    },\n    \"lean-bridge/component/model.json\": {\n      \"bytes\": 78974,\n      \"sha256\": \"b2dc824a8de0e0a531043470bd014ace350992c645f548ec8294dd8fb8060403\"\n    },\n    \"lean-bridge/component/native-component.json\": {\n      \"bytes\": 32602,\n      \"sha256\": \"6e61b7a96ba68e56d415f4819e987209144e4b4e4d41919065388df8ac21d727\"\n    },\n    \"lean-bridge/dotnet/binding-manifest.json\": {\n      \"bytes\": 1160,\n      \"sha256\": \"990e1690e974d167707718f6c2357ef34a7ddb736277d5a5ecbe48e0af315286\"\n    },\n    \"lean-bridge/dotnet/global.json\": {\n      \"bytes\": 104,\n      \"sha256\": \"d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc\"\n    },\n    \"lean-bridge/dotnet/src/LeanBridge.Subtypes/Api.cs\": {\n      \"bytes\": 3388,\n      \"sha256\": \"9a5cf958433a8d7443af94041f0c73198f462f1f46e813130e1859db1b97ce87\"\n    },\n    \"lean-bridge/dotnet/src/LeanBridge.Subtypes/LeanBridge.Subtypes.csproj\": {\n      \"bytes\": 604,\n      \"sha256\": \"39daa48a53c13d6c9d70fbf692224e152156257250a02f63b9bb2b9353b6c60d\"\n    },\n    \"lean-bridge/dotnet/src/LeanBridge.Subtypes/Runtime.cs\": {\n      \"bytes\": 26199,\n      \"sha256\": \"275f0ed87742995b3d6dfc1870323016a5e528cf851707b640b79b73a439ae55\"\n    },\n    \"lean-bridge/licenses/Lean-LICENSE\": {\n      \"bytes\": 9160,\n      \"sha256\": \"8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e\"\n    },\n    \"lean-bridge/licenses/Lean-LICENSES\": {\n      \"bytes\": 81854,\n      \"sha256\": \"00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce\"\n    },\n    \"lean-bridge/licenses/LeanBridge-LICENSE\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"lean-bridge/licenses/source-notices.json\": {\n      \"bytes\": 2066,\n      \"sha256\": \"fbbfe0db3435a0e2142d93a9c8014df38962ea11ffb264809487d8d9d29eeac0\"\n    },\n    \"lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"lean-bridge/native-c-adapter.json\": {\n      \"bytes\": 1348,\n      \"sha256\": \"92e60c7214072138fa4615035fb20bacbaa6fbbfeb1ca6adbfece0ea8986fdbd\"\n    },\n    \"lean-bridge/native-dotnet.json\": {\n      \"bytes\": 2410,\n      \"sha256\": \"48244986809f707c9f0a0ed6bec7a1ca59189b7f0ae297f487dc9fe62ae1d063\"\n    },\n    \"lean-bridge/runtime.json\": {\n      \"bytes\": 1466,\n      \"sha256\": \"137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf\"\n    },\n    \"lib/net8.0/LeanBridge.Subtypes.dll\": {\n      \"bytes\": 20480,\n      \"sha256\": \"1aa3e66e9e23307537ceca722b4801ea23bf8966ff4deafc290f3796ad9fbdcf\"\n    },\n    \"lib/net8.0/LeanBridge.Subtypes.xml\": {\n      \"bytes\": 3219,\n      \"sha256\": \"022572e65250ffe84ef88a125dc311a4c9cddbea9d9c3647829cc211c36c02e3\"\n    },\n    \"runtimes/linux-x64/native/libcomponent_9da28bcf49ab7dd69f45.so\": {\n      \"bytes\": 51056,\n      \"sha256\": \"64891257d664469f456803b18fdecde48feac5538acb7278627f33f0e85a678b\"\n    },\n    \"runtimes/linux-x64/native/liblean_bridge_native.so\": {\n      \"bytes\": 21464,\n      \"sha256\": \"25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7\"\n    },\n    \"runtimes/linux-x64/native/libleanshared.so\": {\n      \"bytes\": 158401256,\n      \"sha256\": \"d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4\"\n    },\n    \"runtimes/linux-x64/native/libsubtypes.so\": {\n      \"bytes\": 48440,\n      \"sha256\": \"fd5f8a1c54595080f08d6d92afb060ee87f432dd3e2b281551e15298ddbcd81a\"\n    }\n  },\n  \"glibcMinimumVersion\": \"2.36\",\n  \"kind\": \"lean-bridge-ordinary-nuget-package\",\n  \"name\": \"Subtypes.Api\",\n  \"namespace\": \"LeanBridge.Subtypes\",\n  \"runtimeIdentity\": \"137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf\",\n  \"schemaVersion\": 1,\n  \"sourceIdentity\": {\n    \"exportConfigurationSha256\": \"74c0344e8577348f17c581db742abf7823533b25a1c0c9511096668f0a7b2575\",\n    \"exportConfigurationSource\": \"{\\n  \\\"modules\\\": [\\n    \\\"Subtypes\\\"\\n  ],\\n  \\\"schemaVersion\\\": 1,\\n  \\\"targets\\\": {\\n    \\\"nuget\\\": {\\n      \\\"name\\\": \\\"Subtypes.Api\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    }\\n  }\\n}\\n\",\n    \"extractorSha256\": \"8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f\",\n    \"leanCommit\": \"f3b06c705e6c85f5314019d5d3baab0fec5b580c\",\n    \"leanCompilerSha256\": \"e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550\",\n    \"leanVersion\": \"4.32.2\",\n    \"modules\": [\n      {\n        \"interface\": {\n          \"bytes\": 136168,\n          \"interfaceSha256\": \"e03538a63c6cf7147074d8b5d3de20588ce74a0e3593ecb29ebd0d1b1c5697a0\",\n          \"sha256\": \"beb6e613609b3ac5b619c15645b59e17740f685f2a2abeeadba52ae368df7468\"\n        },\n        \"module\": \"Subtypes\",\n        \"source\": {\n          \"bytes\": 3049,\n          \"path\": \"Subtypes.lean\",\n          \"sha256\": \"aa5a5429a35e8a8fcf197c2aed94f7a29e00ad96c45cc142c654a5de7bebe1c6\"\n        }\n      }\n    ],\n    \"request\": {\n      \"arities\": [],\n      \"contracts\": {\n        \"Subtypes.byteValue\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"Subtypes.checkedByte\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\",\n            \"refinement\": {\n              \"constructor\": \"Subtypes.checkedByte\"\n            }\n          }\n        },\n        \"Subtypes.clamp\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"Subtypes.checkedBounded\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"Subtypes.firstEven\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"Subtypes.checkedEven\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\",\n            \"refinement\": {\n              \"constructor\": \"Subtypes.checkedEven\"\n            }\n          }\n        },\n        \"Subtypes.half\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"Subtypes.checkedEven\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"Subtypes.head\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"Subtypes.checkedPayload\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"Subtypes.join\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"Subtypes.checkedWord\"\n              }\n            },\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"Subtypes.checkedWord\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\",\n            \"refinement\": {\n              \"constructor\": \"Subtypes.checkedWord\"\n            }\n          }\n        },\n        \"Subtypes.mix\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"Subtypes.checkedEven\"\n              }\n            },\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\"\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"Subtypes.pad\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\"\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\",\n            \"refinement\": {\n              \"constructor\": \"Subtypes.checkedEven\"\n            }\n          }\n        },\n        \"Subtypes.scale\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\"\n            },\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"Subtypes.checkedSmall\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"Subtypes.secondEven\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"Subtypes.normalizedEven\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\",\n            \"refinement\": {\n              \"constructor\": \"Subtypes.checkedEven\"\n            }\n          }\n        },\n        \"Subtypes.shout\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"Subtypes.checkedWord\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\",\n            \"refinement\": {\n              \"constructor\": \"Subtypes.checkedWord\"\n            }\n          }\n        },\n        \"Subtypes.zeroEven\": {\n          \"parameters\": [],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\",\n            \"refinement\": {\n              \"constructor\": \"Subtypes.checkedEven\"\n            }\n          }\n        }\n      },\n      \"exportModules\": [\n        \"Subtypes\"\n      ],\n      \"exports\": [\n        \"Subtypes.byteValue\",\n        \"Subtypes.clamp\",\n        \"Subtypes.firstEven\",\n        \"Subtypes.half\",\n        \"Subtypes.head\",\n        \"Subtypes.join\",\n        \"Subtypes.mix\",\n        \"Subtypes.pad\",\n        \"Subtypes.scale\",\n        \"Subtypes.secondEven\",\n        \"Subtypes.shout\",\n        \"Subtypes.zeroEven\"\n      ],\n      \"metadata\": {\n        \"invocationIdentitySha256\": \"a1f1664069866bb5cde7b271a22d0fa09248370fe8c3a3217187c73dfa59e78f\",\n        \"modules\": [\n          {\n            \"interfaceSha256\": \"e03538a63c6cf7147074d8b5d3de20588ce74a0e3593ecb29ebd0d1b1c5697a0\",\n            \"name\": \"Subtypes\",\n            \"sourcePath\": \"Subtypes.lean\",\n            \"sourceSha256\": \"aa5a5429a35e8a8fcf197c2aed94f7a29e00ad96c45cc142c654a5de7bebe1c6\"\n          }\n        ],\n        \"toolchain\": \"leanprover/lean4:v4.32.2\"\n      },\n      \"modules\": [\n        \"Subtypes\"\n      ],\n      \"profile\": \"native-library-v1\",\n      \"resources\": [],\n      \"specializations\": [\n        {\n          \"declaration\": \"Subtypes.echo\",\n          \"name\": \"Subtypes.firstEven\",\n          \"types\": [\n            \"Subtypes.Even\"\n          ]\n        },\n        {\n          \"declaration\": \"Subtypes.echo\",\n          \"name\": \"Subtypes.secondEven\",\n          \"types\": [\n            \"Subtypes.Even\"\n          ]\n        }\n      ]\n    },\n    \"reviewedBindingIr\": {\n      \"path\": \"api.binding-ir.json\",\n      \"schemaVersion\": 1,\n      \"semanticSha256\": \"a0a9196206d3c230a33473256d48d59575afd3e1e26545dbb79495449dc6fc7a\",\n      \"source\": \"{\\n  \\\"assurance\\\": [],\\n  \\\"capabilities\\\": [],\\n  \\\"component\\\": {\\n    \\\"id\\\": \\\"subtypes@1.0.0\\\",\\n    \\\"name\\\": \\\"subtypes\\\",\\n    \\\"version\\\": \\\"1.0.0\\\"\\n  },\\n  \\\"declarations\\\": [\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:Subtypes.shout\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"shout\\\",\\n      \\\"overloadKey\\\": \\\"Subtypes.shout\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"kind\\\": \\\"primitive\\\",\\n            \\\"name\\\": \\\"string\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"kind\\\": \\\"primitive\\\",\\n          \\\"name\\\": \\\"string\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"Subtypes.shout\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [\\n              {\\n                \\\"constructor\\\": \\\"Subtypes.checkedWord\\\",\\n                \\\"kind\\\": \\\"subtype\\\"\\n              }\\n            ],\\n            \\\"result\\\": {\\n              \\\"constructor\\\": \\\"Subtypes.checkedWord\\\",\\n              \\\"kind\\\": \\\"subtype\\\"\\n            }\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    },\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:Subtypes.half\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"half\\\",\\n      \\\"overloadKey\\\": \\\"Subtypes.half\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"kind\\\": \\\"primitive\\\",\\n            \\\"name\\\": \\\"nat\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"kind\\\": \\\"primitive\\\",\\n          \\\"name\\\": \\\"nat\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"Subtypes.half\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [\\n              {\\n                \\\"constructor\\\": \\\"Subtypes.checkedEven\\\",\\n                \\\"kind\\\": \\\"subtype\\\"\\n              }\\n            ],\\n            \\\"result\\\": null\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    },\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:Subtypes.scale\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"scale\\\",\\n      \\\"overloadKey\\\": \\\"Subtypes.scale\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"kind\\\": \\\"primitive\\\",\\n            \\\"name\\\": \\\"int\\\"\\n          }\\n        },\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value1\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"kind\\\": \\\"primitive\\\",\\n            \\\"name\\\": \\\"int\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"kind\\\": \\\"primitive\\\",\\n          \\\"name\\\": \\\"int\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"Subtypes.scale\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [\\n              null,\\n              {\\n                \\\"constructor\\\": \\\"Subtypes.checkedSmall\\\",\\n                \\\"kind\\\": \\\"subtype\\\"\\n              }\\n            ],\\n            \\\"result\\\": null\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    },\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:Subtypes.head\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"head\\\",\\n      \\\"overloadKey\\\": \\\"Subtypes.head\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"kind\\\": \\\"primitive\\\",\\n            \\\"name\\\": \\\"bytes\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"kind\\\": \\\"primitive\\\",\\n          \\\"name\\\": \\\"uint8\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"Subtypes.head\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [\\n              {\\n                \\\"constructor\\\": \\\"Subtypes.checkedPayload\\\",\\n                \\\"kind\\\": \\\"subtype\\\"\\n              }\\n            ],\\n            \\\"result\\\": null\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    },\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:Subtypes.pad\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"pad\\\",\\n      \\\"overloadKey\\\": \\\"Subtypes.pad\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"kind\\\": \\\"primitive\\\",\\n            \\\"name\\\": \\\"nat\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"kind\\\": \\\"primitive\\\",\\n          \\\"name\\\": \\\"nat\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"Subtypes.pad\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [\\n              null\\n            ],\\n            \\\"result\\\": {\\n              \\\"constructor\\\": \\\"Subtypes.checkedEven\\\",\\n              \\\"kind\\\": \\\"subtype\\\"\\n            }\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    },\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:Subtypes.join\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"join\\\",\\n      \\\"overloadKey\\\": \\\"Subtypes.join\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"kind\\\": \\\"primitive\\\",\\n            \\\"name\\\": \\\"string\\\"\\n          }\\n        },\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value1\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"kind\\\": \\\"primitive\\\",\\n            \\\"name\\\": \\\"string\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"kind\\\": \\\"primitive\\\",\\n          \\\"name\\\": \\\"string\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"Subtypes.join\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [\\n              {\\n                \\\"constructor\\\": \\\"Subtypes.checkedWord\\\",\\n                \\\"kind\\\": \\\"subtype\\\"\\n              },\\n              {\\n                \\\"constructor\\\": \\\"Subtypes.checkedWord\\\",\\n                \\\"kind\\\": \\\"subtype\\\"\\n              }\\n            ],\\n            \\\"result\\\": {\\n              \\\"constructor\\\": \\\"Subtypes.checkedWord\\\",\\n              \\\"kind\\\": \\\"subtype\\\"\\n            }\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    },\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:Subtypes.clamp\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"clamp\\\",\\n      \\\"overloadKey\\\": \\\"Subtypes.clamp\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"kind\\\": \\\"primitive\\\",\\n            \\\"name\\\": \\\"nat\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"kind\\\": \\\"primitive\\\",\\n          \\\"name\\\": \\\"nat\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"Subtypes.clamp\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [\\n              {\\n                \\\"constructor\\\": \\\"Subtypes.checkedBounded\\\",\\n                \\\"kind\\\": \\\"subtype\\\"\\n              }\\n            ],\\n            \\\"result\\\": null\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    },\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:Subtypes.mix\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"mix\\\",\\n      \\\"overloadKey\\\": \\\"Subtypes.mix\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"kind\\\": \\\"primitive\\\",\\n            \\\"name\\\": \\\"nat\\\"\\n          }\\n        },\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value1\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"kind\\\": \\\"primitive\\\",\\n            \\\"name\\\": \\\"nat\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"kind\\\": \\\"primitive\\\",\\n          \\\"name\\\": \\\"nat\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"Subtypes.mix\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [\\n              {\\n                \\\"constructor\\\": \\\"Subtypes.checkedEven\\\",\\n                \\\"kind\\\": \\\"subtype\\\"\\n              },\\n              {\\n                \\\"bound\\\": \\\"10\\\",\\n                \\\"kind\\\": \\\"fin\\\"\\n              }\\n            ],\\n            \\\"result\\\": null\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    },\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:Subtypes.byteValue\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"byteValue\\\",\\n      \\\"overloadKey\\\": \\\"Subtypes.byteValue\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"kind\\\": \\\"primitive\\\",\\n            \\\"name\\\": \\\"uint8\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"kind\\\": \\\"primitive\\\",\\n          \\\"name\\\": \\\"uint8\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"Subtypes.byteValue\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [\\n              {\\n                \\\"constructor\\\": \\\"Subtypes.checkedByte\\\",\\n                \\\"kind\\\": \\\"subtype\\\"\\n              }\\n            ],\\n            \\\"result\\\": {\\n              \\\"constructor\\\": \\\"Subtypes.checkedByte\\\",\\n              \\\"kind\\\": \\\"subtype\\\"\\n            }\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    },\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:Subtypes.firstEven\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"firstEven\\\",\\n      \\\"overloadKey\\\": \\\"Subtypes.firstEven\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"kind\\\": \\\"primitive\\\",\\n            \\\"name\\\": \\\"nat\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"kind\\\": \\\"primitive\\\",\\n          \\\"name\\\": \\\"nat\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"Subtypes.echo\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [\\n              {\\n                \\\"constructor\\\": \\\"Subtypes.checkedEven\\\",\\n                \\\"kind\\\": \\\"subtype\\\"\\n              }\\n            ],\\n            \\\"result\\\": {\\n              \\\"constructor\\\": \\\"Subtypes.checkedEven\\\",\\n              \\\"kind\\\": \\\"subtype\\\"\\n            }\\n          },\\n          \\\"lean-lang.org/specialization\\\": {\\n            \\\"application\\\": \\\"(@_root_.Subtypes.echo.{0} (@_root_.Subtypes.Even))\\\",\\n            \\\"declaration\\\": \\\"Subtypes.echo\\\",\\n            \\\"name\\\": \\\"Subtypes.firstEven\\\",\\n            \\\"types\\\": [\\n              \\\"Subtypes.Even\\\"\\n            ]\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    },\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:Subtypes.secondEven\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"secondEven\\\",\\n      \\\"overloadKey\\\": \\\"Subtypes.secondEven\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"kind\\\": \\\"primitive\\\",\\n            \\\"name\\\": \\\"nat\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"kind\\\": \\\"primitive\\\",\\n          \\\"name\\\": \\\"nat\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"Subtypes.echo\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [\\n              {\\n                \\\"constructor\\\": \\\"Subtypes.normalizedEven\\\",\\n                \\\"kind\\\": \\\"subtype\\\"\\n              }\\n            ],\\n            \\\"result\\\": {\\n              \\\"constructor\\\": \\\"Subtypes.checkedEven\\\",\\n              \\\"kind\\\": \\\"subtype\\\"\\n            }\\n          },\\n          \\\"lean-lang.org/specialization\\\": {\\n            \\\"application\\\": \\\"(@_root_.Subtypes.echo.{0} (@_root_.Subtypes.Even))\\\",\\n            \\\"declaration\\\": \\\"Subtypes.echo\\\",\\n            \\\"name\\\": \\\"Subtypes.secondEven\\\",\\n            \\\"types\\\": [\\n              \\\"Subtypes.Even\\\"\\n            ]\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    },\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:Subtypes.zeroEven\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"zeroEven\\\",\\n      \\\"overloadKey\\\": \\\"Subtypes.zeroEven\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"kind\\\": \\\"primitive\\\",\\n          \\\"name\\\": \\\"nat\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"Subtypes.zeroEven\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [],\\n            \\\"result\\\": {\\n              \\\"constructor\\\": \\\"Subtypes.checkedEven\\\",\\n              \\\"kind\\\": \\\"subtype\\\"\\n            }\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    }\\n  ],\\n  \\\"documentation\\\": {\\n    \\\"details\\\": \\\"\\\",\\n    \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n  },\\n  \\\"errors\\\": [],\\n  \\\"producers\\\": [\\n    {\\n      \\\"adapter\\\": \\\"independent-corpus-contract\\\",\\n      \\\"adapterVersion\\\": 1,\\n      \\\"extensions\\\": {},\\n      \\\"id\\\": \\\"corpusReview\\\",\\n      \\\"tool\\\": \\\"Corpus contract review\\\",\\n      \\\"toolVersion\\\": \\\"1\\\"\\n    }\\n  ],\\n  \\\"schemaVersion\\\": 3,\\n  \\\"types\\\": []\\n}\\n\",\n      \"sourceSha256\": \"536daeb6d2c733c01c75cd18ae0275131c4e2c1c79604a655a8e71c72713d5e2\"\n    },\n    \"sourceNoticesSha256\": \"fbbfe0db3435a0e2142d93a9c8014df38962ea11ffb264809487d8d9d29eeac0\",\n    \"sourceTreeSha256\": \"e9b608b8ef7f646b4bfe8601177400c412e522ab53d921ffe072b187c7a3e174\"\n  },\n  \"version\": \"1.0.0\"\n}\n",
+        "root": "/tmp/lean-bridge-reviewed-subtype-hosts-Ih4sEH/consumer/dotnet"
+      },
+      "modelSha256": "b2dc824a8de0e0a531043470bd014ace350992c645f548ec8294dd8fb8060403",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51383356,
+              "path": "archives/Subtypes.Api.1.0.0.nupkg",
+              "sha256": "1e566573088fb52543f81b9e7ccc12e1d6ce25c9de9d714607b5fe1d324f7329"
+            }
+          ],
+          "ecosystem": "nuget",
+          "name": "Subtypes.Api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "nuget",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-source",
+      "profile": "dotnet",
+      "receiptSha256": "448778ae1d266b558427f21fd5d401e68a17c0820a4e0b47c8ff2180f73aeba7",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "repeatedRuns": 1,
+      "reviewedBindingIrSha256": "a0a9196206d3c230a33473256d48d59575afd3e1e26545dbb79495449dc6fc7a",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceUnchangedAfterReplay": true
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

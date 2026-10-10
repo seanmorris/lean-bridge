@@ -1,0 +1,391 @@
+#include "runtime.h"
+#include "component.h"
+static void lbp_component_ready(pTHX) {
+  if (!lean_bridge_native_component_ready("subtypes@1.0.0:64891257d664469f456803b18fdecde48feac5538acb7278627f33f0e85a678b")) croak("Lean runtime is not ready or has been retired");
+}
+
+static uint8_t lb_read_23919de1caf8120217dd(pTHX_ lbp_scope *scope, SV *value) {
+return (uint8_t)lbp_unsigned(aTHX_ value, UINT8_MAX);
+}
+static SV *lb_write_23919de1caf8120217dd(pTHX_ lbp_scope *scope, uint8_t value) {
+return lbp_mortal(newSVuv(value));
+}
+
+static lean_object * lb_read_bcb803bc837008bec599(pTHX_ lbp_scope *scope, SV *value) {
+
+    SV *text = lbp_bigint_text(aTHX_ value, 1);
+    STRLEN length; const char *bytes = SvPV(text, length); lbp_budget(scope, length);
+    return lbp_keep(scope, lean_cstr_to_nat(bytes));
+}
+static SV *lb_write_bcb803bc837008bec599(pTHX_ lbp_scope *scope, lean_object * value) {
+
+    lean_inc(value); lean_object *text = lbp_keep(scope, lb_native_nat_text(value));
+    size_t length = lean_string_size(text) - 1; lbp_budget(scope, length);
+    return lbp_bigint_from_text(aTHX_ lean_string_cstr(text), length);
+}
+
+static lean_object * lb_read_b02b5a1865a26e6f063c(pTHX_ lbp_scope *scope, SV *value) {
+
+    lbp_plain(aTHX_ value); if (!SvPOK(value) || SvUTF8(value)) croak("ByteArray requires an octet string, not Unicode text");
+    STRLEN length; const char *bytes = SvPV(value, length); lbp_budget(scope, length);
+    lean_object *result = lbp_keep(scope, lean_alloc_sarray(1, length, length));
+    memcpy(lean_sarray_cptr(result), bytes, length); return result;
+}
+static SV *lb_write_b02b5a1865a26e6f063c(pTHX_ lbp_scope *scope, lean_object * value) {
+
+    size_t length = lean_sarray_size(value); lbp_budget(scope, length);
+    return lbp_mortal(newSVpvn((const char *)lean_sarray_cptr(value), length));
+}
+
+static lean_object * lb_read_fef73841aaed14bc1688(pTHX_ lbp_scope *scope, SV *value) {
+
+    lbp_plain(aTHX_ value); if (!SvPOK(value)) croak("String requires a text scalar");
+    STRLEN length; const U8 *bytes = (const U8 *)SvPVutf8(value, length); lbp_budget(scope, length);
+    if (!is_utf8_string_flags(bytes, length, UTF8_DISALLOW_SURROGATE | UTF8_DISALLOW_SUPER)) croak("String contains invalid Unicode");
+    return lbp_keep(scope, lean_mk_string_from_bytes((const char *)bytes, length));
+}
+static SV *lb_write_fef73841aaed14bc1688(pTHX_ lbp_scope *scope, lean_object * value) {
+
+    size_t length = lean_string_size(value) - 1; lbp_budget(scope, length);
+    SV *result = lbp_mortal(newSVpvn(lean_string_cstr(value), length)); SvUTF8_on(result); return result;
+}
+
+static lean_object * lb_read_09ff00cb13eed05963f7(pTHX_ lbp_scope *scope, SV *value) {
+
+    SV *text = lbp_bigint_text(aTHX_ value, 0);
+    STRLEN length; const char *bytes = SvPV(text, length); lbp_budget(scope, length);
+    return lbp_keep(scope, lb_native_int_parse(lean_mk_string_from_bytes(bytes, length)));
+}
+static SV *lb_write_09ff00cb13eed05963f7(pTHX_ lbp_scope *scope, lean_object * value) {
+
+    lean_inc(value); lean_object *text = lbp_keep(scope, lb_native_int_text(value));
+    size_t length = lean_string_size(text) - 1; lbp_budget(scope, length);
+    return lbp_bigint_from_text(aTHX_ lean_string_cstr(text), length);
+}
+
+MODULE = LeanBridge::Subtypes    PACKAGE = LeanBridge::Subtypes
+PROTOTYPES: DISABLE
+
+
+void
+byte_value(...)
+  PPCODE:
+    if (items != 1) croak("byte_value expects 1 arguments");
+    lbp_check_interpreter(aTHX);
+    lbp_component_ready(aTHX);
+    LBP_ENTER();
+    uint8_t a0 = lb_read_23919de1caf8120217dd(aTHX_ scope, ST(0));
+     if (!lb_dd9c7eba69bac0f798a13e13_refinement_0(a0)) croak("%s", "value0 was rejected by Subtypes.checkedByte");
+    
+    lean_object *checked = lb_dd9c7eba69bac0f798a13e13(a0);
+    if (lean_is_scalar(checked)) croak("Lean rejected an argument outside its checked refinement");
+    lean_object *boxed = lean_ctor_get(checked, 0);
+    
+    uint8_t result = (uint8_t)lean_unbox(boxed);
+    lean_dec(checked);
+    
+    lbp_finish(aTHX_ scope);
+    lbp_component_ready(aTHX);
+    SV *out = lb_write_23919de1caf8120217dd(aTHX_ scope, result);
+    lbp_component_ready(aTHX);
+    SvREFCNT_inc(out);
+    LBP_LEAVE();
+    ST(0) = sv_2mortal(out);
+    XSRETURN(1);
+
+
+void
+clamp(...)
+  PPCODE:
+    if (items != 1) croak("clamp expects 1 arguments");
+    lbp_check_interpreter(aTHX);
+    lbp_component_ready(aTHX);
+    LBP_ENTER();
+    lean_object * a0 = lb_read_bcb803bc837008bec599(aTHX_ scope, ST(0));
+    lean_inc(a0); if (!lb_c91ef75f139613c4dde809e0_refinement_0(a0)) croak("%s", "value0 was rejected by Subtypes.checkedBounded");
+    lean_inc(a0);
+    lean_object *checked = lb_c91ef75f139613c4dde809e0(a0);
+    if (lean_is_scalar(checked)) croak("Lean rejected an argument outside its checked refinement");
+    lean_object *boxed = lean_ctor_get(checked, 0);
+    lean_inc(boxed);
+    lean_object * result = boxed;
+    lean_dec(checked);
+    lbp_keep(scope, result);
+    lbp_finish(aTHX_ scope);
+    lbp_component_ready(aTHX);
+    SV *out = lb_write_bcb803bc837008bec599(aTHX_ scope, result);
+    lbp_component_ready(aTHX);
+    SvREFCNT_inc(out);
+    LBP_LEAVE();
+    ST(0) = sv_2mortal(out);
+    XSRETURN(1);
+
+
+void
+first_even(...)
+  PPCODE:
+    if (items != 1) croak("first_even expects 1 arguments");
+    lbp_check_interpreter(aTHX);
+    lbp_component_ready(aTHX);
+    LBP_ENTER();
+    lean_object * a0 = lb_read_bcb803bc837008bec599(aTHX_ scope, ST(0));
+    lean_inc(a0); if (!lb_9bb269bf43e5265e28a853e1_refinement_0(a0)) croak("%s", "value0 was rejected by Subtypes.checkedEven");
+    lean_inc(a0);
+    lean_object *checked = lb_9bb269bf43e5265e28a853e1(a0);
+    if (lean_is_scalar(checked)) croak("Lean rejected an argument outside its checked refinement");
+    lean_object *boxed = lean_ctor_get(checked, 0);
+    lean_inc(boxed);
+    lean_object * result = boxed;
+    lean_dec(checked);
+    lbp_keep(scope, result);
+    lbp_finish(aTHX_ scope);
+    lbp_component_ready(aTHX);
+    SV *out = lb_write_bcb803bc837008bec599(aTHX_ scope, result);
+    lbp_component_ready(aTHX);
+    SvREFCNT_inc(out);
+    LBP_LEAVE();
+    ST(0) = sv_2mortal(out);
+    XSRETURN(1);
+
+
+void
+half(...)
+  PPCODE:
+    if (items != 1) croak("half expects 1 arguments");
+    lbp_check_interpreter(aTHX);
+    lbp_component_ready(aTHX);
+    LBP_ENTER();
+    lean_object * a0 = lb_read_bcb803bc837008bec599(aTHX_ scope, ST(0));
+    lean_inc(a0); if (!lb_91473598b255f6e5c1372d98_refinement_0(a0)) croak("%s", "value0 was rejected by Subtypes.checkedEven");
+    lean_inc(a0);
+    lean_object *checked = lb_91473598b255f6e5c1372d98(a0);
+    if (lean_is_scalar(checked)) croak("Lean rejected an argument outside its checked refinement");
+    lean_object *boxed = lean_ctor_get(checked, 0);
+    lean_inc(boxed);
+    lean_object * result = boxed;
+    lean_dec(checked);
+    lbp_keep(scope, result);
+    lbp_finish(aTHX_ scope);
+    lbp_component_ready(aTHX);
+    SV *out = lb_write_bcb803bc837008bec599(aTHX_ scope, result);
+    lbp_component_ready(aTHX);
+    SvREFCNT_inc(out);
+    LBP_LEAVE();
+    ST(0) = sv_2mortal(out);
+    XSRETURN(1);
+
+
+void
+head(...)
+  PPCODE:
+    if (items != 1) croak("head expects 1 arguments");
+    lbp_check_interpreter(aTHX);
+    lbp_component_ready(aTHX);
+    LBP_ENTER();
+    lean_object * a0 = lb_read_b02b5a1865a26e6f063c(aTHX_ scope, ST(0));
+    lean_inc(a0); if (!lb_1886f5b34ac04df8628c9301_refinement_0(a0)) croak("%s", "value0 was rejected by Subtypes.checkedPayload");
+    lean_inc(a0);
+    lean_object *checked = lb_1886f5b34ac04df8628c9301(a0);
+    if (lean_is_scalar(checked)) croak("Lean rejected an argument outside its checked refinement");
+    lean_object *boxed = lean_ctor_get(checked, 0);
+    
+    uint8_t result = (uint8_t)lean_unbox(boxed);
+    lean_dec(checked);
+    
+    lbp_finish(aTHX_ scope);
+    lbp_component_ready(aTHX);
+    SV *out = lb_write_23919de1caf8120217dd(aTHX_ scope, result);
+    lbp_component_ready(aTHX);
+    SvREFCNT_inc(out);
+    LBP_LEAVE();
+    ST(0) = sv_2mortal(out);
+    XSRETURN(1);
+
+
+void
+join(...)
+  PPCODE:
+    if (items != 2) croak("join expects 2 arguments");
+    lbp_check_interpreter(aTHX);
+    lbp_component_ready(aTHX);
+    LBP_ENTER();
+    lean_object * a0 = lb_read_fef73841aaed14bc1688(aTHX_ scope, ST(0));
+    lean_object * a1 = lb_read_fef73841aaed14bc1688(aTHX_ scope, ST(1));
+    lean_inc(a0); if (!lb_9205887c464685a24bd748da_refinement_0(a0)) croak("%s", "value0 was rejected by Subtypes.checkedWord");
+    lean_inc(a1); if (!lb_9205887c464685a24bd748da_refinement_1(a1)) croak("%s", "value1 was rejected by Subtypes.checkedWord");
+    lean_inc(a0); lean_inc(a1);
+    lean_object *checked = lb_9205887c464685a24bd748da(a0, a1);
+    if (lean_is_scalar(checked)) croak("Lean rejected an argument outside its checked refinement");
+    lean_object *boxed = lean_ctor_get(checked, 0);
+    lean_inc(boxed);
+    lean_object * result = boxed;
+    lean_dec(checked);
+    lbp_keep(scope, result);
+    lbp_finish(aTHX_ scope);
+    lbp_component_ready(aTHX);
+    SV *out = lb_write_fef73841aaed14bc1688(aTHX_ scope, result);
+    lbp_component_ready(aTHX);
+    SvREFCNT_inc(out);
+    LBP_LEAVE();
+    ST(0) = sv_2mortal(out);
+    XSRETURN(1);
+
+
+void
+mix(...)
+  PPCODE:
+    if (items != 2) croak("mix expects 2 arguments");
+    lbp_check_interpreter(aTHX);
+    lbp_component_ready(aTHX);
+    LBP_ENTER();
+    lean_object * a0 = lb_read_bcb803bc837008bec599(aTHX_ scope, ST(0));
+    lean_object * a1 = lb_read_bcb803bc837008bec599(aTHX_ scope, ST(1));
+    { lean_object *bound = lean_cstr_to_nat("10"); int below = lean_nat_lt(a1, bound); lean_dec(bound);
+      if (!below) croak("%s", "value1 is not below its Fin 10 bound"); }
+    lean_inc(a0); if (!lb_208c4c169dd06ab4d3767757_refinement_0(a0)) croak("%s", "value0 was rejected by Subtypes.checkedEven");
+    lean_inc(a0); lean_inc(a1);
+    lean_object *checked = lb_208c4c169dd06ab4d3767757(a0, a1);
+    if (lean_is_scalar(checked)) croak("Lean rejected an argument outside its checked refinement");
+    lean_object *boxed = lean_ctor_get(checked, 0);
+    lean_inc(boxed);
+    lean_object * result = boxed;
+    lean_dec(checked);
+    lbp_keep(scope, result);
+    lbp_finish(aTHX_ scope);
+    lbp_component_ready(aTHX);
+    SV *out = lb_write_bcb803bc837008bec599(aTHX_ scope, result);
+    lbp_component_ready(aTHX);
+    SvREFCNT_inc(out);
+    LBP_LEAVE();
+    ST(0) = sv_2mortal(out);
+    XSRETURN(1);
+
+
+void
+pad(...)
+  PPCODE:
+    if (items != 1) croak("pad expects 1 arguments");
+    lbp_check_interpreter(aTHX);
+    lbp_component_ready(aTHX);
+    LBP_ENTER();
+    lean_object * a0 = lb_read_bcb803bc837008bec599(aTHX_ scope, ST(0));
+    lean_inc(a0);
+    lean_object * result = lb_726954a7fecd6b63c462c2e2(a0);
+    lbp_keep(scope, result);
+    lbp_finish(aTHX_ scope);
+    lbp_component_ready(aTHX);
+    SV *out = lb_write_bcb803bc837008bec599(aTHX_ scope, result);
+    lbp_component_ready(aTHX);
+    SvREFCNT_inc(out);
+    LBP_LEAVE();
+    ST(0) = sv_2mortal(out);
+    XSRETURN(1);
+
+
+void
+scale(...)
+  PPCODE:
+    if (items != 2) croak("scale expects 2 arguments");
+    lbp_check_interpreter(aTHX);
+    lbp_component_ready(aTHX);
+    LBP_ENTER();
+    lean_object * a0 = lb_read_09ff00cb13eed05963f7(aTHX_ scope, ST(0));
+    lean_object * a1 = lb_read_09ff00cb13eed05963f7(aTHX_ scope, ST(1));
+    lean_inc(a1); if (!lb_fa19a195ff9ce74a4b7afc1d_refinement_1(a1)) croak("%s", "value1 was rejected by Subtypes.checkedSmall");
+    lean_inc(a0); lean_inc(a1);
+    lean_object *checked = lb_fa19a195ff9ce74a4b7afc1d(a0, a1);
+    if (lean_is_scalar(checked)) croak("Lean rejected an argument outside its checked refinement");
+    lean_object *boxed = lean_ctor_get(checked, 0);
+    lean_inc(boxed);
+    lean_object * result = boxed;
+    lean_dec(checked);
+    lbp_keep(scope, result);
+    lbp_finish(aTHX_ scope);
+    lbp_component_ready(aTHX);
+    SV *out = lb_write_09ff00cb13eed05963f7(aTHX_ scope, result);
+    lbp_component_ready(aTHX);
+    SvREFCNT_inc(out);
+    LBP_LEAVE();
+    ST(0) = sv_2mortal(out);
+    XSRETURN(1);
+
+
+void
+second_even(...)
+  PPCODE:
+    if (items != 1) croak("second_even expects 1 arguments");
+    lbp_check_interpreter(aTHX);
+    lbp_component_ready(aTHX);
+    LBP_ENTER();
+    lean_object * a0 = lb_read_bcb803bc837008bec599(aTHX_ scope, ST(0));
+    lean_inc(a0); if (!lb_a5a1d2658399cacb73553f8b_refinement_0(a0)) croak("%s", "value0 was rejected by Subtypes.normalizedEven");
+    lean_inc(a0);
+    lean_object *checked = lb_a5a1d2658399cacb73553f8b(a0);
+    if (lean_is_scalar(checked)) croak("Lean rejected an argument outside its checked refinement");
+    lean_object *boxed = lean_ctor_get(checked, 0);
+    lean_inc(boxed);
+    lean_object * result = boxed;
+    lean_dec(checked);
+    lbp_keep(scope, result);
+    lbp_finish(aTHX_ scope);
+    lbp_component_ready(aTHX);
+    SV *out = lb_write_bcb803bc837008bec599(aTHX_ scope, result);
+    lbp_component_ready(aTHX);
+    SvREFCNT_inc(out);
+    LBP_LEAVE();
+    ST(0) = sv_2mortal(out);
+    XSRETURN(1);
+
+
+void
+shout(...)
+  PPCODE:
+    if (items != 1) croak("shout expects 1 arguments");
+    lbp_check_interpreter(aTHX);
+    lbp_component_ready(aTHX);
+    LBP_ENTER();
+    lean_object * a0 = lb_read_fef73841aaed14bc1688(aTHX_ scope, ST(0));
+    lean_inc(a0); if (!lb_80fdcaaaf560c424e720029c_refinement_0(a0)) croak("%s", "value0 was rejected by Subtypes.checkedWord");
+    lean_inc(a0);
+    lean_object *checked = lb_80fdcaaaf560c424e720029c(a0);
+    if (lean_is_scalar(checked)) croak("Lean rejected an argument outside its checked refinement");
+    lean_object *boxed = lean_ctor_get(checked, 0);
+    lean_inc(boxed);
+    lean_object * result = boxed;
+    lean_dec(checked);
+    lbp_keep(scope, result);
+    lbp_finish(aTHX_ scope);
+    lbp_component_ready(aTHX);
+    SV *out = lb_write_fef73841aaed14bc1688(aTHX_ scope, result);
+    lbp_component_ready(aTHX);
+    SvREFCNT_inc(out);
+    LBP_LEAVE();
+    ST(0) = sv_2mortal(out);
+    XSRETURN(1);
+
+
+void
+zero_even(...)
+  PPCODE:
+    if (items != 0) croak("zero_even expects 0 arguments");
+    lbp_check_interpreter(aTHX);
+    lbp_component_ready(aTHX);
+    LBP_ENTER();
+    
+    
+    lean_object * result = lb_c467ef12fd0e27374fac8f55(lean_box(0));
+    lbp_keep(scope, result);
+    lbp_finish(aTHX_ scope);
+    lbp_component_ready(aTHX);
+    SV *out = lb_write_bcb803bc837008bec599(aTHX_ scope, result);
+    lbp_component_ready(aTHX);
+    SvREFCNT_inc(out);
+    LBP_LEAVE();
+    ST(0) = sv_2mortal(out);
+    XSRETURN(1);
+
+BOOT:
+  lbp_check_interpreter(aTHX);
+  extern lean_object *initialize_LeanBridgeNative9da28bcf49ab7dd6(uint8_t);
+  if (!lean_bridge_native_component_initialize("subtypes@1.0.0:64891257d664469f456803b18fdecde48feac5538acb7278627f33f0e85a678b", (lean_bridge_native_initializer)initialize_LeanBridgeNative9da28bcf49ab7dd6)) croak("Lean component initialization failed");
+

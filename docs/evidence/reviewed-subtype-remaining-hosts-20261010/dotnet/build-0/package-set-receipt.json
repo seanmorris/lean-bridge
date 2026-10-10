@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "subtypes@1.0.0",
+    "name": "subtypes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51383356,
+          "path": "archives/Subtypes.Api.1.0.0.nupkg",
+          "sha256": "1e566573088fb52543f81b9e7ccc12e1d6ce25c9de9d714607b5fe1d324f7329"
+        }
+      ],
+      "ecosystem": "nuget",
+      "name": "Subtypes.Api",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "nuget",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "dd112bf2d6587d7c4d5918412b64cf5180821ee6aa66b7da030303b6d5150024",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "e9b608b8ef7f646b4bfe8601177400c412e522ab53d921ffe072b187c7a3e174"
+  }
+}

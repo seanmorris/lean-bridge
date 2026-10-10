@@ -1,0 +1,32 @@
+TAP version 13
+# Subtest: installed reviewed native Subtype hosts reproduce and relocate the complete checked corpus
+not ok 1 - installed reviewed native Subtype hosts reproduce and relocate the complete checked corpus
+  ---
+  duration_ms: 92705.560134
+  type: 'test'
+  location: '/app/tests/helpers/reviewed-subtype-host-installed-tests.mjs:51:1'
+  failureType: 'testCodeFailure'
+  error: "ENOENT: no such file or directory, realpath '/app/.toolchains/php-8.5.10-ffi/lib/php/extensions/no-debug-non-zts-20250925/ctype.so'"
+  code: 'ENOENT'
+  stack: |-
+    async realpath (node:internal/fs/promises:1179:10)
+    async Object.installFinContainerEdgePhp [as installPhp] (file:///app/tests/helpers/fin-container-edge-php-closure.mjs:139:16)
+    async installCopiedConsumer (file:///app/tests/helpers/copied-fixture-install.mjs:129:16)
+    async installReviewedSubtypeHost (file:///app/tests/helpers/reviewed-subtype-host-install.mjs:33:22)
+    async TestContext.<anonymous> (file:///app/tests/helpers/reviewed-subtype-host-installed-tests.mjs:120:23)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# reviewed Subtype author 0: php-native
+# reviewed Subtype author 1: php-native
+# installing and relocating reviewed php-native
+# Retained failed reviewed Subtype host inputs: /tmp/lean-bridge-reviewed-subtype-hosts-rXegdc
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 93152.560039
