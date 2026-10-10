@@ -1,0 +1,163 @@
+{
+  "archives": {
+    "archives/fincallbacks-1.0.0-c.tar.gz": "c5e8b72b316f15d855c769afb6b5bff0487bc691084083a28b70793dc8fb97f9",
+    "archives/fincallbacks-1.0.0-cpp.tar.gz": "ebe2277af93ff6ff247904881dca24cd3b204362832722671d11ab280478be52"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "43a0642f902ad0a91f999f41d59dacc10d0bf0d6d4419609469e3565c2e247b7",
+      "checks": 297,
+      "compilerFreePath": true,
+      "consumerSha256": "515801e464db5b6c449c5377fa3becaa8731b1f74d21da2627a6e79a7979f2c8",
+      "dispatch": {
+        "columns": [
+          "public lease-call entry",
+          "checked closure-call adapter",
+          "source body"
+        ],
+        "interposer": "LD_PRELOAD",
+        "observed": [
+          [
+            "start",
+            0,
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            "public-valid",
+            0,
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          [
+            "public-invalid-bound",
+            1,
+            [
+              2,
+              1,
+              1
+            ]
+          ],
+          [
+            "public-invalid-wide",
+            1,
+            [
+              3,
+              1,
+              1
+            ]
+          ],
+          [
+            "public-recovery",
+            0,
+            [
+              4,
+              2,
+              2
+            ]
+          ],
+          [
+            "raw-invalid",
+            1,
+            [
+              4,
+              3,
+              2
+            ]
+          ],
+          [
+            "raw-valid",
+            0,
+            [
+              4,
+              4,
+              3
+            ]
+          ],
+          [
+            "public-after-raw",
+            0,
+            [
+              5,
+              5,
+              4
+            ]
+          ]
+        ],
+        "positiveControl": "valid public and raw calls increment the adapter and source counts",
+        "symbols": {
+          "adapter": "lb_t07ff56848fc3a3cd3550_call",
+          "entry": "fincallbacks_gmp_owned_callback1469b3ae2047ff62e64f_call",
+          "factory": "lb_54bd66dae599b3b7003902f1",
+          "source": "l_FinCallbacks_scaled"
+        }
+      },
+      "modelSha256": "1c4a3743f99ffa31b548f65929a91a4cda5ceb93559b47ed1145e8b359c9cd93",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 53900918,
+              "path": "archives/fincallbacks-1.0.0-c.tar.gz",
+              "sha256": "c5e8b72b316f15d855c769afb6b5bff0487bc691084083a28b70793dc8fb97f9"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "fincallbacks",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "c",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "c",
+      "receiptSha256": "4dcf5a5f282eceb72ddfabc25c06fabd94239e250609417ced0c60d18844f8af",
+      "sourceRemovedBeforeInstallation": true
+    },
+    {
+      "bindingIrSha256": "43a0642f902ad0a91f999f41d59dacc10d0bf0d6d4419609469e3565c2e247b7",
+      "checks": 283,
+      "compilerFreePath": true,
+      "consumerSha256": "157a63e7558f413907eef1840fd55221b93b3c7bac70e65794aded332804b19d",
+      "modelSha256": "1c4a3743f99ffa31b548f65929a91a4cda5ceb93559b47ed1145e8b359c9cd93",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51823542,
+              "path": "archives/fincallbacks-1.0.0-cpp.tar.gz",
+              "sha256": "ebe2277af93ff6ff247904881dca24cd3b204362832722671d11ab280478be52"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "fincallbacks",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "cpp",
+      "receiptSha256": "4dcf5a5f282eceb72ddfabc25c06fabd94239e250609417ced0c60d18844f8af",
+      "sourceRemovedBeforeInstallation": true
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

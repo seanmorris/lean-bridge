@@ -23,6 +23,7 @@ import { finRecordDispatchColumns, finRecordDispatchExpected } from "./fin-recor
 import "./native-fin-diagnostic-source-history-tests.mjs";
 import "./native-fin-nix-boundary-tests.mjs";
 import "./native-fin-diagnostic-php-wasm-tests.mjs";
+import "./native-fin-diagnostic-callback-tests.mjs";
 
 const run = promisify(execFile);
 const surfaceOf = model => compilePrimitiveCSurface(model.bindingIr, { wordBits: model.pointerBits, callables: true, structuredCallables: true, compounds: true, lists: true, variants: true });
