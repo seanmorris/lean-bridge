@@ -175,6 +175,7 @@ import { finAliasClosureChangedPaths } from "./fin-alias-closure-history.mjs";
 import { phpWasmDirectFinChangedPaths } from "./php-wasm-fin-direct-history.mjs";
 import { finCoreRepairChangedPaths } from "./fin-core-repair-history.mjs";
 import { phpWasmDirectPromotionChangedPaths } from "./php-wasm-direct-fin-promotion-history.mjs";
+import { phpWasmSubtypeChangedPaths } from "./php-wasm-subtype-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -815,6 +816,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...phpWasmDirectFinChangedPaths
 	, ...finCoreRepairChangedPaths
 	, ...phpWasmDirectPromotionChangedPaths
+	, ...phpWasmSubtypeChangedPaths
 ])].sort());
 
 /**

@@ -10,6 +10,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { phpWasmDirectArchiveRoot, phpWasmDirectProducer } from "./php-wasm-fin-direct-archive.mjs";
 import { beforePhpWasmDirectPromotionSource, phpWasmDirectPromotionHistoryPath } from "./php-wasm-direct-fin-promotion-history.mjs";
+import { beforePhpWasmSubtypeSource, phpWasmSubtypeHistoryPath } from "./php-wasm-subtype-history.mjs";
 import { phpWasmDirectPromotionConversion, phpWasmDirectPromotionEnvironment, phpWasmDirectPromotionLimit, phpWasmDirectPromotionReferences, promotePhpWasmDirectFin } from "./php-wasm-direct-fin-promotion.mjs";
 import "./php-wasm-direct-fin-promotion-history-tests.mjs";
 
@@ -82,6 +83,12 @@ test("direct PHP-Wasm promotion supplements only its existing six Fin cells and 
 		const update = history.updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);
 		if(update) file.sha256 = update.currentSha256;
 	}
+	const subtypeHistory = JSON.parse(await readFile(phpWasmSubtypeHistoryPath));
+	for(const entry of expected.evidence) for(const file of entry.files)
+	{
+		const update = subtypeHistory.updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);
+		if(update) file.sha256 = update.currentSha256;
+	}
 	assert.deepEqual(current.document, expected);
 	for(const entry of current.document.evidence) for(const file of entry.files)
 		assert.equal(sha256(await readFile(file.path)), file.sha256, file.path);
@@ -101,7 +108,8 @@ test("direct PHP-Wasm promotion refuses incomplete, duplicated or repeated suppl
 });
 
 test("PHP consumer and author guides distinguish direct acceptance from the earlier nested fixtures", async () => {
-	const consumer = await readFile("docs/php.md", "utf8"), author = await readFile("docs/lean/existing-package.md", "utf8");
+	const consumer = await readFile("docs/php.md", "utf8");
+	const author = beforePhpWasmSubtypeSource("docs/lean/existing-package.md", await readFile("docs/lean/existing-package.md", "utf8"));
 	const row = consumer.split("\n").find(line => line.startsWith("| `Fin n` |"));
 	assert.ok(row.includes(phpWasmDirectPromotionConversion));
 	assert.ok(!row.includes("no bare top-level Fin or direct Array/List/Option"));

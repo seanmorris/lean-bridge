@@ -1,0 +1,68 @@
+TAP version 13
+# Subtest: PHP-Wasm Subtype fixtures preserve the native corpus and independently chosen constructors
+ok 1 - PHP-Wasm Subtype fixtures preserve the native corpus and independently chosen constructors
+  ---
+  duration_ms: 62.908489
+  type: 'test'
+  ...
+# Subtest: ordinary PHP-Wasm Subtype adapters compile with fresh Lean and retain every checked site
+not ok 2 - ordinary PHP-Wasm Subtype adapters compile with fresh Lean and retain every checked site
+  ---
+  duration_ms: 36.841891
+  type: 'test'
+  location: '/app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/php-wasm-subtype-tests.mjs:89:38'
+  failureType: 'testCodeFailure'
+  error: 'Contract Subtypes.firstEven must refer to a selected export'
+  code: 'invalid-export-configuration'
+  name: 'ExportConfigurationError'
+  stack: |-
+    fail (file:///app/build/worktrees/fin-container-edge-file-closure-vo1454/src/analyze/export-configuration.mjs:42:41)
+    validateExportConfiguration (file:///app/build/worktrees/fin-container-edge-file-closure-vo1454/src/analyze/export-configuration.mjs:87:5)
+    readExportConfiguration (file:///app/build/worktrees/fin-container-edge-file-closure-vo1454/src/analyze/export-configuration.mjs:420:3)
+    async buildElaboratedComponent (file:///app/build/worktrees/fin-container-edge-file-closure-vo1454/src/build/elaborated-component.mjs:102:18)
+    async waitForActual (node:assert:644:5)
+    async Function.rejects (node:assert:767:25)
+    async elaborate (file:///app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/php-wasm-subtype-tests.mjs:78:3)
+    async TestContext.<anonymous> (file:///app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/php-wasm-subtype-tests.mjs:92:33)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: reviewed PHP-Wasm Subtype adapters compile with fresh Lean and retain every checked site
+ok 3 - reviewed PHP-Wasm Subtype adapters compile with fresh Lean and retain every checked site
+  ---
+  duration_ms: 34640.85939
+  type: 'test'
+  ...
+# Subtest: a different valid reviewed Subtype constructor remains a legitimate PHP-Wasm API choice
+ok 4 - a different valid reviewed Subtype constructor remains a legitimate PHP-Wasm API choice
+  ---
+  duration_ms: 33467.325916
+  type: 'test'
+  ...
+# Subtest: ordinary installed PHP-Wasm Subtypes execute all checked constructors and recover after rejection
+ok 5 - ordinary installed PHP-Wasm Subtypes execute all checked constructors and recover after rejection # SKIP
+  ---
+  duration_ms: 0.150555
+  type: 'test'
+  ...
+# Subtest: reviewed installed PHP-Wasm Subtypes execute all checked constructors and recover after rejection
+ok 6 - reviewed installed PHP-Wasm Subtypes execute all checked constructors and recover after rejection # SKIP
+  ---
+  duration_ms: 0.060066
+  type: 'test'
+  ...
+# Subtest: independent PHP-Wasm Subtype review does not borrow the ordinary configuration
+ok 7 - independent PHP-Wasm Subtype review does not borrow the ordinary configuration
+  ---
+  duration_ms: 0.252364
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 4
+# fail 1
+# cancelled 0
+# skipped 2
+# todo 0
+# duration_ms 69470.293538

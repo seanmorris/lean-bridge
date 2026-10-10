@@ -35,6 +35,8 @@ import "./helpers/php-wasm-fin-direct-report-tests.mjs";
 import "./helpers/php-wasm-fin-direct-ci-tests.mjs";
 import "./helpers/php-wasm-fin-direct-history-tests.mjs";
 import "./helpers/php-wasm-direct-fin-promotion-tests.mjs";
+import "./helpers/php-wasm-subtype-tests.mjs";
+import "./helpers/php-wasm-subtype-history-tests.mjs";
 
 const heap = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
 const refinedError = pattern => error => error.code === "native-refinements-unsupported" && pattern.test(error.message);
@@ -87,7 +89,7 @@ test("the PHP-Wasm side module compares caller limbs with each bound before the 
 	assert.ok(provider.includes("static const uint32_t lb_fin_tile_sum_0_0[1] = {0x5u};"));
 });
 
-test("PHP-Wasm keeps checked Subtype, callables, graph and owned packages refused", async () => {
+test("PHP-Wasm preserves top-level Subtype checks while refined callable, graph and owned packages remain refused", async () => {
 	const component = { id: "sample@1.0.0", name: "sample", version: "1.0.0" };
 	const input = parameter => {
 		const value = nativeMetadataFixture(), projection = value.metadata.modules[0].declarations[0].projection;
@@ -95,7 +97,9 @@ test("PHP-Wasm keeps checked Subtype, callables, graph and owned packages refuse
 		return { ...value, component };
 	};
 	const base = nativeMetadataFixture().metadata.modules[0].declarations[0].projection.parameters[0].type;
-	assert.throws(() => createPhpWasmCopiedModel(input({ kind: "refinement", base, predicate: { kind: "subtype", constructor: "Sample.checkedText" }, abi: base.abi })), refinedError(/checked Subtype refinements are not yet supported by PHP-Wasm packages/u));
+	const subtype = { kind: "refinement", base, predicate: { kind: "subtype", constructor: "Sample.checkedText" }, abi: base.abi };
+	assert.deepEqual(createPhpWasmCopiedModel(input(subtype)).exports[0].refinements, { parameters: [subtype.predicate], result: null });
+	assert.throws(() => createPhpWasmCopiedModel(input({ kind: "array", element: subtype, abi: heap })), /Subtype refinements require a top-level native parameter or result/u);
 	// A refined export beside a callable export is refused for the whole package.
 	const signatures = { tileSum: finRecordCompilerInput().metadata.modules[0].declarations.find(item => item.identity === "Sample.tileSum").projection.parameters[0].type };
 	const mixed = finRecordCompilerInput({}, { callable: [{ kind: "callback", parameters: [finRecordNat], result: finRecordNat, abi: heap }, finRecordNat], tileSum: [signatures.tileSum, finRecordNat] });

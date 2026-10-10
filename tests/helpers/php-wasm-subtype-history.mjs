@@ -1,27 +1,27 @@
 /**
- * Authenticate Direct PHP-Wasm Fin promotion integration without changing earlier evidence.
+ * Authenticate PHP-Wasm Subtype integration without changing earlier evidence.
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforePhpWasmSubtypeSource } from "./php-wasm-subtype-history.mjs";
 
-export const phpWasmDirectPromotionHistoryPath = "docs/evidence/php-wasm-direct-fin-promotion-source-history-20261010.json";
-export const phpWasmDirectPromotionPredecessor = "4748e2c85700db76be65342b9de153b6f0adb14b";
-export const phpWasmDirectPromotionChangedPaths = [
-	"docs/evidence/refinement-closure-audit-20261007.md"
-	, "docs/lean/existing-package.md"
+export const phpWasmSubtypeHistoryPath = "docs/evidence/php-wasm-subtype-source-history-20261010.json";
+export const phpWasmSubtypePredecessor = "bcc816d696f8285b4eaae6aa98d915f1a8a80b5f";
+export const phpWasmSubtypeChangedPaths = [
+	"docs/lean/existing-package.md"
 	, "docs/php.md"
 	, "docs/type-surface.v1.json"
-	, "tests/helpers/fin-core-repair-history-tests.mjs"
-	, "tests/helpers/fin-core-repair-history.mjs"
-	, "tests/helpers/fin-native-hosted-promotion-tests.mjs"
+	, "src/build/native-model.mjs"
+	, "src/release/php-wasm-copied-package.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/php-wasm-fin-promotion-tests.mjs"
+	, "tests/helpers/php-wasm-direct-fin-promotion-history-tests.mjs"
+	, "tests/helpers/php-wasm-direct-fin-promotion-history.mjs"
+	, "tests/helpers/php-wasm-direct-fin-promotion-tests.mjs"
+	, "tests/helpers/php-wasm-fin-fixtures.mjs"
+	, "tests/native-refinement-boundaries.test.mjs"
 	, "tests/php-wasm-fin.test.mjs"
-	, "tests/type-surface.test.mjs"
 ];
 let history;
 
@@ -31,8 +31,8 @@ let history;
  * @param source - Complete current source.
  * @param update - Exact recorded transition.
  */
-export const reversePhpWasmDirectPromotionUpdate = (source, update) => {
-	assert.ok(phpWasmDirectPromotionChangedPaths.includes(update.path));
+export const reversePhpWasmSubtypeUpdate = (source, update) => {
+	assert.ok(phpWasmSubtypeChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -58,12 +58,11 @@ export const reversePhpWasmDirectPromotionUpdate = (source, update) => {
  * @param source - Complete source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforePhpWasmDirectPromotionSource = (path, source, expected) => {
-	source = beforePhpWasmSubtypeSource(path, source, expected);
-	if(typeof source !== "string" || !phpWasmDirectPromotionChangedPaths.includes(path)) return source;
+export const beforePhpWasmSubtypeSource = (path, source, expected) => {
+	if(typeof source !== "string" || !phpWasmSubtypeChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(phpWasmDirectPromotionHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(phpWasmSubtypeHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reversePhpWasmDirectPromotionUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reversePhpWasmSubtypeUpdate(source, update) : source;
 };

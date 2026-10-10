@@ -872,13 +872,20 @@ weak or strict) and four Chromium bundled configurations. These runs use
 Node 22.23.3, Chromium 154.0.8037.57, PHP 8.4.1 and php-wasm 0.1.0.
 Those earlier fixtures do not execute bare top-level `Fin` or direct
 `Array (Fin n)`, `List (Fin n)` or `Option (Fin n)` exports.
-Source-dispatch counters were not measured. PHP-Wasm checked `Subtype`,
-refined callbacks and refinements combined with graph or owned transports
-remain unsupported.
+Source-dispatch counters were not measured. Refined callbacks and refinements
+combined with graph or owned transports remain unsupported.
 
 ### Checked values
 
 In native PHP packages, a Lean `Subtype` parameter or result over a primitive base uses the base's usual type. The package runs the author's checked constructor from the export contract before the exported function; a rejected value throws `LeanBridgeError` with code 1 and a message naming the parameter and constructor (`arg0 was rejected by Library.checkedWord`), and caller data stays unchanged. The exported function receives the constructed value, which a normalizing constructor may change. The package README names each constructor. Only top-level parameters and results are supported; see the [installed checks](evidence/native-subtype-20261007.md).
+
+The plain copied PHP-Wasm generator now admits top-level `Subtype` parameters and
+results over primitive bases on ordinary and reviewed routes. Fresh Lean compiles
+the selected constructors and adapters, including normalization and separate
+constructor choices for one generic function. Installed Node/Chromium acceptance
+and constructor-call measurements are still pending, so the conversion table does
+not yet report an installed PHP-Wasm mapping. Nested Subtype and refined
+callback, graph and owned transports remain rejected.
 
 ### Ordinary PHP-Wasm packages
 

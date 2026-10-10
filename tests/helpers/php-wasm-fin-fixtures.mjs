@@ -102,7 +102,10 @@ export const checkInstalledPhpWasmFixture = async (t, spec) => {
 		const projectRoot = join(author, "project"), outputRoot = join(author, "release"), handoff = join(consumer, "handoff");
 		await cp(spec.root, projectRoot, { recursive: true });
 		// A reviewed build takes every export decision from the review; the configuration names only modules and targets.
-		const exports = { schemaVersion: 1, modules: [spec.module], ...(spec.reviewed ? {} : { exports: spec.exports }), targets: { "php-wasm": spec.settings } };
+		const ordinary = { exports: spec.exports
+			, ...(spec.contracts ? { contracts: spec.contracts } : {})
+			, ...(spec.specializations ? { specializations: spec.specializations } : {}) };
+		const exports = { schemaVersion: 1, modules: [spec.module], ...(spec.reviewed ? {} : ordinary), targets: { "php-wasm": spec.settings } };
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson(exports));
 		if(spec.reviewed) await saveLakeFile(projectRoot, "api.binding-ir.json", canonicalJson(spec.review()));
 		const environment = nativeFixtureEnvironment(["php-wasm"]);

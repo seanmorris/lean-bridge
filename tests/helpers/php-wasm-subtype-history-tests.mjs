@@ -1,5 +1,5 @@
 /**
- * Authenticate Direct PHP-Wasm Fin promotion history while preserving earlier execution evidence.
+ * Authenticate PHP-Wasm Subtype history while preserving earlier execution evidence.
  *
  * @file
  */
@@ -11,44 +11,43 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforePhpWasmSubtypeSource } from "./php-wasm-subtype-history.mjs";
-import { beforePhpWasmDirectPromotionSource, phpWasmDirectPromotionChangedPaths, phpWasmDirectPromotionHistoryPath, phpWasmDirectPromotionPredecessor, reversePhpWasmDirectPromotionUpdate } from "./php-wasm-direct-fin-promotion-history.mjs";
+import { beforePhpWasmSubtypeSource, phpWasmSubtypeChangedPaths, phpWasmSubtypeHistoryPath, phpWasmSubtypePredecessor, reversePhpWasmSubtypeUpdate } from "./php-wasm-subtype-history.mjs";
 
-test("Direct PHP-Wasm Fin promotion integration authenticates every transition and refuses unrecorded edits", async () => {
-	const history = JSON.parse(await readFile(phpWasmDirectPromotionHistoryPath, "utf8"));
+test("PHP-Wasm Subtype integration authenticates every transition and refuses unrecorded edits", async () => {
+	const history = JSON.parse(await readFile(phpWasmSubtypeHistoryPath, "utf8"));
 	assert.equal(history.schemaVersion, 1);
-	assert.equal(history.milestone, "php-wasm-direct-fin-promotion-v1");
-	assert.equal(history.predecessorCommit, phpWasmDirectPromotionPredecessor);
-	assert.deepEqual(history.updates.map(update => update.path), phpWasmDirectPromotionChangedPaths);
+	assert.equal(history.milestone, "php-wasm-subtype-v1");
+	assert.equal(history.predecessorCommit, phpWasmSubtypePredecessor);
+	assert.deepEqual(history.updates.map(update => update.path), phpWasmSubtypeChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforePhpWasmSubtypeSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
-		const previous = reversePhpWasmDirectPromotionUpdate(current, update);
-		assert.equal(beforePhpWasmDirectPromotionSource(update.path, current), previous);
-		assert.equal(beforePhpWasmDirectPromotionSource(update.path, current, update.currentSha256), current);
-		assert.equal(beforePhpWasmDirectPromotionSource(update.path, previous), previous);
+		const current = await readFile(update.path, "utf8"), previous = reversePhpWasmSubtypeUpdate(current, update);
+		assert.equal(beforePhpWasmSubtypeSource(update.path, current), previous);
+		assert.equal(beforePhpWasmSubtypeSource(update.path, current, update.currentSha256), current);
+		assert.equal(beforePhpWasmSubtypeSource(update.path, previous), previous);
 		assert.equal(beforeFinRefinementSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
 		assert.equal(beforeFinRefinementSource(update.path, current), beforeFinRefinementSource(update.path, previous));
 		const changed = current + "\n// unknown edit\n";
-		assert.equal(beforePhpWasmDirectPromotionSource(update.path, changed), changed);
-		assert.throws(() => reversePhpWasmDirectPromotionUpdate(changed, update));
+		assert.equal(beforePhpWasmSubtypeSource(update.path, changed), changed);
+		assert.throws(() => reversePhpWasmSubtypeUpdate(changed, update));
 		for(const mutation of [
 			{ previousSha256: "0".repeat(64) }, { currentSha256: "0".repeat(64) }
 			, { path: "unknown.mjs" }, { edits: [] }
 			, { edits: [...update.edits, update.edits[0]] }
 			, { edits: [{ ...update.edits[0], start: -1 }] }
 			, { edits: [{ ...update.edits[0], current: "unrecorded" }] }
-		]) assert.throws(() => reversePhpWasmDirectPromotionUpdate(current, { ...update, ...mutation }));
+		]) assert.throws(() => reversePhpWasmSubtypeUpdate(current, { ...update, ...mutation }));
 	}
 	const buffer = Buffer.from("unregistered bytes");
-	assert.equal(beforePhpWasmDirectPromotionSource(phpWasmDirectPromotionChangedPaths[0], buffer), buffer);
-	assert.equal(beforePhpWasmDirectPromotionSource("unknown.mjs", "unregistered bytes"), "unregistered bytes");
+	assert.equal(beforePhpWasmSubtypeSource(phpWasmSubtypeChangedPaths[0], buffer), buffer);
+	assert.equal(beforePhpWasmSubtypeSource("unknown.mjs", "unregistered bytes"), "unregistered bytes");
 });
 
-test("Direct PHP-Wasm Fin promotion integration preserves the earlier source ledgers", async () => {
+test("PHP-Wasm Subtype integration preserves the earlier source ledgers", async () => {
 	for(const [path, digest] of [
-		["docs/evidence/fin-core-repair-source-history-20261010.json", "96be754959edb58f5c9085bf78530902ecd837246fb5a9c2d248c212804e02e4"]
+		["docs/evidence/php-wasm-direct-fin-promotion-source-history-20261010.json", "edac06a7645178f71b0eb2231bf00adb52ec53955f02ae5332677346a9ddd203"]
+		, ["docs/evidence/fin-core-repair-source-history-20261010.json", "96be754959edb58f5c9085bf78530902ecd837246fb5a9c2d248c212804e02e4"]
 		, ["docs/evidence/php-wasm-fin-direct-source-history-20261010.json", "26dee560f3bab991ccbaa57cfda37b2ca1dcbec794693598b6fee57ff6f18e12"]
 		, ["docs/evidence/fin-alias-closure-source-history-20261010.json", "c1454e22108e487a81bf56834e58c87578c70a712561045ecbddc6c0798a3d44"]
 		, ["docs/evidence/fin-nominal-refusal-source-history-20261010.json", "cb9b7e38342da833fb20a32614901edddec7a5a96dc4436aab939c966ac8298e"]
@@ -63,15 +62,32 @@ test("Direct PHP-Wasm Fin promotion integration preserves the earlier source led
 	]) assert.equal(sha256(await readFile(path)), digest, path);
 });
 
-test("Direct PHP-Wasm Fin promotion integration history writer refuses an unrelated HEAD before writing", async t => {
+test("PHP-Wasm Subtype integration history writer refuses an unrelated HEAD before writing", async t => {
 	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-record-omission-history-guard-"));
 	t.after(() => rm(directory, { recursive: true, force: true }));
 	const env = Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith("GIT_")));
 	const git = args => execFileSync("git", args, { cwd: directory, stdio: "pipe", env });
 	git(["init", "--quiet"]);
 	git(["-c", "user.name=Test", "-c", "user.email=test@example.invalid", "-c", "commit.gpgsign=false", "commit", "--allow-empty", "--quiet", "-m", "unrelated revision"]);
-	const result = spawnSync(process.execPath, [resolve("scripts/update-php-wasm-direct-fin-promotion-history.mjs")], { cwd: directory, encoding: "utf8", env });
+	const result = spawnSync(process.execPath, [resolve("scripts/update-php-wasm-subtype-history.mjs")], { cwd: directory, encoding: "utf8", env });
 	assert.equal(result.status, 1);
-	assert.match(result.stderr, /Direct PHP-Wasm Fin promotion history is draft-only/u);
+	assert.match(result.stderr, /PHP-Wasm Subtype history is draft-only/u);
 	assert.deepEqual(await readdir(directory), [".git"]);
+});
+
+test("PHP-Wasm Subtype source admission refreshes source pins without promoting installed support", async () => {
+	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const current = JSON.parse(source), previous = JSON.parse(beforePhpWasmSubtypeSource(path, source));
+	const expected = structuredClone(previous), history = JSON.parse(await readFile(phpWasmSubtypeHistoryPath, "utf8"));
+	let refreshed = 0;
+	for(const entry of expected.evidence) for(const file of entry.files)
+	{
+		const update = history.updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);
+		if(update)
+		{ file.sha256 = update.currentSha256; refreshed++; }
+	}
+	assert.ok(refreshed > 0); assert.deepEqual(current, expected);
+	assert.deepEqual(current.observations, previous.observations);
+	for(const file of current.evidence.flatMap(entry => entry.files))
+		assert.equal(sha256(await readFile(file.path)), file.sha256, file.path);
 });

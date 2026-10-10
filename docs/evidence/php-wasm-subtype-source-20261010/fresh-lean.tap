@@ -1,0 +1,107 @@
+TAP version 13
+# Subtest: PHP-Wasm Subtype fixtures preserve the native corpus and independently chosen constructors
+ok 1 - PHP-Wasm Subtype fixtures preserve the native corpus and independently chosen constructors
+  ---
+  duration_ms: 57.280427
+  type: 'test'
+  ...
+# Subtest: ordinary PHP-Wasm Subtype adapters compile with fresh Lean and retain every checked site
+ok 2 - ordinary PHP-Wasm Subtype adapters compile with fresh Lean and retain every checked site
+  ---
+  duration_ms: 33334.609045
+  type: 'test'
+  ...
+# Subtest: reviewed PHP-Wasm Subtype adapters compile with fresh Lean and retain every checked site
+ok 3 - reviewed PHP-Wasm Subtype adapters compile with fresh Lean and retain every checked site
+  ---
+  duration_ms: 32779.99232
+  type: 'test'
+  ...
+# Subtest: a different valid reviewed Subtype constructor remains a legitimate PHP-Wasm API choice
+ok 4 - a different valid reviewed Subtype constructor remains a legitimate PHP-Wasm API choice
+  ---
+  duration_ms: 31985.728977
+  type: 'test'
+  ...
+# Subtest: fresh PHP-Wasm Subtype analysis refuses invalid constructors and incompatible reviewed transports before output
+    # Subtest: wrong input base
+    ok 1 - wrong input base
+      ---
+      duration_ms: 16356.278433
+      type: 'test'
+      ...
+    # Subtest: wrong output subtype
+    ok 2 - wrong output subtype
+      ---
+      duration_ms: 16062.738629
+      type: 'test'
+      ...
+    # Subtest: unsafe constructor
+    ok 3 - unsafe constructor
+      ---
+      duration_ms: 19008.906162
+      type: 'test'
+      ...
+    # Subtest: partial constructor
+    ok 4 - partial constructor
+      ---
+      duration_ms: 18123.519047
+      type: 'test'
+      ...
+    # Subtest: outside source closure
+    ok 5 - outside source closure
+      ---
+      duration_ms: 16799.591694
+      type: 'test'
+      ...
+    # Subtest: missing constructor
+    ok 6 - missing constructor
+      ---
+      duration_ms: 17959.331634
+      type: 'test'
+      ...
+    # Subtest: wrong Fin bound
+    ok 7 - wrong Fin bound
+      ---
+      duration_ms: 17285.032329
+      type: 'test'
+      ...
+    # Subtest: wrong transport
+    ok 8 - wrong transport
+      ---
+      duration_ms: 16952.045171
+      type: 'test'
+      ...
+    1..8
+ok 5 - fresh PHP-Wasm Subtype analysis refuses invalid constructors and incompatible reviewed transports before output
+  ---
+  duration_ms: 138617.414916
+  type: 'test'
+  ...
+# Subtest: ordinary installed PHP-Wasm Subtypes execute all checked constructors and recover after rejection
+ok 6 - ordinary installed PHP-Wasm Subtypes execute all checked constructors and recover after rejection # SKIP
+  ---
+  duration_ms: 0.162747
+  type: 'test'
+  ...
+# Subtest: reviewed installed PHP-Wasm Subtypes execute all checked constructors and recover after rejection
+ok 7 - reviewed installed PHP-Wasm Subtypes execute all checked constructors and recover after rejection # SKIP
+  ---
+  duration_ms: 0.085465
+  type: 'test'
+  ...
+# Subtest: independent PHP-Wasm Subtype review does not borrow the ordinary configuration
+ok 8 - independent PHP-Wasm Subtype review does not borrow the ordinary configuration
+  ---
+  duration_ms: 0.470157
+  type: 'test'
+  ...
+1..8
+# tests 16
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 2
+# todo 0
+# duration_ms 237878.819861
