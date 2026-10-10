@@ -28,6 +28,7 @@ import { installFinContainerEdgeRuby, runFinContainerEdgeRuby, verifyFinContaine
 import { installFinContainerEdgeJvm, runFinContainerEdgeJvm, verifyFinContainerEdgeJvmEnvironment } from "./fin-container-edge-jvm-closure.mjs";
 import { installFinContainerEdgeDotnet, runFinContainerEdgeDotnet, verifyFinContainerEdgeDotnetEnvironment } from "./fin-container-edge-dotnet-closure.mjs";
 import { observeFinContainerEdgeDotnet } from "./fin-container-edge-dotnet-observer.mjs";
+import { observeFinContainerEdgeWit } from "./fin-container-edge-wit-observer.mjs";
 import { installFinContainerEdgePhp, runFinContainerEdgePhp, verifyFinContainerEdgePhpEnvironment } from "./fin-container-edge-php-closure.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
@@ -158,7 +159,7 @@ export const prepareFinContainerEdgeExecutable = async ({ profile, root, directo
  * @param options.handoff - Archive handoff directory.
  * @param options.packages - Selected verified package-set entries.
  * @param options.command - Absolute installed consumer command.
- * @param options.measureDispatch - Opt in to raw adapters and full public C/C++/Python/Rust/Ruby/PHP/JVM/.NET entry observation.
+ * @param options.measureDispatch - Opt in to raw adapters and complete public consumers for every native edge profile.
  * @param options.expectedModelSha256 - Producer model digest, required for raw observations.
  * @param options.leanPrefix - Matching Lean headers for the test-only raw probe.
  * @param options.dependencies - Original Rust locked dependency handoff metadata.
@@ -380,7 +381,11 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 							: measureDispatch && profile === "dotnet" ? await observeFinContainerEdgeDotnet({
 								installed: movedInstall, receiptPath, receiptBytes: archiveBytes
 								, expectedModelSha256, dotnetEnvironment: dotnetAt(movedInstall)
-								, probeRoot: join(consumer, "dotnet-edge-public") }) : null;
+								, probeRoot: join(consumer, "dotnet-edge-public") })
+								: measureDispatch && profile === "wit-wasi" ? await observeFinContainerEdgeWit({
+									installed: movedInstall, receiptPath, receiptBytes: archiveBytes
+									, expectedModelSha256
+									, probeRoot: join(consumer, "wit-edge-public") }) : null;
 	assert.deepEqual(await checkClosure(movedInstall), fileClosure, "package file set after observations");
 	return { relocatedInstallation: true
 		, ...(exactFileClosure ? { exactPackageFiles: true, packageFileSetSha256: fileClosure.packageFileSetSha256 } : {})
