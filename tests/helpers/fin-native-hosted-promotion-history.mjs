@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeFinZeroCiSource } from "./fin-record-zero-ci-history.mjs";
 
 export const finHostedPromotionHistoryPath = "docs/evidence/fin-native-hosted-promotion-source-history-20261010.json";
 export const finHostedPromotionPredecessor = "216b10cde1a0f7882ce155169339305416fd2499";
@@ -70,6 +71,7 @@ export const reverseFinHostedPromotionUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeFinHostedPromotionSource = (path, source, expected) => {
+	source = beforeFinZeroCiSource(path, source, expected);
 	if(typeof source !== "string" || !finHostedPromotionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

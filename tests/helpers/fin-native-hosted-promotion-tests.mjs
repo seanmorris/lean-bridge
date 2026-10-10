@@ -11,6 +11,7 @@ import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../sr
 import { finHostedPromotionReferences } from "./fin-native-hosted-promotion-references.mjs";
 import { finHostedMissingFieldProfiles, promoteFinHostedCoverage } from "./fin-native-hosted-promotion.mjs";
 import { beforeFinHostedPromotionSource, finHostedPromotionHistoryPath } from "./fin-native-hosted-promotion-history.mjs";
+import { finZeroCiHistoryPath } from "./fin-record-zero-ci-history.mjs";
 import "./fin-native-hosted-promotion-history-tests.mjs";
 
 const references = finHostedPromotionReferences();
@@ -71,7 +72,13 @@ test("hosted Fin promotion adds 78 evidence entries without rewriting an earlier
 		const update = history.updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);
 		if(update) file.sha256 = update.currentSha256;
 	}
-	assert.deepEqual(current.document, expected, "The committed inventory must equal the reviewed promotion and exact source-pin refresh");
+	const zeroHistory = JSON.parse(await readFile(finZeroCiHistoryPath, "utf8"));
+	for(const entry of expected.evidence) for(const file of entry.files)
+	{
+		const update = zeroHistory.updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);
+		if(update) file.sha256 = update.currentSha256;
+	}
+	assert.deepEqual(current.document, expected, "Only the promotion and authenticated source-pin refreshes may change the inventory");
 });
 
 test("hosted Fin promotion supplements 31 observations and adds only eight missing field cells", async () => {

@@ -16,6 +16,7 @@ import { beforeFinEdgeCiSource, finEdgeCiChangedPaths } from "./helpers/fin-cont
 import { finForeignChangedPaths } from "./helpers/fin-container-foreign-history.mjs";
 import { finRecordOmissionChangedPaths } from "./helpers/fin-record-review-omission-history.mjs";
 import { finHostedPromotionChangedPaths } from "./helpers/fin-native-hosted-promotion-history.mjs";
+import { finZeroCiChangedPaths } from "./helpers/fin-record-zero-ci-history.mjs";
 import { beforeFinEdgeIntegrationSource, finEdgeIntegrationBranch, finEdgeIntegrationChangedPaths, finEdgeIntegrationHistoryPath, finEdgeIntegrationPredecessor, reverseFinEdgeIntegrationUpdate } from "./helpers/fin-container-edge-integration-history.mjs";
 
 test("container observer integration authenticates every transition and refuses unrecorded edits", async () => {
@@ -70,7 +71,7 @@ test("container integration refreshes exact source pins without changing support
 		if(!digests.has(file.path))
 		{
 			const bytes = await readFile(file.path);
-			const source = [...finHostedPromotionChangedPaths, ...finRecordOmissionChangedPaths, ...finForeignChangedPaths, ...finEdgeCiChangedPaths].includes(file.path) ? beforeFinEdgeCiSource(file.path, bytes.toString("utf8")) : bytes;
+			const source = [...finZeroCiChangedPaths, ...finHostedPromotionChangedPaths, ...finRecordOmissionChangedPaths, ...finForeignChangedPaths, ...finEdgeCiChangedPaths].includes(file.path) ? beforeFinEdgeCiSource(file.path, bytes.toString("utf8")) : bytes;
 			digests.set(file.path, sha256(source));
 		}
 		assert.equal(digests.get(file.path), file.sha256, file.path);

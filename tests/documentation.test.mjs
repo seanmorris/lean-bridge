@@ -18,6 +18,7 @@ import { generateJavaScriptPackage } from "../src/backends/javascript/generate.m
 import { docPages } from "../site/registry.mjs";
 import { finContainerEntryCiInvocation, finContainerEntryCiSelections } from "./helpers/fin-container-entry-ci.mjs";
 import { assertFinContainerEdgeWorkflow, disableFinContainerEdgeWorkflow } from "./helpers/fin-container-edge-ci.mjs";
+import { assertFinRecordZeroWorkflow, disableFinRecordZeroWorkflow } from "./helpers/fin-record-zero-ci.mjs";
 import { assertManagedCiIsolation } from "./helpers/managed-ci-isolation.mjs";
 import { assertNativeCiIsolation } from "./helpers/native-ci-isolation.mjs";
 import {
@@ -611,7 +612,7 @@ test("CI result contract detects support loss", async () => {
 });
 
 test("dedicated CI covers every consumer with Node 22 and pinned build paths", async () => {
-  const [currentWorkflow, packageDocument, perlWorkflow, toolchainBootstrap] = await Promise.all([
+  const [currentWorkflow, packageDocument, currentPerlWorkflow, toolchainBootstrap] = await Promise.all([
     readFile(".github/workflows/consumer-matrix.yml", "utf8")
     , readFile("package.json", "utf8").then(JSON.parse)
     , readFile(".github/workflows/perl-consumer.yml", "utf8")
@@ -619,7 +620,10 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   ]);
   // Validate all measured edge gates before checking the unchanged earlier command/upload order.
   assertFinContainerEdgeWorkflow(currentWorkflow);
-  const workflow = disableFinContainerEdgeWorkflow(currentWorkflow);
+  assertFinRecordZeroWorkflow(currentWorkflow, "consumer-matrix.yml");
+  const workflow = disableFinContainerEdgeWorkflow(disableFinRecordZeroWorkflow(currentWorkflow, "consumer-matrix.yml"));
+  assertFinRecordZeroWorkflow(currentPerlWorkflow, "perl-consumer.yml");
+  const perlWorkflow = disableFinRecordZeroWorkflow(currentPerlWorkflow, "perl-consumer.yml");
   assert.match(workflow, /^\s*push:\s*$/m);
   assert.match(workflow, /^\s*pull_request:\s*$/m);
   assert.match(workflow, /^\s*workflow_dispatch:\s*$/m);

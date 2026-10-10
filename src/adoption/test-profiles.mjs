@@ -872,6 +872,7 @@ const profileManifest = Object.freeze({
 		, "native-fin-products"
 		, "native-fin-product-arrays"
 		, "native-fin-records"
+		, "native-fin-record-zero"
 		, "reviewed-fin-refusals"
 		, "native-fin-callbacks"
 		, "php-wasm-fin"
