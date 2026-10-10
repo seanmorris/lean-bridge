@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "subtypes@1.0.0",
+    "name": "subtypes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 50108928,
+          "path": "archives/subtypes-1.0.0-x86_64-linux.gem",
+          "sha256": "72ede522103ffcbacdd4257bc4dcf136569a2d561849826ede5d2f40066648df"
+        }
+      ],
+      "ecosystem": "rubygems",
+      "name": "subtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "rubygems",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "3cb9bd6c42465b4a8f2d289ae33072515c3bff7be7cd3b8ab9591cb89a4c05b2",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "a2a94c2fb1aaae597847175e39fe4ce701de341ea15f79b9b30a6a09b23c0927"
+  }
+}

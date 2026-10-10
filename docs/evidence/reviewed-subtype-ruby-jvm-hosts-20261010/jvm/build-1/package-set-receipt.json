@@ -1,0 +1,44 @@
+{
+  "component": {
+    "id": "subtypes@1.0.0",
+    "name": "subtypes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51410951,
+          "path": "archives/subtypes-1.0.0.jar",
+          "sha256": "6bde1046afd2a178f9835a3063810c23bd7967cc55f4c9580629c20d4d620db0"
+        },
+        {
+          "bytes": 618,
+          "path": "archives/subtypes-1.0.0.pom",
+          "sha256": "d0e18b228669bcf5a74e2dde908ba52abbc46dccf3aad33fdbc550bab73f34c8"
+        }
+      ],
+      "ecosystem": "maven",
+      "name": "org.leanbridge:subtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "maven",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "485fe186cc1d7c6bf5195a407b7544ec7f2a19d9eee03255142079b7152d5d6c",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "e2260aca59ed8f3252789dc09a6aef478edad3a15582bc18217da960616aca50"
+  }
+}
