@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeReviewedSubtypeBrowserCiSource } from "./reviewed-subtype-browser-ci-history.mjs";
 
 export const reviewedSubtypeBrowserHistoryPath = "docs/evidence/reviewed-subtype-browser-source-history-20261010.json";
 export const reviewedSubtypeBrowserPredecessor = "c7a78aa4325ccde5ca60ecc2f079093628c83a4a";
@@ -54,6 +55,7 @@ export const reverseReviewedSubtypeBrowserUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeReviewedSubtypeBrowserSource = (path, source, expected) => {
+	source = beforeReviewedSubtypeBrowserCiSource(path, source, expected);
 	if(typeof source !== "string" || !reviewedSubtypeBrowserChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

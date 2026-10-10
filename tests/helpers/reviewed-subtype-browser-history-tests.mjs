@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeReviewedSubtypeBrowserCiSource } from "./reviewed-subtype-browser-ci-history.mjs";
 import { beforeReviewedSubtypeBrowserSource, reviewedSubtypeBrowserChangedPaths, reviewedSubtypeBrowserHistoryPath, reviewedSubtypeBrowserPredecessor, reverseReviewedSubtypeBrowserUpdate } from "./reviewed-subtype-browser-history.mjs";
 
 test("Reviewed browser history authenticates exact transitions and refuses unknown edits", async () => {
@@ -21,7 +22,8 @@ test("Reviewed browser history authenticates exact transitions and refuses unkno
 	assert.deepEqual(history.updates.map(update => update.path), reviewedSubtypeBrowserChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = await readFile(update.path, "utf8"), previous = reverseReviewedSubtypeBrowserUpdate(current, update);
+		const current = beforeReviewedSubtypeBrowserCiSource(update.path, await readFile(update.path, "utf8"));
+		const previous = reverseReviewedSubtypeBrowserUpdate(current, update);
 		assert.equal(beforeReviewedSubtypeBrowserSource(update.path, current), previous);
 		const bytes = Buffer.from(current);
 		assert.equal(beforeFinRefinementSource(update.path, bytes, update.currentSha256), bytes);
@@ -42,7 +44,7 @@ test("Reviewed browser history authenticates exact transitions and refuses unkno
 
 test("Reviewed browser gate changes source pins without adding or changing installed observations", async () => {
 	const history = JSON.parse(await readFile(reviewedSubtypeBrowserHistoryPath));
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", source = beforeReviewedSubtypeBrowserCiSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(source), previous = JSON.parse(beforeReviewedSubtypeBrowserSource(path, source));
 	const expected = structuredClone(previous); let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
@@ -57,7 +59,7 @@ test("Reviewed browser gate changes source pins without adding or changing insta
 	const hashes = new Map();
 	for(const file of current.evidence.flatMap(entry => entry.files))
 	{
-		if(!hashes.has(file.path)) hashes.set(file.path, sha256(await readFile(file.path)));
+		if(!hashes.has(file.path)) hashes.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));
 		assert.equal(hashes.get(file.path), file.sha256, file.path);
 	}
 	assert.equal(sha256(await readFile("docs/evidence/reviewed-subtype-package-ci-source-history-20261010.json")), "c7ec3c041f06c1b6d85b04cd1c4c9b03b87c59709be7c009a4d338a43a017a3f");

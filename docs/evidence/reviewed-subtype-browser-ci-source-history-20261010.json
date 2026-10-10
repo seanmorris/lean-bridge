@@ -1,0 +1,223 @@
+{
+  "schemaVersion": 1,
+  "milestone": "reviewed-subtype-browser-ci-v1",
+  "predecessorCommit": "8521c2a709dac3a884ab3172e68b7e04e741c82a",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "b947e6d88c5d709cd079d6ad3741a0dd78059bf2bdfd9bc48e7393a10292e977",
+      "previousSha256": "faa4e8503bfe4276af0588258422f63107d45f7d77e7cf2768b1415fdd1d91f9",
+      "edits": [
+        {
+          "start": 3423031,
+          "previous": "          \"sha256\": \"bfd0b2027232706f5c080320713f4ad6a58a5e06d2d7bdc9c0e28968ba43e8a8\"\n",
+          "current": "          \"sha256\": \"8486a3c0073841364e4b82118cec2bff65eb8fdf48097d73b2b63a7fa17ca693\"\n"
+        },
+        {
+          "start": 3433658,
+          "previous": "          \"sha256\": \"bfd0b2027232706f5c080320713f4ad6a58a5e06d2d7bdc9c0e28968ba43e8a8\"\n",
+          "current": "          \"sha256\": \"8486a3c0073841364e4b82118cec2bff65eb8fdf48097d73b2b63a7fa17ca693\"\n"
+        },
+        {
+          "start": 3444259,
+          "previous": "          \"sha256\": \"bfd0b2027232706f5c080320713f4ad6a58a5e06d2d7bdc9c0e28968ba43e8a8\"\n",
+          "current": "          \"sha256\": \"8486a3c0073841364e4b82118cec2bff65eb8fdf48097d73b2b63a7fa17ca693\"\n"
+        },
+        {
+          "start": 3456127,
+          "previous": "          \"sha256\": \"bfd0b2027232706f5c080320713f4ad6a58a5e06d2d7bdc9c0e28968ba43e8a8\"\n",
+          "current": "          \"sha256\": \"8486a3c0073841364e4b82118cec2bff65eb8fdf48097d73b2b63a7fa17ca693\"\n"
+        },
+        {
+          "start": 3468323,
+          "previous": "          \"sha256\": \"bfd0b2027232706f5c080320713f4ad6a58a5e06d2d7bdc9c0e28968ba43e8a8\"\n",
+          "current": "          \"sha256\": \"8486a3c0073841364e4b82118cec2bff65eb8fdf48097d73b2b63a7fa17ca693\"\n"
+        },
+        {
+          "start": 3482041,
+          "previous": "          \"sha256\": \"bfd0b2027232706f5c080320713f4ad6a58a5e06d2d7bdc9c0e28968ba43e8a8\"\n",
+          "current": "          \"sha256\": \"8486a3c0073841364e4b82118cec2bff65eb8fdf48097d73b2b63a7fa17ca693\"\n"
+        },
+        {
+          "start": 3495891,
+          "previous": "          \"sha256\": \"bfd0b2027232706f5c080320713f4ad6a58a5e06d2d7bdc9c0e28968ba43e8a8\"\n",
+          "current": "          \"sha256\": \"8486a3c0073841364e4b82118cec2bff65eb8fdf48097d73b2b63a7fa17ca693\"\n"
+        },
+        {
+          "start": 3509746,
+          "previous": "          \"sha256\": \"bfd0b2027232706f5c080320713f4ad6a58a5e06d2d7bdc9c0e28968ba43e8a8\"\n",
+          "current": "          \"sha256\": \"8486a3c0073841364e4b82118cec2bff65eb8fdf48097d73b2b63a7fa17ca693\"\n"
+        },
+        {
+          "start": 3523757,
+          "previous": "          \"sha256\": \"bfd0b2027232706f5c080320713f4ad6a58a5e06d2d7bdc9c0e28968ba43e8a8\"\n",
+          "current": "          \"sha256\": \"8486a3c0073841364e4b82118cec2bff65eb8fdf48097d73b2b63a7fa17ca693\"\n"
+        },
+        {
+          "start": 3538509,
+          "previous": "          \"sha256\": \"bfd0b2027232706f5c080320713f4ad6a58a5e06d2d7bdc9c0e28968ba43e8a8\"\n",
+          "current": "          \"sha256\": \"8486a3c0073841364e4b82118cec2bff65eb8fdf48097d73b2b63a7fa17ca693\"\n"
+        },
+        {
+          "start": 3553291,
+          "previous": "          \"sha256\": \"bfd0b2027232706f5c080320713f4ad6a58a5e06d2d7bdc9c0e28968ba43e8a8\"\n",
+          "current": "          \"sha256\": \"8486a3c0073841364e4b82118cec2bff65eb8fdf48097d73b2b63a7fa17ca693\"\n"
+        },
+        {
+          "start": 3568043,
+          "previous": "          \"sha256\": \"bfd0b2027232706f5c080320713f4ad6a58a5e06d2d7bdc9c0e28968ba43e8a8\"\n",
+          "current": "          \"sha256\": \"8486a3c0073841364e4b82118cec2bff65eb8fdf48097d73b2b63a7fa17ca693\"\n"
+        }
+      ]
+    },
+    {
+      "path": "scripts/run-reviewed-subtype-package-ci.sh",
+      "currentSha256": "dcdff71998e6dcd3c65ea1a158d389fb9817fc8b150daee27f11fb61bf45f069",
+      "previousSha256": "d1b4ab1670928cee43e9c437f7f693a266ba96568962c5d8e6b1979f88c1ee3f",
+      "edits": [
+        {
+          "start": 1265,
+          "previous": "",
+          "current": "  export LEAN_BRIDGE_REVIEWED_SUBTYPE_BROWSER_TEST=1\n  export LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit\n"
+        },
+        {
+          "start": 1675,
+          "previous": "",
+          "current": "if [[ \"$lane\" == npm ]]; then\n  node scripts/check-reviewed-subtype-browser-reports.mjs \\\n    --directory \"$output/records\" --tap \"$output/run.tap\"\nfi\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "58a4c1e3df281cc05eb1297ea83087b8c84dbcc8c59a5df10ccd9041a725ff2c",
+      "previousSha256": "41fd57ade7198744245bd149e7e9812d99679bfc4859ead32da3a0e0c38bd09a",
+      "edits": [
+        {
+          "start": 1497,
+          "previous": "",
+          "current": "import { reviewedSubtypeBrowserCiChangedPaths } from \"./reviewed-subtype-browser-ci-history.mjs\";\n"
+        },
+        {
+          "start": 58049,
+          "previous": "",
+          "current": "\t, ...reviewedSubtypeBrowserCiChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-browser-history-tests.mjs",
+      "currentSha256": "7344c9440972f09423b9c7f957977095921dcea2cca65490fa728e67496bd070",
+      "previousSha256": "d279329ed1f5ec70f13c0d600ade48cd93cf54dcbc60820afd17ad7a2cdef3c7",
+      "edits": [
+        {
+          "start": 499,
+          "previous": "",
+          "current": "import { beforeReviewedSubtypeBrowserCiSource } from \"./reviewed-subtype-browser-ci-history.mjs\";\n"
+        },
+        {
+          "start": 1342,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\"), previous = reverseReviewedSubtypeBrowserUpdate(current, update);\n",
+          "current": "\t\tconst current = beforeReviewedSubtypeBrowserCiSource(update.path, await readFile(update.path, \"utf8\"));\n\t\tconst previous = reverseReviewedSubtypeBrowserUpdate(current, update);\n"
+        },
+        {
+          "start": 2693,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = beforeReviewedSubtypeBrowserCiSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 3551,
+          "previous": "\t\tif(!hashes.has(file.path)) hashes.set(file.path, sha256(await readFile(file.path)));\n",
+          "current": "\t\tif(!hashes.has(file.path)) hashes.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-browser-history.mjs",
+      "currentSha256": "a0a08690de0479f021143e3c8fdbb8580e9a5dbb42d9e09fa892fe91812430ef",
+      "previousSha256": "00563c21c571906a69e0987529641c4cd46483e568b60dfb0b24013c58309fbe",
+      "edits": [
+        {
+          "start": 235,
+          "previous": "",
+          "current": "import { beforeReviewedSubtypeBrowserCiSource } from \"./reviewed-subtype-browser-ci-history.mjs\";\n"
+        },
+        {
+          "start": 2423,
+          "previous": "",
+          "current": "\tsource = beforeReviewedSubtypeBrowserCiSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-browser-tests.mjs",
+      "currentSha256": "d63417e6c3de52f3873df513c18ba7993fd5cae8943b344d4ae026e902849ac1",
+      "previousSha256": "0c82f400a2c26236c7cfcea9f5efc27b98efbbcfe5d7575a7b9cb76bfa80d626",
+      "edits": [
+        {
+          "start": 472,
+          "previous": "",
+          "current": "import \"./reviewed-subtype-browser-report-tests.mjs\";\nimport \"./reviewed-subtype-browser-ci-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-native-promotion-tests.mjs",
+      "currentSha256": "8486a3c0073841364e4b82118cec2bff65eb8fdf48097d73b2b63a7fa17ca693",
+      "previousSha256": "bfd0b2027232706f5c080320713f4ad6a58a5e06d2d7bdc9c0e28968ba43e8a8",
+      "edits": [
+        {
+          "start": 1776,
+          "previous": "",
+          "current": "import { reviewedSubtypeBrowserCiHistoryPath } from \"./reviewed-subtype-browser-ci-history.mjs\";\n"
+        },
+        {
+          "start": 5769,
+          "previous": "\tfor(const path of [reviewedSubtypeNativePromotionHistoryPath, reviewedSubtypeHostCiReportHistoryPath, reviewedSubtypeHostCiHistoryPath, mavenPrerequisiteHistoryPath, reviewedSubtypePackageRecordHistoryPath, reviewedSubtypePackageCiHistoryPath, reviewedSubtypeBrowserHistoryPath])\n",
+          "current": "\tfor(const path of [reviewedSubtypeNativePromotionHistoryPath, reviewedSubtypeHostCiReportHistoryPath, reviewedSubtypeHostCiHistoryPath, mavenPrerequisiteHistoryPath, reviewedSubtypePackageRecordHistoryPath, reviewedSubtypePackageCiHistoryPath, reviewedSubtypeBrowserHistoryPath, reviewedSubtypeBrowserCiHistoryPath])\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-package-ci-shell-tests.mjs",
+      "currentSha256": "e2c46e2ff85439a6228df132869a121e28850d733a7dd12f0eda2cceaf8e3ba0",
+      "previousSha256": "814ac26872ce8d1d522e2c84a79b80d63d05ae70b5eb6cdd7d632dc57ca4e2c1",
+      "edits": [
+        {
+          "start": 1193,
+          "previous": "",
+          "current": "const browser = args[0] === 'scripts/check-reviewed-subtype-browser-reports.mjs';\n"
+        },
+        {
+          "start": 1365,
+          "previous": "fs.appendFileSync('calls.log', (producer ? 'producer' : 'checker') + '\\\\n');\n",
+          "current": "fs.appendFileSync('calls.log', (producer ? 'producer' : browser ? 'browser' : 'checker') + '\\\\n');\n"
+        },
+        {
+          "start": 2128,
+          "previous": "",
+          "current": "    assert.equal(process.env.LEAN_BRIDGE_REVIEWED_SUBTYPE_BROWSER_TEST, '1');\n    assert.equal(process.env.LEAN_BRIDGE_TYPE_CORPUS_BROWSERS, 'chromium,firefox,webkit');\n"
+        },
+        {
+          "start": 2752,
+          "previous": "",
+          "current": "if (browser) {\n  assert.equal(lane, 'npm');\n  assert.deepEqual(args, ['scripts/check-reviewed-subtype-browser-reports.mjs',\n    '--directory', output + '/records', '--tap', output + '/run.tap']);\n  process.exit(Number(process.env.FAKE_BROWSER_EXIT));\n}\n"
+        },
+        {
+          "start": 3441,
+          "previous": "\tfor(const lane of [\"c-cpp\", \"npm\"]) for(const [producer, checker, expected] of [[0, 0, 0], [17, 0, 17], [0, 19, 19]])\n",
+          "current": "\tfor(const lane of [\"c-cpp\", \"npm\"]) for(const [producer, checker, browser, expected] of [[0, 0, 0, 0], [17, 0, 0, 17], [0, 19, 0, 19], ...lane === \"npm\" ? [[0, 0, 23, 23]] : []])\n"
+        },
+        {
+          "start": 3950,
+          "previous": "",
+          "current": "\t\t\t, FAKE_BROWSER_EXIT: String(browser)\n\t\t\t, LEAN_BRIDGE_REVIEWED_SUBTYPE_BROWSER_TEST: \"0\"\n\t\t\t, LEAN_BRIDGE_TYPE_CORPUS_BROWSERS: \"chromium\"\n"
+        },
+        {
+          "start": 4363,
+          "previous": "\t\tconst calls = producer ? \"producer\\n\" : \"producer\\nchecker\\n\";\n",
+          "current": "\t\tconst calls = producer ? \"producer\\n\" : checker || lane === \"c-cpp\" ? \"producer\\nchecker\\n\" : \"producer\\nchecker\\nbrowser\\n\";\n"
+        }
+      ]
+    }
+  ]
+}

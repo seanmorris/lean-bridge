@@ -21,8 +21,9 @@ test("reviewed package CI shell retains both streams, refuses stale output and p
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 const args = process.argv.slice(2), producer = args.includes('--test');
+const browser = args[0] === 'scripts/check-reviewed-subtype-browser-reports.mjs';
 const lane = process.env.FAKE_LANE, output = 'build/reviewed-subtype-package-ci/' + lane;
-fs.appendFileSync('calls.log', (producer ? 'producer' : 'checker') + '\\n');
+fs.appendFileSync('calls.log', (producer ? 'producer' : browser ? 'browser' : 'checker') + '\\n');
 if (producer) {
   assert.equal(process.env.LEAN_BRIDGE_REVIEWED_SUBTYPE_PACKAGE_RECORDS, output + '/records');
   assert.equal(process.env.LEAN_BRIDGE_LAKE_ENGINE, '/original/locked-engine');
@@ -33,6 +34,8 @@ if (producer) {
   } else {
     assert.equal(process.env.LEAN_BRIDGE_REVIEWED_SUBTYPE_NPM_TEST, '1');
     assert.equal(process.env.LEAN_BRIDGE_REVIEWED_SUBTYPE_NPM_REPORT, output + '/records/report.json');
+    assert.equal(process.env.LEAN_BRIDGE_REVIEWED_SUBTYPE_BROWSER_TEST, '1');
+    assert.equal(process.env.LEAN_BRIDGE_TYPE_CORPUS_BROWSERS, 'chromium,firefox,webkit');
   }
   assert.deepEqual(args, ['--test', '--test-concurrency=1', '--test-reporter=tap',
     '--test-name-pattern=' + process.env.FAKE_PATTERN, 'tests/reviewed-subtype-installed.test.mjs']);
@@ -41,6 +44,12 @@ if (producer) {
   process.stdout.write('original stdout\\n'); process.stderr.write('original stderr\\n');
   process.exit(Number(process.env.FAKE_PRODUCER_EXIT));
 }
+if (browser) {
+  assert.equal(lane, 'npm');
+  assert.deepEqual(args, ['scripts/check-reviewed-subtype-browser-reports.mjs',
+    '--directory', output + '/records', '--tap', output + '/run.tap']);
+  process.exit(Number(process.env.FAKE_BROWSER_EXIT));
+}
 assert.deepEqual(args, ['scripts/check-reviewed-subtype-package-reports.mjs', '--lane', lane,
   '--directory', output + '/records', '--tap', output + '/run.tap']);
 process.exit(Number(process.env.FAKE_CHECKER_EXIT));
@@ -48,18 +57,21 @@ process.exit(Number(process.env.FAKE_CHECKER_EXIT));
 	await writeFile(join(bin, "node"), fake); await chmod(join(bin, "node"), 0o755);
 	const original = Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith("LEAN_BRIDGE_")));
 	let index = 0;
-	for(const lane of ["c-cpp", "npm"]) for(const [producer, checker, expected] of [[0, 0, 0], [17, 0, 17], [0, 19, 19]])
+	for(const lane of ["c-cpp", "npm"]) for(const [producer, checker, browser, expected] of [[0, 0, 0, 0], [17, 0, 0, 17], [0, 19, 0, 19], ...lane === "npm" ? [[0, 0, 23, 23]] : []])
 	{
 		const directory = join(root, String(index++)); await mkdir(directory);
 		const pattern = "^" + reviewedSubtypePackageTestNames[lane].replaceAll("+", "\\+") + "$";
 		const env = { ...original, PATH: bin, FAKE_LANE: lane
 			, FAKE_PATTERN: pattern, FAKE_PRODUCER_EXIT: String(producer)
 			, FAKE_CHECKER_EXIT: String(checker)
+			, FAKE_BROWSER_EXIT: String(browser)
+			, LEAN_BRIDGE_REVIEWED_SUBTYPE_BROWSER_TEST: "0"
+			, LEAN_BRIDGE_TYPE_CORPUS_BROWSERS: "chromium"
 			, LEAN_BRIDGE_LAKE_ENGINE: "/original/locked-engine"
 			, LEAN_BRIDGE_LAKE_RUNTIME_ROOT: "/original/runtime" };
 		const result = spawnSync("/bin/bash", [script, lane], { cwd: directory, env, encoding: "utf8" });
 		assert.equal(result.status, expected, result.stderr);
-		const calls = producer ? "producer\n" : "producer\nchecker\n";
+		const calls = producer ? "producer\n" : checker || lane === "c-cpp" ? "producer\nchecker\n" : "producer\nchecker\nbrowser\n";
 		assert.equal(await readFile(join(directory, "calls.log"), "utf8"), calls);
 		const output = join(directory, "build/reviewed-subtype-package-ci", lane), tap = await readFile(join(output, "run.tap"), "utf8");
 		assert.ok(tap.includes("original stdout\n")); assert.ok(tap.includes("original stderr\n"));

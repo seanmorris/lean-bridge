@@ -26,8 +26,14 @@ if [[ "$lane" == c-cpp ]]; then
 else
   export LEAN_BRIDGE_REVIEWED_SUBTYPE_NPM_TEST=1
   export LEAN_BRIDGE_REVIEWED_SUBTYPE_NPM_REPORT="$output/records/report.json"
+  export LEAN_BRIDGE_REVIEWED_SUBTYPE_BROWSER_TEST=1
+  export LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit
 fi
 node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern="$pattern" \
   tests/reviewed-subtype-installed.test.mjs 2>&1 | tee "$output/run.tap"
 node scripts/check-reviewed-subtype-package-reports.mjs --lane "$lane" \
   --directory "$output/records" --tap "$output/run.tap"
+if [[ "$lane" == npm ]]; then
+  node scripts/check-reviewed-subtype-browser-reports.mjs \
+    --directory "$output/records" --tap "$output/run.tap"
+fi
