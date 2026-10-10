@@ -12,6 +12,7 @@ import "./helpers/fin-record-evidence-tests.mjs";
 import "./helpers/native-fin-promotion-tests.mjs";
 import "./helpers/fin-record-wit-format-tests.mjs";
 import "./helpers/fin-wit-record-evidence-tests.mjs";
+import "./helpers/native-fin-diagnostic-tests.mjs";
 import { generateNativeLeanAdapters } from "../src/build/native-model.mjs";
 import { compilePrimitiveCSurface } from "../src/backends/c/primitive-surface.mjs";
 import { generateCopiedNativeCalls } from "../src/backends/c/native-copied-values.mjs";
@@ -90,15 +91,15 @@ test("C adapters check record fields and only the active variant case on caller 
 	};
 	// A nested record is walked through its own fields; every comparison precedes the only conversion into Lean.
 	ordered(call("nest_sum"), "_check(arg0, &budget)"
-		, "if (!lb_fin_below((&(&arg0->inner)->digit)->data, (&(&arg0->inner)->digit)->length, lb_fin_nest_sum_0_0, 1)) return lb_invalid(error, \"arg0 is not below its Fin 5 bound\");"
-		, "if (!lb_fin_below((&arg0->tag)->data, (&arg0->tag)->length, lb_fin_nest_sum_0_1, 1)) return lb_invalid(error, \"arg0 is not below its Fin 3 bound\");"
+		, "if (!lb_fin_below((&(&arg0->inner)->digit)->data, (&(&arg0->inner)->digit)->length, lb_fin_nest_sum_0_0, 1)) return lb_invalid(error, \"arg0.inner.digit is not below its Fin 5 bound\");"
+		, "if (!lb_fin_below((&arg0->tag)->data, (&arg0->tag)->length, lb_fin_nest_sum_0_1, 1)) return lb_invalid(error, \"arg0.tag is not below its Fin 3 bound\");"
 		, "lean_object *checked = ", "_in(arg0)");
 	// The bound after heap fields is compared before any of them is converted.
 	ordered(call("late_sum"), "_check(arg0, &budget)", "lb_fin_below((&arg0->digit)->data", "lean_object *checked = ", "_in(arg0)");
 	// Only the active case is compared; Fin 0 compares against no limbs, so a present value always fails.
 	ordered(call("shape_size"), "if (arg0->kind == 0u) {", "(&arg0->cases.circle.radius)->data", "lean_object *checked = ");
 	assert.doesNotMatch(call("shape_size"), /kind == [12]u/u);
-	ordered(call("gate_open"), "if (arg0->kind == 1u) {", "if (!lb_fin_below((&arg0->cases.never.value)->data, (&arg0->cases.never.value)->length, NULL, 0)) return lb_invalid(error, \"arg0 is not below its Fin 0 bound\");");
+	ordered(call("gate_open"), "if (arg0->kind == 1u) {", "if (!lb_fin_below((&arg0->cases.never.value)->data, (&arg0->cases.never.value)->length, NULL, 0)) return lb_invalid(error, \"arg0.never.value is not below its Fin 0 bound\");");
 	ordered(call("slot_count"), "if ((&arg0->maybe)->has_value) {", "(&(&arg0->maybe)->value)->data, (&(&arg0->maybe)->value)->length, NULL, 0)");
 	ordered(call("maybe_shape"), "if (arg0->has_value) {", "if ((&arg0->value)->kind == 0u) {", "(&(&arg0->value)->cases.circle.radius)->data");
 	ordered(call("tiles"), "for (size_t k2 = 0; k2 < arg0->length; ++k2) {", "(&(&arg0->data[k2])->digit)->data");

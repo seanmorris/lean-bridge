@@ -17,13 +17,14 @@ import { generateNativeCallables } from "./native-callables.mjs";
 export const generateNativePrimitiveC = (model, receipt) => {
 	const surface = compilePrimitiveCSurface(model.bindingIr, { wordBits: model.pointerBits, callables: true, structuredCallables: true, compounds: true, lists: true, variants: true }), p = surface.prefix, macro = p.toUpperCase();
 	const callables = generateNativeCallables(model, surface);
+	const copied = generateCopiedNativeCalls(model, surface);
 	if(!/^initialize_LeanBridgeNative[0-9a-f]{16}$/.test(receipt.initializer)) throw new TypeError("Invalid native initializer identity");
 	return `#include "${p}_runtime.h"
 #include "component.h"
 #include "lean_bridge_native_runtime.h"
 #include <stdlib.h>
 #include <string.h>
-${surface.callbacks.size ? "#include <pthread.h>\n#include <unistd.h>" : ""}
+${copied.includes("(void)snprintf(") || callables.source.includes("(void)snprintf(") ? "#include <stdio.h>\n" : ""}${surface.callbacks.size ? "#include <pthread.h>\n#include <unistd.h>" : ""}
 
 static inline ${p}_status lb_invalid(${p}_error *error, const char *message) {
   if (error) *error = (${p}_error){${macro}_ERROR_INVALID_ARGUMENT, message, strlen(message)};
@@ -94,7 +95,7 @@ static inline int lb_nat_out(lean_object *value, uint32_t **out, size_t *length,
   lean_dec(value); *out = data; *length = used; return 1;
 }
 
-${generateCopiedNativeCalls(model, surface)}
+${copied}
 ${callables.source}
 extern lean_object *${receipt.initializer}(uint8_t builtin);
 static void *lb_initialize(uint8_t builtin) { return ${receipt.initializer}(builtin); }

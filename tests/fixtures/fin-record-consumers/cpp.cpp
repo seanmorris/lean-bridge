@@ -26,12 +26,12 @@ int main() {
   t.digit = 5;
   {
     const api::Tile before{5, huge};
-    CHECK(rejected([&] { api::tile_sum(t); }, "arg0 is not below its Fin 5 bound") && t == before);
+    CHECK(rejected([&] { api::tile_sum(t); }, "arg0.digit is not below its Fin 5 bound") && t == before);
   }
   t.digit = Nat(1) << 70;
   {
     const api::Tile before{Nat(1) << 70, huge};
-    CHECK(rejected([&] { api::tile_sum(t); }, "arg0 is not below its Fin 5 bound") && t == before);
+    CHECK(rejected([&] { api::tile_sum(t); }, "arg0.digit is not below its Fin 5 bound") && t == before);
   }
   /* Nest: the inner record's own bound and the outer bound are both checked. */
   api::Nest nest{api::Tile{4, 6}, 2};
@@ -39,12 +39,12 @@ int main() {
   nest.inner.digit = 5;
   {
     const api::Nest before{api::Tile{5, 6}, 2};
-    CHECK(rejected([&] { api::nest_sum(nest); }, "arg0 is not below its Fin 5 bound") && nest == before);
+    CHECK(rejected([&] { api::nest_sum(nest); }, "arg0.inner.digit is not below its Fin 5 bound") && nest == before);
   }
   nest.inner.digit = 4; nest.tag = 3;
   {
     const api::Nest before{api::Tile{4, 6}, 3};
-    CHECK(rejected([&] { api::nest_sum(nest); }, "arg0 is not below its Fin 3 bound") && nest == before);
+    CHECK(rejected([&] { api::nest_sum(nest); }, "arg0.tag is not below its Fin 3 bound") && nest == before);
   }
   nest.tag = 2;
   CHECK(api::nest_sum(nest) == 210); /* Recovery. */
@@ -54,7 +54,7 @@ int main() {
   late.digit = 5;
   {
     const api::Late before{"ab", {1, 2}, 5};
-    CHECK(rejected([&] { api::late_sum(late); }, "arg0 is not below its Fin 5 bound") && late == before);
+    CHECK(rejected([&] { api::late_sum(late); }, "arg0.digit is not below its Fin 5 bound") && late == before);
   }
   late.digit = 4;
   CHECK(api::late_sum(late) == 4005);
@@ -64,7 +64,7 @@ int main() {
   slot.maybe = Nat(0);
   {
     const api::Slot before{Nat(0), 8};
-    CHECK(rejected([&] { api::slot_count(slot); }, "arg0 is not below its Fin 0 bound") && slot == before);
+    CHECK(rejected([&] { api::slot_count(slot); }, "arg0.maybe? is not below its Fin 0 bound") && slot == before);
   }
   /* Shape: only the active case is checked. */
   api::Shape shape = api::ShapeCircle{9};
@@ -72,7 +72,7 @@ int main() {
   shape = api::ShapeCircle{10};
   {
     const api::Shape before = api::ShapeCircle{10};
-    CHECK(rejected([&] { api::shape_size(shape); }, "arg0 is not below its Fin 10 bound") && shape == before);
+    CHECK(rejected([&] { api::shape_size(shape); }, "arg0.circle.radius is not below its Fin 10 bound") && shape == before);
   }
   shape = api::ShapeLabel{"abc"};
   CHECK(api::shape_size(shape) == 1003);
@@ -84,7 +84,7 @@ int main() {
   gate = api::GateNever{0};
   {
     const api::Gate before = api::GateNever{0};
-    CHECK(rejected([&] { api::gate_open(gate); }, "arg0 is not below its Fin 0 bound") && gate == before);
+    CHECK(rejected([&] { api::gate_open(gate); }, "arg0.never.value is not below its Fin 0 bound") && gate == before);
   }
   /* Array Tile: every element; the empty array is valid. */
   std::vector<api::Tile> row = {{0, 1}, {4, 2}, {1, 0}};
@@ -94,7 +94,7 @@ int main() {
     const Nat kept = row[k].digit;
     row[k].digit = 5;
     std::vector<api::Tile> before = {{0, 1}, {4, 2}, {1, 0}}; before[k].digit = 5;
-    CHECK(rejected([&] { api::tiles(row); }, "arg0 is not below its Fin 5 bound") && row == before);
+    CHECK(rejected([&] { api::tiles(row); }, "arg0[" + std::to_string(k) + "].digit is not below its Fin 5 bound") && row == before);
     row[k].digit = kept;
   }
   CHECK(api::tiles(row) == 8);
@@ -105,7 +105,7 @@ int main() {
   maybe = api::Shape{api::ShapeCircle{10}};
   {
     const std::optional<api::Shape> before = api::Shape{api::ShapeCircle{10}};
-    CHECK(rejected([&] { api::maybe_shape(maybe); }, "arg0 is not below its Fin 10 bound") && maybe == before);
+    CHECK(rejected([&] { api::maybe_shape(maybe); }, "arg0?.circle.radius is not below its Fin 10 bound") && maybe == before);
   }
   /* List Tile: every element's fields; a rejected list is unchanged before the caller restores it. */
   CHECK(api::tile_list({}) == 0);
@@ -114,7 +114,7 @@ int main() {
     const Nat kept = row[k].digit;
     row[k].digit = 5;
     std::vector<api::Tile> before = {{0, 1}, {4, 2}, {1, 0}}; before[k].digit = 5;
-    CHECK(rejected([&] { api::tile_list(row); }, "arg0 is not below its Fin 5 bound") && row == before);
+    CHECK(rejected([&] { api::tile_list(row); }, "arg0[" + std::to_string(k) + "].digit is not below its Fin 5 bound") && row == before);
     row[k].digit = kept;
   }
   CHECK(api::tile_list(row) == 8);
@@ -124,12 +124,12 @@ int main() {
   pair.first.digit = 5;
   {
     const std::pair<api::Tile, api::Shape> before{api::Tile{5, 6}, api::ShapeCircle{9}};
-    CHECK(rejected([&] { api::tile_pair(pair); }, "arg0 is not below its Fin 5 bound") && pair == before);
+    CHECK(rejected([&] { api::tile_pair(pair); }, "arg0.0.digit is not below its Fin 5 bound") && pair == before);
   }
   pair.first.digit = 4; pair.second = api::ShapeCircle{10};
   {
     const std::pair<api::Tile, api::Shape> before{api::Tile{4, 6}, api::ShapeCircle{10}};
-    CHECK(rejected([&] { api::tile_pair(pair); }, "arg0 is not below its Fin 10 bound") && pair == before);
+    CHECK(rejected([&] { api::tile_pair(pair); }, "arg0.1.circle.radius is not below its Fin 10 bound") && pair == before);
   }
   pair.second = api::ShapeCircle{9};
   CHECK(api::tile_pair(pair) == 19);
@@ -141,13 +141,13 @@ int main() {
   except = api::Ok<api::Tile>{api::Tile{5, 4}};
   {
     const Except before = api::Ok<api::Tile>{api::Tile{5, 4}};
-    CHECK(rejected([&] { api::tile_except(except); }, "arg0 is not below its Fin 5 bound") && except == before);
+    CHECK(rejected([&] { api::tile_except(except); }, "arg0.ok.digit is not below its Fin 5 bound") && except == before);
   }
   CHECK(api::tile_except(api::Err<api::Shape>{api::ShapeCircle{9}}) == 509);
   except = api::Err<api::Shape>{api::ShapeCircle{10}};
   {
     const Except before = api::Err<api::Shape>{api::ShapeCircle{10}};
-    CHECK(rejected([&] { api::tile_except(except); }, "arg0 is not below its Fin 10 bound") && except == before);
+    CHECK(rejected([&] { api::tile_except(except); }, "arg0.error.circle.radius is not below its Fin 10 bound") && except == before);
   }
   CHECK(api::tile_except(api::Err<api::Shape>{api::ShapeLabel{"x"}}) == 1501);
   except = api::Ok<api::Tile>{api::Tile{3, 4}};
@@ -158,7 +158,7 @@ int main() {
   t.digit = 5;
   {
     const api::Tile before{5, 9};
-    CHECK(rejected([&] { api::bump(t); }, "arg0 is not below its Fin 5 bound") && t == before);
+    CHECK(rejected([&] { api::bump(t); }, "arg0.digit is not below its Fin 5 bound") && t == before);
   }
   const api::Shape small = api::make_shape(4);
   CHECK(std::holds_alternative<api::ShapeCircle>(small) && std::get<api::ShapeCircle>(small).radius == 4);
@@ -168,7 +168,7 @@ int main() {
     t = api::Tile{i % 5, i};
     if (api::tile_sum(t) != i % 5 + i) { std::fprintf(stderr, "round %u failed\n", i); return 1; }
     t.digit = 5 + i;
-    if (!rejected([&] { api::tile_sum(t); }, "arg0 is not below its Fin 5 bound") || t != api::Tile{5 + i, i}) { std::fprintf(stderr, "rejection round %u failed\n", i); return 1; }
+    if (!rejected([&] { api::tile_sum(t); }, "arg0.digit is not below its Fin 5 bound") || t != api::Tile{5 + i, i}) { std::fprintf(stderr, "rejection round %u failed\n", i); return 1; }
   }
   checks += 2000;
   std::printf("fin-record-ok:%u\n", checks);

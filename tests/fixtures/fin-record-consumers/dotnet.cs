@@ -15,9 +15,9 @@ class Consumer {
     static bool Same(object? value, object? expected) => StructuralComparisons.StructuralEqualityComparer.Equals(value, expected);
     // The input and an independently built snapshot exist before the call; they are compared
     // immediately after the rejection, before the caller changes anything back.
-    static bool Refused<T>(Func<T, object> call, Func<T> build, string bound) {
+    static bool Refused<T>(Func<T, object> call, Func<T> build, string parameter, string bound) {
         T input = build(), before = build();
-        return Rejected(() => call(input), "arg0", bound) && Same(input, before);
+        return Rejected(() => call(input), parameter, bound) && Same(input, before);
     }
     static BigInteger N(long value) => new BigInteger(value);
     static Tile Piece(BigInteger digit, BigInteger count) => new(digit, count);
@@ -34,7 +34,7 @@ class Consumer {
             values[k] = Piece(5, kept.Count);
             Tile[] before = Row();
             before[k] = Piece(5, kept.Count);
-            Check(Rejected(() => call(values), "arg0", "5") && Same(values, before), $"{label} element {k}");
+            Check(Rejected(() => call(values), $"arg0[{k}].digit", "5") && Same(values, before), $"{label} element {k}");
             values[k] = kept;
         }
         Check(call(values) == 8, label + " recovery");
@@ -44,57 +44,57 @@ class Consumer {
         // Tile: the digit is Fin 5; any count is valid.
         for (int d = 0; d < 5; ++d) Check(Api.TileSum(Piece(d, 10)) == d + 10, "tile valid");
         Check(Api.TileSum(Piece(3, huge)) == huge + 3, "unbounded count");
-        Check(Refused(v => Api.TileSum(v), () => Piece(5, huge), "5"), "tile at bound");
-        Check(Refused(v => Api.TileSum(v), () => Piece(BigInteger.One << 70, huge), "5"), "tile beyond 64 bits");
+        Check(Refused(v => Api.TileSum(v), () => Piece(5, huge), "arg0.digit", "5"), "tile at bound");
+        Check(Refused(v => Api.TileSum(v), () => Piece(BigInteger.One << 70, huge), "arg0.digit", "5"), "tile beyond 64 bits");
         // Nest: the inner record's own bound and the outer bound are both checked.
         Check(Api.NestSum(new Nest(Piece(4, 6), 2)) == 210, "nest valid");
-        Check(Refused(v => Api.NestSum(v), () => new Nest(Piece(5, 6), 2), "5"), "nest inner at bound");
-        Check(Refused(v => Api.NestSum(v), () => new Nest(Piece(4, 6), 3), "3"), "nest tag at bound");
+        Check(Refused(v => Api.NestSum(v), () => new Nest(Piece(5, 6), 2), "arg0.inner.digit", "5"), "nest inner at bound");
+        Check(Refused(v => Api.NestSum(v), () => new Nest(Piece(4, 6), 3), "arg0.tag", "3"), "nest tag at bound");
         Check(Api.NestSum(new Nest(Piece(4, 6), 2)) == 210, "nest recovery");
         // Late: heap fields precede the bound; a rejection leaves them as the caller built them.
         Check(Api.LateSum(L(4)) == 4005, "late valid");
-        Check(Refused(v => Api.LateSum(v), () => L(5), "5"), "late at bound");
+        Check(Refused(v => Api.LateSum(v), () => L(5), "arg0.digit", "5"), "late at bound");
         Check(Api.LateSum(L(4)) == 4005, "late recovery");
         // Slot: Option (Fin 0) is valid only when absent.
         Check(Api.SlotCount(new Slot(Option<BigInteger>.None, 8)) == 8, "slot absent");
-        Check(Refused(v => Api.SlotCount(v), () => new Slot(Option<BigInteger>.Some(0), 8), "0"), "slot present");
+        Check(Refused(v => Api.SlotCount(v), () => new Slot(Option<BigInteger>.Some(0), 8), "arg0.maybe?", "0"), "slot present");
         // Shape: only the active case is checked.
         Check(Api.ShapeSize(new ShapeCircle(9)) == 9, "circle valid");
-        Check(Refused<Shape>(v => Api.ShapeSize(v), () => new ShapeCircle(10), "10"), "circle at bound");
+        Check(Refused<Shape>(v => Api.ShapeSize(v), () => new ShapeCircle(10), "arg0.circle.radius", "10"), "circle at bound");
         Check(Api.ShapeSize(new ShapeLabel("abc")) == 1003, "label");
         Check(Api.ShapeSize(new ShapeEmpty()) == 7, "empty");
         // Gate: the never case holds Fin 0, so it is always rejected; the closed case is always valid.
         Check(Api.GateOpen(new GateClosed()) == 1, "gate closed");
-        Check(Refused<Gate>(v => Api.GateOpen(v), () => new GateNever(0), "0"), "gate never");
+        Check(Refused<Gate>(v => Api.GateOpen(v), () => new GateNever(0), "arg0.never.value", "0"), "gate never");
         // Array Tile and List Tile: every element's fields; the empty sequence is valid.
         Sequence(Api.Tiles, "tiles");
         Sequence(Api.TileList, "list");
         // Tile × Shape: both components; the inactive circle of a label is never read.
         Check(Api.TilePair((Piece(4, 6), new ShapeCircle(9))) == 19, "pair valid");
-        Check(Refused(v => Api.TilePair(v), () => (Piece(5, 6), (Shape)new ShapeCircle(9)), "5"), "pair tile at bound");
-        Check(Refused(v => Api.TilePair(v), () => (Piece(4, 6), (Shape)new ShapeCircle(10)), "10"), "pair circle at bound");
+        Check(Refused(v => Api.TilePair(v), () => (Piece(5, 6), (Shape)new ShapeCircle(9)), "arg0.0.digit", "5"), "pair tile at bound");
+        Check(Refused(v => Api.TilePair(v), () => (Piece(4, 6), (Shape)new ShapeCircle(10)), "arg0.1.circle.radius", "10"), "pair circle at bound");
         Check(Api.TilePair((Piece(4, 6), new ShapeCircle(9))) == 19, "pair recovery");
         Check(Api.TilePair((Piece(1, 1), new ShapeLabel("ab"))) == 1004, "pair label");
         // Except Shape Tile: the ok record or the error variant, only the active branch.
         Check(Api.TileExcept(Result<Tile, Shape>.Ok(Piece(3, 4))) == 7, "except ok");
-        Check(Refused(v => Api.TileExcept(v), () => Result<Tile, Shape>.Ok(Piece(5, 4)), "5"), "except ok at bound");
+        Check(Refused(v => Api.TileExcept(v), () => Result<Tile, Shape>.Ok(Piece(5, 4)), "arg0.ok.digit", "5"), "except ok at bound");
         Check(Api.TileExcept(Result<Tile, Shape>.Err(new ShapeCircle(9))) == 509, "except error circle");
-        Check(Refused(v => Api.TileExcept(v), () => Result<Tile, Shape>.Err(new ShapeCircle(10)), "10"), "except error at bound");
+        Check(Refused(v => Api.TileExcept(v), () => Result<Tile, Shape>.Err(new ShapeCircle(10)), "arg0.error.circle.radius", "10"), "except error at bound");
         Check(Api.TileExcept(Result<Tile, Shape>.Err(new ShapeLabel("x"))) == 1501, "except error label");
         Check(Api.TileExcept(Result<Tile, Shape>.Ok(Piece(3, 4))) == 7, "except recovery");
         // Option Shape: absent, a valid present circle, then an invalid one.
         Check(Api.MaybeShape(Option<Shape>.None) == 99, "maybe absent");
         Check(Api.MaybeShape(Option<Shape>.Some(new ShapeCircle(3))) == 3, "maybe circle");
-        Check(Refused(v => Api.MaybeShape(v), () => Option<Shape>.Some(new ShapeCircle(10)), "10"), "maybe circle at bound");
+        Check(Refused(v => Api.MaybeShape(v), () => Option<Shape>.Some(new ShapeCircle(10)), "arg0?.circle.radius", "10"), "maybe circle at bound");
         // Results carrying bounds are produced by Lean and arrive below them.
         Check(Api.Bump(Piece(4, 9)).Equals(Piece(0, 10)), "bump");
-        Check(Refused(v => Api.Bump(v), () => Piece(5, 9), "5"), "bump at bound");
+        Check(Refused(v => Api.Bump(v), () => Piece(5, 9), "arg0.digit", "5"), "bump at bound");
         Check(Api.MakeShape(4).Equals(new ShapeCircle(4)), "make circle");
         Check(Api.MakeShape(23).Equals(new ShapeLabel("23")), "make label");
         for (int i = 0; i < 1000; ++i) {
             if (Api.TileSum(Piece(i % 5, i)) != i % 5 + i) throw new Exception($"round {i} failed");
             int round = i;
-            if (!Refused(v => Api.TileSum(v), () => Piece(5 + round, round), "5")) throw new Exception($"rejection round {i} failed");
+            if (!Refused(v => Api.TileSum(v), () => Piece(5 + round, round), "arg0.digit", "5")) throw new Exception($"rejection round {i} failed");
         }
         checks += 2000;
         Console.WriteLine($"fin-record-ok:{checks}");

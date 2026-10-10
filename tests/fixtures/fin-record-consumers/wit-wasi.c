@@ -151,28 +151,28 @@ int main(void) {
   for (uint32_t d = 0; d < 5; ++d) { arg = tile(d, 10); out = call("tile-sum", &arg); CHECK(is_nat(&out, d + 10)); clear(&out); }
   arg = tile_of(nat(3), limbs(huge, 4)); out = call("tile-sum", &arg);
   value expected = limbs(huge_plus_three, 4); CHECK(same(&out, &expected)); clear(&expected); clear(&out);
-  arg = tile_of(nat(5), limbs(huge, 4)); CHECK(rejected("tile-sum", &arg, "arg0 is not below its Fin 5 bound"));
-  arg = tile_of(limbs(beyond, 3), limbs(huge, 4)); CHECK(rejected("tile-sum", &arg, "arg0 is not below its Fin 5 bound"));
+  arg = tile_of(nat(5), limbs(huge, 4)); CHECK(rejected("tile-sum", &arg, "arg0.digit is not below its Fin 5 bound"));
+  arg = tile_of(limbs(beyond, 3), limbs(huge, 4)); CHECK(rejected("tile-sum", &arg, "arg0.digit is not below its Fin 5 bound"));
   /* Nest: the inner record's own bound and the outer bound are both checked. */
   arg = nest(4, 6, 2); out = call("nest-sum", &arg); CHECK(is_nat(&out, 210)); clear(&out);
-  arg = nest(5, 6, 2); CHECK(rejected("nest-sum", &arg, "arg0 is not below its Fin 5 bound"));
-  arg = nest(4, 6, 3); CHECK(rejected("nest-sum", &arg, "arg0 is not below its Fin 3 bound"));
+  arg = nest(5, 6, 2); CHECK(rejected("nest-sum", &arg, "arg0.inner.digit is not below its Fin 5 bound"));
+  arg = nest(4, 6, 3); CHECK(rejected("nest-sum", &arg, "arg0.tag is not below its Fin 3 bound"));
   arg = nest(4, 6, 2); out = call("nest-sum", &arg); CHECK(is_nat(&out, 210)); clear(&out); /* Recovery. */
   /* Late: heap fields precede the bound; a rejection leaves them as the caller built them. */
   arg = late(4); out = call("late-sum", &arg); CHECK(is_nat(&out, 4005)); clear(&out);
-  arg = late(5); CHECK(rejected("late-sum", &arg, "arg0 is not below its Fin 5 bound"));
+  arg = late(5); CHECK(rejected("late-sum", &arg, "arg0.digit is not below its Fin 5 bound"));
   arg = late(4); out = call("late-sum", &arg); CHECK(is_nat(&out, 4005)); clear(&out);
   /* Slot: Option (Fin 0) is valid only when absent. */
   arg = slot(none()); out = call("slot-count", &arg); CHECK(is_nat(&out, 8)); clear(&out);
-  arg = slot(some(nat(0))); CHECK(rejected("slot-count", &arg, "arg0 is not below its Fin 0 bound"));
+  arg = slot(some(nat(0))); CHECK(rejected("slot-count", &arg, "arg0.maybe? is not below its Fin 0 bound"));
   /* Shape: only the active case is checked. */
   arg = circle(9); out = call("shape-size", &arg); CHECK(is_nat(&out, 9)); clear(&out);
-  arg = circle(10); CHECK(rejected("shape-size", &arg, "arg0 is not below its Fin 10 bound"));
+  arg = circle(10); CHECK(rejected("shape-size", &arg, "arg0.circle.radius is not below its Fin 10 bound"));
   arg = label("abc"); out = call("shape-size", &arg); CHECK(is_nat(&out, 1003)); clear(&out);
   arg = tagged("empty", NULL); out = call("shape-size", &arg); CHECK(is_nat(&out, 7)); clear(&out);
   /* Gate: the never case holds Fin 0, so it is always rejected; the closed case is always valid. */
   arg = tagged("closed", NULL); out = call("gate-open", &arg); CHECK(is_nat(&out, 1)); clear(&out);
-  arg = one_field("never", "value", nat(0)); CHECK(rejected("gate-open", &arg, "arg0 is not below its Fin 0 bound"));
+  arg = one_field("never", "value", nat(0)); CHECK(rejected("gate-open", &arg, "arg0.never.value is not below its Fin 0 bound"));
   /* Array Tile and List Tile: every element's fields; the empty sequence is valid. */
   const char *sequences[2] = {"tiles", "tile-list"};
   for (int which = 0; which < 2; ++which) {
@@ -183,7 +183,7 @@ int main(void) {
     for (int k = 0; k < 3; ++k) {
       value *digit = field(&tiles.of.list.data[k], 0), kept = *digit;
       *digit = nat(5);
-      CHECK(rejected_kept(sequences[which], &tiles, "arg0 is not below its Fin 5 bound") && is_nat(digit, 5));
+      CHECK(rejected_kept(sequences[which], &tiles, (const char *[]){"arg0[0].digit is not below its Fin 5 bound", "arg0[1].digit is not below its Fin 5 bound", "arg0[2].digit is not below its Fin 5 bound"}[k]) && is_nat(digit, 5));
       clear(digit); *digit = kept;
     }
     out = run(sequences[which], &tiles); CHECK(is_nat(&out, 8)); clear(&out); /* Recovery. */
@@ -191,25 +191,25 @@ int main(void) {
   }
   /* Tile × Shape: both components; the inactive circle of a label is never read. */
   arg = pair(tile(4, 6), circle(9)); out = call("tile-pair", &arg); CHECK(is_nat(&out, 19)); clear(&out);
-  arg = pair(tile(5, 6), circle(9)); CHECK(rejected("tile-pair", &arg, "arg0 is not below its Fin 5 bound"));
-  arg = pair(tile(4, 6), circle(10)); CHECK(rejected("tile-pair", &arg, "arg0 is not below its Fin 10 bound"));
+  arg = pair(tile(5, 6), circle(9)); CHECK(rejected("tile-pair", &arg, "arg0.0.digit is not below its Fin 5 bound"));
+  arg = pair(tile(4, 6), circle(10)); CHECK(rejected("tile-pair", &arg, "arg0.1.circle.radius is not below its Fin 10 bound"));
   arg = pair(tile(4, 6), circle(9)); out = call("tile-pair", &arg); CHECK(is_nat(&out, 19)); clear(&out); /* Recovery. */
   arg = pair(tile(1, 1), label("ab")); out = call("tile-pair", &arg); CHECK(is_nat(&out, 1004)); clear(&out);
   /* Except Shape Tile crosses as result<tile, shape>: only the active branch is checked. */
   arg = branch(true, tile(3, 4)); out = call("tile-except", &arg); CHECK(is_nat(&out, 7)); clear(&out);
-  arg = branch(true, tile(5, 4)); CHECK(rejected("tile-except", &arg, "arg0 is not below its Fin 5 bound"));
+  arg = branch(true, tile(5, 4)); CHECK(rejected("tile-except", &arg, "arg0.ok.digit is not below its Fin 5 bound"));
   arg = branch(false, circle(9)); out = call("tile-except", &arg); CHECK(is_nat(&out, 509)); clear(&out);
-  arg = branch(false, circle(10)); CHECK(rejected("tile-except", &arg, "arg0 is not below its Fin 10 bound"));
+  arg = branch(false, circle(10)); CHECK(rejected("tile-except", &arg, "arg0.error.circle.radius is not below its Fin 10 bound"));
   arg = branch(false, label("x")); out = call("tile-except", &arg); CHECK(is_nat(&out, 1501)); clear(&out);
   arg = branch(true, tile(3, 4)); out = call("tile-except", &arg); CHECK(is_nat(&out, 7)); clear(&out); /* Recovery. */
   /* Option Shape: absent, a valid present circle, then an invalid one. */
   arg = none(); out = call("maybe-shape", &arg); CHECK(is_nat(&out, 99)); clear(&out);
   arg = some(circle(3)); out = call("maybe-shape", &arg); CHECK(is_nat(&out, 3)); clear(&out);
-  arg = some(circle(10)); CHECK(rejected("maybe-shape", &arg, "arg0 is not below its Fin 10 bound"));
+  arg = some(circle(10)); CHECK(rejected("maybe-shape", &arg, "arg0?.circle.radius is not below its Fin 10 bound"));
   /* Results carrying bounds are produced by Lean and arrive below them. */
   arg = tile(4, 9); out = call("bump", &arg);
   expected = tile(0, 10); CHECK(same(&out, &expected)); clear(&expected); clear(&out);
-  arg = tile(5, 9); CHECK(rejected("bump", &arg, "arg0 is not below its Fin 5 bound"));
+  arg = tile(5, 9); CHECK(rejected("bump", &arg, "arg0.digit is not below its Fin 5 bound"));
   arg = nat(4); out = call("make-shape", &arg);
   CHECK(out.kind == WASMTIME_COMPONENT_VARIANT && named(&out.of.variant.discriminant, "circle"));
   expected = circle(4); CHECK(same(&out, &expected)); clear(&expected); clear(&out);
@@ -221,7 +221,7 @@ int main(void) {
     if (!is_nat(&out, i % 5 + i)) { fprintf(stderr, "round %u failed\n", i); return 1; }
     clear(&out);
     arg = tile(5 + i, i);
-    if (!rejected("tile-sum", &arg, "arg0 is not below its Fin 5 bound")) { fprintf(stderr, "rejection round %u failed\n", i); return 1; }
+    if (!rejected("tile-sum", &arg, "arg0.digit is not below its Fin 5 bound")) { fprintf(stderr, "rejection round %u failed\n", i); return 1; }
   }
   checks += 2000;
   finrecords_wasmtime_close(session);

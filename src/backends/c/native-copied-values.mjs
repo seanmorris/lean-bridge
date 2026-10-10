@@ -5,6 +5,7 @@
  */
 import { nativeCType, nativeObjectType, nativeTypeKey } from "../../build/native-model.mjs";
 import { canonicalJson, sha256 } from "../../capsule/node.mjs";
+import { finDiagnosticRejection } from "./fin-diagnostic.mjs";
 
 /**
  * Convert a compiler type to its semantic C reference.
@@ -54,41 +55,42 @@ const finBelow = `static inline int lb_fin_below(const uint32_t *data, size_t le
  */
 export const finRefinementWalk = ({ refinement, type: root, value: argument, constant, label, copy, bounds, reject }) => {
 	let sites = 0;
-	const check = (site, type, value, indent) => {
-		if(type.kind === "alias") return check(site, type.target, value, indent);
+	const check = (site, type, value, indent, path) => {
+		if(type.kind === "alias") return check(site, type.target, value, indent, path);
 		if(site.kind === "fin")
 		{
 			// A top-level scalar keeps its historical constant name; nested sites are numbered.
 			const limbs = finBoundLimbs(site.bound), name = sites === 0 && refinement.kind === "fin" ? constant : `${constant}_${sites}`;
 			sites += 1;
 			if(limbs.length) bounds.push(`static const uint32_t ${name}[${limbs.length}] = {${limbs.map(limb => `0x${limb.toString(16)}u`).join(", ")}};`);
-			// The message names the leaf that failed, with its own bound.
-			return [`${indent}if (!lb_fin_below(${value}->data, ${value}->length, ${limbs.length ? name : "NULL"}, ${limbs.length})) ${reject(JSON.stringify(`${label} is not below its Fin ${site.bound} bound`))}`];
+			const rejected = finDiagnosticRejection({ path, bound: site.bound, name, indent, reject });
+			return [`${indent}if (!lb_fin_below(${value}->data, ${value}->length, ${limbs.length ? name : "NULL"}, ${limbs.length})) ${rejected}`];
 		}
 		const fields = copy(type).fields;
 		if(site.kind === "array" || site.kind === "list")
 		{
 			const index = `k${indent.length}`;
-			return [`${indent}for (size_t ${index} = 0; ${index} < ${value}->length; ++${index}) {`, ...check(site.arguments[0], type.element, `(&${value}->data[${index}])`, `${indent}  `), `${indent}}`];
+			return [`${indent}for (size_t ${index} = 0; ${index} < ${value}->length; ++${index}) {`, ...check(site.arguments[0], type.element, `(&${value}->data[${index}])`, `${indent}  `, [...path, "[", { index }, "]"]), `${indent}}`];
 		}
 		// A record checks each refined field in declaration order; a variant only its active case.
 		if(site.kind === "record")
-			return site.arguments.flatMap((child, index) => child === null ? [] : check(child, type.fields[index].type, `(&${value}->${fields[index].name})`, indent));
+			return site.arguments.flatMap((child, index) => child === null ? [] : check(child, type.fields[index].type, `(&${value}->${fields[index].name})`, indent, [...path, `.${site.fields[index]}`]));
 		if(site.kind === "variant")
 		{
 			const cases = copy(type).cases;
 			return site.cases.flatMap(({ arguments: children }, index) => children.every(child => child === null) ? [] : [`${indent}if (${value}->kind == ${index}u) {`
-				, ...children.flatMap((child, field) => child === null ? [] : check(child, type.cases[index].fields[field].type, `(&${value}->cases.${cases[index].name}.${cases[index].fields[field].name})`, `${indent}  `))
+				, ...children.flatMap((child, field) => child === null ? [] : check(child, type.cases[index].fields[field].type, `(&${value}->cases.${cases[index].name}.${cases[index].fields[field].name})`, `${indent}  `, [...path, `.${site.cases[index].name}.${site.cases[index].fields[field]}`]))
 				, `${indent}}`]);
 		}
 		const flag = { option: "has_value", result: "is_ok" }[site.kind];
 		return site.arguments.flatMap((child, index) => {
 			if(child === null) return [];
-			const inner = check(child, type.arguments ? type.arguments[index] : type.element, `(&${value}->${fields[index].name})`, flag ? `${indent}  ` : indent);
+			const suffix = site.kind === "option" ? "?" : site.kind === "result" ? `.${index ? "error" : "ok"}` : `.${index}`;
+			const inner = check(child, type.arguments ? type.arguments[index] : type.element, `(&${value}->${fields[index].name})`, flag ? `${indent}  ` : indent, [...path, suffix]);
 			return flag ? [`${indent}if (${index === 1 ? "!" : ""}${value}->${flag}) {`, ...inner, `${indent}}`] : inner;
 		});
 	};
-	return check(refinement, root, argument, "  ");
+	return check(refinement, root, argument, "  ", [label]);
 };
 
 /**

@@ -29,10 +29,10 @@ final class Consumer {
     }
     // The input and an independently built snapshot exist before the call; they are compared
     // immediately after the rejection, before the caller changes anything back.
-    static <T> boolean refused(Function<T, ?> call, Supplier<T> build, String bound) {
+    static <T> boolean refused(Function<T, ?> call, Supplier<T> build, String parameter, String bound) {
         T input = build.get();
         T before = build.get();
-        return rejected(() -> call.apply(input), "arg0", bound) && Objects.deepEquals(input, before);
+        return rejected(() -> call.apply(input), parameter, bound) && Objects.deepEquals(input, before);
     }
     static BigInteger n(long value) { return BigInteger.valueOf(value); }
     static Tile tile(BigInteger digit, BigInteger count) { return new Tile(digit, count); }
@@ -50,7 +50,7 @@ final class Consumer {
             values[k] = tile(n(5), kept.count());
             Tile[] before = row();
             before[k] = tile(n(5), kept.count());
-            check(rejected(() -> call.apply(values), "arg0", "5") && Objects.deepEquals(values, before), label + " element " + k);
+            check(rejected(() -> call.apply(values), "arg0[" + k + "].digit", "5") && Objects.deepEquals(values, before), label + " element " + k);
             values[k] = kept;
         }
         check(call.apply(values).equals(n(8)), label + " recovery");
@@ -60,57 +60,57 @@ final class Consumer {
         // Tile: the digit is Fin 5; any count is valid.
         for (int d = 0; d < 5; d++) check(Api.tileSum(tile(d, 10)).equals(n(d + 10)), "tile valid");
         check(Api.tileSum(tile(n(3), huge)).equals(huge.add(n(3))), "unbounded count");
-        check(refused(Api::tileSum, () -> tile(n(5), huge), "5"), "tile at bound");
-        check(refused(Api::tileSum, () -> tile(BigInteger.ONE.shiftLeft(70), huge), "5"), "tile beyond 64 bits");
+        check(refused(Api::tileSum, () -> tile(n(5), huge), "arg0.digit", "5"), "tile at bound");
+        check(refused(Api::tileSum, () -> tile(BigInteger.ONE.shiftLeft(70), huge), "arg0.digit", "5"), "tile beyond 64 bits");
         // Nest: the inner record's own bound and the outer bound are both checked.
         check(Api.nestSum(new Nest(tile(4, 6), n(2))).equals(n(210)), "nest valid");
-        check(refused(Api::nestSum, () -> new Nest(tile(5, 6), n(2)), "5"), "nest inner at bound");
-        check(refused(Api::nestSum, () -> new Nest(tile(4, 6), n(3)), "3"), "nest tag at bound");
+        check(refused(Api::nestSum, () -> new Nest(tile(5, 6), n(2)), "arg0.inner.digit", "5"), "nest inner at bound");
+        check(refused(Api::nestSum, () -> new Nest(tile(4, 6), n(3)), "arg0.tag", "3"), "nest tag at bound");
         check(Api.nestSum(new Nest(tile(4, 6), n(2))).equals(n(210)), "nest recovery");
         // Late: heap fields precede the bound; a rejection leaves them as the caller built them.
         check(Api.lateSum(late(4)).equals(n(4005)), "late valid");
-        check(refused(Api::lateSum, () -> late(5), "5"), "late at bound");
+        check(refused(Api::lateSum, () -> late(5), "arg0.digit", "5"), "late at bound");
         check(Api.lateSum(late(4)).equals(n(4005)), "late recovery");
         // Slot: Option (Fin 0) is valid only when absent.
         check(Api.slotCount(new Slot(Option.none(), n(8))).equals(n(8)), "slot absent");
-        check(refused(Api::slotCount, () -> new Slot(Option.some(n(0)), n(8)), "0"), "slot present");
+        check(refused(Api::slotCount, () -> new Slot(Option.some(n(0)), n(8)), "arg0.maybe?", "0"), "slot present");
         // Shape: only the active case is checked.
         check(Api.shapeSize(new ShapeCircle(n(9))).equals(n(9)), "circle valid");
-        check(refused(Api::shapeSize, () -> (Shape) new ShapeCircle(n(10)), "10"), "circle at bound");
+        check(refused(Api::shapeSize, () -> (Shape) new ShapeCircle(n(10)), "arg0.circle.radius", "10"), "circle at bound");
         check(Api.shapeSize(new ShapeLabel("abc")).equals(n(1003)), "label");
         check(Api.shapeSize(new ShapeEmpty()).equals(n(7)), "empty");
         // Gate: the never case holds Fin 0, so it is always rejected; the closed case is always valid.
         check(Api.gateOpen(new GateClosed()).equals(n(1)), "gate closed");
-        check(refused(Api::gateOpen, () -> new GateNever(n(0)), "0"), "gate never");
+        check(refused(Api::gateOpen, () -> new GateNever(n(0)), "arg0.never.value", "0"), "gate never");
         // Array Tile and List Tile: every element's fields; the empty sequence is valid.
         sequence(Api::tiles, "tiles");
         sequence(Api::tileList, "list");
         // Tile × Shape: both components; the inactive circle of a label is never read.
         check(Api.tilePair(new Pair<>(tile(4, 6), new ShapeCircle(n(9)))).equals(n(19)), "pair valid");
-        check(refused(Api::tilePair, () -> new Pair<Tile, Shape>(tile(5, 6), new ShapeCircle(n(9))), "5"), "pair tile at bound");
-        check(refused(Api::tilePair, () -> new Pair<Tile, Shape>(tile(4, 6), new ShapeCircle(n(10))), "10"), "pair circle at bound");
+        check(refused(Api::tilePair, () -> new Pair<Tile, Shape>(tile(5, 6), new ShapeCircle(n(9))), "arg0.0.digit", "5"), "pair tile at bound");
+        check(refused(Api::tilePair, () -> new Pair<Tile, Shape>(tile(4, 6), new ShapeCircle(n(10))), "arg0.1.circle.radius", "10"), "pair circle at bound");
         check(Api.tilePair(new Pair<>(tile(4, 6), new ShapeCircle(n(9)))).equals(n(19)), "pair recovery");
         check(Api.tilePair(new Pair<>(tile(1, 1), new ShapeLabel("ab"))).equals(n(1004)), "pair label");
         // Except Shape Tile: the ok record or the error variant, only the active branch.
         check(Api.tileExcept(Result.ok(tile(3, 4))).equals(n(7)), "except ok");
-        check(refused(Api::tileExcept, () -> Result.<Tile, Shape>ok(tile(5, 4)), "5"), "except ok at bound");
+        check(refused(Api::tileExcept, () -> Result.<Tile, Shape>ok(tile(5, 4)), "arg0.ok.digit", "5"), "except ok at bound");
         check(Api.tileExcept(Result.err(new ShapeCircle(n(9)))).equals(n(509)), "except error circle");
-        check(refused(Api::tileExcept, () -> Result.<Tile, Shape>err(new ShapeCircle(n(10))), "10"), "except error at bound");
+        check(refused(Api::tileExcept, () -> Result.<Tile, Shape>err(new ShapeCircle(n(10))), "arg0.error.circle.radius", "10"), "except error at bound");
         check(Api.tileExcept(Result.err(new ShapeLabel("x"))).equals(n(1501)), "except error label");
         check(Api.tileExcept(Result.ok(tile(3, 4))).equals(n(7)), "except recovery");
         // Option Shape: absent, a valid present circle, then an invalid one.
         check(Api.maybeShape(Option.none()).equals(n(99)), "maybe absent");
         check(Api.maybeShape(Option.some(new ShapeCircle(n(3)))).equals(n(3)), "maybe circle");
-        check(refused(Api::maybeShape, () -> Option.<Shape>some(new ShapeCircle(n(10))), "10"), "maybe circle at bound");
+        check(refused(Api::maybeShape, () -> Option.<Shape>some(new ShapeCircle(n(10))), "arg0?.circle.radius", "10"), "maybe circle at bound");
         // Results carrying bounds are produced by Lean and arrive below them.
         check(Api.bump(tile(4, 9)).equals(tile(0, 10)), "bump");
-        check(refused(Api::bump, () -> tile(5, 9), "5"), "bump at bound");
+        check(refused(Api::bump, () -> tile(5, 9), "arg0.digit", "5"), "bump at bound");
         check(Api.makeShape(n(4)).equals(new ShapeCircle(n(4))), "make circle");
         check(Api.makeShape(n(23)).equals(new ShapeLabel("23")), "make label");
         for (int i = 0; i < 1000; i++) {
             final int round = i;
             if (!Api.tileSum(tile(i % 5, i)).equals(n(i % 5 + i))) throw new AssertionError("round " + i + " failed");
-            if (!refused(Api::tileSum, () -> tile(5 + round, round), "5")) throw new AssertionError("rejection round " + i + " failed");
+            if (!refused(Api::tileSum, () -> tile(5 + round, round), "arg0.digit", "5")) throw new AssertionError("rejection round " + i + " failed");
         }
         checks += 2000;
         System.out.println("fin-record-ok:" + checks);
