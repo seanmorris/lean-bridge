@@ -63,7 +63,7 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 	const archive = join(handoff, pkg.artifacts[0].path);
 	const extension = extensions[profile], source = await fixture.source(profile, extension, 64);
 	await saveLakeFile(root, `consumer.${extension}`, source);
-	let command, args, pythonPolicy, rubyPolicy, jvmPolicy, env = copiedCleanEnvironment;
+	let command, args, pythonPolicy, rubyPolicy, jvmPolicy, dotnetPolicy, env = copiedCleanEnvironment;
 	// Optional fixture policy runs before the first package-influenced compilation and again
 	// around execution. Other fixture callers retain their existing install behavior.
 	let verifyPackage = async () => {};
@@ -141,13 +141,21 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 	else if(profile === "dotnet")
 	{
 		command = environment.LEAN_BRIDGE_DOTNET;
-		await mkdir(join(root, "feed"));
-		await cp(archive, join(root, "feed", `${pkg.name}.${pkg.version}.nupkg`));
-		await saveLakeFile(root, "Consumer.csproj", `<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><Nullable>enable</Nullable><UseAppHost>false</UseAppHost><NuGetAudit>false</NuGetAudit><TreatWarningsAsErrors>true</TreatWarningsAsErrors><EnableDefaultCompileItems>false</EnableDefaultCompileItems></PropertyGroup><ItemGroup><Compile Include="consumer.cs"/><PackageReference Include="${pkg.name}" Version="[${pkg.version}]"/></ItemGroup></Project>`);
-		await saveLakeFile(root, "NuGet.Config", '<configuration><packageSources><clear/><add key="prepared" value="feed"/></packageSources><fallbackPackageFolders><clear/></fallbackPackageFolders></configuration>');
-		env = { ...env, DOTNET_ROOT: dirname(command), DOTNET_CLI_HOME: join(root, "dotnet-home"), DOTNET_CLI_TELEMETRY_OPTOUT: "1", DOTNET_NOLOGO: "1", NUGET_PACKAGES: join(root, "packages") };
-		await runCopied(command, ["restore", "--configfile", "NuGet.Config"], root, env);
-		await runCopied(command, ["build", "--no-restore", "--disable-build-servers", "-p:UseSharedCompilation=false", "-o", "out"], root, env);
+		if(fixture.installDotnet)
+		{
+			dotnetPolicy = await fixture.installDotnet({ root, archive, archiveSha256: pkg.artifacts[0].sha256, command });
+			command = dotnetPolicy.context.command;
+		}
+		else
+		{
+			await mkdir(join(root, "feed"));
+			await cp(archive, join(root, "feed", `${pkg.name}.${pkg.version}.nupkg`));
+			await saveLakeFile(root, "Consumer.csproj", `<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><Nullable>enable</Nullable><UseAppHost>false</UseAppHost><NuGetAudit>false</NuGetAudit><TreatWarningsAsErrors>true</TreatWarningsAsErrors><EnableDefaultCompileItems>false</EnableDefaultCompileItems></PropertyGroup><ItemGroup><Compile Include="consumer.cs"/><PackageReference Include="${pkg.name}" Version="[${pkg.version}]"/></ItemGroup></Project>`);
+			await saveLakeFile(root, "NuGet.Config", '<configuration><packageSources><clear/><add key="prepared" value="feed"/></packageSources><fallbackPackageFolders><clear/></fallbackPackageFolders></configuration>');
+			env = { ...env, DOTNET_ROOT: dirname(command), DOTNET_CLI_HOME: join(root, "dotnet-home"), DOTNET_CLI_TELEMETRY_OPTOUT: "1", DOTNET_NOLOGO: "1", NUGET_PACKAGES: join(root, "packages") };
+			await runCopied(command, ["restore", "--configfile", "NuGet.Config"], root, env);
+			await runCopied(command, ["build", "--no-restore", "--disable-build-servers", "-p:UseSharedCompilation=false", "-o", "out"], root, env);
+		}
 		args = ["out/Consumer.dll"];
 	}
 	else if(profile === "java" || profile === "kotlin")
@@ -192,7 +200,8 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 	await verifyPackage();
 	const result = pythonPolicy ? await pythonPolicy.run(["consumer.py"], root, env)
 		: rubyPolicy ? await rubyPolicy.run(args, root)
-			: jvmPolicy ? await jvmPolicy.run() : await runCopied(command, args, root, env);
+			: jvmPolicy ? await jvmPolicy.run()
+				: dotnetPolicy ? await dotnetPolicy.run() : await runCopied(command, args, root, env);
 	await verifyPackage();
 	assert.equal(result.stderr, "");
 	const observation = fixture.parseResult?.(result.stdout);
@@ -210,5 +219,6 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 		, ...(pythonPolicy ? { pythonEnvironment: pythonPolicy.context } : {})
 		, ...(rubyPolicy ? { rubyEnvironment: rubyPolicy.context } : {})
 		, ...(jvmPolicy ? { jvmEnvironment: jvmPolicy.context } : {})
+		, ...(dotnetPolicy ? { dotnetEnvironment: dotnetPolicy.context } : {})
 		, offlineInstall: true, compilerFreePath: true };
 };

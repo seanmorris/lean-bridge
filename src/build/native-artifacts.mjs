@@ -56,7 +56,7 @@ export async function verifyNativeFiles(root, files)
 	{
 		// javac names nested classes Outer$Inner.class. Keep dollars out of directories
 		// and non-class payloads; no shell interpretation is used for these paths.
-		const safe = /^[A-Za-z0-9_.+/-]+$/.test(path) || /^(?:[A-Za-z0-9_.+-]+\/)*[A-Za-z_][A-Za-z0-9_]*(?:\$[A-Za-z0-9_]+)+\.class$/.test(path);
+		const safe = path === "[Content_Types].xml" || /^[A-Za-z0-9_.+/-]+$/.test(path) || /^(?:[A-Za-z0-9_.+-]+\/)*[A-Za-z_][A-Za-z0-9_]*(?:\$[A-Za-z0-9_]+)+\.class$/.test(path);
 		if(!actual.has(path) || !safe || path.split("/").some(part => !part || part === "." || part === "..")) throw new Error(`invalid native artifact path: ${path}`);
 		if(!identity || Object.keys(identity).sort().join(",") !== "bytes,sha256" || !Number.isSafeInteger(identity.bytes)
       || identity.bytes < 0 || !/^[a-f0-9]{64}$/.test(identity.sha256)) throw new Error("invalid native file identity");

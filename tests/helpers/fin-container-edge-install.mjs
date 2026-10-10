@@ -24,6 +24,7 @@ import { finContainerEdgeClosedProfiles, verifyFinContainerEdgeArchiveClosure, v
 import { installFinContainerEdgePython, runFinContainerEdgePython, verifyFinContainerEdgePythonEnvironment } from "./fin-container-edge-python-closure.mjs";
 import { installFinContainerEdgeRuby, runFinContainerEdgeRuby, verifyFinContainerEdgeRubyEnvironment } from "./fin-container-edge-ruby-closure.mjs";
 import { installFinContainerEdgeJvm, runFinContainerEdgeJvm, verifyFinContainerEdgeJvmEnvironment } from "./fin-container-edge-jvm-closure.mjs";
+import { installFinContainerEdgeDotnet, runFinContainerEdgeDotnet, verifyFinContainerEdgeDotnetEnvironment } from "./fin-container-edge-dotnet-closure.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { prepareRustCorpusDependencies } from "./type-corpus-rust.mjs";
@@ -161,8 +162,9 @@ export const prepareFinContainerEdgeExecutable = async ({ profile, root, directo
  * @param options.pythonEnvironment - Python baseline captured before package installation.
  * @param options.rubyEnvironment - Ruby environment derived from the original gem before installation.
  * @param options.jvmEnvironment - JVM archive identity and isolated host compilation outputs.
+ * @param options.dotnetEnvironment - Original NuGet inputs and verified deployed application.
  */
-export const repeatFinContainerEdges = async ({ profile, consumer, handoff, packages, command, measureDispatch = false, expectedModelSha256, leanPrefix, dependencies, toolchainEnvironment, pythonEnvironment, rubyEnvironment, jvmEnvironment }) => {
+export const repeatFinContainerEdges = async ({ profile, consumer, handoff, packages, command, measureDispatch = false, expectedModelSha256, leanPrefix, dependencies, toolchainEnvironment, pythonEnvironment, rubyEnvironment, jvmEnvironment, dotnetEnvironment }) => {
 	assert.equal(typeof measureDispatch, "boolean");
 	const root = join(consumer, profile), pkg = packages.find(item => item.role === "component");
 	assert.ok(pkg);
@@ -211,9 +213,13 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 	}
 	else if(profile === "dotnet")
 	{
-		installed = join(root, "packages", pkg.name.toLowerCase(), pkg.version);
+		assert.ok(dotnetEnvironment, ".NET repeat requires original pre-restore archive identities");
+		assert.equal(dotnetEnvironment.root, root); assert.equal(dotnetEnvironment.command, command);
+		await verifyFinContainerEdgeDotnetEnvironment(dotnetEnvironment);
+		installed = join(root, "inspection");
 		receiptPath = "lean-bridge/package-receipt.json";
 		archiveBytes = (await runCopied("/usr/bin/unzip", ["-p", archive, receiptPath], root)).stdout;
+		assert.equal(archiveBytes, dotnetEnvironment.receiptBytes);
 		args = ["out/Consumer.dll"];
 		deployed[args[0]] = sha256(await readFile(join(root, args[0])));
 	}
@@ -255,11 +261,13 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 	assert.equal(receipt.name, pkg.name);
 	assert.equal(receipt.version, pkg.version);
 	await verifyNativeFiles(installed, receipt.files);
-	const exactFileClosure = finContainerEdgeClosedProfiles.includes(profile) || profile === "ruby" || jvm;
+	const exactFileClosure = finContainerEdgeClosedProfiles.includes(profile) || profile === "ruby" || profile === "dotnet" || jvm;
 	const pythonAt = path => ({ ...pythonEnvironment, venv: resolve(path, relative(join(pythonEnvironment.venv, pythonEnvironment.site), pythonEnvironment.venv)) });
 	const rubyAt = path => ({ ...rubyEnvironment, gems: resolve(path, "../..") });
 	const jvmAt = path => ({ ...jvmEnvironment, root: dirname(path) });
+	const dotnetAt = path => ({ ...dotnetEnvironment, root: dirname(path) });
 	const checkClosure = async path => {
+		if(profile === "dotnet") return verifyFinContainerEdgeDotnetEnvironment(dotnetAt(path));
 		if(jvm) return { ...await verifyFinContainerEdgeFileClosure({ installed: path, receiptPath, receiptBytes: archiveBytes })
 			, ...await verifyFinContainerEdgeJvmEnvironment(jvmAt(path)) };
 		return profile === "python" ? verifyFinContainerEdgePythonEnvironment(pythonAt(path))
@@ -307,7 +315,8 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 		: profile === "dotnet" ? { ...copiedCleanEnvironment, DOTNET_ROOT: dirname(command), DOTNET_CLI_HOME: join(moved, "dotnet-home"), DOTNET_CLI_TELEMETRY_OPTOUT: "1", DOTNET_NOLOGO: "1" } : copiedCleanEnvironment;
 	const repeated = profile === "python" ? await runFinContainerEdgePython(pythonAt(movedInstall), args, moved, environment)
 		: profile === "ruby" ? await runFinContainerEdgeRuby(rubyAt(movedInstall), args, moved)
-			: jvm ? await runFinContainerEdgeJvm(jvmAt(movedInstall)) : await runCopied(movedCommand, args, moved, environment);
+			: jvm ? await runFinContainerEdgeJvm(jvmAt(movedInstall))
+				: profile === "dotnet" ? await runFinContainerEdgeDotnet(dotnetAt(movedInstall)) : await runCopied(movedCommand, args, moved, environment);
 	assert.deepEqual(await checkClosure(movedInstall), fileClosure, "package file set after relocated execution");
 	assert.equal(repeated.stderr, "");
 	assert.equal(repeated.stdout, `fin-container-ok:${finContainerEdgeChecks[profile]}\n`);
@@ -352,6 +361,7 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 		, ...(pythonEnvironment ? { pythonEnvironment: fileClosure, pythonBytecodePolicy: "isolated-empty-prefix" } : {})
 		, ...(rubyEnvironment ? { rubyEnvironment: fileClosure } : {})
 		, ...(jvmEnvironment ? { jvmEnvironment: fileClosure } : {})
+		, ...(dotnetEnvironment ? { dotnetEnvironment: fileClosure } : {})
 		, repeatExecution: true
 		, installedFilesUnchanged: true
 		, installedFilesSha256: sha256(canonicalJson(receipt.files))
@@ -410,7 +420,7 @@ export const checkInstalledFinContainerEdges = async (t, profiles, reportPath, {
 		{
 			const packages = receipt.packages.filter(pkg => pkg.target === finContainerTargets[profile][0]);
 			const consumerSource = await finContainerEdgeConsumer(profile);
-			const { command, pythonEnvironment, rubyEnvironment, jvmEnvironment, ...observation } = await installCopiedConsumer({ profile
+			const { command, pythonEnvironment, rubyEnvironment, jvmEnvironment, dotnetEnvironment, ...observation } = await installCopiedConsumer({ profile
 				, consumer, handoff, packages, environment, dependencies
 				, fixture: {
 					source: () => consumerSource
@@ -418,6 +428,7 @@ export const checkInstalledFinContainerEdges = async (t, profiles, reportPath, {
 					, installPython: installFinContainerEdgePython
 					, installRuby: installFinContainerEdgeRuby
 					, installJvm: installFinContainerEdgeJvm
+					, installDotnet: installFinContainerEdgeDotnet
 					, success: "fin-container-ok"
 					, expectedChecks: finContainerEdgeChecks[profile]
 					, wit: [
@@ -427,7 +438,8 @@ export const checkInstalledFinContainerEdges = async (t, profiles, reportPath, {
 					].map(name => new RegExp(`${name}: func\\(`, "u")) } });
 			const { rawAdapterDispatch, publicHostDispatch, ...repeated } = await repeatFinContainerEdges({
 				profile, consumer, handoff, packages, command
-				, measureDispatch, pythonEnvironment, rubyEnvironment, jvmEnvironment
+				, measureDispatch, pythonEnvironment, rubyEnvironment
+				, jvmEnvironment, dotnetEnvironment
 				, expectedModelSha256: sha256(modelBytes)
 				, leanPrefix: environment.LEAN_BRIDGE_LEAN_PREFIX
 				, dependencies, toolchainEnvironment: environment });

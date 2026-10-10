@@ -48,7 +48,8 @@ export const readClosedPackageZip = bytes => {
 		assert.equal(bytes.readUInt16LE(offset + 28), 0);
 		assert.ok(offset + 30 + nameSize <= centralStart && central + 46 + nameSize <= end);
 		const nameBytes = bytes.subarray(offset + 30, offset + 30 + nameSize), path = nameBytes.toString("utf8");
-		assert.deepEqual(Buffer.from(path), nameBytes); assert.match(path, /^[A-Za-z0-9_.$+/-]+$/u);
+		assert.deepEqual(Buffer.from(path), nameBytes);
+		assert.ok(path === "[Content_Types].xml" || /^[A-Za-z0-9_.$+/-]+$/u.test(path), "safe ZIP member name");
 		assert.ok(!path.startsWith("/") && !path.split("/").some(part => ["", ".", ".."].includes(part)), "safe ZIP path");
 		assert.ok(!files.has(path), `duplicate ZIP path ${path}`);
 		total += size; assert.ok(total < 512 * 1024 ** 2, "ZIP expanded size limit");
