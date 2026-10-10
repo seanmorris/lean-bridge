@@ -63,7 +63,7 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 	const archive = join(handoff, pkg.artifacts[0].path);
 	const extension = extensions[profile], source = await fixture.source(profile, extension, 64);
 	await saveLakeFile(root, `consumer.${extension}`, source);
-	let command, args, pythonPolicy, rubyPolicy, env = copiedCleanEnvironment;
+	let command, args, pythonPolicy, rubyPolicy, jvmPolicy, env = copiedCleanEnvironment;
 	// Optional fixture policy runs before the first package-influenced compilation and again
 	// around execution. Other fixture callers retain their existing install behavior.
 	let verifyPackage = async () => {};
@@ -154,14 +154,21 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 	{
 		command = environment.LEAN_BRIDGE_JAVA;
 		const jar = join(root, "component.jar");
-		await cp(join(handoff, pkg.artifacts.find(item => item.path.endsWith(".jar")).path), jar);
-		if(profile === "java")
+		const artifact = pkg.artifacts.find(item => item.path.endsWith(".jar"));
+		if(fixture.installJvm)
 		{
+			jvmPolicy = await fixture.installJvm({ profile, root, archive: join(handoff, artifact.path), archiveSha256: artifact.sha256, environment });
+			command = jvmPolicy.context.command; args = jvmPolicy.args;
+		}
+		else if(profile === "java")
+		{
+			await cp(join(handoff, artifact.path), jar);
 			await runCopied(environment.LEAN_BRIDGE_JAVAC, ["--release", "22", "-Werror", "-cp", jar, "consumer.java"], root);
 			args = ["--enable-native-access=ALL-UNNAMED", "-cp", `${jar}:${root}`, "Consumer"];
 		}
 		else
 		{
+			await cp(join(handoff, artifact.path), jar);
 			await runCopied(environment.LEAN_BRIDGE_KOTLINC, ["-Werror", "-jvm-target", "22", "-cp", jar, "consumer.kt", "-include-runtime", "-d", "consumer.jar"], root, { ...environment, JAVA_HOME: dirname(dirname(command)) });
 			args = ["--enable-native-access=ALL-UNNAMED", "-cp", `${jar}:${join(root, "consumer.jar")}`, "ConsumerKt"];
 		}
@@ -184,7 +191,8 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 	else throw new Error(`Copied consumer not implemented: ${profile}`);
 	await verifyPackage();
 	const result = pythonPolicy ? await pythonPolicy.run(["consumer.py"], root, env)
-		: rubyPolicy ? await rubyPolicy.run(args, root) : await runCopied(command, args, root, env);
+		: rubyPolicy ? await rubyPolicy.run(args, root)
+			: jvmPolicy ? await jvmPolicy.run() : await runCopied(command, args, root, env);
 	await verifyPackage();
 	assert.equal(result.stderr, "");
 	const observation = fixture.parseResult?.(result.stdout);
@@ -201,5 +209,6 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 		, consumerSha256: sha256(source), command
 		, ...(pythonPolicy ? { pythonEnvironment: pythonPolicy.context } : {})
 		, ...(rubyPolicy ? { rubyEnvironment: rubyPolicy.context } : {})
+		, ...(jvmPolicy ? { jvmEnvironment: jvmPolicy.context } : {})
 		, offlineInstall: true, compilerFreePath: true };
 };
