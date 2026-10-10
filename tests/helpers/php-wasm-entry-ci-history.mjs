@@ -1,24 +1,25 @@
 /**
- * Authenticate PHP-Wasm Subtype installed probe harness integration without changing earlier evidence.
+ * Authenticate PHP-Wasm Subtype installed entry CI integration without changing earlier evidence.
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforePhpWasmEntryCiSource } from "./php-wasm-entry-ci-history.mjs";
 
-export const phpWasmEntryHarnessHistoryPath = "docs/evidence/php-wasm-entry-harness-source-history-20261010.json";
-export const phpWasmEntryHarnessPredecessor = "fc19615384b3f65de389c8c203e4cd67f3c124b0";
-export const phpWasmEntryHarnessChangedPaths = [
-	"docs/type-surface.v1.json"
+export const phpWasmEntryCiHistoryPath = "docs/evidence/php-wasm-entry-ci-source-history-20261010.json";
+export const phpWasmEntryCiPredecessor = "9d41340747ee4cf130e77f39ec6d676e6aa1ceca";
+export const phpWasmEntryCiChangedPaths = [
+	".github/workflows/consumer-matrix.yml"
+	, "docs/type-surface.v1.json"
+	, "scripts/check-php-wasm-subtype-entry-reports.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
 	, "tests/helpers/php-wasm-direct-fin-promotion-tests.mjs"
-	, "tests/helpers/php-wasm-subtype-entry-history-tests.mjs"
-	, "tests/helpers/php-wasm-subtype-entry-history.mjs"
-	, "tests/helpers/php-wasm-subtype-entry-tests.mjs"
+	, "tests/helpers/php-wasm-entry-harness-history-tests.mjs"
+	, "tests/helpers/php-wasm-entry-harness-history.mjs"
+	, "tests/helpers/php-wasm-subtype-ci-tests.mjs"
+	, "tests/helpers/php-wasm-subtype-entry-installed-tests.mjs"
 	, "tests/helpers/php-wasm-subtype-promotion-tests.mjs"
-	, "tests/helpers/type-corpus-php-wasm-install.mjs"
 ];
 let history;
 
@@ -28,8 +29,8 @@ let history;
  * @param source - Complete current source.
  * @param update - Exact recorded transition.
  */
-export const reversePhpWasmEntryHarnessUpdate = (source, update) => {
-	assert.ok(phpWasmEntryHarnessChangedPaths.includes(update.path));
+export const reversePhpWasmEntryCiUpdate = (source, update) => {
+	assert.ok(phpWasmEntryCiChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -55,12 +56,11 @@ export const reversePhpWasmEntryHarnessUpdate = (source, update) => {
  * @param source - Complete source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforePhpWasmEntryHarnessSource = (path, source, expected) => {
-	source = beforePhpWasmEntryCiSource(path, source, expected);
-	if(typeof source !== "string" || !phpWasmEntryHarnessChangedPaths.includes(path)) return source;
+export const beforePhpWasmEntryCiSource = (path, source, expected) => {
+	if(typeof source !== "string" || !phpWasmEntryCiChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(phpWasmEntryHarnessHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(phpWasmEntryCiHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reversePhpWasmEntryHarnessUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reversePhpWasmEntryCiUpdate(source, update) : source;
 };

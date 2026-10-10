@@ -1,0 +1,18 @@
+{
+  "command": "/usr/bin/taskset",
+  "args": [
+    "-c",
+    "3",
+    "/usr/bin/node",
+    "scripts/prepare-php-wasm-subtype-entry-runtime.mjs",
+    "--output",
+    "/app/build/php-wasm-subtype-entry-input/php-wasm-runtime"
+  ],
+  "cwd": "/app",
+  "pid": 3173620,
+  "startedAt": "2026-10-10T17:22:00.991Z",
+  "initialFreeMiB": 2072,
+  "scriptSha256": "dceaa4f7183ab13e13f558268563024fc5b6c66ce8797d75c2005062e3bd5c9f",
+  "runnerSha256": "eb0a528e23acc99eb371ab6470e24e12d4b9cfd84fab25e1a59f4e4459d89305",
+  "scope": "Draft CI runtime preparation with default pinned paths. Does not rerun installed probes."
+}

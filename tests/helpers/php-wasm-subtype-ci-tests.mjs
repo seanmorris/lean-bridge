@@ -9,9 +9,10 @@ import test from "node:test";
 import { assertPhpWasmSubtypeWorkflow, disablePhpWasmSubtypeWorkflow, enablePhpWasmSubtypeWorkflow, phpWasmSubtypeCiBlock, phpWasmSubtypeCiCheck, phpWasmSubtypeCiInvocation, phpWasmSubtypeCiReports } from "./php-wasm-subtype-ci.mjs";
 import { beforePhpWasmSubtypeAcceptanceSource } from "./php-wasm-subtype-acceptance-history.mjs";
 import { assertPhpWasmDirectFinWorkflow } from "./php-wasm-fin-direct-ci.mjs";
+import { beforePhpWasmEntryCiSource } from "./php-wasm-entry-ci-history.mjs";
 
 test("PHP-Wasm Subtype CI preserves the earlier workflow and requires both installed source routes and fresh constructor analysis", async () => {
-	const path = ".github/workflows/consumer-matrix.yml", current = await readFile(path, "utf8");
+	const path = ".github/workflows/consumer-matrix.yml", current = beforePhpWasmEntryCiSource(path, await readFile(path, "utf8"));
 	assertPhpWasmSubtypeWorkflow(current);
 	const previous = beforePhpWasmSubtypeAcceptanceSource(path, current);
 	assertPhpWasmDirectFinWorkflow(previous);
@@ -24,7 +25,7 @@ test("PHP-Wasm Subtype CI preserves the earlier workflow and requires both insta
 });
 
 test("PHP-Wasm Subtype CI refuses lost producers, checks, uploads and failure suppression", async () => {
-	const current = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	const path = ".github/workflows/consumer-matrix.yml", current = beforePhpWasmEntryCiSource(path, await readFile(path, "utf8"));
 	for(const changed of [
 		current.replace(phpWasmSubtypeCiBlock, "")
 		, current.replace(phpWasmSubtypeCiInvocation, phpWasmSubtypeCiInvocation.replace("_TEST=1", "_TEST=0"))

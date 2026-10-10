@@ -1,0 +1,1406 @@
+TAP version 13
+# Subtest: container edge CI authenticates every transition and refuses unrecorded edits
+ok 1 - container edge CI authenticates every transition and refuses unrecorded edits
+  ---
+  duration_ms: 6632.37668
+  type: 'test'
+  ...
+# Subtest: container edge CI refreshes exact source pins without changing support claims or old ledgers
+ok 2 - container edge CI refreshes exact source pins without changing support claims or old ledgers
+  ---
+  duration_ms: 1626.314062
+  type: 'test'
+  ...
+# Subtest: measured CI and history tests run through the registered report test root
+ok 3 - measured CI and history tests run through the registered report test root
+  ---
+  duration_ms: 1.60452
+  type: 'test'
+  ...
+# Subtest: container edge CI history writer refuses an unrelated HEAD before writing
+ok 4 - container edge CI history writer refuses an unrelated HEAD before writing
+  ---
+  duration_ms: 104.259958
+  type: 'test'
+  ...
+# Subtest: Native Fin .NET SDK repair integration authenticates every transition and refuses unrecorded edits
+ok 5 - Native Fin .NET SDK repair integration authenticates every transition and refuses unrecorded edits
+  ---
+  duration_ms: 8052.270258
+  type: 'test'
+  ...
+# Subtest: Native Fin .NET SDK repair integration preserves the earlier source ledgers
+ok 6 - Native Fin .NET SDK repair integration preserves the earlier source ledgers
+  ---
+  duration_ms: 8.258744
+  type: 'test'
+  ...
+# Subtest: Native Fin .NET SDK repair changes source pins without changing any support claim
+ok 7 - Native Fin .NET SDK repair changes source pins without changing any support claim
+  ---
+  duration_ms: 1338.975267
+  type: 'test'
+  ...
+# Subtest: Native Fin .NET SDK repair integration history writer refuses an unrelated HEAD before writing
+ok 8 - Native Fin .NET SDK repair integration history writer refuses an unrelated HEAD before writing
+  ---
+  duration_ms: 115.045261
+  type: 'test'
+  ...
+# Subtest: Native Fin JVM exit diagnostics integration authenticates every transition and refuses unrecorded edits
+ok 9 - Native Fin JVM exit diagnostics integration authenticates every transition and refuses unrecorded edits
+  ---
+  duration_ms: 8496.769585
+  type: 'test'
+  ...
+# Subtest: Native Fin JVM exit diagnostics integration preserves the earlier source ledgers
+ok 10 - Native Fin JVM exit diagnostics integration preserves the earlier source ledgers
+  ---
+  duration_ms: 10.465361
+  type: 'test'
+  ...
+# Subtest: Native Fin JVM exit diagnostics changes source pins without changing any support claim
+ok 11 - Native Fin JVM exit diagnostics changes source pins without changing any support claim
+  ---
+  duration_ms: 1359.85328
+  type: 'test'
+  ...
+# Subtest: Native Fin JVM exit diagnostics integration history writer refuses an unrelated HEAD before writing
+ok 12 - Native Fin JVM exit diagnostics integration history writer refuses an unrelated HEAD before writing
+  ---
+  duration_ms: 149.950767
+  type: 'test'
+  ...
+# Subtest: the measured edge archive retains every original run record and producer source snapshot
+ok 13 - the measured edge archive retains every original run record and producer source snapshot
+  ---
+  duration_ms: 491.963022
+  type: 'test'
+  ...
+# 866 original files, including 811 Git source snapshots, authenticated
+# Subtest: all archived native edge selections pass the strict raw and public report gate
+ok 14 - all archived native edge selections pass the strict raw and public report gate
+  ---
+  duration_ms: 932.577329
+  type: 'test'
+  ...
+# Subtest: measured archive authentication rejects altered reports, logs, runners and source bytes
+ok 15 - measured archive authentication rejects altered reports, logs, runners and source bytes
+  ---
+  duration_ms: 261.19906
+  type: 'test'
+  ...
+# Subtest: edge gates run every native public host and both Python floors without changing prior gates
+ok 16 - edge gates run every native public host and both Python floors without changing prior gates
+  ---
+  duration_ms: 55.299227
+  type: 'test'
+  ...
+# Subtest: edge workflow rejects missing dispatch, relabelled floors, unrecorded commands and unenforced outcomes
+ok 17 - edge workflow rejects missing dispatch, relabelled floors, unrecorded commands and unenforced outcomes
+  ---
+  duration_ms: 257.545129
+  type: 'test'
+  ...
+# 65 missing or weakened CI claims rejected
+# Subtest: JVM diagnostics preserve the strict exit guard and add no retry or status substitution
+ok 18 - JVM diagnostics preserve the strict exit guard and add no retry or status substitution
+  ---
+  duration_ms: 0.628972
+  type: 'test'
+  ...
+# Subtest: removing only diagnostic statements reproduces the original archived observer byte for byte
+ok 19 - removing only diagnostic statements reproduces the original archived observer byte for byte
+  ---
+  duration_ms: 22.103045
+  type: 'test'
+  ...
+# Subtest: report checks accept both exact logging revisions and refuse every unrecorded script
+ok 20 - report checks accept both exact logging revisions and refuse every unrecorded script
+  ---
+  duration_ms: 1637.157402
+  type: 'test'
+  ...
+# Subtest: JVM diagnostics retain bounded exit events, thread and process state without deciding acceptance
+ok 21 - JVM diagnostics retain bounded exit events, thread and process state without deciding acceptance
+  ---
+  duration_ms: 27.112361
+  type: 'test'
+  ...
+# Subtest: native edge .NET selection accepts multiple SDKs and pins the newest stable 8.0 version
+ok 22 - native edge .NET selection accepts multiple SDKs and pins the newest stable 8.0 version
+  ---
+  duration_ms: 1.348887
+  type: 'test'
+  ...
+# Subtest: native edge .NET selection refuses missing, ambiguous and foreign SDKs
+ok 23 - native edge .NET selection refuses missing, ambiguous and foreign SDKs
+  ---
+  duration_ms: 1.183617
+  type: 'test'
+  ...
+# Subtest: native edge .NET installer refuses a host ignoring global.json before restore
+ok 24 - native edge .NET installer refuses a host ignoring global.json before restore # SKIP
+  ---
+  duration_ms: 0.094563
+  type: 'test'
+  ...
+# Subtest: synthetic current-format reports cover ten native hosts and both Python floors
+ok 25 - synthetic current-format reports cover ten native hosts and both Python floors
+  ---
+  duration_ms: 1676.159639
+  type: 'test'
+  ...
+# Subtest: every native report rejects missing public observations, stale sources and altered call rows
+ok 26 - every native report rejects missing public observations, stale sources and altered call rows
+  ---
+  duration_ms: 18888.357905
+  type: 'test'
+  ...
+# 230 cross-host false acceptance claims rejected
+# Subtest: host-specific checks reject stale probes, broken debugger bindings and missing runtime policies
+ok 27 - host-specific checks reject stale probes, broken debugger bindings and missing runtime policies
+  ---
+  duration_ms: 5800.975392
+  type: 'test'
+  ...
+# 52 host-specific false acceptance claims rejected
+# Subtest: coordinated missing environment identities cannot pass by comparing two absent values
+ok 28 - coordinated missing environment identities cannot pass by comparing two absent values
+  ---
+  duration_ms: 1214.079166
+  type: 'test'
+  ...
+# Subtest: historical uninstrumented reports cannot pass the current measured gate
+ok 29 - historical uninstrumented reports cannot pass the current measured gate
+  ---
+  duration_ms: 3.193354
+  type: 'test'
+  ...
+# Subtest: edge report CLI fails closed for omitted arguments, missing files, bad floors and unobserved hosts
+ok 30 - edge report CLI fails closed for omitted arguments, missing files, bad floors and unobserved hosts
+  ---
+  duration_ms: 3980.842057
+  type: 'test'
+  ...
+# Subtest: the native PHP and PHP-Wasm jobs together keep exactly the former PHP job and both gate the summary
+ok 31 - the native PHP and PHP-Wasm jobs together keep exactly the former PHP job and both gate the summary
+  ---
+  duration_ms: 45.728957
+  type: 'test'
+  ...
+# Subtest: PHP shard checks refuse skipped, weakened or unenforced jobs and lost commands
+ok 32 - PHP shard checks refuse skipped, weakened or unenforced jobs and lost commands
+  ---
+  duration_ms: 52.307722
+  type: 'test'
+  ...
+# Subtest: PHP acceptance shard authenticates each exact source predecessor
+ok 33 - PHP acceptance shard authenticates each exact source predecessor
+  ---
+  duration_ms: 1716.870907
+  type: 'test'
+  ...
+# Subtest: PHP shard source pins do not change observations or other inventory claims
+ok 34 - PHP shard source pins do not change observations or other inventory claims
+  ---
+  duration_ms: 2444.981247
+  type: 'test'
+  ...
+# Subtest: owned PHP-Wasm CI requires all layers, installed releases and exact documentation execution
+ok 35 - owned PHP-Wasm CI requires all layers, installed releases and exact documentation execution
+  ---
+  duration_ms: 2.560748
+  type: 'test'
+  ...
+# Subtest: owned PHP-Wasm CI rejects skipped execution, omitted reports and swallowed failures
+ok 36 - owned PHP-Wasm CI rejects skipped execution, omitted reports and swallowed failures
+  ---
+  duration_ms: 58.77543
+  type: 'test'
+  ...
+# Subtest: owned and copied descriptors share one runtime with exact extension names
+ok 37 - owned and copied descriptors share one runtime with exact extension names
+  ---
+  duration_ms: 4.085785
+  type: 'test'
+  ...
+# Subtest: installed descriptors deduplicate runtime, extension and PHP files per host
+ok 38 - installed descriptors deduplicate runtime, extension and PHP files per host
+  ---
+  duration_ms: 0.433626
+  type: 'test'
+  ...
+# Subtest: descriptor registration rejects incompatible identities before accepting another package
+ok 39 - descriptor registration rejects incompatible identities before accepting another package
+  ---
+  duration_ms: 0.594205
+  type: 'test'
+  ...
+# Subtest: bundled PHP dependencies mount once without affecting extension-only Composer loading
+ok 40 - bundled PHP dependencies mount once without affecting extension-only Composer loading
+  ---
+  duration_ms: 0.663814
+  type: 'test'
+  ...
+# Subtest: alias catalogs mount once at their exact package-relative path
+ok 41 - alias catalogs mount once at their exact package-relative path
+  ---
+  duration_ms: 0.587386
+  type: 'test'
+  ...
+# Subtest: descriptors reject unsupported versions, variants, misplaced modes and late registration
+ok 42 - descriptors reject unsupported versions, variants, misplaced modes and late registration
+  ---
+  duration_ms: 0.976283
+  type: 'test'
+  ...
+# Subtest: lazy descriptors register URLs and opt-in files without startup extensions
+ok 43 - lazy descriptors register URLs and opt-in files without startup extensions
+  ---
+  duration_ms: 0.570221
+  type: 'test'
+  ...
+# Subtest: different components can mix loading modes while sharing one runtime
+ok 44 - different components can mix loading modes while sharing one runtime
+  ---
+  duration_ms: 0.233339
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Fin admission authenticates each exact source predecessor
+ok 45 - PHP-Wasm Fin admission authenticates each exact source predecessor
+  ---
+  duration_ms: 2846.897788
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Fin admission changes current source pins without inventing installed evidence
+ok 46 - PHP-Wasm Fin admission changes current source pins without inventing installed evidence
+  ---
+  duration_ms: 4385.014157
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Fin archive authenticates each exact source predecessor
+ok 47 - PHP-Wasm Fin archive authenticates each exact source predecessor
+  ---
+  duration_ms: 2638.875645
+  type: 'test'
+  ...
+# Subtest: Reviewed PHP-Wasm Fin integration authenticates each exact source predecessor
+ok 48 - Reviewed PHP-Wasm Fin integration authenticates each exact source predecessor
+  ---
+  duration_ms: 1793.462077
+  type: 'test'
+  ...
+# Subtest: Reviewed PHP-Wasm Fin source pins do not change observations or other inventory claims
+ok 49 - Reviewed PHP-Wasm Fin source pins do not change observations or other inventory claims
+  ---
+  duration_ms: 2829.782442
+  type: 'test'
+  ...
+# Subtest: Reviewed PHP-Wasm Fin archive authenticates each exact source predecessor
+ok 50 - Reviewed PHP-Wasm Fin archive authenticates each exact source predecessor
+  ---
+  duration_ms: 21.681469
+  type: 'test'
+  ...
+# Subtest: reviewed PHP-Wasm archival leaves the entire preceding support inventory unchanged
+ok 51 - reviewed PHP-Wasm archival leaves the entire preceding support inventory unchanged
+  ---
+  duration_ms: 1679.001826
+  type: 'test'
+  ...
+# Subtest: the PHP-Wasm promotion updater refuses another HEAD before reading or writing evidence
+ok 52 - the PHP-Wasm promotion updater refuses another HEAD before reading or writing evidence
+  ---
+  duration_ms: 161.175442
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Fin promotion authenticates every exact predecessor and rejects unrelated edits
+ok 53 - PHP-Wasm Fin promotion authenticates every exact predecessor and rejects unrelated edits
+  ---
+  duration_ms: 1668.445483
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Fin promotion preserves earlier evidence except exact authenticated source pins
+ok 54 - PHP-Wasm Fin promotion preserves earlier evidence except exact authenticated source pins
+  ---
+  duration_ms: 2017.794765
+  type: 'test'
+  ...
+# Subtest: direct PHP-Wasm Fin CI preserves the earlier workflow and requires both installed source routes
+ok 55 - direct PHP-Wasm Fin CI preserves the earlier workflow and requires both installed source routes
+  ---
+  duration_ms: 11.401306
+  type: 'test'
+  ...
+# Subtest: direct PHP-Wasm Fin CI refuses lost producers, checks, uploads and failure suppression
+ok 56 - direct PHP-Wasm Fin CI refuses lost producers, checks, uploads and failure suppression
+  ---
+  duration_ms: 31.227797
+  type: 'test'
+  ...
+# Subtest: Direct PHP-Wasm Fin integration authenticates every transition and refuses unrecorded edits
+ok 57 - Direct PHP-Wasm Fin integration authenticates every transition and refuses unrecorded edits
+  ---
+  duration_ms: 7388.853661
+  type: 'test'
+  ...
+# Subtest: Direct PHP-Wasm Fin integration preserves the earlier source ledgers
+ok 58 - Direct PHP-Wasm Fin integration preserves the earlier source ledgers
+  ---
+  duration_ms: 7.728429
+  type: 'test'
+  ...
+# Subtest: Direct PHP-Wasm Fin integration history writer refuses an unrelated HEAD before writing
+ok 59 - Direct PHP-Wasm Fin integration history writer refuses an unrelated HEAD before writing
+  ---
+  duration_ms: 108.241036
+  type: 'test'
+  ...
+# Subtest: Direct PHP-Wasm Fin integration changes current source pins only and adds no installed support claims
+ok 60 - Direct PHP-Wasm Fin integration changes current source pins only and adds no installed support claims
+  ---
+  duration_ms: 1980.682652
+  type: 'test'
+  ...
+# Subtest: Direct PHP-Wasm Fin promotion integration authenticates every transition and refuses unrecorded edits
+ok 61 - Direct PHP-Wasm Fin promotion integration authenticates every transition and refuses unrecorded edits
+  ---
+  duration_ms: 6747.339622
+  type: 'test'
+  ...
+# Subtest: Direct PHP-Wasm Fin promotion integration preserves the earlier source ledgers
+ok 62 - Direct PHP-Wasm Fin promotion integration preserves the earlier source ledgers
+  ---
+  duration_ms: 7.339037
+  type: 'test'
+  ...
+# Subtest: Direct PHP-Wasm Fin promotion integration history writer refuses an unrelated HEAD before writing
+ok 63 - Direct PHP-Wasm Fin promotion integration history writer refuses an unrelated HEAD before writing
+  ---
+  duration_ms: 1337.975093
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype integration authenticates every transition and refuses unrecorded edits
+ok 64 - PHP-Wasm Subtype integration authenticates every transition and refuses unrecorded edits
+  ---
+  duration_ms: 6985.960519
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype integration preserves the earlier source ledgers
+ok 65 - PHP-Wasm Subtype integration preserves the earlier source ledgers
+  ---
+  duration_ms: 9.400861
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype integration history writer refuses an unrelated HEAD before writing
+ok 66 - PHP-Wasm Subtype integration history writer refuses an unrelated HEAD before writing
+  ---
+  duration_ms: 122.654716
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype source admission refreshes source pins without promoting installed support
+ok 67 - PHP-Wasm Subtype source admission refreshes source pins without promoting installed support
+  ---
+  duration_ms: 5419.841071
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype CI preserves the earlier workflow and requires both installed source routes and fresh constructor analysis
+ok 68 - PHP-Wasm Subtype CI preserves the earlier workflow and requires both installed source routes and fresh constructor analysis
+  ---
+  duration_ms: 10.742085
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype CI refuses lost producers, checks, uploads and failure suppression
+ok 69 - PHP-Wasm Subtype CI refuses lost producers, checks, uploads and failure suppression
+  ---
+  duration_ms: 24.096196
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype acceptance integration authenticates every transition and refuses unrecorded edits
+ok 70 - PHP-Wasm Subtype acceptance integration authenticates every transition and refuses unrecorded edits
+  ---
+  duration_ms: 6546.469931
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype acceptance integration preserves the earlier source ledgers
+ok 71 - PHP-Wasm Subtype acceptance integration preserves the earlier source ledgers
+  ---
+  duration_ms: 6.407437
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype acceptance integration history writer refuses an unrelated HEAD before writing
+ok 72 - PHP-Wasm Subtype acceptance integration history writer refuses an unrelated HEAD before writing
+  ---
+  duration_ms: 97.521002
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype acceptance archive and CI refresh source pins without changing support observations
+ok 73 - PHP-Wasm Subtype acceptance archive and CI refresh source pins without changing support observations
+  ---
+  duration_ms: 4898.68608
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype promotion integration authenticates every transition and refuses unrecorded edits
+ok 74 - PHP-Wasm Subtype promotion integration authenticates every transition and refuses unrecorded edits
+  ---
+  duration_ms: 7843.265734
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype promotion integration preserves the earlier source ledgers
+ok 75 - PHP-Wasm Subtype promotion integration preserves the earlier source ledgers
+  ---
+  duration_ms: 7.308861
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype promotion integration history writer refuses an unrelated HEAD before writing
+ok 76 - PHP-Wasm Subtype promotion integration history writer refuses an unrelated HEAD before writing
+  ---
+  duration_ms: 1331.976139
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype entry probe integration authenticates every transition and refuses unrecorded edits
+ok 77 - PHP-Wasm Subtype entry probe integration authenticates every transition and refuses unrecorded edits
+  ---
+  duration_ms: 8332.137486
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype entry probe integration preserves the earlier source ledgers
+ok 78 - PHP-Wasm Subtype entry probe integration preserves the earlier source ledgers
+  ---
+  duration_ms: 19.656416
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype entry probe changes source pins without changing any support claim
+ok 79 - PHP-Wasm Subtype entry probe changes source pins without changing any support claim
+  ---
+  duration_ms: 1763.388539
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype entry probe integration history writer refuses an unrelated HEAD before writing
+ok 80 - PHP-Wasm Subtype entry probe integration history writer refuses an unrelated HEAD before writing
+  ---
+  duration_ms: 96.473934
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype installed probe harness integration authenticates every transition and refuses unrecorded edits
+ok 81 - PHP-Wasm Subtype installed probe harness integration authenticates every transition and refuses unrecorded edits
+  ---
+  duration_ms: 6866.348531
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype installed probe harness integration preserves the earlier source ledgers
+ok 82 - PHP-Wasm Subtype installed probe harness integration preserves the earlier source ledgers
+  ---
+  duration_ms: 21.890968
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype installed probe harness changes source pins without changing any support claim
+ok 83 - PHP-Wasm Subtype installed probe harness changes source pins without changing any support claim
+  ---
+  duration_ms: 1236.420779
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype installed probe harness integration history writer refuses an unrelated HEAD before writing
+ok 84 - PHP-Wasm Subtype installed probe harness integration history writer refuses an unrelated HEAD before writing
+  ---
+  duration_ms: 116.270204
+  type: 'test'
+  ...
+# Subtest: probe driver preserves arrangements and validates all synthetic rows across loading modes
+ok 85 - probe driver preserves arrangements and validates all synthetic rows across loading modes
+  ---
+  duration_ms: 190.48865
+  type: 'test'
+  ...
+# Subtest: probe driver rejects absent instrumentation, altered call sequences and incorrect positive controls
+ok 86 - probe driver rejects absent instrumentation, altered call sequences and incorrect positive controls
+  ---
+  duration_ms: 145.244482
+  type: 'test'
+  ...
+# Subtest: installed PHP-Wasm entry CI preserves the prior workflow and enforces both source routes
+ok 87 - installed PHP-Wasm entry CI preserves the prior workflow and enforces both source routes
+  ---
+  duration_ms: 11.108991
+  type: 'test'
+  ...
+# Subtest: installed PHP-Wasm entry CI refuses changed gates, discarded originals and suppressed failures
+ok 88 - installed PHP-Wasm entry CI refuses changed gates, discarded originals and suppressed failures
+  ---
+  duration_ms: 15.133244
+  type: 'test'
+  ...
+# Subtest: installed entry TAP requires actual ordinary and reviewed passes and rejects missing or skipped execution
+ok 89 - installed entry TAP requires actual ordinary and reviewed passes and rejects missing or skipped execution
+  ---
+  duration_ms: 17.678928
+  type: 'test'
+  ...
+# Subtest: actual CI shell propagates producer and checker failures while preserving the original TAP
+ok 90 - actual CI shell propagates producer and checker failures while preserving the original TAP
+  ---
+  duration_ms: 244.554164
+  type: 'test'
+  ...
+# Subtest: paired report CLI checks an explicitly supplied original TAP before accepting any reports
+ok 91 - paired report CLI checks an explicitly supplied original TAP before accepting any reports
+  ---
+  duration_ms: 6236.613768
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype installed entry CI integration authenticates every transition and refuses unrecorded edits
+ok 92 - PHP-Wasm Subtype installed entry CI integration authenticates every transition and refuses unrecorded edits
+  ---
+  duration_ms: 6886.189529
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype installed entry CI integration preserves the earlier source ledgers
+ok 93 - PHP-Wasm Subtype installed entry CI integration preserves the earlier source ledgers
+  ---
+  duration_ms: 34.664926
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype installed entry CI changes source pins without changing any support claim
+ok 94 - PHP-Wasm Subtype installed entry CI changes source pins without changing any support claim
+  ---
+  duration_ms: 1174.457307
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype installed entry CI integration history writer refuses an unrelated HEAD before writing
+ok 95 - PHP-Wasm Subtype installed entry CI integration history writer refuses an unrelated HEAD before writing
+  ---
+  duration_ms: 124.632124
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm refinement READMEs do not mislabel supported fields, containers or reviewed APIs
+ok 96 - PHP-Wasm refinement READMEs do not mislabel supported fields, containers or reviewed APIs
+  ---
+  duration_ms: 136.714789
+  type: 'test'
+  ...
+# Subtest: direct PHP-Wasm Fin fixtures preserve native callers, full container edges and independent reviews
+ok 97 - direct PHP-Wasm Fin fixtures preserve native callers, full container edges and independent reviews
+  ---
+  duration_ms: 25.665357
+  type: 'test'
+  ...
+# Subtest: ordinary installed PHP-Wasm direct Fin scalars and containers execute in Node and Chromium
+ok 98 - ordinary installed PHP-Wasm direct Fin scalars and containers execute in Node and Chromium # SKIP
+  ---
+  duration_ms: 0.899283
+  type: 'test'
+  ...
+# Subtest: reviewed installed PHP-Wasm direct Fin scalars and containers execute in Node and Chromium
+ok 99 - reviewed installed PHP-Wasm direct Fin scalars and containers execute in Node and Chromium # SKIP
+  ---
+  duration_ms: 0.105698
+  type: 'test'
+  ...
+# Subtest: fresh PHP-Wasm direct Fin reviews reject tightened, loosened, omitted and changed source bounds before output
+ok 100 - fresh PHP-Wasm direct Fin reviews reject tightened, loosened, omitted and changed source bounds before output # SKIP
+  ---
+  duration_ms: 0.936585
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype fixtures preserve the native corpus and independently chosen constructors
+ok 101 - PHP-Wasm Subtype fixtures preserve the native corpus and independently chosen constructors
+  ---
+  duration_ms: 19.378011
+  type: 'test'
+  ...
+# Subtest: ordinary PHP-Wasm Subtype adapters compile with fresh Lean and retain every checked site
+ok 102 - ordinary PHP-Wasm Subtype adapters compile with fresh Lean and retain every checked site # SKIP
+  ---
+  duration_ms: 0.205041
+  type: 'test'
+  ...
+# Subtest: reviewed PHP-Wasm Subtype adapters compile with fresh Lean and retain every checked site
+ok 103 - reviewed PHP-Wasm Subtype adapters compile with fresh Lean and retain every checked site # SKIP
+  ---
+  duration_ms: 0.107425
+  type: 'test'
+  ...
+# Subtest: a different valid reviewed Subtype constructor remains a legitimate PHP-Wasm API choice
+ok 104 - a different valid reviewed Subtype constructor remains a legitimate PHP-Wasm API choice # SKIP
+  ---
+  duration_ms: 0.088058
+  type: 'test'
+  ...
+# Subtest: fresh PHP-Wasm Subtype analysis refuses invalid constructors and incompatible reviewed transports before output
+ok 105 - fresh PHP-Wasm Subtype analysis refuses invalid constructors and incompatible reviewed transports before output # SKIP
+  ---
+  duration_ms: 0.069179
+  type: 'test'
+  ...
+# Subtest: ordinary installed PHP-Wasm Subtypes execute all checked constructors and recover after rejection
+ok 106 - ordinary installed PHP-Wasm Subtypes execute all checked constructors and recover after rejection # SKIP
+  ---
+  duration_ms: 0.079298
+  type: 'test'
+  ...
+# Subtest: reviewed installed PHP-Wasm Subtypes execute all checked constructors and recover after rejection
+ok 107 - reviewed installed PHP-Wasm Subtypes execute all checked constructors and recover after rejection # SKIP
+  ---
+  duration_ms: 0.16353
+  type: 'test'
+  ...
+# Subtest: independent PHP-Wasm Subtype review does not borrow the ordinary configuration
+ok 108 - independent PHP-Wasm Subtype review does not borrow the ordinary configuration
+  ---
+  duration_ms: 0.51541
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm entry probe archive authenticates all original inputs and preserves failed attempts
+ok 109 - PHP-Wasm entry probe archive authenticates all original inputs and preserves failed attempts
+  ---
+  duration_ms: 178.327772
+  type: 'test'
+  ...
+# Subtest: all 55 selected C definitions reproduce the executed probe inputs byte for byte
+ok 110 - all 55 selected C definitions reproduce the executed probe inputs byte for byte
+  ---
+  duration_ms: 63.689758
+  type: 'test'
+  ...
+# Subtest: complete weak and strict PHP callers retain all 2030 measured calls and recovery controls
+ok 111 - complete weak and strict PHP callers retain all 2030 measured calls and recovery controls
+  ---
+  duration_ms: 168.175509
+  type: 'test'
+  ...
+# Subtest: measured smoke controls cover rejection zeros, normalization and every selected entry
+ok 112 - measured smoke controls cover rejection zeros, normalization and every selected entry
+  ---
+  duration_ms: 24.935146
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Fin archive authenticates both complete fixtures and every installed route
+ok 113 - PHP-Wasm Fin archive authenticates both complete fixtures and every installed route
+  ---
+  duration_ms: 16.003338
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Fin archive rejects missing cases, altered constraints and unobserved claims
+ok 114 - PHP-Wasm Fin archive rejects missing cases, altered constraints and unobserved claims
+  ---
+  duration_ms: 130.740866
+  type: 'test'
+  ...
+# Subtest: the successful PHP-safe Fin fixture does not rewrite its failed predecessor
+ok 115 - the successful PHP-safe Fin fixture does not rewrite its failed predecessor
+  ---
+  duration_ms: 11.749159
+  type: 'test'
+  ...
+# Subtest: reviewed PHP-Wasm Fin archive authenticates both independent contracts, every installed arrangement and original source
+ok 116 - reviewed PHP-Wasm Fin archive authenticates both independent contracts, every installed arrangement and original source
+  ---
+  duration_ms: 55.238011
+  type: 'test'
+  ...
+# Subtest: reviewed PHP-Wasm validation refuses lost executions, changed reviews and forged package observations
+ok 117 - reviewed PHP-Wasm validation refuses lost executions, changed reviews and forged package observations
+  ---
+  duration_ms: 740.088202
+  type: 'test'
+  ...
+# Subtest: reviewed PHP-Wasm validation independently rejects each package, request, driver and execution mutation
+ok 118 - reviewed PHP-Wasm validation independently rejects each package, request, driver and execution mutation
+  ---
+  duration_ms: 1209.895667
+  type: 'test'
+  ...
+# Subtest: reviewed PHP-Wasm execution authentication rejects incomplete tests, fixture builds and realm selections
+ok 119 - reviewed PHP-Wasm execution authentication rejects incomplete tests, fixture builds and realm selections
+  ---
+  duration_ms: 7.234269
+  type: 'test'
+  ...
+# Subtest: PHP promotion normalization refuses unauthenticated round-trip inventory bytes
+ok 120 - PHP promotion normalization refuses unauthenticated round-trip inventory bytes
+  ---
+  duration_ms: 1752.798571
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Fin promotion authenticates four original selections and every pinned file
+ok 121 - PHP-Wasm Fin promotion authenticates four original selections and every pinned file
+  ---
+  duration_ms: 8222.381231
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Fin promotion states nested-only coverage in the evidence and generated consumer table
+ok 122 - PHP-Wasm Fin promotion states nested-only coverage in the evidence and generated consumer table
+  ---
+  duration_ms: 6254.178291
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Fin promotion rejects appended and replaced claims in every selection
+ok 123 - PHP-Wasm Fin promotion rejects appended and replaced claims in every selection
+  ---
+  duration_ms: 8461.430051
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Fin promotion changes exactly six cells and no earlier observation
+ok 124 - PHP-Wasm Fin promotion changes exactly six cells and no earlier observation
+  ---
+  duration_ms: 7149.134842
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Fin promotion rejects inferred hosts, positions, runtime claims and weakened scope
+ok 125 - PHP-Wasm Fin promotion rejects inferred hosts, positions, runtime claims and weakened scope
+  ---
+  duration_ms: 7255.462797
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Fin promotion rejects changed receipts, reports, logs and selected producer sources
+ok 126 - PHP-Wasm Fin promotion rejects changed receipts, reports, logs and selected producer sources
+  ---
+  duration_ms: 159.815662
+  type: 'test'
+  ...
+# Subtest: direct PHP-Wasm Fin originals retain both source routes, all 48 executions and six fresh review refusals
+ok 127 - direct PHP-Wasm Fin originals retain both source routes, all 48 executions and six fresh review refusals
+  ---
+  duration_ms: 57.367875
+  type: 'test'
+  ...
+# Subtest: direct PHP-Wasm Fin archive refuses altered original records and selected producer sources
+ok 128 - direct PHP-Wasm Fin archive refuses altered original records and selected producer sources
+  ---
+  duration_ms: 386.73029
+  type: 'test'
+  ...
+# Subtest: direct PHP-Wasm reports reject missing routes, bounds, callers, loading phases and package identities
+ok 129 - direct PHP-Wasm reports reject missing routes, bounds, callers, loading phases and package identities
+  ---
+  duration_ms: 2373.241928
+  type: 'test'
+  ...
+# Subtest: direct PHP-Wasm report CLI requires both reports and rejects unknown arguments or truncated acceptance
+ok 130 - direct PHP-Wasm report CLI requires both reports and rejects unknown arguments or truncated acceptance
+  ---
+  duration_ms: 7442.689782
+  type: 'test'
+  ...
+# Subtest: direct PHP-Wasm promotion authenticates four selections without borrowing runtime or dispatch coverage
+ok 131 - direct PHP-Wasm promotion authenticates four selections without borrowing runtime or dispatch coverage
+  ---
+  duration_ms: 94.202088
+  type: 'test'
+  ...
+# Subtest: direct PHP-Wasm promotion supplements only its existing six Fin cells and preserves earlier evidence
+ok 132 - direct PHP-Wasm promotion supplements only its existing six Fin cells and preserves earlier evidence
+  ---
+  duration_ms: 8339.572836
+  type: 'test'
+  ...
+# Subtest: direct PHP-Wasm promotion refuses incomplete, duplicated or repeated supplements
+ok 133 - direct PHP-Wasm promotion refuses incomplete, duplicated or repeated supplements
+  ---
+  duration_ms: 465.810298
+  type: 'test'
+  ...
+# Subtest: PHP consumer and author guides distinguish direct acceptance from the earlier nested fixtures
+ok 134 - PHP consumer and author guides distinguish direct acceptance from the earlier nested fixtures
+  ---
+  duration_ms: 2.898306
+  type: 'test'
+  ...
+# Subtest: installed PHP-Wasm Subtype originals retain both routes, 24 executions and the failed host-path attempt
+ok 135 - installed PHP-Wasm Subtype originals retain both routes, 24 executions and the failed host-path attempt
+  ---
+  duration_ms: 47.435552
+  type: 'test'
+  ...
+# Subtest: installed PHP-Wasm Subtype archive refuses changed records and selected producer sources
+ok 136 - installed PHP-Wasm Subtype archive refuses changed records and selected producer sources
+  ---
+  duration_ms: 298.330631
+  type: 'test'
+  ...
+# Subtest: installed PHP-Wasm Subtype reports reject lost constructors, execution modes and package identities
+ok 137 - installed PHP-Wasm Subtype reports reject lost constructors, execution modes and package identities
+  ---
+  duration_ms: 672.954692
+  type: 'test'
+  ...
+# Subtest: installed PHP-Wasm Subtype report CLI requires both routes and rejects truncated or unknown input
+ok 138 - installed PHP-Wasm Subtype report CLI requires both routes and rejects truncated or unknown input
+  ---
+  duration_ms: 6765.869575
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype promotion authenticates both source routes without inventing dispatch or browser coverage
+ok 139 - PHP-Wasm Subtype promotion authenticates both source routes without inventing dispatch or browser coverage
+  ---
+  duration_ms: 53.454068
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype promotion changes only four cells and preserves every older observation
+ok 140 - PHP-Wasm Subtype promotion changes only four cells and preserves every older observation
+  ---
+  duration_ms: 8033.616166
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype promotion refuses missing, duplicate, weakened or repeated evidence selections
+ok 141 - PHP-Wasm Subtype promotion refuses missing, duplicate, weakened or repeated evidence selections
+  ---
+  duration_ms: 716.884629
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm consumer and author guides describe installed Subtypes and retain unmeasured entry counts
+ok 142 - PHP-Wasm consumer and author guides describe installed Subtypes and retain unmeasured entry counts
+  ---
+  duration_ms: 1.943271
+  type: 'test'
+  ...
+# Subtest: original installed Subtype probes authenticate all ordinary and reviewed executions
+ok 143 - original installed Subtype probes authenticate all ordinary and reviewed executions
+  ---
+  duration_ms: 660.747676
+  type: 'test'
+  ...
+# Subtest: installed Subtype probe reports reject missing modes, forged entries and compiler-sidecar changes
+ok 144 - installed Subtype probe reports reject missing modes, forged entries and compiler-sidecar changes
+  ---
+  duration_ms: 3317.799948
+  type: 'test'
+  ...
+# Subtest: installed Subtype archive rejects changed indexes and both length and same-length record corruption
+ok 145 - installed Subtype archive rejects changed indexes and both length and same-length record corruption
+  ---
+  duration_ms: 1883.169488
+  type: 'test'
+  ...
+# Subtest: installed Subtype entry CLI requires both complete source routes and refuses ambiguous flags
+ok 146 - installed Subtype entry CLI requires both complete source routes and refuses ambiguous flags
+  ---
+  duration_ms: 5879.463103
+  type: 'test'
+  ...
+# Subtest: portable PHP-Wasm probe setup reproduces the executed source and explicit selection
+ok 147 - portable PHP-Wasm probe setup reproduces the executed source and explicit selection
+  ---
+  duration_ms: 12.044746
+  type: 'test'
+  ...
+# Subtest: ordinary installed PHP-Wasm Subtype entry probes record constructor and source calls
+ok 148 - ordinary installed PHP-Wasm Subtype entry probes record constructor and source calls # SKIP
+  ---
+  duration_ms: 0.35383
+  type: 'test'
+  ...
+# Subtest: reviewed installed PHP-Wasm Subtype entry probes record constructor and source calls
+ok 149 - reviewed installed PHP-Wasm Subtype entry probes record constructor and source calls # SKIP
+  ---
+  duration_ms: 0.077834
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm C entry markers preserve all original bytes and select definitions only
+ok 150 - PHP-Wasm C entry markers preserve all original bytes and select definitions only
+  ---
+  duration_ms: 1.482416
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm marker selection refuses duplicate symbols, labels and invalid C identities
+ok 151 - PHP-Wasm marker selection refuses duplicate symbols, labels and invalid C identities
+  ---
+  duration_ms: 1.470659
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm C marker restoration refuses corrupt bytes, offsets and digests
+ok 152 - PHP-Wasm C marker restoration refuses corrupt bytes, offsets and digests
+  ---
+  duration_ms: 1.185776
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm trace parser distinguishes rejected construction from actual adapter and source entry
+ok 153 - PHP-Wasm trace parser distinguishes rejected construction from actual adapter and source entry
+  ---
+  duration_ms: 0.412848
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm trace parser refuses incomplete brackets, unknown stderr and out-of-call entries
+ok 154 - PHP-Wasm trace parser refuses incomplete brackets, unknown stderr and out-of-call entries
+  ---
+  duration_ms: 0.644708
+  type: 'test'
+  ...
+# Subtest: plain copied PHP-Wasm models carry the native Fin trees and the same Lean guards
+ok 155 - plain copied PHP-Wasm models carry the native Fin trees and the same Lean guards
+  ---
+  duration_ms: 30.992092
+  type: 'test'
+  ...
+# Subtest: every PHP Fin fixture's export names generate native PHP and PHP-Wasm packages before any long run
+ok 156 - every PHP Fin fixture's export names generate native PHP and PHP-Wasm packages before any long run
+  ---
+  duration_ms: 90.56885
+  type: 'test'
+  ...
+# Subtest: the PHP-Wasm side module compares caller limbs with each bound before the only conversion into Lean
+ok 157 - the PHP-Wasm side module compares caller limbs with each bound before the only conversion into Lean
+  ---
+  duration_ms: 38.058889
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm preserves top-level Subtype checks while refined callable, graph and owned packages remain refused
+ok 158 - PHP-Wasm preserves top-level Subtype checks while refined callable, graph and owned packages remain refused
+  ---
+  duration_ms: 36.739677
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm packages document each checked path, and packages without bounds document nothing new
+ok 159 - PHP-Wasm packages document each checked path, and packages without bounds document nothing new
+  ---
+  duration_ms: 22.725268
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm callers are the native PHP Fin consumers with only loading and reporting changed
+ok 160 - PHP-Wasm callers are the native PHP Fin consumers with only loading and reporting changed
+  ---
+  duration_ms: 3.721964
+  type: 'test'
+  ...
+# Subtest: relocated PHP-Wasm packages check Fin before Lean in Node and browser hosts (dispatch not measured)
+ok 161 - relocated PHP-Wasm packages check Fin before Lean in Node and browser hosts (dispatch not measured) # SKIP
+  ---
+  duration_ms: 0.173525
+  type: 'test'
+  ...
+# Subtest: independent Fin reviews reconcile with fresh Lean in the wasm32 model, and a changed bound is refused
+ok 162 - independent Fin reviews reconcile with fresh Lean in the wasm32 model, and a changed bound is refused # SKIP
+  ---
+  duration_ms: 0.406646
+  type: 'test'
+  ...
+# Subtest: independently reviewed PHP-Wasm packages check Fin before Lean in Node and browser hosts (dispatch not measured)
+ok 163 - independently reviewed PHP-Wasm packages check Fin before Lean in Node and browser hosts (dispatch not measured) # SKIP
+  ---
+  duration_ms: 0.074235
+  type: 'test'
+  ...
+# Subtest: CI runs the reviewed PHP-Wasm Fin reconciliation and installed gates and keeps their report
+ok 164 - CI runs the reviewed PHP-Wasm Fin reconciliation and installed gates and keeps their report
+  ---
+  duration_ms: 11.137973
+  type: 'test'
+  ...
+# Subtest: every repository test receives exactly one named execution profile
+ok 165 - every repository test receives exactly one named execution profile
+  ---
+  duration_ms: 35.458191
+  type: 'test'
+  ...
+# Subtest: unclassified tests and non-tests are rejected
+ok 166 - unclassified tests and non-tests are rejected
+  ---
+  duration_ms: 0.604519
+  type: 'test'
+  ...
+# Subtest: missing manifest entries and duplicate discovered paths are rejected
+ok 167 - missing manifest entries and duplicate discovered paths are rejected
+  ---
+  duration_ms: 0.483958
+  type: 'test'
+  ...
+# Subtest: historical test registration checks permit additions but reject edits and ambiguous lineage
+ok 168 - historical test registration checks permit additions but reject edits and ambiguous lineage
+  ---
+  duration_ms: 2651.852488
+  type: 'test'
+  ...
+# Subtest: historical shape comparisons preserve old cells without weakening the live classifier
+ok 169 - historical shape comparisons preserve old cells without weakening the live classifier
+  ---
+  duration_ms: 4779.549134
+  type: 'test'
+  ...
+# Subtest: the versioned inventory classifies every profile, IR alternative and required source shape
+ok 170 - the versioned inventory classifies every profile, IR alternative and required source shape
+  ---
+  duration_ms: 501.30285
+  type: 'test'
+  ...
+# Subtest: recursive copied values and callback payloads have installed checks in all seventeen profiles
+ok 171 - recursive copied values and callback payloads have installed checks in all seventeen profiles
+  ---
+  duration_ms: 317.928898
+  type: 'test'
+  ...
+# Subtest: Char installed evidence distinguishes npm record fields from scalar and callable evidence
+ok 172 - Char installed evidence distinguishes npm record fields from scalar and callable evidence
+  ---
+  duration_ms: 332.737079
+  type: 'test'
+  ...
+# Subtest: platform-word evidence binds all seventeen profiles to compiled widths and audited positions
+ok 173 - platform-word evidence binds all seventeen profiles to compiled widths and audited positions
+  ---
+  duration_ms: 177.118945
+  type: 'test'
+  ...
+# Subtest: List evidence covers all copied profiles and accepted npm/native callbacks
+ok 174 - List evidence covers all copied profiles and accepted npm/native callbacks
+  ---
+  duration_ms: 169.914565
+  type: 'test'
+  ...
+# Subtest: collection evidence covers all seventeen profiles, both source paths and nineteen primitive fields
+ok 175 - collection evidence covers all seventeen profiles, both source paths and nineteen primitive fields
+  ---
+  duration_ms: 138.718604
+  type: 'test'
+  ...
+# Subtest: npm record evidence covers only copied positions and all nineteen primitive fields
+ok 176 - npm record evidence covers only copied positions and all nineteen primitive fields
+  ---
+  duration_ms: 152.308824
+  type: 'test'
+  ...
+# Subtest: native compound evidence promotes exactly C/C++ copied positions on both paths
+ok 177 - native compound evidence promotes exactly C/C++ copied positions on both paths
+  ---
+  duration_ms: 168.434309
+  type: 'test'
+  ...
+# Subtest: python compound evidence promotes exactly eighteen copied positions on both paths
+ok 178 - python compound evidence promotes exactly eighteen copied positions on both paths
+  ---
+  duration_ms: 267.201829
+  type: 'test'
+  ...
+# Subtest: rust compound evidence promotes exactly eighteen copied positions on both paths
+ok 179 - rust compound evidence promotes exactly eighteen copied positions on both paths
+  ---
+  duration_ms: 163.42785
+  type: 'test'
+  ...
+# Subtest: dotnet compound evidence promotes exactly eighteen copied positions on both paths
+ok 180 - dotnet compound evidence promotes exactly eighteen copied positions on both paths
+  ---
+  duration_ms: 203.289848
+  type: 'test'
+  ...
+# Subtest: java compound evidence promotes exactly eighteen copied positions on both paths
+ok 181 - java compound evidence promotes exactly eighteen copied positions on both paths
+  ---
+  duration_ms: 267.471256
+  type: 'test'
+  ...
+# Subtest: kotlin compound evidence promotes exactly eighteen copied positions on both paths
+ok 182 - kotlin compound evidence promotes exactly eighteen copied positions on both paths
+  ---
+  duration_ms: 212.65792
+  type: 'test'
+  ...
+# Subtest: ruby compound evidence promotes exactly eighteen copied positions on both paths
+ok 183 - ruby compound evidence promotes exactly eighteen copied positions on both paths
+  ---
+  duration_ms: 254.87833
+  type: 'test'
+  ...
+# Subtest: perl compound evidence promotes exactly eighteen copied positions on both paths
+ok 184 - perl compound evidence promotes exactly eighteen copied positions on both paths
+  ---
+  duration_ms: 196.658892
+  type: 'test'
+  ...
+# Subtest: php-native compound evidence promotes exactly eighteen copied positions on both paths
+ok 185 - php-native compound evidence promotes exactly eighteen copied positions on both paths
+  ---
+  duration_ms: 185.174013
+  type: 'test'
+  ...
+# Subtest: php-wasm compound evidence promotes exactly eighteen copied positions on both paths
+ok 186 - php-wasm compound evidence promotes exactly eighteen copied positions on both paths
+  ---
+  duration_ms: 287.058487
+  type: 'test'
+  ...
+# Subtest: wit-wasi compound evidence promotes exactly eighteen copied positions on both paths
+ok 187 - wit-wasi compound evidence promotes exactly eighteen copied positions on both paths
+  ---
+  duration_ms: 262.360201
+  type: 'test'
+  ...
+# Subtest: npm callable evidence covers five installed profiles without claiming fields or compound values
+ok 188 - npm callable evidence covers five installed profiles without claiming fields or compound values
+  ---
+  duration_ms: 246.33586
+  type: 'test'
+  ...
+# Subtest: historical C callable evidence excludes GMP integers, other hosts and copied fields
+ok 189 - historical C callable evidence excludes GMP integers, other hosts and copied fields
+  ---
+  duration_ms: 255.048639
+  type: 'test'
+  ...
+# Subtest: python callable evidence promotes only its installed primitive and callable positions
+ok 190 - python callable evidence promotes only its installed primitive and callable positions
+  ---
+  duration_ms: 268.726083
+  type: 'test'
+  ...
+# Subtest: ruby callable evidence promotes only its installed primitive and callable positions
+ok 191 - ruby callable evidence promotes only its installed primitive and callable positions
+  ---
+  duration_ms: 142.748853
+  type: 'test'
+  ...
+# Subtest: rust callable evidence promotes only its installed primitive and callable positions
+ok 192 - rust callable evidence promotes only its installed primitive and callable positions
+  ---
+  duration_ms: 193.395651
+  type: 'test'
+  ...
+# Subtest: cpp callable evidence promotes only its installed primitive and callable positions
+ok 193 - cpp callable evidence promotes only its installed primitive and callable positions
+  ---
+  duration_ms: 163.694924
+  type: 'test'
+  ...
+# Subtest: dotnet callable evidence promotes only its installed primitive and callable positions
+ok 194 - dotnet callable evidence promotes only its installed primitive and callable positions
+  ---
+  duration_ms: 180.541086
+  type: 'test'
+  ...
+# Subtest: java callable evidence promotes only its installed primitive and callable positions
+ok 195 - java callable evidence promotes only its installed primitive and callable positions
+  ---
+  duration_ms: 185.650225
+  type: 'test'
+  ...
+# Subtest: kotlin callable evidence promotes only its installed primitive and callable positions
+ok 196 - kotlin callable evidence promotes only its installed primitive and callable positions
+  ---
+  duration_ms: 146.681738
+  type: 'test'
+  ...
+# Subtest: php-native callable evidence promotes only its installed primitive and callable positions
+ok 197 - php-native callable evidence promotes only its installed primitive and callable positions
+  ---
+  duration_ms: 183.799694
+  type: 'test'
+  ...
+# Subtest: php-wasm callable evidence promotes only its installed primitive and callable positions
+ok 198 - php-wasm callable evidence promotes only its installed primitive and callable positions
+  ---
+  duration_ms: 202.813189
+  type: 'test'
+  ...
+# Subtest: wit-wasi callable evidence promotes only its installed primitive and callable positions
+ok 199 - wit-wasi callable evidence promotes only its installed primitive and callable positions
+  ---
+  duration_ms: 172.919125
+  type: 'test'
+  ...
+# Subtest: C exact integers use installed GMP values in every copied and primitive callable position
+ok 200 - C exact integers use installed GMP values in every copied and primitive callable position
+  ---
+  duration_ms: 158.296637
+  type: 'test'
+  ...
+# Subtest: Perl installed evidence stays scoped to audited source paths and positions
+ok 201 - Perl installed evidence stays scoped to audited source paths and positions
+  ---
+  duration_ms: 174.949112
+  type: 'test'
+  ...
+# Subtest: Perl primitive callable evidence promotes no other profile or copied fields
+ok 202 - Perl primitive callable evidence promotes no other profile or copied fields
+  ---
+  duration_ms: 227.095955
+  type: 'test'
+  ...
+# Subtest: ordinary php-native installed evidence stays within copied-value positions
+ok 203 - ordinary php-native installed evidence stays within copied-value positions
+  ---
+  duration_ms: 239.811387
+  type: 'test'
+  ...
+# Subtest: ordinary php-wasm installed evidence stays within copied-value positions
+ok 204 - ordinary php-wasm installed evidence stays within copied-value positions
+  ---
+  duration_ms: 269.012445
+  type: 'test'
+  ...
+# Subtest: ordinary rust installed evidence stays within copied-value positions
+ok 205 - ordinary rust installed evidence stays within copied-value positions
+  ---
+  duration_ms: 208.44427
+  type: 'test'
+  ...
+# Subtest: ordinary dotnet installed evidence stays within copied-value positions
+ok 206 - ordinary dotnet installed evidence stays within copied-value positions
+  ---
+  duration_ms: 229.897871
+  type: 'test'
+  ...
+# Subtest: ordinary java installed evidence stays within copied-value positions
+ok 207 - ordinary java installed evidence stays within copied-value positions
+  ---
+  duration_ms: 367.743986
+  type: 'test'
+  ...
+# Subtest: ordinary kotlin installed evidence stays within copied-value positions
+ok 208 - ordinary kotlin installed evidence stays within copied-value positions
+  ---
+  duration_ms: 174.10796
+  type: 'test'
+  ...
+# Subtest: ordinary ruby installed evidence stays within copied-value positions
+ok 209 - ordinary ruby installed evidence stays within copied-value positions
+  ---
+  duration_ms: 178.965669
+  type: 'test'
+  ...
+# Subtest: ordinary wit-wasi installed evidence stays within copied-value positions
+ok 210 - ordinary wit-wasi installed evidence stays within copied-value positions
+  ---
+  duration_ms: 280.37228
+  type: 'test'
+  ...
+# Subtest: ordinary python installed evidence stays within copied-value positions
+ok 211 - ordinary python installed evidence stays within copied-value positions
+  ---
+  duration_ms: 181.595606
+  type: 'test'
+  ...
+# Subtest: a new primitive fails until its type-surface classification is reviewed
+ok 212 - a new primitive fails until its type-surface classification is reviewed
+  ---
+  duration_ms: 31.693281
+  type: 'test'
+  ...
+# Subtest: a new constructor fails until its type-surface classification is reviewed
+ok 213 - a new constructor fails until its type-surface classification is reviewed
+  ---
+  duration_ms: 21.998929
+  type: 'test'
+  ...
+# Subtest: a new named kind fails until its type-surface classification is reviewed
+ok 214 - a new named kind fails until its type-surface classification is reviewed
+  ---
+  duration_ms: 22.993658
+  type: 'test'
+  ...
+# Subtest: a new type reference fails until its type-surface classification is reviewed
+ok 215 - a new type reference fails until its type-surface classification is reviewed
+  ---
+  duration_ms: 28.209611
+  type: 'test'
+  ...
+# Subtest: a new declaration fails until its type-surface classification is reviewed
+ok 216 - a new declaration fails until its type-surface classification is reviewed
+  ---
+  duration_ms: 18.544437
+  type: 'test'
+  ...
+# Subtest: a new delivery fails until its type-surface classification is reviewed
+ok 217 - a new delivery fails until its type-surface classification is reviewed
+  ---
+  duration_ms: 18.607666
+  type: 'test'
+  ...
+# Subtest: a new ownership fails until its type-surface classification is reviewed
+ok 218 - a new ownership fails until its type-surface classification is reviewed
+  ---
+  duration_ms: 25.469422
+  type: 'test'
+  ...
+# Subtest: a new callback ownership fails until its type-surface classification is reviewed
+ok 219 - a new callback ownership fails until its type-surface classification is reviewed
+  ---
+  duration_ms: 21.35587
+  type: 'test'
+  ...
+# Subtest: a new callback effect fails until its type-surface classification is reviewed
+ok 220 - a new callback effect fails until its type-surface classification is reviewed
+  ---
+  duration_ms: 20.354378
+  type: 'test'
+  ...
+# Subtest: missing, duplicate, foreign and unclassified source/profile entries cannot disappear
+ok 221 - missing, duplicate, foreign and unclassified source/profile entries cannot disappear
+  ---
+  duration_ms: 757.307724
+  type: 'test'
+  ...
+# Subtest: refinements, host null and erased proofs retain their individual value positions
+ok 222 - refinements, host null and erased proofs retain their individual value positions
+  ---
+  duration_ms: 222.186931
+  type: 'test'
+  ...
+# Subtest: checked Subtype evidence promotes only top-level parameters and results
+ok 223 - checked Subtype evidence promotes only top-level parameters and results
+  ---
+  duration_ms: 394.338995
+  type: 'test'
+  ...
+# Subtest: browser Fin evidence promotes only top-level parameters and results from the shared npm archive
+ok 224 - browser Fin evidence promotes only top-level parameters and results from the shared npm archive
+  ---
+  duration_ms: 238.069412
+  type: 'test'
+  ...
+# Subtest: scalar Fin rejection evidence backs every npm Fin cell's generation and compilation claims
+ok 225 - scalar Fin rejection evidence backs every npm Fin cell's generation and compilation claims
+  ---
+  duration_ms: 0.313223
+  type: 'test'
+  ...
+# Subtest: unknown fields, versions, evidence states and unsafe paths fail closed
+ok 226 - unknown fields, versions, evidence states and unsafe paths fail closed
+  ---
+  duration_ms: 316.870491
+  type: 'test'
+  ...
+# Subtest: inspection, generation, installation and execution are distinct evidence stages
+ok 227 - inspection, generation, installation and execution are distinct evidence stages
+  ---
+  duration_ms: 172.942858
+  type: 'test'
+  ...
+# Subtest: missing evidence and ambiguous overlapping observations are rejected
+ok 228 - missing evidence and ambiguous overlapping observations are rejected
+  ---
+  duration_ms: 65.097428
+  type: 'test'
+  ...
+# Subtest: partial evidence cannot leak across a position, source path or language profile
+ok 229 - partial evidence cannot leak across a position, source path or language profile
+  ---
+  duration_ms: 157.503158
+  type: 'test'
+  ...
+# Subtest: rejections and partial ranges remain required work, and exclusions need review evidence
+ok 230 - rejections and partial ranges remain required work, and exclusions need review evidence
+  ---
+  duration_ms: 126.534546
+  type: 'test'
+  ...
+# Subtest: the inventory command keeps unknown filters closed and emits unreviewed cells as JSON
+ok 231 - the inventory command keeps unknown filters closed and emits unreviewed cells as JSON
+  ---
+  duration_ms: 19755.223944
+  type: 'test'
+  ...
+# Subtest: changing an audited source fails before the inventory can feed a report
+ok 232 - changing an audited source fails before the inventory can feed a report
+  ---
+  duration_ms: 17779.098215
+  type: 'test'
+  ...
+1..232
+# tests 232
+# suites 0
+# pass 217
+# fail 0
+# cancelled 0
+# skipped 15
+# todo 0
+# duration_ms 200680.799281

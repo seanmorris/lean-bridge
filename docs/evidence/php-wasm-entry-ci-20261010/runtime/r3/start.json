@@ -1,0 +1,19 @@
+{
+  "command": "/usr/bin/taskset",
+  "args": [
+    "-c",
+    "3",
+    "/usr/bin/node",
+    "scripts/prepare-php-wasm-subtype-entry-runtime.mjs",
+    "--output",
+    "/app/build/php-wasm-subtype-entry-input/php-wasm-runtime"
+  ],
+  "cwd": "/app",
+  "pid": 3173961,
+  "startedAt": "2026-10-10T17:22:53.844Z",
+  "initialFreeMiB": 2071,
+  "leanRuntimeRoot": "/app/build/lean-runtime/f3b06c705e6c85f5314019d5d3baab0fec5b580c-743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3-browser-php-wasm-3.1.68-clean",
+  "scriptSha256": "dceaa4f7183ab13e13f558268563024fc5b6c66ce8797d75c2005062e3bd5c9f",
+  "runnerSha256": "98aa11f6fe6c31d2d42d65d142feab0aaf0723d6407f39a1ead8f12639e3cb25",
+  "scope": "Draft CI runtime preparation with an explicit local pinned Lean archive path; other inputs use CI defaults. Does not rerun installed probes."
+}

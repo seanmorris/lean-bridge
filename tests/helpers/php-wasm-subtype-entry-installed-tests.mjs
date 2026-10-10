@@ -23,6 +23,8 @@ import { parseSubtypeEntryTrace } from "./php-wasm-subtype-entry-trace.mjs";
 import { subtypeEntryCall, subtypeEntryCorpusCalls } from "./php-wasm-subtype-entry-cases.mjs";
 import "./php-wasm-subtype-entry-driver-tests.mjs";
 import "./php-wasm-subtype-entry-report-tests.mjs";
+import "./php-wasm-subtype-entry-ci-tests.mjs";
+import "./php-wasm-entry-ci-history-tests.mjs";
 
 test("portable PHP-Wasm probe setup reproduces the executed source and explicit selection", async t => {
 	const fixture = await phpWasmSubtypeFixture(t), source = await readFile(join(fixture.root, "Subtypes.lean"), "utf8");

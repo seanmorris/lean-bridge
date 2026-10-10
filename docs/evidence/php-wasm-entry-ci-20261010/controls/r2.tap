@@ -1,0 +1,64 @@
+TAP version 13
+# Subtest: PHP-Wasm Subtype installed entry CI integration authenticates every transition and refuses unrecorded edits
+ok 1 - PHP-Wasm Subtype installed entry CI integration authenticates every transition and refuses unrecorded edits
+  ---
+  duration_ms: 6435.120644
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype installed entry CI integration preserves the earlier source ledgers
+ok 2 - PHP-Wasm Subtype installed entry CI integration preserves the earlier source ledgers
+  ---
+  duration_ms: 11.536668
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype installed entry CI changes source pins without changing any support claim
+ok 3 - PHP-Wasm Subtype installed entry CI changes source pins without changing any support claim
+  ---
+  duration_ms: 1070.12659
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Subtype installed entry CI integration history writer refuses an unrelated HEAD before writing
+ok 4 - PHP-Wasm Subtype installed entry CI integration history writer refuses an unrelated HEAD before writing
+  ---
+  duration_ms: 92.777964
+  type: 'test'
+  ...
+# Subtest: installed PHP-Wasm entry CI preserves the prior workflow and enforces both source routes
+ok 5 - installed PHP-Wasm entry CI preserves the prior workflow and enforces both source routes
+  ---
+  duration_ms: 15.766033
+  type: 'test'
+  ...
+# Subtest: installed PHP-Wasm entry CI refuses changed gates, discarded originals and suppressed failures
+ok 6 - installed PHP-Wasm entry CI refuses changed gates, discarded originals and suppressed failures
+  ---
+  duration_ms: 20.664151
+  type: 'test'
+  ...
+# Subtest: installed entry TAP requires actual ordinary and reviewed passes and rejects missing or skipped execution
+ok 7 - installed entry TAP requires actual ordinary and reviewed passes and rejects missing or skipped execution
+  ---
+  duration_ms: 15.075216
+  type: 'test'
+  ...
+# Subtest: actual CI shell propagates producer and checker failures while preserving the original TAP
+ok 8 - actual CI shell propagates producer and checker failures while preserving the original TAP
+  ---
+  duration_ms: 196.136298
+  type: 'test'
+  ...
+# Subtest: paired report CLI checks an explicitly supplied original TAP before accepting any reports
+ok 9 - paired report CLI checks an explicitly supplied original TAP before accepting any reports
+  ---
+  duration_ms: 5802.363591
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 13960.793078

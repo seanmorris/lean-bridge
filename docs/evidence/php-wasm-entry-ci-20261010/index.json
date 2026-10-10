@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 1,
+  "predecessor": "9d41340747ee4cf130e77f39ec6d676e6aa1ceca",
+  "scope": "CI wiring and local runtime preparation. Earlier installed probe acceptance remains in its original archive. No hosted execution is claimed.",
+  "files": [
+    {
+      "path": "sources/.github/workflows/consumer-matrix.yml.txt",
+      "input": ".github/workflows/consumer-matrix.yml",
+      "bytes": 323850,
+      "sha256": "3265ba8c2c5f425a46ef9cbf9a6fe9723f275f5341125d8c3f48a630dd734ad5"
+    },
+    {
+      "path": "sources/scripts/prepare-php-wasm-subtype-entry-runtime.mjs.txt",
+      "input": "scripts/prepare-php-wasm-subtype-entry-runtime.mjs",
+      "bytes": 1262,
+      "sha256": "dceaa4f7183ab13e13f558268563024fc5b6c66ce8797d75c2005062e3bd5c9f"
+    },
+    {
+      "path": "sources/scripts/check-php-wasm-subtype-entry-reports.mjs.txt",
+      "input": "scripts/check-php-wasm-subtype-entry-reports.mjs",
+      "bytes": 1511,
+      "sha256": "0d1d44e7e97e6ebf4c07b10142ff42df453b400fc1d16f0207163e78894e9e50"
+    },
+    {
+      "path": "sources/scripts/update-php-wasm-entry-ci-history.mjs.txt",
+      "input": "scripts/update-php-wasm-entry-ci-history.mjs",
+      "bytes": 5213,
+      "sha256": "3f16fd4a7fb3f357c8a000f406557b4d7c50e5af9e096ae2049f9bf925a234fe"
+    },
+    {
+      "path": "sources/tests/helpers/php-wasm-subtype-entry-ci.mjs.txt",
+      "input": "tests/helpers/php-wasm-subtype-entry-ci.mjs",
+      "bytes": 4670,
+      "sha256": "be42f9444389a3cbd3816fb2e65d94f7ce362b12a63622d548b2d3d5f2fdd1fa"
+    },
+    {
+      "path": "sources/tests/helpers/php-wasm-subtype-entry-ci-tests.mjs.txt",
+      "input": "tests/helpers/php-wasm-subtype-entry-ci-tests.mjs",
+      "bytes": 9645,
+      "sha256": "45c85cb069e92f8c12d75744c1d5966f688ab9401d27b4f82d2ee4c549c2c5e9"
+    },
+    {
+      "path": "sources/tests/helpers/php-wasm-subtype-entry-ci-tap.mjs.txt",
+      "input": "tests/helpers/php-wasm-subtype-entry-ci-tap.mjs",
+      "bytes": 1471,
+      "sha256": "2aa8d92214f38ffdab1d4491468e70ef16c562a5956e92f02e6764f95ef8e28c"
+    },
+    {
+      "path": "sources/tests/helpers/php-wasm-entry-ci-history.mjs.txt",
+      "input": "tests/helpers/php-wasm-entry-ci-history.mjs",
+      "bytes": 2861,
+      "sha256": "e59d46215cec69ee4aeacdb7ea73c7f44538ce3971dc2e290874ac8d15375083"
+    },
+    {
+      "path": "sources/tests/helpers/php-wasm-entry-ci-history-tests.mjs.txt",
+      "input": "tests/helpers/php-wasm-entry-ci-history-tests.mjs",
+      "bytes": 7968,
+      "sha256": "b774ccd4b2914324b4dd47e2e9fa356f727f1afdf343ccd0eedf202ef53b7936"
+    },
+    {
+      "path": "runtime/r1/runner.mjs.txt",
+      "input": "build/run-vo1443-entry-runtime-ci-r1.mjs",
+      "bytes": 3378,
+      "sha256": "eb0a528e23acc99eb371ab6470e24e12d4b9cfd84fab25e1a59f4e4459d89305"
+    },
+    {
+      "path": "runtime/r1/log",
+      "input": "build/vo1443-entry-runtime-ci-r1.log",
+      "bytes": 891,
+      "sha256": "ffb7db3b8c37afe4df8f1b92fe8c6a30d5afd4bcc70d6f8aec5c856389109186"
+    },
+    {
+      "path": "runtime/r1/start.json",
+      "input": "build/vo1443-entry-runtime-ci-r1.start.json",
+      "bytes": 609,
+      "sha256": "f095744db0b8d0fb9ccd2620d0587d5ac2661eb4b170744a49c70c7b34a3f17b"
+    },
+    {
+      "path": "runtime/r1/end.json",
+      "input": "build/vo1443-entry-runtime-ci-r1.end.json",
+      "bytes": 214,
+      "sha256": "332bc1e3f301c5a25d4693e8b127f0f098964048bf679093b003af66aab8dd58"
+    },
+    {
+      "path": "runtime/r2/runner.mjs.txt",
+      "input": "build/run-vo1443-entry-runtime-ci-r2.mjs",
+      "bytes": 3677,
+      "sha256": "69958907d72fea488217b93bef63fd04c0fd7b36b2002bbb3475b9a7129d8e9c"
+    },
+    {
+      "path": "runtime/r2/log",
+      "input": "build/vo1443-entry-runtime-ci-r2.log",
+      "bytes": 1093,
+      "sha256": "9a6eb0255f44b4b211522761e3b55c679f525754e47f89326142a6d808f8b32b"
+    },
+    {
+      "path": "runtime/r2/start.json",
+      "input": "build/vo1443-entry-runtime-ci-r2.start.json",
+      "bytes": 847,
+      "sha256": "f7e29b061fcb468d75f86f8c18f72a1df1fdc15bec04e1505ab0295b9806d5c3"
+    },
+    {
+      "path": "runtime/r2/end.json",
+      "input": "build/vo1443-entry-runtime-ci-r2.end.json",
+      "bytes": 214,
+      "sha256": "119988d8ec323ed445f8f013dd06b1122276facce470cea3e9f02e0b11b281dc"
+    },
+    {
+      "path": "runtime/r3/runner.mjs.txt",
+      "input": "build/run-vo1443-entry-runtime-ci-r3.mjs",
+      "bytes": 3676,
+      "sha256": "98aa11f6fe6c31d2d42d65d142feab0aaf0723d6407f39a1ead8f12639e3cb25"
+    },
+    {
+      "path": "runtime/r3/log",
+      "input": "build/vo1443-entry-runtime-ci-r3.log",
+      "bytes": 224,
+      "sha256": "682eb37cf704536f9fa8a75c3989f184744a925de991938899a9eb00a8eda1d0"
+    },
+    {
+      "path": "runtime/r3/start.json",
+      "input": "build/vo1443-entry-runtime-ci-r3.start.json",
+      "bytes": 845,
+      "sha256": "29337a7e8f7a7abcdf1ab22d04a80a89301df86cc1842d82dc43fef8875b5712"
+    },
+    {
+      "path": "runtime/r3/end.json",
+      "input": "build/vo1443-entry-runtime-ci-r3.end.json",
+      "bytes": 214,
+      "sha256": "fedf7f169fc253af35b42b3726343c762ad31405cfeb480aa4bb545d49c1d5ae"
+    },
+    {
+      "path": "runtime/r3/verified.json",
+      "input": "build/vo1443-entry-runtime-ci-r3.verified.json",
+      "bytes": 342,
+      "sha256": "230c1c30681ba9c82d2277995eb86fa34818541f4f11ea4243d1c05ba7b20deb"
+    },
+    {
+      "path": "runtime/r3/runtime.json",
+      "input": "build/php-wasm-subtype-entry-input/php-wasm-runtime/runtime.json",
+      "bytes": 6745,
+      "sha256": "44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966"
+    },
+    {
+      "path": "controls/r1.tap",
+      "input": "build/vo1443-entry-ci-controls-r1.tap",
+      "bytes": 2942,
+      "sha256": "395b6efecc48995c8f579f2bcee09003e497f7d7f48cee98f89a5473d8d8de8f"
+    },
+    {
+      "path": "controls/r2.tap",
+      "input": "build/vo1443-entry-ci-controls-r2.tap",
+      "bytes": 2475,
+      "sha256": "3320f9b3766807b264ddea6ed988b8f7154ec0bacde8fd3502dbd252dcbccf71"
+    },
+    {
+      "path": "controls/r3.tap",
+      "input": "build/vo1443-entry-ci-controls-r3.tap",
+      "bytes": 2757,
+      "sha256": "10e8389569a684200587587df3c4a9ee3f994f1a0a2cb4e3951327a872d4e11d"
+    },
+    {
+      "path": "integration/r1.tap",
+      "input": "build/vo1443-entry-ci-integration-r1.tap",
+      "bytes": 57669,
+      "sha256": "bdd1f0298d5246a9f92e38e90ae0e81a09c6329ad684720b2c6bb2a4a2de0351"
+    },
+    {
+      "path": "integration/r2.tap",
+      "input": "build/vo1443-entry-ci-integration-r2.tap",
+      "bytes": 57929,
+      "sha256": "907486cb77198661568db54f00056c7ebb74f84ac57af6935dda1e511f9a1ac4"
+    },
+    {
+      "path": "checks/lint.log",
+      "input": "build/vo1443-entry-ci-full-lint-r2.log",
+      "bytes": 69,
+      "sha256": "c74487819a8f35f2001b8da47ec2ece5489047be36765d02b4b79539831df225"
+    },
+    {
+      "path": "checks/typecheck.log",
+      "input": "build/vo1443-entry-ci-typecheck-r2.log",
+      "bytes": 92,
+      "sha256": "0bc1474182b2e364c3fec8a11714d2ad77b63868bf2dd987498372486e9b76e9"
+    },
+    {
+      "path": "checks/references.log",
+      "input": "build/vo1443-entry-ci-reference-r1.log",
+      "bytes": 146,
+      "sha256": "ae8ba1e98a93b3e83a21ad03f4e0ca6f8fa2921232ee0504c2e0c5abd33f7ea8"
+    },
+    {
+      "path": "checks/git-audit.json",
+      "input": "build/vo1443-entry-ci-git-audit-r1.json",
+      "bytes": 236,
+      "sha256": "1888f7679fe8f8c47b246dfa4abef07400338631af37b728a400dd32b09b750c"
+    },
+    {
+      "path": "checks/git-audit.mjs.txt",
+      "input": "build/audit-vo1443-entry-ci-r1.mjs",
+      "bytes": 2460,
+      "sha256": "ac3fee13d48f52295d76dbb120dc2892e42e38659a05b7dcdd67b08bdab3b15c"
+    },
+    {
+      "path": "archive.mjs.txt",
+      "input": "build/archive-vo1443-entry-ci-r1.mjs",
+      "bytes": 3928,
+      "sha256": "01e30c4bd1f430308792cb07277852a2d1c86e85b72720999f36c3d08abeef7b"
+    }
+  ]
+}

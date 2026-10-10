@@ -1,5 +1,5 @@
 /**
- * Authenticate PHP-Wasm Subtype installed probe harness history while preserving earlier execution evidence.
+ * Authenticate PHP-Wasm Subtype installed entry CI history while preserving earlier execution evidence.
  *
  * @file
  */
@@ -11,44 +11,43 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforePhpWasmEntryCiSource } from "./php-wasm-entry-ci-history.mjs";
-import { beforePhpWasmEntryHarnessSource, phpWasmEntryHarnessChangedPaths, phpWasmEntryHarnessHistoryPath, phpWasmEntryHarnessPredecessor, reversePhpWasmEntryHarnessUpdate } from "./php-wasm-entry-harness-history.mjs";
+import { beforePhpWasmEntryCiSource, phpWasmEntryCiChangedPaths, phpWasmEntryCiHistoryPath, phpWasmEntryCiPredecessor, reversePhpWasmEntryCiUpdate } from "./php-wasm-entry-ci-history.mjs";
 
-test("PHP-Wasm Subtype installed probe harness integration authenticates every transition and refuses unrecorded edits", async () => {
-	const history = JSON.parse(await readFile(phpWasmEntryHarnessHistoryPath, "utf8"));
+test("PHP-Wasm Subtype installed entry CI integration authenticates every transition and refuses unrecorded edits", async () => {
+	const history = JSON.parse(await readFile(phpWasmEntryCiHistoryPath, "utf8"));
 	assert.equal(history.schemaVersion, 1);
-	assert.equal(history.milestone, "php-wasm-entry-harness-v1");
-	assert.equal(history.predecessorCommit, phpWasmEntryHarnessPredecessor);
-	assert.deepEqual(history.updates.map(update => update.path), phpWasmEntryHarnessChangedPaths);
+	assert.equal(history.milestone, "php-wasm-entry-ci-v1");
+	assert.equal(history.predecessorCommit, phpWasmEntryCiPredecessor);
+	assert.deepEqual(history.updates.map(update => update.path), phpWasmEntryCiChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforePhpWasmEntryCiSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
-		const previous = reversePhpWasmEntryHarnessUpdate(current, update);
-		assert.equal(beforePhpWasmEntryHarnessSource(update.path, current), previous);
-		assert.equal(beforePhpWasmEntryHarnessSource(update.path, current, update.currentSha256), current);
-		assert.equal(beforePhpWasmEntryHarnessSource(update.path, previous), previous);
+		const current = await readFile(update.path, "utf8"), previous = reversePhpWasmEntryCiUpdate(current, update);
+		assert.equal(beforePhpWasmEntryCiSource(update.path, current), previous);
+		assert.equal(beforePhpWasmEntryCiSource(update.path, current, update.currentSha256), current);
+		assert.equal(beforePhpWasmEntryCiSource(update.path, previous), previous);
 		assert.equal(beforeFinRefinementSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
 		assert.equal(beforeFinRefinementSource(update.path, current), beforeFinRefinementSource(update.path, previous));
 		const changed = current + "\n// unknown edit\n";
-		assert.equal(beforePhpWasmEntryHarnessSource(update.path, changed), changed);
-		assert.throws(() => reversePhpWasmEntryHarnessUpdate(changed, update));
+		assert.equal(beforePhpWasmEntryCiSource(update.path, changed), changed);
+		assert.throws(() => reversePhpWasmEntryCiUpdate(changed, update));
 		for(const mutation of [
 			{ previousSha256: "0".repeat(64) }, { currentSha256: "0".repeat(64) }
 			, { path: "unknown.mjs" }, { edits: [] }
 			, { edits: [...update.edits, update.edits[0]] }
 			, { edits: [{ ...update.edits[0], start: -1 }] }
 			, { edits: [{ ...update.edits[0], current: "unrecorded" }] }
-		]) assert.throws(() => reversePhpWasmEntryHarnessUpdate(current, { ...update, ...mutation }));
+		]) assert.throws(() => reversePhpWasmEntryCiUpdate(current, { ...update, ...mutation }));
 	}
 	const buffer = Buffer.from("unregistered bytes");
-	assert.equal(beforePhpWasmEntryHarnessSource(phpWasmEntryHarnessChangedPaths[0], buffer), buffer);
-	assert.equal(beforePhpWasmEntryHarnessSource("unknown.mjs", "unregistered bytes"), "unregistered bytes");
+	assert.equal(beforePhpWasmEntryCiSource(phpWasmEntryCiChangedPaths[0], buffer), buffer);
+	assert.equal(beforePhpWasmEntryCiSource("unknown.mjs", "unregistered bytes"), "unregistered bytes");
 });
 
-test("PHP-Wasm Subtype installed probe harness integration preserves the earlier source ledgers", async () => {
+test("PHP-Wasm Subtype installed entry CI integration preserves the earlier source ledgers", async () => {
 	for(const [path, digest] of [
-		["docs/evidence/php-wasm-subtype-entry-source-history-20261010.json", "21629834a6b9bde05f5ba26557bd016375c9e89470e4991179e1ea6c12ada84d"]
+		["docs/evidence/php-wasm-entry-harness-source-history-20261010.json", "389a5db323ff45c03c1e931d0a6bcd402d15fb85a26385b54bf000b12a0d40fe"]
+		, ["docs/evidence/php-wasm-subtype-entry-source-history-20261010.json", "21629834a6b9bde05f5ba26557bd016375c9e89470e4991179e1ea6c12ada84d"]
 		, ["docs/evidence/fin-jvm-diagnostics-source-history-20261010.json", "00bb8d625c48b4e0db115a9dca3d78905420fa6f2a1da562fb5681b1a683cb9a"]
 		, ["docs/evidence/fin-dotnet-sdk-source-history-20261010.json", "e1589698e97e00d01d1c72702a04ceb360693b5244d11086f3bcfd56811b6e72"]
 		, ["docs/evidence/php-wasm-subtype-promotion-source-history-20261010.json", "e15bcc8b90174b20163bc9e04ae46eb6da68887998d313db2ad41e3aa2ae7af0"]
@@ -70,10 +69,10 @@ test("PHP-Wasm Subtype installed probe harness integration preserves the earlier
 	]) assert.equal(sha256(await readFile(path)), digest, path);
 });
 
-test("PHP-Wasm Subtype installed probe harness changes source pins without changing any support claim", async () => {
-	const history = JSON.parse(await readFile(phpWasmEntryHarnessHistoryPath, "utf8"));
-	const path = "docs/type-surface.v1.json", text = beforePhpWasmEntryCiSource(path, await readFile(path, "utf8"));
-	const current = JSON.parse(text), previous = JSON.parse(beforePhpWasmEntryHarnessSource(path, text));
+test("PHP-Wasm Subtype installed entry CI changes source pins without changing any support claim", async () => {
+	const history = JSON.parse(await readFile(phpWasmEntryCiHistoryPath, "utf8"));
+	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
+	const current = JSON.parse(text), previous = JSON.parse(beforePhpWasmEntryCiSource(path, text));
 	const expected = structuredClone(previous); let refreshed = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{
@@ -88,21 +87,20 @@ test("PHP-Wasm Subtype installed probe harness changes source pins without chang
 	const digests = new Map();
 	for(const file of current.evidence.flatMap(entry => entry.files))
 	{
-		const key = `${file.path}:${file.sha256}`;
-		if(!digests.has(key)) digests.set(key, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));
-		assert.equal(digests.get(key), file.sha256, file.path);
+		if(!digests.has(file.path)) digests.set(file.path, sha256(await readFile(file.path)));
+		assert.equal(digests.get(file.path), file.sha256, file.path);
 	}
 });
 
-test("PHP-Wasm Subtype installed probe harness integration history writer refuses an unrelated HEAD before writing", async t => {
+test("PHP-Wasm Subtype installed entry CI integration history writer refuses an unrelated HEAD before writing", async t => {
 	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-record-omission-history-guard-"));
 	t.after(() => rm(directory, { recursive: true, force: true }));
 	const env = Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith("GIT_")));
 	const git = args => execFileSync("git", args, { cwd: directory, stdio: "pipe", env });
 	git(["init", "--quiet"]);
 	git(["-c", "user.name=Test", "-c", "user.email=test@example.invalid", "-c", "commit.gpgsign=false", "commit", "--allow-empty", "--quiet", "-m", "unrelated revision"]);
-	const result = spawnSync(process.execPath, [resolve("scripts/update-php-wasm-entry-harness-history.mjs")], { cwd: directory, encoding: "utf8", env });
+	const result = spawnSync(process.execPath, [resolve("scripts/update-php-wasm-entry-ci-history.mjs")], { cwd: directory, encoding: "utf8", env });
 	assert.equal(result.status, 1);
-	assert.match(result.stderr, /PHP-Wasm Subtype installed probe harness history is draft-only/u);
+	assert.match(result.stderr, /PHP-Wasm Subtype installed entry CI history is draft-only/u);
 	assert.deepEqual(await readdir(directory), [".git"]);
 });

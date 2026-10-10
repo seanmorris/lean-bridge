@@ -1,0 +1,56 @@
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { access, mkdir, readFile, writeFile } from 'node:fs/promises';
+import { dirname } from 'node:path';
+
+const root = '/app/docs/evidence/php-wasm-entry-ci-20261010';
+const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
+const sources = [
+  '.github/workflows/consumer-matrix.yml',
+  'scripts/prepare-php-wasm-subtype-entry-runtime.mjs',
+  'scripts/check-php-wasm-subtype-entry-reports.mjs',
+  'scripts/update-php-wasm-entry-ci-history.mjs',
+  'tests/helpers/php-wasm-subtype-entry-ci.mjs',
+  'tests/helpers/php-wasm-subtype-entry-ci-tests.mjs',
+  'tests/helpers/php-wasm-subtype-entry-ci-tap.mjs',
+  'tests/helpers/php-wasm-entry-ci-history.mjs',
+  'tests/helpers/php-wasm-entry-ci-history-tests.mjs',
+];
+const inputs = sources.map(path => [path, 'sources/' + path + '.txt']);
+for (const attempt of [1, 2, 3]) {
+  inputs.push([`build/run-vo1443-entry-runtime-ci-r${attempt}.mjs`, `runtime/r${attempt}/runner.mjs.txt`]);
+  for (const extension of ['log', 'start.json', 'end.json'])
+    inputs.push([`build/vo1443-entry-runtime-ci-r${attempt}.${extension}`, `runtime/r${attempt}/${extension}`]);
+}
+inputs.push(['build/vo1443-entry-runtime-ci-r3.verified.json', 'runtime/r3/verified.json']);
+inputs.push(['build/php-wasm-subtype-entry-input/php-wasm-runtime/runtime.json', 'runtime/r3/runtime.json']);
+for (const attempt of [1, 2, 3]) inputs.push([`build/vo1443-entry-ci-controls-r${attempt}.tap`, `controls/r${attempt}.tap`]);
+for (const attempt of [1, 2]) inputs.push([`build/vo1443-entry-ci-integration-r${attempt}.tap`, `integration/r${attempt}.tap`]);
+for (const [input, output] of [
+  ['build/vo1443-entry-ci-full-lint-r2.log', 'checks/lint.log'],
+  ['build/vo1443-entry-ci-typecheck-r2.log', 'checks/typecheck.log'],
+  ['build/vo1443-entry-ci-reference-r1.log', 'checks/references.log'],
+  ['build/vo1443-entry-ci-git-audit-r1.json', 'checks/git-audit.json'],
+  ['build/audit-vo1443-entry-ci-r1.mjs', 'checks/git-audit.mjs.txt'],
+  ['build/archive-vo1443-entry-ci-r1.mjs', 'archive.mjs.txt'],
+]) inputs.push([input, output]);
+const rows = await Promise.all(inputs.map(async ([input, path]) => ({ input, path, bytes: await readFile('/app/' + input) })));
+const tap = rows.find(row => row.path === 'integration/r2.tap').bytes.toString();
+assert.match(tap, /\n1\.\.233\n/);
+for (const [name, count] of Object.entries({ tests: 233, pass: 218, fail: 0, cancelled: 0, skipped: 15, todo: 0 }))
+  assert.match(tap, new RegExp(`^# ${name} ${count}$`, 'm'));
+const terminal = JSON.parse(rows.find(row => row.path === 'runtime/r3/end.json').bytes);
+assert.deepEqual([terminal.code, terminal.signal, terminal.stoppedForDisk], [0, null, false]);
+const verified = JSON.parse(rows.find(row => row.path === 'runtime/r3/verified.json').bytes);
+assert.equal(verified.matchesPriorProbeRuntimeExactly, true);
+assert.equal(verified.runtimeIdentity, '44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966');
+await assert.rejects(access(root), { code: 'ENOENT' });
+const files = [];
+for (const row of rows) {
+  await mkdir(dirname(root + '/' + row.path), { recursive: true });
+  await writeFile(root + '/' + row.path, row.bytes, { flag: 'wx' });
+  assert.equal(sha256(await readFile(root + '/' + row.path)), sha256(row.bytes));
+  files.push({ path: row.path, input: row.input, bytes: row.bytes.length, sha256: sha256(row.bytes) });
+}
+await writeFile(root + '/index.json', JSON.stringify({ schemaVersion: 1, predecessor: '9d41340747ee4cf130e77f39ec6d676e6aa1ceca', scope: 'CI wiring and local runtime preparation. Earlier installed probe acceptance remains in its original archive. No hosted execution is claimed.', files }, null, 2) + '\n', { flag: 'wx' });
+console.log(JSON.stringify({ files: files.length, bytes: files.reduce((sum, file) => sum + file.bytes, 0), indexSha256: sha256(await readFile(root + '/index.json')) }));

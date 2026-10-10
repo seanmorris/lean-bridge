@@ -1,0 +1,41 @@
+import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
+import { readFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+const repo = '/app', predecessor = '9d41340747ee4cf130e77f39ec6d676e6aa1ceca';
+const hash = value => createHash('sha256').update(value).digest('hex');
+const git = args => execFileSync('git', args, { cwd: repo, maxBuffer: 32 * 1024 * 1024 });
+const ledgerBytes = await readFile(repo + '/docs/evidence/php-wasm-entry-ci-source-history-20261010.json');
+const ledger = JSON.parse(ledgerBytes);
+assert.equal(ledger.predecessorCommit, predecessor); assert.equal(ledger.updates.length, 10);
+for (const item of ledger.updates) {
+  const current = await readFile(repo + '/' + item.path, 'utf8');
+  assert.equal(hash(current), item.currentSha256);
+  let previous = current;
+  for (const edit of [...item.edits].reverse()) {
+    assert.equal(previous.slice(edit.start, edit.start + edit.current.length), edit.current);
+    previous = previous.slice(0, edit.start) + edit.previous + previous.slice(edit.start + edit.current.length);
+  }
+  assert.equal(hash(previous), item.previousSha256);
+  assert.equal(previous, git(['show', predecessor + ':' + item.path]).toString());
+}
+const path = 'docs/type-surface.v1.json';
+const old = JSON.parse(git(['show', predecessor + ':' + path]));
+const current = JSON.parse(await readFile(repo + '/' + path));
+let pins = 0;
+for (const evidence of old.evidence) for (const file of evidence.files) {
+  const update = ledger.updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);
+  if (update) { file.sha256 = update.currentSha256; pins++; }
+}
+assert.equal(pins, 98); assert.deepEqual(current, old);
+const archived = git(['ls-tree', '-r', '-z', predecessor, '--', 'docs/evidence']).toString().split('\0').filter(Boolean);
+for (const entry of archived) {
+  const [metadata, path] = entry.split('\t');
+  const [, kind, oid] = metadata.split(' '); assert.equal(kind, 'blob');
+  const bytes = await readFile(repo + '/' + path);
+  const actual = createHash('sha1').update(Buffer.from('blob ' + bytes.length + '\0')).update(bytes).digest('hex');
+  assert.equal(actual, oid, path);
+}
+console.log(JSON.stringify({ predecessor, transitions: ledger.updates.length, sourcePins: pins, oldArchivesUnchanged: archived.length,
+  evidence: current.evidence.length, observations: current.observations.length, ledgerSha256: hash(ledgerBytes) }));
+

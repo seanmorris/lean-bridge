@@ -1,0 +1,40 @@
+import assert from 'node:assert/strict';
+import { spawn } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import { open, readFile, statfs, writeFile } from 'node:fs/promises';
+import { readVerifiedPhpWasmCopiedRuntime } from '../src/build/php-wasm-copied-artifacts.mjs';
+
+const cwd = '/app', prefix = cwd + '/build/vo1443-entry-runtime-ci-r3';
+const output = cwd + '/build/php-wasm-subtype-entry-input/php-wasm-runtime';
+const script = 'scripts/prepare-php-wasm-subtype-entry-runtime.mjs';
+const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
+const freeMiB = async () => { const s = await statfs(cwd); return Math.floor(s.bavail * s.bsize / 1048576); };
+let minimumFreeMiB = await freeMiB(), stoppedForDisk = false;
+assert.ok(minimumFreeMiB >= 2048, `Insufficient disk to start: ${minimumFreeMiB} MiB`);
+const env = { ...Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith('LEAN_BRIDGE_'))), LEAN_BRIDGE_PHP_LEAN_RUNTIME: '/app/build/lean-runtime/f3b06c705e6c85f5314019d5d3baab0fec5b580c-743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3-browser-php-wasm-3.1.68-clean', LEAN_NUM_THREADS: '1', OMP_NUM_THREADS: '1', MAKEFLAGS: '-j1' };
+const args = ['-c', '3', process.execPath, script, '--output', output];
+const log = await open(prefix + '.log', 'wx');
+const scriptSha256 = sha256(await readFile(cwd + '/' + script));
+const child = spawn('/usr/bin/taskset', args, { cwd, env, detached: true, stdio: ['ignore', log.fd, log.fd] });
+await writeFile(prefix + '.start.json', JSON.stringify({ command: '/usr/bin/taskset', args, cwd, pid: child.pid, startedAt: new Date().toISOString(), initialFreeMiB: minimumFreeMiB, leanRuntimeRoot: env.LEAN_BRIDGE_PHP_LEAN_RUNTIME, scriptSha256, runnerSha256: sha256(await readFile(import.meta.filename)), scope: 'Draft CI runtime preparation with an explicit local pinned Lean archive path; other inputs use CI defaults. Does not rerun installed probes.' }, null, 2) + '\n', { flag: 'wx' });
+process.stdout.write(`Started runtime preparation ${child.pid}, free ${minimumFreeMiB} MiB\n`);
+const timer = setInterval(async () => {
+  minimumFreeMiB = Math.min(minimumFreeMiB, await freeMiB());
+  if (minimumFreeMiB < 768 && !stoppedForDisk) { stoppedForDisk = true; process.kill(-child.pid, 'SIGTERM'); }
+}, 5000);
+const result = await new Promise(resolve => {
+  child.once('error', error => resolve({ code: null, signal: null, error: error.message }));
+  child.once('close', (code, signal) => resolve({ code, signal }));
+});
+clearInterval(timer); await log.close();
+minimumFreeMiB = Math.min(minimumFreeMiB, await freeMiB());
+await writeFile(prefix + '.end.json', JSON.stringify({ ...result, minimumFreeMiB, stoppedForDisk, finishedAt: new Date().toISOString(), logSha256: sha256(await readFile(prefix + '.log')) }, null, 2) + '\n', { flag: 'wx' });
+assert.deepEqual([result.code, result.signal, stoppedForDisk], [0, null, false]);
+assert.equal(sha256(await readFile(cwd + '/' + script)), scriptSha256);
+const built = await readVerifiedPhpWasmCopiedRuntime(output);
+const prior = await readVerifiedPhpWasmCopiedRuntime(cwd + '/build/type-corpus/php-wasm-current-runtime');
+assert.deepEqual(built, prior);
+await writeFile(prefix + '.verified.json', JSON.stringify({ runtimeIdentity: built.identity, library: built.manifest.library, manifestSha256: sha256(await readFile(output + '/runtime.json')), matchesPriorProbeRuntimeExactly: true, verifiedAt: new Date().toISOString() }, null, 2) + '\n', { flag: 'wx' });
+process.stdout.write(JSON.stringify({ ...result, minimumFreeMiB, runtimeIdentity: built.identity, matchesPriorProbeRuntimeExactly: true }) + '\n');
+
+
