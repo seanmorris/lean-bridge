@@ -62,30 +62,30 @@ int main(void) {
     arg = pair(nat(d), nat(1000)); out = call("first", &arg);
     CHECK(out.kind == WASMTIME_COMPONENT_TUPLE && is_nat(&out.of.tuple.data[0], 9 - d) && is_nat(&out.of.tuple.data[1], 1001)); clear(&out);
   }
-  arg = pair(nat(10), nat(0)); CHECK(rejected("first", &arg, "arg0 is not below its Fin 10 bound"));
+  arg = pair(nat(10), nat(0)); CHECK(rejected("first", &arg, "arg0.0 is not below its Fin 10 bound"));
   const uint32_t beyond[3] = {0, 0, 64}; /* 2^70 */
-  arg = pair(limbs(beyond, 3), nat(0)); CHECK(rejected("first", &arg, "arg0 is not below its Fin 10 bound"));
+  arg = pair(limbs(beyond, 3), nat(0)); CHECK(rejected("first", &arg, "arg0.0 is not below its Fin 10 bound"));
   /* Nat × Fin 1, and a bound wider than 64 bits (10 * 2^64 + 10) beside Fin 10. */
   arg = pair(nat(41), nat(0)); out = call("second", &arg); CHECK(is_nat(&out, 41)); clear(&out);
-  arg = pair(nat(41), nat(1)); CHECK(rejected("second", &arg, "arg0 is not below its Fin 1 bound"));
+  arg = pair(nat(41), nat(1)); CHECK(rejected("second", &arg, "arg0.1 is not below its Fin 1 bound"));
   const uint32_t below_wide[3] = {9, 0, 10}, at_wide[3] = {10, 0, 10};
   arg = pair(limbs(below_wide, 3), nat(9)); out = call("wide", &arg); CHECK(out.kind == WASMTIME_COMPONENT_LIST && out.of.list.size == 3); clear(&out);
-  arg = pair(limbs(at_wide, 3), nat(9)); CHECK(rejected("wide", &arg, "arg0 is not below its Fin 184467440737095516170 bound"));
-  arg = pair(limbs(below_wide, 3), nat(10)); CHECK(rejected("wide", &arg, "arg0 is not below its Fin 10 bound"));
+  arg = pair(limbs(at_wide, 3), nat(9)); CHECK(rejected("wide", &arg, "arg0.0 is not below its Fin 184467440737095516170 bound"));
+  arg = pair(limbs(below_wide, 3), nat(10)); CHECK(rejected("wide", &arg, "arg0.1 is not below its Fin 10 bound"));
   /* Option (Fin 0 × Nat): only none is valid. */
   arg = none(); out = call("absent-only", &arg); CHECK(is_nat(&out, 7)); clear(&out);
-  arg = some(pair(nat(0), nat(0))); CHECK(rejected("absent-only", &arg, "arg0 is not below its Fin 0 bound"));
+  arg = some(pair(nat(0), nat(0))); CHECK(rejected("absent-only", &arg, "arg0?.0 is not below its Fin 0 bound"));
   /* Except String (Fin 10): the ok branch is bounded; an inactive branch is never read. */
   arg = branch(true, nat(9)); out = call("ok-only", &arg); CHECK(is_nat(&out, 9)); clear(&out);
-  arg = branch(true, nat(10)); CHECK(rejected("ok-only", &arg, "arg0 is not below its Fin 10 bound"));
+  arg = branch(true, nat(10)); CHECK(rejected("ok-only", &arg, "arg0.ok is not below its Fin 10 bound"));
   arg = branch(false, text("four")); out = call("ok-only", &arg); CHECK(is_nat(&out, 104)); clear(&out);
   /* Except (Fin 5) Nat and Except (Fin 3) (Fin 7): only the active branch is checked. */
   arg = branch(false, nat(4)); out = call("error-only", &arg); CHECK(is_nat(&out, 104)); clear(&out);
-  arg = branch(false, nat(5)); CHECK(rejected("error-only", &arg, "arg0 is not below its Fin 5 bound"));
+  arg = branch(false, nat(5)); CHECK(rejected("error-only", &arg, "arg0.error is not below its Fin 5 bound"));
   arg = branch(true, nat(6)); out = call("both", &arg); CHECK(is_nat(&out, 6)); clear(&out);
-  arg = branch(true, nat(7)); CHECK(rejected("both", &arg, "arg0 is not below its Fin 7 bound"));
+  arg = branch(true, nat(7)); CHECK(rejected("both", &arg, "arg0.ok is not below its Fin 7 bound"));
   arg = branch(false, nat(2)); out = call("both", &arg); CHECK(is_nat(&out, 102)); clear(&out);
-  arg = branch(false, nat(3)); CHECK(rejected("both", &arg, "arg0 is not below its Fin 3 bound"));
+  arg = branch(false, nat(3)); CHECK(rejected("both", &arg, "arg0.error is not below its Fin 3 bound"));
   /* List (Option (Fin 3 × Except (Fin 2) Nat)): every present element, both levels. */
   for (int round = 0; round < 4; ++round) {
     uint32_t component = round == 2 ? 3 : 2, error = round == 1 ? 2 : 1;
@@ -94,14 +94,14 @@ int main(void) {
     rows.of.list.data[0] = none();
     rows.of.list.data[1] = some(pair(nat(component), branch(true, nat(50))));
     rows.of.list.data[2] = some(pair(nat(1), branch(false, nat(error))));
-    if (round == 1) { CHECK(rejected("nested", &rows, "arg0 is not below its Fin 2 bound")); continue; }
-    if (round == 2) { CHECK(rejected("nested", &rows, "arg0 is not below its Fin 3 bound")); continue; }
+    if (round == 1) { CHECK(rejected("nested", &rows, "arg0[2]?.1.error is not below its Fin 2 bound")); continue; }
+    if (round == 2) { CHECK(rejected("nested", &rows, "arg0[1]?.0 is not below its Fin 3 bound")); continue; }
     out = call("nested", &rows); CHECK(is_nat(&out, 54)); clear(&out); /* Valid before and after the rejections. */
   }
   /* DigitPair := Digit × Digit through the alias. */
   arg = pair(nat(1), nat(9)); out = call("aliased", &arg);
   CHECK(out.kind == WASMTIME_COMPONENT_TUPLE && is_nat(&out.of.tuple.data[0], 9) && is_nat(&out.of.tuple.data[1], 1)); clear(&out);
-  arg = pair(nat(1), nat(10)); CHECK(rejected("aliased", &arg, "arg0 is not below its Fin 10 bound"));
+  arg = pair(nat(1), nat(10)); CHECK(rejected("aliased", &arg, "arg0.1 is not below its Fin 10 bound"));
   /* Results carrying bounds are produced by Lean and arrive below them. */
   arg = nat(4); out = call("produce", &arg); CHECK(out.kind == WASMTIME_COMPONENT_RESULT && !out.of.result.is_ok && is_nat(out.of.result.val, 4)); clear(&out);
   arg = nat(23); out = call("pair-up", &arg); CHECK(is_nat(&out.of.tuple.data[0], 3) && is_nat(&out.of.tuple.data[1], 23)); clear(&out);
@@ -110,7 +110,7 @@ int main(void) {
     if (!is_nat(&out.of.tuple.data[0], 9 - i % 10)) { fprintf(stderr, "round %u failed\n", i); return 1; }
     clear(&out);
     arg = pair(nat(10 + i), nat(i));
-    if (!rejected("first", &arg, "arg0 is not below its Fin 10 bound")) { fprintf(stderr, "rejection round %u failed\n", i); return 1; }
+    if (!rejected("first", &arg, "arg0.0 is not below its Fin 10 bound")) { fprintf(stderr, "rejection round %u failed\n", i); return 1; }
   }
   checks += 2000;
   finproducts_wasmtime_close(session);

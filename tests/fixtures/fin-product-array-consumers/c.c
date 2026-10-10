@@ -48,7 +48,7 @@ int main(void) {
     row bad[3]; fill(bad);
     if (k < 3) { mpz_set_ui(items[k].fst, 4); mpz_set_ui(bad[k].fst, 4); }
     else { mpz_set_ui(items[1].snd.error, 6); mpz_set_ui(bad[1].snd.error, 6); }
-    CHECK(rejected(finproductarrays_rows(&span, count, &error), &error, k < 3 ? "arg0 is not below its Fin 4 bound" : "arg0 is not below its Fin 6 bound"));
+    CHECK(rejected(finproductarrays_rows(&span, count, &error), &error, k < 3 ? (const char *[]){"arg0[0].0 is not below its Fin 4 bound", "arg0[1].0 is not below its Fin 4 bound", "arg0[2].0 is not below its Fin 4 bound"}[k] : "arg0[1].1.error is not below its Fin 6 bound"));
     CHECK(all_same(items, bad));
     for (int i = 0; i < 3; ++i) finproductarrays_tuple_nat_result_nat_nat_value_clear(&bad[i]);
     if (k < 3) mpz_set(items[k].fst, copy[k].fst); else mpz_set_ui(items[1].snd.error, 5);
@@ -64,7 +64,7 @@ int main(void) {
   for (unsigned long i = 0; i < 1000; ++i) {
     if (!OK(finproductarrays_rows(&span, count, &error)) || mpz_cmp(count, expected) != 0) { fprintf(stderr, "round %lu failed\n", i); return 1; }
     mpz_set_ui(items[2].fst, 4 + i);
-    if (!rejected(finproductarrays_rows(&span, count, &error), &error, "arg0 is not below its Fin 4 bound") || mpz_cmp_ui(items[2].fst, 4 + i) != 0) { fprintf(stderr, "rejection round %lu failed\n", i); return 1; }
+    if (!rejected(finproductarrays_rows(&span, count, &error), &error, "arg0[2].0 is not below its Fin 4 bound") || mpz_cmp_ui(items[2].fst, 4 + i) != 0) { fprintf(stderr, "rejection round %lu failed\n", i); return 1; }
     mpz_set_ui(items[2].fst, 3);
   }
   checks += 2000;

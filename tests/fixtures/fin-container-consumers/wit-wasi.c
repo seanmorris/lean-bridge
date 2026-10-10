@@ -77,35 +77,35 @@ int main(void) {
   for (uint32_t i = 0; i < 8; ++i) CHECK(is_small(&out.of.list.data[i], 9 - i));
   clear(&out);
   args[0] = list(0, NULL); out = call("mirror-all", args, 1); CHECK(out.of.list.size == 0); clear(&out);
-  args[0] = digits(ten_first, 3); CHECK(rejected("mirror-all", args, 1, "arg0 is not below its Fin 10 bound"));
-  args[0] = digits(ten_middle, 3); CHECK(rejected("mirror-all", args, 1, "arg0 is not below its Fin 10 bound"));
-  args[0] = digits(ten_last, 3); CHECK(rejected("mirror-all", args, 1, "arg0 is not below its Fin 10 bound"));
-  { value items[2] = {nat(word, 2), small(1)}; args[0] = list(2, items); CHECK(rejected("mirror-all", args, 1, "arg0 is not below its Fin 10 bound")); }
+  args[0] = digits(ten_first, 3); CHECK(rejected("mirror-all", args, 1, "arg0[0] is not below its Fin 10 bound"));
+  args[0] = digits(ten_middle, 3); CHECK(rejected("mirror-all", args, 1, "arg0[1] is not below its Fin 10 bound"));
+  args[0] = digits(ten_last, 3); CHECK(rejected("mirror-all", args, 1, "arg0[2] is not below its Fin 10 bound"));
+  { value items[2] = {nat(word, 2), small(1)}; args[0] = list(2, items); CHECK(rejected("mirror-all", args, 1, "arg0[0] is not below its Fin 10 bound")); }
   /* Array (Fin 0): only the empty array has values. */
   args[0] = list(0, NULL); out = call("count-none", args, 1); CHECK(is_small(&out, 0)); clear(&out);
-  { value items[1] = {small(0)}; args[0] = list(1, items); CHECK(rejected("count-none", args, 1, "arg0 is not below its Fin 0 bound")); }
+  { value items[1] = {small(0)}; args[0] = list(1, items); CHECK(rejected("count-none", args, 1, "arg0[0] is not below its Fin 0 bound")); }
   /* List Huge: a 2^70 bound compared limb by limb. */
   { value items[2] = {nat(word, 2), nat(last, 3)}; args[0] = list(2, items); out = call("sum-huge", args, 1); CHECK(is_nat(&out, sum, 3)); clear(&out); }
   args[0] = list(0, NULL); out = call("sum-huge", args, 1); CHECK(is_small(&out, 0)); clear(&out);
-  { value items[2] = {nat(word, 2), nat(huge, 3)}; args[0] = list(2, items); CHECK(rejected("sum-huge", args, 1, "arg0 is not below its Fin 1180591620717411303424 bound")); }
+  { value items[2] = {nat(word, 2), nat(huge, 3)}; args[0] = list(2, items); CHECK(rejected("sum-huge", args, 1, "arg0[1] is not below its Fin 1180591620717411303424 bound")); }
   /* Option (Fin 1): none is valid; a present value is checked. */
   args[0] = none(); out = call("or-default", args, 1); CHECK(is_small(&out, 7)); clear(&out);
   args[0] = some(small(0)); out = call("or-default", args, 1); CHECK(is_small(&out, 0)); clear(&out);
-  args[0] = some(small(1)); CHECK(rejected("or-default", args, 1, "arg0 is not below its Fin 1 bound"));
+  args[0] = some(small(1)); CHECK(rejected("or-default", args, 1, "arg0? is not below its Fin 1 bound"));
   /* Array (Option Digit): only present elements are checked. */
   { value items[3] = {some(small(1)), none(), some(small(9))}; args[0] = list(3, items); out = call("present", args, 1);
     CHECK(out.of.list.size == 2 && is_small(&out.of.list.data[0], 1) && is_small(&out.of.list.data[1], 9)); clear(&out); }
-  { value items[3] = {some(small(1)), none(), some(small(10))}; args[0] = list(3, items); CHECK(rejected("present", args, 1, "arg0 is not below its Fin 10 bound")); }
+  { value items[3] = {some(small(1)), none(), some(small(10))}; args[0] = list(3, items); CHECK(rejected("present", args, 1, "arg0[2]? is not below its Fin 10 bound")); }
   { value items[3] = {some(small(1)), none(), none()}; args[0] = list(3, items); out = call("present", args, 1); CHECK(out.of.list.size == 1); clear(&out); }
   /* List (Array Digit) -> Option (List Digit): nested rows. */
   { const uint32_t r0[] = {1, 2}, r1[] = {3}; value rows[2] = {digits(r0, 2), digits(r1, 1)}; args[0] = list(2, rows); out = call("flatten", args, 1);
     CHECK(out.kind == WASMTIME_COMPONENT_OPTION && out.of.option && out.of.option->of.list.size == 3 && is_small(&out.of.option->of.list.data[2], 3)); clear(&out); }
   args[0] = list(0, NULL); out = call("flatten", args, 1); CHECK(out.kind == WASMTIME_COMPONENT_OPTION && !out.of.option); clear(&out);
-  { const uint32_t r0[] = {1, 2}, r1[] = {10}; value rows[2] = {digits(r0, 2), digits(r1, 1)}; args[0] = list(2, rows); CHECK(rejected("flatten", args, 1, "arg0 is not below its Fin 10 bound")); }
+  { const uint32_t r0[] = {1, 2}, r1[] = {10}; value rows[2] = {digits(r0, 2), digits(r1, 1)}; args[0] = list(2, rows); CHECK(rejected("flatten", args, 1, "arg0[1][0] is not below its Fin 10 bound")); }
   /* A late refined argument after an unrefined one. */
   { value names[2] = {text("a"), text("b")}; const uint32_t offsets[] = {1, 3}; args[0] = list(2, names); args[1] = digits(offsets, 2); out = call("label", args, 2);
     CHECK(out.kind == WASMTIME_COMPONENT_STRING && out.of.string.size == 7 && memcmp(out.of.string.data, "a:1,b:3", 7) == 0); clear(&out); }
-  { value names[2] = {text("a"), text("b")}; const uint32_t offsets[] = {1, 4}; args[0] = list(2, names); args[1] = digits(offsets, 2); CHECK(rejected("label", args, 2, "arg1 is not below its Fin 4 bound")); }
+  { value names[2] = {text("a"), text("b")}; const uint32_t offsets[] = {1, 4}; args[0] = list(2, names); args[1] = digits(offsets, 2); CHECK(rejected("label", args, 2, "arg1[1] is not below its Fin 4 bound")); }
   /* A result-only container refinement projects each element after Lean returns. */
   { value items[2] = {small(100), nat(huge, 3)}; args[0] = list(2, items); out = call("wrap-all", args, 1); CHECK(out.of.list.size == 2 && is_small(&out.of.list.data[0], 2) && is_small(&out.of.list.data[1], 2)); clear(&out); }
   args[0] = list(0, NULL); out = call("wrap-all", args, 1); CHECK(out.of.list.size == 0); clear(&out);
@@ -113,7 +113,7 @@ int main(void) {
   for (uint32_t i = 0; i < 1000; ++i) {
     uint32_t beyond = 10 + i % 5, within = i % 10;
     args[0] = digits(&beyond, 1);
-    if (!rejected("mirror-all", args, 1, "arg0 is not below its Fin 10 bound")) { fprintf(stderr, "invalid call %u accepted\n", i); return 1; }
+    if (!rejected("mirror-all", args, 1, "arg0[0] is not below its Fin 10 bound")) { fprintf(stderr, "invalid call %u accepted\n", i); return 1; }
     args[0] = digits(&within, 1); out = call("mirror-all", args, 1);
     if (out.of.list.size != 1 || !is_small(&out.of.list.data[0], 9 - within)) { fprintf(stderr, "valid call %u failed\n", i); return 1; }
     clear(&out);

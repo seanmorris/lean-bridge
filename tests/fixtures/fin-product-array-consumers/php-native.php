@@ -32,13 +32,13 @@ check(rows($rows)->isEqualTo($expected), 'valid rows');
 for ($k = 0; $k < 3; ++$k) {
     $rows[$k][0] = n(4);
     $before = array_map(fn($row) => [$row[0], clone $row[1]], $rows);
-    check(rejected(fn() => rows($rows), 'arg0', '4') && same($rows, $before), "component at $k");
+    check(rejected(fn() => rows($rows), "arg0[$k].0", '4') && same($rows, $before), "component at $k");
     $rows[$k][0] = $valid()[$k][0];
 }
 // The active error branch is bounded: error 6 is rejected, while ok 6 in the last row passed above.
 $rows[1][1] = new Err(n(6));
 $before = array_map(fn($row) => [$row[0], clone $row[1]], $rows);
-check(rejected(fn() => rows($rows), 'arg0', '6') && same($rows, $before), 'error branch at bound');
+check(rejected(fn() => rows($rows), 'arg0[1].1.error', '6') && same($rows, $before), 'error branch at bound');
 $rows[1][1] = new Err(n(5));
 // A valid call recovers.
 check(same($rows, $valid()), 'caller rows unchanged');
@@ -48,7 +48,7 @@ check(same(reversed($rows), array_reverse($valid())), 'reversed');
 for ($i = 0; $i < 1000; ++$i) {
     if (!rows($rows)->isEqualTo($expected)) throw new Exception("round $i failed");
     $bad = $rows; $bad[2][0] = n(4 + $i);
-    if (!rejected(fn() => rows($bad), 'arg0', '4') || !$bad[2][0]->isEqualTo(4 + $i)) throw new Exception("rejection round $i failed");
+    if (!rejected(fn() => rows($bad), 'arg0[2].0', '4') || !$bad[2][0]->isEqualTo(4 + $i)) throw new Exception("rejection round $i failed");
 }
 $checks += 2000;
 echo "fin-product-array-ok:$checks\n";

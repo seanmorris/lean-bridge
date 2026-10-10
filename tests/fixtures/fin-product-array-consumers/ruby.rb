@@ -25,13 +25,13 @@ check(API.rows(rows) == expected, "valid rows")
 3.times do |k|
   rows[k][0] = 4
   before = rows.map(&:dup)
-  check(rejected("arg0", "4") { API.rows(rows) } && rows == before, "component at #{k}")
+  check(rejected("arg0[#{k}].0", "4") { API.rows(rows) } && rows == before, "component at #{k}")
   rows[k][0] = valid.()[k][0]
 end
 # The active error branch is bounded: error 6 is rejected, while ok 6 in the last row passed above.
 rows[1][1] = Err.new(6)
 before = rows.map(&:dup)
-check(rejected("arg0", "6") { API.rows(rows) } && rows == before, "error branch at bound")
+check(rejected("arg0[1].1.error", "6") { API.rows(rows) } && rows == before, "error branch at bound")
 rows[1][1] = Err.new(5)
 # A valid call recovers.
 check(rows == valid.(), "caller rows unchanged")
@@ -41,7 +41,7 @@ check(API.reversed(rows) == valid.().reverse, "reversed")
 1000.times do |i|
   raise "round #{i} failed" unless API.rows(rows) == expected
   rows[2][0] = 4 + i
-  raise "rejection round #{i} failed" unless rejected("arg0", "4") { API.rows(rows) } && rows[2][0] == 4 + i
+  raise "rejection round #{i} failed" unless rejected("arg0[2].0", "4") { API.rows(rows) } && rows[2][0] == 4 + i
   rows[2][0] = 3
 end
 $checks += 2000

@@ -24,13 +24,13 @@ fn main() {
     for k in 0..3 {
         rows[k].0 = n(4);
         let before = rows.clone();
-        check!(rejected(api::rows(&rows), "arg0", "4") && rows == before);
+        check!(rejected(api::rows(&rows), &format!("arg0[{k}].0"), "4") && rows == before);
         rows[k].0 = valid[k].0.clone();
     }
     // The active error branch is bounded: error 6 is rejected, while ok 6 in the last row passed above.
     rows[1].1 = Err(n(6));
     let before = rows.clone();
-    check!(rejected(api::rows(&rows), "arg0", "6") && rows == before);
+    check!(rejected(api::rows(&rows), "arg0[1].1.error", "6") && rows == before);
     rows[1].1 = Err(n(5));
     // A valid call recovers.
     check!(rows == valid);
@@ -40,7 +40,7 @@ fn main() {
     for i in 0..1000u64 {
         assert!(api::rows(&rows).unwrap() == expected, "round {i} failed");
         rows[2].0 = n(4 + i);
-        assert!(rejected(api::rows(&rows), "arg0", "4"), "rejection round {i} failed");
+        assert!(rejected(api::rows(&rows), "arg0[2].0", "4"), "rejection round {i} failed");
         rows[2].0 = n(3);
     }
     checks += 2000;

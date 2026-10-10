@@ -59,7 +59,7 @@ int main() {
   CHECK(digits(items) == 5);
   for (std::size_t bad = 0; bad < 3; ++bad) {
     items[bad] = 3;
-    CHECK(rejected([&] { digits(items); }, "arg0 is not below its Fin 3 bound") && items[bad] == 3);
+    CHECK(rejected([&] { digits(items); }, "arg0[" + std::to_string(bad) + "] is not below its Fin 3 bound") && items[bad] == 3);
     items[bad] = bad;
   }
   CHECK(digits(std::vector<Nat>{}) == 0);
@@ -68,12 +68,12 @@ int main() {
   auto pick = api::pick(std::monostate{});
   CHECK(pick(std::nullopt) == 100);
   CHECK(pick(std::pair<Nat, Nat>{4, 7}) == 11);
-  CHECK(rejected([&] { pick(std::pair<Nat, Nat>{5, 0}); }, "arg0 is not below its Fin 5 bound"));
+  CHECK(rejected([&] { pick(std::pair<Nat, Nat>{5, 0}); }, "arg0?.0 is not below its Fin 5 bound"));
 
   /* Except String (Fin 7): only the active ok branch is bounded. */
   auto branch = api::branch(std::monostate{});
   CHECK(branch(api::Ok<Nat>{6}) == 6);
-  CHECK(rejected([&] { branch(api::Ok<Nat>{7}); }, "arg0 is not below its Fin 7 bound"));
+  CHECK(rejected([&] { branch(api::Ok<Nat>{7}); }, "arg0.ok is not below its Fin 7 bound"));
   CHECK(branch(api::Err<std::string>{"abc"}) == 53);
 
   /* A leased closure's Fin 10 result comes from Lean: the host only receives values below 10. */
@@ -91,7 +91,7 @@ int main() {
   CHECK(tiles(row) == 330);
   for (std::size_t bad = 0; bad < 3; ++bad) {
     row[bad].digit = 5;
-    CHECK(rejected([&] { tiles(row); }, "arg0 is not below its Fin 5 bound") && row[bad].digit == 5);
+    CHECK(rejected([&] { tiles(row); }, "arg0[" + std::to_string(bad) + "].digit is not below its Fin 5 bound") && row[bad].digit == 5);
     row[bad].digit = bad;
   }
   CHECK(tiles(row) == 330);
@@ -100,13 +100,13 @@ int main() {
   auto maybe = api::maybe_tiles(std::monostate{});
   CHECK(maybe(std::nullopt) == 7 && maybe(row) == 3);
   row[1].digit = 9;
-  CHECK(rejected([&] { maybe(row); }, "arg0 is not below its Fin 5 bound"));
+  CHECK(rejected([&] { maybe(row); }, "arg0?[1].digit is not below its Fin 5 bound"));
   row[1].digit = 1;
 
   /* A variant: only the active case's Fin 10 field is checked. */
   auto shaped = api::shaped(std::monostate{});
   CHECK(shaped(api::ShapeCircle{9}) == 9);
-  CHECK(rejected([&] { shaped(api::ShapeCircle{10}); }, "arg0 is not below its Fin 10 bound"));
+  CHECK(rejected([&] { shaped(api::ShapeCircle{10}); }, "arg0.circle.radius is not below its Fin 10 bound"));
   CHECK(shaped(api::ShapeLabel{"hey"}) == 23);
 
   /* A leased closure's record result comes from Lean: every digit is below 5. */

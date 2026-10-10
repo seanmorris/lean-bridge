@@ -21,26 +21,26 @@ fn main() {
     for position in 0..3 {
         let mut bad = vec![n(1), n(2), n(3)];
         bad[position] = n(10);
-        check!(rejected(api::mirror_all(&bad), "arg0", "10"));
+        check!(rejected(api::mirror_all(&bad), &format!("arg0[{position}]"), "10"));
         check!(bad[position] == n(10));
     }
-    check!(rejected(api::mirror_all(&[word.clone(), n(1), n(2)]), "arg0", "10"));
+    check!(rejected(api::mirror_all(&[word.clone(), n(1), n(2)]), "arg0[0]", "10"));
     // Array (Fin 0): only the empty array has values.
     check!(api::count_none(&[]).unwrap() == n(0));
-    check!(rejected(api::count_none(&[n(0)]), "arg0", "0"));
+    check!(rejected(api::count_none(&[n(0)]), "arg0[0]", "0"));
     // List Huge: a 2^70 bound compared limb by limb.
     let last = &huge - 1u8;
     check!(api::sum_huge(&[word.clone(), last.clone()]).unwrap() == &word + &last);
     check!(api::sum_huge(&[]).unwrap() == n(0));
-    check!(rejected(api::sum_huge(&[word.clone(), huge.clone()]), "arg0", &huge.to_string()));
+    check!(rejected(api::sum_huge(&[word.clone(), huge.clone()]), "arg0[1]", &huge.to_string()));
     // Option (Fin 1): none is valid; a present value is checked.
     check!(api::or_default(&None).unwrap() == n(7) && api::or_default(&Some(n(0))).unwrap() == n(0));
-    check!(rejected(api::or_default(&Some(n(1))), "arg0", "1"));
+    check!(rejected(api::or_default(&Some(n(1))), "arg0?", "1"));
     // Array (Option Digit): only present elements are checked.
     let mut mixed = vec![Some(n(1)), None, Some(n(9))];
     check!(api::present(&mixed).unwrap() == vec![n(1), n(9)]);
     mixed[2] = Some(n(10));
-    check!(rejected(api::present(&mixed), "arg0", "10"));
+    check!(rejected(api::present(&mixed), "arg0[2]?", "10"));
     mixed[2] = None;
     check!(api::present(&mixed).unwrap().len() == 1);
     // List (Array Digit) -> Option (List Digit): nested rows.
@@ -48,18 +48,18 @@ fn main() {
     check!(api::flatten(&rows).unwrap() == Some(vec![n(1), n(2), n(3)]));
     check!(api::flatten(&[]).unwrap().is_none());
     rows[1][0] = n(10);
-    check!(rejected(api::flatten(&rows), "arg0", "10"));
+    check!(rejected(api::flatten(&rows), "arg0[1][0]", "10"));
     // A late refined argument after an unrefined one.
     let names = ["a".to_string(), "b".to_string()];
     check!(api::label(&names, &[n(1), n(3)]).unwrap() == "a:1,b:3");
-    check!(rejected(api::label(&names, &[n(1), n(4)]), "arg1", "4"));
+    check!(rejected(api::label(&names, &[n(1), n(4)]), "arg1[1]", "4"));
     check!(names[1] == "b");
     // A result-only container refinement projects each element after Lean returns.
     check!(api::wrap_all(&[n(100), huge.clone()]).unwrap() == vec![n(2), n(2)]);
     check!(api::wrap_all(&[]).unwrap().is_empty());
     // Repeated invalid and valid calls recover without retiring the runtime.
     for i in 0..1000u64 {
-        assert!(rejected(api::mirror_all(&[n(10 + i % 5)]), "arg0", "10"), "invalid call accepted at {i}");
+        assert!(rejected(api::mirror_all(&[n(10 + i % 5)]), "arg0[0]", "10"), "invalid call accepted at {i}");
         assert!(api::mirror_all(&[n(i % 10)]).unwrap() == vec![n(9 - i % 10)], "valid call failed at {i}");
     }
     checks += 2000;

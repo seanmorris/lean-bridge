@@ -129,9 +129,9 @@ test("the installed WIT patterns match the WIT generated from the fixture's comp
 test("C adapters compare both components and only the active branch on caller limbs before Lean runs", () => {
 	const value = mixed(), calls = generateCopiedNativeCalls(value, compilePrimitiveCSurface(value.bindingIr, { compounds: true }));
 	const call = calls.slice(calls.indexOf("static sample_status lb_call_increment("), calls.indexOf("\n}\n", calls.indexOf("static sample_status lb_call_increment(")));
-	const first = call.indexOf("lb_fin_below((&arg0->fst)->data, (&arg0->fst)->length, lb_fin_increment_0_0, 1)) return lb_invalid(error, \"arg0 is not below its Fin 10 bound\");");
-	const ok = call.indexOf("if ((&arg0->snd)->is_ok) {\n    if (!lb_fin_below((&(&arg0->snd)->ok)->data, (&(&arg0->snd)->ok)->length, lb_fin_increment_0_1, 1)) return lb_invalid(error, \"arg0 is not below its Fin 3 bound\");\n  }");
-	const error = call.indexOf("if (!(&arg0->snd)->is_ok) {\n    if (!lb_fin_below((&(&arg0->snd)->error)->data, (&(&arg0->snd)->error)->length, lb_fin_increment_0_2, 1)) return lb_invalid(error, \"arg0 is not below its Fin 2 bound\");\n  }");
+	const first = call.indexOf("lb_fin_below((&arg0->fst)->data, (&arg0->fst)->length, lb_fin_increment_0_0, 1)) return lb_invalid(error, \"arg0.0 is not below its Fin 10 bound\");");
+	const ok = call.indexOf("if ((&arg0->snd)->is_ok) {\n    if (!lb_fin_below((&(&arg0->snd)->ok)->data, (&(&arg0->snd)->ok)->length, lb_fin_increment_0_1, 1)) return lb_invalid(error, \"arg0.1.ok is not below its Fin 3 bound\");\n  }");
+	const error = call.indexOf("if (!(&arg0->snd)->is_ok) {\n    if (!lb_fin_below((&(&arg0->snd)->error)->data, (&(&arg0->snd)->error)->length, lb_fin_increment_0_2, 1)) return lb_invalid(error, \"arg0.1.error is not below its Fin 2 bound\");\n  }");
 	const dispatch = call.indexOf("lean_object *checked = ");
 	// Every comparison follows the copy check and precedes the only conversion into Lean.
 	assert.ok(call.indexOf("_check(arg0, &budget)") < first && first < ok && ok < error && error < dispatch, call);
@@ -141,7 +141,7 @@ test("C adapters compare both components and only the active branch on caller li
 	// A bound wider than 64 bits (10 * 2^64 + 10) becomes its exact limbs; Fin 0 compares against no limbs.
 	const wide = model(binary("tuple", fin(huge), fin("0"))), wideCalls = generateCopiedNativeCalls(wide, compilePrimitiveCSurface(wide.bindingIr, { compounds: true }));
 	assert.ok(wideCalls.includes("static const uint32_t lb_fin_increment_0_0[3] = {0xau, 0x0u, 0xau};"));
-	assert.ok(wideCalls.includes("if (!lb_fin_below((&arg0->snd)->data, (&arg0->snd)->length, NULL, 0)) return lb_invalid(error, \"arg0 is not below its Fin 0 bound\");"));
+	assert.ok(wideCalls.includes("if (!lb_fin_below((&arg0->snd)->data, (&arg0->snd)->length, NULL, 0)) return lb_invalid(error, \"arg0.1 is not below its Fin 0 bound\");"));
 });
 
 test("Lean adapters construct every Fin of both components and the active branch before one source call", () => {

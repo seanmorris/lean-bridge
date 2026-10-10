@@ -25,13 +25,13 @@ fun main() {
     for (k in 0 until 3) {
         rows[k] = Pair(n(4), rows[k].second())
         val before = rows.copyOf()
-        check(rejected("arg0", "4") { Api.rows(rows) } && rows.contentEquals(before), "component at $k")
+        check(rejected("arg0[$k].0", "4") { Api.rows(rows) } && rows.contentEquals(before), "component at $k")
         rows[k] = valid()[k]
     }
     // The active error branch is bounded: error 6 is rejected, while ok 6 in the last row passed above.
     rows[1] = Pair(n(2), Result.err(n(6)))
     val before = rows.copyOf()
-    check(rejected("arg0", "6") { Api.rows(rows) } && rows.contentEquals(before), "error branch at bound")
+    check(rejected("arg0[1].1.error", "6") { Api.rows(rows) } && rows.contentEquals(before), "error branch at bound")
     rows[1] = valid()[1]
     // A valid call recovers.
     check(rows.contentEquals(valid()), "caller rows unchanged")
@@ -41,7 +41,7 @@ fun main() {
     for (i in 0L until 1000L) {
         check(Api.rows(rows) == expected, "round")
         val bad = valid(); bad[2] = Pair(n(4 + i), bad[2].second())
-        check(rejected("arg0", "4") { Api.rows(bad) } && bad[2].first() == n(4 + i), "rejection round")
+        check(rejected("arg0[2].0", "4") { Api.rows(bad) } && bad[2].first() == n(4 + i), "rejection round")
     }
     println("fin-product-array-ok:$checks")
 }

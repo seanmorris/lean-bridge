@@ -27,13 +27,13 @@ class Consumer {
         for (int k = 0; k < 3; ++k) {
             rows[k].Item1 = 4;
             var before = rows.ToArray();
-            Check(Rejected(() => Api.Rows(rows), "arg0", "4") && rows.SequenceEqual(before), $"component at {k}");
+            Check(Rejected(() => Api.Rows(rows), $"arg0[{k}].0", "4") && rows.SequenceEqual(before), $"component at {k}");
             rows[k].Item1 = Valid()[k].Item1;
         }
         // The active error branch is bounded: error 6 is rejected, while ok 6 in the last row passed above.
         rows[1].Item2 = Result<BigInteger, BigInteger>.Err(6);
         var snapshot = rows.ToArray();
-        Check(Rejected(() => Api.Rows(rows), "arg0", "6") && rows.SequenceEqual(snapshot), "error branch at bound");
+        Check(Rejected(() => Api.Rows(rows), "arg0[1].1.error", "6") && rows.SequenceEqual(snapshot), "error branch at bound");
         rows[1].Item2 = Result<BigInteger, BigInteger>.Err(5);
         // A valid call recovers.
         Check(rows.SequenceEqual(Valid()), "caller rows unchanged");
@@ -43,7 +43,7 @@ class Consumer {
         for (int i = 0; i < 1000; ++i) {
             if (Api.Rows(rows) != expected) throw new Exception($"round {i} failed");
             rows[2].Item1 = 4 + i;
-            if (!Rejected(() => Api.Rows(rows), "arg0", "4") || rows[2].Item1 != 4 + i) throw new Exception($"rejection round {i} failed");
+            if (!Rejected(() => Api.Rows(rows), "arg0[2].0", "4") || rows[2].Item1 != 4 + i) throw new Exception($"rejection round {i} failed");
             rows[2].Item1 = 3;
         }
         checks += 2000;

@@ -20,7 +20,7 @@ static unsigned checks;
 #define WIDE "184467440737095516170"
 
 static char bound_text[128];
-static const char *bound(const char *n) { snprintf(bound_text, sizeof bound_text, "callback result is not below its Fin %s bound", n); return bound_text; }
+static const char *bound(const char *path, const char *n) { snprintf(bound_text, sizeof bound_text, "callback result%s is not below its Fin %s bound", path, n); return bound_text; }
 static int message_is(const finreplies_error *error, const char *expected) {
   return error->message_length == strlen(expected) && memcmp(error->message, expected, error->message_length) == 0;
 }
@@ -155,7 +155,7 @@ static finreplies_error error;
 /* One bounded leaf: the reply `format` filled with n - 1 is accepted as `expected`; with n and n + 1
    it is refused naming Fin n. Host-owned spans are released exactly once either way. */
 typedef finreplies_status (*caller)(host_state *);
-static int leaf_bounds(caller call, const char *format, unsigned n, long at, unsigned long expected, int spans) {
+static int leaf_bounds(caller call, const char *format, unsigned n, long at, unsigned long expected, int spans, const char *path) {
   char reply[64], text[8];
   snprintf(text, sizeof text, "%u", n);
   for (unsigned value = n - 1; value <= n + 1; ++value) {
@@ -163,7 +163,7 @@ static int leaf_bounds(caller call, const char *format, unsigned n, long at, uns
     host_state state = {.at = at, .reply = reply}; preset();
     finreplies_status status = call(&state);
     if (value == n - 1) CHECK(accepted(status, expected) && (!spans || state.released == 1));
-    else CHECK(refused(status, &error, bound(text)) && state.calls == 1 && (!spans || state.released == 1));
+    else CHECK(refused(status, &error, bound(path, text)) && state.calls == 1 && (!spans || state.released == 1));
   }
   return 0;
 }
@@ -184,7 +184,7 @@ static int check_maybe(void) {
   const long positions[] = {0, 1, 3};
   for (int i = 0; i < 3; ++i) for (int j = 0; j < 2; ++j) {
     host_state bad = {.at = positions[i], .reply = j ? "6" : "5"}; preset();
-    CHECK(refused(CALL(maybe, option_host, bad), &error, bound("5")) && bad.calls == (unsigned)positions[i] + 1);
+    CHECK(refused(CALL(maybe, option_host, bad), &error, bound("?", "5")) && bad.calls == (unsigned)positions[i] + 1);
   }
   host_state malformed = {.at = 1, .malformed = 1}; preset();
   CHECK(refused(CALL(maybe, option_host, malformed), &error, MALFORMED) && malformed.calls == 2);
@@ -205,7 +205,7 @@ static int check_digits(void) {
   const char *bad[] = {"3,1,2", "0,3,2", "0,1,3", "4,1,2", "0,4,2", "0,1,4"};
   for (int i = 0; i < 6; ++i) {
     host_state state = {.reply = bad[i]}; preset();
-    CHECK(refused(CALL(digits, array_host, state), &error, bound("3")) && state.calls == 1 && state.released == 1);
+    CHECK(refused(CALL(digits, array_host, state), &error, bound((const char *[]){"[0]", "[1]", "[2]"}[i % 3], "3")) && state.calls == 1 && state.released == 1);
   }
   host_state empty = {.reply = ""}; preset();
   CHECK(accepted(CALL(digits, array_host, empty), 0) && empty.released == 1);
@@ -217,11 +217,11 @@ static int check_zero(void) {
   host_state none = {.at = 1, .reply = "none"}; preset();
   CHECK(accepted(CALL(none0, option_host, none), 11));
   host_state some = {.at = 1, .reply = "0"}; preset();
-  CHECK(refused(CALL(none0, option_host, some), &error, bound("0")));
+  CHECK(refused(CALL(none0, option_host, some), &error, bound("?", "0")));
   host_state empty = {.reply = ""}; preset();
   CHECK(accepted(CALL(empty0, list_host, empty), 0) && empty.released == 1);
   host_state populated = {.reply = "0"}; preset();
-  CHECK(refused(CALL(empty0, list_host, populated), &error, bound("0")) && populated.released == 1);
+  CHECK(refused(CALL(empty0, list_host, populated), &error, bound("[0]", "0")) && populated.released == 1);
   return 0;
 }
 
@@ -236,7 +236,7 @@ static int check_wide(void) {
   const char *bad[] = {WIDE, "184467440737095516171"};
   for (int i = 0; i < 2; ++i) {
     host_state state = {.at = 1, .reply = bad[i]}; preset();
-    CHECK(refused(CALL(wide, option_host, state), &error, bound(WIDE)));
+    CHECK(refused(CALL(wide, option_host, state), &error, bound("?", WIDE)));
   }
   return 0;
 }
@@ -250,11 +250,11 @@ static int check_failure(void) {
   const char *bad[] = {"error:7", "error:8"};
   for (int i = 0; i < 2; ++i) {
     host_state state = {.reply = bad[i]}; preset();
-    CHECK(refused(CALL(failure, failure_host, state), &error, bound("7")));
+    CHECK(refused(CALL(failure, failure_host, state), &error, bound(".error", "7")));
   }
   host_state malformed = {.malformed = 1}; preset();
   CHECK(refused(CALL(failure, failure_host, malformed), &error, MALFORMED));
-  RUN(leaf_bounds(call_success, "ok:0,%u", 3, -1, 2, 1));
+  RUN(leaf_bounds(call_success, "ok:0,%u", 3, -1, 2, 1, ".ok[1]"));
   host_state errorBranch = {.reply = "error:1000000"}; preset();
   CHECK(accepted(CALL(success, success_host, errorBranch), 1000000));
   return 0;
@@ -269,7 +269,7 @@ static int check_late(void) {
   const char *bad[] = {"digit:10", "digit:11"};
   for (int i = 0; i < 2; ++i) {
     host_state state = {.reply = bad[i]}; preset();
-    CHECK(refused(CALL(late, late_host, state), &error, bound("10")));
+    CHECK(refused(CALL(late, late_host, state), &error, bound(".digit.value", "10")));
   }
   host_state malformed = {.malformed = 1}; preset();
   CHECK(refused(CALL(late, late_host, malformed), &error, MALFORMED));
@@ -278,19 +278,19 @@ static int check_late(void) {
 
 /* Records, products, aliases and nested spans whose stand-in holds no Fin, at n - 1, n and n + 1. */
 static int check_composites(void) {
-  RUN(leaf_bounds(call_tile, "%u:5", 5, -1, 50 + 5, 0));
+  RUN(leaf_bounds(call_tile, "%u:5", 5, -1, 50 + 5, 0, "?.digit"));
   host_state noTile = {.reply = "none"}; preset();
   CHECK(accepted(CALL(maybe_tile, tile_host, noTile), 3));
-  RUN(leaf_bounds(call_product, "%u", 5, -1, 9, 0));
+  RUN(leaf_bounds(call_product, "%u", 5, -1, 9, 0, ".0?"));
   host_state noPair = {.reply = "none"}; preset();
   CHECK(accepted(CALL(product, product_host, noPair), 9));
-  RUN(leaf_bounds(call_slot, "%u", 5, -1, 9, 0));
+  RUN(leaf_bounds(call_slot, "%u", 5, -1, 9, 0, ".digit?"));
   host_state noSlot = {.reply = "none"}; preset();
   CHECK(accepted(CALL(slotted, slot_host, noSlot), 9));
   host_state malformedSlot = {.malformed = 1}; preset();
   CHECK(refused(CALL(slotted, slot_host, malformedSlot), &error, MALFORMED));
-  RUN(leaf_bounds(call_aliased, "%u", 5, 0, 4, 0));
-  RUN(leaf_bounds(call_nested, "0,%u", 3, -1, 2, 1));
+  RUN(leaf_bounds(call_aliased, "%u", 5, 0, 4, 0, "?"));
+  RUN(leaf_bounds(call_nested, "0,%u", 3, -1, 2, 1, "?[1]"));
   host_state noNested = {.reply = "none"}; preset();
   CHECK(accepted(CALL(nested, nested_host, noNested), 2));
   return 0;
@@ -300,9 +300,9 @@ static int check_composites(void) {
 static int check_listed(void) {
   host_state ok = {.reply = "0,1,2"}; preset();
   CHECK(accepted(CALL(listed, list_host, ok), 123) && ok.released == 1);
-  RUN(leaf_bounds(call_listed, "%u,1,2", 3, -1, 323, 1));
-  RUN(leaf_bounds(call_listed, "0,%u,2", 3, -1, 133, 1));
-  RUN(leaf_bounds(call_listed, "0,1,%u", 3, -1, 123, 1));
+  RUN(leaf_bounds(call_listed, "%u,1,2", 3, -1, 323, 1, "[0]"));
+  RUN(leaf_bounds(call_listed, "0,%u,2", 3, -1, 133, 1, "[1]"));
+  RUN(leaf_bounds(call_listed, "0,1,%u", 3, -1, 123, 1, "[2]"));
   host_state empty = {.reply = ""}; preset();
   CHECK(accepted(CALL(listed, list_host, empty), 0) && empty.released == 1);
   return 0;
@@ -312,7 +312,7 @@ static int check_listed(void) {
 static int check_twice(void) {
   host_state first = {.at = 1, .reply = "6"}, second = {0};
   preset();
-  CHECK(refused(finreplies_twice(&(HOST_twice){.call = option_host, .context = &first}, &(HOST_twice_second){.call = second_host, .context = &second}, out, &error), &error, bound("5")));
+  CHECK(refused(finreplies_twice(&(HOST_twice){.call = option_host, .context = &first}, &(HOST_twice_second){.call = second_host, .context = &second}, out, &error), &error, bound("?", "5")));
   CHECK(first.calls == 1 && second.calls == 0);
   host_state good = {.at = -1}; preset();
   CHECK(finreplies_twice(&(HOST_twice){.call = option_host, .context = &good}, &(HOST_twice_second){.call = second_host, .context = &second}, out, &error) == FINREPLIES_STATUS_OK);

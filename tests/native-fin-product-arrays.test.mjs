@@ -71,11 +71,18 @@ test("C adapters compare every element's component and active error branch on ca
 	const model = compilerModel(), calls = generateCopiedNativeCalls(model, compilePrimitiveCSurface(model.bindingIr, { compounds: true }));
 	const start = calls.indexOf("static finproductarrays_status lb_call_rows("), call = calls.slice(start, calls.indexOf("\n}\n", start));
 	const loop = call.indexOf("for (size_t k2 = 0; k2 < arg0->length; ++k2) {");
-	const component = call.indexOf("if (!lb_fin_below((&(&arg0->data[k2])->fst)->data, (&(&arg0->data[k2])->fst)->length, lb_fin_rows_0_0, 1)) return lb_invalid(error, \"arg0 is not below its Fin 4 bound\");");
-	const branch = call.indexOf("if (!(&(&arg0->data[k2])->snd)->is_ok) {\n      if (!lb_fin_below((&(&(&arg0->data[k2])->snd)->error)->data, (&(&(&arg0->data[k2])->snd)->error)->length, lb_fin_rows_0_1, 1)) return lb_invalid(error, \"arg0 is not below its Fin 6 bound\");\n    }");
+	const component = call.indexOf("if (!lb_fin_below((&(&arg0->data[k2])->fst)->data, (&(&arg0->data[k2])->fst)->length, lb_fin_rows_0_0, 1)) {");
+	const branch = call.indexOf("if (!(&(&arg0->data[k2])->snd)->is_ok) {\n      if (!lb_fin_below((&(&(&arg0->data[k2])->snd)->error)->data, (&(&(&arg0->data[k2])->snd)->error)->length, lb_fin_rows_0_1, 1)) {");
 	const dispatch = call.indexOf("lean_object *checked = ");
 	// The copy check, then each element's comparisons, then the only conversion into Lean.
 	assert.ok(call.indexOf("_check(arg0, &budget)") < loop && loop < component && component < branch && branch < dispatch, call);
+	for(const [index, path, bound] of [[0, "arg0[%zu].0", "4"], [1, "arg0[%zu].1.error", "6"]])
+	{
+		const buffer = `lb_fin_rows_0_${index}_message`;
+		const formatting = call.indexOf(`(void)snprintf(${buffer}, sizeof(${buffer}), "${path} is not below its Fin ${bound} bound", k2);`);
+		const rejection = call.indexOf(`return lb_invalid(error, ${buffer});`);
+		assert.ok((index ? branch : component) < formatting && formatting < rejection && rejection < dispatch, path);
+	}
 	assert.doesNotMatch(call, /->ok\)->data/u);
 	for(const [name, limbs] of [["lb_fin_rows_0_0", "0x4u"], ["lb_fin_rows_0_1", "0x6u"]])
 		assert.ok(calls.includes(`static const uint32_t ${name}[1] = {${limbs}};`), name);

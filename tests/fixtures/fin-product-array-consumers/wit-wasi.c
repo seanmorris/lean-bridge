@@ -85,14 +85,14 @@ int main(void) {
   for (int k = 0; k < 3; ++k) {
     uint32_t components[3] = {0, 2, 3}; components[k] = 4;
     arg = rows(components, 5, 3);
-    CHECK(rejected("rows", &arg, "arg0 is not below its Fin 4 bound"));
+    CHECK(rejected("rows", &arg, (const char *[]){"arg0[0].0 is not below its Fin 4 bound", "arg0[1].0 is not below its Fin 4 bound", "arg0[2].0 is not below its Fin 4 bound"}[k]));
     for (int i = 0; i < 3; ++i) if (i != k) CHECK(valid_row(&arg, i, i));
     CHECK(is_nat(&arg.of.list.data[k].of.tuple.data[0], 4));
     clear(&arg);
   }
   /* The active error branch is bounded: error 6 is rejected, while ok 6 in the last row passed above. */
   arg = rows(valid, 6, 3);
-  CHECK(rejected("rows", &arg, "arg0 is not below its Fin 6 bound"));
+  CHECK(rejected("rows", &arg, "arg0[1].1.error is not below its Fin 6 bound"));
   CHECK(valid_row(&arg, 0, 0) && valid_row(&arg, 2, 2) && is_nat(arg.of.list.data[1].of.tuple.data[1].of.result.val, 6));
   clear(&arg);
   /* A valid call recovers, and Lean returns the rows reversed below their bounds. */
@@ -107,7 +107,7 @@ int main(void) {
     clear(&out);
     const uint32_t bad[3] = {0, 2, 4 + i};
     arg = rows(bad, 5, 3);
-    if (!rejected("rows", &arg, "arg0 is not below its Fin 4 bound")) { fprintf(stderr, "rejection round %u failed\n", i); return 1; }
+    if (!rejected("rows", &arg, "arg0[2].0 is not below its Fin 4 bound")) { fprintf(stderr, "rejection round %u failed\n", i); return 1; }
     clear(&arg);
   }
   checks += 2000;

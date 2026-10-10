@@ -1,0 +1,1068 @@
+{
+  "archives": {
+    "archives/finrecords-1.0.0-c.tar.gz": "a530b5ac3192be96aadbb64cd4c98475679865eec82c917c6c68b63f20a50213",
+    "archives/finrecords-1.0.0-cpp.tar.gz": "3527e95330f3ddb0e12f8f423a8a6212d0424a0f77c5a5311a1cd720df8e72e9"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "839e9a2a007c9f901f75f294131116712fbd412a9a54dd9a9814aff1e6d6b818",
+      "checks": 2064,
+      "compilerFreePath": true,
+      "consumerSha256": "6ea986e9a2f2e3524837ddc70e6338602c27c3446e9675985cf863f707de8b93",
+      "dispatch": {
+        "columns": [
+          "l_FinRecords_tileSum",
+          "l_FinRecords_shapeSize",
+          "lb_a66515c1ce98cdda14698214",
+          "lb_5c2660bc5b4223091cab031b"
+        ],
+        "interposer": "LD_PRELOAD",
+        "observed": [
+          [
+            "start",
+            0,
+            [
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            "public-valid-tile",
+            0,
+            [
+              1,
+              0,
+              1,
+              0
+            ]
+          ],
+          [
+            "public-invalid-tile",
+            1,
+            [
+              1,
+              0,
+              1,
+              0
+            ]
+          ],
+          [
+            "public-valid-circle",
+            0,
+            [
+              1,
+              1,
+              1,
+              1
+            ]
+          ],
+          [
+            "public-invalid-circle",
+            1,
+            [
+              1,
+              1,
+              1,
+              1
+            ]
+          ],
+          [
+            "raw-invalid-tile",
+            1,
+            [
+              1,
+              1,
+              2,
+              1
+            ]
+          ],
+          [
+            "raw-invalid-circle",
+            1,
+            [
+              1,
+              1,
+              2,
+              2
+            ]
+          ],
+          [
+            "raw-valid-tile",
+            1,
+            [
+              2,
+              1,
+              3,
+              2
+            ]
+          ],
+          [
+            "raw-valid-circle",
+            1,
+            [
+              2,
+              2,
+              3,
+              3
+            ]
+          ]
+        ],
+        "positiveControl": "valid public and raw calls increment source and adapter counts"
+      },
+      "modelSha256": "1a8a3e8e4c0083488fa330bbf6f1250b0794679098e27b6dc0507175ad10879e",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 53881245,
+              "path": "archives/finrecords-1.0.0-c.tar.gz",
+              "sha256": "a530b5ac3192be96aadbb64cd4c98475679865eec82c917c6c68b63f20a50213"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "finrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "c",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "c",
+      "receiptSha256": "741d85ebcc1fc075bc7c05fdfcabff56c0face25ae89ab0bf0a6240b67e248ec",
+      "refinements": {
+        "FinRecords.bump": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "5",
+                  "kind": "fin"
+                },
+                null
+              ],
+              "definition": "FinRecords.Tile",
+              "fields": [
+                "digit",
+                "count"
+              ],
+              "kind": "record"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "5",
+                "kind": "fin"
+              },
+              null
+            ],
+            "definition": "FinRecords.Tile",
+            "fields": [
+              "digit",
+              "count"
+            ],
+            "kind": "record"
+          }
+        },
+        "FinRecords.gateOpen": {
+          "parameters": [
+            {
+              "cases": [
+                {
+                  "arguments": [],
+                  "fields": [],
+                  "name": "closed"
+                },
+                {
+                  "arguments": [
+                    {
+                      "bound": "0",
+                      "kind": "fin"
+                    }
+                  ],
+                  "fields": [
+                    "value"
+                  ],
+                  "name": "never"
+                }
+              ],
+              "definition": "FinRecords.Gate",
+              "kind": "variant"
+            }
+          ],
+          "result": null
+        },
+        "FinRecords.lateSum": {
+          "parameters": [
+            {
+              "arguments": [
+                null,
+                null,
+                {
+                  "bound": "5",
+                  "kind": "fin"
+                }
+              ],
+              "definition": "FinRecords.Late",
+              "fields": [
+                "label",
+                "items",
+                "digit"
+              ],
+              "kind": "record"
+            }
+          ],
+          "result": null
+        },
+        "FinRecords.makeShape": {
+          "parameters": [
+            null
+          ],
+          "result": {
+            "cases": [
+              {
+                "arguments": [
+                  {
+                    "bound": "10",
+                    "kind": "fin"
+                  }
+                ],
+                "fields": [
+                  "radius"
+                ],
+                "name": "circle"
+              },
+              {
+                "arguments": [
+                  null
+                ],
+                "fields": [
+                  "text"
+                ],
+                "name": "label"
+              },
+              {
+                "arguments": [],
+                "fields": [],
+                "name": "empty"
+              }
+            ],
+            "definition": "FinRecords.Shape",
+            "kind": "variant"
+          }
+        },
+        "FinRecords.maybeShape": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "cases": [
+                    {
+                      "arguments": [
+                        {
+                          "bound": "10",
+                          "kind": "fin"
+                        }
+                      ],
+                      "fields": [
+                        "radius"
+                      ],
+                      "name": "circle"
+                    },
+                    {
+                      "arguments": [
+                        null
+                      ],
+                      "fields": [
+                        "text"
+                      ],
+                      "name": "label"
+                    },
+                    {
+                      "arguments": [],
+                      "fields": [],
+                      "name": "empty"
+                    }
+                  ],
+                  "definition": "FinRecords.Shape",
+                  "kind": "variant"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "result": null
+        },
+        "FinRecords.nestSum": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "5",
+                      "kind": "fin"
+                    },
+                    null
+                  ],
+                  "definition": "FinRecords.Tile",
+                  "fields": [
+                    "digit",
+                    "count"
+                  ],
+                  "kind": "record"
+                },
+                {
+                  "bound": "3",
+                  "kind": "fin"
+                }
+              ],
+              "definition": "FinRecords.Nest",
+              "fields": [
+                "inner",
+                "tag"
+              ],
+              "kind": "record"
+            }
+          ],
+          "result": null
+        },
+        "FinRecords.shapeSize": {
+          "parameters": [
+            {
+              "cases": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "fields": [
+                    "radius"
+                  ],
+                  "name": "circle"
+                },
+                {
+                  "arguments": [
+                    null
+                  ],
+                  "fields": [
+                    "text"
+                  ],
+                  "name": "label"
+                },
+                {
+                  "arguments": [],
+                  "fields": [],
+                  "name": "empty"
+                }
+              ],
+              "definition": "FinRecords.Shape",
+              "kind": "variant"
+            }
+          ],
+          "result": null
+        },
+        "FinRecords.slotCount": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "0",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "option"
+                },
+                null
+              ],
+              "definition": "FinRecords.Slot",
+              "fields": [
+                "maybe",
+                "count"
+              ],
+              "kind": "record"
+            }
+          ],
+          "result": null
+        },
+        "FinRecords.tileExcept": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "5",
+                      "kind": "fin"
+                    },
+                    null
+                  ],
+                  "definition": "FinRecords.Tile",
+                  "fields": [
+                    "digit",
+                    "count"
+                  ],
+                  "kind": "record"
+                },
+                {
+                  "cases": [
+                    {
+                      "arguments": [
+                        {
+                          "bound": "10",
+                          "kind": "fin"
+                        }
+                      ],
+                      "fields": [
+                        "radius"
+                      ],
+                      "name": "circle"
+                    },
+                    {
+                      "arguments": [
+                        null
+                      ],
+                      "fields": [
+                        "text"
+                      ],
+                      "name": "label"
+                    },
+                    {
+                      "arguments": [],
+                      "fields": [],
+                      "name": "empty"
+                    }
+                  ],
+                  "definition": "FinRecords.Shape",
+                  "kind": "variant"
+                }
+              ],
+              "kind": "result"
+            }
+          ],
+          "result": null
+        },
+        "FinRecords.tileList": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "5",
+                      "kind": "fin"
+                    },
+                    null
+                  ],
+                  "definition": "FinRecords.Tile",
+                  "fields": [
+                    "digit",
+                    "count"
+                  ],
+                  "kind": "record"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": null
+        },
+        "FinRecords.tilePair": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "5",
+                      "kind": "fin"
+                    },
+                    null
+                  ],
+                  "definition": "FinRecords.Tile",
+                  "fields": [
+                    "digit",
+                    "count"
+                  ],
+                  "kind": "record"
+                },
+                {
+                  "cases": [
+                    {
+                      "arguments": [
+                        {
+                          "bound": "10",
+                          "kind": "fin"
+                        }
+                      ],
+                      "fields": [
+                        "radius"
+                      ],
+                      "name": "circle"
+                    },
+                    {
+                      "arguments": [
+                        null
+                      ],
+                      "fields": [
+                        "text"
+                      ],
+                      "name": "label"
+                    },
+                    {
+                      "arguments": [],
+                      "fields": [],
+                      "name": "empty"
+                    }
+                  ],
+                  "definition": "FinRecords.Shape",
+                  "kind": "variant"
+                }
+              ],
+              "kind": "tuple"
+            }
+          ],
+          "result": null
+        },
+        "FinRecords.tileSum": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "5",
+                  "kind": "fin"
+                },
+                null
+              ],
+              "definition": "FinRecords.Tile",
+              "fields": [
+                "digit",
+                "count"
+              ],
+              "kind": "record"
+            }
+          ],
+          "result": null
+        },
+        "FinRecords.tiles": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "5",
+                      "kind": "fin"
+                    },
+                    null
+                  ],
+                  "definition": "FinRecords.Tile",
+                  "fields": [
+                    "digit",
+                    "count"
+                  ],
+                  "kind": "record"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        }
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "45b1076116bd29b7b5af3ffcb15517d0ebce77f8ccdce295cefabae58d9c386f"
+    },
+    {
+      "bindingIrSha256": "839e9a2a007c9f901f75f294131116712fbd412a9a54dd9a9814aff1e6d6b818",
+      "checks": 2053,
+      "compilerFreePath": true,
+      "consumerSha256": "8829f065c80f3110620090fc2114deeaf2e46a4e050c6e31f890f09911218899",
+      "modelSha256": "1a8a3e8e4c0083488fa330bbf6f1250b0794679098e27b6dc0507175ad10879e",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51809280,
+              "path": "archives/finrecords-1.0.0-cpp.tar.gz",
+              "sha256": "3527e95330f3ddb0e12f8f423a8a6212d0424a0f77c5a5311a1cd720df8e72e9"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "finrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "cpp",
+      "receiptSha256": "741d85ebcc1fc075bc7c05fdfcabff56c0face25ae89ab0bf0a6240b67e248ec",
+      "refinements": {
+        "FinRecords.bump": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "5",
+                  "kind": "fin"
+                },
+                null
+              ],
+              "definition": "FinRecords.Tile",
+              "fields": [
+                "digit",
+                "count"
+              ],
+              "kind": "record"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "5",
+                "kind": "fin"
+              },
+              null
+            ],
+            "definition": "FinRecords.Tile",
+            "fields": [
+              "digit",
+              "count"
+            ],
+            "kind": "record"
+          }
+        },
+        "FinRecords.gateOpen": {
+          "parameters": [
+            {
+              "cases": [
+                {
+                  "arguments": [],
+                  "fields": [],
+                  "name": "closed"
+                },
+                {
+                  "arguments": [
+                    {
+                      "bound": "0",
+                      "kind": "fin"
+                    }
+                  ],
+                  "fields": [
+                    "value"
+                  ],
+                  "name": "never"
+                }
+              ],
+              "definition": "FinRecords.Gate",
+              "kind": "variant"
+            }
+          ],
+          "result": null
+        },
+        "FinRecords.lateSum": {
+          "parameters": [
+            {
+              "arguments": [
+                null,
+                null,
+                {
+                  "bound": "5",
+                  "kind": "fin"
+                }
+              ],
+              "definition": "FinRecords.Late",
+              "fields": [
+                "label",
+                "items",
+                "digit"
+              ],
+              "kind": "record"
+            }
+          ],
+          "result": null
+        },
+        "FinRecords.makeShape": {
+          "parameters": [
+            null
+          ],
+          "result": {
+            "cases": [
+              {
+                "arguments": [
+                  {
+                    "bound": "10",
+                    "kind": "fin"
+                  }
+                ],
+                "fields": [
+                  "radius"
+                ],
+                "name": "circle"
+              },
+              {
+                "arguments": [
+                  null
+                ],
+                "fields": [
+                  "text"
+                ],
+                "name": "label"
+              },
+              {
+                "arguments": [],
+                "fields": [],
+                "name": "empty"
+              }
+            ],
+            "definition": "FinRecords.Shape",
+            "kind": "variant"
+          }
+        },
+        "FinRecords.maybeShape": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "cases": [
+                    {
+                      "arguments": [
+                        {
+                          "bound": "10",
+                          "kind": "fin"
+                        }
+                      ],
+                      "fields": [
+                        "radius"
+                      ],
+                      "name": "circle"
+                    },
+                    {
+                      "arguments": [
+                        null
+                      ],
+                      "fields": [
+                        "text"
+                      ],
+                      "name": "label"
+                    },
+                    {
+                      "arguments": [],
+                      "fields": [],
+                      "name": "empty"
+                    }
+                  ],
+                  "definition": "FinRecords.Shape",
+                  "kind": "variant"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "result": null
+        },
+        "FinRecords.nestSum": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "5",
+                      "kind": "fin"
+                    },
+                    null
+                  ],
+                  "definition": "FinRecords.Tile",
+                  "fields": [
+                    "digit",
+                    "count"
+                  ],
+                  "kind": "record"
+                },
+                {
+                  "bound": "3",
+                  "kind": "fin"
+                }
+              ],
+              "definition": "FinRecords.Nest",
+              "fields": [
+                "inner",
+                "tag"
+              ],
+              "kind": "record"
+            }
+          ],
+          "result": null
+        },
+        "FinRecords.shapeSize": {
+          "parameters": [
+            {
+              "cases": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "fields": [
+                    "radius"
+                  ],
+                  "name": "circle"
+                },
+                {
+                  "arguments": [
+                    null
+                  ],
+                  "fields": [
+                    "text"
+                  ],
+                  "name": "label"
+                },
+                {
+                  "arguments": [],
+                  "fields": [],
+                  "name": "empty"
+                }
+              ],
+              "definition": "FinRecords.Shape",
+              "kind": "variant"
+            }
+          ],
+          "result": null
+        },
+        "FinRecords.slotCount": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "0",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "option"
+                },
+                null
+              ],
+              "definition": "FinRecords.Slot",
+              "fields": [
+                "maybe",
+                "count"
+              ],
+              "kind": "record"
+            }
+          ],
+          "result": null
+        },
+        "FinRecords.tileExcept": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "5",
+                      "kind": "fin"
+                    },
+                    null
+                  ],
+                  "definition": "FinRecords.Tile",
+                  "fields": [
+                    "digit",
+                    "count"
+                  ],
+                  "kind": "record"
+                },
+                {
+                  "cases": [
+                    {
+                      "arguments": [
+                        {
+                          "bound": "10",
+                          "kind": "fin"
+                        }
+                      ],
+                      "fields": [
+                        "radius"
+                      ],
+                      "name": "circle"
+                    },
+                    {
+                      "arguments": [
+                        null
+                      ],
+                      "fields": [
+                        "text"
+                      ],
+                      "name": "label"
+                    },
+                    {
+                      "arguments": [],
+                      "fields": [],
+                      "name": "empty"
+                    }
+                  ],
+                  "definition": "FinRecords.Shape",
+                  "kind": "variant"
+                }
+              ],
+              "kind": "result"
+            }
+          ],
+          "result": null
+        },
+        "FinRecords.tileList": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "5",
+                      "kind": "fin"
+                    },
+                    null
+                  ],
+                  "definition": "FinRecords.Tile",
+                  "fields": [
+                    "digit",
+                    "count"
+                  ],
+                  "kind": "record"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": null
+        },
+        "FinRecords.tilePair": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "5",
+                      "kind": "fin"
+                    },
+                    null
+                  ],
+                  "definition": "FinRecords.Tile",
+                  "fields": [
+                    "digit",
+                    "count"
+                  ],
+                  "kind": "record"
+                },
+                {
+                  "cases": [
+                    {
+                      "arguments": [
+                        {
+                          "bound": "10",
+                          "kind": "fin"
+                        }
+                      ],
+                      "fields": [
+                        "radius"
+                      ],
+                      "name": "circle"
+                    },
+                    {
+                      "arguments": [
+                        null
+                      ],
+                      "fields": [
+                        "text"
+                      ],
+                      "name": "label"
+                    },
+                    {
+                      "arguments": [],
+                      "fields": [],
+                      "name": "empty"
+                    }
+                  ],
+                  "definition": "FinRecords.Shape",
+                  "kind": "variant"
+                }
+              ],
+              "kind": "tuple"
+            }
+          ],
+          "result": null
+        },
+        "FinRecords.tileSum": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "5",
+                  "kind": "fin"
+                },
+                null
+              ],
+              "definition": "FinRecords.Tile",
+              "fields": [
+                "digit",
+                "count"
+              ],
+              "kind": "record"
+            }
+          ],
+          "result": null
+        },
+        "FinRecords.tiles": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "5",
+                      "kind": "fin"
+                    },
+                    null
+                  ],
+                  "definition": "FinRecords.Tile",
+                  "fields": [
+                    "digit",
+                    "count"
+                  ],
+                  "kind": "record"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        }
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "45b1076116bd29b7b5af3ffcb15517d0ebce77f8ccdce295cefabae58d9c386f"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

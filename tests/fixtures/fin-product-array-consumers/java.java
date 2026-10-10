@@ -32,13 +32,13 @@ final class Consumer {
         for (int k = 0; k < 3; k++) {
             rows[k] = new Pair<>(n(4), rows[k].second());
             var before = rows.clone();
-            check(rejected(() -> Api.rows(rows), "arg0", "4") && Arrays.equals(rows, before), "component at " + k);
+            check(rejected(() -> Api.rows(rows), "arg0[" + k + "].0", "4") && Arrays.equals(rows, before), "component at " + k);
             rows[k] = valid()[k];
         }
         // The active error branch is bounded: error 6 is rejected, while ok 6 in the last row passed above.
         rows[1] = new Pair<>(n(2), Result.err(n(6)));
         var before = rows.clone();
-        check(rejected(() -> Api.rows(rows), "arg0", "6") && Arrays.equals(rows, before), "error branch at bound");
+        check(rejected(() -> Api.rows(rows), "arg0[1].1.error", "6") && Arrays.equals(rows, before), "error branch at bound");
         rows[1] = valid()[1];
         // A valid call recovers.
         check(Arrays.equals(rows, valid()), "caller rows unchanged");
@@ -50,7 +50,7 @@ final class Consumer {
         for (int i = 0; i < 1000; i++) {
             if (!Api.rows(rows).equals(expected)) throw new AssertionError("round " + i + " failed");
             var bad = valid(); bad[2] = new Pair<>(n(4 + i), bad[2].second());
-            if (!rejected(() -> Api.rows(bad), "arg0", "4") || !bad[2].first().equals(n(4 + i))) throw new AssertionError("rejection round " + i + " failed");
+            if (!rejected(() -> Api.rows(bad), "arg0[2].0", "4") || !bad[2].first().equals(n(4 + i))) throw new AssertionError("rejection round " + i + " failed");
         }
         checks += 2000;
         System.out.println("fin-product-array-ok:" + checks);

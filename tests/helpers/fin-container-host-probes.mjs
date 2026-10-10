@@ -57,11 +57,11 @@ raw.restype = c.c_int
 def report(step, status):
     print(step, status, *[count(i) for i in range(${finContainerDispatchColumns.length})])
 
-def rejected(call, bound):
+def rejected(call, path, bound):
     try:
         call()
     except api.LeanBridgeError as error:
-        if error.status == 1 and str(error) == 'arg0 is not below its Fin ' + bound + ' bound':
+        if error.status == 1 and str(error) == path + ' is not below its Fin ' + bound + ' bound':
             return 1
         raise
     raise AssertionError('invalid input accepted')
@@ -70,11 +70,11 @@ report('start', 0)
 if api.mirror_all([3]) != (6,):
     raise AssertionError('incorrect mirror result')
 report('public-valid-mirror', 0)
-report('public-invalid-mirror', rejected(lambda: api.mirror_all([10]), '10'))
+report('public-invalid-mirror', rejected(lambda: api.mirror_all([10]), 'arg0[0]', '10'))
 if api.or_default(None) != 7:
     raise AssertionError('incorrect absent result')
 report('public-valid-absent', 0)
-report('public-invalid-present', rejected(lambda: api.or_default(api.Some(1)), '1'))
+report('public-invalid-present', rejected(lambda: api.or_default(api.Some(1)), 'arg0?', '1'))
 for operation, step in enumerate(('raw-invalid-mirror', 'raw-invalid-present', 'raw-valid-mirror', 'raw-valid-absent')):
     report(step, raw(operation))
 `;
@@ -94,9 +94,9 @@ fn report(count: Counter, step: &str, status: i32) {
     for index in 0..${finContainerDispatchColumns.length} { print!(" {}", unsafe { count(index) }); }
     println!();
 }
-fn rejected<T>(result: Result<T, Error>, bound: &str) -> i32 {
+fn rejected<T>(result: Result<T, Error>, path: &str, bound: &str) -> i32 {
     match result {
-        Err(Error::Native { code: 1, message }) if message == format!("arg0 is not below its Fin {bound} bound") => 1,
+        Err(Error::Native { code: 1, message }) if message == format!("{path} is not below its Fin {bound} bound") => 1,
         _ => panic!("missing expected Fin rejection"),
     }
 }
@@ -112,10 +112,10 @@ fn main() {
     report(count, "start", 0);
     assert_eq!(api::mirror_all(&[n(3)]).unwrap(), vec![n(6)]);
     report(count, "public-valid-mirror", 0);
-    report(count, "public-invalid-mirror", rejected(api::mirror_all(&[n(10)]), "10"));
+    report(count, "public-invalid-mirror", rejected(api::mirror_all(&[n(10)]), "arg0[0]", "10"));
     assert_eq!(api::or_default(&None).unwrap(), n(7));
     report(count, "public-valid-absent", 0);
-    report(count, "public-invalid-present", rejected(api::or_default(&Some(n(1))), "1"));
+    report(count, "public-invalid-present", rejected(api::or_default(&Some(n(1))), "arg0?", "1"));
     for (operation, step) in ["raw-invalid-mirror", "raw-invalid-present", "raw-valid-mirror", "raw-valid-absent"].iter().enumerate() {
         report(count, step, unsafe { raw(operation as c_uint) });
     }

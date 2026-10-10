@@ -348,7 +348,26 @@ test("host replies are admitted only when their failure value holds no Fin, and 
 		const source = generateNativeCallables(model, replySurface(model)).source, trampoline = section(source, `lb_invoke_${key}(`);
 		const walk = trampoline.indexOf("lb_fin_below(");
 		assert.ok(trampoline.indexOf("_check(&returned") < walk && walk < trampoline.indexOf("_in(&returned)"), name);
-		assert.match(trampoline, /lb_record\(frame, FINCALLBACKS_STATUS_INVALID_ARGUMENT, NULL, "callback result is not below its Fin \d+ bound"\); goto done; \}/u, name);
+		const [path, bound] = {
+			maybe: ["?", "5"]
+			, digits: ["[%zu]", "3"]
+			, none0: ["?", "0"]
+			, empty0: ["[%zu]", "0"]
+			, wide: ["?", "184467440737095516170"]
+			, failure: [".error", "7"]
+			, trailing: [".digit.value", "10"]
+			, maybeTile: ["?.digit", "5"]
+			, aliased: ["?", "5"]
+			, nested: ["?[%zu]", "3"]
+			, slotted: [".digit?", "5"]
+			, product: [".0?", "5"]
+			, success: [".ok[%zu]", "3"]
+		}[name];
+		const message = `"callback result${path} is not below its Fin ${bound} bound"`;
+		const buffer = `lb_fin_reply_${key}_0_message`;
+		if(path.includes("%zu"))
+			assert.ok(trampoline.includes(`(void)snprintf(${buffer}, sizeof(${buffer}), ${message}, ${["nested", "success"].includes(name) ? "k4" : "k2"});`), name);
+		assert.ok(trampoline.includes(`lb_record(frame, FINCALLBACKS_STATUS_INVALID_ARGUMENT, NULL, ${path.includes("%zu") ? buffer : message}); goto done; }`), name);
 		// A reply Lean rejected suppresses later host callbacks and reaches the frame at reentry and leave.
 		const flag = `if (${nativeReplyRejectedSymbol(model)}()) lb_record(`;
 		assert.ok(trampoline.indexOf(flag) >= 0 && trampoline.indexOf(flag) < trampoline.indexOf("if (frame->status != FINCALLBACKS_STATUS_OK) goto done;"), name);
@@ -383,8 +402,8 @@ test("checked host replies keep distinct identities in either declaration order"
 	assert.ok(!lean.includes(`reply_reject_${unchecked.key}`));
 	// Each checked trampoline compares its own bound.
 	const source = generateNativeCallables(model, replySurface(model)).source;
-	assert.match(section(source, `lb_invoke_${forward["Sample.a"]}(`), /"callback result is not below its Fin 3 bound"/u);
-	assert.match(section(source, `lb_invoke_${forward["Sample.b"]}(`), /"callback result is not below its Fin 5 bound"/u);
+	assert.match(section(source, `lb_invoke_${forward["Sample.a"]}(`), /"callback result\? is not below its Fin 3 bound"/u);
+	assert.match(section(source, `lb_invoke_${forward["Sample.b"]}(`), /"callback result\? is not below its Fin 5 bound"/u);
 	assert.doesNotMatch(section(source, `lb_invoke_${forward["Sample.c"]}(`), /lb_fin_below/u);
 });
 

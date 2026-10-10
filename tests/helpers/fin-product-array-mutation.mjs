@@ -10,6 +10,7 @@
 /** C source implementing the projection functions the C consumer links against. */
 export const finProductArrayStubRuntime = () => `#include <finproductarrays.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 typedef finproductarrays_gmp_tuple_nat_result_nat_nat_value row;
 typedef finproductarrays_gmp_array_tuple_nat_result_nat_nat_span rows;
@@ -27,19 +28,22 @@ static finproductarrays_gmp_status invalid(finproductarrays_gmp_error *error, co
 }
 /* Fin 4 on each component and Fin 6 on each active error branch, in element order. */
 static finproductarrays_gmp_status check(const rows *input, finproductarrays_gmp_error *error) {
+  static _Thread_local char diagnostic[128];
   for (size_t k = 0; k < input->length; ++k) {
     row *item = (row *)&input->data[k];
     if (mpz_cmp_ui(item->fst, 4) >= 0) {
 #ifdef MUTATE_COMPONENT
       mpz_set_ui(item->fst, 0);
 #endif
-      return invalid(error, "arg0 is not below its Fin 4 bound");
+      snprintf(diagnostic, sizeof diagnostic, "arg0[%zu].0 is not below its Fin 4 bound", k);
+      return invalid(error, diagnostic);
     }
     if (!item->snd.is_ok && mpz_cmp_ui(item->snd.error, 6) >= 0) {
 #ifdef MUTATE_ERROR
       mpz_set_ui(item->snd.error, 0);
 #endif
-      return invalid(error, "arg0 is not below its Fin 6 bound");
+      snprintf(diagnostic, sizeof diagnostic, "arg0[%zu].1.error is not below its Fin 6 bound", k);
+      return invalid(error, diagnostic);
     }
   }
   return FINPRODUCTARRAYS_GMP_STATUS_OK;

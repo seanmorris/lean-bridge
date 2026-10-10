@@ -110,7 +110,7 @@ int main(void) {
   CHECK(OK(CALL(CLOSURE_DIGITS)(digits, &span, out, &error)) && mpz_cmp_ui(out, 5) == 0);
   for (unsigned bad = 0; bad < 3; ++bad) {
     mpz_set_ui(items[bad], 3);
-    CHECK(rejected(CALL(CLOSURE_DIGITS)(digits, &span, out, &error), &error, "arg0 is not below its Fin 3 bound") && mpz_cmp_ui(items[bad], 3) == 0);
+    CHECK(rejected(CALL(CLOSURE_DIGITS)(digits, &span, out, &error), &error, (const char *[]){"arg0[0] is not below its Fin 3 bound", "arg0[1] is not below its Fin 3 bound", "arg0[2] is not below its Fin 3 bound"}[bad]) && mpz_cmp_ui(items[bad], 3) == 0);
     mpz_set_ui(items[bad], bad);
   }
   span.length = 0; CHECK(OK(CALL(CLOSURE_DIGITS)(digits, &span, out, &error)) && mpz_cmp_ui(out, 0) == 0);
@@ -125,7 +125,7 @@ int main(void) {
   choice.has_value = 1; mpz_set_ui(choice.value.fst, 4); mpz_set_ui(choice.value.snd, 7);
   CHECK(OK(CALL(CLOSURE_PICK)(pick, &choice, out, &error)) && mpz_cmp_ui(out, 11) == 0);
   mpz_set_ui(choice.value.fst, 5);
-  CHECK(rejected(CALL(CLOSURE_PICK)(pick, &choice, out, &error), &error, "arg0 is not below its Fin 5 bound") && mpz_cmp_ui(choice.value.fst, 5) == 0);
+  CHECK(rejected(CALL(CLOSURE_PICK)(pick, &choice, out, &error), &error, "arg0?.0 is not below its Fin 5 bound") && mpz_cmp_ui(choice.value.fst, 5) == 0);
   fincallbacks_option_tuple_nat_nat_value_clear(&choice);
   DISPOSE(CLOSURE_PICK)(&pick);
 
@@ -136,7 +136,7 @@ int main(void) {
   value.is_ok = 1; mpz_set_ui(value.ok, 6);
   CHECK(OK(CALL(CLOSURE_BRANCH)(branch, &value, out, &error)) && mpz_cmp_ui(out, 6) == 0);
   mpz_set_ui(value.ok, 7);
-  CHECK(rejected(CALL(CLOSURE_BRANCH)(branch, &value, out, &error), &error, "arg0 is not below its Fin 7 bound"));
+  CHECK(rejected(CALL(CLOSURE_BRANCH)(branch, &value, out, &error), &error, "arg0.ok is not below its Fin 7 bound"));
   fincallbacks_result_nat_string_value_clear(&value); fincallbacks_result_nat_string_value_init(&value);
   value.is_ok = 0; value.error = (fincallbacks_string){"abc", 3, NULL, NULL};
   CHECK(OK(CALL(CLOSURE_BRANCH)(branch, &value, out, &error)) && mpz_cmp_ui(out, 53) == 0);
@@ -161,7 +161,7 @@ int main(void) {
   CHECK(OK(CALL(CLOSURE_TILES)(tiles, &rows, out, &error)) && mpz_cmp_ui(out, 330) == 0);
   for (unsigned bad = 0; bad < 3; ++bad) {
     mpz_set_ui(row[bad].digit, 5);
-    CHECK(rejected(CALL(CLOSURE_TILES)(tiles, &rows, out, &error), &error, "arg0 is not below its Fin 5 bound") && mpz_cmp_ui(row[bad].digit, 5) == 0);
+    CHECK(rejected(CALL(CLOSURE_TILES)(tiles, &rows, out, &error), &error, (const char *[]){"arg0[0].digit is not below its Fin 5 bound", "arg0[1].digit is not below its Fin 5 bound", "arg0[2].digit is not below its Fin 5 bound"}[bad]) && mpz_cmp_ui(row[bad].digit, 5) == 0);
     mpz_set_ui(row[bad].digit, bad);
   }
   CHECK(OK(CALL(CLOSURE_TILES)(tiles, &rows, out, &error)) && mpz_cmp_ui(out, 330) == 0);
@@ -175,7 +175,7 @@ int main(void) {
   optional.has_value = 1; optional.value = rows;
   CHECK(OK(CALL(CLOSURE_MAYBETILES)(maybe, &optional, out, &error)) && mpz_cmp_ui(out, 3) == 0);
   mpz_set_ui(row[1].digit, 9);
-  CHECK(rejected(CALL(CLOSURE_MAYBETILES)(maybe, &optional, out, &error), &error, "arg0 is not below its Fin 5 bound"));
+  CHECK(rejected(CALL(CLOSURE_MAYBETILES)(maybe, &optional, out, &error), &error, "arg0?[1].digit is not below its Fin 5 bound"));
   mpz_set_ui(row[1].digit, 1);
   DISPOSE(CLOSURE_MAYBETILES)(&maybe);
   for (unsigned i = 0; i < 3; ++i) fincallbacks_tile_clear(&row[i]);
@@ -188,7 +188,7 @@ int main(void) {
   mpz_set_ui(shape.cases.circle.radius, 9);
   CHECK(OK(CALL(CLOSURE_SHAPED)(shaped, &shape, out, &error)) && mpz_cmp_ui(out, 9) == 0);
   mpz_set_ui(shape.cases.circle.radius, 10);
-  CHECK(rejected(CALL(CLOSURE_SHAPED)(shaped, &shape, out, &error), &error, "arg0 is not below its Fin 10 bound") && mpz_cmp_ui(shape.cases.circle.radius, 10) == 0);
+  CHECK(rejected(CALL(CLOSURE_SHAPED)(shaped, &shape, out, &error), &error, "arg0.circle.radius is not below its Fin 10 bound") && mpz_cmp_ui(shape.cases.circle.radius, 10) == 0);
   CHECK(OK(fincallbacks_shape_select(&shape, FINCALLBACKS_SHAPE_KIND_LABEL)));
   shape.cases.label.text = (fincallbacks_string){"hey", 3, NULL, NULL};
   CHECK(OK(CALL(CLOSURE_SHAPED)(shaped, &shape, out, &error)) && mpz_cmp_ui(out, 23) == 0);

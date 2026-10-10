@@ -59,7 +59,7 @@ export const stripReplyWalk = (source, key) => {
 	const comparisons = lines.filter(line => line.includes(`lb_fin_below(`) && line.includes(`, ${name}, `));
 	// One bound, one comparison: the walk of a single Option (Fin n) reply.
 	assert.equal(definitions.length, 1); assert.equal(comparisons.length, 1);
-	assert.match(comparisons[0], /^ {8}if \(!lb_fin_below\(.*\)\) \{ lb_record\(frame, [A-Z0-9_]+_STATUS_INVALID_ARGUMENT, NULL, "callback result is not below its Fin 5 bound"\); goto done; \}$/u);
+	assert.match(comparisons[0], /^ {8}if \(!lb_fin_below\(.*\)\) \{ lb_record\(frame, [A-Z0-9_]+_STATUS_INVALID_ARGUMENT, NULL, "callback result\? is not below its Fin 5 bound"\); goto done; \}$/u);
 	const stripped = lines.filter(line => line !== definitions[0] && line !== comparisons[0]).join("\n");
 	assert.equal(stripped.split("\n").length, lines.length - 2);
 	assert.ok(!stripped.includes(name));

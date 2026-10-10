@@ -31,13 +31,13 @@ int main() {
   for (std::size_t k = 0; k < 3; ++k) {
     rows[k].first = 4;
     const std::vector<Row> before = rows;
-    CHECK(rejected([&] { api::rows(rows); }, "arg0 is not below its Fin 4 bound") && rows == before);
+    CHECK(rejected([&] { api::rows(rows); }, "arg0[" + std::to_string(k) + "].0 is not below its Fin 4 bound") && rows == before);
     rows[k].first = valid[k].first;
   }
   /* The active error branch is bounded: error 6 is rejected, while ok 6 in the last row passed above. */
   rows[1].second = api::Err<Nat>{6};
   const std::vector<Row> before = rows;
-  CHECK(rejected([&] { api::rows(rows); }, "arg0 is not below its Fin 6 bound") && rows == before);
+  CHECK(rejected([&] { api::rows(rows); }, "arg0[1].1.error is not below its Fin 6 bound") && rows == before);
   rows[1].second = api::Err<Nat>{5};
   /* A valid call recovers. */
   CHECK(rows == valid);
@@ -47,7 +47,7 @@ int main() {
   for (unsigned i = 0; i < 1000; ++i) {
     if (api::rows(rows) != expected) { std::fprintf(stderr, "round %u failed\n", i); return 1; }
     rows[2].first = 4 + i;
-    if (!rejected([&] { api::rows(rows); }, "arg0 is not below its Fin 4 bound") || rows[2].first != 4 + i) { std::fprintf(stderr, "rejection round %u failed\n", i); return 1; }
+    if (!rejected([&] { api::rows(rows); }, "arg0[2].0 is not below its Fin 4 bound") || rows[2].first != 4 + i) { std::fprintf(stderr, "rejection round %u failed\n", i); return 1; }
     rows[2].first = 3;
   }
   checks += 2000;

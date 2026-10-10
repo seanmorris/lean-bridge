@@ -41,7 +41,7 @@ int main() {
   for (std::size_t bad = 0; bad < 3; ++bad) {
     std::vector<Nat> broken = items; broken[bad] = 3;
     const std::vector<Nat> before = broken;
-    CHECK(rejected([&] { digits(broken); }, "arg0 is not below its Fin 3 bound") && broken == before);
+    CHECK(rejected([&] { digits(broken); }, "arg0[" + std::to_string(bad) + "] is not below its Fin 3 bound") && broken == before);
   }
   CHECK(digits(std::vector<Nat>{}) == 0);
   digits.close();
@@ -52,7 +52,7 @@ int main() {
   CHECK(tiles(row) == 330);
   for (std::size_t bad = 0; bad < 3; ++bad) {
     std::vector<api::Tile> broken = row; broken[bad].digit = 5;
-    CHECK(rejected([&] { tiles(broken); }, "arg0 is not below its Fin 5 bound"));
+    CHECK(rejected([&] { tiles(broken); }, "arg0[" + std::to_string(bad) + "].digit is not below its Fin 5 bound"));
   }
   CHECK(tiles(row) == 330);
   tiles.close();

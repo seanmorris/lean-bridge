@@ -70,7 +70,7 @@ int main(void) {
   CHECK(OK(CALL(CLOSURE_DIGITS)(digits, &span, out, &error)) && mpz_cmp_ui(out, 5) == 0);
   for (unsigned bad = 0; bad < 3; ++bad) {
     mpz_set_ui(items[bad], 3);
-    CHECK(rejected(CALL(CLOSURE_DIGITS)(digits, &span, out, &error), &error, "arg0 is not below its Fin 3 bound") && mpz_cmp_ui(items[bad], 3) == 0);
+    CHECK(rejected(CALL(CLOSURE_DIGITS)(digits, &span, out, &error), &error, (const char *[]){"arg0[0] is not below its Fin 3 bound", "arg0[1] is not below its Fin 3 bound", "arg0[2] is not below its Fin 3 bound"}[bad]) && mpz_cmp_ui(items[bad], 3) == 0);
     mpz_set_ui(items[bad], bad);
   }
   span.length = 0; CHECK(OK(CALL(CLOSURE_DIGITS)(digits, &span, out, &error)) && mpz_cmp_ui(out, 0) == 0);
@@ -86,7 +86,7 @@ int main(void) {
   CHECK(OK(CALL(CLOSURE_TILES)(tiles, &rows, out, &error)) && mpz_cmp_ui(out, 330) == 0);
   for (unsigned bad = 0; bad < 3; ++bad) {
     mpz_set_ui(row[bad].digit, 5);
-    CHECK(rejected(CALL(CLOSURE_TILES)(tiles, &rows, out, &error), &error, "arg0 is not below its Fin 5 bound") && mpz_cmp_ui(row[bad].digit, 5) == 0);
+    CHECK(rejected(CALL(CLOSURE_TILES)(tiles, &rows, out, &error), &error, (const char *[]){"arg0[0].digit is not below its Fin 5 bound", "arg0[1].digit is not below its Fin 5 bound", "arg0[2].digit is not below its Fin 5 bound"}[bad]) && mpz_cmp_ui(row[bad].digit, 5) == 0);
     mpz_set_ui(row[bad].digit, bad);
   }
   CHECK(OK(CALL(CLOSURE_TILES)(tiles, &rows, out, &error)) && mpz_cmp_ui(out, 330) == 0);

@@ -33,7 +33,7 @@ for k in range(4):
     else:
         bad[1] = (2, Err(6))
     before = copy.deepcopy(bad)
-    check(rejected(lambda: api.rows(bad), 'arg0', '4' if k < 3 else '6'), 'rejected case ' + str(k))
+    check(rejected(lambda: api.rows(bad), (f"arg0[{k}].0" if k < 3 else "arg0[1].1.error"), '4' if k < 3 else '6'), 'rejected case ' + str(k))
     check(bad == before, 'rejected input unchanged ' + str(k))
 # A valid call recovers.
 check(rows == [(0, Ok(2**100)), (2, Err(5)), (3, Ok(6))], 'caller rows unchanged')
@@ -43,5 +43,5 @@ check(api.reversed(rows) == tuple(reversed(valid)), 'reversed')
 for i in range(1000):
     check(api.rows(rows) == expected, 'round')
     bad = [valid[0], valid[1], (4 + i, Ok(6))]
-    check(rejected(lambda: api.rows(bad), 'arg0', '4') and bad[2][0] == 4 + i, 'rejection round')
+    check(rejected(lambda: api.rows(bad), 'arg0[2].0', '4') and bad[2][0] == 4 + i, 'rejection round')
 print(f'fin-product-array-ok:{checks}')

@@ -85,7 +85,7 @@ static void *other_thread(void *unused) { (void)unused; thread_result = refuse_a
 
 int main(int argc, char **argv) {
   if (argc != 2) return 2;
-  refusal = strcmp(argv[1], "stripped") == 0 ? "Lean rejected a host callback result outside its Fin bound" : "callback result is not below its Fin 5 bound";
+  refusal = strcmp(argv[1], "stripped") == 0 ? "Lean rejected a host callback result outside its Fin bound" : "callback result? is not below its Fin 5 bound";
   finreplies_error error = {0};
   /* Positive control: four replies below the bound select 10 + 20 + 30 + 40. */
   host_state valid = {.bad_at = -1};
