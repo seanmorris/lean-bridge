@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeCheckedRecordNativeInstalledSource } from "./checked-record-native-installed-history.mjs";
 
 export const checkedRecordNativeHostHistoryPath = "docs/evidence/checked-record-native-host-source-history-20261010.json";
 export const checkedRecordNativeHostPredecessor = "641e216040f2b270d4a3eba716adad7b79333803";
@@ -64,6 +65,7 @@ export const reverseCheckedRecordNativeHostUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeCheckedRecordNativeHostSource = (path, source, expected) => {
+	source = beforeCheckedRecordNativeInstalledSource(path, source, expected);
 	if(typeof source !== "string" || !checkedRecordNativeHostChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
@@ -71,4 +73,3 @@ export const beforeCheckedRecordNativeHostSource = (path, source, expected) => {
 	const update = record.updates.find(item => item.path === path);
 	return update?.currentSha256 === digest ? reverseCheckedRecordNativeHostUpdate(source, update) : source;
 };
-

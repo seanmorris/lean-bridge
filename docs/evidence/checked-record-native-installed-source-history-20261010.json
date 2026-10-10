@@ -1,0 +1,201 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-native-installed-v1",
+  "predecessorCommit": "42f40d5658f82ed57d21424c16187bf510f96cf4",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "3feaa9617b0eff79e6289da8563b7be9d40fb12361326f3b47a45875bbb8f0bc",
+      "previousSha256": "a112119c59da7fe9cebd773abaab961115274284a9867f644ac3243e3ce99420",
+      "edits": [
+        {
+          "start": 3423031,
+          "previous": "          \"sha256\": \"74fc198137888dc33aa149b726056580a95548af9040bf0ed7471ccbc7865c0e\"\n",
+          "current": "          \"sha256\": \"28a7b73b115768f551bc8ee01df2ec1cd207a8373f385a9481cb79a221d7f0e4\"\n"
+        },
+        {
+          "start": 3433658,
+          "previous": "          \"sha256\": \"74fc198137888dc33aa149b726056580a95548af9040bf0ed7471ccbc7865c0e\"\n",
+          "current": "          \"sha256\": \"28a7b73b115768f551bc8ee01df2ec1cd207a8373f385a9481cb79a221d7f0e4\"\n"
+        },
+        {
+          "start": 3444259,
+          "previous": "          \"sha256\": \"74fc198137888dc33aa149b726056580a95548af9040bf0ed7471ccbc7865c0e\"\n",
+          "current": "          \"sha256\": \"28a7b73b115768f551bc8ee01df2ec1cd207a8373f385a9481cb79a221d7f0e4\"\n"
+        },
+        {
+          "start": 3456127,
+          "previous": "          \"sha256\": \"74fc198137888dc33aa149b726056580a95548af9040bf0ed7471ccbc7865c0e\"\n",
+          "current": "          \"sha256\": \"28a7b73b115768f551bc8ee01df2ec1cd207a8373f385a9481cb79a221d7f0e4\"\n"
+        },
+        {
+          "start": 3468323,
+          "previous": "          \"sha256\": \"74fc198137888dc33aa149b726056580a95548af9040bf0ed7471ccbc7865c0e\"\n",
+          "current": "          \"sha256\": \"28a7b73b115768f551bc8ee01df2ec1cd207a8373f385a9481cb79a221d7f0e4\"\n"
+        },
+        {
+          "start": 3482041,
+          "previous": "          \"sha256\": \"74fc198137888dc33aa149b726056580a95548af9040bf0ed7471ccbc7865c0e\"\n",
+          "current": "          \"sha256\": \"28a7b73b115768f551bc8ee01df2ec1cd207a8373f385a9481cb79a221d7f0e4\"\n"
+        },
+        {
+          "start": 3495891,
+          "previous": "          \"sha256\": \"74fc198137888dc33aa149b726056580a95548af9040bf0ed7471ccbc7865c0e\"\n",
+          "current": "          \"sha256\": \"28a7b73b115768f551bc8ee01df2ec1cd207a8373f385a9481cb79a221d7f0e4\"\n"
+        },
+        {
+          "start": 3509746,
+          "previous": "          \"sha256\": \"74fc198137888dc33aa149b726056580a95548af9040bf0ed7471ccbc7865c0e\"\n",
+          "current": "          \"sha256\": \"28a7b73b115768f551bc8ee01df2ec1cd207a8373f385a9481cb79a221d7f0e4\"\n"
+        },
+        {
+          "start": 3523757,
+          "previous": "          \"sha256\": \"74fc198137888dc33aa149b726056580a95548af9040bf0ed7471ccbc7865c0e\"\n",
+          "current": "          \"sha256\": \"28a7b73b115768f551bc8ee01df2ec1cd207a8373f385a9481cb79a221d7f0e4\"\n"
+        },
+        {
+          "start": 3538509,
+          "previous": "          \"sha256\": \"74fc198137888dc33aa149b726056580a95548af9040bf0ed7471ccbc7865c0e\"\n",
+          "current": "          \"sha256\": \"28a7b73b115768f551bc8ee01df2ec1cd207a8373f385a9481cb79a221d7f0e4\"\n"
+        },
+        {
+          "start": 3553291,
+          "previous": "          \"sha256\": \"74fc198137888dc33aa149b726056580a95548af9040bf0ed7471ccbc7865c0e\"\n",
+          "current": "          \"sha256\": \"28a7b73b115768f551bc8ee01df2ec1cd207a8373f385a9481cb79a221d7f0e4\"\n"
+        },
+        {
+          "start": 3568043,
+          "previous": "          \"sha256\": \"74fc198137888dc33aa149b726056580a95548af9040bf0ed7471ccbc7865c0e\"\n",
+          "current": "          \"sha256\": \"28a7b73b115768f551bc8ee01df2ec1cd207a8373f385a9481cb79a221d7f0e4\"\n"
+        },
+        {
+          "start": 3582905,
+          "previous": "          \"sha256\": \"62edd1393c150b0f4fd49eb18b5c6d545d958354a0a799253a232dcc2ec460f5\"\n",
+          "current": "          \"sha256\": \"e841bd1c0b5ac9b0661e3757eb652fe0d1507ded67f38dce173599f815111ccb\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/checked-records.test.mjs",
+      "currentSha256": "3f517cc64ad9d2ed9b83f435c7aa66b0a0a15acf3d569ba8189d22e7e696a97c",
+      "previousSha256": "e2e8c4f8c7c683f962671a9184040f4b6bce51720f7c4882996b8ddd97c78adb",
+      "edits": [
+        {
+          "start": 664,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-native-fixture-tests.mjs\";\nimport \"./helpers/checked-record-native-installed-tests.mjs\";\nimport \"./helpers/checked-record-native-installed-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-native-host-history-tests.mjs",
+      "currentSha256": "469324edd49c0e587108fdc6343178ae6674687b6eac6d5c3a498f7c698cee28",
+      "previousSha256": "51b2485903457ab977a300d1092aa9d762c0057281ee3d4be01dd884f24151b4",
+      "edits": [
+        {
+          "start": 519,
+          "previous": "",
+          "current": "import { beforeCheckedRecordNativeInstalledSource } from \"./checked-record-native-installed-history.mjs\";\n"
+        },
+        {
+          "start": 1402,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst current = beforeCheckedRecordNativeInstalledSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2826,
+          "previous": "\tconst source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst source = beforeCheckedRecordNativeInstalledSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 5046,
+          "previous": "\n",
+          "current": ""
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-native-host-history.mjs",
+      "currentSha256": "04210875f5cf66f4e5d7e5f0c093e0916af245b973feae43e0f61f6ea980153f",
+      "previousSha256": "acaad33da178c3c3a98330c08d973d0165351eb6cad6aeb15a508adbc272d970",
+      "edits": [
+        {
+          "start": 243,
+          "previous": "",
+          "current": "import { beforeCheckedRecordNativeInstalledSource } from \"./checked-record-native-installed-history.mjs\";\n"
+        },
+        {
+          "start": 2835,
+          "previous": "",
+          "current": "\tsource = beforeCheckedRecordNativeInstalledSource(path, source, expected);\n"
+        },
+        {
+          "start": 3357,
+          "previous": "\n",
+          "current": ""
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "194cce095115b0d92fd1b1531793ee3c281d81e78d233245ec5d53a4fedd350a",
+      "previousSha256": "d1b844ba19559d08737f756196c5979010854397c2dda3eda7c2b03f12d272c2",
+      "edits": [
+        {
+          "start": 1803,
+          "previous": "",
+          "current": "import { checkedRecordNativeInstalledChangedPaths } from \"./checked-record-native-installed-history.mjs\";\n"
+        },
+        {
+          "start": 58498,
+          "previous": "",
+          "current": "\t, ...checkedRecordNativeInstalledChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-browser-promotion-tests.mjs",
+      "currentSha256": "e841bd1c0b5ac9b0661e3757eb652fe0d1507ded67f38dce173599f815111ccb",
+      "previousSha256": "62edd1393c150b0f4fd49eb18b5c6d545d958354a0a799253a232dcc2ec460f5",
+      "edits": [
+        {
+          "start": 617,
+          "previous": "import { beforeCheckedRecordNativeHostSource, checkedRecordNativeHostHistoryPath } from \"./checked-record-native-host-history.mjs\";\n",
+          "current": "import { beforeCheckedRecordNativeHostSource } from \"./checked-record-native-host-history.mjs\";\n"
+        },
+        {
+          "start": 4311,
+          "previous": "\tfor(const path of [reviewedSubtypeBrowserPromotionHistoryPath, checkedRecordNativeHostHistoryPath])\n",
+          "current": "\tfor(const path of [reviewedSubtypeBrowserPromotionHistoryPath])\n"
+        },
+        {
+          "start": 4675,
+          "previous": "\tassert.deepEqual(current.document, proposed);\n",
+          "current": "\tconst ledger = JSON.parse(await readFile(reviewedSubtypeBrowserPromotionHistoryPath));\n\tconst inventory = ledger.updates.find(item => item.path === \"docs/type-surface.v1.json\");\n\tconst authenticated = beforeFinRefinementSource(inventory.path, await readFile(inventory.path), inventory.currentSha256);\n\tassert.equal(sha256(authenticated), inventory.currentSha256);\n\tconst milestone = JSON.parse(authenticated);\n\t// The factories pin today's validators. Authenticate their exact milestone\n\t// bytes before comparing the complete historical promotion.\n\tfor(const entry of proposed.evidence.slice(previous.evidence.length))\n\t\tfor(const file of entry.files.filter(item => !item.path.startsWith(\"docs/evidence/\")))\n\t\t{\n\t\t\tconst original = milestone.evidence.find(item => item.id === entry.id)?.files.find(item => item.path === file.path);\n\t\t\tassert.ok(original, file.path);\n\t\t\tconst bytes = beforeFinRefinementSource(file.path, await readFile(file.path), original.sha256);\n\t\t\tassert.equal(sha256(bytes), original.sha256, file.path);\n\t\t\tfile.sha256 = original.sha256;\n\t\t}\n\tassert.deepEqual(milestone, proposed);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-native-promotion-tests.mjs",
+      "currentSha256": "28a7b73b115768f551bc8ee01df2ec1cd207a8373f385a9481cb79a221d7f0e4",
+      "previousSha256": "74fc198137888dc33aa149b726056580a95548af9040bf0ed7471ccbc7865c0e",
+      "edits": [
+        {
+          "start": 1165,
+          "previous": "import { beforeReviewedSubtypeHostCiReportSource, reviewedSubtypeHostCiReportHistoryPath } from \"./reviewed-subtype-host-ci-report-history.mjs\";\nimport { reviewedSubtypeHostCiHistoryPath } from \"./reviewed-subtype-host-ci-history.mjs\";\nimport { mavenPrerequisiteHistoryPath } from \"./maven-prerequisite-history.mjs\";\nimport { reviewedSubtypePackageRecordHistoryPath } from \"./reviewed-subtype-package-record-history.mjs\";\nimport { reviewedSubtypePackageCiHistoryPath } from \"./reviewed-subtype-package-ci-history.mjs\";\nimport { reviewedSubtypeBrowserHistoryPath } from \"./reviewed-subtype-browser-history.mjs\";\nimport { reviewedSubtypeBrowserCiHistoryPath } from \"./reviewed-subtype-browser-ci-history.mjs\";\nimport { reviewedSubtypeBrowserPromotionHistoryPath } from \"./reviewed-subtype-browser-promotion-history.mjs\";\nimport { browserSubtypeEvidenceId, browserSubtypeObservationId } from \"./reviewed-subtype-browser-promotion.mjs\";\nimport { checkedRecordNativeHostHistoryPath } from \"./checked-record-native-host-history.mjs\";\n",
+          "current": "import { beforeReviewedSubtypeHostCiReportSource } from \"./reviewed-subtype-host-ci-report-history.mjs\";\n"
+        },
+        {
+          "start": 5166,
+          "previous": "\tfor(const path of [reviewedSubtypeNativePromotionHistoryPath, reviewedSubtypeHostCiReportHistoryPath, reviewedSubtypeHostCiHistoryPath, mavenPrerequisiteHistoryPath, reviewedSubtypePackageRecordHistoryPath, reviewedSubtypePackageCiHistoryPath, reviewedSubtypeBrowserHistoryPath, reviewedSubtypeBrowserCiHistoryPath, reviewedSubtypeBrowserPromotionHistoryPath, checkedRecordNativeHostHistoryPath])\n",
+          "current": "\tfor(const path of [reviewedSubtypeNativePromotionHistoryPath])\n"
+        },
+        {
+          "start": 5529,
+          "previous": "\tconst comparable = structuredClone(current.document);\n\tcomparable.evidence = comparable.evidence.filter(item => item.id !== browserSubtypeEvidenceId);\n\tcomparable.observations = comparable.observations.filter(item => item.id !== browserSubtypeObservationId);\n\tassert.deepEqual(comparable, proposed);\n",
+          "current": "\tconst ledger = JSON.parse(await readFile(reviewedSubtypeNativePromotionHistoryPath));\n\tconst inventory = ledger.updates.find(item => item.path === \"docs/type-surface.v1.json\");\n\tconst authenticated = beforeFinRefinementSource(inventory.path, await readFile(inventory.path), inventory.currentSha256);\n\tassert.equal(sha256(authenticated), inventory.currentSha256);\n\tconst milestone = JSON.parse(authenticated);\n\t// The factories pin today's validators. Authenticate their exact milestone\n\t// bytes before comparing the complete historical promotion.\n\tfor(const entry of proposed.evidence.slice(previous.evidence.length))\n\t\tfor(const file of entry.files.filter(item => !item.path.startsWith(\"docs/evidence/\")))\n\t\t{\n\t\t\tconst original = milestone.evidence.find(item => item.id === entry.id)?.files.find(item => item.path === file.path);\n\t\t\tassert.ok(original, file.path);\n\t\t\tconst bytes = beforeFinRefinementSource(file.path, await readFile(file.path), original.sha256);\n\t\t\tassert.equal(sha256(bytes), original.sha256, file.path);\n\t\t\tfile.sha256 = original.sha256;\n\t\t}\n\tassert.deepEqual(milestone, proposed);\n"
+        }
+      ]
+    }
+  ]
+}

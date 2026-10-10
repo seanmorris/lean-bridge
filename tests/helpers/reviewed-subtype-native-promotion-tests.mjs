@@ -15,16 +15,7 @@ import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { reviewedSubtypeNativeProfiles, reviewedSubtypeNativeReferences, promoteReviewedSubtypeNative, reviewedSubtypeNativeLimit, reviewedSubtypeNativeConversion } from "./reviewed-subtype-native-promotion.mjs";
 import { beforeReviewedSubtypeNativePromotionSource, reviewedSubtypeNativePromotionChangedPaths, reviewedSubtypeNativePromotionHistoryPath, reviewedSubtypeNativePromotionPredecessor, reverseReviewedSubtypeNativePromotionUpdate } from "./reviewed-subtype-native-promotion-history.mjs";
 import "./fin-record-zero-ci-history-tests.mjs";
-import { beforeReviewedSubtypeHostCiReportSource, reviewedSubtypeHostCiReportHistoryPath } from "./reviewed-subtype-host-ci-report-history.mjs";
-import { reviewedSubtypeHostCiHistoryPath } from "./reviewed-subtype-host-ci-history.mjs";
-import { mavenPrerequisiteHistoryPath } from "./maven-prerequisite-history.mjs";
-import { reviewedSubtypePackageRecordHistoryPath } from "./reviewed-subtype-package-record-history.mjs";
-import { reviewedSubtypePackageCiHistoryPath } from "./reviewed-subtype-package-ci-history.mjs";
-import { reviewedSubtypeBrowserHistoryPath } from "./reviewed-subtype-browser-history.mjs";
-import { reviewedSubtypeBrowserCiHistoryPath } from "./reviewed-subtype-browser-ci-history.mjs";
-import { reviewedSubtypeBrowserPromotionHistoryPath } from "./reviewed-subtype-browser-promotion-history.mjs";
-import { browserSubtypeEvidenceId, browserSubtypeObservationId } from "./reviewed-subtype-browser-promotion.mjs";
-import { checkedRecordNativeHostHistoryPath } from "./checked-record-native-host-history.mjs";
+import { beforeReviewedSubtypeHostCiReportSource } from "./reviewed-subtype-host-ci-report-history.mjs";
 
 const predecessor = async () => JSON.parse(beforeReviewedSubtypeNativePromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
 
@@ -82,7 +73,7 @@ test("native Subtype promotion adds exactly eighteen cells and preserves every o
 		changed.push(`${cell.profile}/${cell.position}`);
 	}
 	assert.deepEqual(changed.sort(), reviewedSubtypeNativeProfiles.flatMap(profile => [profile + "/parameter", profile + "/result"]).sort());
-	for(const path of [reviewedSubtypeNativePromotionHistoryPath, reviewedSubtypeHostCiReportHistoryPath, reviewedSubtypeHostCiHistoryPath, mavenPrerequisiteHistoryPath, reviewedSubtypePackageRecordHistoryPath, reviewedSubtypePackageCiHistoryPath, reviewedSubtypeBrowserHistoryPath, reviewedSubtypeBrowserCiHistoryPath, reviewedSubtypeBrowserPromotionHistoryPath, checkedRecordNativeHostHistoryPath])
+	for(const path of [reviewedSubtypeNativePromotionHistoryPath])
 	{
 		const history = JSON.parse(await readFile(path));
 		for(const entry of proposed.evidence) for(const file of entry.files)
@@ -91,10 +82,23 @@ test("native Subtype promotion adds exactly eighteen cells and preserves every o
 			if(update) file.sha256 = update.currentSha256;
 		}
 	}
-	const comparable = structuredClone(current.document);
-	comparable.evidence = comparable.evidence.filter(item => item.id !== browserSubtypeEvidenceId);
-	comparable.observations = comparable.observations.filter(item => item.id !== browserSubtypeObservationId);
-	assert.deepEqual(comparable, proposed);
+	const ledger = JSON.parse(await readFile(reviewedSubtypeNativePromotionHistoryPath));
+	const inventory = ledger.updates.find(item => item.path === "docs/type-surface.v1.json");
+	const authenticated = beforeFinRefinementSource(inventory.path, await readFile(inventory.path), inventory.currentSha256);
+	assert.equal(sha256(authenticated), inventory.currentSha256);
+	const milestone = JSON.parse(authenticated);
+	// The factories pin today's validators. Authenticate their exact milestone
+	// bytes before comparing the complete historical promotion.
+	for(const entry of proposed.evidence.slice(previous.evidence.length))
+		for(const file of entry.files.filter(item => !item.path.startsWith("docs/evidence/")))
+		{
+			const original = milestone.evidence.find(item => item.id === entry.id)?.files.find(item => item.path === file.path);
+			assert.ok(original, file.path);
+			const bytes = beforeFinRefinementSource(file.path, await readFile(file.path), original.sha256);
+			assert.equal(sha256(bytes), original.sha256, file.path);
+			file.sha256 = original.sha256;
+		}
+	assert.deepEqual(milestone, proposed);
 });
 
 test("native Subtype promotion refuses altered references, overlaps and repeat promotion", async () => {

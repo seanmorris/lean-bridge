@@ -12,7 +12,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeCheckedRecordNativeHostSource, checkedRecordNativeHostHistoryPath } from "./checked-record-native-host-history.mjs";
+import { beforeCheckedRecordNativeHostSource } from "./checked-record-native-host-history.mjs";
 import { browserSubtypeRoot, browserSubtypeIndex, browserSubtypeProfiles, browserSubtypeEvidenceId, browserSubtypeObservationId, browserSubtypeLimit, browserSubtypeConversion, browserSubtypeReference, promoteBrowserSubtype } from "./reviewed-subtype-browser-promotion.mjs";
 import { beforeReviewedSubtypeBrowserPromotionSource, reviewedSubtypeBrowserPromotionChangedPaths, reviewedSubtypeBrowserPromotionHistoryPath, reviewedSubtypeBrowserPromotionPredecessor, reverseReviewedSubtypeBrowserPromotionUpdate } from "./reviewed-subtype-browser-promotion-history.mjs";
 
@@ -63,7 +63,7 @@ test("reviewed browser promotion adds exactly six cells and preserves every earl
 		changed.push(`${cell.profile}/${cell.position}`);
 	}
 	assert.deepEqual(changed.sort(), browserSubtypeProfiles.flatMap(profile => [profile + "/parameter", profile + "/result"]).sort());
-	for(const path of [reviewedSubtypeBrowserPromotionHistoryPath, checkedRecordNativeHostHistoryPath])
+	for(const path of [reviewedSubtypeBrowserPromotionHistoryPath])
 	{
 		const history = JSON.parse(await readFile(path));
 		for(const entry of proposed.evidence) for(const file of entry.files)
@@ -72,7 +72,23 @@ test("reviewed browser promotion adds exactly six cells and preserves every earl
 			if(update) file.sha256 = update.currentSha256;
 		}
 	}
-	assert.deepEqual(current.document, proposed);
+	const ledger = JSON.parse(await readFile(reviewedSubtypeBrowserPromotionHistoryPath));
+	const inventory = ledger.updates.find(item => item.path === "docs/type-surface.v1.json");
+	const authenticated = beforeFinRefinementSource(inventory.path, await readFile(inventory.path), inventory.currentSha256);
+	assert.equal(sha256(authenticated), inventory.currentSha256);
+	const milestone = JSON.parse(authenticated);
+	// The factories pin today's validators. Authenticate their exact milestone
+	// bytes before comparing the complete historical promotion.
+	for(const entry of proposed.evidence.slice(previous.evidence.length))
+		for(const file of entry.files.filter(item => !item.path.startsWith("docs/evidence/")))
+		{
+			const original = milestone.evidence.find(item => item.id === entry.id)?.files.find(item => item.path === file.path);
+			assert.ok(original, file.path);
+			const bytes = beforeFinRefinementSource(file.path, await readFile(file.path), original.sha256);
+			assert.equal(sha256(bytes), original.sha256, file.path);
+			file.sha256 = original.sha256;
+		}
+	assert.deepEqual(milestone, proposed);
 	assert.equal(proposed.observations.at(-1).id, browserSubtypeObservationId);
 });
 
