@@ -19,6 +19,12 @@ const cases = [
 		, revision: "8fdec75af4ab853ee18b3b9159784174a37df86a"
 		, tree: "966f4125ba0e904a6176abb138bc8500ed2420c8"
 		, outcome: "passed", profiles: ["python"], count: 40 }
+	, { name: "python312-ruby-jvm-3c41650"
+		, digest: "5894e167f280b207c92817273bb4c67697320cd2a269b01942d239c0b73ddeda"
+		, revision: "3c416502d4630017e366eaefd55455fef83add66"
+		, tree: "5152274a80982d87de03c7db843819fd662b22f2"
+		, outcome: "passed", profiles: ["java", "kotlin", "python", "ruby"]
+		, count: 40 }
 ];
 const inspect = async (item, read = readFile) => {
 	const root = base + item.name + "/", bytes = await read(root + "index.json");
@@ -77,7 +83,7 @@ const inspect = async (item, read = readFile) => {
 	}
 };
 
-test("zero-bound nominal archives retain successful C/C++ and Python calls with the failed Python predecessor", async () => {
+test("zero-bound nominal archives retain successful native calls with the failed Python predecessor", async () => {
 	for(const item of cases) await inspect(item);
 });
 

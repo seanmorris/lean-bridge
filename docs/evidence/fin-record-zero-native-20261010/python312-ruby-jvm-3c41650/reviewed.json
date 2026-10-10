@@ -1,0 +1,1382 @@
+{
+  "archives": {
+    "archives/finrecordzero-1.0.0-py3-none-manylinux_2_36_x86_64.whl": "909c40e32fc447068a3bc62336fc0040960546e49e05574d2d9f6e645e702e79",
+    "archives/finrecordzero-1.0.0-x86_64-linux.gem": "4e8ebf419427325399679e9cb4f92e1db55da6e8cbcb14f1ca888ffaea455fcc",
+    "archives/finrecordzero-1.0.0.jar": "4c22f2121949c95ec1a1ad3f981e1b96b85320d753b683fcdd76588775a0c8a1",
+    "archives/finrecordzero-1.0.0.pom": "ebeb558f410609c3e96aa7e037953dd04db5d8e4472d6269c1a0b78df8ac0b6d"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "b0f3a20ed4d265db394f0ae3930bd028867cc9af6523a392b37c7d4c2fa52ab7",
+      "checks": 2046,
+      "compilerFreePath": true,
+      "consumerSha256": "35d08d1818131c3b27ccfbb2c6cfa90ce2b18148c33432d0bfaffb142c75bc35",
+      "modelSha256": "14ba09c159c4d5b3918b342716c0e5402d2bdf1f4a69e5ded5f91e876b6c3228",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51419280,
+              "path": "archives/finrecordzero-1.0.0.jar",
+              "sha256": "4c22f2121949c95ec1a1ad3f981e1b96b85320d753b683fcdd76588775a0c8a1"
+            },
+            {
+              "bytes": 623,
+              "path": "archives/finrecordzero-1.0.0.pom",
+              "sha256": "ebeb558f410609c3e96aa7e037953dd04db5d8e4472d6269c1a0b78df8ac0b6d"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:finrecordzero",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "java",
+      "receiptSha256": "2891c661f0fab1bc5db43fca496ae44d6723753c9b301f1a46d6443dabe04299",
+      "refinements": {
+        "FinRecordZero.arrayFields": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    null,
+                    null,
+                    {
+                      "arguments": [
+                        {
+                          "bound": "0",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "array"
+                    },
+                    {
+                      "arguments": [
+                        {
+                          "bound": "0",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "list"
+                    }
+                  ],
+                  "definition": "FinRecordZero.Fields",
+                  "fields": [
+                    "label",
+                    "payload",
+                    "array",
+                    "list"
+                  ],
+                  "kind": "record"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  null,
+                  null,
+                  {
+                    "arguments": [
+                      {
+                        "bound": "0",
+                        "kind": "fin"
+                      }
+                    ],
+                    "kind": "array"
+                  },
+                  {
+                    "arguments": [
+                      {
+                        "bound": "0",
+                        "kind": "fin"
+                      }
+                    ],
+                    "kind": "list"
+                  }
+                ],
+                "definition": "FinRecordZero.Fields",
+                "fields": [
+                  "label",
+                  "payload",
+                  "array",
+                  "list"
+                ],
+                "kind": "record"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinRecordZero.arrayRecords": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "0",
+                      "kind": "fin"
+                    }
+                  ],
+                  "definition": "FinRecordZero.Zero",
+                  "fields": [
+                    "digit"
+                  ],
+                  "kind": "record"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "0",
+                    "kind": "fin"
+                  }
+                ],
+                "definition": "FinRecordZero.Zero",
+                "fields": [
+                  "digit"
+                ],
+                "kind": "record"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinRecordZero.fieldCollections": {
+          "parameters": [
+            {
+              "arguments": [
+                null,
+                null,
+                {
+                  "arguments": [
+                    {
+                      "bound": "0",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "array"
+                },
+                {
+                  "arguments": [
+                    {
+                      "bound": "0",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "list"
+                }
+              ],
+              "definition": "FinRecordZero.Fields",
+              "fields": [
+                "label",
+                "payload",
+                "array",
+                "list"
+              ],
+              "kind": "record"
+            }
+          ],
+          "result": {
+            "arguments": [
+              null,
+              null,
+              {
+                "arguments": [
+                  {
+                    "bound": "0",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "array"
+              },
+              {
+                "arguments": [
+                  {
+                    "bound": "0",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "list"
+              }
+            ],
+            "definition": "FinRecordZero.Fields",
+            "fields": [
+              "label",
+              "payload",
+              "array",
+              "list"
+            ],
+            "kind": "record"
+          }
+        },
+        "FinRecordZero.listFields": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    null,
+                    null,
+                    {
+                      "arguments": [
+                        {
+                          "bound": "0",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "array"
+                    },
+                    {
+                      "arguments": [
+                        {
+                          "bound": "0",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "list"
+                    }
+                  ],
+                  "definition": "FinRecordZero.Fields",
+                  "fields": [
+                    "label",
+                    "payload",
+                    "array",
+                    "list"
+                  ],
+                  "kind": "record"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  null,
+                  null,
+                  {
+                    "arguments": [
+                      {
+                        "bound": "0",
+                        "kind": "fin"
+                      }
+                    ],
+                    "kind": "array"
+                  },
+                  {
+                    "arguments": [
+                      {
+                        "bound": "0",
+                        "kind": "fin"
+                      }
+                    ],
+                    "kind": "list"
+                  }
+                ],
+                "definition": "FinRecordZero.Fields",
+                "fields": [
+                  "label",
+                  "payload",
+                  "array",
+                  "list"
+                ],
+                "kind": "record"
+              }
+            ],
+            "kind": "list"
+          }
+        },
+        "FinRecordZero.listRecords": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "0",
+                      "kind": "fin"
+                    }
+                  ],
+                  "definition": "FinRecordZero.Zero",
+                  "fields": [
+                    "digit"
+                  ],
+                  "kind": "record"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "0",
+                    "kind": "fin"
+                  }
+                ],
+                "definition": "FinRecordZero.Zero",
+                "fields": [
+                  "digit"
+                ],
+                "kind": "record"
+              }
+            ],
+            "kind": "list"
+          }
+        }
+      },
+      "reviewedSourceSha256": "f06d12fbb452233cafd206ed03ba70b823abbe929973dadc3630f6bd5ae8aaf3",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "4473994a4c78822d8dbe45fcbf1074c9ac6b4941bfd3f7d54f860fbac3de0f9c"
+    },
+    {
+      "bindingIrSha256": "b0f3a20ed4d265db394f0ae3930bd028867cc9af6523a392b37c7d4c2fa52ab7",
+      "checks": 2046,
+      "compilerFreePath": true,
+      "consumerSha256": "aacd43220a0b54e633f5286cb6d3362b8b9c6f5a840861439d1370f28b89acdd",
+      "modelSha256": "14ba09c159c4d5b3918b342716c0e5402d2bdf1f4a69e5ded5f91e876b6c3228",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51419280,
+              "path": "archives/finrecordzero-1.0.0.jar",
+              "sha256": "4c22f2121949c95ec1a1ad3f981e1b96b85320d753b683fcdd76588775a0c8a1"
+            },
+            {
+              "bytes": 623,
+              "path": "archives/finrecordzero-1.0.0.pom",
+              "sha256": "ebeb558f410609c3e96aa7e037953dd04db5d8e4472d6269c1a0b78df8ac0b6d"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:finrecordzero",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "kotlin",
+      "receiptSha256": "2891c661f0fab1bc5db43fca496ae44d6723753c9b301f1a46d6443dabe04299",
+      "refinements": {
+        "FinRecordZero.arrayFields": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    null,
+                    null,
+                    {
+                      "arguments": [
+                        {
+                          "bound": "0",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "array"
+                    },
+                    {
+                      "arguments": [
+                        {
+                          "bound": "0",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "list"
+                    }
+                  ],
+                  "definition": "FinRecordZero.Fields",
+                  "fields": [
+                    "label",
+                    "payload",
+                    "array",
+                    "list"
+                  ],
+                  "kind": "record"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  null,
+                  null,
+                  {
+                    "arguments": [
+                      {
+                        "bound": "0",
+                        "kind": "fin"
+                      }
+                    ],
+                    "kind": "array"
+                  },
+                  {
+                    "arguments": [
+                      {
+                        "bound": "0",
+                        "kind": "fin"
+                      }
+                    ],
+                    "kind": "list"
+                  }
+                ],
+                "definition": "FinRecordZero.Fields",
+                "fields": [
+                  "label",
+                  "payload",
+                  "array",
+                  "list"
+                ],
+                "kind": "record"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinRecordZero.arrayRecords": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "0",
+                      "kind": "fin"
+                    }
+                  ],
+                  "definition": "FinRecordZero.Zero",
+                  "fields": [
+                    "digit"
+                  ],
+                  "kind": "record"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "0",
+                    "kind": "fin"
+                  }
+                ],
+                "definition": "FinRecordZero.Zero",
+                "fields": [
+                  "digit"
+                ],
+                "kind": "record"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinRecordZero.fieldCollections": {
+          "parameters": [
+            {
+              "arguments": [
+                null,
+                null,
+                {
+                  "arguments": [
+                    {
+                      "bound": "0",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "array"
+                },
+                {
+                  "arguments": [
+                    {
+                      "bound": "0",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "list"
+                }
+              ],
+              "definition": "FinRecordZero.Fields",
+              "fields": [
+                "label",
+                "payload",
+                "array",
+                "list"
+              ],
+              "kind": "record"
+            }
+          ],
+          "result": {
+            "arguments": [
+              null,
+              null,
+              {
+                "arguments": [
+                  {
+                    "bound": "0",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "array"
+              },
+              {
+                "arguments": [
+                  {
+                    "bound": "0",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "list"
+              }
+            ],
+            "definition": "FinRecordZero.Fields",
+            "fields": [
+              "label",
+              "payload",
+              "array",
+              "list"
+            ],
+            "kind": "record"
+          }
+        },
+        "FinRecordZero.listFields": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    null,
+                    null,
+                    {
+                      "arguments": [
+                        {
+                          "bound": "0",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "array"
+                    },
+                    {
+                      "arguments": [
+                        {
+                          "bound": "0",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "list"
+                    }
+                  ],
+                  "definition": "FinRecordZero.Fields",
+                  "fields": [
+                    "label",
+                    "payload",
+                    "array",
+                    "list"
+                  ],
+                  "kind": "record"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  null,
+                  null,
+                  {
+                    "arguments": [
+                      {
+                        "bound": "0",
+                        "kind": "fin"
+                      }
+                    ],
+                    "kind": "array"
+                  },
+                  {
+                    "arguments": [
+                      {
+                        "bound": "0",
+                        "kind": "fin"
+                      }
+                    ],
+                    "kind": "list"
+                  }
+                ],
+                "definition": "FinRecordZero.Fields",
+                "fields": [
+                  "label",
+                  "payload",
+                  "array",
+                  "list"
+                ],
+                "kind": "record"
+              }
+            ],
+            "kind": "list"
+          }
+        },
+        "FinRecordZero.listRecords": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "0",
+                      "kind": "fin"
+                    }
+                  ],
+                  "definition": "FinRecordZero.Zero",
+                  "fields": [
+                    "digit"
+                  ],
+                  "kind": "record"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "0",
+                    "kind": "fin"
+                  }
+                ],
+                "definition": "FinRecordZero.Zero",
+                "fields": [
+                  "digit"
+                ],
+                "kind": "record"
+              }
+            ],
+            "kind": "list"
+          }
+        }
+      },
+      "reviewedSourceSha256": "f06d12fbb452233cafd206ed03ba70b823abbe929973dadc3630f6bd5ae8aaf3",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "4473994a4c78822d8dbe45fcbf1074c9ac6b4941bfd3f7d54f860fbac3de0f9c"
+    },
+    {
+      "bindingIrSha256": "b0f3a20ed4d265db394f0ae3930bd028867cc9af6523a392b37c7d4c2fa52ab7",
+      "checks": 2046,
+      "compilerFreePath": true,
+      "consumerSha256": "221855299016a7f855e804d0bb7c09304bdea7ef524c355d0a2de5b1dd95bcbf",
+      "modelSha256": "14ba09c159c4d5b3918b342716c0e5402d2bdf1f4a69e5ded5f91e876b6c3228",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51378018,
+              "path": "archives/finrecordzero-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+              "sha256": "909c40e32fc447068a3bc62336fc0040960546e49e05574d2d9f6e645e702e79"
+            }
+          ],
+          "ecosystem": "pypi",
+          "name": "finrecordzero",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "pypi",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "python",
+      "receiptSha256": "2891c661f0fab1bc5db43fca496ae44d6723753c9b301f1a46d6443dabe04299",
+      "refinements": {
+        "FinRecordZero.arrayFields": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    null,
+                    null,
+                    {
+                      "arguments": [
+                        {
+                          "bound": "0",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "array"
+                    },
+                    {
+                      "arguments": [
+                        {
+                          "bound": "0",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "list"
+                    }
+                  ],
+                  "definition": "FinRecordZero.Fields",
+                  "fields": [
+                    "label",
+                    "payload",
+                    "array",
+                    "list"
+                  ],
+                  "kind": "record"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  null,
+                  null,
+                  {
+                    "arguments": [
+                      {
+                        "bound": "0",
+                        "kind": "fin"
+                      }
+                    ],
+                    "kind": "array"
+                  },
+                  {
+                    "arguments": [
+                      {
+                        "bound": "0",
+                        "kind": "fin"
+                      }
+                    ],
+                    "kind": "list"
+                  }
+                ],
+                "definition": "FinRecordZero.Fields",
+                "fields": [
+                  "label",
+                  "payload",
+                  "array",
+                  "list"
+                ],
+                "kind": "record"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinRecordZero.arrayRecords": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "0",
+                      "kind": "fin"
+                    }
+                  ],
+                  "definition": "FinRecordZero.Zero",
+                  "fields": [
+                    "digit"
+                  ],
+                  "kind": "record"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "0",
+                    "kind": "fin"
+                  }
+                ],
+                "definition": "FinRecordZero.Zero",
+                "fields": [
+                  "digit"
+                ],
+                "kind": "record"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinRecordZero.fieldCollections": {
+          "parameters": [
+            {
+              "arguments": [
+                null,
+                null,
+                {
+                  "arguments": [
+                    {
+                      "bound": "0",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "array"
+                },
+                {
+                  "arguments": [
+                    {
+                      "bound": "0",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "list"
+                }
+              ],
+              "definition": "FinRecordZero.Fields",
+              "fields": [
+                "label",
+                "payload",
+                "array",
+                "list"
+              ],
+              "kind": "record"
+            }
+          ],
+          "result": {
+            "arguments": [
+              null,
+              null,
+              {
+                "arguments": [
+                  {
+                    "bound": "0",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "array"
+              },
+              {
+                "arguments": [
+                  {
+                    "bound": "0",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "list"
+              }
+            ],
+            "definition": "FinRecordZero.Fields",
+            "fields": [
+              "label",
+              "payload",
+              "array",
+              "list"
+            ],
+            "kind": "record"
+          }
+        },
+        "FinRecordZero.listFields": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    null,
+                    null,
+                    {
+                      "arguments": [
+                        {
+                          "bound": "0",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "array"
+                    },
+                    {
+                      "arguments": [
+                        {
+                          "bound": "0",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "list"
+                    }
+                  ],
+                  "definition": "FinRecordZero.Fields",
+                  "fields": [
+                    "label",
+                    "payload",
+                    "array",
+                    "list"
+                  ],
+                  "kind": "record"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  null,
+                  null,
+                  {
+                    "arguments": [
+                      {
+                        "bound": "0",
+                        "kind": "fin"
+                      }
+                    ],
+                    "kind": "array"
+                  },
+                  {
+                    "arguments": [
+                      {
+                        "bound": "0",
+                        "kind": "fin"
+                      }
+                    ],
+                    "kind": "list"
+                  }
+                ],
+                "definition": "FinRecordZero.Fields",
+                "fields": [
+                  "label",
+                  "payload",
+                  "array",
+                  "list"
+                ],
+                "kind": "record"
+              }
+            ],
+            "kind": "list"
+          }
+        },
+        "FinRecordZero.listRecords": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "0",
+                      "kind": "fin"
+                    }
+                  ],
+                  "definition": "FinRecordZero.Zero",
+                  "fields": [
+                    "digit"
+                  ],
+                  "kind": "record"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "0",
+                    "kind": "fin"
+                  }
+                ],
+                "definition": "FinRecordZero.Zero",
+                "fields": [
+                  "digit"
+                ],
+                "kind": "record"
+              }
+            ],
+            "kind": "list"
+          }
+        }
+      },
+      "reviewedSourceSha256": "f06d12fbb452233cafd206ed03ba70b823abbe929973dadc3630f6bd5ae8aaf3",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "4473994a4c78822d8dbe45fcbf1074c9ac6b4941bfd3f7d54f860fbac3de0f9c"
+    },
+    {
+      "bindingIrSha256": "b0f3a20ed4d265db394f0ae3930bd028867cc9af6523a392b37c7d4c2fa52ab7",
+      "checks": 2046,
+      "compilerFreePath": true,
+      "consumerSha256": "5b37e07898b96915c1eb96cdc05fcfa3fdcf99b8e0d443d758771ebc2e5b209c",
+      "modelSha256": "14ba09c159c4d5b3918b342716c0e5402d2bdf1f4a69e5ded5f91e876b6c3228",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 50106880,
+              "path": "archives/finrecordzero-1.0.0-x86_64-linux.gem",
+              "sha256": "4e8ebf419427325399679e9cb4f92e1db55da6e8cbcb14f1ca888ffaea455fcc"
+            }
+          ],
+          "ecosystem": "rubygems",
+          "name": "finrecordzero",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "rubygems",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "ruby",
+      "receiptSha256": "2891c661f0fab1bc5db43fca496ae44d6723753c9b301f1a46d6443dabe04299",
+      "refinements": {
+        "FinRecordZero.arrayFields": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    null,
+                    null,
+                    {
+                      "arguments": [
+                        {
+                          "bound": "0",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "array"
+                    },
+                    {
+                      "arguments": [
+                        {
+                          "bound": "0",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "list"
+                    }
+                  ],
+                  "definition": "FinRecordZero.Fields",
+                  "fields": [
+                    "label",
+                    "payload",
+                    "array",
+                    "list"
+                  ],
+                  "kind": "record"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  null,
+                  null,
+                  {
+                    "arguments": [
+                      {
+                        "bound": "0",
+                        "kind": "fin"
+                      }
+                    ],
+                    "kind": "array"
+                  },
+                  {
+                    "arguments": [
+                      {
+                        "bound": "0",
+                        "kind": "fin"
+                      }
+                    ],
+                    "kind": "list"
+                  }
+                ],
+                "definition": "FinRecordZero.Fields",
+                "fields": [
+                  "label",
+                  "payload",
+                  "array",
+                  "list"
+                ],
+                "kind": "record"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinRecordZero.arrayRecords": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "0",
+                      "kind": "fin"
+                    }
+                  ],
+                  "definition": "FinRecordZero.Zero",
+                  "fields": [
+                    "digit"
+                  ],
+                  "kind": "record"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "0",
+                    "kind": "fin"
+                  }
+                ],
+                "definition": "FinRecordZero.Zero",
+                "fields": [
+                  "digit"
+                ],
+                "kind": "record"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinRecordZero.fieldCollections": {
+          "parameters": [
+            {
+              "arguments": [
+                null,
+                null,
+                {
+                  "arguments": [
+                    {
+                      "bound": "0",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "array"
+                },
+                {
+                  "arguments": [
+                    {
+                      "bound": "0",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "list"
+                }
+              ],
+              "definition": "FinRecordZero.Fields",
+              "fields": [
+                "label",
+                "payload",
+                "array",
+                "list"
+              ],
+              "kind": "record"
+            }
+          ],
+          "result": {
+            "arguments": [
+              null,
+              null,
+              {
+                "arguments": [
+                  {
+                    "bound": "0",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "array"
+              },
+              {
+                "arguments": [
+                  {
+                    "bound": "0",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "list"
+              }
+            ],
+            "definition": "FinRecordZero.Fields",
+            "fields": [
+              "label",
+              "payload",
+              "array",
+              "list"
+            ],
+            "kind": "record"
+          }
+        },
+        "FinRecordZero.listFields": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    null,
+                    null,
+                    {
+                      "arguments": [
+                        {
+                          "bound": "0",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "array"
+                    },
+                    {
+                      "arguments": [
+                        {
+                          "bound": "0",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "list"
+                    }
+                  ],
+                  "definition": "FinRecordZero.Fields",
+                  "fields": [
+                    "label",
+                    "payload",
+                    "array",
+                    "list"
+                  ],
+                  "kind": "record"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  null,
+                  null,
+                  {
+                    "arguments": [
+                      {
+                        "bound": "0",
+                        "kind": "fin"
+                      }
+                    ],
+                    "kind": "array"
+                  },
+                  {
+                    "arguments": [
+                      {
+                        "bound": "0",
+                        "kind": "fin"
+                      }
+                    ],
+                    "kind": "list"
+                  }
+                ],
+                "definition": "FinRecordZero.Fields",
+                "fields": [
+                  "label",
+                  "payload",
+                  "array",
+                  "list"
+                ],
+                "kind": "record"
+              }
+            ],
+            "kind": "list"
+          }
+        },
+        "FinRecordZero.listRecords": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "0",
+                      "kind": "fin"
+                    }
+                  ],
+                  "definition": "FinRecordZero.Zero",
+                  "fields": [
+                    "digit"
+                  ],
+                  "kind": "record"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "0",
+                    "kind": "fin"
+                  }
+                ],
+                "definition": "FinRecordZero.Zero",
+                "fields": [
+                  "digit"
+                ],
+                "kind": "record"
+              }
+            ],
+            "kind": "list"
+          }
+        }
+      },
+      "reviewedSourceSha256": "f06d12fbb452233cafd206ed03ba70b823abbe929973dadc3630f6bd5ae8aaf3",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "4473994a4c78822d8dbe45fcbf1074c9ac6b4941bfd3f7d54f860fbac3de0f9c"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

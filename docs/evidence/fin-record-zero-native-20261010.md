@@ -18,6 +18,7 @@ rejection/recovery pairs.
 | C and C++ | Passed, 2,046 assertions per consumer | Passed, 2,046 assertions per consumer |
 | Python 3.11.16 at the original producer | Failed: test expected lists instead of tuples | Same test expectation failure |
 | Python 3.11.16 at repaired producer `8fdec75` | Passed, 2,046 assertions | Passed, 2,046 assertions |
+| Python 3.12.14, Ruby, Java, and Kotlin at producer `3c41650` | Passed, 2,046 assertions per consumer | Passed, 2,046 assertions per consumer |
 
 The C/C++ harness rebuilt each route from two unrelated author directories
 and required byte-identical archives. It removed author and build staging
@@ -32,7 +33,7 @@ expectations. The repaired installed run passes both routes and their
 two-root reproducibility checks. The failed original remains archived
 and supplies no acceptance evidence.
 
-All three runs used local glibc 2.36 and configured floor 2.36. They
+All four runs used local glibc 2.36 and configured floor 2.36. They
 are not hosted CI results or minimum-platform tests. This supplement does
 not measure source or adapter dispatch. Earlier #1442 dispatch observations
 retain their separate scope.
@@ -52,6 +53,8 @@ Indexes:
   `b8ded2711303e9badf36994c3b8f80fe2b641ee673eeb78e6b706ff7cb2461a7`.
 - [Repaired Python pass](fin-record-zero-native-20261010/python311-8fdec75/index.json):
   `4d03aec16689260f2309db46630a6c644866243be808f0c858a42b4dba59099a`.
+- [Python 3.12, Ruby, Java, and Kotlin pass](fin-record-zero-native-20261010/python312-ruby-jvm-3c41650/index.json):
+  `5894e167f280b207c92817273bb4c67697320cd2a269b01942d239c0b73ddeda`.
 
 #1442 remains open for the remaining installed selections and its complete
 acceptance audit. These observations do not close #1220.
