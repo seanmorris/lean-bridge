@@ -12,6 +12,7 @@ import test from "node:test";
 import { classifyRepositoryTest } from "../../src/adoption/test-profiles.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { finHostedPromotionChangedPaths } from "./fin-native-hosted-promotion-history.mjs";
 import { beforeFinRecordOmissionSource, finRecordOmissionChangedPaths } from "./fin-record-review-omission-history.mjs";
 import { beforeFinForeignSource, finForeignChangedPaths, finForeignHistoryPath, finForeignPredecessor, reverseFinForeignUpdate } from "./fin-container-foreign-history.mjs";
 
@@ -66,7 +67,7 @@ test("foreign-carrier integration refreshes exact source pins without changing s
 		if(!digests.has(file.path))
 		{
 			const bytes = await readFile(file.path);
-			const source = finRecordOmissionChangedPaths.includes(file.path) ? beforeFinRecordOmissionSource(file.path, bytes.toString("utf8")) : bytes;
+			const source = [...finHostedPromotionChangedPaths, ...finRecordOmissionChangedPaths].includes(file.path) ? beforeFinRecordOmissionSource(file.path, bytes.toString("utf8")) : bytes;
 			digests.set(file.path, sha256(source));
 		}
 		assert.equal(digests.get(file.path), file.sha256, file.path);

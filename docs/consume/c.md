@@ -624,6 +624,8 @@ callback values use the graph API and limits described below. Callbacks inside
 copied containers, asynchronous delivery and resource-containing aggregates
 remain unsupported.
 
+The [hosted Fin matrix](../evidence/fin-native-hosted-20261010/receipt.json) also verifies ordinary-source and independently reviewed products, arrays of products, and plain record/variant fields on this host. It retains the original installed-package reports and does not extend the earlier reports' dispatch measurements.
+
 ### Checked values
 
 A Lean `Subtype` parameter or result over a primitive base, such as `{ value : String // value.length > 0 }`, uses the base's usual type. The package runs the author's checked constructor from the export contract before the exported function; a rejected value fails the call with the same invalid-argument error as a `Fin` bound, with the message naming the parameter and constructor (`arg0 was rejected by Library.checkedWord`), and caller data stays unchanged. The exported function receives the constructed value, which a normalizing constructor may change. The package README names each constructor. Only top-level parameters and results are supported; see the [installed checks](../evidence/native-subtype-20261007.md).

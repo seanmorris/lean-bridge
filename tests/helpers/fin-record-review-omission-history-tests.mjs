@@ -12,6 +12,7 @@ import test from "node:test";
 import "./fin-record-review-omission-compiled-tests.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeFinHostedPromotionSource } from "./fin-native-hosted-promotion-history.mjs";
 import { beforeFinRecordOmissionSource, finRecordOmissionChangedPaths, finRecordOmissionHistoryPath, finRecordOmissionPredecessor, reverseFinRecordOmissionUpdate } from "./fin-record-review-omission-history.mjs";
 
 test("record review omission authenticates every transition and refuses unrecorded edits", async () => {
@@ -22,7 +23,7 @@ test("record review omission authenticates every transition and refuses unrecord
 	assert.deepEqual(history.updates.map(update => update.path), finRecordOmissionChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = await readFile(update.path, "utf8"), previous = reverseFinRecordOmissionUpdate(current, update);
+		const current = beforeFinHostedPromotionSource(update.path, await readFile(update.path, "utf8")), previous = reverseFinRecordOmissionUpdate(current, update);
 		assert.equal(beforeFinRecordOmissionSource(update.path, current), previous);
 		assert.equal(beforeFinRecordOmissionSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeFinRecordOmissionSource(update.path, previous), previous);
@@ -53,7 +54,7 @@ test("record omission controls preserve the inventory and all earlier ledgers", 
 		, ["docs/evidence/fin-container-edge-integration-source-history-20261010.json", "a9fa371246d50339037ad0c1ded08f5d3c83b7802817dd93980e1669cc27a4b1"]
 		, ["docs/evidence/native-fin-diagnostic-ci-source-history-20261010.json", "77d1716708d41789f6dced955d6764d3ca2c86c88a1f2eea8b8df356e1dea8c6"]
 		, ["docs/evidence/native-fin-diagnostic-source-history-20261010.json", "2bc3b1217601bb0eb0c19b9f1496d00ab5df831e3a1bd1881a4429b28fd210ab"]
-	]) assert.equal(sha256(await readFile(path)), digest, path);
+	]) assert.equal(sha256(beforeFinHostedPromotionSource(path, await readFile(path, "utf8"))), digest, path);
 });
 
 test("record review omission history writer refuses an unrelated HEAD before writing", async t => {

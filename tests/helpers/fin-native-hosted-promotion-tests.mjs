@@ -10,9 +10,12 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { finHostedPromotionReferences } from "./fin-native-hosted-promotion-references.mjs";
 import { finHostedMissingFieldProfiles, promoteFinHostedCoverage } from "./fin-native-hosted-promotion.mjs";
+import { beforeFinHostedPromotionSource, finHostedPromotionHistoryPath } from "./fin-native-hosted-promotion-history.mjs";
+import "./fin-native-hosted-promotion-history-tests.mjs";
 
 const references = finHostedPromotionReferences();
-const before = await readTypeSurface();
+const current = await readTypeSurface();
+const before = { ...current, document: JSON.parse(beforeFinHostedPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"))) };
 const proposed = references.then(rows => promoteFinHostedCoverage(before.document, rows));
 
 test("hosted Fin promotion retains all native profiles, Python selections and four Perl ABIs", async () => {
@@ -61,6 +64,14 @@ test("hosted Fin promotion adds 78 evidence entries without rewriting an earlier
 	for(const key of Object.keys(before.document).filter(key => !["evidence", "observations"].includes(key)))
 		assert.deepEqual(document[key], before.document[key], key);
 	validateTypeSurface(document, before);
+	const expected = structuredClone(document);
+	const history = JSON.parse(await readFile(finHostedPromotionHistoryPath, "utf8"));
+	for(const entry of expected.evidence.slice(0, before.document.evidence.length)) for(const file of entry.files)
+	{
+		const update = history.updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);
+		if(update) file.sha256 = update.currentSha256;
+	}
+	assert.deepEqual(current.document, expected, "The committed inventory must equal the reviewed promotion and exact source-pin refresh");
 });
 
 test("hosted Fin promotion supplements 31 observations and adds only eight missing field cells", async () => {

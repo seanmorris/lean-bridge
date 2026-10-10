@@ -1,23 +1,38 @@
 /**
- * Authenticate fresh-Lean record and variant omission controls without rewriting earlier evidence.
+ * Authenticate hosted Fin coverage promotion without rewriting earlier evidence.
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeFinHostedPromotionSource } from "./fin-native-hosted-promotion-history.mjs";
 
-export const finRecordOmissionHistoryPath = "docs/evidence/fin-record-review-omission-source-history-20261010.json";
-export const finRecordOmissionPredecessor = "49795a9076d9c1e8233ab9c2b861a5ad403953dc";
-export const finRecordOmissionChangedPaths = [
-	"tests/fin-container-edge-integration-history.test.mjs"
+export const finHostedPromotionHistoryPath = "docs/evidence/fin-native-hosted-promotion-source-history-20261010.json";
+export const finHostedPromotionPredecessor = "216b10cde1a0f7882ce155169339305416fd2499";
+export const finHostedPromotionChangedPaths = [
+	"docs/consume/c.md"
+	, "docs/consume/cpp.md"
+	, "docs/consume/dotnet.md"
+	, "docs/consume/java.md"
+	, "docs/consume/kotlin.md"
+	, "docs/consume/perl.md"
+	, "docs/consume/python.md"
+	, "docs/consume/ruby.md"
+	, "docs/consume/rust.md"
+	, "docs/consume/wit-wasi.md"
+	, "docs/evidence/refinement-closure-audit-20261007.md"
+	, "docs/php.md"
+	, "docs/type-surface.v1.json"
+	, "tests/documentation.test.mjs"
+	, "tests/fin-container-edge-integration-history.test.mjs"
 	, "tests/helpers/fin-container-edge-ci-history-tests.mjs"
 	, "tests/helpers/fin-container-foreign-history-tests.mjs"
-	, "tests/helpers/fin-container-foreign-history.mjs"
+	, "tests/helpers/fin-native-hosted-promotion-tests.mjs"
+	, "tests/helpers/fin-record-review-omission-history-tests.mjs"
+	, "tests/helpers/fin-record-review-omission-history.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
 	, "tests/helpers/native-fin-diagnostic-ci-tests.mjs"
-	, "tests/native-fin-records.test.mjs"
+	, "tests/type-surface.test.mjs"
 ];
 let history;
 
@@ -27,8 +42,8 @@ let history;
  * @param source - Complete current source.
  * @param update - Exact recorded transition.
  */
-export const reverseFinRecordOmissionUpdate = (source, update) => {
-	assert.ok(finRecordOmissionChangedPaths.includes(update.path));
+export const reverseFinHostedPromotionUpdate = (source, update) => {
+	assert.ok(finHostedPromotionChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -54,12 +69,11 @@ export const reverseFinRecordOmissionUpdate = (source, update) => {
  * @param source - Complete source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeFinRecordOmissionSource = (path, source, expected) => {
-	source = beforeFinHostedPromotionSource(path, source, expected);
-	if(typeof source !== "string" || !finRecordOmissionChangedPaths.includes(path)) return source;
+export const beforeFinHostedPromotionSource = (path, source, expected) => {
+	if(typeof source !== "string" || !finHostedPromotionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(finRecordOmissionHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(finHostedPromotionHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseFinRecordOmissionUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseFinHostedPromotionUpdate(source, update) : source;
 };

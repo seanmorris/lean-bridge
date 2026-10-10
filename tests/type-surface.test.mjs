@@ -384,7 +384,10 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	const fins = finEvidence || phpWasmFin ? ["fin"] : [];
 	const finRuntimes = { python: ["python311", "python312"], ruby: ["ruby33"] }[profile] ?? [];
 	const finBatch = ["rust", "dotnet", "wit-wasi"].includes(profile);
-	const nominalFin = finRuntimes.length > 0 || finBatch || phpWasmFin;
+	const nominalFin = finRuntimes.length > 0 || finBatch || phpWasmFin || ["java", "kotlin", "php-native"].includes(profile);
+	const finHostedGroup = ["java", "kotlin"].includes(profile) ? "jvm" : profile;
+	const finHostedSuffixes = profile === "python" ? ["python", "python312"] : [["java", "kotlin"].includes(profile) ? "java-kotlin" : profile];
+	const hostedFinEvidence = family => finHostedSuffixes.map(suffix => `fin-hosted-${finHostedGroup}-${suffix}-${family}-ordinary-installed`);
 	// Finite specializations are signature-only cells, one receipt per build group.
 	const specializationEvidence = { python: "python", rust: "rust", ruby: "ruby", dotnet: "dotnet", java: "java-kotlin", kotlin: "java-kotlin", "php-native": "php-native", "wit-wasi": "wit-wasi" }[profile];
 	const specialized = specializationEvidence ? ["generic", "implicit", "instance"] : [];
@@ -417,13 +420,15 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 					assert.deepEqual(stage.evidence, [`php-wasm-fin-${cell.position === "field" ? "records" : "products"}-ordinary-installed`]);
 					continue;
 				}
-				assert.deepEqual(stage.evidence, cell.position === "field"
+				const earlierFinEvidence = cell.position === "field"
 					? (finBatch ? [`fin-batch-${profile}-record-ordinary-installed`] : finRuntimes.map(runtime => `fin-${runtime}-record-ordinary-installed`))
 					: [finEvidence, `native-fin-containers-${specializationEvidence}-installed`
 						, ...finRuntimes.flatMap(runtime => ["product", "product-array"].map(family => `fin-${runtime}-${family}-ordinary-installed`))
 						, ...(["rust", "dotnet"].includes(profile) ? ["product", "product-array"].map(family => `fin-batch-${profile}-${family}-ordinary-installed`) : [])
 						, ...scalarCounters.map(caller => `fin-dispatch-${caller}-ordinary-installed`)
-						, ...(stageName === "installedExecution" && ["python", "rust"].includes(profile) ? [`hosted-container-${profile}-ordinary-source-dispatch`] : [])]);
+						, ...(stageName === "installedExecution" && ["python", "rust"].includes(profile) ? [`hosted-container-${profile}-ordinary-source-dispatch`] : [])];
+				assert.deepEqual(stage.evidence, [...earlierFinEvidence
+					, ...(cell.position === "field" ? ["record"] : ["product", "product-array"]).flatMap(hostedFinEvidence)]);
 				continue;
 			}
 			if(cell.shape === "subtype")

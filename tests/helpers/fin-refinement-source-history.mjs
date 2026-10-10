@@ -168,6 +168,7 @@ import { finEdgeIntegrationChangedPaths } from "./fin-container-edge-integration
 import { finEdgeCiChangedPaths } from "./fin-container-edge-ci-history.mjs";
 import { finForeignChangedPaths } from "./fin-container-foreign-history.mjs";
 import { finRecordOmissionChangedPaths } from "./fin-record-review-omission-history.mjs";
+import { finHostedPromotionChangedPaths } from "./fin-native-hosted-promotion-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -801,6 +802,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...finEdgeCiChangedPaths
 	, ...finForeignChangedPaths
 	, ...finRecordOmissionChangedPaths
+	, ...finHostedPromotionChangedPaths
 ])].sort());
 
 /**

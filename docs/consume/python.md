@@ -693,6 +693,8 @@ Box: 42; payload: 42; callback: 44; closure: 42
 
 ## Values and cleanup
 
+The [hosted Fin matrix](../evidence/fin-native-hosted-20261010/receipt.json) also verifies ordinary-source and independently reviewed products, arrays of products, and plain record/variant fields on this host. It retains separate Python 3.11 and 3.12 executions and does not extend the earlier reports' dispatch measurements.
+
 ### Checked Lean values
 
 Ordinary-source and reviewed-IR packages map `Fin n` to exact Python `int` values below `n`. Bounds apply inside `Array`, `List`, `Option`, binary products, the active `Except` branch, and nonrecursive, nongeneric record or variant fields. A negative input raises `ValueError`; `bool` and other non-`int` values raise `TypeError`. An input at or above the bound raises `LeanBridgeError` with status 1 and a message naming the parameter and bound. Products use pairs, `Option` uses `None` or `Some`, and `Except` uses `Err` or `Ok`. The generated docstrings and stubs list each bound. `Fin 0` has no valid element, but empty containers, absent options and inactive branches remain valid.
