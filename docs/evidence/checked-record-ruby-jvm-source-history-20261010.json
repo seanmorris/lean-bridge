@@ -1,0 +1,216 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-ruby-jvm-v1",
+  "predecessorCommit": "71ef6f081bfab86e9556545250a44bb04c420604",
+  "updates": [
+    {
+      "path": "docs/lean/existing-package.md",
+      "currentSha256": "613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232",
+      "previousSha256": "35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891",
+      "edits": [
+        {
+          "start": 44884,
+          "previous": "Native adapters also generate Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI packages using the same C payload mirrors. Their [source checks](../evidence/checked-record-native-hosts-20261010.md) cover conversion layouts and constructor metadata; installed-package acceptance for those seven hosts remains pending. Perl and PHP-Wasm checked-record adapters remain pending. Browser execution remains pending. Nested checked records, value-dependent runtime fields, recursive checked records, other index kinds and callbacks remain unsupported. npm uses private ABI 8 for its proof-free carriers.\n",
+          "current": "[Installed Ruby, Java and Kotlin checks](../evidence/checked-record-ruby-jvm-20261010.md) also pass all four source/result-only routes, using the same two-root reproduction, author removal and relocated replay. Their receipts bind the RubyGems load paths and JVM classpaths to the installed packages. Kotlin callers use the generated Kotlin API. These local runs also use glibc 2.36 without entry-count measurements.\n\nNative adapters also generate Rust, .NET, native PHP and WIT/WASI packages using the same C payload mirrors. Their [source checks](../evidence/checked-record-native-hosts-20261010.md) cover conversion layouts and constructor metadata; installed-package acceptance for those four hosts remains pending. Perl and PHP-Wasm checked-record adapters remain pending. Browser execution remains pending. Nested checked records, value-dependent runtime fields, recursive checked records, other index kinds and callbacks remain unsupported. npm uses private ABI 8 for its proof-free carriers.\n"
+        },
+        {
+          "start": 53283,
+          "previous": "| Record with erased proof fields and a checked input constructor | Node installed; browser pending | C/C++ and Python installed; other native hosts generated, pending | Rejected | Rejected | C/C++, Python and Node installed; other native hosts generated, pending; browser pending; CPAN and PHP-Wasm rejected |\n",
+          "current": "| Record with erased proof fields and a checked input constructor | Node installed; browser pending | C/C++, Python, Ruby, Java and Kotlin installed; other native hosts generated, pending | Rejected | Rejected | C/C++, Python, Ruby, Java, Kotlin and Node installed; other native hosts generated, pending; browser pending; CPAN and PHP-Wasm rejected |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "1d19487acb2230cdec3388dd95e15b898ce2dc2d59d0104ee71612a39929ed12",
+      "previousSha256": "82d1a1dc6cf3dca0a0fb7e730fbcc6b843f516d99bdc6b97d923b5e951d2b081",
+      "edits": [
+        {
+          "start": 1072635,
+          "previous": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n",
+          "current": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n"
+        },
+        {
+          "start": 1080224,
+          "previous": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n",
+          "current": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n"
+        },
+        {
+          "start": 1086825,
+          "previous": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n",
+          "current": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n"
+        },
+        {
+          "start": 1093933,
+          "previous": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n",
+          "current": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n"
+        },
+        {
+          "start": 1101427,
+          "previous": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n",
+          "current": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n"
+        },
+        {
+          "start": 1108483,
+          "previous": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n",
+          "current": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n"
+        },
+        {
+          "start": 1116084,
+          "previous": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n",
+          "current": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n"
+        },
+        {
+          "start": 1126365,
+          "previous": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n",
+          "current": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n"
+        },
+        {
+          "start": 1138698,
+          "previous": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n",
+          "current": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n"
+        },
+        {
+          "start": 1192157,
+          "previous": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n",
+          "current": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n"
+        },
+        {
+          "start": 1224700,
+          "previous": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n",
+          "current": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n"
+        },
+        {
+          "start": 1254979,
+          "previous": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n",
+          "current": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n"
+        },
+        {
+          "start": 1287946,
+          "previous": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n",
+          "current": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n"
+        },
+        {
+          "start": 1329356,
+          "previous": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n",
+          "current": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n"
+        },
+        {
+          "start": 1355204,
+          "previous": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n",
+          "current": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n"
+        },
+        {
+          "start": 1377884,
+          "previous": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n",
+          "current": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n"
+        },
+        {
+          "start": 1397576,
+          "previous": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n",
+          "current": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n"
+        },
+        {
+          "start": 1418061,
+          "previous": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n",
+          "current": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/checked-records.test.mjs",
+      "currentSha256": "1728134bff23b2c70ff5970cd77d9a8612dd271343809e633af511cad0bb0d00",
+      "previousSha256": "04fac102db705f5645c63a4e4358c6e8671988bf5503eb00387e17c37533a03b",
+      "edits": [
+        {
+          "start": 976,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-ruby-jvm-archive-tests.mjs\";\nimport \"./helpers/checked-record-ruby-jvm-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-python-history-tests.mjs",
+      "currentSha256": "85363b21157163d32d9df2bf65ed8a72095f23bdad2a9baf297d40e379fd1aef",
+      "previousSha256": "4f83f7522e8217126c6af883006243980361d9a6b593f8dfb34a895f665cefb8",
+      "edits": [
+        {
+          "start": 512,
+          "previous": "",
+          "current": "import { beforeCheckedRecordRubyJvmArchiveSource } from \"./checked-record-ruby-jvm-history.mjs\";\n"
+        },
+        {
+          "start": 1393,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst current = beforeCheckedRecordRubyJvmArchiveSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2818,
+          "previous": "\tconst source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst source = beforeCheckedRecordRubyJvmArchiveSource(path, await readFile(path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-python-history.mjs",
+      "currentSha256": "b0b7b7183e1d0ec001aab1eb19544751927fc829d133b9d3a4448b647b2da3c9",
+      "previousSha256": "a611e87b0435920188d5ba1e8d70a2215841cbaf8d0a548055f3f7b60356d0fa",
+      "edits": [
+        {
+          "start": 236,
+          "previous": "",
+          "current": "import { beforeCheckedRecordRubyJvmArchiveSource } from \"./checked-record-ruby-jvm-history.mjs\";\n"
+        },
+        {
+          "start": 2409,
+          "previous": "",
+          "current": "\tsource = beforeCheckedRecordRubyJvmArchiveSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "6258cced2343691ac1fae2a23a4b6aeaeb77a89d481870709d2ce3c01b322a73",
+      "previousSha256": "5e8e150a84b40fc8199b054907353de497c7683ef54611524797da0d5ff51f03",
+      "edits": [
+        {
+          "start": 2003,
+          "previous": "",
+          "current": "import { checkedRecordRubyJvmArchiveChangedPaths } from \"./checked-record-ruby-jvm-history.mjs\";\n"
+        },
+        {
+          "start": 58781,
+          "previous": "",
+          "current": "\t, ...checkedRecordRubyJvmArchiveChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/lean-author-documentation.test.mjs",
+      "currentSha256": "c39e8d555c9a64c27cf3302e0cee5743674da2d64b08e5b8e778312b20eea733",
+      "previousSha256": "076e0f68964020657c8358aec72d438ae1efa6138133cf9c9a8d62d1dbcd0217",
+      "edits": [
+        {
+          "start": 953,
+          "previous": "",
+          "current": "import { readCheckedRecordRubyJvmArchive } from \"./helpers/checked-record-ruby-jvm-archive.mjs\";\n"
+        },
+        {
+          "start": 11401,
+          "previous": "\tassert.match(section, /installed-package acceptance for those seven hosts remains pending/);\n",
+          "current": "\tassert.match(section, /checked-record-ruby-jvm-20261010\\.md/);\n\tassert.match(section, /installed-package acceptance for those four hosts remains pending/);\n"
+        },
+        {
+          "start": 12400,
+          "previous": "\tassert.equal(row, \"| Record with erased proof fields and a checked input constructor | Node installed; browser pending | C/C++ and Python installed; other native hosts generated, pending | Rejected | Rejected | C/C++, Python and Node installed; other native hosts generated, pending; browser pending; CPAN and PHP-Wasm rejected |\");\n",
+          "current": "\tassert.equal(row, \"| Record with erased proof fields and a checked input constructor | Node installed; browser pending | C/C++, Python, Ruby, Java and Kotlin installed; other native hosts generated, pending | Rejected | Rejected | C/C++, Python, Ruby, Java, Kotlin and Node installed; other native hosts generated, pending; browser pending; CPAN and PHP-Wasm rejected |\");\n"
+        },
+        {
+          "start": 12963,
+          "previous": "",
+          "current": "\tconst rubyJvm = await readCheckedRecordRubyJvmArchive();\n\tassert.equal(rubyJvm.reports.length, 4);\n\tfor(const report of rubyJvm.reports) assert.deepEqual(report.profiles, [\"java\", \"kotlin\", \"ruby\"]);\n"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+import assert from "node:assert/strict";
+import { spawn } from "node:child_process";
+
+const [revision, profiles, group] = process.argv.slice(2);
+assert.match(revision ?? "", /^[a-f0-9]{40}$/);
+assert.match(group ?? "", /^[a-z0-9-]+$/);
+const selected = profiles?.split(",") ?? [];
+assert.ok(selected.length && selected.every(profile => ["rust", "ruby", "dotnet", "java", "kotlin", "php-native", "wit-wasi"].includes(profile)));
+assert.equal(new Set(selected).size, selected.length);
+for (const [route, short] of [
+  ["ordinary-source", "ordinary"],
+  ["reviewed-ir", "reviewed"],
+  ["result-only-ordinary-source", "result-ordinary"],
+  ["result-only-reviewed-ir", "result-reviewed"]
+]) {
+  const label = `${group}-${short}-r1`;
+  console.log(JSON.stringify({ event: "starting", revision, profiles, route, label, time: new Date().toISOString() }));
+  const child = spawn(process.execPath, ["build/run-checked-record-native-hosts-v1.mjs", revision, profiles, route, label], {
+    cwd: "/app", stdio: "inherit", env: process.env
+  });
+  const result = await new Promise(resolve => {
+    child.once("error", error => resolve({ error: error.message }));
+    child.once("close", (code, signal) => resolve({ code, signal }));
+  });
+  console.log(JSON.stringify({ event: "completed", route, label, result, time: new Date().toISOString() }));
+  assert.deepEqual(result, { code: 0, signal: null });
+}

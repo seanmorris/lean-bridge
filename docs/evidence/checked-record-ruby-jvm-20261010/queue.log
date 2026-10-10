@@ -1,0 +1,16 @@
+{"event":"starting","revision":"71ef6f081bfab86e9556545250a44bb04c420604","profiles":"ruby,java,kotlin","route":"ordinary-source","label":"ruby-jvm-ordinary-r1","time":"2026-10-10T23:06:16.417Z"}
+Started 3345912 at 71ef6f081bfab86e9556545250a44bb04c420604; free 2503 MiB; output /app/build/vo1446-host-ruby-jvm-ordinary-r1-71ef6f0-records
+{"code":0,"signal":null,"pid":3345912,"stoppedForDisk":false,"minimumFreeMiB":1754,"endedAt":"2026-10-10T23:09:36.223Z","tapSha256":"0e2b9ce753f3fc75dcab1e21ba01e61ec7ba9e0102bcad7ce6ee6c29f51e5403"}
+{"event":"completed","route":"ordinary-source","label":"ruby-jvm-ordinary-r1","result":{"code":0,"signal":null},"time":"2026-10-10T23:09:36.245Z"}
+{"event":"starting","revision":"71ef6f081bfab86e9556545250a44bb04c420604","profiles":"ruby,java,kotlin","route":"reviewed-ir","label":"ruby-jvm-reviewed-r1","time":"2026-10-10T23:09:36.246Z"}
+Started 3346607 at 71ef6f081bfab86e9556545250a44bb04c420604; free 2496 MiB; output /app/build/vo1446-host-ruby-jvm-reviewed-r1-71ef6f0-records
+{"code":0,"signal":null,"pid":3346607,"stoppedForDisk":false,"minimumFreeMiB":1789,"endedAt":"2026-10-10T23:13:07.470Z","tapSha256":"84607d53c1672526704766eb50a1be6bbbe51730e61831634f0a5bc22c0338c2"}
+{"event":"completed","route":"reviewed-ir","label":"ruby-jvm-reviewed-r1","result":{"code":0,"signal":null},"time":"2026-10-10T23:13:07.496Z"}
+{"event":"starting","revision":"71ef6f081bfab86e9556545250a44bb04c420604","profiles":"ruby,java,kotlin","route":"result-only-ordinary-source","label":"ruby-jvm-result-ordinary-r1","time":"2026-10-10T23:13:07.496Z"}
+Started 3347533 at 71ef6f081bfab86e9556545250a44bb04c420604; free 2465 MiB; output /app/build/vo1446-host-ruby-jvm-result-ordinary-r1-71ef6f0-records
+{"code":0,"signal":null,"pid":3347533,"stoppedForDisk":false,"minimumFreeMiB":1791,"endedAt":"2026-10-10T23:16:22.645Z","tapSha256":"503a9706e87c7c646df6b442bd4706e0c17a78294f7cd86ad39cb743c06f719e"}
+{"event":"completed","route":"result-only-ordinary-source","label":"ruby-jvm-result-ordinary-r1","result":{"code":0,"signal":null},"time":"2026-10-10T23:16:22.667Z"}
+{"event":"starting","revision":"71ef6f081bfab86e9556545250a44bb04c420604","profiles":"ruby,java,kotlin","route":"result-only-reviewed-ir","label":"ruby-jvm-result-reviewed-r1","time":"2026-10-10T23:16:22.667Z"}
+Started 3348255 at 71ef6f081bfab86e9556545250a44bb04c420604; free 2462 MiB; output /app/build/vo1446-host-ruby-jvm-result-reviewed-r1-71ef6f0-records
+{"code":0,"signal":null,"pid":3348255,"stoppedForDisk":false,"minimumFreeMiB":1794,"endedAt":"2026-10-10T23:19:36.358Z","tapSha256":"cecacffbefe74ae10c303c47619c19b5f2f040adb4bba76d070ba5bcbadf5e70"}
+{"event":"completed","route":"result-only-reviewed-ir","label":"ruby-jvm-result-reviewed-r1","result":{"code":0,"signal":null},"time":"2026-10-10T23:19:36.377Z"}

@@ -24,6 +24,7 @@ import { reviewedSubtypeBrowserPromotionChangedPaths } from "./reviewed-subtype-
 import { checkedRecordNativeHostChangedPaths } from "./checked-record-native-host-history.mjs";
 import { checkedRecordNativeInstalledChangedPaths } from "./checked-record-native-installed-history.mjs";
 import { checkedRecordPythonArchiveChangedPaths } from "./checked-record-python-history.mjs";
+import { checkedRecordRubyJvmArchiveChangedPaths } from "./checked-record-ruby-jvm-history.mjs";
 import { subtypeComponentChangedPaths } from "./subtype-component-source-history.mjs";
 import { nestedFinChangedPaths, refinementClosureChangedPaths } from "./nested-fin-source-history.mjs";
 import { nominalFinChangedPaths } from "./nominal-fin-source-history.mjs";
@@ -863,6 +864,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...checkedRecordNativeHostChangedPaths
 	, ...checkedRecordNativeInstalledChangedPaths
 	, ...checkedRecordPythonArchiveChangedPaths
+	, ...checkedRecordRubyJvmArchiveChangedPaths
 ])].sort());
 
 /**

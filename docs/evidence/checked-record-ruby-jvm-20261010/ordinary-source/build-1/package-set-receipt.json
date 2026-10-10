@@ -1,0 +1,62 @@
+{
+  "component": {
+    "id": "checkedrecords@1.0.0",
+    "name": "checkedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51416547,
+          "path": "archives/checkedrecords-1.0.0.jar",
+          "sha256": "09a966313fa7a33f12e9e08e948b5fcab7d8314b814b05311ef90961ef93b63c"
+        },
+        {
+          "bytes": 624,
+          "path": "archives/checkedrecords-1.0.0.pom",
+          "sha256": "45a3cb2ca77267996472b9764e0db7ec0b33e61ab730614f7252289960bffa1e"
+        }
+      ],
+      "ecosystem": "maven",
+      "name": "org.leanbridge:checkedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "maven",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 50103808,
+          "path": "archives/checkedrecords-1.0.0-x86_64-linux.gem",
+          "sha256": "5d6a5c2d84c1a227b33f24fcd3ea3888ac655eed931f0cd65ad2e8fef7aeccb1"
+        }
+      ],
+      "ecosystem": "rubygems",
+      "name": "checkedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "rubygems",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "61abd3c84b3f8fdd497949b986ef4abb876b5b679c8f743ec14bd5f0fcf043e5",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "2e7b13dfae521ad7693399ccbadaea0889e57ef1e788e77525e42dfa383a823a"
+  }
+}

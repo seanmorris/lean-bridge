@@ -1,0 +1,822 @@
+{
+  "artifacts": [
+    {
+      "bytes": 2396,
+      "path": "ordinary-source/build-0/CheckedRecords.lean",
+      "sha256": "368d74e1c5abd242ec96ac8bc9cf9648377ccbe8b0f8608ab46efe14cfec34b7"
+    },
+    {
+      "bytes": 17376,
+      "path": "ordinary-source/build-0/expected.json",
+      "sha256": "cf7d6a01ce32450d267bb5613e8255b057569fd05d107edd12237b090b70bbb8"
+    },
+    {
+      "bytes": 3262,
+      "path": "ordinary-source/build-0/lean-bridge.exports.json",
+      "sha256": "2564512a3a4a549b82f9a4bf77d23eb7f395f7c71f4755775f3e9eeb72c019fd"
+    },
+    {
+      "bytes": 66148,
+      "path": "ordinary-source/build-0/model.json",
+      "sha256": "648cc3410b895e52dbe66cf15ef410a5bc081758457ecfd36804246f7d2f5329"
+    },
+    {
+      "bytes": 1897,
+      "path": "ordinary-source/build-0/package-set-receipt.json",
+      "sha256": "83dc95601f2ea015cdbcd7f6a706fbbde6d885221c8e455c1dfe543151b1df72"
+    },
+    {
+      "bytes": 2396,
+      "path": "ordinary-source/build-1/CheckedRecords.lean",
+      "sha256": "368d74e1c5abd242ec96ac8bc9cf9648377ccbe8b0f8608ab46efe14cfec34b7"
+    },
+    {
+      "bytes": 17376,
+      "path": "ordinary-source/build-1/expected.json",
+      "sha256": "cf7d6a01ce32450d267bb5613e8255b057569fd05d107edd12237b090b70bbb8"
+    },
+    {
+      "bytes": 3262,
+      "path": "ordinary-source/build-1/lean-bridge.exports.json",
+      "sha256": "2564512a3a4a549b82f9a4bf77d23eb7f395f7c71f4755775f3e9eeb72c019fd"
+    },
+    {
+      "bytes": 66148,
+      "path": "ordinary-source/build-1/model.json",
+      "sha256": "648cc3410b895e52dbe66cf15ef410a5bc081758457ecfd36804246f7d2f5329"
+    },
+    {
+      "bytes": 1897,
+      "path": "ordinary-source/build-1/package-set-receipt.json",
+      "sha256": "83dc95601f2ea015cdbcd7f6a706fbbde6d885221c8e455c1dfe543151b1df72"
+    },
+    {
+      "bytes": 4721,
+      "path": "ordinary-source/consumers/java.java",
+      "sha256": "e352fc797ddb24d72159481ab032b11ff83d525167bbbca410baaf5ac0658573"
+    },
+    {
+      "bytes": 4271,
+      "path": "ordinary-source/consumers/kotlin.kt",
+      "sha256": "b01b7b6edf8349dbf520ec10fe0f355a609de39c9e2e0969da1942596413498e"
+    },
+    {
+      "bytes": 3150,
+      "path": "ordinary-source/consumers/ruby.rb",
+      "sha256": "1c3711937c25fa0d92f93fa4db8b4c072dc21677fcb13768f4b7ce743ed4a5fc"
+    },
+    {
+      "bytes": 26195,
+      "path": "ordinary-source/java.json",
+      "sha256": "7e0f7d041211582636a3cc7ede47366b8bac26caa9edb68bebeeb4f06cbee4da"
+    },
+    {
+      "bytes": 26192,
+      "path": "ordinary-source/kotlin.json",
+      "sha256": "eea52e96bef65cd627ac1f162ff951931968375c3be686a28e3e3b9a05ea008a"
+    },
+    {
+      "bytes": 78727,
+      "path": "ordinary-source/report.json",
+      "sha256": "726f94b3c8261c1b4c6423ca959a67d6e547b06f871c16197c5e8849c2050440"
+    },
+    {
+      "bytes": 23521,
+      "path": "ordinary-source/ruby.json",
+      "sha256": "e37bb99c460418105c20ead25d82458c60dfa62b28639d8d830ef64eb293f9b7"
+    },
+    {
+      "bytes": 229,
+      "path": "ordinary-source/run.end.json",
+      "sha256": "6274129658e435e22936d427fe2a633b317e5c20b685546649f20a4f92b153b9"
+    },
+    {
+      "bytes": 266,
+      "path": "ordinary-source/run.finished.json",
+      "sha256": "99238081f336e7679b1c569ece51c22a288a64a0e25693610dc1ac256394bb5f"
+    },
+    {
+      "bytes": 1504,
+      "path": "ordinary-source/run.start.json",
+      "sha256": "6f28aca95a6941fd4d6db185bf5c3efb90f4d752bc1b288ca7fe74fe342ed149"
+    },
+    {
+      "bytes": 593,
+      "path": "ordinary-source/run.tap",
+      "sha256": "0e2b9ce753f3fc75dcab1e21ba01e61ec7ba9e0102bcad7ce6ee6c29f51e5403"
+    },
+    {
+      "bytes": 2818,
+      "path": "queue.log",
+      "sha256": "5df65010927c6defc0a5c4e3a265f84d7e8ed141be1af274acbcc42a193786e5"
+    },
+    {
+      "bytes": 1391,
+      "path": "queue.mjs.txt",
+      "sha256": "15c1bfe2702a8c9d0ba678f60547e8fb4f80bede4d45ab905dc36d12f4fda2c2"
+    },
+    {
+      "bytes": 2396,
+      "path": "result-only-ordinary-source/build-0/CheckedRecords.lean",
+      "sha256": "368d74e1c5abd242ec96ac8bc9cf9648377ccbe8b0f8608ab46efe14cfec34b7"
+    },
+    {
+      "bytes": 3294,
+      "path": "result-only-ordinary-source/build-0/expected.json",
+      "sha256": "7c77685d3a2b92567e69f3cc3de381caf3819d9414adf37fc43d13dbfe0eb8db"
+    },
+    {
+      "bytes": 561,
+      "path": "result-only-ordinary-source/build-0/lean-bridge.exports.json",
+      "sha256": "baefe4be2e3a3b758a9e51ee4864201d6389ecde25cc86fab8ded828bf0e5289"
+    },
+    {
+      "bytes": 12586,
+      "path": "result-only-ordinary-source/build-0/model.json",
+      "sha256": "201b7d486c1d4a5efc360fa5f3cd28b6222ae999daacb6398e6e36364cb10982"
+    },
+    {
+      "bytes": 1897,
+      "path": "result-only-ordinary-source/build-0/package-set-receipt.json",
+      "sha256": "0da4f5e83bc722c41b8049839bf63d1c027aa3213b9182438c18e00d86aca8ab"
+    },
+    {
+      "bytes": 2396,
+      "path": "result-only-ordinary-source/build-1/CheckedRecords.lean",
+      "sha256": "368d74e1c5abd242ec96ac8bc9cf9648377ccbe8b0f8608ab46efe14cfec34b7"
+    },
+    {
+      "bytes": 3294,
+      "path": "result-only-ordinary-source/build-1/expected.json",
+      "sha256": "7c77685d3a2b92567e69f3cc3de381caf3819d9414adf37fc43d13dbfe0eb8db"
+    },
+    {
+      "bytes": 561,
+      "path": "result-only-ordinary-source/build-1/lean-bridge.exports.json",
+      "sha256": "baefe4be2e3a3b758a9e51ee4864201d6389ecde25cc86fab8ded828bf0e5289"
+    },
+    {
+      "bytes": 12586,
+      "path": "result-only-ordinary-source/build-1/model.json",
+      "sha256": "201b7d486c1d4a5efc360fa5f3cd28b6222ae999daacb6398e6e36364cb10982"
+    },
+    {
+      "bytes": 1897,
+      "path": "result-only-ordinary-source/build-1/package-set-receipt.json",
+      "sha256": "0da4f5e83bc722c41b8049839bf63d1c027aa3213b9182438c18e00d86aca8ab"
+    },
+    {
+      "bytes": 1020,
+      "path": "result-only-ordinary-source/consumers/java.java",
+      "sha256": "fc36bc9374d13b0eecb39d0822c55d8fb9daf130cd517d40db8c819e129c87a9"
+    },
+    {
+      "bytes": 888,
+      "path": "result-only-ordinary-source/consumers/kotlin.kt",
+      "sha256": "c987eef426683a529b25bfd73ef29b379318fc4504bdc699e4293ae65e55a944"
+    },
+    {
+      "bytes": 472,
+      "path": "result-only-ordinary-source/consumers/ruby.rb",
+      "sha256": "26b8094ac9cbe187420f3a5f12161f900d73262aef33cb1fbca2dfe22613977f"
+    },
+    {
+      "bytes": 17542,
+      "path": "result-only-ordinary-source/java.json",
+      "sha256": "289c5d8590c56480f1ec0d3d6d727b5f245a08360c9c10cbd5b056cfd336d8d6"
+    },
+    {
+      "bytes": 17538,
+      "path": "result-only-ordinary-source/kotlin.json",
+      "sha256": "bcc59a08eb3848fc1e8f570b25b66a7b2e6864aa860c9ba94faf1087132c882e"
+    },
+    {
+      "bytes": 54371,
+      "path": "result-only-ordinary-source/report.json",
+      "sha256": "9a5d71dd479bcad16017aeba3eb4a8d3fffeae39b59eef3c01d594282b8c5fe2"
+    },
+    {
+      "bytes": 16460,
+      "path": "result-only-ordinary-source/ruby.json",
+      "sha256": "1ebc338e04f45c05609b32fcef122aa488f828ca9d37053997b067075fd1301a"
+    },
+    {
+      "bytes": 229,
+      "path": "result-only-ordinary-source/run.end.json",
+      "sha256": "3aabaf1f87a4678fed7eb20dce1d675340d8ee77510ecb49fc1d92aaf93d0001"
+    },
+    {
+      "bytes": 273,
+      "path": "result-only-ordinary-source/run.finished.json",
+      "sha256": "e02fe716ab926e6cf485168f75dbeec31e594947f3836d8b94329ce373d26f5f"
+    },
+    {
+      "bytes": 1542,
+      "path": "result-only-ordinary-source/run.start.json",
+      "sha256": "66f4b1c25508a42852cd26e25d38103f606321c0d1277ff52ca8f6b8e6cb141f"
+    },
+    {
+      "bytes": 675,
+      "path": "result-only-ordinary-source/run.tap",
+      "sha256": "503a9706e87c7c646df6b442bd4706e0c17a78294f7cd86ad39cb743c06f719e"
+    },
+    {
+      "bytes": 3294,
+      "path": "result-only-reviewed-ir/build-0/api.binding-ir.json",
+      "sha256": "7c77685d3a2b92567e69f3cc3de381caf3819d9414adf37fc43d13dbfe0eb8db"
+    },
+    {
+      "bytes": 2396,
+      "path": "result-only-reviewed-ir/build-0/CheckedRecords.lean",
+      "sha256": "368d74e1c5abd242ec96ac8bc9cf9648377ccbe8b0f8608ab46efe14cfec34b7"
+    },
+    {
+      "bytes": 3294,
+      "path": "result-only-reviewed-ir/build-0/expected.json",
+      "sha256": "7c77685d3a2b92567e69f3cc3de381caf3819d9414adf37fc43d13dbfe0eb8db"
+    },
+    {
+      "bytes": 261,
+      "path": "result-only-reviewed-ir/build-0/lean-bridge.exports.json",
+      "sha256": "66ec96376aabedcd6b537cd1321d6503ddd71699b068af818033dd720ac32afb"
+    },
+    {
+      "bytes": 15621,
+      "path": "result-only-reviewed-ir/build-0/model.json",
+      "sha256": "a278d84fbf07f7a5afcd201a6510660aa513bb03d5535d1a281f84aca7e0396b"
+    },
+    {
+      "bytes": 1897,
+      "path": "result-only-reviewed-ir/build-0/package-set-receipt.json",
+      "sha256": "5a925960fce68518fd239cc7d5aaa0a92654650043a45525d0b8886530501f77"
+    },
+    {
+      "bytes": 3294,
+      "path": "result-only-reviewed-ir/build-1/api.binding-ir.json",
+      "sha256": "7c77685d3a2b92567e69f3cc3de381caf3819d9414adf37fc43d13dbfe0eb8db"
+    },
+    {
+      "bytes": 2396,
+      "path": "result-only-reviewed-ir/build-1/CheckedRecords.lean",
+      "sha256": "368d74e1c5abd242ec96ac8bc9cf9648377ccbe8b0f8608ab46efe14cfec34b7"
+    },
+    {
+      "bytes": 3294,
+      "path": "result-only-reviewed-ir/build-1/expected.json",
+      "sha256": "7c77685d3a2b92567e69f3cc3de381caf3819d9414adf37fc43d13dbfe0eb8db"
+    },
+    {
+      "bytes": 261,
+      "path": "result-only-reviewed-ir/build-1/lean-bridge.exports.json",
+      "sha256": "66ec96376aabedcd6b537cd1321d6503ddd71699b068af818033dd720ac32afb"
+    },
+    {
+      "bytes": 15621,
+      "path": "result-only-reviewed-ir/build-1/model.json",
+      "sha256": "a278d84fbf07f7a5afcd201a6510660aa513bb03d5535d1a281f84aca7e0396b"
+    },
+    {
+      "bytes": 1897,
+      "path": "result-only-reviewed-ir/build-1/package-set-receipt.json",
+      "sha256": "5a925960fce68518fd239cc7d5aaa0a92654650043a45525d0b8886530501f77"
+    },
+    {
+      "bytes": 1020,
+      "path": "result-only-reviewed-ir/consumers/java.java",
+      "sha256": "fc36bc9374d13b0eecb39d0822c55d8fb9daf130cd517d40db8c819e129c87a9"
+    },
+    {
+      "bytes": 888,
+      "path": "result-only-reviewed-ir/consumers/kotlin.kt",
+      "sha256": "c987eef426683a529b25bfd73ef29b379318fc4504bdc699e4293ae65e55a944"
+    },
+    {
+      "bytes": 472,
+      "path": "result-only-reviewed-ir/consumers/ruby.rb",
+      "sha256": "26b8094ac9cbe187420f3a5f12161f900d73262aef33cb1fbca2dfe22613977f"
+    },
+    {
+      "bytes": 21604,
+      "path": "result-only-reviewed-ir/java.json",
+      "sha256": "f580c814bb693bb2323f42862cdb70bf1f3ab1ba8f657c9314c2164476aa9229"
+    },
+    {
+      "bytes": 21600,
+      "path": "result-only-reviewed-ir/kotlin.json",
+      "sha256": "1ec8eceb17d1c403e51395f7a9f468838076ef521fd5711a344df6c64aee89b0"
+    },
+    {
+      "bytes": 66554,
+      "path": "result-only-reviewed-ir/report.json",
+      "sha256": "633c4465bafd0e72c32004e42b64ad67be22229c609a1b06f3f3cf51a105c108"
+    },
+    {
+      "bytes": 20523,
+      "path": "result-only-reviewed-ir/ruby.json",
+      "sha256": "e8f39fcaf862adc92d5202b02665e9e66472d31a997665496527c8bbaa323ca0"
+    },
+    {
+      "bytes": 229,
+      "path": "result-only-reviewed-ir/run.end.json",
+      "sha256": "ed624aec7b98ff1bd0b37b02f6d9f7438186aea763030893af20465f9df71da2"
+    },
+    {
+      "bytes": 273,
+      "path": "result-only-reviewed-ir/run.finished.json",
+      "sha256": "7863d1871b71ccb88f17846f84e4c08afd22c9ca753c34eca87294ad31517ab8"
+    },
+    {
+      "bytes": 1534,
+      "path": "result-only-reviewed-ir/run.start.json",
+      "sha256": "ebc00b3aa61699f1e8b69e7bb2603ae3700f13ea4d0a57ea0bd6803d51a3909e"
+    },
+    {
+      "bytes": 649,
+      "path": "result-only-reviewed-ir/run.tap",
+      "sha256": "cecacffbefe74ae10c303c47619c19b5f2f040adb4bba76d070ba5bcbadf5e70"
+    },
+    {
+      "bytes": 17376,
+      "path": "reviewed-ir/build-0/api.binding-ir.json",
+      "sha256": "cf7d6a01ce32450d267bb5613e8255b057569fd05d107edd12237b090b70bbb8"
+    },
+    {
+      "bytes": 2396,
+      "path": "reviewed-ir/build-0/CheckedRecords.lean",
+      "sha256": "368d74e1c5abd242ec96ac8bc9cf9648377ccbe8b0f8608ab46efe14cfec34b7"
+    },
+    {
+      "bytes": 17376,
+      "path": "reviewed-ir/build-0/expected.json",
+      "sha256": "cf7d6a01ce32450d267bb5613e8255b057569fd05d107edd12237b090b70bbb8"
+    },
+    {
+      "bytes": 261,
+      "path": "reviewed-ir/build-0/lean-bridge.exports.json",
+      "sha256": "66ec96376aabedcd6b537cd1321d6503ddd71699b068af818033dd720ac32afb"
+    },
+    {
+      "bytes": 81959,
+      "path": "reviewed-ir/build-0/model.json",
+      "sha256": "92ef2c11990f5a3cfa79d9d58b04e47f4e85843807e5e7519ac4101bfe727b5e"
+    },
+    {
+      "bytes": 1897,
+      "path": "reviewed-ir/build-0/package-set-receipt.json",
+      "sha256": "bb8e667e4c28eedbc275472a5f7fc808623c347d7d76f445a439a2711426f767"
+    },
+    {
+      "bytes": 17376,
+      "path": "reviewed-ir/build-1/api.binding-ir.json",
+      "sha256": "cf7d6a01ce32450d267bb5613e8255b057569fd05d107edd12237b090b70bbb8"
+    },
+    {
+      "bytes": 2396,
+      "path": "reviewed-ir/build-1/CheckedRecords.lean",
+      "sha256": "368d74e1c5abd242ec96ac8bc9cf9648377ccbe8b0f8608ab46efe14cfec34b7"
+    },
+    {
+      "bytes": 17376,
+      "path": "reviewed-ir/build-1/expected.json",
+      "sha256": "cf7d6a01ce32450d267bb5613e8255b057569fd05d107edd12237b090b70bbb8"
+    },
+    {
+      "bytes": 261,
+      "path": "reviewed-ir/build-1/lean-bridge.exports.json",
+      "sha256": "66ec96376aabedcd6b537cd1321d6503ddd71699b068af818033dd720ac32afb"
+    },
+    {
+      "bytes": 81959,
+      "path": "reviewed-ir/build-1/model.json",
+      "sha256": "92ef2c11990f5a3cfa79d9d58b04e47f4e85843807e5e7519ac4101bfe727b5e"
+    },
+    {
+      "bytes": 1897,
+      "path": "reviewed-ir/build-1/package-set-receipt.json",
+      "sha256": "bb8e667e4c28eedbc275472a5f7fc808623c347d7d76f445a439a2711426f767"
+    },
+    {
+      "bytes": 4747,
+      "path": "reviewed-ir/consumers/java.java",
+      "sha256": "2d0dfe792ce3c67f42988ffaded78eafa75889499a940813c767157ff4dab523"
+    },
+    {
+      "bytes": 4297,
+      "path": "reviewed-ir/consumers/kotlin.kt",
+      "sha256": "dda59eb00df3d991db72b3478a33b68944176ecf000c88466684a30b9acbe11b"
+    },
+    {
+      "bytes": 3176,
+      "path": "reviewed-ir/consumers/ruby.rb",
+      "sha256": "15cb04e2d54a0d03af99b974c65c7cd08f420dff41e2d6b7cddc7221b65b3895"
+    },
+    {
+      "bytes": 45701,
+      "path": "reviewed-ir/java.json",
+      "sha256": "1be6b76e194b27242b2ca54a9ac3f0515d67d1930c951e34e1248fd3f2e7e709"
+    },
+    {
+      "bytes": 45698,
+      "path": "reviewed-ir/kotlin.json",
+      "sha256": "5affa18ada734dc516529b0c4aebfb0e844dff68789ffa88464d15f4a4524994"
+    },
+    {
+      "bytes": 137241,
+      "path": "reviewed-ir/report.json",
+      "sha256": "378e71e90b4cbb38da35a4a7d0594e231753d733cdf915f3e0d3608c82ae83a1"
+    },
+    {
+      "bytes": 43027,
+      "path": "reviewed-ir/ruby.json",
+      "sha256": "219a81128f655608c5821bedd06ef78b179c0e1914978f1b1826c287e3a94486"
+    },
+    {
+      "bytes": 229,
+      "path": "reviewed-ir/run.end.json",
+      "sha256": "f1c9f061118547df4d27f934b30983b5e764aca5fba7e1bb305b446068e48839"
+    },
+    {
+      "bytes": 266,
+      "path": "reviewed-ir/run.finished.json",
+      "sha256": "21a26aa29f592c16c42de18447de323bea807c8adce428abb4eda1f00e93c387"
+    },
+    {
+      "bytes": 1496,
+      "path": "reviewed-ir/run.start.json",
+      "sha256": "7f4a14fa115d0bee87dded81ce1ac2c53ed1c6c9d0cf3517bc716c9be80b7157"
+    },
+    {
+      "bytes": 565,
+      "path": "reviewed-ir/run.tap",
+      "sha256": "84607d53c1672526704766eb50a1be6bbbe51730e61831634f0a5bc22c0338c2"
+    },
+    {
+      "bytes": 5306,
+      "path": "runner.mjs.txt",
+      "sha256": "856d050147512e51cf1fd102d444bbede8b8496a20895a6ec9db6b1e00c053b4"
+    },
+    {
+      "bytes": 88464,
+      "path": "sources/src/analyze/NativeExports.lean.txt",
+      "sha256": "8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f"
+    },
+    {
+      "bytes": 20423,
+      "path": "sources/src/backends/c/native-copied-values.mjs.txt",
+      "sha256": "492fd83a246d7d1c58b18812ddc7c90e1fb5d7a999b368cbe56456b5a9d6b7be"
+    },
+    {
+      "bytes": 13442,
+      "path": "sources/src/backends/jvm/copied-conversions.mjs.txt",
+      "sha256": "d41050ddcad1ebbbe19c74d681f311903764128ebed212616b0f6098b4fbefbe"
+    },
+    {
+      "bytes": 13123,
+      "path": "sources/src/backends/jvm/copied-kotlin.mjs.txt",
+      "sha256": "bca0eaf8fd637c524cc4e7d0756dc683037cb8e426cbfad02d7cfc733bac8d17"
+    },
+    {
+      "bytes": 14000,
+      "path": "sources/src/backends/native/fin-refinements.mjs.txt",
+      "sha256": "5e4195e974bc3212635efc9e7cedad96fca4dd9f81a0956bb1e800944f8b6a71"
+    },
+    {
+      "bytes": 12944,
+      "path": "sources/src/backends/ruby/copied-conversions.mjs.txt",
+      "sha256": "ce15adec396be01282ccb353fc486359693d032ccc46442dbe897d80e45fb52a"
+    },
+    {
+      "bytes": 24545,
+      "path": "sources/src/build/compiler-adapters.mjs.txt",
+      "sha256": "335d5a7ce36223c240626c0462e6eb5938d291f38f24d17b7c66218739ca6e36"
+    },
+    {
+      "bytes": 6854,
+      "path": "sources/src/build/component-refinements.mjs.txt",
+      "sha256": "ee003a614e93bbfa542625357eb5ff752c5af4805f9e2f81ca5168ccd1134df8"
+    },
+    {
+      "bytes": 12774,
+      "path": "sources/src/build/native-artifacts.mjs.txt",
+      "sha256": "71c358f5fbc4326537384b31a6d424cdedc4bf2455525d25f348c71af9299613"
+    },
+    {
+      "bytes": 15034,
+      "path": "sources/src/build/native-c-projection.mjs.txt",
+      "sha256": "2e9b44c74bc79ea53bc4d93bac0721371576c627f62b12623044f21c317e9c67"
+    },
+    {
+      "bytes": 3440,
+      "path": "sources/src/build/native-jvm-artifacts.mjs.txt",
+      "sha256": "e60076860021983a46fefe2fb2cb22c218b915bf8b13753c083db3ef0150ee81"
+    },
+    {
+      "bytes": 3075,
+      "path": "sources/src/build/native-jvm-projection.mjs.txt",
+      "sha256": "49187b08795c0a7e1c05179d8a6651b7308498685c035290def5699ee300ae86"
+    },
+    {
+      "bytes": 42232,
+      "path": "sources/src/build/native-model.mjs.txt",
+      "sha256": "dd29801162eeaa06fe0c96b8d71c6b1994033ab52440ec39ecf62e5d832dd6ae"
+    },
+    {
+      "bytes": 3459,
+      "path": "sources/src/build/native-ruby-artifacts.mjs.txt",
+      "sha256": "296ccf9cbafd02ff8a0c0f8e4608c40e5379a681a2682ea795af818af65e4145"
+    },
+    {
+      "bytes": 4721,
+      "path": "sources/tests/fixtures/checked-record-consumers/java.java.txt",
+      "sha256": "e352fc797ddb24d72159481ab032b11ff83d525167bbbca410baaf5ac0658573"
+    },
+    {
+      "bytes": 4271,
+      "path": "sources/tests/fixtures/checked-record-consumers/kotlin.kt.txt",
+      "sha256": "b01b7b6edf8349dbf520ec10fe0f355a609de39c9e2e0969da1942596413498e"
+    },
+    {
+      "bytes": 3150,
+      "path": "sources/tests/fixtures/checked-record-consumers/ruby.rb.txt",
+      "sha256": "1c3711937c25fa0d92f93fa4db8b4c072dc21677fcb13768f4b7ce743ed4a5fc"
+    },
+    {
+      "bytes": 2396,
+      "path": "sources/tests/fixtures/onboarding/checked-records/CheckedRecords.lean.txt",
+      "sha256": "368d74e1c5abd242ec96ac8bc9cf9648377ccbe8b0f8608ab46efe14cfec34b7"
+    },
+    {
+      "bytes": 11410,
+      "path": "sources/tests/helpers/checked-record-fixture.mjs.txt",
+      "sha256": "29a2a8a7a269b68aa19e8967ecf5950481b792106878991d3b7b8f515e74ced0"
+    },
+    {
+      "bytes": 6811,
+      "path": "sources/tests/helpers/checked-record-native-fixture.mjs.txt",
+      "sha256": "2e1cf710ec499253e71e95bd4809488947e9880bc78cebddc3ae14779e1bfc65"
+    },
+    {
+      "bytes": 4983,
+      "path": "sources/tests/helpers/checked-record-native-install.mjs.txt",
+      "sha256": "77132aeca029b5e3143372d11e080ea3ea28bb616ebd1d22d07a2c8239bbffe2"
+    },
+    {
+      "bytes": 8236,
+      "path": "sources/tests/helpers/checked-record-native-installed-tests.mjs.txt",
+      "sha256": "e9cbaa90867580332c5dbe7886c2fa2f46c2a0bf2e78bf6b94a891ddeee2a32f"
+    },
+    {
+      "bytes": 4345,
+      "path": "sources/tests/helpers/closed-package-zip.mjs.txt",
+      "sha256": "c0195e5c1145f1a9b8bdcbbd5f55a1477886714e1633fd2593687fdb6e45bdcf"
+    },
+    {
+      "bytes": 15505,
+      "path": "sources/tests/helpers/copied-fixture-install.mjs.txt",
+      "sha256": "dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df"
+    },
+    {
+      "bytes": 3517,
+      "path": "sources/tests/helpers/fin-container-edge-closure.mjs.txt",
+      "sha256": "2d1788a27ccd388a5779c251b01b0dc1370c8047362dc3720a7189815dd141a2"
+    },
+    {
+      "bytes": 7620,
+      "path": "sources/tests/helpers/fin-container-edge-jvm-closure.mjs.txt",
+      "sha256": "e8a90d5af4b86588f82c044992c2eec50fe09f1e139aefba0799767a8813a98c"
+    },
+    {
+      "bytes": 8330,
+      "path": "sources/tests/helpers/fin-container-edge-ruby-closure.mjs.txt",
+      "sha256": "76556c24a4d540695aed2fd5dcb20cb25d98a7da0ceabff99ad291a92c444a5c"
+    },
+    {
+      "bytes": 9902,
+      "path": "sources/tests/helpers/lake-workspace.mjs.txt",
+      "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082"
+    },
+    {
+      "bytes": 5283,
+      "path": "sources/tests/helpers/package-set.mjs.txt",
+      "sha256": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c"
+    }
+  ],
+  "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+  "runs": [
+    {
+      "archive": "ordinary-source",
+      "label": "ruby-jvm-ordinary-r1",
+      "route": "ordinary-source"
+    },
+    {
+      "archive": "reviewed-ir",
+      "label": "ruby-jvm-reviewed-r1",
+      "route": "reviewed-ir"
+    },
+    {
+      "archive": "result-only-ordinary-source",
+      "label": "ruby-jvm-result-ordinary-r1",
+      "route": "result-only-ordinary-source"
+    },
+    {
+      "archive": "result-only-reviewed-ir",
+      "label": "ruby-jvm-result-reviewed-r1",
+      "route": "result-only-reviewed-ir"
+    }
+  ],
+  "schemaVersion": 1,
+  "scope": {
+    "completeToolchainClosure": false,
+    "dispatch": "not measured",
+    "glibcFloor": "2.36",
+    "packageBinariesRetained": false,
+    "profiles": [
+      "java",
+      "kotlin",
+      "ruby"
+    ],
+    "routes": [
+      "ordinary-source",
+      "reviewed-ir",
+      "result-only-ordinary-source",
+      "result-only-reviewed-ir"
+    ]
+  },
+  "sources": [
+    {
+      "archive": "sources/tests/helpers/checked-record-native-installed-tests.mjs.txt",
+      "path": "tests/helpers/checked-record-native-installed-tests.mjs",
+      "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+      "sha256": "e9cbaa90867580332c5dbe7886c2fa2f46c2a0bf2e78bf6b94a891ddeee2a32f"
+    },
+    {
+      "archive": "sources/tests/helpers/checked-record-native-install.mjs.txt",
+      "path": "tests/helpers/checked-record-native-install.mjs",
+      "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+      "sha256": "77132aeca029b5e3143372d11e080ea3ea28bb616ebd1d22d07a2c8239bbffe2"
+    },
+    {
+      "archive": "sources/tests/helpers/checked-record-native-fixture.mjs.txt",
+      "path": "tests/helpers/checked-record-native-fixture.mjs",
+      "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+      "sha256": "2e1cf710ec499253e71e95bd4809488947e9880bc78cebddc3ae14779e1bfc65"
+    },
+    {
+      "archive": "sources/tests/helpers/checked-record-fixture.mjs.txt",
+      "path": "tests/helpers/checked-record-fixture.mjs",
+      "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+      "sha256": "29a2a8a7a269b68aa19e8967ecf5950481b792106878991d3b7b8f515e74ced0"
+    },
+    {
+      "archive": "sources/tests/helpers/fin-container-edge-ruby-closure.mjs.txt",
+      "path": "tests/helpers/fin-container-edge-ruby-closure.mjs",
+      "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+      "sha256": "76556c24a4d540695aed2fd5dcb20cb25d98a7da0ceabff99ad291a92c444a5c"
+    },
+    {
+      "archive": "sources/tests/helpers/fin-container-edge-jvm-closure.mjs.txt",
+      "path": "tests/helpers/fin-container-edge-jvm-closure.mjs",
+      "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+      "sha256": "e8a90d5af4b86588f82c044992c2eec50fe09f1e139aefba0799767a8813a98c"
+    },
+    {
+      "archive": "sources/tests/helpers/fin-container-edge-closure.mjs.txt",
+      "path": "tests/helpers/fin-container-edge-closure.mjs",
+      "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+      "sha256": "2d1788a27ccd388a5779c251b01b0dc1370c8047362dc3720a7189815dd141a2"
+    },
+    {
+      "archive": "sources/tests/helpers/closed-package-zip.mjs.txt",
+      "path": "tests/helpers/closed-package-zip.mjs",
+      "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+      "sha256": "c0195e5c1145f1a9b8bdcbbd5f55a1477886714e1633fd2593687fdb6e45bdcf"
+    },
+    {
+      "archive": "sources/tests/helpers/copied-fixture-install.mjs.txt",
+      "path": "tests/helpers/copied-fixture-install.mjs",
+      "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+      "sha256": "dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df"
+    },
+    {
+      "archive": "sources/tests/helpers/package-set.mjs.txt",
+      "path": "tests/helpers/package-set.mjs",
+      "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+      "sha256": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c"
+    },
+    {
+      "archive": "sources/tests/helpers/lake-workspace.mjs.txt",
+      "path": "tests/helpers/lake-workspace.mjs",
+      "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+      "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082"
+    },
+    {
+      "archive": "sources/tests/fixtures/checked-record-consumers/ruby.rb.txt",
+      "path": "tests/fixtures/checked-record-consumers/ruby.rb",
+      "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+      "sha256": "1c3711937c25fa0d92f93fa4db8b4c072dc21677fcb13768f4b7ce743ed4a5fc"
+    },
+    {
+      "archive": "sources/tests/fixtures/checked-record-consumers/java.java.txt",
+      "path": "tests/fixtures/checked-record-consumers/java.java",
+      "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+      "sha256": "e352fc797ddb24d72159481ab032b11ff83d525167bbbca410baaf5ac0658573"
+    },
+    {
+      "archive": "sources/tests/fixtures/checked-record-consumers/kotlin.kt.txt",
+      "path": "tests/fixtures/checked-record-consumers/kotlin.kt",
+      "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+      "sha256": "b01b7b6edf8349dbf520ec10fe0f355a609de39c9e2e0969da1942596413498e"
+    },
+    {
+      "archive": "sources/tests/fixtures/onboarding/checked-records/CheckedRecords.lean.txt",
+      "path": "tests/fixtures/onboarding/checked-records/CheckedRecords.lean",
+      "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+      "sha256": "368d74e1c5abd242ec96ac8bc9cf9648377ccbe8b0f8608ab46efe14cfec34b7"
+    },
+    {
+      "archive": "sources/src/build/native-c-projection.mjs.txt",
+      "path": "src/build/native-c-projection.mjs",
+      "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+      "sha256": "2e9b44c74bc79ea53bc4d93bac0721371576c627f62b12623044f21c317e9c67"
+    },
+    {
+      "archive": "sources/src/build/native-artifacts.mjs.txt",
+      "path": "src/build/native-artifacts.mjs",
+      "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+      "sha256": "71c358f5fbc4326537384b31a6d424cdedc4bf2455525d25f348c71af9299613"
+    },
+    {
+      "archive": "sources/src/build/native-ruby-artifacts.mjs.txt",
+      "path": "src/build/native-ruby-artifacts.mjs",
+      "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+      "sha256": "296ccf9cbafd02ff8a0c0f8e4608c40e5379a681a2682ea795af818af65e4145"
+    },
+    {
+      "archive": "sources/src/build/native-jvm-artifacts.mjs.txt",
+      "path": "src/build/native-jvm-artifacts.mjs",
+      "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+      "sha256": "e60076860021983a46fefe2fb2cb22c218b915bf8b13753c083db3ef0150ee81"
+    },
+    {
+      "archive": "sources/src/build/native-jvm-projection.mjs.txt",
+      "path": "src/build/native-jvm-projection.mjs",
+      "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+      "sha256": "49187b08795c0a7e1c05179d8a6651b7308498685c035290def5699ee300ae86"
+    },
+    {
+      "archive": "sources/src/build/native-model.mjs.txt",
+      "path": "src/build/native-model.mjs",
+      "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+      "sha256": "dd29801162eeaa06fe0c96b8d71c6b1994033ab52440ec39ecf62e5d832dd6ae"
+    },
+    {
+      "archive": "sources/src/build/component-refinements.mjs.txt",
+      "path": "src/build/component-refinements.mjs",
+      "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+      "sha256": "ee003a614e93bbfa542625357eb5ff752c5af4805f9e2f81ca5168ccd1134df8"
+    },
+    {
+      "archive": "sources/src/build/compiler-adapters.mjs.txt",
+      "path": "src/build/compiler-adapters.mjs",
+      "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+      "sha256": "335d5a7ce36223c240626c0462e6eb5938d291f38f24d17b7c66218739ca6e36"
+    },
+    {
+      "archive": "sources/src/backends/c/native-copied-values.mjs.txt",
+      "path": "src/backends/c/native-copied-values.mjs",
+      "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+      "sha256": "492fd83a246d7d1c58b18812ddc7c90e1fb5d7a999b368cbe56456b5a9d6b7be"
+    },
+    {
+      "archive": "sources/src/backends/ruby/copied-conversions.mjs.txt",
+      "path": "src/backends/ruby/copied-conversions.mjs",
+      "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+      "sha256": "ce15adec396be01282ccb353fc486359693d032ccc46442dbe897d80e45fb52a"
+    },
+    {
+      "archive": "sources/src/backends/jvm/copied-conversions.mjs.txt",
+      "path": "src/backends/jvm/copied-conversions.mjs",
+      "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+      "sha256": "d41050ddcad1ebbbe19c74d681f311903764128ebed212616b0f6098b4fbefbe"
+    },
+    {
+      "archive": "sources/src/backends/jvm/copied-kotlin.mjs.txt",
+      "path": "src/backends/jvm/copied-kotlin.mjs",
+      "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+      "sha256": "bca0eaf8fd637c524cc4e7d0756dc683037cb8e426cbfad02d7cfc733bac8d17"
+    },
+    {
+      "archive": "sources/src/backends/native/fin-refinements.mjs.txt",
+      "path": "src/backends/native/fin-refinements.mjs",
+      "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+      "sha256": "5e4195e974bc3212635efc9e7cedad96fca4dd9f81a0956bb1e800944f8b6a71"
+    },
+    {
+      "archive": "sources/src/analyze/NativeExports.lean.txt",
+      "path": "src/analyze/NativeExports.lean",
+      "revision": "71ef6f081bfab86e9556545250a44bb04c420604",
+      "sha256": "8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f"
+    }
+  ],
+  "tree": "51c802ba68c930d8113dca07d301cae1ae25b33e"
+}

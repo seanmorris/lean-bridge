@@ -17,6 +17,8 @@ import "./helpers/checked-record-native-installed-tests.mjs";
 import "./helpers/checked-record-native-installed-history-tests.mjs";
 import "./helpers/checked-record-python-archive-tests.mjs";
 import "./helpers/checked-record-python-history-tests.mjs";
+import "./helpers/checked-record-ruby-jvm-archive-tests.mjs";
+import "./helpers/checked-record-ruby-jvm-history-tests.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
 import { assertRefinement } from "../src/abi/refinements.mjs";

@@ -1,0 +1,174 @@
+{
+  "archives": {
+    "archives/checkedrecords-1.0.0-x86_64-linux.gem": "9cb464b41319f6862a903a51162224702109405452a17de937597a229c205357",
+    "archives/checkedrecords-1.0.0.jar": "4ce9aa28d2f3d6c10fd5ea9b1545777e3ee78fe1ca225844e6e29b28b83e6488",
+    "archives/checkedrecords-1.0.0.pom": "45a3cb2ca77267996472b9764e0db7ec0b33e61ab730614f7252289960bffa1e"
+  },
+  "bindingIrSha256": "4bd77645694dab09e4d06d1feae3f4bfe01cda5728eb0a18d7f1cd8cada25494",
+  "checks": 1002,
+  "compilerFreePath": true,
+  "compilerFreeReplay": true,
+  "consumerSha256": "26b8094ac9cbe187420f3a5f12161f900d73262aef33cb1fbca2dfe22613977f",
+  "dispatch": {
+    "observed": false,
+    "reason": "No entry counters in this installed host acceptance"
+  },
+  "expectedBindingIrSha256": "2c63d8386d6d7c063182ecb9652889a1f6596e5091ae3e21a876ec122cca0b02",
+  "modelSha256": "201b7d486c1d4a5efc360fa5f3cd28b6222ae999daacb6398e6e36364cb10982",
+  "offlineInstall": true,
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 50081792,
+          "path": "archives/checkedrecords-1.0.0-x86_64-linux.gem",
+          "sha256": "9cb464b41319f6862a903a51162224702109405452a17de937597a229c205357"
+        }
+      ],
+      "ecosystem": "rubygems",
+      "name": "checkedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "rubygems",
+      "version": "1.0.0"
+    }
+  ],
+  "profile": "ruby",
+  "receiptSha256": "0da4f5e83bc722c41b8049839bf63d1c027aa3213b9182438c18e00d86aca8ab",
+  "relocatedInstallation": true,
+  "repeatExecution": true,
+  "repeatedRuns": 1,
+  "resultOnly": true,
+  "reviewed": false,
+  "route": "result-only-ordinary-source",
+  "rubyEnvironment": {
+    "command": "/app/.toolchains/ruby33/bin/ruby",
+    "expectedSha256": "5993621d1cf9039255ee35dd55b61b4271bf5cde57a03ca81c59910cea6ee998",
+    "files": {
+      "cache/checkedrecords-1.0.0-x86_64-linux.gem": {
+        "bytes": 50081792,
+        "sha256": "9cb464b41319f6862a903a51162224702109405452a17de937597a229c205357"
+      },
+      "gems/checkedrecords-1.0.0-x86_64-linux/README.md": {
+        "bytes": 2658,
+        "sha256": "09d5697118230ce80f1b66361f80fb2b295b6104d77fee11bcf62eb4756bf0c4"
+      },
+      "gems/checkedrecords-1.0.0-x86_64-linux/binding-manifest.json": {
+        "bytes": 1114,
+        "sha256": "8cd7a0795bb5c59cf24067bc7dbf36bb46b640a6948cbe5e9794c406d93ce6ff"
+      },
+      "gems/checkedrecords-1.0.0-x86_64-linux/lean-bridge/component/allocation-guard.h": {
+        "bytes": 1309,
+        "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+      },
+      "gems/checkedrecords-1.0.0-x86_64-linux/lean-bridge/component/artifacts.json": {
+        "bytes": 1528,
+        "sha256": "054cf18c9b2e54a434c907d8ce58acdd6ac8da36ca59489eb9c59dd48c529d3a"
+      },
+      "gems/checkedrecords-1.0.0-x86_64-linux/lean-bridge/component/binding-ir.json": {
+        "bytes": 4037,
+        "sha256": "b04ac267b9522deac9c72ec5f215a4e8d8a7a5657bc999cbfdc2ed5a6ef41f31"
+      },
+      "gems/checkedrecords-1.0.0-x86_64-linux/lean-bridge/component/component.h": {
+        "bytes": 439,
+        "sha256": "fa42693606b08c9c5e89e44c55dba2f53866d00864779c4b5ddcf6e2f7f28d18"
+      },
+      "gems/checkedrecords-1.0.0-x86_64-linux/lean-bridge/component/generated.lean": {
+        "bytes": 1316,
+        "sha256": "906ccb2d3088bc08658566c42c66def4498cbea742bb583e5189c003496de317"
+      },
+      "gems/checkedrecords-1.0.0-x86_64-linux/lean-bridge/component/metadata.json": {
+        "bytes": 17670,
+        "sha256": "664abc3558efa1f91d04b646a3e8243fe6f20321c063d092b83ce2d9124c5509"
+      },
+      "gems/checkedrecords-1.0.0-x86_64-linux/lean-bridge/component/model.json": {
+        "bytes": 12586,
+        "sha256": "201b7d486c1d4a5efc360fa5f3cd28b6222ae999daacb6398e6e36364cb10982"
+      },
+      "gems/checkedrecords-1.0.0-x86_64-linux/lean-bridge/component/native-component.json": {
+        "bytes": 3983,
+        "sha256": "511efe839d538fc306ce0183e6217ba43baf67a56148d09c1430c199491c06f9"
+      },
+      "gems/checkedrecords-1.0.0-x86_64-linux/lean-bridge/licenses/Lean-LICENSE": {
+        "bytes": 9160,
+        "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+      },
+      "gems/checkedrecords-1.0.0-x86_64-linux/lean-bridge/licenses/Lean-LICENSES": {
+        "bytes": 81854,
+        "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+      },
+      "gems/checkedrecords-1.0.0-x86_64-linux/lean-bridge/licenses/LeanBridge-LICENSE": {
+        "bytes": 1093,
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      "gems/checkedrecords-1.0.0-x86_64-linux/lean-bridge/licenses/source-notices.json": {
+        "bytes": 2353,
+        "sha256": "3f217a7f1cfbc76e3ac5c4f9301ecf712c534038f021c426a627188957d3e647"
+      },
+      "gems/checkedrecords-1.0.0-x86_64-linux/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+        "bytes": 1093,
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      "gems/checkedrecords-1.0.0-x86_64-linux/lean-bridge/native-c-adapter.json": {
+        "bytes": 1375,
+        "sha256": "748c327963cd7bd1dc0da2931c9a0cb68044ac089055a38dad3693aa2d25cea8"
+      },
+      "gems/checkedrecords-1.0.0-x86_64-linux/lean-bridge/package-receipt.json": {
+        "bytes": 7553,
+        "sha256": "1e3f97509d7b2a7bcf032e058bb6ea31c1c9ba359eb6e3f1ac434c108ce77dd8"
+      },
+      "gems/checkedrecords-1.0.0-x86_64-linux/lean-bridge/platform.json": {
+        "bytes": 117,
+        "sha256": "16530dd58887bd79e4993fc88abe2d967ee38bec55efd2c4991c71a995802e72"
+      },
+      "gems/checkedrecords-1.0.0-x86_64-linux/lean-bridge/runtime.json": {
+        "bytes": 1466,
+        "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+      },
+      "gems/checkedrecords-1.0.0-x86_64-linux/lib/lean_bridge/checkedrecords.rb": {
+        "bytes": 933,
+        "sha256": "d02e4261eba3e896f74c7ad8337fcc377b85f810108a70bca4930f14f16a66de"
+      },
+      "gems/checkedrecords-1.0.0-x86_64-linux/lib/lean_bridge/checkedrecords/native.rb": {
+        "bytes": 11616,
+        "sha256": "002d008db24e4b158621400108e270e517c3763dcdd069bcab755600d5e205d4"
+      },
+      "gems/checkedrecords-1.0.0-x86_64-linux/lib/lean_bridge/checkedrecords/native/linux-x64/libcheckedrecords.so": {
+        "bytes": 21136,
+        "sha256": "7166f708f640b1d4b2517182f642b206953bf4dee9d38ac4e63cc8e0dab5c8f0"
+      },
+      "gems/checkedrecords-1.0.0-x86_64-linux/lib/lean_bridge/checkedrecords/native/linux-x64/libcomponent_d3803aad486f3d2e4a02.so": {
+        "bytes": 36936,
+        "sha256": "829ac10b0035ddbb640abc91d4e3679c83efdb1b64275fb551fd0baacff99844"
+      },
+      "gems/checkedrecords-1.0.0-x86_64-linux/lib/lean_bridge/checkedrecords/native/linux-x64/liblean_bridge_native.so": {
+        "bytes": 21464,
+        "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+      },
+      "gems/checkedrecords-1.0.0-x86_64-linux/lib/lean_bridge/checkedrecords/native/linux-x64/libleanshared.so": {
+        "bytes": 158401256,
+        "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+      },
+      "gems/checkedrecords-1.0.0-x86_64-linux/lib/lean_bridge/native_copied_runtime_v1.rb": {
+        "bytes": 483,
+        "sha256": "7575ac13e27ba18a8d67228f16bf66fb0c7218763025ee1772bce5ee00c0ceac"
+      },
+      "specifications/checkedrecords-1.0.0-x86_64-linux.gemspec": {
+        "bytes": 916,
+        "sha256": "e341c5f058379f79d12994d943a9b52264fb84b12ebd121f757656f59b8d1e79"
+      }
+    },
+    "fullName": "checkedrecords-1.0.0-x86_64-linux",
+    "gems": "/tmp/lean-bridge-checked-record-hosts-ysHXYo/consumer/ruby/gems",
+    "interpreter": {
+      "bytes": 31101696,
+      "sha256": "28eea9e1f4c7eef2f6812b0535409dce29f71ca86bbbddeccb6df6d3279bf6bb"
+    },
+    "receiptBytes": "{\n  \"bindingIrSha256\": \"4bd77645694dab09e4d06d1feae3f4bfe01cda5728eb0a18d7f1cd8cada25494\",\n  \"component\": {\n    \"id\": \"checkedrecords@1.0.0\",\n    \"name\": \"checkedrecords\",\n    \"version\": \"1.0.0\"\n  },\n  \"ecosystem\": \"rubygems\",\n  \"files\": {\n    \"README.md\": {\n      \"bytes\": 2658,\n      \"sha256\": \"09d5697118230ce80f1b66361f80fb2b295b6104d77fee11bcf62eb4756bf0c4\"\n    },\n    \"binding-manifest.json\": {\n      \"bytes\": 1114,\n      \"sha256\": \"8cd7a0795bb5c59cf24067bc7dbf36bb46b640a6948cbe5e9794c406d93ce6ff\"\n    },\n    \"lean-bridge/component/allocation-guard.h\": {\n      \"bytes\": 1309,\n      \"sha256\": \"f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83\"\n    },\n    \"lean-bridge/component/artifacts.json\": {\n      \"bytes\": 1528,\n      \"sha256\": \"054cf18c9b2e54a434c907d8ce58acdd6ac8da36ca59489eb9c59dd48c529d3a\"\n    },\n    \"lean-bridge/component/binding-ir.json\": {\n      \"bytes\": 4037,\n      \"sha256\": \"b04ac267b9522deac9c72ec5f215a4e8d8a7a5657bc999cbfdc2ed5a6ef41f31\"\n    },\n    \"lean-bridge/component/component.h\": {\n      \"bytes\": 439,\n      \"sha256\": \"fa42693606b08c9c5e89e44c55dba2f53866d00864779c4b5ddcf6e2f7f28d18\"\n    },\n    \"lean-bridge/component/generated.lean\": {\n      \"bytes\": 1316,\n      \"sha256\": \"906ccb2d3088bc08658566c42c66def4498cbea742bb583e5189c003496de317\"\n    },\n    \"lean-bridge/component/metadata.json\": {\n      \"bytes\": 17670,\n      \"sha256\": \"664abc3558efa1f91d04b646a3e8243fe6f20321c063d092b83ce2d9124c5509\"\n    },\n    \"lean-bridge/component/model.json\": {\n      \"bytes\": 12586,\n      \"sha256\": \"201b7d486c1d4a5efc360fa5f3cd28b6222ae999daacb6398e6e36364cb10982\"\n    },\n    \"lean-bridge/component/native-component.json\": {\n      \"bytes\": 3983,\n      \"sha256\": \"511efe839d538fc306ce0183e6217ba43baf67a56148d09c1430c199491c06f9\"\n    },\n    \"lean-bridge/licenses/Lean-LICENSE\": {\n      \"bytes\": 9160,\n      \"sha256\": \"8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e\"\n    },\n    \"lean-bridge/licenses/Lean-LICENSES\": {\n      \"bytes\": 81854,\n      \"sha256\": \"00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce\"\n    },\n    \"lean-bridge/licenses/LeanBridge-LICENSE\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"lean-bridge/licenses/source-notices.json\": {\n      \"bytes\": 2353,\n      \"sha256\": \"3f217a7f1cfbc76e3ac5c4f9301ecf712c534038f021c426a627188957d3e647\"\n    },\n    \"lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"lean-bridge/native-c-adapter.json\": {\n      \"bytes\": 1375,\n      \"sha256\": \"748c327963cd7bd1dc0da2931c9a0cb68044ac089055a38dad3693aa2d25cea8\"\n    },\n    \"lean-bridge/platform.json\": {\n      \"bytes\": 117,\n      \"sha256\": \"16530dd58887bd79e4993fc88abe2d967ee38bec55efd2c4991c71a995802e72\"\n    },\n    \"lean-bridge/runtime.json\": {\n      \"bytes\": 1466,\n      \"sha256\": \"137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf\"\n    },\n    \"lib/lean_bridge/checkedrecords.rb\": {\n      \"bytes\": 933,\n      \"sha256\": \"d02e4261eba3e896f74c7ad8337fcc377b85f810108a70bca4930f14f16a66de\"\n    },\n    \"lib/lean_bridge/checkedrecords/native.rb\": {\n      \"bytes\": 11616,\n      \"sha256\": \"002d008db24e4b158621400108e270e517c3763dcdd069bcab755600d5e205d4\"\n    },\n    \"lib/lean_bridge/checkedrecords/native/linux-x64/libcheckedrecords.so\": {\n      \"bytes\": 21136,\n      \"sha256\": \"7166f708f640b1d4b2517182f642b206953bf4dee9d38ac4e63cc8e0dab5c8f0\"\n    },\n    \"lib/lean_bridge/checkedrecords/native/linux-x64/libcomponent_d3803aad486f3d2e4a02.so\": {\n      \"bytes\": 36936,\n      \"sha256\": \"829ac10b0035ddbb640abc91d4e3679c83efdb1b64275fb551fd0baacff99844\"\n    },\n    \"lib/lean_bridge/checkedrecords/native/linux-x64/liblean_bridge_native.so\": {\n      \"bytes\": 21464,\n      \"sha256\": \"25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7\"\n    },\n    \"lib/lean_bridge/checkedrecords/native/linux-x64/libleanshared.so\": {\n      \"bytes\": 158401256,\n      \"sha256\": \"d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4\"\n    },\n    \"lib/lean_bridge/native_copied_runtime_v1.rb\": {\n      \"bytes\": 483,\n      \"sha256\": \"7575ac13e27ba18a8d67228f16bf66fb0c7218763025ee1772bce5ee00c0ceac\"\n    }\n  },\n  \"glibcMinimumVersion\": \"2.36\",\n  \"kind\": \"lean-bridge-ordinary-rubygems-package\",\n  \"name\": \"checkedrecords\",\n  \"namespace\": \"LeanBridge::Checkedrecords\",\n  \"requirePath\": \"lean_bridge/checkedrecords\",\n  \"runtimeIdentity\": \"137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf\",\n  \"schemaVersion\": 1,\n  \"sourceIdentity\": {\n    \"exportConfigurationSha256\": \"baefe4be2e3a3b758a9e51ee4864201d6389ecde25cc86fab8ded828bf0e5289\",\n    \"exportConfigurationSource\": \"{\\n  \\\"contracts\\\": {\\n    \\\"CheckedRecords.repeated\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\"\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    }\\n  },\\n  \\\"exports\\\": [\\n    \\\"CheckedRecords.repeated\\\"\\n  ],\\n  \\\"modules\\\": [\\n    \\\"CheckedRecords\\\"\\n  ],\\n  \\\"schemaVersion\\\": 1,\\n  \\\"targets\\\": {\\n    \\\"maven\\\": {\\n      \\\"name\\\": \\\"org.leanbridge:checkedrecords\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    },\\n    \\\"rubygems\\\": {\\n      \\\"name\\\": \\\"checkedrecords\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    }\\n  }\\n}\\n\",\n    \"extractorSha256\": \"8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f\",\n    \"leanCommit\": \"f3b06c705e6c85f5314019d5d3baab0fec5b580c\",\n    \"leanCompilerSha256\": \"e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550\",\n    \"leanVersion\": \"4.32.2\",\n    \"modules\": [\n      {\n        \"interface\": {\n          \"bytes\": 212984,\n          \"interfaceSha256\": \"9266352966cf6c2be6c82d2622ffe556a121d9da74857956721013397e518e9f\",\n          \"sha256\": \"36a44a802ba099c216a0fb4c7806e5875c8c2830df4505c0a75d99f857231e6e\"\n        },\n        \"module\": \"CheckedRecords\",\n        \"source\": {\n          \"bytes\": 2396,\n          \"path\": \"CheckedRecords.lean\",\n          \"sha256\": \"368d74e1c5abd242ec96ac8bc9cf9648377ccbe8b0f8608ab46efe14cfec34b7\"\n        }\n      }\n    ],\n    \"request\": {\n      \"arities\": [],\n      \"contracts\": {\n        \"CheckedRecords.repeated\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\"\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        }\n      },\n      \"exportModules\": [\n        \"CheckedRecords\"\n      ],\n      \"exports\": [\n        \"CheckedRecords.repeated\"\n      ],\n      \"metadata\": {\n        \"invocationIdentitySha256\": \"eebe8db73ffe690d32a73bcacce660a1b770d43a6f7bf2ee2aee5fec2621b7e6\",\n        \"modules\": [\n          {\n            \"interfaceSha256\": \"9266352966cf6c2be6c82d2622ffe556a121d9da74857956721013397e518e9f\",\n            \"name\": \"CheckedRecords\",\n            \"sourcePath\": \"CheckedRecords.lean\",\n            \"sourceSha256\": \"368d74e1c5abd242ec96ac8bc9cf9648377ccbe8b0f8608ab46efe14cfec34b7\"\n          }\n        ],\n        \"toolchain\": \"leanprover/lean4:v4.32.2\"\n      },\n      \"modules\": [\n        \"CheckedRecords\"\n      ],\n      \"profile\": \"native-library-v1\",\n      \"resources\": []\n    },\n    \"sourceNoticesSha256\": \"3f217a7f1cfbc76e3ac5c4f9301ecf712c534038f021c426a627188957d3e647\",\n    \"sourceTreeSha256\": \"c502a431888f3e357436b4842020c41bca2cd89d87a30c58d8fa3ee257290545\"\n  },\n  \"version\": \"1.0.0\"\n}\n"
+  },
+  "sourceRemovedBeforeInstallation": true,
+  "sourceUnchangedAfterReplay": true
+}
