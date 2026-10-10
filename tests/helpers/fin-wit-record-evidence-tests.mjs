@@ -26,7 +26,7 @@ const originalSources = async record => {
 	for(const source of record.sourceFiles)
 	{
 		const bytes = beforeFinRefinementSource(source.path, await readFile(source.path), source.sha256);
-		assert.equal(sha256(bytes), source.sha256, source.path); sources.set(source.path, bytes);
+		assert.equal(sha256(bytes), source.sha256, source.path); sources.set(source.path, Buffer.from(bytes));
 	}
 	return async path => { assert.ok(sources.has(path), path); return sources.get(path); };
 };

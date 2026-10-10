@@ -47,8 +47,20 @@ The original report and TAP were copied without changing their bytes:
 | `ordinary-c-cpp.json` | `31b27a9cc5b78f4bfd979ede83ce9bf0d70e9e2ebd0dcb00a0b2cf46859d6387` |
 | `ordinary-c-cpp.tap` | `e824c012d8a90820c942e690186e845642f7aa261873090cd9d2e26902095738` |
 
+The shared validator reports source field and case names, even when a host
+binding spells them differently. For example, an inherited `toDigit` field
+reports `arg0.toDigit.digit`. Tuple members use `.0` and `.1`, result branches
+use `.ok` and `.error`, a present option adds `?`, and arrays/lists add the
+actual zero-based index. `arg0[1]?[2].circle.radius` identifies the failed
+radius inside a nested container. Top-level scalar messages are unchanged.
+
+Indexed messages use thread-local storage and format only after a failed
+bound check. The generated formatter preserves long paths; existing bridge
+error channels still impose their 1,023-byte message limit.
+
 This check does not cover the new messages in reviewed packages, other
 native consumers, PHP-Wasm, or callback/closure packages. Their installed
-checks, exact source-history integration and support-table reconciliation
-remain pending. No existing receipt, observation or support claim changes
-with this retained report.
+checks and support-table reconciliation remain pending. The
+[source-history transition](native-fin-diagnostic-source-history-20261010.json)
+preserves earlier producer bytes and refreshes current source hashes without
+changing historical receipts, observations or support claims.

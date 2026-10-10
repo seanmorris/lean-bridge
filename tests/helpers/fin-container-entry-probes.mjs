@@ -27,6 +27,7 @@ export const finContainerEntryUntriggered = "fin container load trigger countNon
 export const finContainerEntryMissing = "fin_container_entry_count is not resolvable in this process\n";
 export const finContainerEntryLoadTrigger = "countNone([]) == 0: a public call outside the ten counted columns, after a record with nothing armed and no entries, and before a record with all ten armed and still no entries";
 const R = finContainerGdbRecord;
+const rejectionPattern = String.raw`(arg[0-9]+(?:\[[0-9]+\]|\?)*) is not below its Fin ([0-9]+) bound`;
 const width = 10, entries = 296, definers = 216, breakpoints = 136;
 
 // Host-language literals for one step's arguments; every method's parameter types are fixed.
@@ -91,7 +92,7 @@ function show($value): ?string {
 function status(callable $call): string {
     try { $result = $call(); }
     catch (LeanBridgeError $error) {
-        return $error->getCode() === 1 && preg_match('/^(arg[0-9]+) is not below its Fin ([0-9]+) bound$/D', $error->getMessage(), $match) === 1
+        return $error->getCode() === 1 && preg_match('/^${rejectionPattern}$/D', $error->getMessage(), $match) === 1
             ? 'rejected:' . $match[1] . ':' . $match[2] : 'native-error:' . $error->getCode();
     }
     catch (Throwable $error) { return 'threw:' . str_replace('\\', '.', get_class($error)); }
@@ -260,7 +261,7 @@ def status
   text = show(yield)
   text ? "ok:#{text}" : "ok:unexpected"
 rescue ::RangeError => error
-  match = /\\A(arg[0-9]+) is not below its Fin ([0-9]+) bound\\z/.match(error.message)
+  match = /\\A${rejectionPattern}\\z/.match(error.message)
   match ? "rejected:#{match[1]}:#{match[2]}" : "error:RangeError"
 rescue ::StandardError => error
   "error:#{error.class}"
@@ -358,7 +359,7 @@ static class Probe
         catch (ArgumentOutOfRangeException) { return "error:ArgumentOutOfRangeException"; }
         catch (ArgumentException error)
         {
-            var match = Regex.Match(error.Message, @"\\A(arg[0-9]+) is not below its Fin ([0-9]+) bound\\z");
+            var match = Regex.Match(error.Message, @"\\A${rejectionPattern}\\z");
             return match.Success ? "rejected:" + match.Groups[1].Value + ":" + match.Groups[2].Value : "error:ArgumentException";
         }
         catch (Exception error) { return "error:" + error.GetType().Name; }
@@ -388,7 +389,7 @@ import org.leanbridge.fincontainers.Option;
 
 final class Probe {
     private Probe() { }
-    private static final Pattern REJECTED = Pattern.compile("\\\\A(arg[0-9]+) is not below its Fin ([0-9]+) bound\\\\z");
+    private static final Pattern REJECTED = Pattern.compile(${JSON.stringify(String.raw`\A${rejectionPattern}\z`)});
     private static final Pattern PRINTABLE = Pattern.compile("\\\\A[!-~]*\\\\z");
     private static String record = "", nonce = "", config = "";
     private static int[] expected = new int[0];
@@ -483,7 +484,7 @@ import kotlin.system.exitProcess
 import org.leanbridge.fincontainers.Api
 import org.leanbridge.fincontainers.Option
 
-private val rejectedPattern = Regex("(arg[0-9]+) is not below its Fin ([0-9]+) bound")
+private val rejectedPattern = Regex(${JSON.stringify(rejectionPattern)})
 private val printablePattern = Regex("[!-~]*")
 private var record = ""
 private var nonce = ""

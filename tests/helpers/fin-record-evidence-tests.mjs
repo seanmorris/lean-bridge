@@ -83,7 +83,10 @@ test("record archives bind the expanded frozen fixture, original packages and C 
 		const report = JSON.parse(bytes);
 		validateReport(report, path);
 		for(const item of report.reports)
-			assert.equal(item.consumerSha256, sha256(await readFile(`tests/fixtures/fin-record-consumers/${item.profile}.${item.profile === "c" ? "c" : "cpp"}`)));
+		{
+			const consumer = `tests/fixtures/fin-record-consumers/${item.profile}.${item.profile === "c" ? "c" : "cpp"}`;
+			assert.equal(sha256(beforeFinRefinementSource(consumer, await readFile(consumer), item.consumerSha256)), item.consumerSha256);
+		}
 		assert.equal(run.log.path, `${directory}/${id}.tap`);
 		assert.equal(run.log.sha256, logDigest);
 		assert.equal(run.log.passed, passed); assert.equal(run.log.failed, 0); assert.equal(run.log.skipped, skipped);

@@ -30,10 +30,10 @@ int main(void) {
   CHECK(OK(inheritedrecords_bump(&tagged, &bumped, &error)) && mpz_cmp_ui(bumped.to_digit.digit, 0) == 0 && mpz_cmp_ui(bumped.to_point.x, 2) == 0 && same_text(&bumped.tag, "ab"));
   inheritedrecords_tagged_clear(&bumped); inheritedrecords_tagged_init(&bumped);
   mpz_set_ui(tagged.to_digit.digit, 10);
-  CHECK(rejected(inheritedrecords_total(&tagged, count, &error), &error, "arg0 is not below its Fin 10 bound") && mpz_cmp_ui(tagged.to_digit.digit, 10) == 0);
-  CHECK(rejected(inheritedrecords_bump(&tagged, &bumped, &error), &error, "arg0 is not below its Fin 10 bound"));
+  CHECK(rejected(inheritedrecords_total(&tagged, count, &error), &error, "arg0.toDigit.digit is not below its Fin 10 bound") && mpz_cmp_ui(tagged.to_digit.digit, 10) == 0);
+  CHECK(rejected(inheritedrecords_bump(&tagged, &bumped, &error), &error, "arg0.toDigit.digit is not below its Fin 10 bound"));
   mpz_set_ui(tagged.to_digit.digit, 0); mpz_setbit(tagged.to_digit.digit, 70);
-  CHECK(rejected(inheritedrecords_total(&tagged, count, &error), &error, "arg0 is not below its Fin 10 bound"));
+  CHECK(rejected(inheritedrecords_total(&tagged, count, &error), &error, "arg0.toDigit.digit is not below its Fin 10 bound"));
   mpz_set_ui(tagged.to_digit.digit, 4);
   CHECK(OK(inheritedrecords_total(&tagged, count, &error)) && mpz_cmp_ui(count, 11) == 0); /* Recovery. */
   /* Stamped extends Labeled: two levels of subobjects. */
@@ -47,12 +47,12 @@ int main(void) {
   point(&merged.to_labeled.to_point, 5, 0); merged.to_labeled.label = text("m"); mpz_set_ui(merged.to_digit.digit, 3); merged.tag = text("t"); mpz_set_ui(merged.extra, 100);
   CHECK(OK(inheritedrecords_merged_total(&merged, count, &error)) && mpz_cmp_ui(count, 108) == 0);
   mpz_set_ui(merged.to_digit.digit, 10);
-  CHECK(rejected(inheritedrecords_merged_total(&merged, count, &error), &error, "arg0 is not below its Fin 10 bound"));
+  CHECK(rejected(inheritedrecords_merged_total(&merged, count, &error), &error, "arg0.toDigit.digit is not below its Fin 10 bound"));
   for (unsigned long i = 0; i < 1000; ++i) {
     mpz_set_ui(tagged.to_digit.digit, i % 10);
     if (!OK(inheritedrecords_total(&tagged, count, &error)) || mpz_cmp_ui(count, i % 10 + 7) != 0) { fprintf(stderr, "round %lu failed\n", i); return 1; }
     mpz_set_ui(tagged.to_digit.digit, 10 + i);
-    if (!rejected(inheritedrecords_total(&tagged, count, &error), &error, "arg0 is not below its Fin 10 bound")) { fprintf(stderr, "rejection round %lu failed\n", i); return 1; }
+    if (!rejected(inheritedrecords_total(&tagged, count, &error), &error, "arg0.toDigit.digit is not below its Fin 10 bound")) { fprintf(stderr, "rejection round %lu failed\n", i); return 1; }
   }
   checks += 2000;
   /* Caller-owned strings were borrowed views; clear only the numbers the caller initialized. */

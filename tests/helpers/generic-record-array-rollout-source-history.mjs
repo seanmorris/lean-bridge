@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeFinDiagnosticSource } from "./native-fin-diagnostic-source-history.mjs";
 
 export const arrayRolloutHistoryPath = "docs/evidence/generic-record-array-rollout-source-history-20261009.json";
 export const arrayRolloutPredecessor = "e0c45bdfe5c11bcfcccb3d6a41510c70dfa54ad5";
@@ -73,6 +74,7 @@ export const reverseArrayRolloutUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeArrayRolloutSource = (path, source, expected) => {
+	source = beforeFinDiagnosticSource(path, source, expected);
 	if(typeof source !== "string" || !arrayRolloutChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

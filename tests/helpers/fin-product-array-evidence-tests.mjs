@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import "./fin-product-array-dispatch-evidence-tests.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { finProductArrayRefinements } from "./fin-product-array-install.mjs";
 import { finProductArrayReviewedIr } from "./reviewed-fin-product-array-fixture.mjs";
 
@@ -49,7 +50,8 @@ test("Array product archives retain exact installed C/C++ results and unmeasured
 			assert.equal(item.path, path);
 			assert.equal(item.checks, item.profile === "c" ? 2015 : 2010);
 			assert.deepEqual(item.refinements, finProductArrayRefinements);
-			assert.equal(item.consumerSha256, sha256(await readFile(`tests/fixtures/fin-product-array-consumers/${item.profile}.${item.profile === "c" ? "c" : "cpp"}`)));
+			const consumer = `tests/fixtures/fin-product-array-consumers/${item.profile}.${item.profile === "c" ? "c" : "cpp"}`;
+			assert.equal(sha256(beforeFinRefinementSource(consumer, await readFile(consumer), item.consumerSha256)), item.consumerSha256);
 			for(const flag of ["sourceRemovedBeforeInstallation", "offlineInstall", "compilerFreePath"])
 				assert.equal(item[flag], true, flag);
 			assert.equal(Object.hasOwn(item, "dispatch"), false, "These historical reports do not measure dispatch");

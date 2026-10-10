@@ -20,6 +20,7 @@ import { finRecordCompilerModel, finRecordNat, finRecordShape, finRecordSignatur
 import { finCallbackCompilerModel } from "./fin-callback-model.mjs";
 import { finReplyCompilerModel } from "./fin-reply-model.mjs";
 import { finRecordDispatchColumns, finRecordDispatchExpected } from "./fin-record-dispatch.mjs";
+import "./native-fin-diagnostic-source-history-tests.mjs";
 
 const run = promisify(execFile);
 const surfaceOf = model => compilePrimitiveCSurface(model.bindingIr, { wordBits: model.pointerBits, callables: true, structuredCallables: true, compounds: true, lists: true, variants: true });
@@ -35,6 +36,13 @@ const compile = async (t, source, files = {}, defines = []) => {
 	await run("cc", ["-std=c11", "-Wall", "-Wextra", "-Werror", "-Wformat=2", "-pedantic", "-pthread", ...defines.map(name => `-D${name}`), "test.c", "-o", binary], { cwd: directory });
 	return () => run(binary, [], { cwd: directory, timeout: 30_000 });
 };
+
+test("the published CLI includes the native Fin diagnostic generator", async () => {
+	const manifest = JSON.parse(await readFile("package.json", "utf8"));
+	assert.ok(manifest.files.includes("src/backends/c/fin-diagnostic.mjs"));
+	const release = JSON.parse(await readFile("config/cli-package.v1.json", "utf8"));
+	assert.ok(release.files.includes("src/backends/c/fin-diagnostic.mjs"));
+});
 
 test("the first installed Fin diagnostic report retains exact original bytes and only its measured C/C++ scope", async () => {
 	const directory = "docs/evidence/native-fin-diagnostics-20261010";

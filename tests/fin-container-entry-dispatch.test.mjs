@@ -100,8 +100,8 @@ test("public rows reject every invalid call before any valid one and count each 
 		, "recovery-valid-nested": "ok:"
 		, "recovery-valid-label": "ok:a:0"
 	});
-	assert.equal(finContainerEntryExpected.find(([step]) => step === "invalid-list-wide")[1], "rejected:arg0:1180591620717411303424");
-	assert.equal(finContainerEntryExpected.find(([step]) => step === "invalid-label-late")[1], "rejected:arg1:4");
+	assert.equal(finContainerEntryExpected.find(([step]) => step === "invalid-list-wide")[1], "rejected:arg0[1]:1180591620717411303424");
+	assert.equal(finContainerEntryExpected.find(([step]) => step === "invalid-label-late")[1], "rejected:arg1[1]:4");
 });
 
 test("raw adapter rows enter only the adapter for invalid values and both for valid ones", () => {
@@ -252,6 +252,28 @@ test("host probes resolve their instrument before loading, gate lazy loaders and
 	{
 		assert.ok(source.includes(JSON.stringify(finContainerGdbRecord.magic)));
 		assert.doesNotMatch(source, /LBFINGDB|native_fin|NativeFin/u);
+	}
+});
+
+test("every generated host rejection parser retains the actual container path", () => {
+	const parsers = [
+		/preg_match\('\/\^(.+ is not below.+)\$\/D'/u.exec(phpFinContainerEntryProbe())?.[1]
+		, /match = \/\\A(.+)\\z\//u.exec(rubyFinContainerEntryProbe())?.[1]
+		, /Regex.Match\(error.Message, @"\\A(.+)\\z"\)/u.exec(dotnetFinContainerEntryProbe())?.[1]
+		, JSON.parse(/REJECTED = Pattern.compile\(("(?:\\.|[^"\\])*")\)/u.exec(javaFinContainerEntryProbe())?.[1]).slice(2, -2)
+		, JSON.parse(/rejectedPattern = Regex\(("(?:\\.|[^"\\])*")\)/u.exec(kotlinFinContainerEntryProbe())?.[1])
+	];
+	for(const pattern of parsers)
+	{
+		assert.equal(typeof pattern, "string");
+		const parser = new RegExp(`^(?:${pattern})$`, "u");
+		for(const [, , , outcome] of finContainerEntrySteps.filter(step => step[3].rejected))
+		{
+			const [path, bound] = outcome.rejected;
+			assert.deepEqual(parser.exec(`${path} is not below its Fin ${bound} bound`)?.slice(1), [path, bound]);
+		}
+		for(const path of ["arg0[-1]", "arg0[1", "arg0x", "arg0[]", "arg0[1]extra"])
+			assert.equal(parser.exec(`${path} is not below its Fin 10 bound`), null, path);
 	}
 });
 

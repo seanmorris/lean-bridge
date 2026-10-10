@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
@@ -66,7 +67,7 @@ test("Array dispatch archives retain exact installed packages and ten measured C
 	assert.deepEqual(receipt.scope.dispatchProfiles, ["c"]);
 	assert.deepEqual(receipt.scope.unmeasuredDispatchProfiles, ["cpp"]);
 	assert.equal(receipt.sourceFiles.length, 6);
-	for(const source of receipt.sourceFiles) assert.equal(sha256(await readFile(source.path)), source.sha256, source.path);
+	for(const source of receipt.sourceFiles) assert.equal(sha256(beforeFinRefinementSource(source.path, await readFile(source.path), source.sha256)), source.sha256, source.path);
 	assert.deepEqual(receipt.runs.map(run => run.id), identities.map(([id]) => id));
 	for(const [id, path, reportDigest, logDigest, passed, skipped] of identities)
 	{
@@ -81,7 +82,10 @@ test("Array dispatch archives retain exact installed packages and ten measured C
 		const report = JSON.parse(bytes);
 		validateReport(report, path);
 		for(const item of report.reports)
-			assert.equal(item.consumerSha256, sha256(await readFile(`tests/fixtures/fin-product-array-consumers/${item.profile}.${item.profile === "c" ? "c" : "cpp"}`)));
+		{
+			const consumer = `tests/fixtures/fin-product-array-consumers/${item.profile}.${item.profile === "c" ? "c" : "cpp"}`;
+			assert.equal(sha256(beforeFinRefinementSource(consumer, await readFile(consumer), item.consumerSha256)), item.consumerSha256);
+		}
 		assert.equal(run.log.path, `${directory}/${id}.tap`);
 		assert.equal(run.log.sha256, logDigest);
 		assert.equal(run.log.passed, passed); assert.equal(run.log.failed, 0); assert.equal(run.log.skipped, skipped);

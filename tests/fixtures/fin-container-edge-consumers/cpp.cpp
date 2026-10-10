@@ -1,7 +1,8 @@
   {
     const unsigned edge_before = checks;
-    const std::string edge_zero_error = "arg0 is not below its Fin 0 bound";
-    const std::string edge_digit_error = "arg0 is not below its Fin 10 bound";
+    const std::string edge_zero_error = "arg0[0] is not below its Fin 0 bound";
+    const std::string edge_zero_option_error = "arg0? is not below its Fin 0 bound";
+    const std::string edge_digit_suffix = " is not below its Fin 10 bound";
     CHECK(api::empty_array({}).empty());
     CHECK(api::empty_list({}).empty());
     CHECK(api::empty_option(std::nullopt) == std::nullopt);
@@ -10,7 +11,7 @@
       const std::optional<Nat> option = value;
       CHECK(rejected([&] { api::empty_array(input); }, edge_zero_error));
       CHECK(rejected([&] { api::empty_list(input); }, edge_zero_error));
-      CHECK(rejected([&] { api::empty_option(option); }, edge_zero_error));
+      CHECK(rejected([&] { api::empty_option(option); }, edge_zero_option_error));
       CHECK(input == std::vector<Nat>{value} && option == std::optional<Nat>{value});
     }
     CHECK(api::optional_digits(std::nullopt) == std::nullopt);
@@ -21,15 +22,15 @@
       const auto before = input;
       std::vector<std::optional<Nat>> mixed = {Nat(1), Nat(2), Nat(3)}; mixed[position] = Nat(10);
       const auto mixed_before = mixed;
-      CHECK(rejected([&] { api::present(mixed); }, edge_digit_error));
+      CHECK(rejected([&] { api::present(mixed); }, "arg0[" + std::to_string(position) + "]?" + edge_digit_suffix));
       CHECK(mixed == mixed_before);
-      CHECK(rejected([&] { api::optional_digits(input); }, edge_digit_error));
+      CHECK(rejected([&] { api::optional_digits(input); }, "arg0?[" + std::to_string(position) + "]" + edge_digit_suffix));
       CHECK(input == before);
       for (unsigned column = 0; column < 3; ++column) {
         std::vector<std::vector<Nat>> table = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
         table[position][column] = 10;
         const auto snapshot = table;
-        CHECK(rejected([&] { api::flatten(table); }, edge_digit_error));
+        CHECK(rejected([&] { api::flatten(table); }, "arg0[" + std::to_string(position) + "][" + std::to_string(column) + "]" + edge_digit_suffix));
         CHECK(table == snapshot);
       }
     }
@@ -58,13 +59,13 @@
       CHECK(api::empty_array({}).empty());
       CHECK(rejected([&] { api::empty_list({0}); }, edge_zero_error));
       CHECK(api::empty_list({}).empty());
-      CHECK(rejected([&] { api::empty_option(Nat(0)); }, edge_zero_error));
+      CHECK(rejected([&] { api::empty_option(Nat(0)); }, edge_zero_option_error));
       CHECK(api::empty_option(std::nullopt) == std::nullopt);
-      CHECK(rejected([&] { api::present({Nat(1), Nat(10), std::nullopt}); }, edge_digit_error));
+      CHECK(rejected([&] { api::present({Nat(1), Nat(10), std::nullopt}); }, "arg0[1]?" + edge_digit_suffix));
       CHECK(api::present({Nat(1), std::nullopt, Nat(9)}) == std::vector<Nat>({1, 9}));
-      CHECK(rejected([&] { api::flatten({{1}, {10}, {9}}); }, edge_digit_error));
+      CHECK(rejected([&] { api::flatten({{1}, {10}, {9}}); }, "arg0[1][0]" + edge_digit_suffix));
       CHECK(api::flatten({{1}, {}, {9}}) == std::optional<std::vector<Nat>>{std::vector<Nat>({1, 9})});
-      CHECK(rejected([&] { api::optional_digits(std::vector<Nat>{1, 10, 9}); }, edge_digit_error));
+      CHECK(rejected([&] { api::optional_digits(std::vector<Nat>{1, 10, 9}); }, "arg0?[1]" + edge_digit_suffix));
       CHECK(api::optional_digits(std::vector<Nat>{1, 9}) == std::optional<std::vector<Nat>>{std::vector<Nat>({1, 9})});
     }
     CHECK(checks - edge_before == 12059);

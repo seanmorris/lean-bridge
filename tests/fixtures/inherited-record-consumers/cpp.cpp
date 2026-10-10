@@ -13,7 +13,7 @@ template<class F> static bool rejected(F&& call, const std::string& expected) {
 }
 
 int main() {
-  const std::string bound = "arg0 is not below its Fin 10 bound";
+  const std::string bound = "arg0.toDigit.digit is not below its Fin 10 bound";
   /* Labeled extends Point: the parent is the to_point member, read and rebuilt by Lean. */
   const api::Labeled moved = api::move(api::Labeled{api::Point{4, 7}, "héllo"});
   CHECK((moved == api::Labeled{api::Point{5, 7}, "héllo!"}));

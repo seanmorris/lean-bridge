@@ -10,7 +10,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { finCallbackCompilerModel } from "./fin-callback-model.mjs";
-import { finCallbackConsumerNames, finCallbackConsumerSource } from "./fin-callback-install.mjs";
+import { finCallbackConsumerNames } from "./fin-callback-install.mjs";
 import { finCallbackDispatchExpected } from "./fin-callback-dispatch.mjs";
 
 const directory = "docs/evidence/native-fin-callbacks-20261008";
@@ -67,9 +67,19 @@ const consumers = async () => {
 	// Only the signature-derived C macro names are reconstructed here, not the compiled
 	// model identity. The complete consumer digest must match the installed observation.
 	const names = finCallbackConsumerNames(finCallbackCompilerModel().bindingIr);
+	const receiptBytes = await readFile(`${directory}/receipt.json`);
+	assert.equal(sha256(receiptBytes), "726ec4f76cd953e74d887108c8b75f3be5b1e89d7e492a261f6b773436c302e6");
+	const receipt = JSON.parse(receiptBytes);
+	const source = async (profile, extension) => {
+		const path = `tests/fixtures/fin-callback-consumers/${profile}.${extension}`;
+		const expected = receipt.sourceFiles.find(file => file.path === path).sha256;
+		const previous = beforeFinRefinementSource(path, await readFile(path, "utf8"), expected);
+		assert.equal(sha256(previous), expected, path);
+		return previous;
+	};
 	return {
-		c: sha256(await finCallbackConsumerSource("c", "c", names))
-		, cpp: sha256(await finCallbackConsumerSource("cpp", "cpp", names))
+		c: sha256(`${Object.entries(names).map(([macro, name]) => `#define ${macro} ${name}`).join("\n")}\n${await source("c", "c")}`)
+		, cpp: sha256(await source("cpp", "cpp"))
 	};
 };
 

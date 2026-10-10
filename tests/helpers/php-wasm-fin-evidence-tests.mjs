@@ -41,7 +41,9 @@ test("PHP-Wasm Fin archive authenticates both complete fixtures and every instal
 	for(const report of archive.reports)
 	{
 		const fixture = phpWasmFinFixtures[report.fixture];
-		const caller = await readFile(fixture.consumer, "utf8"), { request } = await phpWasmFinCaller(fixture);
+		const expectedCaller = receipt.sourceFiles.find(item => item.path === fixture.consumer).sha256;
+		const caller = beforeFinRefinementSource(fixture.consumer, await readFile(fixture.consumer, "utf8"), expectedCaller), { request } = await phpWasmFinCaller(fixture);
+		assert.equal(sha256(caller), expectedCaller, fixture.consumer);
 		assert.deepEqual(report.phpWasm.runtime.pins, receipt.producerEnvironment.pins);
 		assert.equal(report.phpWasm.nodeVersion, receipt.producerEnvironment.nodeVersion);
 		assert.equal(report.phpWasm.browserVersion, receipt.producerEnvironment.browserVersion);
@@ -62,10 +64,14 @@ test("PHP-Wasm Fin archive authenticates both complete fixtures and every instal
 
 test("PHP-Wasm Fin archive rejects missing cases, altered constraints and unobserved claims", async () => {
 	const archive = JSON.parse(await readFile(`${directory}/ordinary.json`, "utf8"));
+	const receipt = JSON.parse(await readFile(`${directory}/receipt.json`, "utf8"));
 	for(const original of archive.reports)
 	{
 		const fixture = phpWasmFinFixtures[original.fixture];
-		const caller = await readFile(fixture.consumer, "utf8"), { request } = await phpWasmFinCaller(fixture);
+		const expectedCaller = receipt.sourceFiles.find(item => item.path === fixture.consumer).sha256;
+		const caller = beforeFinRefinementSource(fixture.consumer, await readFile(fixture.consumer, "utf8"), expectedCaller), { request } = await phpWasmFinCaller(fixture);
+		assert.equal(sha256(caller), expectedCaller, fixture.consumer);
+		validateReport(original, fixture, caller, request, counts[original.fixture]);
 		const mutations = [
 			report => { report.phpWasm.executions.pop(); }
 			, report => { report.phpWasm.executions[0].observation.checks = 0; }
