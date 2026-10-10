@@ -14,6 +14,8 @@ import { sha256 } from "../src/capsule/node.mjs";
 import { finContainerEdgeProfiles } from "./helpers/fin-container-edges.mjs";
 import { assertFinContainerEdgeReport } from "./helpers/fin-container-edge-report.mjs";
 import { syntheticFinContainerEdgeReport } from "./helpers/fin-container-edge-report-fixtures.mjs";
+import "./helpers/fin-container-edge-ci-tests.mjs";
+import "./helpers/fin-container-edge-ci-history-tests.mjs";
 
 test("synthetic current-format reports cover ten native hosts and both Python floors", async () => {
 	const profiles = [...finContainerEdgeProfiles].sort();

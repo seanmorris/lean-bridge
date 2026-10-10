@@ -12,6 +12,7 @@ import test from "node:test";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { sha256 } from "../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
+import { beforeFinEdgeCiSource, finEdgeCiChangedPaths } from "./helpers/fin-container-edge-ci-history.mjs";
 import { beforeFinEdgeIntegrationSource, finEdgeIntegrationBranch, finEdgeIntegrationChangedPaths, finEdgeIntegrationHistoryPath, finEdgeIntegrationPredecessor, reverseFinEdgeIntegrationUpdate } from "./helpers/fin-container-edge-integration-history.mjs";
 
 test("container observer integration authenticates every transition and refuses unrecorded edits", async () => {
@@ -23,7 +24,7 @@ test("container observer integration authenticates every transition and refuses 
 	assert.deepEqual(history.updates.map(update => update.path), finEdgeIntegrationChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = await readFile(update.path, "utf8"), previous = reverseFinEdgeIntegrationUpdate(current, update);
+		const current = beforeFinEdgeCiSource(update.path, await readFile(update.path, "utf8")), previous = reverseFinEdgeIntegrationUpdate(current, update);
 		assert.equal(beforeFinEdgeIntegrationSource(update.path, current), previous);
 		assert.equal(beforeFinEdgeIntegrationSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeFinEdgeIntegrationSource(update.path, previous), previous);
@@ -48,7 +49,7 @@ test("container observer integration authenticates every transition and refuses 
 
 test("container integration refreshes exact source pins without changing support claims or old ledgers", async () => {
 	const history = JSON.parse(await readFile(finEdgeIntegrationHistoryPath, "utf8"));
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", source = beforeFinEdgeCiSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(source), previous = JSON.parse(beforeFinEdgeIntegrationSource(path, source));
 	const expected = structuredClone(previous); let refreshed = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
@@ -63,7 +64,12 @@ test("container integration refreshes exact source pins without changing support
 	const digests = new Map();
 	for(const file of current.evidence.flatMap(entry => entry.files))
 	{
-		if(!digests.has(file.path)) digests.set(file.path, sha256(await readFile(file.path)));
+		if(!digests.has(file.path))
+		{
+			const bytes = await readFile(file.path);
+			const source = finEdgeCiChangedPaths.includes(file.path) ? beforeFinEdgeCiSource(file.path, bytes.toString("utf8")) : bytes;
+			digests.set(file.path, sha256(source));
+		}
 		assert.equal(digests.get(file.path), file.sha256, file.path);
 	}
 	for(const [path, digest] of [
