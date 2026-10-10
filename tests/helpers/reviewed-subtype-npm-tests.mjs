@@ -21,6 +21,7 @@ import { reviewedSubtypeInstalledIr, reviewedSubtypeInstalledSource } from "./re
 import { checkReviewedSubtype } from "../fixtures/reviewed-subtype-consumers/javascript.mjs";
 import { reviewedSubtypeNpmTypescript as typescript, reviewedSubtypeNpmCaller } from "./reviewed-subtype-package-fixture.mjs";
 import { createReviewedSubtypePackageRecords, retainReviewedSubtypeFiles, reviewedSubtypeAuthorFiles } from "./reviewed-subtype-package-records.mjs";
+import { checkReviewedSubtypeBrowsers } from "./reviewed-subtype-browser.mjs";
 
 const expected = { checks: 2036, rejections: 2024 };
 const fail = () => { throw new Error("Component scalar call failed (6)"); };
@@ -158,4 +159,6 @@ test("source-free reviewed npm archives execute checked Subtype constructors for
 		, dispatch: "not measured" };
 	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson(report));
 	if(reportPath !== join(records, "report.json")) await retainReviewedSubtypeFiles(records, "", dirname(reportPath), { "report.json": reportPath.split("/").at(-1) });
+	if(process.env.LEAN_BRIDGE_REVIEWED_SUBTYPE_BROWSER_TEST === "1")
+		await checkReviewedSubtypeBrowsers({ directory, handoff, receipt, records });
 });

@@ -29,6 +29,7 @@ import { createReviewedSubtypePackageRecords, retainReviewedSubtypeFiles, review
 import { reviewedSubtypePackageChecks } from "./helpers/reviewed-subtype-package-fixture.mjs";
 import "./helpers/reviewed-subtype-package-record-tests.mjs";
 import "./helpers/reviewed-subtype-package-ci-tests.mjs";
+import "./helpers/reviewed-subtype-browser-tests.mjs";
 
 const fixture = "tests/fixtures/onboarding/native-subtype";
 const reviewInput = review => {

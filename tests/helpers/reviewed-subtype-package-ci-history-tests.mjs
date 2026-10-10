@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeReviewedSubtypeBrowserSource } from "./reviewed-subtype-browser-history.mjs";
 import { beforeReviewedSubtypePackageCiSource, reviewedSubtypePackageCiChangedPaths, reviewedSubtypePackageCiHistoryPath, reviewedSubtypePackageCiPredecessor, reverseReviewedSubtypePackageCiUpdate } from "./reviewed-subtype-package-ci-history.mjs";
 
 test("Reviewed package CI history authenticates exact transitions and refuses unknown edits", async () => {
@@ -21,7 +22,8 @@ test("Reviewed package CI history authenticates exact transitions and refuses un
 	assert.deepEqual(history.updates.map(update => update.path), reviewedSubtypePackageCiChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = await readFile(update.path, "utf8"), previous = reverseReviewedSubtypePackageCiUpdate(current, update);
+		const current = beforeReviewedSubtypeBrowserSource(update.path, await readFile(update.path, "utf8"));
+		const previous = reverseReviewedSubtypePackageCiUpdate(current, update);
 		assert.equal(beforeReviewedSubtypePackageCiSource(update.path, current), previous);
 		const bytes = Buffer.from(current);
 		assert.equal(beforeFinRefinementSource(update.path, bytes, update.currentSha256), bytes);
@@ -42,7 +44,7 @@ test("Reviewed package CI history authenticates exact transitions and refuses un
 
 test("Reviewed package CI gate changes source pins without adding or changing installed observations", async () => {
 	const history = JSON.parse(await readFile(reviewedSubtypePackageCiHistoryPath));
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", source = beforeReviewedSubtypeBrowserSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(source), previous = JSON.parse(beforeReviewedSubtypePackageCiSource(path, source));
 	const expected = structuredClone(previous); let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
@@ -57,7 +59,7 @@ test("Reviewed package CI gate changes source pins without adding or changing in
 	const hashes = new Map();
 	for(const file of current.evidence.flatMap(entry => entry.files))
 	{
-		if(!hashes.has(file.path)) hashes.set(file.path, sha256(await readFile(file.path)));
+		if(!hashes.has(file.path)) hashes.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));
 		assert.equal(hashes.get(file.path), file.sha256, file.path);
 	}
 	assert.equal(sha256(await readFile("docs/evidence/reviewed-subtype-package-record-source-history-20261010.json")), "f43d248e5ad50909e38cd994660da74f69827711b49923310c6d195ef53a8d64");
