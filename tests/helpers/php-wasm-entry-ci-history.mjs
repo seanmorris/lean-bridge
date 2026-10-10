@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeReviewedSubtypeHostSource } from "./reviewed-subtype-host-history.mjs";
 
 export const phpWasmEntryCiHistoryPath = "docs/evidence/php-wasm-entry-ci-source-history-20261010.json";
 export const phpWasmEntryCiPredecessor = "9d41340747ee4cf130e77f39ec6d676e6aa1ceca";
@@ -57,6 +58,7 @@ export const reversePhpWasmEntryCiUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforePhpWasmEntryCiSource = (path, source, expected) => {
+	source = beforeReviewedSubtypeHostSource(path, source, expected);
 	if(typeof source !== "string" || !phpWasmEntryCiChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

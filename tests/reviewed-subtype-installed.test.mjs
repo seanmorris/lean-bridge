@@ -24,6 +24,7 @@ import { assertReviewedSubtypeDiagnostics, relabelReviewedSubtypeDiagnostics, re
 import "./helpers/reviewed-subtype-harness-source-history-tests.mjs";
 import "./helpers/subtype-fixture-link-source-history-tests.mjs";
 import "./helpers/reviewed-subtype-npm-tests.mjs";
+import "./helpers/reviewed-subtype-host-installed-tests.mjs";
 
 const fixture = "tests/fixtures/onboarding/native-subtype";
 const reviewInput = review => {

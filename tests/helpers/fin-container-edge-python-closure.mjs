@@ -183,10 +183,11 @@ export const runFinContainerEdgePython = async (context, args, cwd, environment 
  * @param options.root - Existing consumer directory, with a not-yet-created venv child.
  * @param options.archive - Original wheel path.
  * @param options.archiveSha256 - Package-set digest of that wheel.
+ * @param options.receiptPath - Original receipt member, defaulting to the Fin edge fixture.
  */
-export const installFinContainerEdgePython = async ({ baseCommand, root, archive, archiveSha256 }) => {
+export const installFinContainerEdgePython = async ({ baseCommand, root, archive, archiveSha256, receiptPath = "lean_fincontainers/lean_bridge/package-receipt.json" }) => {
 	assert.equal(sha256(await readFile(archive)), archiveSha256, "original Python wheel drift");
-	const receiptPath = "lean_fincontainers/lean_bridge/package-receipt.json";
+	safePath(receiptPath);
 	const member = await runCopied("/usr/bin/unzip", ["-p", archive, receiptPath], root);
 	assert.equal(member.stderr, "");
 	const context = await createFinContainerEdgePythonEnvironment({ baseCommand, venv: join(root, "venv"), cwd: root });

@@ -183,6 +183,7 @@ import { finJvmDiagnosticsChangedPaths } from "./fin-jvm-diagnostics-history.mjs
 import { phpWasmSubtypeEntryChangedPaths } from "./php-wasm-subtype-entry-history.mjs";
 import { phpWasmEntryHarnessChangedPaths } from "./php-wasm-entry-harness-history.mjs";
 import { phpWasmEntryCiChangedPaths } from "./php-wasm-entry-ci-history.mjs";
+import { reviewedSubtypeHostChangedPaths } from "./reviewed-subtype-host-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -831,6 +832,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...phpWasmSubtypeEntryChangedPaths
 	, ...phpWasmEntryHarnessChangedPaths
 	, ...phpWasmEntryCiChangedPaths
+	, ...reviewedSubtypeHostChangedPaths
 ])].sort());
 
 /**
