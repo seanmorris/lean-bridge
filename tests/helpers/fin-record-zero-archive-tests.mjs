@@ -48,6 +48,11 @@ const cases = [
 		, tree: "6da1c6b703b990e7ac8b5934cdb14a4fa06f506f"
 		, outcome: "passed", profiles: ["perl"], perl: "5.36.3-unthreaded"
 		, count: 40 }
+	, { name: "perl5382-threaded-floor236-1840da1"
+		, digest: "d292a247c895405a01d2f57db30af728caad54db30a61d14e287b89934e73538"
+		, revision: "1840da12d270045b1340b16e98a2a8085f002337"
+		, tree: "6da1c6b703b990e7ac8b5934cdb14a4fa06f506f"
+		, outcome: "passed", profiles: ["perl"], perl: "5.38.2-threaded", count: 40 }
 ];
 const inspect = async (item, read = readFile) => {
 	const root = base + item.name + "/", bytes = await read(root + "index.json");
