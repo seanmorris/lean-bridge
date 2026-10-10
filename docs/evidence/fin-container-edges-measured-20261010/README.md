@@ -58,3 +58,16 @@ node scripts/check-fin-container-edge-report.mjs \
 ```
 
 [The CI milestone](../fin-container-edge-ci-20261010.md) adds recurring producers and report gates. Hosted acceptance and the final original-requirement audit for #1427/#1454 remain open. This archive does not promote other hosts, reviewed IR, product/record refinements or type-surface support cells.
+
+## Open original acceptance item: malformed foreign carriers
+
+The case audit distinguishes refinement failures from malformed foreign inputs. The 42-row direct-adapter probe supplies well-formed erased Lean values; its invalid cases violate Fin bounds, not the foreign ABI's structural contract. C's public consumer separately rejects invalid option tags and null-data/nonzero-length spans. Dynamic and managed consumers exercise their host-level type errors. These are distinct observations.
+
+The WIT/WASI edge consumer explicitly leaves malformed raw carriers to a separate required gate. Its current installed report does not establish that gate. Rust's typed public API cannot construct malformed tags or spans, but that restriction does not establish rejection at its underlying foreign ABI. The original per-host malformed-carrier acceptance therefore remains unproven.
+
+The remaining supplement must:
+
+1. Map each installed package's actual foreign entrypoints and representable malformed inputs, including safe invalid tags, lengths and null-data combinations. Do not fabricate Lean object layouts or use invalid dangling pointers.
+2. Execute those cases against each package's receipt-verified libraries, with unchanged inputs/error outputs, no adapter/source dispatch on structural rejection, valid positive controls and recovery.
+3. Preserve the existing public-host and direct-adapter observations. Give the foreign-carrier probe its own caller identity, original reports and strict CI gate.
+4. Complete the original #1427 case audit before closing #1454. These supplemental observations must not be inferred from another host's C consumer.
