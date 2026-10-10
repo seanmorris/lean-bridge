@@ -12,9 +12,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../../src/adoption/test-profiles.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeFinNominalRefusalSource, finNominalRefusalChangedPaths } from "./fin-nominal-refusal-history.mjs";
-import { finAliasClosureChangedPaths } from "./fin-alias-closure-history.mjs";
-import { phpWasmDirectFinChangedPaths } from "./php-wasm-fin-direct-history.mjs";
+import { beforeFinNominalRefusalSource } from "./fin-nominal-refusal-history.mjs";
 import { beforeFinZeroCiSource, finZeroCiChangedPaths, finZeroCiHistoryPath, finZeroCiPredecessor, reverseFinZeroCiUpdate } from "./fin-record-zero-ci-history.mjs";
 
 test("Fin zero CI integration authenticates every transition and refuses unrecorded edits", async () => {
@@ -96,8 +94,7 @@ test("Fin zero integration changes current source pins only and adds no installe
 		if(!digests.has(file.path))
 		{
 			const bytes = await readFile(file.path);
-			const text = [...finNominalRefusalChangedPaths, ...finAliasClosureChangedPaths, ...phpWasmDirectFinChangedPaths].includes(file.path);
-			digests.set(file.path, sha256(beforeFinNominalRefusalSource(file.path, text ? bytes.toString("utf8") : bytes)));
+			digests.set(file.path, sha256(beforeFinRefinementSource(file.path, bytes, file.sha256)));
 		}
 		assert.equal(file.sha256, digests.get(file.path), file.path);
 	}

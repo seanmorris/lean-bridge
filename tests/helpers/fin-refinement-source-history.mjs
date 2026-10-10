@@ -12,6 +12,7 @@ import { subtypeHeapChangedPaths } from "./subtype-heap-source-history.mjs";
 import { reviewedPerlDiagnosticChangedPaths } from "./reviewed-perl-diagnostic-history.mjs";
 import { refinementFollowupChangedPaths } from "./refinement-followup-history.mjs";
 import { finHistoryBufferRepairChangedPaths } from "./fin-history-buffer-repair.mjs";
+import { reviewedSubtypeNativePromotionChangedPaths } from "./reviewed-subtype-native-promotion-history.mjs";
 import { subtypeComponentChangedPaths } from "./subtype-component-source-history.mjs";
 import { nestedFinChangedPaths, refinementClosureChangedPaths } from "./nested-fin-source-history.mjs";
 import { nominalFinChangedPaths } from "./nominal-fin-source-history.mjs";
@@ -839,6 +840,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...reviewedPerlDiagnosticChangedPaths
 	, ...refinementFollowupChangedPaths
 	, ...finHistoryBufferRepairChangedPaths
+	, ...reviewedSubtypeNativePromotionChangedPaths
 ])].sort());
 
 /**

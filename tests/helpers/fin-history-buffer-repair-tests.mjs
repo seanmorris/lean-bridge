@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeReviewedSubtypeNativePromotionSource } from "./reviewed-subtype-native-promotion-history.mjs";
 import { beforeFinHistoryBufferRepairSource, finHistoryBufferRepairChangedPaths, finHistoryBufferRepairHistoryPath, finHistoryBufferRepairPredecessor, reverseFinHistoryBufferRepairUpdate } from "./fin-history-buffer-repair.mjs";
 
 test("Buffer repair authenticates all source transitions and refuses unknown edits", async () => {
@@ -21,7 +22,7 @@ test("Buffer repair authenticates all source transitions and refuses unknown edi
 	assert.deepEqual(history.updates.map(update => update.path), finHistoryBufferRepairChangedPaths);
 	for(const update of history.updates)
 	{
-		const bytes = await readFile(update.path), source = bytes.toString();
+		const bytes = Buffer.from(beforeReviewedSubtypeNativePromotionSource(update.path, await readFile(update.path, "utf8"))), source = bytes.toString();
 		const previous = reverseFinHistoryBufferRepairUpdate(source, update);
 		assert.equal(beforeFinHistoryBufferRepairSource(update.path, source), previous);
 		assert.equal(beforeFinHistoryBufferRepairSource(update.path, source, update.currentSha256), source);
@@ -67,7 +68,7 @@ test("native-model Buffer reads select both recorded epochs without accepting ch
 test("Buffer repair preserves the inventory, previous ledger and original three-failure reproduction", async () => {
 	const history = JSON.parse(await readFile(finHistoryBufferRepairHistoryPath));
 	assert.equal(history.inventorySha256, "6a608542a14568c731ca961707e26d68975fb3d58d56443d45606c5b6f804c02");
-	assert.equal(sha256(await readFile("docs/type-surface.v1.json")), history.inventorySha256);
+	assert.equal(sha256(beforeReviewedSubtypeNativePromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"))), history.inventorySha256);
 	assert.equal(sha256(await readFile("docs/evidence/refinement-followup-source-history-20261010.json")), "a7fdc0c266afd2b3ea4ce29fc5e99dbb554df277a06dc7af252614bca7aeafc1");
 	const original = await readFile(history.reproduction.path);
 	assert.equal(original.length, history.reproduction.bytes);

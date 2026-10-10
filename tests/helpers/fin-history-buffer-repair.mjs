@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeReviewedSubtypeNativePromotionSource } from "./reviewed-subtype-native-promotion-history.mjs";
 
 export const finHistoryBufferRepairHistoryPath = "docs/evidence/fin-history-buffer-repair-source-history-20261010.json";
 export const finHistoryBufferRepairPredecessor = "69d82afba73db3ac876f850acd170c8194a238c5";
@@ -53,6 +54,7 @@ export const reverseFinHistoryBufferRepairUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeFinHistoryBufferRepairSource = (path, source, expected) => {
+	source = beforeReviewedSubtypeNativePromotionSource(path, source, expected);
 	if(typeof source !== "string" || !finHistoryBufferRepairChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

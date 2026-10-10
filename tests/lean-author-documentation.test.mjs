@@ -19,6 +19,7 @@ import { callbackFinPromotionReferences } from "./helpers/callback-fin-promotion
 import { sha256 } from "../src/capsule/node.mjs";
 import { finHostedReceiptSha256 } from "./helpers/fin-native-hosted-evidence.mjs";
 import { phpWasmSubtypePromotionReferences } from "./helpers/php-wasm-subtype-promotion.mjs";
+import { reviewedSubtypeNativeReferences } from "./helpers/reviewed-subtype-native-promotion.mjs";
 
 const fixture = "tests/fixtures/documentation/lean-author";
 const documents = [
@@ -257,10 +258,13 @@ test("CPAN guidance distinguishes scalar and container four-ABI relocation from 
 	assert.match(moved.scope.relocation, /unchanged consumer.pl reruns once/u);
 	assert.match(document, /Four-ABI CPAN acceptance.*perl-refinements-20261009\.md/u);
 	assert.match(document, /Installed, both source routes on four ABIs/u);
-	assert.match(document, /Installed on four ABIs; ordinary source/u);
+	assert.match(document, /\| `Subtype` parameter or result over a primitive \| Installed \| Installed \| Installed, both source routes on four ABIs \|/u);
 	assert.match(document, /Separate scalar checks.*perl-scalar-20261009\.md.*top-level `Fin` on the same four configurations.*installed-tree relocation and entry counts for `mirror`, `impossible` and `label`/u);
 	assert.match(document, /\| `Fin n` parameter or result \| Installed \| Installed \| Installed, both source routes on four ABIs \|/u);
-	assert.match(document, /C\/C\+\+, Node and PHP-Wasm installed; other profiles pending/u);
+	assert.match(document, /C\/C\+\+, Node, native hosts, CPAN and PHP-Wasm installed; reviewed browser pending/u);
+	const reviewedNative = await reviewedSubtypeNativeReferences();
+	assert.equal(reviewedNative.length, 12);
+	assert.deepEqual(reviewedNative.filter(item => item.profiles.includes("perl")).map(item => item.group), ["perl-5.36.3-threaded", "perl-5.36.3-unthreaded", "perl-5.38.2-threaded", "perl-5.38.2-unthreaded"]);
 	const phpWasm = await phpWasmSubtypePromotionReferences();
 	assert.deepEqual(phpWasm.map(item => item.sourcePath), ["ordinary-source", "reviewed-ir"]);
 	assert.ok(document.includes("../evidence/php-wasm-subtype-installed-20261010/index.json"));

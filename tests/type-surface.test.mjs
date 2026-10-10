@@ -16,6 +16,7 @@ import { readTypeSurface, typeSurfaceCells, typeSurfaceGapReport, validateTypeSu
 import { historicalTypeSurfaceCells } from "./helpers/historical-type-surface-cells.mjs";
 import { beforeCheckedRecordPromotionSource } from "./helpers/checked-record-promotion-source-history.mjs";
 import { beforeCallbackFinPromotionSource } from "./helpers/callback-fin-promotion-source-history.mjs";
+import { reviewedSubtypeNativeProfiles, reviewedSubtypeNativeReferences } from "./helpers/reviewed-subtype-native-promotion.mjs";
 
 const execute = promisify(execFile);
 const root = path.resolve(import.meta.dirname, "..");
@@ -499,16 +500,16 @@ test("refinements, host null and erased proofs retain their individual value pos
 	}
 });
 
-test("checked Subtype evidence promotes only top-level parameters and results", () => {
+test("checked Subtype evidence promotes only top-level parameters and results", async () => {
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "subtype");
 	const installed = cells.filter(cell => cell.stages.installedExecution.state === "passed");
 	const ordinary = installed.filter(cell => cell.path === "ordinary-source");
 	const reviewed = installed.filter(cell => cell.path === "reviewed-ir");
-	// Ordinary Node, native, Perl, three browsers and PHP-Wasm; reviewed C/C++, Node and PHP-Wasm.
+	// Ordinary all profiles; reviewed all native profiles, Node and PHP-Wasm.
 	const native = ["c", "cpp", "python", "rust", "ruby", "dotnet", "java", "kotlin", "php-native", "wit-wasi"];
 	const browser = ["browser-javascript", "browser-react", "browser-worker"];
 	assert.equal(ordinary.length, 2 * (2 + native.length + 1 + browser.length + 1));
-	assert.equal(reviewed.length, 10);
+	assert.equal(reviewed.length, 28);
 	assert.equal(installed.length, ordinary.length + reviewed.length);
 	assert.deepEqual([...new Set(installed.map(cell => cell.profile))].sort(), ["node-javascript", "node-typescript", ...native, "perl", ...browser, "php-wasm"].sort());
 	assert.deepEqual([...new Set(installed.map(cell => cell.position))], ["parameter", "result"]);
@@ -538,9 +539,16 @@ test("checked Subtype evidence promotes only top-level parameters and results", 
 		assert.deepEqual(cell.stages.installedExecution.evidence, [browser.includes(cell.profile) ? "npm-browser-refinements-installed" : "npm-subtype-refinements-installed"]);
 		assert.match(cell.hostType, /declared primitive/u);
 	}
-	assert.deepEqual([...new Set(reviewed.map(cell => cell.profile))].sort(), ["c", "cpp", "node-javascript", "node-typescript", "php-wasm"]);
+	assert.deepEqual([...new Set(reviewed.map(cell => cell.profile))].sort(), ["c", "cpp", "node-javascript", "node-typescript", "php-wasm", ...reviewedSubtypeNativeProfiles].sort());
+	const references = await reviewedSubtypeNativeReferences();
 	for(const cell of reviewed)
 	{
+		if(reviewedSubtypeNativeProfiles.includes(cell.profile))
+		{
+			assert.deepEqual(cell.stages.installedExecution.evidence, references.filter(item => item.profiles.includes(cell.profile)).map(item => item.id));
+			for(const stage of Object.values(cell.stages)) assert.equal(stage.state, "passed");
+			continue;
+		}
 		if(cell.profile === "php-wasm")
 		{
 			assert.deepEqual(cell.stages.installedExecution.evidence, ["php-wasm-subtype-reviewed-installed"]);

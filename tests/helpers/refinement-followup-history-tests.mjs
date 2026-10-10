@@ -47,7 +47,7 @@ test("refinement follow-up history authenticates exact transitions and preserves
 
 test("refinement follow-ups preserve every support claim and authenticate all current source pins", async () => {
 	const history = JSON.parse(await readFile(refinementFollowupHistoryPath));
-	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", text = beforeFinHistoryBufferRepairSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(text), previous = JSON.parse(beforeRefinementFollowupSource(path, text));
 	const expected = structuredClone(previous); let refreshed = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
@@ -61,7 +61,7 @@ test("refinement follow-ups preserve every support claim and authenticate all cu
 	const hashes = new Map();
 	for(const file of current.evidence.flatMap(entry => entry.files))
 	{
-		if(!hashes.has(file.path)) hashes.set(file.path, sha256(await readFile(file.path)));
+		if(!hashes.has(file.path)) hashes.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));
 		assert.equal(hashes.get(file.path), file.sha256, file.path);
 	}
 	assert.equal(sha256(await readFile("docs/evidence/reviewed-perl-diagnostic-source-history-20261010.json")), "1c821561a9b0d01814756047618f930292311e58eb03b5043ad492b8d6dfc4eb");
