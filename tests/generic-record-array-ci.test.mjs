@@ -4,11 +4,30 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { execFileSync } from "node:child_process";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import test from "node:test";
 import { assertHostedArrayArchive, assertHostedArrayExecution, assertHostedArrayReport, hostedArrayDirectory } from "./helpers/generic-record-array-hosted-evidence.mjs";
 import "./helpers/native-specialization-closure-tests.mjs";
 import "./helpers/fin-native-hosted-evidence-tests.mjs";
+
+test("hosted transcript whitespace rules are archive-local and preserve unrelated attributes", async t => {
+	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-hosted-attributes-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const env = Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith("GIT_")));
+	const git = (args, input) => execFileSync("git", args, { cwd: directory, env, encoding: "utf8", input });
+	git(["init", "--quiet"]);
+	const root = await readFile(".gitattributes", "utf8"), local = await readFile(`${hostedArrayDirectory}/.gitattributes`, "utf8");
+	assert.ok(!root.includes(hostedArrayDirectory), "new archive does not rewrite historical root attributes");
+	assert.equal(local, "# Preserve these original, receipt-authenticated hosted transcripts.\njob-*.log whitespace=-blank-at-eol\n");
+	await writeFile(join(directory, ".gitattributes"), root);
+	await mkdir(join(directory, hostedArrayDirectory), { recursive: true });
+	await writeFile(join(directory, hostedArrayDirectory, ".gitattributes"), local);
+	const paths = [`${hostedArrayDirectory}/job-113952962715.log`, `${hostedArrayDirectory}/receipt.json`, "docs/evidence/other/job-1.log", "docs/evidence/hosted-specializations-20261009/c-family/job.log"];
+	assert.equal(git(["check-attr", "--stdin", "whitespace"], paths.join("\n") + "\n"), paths.map((path, index) => `${path}: whitespace: ${[0, 3].includes(index) ? "-blank-at-eol" : "unspecified"}\n`).join(""));
+});
 
 const paths = [".github/workflows/consumer-matrix.yml", ".github/workflows/perl-consumer.yml"];
 const selections = [
