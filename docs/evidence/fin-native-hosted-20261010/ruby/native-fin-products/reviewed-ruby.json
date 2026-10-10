@@ -1,0 +1,264 @@
+{
+  "archives": {
+    "archives/finproducts-1.0.0-x86_64-linux.gem": "0dce927df92c5e955711e2d733e66a1f89e7167221e19f6f08e8839315f91e1d"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "015701ba9c1f69e23d8ceb7ca2ce7d41b47d668f32c6c9f1571bb6d3d202183e",
+      "checks": 2039,
+      "compilerFreePath": true,
+      "consumerSha256": "b85aed48e93055f5d44f1fc30945dd4e5d9a714428006a06b8e1d62145e61b79",
+      "modelSha256": "d26476cb14c6ebec33501ab19f424b3e1060ca9c173f6293a55842892c019ed1",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 50120704,
+              "path": "archives/finproducts-1.0.0-x86_64-linux.gem",
+              "sha256": "0dce927df92c5e955711e2d733e66a1f89e7167221e19f6f08e8839315f91e1d"
+            }
+          ],
+          "ecosystem": "rubygems",
+          "name": "finproducts",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "rubygems",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "ruby",
+      "receiptSha256": "60fbf2aa6bbe9ab323585838b3564f4dc200279a413700ae06c6b44664c23797",
+      "refinements": {
+        "FinProducts.absentOnly": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "0",
+                      "kind": "fin"
+                    },
+                    null
+                  ],
+                  "kind": "tuple"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "result": null
+        },
+        "FinProducts.aliased": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                },
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "tuple"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              },
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "tuple"
+          }
+        },
+        "FinProducts.both": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "7",
+                  "kind": "fin"
+                },
+                {
+                  "bound": "3",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "result"
+            }
+          ],
+          "result": null
+        },
+        "FinProducts.errorOnly": {
+          "parameters": [
+            {
+              "arguments": [
+                null,
+                {
+                  "bound": "5",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "result"
+            }
+          ],
+          "result": null
+        },
+        "FinProducts.first": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                },
+                null
+              ],
+              "kind": "tuple"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              },
+              null
+            ],
+            "kind": "tuple"
+          }
+        },
+        "FinProducts.nested": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "bound": "3",
+                          "kind": "fin"
+                        },
+                        {
+                          "arguments": [
+                            null,
+                            {
+                              "bound": "2",
+                              "kind": "fin"
+                            }
+                          ],
+                          "kind": "result"
+                        }
+                      ],
+                      "kind": "tuple"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": null
+        },
+        "FinProducts.okOnly": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                },
+                null
+              ],
+              "kind": "result"
+            }
+          ],
+          "result": null
+        },
+        "FinProducts.pairUp": {
+          "parameters": [
+            null
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              },
+              null
+            ],
+            "kind": "tuple"
+          }
+        },
+        "FinProducts.produce": {
+          "parameters": [
+            null
+          ],
+          "result": {
+            "arguments": [
+              null,
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "result"
+          }
+        },
+        "FinProducts.second": {
+          "parameters": [
+            {
+              "arguments": [
+                null,
+                {
+                  "bound": "1",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "tuple"
+            }
+          ],
+          "result": null
+        },
+        "FinProducts.wide": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "184467440737095516170",
+                  "kind": "fin"
+                },
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "tuple"
+            }
+          ],
+          "result": null
+        }
+      },
+      "reviewedSourceSha256": "72fd36cacbb76e0e4cc119173b3d5d90298e97e30b765b654edc150bd8b904d6",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "b28ef33cfc01202716932afa79ecc521fd12d1c2fa0dc3d738d3b6a46f57309f"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

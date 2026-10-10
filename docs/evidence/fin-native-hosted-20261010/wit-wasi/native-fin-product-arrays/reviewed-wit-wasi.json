@@ -1,0 +1,126 @@
+{
+  "archives": {
+    "archives/finproductarrays-1.0.0-wit-wasi.tar.gz": "251d874f5159a1f3781d982b5619b55094f62d8ef9c5a772cd633459852f3be7"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "a5c62fbf096ae5c8b92add1cd495ca522f5d07eb76fd7cd6d5bd8997eaf4e8d0",
+      "checks": 2021,
+      "compilerFreePath": true,
+      "consumerSha256": "c9d3df9097a86e5cdce3b32a90d15b646bdb261793b33fdbb4cc6f06e30b49b8",
+      "modelSha256": "881c20636e9fbe6b5bbc1ccaa0fc5cd594ce101c40b1d0f0000edda349c99d22",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 59213012,
+              "path": "archives/finproductarrays-1.0.0-wit-wasi.tar.gz",
+              "sha256": "251d874f5159a1f3781d982b5619b55094f62d8ef9c5a772cd633459852f3be7"
+            }
+          ],
+          "ecosystem": "wit-wasi",
+          "name": "finproductarrays",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "wit-wasi",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "wit-wasi",
+      "receiptSha256": "5f387696180efaaa3ce62f23f7af15d42da91634960f170b75c6865ee0a4e892",
+      "refinements": {
+        "FinProductArrays.reversed": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "4",
+                      "kind": "fin"
+                    },
+                    {
+                      "arguments": [
+                        null,
+                        {
+                          "bound": "6",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "result"
+                    }
+                  ],
+                  "kind": "tuple"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "4",
+                    "kind": "fin"
+                  },
+                  {
+                    "arguments": [
+                      null,
+                      {
+                        "bound": "6",
+                        "kind": "fin"
+                      }
+                    ],
+                    "kind": "result"
+                  }
+                ],
+                "kind": "tuple"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinProductArrays.rows": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "4",
+                      "kind": "fin"
+                    },
+                    {
+                      "arguments": [
+                        null,
+                        {
+                          "bound": "6",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "result"
+                    }
+                  ],
+                  "kind": "tuple"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        }
+      },
+      "reviewedSourceSha256": "895f91af59a9aacc64de2c13690ff95b1acf702354f71bcb839bbd13a86cba30",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "19959fb939cd659ed2e6c08bad8371e2754b586720cb4b4e4510fffbdfb1095b"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

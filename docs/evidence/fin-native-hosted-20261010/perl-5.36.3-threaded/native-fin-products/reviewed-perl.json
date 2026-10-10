@@ -1,0 +1,289 @@
+{
+  "archives": {
+    "archives/LeanBridge-FinProducts-1.000.tar.gz": "85013de702552bfa2e2e81fd6314f5167cd52200c2aa45f00d2c75277b98eb87",
+    "archives/LeanBridge-Runtime-0.0021003929731850758972973244829406958690725170599882297501769226195507928501733121.tar.gz": "3db6a29d8ceedf1ce19ad0908cbe5f5ad9ddcddff75056f3d8cab5a9aa44f887"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "a2e61105877a787ee72292148293a826bf23285a9e00f12bbabec5d268f03941",
+      "checks": 2045,
+      "compilerFreePath": true,
+      "consumerSha256": "5290c1441784232e305daf273951ef5eaa8bb664bd700469b31b21fd429caeb0",
+      "modelSha256": "1696cfb583d306723e20a2dc2421447ec3c221d88c87ded62710a9921b9a7107",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 97782,
+              "path": "archives/LeanBridge-FinProducts-1.000.tar.gz",
+              "sha256": "85013de702552bfa2e2e81fd6314f5167cd52200c2aa45f00d2c75277b98eb87"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-FinProducts",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0021003929731850758972973244829406958690725170599882297501769226195507928501733121"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51362589,
+              "path": "archives/LeanBridge-Runtime-0.0021003929731850758972973244829406958690725170599882297501769226195507928501733121.tar.gz",
+              "sha256": "3db6a29d8ceedf1ce19ad0908cbe5f5ad9ddcddff75056f3d8cab5a9aa44f887"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "cpan",
+          "version": "0.0021003929731850758972973244829406958690725170599882297501769226195507928501733121"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "perl",
+      "receiptSha256": "507dea9dcf8399bda8b913072f26405ee4c82cfe4b727ad42cf35b1f33c9e09d",
+      "refinements": {
+        "FinProducts.absentOnly": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "0",
+                      "kind": "fin"
+                    },
+                    null
+                  ],
+                  "kind": "tuple"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "result": null
+        },
+        "FinProducts.aliased": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                },
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "tuple"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              },
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "tuple"
+          }
+        },
+        "FinProducts.both": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "7",
+                  "kind": "fin"
+                },
+                {
+                  "bound": "3",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "result"
+            }
+          ],
+          "result": null
+        },
+        "FinProducts.errorOnly": {
+          "parameters": [
+            {
+              "arguments": [
+                null,
+                {
+                  "bound": "5",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "result"
+            }
+          ],
+          "result": null
+        },
+        "FinProducts.first": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                },
+                null
+              ],
+              "kind": "tuple"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              },
+              null
+            ],
+            "kind": "tuple"
+          }
+        },
+        "FinProducts.nested": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "bound": "3",
+                          "kind": "fin"
+                        },
+                        {
+                          "arguments": [
+                            null,
+                            {
+                              "bound": "2",
+                              "kind": "fin"
+                            }
+                          ],
+                          "kind": "result"
+                        }
+                      ],
+                      "kind": "tuple"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": null
+        },
+        "FinProducts.okOnly": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                },
+                null
+              ],
+              "kind": "result"
+            }
+          ],
+          "result": null
+        },
+        "FinProducts.pairUp": {
+          "parameters": [
+            null
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              },
+              null
+            ],
+            "kind": "tuple"
+          }
+        },
+        "FinProducts.produce": {
+          "parameters": [
+            null
+          ],
+          "result": {
+            "arguments": [
+              null,
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "result"
+          }
+        },
+        "FinProducts.second": {
+          "parameters": [
+            {
+              "arguments": [
+                null,
+                {
+                  "bound": "1",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "tuple"
+            }
+          ],
+          "result": null
+        },
+        "FinProducts.wide": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "184467440737095516170",
+                  "kind": "fin"
+                },
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "tuple"
+            }
+          ],
+          "result": null
+        }
+      },
+      "reviewedSourceSha256": "72fd36cacbb76e0e4cc119173b3d5d90298e97e30b765b654edc150bd8b904d6",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "331659f106872058afa40a2679617242c65ac93564a3f49506f9800b439ea91d"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

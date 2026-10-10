@@ -1,0 +1,288 @@
+{
+  "archives": {
+    "archives/LeanBridge-FinProducts-1.000.tar.gz": "dba242275cf9445abb1ef97558653099deb7d3ded3f0a88382556c4c6f167bfe",
+    "archives/LeanBridge-Runtime-0.0021072338727314564978413376084786059360699966616434525968589739297421353356724781.tar.gz": "c7b601ca6de3399e837e49b83e5955746f22e20dc38e04a20ba674db7d74b637"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "ddc948ce3d9a80385584ba23cac070077222912eaab1868a327c08881afa90c7",
+      "checks": 2045,
+      "compilerFreePath": true,
+      "consumerSha256": "5290c1441784232e305daf273951ef5eaa8bb664bd700469b31b21fd429caeb0",
+      "modelSha256": "814afaf5ba5277a35e2304b7ddcef097bec5908ae12811a76c2b2132c74af0d2",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 93324,
+              "path": "archives/LeanBridge-FinProducts-1.000.tar.gz",
+              "sha256": "dba242275cf9445abb1ef97558653099deb7d3ded3f0a88382556c4c6f167bfe"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-FinProducts",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0021072338727314564978413376084786059360699966616434525968589739297421353356724781"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51362427,
+              "path": "archives/LeanBridge-Runtime-0.0021072338727314564978413376084786059360699966616434525968589739297421353356724781.tar.gz",
+              "sha256": "c7b601ca6de3399e837e49b83e5955746f22e20dc38e04a20ba674db7d74b637"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "cpan",
+          "version": "0.0021072338727314564978413376084786059360699966616434525968589739297421353356724781"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "perl",
+      "receiptSha256": "61ea94a082c9366b3af3c145ba12944565c71c37768a5d987304d0c930f58a66",
+      "refinements": {
+        "FinProducts.absentOnly": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "0",
+                      "kind": "fin"
+                    },
+                    null
+                  ],
+                  "kind": "tuple"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "result": null
+        },
+        "FinProducts.aliased": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                },
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "tuple"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              },
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "tuple"
+          }
+        },
+        "FinProducts.both": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "7",
+                  "kind": "fin"
+                },
+                {
+                  "bound": "3",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "result"
+            }
+          ],
+          "result": null
+        },
+        "FinProducts.errorOnly": {
+          "parameters": [
+            {
+              "arguments": [
+                null,
+                {
+                  "bound": "5",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "result"
+            }
+          ],
+          "result": null
+        },
+        "FinProducts.first": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                },
+                null
+              ],
+              "kind": "tuple"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              },
+              null
+            ],
+            "kind": "tuple"
+          }
+        },
+        "FinProducts.nested": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "bound": "3",
+                          "kind": "fin"
+                        },
+                        {
+                          "arguments": [
+                            null,
+                            {
+                              "bound": "2",
+                              "kind": "fin"
+                            }
+                          ],
+                          "kind": "result"
+                        }
+                      ],
+                      "kind": "tuple"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": null
+        },
+        "FinProducts.okOnly": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                },
+                null
+              ],
+              "kind": "result"
+            }
+          ],
+          "result": null
+        },
+        "FinProducts.pairUp": {
+          "parameters": [
+            null
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              },
+              null
+            ],
+            "kind": "tuple"
+          }
+        },
+        "FinProducts.produce": {
+          "parameters": [
+            null
+          ],
+          "result": {
+            "arguments": [
+              null,
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "result"
+          }
+        },
+        "FinProducts.second": {
+          "parameters": [
+            {
+              "arguments": [
+                null,
+                {
+                  "bound": "1",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "tuple"
+            }
+          ],
+          "result": null
+        },
+        "FinProducts.wide": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "184467440737095516170",
+                  "kind": "fin"
+                },
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "tuple"
+            }
+          ],
+          "result": null
+        }
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "c58d59f225c3774ced7cf167d93136a8944624624c2e01fa68003d07f9394acd"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

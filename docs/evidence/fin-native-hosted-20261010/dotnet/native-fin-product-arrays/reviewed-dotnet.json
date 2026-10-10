@@ -1,0 +1,126 @@
+{
+  "archives": {
+    "archives/FinProductArrays.Api.1.0.0.nupkg": "10eef5e4fa012134d449bfd727fc4e36f270fcce9252b66d8e8a4fd194b93ce4"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "45ce05c54e3056116ed50033409bcb02a63be82b6e8d4f304ceef2e81c4d4ff0",
+      "checks": 2010,
+      "compilerFreePath": true,
+      "consumerSha256": "138274153e475e7dacf16dac08ef3ce3a594cfc5d16a78b45264a96188980670",
+      "modelSha256": "39812a681f0800bee10cefe89397f808d8a87a0b4180e6f77beb022288d957df",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51367964,
+              "path": "archives/FinProductArrays.Api.1.0.0.nupkg",
+              "sha256": "10eef5e4fa012134d449bfd727fc4e36f270fcce9252b66d8e8a4fd194b93ce4"
+            }
+          ],
+          "ecosystem": "nuget",
+          "name": "FinProductArrays.Api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "nuget",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "dotnet",
+      "receiptSha256": "94dbd0b95f9b249c1d52f48c89e5af420a464e8e487db881fd966ffaa95b3c90",
+      "refinements": {
+        "FinProductArrays.reversed": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "4",
+                      "kind": "fin"
+                    },
+                    {
+                      "arguments": [
+                        null,
+                        {
+                          "bound": "6",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "result"
+                    }
+                  ],
+                  "kind": "tuple"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "4",
+                    "kind": "fin"
+                  },
+                  {
+                    "arguments": [
+                      null,
+                      {
+                        "bound": "6",
+                        "kind": "fin"
+                      }
+                    ],
+                    "kind": "result"
+                  }
+                ],
+                "kind": "tuple"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinProductArrays.rows": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "4",
+                      "kind": "fin"
+                    },
+                    {
+                      "arguments": [
+                        null,
+                        {
+                          "bound": "6",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "result"
+                    }
+                  ],
+                  "kind": "tuple"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        }
+      },
+      "reviewedSourceSha256": "895f91af59a9aacc64de2c13690ff95b1acf702354f71bcb839bbd13a86cba30",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "30d5435e1e9a51140d25585013d42a1cfc5495626888ce4708a090f008351b2a"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

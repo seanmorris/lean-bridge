@@ -1,0 +1,334 @@
+{
+  "archives": {
+    "archives/finproductarrays-1.0.0-c.tar.gz": "75b8e5de51dbf3484246d0aeed71ec572081a8df3b607b62ea41612eead34464",
+    "archives/finproductarrays-1.0.0-cpp.tar.gz": "5e55b7a4c6c9b1621308d44e08efae700af31895ec901a0772f6caa797262999"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "3a1454d7b02c29ec06af11ed57d5a46de9f00b0cb457b6d33ce4ead1a3cfdbae",
+      "checks": 2015,
+      "compilerFreePath": true,
+      "consumerSha256": "2263e57b51ef321285769a2d163fd27c30f132baa018cb04dcf9807cc817170d",
+      "dispatch": {
+        "columns": [
+          "l_FinProductArrays_rows",
+          "lb_dc9ab8418f9fe9c63bd75171"
+        ],
+        "interposer": "LD_PRELOAD",
+        "observed": [
+          [
+            "start",
+            0,
+            [
+              0,
+              0
+            ]
+          ],
+          [
+            "public-valid",
+            0,
+            [
+              1,
+              1
+            ]
+          ],
+          [
+            "public-invalid-first",
+            1,
+            [
+              1,
+              1
+            ]
+          ],
+          [
+            "public-invalid-middle",
+            1,
+            [
+              1,
+              1
+            ]
+          ],
+          [
+            "public-invalid-last",
+            1,
+            [
+              1,
+              1
+            ]
+          ],
+          [
+            "public-invalid-error",
+            1,
+            [
+              1,
+              1
+            ]
+          ],
+          [
+            "public-recovery",
+            0,
+            [
+              2,
+              2
+            ]
+          ],
+          [
+            "raw-invalid-component",
+            1,
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            "raw-invalid-error",
+            1,
+            [
+              2,
+              4
+            ]
+          ],
+          [
+            "raw-valid-unbounded-ok",
+            1,
+            [
+              3,
+              5
+            ]
+          ]
+        ],
+        "positiveControl": "valid public and raw calls increment source and adapter counts"
+      },
+      "modelSha256": "b962813616068354c59d799df594cdee137643c070d7418cf21aeea41293fbc7",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 53831382,
+              "path": "archives/finproductarrays-1.0.0-c.tar.gz",
+              "sha256": "75b8e5de51dbf3484246d0aeed71ec572081a8df3b607b62ea41612eead34464"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "finproductarrays",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "c",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "c",
+      "receiptSha256": "f0abe89fd1ce6200a036469734d65526bbf44d1aa8fc301f3920a8fdf84828ca",
+      "refinements": {
+        "FinProductArrays.reversed": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "4",
+                      "kind": "fin"
+                    },
+                    {
+                      "arguments": [
+                        null,
+                        {
+                          "bound": "6",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "result"
+                    }
+                  ],
+                  "kind": "tuple"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "4",
+                    "kind": "fin"
+                  },
+                  {
+                    "arguments": [
+                      null,
+                      {
+                        "bound": "6",
+                        "kind": "fin"
+                      }
+                    ],
+                    "kind": "result"
+                  }
+                ],
+                "kind": "tuple"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinProductArrays.rows": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "4",
+                      "kind": "fin"
+                    },
+                    {
+                      "arguments": [
+                        null,
+                        {
+                          "bound": "6",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "result"
+                    }
+                  ],
+                  "kind": "tuple"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        }
+      },
+      "reviewedSourceSha256": "895f91af59a9aacc64de2c13690ff95b1acf702354f71bcb839bbd13a86cba30",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "96ddefbd6cbc645389c9aa509002448d465b405d82e0b99dd6eff37c88a6c58d"
+    },
+    {
+      "bindingIrSha256": "3a1454d7b02c29ec06af11ed57d5a46de9f00b0cb457b6d33ce4ead1a3cfdbae",
+      "checks": 2010,
+      "compilerFreePath": true,
+      "consumerSha256": "2aa83aece8683b5ac4bf299165021d4fabd61b14bcb6275d867739a7bc6a05e5",
+      "modelSha256": "b962813616068354c59d799df594cdee137643c070d7418cf21aeea41293fbc7",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51758272,
+              "path": "archives/finproductarrays-1.0.0-cpp.tar.gz",
+              "sha256": "5e55b7a4c6c9b1621308d44e08efae700af31895ec901a0772f6caa797262999"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "finproductarrays",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "cpp",
+      "receiptSha256": "f0abe89fd1ce6200a036469734d65526bbf44d1aa8fc301f3920a8fdf84828ca",
+      "refinements": {
+        "FinProductArrays.reversed": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "4",
+                      "kind": "fin"
+                    },
+                    {
+                      "arguments": [
+                        null,
+                        {
+                          "bound": "6",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "result"
+                    }
+                  ],
+                  "kind": "tuple"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "4",
+                    "kind": "fin"
+                  },
+                  {
+                    "arguments": [
+                      null,
+                      {
+                        "bound": "6",
+                        "kind": "fin"
+                      }
+                    ],
+                    "kind": "result"
+                  }
+                ],
+                "kind": "tuple"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinProductArrays.rows": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "4",
+                      "kind": "fin"
+                    },
+                    {
+                      "arguments": [
+                        null,
+                        {
+                          "bound": "6",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "result"
+                    }
+                  ],
+                  "kind": "tuple"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        }
+      },
+      "reviewedSourceSha256": "895f91af59a9aacc64de2c13690ff95b1acf702354f71bcb839bbd13a86cba30",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "96ddefbd6cbc645389c9aa509002448d465b405d82e0b99dd6eff37c88a6c58d"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

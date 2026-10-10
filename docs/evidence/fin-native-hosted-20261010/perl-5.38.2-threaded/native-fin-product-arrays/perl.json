@@ -1,0 +1,150 @@
+{
+  "archives": {
+    "archives/LeanBridge-FinProductArrays-1.000.tar.gz": "192d2e584039afd6eead12652c5fe9b241ccdeed24d7e321308f02504fc07bbe",
+    "archives/LeanBridge-Runtime-0.0020989849429724070532481922236718104540983444686201531094367768450915895511528201.tar.gz": "3eb28fb76323d26a453e95059fdcdb44c964d2d4cd1caefe33465869ddf0170b"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "7b7acfa2b8b068aa5193b4c464bc69453dabcda0efdd361be545e00d5dce01af",
+      "checks": 2013,
+      "compilerFreePath": true,
+      "consumerSha256": "13421d3880db7bb306dca65fe94529eb72c7122ea74826b4db1362e821c016b0",
+      "modelSha256": "7569004d1ae4e3b7f46b47ca981487f5f7cb18ab7ea52055d549627c9d5c088d",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 67874,
+              "path": "archives/LeanBridge-FinProductArrays-1.000.tar.gz",
+              "sha256": "192d2e584039afd6eead12652c5fe9b241ccdeed24d7e321308f02504fc07bbe"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-FinProductArrays",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020989849429724070532481922236718104540983444686201531094367768450915895511528201"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51362877,
+              "path": "archives/LeanBridge-Runtime-0.0020989849429724070532481922236718104540983444686201531094367768450915895511528201.tar.gz",
+              "sha256": "3eb28fb76323d26a453e95059fdcdb44c964d2d4cd1caefe33465869ddf0170b"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "cpan",
+          "version": "0.0020989849429724070532481922236718104540983444686201531094367768450915895511528201"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "perl",
+      "receiptSha256": "622eb6101c1dc469fd643e34c6c970ae1e3ef066ab4407f30fd0346c28143ca9",
+      "refinements": {
+        "FinProductArrays.reversed": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "4",
+                      "kind": "fin"
+                    },
+                    {
+                      "arguments": [
+                        null,
+                        {
+                          "bound": "6",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "result"
+                    }
+                  ],
+                  "kind": "tuple"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "4",
+                    "kind": "fin"
+                  },
+                  {
+                    "arguments": [
+                      null,
+                      {
+                        "bound": "6",
+                        "kind": "fin"
+                      }
+                    ],
+                    "kind": "result"
+                  }
+                ],
+                "kind": "tuple"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinProductArrays.rows": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "4",
+                      "kind": "fin"
+                    },
+                    {
+                      "arguments": [
+                        null,
+                        {
+                          "bound": "6",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "result"
+                    }
+                  ],
+                  "kind": "tuple"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        }
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "5cbae8786c9994aaf90ff306e936d567bbc364a2ebd5a1e1f58f63321df3f69c"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

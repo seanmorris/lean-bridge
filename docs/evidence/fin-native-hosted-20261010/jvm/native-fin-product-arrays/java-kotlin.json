@@ -1,0 +1,252 @@
+{
+  "archives": {
+    "archives/finproductarrays-1.0.0.jar": "b0789490718711881aa4f1cadf23659af9fc617ae23093fd2cc873bdc10f4caa",
+    "archives/finproductarrays-1.0.0.pom": "805edb0f7c7e60270a4c1cd8efa8ca00cd976b14e8e545dfe5280e844ab7c324"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "b05d172fe377a60ea6783cd9cc44f0ec01dca0836262037b40881e3793a5ddd7",
+      "checks": 2010,
+      "compilerFreePath": true,
+      "consumerSha256": "41384c5aaa76d46dac396a2b00ce1d49c972a81fca1008852f3c9e9d6dae5b5e",
+      "modelSha256": "5a46329fcee93eb790c4fcab2fbd8baefb9119e62b5c941df9ea9ee5082efc83",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51410374,
+              "path": "archives/finproductarrays-1.0.0.jar",
+              "sha256": "b0789490718711881aa4f1cadf23659af9fc617ae23093fd2cc873bdc10f4caa"
+            },
+            {
+              "bytes": 626,
+              "path": "archives/finproductarrays-1.0.0.pom",
+              "sha256": "805edb0f7c7e60270a4c1cd8efa8ca00cd976b14e8e545dfe5280e844ab7c324"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:finproductarrays",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "java",
+      "receiptSha256": "535feb878ae1e173b4ecaaa2a6f062329711a36e17cb04c5feb8660fbac9d860",
+      "refinements": {
+        "FinProductArrays.reversed": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "4",
+                      "kind": "fin"
+                    },
+                    {
+                      "arguments": [
+                        null,
+                        {
+                          "bound": "6",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "result"
+                    }
+                  ],
+                  "kind": "tuple"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "4",
+                    "kind": "fin"
+                  },
+                  {
+                    "arguments": [
+                      null,
+                      {
+                        "bound": "6",
+                        "kind": "fin"
+                      }
+                    ],
+                    "kind": "result"
+                  }
+                ],
+                "kind": "tuple"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinProductArrays.rows": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "4",
+                      "kind": "fin"
+                    },
+                    {
+                      "arguments": [
+                        null,
+                        {
+                          "bound": "6",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "result"
+                    }
+                  ],
+                  "kind": "tuple"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        }
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "a294f80e446e229c68d8ef2faf1b2462733c20320a8b7d3aeb3d3d58817b691f"
+    },
+    {
+      "bindingIrSha256": "b05d172fe377a60ea6783cd9cc44f0ec01dca0836262037b40881e3793a5ddd7",
+      "checks": 2010,
+      "compilerFreePath": true,
+      "consumerSha256": "6053076f75ffc80068995221b85950a23efc7c7c3e9eb2b28e816d0c016149be",
+      "modelSha256": "5a46329fcee93eb790c4fcab2fbd8baefb9119e62b5c941df9ea9ee5082efc83",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51410374,
+              "path": "archives/finproductarrays-1.0.0.jar",
+              "sha256": "b0789490718711881aa4f1cadf23659af9fc617ae23093fd2cc873bdc10f4caa"
+            },
+            {
+              "bytes": 626,
+              "path": "archives/finproductarrays-1.0.0.pom",
+              "sha256": "805edb0f7c7e60270a4c1cd8efa8ca00cd976b14e8e545dfe5280e844ab7c324"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:finproductarrays",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "kotlin",
+      "receiptSha256": "535feb878ae1e173b4ecaaa2a6f062329711a36e17cb04c5feb8660fbac9d860",
+      "refinements": {
+        "FinProductArrays.reversed": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "4",
+                      "kind": "fin"
+                    },
+                    {
+                      "arguments": [
+                        null,
+                        {
+                          "bound": "6",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "result"
+                    }
+                  ],
+                  "kind": "tuple"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "4",
+                    "kind": "fin"
+                  },
+                  {
+                    "arguments": [
+                      null,
+                      {
+                        "bound": "6",
+                        "kind": "fin"
+                      }
+                    ],
+                    "kind": "result"
+                  }
+                ],
+                "kind": "tuple"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinProductArrays.rows": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "4",
+                      "kind": "fin"
+                    },
+                    {
+                      "arguments": [
+                        null,
+                        {
+                          "bound": "6",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "result"
+                    }
+                  ],
+                  "kind": "tuple"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        }
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "a294f80e446e229c68d8ef2faf1b2462733c20320a8b7d3aeb3d3d58817b691f"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}
