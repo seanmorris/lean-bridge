@@ -1,0 +1,32 @@
+{
+  "revision": "5b3f2efaeba2ea8257a6e62b0c6c3722a7713601",
+  "tree": "e4df83af92dedb700a5870256ee8238490d3b484",
+  "cwd": "/app",
+  "lane": "c-cpp",
+  "startedAt": "2026-10-10T20:38:11.918Z",
+  "runnerSha256": "4a5fd632bc7c30ba5a1f8118560b343bffb43c7ed43e649265c4d6b3786ec327",
+  "scope": "Two-root reviewed package acceptance, source removal, offline compiler-free installation; npm includes strict TypeScript. No relocation replay or entry counters. Local native glibc floor 2.36; npm uses frozen local engine.",
+  "command": "/usr/bin/taskset",
+  "args": [
+    "-c",
+    "3",
+    "/usr/bin/node",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "--test-name-pattern=^source-free reviewed C and C\\+\\+ archives execute each checked constructor and distinct generic choices$",
+    "tests/reviewed-subtype-installed.test.mjs"
+  ],
+  "output": "/app/build/vo1444-package-c-cpp-r1-5b3f2ef-records",
+  "initialFreeMiB": 2081,
+  "environment": {
+    "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+    "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+    "LEAN_BRIDGE_REVIEWED_SUBTYPE_PACKAGE_RECORDS": "/app/build/vo1444-package-c-cpp-r1-5b3f2ef-records",
+    "LEAN_BRIDGE_REVIEWED_SUBTYPE_PROFILES": "c,cpp",
+    "LEAN_BRIDGE_REVIEWED_SUBTYPE_REPORT": "/app/build/vo1444-package-c-cpp-r1-5b3f2ef-records/report.json",
+    "LEAN_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MAKEFLAGS": "-j1"
+  }
+}

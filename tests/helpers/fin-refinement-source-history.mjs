@@ -17,6 +17,7 @@ import { reviewedSubtypeHostCiReportChangedPaths } from "./reviewed-subtype-host
 import { reviewedSubtypeHostCiChangedPaths } from "./reviewed-subtype-host-ci-history.mjs";
 import { mavenPrerequisiteChangedPaths } from "./maven-prerequisite-history.mjs";
 import { reviewedSubtypePackageRecordChangedPaths } from "./reviewed-subtype-package-record-history.mjs";
+import { reviewedSubtypePackageCiChangedPaths } from "./reviewed-subtype-package-ci-history.mjs";
 import { subtypeComponentChangedPaths } from "./subtype-component-source-history.mjs";
 import { nestedFinChangedPaths, refinementClosureChangedPaths } from "./nested-fin-source-history.mjs";
 import { nominalFinChangedPaths } from "./nominal-fin-source-history.mjs";
@@ -849,6 +850,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...reviewedSubtypeHostCiChangedPaths
 	, ...mavenPrerequisiteChangedPaths
 	, ...reviewedSubtypePackageRecordChangedPaths
+	, ...reviewedSubtypePackageCiChangedPaths
 ])].sort());
 
 /**

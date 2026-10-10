@@ -8,12 +8,14 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { assertReviewedSubtypeHostWorkflow, disableReviewedSubtypeHostWorkflow, enableReviewedSubtypeHostWorkflow, reviewedSubtypeHostCiBlock, reviewedSubtypeHostCiCommand, reviewedSubtypeHostCiGroups, reviewedSubtypeHostCiUpload } from "./reviewed-subtype-host-ci-workflow.mjs";
 import { beforeReviewedSubtypeHostCiSource } from "./reviewed-subtype-host-ci-history.mjs";
+import { beforeReviewedSubtypePackageCiSource } from "./reviewed-subtype-package-ci-history.mjs";
 import "./reviewed-subtype-host-ci-history-tests.mjs";
 
 test("reviewed native CI workflows preserve every previous command while enabling all twelve runtime selections", async () => {
 	for(const name of ["consumer-matrix.yml", "perl-consumer.yml"])
 	{
-		const path = ".github/workflows/" + name, current = await readFile(path, "utf8"), previous = beforeReviewedSubtypeHostCiSource(path, current);
+		const path = ".github/workflows/" + name, current = beforeReviewedSubtypePackageCiSource(path, await readFile(path, "utf8"));
+		const previous = beforeReviewedSubtypeHostCiSource(path, current);
 		assertReviewedSubtypeHostWorkflow(current, name);
 		assert.notEqual(current, previous);
 		assert.equal(disableReviewedSubtypeHostWorkflow(current, name), previous);

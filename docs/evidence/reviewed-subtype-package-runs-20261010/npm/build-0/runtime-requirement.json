@@ -1,0 +1,14 @@
+{
+  "abiVersion": 1,
+  "artifactIncluded": false,
+  "kind": "lean-bridge-shared-runtime-requirement",
+  "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+  "patchSetSha256": "743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3",
+  "profile": "side-lazy",
+  "requiredImports": [
+    "memory",
+    "__indirect_function_table"
+  ],
+  "schemaVersion": 1,
+  "shared": true
+}

@@ -23,6 +23,7 @@ import { assertPhpWasmDirectFinWorkflow, disablePhpWasmDirectFinWorkflow } from 
 import { assertPhpWasmSubtypeWorkflow, disablePhpWasmSubtypeWorkflow } from "./helpers/php-wasm-subtype-ci.mjs";
 import { assertPhpWasmEntryWorkflow, disablePhpWasmEntryWorkflow } from "./helpers/php-wasm-subtype-entry-ci.mjs";
 import { assertReviewedSubtypeHostWorkflow, disableReviewedSubtypeHostWorkflow } from "./helpers/reviewed-subtype-host-ci-workflow.mjs";
+import { assertReviewedSubtypePackageWorkflow, disableReviewedSubtypePackageWorkflow } from "./helpers/reviewed-subtype-package-ci-workflow.mjs";
 import { assertManagedCiIsolation } from "./helpers/managed-ci-isolation.mjs";
 import { assertNativeCiIsolation } from "./helpers/native-ci-isolation.mjs";
 import {
@@ -616,13 +617,15 @@ test("CI result contract detects support loss", async () => {
 });
 
 test("dedicated CI covers every consumer with Node 22 and pinned build paths", async () => {
-  const [currentWorkflow, packageDocument, currentPerlWorkflow, toolchainBootstrap] = await Promise.all([
+  const [packageWorkflow, packageDocument, currentPerlWorkflow, toolchainBootstrap] = await Promise.all([
     readFile(".github/workflows/consumer-matrix.yml", "utf8")
     , readFile("package.json", "utf8").then(JSON.parse)
     , readFile(".github/workflows/perl-consumer.yml", "utf8")
     , readFile("scripts/bootstrap-toolchains.sh", "utf8")
   ]);
   // Validate all measured edge gates before checking the unchanged earlier command/upload order.
+  assertReviewedSubtypePackageWorkflow(packageWorkflow);
+  const currentWorkflow = disableReviewedSubtypePackageWorkflow(packageWorkflow);
   assertReviewedSubtypeHostWorkflow(currentWorkflow, "consumer-matrix.yml");
   assertReviewedSubtypeHostWorkflow(currentPerlWorkflow, "perl-consumer.yml");
   assertFinContainerEdgeWorkflow(currentWorkflow);
