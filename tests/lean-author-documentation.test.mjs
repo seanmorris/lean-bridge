@@ -15,6 +15,7 @@ import { validateExportConfiguration } from "../src/analyze/export-configuration
 import { componentNpmIdentity } from "../src/release/component-package-receipt.mjs";
 import { checkedRecordContracts } from "./helpers/checked-record-fixture.mjs";
 import { checkedRecordPromotionReferences } from "./helpers/checked-record-promotion-references.mjs";
+import { readCheckedRecordPythonArchive } from "./helpers/checked-record-python-archive.mjs";
 import { callbackFinPromotionReferences } from "./helpers/callback-fin-promotion-references.mjs";
 import { sha256 } from "../src/capsule/node.mjs";
 import { finHostedReceiptSha256 } from "./helpers/fin-native-hosted-evidence.mjs";
@@ -149,6 +150,9 @@ test("checked-record guidance uses the tested payload and per-site constructor c
 	assert.match(section, /checked-records-20261008\/receipt\.json/);
 	assert.match(section, /ordinary-source and reviewed C\/C\+\+ and Node JavaScript packages/);
 	assert.match(section, /Separate ordinary-source result-only packages also pass/);
+	assert.match(section, /checked-record-python-hosts-20261010\.md/);
+	assert.match(section, /Python 3\.11 and 3\.12/);
+	assert.match(section, /installed-package acceptance for those seven hosts remains pending/);
 	assert.match(section, /Browser execution remains pending/);
 	assert.doesNotMatch(section, /Installed-package acceptance for this mapping is pending|do not establish installed C\/C\+\+/);
 	assert.match(section, /exact names, order and types/);
@@ -158,10 +162,13 @@ test("checked-record guidance uses the tested payload and per-site constructor c
 	assert.match(await readFile("docs/lean/export-decisions.md", "utf8"), /existing-package.md#export-a-record-with-proof-fields/);
 });
 
-test("the checked-record author table agrees with all six retained installed selections", async () => {
+test("the checked-record author table agrees with the retained native, npm and Python selections", async () => {
 	const document = await readFile("docs/lean/existing-package.md", "utf8");
 	const row = document.split("\n").find(line => line.startsWith("| Record with erased proof fields"));
-	assert.equal(row, "| Record with erased proof fields and a checked input constructor | Node installed; browser pending | C/C++ installed; other hosts rejected | Rejected | Rejected | C/C++ and Node installed; browser pending; other targets rejected |");
+	assert.equal(row, "| Record with erased proof fields and a checked input constructor | Node installed; browser pending | C/C++ and Python installed; other native hosts generated, pending | Rejected | Rejected | C/C++, Python and Node installed; other native hosts generated, pending; browser pending; CPAN and PHP-Wasm rejected |");
+	const python = await readCheckedRecordPythonArchive();
+	assert.equal(python.reports.length, 8);
+	assert.deepEqual([...new Set(python.index.runs.map(run => run.floor))], ["3.11", "3.12"]);
 	const references = await checkedRecordPromotionReferences();
 	assert.deepEqual(references.map(item => [item.host, item.route]), [
 		["c-cpp", "ordinary"], ["c-cpp", "reviewed"], ["c-cpp", "result-only"]

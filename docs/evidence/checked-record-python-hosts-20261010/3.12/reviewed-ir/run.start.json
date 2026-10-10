@@ -1,0 +1,34 @@
+{
+  "revision": "5a730e4a970ee43485553b6357ae68e4fbfab827",
+  "tree": "461c77685201e562a7396961a99b992940028113",
+  "cwd": "/app",
+  "startedAt": "2026-10-10T22:48:43.163Z",
+  "runnerSha256": "856d050147512e51cf1fd102d444bbede8b8496a20895a6ec9db6b1e00c053b4",
+  "scope": "Local two-root checked-record native acceptance; independent full or result-only caller, source removal, offline compiler-free installation and relocation. No entry counters. Local glibc floor 2.36.",
+  "command": "/usr/bin/taskset",
+  "args": [
+    "-c",
+    "3",
+    "/usr/bin/node",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "tests/helpers/checked-record-native-installed-tests.mjs"
+  ],
+  "output": "/app/build/vo1446-host-python312-reviewed-r1-5a730e4-records",
+  "route": "reviewed-ir",
+  "initialFreeMiB": 2506,
+  "environment": {
+    "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+    "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+    "LEAN_BRIDGE_CHECKED_RECORD_NATIVE_HOSTS": "python",
+    "LEAN_BRIDGE_CHECKED_RECORD_NATIVE_OUTPUT": "/app/build/vo1446-host-python312-reviewed-r1-5a730e4-records",
+    "LEAN_BRIDGE_CHECKED_RECORD_NATIVE_ROUTES": "reviewed-ir",
+    "LEAN_BRIDGE_PYTHON": "/app/.toolchains/python312/bin/python3",
+    "LEAN_BRIDGE_PHP": "/app/.toolchains/php-8.5.10-ffi/bin/php",
+    "LEAN_BRIDGE_COMPOSER": "/usr/bin/composer",
+    "LEAN_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MAKEFLAGS": "-j1"
+  }
+}

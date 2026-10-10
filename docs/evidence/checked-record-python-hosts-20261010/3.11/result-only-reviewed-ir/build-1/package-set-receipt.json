@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "checkedrecords@1.0.0",
+    "name": "checkedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51353404,
+          "path": "archives/checkedrecords-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+          "sha256": "468b88183d4d1ead8bfe1d1c7f04ba061a3d69725b6ecbb2321c6e402a66ebb6"
+        }
+      ],
+      "ecosystem": "pypi",
+      "name": "checkedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "pypi",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "1304052f68a21f961d4ad0756d3a93d531014e71e4f3bb8cdfd3faa65a6ecb39",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "bf08bf4b2afc20ae784fdabbffe9abc67dc4aae3e4761babe9218e3f7ae40603"
+  }
+}

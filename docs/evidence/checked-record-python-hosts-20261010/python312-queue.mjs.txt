@@ -1,0 +1,21 @@
+import assert from "node:assert/strict";
+import { spawn } from "node:child_process";
+const revision = "5a730e4a970ee43485553b6357ae68e4fbfab827";
+const selections = [
+  ["ordinary-source", "python312-ordinary-r1"],
+  ["reviewed-ir", "python312-reviewed-r1"],
+  ["result-only-ordinary-source", "python312-result-ordinary-r1"],
+  ["result-only-reviewed-ir", "python312-result-reviewed-r1"]
+];
+for (const [route, label] of selections) {
+  console.log(JSON.stringify({ event: "starting", route, label, time: new Date().toISOString() }));
+  const child = spawn(process.execPath, ["build/run-checked-record-native-hosts-v1.mjs", revision, "python", route, label], {
+    cwd: "/app", stdio: "inherit", env: { ...process.env, VO1446_PYTHON: "/app/.toolchains/python312/bin/python3" }
+  });
+  const result = await new Promise(resolve => {
+    child.once("error", error => resolve({ error: error.message }));
+    child.once("close", (code, signal) => resolve({ code, signal }));
+  });
+  console.log(JSON.stringify({ event: "completed", route, label, result, time: new Date().toISOString() }));
+  assert.deepEqual(result, { code: 0, signal: null });
+}

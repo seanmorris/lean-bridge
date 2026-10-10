@@ -1,0 +1,216 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-python-v1",
+  "predecessorCommit": "5a730e4a970ee43485553b6357ae68e4fbfab827",
+  "updates": [
+    {
+      "path": "docs/lean/existing-package.md",
+      "currentSha256": "35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891",
+      "previousSha256": "f60a42d015887a4b3b124908fd1c602f526b5d3e4d29dd65244faee40263fb40",
+      "edits": [
+        {
+          "start": 44381,
+          "previous": "This mapping currently requires a nonempty, closed copied payload at a top-level parameter or result. Native adapters also generate Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI packages using the same C payload mirrors. Their [source checks](../evidence/checked-record-native-hosts-20261010.md) cover conversion layouts and constructor metadata; installed-package acceptance for these hosts remains pending. Perl and PHP-Wasm checked-record adapters remain pending. Browser execution remains pending. Nested checked records, value-dependent runtime fields, recursive checked records, other index kinds and callbacks remain unsupported. npm uses private ABI 8 for its proof-free carriers.\n",
+          "current": "This mapping currently requires a nonempty, closed copied payload at a top-level parameter or result. [Installed Python checks](../evidence/checked-record-python-hosts-20261010.md) pass on Python 3.11 and 3.12 for ordinary-source, reviewed and separate result-only packages. Each selection reproduces two author builds, removes the author roots before offline installation, and replays the caller after relocating the installation. These local runs use glibc 2.36 and do not measure Lean entry counts.\n\nNative adapters also generate Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI packages using the same C payload mirrors. Their [source checks](../evidence/checked-record-native-hosts-20261010.md) cover conversion layouts and constructor metadata; installed-package acceptance for those seven hosts remains pending. Perl and PHP-Wasm checked-record adapters remain pending. Browser execution remains pending. Nested checked records, value-dependent runtime fields, recursive checked records, other index kinds and callbacks remain unsupported. npm uses private ABI 8 for its proof-free carriers.\n"
+        },
+        {
+          "start": 52886,
+          "previous": "| Record with erased proof fields and a checked input constructor | Node installed; browser pending | C/C++ installed; other hosts rejected | Rejected | Rejected | C/C++ and Node installed; browser pending; other targets rejected |\n",
+          "current": "| Record with erased proof fields and a checked input constructor | Node installed; browser pending | C/C++ and Python installed; other native hosts generated, pending | Rejected | Rejected | C/C++, Python and Node installed; other native hosts generated, pending; browser pending; CPAN and PHP-Wasm rejected |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "82d1a1dc6cf3dca0a0fb7e730fbcc6b843f516d99bdc6b97d923b5e951d2b081",
+      "previousSha256": "3feaa9617b0eff79e6289da8563b7be9d40fb12361326f3b47a45875bbb8f0bc",
+      "edits": [
+        {
+          "start": 1072635,
+          "previous": "          \"sha256\": \"f60a42d015887a4b3b124908fd1c602f526b5d3e4d29dd65244faee40263fb40\"\n",
+          "current": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n"
+        },
+        {
+          "start": 1080224,
+          "previous": "          \"sha256\": \"f60a42d015887a4b3b124908fd1c602f526b5d3e4d29dd65244faee40263fb40\"\n",
+          "current": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n"
+        },
+        {
+          "start": 1086825,
+          "previous": "          \"sha256\": \"f60a42d015887a4b3b124908fd1c602f526b5d3e4d29dd65244faee40263fb40\"\n",
+          "current": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n"
+        },
+        {
+          "start": 1093933,
+          "previous": "          \"sha256\": \"f60a42d015887a4b3b124908fd1c602f526b5d3e4d29dd65244faee40263fb40\"\n",
+          "current": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n"
+        },
+        {
+          "start": 1101427,
+          "previous": "          \"sha256\": \"f60a42d015887a4b3b124908fd1c602f526b5d3e4d29dd65244faee40263fb40\"\n",
+          "current": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n"
+        },
+        {
+          "start": 1108483,
+          "previous": "          \"sha256\": \"f60a42d015887a4b3b124908fd1c602f526b5d3e4d29dd65244faee40263fb40\"\n",
+          "current": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n"
+        },
+        {
+          "start": 1116084,
+          "previous": "          \"sha256\": \"f60a42d015887a4b3b124908fd1c602f526b5d3e4d29dd65244faee40263fb40\"\n",
+          "current": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n"
+        },
+        {
+          "start": 1126365,
+          "previous": "          \"sha256\": \"f60a42d015887a4b3b124908fd1c602f526b5d3e4d29dd65244faee40263fb40\"\n",
+          "current": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n"
+        },
+        {
+          "start": 1138698,
+          "previous": "          \"sha256\": \"f60a42d015887a4b3b124908fd1c602f526b5d3e4d29dd65244faee40263fb40\"\n",
+          "current": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n"
+        },
+        {
+          "start": 1192157,
+          "previous": "          \"sha256\": \"f60a42d015887a4b3b124908fd1c602f526b5d3e4d29dd65244faee40263fb40\"\n",
+          "current": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n"
+        },
+        {
+          "start": 1224700,
+          "previous": "          \"sha256\": \"f60a42d015887a4b3b124908fd1c602f526b5d3e4d29dd65244faee40263fb40\"\n",
+          "current": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n"
+        },
+        {
+          "start": 1254979,
+          "previous": "          \"sha256\": \"f60a42d015887a4b3b124908fd1c602f526b5d3e4d29dd65244faee40263fb40\"\n",
+          "current": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n"
+        },
+        {
+          "start": 1287946,
+          "previous": "          \"sha256\": \"f60a42d015887a4b3b124908fd1c602f526b5d3e4d29dd65244faee40263fb40\"\n",
+          "current": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n"
+        },
+        {
+          "start": 1329356,
+          "previous": "          \"sha256\": \"f60a42d015887a4b3b124908fd1c602f526b5d3e4d29dd65244faee40263fb40\"\n",
+          "current": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n"
+        },
+        {
+          "start": 1355204,
+          "previous": "          \"sha256\": \"f60a42d015887a4b3b124908fd1c602f526b5d3e4d29dd65244faee40263fb40\"\n",
+          "current": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n"
+        },
+        {
+          "start": 1377884,
+          "previous": "          \"sha256\": \"f60a42d015887a4b3b124908fd1c602f526b5d3e4d29dd65244faee40263fb40\"\n",
+          "current": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n"
+        },
+        {
+          "start": 1397576,
+          "previous": "          \"sha256\": \"f60a42d015887a4b3b124908fd1c602f526b5d3e4d29dd65244faee40263fb40\"\n",
+          "current": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n"
+        },
+        {
+          "start": 1418061,
+          "previous": "          \"sha256\": \"f60a42d015887a4b3b124908fd1c602f526b5d3e4d29dd65244faee40263fb40\"\n",
+          "current": "          \"sha256\": \"35d99babb164fd09b2ba309476f97544661457632bbaacbe747d125d49f55891\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/checked-records.test.mjs",
+      "currentSha256": "04fac102db705f5645c63a4e4358c6e8671988bf5503eb00387e17c37533a03b",
+      "previousSha256": "3f517cc64ad9d2ed9b83f435c7aa66b0a0a15acf3d569ba8189d22e7e696a97c",
+      "edits": [
+        {
+          "start": 856,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-python-archive-tests.mjs\";\nimport \"./helpers/checked-record-python-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-native-installed-history-tests.mjs",
+      "currentSha256": "b416db705856f3030fb0856ddc25174ace6a56fa4cba25660945d80827065267",
+      "previousSha256": "c95a066ab6f34d17671f7cdb371911a806d8f92ca2fd1cf163c0dda562e69260",
+      "edits": [
+        {
+          "start": 522,
+          "previous": "",
+          "current": "import { beforeCheckedRecordPythonArchiveSource } from \"./checked-record-python-history.mjs\";\n"
+        },
+        {
+          "start": 1446,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst current = beforeCheckedRecordPythonArchiveSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2901,
+          "previous": "\tconst source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst source = beforeCheckedRecordPythonArchiveSource(path, await readFile(path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-native-installed-history.mjs",
+      "currentSha256": "78444a5aafeea176c59c984bdc819b4ef67d395578d4142f0de83feb337a8ca1",
+      "previousSha256": "18b02795f4534ca0677345395ad9764ea35fad9f3e01af5ca484fb69f8950874",
+      "edits": [
+        {
+          "start": 246,
+          "previous": "",
+          "current": "import { beforeCheckedRecordPythonArchiveSource } from \"./checked-record-python-history.mjs\";\n"
+        },
+        {
+          "start": 2474,
+          "previous": "",
+          "current": "\tsource = beforeCheckedRecordPythonArchiveSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "5e8e150a84b40fc8199b054907353de497c7683ef54611524797da0d5ff51f03",
+      "previousSha256": "194cce095115b0d92fd1b1531793ee3c281d81e78d233245ec5d53a4fedd350a",
+      "edits": [
+        {
+          "start": 1909,
+          "previous": "",
+          "current": "import { checkedRecordPythonArchiveChangedPaths } from \"./checked-record-python-history.mjs\";\n"
+        },
+        {
+          "start": 58639,
+          "previous": "",
+          "current": "\t, ...checkedRecordPythonArchiveChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/lean-author-documentation.test.mjs",
+      "currentSha256": "076e0f68964020657c8358aec72d438ae1efa6138133cf9c9a8d62d1dbcd0217",
+      "previousSha256": "7d3124b28665353caf144fb6c6b75e77ac0231445dacde97a103849e8796e937",
+      "edits": [
+        {
+          "start": 859,
+          "previous": "",
+          "current": "import { readCheckedRecordPythonArchive } from \"./helpers/checked-record-python-archive.mjs\";\n"
+        },
+        {
+          "start": 11186,
+          "previous": "",
+          "current": "\tassert.match(section, /checked-record-python-hosts-20261010\\.md/);\n\tassert.match(section, /Python 3\\.11 and 3\\.12/);\n\tassert.match(section, /installed-package acceptance for those seven hosts remains pending/);\n"
+        },
+        {
+          "start": 11950,
+          "previous": "test(\"the checked-record author table agrees with all six retained installed selections\", async () => {\n",
+          "current": "test(\"the checked-record author table agrees with the retained native, npm and Python selections\", async () => {\n"
+        },
+        {
+          "start": 12240,
+          "previous": "\tassert.equal(row, \"| Record with erased proof fields and a checked input constructor | Node installed; browser pending | C/C++ installed; other hosts rejected | Rejected | Rejected | C/C++ and Node installed; browser pending; other targets rejected |\");\n",
+          "current": "\tassert.equal(row, \"| Record with erased proof fields and a checked input constructor | Node installed; browser pending | C/C++ and Python installed; other native hosts generated, pending | Rejected | Rejected | C/C++, Python and Node installed; other native hosts generated, pending; browser pending; CPAN and PHP-Wasm rejected |\");\n\tconst python = await readCheckedRecordPythonArchive();\n\tassert.equal(python.reports.length, 8);\n\tassert.deepEqual([...new Set(python.index.runs.map(run => run.floor))], [\"3.11\", \"3.12\"]);\n"
+        }
+      ]
+    }
+  ]
+}

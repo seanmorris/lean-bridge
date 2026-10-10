@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeCheckedRecordPythonArchiveSource } from "./checked-record-python-history.mjs";
 
 export const checkedRecordNativeInstalledHistoryPath = "docs/evidence/checked-record-native-installed-source-history-20261010.json";
 export const checkedRecordNativeInstalledPredecessor = "42f40d5658f82ed57d21424c16187bf510f96cf4";
@@ -54,6 +55,7 @@ export const reverseCheckedRecordNativeInstalledUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeCheckedRecordNativeInstalledSource = (path, source, expected) => {
+	source = beforeCheckedRecordPythonArchiveSource(path, source, expected);
 	if(typeof source !== "string" || !checkedRecordNativeInstalledChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

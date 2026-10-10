@@ -1,0 +1,29 @@
+{
+  "contracts": {
+    "CheckedRecords.repeated": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    }
+  },
+  "exports": [
+    "CheckedRecords.repeated"
+  ],
+  "modules": [
+    "CheckedRecords"
+  ],
+  "schemaVersion": 1,
+  "targets": {
+    "pypi": {
+      "name": "checkedrecords",
+      "version": "1.0.0"
+    }
+  }
+}
