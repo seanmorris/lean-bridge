@@ -14,6 +14,7 @@ import { assertFinContainerEdgeProbeLocation, finContainerEdgeDefinitions, verif
 import { assertFinContainerEdgeGdbRun, finContainerEdgeGdbScript, prepareFinContainerEdgeGdb } from "./fin-container-edge-gdb.mjs";
 import { finContainerGdbCommand } from "./fin-container-dispatch-gdb.mjs";
 import { finContainerEdgeRubyProbe, readFinContainerEdgeRuby } from "./fin-container-edge-ruby.mjs";
+import { verifyFinContainerEdgeRubyEnvironment } from "./fin-container-edge-ruby-closure.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 
 /**
@@ -27,11 +28,19 @@ import { saveLakeFile } from "./lake-workspace.mjs";
  * @param options.expectedModelSha256 - Producer model digest.
  * @param options.probeRoot - New directory outside the installation.
  * @param options.command - Absolute MRI interpreter selected by the original gem consumer.
+ * @param options.rubyEnvironment - Original archive-derived GEM_HOME identity for installed runs.
  */
-export const observeFinContainerEdgeRuby = async ({ installed, receiptPath, receiptBytes, expectedModelSha256, probeRoot, command }) => {
+export const observeFinContainerEdgeRuby = async ({ installed, receiptPath, receiptBytes, expectedModelSha256, probeRoot, command, rubyEnvironment }) => {
 	await assertFinContainerEdgeProbeLocation(installed, probeRoot);
 	assert.ok(typeof command === "string" && isAbsolute(command) && !command.includes("\0"));
-	const options = { installed, receiptPath, receiptBytes, expectedModelSha256 };
+	const options = { installed, receiptPath, receiptBytes, expectedModelSha256, exactFileClosure: true };
+	const checkEnvironment = async () => {
+		if(!rubyEnvironment) return;
+		assert.equal(installed, join(rubyEnvironment.gems, "gems", rubyEnvironment.fullName));
+		assert.equal(command, rubyEnvironment.command);
+		await verifyFinContainerEdgeRubyEnvironment(rubyEnvironment);
+	};
+	await checkEnvironment();
 	const before = await verifyFinContainerEdgeDeployment(options);
 	const modules = ["lib/lean_bridge/fincontainers.rb", "lib/lean_bridge/fincontainers/native.rb", "lib/lean_bridge/native_copied_runtime_v1.rb"];
 	for(const path of modules) assert.ok(Object.hasOwn(before.receipt.files, path), `Ruby module is not receipt-pinned: ${path}`);
@@ -50,13 +59,20 @@ export const observeFinContainerEdgeRuby = async ({ installed, receiptPath, rece
 		, probeRoot: join(probeRoot, "gdb"), cwd: probeRoot
 		, env: { ...copiedCleanEnvironment, LEAN_NUM_THREADS: "1" }
 		, argv: ({ record, nonce, configSha256, definerIndices }) => [command, "--disable-gems", "-I", join(installed, "lib"), "public.rb", record, nonce, configSha256, definerIndices.join(",")] });
-	const absent = await observer.run({ gdb: false });
+	const runObserved = async settings => {
+		await checkEnvironment(); await verifyFinContainerEdgeDeployment(options);
+		try
+		{ return await observer.run(settings); }
+		finally
+		{ await checkEnvironment(); await verifyFinContainerEdgeDeployment(options); }
+	};
+	const absent = await runObserved({ gdb: false });
 	assert.equal(absent.code, 2); assert.equal(absent.stdout, ""); assert.equal(absent.stderr, "edge record is not attached with empty counters\n");
-	const run = await observer.run();
+	const run = await runObserved();
 	assert.equal(run.code, 0, run.output + run.stderr);
 	const observations = readFinContainerEdgeRuby(run.stdout);
 	const armed = await assertFinContainerEdgeGdbRun(observer, run, observations);
-	const repeat = await observer.run();
+	const repeat = await runObserved();
 	assert.equal(repeat.code, 0, repeat.output + repeat.stderr);
 	assert.equal(repeat.stdout, run.stdout, "a fresh Ruby process must repeat every call");
 	const again = await assertFinContainerEdgeGdbRun(observer, repeat, readFinContainerEdgeRuby(repeat.stdout));

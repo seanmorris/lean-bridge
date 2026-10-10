@@ -63,7 +63,7 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 	const archive = join(handoff, pkg.artifacts[0].path);
 	const extension = extensions[profile], source = await fixture.source(profile, extension, 64);
 	await saveLakeFile(root, `consumer.${extension}`, source);
-	let command, args, pythonPolicy, env = copiedCleanEnvironment;
+	let command, args, pythonPolicy, rubyPolicy, env = copiedCleanEnvironment;
 	// Optional fixture policy runs before the first package-influenced compilation and again
 	// around execution. Other fixture callers retain their existing install behavior.
 	let verifyPackage = async () => {};
@@ -106,7 +106,9 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 	{
 		command = (await runCopied(environment.LEAN_BRIDGE_RUBY ?? "ruby", ["--disable-gems", "-rrbconfig", "-e", "print RbConfig.ruby"], root, { PATH: environment.PATH })).stdout;
 		env = { ...env, GEM_HOME: join(root, "gems"), GEM_PATH: join(root, "gems") };
-		await runCopied(command, [environment.LEAN_BRIDGE_GEM ?? join(dirname(command), "gem"), "install", "--norc", archive, "--local", "--install-dir", env.GEM_HOME, "--no-document"], root, env);
+		const gemCommand = environment.LEAN_BRIDGE_GEM ?? join(dirname(command), "gem");
+		if(fixture.installRuby) rubyPolicy = await fixture.installRuby({ command, gemCommand, root, archive, archiveSha256: pkg.artifacts[0].sha256 });
+		else await runCopied(command, [gemCommand, "install", "--norc", archive, "--local", "--install-dir", env.GEM_HOME, "--no-document"], root, env);
 		args = ["consumer.rb"];
 	}
 	else if(profile === "perl")
@@ -181,7 +183,8 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 	}
 	else throw new Error(`Copied consumer not implemented: ${profile}`);
 	await verifyPackage();
-	const result = pythonPolicy ? await pythonPolicy.run(["consumer.py"], root, env) : await runCopied(command, args, root, env);
+	const result = pythonPolicy ? await pythonPolicy.run(["consumer.py"], root, env)
+		: rubyPolicy ? await rubyPolicy.run(args, root) : await runCopied(command, args, root, env);
 	await verifyPackage();
 	assert.equal(result.stderr, "");
 	const observation = fixture.parseResult?.(result.stdout);
@@ -197,5 +200,6 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 		, ...(observation ? { result: observation } : {})
 		, consumerSha256: sha256(source), command
 		, ...(pythonPolicy ? { pythonEnvironment: pythonPolicy.context } : {})
+		, ...(rubyPolicy ? { rubyEnvironment: rubyPolicy.context } : {})
 		, offlineInstall: true, compilerFreePath: true };
 };

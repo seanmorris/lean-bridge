@@ -18,8 +18,10 @@ import { finContainerEdgeEntries } from "./helpers/fin-container-edge-dispatch.m
 import { finContainerEdgeRubyExpected, finContainerEdgeRubyProbe, readFinContainerEdgeRuby } from "./helpers/fin-container-edge-ruby.mjs";
 import { assertFinContainerEdgeGdbRun, finContainerEdgeGdbScript, prepareFinContainerEdgeGdb } from "./helpers/fin-container-edge-gdb.mjs";
 import { observeFinContainerEdgeRuby } from "./helpers/fin-container-edge-ruby-observer.mjs";
+import { installFinContainerEdgeRuby } from "./helpers/fin-container-edge-ruby-closure.mjs";
+import { repeatFinContainerEdges } from "./helpers/fin-container-edge-install.mjs";
 import { finContainerGdbScript } from "./helpers/fin-container-dispatch-gdb.mjs";
-import { copiedCleanEnvironment } from "./helpers/copied-fixture-install.mjs";
+import { copiedCleanEnvironment, installCopiedConsumer, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 
 const text = rows => rows.map(([step, method, status, counts]) => `edge-ruby ${step} ${method} ${status} ${counts.join(" ")}\n`).join("") + "fin-container-ok:14094\n";
@@ -178,7 +180,8 @@ test("Ruby normal deep-binding loader executes every edge call under verified ad
 	{
 		const bytes = await readFile(join(site, path)); files[path] = { bytes: bytes.length, sha256: sha256(bytes) };
 	}
-	const receiptPath = "lean-bridge/package-receipt.json", receiptBytes = Buffer.from(JSON.stringify({ component: model.component, bindingIrSha256, files }));
+	const name = "lean_bridge_edge_source", version = "1.0.0";
+	const receiptPath = "lean-bridge/package-receipt.json", receiptBytes = Buffer.from(JSON.stringify({ name, version, component: model.component, bindingIrSha256, files }));
 	await saveLakeFile(site, receiptPath, receiptBytes);
 	const installed = `${site}-relocated`; await rename(site, installed);
 	await assert.rejects(access(site), { code: "ENOENT" });
@@ -207,5 +210,43 @@ test("Ruby normal deep-binding loader executes every edge call under verified ad
 	const wrongModule = await prepareFinContainerEdgeGdb(movedOptions);
 	const locationFailure = await wrongModule.run();
 	assert.equal(locationFailure.code, 6); assert.equal(locationFailure.stdout, ""); assert.equal(locationFailure.stderr, "unexpected Ruby module location\n");
+	// A synthetic gem exercises the normal RubyGems path with real compiled Lean, but is
+	// not evidence of the separately required canonical two-root installed-package gate.
+	const archiveName = `${name}-${version}-x86_64-linux.gem`;
+	const buildGem = `
+spec = Gem::Specification.new do |s|
+  s.name = "${name}"; s.version = "${version}"; s.summary = "Synthetic compiled Lean guard fixture"
+  s.authors = ["Test"]; s.license = "MIT"; s.homepage = "https://example.invalid/"
+  s.platform = Gem::Platform.new("x86_64-linux"); s.files = JSON.parse(ARGV.fetch(0)); s.require_paths = ["lib"]
+end
+Gem::Package.build(spec, false, false, ARGV.fetch(1))
+`;
+	await runCopied(ruby, ["--disable-gems", "-rrubygems", "-rrubygems/package"
+		, "-rjson", "-e", buildGem, JSON.stringify([...members, receiptPath])
+		, join(root, archiveName)], installed);
+	const packages = [{ role: "component", name, version, artifacts: [{ path: archiveName, sha256: sha256(await readFile(join(root, archiveName))) }] }];
+	const consumer = join(root, "gem-consumer");
+	const normal = await installCopiedConsumer({ profile: "ruby", consumer
+		, handoff: root, packages, environment: { LEAN_BRIDGE_RUBY: ruby }
+		, fixture: { source: () => finContainerEdgeConsumer("ruby")
+			, installRuby: installFinContainerEdgeRuby
+			, success: "fin-container-ok", expectedChecks: 14094 } });
+	assert.equal(normal.checks, 14094);
+	const relocated = await repeatFinContainerEdges({ profile: "ruby", consumer
+		, handoff: root, packages, command: normal.command
+		, rubyEnvironment: normal.rubyEnvironment });
+	assert.equal(relocated.exactPackageFiles, true);
+	const rubyEnvironment = { ...normal.rubyEnvironment, gems: join(consumer, "ruby-relocated/gems") };
+	const installedGem = join(rubyEnvironment.gems, "gems", rubyEnvironment.fullName);
+	const gemReport = await observeFinContainerEdgeRuby({ ...moved, installed: installedGem
+		, rubyEnvironment, command: normal.command
+		, probeRoot: join(root, "gem-public-probe") });
+	assert.deepEqual(gemReport.observations, report.observations);
+	assert.equal(gemReport.stdoutSha256, report.stdoutSha256);
+	await saveLakeFile(installedGem, "lib/fiddle.rb", 'raise "must not execute"\n');
+	await assert.rejects(observeFinContainerEdgeRuby({ ...moved, installed: installedGem
+		, rubyEnvironment, command: normal.command
+		, probeRoot: join(root, "gem-shadow-probe") }), /unrecorded or missing Ruby environment file/u);
+	await assert.rejects(access(join(root, "gem-shadow-probe")), { code: "ENOENT" });
 	t.diagnostic(JSON.stringify({ scope: "source/runtime fixture with synthetic receipt, not installed RubyGems acceptance", checks: report.checks, measuredCalls: rows.length, finalCounts: rows.at(-1)[3], stdoutSha256: report.stdoutSha256, probeSha256: report.probeSha256, scriptSha256: report.scriptSha256, coldProcesses: report.runs.length }));
 });
