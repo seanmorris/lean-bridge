@@ -12,6 +12,7 @@ import { phpWasmDirectArchiveRoot, phpWasmDirectProducer } from "./php-wasm-fin-
 import { beforePhpWasmDirectPromotionSource, phpWasmDirectPromotionHistoryPath } from "./php-wasm-direct-fin-promotion-history.mjs";
 import { beforePhpWasmSubtypeSource, phpWasmSubtypeHistoryPath } from "./php-wasm-subtype-history.mjs";
 import { phpWasmSubtypeAcceptanceHistoryPath } from "./php-wasm-subtype-acceptance-history.mjs";
+import { beforePhpWasmSubtypePromotionSource, phpWasmSubtypePromotionHistoryPath } from "./php-wasm-subtype-promotion-history.mjs";
 import { phpWasmDirectPromotionConversion, phpWasmDirectPromotionEnvironment, phpWasmDirectPromotionLimit, phpWasmDirectPromotionReferences, promotePhpWasmDirectFin } from "./php-wasm-direct-fin-promotion.mjs";
 import "./php-wasm-direct-fin-promotion-history-tests.mjs";
 
@@ -40,8 +41,15 @@ test("direct PHP-Wasm promotion authenticates four selections without borrowing 
 
 test("direct PHP-Wasm promotion supplements only its existing six Fin cells and preserves earlier evidence", async () => {
 	const current = await readTypeSurface(), previous = await predecessor();
+	current.document = JSON.parse(beforePhpWasmSubtypePromotionSource("docs/type-surface.v1.json", JSON.stringify(current.document, null, 2) + "\n"));
 	const references = await phpWasmDirectPromotionReferences();
 	const proposed = await promotePhpWasmDirectFin(previous, references);
+	const later = JSON.parse(await readFile(phpWasmSubtypePromotionHistoryPath));
+	for(const entry of proposed.evidence) for(const file of entry.files)
+	{
+		const update = later.updates.find(item => item.path === file.path && item.currentSha256 === file.sha256);
+		if(update) file.sha256 = update.previousSha256;
+	}
 	validateTypeSurface(proposed, current);
 	assert.equal(proposed.observations.length, previous.observations.length);
 	assert.equal(proposed.evidence.length, previous.evidence.length + 4);
@@ -95,7 +103,11 @@ test("direct PHP-Wasm promotion supplements only its existing six Fin cells and 
 	}
 	assert.deepEqual(current.document, expected);
 	for(const entry of current.document.evidence) for(const file of entry.files)
-		assert.equal(sha256(await readFile(file.path)), file.sha256, file.path);
+	{
+		const bytes = await readFile(file.path);
+		const update = later.updates.find(item => item.path === file.path);
+		assert.equal(sha256(update ? beforePhpWasmSubtypePromotionSource(file.path, bytes.toString(), file.sha256) : bytes), file.sha256, file.path);
+	}
 });
 
 test("direct PHP-Wasm promotion refuses incomplete, duplicated or repeated supplements", async () => {

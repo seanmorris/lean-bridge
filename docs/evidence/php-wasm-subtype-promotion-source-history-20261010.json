@@ -1,0 +1,629 @@
+{
+  "schemaVersion": 1,
+  "milestone": "php-wasm-subtype-promotion-v1",
+  "predecessorCommit": "1d95f243e3998082405267d7d745ed76367219ca",
+  "updates": [
+    {
+      "path": "docs/evidence/refinement-closure-audit-20261007.md",
+      "currentSha256": "7622b7de2243d84014c3f2a02164b904d2a276282cd9f6cd36268f2622cbd144",
+      "previousSha256": "496faaa7377f145e609b3c2b8cfbb0b2ca7e3dc17132a0832552e22ac18e3ea4",
+      "edits": [
+        {
+          "start": 4162,
+          "previous": "| Checked Subtype | Ordinary top-level primitive-base parameters and results for Node, browser, C, C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI. Reviewed C/C++ and Node JavaScript/strict TypeScript now cite the [Subtype archive](reviewed-subtype-20261008/receipt.json): C 2033 checks, C++ 2026, npm 2036 checks and 2024 rejections. | None for these reviewed reports; the archive also preserves both failed attempts. | Other reviewed native hosts, browser execution and ordinary Perl CI remain separate. Nested and nominal Subtype positions are not admitted. |\n",
+          "current": "| Checked Subtype | Ordinary top-level primitive-base parameters and results for Node, browser, C, C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI. Reviewed C/C++ and Node JavaScript/strict TypeScript now cite the [Subtype archive](reviewed-subtype-20261008/receipt.json): C 2033 checks, C++ 2026, npm 2036 checks and 2024 rejections. | None for these reviewed reports; the archive also preserves both failed attempts. | PHP-Wasm's [installed Subtype archive](php-wasm-subtype-installed-20261010/index.json) adds four ordinary/reviewed parameter/result cells with twelve configurations and 2,024 checks each per route. Other reviewed native hosts and npm browser execution remain separate. Nested and nominal Subtype positions are not admitted. |\n"
+        },
+        {
+          "start": 7727,
+          "previous": "| PHP-Wasm refinements | Six ordinary/reviewed parameter, result and field cells retain the [ordinary](php-wasm-fin-20261008/receipt.json) and [reviewed](reviewed-php-wasm-fin-20261008/receipt.json) nested-product/field evidence. The [direct-value supplement](php-wasm-fin-direct-20261010/index.json) adds scalar and complete direct/nested Array/List/Option acceptance on both routes: seven scalar exports with 2,028 checks and twelve container exports with 14,089 checks, each in twelve Node/Chromium configurations. | Four direct-value evidence entries supplement the existing parameter/result observations. Consumer and author guides cite each run's actual environment; older reports remain unchanged. | Checked Subtype, measured source/adapter dispatch, integrated hosted acceptance and graph/owned/callback refinement transports remain open. No native PHP or other browser-engine claim is added. |\n",
+          "current": "| PHP-Wasm refinements | Six ordinary/reviewed parameter, result and field cells retain the [ordinary](php-wasm-fin-20261008/receipt.json) and [reviewed](reviewed-php-wasm-fin-20261008/receipt.json) nested-product/field evidence. The [direct-value supplement](php-wasm-fin-direct-20261010/index.json) adds scalar and complete direct/nested Array/List/Option acceptance on both routes: seven scalar exports with 2,028 checks and twelve container exports with 14,089 checks, each in twelve Node/Chromium configurations. | Four direct-value evidence entries supplement the existing parameter/result observations. Consumer and author guides cite each run's actual environment; older reports remain unchanged. | The [Subtype archive](php-wasm-subtype-installed-20261010/index.json) adds four ordinary/reviewed top-level parameter/result cells, each route tested in twelve configurations with 2,024 checks per execution. Constructor/source/adapter entry measurements, nested Subtype, integrated hosted acceptance and graph/owned/callback refinement transports remain open. No native PHP or other browser-engine claim is added. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/existing-package.md",
+      "currentSha256": "1a3af319361d7aaec58dae090c6f4b7f963a05a51ef8ae14c50ff1b21aee22ac",
+      "previousSha256": "3d4446164408fbcc6db6a085f65e7b3e8f9e117ef504d99f9f93908a559c7f75",
+      "edits": [
+        {
+          "start": 48752,
+          "previous": "Keep `lean-bridge.exports.json` limited to modules and target package settings. The review supplies each constructor; configuration `contracts` cannot override it. Analysis, build and target recompilation retain the same selection, and fresh Lean checks the constructor and exported signature. A specialization uses its public export name, so two specializations of one generic can choose different constructors. Changing to another valid constructor is an API change, including when it normalizes accepted inputs. [Installed reviewed Subtype checks](../evidence/reviewed-subtype-20261008/receipt.json) cover C, C++ and Node JavaScript/strict TypeScript. Other reviewed hosts and browser profiles remain pending.\n",
+          "current": "Keep `lean-bridge.exports.json` limited to modules and target package settings. The review supplies each constructor; configuration `contracts` cannot override it. Analysis, build and target recompilation retain the same selection, and fresh Lean checks the constructor and exported signature. A specialization uses its public export name, so two specializations of one generic can choose different constructors. Changing to another valid constructor is an API change, including when it normalizes accepted inputs. [Installed reviewed Subtype checks](../evidence/reviewed-subtype-20261008/receipt.json) cover C, C++ and Node JavaScript/strict TypeScript. [PHP-Wasm installed checks](../evidence/php-wasm-subtype-installed-20261010.md) also cover ordinary and reviewed packages in Node and Chromium. Other reviewed native hosts and npm browser profiles remain pending.\n"
+        },
+        {
+          "start": 51504,
+          "previous": "| `Subtype` parameter or result over a primitive | Installed | Installed | Installed on four ABIs; ordinary source | Generated; installed checks pending | C/C++ and Node installed; PHP-Wasm adapters compile; other installed profiles pending |\n",
+          "current": "| `Subtype` parameter or result over a primitive | Installed | Installed | Installed on four ABIs; ordinary source | Installed, both source routes | C/C++, Node and PHP-Wasm installed; other profiles pending |\n"
+        },
+        {
+          "start": 54033,
+          "previous": "Installed reviewed scalar and container reports cover [C/C++](../evidence/reviewed-fin-20261007/receipt.json), [Python and Rust scalar](../evidence/reviewed-scalar-hosts-20261007/receipt.json), [managed/PHP/Ruby/WIT scalar](../evidence/reviewed-scalar-rollout-20261007/receipt.json), [the other native container hosts](../evidence/reviewed-fin-hosts-20261007/receipt.json), and CPAN [scalar](../evidence/reviewed-perl-scalar-20261007/receipt.json) and [containers](../evidence/reviewed-perl-containers-20261007/receipt.json). They record two-root reproduction, source-free consumers and each local runtime floor. The structural and nominal-field receipts above add Python, Ruby, Rust, .NET and WIT/WASI coverage at their named sites. [Reviewed Subtype acceptance](../evidence/reviewed-subtype-20261008/receipt.json) covers C/C++ and Node; other reviewed hosts remain pending. Callback checks have their own receipts and do not follow from scalar or container checks.\n",
+          "current": "Installed reviewed scalar and container reports cover [C/C++](../evidence/reviewed-fin-20261007/receipt.json), [Python and Rust scalar](../evidence/reviewed-scalar-hosts-20261007/receipt.json), [managed/PHP/Ruby/WIT scalar](../evidence/reviewed-scalar-rollout-20261007/receipt.json), [the other native container hosts](../evidence/reviewed-fin-hosts-20261007/receipt.json), and CPAN [scalar](../evidence/reviewed-perl-scalar-20261007/receipt.json) and [containers](../evidence/reviewed-perl-containers-20261007/receipt.json). They record two-root reproduction, source-free consumers and each local runtime floor. The structural and nominal-field receipts above add Python, Ruby, Rust, .NET and WIT/WASI coverage at their named sites. [Reviewed Subtype acceptance](../evidence/reviewed-subtype-20261008/receipt.json) covers C/C++ and Node. The [PHP-Wasm Subtype archive](../evidence/php-wasm-subtype-installed-20261010/index.json) adds both source routes in Node and Chromium; other reviewed hosts remain pending. Callback checks have their own receipts and do not follow from scalar or container checks.\n"
+        },
+        {
+          "start": 62143,
+          "previous": "Native source rejections name the declaration in `native-elaboration-unsupported`. Readers without a checked adapter reject refined metadata with `native-refinements-unsupported`. PHP-Wasm now generates checked top-level Subtype adapters on ordinary and reviewed routes; fresh Lean compiles both. Installed PHP-Wasm Subtype execution and constructor-call measurements remain pending. PHP-Wasm keeps nested Subtype and packages combining refinements with graph, owned or callable transports rejected. A consumer that does not declare checked support cannot read a verified refined component (`native-refinements-unavailable`). Python's [installed CI reports](../evidence/python-refinements-20261007/receipt.json) cover scalar and container `Fin`, top-level checked `Subtype`, and finite function specializations. Local acceptance does not establish a hosted CI result for a later revision.\n",
+          "current": "Native source rejections name the declaration in `native-elaboration-unsupported`. Readers without a checked adapter reject refined metadata with `native-refinements-unsupported`. PHP-Wasm's [installed Subtype checks](../evidence/php-wasm-subtype-installed-20261010.md) cover ordinary and reviewed top-level parameters and results: twelve exports, twelve Node/Chromium configurations per route, and 2,024 checks per execution. Constructors and adapters compile with fresh Lean; runtime entry counts remain unmeasured. PHP-Wasm keeps nested Subtype and packages combining refinements with graph, owned or callable transports rejected. A consumer that does not declare checked support cannot read a verified refined component (`native-refinements-unavailable`). Python's [installed CI reports](../evidence/python-refinements-20261007/receipt.json) cover scalar and container `Fin`, top-level checked `Subtype`, and finite function specializations. Local acceptance does not establish a hosted CI result for a later revision.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/php.md",
+      "currentSha256": "f30c1cff0dac683d080590d8e06a7a389edc420972879df0a29bcd9ea8493938",
+      "previousSha256": "c6e4c69478e0cde15393fd54eea9d2d21f22057fbd2ddefa72cbe6f180da9d91",
+      "edits": [
+        {
+          "start": 46591,
+          "previous": "The plain copied PHP-Wasm generator now admits top-level `Subtype` parameters and\nresults over primitive bases on ordinary and reviewed routes. Fresh Lean compiles\nthe selected constructors and adapters, including normalization and separate\nconstructor choices for one generic function. Installed Node/Chromium acceptance\nand constructor-call measurements are still pending, so the conversion table does\nnot yet report an installed PHP-Wasm mapping. Nested Subtype and refined\n",
+          "current": "Plain copied PHP-Wasm packages support top-level `Subtype` parameters and results\nover primitive bases on ordinary and reviewed routes. Use `Brick\\\\Math\\\\BigInteger`\nfor `Nat` and `Int`, strings for `String`, `Bytes` for `ByteArray`, and integers\nfor `UInt8`. Lean checks the selected constructor and passes its constructed\nvalue to the export, including any normalization. Rejection throws\n`LeanBridgeError` with code 1 naming the parameter and constructor. Results use\nthe base representation.\n\nThe [installed PHP-Wasm Subtype checks](evidence/php-wasm-subtype-installed-20261010.md)\nrun twelve exports in twelve Node/Chromium configurations per source route, with\n2,024 checks in each execution. They cover weak/strict PHP, embedded/Composer\nNode loading, bundled Chromium loading, startup/lazy loading, rejection recovery,\ninput preservation and two constructor choices for one generic function. These\nlocal runs use Node 22.23.2, Chromium 152.0.7977.75 and PHP 8.4.1 on wasm32.\nConstructor and dispatch counts were not measured. Nested Subtype and refined\n"
+        },
+        {
+          "start": 99613,
+          "previous": "| `Subtype / {x // p x}` | Native PHP: `Brick\\Math\\BigInteger, string and Bytes, checked by the exported Lean validator and constructed by the adapter before dispatch` (input); `the base value projected from the proof-backed Lean result` (result); PHP-Wasm: No host mapping recorded | Ordinary source: Native PHP: Installed checks passed (input, result); Not audited (field, callback input, callback result); PHP-Wasm: Not audited. Reviewed IR: Not audited | Native PHP: Values cross as their base. The exported validator and the adapter each run the author's checked constructor independently; the export receives the constructed value. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n",
+          "current": "| `Subtype / {x // p x}` | Native PHP: `Brick\\Math\\BigInteger, string and Bytes, checked by the exported Lean validator and constructed by the adapter before dispatch` (input); `the base value projected from the proof-backed Lean result` (result); PHP-Wasm: `Brick\\Math\\BigInteger, string, Bytes or int, checked and constructed by the selected Lean constructor` (input); `the primitive base value projected from the proof-backed Lean result` (result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Native PHP: Not audited; PHP-Wasm: Installed checks passed (input, result); Not audited (field, callback input, callback result) | Native PHP: Values cross as their base. The exported validator and the adapter each run the author's checked constructor independently; the export receives the constructed value. PHP-Wasm: Pass the primitive base value. Lean's selected checked constructor supplies the value passed to the export, including normalization; rejection throws LeanBridgeError code 1 naming the parameter and constructor. Results project the proof-backed base value. Weak and strict callers preserve inputs and recover after rejection. Only top-level primitive-base parameters and results are covered; constructor and dispatch counts were not measured. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "8ddb27b0e166690022633ed4e30256d0b8f43981ae6ee71e4a5421e7a72634ee",
+      "previousSha256": "2abe896601c3a7bd89dd1ab999b33e6eea63d2ec9624dd70b61c0612e24aa6bf",
+      "edits": [
+        {
+          "start": 49666,
+          "previous": "          \"sha256\": \"c6e4c69478e0cde15393fd54eea9d2d21f22057fbd2ddefa72cbe6f180da9d91\"\n",
+          "current": "          \"sha256\": \"f30c1cff0dac683d080590d8e06a7a389edc420972879df0a29bcd9ea8493938\"\n"
+        },
+        {
+          "start": 50871,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 181878,
+          "previous": "          \"sha256\": \"c6e4c69478e0cde15393fd54eea9d2d21f22057fbd2ddefa72cbe6f180da9d91\"\n",
+          "current": "          \"sha256\": \"f30c1cff0dac683d080590d8e06a7a389edc420972879df0a29bcd9ea8493938\"\n"
+        },
+        {
+          "start": 185686,
+          "previous": "          \"sha256\": \"b9e91b526c2fc8d0ffc77113242cb9cf2fe7ef9d1c94aa733cbdcac7d6fb4303\"\n",
+          "current": "          \"sha256\": \"56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2\"\n"
+        },
+        {
+          "start": 196777,
+          "previous": "          \"sha256\": \"c6e4c69478e0cde15393fd54eea9d2d21f22057fbd2ddefa72cbe6f180da9d91\"\n",
+          "current": "          \"sha256\": \"f30c1cff0dac683d080590d8e06a7a389edc420972879df0a29bcd9ea8493938\"\n"
+        },
+        {
+          "start": 289583,
+          "previous": "          \"sha256\": \"b9e91b526c2fc8d0ffc77113242cb9cf2fe7ef9d1c94aa733cbdcac7d6fb4303\"\n",
+          "current": "          \"sha256\": \"56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2\"\n"
+        },
+        {
+          "start": 393793,
+          "previous": "          \"sha256\": \"b9e91b526c2fc8d0ffc77113242cb9cf2fe7ef9d1c94aa733cbdcac7d6fb4303\"\n",
+          "current": "          \"sha256\": \"56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2\"\n"
+        },
+        {
+          "start": 486709,
+          "previous": "          \"sha256\": \"b9e91b526c2fc8d0ffc77113242cb9cf2fe7ef9d1c94aa733cbdcac7d6fb4303\"\n",
+          "current": "          \"sha256\": \"56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2\"\n"
+        },
+        {
+          "start": 498380,
+          "previous": "          \"sha256\": \"b9e91b526c2fc8d0ffc77113242cb9cf2fe7ef9d1c94aa733cbdcac7d6fb4303\"\n",
+          "current": "          \"sha256\": \"56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2\"\n"
+        },
+        {
+          "start": 508069,
+          "previous": "          \"sha256\": \"b9e91b526c2fc8d0ffc77113242cb9cf2fe7ef9d1c94aa733cbdcac7d6fb4303\"\n",
+          "current": "          \"sha256\": \"56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2\"\n"
+        },
+        {
+          "start": 586858,
+          "previous": "          \"sha256\": \"b9e91b526c2fc8d0ffc77113242cb9cf2fe7ef9d1c94aa733cbdcac7d6fb4303\"\n",
+          "current": "          \"sha256\": \"56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2\"\n"
+        },
+        {
+          "start": 597235,
+          "previous": "          \"sha256\": \"b9e91b526c2fc8d0ffc77113242cb9cf2fe7ef9d1c94aa733cbdcac7d6fb4303\"\n",
+          "current": "          \"sha256\": \"56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2\"\n"
+        },
+        {
+          "start": 706033,
+          "previous": "          \"sha256\": \"b9e91b526c2fc8d0ffc77113242cb9cf2fe7ef9d1c94aa733cbdcac7d6fb4303\"\n",
+          "current": "          \"sha256\": \"56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2\"\n"
+        },
+        {
+          "start": 707695,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 721726,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 733101,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 747321,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 758775,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 770846,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 782134,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 790717,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 797175,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 805561,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 813538,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 836468,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 867557,
+          "previous": "          \"sha256\": \"b9e91b526c2fc8d0ffc77113242cb9cf2fe7ef9d1c94aa733cbdcac7d6fb4303\"\n",
+          "current": "          \"sha256\": \"56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2\"\n"
+        },
+        {
+          "start": 1057157,
+          "previous": "          \"sha256\": \"b9e91b526c2fc8d0ffc77113242cb9cf2fe7ef9d1c94aa733cbdcac7d6fb4303\"\n",
+          "current": "          \"sha256\": \"56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2\"\n"
+        },
+        {
+          "start": 1072635,
+          "previous": "          \"sha256\": \"3d4446164408fbcc6db6a085f65e7b3e8f9e117ef504d99f9f93908a559c7f75\"\n",
+          "current": "          \"sha256\": \"1a3af319361d7aaec58dae090c6f4b7f963a05a51ef8ae14c50ff1b21aee22ac\"\n"
+        },
+        {
+          "start": 1078061,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 1080224,
+          "previous": "          \"sha256\": \"3d4446164408fbcc6db6a085f65e7b3e8f9e117ef504d99f9f93908a559c7f75\"\n",
+          "current": "          \"sha256\": \"1a3af319361d7aaec58dae090c6f4b7f963a05a51ef8ae14c50ff1b21aee22ac\"\n"
+        },
+        {
+          "start": 1084759,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 1086825,
+          "previous": "          \"sha256\": \"3d4446164408fbcc6db6a085f65e7b3e8f9e117ef504d99f9f93908a559c7f75\"\n",
+          "current": "          \"sha256\": \"1a3af319361d7aaec58dae090c6f4b7f963a05a51ef8ae14c50ff1b21aee22ac\"\n"
+        },
+        {
+          "start": 1091762,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 1093933,
+          "previous": "          \"sha256\": \"3d4446164408fbcc6db6a085f65e7b3e8f9e117ef504d99f9f93908a559c7f75\"\n",
+          "current": "          \"sha256\": \"1a3af319361d7aaec58dae090c6f4b7f963a05a51ef8ae14c50ff1b21aee22ac\"\n"
+        },
+        {
+          "start": 1099268,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 1101427,
+          "previous": "          \"sha256\": \"3d4446164408fbcc6db6a085f65e7b3e8f9e117ef504d99f9f93908a559c7f75\"\n",
+          "current": "          \"sha256\": \"1a3af319361d7aaec58dae090c6f4b7f963a05a51ef8ae14c50ff1b21aee22ac\"\n"
+        },
+        {
+          "start": 1106222,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 1108483,
+          "previous": "          \"sha256\": \"3d4446164408fbcc6db6a085f65e7b3e8f9e117ef504d99f9f93908a559c7f75\"\n",
+          "current": "          \"sha256\": \"1a3af319361d7aaec58dae090c6f4b7f963a05a51ef8ae14c50ff1b21aee22ac\"\n"
+        },
+        {
+          "start": 1113856,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 1116084,
+          "previous": "          \"sha256\": \"3d4446164408fbcc6db6a085f65e7b3e8f9e117ef504d99f9f93908a559c7f75\"\n",
+          "current": "          \"sha256\": \"1a3af319361d7aaec58dae090c6f4b7f963a05a51ef8ae14c50ff1b21aee22ac\"\n"
+        },
+        {
+          "start": 1123094,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 1126365,
+          "previous": "          \"sha256\": \"3d4446164408fbcc6db6a085f65e7b3e8f9e117ef504d99f9f93908a559c7f75\"\n",
+          "current": "          \"sha256\": \"1a3af319361d7aaec58dae090c6f4b7f963a05a51ef8ae14c50ff1b21aee22ac\"\n"
+        },
+        {
+          "start": 1132221,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 1138698,
+          "previous": "          \"sha256\": \"3d4446164408fbcc6db6a085f65e7b3e8f9e117ef504d99f9f93908a559c7f75\"\n",
+          "current": "          \"sha256\": \"1a3af319361d7aaec58dae090c6f4b7f963a05a51ef8ae14c50ff1b21aee22ac\"\n"
+        },
+        {
+          "start": 1147156,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 1155203,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 1159465,
+          "previous": "          \"sha256\": \"b9e91b526c2fc8d0ffc77113242cb9cf2fe7ef9d1c94aa733cbdcac7d6fb4303\"\n",
+          "current": "          \"sha256\": \"56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2\"\n"
+        },
+        {
+          "start": 1164175,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 1173566,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 1186589,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 1192157,
+          "previous": "          \"sha256\": \"3d4446164408fbcc6db6a085f65e7b3e8f9e117ef504d99f9f93908a559c7f75\"\n",
+          "current": "          \"sha256\": \"1a3af319361d7aaec58dae090c6f4b7f963a05a51ef8ae14c50ff1b21aee22ac\"\n"
+        },
+        {
+          "start": 1219701,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 1224700,
+          "previous": "          \"sha256\": \"3d4446164408fbcc6db6a085f65e7b3e8f9e117ef504d99f9f93908a559c7f75\"\n",
+          "current": "          \"sha256\": \"1a3af319361d7aaec58dae090c6f4b7f963a05a51ef8ae14c50ff1b21aee22ac\"\n"
+        },
+        {
+          "start": 1249945,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 1254979,
+          "previous": "          \"sha256\": \"3d4446164408fbcc6db6a085f65e7b3e8f9e117ef504d99f9f93908a559c7f75\"\n",
+          "current": "          \"sha256\": \"1a3af319361d7aaec58dae090c6f4b7f963a05a51ef8ae14c50ff1b21aee22ac\"\n"
+        },
+        {
+          "start": 1282881,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 1287946,
+          "previous": "          \"sha256\": \"3d4446164408fbcc6db6a085f65e7b3e8f9e117ef504d99f9f93908a559c7f75\"\n",
+          "current": "          \"sha256\": \"1a3af319361d7aaec58dae090c6f4b7f963a05a51ef8ae14c50ff1b21aee22ac\"\n"
+        },
+        {
+          "start": 1322184,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 1329356,
+          "previous": "          \"sha256\": \"3d4446164408fbcc6db6a085f65e7b3e8f9e117ef504d99f9f93908a559c7f75\"\n",
+          "current": "          \"sha256\": \"1a3af319361d7aaec58dae090c6f4b7f963a05a51ef8ae14c50ff1b21aee22ac\"\n"
+        },
+        {
+          "start": 1329656,
+          "previous": "          \"sha256\": \"c6e4c69478e0cde15393fd54eea9d2d21f22057fbd2ddefa72cbe6f180da9d91\"\n",
+          "current": "          \"sha256\": \"f30c1cff0dac683d080590d8e06a7a389edc420972879df0a29bcd9ea8493938\"\n"
+        },
+        {
+          "start": 1348725,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 1355204,
+          "previous": "          \"sha256\": \"3d4446164408fbcc6db6a085f65e7b3e8f9e117ef504d99f9f93908a559c7f75\"\n",
+          "current": "          \"sha256\": \"1a3af319361d7aaec58dae090c6f4b7f963a05a51ef8ae14c50ff1b21aee22ac\"\n"
+        },
+        {
+          "start": 1355504,
+          "previous": "          \"sha256\": \"c6e4c69478e0cde15393fd54eea9d2d21f22057fbd2ddefa72cbe6f180da9d91\"\n",
+          "current": "          \"sha256\": \"f30c1cff0dac683d080590d8e06a7a389edc420972879df0a29bcd9ea8493938\"\n"
+        },
+        {
+          "start": 1371105,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 1377884,
+          "previous": "          \"sha256\": \"3d4446164408fbcc6db6a085f65e7b3e8f9e117ef504d99f9f93908a559c7f75\"\n",
+          "current": "          \"sha256\": \"1a3af319361d7aaec58dae090c6f4b7f963a05a51ef8ae14c50ff1b21aee22ac\"\n"
+        },
+        {
+          "start": 1390997,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 1397576,
+          "previous": "          \"sha256\": \"3d4446164408fbcc6db6a085f65e7b3e8f9e117ef504d99f9f93908a559c7f75\"\n",
+          "current": "          \"sha256\": \"1a3af319361d7aaec58dae090c6f4b7f963a05a51ef8ae14c50ff1b21aee22ac\"\n"
+        },
+        {
+          "start": 1401227,
+          "previous": "          \"sha256\": \"b9e91b526c2fc8d0ffc77113242cb9cf2fe7ef9d1c94aa733cbdcac7d6fb4303\"\n",
+          "current": "          \"sha256\": \"56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2\"\n"
+        },
+        {
+          "start": 1412450,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 1418061,
+          "previous": "          \"sha256\": \"3d4446164408fbcc6db6a085f65e7b3e8f9e117ef504d99f9f93908a559c7f75\"\n",
+          "current": "          \"sha256\": \"1a3af319361d7aaec58dae090c6f4b7f963a05a51ef8ae14c50ff1b21aee22ac\"\n"
+        },
+        {
+          "start": 1425469,
+          "previous": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n",
+          "current": "          \"sha256\": \"cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07\"\n"
+        },
+        {
+          "start": 1428884,
+          "previous": "          \"sha256\": \"c6e4c69478e0cde15393fd54eea9d2d21f22057fbd2ddefa72cbe6f180da9d91\"\n",
+          "current": "          \"sha256\": \"f30c1cff0dac683d080590d8e06a7a389edc420972879df0a29bcd9ea8493938\"\n"
+        },
+        {
+          "start": 3345337,
+          "previous": "          \"sha256\": \"2b843beb3d0047285a648ca9538df33e758371a5ddb26c83e465a842fad58d04\"\n",
+          "current": "          \"sha256\": \"ed1e832ebfa166303aa8d6572cb6566b98908e8c465026a22f1182442d5c84d4\"\n"
+        },
+        {
+          "start": 3358298,
+          "previous": "          \"sha256\": \"2b843beb3d0047285a648ca9538df33e758371a5ddb26c83e465a842fad58d04\"\n",
+          "current": "          \"sha256\": \"ed1e832ebfa166303aa8d6572cb6566b98908e8c465026a22f1182442d5c84d4\"\n"
+        },
+        {
+          "start": 3371263,
+          "previous": "          \"sha256\": \"2b843beb3d0047285a648ca9538df33e758371a5ddb26c83e465a842fad58d04\"\n",
+          "current": "          \"sha256\": \"ed1e832ebfa166303aa8d6572cb6566b98908e8c465026a22f1182442d5c84d4\"\n"
+        },
+        {
+          "start": 3384220,
+          "previous": "          \"sha256\": \"2b843beb3d0047285a648ca9538df33e758371a5ddb26c83e465a842fad58d04\"\n",
+          "current": "          \"sha256\": \"ed1e832ebfa166303aa8d6572cb6566b98908e8c465026a22f1182442d5c84d4\"\n"
+        },
+        {
+          "start": 3395663,
+          "previous": "",
+          "current": "    },\n    {\n      \"id\": \"php-wasm-subtype-ordinary-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"b7706ed7be1b24c0592fa4e3f7eccbd21ba7eb5d\",\n      \"scope\": \"ordinary-source: twelve exports, twelve installed executions with 2024 checks each, two-root package reproduction and source-free offline installation. Cases include checked String/Nat/Int/ByteArray/UInt8 bases, mixed Fin/Subtype, two checked arguments, input preservation, rejection/recovery, normalization, two constructors for one generic and a zero-argument refined result. Local Node 22.23.2 and Chromium 152.0.7977.75 execute PHP 8.4.1 on wasm32, with php-wasm 0.1.0, Lean 4.32.2 and Emscripten 3.1.68. Each route runs eight Node embedded/Composer startup/lazy weak/strict configurations and four Chromium bundled startup/lazy weak/strict configurations. Constructor, adapter and source entry counts were not measured. These local observations do not establish hosted CI, native PHP, Firefox/WebKit, browser Composer, nested or nominal Subtype, refined callbacks, or graph/owned refinement transports. The archive retains selected producer sources and package digests, not a complete dependency closure or package binaries.\",\n      \"command\": \"LEAN_BRIDGE_PHP_WASM_SUBTYPE_TEST=1 node --test --test-concurrency=1 --test-name-pattern='^(ordinary|reviewed) installed PHP-Wasm Subtypes' tests/helpers/php-wasm-subtype-tests.mjs && node scripts/check-php-wasm-subtype-reports.mjs --directory build/php-wasm-subtype\",\n      \"files\": [\n        {\n          \"path\": \"tests/helpers/php-wasm-subtype-promotion.mjs\",\n          \"sha256\": \"3a1a8b3c9ad08faf556042e85beb1fb82880b534266d93cc3ab527bd83963b4d\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-subtype-promotion-tests.mjs\",\n          \"sha256\": \"b54cb3090bba078a4e0d3a0bbef7df6d40a4f7cb14440615db021ead6d096c03\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-subtype-archive.mjs\",\n          \"sha256\": \"11a6ff1fca31edde52dde5fa8a318b943aa21281a8518ba7af503030a0606297\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-subtype-report.mjs\",\n          \"sha256\": \"49b7a812340d57259bfe379a2a974cccd51909689123a2a63e64dc35f5cf7c1c\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-subtype-fixture.mjs\",\n          \"sha256\": \"77043084402799ce0f7a413263231ff58438030b9298bf624ad6838488252cb3\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-fin-direct-report.mjs\",\n          \"sha256\": \"ff17d6e7e7cfcfa062ebfc04e5989e8844f015cfd0eef045abb9ff8781474195\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-fin-observation.mjs\",\n          \"sha256\": \"6f3cb87b5f0af93a6b3a5f38c135e307d30a8973822508da21a390f5626a6c46\"\n        },\n        {\n          \"path\": \"scripts/check-php-wasm-subtype-reports.mjs\",\n          \"sha256\": \"e1155f29427dbe879589c4bee592cd24b01a07fadec37c024b9819d45afe8304\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/index.json\",\n          \"sha256\": \"fcad1416ce70d9ee17c619b8333bc18997561d44af6e188bb80de17d839aff8b\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/start.json\",\n          \"sha256\": \"a3e18dfa00c8bbc6908341f51b94e5be0658aa6de38822c586704ac9f565be54\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/end.json\",\n          \"sha256\": \"e823dba21251da163e5a1d9be094a646c224bb30e3242ae9de1397125e63bef3\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/run.tap\",\n          \"sha256\": \"bcab754e5282489326c1ad1c04caec6ac61d18c3851fbc6cef4a7be3ab1d85b4\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/ordinary.json\",\n          \"sha256\": \"3288e86cdfa2c746f276085c21460b23a033bc11eb763397a494f99dce7bab30\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/reviewed.json\",\n          \"sha256\": \"fa28f40ef8e6442991c8bd2aa8c1f5476cc759e65e7005dab0c0e1ce79df6d75\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/runtime.json\",\n          \"sha256\": \"44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/verified.json\",\n          \"sha256\": \"53441758139388d8f710add5f1ea7509c1282894927cca57ad0c1e2599074abb\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/runner.mjs\",\n          \"sha256\": \"8db3d45fb574105dc1a3773f935d8e1ac9944123ff35c652a8bf8a5d08b416f0\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/failed-host-path/start.json\",\n          \"sha256\": \"6ab12e62770d2f6257cf6507d6d220481ca9611b2da633131af27290c5e34af7\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/failed-host-path/end.json\",\n          \"sha256\": \"0490912d6b96d758d2be2b5b662013bb8949e4d42808219ad169bec7a518ca20\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/failed-host-path/run.tap\",\n          \"sha256\": \"527a785ce82ab7ed2dd081832a9a1e46add000957059e2542dc5bac1c6eb2b32\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/failed-host-path/runtime.json\",\n          \"sha256\": \"44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/failed-host-path/runner.mjs\",\n          \"sha256\": \"f8f1cb420799a0bde0f392f5bca167992dbe5d3ff82a09e9347d02553984290f\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/helpers/php-wasm-subtype-tests.mjs\",\n          \"sha256\": \"e8bfb1ebcffc46b05e0415ca63d8e46fcafdb1ffa43e2bf9fd30e09474a9ba7d\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/helpers/php-wasm-subtype-fixture.mjs\",\n          \"sha256\": \"77043084402799ce0f7a413263231ff58438030b9298bf624ad6838488252cb3\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/helpers/php-wasm-fin-fixtures.mjs\",\n          \"sha256\": \"a85cb80188630dd4355f1ca97ea7c52c741f999652ca4d1e24f8e4b7972c6e16\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/helpers/native-subtype-install.mjs\",\n          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/helpers/reviewed-subtype-installed-fixture.mjs\",\n          \"sha256\": \"81ccd2fa3d62bc9d7e4061898dc262d8d5276e71e42ea142ac2f63b2317e781d\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/helpers/type-corpus-php-wasm-install.mjs\",\n          \"sha256\": \"1231106d14bf66afeffa79ee9c999867e90359f6cc82c8ed117c84beb13d20dc\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/helpers/type-corpus-php-wasm-evidence.mjs\",\n          \"sha256\": \"708809054b1af4ff864a8cf04343c79fc783f60ce770325131d7004006a03aa1\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/helpers/copied-fixture-install.mjs\",\n          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/helpers/lake-workspace.mjs\",\n          \"sha256\": \"56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/fixtures/onboarding/native-subtype/Subtypes.lean\",\n          \"sha256\": \"bc6065620ea7ba38b270362ae7aa93feb68e8e316b4c0fca196477f62103175c\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/fixtures/onboarding/native-subtype/LICENSE\",\n          \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/fixtures/onboarding/native-subtype/lakefile.toml\",\n          \"sha256\": \"7cc9357b8eaa2dc868fed6c1ac4c44499eb29ccfe26016e6ed6361e88b5429ba\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/fixtures/onboarding/native-subtype/lean-toolchain\",\n          \"sha256\": \"2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/fixtures/onboarding/native-subtype/package.json\",\n          \"sha256\": \"db736971b2c14dc3aa16fc7113d32fd28f89a2abba58f601ece3613d87ffd2ee\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/fixtures/subtype-consumers/php-native.php\",\n          \"sha256\": \"89f5c51bae7f7111a1ad937b2116b5fe3b2ec69668fbf650cde2279cff8fd7a7\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/src/analyze/NativeExports.lean\",\n          \"sha256\": \"8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/src/analyze/native-metadata.mjs\",\n          \"sha256\": \"dae540c8c48bd6146e2dbeb28a62399faaa87dfbd67111a6c0947107976f314d\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/src/analyze/reviewed-source.mjs\",\n          \"sha256\": \"d3a875e4fc6dca6b7a93e70db62980d01f5b2a68f2e5e8999b93bbf0ca04a462\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/src/analyze/reviewed-refinements.mjs\",\n          \"sha256\": \"ba87773c1738ced6131e800e497a92b99ae6b10b26d9782e2562d2b2159a9dda\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/src/analyze/export-configuration.mjs\",\n          \"sha256\": \"5a324d0e1c3dee2180625a59c7f21b1d2bd932676b5f567f0f9caebafa67bedb\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/src/build/native-model.mjs\",\n          \"sha256\": \"dd29801162eeaa06fe0c96b8d71c6b1994033ab52440ec39ecf62e5d832dd6ae\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/src/build/component-refinements.mjs\",\n          \"sha256\": \"ee003a614e93bbfa542625357eb5ff752c5af4805f9e2f81ca5168ccd1134df8\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/src/build/php-wasm-copied-component.mjs\",\n          \"sha256\": \"1820fa19a86f827e378334e847cebe9511863401b08a5e9c2e60c72bf09cc7ae\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/src/build/php-wasm-copied-artifacts.mjs\",\n          \"sha256\": \"c6d31833738b791ac43e9ec970cbbd75830658b040cd8ef2cd3467c4a04ba3fe\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/src/backends/c/native-copied-values.mjs\",\n          \"sha256\": \"492fd83a246d7d1c58b18812ddc7c90e1fb5d7a999b368cbe56456b5a9d6b7be\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/src/backends/php/copied-values.mjs\",\n          \"sha256\": \"eb62ac337326372d41b184c1628d3a1bc63d3f968bc429a5e6142d74f1b9bb7d\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/src/release/php-wasm-copied-package.mjs\",\n          \"sha256\": \"b9e91b526c2fc8d0ffc77113242cb9cf2fe7ef9d1c94aa733cbdcac7d6fb4303\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"php-wasm-subtype-ordinary-installed/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.6bacf52ff14720ed40a37f4d0b2cb5bd636e43f42bfc9849794227a0cfc3c4a5.tgz\",\n          \"sha256\": \"0b4e68d09272f995b29432845dd68a177d51a260fe0a4dc3e36129e5ed7f0ed9\"\n        },\n        {\n          \"path\": \"php-wasm-subtype-ordinary-installed/packages/php-wasm/archives/lean-bridge-subtypes-wasm-1.0.0-php-wasm.zip\",\n          \"sha256\": \"316935d2661afbc70fdc5a3ce098b802d6ffd3c19749b34b38ff6731c55495b8\"\n        },\n        {\n          \"path\": \"php-wasm-subtype-ordinary-installed/packages/php-wasm/archives/lean-bridge-subtypes-wasm-1.0.0.tgz\",\n          \"sha256\": \"2a318cc5db38a14c8df4511fc3672fb254caa228a7b4050f97fb5516d1a08882\"\n        }\n      ]\n    },\n    {\n      \"id\": \"php-wasm-subtype-reviewed-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"b7706ed7be1b24c0592fa4e3f7eccbd21ba7eb5d\",\n      \"scope\": \"reviewed-ir: twelve exports, twelve installed executions with 2024 checks each, two-root package reproduction and source-free offline installation. Cases include checked String/Nat/Int/ByteArray/UInt8 bases, mixed Fin/Subtype, two checked arguments, input preservation, rejection/recovery, normalization, two constructors for one generic and a zero-argument refined result. Local Node 22.23.2 and Chromium 152.0.7977.75 execute PHP 8.4.1 on wasm32, with php-wasm 0.1.0, Lean 4.32.2 and Emscripten 3.1.68. Each route runs eight Node embedded/Composer startup/lazy weak/strict configurations and four Chromium bundled startup/lazy weak/strict configurations. Constructor, adapter and source entry counts were not measured. These local observations do not establish hosted CI, native PHP, Firefox/WebKit, browser Composer, nested or nominal Subtype, refined callbacks, or graph/owned refinement transports. The archive retains selected producer sources and package digests, not a complete dependency closure or package binaries.\",\n      \"command\": \"LEAN_BRIDGE_PHP_WASM_SUBTYPE_TEST=1 node --test --test-concurrency=1 --test-name-pattern='^(ordinary|reviewed) installed PHP-Wasm Subtypes' tests/helpers/php-wasm-subtype-tests.mjs && node scripts/check-php-wasm-subtype-reports.mjs --directory build/php-wasm-subtype\",\n      \"files\": [\n        {\n          \"path\": \"tests/helpers/php-wasm-subtype-promotion.mjs\",\n          \"sha256\": \"3a1a8b3c9ad08faf556042e85beb1fb82880b534266d93cc3ab527bd83963b4d\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-subtype-promotion-tests.mjs\",\n          \"sha256\": \"b54cb3090bba078a4e0d3a0bbef7df6d40a4f7cb14440615db021ead6d096c03\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-subtype-archive.mjs\",\n          \"sha256\": \"11a6ff1fca31edde52dde5fa8a318b943aa21281a8518ba7af503030a0606297\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-subtype-report.mjs\",\n          \"sha256\": \"49b7a812340d57259bfe379a2a974cccd51909689123a2a63e64dc35f5cf7c1c\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-subtype-fixture.mjs\",\n          \"sha256\": \"77043084402799ce0f7a413263231ff58438030b9298bf624ad6838488252cb3\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-fin-direct-report.mjs\",\n          \"sha256\": \"ff17d6e7e7cfcfa062ebfc04e5989e8844f015cfd0eef045abb9ff8781474195\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-fin-observation.mjs\",\n          \"sha256\": \"6f3cb87b5f0af93a6b3a5f38c135e307d30a8973822508da21a390f5626a6c46\"\n        },\n        {\n          \"path\": \"scripts/check-php-wasm-subtype-reports.mjs\",\n          \"sha256\": \"e1155f29427dbe879589c4bee592cd24b01a07fadec37c024b9819d45afe8304\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/index.json\",\n          \"sha256\": \"fcad1416ce70d9ee17c619b8333bc18997561d44af6e188bb80de17d839aff8b\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/start.json\",\n          \"sha256\": \"a3e18dfa00c8bbc6908341f51b94e5be0658aa6de38822c586704ac9f565be54\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/end.json\",\n          \"sha256\": \"e823dba21251da163e5a1d9be094a646c224bb30e3242ae9de1397125e63bef3\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/run.tap\",\n          \"sha256\": \"bcab754e5282489326c1ad1c04caec6ac61d18c3851fbc6cef4a7be3ab1d85b4\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/ordinary.json\",\n          \"sha256\": \"3288e86cdfa2c746f276085c21460b23a033bc11eb763397a494f99dce7bab30\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/reviewed.json\",\n          \"sha256\": \"fa28f40ef8e6442991c8bd2aa8c1f5476cc759e65e7005dab0c0e1ce79df6d75\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/runtime.json\",\n          \"sha256\": \"44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/verified.json\",\n          \"sha256\": \"53441758139388d8f710add5f1ea7509c1282894927cca57ad0c1e2599074abb\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/runner.mjs\",\n          \"sha256\": \"8db3d45fb574105dc1a3773f935d8e1ac9944123ff35c652a8bf8a5d08b416f0\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/failed-host-path/start.json\",\n          \"sha256\": \"6ab12e62770d2f6257cf6507d6d220481ca9611b2da633131af27290c5e34af7\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/failed-host-path/end.json\",\n          \"sha256\": \"0490912d6b96d758d2be2b5b662013bb8949e4d42808219ad169bec7a518ca20\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/failed-host-path/run.tap\",\n          \"sha256\": \"527a785ce82ab7ed2dd081832a9a1e46add000957059e2542dc5bac1c6eb2b32\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/failed-host-path/runtime.json\",\n          \"sha256\": \"44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/failed-host-path/runner.mjs\",\n          \"sha256\": \"f8f1cb420799a0bde0f392f5bca167992dbe5d3ff82a09e9347d02553984290f\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/helpers/php-wasm-subtype-tests.mjs\",\n          \"sha256\": \"e8bfb1ebcffc46b05e0415ca63d8e46fcafdb1ffa43e2bf9fd30e09474a9ba7d\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/helpers/php-wasm-subtype-fixture.mjs\",\n          \"sha256\": \"77043084402799ce0f7a413263231ff58438030b9298bf624ad6838488252cb3\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/helpers/php-wasm-fin-fixtures.mjs\",\n          \"sha256\": \"a85cb80188630dd4355f1ca97ea7c52c741f999652ca4d1e24f8e4b7972c6e16\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/helpers/native-subtype-install.mjs\",\n          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/helpers/reviewed-subtype-installed-fixture.mjs\",\n          \"sha256\": \"81ccd2fa3d62bc9d7e4061898dc262d8d5276e71e42ea142ac2f63b2317e781d\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/helpers/type-corpus-php-wasm-install.mjs\",\n          \"sha256\": \"1231106d14bf66afeffa79ee9c999867e90359f6cc82c8ed117c84beb13d20dc\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/helpers/type-corpus-php-wasm-evidence.mjs\",\n          \"sha256\": \"708809054b1af4ff864a8cf04343c79fc783f60ce770325131d7004006a03aa1\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/helpers/copied-fixture-install.mjs\",\n          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/helpers/lake-workspace.mjs\",\n          \"sha256\": \"56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/fixtures/onboarding/native-subtype/Subtypes.lean\",\n          \"sha256\": \"bc6065620ea7ba38b270362ae7aa93feb68e8e316b4c0fca196477f62103175c\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/fixtures/onboarding/native-subtype/LICENSE\",\n          \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/fixtures/onboarding/native-subtype/lakefile.toml\",\n          \"sha256\": \"7cc9357b8eaa2dc868fed6c1ac4c44499eb29ccfe26016e6ed6361e88b5429ba\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/fixtures/onboarding/native-subtype/lean-toolchain\",\n          \"sha256\": \"2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/fixtures/onboarding/native-subtype/package.json\",\n          \"sha256\": \"db736971b2c14dc3aa16fc7113d32fd28f89a2abba58f601ece3613d87ffd2ee\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/fixtures/subtype-consumers/php-native.php\",\n          \"sha256\": \"89f5c51bae7f7111a1ad937b2116b5fe3b2ec69668fbf650cde2279cff8fd7a7\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/src/analyze/NativeExports.lean\",\n          \"sha256\": \"8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/src/analyze/native-metadata.mjs\",\n          \"sha256\": \"dae540c8c48bd6146e2dbeb28a62399faaa87dfbd67111a6c0947107976f314d\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/src/analyze/reviewed-source.mjs\",\n          \"sha256\": \"d3a875e4fc6dca6b7a93e70db62980d01f5b2a68f2e5e8999b93bbf0ca04a462\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/src/analyze/reviewed-refinements.mjs\",\n          \"sha256\": \"ba87773c1738ced6131e800e497a92b99ae6b10b26d9782e2562d2b2159a9dda\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/src/analyze/export-configuration.mjs\",\n          \"sha256\": \"5a324d0e1c3dee2180625a59c7f21b1d2bd932676b5f567f0f9caebafa67bedb\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/src/build/native-model.mjs\",\n          \"sha256\": \"dd29801162eeaa06fe0c96b8d71c6b1994033ab52440ec39ecf62e5d832dd6ae\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/src/build/component-refinements.mjs\",\n          \"sha256\": \"ee003a614e93bbfa542625357eb5ff752c5af4805f9e2f81ca5168ccd1134df8\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/src/build/php-wasm-copied-component.mjs\",\n          \"sha256\": \"1820fa19a86f827e378334e847cebe9511863401b08a5e9c2e60c72bf09cc7ae\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/src/build/php-wasm-copied-artifacts.mjs\",\n          \"sha256\": \"c6d31833738b791ac43e9ec970cbbd75830658b040cd8ef2cd3467c4a04ba3fe\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/src/backends/c/native-copied-values.mjs\",\n          \"sha256\": \"492fd83a246d7d1c58b18812ddc7c90e1fb5d7a999b368cbe56456b5a9d6b7be\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/src/backends/php/copied-values.mjs\",\n          \"sha256\": \"eb62ac337326372d41b184c1628d3a1bc63d3f968bc429a5e6142d74f1b9bb7d\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-subtype-installed-20261010/sources/src/release/php-wasm-copied-package.mjs\",\n          \"sha256\": \"b9e91b526c2fc8d0ffc77113242cb9cf2fe7ef9d1c94aa733cbdcac7d6fb4303\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"php-wasm-subtype-reviewed-installed/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.6bacf52ff14720ed40a37f4d0b2cb5bd636e43f42bfc9849794227a0cfc3c4a5.tgz\",\n          \"sha256\": \"0b4e68d09272f995b29432845dd68a177d51a260fe0a4dc3e36129e5ed7f0ed9\"\n        },\n        {\n          \"path\": \"php-wasm-subtype-reviewed-installed/packages/php-wasm/archives/lean-bridge-subtypes-wasm-1.0.0-php-wasm.zip\",\n          \"sha256\": \"c299034227f880ebc4f6a929ab63c4f4e01c06eb77f49471af2c10adc7d70b1e\"\n        },\n        {\n          \"path\": \"php-wasm-subtype-reviewed-installed/packages/php-wasm/archives/lean-bridge-subtypes-wasm-1.0.0.tgz\",\n          \"sha256\": \"fd471d5606878c14134c2b01b50e5f973c2cf18f760ee0155f0aab80e51dd1ac\"\n        }\n      ]\n"
+        },
+        {
+          "start": 6122931,
+          "previous": "",
+          "current": "    },\n    {\n      \"id\": \"php-wasm-subtype-ordinary\",\n      \"profiles\": [\n        \"php-wasm\"\n      ],\n      \"shapes\": [\n        \"subtype\"\n      ],\n      \"positions\": [\n        \"parameter\",\n        \"result\"\n      ],\n      \"path\": \"ordinary-source\",\n      \"scope\": \"ordinary-source: twelve exports, twelve installed executions with 2024 checks each, two-root package reproduction and source-free offline installation. Cases include checked String/Nat/Int/ByteArray/UInt8 bases, mixed Fin/Subtype, two checked arguments, input preservation, rejection/recovery, normalization, two constructors for one generic and a zero-argument refined result. Local Node 22.23.2 and Chromium 152.0.7977.75 execute PHP 8.4.1 on wasm32, with php-wasm 0.1.0, Lean 4.32.2 and Emscripten 3.1.68. Each route runs eight Node embedded/Composer startup/lazy weak/strict configurations and four Chromium bundled startup/lazy weak/strict configurations. Constructor, adapter and source entry counts were not measured. These local observations do not establish hosted CI, native PHP, Firefox/WebKit, browser Composer, nested or nominal Subtype, refined callbacks, or graph/owned refinement transports. The archive retains selected producer sources and package digests, not a complete dependency closure or package binaries.\",\n      \"limitations\": [\n        \"Constructor, adapter and source entry counts were not measured. These local observations do not establish hosted CI, native PHP, Firefox/WebKit, browser Composer, nested or nominal Subtype, refined callbacks, or graph/owned refinement transports. The archive retains selected producer sources and package digests, not a complete dependency closure or package binaries.\",\n        \"Local Node 22.23.2 and Chromium 152.0.7977.75 execute PHP 8.4.1 on wasm32, with php-wasm 0.1.0, Lean 4.32.2 and Emscripten 3.1.68. Each route runs eight Node embedded/Composer startup/lazy weak/strict configurations and four Chromium bundled startup/lazy weak/strict configurations.\"\n      ],\n      \"hostTypes\": {\n        \"subtype\": {\n          \"parameter\": \"Brick\\\\Math\\\\BigInteger, string, Bytes or int, checked and constructed by the selected Lean constructor\",\n          \"result\": \"the primitive base value projected from the proof-backed Lean result\"\n        }\n      },\n      \"conversionNotes\": {\n        \"subtype\": \"Pass the primitive base value. Lean's selected checked constructor supplies the value passed to the export, including normalization; rejection throws LeanBridgeError code 1 naming the parameter and constructor. Results project the proof-backed base value. Weak and strict callers preserve inputs and recover after rejection. Only top-level primitive-base parameters and results are covered; constructor and dispatch counts were not measured.\"\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-subtype-ordinary-installed\"\n          ],\n          \"note\": \"Fresh Lean checks each configured constructor against the exact primitive base and subtype.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-subtype-ordinary-installed\"\n          ],\n          \"note\": \"The plain copied wasm32 PHP model retains all twelve export decisions, including distinct checked constructors for two specializations of one generic.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-subtype-ordinary-installed\"\n          ],\n          \"note\": \"Lean compiles the typed validators and adapters; results project the subtype base value.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-subtype-ordinary-installed\"\n          ],\n          \"note\": \"Three package archives reproduce in two author roots before source removal and offline installation.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-subtype-ordinary-installed\"\n          ],\n          \"note\": \"ordinary-source: twelve exports, twelve installed executions with 2024 checks each, two-root package reproduction and source-free offline installation. Cases include checked String/Nat/Int/ByteArray/UInt8 bases, mixed Fin/Subtype, two checked arguments, input preservation, rejection/recovery, normalization, two constructors for one generic and a zero-argument refined result. Local Node 22.23.2 and Chromium 152.0.7977.75 execute PHP 8.4.1 on wasm32, with php-wasm 0.1.0, Lean 4.32.2 and Emscripten 3.1.68. Each route runs eight Node embedded/Composer startup/lazy weak/strict configurations and four Chromium bundled startup/lazy weak/strict configurations. Constructor, adapter and source entry counts were not measured. These local observations do not establish hosted CI, native PHP, Firefox/WebKit, browser Composer, nested or nominal Subtype, refined callbacks, or graph/owned refinement transports. The archive retains selected producer sources and package digests, not a complete dependency closure or package binaries.\"\n        }\n      }\n    },\n    {\n      \"id\": \"php-wasm-subtype-reviewed\",\n      \"profiles\": [\n        \"php-wasm\"\n      ],\n      \"shapes\": [\n        \"subtype\"\n      ],\n      \"positions\": [\n        \"parameter\",\n        \"result\"\n      ],\n      \"path\": \"reviewed-ir\",\n      \"scope\": \"reviewed-ir: twelve exports, twelve installed executions with 2024 checks each, two-root package reproduction and source-free offline installation. Cases include checked String/Nat/Int/ByteArray/UInt8 bases, mixed Fin/Subtype, two checked arguments, input preservation, rejection/recovery, normalization, two constructors for one generic and a zero-argument refined result. Local Node 22.23.2 and Chromium 152.0.7977.75 execute PHP 8.4.1 on wasm32, with php-wasm 0.1.0, Lean 4.32.2 and Emscripten 3.1.68. Each route runs eight Node embedded/Composer startup/lazy weak/strict configurations and four Chromium bundled startup/lazy weak/strict configurations. Constructor, adapter and source entry counts were not measured. These local observations do not establish hosted CI, native PHP, Firefox/WebKit, browser Composer, nested or nominal Subtype, refined callbacks, or graph/owned refinement transports. The archive retains selected producer sources and package digests, not a complete dependency closure or package binaries.\",\n      \"limitations\": [\n        \"Constructor, adapter and source entry counts were not measured. These local observations do not establish hosted CI, native PHP, Firefox/WebKit, browser Composer, nested or nominal Subtype, refined callbacks, or graph/owned refinement transports. The archive retains selected producer sources and package digests, not a complete dependency closure or package binaries.\",\n        \"Local Node 22.23.2 and Chromium 152.0.7977.75 execute PHP 8.4.1 on wasm32, with php-wasm 0.1.0, Lean 4.32.2 and Emscripten 3.1.68. Each route runs eight Node embedded/Composer startup/lazy weak/strict configurations and four Chromium bundled startup/lazy weak/strict configurations.\"\n      ],\n      \"hostTypes\": {\n        \"subtype\": {\n          \"parameter\": \"Brick\\\\Math\\\\BigInteger, string, Bytes or int, checked and constructed by the selected Lean constructor\",\n          \"result\": \"the primitive base value projected from the proof-backed Lean result\"\n        }\n      },\n      \"conversionNotes\": {\n        \"subtype\": \"Pass the primitive base value. Lean's selected checked constructor supplies the value passed to the export, including normalization; rejection throws LeanBridgeError code 1 naming the parameter and constructor. Results project the proof-backed base value. Weak and strict callers preserve inputs and recover after rejection. Only top-level primitive-base parameters and results are covered; constructor and dispatch counts were not measured.\"\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-subtype-reviewed-installed\"\n          ],\n          \"note\": \"Independently reviewed constructor and specialization decisions reconcile with fresh Lean metadata.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-subtype-reviewed-installed\"\n          ],\n          \"note\": \"The plain copied wasm32 PHP model retains all twelve export decisions, including distinct checked constructors for two specializations of one generic.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-subtype-reviewed-installed\"\n          ],\n          \"note\": \"Lean compiles the typed validators and adapters; results project the subtype base value.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-subtype-reviewed-installed\"\n          ],\n          \"note\": \"Three package archives reproduce in two author roots before source removal and offline installation.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-subtype-reviewed-installed\"\n          ],\n          \"note\": \"reviewed-ir: twelve exports, twelve installed executions with 2024 checks each, two-root package reproduction and source-free offline installation. Cases include checked String/Nat/Int/ByteArray/UInt8 bases, mixed Fin/Subtype, two checked arguments, input preservation, rejection/recovery, normalization, two constructors for one generic and a zero-argument refined result. Local Node 22.23.2 and Chromium 152.0.7977.75 execute PHP 8.4.1 on wasm32, with php-wasm 0.1.0, Lean 4.32.2 and Emscripten 3.1.68. Each route runs eight Node embedded/Composer startup/lazy weak/strict configurations and four Chromium bundled startup/lazy weak/strict configurations. Constructor, adapter and source entry counts were not measured. These local observations do not establish hosted CI, native PHP, Firefox/WebKit, browser Composer, nested or nominal Subtype, refined callbacks, or graph/owned refinement transports. The archive retains selected producer sources and package digests, not a complete dependency closure or package binaries.\"\n        }\n      }\n"
+        }
+      ]
+    },
+    {
+      "path": "src/release/php-wasm-copied-package.mjs",
+      "currentSha256": "56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2",
+      "previousSha256": "b9e91b526c2fc8d0ffc77113242cb9cf2fe7ef9d1c94aa733cbdcac7d6fb4303",
+      "edits": [
+        {
+          "start": 1482,
+          "previous": "import { nativeFinContainerNote, nativeFinSummary, nativeRefinementReadme } from \"../backends/native/fin-refinements.mjs\";\n",
+          "current": "import { nativeFinContainerNote, nativeFinRefinements, nativeFinSummary, nativeRefinementReadme } from \"../backends/native/fin-refinements.mjs\";\n"
+        },
+        {
+          "start": 3424,
+          "previous": "\t\t.replace(\"Subtype inside containers, records, variants, callbacks or reviewed Binding IR\", \"Subtype inside containers, records, variants or callbacks\");\n\treturn `\\n## Bounded integers\\n\\n${description}\\n\\n${functions.map(fn => `- ${projection.namespace}\\\\${fn.field}: ${bounds(fn)}`).join(\"\\n\")}\\n`;\n",
+          "current": "\t\t.replace(\"Subtype inside containers, records, variants, callbacks or reviewed Binding IR\", \"Subtype inside containers, records, variants or callbacks\")\n\t\t.replace(/Fin inside (?:containers, records, variants, callbacks or reviewed Binding IR|records, variants, callbacks or reviewed Binding IR|records, variants or callbacks) is not supported in PHP-Wasm packages\\./u,\n\t\t\t\"Fin inside callbacks or generic record instantiations is not supported in PHP-Wasm packages.\");\n\tconst subtype = declarations.some(declaration => {\n\t\tconst value = nativeFinRefinements(declaration, types);\n\t\treturn [...value.parameters, value.result].some(refinement => refinement?.kind === \"subtype\");\n\t});\n\treturn `\\n## ${subtype ? \"Checked refinements\" : \"Bounded integers\"}\\n\\n${description}\\n\\n${functions.map(fn => `- ${projection.namespace}\\\\${fn.field}: ${bounds(fn)}`).join(\"\\n\")}\\n`;\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "cf0dc49efbe6a4d6507db650c226b7c4a87bddf16059cdf6ba1e93c4c530cd0d",
+      "previousSha256": "a2dfdae2ca37dca1f22fdd14754dd46bdbf8c5ccfa0bc1ab227b6878e10aa434",
+      "edits": [
+        {
+          "start": 16133,
+          "previous": "",
+          "current": "import { phpWasmSubtypePromotionChangedPaths } from \"./php-wasm-subtype-promotion-history.mjs\";\n"
+        },
+        {
+          "start": 55828,
+          "previous": "",
+          "current": "\t, ...phpWasmSubtypePromotionChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-wasm-direct-fin-promotion-tests.mjs",
+      "currentSha256": "ed1e832ebfa166303aa8d6572cb6566b98908e8c465026a22f1182442d5c84d4",
+      "previousSha256": "2b843beb3d0047285a648ca9538df33e758371a5ddb26c83e465a842fad58d04",
+      "edits": [
+        {
+          "start": 833,
+          "previous": "",
+          "current": "import { beforePhpWasmSubtypePromotionSource, phpWasmSubtypePromotionHistoryPath } from \"./php-wasm-subtype-promotion-history.mjs\";\n"
+        },
+        {
+          "start": 2778,
+          "previous": "",
+          "current": "\tcurrent.document = JSON.parse(beforePhpWasmSubtypePromotionSource(\"docs/type-surface.v1.json\", JSON.stringify(current.document, null, 2) + \"\\n\"));\n"
+        },
+        {
+          "start": 3059,
+          "previous": "",
+          "current": "\tconst later = JSON.parse(await readFile(phpWasmSubtypePromotionHistoryPath));\n\tfor(const entry of proposed.evidence) for(const file of entry.files)\n\t{\n\t\tconst update = later.updates.find(item => item.path === file.path && item.currentSha256 === file.sha256);\n\t\tif(update) file.sha256 = update.previousSha256;\n\t}\n"
+        },
+        {
+          "start": 6215,
+          "previous": "\t\tassert.equal(sha256(await readFile(file.path)), file.sha256, file.path);\n",
+          "current": "\t{\n\t\tconst bytes = await readFile(file.path);\n\t\tconst update = later.updates.find(item => item.path === file.path);\n\t\tassert.equal(sha256(update ? beforePhpWasmSubtypePromotionSource(file.path, bytes.toString(), file.sha256) : bytes), file.sha256, file.path);\n\t}\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-wasm-subtype-acceptance-history-tests.mjs",
+      "currentSha256": "5278f636fc730d0252d178863fd26899401346eb22425be3d7b1c205cfd93a2b",
+      "previousSha256": "12749ccea73e831fff48b48eba4359119d55e7b240e1139f31060e2b78818f00",
+      "edits": [
+        {
+          "start": 528,
+          "previous": "",
+          "current": "import { beforePhpWasmSubtypePromotionSource } from \"./php-wasm-subtype-promotion-history.mjs\";\n"
+        },
+        {
+          "start": 1416,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\"), previous = reversePhpWasmSubtypeAcceptanceUpdate(current, update);\n",
+          "current": "\t\tconst current = beforePhpWasmSubtypePromotionSource(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n\t\tconst previous = reversePhpWasmSubtypeAcceptanceUpdate(current, update);\n"
+        },
+        {
+          "start": 6417,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = beforePhpWasmSubtypePromotionSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 7252,
+          "previous": "\t\tassert.equal(sha256(await readFile(file.path)), file.sha256, file.path);\n",
+          "current": "\t\tassert.equal(sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)), file.sha256, file.path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-wasm-subtype-acceptance-history.mjs",
+      "currentSha256": "5d47b4df6d1393960a7fb2dcf230d54f41d6be5c2236c862bbe01e1713429d64",
+      "previousSha256": "f23171429b1f07d39c35ecfab53cfb728f077afa9c7b6d2cfea448bb36efeebb",
+      "edits": [
+        {
+          "start": 246,
+          "previous": "",
+          "current": "import { beforePhpWasmSubtypePromotionSource } from \"./php-wasm-subtype-promotion-history.mjs\";\n"
+        },
+        {
+          "start": 2550,
+          "previous": "",
+          "current": "\tsource = beforePhpWasmSubtypePromotionSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/php-wasm-fin.test.mjs",
+      "currentSha256": "f4be80cc8307c9026ea726503d4ac074247a4f89e2f08b74d6639b29f36c53e0",
+      "previousSha256": "32de52c15c302e7cca89c6667e91ffa6d7f85ffc2cd087ccde4780363177ed73",
+      "edits": [
+        {
+          "start": 2605,
+          "previous": "",
+          "current": "import \"./helpers/php-wasm-subtype-promotion-tests.mjs\";\nimport \"./helpers/php-wasm-subtype-promotion-history-tests.mjs\";\nimport \"./helpers/php-wasm-refinement-readme-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/type-surface.test.mjs",
+      "currentSha256": "cbf80e41f1b9db0869ba435c2f2fb40e5c856a013dbd888df1f410982ad6da07",
+      "previousSha256": "6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61",
+      "edits": [
+        {
+          "start": 27323,
+          "previous": "\tconst subtypes = specializationEvidence ? [\"subtype\"] : [];\n",
+          "current": "\tconst subtypes = specializationEvidence || profile === \"php-wasm\" ? [\"subtype\"] : [];\n"
+        },
+        {
+          "start": 29977,
+          "previous": "\t\t\t\tassert.deepEqual(stage.evidence, [`native-subtype-${specializationEvidence}-installed`]);\n",
+          "current": "\t\t\t\tassert.deepEqual(stage.evidence, [profile === \"php-wasm\" ? \"php-wasm-subtype-ordinary-installed\" : `native-subtype-${specializationEvidence}-installed`]);\n"
+        },
+        {
+          "start": 35717,
+          "previous": "\t// Ordinary Node, ten earlier native profiles, Perl and three browsers; reviewed C/C++ and Node.\n",
+          "current": "\t// Ordinary Node, native, Perl, three browsers and PHP-Wasm; reviewed C/C++, Node and PHP-Wasm.\n"
+        },
+        {
+          "start": 36000,
+          "previous": "\tassert.equal(ordinary.length, 2 * (2 + native.length + 1 + browser.length));\n\tassert.equal(reviewed.length, 8);\n",
+          "current": "\tassert.equal(ordinary.length, 2 * (2 + native.length + 1 + browser.length + 1));\n\tassert.equal(reviewed.length, 10);\n"
+        },
+        {
+          "start": 36186,
+          "previous": "\tassert.deepEqual([...new Set(installed.map(cell => cell.profile))].sort(), [\"node-javascript\", \"node-typescript\", ...native, \"perl\", ...browser].sort());\n",
+          "current": "\tassert.deepEqual([...new Set(installed.map(cell => cell.profile))].sort(), [\"node-javascript\", \"node-typescript\", ...native, \"perl\", ...browser, \"php-wasm\"].sort());\n"
+        },
+        {
+          "start": 36527,
+          "previous": "",
+          "current": "\t\tif(cell.profile === \"php-wasm\")\n\t\t{\n\t\t\tassert.deepEqual(cell.stages.installedExecution.evidence, [\"php-wasm-subtype-ordinary-installed\"]);\n\t\t\tassert.match(cell.hostType, /selected Lean constructor|proof-backed Lean result/u);\n\t\t\tcontinue;\n\t\t}\n"
+        },
+        {
+          "start": 37887,
+          "previous": "\tassert.deepEqual([...new Set(reviewed.map(cell => cell.profile))].sort(), [\"c\", \"cpp\", \"node-javascript\", \"node-typescript\"]);\n",
+          "current": "\tassert.deepEqual([...new Set(reviewed.map(cell => cell.profile))].sort(), [\"c\", \"cpp\", \"node-javascript\", \"node-typescript\", \"php-wasm\"]);\n"
+        },
+        {
+          "start": 38059,
+          "previous": "",
+          "current": "\t\tif(cell.profile === \"php-wasm\")\n\t\t{\n\t\t\tassert.deepEqual(cell.stages.installedExecution.evidence, [\"php-wasm-subtype-reviewed-installed\"]);\n\t\t\tfor(const stage of Object.values(cell.stages)) assert.equal(stage.state, \"passed\");\n\t\t\tassert.match(cell.hostType, /selected Lean constructor|proof-backed Lean result/u);\n\t\t\tcontinue;\n\t\t}\n"
+        }
+      ]
+    }
+  ]
+}

@@ -18,7 +18,7 @@ import { ownedPhpWasmReadme, ownedPhpWasmTransferReadme, ownedPhpWasmBorrowReadm
 import { phpCopiedAliases, phpAliasReadme } from "../backends/php/copied-aliases.mjs";
 import { phpVariantReadme } from "../backends/php/copied-variants.mjs";
 import { phpValueReadme } from "../backends/php/copied-equality.mjs";
-import { nativeFinContainerNote, nativeFinSummary, nativeRefinementReadme } from "../backends/native/fin-refinements.mjs";
+import { nativeFinContainerNote, nativeFinRefinements, nativeFinSummary, nativeRefinementReadme } from "../backends/native/fin-refinements.mjs";
 import { componentNpmIdentity } from "./component-package-receipt.mjs";
 import { createDeterministicTarGzFromFiles, tarGzipPackingIdentity } from "./deterministic-archive.mjs";
 import { createDeterministicZip } from "./deterministic-zip.mjs";
@@ -41,8 +41,14 @@ export const phpWasmFinReadme = projection => {
 	const declarations = functions.map(fn => fn.declaration);
 	const description = nativeRefinementReadme(declarations, `Lean Fin n parameters and results are Brick\\Math\\BigInteger values below n. The PHP-Wasm side module compares each argument with its exact bound, including bounds wider than 64 bits, before any Lean code runs; a value at or above its bound throws LeanBridgeError with code 1 whose message names the Lean parameter and bound. Fin 0 has no values, so every call to a function taking one is rejected. Results are BigInteger values below their declared bound. ${nativeFinContainerNote(declarations, "PHP-Wasm packages", types)}`, "PHP-Wasm packages", types)
 		.replace("The bundled native library runs", "The PHP-Wasm side module runs")
-		.replace("Subtype inside containers, records, variants, callbacks or reviewed Binding IR", "Subtype inside containers, records, variants or callbacks");
-	return `\n## Bounded integers\n\n${description}\n\n${functions.map(fn => `- ${projection.namespace}\\${fn.field}: ${bounds(fn)}`).join("\n")}\n`;
+		.replace("Subtype inside containers, records, variants, callbacks or reviewed Binding IR", "Subtype inside containers, records, variants or callbacks")
+		.replace(/Fin inside (?:containers, records, variants, callbacks or reviewed Binding IR|records, variants, callbacks or reviewed Binding IR|records, variants or callbacks) is not supported in PHP-Wasm packages\./u,
+			"Fin inside callbacks or generic record instantiations is not supported in PHP-Wasm packages.");
+	const subtype = declarations.some(declaration => {
+		const value = nativeFinRefinements(declaration, types);
+		return [...value.parameters, value.result].some(refinement => refinement?.kind === "subtype");
+	});
+	return `\n## ${subtype ? "Checked refinements" : "Bounded integers"}\n\n${description}\n\n${functions.map(fn => `- ${projection.namespace}\\${fn.field}: ${bounds(fn)}`).join("\n")}\n`;
 };
 
 const profile = "php-wasm-copied-loading-v1";

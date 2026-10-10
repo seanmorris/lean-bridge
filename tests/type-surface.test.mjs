@@ -399,7 +399,7 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 		, "wit-wasi": ["php-native-ruby-wit-wasi"]
 	}[profile] ?? [];
 	// Author-checked Subtype cells are promoted per build group by their own receipt, at top-level parameters and results.
-	const subtypes = specializationEvidence ? ["subtype"] : [];
+	const subtypes = specializationEvidence || profile === "php-wasm" ? ["subtype"] : [];
 	assert.equal(observed.length, 63 + 3 * (compounds.length + lists.length + aliases.length + variants.length + recursive.length) + 2 * fins.length + 2 * subtypes.length + specialized.length + (nominalFin ? 1 : 0));
 	assert.deepEqual([...new Set(observed.map(cell => cell.shape))].sort(), [...document.irFacets.primitive, "array", "record", ...compounds, ...lists, ...aliases, ...variants, ...recursive, ...fins, ...subtypes, ...specialized].sort());
 	for(const cell of observed)
@@ -435,7 +435,7 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 			}
 			if(cell.shape === "subtype")
 			{
-				assert.deepEqual(stage.evidence, [`native-subtype-${specializationEvidence}-installed`]);
+				assert.deepEqual(stage.evidence, [profile === "php-wasm" ? "php-wasm-subtype-ordinary-installed" : `native-subtype-${specializationEvidence}-installed`]);
 				continue;
 			}
 			if(specialized.includes(cell.shape))
@@ -504,17 +504,23 @@ test("checked Subtype evidence promotes only top-level parameters and results", 
 	const installed = cells.filter(cell => cell.stages.installedExecution.state === "passed");
 	const ordinary = installed.filter(cell => cell.path === "ordinary-source");
 	const reviewed = installed.filter(cell => cell.path === "reviewed-ir");
-	// Ordinary Node, ten earlier native profiles, Perl and three browsers; reviewed C/C++ and Node.
+	// Ordinary Node, native, Perl, three browsers and PHP-Wasm; reviewed C/C++, Node and PHP-Wasm.
 	const native = ["c", "cpp", "python", "rust", "ruby", "dotnet", "java", "kotlin", "php-native", "wit-wasi"];
 	const browser = ["browser-javascript", "browser-react", "browser-worker"];
-	assert.equal(ordinary.length, 2 * (2 + native.length + 1 + browser.length));
-	assert.equal(reviewed.length, 8);
+	assert.equal(ordinary.length, 2 * (2 + native.length + 1 + browser.length + 1));
+	assert.equal(reviewed.length, 10);
 	assert.equal(installed.length, ordinary.length + reviewed.length);
-	assert.deepEqual([...new Set(installed.map(cell => cell.profile))].sort(), ["node-javascript", "node-typescript", ...native, "perl", ...browser].sort());
+	assert.deepEqual([...new Set(installed.map(cell => cell.profile))].sort(), ["node-javascript", "node-typescript", ...native, "perl", ...browser, "php-wasm"].sort());
 	assert.deepEqual([...new Set(installed.map(cell => cell.position))], ["parameter", "result"]);
 	for(const cell of ordinary)
 	{
 		assert.equal(cell.path, "ordinary-source");
+		if(cell.profile === "php-wasm")
+		{
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["php-wasm-subtype-ordinary-installed"]);
+			assert.match(cell.hostType, /selected Lean constructor|proof-backed Lean result/u);
+			continue;
+		}
 		if(cell.profile === "perl")
 		{
 			assert.deepEqual(cell.stages.installedExecution.evidence, ["perl-relocated-subtype-hosted-installed", "perl-relocated-supplemental-hosted-installed"]);
@@ -532,9 +538,16 @@ test("checked Subtype evidence promotes only top-level parameters and results", 
 		assert.deepEqual(cell.stages.installedExecution.evidence, [browser.includes(cell.profile) ? "npm-browser-refinements-installed" : "npm-subtype-refinements-installed"]);
 		assert.match(cell.hostType, /declared primitive/u);
 	}
-	assert.deepEqual([...new Set(reviewed.map(cell => cell.profile))].sort(), ["c", "cpp", "node-javascript", "node-typescript"]);
+	assert.deepEqual([...new Set(reviewed.map(cell => cell.profile))].sort(), ["c", "cpp", "node-javascript", "node-typescript", "php-wasm"]);
 	for(const cell of reviewed)
 	{
+		if(cell.profile === "php-wasm")
+		{
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["php-wasm-subtype-reviewed-installed"]);
+			for(const stage of Object.values(cell.stages)) assert.equal(stage.state, "passed");
+			assert.match(cell.hostType, /selected Lean constructor|proof-backed Lean result/u);
+			continue;
+		}
 		const native = ["c", "cpp"].includes(cell.profile);
 		assert.deepEqual(cell.stages.installedExecution.evidence, [`reviewed-subtype-${native ? "c-cpp" : "npm"}-installed`]);
 		for(const stage of Object.values(cell.stages)) assert.equal(stage.state, "passed");
