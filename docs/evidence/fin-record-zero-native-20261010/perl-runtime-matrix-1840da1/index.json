@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "kind": "fin-record-zero-perl-runtime-matrix",
+  "revision": "1840da12d270045b1340b16e98a2a8085f002337",
+  "scope": "Local glibc 2.36. Original Perl runtime version, thread ABI, executable identities and unchanged before/after checks for the four successful installed Fin 0 nominal collection selections. No hosted or minimum-platform claim.",
+  "references": [
+    {
+      "selection": "5.36.3-threaded",
+      "archive": "perl5363-threaded-floor236-1840da1",
+      "indexSha256": "bc4ddddb4b46cfc65e24fad54a1d3af025e13a74250be7b34a88a8257e27f0c1"
+    },
+    {
+      "selection": "5.36.3-unthreaded",
+      "archive": "perl5363-unthreaded-floor236-1840da1",
+      "indexSha256": "509e9df47cfec65f8c92771b55cf2964aaa4c377b2ef8c3040c003cfa8a7db70"
+    },
+    {
+      "selection": "5.38.2-threaded",
+      "archive": "perl5382-threaded-floor236-1840da1",
+      "indexSha256": "d292a247c895405a01d2f57db30af728caad54db30a61d14e287b89934e73538"
+    },
+    {
+      "selection": "5.38.2-unthreaded",
+      "archive": "perl5382-unthreaded-floor236-1840da1",
+      "indexSha256": "d3570a68e739e20a84fe481038313407b2aafe34a065af329a8be15251d584fc"
+    }
+  ],
+  "files": [
+    {
+      "path": "start.json",
+      "bytes": 3354,
+      "sha256": "560033e245c9cbf44cb4ff71302d2a76cad9979243f585cbd0eaaba80ae9c663"
+    },
+    {
+      "path": "end.json",
+      "bytes": 8241,
+      "sha256": "79e629f39cb4ad44bd8663c65ae1cfd68de9cef1b1da858c4b200f9e4cece9db"
+    },
+    {
+      "path": "perl5363-threaded-floor236.json",
+      "bytes": 1845,
+      "sha256": "518a0415fcb3345e616ad5079b626658a5910eb408f775e8c5d5d2abafdf844e"
+    },
+    {
+      "path": "perl5363-unthreaded-floor236.json",
+      "bytes": 1813,
+      "sha256": "d68b4a1c4a06684d600f019706794557bc7bbbc4f7c5c07410378c65709d99e4"
+    },
+    {
+      "path": "perl5382-threaded-floor236.json",
+      "bytes": 1845,
+      "sha256": "4904a51096d5030d9fb02a635b92c7563e3d12360e2e3b53d9984fca0684ba74"
+    },
+    {
+      "path": "perl5382-unthreaded-floor236.json",
+      "bytes": 1813,
+      "sha256": "d1be58a6657a0c88eb6b8d32d8673d99a466ca1be3e8d9285305fea5464c4adc"
+    },
+    {
+      "path": "queue.mjs",
+      "bytes": 3342,
+      "sha256": "4f1df438770998d57c8b81add7dc00eaec337fb0f4059928a0a2d20b104d3f2e"
+    },
+    {
+      "path": "native-runner.mjs",
+      "bytes": 6285,
+      "sha256": "cbcd374d37f95907316d2ee69fdc51167c857928d9a1fbebe5ad2a1a005e0d7f"
+    }
+  ]
+}

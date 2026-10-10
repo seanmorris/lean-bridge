@@ -1,0 +1,50 @@
+{
+  "selection": "perl5382-threaded-floor236",
+  "command": [
+    "/usr/bin/node",
+    "build/run-vo1442-zero-native-v2.mjs",
+    "1840da12d270045b1340b16e98a2a8085f002337",
+    "perl5382-threaded-floor236",
+    "perl"
+  ],
+  "startedAt": "2026-10-10T11:46:38.305Z",
+  "endedAt": "2026-10-10T11:50:30.701Z",
+  "code": 0,
+  "signal": null,
+  "runtimeBefore": {
+    "selection": "5.38.2-threaded",
+    "command": "/app/.toolchains/perl/5.38.2-threaded/bin/perl",
+    "args": [
+      "-MConfig",
+      "-MJSON::PP",
+      "-e",
+      "print JSON::PP->new->canonical->encode({version => \"$^V\", archname => $Config{archname}, threaded => $Config{usethreads} eq \"define\" ? JSON::PP::true : JSON::PP::false})"
+    ],
+    "stdout": "{\"archname\":\"x86_64-linux-thread-multi\",\"threaded\":true,\"version\":\"v5.38.2\"}",
+    "runtime": {
+      "archname": "x86_64-linux-thread-multi",
+      "threaded": true,
+      "version": "v5.38.2"
+    },
+    "realpath": "/app/.toolchains/perl/5.38.2-threaded/bin/perl",
+    "sha256": "03f8e3368d9f5ee75c77b2c139a99b09a2326967e448639c1584f5fc725e04fc"
+  },
+  "runtimeAfter": {
+    "selection": "5.38.2-threaded",
+    "command": "/app/.toolchains/perl/5.38.2-threaded/bin/perl",
+    "args": [
+      "-MConfig",
+      "-MJSON::PP",
+      "-e",
+      "print JSON::PP->new->canonical->encode({version => \"$^V\", archname => $Config{archname}, threaded => $Config{usethreads} eq \"define\" ? JSON::PP::true : JSON::PP::false})"
+    ],
+    "stdout": "{\"archname\":\"x86_64-linux-thread-multi\",\"threaded\":true,\"version\":\"v5.38.2\"}",
+    "runtime": {
+      "archname": "x86_64-linux-thread-multi",
+      "threaded": true,
+      "version": "v5.38.2"
+    },
+    "realpath": "/app/.toolchains/perl/5.38.2-threaded/bin/perl",
+    "sha256": "03f8e3368d9f5ee75c77b2c139a99b09a2326967e448639c1584f5fc725e04fc"
+  }
+}

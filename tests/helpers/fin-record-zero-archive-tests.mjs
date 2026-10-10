@@ -1,5 +1,5 @@
 /**
- * Preserve the first installed zero-bound nominal collection runs, including the Python failure.
+ * Preserve installed zero-bound nominal collection runs, including original failures.
  *
  * @file
  */
@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { assertFinRecordZeroReport } from "./fin-record-zero-report.mjs";
+import { assertFinRecordZeroPerlRuntimes } from "./fin-record-zero-runtime-archive.mjs";
 
 const base = "docs/evidence/fin-record-zero-native-20261010/";
 const originalRevision = "7f32996dce66ea7ab191c8c23b031a0b13c1ffe2";
@@ -53,6 +54,12 @@ const cases = [
 		, revision: "1840da12d270045b1340b16e98a2a8085f002337"
 		, tree: "6da1c6b703b990e7ac8b5934cdb14a4fa06f506f"
 		, outcome: "passed", profiles: ["perl"], perl: "5.38.2-threaded", count: 40 }
+	, { name: "perl5382-unthreaded-floor236-1840da1"
+		, digest: "d3570a68e739e20a84fe481038313407b2aafe34a065af329a8be15251d584fc"
+		, revision: "1840da12d270045b1340b16e98a2a8085f002337"
+		, tree: "6da1c6b703b990e7ac8b5934cdb14a4fa06f506f"
+		, outcome: "passed", profiles: ["perl"], perl: "5.38.2-unthreaded"
+		, count: 40 }
 ];
 const inspect = async (item, read = readFile) => {
 	const root = base + item.name + "/", bytes = await read(root + "index.json");
@@ -135,4 +142,39 @@ test("zero-bound archive gates refuse altered originals, source snapshots and ex
 			const bytes = await readFile(path);
 			return path === base + item.name + "/" + target ? Buffer.concat([bytes, Buffer.from("\n")]) : bytes;
 		}));
+});
+
+const runtimeDigest = "3bf1a7a32022d88e77eefd8aae97fe36074a2304c8f36617eb64b53df572f612";
+const perl = cases.filter(item => item.perl);
+
+test("zero-bound installed acceptance covers eleven native hosts, two Python floors and four Perl ABIs", async () => {
+	const passed = cases.filter(item => item.outcome === "passed");
+	assert.deepEqual([...new Set(passed.flatMap(item => item.profiles))].sort(),
+		["c", "cpp", "dotnet", "java", "kotlin", "perl", "php-native", "python", "ruby", "rust", "wit-wasi"]);
+	assert.equal(passed.reduce((sum, item) => sum + item.profiles.length, 0), 15);
+	const python = passed.filter(item => item.profiles.includes("python"));
+	assert.equal(python.length, 2);
+	for(const [position, item] of python.entries())
+	{
+		const start = JSON.parse(await readFile(base + item.name + "/start.json"));
+		assert.equal(start.environment.LEAN_BRIDGE_PYTHON,
+			position === 0 ? "/app/.toolchains/python311/bin/python3.11" : "/app/.toolchains/python312/bin/python3.12");
+	}
+	await assertFinRecordZeroPerlRuntimes(runtimeDigest, perl);
+});
+
+test("zero-bound Perl runtime gate refuses missing selections and altered runtime originals", async () => {
+	await assert.rejects(() => assertFinRecordZeroPerlRuntimes("0".repeat(64), perl));
+	await assert.rejects(() => assertFinRecordZeroPerlRuntimes(runtimeDigest, perl.slice(0, 3)));
+	await assert.rejects(() => assertFinRecordZeroPerlRuntimes(runtimeDigest, [perl[0], perl[0], ...perl.slice(2)]));
+	const root = base + "perl-runtime-matrix-1840da1/";
+	const index = JSON.parse(await readFile(root + "index.json"));
+	const originals = ["index.json", "start.json", "end.json"];
+	const linked = perl.flatMap(item => originals.map(name => base + item.name + "/" + name));
+	const paths = [root + "index.json", ...index.files.map(file => root + file.path), ...linked];
+	for(const target of paths)
+		await assert.rejects(() => assertFinRecordZeroPerlRuntimes(runtimeDigest, perl, async path => {
+			const bytes = await readFile(path);
+			return path === target ? Buffer.concat([bytes, Buffer.from("\n")]) : bytes;
+		}), target);
 });

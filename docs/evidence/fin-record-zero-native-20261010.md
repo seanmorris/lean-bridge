@@ -24,8 +24,9 @@ rejection/recovery pairs.
 | Perl 5.36.3 threaded at producer `1840da1`, corrected local runner | Passed, 2,046 assertions | Passed, 2,046 assertions |
 | Perl 5.36.3 unthreaded at producer `1840da1` | Passed, 2,046 assertions | Passed, 2,046 assertions |
 | Perl 5.38.2 threaded at producer `1840da1` | Passed, 2,046 assertions | Passed, 2,046 assertions |
+| Perl 5.38.2 unthreaded at producer `1840da1` | Passed, 2,046 assertions | Passed, 2,046 assertions |
 
-The C/C++ harness rebuilt each route from two unrelated author directories
+Every successful selection rebuilt each route from two unrelated author directories
 and required byte-identical archives. It removed author and build staging
 before installing the prepared packages offline. Three changed reviews
 also failed against fresh Lean before output: a loosened record bound, a
@@ -77,6 +78,17 @@ Indexes:
   `509e9df47cfec65f8c92771b55cf2964aaa4c377b2ef8c3040c003cfa8a7db70`.
 - [Perl 5.38.2 threaded pass](fin-record-zero-native-20261010/perl5382-threaded-floor236-1840da1/index.json):
   `d292a247c895405a01d2f57db30af728caad54db30a61d14e287b89934e73538`.
+- [Perl 5.38.2 unthreaded pass](fin-record-zero-native-20261010/perl5382-unthreaded-floor236-1840da1/index.json):
+  `d3570a68e739e20a84fe481038313407b2aafe34a065af329a8be15251d584fc`.
 
-#1442 remains open for the remaining installed selections and its complete
-acceptance audit. These observations do not close #1220.
+The [Perl runtime archive](fin-record-zero-native-20261010/perl-runtime-matrix-1840da1/index.json)
+ties all four successful selections to their original version and thread-ABI
+probes, executable paths and SHA-256 hashes. Each executable remained
+unchanged before and after its installed tests. The index digest is
+`3bf1a7a32022d88e77eefd8aae97fe36074a2304c8f36617eb64b53df572f612`.
+
+All fifteen required runtime selections now pass both routes: eleven native
+hosts, two Python floors and four Perl ABIs. The archive gate requires the
+complete selection and rejects missing, duplicated or altered records.
+The complete #1442 acceptance audit remains separate from this supplement.
+These observations do not close #1220.
