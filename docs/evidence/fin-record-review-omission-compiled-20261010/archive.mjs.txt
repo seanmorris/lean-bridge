@@ -1,0 +1,49 @@
+import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const root = "/app/build/worktrees/fin-container-edge-file-closure-vo1454";
+const revision = "179d385755cda5908cdc63dd4cc5a39989acbbad";
+const directory = join(root, "docs/evidence/fin-record-review-omission-compiled-20261010");
+const prefix = "/app/build/vo1442-record-omission-179d385";
+const hash = bytes => createHash("sha256").update(bytes).digest("hex");
+const git = args => execFileSync("git", args, { cwd: root, maxBuffer: 32 * 1024 * 1024 });
+assert.equal(git(["rev-parse", "HEAD"]).toString().trim(), revision);
+assert.equal(git(["status", "--porcelain", "--untracked-files=no"]).length, 0);
+const originals = { "runner.mjs.txt": prefix + ".mjs", "queued.json": prefix + ".queued.json",
+  "start.json": prefix + ".start.json", "end.json": prefix + ".end.json", "run.tap": prefix + ".tap",
+  "verified.json": prefix + ".verified.json" };
+const outputs = new Map(), files = [];
+const add = (path, bytes, original) => {
+  outputs.set(path, bytes); files.push({ path, bytes: bytes.length, sha256: hash(bytes), original });
+};
+for(const [path, original] of Object.entries(originals)) add(path, await readFile(original), original);
+const start = JSON.parse(outputs.get("start.json")), end = JSON.parse(outputs.get("end.json"));
+const verified = JSON.parse(outputs.get("verified.json")), tap = outputs.get("run.tap");
+assert.equal(start.revision, revision); assert.equal(verified.revision, revision);
+assert.equal(start.tree, git(["rev-parse", revision + "^{tree}"]).toString().trim());
+assert.deepEqual([end.code, end.signal, end.stoppedForDisk], [0, null, false]);
+assert.equal(verified.cases, 7); assert.equal(end.tapSha256, hash(tap)); assert.equal(verified.tapSha256, hash(tap));
+for(const [key, count] of [["tests",8],["pass",8],["fail",0],["skipped",0]])
+  assert.equal(Number(tap.toString().match(new RegExp("^# " + key + " (\\d+)$","m"))?.[1]), count);
+const sources = [
+  "tests/native-fin-records.test.mjs", "tests/helpers/fin-fixture-installed.mjs",
+  "tests/helpers/reviewed-fin-record-fixture.mjs", "tests/helpers/fin-record-model.mjs",
+  "tests/helpers/fin-record-install.mjs", "tests/helpers/copied-fixture-install.mjs",
+  "tests/helpers/lake-workspace.mjs", "src/analyze/reviewed-source.mjs", "src/build/canonical-build.mjs",
+  "src/analyze/NativeExports.lean",
+  ...git(["ls-tree","-r","--name-only",revision,"--","tests/fixtures/onboarding/native-fin-records"]).toString().trim().split("\n")
+];
+for(const path of sources) add("sources/" + path + ".txt", git(["show", revision + ":" + path]), "git:" + revision + ":" + path);
+add("archive.mjs.txt", await readFile(fileURLToPath(import.meta.url)), "/app/build/archive-vo1442-record-omission-179d385.mjs");
+const index = Buffer.from(JSON.stringify({ schemaVersion:1, kind:"fresh-lean-record-review-omission", producer:{revision,tree:start.tree}, cases:7,
+  scope:"Fresh Lean source/review rejection before output, not installed-package or hosted acceptance. Source snapshots are selected identities, not a full build dependency closure.", files },null,2)+"\n");
+for(const [path, bytes] of [...outputs,["index.json",index]]) {
+  const target = join(directory,path); await mkdir(dirname(target),{recursive:true});
+  try { await writeFile(target,bytes,{flag:"wx"}); }
+  catch(error) { if(error.code!=="EEXIST")throw error; assert.deepEqual(await readFile(target),bytes); }
+}
+console.log(JSON.stringify({directory,files:files.length,sources:sources.length,indexSha256:hash(index)}));

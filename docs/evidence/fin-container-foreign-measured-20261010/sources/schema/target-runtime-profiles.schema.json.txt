@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:lean-bridge:schema:target-runtime-profiles:v1",
+  "title": "Lean Bridge managed runtime target profiles",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "contractVersion",
+    "verifiedAt",
+    "bindingIrSchemaVersion",
+    "platform",
+    "boundary",
+    "acceptance",
+    "profiles"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "contractVersion": { "$ref": "#/$defs/version" },
+    "verifiedAt": { "type": "string", "format": "date" },
+    "bindingIrSchemaVersion": { "const": 3 },
+    "platform": { "$ref": "#/$defs/platform" },
+    "boundary": { "$ref": "#/$defs/boundary" },
+    "acceptance": {
+      "type": "array",
+      "minItems": 12,
+      "maxItems": 12,
+      "items": { "$ref": "#/$defs/acceptance" }
+    },
+    "profiles": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": { "$ref": "#/$defs/profile" }
+    }
+  },
+  "$defs": {
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "identifier": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+    "strings": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "platform": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "operatingSystem", "architecture", "libc", "minimumLibcVersion"],
+      "properties": {
+        "id": { "const": "linux-x64-gnu.2.38" },
+        "operatingSystem": { "const": "linux" },
+        "architecture": { "const": "x86-64" },
+        "libc": { "const": "glibc" },
+        "minimumLibcVersion": { "const": "2.38" }
+      }
+    },
+    "boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "transport",
+        "runtimeScope",
+        "sharedRuntime",
+        "compileOnce",
+        "runtimeLibrary",
+        "componentLibrary",
+        "header",
+        "failureProtocol",
+        "callbackThread"
+      ],
+      "properties": {
+        "transport": { "const": "generated-c" },
+        "runtimeScope": { "const": "process" },
+        "sharedRuntime": { "const": true },
+        "compileOnce": { "const": true },
+        "runtimeLibrary": { "const": "liblean_bridge_native.so" },
+        "componentLibrary": { "const": "liblean_alpha_component.so" },
+        "header": { "const": "lean_alpha.h" },
+        "failureProtocol": { "const": "status-and-error-envelope" },
+        "callbackThread": { "const": "initiating-runtime-thread" }
+      }
+    },
+    "acceptance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "requirement", "evidence"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "requirement": { "type": "string", "minLength": 1 },
+        "evidence": { "type": "string", "minLength": 1 }
+      }
+    },
+    "package": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ecosystem", "coordinate", "nativeLayout", "scriptsDisabled"],
+      "properties": {
+        "ecosystem": { "enum": ["nuget", "maven", "rubygems"] },
+        "coordinate": { "type": "string", "minLength": 1 },
+        "nativeLayout": { "type": "string", "minLength": 1 },
+        "scriptsDisabled": { "const": true }
+      }
+    },
+    "gap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["feature", "reason"],
+      "properties": {
+        "feature": { "$ref": "#/$defs/identifier" },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    },
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "language",
+        "runtime",
+        "minimumRuntimeVersion",
+        "interop",
+        "package",
+        "publicConventions",
+        "privateMechanisms",
+        "forbiddenMechanisms",
+        "supportedFeatures",
+        "capabilityGaps",
+        "lifecycle"
+      ],
+      "properties": {
+        "id": { "enum": ["dotnet", "jvm", "ruby"] },
+        "language": { "enum": ["C#", "Java", "Ruby"] },
+        "runtime": { "enum": [".NET", "JDK", "MRI Ruby"] },
+        "minimumRuntimeVersion": { "type": "string", "minLength": 1 },
+        "interop": { "enum": ["library-import", "foreign-function-and-memory", "fiddle"] },
+        "package": { "$ref": "#/$defs/package" },
+        "publicConventions": { "$ref": "#/$defs/strings" },
+        "privateMechanisms": { "$ref": "#/$defs/strings" },
+        "forbiddenMechanisms": { "$ref": "#/$defs/strings" },
+        "supportedFeatures": { "$ref": "#/$defs/strings" },
+        "capabilityGaps": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/gap" }
+        },
+        "lifecycle": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

@@ -16,6 +16,7 @@ import { assertFinForeignBindingIr, assertFinForeignReport } from "./helpers/fin
 import { syntheticFinForeignReport } from "./helpers/fin-container-foreign-report-fixtures.mjs";
 import { finContainerEdgeCompilerModel } from "./helpers/fin-container-edge-compiled-fixture.mjs";
 import "./helpers/fin-container-foreign-history-tests.mjs";
+import "./helpers/fin-container-foreign-measured-evidence-tests.mjs";
 
 test("synthetic foreign report formats cover all native profiles and both Python floors", async () => {
 	await assertFinForeignReport(await syntheticFinForeignReport([...finContainerEdgeProfiles].sort()), [...finContainerEdgeProfiles].sort(), { python: "3.11" });

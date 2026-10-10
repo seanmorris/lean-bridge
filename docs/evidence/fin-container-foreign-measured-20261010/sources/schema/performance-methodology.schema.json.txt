@@ -1,0 +1,214 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lean-bridge.example/schema/performance-methodology.schema.json",
+  "title": "Lean Bridge performance measurement methodology",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "kind",
+    "id",
+    "status",
+    "referenceEnvironments",
+    "toolchain",
+    "identityInputs",
+    "execution",
+    "sampling",
+    "statistics",
+    "memory",
+    "noise",
+    "reporting"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "lean-bridge-performance-methodology" },
+    "id": { "type": "string", "minLength": 1 },
+    "status": { "const": "approved-for-baseline-collection" },
+    "referenceEnvironments": {
+      "type": "array",
+      "minItems": 2,
+      "items": { "$ref": "#/$defs/environment" }
+    },
+    "toolchain": { "$ref": "#/$defs/toolchain" },
+    "identityInputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/identityInput" }
+    },
+    "execution": { "$ref": "#/$defs/execution" },
+    "sampling": { "$ref": "#/$defs/sampling" },
+    "statistics": { "$ref": "#/$defs/statistics" },
+    "memory": { "$ref": "#/$defs/memory" },
+    "noise": { "$ref": "#/$defs/noise" },
+    "reporting": { "$ref": "#/$defs/reporting" }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "stringArray": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "eligibility", "operatingSystem", "hardware", "runtimes", "constraints", "limitations"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "eligibility": { "enum": ["budget-eligible", "informational-only"] },
+        "operatingSystem": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "version", "kernelRelease"],
+          "properties": {
+            "id": { "type": "string", "minLength": 1 },
+            "version": { "type": "string", "minLength": 1 },
+            "kernelRelease": { "type": "string", "minLength": 1 }
+          }
+        },
+        "hardware": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["architecture", "cpuModel", "logicalCpuCount", "minimumMemoryBytes"],
+          "properties": {
+            "architecture": { "type": "string", "minLength": 1 },
+            "cpuModel": { "type": "string", "minLength": 1 },
+            "logicalCpuCount": { "type": "integer", "minimum": 1 },
+            "minimumMemoryBytes": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "runtimes": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["node", "playwright", "browser"],
+          "properties": {
+            "node": { "type": "string", "minLength": 1 },
+            "playwright": { "type": "string", "minLength": 1 },
+            "browser": { "type": "string", "minLength": 1 }
+          }
+        },
+        "constraints": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["exclusiveRunner", "cpuGovernor", "maximumLoadAveragePerCpu", "swapActivity", "networkDuringTimedRegions"],
+          "properties": {
+            "exclusiveRunner": { "type": "boolean" },
+            "cpuGovernor": { "type": "string", "minLength": 1 },
+            "maximumLoadAveragePerCpu": { "type": "number", "exclusiveMinimum": 0 },
+            "swapActivity": { "type": "string", "minLength": 1 },
+            "networkDuringTimedRegions": { "type": "string", "minLength": 1 }
+          }
+        },
+        "limitations": { "$ref": "#/$defs/stringArray" }
+      }
+    },
+    "toolchain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["leanVersion", "leanCommit", "leanPatchSetSha256", "emscriptenVersion", "emscriptenCommit", "libuvCommit", "nixSystem"],
+      "properties": {
+        "leanVersion": { "type": "string", "minLength": 1 },
+        "leanCommit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+        "leanPatchSetSha256": { "$ref": "#/$defs/sha256" },
+        "emscriptenVersion": { "type": "string", "minLength": 1 },
+        "emscriptenCommit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+        "libuvCommit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+        "nixSystem": { "type": "string", "minLength": 1 }
+      }
+    },
+    "identityInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceState", "buildIsolation", "targetProfiles", "artifactBuildTiming", "processModel", "profileOrder", "cacheProfiles", "networkTiming"],
+      "properties": {
+        "sourceState": { "const": "clean-committed-revision" },
+        "buildIsolation": { "const": "pinned-nix-closure" },
+        "targetProfiles": { "$ref": "#/$defs/stringArray" },
+        "artifactBuildTiming": { "const": "excluded" },
+        "processModel": { "const": "one-fresh-process-per-fork" },
+        "profileOrder": { "const": "deterministic-balanced-permutation" },
+        "cacheProfiles": { "$ref": "#/$defs/stringArray" },
+        "networkTiming": { "const": "separate-profile-only" }
+      }
+    },
+    "sampling": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["validForks", "maximumInvalidForks", "warmup", "firstCall", "steadyStateSamples", "scalingSamples", "clockNode", "clockBrowser", "clockUnit", "outlierPolicy"],
+      "properties": {
+        "validForks": { "type": "integer", "minimum": 3 },
+        "maximumInvalidForks": { "type": "integer", "minimum": 0 },
+        "warmup": { "type": "string", "minLength": 1 },
+        "firstCall": { "type": "string", "minLength": 1 },
+        "steadyStateSamples": { "type": "string", "minLength": 1 },
+        "scalingSamples": { "type": "string", "minLength": 1 },
+        "clockNode": { "const": "process.hrtime.bigint" },
+        "clockBrowser": { "const": "performance.now" },
+        "clockUnit": { "const": "nanoseconds" },
+        "outlierPolicy": { "const": "retain-all-samples-from-valid-forks" }
+      }
+    },
+    "statistics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["headline", "requiredDistribution", "confidenceLevel", "bootstrapResamples", "bootstrapUnit", "bootstrapSeed", "comparisonRule", "regressionRule"],
+      "properties": {
+        "headline": { "$ref": "#/$defs/stringArray" },
+        "requiredDistribution": { "$ref": "#/$defs/stringArray" },
+        "confidenceLevel": { "type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 1 },
+        "bootstrapResamples": { "type": "integer", "minimum": 1000 },
+        "bootstrapUnit": { "const": "fork-summary" },
+        "bootstrapSeed": { "type": "string", "minLength": 1 },
+        "comparisonRule": { "type": "string", "minLength": 1 },
+        "regressionRule": { "const": "require-both-statistical-and-practical-significance" }
+      }
+    },
+    "memory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authoritative", "supplemental", "explicitGc", "finalization", "wasmGrowth", "retainedState"],
+      "properties": {
+        "authoritative": { "$ref": "#/$defs/stringArray" },
+        "supplemental": { "$ref": "#/$defs/stringArray" },
+        "explicitGc": { "type": "string", "minLength": 1 },
+        "finalization": { "type": "string", "minLength": 1 },
+        "wasmGrowth": { "type": "string", "minLength": 1 },
+        "retainedState": { "type": "string", "minLength": 1 }
+      }
+    },
+    "noise": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["observations", "invalidForkPolicy", "retryPolicy", "failurePolicy"],
+      "properties": {
+        "observations": { "$ref": "#/$defs/stringArray" },
+        "invalidForkPolicy": { "type": "string", "minLength": 1 },
+        "retryPolicy": { "type": "string", "minLength": 1 },
+        "failurePolicy": { "type": "string", "minLength": 1 }
+      }
+    },
+    "reporting": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requiredIdentity", "requiredEvidence", "accessibility", "immutableBundle"],
+      "properties": {
+        "requiredIdentity": { "$ref": "#/$defs/stringArray" },
+        "requiredEvidence": { "$ref": "#/$defs/stringArray" },
+        "accessibility": { "type": "string", "minLength": 1 },
+        "immutableBundle": { "const": true }
+      }
+    }
+  }
+}

@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "kind": "fresh-lean-record-review-omission",
+  "producer": {
+    "revision": "179d385755cda5908cdc63dd4cc5a39989acbbad",
+    "tree": "4d5a5d11b42491ef3692792aef6f8cd55a78de4b"
+  },
+  "cases": 7,
+  "scope": "Fresh Lean source/review rejection before output, not installed-package or hosted acceptance. Source snapshots are selected identities, not a full build dependency closure.",
+  "files": [
+    {
+      "path": "runner.mjs.txt",
+      "bytes": 5182,
+      "sha256": "14827ac43aa22c8811579afff6d7d8b8f1ff8a9a8ef8cfdeb7892b9860555a12",
+      "original": "/app/build/vo1442-record-omission-179d385.mjs"
+    },
+    {
+      "path": "queued.json",
+      "bytes": 295,
+      "sha256": "eb8d0161dd4a0c63686ee1559e1f00ed74e811df2ac0e9e35c48286a320d2915",
+      "original": "/app/build/vo1442-record-omission-179d385.queued.json"
+    },
+    {
+      "path": "start.json",
+      "bytes": 838,
+      "sha256": "40bbd44a76a98eb778bacf369e29a88e9d0774150fde68f00a2e81339078d019",
+      "original": "/app/build/vo1442-record-omission-179d385.start.json"
+    },
+    {
+      "path": "end.json",
+      "bytes": 211,
+      "sha256": "ebb8bf7e4f4139d1a2d7ea20a6e7bedfc40ba51b16eb8f8cd167667e9f166e1f",
+      "original": "/app/build/vo1442-record-omission-179d385.end.json"
+    },
+    {
+      "path": "run.tap",
+      "bytes": 1387,
+      "sha256": "8604a5ee249147d01abb793055fda614a4356b6e08c3a817e00ad5ed0d04523f",
+      "original": "/app/build/vo1442-record-omission-179d385.tap"
+    },
+    {
+      "path": "verified.json",
+      "bytes": 202,
+      "sha256": "c2e40a020a432b45df01c4141433e5e87d8225a75d22c0a58ad5e4f78c49c1a4",
+      "original": "/app/build/vo1442-record-omission-179d385.verified.json"
+    },
+    {
+      "path": "sources/tests/native-fin-records.test.mjs.txt",
+      "bytes": 22976,
+      "sha256": "fae60a8cedf40098f65b997c750785425862a30ee73132be4eb74633e4897589",
+      "original": "git:179d385755cda5908cdc63dd4cc5a39989acbbad:tests/native-fin-records.test.mjs"
+    },
+    {
+      "path": "sources/tests/helpers/fin-fixture-installed.mjs.txt",
+      "bytes": 8806,
+      "sha256": "fb52e672df3f2dc369a0d51a271e73c0c7c670a15c47d9d2c0c96ba717a3d403",
+      "original": "git:179d385755cda5908cdc63dd4cc5a39989acbbad:tests/helpers/fin-fixture-installed.mjs"
+    },
+    {
+      "path": "sources/tests/helpers/reviewed-fin-record-fixture.mjs.txt",
+      "bytes": 3333,
+      "sha256": "757d1a1a2d672d3ec66de20688860182f982a0fcd0e731051a58109a671b06a4",
+      "original": "git:179d385755cda5908cdc63dd4cc5a39989acbbad:tests/helpers/reviewed-fin-record-fixture.mjs"
+    },
+    {
+      "path": "sources/tests/helpers/fin-record-model.mjs.txt",
+      "bytes": 4766,
+      "sha256": "b6fec1465d78b6e76c1a1646bf30fceb05903b413b2fd5622605f8b280e11bb0",
+      "original": "git:179d385755cda5908cdc63dd4cc5a39989acbbad:tests/helpers/fin-record-model.mjs"
+    },
+    {
+      "path": "sources/tests/helpers/fin-record-install.mjs.txt",
+      "bytes": 4128,
+      "sha256": "f47a2cf7290887d2ac09a37e873d89fa575687ec5d9228c05ce904de35259227",
+      "original": "git:179d385755cda5908cdc63dd4cc5a39989acbbad:tests/helpers/fin-record-install.mjs"
+    },
+    {
+      "path": "sources/tests/helpers/copied-fixture-install.mjs.txt",
+      "bytes": 15505,
+      "sha256": "dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df",
+      "original": "git:179d385755cda5908cdc63dd4cc5a39989acbbad:tests/helpers/copied-fixture-install.mjs"
+    },
+    {
+      "path": "sources/tests/helpers/lake-workspace.mjs.txt",
+      "bytes": 9902,
+      "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082",
+      "original": "git:179d385755cda5908cdc63dd4cc5a39989acbbad:tests/helpers/lake-workspace.mjs"
+    },
+    {
+      "path": "sources/src/analyze/reviewed-source.mjs.txt",
+      "bytes": 24336,
+      "sha256": "d3a875e4fc6dca6b7a93e70db62980d01f5b2a68f2e5e8999b93bbf0ca04a462",
+      "original": "git:179d385755cda5908cdc63dd4cc5a39989acbbad:src/analyze/reviewed-source.mjs"
+    },
+    {
+      "path": "sources/src/build/canonical-build.mjs.txt",
+      "bytes": 43813,
+      "sha256": "17e88b02d75c81379c0a8f6e6b14ab583fabfaa8b7fdb747174505256ca48e7c",
+      "original": "git:179d385755cda5908cdc63dd4cc5a39989acbbad:src/build/canonical-build.mjs"
+    },
+    {
+      "path": "sources/src/analyze/NativeExports.lean.txt",
+      "bytes": 87953,
+      "sha256": "46b46cbb21fe51d166ab700cde2c41583bc3a093f67cecd07d104cdf649f61ce",
+      "original": "git:179d385755cda5908cdc63dd4cc5a39989acbbad:src/analyze/NativeExports.lean"
+    },
+    {
+      "path": "sources/tests/fixtures/onboarding/native-fin-records/FinRecords.lean.txt",
+      "bytes": 2653,
+      "sha256": "419dcccad2f2a6cafb828315e0e51ee3747ad15a3fe3c7a5e74deb7a532dd299",
+      "original": "git:179d385755cda5908cdc63dd4cc5a39989acbbad:tests/fixtures/onboarding/native-fin-records/FinRecords.lean"
+    },
+    {
+      "path": "sources/tests/fixtures/onboarding/native-fin-records/LICENSE.txt",
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996",
+      "original": "git:179d385755cda5908cdc63dd4cc5a39989acbbad:tests/fixtures/onboarding/native-fin-records/LICENSE"
+    },
+    {
+      "path": "sources/tests/fixtures/onboarding/native-fin-records/lakefile.toml.txt",
+      "bytes": 71,
+      "sha256": "876cf2bc655ac6d95d6b144b8ac9d4ad755d3565e13c87c2e742ccc425f506df",
+      "original": "git:179d385755cda5908cdc63dd4cc5a39989acbbad:tests/fixtures/onboarding/native-fin-records/lakefile.toml"
+    },
+    {
+      "path": "sources/tests/fixtures/onboarding/native-fin-records/lean-toolchain.txt",
+      "bytes": 25,
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273",
+      "original": "git:179d385755cda5908cdc63dd4cc5a39989acbbad:tests/fixtures/onboarding/native-fin-records/lean-toolchain"
+    },
+    {
+      "path": "sources/tests/fixtures/onboarding/native-fin-records/package.json.txt",
+      "bytes": 56,
+      "sha256": "1d16d863f29a946af4e8be43fc9f101a433d70258499da070495d6aeae12dfc2",
+      "original": "git:179d385755cda5908cdc63dd4cc5a39989acbbad:tests/fixtures/onboarding/native-fin-records/package.json"
+    },
+    {
+      "path": "archive.mjs.txt",
+      "bytes": 3732,
+      "sha256": "efea23556985b7736212525d76ff5159bd60cc0146f4eb9b26f501573ba0faec",
+      "original": "/app/build/archive-vo1442-record-omission-179d385.mjs"
+    }
+  ]
+}

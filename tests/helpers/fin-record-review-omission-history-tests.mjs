@@ -9,6 +9,7 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import "./fin-record-review-omission-compiled-tests.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeFinRecordOmissionSource, finRecordOmissionChangedPaths, finRecordOmissionHistoryPath, finRecordOmissionPredecessor, reverseFinRecordOmissionUpdate } from "./fin-record-review-omission-history.mjs";

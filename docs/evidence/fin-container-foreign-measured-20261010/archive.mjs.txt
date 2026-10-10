@@ -1,0 +1,99 @@
+import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { assertFinForeignReport } from "../tests/helpers/fin-container-foreign-report.mjs";
+
+const producer = "/app";
+const revision = "3ca155faffbe5ee9ea2a491bf28728579c10f2d5";
+const destination = "/app/build/worktrees/fin-container-edge-file-closure-vo1454/docs/evidence/fin-container-foreign-measured-20261010";
+const selections = [
+  { label: "c-cpp", profiles: ["c", "cpp"] },
+  { label: "python311", profiles: ["python"], python: "3.11" },
+  { label: "python312", profiles: ["python"], python: "3.12" },
+  { label: "rust", profiles: ["rust"] },
+  { label: "dotnet", profiles: ["dotnet"] },
+  { label: "ruby", profiles: ["ruby"] },
+  { label: "php-native", profiles: ["php-native"] },
+  { label: "java-kotlin", profiles: ["java", "kotlin"] },
+  { label: "wit-wasi", profiles: ["wit-wasi"] }
+];
+const hash = bytes => createHash("sha256").update(bytes).digest("hex");
+const git = args => execFileSync("git", args, { cwd: producer, maxBuffer: 64 * 1024 * 1024 });
+assert.equal(git(["rev-parse", "HEAD"]).toString().trim(), revision);
+assert.equal(git(["status", "--porcelain", "--untracked-files=no"]).toString(), "");
+const tree = git(["rev-parse", revision + "^{tree}"]).toString().trim();
+const pending = new Map(), files = [], runs = [];
+const add = (name, bytes, original) => {
+  assert.ok(!pending.has(name), name);
+  pending.set(name, bytes);
+  files.push({ path: name, original, bytes: bytes.length, sha256: hash(bytes) });
+};
+for(const selection of selections) {
+  const prefix = "build/vo1454-foreign-installed-" + selection.label + "-3ca155f";
+  const reportPath = "build/vo1454-foreign-installed-3ca155f/edges-" + selection.label + ".json";
+  const originals = { "runner.mjs.txt": prefix + ".mjs", "start.json": prefix + ".start.json",
+    "end.json": prefix + ".end.json", "run.tap": prefix + ".tap",
+    "verified.json": prefix + ".verified.json", "report.json": reportPath };
+  const bytes = Object.fromEntries(await Promise.all(Object.entries(originals).map(async ([name, path]) =>
+    [name, await readFile(join(producer, path))])));
+  const start = JSON.parse(bytes["start.json"]), end = JSON.parse(bytes["end.json"]);
+  const verified = JSON.parse(bytes["verified.json"]), report = JSON.parse(bytes["report.json"]);
+  assert.deepEqual([start.revision, start.tree, start.cwd], [revision, tree, producer]);
+  assert.equal(start.environment.LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES, selection.profiles.join(","));
+  assert.equal(start.environment.LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH, "1");
+  assert.equal(start.environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR, "2.36");
+  assert.equal(start.report, join(producer, reportPath));
+  assert.equal(start.environment.LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT, start.report);
+  assert.ok(start.initialFreeMiB >= 2048);
+  assert.deepEqual([end.code, end.signal, end.stoppedForDisk], [0, null, false]);
+  assert.equal(end.tapSha256, hash(bytes["run.tap"]));
+  assert.ok(end.minimumFreeMiB >= 768);
+  const tap = bytes["run.tap"].toString("utf8");
+  for(const [name, value] of [["tests", 1], ["pass", 1], ["fail", 0], ["skipped", 0]])
+    assert.equal(Number(tap.match(new RegExp("^# " + name + " (\\d+)$", "m"))?.[1]), value);
+  assert.match(tap, /^ok 1 - installed source-free native packages execute zero-bound and nested-position Fin edge cases$/m);
+  assert.deepEqual([verified.revision, verified.report, verified.reportSha256], [revision, start.report, hash(bytes["report.json"])]);
+  assert.equal(verified.checker, "Fin container raw, public and foreign-carrier measurements verified for " + selection.profiles.join(", ") + ".");
+  assert.ok(Date.parse(start.startedAt) <= Date.parse(end.endedAt));
+  assert.ok(Date.parse(end.endedAt) <= Date.parse(verified.verifiedAt));
+  await assertFinForeignReport(report, selection.profiles, { python: selection.python });
+  for(const [name, content] of Object.entries(bytes))
+    add(selection.label + "/" + name, content, originals[name]);
+  runs.push({ ...selection, startedAt: start.startedAt, endedAt: end.endedAt,
+    reportSha256: verified.reportSha256, tapSha256: end.tapSha256,
+    observations: report.reports.map(item => ({ profile: item.profile, checks: item.checks,
+      sourceTreeSha256: item.sourceTreeSha256, consumerSha256: item.consumerSha256,
+      fixtureSha256: item.fixtureSha256, modelSha256: item.modelSha256,
+      foreignCalls: item.foreignCarriers.measuredCalls, foreignCases: item.foreignCarriers.cases,
+      foreignStdoutSha256: item.foreignCarriers.stdoutSha256 })) });
+}
+const tracked = git(["ls-tree", "-r", "--name-only", revision]).toString().trim().split("\n");
+const sources = tracked.filter(path =>
+  /^(src|schema|config)\//u.test(path)
+  || /^tests\/helpers\/(fin-container|copied-fixture-install|package-set|lake-workspace|type-corpus-(rust|jvm|php))/u.test(path)
+  || /^tests\/fixtures\/fin-container/u.test(path)
+  || ["package.json", "package-lock.json", "lean-toolchain", "tests/fixtures/onboarding/native-fin-containers/FinContainers.lean",
+    "tests/fin-container-edges.test.mjs", "tests/fin-container-foreign-carriers.test.mjs", "tests/fin-container-foreign-report.test.mjs",
+    ".github/workflows/consumer-matrix.yml", "scripts/check-fin-container-edge-report.mjs", "scripts/check-fin-container-foreign-report.mjs"].includes(path));
+for(const path of sources)
+  add("sources/" + path + ".txt", git(["show", revision + ":" + path]), "git:" + revision + ":" + path);
+add("archive.mjs.txt", await readFile(fileURLToPath(import.meta.url)), "build/archive-vo1454-foreign-measured-3ca155f.mjs");
+const index = Buffer.from(JSON.stringify({ schemaVersion: 1, kind: "native-fin-container-foreign-measured",
+  producer: { revision, tree, glibcFloor: "2.36", hosted: false },
+  runs, files }, null, 2) + "\n");
+assert.equal(git(["rev-parse", "HEAD"]).toString().trim(), revision);
+assert.equal(git(["status", "--porcelain", "--untracked-files=no"]).toString(), "");
+for(const [name, bytes] of [...pending, ["index.json", index]]) {
+  const path = join(destination, name);
+  await mkdir(dirname(path), { recursive: true });
+  try { await writeFile(path, bytes, { flag: "wx" }); }
+  catch(error) {
+    if(error.code !== "EEXIST") throw error;
+    assert.deepEqual(await readFile(path), bytes, "Refusing to replace " + path);
+  }
+}
+process.stdout.write(JSON.stringify({ destination, files: files.length, sourceSnapshots: sources.length,
+  runs: runs.length, indexSha256: hash(index), bytes: [...pending.values()].reduce((sum, bytes) => sum + bytes.length, index.length) }) + "\n");

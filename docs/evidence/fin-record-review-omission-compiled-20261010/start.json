@@ -1,0 +1,26 @@
+{
+  "revision": "179d385755cda5908cdc63dd4cc5a39989acbbad",
+  "tree": "4d5a5d11b42491ef3692792aef6f8cd55a78de4b",
+  "cwd": "/app/build/worktrees/fin-container-edge-file-closure-vo1454",
+  "pid": 2727637,
+  "command": "/usr/bin/taskset",
+  "args": [
+    "-c",
+    "3",
+    "/usr/bin/node",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "--test-name-pattern=^changed record and variant reviews are refused against fresh Lean before any output$",
+    "tests/native-fin-records.test.mjs"
+  ],
+  "environment": {
+    "LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES": "c",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+    "LEAN_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MAKEFLAGS": "-j1"
+  },
+  "initialFreeMiB": 2822,
+  "startedAt": "2026-10-10T10:13:58.250Z"
+}

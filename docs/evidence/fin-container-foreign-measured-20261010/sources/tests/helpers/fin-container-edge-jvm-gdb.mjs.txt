@@ -1,0 +1,184 @@
+/**
+ * Authenticate the JVM loader's real temporary native files without changing the loader.
+ * The fixed-directory observer and its historical failure controls remain unchanged.
+ *
+ * @file
+ */
+import assert from "node:assert/strict";
+import { mkdtemp, readdir } from "node:fs/promises";
+import { isAbsolute, join } from "node:path";
+import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { assertFinContainerEdgeGdbRun, finContainerEdgeGdbScript, prepareFinContainerEdgeGdb } from "./fin-container-edge-gdb.mjs";
+
+const replace = (source, before, after) => {
+	assert.equal(source.split(before).length, 2, `one JVM instrumentation site: ${before}`);
+	return source.replace(before, after);
+};
+
+/**
+ * Bind runtime-extracted ELF files to the original verified archive library hashes.
+ * File descriptors stay open until after JVM exit, so deleted copies can still be verified.
+ *
+ * @param options - Original library identities and this run's exclusive temporary parent.
+ * @param options.nativeDirectory - Original receipt-pinned native library directory.
+ * @param options.extractionRoot - Fresh parent selected with java.io.tmpdir for this process only.
+ * @param options.libraries - Exact verified native filename-to-digest map.
+ */
+export const finContainerEdgeJvmGdbScript = ({ nativeDirectory, extractionRoot, libraries }) => {
+	for(const path of [nativeDirectory, extractionRoot]) assert.ok(typeof path === "string" && isAbsolute(path) && !path.includes("\0"));
+	assert.ok(Object.keys(libraries).length);
+	for(const [name, digest] of Object.entries(libraries))
+	{
+		assert.match(name, /^[A-Za-z0-9_.+-]+\.so(?:\.[0-9]+)*$/u);
+		assert.match(digest, /^[a-f0-9]{64}$/u);
+	}
+	const policy = JSON.stringify(canonicalJson({ nativeDirectory, extractionRoot, libraries }));
+	const helpers = `import hashlib
+import stat
+jvm_policy = json.loads(${policy})
+jvm_copies = {}
+jvm_extracted = None
+
+
+def jvm_digest(fd):
+    os.lseek(fd, 0, os.SEEK_SET)
+    digest = hashlib.sha256()
+    while True:
+        chunk = os.read(fd, 1024 * 1024)
+        if not chunk:
+            return digest.hexdigest()
+        digest.update(chunk)
+
+
+def jvm_discover(filename):
+    global root, jvm_extracted
+    path = os.path.abspath(filename)
+    if os.path.basename(path) not in libraries:
+        return
+    if os.path.realpath(path) != path:
+        raise RuntimeError("JVM native file traverses a symlink")
+    parent = os.path.dirname(path)
+    if jvm_extracted is not None:
+        if parent != jvm_extracted:
+            raise RuntimeError("JVM loaded a second native directory: " + parent + " instead of " + jvm_extracted)
+        return
+    outer = jvm_policy["extractionRoot"]
+    if os.path.realpath(outer) != outer or os.path.dirname(parent) != outer or not re.fullmatch(r"lean-bridge-jvm-[0-9]+", os.path.basename(parent)):
+        raise RuntimeError("JVM native directory is outside this run")
+    if sorted(os.listdir(outer)) != [os.path.basename(parent)] or sorted(os.listdir(parent)) != libraries:
+        raise RuntimeError("unrecorded JVM extraction file")
+    info = os.lstat(parent)
+    if not stat.S_ISDIR(info.st_mode) or stat.S_IMODE(info.st_mode) != 0o700 or info.st_uid != os.getuid():
+        raise RuntimeError("JVM extraction must be a private directory")
+    for name in libraries:
+        native = os.path.join(parent, name)
+        fd = os.open(native, os.O_RDONLY | os.O_NOFOLLOW)
+        info = os.fstat(fd)
+        if not stat.S_ISREG(info.st_mode) or info.st_nlink != 1 or info.st_uid != os.getuid():
+            os.close(fd)
+            raise RuntimeError("JVM native copy must be a private regular file")
+        if jvm_digest(fd) != jvm_policy["libraries"][name]:
+            os.close(fd)
+            raise RuntimeError("JVM native copy differs from original archive")
+        jvm_copies[name] = {"fd": fd, "bytes": info.st_size, "device": info.st_dev, "inode": info.st_ino}
+    root = parent
+    jvm_extracted = parent
+
+
+def jvm_manifest():
+    if sorted(jvm_copies) != libraries:
+        raise RuntimeError("incomplete JVM extraction identity")
+    return {"root": jvm_extracted, "parent": jvm_policy["extractionRoot"],
+            "libraries": {name: {**{key: value for key, value in item.items() if key != "fd"}, "sha256": jvm_policy["libraries"][name]} for name, item in jvm_copies.items()}}
+
+
+def jvm_finished():
+    if not jvm_copies or not os.path.exists(config["armed"]):
+        return
+    observed = {}
+    for name, item in jvm_copies.items():
+        info = os.fstat(item["fd"])
+        digest = jvm_digest(item["fd"])
+        if digest != jvm_policy["libraries"][name] or info.st_size != item["bytes"] or info.st_dev != item["device"] or info.st_ino != item["inode"]:
+            raise RuntimeError("JVM native copy changed during execution")
+        observed[name] = {"sha256": digest, "linksAfterExit": info.st_nlink}
+        os.close(item["fd"])
+    with open(config["armed"]) as source:
+        manifest = json.load(source)
+    manifest["jvmExtraction"]["afterExit"] = observed
+    with open(config["armed"], "w") as out:
+        json.dump(manifest, out)
+
+`;
+	let source = replace(finContainerEdgeGdbScript, "def write():\n", helpers + "\ndef write():\n");
+	source = replace(source, "def loaded(event):\n    path = os.path.realpath(event.new_objfile.filename)", "def loaded(event):\n    jvm_discover(event.new_objfile.filename)\n    path = os.path.realpath(event.new_objfile.filename)");
+	source = replace(source, '"breakpoints": armed}, out)', '"breakpoints": armed, "jvmExtraction": jvm_manifest()}, out)');
+	source = replace(source, 'if state["failure"] is not None:\n    stop(71, state["failure"])', `try:
+    jvm_finished()
+except Exception as error:
+    fail("JVM extraction final verification failed: " + str(error))
+if state["failure"] is not None:
+    stop(71, state["failure"])`);
+	source = replace(source, 'try:\n    # Address-space randomization stays', `if root != jvm_policy["nativeDirectory"] or sorted(jvm_policy["libraries"]) != libraries:
+    stop(71, "JVM original native inventory mismatch")
+if os.path.realpath(jvm_policy["extractionRoot"]) != jvm_policy["extractionRoot"] or os.listdir(jvm_policy["extractionRoot"]):
+    stop(71, "JVM extraction parent is not fresh")
+try:
+    # Address-space randomization stays`);
+	return source;
+};
+
+/**
+ * Prepare normal address breakpoints plus authenticated per-process JVM extraction discovery.
+ *
+ * @param options - Fixed-directory observer options; argv additionally receives extractionRoot.
+ */
+export const prepareFinContainerEdgeJvmGdb = async options => {
+	let extractionRoot = null, active = false;
+	const observer = await prepareFinContainerEdgeGdb({ ...options, argv: args => {
+		assert.ok(active && extractionRoot);
+		return options.argv({ ...args, extractionRoot });
+	} });
+	return { ...observer, run: async ({ mutateScript = source => source, ...settings } = {}) => {
+		assert.equal(active, false, "JVM observer runs must be serial"); active = true;
+		try
+		{
+			extractionRoot = await mkdtemp(join(options.probeRoot, "jvm-run-"));
+			const source = finContainerEdgeJvmGdbScript({ ...options, extractionRoot });
+			const script = mutateScript(source);
+			const run = await observer.run({ ...settings, script });
+			if(run.code === 0) assert.deepEqual(await readdir(extractionRoot), [], "normal JVM shutdown removes every extracted library");
+			return { ...run, extractionRoot, scriptSha256: sha256(script) };
+		}
+		finally
+		{ active = false; }
+	} };
+};
+
+/**
+ * Independently check address records and both pre-load and post-exit native copy identities.
+ *
+ * @param observer - Prepared JVM observer.
+ * @param run - Completed real process.
+ * @param rows - Complete independently validated host transcript.
+ * @param libraries - Original archive-derived shared library digests.
+ */
+export const assertFinContainerEdgeJvmGdbRun = async (observer, run, rows, libraries) => {
+	const manifest = await assertFinContainerEdgeGdbRun(observer, run, rows);
+	const extracted = manifest.jvmExtraction;
+	assert.deepEqual(Object.keys(extracted).sort(), ["afterExit", "libraries", "parent", "root"]);
+	assert.equal(extracted.parent, run.extractionRoot);
+	assert.match(extracted.root.slice(run.extractionRoot.length), /^\/lean-bridge-jvm-[0-9]+$/u);
+	assert.ok(extracted.root.startsWith(run.extractionRoot));
+	assert.deepEqual(Object.keys(extracted.libraries).sort(), Object.keys(libraries).sort());
+	assert.deepEqual(Object.keys(extracted.afterExit).sort(), Object.keys(libraries).sort());
+	for(const [name, digest] of Object.entries(libraries))
+	{
+		const entry = extracted.libraries[name];
+		assert.deepEqual(Object.keys(entry).sort(), ["bytes", "device", "inode", "sha256"]);
+		assert.equal(entry.sha256, digest);
+		for(const field of ["bytes", "device", "inode"]) assert.ok(Number.isSafeInteger(entry[field]) && entry[field] > 0);
+		assert.deepEqual(extracted.afterExit[name], { sha256: digest, linksAfterExit: 0 });
+	}
+	return manifest;
+};

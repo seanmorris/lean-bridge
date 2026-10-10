@@ -1,0 +1,59 @@
+TAP version 13
+# Subtest: changed record and variant reviews are refused against fresh Lean before any output
+    # Subtest: tightened field
+    ok 1 - tightened field
+      ---
+      duration_ms: 18154.09434
+      type: 'test'
+      ...
+    # Subtest: bound moved to the other field
+    ok 2 - bound moved to the other field
+      ---
+      duration_ms: 18250.977813
+      type: 'test'
+      ...
+    # Subtest: loosened nested record's own bound
+    ok 3 - loosened nested record's own bound
+      ---
+      duration_ms: 20529.553012
+      type: 'test'
+      ...
+    # Subtest: tightened case field
+    ok 4 - tightened case field
+      ---
+      duration_ms: 18016.768067
+      type: 'test'
+      ...
+    # Subtest: loosened Fin 0 case
+    ok 5 - loosened Fin 0 case
+      ---
+      duration_ms: 19144.930719
+      type: 'test'
+      ...
+    # Subtest: omitted record bounds
+    ok 6 - omitted record bounds
+      ---
+      duration_ms: 18706.493636
+      type: 'test'
+      ...
+    # Subtest: omitted variant bounds
+    ok 7 - omitted variant bounds
+      ---
+      duration_ms: 19584.757035
+      type: 'test'
+      ...
+    1..7
+ok 1 - changed record and variant reviews are refused against fresh Lean before any output
+  ---
+  duration_ms: 132401.650126
+  type: 'test'
+  ...
+1..1
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 133725.587237

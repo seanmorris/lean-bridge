@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:lean-bridge:schema:performance-ci-report:v1",
+  "title": "Lean Bridge aggregate CI performance report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "kind",
+    "recordedAt",
+    "accepted",
+    "informational",
+    "source",
+    "workflow",
+    "toolchain",
+    "identities",
+    "build",
+    "jobs",
+    "measurements",
+    "validation",
+    "policy",
+    "artifact",
+    "limitations"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "lean-bridge-performance-ci-report" },
+    "recordedAt": { "type": "string" },
+    "accepted": { "type": "boolean" },
+    "informational": { "const": true },
+    "source": { "oneOf": [{ "$ref": "#/$defs/source" }, { "type": "null" }] },
+    "workflow": { "type": ["object", "null"] },
+    "toolchain": { "type": ["object", "null"] },
+    "identities": { "type": ["object", "null"] },
+    "build": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifacts", "artifactCount", "totalBytes", "sha256"],
+      "properties": {
+        "artifacts": { "type": "array", "items": { "$ref": "#/$defs/artifact" } },
+        "artifactCount": { "type": "integer", "minimum": 0 },
+        "totalBytes": { "type": "integer", "minimum": 0 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "jobs": { "type": "array", "items": { "$ref": "#/$defs/job" } },
+    "measurements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["spatial", "scaling", "overhead", "lifecycle", "selfConsistency", "buildReproducibility"],
+      "properties": {
+        "spatial": { "$ref": "#/$defs/measurement" },
+        "scaling": { "$ref": "#/$defs/measurement" },
+        "overhead": { "$ref": "#/$defs/measurement" },
+        "lifecycle": { "$ref": "#/$defs/measurement" },
+        "selfConsistency": { "$ref": "#/$defs/measurement" },
+        "buildReproducibility": { "$ref": "#/$defs/measurement" }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accepted", "issueCount", "issues"],
+      "properties": {
+        "accepted": { "type": "boolean" },
+        "issueCount": { "type": "integer", "minimum": 0 },
+        "issues": { "type": "array", "items": { "$ref": "#/$defs/issue" } }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "budget", "regressionFailureAuthorized"],
+      "properties": {
+        "status": { "const": "informational-no-approved-budget" },
+        "budget": { "type": "null" },
+        "regressionFailureAuthorized": { "const": false }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "retentionDays", "url"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "retentionDays": { "type": "integer", "minimum": 1 },
+        "url": { "type": ["string", "null"] }
+      }
+    },
+    "limitations": { "type": "array", "items": { "type": "string" } }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commit", "dirty"],
+      "properties": {
+        "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "dirty": { "type": "boolean" }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "bytes", "sha256"],
+      "properties": {
+        "path": { "type": "string" },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "measurement": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["sha256", "record"],
+          "properties": {
+            "sha256": { "$ref": "#/$defs/sha256" },
+            "record": { "type": "object" }
+          }
+        }
+      ]
+    },
+    "job": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "kind", "id", "recordedAt", "accepted", "exitCode", "command", "cacheHit", "durationMs", "resources", "results"],
+      "properties": {
+        "schemaVersion": { "const": 1 },
+        "kind": { "const": "lean-bridge-performance-ci-job" },
+        "id": { "enum": ["build", "spatial", "scaling", "overhead", "lifecycle", "reproducibility"] },
+        "recordedAt": { "type": "string" },
+        "accepted": { "type": "boolean" },
+        "exitCode": { "type": "integer" },
+        "command": { "type": "string" },
+        "cacheHit": { "type": ["boolean", "null"] },
+        "durationMs": { "type": "integer", "minimum": 0 },
+        "resources": { "type": "object" },
+        "results": { "type": "array", "items": { "$ref": "#/$defs/jobResult" } }
+      }
+    },
+    "jobResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "path", "bytes", "fileSha256", "sha256"],
+      "properties": {
+        "role": { "enum": ["build-manifest", "spatial", "scaling", "overhead", "lifecycle", "selfConsistency", "buildReproducibility"] },
+        "path": { "type": "string" },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "fileSha256": { "$ref": "#/$defs/sha256" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "issue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "path", "message"],
+      "properties": {
+        "code": { "type": "string" },
+        "path": { "type": "string" },
+        "message": { "type": "string" }
+      }
+    }
+  }
+}
