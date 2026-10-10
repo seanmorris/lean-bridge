@@ -1,0 +1,281 @@
+{
+  "schemaVersion": 1,
+  "milestone": "reviewed-subtype-package-record-v1",
+  "predecessorCommit": "6c446492b1c6c471fc97e0a5bab4feeb24c06e38",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "69c6b4d5754cf1e2ca1808287e485fbb38759ba31a17d8de29223f3de5906a6b",
+      "previousSha256": "99f8eabaf3a1b4cb0ad3651a84db89abdee3895301e0c7e7fd4cee1baae614be",
+      "edits": [
+        {
+          "start": 1714869,
+          "previous": "          \"sha256\": \"cffb0fd95cb4a90bf9aad24c4efd1ffed1973e0d1dfed3c264744196b72ca396\"\n",
+          "current": "          \"sha256\": \"cda62fed12f3c99c0c78f9b27a00b78b63b9a61187829509f6957afaba45f050\"\n"
+        },
+        {
+          "start": 1715397,
+          "previous": "          \"sha256\": \"8a8134844eb60d641512a33e534e503dc4c1e22637b47d4515640a07cc071d2b\"\n",
+          "current": "          \"sha256\": \"e6ae99e566868ba54d4821ddab65756a9b016999b112bf8c7b3c9c6ffbd85303\"\n"
+        },
+        {
+          "start": 1720648,
+          "previous": "          \"sha256\": \"cffb0fd95cb4a90bf9aad24c4efd1ffed1973e0d1dfed3c264744196b72ca396\"\n",
+          "current": "          \"sha256\": \"cda62fed12f3c99c0c78f9b27a00b78b63b9a61187829509f6957afaba45f050\"\n"
+        },
+        {
+          "start": 1721176,
+          "previous": "          \"sha256\": \"8a8134844eb60d641512a33e534e503dc4c1e22637b47d4515640a07cc071d2b\"\n",
+          "current": "          \"sha256\": \"e6ae99e566868ba54d4821ddab65756a9b016999b112bf8c7b3c9c6ffbd85303\"\n"
+        },
+        {
+          "start": 3423031,
+          "previous": "          \"sha256\": \"2c81deedc51bb859e270d2cd7ef8a62498ba27f8c9a939cc95b95b7e87484373\"\n",
+          "current": "          \"sha256\": \"bde5c761ed0a2c38ba65c107ef3f93d0715b5594ad0140fdf6d248fde08ee1e7\"\n"
+        },
+        {
+          "start": 3433658,
+          "previous": "          \"sha256\": \"2c81deedc51bb859e270d2cd7ef8a62498ba27f8c9a939cc95b95b7e87484373\"\n",
+          "current": "          \"sha256\": \"bde5c761ed0a2c38ba65c107ef3f93d0715b5594ad0140fdf6d248fde08ee1e7\"\n"
+        },
+        {
+          "start": 3444259,
+          "previous": "          \"sha256\": \"2c81deedc51bb859e270d2cd7ef8a62498ba27f8c9a939cc95b95b7e87484373\"\n",
+          "current": "          \"sha256\": \"bde5c761ed0a2c38ba65c107ef3f93d0715b5594ad0140fdf6d248fde08ee1e7\"\n"
+        },
+        {
+          "start": 3456127,
+          "previous": "          \"sha256\": \"2c81deedc51bb859e270d2cd7ef8a62498ba27f8c9a939cc95b95b7e87484373\"\n",
+          "current": "          \"sha256\": \"bde5c761ed0a2c38ba65c107ef3f93d0715b5594ad0140fdf6d248fde08ee1e7\"\n"
+        },
+        {
+          "start": 3468323,
+          "previous": "          \"sha256\": \"2c81deedc51bb859e270d2cd7ef8a62498ba27f8c9a939cc95b95b7e87484373\"\n",
+          "current": "          \"sha256\": \"bde5c761ed0a2c38ba65c107ef3f93d0715b5594ad0140fdf6d248fde08ee1e7\"\n"
+        },
+        {
+          "start": 3482041,
+          "previous": "          \"sha256\": \"2c81deedc51bb859e270d2cd7ef8a62498ba27f8c9a939cc95b95b7e87484373\"\n",
+          "current": "          \"sha256\": \"bde5c761ed0a2c38ba65c107ef3f93d0715b5594ad0140fdf6d248fde08ee1e7\"\n"
+        },
+        {
+          "start": 3495891,
+          "previous": "          \"sha256\": \"2c81deedc51bb859e270d2cd7ef8a62498ba27f8c9a939cc95b95b7e87484373\"\n",
+          "current": "          \"sha256\": \"bde5c761ed0a2c38ba65c107ef3f93d0715b5594ad0140fdf6d248fde08ee1e7\"\n"
+        },
+        {
+          "start": 3509746,
+          "previous": "          \"sha256\": \"2c81deedc51bb859e270d2cd7ef8a62498ba27f8c9a939cc95b95b7e87484373\"\n",
+          "current": "          \"sha256\": \"bde5c761ed0a2c38ba65c107ef3f93d0715b5594ad0140fdf6d248fde08ee1e7\"\n"
+        },
+        {
+          "start": 3523757,
+          "previous": "          \"sha256\": \"2c81deedc51bb859e270d2cd7ef8a62498ba27f8c9a939cc95b95b7e87484373\"\n",
+          "current": "          \"sha256\": \"bde5c761ed0a2c38ba65c107ef3f93d0715b5594ad0140fdf6d248fde08ee1e7\"\n"
+        },
+        {
+          "start": 3538509,
+          "previous": "          \"sha256\": \"2c81deedc51bb859e270d2cd7ef8a62498ba27f8c9a939cc95b95b7e87484373\"\n",
+          "current": "          \"sha256\": \"bde5c761ed0a2c38ba65c107ef3f93d0715b5594ad0140fdf6d248fde08ee1e7\"\n"
+        },
+        {
+          "start": 3553291,
+          "previous": "          \"sha256\": \"2c81deedc51bb859e270d2cd7ef8a62498ba27f8c9a939cc95b95b7e87484373\"\n",
+          "current": "          \"sha256\": \"bde5c761ed0a2c38ba65c107ef3f93d0715b5594ad0140fdf6d248fde08ee1e7\"\n"
+        },
+        {
+          "start": 3568043,
+          "previous": "          \"sha256\": \"2c81deedc51bb859e270d2cd7ef8a62498ba27f8c9a939cc95b95b7e87484373\"\n",
+          "current": "          \"sha256\": \"bde5c761ed0a2c38ba65c107ef3f93d0715b5594ad0140fdf6d248fde08ee1e7\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "1f0f4a0ffaf9829cd3a2456388b4836332737c8a4feaf84b3b3c1ee0558c8c84",
+      "previousSha256": "a1ce16c9e3317ad56b30815f75392fd1fcce0ddbab4401982a1c65e47c04f77d",
+      "edits": [
+        {
+          "start": 1200,
+          "previous": "",
+          "current": "import { reviewedSubtypePackageRecordChangedPaths } from \"./reviewed-subtype-package-record-history.mjs\";\n"
+        },
+        {
+          "start": 57629,
+          "previous": "",
+          "current": "\t, ...reviewedSubtypePackageRecordChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/maven-prerequisite-history-tests.mjs",
+      "currentSha256": "dd103a70ab0a8b27340b922c235ea4a79cb6d012f932adfe0d4731f76aff4127",
+      "previousSha256": "c2a4deb7c09d6838ca67f7e7a8c66046f39d2ade3e925b8de05f0a11e3ba7d0b",
+      "edits": [
+        {
+          "start": 516,
+          "previous": "",
+          "current": "import { beforeReviewedSubtypePackageRecordSource } from \"./reviewed-subtype-package-record-history.mjs\";\n"
+        },
+        {
+          "start": 1317,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\"), previous = reverseMavenPrerequisiteUpdate(current, update);\n",
+          "current": "\t\tconst current = beforeReviewedSubtypePackageRecordSource(update.path, await readFile(update.path, \"utf8\"));\n\t\tconst previous = reverseMavenPrerequisiteUpdate(current, update);\n"
+        },
+        {
+          "start": 2644,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = beforeReviewedSubtypePackageRecordSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 3501,
+          "previous": "\t\tif(!hashes.has(file.path)) hashes.set(file.path, sha256(await readFile(file.path)));\n",
+          "current": "\t\tif(!hashes.has(file.path)) hashes.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/maven-prerequisite-history.mjs",
+      "currentSha256": "4a33fc55ab19fe26accc179a7d7bc1d48a15deac133b1bbb8c374e7bb9f055b3",
+      "previousSha256": "1328a17c7ebebb1f09c57834a0ff336847d43d9aed80453289e635c254e266dd",
+      "edits": [
+        {
+          "start": 246,
+          "previous": "",
+          "current": "import { beforeReviewedSubtypePackageRecordSource } from \"./reviewed-subtype-package-record-history.mjs\";\n"
+        },
+        {
+          "start": 2428,
+          "previous": "",
+          "current": "\tsource = beforeReviewedSubtypePackageRecordSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-native-promotion-tests.mjs",
+      "currentSha256": "bde5c761ed0a2c38ba65c107ef3f93d0715b5594ad0140fdf6d248fde08ee1e7",
+      "previousSha256": "2c81deedc51bb859e270d2cd7ef8a62498ba27f8c9a939cc95b95b7e87484373",
+      "edits": [
+        {
+          "start": 1482,
+          "previous": "",
+          "current": "import { reviewedSubtypePackageRecordHistoryPath } from \"./reviewed-subtype-package-record-history.mjs\";\n"
+        },
+        {
+          "start": 5483,
+          "previous": "\tfor(const path of [reviewedSubtypeNativePromotionHistoryPath, reviewedSubtypeHostCiReportHistoryPath, reviewedSubtypeHostCiHistoryPath, mavenPrerequisiteHistoryPath])\n",
+          "current": "\tfor(const path of [reviewedSubtypeNativePromotionHistoryPath, reviewedSubtypeHostCiReportHistoryPath, reviewedSubtypeHostCiHistoryPath, mavenPrerequisiteHistoryPath, reviewedSubtypePackageRecordHistoryPath])\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-npm-tests.mjs",
+      "currentSha256": "e6ae99e566868ba54d4821ddab65756a9b016999b112bf8c7b3c9c6ffbd85303",
+      "previousSha256": "8a8134844eb60d641512a33e534e503dc4c1e22637b47d4515640a07cc071d2b",
+      "edits": [
+        {
+          "start": 1283,
+          "previous": "",
+          "current": "import { reviewedSubtypeNpmTypescript as typescript, reviewedSubtypeNpmCaller } from \"./reviewed-subtype-package-fixture.mjs\";\nimport { createReviewedSubtypePackageRecords, retainReviewedSubtypeFiles, reviewedSubtypeAuthorFiles } from \"./reviewed-subtype-package-records.mjs\";\n"
+        },
+        {
+          "start": 4003,
+          "previous": "const typescript = `import * as api from \"subtypes\";\nconst text: string = api.shout(\"hello\") + api.join(\"a\", \"b\");\nconst nat: bigint = api.half(4n) + api.pad(3n) + api.clamp(200n) + api.mix(4n, 3n);\nconst signed: bigint = api.scale(-3n, 127n);\nconst byte: number = api.head(new Uint8Array([255])) + api.byte(1);\nconst first: bigint = api.firstEven(6n), second: bigint = api.secondEven(7n), zero: bigint = api.zeroEven();\n// @ts-expect-error Nat retains bigint, including in specialized Subtype exports.\napi.firstEven(6);\n// @ts-expect-error UInt8 retains number.\napi.byte(1n);\n// @ts-expect-error ByteArray retains Uint8Array.\napi.head([1, 2]);\n// @ts-expect-error A zero-argument result is not a Unit-argument function.\napi.zeroEven(undefined);\nvoid text; void nat; void signed; void byte; void first; void second; void zero;\n`;\n",
+          "current": ""
+        },
+        {
+          "start": 4560,
+          "previous": "",
+          "current": "\tconst reportPath = resolve(process.env.LEAN_BRIDGE_REVIEWED_SUBTYPE_NPM_REPORT ?? \"build/reviewed-subtype/npm.json\");\n\tconst records = await createReviewedSubtypePackageRecords(reportPath);\n"
+        },
+        {
+          "start": 5701,
+          "previous": "",
+          "current": "\t\tawait retainReviewedSubtypeFiles(records, `build-${index}`, projectRoot, reviewedSubtypeAuthorFiles);\n"
+        },
+        {
+          "start": 6850,
+          "previous": "",
+          "current": "\t\tawait retainReviewedSubtypeFiles(records, `build-${index}`, bundleRoot, {\n\t\t\t\"binding-ir.json\": \"binding/binding-ir.json\"\n\t\t\t, \"compiler-adapters.json\": \"locks/compiler-adapters.json\"\n\t\t\t, \"component-build-plan.json\": \"locks/component-build-plan.json\"\n\t\t\t, \"component-release-bundle.json\": \"component-release-bundle.json\"\n\t\t\t, \"provenance.json\": \"metadata/provenance.json\"\n\t\t\t, \"runtime-requirement.json\": \"metadata/runtime-requirement.json\" });\n\t\tawait retainReviewedSubtypeFiles(records, `build-${index}`, release.output, { \"component-package-receipt.json\": \"component-package-receipt.json\" });\n"
+        },
+        {
+          "start": 9519,
+          "previous": "\tconst script = 'import * as api from \"subtypes\";\\nimport { runtime } from \"./node_modules/subtypes/internal/runtime.mjs\";\\nimport { checkReviewedSubtype } from \"./check.mjs\";\\nconsole.log(JSON.stringify(checkReviewedSubtype(api, (name, args) => runtime.call(\"lean:Subtypes.\" + name, args))));\\n';\n",
+          "current": "\tconst script = reviewedSubtypeNpmCaller;\n"
+        },
+        {
+          "start": 9665,
+          "previous": "",
+          "current": "\tawait saveLakeFile(consumer, \"index.mts\", typescript);\n\tconst declarations = await readFile(join(consumer, \"node_modules/subtypes/index.d.ts\"));\n\tawait retainReviewedSubtypeFiles(records, \"\", consumer, {\n\t\t\"index.mjs\": \"index.mjs\", \"index.mts\": \"index.mts\", \"check.mjs\": \"check.mjs\"\n\t\t, \"index.d.ts\": \"node_modules/subtypes/index.d.ts\" });\n"
+        },
+        {
+          "start": 10173,
+          "previous": "\tawait saveLakeFile(consumer, \"index.mts\", typescript);\n",
+          "current": ""
+        },
+        {
+          "start": 10424,
+          "previous": "\tconst declarations = await readFile(join(consumer, \"node_modules/subtypes/index.d.ts\"));\n",
+          "current": "\tassert.deepEqual(await readFile(join(consumer, \"node_modules/subtypes/index.d.ts\")), declarations);\n"
+        },
+        {
+          "start": 11141,
+          "previous": "\tconst reportPath = resolve(process.env.LEAN_BRIDGE_REVIEWED_SUBTYPE_NPM_REPORT ?? \"build/reviewed-subtype/npm.json\");\n",
+          "current": ""
+        },
+        {
+          "start": 11236,
+          "previous": "",
+          "current": "\tif(reportPath !== join(records, \"report.json\")) await retainReviewedSubtypeFiles(records, \"\", dirname(reportPath), { \"report.json\": reportPath.split(\"/\").at(-1) });\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/reviewed-subtype-installed.test.mjs",
+      "currentSha256": "cda62fed12f3c99c0c78f9b27a00b78b63b9a61187829509f6957afaba45f050",
+      "previousSha256": "cffb0fd95cb4a90bf9aad24c4efd1ffed1973e0d1dfed3c264744196b72ca396",
+      "edits": [
+        {
+          "start": 1790,
+          "previous": "",
+          "current": "import { createReviewedSubtypePackageRecords, retainReviewedSubtypeFiles, reviewedSubtypeAuthorFiles } from \"./helpers/reviewed-subtype-package-records.mjs\";\nimport { reviewedSubtypePackageChecks } from \"./helpers/reviewed-subtype-package-fixture.mjs\";\nimport \"./helpers/reviewed-subtype-package-record-tests.mjs\";\n"
+        },
+        {
+          "start": 10486,
+          "previous": "",
+          "current": "\tconst reportPath = resolve(process.env.LEAN_BRIDGE_REVIEWED_SUBTYPE_REPORT ?? `build/reviewed-subtype/${profiles.join(\"-\")}.json`);\n\tconst records = await createReviewedSubtypePackageRecords(reportPath);\n"
+        },
+        {
+          "start": 11393,
+          "previous": "",
+          "current": "\t\tawait retainReviewedSubtypeFiles(records, `build-${attempt}`, projectRoot, reviewedSubtypeAuthorFiles);\n"
+        },
+        {
+          "start": 12166,
+          "previous": "",
+          "current": "\t\tawait retainReviewedSubtypeFiles(records, `build-${attempt}`, outputRoot, {\n\t\t\t\"model.json\": \"native/component/model.json\"\n\t\t\t, \"package-set-receipt.json\": \"package-set-receipt.json\" });\n"
+        },
+        {
+          "start": 12780,
+          "previous": "",
+          "current": "\t\t\tconst source = await reviewedSubtypeNativeConsumer(profile);\n\t\t\tawait saveLakeFile(records, `consumer.${profile}`, source);\n"
+        },
+        {
+          "start": 13014,
+          "previous": "\t\t\t\t, fixture: { source: reviewedSubtypeNativeConsumer, wit: [], success: \"subtype-ok\" } });\n",
+          "current": "\t\t\t\t, fixture: { source: async () => source, wit: [], success: \"subtype-ok\", expectedChecks: reviewedSubtypePackageChecks[profile] } });\n\t\t\tassert.equal(await readFile(join(consumer, profile, `consumer.${profile}`), \"utf8\"), source);\n"
+        },
+        {
+          "start": 13843,
+          "previous": "\tconst reportPath = resolve(process.env.LEAN_BRIDGE_REVIEWED_SUBTYPE_REPORT ?? `build/reviewed-subtype/${profiles.join(\"-\")}.json`);\n",
+          "current": ""
+        },
+        {
+          "start": 14004,
+          "previous": "",
+          "current": "\tif(reportPath !== join(records, \"report.json\")) await retainReviewedSubtypeFiles(records, \"\", dirname(reportPath), { \"report.json\": reportPath.split(\"/\").at(-1) });\n"
+        }
+      ]
+    }
+  ]
+}

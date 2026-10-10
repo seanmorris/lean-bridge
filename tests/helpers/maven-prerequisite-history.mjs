@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeReviewedSubtypePackageRecordSource } from "./reviewed-subtype-package-record-history.mjs";
 
 export const mavenPrerequisiteHistoryPath = "docs/evidence/maven-prerequisite-source-history-20261010.json";
 export const mavenPrerequisitePredecessor = "0fb8f59f5c8d81c6eb3e4ba7bcd8b7797bdb0b24";
@@ -55,6 +56,7 @@ export const reverseMavenPrerequisiteUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeMavenPrerequisiteSource = (path, source, expected) => {
+	source = beforeReviewedSubtypePackageRecordSource(path, source, expected);
 	if(typeof source !== "string" || !mavenPrerequisiteChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

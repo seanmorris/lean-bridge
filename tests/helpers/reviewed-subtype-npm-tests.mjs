@@ -19,6 +19,8 @@ import { refinementEngineTransport } from "./refinement-engine.mjs";
 import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
 import { reviewedSubtypeInstalledIr, reviewedSubtypeInstalledSource } from "./reviewed-subtype-installed-fixture.mjs";
 import { checkReviewedSubtype } from "../fixtures/reviewed-subtype-consumers/javascript.mjs";
+import { reviewedSubtypeNpmTypescript as typescript, reviewedSubtypeNpmCaller } from "./reviewed-subtype-package-fixture.mjs";
+import { createReviewedSubtypePackageRecords, retainReviewedSubtypeFiles, reviewedSubtypeAuthorFiles } from "./reviewed-subtype-package-records.mjs";
 
 const expected = { checks: 2036, rejections: 2024 };
 const fail = () => { throw new Error("Component scalar call failed (6)"); };
@@ -66,22 +68,6 @@ test("the reviewed Subtype npm corpus rejects permissive bounds, wrong failure l
 	assert.throws(() => run(api, { ...raw, half: value => value / 2n }), /accepted: raw half/u);
 });
 
-const typescript = `import * as api from "subtypes";
-const text: string = api.shout("hello") + api.join("a", "b");
-const nat: bigint = api.half(4n) + api.pad(3n) + api.clamp(200n) + api.mix(4n, 3n);
-const signed: bigint = api.scale(-3n, 127n);
-const byte: number = api.head(new Uint8Array([255])) + api.byte(1);
-const first: bigint = api.firstEven(6n), second: bigint = api.secondEven(7n), zero: bigint = api.zeroEven();
-// @ts-expect-error Nat retains bigint, including in specialized Subtype exports.
-api.firstEven(6);
-// @ts-expect-error UInt8 retains number.
-api.byte(1n);
-// @ts-expect-error ByteArray retains Uint8Array.
-api.head([1, 2]);
-// @ts-expect-error A zero-argument result is not a Unit-argument function.
-api.zeroEven(undefined);
-void text; void nat; void signed; void byte; void first; void second; void zero;
-`;
 const engineRoot = process.cwd();
 const runtimeRoot = resolve(process.env.LEAN_BRIDGE_LAKE_RUNTIME_ROOT ?? "build/lean-link-spike/lazy");
 const clean = { PATH: "/unavailable", CC: "/unavailable/compiler", CXX: "/unavailable/compiler", LEAN_BRIDGE_LEAN: "/unavailable/lean", LEAN_BRIDGE_RUNTIME_ROOT: "/unavailable/runtime", NODE_PATH: "" };
@@ -90,6 +76,8 @@ test("source-free reviewed npm archives execute checked Subtype constructors for
 	skip: process.env.LEAN_BRIDGE_REVIEWED_SUBTYPE_NPM_TEST !== "1"
 	, timeout: 3_600_000
 }, async t => {
+	const reportPath = resolve(process.env.LEAN_BRIDGE_REVIEWED_SUBTYPE_NPM_REPORT ?? "build/reviewed-subtype/npm.json");
+	const records = await createReviewedSubtypePackageRecords(reportPath);
 	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-reviewed-subtype-npm-"));
 	t.after(() => rm(directory, { recursive: true, force: true }));
 	const producers = join(directory, "producers"), releases = [], facts = [];
@@ -101,6 +89,7 @@ test("source-free reviewed npm archives execute checked Subtype constructors for
 		await saveLakeFile(projectRoot, "Subtypes.lean", await readFile(join(fixture, "Subtypes.lean"), "utf8") + reviewedSubtypeInstalledSource);
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["Subtypes"] }));
 		await saveLakeFile(projectRoot, "api.binding-ir.json", canonicalJson(review));
+		await retainReviewedSubtypeFiles(records, `build-${index}`, projectRoot, reviewedSubtypeAuthorFiles);
 		const before = await lakeInputState(projectRoot), outputRoot = join(producers, `build-${index}`);
 		await buildCanonicalProject({ projectRoot, outputRoot, engineRoot, environment, targets: ["npm"], runner: refinementEngineTransport() })
 			.catch(error => assert.fail(`${error.message}: ${JSON.stringify(error.details)}`));
@@ -111,6 +100,14 @@ test("source-free reviewed npm archives execute checked Subtype constructors for
 		facts.push({ bindingIrSha256: hashBindingIr(ir), bindingIrFileSha256: sha256(irBytes), privateAbi: plan.privateAbi.version });
 		const release = await buildComponentNpmPackages({ bundleRoot, runtimeRoot, outputRoot: join(producers, `npm-${index}`) });
 		await verifyComponentPackageReceipt({ receiptPath: join(release.output, "component-package-receipt.json") });
+		await retainReviewedSubtypeFiles(records, `build-${index}`, bundleRoot, {
+			"binding-ir.json": "binding/binding-ir.json"
+			, "compiler-adapters.json": "locks/compiler-adapters.json"
+			, "component-build-plan.json": "locks/component-build-plan.json"
+			, "component-release-bundle.json": "component-release-bundle.json"
+			, "provenance.json": "metadata/provenance.json"
+			, "runtime-requirement.json": "metadata/runtime-requirement.json" });
+		await retainReviewedSubtypeFiles(records, `build-${index}`, release.output, { "component-package-receipt.json": "component-package-receipt.json" });
 		assert.equal(release.report.bindingIrSha256, facts[index].bindingIrSha256);
 		assert.deepEqual(await lakeInputState(projectRoot), before);
 		releases.push(release);
@@ -136,16 +133,20 @@ test("source-free reviewed npm archives execute checked Subtype constructors for
 	const configuration = ["--userconfig", join(consumer, "user.npmrc"), "--globalconfig", join(consumer, "global.npmrc"), "--cache", join(consumer, "empty-cache")];
 	await run([npmCli, "install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", ...configuration, join(handoff, receipt.runtime.archive), join(handoff, receipt.package.archive)]);
 	const corpus = await readFile("tests/fixtures/reviewed-subtype-consumers/javascript.mjs", "utf8");
-	const script = 'import * as api from "subtypes";\nimport { runtime } from "./node_modules/subtypes/internal/runtime.mjs";\nimport { checkReviewedSubtype } from "./check.mjs";\nconsole.log(JSON.stringify(checkReviewedSubtype(api, (name, args) => runtime.call("lean:Subtypes." + name, args))));\n';
+	const script = reviewedSubtypeNpmCaller;
 	await saveLakeFile(consumer, "check.mjs", corpus);
 	await saveLakeFile(consumer, "index.mjs", script);
+	await saveLakeFile(consumer, "index.mts", typescript);
+	const declarations = await readFile(join(consumer, "node_modules/subtypes/index.d.ts"));
+	await retainReviewedSubtypeFiles(records, "", consumer, {
+		"index.mjs": "index.mjs", "index.mts": "index.mts", "check.mjs": "check.mjs"
+		, "index.d.ts": "node_modules/subtypes/index.d.ts" });
 	const result = await run(["index.mjs"]);
 	assert.equal(result.stderr, "");
 	const observed = JSON.parse(result.stdout.trim());
 	assert.deepEqual(observed, expected);
-	await saveLakeFile(consumer, "index.mts", typescript);
 	await run([join(engineRoot, "node_modules/typescript/lib/tsc.js"), "--strict", "--noEmit", "--skipLibCheck", "false", "--target", "ES2022", "--lib", "ES2022,ESNext.Disposable", "--module", "NodeNext", "--moduleResolution", "NodeNext", "index.mts"]);
-	const declarations = await readFile(join(consumer, "node_modules/subtypes/index.d.ts"));
+	assert.deepEqual(await readFile(join(consumer, "node_modules/subtypes/index.d.ts")), declarations);
 	const report = { schemaVersion: 1, profile: "npm", path: "reviewed-source"
 		, ...facts[0], reviewedBindingIrSha256: hashBindingIr(review), receipt
 		, receiptSha256: sha256(await readFile(join(handoff, "component-package-receipt.json")))
@@ -155,6 +156,6 @@ test("source-free reviewed npm archives execute checked Subtype constructors for
 		, reproducible: true, independentBuilds: 2, offlineInstall: true
 		, sourceRemovedBeforeInstallation: true, compilerFreePath: true
 		, dispatch: "not measured" };
-	const reportPath = resolve(process.env.LEAN_BRIDGE_REVIEWED_SUBTYPE_NPM_REPORT ?? "build/reviewed-subtype/npm.json");
 	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson(report));
+	if(reportPath !== join(records, "report.json")) await retainReviewedSubtypeFiles(records, "", dirname(reportPath), { "report.json": reportPath.split("/").at(-1) });
 });

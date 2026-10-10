@@ -25,6 +25,9 @@ import "./helpers/reviewed-subtype-harness-source-history-tests.mjs";
 import "./helpers/subtype-fixture-link-source-history-tests.mjs";
 import "./helpers/reviewed-subtype-npm-tests.mjs";
 import "./helpers/reviewed-subtype-host-installed-tests.mjs";
+import { createReviewedSubtypePackageRecords, retainReviewedSubtypeFiles, reviewedSubtypeAuthorFiles } from "./helpers/reviewed-subtype-package-records.mjs";
+import { reviewedSubtypePackageChecks } from "./helpers/reviewed-subtype-package-fixture.mjs";
+import "./helpers/reviewed-subtype-package-record-tests.mjs";
 
 const fixture = "tests/fixtures/onboarding/native-subtype";
 const reviewInput = review => {
@@ -143,6 +146,8 @@ test("source-free reviewed C and C++ archives execute each checked constructor a
 	skip: !profiles.length, timeout: 2_400_000
 }, async t => {
 	const reports = [], archives = [];
+	const reportPath = resolve(process.env.LEAN_BRIDGE_REVIEWED_SUBTYPE_REPORT ?? `build/reviewed-subtype/${profiles.join("-")}.json`);
+	const records = await createReviewedSubtypePackageRecords(reportPath);
 	const targets = Object.fromEntries(profiles.map(profile => nativeSubtypeTargets[profile]));
 	const environment = nativeSubtypeEnvironment(profiles);
 	const review = reviewedSubtypeInstalledIr();
@@ -153,6 +158,7 @@ test("source-free reviewed C and C++ archives execute each checked constructor a
 		t.after(() => Promise.all([directory, consumer].map(root => rm(root, { recursive: true, force: true }))));
 		const projectRoot = join(directory, "project"), outputRoot = join(directory, "release"), handoff = join(consumer, "handoff");
 		await authorProject(projectRoot, targets, review);
+		await retainReviewedSubtypeFiles(records, `build-${attempt}`, projectRoot, reviewedSubtypeAuthorFiles);
 		t.diagnostic(`reviewed Subtype build ${attempt}: ${profiles.join(", ")}`);
 		const built = await buildCanonicalProject({ projectRoot, outputRoot, targets: Object.keys(targets), environment }).catch(error => {
 			error.message += `: ${JSON.stringify(error.details)}`; throw error;
@@ -162,6 +168,9 @@ test("source-free reviewed C and C++ archives execute each checked constructor a
 		assert.equal(model.exports.length, 12);
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
+		await retainReviewedSubtypeFiles(records, `build-${attempt}`, outputRoot, {
+			"model.json": "native/component/model.json"
+			, "package-set-receipt.json": "package-set-receipt.json" });
 		archives.push(Object.fromEntries(receipt.packages.flatMap(pkg => pkg.artifacts.map(artifact => [artifact.path, artifact.sha256]))));
 		await rm(directory, { recursive: true, force: true });
 		await assert.rejects(() => lstat(directory), { code: "ENOENT" });
@@ -169,9 +178,12 @@ test("source-free reviewed C and C++ archives execute each checked constructor a
 		for(const profile of profiles)
 		{
 			const packages = receipt.packages.filter(pkg => pkg.target === nativeSubtypeTargets[profile][0]);
+			const source = await reviewedSubtypeNativeConsumer(profile);
+			await saveLakeFile(records, `consumer.${profile}`, source);
 			const observation = await installCopiedConsumer({
 				profile, consumer, handoff, packages, environment
-				, fixture: { source: reviewedSubtypeNativeConsumer, wit: [], success: "subtype-ok" } });
+				, fixture: { source: async () => source, wit: [], success: "subtype-ok", expectedChecks: reviewedSubtypePackageChecks[profile] } });
+			assert.equal(await readFile(join(consumer, profile, `consumer.${profile}`), "utf8"), source);
 			delete observation.command;
 			reports.push({ profile, path: "reviewed-source", ...observation, packages
 				, bindingIrSha256: built.bindingIrSha256
@@ -184,6 +196,6 @@ test("source-free reviewed C and C++ archives execute each checked constructor a
 		await rm(consumer, { recursive: true, force: true });
 	}
 	assert.deepEqual(archives[1], archives[0]);
-	const reportPath = resolve(process.env.LEAN_BRIDGE_REVIEWED_SUBTYPE_REPORT ?? `build/reviewed-subtype/${profiles.join("-")}.json`);
 	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, reports, archives: archives[0], reproducible: true }));
+	if(reportPath !== join(records, "report.json")) await retainReviewedSubtypeFiles(records, "", dirname(reportPath), { "report.json": reportPath.split("/").at(-1) });
 });

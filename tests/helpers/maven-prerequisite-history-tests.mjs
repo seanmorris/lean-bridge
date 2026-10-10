@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeReviewedSubtypePackageRecordSource } from "./reviewed-subtype-package-record-history.mjs";
 import { beforeMavenPrerequisiteSource, mavenPrerequisiteChangedPaths, mavenPrerequisiteHistoryPath, mavenPrerequisitePredecessor, reverseMavenPrerequisiteUpdate } from "./maven-prerequisite-history.mjs";
 
 test("Maven prerequisite history authenticates exact transitions and refuses unknown edits", async () => {
@@ -21,7 +22,8 @@ test("Maven prerequisite history authenticates exact transitions and refuses unk
 	assert.deepEqual(history.updates.map(update => update.path), mavenPrerequisiteChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = await readFile(update.path, "utf8"), previous = reverseMavenPrerequisiteUpdate(current, update);
+		const current = beforeReviewedSubtypePackageRecordSource(update.path, await readFile(update.path, "utf8"));
+		const previous = reverseMavenPrerequisiteUpdate(current, update);
 		assert.equal(beforeMavenPrerequisiteSource(update.path, current), previous);
 		const bytes = Buffer.from(current);
 		assert.equal(beforeFinRefinementSource(update.path, bytes, update.currentSha256), bytes);
@@ -42,7 +44,7 @@ test("Maven prerequisite history authenticates exact transitions and refuses unk
 
 test("Maven prerequisite gate changes source pins without adding or changing installed observations", async () => {
 	const history = JSON.parse(await readFile(mavenPrerequisiteHistoryPath));
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", source = beforeReviewedSubtypePackageRecordSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(source), previous = JSON.parse(beforeMavenPrerequisiteSource(path, source));
 	const expected = structuredClone(previous); let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
@@ -57,7 +59,7 @@ test("Maven prerequisite gate changes source pins without adding or changing ins
 	const hashes = new Map();
 	for(const file of current.evidence.flatMap(entry => entry.files))
 	{
-		if(!hashes.has(file.path)) hashes.set(file.path, sha256(await readFile(file.path)));
+		if(!hashes.has(file.path)) hashes.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));
 		assert.equal(hashes.get(file.path), file.sha256, file.path);
 	}
 	assert.equal(sha256(await readFile("docs/evidence/reviewed-subtype-host-ci-source-history-20261010.json")), "5e13607300b651bb48ba6567efa65a4d8327b652afb4d2b1c613f43b92780177");
