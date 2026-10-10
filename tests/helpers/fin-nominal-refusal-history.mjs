@@ -1,30 +1,23 @@
 /**
- * Authenticate Fin 0 nominal collection CI integration without changing earlier evidence.
+ * Authenticate Fin nominal refusal integration without changing earlier evidence.
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeFinNominalRefusalSource } from "./fin-nominal-refusal-history.mjs";
 
-export const finZeroCiHistoryPath = "docs/evidence/fin-record-zero-ci-source-history-20261010.json";
-export const finZeroCiPredecessor = "a2f80b36e892c8ad15205b2e505dd3b12b69bcaa";
-export const finZeroCiChangedPaths = [
-	".github/workflows/consumer-matrix.yml"
-	, ".github/workflows/perl-consumer.yml"
-	, "docs/type-surface.v1.json"
-	, "src/adoption/test-profiles.mjs"
-	, "tests/documentation.test.mjs"
-	, "tests/fin-container-edge-integration-history.test.mjs"
-	, "tests/helpers/fin-container-edge-ci-history-tests.mjs"
-	, "tests/helpers/fin-container-foreign-history-tests.mjs"
-	, "tests/helpers/fin-native-hosted-promotion-history-tests.mjs"
-	, "tests/helpers/fin-native-hosted-promotion-history.mjs"
-	, "tests/helpers/fin-native-hosted-promotion-tests.mjs"
+export const finNominalRefusalHistoryPath = "docs/evidence/fin-nominal-refusal-source-history-20261010.json";
+export const finNominalRefusalPredecessor = "8a706648c2bfdf86058b30ed847def9fa558f459";
+export const finNominalRefusalChangedPaths = [
+	"docs/type-surface.v1.json"
+	, "src/analyze/NativeExports.lean"
+	, "src/analyze/native-metadata.mjs"
+	, "tests/helpers/fin-record-zero-ci-history-tests.mjs"
+	, "tests/helpers/fin-record-zero-ci-history.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
 	, "tests/helpers/native-fin-diagnostic-ci-tests.mjs"
-	, "tests/native-fin-record-zero.test.mjs"
+	, "tests/native-fin-records.test.mjs"
 ];
 let history;
 
@@ -34,8 +27,8 @@ let history;
  * @param source - Complete current source.
  * @param update - Exact recorded transition.
  */
-export const reverseFinZeroCiUpdate = (source, update) => {
-	assert.ok(finZeroCiChangedPaths.includes(update.path));
+export const reverseFinNominalRefusalUpdate = (source, update) => {
+	assert.ok(finNominalRefusalChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -61,12 +54,11 @@ export const reverseFinZeroCiUpdate = (source, update) => {
  * @param source - Complete source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeFinZeroCiSource = (path, source, expected) => {
-	source = beforeFinNominalRefusalSource(path, source, expected);
-	if(typeof source !== "string" || !finZeroCiChangedPaths.includes(path)) return source;
+export const beforeFinNominalRefusalSource = (path, source, expected) => {
+	if(typeof source !== "string" || !finNominalRefusalChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(finZeroCiHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(finNominalRefusalHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseFinZeroCiUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseFinNominalRefusalUpdate(source, update) : source;
 };

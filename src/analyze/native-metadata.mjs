@@ -59,7 +59,7 @@ export const projectNativeMetadata = (metadata, sourceIdentity, { copiedGraphs =
 	if(diagnostics.length) throw Object.assign(new Error(`Native export metadata rejected: ${diagnostics.map(item => item.message).join("; ")}`), {
 		code: "native-elaboration-unsupported"
 		, details: { diagnostics
-			, projections: metadata.modules.flatMap(module => module.declarations).filter(item => item.selected && item.projection.status === "unsupported").map(item => ({ declaration: item.identity, ...item.projection })) }
+			, projections: metadata.modules.flatMap(module => module.declarations).filter(item => item.selected && item.projection.status === "unsupported").map(item => ({ declaration: item.identity, source: item.source, ...item.projection })) }
 	});
 	const refined = metadata.modules.flatMap(module => module.declarations).find(item => item.selected && containsGraph(item.projection, "refinement"));
 	if(refined && !refinements) throw Object.assign(new Error(`${refined.identity}: checked Fin refinements are implemented only for ordinary native packages with bound-checking adapters`), {

@@ -7,6 +7,8 @@ import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import test from "node:test";
+import "./helpers/fin-nominal-refusals-tests.mjs";
+import "./helpers/fin-nominal-refusal-history-tests.mjs";
 import "./helpers/native-fin-records-source-history-tests.mjs";
 import "./helpers/fin-record-evidence-tests.mjs";
 import "./helpers/native-fin-promotion-tests.mjs";

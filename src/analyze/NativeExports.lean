@@ -1041,6 +1041,11 @@ def describeSignature (request : Request) (name : String) (type : Expr) (parentA
   let checkedResult := contract.bind (fun value => (value.getObjVal? "result").toOption) |>.bind checkedConstructor
   try
     let (nativeParameters, result) ← signature request type arity checkedParameters checkedResult (parentAliases := parentAliases)
+    -- Refuse before emitting metadata: native graph carriers cannot check refinements.
+    -- The projection retains this declaration's diagnostic instead of failing schema validation.
+    let sites := (nativeParameters.map fun parameter => (parameter.getObjVal? "type").toOption.getD Json.null).push result
+    if native && sites.any (fun site => containsKind #[] site "graph") && sites.any containsRefinement then
+      throwError "checked Fin refinements cannot share a component with copied graph exports"
     if !native && nativeParameters.size > 32 then throwError "components support at most 32 arguments"
     let nativeParameters ← if native then pure nativeParameters else nativeParameters.mapM fun (parameter : Json) => do
       pure <| obj [("name", ← ofExcept <| parameter.getObjVal? "name"),
