@@ -21,3 +21,5 @@ node --test --test-concurrency=1 \
 The workflow tests reject missing observations, missing checker commands, omitted uploads, weakened failure enforcement and wrong Python floors. Actionlint and focused ESLint passed. These checks validate CI wiring; the new workflow still needs a hosted run.
 
 The immutable CI history ledger records seven exact source transitions from `b70f471bdd0aa3e173e6ba75a46847ed72f4f73b` and refreshes 92 current source pins. It changes no previous observations or support claims. Earlier ledgers and archived execution records retain their original bytes.
+
+The [measured local installed matrix](fin-container-edges-measured-20261010/README.md) now records all ten native profiles and both Python floors at that producer revision. Its original reports, logs, runners and source snapshots have separate recurring archive checks.

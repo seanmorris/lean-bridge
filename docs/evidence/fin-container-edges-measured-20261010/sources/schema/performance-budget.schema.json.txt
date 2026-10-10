@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:lean-bridge:schema:performance-budget:v1",
+  "title": "Lean Bridge performance budget",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "id", "status", "methodologySha256", "environmentId", "activeBaseline", "history", "thresholds", "policy"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "lean-bridge-performance-budget" },
+    "id": { "type": "string", "minLength": 1 },
+    "status": { "const": "active" },
+    "methodologySha256": { "$ref": "#/$defs/sha256" },
+    "environmentId": { "type": "string", "minLength": 1 },
+    "activeBaseline": { "$ref": "#/$defs/baselinePointer" },
+    "history": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/history" } },
+    "thresholds": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/threshold" } },
+    "policy": { "$ref": "#/$defs/policy" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "baselinePointer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "path", "sha256"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "history": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["baselineId", "path", "sha256", "sourceCommit", "status", "reviewedAt", "reviewedBy", "rationale"],
+      "properties": {
+        "baselineId": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "sourceCommit": { "type": "string", "minLength": 7 },
+        "status": { "enum": ["active", "superseded"] },
+        "reviewedAt": { "type": "string", "format": "date-time" },
+        "reviewedBy": { "type": "string", "minLength": 1 },
+        "rationale": { "type": "string", "minLength": 1 }
+      }
+    },
+    "threshold": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metricId", "label", "category", "unit", "targetProfile", "statistic", "absoluteCeiling", "relativeRegressionRatio", "required"],
+      "properties": {
+        "metricId": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "category": { "type": "string", "minLength": 1 },
+        "unit": { "enum": ["nanoseconds", "bytes", "count"] },
+        "targetProfile": { "type": "string", "minLength": 1 },
+        "statistic": { "const": "p95" },
+        "absoluteCeiling": { "type": "number", "minimum": 0 },
+        "relativeRegressionRatio": { "type": "number", "minimum": 0 },
+        "required": { "const": true }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["comparison", "relativeRegression", "absoluteCeiling", "missingMetric", "baselineUpdate"],
+      "properties": {
+        "comparison": { "const": "like-for-like-only" },
+        "relativeRegression": { "type": "string", "minLength": 1 },
+        "absoluteCeiling": { "const": "hard-failure" },
+        "missingMetric": { "const": "hard-failure" },
+        "baselineUpdate": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

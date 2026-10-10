@@ -1,0 +1,33 @@
+{
+  "revision": "b70f471bdd0aa3e173e6ba75a46847ed72f4f73b",
+  "tree": "27c93c1dbc5f1800fb99f13130b55d0be1f1c4df",
+  "cwd": "/app",
+  "startedAt": "2026-10-10T09:07:43.798Z",
+  "pid": 2630814,
+  "pgid": 2630814,
+  "command": "/usr/bin/taskset",
+  "args": [
+    "-c",
+    "3",
+    "/usr/bin/node",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "--test-name-pattern=^installed source-free native packages execute zero-bound and nested-position Fin edge cases$",
+    "tests/fin-container-edges.test.mjs"
+  ],
+  "report": "/app/build/vo1454-installed-b70f471/edges-wit-wasi.json",
+  "initialFreeMiB": 3036,
+  "environment": {
+    "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+    "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+    "LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES": "wit-wasi",
+    "LEAN_BRIDGE_WASMTIME_C_API": "/app/.toolchains/wasmtime42",
+    "LEAN_BRIDGE_GDB": "/usr/bin/gdb",
+    "LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH": "1",
+    "LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT": "/app/build/vo1454-installed-b70f471/edges-wit-wasi.json",
+    "LEAN_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MAKEFLAGS": "-j1"
+  }
+}

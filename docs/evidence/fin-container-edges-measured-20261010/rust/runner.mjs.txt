@@ -1,0 +1,68 @@
+import assert from "node:assert/strict";
+import { spawn, execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
+import { open, readFile, statfs, writeFile } from "node:fs/promises";
+
+const cwd = "/app", revision = "b70f471bdd0aa3e173e6ba75a46847ed72f4f73b";
+const prefix = "/app/build/vo1454-installed-rust-b70f471";
+const report = "/app/build/vo1454-installed-b70f471/edges-rust.json";
+const sha256 = value => createHash("sha256").update(value).digest("hex");
+const git = args => execFileSync("git", args, { cwd, encoding: "utf8" }).trim();
+const freeMiB = async () => { const value = await statfs(cwd); return Math.floor(value.bavail * value.bsize / 1024 / 1024); };
+assert.equal(git(["rev-parse", "HEAD"]), revision);
+assert.equal(git(["status", "--porcelain", "--untracked-files=no"]), "");
+let minimumFreeMiB = await freeMiB();
+assert.ok(minimumFreeMiB >= 2048, `Insufficient disk to start: ${minimumFreeMiB} MiB`);
+const environment = {
+  ...Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith("LEAN_BRIDGE_")))
+  , LEAN_BRIDGE_LEAN_PREFIX: "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2"
+  , LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR: "2.36"
+  , LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES: "rust"
+  , LEAN_BRIDGE_CARGO: "/app/.toolchains/rust-1.90.0/bin/cargo"
+  , LEAN_BRIDGE_RUSTC: "/app/.toolchains/rust-1.90.0/bin/rustc"
+  , LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH: "1"
+  , LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT: report
+  , LEAN_NUM_THREADS: "1", OMP_NUM_THREADS: "1", MAKEFLAGS: "-j1"
+};
+const args = ["-c", "3", process.execPath, "--test", "--test-concurrency=1", "--test-reporter=tap"
+  , "--test-name-pattern=^installed source-free native packages execute zero-bound and nested-position Fin edge cases$"
+  , "tests/fin-container-edges.test.mjs"];
+const log = await open(`${prefix}.tap`, "wx");
+const child = spawn("/usr/bin/taskset", args, { cwd, env: environment, detached: true, stdio: ["ignore", log.fd, log.fd] });
+const start = { revision, tree: git(["rev-parse", "HEAD^{tree}"]), cwd
+  , startedAt: new Date().toISOString(), pid: child.pid, pgid: child.pid
+  , command: "/usr/bin/taskset", args, report, initialFreeMiB: minimumFreeMiB
+  , environment: Object.fromEntries(Object.entries(environment).filter(([key]) => key.startsWith("LEAN_BRIDGE_") || ["LEAN_NUM_THREADS", "OMP_NUM_THREADS", "MAKEFLAGS"].includes(key))) };
+await writeFile(`${prefix}.start.json`, JSON.stringify(start, null, 2) + "\n", { flag: "wx" });
+process.stdout.write(`Started ${child.pid} at ${revision}; free ${minimumFreeMiB} MiB; report ${report}\n`);
+let stoppedForDisk = false;
+const timer = setInterval(async () => {
+  try {
+    minimumFreeMiB = Math.min(minimumFreeMiB, await freeMiB());
+    if(minimumFreeMiB < 768 && !stoppedForDisk) {
+      stoppedForDisk = true;
+      process.stdout.write(`Stopping producer before disk exhaustion: ${minimumFreeMiB} MiB\n`);
+      process.kill(-child.pid, "SIGTERM");
+    }
+  } catch(error) { process.stderr.write(`Disk monitor: ${error.message}\n`); }
+}, 10_000);
+const outcome = await new Promise(resolve => {
+  child.once("error", error => resolve({ code: null, signal: null, spawnError: error.message }));
+  child.once("close", (code, signal) => resolve({ code, signal }));
+});
+clearInterval(timer);
+await log.close();
+minimumFreeMiB = Math.min(minimumFreeMiB, await freeMiB());
+const tap = await readFile(`${prefix}.tap`);
+const end = { ...outcome, stoppedForDisk, minimumFreeMiB, endedAt: new Date().toISOString(), tapSha256: sha256(tap) };
+await writeFile(`${prefix}.end.json`, JSON.stringify(end, null, 2) + "\n", { flag: "wx" });
+process.stdout.write(JSON.stringify(end) + "\n");
+assert.deepEqual([outcome.code, outcome.signal, stoppedForDisk], [0, null, false]);
+assert.equal(git(["rev-parse", "HEAD"]), revision);
+assert.equal(git(["status", "--porcelain", "--untracked-files=no"]), "");
+const count = name => Number(tap.toString().match(new RegExp(`^# ${name} (\\d+)$`, "m"))?.[1]);
+assert.deepEqual([count("tests"), count("pass"), count("fail"), count("skipped")], [1, 1, 0, 0]);
+const bytes = await readFile(report);
+const checked = execFileSync("/usr/bin/taskset", ["-c", "3", process.execPath, "scripts/check-fin-container-edge-report.mjs", "rust", report], { cwd, encoding: "utf8" });
+await writeFile(`${prefix}.verified.json`, JSON.stringify({ revision, report, reportSha256: sha256(bytes), checker: checked.trim(), verifiedAt: new Date().toISOString() }, null, 2) + "\n", { flag: "wx" });
+process.stdout.write(checked);

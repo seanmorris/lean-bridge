@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lean-bridge.example/schema/performance-scaling-result.schema.json",
+  "title": "Lean Bridge library scaling result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "runs"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "lean-bridge-library-scaling-suite" },
+    "runs": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/run" }
+    }
+  },
+  "$defs": {
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "kind", "recordedAt", "source", "profile", "graph", "environment", "artifacts", "bytes", "phases", "composition", "memory", "correctness", "limitations"],
+      "properties": {
+        "schemaVersion": { "const": 1 },
+        "kind": { "const": "lean-bridge-library-scaling-profile" },
+        "recordedAt": { "type": "string" },
+        "source": { "type": "object" },
+        "profile": { "enum": ["lazy", "startup", "final-static", "isolated"] },
+        "graph": { "type": "object" },
+        "environment": { "type": "object" },
+        "artifacts": { "type": "array", "minItems": 1 },
+        "bytes": { "type": "object" },
+        "phases": { "type": "object" },
+        "composition": { "type": "object" },
+        "memory": { "type": "object" },
+        "correctness": { "type": "object" },
+        "limitations": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

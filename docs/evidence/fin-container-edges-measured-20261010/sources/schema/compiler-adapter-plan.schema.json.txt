@@ -1,0 +1,219 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:lean-bridge:schema:compiler-adapter-plan:v1",
+  "title": "Lean Bridge generated compiler adapter plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "component", "componentPlanSha256", "module", "imports", "exports", "privateAbi", "leanSourceSha256"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "component": { "type": "string", "minLength": 1 },
+    "componentPlanSha256": { "$ref": "#/$defs/sha256" },
+    "module": { "type": "string", "pattern": "^LeanBridgeGenerated[0-9a-f]{16}$" },
+    "imports": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "exports": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/export" } },
+    "privateAbi": { "$ref": "#/$defs/privateAbi" },
+    "nominalRefinements": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["id", "refinement"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^lean:.+" },
+          "refinement": { "$ref": "#/$defs/nominalRefinement" }
+        }
+      }
+    },
+    "leanSourceSha256": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "nominalRefinement": {
+      "oneOf": [
+        {
+          "type": "object", "additionalProperties": false, "required": ["kind", "target"],
+          "properties": { "kind": { "const": "alias" }, "target": { "$ref": "#/$defs/refinement" } }
+        },
+        {
+          "type": "object", "additionalProperties": false, "required": ["kind", "fields"],
+          "properties": {
+            "kind": { "const": "record" },
+            "fields": { "type": "array", "items": { "$ref": "#/$defs/refinement" } }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false, "required": ["kind", "cases"],
+          "properties": {
+            "kind": { "const": "variant" },
+            "cases": { "type": "array", "items": { "type": "array", "items": { "$ref": "#/$defs/refinement" } } }
+          }
+        }
+      ]
+    },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "parameter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "leanType"],
+      "properties": {
+        "name": { "type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_']*$" },
+        "leanType": { "type": "string", "minLength": 1 }
+      }
+    },
+    "export": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bindingId", "sourceDeclaration", "sourceModule", "wrapper", "symbol", "parameters", "leanResultType", "resultMode", "leanEffect"
+      ],
+      "properties": {
+        "bindingId": { "type": "string", "minLength": 1 },
+        "sourceDeclaration": { "type": "string", "minLength": 1 },
+        "sourceApplication": { "type": "string", "minLength": 1 },
+        "sourceModule": { "type": "string", "minLength": 1 },
+        "wrapper": { "type": "string", "pattern": "^export_[0-9a-f]{20}$" },
+        "symbol": { "type": "string", "pattern": "^lean_bridge_[0-9a-f]{24}$" },
+        "parameters": { "type": "array", "items": { "$ref": "#/$defs/parameter" } },
+        "leanResultType": { "type": "string", "minLength": 1 },
+        "refinements": { "$ref": "#/$defs/refinements" },
+        "resultMode": { "enum": ["value", "promise"] },
+        "leanEffect": { "type": ["string", "null"], "enum": ["IO", "Task", null] }
+      }
+    },
+    "refinement": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object", "additionalProperties": false, "required": ["kind", "arguments"],
+          "properties": {
+            "kind": { "enum": ["array", "list", "option", "tuple", "result"] },
+            "arguments": { "type": "array", "minItems": 1, "maxItems": 2, "items": { "$ref": "#/$defs/refinement" } }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false, "required": ["kind", "bound"],
+          "properties": {
+            "kind": { "const": "fin" },
+            "bound": { "type": "string", "pattern": "^(0|[1-9][0-9]*)$" }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false, "required": ["kind", "constructor"],
+          "properties": {
+            "kind": { "const": "subtype" },
+            "constructor": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)*$" }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false, "required": ["kind", "constructor"],
+          "properties": {
+            "kind": { "const": "checked-record" },
+            "constructor": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)*$" }
+          }
+        }
+      ]
+    },
+    "refinements": {
+      "type": "object", "additionalProperties": false, "required": ["parameters", "result"],
+      "properties": {
+        "parameters": { "type": "array", "items": { "$ref": "#/$defs/refinement" } },
+        "result": { "$ref": "#/$defs/refinement" }
+      }
+    },
+    "privateExport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bindingId", "symbol", "parameters", "result", "resultMode"],
+      "properties": {
+        "bindingId": { "type": "string", "minLength": 1 },
+        "symbol": { "type": "string", "pattern": "^lean_bridge_[0-9a-f]{24}$" },
+        "parameters": { "type": "array", "items": { "$ref": "binding-ir.schema.json#/$defs/typeRef" } },
+        "result": { "$ref": "binding-ir.schema.json#/$defs/typeRef" },
+        "resultMode": { "enum": ["value", "promise"] }
+      }
+    },
+    "privateAbi": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "dispatch", "exports"],
+      "properties": {
+        "version": { "enum": [2, 3, 4, 5, 6, 7, 8, 9] },
+        "dispatch": { "enum": ["scalar-frame-v2", "scalar-callable-frame-v1", "copied-array-frame-v1", "copied-record-frame-v1", "copied-compound-frame-v1", "copied-nominal-frame-v1", "copied-graph-frame-v1", "copied-callable-frame-v1"] },
+        "types": { "type": "array", "maxItems": 1024, "items": { "$ref": "#/$defs/nominal" } },
+        "records": { "type": "array", "maxItems": 1024, "items": { "$ref": "#/$defs/record" } },
+        "callbacks": { "type": "array", "minItems": 1, "maxItems": 1024, "items": { "$ref": "#/$defs/structuredCallback" } },
+        "nominalRefinements": { "$ref": "#/properties/nominalRefinements" },
+        "exports": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/privateExport" } }
+      },
+      "allOf": [
+        { "if": { "properties": { "version": { "enum": [2, 3, 4, 5, 6] } } }, "then": { "not": { "required": ["types"] } } },
+        { "if": { "properties": { "version": { "not": { "const": 9 } } } }, "then": { "not": { "required": ["nominalRefinements"] } } }
+      ],
+      "oneOf": [
+        { "properties": { "version": { "const": 2 }, "dispatch": { "const": "scalar-frame-v2" } }, "not": { "anyOf": [{ "required": ["callbacks"] }, { "required": ["records"] }] } },
+        { "properties": { "version": { "const": 3 }, "dispatch": { "const": "scalar-callable-frame-v1" }, "callbacks": { "items": { "$ref": "#/$defs/callback" } } }, "required": ["callbacks"], "not": { "required": ["records"] } },
+        { "properties": { "version": { "const": 4 }, "dispatch": { "const": "copied-array-frame-v1" } }, "not": { "anyOf": [{ "required": ["callbacks"] }, { "required": ["records"] }] } },
+        { "properties": { "version": { "const": 5 }, "dispatch": { "const": "copied-record-frame-v1" }, "records": { "minItems": 1 } }, "required": ["records"], "not": { "required": ["callbacks"] } },
+        { "properties": { "version": { "const": 6 }, "dispatch": { "const": "copied-compound-frame-v1" } }, "required": ["records"], "not": { "required": ["callbacks"] } },
+        { "properties": { "version": { "const": 7 }, "dispatch": { "const": "copied-nominal-frame-v1" }, "types": { "minItems": 1 } }, "required": ["types"], "not": { "anyOf": [{ "required": ["callbacks"] }, { "required": ["records"] }] } },
+        { "properties": { "version": { "const": 8 }, "dispatch": { "const": "copied-graph-frame-v1" }, "types": { "minItems": 1 } }, "required": ["types"], "not": { "anyOf": [{ "required": ["callbacks"] }, { "required": ["records"] }] } },
+        { "properties": { "version": { "const": 9 }, "dispatch": { "const": "copied-callable-frame-v1" } }, "required": ["types", "callbacks"], "not": { "required": ["records"] } }
+      ]
+    },
+    "record": {
+      "type": "object", "additionalProperties": false, "required": ["id", "fields"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^lean:[A-Za-z_][A-Za-z0-9_'.]*$" },
+        "fields": { "type": "array", "maxItems": 1024, "items": {
+          "type": "object", "additionalProperties": false, "required": ["name", "type"],
+          "properties": {
+            "name": { "type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$" },
+            "type": { "$ref": "binding-ir.schema.json#/$defs/typeRef" }
+          }
+        } }
+      }
+    },
+    "nominal": {
+      "type": "object", "additionalProperties": false, "required": ["kind", "id"],
+      "properties": {
+        "kind": { "enum": ["record", "alias", "variant"] },
+        "id": { "$ref": "#/$defs/record/properties/id" },
+        "target": { "$ref": "binding-ir.schema.json#/$defs/typeRef" },
+        "fields": { "$ref": "#/$defs/record/properties/fields" },
+        "cases": { "type": "array", "minItems": 1, "maxItems": 1024, "items": {
+          "type": "object", "additionalProperties": false, "required": ["name", "fields"],
+          "properties": {
+            "name": { "type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$" },
+            "fields": { "$ref": "#/$defs/record/properties/fields" }
+          }
+        } }
+      },
+      "oneOf": [
+        { "properties": { "kind": { "const": "record" } }, "required": ["fields"], "not": { "anyOf": [{ "required": ["cases"] }, { "required": ["target"] }] } },
+        { "properties": { "kind": { "const": "alias" } }, "required": ["target"], "not": { "anyOf": [{ "required": ["cases"] }, { "required": ["fields"] }] } },
+        { "properties": { "kind": { "const": "variant" } }, "required": ["cases"], "not": { "anyOf": [{ "required": ["fields"] }, { "required": ["target"] }] } }
+      ]
+    },
+    "structuredCallback": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "key", "parameters", "result"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 1024 },
+        "key": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "refinements": { "$ref": "#/$defs/refinements" },
+        "parameters": { "type": "array", "minItems": 1, "maxItems": 16, "items": { "$ref": "binding-ir.schema.json#/$defs/typeRef" } },
+        "result": { "$ref": "binding-ir.schema.json#/$defs/typeRef" }
+      }
+    },
+    "callback": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "key", "parameters", "result"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 1024 },
+        "key": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "parameters": { "type": "array", "minItems": 1, "maxItems": 16, "items": { "$ref": "elaborated-export-metadata.schema.json#/$defs/scalarType" } },
+        "result": { "$ref": "elaborated-export-metadata.schema.json#/$defs/scalarType" }
+      }
+    }
+  }
+}

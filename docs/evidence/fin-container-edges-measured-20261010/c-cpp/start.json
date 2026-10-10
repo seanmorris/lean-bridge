@@ -1,0 +1,31 @@
+{
+  "revision": "b70f471bdd0aa3e173e6ba75a46847ed72f4f73b",
+  "tree": "27c93c1dbc5f1800fb99f13130b55d0be1f1c4df",
+  "cwd": "/app",
+  "startedAt": "2026-10-10T08:24:29.909Z",
+  "pid": 2530626,
+  "pgid": 2530626,
+  "command": "/usr/bin/taskset",
+  "args": [
+    "-c",
+    "3",
+    "/usr/bin/node",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "--test-name-pattern=^installed source-free native packages execute zero-bound and nested-position Fin edge cases$",
+    "tests/fin-container-edges.test.mjs"
+  ],
+  "report": "/app/build/vo1454-installed-b70f471/edges-c-cpp.json",
+  "initialFreeMiB": 3758,
+  "environment": {
+    "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+    "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+    "LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES": "c,cpp",
+    "LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH": "1",
+    "LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT": "/app/build/vo1454-installed-b70f471/edges-c-cpp.json",
+    "LEAN_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MAKEFLAGS": "-j1"
+  }
+}

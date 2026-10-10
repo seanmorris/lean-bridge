@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lean-bridge.example/schema/performance-result.schema.json",
+  "title": "Lean Bridge performance result bundle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "runs"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "lean-bridge-performance-suite" },
+    "runs": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/run" }
+    }
+  },
+  "$defs": {
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "kind", "recordedAt", "source", "profile", "workload", "environment", "artifacts", "composition", "correctness", "timing", "memory", "limitations"],
+      "properties": {
+        "schemaVersion": { "const": 1 },
+        "kind": { "const": "lean-bridge-performance-profile" },
+        "recordedAt": { "type": "string" },
+        "source": { "type": "object" },
+        "profile": { "enum": ["lazy", "startup", "final-static", "islands"] },
+        "workload": { "type": "object" },
+        "environment": { "type": "object" },
+        "artifacts": { "type": "array", "minItems": 1 },
+        "composition": { "type": "object" },
+        "correctness": { "type": "object" },
+        "timing": { "type": "object" },
+        "memory": { "type": "object" },
+        "limitations": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

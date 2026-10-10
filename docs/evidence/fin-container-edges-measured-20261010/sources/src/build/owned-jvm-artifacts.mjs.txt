@@ -1,0 +1,90 @@
+/**
+ * Authenticate the private JVM ownership adapter and its GMP dependency.
+ *
+ * @file
+ */
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+import { canonicalJson, sha256 } from "../capsule/node.mjs";
+import { generateOwnedCPackage } from "../backends/c/owned-package.mjs";
+import { generateOwnedJvmPackage } from "../backends/jvm/owned-package.mjs";
+import { gmpIdentity } from "../backends/c/gmp.mjs";
+import { nativeArtifactPaths, readVerifiedNativeComponent, readVerifiedNativeRuntime, validateNativeElf, verifyNativeFiles } from "./native-artifacts.mjs";
+
+/**
+ * Keep managed lifetime cleanup beside the unchanged C ownership implementation.
+ *
+ * @param c - Authenticated public C adapter sources.
+ * @param jvm - Generated managed model and native thread-exit guard.
+ */
+export const ownedJvmAdapterSources = (c, jvm) => ({ ...c.files
+	, [`src/${c.values.prefix}-jvm.c`]: c.source + jvm.cleanup.source
+	, [`src/${c.values.prefix}-jvm-thread-exit.cpp`]: jvm.cleanup.guardSource });
+
+/**
+ * Derive loader identities from compiled artifacts, never caller-supplied hashes.
+ *
+ * @param options - Closed producer staging roots.
+ * @param options.nativeRoot - Compiler-authenticated Lean component.
+ * @param options.runtimeRoot - Prepared shared runtime and broker.
+ * @param options.adapterRoot - JVM adapter, TLS guard and private GMP artifacts.
+ */
+export const ownedJvmEvidence = async ({ nativeRoot, runtimeRoot, adapterRoot }) => {
+	const { manifest: runtime, identity } = await readVerifiedNativeRuntime(runtimeRoot);
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });
+	if(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError("Owned JVM requires authenticated callback/copy, receiver or callback-result support");
+	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
+	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
+	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
+	const receiverExports = Boolean(model.ownedGraph.receiverExports), hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
+	const callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);
+	const capabilities = { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks };
+	const c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, valueCopies: callbackResultAnchors, ...capabilities });
+	const projection = generateOwnedJvmPackage(model.bindingIr, null, capabilities), prefix = c.values.prefix;
+	const adapter = JSON.parse(await readFile(join(adapterRoot, "native-jvm-adapter.json"), "utf8"));
+	await verifyNativeFiles(adapterRoot, adapter.files);
+	const sources = ownedJvmAdapterSources(c, projection), gmpLibrary = "libgmp-lean-bridge.so.10";
+	const gmpFiles = ["include/gmp.h", `lib/${gmpLibrary}`
+		, "share/lean-bridge/gmp.json", "share/lean-bridge/sources/gmp-6.3.0.tar.xz"
+		, ...["COPYING", "COPYING.LESSERv3", "COPYINGv2", "COPYINGv3"].map(name => `share/lean-bridge/licenses/GMP-${name}`)];
+	const expectedPaths = [...Object.keys(sources), `lib/lib${prefix}_jvm.so`, ...gmpFiles.map(path => `gmp/${path}`)].sort();
+	if(adapter.schemaVersion !== (callbackResultAnchors ? 5 : receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1) || adapter.profile !== "native-library-v1" || adapter.runtimeIdentity !== identity
+		|| adapter.bindingIrSha256 !== model.bindingIrSha256 || adapter.componentReceiptSha256 !== sha256(canonicalJson(receipt))
+		|| adapter.library !== `lib${prefix}_jvm.so` || adapter.ownedValues?.schemaVersion !== (callbackResultAnchors ? 6 : receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : 2)
+		|| canonicalJson(adapter.ownedValues.callbackResultAnchors ?? null) !== canonicalJson(model.ownedGraph.callbackResultAnchors ?? null)
+		|| canonicalJson(adapter.ownedValues.receiverExports ?? null) !== canonicalJson(model.ownedGraph.receiverExports ?? null)
+		|| canonicalJson(adapter.ownedValues.resultAnchors ?? null) !== canonicalJson(model.ownedGraph.resultAnchors ?? null)
+		|| canonicalJson(adapter.ownedValues.inputTransfers ?? null) !== canonicalJson(model.ownedGraph.inputTransfers ?? null)
+		|| canonicalJson(adapter.ownedValues.hostCallbacks ?? null) !== canonicalJson(model.ownedGraph.hostCallbacks ?? null)
+		|| adapter.ownedValues.headerSha256 !== sha256(c.publicHeader) || adapter.ownedValues.sourceSha256 !== sha256(c.source)
+		|| canonicalJson(adapter.jvmValues ?? null) !== canonicalJson(projection.contract)
+		|| canonicalJson(adapter.gmp) !== canonicalJson({ version: "6.3.0", soname: gmpLibrary, binding: "local-symbols" })
+		|| canonicalJson(Object.keys(adapter.files).sort()) !== canonicalJson(expectedPaths)
+		|| canonicalJson(await nativeArtifactPaths(adapterRoot)) !== canonicalJson([...expectedPaths, "native-jvm-adapter.json"].sort()))
+		throw new Error("Owned JVM adapter differs from compiler-authenticated types or lifetime rules");
+	for(const [path, source] of Object.entries(sources))
+		if(source !== await readFile(join(adapterRoot, path), "utf8")) throw new Error(`Owned JVM generated adapter source differs: ${path}`);
+	const gmpRoot = join(adapterRoot, "gmp"), gmp = JSON.parse(await readFile(join(gmpRoot, "share/lean-bridge/gmp.json"), "utf8"));
+	await verifyNativeFiles(gmpRoot, gmp.files);
+	if(Object.entries(gmpIdentity).some(([key, value]) => gmp[key] !== value)
+		|| gmp.soname !== gmpLibrary || gmp.binding !== "local-symbols" || gmp.checked !== true
+		|| !gmp.configure?.includes("LIBGMP_LDFLAGS=-release lean-bridge -Wl,-Bsymbolic")
+		|| !gmp.configure?.some(flag => flag.startsWith("CFLAGS=") && flag.split(" ").includes("-fPIC"))
+		|| canonicalJson(Object.keys(gmp.files).sort()) !== canonicalJson(gmpFiles.filter(path => !["share/lean-bridge/gmp.json", "share/lean-bridge/sources/gmp-6.3.0.tar.xz"].includes(path)).sort())
+		|| sha256(await readFile(join(gmpRoot, "share/lean-bridge/sources/gmp-6.3.0.tar.xz"))) !== gmpIdentity.sha256)
+		throw new Error("Owned JVM GMP differs from its isolated, checked source build");
+	validateNativeElf(await readFile(join(gmpRoot, "lib", gmpLibrary)));
+	validateNativeElf(await readFile(join(adapterRoot, "lib", adapter.library)));
+	const libraries = { [adapter.library]: adapter.files[`lib/${adapter.library}`].sha256
+		, [receipt.library]: receipt.nativeLibrary.sha256
+		, [gmpLibrary]: adapter.files[`gmp/lib/${gmpLibrary}`].sha256
+		, ...Object.fromEntries(Object.entries(runtime.files).filter(([path]) => path.startsWith("lib/")).map(([path, file]) => [path.slice(4), file.sha256])) };
+	const libraryPaths = Object.fromEntries(Object.keys(libraries).map(file => [file
+		, file === adapter.library ? join(adapterRoot, "lib", file)
+			: file === receipt.library ? join(nativeRoot, file)
+				: file === gmpLibrary ? join(gmpRoot, "lib", file) : join(runtimeRoot, "lib", file)]));
+	const evidence = { runtimeIdentity: identity, componentId: model.component.id
+		, componentReceiptSha256: sha256(canonicalJson(receipt))
+		, ownedValues: projection.contract, library: adapter.library, libraries };
+	return { model, receipt, projection, prefix, evidence, libraryPaths, adapter, runtime };
+};

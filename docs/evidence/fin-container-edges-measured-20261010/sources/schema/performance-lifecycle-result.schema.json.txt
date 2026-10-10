@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lean-bridge.example/schema/performance-lifecycle-result.schema.json",
+  "title": "Lean Bridge lifecycle stability result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "recordedAt", "source", "environment", "artifacts", "bindingIrSha256", "method", "memory", "lifecycle", "correctness", "limitations"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "lean-bridge-lifecycle-stability-suite" },
+    "recordedAt": { "type": "string" },
+    "source": { "type": "object" },
+    "environment": { "type": "object" },
+    "artifacts": { "type": "array", "minItems": 3 },
+    "bindingIrSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "method": { "type": "object" },
+    "memory": { "type": "object" },
+    "lifecycle": { "type": "object" },
+    "correctness": { "type": "object" },
+    "limitations": { "type": "array", "items": { "type": "string" } }
+  }
+}

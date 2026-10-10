@@ -1,0 +1,263 @@
+/**
+ * Lower compiler-owned signatures into one language-neutral Binding IR.
+ *
+ * @file
+ */
+import { canonicalJson, sha256 } from "../capsule/node.mjs";
+import { validateBindingIr, validateOwnedAggregateBindingIr } from "../binding-ir/contract.mjs";
+import { hashBindingIr, canonicalizeJsonValue } from "../binding-ir/canonical.mjs";
+import { validateElaboratedMetadata } from "./elaborated-metadata.mjs";
+import { exportContractFor, exportContractOwnership, exportContractEffects } from "./export-configuration.mjs";
+import { callbackSemanticSignature } from "./callback-signature.mjs";
+
+const doc = summary => ({ summary, details: "" });
+const source = declaration => ({ producer: "lean", declaration, extensions: {} });
+const identity = type => ["resource", "callback"].includes(type.kind);
+
+/**
+ * Give source packages the same component identity in every compiled profile.
+ *
+ * @param facts - Captured Lake package name and version.
+ */
+export const elaboratedComponent = facts => ({
+	id: `${facts.name.toLowerCase().replace(/[^a-z0-9._-]+/g, "-").replace(/^[^a-z0-9]+/, "") || "lean-project"}@${facts.version}`
+	, name: facts.name, version: facts.version
+});
+
+/**
+ * Compare source APIs without conflating toolchain-specific evidence with meaning.
+ * Source locations and producer hashes remain bound by the complete Binding IR.
+ *
+ * @param document - Validated compiler-derived Binding IR, before host naming.
+ * @param options - Explicit capabilities of the profile comparison.
+ * @param options.ownedGraphs - Compare owned APIs without opening copied-only consumers.
+ */
+export const sourceApiIdentity = (document, { ownedGraphs = false } = {}) => {
+	(ownedGraphs && document.schemaVersion === 4 ? validateOwnedAggregateBindingIr : validateBindingIr)(document);
+	const declarations = document.declarations.map(declaration => {
+		const extensions = { ...declaration.source.extensions };
+		delete extensions["lean-lang.org/source-position"];
+		return { ...declaration, source: { ...declaration.source, extensions } };
+	});
+	const api = { schemaVersion: 1, kind: "lean-bridge-source-api"
+		, component: document.component
+		, ...(document.schemaVersion === 4 ? { aggregatePolicy: document.aggregatePolicy } : {})
+		, types: document.types, declarations, errors: document.errors
+		, capabilities: document.capabilities, assurance: document.assurance };
+	return Object.freeze({ document: api, sha256: sha256(canonicalJson(api)) });
+};
+
+/**
+ * Project admitted scalar and native types without applying a consumer's names.
+ *
+ * @param options - Compiler report and its independently retained invocation.
+ * @param options.metadata - Fresh scalar or native compiler report.
+ * @param options.request - Authorized request validated against that report.
+ * @param options.component - Language-neutral component identity.
+ * @param options.elaborationSha256 - Digest of the enclosing compiler evidence.
+ * @param options.include - Optional subset of supported selections for partial analysis.
+ */
+export const createElaboratedSemanticModel = options => lowerSemanticModel(options, false);
+
+/**
+ * Lower explicit ownership metadata without admitting it to copied-value backends.
+ *
+ * @param options - Fresh compiler report, authorized request and measured evidence.
+ */
+export const createOwnedElaboratedSemanticModel = options => lowerSemanticModel(options, true);
+
+const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, include }, ownedAggregates) => {
+	validateElaboratedMetadata(metadata, request);
+	if(ownedAggregates !== (request.ownedAggregates !== undefined))
+		throw new TypeError("Explicit aggregate ownership requires the ownership-aware semantic model");
+	if(!/^[a-f0-9]{64}$/.test(elaborationSha256)) throw new TypeError("Semantic lowering requires its compiler evidence identity");
+	const selected = metadata.modules.flatMap(module => module.declarations).filter(item => item.selected && item.projection.status === "supported");
+	if(include && (new Set(include).size !== include.length || include.some(name => !selected.some(item => item.identity === name))))
+		throw new TypeError("Semantic lowering can select only admitted compiler declarations");
+	const definitions = new Map(), namedFacts = new Map(), namedTypes = new Map();
+	const included = selected.filter(item => !include || include.includes(item.identity));
+	// Compare a nominal definition by its immediate edges, regardless of whether
+	// another export spells its dependencies inline or in a finite graph table.
+	// Visit every inline definition, including duplicates, so conflicting nested
+	// facts cannot hide behind a previously encountered parent type.
+	const remember = type => {
+		if(["graph", "owned-graph"].includes(type.kind))
+		{
+			type.types.forEach(remember);
+			return remember(type.root);
+		}
+		const value = { ...type };
+		if(type.kind === "refinement") value.base = remember(type.base);
+		if(type.kind === "alias") value.target = remember(type.target);
+		if(["array", "list", "option"].includes(type.kind)) value.element = remember(type.element);
+		if(["result", "tuple"].includes(type.kind)) value.arguments = type.arguments.map(remember);
+		if(type.kind === "record") value.fields = type.fields.map(field => ({ ...field, type: remember(field.type) }));
+		// An instantiated generic record keeps the structure and the resolved type arguments it came from.
+		if(type.kind === "record" && type.provenance) value.provenance = { structure: type.provenance.structure, arguments: type.provenance.arguments.map(remember) };
+		if(type.kind === "variant") value.cases = type.cases.map(branch => ({ ...branch, fields: branch.fields.map(field => ({ ...field, type: remember(field.type) })) }));
+		if(type.kind === "callback")
+		{ value.parameters = type.parameters.map(remember); value.result = remember(type.result); }
+		if(!["alias", "record", "variant", "resource"].includes(type.kind)) return value;
+		const facts = canonicalJson(value);
+		if(namedFacts.has(type.name) && namedFacts.get(type.name) !== facts) throw new TypeError(`Conflicting compiler type definitions: lean:${type.name}`);
+		namedFacts.set(type.name, facts); namedTypes.set(type.name, type);
+		return { kind: "reference", name: type.name, ...(type.abi ? { lean: type.lean, abi: type.abi } : {}) };
+	};
+	for(const { projection } of included)
+	{
+		projection.parameters.forEach(parameter => remember(parameter.type));
+		remember(projection.result);
+	}
+	const callbackFailure = { mode: "declared", errors: ["error:native-callback"], unexpected: "poison-runtime" };
+	const site = (type, result = false, decision) => ({ type: reference(type, decision?.callable), ...exportContractOwnership(type, result)
+		, ...decision ? { ownership: decision.ownership, lifetime: structuredClone(decision.lifetime) } : {} });
+	const parameter = (type, index, decision) => ({ name: `arg${index}`, ...site(type, false, decision), mutability: "immutable", optional: false, default: null });
+	const reference = (type, decision) => {
+		if(["graph", "owned-graph"].includes(type.kind)) return reference(type.root);
+		if(type.kind === "reference")
+		{
+			const target = namedTypes.get(type.name);
+			if(!target) throw new TypeError(`Missing compiler type definition: ${type.name}`);
+			return reference(target);
+		}
+		if(type.kind === "primitive") return { kind: "primitive", name: type.name };
+		if(type.kind === "refinement") return reference(type.base);
+		if(["array", "list", "option"].includes(type.kind)) return { kind: "apply", constructor: type.kind, arguments: [reference(type.element)] };
+		if(["result", "tuple"].includes(type.kind)) return { kind: "apply", constructor: type.kind, arguments: type.arguments.map(value => reference(value)) };
+		// Callback identity describes its semantic signature, not native boxing or C layout.
+		const callable = type.kind === "callback" ? {
+			parameters: type.parameters.map((type, index) => parameter(type, index, decision?.parameters?.[index]))
+			, result: site(type.result, true, decision?.result)
+		} : null;
+		const callbackRefinements = callable && { parameters: type.parameters.map(refinement), result: refinement(type.result) };
+		const constrainedCallback = callbackRefinements && [...callbackRefinements.parameters, callbackRefinements.result].some(value => value !== null);
+		const signature = callable && { ...callbackSemanticSignature(callable), ...(constrainedCallback ? { refinements: callbackRefinements } : {}) };
+		const callbackName = signature && `Callback${sha256(canonicalJson(signature)).slice(0, 20)}`;
+		const id = callbackName ? `bridge:${callbackName}` : `lean:${type.name}`;
+		if(!definitions.has(id))
+		{
+			const definition = { id, name: callbackName || type.name.split(".").at(-1)
+				, kind: type.kind, representation: identity(type) ? "identity" : "copied"
+				, mutability: type.kind === "resource" ? "read" : "immutable"
+				, typeParameters: [], fields: [], target: null, resource: null
+				, callable: null, cases: [], host: null
+				, ...(ownedAggregates ? { aggregate: null } : {})
+				, documentation: doc(callbackName ? "Checked Lean callback." : `Checked Lean ${type.name}.`)
+				, source: source(type.name ?? callbackName), assurance: [] };
+			definitions.set(id, definition);
+			if(type.kind === "alias") definition.target = reference(type.target);
+			if(type.kind === "record") definition.fields = type.fields.map(field => ({ name: field.name, type: reference(field.type), mutability: "immutable", documentation: doc(field.name) }));
+			if(type.kind === "variant") definition.cases = type.cases.map(item => ({ name: item.name
+				, fields: item.fields.map(field => ({ name: field.name, type: reference(field.type), mutability: "immutable", documentation: doc(field.name) }))
+				, documentation: doc(item.name) }));
+			if(type.kind === "resource") definition.resource = { kindId: `resource:${type.name}`, disposal: "required", fallback: "queued-finalizer", cycles: "explicit-cut" };
+			if(type.kind === "callback") definition.callable = {
+				...callable
+				, effects: ["host-call", "fails"], failure: callbackFailure
+				, resultMode: "value", invocation: "many", reentry: "same-agent"
+				, selfDisposal: "defer" };
+			const constraints = type.kind === "alias" ? { kind: "alias", target: refinement(type.target) }
+				: type.kind === "record" ? { kind: "record", fields: type.fields.map(field => refinement(field.type)) }
+					: type.kind === "variant" ? { kind: "variant", cases: type.cases.map(item => item.fields.map(field => refinement(field.type))) } : null;
+			const constrained = constraints && (constraints.kind === "alias" ? constraints.target !== null
+				: (constraints.kind === "record" ? constraints.fields : constraints.cases.flat()).some(value => value !== null));
+			if(constrained) definition.source.extensions["lean-lang.org/nominal-refinements"] = constraints;
+			// A value index stays local to the instantiation provenance; it is never a host type.
+			if(type.kind === "record" && type.provenance)
+				definition.source.extensions["lean-lang.org/instantiation"] = { structure: type.provenance.structure
+					, arguments: type.provenance.arguments.map(argument => argument.kind === "value" ? { kind: "value", type: reference(argument.type), value: argument.value } : reference(argument)) };
+			// Proof fields are named, never carried: only a site's checked constructor builds them.
+			if(type.kind === "record" && type.erased) definition.source.extensions["lean-lang.org/erased-proofs"] = { fields: [...type.erased] };
+			if(constrainedCallback) definition.source.extensions["lean-lang.org/refinements"] = callbackRefinements;
+		}
+		return { kind: "named", id };
+	};
+	const refinement = type => {
+		if(type.kind === "graph") return refinement(type.root);
+		if(type.kind === "refinement") return structuredClone(type.predicate);
+		const children = ["array", "list", "option"].includes(type.kind) ? [type.element]
+			: ["tuple", "result"].includes(type.kind) ? type.arguments : [];
+		const arguments_ = children.map(refinement);
+		return arguments_.some(value => value !== null) ? { kind: type.kind, arguments: arguments_ } : null;
+	};
+	const declarations = included.map(item => {
+		const { projection } = item;
+		const contract = exportContractFor(request.contracts, item.identity);
+		const refinements = { parameters: projection.parameters.map(parameter => refinement(parameter.type))
+			, result: refinement(projection.result) };
+		const hasRefinements = refinements.result !== null || refinements.parameters.some(value => value !== null);
+		const hasCallback = projection.parameters.some(parameter => parameter.type.kind === "callback");
+		const parameters = projection.parameters.map((p, i) => parameter(p.type, i, contract?.parameters?.[i]));
+		const receiver = contract?.receiver ? (({ type, ownership, lifetime, mutability }) =>
+			({ type, ownership, lifetime, mutability }))(parameters.shift()) : null;
+		return { id: `lean:${item.identity}`, name: item.identity.split(".").at(-1)
+			, kind: contract?.receiver ?? "function", owner: receiver?.type.id ?? null
+			, overloadKey: item.identity
+			, typeParameters: [], receiver, parameters
+			, result: site(projection.result, true, contract?.result)
+			, mutability: "immutable"
+			, effects: exportContractEffects(projection, ownedAggregates)
+			, failure: hasCallback ? callbackFailure : { mode: "none", errors: [], unexpected: "poison-runtime" }
+			, resultMode: "value", capabilities: [], assurance: []
+			, documentation: doc(item.documentation ?? `Call ${item.identity}.`)
+			, source: { producer: "lean"
+				, declaration: item.specialization?.declaration ?? item.identity
+				, extensions: { "lean-lang.org/theorem-references": item.theoremReferences
+					, "lean-lang.org/source-position": item.source
+					, ...(hasRefinements ? { "lean-lang.org/refinements": refinements } : {})
+					, ...(item.specialization ? { "lean-lang.org/specialization": { name: item.identity, ...item.specialization } } : {})
+					, ...(exportContractFor(request.contracts, item.identity) ? { "lean-lang.org/export-contract": request.contracts[item.identity] } : {}) } } };
+	}).sort((left, right) => left.id < right.id ? -1 : left.id > right.id ? 1 : 0);
+	const errors = [...definitions.values()].some(type => type.kind === "callback") ? [{
+		id: "error:native-callback", name: "NativeCallbackFailure"
+		, category: "boundary", payload: null
+		, documentation: doc("A synchronous host callback failed; the adapter preserves the exception after cleanup.")
+	}] : [];
+	if(ownedAggregates)
+	{
+		// Propagate retained identities over finite nominal edges. Recursive values
+		// do not require recursive expansion, and copied siblings stay copied.
+		const parents = new Map(), pending = [];
+		for(const definition of definitions.values())
+		{
+			if(definition.representation === "identity") pending.push(definition.id);
+			const fields = definition.kind === "variant" ? definition.cases.flatMap(branch => branch.fields) : definition.fields;
+			const edges = definition.kind === "alias" ? [definition.target] : fields.map(field => field.type);
+			while(edges.length)
+			{
+				const edge = edges.pop();
+				if(edge.kind === "apply") edges.push(...edge.arguments);
+				else if(edge.kind === "named")
+				{
+					if(!parents.has(edge.id)) parents.set(edge.id, new Set());
+					parents.get(edge.id).add(definition.id);
+				}
+			}
+		}
+		for(let cursor = 0; cursor < pending.length; ++cursor)
+			for(const id of parents.get(pending[cursor]) ?? [])
+			{
+				const definition = definitions.get(id);
+				const representation = definition.kind === "alias" && definition.target.kind === "named"
+					? definitions.get(definition.target.id).representation : "owned";
+				if(definition.representation === representation) continue;
+				definition.representation = representation; pending.push(id);
+			}
+		for(const definition of definitions.values())
+			if(definition.representation === "owned" && ["record", "variant"].includes(definition.kind))
+				definition.aggregate = structuredClone(request.ownedAggregates);
+	}
+	const document = { schemaVersion: ownedAggregates ? 4 : 3, component
+		, ...(ownedAggregates ? { aggregatePolicy: structuredClone(request.ownedAggregates) } : {})
+		, producers: [{ id: "lean", adapter: metadata.producer.adapter
+			, adapterVersion: metadata.producer.adapterVersion, tool: "Lean"
+			, toolVersion: metadata.producer.toolVersion
+			, extensions: { "lean-lang.org/toolchain": request.metadata.toolchain, "lean-lang.org/elaboration-sha256": elaborationSha256 } }]
+		, types: [...definitions.values()].sort((left, right) => left.id < right.id ? -1 : left.id > right.id ? 1 : 0)
+		, declarations, errors, capabilities: [], assurance: []
+		, documentation: doc(`Compiler-checked exports for ${component.name}.`) };
+	if(declarations.length) (ownedAggregates ? validateOwnedAggregateBindingIr : validateBindingIr)(document);
+	const semanticSha256 = !declarations.length ? null
+		: ownedAggregates ? sha256(canonicalizeJsonValue(document)) : hashBindingIr(document);
+	return Object.freeze({ document, semanticSha256 });
+};

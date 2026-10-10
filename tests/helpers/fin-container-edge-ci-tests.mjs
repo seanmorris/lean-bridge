@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { assertFinContainerEdgeWorkflow, disableFinContainerEdgeWorkflow, enableFinContainerEdgeWorkflow, finContainerEdgeCiBlock, finContainerEdgeCiCheck, finContainerEdgeCiFlag, finContainerEdgeCiInvocation, finContainerEdgeCiSelections } from "./fin-container-edge-ci.mjs";
 import { assertFinContainerEntryWorkflow } from "./fin-container-entry-ci.mjs";
+import "./fin-container-edge-measured-evidence-tests.mjs";
 
 test("edge gates run every native public host and both Python floors without changing prior gates", async () => {
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");

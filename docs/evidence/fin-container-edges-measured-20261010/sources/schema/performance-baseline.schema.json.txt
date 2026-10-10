@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:lean-bridge:schema:performance-baseline:v1",
+  "title": "Lean Bridge performance baseline",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "id", "status", "recordedAt", "methodology", "environment", "source", "identity", "artifacts", "collection", "metrics", "correctness", "limitations"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "lean-bridge-performance-baseline" },
+    "id": { "type": "string", "minLength": 1 },
+    "status": { "const": "collected" },
+    "recordedAt": { "type": "string", "format": "date-time" },
+    "methodology": { "$ref": "#/$defs/methodology" },
+    "environment": { "$ref": "#/$defs/environment" },
+    "source": { "$ref": "#/$defs/source" },
+    "identity": { "$ref": "#/$defs/identity" },
+    "artifacts": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/artifact" } },
+    "collection": { "$ref": "#/$defs/collection" },
+    "metrics": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/metric" } },
+    "correctness": { "$ref": "#/$defs/correctness" },
+    "limitations": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "methodology": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "sha256"],
+      "properties": { "id": { "type": "string" }, "sha256": { "$ref": "#/$defs/sha256" } }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "classification", "reportSha256", "observation"],
+      "properties": {
+        "id": { "type": "string" },
+        "classification": { "const": "budget-eligible" },
+        "reportSha256": { "$ref": "#/$defs/sha256" },
+        "observation": { "type": "object" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commit", "dirty"],
+      "properties": { "commit": { "type": "string", "minLength": 7 }, "dirty": { "const": false } }
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["comparisonSha256", "resultIdentity", "inputs"],
+      "properties": {
+        "comparisonSha256": { "$ref": "#/$defs/sha256" },
+        "resultIdentity": { "$ref": "#/$defs/sha256" },
+        "inputs": { "type": "object" }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "bytes", "sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "rawFork": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "path", "bytes", "sha256"],
+      "properties": {
+        "id": { "type": "string" },
+        "path": { "type": "string" },
+        "bytes": { "type": "integer", "minimum": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "collection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["validForks", "invalidForks", "maximumInvalidForks", "rawForkFiles", "reproductionCommand"],
+      "properties": {
+        "validForks": { "type": "integer", "minimum": 3 },
+        "invalidForks": { "type": "array" },
+        "maximumInvalidForks": { "type": "integer", "minimum": 0 },
+        "rawForkFiles": { "type": "array", "minItems": 3, "items": { "$ref": "#/$defs/rawFork" } },
+        "reproductionCommand": { "type": "string", "minLength": 1 }
+      }
+    },
+    "interval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["level", "lower", "upper"],
+      "properties": {
+        "level": { "type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 1 },
+        "lower": { "type": "number", "minimum": 0 },
+        "upper": { "type": "number", "minimum": 0 }
+      }
+    },
+    "headline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["median", "p95", "medianConfidenceInterval", "p95ConfidenceInterval"],
+      "properties": {
+        "median": { "type": "number", "minimum": 0 },
+        "p95": { "type": "number", "minimum": 0 },
+        "medianConfidenceInterval": { "$ref": "#/$defs/interval" },
+        "p95ConfidenceInterval": { "$ref": "#/$defs/interval" }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metricIdentity", "resultIdentity", "validForks", "forkSummaries", "headline"],
+      "properties": {
+        "metricIdentity": { "type": "string" },
+        "resultIdentity": { "$ref": "#/$defs/sha256" },
+        "validForks": { "type": "integer", "minimum": 3 },
+        "forkSummaries": { "type": "array" },
+        "headline": { "$ref": "#/$defs/headline" }
+      }
+    },
+    "metric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "category", "unit", "targetProfile", "cacheProfile", "summary"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "category": { "type": "string", "minLength": 1 },
+        "unit": { "enum": ["nanoseconds", "bytes", "count"] },
+        "targetProfile": { "type": "string", "minLength": 1 },
+        "cacheProfile": { "type": "string", "minLength": 1 },
+        "summary": { "$ref": "#/$defs/summary" }
+      }
+    },
+    "correctness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accepted", "checkedForks"],
+      "properties": { "accepted": { "const": true }, "checkedForks": { "type": "integer", "minimum": 3 } }
+    }
+  }
+}
