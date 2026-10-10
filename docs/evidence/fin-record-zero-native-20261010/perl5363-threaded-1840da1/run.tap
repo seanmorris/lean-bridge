@@ -1,0 +1,52 @@
+TAP version 13
+# Subtest: installed native packages check empty Fin 0 record collections and reject populated fields
+not ok 1 - installed native packages check empty Fin 0 record collections and reject populated fields
+  ---
+  duration_ms: 55635.606875
+  type: 'test'
+  location: '/app/tests/helpers/fin-record-zero-tests.mjs:50:1'
+  failureType: 'testCodeFailure'
+  error: '/app/.toolchains/perl/5.36.3-threaded/bin/perl exited with status 29: {"command":"/app/.toolchains/perl/5.36.3-threaded/bin/perl","args":["Makefile.PL","INSTALL_BASE=/tmp/lean-bridge-fin-record-zero-author-B38OfN/.lean-bridge-native-project-x0LPfO/.build-runtime"],"stderr":"Package requires glibc 2.38 or later\\n","stdout":""}'
+  code: 'build-command-failed'
+  name: 'CanonicalBuildError'
+  stack: |-
+    ChildProcess.<anonymous> (file:///app/src/build/process-runner.mjs:77:21)
+    Object.onceWrapper (node:events:634:26)
+    ChildProcess.emit (node:events:519:28)
+    maybeClose (node:internal/child_process:1101:16)
+    ChildProcess._handle.onexit (node:internal/child_process:304:5)
+  ...
+# build 0: perl
+# Subtest: independently reviewed native packages check empty Fin 0 record collections
+not ok 2 - independently reviewed native packages check empty Fin 0 record collections
+  ---
+  duration_ms: 54445.300938
+  type: 'test'
+  location: '/app/tests/helpers/fin-record-zero-tests.mjs:51:1'
+  failureType: 'testCodeFailure'
+  error: '/app/.toolchains/perl/5.36.3-threaded/bin/perl exited with status 29: {"command":"/app/.toolchains/perl/5.36.3-threaded/bin/perl","args":["Makefile.PL","INSTALL_BASE=/tmp/lean-bridge-fin-record-zero-author-mfaDxG/.lean-bridge-native-project-v65hR9/.build-runtime"],"stderr":"Package requires glibc 2.38 or later\\n","stdout":""}'
+  code: 'build-command-failed'
+  name: 'CanonicalBuildError'
+  stack: |-
+    ChildProcess.<anonymous> (file:///app/src/build/process-runner.mjs:77:21)
+    Object.onceWrapper (node:events:634:26)
+    ChildProcess.emit (node:events:519:28)
+    maybeClose (node:internal/child_process:1101:16)
+    ChildProcess._handle.onexit (node:internal/child_process:304:5)
+  ...
+# build 0: perl
+# Subtest: changed zero-bound record collections are refused against fresh Lean before output
+ok 3 - changed zero-bound record collections are refused against fresh Lean before output # SKIP
+  ---
+  duration_ms: 0.530977
+  type: 'test'
+  ...
+1..3
+# tests 3
+# suites 0
+# pass 0
+# fail 2
+# cancelled 0
+# skipped 1
+# todo 0
+# duration_ms 110502.523507

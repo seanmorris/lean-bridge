@@ -25,6 +25,18 @@ const cases = [
 		, tree: "5152274a80982d87de03c7db843819fd662b22f2"
 		, outcome: "passed", profiles: ["java", "kotlin", "python", "ruby"]
 		, count: 40 }
+	, { name: "rust-dotnet-php-wit-09de9d6"
+		, digest: "3ceebcfece7cdef81e9581dc14415ff5c8067e89310f7c4d45f6d3c6705823fa"
+		, revision: "09de9d6464b66b8bd1bfcc18d8fe6cf3aa0cda84"
+		, tree: "ba60824a3057119bc52ee9df4c71132dfc94a1c0"
+		, outcome: "passed", profiles: ["dotnet", "php-native", "rust", "wit-wasi"]
+		, count: 40 }
+	, { name: "perl5363-threaded-1840da1"
+		, digest: "c60c7e1431585c9ac6c0f03fe9934eb9cc5103748641476db7d35e02225b7509"
+		, revision: "1840da12d270045b1340b16e98a2a8085f002337"
+		, tree: "6da1c6b703b990e7ac8b5934cdb14a4fa06f506f"
+		, outcome: "failed", failure: "perl-glibc-floor"
+		, profiles: ["perl"], count: 37 }
 ];
 const inspect = async (item, read = readFile) => {
 	const root = base + item.name + "/", bytes = await read(root + "index.json");
@@ -76,14 +88,23 @@ const inspect = async (item, read = readFile) => {
 	{
 		assert.equal(end.code, 1);
 		for(const line of ["# tests 3", "# pass 0", "# fail 2", "# skipped 1", "# cancelled 0"]) assert.ok(lines.includes(line), line);
-		assert.match(files.get("run.tap").toString("utf8"), /AssertionError: empty record collection/u);
-		assert.match(files.get("sources/tests/fixtures/fin-record-zero-consumers/python.py").toString("utf8"), /check\(call\(\[\]\) == \[\]/u);
-		assert.match(files.get("sources/src/backends/python/copied-conversions.mjs").toString("utf8"), /return tuple\(_from/u);
+		if(item.failure === "perl-glibc-floor")
+		{
+			assert.match(files.get("run.tap").toString("utf8"), /Package requires glibc 2\.38 or later/u);
+			assert.equal(start.environment.LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR, undefined);
+			assert.equal(start.environment.LEAN_BRIDGE_CORPUS_PERL, "/app/.toolchains/perl/5.36.3-threaded/bin/perl");
+		}
+		else
+		{
+			assert.match(files.get("run.tap").toString("utf8"), /AssertionError: empty record collection/u);
+			assert.match(files.get("sources/tests/fixtures/fin-record-zero-consumers/python.py").toString("utf8"), /check\(call\(\[\]\) == \[\]/u);
+			assert.match(files.get("sources/src/backends/python/copied-conversions.mjs").toString("utf8"), /return tuple\(_from/u);
+		}
 		for(const name of ["ordinary.json", "reviewed.json", "verified.json"]) assert.equal(files.has(name), false);
 	}
 };
 
-test("zero-bound nominal archives retain successful native calls with the failed Python predecessor", async () => {
+test("zero-bound nominal archives retain successful native calls and original failed attempts", async () => {
 	for(const item of cases) await inspect(item);
 });
 
