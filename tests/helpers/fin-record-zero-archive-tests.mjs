@@ -37,6 +37,11 @@ const cases = [
 		, tree: "6da1c6b703b990e7ac8b5934cdb14a4fa06f506f"
 		, outcome: "failed", failure: "perl-glibc-floor"
 		, profiles: ["perl"], count: 37 }
+	, { name: "perl5363-threaded-floor236-1840da1"
+		, digest: "bc4ddddb4b46cfc65e24fad54a1d3af025e13a74250be7b34a88a8257e27f0c1"
+		, revision: "1840da12d270045b1340b16e98a2a8085f002337"
+		, tree: "6da1c6b703b990e7ac8b5934cdb14a4fa06f506f"
+		, outcome: "passed", profiles: ["perl"], perl: "5.36.3-threaded", count: 40 }
 ];
 const inspect = async (item, read = readFile) => {
 	const root = base + item.name + "/", bytes = await read(root + "index.json");
@@ -61,6 +66,11 @@ const inspect = async (item, read = readFile) => {
 	assert.equal(start.revision, revision); assert.deepEqual(start.profiles, item.profiles);
 	assert.deepEqual(start.environment, index.environment);
 	assert.equal(start.environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR, "2.36");
+	if(item.perl)
+	{
+		assert.equal(start.environment.LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR, "2.36");
+		assert.equal(start.environment.LEAN_BRIDGE_CORPUS_PERL, `/app/.toolchains/perl/${item.perl}/bin/perl`);
+	}
 	assert.equal(start.glibc, "glibc 2.36"); assert.equal(start.node, "v22.23.2");
 	assert.equal(sha256(files.get("runner.mjs")), start.runnerSha256);
 	assert.equal(sha256(files.get("run.tap")), end.tapSha256);

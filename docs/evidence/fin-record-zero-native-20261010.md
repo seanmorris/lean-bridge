@@ -21,6 +21,7 @@ rejection/recovery pairs.
 | Python 3.12.14, Ruby, Java, and Kotlin at producer `3c41650` | Passed, 2,046 assertions per consumer | Passed, 2,046 assertions per consumer |
 | Rust, .NET, native PHP, and WIT/WASI at producer `09de9d6` | Passed, 2,046 assertions per consumer | Passed, 2,046 assertions per consumer |
 | Perl 5.36.3 threaded at producer `1840da1`, initial local runner | Failed: runner omitted the CPAN glibc-floor setting | Same platform-floor rejection |
+| Perl 5.36.3 threaded at producer `1840da1`, corrected local runner | Passed, 2,046 assertions | Passed, 2,046 assertions |
 
 The C/C++ harness rebuilt each route from two unrelated author directories
 and required byte-identical archives. It removed author and build staging
@@ -68,6 +69,8 @@ Indexes:
   `3ceebcfece7cdef81e9581dc14415ff5c8067e89310f7c4d45f6d3c6705823fa`.
 - [Original Perl platform rejection](fin-record-zero-native-20261010/perl5363-threaded-1840da1/index.json):
   `c60c7e1431585c9ac6c0f03fe9934eb9cc5103748641476db7d35e02225b7509`.
+- [Perl 5.36.3 threaded pass](fin-record-zero-native-20261010/perl5363-threaded-floor236-1840da1/index.json):
+  `bc4ddddb4b46cfc65e24fad54a1d3af025e13a74250be7b34a88a8257e27f0c1`.
 
 #1442 remains open for the remaining installed selections and its complete
 acceptance audit. These observations do not close #1220.
