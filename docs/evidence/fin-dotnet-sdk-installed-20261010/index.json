@@ -1,0 +1,192 @@
+{
+  "schemaVersion": 1,
+  "kind": "native-fin-edge-dotnet-sdk-repair-installed-v1",
+  "revision": "7b575976b7804fa99e10d71cf10b21468def33d3",
+  "scope": "Local two-root source-free .NET edge acceptance after SDK-selection repair, including raw/public/foreign-carrier observations. Local SDK 8.0.424 and glibc floor 2.36; hosted multi-SDK execution is not established. Selected sources, original run records and package digests are retained, not a complete source/toolchain closure or package binaries.",
+  "reportSha256": "e0cd49c8746265e9ee4a71c1661e75944a9f3ee8a93e1695e1f1dcd29231ec49",
+  "files": [
+    {
+      "path": "report.json",
+      "sha256": "e0cd49c8746265e9ee4a71c1661e75944a9f3ee8a93e1695e1f1dcd29231ec49",
+      "bytes": 3661301
+    },
+    {
+      "path": "run.tap",
+      "sha256": "665ce62f8fdeaaa4d964f23a07602eb24d9e5c3216fc37c052c21850685e23f9",
+      "bytes": 430
+    },
+    {
+      "path": "start.json",
+      "sha256": "9b0bcd5989841a6735a3dbac17482b42c9186fdddbbf328045f1055096dda241",
+      "bytes": 1575
+    },
+    {
+      "path": "end.json",
+      "sha256": "157c75fa2faae6787b7e682bb42bf22749c1c937d35049c5f6c0d9adf417457e",
+      "bytes": 210
+    },
+    {
+      "path": "verified.json",
+      "sha256": "238e1dda65d3bd76b22e0f3b33a06caa3de7df3263545915bab9053e40e0c275",
+      "bytes": 346
+    },
+    {
+      "path": "runner.mjs.txt",
+      "sha256": "b634b6f41149667ba85eb731e0af42510f11fdd8a37cd8148d0063114ff51047",
+      "bytes": 4998
+    },
+    {
+      "path": "failed-report-name/run.tap",
+      "sha256": "5f75f57b93da393dda6c15c062f4c50c02f19294d19e40fe2a1103564581b358",
+      "bytes": 1399
+    },
+    {
+      "path": "failed-report-name/run.start.json",
+      "sha256": "c4b587963e1284e71f4847bd675d99ec6d6ed00dd6ba0aae20a596ede86d3e9a",
+      "bytes": 1591
+    },
+    {
+      "path": "failed-report-name/run.end.json",
+      "sha256": "50e05dbb59cb3a6275ce054c6efcaa15ce7208beab504c57666cd8d81311869c",
+      "bytes": 211
+    },
+    {
+      "path": "failed-report-name/runner.mjs.txt",
+      "sha256": "93a74130f85e64afaa1ee8865575a54489959d44e1d27647887ef1acaa4340b6",
+      "bytes": 4945
+    },
+    {
+      "path": "sources/tests/helpers/fin-container-edge-dotnet-closure.mjs",
+      "sha256": "3b8ef4a910a6d095fd4d8ae32a80c29499b4cad92a53dfaddfa2dca72b4f3918",
+      "bytes": 14369,
+      "sourcePath": "tests/helpers/fin-container-edge-dotnet-closure.mjs",
+      "revision": "7b575976b7804fa99e10d71cf10b21468def33d3"
+    },
+    {
+      "path": "sources/tests/helpers/fin-container-edge-sdk-tests.mjs",
+      "sha256": "c30c9c8ec38458784b2b6d3a6bc83e2637da2c6790145921e4e8a0f7420846d3",
+      "bytes": 4206,
+      "sourcePath": "tests/helpers/fin-container-edge-sdk-tests.mjs",
+      "revision": "7b575976b7804fa99e10d71cf10b21468def33d3"
+    },
+    {
+      "path": "sources/tests/helpers/fin-container-edge-install.mjs",
+      "sha256": "01f8601bac2b4608a53693e524cfca1f0bc6bbe7af110b001b341698a833813d",
+      "bytes": 31327,
+      "sourcePath": "tests/helpers/fin-container-edge-install.mjs",
+      "revision": "7b575976b7804fa99e10d71cf10b21468def33d3"
+    },
+    {
+      "path": "sources/tests/helpers/fin-container-edge-dotnet.mjs",
+      "sha256": "a1d51a9bf3464aa0533a2f8d9c56da2920b96edc30f8ba084630988aab39b222",
+      "bytes": 9523,
+      "sourcePath": "tests/helpers/fin-container-edge-dotnet.mjs",
+      "revision": "7b575976b7804fa99e10d71cf10b21468def33d3"
+    },
+    {
+      "path": "sources/tests/helpers/fin-container-edge-dotnet-observer.mjs",
+      "sha256": "6d3e2ccfa085a2437ed373a462eafb153cb6fa9b7ee385459f6269b89991561c",
+      "bytes": 8485,
+      "sourcePath": "tests/helpers/fin-container-edge-dotnet-observer.mjs",
+      "revision": "7b575976b7804fa99e10d71cf10b21468def33d3"
+    },
+    {
+      "path": "sources/tests/helpers/fin-container-foreign-carriers.mjs",
+      "sha256": "e93ce101860429ddf85f492a6e99a4a7b49e2f566937e3344ba76da80b419e56",
+      "bytes": 5505,
+      "sourcePath": "tests/helpers/fin-container-foreign-carriers.mjs",
+      "revision": "7b575976b7804fa99e10d71cf10b21468def33d3"
+    },
+    {
+      "path": "sources/tests/helpers/fin-container-foreign-observer.mjs",
+      "sha256": "6c09b917b10fa715980b62da8c2c55dbc88180edb75c058066510ffdf994663c",
+      "bytes": 6877,
+      "sourcePath": "tests/helpers/fin-container-foreign-observer.mjs",
+      "revision": "7b575976b7804fa99e10d71cf10b21468def33d3"
+    },
+    {
+      "path": "sources/tests/helpers/fin-container-edge-dispatch.mjs",
+      "sha256": "632c06ae53f887c59c30cd8a2c61bfa422732bb46ecd07806643bdf397532573",
+      "bytes": 19536,
+      "sourcePath": "tests/helpers/fin-container-edge-dispatch.mjs",
+      "revision": "7b575976b7804fa99e10d71cf10b21468def33d3"
+    },
+    {
+      "path": "sources/tests/helpers/fin-container-edge-gdb.mjs",
+      "sha256": "cb00e4c4b4e8f8815da4f51b49c82284c67a90e2732aad0bccde688121a020fa",
+      "bytes": 8730,
+      "sourcePath": "tests/helpers/fin-container-edge-gdb.mjs",
+      "revision": "7b575976b7804fa99e10d71cf10b21468def33d3"
+    },
+    {
+      "path": "sources/tests/helpers/fin-container-dispatch-gdb.mjs",
+      "sha256": "a392dc47bb0334e0896539ccbf616d4a88547de283df9c84601d7bd29d631ff7",
+      "bytes": 19931,
+      "sourcePath": "tests/helpers/fin-container-dispatch-gdb.mjs",
+      "revision": "7b575976b7804fa99e10d71cf10b21468def33d3"
+    },
+    {
+      "path": "sources/tests/helpers/fin-container-edges.mjs",
+      "sha256": "cad710d6b65e715bd156a5fbb052b56b313b5e195c769a44243edcb8a881f226",
+      "bytes": 5396,
+      "sourcePath": "tests/helpers/fin-container-edges.mjs",
+      "revision": "7b575976b7804fa99e10d71cf10b21468def33d3"
+    },
+    {
+      "path": "sources/tests/helpers/fin-container-foreign-report.mjs",
+      "sha256": "236ff5bd893e983cad390f953c41429251dc6694381931473da7efe6c1e2180f",
+      "bytes": 5511,
+      "sourcePath": "tests/helpers/fin-container-foreign-report.mjs",
+      "revision": "7b575976b7804fa99e10d71cf10b21468def33d3"
+    },
+    {
+      "path": "sources/tests/helpers/fin-container-edge-report.mjs",
+      "sha256": "9591db08b2593ba07cbf208450f469779d900e48d2236696a82e3c7f2b9a8297",
+      "bytes": 12387,
+      "sourcePath": "tests/helpers/fin-container-edge-report.mjs",
+      "revision": "7b575976b7804fa99e10d71cf10b21468def33d3"
+    },
+    {
+      "path": "sources/scripts/check-fin-container-foreign-report.mjs",
+      "sha256": "680fb729d9452df7c136e1650ece84e46f41087b1828834fa39f8c841f8766eb",
+      "bytes": 824,
+      "sourcePath": "scripts/check-fin-container-foreign-report.mjs",
+      "revision": "7b575976b7804fa99e10d71cf10b21468def33d3"
+    },
+    {
+      "path": "sources/tests/fin-container-edges.test.mjs",
+      "sha256": "d48c56fa9dfa29440878467115375350434922023574d2e12d6baae3299aed38",
+      "bytes": 26739,
+      "sourcePath": "tests/fin-container-edges.test.mjs",
+      "revision": "7b575976b7804fa99e10d71cf10b21468def33d3"
+    },
+    {
+      "path": "sources/tests/fixtures/onboarding/native-fin-containers/FinContainers.lean",
+      "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be",
+      "bytes": 1562,
+      "sourcePath": "tests/fixtures/onboarding/native-fin-containers/FinContainers.lean",
+      "revision": "7b575976b7804fa99e10d71cf10b21468def33d3"
+    },
+    {
+      "path": "sources/tests/fixtures/fin-container-edges.lean",
+      "sha256": "6c2b2250f52557b39b0267762b029af38ba695dccd63065c01a069a6b37cea45",
+      "bytes": 593,
+      "sourcePath": "tests/fixtures/fin-container-edges.lean",
+      "revision": "7b575976b7804fa99e10d71cf10b21468def33d3"
+    },
+    {
+      "path": "sources/tests/fixtures/fin-container-consumers/dotnet.cs",
+      "sha256": "4797948b96775e5c87a7366a059373bc5262e6cb9e028cd643086f0203d3436b",
+      "bytes": 4490,
+      "sourcePath": "tests/fixtures/fin-container-consumers/dotnet.cs",
+      "revision": "7b575976b7804fa99e10d71cf10b21468def33d3"
+    },
+    {
+      "path": "sources/tests/fixtures/fin-container-edge-consumers/dotnet.cs",
+      "sha256": "1d2c482c9b83bee5f401bce295c0ba95e274366d768e51c30b5697c45f637efa",
+      "bytes": 5933,
+      "sourcePath": "tests/fixtures/fin-container-edge-consumers/dotnet.cs",
+      "revision": "7b575976b7804fa99e10d71cf10b21468def33d3"
+    }
+  ]
+}

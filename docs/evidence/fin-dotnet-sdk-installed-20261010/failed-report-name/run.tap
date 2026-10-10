@@ -1,0 +1,32 @@
+TAP version 13
+# Subtest: installed source-free native packages execute zero-bound and nested-position Fin edge cases
+not ok 1 - installed source-free native packages execute zero-bound and nested-position Fin edge cases
+  ---
+  duration_ms: 4.824445
+  type: 'test'
+  location: '/app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/fin-container-edges.test.mjs:360:1'
+  failureType: 'testCodeFailure'
+  error: 'Use an edges-*.json report name'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: 'vo1454-dotnet-sdk-installed-7b57597.json'
+  operator: 'match'
+  stack: |-
+    requireNewFinContainerEdgeReport (file:///app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/fin-container-edge-install.mjs:105:9)
+    checkInstalledFinContainerEdges (file:///app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/fin-container-edge-install.mjs:427:8)
+    TestContext.<anonymous> (file:///app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/fin-container-edges.test.mjs:362:23)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.start (node:internal/test_runner/test:944:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 502.855467
