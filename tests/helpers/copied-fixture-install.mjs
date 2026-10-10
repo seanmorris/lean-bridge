@@ -63,7 +63,7 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 	const archive = join(handoff, pkg.artifacts[0].path);
 	const extension = extensions[profile], source = await fixture.source(profile, extension, 64);
 	await saveLakeFile(root, `consumer.${extension}`, source);
-	let command, args, pythonPolicy, rubyPolicy, jvmPolicy, dotnetPolicy, env = copiedCleanEnvironment;
+	let command, args, pythonPolicy, rubyPolicy, jvmPolicy, dotnetPolicy, phpPolicy, env = copiedCleanEnvironment;
 	// Optional fixture policy runs before the first package-influenced compilation and again
 	// around execution. Other fixture callers retain their existing install behavior.
 	let verifyPackage = async () => {};
@@ -124,18 +124,26 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 	else if(profile === "php-native")
 	{
 		command = environment.LEAN_BRIDGE_PHP ?? "/usr/bin/php";
-		const inspection = join(root, "inspection");
-		await runCopied("/usr/bin/unzip", ["-q", archive, "-d", inspection], root);
-		const metadata = JSON.parse(await readFile(join(inspection, "composer.json")));
-		await saveLakeFile(root, "composer.json", canonicalJson({ name: "copied-check/consumer"
-			, require: { [pkg.name]: pkg.version }
-			, repositories: [{ "packagist.org": false }, await brickMathRepository(join(root, "feed")), { type: "package", package: { ...metadata, dist: { type: "zip", url: pathToFileURL(archive).href } } }]
-			, config: { "allow-plugins": false } }));
-		await runCopied(command, [environment.LEAN_BRIDGE_COMPOSER ?? "/usr/bin/composer", "--no-plugins", "--no-scripts", "--no-interaction", "install", "--prefer-dist"], root
-			, { ...env, PATH: "/usr/bin:/bin", COMPOSER_ALLOW_SUPERUSER: "1", COMPOSER_DISABLE_NETWORK: "1", COMPOSER_HOME: join(root, "composer-home"), COMPOSER_CACHE_DIR: join(root, "composer-cache") });
+		if(fixture.installPhp)
+		{
+			phpPolicy = await fixture.installPhp({ root, archive, archiveSha256: pkg.artifacts[0].sha256, command, composer: environment.LEAN_BRIDGE_COMPOSER ?? "/usr/bin/composer" });
+			command = phpPolicy.context.command;
+		}
+		else
+		{
+			const inspection = join(root, "inspection");
+			await runCopied("/usr/bin/unzip", ["-q", archive, "-d", inspection], root);
+			const metadata = JSON.parse(await readFile(join(inspection, "composer.json")));
+			await saveLakeFile(root, "composer.json", canonicalJson({ name: "copied-check/consumer"
+				, require: { [pkg.name]: pkg.version }
+				, repositories: [{ "packagist.org": false }, await brickMathRepository(join(root, "feed")), { type: "package", package: { ...metadata, dist: { type: "zip", url: pathToFileURL(archive).href } } }]
+				, config: { "allow-plugins": false } }));
+			await runCopied(command, [environment.LEAN_BRIDGE_COMPOSER ?? "/usr/bin/composer", "--no-plugins", "--no-scripts", "--no-interaction", "install", "--prefer-dist"], root
+				, { ...env, PATH: "/usr/bin:/bin", COMPOSER_ALLOW_SUPERUSER: "1", COMPOSER_DISABLE_NETWORK: "1", COMPOSER_HOME: join(root, "composer-home"), COMPOSER_CACHE_DIR: join(root, "composer-cache") });
+			await saveLakeFile(root, "strict.php", source.replace("declare(strict_types=0);", "declare(strict_types=1);"));
+		}
 		args = ["-n", "-d", "extension=ffi", "-d", "ffi.enable=1", "consumer.php"];
-		await saveLakeFile(root, "strict.php", source.replace("declare(strict_types=0);", "declare(strict_types=1);"));
-		const strict = await runCopied(command, [...args.slice(0, -1), "strict.php"], root);
+		const strict = phpPolicy ? await phpPolicy.run("strict") : await runCopied(command, [...args.slice(0, -1), "strict.php"], root);
 		assert.equal(strict.stderr, ""); assert.match(strict.stdout, new RegExp(`^${fixture.success}:[0-9]+\n$`));
 	}
 	else if(profile === "dotnet")
@@ -201,7 +209,8 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 	const result = pythonPolicy ? await pythonPolicy.run(["consumer.py"], root, env)
 		: rubyPolicy ? await rubyPolicy.run(args, root)
 			: jvmPolicy ? await jvmPolicy.run()
-				: dotnetPolicy ? await dotnetPolicy.run() : await runCopied(command, args, root, env);
+				: dotnetPolicy ? await dotnetPolicy.run()
+					: phpPolicy ? await phpPolicy.run() : await runCopied(command, args, root, env);
 	await verifyPackage();
 	assert.equal(result.stderr, "");
 	const observation = fixture.parseResult?.(result.stdout);
@@ -220,5 +229,6 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 		, ...(rubyPolicy ? { rubyEnvironment: rubyPolicy.context } : {})
 		, ...(jvmPolicy ? { jvmEnvironment: jvmPolicy.context } : {})
 		, ...(dotnetPolicy ? { dotnetEnvironment: dotnetPolicy.context } : {})
+		, ...(phpPolicy ? { phpEnvironment: phpPolicy.context } : {})
 		, offlineInstall: true, compilerFreePath: true };
 };
