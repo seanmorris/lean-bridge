@@ -12,6 +12,7 @@ import { processBuildRunner } from "../../src/build/process-runner.mjs";
 import { nativeArtifactPaths } from "../../src/build/native-artifacts.mjs";
 import { createDeterministicTarGz } from "../../src/release/deterministic-archive.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
+import { runMavenPrerequisite } from "../../scripts/maven-prerequisite.mjs";
 
 /**
  * Run a selected JVM tool with bounded output and execution time.
@@ -94,8 +95,9 @@ export const prepareJvmCorpusDependencies = async ({ directory, handoff, pkg, en
 	await saveLakeFile(root, "settings.xml", mavenSettings);
 	await saveLakeFile(root, "pom.xml", jvmConsumerPom(pkg));
 	const jar = pkg.artifacts.find(file => file.path.endsWith(".jar")), pom = pkg.artifacts.find(file => file.path.endsWith(".pom"));
-	await jvmMaven(tools, root, [mavenGoals.install, `-Dfile=${join(handoff, jar.path)}`, `-DpomFile=${join(handoff, pom.path)}`], clean, false);
-	await jvmMaven(tools, root, [mavenGoals.resolve, "-Dmdep.outputFile=classpath.txt"], clean, false);
+	const bootstrap = args => runMavenPrerequisite(args, selected => jvmMaven(tools, root, selected, clean, false));
+	await bootstrap([mavenGoals.install, `-Dfile=${join(handoff, jar.path)}`, `-DpomFile=${join(handoff, pom.path)}`]);
+	await bootstrap([mavenGoals.resolve, "-Dmdep.outputFile=classpath.txt"]);
 	const vendor = join(directory, "maven-plugin-closure"), files = {};
 	const own = `${pkg.name.split(":")[0].replaceAll(".", "/")}/`;
 	for(const path of await nativeArtifactPaths(join(root, "repository")))

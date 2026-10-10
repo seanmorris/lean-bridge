@@ -18,6 +18,8 @@ import { packageOrdinaryMaven } from "../src/release/native-maven.mjs";
 import { createDeterministicZip } from "../src/release/deterministic-zip.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { runMavenPrerequisite } from "../scripts/maven-prerequisite.mjs";
+import "./helpers/maven-prerequisite-tests.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_NATIVE_JVM_TEST === "1";
 const leanPrefix = process.env.LEAN_BRIDGE_LEAN_PREFIX ?? join(process.cwd(), ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
@@ -160,7 +162,8 @@ const consume = async (working, build, name) => {
 	const root = join(working, `consumer-${name}`), repository = join(working, "maven-cache");
 	await mkdir(root); await mkdir(join(root, "native-temp"));
 	const jar = build.packages.find(file => file.archive.endsWith(".jar")), pom = build.packages.find(file => file.archive.endsWith(".pom"));
-	await run(mvn, ["--batch-mode", "--quiet", `-Dmaven.repo.local=${repository}`, "org.apache.maven.plugins:maven-install-plugin:3.1.4:install-file", `-Dfile=${join(build.output, "archives", jar.archive)}`, `-DpomFile=${join(build.output, "archives", pom.archive)}`], root);
+	await runMavenPrerequisite(["--batch-mode", `-Dmaven.repo.local=${repository}`, "org.apache.maven.plugins:maven-install-plugin:3.1.4:install-file", `-Dfile=${join(build.output, "archives", jar.archive)}`, `-DpomFile=${join(build.output, "archives", pom.archive)}`]
+		, args => processBuildRunner.capture({ command: mvn, args, cwd: root, env: environment, timeoutMs: 180_000 }));
 	const installed = join(repository, "com/acme", `${name.toLowerCase()}-api`, jar.version, jar.archive);
 	assert.equal(sha256(await readFile(installed)), jar.sha256);
 	await saveLakeFile(root, "Consumer.java", javaConsumer(name));

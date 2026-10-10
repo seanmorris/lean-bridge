@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeMavenPrerequisiteSource } from "./maven-prerequisite-history.mjs";
 
 export const reviewedSubtypeHostCiHistoryPath = "docs/evidence/reviewed-subtype-host-ci-source-history-20261010.json";
 export const reviewedSubtypeHostCiPredecessor = "33f1db0daaff269627dcdbb684a4e1a9f164729f";
@@ -57,6 +58,7 @@ export const reverseReviewedSubtypeHostCiUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeReviewedSubtypeHostCiSource = (path, source, expected) => {
+	source = beforeMavenPrerequisiteSource(path, source, expected);
 	if(typeof source !== "string" || !reviewedSubtypeHostCiChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

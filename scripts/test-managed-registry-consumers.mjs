@@ -12,6 +12,7 @@ import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { promisify } from "node:util";
+import { runMavenPrerequisite } from "./maven-prerequisite.mjs";
 
 import {
 	STEADY_STATE_BOX_VALUE,
@@ -132,7 +133,8 @@ Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { iterations = $
 
 	const mavenRepository = join(mavenRoot, "repository");
 	const localRepository = join(scratch, "maven-repository");
-	await run(maven, ["--batch-mode", "--quiet", `-Dmaven.repo.local=${localRepository}`, "org.apache.maven.plugins:maven-dependency-plugin:3.8.1:get", "-Dartifact=org.leanbridge:lean-alpha:0.0.0", `-DremoteRepositories=lean-bridge::default::${pathToFileURL(mavenRepository).href}`, "-Dtransitive=false"]);
+	await runMavenPrerequisite(["--batch-mode", `-Dmaven.repo.local=${localRepository}`, "org.apache.maven.plugins:maven-dependency-plugin:3.8.1:get", "-Dartifact=org.leanbridge:lean-alpha:0.0.0", `-DremoteRepositories=lean-bridge::default::${pathToFileURL(mavenRepository).href}`, "-Dtransitive=false"]
+		, args => run(maven, args, { timeout: 180_000 }));
 	const jar = join(localRepository, "org/leanbridge/lean-alpha/0.0.0/lean-alpha-0.0.0.jar");
 	const javaDocsRoot = join(scratch, "documentation/java");
 	await cp(join(fixtureRoot, "java"), javaDocsRoot, { recursive: true });
