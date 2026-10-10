@@ -1,0 +1,135 @@
+{
+  "archives": {
+    "archives/genericrecords-1.0.0-wit-wasi.tar.gz": "326b8fe802829b7b74a64b4929624be8b9e27386b80822645d9125151f4c1045"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "17b6fa435c3d00e95fc878ff18a5caa7e138fe6f011628f181cea2570479873f",
+      "checks": 1019,
+      "compilerFreePath": true,
+      "consumerSha256": "c311efc21745a457af7eb9eadd1b44425a1474bb703167d93b7a39f7e354bb38",
+      "instantiations": {
+        "BoxPair": {
+          "arguments": [
+            {
+              "id": "NatBox",
+              "kind": "named"
+            },
+            {
+              "id": "TextBox",
+              "kind": "named"
+            }
+          ],
+          "structure": "Pair"
+        },
+        "MarkerTag": {
+          "arguments": [
+            {
+              "id": "Marker",
+              "kind": "named"
+            }
+          ],
+          "fields": 1,
+          "structure": "Tag"
+        },
+        "MaybeBox": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBoxAgain": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "TaggedNat": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Tagged"
+        },
+        "TextBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            }
+          ],
+          "structure": "Box"
+        },
+        "WordPair": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Pair"
+        }
+      },
+      "modelSha256": "ab2885b3f318433838398d70977222e9f681a37c21398b1c70fe7ebcb6810823",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 59247663,
+              "path": "archives/genericrecords-1.0.0-wit-wasi.tar.gz",
+              "sha256": "326b8fe802829b7b74a64b4929624be8b9e27386b80822645d9125151f4c1045"
+            }
+          ],
+          "ecosystem": "wit-wasi",
+          "name": "genericrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "wit-wasi",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "wit-wasi",
+      "receiptSha256": "f4b72b6ec3b4f25426e38a039369229ae72df4ac4e92fbcb25ebbf55d735d4b7",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "96d64e373dd2c2ad5d3ed5b24d1589c6d280cf02a49b8632624e49be42e669bd"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

@@ -23,3 +23,5 @@ docs/evidence/hosted-specializations-20261009/*/job.log whitespace=-blank-at-eol
 docs/evidence/wasm-entry-20261009/failed-ba282ec-node-smoke/run.tap whitespace=-blank-at-eol
 # Preserve the receipt-authenticated hosted Perl scalar job logs without rewriting whitespace.
 docs/evidence/perl-scalar-hosted-20261009/*/job.log whitespace=-blank-at-eol
+# Preserve the original, receipt-authenticated hosted generic-record Array transcripts.
+docs/evidence/generic-record-array-hosted-20261010/job-*.log whitespace=-blank-at-eol

@@ -1,0 +1,281 @@
+{
+  "archives": {
+    "archives/GenericRecords.Api.1.0.0.nupkg": "4519af50fcba772cc1fc7a80693cee9db47b71effbd0e69e9eed36e0ec18c56f"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "b83df84a5481e4f411ef80589a839df6cba1cc22e6d294a8f7d569865743a325",
+      "checks": 1034,
+      "compilerFreePath": true,
+      "consumerSha256": "16f05809c846ee59e289ea4e74172debadb796e8823f862b1c213fdce08bb37f",
+      "instantiations": {
+        "BoxPair": {
+          "arguments": [
+            {
+              "id": "NatBox",
+              "kind": "named"
+            },
+            {
+              "id": "TextBox",
+              "kind": "named"
+            }
+          ],
+          "structure": "Pair"
+        },
+        "MarkerTag": {
+          "arguments": [
+            {
+              "id": "Marker",
+              "kind": "named"
+            }
+          ],
+          "fields": 1,
+          "structure": "Tag"
+        },
+        "MaybeBox": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBoxAgain": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "TaggedNat": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Tagged"
+        },
+        "TextBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            }
+          ],
+          "structure": "Box"
+        },
+        "WordPair": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Pair"
+        }
+      },
+      "managedTypes": {
+        "artifactSha256": "40fa4064be0101ac1ef8da17fbc1e0cbe9a0b294d220c15b1cdae9ea71ccbace",
+        "artifactUnchanged": true,
+        "positiveCompiles": true,
+        "positiveSourceSha256": "77bea2f839f1bd282e8fdf8c2dcbeea9d1b349b2573c0445bf996e1de4c344fb",
+        "rejected": [
+          {
+            "case": "alias",
+            "diagnostics": [
+              {
+                "code": "CS1503",
+                "column": 85,
+                "file": "invalid-alias.cs",
+                "line": 1
+              }
+            ],
+            "sourceSha256": "737fd4c757730ab2bd283eb7753e5b335626a3095726d5e64d44e811c364bea0"
+          },
+          {
+            "case": "field",
+            "diagnostics": [
+              {
+                "code": "CS1503",
+                "column": 87,
+                "file": "invalid-field.cs",
+                "line": 1
+              }
+            ],
+            "sourceSha256": "8c80b785b20d6cff03d1d80190235b539bfffa53eb45d9a9bd07b7e97e4ac113"
+          },
+          {
+            "case": "missing",
+            "diagnostics": [
+              {
+                "code": "CS7036",
+                "column": 80,
+                "file": "invalid-missing.cs",
+                "line": 1
+              }
+            ],
+            "sourceSha256": "357c175400d7029e51c13f2b0d4cb773c8c77f17571722a434b7e60040cc6a2f"
+          },
+          {
+            "case": "namespace",
+            "diagnostics": [
+              {
+                "code": "CS1503",
+                "column": 89,
+                "file": "invalid-namespace.cs",
+                "line": 1
+              }
+            ],
+            "sourceSha256": "9b6fc03fa2806f0af3a7d8c3d8d97ff5a744a23b274afd6e9e4e3b746a2e45e3"
+          },
+          {
+            "case": "specialized-field",
+            "diagnostics": [
+              {
+                "code": "CS1503",
+                "column": 88,
+                "file": "invalid-specialized-field.cs",
+                "line": 1
+              }
+            ],
+            "sourceSha256": "75557967d84af48df610141bc05981f68d58a686d747c210fb3ddf329b87d7f1"
+          },
+          {
+            "case": "specialized-missing",
+            "diagnostics": [
+              {
+                "code": "CS7036",
+                "column": 80,
+                "file": "invalid-specialized-missing.cs",
+                "line": 1
+              }
+            ],
+            "sourceSha256": "2c02c0f8f3ca05bc9097fc1dc19b282eae11f61f850dc5b5c355b100672131d7"
+          }
+        ],
+        "repeatExecutionAfterTypeRejection": true
+      },
+      "modelSha256": "4b3828797ce34e61bf6f57a973a19c7ee7699c467ef02e46ad0253e973d3f16e",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51408003,
+              "path": "archives/GenericRecords.Api.1.0.0.nupkg",
+              "sha256": "4519af50fcba772cc1fc7a80693cee9db47b71effbd0e69e9eed36e0ec18c56f"
+            }
+          ],
+          "ecosystem": "nuget",
+          "name": "GenericRecords.Api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "nuget",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "dotnet",
+      "receiptSha256": "777bd5f21ec20cc9d571c00709a5a68a439d337ad267d733b3927e0da8a3ccae",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "d9acff77c0e686a014d9de7f9546ee0c9040f39e18e2ead2c50380b3eb5de677",
+      "specializations": [
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoNatBox",
+          "types": [
+            "GenericRecords.NatBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoAgain",
+          "types": [
+            "GenericRecords.NatBoxAgain"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoTextBox",
+          "types": [
+            "GenericRecords.TextBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoLeft",
+          "types": [
+            "GenericRecords.Left.LeftBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoRight",
+          "types": [
+            "GenericRecords.Right.RightBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoBoxes",
+          "types": [
+            "GenericRecords.Boxes"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoOptionalBoxes",
+          "types": [
+            "GenericRecords.OptionalBoxes"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoNats",
+          "types": [
+            "GenericRecords.Nats"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoOptionalNat",
+          "types": [
+            "GenericRecords.OptionalNat"
+          ]
+        }
+      ]
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

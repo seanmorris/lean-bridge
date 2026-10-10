@@ -1,0 +1,66 @@
+{
+  "bindingRuntimeIdentity": "6f4dbd1e2e112f4678734553d1c9bb8722fad3e6290adbff1ac46d05e5eff7dd",
+  "cases": {
+    "bytes1024": {
+      "directC": {
+        "iterations": 1000000,
+        "medianNs": 44.954457,
+        "minimumNs": 44.858007,
+        "samples": 9
+      },
+      "perl": {
+        "iterations": 100000,
+        "medianNs": 1545.10265999988,
+        "minimumNs": 1541.91560999948,
+        "samples": 9
+      },
+      "relativeCost": 34.37039980262424
+    },
+    "callback": {
+      "directC": {
+        "iterations": 1000000,
+        "medianNs": 310.358691,
+        "minimumNs": 308.55938,
+        "samples": 9
+      },
+      "perl": {
+        "iterations": 100000,
+        "medianNs": 4141.21628999965,
+        "minimumNs": 4138.08686000039,
+        "samples": 9
+      },
+      "relativeCost": 13.34332309707947
+    },
+    "scalar": {
+      "directC": {
+        "iterations": 1000000,
+        "medianNs": 2.815179,
+        "minimumNs": 2.792316,
+        "samples": 9
+      },
+      "perl": {
+        "iterations": 100000,
+        "medianNs": 878.395170000204,
+        "minimumNs": 876.636089999465,
+        "samples": 9
+      },
+      "relativeCost": 312.02107219477125
+    }
+  },
+  "consumer": "perl",
+  "methodology": "9 warmed samples; median ns/call; direct C invokes the same Lean shared library; setup excluded",
+  "nativeLibrarySha256": "f68dbebfe4cf5cd4e412868ad5d0c6fa7e164ecb9e1de727f1b64023ad0c25a7",
+  "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+  "schemaVersion": 1,
+  "startup": {
+    "medianMs": 698.900954,
+    "methodology": "5 fresh Perl processes; includes process launch, import, artifact hashing and runtime initialization; OS page cache is not cleared",
+    "samplesMs": [
+      696.604751,
+      698.900954,
+      698.620636,
+      699.344242,
+      699.134671
+    ]
+  }
+}

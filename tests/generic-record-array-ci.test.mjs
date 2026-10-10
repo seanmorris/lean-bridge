@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { assertHostedArrayArchive, assertHostedArrayExecution, assertHostedArrayReport, hostedArrayDirectory } from "./helpers/generic-record-array-hosted-evidence.mjs";
 
 const paths = [".github/workflows/consumer-matrix.yml", ".github/workflows/perl-consumer.yml"];
 const selections = [
@@ -99,4 +100,86 @@ test("Array CI requires the second Python floor and all four Perl configurations
 	const job = jobOf(sources[1], `          ${command("perl", "perl")}\n`);
 	for(const floor of ["5.36.3-threaded", "5.36.3-unthreaded", "5.38.2-threaded", "5.38.2-unthreaded"])
 		assert.throws(() => check([sources[0], sources[1].replace(job, job.replace(`          - ${floor}\n`, ""))]));
+});
+
+const hostedReceipt = async () => JSON.parse(await readFile(`${hostedArrayDirectory}/receipt.json`));
+const hostedJson = async name => JSON.parse(await readFile(`${hostedArrayDirectory}/${name}`));
+
+test("completed hosted Array rollout authenticates every ZIP, runtime, report and source snapshot", async () => {
+	assert.deepEqual(await assertHostedArrayArchive(await hostedReceipt()), {
+		groups: 12, arraySelections: 13, arrayObservations: 15
+		, genericReports: 39, genericObservations: 45, files: 150
+	});
+});
+
+test("hosted Array closure refuses forged receipts before reads and corrupt or missing originals", async () => {
+	const receipt = await hostedReceipt();
+	for(const mutate of [value => { value.revision = "0".repeat(40); }, value => { value.files.pop(); }, value => { value.groups.pop(); }, value => { value.scope.supportPromotion = true; }])
+	{
+		const changed = structuredClone(receipt); mutate(changed); let reads = 0;
+		await assert.rejects(assertHostedArrayArchive(changed, async () => { reads++; return Buffer.alloc(0); }));
+		assert.equal(reads, 0);
+	}
+	for(const suffix of ["c-family.zip", "job-113952963002.log", "python/generic-records/array-python312.json", "perl-5.38.2-unthreaded/generic-records/array-perl.json", "sources/tests/helpers/generic-record-arrays.mjs.txt"])
+	{
+		const target = `${hostedArrayDirectory}/${suffix}`;
+		await assert.rejects(assertHostedArrayArchive(receipt, async path => path === target ? Buffer.from("corrupted original") : readFile(path)));
+		await assert.rejects(assertHostedArrayArchive(receipt, async path => {
+			if(path === target) throw new Error("missing original");
+			return readFile(path);
+		}), /missing original/u);
+	}
+});
+
+test("hosted Array semantic audit rejects lost checks, provenance, isolation and nominal compiler controls", async () => {
+	const receipt = await hostedReceipt(), sources = new Map();
+	for(const file of receipt.files.filter(file => file.original.startsWith("git:")))
+		sources.set(file.original.slice(`git:${receipt.revision}:`.length), await readFile(file.path, "utf8"));
+	const source = path => { assert.ok(sources.has(path)); return sources.get(path); };
+	for(const group of receipt.groups) for(const file of group.reports.filter(item => item.member.startsWith("generic-records/array-")))
+	{
+		const name = file.member, data = await hostedJson(`${group.name}/${name}`);
+		const base = await hostedJson(`${group.name}/${name.replace("/array-", "/")}`);
+		const specialized = await hostedJson(`${group.name}/${name.replace("/array-", "/specialized-")}`);
+		const verify = value => assertHostedArrayReport(value, group.name, name, source, base, specialized);
+		verify(data);
+		const mutations = [
+			value => { value.authorRoots = 1; }, value => { value.reproducible = false; }
+			, value => { value.reports[0].checks--; }
+			, value => { value.reports[0].consumerSha256 = "0".repeat(64); }
+			, value => { value.reports[0].sourceRemovedBeforeInstallation = false; }
+			, value => { value.reports[0].offlineInstall = false; }
+			, value => { value.reports[0].specializations.pop(); }
+			, value => { value.reports[0].arrayExports.pop(); }
+			, value => { value.reports[0].cases.pop(); }
+			, value => { delete value.reports[0].instantiations["lean:GenericRecords.RowBox"]; }
+			, value => { value.archives = {}; }
+		];
+		if(group.name === "python") mutations.push(value => { value.reports[0].python.version = "3.10.0"; });
+		if(["rust", "dotnet", "jvm"].includes(group.name)) mutations.push(value => {
+			(value.reports[0].rustTypes ?? value.reports[0].managedTypes).rejected[0].diagnostics[0].code = "unrelated-error";
+		});
+		for(const mutate of mutations)
+		{ const changed = structuredClone(data); mutate(changed); assert.throws(() => verify(changed), name); }
+	}
+});
+
+test("hosted Array execution audit rejects skipped tests, wrong interpreters and failed compare steps", async () => {
+	const receipt = await hostedReceipt();
+	for(const group of receipt.groups)
+	{
+		const job = await hostedJson(`job-${group.jobId}.json`), log = await readFile(`${hostedArrayDirectory}/job-${group.jobId}.log`, "utf8");
+		assertHostedArrayExecution(group, job, log);
+		for(const changed of [log.replace("ok 12 - relocated source-free native packages carry Array fields", "not ok 12 - relocated source-free native packages carry Array fields")
+			, log.replaceAll("test -s build/generic-records/array-", "echo build/generic-records/array-")
+			, log + "\nLEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36\n"])
+			assert.throws(() => assertHostedArrayExecution(group, job, changed));
+		const failed = structuredClone(job); failed.conclusion = "failure";
+		assert.throws(() => assertHostedArrayExecution(group, failed, log));
+		const skipped = structuredClone(job);
+		for(const step of skipped.steps) if(step.conclusion === "success") step.conclusion = "skipped";
+		assert.throws(() => assertHostedArrayExecution(group, skipped, log));
+		if(group.name === "python") assert.throws(() => assertHostedArrayExecution(group, job, log.replaceAll("Python/3.12.15", "Python/3.11.17")));
+		if(group.name.startsWith("perl-")) assert.throws(() => assertHostedArrayExecution(group, job, log.replaceAll(`CORPUS_PERL_CONFIGURATION: ${group.name.slice(5)}`, "CORPUS_PERL_CONFIGURATION: wrong")));
+	}
 });

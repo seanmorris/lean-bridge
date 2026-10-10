@@ -1,0 +1,18 @@
+  CHECK(api::echo_nat_box(box).value == 4);
+  CHECK(api::echo_again(api::NatBoxAgain{4, 1}).value == 4);
+  CHECK(api::echo_text_box(api::TextBox{"text", 0}).value == "text");
+  CHECK(api::echo_left(api::LeftBox{5, 2}).value == 5);
+  CHECK(api::echo_right(api::RightBox{6, 3}).count == 3);
+  static_assert(!std::is_same_v<api::LeftBox, api::RightBox>);
+  static_assert(!std::is_same_v<api::LeftBox, api::NatBox>);
+  const api::Boxes specialized_boxes = api::echo_boxes(boxes);
+  CHECK(specialized_boxes.size() == 3 && specialized_boxes[2].value == (Nat(1) << 70));
+  CHECK(api::echo_boxes(api::Boxes{}).empty());
+  const api::OptionalBoxes specialized_optional = api::echo_optional_boxes(std::optional<api::Boxes>{boxes});
+  CHECK(specialized_optional && specialized_optional->size() == 3 && (*specialized_optional)[2].value == (Nat(1) << 70));
+  CHECK(!api::echo_optional_boxes(std::nullopt));
+  CHECK(api::echo_optional_boxes(std::optional<api::Boxes>{api::Boxes{}})->empty());
+  const api::Nats specialized_nats = api::echo_nats(api::Nats{0, Nat(1) << 70});
+  CHECK(specialized_nats.size() == 2 && specialized_nats[1] == (Nat(1) << 70) && api::echo_nats(api::Nats{}).empty());
+  const api::OptionalNat specialized_nat = api::echo_optional_nat(std::optional<Nat>{Nat(1) << 70});
+  CHECK(specialized_nat && *specialized_nat == (Nat(1) << 70) && !api::echo_optional_nat(std::nullopt));

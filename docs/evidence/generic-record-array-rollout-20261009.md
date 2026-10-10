@@ -12,6 +12,12 @@ its origin and the exact order of its type arguments.
 
 ## Retained executions
 
+The [hosted acceptance audit](generic-record-array-hosted-20261010.md) completed
+on 10 October at `ff71335`. It retains the successful distribution-package runs
+for every profile below, both Python versions and all four Perl configurations.
+The following table records the earlier local executions and their original
+runtime versions.
+
 | Consumer | Checks per execution | Retained report group |
 | --- | ---: | --- |
 | C | 2,078 | First archive |
@@ -61,8 +67,9 @@ The consumer workflows now run `tests/generic-record-arrays.test.mjs` for each
 native profile, with both Python floors and all four Perl configurations.
 Each selection requires its own nonempty `array-*.json` report and uploads it,
 including on job failure. The existing base generic-record and specialization
-tests remain mandatory. Workflow configuration is not a hosted pass; the first
-run of this integration must still complete successfully.
+tests remain mandatory. Workflow configuration is not a hosted pass; the
+[completed hosted audit](generic-record-array-hosted-20261010.md) verifies the
+successful executions and their original reports.
 
 The inventory attaches these reports as supplementary test evidence to the
 nine existing native generic observations. It preserves their installed-package

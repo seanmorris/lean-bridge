@@ -1,0 +1,576 @@
+{
+  "archives": {
+    "archives/genericrecords-1.0.0.jar": "31aacfe2fcf359addd6ec8e25edc04602affc268b9083c8637ae9bfd01cae82a",
+    "archives/genericrecords-1.0.0.pom": "db36a8879493eb18bc249f6773ef2a7e7333ec49870ec86de62a1c5de2f7f876"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "9e1a70c8cb28e122fb7e8a2a9ceb479c93061ea8143214305becb65e78050f76",
+      "checks": 1034,
+      "compilerFreePath": true,
+      "consumerSha256": "815c5d86424e0f723a635072a3dcbf78861518ab411a302f87d56a6677b8623f",
+      "instantiations": {
+        "BoxPair": {
+          "arguments": [
+            {
+              "id": "NatBox",
+              "kind": "named"
+            },
+            {
+              "id": "TextBox",
+              "kind": "named"
+            }
+          ],
+          "structure": "Pair"
+        },
+        "MarkerTag": {
+          "arguments": [
+            {
+              "id": "Marker",
+              "kind": "named"
+            }
+          ],
+          "fields": 1,
+          "structure": "Tag"
+        },
+        "MaybeBox": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBoxAgain": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "TaggedNat": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Tagged"
+        },
+        "TextBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            }
+          ],
+          "structure": "Box"
+        },
+        "WordPair": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Pair"
+        }
+      },
+      "managedTypes": {
+        "artifactSha256": "31aacfe2fcf359addd6ec8e25edc04602affc268b9083c8637ae9bfd01cae82a",
+        "artifactUnchanged": true,
+        "positiveCompiles": true,
+        "positiveSourceSha256": "276cda247775a33b720743b513dbe5f8bdd5735c42112a7d809460ead177a21e",
+        "rejected": [
+          {
+            "case": "alias",
+            "diagnostics": [
+              {
+                "code": "compiler.err.cant.apply.symbol",
+                "column": 4,
+                "file": "invalid-alias.java",
+                "line": 4,
+                "message": "kindname.method, bump, org.leanbridge.genericrecords.NatBox, org.leanbridge.genericrecords.NatBoxAgain, kindname.class, org.leanbridge.genericrecords.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: org.leanbridge.genericrecords.NatBoxAgain, org.leanbridge.genericrecords.NatBox))"
+              }
+            ],
+            "sourceSha256": "f7b167cf1e11ae7689d23ddb63ad7e47ccdc5348a182bf2e55faba548dc0a4f0"
+          },
+          {
+            "case": "field",
+            "diagnostics": [
+              {
+                "code": "compiler.err.cant.apply.symbol",
+                "column": 1,
+                "file": "invalid-field.java",
+                "line": 4,
+                "message": "kindname.constructor, NatBox, java.math.BigInteger,java.math.BigInteger, java.lang.String,java.math.BigInteger, kindname.record, org.leanbridge.genericrecords.NatBox, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: java.lang.String, java.math.BigInteger))"
+              }
+            ],
+            "sourceSha256": "fd9479f5a94f69f51761742cc1876da16a47d41d2e9d9f45546b2e6bd6213043"
+          },
+          {
+            "case": "missing",
+            "diagnostics": [
+              {
+                "code": "compiler.err.cant.apply.symbol",
+                "column": 1,
+                "file": "invalid-missing.java",
+                "line": 4,
+                "message": "kindname.constructor, NatBox, java.math.BigInteger,java.math.BigInteger, java.math.BigInteger, kindname.record, org.leanbridge.genericrecords.NatBox, (compiler.misc.arg.length.mismatch)"
+              }
+            ],
+            "sourceSha256": "cd47c3961d6440fc4d1ccb09d3f390207b5c2a73594965c14ce9c4a34bae60c6"
+          },
+          {
+            "case": "namespace",
+            "diagnostics": [
+              {
+                "code": "compiler.err.cant.apply.symbol",
+                "column": 4,
+                "file": "invalid-namespace.java",
+                "line": 4,
+                "message": "kindname.method, echoLeft, org.leanbridge.genericrecords.LeftBox, org.leanbridge.genericrecords.RightBox, kindname.class, org.leanbridge.genericrecords.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: org.leanbridge.genericrecords.RightBox, org.leanbridge.genericrecords.LeftBox))"
+              }
+            ],
+            "sourceSha256": "4366069524948c78c04a3d184fd76ec0dbf69aff79f2424b1a787460f3764a57"
+          },
+          {
+            "case": "specialized-field",
+            "diagnostics": [
+              {
+                "code": "compiler.err.cant.apply.symbol",
+                "column": 1,
+                "file": "invalid-specialized-field.java",
+                "line": 4,
+                "message": "kindname.constructor, LeftBox, java.math.BigInteger,java.math.BigInteger, java.lang.String,java.math.BigInteger, kindname.record, org.leanbridge.genericrecords.LeftBox, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: java.lang.String, java.math.BigInteger))"
+              }
+            ],
+            "sourceSha256": "b59017237b659a1df06c65fe45fe2dff3ffc3f011607702236fdf631e8a379aa"
+          },
+          {
+            "case": "specialized-missing",
+            "diagnostics": [
+              {
+                "code": "compiler.err.cant.apply.symbol",
+                "column": 1,
+                "file": "invalid-specialized-missing.java",
+                "line": 4,
+                "message": "kindname.constructor, RightBox, java.math.BigInteger,java.math.BigInteger, java.math.BigInteger, kindname.record, org.leanbridge.genericrecords.RightBox, (compiler.misc.arg.length.mismatch)"
+              }
+            ],
+            "sourceSha256": "2e080fbbd9b72a608aa4a989861469f746a39319b3233dc5745a74868b056648"
+          }
+        ],
+        "repeatExecutionAfterTypeRejection": true
+      },
+      "modelSha256": "7e3585a6c4e7cea3a547126fe10acb5fa4e3feef7e03c22c6fb33d378c92d117",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51492533,
+              "path": "archives/genericrecords-1.0.0.jar",
+              "sha256": "31aacfe2fcf359addd6ec8e25edc04602affc268b9083c8637ae9bfd01cae82a"
+            },
+            {
+              "bytes": 624,
+              "path": "archives/genericrecords-1.0.0.pom",
+              "sha256": "db36a8879493eb18bc249f6773ef2a7e7333ec49870ec86de62a1c5de2f7f876"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:genericrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "java",
+      "receiptSha256": "5fae39f21ab0ce6b454d388dd72d31a41997454368ba0ce69cbb7eef1548313a",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "78ba8840754c8f0980ed2318ecb2d4dd141e4842af7cb3ed8890fd6419f9471b",
+      "specializations": [
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoNatBox",
+          "types": [
+            "GenericRecords.NatBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoAgain",
+          "types": [
+            "GenericRecords.NatBoxAgain"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoTextBox",
+          "types": [
+            "GenericRecords.TextBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoLeft",
+          "types": [
+            "GenericRecords.Left.LeftBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoRight",
+          "types": [
+            "GenericRecords.Right.RightBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoBoxes",
+          "types": [
+            "GenericRecords.Boxes"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoOptionalBoxes",
+          "types": [
+            "GenericRecords.OptionalBoxes"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoNats",
+          "types": [
+            "GenericRecords.Nats"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoOptionalNat",
+          "types": [
+            "GenericRecords.OptionalNat"
+          ]
+        }
+      ]
+    },
+    {
+      "bindingIrSha256": "9e1a70c8cb28e122fb7e8a2a9ceb479c93061ea8143214305becb65e78050f76",
+      "checks": 1030,
+      "compilerFreePath": true,
+      "consumerSha256": "7d30f76e6b48f396ebbb3be657743dc18c6ef9acfd7d94e081d74bc7bbdc1fd5",
+      "instantiations": {
+        "BoxPair": {
+          "arguments": [
+            {
+              "id": "NatBox",
+              "kind": "named"
+            },
+            {
+              "id": "TextBox",
+              "kind": "named"
+            }
+          ],
+          "structure": "Pair"
+        },
+        "MarkerTag": {
+          "arguments": [
+            {
+              "id": "Marker",
+              "kind": "named"
+            }
+          ],
+          "fields": 1,
+          "structure": "Tag"
+        },
+        "MaybeBox": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBoxAgain": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "TaggedNat": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Tagged"
+        },
+        "TextBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            }
+          ],
+          "structure": "Box"
+        },
+        "WordPair": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Pair"
+        }
+      },
+      "managedTypes": {
+        "artifactSha256": "31aacfe2fcf359addd6ec8e25edc04602affc268b9083c8637ae9bfd01cae82a",
+        "artifactUnchanged": true,
+        "positiveCompiles": true,
+        "positiveSourceSha256": "6fa5a7dff163490d27fd4b0febaa9374c91a2686e05025067996e904055e3a81",
+        "rejected": [
+          {
+            "case": "alias",
+            "diagnostics": [
+              {
+                "code": "ARGUMENT_TYPE_MISMATCH",
+                "column": 10,
+                "file": "invalid-alias.kt",
+                "line": 4,
+                "message": "Argument type mismatch: actual type is 'NatBoxAgain', but 'NatBox!' was expected."
+              }
+            ],
+            "sourceSha256": "c267e2145c9ed6447c6098465ffbe97a39dbcb64fdc2f4ea581eaa9a3baeb9a4"
+          },
+          {
+            "case": "field",
+            "diagnostics": [
+              {
+                "code": "ARGUMENT_TYPE_MISMATCH",
+                "column": 8,
+                "file": "invalid-field.kt",
+                "line": 4,
+                "message": "Argument type mismatch: actual type is 'String', but 'BigInteger!' was expected."
+              }
+            ],
+            "sourceSha256": "7dba5c5aee8e2f46e24c5ccb4bb55f2565f773265c33a9ae0de7fa62f1ced9df"
+          },
+          {
+            "case": "missing",
+            "diagnostics": [
+              {
+                "code": "NO_VALUE_FOR_PARAMETER",
+                "column": 8,
+                "file": "invalid-missing.kt",
+                "line": 4,
+                "message": "No value passed for parameter 'count'."
+              }
+            ],
+            "sourceSha256": "e079e036493ea532b0f8839762b339dec0a3320d2c42a13cec0a3016814bb455"
+          },
+          {
+            "case": "namespace",
+            "diagnostics": [
+              {
+                "code": "ARGUMENT_TYPE_MISMATCH",
+                "column": 14,
+                "file": "invalid-namespace.kt",
+                "line": 4,
+                "message": "Argument type mismatch: actual type is 'RightBox', but 'LeftBox!' was expected."
+              }
+            ],
+            "sourceSha256": "b6059f97435bddd0b1a7164b3e4e45c2c5943ee009dd13461292abd8800ebbc5"
+          },
+          {
+            "case": "specialized-field",
+            "diagnostics": [
+              {
+                "code": "ARGUMENT_TYPE_MISMATCH",
+                "column": 9,
+                "file": "invalid-specialized-field.kt",
+                "line": 4,
+                "message": "Argument type mismatch: actual type is 'String', but 'BigInteger!' was expected."
+              }
+            ],
+            "sourceSha256": "e323105a9207237973de60ced2c6ecb95008cdd35923ddef71c318955e71c6a4"
+          },
+          {
+            "case": "specialized-missing",
+            "diagnostics": [
+              {
+                "code": "NO_VALUE_FOR_PARAMETER",
+                "column": 10,
+                "file": "invalid-specialized-missing.kt",
+                "line": 4,
+                "message": "No value passed for parameter 'count'."
+              }
+            ],
+            "sourceSha256": "cf499740f18fb40c9f23801533f380b63826afcc7e24a0b1af9c923537388099"
+          }
+        ],
+        "repeatExecutionAfterTypeRejection": true
+      },
+      "modelSha256": "7e3585a6c4e7cea3a547126fe10acb5fa4e3feef7e03c22c6fb33d378c92d117",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51492533,
+              "path": "archives/genericrecords-1.0.0.jar",
+              "sha256": "31aacfe2fcf359addd6ec8e25edc04602affc268b9083c8637ae9bfd01cae82a"
+            },
+            {
+              "bytes": 624,
+              "path": "archives/genericrecords-1.0.0.pom",
+              "sha256": "db36a8879493eb18bc249f6773ef2a7e7333ec49870ec86de62a1c5de2f7f876"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:genericrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "kotlin",
+      "receiptSha256": "5fae39f21ab0ce6b454d388dd72d31a41997454368ba0ce69cbb7eef1548313a",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "78ba8840754c8f0980ed2318ecb2d4dd141e4842af7cb3ed8890fd6419f9471b",
+      "specializations": [
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoNatBox",
+          "types": [
+            "GenericRecords.NatBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoAgain",
+          "types": [
+            "GenericRecords.NatBoxAgain"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoTextBox",
+          "types": [
+            "GenericRecords.TextBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoLeft",
+          "types": [
+            "GenericRecords.Left.LeftBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoRight",
+          "types": [
+            "GenericRecords.Right.RightBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoBoxes",
+          "types": [
+            "GenericRecords.Boxes"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoOptionalBoxes",
+          "types": [
+            "GenericRecords.OptionalBoxes"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoNats",
+          "types": [
+            "GenericRecords.Nats"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoOptionalNat",
+          "types": [
+            "GenericRecords.OptionalNat"
+          ]
+        }
+      ]
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}
