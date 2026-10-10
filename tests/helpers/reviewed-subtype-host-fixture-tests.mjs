@@ -31,6 +31,9 @@ test("reviewed host fixture preserves checked types, constructor choices and all
 	assert.equal(review.declarations.length, 12);
 	const previousByte = old.declarations.find(item => item.name === "byte");
 	const portableByte = review.declarations.find(item => item.name === "byteValue");
+	assert.equal(portableByte.id, "lean:Subtypes.byteValue");
+	assert.equal(portableByte.overloadKey, "Subtypes.byteValue");
+	assert.equal(portableByte.source.declaration, "Subtypes.byteValue");
 	assert.deepEqual(portableByte.parameters, previousByte.parameters);
 	assert.deepEqual(portableByte.result, previousByte.result);
 	assert.deepEqual(portableByte.source.extensions, previousByte.source.extensions);

@@ -24,6 +24,7 @@ export const reviewedSubtypeHostIr = () => {
 	assert.ok(declaration);
 	declaration.id = "lean:Subtypes.byteValue";
 	declaration.name = "byteValue";
+	declaration.overloadKey = "Subtypes.byteValue";
 	declaration.source.declaration = "Subtypes.byteValue";
 	return review;
 };
