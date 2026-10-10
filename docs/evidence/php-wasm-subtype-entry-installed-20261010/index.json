@@ -1,0 +1,691 @@
+{
+  "schemaVersion": 1,
+  "producer": "7f3ae5573d224153ce9f182f13833760d7196301",
+  "scope": "Separate instrumented ordinary/reviewed PHP-Wasm Subtype installed probes. Original reports, reversible C inputs, compiler records and selected producer sources; not a complete toolchain/input closure or unmodified-release measurement. Package binaries and object bytes were not retained by the original producer; their measured hashes remain in reports.",
+  "files": [
+    {
+      "path": "producer/src/build/native-component.mjs.txt",
+      "originalPath": "/app/src/build/native-component.mjs",
+      "bytes": 12579,
+      "sha256": "2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "producer/src/build/php-wasm-copied-component.mjs.txt",
+      "originalPath": "/app/src/build/php-wasm-copied-component.mjs",
+      "bytes": 16599,
+      "sha256": "1820fa19a86f827e378334e847cebe9511863401b08a5e9c2e60c72bf09cc7ae",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "producer/src/build/process-runner.mjs.txt",
+      "originalPath": "/app/src/build/process-runner.mjs",
+      "bytes": 2668,
+      "sha256": "f1c9d51f97abdbb1fcf0ff04ee5e70b20ffce770ffe6ca7a843d7e35877fdf36",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "producer/src/release/package-set-assembly.mjs.txt",
+      "originalPath": "/app/src/release/package-set-assembly.mjs",
+      "bytes": 6020,
+      "sha256": "a4b6c8375b0962c2c4e071c0d38ef30348ad672e1256feeb47b2c16829f71b9c",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "producer/src/release/package-set-receipt.mjs.txt",
+      "originalPath": "/app/src/release/package-set-receipt.mjs",
+      "bytes": 14878,
+      "sha256": "d0b945554b03e9d0f93149b12ddf808c33243cbb0ff5495a7a8a68e683fc71ed",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "producer/src/release/php-wasm-copied-package.mjs.txt",
+      "originalPath": "/app/src/release/php-wasm-copied-package.mjs",
+      "bytes": 30851,
+      "sha256": "56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "producer/tests/fixtures/onboarding/native-subtype/Subtypes.lean.txt",
+      "originalPath": "/app/tests/fixtures/onboarding/native-subtype/Subtypes.lean",
+      "bytes": 2276,
+      "sha256": "bc6065620ea7ba38b270362ae7aa93feb68e8e316b4c0fca196477f62103175c",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "producer/tests/fixtures/php-wasm-subtype-entry/driver.mjs.txt",
+      "originalPath": "/app/tests/fixtures/php-wasm-subtype-entry/driver.mjs",
+      "bytes": 3896,
+      "sha256": "b442c9e6712e631cca243bc56284216bb45138ace5d5cf4c4a066c7014bfab24",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "producer/tests/fixtures/subtype-consumers/php-native.php.txt",
+      "originalPath": "/app/tests/fixtures/subtype-consumers/php-native.php",
+      "bytes": 3214,
+      "sha256": "89f5c51bae7f7111a1ad937b2116b5fe3b2ec69668fbf650cde2279cff8fd7a7",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "producer/tests/fixtures/type-corpus/consumers/php-wasm-browser.mjs.txt",
+      "originalPath": "/app/tests/fixtures/type-corpus/consumers/php-wasm-browser.mjs",
+      "bytes": 659,
+      "sha256": "131bb94535ea817056a1218fd74a7a77ba21675e3e7abe4bd86ab75057cc4301",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "producer/tests/fixtures/type-corpus/consumers/php-wasm-node.mjs.txt",
+      "originalPath": "/app/tests/fixtures/type-corpus/consumers/php-wasm-node.mjs",
+      "bytes": 1156,
+      "sha256": "49fb787db69cff257d85dde2275449a0010897c73fc6e928e371859662ec960a",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "producer/tests/fixtures/type-corpus/consumers/php-wasm.mjs.txt",
+      "originalPath": "/app/tests/fixtures/type-corpus/consumers/php-wasm.mjs",
+      "bytes": 2071,
+      "sha256": "e881e52e87a80cb844c6482670b36c98269d6fb79920f39b56b0ce8e2d1d7d78",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "producer/tests/helpers/brick-math.mjs.txt",
+      "originalPath": "/app/tests/helpers/brick-math.mjs",
+      "bytes": 3926,
+      "sha256": "ca360a3ecce5717a4d495459cfb09d6dba0f075393a28c91d2f725a2c8691eb6",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "producer/tests/helpers/copied-fixture-install.mjs.txt",
+      "originalPath": "/app/tests/helpers/copied-fixture-install.mjs",
+      "bytes": 15505,
+      "sha256": "dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "producer/tests/helpers/native-subtype-install.mjs.txt",
+      "originalPath": "/app/tests/helpers/native-subtype-install.mjs",
+      "bytes": 4083,
+      "sha256": "2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "producer/tests/helpers/package-set.mjs.txt",
+      "originalPath": "/app/tests/helpers/package-set.mjs",
+      "bytes": 5283,
+      "sha256": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "producer/tests/helpers/php-wasm-fin-fixtures.mjs.txt",
+      "originalPath": "/app/tests/helpers/php-wasm-fin-fixtures.mjs",
+      "bytes": 9651,
+      "sha256": "a85cb80188630dd4355f1ca97ea7c52c741f999652ca4d1e24f8e4b7972c6e16",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "producer/tests/helpers/php-wasm-subtype-entry-build.mjs.txt",
+      "originalPath": "/app/tests/helpers/php-wasm-subtype-entry-build.mjs",
+      "bytes": 9490,
+      "sha256": "e38618aa7ee9c5bbf7988e2a763cf385bccc22da3208b201ec89917356d3694f",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "producer/tests/helpers/php-wasm-subtype-entry-c.mjs.txt",
+      "originalPath": "/app/tests/helpers/php-wasm-subtype-entry-c.mjs",
+      "bytes": 4665,
+      "sha256": "4a363c286ca9528e7b27e6b53a12cdfacb9ce6f36548e518cc25252093b5cef5",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "producer/tests/helpers/php-wasm-subtype-entry-cases.mjs.txt",
+      "originalPath": "/app/tests/helpers/php-wasm-subtype-entry-cases.mjs",
+      "bytes": 2862,
+      "sha256": "d51f90ddc7abfafac6fdce6b385a8aac54013af22c59dce702f05a9abeb016ca",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "producer/tests/helpers/php-wasm-subtype-entry-installed-tests.mjs.txt",
+      "originalPath": "/app/tests/helpers/php-wasm-subtype-entry-installed-tests.mjs",
+      "bytes": 7846,
+      "sha256": "f55a8e27f0aea315fb2c8b9c0c1ad876a0bb17c712a3b773559f9645206021eb",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "producer/tests/helpers/php-wasm-subtype-entry-trace.mjs.txt",
+      "originalPath": "/app/tests/helpers/php-wasm-subtype-entry-trace.mjs",
+      "bytes": 2551,
+      "sha256": "2324b8766ccbcffda2005d7737981380f747afe73c8cb153fc9ede53a18e3666",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "producer/tests/helpers/php-wasm-subtype-fixture.mjs.txt",
+      "originalPath": "/app/tests/helpers/php-wasm-subtype-fixture.mjs",
+      "bytes": 4556,
+      "sha256": "77043084402799ce0f7a413263231ff58438030b9298bf624ad6838488252cb3",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "producer/tests/helpers/reviewed-subtype-fixture.mjs.txt",
+      "originalPath": "/app/tests/helpers/reviewed-subtype-fixture.mjs",
+      "bytes": 3179,
+      "sha256": "98f50aa4b5075142bb29f0938827e0a5b0fbd0713eb0b76b374db64fb550a197",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "producer/tests/helpers/reviewed-subtype-installed-fixture.mjs.txt",
+      "originalPath": "/app/tests/helpers/reviewed-subtype-installed-fixture.mjs",
+      "bytes": 6875,
+      "sha256": "81ccd2fa3d62bc9d7e4061898dc262d8d5276e71e42ea142ac2f63b2317e781d",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "producer/tests/helpers/type-corpus-php-wasm-browser.mjs.txt",
+      "originalPath": "/app/tests/helpers/type-corpus-php-wasm-browser.mjs",
+      "bytes": 3987,
+      "sha256": "2a561bf2aefc1820954ed2ed14c80ba774d253b461d1b59809c1b494fb1e3e8a",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "producer/tests/helpers/type-corpus-php-wasm-install.mjs.txt",
+      "originalPath": "/app/tests/helpers/type-corpus-php-wasm-install.mjs",
+      "bytes": 15343,
+      "sha256": "09e04f1fb6b914a58a529382ac1d888b6559c63406e4d546cd578a806b8de8b7",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "producer/tests/helpers/type-corpus-php.mjs.txt",
+      "originalPath": "/app/tests/helpers/type-corpus-php.mjs",
+      "bytes": 19240,
+      "sha256": "46f9428900f9a81c536f3d46accb633838d2778e43e62b5f78f84dafeeecc502",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "producer/tests/helpers/type-corpus-reviewed-ir.mjs.txt",
+      "originalPath": "/app/tests/helpers/type-corpus-reviewed-ir.mjs",
+      "bytes": 3557,
+      "sha256": "621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "producer/tests/php-wasm-fin.test.mjs.txt",
+      "originalPath": "/app/tests/php-wasm-fin.test.mjs",
+      "bytes": 21655,
+      "sha256": "f6bd80f0acb5a95e5d0470cd0ae1c1e897d50173d767b6a4f4e61cea27f93a1f",
+      "sourceRevision": "7f3ae5573d224153ce9f182f13833760d7196301"
+    },
+    {
+      "path": "r1/ordinary/build-0/c-inputs/1-Subtypes.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-0/c-inputs/1-Subtypes.c",
+      "bytes": 14191,
+      "sha256": "35e5a115ad62460e8e505ee24318ac55bce5ee85fbdbc2f611db3077e103dd59"
+    },
+    {
+      "path": "r1/ordinary/build-0/c-inputs/2-adapter.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-0/c-inputs/2-adapter.c",
+      "bytes": 29725,
+      "sha256": "f9cb07dd248efdb60a5025aedd09b0e075300e731449f8ce262db7fe66d3d6c5"
+    },
+    {
+      "path": "r1/ordinary/build-0/c-inputs/3-provider.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-0/c-inputs/3-provider.c",
+      "bytes": 26091,
+      "sha256": "bceeba036563a92976c983cd1d7fa2d1f8ca6502513f25ebfba88993a5b2c66b"
+    },
+    {
+      "path": "r1/ordinary/build-0/c-inputs/4-callbacks.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-0/c-inputs/4-callbacks.c",
+      "bytes": 63,
+      "sha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c"
+    },
+    {
+      "path": "r1/ordinary/build-0/c-inputs/5-width.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-0/c-inputs/5-width.c",
+      "bytes": 236,
+      "sha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e"
+    },
+    {
+      "path": "r1/ordinary/build-0/c-inputs/6-subtypes.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-0/c-inputs/6-subtypes.c",
+      "bytes": 11924,
+      "sha256": "b4dd529ec97ff0226f57d1835289eba3348104f1daf777bb5932f2ea60ad02ff"
+    },
+    {
+      "path": "r1/ordinary/build-0/c-inputs/7-lb_subtypes_c28d025face37606.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-0/c-inputs/7-lb_subtypes_c28d025face37606.c",
+      "bytes": 43600,
+      "sha256": "d5a04bddd37fe7ff0a86d1be3cd30bbddacb9a34fb0e33c7a340661a87ee9355"
+    },
+    {
+      "path": "r1/ordinary/build-0/c-probes/1-Subtypes.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-0/c-probes/1-Subtypes.c",
+      "bytes": 15573,
+      "sha256": "15e5d88e874f9b8c0884f770217b5abd2a6db0b122ab74e0a3a1df349969e274"
+    },
+    {
+      "path": "r1/ordinary/build-0/c-probes/2-adapter.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-0/c-probes/2-adapter.c",
+      "bytes": 31529,
+      "sha256": "a2ca97377e2f83638b902771f06838985f7ec37077c5fae93e764060d27be14b"
+    },
+    {
+      "path": "r1/ordinary/build-0/c-probes/3-provider.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-0/c-probes/3-provider.c",
+      "bytes": 26091,
+      "sha256": "bceeba036563a92976c983cd1d7fa2d1f8ca6502513f25ebfba88993a5b2c66b"
+    },
+    {
+      "path": "r1/ordinary/build-0/c-probes/4-callbacks.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-0/c-probes/4-callbacks.c",
+      "bytes": 63,
+      "sha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c"
+    },
+    {
+      "path": "r1/ordinary/build-0/c-probes/5-width.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-0/c-probes/5-width.c",
+      "bytes": 236,
+      "sha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e"
+    },
+    {
+      "path": "r1/ordinary/build-0/c-probes/6-subtypes.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-0/c-probes/6-subtypes.c",
+      "bytes": 14002,
+      "sha256": "81e019d535782fb4b3a758246a13c215337140562b0d9d327e150422c7e32067"
+    },
+    {
+      "path": "r1/ordinary/build-0/c-probes/7-lb_subtypes_c28d025face37606.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-0/c-probes/7-lb_subtypes_c28d025face37606.c",
+      "bytes": 43600,
+      "sha256": "d5a04bddd37fe7ff0a86d1be3cd30bbddacb9a34fb0e33c7a340661a87ee9355"
+    },
+    {
+      "path": "r1/ordinary/build-0/commands.json",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-0/commands.json",
+      "bytes": 58020,
+      "sha256": "14c3b8df5b0971f323f8079921c1744fa8194d5a666897bdd03141e6a585bcac"
+    },
+    {
+      "path": "r1/ordinary/build-0/model.json",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-0/model.json",
+      "bytes": 65877,
+      "sha256": "a4ed83e59769ac47d5a41ee84938ceca13f1f7e20522355d9e2cf4e3e8ab4f05"
+    },
+    {
+      "path": "r1/ordinary/build-0/observation.json",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-0/observation.json",
+      "bytes": 86983,
+      "sha256": "39a4cd6863668deb490bb78e014d154a3a0eeb94f01d4128abd0acca13c7953d"
+    },
+    {
+      "path": "r1/ordinary/build-0/source-probe.json",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-0/source-probe.json",
+      "bytes": 9023,
+      "sha256": "ae88cac0f5c4a504616721514ee28602fe7ca9fa163d337aafa86b877d676a05"
+    },
+    {
+      "path": "r1/ordinary/build-1/c-inputs/1-Subtypes.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-1/c-inputs/1-Subtypes.c",
+      "bytes": 14191,
+      "sha256": "35e5a115ad62460e8e505ee24318ac55bce5ee85fbdbc2f611db3077e103dd59"
+    },
+    {
+      "path": "r1/ordinary/build-1/c-inputs/2-adapter.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-1/c-inputs/2-adapter.c",
+      "bytes": 29725,
+      "sha256": "f9cb07dd248efdb60a5025aedd09b0e075300e731449f8ce262db7fe66d3d6c5"
+    },
+    {
+      "path": "r1/ordinary/build-1/c-inputs/3-provider.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-1/c-inputs/3-provider.c",
+      "bytes": 26091,
+      "sha256": "bceeba036563a92976c983cd1d7fa2d1f8ca6502513f25ebfba88993a5b2c66b"
+    },
+    {
+      "path": "r1/ordinary/build-1/c-inputs/4-callbacks.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-1/c-inputs/4-callbacks.c",
+      "bytes": 63,
+      "sha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c"
+    },
+    {
+      "path": "r1/ordinary/build-1/c-inputs/5-width.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-1/c-inputs/5-width.c",
+      "bytes": 236,
+      "sha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e"
+    },
+    {
+      "path": "r1/ordinary/build-1/c-inputs/6-subtypes.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-1/c-inputs/6-subtypes.c",
+      "bytes": 11924,
+      "sha256": "b4dd529ec97ff0226f57d1835289eba3348104f1daf777bb5932f2ea60ad02ff"
+    },
+    {
+      "path": "r1/ordinary/build-1/c-inputs/7-lb_subtypes_c28d025face37606.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-1/c-inputs/7-lb_subtypes_c28d025face37606.c",
+      "bytes": 43600,
+      "sha256": "d5a04bddd37fe7ff0a86d1be3cd30bbddacb9a34fb0e33c7a340661a87ee9355"
+    },
+    {
+      "path": "r1/ordinary/build-1/c-probes/1-Subtypes.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-1/c-probes/1-Subtypes.c",
+      "bytes": 15573,
+      "sha256": "15e5d88e874f9b8c0884f770217b5abd2a6db0b122ab74e0a3a1df349969e274"
+    },
+    {
+      "path": "r1/ordinary/build-1/c-probes/2-adapter.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-1/c-probes/2-adapter.c",
+      "bytes": 31529,
+      "sha256": "a2ca97377e2f83638b902771f06838985f7ec37077c5fae93e764060d27be14b"
+    },
+    {
+      "path": "r1/ordinary/build-1/c-probes/3-provider.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-1/c-probes/3-provider.c",
+      "bytes": 26091,
+      "sha256": "bceeba036563a92976c983cd1d7fa2d1f8ca6502513f25ebfba88993a5b2c66b"
+    },
+    {
+      "path": "r1/ordinary/build-1/c-probes/4-callbacks.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-1/c-probes/4-callbacks.c",
+      "bytes": 63,
+      "sha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c"
+    },
+    {
+      "path": "r1/ordinary/build-1/c-probes/5-width.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-1/c-probes/5-width.c",
+      "bytes": 236,
+      "sha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e"
+    },
+    {
+      "path": "r1/ordinary/build-1/c-probes/6-subtypes.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-1/c-probes/6-subtypes.c",
+      "bytes": 14002,
+      "sha256": "81e019d535782fb4b3a758246a13c215337140562b0d9d327e150422c7e32067"
+    },
+    {
+      "path": "r1/ordinary/build-1/c-probes/7-lb_subtypes_c28d025face37606.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-1/c-probes/7-lb_subtypes_c28d025face37606.c",
+      "bytes": 43600,
+      "sha256": "d5a04bddd37fe7ff0a86d1be3cd30bbddacb9a34fb0e33c7a340661a87ee9355"
+    },
+    {
+      "path": "r1/ordinary/build-1/commands.json",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-1/commands.json",
+      "bytes": 58020,
+      "sha256": "a9730218d8010539b67abd7442605212ff2dfe726e6b8304492133bb3d161915"
+    },
+    {
+      "path": "r1/ordinary/build-1/model.json",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-1/model.json",
+      "bytes": 65877,
+      "sha256": "a4ed83e59769ac47d5a41ee84938ceca13f1f7e20522355d9e2cf4e3e8ab4f05"
+    },
+    {
+      "path": "r1/ordinary/build-1/observation.json",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-1/observation.json",
+      "bytes": 86983,
+      "sha256": "fa8f66cc785044cb9511a57cd4580e881bb7dff9a5d24a085a81e7c688639839"
+    },
+    {
+      "path": "r1/ordinary/build-1/source-probe.json",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/build-1/source-probe.json",
+      "bytes": 9023,
+      "sha256": "ae88cac0f5c4a504616721514ee28602fe7ca9fa163d337aafa86b877d676a05"
+    },
+    {
+      "path": "r1/ordinary/report.json",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/ordinary/report.json",
+      "bytes": 6963624,
+      "sha256": "3116b66a25dc17ffd56e093927b88cde6add6dfb864a36e172514ab413008718"
+    },
+    {
+      "path": "r1/reviewed/build-0/c-inputs/1-Subtypes.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-0/c-inputs/1-Subtypes.c",
+      "bytes": 14191,
+      "sha256": "35e5a115ad62460e8e505ee24318ac55bce5ee85fbdbc2f611db3077e103dd59"
+    },
+    {
+      "path": "r1/reviewed/build-0/c-inputs/2-adapter.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-0/c-inputs/2-adapter.c",
+      "bytes": 29725,
+      "sha256": "f9cb07dd248efdb60a5025aedd09b0e075300e731449f8ce262db7fe66d3d6c5"
+    },
+    {
+      "path": "r1/reviewed/build-0/c-inputs/3-provider.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-0/c-inputs/3-provider.c",
+      "bytes": 26091,
+      "sha256": "bceeba036563a92976c983cd1d7fa2d1f8ca6502513f25ebfba88993a5b2c66b"
+    },
+    {
+      "path": "r1/reviewed/build-0/c-inputs/4-callbacks.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-0/c-inputs/4-callbacks.c",
+      "bytes": 63,
+      "sha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c"
+    },
+    {
+      "path": "r1/reviewed/build-0/c-inputs/5-width.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-0/c-inputs/5-width.c",
+      "bytes": 236,
+      "sha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e"
+    },
+    {
+      "path": "r1/reviewed/build-0/c-inputs/6-subtypes.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-0/c-inputs/6-subtypes.c",
+      "bytes": 11924,
+      "sha256": "b4dd529ec97ff0226f57d1835289eba3348104f1daf777bb5932f2ea60ad02ff"
+    },
+    {
+      "path": "r1/reviewed/build-0/c-inputs/7-lb_subtypes_c786e4fda4ba9960.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-0/c-inputs/7-lb_subtypes_c786e4fda4ba9960.c",
+      "bytes": 43600,
+      "sha256": "ea3afad3426426623fa0c07ebe39d55fa2352d9149ff1d73b625989019f4d854"
+    },
+    {
+      "path": "r1/reviewed/build-0/c-probes/1-Subtypes.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-0/c-probes/1-Subtypes.c",
+      "bytes": 15573,
+      "sha256": "15e5d88e874f9b8c0884f770217b5abd2a6db0b122ab74e0a3a1df349969e274"
+    },
+    {
+      "path": "r1/reviewed/build-0/c-probes/2-adapter.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-0/c-probes/2-adapter.c",
+      "bytes": 31529,
+      "sha256": "a2ca97377e2f83638b902771f06838985f7ec37077c5fae93e764060d27be14b"
+    },
+    {
+      "path": "r1/reviewed/build-0/c-probes/3-provider.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-0/c-probes/3-provider.c",
+      "bytes": 26091,
+      "sha256": "bceeba036563a92976c983cd1d7fa2d1f8ca6502513f25ebfba88993a5b2c66b"
+    },
+    {
+      "path": "r1/reviewed/build-0/c-probes/4-callbacks.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-0/c-probes/4-callbacks.c",
+      "bytes": 63,
+      "sha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c"
+    },
+    {
+      "path": "r1/reviewed/build-0/c-probes/5-width.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-0/c-probes/5-width.c",
+      "bytes": 236,
+      "sha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e"
+    },
+    {
+      "path": "r1/reviewed/build-0/c-probes/6-subtypes.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-0/c-probes/6-subtypes.c",
+      "bytes": 14002,
+      "sha256": "81e019d535782fb4b3a758246a13c215337140562b0d9d327e150422c7e32067"
+    },
+    {
+      "path": "r1/reviewed/build-0/c-probes/7-lb_subtypes_c786e4fda4ba9960.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-0/c-probes/7-lb_subtypes_c786e4fda4ba9960.c",
+      "bytes": 43600,
+      "sha256": "ea3afad3426426623fa0c07ebe39d55fa2352d9149ff1d73b625989019f4d854"
+    },
+    {
+      "path": "r1/reviewed/build-0/commands.json",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-0/commands.json",
+      "bytes": 58020,
+      "sha256": "26a0c6c919473a579b821509be922f3bc7b24fad8c2bd49b1cb32717bf367a04"
+    },
+    {
+      "path": "r1/reviewed/build-0/model.json",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-0/model.json",
+      "bytes": 82979,
+      "sha256": "b8a0db181f17da9d4be9c5a4b01f2eb1231d941896e0de4cf3503b0d463a6306"
+    },
+    {
+      "path": "r1/reviewed/build-0/observation.json",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-0/observation.json",
+      "bytes": 104626,
+      "sha256": "4589b5fd2fa9e7d247eccd7cbd73f779dec7aff0def4e7b482fc278575b6c722"
+    },
+    {
+      "path": "r1/reviewed/build-0/source-probe.json",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-0/source-probe.json",
+      "bytes": 9023,
+      "sha256": "ae88cac0f5c4a504616721514ee28602fe7ca9fa163d337aafa86b877d676a05"
+    },
+    {
+      "path": "r1/reviewed/build-1/c-inputs/1-Subtypes.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-1/c-inputs/1-Subtypes.c",
+      "bytes": 14191,
+      "sha256": "35e5a115ad62460e8e505ee24318ac55bce5ee85fbdbc2f611db3077e103dd59"
+    },
+    {
+      "path": "r1/reviewed/build-1/c-inputs/2-adapter.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-1/c-inputs/2-adapter.c",
+      "bytes": 29725,
+      "sha256": "f9cb07dd248efdb60a5025aedd09b0e075300e731449f8ce262db7fe66d3d6c5"
+    },
+    {
+      "path": "r1/reviewed/build-1/c-inputs/3-provider.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-1/c-inputs/3-provider.c",
+      "bytes": 26091,
+      "sha256": "bceeba036563a92976c983cd1d7fa2d1f8ca6502513f25ebfba88993a5b2c66b"
+    },
+    {
+      "path": "r1/reviewed/build-1/c-inputs/4-callbacks.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-1/c-inputs/4-callbacks.c",
+      "bytes": 63,
+      "sha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c"
+    },
+    {
+      "path": "r1/reviewed/build-1/c-inputs/5-width.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-1/c-inputs/5-width.c",
+      "bytes": 236,
+      "sha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e"
+    },
+    {
+      "path": "r1/reviewed/build-1/c-inputs/6-subtypes.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-1/c-inputs/6-subtypes.c",
+      "bytes": 11924,
+      "sha256": "b4dd529ec97ff0226f57d1835289eba3348104f1daf777bb5932f2ea60ad02ff"
+    },
+    {
+      "path": "r1/reviewed/build-1/c-inputs/7-lb_subtypes_c786e4fda4ba9960.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-1/c-inputs/7-lb_subtypes_c786e4fda4ba9960.c",
+      "bytes": 43600,
+      "sha256": "ea3afad3426426623fa0c07ebe39d55fa2352d9149ff1d73b625989019f4d854"
+    },
+    {
+      "path": "r1/reviewed/build-1/c-probes/1-Subtypes.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-1/c-probes/1-Subtypes.c",
+      "bytes": 15573,
+      "sha256": "15e5d88e874f9b8c0884f770217b5abd2a6db0b122ab74e0a3a1df349969e274"
+    },
+    {
+      "path": "r1/reviewed/build-1/c-probes/2-adapter.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-1/c-probes/2-adapter.c",
+      "bytes": 31529,
+      "sha256": "a2ca97377e2f83638b902771f06838985f7ec37077c5fae93e764060d27be14b"
+    },
+    {
+      "path": "r1/reviewed/build-1/c-probes/3-provider.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-1/c-probes/3-provider.c",
+      "bytes": 26091,
+      "sha256": "bceeba036563a92976c983cd1d7fa2d1f8ca6502513f25ebfba88993a5b2c66b"
+    },
+    {
+      "path": "r1/reviewed/build-1/c-probes/4-callbacks.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-1/c-probes/4-callbacks.c",
+      "bytes": 63,
+      "sha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c"
+    },
+    {
+      "path": "r1/reviewed/build-1/c-probes/5-width.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-1/c-probes/5-width.c",
+      "bytes": 236,
+      "sha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e"
+    },
+    {
+      "path": "r1/reviewed/build-1/c-probes/6-subtypes.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-1/c-probes/6-subtypes.c",
+      "bytes": 14002,
+      "sha256": "81e019d535782fb4b3a758246a13c215337140562b0d9d327e150422c7e32067"
+    },
+    {
+      "path": "r1/reviewed/build-1/c-probes/7-lb_subtypes_c786e4fda4ba9960.c",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-1/c-probes/7-lb_subtypes_c786e4fda4ba9960.c",
+      "bytes": 43600,
+      "sha256": "ea3afad3426426623fa0c07ebe39d55fa2352d9149ff1d73b625989019f4d854"
+    },
+    {
+      "path": "r1/reviewed/build-1/commands.json",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-1/commands.json",
+      "bytes": 58020,
+      "sha256": "3bd848b7565559b2e9914060a32b09552a2e0275b8f12c985c4f2df7923c8249"
+    },
+    {
+      "path": "r1/reviewed/build-1/model.json",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-1/model.json",
+      "bytes": 82979,
+      "sha256": "b8a0db181f17da9d4be9c5a4b01f2eb1231d941896e0de4cf3503b0d463a6306"
+    },
+    {
+      "path": "r1/reviewed/build-1/observation.json",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-1/observation.json",
+      "bytes": 104626,
+      "sha256": "26b101715b858ac5b625282c7303ef15589e606dac64f1c7abf510e571db567e"
+    },
+    {
+      "path": "r1/reviewed/build-1/source-probe.json",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/build-1/source-probe.json",
+      "bytes": 9023,
+      "sha256": "ae88cac0f5c4a504616721514ee28602fe7ca9fa163d337aafa86b877d676a05"
+    },
+    {
+      "path": "r1/reviewed/report.json",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55-reports/reviewed/report.json",
+      "bytes": 7016553,
+      "sha256": "33c59703dce40760f9ba437039b2604b34067cdff7898a6df4e546ba96faa1a0"
+    },
+    {
+      "path": "run/end.json",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55.end.json",
+      "bytes": 211,
+      "sha256": "3d0dccac94b9135f623f203321b3b63db4298b9873e696bf52a4217dee75979f"
+    },
+    {
+      "path": "run/runner.mjs.txt",
+      "originalPath": "/app/build/run-vo1443-subtype-entry-installed-r1.mjs",
+      "bytes": 5062,
+      "sha256": "897f89a5d87983963b35987d4928652f0e03fda56dc8a4134510610e80a76607"
+    },
+    {
+      "path": "run/start.json",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55.start.json",
+      "bytes": 1587,
+      "sha256": "e98d34c1cfe0bd98a8b444b64c829de761e2e04f18275937aad117abcf494914"
+    },
+    {
+      "path": "run/tap",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55.tap",
+      "bytes": 2418,
+      "sha256": "0c77eea6f1d4e46aacf439d294e2a0125619a9a37dd72f942cfcdc5d5f5ad57c"
+    },
+    {
+      "path": "run/verified.json",
+      "originalPath": "/app/build/vo1443-subtype-entry-installed-r1-7f3ae55.verified.json",
+      "bytes": 689,
+      "sha256": "0b97c695f37ca617ee4b0878231311149fb2512d4b6138de819d253e18727bf6"
+    }
+  ]
+}

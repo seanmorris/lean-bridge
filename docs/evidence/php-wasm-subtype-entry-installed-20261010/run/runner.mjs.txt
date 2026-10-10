@@ -1,0 +1,76 @@
+import assert from 'node:assert/strict';
+import { spawn, execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import { open, readFile, statfs, writeFile } from 'node:fs/promises';
+
+const cwd = '/app', revision = process.argv[2];
+assert.match(revision ?? '', /^[a-f0-9]{40}$/);
+const prefix = '/app/build/vo1443-subtype-entry-installed-r1-' + revision.slice(0, 7);
+const output = prefix + '-reports';
+const sha256 = value => createHash('sha256').update(value).digest('hex');
+const git = args => execFileSync('git', args, { cwd, encoding: 'utf8' }).trim();
+const freeMiB = async () => { const value = await statfs(cwd); return Math.floor(value.bavail * value.bsize / 1048576); };
+assert.equal(git(['rev-parse', 'HEAD']), revision);
+assert.equal(git(['status', '--porcelain', '--untracked-files=no']), '');
+let minimumFreeMiB = await freeMiB();
+assert.ok(minimumFreeMiB >= 2048, `Insufficient disk to start: ${minimumFreeMiB} MiB`);
+const environment = {
+  ...Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith('LEAN_BRIDGE_'))),
+  LEAN_BRIDGE_LEAN_PREFIX: '/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2',
+  LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME: '/app/build/type-corpus/php-wasm-current-runtime',
+  LEAN_BRIDGE_PHP_EMSDK: '/app/.toolchains/emsdk-php-wasm',
+  LEAN_BRIDGE_PHP_SOURCE: '/app/build/php-wasm-sdk/php8.4-src',
+  LEAN_BRIDGE_PHP_WASM_HOST: '/app/build/php-wasm-host/node_modules/php-wasm',
+  LEAN_BRIDGE_PHP_WASM_SUBTYPE_ENTRY_TEST: '1',
+  LEAN_BRIDGE_PHP_WASM_SUBTYPE_ENTRY_OUTPUT: output,
+  LEAN_NUM_THREADS: '1', OMP_NUM_THREADS: '1', MAKEFLAGS: '-j1',
+};
+const args = ['-c', '3', process.execPath, '--test', '--test-concurrency=1', '--test-reporter=tap',
+  '--test-name-pattern=^(ordinary|reviewed) installed PHP-Wasm Subtype entry probes record constructor and source calls$',
+  'tests/php-wasm-fin.test.mjs'];
+const log = await open(prefix + '.tap', 'wx');
+const child = spawn('/usr/bin/taskset', args, { cwd, env: environment, detached: true, stdio: ['ignore', log.fd, log.fd] });
+await writeFile(prefix + '.start.json', JSON.stringify({ revision, tree: git(['rev-parse', 'HEAD^{tree}']), cwd,
+  startedAt: new Date().toISOString(), pid: child.pid, pgid: child.pid,
+  runnerSha256: sha256(await readFile(import.meta.filename)), output, initialFreeMiB: minimumFreeMiB,
+  command: '/usr/bin/taskset', args,
+  scope: 'Separate instrumented ordinary/reviewed Subtype probes, two-root reproducibility and source-free offline installed Node/Chromium execution. No unmodified-release entry measurements.',
+  environment: Object.fromEntries(Object.entries(environment).filter(([key]) => key.startsWith('LEAN_BRIDGE_') || ['LEAN_NUM_THREADS', 'OMP_NUM_THREADS', 'MAKEFLAGS'].includes(key)))
+}, null, 2) + '\n', { flag: 'wx' });
+process.stdout.write(`Started ${child.pid} at ${revision}; free ${minimumFreeMiB} MiB; reports ${output}\n`);
+let stoppedForDisk = false;
+const timer = setInterval(async () => {
+  try {
+    minimumFreeMiB = Math.min(minimumFreeMiB, await freeMiB());
+    if (minimumFreeMiB < 768 && !stoppedForDisk) {
+      stoppedForDisk = true;
+      process.stdout.write(`Stopping producer before disk exhaustion: ${minimumFreeMiB} MiB\n`);
+      process.kill(-child.pid, 'SIGTERM');
+    }
+  } catch (error) { process.stderr.write(`Disk monitor: ${error.message}\n`); }
+}, 5000);
+const outcome = await new Promise(resolve => {
+  child.once('error', error => resolve({ code: null, signal: null, spawnError: error.message }));
+  child.once('close', (code, signal) => resolve({ code, signal }));
+});
+clearInterval(timer); await log.close();
+minimumFreeMiB = Math.min(minimumFreeMiB, await freeMiB());
+const tap = await readFile(prefix + '.tap');
+const end = { ...outcome, stoppedForDisk, minimumFreeMiB, endedAt: new Date().toISOString(), tapSha256: sha256(tap) };
+await writeFile(prefix + '.end.json', JSON.stringify(end, null, 2) + '\n', { flag: 'wx' });
+process.stdout.write(JSON.stringify(end) + '\n');
+assert.deepEqual([outcome.code, outcome.signal, stoppedForDisk], [0, null, false]);
+assert.equal(git(['rev-parse', 'HEAD']), revision);
+assert.equal(git(['status', '--porcelain', '--untracked-files=no']), '');
+const count = name => Number(tap.toString().match(new RegExp(`^# ${name} (\\d+)$`, 'm'))?.[1]);
+assert.deepEqual([count('tests'), count('pass'), count('fail'), count('skipped')], [2, 2, 0, 0]);
+const reports = [];
+for (const route of ['ordinary', 'reviewed']) {
+  const path = output + '/' + route + '/report.json', bytes = await readFile(path), report = JSON.parse(bytes);
+  assert.equal(report.route, route); assert.equal(report.scope, 'separate-instrumented-probe');
+  assert.equal(report.phpWasm.executions.length, 12);
+  reports.push({ route, path, sha256: sha256(bytes) });
+}
+await writeFile(prefix + '.verified.json', JSON.stringify({ revision, reports, verifiedAt: new Date().toISOString(),
+  scope: 'Producer checks passed. Independent report/sidecar authentication and corruption controls remain required.'
+}, null, 2) + '\n', { flag: 'wx' });

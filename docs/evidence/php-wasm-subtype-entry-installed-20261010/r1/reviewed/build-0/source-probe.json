@@ -1,0 +1,185 @@
+{
+  "appendedControl": "\nnamespace Subtypes\n@[noinline, export lb_probe_source_unrestricted]\ndef unrestricted (value : Nat) : Nat := value\nend Subtypes\n",
+  "edits": [
+    {
+      "current": "@[noinline, export lb_probe_constructor_normalizedEven]\ndef normalizedEven",
+      "offset": 2499,
+      "previous": "def normalizedEven"
+    },
+    {
+      "current": "@[noinline, export lb_probe_source_echo]\ndef echo",
+      "offset": 2452,
+      "previous": "def echo"
+    },
+    {
+      "current": "@[noinline, export lb_probe_source_byte]\ndef byte",
+      "offset": 2412,
+      "previous": "def byte"
+    },
+    {
+      "current": "@[noinline, export lb_probe_constructor_checkedByte]\ndef checkedByte",
+      "offset": 2312,
+      "previous": "def checkedByte"
+    },
+    {
+      "current": "@[noinline, export lb_probe_source_mix]\ndef mix",
+      "offset": 2137,
+      "previous": "@[noinline] def mix"
+    },
+    {
+      "current": "@[noinline, export lb_probe_source_clamp]\ndef clamp",
+      "offset": 1946,
+      "previous": "def clamp"
+    },
+    {
+      "current": "@[noinline, export lb_probe_constructor_checkedBounded]\ndef checkedBounded",
+      "offset": 1774,
+      "previous": "def checkedBounded"
+    },
+    {
+      "current": "@[noinline, export lb_probe_source_join]\ndef join",
+      "offset": 1529,
+      "previous": "def join"
+    },
+    {
+      "current": "@[noinline, export lb_probe_source_pad]\ndef pad",
+      "offset": 1397,
+      "previous": "def pad"
+    },
+    {
+      "current": "@[noinline, export lb_probe_source_head]\ndef head",
+      "offset": 1273,
+      "previous": "def head"
+    },
+    {
+      "current": "@[noinline, export lb_probe_source_scale]\ndef scale",
+      "offset": 1158,
+      "previous": "def scale"
+    },
+    {
+      "current": "@[noinline, export lb_probe_source_half]\ndef half",
+      "offset": 1052,
+      "previous": "def half"
+    },
+    {
+      "current": "@[noinline, export lb_probe_source_shout]\ndef shout",
+      "offset": 920,
+      "previous": "def shout"
+    },
+    {
+      "current": "@[noinline, export lb_probe_constructor_checkedPayload]\ndef checkedPayload",
+      "offset": 760,
+      "previous": "def checkedPayload"
+    },
+    {
+      "current": "@[noinline, export lb_probe_constructor_checkedSmall]\ndef checkedSmall",
+      "offset": 644,
+      "previous": "def checkedSmall"
+    },
+    {
+      "current": "@[noinline, export lb_probe_constructor_checkedEven]\ndef checkedEven",
+      "offset": 543,
+      "previous": "def checkedEven"
+    },
+    {
+      "current": "@[noinline, export lb_probe_constructor_checkedWord]\ndef checkedWord",
+      "offset": 436,
+      "previous": "def checkedWord"
+    }
+  ],
+  "entries": [
+    {
+      "kind": "constructor",
+      "label": "Subtypes.checkedWord",
+      "symbol": "lb_probe_constructor_checkedWord"
+    },
+    {
+      "kind": "constructor",
+      "label": "Subtypes.checkedEven",
+      "symbol": "lb_probe_constructor_checkedEven"
+    },
+    {
+      "kind": "constructor",
+      "label": "Subtypes.checkedSmall",
+      "symbol": "lb_probe_constructor_checkedSmall"
+    },
+    {
+      "kind": "constructor",
+      "label": "Subtypes.checkedPayload",
+      "symbol": "lb_probe_constructor_checkedPayload"
+    },
+    {
+      "kind": "constructor",
+      "label": "Subtypes.checkedBounded",
+      "symbol": "lb_probe_constructor_checkedBounded"
+    },
+    {
+      "kind": "constructor",
+      "label": "Subtypes.checkedByte",
+      "symbol": "lb_probe_constructor_checkedByte"
+    },
+    {
+      "kind": "constructor",
+      "label": "Subtypes.normalizedEven",
+      "symbol": "lb_probe_constructor_normalizedEven"
+    },
+    {
+      "kind": "source",
+      "label": "Subtypes.shout",
+      "symbol": "lb_probe_source_shout"
+    },
+    {
+      "kind": "source",
+      "label": "Subtypes.half",
+      "symbol": "lb_probe_source_half"
+    },
+    {
+      "kind": "source",
+      "label": "Subtypes.scale",
+      "symbol": "lb_probe_source_scale"
+    },
+    {
+      "kind": "source",
+      "label": "Subtypes.head",
+      "symbol": "lb_probe_source_head"
+    },
+    {
+      "kind": "source",
+      "label": "Subtypes.pad",
+      "symbol": "lb_probe_source_pad"
+    },
+    {
+      "kind": "source",
+      "label": "Subtypes.join",
+      "symbol": "lb_probe_source_join"
+    },
+    {
+      "kind": "source",
+      "label": "Subtypes.clamp",
+      "symbol": "lb_probe_source_clamp"
+    },
+    {
+      "kind": "source",
+      "label": "Subtypes.mix",
+      "symbol": "lb_probe_source_mix"
+    },
+    {
+      "kind": "source",
+      "label": "Subtypes.byte",
+      "symbol": "lb_probe_source_byte"
+    },
+    {
+      "kind": "source",
+      "label": "Subtypes.echo",
+      "symbol": "l_Subtypes_echo___redArg"
+    },
+    {
+      "kind": "source",
+      "label": "Subtypes.unrestricted",
+      "symbol": "lb_probe_source_unrestricted"
+    }
+  ],
+  "originalSha256": "9da073e32017c1c93d2272e8269d9e2b97b3398d146d5d33ce5a4fc47af5a4c2",
+  "probeSha256": "0c49a3b32fc7758b6959ddace649d11d333addbe95b4ddc92493498eaea432df",
+  "source": "namespace Subtypes\n\n/-- A nonempty string. -/\nabbrev Word := { value : String // value.length > 0 }\n/-- An even natural number. -/\nabbrev Even := { value : Nat // value % 2 = 0 }\n/-- A signed value within one byte. -/\nabbrev Small := { value : Int // -128 ≤ value ∧ value < 128 }\n/-- Nonempty bytes. -/\nabbrev Payload := { value : ByteArray // value.size > 0 }\n\n/-- Checked constructors: the only way a host value becomes a subtype. -/\n@[noinline, export lb_probe_constructor_checkedWord]\ndef checkedWord (value : String) : Option Word :=\n  if h : value.length > 0 then some ⟨value, h⟩ else none\n@[noinline, export lb_probe_constructor_checkedEven]\ndef checkedEven (value : Nat) : Option Even :=\n  if h : value % 2 = 0 then some ⟨value, h⟩ else none\n@[noinline, export lb_probe_constructor_checkedSmall]\ndef checkedSmall (value : Int) : Option Small :=\n  if h : -128 ≤ value ∧ value < 128 then some ⟨value, h⟩ else none\n@[noinline, export lb_probe_constructor_checkedPayload]\ndef checkedPayload (value : ByteArray) : Option Payload :=\n  if h : value.size > 0 then some ⟨value, h⟩ else none\n\n/-- A checked string argument and result. -/\n@[noinline, export lb_probe_source_shout]\ndef shout (word : Word) : Word := ⟨word.val ++ \"!\", by simp [String.length_append]; omega⟩\n\n/-- Half of an even number is exact. -/\n@[noinline, export lb_probe_source_half]\ndef half (value : Even) : Nat := value.val / 2\n\n/-- The checked argument comes after an unchecked one. -/\n@[noinline, export lb_probe_source_scale]\ndef scale (factor : Int) (value : Small) : Int := factor * value.val\n\n/-- The first byte of a nonempty payload. -/\n@[noinline, export lb_probe_source_head]\ndef head (payload : Payload) : UInt8 := payload.val.get! 0\n\n/-- A result-only subtype: the host receives the base value. -/\n@[noinline, export lb_probe_source_pad]\ndef pad (value : Nat) : Even := ⟨value * 2, by omega⟩\n\n/-- Two checked arguments: the second is rejected after the first passed. -/\n@[noinline, export lb_probe_source_join]\ndef join (left : Word) (right : Word) : Word := ⟨left.val ++ right.val, by simp [String.length_append]; omega⟩\n\n/-- A normalizing constructor: every input is accepted and clamped to the bound. -/\nabbrev Bounded := { value : Nat // value ≤ 100 }\n@[noinline, export lb_probe_constructor_checkedBounded]\ndef checkedBounded (value : Nat) : Option Bounded := some ⟨min value 100, Nat.min_le_right _ _⟩\n/-- The export receives the constructed value, never the caller's input. -/\n@[noinline, export lb_probe_source_clamp]\ndef clamp (value : Bounded) : Nat := value.val\n\n/-- A checked constructor beside a compiler-checked Fin bound. Kept out of line so the\ndispatch probe can count calls to the export itself. -/\n@[noinline, export lb_probe_source_mix]\ndef mix (value : Even) (digit : Fin 10) : Nat := value.val + digit.val\n\nend Subtypes\n\nnamespace Subtypes\nuniverse u\nabbrev Byte := { value : UInt8 // value != 0 }\n@[noinline, export lb_probe_constructor_checkedByte]\ndef checkedByte (value : UInt8) : Option Byte :=\n  if h : value != 0 then some ⟨value, h⟩ else none\n@[noinline, export lb_probe_source_byte]\ndef byte (value : Byte) : Byte := value\n@[noinline, export lb_probe_source_echo]\ndef echo {α : Type u} (value : α) : α := value\n@[noinline, export lb_probe_constructor_normalizedEven]\ndef normalizedEven (value : Nat) : Option Even := some ⟨value * 2, by omega⟩\ndef wrongEven (value : Nat) : Option Nat := some value\nunsafe def unsafeEven (value : Nat) : Option Even := checkedEven value\npartial def partialEven (value : Nat) : Option Even :=\n  if value == 0 then checkedEven value else partialEven (value - 1)\nend Subtypes\n\nnamespace Subtypes\ndef zeroEven : Even := ⟨0, by decide⟩\nend Subtypes\n\nnamespace Subtypes\n@[noinline, export lb_probe_source_unrestricted]\ndef unrestricted (value : Nat) : Nat := value\nend Subtypes\n"
+}
