@@ -1,0 +1,55 @@
+{
+  "archives": {
+    "archives/Specialized.Api.1.0.0.nupkg": "b7ac781ceff5db7f861b4fc7012b8a771888c0a5657d82bd490c9964b30b4ca7"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "098497fee9a7c12482bdba344a868183eaf0afd170237410869d974ebcffe740",
+      "checks": 2030,
+      "compilerFreePath": true,
+      "consumerSha256": "aefe683414e9a9a11530a5a6bd07a96310a75a2e29014eaf54f7a3d2713bdece",
+      "exports": [
+        "Specialized.echoWord",
+        "Specialized.echoText",
+        "Specialized.echoNat",
+        "Specialized.echoWords",
+        "Specialized.chooseWord",
+        "Specialized.chooseText",
+        "Specialized.chooseWords",
+        "Specialized.firstTextWord",
+        "Specialized.doubleWord",
+        "Specialized.doubleNat",
+        "Specialized.plain"
+      ],
+      "modelSha256": "98924819c86c5fef84f0d161955ebcb7d437f511c2786d8f70cac66436936d33",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51364537,
+              "path": "archives/Specialized.Api.1.0.0.nupkg",
+              "sha256": "b7ac781ceff5db7f861b4fc7012b8a771888c0a5657d82bd490c9964b30b4ca7"
+            }
+          ],
+          "ecosystem": "nuget",
+          "name": "Specialized.Api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "nuget",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "dotnet",
+      "receiptSha256": "89fb91d278f1778b8ea0040403cf56543ea6bc2a2b5a2ff83ddb469b0266fae0",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "f4bceb7d3c0c1675a5d34ca93bb076f409deb60d2f1712cf28cb6bb243acbdba"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

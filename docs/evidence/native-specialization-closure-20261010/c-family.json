@@ -1,0 +1,102 @@
+{
+  "archives": {
+    "archives/specialized-1.0.0-c.tar.gz": "6c1a795766d313b6887e3537061292711e6cf438f1a0f77d354ca8409b3d33b0",
+    "archives/specialized-1.0.0-cpp.tar.gz": "951e6fe026033bc07344465afb4a0a9874ffc6b15883ffefca35e8f34d67ed08"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "6f990a3e9c426587b6f16433d1e8489ae207787d9a5bfe2a384e38fd6c188dbb",
+      "checks": 2016,
+      "compilerFreePath": true,
+      "consumerSha256": "56f675130a9129a4f3c1662c9ca6ba49d3c9558410e715a2f368b20283b96af9",
+      "exports": [
+        "Specialized.echoWord",
+        "Specialized.echoText",
+        "Specialized.echoNat",
+        "Specialized.echoWords",
+        "Specialized.chooseWord",
+        "Specialized.chooseText",
+        "Specialized.chooseWords",
+        "Specialized.firstTextWord",
+        "Specialized.doubleWord",
+        "Specialized.doubleNat",
+        "Specialized.plain"
+      ],
+      "modelSha256": "b412a80247d278217cb4881b31538aea543272ffdeaf4916326cfdf016df89b4",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 53835432,
+              "path": "archives/specialized-1.0.0-c.tar.gz",
+              "sha256": "6c1a795766d313b6887e3537061292711e6cf438f1a0f77d354ca8409b3d33b0"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "specialized",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "c",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "c",
+      "receiptSha256": "54bf1f37aba8bb6d096da358788d84c40de8a21165f23619a36953d1d6fe9a73",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "4029538989c07ea9b155c46f10a7d81131f88a6202453291219ab355e70ef5d1"
+    },
+    {
+      "bindingIrSha256": "6f990a3e9c426587b6f16433d1e8489ae207787d9a5bfe2a384e38fd6c188dbb",
+      "checks": 2011,
+      "compilerFreePath": true,
+      "consumerSha256": "f85ddccdee25e3025930f70a5aea96e04f937f6260d4834a62bf0ac3894e0d8d",
+      "exports": [
+        "Specialized.echoWord",
+        "Specialized.echoText",
+        "Specialized.echoNat",
+        "Specialized.echoWords",
+        "Specialized.chooseWord",
+        "Specialized.chooseText",
+        "Specialized.chooseWords",
+        "Specialized.firstTextWord",
+        "Specialized.doubleWord",
+        "Specialized.doubleNat",
+        "Specialized.plain"
+      ],
+      "modelSha256": "b412a80247d278217cb4881b31538aea543272ffdeaf4916326cfdf016df89b4",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51761870,
+              "path": "archives/specialized-1.0.0-cpp.tar.gz",
+              "sha256": "951e6fe026033bc07344465afb4a0a9874ffc6b15883ffefca35e8f34d67ed08"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "specialized",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "cpp",
+      "receiptSha256": "54bf1f37aba8bb6d096da358788d84c40de8a21165f23619a36953d1d6fe9a73",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "4029538989c07ea9b155c46f10a7d81131f88a6202453291219ab355e70ef5d1"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

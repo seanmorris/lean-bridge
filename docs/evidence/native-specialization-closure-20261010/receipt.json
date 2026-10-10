@@ -1,0 +1,324 @@
+{
+  "archives": [
+    {
+      "path": "docs/evidence/generic-record-array-hosted-20261010/receipt.json",
+      "sha256": "bf6d8306150d051ae1b9e02926b19c5cbefc14cad553e080a86cacc66b95ebc0"
+    },
+    {
+      "path": "docs/evidence/hosted-specializations-20261009/receipt.json",
+      "sha256": "8a13545f11d2b3a6c0f85c4303651cb4e2a4a61cdf2049bf934c81e9cdc7ad44"
+    }
+  ],
+  "kind": "native-specialization-closure",
+  "planNodes": [
+    1426,
+    1455
+  ],
+  "reports": [
+    {
+      "artifactId": 11652665139,
+      "bytes": 3720,
+      "checks": [
+        [
+          "c",
+          2016
+        ],
+        [
+          "cpp",
+          2011
+        ]
+      ],
+      "group": "c-family",
+      "jobId": 113952962715,
+      "member": "native-specializations/c-cpp.json",
+      "path": "docs/evidence/native-specialization-closure-20261010/c-family.json",
+      "sha256": "b4cb02757b8ab933aa144f15baf23e36f9eed95553a7427969ce26e2d169b900"
+    },
+    {
+      "artifactId": 11646088334,
+      "bytes": 1962,
+      "checks": [
+        [
+          "python",
+          2020
+        ]
+      ],
+      "group": "python",
+      "jobId": 113952963002,
+      "member": "native-specializations/python.json",
+      "path": "docs/evidence/native-specialization-closure-20261010/python.json",
+      "sha256": "5a95e27c95dcae8d1899fe045f97298854d05957edd3a10f833be5a032ef83a1"
+    },
+    {
+      "artifactId": 11646000617,
+      "bytes": 1904,
+      "checks": [
+        [
+          "rust",
+          2011
+        ]
+      ],
+      "group": "rust",
+      "jobId": 113952962816,
+      "member": "native-specializations/rust.json",
+      "path": "docs/evidence/native-specialization-closure-20261010/rust.json",
+      "sha256": "449216b8f8f9bac708be2282b18c2390486046b8ad5cb69ed8415ef3105424a6"
+    },
+    {
+      "artifactId": 11647727957,
+      "bytes": 1932,
+      "checks": [
+        [
+          "ruby",
+          2020
+        ]
+      ],
+      "group": "ruby",
+      "jobId": 113952963054,
+      "member": "native-specializations/ruby.json",
+      "path": "docs/evidence/native-specialization-closure-20261010/ruby.json",
+      "sha256": "2790eae00c8463f9b6cdb6491c872b7a5d126d81255b712a6b4d673d7d5e24ef"
+    },
+    {
+      "artifactId": 11642638267,
+      "bytes": 1918,
+      "checks": [
+        [
+          "dotnet",
+          2030
+        ]
+      ],
+      "group": "dotnet",
+      "jobId": 113952962674,
+      "member": "native-specializations/dotnet.json",
+      "path": "docs/evidence/native-specialization-closure-20261010/dotnet.json",
+      "sha256": "6983604ece2d0db20f928c5c1a941146f9fe27f8fda497a1e58837e2a3bc8b82"
+    },
+    {
+      "artifactId": 11644532010,
+      "bytes": 4152,
+      "checks": [
+        [
+          "java",
+          2070
+        ],
+        [
+          "kotlin",
+          2036
+        ]
+      ],
+      "group": "jvm",
+      "jobId": 113952962820,
+      "member": "native-specializations/java-kotlin.json",
+      "path": "docs/evidence/native-specialization-closure-20261010/jvm.json",
+      "sha256": "dd19d56b583d8bc074fb66623bcc9f684de02bf0bc95f5d5cfaf3556ee16793d"
+    },
+    {
+      "artifactId": 11640932994,
+      "bytes": 1964,
+      "checks": [
+        [
+          "php-native",
+          2020
+        ]
+      ],
+      "group": "php-native",
+      "jobId": 113952962703,
+      "member": "native-specializations/php-native.json",
+      "path": "docs/evidence/native-specialization-closure-20261010/php-native.json",
+      "sha256": "b7ed0823745026f4e6ec8a23d4fafc5407a6ba8a4618f2b76d3a640b098491d9"
+    },
+    {
+      "artifactId": 11648667426,
+      "bytes": 1934,
+      "checks": [
+        [
+          "wit-wasi",
+          2021
+        ]
+      ],
+      "group": "wit-wasi",
+      "jobId": 113952962913,
+      "member": "native-specializations/wit-wasi.json",
+      "path": "docs/evidence/native-specialization-closure-20261010/wit-wasi.json",
+      "sha256": "094992c61130f0d9a463e9ea03be53ae98e7826157f5c3490b7f41184e387316"
+    },
+    {
+      "artifactId": 11643682761,
+      "bytes": 3159,
+      "checks": [
+        [
+          "perl",
+          2019
+        ]
+      ],
+      "group": "perl-5.36.3-threaded",
+      "jobId": 113952963338,
+      "member": "native-specializations/perl.json",
+      "path": "docs/evidence/native-specialization-closure-20261010/perl-5.36.3-threaded.json",
+      "sha256": "ac66aaeb54f4fd18a39247ad6a8a6c8473a277000fdce965ac2586ab19c1aba8"
+    },
+    {
+      "artifactId": 11644726189,
+      "bytes": 3159,
+      "checks": [
+        [
+          "perl",
+          2019
+        ]
+      ],
+      "group": "perl-5.36.3-unthreaded",
+      "jobId": 113952963292,
+      "member": "native-specializations/perl.json",
+      "path": "docs/evidence/native-specialization-closure-20261010/perl-5.36.3-unthreaded.json",
+      "sha256": "7e5391d808367e1c36d31fecd5d3b7766dc1ee2e33c4ec3c789ce31089f48529"
+    },
+    {
+      "artifactId": 11641508556,
+      "bytes": 3159,
+      "checks": [
+        [
+          "perl",
+          2019
+        ]
+      ],
+      "group": "perl-5.38.2-threaded",
+      "jobId": 113952963297,
+      "member": "native-specializations/perl.json",
+      "path": "docs/evidence/native-specialization-closure-20261010/perl-5.38.2-threaded.json",
+      "sha256": "383324835fd36ba2b5dd8ac9a9a3425df18d7cbecb8f4f1adb7c41d379371748"
+    },
+    {
+      "artifactId": 11643806372,
+      "bytes": 3159,
+      "checks": [
+        [
+          "perl",
+          2019
+        ]
+      ],
+      "group": "perl-5.38.2-unthreaded",
+      "jobId": 113952963331,
+      "member": "native-specializations/perl.json",
+      "path": "docs/evidence/native-specialization-closure-20261010/perl-5.38.2-unthreaded.json",
+      "sha256": "62b5dbaef7eff30d8004d799fe6beabf41a9a03f2e8fbce8ba783877e729749e"
+    }
+  ],
+  "revision": "ff71335c762628da47887bfd4f208e62c39b94b7",
+  "runId": 37969725049,
+  "schemaVersion": 1,
+  "scope": {
+    "arrayObservations": 15,
+    "arraySelections": 13,
+    "excluded": [
+      "reviewed IR",
+      "open generic dispatch",
+      "callback/resource specializations",
+      "broader recursive/refined/dependent generic work"
+    ],
+    "functionObservations": 14,
+    "functionSelections": 12,
+    "packageArchivesRetained": false,
+    "path": "ordinary-source",
+    "perl": "All fixtures run on 5.36.3 and 5.38.2, each threaded and unthreaded.",
+    "profiles": 11,
+    "python": "The common ten-function fixture runs on 3.11.17; direct, specialized and Array record fixtures also run on 3.12.15.",
+    "recordObservations": 15,
+    "recordSelections": 13,
+    "sourceIdentity": "The eighteen selected function-fixture, producer and consumer files match the old source snapshots, ff71335 producer and a46d3db closure baseline byte for byte. No archived source is executed by the verifier.",
+    "supportPromotion": false
+  },
+  "sources": [
+    {
+      "archivePath": "docs/evidence/hosted-specializations-20261009/sources/tests/native-specializations.test.mjs.txt",
+      "path": "tests/native-specializations.test.mjs",
+      "sha256": "54568bfe58059d8c641b711f154c6b3e2e9373510c1174a631d3c2bb40ee7985"
+    },
+    {
+      "archivePath": "docs/evidence/hosted-specializations-20261009/sources/tests/helpers/native-specialization-install.mjs.txt",
+      "path": "tests/helpers/native-specialization-install.mjs",
+      "sha256": "83f2fda3889463156fad10d3677466978bac9389c429e8a1c2e8ae30816b05e0"
+    },
+    {
+      "archivePath": "docs/evidence/hosted-specializations-20261009/sources/tests/helpers/copied-fixture-install.mjs.txt",
+      "path": "tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227"
+    },
+    {
+      "archivePath": "docs/evidence/hosted-specializations-20261009/sources/tests/fixtures/onboarding/native-specializations/Specialized.lean.txt",
+      "path": "tests/fixtures/onboarding/native-specializations/Specialized.lean",
+      "sha256": "a4578c3de5657f52e602449a567eb43e1b0be32015ce9a3bad793a3de75ca693"
+    },
+    {
+      "archivePath": "docs/evidence/hosted-specializations-20261009/sources/tests/fixtures/onboarding/native-specializations/lakefile.toml.txt",
+      "path": "tests/fixtures/onboarding/native-specializations/lakefile.toml",
+      "sha256": "98ab8a5b675c0255459532f463ddca59c316d1e359f08c85cbef0dbc46eba4b5"
+    },
+    {
+      "archivePath": "docs/evidence/hosted-specializations-20261009/sources/tests/fixtures/onboarding/native-specializations/lean-toolchain.txt",
+      "path": "tests/fixtures/onboarding/native-specializations/lean-toolchain",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "archivePath": "docs/evidence/hosted-specializations-20261009/sources/tests/fixtures/onboarding/native-specializations/package.json.txt",
+      "path": "tests/fixtures/onboarding/native-specializations/package.json",
+      "sha256": "d67dbb73da60b11d455694897693a8e510ef012cbf40d4aa09930391ed20663c"
+    },
+    {
+      "archivePath": "docs/evidence/hosted-specializations-20261009/sources/tests/fixtures/specialization-consumers/c.c.txt",
+      "path": "tests/fixtures/specialization-consumers/c.c",
+      "sha256": "56f675130a9129a4f3c1662c9ca6ba49d3c9558410e715a2f368b20283b96af9"
+    },
+    {
+      "archivePath": "docs/evidence/hosted-specializations-20261009/sources/tests/fixtures/specialization-consumers/cpp.cpp.txt",
+      "path": "tests/fixtures/specialization-consumers/cpp.cpp",
+      "sha256": "f85ddccdee25e3025930f70a5aea96e04f937f6260d4834a62bf0ac3894e0d8d"
+    },
+    {
+      "archivePath": "docs/evidence/hosted-specializations-20261009/sources/tests/fixtures/specialization-consumers/dotnet.cs.txt",
+      "path": "tests/fixtures/specialization-consumers/dotnet.cs",
+      "sha256": "aefe683414e9a9a11530a5a6bd07a96310a75a2e29014eaf54f7a3d2713bdece"
+    },
+    {
+      "archivePath": "docs/evidence/hosted-specializations-20261009/sources/tests/fixtures/specialization-consumers/java.java.txt",
+      "path": "tests/fixtures/specialization-consumers/java.java",
+      "sha256": "ea480a4537a2c3bb903e76791c1ac7e8def6b5b8299926cdd513449892b97e21"
+    },
+    {
+      "archivePath": "docs/evidence/hosted-specializations-20261009/sources/tests/fixtures/specialization-consumers/kotlin.kt.txt",
+      "path": "tests/fixtures/specialization-consumers/kotlin.kt",
+      "sha256": "92d46b0957df6c6c2537ed1245a2b65c65225ac35a22284e066f3155e133f81c"
+    },
+    {
+      "archivePath": "docs/evidence/hosted-specializations-20261009/sources/tests/fixtures/specialization-consumers/perl.pl.txt",
+      "path": "tests/fixtures/specialization-consumers/perl.pl",
+      "sha256": "98913c32637cc6fc306f113ef31a89d2cd30899df235b166f915186001ba7026"
+    },
+    {
+      "archivePath": "docs/evidence/hosted-specializations-20261009/sources/tests/fixtures/specialization-consumers/php-native.php.txt",
+      "path": "tests/fixtures/specialization-consumers/php-native.php",
+      "sha256": "576f2343ef6f1d74fd36af79627124739d33094b30c15cc112eface72cc7212b"
+    },
+    {
+      "archivePath": "docs/evidence/hosted-specializations-20261009/sources/tests/fixtures/specialization-consumers/python.py.txt",
+      "path": "tests/fixtures/specialization-consumers/python.py",
+      "sha256": "ca2a7b15e84ee0e83d40588e1f688cde70f6acb0b69ed9735df0e50ddab9cc64"
+    },
+    {
+      "archivePath": "docs/evidence/hosted-specializations-20261009/sources/tests/fixtures/specialization-consumers/ruby.rb.txt",
+      "path": "tests/fixtures/specialization-consumers/ruby.rb",
+      "sha256": "7c63325b609b6f217059e97fd0a390fe6570323c15f039c723101dd174da19ad"
+    },
+    {
+      "archivePath": "docs/evidence/hosted-specializations-20261009/sources/tests/fixtures/specialization-consumers/rust.rs.txt",
+      "path": "tests/fixtures/specialization-consumers/rust.rs",
+      "sha256": "62c9c337f2917c6f8910db8d1c82703dfef54d9438bcecc31c70f18b8fa59d31"
+    },
+    {
+      "archivePath": "docs/evidence/hosted-specializations-20261009/sources/tests/fixtures/specialization-consumers/wit-wasi.c.txt",
+      "path": "tests/fixtures/specialization-consumers/wit-wasi.c",
+      "sha256": "b0f7868d0faaf1de3e550c35293f50c3a8da0d9db8390c683a54d7ba22f08b15"
+    }
+  ],
+  "workingRevision": "a46d3db2981f7066c6f78bc0f9077929c35b00ee"
+}

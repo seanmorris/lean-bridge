@@ -30,7 +30,7 @@ Python's record selections run on both Python 3.11 and 3.12. The function select
 
 Rust, .NET, Java and Kotlin record reports also retain rejected caller diagnostics and successful recovery runs. Managed-language checks verify that those compilations leave the installed library unchanged.
 
-## Verification and remaining work
+## Verification and subsequent acceptance
 
 Run the portable archive checks from the repository root:
 
@@ -44,4 +44,4 @@ The C-family job was cancelled during later work. All three selected specializat
 
 This archive supplements the earlier [function](native-specializations-20261006.md) and [record specialization](generic-record-specializations-20261007.md) reports without replacing them. It adds no reviewed-contract, browser, PHP-Wasm, open-generic, callback or refined-generic acceptance.
 
-VO #1439 still requires native installed acceptance for generic records containing explicit Lean `Array` values. Those cases exist in the [browser fixture](../../tests/fixtures/generic-record-browser/GenericRecordArrays.lean), but the native reports archived here cover `List` and `Option`. The separate function fixture's `Array UInt32` alias does not establish that record combination.
+The native reports in this original archive cover `List` and `Option`. The separate function fixture's `Array UInt32` alias does not establish records containing arrays. VO #1439 subsequently passed those cases across every native profile; the [hosted Array audit](generic-record-array-hosted-20261010.md) retains the successful executions. The [final specialization audit](native-specialization-closure-20261010.md) reconciles that evidence with the original #1426 requirements and closes #1455 and #1426.

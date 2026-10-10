@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { assertHostedArrayArchive, assertHostedArrayExecution, assertHostedArrayReport, hostedArrayDirectory } from "./helpers/generic-record-array-hosted-evidence.mjs";
+import "./helpers/native-specialization-closure-tests.mjs";
 
 const paths = [".github/workflows/consumer-matrix.yml", ".github/workflows/perl-consumer.yml"];
 const selections = [

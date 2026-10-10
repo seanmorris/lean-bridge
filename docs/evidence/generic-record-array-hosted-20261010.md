@@ -72,4 +72,7 @@ The [local acceptance archives](generic-record-array-rollout-20261009.md),
 including the initial failed Perl attempt, remain unchanged. Existing support
 states remain unchanged. This closure covers ordinary-source native generic
 records; it does not close #1426 or #1220, or add reviewed-IR, browser,
-PHP-Wasm, inherited, indexed or refined generic-record coverage.
+PHP-Wasm, inherited, indexed or refined generic-record coverage. The separate
+[finite-specialization closure audit](native-specialization-closure-20261010.md)
+now reconciles the original #1426 requirements, including the common function
+fixture and Lean-selected instances, and completes that task.
