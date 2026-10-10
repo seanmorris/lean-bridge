@@ -23,4 +23,6 @@ The guarded observer is now wired into the canonical edge runner. Its source gat
 
 Guarded-observer local TAP: `/app/build/vo1454-jvm-observer-r6.tap`, SHA-256 `3fbceeaba2c010a26bb07b3d1e3f8f5ae1e3fc0e3c6e2326ed798e4836b50fda`.
 
+The complete 15-root edge source regression at `7c3129d0ef5e06b1b4d00563cfb8f6d56f9c81f4` passed 87 tests with zero failures and one canonical installed-package skip in 1,092.845 seconds. This includes the C/C++, Python, Rust, Ruby, PHP and JVM source observers and the managed installation guards. The new .NET public observer was not part of that run. Original TAP: `/app/build/vo1454-jvm-observer-full-r1.tap`, SHA-256 `7e1ccf92d2e93067b9281996106795348d511e32d1b9f6f4cf130a471d623b21`.
+
 These tests use a synthetic receipt-bearing JAR around real Lean and generated wrappers. They do not establish canonical two-root package acceptance, hosted acceptance, or diagnostic-path integration. The complete canonical matrix and integration with the current nested diagnostics remain separate work. No support-table claim changes.
