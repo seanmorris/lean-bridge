@@ -178,6 +178,14 @@ export const installedPhpWasmCorpus = async options => {
 		await rename(join(project, path), join(deployment, path));
 	for(const [fixture, path] of [["php-wasm", "driver"], ["php-wasm-node", "node"], ["php-wasm-browser", "browser"]])
 		await cp(join(repository, "tests/fixtures/type-corpus/consumers", fixture + ".mjs"), join(deployment, path + ".mjs"));
+	// Only an explicitly selected test probe accepts entry markers. The normal driver stays byte-identical.
+	if(fixture && Object.hasOwn(fixture, "entryProbe"))
+	{
+		assert.equal(fixture.entryProbe, true);
+		await cp(join(repository, "tests/fixtures/php-wasm-subtype-entry/driver.mjs"), join(deployment, "driver.mjs"));
+		for(const [source, destination] of [["trace", "entry-trace"], ["cases", "entry-cases"]])
+			await cp(join(repository, `tests/helpers/php-wasm-subtype-entry-${source}.mjs`), join(deployment, destination + ".mjs"));
+	}
 	await saveLakeFile(deployment, "index.html", '<!doctype html><html><head><link rel="icon" href="data:,"></head><body><script type="module" src="./browser.mjs"></script></body></html>');
 	for(const mode of ["weak", "strict"]) await saveLakeFile(deployment, mode + ".php", source(mode));
 	for(const arrangement of ["embedded", "composer"]) await saveLakeFile(deployment, "request-" + arrangement + ".json", request(arrangement));

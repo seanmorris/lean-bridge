@@ -11,6 +11,7 @@ import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { finDotnetSdkHistoryPath } from "./fin-dotnet-sdk-history.mjs";
 import { finJvmDiagnosticsHistoryPath } from "./fin-jvm-diagnostics-history.mjs";
 import { phpWasmSubtypeEntryHistoryPath } from "./php-wasm-subtype-entry-history.mjs";
+import { phpWasmEntryHarnessHistoryPath } from "./php-wasm-entry-harness-history.mjs";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { phpWasmDirectArchiveRoot, phpWasmDirectProducer } from "./php-wasm-fin-direct-archive.mjs";
 import { beforePhpWasmDirectPromotionSource, phpWasmDirectPromotionHistoryPath } from "./php-wasm-direct-fin-promotion-history.mjs";
@@ -48,7 +49,7 @@ test("direct PHP-Wasm promotion supplements only its existing six Fin cells and 
 	current.document = JSON.parse(beforePhpWasmSubtypePromotionSource("docs/type-surface.v1.json", JSON.stringify(current.document, null, 2) + "\n"));
 	const references = await phpWasmDirectPromotionReferences();
 	const proposed = await promotePhpWasmDirectFin(previous, references);
-	for(const path of [phpWasmSubtypeEntryHistoryPath, finJvmDiagnosticsHistoryPath, finDotnetSdkHistoryPath, phpWasmSubtypePromotionHistoryPath])
+	for(const path of [phpWasmEntryHarnessHistoryPath, phpWasmSubtypeEntryHistoryPath, finJvmDiagnosticsHistoryPath, finDotnetSdkHistoryPath, phpWasmSubtypePromotionHistoryPath])
 	{
 		const later = JSON.parse(await readFile(path));
 		for(const entry of proposed.evidence) for(const file of entry.files)

@@ -10,6 +10,8 @@ import { instrumentSubtypeCEntries, restoreSubtypeCEntries, validateSubtypeEntry
 import { parseSubtypeEntryTrace } from "./php-wasm-subtype-entry-trace.mjs";
 import "./php-wasm-subtype-entry-archive-tests.mjs";
 import "./php-wasm-subtype-entry-history-tests.mjs";
+import "./php-wasm-entry-harness-history-tests.mjs";
+import "./php-wasm-subtype-entry-installed-tests.mjs";
 
 const selected = [
 	{ symbol: "public_half", kind: "public", label: "half" }

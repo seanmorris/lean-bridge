@@ -11,6 +11,7 @@ import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeFinDotnetSdkSource, finDotnetSdkHistoryPath } from "./fin-dotnet-sdk-history.mjs";
 import { finJvmDiagnosticsHistoryPath } from "./fin-jvm-diagnostics-history.mjs";
 import { phpWasmSubtypeEntryHistoryPath } from "./php-wasm-subtype-entry-history.mjs";
+import { phpWasmEntryHarnessHistoryPath } from "./php-wasm-entry-harness-history.mjs";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { phpWasmSubtypeArchiveRoot, phpWasmSubtypeProducer } from "./php-wasm-subtype-archive.mjs";
 import { beforePhpWasmSubtypePromotionSource, phpWasmSubtypePromotionHistoryPath } from "./php-wasm-subtype-promotion-history.mjs";
@@ -43,7 +44,7 @@ test("PHP-Wasm Subtype promotion changes only four cells and preserves every old
 	const current = await readTypeSurface(), previous = await predecessor();
 	current.document = JSON.parse(beforeFinDotnetSdkSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
 	const references = await phpWasmSubtypePromotionReferences(), proposed = await promotePhpWasmSubtype(previous, references);
-	for(const path of [phpWasmSubtypeEntryHistoryPath, finJvmDiagnosticsHistoryPath, finDotnetSdkHistoryPath])
+	for(const path of [phpWasmEntryHarnessHistoryPath, phpWasmSubtypeEntryHistoryPath, finJvmDiagnosticsHistoryPath, finDotnetSdkHistoryPath])
 	{
 		const later = JSON.parse(await readFile(path));
 		for(const entry of proposed.evidence) for(const file of entry.files)
