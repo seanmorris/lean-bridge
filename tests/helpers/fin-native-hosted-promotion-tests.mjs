@@ -15,6 +15,8 @@ import { finZeroCiHistoryPath } from "./fin-record-zero-ci-history.mjs";
 import { finNominalRefusalHistoryPath } from "./fin-nominal-refusal-history.mjs";
 import { finAliasClosureHistoryPath } from "./fin-alias-closure-history.mjs";
 import { phpWasmDirectFinHistoryPath } from "./php-wasm-fin-direct-history.mjs";
+import { finCoreRepairHistoryPath } from "./fin-core-repair-history.mjs";
+import { restorePerlFinOptionNotes } from "./fin-core-repair-notes.mjs";
 import "./fin-native-hosted-promotion-history-tests.mjs";
 
 const references = finHostedPromotionReferences();
@@ -68,14 +70,14 @@ test("hosted Fin promotion adds 78 evidence entries without rewriting an earlier
 	for(const key of Object.keys(before.document).filter(key => !["evidence", "observations"].includes(key)))
 		assert.deepEqual(document[key], before.document[key], key);
 	validateTypeSurface(document, before);
-	const expected = structuredClone(document);
+	const expected = restorePerlFinOptionNotes(document);
 	const history = JSON.parse(await readFile(finHostedPromotionHistoryPath, "utf8"));
 	for(const entry of expected.evidence.slice(0, before.document.evidence.length)) for(const file of entry.files)
 	{
 		const update = history.updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);
 		if(update) file.sha256 = update.currentSha256;
 	}
-	for(const path of [finZeroCiHistoryPath, finNominalRefusalHistoryPath, finAliasClosureHistoryPath, phpWasmDirectFinHistoryPath])
+	for(const path of [finZeroCiHistoryPath, finNominalRefusalHistoryPath, finAliasClosureHistoryPath, phpWasmDirectFinHistoryPath, finCoreRepairHistoryPath])
 	{
 		const stage = JSON.parse(await readFile(path, "utf8"));
 		for(const entry of expected.evidence) for(const file of entry.files)
@@ -84,7 +86,7 @@ test("hosted Fin promotion adds 78 evidence entries without rewriting an earlier
 			if(update) file.sha256 = update.currentSha256;
 		}
 	}
-	assert.deepEqual(current.document, expected, "Only the promotion and authenticated source-pin refreshes may change the inventory");
+	assert.deepEqual(current.document, expected, "Only the promotion, exact source pins and Perl option guidance may change the inventory");
 });
 
 test("hosted Fin promotion supplements 31 observations and adds only eight missing field cells", async () => {

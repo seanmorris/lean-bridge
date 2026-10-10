@@ -43,13 +43,16 @@ test("each consumer guide cites its scalar entry-counter receipt once, with the 
 	}
 });
 
-test("the Java and Kotlin guides keep scalar results supported and separate generated shapes from rejected callbacks", async () => {
+test("the Java and Kotlin guides cite installed product and field acceptance and keep callbacks rejected", async () => {
 	for(const guide of ["docs/consume/java.md", "docs/consume/kotlin.md"])
 	{
 		const text = await readFile(guide, "utf8");
 		assert.ok(!text.includes("Fields, callbacks, products and results are not"), guide);
 		assert.ok(text.includes("Top-level parameters and results are supported, including inside `Array`, `List` and `Option`"), guide);
-		assert.ok(text.includes("These packages also generate Fin checks in pairs, the active `Except` branch and plain record or variant fields, but installed acceptance for those shapes is not yet recorded. `Fin` in callback signatures is rejected at build time."), guide);
+		assert.ok(text.includes("Both ordinary-source and independently reviewed packages also check Fin inside pairs, active `Except` branches and plain record or variant fields, including Array/List/Option compositions."), guide);
+		assert.ok(text.includes("[hosted product and field checks](../evidence/fin-native-hosted-20261010/receipt.json)"), guide);
+		assert.ok(text.includes("`Fin` in callback signatures is rejected at build time."), guide);
+		assert.ok(!text.includes("installed acceptance for those shapes is not yet recorded"), guide);
 	}
 });
 

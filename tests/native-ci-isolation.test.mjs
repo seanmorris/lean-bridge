@@ -13,6 +13,7 @@ import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { runCopied } from "./helpers/copied-fixture-install.mjs";
 import "./helpers/native-consumer-budget-tests.mjs";
 import "./helpers/perl-closure-native-budget-tests.mjs";
+import "./helpers/fin-core-repair-history-tests.mjs";
 
 const workflow = () => readFile(".github/workflows/consumer-matrix.yml", "utf8");
 const baseline = async () => JSON.parse(await readFile("tests/fixtures/ci/native-acceptance-before-isolation.json"));
@@ -77,12 +78,26 @@ test("native recording scripts emit only selected rows and reject every incomple
 				assert.equal(row["--output"], `build/consumer-ci/results/native-${profile}/${consumer}.json`);
 				assert.equal(row["--performance"], `build/consumer-ci/performance/${consumer}.json`);
 				assert.ok(row["--command"].startsWith("npm run test:consumer:native && "));
-				if(profile === "python") assert.ok(row["--command"].includes("LEAN_BRIDGE_PYTHON='/fixture/python312/bin/python3.12'"));
-				else assert.ok(!row["--command"].includes("/fixture/python312/bin/python3.12"));
+				for(const version of ["3.11", "3.12"])
+				{
+					const executable = `/fixture/python${version.replace(".", "")}/bin/python${version}`;
+					if(profile === "python") assert.ok(row["--command"].includes(`LEAN_BRIDGE_PYTHON='${executable}'`));
+					else assert.ok(!row["--command"].includes(executable));
+				}
 			}
 			++runs; rows += parsed.length;
 		}
 	}
 	assert.equal(runs, 30); assert.equal(rows, 40);
 	t.diagnostic(`${runs} actual Bash recording runs checked ${rows} result rows.`);
+});
+
+test("native recording expressions reject unknown Python setup outputs", async () => {
+	const source = await workflow();
+	for(const version of ["311", "312"])
+	{
+		const changed = source.replaceAll(`steps.collection_python${version}.outputs`, "steps.collection_python999.outputs");
+		assert.notEqual(changed, source);
+		assert.throws(() => nativeCiRecordScript(changed, "python"), /Cannot read properties of undefined/u);
+	}
 });

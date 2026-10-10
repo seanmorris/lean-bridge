@@ -1,31 +1,28 @@
 /**
- * Authenticate Direct PHP-Wasm Fin integration without changing earlier evidence.
+ * Authenticate Fin Core repair integration without changing earlier evidence.
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeFinCoreRepairSource } from "./fin-core-repair-history.mjs";
 
-export const phpWasmDirectFinHistoryPath = "docs/evidence/php-wasm-fin-direct-source-history-20261010.json";
-export const phpWasmDirectFinPredecessor = "ccb44b24d17b96bd3327cb976b6d45921f7f3af2";
-export const phpWasmDirectFinChangedPaths = [
-	".github/workflows/consumer-matrix.yml"
+export const finCoreRepairHistoryPath = "docs/evidence/fin-core-repair-source-history-20261010.json";
+export const finCoreRepairPredecessor = "4e0291810246eb3c22061bf00a5508e0490adc1a";
+export const finCoreRepairChangedPaths = [
+	"docs/consume/perl.md"
 	, "docs/type-surface.v1.json"
-	, "tests/documentation.test.mjs"
-	, "tests/helpers/fin-alias-closure-history-tests.mjs"
-	, "tests/helpers/fin-alias-closure-history.mjs"
+	, "tests/copied-fixture-source-history.test.mjs"
+	, "tests/fin-container-edge-integration-history.test.mjs"
+	, "tests/fin-dispatch-guides.test.mjs"
+	, "tests/helpers/fin-container-edge-ci-history-tests.mjs"
+	, "tests/helpers/fin-container-foreign-history-tests.mjs"
 	, "tests/helpers/fin-native-hosted-promotion-tests.mjs"
-	, "tests/helpers/fin-nominal-refusal-history-tests.mjs"
-	, "tests/helpers/fin-record-zero-ci-history-tests.mjs"
-	, "tests/helpers/fin-record-zero-ci-tests.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/native-fin-diagnostic-ci-tests.mjs"
-	, "tests/helpers/php-wasm-fin-direct-fixtures.mjs"
-	, "tests/helpers/php-wasm-fin-observation.mjs"
-	, "tests/helpers/php-wasm-fin-promotion-tests.mjs"
-	, "tests/php-wasm-fin.test.mjs"
+	, "tests/helpers/native-ci-isolation.mjs"
+	, "tests/helpers/php-wasm-fin-direct-history-tests.mjs"
+	, "tests/helpers/php-wasm-fin-direct-history.mjs"
+	, "tests/native-ci-isolation.test.mjs"
 ];
 let history;
 
@@ -35,8 +32,8 @@ let history;
  * @param source - Complete current source.
  * @param update - Exact recorded transition.
  */
-export const reversePhpWasmDirectFinUpdate = (source, update) => {
-	assert.ok(phpWasmDirectFinChangedPaths.includes(update.path));
+export const reverseFinCoreRepairUpdate = (source, update) => {
+	assert.ok(finCoreRepairChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -62,12 +59,11 @@ export const reversePhpWasmDirectFinUpdate = (source, update) => {
  * @param source - Complete source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforePhpWasmDirectFinSource = (path, source, expected) => {
-	source = beforeFinCoreRepairSource(path, source, expected);
-	if(typeof source !== "string" || !phpWasmDirectFinChangedPaths.includes(path)) return source;
+export const beforeFinCoreRepairSource = (path, source, expected) => {
+	if(typeof source !== "string" || !finCoreRepairChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(phpWasmDirectFinHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(finCoreRepairHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reversePhpWasmDirectFinUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseFinCoreRepairUpdate(source, update) : source;
 };

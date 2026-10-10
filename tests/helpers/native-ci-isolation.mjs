@@ -61,7 +61,8 @@ export const nativeCiCommands = step => {
 const context = (profile, overrides) => ({
 	always: () => true
 	, matrix: { profile, consumers: nativeCiProfiles[profile].consumers.join(" ") }
-	, steps: { collection_python312: { outputs: { "python-path": "/fixture/python312/bin/python3.12" } }
+	, steps: { collection_python311: { outputs: { "python-path": "/fixture/python311/bin/python3.11" } }
+		, collection_python312: { outputs: { "python-path": "/fixture/python312/bin/python3.12" } }
 		, ...Object.fromEntries(Object.entries({
 			consumer: "success"
 			, ...Object.fromEntries(Object.entries(nativeCiProfiles).flatMap(([name, spec]) =>

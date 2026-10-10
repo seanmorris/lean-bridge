@@ -1,0 +1,648 @@
+{
+  "schemaVersion": 1,
+  "milestone": "fin-core-repair-v1",
+  "predecessorCommit": "4e0291810246eb3c22061bf00a5508e0490adc1a",
+  "updates": [
+    {
+      "path": "docs/consume/perl.md",
+      "currentSha256": "f228ff72b80f413c7a203c0f9a3ff7ffcfcf8318c3f4b92bd13581bf035eca2d",
+      "previousSha256": "ada104f2c0d4616e3b819f8aa165ae0758dc38e79bc161f1ff9546f7d20efeb4",
+      "edits": [
+        {
+          "start": 50211,
+          "previous": "| `Fin n` | `Math::BigInt checked against the declared bound` (input); `Math::BigInt below the bound` (result); `Math::BigInt checked against the field's closed bound` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Use Math::BigInt with the exact closed bound, including inside Array/List/Option/Prod/Except compositions, plain records and active variant fields. Empty containers, absent options and inactive Fin 0 branches are valid; present Fin 0 values are rejected. Rejections preserve caller values and name the failing path and bound. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "current": "| `Fin n` | `Math::BigInt checked against the declared bound` (input); `Math::BigInt below the bound` (result); `Math::BigInt checked against the field's closed bound` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Use Math::BigInt with the exact closed bound, including inside Array/List/Option/Prod/Except compositions, plain records and active variant fields. Empty containers, absent options and inactive Fin 0 branches are valid; present Fin 0 values are rejected. Rejections preserve caller values and name the failing path and bound. For Option, use undef for absence and the generated Some->new(value) for presence. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "27e7b5b9ac40af977e6ce8b358e4f0aafe7a8a3e255a33877cdf5c451a3c4731",
+      "previousSha256": "7308e8fcdd2a46f6f134d634ad0f367f9fbcd1ea3f0b84822690af0bb1b9a56b",
+      "edits": [
+        {
+          "start": 266657,
+          "previous": "          \"sha256\": \"ada104f2c0d4616e3b819f8aa165ae0758dc38e79bc161f1ff9546f7d20efeb4\"\n",
+          "current": "          \"sha256\": \"f228ff72b80f413c7a203c0f9a3ff7ffcfcf8318c3f4b92bd13581bf035eca2d\"\n"
+        },
+        {
+          "start": 3011407,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3015744,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3020124,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3024519,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3028892,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3033219,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3037563,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3041701,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3046091,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3050474,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3054661,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3058846,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3063307,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3067761,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3071930,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3076060,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3080438,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3084809,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3088885,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3092906,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3096970,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3101038,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3105084,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3109097,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3113128,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3117160,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3121235,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3125314,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3129371,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3133395,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3137447,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3141492,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3145580,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3149672,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3153742,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3157779,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3161864,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3166148,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3170475,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3174817,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3179137,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3183411,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3187693,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3191793,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3195936,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3200083,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3204208,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3208300,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3212400,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3216471,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3220585,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3224703,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3228799,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3232862,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3237044,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3241559,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3246117,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3250685,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3255231,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3259737,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3264265,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3268792,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3273362,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3277942,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3282500,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3287018,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3291550,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3296065,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3300623,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3305191,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3309737,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3314243,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3318771,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3323298,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3327868,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3332448,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3337006,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 3341524,
+          "previous": "          \"sha256\": \"5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb\"\n",
+          "current": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n"
+        },
+        {
+          "start": 5744143,
+          "previous": "        \"fin\": \"Use Math::BigInt with the exact closed bound, including inside Array/List/Option/Prod/Except compositions, plain records and active variant fields. Empty containers, absent options and inactive Fin 0 branches are valid; present Fin 0 values are rejected. Rejections preserve caller values and name the failing path and bound.\"\n",
+          "current": "        \"fin\": \"Use Math::BigInt with the exact closed bound, including inside Array/List/Option/Prod/Except compositions, plain records and active variant fields. Empty containers, absent options and inactive Fin 0 branches are valid; present Fin 0 values are rejected. Rejections preserve caller values and name the failing path and bound. For Option, use undef for absence and the generated Some->new(value) for presence.\"\n"
+        },
+        {
+          "start": 5980224,
+          "previous": "        \"fin\": \"Use Math::BigInt with the exact closed bound, including inside Array/List/Option/Prod/Except compositions, plain records and active variant fields. Empty containers, absent options and inactive Fin 0 branches are valid; present Fin 0 values are rejected. Rejections preserve caller values and name the failing path and bound.\"\n",
+          "current": "        \"fin\": \"Use Math::BigInt with the exact closed bound, including inside Array/List/Option/Prod/Except compositions, plain records and active variant fields. Empty containers, absent options and inactive Fin 0 branches are valid; present Fin 0 values are rejected. Rejections preserve caller values and name the failing path and bound. For Option, use undef for absence and the generated Some->new(value) for presence.\"\n"
+        },
+        {
+          "start": 6024764,
+          "previous": "        \"fin\": \"Use Math::BigInt with the exact closed bound, including inside Array/List/Option/Prod/Except compositions, plain records and active variant fields. Empty containers, absent options and inactive Fin 0 branches are valid; present Fin 0 values are rejected. Rejections preserve caller values and name the failing path and bound.\"\n",
+          "current": "        \"fin\": \"Use Math::BigInt with the exact closed bound, including inside Array/List/Option/Prod/Except compositions, plain records and active variant fields. Empty containers, absent options and inactive Fin 0 branches are valid; present Fin 0 values are rejected. Rejections preserve caller values and name the failing path and bound. For Option, use undef for absence and the generated Some->new(value) for presence.\"\n"
+        },
+        {
+          "start": 6036919,
+          "previous": "        \"fin\": \"Use Math::BigInt with the exact closed bound, including inside Array/List/Option/Prod/Except compositions, plain records and active variant fields. Empty containers, absent options and inactive Fin 0 branches are valid; present Fin 0 values are rejected. Rejections preserve caller values and name the failing path and bound.\"\n",
+          "current": "        \"fin\": \"Use Math::BigInt with the exact closed bound, including inside Array/List/Option/Prod/Except compositions, plain records and active variant fields. Empty containers, absent options and inactive Fin 0 branches are valid; present Fin 0 values are rejected. Rejections preserve caller values and name the failing path and bound. For Option, use undef for absence and the generated Some->new(value) for presence.\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/copied-fixture-source-history.test.mjs",
+      "currentSha256": "b97e33388a2e8256cc0196d86f8cff3f742162e36818f1d72ee60f3fe5c14c26",
+      "previousSha256": "63eefc6ce5f684fda92b15d4a4c2354f5b121aee3716c2b5f47981107bdd5488",
+      "edits": [
+        {
+          "start": 831,
+          "previous": "",
+          "current": "import { beforeFinRefinementSource } from \"./helpers/fin-refinement-source-history.mjs\";\n"
+        },
+        {
+          "start": 1215,
+          "previous": "\tconst { fixture } = await read(), current = await readFile(fixture.path);\n",
+          "current": "\tconst { fixture } = await read();\n\tconst current = beforeFinRefinementSource(fixture.path, await readFile(fixture.path), fixture.currentSha256);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fin-container-edge-integration-history.test.mjs",
+      "currentSha256": "ae52e3524aa1bc3d2980106cb5d07856124a08f4f9a04440c1829e896a2ddea4",
+      "previousSha256": "67555b637f3517d82196912748d98ca72214e9e53269ac084c0d4f4d0bd9b22c",
+      "edits": [
+        {
+          "start": 602,
+          "previous": "import { beforeFinEdgeCiSource, finEdgeCiChangedPaths } from \"./helpers/fin-container-edge-ci-history.mjs\";\nimport { finForeignChangedPaths } from \"./helpers/fin-container-foreign-history.mjs\";\nimport { finRecordOmissionChangedPaths } from \"./helpers/fin-record-review-omission-history.mjs\";\nimport { finHostedPromotionChangedPaths } from \"./helpers/fin-native-hosted-promotion-history.mjs\";\nimport { finZeroCiChangedPaths } from \"./helpers/fin-record-zero-ci-history.mjs\";\n",
+          "current": "import { beforeFinEdgeCiSource } from \"./helpers/fin-container-edge-ci-history.mjs\";\n"
+        },
+        {
+          "start": 4178,
+          "previous": "\t\t\tconst source = [...finZeroCiChangedPaths, ...finHostedPromotionChangedPaths, ...finRecordOmissionChangedPaths, ...finForeignChangedPaths, ...finEdgeCiChangedPaths].includes(file.path) ? beforeFinEdgeCiSource(file.path, bytes.toString(\"utf8\")) : bytes;\n",
+          "current": "\t\t\tconst source = beforeFinRefinementSource(file.path, bytes, file.sha256);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fin-dispatch-guides.test.mjs",
+      "currentSha256": "e24e9c9f3da2a894ca2c546a848b47e202100f646b547d04289a9f0d0d949bab",
+      "previousSha256": "e87884c06a8a13eeae8edff63055199692e12282f8ff3488529936ea25aedbb6",
+      "edits": [
+        {
+          "start": 3995,
+          "previous": "test(\"the Java and Kotlin guides keep scalar results supported and separate generated shapes from rejected callbacks\", async () => {\n",
+          "current": "test(\"the Java and Kotlin guides cite installed product and field acceptance and keep callbacks rejected\", async () => {\n"
+        },
+        {
+          "start": 4456,
+          "previous": "\t\tassert.ok(text.includes(\"These packages also generate Fin checks in pairs, the active `Except` branch and plain record or variant fields, but installed acceptance for those shapes is not yet recorded. `Fin` in callback signatures is rejected at build time.\"), guide);\n",
+          "current": "\t\tassert.ok(text.includes(\"Both ordinary-source and independently reviewed packages also check Fin inside pairs, active `Except` branches and plain record or variant fields, including Array/List/Option compositions.\"), guide);\n\t\tassert.ok(text.includes(\"[hosted product and field checks](../evidence/fin-native-hosted-20261010/receipt.json)\"), guide);\n\t\tassert.ok(text.includes(\"`Fin` in callback signatures is rejected at build time.\"), guide);\n\t\tassert.ok(!text.includes(\"installed acceptance for those shapes is not yet recorded\"), guide);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-container-edge-ci-history-tests.mjs",
+      "currentSha256": "fd32ada0d41ed8b834cb933a6ca374d4dec2e0d662e2dbe2773d740db586f4f6",
+      "previousSha256": "dcc45b58a91e73de88d7d8fa4e47c89bd39253fa93d1d71c8d1824628b454643",
+      "edits": [
+        {
+          "start": 591,
+          "previous": "import { beforeFinForeignSource, finForeignChangedPaths } from \"./fin-container-foreign-history.mjs\";\nimport { finRecordOmissionChangedPaths } from \"./fin-record-review-omission-history.mjs\";\nimport { finHostedPromotionChangedPaths } from \"./fin-native-hosted-promotion-history.mjs\";\nimport { finZeroCiChangedPaths } from \"./fin-record-zero-ci-history.mjs\";\n",
+          "current": "import { beforeFinForeignSource } from \"./fin-container-foreign-history.mjs\";\n"
+        },
+        {
+          "start": 3839,
+          "previous": "\t\t\tconst source = [...finZeroCiChangedPaths, ...finHostedPromotionChangedPaths, ...finRecordOmissionChangedPaths, ...finForeignChangedPaths].includes(file.path) ? beforeFinForeignSource(file.path, bytes.toString(\"utf8\")) : bytes;\n",
+          "current": "\t\t\tconst source = beforeFinRefinementSource(file.path, bytes, file.sha256);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-container-foreign-history-tests.mjs",
+      "currentSha256": "34e72f12084b0b0c630329e60bd6159247cc5eaf4deb3c06cc6e5f3e3c1d6592",
+      "previousSha256": "abfa101b5c52f3896e3a164b51ff0fa3bb56408203723dcb6adffdd6840f45cb",
+      "edits": [
+        {
+          "start": 591,
+          "previous": "import { finHostedPromotionChangedPaths } from \"./fin-native-hosted-promotion-history.mjs\";\nimport { finZeroCiChangedPaths } from \"./fin-record-zero-ci-history.mjs\";\nimport { beforeFinRecordOmissionSource, finRecordOmissionChangedPaths } from \"./fin-record-review-omission-history.mjs\";\n",
+          "current": "import { beforeFinRecordOmissionSource } from \"./fin-record-review-omission-history.mjs\";\n"
+        },
+        {
+          "start": 3906,
+          "previous": "\t\t\tconst source = [...finZeroCiChangedPaths, ...finHostedPromotionChangedPaths, ...finRecordOmissionChangedPaths].includes(file.path) ? beforeFinRecordOmissionSource(file.path, bytes.toString(\"utf8\")) : bytes;\n",
+          "current": "\t\t\tconst source = beforeFinRefinementSource(file.path, bytes, file.sha256);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-native-hosted-promotion-tests.mjs",
+      "currentSha256": "27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884",
+      "previousSha256": "5f62e7e5721a7427a6a5004ccda80d19e42a972ee94ff77ec42f37ac89ecdcfb",
+      "edits": [
+        {
+          "start": 1024,
+          "previous": "",
+          "current": "import { finCoreRepairHistoryPath } from \"./fin-core-repair-history.mjs\";\nimport { restorePerlFinOptionNotes } from \"./fin-core-repair-notes.mjs\";\n"
+        },
+        {
+          "start": 4609,
+          "previous": "\tconst expected = structuredClone(document);\n",
+          "current": "\tconst expected = restorePerlFinOptionNotes(document);\n"
+        },
+        {
+          "start": 5026,
+          "previous": "\tfor(const path of [finZeroCiHistoryPath, finNominalRefusalHistoryPath, finAliasClosureHistoryPath, phpWasmDirectFinHistoryPath])\n",
+          "current": "\tfor(const path of [finZeroCiHistoryPath, finNominalRefusalHistoryPath, finAliasClosureHistoryPath, phpWasmDirectFinHistoryPath, finCoreRepairHistoryPath])\n"
+        },
+        {
+          "start": 5485,
+          "previous": "\tassert.deepEqual(current.document, expected, \"Only the promotion and authenticated source-pin refreshes may change the inventory\");\n",
+          "current": "\tassert.deepEqual(current.document, expected, \"Only the promotion, exact source pins and Perl option guidance may change the inventory\");\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "c5bd7febb7df2f2586f35d7efa2274024fda106c09183b58c1675f4cb248293b",
+      "previousSha256": "bc66bd4dd6030f5896a64777c7ba8f04095e04668f2a864bd300b25ae0ae9f2c",
+      "edits": [
+        {
+          "start": 15785,
+          "previous": "",
+          "current": "import { finCoreRepairChangedPaths } from \"./fin-core-repair-history.mjs\";\n"
+        },
+        {
+          "start": 55310,
+          "previous": "",
+          "current": "\t, ...finCoreRepairChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-ci-isolation.mjs",
+      "currentSha256": "7a97fad57da31bbf033115b4a4aa1c9a33cace4edc1457a8cf62c94df383a621",
+      "previousSha256": "7970054a9fb453711e30b190a8b6663d5f315f3f4d77841c3ae00db8b5678f16",
+      "edits": [
+        {
+          "start": 2089,
+          "previous": "\t, steps: { collection_python312: { outputs: { \"python-path\": \"/fixture/python312/bin/python3.12\" } }\n",
+          "current": "\t, steps: { collection_python311: { outputs: { \"python-path\": \"/fixture/python311/bin/python3.11\" } }\n\t\t, collection_python312: { outputs: { \"python-path\": \"/fixture/python312/bin/python3.12\" } }\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-wasm-fin-direct-history-tests.mjs",
+      "currentSha256": "ceb42365564c6f6b7741a7dd4c806e4d2980b6655f6bd641562015001ff615cb",
+      "previousSha256": "0ab851392aba47af380988a4fc2e0245383a4e14fae4f8d3e3376c3f62947fe4",
+      "edits": [
+        {
+          "start": 520,
+          "previous": "",
+          "current": "import { beforeFinCoreRepairSource } from \"./fin-core-repair-history.mjs\";\n"
+        },
+        {
+          "start": 1299,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\"), previous = reversePhpWasmDirectFinUpdate(current, update);\n",
+          "current": "\t\tconst current = beforeFinCoreRepairSource(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n\t\tconst previous = reversePhpWasmDirectFinUpdate(current, update);\n"
+        },
+        {
+          "start": 5620,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = beforeFinCoreRepairSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 6460,
+          "previous": "\t\tif(!digests.has(file.path)) digests.set(file.path, sha256(await readFile(file.path)));\n",
+          "current": "\t\tif(!digests.has(file.path)) digests.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-wasm-fin-direct-history.mjs",
+      "currentSha256": "46881a405688a8ac5ac1aea213f610e878f7d58b61b6d335ba4f30fa2d5d3e29",
+      "previousSha256": "e5c4a59c38af7763cb43d7dc524308100f7738906dc63763de739f2b485ce5d2",
+      "edits": [
+        {
+          "start": 238,
+          "previous": "",
+          "current": "import { beforeFinCoreRepairSource } from \"./fin-core-repair-history.mjs\";\n"
+        },
+        {
+          "start": 2716,
+          "previous": "",
+          "current": "\tsource = beforeFinCoreRepairSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/native-ci-isolation.test.mjs",
+      "currentSha256": "6b2b77ce37d7c84eaa976b2e4fb5b2f1fea5537d1a1ca67238a6c6fd435f8a97",
+      "previousSha256": "975293eef626432d03a6428cf90c7a11bb6943eddcca29b1910c69777bcac367",
+      "edits": [
+        {
+          "start": 673,
+          "previous": "",
+          "current": "import \"./helpers/fin-core-repair-history-tests.mjs\";\n"
+        },
+        {
+          "start": 4658,
+          "previous": "\t\t\t\tif(profile === \"python\") assert.ok(row[\"--command\"].includes(\"LEAN_BRIDGE_PYTHON='/fixture/python312/bin/python3.12'\"));\n\t\t\t\telse assert.ok(!row[\"--command\"].includes(\"/fixture/python312/bin/python3.12\"));\n",
+          "current": "\t\t\t\tfor(const version of [\"3.11\", \"3.12\"])\n\t\t\t\t{\n\t\t\t\t\tconst executable = `/fixture/python${version.replace(\".\", \"\")}/bin/python${version}`;\n\t\t\t\t\tif(profile === \"python\") assert.ok(row[\"--command\"].includes(`LEAN_BRIDGE_PYTHON='${executable}'`));\n\t\t\t\t\telse assert.ok(!row[\"--command\"].includes(executable));\n\t\t\t\t}\n"
+        },
+        {
+          "start": 5152,
+          "previous": "",
+          "current": "\ntest(\"native recording expressions reject unknown Python setup outputs\", async () => {\n\tconst source = await workflow();\n\tfor(const version of [\"311\", \"312\"])\n\t{\n\t\tconst changed = source.replaceAll(`steps.collection_python${version}.outputs`, \"steps.collection_python999.outputs\");\n\t\tassert.notEqual(changed, source);\n\t\tassert.throws(() => nativeCiRecordScript(changed, \"python\"), /Cannot read properties of undefined/u);\n\t}\n});\n"
+        }
+      ]
+    }
+  ]
+}

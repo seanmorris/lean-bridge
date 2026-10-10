@@ -173,6 +173,7 @@ import { finZeroCiChangedPaths } from "./fin-record-zero-ci-history.mjs";
 import { finNominalRefusalChangedPaths } from "./fin-nominal-refusal-history.mjs";
 import { finAliasClosureChangedPaths } from "./fin-alias-closure-history.mjs";
 import { phpWasmDirectFinChangedPaths } from "./php-wasm-fin-direct-history.mjs";
+import { finCoreRepairChangedPaths } from "./fin-core-repair-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -811,6 +812,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...finNominalRefusalChangedPaths
 	, ...finAliasClosureChangedPaths
 	, ...phpWasmDirectFinChangedPaths
+	, ...finCoreRepairChangedPaths
 ])].sort());
 
 /**

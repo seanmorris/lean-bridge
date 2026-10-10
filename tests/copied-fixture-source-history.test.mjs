@@ -14,6 +14,7 @@ import { beforeOwnedJvmReceiverGc } from "./helpers/owned-jvm-receiver-gc-histor
 import { beforeOwnedCallbackResults } from "./helpers/owned-callback-result-history.mjs";
 import { assertDotnetVariantSourceHash } from "./helpers/dotnet-source-history.mjs";
 import { assertRubyVariantSourceHash } from "./helpers/ruby-source-history.mjs";
+import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
 
 const read = async () => {
 	const bytes = await readFile(copiedFixtureReaderHistoryPath);
@@ -22,7 +23,8 @@ const read = async () => {
 };
 
 test("copied fixture history authenticates the original WIT change and keeps both identities", async () => {
-	const { fixture } = await read(), current = await readFile(fixture.path);
+	const { fixture } = await read();
+	const current = beforeFinRefinementSource(fixture.path, await readFile(fixture.path), fixture.currentSha256);
 	assert.equal(sha256(await readFile(fixture.receipt)), fixture.receiptSha256);
 	assert.equal(sha256(current), fixture.currentSha256);
 	const previous = copiedFixtureHistoricalBytes(fixture.path, current, fixture.previousSha256);
