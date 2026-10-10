@@ -1,0 +1,188 @@
+{
+  "schemaVersion": 1,
+  "milestone": "fin-dotnet-sdk-v1",
+  "predecessorCommit": "1d9b17a4f295566f77fd1d8e5bf898c49c1fea54",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "9c1f313bece5df2d28bbaf3ed29572ba3761790d26d83cefcb7389b519c41c81",
+      "previousSha256": "8ddb27b0e166690022633ed4e30256d0b8f43981ae6ee71e4a5421e7a72634ee",
+      "edits": [
+        {
+          "start": 3345337,
+          "previous": "          \"sha256\": \"ed1e832ebfa166303aa8d6572cb6566b98908e8c465026a22f1182442d5c84d4\"\n",
+          "current": "          \"sha256\": \"d064b09a5f39507b6d924cee98753525e5d8132c48177908b2cc8036197a7f09\"\n"
+        },
+        {
+          "start": 3358298,
+          "previous": "          \"sha256\": \"ed1e832ebfa166303aa8d6572cb6566b98908e8c465026a22f1182442d5c84d4\"\n",
+          "current": "          \"sha256\": \"d064b09a5f39507b6d924cee98753525e5d8132c48177908b2cc8036197a7f09\"\n"
+        },
+        {
+          "start": 3371263,
+          "previous": "          \"sha256\": \"ed1e832ebfa166303aa8d6572cb6566b98908e8c465026a22f1182442d5c84d4\"\n",
+          "current": "          \"sha256\": \"d064b09a5f39507b6d924cee98753525e5d8132c48177908b2cc8036197a7f09\"\n"
+        },
+        {
+          "start": 3384220,
+          "previous": "          \"sha256\": \"ed1e832ebfa166303aa8d6572cb6566b98908e8c465026a22f1182442d5c84d4\"\n",
+          "current": "          \"sha256\": \"d064b09a5f39507b6d924cee98753525e5d8132c48177908b2cc8036197a7f09\"\n"
+        },
+        {
+          "start": 3397424,
+          "previous": "          \"sha256\": \"b54cb3090bba078a4e0d3a0bbef7df6d40a4f7cb14440615db021ead6d096c03\"\n",
+          "current": "          \"sha256\": \"f93e8c9c41dfa1afe2c57d9958b71ae73a7c0931bc8e3bddb90337c438a79162\"\n"
+        },
+        {
+          "start": 3410052,
+          "previous": "          \"sha256\": \"b54cb3090bba078a4e0d3a0bbef7df6d40a4f7cb14440615db021ead6d096c03\"\n",
+          "current": "          \"sha256\": \"f93e8c9c41dfa1afe2c57d9958b71ae73a7c0931bc8e3bddb90337c438a79162\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fin-container-edge-report.test.mjs",
+      "currentSha256": "b3cfd04ab2cc6510c745ca9b5b2e709df2746a50f1eba1ea00156629b1406edc",
+      "previousSha256": "397646545d9a5031d5e53b3cc54a2b417e1c3361abd755e71cf423a03f7f3ae2",
+      "edits": [
+        {
+          "start": 877,
+          "previous": "",
+          "current": "import \"./helpers/fin-container-edge-sdk-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-container-edge-dotnet-closure.mjs",
+      "currentSha256": "3b8ef4a910a6d095fd4d8ae32a80c29499b4cad92a53dfaddfa2dca72b4f3918",
+      "previousSha256": "2431a549de4940b7401b151364fd1589f2b22aa18b3901129a4e64a1c9536f36",
+      "edits": [
+        {
+          "start": 1785,
+          "previous": "",
+          "current": "\n/**\n * Select the newest stable .NET 8 SDK reported by the explicitly selected host.\n * Multiple installed feature bands are normal on hosted runners.\n *\n * @param output - Complete dotnet --list-sdks stdout.\n * @param directory - Canonical SDK directory beside the selected host.\n */\nexport const selectFinContainerEdgeDotnetSdk = (output, directory) => {\n\tconst candidates = output.split(/\\r?\\n/u).flatMap(line => {\n\t\tconst match = /^(8\\.0\\.(0|[1-9][0-9]*)) \\[([^\\r\\n]+)\\]$/u.exec(line);\n\t\tif(!match) return [];\n\t\tassert.ok(Number.isSafeInteger(Number(match[2])), \"invalid .NET 8 SDK version\");\n\t\tassert.equal(match[3], directory, \".NET SDK must belong to the selected host\");\n\t\treturn [{ version: match[1], patch: Number(match[2]), directory: match[3] }];\n\t});\n\tassert.ok(candidates.length > 0, \"an installed stable .NET 8 SDK is required\");\n\tassert.equal(new Set(candidates.map(sdk => sdk.version)).size, candidates.length, \"ambiguous .NET 8 SDK listing\");\n\tcandidates.sort((a, b) => a.patch - b.patch);\n\tconst { version } = candidates.at(-1);\n\treturn Object.freeze({ version, directory });\n};\n\n"
+        },
+        {
+          "start": 9533,
+          "previous": "\tconst sdks = [...listed.stdout.matchAll(/^(8\\.0\\.[0-9]+) \\[([^\\r\\n]+)\\]$/gmu)];\n\tassert.equal(sdks.length, 1, \"select exactly one installed .NET 8 SDK\");\n\tassert.equal(await realpath(sdks[0][2]), join(dirname(command), \"sdk\"));\n",
+          "current": "\tconst sdk = selectFinContainerEdgeDotnetSdk(listed.stdout, join(dirname(command), \"sdk\"));\n\tassert.equal(await realpath(sdk.directory), sdk.directory);\n"
+        },
+        {
+          "start": 10657,
+          "previous": "\t\t, \"global.json\": canonicalJson({ sdk: { version: sdks[0][1], rollForward: \"disable\", allowPrerelease: false } })\n",
+          "current": "\t\t, \"global.json\": canonicalJson({ sdk: { version: sdk.version, rollForward: \"disable\", allowPrerelease: false } })\n"
+        },
+        {
+          "start": 12105,
+          "previous": "",
+          "current": "\tassert.equal((await runCopied(command, [\"--version\"], root, env)).stdout.trim(), sdk.version, \".NET host must use the pinned SDK\");\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "54e8e05b55e38b632b9105b51f391a9c6c0b792cb918580f632cb2005ac729bb",
+      "previousSha256": "cf0dc49efbe6a4d6507db650c226b7c4a87bddf16059cdf6ba1e93c4c530cd0d",
+      "edits": [
+        {
+          "start": 16229,
+          "previous": "",
+          "current": "import { finDotnetSdkChangedPaths } from \"./fin-dotnet-sdk-history.mjs\";\n"
+        },
+        {
+          "start": 55943,
+          "previous": "",
+          "current": "\t, ...finDotnetSdkChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-wasm-direct-fin-promotion-tests.mjs",
+      "currentSha256": "d064b09a5f39507b6d924cee98753525e5d8132c48177908b2cc8036197a7f09",
+      "previousSha256": "ed1e832ebfa166303aa8d6572cb6566b98908e8c465026a22f1182442d5c84d4",
+      "edits": [
+        {
+          "start": 288,
+          "previous": "",
+          "current": "import { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\nimport { finDotnetSdkHistoryPath } from \"./fin-dotnet-sdk-history.mjs\";\n"
+        },
+        {
+          "start": 3212,
+          "previous": "\tconst later = JSON.parse(await readFile(phpWasmSubtypePromotionHistoryPath));\n\tfor(const entry of proposed.evidence) for(const file of entry.files)\n",
+          "current": "\tfor(const path of [finDotnetSdkHistoryPath, phpWasmSubtypePromotionHistoryPath])\n"
+        },
+        {
+          "start": 3297,
+          "previous": "\t\tconst update = later.updates.find(item => item.path === file.path && item.currentSha256 === file.sha256);\n\t\tif(update) file.sha256 = update.previousSha256;\n",
+          "current": "\t\tconst later = JSON.parse(await readFile(path));\n\t\tfor(const entry of proposed.evidence) for(const file of entry.files)\n\t\t{\n\t\t\tconst update = later.updates.find(item => item.path === file.path && item.currentSha256 === file.sha256);\n\t\t\tif(update) file.sha256 = update.previousSha256;\n\t\t}\n"
+        },
+        {
+          "start": 6432,
+          "previous": "\t{\n\t\tconst bytes = await readFile(file.path);\n\t\tconst update = later.updates.find(item => item.path === file.path);\n\t\tassert.equal(sha256(update ? beforePhpWasmSubtypePromotionSource(file.path, bytes.toString(), file.sha256) : bytes), file.sha256, file.path);\n\t}\n",
+          "current": "\t\tassert.equal(sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)), file.sha256, file.path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-wasm-subtype-promotion-history-tests.mjs",
+      "currentSha256": "ed1ad80b678ba5fdf13b9f83686537425b154d94ff2d78b137ea10b3fe331364",
+      "previousSha256": "4884d594f609360943834883e212753d02cf94344bd48056bda1b2086aeced78",
+      "edits": [
+        {
+          "start": 527,
+          "previous": "",
+          "current": "import { beforeFinDotnetSdkSource } from \"./fin-dotnet-sdk-history.mjs\";\n"
+        },
+        {
+          "start": 1381,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\"), previous = reversePhpWasmSubtypePromotionUpdate(current, update);\n",
+          "current": "\t\tconst current = beforeFinDotnetSdkSource(update.path, await readFile(update.path, \"utf8\")), previous = reversePhpWasmSubtypePromotionUpdate(current, update);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-wasm-subtype-promotion-history.mjs",
+      "currentSha256": "abd18d68f8099574037217d49bd4eb4e27c2e73a76006e9216be7e1e61863633",
+      "previousSha256": "241fb8ac7207670a10a685cae5981853759df10bb4e88753a8126a79d7975cce",
+      "edits": [
+        {
+          "start": 245,
+          "previous": "",
+          "current": "import { beforeFinDotnetSdkSource } from \"./fin-dotnet-sdk-history.mjs\";\n"
+        },
+        {
+          "start": 2534,
+          "previous": "",
+          "current": "\tsource = beforeFinDotnetSdkSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-wasm-subtype-promotion-tests.mjs",
+      "currentSha256": "f93e8c9c41dfa1afe2c57d9958b71ae73a7c0931bc8e3bddb90337c438a79162",
+      "previousSha256": "b54cb3090bba078a4e0d3a0bbef7df6d40a4f7cb14440615db021ead6d096c03",
+      "edits": [
+        {
+          "start": 276,
+          "previous": "",
+          "current": "import { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\nimport { beforeFinDotnetSdkSource, finDotnetSdkHistoryPath } from \"./fin-dotnet-sdk-history.mjs\";\n"
+        },
+        {
+          "start": 2559,
+          "previous": "",
+          "current": "\tcurrent.document = JSON.parse(beforeFinDotnetSdkSource(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\", \"utf8\")));\n"
+        },
+        {
+          "start": 2824,
+          "previous": "",
+          "current": "\tconst later = JSON.parse(await readFile(finDotnetSdkHistoryPath));\n\tfor(const entry of proposed.evidence) for(const file of entry.files)\n\t{\n\t\tconst update = later.updates.find(item => item.path === file.path && item.currentSha256 === file.sha256);\n\t\tif(update) file.sha256 = update.previousSha256;\n\t}\n"
+        },
+        {
+          "start": 5235,
+          "previous": "\t\tassert.equal(sha256(await readFile(file.path)), file.sha256, file.path);\n",
+          "current": "\t\tassert.equal(sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)), file.sha256, file.path);\n"
+        }
+      ]
+    }
+  ]
+}

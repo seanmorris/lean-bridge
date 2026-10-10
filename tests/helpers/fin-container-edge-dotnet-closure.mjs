@@ -24,6 +24,29 @@ const environment = (root, command) => ({ ...copiedCleanEnvironment
 	, DOTNET_CLI_TELEMETRY_OPTOUT: "1", DOTNET_NOLOGO: "1"
 	, DOTNET_MULTILEVEL_LOOKUP: "0", NUGET_PACKAGES: join(root, "packages")
 	, NUGET_HTTP_CACHE_PATH: join(root, "http-cache") });
+
+/**
+ * Select the newest stable .NET 8 SDK reported by the explicitly selected host.
+ * Multiple installed feature bands are normal on hosted runners.
+ *
+ * @param output - Complete dotnet --list-sdks stdout.
+ * @param directory - Canonical SDK directory beside the selected host.
+ */
+export const selectFinContainerEdgeDotnetSdk = (output, directory) => {
+	const candidates = output.split(/\r?\n/u).flatMap(line => {
+		const match = /^(8\.0\.(0|[1-9][0-9]*)) \[([^\r\n]+)\]$/u.exec(line);
+		if(!match) return [];
+		assert.ok(Number.isSafeInteger(Number(match[2])), "invalid .NET 8 SDK version");
+		assert.equal(match[3], directory, ".NET SDK must belong to the selected host");
+		return [{ version: match[1], patch: Number(match[2]), directory: match[3] }];
+	});
+	assert.ok(candidates.length > 0, "an installed stable .NET 8 SDK is required");
+	assert.equal(new Set(candidates.map(sdk => sdk.version)).size, candidates.length, "ambiguous .NET 8 SDK listing");
+	candidates.sort((a, b) => a.patch - b.patch);
+	const { version } = candidates.at(-1);
+	return Object.freeze({ version, directory });
+};
+
 const verifyFiles = async (root, files, exact = false) => {
 	assert.equal(await realpath(root), resolve(root), ".NET directory must not traverse a symlink");
 	if(exact) assert.deepEqual(await nativeArtifactPaths(root), Object.keys(files).sort(), "unrecorded or missing .NET file");
@@ -140,16 +163,15 @@ export const installFinContainerEdgeDotnet = async ({ root, archive, archiveSha2
 	const { receipt } = original, command = await realpath(selected), env = environment(root, command);
 	const interpreter = identity(await readFile(command));
 	const listed = await runCopied(command, ["--list-sdks"], root, env);
-	const sdks = [...listed.stdout.matchAll(/^(8\.0\.[0-9]+) \[([^\r\n]+)\]$/gmu)];
-	assert.equal(sdks.length, 1, "select exactly one installed .NET 8 SDK");
-	assert.equal(await realpath(sdks[0][2]), join(dirname(command), "sdk"));
+	const sdk = selectFinContainerEdgeDotnetSdk(listed.stdout, join(dirname(command), "sdk"));
+	assert.equal(await realpath(sdk.directory), sdk.directory);
 	const archiveName = `${receipt.name}.${receipt.version}.nupkg`, packageDirectory = `${receipt.name.toLowerCase()}/${receipt.version}`;
 	const project = `<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><Nullable>enable</Nullable><UseAppHost>false</UseAppHost><NuGetAudit>false</NuGetAudit><TreatWarningsAsErrors>true</TreatWarningsAsErrors><EnableDefaultItems>false</EnableDefaultItems><EnableDefaultCompileItems>false</EnableDefaultCompileItems></PropertyGroup><ItemGroup><Compile Include="consumer.cs"/><PackageReference Include="${receipt.name}" Version="[${receipt.version}]"/></ItemGroup></Project>`;
 	const contents = {
 		"consumer.cs": await readFile(join(root, "consumer.cs"))
 		, "Consumer.csproj": project
 		, "NuGet.Config": '<configuration><packageSources><clear/><add key="prepared" value="feed"/></packageSources><fallbackPackageFolders><clear/></fallbackPackageFolders></configuration>'
-		, "global.json": canonicalJson({ sdk: { version: sdks[0][1], rollForward: "disable", allowPrerelease: false } })
+		, "global.json": canonicalJson({ sdk: { version: sdk.version, rollForward: "disable", allowPrerelease: false } })
 		, [`feed/${archiveName}`]: bytes };
 	for(const [path, data] of Object.entries(contents))
 	{
@@ -172,6 +194,7 @@ export const installFinContainerEdgeDotnet = async ({ root, archive, archiveSha2
 		, inputs: immutable(Object.fromEntries(Object.entries(contents).map(([path, data]) => [path, identity(data)])))
 		, cacheFiles: immutable(Object.fromEntries(Object.entries(packageFiles).map(([path, entry]) => [`${packageDirectory}/${path}`, entry]))) };
 	await verifyFiles(root, context.inputs);
+	assert.equal((await runCopied(command, ["--version"], root, env)).stdout.trim(), sdk.version, ".NET host must use the pinned SDK");
 	await runCopied(command, ["restore", "--configfile", "NuGet.Config", ...buildFlags], root, env);
 	await verifyInputs(context);
 	assert.deepEqual(await nativeArtifactPaths(join(root, "obj")), restoredNames, "unexpected generated NuGet input");

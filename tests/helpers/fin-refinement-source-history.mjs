@@ -178,6 +178,7 @@ import { phpWasmDirectPromotionChangedPaths } from "./php-wasm-direct-fin-promot
 import { phpWasmSubtypeChangedPaths } from "./php-wasm-subtype-history.mjs";
 import { phpWasmSubtypeAcceptanceChangedPaths } from "./php-wasm-subtype-acceptance-history.mjs";
 import { phpWasmSubtypePromotionChangedPaths } from "./php-wasm-subtype-promotion-history.mjs";
+import { finDotnetSdkChangedPaths } from "./fin-dotnet-sdk-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -821,6 +822,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...phpWasmSubtypeChangedPaths
 	, ...phpWasmSubtypeAcceptanceChangedPaths
 	, ...phpWasmSubtypePromotionChangedPaths
+	, ...finDotnetSdkChangedPaths
 ])].sort());
 
 /**

@@ -1,27 +1,23 @@
 /**
- * Authenticate PHP-Wasm Subtype promotion integration without changing earlier evidence.
+ * Authenticate Native Fin .NET SDK repair integration without changing earlier evidence.
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeFinDotnetSdkSource } from "./fin-dotnet-sdk-history.mjs";
 
-export const phpWasmSubtypePromotionHistoryPath = "docs/evidence/php-wasm-subtype-promotion-source-history-20261010.json";
-export const phpWasmSubtypePromotionPredecessor = "1d95f243e3998082405267d7d745ed76367219ca";
-export const phpWasmSubtypePromotionChangedPaths = [
-	"docs/evidence/refinement-closure-audit-20261007.md"
-	, "docs/lean/existing-package.md"
-	, "docs/php.md"
-	, "docs/type-surface.v1.json"
-	, "src/release/php-wasm-copied-package.mjs"
+export const finDotnetSdkHistoryPath = "docs/evidence/fin-dotnet-sdk-source-history-20261010.json";
+export const finDotnetSdkPredecessor = "1d9b17a4f295566f77fd1d8e5bf898c49c1fea54";
+export const finDotnetSdkChangedPaths = [
+	"docs/type-surface.v1.json"
+	, "tests/fin-container-edge-report.test.mjs"
+	, "tests/helpers/fin-container-edge-dotnet-closure.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
 	, "tests/helpers/php-wasm-direct-fin-promotion-tests.mjs"
-	, "tests/helpers/php-wasm-subtype-acceptance-history-tests.mjs"
-	, "tests/helpers/php-wasm-subtype-acceptance-history.mjs"
-	, "tests/php-wasm-fin.test.mjs"
-	, "tests/type-surface.test.mjs"
+	, "tests/helpers/php-wasm-subtype-promotion-history-tests.mjs"
+	, "tests/helpers/php-wasm-subtype-promotion-history.mjs"
+	, "tests/helpers/php-wasm-subtype-promotion-tests.mjs"
 ];
 let history;
 
@@ -31,8 +27,8 @@ let history;
  * @param source - Complete current source.
  * @param update - Exact recorded transition.
  */
-export const reversePhpWasmSubtypePromotionUpdate = (source, update) => {
-	assert.ok(phpWasmSubtypePromotionChangedPaths.includes(update.path));
+export const reverseFinDotnetSdkUpdate = (source, update) => {
+	assert.ok(finDotnetSdkChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -58,12 +54,11 @@ export const reversePhpWasmSubtypePromotionUpdate = (source, update) => {
  * @param source - Complete source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforePhpWasmSubtypePromotionSource = (path, source, expected) => {
-	source = beforeFinDotnetSdkSource(path, source, expected);
-	if(typeof source !== "string" || !phpWasmSubtypePromotionChangedPaths.includes(path)) return source;
+export const beforeFinDotnetSdkSource = (path, source, expected) => {
+	if(typeof source !== "string" || !finDotnetSdkChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(phpWasmSubtypePromotionHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(finDotnetSdkHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reversePhpWasmSubtypePromotionUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseFinDotnetSdkUpdate(source, update) : source;
 };

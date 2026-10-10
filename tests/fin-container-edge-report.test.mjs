@@ -16,6 +16,7 @@ import { assertFinContainerEdgeReport } from "./helpers/fin-container-edge-repor
 import { syntheticFinContainerEdgeReport } from "./helpers/fin-container-edge-report-fixtures.mjs";
 import "./helpers/fin-container-edge-ci-tests.mjs";
 import "./helpers/fin-container-edge-ci-history-tests.mjs";
+import "./helpers/fin-container-edge-sdk-tests.mjs";
 
 test("synthetic current-format reports cover ten native hosts and both Python floors", async () => {
 	const profiles = [...finContainerEdgeProfiles].sort();

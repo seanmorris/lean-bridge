@@ -7,6 +7,8 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { finDotnetSdkHistoryPath } from "./fin-dotnet-sdk-history.mjs";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { phpWasmDirectArchiveRoot, phpWasmDirectProducer } from "./php-wasm-fin-direct-archive.mjs";
 import { beforePhpWasmDirectPromotionSource, phpWasmDirectPromotionHistoryPath } from "./php-wasm-direct-fin-promotion-history.mjs";
@@ -44,11 +46,14 @@ test("direct PHP-Wasm promotion supplements only its existing six Fin cells and 
 	current.document = JSON.parse(beforePhpWasmSubtypePromotionSource("docs/type-surface.v1.json", JSON.stringify(current.document, null, 2) + "\n"));
 	const references = await phpWasmDirectPromotionReferences();
 	const proposed = await promotePhpWasmDirectFin(previous, references);
-	const later = JSON.parse(await readFile(phpWasmSubtypePromotionHistoryPath));
-	for(const entry of proposed.evidence) for(const file of entry.files)
+	for(const path of [finDotnetSdkHistoryPath, phpWasmSubtypePromotionHistoryPath])
 	{
-		const update = later.updates.find(item => item.path === file.path && item.currentSha256 === file.sha256);
-		if(update) file.sha256 = update.previousSha256;
+		const later = JSON.parse(await readFile(path));
+		for(const entry of proposed.evidence) for(const file of entry.files)
+		{
+			const update = later.updates.find(item => item.path === file.path && item.currentSha256 === file.sha256);
+			if(update) file.sha256 = update.previousSha256;
+		}
 	}
 	validateTypeSurface(proposed, current);
 	assert.equal(proposed.observations.length, previous.observations.length);
@@ -103,11 +108,7 @@ test("direct PHP-Wasm promotion supplements only its existing six Fin cells and 
 	}
 	assert.deepEqual(current.document, expected);
 	for(const entry of current.document.evidence) for(const file of entry.files)
-	{
-		const bytes = await readFile(file.path);
-		const update = later.updates.find(item => item.path === file.path);
-		assert.equal(sha256(update ? beforePhpWasmSubtypePromotionSource(file.path, bytes.toString(), file.sha256) : bytes), file.sha256, file.path);
-	}
+		assert.equal(sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)), file.sha256, file.path);
 });
 
 test("direct PHP-Wasm promotion refuses incomplete, duplicated or repeated supplements", async () => {
