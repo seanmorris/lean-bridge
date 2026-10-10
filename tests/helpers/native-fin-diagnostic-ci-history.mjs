@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeFinEdgeIntegrationSource } from "./fin-container-edge-integration-history.mjs";
 
 export const finDiagnosticCiHistoryPath = "docs/evidence/native-fin-diagnostic-ci-source-history-20261010.json";
 export const finDiagnosticCiPredecessor = "4007e0d1926a0a2206e8b49c26f82b474aca0c0f";
@@ -59,6 +60,7 @@ export const reverseFinDiagnosticCiUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeFinDiagnosticCiSource = (path, source, expected) => {
+	source = beforeFinEdgeIntegrationSource(path, source, expected);
 	if(typeof source !== "string" || !finDiagnosticCiChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

@@ -67,6 +67,13 @@ const consumers = Object.freeze({
 	c: { extension: "c", marker: '  printf("fin-container-ok:%u\\n", checks);' }
 	, cpp: { extension: "cpp", marker: '  std::printf("fin-container-ok:%u\\n", checks);' }
 	, python: { extension: "py", marker: "print('fin-container-ok:' + str(checks))" }
+	, rust: { extension: "rs", marker: '    println!("fin-container-ok:{checks}");' }
+	, ruby: { extension: "rb", marker: 'puts "fin-container-ok:#{$checks}"' }
+	, dotnet: { extension: "cs", marker: '        Console.WriteLine($"fin-container-ok:{checks}");' }
+	, java: { extension: "java", marker: '        System.out.println("fin-container-ok:" + checks);' }
+	, kotlin: { extension: "kt", marker: '    println("fin-container-ok:$checks")' }
+	, "php-native": { extension: "php", marker: 'echo "fin-container-ok:$checks\\n";' }
+	, "wit-wasi": { extension: "c", marker: "  fincontainers_wasmtime_close(session);" }
 });
 /** Source development is staged; this list is not a support or installed-acceptance claim. */
 export const implementedFinContainerEdgeProfiles = Object.freeze(Object.keys(consumers));
@@ -81,5 +88,7 @@ export const finContainerEdgeConsumer = async profile => {
 	const { extension, marker } = consumers[profile];
 	const original = await readFile(`tests/fixtures/fin-container-consumers/${profile}.${extension}`, "utf8");
 	const fragment = await readFile(`tests/fixtures/fin-container-edge-consumers/${profile}.${extension}`, "utf8");
-	return insertFinContainerEdgeFragment(original, marker, fragment);
+	const combined = insertFinContainerEdgeFragment(original, marker, fragment);
+	return profile === "wit-wasi"
+		? insertFinContainerEdgeFragment(combined, "int main(void) {", await readFile("tests/fixtures/fin-container-edge-consumers/wit-wasi-helpers.c", "utf8")) : combined;
 };

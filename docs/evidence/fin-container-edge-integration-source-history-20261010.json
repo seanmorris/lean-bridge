@@ -1,0 +1,1408 @@
+{
+  "schemaVersion": 1,
+  "milestone": "fin-container-edge-integration-v1",
+  "predecessorCommit": "e503ba7c40d2e32002028559b70f2dbcc94983fc",
+  "integratedBranchCommit": "8287f60cc78a55f6e201a364656d8dc556411add",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "a54c0b74268d9b9525953ceaf8735926c978d43aa1814b697320e26cc09acb02",
+      "previousSha256": "b79f120e3ab1715517567f8385a69804286a0181678b2042f64e722d83f5682e",
+      "edits": [
+        {
+          "start": 57139,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 66610,
+          "previous": "          \"sha256\": \"5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4\"\n",
+          "current": "          \"sha256\": \"213175fe734bbe3c798c6a9d866a04872a54012fed39da9d2e86d10655e8a251\"\n"
+        },
+        {
+          "start": 71488,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 79697,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 87518,
+          "previous": "          \"sha256\": \"5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4\"\n",
+          "current": "          \"sha256\": \"213175fe734bbe3c798c6a9d866a04872a54012fed39da9d2e86d10655e8a251\"\n"
+        },
+        {
+          "start": 91684,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 96900,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 103368,
+          "previous": "          \"sha256\": \"5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4\"\n",
+          "current": "          \"sha256\": \"213175fe734bbe3c798c6a9d866a04872a54012fed39da9d2e86d10655e8a251\"\n"
+        },
+        {
+          "start": 107770,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 113193,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 118969,
+          "previous": "          \"sha256\": \"5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4\"\n",
+          "current": "          \"sha256\": \"213175fe734bbe3c798c6a9d866a04872a54012fed39da9d2e86d10655e8a251\"\n"
+        },
+        {
+          "start": 122115,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 129449,
+          "previous": "          \"sha256\": \"5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4\"\n",
+          "current": "          \"sha256\": \"213175fe734bbe3c798c6a9d866a04872a54012fed39da9d2e86d10655e8a251\"\n"
+        },
+        {
+          "start": 131294,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 145843,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 157430,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 169072,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 173951,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 182038,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 188149,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 196937,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 202630,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 209870,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 215271,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 223089,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 226817,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 231627,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 235542,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 240058,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 245167,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 249072,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 252783,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 257738,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 262093,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 267313,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 270520,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 276414,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 281132,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 286263,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 292254,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 298402,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 303775,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 308436,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 312478,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 316988,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 321885,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 326282,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 331685,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 338971,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 344547,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 348222,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 353115,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 357509,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 362757,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 366632,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 371796,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 375495,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 379353,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 382880,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 386757,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 390814,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 395918,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 401464,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 405154,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 408349,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 411879,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 415558,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 419614,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 422654,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 426871,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 433513,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 438068,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 440629,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 444349,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 447007,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 450737,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 453170,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 456353,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 459929,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 466771,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 473613,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 478424,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 482917,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 488645,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 494151,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 499935,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 503840,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 509624,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 513433,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 518193,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 524963,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 530099,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 533526,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 538989,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 544540,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 550014,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 557512,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 565409,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 572923,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 577070,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 583066,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 588260,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 593329,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 598986,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 602642,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 607606,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 614190,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 619522,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 622711,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 628374,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 633667,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 639345,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 646752,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 654379,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 661748,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 683083,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 693185,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 700045,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 707040,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 708017,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 721251,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 722048,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 730808,
+          "previous": "          \"sha256\": \"5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4\"\n",
+          "current": "          \"sha256\": \"213175fe734bbe3c798c6a9d866a04872a54012fed39da9d2e86d10655e8a251\"\n"
+        },
+        {
+          "start": 732287,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 733261,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 746667,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 747481,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 757279,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 758935,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 769166,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 771006,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 780933,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 782294,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 789858,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 790877,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 796312,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 797335,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 805046,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 805721,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 813030,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 813856,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 825828,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 835500,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 844966,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 900484,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 904761,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 952772,
+          "previous": "          \"sha256\": \"5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4\"\n",
+          "current": "          \"sha256\": \"213175fe734bbe3c798c6a9d866a04872a54012fed39da9d2e86d10655e8a251\"\n"
+        },
+        {
+          "start": 962117,
+          "previous": "          \"sha256\": \"5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4\"\n",
+          "current": "          \"sha256\": \"213175fe734bbe3c798c6a9d866a04872a54012fed39da9d2e86d10655e8a251\"\n"
+        },
+        {
+          "start": 979185,
+          "previous": "          \"sha256\": \"5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4\"\n",
+          "current": "          \"sha256\": \"213175fe734bbe3c798c6a9d866a04872a54012fed39da9d2e86d10655e8a251\"\n"
+        },
+        {
+          "start": 1016059,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 1047367,
+          "previous": "          \"sha256\": \"5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4\"\n",
+          "current": "          \"sha256\": \"213175fe734bbe3c798c6a9d866a04872a54012fed39da9d2e86d10655e8a251\"\n"
+        },
+        {
+          "start": 1060775,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 1073261,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 1081005,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 1087455,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 1094715,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 1102060,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 1109113,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 1116714,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 1126994,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 1140156,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 1150414,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 1158300,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 1169037,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 1179297,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 1193716,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 1202093,
+          "previous": "          \"sha256\": \"5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4\"\n",
+          "current": "          \"sha256\": \"213175fe734bbe3c798c6a9d866a04872a54012fed39da9d2e86d10655e8a251\"\n"
+        },
+        {
+          "start": 1210737,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 1226260,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 1233770,
+          "previous": "          \"sha256\": \"5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4\"\n",
+          "current": "          \"sha256\": \"213175fe734bbe3c798c6a9d866a04872a54012fed39da9d2e86d10655e8a251\"\n"
+        },
+        {
+          "start": 1240128,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 1256542,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 1266097,
+          "previous": "          \"sha256\": \"5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4\"\n",
+          "current": "          \"sha256\": \"213175fe734bbe3c798c6a9d866a04872a54012fed39da9d2e86d10655e8a251\"\n"
+        },
+        {
+          "start": 1273926,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 1289505,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 1300877,
+          "previous": "          \"sha256\": \"5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4\"\n",
+          "current": "          \"sha256\": \"213175fe734bbe3c798c6a9d866a04872a54012fed39da9d2e86d10655e8a251\"\n"
+        },
+        {
+          "start": 1310109,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 1330731,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 1356283,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 1378820,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 1398512,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 1419155,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 1451673,
+          "previous": "          \"sha256\": \"6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c\"\n",
+          "current": "          \"sha256\": \"c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45\"\n"
+        },
+        {
+          "start": 1495530,
+          "previous": "          \"sha256\": \"5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4\"\n",
+          "current": "          \"sha256\": \"213175fe734bbe3c798c6a9d866a04872a54012fed39da9d2e86d10655e8a251\"\n"
+        },
+        {
+          "start": 1715567,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 1721346,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 1725958,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 1730124,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 1913974,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 1922764,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 1931472,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 1937250,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 1943587,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        },
+        {
+          "start": 1949562,
+          "previous": "          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n",
+          "current": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "currentSha256": "c70084de727fcb5a4bdb28d954e42c3f4e89fcf3ab325bf05d5b46cca89f2e45",
+      "previousSha256": "6f02bb1f2adde8914dab32218b4b337ae7a8a54528d513df03700b09cb18e57c",
+      "edits": [
+        {
+          "start": 8109,
+          "previous": "",
+          "current": "\t\t, \"fin-container-edge-integration-history\"\n\t\t, \"fin-container-edge-report\"\n"
+        },
+        {
+          "start": 29282,
+          "previous": "",
+          "current": "\t\t, \"fin-container-edge-closure\"\n\t\t, \"fin-container-edge-cpp\"\n\t\t, \"fin-container-edge-dispatch\"\n\t\t, \"fin-container-edge-dotnet-closure\"\n\t\t, \"fin-container-edge-dotnet\"\n\t\t, \"fin-container-edge-jvm-closure\"\n\t\t, \"fin-container-edge-jvm\"\n\t\t, \"fin-container-edge-php-closure\"\n\t\t, \"fin-container-edge-php\"\n\t\t, \"fin-container-edge-public\"\n\t\t, \"fin-container-edge-python-closure\"\n\t\t, \"fin-container-edge-python\"\n\t\t, \"fin-container-edge-ruby-closure\"\n\t\t, \"fin-container-edge-ruby\"\n\t\t, \"fin-container-edge-rust\"\n\t\t, \"fin-container-edge-wit\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/native-artifacts.mjs",
+      "currentSha256": "213175fe734bbe3c798c6a9d866a04872a54012fed39da9d2e86d10655e8a251",
+      "previousSha256": "5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4",
+      "edits": [
+        {
+          "start": 2602,
+          "previous": "\t\tconst safe = /^[A-Za-z0-9_.+/-]+$/.test(path) || /^(?:[A-Za-z0-9_.+-]+\\/)*[A-Za-z_][A-Za-z0-9_]*(?:\\$[A-Za-z0-9_]+)+\\.class$/.test(path);\n",
+          "current": "\t\tconst safe = path === \"[Content_Types].xml\" || /^[A-Za-z0-9_.+/-]+$/.test(path) || /^(?:[A-Za-z0-9_.+-]+\\/)*[A-Za-z_][A-Za-z0-9_]*(?:\\$[A-Za-z0-9_]+)+\\.class$/.test(path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fin-container-edges.test.mjs",
+      "currentSha256": "d48c56fa9dfa29440878467115375350434922023574d2e12d6baae3299aed38",
+      "previousSha256": "c22cdd1d20e90498bf5ee0b6829878b090eb5ff208e168e1e6cca2b5cb2749af",
+      "edits": [
+        {
+          "start": 335,
+          "previous": "import { join, resolve } from \"node:path\";\n",
+          "current": "import { dirname, join, resolve } from \"node:path\";\n"
+        },
+        {
+          "start": 787,
+          "previous": "",
+          "current": "import { generateRustBindingPackage } from \"../src/backends/rust/generate.mjs\";\nimport { compileCopiedDotnetModel } from \"../src/backends/dotnet/copied-model.mjs\";\nimport { renderCopiedDotnetPackage } from \"../src/backends/dotnet/copied-values.mjs\";\nimport { compileCopiedJvmModel } from \"../src/backends/jvm/copied-model.mjs\";\nimport { renderCopiedJvmPackage } from \"../src/backends/jvm/copied-values.mjs\";\nimport { compileCopiedWitModel } from \"../src/backends/wit/copied-model.mjs\";\nimport { renderWitHostHeader } from \"../src/backends/wit/copied-host.mjs\";\n"
+        },
+        {
+          "start": 1771,
+          "previous": "import { checkInstalledFinContainerEdges, finContainerEdgeChecks, finContainerEdgeSelection, prepareFinContainerEdgeExecutable, requireNewFinContainerEdgeReport, writeFinContainerEdgeReport } from \"./helpers/fin-container-edge-install.mjs\";\n",
+          "current": "import { checkInstalledFinContainerEdges, finContainerEdgeChecks, finContainerEdgeDispatchEnabled, finContainerEdgeGemReceipt, finContainerEdgeSelection, prepareFinContainerEdgeExecutable, requireNewFinContainerEdgeReport, writeFinContainerEdgeReport } from \"./helpers/fin-container-edge-install.mjs\";\n"
+        },
+        {
+          "start": 5602,
+          "previous": "\tassert.deepEqual(implementedFinContainerEdgeProfiles, [\"c\", \"cpp\", \"python\"]);\n\tfor(const profile of [\"c\", \"cpp\", \"python\"])\n",
+          "current": "\tassert.deepEqual(implementedFinContainerEdgeProfiles, finContainerEdgeProfiles);\n\tfor(const profile of implementedFinContainerEdgeProfiles)\n"
+        },
+        {
+          "start": 5746,
+          "previous": "\t\tconst extension = { c: \"c\", cpp: \"cpp\", python: \"py\" }[profile];\n",
+          "current": "\t\tconst extension = { c: \"c\", cpp: \"cpp\", python: \"py\", rust: \"rs\", ruby: \"rb\", dotnet: \"cs\", java: \"java\", kotlin: \"kt\", \"php-native\": \"php\", \"wit-wasi\": \"c\" }[profile];\n"
+        },
+        {
+          "start": 6248,
+          "previous": "\t\tassert.equal(combined.replace(fragment + \"\\n\", \"\"), base);\n\t\tfor(const method of [\"empty_array\", \"empty_list\", \"empty_option\", \"optional_digits\", \"present\", \"flatten\"])\n\t\t\tassert.ok(fragment.includes(method), `${profile}: ${method}`);\n",
+          "current": "\t\tlet restored = combined.replace(fragment + \"\\n\", \"\");\n\t\tif(profile === \"wit-wasi\")\n\t\t{\n\t\t\tconst helpers = await readFile(\"tests/fixtures/fin-container-edge-consumers/wit-wasi-helpers.c\", \"utf8\");\n\t\t\tassert.equal(restored.split(helpers).length, 2);\n\t\t\trestored = restored.replace(helpers + \"\\n\", \"\");\n\t\t\tassert.ok(combined.indexOf(fragment) < combined.indexOf(\"  fincontainers_wasmtime_close(session);\"));\n\t\t}\n\t\tassert.equal(restored, base);\n\t\tfor(const method of [\"emptyarray\", \"emptylist\", \"emptyoption\", \"optionaldigits\", \"present\", \"flatten\"])\n\t\t\tassert.ok(fragment.replace(/[_-]/gu, \"\").toLowerCase().includes(method), `${profile}: ${method}`);\n"
+        },
+        {
+          "start": 7014,
+          "previous": "\tawait assert.rejects(finContainerEdgeConsumer(\"rust\"), /not implemented/u);\n",
+          "current": "\tawait assert.rejects(finContainerEdgeConsumer(\"php-wasm\"), /not implemented/u);\n"
+        },
+        {
+          "start": 8106,
+          "previous": "",
+          "current": "\tconst ruby = await readFile(\"tests/fixtures/fin-container-edge-consumers/ruby.rb\", \"utf8\");\n\tassert.ok(ruby.includes('error.class == RangeError && error.message == \"Nat cannot be negative\"'));\n\tassert.ok(ruby.includes(\"check(edge_negative.call { API.optional_digits(Some.new(values)) }\"));\n"
+        },
+        {
+          "start": 11294,
+          "previous": "",
+          "current": "test(\"the complete Ruby edge consumer parses without executing a mock algorithm\", { skip: !sourceChecks }, async t => {\n\tconst root = await mkdtemp(join(tmpdir(), \"lean-bridge-fin-edge-ruby-\"));\n\tt.after(() => rm(root, { recursive: true, force: true }));\n\tawait saveLakeFile(root, \"consumer.rb\", await finContainerEdgeConsumer(\"ruby\"));\n\tconst ruby = resolve(process.env.LEAN_BRIDGE_RUBY ?? \".toolchains/ruby33/bin/ruby\");\n\tconst result = await runCopied(ruby, [\"-c\", \"consumer.rb\"], root);\n\tassert.equal(result.stdout, \"Syntax OK\\n\"); assert.equal(result.stderr, \"\");\n});\n\ntest(\"the complete PHP edge consumer parses in both weak and strict modes\", { skip: !sourceChecks }, async t => {\n\tconst root = await mkdtemp(join(tmpdir(), \"lean-bridge-fin-edge-php-\"));\n\tt.after(() => rm(root, { recursive: true, force: true }));\n\tconst source = await finContainerEdgeConsumer(\"php-native\");\n\tassert.equal(source.split(\"declare(strict_types=0);\").length, 2);\n\tfor(const mode of [0, 1])\n\t{\n\t\tconst path = `consumer-${mode}.php`;\n\t\tawait saveLakeFile(root, path, source.replace(\"declare(strict_types=0);\", `declare(strict_types=${mode});`));\n\t\tconst result = await runCopied(process.env.LEAN_BRIDGE_PHP ?? \"/usr/bin/php\", [\"-n\", \"-l\", path], root);\n\t\tassert.equal(result.stdout, `No syntax errors detected in ${path}\\n`); assert.equal(result.stderr, \"\");\n\t}\n});\n\ntest(\"the complete WIT edge consumer compiles against the generated public Wasmtime header\", { skip: !sourceChecks }, async t => {\n\tconst root = await mkdtemp(join(tmpdir(), \"lean-bridge-fin-edge-wit-\"));\n\tt.after(() => rm(root, { recursive: true, force: true }));\n\tconst model = compileCopiedWitModel(finContainerEdgeReviewedIr());\n\tassert.equal(model.surface.prefix, \"fincontainers\");\n\tfor(const name of [\"empty-array\", \"empty-list\", \"empty-option\", \"optional-digits\"])\n\t\tassert.ok(model.wit.includes(`${name}: func(`));\n\tawait saveLakeFile(root, \"fincontainers_wasmtime.h\", renderWitHostHeader(model));\n\tawait saveLakeFile(root, \"consumer.c\", await finContainerEdgeConsumer(\"wit-wasi\"));\n\tconst wasmtime = resolve(process.env.LEAN_BRIDGE_WASMTIME_C_API ?? \".toolchains/wasmtime42\");\n\tconst result = await runCopied(\"/usr/bin/cc\", [\"-std=c11\", \"-Wall\", \"-Wextra\", \"-Werror\", \"-fsyntax-only\", \"-I.\", `-I${join(wasmtime, \"include\")}`, \"consumer.c\"], root);\n\tassert.equal(result.stdout, \"\"); assert.equal(result.stderr, \"\");\n});\n\ntest(\"the complete Rust edge consumer typechecks offline against generated public types\", { skip: !sourceChecks }, async t => {\n\tconst root = await mkdtemp(join(tmpdir(), \"lean-bridge-fin-edge-rust-\"));\n\tt.after(() => rm(root, { recursive: true, force: true }));\n\tconst files = generateRustBindingPackage(finContainerEdgeReviewedIr());\n\tfor(const [path, source] of Object.entries(files)) await saveLakeFile(join(root, \"package\"), path, source);\n\tconst name = /^name = \"([^\"]+)\"$/mu.exec(files[\"Cargo.toml\"])[1];\n\tawait saveLakeFile(root, \"Cargo.toml\", `[package]\\nname=\"fin-edge-source-check\"\\nversion=\"0.0.0\"\\nedition=\"2021\"\\n[dependencies]\\nfincontainers={package=\"${name}\",path=\"package\"}\\n`);\n\tawait saveLakeFile(root, \"src/main.rs\", await finContainerEdgeConsumer(\"rust\"));\n\tconst cargo = resolve(process.env.LEAN_BRIDGE_CARGO ?? \".toolchains/rust-1.90.0/bin/cargo\");\n\tconst rustc = resolve(process.env.LEAN_BRIDGE_RUSTC ?? \".toolchains/rust-1.90.0/bin/rustc\");\n\tconst result = await runCopied(cargo, [\"check\", \"--offline\", \"--quiet\"], root, { ...process.env, RUSTC: rustc, RUSTFLAGS: \"-D warnings\", CARGO_NET_OFFLINE: \"true\", CARGO_TARGET_DIR: join(root, \"target\") });\n\tassert.equal(result.stdout, \"\"); assert.equal(result.stderr, \"\");\n});\n\ntest(\"the complete .NET edge consumer compiles against generated public types with strict warnings\", { skip: !sourceChecks }, async t => {\n\tconst root = await mkdtemp(join(tmpdir(), \"lean-bridge-fin-edge-dotnet-\"));\n\tt.after(() => rm(root, { recursive: true, force: true }));\n\tconst files = renderCopiedDotnetPackage(compileCopiedDotnetModel(finContainerEdgeReviewedIr()));\n\tfor(const [path, source] of Object.entries(files).filter(([path]) => path.endsWith(\".cs\")))\n\t\tawait saveLakeFile(join(root, \"generated\"), path, source);\n\tawait saveLakeFile(root, \"consumer.cs\", await finContainerEdgeConsumer(\"dotnet\"));\n\tawait saveLakeFile(root, \"Consumer.csproj\", '<Project Sdk=\"Microsoft.NET.Sdk\"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><Nullable>enable</Nullable><AllowUnsafeBlocks>true</AllowUnsafeBlocks><TreatWarningsAsErrors>true</TreatWarningsAsErrors><UseAppHost>false</UseAppHost><NuGetAudit>false</NuGetAudit></PropertyGroup></Project>');\n\tawait saveLakeFile(root, \"NuGet.Config\", '<configuration><packageSources><clear/></packageSources><fallbackPackageFolders><clear/></fallbackPackageFolders></configuration>');\n\tconst dotnet = resolve(process.env.LEAN_BRIDGE_DOTNET ?? \".toolchains/dotnet/dotnet\");\n\tconst env = { ...copiedCleanEnvironment, DOTNET_ROOT: dirname(dotnet), DOTNET_CLI_HOME: join(root, \"dotnet-home\"), DOTNET_CLI_TELEMETRY_OPTOUT: \"1\", DOTNET_NOLOGO: \"1\", NUGET_PACKAGES: join(root, \"packages\") };\n\tawait runCopied(dotnet, [\"restore\", \"--configfile\", \"NuGet.Config\"], root, env);\n\tconst result = await runCopied(dotnet, [\"build\", \"--no-restore\", \"--disable-build-servers\", \"-p:UseSharedCompilation=false\"], root, env);\n\tassert.match(result.stdout, /Build succeeded\\./u); assert.equal(result.stderr, \"\");\n});\n\ntest(\"the complete Java and Kotlin edge consumers compile against generated public types\", { skip: !sourceChecks }, async t => {\n\tconst root = await mkdtemp(join(tmpdir(), \"lean-bridge-fin-edge-jvm-\"));\n\tt.after(() => rm(root, { recursive: true, force: true }));\n\tconst files = renderCopiedJvmPackage(compileCopiedJvmModel(finContainerEdgeReviewedIr()));\n\tconst sources = Object.entries(files).filter(([path]) => path.endsWith(\".java\"));\n\tfor(const [path, source] of sources) await saveLakeFile(join(root, \"generated\"), path, source);\n\tawait saveLakeFile(root, \"consumer.java\", await finContainerEdgeConsumer(\"java\"));\n\tawait saveLakeFile(root, \"consumer.kt\", await finContainerEdgeConsumer(\"kotlin\"));\n\tconst javac = resolve(process.env.LEAN_BRIDGE_JAVAC ?? \".toolchains/jdk22/bin/javac\");\n\tconst java = resolve(process.env.LEAN_BRIDGE_JAVA ?? \".toolchains/jdk22/bin/java\");\n\tconst kotlinc = resolve(process.env.LEAN_BRIDGE_KOTLINC ?? \".toolchains/kotlin-2.2.0/kotlinc/bin/kotlinc\");\n\tconst classes = join(root, \"classes\");\n\tconst compiled = await runCopied(javac, [\"--release\", \"22\", \"-Werror\", \"-d\", classes, ...sources.map(([path]) => join(root, \"generated\", path)), \"consumer.java\"], root);\n\tassert.equal(compiled.stdout, \"\"); assert.equal(compiled.stderr, \"\");\n\tconst kotlin = await runCopied(kotlinc, [\"-Werror\", \"-jvm-target\", \"22\", \"-cp\", classes, \"consumer.kt\", \"-d\", \"consumer.jar\"], root, { ...copiedCleanEnvironment, PATH: \"/usr/bin:/bin\", JAVA_HOME: dirname(dirname(java)) });\n\tassert.equal(kotlin.stdout, \"\"); assert.equal(kotlin.stderr, \"\");\n});\n\n"
+        },
+        {
+          "start": 18514,
+          "previous": "\tfor(const value of [\"\", \"c,c\", \"c,\", \"c,perl\", \"rust\", \" c\", 0, null]) assert.throws(() => finContainerEdgeSelection(value));\n\tassert.deepEqual(finContainerEdgeChecks, { c: 14114, cpp: 14099, python: 14095 });\n",
+          "current": "\tassert.deepEqual(finContainerEdgeSelection(\"rust,ruby\"), [\"ruby\", \"rust\"]);\n\tassert.deepEqual(finContainerEdgeSelection(\"kotlin,dotnet,java\"), [\"dotnet\", \"java\", \"kotlin\"]);\n\tassert.deepEqual(finContainerEdgeSelection(\"php-native\"), [\"php-native\"]);\n\tassert.deepEqual(finContainerEdgeSelection(\"wit-wasi\"), [\"wit-wasi\"]);\n\tfor(const value of [\"\", \"c,c\", \"c,\", \"c,perl\", \"php-wasm\", \" c\", 0, null]) assert.throws(() => finContainerEdgeSelection(value));\n\tassert.deepEqual(finContainerEdgeChecks, { c: 14114, cpp: 14099, python: 14095, rust: 14078, ruby: 14094, dotnet: 14089, java: 14089, kotlin: 14088, \"php-native\": 14089, \"wit-wasi\": 14066 });\n});\n\ntest(\"Ruby receipt extraction reads original nested gem bytes and refuses missing or repeated members\", { skip: !sourceChecks }, async t => {\n\t// Format-only controls use no Lean API and do not constitute installed acceptance.\n\tconst root = await mkdtemp(join(tmpdir(), \"lean-bridge-fin-edge-gem-\"));\n\tt.after(() => rm(root, { recursive: true, force: true }));\n\tconst ruby = resolve(process.env.LEAN_BRIDGE_RUBY ?? \".toolchains/ruby33/bin/ruby\");\n\tawait saveLakeFile(root, \"make.rb\", `require \"rubygems\"\nrequire \"rubygems/package\"\nrequire \"zlib\"\nrequire \"stringio\"\ndef tar(entries)\n  stream = StringIO.new\n  Gem::Package::TarWriter.new(stream) do |writer|\n    entries.each { |name, bytes| writer.add_file_simple(name, 0644, bytes.bytesize) { |entry| entry.write(bytes) } }\n  end\n  stream.string\nend\ndef gzip(bytes)\n  stream = StringIO.new\n  Zlib::GzipWriter.wrap(stream) { |writer| writer.write(bytes) }\n  stream.string\nend\nreceipt = ['lean-bridge/package-receipt.json', \"{\\\\\"checked\\\\\":true}\\\\n\"]\nvalid = ['data.tar.gz', gzip(tar([receipt]))]\nFile.binwrite('valid.gem', tar([valid]))\nFile.binwrite('no-data.gem', tar([]))\nFile.binwrite('two-data.gem', tar([valid, valid]))\nFile.binwrite('no-receipt.gem', tar([['data.tar.gz', gzip(tar([]))]]))\nFile.binwrite('two-receipts.gem', tar([['data.tar.gz', gzip(tar([receipt, receipt]))]]))\n`);\n\tawait runCopied(ruby, [\"--disable-gems\", \"make.rb\"], root);\n\tconst read = name => runCopied(ruby, [\"--disable-gems\", \"-e\", finContainerEdgeGemReceipt, join(root, name)], root);\n\tconst valid = await read(\"valid.gem\");\n\tassert.equal(valid.stdout, '{\"checked\":true}\\n'); assert.equal(valid.stderr, \"\");\n\tfor(const name of [\"no-data.gem\", \"two-data.gem\", \"no-receipt.gem\", \"two-receipts.gem\"])\n\t\tawait assert.rejects(read(name), error => {\n\t\t\tassert.equal(error.code, \"build-command-failed\");\n\t\t\tassert.match(error.details.stderr, /Expected one gem (?:data member|receipt)/u);\n\t\t\tassert.equal(error.details.stdout, \"\");\n\t\t\treturn true;\n\t\t});\n"
+        },
+        {
+          "start": 21518,
+          "previous": "\tfor(const profile of [\"c\", \"cpp\"])\n",
+          "current": "\tfor(const profile of [\"c\", \"cpp\", \"wit-wasi\"])\n"
+        },
+        {
+          "start": 25479,
+          "previous": "",
+          "current": "const measureDispatch = finContainerEdgeDispatchEnabled(process.env.LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH, profiles);\ntest(\"edge dispatch opt-in rejects typoed flags and missing installed selections\", () => {\n\tassert.equal(finContainerEdgeDispatchEnabled(undefined, []), false);\n\tassert.equal(finContainerEdgeDispatchEnabled(undefined, [\"c\"]), false);\n\tassert.equal(finContainerEdgeDispatchEnabled(\"1\", [\"c\"]), true);\n\tassert.throws(() => finContainerEdgeDispatchEnabled(\"1\", []));\n\tfor(const flag of [\"0\", \"\", \"true\", \"yes\", \" 1\", \"1 \"])\n\t\tassert.throws(() => finContainerEdgeDispatchEnabled(flag, [\"c\"]));\n});\n"
+        },
+        {
+          "start": 26399,
+          "previous": "\tconst report = await checkInstalledFinContainerEdges(t, profiles, path);\n",
+          "current": "\tconst report = await checkInstalledFinContainerEdges(t, profiles, path, { measureDispatch });\n"
+        },
+        {
+          "start": 26611,
+          "previous": "",
+          "current": "\tif(measureDispatch) assert.ok(report.reports.every(item => item.dispatch.rawAdapter?.runtimeDefinitionsChecked === true));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/copied-fixture-install.mjs",
+      "currentSha256": "dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df",
+      "previousSha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+      "edits": [
+        {
+          "start": 4170,
+          "previous": "\tlet command, args, env = copiedCleanEnvironment;\n",
+          "current": "\tlet command, args, pythonPolicy, rubyPolicy, jvmPolicy, dotnetPolicy, phpPolicy, env = copiedCleanEnvironment;\n\t// Optional fixture policy runs before the first package-influenced compilation and again\n\t// around execution. Other fixture callers retain their existing install behavior.\n\tlet verifyPackage = async () => {};\n"
+        },
+        {
+          "start": 4566,
+          "previous": "\t\tawait runCopied(environment.LEAN_BRIDGE_PYTHON ?? \"/usr/bin/python3\", [\"-I\", \"-m\", \"venv\", join(root, \"venv\")], root);\n\t\tawait runCopied(command, [\"-I\", \"-m\", \"pip\", \"--isolated\", \"install\", \"--no-index\", \"--no-deps\", \"--no-cache-dir\", archive], root);\n",
+          "current": "\t\tconst baseCommand = environment.LEAN_BRIDGE_PYTHON ?? \"/usr/bin/python3\";\n\t\tif(fixture.installPython) pythonPolicy = await fixture.installPython({ baseCommand, root, archive, archiveSha256: pkg.artifacts[0].sha256 });\n\t\telse\n\t\t{\n\t\t\tawait runCopied(baseCommand, [\"-I\", \"-m\", \"venv\", join(root, \"venv\")], root);\n\t\t\tawait runCopied(command, [\"-I\", \"-m\", \"pip\", \"--isolated\", \"install\", \"--no-index\", \"--no-deps\", \"--no-cache-dir\", archive], root);\n\t\t}\n"
+        },
+        {
+          "start": 5280,
+          "previous": "",
+          "current": "\t\tverifyPackage = () => fixture.verifyInstalledPackage?.({ profile, installed, receiptPath: \"lean-bridge-package.json\", archive, archiveSha256: pkg.artifacts[0].sha256 });\n\t\tawait verifyPackage();\n"
+        },
+        {
+          "start": 7107,
+          "previous": "\t\tawait runCopied(command, [environment.LEAN_BRIDGE_GEM ?? join(dirname(command), \"gem\"), \"install\", \"--norc\", archive, \"--local\", \"--install-dir\", env.GEM_HOME, \"--no-document\"], root, env);\n",
+          "current": "\t\tconst gemCommand = environment.LEAN_BRIDGE_GEM ?? join(dirname(command), \"gem\");\n\t\tif(fixture.installRuby) rubyPolicy = await fixture.installRuby({ command, gemCommand, root, archive, archiveSha256: pkg.artifacts[0].sha256 });\n\t\telse await runCopied(command, [gemCommand, \"install\", \"--norc\", archive, \"--local\", \"--install-dir\", env.GEM_HOME, \"--no-document\"], root, env);\n"
+        },
+        {
+          "start": 8311,
+          "previous": "\t\tconst inspection = join(root, \"inspection\");\n\t\tawait runCopied(\"/usr/bin/unzip\", [\"-q\", archive, \"-d\", inspection], root);\n\t\tconst metadata = JSON.parse(await readFile(join(inspection, \"composer.json\")));\n\t\tawait saveLakeFile(root, \"composer.json\", canonicalJson({ name: \"copied-check/consumer\"\n\t\t\t, require: { [pkg.name]: pkg.version }\n\t\t\t, repositories: [{ \"packagist.org\": false }, await brickMathRepository(join(root, \"feed\")), { type: \"package\", package: { ...metadata, dist: { type: \"zip\", url: pathToFileURL(archive).href } } }]\n\t\t\t, config: { \"allow-plugins\": false } }));\n\t\tawait runCopied(command, [environment.LEAN_BRIDGE_COMPOSER ?? \"/usr/bin/composer\", \"--no-plugins\", \"--no-scripts\", \"--no-interaction\", \"install\", \"--prefer-dist\"], root\n\t\t\t, { ...env, PATH: \"/usr/bin:/bin\", COMPOSER_ALLOW_SUPERUSER: \"1\", COMPOSER_DISABLE_NETWORK: \"1\", COMPOSER_HOME: join(root, \"composer-home\"), COMPOSER_CACHE_DIR: join(root, \"composer-cache\") });\n",
+          "current": "\t\tif(fixture.installPhp)\n\t\t{\n\t\t\tphpPolicy = await fixture.installPhp({ root, archive, archiveSha256: pkg.artifacts[0].sha256, command, composer: environment.LEAN_BRIDGE_COMPOSER ?? \"/usr/bin/composer\" });\n\t\t\tcommand = phpPolicy.context.command;\n\t\t}\n\t\telse\n\t\t{\n\t\t\tconst inspection = join(root, \"inspection\");\n\t\t\tawait runCopied(\"/usr/bin/unzip\", [\"-q\", archive, \"-d\", inspection], root);\n\t\t\tconst metadata = JSON.parse(await readFile(join(inspection, \"composer.json\")));\n\t\t\tawait saveLakeFile(root, \"composer.json\", canonicalJson({ name: \"copied-check/consumer\"\n\t\t\t\t, require: { [pkg.name]: pkg.version }\n\t\t\t\t, repositories: [{ \"packagist.org\": false }, await brickMathRepository(join(root, \"feed\")), { type: \"package\", package: { ...metadata, dist: { type: \"zip\", url: pathToFileURL(archive).href } } }]\n\t\t\t\t, config: { \"allow-plugins\": false } }));\n\t\t\tawait runCopied(command, [environment.LEAN_BRIDGE_COMPOSER ?? \"/usr/bin/composer\", \"--no-plugins\", \"--no-scripts\", \"--no-interaction\", \"install\", \"--prefer-dist\"], root\n\t\t\t\t, { ...env, PATH: \"/usr/bin:/bin\", COMPOSER_ALLOW_SUPERUSER: \"1\", COMPOSER_DISABLE_NETWORK: \"1\", COMPOSER_HOME: join(root, \"composer-home\"), COMPOSER_CACHE_DIR: join(root, \"composer-cache\") });\n\t\t\tawait saveLakeFile(root, \"strict.php\", source.replace(\"declare(strict_types=0);\", \"declare(strict_types=1);\"));\n\t\t}\n"
+        },
+        {
+          "start": 9728,
+          "previous": "\t\tawait saveLakeFile(root, \"strict.php\", source.replace(\"declare(strict_types=0);\", \"declare(strict_types=1);\"));\n\t\tconst strict = await runCopied(command, [...args.slice(0, -1), \"strict.php\"], root);\n",
+          "current": "\t\tconst strict = phpPolicy ? await phpPolicy.run(\"strict\") : await runCopied(command, [...args.slice(0, -1), \"strict.php\"], root);\n"
+        },
+        {
+          "start": 10049,
+          "previous": "\t\tawait mkdir(join(root, \"feed\"));\n\t\tawait cp(archive, join(root, \"feed\", `${pkg.name}.${pkg.version}.nupkg`));\n\t\tawait saveLakeFile(root, \"Consumer.csproj\", `<Project Sdk=\"Microsoft.NET.Sdk\"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><Nullable>enable</Nullable><UseAppHost>false</UseAppHost><NuGetAudit>false</NuGetAudit><TreatWarningsAsErrors>true</TreatWarningsAsErrors><EnableDefaultCompileItems>false</EnableDefaultCompileItems></PropertyGroup><ItemGroup><Compile Include=\"consumer.cs\"/><PackageReference Include=\"${pkg.name}\" Version=\"[${pkg.version}]\"/></ItemGroup></Project>`);\n\t\tawait saveLakeFile(root, \"NuGet.Config\", '<configuration><packageSources><clear/><add key=\"prepared\" value=\"feed\"/></packageSources><fallbackPackageFolders><clear/></fallbackPackageFolders></configuration>');\n\t\tenv = { ...env, DOTNET_ROOT: dirname(command), DOTNET_CLI_HOME: join(root, \"dotnet-home\"), DOTNET_CLI_TELEMETRY_OPTOUT: \"1\", DOTNET_NOLOGO: \"1\", NUGET_PACKAGES: join(root, \"packages\") };\n\t\tawait runCopied(command, [\"restore\", \"--configfile\", \"NuGet.Config\"], root, env);\n\t\tawait runCopied(command, [\"build\", \"--no-restore\", \"--disable-build-servers\", \"-p:UseSharedCompilation=false\", \"-o\", \"out\"], root, env);\n",
+          "current": "\t\tif(fixture.installDotnet)\n\t\t{\n\t\t\tdotnetPolicy = await fixture.installDotnet({ root, archive, archiveSha256: pkg.artifacts[0].sha256, command });\n\t\t\tcommand = dotnetPolicy.context.command;\n\t\t}\n\t\telse\n\t\t{\n\t\t\tawait mkdir(join(root, \"feed\"));\n\t\t\tawait cp(archive, join(root, \"feed\", `${pkg.name}.${pkg.version}.nupkg`));\n\t\t\tawait saveLakeFile(root, \"Consumer.csproj\", `<Project Sdk=\"Microsoft.NET.Sdk\"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><Nullable>enable</Nullable><UseAppHost>false</UseAppHost><NuGetAudit>false</NuGetAudit><TreatWarningsAsErrors>true</TreatWarningsAsErrors><EnableDefaultCompileItems>false</EnableDefaultCompileItems></PropertyGroup><ItemGroup><Compile Include=\"consumer.cs\"/><PackageReference Include=\"${pkg.name}\" Version=\"[${pkg.version}]\"/></ItemGroup></Project>`);\n\t\t\tawait saveLakeFile(root, \"NuGet.Config\", '<configuration><packageSources><clear/><add key=\"prepared\" value=\"feed\"/></packageSources><fallbackPackageFolders><clear/></fallbackPackageFolders></configuration>');\n\t\t\tenv = { ...env, DOTNET_ROOT: dirname(command), DOTNET_CLI_HOME: join(root, \"dotnet-home\"), DOTNET_CLI_TELEMETRY_OPTOUT: \"1\", DOTNET_NOLOGO: \"1\", NUGET_PACKAGES: join(root, \"packages\") };\n\t\t\tawait runCopied(command, [\"restore\", \"--configfile\", \"NuGet.Config\"], root, env);\n\t\t\tawait runCopied(command, [\"build\", \"--no-restore\", \"--disable-build-servers\", \"-p:UseSharedCompilation=false\", \"-o\", \"out\"], root, env);\n\t\t}\n"
+        },
+        {
+          "start": 11690,
+          "previous": "\t\tawait cp(join(handoff, pkg.artifacts.find(item => item.path.endsWith(\".jar\")).path), jar);\n\t\tif(profile === \"java\")\n",
+          "current": "\t\tconst artifact = pkg.artifacts.find(item => item.path.endsWith(\".jar\"));\n\t\tif(fixture.installJvm)\n\t\t{\n\t\t\tjvmPolicy = await fixture.installJvm({ profile, root, archive: join(handoff, artifact.path), archiveSha256: artifact.sha256, environment });\n\t\t\tcommand = jvmPolicy.context.command; args = jvmPolicy.args;\n\t\t}\n\t\telse if(profile === \"java\")\n"
+        },
+        {
+          "start": 12039,
+          "previous": "",
+          "current": "\t\t\tawait cp(join(handoff, artifact.path), jar);\n"
+        },
+        {
+          "start": 12307,
+          "previous": "",
+          "current": "\t\t\tawait cp(join(handoff, artifact.path), jar);\n"
+        },
+        {
+          "start": 12824,
+          "previous": "",
+          "current": "\t\tconst installed = join(root, `${pkg.name}-${pkg.version}`);\n\t\tverifyPackage = () => fixture.verifyInstalledPackage?.({ profile, installed, receiptPath: \"lean-bridge/package-receipt.json\", archive, archiveSha256: pkg.artifacts[0].sha256 });\n\t\tawait verifyPackage();\n"
+        },
+        {
+          "start": 14147,
+          "previous": "\tconst result = await runCopied(command, args, root, env);\n",
+          "current": "\tawait verifyPackage();\n\tconst result = pythonPolicy ? await pythonPolicy.run([\"consumer.py\"], root, env)\n\t\t: rubyPolicy ? await rubyPolicy.run(args, root)\n\t\t\t: jvmPolicy ? await jvmPolicy.run()\n\t\t\t\t: dotnetPolicy ? await dotnetPolicy.run()\n\t\t\t\t\t: phpPolicy ? await phpPolicy.run() : await runCopied(command, args, root, env);\n\tawait verifyPackage();\n"
+        },
+        {
+          "start": 14996,
+          "previous": "\treturn { checks, ...(observation ? { result: observation } : {}), consumerSha256: sha256(source), command, offlineInstall: true, compilerFreePath: true };\n",
+          "current": "\treturn { checks\n\t\t, ...(observation ? { result: observation } : {})\n\t\t, consumerSha256: sha256(source), command\n\t\t, ...(pythonPolicy ? { pythonEnvironment: pythonPolicy.context } : {})\n\t\t, ...(rubyPolicy ? { rubyEnvironment: rubyPolicy.context } : {})\n\t\t, ...(jvmPolicy ? { jvmEnvironment: jvmPolicy.context } : {})\n\t\t, ...(dotnetPolicy ? { dotnetEnvironment: dotnetPolicy.context } : {})\n\t\t, ...(phpPolicy ? { phpEnvironment: phpPolicy.context } : {})\n\t\t, offlineInstall: true, compilerFreePath: true };\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-container-edge-install.mjs",
+      "currentSha256": "d2e1e9ace5d14b63bc52d1851d46979f701a4774fe24b86390da08488b5363f3",
+      "previousSha256": "f6d1bf014ac2a711c6da9c06bd9e91c57ac180ffd5dce1a23b0aef05f8c6bb75",
+      "edits": [
+        {
+          "start": 4,
+          "previous": " * Installed acceptance for the additive native Fin container cases. This development slice is C/C++/Python;\n * other native consumers and the separate measured-dispatch supplement remain required under VO #1454.\n",
+          "current": " * Installed acceptance for the additive native Fin container cases across all ten non-Perl hosts.\n * Actual executions and the separate measured-dispatch supplement remain required under VO #1454.\n"
+        },
+        {
+          "start": 969,
+          "previous": "import { finContainerEdgeConsumer, finContainerEdgeRefinements, finContainerEdgeSource, implementedFinContainerEdgeProfiles } from \"./fin-container-edges.mjs\";\n",
+          "current": "import { finContainerEdgeConsumer, finContainerEdgeRefinements, finContainerEdgeSource } from \"./fin-container-edges.mjs\";\nimport { observeFinContainerEdgeRaw } from \"./fin-container-edge-observer.mjs\";\nimport { observeFinContainerEdgePublic } from \"./fin-container-edge-public-observer.mjs\";\nimport { observeFinContainerEdgePython } from \"./fin-container-edge-python-observer.mjs\";\nimport { observeFinContainerEdgeRust } from \"./fin-container-edge-rust-observer.mjs\";\nimport { observeFinContainerEdgeRuby } from \"./fin-container-edge-ruby-observer.mjs\";\nimport { observeFinContainerEdgePhp } from \"./fin-container-edge-php-observer.mjs\";\nimport { observeFinContainerEdgeJvm } from \"./fin-container-edge-jvm-observer.mjs\";\nimport { finContainerEdgeClosedProfiles, verifyFinContainerEdgeArchiveClosure, verifyFinContainerEdgeFileClosure } from \"./fin-container-edge-closure.mjs\";\nimport { installFinContainerEdgePython, runFinContainerEdgePython, verifyFinContainerEdgePythonEnvironment } from \"./fin-container-edge-python-closure.mjs\";\nimport { installFinContainerEdgeRuby, runFinContainerEdgeRuby, verifyFinContainerEdgeRubyEnvironment } from \"./fin-container-edge-ruby-closure.mjs\";\nimport { installFinContainerEdgeJvm, runFinContainerEdgeJvm, verifyFinContainerEdgeJvmEnvironment } from \"./fin-container-edge-jvm-closure.mjs\";\nimport { installFinContainerEdgeDotnet, runFinContainerEdgeDotnet, verifyFinContainerEdgeDotnetEnvironment } from \"./fin-container-edge-dotnet-closure.mjs\";\nimport { observeFinContainerEdgeDotnet } from \"./fin-container-edge-dotnet-observer.mjs\";\nimport { observeFinContainerEdgeWit } from \"./fin-container-edge-wit-observer.mjs\";\nimport { installFinContainerEdgePhp, runFinContainerEdgePhp, verifyFinContainerEdgePhpEnvironment } from \"./fin-container-edge-php-closure.mjs\";\n"
+        },
+        {
+          "start": 2887,
+          "previous": "",
+          "current": "import { prepareRustCorpusDependencies } from \"./type-corpus-rust.mjs\";\n"
+        },
+        {
+          "start": 3052,
+          "previous": "export const finContainerEdgeChecks = Object.freeze({ c: 2041 + 12073, cpp: 2039 + 12060, python: 2029 + 12066 });\n",
+          "current": "export const finContainerEdgeChecks = Object.freeze({\n\tc: 2041 + 12073\n\t, cpp: 2039 + 12060\n\t, python: 2029 + 12066\n\t, rust: 2027 + 12051\n\t, ruby: 2025 + 12069\n\t, dotnet: 2026 + 12063\n\t, java: 2026 + 12063\n\t, kotlin: 2025 + 12063\n\t, \"php-native\": 2026 + 12063\n\t, \"wit-wasi\": 2033 + 12033 });\n\n/** Read exactly one receipt directly from the gem's original data member, without extracting a substitute. */\nexport const finContainerEdgeGemReceipt = String.raw`require \"rubygems\"\nrequire \"rubygems/package\"\nrequire \"zlib\"\nrequire \"stringio\"\npayloads = []\nGem::Package::TarReader.new(File.open(ARGV.fetch(0), \"rb\")) do |tar|\n  tar.each { |entry| payloads << entry.read if entry.full_name == \"data.tar.gz\" && entry.file? }\nend\nabort \"Expected one gem data member\" unless payloads.length == 1\nreceipts = []\nZlib::GzipReader.wrap(StringIO.new(payloads.fetch(0))) do |gzip|\n  Gem::Package::TarReader.new(gzip) do |tar|\n    tar.each { |entry| receipts << entry.read if entry.full_name == \"lean-bridge/package-receipt.json\" && entry.file? }\n  end\nend\nabort \"Expected one gem receipt\" unless receipts.length == 1\nprint receipts.fetch(0)\n`;\n"
+        },
+        {
+          "start": 4513,
+          "previous": "\tassert.ok(profiles.every(profile => implementedFinContainerEdgeProfiles.includes(profile)), \"Unknown, empty or unimplemented Fin edge profile\");\n",
+          "current": "\tassert.ok(profiles.every(profile => Object.hasOwn(finContainerEdgeChecks, profile)), \"Unknown, empty or unimplemented Fin edge installed profile\");\n"
+        },
+        {
+          "start": 4770,
+          "previous": "",
+          "current": "/**\n * Enable additional raw measurements only on an explicit installed selection. Typos must not silently\n * turn an expected measurement into a passing uninstrumented run.\n *\n * @param value - Optional LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH setting.\n * @param profiles - Explicit installed profiles.\n */\nexport const finContainerEdgeDispatchEnabled = (value, profiles) => {\n\tif(value === undefined) return false;\n\tassert.equal(value, \"1\", \"Fin edge dispatch accepts only the explicit value 1\");\n\tassert.ok(profiles.length > 0, \"Fin edge dispatch requires an installed profile selection\");\n\treturn true;\n};\n\n"
+        },
+        {
+          "start": 6262,
+          "previous": " * Compile the installed public C/C++ consumer with an origin-relative runtime search path.\n",
+          "current": " * Compile the installed public C/C++/Wasmtime consumer with an origin-relative runtime search path.\n"
+        },
+        {
+          "start": 6515,
+          "previous": " * @param options.profile - C or C++.\n",
+          "current": " * @param options.profile - C, C++ or WIT/WASI.\n"
+        },
+        {
+          "start": 6894,
+          "previous": "\tassert.ok([\"c\", \"cpp\"].includes(profile));\n",
+          "current": "\tassert.ok([\"c\", \"cpp\", \"wit-wasi\"].includes(profile));\n"
+        },
+        {
+          "start": 8649,
+          "previous": " * @param options.profile - C, C++ or Python.\n",
+          "current": " * @param options.profile - An implemented installed profile.\n"
+        },
+        {
+          "start": 8968,
+          "previous": "",
+          "current": " * @param options.measureDispatch - Opt in to raw adapters and complete public consumers for every native edge profile.\n * @param options.expectedModelSha256 - Producer model digest, required for raw observations.\n * @param options.leanPrefix - Matching Lean headers for the test-only raw probe.\n * @param options.dependencies - Original Rust locked dependency handoff metadata.\n * @param options.toolchainEnvironment - Explicit Rust/JVM compilers for test-only callers.\n * @param options.pythonEnvironment - Python baseline captured before package installation.\n * @param options.rubyEnvironment - Ruby environment derived from the original gem before installation.\n * @param options.jvmEnvironment - JVM archive identity and isolated host compilation outputs.\n * @param options.dotnetEnvironment - Original NuGet inputs and verified deployed application.\n * @param options.phpEnvironment - Original Composer payloads and verified generated autoload inputs.\n"
+        },
+        {
+          "start": 9931,
+          "previous": "export const repeatFinContainerEdges = async ({ profile, consumer, handoff, packages, command }) => {\n",
+          "current": "export const repeatFinContainerEdges = async ({ profile, consumer, handoff, packages, command, measureDispatch = false, expectedModelSha256, leanPrefix, dependencies, toolchainEnvironment, pythonEnvironment, rubyEnvironment, jvmEnvironment, dotnetEnvironment, phpEnvironment }) => {\n\tassert.equal(typeof measureDispatch, \"boolean\");\n"
+        },
+        {
+          "start": 10376,
+          "previous": "\tconst archive = join(handoff, pkg.artifacts[0].path);\n",
+          "current": "\tconst jvm = [\"java\", \"kotlin\"].includes(profile);\n\tconst artifact = jvm ? pkg.artifacts.find(item => item.path.endsWith(\".jar\")) : pkg.artifacts[0];\n\tassert.ok(artifact);\n\tconst archive = join(handoff, artifact.path);\n\tassert.equal(sha256(await readFile(archive)), artifact.sha256);\n"
+        },
+        {
+          "start": 10717,
+          "previous": "",
+          "current": "\tconst deployed = {};\n"
+        },
+        {
+          "start": 10768,
+          "previous": "\t\tconst identity = await runCopied(command, [\"-I\", \"-c\", \"import json, pathlib, sys, lean_fincontainers; print(json.dumps({'site':str(pathlib.Path(lean_fincontainers.__file__).parent.parent),'version':sys.version.split()[0]}))\"], root);\n",
+          "current": "\t\tassert.ok(pythonEnvironment, \"Python repeat requires the original pre-install baseline\");\n\t\tassert.equal(command, join(pythonEnvironment.venv, \"bin/python\"));\n\t\treceiptPath = \"lean_fincontainers/lean_bridge/package-receipt.json\";\n\t\tarchiveBytes = (await runCopied(\"/usr/bin/unzip\", [\"-p\", archive, receiptPath], root)).stdout;\n\t\tassert.equal(sha256(archiveBytes), pythonEnvironment.receiptSha256);\n\t\tconst identity = await runFinContainerEdgePython(pythonEnvironment, [\"-c\", \"import json, pathlib, sys, lean_fincontainers; print(json.dumps({'site':str(pathlib.Path(lean_fincontainers.__file__).parent.parent),'version':sys.version.split()[0]}))\"], root);\n"
+        },
+        {
+          "start": 11550,
+          "previous": "",
+          "current": "\t\tassert.equal(installed, join(pythonEnvironment.venv, pythonEnvironment.site));\n"
+        },
+        {
+          "start": 11658,
+          "previous": "\t\treceiptPath = \"lean_fincontainers/lean_bridge/package-receipt.json\";\n",
+          "current": "\t\targs = [\"consumer.py\"];\n\t}\n\telse if(profile === \"ruby\")\n\t{\n\t\tconst gems = join(root, \"gems\");\n\t\tassert.ok(rubyEnvironment, \"Ruby repeat requires the original pre-install archive identity\");\n\t\tassert.equal(rubyEnvironment.gems, gems);\n\t\tconst identity = await runFinContainerEdgeRuby(rubyEnvironment, [\"-e\", \"print Gem::Specification.find_by_name(ARGV.fetch(0), ARGV.fetch(1)).full_gem_path\", pkg.name, pkg.version], root);\n\t\tinstalled = join(gems, \"gems\", rubyEnvironment.fullName);\n\t\tassert.equal(identity.stdout, installed);\n\t\treceiptPath = \"lean-bridge/package-receipt.json\";\n\t\tarchiveBytes = (await runCopied(command, [\"--disable-gems\", \"-e\", finContainerEdgeGemReceipt, archive], root)).stdout;\n\t\tassert.equal(archiveBytes, rubyEnvironment.receiptBytes);\n\t\targs = [\"consumer.rb\"];\n\t}\n\telse if(profile === \"rust\")\n\t{\n\t\tconst directory = `${pkg.name}-${pkg.version}`;\n\t\tinstalled = join(root, directory);\n\t\treceiptPath = \"lean-bridge/package-receipt.json\";\n\t\tarchiveBytes = (await runCopied(\"/usr/bin/tar\", [\"--use-compress-program=/usr/bin/gzip\", \"-xOf\", archive, `${directory}/${receiptPath}`], root)).stdout;\n\t\targs = [];\n\t}\n\telse if(profile === \"dotnet\")\n\t{\n\t\tassert.ok(dotnetEnvironment, \".NET repeat requires original pre-restore archive identities\");\n\t\tassert.equal(dotnetEnvironment.root, root); assert.equal(dotnetEnvironment.command, command);\n\t\tawait verifyFinContainerEdgeDotnetEnvironment(dotnetEnvironment);\n\t\tinstalled = join(root, \"inspection\");\n\t\treceiptPath = \"lean-bridge/package-receipt.json\";\n\t\tarchiveBytes = (await runCopied(\"/usr/bin/unzip\", [\"-p\", archive, receiptPath], root)).stdout;\n\t\tassert.equal(archiveBytes, dotnetEnvironment.receiptBytes);\n\t\targs = [\"out/Consumer.dll\"];\n\t\tdeployed[args[0]] = sha256(await readFile(join(root, args[0])));\n\t}\n\telse if(profile === \"php-native\")\n\t{\n\t\tassert.ok(phpEnvironment, \"PHP repeat requires the original pre-install archive identity\");\n\t\tassert.equal(phpEnvironment.root, root); assert.equal(phpEnvironment.command, command);\n\t\tassert.equal(phpEnvironment.name, pkg.name);\n\t\tawait verifyFinContainerEdgePhpEnvironment(phpEnvironment);\n\t\tinstalled = join(root, \"vendor\", pkg.name);\n\t\treceiptPath = \"lean-bridge/package-receipt.json\";\n\t\tarchiveBytes = (await runCopied(\"/usr/bin/unzip\", [\"-p\", archive, receiptPath], root)).stdout;\n\t\tassert.equal(archiveBytes, phpEnvironment.receiptBytes);\n\t\targs = [\"-n\", \"-d\", \"extension=ffi\", \"-d\", \"ffi.enable=1\", \"consumer.php\"];\n\t\tfor(const path of [\"consumer.php\", \"strict.php\"]) deployed[path] = sha256(await readFile(join(root, path)));\n\t}\n\telse if(jvm)\n\t{\n\t\tassert.ok(jvmEnvironment, \"JVM repeat requires the original pre-compilation archive identity\");\n\t\tassert.equal(jvmEnvironment.root, root); assert.equal(jvmEnvironment.command, command);\n\t\tawait verifyFinContainerEdgeJvmEnvironment(jvmEnvironment);\n\t\t// Verify the exact JAR that the caller loads, then inspect its receipt-pinned members.\n\t\tassert.equal(sha256(await readFile(join(root, \"component.jar\"))), artifact.sha256);\n\t\tinstalled = join(root, \"jar-inspection\");\n\t\tawait runCopied(\"/usr/bin/unzip\", [\"-q\", join(root, \"component.jar\"), \"-d\", installed], root);\n\t\treceiptPath = \"META-INF/lean-bridge/package-receipt.json\";\n"
+        },
+        {
+          "start": 14956,
+          "previous": "\t\targs = [\"-I\", \"consumer.py\"];\n",
+          "current": "\t\tassert.equal(archiveBytes, jvmEnvironment.receiptBytes);\n\t\targs = [\"--enable-native-access=ALL-UNNAMED\", \"-cp\", profile === \"java\" ? \"component.jar:classes\" : \"component.jar:consumer.jar\", profile === \"java\" ? \"Consumer\" : \"ConsumerKt\"];\n\t\tfor(const path of Object.keys(jvmEnvironment.files))\n\t\t\tdeployed[path] = sha256(await readFile(join(root, path)));\n"
+        },
+        {
+          "start": 15325,
+          "previous": "\t\tassert.ok([\"c\", \"cpp\"].includes(profile));\n",
+          "current": "\t\tassert.ok([\"c\", \"cpp\", \"wit-wasi\"].includes(profile));\n"
+        },
+        {
+          "start": 15873,
+          "previous": "",
+          "current": "\tassert.equal(receipt.name, pkg.name);\n\tassert.equal(receipt.version, pkg.version);\n"
+        },
+        {
+          "start": 16009,
+          "previous": "\tconst executable = profile === \"python\" ? null : await prepareFinContainerEdgeExecutable({ profile, root, directory: basename(installed), pkgConfig: receipt.pkgConfig });\n\tif(executable)\n",
+          "current": "\tconst exactFileClosure = finContainerEdgeClosedProfiles.includes(profile) || [\"ruby\", \"dotnet\", \"php-native\"].includes(profile) || jvm;\n\tconst pythonAt = path => ({ ...pythonEnvironment, venv: resolve(path, relative(join(pythonEnvironment.venv, pythonEnvironment.site), pythonEnvironment.venv)) });\n\tconst rubyAt = path => ({ ...rubyEnvironment, gems: resolve(path, \"../..\") });\n\tconst jvmAt = path => ({ ...jvmEnvironment, root: dirname(path) });\n\tconst dotnetAt = path => ({ ...dotnetEnvironment, root: dirname(path) });\n\tconst phpAt = path => ({ ...phpEnvironment, root: resolve(path, relative(installed, root)) });\n\tconst checkClosure = async path => {\n\t\tif(profile === \"php-native\") return verifyFinContainerEdgePhpEnvironment(phpAt(path));\n\t\tif(profile === \"dotnet\") return verifyFinContainerEdgeDotnetEnvironment(dotnetAt(path));\n\t\tif(jvm) return { ...await verifyFinContainerEdgeFileClosure({ installed: path, receiptPath, receiptBytes: archiveBytes })\n\t\t\t, ...await verifyFinContainerEdgeJvmEnvironment(jvmAt(path)) };\n\t\treturn profile === \"python\" ? verifyFinContainerEdgePythonEnvironment(pythonAt(path))\n\t\t\t: profile === \"ruby\" ? verifyFinContainerEdgeRubyEnvironment(rubyAt(path))\n\t\t\t\t: exactFileClosure ? verifyFinContainerEdgeFileClosure({ installed: path, receiptPath, receiptBytes: archiveBytes }) : null;\n\t};\n\tconst fileClosure = await checkClosure(installed);\n\tif(profile === \"dotnet\")\n\t{\n\t\t// The application loads the copied assembly and native libraries, not the NuGet cache originals.\n\t\tfor(const [path, file] of Object.entries(receipt.files))\n\t\t{\n\t\t\tconst target = path.startsWith(\"lib/net8.0/\") && path.endsWith(\".dll\") ? `out/${basename(path)}`\n\t\t\t\t: path.startsWith(\"runtimes/linux-x64/native/\") ? `out/${path}` : null;\n\t\t\tif(target === null) continue;\n\t\t\tconst bytes = await readFile(join(root, target));\n\t\t\tassert.equal(bytes.length, file.bytes); assert.equal(sha256(bytes), file.sha256);\n\t\t\tdeployed[target] = file.sha256;\n\t\t}\n\t\tassert.ok(Object.keys(deployed).some(path => path.endsWith(\".so\")));\n\t\tassert.ok(Object.keys(deployed).some(path => path.endsWith(\".dll\") && path !== \"out/Consumer.dll\"));\n\t}\n\tconst executable = [\"c\", \"cpp\", \"wit-wasi\"].includes(profile)\n\t\t? await prepareFinContainerEdgeExecutable({ profile, root, directory: basename(installed), pkgConfig: profile === \"wit-wasi\" ? `${pkg.name}-wit` : receipt.pkgConfig })\n\t\t: profile === \"rust\" ? { executableSha256: sha256(await readFile(command)) } : null;\n\tif(executable?.runtimeSearchPath)\n"
+        },
+        {
+          "start": 18870,
+          "previous": "\tassert.ok(command.startsWith(`${root}/`));\n",
+          "current": "\tassert.deepEqual(await checkClosure(installed), fileClosure, \"package file set before relocation\");\n\tconst externalCommand = [\"ruby\", \"dotnet\", \"java\", \"kotlin\", \"php-native\"].includes(profile);\n\tassert.ok(externalCommand ? command.startsWith(\"/\") : command.startsWith(`${root}/`));\n"
+        },
+        {
+          "start": 19239,
+          "previous": "\tconst repeated = await runCopied(join(moved, relative(root, command)), args, moved, copiedCleanEnvironment);\n",
+          "current": "\tconst movedCommand = externalCommand ? command : join(moved, relative(root, command));\n\tconst movedInstall = join(moved, relative(root, installed));\n\tassert.deepEqual(await checkClosure(movedInstall), fileClosure, \"package file set before relocated execution\");\n\tconst environment = profile === \"ruby\"\n\t\t? { ...copiedCleanEnvironment, GEM_HOME: join(moved, \"gems\"), GEM_PATH: join(moved, \"gems\") }\n\t\t: profile === \"dotnet\" ? { ...copiedCleanEnvironment, DOTNET_ROOT: dirname(command), DOTNET_CLI_HOME: join(moved, \"dotnet-home\"), DOTNET_CLI_TELEMETRY_OPTOUT: \"1\", DOTNET_NOLOGO: \"1\" } : copiedCleanEnvironment;\n\tconst repeated = profile === \"python\" ? await runFinContainerEdgePython(pythonAt(movedInstall), args, moved, environment)\n\t\t: profile === \"ruby\" ? await runFinContainerEdgeRuby(rubyAt(movedInstall), args, moved)\n\t\t\t: jvm ? await runFinContainerEdgeJvm(jvmAt(movedInstall))\n\t\t\t\t: profile === \"dotnet\" ? await runFinContainerEdgeDotnet(dotnetAt(movedInstall))\n\t\t\t\t\t: profile === \"php-native\" ? await runFinContainerEdgePhp(phpAt(movedInstall)) : await runCopied(movedCommand, args, moved, environment);\n\tassert.deepEqual(await checkClosure(movedInstall), fileClosure, \"package file set after relocated execution\");\n"
+        },
+        {
+          "start": 20590,
+          "previous": "\tconst movedInstall = join(moved, relative(root, installed));\n",
+          "current": "\tif(profile === \"php-native\")\n\t{\n\t\tconst strict = await runFinContainerEdgePhp(phpAt(movedInstall), \"strict\");\n\t\tassert.equal(strict.stderr, \"\");\n\t\tassert.equal(strict.stdout, repeated.stdout);\n\t}\n"
+        },
+        {
+          "start": 20928,
+          "previous": "\tif(executable) assert.equal(sha256(await readFile(join(moved, \"consumer\"))), executable.executableSha256);\n",
+          "current": "\tif(executable) assert.equal(sha256(await readFile(movedCommand)), executable.executableSha256);\n\tfor(const [path, digest] of Object.entries(deployed)) assert.equal(sha256(await readFile(join(moved, path))), digest);\n\tconst rawAdapter = measureDispatch ? await observeFinContainerEdgeRaw({\n\t\tinstalled: movedInstall, receiptPath, receiptBytes: archiveBytes\n\t\t, expectedModelSha256, leanPrefix, exactFileClosure\n\t\t, probeRoot: join(consumer, `${profile}-edge-raw`) }) : null;\n\tconst publicHost = measureDispatch && [\"c\", \"cpp\"].includes(profile) ? await observeFinContainerEdgePublic({\n\t\tinstalled: movedInstall, receiptPath, receiptBytes: archiveBytes\n\t\t, expectedModelSha256, profile\n\t\t, probeRoot: join(consumer, `${profile}-edge-public`) })\n\t\t: measureDispatch && profile === \"python\" ? await observeFinContainerEdgePython({\n\t\t\tinstalled: movedInstall, receiptPath, receiptBytes: archiveBytes\n\t\t\t, expectedModelSha256, command: movedCommand\n\t\t\t, pythonEnvironment: pythonAt(movedInstall)\n\t\t\t, probeRoot: join(consumer, \"python-edge-public\") })\n\t\t\t: measureDispatch && profile === \"rust\" ? await observeFinContainerEdgeRust({\n\t\t\t\tinstalled: movedInstall, receiptPath, receiptBytes: archiveBytes\n\t\t\t\t, expectedModelSha256\n\t\t\t\t, dependencyRoot: join(moved, \"dependencies\")\n\t\t\t\t, dependencyArchive: join(consumer, \"dependencies\", dependencies.archive)\n\t\t\t\t, dependencies, environment: toolchainEnvironment\n\t\t\t\t, probeRoot: join(consumer, \"rust-edge-public\") })\n\t\t\t\t: measureDispatch && profile === \"ruby\" ? await observeFinContainerEdgeRuby({\n\t\t\t\t\tinstalled: movedInstall, receiptPath, receiptBytes: archiveBytes\n\t\t\t\t\t, rubyEnvironment: rubyAt(movedInstall)\n\t\t\t\t\t, expectedModelSha256, command: movedCommand\n\t\t\t\t\t, probeRoot: join(consumer, \"ruby-edge-public\") })\n\t\t\t\t\t: measureDispatch && profile === \"php-native\" ? await observeFinContainerEdgePhp({\n\t\t\t\t\t\tinstalled: movedInstall, receiptPath, receiptBytes: archiveBytes\n\t\t\t\t\t\t, expectedModelSha256, phpEnvironment: phpAt(movedInstall)\n\t\t\t\t\t\t, probeRoot: join(consumer, \"php-edge-public\") })\n\t\t\t\t\t\t: measureDispatch && jvm ? await observeFinContainerEdgeJvm({\n\t\t\t\t\t\t\tinstalled: movedInstall, receiptPath, receiptBytes: archiveBytes\n\t\t\t\t\t\t\t, expectedModelSha256, jvmEnvironment: jvmAt(movedInstall)\n\t\t\t\t\t\t\t, toolchainEnvironment\n\t\t\t\t\t\t\t, probeRoot: join(consumer, `${profile}-edge-public`) })\n\t\t\t\t\t\t\t: measureDispatch && profile === \"dotnet\" ? await observeFinContainerEdgeDotnet({\n\t\t\t\t\t\t\t\tinstalled: movedInstall, receiptPath, receiptBytes: archiveBytes\n\t\t\t\t\t\t\t\t, expectedModelSha256, dotnetEnvironment: dotnetAt(movedInstall)\n\t\t\t\t\t\t\t\t, probeRoot: join(consumer, \"dotnet-edge-public\") })\n\t\t\t\t\t\t\t\t: measureDispatch && profile === \"wit-wasi\" ? await observeFinContainerEdgeWit({\n\t\t\t\t\t\t\t\t\tinstalled: movedInstall, receiptPath, receiptBytes: archiveBytes\n\t\t\t\t\t\t\t\t\t, expectedModelSha256\n\t\t\t\t\t\t\t\t\t, probeRoot: join(consumer, \"wit-edge-public\") }) : null;\n\tassert.deepEqual(await checkClosure(movedInstall), fileClosure, \"package file set after observations\");\n"
+        },
+        {
+          "start": 23971,
+          "previous": "",
+          "current": "\t\t, ...(exactFileClosure ? { exactPackageFiles: true, packageFileSetSha256: fileClosure.packageFileSetSha256 } : {})\n\t\t, ...(pythonEnvironment ? { pythonEnvironment: fileClosure, pythonBytecodePolicy: \"isolated-empty-prefix\" } : {})\n\t\t, ...(rubyEnvironment ? { rubyEnvironment: fileClosure } : {})\n\t\t, ...(jvmEnvironment ? { jvmEnvironment: fileClosure } : {})\n\t\t, ...(dotnetEnvironment ? { dotnetEnvironment: fileClosure } : {})\n\t\t, ...(phpEnvironment ? { phpEnvironment: fileClosure } : {})\n"
+        },
+        {
+          "start": 24654,
+          "previous": "",
+          "current": "\t\t, ...(Object.keys(deployed).length ? { deployedFiles: deployed } : {})\n\t\t, ...(profile === \"php-native\" ? { repeatStrictExecution: true } : {})\n\t\t, ...(rawAdapter ? { rawAdapterDispatch: rawAdapter } : {})\n\t\t, ...(publicHost ? { publicHostDispatch: publicHost } : {})\n"
+        },
+        {
+          "start": 25275,
+          "previous": "",
+          "current": " * @param options - Explicit optional acceptance measurements.\n * @param options.measureDispatch - Measure raw C adapters of each installed package after its move.\n"
+        },
+        {
+          "start": 25443,
+          "previous": "export const checkInstalledFinContainerEdges = async (t, profiles, reportPath) => {\n",
+          "current": "export const checkInstalledFinContainerEdges = async (t, profiles, reportPath, { measureDispatch = false } = {}) => {\n\tassert.equal(typeof measureDispatch, \"boolean\");\n"
+        },
+        {
+          "start": 27744,
+          "previous": "",
+          "current": "\t\tconst dependencies = attempt === 0 && profiles.includes(\"rust\")\n\t\t\t? await prepareRustCorpusDependencies({ rustRoot: join(outputRoot, \"native/rust\"), directory: author, handoff: join(consumer, \"dependencies\"), environment }) : undefined;\n"
+        },
+        {
+          "start": 28332,
+          "previous": "\t\t\tconst { command, ...observation } = await installCopiedConsumer({ profile\n\t\t\t\t, consumer, handoff, packages, environment\n\t\t\t\t, fixture: { source: () => consumerSource, success: \"fin-container-ok\", expectedChecks: finContainerEdgeChecks[profile] } });\n\t\t\tconst repeated = await repeatFinContainerEdges({ profile, consumer, handoff, packages, command });\n",
+          "current": "\t\t\tconst { command, pythonEnvironment, rubyEnvironment, jvmEnvironment, dotnetEnvironment, phpEnvironment, ...observation } = await installCopiedConsumer({ profile\n\t\t\t\t, consumer, handoff, packages, environment, dependencies\n\t\t\t\t, fixture: {\n\t\t\t\t\tsource: () => consumerSource\n\t\t\t\t\t, verifyInstalledPackage: verifyFinContainerEdgeArchiveClosure\n\t\t\t\t\t, installPython: installFinContainerEdgePython\n\t\t\t\t\t, installRuby: installFinContainerEdgeRuby\n\t\t\t\t\t, installJvm: installFinContainerEdgeJvm\n\t\t\t\t\t, installDotnet: installFinContainerEdgeDotnet\n\t\t\t\t\t, installPhp: installFinContainerEdgePhp\n\t\t\t\t\t, success: \"fin-container-ok\"\n\t\t\t\t\t, expectedChecks: finContainerEdgeChecks[profile]\n\t\t\t\t\t, wit: [\n\t\t\t\t\t\t\"mirror-all\", \"count-none\", \"sum-huge\", \"or-default\"\n\t\t\t\t\t\t, \"present\", \"flatten\", \"label\", \"wrap-all\", \"empty-array\"\n\t\t\t\t\t\t, \"empty-list\", \"empty-option\", \"optional-digits\"\n\t\t\t\t\t].map(name => new RegExp(`${name}: func\\\\(`, \"u\")) } });\n\t\t\tconst { rawAdapterDispatch, publicHostDispatch, ...repeated } = await repeatFinContainerEdges({\n\t\t\t\tprofile, consumer, handoff, packages, command\n\t\t\t\t, measureDispatch, pythonEnvironment, rubyEnvironment\n\t\t\t\t, jvmEnvironment, dotnetEnvironment, phpEnvironment\n\t\t\t\t, expectedModelSha256: sha256(modelBytes)\n\t\t\t\t, leanPrefix: environment.LEAN_BRIDGE_LEAN_PREFIX\n\t\t\t\t, dependencies, toolchainEnvironment: environment });\n"
+        },
+        {
+          "start": 30089,
+          "previous": "\t\t\t\t, dispatch: { observed: false, reason: \"This supplement measures public behavior. Expanded source/adapter counters remain a separate required gate.\" } });\n",
+          "current": "\t\t\t\t, dispatch: rawAdapterDispatch ? { kind: \"fin-container-edge-dispatch-v1\"\n\t\t\t\t\t, publicHost: publicHostDispatch ?? { observed: false, reason: \"The separate C raw caller does not measure this host's public calls.\" }\n\t\t\t\t\t, rawAdapter: rawAdapterDispatch }\n\t\t\t\t\t: { observed: false, reason: \"This supplement measures public behavior. Expanded source/adapter counters remain a separate required gate.\" } });\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-container-edges.mjs",
+      "currentSha256": "cad710d6b65e715bd156a5fbb052b56b313b5e195c769a44243edcb8a881f226",
+      "previousSha256": "3f2af08f59520ece2180ebd85ee57d5b7af53e18dbf89c50a94b37e2a30aef08",
+      "edits": [
+        {
+          "start": 3713,
+          "previous": "",
+          "current": "\t, rust: { extension: \"rs\", marker: '    println!(\"fin-container-ok:{checks}\");' }\n\t, ruby: { extension: \"rb\", marker: 'puts \"fin-container-ok:#{$checks}\"' }\n\t, dotnet: { extension: \"cs\", marker: '        Console.WriteLine($\"fin-container-ok:{checks}\");' }\n\t, java: { extension: \"java\", marker: '        System.out.println(\"fin-container-ok:\" + checks);' }\n\t, kotlin: { extension: \"kt\", marker: '    println(\"fin-container-ok:$checks\")' }\n\t, \"php-native\": { extension: \"php\", marker: 'echo \"fin-container-ok:$checks\\\\n\";' }\n\t, \"wit-wasi\": { extension: \"c\", marker: \"  fincontainers_wasmtime_close(session);\" }\n"
+        },
+        {
+          "start": 5117,
+          "previous": "\treturn insertFinContainerEdgeFragment(original, marker, fragment);\n",
+          "current": "\tconst combined = insertFinContainerEdgeFragment(original, marker, fragment);\n\treturn profile === \"wit-wasi\"\n\t\t? insertFinContainerEdgeFragment(combined, \"int main(void) {\", await readFile(\"tests/fixtures/fin-container-edge-consumers/wit-wasi-helpers.c\", \"utf8\")) : combined;\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "3befaa83e11e42a76a1fe39a509ded28ea9a01eec45fced9eb86984c72c7a00b",
+      "previousSha256": "38697bd52dbb820521a0939f097ae8f460f66858df07e6c9b441bb32fd7f2728",
+      "edits": [
+        {
+          "start": 15035,
+          "previous": "",
+          "current": "import { finEdgeIntegrationChangedPaths } from \"./fin-container-edge-integration-history.mjs\";\n"
+        },
+        {
+          "start": 54280,
+          "previous": "",
+          "current": "\t, ...finEdgeIntegrationChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-diagnostic-ci-history.mjs",
+      "currentSha256": "ee5bbefe5f6be3029d416fc3cac00cb4421d143ae67f5c8061f22c20057aeda6",
+      "previousSha256": "af6b1585c6adaa57d16db290f3f0f159757edd2f42bad5b1d1fc1f9c8ee70805",
+      "edits": [
+        {
+          "start": 248,
+          "previous": "",
+          "current": "import { beforeFinEdgeIntegrationSource } from \"./fin-container-edge-integration-history.mjs\";\n"
+        },
+        {
+          "start": 2610,
+          "previous": "",
+          "current": "\tsource = beforeFinEdgeIntegrationSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-diagnostic-ci-tests.mjs",
+      "currentSha256": "3ad9eecff9afab4b4692b64ceb609e8ed24a7bcb645dd9e3e1edf62f945551d6",
+      "previousSha256": "dfef104cc288fa57ebf260e48b44194b9b78acf409ede5ef67eb3f4a3529cda7",
+      "edits": [
+        {
+          "start": 368,
+          "previous": "",
+          "current": "import { beforeFinEdgeIntegrationSource, finEdgeIntegrationChangedPaths } from \"./fin-container-edge-integration-history.mjs\";\n"
+        },
+        {
+          "start": 1194,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\"), previous = reverseFinDiagnosticCiUpdate(current, update);\n",
+          "current": "\t\tconst current = beforeFinEdgeIntegrationSource(update.path, await readFile(update.path, \"utf8\")), previous = reverseFinDiagnosticCiUpdate(current, update);\n"
+        },
+        {
+          "start": 2713,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = beforeFinEdgeIntegrationSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 3454,
+          "previous": "\t\tassert.equal(sha256(await readFile(file.path)), file.sha256, file.path);\n",
+          "current": "\t{\n\t\tconst bytes = await readFile(file.path);\n\t\tconst source = finEdgeIntegrationChangedPaths.includes(file.path)\n\t\t\t? beforeFinEdgeIntegrationSource(file.path, bytes.toString(\"utf8\")) : bytes;\n\t\tassert.equal(sha256(source), file.sha256, file.path);\n\t}\n"
+        }
+      ]
+    }
+  ]
+}

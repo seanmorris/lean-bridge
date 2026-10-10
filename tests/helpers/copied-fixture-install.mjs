@@ -63,18 +63,28 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 	const archive = join(handoff, pkg.artifacts[0].path);
 	const extension = extensions[profile], source = await fixture.source(profile, extension, 64);
 	await saveLakeFile(root, `consumer.${extension}`, source);
-	let command, args, env = copiedCleanEnvironment;
+	let command, args, pythonPolicy, rubyPolicy, jvmPolicy, dotnetPolicy, phpPolicy, env = copiedCleanEnvironment;
+	// Optional fixture policy runs before the first package-influenced compilation and again
+	// around execution. Other fixture callers retain their existing install behavior.
+	let verifyPackage = async () => {};
 	if(profile === "python")
 	{
 		command = join(root, "venv/bin/python");
-		await runCopied(environment.LEAN_BRIDGE_PYTHON ?? "/usr/bin/python3", ["-I", "-m", "venv", join(root, "venv")], root);
-		await runCopied(command, ["-I", "-m", "pip", "--isolated", "install", "--no-index", "--no-deps", "--no-cache-dir", archive], root);
+		const baseCommand = environment.LEAN_BRIDGE_PYTHON ?? "/usr/bin/python3";
+		if(fixture.installPython) pythonPolicy = await fixture.installPython({ baseCommand, root, archive, archiveSha256: pkg.artifacts[0].sha256 });
+		else
+		{
+			await runCopied(baseCommand, ["-I", "-m", "venv", join(root, "venv")], root);
+			await runCopied(command, ["-I", "-m", "pip", "--isolated", "install", "--no-index", "--no-deps", "--no-cache-dir", archive], root);
+		}
 		args = ["-I", "consumer.py"];
 	}
 	else if(["c", "cpp", "wit-wasi"].includes(profile))
 	{
 		await runCopied("/usr/bin/tar", ["--use-compress-program=/usr/bin/gzip", "-xf", archive], root);
 		const installed = join(root, `${pkg.name}-${pkg.version}-${profile}`);
+		verifyPackage = () => fixture.verifyInstalledPackage?.({ profile, installed, receiptPath: "lean-bridge-package.json", archive, archiveSha256: pkg.artifacts[0].sha256 });
+		await verifyPackage();
 		const receipt = JSON.parse(await readFile(join(installed, "lean-bridge-package.json")));
 		await verifyNativeFiles(installed, receipt.files);
 		const tools = join(root, "tools"); await mkdir(tools);
@@ -96,7 +106,9 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 	{
 		command = (await runCopied(environment.LEAN_BRIDGE_RUBY ?? "ruby", ["--disable-gems", "-rrbconfig", "-e", "print RbConfig.ruby"], root, { PATH: environment.PATH })).stdout;
 		env = { ...env, GEM_HOME: join(root, "gems"), GEM_PATH: join(root, "gems") };
-		await runCopied(command, [environment.LEAN_BRIDGE_GEM ?? join(dirname(command), "gem"), "install", "--norc", archive, "--local", "--install-dir", env.GEM_HOME, "--no-document"], root, env);
+		const gemCommand = environment.LEAN_BRIDGE_GEM ?? join(dirname(command), "gem");
+		if(fixture.installRuby) rubyPolicy = await fixture.installRuby({ command, gemCommand, root, archive, archiveSha256: pkg.artifacts[0].sha256 });
+		else await runCopied(command, [gemCommand, "install", "--norc", archive, "--local", "--install-dir", env.GEM_HOME, "--no-document"], root, env);
 		args = ["consumer.rb"];
 	}
 	else if(profile === "perl")
@@ -112,44 +124,67 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 	else if(profile === "php-native")
 	{
 		command = environment.LEAN_BRIDGE_PHP ?? "/usr/bin/php";
-		const inspection = join(root, "inspection");
-		await runCopied("/usr/bin/unzip", ["-q", archive, "-d", inspection], root);
-		const metadata = JSON.parse(await readFile(join(inspection, "composer.json")));
-		await saveLakeFile(root, "composer.json", canonicalJson({ name: "copied-check/consumer"
-			, require: { [pkg.name]: pkg.version }
-			, repositories: [{ "packagist.org": false }, await brickMathRepository(join(root, "feed")), { type: "package", package: { ...metadata, dist: { type: "zip", url: pathToFileURL(archive).href } } }]
-			, config: { "allow-plugins": false } }));
-		await runCopied(command, [environment.LEAN_BRIDGE_COMPOSER ?? "/usr/bin/composer", "--no-plugins", "--no-scripts", "--no-interaction", "install", "--prefer-dist"], root
-			, { ...env, PATH: "/usr/bin:/bin", COMPOSER_ALLOW_SUPERUSER: "1", COMPOSER_DISABLE_NETWORK: "1", COMPOSER_HOME: join(root, "composer-home"), COMPOSER_CACHE_DIR: join(root, "composer-cache") });
+		if(fixture.installPhp)
+		{
+			phpPolicy = await fixture.installPhp({ root, archive, archiveSha256: pkg.artifacts[0].sha256, command, composer: environment.LEAN_BRIDGE_COMPOSER ?? "/usr/bin/composer" });
+			command = phpPolicy.context.command;
+		}
+		else
+		{
+			const inspection = join(root, "inspection");
+			await runCopied("/usr/bin/unzip", ["-q", archive, "-d", inspection], root);
+			const metadata = JSON.parse(await readFile(join(inspection, "composer.json")));
+			await saveLakeFile(root, "composer.json", canonicalJson({ name: "copied-check/consumer"
+				, require: { [pkg.name]: pkg.version }
+				, repositories: [{ "packagist.org": false }, await brickMathRepository(join(root, "feed")), { type: "package", package: { ...metadata, dist: { type: "zip", url: pathToFileURL(archive).href } } }]
+				, config: { "allow-plugins": false } }));
+			await runCopied(command, [environment.LEAN_BRIDGE_COMPOSER ?? "/usr/bin/composer", "--no-plugins", "--no-scripts", "--no-interaction", "install", "--prefer-dist"], root
+				, { ...env, PATH: "/usr/bin:/bin", COMPOSER_ALLOW_SUPERUSER: "1", COMPOSER_DISABLE_NETWORK: "1", COMPOSER_HOME: join(root, "composer-home"), COMPOSER_CACHE_DIR: join(root, "composer-cache") });
+			await saveLakeFile(root, "strict.php", source.replace("declare(strict_types=0);", "declare(strict_types=1);"));
+		}
 		args = ["-n", "-d", "extension=ffi", "-d", "ffi.enable=1", "consumer.php"];
-		await saveLakeFile(root, "strict.php", source.replace("declare(strict_types=0);", "declare(strict_types=1);"));
-		const strict = await runCopied(command, [...args.slice(0, -1), "strict.php"], root);
+		const strict = phpPolicy ? await phpPolicy.run("strict") : await runCopied(command, [...args.slice(0, -1), "strict.php"], root);
 		assert.equal(strict.stderr, ""); assert.match(strict.stdout, new RegExp(`^${fixture.success}:[0-9]+\n$`));
 	}
 	else if(profile === "dotnet")
 	{
 		command = environment.LEAN_BRIDGE_DOTNET;
-		await mkdir(join(root, "feed"));
-		await cp(archive, join(root, "feed", `${pkg.name}.${pkg.version}.nupkg`));
-		await saveLakeFile(root, "Consumer.csproj", `<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><Nullable>enable</Nullable><UseAppHost>false</UseAppHost><NuGetAudit>false</NuGetAudit><TreatWarningsAsErrors>true</TreatWarningsAsErrors><EnableDefaultCompileItems>false</EnableDefaultCompileItems></PropertyGroup><ItemGroup><Compile Include="consumer.cs"/><PackageReference Include="${pkg.name}" Version="[${pkg.version}]"/></ItemGroup></Project>`);
-		await saveLakeFile(root, "NuGet.Config", '<configuration><packageSources><clear/><add key="prepared" value="feed"/></packageSources><fallbackPackageFolders><clear/></fallbackPackageFolders></configuration>');
-		env = { ...env, DOTNET_ROOT: dirname(command), DOTNET_CLI_HOME: join(root, "dotnet-home"), DOTNET_CLI_TELEMETRY_OPTOUT: "1", DOTNET_NOLOGO: "1", NUGET_PACKAGES: join(root, "packages") };
-		await runCopied(command, ["restore", "--configfile", "NuGet.Config"], root, env);
-		await runCopied(command, ["build", "--no-restore", "--disable-build-servers", "-p:UseSharedCompilation=false", "-o", "out"], root, env);
+		if(fixture.installDotnet)
+		{
+			dotnetPolicy = await fixture.installDotnet({ root, archive, archiveSha256: pkg.artifacts[0].sha256, command });
+			command = dotnetPolicy.context.command;
+		}
+		else
+		{
+			await mkdir(join(root, "feed"));
+			await cp(archive, join(root, "feed", `${pkg.name}.${pkg.version}.nupkg`));
+			await saveLakeFile(root, "Consumer.csproj", `<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><Nullable>enable</Nullable><UseAppHost>false</UseAppHost><NuGetAudit>false</NuGetAudit><TreatWarningsAsErrors>true</TreatWarningsAsErrors><EnableDefaultCompileItems>false</EnableDefaultCompileItems></PropertyGroup><ItemGroup><Compile Include="consumer.cs"/><PackageReference Include="${pkg.name}" Version="[${pkg.version}]"/></ItemGroup></Project>`);
+			await saveLakeFile(root, "NuGet.Config", '<configuration><packageSources><clear/><add key="prepared" value="feed"/></packageSources><fallbackPackageFolders><clear/></fallbackPackageFolders></configuration>');
+			env = { ...env, DOTNET_ROOT: dirname(command), DOTNET_CLI_HOME: join(root, "dotnet-home"), DOTNET_CLI_TELEMETRY_OPTOUT: "1", DOTNET_NOLOGO: "1", NUGET_PACKAGES: join(root, "packages") };
+			await runCopied(command, ["restore", "--configfile", "NuGet.Config"], root, env);
+			await runCopied(command, ["build", "--no-restore", "--disable-build-servers", "-p:UseSharedCompilation=false", "-o", "out"], root, env);
+		}
 		args = ["out/Consumer.dll"];
 	}
 	else if(profile === "java" || profile === "kotlin")
 	{
 		command = environment.LEAN_BRIDGE_JAVA;
 		const jar = join(root, "component.jar");
-		await cp(join(handoff, pkg.artifacts.find(item => item.path.endsWith(".jar")).path), jar);
-		if(profile === "java")
+		const artifact = pkg.artifacts.find(item => item.path.endsWith(".jar"));
+		if(fixture.installJvm)
 		{
+			jvmPolicy = await fixture.installJvm({ profile, root, archive: join(handoff, artifact.path), archiveSha256: artifact.sha256, environment });
+			command = jvmPolicy.context.command; args = jvmPolicy.args;
+		}
+		else if(profile === "java")
+		{
+			await cp(join(handoff, artifact.path), jar);
 			await runCopied(environment.LEAN_BRIDGE_JAVAC, ["--release", "22", "-Werror", "-cp", jar, "consumer.java"], root);
 			args = ["--enable-native-access=ALL-UNNAMED", "-cp", `${jar}:${root}`, "Consumer"];
 		}
 		else
 		{
+			await cp(join(handoff, artifact.path), jar);
 			await runCopied(environment.LEAN_BRIDGE_KOTLINC, ["-Werror", "-jvm-target", "22", "-cp", jar, "consumer.kt", "-include-runtime", "-d", "consumer.jar"], root, { ...environment, JAVA_HOME: dirname(dirname(command)) });
 			args = ["--enable-native-access=ALL-UNNAMED", "-cp", `${jar}:${join(root, "consumer.jar")}`, "ConsumerKt"];
 		}
@@ -157,6 +192,9 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 	else if(profile === "rust")
 	{
 		await runCopied("/usr/bin/tar", ["--use-compress-program=/usr/bin/gzip", "-xf", archive], root);
+		const installed = join(root, `${pkg.name}-${pkg.version}`);
+		verifyPackage = () => fixture.verifyInstalledPackage?.({ profile, installed, receiptPath: "lean-bridge/package-receipt.json", archive, archiveSha256: pkg.artifacts[0].sha256 });
+		await verifyPackage();
 		const dependencyArchive = join(consumer, "dependencies", dependencies.archive);
 		assert.equal(sha256(await readFile(dependencyArchive)), dependencies.sha256);
 		await runCopied("/usr/bin/tar", ["--use-compress-program=/usr/bin/gzip", "-xf", dependencyArchive], root);
@@ -167,7 +205,13 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 		command = join(root, "target/debug/consumer"); args = [];
 	}
 	else throw new Error(`Copied consumer not implemented: ${profile}`);
-	const result = await runCopied(command, args, root, env);
+	await verifyPackage();
+	const result = pythonPolicy ? await pythonPolicy.run(["consumer.py"], root, env)
+		: rubyPolicy ? await rubyPolicy.run(args, root)
+			: jvmPolicy ? await jvmPolicy.run()
+				: dotnetPolicy ? await dotnetPolicy.run()
+					: phpPolicy ? await phpPolicy.run() : await runCopied(command, args, root, env);
+	await verifyPackage();
 	assert.equal(result.stderr, "");
 	const observation = fixture.parseResult?.(result.stdout);
 	if(!fixture.parseResult) assert.match(result.stdout.trim(), new RegExp(`^${fixture.success}:[0-9]+$`));
@@ -178,5 +222,13 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 		assert.equal(checks, fixture.expectedChecks);
 	}
 	else assert.ok(checks >= 100);
-	return { checks, ...(observation ? { result: observation } : {}), consumerSha256: sha256(source), command, offlineInstall: true, compilerFreePath: true };
+	return { checks
+		, ...(observation ? { result: observation } : {})
+		, consumerSha256: sha256(source), command
+		, ...(pythonPolicy ? { pythonEnvironment: pythonPolicy.context } : {})
+		, ...(rubyPolicy ? { rubyEnvironment: rubyPolicy.context } : {})
+		, ...(jvmPolicy ? { jvmEnvironment: jvmPolicy.context } : {})
+		, ...(dotnetPolicy ? { dotnetEnvironment: dotnetPolicy.context } : {})
+		, ...(phpPolicy ? { phpEnvironment: phpPolicy.context } : {})
+		, offlineInstall: true, compilerFreePath: true };
 };

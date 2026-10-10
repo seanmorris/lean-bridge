@@ -1,0 +1,590 @@
+TAP version 13
+# Subtest: exact package closure rejects extra files, links, changed sources and substituted receipts
+ok 1 - exact package closure rejects extra files, links, changed sources and substituted receipts
+  ---
+  duration_ms: 56.339473
+  type: 'test'
+  ...
+# Subtest: archive closure authenticates the original receipt and rechecks the archive digest
+ok 2 - archive closure authenticates the original receipt and rechecks the archive digest
+  ---
+  duration_ms: 47.360813
+  type: 'test'
+  ...
+# Subtest: installed Rust guard refuses an executable build.rs before Cargo and rechecks clean executions
+ok 3 - installed Rust guard refuses an executable build.rs before Cargo and rechecks clean executions
+  ---
+  duration_ms: 1058.138686
+  type: 'test'
+  ...
+# Subtest: C, C++ and WIT refuse extra package files before tool or compiler setup
+ok 4 - C, C++ and WIT refuse extra package files before tool or compiler setup
+  ---
+  duration_ms: 46.146616
+  type: 'test'
+  ...
+# Subtest: C++ expectations retain its distinct negative-Nat cases and all recovery calls
+ok 5 - C++ expectations retain its distinct negative-Nat cases and all recovery calls
+  ---
+  duration_ms: 12.945441
+  type: 'test'
+  ...
+# Subtest: C++ transcript refuses compensated counts, altered calls and incomplete consumer execution
+ok 6 - C++ transcript refuses compensated counts, altered calls and incomplete consumer execution
+  ---
+  duration_ms: 708.795054
+  type: 'test'
+  ...
+# Subtest: C++ instrumentation keeps every original assertion and requires exact wire definition identities
+ok 7 - C++ instrumentation keeps every original assertion and requires exact wire definition identities
+  ---
+  duration_ms: 27.548094
+  type: 'test'
+  ...
+# Subtest: full C++ consumer executes compiled Lean and refuses broken entry instruments
+ok 8 - full C++ consumer executes compiled Lean and refuses broken entry instruments
+  ---
+  duration_ms: 38285.536075
+  type: 'test'
+  ...
+# {"scope":"compiler/runtime source gate, not installed-package acceptance","originalConsumerChecks":14099,"measuredCalls":12044,"columns":["l_FinContainers_present","l_FinContainers_flatten","lb_86c7a64da8ee24b35d1d85b6","lb_b244d40ec7c4abc4b049ea54","lb_e428745a932de5c8398c1557","lb_8f62bcc162693eda87120faa","lb_947649dd882592d17d97bd16","lb_b7e9b211e04cb18fd70f7eda"],"finalCounts":[1003,1003,1001,1001,1001,1003,1003,1003],"probeSha256":"a74e9ea81f1f699a35c6ae102c9f35aaff515a164f223f092dd55837be87a107","interposerSha256":"1a30612dd8ffda422b5ac1cc69f4e752ff16e783e02da80dafd4b20fb50c3eb6","stdoutSha256":"1b0ab19383a7d2c89ac215e2da166e586e9b8a4ee7e6c4eceebb873860a3db5d","compiledLeanSha256":"25bfacadcf3d417c00342c6dccf143d6c402475b8ae9eca93154c49d1bea005d"}
+# Subtest: edge columns bind all six exact declarations, refinements and adapter identities to the receipt
+ok 9 - edge columns bind all six exact declarations, refinements and adapter identities to the receipt
+  ---
+  duration_ms: 8.63185
+  type: 'test'
+  ...
+# Subtest: raw cases include all zero-bound and nested positions before the first positive control
+ok 10 - raw cases include all zero-bound and nested positions before the first positive control
+  ---
+  duration_ms: 0.372523
+  type: 'test'
+  ...
+# Subtest: raw counts require adapter-only rejection, exact positive calls and every recovery pair
+ok 11 - raw counts require adapter-only rejection, exact positive calls and every recovery pair
+  ---
+  duration_ms: 34.170719
+  type: 'test'
+  ...
+# Subtest: raw instrumentation checks each call, complete result values, retained inputs and owned cleanup
+ok 12 - raw instrumentation checks each call, complete result values, retained inputs and owned cleanup
+  ---
+  duration_ms: 0.855142
+  type: 'test'
+  ...
+# Subtest: public instrumentation preserves every original assertion and checks both counters per call
+ok 13 - public instrumentation preserves every original assertion and checks both counters per call
+  ---
+  duration_ms: 25.765943
+  type: 'test'
+  ...
+# Subtest: deployment binding refuses foreign receipts, model drift and unrecorded native libraries
+ok 14 - deployment binding refuses foreign receipts, model drift and unrecorded native libraries
+  ---
+  duration_ms: 47.678768
+  type: 'test'
+  ...
+# Subtest: fresh Lean preserves the measured calls and executes all raw cases with actual counters
+ok 15 - fresh Lean preserves the measured calls and executes all raw cases with actual counters
+  ---
+  duration_ms: 13093.799451
+  type: 'test'
+  ...
+# {"scope":"fresh compiler/runtime source gate, not installed-package acceptance","sourceSha256":"5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57","adapterSourceSha256":"b4c6f78a2898c888d80fd7ea25377e21f43d8c227bb47becf1da739fd1eadb34","compiledAdapterSha256":"cabc6bc09cf85d325134e3f8d19926995422581fa26a29eab794a22a747cfb79","rawProbeSha256":"25ac090edae4cde82e1b39acaad59a12aad875b4db95a58e069a4ffddb3ebda5","interposerSha256":"1a30612dd8ffda422b5ac1cc69f4e752ff16e783e02da80dafd4b20fb50c3eb6","observedSha256":"5852c9429d1d6b56f58dd1fee23ecada26f1f94efa99b5b751611ab64fff6af4","columns":["l_FinContainers_present","l_FinContainers_flatten","lb_86c7a64da8ee24b35d1d85b6","lb_b244d40ec7c4abc4b049ea54","lb_e428745a932de5c8398c1557","lb_8f62bcc162693eda87120faa","lb_947649dd882592d17d97bd16","lb_b7e9b211e04cb18fd70f7eda"],"finalCounts":[1002,1003,2004,2004,2004,2006,2005,2012],"inlinedSourceFunctionsNotCounted":["emptyArray","emptyList","emptyOption","optionalDigits"]}
+# Subtest: raw and public edge probes compile against the pinned Lean API and generated GMP header
+ok 16 - raw and public edge probes compile against the pinned Lean API and generated GMP header
+  ---
+  duration_ms: 211.903294
+  type: 'test'
+  ...
+# Subtest: NuGet's exact root content-types name does not admit other bracketed inventory paths
+ok 17 - NuGet's exact root content-types name does not admit other bracketed inventory paths
+  ---
+  duration_ms: 18.555977
+  type: 'test'
+  ...
+# Subtest: .NET guard verifies NuGet's derived cache layout and the complete deployed application
+ok 18 - .NET guard verifies NuGet's derived cache layout and the complete deployed application
+  ---
+  duration_ms: 9205.505507
+  type: 'test'
+  ...
+# Subtest: unrecorded NuGet targets are refused before restore and execute in an unguarded positive control
+ok 19 - unrecorded NuGet targets are refused before restore and execute in an unguarded positive control
+  ---
+  duration_ms: 8773.018939
+  type: 'test'
+  ...
+# Subtest: ambient parent build imports and SDK selection cannot enter the isolated .NET build
+ok 20 - ambient parent build imports and SDK selection cannot enter the isolated .NET build
+  ---
+  duration_ms: 18271.255526
+  type: 'test'
+  ...
+# Subtest: extra deployed .NET code is refused before loading, with an executable positive control
+ok 21 - extra deployed .NET code is refused before loading, with an executable positive control
+  ---
+  duration_ms: 13421.368201
+  type: 'test'
+  ...
+# Subtest: .NET post-execution checks run on success and after an application failure
+ok 22 - .NET post-execution checks run on success and after an application failure
+  ---
+  duration_ms: 13925.601972
+  type: 'test'
+  ...
+# Subtest: NuGet archives authenticate their original digest and exact receipt before compilation
+ok 23 - NuGet archives authenticate their original digest and exact receipt before compilation
+  ---
+  duration_ms: 3842.918831
+  type: 'test'
+  ...
+# Subtest: .NET transcript requires all 12,047 public calls including Some(null) and recovery
+ok 24 - .NET transcript requires all 12,047 public calls including Some(null) and recovery
+  ---
+  duration_ms: 580.913508
+  type: 'test'
+  ...
+# Subtest: .NET instrumentation retains every assertion and public type without changing the loader
+ok 25 - .NET instrumentation retains every assertion and public type without changing the loader
+  ---
+  duration_ms: 23.669257
+  type: 'test'
+  ...
+# Subtest: real C\# edge calls preserve NuGet loading and reject forged entry measurements
+ok 26 - real C\# edge calls preserve NuGet loading and reject forged entry measurements
+  ---
+  duration_ms: 201311.322147
+  type: 'test'
+  ...
+# .NET source fixture: 14089 assertions, 12047 measured calls, stdout SHA-256 b0e53b09e5888149c0053e343f87500cfc9a4be572c23ce32706a8bf5e8706dd
+# Subtest: closed ZIP reader validates every member and refuses unsafe or inconsistent layouts
+ok 27 - closed ZIP reader validates every member and refuses unsafe or inconsistent layouts
+  ---
+  duration_ms: 32.292308
+  type: 'test'
+  ...
+# Subtest: JVM archive closure authenticates the receipt before any package discovery
+ok 28 - JVM archive closure authenticates the receipt before any package discovery
+  ---
+  duration_ms: 31.158022
+  type: 'test'
+  ...
+# Subtest: JVM installation refuses an executable annotation processor before javac
+ok 29 - JVM installation refuses an executable annotation processor before javac
+  ---
+  duration_ms: 3543.523958
+  type: 'test'
+  ...
+# Subtest: Java checks the exact runtime classpath before and after execution and relocation
+ok 30 - Java checks the exact runtime classpath before and after execution and relocation
+  ---
+  duration_ms: 3337.796902
+  type: 'test'
+  ...
+# Subtest: JVM post-execution verification also runs after a failing consumer
+ok 31 - JVM post-execution verification also runs after a failing consumer
+  ---
+  duration_ms: 3863.270206
+  type: 'test'
+  ...
+# Subtest: Kotlin compiles in a clean environment and rechecks both JARs after relocation
+ok 32 - Kotlin compiles in a clean environment and rechecks both JARs after relocation
+  ---
+  duration_ms: 8579.530786
+  type: 'test'
+  ...
+# Subtest: JVM installation refuses a reused directory before compiling
+ok 33 - JVM installation refuses a reused directory before compiling
+  ---
+  duration_ms: 1284.897442
+  type: 'test'
+  ...
+# Subtest: JVM transcripts retain both caller identities, null carriers and every rejection/recovery pair
+ok 34 - JVM transcripts retain both caller identities, null carriers and every rejection/recovery pair
+  ---
+  duration_ms: 1204.052741
+  type: 'test'
+  ...
+# Subtest: JVM instrumentation changes only call forwarding and startup, retaining original assertions
+ok 35 - JVM instrumentation changes only call forwarding and startup, retaining original assertions
+  ---
+  duration_ms: 57.282014
+  type: 'test'
+  ...
+# Subtest: real Java and Kotlin edge calls use unchanged JAR extraction with measured native entries
+ok 36 - real Java and Kotlin edge calls use unchanged JAR extraction with measured native entries
+  ---
+  duration_ms: 337317.817437
+  type: 'test'
+  ...
+# {"profile":"java","scope":"real Lean/JVM source fixture with synthetic JAR receipt, not canonical installed acceptance","checks":14089,"calls":12046,"finalCounts":[1003,1003,1001,1001,1001,1003,1003,1003],"stdoutSha256":"d85058fc9d50c547f462ea143b627f9cb4397964ba073fbfa3f3f88927827f61","coldProcesses":2,"normalExtractionCheckedBeforeAndAfterExit":true,"guardedObserverChecked":true}
+# {"profile":"kotlin","scope":"real Lean/JVM source fixture with synthetic JAR receipt, not canonical installed acceptance","checks":14088,"calls":12046,"finalCounts":[1003,1003,1001,1001,1001,1003,1003,1003],"stdoutSha256":"7c3922bc686e2439429f3ee5a33c65f67ec120e639c6b32ee7adb5b79e2f54c2","coldProcesses":2,"normalExtractionCheckedBeforeAndAfterExit":true,"guardedObserverChecked":true}
+# Subtest: PHP archive guard authenticates original receipts, member sets and Composer discovery metadata
+ok 37 - PHP archive guard authenticates original receipts, member sets and Composer discovery metadata
+  ---
+  duration_ms: 67.968278
+  type: 'test'
+  ...
+# Subtest: Composer guard closes original payloads and generated autoloaders before weak, strict and relocated calls
+ok 38 - Composer guard closes original payloads and generated autoloaders before weak, strict and relocated calls
+  ---
+  duration_ms: 2115.344143
+  type: 'test'
+  ...
+# Subtest: an unrecorded Composer autoload file executes without the guard and is refused before guarded installation
+ok 39 - an unrecorded Composer autoload file executes without the guard and is refused before guarded installation
+  ---
+  duration_ms: 372.98811
+  type: 'test'
+  ...
+# Subtest: PHP startup ignores an ambient ini prepend that executes in the unguarded positive control
+ok 40 - PHP startup ignores an ambient ini prepend that executes in the unguarded positive control
+  ---
+  duration_ms: 937.090991
+  type: 'test'
+  ...
+# Subtest: PHP verifies generated inputs after a successful or failing caller modifies them
+ok 41 - PHP verifies generated inputs after a successful or failing caller modifies them
+  ---
+  duration_ms: 1107.324588
+  type: 'test'
+  ...
+# Subtest: PHP refuses original archive drift and a reused consumer root before Composer
+ok 42 - PHP refuses original archive drift and a reused consumer root before Composer
+  ---
+  duration_ms: 7.032225
+  type: 'test'
+  ...
+# Subtest: PHP transcript requires all original and edge calls, including exact exception categories
+ok 43 - PHP transcript requires all original and edge calls, including exact exception categories
+  ---
+  duration_ms: 549.866961
+  type: 'test'
+  ...
+# Subtest: PHP probe preserves every original assertion and caller strictness
+ok 44 - PHP probe preserves every original assertion and caller strictness
+  ---
+  duration_ms: 45.215943
+  type: 'test'
+  ...
+# Subtest: PHP observer measures real Lean through guarded Composer in both relocated caller modes
+ok 45 - PHP observer measures real Lean through guarded Composer in both relocated caller modes
+  ---
+  duration_ms: 177538.090168
+  type: 'test'
+  ...
+# {"scope":"real Lean with synthetic Composer receipt, not canonical installed acceptance","checksPerProcess":14089,"measuredCallsPerProcess":12047,"finalCounts":[1003,1003,1001,1001,1001,1003,1003,1003],"modes":[{"mode":"weak","stdoutSha256":"43ca65c4a05e9e1560d599396bacb8575fde2a66c2f5c9076b28d03c56c27f66","probeSha256":"39f78c56c3489a698c4fca40006cdb9b7ac23cedb8649c56f96d806b354782f8","coldProcesses":2},{"mode":"strict","stdoutSha256":"43ca65c4a05e9e1560d599396bacb8575fde2a66c2f5c9076b28d03c56c27f66","probeSha256":"b4d9bc86791e959c519a5040ddb001d79e4ab7e92af35e087f9609304aebe211","coldProcesses":2}],"scriptSha256":"8ec3837e38f9a5127c54b8da375008f2e5321763481bf384b91292668b6ec64f"}
+# Subtest: raw and public probes cannot write through an outside symlink into the installed package
+ok 46 - raw and public probes cannot write through an outside symlink into the installed package
+  ---
+  duration_ms: 32.446661
+  type: 'test'
+  ...
+# Subtest: public expectations include the old consumer, malformed carriers and all six thousand recovery pairs
+ok 47 - public expectations include the old consumer, malformed carriers and all six thousand recovery pairs
+  ---
+  duration_ms: 20.78365
+  type: 'test'
+  ...
+# Subtest: public instrumentation requires exactly six absolute GMP definition identities
+ok 48 - public instrumentation requires exactly six absolute GMP definition identities
+  ---
+  duration_ms: 13.660507
+  type: 'test'
+  ...
+# Subtest: public transcript requires exact per-call identities, statuses, counters and complete consumer success
+ok 49 - public transcript requires exact per-call identities, statuses, counters and complete consumer success
+  ---
+  duration_ms: 658.626046
+  type: 'test'
+  ...
+# Subtest: complete public consumer executes real Lean with every entry measured and broken instruments refused
+ok 50 - complete public consumer executes real Lean with every entry measured and broken instruments refused
+  ---
+  duration_ms: 19569.163254
+  type: 'test'
+  ...
+# {"scope":"compiler/runtime source gate, not installed-package acceptance","originalConsumerChecks":14114,"measuredCalls":12045,"columns":["l_FinContainers_present","l_FinContainers_flatten","lb_86c7a64da8ee24b35d1d85b6","lb_b244d40ec7c4abc4b049ea54","lb_e428745a932de5c8398c1557","lb_8f62bcc162693eda87120faa","lb_947649dd882592d17d97bd16","lb_b7e9b211e04cb18fd70f7eda"],"finalCounts":[1003,1002,1001,1001,1002,1004,1003,1002],"probeSha256":"baf83ec57d50e9ed2b4a31bf2cb404120f86a099cdd1b048e6680e0ea350f02c","interposerSha256":"1a30612dd8ffda422b5ac1cc69f4e752ff16e783e02da80dafd4b20fb50c3eb6","stdoutSha256":"7ac1c4752e632969fb284eada8fb88e7f17c40f3215b919d647cf15c82091649","compiledLeanSha256":"25bfacadcf3d417c00342c6dccf143d6c402475b8ae9eca93154c49d1bea005d"}
+# Subtest: Python bootstrap refuses existing environments and unsafe bytecode prefixes before execution
+ok 51 - Python bootstrap refuses existing environments and unsafe bytecode prefixes before execution
+  ---
+  duration_ms: 13.080667
+  type: 'test'
+  ...
+# Subtest: Python 3.11.16 authenticates pip metadata and refuses startup and bytecode injections
+ok 52 - Python 3.11.16 authenticates pip metadata and refuses startup and bytecode injections
+  ---
+  duration_ms: 24021.906789
+  type: 'test'
+  ...
+# {"python":"3.11.16","scope":"synthetic wheel startup controls, not Lean installed acceptance","bootstrapEntries":2164,"relocated":true,"startupInjectionRefused":true,"poisonedBytecodeRefused":true}
+# Subtest: Python 3.12.14 authenticates pip metadata and refuses startup and bytecode injections
+ok 53 - Python 3.12.14 authenticates pip metadata and refuses startup and bytecode injections
+  ---
+  duration_ms: 14901.839107
+  type: 'test'
+  ...
+# {"python":"3.12.14","scope":"synthetic wheel startup controls, not Lean installed acceptance","bootstrapEntries":983,"relocated":true,"startupInjectionRefused":true,"poisonedBytecodeRefused":true}
+# Subtest: Python expected calls distinguish bounds from type and negative-Nat errors
+ok 54 - Python expected calls distinguish bounds from type and negative-Nat errors
+  ---
+  duration_ms: 14.770756
+  type: 'test'
+  ...
+# Subtest: Python transcript requires every call and exact error class, even when aggregate counts agree
+ok 55 - Python transcript requires every call and exact error class, even when aggregate counts agree
+  ---
+  duration_ms: 735.914854
+  type: 'test'
+  ...
+# Subtest: Python proxy preserves the original consumer and binds both imported modules and wire definitions
+ok 56 - Python proxy preserves the original consumer and binds both imported modules and wire definitions
+  ---
+  duration_ms: 44.822857
+  type: 'test'
+  ...
+# Subtest: both Python floors execute the full consumer with measured Lean entries and relocated modules
+    # Subtest: Python 3.11.16
+    ok 1 - Python 3.11.16
+      ---
+      duration_ms: 21841.72633
+      type: 'test'
+      ...
+    # Subtest: Python 3.12.14
+    ok 2 - Python 3.12.14
+      ---
+      duration_ms: 22880.32334
+      type: 'test'
+      ...
+    1..2
+ok 57 - both Python floors execute the full consumer with measured Lean entries and relocated modules
+  ---
+  duration_ms: 53642.185492
+  type: 'test'
+  ...
+# {"scope":"compiler/runtime source gate, not installed-package acceptance","python":"3.11.16","checks":14095,"measuredCalls":12044,"finalCounts":[1003,1003,1001,1001,1001,1003,1003,1003],"stdoutSha256":"14263a1a14708528bb9779e95c0095312e5917ae9b67e42941107e8053f7af45","probeSha256":"9ee8c5c1dab0ab0af0ca3269baa820b8461d0e167cdf3b12aed52cd629cd2190","interposerSha256":"1a30612dd8ffda422b5ac1cc69f4e752ff16e783e02da80dafd4b20fb50c3eb6"}
+# {"scope":"compiler/runtime source gate, not installed-package acceptance","python":"3.12.14","checks":14095,"measuredCalls":12044,"finalCounts":[1003,1003,1001,1001,1001,1003,1003,1003],"stdoutSha256":"14263a1a14708528bb9779e95c0095312e5917ae9b67e42941107e8053f7af45","probeSha256":"9ee8c5c1dab0ab0af0ca3269baa820b8461d0e167cdf3b12aed52cd629cd2190","interposerSha256":"1a30612dd8ffda422b5ac1cc69f4e752ff16e783e02da80dafd4b20fb50c3eb6"}
+# Subtest: Ruby installation refuses any existing GEM_HOME before starting an interpreter
+ok 58 - Ruby installation refuses any existing GEM_HOME before starting an interpreter
+  ---
+  duration_ms: 6.544648
+  type: 'test'
+  ...
+# Subtest: RubyGems identity and startup reject changed specs, extra load paths, caches and plugins before execution
+ok 59 - RubyGems identity and startup reject changed specs, extra load paths, caches and plugins before execution
+  ---
+  duration_ms: 2807.501285
+  type: 'test'
+  ...
+# Subtest: Ruby archives with unrecorded executable inputs fail before installation or package startup
+ok 60 - Ruby archives with unrecorded executable inputs fail before installation or package startup
+  ---
+  duration_ms: 918.028628
+  type: 'test'
+  ...
+# Subtest: Ruby edge transcript retains every carrier, bound and negative-Nat rejection
+ok 61 - Ruby edge transcript retains every carrier, bound and negative-Nat rejection
+  ---
+  duration_ms: 649.671168
+  type: 'test'
+  ...
+# Subtest: Ruby instrumentation preserves original assertions and the historical GDB failure logic
+ok 62 - Ruby instrumentation preserves original assertions and the historical GDB failure logic
+  ---
+  duration_ms: 26.451157
+  type: 'test'
+  ...
+# Subtest: Ruby normal deep-binding loader executes every edge call under verified address breakpoints
+ok 63 - Ruby normal deep-binding loader executes every edge call under verified address breakpoints
+  ---
+  duration_ms: 187833.209296
+  type: 'test'
+  ...
+# {"scope":"source/runtime fixture with synthetic receipt, not installed RubyGems acceptance","checks":14094,"measuredCalls":12047,"finalCounts":[1003,1003,1001,1001,1001,1003,1003,1003],"stdoutSha256":"5094b85bc0d4aa33233a7d13e80ac4aab166e277e09616052b8ef4cabbf00c8b","probeSha256":"005275277ab3a983e910bed4b087ba69ca0eff0594b55b69c7a8797762760733","scriptSha256":"8ec3837e38f9a5127c54b8da375008f2e5321763481bf384b91292668b6ec64f","coldProcesses":2}
+# Subtest: Rust expected calls include all representable edge cases and all six thousand recovery pairs
+ok 64 - Rust expected calls include all representable edge cases and all six thousand recovery pairs
+  ---
+  duration_ms: 8.105311
+  type: 'test'
+  ...
+# Subtest: Rust transcript refuses altered, missing or reordered calls even with compensated totals
+ok 65 - Rust transcript refuses altered, missing or reordered calls even with compensated totals
+  ---
+  duration_ms: 725.601486
+  type: 'test'
+  ...
+# Subtest: Rust instrumentation preserves the original consumer and requires a closed library/definition map
+ok 66 - Rust instrumentation preserves the original consumer and requires a closed library/definition map
+  ---
+  duration_ms: 51.287758
+  type: 'test'
+  ...
+# Subtest: Rust dependency verification refuses archive, lock, manifest, source, closure and symlink drift
+ok 67 - Rust dependency verification refuses archive, lock, manifest, source, closure and symlink drift
+  ---
+  duration_ms: 52.784674
+  type: 'test'
+  ...
+# Subtest: full Rust consumer measures actual Lean through verified extracted-and-unlinked libraries
+ok 68 - full Rust consumer measures actual Lean through verified extracted-and-unlinked libraries
+  ---
+  duration_ms: 106992.03995
+  type: 'test'
+  ...
+# {"scope":"actual Rust compiler/runtime source gate, not installed-package acceptance","checks":14078,"measuredCalls":12038,"columns":["l_FinContainers_present","l_FinContainers_flatten","lb_86c7a64da8ee24b35d1d85b6","lb_b244d40ec7c4abc4b049ea54","lb_e428745a932de5c8398c1557","lb_8f62bcc162693eda87120faa","lb_947649dd882592d17d97bd16","lb_b7e9b211e04cb18fd70f7eda"],"finalCounts":[1003,1003,1001,1001,1001,1003,1003,1003],"probeSha256":"53319999dbd2e5c34726bf5d1a3108aaa4843fe4a1ed0805a8c4c311e2c75079","interposerSha256":"372030a33e4ea8ff8dfeba898337a008f3c6bcbaad9a6a628b555a9dcf0ac672","stdoutSha256":"18eeda21e34798d0bada95efbbda61b08179c2b51b391e1a2652ce8f70d1cd17","extractionCleanupUnchanged":true}
+# {"scope":"relocated source fixture with synthetic receipt, not installed-package acceptance","checks":14078,"measuredCalls":12038,"rustcVersion":"rustc 1.90.0 (1159e78c4 2025-09-14)","probeSha256":"53319999dbd2e5c34726bf5d1a3108aaa4843fe4a1ed0805a8c4c311e2c75079","interposerSha256":"5585d87f683d0cc40f74c8046aa65fea6dcbad5ac581d4a772166009d92cd9eb","stdoutSha256":"18eeda21e34798d0bada95efbbda61b08179c2b51b391e1a2652ce8f70d1cd17","dependencyPackages":14,"offline":true,"linkOnly":true}
+# Subtest: WIT transcript requires the complete original calls and 6,000 recovery pairs
+ok 69 - WIT transcript requires the complete original calls and 6,000 recovery pairs
+  ---
+  duration_ms: 533.855351
+  type: 'test'
+  ...
+# Subtest: WIT probe preserves all statements and borrows the same public call values
+ok 70 - WIT probe preserves all statements and borrows the same public call values
+  ---
+  duration_ms: 40.11782
+  type: 'test'
+  ...
+# Subtest: real WIT edge calls cross the compiled component with checked native entries
+ok 71 - real WIT edge calls cross the compiled component with checked native entries
+  ---
+  duration_ms: 94848.908936
+  type: 'test'
+  ...
+# WIT source fixture: 14066 assertions, 12038 measured calls, stdout SHA-256 8da8e84e8731aba98a8ffae72fa2b48032caf27263181e0225bb3ac94886ee34
+# Subtest: the edge fixture preserves the eight original exports and adds four explicit round trips
+ok 72 - the edge fixture preserves the eight original exports and adds four explicit round trips
+  ---
+  duration_ms: 7.840749
+  type: 'test'
+  ...
+# Subtest: the edge refinement contract keeps the original trees and checks both sides of every addition
+ok 73 - the edge refinement contract keeps the original trees and checks both sides of every addition
+  ---
+  duration_ms: 11.737023
+  type: 'test'
+  ...
+# Subtest: edge insertion refuses missing, empty, repeated and fragment-supplied markers
+ok 74 - edge insertion refuses missing, empty, repeated and fragment-supplied markers
+  ---
+  duration_ms: 1.060514
+  type: 'test'
+  ...
+# Subtest: the development slice does not erase the remaining native hosts or replace old consumers
+ok 75 - the development slice does not erase the remaining native hosts or replace old consumers
+  ---
+  duration_ms: 29.969738
+  type: 'test'
+  ...
+# Subtest: structural and negative-Nat controls require their own positive diagnostic, not any bound error
+ok 76 - structural and negative-Nat controls require their own positive diagnostic, not any bound error
+  ---
+  duration_ms: 34.752651
+  type: 'test'
+  ...
+# Subtest: fresh Lean elaborates all twelve composed Fin container declarations
+ok 77 - fresh Lean elaborates all twelve composed Fin container declarations
+  ---
+  duration_ms: 456.908988
+  type: 'test'
+  ...
+# Subtest: the complete C edge consumer compiles against generated GMP headers with strict warnings
+ok 78 - the complete C edge consumer compiles against generated GMP headers with strict warnings
+  ---
+  duration_ms: 43.917489
+  type: 'test'
+  ...
+# Subtest: the complete Python edge consumer parses without executing a mock algorithm
+ok 79 - the complete Python edge consumer parses without executing a mock algorithm
+  ---
+  duration_ms: 41.234625
+  type: 'test'
+  ...
+# Subtest: the complete C++ edge consumer compiles against generated public types with strict warnings
+ok 80 - the complete C++ edge consumer compiles against generated public types with strict warnings
+  ---
+  duration_ms: 2396.206326
+  type: 'test'
+  ...
+# Subtest: the complete Ruby edge consumer parses without executing a mock algorithm
+ok 81 - the complete Ruby edge consumer parses without executing a mock algorithm
+  ---
+  duration_ms: 10.136234
+  type: 'test'
+  ...
+# Subtest: the complete PHP edge consumer parses in both weak and strict modes
+ok 82 - the complete PHP edge consumer parses in both weak and strict modes
+  ---
+  duration_ms: 26.79275
+  type: 'test'
+  ...
+# Subtest: the complete WIT edge consumer compiles against the generated public Wasmtime header
+ok 83 - the complete WIT edge consumer compiles against the generated public Wasmtime header
+  ---
+  duration_ms: 50.672551
+  type: 'test'
+  ...
+# Subtest: the complete Rust edge consumer typechecks offline against generated public types
+ok 84 - the complete Rust edge consumer typechecks offline against generated public types
+  ---
+  duration_ms: 3426.866861
+  type: 'test'
+  ...
+# Subtest: the complete .NET edge consumer compiles against generated public types with strict warnings
+ok 85 - the complete .NET edge consumer compiles against generated public types with strict warnings
+  ---
+  duration_ms: 5817.639186
+  type: 'test'
+  ...
+# Subtest: the complete Java and Kotlin edge consumers compile against generated public types
+ok 86 - the complete Java and Kotlin edge consumers compile against generated public types
+  ---
+  duration_ms: 13850.901374
+  type: 'test'
+  ...
+# Subtest: installed edge selection is explicit and checks every assertion, including the old consumer
+ok 87 - installed edge selection is explicit and checks every assertion, including the old consumer
+  ---
+  duration_ms: 1.958551
+  type: 'test'
+  ...
+# Subtest: Ruby receipt extraction reads original nested gem bytes and refuses missing or repeated members
+ok 88 - Ruby receipt extraction reads original nested gem bytes and refuses missing or repeated members
+  ---
+  duration_ms: 677.458883
+  type: 'test'
+  ...
+# Subtest: edge C/C++ linkage survives a real directory move without an absolute runtime path
+ok 89 - edge C/C++ linkage survives a real directory move without an absolute runtime path
+  ---
+  duration_ms: 478.569044
+  type: 'test'
+  ...
+# Subtest: edge reports refuse old paths, existing bytes and dangling symlinks before any build
+ok 90 - edge reports refuse old paths, existing bytes and dangling symlinks before any build
+  ---
+  duration_ms: 3.589508
+  type: 'test'
+  ...
+# Subtest: edge dispatch opt-in rejects typoed flags and missing installed selections
+ok 91 - edge dispatch opt-in rejects typoed flags and missing installed selections
+  ---
+  duration_ms: 1.269167
+  type: 'test'
+  ...
+# Subtest: installed source-free native packages execute zero-bound and nested-position Fin edge cases
+ok 92 - installed source-free native packages execute zero-bound and nested-position Fin edge cases # SKIP
+  ---
+  duration_ms: 0.117759
+  type: 'test'
+  ...
+1..92
+# tests 94
+# suites 0
+# pass 93
+# fail 0
+# cancelled 0
+# skipped 1
+# todo 0
+# duration_ms 1406467.141818
