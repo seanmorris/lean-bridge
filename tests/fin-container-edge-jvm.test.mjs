@@ -18,6 +18,7 @@ import { finContainerEdgeGdbScript } from "./helpers/fin-container-edge-gdb.mjs"
 import { finContainerEdgeJvmChecks, finContainerEdgeJvmExpected, finContainerEdgeJvmProbe, readFinContainerEdgeJvm } from "./helpers/fin-container-edge-jvm.mjs";
 import { assertFinContainerEdgeJvmGdbRun, finContainerEdgeJvmGdbScript, prepareFinContainerEdgeJvmGdb } from "./helpers/fin-container-edge-jvm-gdb.mjs";
 import { finContainerEdgeJvmFixture } from "./helpers/fin-container-edge-jvm-fixture.mjs";
+import { observeFinContainerEdgeJvm } from "./helpers/fin-container-edge-jvm-observer.mjs";
 import { installFinContainerEdgeJvm, verifyFinContainerEdgeJvmEnvironment } from "./helpers/fin-container-edge-jvm-closure.mjs";
 import { copiedCleanEnvironment, installCopiedConsumer, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
@@ -91,6 +92,12 @@ test("real Java and Kotlin edge calls use unchanged JAR extraction with measured
 		assert.equal(relocated.exactPackageFiles, true);
 		const jvmEnvironment = { ...installation.jvmEnvironment, root: join(consumer, `${profile}-relocated`) };
 		const jar = join(jvmEnvironment.root, "component.jar");
+		const moved = { installed: join(jvmEnvironment.root, "jar-inspection")
+			, receiptPath: fixture.receiptPath, receiptBytes: fixture.receiptBytes
+			, expectedModelSha256: sha256(fixture.modelBytes), jvmEnvironment
+			, toolchainEnvironment: environment
+			, probeRoot: join(root, `${profile}-receipt-probe`) };
+		const report = await observeFinContainerEdgeJvm(moved);
 		const source = await finContainerEdgeJvmProbe(model, model.component, profile, jar);
 		const probe = join(root, `${profile}-probe`); await mkdir(probe);
 		await saveLakeFile(probe, "EdgeCounter.java", source.counter);
@@ -164,6 +171,27 @@ test("real Java and Kotlin edge calls use unchanged JAR extraction with measured
 		await writeFile(run.armed, bytes);
 		for(const [path, digest] of Object.entries(probeFiles)) assert.equal(sha256(await readFile(join(probe, path))), digest);
 		await verifyFinContainerEdgeJvmEnvironment(jvmEnvironment);
-		t.diagnostic(JSON.stringify({ profile, scope: "real Lean/JVM source fixture with synthetic JAR receipt, not canonical installed acceptance", checks: finContainerEdgeJvmChecks[profile], calls: rows.length, finalCounts: rows.at(-1)[3], stdoutSha256: sha256(run.stdout), coldProcesses: 2, normalExtractionCheckedBeforeAndAfterExit: true }));
+		assert.equal(report.kind, "fin-container-edge-public-jvm-v1");
+		assert.equal(report.profile, profile); assert.equal(report.checks, finContainerEdgeJvmChecks[profile]);
+		assert.equal(report.measuredCalls, 12046); assert.deepEqual(report.observations, finContainerEdgeJvmExpected);
+		assert.equal(report.receiptSha256, sha256(fixture.receiptBytes));
+		assert.equal(report.modelSha256, sha256(fixture.modelBytes));
+		assert.equal(report.runs.length, 2); assert.equal(report.stdoutSha256, sha256(run.stdout));
+		for(const flag of ["installedFilesUnchanged", "loadedClassesChecked", "repeatedColdProcess", "runtimeDefinitionsChecked", "nativeExtractionCheckedBeforeAndAfterExit", "missingInstrumentRefused"])
+			assert.equal(report[flag], true, flag);
+		await assert.rejects(observeFinContainerEdgeJvm({ ...moved, jvmEnvironment: null }), /original guarded classpath/u);
+		await assert.rejects(observeFinContainerEdgeJvm({ ...moved, toolchainEnvironment: null }), /explicitly selected/u);
+		await assert.rejects(observeFinContainerEdgeJvm({ ...moved, probeRoot: join(moved.installed, "probe") }), /outside the installed package/u);
+		await assert.rejects(observeFinContainerEdgeJvm({ ...moved, expectedModelSha256: "0".repeat(64) }), /producer's model/u);
+		const originalJar = await readFile(jar);
+		try
+		{
+			await writeFile(jar, Buffer.concat([originalJar, Buffer.from("drift")]));
+			await assert.rejects(observeFinContainerEdgeJvm({ ...moved, probeRoot: join(root, `${profile}-jar-drift`) }), assert.AssertionError);
+		}
+		finally
+		{ await writeFile(jar, originalJar); }
+		await verifyFinContainerEdgeJvmEnvironment(jvmEnvironment);
+		t.diagnostic(JSON.stringify({ profile, scope: "real Lean/JVM source fixture with synthetic JAR receipt, not canonical installed acceptance", checks: report.checks, calls: report.measuredCalls, finalCounts: rows.at(-1)[3], stdoutSha256: report.stdoutSha256, coldProcesses: report.runs.length, normalExtractionCheckedBeforeAndAfterExit: true, guardedObserverChecked: true }));
 	}
 });

@@ -21,6 +21,7 @@ import { observeFinContainerEdgePython } from "./fin-container-edge-python-obser
 import { observeFinContainerEdgeRust } from "./fin-container-edge-rust-observer.mjs";
 import { observeFinContainerEdgeRuby } from "./fin-container-edge-ruby-observer.mjs";
 import { observeFinContainerEdgePhp } from "./fin-container-edge-php-observer.mjs";
+import { observeFinContainerEdgeJvm } from "./fin-container-edge-jvm-observer.mjs";
 import { finContainerEdgeClosedProfiles, verifyFinContainerEdgeArchiveClosure, verifyFinContainerEdgeFileClosure } from "./fin-container-edge-closure.mjs";
 import { installFinContainerEdgePython, runFinContainerEdgePython, verifyFinContainerEdgePythonEnvironment } from "./fin-container-edge-python-closure.mjs";
 import { installFinContainerEdgeRuby, runFinContainerEdgeRuby, verifyFinContainerEdgeRubyEnvironment } from "./fin-container-edge-ruby-closure.mjs";
@@ -156,11 +157,11 @@ export const prepareFinContainerEdgeExecutable = async ({ profile, root, directo
  * @param options.handoff - Archive handoff directory.
  * @param options.packages - Selected verified package-set entries.
  * @param options.command - Absolute installed consumer command.
- * @param options.measureDispatch - Opt in to raw adapters and full public C/C++/Python/Rust/Ruby/PHP entry observation.
+ * @param options.measureDispatch - Opt in to raw adapters and full public C/C++/Python/Rust/Ruby/PHP/JVM entry observation.
  * @param options.expectedModelSha256 - Producer model digest, required for raw observations.
  * @param options.leanPrefix - Matching Lean headers for the test-only raw probe.
  * @param options.dependencies - Original Rust locked dependency handoff metadata.
- * @param options.toolchainEnvironment - Explicit Cargo and rustc for the test-only Rust caller.
+ * @param options.toolchainEnvironment - Explicit Rust/JVM compilers for test-only callers.
  * @param options.pythonEnvironment - Python baseline captured before package installation.
  * @param options.rubyEnvironment - Ruby environment derived from the original gem before installation.
  * @param options.jvmEnvironment - JVM archive identity and isolated host compilation outputs.
@@ -369,7 +370,12 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 					: measureDispatch && profile === "php-native" ? await observeFinContainerEdgePhp({
 						installed: movedInstall, receiptPath, receiptBytes: archiveBytes
 						, expectedModelSha256, phpEnvironment: phpAt(movedInstall)
-						, probeRoot: join(consumer, "php-edge-public") }) : null;
+						, probeRoot: join(consumer, "php-edge-public") })
+						: measureDispatch && jvm ? await observeFinContainerEdgeJvm({
+							installed: movedInstall, receiptPath, receiptBytes: archiveBytes
+							, expectedModelSha256, jvmEnvironment: jvmAt(movedInstall)
+							, toolchainEnvironment
+							, probeRoot: join(consumer, `${profile}-edge-public`) }) : null;
 	assert.deepEqual(await checkClosure(movedInstall), fileClosure, "package file set after observations");
 	return { relocatedInstallation: true
 		, ...(exactFileClosure ? { exactPackageFiles: true, packageFileSetSha256: fileClosure.packageFileSetSha256 } : {})
