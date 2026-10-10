@@ -1,0 +1,14 @@
+{
+  "status": 0,
+  "signal": null,
+  "stdout": "\nProgram stopped.\n0x00007fd3ad84b540 in ?? () from /lib64/ld-linux-x86-64.so.2\n[Thread debugging using libthread_db enabled]\nUsing host libthread_db library \"/lib/x86_64-linux-gnu/libthread_db.so.1\".\n[New Thread 0x7fd3abf516c0 (LWP 848)]\n[New Thread 0x7fd3aa01e6c0 (LWP 849)]\n[New Thread 0x7fd3a9f1d6c0 (LWP 850)]\n[New Thread 0x7fd3a9e1c6c0 (LWP 851)]\n[New Thread 0x7fd3a99176c0 (LWP 852)]\n[New Thread 0x7fd3a98166c0 (LWP 853)]\n[New Thread 0x7fd3a95f86c0 (LWP 854)]\n[New Thread 0x7fd3a94f76c0 (LWP 855)]\n[New Thread 0x7fd3a93f66c0 (LWP 856)]\n[New Thread 0x7fd3a92f56c0 (LWP 857)]\n[New Thread 0x7fd3a91f46c0 (LWP 858)]\n[New Thread 0x7fd3a90f36c0 (LWP 859)]\n[New Thread 0x7fd3a8ff26c0 (LWP 860)]\n[New Thread 0x7fd3a8ef16c0 (LWP 861)]\n[New Thread 0x7fd3a8df06c0 (LWP 862)]\n[New Thread 0x7fd3a8c1f6c0 (LWP 863)]\n[New Thread 0x7fd3a8b1e6c0 (LWP 864)]\n[New Thread 0x7fd2f28316c0 (LWP 866)]\n[New Thread 0x7fd3a89606c0 (LWP 867)]\n[New Thread 0x7fd3a885f6c0 (LWP 868)]\n[New Thread 0x7fd3a875e6c0 (LWP 869)]\n[New Thread 0x7fd3a865d6c0 (LWP 870)]\n[Thread 0x7fd3a89606c0 (LWP 867) exited]\n[Thread 0x7fd3a91f46c0 (LWP 858) exited]\n[Thread 0x7fd3a94f76c0 (LWP 855) exited]\n[Thread 0x7fd3a95f86c0 (LWP 854) exited]\n[Thread 0x7fd3a98166c0 (LWP 853) exited]\n[Thread 0x7fd3a99176c0 (LWP 852) exited]\n[Thread 0x7fd3a9f1d6c0 (LWP 850) exited]\n[Thread 0x7fd3a865d6c0 (LWP 870) exited]\n[Thread 0x7fd3a875e6c0 (LWP 869) exited]\n[Thread 0x7fd3a885f6c0 (LWP 868) exited]\n[Thread 0x7fd2f28316c0 (LWP 866) exited]\n[Thread 0x7fd3a8b1e6c0 (LWP 864) exited]\n[Thread 0x7fd3a8c1f6c0 (LWP 863) exited]\n[Thread 0x7fd3a8df06c0 (LWP 862) exited]\n[Thread 0x7fd3a8ef16c0 (LWP 861) exited]\n[Thread 0x7fd3a8ff26c0 (LWP 860) exited]\n[Thread 0x7fd3a90f36c0 (LWP 859) exited]\n[Thread 0x7fd3a92f56c0 (LWP 857) exited]\n[Thread 0x7fd3a93f66c0 (LWP 856) exited]\n[Thread 0x7fd3a9e1c6c0 (LWP 851) exited]\n[Thread 0x7fd3aa01e6c0 (LWP 849) exited]\n[Thread 0x7fd3abf516c0 (LWP 848) exited]\n[Inferior 1 (process 845) exited normally]\nexit-state pid=0 code=0 signal=None events=[{'code': 0, 'pid': 845}] threads=[]\n",
+  "stderr": "",
+  "startedAt": "2026-10-10T15:33:47.981Z",
+  "endedAt": "2026-10-10T15:33:57.192Z",
+  "minFreeMiB": 1483,
+  "stoppedForDisk": false,
+  "variant": {
+    "cpu": "3",
+    "processors": 4
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "revision": "3beb2ca905ee1c4020033aa9dce540a386b091dc",
+  "scope": "Exact edge Java Consumer and production eight-column observer under Ubuntu24.04/GDB15.1. One-root diagnostic, not hosted acceptance or a repair.",
+  "jarSha256": "9d09c5e9a58c1c5a79d70bbfdac53e20d5cf3028f4bf77449cdd61859d8baa83",
+  "environment": {
+    "gdb": {
+      "status": 0,
+      "signal": null,
+      "stdout": "GNU gdb (Ubuntu 15.1-1ubuntu1~24.04.1) 15.1\nCopyright (C) 2024 Free Software Foundation, Inc.\nLicense GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n",
+      "stderr": ""
+    },
+    "gdbSha256": {
+      "status": 0,
+      "signal": null,
+      "stdout": "3832cc070ae1716e322105d3b39fb398695e5f031c9d39224cf227a8c2b889f6  /usr/bin/gdb\n",
+      "stderr": ""
+    },
+    "java": {
+      "status": 0,
+      "signal": null,
+      "stdout": "openjdk 22.0.2 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)\n",
+      "stderr": ""
+    },
+    "javaSha256": {
+      "status": 0,
+      "signal": null,
+      "stdout": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e  /app/.toolchains/jdk22/bin/java\n",
+      "stderr": ""
+    },
+    "glibc": {
+      "status": 0,
+      "signal": null,
+      "stdout": "glibc 2.39\n",
+      "stderr": ""
+    },
+    "image": {
+      "status": 0,
+      "signal": null,
+      "stdout": "sha256:69f919497cada9a8611f3de61df902d9f94bf20f84552ef5bd93125c38608ef9\n",
+      "stderr": ""
+    },
+    "cpuSettings": {
+      "status": 0,
+      "signal": null,
+      "stdout": "\"3\"\n",
+      "stderr": ""
+    }
+  },
+  "identity": {
+    "columns": [
+      "l_FinContainers_present",
+      "l_FinContainers_flatten",
+      "lb_86c7a64da8ee24b35d1d85b6",
+      "lb_b244d40ec7c4abc4b049ea54",
+      "lb_e428745a932de5c8398c1557",
+      "lb_8f62bcc162693eda87120faa",
+      "lb_947649dd882592d17d97bd16",
+      "lb_b7e9b211e04cb18fd70f7eda"
+    ],
+    "componentId": "fincontainers@1.0.0",
+    "definers": [
+      "libcomponent_3acdf22f1550490d7b06.so",
+      "libcomponent_3acdf22f1550490d7b06.so",
+      "libcomponent_3acdf22f1550490d7b06.so",
+      "libcomponent_3acdf22f1550490d7b06.so",
+      "libcomponent_3acdf22f1550490d7b06.so",
+      "libcomponent_3acdf22f1550490d7b06.so",
+      "libcomponent_3acdf22f1550490d7b06.so",
+      "libcomponent_3acdf22f1550490d7b06.so"
+    ],
+    "instrument": "gdb-breakpoints",
+    "kind": "fin-container-edge",
+    "libraries": [
+      "libcomponent_3acdf22f1550490d7b06.so",
+      "libfincontainers.so",
+      "liblean_bridge_native.so",
+      "libleanshared.so"
+    ],
+    "platform": "x86_64-linux-gnu",
+    "schemaVersion": 1
+  },
+  "configSha256": "af1d28455f8b08066347da5895302b4f6a489603de98c82234e03da033d040fe",
+  "results": [
+    {
+      "index": 0,
+      "mode": "production",
+      "status": 0,
+      "signal": null,
+      "checks": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nundefined !== 0\n\n    at assertFinContainerEdgeGdbRun (file:///app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/fin-container-edge-gdb.mjs:126:9)\n    at assertFinContainerEdgeJvmGdbRun (file:///app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/fin-container-edge-jvm-gdb.mjs:167:25)\n    at file:///app/build/diagnose-vo1454-edge-gdb15.mjs:72:9",
+      "minFreeMiB": 1496,
+      "stoppedForDisk": false,
+      "productionSha256": "ba4991e24d1a7d06e8c5fd762bb6e031dae521a31c3acbcdc1ea1a3e814ccefc",
+      "scriptSha256": "ba4991e24d1a7d06e8c5fd762bb6e031dae521a31c3acbcdc1ea1a3e814ccefc"
+    },
+    {
+      "index": 1,
+      "mode": "trace",
+      "status": 0,
+      "signal": null,
+      "checks": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nundefined !== 0\n\n    at assertFinContainerEdgeGdbRun (file:///app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/fin-container-edge-gdb.mjs:126:9)\n    at assertFinContainerEdgeJvmGdbRun (file:///app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/fin-container-edge-jvm-gdb.mjs:167:25)\n    at file:///app/build/diagnose-vo1454-edge-gdb15.mjs:72:9",
+      "minFreeMiB": 1494,
+      "stoppedForDisk": false,
+      "productionSha256": "42a61e5be4a0a3fb440adb53d68ae75942d553ab305ef4de2595a390c88bd8cb",
+      "scriptSha256": "08a0ca691206594e1046fd547a47244ce020d1628b3737f8445ba7f2ed50721f",
+      "exitState": "exit-state pid=0 code=0 signal=None events=[{'code': 0, 'pid': 725}] threads=[]"
+    }
+  ]
+}

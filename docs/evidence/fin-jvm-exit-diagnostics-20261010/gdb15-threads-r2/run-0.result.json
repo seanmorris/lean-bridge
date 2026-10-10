@@ -1,0 +1,14 @@
+{
+  "status": 0,
+  "signal": null,
+  "stdout": "\nProgram stopped.\n0x00007fbd3f8c9540 in ?? () from /lib64/ld-linux-x86-64.so.2\n[Thread debugging using libthread_db enabled]\nUsing host libthread_db library \"/lib/x86_64-linux-gnu/libthread_db.so.1\".\n[New Thread 0x7fbd3dfcf6c0 (LWP 797)]\n[New Thread 0x7fbd3c29e6c0 (LWP 798)]\n[New Thread 0x7fbd3c19d6c0 (LWP 799)]\n[New Thread 0x7fbd1ac2d6c0 (LWP 800)]\n[New Thread 0x7fbd1892a6c0 (LWP 801)]\n[New Thread 0x7fbd188296c0 (LWP 802)]\n[New Thread 0x7fbd186a76c0 (LWP 803)]\n[New Thread 0x7fbd185a66c0 (LWP 804)]\n[New Thread 0x7fbd184a56c0 (LWP 805)]\n[New Thread 0x7fbd183a46c0 (LWP 806)]\n[New Thread 0x7fbd182a36c0 (LWP 807)]\n[New Thread 0x7fbd181a26c0 (LWP 808)]\n[New Thread 0x7fbd03fff6c0 (LWP 809)]\n[New Thread 0x7fbd03efe6c0 (LWP 810)]\n[New Thread 0x7fbd03dfd6c0 (LWP 811)]\n[New Thread 0x7fbd03c2c6c0 (LWP 812)]\n[New Thread 0x7fbd03b2b6c0 (LWP 813)]\n[New Thread 0x7fbc868316c0 (LWP 815)]\n[New Thread 0x7fbd03a0c6c0 (LWP 816)]\n[Thread 0x7fbd182a36c0 (LWP 807) exited]\n[Thread 0x7fbd185a66c0 (LWP 804) exited]\n[Thread 0x7fbd186a76c0 (LWP 803) exited]\n[Thread 0x7fbd188296c0 (LWP 802) exited]\n[Thread 0x7fbd1892a6c0 (LWP 801) exited]\n[Thread 0x7fbd3c19d6c0 (LWP 799) exited]\n[Thread 0x7fbd03a0c6c0 (LWP 816) exited]\n[Thread 0x7fbc868316c0 (LWP 815) exited]\n[Thread 0x7fbd03b2b6c0 (LWP 813) exited]\n[Thread 0x7fbd03c2c6c0 (LWP 812) exited]\n[Thread 0x7fbd03dfd6c0 (LWP 811) exited]\n[Thread 0x7fbd03efe6c0 (LWP 810) exited]\n[Thread 0x7fbd03fff6c0 (LWP 809) exited]\n[Thread 0x7fbd181a26c0 (LWP 808) exited]\n[Thread 0x7fbd183a46c0 (LWP 806) exited]\n[Thread 0x7fbd184a56c0 (LWP 805) exited]\n[Thread 0x7fbd1ac2d6c0 (LWP 800) exited]\n[Thread 0x7fbd3c29e6c0 (LWP 798) exited]\n[Thread 0x7fbd3dfcf6c0 (LWP 797) exited]\n[Inferior 1 (process 794) exited normally]\nexit-state pid=0 code=0 signal=None events=[{'code': 0, 'pid': 794}] threads=[]\n",
+  "stderr": "",
+  "startedAt": "2026-10-10T15:33:38.491Z",
+  "endedAt": "2026-10-10T15:33:47.291Z",
+  "minFreeMiB": 1485,
+  "stoppedForDisk": false,
+  "variant": {
+    "cpu": "3",
+    "processors": 2
+  }
+}

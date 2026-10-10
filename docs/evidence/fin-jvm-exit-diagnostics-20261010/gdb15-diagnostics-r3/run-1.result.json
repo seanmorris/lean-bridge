@@ -1,0 +1,16 @@
+{
+  "status": 72,
+  "signal": null,
+  "stdout": "\nProgram stopped.\n0x00007fad20c5c540 in ?? () from /lib64/ld-linux-x86-64.so.2\n[Thread debugging using libthread_db enabled]\nUsing host libthread_db library \"/lib/x86_64-linux-gnu/libthread_db.so.1\".\n[New Thread 0x7fad1f3626c0 (LWP 1091)]\n[New Thread 0x7fad1d42f6c0 (LWP 1092)]\n[New Thread 0x7fad1d32e6c0 (LWP 1093)]\n[New Thread 0x7fad1d22d6c0 (LWP 1094)]\n[New Thread 0x7fad1cd286c0 (LWP 1095)]\n[New Thread 0x7fad1cc276c0 (LWP 1096)]\n[New Thread 0x7fad1ca096c0 (LWP 1097)]\n[New Thread 0x7fad1c9086c0 (LWP 1098)]\n[New Thread 0x7fad1c8076c0 (LWP 1099)]\n[New Thread 0x7fad1c7066c0 (LWP 1100)]\n[New Thread 0x7fad1c6056c0 (LWP 1101)]\n[New Thread 0x7fad1c5046c0 (LWP 1102)]\n[New Thread 0x7fad1c4036c0 (LWP 1103)]\n[New Thread 0x7fad1c3026c0 (LWP 1104)]\n[New Thread 0x7fad1c2016c0 (LWP 1105)]\n[New Thread 0x7facf8c2d6c0 (LWP 1106)]\n[New Thread 0x7facf8b2c6c0 (LWP 1107)]\n[New Thread 0x7facf8a0e6c0 (LWP 1108)]\n[Thread 0x7facf8a0e6c0 (LWP 1108) exited]\n[New Thread 0x7fac5e8316c0 (LWP 1110)]\n[New Thread 0x7facf8a0e6c0 (LWP 1111)]\n[New Thread 0x7facf889c6c0 (LWP 1112)]\n[New Thread 0x7facf879b6c0 (LWP 1113)]\n[New Thread 0x7facf869a6c0 (LWP 1114)]\n[Thread 0x7facf869a6c0 (LWP 1114) exited]\n[Thread 0x7fad1c6056c0 (LWP 1101) exited]\n[Thread 0x7fad1c9086c0 (LWP 1098) exited]\n[Thread 0x7fad1ca096c0 (LWP 1097) exited]\n[Thread 0x7fad1cc276c0 (LWP 1096) exited]\n[Thread 0x7fad1cd286c0 (LWP 1095) exited]\n[Thread 0x7fad1d32e6c0 (LWP 1093) exited]\n[Thread 0x7facf879b6c0 (LWP 1113) exited]\n[Thread 0x7facf889c6c0 (LWP 1112) exited]\n[Thread 0x7facf8a0e6c0 (LWP 1111) exited]\n[Thread 0x7fac5e8316c0 (LWP 1110) exited]\n[Thread 0x7facf8b2c6c0 (LWP 1107) exited]\n[Thread 0x7facf8c2d6c0 (LWP 1106) exited]\n[Thread 0x7fad1c2016c0 (LWP 1105) exited]\n[Thread 0x7fad1c3026c0 (LWP 1104) exited]\n[Thread 0x7fad1c4036c0 (LWP 1103) exited]\n[Thread 0x7fad1c5046c0 (LWP 1102) exited]\n[Thread 0x7fad1c7066c0 (LWP 1100) exited]\n[Thread 0x7fad1c8076c0 (LWP 1099) exited]\n[Thread 0x7fad1d22d6c0 (LWP 1094) exited]\n[Thread 0x7fad1d42f6c0 (LWP 1092) exited]\n[Thread 0x7fad1f3626c0 (LWP 1091) exited]\n[Inferior 1 (process 1088) exited normally]\n",
+  "stderr": "fin JVM exit diagnostics: {\"exitCode\": null, \"exitEvents\": [{\"code\": 0, \"pid\": 1088}], \"exitSignal\": null, \"gdb\": \"15.1\", \"kernel\": \"6.1.0-31-amd64\", \"observedPid\": 1088, \"pid\": 0, \"processStatusError\": \"[Errno 2] No such file or directory: '/proc/1088/status'\", \"threadCount\": 0, \"threads\": []}\nfin instrumentation refused: the inferior did not exit normally\n",
+  "startedAt": "2026-10-10T15:38:30.428Z",
+  "endedAt": "2026-10-10T15:38:44.734Z",
+  "minFreeMiB": 1471,
+  "stoppedForDisk": false,
+  "variant": {
+    "cpu": "3",
+    "processors": 4,
+    "mode": "missing-exit",
+    "expected": 72
+  }
+}

@@ -19,6 +19,7 @@ import { finContainerEdgePhpProbe } from "./fin-container-edge-php.mjs";
 import { finContainerEdgeWitProbe } from "./fin-container-edge-wit.mjs";
 import { finContainerEdgeGdbScript } from "./fin-container-edge-gdb.mjs";
 import { finContainerEdgeJvmGdbScript } from "./fin-container-edge-jvm-gdb.mjs";
+import { withoutFinContainerEdgeJvmExitDiagnostics } from "./fin-container-edge-jvm-exit.mjs";
 
 const digest = /^[a-f0-9]{64}$/u;
 const positive = value => assert.ok(Number.isSafeInteger(value) && value > 0);
@@ -76,9 +77,11 @@ const gdbRuns = (host, observation, jvm = false) => {
 		if(jvm)
 		{
 			absolute(run.extractionRoot);
-			assert.equal(run.scriptSha256, sha256(finContainerEdgeJvmGdbScript({
+			const script = finContainerEdgeJvmGdbScript({
 				nativeDirectory: host.libraryDirectory
-				, extractionRoot: run.extractionRoot, libraries: host.libraries })));
+				, extractionRoot: run.extractionRoot, libraries: host.libraries });
+			// Logging does not change acceptance. Preserve exactly the original and diagnostic versions.
+			assert.ok([sha256(script), sha256(withoutFinContainerEdgeJvmExitDiagnostics(script))].includes(run.scriptSha256), "one exact JVM observer version");
 			const extracted = manifest.jvmExtraction;
 			assert.equal(extracted.parent, run.extractionRoot);
 			assert.ok(extracted.root.startsWith(run.extractionRoot + "/"));

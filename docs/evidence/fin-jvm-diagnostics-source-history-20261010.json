@@ -1,0 +1,195 @@
+{
+  "schemaVersion": 1,
+  "milestone": "fin-jvm-diagnostics-v1",
+  "predecessorCommit": "3beb2ca905ee1c4020033aa9dce540a386b091dc",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "d7769872bf6cbf9cca402301bdfba48eccd91c38769929ab8d5e775be0ee31f0",
+      "previousSha256": "9c1f313bece5df2d28bbaf3ed29572ba3761790d26d83cefcb7389b519c41c81",
+      "edits": [
+        {
+          "start": 3345337,
+          "previous": "          \"sha256\": \"d064b09a5f39507b6d924cee98753525e5d8132c48177908b2cc8036197a7f09\"\n",
+          "current": "          \"sha256\": \"becf1768d8c977572538a189b8b5688b8431c123eb8cd850139138b2e830e679\"\n"
+        },
+        {
+          "start": 3358298,
+          "previous": "          \"sha256\": \"d064b09a5f39507b6d924cee98753525e5d8132c48177908b2cc8036197a7f09\"\n",
+          "current": "          \"sha256\": \"becf1768d8c977572538a189b8b5688b8431c123eb8cd850139138b2e830e679\"\n"
+        },
+        {
+          "start": 3371263,
+          "previous": "          \"sha256\": \"d064b09a5f39507b6d924cee98753525e5d8132c48177908b2cc8036197a7f09\"\n",
+          "current": "          \"sha256\": \"becf1768d8c977572538a189b8b5688b8431c123eb8cd850139138b2e830e679\"\n"
+        },
+        {
+          "start": 3384220,
+          "previous": "          \"sha256\": \"d064b09a5f39507b6d924cee98753525e5d8132c48177908b2cc8036197a7f09\"\n",
+          "current": "          \"sha256\": \"becf1768d8c977572538a189b8b5688b8431c123eb8cd850139138b2e830e679\"\n"
+        },
+        {
+          "start": 3397424,
+          "previous": "          \"sha256\": \"f93e8c9c41dfa1afe2c57d9958b71ae73a7c0931bc8e3bddb90337c438a79162\"\n",
+          "current": "          \"sha256\": \"ef7eda9494ac7a0633beb4c0913d618a5581d8a842d5caca40d032eb2dfcca89\"\n"
+        },
+        {
+          "start": 3410052,
+          "previous": "          \"sha256\": \"f93e8c9c41dfa1afe2c57d9958b71ae73a7c0931bc8e3bddb90337c438a79162\"\n",
+          "current": "          \"sha256\": \"ef7eda9494ac7a0633beb4c0913d618a5581d8a842d5caca40d032eb2dfcca89\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-container-edge-jvm-gdb.mjs",
+      "currentSha256": "bc8d76c745dafaf955947c8e74fb3c5c49af5ea27d766a256af48d39ed543fd4",
+      "previousSha256": "4290e043cd6217c2bd807478674ad2a1cf3882f31a209d674202d89c54f72f29",
+      "edits": [
+        {
+          "start": 536,
+          "previous": "",
+          "current": "import { finContainerEdgeJvmExitDiagnostics } from \"./fin-container-edge-jvm-exit.mjs\";\n"
+        },
+        {
+          "start": 5300,
+          "previous": "",
+          "current": "\tsource = replace(source, \"gdb.events.new_objfile.connect(on_new_objfile)\", \"gdb.events.new_objfile.connect(on_new_objfile)\\n\" + finContainerEdgeJvmExitDiagnostics);\n\tsource = replace(source, '    stop(72, \"the inferior did not exit normally\")', '    jvm_log_exit_state()\\n    stop(72, \"the inferior did not exit normally\")');\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-container-edge-report-hosts.mjs",
+      "currentSha256": "60bccfd74b8c1f8d36ef3655052fb5438143600da4635d454f60c3897174ed28",
+      "previousSha256": "44b814dad92668778d23448158771b0e6f05b2031b9169d1b9b47c3dd4007966",
+      "edits": [
+        {
+          "start": 1310,
+          "previous": "",
+          "current": "import { withoutFinContainerEdgeJvmExitDiagnostics } from \"./fin-container-edge-jvm-exit.mjs\";\n"
+        },
+        {
+          "start": 4162,
+          "previous": "\t\t\tassert.equal(run.scriptSha256, sha256(finContainerEdgeJvmGdbScript({\n",
+          "current": "\t\t\tconst script = finContainerEdgeJvmGdbScript({\n"
+        },
+        {
+          "start": 4254,
+          "previous": "\t\t\t\t, extractionRoot: run.extractionRoot, libraries: host.libraries })));\n",
+          "current": "\t\t\t\t, extractionRoot: run.extractionRoot, libraries: host.libraries });\n\t\t\t// Logging does not change acceptance. Preserve exactly the original and diagnostic versions.\n\t\t\tassert.ok([sha256(script), sha256(withoutFinContainerEdgeJvmExitDiagnostics(script))].includes(run.scriptSha256), \"one exact JVM observer version\");\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-container-edge-sdk-tests.mjs",
+      "currentSha256": "c2ec10dc7c8dce034369eedc9c9dba9dd235b9302f804a9e97c2851810c0d948",
+      "previousSha256": "c30c9c8ec38458784b2b6d3a6bc83e2637da2c6790145921e4e8a0f7420846d3",
+      "edits": [
+        {
+          "start": 658,
+          "previous": "",
+          "current": "import \"./fin-container-edge-jvm-exit-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-dotnet-sdk-history-tests.mjs",
+      "currentSha256": "17abcb5f7b95aa867f9f8974afe352dd11d3500aacd67a21186f619afd79d829",
+      "previousSha256": "c515176a83f20e2d2ad9dd3ac4077dcd8eec808ac29db8764fb678ba24616fc7",
+      "edits": [
+        {
+          "start": 527,
+          "previous": "",
+          "current": "import { beforeFinJvmDiagnosticsSource } from \"./fin-jvm-diagnostics-history.mjs\";\n"
+        },
+        {
+          "start": 1279,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\"), previous = reverseFinDotnetSdkUpdate(current, update);\n",
+          "current": "\t\tconst current = beforeFinJvmDiagnosticsSource(update.path, await readFile(update.path, \"utf8\")), previous = reverseFinDotnetSdkUpdate(current, update);\n"
+        },
+        {
+          "start": 5474,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", text = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", text = beforeFinJvmDiagnosticsSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 6328,
+          "previous": "\t\tif(!digests.has(file.path)) digests.set(file.path, sha256(await readFile(file.path)));\n",
+          "current": "\t\tif(!digests.has(file.path)) digests.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-dotnet-sdk-history.mjs",
+      "currentSha256": "4fb84e57b4e2b80b705375914234cc5d77b227fbb58d137cb37d44b898c8964d",
+      "previousSha256": "7bd7e9040c0d8c2d808745428517d88d3d829481ee206adc6535c46dc75c8209",
+      "edits": [
+        {
+          "start": 245,
+          "previous": "",
+          "current": "import { beforeFinJvmDiagnosticsSource } from \"./fin-jvm-diagnostics-history.mjs\";\n"
+        },
+        {
+          "start": 2404,
+          "previous": "",
+          "current": "\tsource = beforeFinJvmDiagnosticsSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "a30e7b09d5ff39a5cb93a977dfb9f996dc5f8f0ea31cf423891ce83ece0623bb",
+      "previousSha256": "54e8e05b55e38b632b9105b51f391a9c6c0b792cb918580f632cb2005ac729bb",
+      "edits": [
+        {
+          "start": 16302,
+          "previous": "",
+          "current": "import { finJvmDiagnosticsChangedPaths } from \"./fin-jvm-diagnostics-history.mjs\";\n"
+        },
+        {
+          "start": 56057,
+          "previous": "",
+          "current": "\t, ...finJvmDiagnosticsChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-wasm-direct-fin-promotion-tests.mjs",
+      "currentSha256": "becf1768d8c977572538a189b8b5688b8431c123eb8cd850139138b2e830e679",
+      "previousSha256": "d064b09a5f39507b6d924cee98753525e5d8132c48177908b2cc8036197a7f09",
+      "edits": [
+        {
+          "start": 441,
+          "previous": "",
+          "current": "import { finJvmDiagnosticsHistoryPath } from \"./fin-jvm-diagnostics-history.mjs\";\n"
+        },
+        {
+          "start": 3294,
+          "previous": "\tfor(const path of [finDotnetSdkHistoryPath, phpWasmSubtypePromotionHistoryPath])\n",
+          "current": "\tfor(const path of [finJvmDiagnosticsHistoryPath, finDotnetSdkHistoryPath, phpWasmSubtypePromotionHistoryPath])\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-wasm-subtype-promotion-tests.mjs",
+      "currentSha256": "ef7eda9494ac7a0633beb4c0913d618a5581d8a842d5caca40d032eb2dfcca89",
+      "previousSha256": "f93e8c9c41dfa1afe2c57d9958b71ae73a7c0931bc8e3bddb90337c438a79162",
+      "edits": [
+        {
+          "start": 455,
+          "previous": "",
+          "current": "import { finJvmDiagnosticsHistoryPath } from \"./fin-jvm-diagnostics-history.mjs\";\n"
+        },
+        {
+          "start": 2906,
+          "previous": "\tconst later = JSON.parse(await readFile(finDotnetSdkHistoryPath));\n\tfor(const entry of proposed.evidence) for(const file of entry.files)\n",
+          "current": "\tfor(const path of [finJvmDiagnosticsHistoryPath, finDotnetSdkHistoryPath])\n"
+        },
+        {
+          "start": 2985,
+          "previous": "\t\tconst update = later.updates.find(item => item.path === file.path && item.currentSha256 === file.sha256);\n\t\tif(update) file.sha256 = update.previousSha256;\n",
+          "current": "\t\tconst later = JSON.parse(await readFile(path));\n\t\tfor(const entry of proposed.evidence) for(const file of entry.files)\n\t\t{\n\t\t\tconst update = later.updates.find(item => item.path === file.path && item.currentSha256 === file.sha256);\n\t\t\tif(update) file.sha256 = update.previousSha256;\n\t\t}\n"
+        }
+      ]
+    }
+  ]
+}

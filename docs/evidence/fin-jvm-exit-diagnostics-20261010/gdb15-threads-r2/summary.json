@@ -1,0 +1,86 @@
+{
+  "startedAt": "2026-10-10T15:33:38.077Z",
+  "revision": "3beb2ca905ee1c4020033aa9dce540a386b091dc",
+  "scriptSha256": "a2e22f7cc3aab427073d2caac721fac04a85efc7ab5ac2692c1af80ab9ad54e7",
+  "variants": [
+    {
+      "cpu": "3",
+      "processors": 2
+    },
+    {
+      "cpu": "3",
+      "processors": 4
+    },
+    {
+      "cpu": "0,3",
+      "processors": 2
+    },
+    {
+      "cpu": "0,3",
+      "processors": 4
+    }
+  ],
+  "jarSha256": "9d09c5e9a58c1c5a79d70bbfdac53e20d5cf3028f4bf77449cdd61859d8baa83",
+  "libraries": {
+    "libcomponent_3acdf22f1550490d7b06.so": "83a7b20759f9c65d363fc158796ed8f7941afd34de74f536acef48d13e86fcc5",
+    "libfincontainers.so": "517cd6dbc3c379671357ba627a4dbffb1b4a3495987bed10c2b3cb4880717fa3",
+    "liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+    "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+  },
+  "endedAt": "2026-10-10T15:34:13.633Z",
+  "scope": "Scheduling diagnostic with exact installed Java edge fixture. Not a hosted repair or full two-root acceptance.",
+  "results": [
+    {
+      "index": 0,
+      "variant": {
+        "cpu": "3",
+        "processors": 2
+      },
+      "status": 0,
+      "checks": "passed",
+      "minFreeMiB": 1485,
+      "stoppedForDisk": false,
+      "scriptSha256": "fea26c77f96ab0371a9b14bd97a71fd08698addbf9b5a06554642df1f4f2d3b1",
+      "exitState": "exit-state pid=0 code=0 signal=None events=[{'code': 0, 'pid': 794}] threads=[]"
+    },
+    {
+      "index": 1,
+      "variant": {
+        "cpu": "3",
+        "processors": 4
+      },
+      "status": 0,
+      "checks": "passed",
+      "minFreeMiB": 1483,
+      "stoppedForDisk": false,
+      "scriptSha256": "25df7f0cdb9f12329e7f0972d2986bc966df39a8846b88f7808d20214210f8da",
+      "exitState": "exit-state pid=0 code=0 signal=None events=[{'code': 0, 'pid': 845}] threads=[]"
+    },
+    {
+      "index": 2,
+      "variant": {
+        "cpu": "0,3",
+        "processors": 2
+      },
+      "status": 0,
+      "checks": "passed",
+      "minFreeMiB": 1482,
+      "stoppedForDisk": false,
+      "scriptSha256": "7dfd21abed4b6613c40d622f6f3e9dacfdfa95db993601e00e0cd828c2f74f67",
+      "exitState": "exit-state pid=0 code=0 signal=None events=[{'code': 0, 'pid': 899}] threads=[]"
+    },
+    {
+      "index": 3,
+      "variant": {
+        "cpu": "0,3",
+        "processors": 4
+      },
+      "status": 0,
+      "checks": "passed",
+      "minFreeMiB": 1480,
+      "stoppedForDisk": false,
+      "scriptSha256": "348032cc993a36303fd787dee53a25aae747a4ce82b21a967f0f001aac7775df",
+      "exitState": "exit-state pid=0 code=0 signal=None events=[{'code': 0, 'pid': 950}] threads=[]"
+    }
+  ]
+}

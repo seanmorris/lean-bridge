@@ -1,0 +1,16 @@
+{
+  "status": 72,
+  "signal": null,
+  "stdout": "\nProgram stopped.\n0x00007f4eb0b45540 in ?? () from /lib64/ld-linux-x86-64.so.2\n[Thread debugging using libthread_db enabled]\nUsing host libthread_db library \"/lib/x86_64-linux-gnu/libthread_db.so.1\".\n[New Thread 0x7f4eaf24b6c0 (LWP 1146)]\n[New Thread 0x7f4ead3186c0 (LWP 1147)]\n[New Thread 0x7f4ead2176c0 (LWP 1148)]\n[New Thread 0x7f4ead1166c0 (LWP 1149)]\n[New Thread 0x7f4eacc116c0 (LWP 1150)]\n[New Thread 0x7f4eacb106c0 (LWP 1151)]\n[New Thread 0x7f4eac8f26c0 (LWP 1152)]\n[New Thread 0x7f4eac7f16c0 (LWP 1153)]\n[New Thread 0x7f4eac6f06c0 (LWP 1154)]\n[New Thread 0x7f4eac5ef6c0 (LWP 1155)]\n[New Thread 0x7f4eac4ee6c0 (LWP 1156)]\n[New Thread 0x7f4eac3ed6c0 (LWP 1157)]\n[New Thread 0x7f4eac2ec6c0 (LWP 1158)]\n[New Thread 0x7f4eac1eb6c0 (LWP 1159)]\n[New Thread 0x7f4e88c2d6c0 (LWP 1160)]\n[New Thread 0x7f4e88b2c6c0 (LWP 1161)]\n[New Thread 0x7f4e88a2b6c0 (LWP 1162)]\n[New Thread 0x7f4df68316c0 (LWP 1164)]\n[New Thread 0x7f4e888876c0 (LWP 1165)]\n[New Thread 0x7f4e887866c0 (LWP 1166)]\n[New Thread 0x7f4e886856c0 (LWP 1167)]\n[New Thread 0x7f4e885846c0 (LWP 1168)]\n[Thread 0x7f4e888876c0 (LWP 1165) exited]\n[Thread 0x7f4eac4ee6c0 (LWP 1156) exited]\n[Thread 0x7f4eac7f16c0 (LWP 1153) exited]\n[Thread 0x7f4eac8f26c0 (LWP 1152) exited]\n[Thread 0x7f4eacb106c0 (LWP 1151) exited]\n[Thread 0x7f4eacc116c0 (LWP 1150) exited]\n[Thread 0x7f4ead2176c0 (LWP 1148) exited]\n[Thread 0x7f4e886856c0 (LWP 1167) exited]\n[Thread 0x7f4e887866c0 (LWP 1166) exited]\n[Thread 0x7f4df68316c0 (LWP 1164) exited]\n[Thread 0x7f4e88a2b6c0 (LWP 1162) exited]\n[Thread 0x7f4e88b2c6c0 (LWP 1161) exited]\n[Thread 0x7f4e88c2d6c0 (LWP 1160) exited]\n[Thread 0x7f4eac1eb6c0 (LWP 1159) exited]\n[Thread 0x7f4eac2ec6c0 (LWP 1158) exited]\n[Thread 0x7f4eac3ed6c0 (LWP 1157) exited]\n[Thread 0x7f4eac5ef6c0 (LWP 1155) exited]\n[Thread 0x7f4eac6f06c0 (LWP 1154) exited]\n[Thread 0x7f4ead1166c0 (LWP 1149) exited]\n[Thread 0x7f4ead3186c0 (LWP 1147) exited]\n[Thread 0x7f4eaf24b6c0 (LWP 1146) exited]\n[Thread 0x7f4eb08e9080 (LWP 1143) exited]\n[Thread 0x7f4e885846c0 (LWP 1168) exited]\n[New process 1143]\n[Inferior 1 (process 1143) exited normally]\n",
+  "stderr": "fin JVM exit diagnostics unavailable: injected diagnostic read failure\nfin instrumentation refused: the inferior did not exit normally\n",
+  "startedAt": "2026-10-10T15:38:45.817Z",
+  "endedAt": "2026-10-10T15:38:58.238Z",
+  "minFreeMiB": 1469,
+  "stoppedForDisk": false,
+  "variant": {
+    "cpu": "3",
+    "processors": 4,
+    "mode": "diagnostic-error",
+    "expected": 72
+  }
+}

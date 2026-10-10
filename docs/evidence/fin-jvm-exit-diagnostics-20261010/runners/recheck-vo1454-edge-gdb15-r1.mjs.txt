@@ -1,0 +1,48 @@
+import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
+import { readFile, writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
+import { sha256 } from '/app/build/worktrees/fin-container-edge-file-closure-vo1454/src/capsule/node.mjs';
+import { assertFinContainerEdgeJvmGdbRun } from '/app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/fin-container-edge-jvm-gdb.mjs';
+import { readFinContainerEdgeJvm } from '/app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/fin-container-edge-jvm.mjs';
+const root = '/app/build/vo1454-actual-edge-jvm-3beb2ca';
+const directory = join(root, 'gdb15-r1');
+const original = JSON.parse(await readFile(join(root, 'consumer/java-edge-public/gdb/run-1.json')));
+const baseline = JSON.parse(await readFile(join(root, 'baseline-dispatch.json'))).publicHostDispatch;
+const listings = {};
+for(const name of original.identity.libraries) {
+ const result = spawnSync('/usr/bin/nm', ['-D', '--defined-only', join(original.root, name)], {encoding:'utf8', maxBuffer:32*1024*1024});
+ assert.equal(result.status, 0); listings[name] = result.stdout;
+ assert.equal(sha256(await readFile(join(original.root, name))), baseline.libraries[name]);
+}
+const observer = {identity: original.identity, configSha256: original.configSha256, listings,
+ definerIndices: original.identity.definers.map(n => original.identity.libraries.indexOf(n))};
+const results = [];
+for(const index of [0, 1]) {
+ const stem = join(directory, 'run-' + index), inputs = {};
+ for(const suffix of ['.json', '.py', '.result.json', '.record', '.armed.json', '.stdout', '.stderr'])
+  inputs['run-' + index + suffix] = sha256(await readFile(stem + suffix));
+ const config = JSON.parse(await readFile(stem + '.json'));
+ const result = JSON.parse(await readFile(stem + '.result.json'));
+ assert.equal(result.status, 0); assert.equal(result.signal, null); assert.equal(result.stoppedForDisk, false);
+ const stdout = await readFile(stem + '.stdout', 'utf8'), stderr = await readFile(stem + '.stderr', 'utf8');
+ const rows = readFinContainerEdgeJvm(stdout, 'java');
+ assert.equal(rows.length, 12046);
+ const run = {code: result.status, output: result.stdout + result.stderr, stdout, stderr,
+  record: stem + '.record', armed: stem + '.armed.json', nonce: config.nonce,
+  extractionRoot: config.argv[2].slice('-Djava.io.tmpdir='.length)};
+ const manifest = await assertFinContainerEdgeJvmGdbRun(observer, run, rows, baseline.libraries);
+ const refuse = async (label, value) => {
+  await assert.rejects(assertFinContainerEdgeJvmGdbRun(observer, {...run, ...value}, rows, baseline.libraries), undefined, label);
+ };
+ await refuse('nonzero observer exit', {code: 72});
+ await refuse('missing observer exit', {code: undefined});
+ await refuse('consumer stderr', {stderr: 'unexpected\n'});
+ await refuse('nonce mismatch', {nonce: 'f'.repeat(32)});
+ await refuse('extraction outside owned parent', {extractionRoot: '/not-the-run'});
+ results.push({index, status:'verified', rows: rows.length, pid: manifest.pid, inputs, refusedMutations:5});
+}
+const report = {revision:'3beb2ca905ee1c4020033aa9dce540a386b091dc',
+ scope:'Read-only verification of original diagnostic bytes, correcting only the missing code/output/stderr fields in the diagnostic caller. Neither original result nor production checker changed. No hosted repair established.', results};
+await writeFile(join(directory, 'recheck.json'), JSON.stringify(report, null, 2) + '\n', {flag:'wx'});
+console.log(JSON.stringify(report));

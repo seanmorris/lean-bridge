@@ -1,23 +1,23 @@
 /**
- * Authenticate Native Fin .NET SDK repair integration without changing earlier evidence.
+ * Authenticate Native Fin JVM exit diagnostics integration without changing earlier evidence.
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeFinJvmDiagnosticsSource } from "./fin-jvm-diagnostics-history.mjs";
 
-export const finDotnetSdkHistoryPath = "docs/evidence/fin-dotnet-sdk-source-history-20261010.json";
-export const finDotnetSdkPredecessor = "1d9b17a4f295566f77fd1d8e5bf898c49c1fea54";
-export const finDotnetSdkChangedPaths = [
+export const finJvmDiagnosticsHistoryPath = "docs/evidence/fin-jvm-diagnostics-source-history-20261010.json";
+export const finJvmDiagnosticsPredecessor = "3beb2ca905ee1c4020033aa9dce540a386b091dc";
+export const finJvmDiagnosticsChangedPaths = [
 	"docs/type-surface.v1.json"
-	, "tests/fin-container-edge-report.test.mjs"
-	, "tests/helpers/fin-container-edge-dotnet-closure.mjs"
+	, "tests/helpers/fin-container-edge-jvm-gdb.mjs"
+	, "tests/helpers/fin-container-edge-report-hosts.mjs"
+	, "tests/helpers/fin-container-edge-sdk-tests.mjs"
+	, "tests/helpers/fin-dotnet-sdk-history-tests.mjs"
+	, "tests/helpers/fin-dotnet-sdk-history.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
 	, "tests/helpers/php-wasm-direct-fin-promotion-tests.mjs"
-	, "tests/helpers/php-wasm-subtype-promotion-history-tests.mjs"
-	, "tests/helpers/php-wasm-subtype-promotion-history.mjs"
 	, "tests/helpers/php-wasm-subtype-promotion-tests.mjs"
 ];
 let history;
@@ -28,8 +28,8 @@ let history;
  * @param source - Complete current source.
  * @param update - Exact recorded transition.
  */
-export const reverseFinDotnetSdkUpdate = (source, update) => {
-	assert.ok(finDotnetSdkChangedPaths.includes(update.path));
+export const reverseFinJvmDiagnosticsUpdate = (source, update) => {
+	assert.ok(finJvmDiagnosticsChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -55,12 +55,11 @@ export const reverseFinDotnetSdkUpdate = (source, update) => {
  * @param source - Complete source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeFinDotnetSdkSource = (path, source, expected) => {
-	source = beforeFinJvmDiagnosticsSource(path, source, expected);
-	if(typeof source !== "string" || !finDotnetSdkChangedPaths.includes(path)) return source;
+export const beforeFinJvmDiagnosticsSource = (path, source, expected) => {
+	if(typeof source !== "string" || !finJvmDiagnosticsChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(finDotnetSdkHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(finJvmDiagnosticsHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseFinDotnetSdkUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseFinJvmDiagnosticsUpdate(source, update) : source;
 };

@@ -12,6 +12,7 @@ import { installFinContainerEdgeDotnet, selectFinContainerEdgeDotnetSdk } from "
 import { finContainerEdgeDotnetFixture } from "./fin-container-edge-dotnet-closure-fixture.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import "./fin-dotnet-sdk-history-tests.mjs";
+import "./fin-container-edge-jvm-exit-tests.mjs";
 
 test("native edge .NET selection accepts multiple SDKs and pins the newest stable 8.0 version", () => {
 	const directory = "/trusted dotnet/sdk";

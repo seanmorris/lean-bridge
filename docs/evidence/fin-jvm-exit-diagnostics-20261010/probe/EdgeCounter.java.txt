@@ -1,0 +1,92 @@
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.function.Supplier;
+
+public final class EdgeCounter {
+    private EdgeCounter() { }
+    private static String[] arguments;
+    private static long step;
+    private static void refuse(int code, String message) {
+        System.err.println(message); System.exit(code);
+        throw new AssertionError("System.exit returned");
+    }
+    private static ByteBuffer record() {
+        try {
+            byte[] bytes = Files.readAllBytes(Path.of(arguments[0]));
+            return bytes.length == 328 ? ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN) : null;
+        } catch (java.io.IOException | RuntimeException error) { return null; }
+    }
+    private static String text(ByteBuffer value, int offset, int size) {
+        return new String(value.array(), offset, size, StandardCharsets.US_ASCII);
+    }
+    private static boolean ours(ByteBuffer value) {
+        return value != null && text(value, 0, 8).equals("LBFEDGDB") && value.getInt(8) == 1
+            && value.getInt(12) == 8 && text(value, 16, 64).equals(arguments[2])
+            && text(value, 80, 32).equals(arguments[1]) && value.getLong(112) == ProcessHandle.current().pid()
+            && value.getInt(120) == 1;
+    }
+    public static void initial(String[] args) {
+        arguments = args;
+        if (args.length != 4) refuse(2, "edge record is not attached with empty counters");
+        ByteBuffer value = record();
+        if (!ours(value)) refuse(2, "edge record is not attached with empty counters");
+        for (int offset = 124; offset < 328; offset += 4) {
+            int expected = offset >= 200 && offset < 232 ? -1 : 0;
+            if (value.getInt(offset) != expected) refuse(2, "edge record is not attached with empty counters");
+        }
+        try {
+            Path expected = Path.of("/app/build/vo1454-actual-edge-jvm-3beb2ca/consumer/java-relocated/component.jar");
+            for (String name : new String[]{"Api", "Option", "Runtime", "NativeAssets"}) {
+                Class<?> type = Class.forName("org.leanbridge.fincontainers." + name, false, EdgeCounter.class.getClassLoader());
+                Path actual = Path.of(type.getProtectionDomain().getCodeSource().getLocation().toURI());
+                if (!actual.equals(expected) || !actual.toRealPath().equals(expected)) refuse(6, "unexpected JVM public class location");
+            }
+        } catch (Exception error) { refuse(6, "unexpected JVM public class location"); }
+    }
+    private static long[] counts() {
+        ByteBuffer value = record();
+        if (!ours(value) || value.getInt(124) != 255 || value.getInt(128) != 0 || value.getInt(132) != 0)
+            refuse(3, "JVM edge definitions are not completely armed");
+        String[] expected = arguments[3].split(",", -1);
+        if (expected.length != 8) refuse(3, "JVM edge definitions are not completely armed");
+        long[] result = new long[8];
+        for (int i = 0; i < 8; ++i) {
+            if (value.getLong(136 + i * 8) != 1 || !Integer.toString(value.getInt(200 + i * 4)).equals(expected[i]) || value.getInt(232 + i * 4) != 0)
+                refuse(3, "JVM edge definitions are not completely armed");
+            result[i] = value.getLong(264 + i * 8);
+            if (result[i] < 0) refuse(3, "JVM edge definitions are not completely armed");
+        }
+        return result;
+    }
+    private static void recorded(int index, String name, String status, long[] before) {
+        long[] after = counts();
+        for (int column = 0; column < 8; ++column) {
+            long delta = status.equals("ok") && (column == index + 2 || (index >= 4 && column == index - 4)) ? 1 : 0;
+            if (after[column] != before[column] + delta) refuse(5, "wrong JVM edge dispatch count");
+        }
+        StringBuilder line = new StringBuilder("edge-java ").append(++step).append(' ').append(name).append(' ').append(status);
+        for (long count : after) line.append(' ').append(count);
+        System.out.println(line);
+    }
+    static <T> T call(int index, String name, Supplier<T> action) {
+        long[] before = counts();
+        if (step == 0 && !Arrays.equals(before, new long[8])) refuse(5, "nonempty JVM edge counters before first call");
+        T result;
+        try { result = action.get(); }
+        catch (RuntimeException error) {
+            String status;
+            if (error.getClass() == NullPointerException.class) status = "null";
+            else if (error.getClass() == IllegalArgumentException.class && "Nat cannot be negative".equals(error.getMessage())) status = "value";
+            else if (error.getClass() == IllegalArgumentException.class && error.getMessage() != null && error.getMessage().matches("arg[0-9]+(?:\\[[0-9]+\\]|\\?)* is not below its Fin [0-9]+ bound")) status = "fin";
+            else throw error;
+            recorded(index, name, status, before);
+            throw error;
+        }
+        recorded(index, name, "ok", before);
+        return result;
+    }
+}

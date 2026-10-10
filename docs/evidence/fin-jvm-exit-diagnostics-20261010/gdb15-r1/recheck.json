@@ -1,0 +1,38 @@
+{
+  "revision": "3beb2ca905ee1c4020033aa9dce540a386b091dc",
+  "scope": "Read-only verification of original diagnostic bytes, correcting only the missing code/output/stderr fields in the diagnostic caller. Neither original result nor production checker changed. No hosted repair established.",
+  "results": [
+    {
+      "index": 0,
+      "status": "verified",
+      "rows": 12046,
+      "pid": 686,
+      "inputs": {
+        "run-0.json": "cf3e3c43cd26aff046b611537d9834726ae4b76284986c24437c7b8e5c132158",
+        "run-0.py": "ba4991e24d1a7d06e8c5fd762bb6e031dae521a31c3acbcdc1ea1a3e814ccefc",
+        "run-0.result.json": "5485a4700069481c7b8b55e8ad095f05c21775b9e9973ce7004561042afb0dc6",
+        "run-0.record": "8464847eb32e1c5331b9a355f088dbd80c25b48e9d8021254afb2b3e5d6aadf1",
+        "run-0.armed.json": "d3c00c4a959e1495fcea94159d5aa60c9018689c3cfb1109e96c965c0c712e60",
+        "run-0.stdout": "d85058fc9d50c547f462ea143b627f9cb4397964ba073fbfa3f3f88927827f61",
+        "run-0.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "refusedMutations": 5
+    },
+    {
+      "index": 1,
+      "status": "verified",
+      "rows": 12046,
+      "pid": 725,
+      "inputs": {
+        "run-1.json": "8412a142802a6ec52e838de3a05de96bad8d7d89f6e40d4aba70443a7085eea6",
+        "run-1.py": "08a0ca691206594e1046fd547a47244ce020d1628b3737f8445ba7f2ed50721f",
+        "run-1.result.json": "114e962b68ad612224eff658dca5e2b549470aa4d6b5f5beb33710dde50f0794",
+        "run-1.record": "14497eb1006b049c571a7a231d75f742ec5def645918dbc49e096bc59963322f",
+        "run-1.armed.json": "aa7a4cb81d5adf10a7fdca22a720bd2d954907e40e56b5cb2fcd0d0ad70147be",
+        "run-1.stdout": "d85058fc9d50c547f462ea143b627f9cb4397964ba073fbfa3f3f88927827f61",
+        "run-1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "refusedMutations": 5
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+import assert from 'node:assert/strict';
+import { spawn, spawnSync } from 'node:child_process';
+import { mkdir, readFile, statfs, writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
+import { canonicalJson, sha256 } from '/app/build/worktrees/fin-container-edge-file-closure-vo1454/src/capsule/node.mjs';
+import { finContainerEdgeJvmGdbScript, assertFinContainerEdgeJvmGdbRun } from '/app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/fin-container-edge-jvm-gdb.mjs';
+import { readFinContainerEdgeJvm } from '/app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/fin-container-edge-jvm.mjs';
+const container = 'lean-bridge-vo1454-edge-gdb15-3beb2ca';
+const root = '/app/build/vo1454-actual-edge-jvm-3beb2ca', output = join(root, 'gdb15-threads-r2');
+const free = async () => { const s = await statfs('/app'); return Math.floor(s.bavail*s.bsize/1048576); };
+assert.ok(await free() >= 1536, 'Runtime-only replay needs 1.5 GiB headroom');
+const docker = (args, check=true) => {
+ const r=spawnSync('/usr/bin/docker', args, {encoding:'utf8', timeout:30000, maxBuffer:32*1024*1024});
+ if(check) assert.equal(r.status,0,r.stderr || r.stdout || r.error?.message);
+ return {status:r.status,signal:r.signal,stdout:r.stdout,stderr:r.stderr};
+};
+await mkdir(output);
+docker(['exec',container,'mkdir','-p',output,join(output,'cache')]);
+const baseline=JSON.parse(await readFile(join(root,'baseline-dispatch.json'))).publicHostDispatch;
+const original=JSON.parse(await readFile(join(root,'consumer/java-edge-public/gdb/run-1.json')));
+const jar=join(root,'consumer/java-relocated/component.jar');
+assert.equal(docker(['exec',container,'sha256sum',jar]).stdout.split(' ')[0],sha256(await readFile(jar)));
+const listings={};
+for(const name of original.identity.libraries) {
+ assert.equal(sha256(await readFile(join(original.root,name))),baseline.libraries[name]);
+ const r=spawnSync('/usr/bin/nm',['-D','--defined-only',join(original.root,name)],{encoding:'utf8',maxBuffer:32*1024*1024});
+ assert.equal(r.status,0);listings[name]=r.stdout;
+}
+for(const [path,digest] of Object.entries(baseline.probeFiles).filter(([p])=>p.endsWith('.class')))
+ assert.equal(docker(['exec',container,'sha256sum',join(root,'consumer/java-edge-public',path)]).stdout.split(' ')[0],digest);
+const observer={identity:original.identity,configSha256:original.configSha256,listings,definerIndices:original.identity.definers.map(n=>original.identity.libraries.indexOf(n))};
+const results=[];
+const variants=[{cpu:'3',processors:2},{cpu:'3',processors:4},{cpu:'0,3',processors:2},{cpu:'0,3',processors:4}];
+const start={startedAt:new Date().toISOString(),revision:'3beb2ca905ee1c4020033aa9dce540a386b091dc',scriptSha256:sha256(await readFile(new URL(import.meta.url))),variants,jarSha256:sha256(await readFile(jar)),libraries:baseline.libraries};
+await writeFile(join(output,'start.json'),JSON.stringify(start,null,2)+'\n',{flag:'wx'});
+try {
+for(const [index,variant] of variants.entries()) {
+ assert.ok(await free()>=1024,'Keep one native extraction available');
+ docker(['update','--cpuset-cpus',variant.cpu,container]);
+ const stem=join(output,'run-'+index),extractionRoot=join(output,'jvm-'+index),nonce=(index+16).toString(16).padStart(32,'0');
+ const config={...original,nonce,record:stem+'.record',armed:stem+'.armed.json',stdout:stem+'.stdout',stderr:stem+'.stderr',argv:[...original.argv]};
+ config.argv[2]='-Djava.io.tmpdir='+extractionRoot;config.argv[6]=config.record;config.argv[7]=nonce;
+ config.argv.splice(1,0,'-XX:ActiveProcessorCount='+variant.processors);
+ docker(['exec',container,'mkdir',extractionRoot]);
+ const production=finContainerEdgeJvmGdbScript({nativeDirectory:original.root,extractionRoot,libraries:baseline.libraries});
+ const marker='signal, code = gdb.convenience_variable("_exitsignal"), gdb.convenience_variable("_exitcode")';
+ assert.equal(production.split(marker).length,2);
+ const script=production.replace('gdb.events.new_objfile.connect(on_new_objfile)',
+  'gdb.events.new_objfile.connect(on_new_objfile)\nexit_events = []\ndef record_exit(event):\n    exit_events.append({"code": getattr(event, "exit_code", None), "pid": event.inferior.pid})\ngdb.events.exited.connect(record_exit)')
+  .replace(marker,marker+'\ngdb.write("exit-state pid=%s code=%s signal=%s events=%s threads=%s\\n" % (gdb.selected_inferior().pid, code, signal, exit_events, [(thread.num, thread.is_stopped(), thread.is_running(), thread.is_exited()) for thread in gdb.selected_inferior().threads()]))');
+ await writeFile(stem+'.json',canonicalJson(config),{flag:'wx'});await writeFile(stem+'.py',script,{flag:'wx'});
+ for(const suffix of ['.json','.py'])docker(['cp',stem+suffix,container+':'+stem+suffix]);
+ const args=['exec',container,'/usr/bin/env','-i','PATH=/unavailable','LEAN_NUM_THREADS=1','XDG_CACHE_HOME='+join(output,'cache'),'LEAN_BRIDGE_FIN_EDGE_GDB_CONFIG='+stem+'.json','/usr/bin/timeout','180','/usr/bin/gdb','-batch','-q','-nx','-x',stem+'.py'];
+ let minFreeMiB=await free(),stoppedForDisk=false,stdout='',stderr='';const startedAt=new Date().toISOString();
+ const child=spawn('/usr/bin/docker',args,{stdio:['ignore','pipe','pipe']});
+ child.stdout.on('data',b=>stdout+=b);child.stderr.on('data',b=>stderr+=b);
+ const timer=setInterval(async()=>{minFreeMiB=Math.min(minFreeMiB,await free());if(minFreeMiB<768&&!stoppedForDisk){stoppedForDisk=true;docker(['kill',container],false);}},3000);
+ const exit=await new Promise(resolve=>{child.once('error',e=>resolve({error:e.message}));child.once('close',(status,signal)=>resolve({status,signal}));});clearInterval(timer);
+ const result={...exit,stdout,stderr,startedAt,endedAt:new Date().toISOString(),minFreeMiB,stoppedForDisk,variant};
+ await writeFile(stem+'.result.json',JSON.stringify(result,null,2)+'\n',{flag:'wx'});
+ for(const suffix of ['.record','.armed.json','.stdout','.stderr'])docker(['cp',container+':'+stem+suffix,stem+suffix],false);
+ let checks='passed';
+ try {
+  const consumer=await readFile(stem+'.stdout','utf8'),errors=await readFile(stem+'.stderr','utf8');
+  const rows=readFinContainerEdgeJvm(consumer,'java');assert.equal(rows.length,12046);
+  await assertFinContainerEdgeJvmGdbRun(observer,{code:result.status,output:stdout+stderr,stdout:consumer,stderr:errors,record:stem+'.record',armed:stem+'.armed.json',nonce,extractionRoot},rows,baseline.libraries);
+  assert.equal(result.signal,null);assert.equal(stoppedForDisk,false);
+  assert.equal(docker(['exec',container,'find',extractionRoot,'-mindepth','1','-print']).stdout,'');
+ }catch(error){checks=error.stack;}
+ const summary={index,variant,status:result.status,checks,minFreeMiB,stoppedForDisk,scriptSha256:sha256(script),exitState:stdout.match(/^exit-state.*$/mu)?.[0]};
+ results.push(summary);console.log(JSON.stringify(summary));
+ if(stoppedForDisk || result.status!==0)break;
+}
+}finally {docker(['update','--cpuset-cpus','3',container],false);}
+await writeFile(join(output,'summary.json'),JSON.stringify({...start,endedAt:new Date().toISOString(),scope:'Scheduling diagnostic with exact installed Java edge fixture. Not a hosted repair or full two-root acceptance.',results},null,2)+'\n',{flag:'wx'});

@@ -1,0 +1,16 @@
+{
+  "status": 0,
+  "signal": null,
+  "stdout": "\nProgram stopped.\n0x00007f029e335540 in ?? () from /lib64/ld-linux-x86-64.so.2\n[Thread debugging using libthread_db enabled]\nUsing host libthread_db library \"/lib/x86_64-linux-gnu/libthread_db.so.1\".\n[New Thread 0x7f029ca3b6c0 (LWP 1037)]\n[New Thread 0x7f029c2786c0 (LWP 1038)]\n[New Thread 0x7f029c1776c0 (LWP 1039)]\n[New Thread 0x7f02794bd6c0 (LWP 1040)]\n[New Thread 0x7f0278fb86c0 (LWP 1041)]\n[New Thread 0x7f0278eb76c0 (LWP 1042)]\n[New Thread 0x7f0278cda6c0 (LWP 1043)]\n[New Thread 0x7f0278bd96c0 (LWP 1044)]\n[New Thread 0x7f0278ad86c0 (LWP 1045)]\n[New Thread 0x7f02789d76c0 (LWP 1046)]\n[New Thread 0x7f02788d66c0 (LWP 1047)]\n[New Thread 0x7f02787d56c0 (LWP 1048)]\n[New Thread 0x7f02786d46c0 (LWP 1049)]\n[New Thread 0x7f02785d36c0 (LWP 1050)]\n[New Thread 0x7f02784d26c0 (LWP 1051)]\n[New Thread 0x7f02783016c0 (LWP 1052)]\n[New Thread 0x7f02782006c0 (LWP 1053)]\n[New Thread 0x7f01de8316c0 (LWP 1055)]\n[New Thread 0x7f0269fff6c0 (LWP 1056)]\n[New Thread 0x7f0269efe6c0 (LWP 1057)]\n[New Thread 0x7f0269dfd6c0 (LWP 1058)]\n[New Thread 0x7f0269cfc6c0 (LWP 1059)]\n[Thread 0x7f0269fff6c0 (LWP 1056) exited]\n[Thread 0x7f02788d66c0 (LWP 1047) exited]\n[Thread 0x7f0278bd96c0 (LWP 1044) exited]\n[Thread 0x7f0278cda6c0 (LWP 1043) exited]\n[Thread 0x7f0278eb76c0 (LWP 1042) exited]\n[Thread 0x7f0278fb86c0 (LWP 1041) exited]\n[Thread 0x7f029c1776c0 (LWP 1039) exited]\n[Thread 0x7f0269cfc6c0 (LWP 1059) exited]\n[Thread 0x7f0269dfd6c0 (LWP 1058) exited]\n[Thread 0x7f0269efe6c0 (LWP 1057) exited]\n[Thread 0x7f01de8316c0 (LWP 1055) exited]\n[Thread 0x7f02782006c0 (LWP 1053) exited]\n[Thread 0x7f02783016c0 (LWP 1052) exited]\n[Thread 0x7f02784d26c0 (LWP 1051) exited]\n[Thread 0x7f02785d36c0 (LWP 1050) exited]\n[Thread 0x7f02786d46c0 (LWP 1049) exited]\n[Thread 0x7f02787d56c0 (LWP 1048) exited]\n[Thread 0x7f02789d76c0 (LWP 1046) exited]\n[Thread 0x7f0278ad86c0 (LWP 1045) exited]\n[Thread 0x7f02794bd6c0 (LWP 1040) exited]\n[Thread 0x7f029c2786c0 (LWP 1038) exited]\n[Thread 0x7f029ca3b6c0 (LWP 1037) exited]\n[Inferior 1 (process 1034) exited normally]\n",
+  "stderr": "",
+  "startedAt": "2026-10-10T15:38:13.678Z",
+  "endedAt": "2026-10-10T15:38:28.442Z",
+  "minFreeMiB": 1473,
+  "stoppedForDisk": false,
+  "variant": {
+    "cpu": "3",
+    "processors": 4,
+    "mode": "production",
+    "expected": 0
+  }
+}

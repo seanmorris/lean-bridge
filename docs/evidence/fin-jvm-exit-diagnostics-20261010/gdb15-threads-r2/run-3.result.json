@@ -1,0 +1,14 @@
+{
+  "status": 0,
+  "signal": null,
+  "stdout": "\nProgram stopped.\n0x00007fd08fe32540 in ?? () from /lib64/ld-linux-x86-64.so.2\n[Thread debugging using libthread_db enabled]\nUsing host libthread_db library \"/lib/x86_64-linux-gnu/libthread_db.so.1\".\n[New Thread 0x7fd08e5386c0 (LWP 953)]\n[New Thread 0x7fd08c6056c0 (LWP 954)]\n[New Thread 0x7fd08c5046c0 (LWP 955)]\n[New Thread 0x7fd08c4036c0 (LWP 956)]\n[New Thread 0x7fd068b2c6c0 (LWP 957)]\n[New Thread 0x7fd068a2b6c0 (LWP 958)]\n[New Thread 0x7fd06880d6c0 (LWP 959)]\n[New Thread 0x7fd06870c6c0 (LWP 960)]\n[New Thread 0x7fd06860b6c0 (LWP 961)]\n[New Thread 0x7fd06850a6c0 (LWP 962)]\n[New Thread 0x7fd0684096c0 (LWP 963)]\n[New Thread 0x7fd0683086c0 (LWP 964)]\n[New Thread 0x7fd0682076c0 (LWP 965)]\n[New Thread 0x7fd0681066c0 (LWP 966)]\n[New Thread 0x7fd053fff6c0 (LWP 967)]\n[New Thread 0x7fd053e2e6c0 (LWP 968)]\n[New Thread 0x7fd053d2d6c0 (LWP 969)]\n[New Thread 0x7fd053beb6c0 (LWP 970)]\n[Thread 0x7fd053beb6c0 (LWP 970) exited]\n[New Thread 0x7fcfce8316c0 (LWP 972)]\n[New Thread 0x7fd053beb6c0 (LWP 973)]\n[New Thread 0x7fd053a726c0 (LWP 974)]\n[New Thread 0x7fd0539716c0 (LWP 975)]\n[New Thread 0x7fd0538706c0 (LWP 976)]\n[Thread 0x7fd053beb6c0 (LWP 973) exited]\n[Thread 0x7fd06880d6c0 (LWP 959) exited]\n[Thread 0x7fd068a2b6c0 (LWP 958) exited]\n[Thread 0x7fd068b2c6c0 (LWP 957) exited]\n[Thread 0x7fd08c5046c0 (LWP 955) exited]\n[Thread 0x7fd0684096c0 (LWP 963) exited]\n[Thread 0x7fd06870c6c0 (LWP 960) exited]\n[Thread 0x7fd0682076c0 (LWP 965) exited]\n[Thread 0x7fd06850a6c0 (LWP 962) exited]\n[Thread 0x7fd0683086c0 (LWP 964) exited]\n[Thread 0x7fd06860b6c0 (LWP 961) exited]\n[Thread 0x7fd08c4036c0 (LWP 956) exited]\n[Thread 0x7fd053fff6c0 (LWP 967) exited]\n[Thread 0x7fd053e2e6c0 (LWP 968) exited]\n[Thread 0x7fd053d2d6c0 (LWP 969) exited]\n[Thread 0x7fcfce8316c0 (LWP 972) exited]\n[Thread 0x7fd053a726c0 (LWP 974) exited]\n[Thread 0x7fd0538706c0 (LWP 976) exited]\n[Thread 0x7fd0539716c0 (LWP 975) exited]\n[Thread 0x7fd0681066c0 (LWP 966) exited]\n[Thread 0x7fd08e5386c0 (LWP 953) exited]\n[Thread 0x7fd08fbd6080 (LWP 950) exited]\n[Thread 0x7fd08c6056c0 (LWP 954) exited]\n[New process 950]\n[Inferior 1 (process 950) exited normally]\nexit-state pid=0 code=0 signal=None events=[{'code': 0, 'pid': 950}] threads=[]\n",
+  "stderr": "",
+  "startedAt": "2026-10-10T15:34:05.640Z",
+  "endedAt": "2026-10-10T15:34:13.223Z",
+  "minFreeMiB": 1480,
+  "stoppedForDisk": false,
+  "variant": {
+    "cpu": "0,3",
+    "processors": 4
+  }
+}

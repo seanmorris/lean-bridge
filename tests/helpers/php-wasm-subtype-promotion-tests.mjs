@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeFinDotnetSdkSource, finDotnetSdkHistoryPath } from "./fin-dotnet-sdk-history.mjs";
+import { finJvmDiagnosticsHistoryPath } from "./fin-jvm-diagnostics-history.mjs";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { phpWasmSubtypeArchiveRoot, phpWasmSubtypeProducer } from "./php-wasm-subtype-archive.mjs";
 import { beforePhpWasmSubtypePromotionSource, phpWasmSubtypePromotionHistoryPath } from "./php-wasm-subtype-promotion-history.mjs";
@@ -41,11 +42,14 @@ test("PHP-Wasm Subtype promotion changes only four cells and preserves every old
 	const current = await readTypeSurface(), previous = await predecessor();
 	current.document = JSON.parse(beforeFinDotnetSdkSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
 	const references = await phpWasmSubtypePromotionReferences(), proposed = await promotePhpWasmSubtype(previous, references);
-	const later = JSON.parse(await readFile(finDotnetSdkHistoryPath));
-	for(const entry of proposed.evidence) for(const file of entry.files)
+	for(const path of [finJvmDiagnosticsHistoryPath, finDotnetSdkHistoryPath])
 	{
-		const update = later.updates.find(item => item.path === file.path && item.currentSha256 === file.sha256);
-		if(update) file.sha256 = update.previousSha256;
+		const later = JSON.parse(await readFile(path));
+		for(const entry of proposed.evidence) for(const file of entry.files)
+		{
+			const update = later.updates.find(item => item.path === file.path && item.currentSha256 === file.sha256);
+			if(update) file.sha256 = update.previousSha256;
+		}
 	}
 	validateTypeSurface(proposed, current);
 	assert.equal(previous.evidence.length, 405); assert.equal(previous.observations.length, 507);

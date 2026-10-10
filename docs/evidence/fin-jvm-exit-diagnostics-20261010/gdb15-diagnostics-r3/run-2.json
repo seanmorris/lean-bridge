@@ -1,0 +1,55 @@
+{
+  "argv": [
+    "/app/.toolchains/jdk22/bin/java",
+    "-XX:ActiveProcessorCount=4",
+    "--enable-native-access=ALL-UNNAMED",
+    "-Djava.io.tmpdir=/app/build/vo1454-actual-edge-jvm-3beb2ca/gdb15-diagnostics-r3/jvm-2",
+    "-cp",
+    "/app/build/vo1454-actual-edge-jvm-3beb2ca/consumer/java-relocated/component.jar:/app/build/vo1454-actual-edge-jvm-3beb2ca/consumer/java-edge-public/classes",
+    "Consumer",
+    "/app/build/vo1454-actual-edge-jvm-3beb2ca/gdb15-diagnostics-r3/run-2.record",
+    "00000000000000000000000000000012",
+    "af1d28455f8b08066347da5895302b4f6a489603de98c82234e03da033d040fe",
+    "0,0,0,0,0,0,0,0"
+  ],
+  "armed": "/app/build/vo1454-actual-edge-jvm-3beb2ca/gdb15-diagnostics-r3/run-2.armed.json",
+  "configSha256": "af1d28455f8b08066347da5895302b4f6a489603de98c82234e03da033d040fe",
+  "identity": {
+    "columns": [
+      "l_FinContainers_present",
+      "l_FinContainers_flatten",
+      "lb_86c7a64da8ee24b35d1d85b6",
+      "lb_b244d40ec7c4abc4b049ea54",
+      "lb_e428745a932de5c8398c1557",
+      "lb_8f62bcc162693eda87120faa",
+      "lb_947649dd882592d17d97bd16",
+      "lb_b7e9b211e04cb18fd70f7eda"
+    ],
+    "componentId": "fincontainers@1.0.0",
+    "definers": [
+      "libcomponent_3acdf22f1550490d7b06.so",
+      "libcomponent_3acdf22f1550490d7b06.so",
+      "libcomponent_3acdf22f1550490d7b06.so",
+      "libcomponent_3acdf22f1550490d7b06.so",
+      "libcomponent_3acdf22f1550490d7b06.so",
+      "libcomponent_3acdf22f1550490d7b06.so",
+      "libcomponent_3acdf22f1550490d7b06.so",
+      "libcomponent_3acdf22f1550490d7b06.so"
+    ],
+    "instrument": "gdb-breakpoints",
+    "kind": "fin-container-edge",
+    "libraries": [
+      "libcomponent_3acdf22f1550490d7b06.so",
+      "libfincontainers.so",
+      "liblean_bridge_native.so",
+      "libleanshared.so"
+    ],
+    "platform": "x86_64-linux-gnu",
+    "schemaVersion": 1
+  },
+  "nonce": "00000000000000000000000000000012",
+  "record": "/app/build/vo1454-actual-edge-jvm-3beb2ca/gdb15-diagnostics-r3/run-2.record",
+  "root": "/app/build/vo1454-actual-edge-jvm-3beb2ca/consumer/java-relocated/jar-inspection/META-INF/lean-bridge/native/linux-x64",
+  "stderr": "/app/build/vo1454-actual-edge-jvm-3beb2ca/gdb15-diagnostics-r3/run-2.stderr",
+  "stdout": "/app/build/vo1454-actual-edge-jvm-3beb2ca/gdb15-diagnostics-r3/run-2.stdout"
+}

@@ -9,7 +9,6 @@ import { mkdtemp, readdir } from "node:fs/promises";
 import { isAbsolute, join } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { assertFinContainerEdgeGdbRun, finContainerEdgeGdbScript, prepareFinContainerEdgeGdb } from "./fin-container-edge-gdb.mjs";
-import { finContainerEdgeJvmExitDiagnostics } from "./fin-container-edge-jvm-exit.mjs";
 
 const replace = (source, before, after) => {
 	assert.equal(source.split(before).length, 2, `one JVM instrumentation site: ${before}`);
@@ -112,8 +111,6 @@ def jvm_finished():
 
 `;
 	let source = replace(finContainerEdgeGdbScript, "def write():\n", helpers + "\ndef write():\n");
-	source = replace(source, "gdb.events.new_objfile.connect(on_new_objfile)", "gdb.events.new_objfile.connect(on_new_objfile)\n" + finContainerEdgeJvmExitDiagnostics);
-	source = replace(source, '    stop(72, "the inferior did not exit normally")', '    jvm_log_exit_state()\n    stop(72, "the inferior did not exit normally")');
 	source = replace(source, "def loaded(event):\n    path = os.path.realpath(event.new_objfile.filename)", "def loaded(event):\n    jvm_discover(event.new_objfile.filename)\n    path = os.path.realpath(event.new_objfile.filename)");
 	source = replace(source, '"breakpoints": armed}, out)', '"breakpoints": armed, "jvmExtraction": jvm_manifest()}, out)');
 	source = replace(source, 'if state["failure"] is not None:\n    stop(71, state["failure"])', `try:

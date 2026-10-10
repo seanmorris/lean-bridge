@@ -1,5 +1,5 @@
 /**
- * Authenticate Native Fin .NET SDK repair history while preserving earlier execution evidence.
+ * Authenticate Native Fin JVM exit diagnostics history while preserving earlier execution evidence.
  *
  * @file
  */
@@ -11,43 +11,43 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeFinJvmDiagnosticsSource } from "./fin-jvm-diagnostics-history.mjs";
-import { beforeFinDotnetSdkSource, finDotnetSdkChangedPaths, finDotnetSdkHistoryPath, finDotnetSdkPredecessor, reverseFinDotnetSdkUpdate } from "./fin-dotnet-sdk-history.mjs";
+import { beforeFinJvmDiagnosticsSource, finJvmDiagnosticsChangedPaths, finJvmDiagnosticsHistoryPath, finJvmDiagnosticsPredecessor, reverseFinJvmDiagnosticsUpdate } from "./fin-jvm-diagnostics-history.mjs";
 
-test("Native Fin .NET SDK repair integration authenticates every transition and refuses unrecorded edits", async () => {
-	const history = JSON.parse(await readFile(finDotnetSdkHistoryPath, "utf8"));
+test("Native Fin JVM exit diagnostics integration authenticates every transition and refuses unrecorded edits", async () => {
+	const history = JSON.parse(await readFile(finJvmDiagnosticsHistoryPath, "utf8"));
 	assert.equal(history.schemaVersion, 1);
-	assert.equal(history.milestone, "fin-dotnet-sdk-v1");
-	assert.equal(history.predecessorCommit, finDotnetSdkPredecessor);
-	assert.deepEqual(history.updates.map(update => update.path), finDotnetSdkChangedPaths);
+	assert.equal(history.milestone, "fin-jvm-diagnostics-v1");
+	assert.equal(history.predecessorCommit, finJvmDiagnosticsPredecessor);
+	assert.deepEqual(history.updates.map(update => update.path), finJvmDiagnosticsChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeFinJvmDiagnosticsSource(update.path, await readFile(update.path, "utf8")), previous = reverseFinDotnetSdkUpdate(current, update);
-		assert.equal(beforeFinDotnetSdkSource(update.path, current), previous);
-		assert.equal(beforeFinDotnetSdkSource(update.path, current, update.currentSha256), current);
-		assert.equal(beforeFinDotnetSdkSource(update.path, previous), previous);
+		const current = await readFile(update.path, "utf8"), previous = reverseFinJvmDiagnosticsUpdate(current, update);
+		assert.equal(beforeFinJvmDiagnosticsSource(update.path, current), previous);
+		assert.equal(beforeFinJvmDiagnosticsSource(update.path, current, update.currentSha256), current);
+		assert.equal(beforeFinJvmDiagnosticsSource(update.path, previous), previous);
 		assert.equal(beforeFinRefinementSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
 		assert.equal(beforeFinRefinementSource(update.path, current), beforeFinRefinementSource(update.path, previous));
 		const changed = current + "\n// unknown edit\n";
-		assert.equal(beforeFinDotnetSdkSource(update.path, changed), changed);
-		assert.throws(() => reverseFinDotnetSdkUpdate(changed, update));
+		assert.equal(beforeFinJvmDiagnosticsSource(update.path, changed), changed);
+		assert.throws(() => reverseFinJvmDiagnosticsUpdate(changed, update));
 		for(const mutation of [
 			{ previousSha256: "0".repeat(64) }, { currentSha256: "0".repeat(64) }
 			, { path: "unknown.mjs" }, { edits: [] }
 			, { edits: [...update.edits, update.edits[0]] }
 			, { edits: [{ ...update.edits[0], start: -1 }] }
 			, { edits: [{ ...update.edits[0], current: "unrecorded" }] }
-		]) assert.throws(() => reverseFinDotnetSdkUpdate(current, { ...update, ...mutation }));
+		]) assert.throws(() => reverseFinJvmDiagnosticsUpdate(current, { ...update, ...mutation }));
 	}
 	const buffer = Buffer.from("unregistered bytes");
-	assert.equal(beforeFinDotnetSdkSource(finDotnetSdkChangedPaths[0], buffer), buffer);
-	assert.equal(beforeFinDotnetSdkSource("unknown.mjs", "unregistered bytes"), "unregistered bytes");
+	assert.equal(beforeFinJvmDiagnosticsSource(finJvmDiagnosticsChangedPaths[0], buffer), buffer);
+	assert.equal(beforeFinJvmDiagnosticsSource("unknown.mjs", "unregistered bytes"), "unregistered bytes");
 });
 
-test("Native Fin .NET SDK repair integration preserves the earlier source ledgers", async () => {
+test("Native Fin JVM exit diagnostics integration preserves the earlier source ledgers", async () => {
 	for(const [path, digest] of [
-		["docs/evidence/php-wasm-subtype-promotion-source-history-20261010.json", "e15bcc8b90174b20163bc9e04ae46eb6da68887998d313db2ad41e3aa2ae7af0"]
+		["docs/evidence/fin-dotnet-sdk-source-history-20261010.json", "e1589698e97e00d01d1c72702a04ceb360693b5244d11086f3bcfd56811b6e72"]
+		, ["docs/evidence/php-wasm-subtype-promotion-source-history-20261010.json", "e15bcc8b90174b20163bc9e04ae46eb6da68887998d313db2ad41e3aa2ae7af0"]
 		, ["docs/evidence/php-wasm-subtype-acceptance-source-history-20261010.json", "8ece9a966dee723f1dd88a396656661fba75bfa32cf79c1358a3a920c9c1256b"]
 		, ["docs/evidence/php-wasm-subtype-source-history-20261010.json", "4c620679ca2b753d21fe0b1d0b9537c25af8e24d0c001a320b500ae5230cd636"]
 		, ["docs/evidence/php-wasm-direct-fin-promotion-source-history-20261010.json", "edac06a7645178f71b0eb2231bf00adb52ec53955f02ae5332677346a9ddd203"]
@@ -66,10 +66,10 @@ test("Native Fin .NET SDK repair integration preserves the earlier source ledger
 	]) assert.equal(sha256(await readFile(path)), digest, path);
 });
 
-test("Native Fin .NET SDK repair changes source pins without changing any support claim", async () => {
-	const history = JSON.parse(await readFile(finDotnetSdkHistoryPath, "utf8"));
-	const path = "docs/type-surface.v1.json", text = beforeFinJvmDiagnosticsSource(path, await readFile(path, "utf8"));
-	const current = JSON.parse(text), previous = JSON.parse(beforeFinDotnetSdkSource(path, text));
+test("Native Fin JVM exit diagnostics changes source pins without changing any support claim", async () => {
+	const history = JSON.parse(await readFile(finJvmDiagnosticsHistoryPath, "utf8"));
+	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
+	const current = JSON.parse(text), previous = JSON.parse(beforeFinJvmDiagnosticsSource(path, text));
 	const expected = structuredClone(previous); let refreshed = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{
@@ -84,20 +84,20 @@ test("Native Fin .NET SDK repair changes source pins without changing any suppor
 	const digests = new Map();
 	for(const file of current.evidence.flatMap(entry => entry.files))
 	{
-		if(!digests.has(file.path)) digests.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));
+		if(!digests.has(file.path)) digests.set(file.path, sha256(await readFile(file.path)));
 		assert.equal(digests.get(file.path), file.sha256, file.path);
 	}
 });
 
-test("Native Fin .NET SDK repair integration history writer refuses an unrelated HEAD before writing", async t => {
+test("Native Fin JVM exit diagnostics integration history writer refuses an unrelated HEAD before writing", async t => {
 	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-record-omission-history-guard-"));
 	t.after(() => rm(directory, { recursive: true, force: true }));
 	const env = Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith("GIT_")));
 	const git = args => execFileSync("git", args, { cwd: directory, stdio: "pipe", env });
 	git(["init", "--quiet"]);
 	git(["-c", "user.name=Test", "-c", "user.email=test@example.invalid", "-c", "commit.gpgsign=false", "commit", "--allow-empty", "--quiet", "-m", "unrelated revision"]);
-	const result = spawnSync(process.execPath, [resolve("scripts/update-fin-dotnet-sdk-history.mjs")], { cwd: directory, encoding: "utf8", env });
+	const result = spawnSync(process.execPath, [resolve("scripts/update-fin-jvm-diagnostics-history.mjs")], { cwd: directory, encoding: "utf8", env });
 	assert.equal(result.status, 1);
-	assert.match(result.stderr, /Native Fin .NET SDK repair history is draft-only/u);
+	assert.match(result.stderr, /Native Fin JVM exit diagnostics history is draft-only/u);
 	assert.deepEqual(await readdir(directory), [".git"]);
 });

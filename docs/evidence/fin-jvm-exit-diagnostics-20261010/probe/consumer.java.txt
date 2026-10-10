@@ -1,0 +1,154 @@
+import java.math.BigInteger;
+import java.util.Arrays;
+import org.leanbridge.fincontainers.Api;
+import org.leanbridge.fincontainers.Option;
+
+final class Consumer {
+    private Consumer() { }
+    private static int checks;
+    static void check(boolean value, String label) { if (!value) throw new AssertionError("failed: " + label); checks++; }
+    static boolean rejected(Runnable action, String parameter, String bound) {
+        try { action.run(); }
+        catch (IllegalArgumentException error) { return (parameter + " is not below its Fin " + bound + " bound").equals(error.getMessage()); }
+        return false;
+    }
+    static boolean throwsType(Class<? extends Throwable> type, Runnable action) {
+        try { action.run(); } catch (Throwable error) { return type.isInstance(error); }
+        return false;
+    }
+    static BigInteger n(long value) { return BigInteger.valueOf(value); }
+    public static void main(String[] args) {
+        EdgeCounter.initial(args);
+        BigInteger huge = BigInteger.ONE.shiftLeft(70), word = BigInteger.ONE.shiftLeft(32);
+        BigInteger[] digits = new BigInteger[10], reversed = new BigInteger[10];
+        for (int i = 0; i < 10; i++) { digits[i] = n(i); reversed[i] = n(9 - i); }
+        // Array (Fin 10): every element is checked; results stay below the bound.
+        check(Arrays.equals(Api.mirrorAll(digits), reversed), "mirror endpoints");
+        check(Api.mirrorAll(new BigInteger[0]).length == 0, "empty array");
+        for (int position = 0; position < 3; position++) {
+            BigInteger[] bad = {n(1), n(2), n(3)};
+            bad[position] = n(10);
+            check(rejected(() -> Api.mirrorAll(bad), "arg0[" + position + "]", "10"), "invalid element at " + position);
+            check(bad[position].equals(n(10)), "input unchanged");
+        }
+        check(rejected(() -> Api.mirrorAll(new BigInteger[]{word, n(1), n(2)}), "arg0[0]", "10"), "word element");
+        check(throwsType(IllegalArgumentException.class, () -> Api.mirrorAll(new BigInteger[]{n(-1), n(1)})) && !rejected(() -> Api.mirrorAll(new BigInteger[]{n(-1), n(1)}), "arg0[0]", "10"), "negative is the Nat error");
+        check(throwsType(NullPointerException.class, () -> Api.mirrorAll(new BigInteger[]{null})), "null element is rejected");
+        // Array (Fin 0): only the empty array has values.
+        check(Api.countNone(new BigInteger[0]).equals(n(0)), "Fin 0 empty");
+        check(rejected(() -> Api.countNone(new BigInteger[]{n(0)}), "arg0[0]", "0"), "Fin 0 present");
+        // List Huge: a 2^70 bound compared limb by limb.
+        BigInteger last = huge.subtract(BigInteger.ONE);
+        check(Api.sumHuge(new BigInteger[]{word, last}).equals(word.add(last)) && Api.sumHuge(new BigInteger[0]).equals(n(0)), "huge sums");
+        check(rejected(() -> Api.sumHuge(new BigInteger[]{word, huge}), "arg0[1]", huge.toString()), "huge bound");
+        // Option (Fin 1): none is valid; a present value is checked.
+        check(Api.orDefault(Option.none()).equals(n(7)) && Api.orDefault(Option.some(n(0))).equals(n(0)), "option values");
+        check(rejected(() -> Api.orDefault(Option.some(n(1))), "arg0?", "1"), "present Fin 1");
+        // Array (Option Digit): only present elements are checked.
+        @SuppressWarnings("unchecked")
+        Option<BigInteger>[] mixed = new Option[]{Option.some(n(1)), Option.none(), Option.some(n(9))};
+        check(Arrays.equals(EdgeApi.present(mixed), new BigInteger[]{n(1), n(9)}), "present digits");
+        mixed[2] = Option.some(n(10));
+        check(rejected(() -> EdgeApi.present(mixed), "arg0[2]?", "10"), "present invalid");
+        mixed[2] = Option.none();
+        check(EdgeApi.present(mixed).length == 1, "absent is never read");
+        // List (Array Digit) -> Option (List Digit): nested rows.
+        BigInteger[][] rows = {{n(1), n(2)}, {n(3)}};
+        Option<BigInteger[]> flat = EdgeApi.flatten(rows);
+        check(flat.isSome() && Arrays.equals(flat.value(), new BigInteger[]{n(1), n(2), n(3)}), "flatten rows");
+        check(!EdgeApi.flatten(new BigInteger[0][]).isSome(), "no rows");
+        rows[1][0] = n(10);
+        check(rejected(() -> EdgeApi.flatten(rows), "arg0[1][0]", "10"), "nested invalid last");
+        // A late refined argument after an unrefined one.
+        String[] names = {"a", "b"};
+        check(Api.label(names, new BigInteger[]{n(1), n(3)}).equals("a:1,b:3"), "label");
+        check(rejected(() -> Api.label(names, new BigInteger[]{n(1), n(4)}), "arg1[1]", "4") && names[1].equals("b"), "late argument, caller data unchanged");
+        // A result-only container refinement projects each element after Lean returns.
+        check(Arrays.equals(Api.wrapAll(new BigInteger[]{n(100), huge}), new BigInteger[]{n(2), n(2)}) && Api.wrapAll(new BigInteger[0]).length == 0, "wrapped results");
+        for (int i = 0; i < 1000; i++) {
+            final int k = i;
+            if (!rejected(() -> Api.mirrorAll(new BigInteger[]{n(10 + k % 5)}), "arg0[0]", "10")) throw new AssertionError("invalid call accepted at " + i);
+            if (!Api.mirrorAll(new BigInteger[]{n(i % 10)})[0].equals(n(9 - i % 10))) throw new AssertionError("valid call failed at " + i);
+        }
+        checks += 2000;
+        // All original checks precede this zero-bound and nested-position supplement.
+        int edgeBefore = checks;
+        check(EdgeApi.emptyArray(new BigInteger[0]).length == 0, "Fin 0 array round trip");
+        check(EdgeApi.emptyList(new BigInteger[0]).length == 0, "Fin 0 list round trip");
+        check(!EdgeApi.emptyOption(Option.none()).isSome(), "Fin 0 none round trip");
+        for (BigInteger value : new BigInteger[]{n(0), n(1), huge}) {
+            BigInteger[] input = {value};
+            Option<BigInteger> option = Option.some(value);
+            check(rejected(() -> EdgeApi.emptyArray(input), "arg0[0]", "0"), "Fin 0 nonempty array");
+            check(rejected(() -> EdgeApi.emptyList(input), "arg0[0]", "0"), "Fin 0 nonempty list");
+            check(rejected(() -> EdgeApi.emptyOption(option), "arg0?", "0"), "Fin 0 some");
+            check(Arrays.equals(input, new BigInteger[]{value}) && option.isSome() && option.value().equals(value), "Fin 0 inputs unchanged");
+        }
+        check(!EdgeApi.optionalDigits(Option.none()).isSome(), "optional list absent");
+        Option<BigInteger[]> edgeEmpty = EdgeApi.optionalDigits(Option.some(new BigInteger[0]));
+        check(edgeEmpty.isSome() && edgeEmpty.value().length == 0, "optional list present empty");
+        check(Arrays.equals(EdgeApi.optionalDigits(Option.some(new BigInteger[]{n(0), n(9)})).value(), new BigInteger[]{n(0), n(9)}), "optional list endpoints");
+        for (int position = 0; position < 3; ++position) {
+            BigInteger[] values = {n(1), n(2), n(3)};
+            values[position] = n(10);
+            BigInteger[] snapshot = values.clone();
+            @SuppressWarnings("unchecked")
+            Option<BigInteger>[] options = new Option[]{Option.some(values[0]), Option.some(values[1]), Option.some(values[2])};
+            check(rejected(() -> EdgeApi.present(options), "arg0[" + position + "]?", "10"), "nested option invalid position");
+            check(Arrays.stream(options).allMatch(Option::isSome) && Arrays.equals(Arrays.stream(options).map(Option::value).toArray(BigInteger[]::new), snapshot), "nested options unchanged");
+            check(rejected(() -> EdgeApi.optionalDigits(Option.some(values)), "arg0?[" + position + "]", "10"), "optional list invalid position");
+            check(Arrays.equals(values, snapshot), "optional list unchanged");
+            for (int column = 0; column < 3; ++column) {
+                BigInteger[][] table = {{n(1), n(2), n(3)}, {n(4), n(5), n(6)}, {n(7), n(8), n(9)}};
+                table[position][column] = n(10);
+                BigInteger[][] before = Arrays.stream(table).map(BigInteger[]::clone).toArray(BigInteger[][]::new);
+                check(rejected(() -> EdgeApi.flatten(table), "arg0[" + position + "][" + column + "]", "10"), "nested row and member positions");
+                check(Arrays.deepEquals(table, before), "nested rows unchanged");
+            }
+        }
+        @SuppressWarnings("unchecked")
+        Option<BigInteger>[] edgeAbsent = new Option[]{Option.none(), Option.none(), Option.none()};
+        check(EdgeApi.present(edgeAbsent).length == 0, "absent options");
+        Option<BigInteger[]> edgeRows = EdgeApi.flatten(new BigInteger[][]{{}, {}, {}});
+        check(edgeRows.isSome() && edgeRows.value().length == 0, "present empty rows");
+        check(throwsType(NullPointerException.class, () -> EdgeApi.emptyArray(null)), "null Array");
+        check(throwsType(NullPointerException.class, () -> EdgeApi.emptyList(null)), "null List");
+        check(throwsType(NullPointerException.class, () -> EdgeApi.optionalDigits(Option.some(null))), "present null List");
+        java.util.function.Predicate<Runnable> edgeNegative = action -> {
+            try { action.run(); }
+            catch (IllegalArgumentException error) { return error.getClass() == IllegalArgumentException.class && "Nat cannot be negative".equals(error.getMessage()); }
+            return false;
+        };
+        check(edgeNegative.test(() -> EdgeApi.emptyArray(new BigInteger[]{n(-1)})), "negative Fin 0 Array is Nat error");
+        check(edgeNegative.test(() -> EdgeApi.emptyList(new BigInteger[]{n(-1)})), "negative Fin 0 List is Nat error");
+        check(edgeNegative.test(() -> EdgeApi.emptyOption(Option.some(n(-1)))), "negative Fin 0 Option is Nat error");
+        for (int position = 0; position < 3; ++position) {
+            BigInteger[] values = {n(1), n(2), n(3)};
+            values[position] = n(-1);
+            BigInteger[] before = values.clone();
+            check(edgeNegative.test(() -> EdgeApi.optionalDigits(Option.some(values))), "negative nested Nat");
+            check(Arrays.equals(values, before), "negative input unchanged");
+        }
+        for (int cycle = 0; cycle < 1000; ++cycle) {
+            check(rejected(() -> EdgeApi.emptyArray(new BigInteger[]{n(0)}), "arg0[0]", "0"), "cycle invalid Array");
+            check(EdgeApi.emptyArray(new BigInteger[0]).length == 0, "cycle valid Array");
+            check(rejected(() -> EdgeApi.emptyList(new BigInteger[]{n(0)}), "arg0[0]", "0"), "cycle invalid List");
+            check(EdgeApi.emptyList(new BigInteger[0]).length == 0, "cycle valid List");
+            check(rejected(() -> EdgeApi.emptyOption(Option.some(n(0))), "arg0?", "0"), "cycle invalid Option");
+            check(!EdgeApi.emptyOption(Option.none()).isSome(), "cycle valid Option");
+            @SuppressWarnings("unchecked")
+            Option<BigInteger>[] badOptions = new Option[]{Option.some(n(1)), Option.some(n(10)), Option.none()};
+            @SuppressWarnings("unchecked")
+            Option<BigInteger>[] goodOptions = new Option[]{Option.some(n(1)), Option.none(), Option.some(n(9))};
+            check(rejected(() -> EdgeApi.present(badOptions), "arg0[1]?", "10"), "cycle invalid nested option");
+            check(Arrays.equals(EdgeApi.present(goodOptions), new BigInteger[]{n(1), n(9)}), "cycle valid nested option");
+            check(rejected(() -> EdgeApi.flatten(new BigInteger[][]{{n(1)}, {n(10)}, {n(9)}}), "arg0[1][0]", "10"), "cycle invalid nested rows");
+            check(Arrays.equals(EdgeApi.flatten(new BigInteger[][]{{n(1)}, {}, {n(9)}}).value(), new BigInteger[]{n(1), n(9)}), "cycle valid nested rows");
+            check(rejected(() -> EdgeApi.optionalDigits(Option.some(new BigInteger[]{n(1), n(10), n(9)})), "arg0?[1]", "10"), "cycle invalid optional list");
+            check(Arrays.equals(EdgeApi.optionalDigits(Option.some(new BigInteger[]{n(1), n(9)})).value(), new BigInteger[]{n(1), n(9)}), "cycle valid optional list");
+        }
+        check(checks - edgeBefore == 12062, "exact edge assertion coverage");
+
+        System.out.println("fin-container-ok:" + checks);
+    }
+}

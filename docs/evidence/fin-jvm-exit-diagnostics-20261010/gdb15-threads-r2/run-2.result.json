@@ -1,0 +1,14 @@
+{
+  "status": 0,
+  "signal": null,
+  "stdout": "\nProgram stopped.\n0x00007f7cb68c1540 in ?? () from /lib64/ld-linux-x86-64.so.2\n[Thread debugging using libthread_db enabled]\nUsing host libthread_db library \"/lib/x86_64-linux-gnu/libthread_db.so.1\".\n[New Thread 0x7f7cb4fc76c0 (LWP 902)]\n[New Thread 0x7f7cb4a066c0 (LWP 903)]\n[New Thread 0x7f7cb49056c0 (LWP 904)]\n[New Thread 0x7f7cb48046c0 (LWP 905)]\n[New Thread 0x7f7cb45016c0 (LWP 906)]\n[New Thread 0x7f7cb44006c0 (LWP 907)]\n[New Thread 0x7f7cb41e26c0 (LWP 908)]\n[New Thread 0x7f7c914bd6c0 (LWP 909)]\n[New Thread 0x7f7c913bc6c0 (LWP 910)]\n[New Thread 0x7f7c912bb6c0 (LWP 911)]\n[New Thread 0x7f7c911ba6c0 (LWP 912)]\n[New Thread 0x7f7c910b96c0 (LWP 913)]\n[New Thread 0x7f7c90fb86c0 (LWP 914)]\n[New Thread 0x7f7c90eb76c0 (LWP 915)]\n[New Thread 0x7f7c90db66c0 (LWP 916)]\n[New Thread 0x7f7c90cb56c0 (LWP 917)]\n[New Thread 0x7f7c90bb46c0 (LWP 918)]\n[New Thread 0x7f7bf68316c0 (LWP 920)]\n[New Thread 0x7f7c90a086c0 (LWP 921)]\n[Thread 0x7f7cb41e26c0 (LWP 908) exited]\n[Thread 0x7f7cb44006c0 (LWP 907) exited]\n[Thread 0x7f7cb45016c0 (LWP 906) exited]\n[Thread 0x7f7cb49056c0 (LWP 904) exited]\n[Thread 0x7f7c914bd6c0 (LWP 909) exited]\n[Thread 0x7f7cb4fc76c0 (LWP 902) exited]\n[Thread 0x7f7c90fb86c0 (LWP 914) exited]\n[Thread 0x7f7cb6665080 (LWP 899) exited]\n[Thread 0x7f7c913bc6c0 (LWP 910) exited]\n[Thread 0x7f7c912bb6c0 (LWP 911) exited]\n[Thread 0x7f7c90eb76c0 (LWP 915) exited]\n[Thread 0x7f7c90cb56c0 (LWP 917) exited]\n[Thread 0x7f7c90bb46c0 (LWP 918) exited]\n[Thread 0x7f7bf68316c0 (LWP 920) exited]\n[Thread 0x7f7c90a086c0 (LWP 921) exited]\n[Thread 0x7f7c90db66c0 (LWP 916) exited]\n[Thread 0x7f7c910b96c0 (LWP 913) exited]\n[Thread 0x7f7c911ba6c0 (LWP 912) exited]\n[Thread 0x7f7cb48046c0 (LWP 905) exited]\n[Thread 0x7f7cb4a066c0 (LWP 903) exited]\n[New process 899]\n[Inferior 1 (process 899) exited normally]\nexit-state pid=0 code=0 signal=None events=[{'code': 0, 'pid': 899}] threads=[]\n",
+  "stderr": "",
+  "startedAt": "2026-10-10T15:33:57.834Z",
+  "endedAt": "2026-10-10T15:34:04.997Z",
+  "minFreeMiB": 1482,
+  "stoppedForDisk": false,
+  "variant": {
+    "cpu": "0,3",
+    "processors": 2
+  }
+}

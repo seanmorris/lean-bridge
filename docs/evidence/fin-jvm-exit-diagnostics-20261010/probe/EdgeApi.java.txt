@@ -1,0 +1,24 @@
+import java.math.BigInteger;
+import org.leanbridge.fincontainers.Api;
+import org.leanbridge.fincontainers.Option;
+public final class EdgeApi {
+    private EdgeApi() { }
+    public static BigInteger[] emptyArray(BigInteger[] value) {
+        return EdgeCounter.call(0, "emptyArray", () -> Api.emptyArray(value));
+    }
+    public static BigInteger[] emptyList(BigInteger[] value) {
+        return EdgeCounter.call(1, "emptyList", () -> Api.emptyList(value));
+    }
+    public static Option<BigInteger> emptyOption(Option<BigInteger> value) {
+        return EdgeCounter.call(2, "emptyOption", () -> Api.emptyOption(value));
+    }
+    public static Option<BigInteger[]> optionalDigits(Option<BigInteger[]> value) {
+        return EdgeCounter.call(3, "optionalDigits", () -> Api.optionalDigits(value));
+    }
+    public static BigInteger[] present(Option<BigInteger>[] value) {
+        return EdgeCounter.call(4, "present", () -> Api.present(value));
+    }
+    public static Option<BigInteger[]> flatten(BigInteger[][] value) {
+        return EdgeCounter.call(5, "flatten", () -> Api.flatten(value));
+    }
+}

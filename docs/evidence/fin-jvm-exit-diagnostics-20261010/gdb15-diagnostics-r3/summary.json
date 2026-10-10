@@ -1,0 +1,78 @@
+{
+  "startedAt": "2026-10-10T15:38:13.249Z",
+  "revision": "3beb2ca905ee1c4020033aa9dce540a386b091dc",
+  "scriptSha256": "ebe4735de95952744f1e7d64c37c486fbc6d667ed6f50c888f2654d65680dc5b",
+  "variants": [
+    {
+      "cpu": "3",
+      "processors": 4,
+      "mode": "production",
+      "expected": 0
+    },
+    {
+      "cpu": "3",
+      "processors": 4,
+      "mode": "missing-exit",
+      "expected": 72
+    },
+    {
+      "cpu": "3",
+      "processors": 4,
+      "mode": "diagnostic-error",
+      "expected": 72
+    }
+  ],
+  "jarSha256": "9d09c5e9a58c1c5a79d70bbfdac53e20d5cf3028f4bf77449cdd61859d8baa83",
+  "libraries": {
+    "libcomponent_3acdf22f1550490d7b06.so": "83a7b20759f9c65d363fc158796ed8f7941afd34de74f536acef48d13e86fcc5",
+    "libfincontainers.so": "517cd6dbc3c379671357ba627a4dbffb1b4a3495987bed10c2b3cb4880717fa3",
+    "liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+    "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+  },
+  "endedAt": "2026-10-10T15:38:59.057Z",
+  "scope": "Actual installed Java edge replay with JVM shutdown diagnostics and fail-closed controls. Baseline is the original producer package; observer is the current draft. Not a hosted repair or full two-root acceptance.",
+  "results": [
+    {
+      "index": 0,
+      "variant": {
+        "cpu": "3",
+        "processors": 4,
+        "mode": "production",
+        "expected": 0
+      },
+      "status": 0,
+      "checks": "passed",
+      "minFreeMiB": 1473,
+      "stoppedForDisk": false,
+      "scriptSha256": "aae9bfc7722e2a9b75517531f7ed329568324c47c94138ca13cd3c4959ef245d"
+    },
+    {
+      "index": 1,
+      "variant": {
+        "cpu": "3",
+        "processors": 4,
+        "mode": "missing-exit",
+        "expected": 72
+      },
+      "status": 72,
+      "checks": "passed",
+      "minFreeMiB": 1471,
+      "stoppedForDisk": false,
+      "scriptSha256": "9fd7981c9dcf11b248de323365679e06b79164543d2d01be80ed7d07861d59e2"
+    },
+    {
+      "index": 2,
+      "variant": {
+        "cpu": "3",
+        "processors": 4,
+        "mode": "diagnostic-error",
+        "expected": 72
+      },
+      "status": 72,
+      "checks": "passed",
+      "minFreeMiB": 1469,
+      "stoppedForDisk": false,
+      "scriptSha256": "0b215719b4612a0f5da82f95f4cb55cb8d0048861c3f6dd27d0eb6538713cdb3"
+    }
+  ]
+}
