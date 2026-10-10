@@ -1,0 +1,422 @@
+{
+  "adaptersSha256": "c7b7d3435110ab477822638ddfb9e11e54f9757836aa41ca9e76ed6f1fcf27ff",
+  "bindingIrSha256": "5b3cc7e8e8c4438fdc094d3bbe6445299d48c29b597a538bbbf0fd90be66c89a",
+  "compiler": {
+    "emsdkCommit": "54ef088329e5a329614b3659a579d2ccd31fd621",
+    "files": {
+      "upstream/bin/clang": {
+        "bytes": 141971168,
+        "sha256": "cbac1be8f3026afc67c45beb7baab688a06d548e52ef5d010146160d46618860"
+      },
+      "upstream/bin/wasm-ld": {
+        "bytes": 73912360,
+        "sha256": "af23d9d3f6c30a496f566c817c954de3e9139fa7d2562579cdbbbff8f21caa72"
+      },
+      "upstream/emscripten/em++.py": {
+        "bytes": 506,
+        "sha256": "017f735c953318fdaaa4af68c8d4bf13936a787ddbd5dad804d532b0223b6c2f"
+      },
+      "upstream/emscripten/emcc": {
+        "bytes": 1065,
+        "sha256": "b0c9551f9155fa9c028efa24591acdfd30f02f32fb247cf9266f5f0f2ede7589"
+      },
+      "upstream/emscripten/emcc.py": {
+        "bytes": 62149,
+        "sha256": "16d0198f2a7a843199a886c4bffe4900849c43826a50ed905089bf018f93b190"
+      },
+      "upstream/emscripten/tools/link.py": {
+        "bytes": 133185,
+        "sha256": "20f5ae3672c1647059b887c256f304fe6af3ad314d440e9932d1c7e9042cd4c9"
+      }
+    },
+    "version": "emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 3.1.68 (ceee49d2ecdab36a3feb85a684f8e5a453dde910)"
+  },
+  "exports": [
+    {
+      "cSymbol": "subtypes_byte",
+      "declaration": "lean:Subtypes.byte",
+      "function": "LeanSubtypes\\byte",
+      "transport": "LeanSubtypes\\Internal\\Zend5b3cc7e8e8c4438f\\call0"
+    },
+    {
+      "cSymbol": "subtypes_clamp",
+      "declaration": "lean:Subtypes.clamp",
+      "function": "LeanSubtypes\\clamp",
+      "transport": "LeanSubtypes\\Internal\\Zend5b3cc7e8e8c4438f\\call1"
+    },
+    {
+      "cSymbol": "subtypes_first_even",
+      "declaration": "lean:Subtypes.firstEven",
+      "function": "LeanSubtypes\\first_even",
+      "transport": "LeanSubtypes\\Internal\\Zend5b3cc7e8e8c4438f\\call2"
+    },
+    {
+      "cSymbol": "subtypes_half",
+      "declaration": "lean:Subtypes.half",
+      "function": "LeanSubtypes\\half",
+      "transport": "LeanSubtypes\\Internal\\Zend5b3cc7e8e8c4438f\\call3"
+    },
+    {
+      "cSymbol": "subtypes_head",
+      "declaration": "lean:Subtypes.head",
+      "function": "LeanSubtypes\\head",
+      "transport": "LeanSubtypes\\Internal\\Zend5b3cc7e8e8c4438f\\call4"
+    },
+    {
+      "cSymbol": "subtypes_join",
+      "declaration": "lean:Subtypes.join",
+      "function": "LeanSubtypes\\join",
+      "transport": "LeanSubtypes\\Internal\\Zend5b3cc7e8e8c4438f\\call5"
+    },
+    {
+      "cSymbol": "subtypes_mix",
+      "declaration": "lean:Subtypes.mix",
+      "function": "LeanSubtypes\\mix",
+      "transport": "LeanSubtypes\\Internal\\Zend5b3cc7e8e8c4438f\\call6"
+    },
+    {
+      "cSymbol": "subtypes_pad",
+      "declaration": "lean:Subtypes.pad",
+      "function": "LeanSubtypes\\pad",
+      "transport": "LeanSubtypes\\Internal\\Zend5b3cc7e8e8c4438f\\call7"
+    },
+    {
+      "cSymbol": "subtypes_scale",
+      "declaration": "lean:Subtypes.scale",
+      "function": "LeanSubtypes\\scale",
+      "transport": "LeanSubtypes\\Internal\\Zend5b3cc7e8e8c4438f\\call8"
+    },
+    {
+      "cSymbol": "subtypes_second_even",
+      "declaration": "lean:Subtypes.secondEven",
+      "function": "LeanSubtypes\\second_even",
+      "transport": "LeanSubtypes\\Internal\\Zend5b3cc7e8e8c4438f\\call9"
+    },
+    {
+      "cSymbol": "subtypes_shout",
+      "declaration": "lean:Subtypes.shout",
+      "function": "LeanSubtypes\\shout",
+      "transport": "LeanSubtypes\\Internal\\Zend5b3cc7e8e8c4438f\\call10"
+    },
+    {
+      "cSymbol": "subtypes_unrestricted",
+      "declaration": "lean:Subtypes.unrestricted",
+      "function": "LeanSubtypes\\unrestricted",
+      "transport": "LeanSubtypes\\Internal\\Zend5b3cc7e8e8c4438f\\call11"
+    },
+    {
+      "cSymbol": "subtypes_zero_even",
+      "declaration": "lean:Subtypes.zeroEven",
+      "function": "LeanSubtypes\\zero_even",
+      "transport": "LeanSubtypes\\Internal\\Zend5b3cc7e8e8c4438f\\call12"
+    }
+  ],
+  "headerSha256": "c752d0e1dfd6961908f0d00682766e7708fee7a86524aaf83c57948559c7ca1f",
+  "initializer": "initialize_LeanBridgeNative9da28bcf49ab7dd6",
+  "library": "lib/php8.4-lb_subtypes_5b3cc7e8e8c4438f.so",
+  "metadataSha256": "86a1d4fa8cb2d6aa9c8df730efc18ce7b241cdb9fa3f8b4398b873f0bc6b0559",
+  "modelSha256": "92042475588defd3729d3dc8d28f797dca8a694408ad7ffb331855b94e55db34",
+  "phpHeadersSha256": "65b1b3ff2b53f551996a1310865e3a1f7c0ce32e9a45c50eaae1320e5442aadd",
+  "pointerBits": 32,
+  "profile": "php-wasm-copied-v1",
+  "runtimeIdentity": "44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966",
+  "schemaVersion": 1,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "6fcaa8dc33bb2ef9c05ca9299de8c55293e0c4dcf58c587bccb511d51eb940d2",
+    "exportConfigurationSource": "{\n  \"contracts\": {\n    \"Subtypes.byte\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"Subtypes.checkedByte\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"refinement\": {\n          \"constructor\": \"Subtypes.checkedByte\"\n        }\n      }\n    },\n    \"Subtypes.clamp\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"Subtypes.checkedBounded\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"refinement\": \"reject\"\n      }\n    },\n    \"Subtypes.firstEven\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"Subtypes.checkedEven\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"refinement\": {\n          \"constructor\": \"Subtypes.checkedEven\"\n        }\n      }\n    },\n    \"Subtypes.half\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"Subtypes.checkedEven\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"refinement\": \"reject\"\n      }\n    },\n    \"Subtypes.head\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"Subtypes.checkedPayload\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"refinement\": \"reject\"\n      }\n    },\n    \"Subtypes.join\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"Subtypes.checkedWord\"\n          }\n        },\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"Subtypes.checkedWord\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"refinement\": {\n          \"constructor\": \"Subtypes.checkedWord\"\n        }\n      }\n    },\n    \"Subtypes.mix\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"Subtypes.checkedEven\"\n          }\n        },\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"refinement\": \"reject\"\n      }\n    },\n    \"Subtypes.pad\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": \"reject\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"refinement\": {\n          \"constructor\": \"Subtypes.checkedEven\"\n        }\n      }\n    },\n    \"Subtypes.scale\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": \"reject\"\n        },\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"Subtypes.checkedSmall\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"refinement\": \"reject\"\n      }\n    },\n    \"Subtypes.secondEven\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"Subtypes.normalizedEven\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"refinement\": {\n          \"constructor\": \"Subtypes.checkedEven\"\n        }\n      }\n    },\n    \"Subtypes.shout\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"Subtypes.checkedWord\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"refinement\": {\n          \"constructor\": \"Subtypes.checkedWord\"\n        }\n      }\n    },\n    \"Subtypes.zeroEven\": {\n      \"parameters\": [],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"refinement\": {\n          \"constructor\": \"Subtypes.checkedEven\"\n        }\n      }\n    }\n  },\n  \"exports\": [\n    \"Subtypes.shout\",\n    \"Subtypes.half\",\n    \"Subtypes.scale\",\n    \"Subtypes.head\",\n    \"Subtypes.pad\",\n    \"Subtypes.join\",\n    \"Subtypes.clamp\",\n    \"Subtypes.mix\",\n    \"Subtypes.byte\",\n    \"Subtypes.firstEven\",\n    \"Subtypes.secondEven\",\n    \"Subtypes.zeroEven\",\n    \"Subtypes.unrestricted\"\n  ],\n  \"modules\": [\n    \"Subtypes\"\n  ],\n  \"schemaVersion\": 1,\n  \"specializations\": [\n    {\n      \"declaration\": \"Subtypes.echo\",\n      \"name\": \"Subtypes.firstEven\",\n      \"types\": [\n        \"Subtypes.Even\"\n      ]\n    },\n    {\n      \"declaration\": \"Subtypes.echo\",\n      \"name\": \"Subtypes.secondEven\",\n      \"types\": [\n        \"Subtypes.Even\"\n      ]\n    }\n  ],\n  \"targets\": {\n    \"php-wasm\": {\n      \"composer\": {\n        \"name\": \"lean-bridge-subtype-entry/probe\",\n        \"version\": \"1.0.0\"\n      },\n      \"npm\": {\n        \"name\": \"lean-bridge-subtype-entry-probe\",\n        \"version\": \"1.0.0\"\n      }\n    }\n  }\n}\n",
+    "extractorSha256": "8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 136208,
+          "interfaceSha256": "229ffb6d4d44245d44a0590c994ce89406218009c4ebce3f1f7e14413d12f0d3",
+          "sha256": "5862c057f7aa077744e26558b1f5c595697d7e42a1ba598846d8bb30eee846d9"
+        },
+        "module": "Subtypes",
+        "source": {
+          "bytes": 3874,
+          "path": "Subtypes.lean",
+          "sha256": "0c49a3b32fc7758b6959ddace649d11d333addbe95b4ddc92493498eaea432df"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "contracts": {
+        "Subtypes.byte": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "Subtypes.checkedByte"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "Subtypes.checkedByte"
+            }
+          }
+        },
+        "Subtypes.clamp": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "Subtypes.checkedBounded"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": "reject"
+          }
+        },
+        "Subtypes.firstEven": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "Subtypes.checkedEven"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "Subtypes.checkedEven"
+            }
+          }
+        },
+        "Subtypes.half": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "Subtypes.checkedEven"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": "reject"
+          }
+        },
+        "Subtypes.head": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "Subtypes.checkedPayload"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": "reject"
+          }
+        },
+        "Subtypes.join": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "Subtypes.checkedWord"
+              }
+            },
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "Subtypes.checkedWord"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "Subtypes.checkedWord"
+            }
+          }
+        },
+        "Subtypes.mix": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "Subtypes.checkedEven"
+              }
+            },
+            {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": "reject"
+          }
+        },
+        "Subtypes.pad": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": "reject"
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "Subtypes.checkedEven"
+            }
+          }
+        },
+        "Subtypes.scale": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": "reject"
+            },
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "Subtypes.checkedSmall"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": "reject"
+          }
+        },
+        "Subtypes.secondEven": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "Subtypes.normalizedEven"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "Subtypes.checkedEven"
+            }
+          }
+        },
+        "Subtypes.shout": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "Subtypes.checkedWord"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "Subtypes.checkedWord"
+            }
+          }
+        },
+        "Subtypes.zeroEven": {
+          "parameters": [],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "Subtypes.checkedEven"
+            }
+          }
+        }
+      },
+      "exportModules": [
+        "Subtypes"
+      ],
+      "exports": [
+        "Subtypes.shout",
+        "Subtypes.half",
+        "Subtypes.scale",
+        "Subtypes.head",
+        "Subtypes.pad",
+        "Subtypes.join",
+        "Subtypes.clamp",
+        "Subtypes.mix",
+        "Subtypes.byte",
+        "Subtypes.firstEven",
+        "Subtypes.secondEven",
+        "Subtypes.zeroEven",
+        "Subtypes.unrestricted"
+      ],
+      "metadata": {
+        "invocationIdentitySha256": "b050ee4e34374712a4e769849e48cb5a7ecb3c68d13f53315dfac82f5e2080b1",
+        "modules": [
+          {
+            "interfaceSha256": "229ffb6d4d44245d44a0590c994ce89406218009c4ebce3f1f7e14413d12f0d3",
+            "name": "Subtypes",
+            "sourcePath": "Subtypes.lean",
+            "sourceSha256": "0c49a3b32fc7758b6959ddace649d11d333addbe95b4ddc92493498eaea432df"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "Subtypes"
+      ],
+      "profile": "native-library-v1",
+      "resources": [],
+      "specializations": [
+        {
+          "declaration": "Subtypes.echo",
+          "name": "Subtypes.firstEven",
+          "types": [
+            "Subtypes.Even"
+          ]
+        },
+        {
+          "declaration": "Subtypes.echo",
+          "name": "Subtypes.secondEven",
+          "types": [
+            "Subtypes.Even"
+          ]
+        }
+      ]
+    },
+    "sourceNoticesSha256": "0e9aeb10829f530cc4879aec9830939a49842f9b83a8e672fc34ff278cc9550d",
+    "sourceTreeSha256": "f305b9d2e80bfefc30ee897e9e0906731dc8267adea96104d213b3de1de528e3"
+  },
+  "wasmLibrary": {
+    "bytes": 65651,
+    "sha256": "2d4d443f38ae3fcfb3006d49cb47851ec6d15771c5d04060ac1e38a8126d9b4d"
+  },
+  "zendSha256": "db8ad513640e4cf2f7318f103c8dca219096d7ee6f607072057d2732c917bc01"
+}

@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "milestone": "php-wasm-subtype-entry-v1",
+  "predecessorCommit": "6ac0d2bacfb0ff53b4698a5310f3f3e5e45ad5d3",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "f54221996d3f577fa6208fffc88e45c8b765a58fa6a21fdb33b75ee7e97e949f",
+      "previousSha256": "d7769872bf6cbf9cca402301bdfba48eccd91c38769929ab8d5e775be0ee31f0",
+      "edits": [
+        {
+          "start": 3345337,
+          "previous": "          \"sha256\": \"becf1768d8c977572538a189b8b5688b8431c123eb8cd850139138b2e830e679\"\n",
+          "current": "          \"sha256\": \"fc93821b2d7705a7bbb81d221bf3cdb0161801d6de6d8a9ccf51f2d2e59b465f\"\n"
+        },
+        {
+          "start": 3358298,
+          "previous": "          \"sha256\": \"becf1768d8c977572538a189b8b5688b8431c123eb8cd850139138b2e830e679\"\n",
+          "current": "          \"sha256\": \"fc93821b2d7705a7bbb81d221bf3cdb0161801d6de6d8a9ccf51f2d2e59b465f\"\n"
+        },
+        {
+          "start": 3371263,
+          "previous": "          \"sha256\": \"becf1768d8c977572538a189b8b5688b8431c123eb8cd850139138b2e830e679\"\n",
+          "current": "          \"sha256\": \"fc93821b2d7705a7bbb81d221bf3cdb0161801d6de6d8a9ccf51f2d2e59b465f\"\n"
+        },
+        {
+          "start": 3384220,
+          "previous": "          \"sha256\": \"becf1768d8c977572538a189b8b5688b8431c123eb8cd850139138b2e830e679\"\n",
+          "current": "          \"sha256\": \"fc93821b2d7705a7bbb81d221bf3cdb0161801d6de6d8a9ccf51f2d2e59b465f\"\n"
+        },
+        {
+          "start": 3397424,
+          "previous": "          \"sha256\": \"ef7eda9494ac7a0633beb4c0913d618a5581d8a842d5caca40d032eb2dfcca89\"\n",
+          "current": "          \"sha256\": \"99963243882ba9d7ea99e770082086a777c82413f70ab06ad2f046a8c9c33487\"\n"
+        },
+        {
+          "start": 3410052,
+          "previous": "          \"sha256\": \"ef7eda9494ac7a0633beb4c0913d618a5581d8a842d5caca40d032eb2dfcca89\"\n",
+          "current": "          \"sha256\": \"99963243882ba9d7ea99e770082086a777c82413f70ab06ad2f046a8c9c33487\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-jvm-diagnostics-history-tests.mjs",
+      "currentSha256": "d0187ff3c3d7be925b567e720ff60a5a3e4c5358462da57c46a531a92f8bb1fc",
+      "previousSha256": "6216d3914f14c52fc3700285ea5801b17e92f920da926eb4dc2b9b40a8c85c27",
+      "edits": [
+        {
+          "start": 532,
+          "previous": "",
+          "current": "import { beforePhpWasmSubtypeEntrySource } from \"./php-wasm-subtype-entry-history.mjs\";\n"
+        },
+        {
+          "start": 1344,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\"), previous = reverseFinJvmDiagnosticsUpdate(current, update);\n",
+          "current": "\t\tconst current = beforePhpWasmSubtypeEntrySource(update.path, await readFile(update.path, \"utf8\")), previous = reverseFinJvmDiagnosticsUpdate(current, update);\n"
+        },
+        {
+          "start": 5740,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", text = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", text = beforePhpWasmSubtypeEntrySource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 6601,
+          "previous": "\t\tif(!digests.has(file.path)) digests.set(file.path, sha256(await readFile(file.path)));\n",
+          "current": "\t\tif(!digests.has(file.path)) digests.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-jvm-diagnostics-history.mjs",
+      "currentSha256": "11f06567cbba55ba3117accbf83113c5a677927e58033433c85e7551a0253d5a",
+      "previousSha256": "108407f8d60952280d4b2ae9b57e9410e38ec1ec5c7c96385e3e4faa3bf036aa",
+      "edits": [
+        {
+          "start": 250,
+          "previous": "",
+          "current": "import { beforePhpWasmSubtypeEntrySource } from \"./php-wasm-subtype-entry-history.mjs\";\n"
+        },
+        {
+          "start": 2479,
+          "previous": "",
+          "current": "\tsource = beforePhpWasmSubtypeEntrySource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "c3401f4ec5b5f9b00d3e8a9a7dc237b6c0ff72045642e55a74db1ed2e5ada525",
+      "previousSha256": "a30e7b09d5ff39a5cb93a977dfb9f996dc5f8f0ea31cf423891ce83ece0623bb",
+      "edits": [
+        {
+          "start": 16385,
+          "previous": "",
+          "current": "import { phpWasmSubtypeEntryChangedPaths } from \"./php-wasm-subtype-entry-history.mjs\";\n"
+        },
+        {
+          "start": 56181,
+          "previous": "",
+          "current": "\t, ...phpWasmSubtypeEntryChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-wasm-direct-fin-promotion-tests.mjs",
+      "currentSha256": "fc93821b2d7705a7bbb81d221bf3cdb0161801d6de6d8a9ccf51f2d2e59b465f",
+      "previousSha256": "becf1768d8c977572538a189b8b5688b8431c123eb8cd850139138b2e830e679",
+      "edits": [
+        {
+          "start": 523,
+          "previous": "",
+          "current": "import { phpWasmSubtypeEntryHistoryPath } from \"./php-wasm-subtype-entry-history.mjs\";\n"
+        },
+        {
+          "start": 3381,
+          "previous": "\tfor(const path of [finJvmDiagnosticsHistoryPath, finDotnetSdkHistoryPath, phpWasmSubtypePromotionHistoryPath])\n",
+          "current": "\tfor(const path of [phpWasmSubtypeEntryHistoryPath, finJvmDiagnosticsHistoryPath, finDotnetSdkHistoryPath, phpWasmSubtypePromotionHistoryPath])\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-wasm-subtype-promotion-tests.mjs",
+      "currentSha256": "99963243882ba9d7ea99e770082086a777c82413f70ab06ad2f046a8c9c33487",
+      "previousSha256": "ef7eda9494ac7a0633beb4c0913d618a5581d8a842d5caca40d032eb2dfcca89",
+      "edits": [
+        {
+          "start": 537,
+          "previous": "",
+          "current": "import { phpWasmSubtypeEntryHistoryPath } from \"./php-wasm-subtype-entry-history.mjs\";\n"
+        },
+        {
+          "start": 2993,
+          "previous": "\tfor(const path of [finJvmDiagnosticsHistoryPath, finDotnetSdkHistoryPath])\n",
+          "current": "\tfor(const path of [phpWasmSubtypeEntryHistoryPath, finJvmDiagnosticsHistoryPath, finDotnetSdkHistoryPath])\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/php-wasm-fin.test.mjs",
+      "currentSha256": "f6bd80f0acb5a95e5d0470cd0ae1c1e897d50173d767b6a4f4e61cea27f93a1f",
+      "previousSha256": "f4be80cc8307c9026ea726503d4ac074247a4f89e2f08b74d6639b29f36c53e0",
+      "edits": [
+        {
+          "start": 2784,
+          "previous": "",
+          "current": "import \"./helpers/php-wasm-subtype-entry-tests.mjs\";\n"
+        }
+      ]
+    }
+  ]
+}

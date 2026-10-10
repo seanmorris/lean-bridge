@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforePhpWasmSubtypeEntrySource } from "./php-wasm-subtype-entry-history.mjs";
 
 export const finJvmDiagnosticsHistoryPath = "docs/evidence/fin-jvm-diagnostics-source-history-20261010.json";
 export const finJvmDiagnosticsPredecessor = "3beb2ca905ee1c4020033aa9dce540a386b091dc";
@@ -56,6 +57,7 @@ export const reverseFinJvmDiagnosticsUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeFinJvmDiagnosticsSource = (path, source, expected) => {
+	source = beforePhpWasmSubtypeEntrySource(path, source, expected);
 	if(typeof source !== "string" || !finJvmDiagnosticsChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

@@ -1,0 +1,689 @@
+{
+  "schemaVersion": 1,
+  "scope": "Exploratory ordinary one-root instrumented PHP-Wasm Subtype probe. Selected compiler inputs and transcripts, not a complete source/toolchain closure, not installed acceptance and not unmodified release measurements.",
+  "producer": "6ac0d2bacfb0ff53b4698a5310f3f3e5e45ad5d3",
+  "files": [
+    {
+      "path": "attempts/r1/build.log",
+      "bytes": 7585,
+      "sha256": "1629560c0028b7c0d437f2b6669f5cc2d7acbfa8ba30798350b4d9aeff4f901a",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r1.log"
+    },
+    {
+      "path": "attempts/r1/commands.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-6ac0d2b/commands.json"
+    },
+    {
+      "path": "attempts/r1/end.json",
+      "bytes": 7673,
+      "sha256": "cda800cd28b82991a1938c522fa1626816e14cde0ff7691c25d19bba43ea5cc6",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-6ac0d2b/end.json"
+    },
+    {
+      "path": "attempts/r1/runner.mjs.txt",
+      "bytes": 8756,
+      "sha256": "9d5cf71668548f0971f8c0e0be6b70f5269afdeb667ec264138613513d72a53c",
+      "originalPath": "/app/build/probe-vo1443-subtype-entries.mjs"
+    },
+    {
+      "path": "attempts/r1/start.json",
+      "bytes": 519,
+      "sha256": "05a276ec61ed9f2afde6989bd5cdb7913a42d2c4ca4d2fc547ae0bd1379756ea",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-6ac0d2b/start.json"
+    },
+    {
+      "path": "corpus/r1-runner.mjs.txt",
+      "bytes": 5786,
+      "sha256": "676ae82c4e8cc2d3c6f8382ad100a0d24b23779771001dbeedadc07428171443",
+      "originalPath": "/app/build/run-vo1443-subtype-entry-corpus.mjs"
+    },
+    {
+      "path": "corpus/r1-weak.json",
+      "bytes": 1072,
+      "sha256": "b959edb9850d4da49c4e82b60e01aa3b5970a8d9fab6dfda52027599c4bf8ae5",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/corpus-weak.json"
+    },
+    {
+      "path": "corpus/r1-weak.log",
+      "bytes": 1008,
+      "sha256": "2d7678aae26fd98be16aae30fcdce0a6189dd11499b2faa5686b6ce28c5b5e94",
+      "originalPath": "/app/build/vo1443-subtype-entry-corpus-weak-r1.log"
+    },
+    {
+      "path": "corpus/r1-weak.php",
+      "bytes": 4322,
+      "sha256": "2beee0aa89a4f32dff026052f1cd587cd8f0e79b2848b0ff979ccb99fabe53ae",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/corpus-weak.php"
+    },
+    {
+      "path": "corpus/r1-weak.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/corpus-weak.stderr"
+    },
+    {
+      "path": "corpus/r2-runner.mjs.txt",
+      "bytes": 5877,
+      "sha256": "e7d15ed94d916bdc3d684a4f5e4430153aeed2022334f140b7c93b427ba3b6d8",
+      "originalPath": "/app/build/run-vo1443-subtype-entry-corpus-r2.mjs"
+    },
+    {
+      "path": "corpus/r2-strict.json",
+      "bytes": 1200,
+      "sha256": "f3777ef1edb653429ddd881c78b7255788baa9e3d9ed003cf9d3df491158c808",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/corpus-r2-strict.json"
+    },
+    {
+      "path": "corpus/r2-strict.log",
+      "bytes": 1053,
+      "sha256": "3675496e11f5220877cdd939b5ed80b882dfb4a2c4179f62e99a1369b820c475",
+      "originalPath": "/app/build/vo1443-subtype-entry-corpus-strict-r2.log"
+    },
+    {
+      "path": "corpus/r2-strict.php",
+      "bytes": 4322,
+      "sha256": "45aeca1682b4b771c05108b434d15da7a1c3694d96c7cf464cefe834c1056850",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/corpus-r2-strict.php"
+    },
+    {
+      "path": "corpus/r2-strict.stderr",
+      "bytes": 532108,
+      "sha256": "3dd22296c55d4c80fc82a4349f2eaf0743c54528f4f62b886428b924cdaed2ea",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/corpus-r2-strict.stderr"
+    },
+    {
+      "path": "corpus/r2-weak.json",
+      "bytes": 1198,
+      "sha256": "493447fd442b4757e0579728b2bb821911ff7806d177fea01263229f38a9f856",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/corpus-r2-weak.json"
+    },
+    {
+      "path": "corpus/r2-weak.log",
+      "bytes": 1051,
+      "sha256": "ad199f4a97b52064a0a481d46ea077790338d190f2df71af5e48f30f3c744ac1",
+      "originalPath": "/app/build/vo1443-subtype-entry-corpus-weak-r2.log"
+    },
+    {
+      "path": "corpus/r2-weak.php",
+      "bytes": 4322,
+      "sha256": "2beee0aa89a4f32dff026052f1cd587cd8f0e79b2848b0ff979ccb99fabe53ae",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/corpus-r2-weak.php"
+    },
+    {
+      "path": "corpus/r2-weak.stderr",
+      "bytes": 532108,
+      "sha256": "3dd22296c55d4c80fc82a4349f2eaf0743c54528f4f62b886428b924cdaed2ea",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/corpus-r2-weak.stderr"
+    },
+    {
+      "path": "observer/php-wasm-subtype-entry-c.mjs.txt",
+      "bytes": 4627,
+      "sha256": "161191a86524715e7d4cf9ff3d562418e809380680284cc9187f20e39ea95001",
+      "originalPath": "/app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/php-wasm-subtype-entry-c.mjs"
+    },
+    {
+      "path": "observer/php-wasm-subtype-entry-trace.mjs.txt",
+      "bytes": 2551,
+      "sha256": "090cc97f5a7afdbcf5c4eeb93d6c30232be507b6370c1dcf59d0216e0d084fc7",
+      "originalPath": "/app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/php-wasm-subtype-entry-trace.mjs"
+    },
+    {
+      "path": "producer/src/backends/php/copied-model.mjs.txt",
+      "bytes": 5629,
+      "sha256": "92250b77404eb0ae0c620bbc11a5d8ce7cbbf3df313d7fdccad8d93a2edffdf6",
+      "originalPath": "/app/build/worktrees/fin-container-edge-file-closure-vo1454/src/backends/php/copied-model.mjs",
+      "sourceRevision": "6ac0d2bacfb0ff53b4698a5310f3f3e5e45ad5d3"
+    },
+    {
+      "path": "producer/src/build/native-model.mjs.txt",
+      "bytes": 42232,
+      "sha256": "dd29801162eeaa06fe0c96b8d71c6b1994033ab52440ec39ecf62e5d832dd6ae",
+      "originalPath": "/app/build/worktrees/fin-container-edge-file-closure-vo1454/src/build/native-model.mjs",
+      "sourceRevision": "6ac0d2bacfb0ff53b4698a5310f3f3e5e45ad5d3"
+    },
+    {
+      "path": "producer/src/build/php-wasm-copied-component.mjs.txt",
+      "bytes": 16599,
+      "sha256": "1820fa19a86f827e378334e847cebe9511863401b08a5e9c2e60c72bf09cc7ae",
+      "originalPath": "/app/build/worktrees/fin-container-edge-file-closure-vo1454/src/build/php-wasm-copied-component.mjs",
+      "sourceRevision": "6ac0d2bacfb0ff53b4698a5310f3f3e5e45ad5d3"
+    },
+    {
+      "path": "producer/src/release/php-wasm-copied-package.mjs.txt",
+      "bytes": 30851,
+      "sha256": "56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2",
+      "originalPath": "/app/build/worktrees/fin-container-edge-file-closure-vo1454/src/release/php-wasm-copied-package.mjs",
+      "sourceRevision": "6ac0d2bacfb0ff53b4698a5310f3f3e5e45ad5d3"
+    },
+    {
+      "path": "producer/tests/fixtures/onboarding/native-subtype/Subtypes.lean.txt",
+      "bytes": 2276,
+      "sha256": "bc6065620ea7ba38b270362ae7aa93feb68e8e316b4c0fca196477f62103175c",
+      "originalPath": "/app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/fixtures/onboarding/native-subtype/Subtypes.lean",
+      "sourceRevision": "6ac0d2bacfb0ff53b4698a5310f3f3e5e45ad5d3"
+    },
+    {
+      "path": "producer/tests/fixtures/subtype-consumers/php-native.php.txt",
+      "bytes": 3214,
+      "sha256": "89f5c51bae7f7111a1ad937b2116b5fe3b2ec69668fbf650cde2279cff8fd7a7",
+      "originalPath": "/app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/fixtures/subtype-consumers/php-native.php",
+      "sourceRevision": "6ac0d2bacfb0ff53b4698a5310f3f3e5e45ad5d3"
+    },
+    {
+      "path": "producer/tests/helpers/php-wasm-fin-fixtures.mjs.txt",
+      "bytes": 9651,
+      "sha256": "a85cb80188630dd4355f1ca97ea7c52c741f999652ca4d1e24f8e4b7972c6e16",
+      "originalPath": "/app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/php-wasm-fin-fixtures.mjs",
+      "sourceRevision": "6ac0d2bacfb0ff53b4698a5310f3f3e5e45ad5d3"
+    },
+    {
+      "path": "producer/tests/helpers/php-wasm-subtype-fixture.mjs.txt",
+      "bytes": 4556,
+      "sha256": "77043084402799ce0f7a413263231ff58438030b9298bf624ad6838488252cb3",
+      "originalPath": "/app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/php-wasm-subtype-fixture.mjs",
+      "sourceRevision": "6ac0d2bacfb0ff53b4698a5310f3f3e5e45ad5d3"
+    },
+    {
+      "path": "producer/tests/helpers/reviewed-subtype-fixture.mjs.txt",
+      "bytes": 3179,
+      "sha256": "98f50aa4b5075142bb29f0938827e0a5b0fbd0713eb0b76b374db64fb550a197",
+      "originalPath": "/app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/reviewed-subtype-fixture.mjs",
+      "sourceRevision": "6ac0d2bacfb0ff53b4698a5310f3f3e5e45ad5d3"
+    },
+    {
+      "path": "producer/tests/helpers/reviewed-subtype-installed-fixture.mjs.txt",
+      "bytes": 6875,
+      "sha256": "81ccd2fa3d62bc9d7e4061898dc262d8d5276e71e42ea142ac2f63b2317e781d",
+      "originalPath": "/app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/reviewed-subtype-installed-fixture.mjs",
+      "sourceRevision": "6ac0d2bacfb0ff53b4698a5310f3f3e5e45ad5d3"
+    },
+    {
+      "path": "r2/build.log",
+      "bytes": 148,
+      "sha256": "bfe0f23cf7aef2fccf12e1f9ed8d46be0e9c2eb85736b954172fc9b457dee0a6",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r2.log"
+    },
+    {
+      "path": "r2/c-inputs/1-Subtypes.c",
+      "bytes": 14191,
+      "sha256": "35e5a115ad62460e8e505ee24318ac55bce5ee85fbdbc2f611db3077e103dd59",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r2-6ac0d2b/c-inputs/1-Subtypes.c"
+    },
+    {
+      "path": "r2/c-inputs/2-adapter.c",
+      "bytes": 29725,
+      "sha256": "f9cb07dd248efdb60a5025aedd09b0e075300e731449f8ce262db7fe66d3d6c5",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r2-6ac0d2b/c-inputs/2-adapter.c"
+    },
+    {
+      "path": "r2/c-inputs/3-provider.c",
+      "bytes": 26091,
+      "sha256": "bceeba036563a92976c983cd1d7fa2d1f8ca6502513f25ebfba88993a5b2c66b",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r2-6ac0d2b/c-inputs/3-provider.c"
+    },
+    {
+      "path": "r2/c-inputs/4-callbacks.c",
+      "bytes": 63,
+      "sha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r2-6ac0d2b/c-inputs/4-callbacks.c"
+    },
+    {
+      "path": "r2/c-inputs/5-width.c",
+      "bytes": 236,
+      "sha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r2-6ac0d2b/c-inputs/5-width.c"
+    },
+    {
+      "path": "r2/c-inputs/6-subtypes.c",
+      "bytes": 11924,
+      "sha256": "b4dd529ec97ff0226f57d1835289eba3348104f1daf777bb5932f2ea60ad02ff",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r2-6ac0d2b/c-inputs/6-subtypes.c"
+    },
+    {
+      "path": "r2/c-inputs/7-lb_subtypes_5b3cc7e8e8c4438f.c",
+      "bytes": 43600,
+      "sha256": "d72fd20c3858e3f8d739dc8fea49eafa1193e679d9dbb727689dc7304c3c60f7",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r2-6ac0d2b/c-inputs/7-lb_subtypes_5b3cc7e8e8c4438f.c"
+    },
+    {
+      "path": "r2/commands.json",
+      "bytes": 32996,
+      "sha256": "dfb99e8218607d7d9f61c56685cda32b00953d7e5c1b883e0b464abe36d9640d",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r2-6ac0d2b/commands.json"
+    },
+    {
+      "path": "r2/end.json",
+      "bytes": 144,
+      "sha256": "c4a6ff09aa4cd7e75542363be852b53b351b987841d33d2a10b643758f6552bd",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r2-6ac0d2b/end.json"
+    },
+    {
+      "path": "r2/entry-hooks.c",
+      "bytes": 12022,
+      "sha256": "e54db57d8a58d18274fa08bf302fd3b8c6e4ffd3c67908495f122a34ea4ba9c9",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r2-6ac0d2b/entry-hooks.c"
+    },
+    {
+      "path": "r2/model.json",
+      "bytes": 65889,
+      "sha256": "884b79215e159e76751bd9c20e7cdd58e3a2dca96c2e95308c7c8e8ece162010",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r2-6ac0d2b/model.json"
+    },
+    {
+      "path": "r2/original.lean",
+      "bytes": 2966,
+      "sha256": "9da073e32017c1c93d2272e8269d9e2b97b3398d146d5d33ce5a4fc47af5a4c2",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r2-6ac0d2b/original.lean"
+    },
+    {
+      "path": "r2/project/lean-bridge.exports.json",
+      "bytes": 5543,
+      "sha256": "6fcaa8dc33bb2ef9c05ca9299de8c55293e0c4dcf58c587bccb511d51eb940d2",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r2-6ac0d2b/project/lean-bridge.exports.json"
+    },
+    {
+      "path": "r2/project/Subtypes.lean",
+      "bytes": 3874,
+      "sha256": "0c49a3b32fc7758b6959ddace649d11d333addbe95b4ddc92493498eaea432df",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r2-6ac0d2b/project/Subtypes.lean"
+    },
+    {
+      "path": "r2/runner.mjs.txt",
+      "bytes": 8754,
+      "sha256": "d1fdb5646c2ae031ae19e2ee8659e7f3d01db442b6d812244471e3fcf2a01178",
+      "originalPath": "/app/build/probe-vo1443-subtype-entries-r2.mjs"
+    },
+    {
+      "path": "r2/selected.json",
+      "bytes": 5858,
+      "sha256": "f3ecb08152c96b13c9d0f07fc17f41e537c75271d6063b6985fad1c71bf2ef83",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r2-6ac0d2b/selected.json"
+    },
+    {
+      "path": "r2/start.json",
+      "bytes": 519,
+      "sha256": "5c203563997f80f76db6f97cbe98c28d6943358d487aa62b5c74dfdb1459385f",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r2-6ac0d2b/start.json"
+    },
+    {
+      "path": "r3/build.log",
+      "bytes": 171,
+      "sha256": "1bff6ed8906dc95c4d84cc70b3fd0f0a1667017509e1478f384ca7217bb33954",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r3.log"
+    },
+    {
+      "path": "r3/c-inputs/1-Subtypes.c",
+      "bytes": 14191,
+      "sha256": "35e5a115ad62460e8e505ee24318ac55bce5ee85fbdbc2f611db3077e103dd59",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r3-6ac0d2b/c-inputs/1-Subtypes.c"
+    },
+    {
+      "path": "r3/c-inputs/2-adapter.c",
+      "bytes": 29725,
+      "sha256": "f9cb07dd248efdb60a5025aedd09b0e075300e731449f8ce262db7fe66d3d6c5",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r3-6ac0d2b/c-inputs/2-adapter.c"
+    },
+    {
+      "path": "r3/c-inputs/3-provider.c",
+      "bytes": 26091,
+      "sha256": "bceeba036563a92976c983cd1d7fa2d1f8ca6502513f25ebfba88993a5b2c66b",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r3-6ac0d2b/c-inputs/3-provider.c"
+    },
+    {
+      "path": "r3/c-inputs/4-callbacks.c",
+      "bytes": 63,
+      "sha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r3-6ac0d2b/c-inputs/4-callbacks.c"
+    },
+    {
+      "path": "r3/c-inputs/5-width.c",
+      "bytes": 236,
+      "sha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r3-6ac0d2b/c-inputs/5-width.c"
+    },
+    {
+      "path": "r3/c-inputs/6-subtypes.c",
+      "bytes": 11924,
+      "sha256": "b4dd529ec97ff0226f57d1835289eba3348104f1daf777bb5932f2ea60ad02ff",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r3-6ac0d2b/c-inputs/6-subtypes.c"
+    },
+    {
+      "path": "r3/c-inputs/7-lb_subtypes_5b3cc7e8e8c4438f.c",
+      "bytes": 43600,
+      "sha256": "d72fd20c3858e3f8d739dc8fea49eafa1193e679d9dbb727689dc7304c3c60f7",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r3-6ac0d2b/c-inputs/7-lb_subtypes_5b3cc7e8e8c4438f.c"
+    },
+    {
+      "path": "r3/c-probes/1-Subtypes.c",
+      "bytes": 15573,
+      "sha256": "a8ebe120e57b525838cc240ea92eb5358e4cd16814fd35f10f9c84e354acd02b",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r3-6ac0d2b/c-probes/1-Subtypes.c"
+    },
+    {
+      "path": "r3/c-probes/2-adapter.c",
+      "bytes": 31529,
+      "sha256": "a2ca97377e2f83638b902771f06838985f7ec37077c5fae93e764060d27be14b",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r3-6ac0d2b/c-probes/2-adapter.c"
+    },
+    {
+      "path": "r3/c-probes/3-provider.c",
+      "bytes": 26091,
+      "sha256": "bceeba036563a92976c983cd1d7fa2d1f8ca6502513f25ebfba88993a5b2c66b",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r3-6ac0d2b/c-probes/3-provider.c"
+    },
+    {
+      "path": "r3/c-probes/4-callbacks.c",
+      "bytes": 63,
+      "sha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r3-6ac0d2b/c-probes/4-callbacks.c"
+    },
+    {
+      "path": "r3/c-probes/5-width.c",
+      "bytes": 236,
+      "sha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r3-6ac0d2b/c-probes/5-width.c"
+    },
+    {
+      "path": "r3/c-probes/6-subtypes.c",
+      "bytes": 14002,
+      "sha256": "81e019d535782fb4b3a758246a13c215337140562b0d9d327e150422c7e32067",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r3-6ac0d2b/c-probes/6-subtypes.c"
+    },
+    {
+      "path": "r3/c-probes/7-lb_subtypes_5b3cc7e8e8c4438f.c",
+      "bytes": 43600,
+      "sha256": "d72fd20c3858e3f8d739dc8fea49eafa1193e679d9dbb727689dc7304c3c60f7",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r3-6ac0d2b/c-probes/7-lb_subtypes_5b3cc7e8e8c4438f.c"
+    },
+    {
+      "path": "r3/commands.json",
+      "bytes": 31485,
+      "sha256": "27569d86417ebcfcb6cd92d07d2d545877d89697a545c260c379578eda88508f",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r3-6ac0d2b/commands.json"
+    },
+    {
+      "path": "r3/end.json",
+      "bytes": 171,
+      "sha256": "baa36b739301bca360e0a65fe85fb71a51b0c3ca484b8d9e4305bb93190ddcd0",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r3-6ac0d2b/end.json"
+    },
+    {
+      "path": "r3/instrumentation.json",
+      "bytes": 22087,
+      "sha256": "48e5b9a293aa0541b083522240d54e2e6a66820370178115281f666343479263",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r3-6ac0d2b/instrumentation.json"
+    },
+    {
+      "path": "r3/model.json",
+      "bytes": 65889,
+      "sha256": "884b79215e159e76751bd9c20e7cdd58e3a2dca96c2e95308c7c8e8ece162010",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r3-6ac0d2b/model.json"
+    },
+    {
+      "path": "r3/original.lean",
+      "bytes": 2966,
+      "sha256": "9da073e32017c1c93d2272e8269d9e2b97b3398d146d5d33ce5a4fc47af5a4c2",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r3-6ac0d2b/original.lean"
+    },
+    {
+      "path": "r3/project/lean-bridge.exports.json",
+      "bytes": 5543,
+      "sha256": "6fcaa8dc33bb2ef9c05ca9299de8c55293e0c4dcf58c587bccb511d51eb940d2",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r3-6ac0d2b/project/lean-bridge.exports.json"
+    },
+    {
+      "path": "r3/project/Subtypes.lean",
+      "bytes": 3874,
+      "sha256": "0c49a3b32fc7758b6959ddace649d11d333addbe95b4ddc92493498eaea432df",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r3-6ac0d2b/project/Subtypes.lean"
+    },
+    {
+      "path": "r3/runner.mjs.txt",
+      "bytes": 10525,
+      "sha256": "d93cbe3e740931492ae8629583cce679f92f8354827adb77e09b2a62e163b62b",
+      "originalPath": "/app/build/probe-vo1443-subtype-entries-r3.mjs"
+    },
+    {
+      "path": "r3/selected.json",
+      "bytes": 5858,
+      "sha256": "f3ecb08152c96b13c9d0f07fc17f41e537c75271d6063b6985fad1c71bf2ef83",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r3-6ac0d2b/selected.json"
+    },
+    {
+      "path": "r3/start.json",
+      "bytes": 549,
+      "sha256": "0b60fc3bc45f7ec015cfdee68cf1e8c0331241c16328d06d519e62e52bdff904",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r3-6ac0d2b/start.json"
+    },
+    {
+      "path": "r4/build.log",
+      "bytes": 171,
+      "sha256": "6e20d2a952d7751b0f2d1c0cc6ad5375ea437caef1526f9c8df2c026ea78ebf5",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4.log"
+    },
+    {
+      "path": "r4/c-inputs/1-Subtypes.c",
+      "bytes": 14191,
+      "sha256": "35e5a115ad62460e8e505ee24318ac55bce5ee85fbdbc2f611db3077e103dd59",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/c-inputs/1-Subtypes.c"
+    },
+    {
+      "path": "r4/c-inputs/2-adapter.c",
+      "bytes": 29725,
+      "sha256": "f9cb07dd248efdb60a5025aedd09b0e075300e731449f8ce262db7fe66d3d6c5",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/c-inputs/2-adapter.c"
+    },
+    {
+      "path": "r4/c-inputs/3-provider.c",
+      "bytes": 26091,
+      "sha256": "bceeba036563a92976c983cd1d7fa2d1f8ca6502513f25ebfba88993a5b2c66b",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/c-inputs/3-provider.c"
+    },
+    {
+      "path": "r4/c-inputs/4-callbacks.c",
+      "bytes": 63,
+      "sha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/c-inputs/4-callbacks.c"
+    },
+    {
+      "path": "r4/c-inputs/5-width.c",
+      "bytes": 236,
+      "sha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/c-inputs/5-width.c"
+    },
+    {
+      "path": "r4/c-inputs/6-subtypes.c",
+      "bytes": 11924,
+      "sha256": "b4dd529ec97ff0226f57d1835289eba3348104f1daf777bb5932f2ea60ad02ff",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/c-inputs/6-subtypes.c"
+    },
+    {
+      "path": "r4/c-inputs/7-lb_subtypes_5b3cc7e8e8c4438f.c",
+      "bytes": 43600,
+      "sha256": "d72fd20c3858e3f8d739dc8fea49eafa1193e679d9dbb727689dc7304c3c60f7",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/c-inputs/7-lb_subtypes_5b3cc7e8e8c4438f.c"
+    },
+    {
+      "path": "r4/c-probes/1-Subtypes.c",
+      "bytes": 15573,
+      "sha256": "15e5d88e874f9b8c0884f770217b5abd2a6db0b122ab74e0a3a1df349969e274",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/c-probes/1-Subtypes.c"
+    },
+    {
+      "path": "r4/c-probes/2-adapter.c",
+      "bytes": 31529,
+      "sha256": "a2ca97377e2f83638b902771f06838985f7ec37077c5fae93e764060d27be14b",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/c-probes/2-adapter.c"
+    },
+    {
+      "path": "r4/c-probes/3-provider.c",
+      "bytes": 26091,
+      "sha256": "bceeba036563a92976c983cd1d7fa2d1f8ca6502513f25ebfba88993a5b2c66b",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/c-probes/3-provider.c"
+    },
+    {
+      "path": "r4/c-probes/4-callbacks.c",
+      "bytes": 63,
+      "sha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/c-probes/4-callbacks.c"
+    },
+    {
+      "path": "r4/c-probes/5-width.c",
+      "bytes": 236,
+      "sha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/c-probes/5-width.c"
+    },
+    {
+      "path": "r4/c-probes/6-subtypes.c",
+      "bytes": 14002,
+      "sha256": "81e019d535782fb4b3a758246a13c215337140562b0d9d327e150422c7e32067",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/c-probes/6-subtypes.c"
+    },
+    {
+      "path": "r4/c-probes/7-lb_subtypes_5b3cc7e8e8c4438f.c",
+      "bytes": 43600,
+      "sha256": "d72fd20c3858e3f8d739dc8fea49eafa1193e679d9dbb727689dc7304c3c60f7",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/c-probes/7-lb_subtypes_5b3cc7e8e8c4438f.c"
+    },
+    {
+      "path": "r4/commands.json",
+      "bytes": 31485,
+      "sha256": "2109e07ae9dc1f4fb9a7fac5b735e084f5a471cab7a0f4f264a4dc70bd248297",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/commands.json"
+    },
+    {
+      "path": "r4/component-receipt.json",
+      "bytes": 19241,
+      "sha256": "676aaf0ed904a320567a0db8998ee3d7ef02d80d407c2e225677cd3c7f649e56",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/component/php-wasm-component.json"
+    },
+    {
+      "path": "r4/end.json",
+      "bytes": 171,
+      "sha256": "fd8289d69d27c57932e3b9b352fb7570e2f070fceb0629a4f2c54b2e5205b0ff",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/end.json"
+    },
+    {
+      "path": "r4/instrumentation.json",
+      "bytes": 22095,
+      "sha256": "360033f98a1e7275a7f3de9418638e8be205ebdc4916601485dc575fdf5ed683",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/instrumentation.json"
+    },
+    {
+      "path": "r4/model.json",
+      "bytes": 65889,
+      "sha256": "884b79215e159e76751bd9c20e7cdd58e3a2dca96c2e95308c7c8e8ece162010",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/model.json"
+    },
+    {
+      "path": "r4/original.lean",
+      "bytes": 2966,
+      "sha256": "9da073e32017c1c93d2272e8269d9e2b97b3398d146d5d33ce5a4fc47af5a4c2",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/original.lean"
+    },
+    {
+      "path": "r4/package-set.json",
+      "bytes": 19677,
+      "sha256": "6a3e914482e521c890ce2f49ee04d4ef3e49ddd25e89975463e18fd8e5947577",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/packages/php-wasm-package-set.json"
+    },
+    {
+      "path": "r4/project/lean-bridge.exports.json",
+      "bytes": 5543,
+      "sha256": "6fcaa8dc33bb2ef9c05ca9299de8c55293e0c4dcf58c587bccb511d51eb940d2",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/project/lean-bridge.exports.json"
+    },
+    {
+      "path": "r4/project/Subtypes.lean",
+      "bytes": 3874,
+      "sha256": "0c49a3b32fc7758b6959ddace649d11d333addbe95b4ddc92493498eaea432df",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/project/Subtypes.lean"
+    },
+    {
+      "path": "r4/runner.mjs.txt",
+      "bytes": 10717,
+      "sha256": "23836129003315e30872edbed3d74b219e6bf011d417ed1e038463ec3514b877",
+      "originalPath": "/app/build/probe-vo1443-subtype-entries-r4.mjs"
+    },
+    {
+      "path": "r4/selected.json",
+      "bytes": 5862,
+      "sha256": "c06204df9f5c7428f9c6726352be119f6b1be3dcb61522f3dcd16f3210c2de7c",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/selected.json"
+    },
+    {
+      "path": "r4/start.json",
+      "bytes": 549,
+      "sha256": "d0e4746fab259085ee807e3c06278c8d59de902fcc7d88440ec9f7e48b140e43",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/start.json"
+    },
+    {
+      "path": "smoke/r1-runner.mjs.txt",
+      "bytes": 2979,
+      "sha256": "6c8b9111181d4cf99090045db04d8d16edfc58ae58ba339a12c0e66c4d8c32ae",
+      "originalPath": "/app/build/run-vo1443-subtype-entry-smoke.mjs"
+    },
+    {
+      "path": "smoke/r1.log",
+      "bytes": 231,
+      "sha256": "b8e2631a30be28c8fa24a7113cabad4406e9b39d2c7636e5aed010ebadcc5b5b",
+      "originalPath": "/app/build/vo1443-subtype-entry-smoke-r1.log"
+    },
+    {
+      "path": "smoke/r2-runner.mjs.txt",
+      "bytes": 4781,
+      "sha256": "567725ac61b74e092be44be8a01d3bf442b0e6b1fb3f3e951f126092c3d4959b",
+      "originalPath": "/app/build/run-vo1443-subtype-entry-smoke-r2.mjs"
+    },
+    {
+      "path": "smoke/r2.json",
+      "bytes": 2730,
+      "sha256": "31327ffc0b8048183a777bf402c5b957af840877acc1bae75bbf7ba4674c0063",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r3-6ac0d2b/smoke-results.json"
+    },
+    {
+      "path": "smoke/r2.log",
+      "bytes": 47,
+      "sha256": "fd66b9c84cc6dc8443ef1672e5e34ca4989c3c5194c12f6b4b2b3e2bb8420a82",
+      "originalPath": "/app/build/vo1443-subtype-entry-smoke-r2.log"
+    },
+    {
+      "path": "smoke/r3-runner.mjs.txt",
+      "bytes": 4955,
+      "sha256": "efbf6cb26853c251f5cfb74ba248420b1a5d6edc049e4cc3b33906caba13fcb3",
+      "originalPath": "/app/build/run-vo1443-subtype-entry-smoke-r3.mjs"
+    },
+    {
+      "path": "smoke/r3.json",
+      "bytes": 13143,
+      "sha256": "f45e4dd4036f1a5b8127f29cfd6c00bd3ac5794353ac1229c1393d4fa8d5801e",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r3-6ac0d2b/smoke-results-r3.json"
+    },
+    {
+      "path": "smoke/r3.log",
+      "bytes": 3754,
+      "sha256": "8b9ec39f3caa955b95dd22a8d4d22e68b2a7f116d4e85311e19cdc7539334394",
+      "originalPath": "/app/build/vo1443-subtype-entry-smoke-r3.log"
+    },
+    {
+      "path": "smoke/r4-runner.mjs.txt",
+      "bytes": 4939,
+      "sha256": "972f27be052231d82e4690028c085ea436058e0b966d084c7c31e11e22f9aeab",
+      "originalPath": "/app/build/run-vo1443-subtype-entry-smoke-r4.mjs"
+    },
+    {
+      "path": "smoke/r4.json",
+      "bytes": 13309,
+      "sha256": "7b472f6dd16a6a517efe12b1dbc377c2906cc16b9fccdbfe4a25af0d58b443ad",
+      "originalPath": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/smoke-results-r4.json"
+    },
+    {
+      "path": "smoke/r4.log",
+      "bytes": 3807,
+      "sha256": "5be3c586f65d60ca7f5e237c8455da197af993a436d43ed246315975f78b20e8",
+      "originalPath": "/app/build/vo1443-subtype-entry-smoke-r4.log"
+    }
+  ]
+}

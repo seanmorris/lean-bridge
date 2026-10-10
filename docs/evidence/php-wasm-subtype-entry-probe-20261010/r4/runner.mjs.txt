@@ -1,0 +1,142 @@
+import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
+import { cp, mkdir, readFile, statfs, writeFile } from 'node:fs/promises';
+import { basename, dirname, join } from 'node:path';
+import { canonicalJson, sha256 } from '/app/build/worktrees/fin-container-edge-file-closure-vo1454/src/capsule/node.mjs';
+import { processBuildRunner } from '/app/build/worktrees/fin-container-edge-file-closure-vo1454/src/build/process-runner.mjs';
+import { buildPhpWasmCopiedComponent } from '/app/build/worktrees/fin-container-edge-file-closure-vo1454/src/build/php-wasm-copied-component.mjs';
+import { compileCopiedPhpModel } from '/app/build/worktrees/fin-container-edge-file-closure-vo1454/src/backends/php/copied-model.mjs';
+import { buildPhpWasmCopiedPackages } from '/app/build/worktrees/fin-container-edge-file-closure-vo1454/src/release/php-wasm-copied-package.mjs';
+import { phpWasmSubtypeContracts, phpWasmSubtypeSpecializations } from '/app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/php-wasm-subtype-fixture.mjs';
+import { reviewedSubtypeInstalledSource } from '/app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/reviewed-subtype-installed-fixture.mjs';
+
+const repo = '/app/build/worktrees/fin-container-edge-file-closure-vo1454';
+const revision = '6ac0d2bacfb0ff53b4698a5310f3f3e5e45ad5d3';
+const root = '/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b';
+const project = join(root, 'project');
+const free = async () => { const d = await statfs('/app'); return Math.floor(d.bavail * d.bsize / 1048576); };
+assert.ok(await free() >= 2048, 'Need 2 GiB before the probe build');
+assert.equal(execFileSync('git', ['rev-parse', 'HEAD'], { cwd: repo, encoding: 'utf8' }).trim(), revision);
+assert.equal(execFileSync('git', ['status', '--porcelain', '--untracked-files=no'], { cwd: repo, encoding: 'utf8' }), '');
+await mkdir(root);
+await cp(join(repo, 'tests/fixtures/onboarding/native-subtype'), project, { recursive: true });
+const original = await readFile(join(project, 'Subtypes.lean'), 'utf8') + reviewedSubtypeInstalledSource;
+const constructors = ['checkedWord', 'checkedEven', 'checkedSmall', 'checkedPayload', 'checkedBounded', 'checkedByte', 'normalizedEven'];
+const sources = ['shout', 'half', 'scale', 'head', 'pad', 'join', 'clamp', 'mix', 'byte', 'echo'];
+const selected = [];
+let source = original;
+for (const [kind, names] of [['constructor', constructors], ['source', sources]]) {
+  for (const name of names) {
+    const symbol = 'lb_probe_' + kind + '_' + name;
+    const pattern = new RegExp('^(?:@\\[noinline\\] )?def ' + name + '\\b', 'gm');
+    assert.equal([...source.matchAll(pattern)].length, 1, name);
+    source = source.replace(pattern, '@[noinline, export ' + symbol + ']\ndef ' + name);
+    // Lean erases echo's type argument and calls its reduced worker directly.
+    const entrySymbol = kind === 'source' && name === 'echo' ? 'l_Subtypes_echo___redArg' : symbol;
+    selected.push({ symbol: entrySymbol, kind, label: 'Subtypes.' + name });
+  }
+}
+source += '\nnamespace Subtypes\n@[noinline, export lb_probe_source_unrestricted]\ndef unrestricted (value : Nat) : Nat := value\nend Subtypes\n';
+selected.push({ symbol: 'lb_probe_source_unrestricted', kind: 'source', label: 'Subtypes.unrestricted' });
+await writeFile(join(root, 'original.lean'), original, { flag: 'wx' });
+await writeFile(join(project, 'Subtypes.lean'), source);
+const settings = { npm: { name: 'lean-bridge-subtype-entry-probe', version: '1.0.0' }, composer: { name: 'lean-bridge-subtype-entry/probe', version: '1.0.0' } };
+await writeFile(join(project, 'lean-bridge.exports.json'), canonicalJson({ schemaVersion: 1, modules: ['Subtypes'], exports: [...Object.keys(phpWasmSubtypeContracts), 'Subtypes.unrestricted'], contracts: phpWasmSubtypeContracts, specializations: phpWasmSubtypeSpecializations, targets: { 'php-wasm': settings } }));
+const leanPrefix = '/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2';
+const runtimeRoot = '/app/build/type-corpus/php-wasm-current-runtime';
+const abort = new AbortController();
+let minimumFreeMiB = await free(), stoppedForDisk = false, model, prepared = false;
+const commands = [], compiled = [], definitionCounts = new Map();
+const timer = setInterval(async () => {
+  minimumFreeMiB = Math.min(minimumFreeMiB, await free());
+  if (minimumFreeMiB < 768 && !stoppedForDisk) { stoppedForDisk = true; abort.abort(new Error('disk floor')); }
+}, 3000);
+const scope = 'One-root feasibility probe only. Explicit C-body entry markers in a separately built probe, not unmodified release measurements or installed acceptance.';
+await writeFile(join(root, 'start.json'), JSON.stringify({ revision, startedAt: new Date().toISOString(), runnerSha256: sha256(await readFile(new URL(import.meta.url))), originalSha256: sha256(original), probeSha256: sha256(source), freeMiB: minimumFreeMiB, scope }, null, 2) + '\n', { flag: 'wx' });
+const save = async (name, data) => writeFile(join(root, name), JSON.stringify(data, null, 2) + '\n', { flag: 'wx' });
+const prepare = () => {
+  if (prepared) return;
+  assert.ok(model);
+  const projection = compileCopiedPhpModel(model.bindingIr, { integerBits: 32, structuredCallables: true, lists: true, variants: true });
+  for (const fn of projection.surface.functions) selected.push({ symbol: fn.name, kind: 'public', label: fn.declaration.name });
+  for (const item of model.exports) {
+    selected.push({ symbol: item.symbol, kind: 'adapter', label: item.name });
+    item.refinements?.parameters.forEach((r, i) => {
+      if (r?.kind === 'subtype') selected.push({ symbol: item.symbol + '_refinement_' + i, kind: 'validator', label: item.name + ':' + i });
+    });
+  }
+  assert.equal(new Set(selected.map(x => x.symbol)).size, selected.length);
+  for (const item of selected) {
+    assert.match(item.symbol, /^[A-Za-z_][A-Za-z0-9_]*$/);
+    assert.match(item.label, /^[A-Za-z_][A-Za-z0-9_.:]*$/);
+    definitionCounts.set(item.symbol, 0);
+  }
+  prepared = true;
+};
+const runner = { capture: async request => {
+  const args = [...request.args];
+  if (basename(request.command) === 'emcc' && args.includes('-c')) {
+    prepare();
+    const path = args[args.indexOf('-c') + 1], bytes = await readFile(path, 'utf8');
+    const insertions = [];
+    for (const item of selected) {
+      const pattern = new RegExp('^[A-Za-z_][A-Za-z0-9_* \\t]*\\b' + item.symbol + '\\([^{};]*\\)\\s*\\{', 'gm');
+      const matches = [...bytes.matchAll(pattern)];
+      assert.ok(matches.length <= 1, 'Duplicate definitions: ' + item.symbol);
+      if (!matches.length) continue;
+      definitionCounts.set(item.symbol, definitionCounts.get(item.symbol) + 1);
+      const text = item.kind === 'public'
+        ? '\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = ' + JSON.stringify(item.label) + ';\n  fputs(' + JSON.stringify('LB_SUBTYPE_ENTRY_V1 begin public ' + item.label + '\n') + ', stderr);\n'
+        : '\n  fputs(' + JSON.stringify('LB_SUBTYPE_ENTRY_V1 enter ' + item.kind + ' ' + item.label + '\n') + ', stderr);\n';
+      insertions.push({ offset: matches[0].index + matches[0][0].length, text, ...item });
+    }
+    if (insertions.length) {
+      const helper = insertions.some(x => x.kind === 'public')
+        ? 'static void lb_probe_end(const char **label) { fprintf(stderr, "LB_SUBTYPE_ENTRY_V1 end public %s\\n", *label); }\n'
+        : '';
+      insertions.push({ offset: 0, text: '#include <stdio.h>\n' + helper, kind: 'preamble' });
+    }
+    insertions.sort((a, b) => b.offset - a.offset);
+    let probe = bytes;
+    for (const insertion of insertions) probe = probe.slice(0, insertion.offset) + insertion.text + probe.slice(insertion.offset);
+    let restored = probe;
+    for (const insertion of [...insertions].reverse()) {
+      assert.equal(restored.slice(insertion.offset, insertion.offset + insertion.text.length), insertion.text);
+      restored = restored.slice(0, insertion.offset) + restored.slice(insertion.offset + insertion.text.length);
+    }
+    assert.equal(restored, bytes, 'Instrumentation must be removable byte for byte');
+    const name = (compiled.length + 1) + '-' + basename(path);
+    const into = join(root, 'c-inputs', name), probePath = join(root, 'c-probes', name);
+    await mkdir(dirname(into), { recursive: true }); await mkdir(dirname(probePath), { recursive: true });
+    await writeFile(into, bytes, { flag: 'wx' }); await writeFile(probePath, probe, { flag: 'wx' });
+    compiled.push({ path, original: into, probe: probePath, originalSha256: sha256(bytes), probeSha256: sha256(probe), insertions });
+    args[args.indexOf('-c') + 1] = probePath;
+    args.push('-iquote', dirname(path), '-ffile-prefix-map=' + root + '=/build/php-wasm-subtype-entry-probe');
+    commands.push({ command: request.command, originalArgs: request.args, probeArgs: args });
+    return processBuildRunner.capture({ ...request, args });
+  }
+  if (basename(request.command) === 'emcc' && args.includes('-sSIDE_MODULE=2')) {
+    prepare();
+    for (const [symbol, count] of definitionCounts) assert.equal(count, 1, symbol + ' must have exactly one instrumented definition');
+    await save('selected.json', selected); await save('model.json', model);
+    await save('instrumentation.json', { scope, compiled, definitionCounts: Object.fromEntries(definitionCounts) });
+    commands.push({ command: request.command, originalArgs: request.args, probeArgs: args });
+  }
+  return processBuildRunner.capture(request);
+} };
+let result;
+try {
+  const component = await buildPhpWasmCopiedComponent({ projectRoot: project, outputRoot: join(root, 'component'), leanPrefix, runtimeRoot, emsdkRoot: '/app/.toolchains/emsdk-php-wasm', phpSource: '/app/build/php-wasm-sdk/php8.4-src', runner, signal: abort.signal, validateModel: value => { model = value; } });
+  await save('component-result.json', component);
+  const packages = await buildPhpWasmCopiedPackages({ componentRoot: join(root, 'component'), runtimeRoot, outputRoot: join(root, 'packages'), leanPrefix, npmSettings: settings.npm, composerSettings: settings.composer });
+  await save('packages-result.json', packages);
+  result = { status: 'built', componentExports: model.exports.length, markedDefinitions: selected.length };
+} catch (error) {
+  result = { status: 'failed', message: error.message, stack: error.stack, details: error.details };
+} finally {
+  clearInterval(timer);
+  await save('commands.json', commands);
+  await save('end.json', { ...result, minimumFreeMiB, stoppedForDisk, endedAt: new Date().toISOString() });
+}
+console.log(JSON.stringify({ ...result, root, minimumFreeMiB, stoppedForDisk }));
+if (result.status !== 'built') process.exitCode = 1;

@@ -1,0 +1,462 @@
+{
+  "scope": "Explicit C-body instrumented one-root probe. No two-root, browser, reviewed or unmodified-package measurement claim.",
+  "driverSha256": "efbf6cb26853c251f5cfb74ba248420b1a5d6edc049e4cc3b33906caba13fcb3",
+  "results": [
+    {
+      "label": "autoload",
+      "status": 0,
+      "stdout": [
+        [
+          "true"
+        ]
+      ],
+      "stderr": [],
+      "sourceSha256": "378c35c7530ee5f06f526f216ccc0673d65ba343a6f025e9786897c671032347",
+      "source": "<?php require_once '/vendor/lean-bridge-subtype-entry/probe/bootstrap.php'; echo 'true';"
+    },
+    {
+      "label": "valid-even",
+      "status": 0,
+      "stdout": [
+        [
+          "\"21\""
+        ]
+      ],
+      "stderr": [
+        [
+          "LB_SUBTYPE_ENTRY_V1 begin public half\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter validator Subtypes.half:0\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter constructor Subtypes.checkedEven\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter adapter Subtypes.half\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter constructor Subtypes.checkedEven\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter source Subtypes.half\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 end public half\n"
+        ]
+      ],
+      "sourceSha256": "f545e7d9aaafc031c30221438135c3d1b1af4ad7d0451f64423104a0de4d2114",
+      "source": "<?php try { $value = (string) \\LeanSubtypes\\half(\\Brick\\Math\\BigInteger::of(\"42\")); } catch (\\LeanSubtypes\\LeanBridgeError $error) { $value = $error->getCode() . \":\" . $error->getMessage(); } echo json_encode($value, JSON_THROW_ON_ERROR);",
+      "entries": [
+        {
+          "kind": "validator",
+          "label": "Subtypes.half:0"
+        },
+        {
+          "kind": "constructor",
+          "label": "Subtypes.checkedEven"
+        },
+        {
+          "kind": "adapter",
+          "label": "Subtypes.half"
+        },
+        {
+          "kind": "constructor",
+          "label": "Subtypes.checkedEven"
+        },
+        {
+          "kind": "source",
+          "label": "Subtypes.half"
+        }
+      ],
+      "counts": {
+        "constructor": 2,
+        "validator": 1,
+        "adapter": 1,
+        "source": 1
+      }
+    },
+    {
+      "label": "invalid-even",
+      "status": 0,
+      "stdout": [
+        [
+          "\"1:arg0 was rejected by Subtypes.checkedEven\""
+        ]
+      ],
+      "stderr": [
+        [
+          "LB_SUBTYPE_ENTRY_V1 begin public half\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter validator Subtypes.half:0\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter constructor Subtypes.checkedEven\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 end public half\n"
+        ]
+      ],
+      "sourceSha256": "65f4da1babfad903627ba9477ef2c133c4462ca89400b66be95075744abb5491",
+      "source": "<?php try { $value = (string) \\LeanSubtypes\\half(\\Brick\\Math\\BigInteger::of(\"7\")); } catch (\\LeanSubtypes\\LeanBridgeError $error) { $value = $error->getCode() . \":\" . $error->getMessage(); } echo json_encode($value, JSON_THROW_ON_ERROR);",
+      "entries": [
+        {
+          "kind": "validator",
+          "label": "Subtypes.half:0"
+        },
+        {
+          "kind": "constructor",
+          "label": "Subtypes.checkedEven"
+        }
+      ],
+      "counts": {
+        "constructor": 1,
+        "validator": 1,
+        "adapter": 0,
+        "source": 0
+      }
+    },
+    {
+      "label": "invalid-fin-before-constructor",
+      "status": 0,
+      "stdout": [
+        [
+          "\"1:arg1 is not below its Fin 10 bound\""
+        ]
+      ],
+      "stderr": [
+        [
+          "LB_SUBTYPE_ENTRY_V1 begin public mix\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 end public mix\n"
+        ]
+      ],
+      "sourceSha256": "fd1985b07edca908e6b70f0aeb69d9fb8a758087cfa25976dc6e9b5dbbd08313",
+      "source": "<?php try { $value = (string) \\LeanSubtypes\\mix(\\Brick\\Math\\BigInteger::of(\"5\"),\\Brick\\Math\\BigInteger::of(\"10\")); } catch (\\LeanSubtypes\\LeanBridgeError $error) { $value = $error->getCode() . \":\" . $error->getMessage(); } echo json_encode($value, JSON_THROW_ON_ERROR);",
+      "entries": [],
+      "counts": {
+        "constructor": 0,
+        "validator": 0,
+        "adapter": 0,
+        "source": 0
+      }
+    },
+    {
+      "label": "late-constructor-rejection",
+      "status": 0,
+      "stdout": [
+        [
+          "\"1:arg1 was rejected by Subtypes.checkedWord\""
+        ]
+      ],
+      "stderr": [
+        [
+          "LB_SUBTYPE_ENTRY_V1 begin public join\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter validator Subtypes.join:0\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter constructor Subtypes.checkedWord\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter validator Subtypes.join:1\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter constructor Subtypes.checkedWord\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 end public join\n"
+        ]
+      ],
+      "sourceSha256": "ec4cdadd9711b97e01c7ccc2f40f42ad090c14084301a24ee97c36b2e6f1cfb6",
+      "source": "<?php try { $value = \\LeanSubtypes\\join('ab',''); } catch (\\LeanSubtypes\\LeanBridgeError $error) { $value = $error->getCode() . \":\" . $error->getMessage(); } echo json_encode($value, JSON_THROW_ON_ERROR);",
+      "entries": [
+        {
+          "kind": "validator",
+          "label": "Subtypes.join:0"
+        },
+        {
+          "kind": "constructor",
+          "label": "Subtypes.checkedWord"
+        },
+        {
+          "kind": "validator",
+          "label": "Subtypes.join:1"
+        },
+        {
+          "kind": "constructor",
+          "label": "Subtypes.checkedWord"
+        }
+      ],
+      "counts": {
+        "constructor": 2,
+        "validator": 2,
+        "adapter": 0,
+        "source": 0
+      }
+    },
+    {
+      "label": "normalized-bounded",
+      "status": 0,
+      "stdout": [
+        [
+          "\"100\""
+        ]
+      ],
+      "stderr": [
+        [
+          "LB_SUBTYPE_ENTRY_V1 begin public clamp\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter validator Subtypes.clamp:0\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter constructor Subtypes.checkedBounded\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter adapter Subtypes.clamp\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter constructor Subtypes.checkedBounded\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter source Subtypes.clamp\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 end public clamp\n"
+        ]
+      ],
+      "sourceSha256": "18b1c45d4b18f30cef82b2fe643eda239b8dfd043e9cc81a3a7dd780e723eaea",
+      "source": "<?php try { $value = (string) \\LeanSubtypes\\clamp(\\Brick\\Math\\BigInteger::of(\"250\")); } catch (\\LeanSubtypes\\LeanBridgeError $error) { $value = $error->getCode() . \":\" . $error->getMessage(); } echo json_encode($value, JSON_THROW_ON_ERROR);",
+      "entries": [
+        {
+          "kind": "validator",
+          "label": "Subtypes.clamp:0"
+        },
+        {
+          "kind": "constructor",
+          "label": "Subtypes.checkedBounded"
+        },
+        {
+          "kind": "adapter",
+          "label": "Subtypes.clamp"
+        },
+        {
+          "kind": "constructor",
+          "label": "Subtypes.checkedBounded"
+        },
+        {
+          "kind": "source",
+          "label": "Subtypes.clamp"
+        }
+      ],
+      "counts": {
+        "constructor": 2,
+        "validator": 1,
+        "adapter": 1,
+        "source": 1
+      }
+    },
+    {
+      "label": "unrefined-control",
+      "status": 0,
+      "stdout": [
+        [
+          "\"7\""
+        ]
+      ],
+      "stderr": [
+        [
+          "LB_SUBTYPE_ENTRY_V1 begin public unrestricted\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter adapter Subtypes.unrestricted\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter source Subtypes.unrestricted\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 end public unrestricted\n"
+        ]
+      ],
+      "sourceSha256": "6962a4c4b9ea1501f592d3a787f8cd6ba337ea9d2da3f1e3df8ff97360b5899f",
+      "source": "<?php try { $value = (string) \\LeanSubtypes\\unrestricted(\\Brick\\Math\\BigInteger::of(\"7\")); } catch (\\LeanSubtypes\\LeanBridgeError $error) { $value = $error->getCode() . \":\" . $error->getMessage(); } echo json_encode($value, JSON_THROW_ON_ERROR);",
+      "entries": [
+        {
+          "kind": "adapter",
+          "label": "Subtypes.unrestricted"
+        },
+        {
+          "kind": "source",
+          "label": "Subtypes.unrestricted"
+        }
+      ],
+      "counts": {
+        "constructor": 0,
+        "validator": 0,
+        "adapter": 1,
+        "source": 1
+      }
+    },
+    {
+      "label": "nonzero-byte",
+      "status": 0,
+      "stdout": [
+        [
+          "255"
+        ]
+      ],
+      "stderr": [
+        [
+          "LB_SUBTYPE_ENTRY_V1 begin public byte\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter validator Subtypes.byte:0\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter constructor Subtypes.checkedByte\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter adapter Subtypes.byte\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter constructor Subtypes.checkedByte\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter source Subtypes.byte\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 end public byte\n"
+        ]
+      ],
+      "sourceSha256": "176d629283f53a6be00bc7c7a6a4e14605a9ce122b4b87347878cd7d94c96c35",
+      "source": "<?php try { $value = \\LeanSubtypes\\byte(255); } catch (\\LeanSubtypes\\LeanBridgeError $error) { $value = $error->getCode() . \":\" . $error->getMessage(); } echo json_encode($value, JSON_THROW_ON_ERROR);",
+      "entries": [
+        {
+          "kind": "validator",
+          "label": "Subtypes.byte:0"
+        },
+        {
+          "kind": "constructor",
+          "label": "Subtypes.checkedByte"
+        },
+        {
+          "kind": "adapter",
+          "label": "Subtypes.byte"
+        },
+        {
+          "kind": "constructor",
+          "label": "Subtypes.checkedByte"
+        },
+        {
+          "kind": "source",
+          "label": "Subtypes.byte"
+        }
+      ],
+      "counts": {
+        "constructor": 2,
+        "validator": 1,
+        "adapter": 1,
+        "source": 1
+      }
+    },
+    {
+      "label": "normalized-specialization",
+      "status": 0,
+      "stdout": [
+        [
+          "\"14\""
+        ]
+      ],
+      "stderr": [
+        [
+          "LB_SUBTYPE_ENTRY_V1 begin public secondEven\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter validator Subtypes.secondEven:0\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter constructor Subtypes.normalizedEven\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter adapter Subtypes.secondEven\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter constructor Subtypes.normalizedEven\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 end public secondEven\n"
+        ]
+      ],
+      "sourceSha256": "7c7b56436bc3029051c1c021fbfa35f4be7e24abfdb7e41e04b6ae01d052fcea",
+      "source": "<?php try { $value = (string) \\LeanSubtypes\\second_even(\\Brick\\Math\\BigInteger::of(\"7\")); } catch (\\LeanSubtypes\\LeanBridgeError $error) { $value = $error->getCode() . \":\" . $error->getMessage(); } echo json_encode($value, JSON_THROW_ON_ERROR);",
+      "entries": [
+        {
+          "kind": "validator",
+          "label": "Subtypes.secondEven:0"
+        },
+        {
+          "kind": "constructor",
+          "label": "Subtypes.normalizedEven"
+        },
+        {
+          "kind": "adapter",
+          "label": "Subtypes.secondEven"
+        },
+        {
+          "kind": "constructor",
+          "label": "Subtypes.normalizedEven"
+        }
+      ],
+      "counts": {
+        "constructor": 2,
+        "validator": 1,
+        "adapter": 1,
+        "source": 0
+      }
+    },
+    {
+      "label": "result-only",
+      "status": 0,
+      "stdout": [
+        [
+          "\"0\""
+        ]
+      ],
+      "stderr": [
+        [
+          "LB_SUBTYPE_ENTRY_V1 begin public zeroEven\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter adapter Subtypes.zeroEven\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 end public zeroEven\n"
+        ]
+      ],
+      "sourceSha256": "ebb783c5ce47e9dd10ad9bac46023192f89614d1c46e0b72122fa4d43a26d17b",
+      "source": "<?php try { $value = (string) \\LeanSubtypes\\zero_even(); } catch (\\LeanSubtypes\\LeanBridgeError $error) { $value = $error->getCode() . \":\" . $error->getMessage(); } echo json_encode($value, JSON_THROW_ON_ERROR);",
+      "entries": [
+        {
+          "kind": "adapter",
+          "label": "Subtypes.zeroEven"
+        }
+      ],
+      "counts": {
+        "constructor": 0,
+        "validator": 0,
+        "adapter": 1,
+        "source": 0
+      }
+    }
+  ],
+  "startup": {
+    "stdout": [],
+    "stderr": []
+  },
+  "status": "passed",
+  "endedAt": "2026-10-10T16:09:58.360Z"
+}

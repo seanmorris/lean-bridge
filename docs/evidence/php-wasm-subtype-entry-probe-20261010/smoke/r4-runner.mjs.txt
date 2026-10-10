@@ -1,0 +1,77 @@
+import assert from 'node:assert/strict';
+import { mkdir, readFile, symlink, writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { PhpNode } from '/app/build/php-wasm-host/node_modules/php-wasm/PhpNode.mjs';
+import { sha256 } from '/app/build/worktrees/fin-container-edge-file-closure-vo1454/src/capsule/node.mjs';
+const root = '/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b';
+const scope = 'Explicit C-body instrumented one-root probe. No two-root, browser, reviewed or unmodified-package measurement claim.';
+const selected = JSON.parse(await readFile(join(root, 'selected.json'), 'utf8'));
+await mkdir(join(root, 'node_modules/@lean-bridge'), { recursive: true });
+await symlink(join(root, 'packages/runtime/package'), join(root, 'node_modules/@lean-bridge/php-wasm-copied-runtime'));
+const { default: api } = await import(pathToFileURL(join(root, 'packages/component/package/index.mjs')));
+const php = new PhpNode({ version: '8.4', autoTransaction: false, ini: 'memory_limit=512M', sharedLibs: [api] });
+let stdout = [], stderr = [];
+const results = [], record = { scope, driverSha256: sha256(await readFile(new URL(import.meta.url))), results };
+php.addEventListener('output', event => stdout.push([...event.detail]));
+php.addEventListener('error', event => stderr.push([...event.detail]));
+const persist = () => writeFile(join(root, 'smoke-results-r4.json'), JSON.stringify(record, null, 2) + '\n');
+const execute = async (label, source, expected) => {
+  stdout = []; stderr = [];
+  const status = await php.run(source);
+  const output = stdout.flat().join('');
+  const observation = { label, status, stdout, stderr, sourceSha256: sha256(source), source };
+  results.push(observation);
+  await persist();
+  assert.equal(status, 0, JSON.stringify(observation));
+  assert.deepEqual(JSON.parse(output), expected, label);
+  const trace = stderr.flat().join('');
+  if (trace !== '') assert.ok(trace.endsWith('\n'), 'Incomplete trace line');
+  const lines = trace === '' ? [] : trace.slice(0, -1).split('\n');
+  if (label === 'autoload') assert.deepEqual(lines, []);
+  else {
+    const first = /^LB_SUBTYPE_ENTRY_V1 begin public ([A-Za-z_][A-Za-z0-9_]*)$/.exec(lines[0]);
+    assert.ok(first, 'Missing public begin marker: ' + label);
+    assert.equal(lines.at(-1), 'LB_SUBTYPE_ENTRY_V1 end public ' + first[1]);
+    const entries = lines.slice(1, -1).map(line => {
+      const match = /^LB_SUBTYPE_ENTRY_V1 enter (constructor|adapter|source|validator) ([A-Za-z_][A-Za-z0-9_.:]*)$/.exec(line);
+      assert.ok(match, 'Unexpected probe stderr: ' + line);
+      assert.equal(selected.filter(item => item.kind === match[1] && item.label === match[2]).length, 1);
+      return { kind: match[1], label: match[2] };
+    });
+    observation.entries = entries;
+    observation.counts = Object.fromEntries(['constructor', 'validator', 'adapter', 'source'].map(kind => [kind, entries.filter(item => item.kind === kind).length]));
+  }
+  await persist();
+  console.log(JSON.stringify({ label, result: JSON.parse(output), counts: observation.counts, stderr }));
+};
+try {
+  await php.binary;
+  record.startup = { stdout, stderr };
+  await persist();
+  assert.deepEqual(stdout, []); assert.deepEqual(stderr, []);
+  await execute('autoload', "<?php require_once '/vendor/lean-bridge-subtype-entry/probe/bootstrap.php'; echo 'true';", true);
+  const n = value => '\\Brick\\Math\\BigInteger::of(' + JSON.stringify(String(value)) + ')';
+  const expressions = [
+    ['valid-even', '(string) \\LeanSubtypes\\half(' + n(42) + ')', '21'],
+    ['invalid-even', '(string) \\LeanSubtypes\\half(' + n(7) + ')', '1:arg0 was rejected by Subtypes.checkedEven'],
+    ['invalid-fin-before-constructor', '(string) \\LeanSubtypes\\mix(' + n(5) + ',' + n(10) + ')', '1:arg1 is not below its Fin 10 bound'],
+    ['late-constructor-rejection', "\\LeanSubtypes\\join('ab','')", '1:arg1 was rejected by Subtypes.checkedWord'],
+    ['normalized-bounded', '(string) \\LeanSubtypes\\clamp(' + n(250) + ')', '100'],
+    ['unrefined-control', '(string) \\LeanSubtypes\\unrestricted(' + n(7) + ')', '7'],
+    ['nonzero-byte', '\\LeanSubtypes\\byte(255)', 255],
+    ['normalized-specialization', '(string) \\LeanSubtypes\\second_even(' + n(7) + ')', '14'],
+    ['result-only', '(string) \\LeanSubtypes\\zero_even()', '0']
+  ];
+  for (const [label, expression, expected] of expressions) {
+    const source = '<?php try { $value = ' + expression + '; } catch (\\LeanSubtypes\\LeanBridgeError $error) { $value = $error->getCode() . ":" . $error->getMessage(); } echo json_encode($value, JSON_THROW_ON_ERROR);';
+    await execute(label, source, expected);
+  }
+  record.status = 'passed';
+} catch (error) {
+  record.status = 'failed'; record.error = { message: error.message, stack: error.stack, stdout, stderr };
+  process.exitCode = 1;
+} finally {
+  record.endedAt = new Date().toISOString();
+  await persist();
+}

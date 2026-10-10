@@ -1,0 +1,89 @@
+import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
+import { cp, mkdir, readFile, statfs, writeFile } from 'node:fs/promises';
+import { basename, dirname, join } from 'node:path';
+import { canonicalJson, sha256 } from '/app/build/worktrees/fin-container-edge-file-closure-vo1454/src/capsule/node.mjs';
+import { processBuildRunner } from '/app/build/worktrees/fin-container-edge-file-closure-vo1454/src/build/process-runner.mjs';
+import { buildPhpWasmCopiedComponent } from '/app/build/worktrees/fin-container-edge-file-closure-vo1454/src/build/php-wasm-copied-component.mjs';
+import { compileCopiedPhpModel } from '/app/build/worktrees/fin-container-edge-file-closure-vo1454/src/backends/php/copied-model.mjs';
+import { buildPhpWasmCopiedPackages } from '/app/build/worktrees/fin-container-edge-file-closure-vo1454/src/release/php-wasm-copied-package.mjs';
+import { phpWasmSubtypeContracts, phpWasmSubtypeSpecializations } from '/app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/php-wasm-subtype-fixture.mjs';
+import { reviewedSubtypeInstalledSource } from '/app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/reviewed-subtype-installed-fixture.mjs';
+const repo='/app/build/worktrees/fin-container-edge-file-closure-vo1454', revision='6ac0d2bacfb0ff53b4698a5310f3f3e5e45ad5d3';
+const root='/app/build/vo1443-subtype-entry-prototype-6ac0d2b', project=join(root,'project');
+const free=async()=>{const d=await statfs('/app');return Math.floor(d.bavail*d.bsize/1048576);};
+assert.ok(await free()>=2048,'Need 2 GiB before the probe build');
+assert.equal(execFileSync('git',['rev-parse','HEAD'],{cwd:repo,encoding:'utf8'}).trim(),revision);
+assert.equal(execFileSync('git',['status','--porcelain','--untracked-files=no'],{cwd:repo,encoding:'utf8'}),'');
+await mkdir(root);await cp(join(repo,'tests/fixtures/onboarding/native-subtype'),project,{recursive:true});
+const original=await readFile(join(project,'Subtypes.lean'),'utf8')+reviewedSubtypeInstalledSource;
+const constructors=['checkedWord','checkedEven','checkedSmall','checkedPayload','checkedBounded','checkedByte','normalizedEven'];
+const sources=['shout','half','scale','head','pad','join','clamp','mix','byte','echo'];
+let source=original;const selected=[];
+for(const [kind,names] of [['constructor',constructors],['source',sources]])for(const name of names){
+ const symbol='lb_probe_'+kind+'_'+name;
+ const pattern=new RegExp('^(?:@\\[noinline\\] )?def '+name+'\\b','gm');
+ assert.equal([...source.matchAll(pattern)].length,1,name);
+ source=source.replace(pattern,'@[noinline]\n@[export '+symbol+']\ndef '+name);
+ selected.push({symbol,kind,label:'Subtypes.'+name});
+}
+source+='\nnamespace Subtypes\n@[noinline]\n@[export lb_probe_source_unrestricted]\ndef unrestricted (value : Nat) : Nat := value\nend Subtypes\n';
+selected.push({symbol:'lb_probe_source_unrestricted',kind:'source',label:'Subtypes.unrestricted'});
+await writeFile(join(root,'original.lean'),original,{flag:'wx'});await writeFile(join(project,'Subtypes.lean'),source);
+const settings={npm:{name:'lean-bridge-subtype-entry-probe',version:'1.0.0'},composer:{name:'lean-bridge-subtype-entry/probe',version:'1.0.0'}};
+await writeFile(join(project,'lean-bridge.exports.json'),canonicalJson({schemaVersion:1,modules:['Subtypes'],exports:[...Object.keys(phpWasmSubtypeContracts),'Subtypes.unrestricted'],contracts:phpWasmSubtypeContracts,specializations:phpWasmSubtypeSpecializations,targets:{'php-wasm':settings}}));
+const leanPrefix='/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2',runtimeRoot='/app/build/type-corpus/php-wasm-current-runtime';
+const abort=new AbortController();let minimumFreeMiB=await free(),stoppedForDisk=false,model,lastCompile;
+const commands=[],compiled=[];
+const timer=setInterval(async()=>{minimumFreeMiB=Math.min(minimumFreeMiB,await free());if(minimumFreeMiB<768&&!stoppedForDisk){stoppedForDisk=true;abort.abort(new Error('disk floor'));}},3000);
+await writeFile(join(root,'start.json'),JSON.stringify({revision,startedAt:new Date().toISOString(),runnerSha256:sha256(await readFile(new URL(import.meta.url))),originalSha256:sha256(original),probeSha256:sha256(source),freeMiB:minimumFreeMiB,scope:'One-root feasibility probe only. Compiler-instrumented component, not the unmodified release and not installed acceptance.'},null,2)+'\n',{flag:'wx'});
+const save=async(name,data)=>writeFile(join(root,name),JSON.stringify(data,null,2)+'\n',{flag:'wx'});
+const runner={capture:async request=>{
+ const args=[...request.args];
+ if(basename(request.command)==='emcc' && args.includes('-c')){
+  const path=args[args.indexOf('-c')+1],bytes=await readFile(path,'utf8');
+  compiled.push({path,source:bytes});lastCompile=request;
+  const into=join(root,'c-inputs',compiled.length+'-'+basename(path));await mkdir(dirname(into),{recursive:true});await writeFile(into,bytes,{flag:'wx'});
+  args.push('-finstrument-functions');commands.push({command:request.command,originalArgs:request.args,probeArgs:args,sourceSha256:sha256(bytes)});
+  return processBuildRunner.capture({...request,args});
+ }
+ if(basename(request.command)==='emcc' && args.includes('-sSIDE_MODULE=2')){
+  assert.ok(model && lastCompile);
+  const projection=compileCopiedPhpModel(model.bindingIr,{integerBits:32,structuredCallables:true,lists:true,variants:true});
+  for(const fn of projection.surface.functions)selected.push({symbol:fn.name,kind:'public',label:fn.declaration.name});
+  for(const item of model.exports){
+   selected.push({symbol:item.symbol,kind:'adapter',label:item.name});
+   item.refinements?.parameters.forEach((r,i)=>{if(r?.kind==='subtype')selected.push({symbol:item.symbol+'_refinement_'+i,kind:'validator',label:item.name+':'+i});});
+  }
+  const all=compiled.map(x=>x.source).join('\n');const declarations=[];
+  for(const item of selected.filter(x=>x.kind!=='public')){
+   const matches=[...all.matchAll(new RegExp('^LEAN_EXPORT [^\\n{};]*\\b'+item.symbol+'\\([^\\n]*\\);$','gm'))];
+   assert.ok(matches.length,item.symbol+' has an actual generated C declaration');
+   declarations.push(matches[0][0]);
+  }
+  assert.equal(new Set(selected.map(x=>x.symbol)).size,selected.length);
+  const staging=dirname(dirname(lastCompile.args[lastCompile.args.indexOf('-o')+1]));
+  const header=join(staging,'c/binding',projection.surface.paths.publicHeader);
+  const hook=join(root,'entry-hooks.c'),object=join(root,'entry-hooks.o');
+  const trace=(item,event)=>'  if (fn == (void *)&'+item.symbol+') { fprintf(stderr, "LB_SUBTYPE_ENTRY_V1 '+event+' '+item.kind+' '+item.label+'\\n"); return; }';
+  const code='#include <stdio.h>\n#include <lean/lean.h>\n#include '+JSON.stringify(header)+'\n'+declarations.join('\n')+'\nvoid __cyg_profile_func_enter(void *fn, void *caller) {\n  (void)caller;\n'+selected.map(item=>trace(item,item.kind==='public'?'begin':'enter')).join('\n')+'\n}\nvoid __cyg_profile_func_exit(void *fn, void *caller) {\n  (void)caller;\n'+selected.filter(x=>x.kind==='public').map(item=>trace(item,'end')).join('\n')+'\n}\n';
+  await writeFile(hook,code,{flag:'wx'});await save('selected.json',selected);await save('model.json',model);
+  const hookArgs=[...lastCompile.args];hookArgs[hookArgs.indexOf('-c')+1]=hook;hookArgs[hookArgs.indexOf('-o')+1]=object;
+  commands.push({command:request.command,kind:'probe-hooks',args:hookArgs,sourceSha256:sha256(code)});
+  await processBuildRunner.capture({...lastCompile,args:hookArgs});
+  args.splice(args.indexOf('-o'),0,object);commands.push({command:request.command,originalArgs:request.args,probeArgs:args});
+  return processBuildRunner.capture({...request,args});
+ }
+ return processBuildRunner.capture(request);
+}};
+let result;
+try{
+ const component=await buildPhpWasmCopiedComponent({projectRoot:project,outputRoot:join(root,'component'),leanPrefix,runtimeRoot,emsdkRoot:'/app/.toolchains/emsdk-php-wasm',phpSource:'/app/build/php-wasm-sdk/php8.4-src',runner,signal:abort.signal,validateModel:value=>{model=value;}});
+ await save('component-result.json',component);
+ const packages=await buildPhpWasmCopiedPackages({componentRoot:join(root,'component'),runtimeRoot,outputRoot:join(root,'packages'),leanPrefix,npmSettings:settings.npm,composerSettings:settings.composer});
+ await save('packages-result.json',packages);
+ result={status:'built',componentExports:model.exports.length};
+}catch(error){result={status:'failed',message:error.message,stack:error.stack,details:error.details};}
+finally{clearInterval(timer);await save('commands.json',commands);await save('end.json',{...result,minimumFreeMiB,stoppedForDisk,endedAt:new Date().toISOString()});}
+console.log(JSON.stringify({...result,root,minimumFreeMiB,stoppedForDisk}));
+if(result.status!=='built')process.exitCode=1;

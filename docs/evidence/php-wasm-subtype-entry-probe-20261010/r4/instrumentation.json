@@ -1,0 +1,521 @@
+{
+  "scope": "One-root feasibility probe only. Explicit C-body entry markers in a separately built probe, not unmodified release measurements or installed acceptance.",
+  "compiled": [
+    {
+      "path": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/.lean-bridge-native-component-GziMwJ/c/Subtypes.c",
+      "original": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/c-inputs/1-Subtypes.c",
+      "probe": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/c-probes/1-Subtypes.c",
+      "originalSha256": "35e5a115ad62460e8e505ee24318ac55bce5ee85fbdbc2f611db3077e103dd59",
+      "probeSha256": "15e5d88e874f9b8c0884f770217b5abd2a6db0b122ab74e0a3a1df349969e274",
+      "insertions": [
+        {
+          "offset": 13497,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source Subtypes.unrestricted\\n\", stderr);\n",
+          "symbol": "lb_probe_source_unrestricted",
+          "kind": "source",
+          "label": "Subtypes.unrestricted"
+        },
+        {
+          "offset": 12013,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor Subtypes.normalizedEven\\n\", stderr);\n",
+          "symbol": "lb_probe_constructor_normalizedEven",
+          "kind": "constructor",
+          "label": "Subtypes.normalizedEven"
+        },
+        {
+          "offset": 11419,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source Subtypes.echo\\n\", stderr);\n",
+          "symbol": "l_Subtypes_echo___redArg",
+          "kind": "source",
+          "label": "Subtypes.echo"
+        },
+        {
+          "offset": 11004,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source Subtypes.byte\\n\", stderr);\n",
+          "symbol": "lb_probe_source_byte",
+          "kind": "source",
+          "label": "Subtypes.byte"
+        },
+        {
+          "offset": 10260,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor Subtypes.checkedByte\\n\", stderr);\n",
+          "symbol": "lb_probe_constructor_checkedByte",
+          "kind": "constructor",
+          "label": "Subtypes.checkedByte"
+        },
+        {
+          "offset": 10025,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source Subtypes.mix\\n\", stderr);\n",
+          "symbol": "lb_probe_source_mix",
+          "kind": "source",
+          "label": "Subtypes.mix"
+        },
+        {
+          "offset": 9893,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source Subtypes.clamp\\n\", stderr);\n",
+          "symbol": "lb_probe_source_clamp",
+          "kind": "source",
+          "label": "Subtypes.clamp"
+        },
+        {
+          "offset": 9377,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor Subtypes.checkedBounded\\n\", stderr);\n",
+          "symbol": "lb_probe_constructor_checkedBounded",
+          "kind": "constructor",
+          "label": "Subtypes.checkedBounded"
+        },
+        {
+          "offset": 9148,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source Subtypes.join\\n\", stderr);\n",
+          "symbol": "lb_probe_source_join",
+          "kind": "source",
+          "label": "Subtypes.join"
+        },
+        {
+          "offset": 8858,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source Subtypes.pad\\n\", stderr);\n",
+          "symbol": "lb_probe_source_pad",
+          "kind": "source",
+          "label": "Subtypes.pad"
+        },
+        {
+          "offset": 8354,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source Subtypes.head\\n\", stderr);\n",
+          "symbol": "lb_probe_source_head",
+          "kind": "source",
+          "label": "Subtypes.head"
+        },
+        {
+          "offset": 8127,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source Subtypes.scale\\n\", stderr);\n",
+          "symbol": "lb_probe_source_scale",
+          "kind": "source",
+          "label": "Subtypes.scale"
+        },
+        {
+          "offset": 7831,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source Subtypes.half\\n\", stderr);\n",
+          "symbol": "lb_probe_source_half",
+          "kind": "source",
+          "label": "Subtypes.half"
+        },
+        {
+          "offset": 7562,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter source Subtypes.shout\\n\", stderr);\n",
+          "symbol": "lb_probe_source_shout",
+          "kind": "source",
+          "label": "Subtypes.shout"
+        },
+        {
+          "offset": 7020,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor Subtypes.checkedPayload\\n\", stderr);\n",
+          "symbol": "lb_probe_constructor_checkedPayload",
+          "kind": "constructor",
+          "label": "Subtypes.checkedPayload"
+        },
+        {
+          "offset": 6051,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor Subtypes.checkedSmall\\n\", stderr);\n",
+          "symbol": "lb_probe_constructor_checkedSmall",
+          "kind": "constructor",
+          "label": "Subtypes.checkedSmall"
+        },
+        {
+          "offset": 4856,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor Subtypes.checkedEven\\n\", stderr);\n",
+          "symbol": "lb_probe_constructor_checkedEven",
+          "kind": "constructor",
+          "label": "Subtypes.checkedEven"
+        },
+        {
+          "offset": 4324,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter constructor Subtypes.checkedWord\\n\", stderr);\n",
+          "symbol": "lb_probe_constructor_checkedWord",
+          "kind": "constructor",
+          "label": "Subtypes.checkedWord"
+        },
+        {
+          "offset": 0,
+          "text": "#include <stdio.h>\n",
+          "kind": "preamble"
+        }
+      ]
+    },
+    {
+      "path": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/.lean-bridge-native-component-GziMwJ/c/adapter.c",
+      "original": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/c-inputs/2-adapter.c",
+      "probe": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/c-probes/2-adapter.c",
+      "originalSha256": "f9cb07dd248efdb60a5025aedd09b0e075300e731449f8ce262db7fe66d3d6c5",
+      "probeSha256": "a2ca97377e2f83638b902771f06838985f7ec37077c5fae93e764060d27be14b",
+      "insertions": [
+        {
+          "offset": 27202,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter Subtypes.zeroEven\\n\", stderr);\n",
+          "symbol": "lb_c467ef12fd0e27374fac8f55",
+          "kind": "adapter",
+          "label": "Subtypes.zeroEven"
+        },
+        {
+          "offset": 27009,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter Subtypes.unrestricted\\n\", stderr);\n",
+          "symbol": "lb_1fd7234bf1e157d167e32146",
+          "kind": "adapter",
+          "label": "Subtypes.unrestricted"
+        },
+        {
+          "offset": 26315,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator Subtypes.shout:0\\n\", stderr);\n",
+          "symbol": "lb_80fdcaaaf560c424e720029c_refinement_0",
+          "kind": "validator",
+          "label": "Subtypes.shout:0"
+        },
+        {
+          "offset": 25062,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter Subtypes.shout\\n\", stderr);\n",
+          "symbol": "lb_80fdcaaaf560c424e720029c",
+          "kind": "adapter",
+          "label": "Subtypes.shout"
+        },
+        {
+          "offset": 24483,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator Subtypes.secondEven:0\\n\", stderr);\n",
+          "symbol": "lb_a5a1d2658399cacb73553f8b_refinement_0",
+          "kind": "validator",
+          "label": "Subtypes.secondEven:0"
+        },
+        {
+          "offset": 23322,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter Subtypes.secondEven\\n\", stderr);\n",
+          "symbol": "lb_a5a1d2658399cacb73553f8b",
+          "kind": "adapter",
+          "label": "Subtypes.secondEven"
+        },
+        {
+          "offset": 22627,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator Subtypes.scale:1\\n\", stderr);\n",
+          "symbol": "lb_fa19a195ff9ce74a4b7afc1d_refinement_1",
+          "kind": "validator",
+          "label": "Subtypes.scale:1"
+        },
+        {
+          "offset": 21341,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter Subtypes.scale\\n\", stderr);\n",
+          "symbol": "lb_fa19a195ff9ce74a4b7afc1d",
+          "kind": "adapter",
+          "label": "Subtypes.scale"
+        },
+        {
+          "offset": 21135,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter Subtypes.pad\\n\", stderr);\n",
+          "symbol": "lb_726954a7fecd6b63c462c2e2",
+          "kind": "adapter",
+          "label": "Subtypes.pad"
+        },
+        {
+          "offset": 20441,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator Subtypes.mix:0\\n\", stderr);\n",
+          "symbol": "lb_208c4c169dd06ab4d3767757_refinement_0",
+          "kind": "validator",
+          "label": "Subtypes.mix:0"
+        },
+        {
+          "offset": 18842,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter Subtypes.mix\\n\", stderr);\n",
+          "symbol": "lb_208c4c169dd06ab4d3767757",
+          "kind": "adapter",
+          "label": "Subtypes.mix"
+        },
+        {
+          "offset": 18124,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator Subtypes.join:1\\n\", stderr);\n",
+          "symbol": "lb_9205887c464685a24bd748da_refinement_1",
+          "kind": "validator",
+          "label": "Subtypes.join:1"
+        },
+        {
+          "offset": 17419,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator Subtypes.join:0\\n\", stderr);\n",
+          "symbol": "lb_9205887c464685a24bd748da_refinement_0",
+          "kind": "validator",
+          "label": "Subtypes.join:0"
+        },
+        {
+          "offset": 15780,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter Subtypes.join\\n\", stderr);\n",
+          "symbol": "lb_9205887c464685a24bd748da",
+          "kind": "adapter",
+          "label": "Subtypes.join"
+        },
+        {
+          "offset": 15075,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator Subtypes.head:0\\n\", stderr);\n",
+          "symbol": "lb_1886f5b34ac04df8628c9301_refinement_0",
+          "kind": "validator",
+          "label": "Subtypes.head:0"
+        },
+        {
+          "offset": 13816,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter Subtypes.head\\n\", stderr);\n",
+          "symbol": "lb_1886f5b34ac04df8628c9301",
+          "kind": "adapter",
+          "label": "Subtypes.head"
+        },
+        {
+          "offset": 13142,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator Subtypes.half:0\\n\", stderr);\n",
+          "symbol": "lb_91473598b255f6e5c1372d98_refinement_0",
+          "kind": "validator",
+          "label": "Subtypes.half:0"
+        },
+        {
+          "offset": 11938,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter Subtypes.half\\n\", stderr);\n",
+          "symbol": "lb_91473598b255f6e5c1372d98",
+          "kind": "adapter",
+          "label": "Subtypes.half"
+        },
+        {
+          "offset": 11264,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator Subtypes.firstEven:0\\n\", stderr);\n",
+          "symbol": "lb_9bb269bf43e5265e28a853e1_refinement_0",
+          "kind": "validator",
+          "label": "Subtypes.firstEven:0"
+        },
+        {
+          "offset": 10035,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter Subtypes.firstEven\\n\", stderr);\n",
+          "symbol": "lb_9bb269bf43e5265e28a853e1",
+          "kind": "adapter",
+          "label": "Subtypes.firstEven"
+        },
+        {
+          "offset": 9472,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator Subtypes.clamp:0\\n\", stderr);\n",
+          "symbol": "lb_c91ef75f139613c4dde809e0_refinement_0",
+          "kind": "validator",
+          "label": "Subtypes.clamp:0"
+        },
+        {
+          "offset": 8380,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter Subtypes.clamp\\n\", stderr);\n",
+          "symbol": "lb_c91ef75f139613c4dde809e0",
+          "kind": "adapter",
+          "label": "Subtypes.clamp"
+        },
+        {
+          "offset": 7628,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter validator Subtypes.byte:0\\n\", stderr);\n",
+          "symbol": "lb_6815c3e5d952f60b3136d82d_refinement_0",
+          "kind": "validator",
+          "label": "Subtypes.byte:0"
+        },
+        {
+          "offset": 6035,
+          "text": "\n  fputs(\"LB_SUBTYPE_ENTRY_V1 enter adapter Subtypes.byte\\n\", stderr);\n",
+          "symbol": "lb_6815c3e5d952f60b3136d82d",
+          "kind": "adapter",
+          "label": "Subtypes.byte"
+        },
+        {
+          "offset": 0,
+          "text": "#include <stdio.h>\n",
+          "kind": "preamble"
+        }
+      ]
+    },
+    {
+      "path": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/.lean-bridge-native-component-GziMwJ/c/provider.c",
+      "original": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/c-inputs/3-provider.c",
+      "probe": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/c-probes/3-provider.c",
+      "originalSha256": "bceeba036563a92976c983cd1d7fa2d1f8ca6502513f25ebfba88993a5b2c66b",
+      "probeSha256": "bceeba036563a92976c983cd1d7fa2d1f8ca6502513f25ebfba88993a5b2c66b",
+      "insertions": []
+    },
+    {
+      "path": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/.lean-bridge-native-component-GziMwJ/c/callbacks.c",
+      "original": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/c-inputs/4-callbacks.c",
+      "probe": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/c-probes/4-callbacks.c",
+      "originalSha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c",
+      "probeSha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c",
+      "insertions": []
+    },
+    {
+      "path": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/.lean-bridge-native-component-GziMwJ/c/width.c",
+      "original": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/c-inputs/5-width.c",
+      "probe": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/c-probes/5-width.c",
+      "originalSha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e",
+      "probeSha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e",
+      "insertions": []
+    },
+    {
+      "path": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/.lean-bridge-native-component-GziMwJ/c/binding/src/subtypes.c",
+      "original": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/c-inputs/6-subtypes.c",
+      "probe": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/c-probes/6-subtypes.c",
+      "originalSha256": "b4dd529ec97ff0226f57d1835289eba3348104f1daf777bb5932f2ea60ad02ff",
+      "probeSha256": "81e019d535782fb4b3a758246a13c215337140562b0d9d327e150422c7e32067",
+      "insertions": [
+        {
+          "offset": 11358,
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"zeroEven\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public zeroEven\\n\", stderr);\n",
+          "symbol": "subtypes_zero_even",
+          "kind": "public",
+          "label": "zeroEven"
+        },
+        {
+          "offset": 10682,
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"unrestricted\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public unrestricted\\n\", stderr);\n",
+          "symbol": "subtypes_unrestricted",
+          "kind": "public",
+          "label": "unrestricted"
+        },
+        {
+          "offset": 9998,
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"shout\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public shout\\n\", stderr);\n",
+          "symbol": "subtypes_shout",
+          "kind": "public",
+          "label": "shout"
+        },
+        {
+          "offset": 9297,
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"secondEven\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public secondEven\\n\", stderr);\n",
+          "symbol": "subtypes_second_even",
+          "kind": "public",
+          "label": "secondEven"
+        },
+        {
+          "offset": 8592,
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"scale\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public scale\\n\", stderr);\n",
+          "symbol": "subtypes_scale",
+          "kind": "public",
+          "label": "scale"
+        },
+        {
+          "offset": 7895,
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"pad\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public pad\\n\", stderr);\n",
+          "symbol": "subtypes_pad",
+          "kind": "public",
+          "label": "pad"
+        },
+        {
+          "offset": 7204,
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"mix\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public mix\\n\", stderr);\n",
+          "symbol": "subtypes_mix",
+          "kind": "public",
+          "label": "mix"
+        },
+        {
+          "offset": 6484,
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"join\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public join\\n\", stderr);\n",
+          "symbol": "subtypes_join",
+          "kind": "public",
+          "label": "join"
+        },
+        {
+          "offset": 5776,
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"head\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public head\\n\", stderr);\n",
+          "symbol": "subtypes_head",
+          "kind": "public",
+          "label": "head"
+        },
+        {
+          "offset": 5106,
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"half\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public half\\n\", stderr);\n",
+          "symbol": "subtypes_half",
+          "kind": "public",
+          "label": "half"
+        },
+        {
+          "offset": 4415,
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"firstEven\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public firstEven\\n\", stderr);\n",
+          "symbol": "subtypes_first_even",
+          "kind": "public",
+          "label": "firstEven"
+        },
+        {
+          "offset": 3733,
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"clamp\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public clamp\\n\", stderr);\n",
+          "symbol": "subtypes_clamp",
+          "kind": "public",
+          "label": "clamp"
+        },
+        {
+          "offset": 3075,
+          "text": "\n  const char *lb_probe_public_scope __attribute__((cleanup(lb_probe_end))) = \"byte\";\n  fputs(\"LB_SUBTYPE_ENTRY_V1 begin public byte\\n\", stderr);\n",
+          "symbol": "subtypes_byte",
+          "kind": "public",
+          "label": "byte"
+        },
+        {
+          "offset": 0,
+          "text": "#include <stdio.h>\nstatic void lb_probe_end(const char **label) { fprintf(stderr, \"LB_SUBTYPE_ENTRY_V1 end public %s\\n\", *label); }\n",
+          "kind": "preamble"
+        }
+      ]
+    },
+    {
+      "path": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/.lean-bridge-native-component-GziMwJ/extension/lb_subtypes_5b3cc7e8e8c4438f.c",
+      "original": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/c-inputs/7-lb_subtypes_5b3cc7e8e8c4438f.c",
+      "probe": "/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b/c-probes/7-lb_subtypes_5b3cc7e8e8c4438f.c",
+      "originalSha256": "d72fd20c3858e3f8d739dc8fea49eafa1193e679d9dbb727689dc7304c3c60f7",
+      "probeSha256": "d72fd20c3858e3f8d739dc8fea49eafa1193e679d9dbb727689dc7304c3c60f7",
+      "insertions": []
+    }
+  ],
+  "definitionCounts": {
+    "lb_probe_constructor_checkedWord": 1,
+    "lb_probe_constructor_checkedEven": 1,
+    "lb_probe_constructor_checkedSmall": 1,
+    "lb_probe_constructor_checkedPayload": 1,
+    "lb_probe_constructor_checkedBounded": 1,
+    "lb_probe_constructor_checkedByte": 1,
+    "lb_probe_constructor_normalizedEven": 1,
+    "lb_probe_source_shout": 1,
+    "lb_probe_source_half": 1,
+    "lb_probe_source_scale": 1,
+    "lb_probe_source_head": 1,
+    "lb_probe_source_pad": 1,
+    "lb_probe_source_join": 1,
+    "lb_probe_source_clamp": 1,
+    "lb_probe_source_mix": 1,
+    "lb_probe_source_byte": 1,
+    "l_Subtypes_echo___redArg": 1,
+    "lb_probe_source_unrestricted": 1,
+    "subtypes_byte": 1,
+    "subtypes_clamp": 1,
+    "subtypes_first_even": 1,
+    "subtypes_half": 1,
+    "subtypes_head": 1,
+    "subtypes_join": 1,
+    "subtypes_mix": 1,
+    "subtypes_pad": 1,
+    "subtypes_scale": 1,
+    "subtypes_second_even": 1,
+    "subtypes_shout": 1,
+    "subtypes_unrestricted": 1,
+    "subtypes_zero_even": 1,
+    "lb_6815c3e5d952f60b3136d82d": 1,
+    "lb_6815c3e5d952f60b3136d82d_refinement_0": 1,
+    "lb_c91ef75f139613c4dde809e0": 1,
+    "lb_c91ef75f139613c4dde809e0_refinement_0": 1,
+    "lb_9bb269bf43e5265e28a853e1": 1,
+    "lb_9bb269bf43e5265e28a853e1_refinement_0": 1,
+    "lb_91473598b255f6e5c1372d98": 1,
+    "lb_91473598b255f6e5c1372d98_refinement_0": 1,
+    "lb_1886f5b34ac04df8628c9301": 1,
+    "lb_1886f5b34ac04df8628c9301_refinement_0": 1,
+    "lb_9205887c464685a24bd748da": 1,
+    "lb_9205887c464685a24bd748da_refinement_0": 1,
+    "lb_9205887c464685a24bd748da_refinement_1": 1,
+    "lb_208c4c169dd06ab4d3767757": 1,
+    "lb_208c4c169dd06ab4d3767757_refinement_0": 1,
+    "lb_726954a7fecd6b63c462c2e2": 1,
+    "lb_fa19a195ff9ce74a4b7afc1d": 1,
+    "lb_fa19a195ff9ce74a4b7afc1d_refinement_1": 1,
+    "lb_a5a1d2658399cacb73553f8b": 1,
+    "lb_a5a1d2658399cacb73553f8b_refinement_0": 1,
+    "lb_80fdcaaaf560c424e720029c": 1,
+    "lb_80fdcaaaf560c424e720029c_refinement_0": 1,
+    "lb_1fd7234bf1e157d167e32146": 1,
+    "lb_c467ef12fd0e27374fac8f55": 1
+  }
+}

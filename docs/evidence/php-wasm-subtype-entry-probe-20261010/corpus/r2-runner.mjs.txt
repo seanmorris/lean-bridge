@@ -1,0 +1,75 @@
+import assert from 'node:assert/strict';
+import { readFile, writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { PhpNode } from '/app/build/php-wasm-host/node_modules/php-wasm/PhpNode.mjs';
+import { sha256 } from '/app/build/worktrees/fin-container-edge-file-closure-vo1454/src/capsule/node.mjs';
+import { phpWasmSubtypeFixture } from '/app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/php-wasm-subtype-fixture.mjs';
+import { phpWasmFinCaller } from '/app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/php-wasm-fin-fixtures.mjs';
+import { parseSubtypeEntryTrace } from '/app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/php-wasm-subtype-entry-trace.mjs';
+const root = '/app/build/vo1443-subtype-entry-prototype-r4-6ac0d2b', mode = process.argv[2];
+assert.ok(['weak', 'strict'].includes(mode));
+const selected = JSON.parse(await readFile(join(root, 'selected.json'), 'utf8'));
+const cleanup = [], fixture = await phpWasmSubtypeFixture({ after: fn => cleanup.push(fn) });
+const caller = await phpWasmFinCaller(fixture), source = caller.source(mode);
+await writeFile(join(root, 'corpus-r2-' + mode + '.php'), source, { flag: 'wx' });
+for (const fn of cleanup) await fn();
+const { default: api } = await import(pathToFileURL(join(root, 'packages/component/package/index.mjs')));
+const php = new PhpNode({ version: '8.4', autoTransaction: false, ini: 'memory_limit=512M', sharedLibs: [api] });
+let stdout = '', stderr = '';
+php.addEventListener('output', event => { stdout += event.detail.join(''); });
+php.addEventListener('error', event => { stderr += event.detail.join(''); });
+const report = { scope: 'One-root ordinary instrumented probe. Complete original public consumer plus its eight existing supplements. No installed, browser, reviewed or unmodified release measurement claim.', mode, startedAt: new Date().toISOString(), runnerSha256: sha256(await readFile(new URL(import.meta.url))), callerSha256: sha256(source), parserSha256: sha256(await readFile('/app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/php-wasm-subtype-entry-trace.mjs')) };
+const save = async () => {
+  await writeFile(join(root, 'corpus-r2-' + mode + '.stderr'), stderr);
+  await writeFile(join(root, 'corpus-r2-' + mode + '.json'), JSON.stringify(report, null, 2) + '\n');
+};
+try {
+  await php.binary;
+  assert.equal(stdout, ''); assert.equal(stderr, '');
+  assert.equal(await php.run("<?php require_once '/vendor/lean-bridge-subtype-entry/probe/bootstrap.php';"), 0);
+  assert.equal(stdout, ''); assert.equal(stderr, '');
+  await php.writeFile('/' + mode + '.php', source);
+  report.status = await php.run("<?php require '/" + mode + ".php';");
+  report.stdout = stdout; report.stderrSha256 = sha256(stderr);
+  await save();
+  assert.equal(report.status, 0);
+  report.observation = JSON.parse(stdout);
+  assert.deepEqual(report.observation, { checks: 2024, word_bits: 32, php: '8.4.1' });
+  const calls = parseSubtypeEntryTrace(stderr, selected), expected = [];
+  const row = (name, parameters = [], source = name, accepted = true, validated = parameters.length) => {
+    const entries = [];
+    const entry = (kind, label) => entries.push({ kind, label: 'Subtypes.' + label });
+    for (const [index, constructor] of parameters.slice(0, validated)) { entry('validator', name + ':' + index); entry('constructor', constructor); }
+    if (accepted) {
+      entry('adapter', name);
+      for (const [, constructor] of parameters) entry('constructor', constructor);
+      if (source !== null) entry('source', source);
+    }
+    expected.push({ publicName: name, entries, counts: Object.fromEntries(['validator', 'constructor', 'adapter', 'source'].map(kind => [kind, entries.filter(item => item.kind === kind).length])) });
+  };
+  const word = [[0, 'checkedWord']], even = [[0, 'checkedEven']], small = [[1, 'checkedSmall']], payload = [[0, 'checkedPayload']], words = [[0, 'checkedWord'], [1, 'checkedWord']], bounded = [[0, 'checkedBounded']], byte = [[0, 'checkedByte']], normalized = [[0, 'normalizedEven']];
+  row('shout', word); row('shout', word); row('shout', word, 'shout', false);
+  row('half', even); row('half', even); row('half', even, 'half', false);
+  row('scale', small); row('scale', small); row('scale', small, 'scale', false); row('scale', small, 'scale', false);
+  row('head', payload); row('head', payload, 'head', false);
+  row('pad'); row('join', words); row('join', words, 'join', false); row('join', words, 'join', false, 1);
+  row('clamp', bounded); row('clamp', bounded);
+  row('mix', even); row('mix', even, 'mix', false, 0); row('mix', even, 'mix', false, 0); row('mix', even, 'mix', false);
+  for (let i = 0; i < 1000; i++) { row('half', even, 'half', false); row('half', even); }
+  row('byte', byte); row('byte', byte, 'byte', false);
+  row('firstEven', even, 'echo'); row('firstEven', even, 'echo', false);
+  row('secondEven', normalized, 'echo'); row('secondEven', normalized, 'echo');
+  row('zeroEven', [], null); row('join', words, 'join', false);
+  assert.equal(expected.length, 2030); assert.deepEqual(calls, expected);
+  report.calls = calls.length;
+  report.counts = Object.fromEntries(['validator', 'constructor', 'adapter', 'source'].map(kind => [kind, calls.reduce((sum, item) => sum + item.counts[kind], 0)]));
+  report.distinctConstructors = [...new Set(calls.flatMap(call => call.entries.filter(entry => entry.kind === 'constructor').map(entry => entry.label)))].sort();
+  assert.equal(report.distinctConstructors.length, 7);
+  report.result = 'passed';
+} catch (error) {
+  report.result = 'failed'; report.error = { message: error.message, stack: error.stack }; process.exitCode = 1;
+} finally {
+  report.endedAt = new Date().toISOString(); await save();
+}
+console.log(JSON.stringify(report));

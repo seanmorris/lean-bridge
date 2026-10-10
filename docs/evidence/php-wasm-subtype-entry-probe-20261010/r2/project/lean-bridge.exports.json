@@ -1,0 +1,263 @@
+{
+  "contracts": {
+    "Subtypes.byte": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "Subtypes.checkedByte"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "refinement": {
+          "constructor": "Subtypes.checkedByte"
+        }
+      }
+    },
+    "Subtypes.clamp": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "Subtypes.checkedBounded"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "refinement": "reject"
+      }
+    },
+    "Subtypes.firstEven": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "Subtypes.checkedEven"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "refinement": {
+          "constructor": "Subtypes.checkedEven"
+        }
+      }
+    },
+    "Subtypes.half": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "Subtypes.checkedEven"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "refinement": "reject"
+      }
+    },
+    "Subtypes.head": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "Subtypes.checkedPayload"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "refinement": "reject"
+      }
+    },
+    "Subtypes.join": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "Subtypes.checkedWord"
+          }
+        },
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "Subtypes.checkedWord"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "refinement": {
+          "constructor": "Subtypes.checkedWord"
+        }
+      }
+    },
+    "Subtypes.mix": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "Subtypes.checkedEven"
+          }
+        },
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "refinement": "reject"
+      }
+    },
+    "Subtypes.pad": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": "reject"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "refinement": {
+          "constructor": "Subtypes.checkedEven"
+        }
+      }
+    },
+    "Subtypes.scale": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": "reject"
+        },
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "Subtypes.checkedSmall"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "refinement": "reject"
+      }
+    },
+    "Subtypes.secondEven": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "Subtypes.normalizedEven"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "refinement": {
+          "constructor": "Subtypes.checkedEven"
+        }
+      }
+    },
+    "Subtypes.shout": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "Subtypes.checkedWord"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "refinement": {
+          "constructor": "Subtypes.checkedWord"
+        }
+      }
+    },
+    "Subtypes.zeroEven": {
+      "parameters": [],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "refinement": {
+          "constructor": "Subtypes.checkedEven"
+        }
+      }
+    }
+  },
+  "exports": [
+    "Subtypes.shout",
+    "Subtypes.half",
+    "Subtypes.scale",
+    "Subtypes.head",
+    "Subtypes.pad",
+    "Subtypes.join",
+    "Subtypes.clamp",
+    "Subtypes.mix",
+    "Subtypes.byte",
+    "Subtypes.firstEven",
+    "Subtypes.secondEven",
+    "Subtypes.zeroEven",
+    "Subtypes.unrestricted"
+  ],
+  "modules": [
+    "Subtypes"
+  ],
+  "schemaVersion": 1,
+  "specializations": [
+    {
+      "declaration": "Subtypes.echo",
+      "name": "Subtypes.firstEven",
+      "types": [
+        "Subtypes.Even"
+      ]
+    },
+    {
+      "declaration": "Subtypes.echo",
+      "name": "Subtypes.secondEven",
+      "types": [
+        "Subtypes.Even"
+      ]
+    }
+  ],
+  "targets": {
+    "php-wasm": {
+      "composer": {
+        "name": "lean-bridge-subtype-entry/probe",
+        "version": "1.0.0"
+      },
+      "npm": {
+        "name": "lean-bridge-subtype-entry-probe",
+        "version": "1.0.0"
+      }
+    }
+  }
+}

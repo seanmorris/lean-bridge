@@ -1,0 +1,277 @@
+[
+  {
+    "symbol": "lb_probe_constructor_checkedWord",
+    "kind": "constructor",
+    "label": "Subtypes.checkedWord"
+  },
+  {
+    "symbol": "lb_probe_constructor_checkedEven",
+    "kind": "constructor",
+    "label": "Subtypes.checkedEven"
+  },
+  {
+    "symbol": "lb_probe_constructor_checkedSmall",
+    "kind": "constructor",
+    "label": "Subtypes.checkedSmall"
+  },
+  {
+    "symbol": "lb_probe_constructor_checkedPayload",
+    "kind": "constructor",
+    "label": "Subtypes.checkedPayload"
+  },
+  {
+    "symbol": "lb_probe_constructor_checkedBounded",
+    "kind": "constructor",
+    "label": "Subtypes.checkedBounded"
+  },
+  {
+    "symbol": "lb_probe_constructor_checkedByte",
+    "kind": "constructor",
+    "label": "Subtypes.checkedByte"
+  },
+  {
+    "symbol": "lb_probe_constructor_normalizedEven",
+    "kind": "constructor",
+    "label": "Subtypes.normalizedEven"
+  },
+  {
+    "symbol": "lb_probe_source_shout",
+    "kind": "source",
+    "label": "Subtypes.shout"
+  },
+  {
+    "symbol": "lb_probe_source_half",
+    "kind": "source",
+    "label": "Subtypes.half"
+  },
+  {
+    "symbol": "lb_probe_source_scale",
+    "kind": "source",
+    "label": "Subtypes.scale"
+  },
+  {
+    "symbol": "lb_probe_source_head",
+    "kind": "source",
+    "label": "Subtypes.head"
+  },
+  {
+    "symbol": "lb_probe_source_pad",
+    "kind": "source",
+    "label": "Subtypes.pad"
+  },
+  {
+    "symbol": "lb_probe_source_join",
+    "kind": "source",
+    "label": "Subtypes.join"
+  },
+  {
+    "symbol": "lb_probe_source_clamp",
+    "kind": "source",
+    "label": "Subtypes.clamp"
+  },
+  {
+    "symbol": "lb_probe_source_mix",
+    "kind": "source",
+    "label": "Subtypes.mix"
+  },
+  {
+    "symbol": "lb_probe_source_byte",
+    "kind": "source",
+    "label": "Subtypes.byte"
+  },
+  {
+    "symbol": "lb_probe_source_echo",
+    "kind": "source",
+    "label": "Subtypes.echo"
+  },
+  {
+    "symbol": "lb_probe_source_unrestricted",
+    "kind": "source",
+    "label": "Subtypes.unrestricted"
+  },
+  {
+    "symbol": "subtypes_byte",
+    "kind": "public",
+    "label": "byte"
+  },
+  {
+    "symbol": "subtypes_clamp",
+    "kind": "public",
+    "label": "clamp"
+  },
+  {
+    "symbol": "subtypes_first_even",
+    "kind": "public",
+    "label": "firstEven"
+  },
+  {
+    "symbol": "subtypes_half",
+    "kind": "public",
+    "label": "half"
+  },
+  {
+    "symbol": "subtypes_head",
+    "kind": "public",
+    "label": "head"
+  },
+  {
+    "symbol": "subtypes_join",
+    "kind": "public",
+    "label": "join"
+  },
+  {
+    "symbol": "subtypes_mix",
+    "kind": "public",
+    "label": "mix"
+  },
+  {
+    "symbol": "subtypes_pad",
+    "kind": "public",
+    "label": "pad"
+  },
+  {
+    "symbol": "subtypes_scale",
+    "kind": "public",
+    "label": "scale"
+  },
+  {
+    "symbol": "subtypes_second_even",
+    "kind": "public",
+    "label": "secondEven"
+  },
+  {
+    "symbol": "subtypes_shout",
+    "kind": "public",
+    "label": "shout"
+  },
+  {
+    "symbol": "subtypes_unrestricted",
+    "kind": "public",
+    "label": "unrestricted"
+  },
+  {
+    "symbol": "subtypes_zero_even",
+    "kind": "public",
+    "label": "zeroEven"
+  },
+  {
+    "symbol": "lb_6815c3e5d952f60b3136d82d",
+    "kind": "adapter",
+    "label": "Subtypes.byte"
+  },
+  {
+    "symbol": "lb_6815c3e5d952f60b3136d82d_refinement_0",
+    "kind": "validator",
+    "label": "Subtypes.byte:0"
+  },
+  {
+    "symbol": "lb_c91ef75f139613c4dde809e0",
+    "kind": "adapter",
+    "label": "Subtypes.clamp"
+  },
+  {
+    "symbol": "lb_c91ef75f139613c4dde809e0_refinement_0",
+    "kind": "validator",
+    "label": "Subtypes.clamp:0"
+  },
+  {
+    "symbol": "lb_9bb269bf43e5265e28a853e1",
+    "kind": "adapter",
+    "label": "Subtypes.firstEven"
+  },
+  {
+    "symbol": "lb_9bb269bf43e5265e28a853e1_refinement_0",
+    "kind": "validator",
+    "label": "Subtypes.firstEven:0"
+  },
+  {
+    "symbol": "lb_91473598b255f6e5c1372d98",
+    "kind": "adapter",
+    "label": "Subtypes.half"
+  },
+  {
+    "symbol": "lb_91473598b255f6e5c1372d98_refinement_0",
+    "kind": "validator",
+    "label": "Subtypes.half:0"
+  },
+  {
+    "symbol": "lb_1886f5b34ac04df8628c9301",
+    "kind": "adapter",
+    "label": "Subtypes.head"
+  },
+  {
+    "symbol": "lb_1886f5b34ac04df8628c9301_refinement_0",
+    "kind": "validator",
+    "label": "Subtypes.head:0"
+  },
+  {
+    "symbol": "lb_9205887c464685a24bd748da",
+    "kind": "adapter",
+    "label": "Subtypes.join"
+  },
+  {
+    "symbol": "lb_9205887c464685a24bd748da_refinement_0",
+    "kind": "validator",
+    "label": "Subtypes.join:0"
+  },
+  {
+    "symbol": "lb_9205887c464685a24bd748da_refinement_1",
+    "kind": "validator",
+    "label": "Subtypes.join:1"
+  },
+  {
+    "symbol": "lb_208c4c169dd06ab4d3767757",
+    "kind": "adapter",
+    "label": "Subtypes.mix"
+  },
+  {
+    "symbol": "lb_208c4c169dd06ab4d3767757_refinement_0",
+    "kind": "validator",
+    "label": "Subtypes.mix:0"
+  },
+  {
+    "symbol": "lb_726954a7fecd6b63c462c2e2",
+    "kind": "adapter",
+    "label": "Subtypes.pad"
+  },
+  {
+    "symbol": "lb_fa19a195ff9ce74a4b7afc1d",
+    "kind": "adapter",
+    "label": "Subtypes.scale"
+  },
+  {
+    "symbol": "lb_fa19a195ff9ce74a4b7afc1d_refinement_1",
+    "kind": "validator",
+    "label": "Subtypes.scale:1"
+  },
+  {
+    "symbol": "lb_a5a1d2658399cacb73553f8b",
+    "kind": "adapter",
+    "label": "Subtypes.secondEven"
+  },
+  {
+    "symbol": "lb_a5a1d2658399cacb73553f8b_refinement_0",
+    "kind": "validator",
+    "label": "Subtypes.secondEven:0"
+  },
+  {
+    "symbol": "lb_80fdcaaaf560c424e720029c",
+    "kind": "adapter",
+    "label": "Subtypes.shout"
+  },
+  {
+    "symbol": "lb_80fdcaaaf560c424e720029c_refinement_0",
+    "kind": "validator",
+    "label": "Subtypes.shout:0"
+  },
+  {
+    "symbol": "lb_1fd7234bf1e157d167e32146",
+    "kind": "adapter",
+    "label": "Subtypes.unrestricted"
+  },
+  {
+    "symbol": "lb_c467ef12fd0e27374fac8f55",
+    "kind": "adapter",
+    "label": "Subtypes.zeroEven"
+  }
+]

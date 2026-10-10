@@ -1,0 +1,90 @@
+{
+  "scope": "Explicit C-body instrumented one-root probe. No two-root, browser, reviewed or unmodified-package measurement claim.",
+  "driverSha256": "567725ac61b74e092be44be8a01d3bf442b0e6b1fb3f3e951f126092c3d4959b",
+  "results": [
+    {
+      "label": "autoload",
+      "status": 0,
+      "stdout": [
+        [
+          "true"
+        ]
+      ],
+      "stderr": [],
+      "sourceSha256": "378c35c7530ee5f06f526f216ccc0673d65ba343a6f025e9786897c671032347",
+      "source": "<?php require_once '/vendor/lean-bridge-subtype-entry/probe/bootstrap.php'; echo 'true';"
+    },
+    {
+      "label": "valid-even",
+      "status": 0,
+      "stdout": [
+        [
+          "\"21\""
+        ]
+      ],
+      "stderr": [
+        [
+          "LB_SUBTYPE_ENTRY_V1 begin public half\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter validator Subtypes.half:0\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter constructor Subtypes.checkedEven\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter adapter Subtypes.half\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter constructor Subtypes.checkedEven\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 enter source Subtypes.half\n"
+        ],
+        [
+          "LB_SUBTYPE_ENTRY_V1 end public half\n"
+        ]
+      ],
+      "sourceSha256": "f545e7d9aaafc031c30221438135c3d1b1af4ad7d0451f64423104a0de4d2114",
+      "source": "<?php try { $value = (string) \\LeanSubtypes\\half(\\Brick\\Math\\BigInteger::of(\"42\")); } catch (\\LeanSubtypes\\LeanBridgeError $error) { $value = $error->getCode() . \":\" . $error->getMessage(); } echo json_encode($value, JSON_THROW_ON_ERROR);"
+    }
+  ],
+  "startup": {
+    "stdout": [],
+    "stderr": []
+  },
+  "status": "failed",
+  "error": {
+    "message": "Missing public begin marker: valid-even",
+    "stack": "AssertionError [ERR_ASSERTION]: Missing public begin marker: valid-even\n    at execute (file:///app/build/run-vo1443-subtype-entry-smoke-r2.mjs:32:12)\n    at async file:///app/build/run-vo1443-subtype-entry-smoke-r2.mjs:66:5",
+    "stdout": [
+      [
+        "\"21\""
+      ]
+    ],
+    "stderr": [
+      [
+        "LB_SUBTYPE_ENTRY_V1 begin public half\n"
+      ],
+      [
+        "LB_SUBTYPE_ENTRY_V1 enter validator Subtypes.half:0\n"
+      ],
+      [
+        "LB_SUBTYPE_ENTRY_V1 enter constructor Subtypes.checkedEven\n"
+      ],
+      [
+        "LB_SUBTYPE_ENTRY_V1 enter adapter Subtypes.half\n"
+      ],
+      [
+        "LB_SUBTYPE_ENTRY_V1 enter constructor Subtypes.checkedEven\n"
+      ],
+      [
+        "LB_SUBTYPE_ENTRY_V1 enter source Subtypes.half\n"
+      ],
+      [
+        "LB_SUBTYPE_ENTRY_V1 end public half\n"
+      ]
+    ]
+  },
+  "endedAt": "2026-10-10T16:09:36.964Z"
+}

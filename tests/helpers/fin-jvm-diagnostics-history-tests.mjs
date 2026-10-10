@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforePhpWasmSubtypeEntrySource } from "./php-wasm-subtype-entry-history.mjs";
 import { beforeFinJvmDiagnosticsSource, finJvmDiagnosticsChangedPaths, finJvmDiagnosticsHistoryPath, finJvmDiagnosticsPredecessor, reverseFinJvmDiagnosticsUpdate } from "./fin-jvm-diagnostics-history.mjs";
 
 test("Native Fin JVM exit diagnostics integration authenticates every transition and refuses unrecorded edits", async () => {
@@ -21,7 +22,7 @@ test("Native Fin JVM exit diagnostics integration authenticates every transition
 	assert.deepEqual(history.updates.map(update => update.path), finJvmDiagnosticsChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = await readFile(update.path, "utf8"), previous = reverseFinJvmDiagnosticsUpdate(current, update);
+		const current = beforePhpWasmSubtypeEntrySource(update.path, await readFile(update.path, "utf8")), previous = reverseFinJvmDiagnosticsUpdate(current, update);
 		assert.equal(beforeFinJvmDiagnosticsSource(update.path, current), previous);
 		assert.equal(beforeFinJvmDiagnosticsSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeFinJvmDiagnosticsSource(update.path, previous), previous);
@@ -68,7 +69,7 @@ test("Native Fin JVM exit diagnostics integration preserves the earlier source l
 
 test("Native Fin JVM exit diagnostics changes source pins without changing any support claim", async () => {
 	const history = JSON.parse(await readFile(finJvmDiagnosticsHistoryPath, "utf8"));
-	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", text = beforePhpWasmSubtypeEntrySource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(text), previous = JSON.parse(beforeFinJvmDiagnosticsSource(path, text));
 	const expected = structuredClone(previous); let refreshed = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
@@ -84,7 +85,7 @@ test("Native Fin JVM exit diagnostics changes source pins without changing any s
 	const digests = new Map();
 	for(const file of current.evidence.flatMap(entry => entry.files))
 	{
-		if(!digests.has(file.path)) digests.set(file.path, sha256(await readFile(file.path)));
+		if(!digests.has(file.path)) digests.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));
 		assert.equal(digests.get(file.path), file.sha256, file.path);
 	}
 });
