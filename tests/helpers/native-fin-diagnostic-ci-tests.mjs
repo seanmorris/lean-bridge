@@ -15,6 +15,8 @@ import { finRecordOmissionChangedPaths } from "./fin-record-review-omission-hist
 import { finHostedPromotionChangedPaths } from "./fin-native-hosted-promotion-history.mjs";
 import { finZeroCiChangedPaths } from "./fin-record-zero-ci-history.mjs";
 import { finNominalRefusalChangedPaths } from "./fin-nominal-refusal-history.mjs";
+import { finAliasClosureChangedPaths } from "./fin-alias-closure-history.mjs";
+import { phpWasmDirectFinChangedPaths } from "./php-wasm-fin-direct-history.mjs";
 import { beforeFinDiagnosticCiSource, finDiagnosticCiChangedPaths, finDiagnosticCiHistoryPath, finDiagnosticCiPredecessor, reverseFinDiagnosticCiUpdate } from "./native-fin-diagnostic-ci-history.mjs";
 
 test("diagnostic CI history authenticates exact repairs and refuses unknown source changes", async () => {
@@ -59,7 +61,7 @@ test("diagnostic CI repair changes source pins only and preserves earlier ledger
 	for(const file of current.evidence.flatMap(entry => entry.files))
 	{
 		const bytes = await readFile(file.path);
-		const source = [...finNominalRefusalChangedPaths, ...finZeroCiChangedPaths, ...finHostedPromotionChangedPaths, ...finRecordOmissionChangedPaths, ...finForeignChangedPaths, ...finEdgeCiChangedPaths, ...finEdgeIntegrationChangedPaths].includes(file.path)
+		const source = [...phpWasmDirectFinChangedPaths, ...finAliasClosureChangedPaths, ...finNominalRefusalChangedPaths, ...finZeroCiChangedPaths, ...finHostedPromotionChangedPaths, ...finRecordOmissionChangedPaths, ...finForeignChangedPaths, ...finEdgeCiChangedPaths, ...finEdgeIntegrationChangedPaths].includes(file.path)
 			? beforeFinEdgeIntegrationSource(file.path, bytes.toString("utf8")) : bytes;
 		assert.equal(sha256(source), file.sha256, file.path);
 	}

@@ -30,6 +30,13 @@ export const phpWasmDirectScalar = Object.freeze({
 	, refinements: phpWasmScalarFinRefinements
 });
 
+export const phpWasmDirectContainerSpec = Object.freeze({
+	module: "FinContainers", namespace: "LeanFincontainers"
+	, operation: "mirror_all"
+	, settings: settings("fincontainers"), review: finContainerEdgeReviewedIr
+	, refinements: finContainerEdgeRefinements
+});
+
 /**
  * Materialize the complete original-plus-edge container fixture and unchanged public PHP caller.
  * The shared installed harness copies this source into two independent author roots.
@@ -43,8 +50,5 @@ export const phpWasmDirectContainers = async t => {
 	await cp("tests/fixtures/onboarding/native-fin-containers", root, { recursive: true });
 	await saveLakeFile(root, "FinContainers.lean", await finContainerEdgeSource());
 	await saveLakeFile(directory, "consumer.php", await finContainerEdgeConsumer("php-native"));
-	return { root, consumer, module: "FinContainers"
-		, namespace: "LeanFincontainers", operation: "mirror_all"
-		, settings: settings("fincontainers"), review: finContainerEdgeReviewedIr
-		, refinements: finContainerEdgeRefinements };
+	return { root, consumer, ...phpWasmDirectContainerSpec };
 };

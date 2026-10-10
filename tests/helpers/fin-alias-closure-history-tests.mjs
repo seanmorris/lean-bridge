@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforePhpWasmDirectFinSource, phpWasmDirectFinChangedPaths } from "./php-wasm-fin-direct-history.mjs";
 import { beforeFinAliasClosureSource, finAliasClosureChangedPaths, finAliasClosureHistoryPath, finAliasClosurePredecessor, reverseFinAliasClosureUpdate } from "./fin-alias-closure-history.mjs";
 
 test("Fin alias closure integration authenticates every transition and refuses unrecorded edits", async () => {
@@ -21,7 +22,7 @@ test("Fin alias closure integration authenticates every transition and refuses u
 	assert.deepEqual(history.updates.map(update => update.path), finAliasClosureChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = await readFile(update.path, "utf8"), previous = reverseFinAliasClosureUpdate(current, update);
+		const current = beforePhpWasmDirectFinSource(update.path, await readFile(update.path, "utf8")), previous = reverseFinAliasClosureUpdate(current, update);
 		assert.equal(beforeFinAliasClosureSource(update.path, current), previous);
 		assert.equal(beforeFinAliasClosureSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeFinAliasClosureSource(update.path, previous), previous);
@@ -72,7 +73,7 @@ test("Fin alias closure integration history writer refuses an unrelated HEAD bef
 });
 
 test("Fin alias closure integration changes current source pins only and adds no installed support claims", async () => {
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", source = beforePhpWasmDirectFinSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(source), previous = JSON.parse(beforeFinAliasClosureSource(path, source));
 	const expected = structuredClone(previous), history = JSON.parse(await readFile(finAliasClosureHistoryPath, "utf8"));
 	let refreshed = 0;
@@ -87,7 +88,11 @@ test("Fin alias closure integration changes current source pins only and adds no
 	const digests = new Map();
 	for(const file of current.evidence.flatMap(entry => entry.files))
 	{
-		if(!digests.has(file.path)) digests.set(file.path, sha256(await readFile(file.path)));
+		if(!digests.has(file.path))
+		{
+			const bytes = await readFile(file.path), source = phpWasmDirectFinChangedPaths.includes(file.path) ? bytes.toString("utf8") : bytes;
+			digests.set(file.path, sha256(beforePhpWasmDirectFinSource(file.path, source)));
+		}
 		assert.equal(file.sha256, digests.get(file.path), file.path);
 	}
 });

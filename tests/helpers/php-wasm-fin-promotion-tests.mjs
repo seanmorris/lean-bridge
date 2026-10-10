@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
 import { beforePhpWasmFinPromotionSource } from "./php-wasm-fin-promotion-source-history.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { phpWasmFinPromotionConversion, phpWasmFinPromotionEnvironment, phpWasmFinPromotionLimit, phpWasmFinPromotionNestedOnly, phpWasmFinPromotionNotes, phpWasmFinPromotionReceipts, phpWasmFinPromotionReferences, phpWasmFinPromotionScope, phpWasmFinPromotionValidators } from "./php-wasm-fin-promotion-references.mjs";
 
 import { beforeNativeFinReplyPromotionSource } from "./native-fin-reply-promotion-source-history.mjs";
@@ -93,7 +94,7 @@ test("PHP-Wasm Fin promotion authenticates four original selections and every pi
 		assert.equal(entry.command, reference.command);
 		assert.equal(entry.scope, phpWasmFinPromotionScope(reference));
 		assert.deepEqual(entry.files.map(file => file.path), [...phpWasmFinPromotionValidators, ...reference.files.map(file => file.path)]);
-		for(const file of entry.files) assert.equal(sha256(await readFile(file.path)), file.sha256, file.path);
+		for(const file of entry.files) assert.equal(sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)), file.sha256, file.path);
 		for(const file of reference.files) assert.ok(entry.files.some(pin => pin.path === file.path && pin.sha256 === file.sha256));
 		assert.deepEqual(entry.artifacts, reference.artifacts.map(file => ({ ...file, path: `${reference.id}/${file.path}` })));
 		assert.equal(entry.artifacts.length, 3);

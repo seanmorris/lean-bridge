@@ -23,9 +23,24 @@ const subset = (files, prefix) => Object.fromEntries(Object.entries(files).filte
  * @param reviewed - Whether an independently authored review selected this build.
  */
 export const assertPhpWasmFinObservation = (report, fixture, caller, requests, checks, reviewed = false) => {
-	assert.equal(typeof reviewed, "boolean");
 	assert.equal(phpWasmFinFixtures[report.fixture], fixture);
 	assert.equal(report.label, `${reviewed ? "reviewed-" : ""}fin-${report.fixture}`);
+	assertPhpWasmRefinementObservation(report, fixture, caller, requests, checks, reviewed);
+};
+
+/**
+ * Validate one independently specified Fin fixture using the shared installed-package contract.
+ * The caller separately validates the fixture name and run label.
+ *
+ * @param report - One installed fixture report.
+ * @param fixture - Independent fixture and contract.
+ * @param caller - Authenticated native PHP consumer source.
+ * @param requests - Request generator for each installed arrangement.
+ * @param checks - Exact public assertion count.
+ * @param reviewed - Whether an independent review selected the build.
+ */
+export const assertPhpWasmRefinementObservation = (report, fixture, caller, requests, checks, reviewed) => {
+	assert.equal(typeof reviewed, "boolean");
 	assert.deepEqual(report.refinements, fixture.refinements);
 	assert.equal(report.profile, "php-wasm"); assert.equal(report.path, reviewed ? "reviewed-source" : "ordinary-source");
 	assert.equal(report.dispatch, "not measured");

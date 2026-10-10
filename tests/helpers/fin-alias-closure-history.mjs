@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforePhpWasmDirectFinSource } from "./php-wasm-fin-direct-history.mjs";
 
 export const finAliasClosureHistoryPath = "docs/evidence/fin-alias-closure-source-history-20261010.json";
 export const finAliasClosurePredecessor = "b8765be7c642fd7ba3349c8cc90a3857a7118b26";
@@ -53,6 +54,7 @@ export const reverseFinAliasClosureUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeFinAliasClosureSource = (path, source, expected) => {
+	source = beforePhpWasmDirectFinSource(path, source, expected);
 	if(typeof source !== "string" || !finAliasClosureChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

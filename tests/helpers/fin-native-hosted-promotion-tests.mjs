@@ -14,6 +14,7 @@ import { beforeFinHostedPromotionSource, finHostedPromotionHistoryPath } from ".
 import { finZeroCiHistoryPath } from "./fin-record-zero-ci-history.mjs";
 import { finNominalRefusalHistoryPath } from "./fin-nominal-refusal-history.mjs";
 import { finAliasClosureHistoryPath } from "./fin-alias-closure-history.mjs";
+import { phpWasmDirectFinHistoryPath } from "./php-wasm-fin-direct-history.mjs";
 import "./fin-native-hosted-promotion-history-tests.mjs";
 
 const references = finHostedPromotionReferences();
@@ -74,7 +75,7 @@ test("hosted Fin promotion adds 78 evidence entries without rewriting an earlier
 		const update = history.updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);
 		if(update) file.sha256 = update.currentSha256;
 	}
-	for(const path of [finZeroCiHistoryPath, finNominalRefusalHistoryPath, finAliasClosureHistoryPath])
+	for(const path of [finZeroCiHistoryPath, finNominalRefusalHistoryPath, finAliasClosureHistoryPath, phpWasmDirectFinHistoryPath])
 	{
 		const stage = JSON.parse(await readFile(path, "utf8"));
 		for(const entry of expected.evidence) for(const file of entry.files)

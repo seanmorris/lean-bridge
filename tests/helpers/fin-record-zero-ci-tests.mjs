@@ -9,13 +9,14 @@ import test from "node:test";
 import { finRecordZeroTargets } from "./fin-record-zero-fixture.mjs";
 import { assertFinRecordZeroWorkflow, disableFinRecordZeroWorkflow, enableFinRecordZeroWorkflow, finRecordZeroCiBlock, finRecordZeroCiCheck, finRecordZeroCiInvocation, finRecordZeroCiSelections } from "./fin-record-zero-ci.mjs";
 import { beforeFinZeroCiSource } from "./fin-record-zero-ci-history.mjs";
+import { beforePhpWasmDirectFinSource } from "./php-wasm-fin-direct-history.mjs";
 
 test("Fin 0 CI covers all native consumers, both Python selections and the four Perl configurations", async () => {
 	assert.deepEqual([...new Set(finRecordZeroCiSelections.flatMap(item => item.profiles.split(",")))].sort(), Object.keys(finRecordZeroTargets).sort());
 	assert.deepEqual(finRecordZeroCiSelections.filter(item => item.python).map(item => item.python), ["3.11", "3.12"]);
 	for(const name of ["consumer-matrix.yml", "perl-consumer.yml"])
 	{
-		const path = ".github/workflows/" + name, workflow = await readFile(path, "utf8");
+		const path = ".github/workflows/" + name, workflow = beforePhpWasmDirectFinSource(path, await readFile(path, "utf8"));
 		assertFinRecordZeroWorkflow(workflow, name);
 		const previous = beforeFinZeroCiSource(path, workflow);
 		assert.notEqual(previous, workflow);

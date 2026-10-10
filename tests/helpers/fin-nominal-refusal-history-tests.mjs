@@ -12,6 +12,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeFinAliasClosureSource, finAliasClosureChangedPaths } from "./fin-alias-closure-history.mjs";
+import { phpWasmDirectFinChangedPaths } from "./php-wasm-fin-direct-history.mjs";
 import { beforeFinNominalRefusalSource, finNominalRefusalChangedPaths, finNominalRefusalHistoryPath, finNominalRefusalPredecessor, reverseFinNominalRefusalUpdate } from "./fin-nominal-refusal-history.mjs";
 
 test("Fin nominal refusal integration authenticates every transition and refuses unrecorded edits", async () => {
@@ -90,7 +91,8 @@ test("Fin nominal refusal integration changes current source pins only and adds 
 		if(!digests.has(file.path))
 		{
 			const bytes = await readFile(file.path);
-			digests.set(file.path, sha256(beforeFinAliasClosureSource(file.path, finAliasClosureChangedPaths.includes(file.path) ? bytes.toString("utf8") : bytes)));
+			const text = [...finAliasClosureChangedPaths, ...phpWasmDirectFinChangedPaths].includes(file.path);
+			digests.set(file.path, sha256(beforeFinAliasClosureSource(file.path, text ? bytes.toString("utf8") : bytes)));
 		}
 		assert.equal(file.sha256, digests.get(file.path), file.path);
 	}

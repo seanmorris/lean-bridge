@@ -19,6 +19,7 @@ import { docPages } from "../site/registry.mjs";
 import { finContainerEntryCiInvocation, finContainerEntryCiSelections } from "./helpers/fin-container-entry-ci.mjs";
 import { assertFinContainerEdgeWorkflow, disableFinContainerEdgeWorkflow } from "./helpers/fin-container-edge-ci.mjs";
 import { assertFinRecordZeroWorkflow, disableFinRecordZeroWorkflow } from "./helpers/fin-record-zero-ci.mjs";
+import { assertPhpWasmDirectFinWorkflow, disablePhpWasmDirectFinWorkflow } from "./helpers/php-wasm-fin-direct-ci.mjs";
 import { assertManagedCiIsolation } from "./helpers/managed-ci-isolation.mjs";
 import { assertNativeCiIsolation } from "./helpers/native-ci-isolation.mjs";
 import {
@@ -621,7 +622,8 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   // Validate all measured edge gates before checking the unchanged earlier command/upload order.
   assertFinContainerEdgeWorkflow(currentWorkflow);
   assertFinRecordZeroWorkflow(currentWorkflow, "consumer-matrix.yml");
-  const workflow = disableFinContainerEdgeWorkflow(disableFinRecordZeroWorkflow(currentWorkflow, "consumer-matrix.yml"));
+  assertPhpWasmDirectFinWorkflow(currentWorkflow);
+  const workflow = disablePhpWasmDirectFinWorkflow(disableFinContainerEdgeWorkflow(disableFinRecordZeroWorkflow(currentWorkflow, "consumer-matrix.yml")));
   assertFinRecordZeroWorkflow(currentPerlWorkflow, "perl-consumer.yml");
   const perlWorkflow = disableFinRecordZeroWorkflow(currentPerlWorkflow, "perl-consumer.yml");
   assert.match(workflow, /^\s*push:\s*$/m);
