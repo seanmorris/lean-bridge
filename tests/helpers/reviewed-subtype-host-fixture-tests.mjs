@@ -20,6 +20,7 @@ import { generateWitPackage } from "../../src/backends/wit/generate.mjs";
 import { reviewedSubtypeInstalledIr, reviewedSubtypeInstalledSource } from "./reviewed-subtype-installed-fixture.mjs";
 import { assertReviewedSubtypeHostDiagnostics, relabelReviewedSubtypeHost, reviewedSubtypeHostConsumer, reviewedSubtypeHostExtensions, reviewedSubtypeHostIr, reviewedSubtypeHostProfiles, reviewedSubtypeHostSource } from "./reviewed-subtype-host-fixture.mjs";
 import { reviewedSubtypeHostSupplements } from "./reviewed-subtype-host-supplements.mjs";
+import { reviewedSubtypeHostChecks } from "./reviewed-subtype-host-install.mjs";
 
 test("reviewed host fixture preserves checked types, constructor choices and all twelve exports under portable names", () => {
 	const old = reviewedSubtypeInstalledIr(), review = reviewedSubtypeHostIr();
@@ -80,6 +81,20 @@ test("all nine reviewed native callers retain every original case and add eight 
 		assert.throws(() => assertReviewedSubtypeHostDiagnostics(original, profile), /Unknown parameter/u);
 		assert.throws(() => relabelReviewedSubtypeHost(source, profile), /Expected an ordinary diagnostic label/u);
 	}
+});
+
+test("reviewed Perl acceptance counts all 17 original checks, eight additions and 1000 rejection/recovery pairs", async () => {
+	const original = await readFile("tests/fixtures/subtype-consumers/perl.pl", "utf8");
+	const source = await reviewedSubtypeHostConsumer("perl");
+	const count = text => [...text.matchAll(/^check\(/gmu)].length;
+	assert.equal(count(original), 17);
+	assert.equal(count(reviewedSubtypeHostSupplements.perl), 8);
+	assert.equal(count(source), 25);
+	assert.match(source, /for my \$i \(0 \.\. 999\) \{/u);
+	assert.match(source, /die "invalid call accepted at \$i\\n" unless rejected/u);
+	assert.match(source, /die "valid call failed at \$i\\n" unless LeanBridge::Subtypes::half/u);
+	assert.match(source, /^\$checks \+= 2000;$/mu);
+	assert.equal(reviewedSubtypeHostChecks.perl, 2000 + count(source));
 });
 
 test("reviewed host diagnostic checks reject stale names, changed calls, wrong constructors and bounds", async () => {

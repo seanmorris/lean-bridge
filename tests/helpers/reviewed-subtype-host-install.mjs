@@ -20,7 +20,7 @@ import { reviewedSubtypeHostConsumer, reviewedSubtypeHostExtensions, reviewedSub
 
 export const reviewedSubtypeHostChecks = Object.freeze({
 	python: 2025, rust: 2026, dotnet: 2024, java: 2024, kotlin: 2023
-	, ruby: 2024, "php-native": 2024, "wit-wasi": 2031, perl: 2024 });
+	, ruby: 2024, "php-native": 2024, "wit-wasi": 2031, perl: 2025 });
 
 /**
  * Install normally, verify complete package/environment inputs and repeat after moving the tree.
