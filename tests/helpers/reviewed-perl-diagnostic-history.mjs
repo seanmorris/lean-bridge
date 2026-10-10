@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeRefinementFollowupSource } from "./refinement-followup-history.mjs";
 
 export const reviewedPerlDiagnosticHistoryPath = "docs/evidence/reviewed-perl-diagnostic-source-history-20261010.json";
 export const reviewedPerlDiagnosticPredecessor = "a0f0ca4f390369a74477588dd96845a3d0f69f57";
@@ -54,6 +55,7 @@ export const reverseReviewedPerlDiagnosticUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeReviewedPerlDiagnosticSource = (path, source, expected) => {
+	source = beforeRefinementFollowupSource(path, source, expected);
 	if(typeof source !== "string" || !reviewedPerlDiagnosticChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

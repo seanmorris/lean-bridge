@@ -16,6 +16,9 @@ import { componentNpmIdentity } from "../src/release/component-package-receipt.m
 import { checkedRecordContracts } from "./helpers/checked-record-fixture.mjs";
 import { checkedRecordPromotionReferences } from "./helpers/checked-record-promotion-references.mjs";
 import { callbackFinPromotionReferences } from "./helpers/callback-fin-promotion-references.mjs";
+import { sha256 } from "../src/capsule/node.mjs";
+import { finHostedReceiptSha256 } from "./helpers/fin-native-hosted-evidence.mjs";
+import { phpWasmSubtypePromotionReferences } from "./helpers/php-wasm-subtype-promotion.mjs";
 
 const fixture = "tests/fixtures/documentation/lean-author";
 const documents = [
@@ -189,13 +192,36 @@ test("the author table names structural Fin hosts from retained family and route
 		assert.deepEqual(receipt.scope.sourcePaths, ["ordinary-source", "reviewed-ir"]);
 		assert.deepEqual(receipt.scope.families, ["product", "product-array", "record"]);
 	}
-	for(const site of ["`Fin n` inside pairs and `Except`", "`Fin n` inside `Array` of pairs and `Except`"])
-		assert.equal(rows.get(site)[1], "C/C++, Python, Ruby, Rust and .NET installed; others pending");
+	const hostedPath = "docs/evidence/fin-native-hosted-20261010/receipt.json";
+	const hostedBytes = await readFile(hostedPath);
+	assert.equal(sha256(hostedBytes), finHostedReceiptSha256);
+	assert.ok(document.includes("../evidence/fin-native-hosted-20261010/receipt.json"));
+	const hosted = JSON.parse(hostedBytes);
+	assert.equal(hosted.reports.length, 78);
+	assert.deepEqual(hosted.scope.routes, ["ordinary-source", "reviewed-ir"]);
+	const observed = new Map();
+	for(const item of hosted.reports)
+	{
+		const bytes = await readFile(item.path);
+		assert.equal(sha256(bytes), item.sha256);
+		for(const report of JSON.parse(bytes).reports)
+		{
+			const key = `${item.selection.family}/${item.selection.route}`;
+			if(!observed.has(key)) observed.set(key, new Set());
+			observed.get(key).add(report.profile);
+		}
+	}
+	for(const family of ["product", "product-array", "record"]) for(const route of ["ordinary", "reviewed"])
+		assert.deepEqual([...observed.get(`${family}/${route}`)].sort(), ["c", "cpp", "dotnet", "java", "kotlin", "perl", "php-native", "python", "ruby", "rust", "wit-wasi"]);
+	for(const site of ["`Fin n` inside pairs and `Except`", "`Fin n` inside `Array` of pairs and `Except`", "`Fin n` in record or variant fields"])
+	{
+		assert.equal(rows.get(site)[1], "Installed");
+		assert.equal(rows.get(site)[2], "Installed, both source routes on four ABIs");
+	}
 	const wit = JSON.parse(await readFile("docs/evidence/fin-wit-records-20261008/receipt.json"));
 	assert.deepEqual(wit.scope.profiles, ["wit-wasi"]); assert.equal(wit.scope.family, "record");
 	assert.deepEqual(wit.scope.sourcePaths, ["ordinary-source", "reviewed-ir"]);
-	assert.equal(rows.get("`Fin n` in record or variant fields")[1], "C/C++, Python, Ruby, Rust, .NET and WIT/WASI installed; Java/Kotlin and native PHP pending");
-	assert.match(document, /Direct WIT product exports, Java\/Kotlin and native PHP products\/fields still need their own installed acceptance/);
+	assert.doesNotMatch(document, /Direct WIT product exports, Java\/Kotlin and native PHP products\/fields still need their own installed acceptance/);
 });
 
 test("callback guidance separates installed browser and reviewed directions from remaining host replies", async () => {
@@ -234,7 +260,10 @@ test("CPAN guidance distinguishes scalar and container four-ABI relocation from 
 	assert.match(document, /Installed on four ABIs; ordinary source/u);
 	assert.match(document, /Separate scalar checks.*perl-scalar-20261009\.md.*top-level `Fin` on the same four configurations.*installed-tree relocation and entry counts for `mirror`, `impossible` and `label`/u);
 	assert.match(document, /\| `Fin n` parameter or result \| Installed \| Installed \| Installed, both source routes on four ABIs \|/u);
-	assert.match(document, /C\/C\+\+ and Node installed; other profiles pending/u);
+	assert.match(document, /C\/C\+\+, Node and PHP-Wasm installed; other profiles pending/u);
+	const phpWasm = await phpWasmSubtypePromotionReferences();
+	assert.deepEqual(phpWasm.map(item => item.sourcePath), ["ordinary-source", "reviewed-ir"]);
+	assert.ok(document.includes("../evidence/php-wasm-subtype-installed-20261010/index.json"));
 	assert.doesNotMatch(document, /Executed; relocation retest pending|Both routes executed; relocation retest pending|Four ABIs executed; relocation retest pending|their installed acceptance is not yet recorded/u);
 	const publisher = await readFile("docs/publish/cpan.md", "utf8");
 	assert.ok(publisher.includes("checked top-level Subtype constructors"));

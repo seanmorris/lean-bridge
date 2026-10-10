@@ -12,6 +12,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeReviewedPerlDiagnosticSource, reviewedPerlDiagnosticChangedPaths } from "./reviewed-perl-diagnostic-history.mjs";
+import { refinementFollowupChangedPaths } from "./refinement-followup-history.mjs";
 import { beforeReviewedSubtypeHostSource, reviewedSubtypeHostChangedPaths, reviewedSubtypeHostHistoryPath, reviewedSubtypeHostPredecessor, reverseReviewedSubtypeHostUpdate } from "./reviewed-subtype-host-history.mjs";
 
 test("Reviewed Subtype native host integration authenticates every transition and refuses unrecorded edits", async () => {
@@ -92,7 +93,7 @@ test("Reviewed Subtype native host changes source pins without changing any supp
 		if(!digests.has(file.path))
 		{
 			const bytes = await readFile(file.path);
-			digests.set(file.path, sha256(reviewedPerlDiagnosticChangedPaths.includes(file.path)
+			digests.set(file.path, sha256([...reviewedPerlDiagnosticChangedPaths, ...refinementFollowupChangedPaths].includes(file.path)
 				? beforeReviewedPerlDiagnosticSource(file.path, bytes.toString()) : bytes));
 		}
 		assert.equal(digests.get(file.path), file.sha256, file.path);

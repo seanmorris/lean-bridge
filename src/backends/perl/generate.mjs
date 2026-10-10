@@ -229,8 +229,15 @@ const conversion = (model, type) => {
 };
 
 // Bounds come from the compiler-checked native model, never from the erased Nat type.
-const perlParameterNames = (model, item) => item.parameters.map((parameter, index) =>
-	model.sourceIdentity?.reviewedBindingIr ? parameter.name : `arg${index}`);
+const perlParameterNames = (model, item) => {
+	if(!model.sourceIdentity?.reviewedBindingIr) return item.parameters.map((_, index) => `arg${index}`);
+	// Native exports retain Lean binder names. The reconciled IR owns the reviewed
+	// API names, and its export ID distinguishes specializations of one declaration.
+	const declaration = model.bindingIr.declarations.find(declaration => declaration.id === `lean:${item.name}`);
+	if(!declaration || declaration.parameters.length !== item.parameters.length)
+		throw new TypeError(`Missing reviewed Perl parameter contract for ${item.name}`);
+	return declaration.parameters.map(parameter => parameter.name);
+};
 const perlFinBounds = (model, item) => {
 	if(!item.refinements) return null;
 	// Reviewed APIs own their parameter names; ordinary-source positional names stay stable.
