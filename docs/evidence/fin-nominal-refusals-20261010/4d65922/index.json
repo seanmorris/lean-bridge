@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "kind": "fin-nominal-refusal-audit",
+  "revision": "4d65922df96dd297c36f9c369651d5a2ec05e330",
+  "tree": "77536d5ebd406a908da7191208031c945db9c238",
+  "outcome": "passed",
+  "scope": "Fresh Lean unsupported-definition diagnostics, not installed package acceptance. Selected source snapshots are not a full build dependency closure.",
+  "files": [
+    {
+      "path": "start.json",
+      "bytes": 71258,
+      "sha256": "29f5f8103cf20cf88e1b2dc6d8ea9e66ec8870d7ec4114125e5ec2d9c2d94a59"
+    },
+    {
+      "path": "run.tap",
+      "bytes": 712,
+      "sha256": "b2483ea949fbdf8edfcf2d27e52fc6b396328a3de524b58baa7971fc69420364"
+    },
+    {
+      "path": "runner.mjs",
+      "bytes": 5424,
+      "sha256": "d826b43d656626f8ef2cd3cd1665bc280a5fc447e6ee94dcbbb67485b09d91b7"
+    },
+    {
+      "path": "generic.lean",
+      "bytes": 190,
+      "sha256": "c9ffa23af590f202ab8ad971423313b0353aa5c4671a07c3f0127e04f40b93f8"
+    },
+    {
+      "path": "generic.json",
+      "bytes": 1451,
+      "sha256": "1ff923667a0ee6b1700920aff1981245e00f9e2dfc702317fc0f4462bf3e4948"
+    },
+    {
+      "path": "recursive.lean",
+      "bytes": 242,
+      "sha256": "98a985251ff05aeaae73bb757c1c8e3feb55e7e734f32dc2e7a43bbc17d82d43"
+    },
+    {
+      "path": "recursive.json",
+      "bytes": 1414,
+      "sha256": "cc9f3271edd828440a0d382e96cbf87530fdbe1d24132b995560cee15ad51db0"
+    },
+    {
+      "path": "callback-record.lean",
+      "bytes": 194,
+      "sha256": "9a94ab98b6550897501b5cb628395f9edc0ecc0514863d3b8212d1b7b06aa640"
+    },
+    {
+      "path": "callback-record.json",
+      "bytes": 1446,
+      "sha256": "a1743092f0f6675c453acff83709dc0248610b87d2f4fdd33a172ee84dd4244b"
+    },
+    {
+      "path": "end.json",
+      "bytes": 130,
+      "sha256": "d74cc1d5da72d4e0557a648aab5ebb7c92861790cca6870aeef2e90955f15d4c"
+    },
+    {
+      "path": "sources/src/analyze/NativeExports.lean",
+      "bytes": 88464,
+      "sha256": "8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f"
+    },
+    {
+      "path": "sources/src/analyze/native-metadata.mjs",
+      "bytes": 6736,
+      "sha256": "dae540c8c48bd6146e2dbeb28a62399faaa87dfbd67111a6c0947107976f314d"
+    }
+  ]
+}

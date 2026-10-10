@@ -91,4 +91,6 @@ All fifteen required runtime selections now pass both routes: eleven native
 hosts, two Python floors and four Perl ABIs. The archive gate requires the
 complete selection and rejects missing, duplicated or altered records.
 The complete #1442 acceptance audit remains separate from this supplement.
+The [nominal refusal audit](fin-nominal-refusals-20261010.md) records the
+recursive diagnostic repair and the remaining alias check.
 These observations do not close #1220.

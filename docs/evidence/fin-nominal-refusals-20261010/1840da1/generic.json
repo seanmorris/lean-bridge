@@ -1,0 +1,45 @@
+{
+  "label": "generic",
+  "declaration": "NativeFin.genericSite",
+  "sourceSha256": "c9ffa23af590f202ab8ad971423313b0353aa5c4671a07c3f0127e04f40b93f8",
+  "config": {
+    "schemaVersion": 1,
+    "modules": [
+      "NativeFin"
+    ],
+    "exports": [
+      "NativeFin.genericSite"
+    ],
+    "targets": {
+      "c": {
+        "name": "finrefusal",
+        "version": "1.0.0"
+      }
+    }
+  },
+  "failure": {
+    "code": "native-elaboration-unsupported",
+    "message": "Native export metadata rejected: NativeFin.genericSite: unsupported-native-type",
+    "details": {
+      "diagnostics": [
+        {
+          "category": "unsupported-meaning",
+          "code": "unsupported-native-type",
+          "declaration": "NativeFin.genericSite",
+          "message": "NativeFin.genericSite: unsupported-native-type",
+          "module": "NativeFin",
+          "severity": "error"
+        }
+      ],
+      "projections": [
+        {
+          "declaration": "NativeFin.genericSite",
+          "expression": "Fin refinements are not implemented by the native-library profile inside callbacks or generic record instantiations: Fin\n  5",
+          "reason": "unsupported-native-type",
+          "status": "unsupported"
+        }
+      ]
+    }
+  },
+  "outputExists": false
+}

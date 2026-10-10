@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "kind": "fin-nominal-refusal-audit",
+  "revision": "1840da12d270045b1340b16e98a2a8085f002337",
+  "tree": "6da1c6b703b990e7ac8b5934cdb14a4fa06f506f",
+  "outcome": "failed",
+  "scope": "Fresh Lean unsupported-definition diagnostics, not installed package acceptance. Selected source snapshots are not a full build dependency closure.",
+  "files": [
+    {
+      "path": "start.json",
+      "bytes": 71048,
+      "sha256": "b6cd7d7f23d419f85b5ce50988ba313a59fb62e1d23655891fa32d1b004b31ec"
+    },
+    {
+      "path": "run.tap",
+      "bytes": 1724,
+      "sha256": "d729a265eea809c40797f32f9b0f5b9b29903fa6adee719b205d2af78a2fd63c"
+    },
+    {
+      "path": "runner.mjs",
+      "bytes": 4632,
+      "sha256": "212a6aafb1b5922bb8954fc939f1c2031e327e258de52d46f5fc325ddc9424ae"
+    },
+    {
+      "path": "generic.lean",
+      "bytes": 190,
+      "sha256": "c9ffa23af590f202ab8ad971423313b0353aa5c4671a07c3f0127e04f40b93f8"
+    },
+    {
+      "path": "generic.json",
+      "bytes": 1266,
+      "sha256": "e1ead5adf06ff59b161f23fdbf9ecebcd577c46ab823cabd6b8f675bfbadf5d8"
+    },
+    {
+      "path": "recursive.lean",
+      "bytes": 242,
+      "sha256": "98a985251ff05aeaae73bb757c1c8e3feb55e7e734f32dc2e7a43bbc17d82d43"
+    },
+    {
+      "path": "recursive.json",
+      "bytes": 630,
+      "sha256": "0caf35ebfdedb46a7369171b40eef2d2450c0a96a88c40857db7bc9767099373"
+    },
+    {
+      "path": "callback-record.lean",
+      "bytes": 194,
+      "sha256": "9a94ab98b6550897501b5cb628395f9edc0ecc0514863d3b8212d1b7b06aa640"
+    },
+    {
+      "path": "callback-record.json",
+      "bytes": 1261,
+      "sha256": "4452bc891eb4c6ea3aa8352f834b5d6e08a33ea0f58351369a7b2c673f12b72b"
+    },
+    {
+      "path": "sources/src/analyze/NativeExports.lean",
+      "bytes": 87953,
+      "sha256": "46b46cbb21fe51d166ab700cde2c41583bc3a093f67cecd07d104cdf649f61ce"
+    },
+    {
+      "path": "sources/src/analyze/native-metadata.mjs",
+      "bytes": 6715,
+      "sha256": "d2cf52cf67bd8630a5fa172e63af02145606e19de03d174d8dac0387c7e64d8e"
+    }
+  ]
+}

@@ -8,6 +8,8 @@ import { access, cp, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
+import "./fin-nominal-refusal-archive-tests.mjs";
+import "./fin-record-alias-tests.mjs";
 import { buildCanonicalProject } from "../../src/build/canonical-build.mjs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import { nativeFixtureEnvironment } from "./copied-fixture-install.mjs";

@@ -1,0 +1,26 @@
+{
+  "label": "recursive",
+  "declaration": "NativeFin.recursiveSite",
+  "sourceSha256": "98a985251ff05aeaae73bb757c1c8e3feb55e7e734f32dc2e7a43bbc17d82d43",
+  "config": {
+    "schemaVersion": 1,
+    "modules": [
+      "NativeFin"
+    ],
+    "exports": [
+      "NativeFin.recursiveSite"
+    ],
+    "targets": {
+      "c": {
+        "name": "finrefusal",
+        "version": "1.0.0"
+      }
+    }
+  },
+  "failure": {
+    "code": "native-project-build-failed",
+    "message": "Invalid copied metadata graph: graph edges require copied references, not inline definitions or identities",
+    "details": {}
+  },
+  "outputExists": false
+}
