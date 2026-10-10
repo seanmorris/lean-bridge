@@ -1,0 +1,124 @@
+TAP version 13
+# Subtest: Fin alias closure integration authenticates every transition and refuses unrecorded edits
+ok 1 - Fin alias closure integration authenticates every transition and refuses unrecorded edits
+  ---
+  duration_ms: 5691.63333
+  type: 'test'
+  ...
+# Subtest: Fin alias closure integration preserves the earlier source ledgers
+ok 2 - Fin alias closure integration preserves the earlier source ledgers
+  ---
+  duration_ms: 36.069612
+  type: 'test'
+  ...
+# Subtest: Fin alias closure integration history writer refuses an unrelated HEAD before writing
+ok 3 - Fin alias closure integration history writer refuses an unrelated HEAD before writing
+  ---
+  duration_ms: 68.614226
+  type: 'test'
+  ...
+# Subtest: Fin alias closure integration changes current source pins only and adds no installed support claims
+not ok 4 - Fin alias closure integration changes current source pins only and adds no installed support claims
+  ---
+  duration_ms: 455.930658
+  type: 'test'
+  location: '/app/tests/helpers/fin-alias-closure-history-tests.mjs:75:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    src/build/native-model.mjs
+    + actual - expected
+    
+    + 'aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13'
+    - 'dd29801162eeaa06fe0c96b8d71c6b1994033ab52440ec39ecf62e5d832dd6ae'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'dd29801162eeaa06fe0c96b8d71c6b1994033ab52440ec39ecf62e5d832dd6ae'
+  actual: 'aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///app/tests/helpers/fin-alias-closure-history-tests.mjs:96:10)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: Fin nominal refusal integration authenticates every transition and refuses unrecorded edits
+ok 5 - Fin nominal refusal integration authenticates every transition and refuses unrecorded edits
+  ---
+  duration_ms: 5813.85243
+  type: 'test'
+  ...
+# Subtest: Fin nominal refusal integration preserves the earlier source ledgers
+ok 6 - Fin nominal refusal integration preserves the earlier source ledgers
+  ---
+  duration_ms: 5.752491
+  type: 'test'
+  ...
+# Subtest: Fin nominal refusal integration history writer refuses an unrelated HEAD before writing
+ok 7 - Fin nominal refusal integration history writer refuses an unrelated HEAD before writing
+  ---
+  duration_ms: 83.241377
+  type: 'test'
+  ...
+# Subtest: Fin nominal refusal integration changes current source pins only and adds no installed support claims
+not ok 8 - Fin nominal refusal integration changes current source pins only and adds no installed support claims
+  ---
+  duration_ms: 486.376931
+  type: 'test'
+  location: '/app/tests/helpers/fin-nominal-refusal-history-tests.mjs:75:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    src/build/native-model.mjs
+    + actual - expected
+    
+    + 'aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13'
+    - 'dd29801162eeaa06fe0c96b8d71c6b1994033ab52440ec39ecf62e5d832dd6ae'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'dd29801162eeaa06fe0c96b8d71c6b1994033ab52440ec39ecf62e5d832dd6ae'
+  actual: 'aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///app/tests/helpers/fin-nominal-refusal-history-tests.mjs:97:10)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: diagnostic CI history authenticates exact repairs and refuses unknown source changes
+ok 9 - diagnostic CI history authenticates exact repairs and refuses unknown source changes
+  ---
+  duration_ms: 5246.114448
+  type: 'test'
+  ...
+# Subtest: diagnostic CI repair changes source pins only and preserves earlier ledgers
+not ok 10 - diagnostic CI repair changes source pins only and preserves earlier ledgers
+  ---
+  duration_ms: 650.152977
+  type: 'test'
+  location: '/app/tests/helpers/native-fin-diagnostic-ci-tests.mjs:47:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    src/build/native-model.mjs
+    + actual - expected
+    
+    + 'dd29801162eeaa06fe0c96b8d71c6b1994033ab52440ec39ecf62e5d832dd6ae'
+    - 'aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13'
+  actual: 'dd29801162eeaa06fe0c96b8d71c6b1994033ab52440ec39ecf62e5d832dd6ae'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///app/tests/helpers/native-fin-diagnostic-ci-tests.mjs:66:10)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 7
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 18963.047859

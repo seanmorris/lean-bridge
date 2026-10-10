@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "milestone": "fin-history-buffer-repair-v1",
+  "predecessorCommit": "69d82afba73db3ac876f850acd170c8194a238c5",
+  "inventorySha256": "6a608542a14568c731ca961707e26d68975fb3d58d56443d45606c5b6f804c02",
+  "updates": [
+    {
+      "path": "tests/helpers/fin-alias-closure-history-tests.mjs",
+      "currentSha256": "d00b5d23e13ad34421b3ed942eff7919f5bf16908a4d366b8e928a4f1fa71deb",
+      "previousSha256": "319f3351e1d8194ea81a461d2ce70ed666da9fe10102f5194444e8e4c5057b2b",
+      "edits": [
+        {
+          "start": 514,
+          "previous": "import { beforePhpWasmDirectFinSource, phpWasmDirectFinChangedPaths } from \"./php-wasm-fin-direct-history.mjs\";\n",
+          "current": "import { beforePhpWasmDirectFinSource } from \"./php-wasm-fin-direct-history.mjs\";\n"
+        },
+        {
+          "start": 6298,
+          "previous": "\t\t\tconst bytes = await readFile(file.path), source = phpWasmDirectFinChangedPaths.includes(file.path) ? bytes.toString(\"utf8\") : bytes;\n\t\t\tdigests.set(file.path, sha256(beforePhpWasmDirectFinSource(file.path, source)));\n",
+          "current": "\t\t\tdigests.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-nominal-refusal-history-tests.mjs",
+      "currentSha256": "c5496338ee19c884dd0b7e7d184cc56a4e3d19dfff9267fbe27c704e0a2266d5",
+      "previousSha256": "542e2bfe5cc634878f698be4e205c940353088f8234c446cc2b979d9515a4f32",
+      "edits": [
+        {
+          "start": 513,
+          "previous": "import { beforeFinAliasClosureSource, finAliasClosureChangedPaths } from \"./fin-alias-closure-history.mjs\";\nimport { phpWasmDirectFinChangedPaths } from \"./php-wasm-fin-direct-history.mjs\";\n",
+          "current": "import { beforeFinAliasClosureSource } from \"./fin-alias-closure-history.mjs\";\n"
+        },
+        {
+          "start": 6209,
+          "previous": "\t\t\tconst bytes = await readFile(file.path);\n\t\t\tconst text = [...finAliasClosureChangedPaths, ...phpWasmDirectFinChangedPaths].includes(file.path);\n\t\t\tdigests.set(file.path, sha256(beforeFinAliasClosureSource(file.path, text ? bytes.toString(\"utf8\") : bytes)));\n",
+          "current": "\t\t\tdigests.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "fb9d1edd1511914414825a4633dc2fa5a4e425473589b314128b449c9ed2b0cb",
+      "previousSha256": "00c8a27c932be659cd2b01a0b2b95bc5dd2758b4707d5140aa86cba409e5f4a9",
+      "edits": [
+        {
+          "start": 725,
+          "previous": "",
+          "current": "import { finHistoryBufferRepairChangedPaths } from \"./fin-history-buffer-repair.mjs\";\n"
+        },
+        {
+          "start": 56922,
+          "previous": "",
+          "current": "\t, ...finHistoryBufferRepairChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-diagnostic-ci-tests.mjs",
+      "currentSha256": "face772e762d0efeb75dfc4c9e316cca2e781e0e8e783ca135eecd317c6bc8bd",
+      "previousSha256": "c2ca85252b4d51aade8f246a81fe39af534a77b43d57a031104d96f3e47ca67a",
+      "edits": [
+        {
+          "start": 368,
+          "previous": "import { beforeFinEdgeIntegrationSource, finEdgeIntegrationChangedPaths } from \"./fin-container-edge-integration-history.mjs\";\nimport { finEdgeCiChangedPaths } from \"./fin-container-edge-ci-history.mjs\";\nimport { finForeignChangedPaths } from \"./fin-container-foreign-history.mjs\";\nimport { finRecordOmissionChangedPaths } from \"./fin-record-review-omission-history.mjs\";\nimport { finHostedPromotionChangedPaths } from \"./fin-native-hosted-promotion-history.mjs\";\nimport { finZeroCiChangedPaths } from \"./fin-record-zero-ci-history.mjs\";\nimport { finNominalRefusalChangedPaths } from \"./fin-nominal-refusal-history.mjs\";\nimport { finAliasClosureChangedPaths } from \"./fin-alias-closure-history.mjs\";\nimport { phpWasmDirectFinChangedPaths } from \"./php-wasm-fin-direct-history.mjs\";\n",
+          "current": "import { beforeFinEdgeIntegrationSource } from \"./fin-container-edge-integration-history.mjs\";\n"
+        },
+        {
+          "start": 664,
+          "previous": "",
+          "current": "import \"./fin-history-buffer-repair-tests.mjs\";\n"
+        },
+        {
+          "start": 3516,
+          "previous": "\t\tconst source = [...phpWasmDirectFinChangedPaths, ...finAliasClosureChangedPaths, ...finNominalRefusalChangedPaths, ...finZeroCiChangedPaths, ...finHostedPromotionChangedPaths, ...finRecordOmissionChangedPaths, ...finForeignChangedPaths, ...finEdgeCiChangedPaths, ...finEdgeIntegrationChangedPaths].includes(file.path)\n\t\t\t? beforeFinEdgeIntegrationSource(file.path, bytes.toString(\"utf8\")) : bytes;\n",
+          "current": "\t\tconst source = beforeFinRefinementSource(file.path, bytes, file.sha256);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/refinement-followup-history-tests.mjs",
+      "currentSha256": "01be30b80d0fc4dfc32a4a8ab541d3be07a9ad720e0532f19d1149c4463c6b13",
+      "previousSha256": "5718555f8011deed579152ee6f6a422a37ffbd65a13493c924abc5dd008fb0be",
+      "edits": [
+        {
+          "start": 515,
+          "previous": "",
+          "current": "import { beforeFinHistoryBufferRepairSource } from \"./fin-history-buffer-repair.mjs\";\n"
+        },
+        {
+          "start": 1313,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\"), previous = reverseRefinementFollowupUpdate(current, update);\n",
+          "current": "\t\tconst current = beforeFinHistoryBufferRepairSource(update.path, await readFile(update.path, \"utf8\")), previous = reverseRefinementFollowupUpdate(current, update);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/refinement-followup-history.mjs",
+      "currentSha256": "7a8184d21ca0754e64ec7883eda1376cc58d2e7678d28a6b06a560aa9bdfd328",
+      "previousSha256": "350920c52ab043491420a6482aafcac1f5489f210218685c12fb48ac02cf537a",
+      "edits": [
+        {
+          "start": 233,
+          "previous": "",
+          "current": "import { beforeFinHistoryBufferRepairSource } from \"./fin-history-buffer-repair.mjs\";\n"
+        },
+        {
+          "start": 2479,
+          "previous": "",
+          "current": "\tsource = beforeFinHistoryBufferRepairSource(path, source, expected);\n"
+        }
+      ]
+    }
+  ],
+  "reproduction": {
+    "path": "docs/evidence/fin-history-buffer-repair-20261010/local-reproduction.tap",
+    "bytes": 4975,
+    "sha256": "abb42414c2e4e4b9fa5105fcba9b564c2d629dcb14e558250c70ceb98d651f1c"
+  }
+}

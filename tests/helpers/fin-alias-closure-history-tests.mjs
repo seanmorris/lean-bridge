@@ -11,7 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforePhpWasmDirectFinSource, phpWasmDirectFinChangedPaths } from "./php-wasm-fin-direct-history.mjs";
+import { beforePhpWasmDirectFinSource } from "./php-wasm-fin-direct-history.mjs";
 import { beforeFinAliasClosureSource, finAliasClosureChangedPaths, finAliasClosureHistoryPath, finAliasClosurePredecessor, reverseFinAliasClosureUpdate } from "./fin-alias-closure-history.mjs";
 
 test("Fin alias closure integration authenticates every transition and refuses unrecorded edits", async () => {
@@ -90,8 +90,7 @@ test("Fin alias closure integration changes current source pins only and adds no
 	{
 		if(!digests.has(file.path))
 		{
-			const bytes = await readFile(file.path), source = phpWasmDirectFinChangedPaths.includes(file.path) ? bytes.toString("utf8") : bytes;
-			digests.set(file.path, sha256(beforePhpWasmDirectFinSource(file.path, source)));
+			digests.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));
 		}
 		assert.equal(file.sha256, digests.get(file.path), file.path);
 	}

@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeFinHistoryBufferRepairSource } from "./fin-history-buffer-repair.mjs";
 
 export const refinementFollowupHistoryPath = "docs/evidence/refinement-followup-source-history-20261010.json";
 export const refinementFollowupPredecessor = "a115eb7873bb4fc6294c603edd629481d1283d19";
@@ -57,6 +58,7 @@ export const reverseRefinementFollowupUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeRefinementFollowupSource = (path, source, expected) => {
+	source = beforeFinHistoryBufferRepairSource(path, source, expected);
 	if(typeof source !== "string" || !refinementFollowupChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

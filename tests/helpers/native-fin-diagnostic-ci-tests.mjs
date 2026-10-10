@@ -8,16 +8,9 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeFinEdgeIntegrationSource, finEdgeIntegrationChangedPaths } from "./fin-container-edge-integration-history.mjs";
-import { finEdgeCiChangedPaths } from "./fin-container-edge-ci-history.mjs";
-import { finForeignChangedPaths } from "./fin-container-foreign-history.mjs";
-import { finRecordOmissionChangedPaths } from "./fin-record-review-omission-history.mjs";
-import { finHostedPromotionChangedPaths } from "./fin-native-hosted-promotion-history.mjs";
-import { finZeroCiChangedPaths } from "./fin-record-zero-ci-history.mjs";
-import { finNominalRefusalChangedPaths } from "./fin-nominal-refusal-history.mjs";
-import { finAliasClosureChangedPaths } from "./fin-alias-closure-history.mjs";
-import { phpWasmDirectFinChangedPaths } from "./php-wasm-fin-direct-history.mjs";
+import { beforeFinEdgeIntegrationSource } from "./fin-container-edge-integration-history.mjs";
 import { beforeFinDiagnosticCiSource, finDiagnosticCiChangedPaths, finDiagnosticCiHistoryPath, finDiagnosticCiPredecessor, reverseFinDiagnosticCiUpdate } from "./native-fin-diagnostic-ci-history.mjs";
+import "./fin-history-buffer-repair-tests.mjs";
 
 test("diagnostic CI history authenticates exact repairs and refuses unknown source changes", async () => {
 	const history = JSON.parse(await readFile(finDiagnosticCiHistoryPath, "utf8"));
@@ -61,8 +54,7 @@ test("diagnostic CI repair changes source pins only and preserves earlier ledger
 	for(const file of current.evidence.flatMap(entry => entry.files))
 	{
 		const bytes = await readFile(file.path);
-		const source = [...phpWasmDirectFinChangedPaths, ...finAliasClosureChangedPaths, ...finNominalRefusalChangedPaths, ...finZeroCiChangedPaths, ...finHostedPromotionChangedPaths, ...finRecordOmissionChangedPaths, ...finForeignChangedPaths, ...finEdgeCiChangedPaths, ...finEdgeIntegrationChangedPaths].includes(file.path)
-			? beforeFinEdgeIntegrationSource(file.path, bytes.toString("utf8")) : bytes;
+		const source = beforeFinRefinementSource(file.path, bytes, file.sha256);
 		assert.equal(sha256(source), file.sha256, file.path);
 	}
 	assert.equal(sha256(await readFile("docs/evidence/native-fin-diagnostic-source-history-20261010.json")), "2bc3b1217601bb0eb0c19b9f1496d00ab5df831e3a1bd1881a4429b28fd210ab");
