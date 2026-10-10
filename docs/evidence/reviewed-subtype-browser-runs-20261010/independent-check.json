@@ -1,0 +1,26 @@
+{
+  "root": "/app/build/vo1444-browser-npm-r1-f07c86d-records",
+  "npm": {
+    "checks": 2036,
+    "rejections": 2024
+  },
+  "reportSha256": "d2d86cf61209e0d38635de103f59f24e1261e02ad067a0b317a5f5f47852c7a5",
+  "profiles": [
+    {
+      "profile": "browser-javascript",
+      "executions": 3,
+      "observations": 9
+    },
+    {
+      "profile": "browser-react",
+      "executions": 6,
+      "observations": 30
+    },
+    {
+      "profile": "browser-worker",
+      "executions": 3,
+      "observations": 12
+    }
+  ],
+  "dispatch": "not measured"
+}

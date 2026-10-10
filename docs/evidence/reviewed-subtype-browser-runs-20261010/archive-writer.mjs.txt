@@ -1,0 +1,63 @@
+import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
+import { access, mkdir, readFile, readdir, writeFile } from "node:fs/promises";
+import { dirname, join } from "node:path";
+import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
+import { assertReviewedSubtypePackageTap } from "../tests/helpers/reviewed-subtype-package-ci-common.mjs";
+const revision = "f07c86d23f75b9b07ae66f6e9c7101c47b29b58e";
+const destination = "docs/evidence/reviewed-subtype-browser-runs-20261010";
+const prefix = "build/vo1444-browser-npm-r1-f07c86d", records = prefix + "-records";
+const git = args => execFileSync("git", args, {maxBuffer:8*1024**2});
+assert.equal(git(["rev-parse","HEAD"]).toString().trim(), revision);
+assert.equal(git(["status","--porcelain","--untracked-files=no"]).length, 0);
+await assert.rejects(access(destination), {code:"ENOENT"});
+execFileSync(process.execPath, ["build/check-reviewed-subtype-browser-records-v1.mjs", "/app/" + records], {stdio:"pipe"});
+const start = JSON.parse(await readFile(prefix + ".start.json")), end = JSON.parse(await readFile(prefix + ".end.json"));
+const finished = JSON.parse(await readFile(prefix + ".finished.json")), tap = await readFile(prefix + ".tap");
+assertReviewedSubtypePackageTap("npm", tap.toString());
+assert.equal(start.revision, revision); assert.equal(start.tree, git(["rev-parse","HEAD^{tree}"]).toString().trim());
+assert.equal(end.code,0); assert.equal(end.signal,null); assert.equal(end.stoppedForDisk,false);
+assert.ok(start.initialFreeMiB >= 2048); assert.ok(end.minimumFreeMiB >= 768);
+assert.equal(start.runnerSha256,sha256(await readFile("build/run-reviewed-subtype-browsers-v1.mjs")));
+assert.equal(end.tapSha256,sha256(tap));
+assert.equal(finished.browserReportSha256,sha256(await readFile(records + "/browser.json")));
+assert.equal(finished.reportSha256,sha256(await readFile(records + "/report.json")));
+const staged = [], artifacts = [], sources = [];
+const keep = (path, bytes, original) => {
+  assert.ok(!artifacts.some(item => item.path === path));
+  staged.push({path,bytes}); artifacts.push({path,original,bytes:bytes.length,sha256:sha256(bytes)});
+};
+for(const suffix of ["tap","start.json","end.json","finished.json"])
+  keep("run." + suffix, await readFile(prefix + "." + suffix), prefix + "." + suffix);
+keep("node-observation.json",await readFile(prefix+"-node.json"),prefix+"-node.json");
+for(const [path,original] of [["runner.mjs.txt","build/run-reviewed-subtype-browsers-v1.mjs"],["checker.mjs.txt","build/check-reviewed-subtype-browser-records-v1.mjs"],["preflight.jsonl","build/vo1444-browser-preflight-r1.jsonl"]])
+  keep(path,await readFile(original),original);
+for(const [path,original] of [["archive-writer.mjs.txt","build/archive-reviewed-subtype-browser-r1.mjs"],["mutation-checker.mjs.txt","build/check-reviewed-subtype-browser-mutations-v1.mjs"],["independent-check.json","build/vo1444-browser-independent-check-r1.json"],["mutation-check.json","build/vo1444-browser-mutation-check-r1.json"]])
+  keep(path,await readFile(original),original);
+for(const entry of await readdir(records,{recursive:true,withFileTypes:true})) {
+  if(!entry.isFile()) continue;
+  const path=join(entry.parentPath,entry.name), relative=path.slice(records.length+1);
+  assert.ok(!relative.startsWith("/") && !relative.split("/").includes(".."));
+  keep(relative,await readFile(path),path);
+}
+const paths = [
+  "tests/reviewed-subtype-installed.test.mjs",
+  ...["reviewed-subtype-npm-tests","reviewed-subtype-browser","reviewed-subtype-browser-fixture","reviewed-subtype-installed-fixture","reviewed-subtype-fixture","reviewed-subtype-package-fixture","reviewed-subtype-package-records","reviewed-subtype-npm-report","reviewed-subtype-package-ci-common","refinement-engine","lake-workspace","type-corpus-browser","type-corpus-browser-build"].map(name=>"tests/helpers/"+name+".mjs"),
+  ...["browser","javascript"].map(name=>"tests/fixtures/reviewed-subtype-consumers/"+name+".mjs"),
+  ...["plain","react","worker-main","worker"].map(name=>"tests/fixtures/type-corpus/consumers/browser/"+name+".mjs"),
+  ...["Subtypes.lean","lean-toolchain","lakefile.toml","package.json","LICENSE"].map(name=>"tests/fixtures/onboarding/native-subtype/"+name),
+  "src/release/component-npm-package.mjs","package-lock.json"
+];
+for(const path of paths) {
+  const bytes=git(["show",revision+":"+path]), archive="sources/"+path+".txt";
+  assert.deepEqual(await readFile(path),bytes);
+  keep(archive,bytes,"git:"+revision+":"+path);
+  sources.push({path,revision,archive,sha256:sha256(bytes)});
+}
+const index={schemaVersion:1,revision,sources,scope:{sourcePath:"reviewed-source",independentBuilds:2,npmChecks:2036,npmRejections:2024,profiles:["browser-javascript","browser-react","browser-worker"],engines:["chromium","firefox","webkit"],executions:12,lifecycleObservations:51,dispatch:"not measured",hostedCi:false,lockedNix:false,packageBinariesRetained:false,completeToolchainClosure:false,relocatedReplay:false},artifacts:artifacts.sort((a,b)=>a.path.localeCompare(b.path))};
+for(const {path,bytes} of staged) {
+  await mkdir(dirname(join(destination,path)),{recursive:true});
+  await writeFile(join(destination,path),bytes,{flag:"wx"});
+}
+await writeFile(join(destination,"index.json"),canonicalJson(index),{flag:"wx"});
+console.log(JSON.stringify({destination,records:artifacts.length,sources:sources.length,indexSha256:sha256(canonicalJson(index))},null,2));

@@ -1,0 +1,71 @@
+import assert from "node:assert/strict";
+import { readFile, readdir } from "node:fs/promises";
+import { join } from "node:path";
+import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
+import { checkReviewedSubtypeBrowserRecords } from "./check-reviewed-subtype-browser-records-v1.mjs";
+const root=process.argv[2], originals=new Map();
+for(const entry of await readdir(root,{recursive:true,withFileTypes:true})) {
+ if(!entry.isFile())continue;
+ const path=join(entry.parentPath,entry.name),relative=path.slice(root.length+1);
+ originals.set(relative,await readFile(path));
+}
+const read = records => async path => {
+ assert.ok(records.has(path),"Missing original "+path);
+ return records.get(path);
+};
+await checkReviewedSubtypeBrowserRecords(read(originals));
+let rejected=0;
+const refuse=async records=>{
+ await assert.rejects(()=>checkReviewedSubtypeBrowserRecords(read(records)));
+ rejected++;
+};
+const set=(records,path,value)=>records.set(path,Buffer.from(canonicalJson(value)));
+for(const path of originals.keys()) {
+ const records=new Map(originals);records.delete(path);
+ await refuse(records);
+}
+const original=JSON.parse(originals.get("browser.json"));
+for(const index of original.reports.keys()) {
+ const mutations=[
+  row=>{row.offlineInstall=false;},
+  row=>{row.compilerFreePath=false;},
+  row=>{row.sourceRemovedBeforeInstallation=false;},
+  row=>{row.bindingIrSha256="0".repeat(64);},
+  row=>{row.receiptSha256="0".repeat(64);},
+  row=>{row.browser.installedSourcesRemoved=false;},
+  row=>{row.browser.externalNetworkBlocked=false;},
+  row=>{row.browser.requestedEngines.pop();},
+  row=>{row.browser.executions.pop();},
+  row=>{row.observations.pop();},
+  row=>{row.observations[0].observation.results.checks--;},
+  row=>{row.observations[0].observation.results.rejections--;},
+  row=>{row.observations[0].observation.realm="wrong";},
+  row=>{row.observations[0].observation.hostVersion="";},
+  row=>{row.observations[0].engine="unknown";},
+  row=>{row.observations[0].phase="first-copy";},
+  row=>{row.browser.executions[0].failedAssetRecovery=false;},
+  row=>{row.browser.executions[0].assets.pop();},
+  row=>{row.browser.executions[0].assets[0].status=404;},
+  row=>{row.browser.executions[0].assets[0].bytes--;},
+  row=>{row.browser.executions[0].assets[0].mime="text/plain";},
+  row=>{row.browser.executions[0].lifecycle={};},
+  row=>{row.browser.installedAssets[0].sha256="0".repeat(64);},
+  row=>{row.browser.deployments[0].modulePaths=[];}
+ ];
+ if(original.reports[index].profile==="browser-react") mutations.push(row=>{row.browser.executions[0].pendingUnmount=false;});
+ for(const mutate of mutations) {
+  const report=structuredClone(original),row=report.reports[index],records=new Map(originals);
+  mutate(row);
+  set(records,"browser.json",report);
+  set(records,row.profile+"/report.json",row);
+  set(records,row.profile+"/observations.json",row.observations);
+  await refuse(records);
+ }
+ const report=structuredClone(original),row=report.reports[index],records=new Map(originals);
+ const bytes=Buffer.from("export const executeCorpus = () => ({checks:2036,rejections:2024});\n");
+ records.set(row.profile+"/javascript.mjs",bytes);
+ row.inputs["javascript.mjs"]={bytes:bytes.length,sha256:sha256(bytes)};
+ set(records,"browser.json",report);set(records,row.profile+"/report.json",row);set(records,row.profile+"/inputs.json",row.inputs);
+ await refuse(records);
+}
+console.log(JSON.stringify({records:originals.size,rejectedMutations:rejected,originalAccepted:true},null,2));

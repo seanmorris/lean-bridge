@@ -1,0 +1,258 @@
+{
+  "bindingIrSemanticSha256": "1f38068bdf77779e5676c60ec7a433d2dcdfb5362fb782344390ba6728eb118c",
+  "component": {
+    "id": "subtypes@1.0.0",
+    "name": "subtypes",
+    "version": "1.0.0"
+  },
+  "componentArtifactManifestSha256": "9450132214ccc4e8b882516e3f78d75f601af08568c4313ea212aebf5a2655c0",
+  "files": [
+    {
+      "bytes": 313,
+      "mediaType": "text/markdown",
+      "path": "README.md",
+      "role": "documentation",
+      "sha256": "5b99bf8365163a2233502cd8216f84c64af942ff9f9d7c5b6f56737401164e3f"
+    },
+    {
+      "bytes": 11653,
+      "mediaType": "application/wasm",
+      "path": "artifacts/subtypes-9da28bcf49ab7dd6.so.wasm",
+      "role": "component",
+      "sha256": "ccaae9801318219a618f0be8ef44010f9f759005d25cb0669917752e29f47cf0"
+    },
+    {
+      "bytes": 28556,
+      "mediaType": "application/json",
+      "path": "binding/binding-ir.json",
+      "role": "binding-ir",
+      "sha256": "f080ba4da71d77719fbafb6433e2a2a2ae807770ddcb121c1bacbb067cebd3f8"
+    },
+    {
+      "bytes": 4120,
+      "mediaType": "application/json",
+      "path": "binding/private-abi.json",
+      "role": "private-abi",
+      "sha256": "a0692d4666e698d41d1f44ce233029d1e81a96918266c66a7446500d9ca89b51"
+    },
+    {
+      "bytes": 6775,
+      "mediaType": "text/x-lean",
+      "path": "generated/LeanBridgeGenerated.lean",
+      "role": "generated-source",
+      "sha256": "623c793bb14e13353ae093f86dd6ec770cd430e68da85c552d9e448e65499cf8"
+    },
+    {
+      "bytes": 1331,
+      "mediaType": "application/json",
+      "path": "lake/lake-dependency-snapshot.json",
+      "role": "source",
+      "sha256": "6255c634823f898b5231a295cf6bb6fa6cb2e9b46dbc648b5333d574ec2eaa1a"
+    },
+    {
+      "bytes": 1093,
+      "mediaType": "text/plain",
+      "path": "lake/root/LICENSE",
+      "role": "source",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 2966,
+      "mediaType": "text/x-lean",
+      "path": "lake/root/Subtypes.lean",
+      "role": "source",
+      "sha256": "9da073e32017c1c93d2272e8269d9e2b97b3398d146d5d33ce5a4fc47af5a4c2"
+    },
+    {
+      "bytes": 19556,
+      "mediaType": "application/json",
+      "path": "lake/root/api.binding-ir.json",
+      "role": "source",
+      "sha256": "941ff4ebed33a2f01c777ecfec7124d9a1ce6af6585fd8995972910d955cdd5a"
+    },
+    {
+      "bytes": 67,
+      "mediaType": "application/toml",
+      "path": "lake/root/lakefile.toml",
+      "role": "source",
+      "sha256": "7cc9357b8eaa2dc868fed6c1ac4c44499eb29ccfe26016e6ed6361e88b5429ba"
+    },
+    {
+      "bytes": 60,
+      "mediaType": "application/json",
+      "path": "lake/root/lean-bridge.exports.json",
+      "role": "source",
+      "sha256": "d35f3882a78088ea90cb5c2c1b1a02fe96c307b6bf0c11026944c8b5e08d8e27"
+    },
+    {
+      "bytes": 25,
+      "mediaType": "text/plain",
+      "path": "lake/root/lean-toolchain",
+      "role": "source",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "bytes": 54,
+      "mediaType": "application/json",
+      "path": "lake/root/package.json",
+      "role": "source",
+      "sha256": "db736971b2c14dc3aa16fc7113d32fd28f89a2abba58f601ece3613d87ffd2ee"
+    },
+    {
+      "bytes": 13479,
+      "mediaType": "application/json",
+      "path": "locks/compiler-adapters.json",
+      "role": "plan",
+      "sha256": "e4264b89632eb18baec75536cd19c07bb27a2375c2c5032944e1801e8da561ba"
+    },
+    {
+      "bytes": 2453,
+      "mediaType": "application/json",
+      "path": "locks/component-build-plan.json",
+      "role": "plan",
+      "sha256": "fbe7a34784f97642101d3d1fba712ddfb52846a2edf0a34857321641cc4e35e5"
+    },
+    {
+      "bytes": 2729,
+      "mediaType": "application/json",
+      "path": "locks/component-compilation-plan.json",
+      "role": "plan",
+      "sha256": "11e1f03c4685b9af8d8b253e57c843a89a57d29586692ffd8ecdc7014bf967f7"
+    },
+    {
+      "bytes": 4058,
+      "mediaType": "application/json",
+      "path": "locks/lean-target-c-manifest.json",
+      "role": "plan",
+      "sha256": "549e71dcfca494087168ed410c0b14f5af1fb85d740f44ae0ffd06190d915b75"
+    },
+    {
+      "bytes": 1841,
+      "mediaType": "application/json",
+      "path": "locks/side-module-link-manifest.json",
+      "role": "plan",
+      "sha256": "1de46815ba5fa5fa83cb4c9c1eb1bd2be12c49b4bdd189f94b60d53e8bdcea3a"
+    },
+    {
+      "bytes": 171,
+      "mediaType": "application/json",
+      "path": "metadata/assurance.json",
+      "role": "assurance",
+      "sha256": "e77e151cb636adcd9c9f32435023b050911709c17c343b913caf239e29883370"
+    },
+    {
+      "bytes": 5621,
+      "mediaType": "application/json",
+      "path": "metadata/component-artifact-manifest.json",
+      "role": "build-evidence",
+      "sha256": "9450132214ccc4e8b882516e3f78d75f601af08568c4313ea212aebf5a2655c0"
+    },
+    {
+      "bytes": 67606,
+      "mediaType": "application/json",
+      "path": "metadata/lake-entry-exports.json",
+      "role": "build-evidence",
+      "sha256": "dd5d8046d427096e20517c04e80f05971e8839f1241c9bf008b16ca2008445c5"
+    },
+    {
+      "bytes": 831,
+      "mediaType": "application/json",
+      "path": "metadata/provenance.json",
+      "role": "provenance",
+      "sha256": "c5a12e4af48fc284c8561fbdd9d514a6b0e24e5a8d9a8c5f3c45078279f1eb53"
+    },
+    {
+      "bytes": 391,
+      "mediaType": "application/json",
+      "path": "metadata/runtime-requirement.json",
+      "role": "runtime-requirement",
+      "sha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9"
+    },
+    {
+      "bytes": 850,
+      "mediaType": "application/json",
+      "path": "metadata/sbom.json",
+      "role": "build-evidence",
+      "sha256": "3f889f490332a553a596be8bd7b24a96684e906c4318614344ef9341f2b9d1f9"
+    },
+    {
+      "bytes": 3248,
+      "mediaType": "application/json",
+      "path": "metadata/side-module-audit.json",
+      "role": "build-evidence",
+      "sha256": "a5e0d265533c2e2e302af4d42f415488833e332e793235c45a9b33162fda0259"
+    },
+    {
+      "bytes": 1093,
+      "mediaType": "text/plain",
+      "path": "source/LICENSE",
+      "role": "source",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 2966,
+      "mediaType": "text/x-lean",
+      "path": "source/Subtypes.lean",
+      "role": "source",
+      "sha256": "9da073e32017c1c93d2272e8269d9e2b97b3398d146d5d33ce5a4fc47af5a4c2"
+    },
+    {
+      "bytes": 19556,
+      "mediaType": "application/json",
+      "path": "source/api.binding-ir.json",
+      "role": "source",
+      "sha256": "941ff4ebed33a2f01c777ecfec7124d9a1ce6af6585fd8995972910d955cdd5a"
+    },
+    {
+      "bytes": 67,
+      "mediaType": "application/toml",
+      "path": "source/lakefile.toml",
+      "role": "source",
+      "sha256": "7cc9357b8eaa2dc868fed6c1ac4c44499eb29ccfe26016e6ed6361e88b5429ba"
+    },
+    {
+      "bytes": 60,
+      "mediaType": "application/json",
+      "path": "source/lean-bridge.exports.json",
+      "role": "source",
+      "sha256": "d35f3882a78088ea90cb5c2c1b1a02fe96c307b6bf0c11026944c8b5e08d8e27"
+    },
+    {
+      "bytes": 25,
+      "mediaType": "text/plain",
+      "path": "source/lean-toolchain",
+      "role": "source",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "bytes": 54,
+      "mediaType": "application/json",
+      "path": "source/package.json",
+      "role": "source",
+      "sha256": "db736971b2c14dc3aa16fc7113d32fd28f89a2abba58f601ece3613d87ffd2ee"
+    }
+  ],
+  "identitySha256": "33c570b6e6ef6eff27e1d8d7da6882984efd331a790e66c0ec89b162e7c2e30f",
+  "kind": "lean-bridge-component-release-bundle",
+  "policies": {
+    "backendNeutral": true,
+    "compileOnce": true,
+    "runtimeBinaryIncluded": false,
+    "sourceReadOnly": true,
+    "targetPackagesIncluded": false
+  },
+  "runtime": {
+    "abiVersion": 1,
+    "artifactIncluded": false,
+    "kind": "content-addressed-peer",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "patchSetSha256": "743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3",
+    "profile": "side-lazy",
+    "requiredImports": [
+      "memory",
+      "__indirect_function_table"
+    ],
+    "shared": true
+  },
+  "schemaVersion": 1
+}

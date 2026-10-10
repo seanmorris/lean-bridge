@@ -1,0 +1,536 @@
+{
+  "component": "subtypes@1.0.0",
+  "componentPlanSha256": "fbe7a34784f97642101d3d1fba712ddfb52846a2edf0a34857321641cc4e35e5",
+  "exports": [
+    {
+      "bindingId": "lean:Subtypes.byte",
+      "leanEffect": null,
+      "leanResultType": "_root_.UInt8",
+      "parameters": [
+        {
+          "leanType": "_root_.UInt8",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "Subtypes.checkedByte",
+            "kind": "subtype"
+          }
+        ],
+        "result": {
+          "constructor": "Subtypes.checkedByte",
+          "kind": "subtype"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "Subtypes.byte",
+      "sourceModule": "Subtypes",
+      "symbol": "lean_bridge_916129e060a16698e83a88bc",
+      "wrapper": "export_11ee88a977bc8db807f2"
+    },
+    {
+      "bindingId": "lean:Subtypes.clamp",
+      "leanEffect": null,
+      "leanResultType": "_root_.Nat",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "Subtypes.checkedBounded",
+            "kind": "subtype"
+          }
+        ],
+        "result": null
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "Subtypes.clamp",
+      "sourceModule": "Subtypes",
+      "symbol": "lean_bridge_3b72f3b0dffb5c9aa753207d",
+      "wrapper": "export_2b72b10c618cd4d53f23"
+    },
+    {
+      "bindingId": "lean:Subtypes.firstEven",
+      "leanEffect": null,
+      "leanResultType": "_root_.Nat",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "Subtypes.checkedEven",
+            "kind": "subtype"
+          }
+        ],
+        "result": {
+          "constructor": "Subtypes.checkedEven",
+          "kind": "subtype"
+        }
+      },
+      "resultMode": "value",
+      "sourceApplication": "(@_root_.Subtypes.echo.{0} (@_root_.Subtypes.Even))",
+      "sourceDeclaration": "Subtypes.echo",
+      "sourceModule": "Subtypes",
+      "symbol": "lean_bridge_208efba71ea822e7cf940c2c",
+      "wrapper": "export_7321e54a0dd26b7b01f0"
+    },
+    {
+      "bindingId": "lean:Subtypes.half",
+      "leanEffect": null,
+      "leanResultType": "_root_.Nat",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "Subtypes.checkedEven",
+            "kind": "subtype"
+          }
+        ],
+        "result": null
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "Subtypes.half",
+      "sourceModule": "Subtypes",
+      "symbol": "lean_bridge_35cc6268e324bf638b657a82",
+      "wrapper": "export_ea6eca5c2c98ea7fe7e7"
+    },
+    {
+      "bindingId": "lean:Subtypes.head",
+      "leanEffect": null,
+      "leanResultType": "_root_.UInt8",
+      "parameters": [
+        {
+          "leanType": "_root_.ByteArray",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "Subtypes.checkedPayload",
+            "kind": "subtype"
+          }
+        ],
+        "result": null
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "Subtypes.head",
+      "sourceModule": "Subtypes",
+      "symbol": "lean_bridge_e261f7cef38af7d2dc0e3300",
+      "wrapper": "export_fe2ceccfe0a2c2c3a315"
+    },
+    {
+      "bindingId": "lean:Subtypes.join",
+      "leanEffect": null,
+      "leanResultType": "_root_.String",
+      "parameters": [
+        {
+          "leanType": "_root_.String",
+          "name": "value0"
+        },
+        {
+          "leanType": "_root_.String",
+          "name": "value1"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "Subtypes.checkedWord",
+            "kind": "subtype"
+          },
+          {
+            "constructor": "Subtypes.checkedWord",
+            "kind": "subtype"
+          }
+        ],
+        "result": {
+          "constructor": "Subtypes.checkedWord",
+          "kind": "subtype"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "Subtypes.join",
+      "sourceModule": "Subtypes",
+      "symbol": "lean_bridge_d2e13b09e2a1e78c6745da81",
+      "wrapper": "export_479cdcb639c9a3f47376"
+    },
+    {
+      "bindingId": "lean:Subtypes.mix",
+      "leanEffect": null,
+      "leanResultType": "_root_.Nat",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        },
+        {
+          "leanType": "_root_.Nat",
+          "name": "value1"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "Subtypes.checkedEven",
+            "kind": "subtype"
+          },
+          {
+            "bound": "10",
+            "kind": "fin"
+          }
+        ],
+        "result": null
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "Subtypes.mix",
+      "sourceModule": "Subtypes",
+      "symbol": "lean_bridge_f04a756e197d8a386e16d330",
+      "wrapper": "export_c2ff968312694fc5c6aa"
+    },
+    {
+      "bindingId": "lean:Subtypes.pad",
+      "leanEffect": null,
+      "leanResultType": "_root_.Nat",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "constructor": "Subtypes.checkedEven",
+          "kind": "subtype"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "Subtypes.pad",
+      "sourceModule": "Subtypes",
+      "symbol": "lean_bridge_0f214053627e92d2f7862d6b",
+      "wrapper": "export_7b017b6e1e7d92e4c470"
+    },
+    {
+      "bindingId": "lean:Subtypes.scale",
+      "leanEffect": null,
+      "leanResultType": "_root_.Int",
+      "parameters": [
+        {
+          "leanType": "_root_.Int",
+          "name": "value0"
+        },
+        {
+          "leanType": "_root_.Int",
+          "name": "value1"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null,
+          {
+            "constructor": "Subtypes.checkedSmall",
+            "kind": "subtype"
+          }
+        ],
+        "result": null
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "Subtypes.scale",
+      "sourceModule": "Subtypes",
+      "symbol": "lean_bridge_b826e8d26746e60aff5b5bfd",
+      "wrapper": "export_6114508906ae18b6376b"
+    },
+    {
+      "bindingId": "lean:Subtypes.secondEven",
+      "leanEffect": null,
+      "leanResultType": "_root_.Nat",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "Subtypes.normalizedEven",
+            "kind": "subtype"
+          }
+        ],
+        "result": {
+          "constructor": "Subtypes.checkedEven",
+          "kind": "subtype"
+        }
+      },
+      "resultMode": "value",
+      "sourceApplication": "(@_root_.Subtypes.echo.{0} (@_root_.Subtypes.Even))",
+      "sourceDeclaration": "Subtypes.echo",
+      "sourceModule": "Subtypes",
+      "symbol": "lean_bridge_8692e4e18580cfad00164ed6",
+      "wrapper": "export_0ac2409bed4fc56b096d"
+    },
+    {
+      "bindingId": "lean:Subtypes.shout",
+      "leanEffect": null,
+      "leanResultType": "_root_.String",
+      "parameters": [
+        {
+          "leanType": "_root_.String",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "Subtypes.checkedWord",
+            "kind": "subtype"
+          }
+        ],
+        "result": {
+          "constructor": "Subtypes.checkedWord",
+          "kind": "subtype"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "Subtypes.shout",
+      "sourceModule": "Subtypes",
+      "symbol": "lean_bridge_86d32d5bea63204d4e0e1d5d",
+      "wrapper": "export_c60d658936bca20e5676"
+    },
+    {
+      "bindingId": "lean:Subtypes.zeroEven",
+      "leanEffect": null,
+      "leanResultType": "_root_.Nat",
+      "parameters": [],
+      "refinements": {
+        "parameters": [],
+        "result": {
+          "constructor": "Subtypes.checkedEven",
+          "kind": "subtype"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "Subtypes.zeroEven",
+      "sourceModule": "Subtypes",
+      "symbol": "lean_bridge_0078068d2bb21f446e8aafb4",
+      "wrapper": "export_06c749cf1ab834e68aee"
+    }
+  ],
+  "imports": [
+    "Subtypes"
+  ],
+  "leanSourceSha256": "623c793bb14e13353ae093f86dd6ec770cd430e68da85c552d9e448e65499cf8",
+  "module": "LeanBridgeGenerated9da28bcf49ab7dd6",
+  "privateAbi": {
+    "dispatch": "scalar-frame-v2",
+    "exports": [
+      {
+        "bindingId": "lean:Subtypes.byte",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "uint8"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "uint8"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_916129e060a16698e83a88bc"
+      },
+      {
+        "bindingId": "lean:Subtypes.clamp",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_3b72f3b0dffb5c9aa753207d"
+      },
+      {
+        "bindingId": "lean:Subtypes.firstEven",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_208efba71ea822e7cf940c2c"
+      },
+      {
+        "bindingId": "lean:Subtypes.half",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_35cc6268e324bf638b657a82"
+      },
+      {
+        "bindingId": "lean:Subtypes.head",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "bytes"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "uint8"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_e261f7cef38af7d2dc0e3300"
+      },
+      {
+        "bindingId": "lean:Subtypes.join",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "string"
+          },
+          {
+            "kind": "primitive",
+            "name": "string"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "string"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_d2e13b09e2a1e78c6745da81"
+      },
+      {
+        "bindingId": "lean:Subtypes.mix",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_f04a756e197d8a386e16d330"
+      },
+      {
+        "bindingId": "lean:Subtypes.pad",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_0f214053627e92d2f7862d6b"
+      },
+      {
+        "bindingId": "lean:Subtypes.scale",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "int"
+          },
+          {
+            "kind": "primitive",
+            "name": "int"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "int"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_b826e8d26746e60aff5b5bfd"
+      },
+      {
+        "bindingId": "lean:Subtypes.secondEven",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_8692e4e18580cfad00164ed6"
+      },
+      {
+        "bindingId": "lean:Subtypes.shout",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "string"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "string"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_86d32d5bea63204d4e0e1d5d"
+      },
+      {
+        "bindingId": "lean:Subtypes.zeroEven",
+        "parameters": [],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_0078068d2bb21f446e8aafb4"
+      }
+    ],
+    "version": 2
+  },
+  "schemaVersion": 1
+}

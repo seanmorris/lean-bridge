@@ -10,6 +10,7 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import test from "node:test";
 import "./reviewed-subtype-browser-history-tests.mjs";
+import "./reviewed-subtype-browser-archive-tests.mjs";
 import { reviewedSubtypeBrowserExpected, reviewedSubtypeBrowserPackage, reviewedSubtypeBrowserPhases, reviewedSubtypeBrowserProfiles, validateReviewedSubtypeBrowserObservation, validateReviewedSubtypeBrowserPhases } from "./reviewed-subtype-browser-fixture.mjs";
 
 const engines = ["chromium", "firefox", "webkit"];

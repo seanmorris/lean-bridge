@@ -1,0 +1,1113 @@
+{
+  "assurance": [],
+  "capabilities": [],
+  "component": {
+    "id": "subtypes@1.0.0",
+    "name": "subtypes",
+    "version": "1.0.0"
+  },
+  "declarations": [
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:Subtypes.byte",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "byte",
+      "overloadKey": "Subtypes.byte",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "uint8"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "uint8"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "Subtypes.byte",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "Subtypes.checkedByte"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "Subtypes.checkedByte"
+              }
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "constructor": "Subtypes.checkedByte",
+                "kind": "subtype"
+              }
+            ],
+            "result": {
+              "constructor": "Subtypes.checkedByte",
+              "kind": "subtype"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 39,
+            "endLine": 57,
+            "path": "root/Subtypes.lean",
+            "startColumn": 0,
+            "startLine": 57
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:Subtypes.clamp",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "clamp",
+      "overloadKey": "Subtypes.clamp",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "Subtypes.clamp",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "Subtypes.checkedBounded"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "constructor": "Subtypes.checkedBounded",
+                "kind": "subtype"
+              }
+            ],
+            "result": null
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 46,
+            "endLine": 44,
+            "path": "root/Subtypes.lean",
+            "startColumn": 0,
+            "startLine": 43
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:Subtypes.firstEven",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "firstEven",
+      "overloadKey": "Subtypes.firstEven",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "Subtypes.echo",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "Subtypes.checkedEven"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "Subtypes.checkedEven"
+              }
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "constructor": "Subtypes.checkedEven",
+                "kind": "subtype"
+              }
+            ],
+            "result": {
+              "constructor": "Subtypes.checkedEven",
+              "kind": "subtype"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 46,
+            "endLine": 58,
+            "path": "root/Subtypes.lean",
+            "startColumn": 0,
+            "startLine": 58
+          },
+          "lean-lang.org/specialization": {
+            "application": "(@_root_.Subtypes.echo.{0} (@_root_.Subtypes.Even))",
+            "declaration": "Subtypes.echo",
+            "name": "Subtypes.firstEven",
+            "types": [
+              "Subtypes.Even"
+            ]
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:Subtypes.half",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "half",
+      "overloadKey": "Subtypes.half",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "Subtypes.half",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "Subtypes.checkedEven"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "constructor": "Subtypes.checkedEven",
+                "kind": "subtype"
+              }
+            ],
+            "result": null
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 46,
+            "endLine": 26,
+            "path": "root/Subtypes.lean",
+            "startColumn": 0,
+            "startLine": 25
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:Subtypes.head",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "head",
+      "overloadKey": "Subtypes.head",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "bytes"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "uint8"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "Subtypes.head",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "Subtypes.checkedPayload"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "constructor": "Subtypes.checkedPayload",
+                "kind": "subtype"
+              }
+            ],
+            "result": null
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 58,
+            "endLine": 32,
+            "path": "root/Subtypes.lean",
+            "startColumn": 0,
+            "startLine": 31
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:Subtypes.join",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "join",
+      "overloadKey": "Subtypes.join",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "string"
+          }
+        },
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value1",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "string"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "string"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "Subtypes.join",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "Subtypes.checkedWord"
+                }
+              },
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "Subtypes.checkedWord"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "Subtypes.checkedWord"
+              }
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "constructor": "Subtypes.checkedWord",
+                "kind": "subtype"
+              },
+              {
+                "constructor": "Subtypes.checkedWord",
+                "kind": "subtype"
+              }
+            ],
+            "result": {
+              "constructor": "Subtypes.checkedWord",
+              "kind": "subtype"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 110,
+            "endLine": 38,
+            "path": "root/Subtypes.lean",
+            "startColumn": 0,
+            "startLine": 37
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:Subtypes.mix",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "mix",
+      "overloadKey": "Subtypes.mix",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value1",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "Subtypes.mix",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "Subtypes.checkedEven"
+                }
+              },
+              {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "constructor": "Subtypes.checkedEven",
+                "kind": "subtype"
+              },
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "result": null
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 82,
+            "endLine": 48,
+            "path": "root/Subtypes.lean",
+            "startColumn": 0,
+            "startLine": 46
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:Subtypes.pad",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "pad",
+      "overloadKey": "Subtypes.pad",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "Subtypes.pad",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "Subtypes.checkedEven"
+              }
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              null
+            ],
+            "result": {
+              "constructor": "Subtypes.checkedEven",
+              "kind": "subtype"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 53,
+            "endLine": 35,
+            "path": "root/Subtypes.lean",
+            "startColumn": 0,
+            "startLine": 34
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:Subtypes.scale",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "scale",
+      "overloadKey": "Subtypes.scale",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "int"
+          }
+        },
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value1",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "int"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "int"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "Subtypes.scale",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy"
+              },
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "Subtypes.checkedSmall"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              null,
+              {
+                "constructor": "Subtypes.checkedSmall",
+                "kind": "subtype"
+              }
+            ],
+            "result": null
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 68,
+            "endLine": 29,
+            "path": "root/Subtypes.lean",
+            "startColumn": 0,
+            "startLine": 28
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:Subtypes.secondEven",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "secondEven",
+      "overloadKey": "Subtypes.secondEven",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "Subtypes.echo",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "Subtypes.normalizedEven"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "Subtypes.checkedEven"
+              }
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "constructor": "Subtypes.normalizedEven",
+                "kind": "subtype"
+              }
+            ],
+            "result": {
+              "constructor": "Subtypes.checkedEven",
+              "kind": "subtype"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 46,
+            "endLine": 58,
+            "path": "root/Subtypes.lean",
+            "startColumn": 0,
+            "startLine": 58
+          },
+          "lean-lang.org/specialization": {
+            "application": "(@_root_.Subtypes.echo.{0} (@_root_.Subtypes.Even))",
+            "declaration": "Subtypes.echo",
+            "name": "Subtypes.secondEven",
+            "types": [
+              "Subtypes.Even"
+            ]
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:Subtypes.shout",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "shout",
+      "overloadKey": "Subtypes.shout",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "string"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "string"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "Subtypes.shout",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "Subtypes.checkedWord"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "Subtypes.checkedWord"
+              }
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "constructor": "Subtypes.checkedWord",
+                "kind": "subtype"
+              }
+            ],
+            "result": {
+              "constructor": "Subtypes.checkedWord",
+              "kind": "subtype"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 90,
+            "endLine": 23,
+            "path": "root/Subtypes.lean",
+            "startColumn": 0,
+            "startLine": 22
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:Subtypes.zeroEven",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "zeroEven",
+      "overloadKey": "Subtypes.zeroEven",
+      "owner": null,
+      "parameters": [],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "Subtypes.zeroEven",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "Subtypes.checkedEven"
+              }
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [],
+            "result": {
+              "constructor": "Subtypes.checkedEven",
+              "kind": "subtype"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 37,
+            "endLine": 67,
+            "path": "root/Subtypes.lean",
+            "startColumn": 0,
+            "startLine": 67
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    }
+  ],
+  "documentation": {
+    "details": "",
+    "summary": "Independent corpus contract."
+  },
+  "errors": [],
+  "producers": [
+    {
+      "adapter": "lean-bridge-elaborator",
+      "adapterVersion": 2,
+      "extensions": {
+        "lean-lang.org/elaboration-sha256": "dd5d8046d427096e20517c04e80f05971e8839f1241c9bf008b16ca2008445c5",
+        "lean-lang.org/toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "id": "lean",
+      "tool": "Lean",
+      "toolVersion": "4.32.2"
+    }
+  ],
+  "schemaVersion": 3,
+  "types": []
+}
