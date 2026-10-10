@@ -10,16 +10,22 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { assertFinRecordZeroReport } from "./fin-record-zero-report.mjs";
 
 const base = "docs/evidence/fin-record-zero-native-20261010/";
-const revision = "7f32996dce66ea7ab191c8c23b031a0b13c1ffe2";
+const originalRevision = "7f32996dce66ea7ab191c8c23b031a0b13c1ffe2";
 const cases = [
 	{ name: "c-cpp-7f32996", digest: "5e975db58e3c2816f02bcefaa63380976797d54877329be48ddb2a2c69766aae", outcome: "passed", profiles: ["c", "cpp"], count: 40 }
 	, { name: "python311-7f32996", digest: "b8ded2711303e9badf36994c3b8f80fe2b641ee673eeb78e6b706ff7cb2461a7", outcome: "failed", profiles: ["python"], count: 37 }
+	, { name: "python311-8fdec75"
+		, digest: "4d03aec16689260f2309db46630a6c644866243be808f0c858a42b4dba59099a"
+		, revision: "8fdec75af4ab853ee18b3b9159784174a37df86a"
+		, tree: "966f4125ba0e904a6176abb138bc8500ed2420c8"
+		, outcome: "passed", profiles: ["python"], count: 40 }
 ];
 const inspect = async (item, read = readFile) => {
 	const root = base + item.name + "/", bytes = await read(root + "index.json");
 	assert.equal(sha256(bytes), item.digest);
 	const index = JSON.parse(bytes);
-	assert.deepEqual(index.producer, { revision, tree: "fc45c2de56af524022131bbc734e096e39c55ef3" });
+	const revision = item.revision ?? originalRevision;
+	assert.deepEqual(index.producer, { revision, tree: item.tree ?? "fc45c2de56af524022131bbc734e096e39c55ef3" });
 	assert.equal(index.schemaVersion, 1); assert.equal(index.kind, "fin-record-zero-local-acceptance");
 	assert.equal(index.outcome, item.outcome); assert.deepEqual(index.profiles, item.profiles);
 	assert.equal(index.hostGlibc, "glibc 2.36");
@@ -48,8 +54,9 @@ const inspect = async (item, read = readFile) => {
 	if(item.outcome === "passed")
 	{
 		assert.equal(end.code, 0);
-		for(const line of ["# tests 6", "# pass 6", "# fail 0", "# skipped 0", "# cancelled 0"]) assert.ok(lines.includes(line), line);
-		for(const label of ["loosened empty record", "loosened array field", "omitted list field"])
+		const reviewedMutations = item.profiles.includes("c");
+		for(const line of [`# tests ${reviewedMutations ? 6 : 3}`, `# pass ${reviewedMutations ? 6 : 2}`, "# fail 0", `# skipped ${reviewedMutations ? 0 : 1}`, "# cancelled 0"]) assert.ok(lines.includes(line), line);
+		if(reviewedMutations) for(const label of ["loosened empty record", "loosened array field", "omitted list field"])
 			assert.ok(lines.includes("    # Subtest: " + label));
 		const verified = json("verified.json"); assert.equal(verified.revision, revision);
 		assert.equal(verified.checksPerConsumer, 2046);
@@ -70,7 +77,7 @@ const inspect = async (item, read = readFile) => {
 	}
 };
 
-test("zero-bound nominal archives retain successful C/C++ calls and the failed Python expectation", async () => {
+test("zero-bound nominal archives retain successful C/C++ and Python calls with the failed Python predecessor", async () => {
 	for(const item of cases) await inspect(item);
 });
 

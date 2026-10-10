@@ -1,0 +1,269 @@
+{
+  "schemaVersion": 1,
+  "kind": "fin-record-zero-local-acceptance",
+  "producer": {
+    "revision": "8fdec75af4ab853ee18b3b9159784174a37df86a",
+    "tree": "966f4125ba0e904a6176abb138bc8500ed2420c8"
+  },
+  "outcome": "passed",
+  "profiles": [
+    "python"
+  ],
+  "environment": {
+    "NO_COLOR": "1",
+    "LEAN_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MAKEFLAGS": "-j1",
+    "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+    "LEAN_BRIDGE_FIN_RECORD_ZERO_PROFILES": "python",
+    "LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_PROFILES": "python",
+    "LEAN_BRIDGE_FIN_RECORD_ZERO_REPORT": "/app/build/vo1442-zero-python311-8fdec75/ordinary.json",
+    "LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_REPORT": "/app/build/vo1442-zero-python311-8fdec75/reviewed.json",
+    "LEAN_BRIDGE_PYTHON": "/app/.toolchains/python311/bin/python3.11"
+  },
+  "hostGlibc": "glibc 2.36",
+  "scope": "Original local installed Fin 0 nominal collection observations. These are not hosted results or dispatch measurements. Selected source snapshots are not a full build dependency closure. Package archive bytes were removed by the installed harness; only their original identities remain in successful reports.",
+  "files": [
+    {
+      "path": "start.json",
+      "role": "original",
+      "bytes": 257840,
+      "sha256": "38e17081bdf176fedb8c4c3c24940dd2935f749a8ee9dc5ac0fbaf5036350594"
+    },
+    {
+      "path": "end.json",
+      "role": "original",
+      "bytes": 211,
+      "sha256": "14280ae8586b910944df78b6a7085eaedc5763c34d03e91aae18a1a4af44cf95"
+    },
+    {
+      "path": "run.tap",
+      "role": "original",
+      "bytes": 984,
+      "sha256": "3a7136267e6cb9350d460060afec30669a82214c86cc6b418de0f6add9664e71"
+    },
+    {
+      "path": "ordinary.json",
+      "role": "original",
+      "bytes": 9604,
+      "sha256": "10a02a6235ca22e23e0917afda01c0c6c4a9c1400dd1b1366b1508bfa7c5bcf8"
+    },
+    {
+      "path": "reviewed.json",
+      "role": "original",
+      "bytes": 9698,
+      "sha256": "1d772f13f111e0c5610766f3d595e1fed8f4b4b4e6fe7bfaa4a59584f582f219"
+    },
+    {
+      "path": "verified.json",
+      "role": "original",
+      "bytes": 366,
+      "sha256": "ef4bb59cd6ab71c18fc0c5876e1044eb300b9c06e4d4d74c607a5730e7c71602"
+    },
+    {
+      "path": "runner.mjs",
+      "role": "runner",
+      "bytes": 6197,
+      "sha256": "65dc36a90cfd1145d41942ac601101fd10f5f4a244c3f4924cedfcd994105aad"
+    },
+    {
+      "path": "sources/src/abi/refinements.mjs",
+      "role": "source",
+      "bytes": 5781,
+      "sha256": "f0cc3f1ea3a934f11f0312f743fcc51db8cc4e0fc2edd0fe422c630bc8d4c180"
+    },
+    {
+      "path": "sources/src/analyze/NativeExports.lean",
+      "role": "source",
+      "bytes": 87953,
+      "sha256": "46b46cbb21fe51d166ab700cde2c41583bc3a093f67cecd07d104cdf649f61ce"
+    },
+    {
+      "path": "sources/src/analyze/reviewed-source.mjs",
+      "role": "source",
+      "bytes": 24336,
+      "sha256": "d3a875e4fc6dca6b7a93e70db62980d01f5b2a68f2e5e8999b93bbf0ca04a462"
+    },
+    {
+      "path": "sources/src/backends/python/copied-conversions.mjs",
+      "role": "source",
+      "bytes": 10261,
+      "sha256": "658271a8cfad111215b7072f8df29189f71f56dc15e3f7104e82bd8b50f2f936"
+    },
+    {
+      "path": "sources/src/backends/python/copied-values.mjs",
+      "role": "source",
+      "bytes": 14861,
+      "sha256": "8c0c6432d1bbccca1d6608757d56345ae5f50fa7746ee8e615c212cbf0799cc7"
+    },
+    {
+      "path": "sources/src/build/canonical-build.mjs",
+      "role": "source",
+      "bytes": 43813,
+      "sha256": "17e88b02d75c81379c0a8f6e6b14ab583fabfaa8b7fdb747174505256ca48e7c"
+    },
+    {
+      "path": "sources/src/build/native-model.mjs",
+      "role": "source",
+      "bytes": 42596,
+      "sha256": "aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13"
+    },
+    {
+      "path": "sources/src/release/package-set-receipt.mjs",
+      "role": "source",
+      "bytes": 14878,
+      "sha256": "d0b945554b03e9d0f93149b12ddf808c33243cbb0ff5495a7a8a68e683fc71ed"
+    },
+    {
+      "path": "sources/tests/fixtures/fin-record-zero-consumers/c.c",
+      "role": "source",
+      "bytes": 6951,
+      "sha256": "e9de9751cf8709fcd9ec7ed612875e8d97cfabca3906c616f898700bd643dcd9"
+    },
+    {
+      "path": "sources/tests/fixtures/fin-record-zero-consumers/cpp.cpp",
+      "role": "source",
+      "bytes": 2539,
+      "sha256": "2be9d1e1f7cfc9c6c7aefeacd1d13855b222a4facd2668646072bd702c17c8a2"
+    },
+    {
+      "path": "sources/tests/fixtures/fin-record-zero-consumers/dotnet.cs",
+      "role": "source",
+      "bytes": 2700,
+      "sha256": "e860ceb3fccdebb1b1610455a077fb25d449d772349cecafc6a6a81d2c4e320f"
+    },
+    {
+      "path": "sources/tests/fixtures/fin-record-zero-consumers/java.java",
+      "role": "source",
+      "bytes": 3255,
+      "sha256": "35d08d1818131c3b27ccfbb2c6cfa90ce2b18148c33432d0bfaffb142c75bc35"
+    },
+    {
+      "path": "sources/tests/fixtures/fin-record-zero-consumers/kotlin.kt",
+      "role": "source",
+      "bytes": 2377,
+      "sha256": "aacd43220a0b54e633f5286cb6d3362b8b9c6f5a840861439d1370f28b89acdd"
+    },
+    {
+      "path": "sources/tests/fixtures/fin-record-zero-consumers/perl.pl",
+      "role": "source",
+      "bytes": 3066,
+      "sha256": "4b8cdf0c5b46db9286ba1668c7a17f062831eb22e8a65cee5778a4e4f0b2c740"
+    },
+    {
+      "path": "sources/tests/fixtures/fin-record-zero-consumers/php-native.php",
+      "role": "source",
+      "bytes": 3121,
+      "sha256": "48f379e145b98e92882c33949f73a190aa3dc3514257813292f3931aa5adf519"
+    },
+    {
+      "path": "sources/tests/fixtures/fin-record-zero-consumers/python.py",
+      "role": "source",
+      "bytes": 2358,
+      "sha256": "221855299016a7f855e804d0bb7c09304bdea7ef524c355d0a2de5b1dd95bcbf"
+    },
+    {
+      "path": "sources/tests/fixtures/fin-record-zero-consumers/ruby.rb",
+      "role": "source",
+      "bytes": 2102,
+      "sha256": "5b37e07898b96915c1eb96cdc05fcfa3fdcf99b8e0d443d758771ebc2e5b209c"
+    },
+    {
+      "path": "sources/tests/fixtures/fin-record-zero-consumers/rust.rs",
+      "role": "source",
+      "bytes": 2744,
+      "sha256": "b55c2af4955240c9cd631ecd5b67484774e565335a8e078dd5853abc75bc8962"
+    },
+    {
+      "path": "sources/tests/fixtures/fin-record-zero-consumers/wit-wasi.c",
+      "role": "source",
+      "bytes": 5948,
+      "sha256": "91a9477ca80df596b5177b80b5b5ce204e3e197a47acaec74151f95d1ac78074"
+    },
+    {
+      "path": "sources/tests/fixtures/onboarding/native-fin-record-zero/FinRecordZero.lean",
+      "role": "source",
+      "bytes": 700,
+      "sha256": "9835cfb2006804e81abb732891c0592f6677a6dcfb7c949f3ed404d295afdc9b"
+    },
+    {
+      "path": "sources/tests/fixtures/onboarding/native-fin-record-zero/LICENSE",
+      "role": "source",
+      "bytes": 1081,
+      "sha256": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca"
+    },
+    {
+      "path": "sources/tests/fixtures/onboarding/native-fin-record-zero/lakefile.toml",
+      "role": "source",
+      "bytes": 77,
+      "sha256": "8a6eeb0fbe305dc8787cf3532a82bcf777aca4df32739da83a8325a0c2658ceb"
+    },
+    {
+      "path": "sources/tests/fixtures/onboarding/native-fin-record-zero/lean-toolchain",
+      "role": "source",
+      "bytes": 25,
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "path": "sources/tests/fixtures/onboarding/native-fin-record-zero/package.json",
+      "role": "source",
+      "bytes": 59,
+      "sha256": "59f469b028bd2466c0c4f1d4bf990e5a8b27203f5946e3631133160d77d60740"
+    },
+    {
+      "path": "sources/tests/helpers/copied-fixture-install.mjs",
+      "role": "source",
+      "bytes": 15505,
+      "sha256": "dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df"
+    },
+    {
+      "path": "sources/tests/helpers/fin-fixture-installed.mjs",
+      "role": "source",
+      "bytes": 8806,
+      "sha256": "fb52e672df3f2dc369a0d51a271e73c0c7c670a15c47d9d2c0c96ba717a3d403"
+    },
+    {
+      "path": "sources/tests/helpers/fin-record-model.mjs",
+      "role": "source",
+      "bytes": 4766,
+      "sha256": "b6fec1465d78b6e76c1a1646bf30fceb05903b413b2fd5622605f8b280e11bb0"
+    },
+    {
+      "path": "sources/tests/helpers/fin-record-zero-declarations-tests.mjs",
+      "role": "source",
+      "bytes": 4804,
+      "sha256": "0989fe1800c62b7411ec04b4ce6082c95ff5588e100eaae2fc3e88ebb3676b49"
+    },
+    {
+      "path": "sources/tests/helpers/fin-record-zero-fixture.mjs",
+      "role": "source",
+      "bytes": 5568,
+      "sha256": "a4d1c195b5f4ec4f522161511d30779e3b62fa7779b8c6b83fbb00317fec8b1d"
+    },
+    {
+      "path": "sources/tests/helpers/fin-record-zero-tests.mjs",
+      "role": "source",
+      "bytes": 4862,
+      "sha256": "3510898e3fc56376c3d660df4547fd3371dc253d7a64dd47fad01bf6214f60de"
+    },
+    {
+      "path": "sources/tests/helpers/lake-workspace.mjs",
+      "role": "source",
+      "bytes": 9902,
+      "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082"
+    },
+    {
+      "path": "sources/tests/helpers/package-set.mjs",
+      "role": "source",
+      "bytes": 5283,
+      "sha256": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c"
+    },
+    {
+      "path": "sources/tests/helpers/type-corpus-reviewed-ir.mjs",
+      "role": "source",
+      "bytes": 3557,
+      "sha256": "621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7"
+    }
+  ]
+}
