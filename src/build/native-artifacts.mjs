@@ -99,7 +99,7 @@ export async function readVerifiedNativeRuntime(root)
  * @param options.ownedCallbackResultAnchors - The caller preserves callback-local result owners.
  * @param options.nativeRefinements - The caller checks top-level Fin bounds before Lean dispatch.
  * @param options.nativeCallbackRefinements - The caller checks a leased closure's Fin arguments before Lean dispatch.
- * @param options.nativeCheckedRecords - The caller passes checked records as payload mirrors (C and C++).
+ * @param options.nativeCheckedRecords - The caller passes checked records through the verified C payload-mirror adapter.
  */
 export async function readVerifiedNativeComponent(root, runtimeIdentity, { copiedGraphs = false, ownedGraphs = false, ownedHostCallbacks = false, ownedInputTransfers = false, ownedAnchoredResults = false, ownedReceiverExports = false, ownedCallbackResultAnchors = false, nativeRefinements = false, nativeCallbackRefinements = false, nativeCheckedRecords = false } = {})
 {
@@ -127,7 +127,7 @@ export async function readVerifiedNativeComponent(root, runtimeIdentity, { copie
 	if(refined && nativeRefinements !== true)
 		throw Object.assign(new TypeError("This native component requires a checked Fin consumer adapter"), { code: "native-refinements-unavailable" });
 	const callbackRefined = refined && model.exports.some(item => [...(item.refinements?.parameters ?? []), item.refinements?.result].some(tree => tree?.kind === "callback"));
-	// Checked records cross only as payload mirrors, which only the C and C++ projections generate.
+	// Every enabled consumer must use the verified payload-mirror C adapter, never source record layout.
 	if(refined && model.exports.some(item => [...(item.refinements?.parameters ?? []), item.refinements?.result].some(tree => tree?.kind === "checked-record")) && nativeCheckedRecords !== true)
 		throw Object.assign(new TypeError("This native component requires a checked-record consumer adapter"), { code: "native-checked-records-unavailable" });
 	if(callbackRefined && nativeCallbackRefinements !== true)

@@ -12,6 +12,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeCheckedRecordNativeHostSource, checkedRecordNativeHostHistoryPath } from "./checked-record-native-host-history.mjs";
 import { browserSubtypeRoot, browserSubtypeIndex, browserSubtypeProfiles, browserSubtypeEvidenceId, browserSubtypeObservationId, browserSubtypeLimit, browserSubtypeConversion, browserSubtypeReference, promoteBrowserSubtype } from "./reviewed-subtype-browser-promotion.mjs";
 import { beforeReviewedSubtypeBrowserPromotionSource, reviewedSubtypeBrowserPromotionChangedPaths, reviewedSubtypeBrowserPromotionHistoryPath, reviewedSubtypeBrowserPromotionPredecessor, reverseReviewedSubtypeBrowserPromotionUpdate } from "./reviewed-subtype-browser-promotion-history.mjs";
 
@@ -62,11 +63,14 @@ test("reviewed browser promotion adds exactly six cells and preserves every earl
 		changed.push(`${cell.profile}/${cell.position}`);
 	}
 	assert.deepEqual(changed.sort(), browserSubtypeProfiles.flatMap(profile => [profile + "/parameter", profile + "/result"]).sort());
-	const history = JSON.parse(await readFile(reviewedSubtypeBrowserPromotionHistoryPath));
-	for(const entry of proposed.evidence) for(const file of entry.files)
+	for(const path of [reviewedSubtypeBrowserPromotionHistoryPath, checkedRecordNativeHostHistoryPath])
 	{
-		const update = history.updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);
-		if(update) file.sha256 = update.currentSha256;
+		const history = JSON.parse(await readFile(path));
+		for(const entry of proposed.evidence) for(const file of entry.files)
+		{
+			const update = history.updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);
+			if(update) file.sha256 = update.currentSha256;
+		}
 	}
 	assert.deepEqual(current.document, proposed);
 	assert.equal(proposed.observations.at(-1).id, browserSubtypeObservationId);
@@ -126,7 +130,7 @@ test("reviewed browser promotion history authenticates exact transitions and rej
 	assert.deepEqual(history.updates.map(update => update.path), reviewedSubtypeBrowserPromotionChangedPaths);
 	for(const update of history.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeCheckedRecordNativeHostSource(update.path, await readFile(update.path, "utf8"));
 		const previous = reverseReviewedSubtypeBrowserPromotionUpdate(source, update);
 		assert.equal(beforeReviewedSubtypeBrowserPromotionSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.currentSha256), source);

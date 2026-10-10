@@ -24,6 +24,7 @@ import { reviewedSubtypeBrowserHistoryPath } from "./reviewed-subtype-browser-hi
 import { reviewedSubtypeBrowserCiHistoryPath } from "./reviewed-subtype-browser-ci-history.mjs";
 import { reviewedSubtypeBrowserPromotionHistoryPath } from "./reviewed-subtype-browser-promotion-history.mjs";
 import { browserSubtypeEvidenceId, browserSubtypeObservationId } from "./reviewed-subtype-browser-promotion.mjs";
+import { checkedRecordNativeHostHistoryPath } from "./checked-record-native-host-history.mjs";
 
 const predecessor = async () => JSON.parse(beforeReviewedSubtypeNativePromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
 
@@ -81,7 +82,7 @@ test("native Subtype promotion adds exactly eighteen cells and preserves every o
 		changed.push(`${cell.profile}/${cell.position}`);
 	}
 	assert.deepEqual(changed.sort(), reviewedSubtypeNativeProfiles.flatMap(profile => [profile + "/parameter", profile + "/result"]).sort());
-	for(const path of [reviewedSubtypeNativePromotionHistoryPath, reviewedSubtypeHostCiReportHistoryPath, reviewedSubtypeHostCiHistoryPath, mavenPrerequisiteHistoryPath, reviewedSubtypePackageRecordHistoryPath, reviewedSubtypePackageCiHistoryPath, reviewedSubtypeBrowserHistoryPath, reviewedSubtypeBrowserCiHistoryPath, reviewedSubtypeBrowserPromotionHistoryPath])
+	for(const path of [reviewedSubtypeNativePromotionHistoryPath, reviewedSubtypeHostCiReportHistoryPath, reviewedSubtypeHostCiHistoryPath, mavenPrerequisiteHistoryPath, reviewedSubtypePackageRecordHistoryPath, reviewedSubtypePackageCiHistoryPath, reviewedSubtypeBrowserHistoryPath, reviewedSubtypeBrowserCiHistoryPath, reviewedSubtypeBrowserPromotionHistoryPath, checkedRecordNativeHostHistoryPath])
 	{
 		const history = JSON.parse(await readFile(path));
 		for(const entry of proposed.evidence) for(const file of entry.files)

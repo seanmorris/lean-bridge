@@ -1,14 +1,14 @@
 /**
- * Read compiler-checked Fin bounds, at top level and inside arrays, lists and
- * options, for native host documentation.
+ * Document compiler-checked Fin bounds, Subtype constructors and checked-record
+ * payloads in native host packages.
  *
  * @file
  */
 import { assertRefinement } from "../../abi/refinements.mjs";
 
 /**
- * Read exact Fin bounds from the declaration's checked refinement extension.
- * Bounds are never inferred from the erased Nat transport type.
+ * Read exact refinements from compiler-checked declaration and type metadata.
+ * Fin bounds are never inferred from the erased Nat transport type.
  *
  * @param declaration - Binding IR declaration.
  * @param types - Binding IR type definitions, to document record and variant fields.
@@ -16,7 +16,18 @@ import { assertRefinement } from "../../abi/refinements.mjs";
 export const nativeFinRefinements = (declaration, types = []) => {
 	const declared = declaration.source?.extensions?.["lean-lang.org/refinements"];
 	const expanded = nativeFinExpansion(declaration, types);
-	if(declared === undefined) return expanded;
+	const checkedRecord = site => site.type.kind === "named" && types.some(type => type.id === site.type.id
+		&& type.kind === "record" && type.source?.extensions?.["lean-lang.org/erased-proofs"] !== undefined);
+	// Lean-produced records carry no input constructor, including result-only packages.
+	const withResult = value => checkedRecord(declaration.result)
+		? { parameters: value?.parameters ?? declaration.parameters.map(() => null)
+			, result: { kind: "checked-record", constructor: null } } : value;
+	if(declared === undefined)
+	{
+		if(declaration.parameters.some(checkedRecord))
+			throw new TypeError(`${declaration.id}: a checked record parameter needs its selected constructor`);
+		return withResult(expanded);
+	}
 	const value = declared;
 	if(value === null || typeof value !== "object" || Array.isArray(value)
 		|| JSON.stringify(Object.keys(value).sort()) !== JSON.stringify(["parameters", "result"])
@@ -24,17 +35,17 @@ export const nativeFinRefinements = (declaration, types = []) => {
 		throw new TypeError(`${declaration.id} has malformed refinement metadata`);
 	value.parameters.forEach((refinement, index) => assertRefinement(refinement, declaration.parameters[index].type));
 	assertRefinement(value.result, declaration.result.type);
-	// Checked records have generated mirror carriers only for C, C++ and npm packages so far.
-	if([...value.parameters, value.result].some(refinement => refinement?.kind === "checked-record"))
-		throw new TypeError(`${declaration.id}: checked records are implemented only for C, C++ and npm packages`);
-	// Only Fin, alone or inside arrays, lists, options, products and results, reaches native
-	// hosts; any other constraint must fail rather than vanish from the docs.
-	const supported = (refinement, top) => refinement === null || refinement.kind === "fin" || (top && refinement.kind === "subtype")
+	if(value.parameters.some((refinement, index) => (refinement?.kind === "checked-record") !== checkedRecord(declaration.parameters[index]))
+		|| value.result?.kind === "checked-record")
+		throw new TypeError(`${declaration.id}: checked records need an input constructor and proof-backed result projection`);
+	// Primitive Subtypes and checked-record constructors are top-level sites. Fin also
+	// crosses copied containers; other constraints must fail rather than vanish from docs.
+	const supported = (refinement, top) => refinement === null || refinement.kind === "fin" || (top && ["subtype", "checked-record"].includes(refinement.kind))
 		|| (["array", "list", "option"].includes(refinement.kind) && refinement.arguments.length === 1 && supported(refinement.arguments[0], false))
 		|| (["tuple", "result"].includes(refinement.kind) && refinement.arguments.length === 2 && refinement.arguments.every(child => supported(child, false)));
 	if(![...value.parameters, value.result].every(refinement => supported(refinement, true)))
-		throw new TypeError(`${declaration.id}: native packages document only top-level Subtype and Fin refinements at top level or inside arrays, lists, options, products and results`);
-	return expanded ?? value;
+		throw new TypeError(`${declaration.id}: native packages document only top-level Subtype/checked records and Fin refinements at top level or inside arrays, lists, options, products and results`);
+	return withResult(expanded ?? value);
 };
 
 /**
@@ -94,6 +105,8 @@ const nativeFinExpansion = (declaration, types) => {
  */
 export const nativeFinBoundPaths = (refinement, path) => {
 	if(refinement === null) return [];
+	if(refinement.kind === "checked-record") return [refinement.constructor === null
+		? `${path} projects proof-backed record payload fields` : `${path} checked by ${refinement.constructor}`];
 	if(refinement.kind === "subtype") return [`${path} checked by ${refinement.constructor}`];
 	if(refinement.kind === "fin") return [`${path} < ${refinement.bound}`];
 	if(refinement.kind === "tuple") return refinement.arguments.flatMap((child, index) => nativeFinBoundPaths(child, `${path}.${index}`));
@@ -119,8 +132,8 @@ export const nativeFinSummary = (declaration, names, types = []) => {
 };
 
 /**
- * README sentence about container sites. Packages whose bounds are all scalar keep the
- * historical sentence byte for byte; packages with container bounds describe the paths.
+ * README sentence about container sites. Scalar bounds retain their short description;
+ * packages with container bounds describe the paths.
  *
  * @param declarations - Binding IR declarations of the package's exports.
  * @param packages - Host package noun, such as "Ruby gems".
@@ -133,24 +146,23 @@ export const nativeFinContainerNote = (declarations, packages, types = []) => {
 	});
 	const nominal = refinement => refinement !== null && typeof refinement === "object"
 		&& (["record", "variant"].includes(refinement.kind) || (refinement.arguments ?? []).some(nominal));
-	// Packages without record or variant bounds keep their earlier sentences byte for byte.
+	// Nominal fields need paths identifying the record member or active variant case.
 	if(trees.some(nominal))
 		return `Fin inside arrays, lists, options, products, Except values, records and variants is checked before Lean runs: every array or list element, a present option value, both product components, only the active Except branch, every record field and only the fields of the active variant case. An empty array, an absent option or an inactive branch or case is valid even for Fin 0. Bounds below list every element as name[*], a present option value as name?, product components as name.0 and name.1, the active branch as name.ok or name.error, a record field as name.field and a field of the active variant case as name.Case.field. Fin inside callbacks or generic record instantiations is not supported in ${packages}.`;
 	const structural = trees.some(refinement => refinement !== null && refinement.kind !== "fin");
 	const product = refinement => refinement !== null && refinement.arguments !== undefined
 		&& (["tuple", "result"].includes(refinement.kind) || refinement.arguments.some(product));
-	// Packages without product or result bounds keep their earlier sentences byte for byte.
+	// Products check both components; results check only their active branch.
 	if(trees.some(product))
 		return `Fin inside arrays, lists, options, products and Except values is checked before Lean runs: every array or list element, a present option value, both product components and only the active Except branch. An empty array, an absent option or an inactive branch is valid even for Fin 0. Bounds below list every element as name[*], a present option value as name?, product components as name.0 and name.1, and the active branch as name.ok or name.error. Fin inside records, variants or callbacks is not supported in ${packages}.`;
 	return structural
-		? `Fin inside arrays, lists and options is checked element by element before Lean runs; an empty array or an absent option is valid even for Fin 0. Bounds below list every element as name[*] and a present option value as name?. Fin inside records, variants, callbacks or reviewed Binding IR is not supported in ${packages}.`
-		: `Fin inside containers, records, variants, callbacks or reviewed Binding IR is not supported in ${packages}.`;
+		? `Fin inside arrays, lists and options is checked element by element before Lean runs; an empty array or an absent option is valid even for Fin 0. Bounds below list every element as name[*] and a present option value as name?. Fin inside records, variants or callbacks is not supported in ${packages}.`
+		: `Fin inside containers, records, variants or callbacks is not supported in ${packages}.`;
 };
 
 /**
- * README text for a package's checked sites: the host's Fin paragraph when any Fin
- * bound exists (byte for byte as before), and a Subtype paragraph when any export
- * carries an author-checked constructor.
+ * README text for a package's checked sites: the supplied Fin paragraph, Subtype
+ * constructors and proof-free checked-record inputs and results.
  *
  * @param declarations - Binding IR declarations of the package's exports.
  * @param finParagraph - The host's Fin paragraph, including its container note.
@@ -161,7 +173,7 @@ export const nativeRefinementReadme = (declarations, finParagraph, packages, typ
 	const kinds = new Set();
 	const walk = refinement => {
 		if(refinement === null) return;
-		if(refinement.kind === "fin" || refinement.kind === "subtype") kinds.add(refinement.kind);
+		if(["fin", "subtype", "checked-record"].includes(refinement.kind)) kinds.add(refinement.kind);
 		else (refinement.kind === "variant" ? refinement.cases.flatMap(branch => branch.arguments) : refinement.arguments).forEach(walk);
 	};
 	for(const declaration of declarations)
@@ -171,6 +183,7 @@ export const nativeRefinementReadme = (declarations, finParagraph, packages, typ
 	}
 	const parts = [];
 	if(kinds.has("fin")) parts.push(finParagraph);
-	if(kinds.has("subtype")) parts.push(`Lean Subtype parameters cross as their base value. The bundled native library runs the author's checked constructor, named below, before the export runs; a value the constructor rejects fails the call with the invalid-argument error naming the parameter and constructor, and the export receives the constructed value, which may differ from the input. Subtype results are the base value. Subtype inside containers, records, variants, callbacks or reviewed Binding IR is not supported in ${packages}.`);
+	if(kinds.has("subtype")) parts.push(`Lean Subtype parameters cross as their base value. The bundled native library runs the author's checked constructor, named below, before the export runs; a value the constructor rejects fails the call with the invalid-argument error naming the parameter and constructor, and the export receives the constructed value, which may differ from the input. Subtype results are the base value. Reviewed APIs select the constructor and reconcile it with fresh Lean compilation. Subtype inside containers, records, variants or callbacks is not supported in ${packages}.`);
+	if(kinds.has("checked-record")) parts.push("Checked records cross as generated record values containing only their payload fields. The bundled native library validates each input through the selected Lean constructor before calling the export. A rejected record reports the parameter and constructor; a normalizing constructor changes the value received by Lean without changing the caller's record. Results project the payload fields of a record whose proofs Lean has already constructed. No proof object or input constructor is needed for a result-only export. Ordinary and reviewed APIs retain each parameter's constructor choice. Nested checked records, other dependent payloads and checked-record callbacks remain unsupported.");
 	return parts.join("\n\n");
 };

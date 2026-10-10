@@ -21,6 +21,7 @@ import { reviewedSubtypePackageCiChangedPaths } from "./reviewed-subtype-package
 import { reviewedSubtypeBrowserChangedPaths } from "./reviewed-subtype-browser-history.mjs";
 import { reviewedSubtypeBrowserCiChangedPaths } from "./reviewed-subtype-browser-ci-history.mjs";
 import { reviewedSubtypeBrowserPromotionChangedPaths } from "./reviewed-subtype-browser-promotion-history.mjs";
+import { checkedRecordNativeHostChangedPaths } from "./checked-record-native-host-history.mjs";
 import { subtypeComponentChangedPaths } from "./subtype-component-source-history.mjs";
 import { nestedFinChangedPaths, refinementClosureChangedPaths } from "./nested-fin-source-history.mjs";
 import { nominalFinChangedPaths } from "./nominal-fin-source-history.mjs";
@@ -857,6 +858,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...reviewedSubtypeBrowserChangedPaths
 	, ...reviewedSubtypeBrowserCiChangedPaths
 	, ...reviewedSubtypeBrowserPromotionChangedPaths
+	, ...checkedRecordNativeHostChangedPaths
 ])].sort());
 
 /**

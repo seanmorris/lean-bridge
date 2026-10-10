@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeCheckedRecordNativeHostSource } from "./checked-record-native-host-history.mjs";
 
 export const reviewedSubtypeBrowserPromotionHistoryPath = "docs/evidence/reviewed-subtype-browser-promotion-source-history-20261010.json";
 export const reviewedSubtypeBrowserPromotionPredecessor = "3e35c2f41213bb35be37fd379796accb004f8962";
@@ -59,6 +60,7 @@ export const reverseReviewedSubtypeBrowserPromotionUpdate = (source, update) => 
  * @param expected - Optional exact stopping digest.
  */
 export const beforeReviewedSubtypeBrowserPromotionSource = (path, source, expected) => {
+	source = beforeCheckedRecordNativeHostSource(path, source, expected);
 	if(typeof source !== "string" || !reviewedSubtypeBrowserPromotionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
