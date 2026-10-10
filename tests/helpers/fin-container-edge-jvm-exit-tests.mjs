@@ -13,6 +13,7 @@ import { finContainerEdgeJvmGdbScript } from "./fin-container-edge-jvm-gdb.mjs";
 import { assertFinContainerEdgeReport } from "./fin-container-edge-report.mjs";
 import { syntheticFinContainerEdgeReport } from "./fin-container-edge-report-fixtures.mjs";
 import "./fin-jvm-diagnostics-history-tests.mjs";
+import "./fin-jvm-diagnostics-archive-tests.mjs";
 
 test("JVM diagnostics preserve the strict exit guard and add no retry or status substitution", () => {
 	const script = finContainerEdgeJvmGdbScript({ nativeDirectory: "/verified", extractionRoot: "/fresh", libraries: { "component.so": "1".repeat(64) } });
