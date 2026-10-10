@@ -103,11 +103,14 @@ export const compileFinContainerEdgeFixture = async (root, lean, { cpp = false }
  *
  * @param root - Fresh source-test directory.
  * @param lean - Absolute pinned Lean compiler.
+ * @param options - Source fixture library layout.
+ * @param options.relocatable - Resolve the bundled Lean runtime beside the extracted libraries.
  */
-export const compileFinContainerEdgeSplitFixture = async (root, lean) => {
+export const compileFinContainerEdgeSplitFixture = async (root, lean, { relocatable = false } = {}) => {
+	assert.equal(typeof relocatable, "boolean");
 	const compiled = await compileFinContainerEdgeFixture(root, lean);
 	const { environment, prefix } = compiled;
-	const runtime = [`-L${join(prefix, "lib/lean")}`, "-lleanshared", `-Wl,-rpath,${join(prefix, "lib/lean")}`];
+	const runtime = [`-L${join(prefix, "lib/lean")}`, "-lleanshared", `-Wl,-rpath,${relocatable ? "$ORIGIN" : join(prefix, "lib/lean")}`];
 	await runCopied("/usr/bin/cc", ["-shared", "-fPIC", "-O2", `-I${join(prefix, "include")}`, "-I.", "broker.c", ...runtime, "-lpthread", "-Wl,-z,defs", "-o", "liblean_bridge_native.so"], root, environment);
 	await runCopied("/usr/bin/cc", [
 		"-shared", "-fPIC", "-O2", `-I${join(prefix, "include")}`
