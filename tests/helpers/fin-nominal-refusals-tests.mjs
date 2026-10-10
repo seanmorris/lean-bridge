@@ -10,6 +10,8 @@ import { join } from "node:path";
 import test from "node:test";
 import "./fin-nominal-refusal-archive-tests.mjs";
 import "./fin-record-alias-tests.mjs";
+import "./fin-record-alias-archive-tests.mjs";
+import "./fin-alias-closure-history-tests.mjs";
 import { buildCanonicalProject } from "../../src/build/canonical-build.mjs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import { nativeFixtureEnvironment } from "./copied-fixture-install.mjs";

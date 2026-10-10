@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "kind": "fin-record-alias-local-acceptance",
+  "outcome": "passed",
+  "producer": {
+    "revision": "b8765be7c642fd7ba3349c8cc90a3857a7118b26",
+    "tree": "1f264657a5b83a801594e55be8dd3c642f0a4620"
+  },
+  "profiles": [
+    "c",
+    "cpp"
+  ],
+  "hostGlibc": "glibc 2.36",
+  "scope": "Local installed C/C++ record/variant aliases, ordinary and reviewed. No new hosted, minimum-platform or dispatch observation. Selected source snapshots are not a full build dependency closure. Package archive digests and sizes survive in original reports; the harness removed package binaries.",
+  "files": [
+    {
+      "path": "start.json",
+      "bytes": 259288,
+      "sha256": "d2313a7d6d36c70b85db44f86703beeb10a8b8ad657de3102d51f25825cca493"
+    },
+    {
+      "path": "end.json",
+      "bytes": 211,
+      "sha256": "33f6dbd19ded6bde6677b9df0b6a2e8de0d364139803f98bfc8fb2204077b999"
+    },
+    {
+      "path": "run.tap",
+      "bytes": 822,
+      "sha256": "9b12a7ea9ad845ea5143f2839e069795541dddcfed752360b6b7469f3f4945a8"
+    },
+    {
+      "path": "ordinary.json",
+      "bytes": 25972,
+      "sha256": "c73496660eb5e1171323b1ae0f8125108a460b358fc26f063a1b20efb233f440"
+    },
+    {
+      "path": "reviewed.json",
+      "bytes": 26160,
+      "sha256": "d340d3cb6a8cd98ffffb61f08a3ea61e49cebf7aa92306a5edc43727ca22fab7"
+    },
+    {
+      "path": "verified.json",
+      "bytes": 404,
+      "sha256": "505be8cb123a1d48a92dcc97e0f9eead3e83a289b454f9b08061420827ae12bc"
+    },
+    {
+      "path": "runner.mjs",
+      "bytes": 6197,
+      "sha256": "ee0927c2fcf7baf1993d5bfbb0ded929b1dc05c5344c4486a2e8058a6b17f683"
+    },
+    {
+      "path": "sources/tests/helpers/fin-record-alias-tests.mjs",
+      "bytes": 3939,
+      "sha256": "7b3ced9430335dd8f53b986ac7b9908c45294e27fae21ad090b46b585b3b6dc6"
+    },
+    {
+      "path": "sources/tests/helpers/fin-record-install.mjs",
+      "bytes": 4128,
+      "sha256": "f47a2cf7290887d2ac09a37e873d89fa575687ec5d9228c05ce904de35259227"
+    },
+    {
+      "path": "sources/tests/helpers/reviewed-fin-record-fixture.mjs",
+      "bytes": 3333,
+      "sha256": "757d1a1a2d672d3ec66de20688860182f982a0fcd0e731051a58109a671b06a4"
+    },
+    {
+      "path": "sources/tests/helpers/type-corpus-reviewed-ir.mjs",
+      "bytes": 3557,
+      "sha256": "621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7"
+    },
+    {
+      "path": "sources/tests/helpers/fin-fixture-installed.mjs",
+      "bytes": 8806,
+      "sha256": "fb52e672df3f2dc369a0d51a271e73c0c7c670a15c47d9d2c0c96ba717a3d403"
+    },
+    {
+      "path": "sources/tests/helpers/copied-fixture-install.mjs",
+      "bytes": 15505,
+      "sha256": "dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df"
+    },
+    {
+      "path": "sources/tests/fixtures/fin-record-consumers/c.c",
+      "bytes": 13313,
+      "sha256": "6ea986e9a2f2e3524837ddc70e6338602c27c3446e9675985cf863f707de8b93"
+    },
+    {
+      "path": "sources/tests/fixtures/fin-record-consumers/cpp.cpp",
+      "bytes": 8218,
+      "sha256": "8829f065c80f3110620090fc2114deeaf2e46a4e050c6e31f890f09911218899"
+    },
+    {
+      "path": "sources/tests/fixtures/onboarding/native-fin-records/FinRecords.lean",
+      "bytes": 2653,
+      "sha256": "419dcccad2f2a6cafb828315e0e51ee3747ad15a3fe3c7a5e74deb7a532dd299"
+    },
+    {
+      "path": "sources/tests/fixtures/onboarding/native-fin-records/LICENSE",
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "path": "sources/tests/fixtures/onboarding/native-fin-records/lakefile.toml",
+      "bytes": 71,
+      "sha256": "876cf2bc655ac6d95d6b144b8ac9d4ad755d3565e13c87c2e742ccc425f506df"
+    },
+    {
+      "path": "sources/tests/fixtures/onboarding/native-fin-records/lean-toolchain",
+      "bytes": 25,
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "path": "sources/tests/fixtures/onboarding/native-fin-records/package.json",
+      "bytes": 56,
+      "sha256": "1d16d863f29a946af4e8be43fc9f101a433d70258499da070495d6aeae12dfc2"
+    },
+    {
+      "path": "sources/src/analyze/NativeExports.lean",
+      "bytes": 88464,
+      "sha256": "8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f"
+    },
+    {
+      "path": "sources/src/analyze/native-metadata.mjs",
+      "bytes": 6736,
+      "sha256": "dae540c8c48bd6146e2dbeb28a62399faaa87dfbd67111a6c0947107976f314d"
+    },
+    {
+      "path": "sources/src/build/native-model.mjs",
+      "bytes": 42596,
+      "sha256": "aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13"
+    },
+    {
+      "path": "sources/src/backends/c/native-copied-values.mjs",
+      "bytes": 20423,
+      "sha256": "492fd83a246d7d1c58b18812ddc7c90e1fb5d7a999b368cbe56456b5a9d6b7be"
+    }
+  ]
+}

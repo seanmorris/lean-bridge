@@ -35,11 +35,12 @@ The [source history](fin-nominal-refusal-source-history-20261010.json)
 preserves eight exact predecessors and refreshes 186 current-source pins.
 It changes no support observations or older receipt bytes.
 
-## Remaining closure check
+## Installed supplements
 
 The [Fin 0 installed matrix](fin-record-zero-native-20261010.md) has passed
 all fifteen runtime selections on both routes. A separate installed test
-now checks aliases of the refined record and variant through the same
+checks aliases of the refined record and variant through the same
 public C/C++ callers, independent reviewed aliases, two-root archive
-reproduction and source-free installation. Its execution remains pending.
+reproduction and source-free installation. Both routes passed; the
+[alias archive](fin-record-alias-native-20261010.md) preserves their originals.
 The refusal audits above are compiler diagnostics, not installed acceptance.

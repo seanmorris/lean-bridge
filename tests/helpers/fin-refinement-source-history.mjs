@@ -171,6 +171,7 @@ import { finRecordOmissionChangedPaths } from "./fin-record-review-omission-hist
 import { finHostedPromotionChangedPaths } from "./fin-native-hosted-promotion-history.mjs";
 import { finZeroCiChangedPaths } from "./fin-record-zero-ci-history.mjs";
 import { finNominalRefusalChangedPaths } from "./fin-nominal-refusal-history.mjs";
+import { finAliasClosureChangedPaths } from "./fin-alias-closure-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -807,6 +808,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...finHostedPromotionChangedPaths
 	, ...finZeroCiChangedPaths
 	, ...finNominalRefusalChangedPaths
+	, ...finAliasClosureChangedPaths
 ])].sort());
 
 /**

@@ -12,6 +12,8 @@ import { finHostedPromotionReferences } from "./fin-native-hosted-promotion-refe
 import { finHostedMissingFieldProfiles, promoteFinHostedCoverage } from "./fin-native-hosted-promotion.mjs";
 import { beforeFinHostedPromotionSource, finHostedPromotionHistoryPath } from "./fin-native-hosted-promotion-history.mjs";
 import { finZeroCiHistoryPath } from "./fin-record-zero-ci-history.mjs";
+import { finNominalRefusalHistoryPath } from "./fin-nominal-refusal-history.mjs";
+import { finAliasClosureHistoryPath } from "./fin-alias-closure-history.mjs";
 import "./fin-native-hosted-promotion-history-tests.mjs";
 
 const references = finHostedPromotionReferences();
@@ -72,11 +74,14 @@ test("hosted Fin promotion adds 78 evidence entries without rewriting an earlier
 		const update = history.updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);
 		if(update) file.sha256 = update.currentSha256;
 	}
-	const zeroHistory = JSON.parse(await readFile(finZeroCiHistoryPath, "utf8"));
-	for(const entry of expected.evidence) for(const file of entry.files)
+	for(const path of [finZeroCiHistoryPath, finNominalRefusalHistoryPath, finAliasClosureHistoryPath])
 	{
-		const update = zeroHistory.updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);
-		if(update) file.sha256 = update.currentSha256;
+		const stage = JSON.parse(await readFile(path, "utf8"));
+		for(const entry of expected.evidence) for(const file of entry.files)
+		{
+			const update = stage.updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);
+			if(update) file.sha256 = update.currentSha256;
+		}
 	}
 	assert.deepEqual(current.document, expected, "Only the promotion and authenticated source-pin refreshes may change the inventory");
 });

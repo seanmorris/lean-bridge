@@ -1,0 +1,30 @@
+TAP version 13
+# Subtest: ordinary installed refined record aliases preserve bounds and relocated archive identities
+ok 1 - ordinary installed refined record aliases preserve bounds and relocated archive identities
+  ---
+  duration_ms: 380672.485442
+  type: 'test'
+  ...
+# build 0: c, cpp
+# installing and checking c
+# installing and checking cpp
+# build 1: c, cpp
+# Subtest: reviewed installed refined record aliases preserve bounds and relocated archive identities
+ok 2 - reviewed installed refined record aliases preserve bounds and relocated archive identities
+  ---
+  duration_ms: 406947.801152
+  type: 'test'
+  ...
+# build 0: c, cpp
+# installing and checking c
+# installing and checking cpp
+# build 1: c, cpp
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 787960.165264
