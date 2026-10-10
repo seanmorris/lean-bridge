@@ -16,6 +16,7 @@ import { copiedCleanEnvironment, installCopiedConsumer, runCopied } from "./copi
 import { finContainerEnvironment, finContainerTargets } from "./fin-container-install.mjs";
 import { finContainerEdgeConsumer, finContainerEdgeRefinements, finContainerEdgeSource } from "./fin-container-edges.mjs";
 import { observeFinContainerEdgeRaw } from "./fin-container-edge-observer.mjs";
+import { observeFinForeignCarriers } from "./fin-container-foreign-observer.mjs";
 import { observeFinContainerEdgePublic } from "./fin-container-edge-public-observer.mjs";
 import { observeFinContainerEdgePython } from "./fin-container-edge-python-observer.mjs";
 import { observeFinContainerEdgeRust } from "./fin-container-edge-rust-observer.mjs";
@@ -348,6 +349,10 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 		installed: movedInstall, receiptPath, receiptBytes: archiveBytes
 		, expectedModelSha256, leanPrefix, exactFileClosure
 		, probeRoot: join(consumer, `${profile}-edge-raw`) }) : null;
+	const foreignCarriers = measureDispatch ? await observeFinForeignCarriers({
+		installed: movedInstall, receiptPath, receiptBytes: archiveBytes
+		, expectedModelSha256, profile, exactFileClosure
+		, probeRoot: join(consumer, `${profile}-foreign-carriers`) }) : null;
 	const publicHost = measureDispatch && ["c", "cpp"].includes(profile) ? await observeFinContainerEdgePublic({
 		installed: movedInstall, receiptPath, receiptBytes: archiveBytes
 		, expectedModelSha256, profile
@@ -402,6 +407,7 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 		, ...(Object.keys(deployed).length ? { deployedFiles: deployed } : {})
 		, ...(profile === "php-native" ? { repeatStrictExecution: true } : {})
 		, ...(rawAdapter ? { rawAdapterDispatch: rawAdapter } : {})
+		, ...(foreignCarriers ? { foreignCarrierDispatch: foreignCarriers } : {})
 		, ...(publicHost ? { publicHostDispatch: publicHost } : {})
 		, ...(python ? { python } : {}) };
 };
@@ -469,7 +475,7 @@ export const checkInstalledFinContainerEdges = async (t, profiles, reportPath, {
 						, "present", "flatten", "label", "wrap-all", "empty-array"
 						, "empty-list", "empty-option", "optional-digits"
 					].map(name => new RegExp(`${name}: func\\(`, "u")) } });
-			const { rawAdapterDispatch, publicHostDispatch, ...repeated } = await repeatFinContainerEdges({
+			const { rawAdapterDispatch, publicHostDispatch, foreignCarrierDispatch, ...repeated } = await repeatFinContainerEdges({
 				profile, consumer, handoff, packages, command
 				, measureDispatch, pythonEnvironment, rubyEnvironment
 				, jvmEnvironment, dotnetEnvironment, phpEnvironment
@@ -491,7 +497,9 @@ export const checkInstalledFinContainerEdges = async (t, profiles, reportPath, {
 				, dispatch: rawAdapterDispatch ? { kind: "fin-container-edge-dispatch-v1"
 					, publicHost: publicHostDispatch ?? { observed: false, reason: "The separate C raw caller does not measure this host's public calls." }
 					, rawAdapter: rawAdapterDispatch }
-					: { observed: false, reason: "This supplement measures public behavior. Expanded source/adapter counters remain a separate required gate." } });
+					: { observed: false, reason: "This supplement measures public behavior. Expanded source/adapter counters remain a separate required gate." }
+				, ...(foreignCarrierDispatch ? { foreignCarriers: foreignCarrierDispatch } : {})
+			});
 		}
 	}
 	assert.equal(new Set(authors).size, 2); assert.deepEqual(archives[1], archives[0]);

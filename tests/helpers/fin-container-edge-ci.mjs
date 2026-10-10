@@ -57,7 +57,7 @@ export const finContainerEdgeCiInvocation = item => {
  *
  * @param item - Explicit CI host selection.
  */
-export const finContainerEdgeCiCheck = item => `node scripts/check-fin-container-edge-report.mjs ${item.profiles} ${report(item)}${item.python ? ` --python ${item.python}` : ""}`;
+export const finContainerEdgeCiCheck = item => `node scripts/check-fin-container-foreign-report.mjs ${item.profiles} ${report(item)}${item.python ? ` --python ${item.python}` : ""}`;
 /**
  * The producer, nonempty report and measured acceptance gate in one enforced step.
  *
@@ -109,7 +109,7 @@ export const disableFinContainerEdgeWorkflow = workflow => {
 export const assertFinContainerEdgeWorkflow = workflow => {
 	assert.deepEqual(finContainerEdgeCiSelections.flatMap(item => item.profiles.split(",")).sort(), [...finContainerEdgeProfiles, "python"].sort());
 	assert.equal(count(workflow, finContainerEdgeCiFlag), 2 * finContainerEdgeCiSelections.length);
-	assert.equal(count(workflow, "scripts/check-fin-container-edge-report.mjs"), 2 * finContainerEdgeCiSelections.length);
+	assert.equal(count(workflow, "scripts/check-fin-container-foreign-report.mjs"), 2 * finContainerEdgeCiSelections.length);
 	for(const item of finContainerEdgeCiSelections)
 	{
 		const index = once(workflow, finContainerEdgeCiBlock(item));

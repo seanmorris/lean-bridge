@@ -13,6 +13,7 @@ import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { sha256 } from "../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
 import { beforeFinEdgeCiSource, finEdgeCiChangedPaths } from "./helpers/fin-container-edge-ci-history.mjs";
+import { finForeignChangedPaths } from "./helpers/fin-container-foreign-history.mjs";
 import { beforeFinEdgeIntegrationSource, finEdgeIntegrationBranch, finEdgeIntegrationChangedPaths, finEdgeIntegrationHistoryPath, finEdgeIntegrationPredecessor, reverseFinEdgeIntegrationUpdate } from "./helpers/fin-container-edge-integration-history.mjs";
 
 test("container observer integration authenticates every transition and refuses unrecorded edits", async () => {
@@ -67,7 +68,7 @@ test("container integration refreshes exact source pins without changing support
 		if(!digests.has(file.path))
 		{
 			const bytes = await readFile(file.path);
-			const source = finEdgeCiChangedPaths.includes(file.path) ? beforeFinEdgeCiSource(file.path, bytes.toString("utf8")) : bytes;
+			const source = [...finForeignChangedPaths, ...finEdgeCiChangedPaths].includes(file.path) ? beforeFinEdgeCiSource(file.path, bytes.toString("utf8")) : bytes;
 			digests.set(file.path, sha256(source));
 		}
 		assert.equal(digests.get(file.path), file.sha256, file.path);

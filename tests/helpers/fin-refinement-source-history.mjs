@@ -166,6 +166,7 @@ import { finDiagnosticChangedPaths } from "./native-fin-diagnostic-source-histor
 import { finDiagnosticCiChangedPaths } from "./native-fin-diagnostic-ci-history.mjs";
 import { finEdgeIntegrationChangedPaths } from "./fin-container-edge-integration-history.mjs";
 import { finEdgeCiChangedPaths } from "./fin-container-edge-ci-history.mjs";
+import { finForeignChangedPaths } from "./fin-container-foreign-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -797,6 +798,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...finDiagnosticCiChangedPaths
 	, ...finEdgeIntegrationChangedPaths
 	, ...finEdgeCiChangedPaths
+	, ...finForeignChangedPaths
 ])].sort());
 
 /**
