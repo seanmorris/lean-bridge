@@ -12,6 +12,7 @@ import test from "node:test";
 import { assertHostedArrayArchive, assertHostedArrayExecution, assertHostedArrayReport, hostedArrayDirectory } from "./helpers/generic-record-array-hosted-evidence.mjs";
 import "./helpers/native-specialization-closure-tests.mjs";
 import "./helpers/fin-native-hosted-evidence-tests.mjs";
+import "./helpers/fin-native-hosted-promotion-tests.mjs";
 
 test("hosted transcript whitespace rules are archive-local and preserve unrelated attributes", async t => {
 	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-hosted-attributes-"));
