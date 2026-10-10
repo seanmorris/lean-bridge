@@ -13,6 +13,7 @@ import "./helpers/native-fin-promotion-tests.mjs";
 import "./helpers/fin-record-wit-format-tests.mjs";
 import "./helpers/fin-wit-record-evidence-tests.mjs";
 import "./helpers/native-fin-diagnostic-tests.mjs";
+import "./helpers/fin-record-review-omission-history-tests.mjs";
 import { generateNativeLeanAdapters } from "../src/build/native-model.mjs";
 import { compilePrimitiveCSurface } from "../src/backends/c/primitive-surface.mjs";
 import { generateCopiedNativeCalls } from "../src/backends/c/native-copied-values.mjs";
@@ -259,5 +260,7 @@ test("changed record and variant reviews are refused against fresh Lean before a
 		, ["bound moved to the other field", ir => { definition(ir, "Tile").fields.reverse(); }, nominal]
 		, ["loosened nested record's own bound", ir => { definition(ir, "Nest").fields[1].bound = "4"; }, nominal]
 		, ["tightened case field", ir => { definition(ir, "Shape").cases[0][0].bound = "9"; }, nominal]
-		, ["loosened Fin 0 case", ir => { definition(ir, "Gate").cases[1][0].bound = "1"; }, nominal]]);
+		, ["loosened Fin 0 case", ir => { definition(ir, "Gate").cases[1][0].bound = "1"; }, nominal]
+		, ["omitted record bounds", ir => { delete ir.types.find(type => type.id === "lean:FinRecords.Tile").source.extensions[nominalKey]; }, /types\[\d+\]\.source\.extensions/u]
+		, ["omitted variant bounds", ir => { delete ir.types.find(type => type.id === "lean:FinRecords.Shape").source.extensions[nominalKey]; }, /types\[\d+\]\.source\.extensions/u]]);
 });

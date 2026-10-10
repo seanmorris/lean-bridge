@@ -1,26 +1,22 @@
 /**
- * Authenticate the additive native foreign-carrier acceptance gate without rewriting earlier evidence.
+ * Authenticate fresh-Lean record and variant omission controls without rewriting earlier evidence.
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeFinRecordOmissionSource } from "./fin-record-review-omission-history.mjs";
 
-export const finForeignHistoryPath = "docs/evidence/fin-container-foreign-source-history-20261010.json";
-export const finForeignPredecessor = "d6e6744d9d554247fd2597cc1406f3655f5da0a2";
-export const finForeignChangedPaths = [
-	".github/workflows/consumer-matrix.yml"
-	, "docs/type-surface.v1.json"
-	, "src/adoption/test-profiles.mjs"
-	, "tests/fin-container-edge-integration-history.test.mjs"
+export const finRecordOmissionHistoryPath = "docs/evidence/fin-record-review-omission-source-history-20261010.json";
+export const finRecordOmissionPredecessor = "49795a9076d9c1e8233ab9c2b861a5ad403953dc";
+export const finRecordOmissionChangedPaths = [
+	"tests/fin-container-edge-integration-history.test.mjs"
 	, "tests/helpers/fin-container-edge-ci-history-tests.mjs"
-	, "tests/helpers/fin-container-edge-ci-history.mjs"
-	, "tests/helpers/fin-container-edge-ci.mjs"
-	, "tests/helpers/fin-container-edge-install.mjs"
+	, "tests/helpers/fin-container-foreign-history-tests.mjs"
+	, "tests/helpers/fin-container-foreign-history.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
 	, "tests/helpers/native-fin-diagnostic-ci-tests.mjs"
+	, "tests/native-fin-records.test.mjs"
 ];
 let history;
 
@@ -30,8 +26,8 @@ let history;
  * @param source - Complete current source.
  * @param update - Exact recorded transition.
  */
-export const reverseFinForeignUpdate = (source, update) => {
-	assert.ok(finForeignChangedPaths.includes(update.path));
+export const reverseFinRecordOmissionUpdate = (source, update) => {
+	assert.ok(finRecordOmissionChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -57,12 +53,11 @@ export const reverseFinForeignUpdate = (source, update) => {
  * @param source - Complete source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeFinForeignSource = (path, source, expected) => {
-	source = beforeFinRecordOmissionSource(path, source, expected);
-	if(typeof source !== "string" || !finForeignChangedPaths.includes(path)) return source;
+export const beforeFinRecordOmissionSource = (path, source, expected) => {
+	if(typeof source !== "string" || !finRecordOmissionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(finForeignHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(finRecordOmissionHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseFinForeignUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseFinRecordOmissionUpdate(source, update) : source;
 };

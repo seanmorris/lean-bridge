@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "milestone": "fin-record-review-omission-v1",
+  "predecessorCommit": "49795a9076d9c1e8233ab9c2b861a5ad403953dc",
+  "updates": [
+    {
+      "path": "tests/fin-container-edge-integration-history.test.mjs",
+      "currentSha256": "4ac655d7acd1e6c4d7a3b2ba0ff200d836167fc4f55f6c2f1f2ccbee58f9e173",
+      "previousSha256": "d9b2a67f5ebb54b716102ee16c4716ae0230ccb53fcc8c2aa990e779e8e507ca",
+      "edits": [
+        {
+          "start": 796,
+          "previous": "",
+          "current": "import { finRecordOmissionChangedPaths } from \"./helpers/fin-record-review-omission-history.mjs\";\n"
+        },
+        {
+          "start": 4385,
+          "previous": "\t\t\tconst source = [...finForeignChangedPaths, ...finEdgeCiChangedPaths].includes(file.path) ? beforeFinEdgeCiSource(file.path, bytes.toString(\"utf8\")) : bytes;\n",
+          "current": "\t\t\tconst source = [...finRecordOmissionChangedPaths, ...finForeignChangedPaths, ...finEdgeCiChangedPaths].includes(file.path) ? beforeFinEdgeCiSource(file.path, bytes.toString(\"utf8\")) : bytes;\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-container-edge-ci-history-tests.mjs",
+      "currentSha256": "19cd95e931770f9f988f79c27df3cd8e0c5df33ce15642424f15ef10b46b8917",
+      "previousSha256": "1b4775c1f5d7a5fa974757cdde13c3bf5564e303ae384d75099565bc0ee53ee8",
+      "edits": [
+        {
+          "start": 693,
+          "previous": "",
+          "current": "import { finRecordOmissionChangedPaths } from \"./fin-record-review-omission-history.mjs\";\n"
+        },
+        {
+          "start": 3953,
+          "previous": "\t\t\tconst source = finForeignChangedPaths.includes(file.path) ? beforeFinForeignSource(file.path, bytes.toString(\"utf8\")) : bytes;\n",
+          "current": "\t\t\tconst source = [...finRecordOmissionChangedPaths, ...finForeignChangedPaths].includes(file.path) ? beforeFinForeignSource(file.path, bytes.toString(\"utf8\")) : bytes;\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-container-foreign-history-tests.mjs",
+      "currentSha256": "40b65b1b6f0b08fd7816d9b49d266ee18a2643843cfb2a4c6e0011686802f0fc",
+      "previousSha256": "418e792f6077fb74ba09c98c398cf0dc1a96e31d5da6544a19a0b90bce2a00ab",
+      "edits": [
+        {
+          "start": 591,
+          "previous": "",
+          "current": "import { beforeFinRecordOmissionSource, finRecordOmissionChangedPaths } from \"./fin-record-review-omission-history.mjs\";\n"
+        },
+        {
+          "start": 1368,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\"), previous = reverseFinForeignUpdate(current, update);\n",
+          "current": "\t\tconst current = beforeFinRecordOmissionSource(update.path, await readFile(update.path, \"utf8\")), previous = reverseFinForeignUpdate(current, update);\n"
+        },
+        {
+          "start": 3092,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = beforeFinRecordOmissionSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 3859,
+          "previous": "\t\tif(!digests.has(file.path)) digests.set(file.path, sha256(await readFile(file.path)));\n",
+          "current": "\t\tif(!digests.has(file.path))\n\t\t{\n\t\t\tconst bytes = await readFile(file.path);\n\t\t\tconst source = finRecordOmissionChangedPaths.includes(file.path) ? beforeFinRecordOmissionSource(file.path, bytes.toString(\"utf8\")) : bytes;\n\t\t\tdigests.set(file.path, sha256(source));\n\t\t}\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-container-foreign-history.mjs",
+      "currentSha256": "82ca97dd4ec4d1ad4f8e6406a329cf0f951c43e4acaa657eccd13a7909c5103f",
+      "previousSha256": "6e32fabaf4644b7198dfb2d2a3ae8fe7078f3c9a039a3ff6c7b20da14104cb36",
+      "edits": [
+        {
+          "start": 259,
+          "previous": "",
+          "current": "import { beforeFinRecordOmissionSource } from \"./fin-record-review-omission-history.mjs\";\n"
+        },
+        {
+          "start": 2479,
+          "previous": "",
+          "current": "\tsource = beforeFinRecordOmissionSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "10f1159e014941494da4d0a04eca969566eee8aa93ae480e56b0495162c4f0c8",
+      "previousSha256": "4a1b47be17b649e2c9c891f97e21b10a797fc119cbda4f1cc6a350be4f6e0257",
+      "edits": [
+        {
+          "start": 15285,
+          "previous": "",
+          "current": "import { finRecordOmissionChangedPaths } from \"./fin-record-review-omission-history.mjs\";\n"
+        },
+        {
+          "start": 54619,
+          "previous": "",
+          "current": "\t, ...finRecordOmissionChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-diagnostic-ci-tests.mjs",
+      "currentSha256": "0f41f910d15118f045d6e5d39eb2669f612a2ca8e8f4091d6cf9a03db4f5a3cc",
+      "previousSha256": "cedbb102445cb07f70764fbe63ae6fc94d0523b70398e7549f890a9b03667587",
+      "edits": [
+        {
+          "start": 650,
+          "previous": "",
+          "current": "import { finRecordOmissionChangedPaths } from \"./fin-record-review-omission-history.mjs\";\n"
+        },
+        {
+          "start": 3745,
+          "previous": "\t\tconst source = [...finForeignChangedPaths, ...finEdgeCiChangedPaths, ...finEdgeIntegrationChangedPaths].includes(file.path)\n",
+          "current": "\t\tconst source = [...finRecordOmissionChangedPaths, ...finForeignChangedPaths, ...finEdgeCiChangedPaths, ...finEdgeIntegrationChangedPaths].includes(file.path)\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/native-fin-records.test.mjs",
+      "currentSha256": "fae60a8cedf40098f65b997c750785425862a30ee73132be4eb74633e4897589",
+      "previousSha256": "3a2dadfc8136b8dc213d25a6abd81e9c51b480007ef960dbe6b6d5daa3ff7e2f",
+      "edits": [
+        {
+          "start": 580,
+          "previous": "",
+          "current": "import \"./helpers/fin-record-review-omission-history-tests.mjs\";\n"
+        },
+        {
+          "start": 22501,
+          "previous": "\t\t, [\"loosened Fin 0 case\", ir => { definition(ir, \"Gate\").cases[1][0].bound = \"1\"; }, nominal]]);\n",
+          "current": "\t\t, [\"loosened Fin 0 case\", ir => { definition(ir, \"Gate\").cases[1][0].bound = \"1\"; }, nominal]\n\t\t, [\"omitted record bounds\", ir => { delete ir.types.find(type => type.id === \"lean:FinRecords.Tile\").source.extensions[nominalKey]; }, /types\\[\\d+\\]\\.source\\.extensions/u]\n\t\t, [\"omitted variant bounds\", ir => { delete ir.types.find(type => type.id === \"lean:FinRecords.Shape\").source.extensions[nominalKey]; }, /types\\[\\d+\\]\\.source\\.extensions/u]]);\n"
+        }
+      ]
+    }
+  ]
+}
