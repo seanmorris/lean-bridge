@@ -1,0 +1,29 @@
+TAP version 13
+# Subtest: installed reviewed native Subtype hosts reproduce and relocate the complete checked corpus
+not ok 1 - installed reviewed native Subtype hosts reproduce and relocate the complete checked corpus
+  ---
+  duration_ms: 48608.844448
+  type: 'test'
+  location: '/app/tests/helpers/reviewed-subtype-host-installed-tests.mjs:52:1'
+  failureType: 'testCodeFailure'
+  error: '/app/.toolchains/perl/5.36.3-threaded/bin/perl exited with status 29: {"command":"/app/.toolchains/perl/5.36.3-threaded/bin/perl","args":["Makefile.PL","INSTALL_BASE=/tmp/lean-bridge-reviewed-subtype-hosts-RSdvpd/author-0/.lean-bridge-native-project-U2AFeL/.build-runtime"],"stderr":"Package requires glibc 2.38 or later\\n","stdout":""}'
+  code: 'build-command-failed'
+  name: 'CanonicalBuildError'
+  stack: |-
+    ChildProcess.<anonymous> (file:///app/src/build/process-runner.mjs:77:21)
+    Object.onceWrapper (node:events:634:26)
+    ChildProcess.emit (node:events:519:28)
+    maybeClose (node:internal/child_process:1101:16)
+    ChildProcess._handle.onexit (node:internal/child_process:304:5)
+  ...
+# reviewed Subtype author 0: perl
+# Retained failed reviewed Subtype host inputs: /tmp/lean-bridge-reviewed-subtype-hosts-RSdvpd
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 49020.660563

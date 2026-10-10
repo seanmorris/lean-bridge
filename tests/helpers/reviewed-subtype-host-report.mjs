@@ -118,8 +118,10 @@ export const assertReviewedSubtypeHostRecords = async ({ profiles, read, python 
 		if(profile === "perl")
 		{
 			hash(item.interpreterSha256);
-			for(const key of ["version", "archname", "useithreads", "usemultiplicity", "ivsize", "ptrsize"])
+			for(const key of ["version", "archname", "ivsize", "ptrsize"])
 				assert.equal(typeof item.perl[key], "string");
+			for(const key of ["useithreads", "usemultiplicity"])
+				assert.ok(item.perl[key] === null || item.perl[key] === "define", key);
 		}
 	}
 	return report;

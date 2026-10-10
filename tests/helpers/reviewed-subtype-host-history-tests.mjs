@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeReviewedPerlDiagnosticSource, reviewedPerlDiagnosticChangedPaths } from "./reviewed-perl-diagnostic-history.mjs";
 import { beforeReviewedSubtypeHostSource, reviewedSubtypeHostChangedPaths, reviewedSubtypeHostHistoryPath, reviewedSubtypeHostPredecessor, reverseReviewedSubtypeHostUpdate } from "./reviewed-subtype-host-history.mjs";
 
 test("Reviewed Subtype native host integration authenticates every transition and refuses unrecorded edits", async () => {
@@ -21,7 +22,7 @@ test("Reviewed Subtype native host integration authenticates every transition an
 	assert.deepEqual(history.updates.map(update => update.path), reviewedSubtypeHostChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = await readFile(update.path, "utf8"), previous = reverseReviewedSubtypeHostUpdate(current, update);
+		const current = beforeReviewedPerlDiagnosticSource(update.path, await readFile(update.path, "utf8")), previous = reverseReviewedSubtypeHostUpdate(current, update);
 		assert.equal(beforeReviewedSubtypeHostSource(update.path, current), previous);
 		assert.equal(beforeReviewedSubtypeHostSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeReviewedSubtypeHostSource(update.path, previous), previous);
@@ -72,7 +73,7 @@ test("Reviewed Subtype native host integration preserves the earlier source ledg
 
 test("Reviewed Subtype native host changes source pins without changing any support claim", async () => {
 	const history = JSON.parse(await readFile(reviewedSubtypeHostHistoryPath, "utf8"));
-	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", text = beforeReviewedPerlDiagnosticSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(text), previous = JSON.parse(beforeReviewedSubtypeHostSource(path, text));
 	const expected = structuredClone(previous); let refreshed = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
@@ -88,7 +89,12 @@ test("Reviewed Subtype native host changes source pins without changing any supp
 	const digests = new Map();
 	for(const file of current.evidence.flatMap(entry => entry.files))
 	{
-		if(!digests.has(file.path)) digests.set(file.path, sha256(await readFile(file.path)));
+		if(!digests.has(file.path))
+		{
+			const bytes = await readFile(file.path);
+			digests.set(file.path, sha256(reviewedPerlDiagnosticChangedPaths.includes(file.path)
+				? beforeReviewedPerlDiagnosticSource(file.path, bytes.toString()) : bytes));
+		}
 		assert.equal(digests.get(file.path), file.sha256, file.path);
 	}
 });

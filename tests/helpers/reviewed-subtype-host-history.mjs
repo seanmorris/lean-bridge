@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeReviewedPerlDiagnosticSource } from "./reviewed-perl-diagnostic-history.mjs";
 
 export const reviewedSubtypeHostHistoryPath = "docs/evidence/reviewed-subtype-host-source-history-20261010.json";
 export const reviewedSubtypeHostPredecessor = "d177236cdc80b69ca2210b8fd19f59ba440d1dea";
@@ -55,6 +56,7 @@ export const reverseReviewedSubtypeHostUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeReviewedSubtypeHostSource = (path, source, expected) => {
+	source = beforeReviewedPerlDiagnosticSource(path, source, expected);
 	if(typeof source !== "string" || !reviewedSubtypeHostChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

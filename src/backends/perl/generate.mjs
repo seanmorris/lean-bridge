@@ -229,10 +229,13 @@ const conversion = (model, type) => {
 };
 
 // Bounds come from the compiler-checked native model, never from the erased Nat type.
-const perlFinBounds = item => {
+const perlParameterNames = (model, item) => item.parameters.map((parameter, index) =>
+	model.sourceIdentity?.reviewedBindingIr ? parameter.name : `arg${index}`);
+const perlFinBounds = (model, item) => {
 	if(!item.refinements) return null;
-	// Messages and documentation name parameters by position, as every other native host does.
-	const parts = item.refinements.parameters.flatMap((refinement, index) => nativeFinBoundPaths(refinement, `arg${index}`));
+	// Reviewed APIs own their parameter names; ordinary-source positional names stay stable.
+	const names = perlParameterNames(model, item);
+	const parts = item.refinements.parameters.flatMap((refinement, index) => nativeFinBoundPaths(refinement, names[index]));
 	parts.push(...nativeFinBoundPaths(item.refinements.result, "result"));
 	return parts.length ? parts.join("; ") : null;
 };
@@ -426,7 +429,7 @@ export const generatePerlBindingPackage = (model, receipt) => {
     }`);
 	}
 	lines.push(`MODULE = ${model.moduleName}    PACKAGE = ${model.moduleName}`, "PROTOTYPES: DISABLE", "");
-	for(const item of model.exports) lines.push(publicXsub(item.publicName, item.symbol, item.parameters.map(p => p.type), item.result, item.refinements ?? null, item.parameters.map((_, index) => `arg${index}`)));
+	for(const item of model.exports) lines.push(publicXsub(item.publicName, item.symbol, item.parameters.map(p => p.type), item.result, item.refinements ?? null, perlParameterNames(model, item)));
 	for(const type of model.types.filter(t => t.kind === "callback"))
 	{
 		lines.push(`
@@ -503,7 +506,7 @@ _callback_${type.key}(...)
 	for(const item of model.exports)
 	{
 		pm.push(`=head2 ${item.publicName}`, "", `Calls C<${item.name}> in the compiled Lean component.`, "");
-		const bounds = perlFinBounds(item);
+		const bounds = perlFinBounds(model, item);
 		if(bounds) pm.push(`Checked Lean ${bounds.includes(" checked by ") ? "refinements" : "Fin bounds"}: ${bounds}.`, "");
 		if(aliases.length) pm.push(perlAliasApiDocs(model, item), "");
 	}
@@ -524,7 +527,7 @@ _callback_${type.key}(...)
 	if(model.exports.some(item => item.refinements?.parameters.some(refinement => refinement?.kind === "subtype") || item.refinements?.result?.kind === "subtype"))
 		pm.push("=head1 CHECKED VALUES", ""
 			, "A Lean C<Subtype> parameter over a primitive base takes the plain base value: L<Math::BigInt> for C<Nat> and C<Int>, an ordinary integer for machine words, a text scalar for C<String> and an octet string for C<ByteArray>. The exported checked constructor named at each function runs on the argument after every Fin bound passed and before the guarded adapter or the exported function; a rejected value dies with a message naming the parameter and the constructor, and the function receives the constructed value. Results are projected to their base value after Lean returns. Each checked site is listed as C<arg0 checked by Module.constructor> at its function.", "");
-	if(model.exports.some(perlFinBounds)) pm.push("=head1 BOUNDED INTEGERS", ""
+	if(model.exports.some(item => perlFinBounds(model, item))) pm.push("=head1 BOUNDED INTEGERS", ""
 		, "Lean C<Fin n> parameters and results are L<Math::BigInt> values below C<n>. Each argument is compared with its exact bound, including bounds wider than 64 bits, before the guarded adapter or the exported function runs. A value that is not a Math::BigInt, or a negative one, is rejected as for Nat; a value at or above its bound dies with a message naming the Lean parameter and bound. C<Fin 0> has no values, so every call to a function taking one dies. Results are Math::BigInt values below their declared bound. Inside arrays, Lists and options every present element is checked the same way before the guarded adapter or the exported function runs, so a C<Fin 0> element is rejected while an empty array or an undefined option is accepted; each checked path is listed as C<arg0[*]? < n> at its function, and a rejection names the failing element's own path and bound, such as C<arg0[2]? is not below its Fin 10 bound>. " + perlNominalFinNote(model), "");
 	pm.push("=head1 OWNERSHIP", "", "Close resource and closure objects when finished. Host callbacks are synchronous and may not be retained by Lean.", "", "=cut", "");
 	const publicModule = `lib/${model.moduleName.replaceAll("::", "/")}.pm`;
