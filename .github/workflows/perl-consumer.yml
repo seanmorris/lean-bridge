@@ -198,6 +198,7 @@ jobs:
           node scripts/check-fin-record-zero-report.mjs perl build/native-fin-record-zero/perl.json build/native-fin-record-zero/reviewed-perl.json
           LEAN_BRIDGE_SUBTYPE_PROFILES=perl node --test tests/native-subtype.test.mjs
           test -s build/native-subtype/perl.json
+          bash scripts/run-reviewed-subtype-host-ci.sh 'perl-${{ matrix.configuration }}'
           LEAN_BRIDGE_PERL_REFINEMENT_TEST=1 node --test tests/perl-refinements.test.mjs
           test -s build/perl-refinements/perl.json
           test -s build/variants/perl.json
@@ -279,6 +280,7 @@ jobs:
             build/native-fin-record-zero/perl.json
             build/native-fin-record-zero/reviewed-perl.json
             build/native-subtype/perl.json
+            build/reviewed-subtype-ci/perl-${{ matrix.configuration }}/
             build/perl-refinements/perl.json
             build/variants/perl.json
             build/recursive/perl-values.json

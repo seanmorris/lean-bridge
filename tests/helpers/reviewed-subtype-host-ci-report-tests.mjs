@@ -12,6 +12,7 @@ import { canonicalJson } from "../../src/capsule/node.mjs";
 import { assertReviewedSubtypeHostCiRecords, assertReviewedSubtypeHostCiTap, parseReviewedSubtypeHostCiArgs, reviewedSubtypeHostCiLanes, reviewedSubtypeHostCiTestName, reviewedSubtypePerlConfigurations } from "./reviewed-subtype-host-ci-report.mjs";
 import "./reviewed-subtype-host-ci-report-history-tests.mjs";
 import "./reviewed-subtype-host-ci-shell-tests.mjs";
+import "./reviewed-subtype-host-ci-workflow-tests.mjs";
 
 const samples = [
 	...["3.11", "3.12"].map(python => ({ root: `docs/evidence/reviewed-subtype-python-hosts-20261010/${python}`, profiles: ["python"], python }))

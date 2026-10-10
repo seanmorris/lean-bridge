@@ -22,6 +22,7 @@ import { assertFinRecordZeroWorkflow, disableFinRecordZeroWorkflow } from "./hel
 import { assertPhpWasmDirectFinWorkflow, disablePhpWasmDirectFinWorkflow } from "./helpers/php-wasm-fin-direct-ci.mjs";
 import { assertPhpWasmSubtypeWorkflow, disablePhpWasmSubtypeWorkflow } from "./helpers/php-wasm-subtype-ci.mjs";
 import { assertPhpWasmEntryWorkflow, disablePhpWasmEntryWorkflow } from "./helpers/php-wasm-subtype-entry-ci.mjs";
+import { assertReviewedSubtypeHostWorkflow, disableReviewedSubtypeHostWorkflow } from "./helpers/reviewed-subtype-host-ci-workflow.mjs";
 import { assertManagedCiIsolation } from "./helpers/managed-ci-isolation.mjs";
 import { assertNativeCiIsolation } from "./helpers/native-ci-isolation.mjs";
 import {
@@ -622,16 +623,18 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
     , readFile("scripts/bootstrap-toolchains.sh", "utf8")
   ]);
   // Validate all measured edge gates before checking the unchanged earlier command/upload order.
+  assertReviewedSubtypeHostWorkflow(currentWorkflow, "consumer-matrix.yml");
+  assertReviewedSubtypeHostWorkflow(currentPerlWorkflow, "perl-consumer.yml");
   assertFinContainerEdgeWorkflow(currentWorkflow);
   assertFinRecordZeroWorkflow(currentWorkflow, "consumer-matrix.yml");
   assertPhpWasmEntryWorkflow(currentWorkflow);
-  const withoutEntry = disablePhpWasmEntryWorkflow(currentWorkflow);
+  const withoutEntry = disablePhpWasmEntryWorkflow(disableReviewedSubtypeHostWorkflow(currentWorkflow, "consumer-matrix.yml"));
   assertPhpWasmSubtypeWorkflow(withoutEntry);
   const withoutSubtype = disablePhpWasmSubtypeWorkflow(withoutEntry);
   assertPhpWasmDirectFinWorkflow(withoutSubtype);
   const workflow = disablePhpWasmDirectFinWorkflow(disableFinContainerEdgeWorkflow(disableFinRecordZeroWorkflow(withoutSubtype, "consumer-matrix.yml")));
   assertFinRecordZeroWorkflow(currentPerlWorkflow, "perl-consumer.yml");
-  const perlWorkflow = disableFinRecordZeroWorkflow(currentPerlWorkflow, "perl-consumer.yml");
+  const perlWorkflow = disableFinRecordZeroWorkflow(disableReviewedSubtypeHostWorkflow(currentPerlWorkflow, "perl-consumer.yml"), "perl-consumer.yml");
   assert.match(workflow, /^\s*push:\s*$/m);
   assert.match(workflow, /^\s*pull_request:\s*$/m);
   assert.match(workflow, /^\s*workflow_dispatch:\s*$/m);

@@ -14,6 +14,7 @@ import { refinementFollowupChangedPaths } from "./refinement-followup-history.mj
 import { finHistoryBufferRepairChangedPaths } from "./fin-history-buffer-repair.mjs";
 import { reviewedSubtypeNativePromotionChangedPaths } from "./reviewed-subtype-native-promotion-history.mjs";
 import { reviewedSubtypeHostCiReportChangedPaths } from "./reviewed-subtype-host-ci-report-history.mjs";
+import { reviewedSubtypeHostCiChangedPaths } from "./reviewed-subtype-host-ci-history.mjs";
 import { subtypeComponentChangedPaths } from "./subtype-component-source-history.mjs";
 import { nestedFinChangedPaths, refinementClosureChangedPaths } from "./nested-fin-source-history.mjs";
 import { nominalFinChangedPaths } from "./nominal-fin-source-history.mjs";
@@ -843,6 +844,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...finHistoryBufferRepairChangedPaths
 	, ...reviewedSubtypeNativePromotionChangedPaths
 	, ...reviewedSubtypeHostCiReportChangedPaths
+	, ...reviewedSubtypeHostCiChangedPaths
 ])].sort());
 
 /**
