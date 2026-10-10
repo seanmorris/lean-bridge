@@ -11,6 +11,7 @@ import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../sr
 import { phpWasmDirectArchiveRoot, phpWasmDirectProducer } from "./php-wasm-fin-direct-archive.mjs";
 import { beforePhpWasmDirectPromotionSource, phpWasmDirectPromotionHistoryPath } from "./php-wasm-direct-fin-promotion-history.mjs";
 import { beforePhpWasmSubtypeSource, phpWasmSubtypeHistoryPath } from "./php-wasm-subtype-history.mjs";
+import { phpWasmSubtypeAcceptanceHistoryPath } from "./php-wasm-subtype-acceptance-history.mjs";
 import { phpWasmDirectPromotionConversion, phpWasmDirectPromotionEnvironment, phpWasmDirectPromotionLimit, phpWasmDirectPromotionReferences, promotePhpWasmDirectFin } from "./php-wasm-direct-fin-promotion.mjs";
 import "./php-wasm-direct-fin-promotion-history-tests.mjs";
 
@@ -83,11 +84,14 @@ test("direct PHP-Wasm promotion supplements only its existing six Fin cells and 
 		const update = history.updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);
 		if(update) file.sha256 = update.currentSha256;
 	}
-	const subtypeHistory = JSON.parse(await readFile(phpWasmSubtypeHistoryPath));
-	for(const entry of expected.evidence) for(const file of entry.files)
+	for(const path of [phpWasmSubtypeHistoryPath, phpWasmSubtypeAcceptanceHistoryPath])
 	{
-		const update = subtypeHistory.updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);
-		if(update) file.sha256 = update.currentSha256;
+		const subtypeHistory = JSON.parse(await readFile(path));
+		for(const entry of expected.evidence) for(const file of entry.files)
+		{
+			const update = subtypeHistory.updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);
+			if(update) file.sha256 = update.currentSha256;
+		}
 	}
 	assert.deepEqual(current.document, expected);
 	for(const entry of current.document.evidence) for(const file of entry.files)

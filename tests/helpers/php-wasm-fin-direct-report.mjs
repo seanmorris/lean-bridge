@@ -112,44 +112,56 @@ export const assertPhpWasmDirectFinReport = (archive, route, inputs) => {
 		assert.equal(row.label, `direct-fin-${row.fixture}`);
 		assert.deepEqual(row.fixtureSources, { leanSha256: sha256(lean), phpSha256: sha256(caller) });
 		assertPhpWasmRefinementObservation(row, fixture, caller, request, phpWasmDirectChecks[row.fixture], reviewed);
-		for(const field of ["bindingIrSha256", "modelSha256", "receiptSha256"]) hash(row[field]);
-		const { component, runtime, packageSet: set } = row.phpWasm, source = component.sourceIdentity;
-		assert.deepEqual(set.component, { id: `${name}@1.0.0`, name, version: "1.0.0" });
-		assert.equal(set.schemaVersion, 1); assert.equal(set.kind, "lean-bridge-php-wasm-copied-package-set");
-		assert.equal(set.profile, "php-wasm-copied-loading-v1");
-		assert.deepEqual(set.npmSettings, fixture.settings.npm); assert.deepEqual(set.composerSettings, fixture.settings.composer);
-		assert.equal(set.componentIdentity, sha256(canonicalJson(component))); hash(set.loaderIdentity);
-		for(const manifest of [component, runtime])
-		{ assert.equal(manifest.schemaVersion, 1); assert.equal(manifest.profile, "php-wasm-copied-v1"); }
-		assert.deepEqual(runtime.pins, phpWasmCopiedPins);
-		assert.deepEqual(component.compiler, runtime.compiler);
-		assert.equal(component.compiler.emsdkCommit, phpWasmCopiedPins.emsdkCommit);
-		assert.ok(component.compiler.version.endsWith(` ${phpWasmCopiedPins.emscriptenVersion} (${phpWasmCopiedPins.emscriptenCommit})`));
-		for(const field of ["headerSha256", "phpHeadersSha256", "adaptersSha256", "zendSha256", "metadataSha256"]) hash(component[field]);
-		assert.equal(source.leanCommit, phpWasmCopiedPins.leanCommit);
-		for(const field of ["leanCompilerSha256", "extractorSha256", "sourceTreeSha256"]) hash(source[field]);
-		assert.deepEqual(source.modules.map(item => item.module), [fixture.module]);
-		assert.equal(source.modules[0].source.sha256, sha256(lean));
-		assert.equal(source.modules[0].source.bytes, Buffer.byteLength(lean));
-		const dependencies = source.lakeDependencies;
-		assert.equal(dependencies.snapshotSha256, sha256(canonicalJson(dependencies.snapshot)));
-		assert.equal(dependencies.resolutionSha256, sha256(canonicalJson(dependencies.resolution)));
-		assert.equal(dependencies.resolution.snapshotSha256, dependencies.snapshotSha256);
-		assert.equal(dependencies.snapshot.rootInputs.find(item => item.path === `${fixture.module}.lean`).sha256, sha256(lean));
-		assert.equal(dependencies.resolution.modules.find(item => item.module === fixture.module).source.sha256, sha256(lean));
-		assert.deepEqual(row.packages.map(pkg => pkg.role).sort(), ["api", "component", "runtime"]);
-		for(const pkg of row.packages)
-		{
-			assert.equal(pkg.target, "php-wasm"); assert.equal(pkg.profile, "php-wasm-copied-v1");
-			const identity = pkg.role === "api" ? fixture.settings.composer : pkg.role === "component" ? fixture.settings.npm
-				: { name: runtimeName, version: `0.0.0-copied1.${set.loaderIdentity}` };
-			assert.equal(pkg.name, identity.name); assert.equal(pkg.version, identity.version);
-			assert.equal(pkg.ecosystem, pkg.role === "api" ? "composer" : "npm");
-		}
-		const receipt = phpWasmDirectReceipt(row); validatePackageSetReceipt(receipt);
-		assert.equal(row.receiptSha256, sha256(canonicalJson(receipt)), "Installed packages must reconstruct the original handoff receipt");
-		assert.deepEqual(row.archives, Object.fromEntries(row.packages.flatMap(pkg => pkg.artifacts.map(item => [item.path, item.sha256]))));
-		lockedInstall(row.phpWasm, fixture);
+		assertPhpWasmRefinementPackage(row, fixture, name, lean);
 	}
 	return true;
+};
+
+/**
+ * Check runtime, package, receipt and offline installation identities for one refinement fixture.
+ *
+ * @param row - Original installed fixture report.
+ * @param fixture - Independent package settings and module selection.
+ * @param name - Original component name.
+ * @param lean - Complete independent Lean source.
+ */
+export const assertPhpWasmRefinementPackage = (row, fixture, name, lean) => {
+	for(const field of ["bindingIrSha256", "modelSha256", "receiptSha256"]) hash(row[field]);
+	const { component, runtime, packageSet: set } = row.phpWasm, source = component.sourceIdentity;
+	assert.deepEqual(set.component, { id: `${name}@1.0.0`, name, version: "1.0.0" });
+	assert.equal(set.schemaVersion, 1); assert.equal(set.kind, "lean-bridge-php-wasm-copied-package-set");
+	assert.equal(set.profile, "php-wasm-copied-loading-v1");
+	assert.deepEqual(set.npmSettings, fixture.settings.npm); assert.deepEqual(set.composerSettings, fixture.settings.composer);
+	assert.equal(set.componentIdentity, sha256(canonicalJson(component))); hash(set.loaderIdentity);
+	for(const manifest of [component, runtime])
+	{ assert.equal(manifest.schemaVersion, 1); assert.equal(manifest.profile, "php-wasm-copied-v1"); }
+	assert.deepEqual(runtime.pins, phpWasmCopiedPins);
+	assert.deepEqual(component.compiler, runtime.compiler);
+	assert.equal(component.compiler.emsdkCommit, phpWasmCopiedPins.emsdkCommit);
+	assert.ok(component.compiler.version.endsWith(` ${phpWasmCopiedPins.emscriptenVersion} (${phpWasmCopiedPins.emscriptenCommit})`));
+	for(const field of ["headerSha256", "phpHeadersSha256", "adaptersSha256", "zendSha256", "metadataSha256"]) hash(component[field]);
+	assert.equal(source.leanCommit, phpWasmCopiedPins.leanCommit);
+	for(const field of ["leanCompilerSha256", "extractorSha256", "sourceTreeSha256"]) hash(source[field]);
+	assert.deepEqual(source.modules.map(item => item.module), [fixture.module]);
+	assert.equal(source.modules[0].source.sha256, sha256(lean));
+	assert.equal(source.modules[0].source.bytes, Buffer.byteLength(lean));
+	const dependencies = source.lakeDependencies;
+	assert.equal(dependencies.snapshotSha256, sha256(canonicalJson(dependencies.snapshot)));
+	assert.equal(dependencies.resolutionSha256, sha256(canonicalJson(dependencies.resolution)));
+	assert.equal(dependencies.resolution.snapshotSha256, dependencies.snapshotSha256);
+	assert.equal(dependencies.snapshot.rootInputs.find(item => item.path === `${fixture.module}.lean`).sha256, sha256(lean));
+	assert.equal(dependencies.resolution.modules.find(item => item.module === fixture.module).source.sha256, sha256(lean));
+	assert.deepEqual(row.packages.map(pkg => pkg.role).sort(), ["api", "component", "runtime"]);
+	for(const pkg of row.packages)
+	{
+		assert.equal(pkg.target, "php-wasm"); assert.equal(pkg.profile, "php-wasm-copied-v1");
+		const identity = pkg.role === "api" ? fixture.settings.composer : pkg.role === "component" ? fixture.settings.npm
+			: { name: runtimeName, version: `0.0.0-copied1.${set.loaderIdentity}` };
+		assert.equal(pkg.name, identity.name); assert.equal(pkg.version, identity.version);
+		assert.equal(pkg.ecosystem, pkg.role === "api" ? "composer" : "npm");
+	}
+	const receipt = phpWasmDirectReceipt(row); validatePackageSetReceipt(receipt);
+	assert.equal(row.receiptSha256, sha256(canonicalJson(receipt)), "Installed packages must reconstruct the original handoff receipt");
+	assert.deepEqual(row.archives, Object.fromEntries(row.packages.flatMap(pkg => pkg.artifacts.map(item => [item.path, item.sha256]))));
+	lockedInstall(row.phpWasm, fixture);
 };

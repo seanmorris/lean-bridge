@@ -1,0 +1,52 @@
+TAP version 13
+# Subtest: ordinary installed PHP-Wasm Subtypes execute all checked constructors and recover after rejection
+not ok 1 - ordinary installed PHP-Wasm Subtypes execute all checked constructors and recover after rejection
+  ---
+  duration_ms: 97640.08474
+  type: 'test'
+  location: '/app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/php-wasm-subtype-tests.mjs:151:38'
+  failureType: 'testCodeFailure'
+  error: "ENOENT: no such file or directory, open '/app/build/worktrees/fin-container-edge-file-closure-vo1454/build/php-wasm-host/node_modules/php-wasm/package.json': undefined"
+  code: 'ENOENT'
+  stack: |-
+    async open (node:internal/fs/promises:639:25)
+    async readFile (node:internal/fs/promises:1252:14)
+    async json (file:///app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/type-corpus-php-wasm-install.mjs:24:39)
+    async installedPhpWasmCorpus (file:///app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/type-corpus-php-wasm-install.mjs:129:23)
+    async checkInstalledPhpWasmFixture (file:///app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/php-wasm-fin-fixtures.mjs:136:20)
+    async TestContext.<anonymous> (file:///app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/php-wasm-subtype-tests.mjs:156:29)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# subtypes build 0: wasm32
+# subtypes build 1: wasm32
+# Subtest: reviewed installed PHP-Wasm Subtypes execute all checked constructors and recover after rejection
+not ok 2 - reviewed installed PHP-Wasm Subtypes execute all checked constructors and recover after rejection
+  ---
+  duration_ms: 92537.454673
+  type: 'test'
+  location: '/app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/php-wasm-subtype-tests.mjs:151:38'
+  failureType: 'testCodeFailure'
+  error: "ENOENT: no such file or directory, open '/app/build/worktrees/fin-container-edge-file-closure-vo1454/build/php-wasm-host/node_modules/php-wasm/package.json': undefined"
+  code: 'ENOENT'
+  stack: |-
+    async open (node:internal/fs/promises:639:25)
+    async readFile (node:internal/fs/promises:1252:14)
+    async json (file:///app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/type-corpus-php-wasm-install.mjs:24:39)
+    async installedPhpWasmCorpus (file:///app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/type-corpus-php-wasm-install.mjs:129:23)
+    async checkInstalledPhpWasmFixture (file:///app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/php-wasm-fin-fixtures.mjs:136:20)
+    async TestContext.<anonymous> (file:///app/build/worktrees/fin-container-edge-file-closure-vo1454/tests/helpers/php-wasm-subtype-tests.mjs:156:29)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# subtypes build 0: wasm32
+# subtypes build 1: wasm32
+1..2
+# tests 2
+# suites 0
+# pass 0
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 191472.727649

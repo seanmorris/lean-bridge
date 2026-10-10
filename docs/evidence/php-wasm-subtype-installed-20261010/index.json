@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 1,
+  "kind": "php-wasm-subtype-local-acceptance",
+  "outcome": "passed",
+  "producer": {
+    "revision": "b7706ed7be1b24c0592fa4e3f7eccbd21ba7eb5d",
+    "tree": "bcfe390ec363e0b60826be9dbfa4000044607c38"
+  },
+  "files": [
+    {
+      "path": "start.json",
+      "bytes": 261505,
+      "sha256": "a3e18dfa00c8bbc6908341f51b94e5be0658aa6de38822c586704ac9f565be54"
+    },
+    {
+      "path": "end.json",
+      "bytes": 298,
+      "sha256": "e823dba21251da163e5a1d9be094a646c224bb30e3242ae9de1397125e63bef3"
+    },
+    {
+      "path": "run.tap",
+      "bytes": 1933,
+      "sha256": "bcab754e5282489326c1ad1c04caec6ac61d18c3851fbc6cef4a7be3ab1d85b4"
+    },
+    {
+      "path": "ordinary.json",
+      "bytes": 253339,
+      "sha256": "3288e86cdfa2c746f276085c21460b23a033bc11eb763397a494f99dce7bab30"
+    },
+    {
+      "path": "reviewed.json",
+      "bytes": 269974,
+      "sha256": "fa28f40ef8e6442991c8bd2aa8c1f5476cc759e65e7005dab0c0e1ce79df6d75"
+    },
+    {
+      "path": "runtime.json",
+      "bytes": 6745,
+      "sha256": "44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966"
+    },
+    {
+      "path": "verified.json",
+      "bytes": 388,
+      "sha256": "53441758139388d8f710add5f1ea7509c1282894927cca57ad0c1e2599074abb"
+    },
+    {
+      "path": "runner.mjs",
+      "bytes": 6905,
+      "sha256": "8db3d45fb574105dc1a3773f935d8e1ac9944123ff35c652a8bf8a5d08b416f0"
+    },
+    {
+      "path": "failed-host-path/start.json",
+      "bytes": 261416,
+      "sha256": "6ab12e62770d2f6257cf6507d6d220481ca9611b2da633131af27290c5e34af7"
+    },
+    {
+      "path": "failed-host-path/end.json",
+      "bytes": 298,
+      "sha256": "0490912d6b96d758d2be2b5b662013bb8949e4d42808219ad169bec7a518ca20"
+    },
+    {
+      "path": "failed-host-path/run.tap",
+      "bytes": 3183,
+      "sha256": "527a785ce82ab7ed2dd081832a9a1e46add000957059e2542dc5bac1c6eb2b32"
+    },
+    {
+      "path": "failed-host-path/runtime.json",
+      "bytes": 6745,
+      "sha256": "44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966"
+    },
+    {
+      "path": "failed-host-path/runner.mjs",
+      "bytes": 6570,
+      "sha256": "f8f1cb420799a0bde0f392f5bca167992dbe5d3ff82a09e9347d02553984290f"
+    },
+    {
+      "path": "sources/tests/helpers/php-wasm-subtype-tests.mjs",
+      "bytes": 11875,
+      "sha256": "e8bfb1ebcffc46b05e0415ca63d8e46fcafdb1ffa43e2bf9fd30e09474a9ba7d"
+    },
+    {
+      "path": "sources/tests/helpers/php-wasm-subtype-fixture.mjs",
+      "bytes": 4556,
+      "sha256": "77043084402799ce0f7a413263231ff58438030b9298bf624ad6838488252cb3"
+    },
+    {
+      "path": "sources/tests/helpers/php-wasm-fin-fixtures.mjs",
+      "bytes": 9651,
+      "sha256": "a85cb80188630dd4355f1ca97ea7c52c741f999652ca4d1e24f8e4b7972c6e16"
+    },
+    {
+      "path": "sources/tests/helpers/native-subtype-install.mjs",
+      "bytes": 4083,
+      "sha256": "2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8"
+    },
+    {
+      "path": "sources/tests/helpers/reviewed-subtype-installed-fixture.mjs",
+      "bytes": 6875,
+      "sha256": "81ccd2fa3d62bc9d7e4061898dc262d8d5276e71e42ea142ac2f63b2317e781d"
+    },
+    {
+      "path": "sources/tests/helpers/type-corpus-php-wasm-install.mjs",
+      "bytes": 14806,
+      "sha256": "1231106d14bf66afeffa79ee9c999867e90359f6cc82c8ed117c84beb13d20dc"
+    },
+    {
+      "path": "sources/tests/helpers/type-corpus-php-wasm-evidence.mjs",
+      "bytes": 16676,
+      "sha256": "708809054b1af4ff864a8cf04343c79fc783f60ce770325131d7004006a03aa1"
+    },
+    {
+      "path": "sources/tests/helpers/copied-fixture-install.mjs",
+      "bytes": 15505,
+      "sha256": "dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df"
+    },
+    {
+      "path": "sources/tests/helpers/lake-workspace.mjs",
+      "bytes": 9902,
+      "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082"
+    },
+    {
+      "path": "sources/tests/fixtures/onboarding/native-subtype/Subtypes.lean",
+      "bytes": 2276,
+      "sha256": "bc6065620ea7ba38b270362ae7aa93feb68e8e316b4c0fca196477f62103175c"
+    },
+    {
+      "path": "sources/tests/fixtures/onboarding/native-subtype/LICENSE",
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "path": "sources/tests/fixtures/onboarding/native-subtype/lakefile.toml",
+      "bytes": 67,
+      "sha256": "7cc9357b8eaa2dc868fed6c1ac4c44499eb29ccfe26016e6ed6361e88b5429ba"
+    },
+    {
+      "path": "sources/tests/fixtures/onboarding/native-subtype/lean-toolchain",
+      "bytes": 25,
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "path": "sources/tests/fixtures/onboarding/native-subtype/package.json",
+      "bytes": 54,
+      "sha256": "db736971b2c14dc3aa16fc7113d32fd28f89a2abba58f601ece3613d87ffd2ee"
+    },
+    {
+      "path": "sources/tests/fixtures/subtype-consumers/php-native.php",
+      "bytes": 3214,
+      "sha256": "89f5c51bae7f7111a1ad937b2116b5fe3b2ec69668fbf650cde2279cff8fd7a7"
+    },
+    {
+      "path": "sources/src/analyze/NativeExports.lean",
+      "bytes": 88464,
+      "sha256": "8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f"
+    },
+    {
+      "path": "sources/src/analyze/native-metadata.mjs",
+      "bytes": 6736,
+      "sha256": "dae540c8c48bd6146e2dbeb28a62399faaa87dfbd67111a6c0947107976f314d"
+    },
+    {
+      "path": "sources/src/analyze/reviewed-source.mjs",
+      "bytes": 24336,
+      "sha256": "d3a875e4fc6dca6b7a93e70db62980d01f5b2a68f2e5e8999b93bbf0ca04a462"
+    },
+    {
+      "path": "sources/src/analyze/reviewed-refinements.mjs",
+      "bytes": 3775,
+      "sha256": "ba87773c1738ced6131e800e497a92b99ae6b10b26d9782e2562d2b2159a9dda"
+    },
+    {
+      "path": "sources/src/analyze/export-configuration.mjs",
+      "bytes": 26498,
+      "sha256": "5a324d0e1c3dee2180625a59c7f21b1d2bd932676b5f567f0f9caebafa67bedb"
+    },
+    {
+      "path": "sources/src/build/native-model.mjs",
+      "bytes": 42232,
+      "sha256": "dd29801162eeaa06fe0c96b8d71c6b1994033ab52440ec39ecf62e5d832dd6ae"
+    },
+    {
+      "path": "sources/src/build/component-refinements.mjs",
+      "bytes": 6854,
+      "sha256": "ee003a614e93bbfa542625357eb5ff752c5af4805f9e2f81ca5168ccd1134df8"
+    },
+    {
+      "path": "sources/src/build/php-wasm-copied-component.mjs",
+      "bytes": 16599,
+      "sha256": "1820fa19a86f827e378334e847cebe9511863401b08a5e9c2e60c72bf09cc7ae"
+    },
+    {
+      "path": "sources/src/build/php-wasm-copied-artifacts.mjs",
+      "bytes": 11312,
+      "sha256": "c6d31833738b791ac43e9ec970cbbd75830658b040cd8ef2cd3467c4a04ba3fe"
+    },
+    {
+      "path": "sources/src/backends/c/native-copied-values.mjs",
+      "bytes": 20423,
+      "sha256": "492fd83a246d7d1c58b18812ddc7c90e1fb5d7a999b368cbe56456b5a9d6b7be"
+    },
+    {
+      "path": "sources/src/backends/php/copied-values.mjs",
+      "bytes": 14384,
+      "sha256": "eb62ac337326372d41b184c1628d3a1bc63d3f968bc429a5e6142d74f1b9bb7d"
+    },
+    {
+      "path": "sources/src/release/php-wasm-copied-package.mjs",
+      "bytes": 30262,
+      "sha256": "b9e91b526c2fc8d0ffc77113242cb9cf2fe7ef9d1c94aa733cbdcac7d6fb4303"
+    }
+  ]
+}

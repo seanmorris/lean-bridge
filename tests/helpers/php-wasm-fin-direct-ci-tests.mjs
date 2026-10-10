@@ -8,9 +8,11 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { assertPhpWasmDirectFinWorkflow, disablePhpWasmDirectFinWorkflow, enablePhpWasmDirectFinWorkflow, phpWasmDirectCiBlock, phpWasmDirectCiCheck, phpWasmDirectCiInvocation, phpWasmDirectCiReports } from "./php-wasm-fin-direct-ci.mjs";
 import { beforePhpWasmDirectFinSource } from "./php-wasm-fin-direct-history.mjs";
+import { beforePhpWasmSubtypeAcceptanceSource } from "./php-wasm-subtype-acceptance-history.mjs";
 
 test("direct PHP-Wasm Fin CI preserves the earlier workflow and requires both installed source routes", async () => {
-	const path = ".github/workflows/consumer-matrix.yml", current = await readFile(path, "utf8");
+	const path = ".github/workflows/consumer-matrix.yml", latest = await readFile(path, "utf8");
+	const current = beforePhpWasmSubtypeAcceptanceSource(path, latest);
 	assertPhpWasmDirectFinWorkflow(current);
 	const previous = beforePhpWasmDirectFinSource(path, current);
 	assert.notEqual(previous, current);
@@ -22,7 +24,9 @@ test("direct PHP-Wasm Fin CI preserves the earlier workflow and requires both in
 });
 
 test("direct PHP-Wasm Fin CI refuses lost producers, checks, uploads and failure suppression", async () => {
-	const current = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	const path = ".github/workflows/consumer-matrix.yml";
+	const current = beforePhpWasmSubtypeAcceptanceSource(path, await readFile(path, "utf8"));
+	assertPhpWasmDirectFinWorkflow(current);
 	for(const changed of [
 		current.replace(phpWasmDirectCiBlock, "")
 		, current.replace(phpWasmDirectCiInvocation, phpWasmDirectCiInvocation.replace("_TEST=1", "_TEST=0"))

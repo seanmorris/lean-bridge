@@ -53,7 +53,10 @@ export const assertPhpWasmRefinementObservation = (report, fixture, caller, requ
 	const identity = component.sourceIdentity, configuration = JSON.parse(identity.exportConfigurationSource);
 	assert.equal(identity.exportConfigurationSha256, sha256(identity.exportConfigurationSource));
 	assert.deepEqual(configuration, { schemaVersion: 1, modules: [fixture.module]
-		, ...(reviewed ? {} : { exports: Object.keys(fixture.refinements) }), targets: { "php-wasm": fixture.settings } });
+		, ...(reviewed ? {} : { exports: Object.keys(fixture.refinements)
+			, ...fixture.contracts ? { contracts: fixture.contracts } : {}
+			, ...fixture.specializations ? { specializations: fixture.specializations } : {} })
+		, targets: { "php-wasm": fixture.settings } });
 	if(reviewed)
 	{
 		const review = fixture.review(), source = canonicalJson(review);
