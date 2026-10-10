@@ -22,6 +22,7 @@ import { reviewedSubtypeHostIr, reviewedSubtypeHostProfiles, reviewedSubtypeHost
 import { installReviewedSubtypeHost } from "./reviewed-subtype-host-install.mjs";
 import "./reviewed-subtype-host-fixture-tests.mjs";
 import "./reviewed-subtype-host-history-tests.mjs";
+import "./reviewed-subtype-python-archive-tests.mjs";
 
 /**
  * Reject empty, duplicate, whitespace-padded or unimplemented explicit host selections.
