@@ -31,6 +31,8 @@ const names = (value, expected) => assert.deepEqual(Object.keys(value).sort(), e
  */
 export const assertReviewedSubtypeRemainingHostRecords = async options => {
 	assert.ok(options.profiles.every(profile => ["rust", "dotnet", "php-native", "wit-wasi", "perl"].includes(profile)));
+	const glibc = options.glibc ?? "2.36";
+	assert.ok(["2.36", "2.38"].includes(glibc), "Unknown reviewed Subtype package glibc floor");
 	const report = await assertReviewedSubtypeHostRecords(options);
 	const model = JSON.parse(await options.read("build-0/model.json"));
 	for(const item of report.reports)
@@ -67,7 +69,7 @@ export const assertReviewedSubtypeRemainingHostRecords = async options => {
 		for(const field of ["name", "version", "ecosystem", "runtimeIdentity"]) assert.equal(receipt[field], pkg[field]);
 		assert.equal(receipt.bindingIrSha256, item.bindingIrSha256);
 		assert.deepEqual(receipt.component, model.component); assert.deepEqual(receipt.sourceIdentity, model.sourceIdentity);
-		assert.equal(receipt.glibcMinimumVersion, "2.36"); files(receipt.files);
+		assert.equal(receipt.glibcMinimumVersion, glibc); files(receipt.files);
 		assert.deepEqual(receipt.files["lean-bridge/component/model.json"], identity(canonicalJson(model)));
 		assert.deepEqual(receipt.files["lean-bridge/component/binding-ir.json"], identity(canonicalJson(model.bindingIr)));
 		assert.equal(environment.packageFileSetSha256, sha256(canonicalJson([...Object.keys(receipt.files), receiptPath].sort())));

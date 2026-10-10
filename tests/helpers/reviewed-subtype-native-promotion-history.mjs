@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeReviewedSubtypeHostCiReportSource } from "./reviewed-subtype-host-ci-report-history.mjs";
 
 export const reviewedSubtypeNativePromotionHistoryPath = "docs/evidence/reviewed-subtype-native-promotion-source-history-20261010.json";
 export const reviewedSubtypeNativePromotionPredecessor = "7b56b06f8a8d1be86810bf71e0727d8a097d21d0";
@@ -67,6 +68,7 @@ export const reverseReviewedSubtypeNativePromotionUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeReviewedSubtypeNativePromotionSource = (path, source, expected) => {
+	source = beforeReviewedSubtypeHostCiReportSource(path, source, expected);
 	if(typeof source !== "string" || !reviewedSubtypeNativePromotionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

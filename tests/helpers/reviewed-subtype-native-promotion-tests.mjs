@@ -15,6 +15,7 @@ import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { reviewedSubtypeNativeProfiles, reviewedSubtypeNativeReferences, promoteReviewedSubtypeNative, reviewedSubtypeNativeLimit, reviewedSubtypeNativeConversion } from "./reviewed-subtype-native-promotion.mjs";
 import { beforeReviewedSubtypeNativePromotionSource, reviewedSubtypeNativePromotionChangedPaths, reviewedSubtypeNativePromotionHistoryPath, reviewedSubtypeNativePromotionPredecessor, reverseReviewedSubtypeNativePromotionUpdate } from "./reviewed-subtype-native-promotion-history.mjs";
 import "./fin-record-zero-ci-history-tests.mjs";
+import { beforeReviewedSubtypeHostCiReportSource, reviewedSubtypeHostCiReportHistoryPath } from "./reviewed-subtype-host-ci-report-history.mjs";
 
 const predecessor = async () => JSON.parse(beforeReviewedSubtypeNativePromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
 
@@ -72,11 +73,14 @@ test("native Subtype promotion adds exactly eighteen cells and preserves every o
 		changed.push(`${cell.profile}/${cell.position}`);
 	}
 	assert.deepEqual(changed.sort(), reviewedSubtypeNativeProfiles.flatMap(profile => [profile + "/parameter", profile + "/result"]).sort());
-	const history = JSON.parse(await readFile(reviewedSubtypeNativePromotionHistoryPath));
-	for(const entry of proposed.evidence) for(const file of entry.files)
+	for(const path of [reviewedSubtypeNativePromotionHistoryPath, reviewedSubtypeHostCiReportHistoryPath])
 	{
-		const update = history.updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);
-		if(update) file.sha256 = update.currentSha256;
+		const history = JSON.parse(await readFile(path));
+		for(const entry of proposed.evidence) for(const file of entry.files)
+		{
+			const update = history.updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);
+			if(update) file.sha256 = update.currentSha256;
+		}
 	}
 	assert.deepEqual(current.document, proposed);
 });
@@ -127,7 +131,8 @@ test("native Subtype promotion history authenticates exact transitions and refus
 	assert.deepEqual(history.updates.map(update => update.path), reviewedSubtypeNativePromotionChangedPaths);
 	for(const update of history.updates)
 	{
-		const source = await readFile(update.path, "utf8"), previous = reverseReviewedSubtypeNativePromotionUpdate(source, update);
+		const source = beforeReviewedSubtypeHostCiReportSource(update.path, await readFile(update.path, "utf8"));
+		const previous = reverseReviewedSubtypeNativePromotionUpdate(source, update);
 		assert.equal(beforeReviewedSubtypeNativePromotionSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.currentSha256), source);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);

@@ -30,6 +30,8 @@ const fileMap = files => {
  */
 export const assertReviewedSubtypeRubyJvmRecords = async options => {
 	assert.ok(options.profiles.every(profile => ["ruby", "java", "kotlin"].includes(profile)));
+	const glibc = options.glibc ?? "2.36";
+	assert.ok(["2.36", "2.38"].includes(glibc), "Unknown reviewed Subtype package glibc floor");
 	const report = await assertReviewedSubtypeHostRecords(options);
 	const model = JSON.parse(await options.read("build-0/model.json"));
 	for(const item of report.reports)
@@ -44,7 +46,7 @@ export const assertReviewedSubtypeRubyJvmRecords = async options => {
 		assert.equal(receipt.bindingIrSha256, item.bindingIrSha256);
 		assert.deepEqual(receipt.component, model.component);
 		assert.deepEqual(receipt.sourceIdentity, model.sourceIdentity);
-		assert.equal(receipt.glibcMinimumVersion, "2.36");
+		assert.equal(receipt.glibcMinimumVersion, glibc);
 		fileMap(receipt.files); fileMap(environment.files);
 		const part = ruby ? "lean-bridge" : "META-INF/lean-bridge";
 		assert.deepEqual(receipt.files[`${part}/component/model.json`], identity(canonicalJson(model)));
