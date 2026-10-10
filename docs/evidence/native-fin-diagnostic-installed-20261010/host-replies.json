@@ -1,0 +1,87 @@
+{
+  "archives": {
+    "archives/finreplies-1.0.0-c.tar.gz": "0f1dac48b1f2571b9596a421f2e7477c78993b7d2a92ed1e56202316000f97d6",
+    "archives/finreplies-1.0.0-cpp.tar.gz": "655436607789ad6770db3b502c27def4b39074df4b1d5aed50e5daf7e39238aa"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "c1678777f048a0258c9729d6ff0ac809dce3e9a36425cf4a045259fa21a79f9e",
+      "checks": 81,
+      "compilerFreePath": true,
+      "consumerSha256": "bfd064415b45c4379c91ceb8cc79912d49fb76d253ba3905de88c0e3567c90e0",
+      "instrumentation": "none: installed packages and consumers as built",
+      "modelSha256": "52b34a4759519adce17e0473a95fc3e866f33ae2380cc4511d399a1b69339337",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 53929028,
+              "path": "archives/finreplies-1.0.0-c.tar.gz",
+              "sha256": "0f1dac48b1f2571b9596a421f2e7477c78993b7d2a92ed1e56202316000f97d6"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "finreplies",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "c",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "c",
+      "receiptSha256": "fb0ceb64d4463bb39dc3fd73039fe37f7c1d3e76e9cb44ac29695123c016b4a3",
+      "result": {
+        "checks": 81,
+        "forkHostCalls": 0,
+        "forkStatus": 5
+      },
+      "sourceRemovedBeforeInstallation": true
+    },
+    {
+      "bindingIrSha256": "c1678777f048a0258c9729d6ff0ac809dce3e9a36425cf4a045259fa21a79f9e",
+      "checks": 74,
+      "compilerFreePath": true,
+      "consumerSha256": "2133b5383f4b80142e429897f341af7609902542ccdd518d0a80769ff785350f",
+      "instrumentation": "none: installed packages and consumers as built",
+      "modelSha256": "52b34a4759519adce17e0473a95fc3e866f33ae2380cc4511d399a1b69339337",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51845025,
+              "path": "archives/finreplies-1.0.0-cpp.tar.gz",
+              "sha256": "655436607789ad6770db3b502c27def4b39074df4b1d5aed50e5daf7e39238aa"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "finreplies",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "cpp",
+      "receiptSha256": "fb0ceb64d4463bb39dc3fd73039fe37f7c1d3e76e9cb44ac29695123c016b4a3",
+      "result": {
+        "checks": 74,
+        "forkHostCalls": 0,
+        "forkStatus": 5
+      },
+      "sourceRemovedBeforeInstallation": true
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1,
+  "scope": "source-free installed C/C++ acceptance"
+}

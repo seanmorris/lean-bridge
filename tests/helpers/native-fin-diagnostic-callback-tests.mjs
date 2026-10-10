@@ -12,6 +12,7 @@ import { finCallbackCompilerModel } from "./fin-callback-model.mjs";
 import { finCallbackConsumerNames } from "./fin-callback-install.mjs";
 import { finCallbackDispatchExpected } from "./fin-callback-dispatch.mjs";
 import { reviewedCallbackFinNativeCallers } from "./reviewed-callback-fin-evidence.mjs";
+import "./native-fin-diagnostic-reply-tests.mjs";
 
 const directory = "docs/evidence/native-fin-diagnostic-installed-20261010";
 const callers = {
