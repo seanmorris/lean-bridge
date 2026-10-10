@@ -10,6 +10,7 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { finContainerRefinements } from "./fin-container-install.mjs";
 import { finContainerDispatchColumns, finContainerDispatchExpected } from "./fin-container-dispatch.mjs";
 import { finContainerReviewedIr } from "./reviewed-fin-container-fixture.mjs";
+import { beforeFinDiagnosticSource } from "./native-fin-diagnostic-source-history.mjs";
 
 const directory = "docs/evidence/reviewed-fin-hosts-20261007";
 const expected = [
@@ -52,7 +53,8 @@ test("reviewed Fin host archives preserve source-free executions and distinguish
 			for(const key of ["bindingIrSha256", "modelSha256", "sourceTreeSha256", "receiptSha256"]) assert.match(item[key], /^[a-f0-9]{64}$/u, key);
 			assert.equal(item.reviewedSourceSha256, sha256(canonicalJson(finContainerReviewedIr())));
 			assert.deepEqual(item.refinements, finContainerRefinements);
-			assert.equal(item.consumerSha256, sha256(await readFile(`tests/fixtures/fin-container-consumers/${item.profile}.${extensions[item.profile]}`)));
+			const consumer = `tests/fixtures/fin-container-consumers/${item.profile}.${extensions[item.profile]}`;
+			assert.equal(item.consumerSha256, sha256(beforeFinDiagnosticSource(consumer, await readFile(consumer, "utf8"))));
 			for(const pkg of item.packages) for(const artifact of pkg.artifacts) assert.equal(report.archives[artifact.path], artifact.sha256);
 			if(reference.observedDispatch.includes(item.profile))
 			{

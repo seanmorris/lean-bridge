@@ -11,6 +11,7 @@ import { dirname, join } from "node:path";
 import test from "node:test";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeFinDiagnosticCiSource } from "./native-fin-diagnostic-ci-history.mjs";
 import { beforeFinNixBoundarySource, finNixBoundaryChangedPaths, finNixBoundaryHistoryPath, finNixBoundaryPredecessor, reverseFinNixBoundaryUpdate } from "./native-fin-nix-boundary-history.mjs";
 
 test("the exact Nix Perl source boundary imports its engine and detects a missing Fin diagnostic module", async t => {
@@ -48,7 +49,7 @@ test("Nix Fin boundary history authenticates both source identities and preserve
 	assert.deepEqual(history.updates.map(update => update.path), finNixBoundaryChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = await readFile(update.path, "utf8"), previous = reverseFinNixBoundaryUpdate(current, update);
+		const current = beforeFinDiagnosticCiSource(update.path, await readFile(update.path, "utf8")), previous = reverseFinNixBoundaryUpdate(current, update);
 		assert.equal(beforeFinNixBoundarySource(update.path, current), previous);
 		assert.equal(beforeFinNixBoundarySource(update.path, previous), previous);
 		assert.equal(beforeFinNixBoundarySource(update.path, current, update.currentSha256), current);
@@ -68,7 +69,7 @@ test("Nix Fin boundary history authenticates both source identities and preserve
 });
 
 test("Nix Fin boundary refreshes exactly eighteen source pins without changing support or observations", async () => {
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", source = beforeFinDiagnosticCiSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(source), previous = JSON.parse(beforeFinNixBoundarySource(path, source));
 	const boundaryPath = "nix/perl-engine-source-boundary.json", boundary = await readFile(boundaryPath, "utf8");
 	const previousDigest = sha256(beforeFinNixBoundarySource(boundaryPath, boundary)), currentDigest = sha256(boundary);

@@ -12,15 +12,14 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { readTypeSurface } from "../src/adoption/type-surface.mjs";
-import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
+import { beforeFinRefinementSource, finRefinementNormalizationPaths } from "./helpers/fin-refinement-source-history.mjs";
 import { assertPerlScalarPromotion, perlScalarEvidenceIds, perlScalarOrdinaryId, perlScalarReviewedId, promotePerlScalarInventory, promotePerlScalarObservations } from "./helpers/perl-scalar-promotion.mjs";
 import { beforePerlScalarPromotionSource, perlScalarPromotionChangedPaths, perlScalarPromotionHistoryPath, perlScalarPromotionPredecessor, reversePerlScalarPromotionUpdate } from "./helpers/perl-scalar-promotion-source-history.mjs";
-import { beforeWasmEntrySupplementSource, wasmEntrySupplementChangedPaths } from "./helpers/wasm-entry-supplement-source-history.mjs";
-import { arrayRolloutChangedPaths } from "./helpers/generic-record-array-rollout-source-history.mjs";
+import { beforeWasmEntrySupplementSource } from "./helpers/wasm-entry-supplement-source-history.mjs";
 
 const historicalRead = async path => {
 	const bytes = await readFile(path);
-	return [...wasmEntrySupplementChangedPaths, ...arrayRolloutChangedPaths].includes(path)
+	return finRefinementNormalizationPaths.includes(path)
 		? Buffer.from(beforeWasmEntrySupplementSource(path, bytes.toString("utf8"))) : bytes;
 };
 

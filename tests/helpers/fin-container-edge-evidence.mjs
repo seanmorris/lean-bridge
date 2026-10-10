@@ -9,7 +9,8 @@ import assert from "node:assert/strict";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { finContainerEdgeConsumer, finContainerEdgeRefinements, finContainerEdgeSource } from "./fin-container-edges.mjs";
+import { finContainerEdgeRefinements, finContainerEdgeSource } from "./fin-container-edges.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 
 export const edgeEvidenceDirectory = "docs/evidence/fin-container-edges-20261009";
 const archived = name => `${edgeEvidenceDirectory}/${name}`;
@@ -250,7 +251,16 @@ export const assertEdgeEvidenceArchive = async (receipt, read = readFile, { curr
 	assert.deepEqual(checks, [["c", 14114], ["cpp", 14099], ["python", 14095], ["python", 14095]]);
 	if(currentSources)
 	{
-		for(const profile of Object.keys(expected)) assert.equal(await finContainerEdgeConsumer(profile), rebuilt.consumers[profile], `live ${profile} consumer`);
+		const restored = new Map();
+		for(const [path, digest] of Object.entries(edgeEvidenceSources))
+		{
+			const previous = beforeFinRefinementSource(path, await read(path), digest).toString("utf8");
+			assert.equal(sha256(previous), digest, `producer source ${path}`);
+			assert.equal(previous, source(path), `archived source ${path}`);
+			restored.set(path, previous);
+		}
+		for(const profile of Object.keys(expected))
+			assert.equal(composeEdgeEvidenceConsumer(profile, path => restored.get(path)), rebuilt.consumers[profile], `historical ${profile} consumer`);
 		assert.equal(await finContainerEdgeSource(), rebuilt.fixture, "live fixture");
 		const report = JSON.parse(text(edgeSelections[0].report));
 		assert.equal(canonicalJson(report.reports[0].refinements), canonicalJson(finContainerEdgeRefinements), "live refinement contract");

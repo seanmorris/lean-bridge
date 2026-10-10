@@ -163,6 +163,7 @@ import { perlScalarPromotionChangedPaths } from "./perl-scalar-promotion-source-
 import { wasmEntrySupplementChangedPaths } from "./wasm-entry-supplement-source-history.mjs";
 import { arrayRolloutChangedPaths } from "./generic-record-array-rollout-source-history.mjs";
 import { finDiagnosticChangedPaths } from "./native-fin-diagnostic-source-history.mjs";
+import { finDiagnosticCiChangedPaths } from "./native-fin-diagnostic-ci-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -791,6 +792,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...wasmEntrySupplementChangedPaths
 	, ...arrayRolloutChangedPaths
 	, ...finDiagnosticChangedPaths
+	, ...finDiagnosticCiChangedPaths
 ])].sort());
 
 /**

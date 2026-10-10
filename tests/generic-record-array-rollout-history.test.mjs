@@ -12,9 +12,16 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { readTypeSurface } from "../src/adoption/type-surface.mjs";
-import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
+import { beforeFinRefinementSource, finRefinementNormalizationPaths } from "./helpers/fin-refinement-source-history.mjs";
 import { supplementArrayRolloutInventory } from "./helpers/generic-record-array-rollout.mjs";
 import { arrayRolloutChangedPaths, arrayRolloutHistoryPath, arrayRolloutPredecessor, beforeArrayRolloutSource, reverseArrayRolloutUpdate } from "./helpers/generic-record-array-rollout-source-history.mjs";
+import { beforeFinDiagnosticSource } from "./helpers/native-fin-diagnostic-source-history.mjs";
+
+const historicalRead = async path => {
+	const bytes = await readFile(path);
+	return finRefinementNormalizationPaths.includes(path)
+		? Buffer.from(beforeFinDiagnosticSource(path, bytes.toString("utf8"))) : bytes;
+};
 
 test("Array rollout history authenticates every exact predecessor and refuses unrecorded changes", async () => {
 	const history = JSON.parse(await readFile(arrayRolloutHistoryPath));
@@ -23,7 +30,7 @@ test("Array rollout history authenticates every exact predecessor and refuses un
 	assert.deepEqual(history.updates.map(item => item.path), arrayRolloutChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = await readFile(update.path, "utf8"), previous = reverseArrayRolloutUpdate(current, update);
+		const current = (await historicalRead(update.path)).toString("utf8"), previous = reverseArrayRolloutUpdate(current, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeArrayRolloutSource(update.path, current), previous);
 		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
@@ -39,10 +46,10 @@ test("Array rollout history authenticates every exact predecessor and refuses un
 });
 
 test("Array rollout inventory changes match the supplement and every current source pin", async () => {
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8"), current = JSON.parse(source);
+	const path = "docs/type-surface.v1.json", source = (await historicalRead(path)).toString("utf8"), current = JSON.parse(source);
 	const previous = JSON.parse(beforeArrayRolloutSource(path, source));
 	const history = JSON.parse(await readFile(arrayRolloutHistoryPath));
-	const expected = await supplementArrayRolloutInventory(previous);
+	const expected = await supplementArrayRolloutInventory(previous, historicalRead);
 	let refreshed = 0;
 	for(const entry of expected.evidence.slice(0, previous.evidence.length)) for(const file of entry.files)
 	{
@@ -53,11 +60,11 @@ test("Array rollout inventory changes match the supplement and every current sou
 	assert.ok(refreshed > 0); assert.deepEqual(current, expected);
 	assert.equal(previous.evidence.length, 310); assert.equal(current.evidence.length, 323);
 	assert.equal(current.observations.length, 499); assert.equal(previous.observations.length, 499);
-	assert.deepEqual((await readTypeSurface()).document, current);
+	assert.deepEqual((await readTypeSurface()).document, JSON.parse(await readFile(path, "utf8")));
 	const files = new Map();
 	for(const entry of current.evidence) for(const file of entry.files)
 	{
-		if(!files.has(file.path)) files.set(file.path, sha256(await readFile(file.path)));
+		if(!files.has(file.path)) files.set(file.path, sha256(await historicalRead(file.path)));
 		assert.equal(files.get(file.path), file.sha256, file.path);
 	}
 });

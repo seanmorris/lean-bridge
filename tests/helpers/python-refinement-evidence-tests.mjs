@@ -28,7 +28,10 @@ const audit = async (kind, record, checks, consumer) => {
 	assert.equal(record.reproducible, true);
 	assert.equal(record.reports.length, kind === "native-fin" ? 2 : 1);
 	const digest = consumer === null ? sha256(pythonFinConsumer())
-		: sha256(await readFile(`tests/fixtures/${consumer}-consumers/python.py`));
+		: await (async () => {
+			const path = `tests/fixtures/${consumer}-consumers/python.py`;
+			return sha256(beforeFinRefinementSource(path, await readFile(path), receipt.sources[path]));
+		})();
 	for(const report of record.reports)
 	{
 		assert.equal(report.profile, "python");

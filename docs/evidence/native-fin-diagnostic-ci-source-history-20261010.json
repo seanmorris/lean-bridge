@@ -1,0 +1,316 @@
+{
+  "schemaVersion": 1,
+  "milestone": "native-fin-diagnostic-ci-v1",
+  "predecessorCommit": "4007e0d1926a0a2206e8b49c26f82b474aca0c0f",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "b79f120e3ab1715517567f8385a69804286a0181678b2042f64e722d83f5682e",
+      "previousSha256": "ecd7d0d0c9a92a972cce652afc9e7e32c04d64d97b9930c59bd69ca50c844c6c",
+      "edits": [
+        {
+          "start": 33708,
+          "previous": "          \"sha256\": \"0aab7307674948e7aac70c680a9038695b67517cdae5ecd61ef6d0ee662d7998\"\n",
+          "current": "          \"sha256\": \"c8e0f74c652f1966c2feef7c8ccaf2ac90fbaf959a75e0cd8d9f7f32341de8de\"\n"
+        },
+        {
+          "start": 37125,
+          "previous": "          \"sha256\": \"0aab7307674948e7aac70c680a9038695b67517cdae5ecd61ef6d0ee662d7998\"\n",
+          "current": "          \"sha256\": \"c8e0f74c652f1966c2feef7c8ccaf2ac90fbaf959a75e0cd8d9f7f32341de8de\"\n"
+        },
+        {
+          "start": 41183,
+          "previous": "          \"sha256\": \"0aab7307674948e7aac70c680a9038695b67517cdae5ecd61ef6d0ee662d7998\"\n",
+          "current": "          \"sha256\": \"c8e0f74c652f1966c2feef7c8ccaf2ac90fbaf959a75e0cd8d9f7f32341de8de\"\n"
+        },
+        {
+          "start": 45334,
+          "previous": "          \"sha256\": \"0aab7307674948e7aac70c680a9038695b67517cdae5ecd61ef6d0ee662d7998\"\n",
+          "current": "          \"sha256\": \"c8e0f74c652f1966c2feef7c8ccaf2ac90fbaf959a75e0cd8d9f7f32341de8de\"\n"
+        },
+        {
+          "start": 1611876,
+          "previous": "          \"sha256\": \"3f5ee5995e7a63c34e948ce6ae9a869280bedf4d257d90c05bd28db5d3181f28\"\n",
+          "current": "          \"sha256\": \"63e8f8dabfb0767e8bfec068c95473017c5bc93f10f159705a126d8ac17851ef\"\n"
+        },
+        {
+          "start": 1615407,
+          "previous": "          \"sha256\": \"3f5ee5995e7a63c34e948ce6ae9a869280bedf4d257d90c05bd28db5d3181f28\"\n",
+          "current": "          \"sha256\": \"63e8f8dabfb0767e8bfec068c95473017c5bc93f10f159705a126d8ac17851ef\"\n"
+        },
+        {
+          "start": 1619198,
+          "previous": "          \"sha256\": \"3f5ee5995e7a63c34e948ce6ae9a869280bedf4d257d90c05bd28db5d3181f28\"\n",
+          "current": "          \"sha256\": \"63e8f8dabfb0767e8bfec068c95473017c5bc93f10f159705a126d8ac17851ef\"\n"
+        },
+        {
+          "start": 1934017,
+          "previous": "          \"sha256\": \"e04e0844f709fef4224951956e365df94ddb7846c453e10fde0c8e389d0785d9\"\n",
+          "current": "          \"sha256\": \"b4873f3748eeb8a12375d780328f23d754547e60e4363977438017d2ae603c83\"\n"
+        },
+        {
+          "start": 1940327,
+          "previous": "          \"sha256\": \"e04e0844f709fef4224951956e365df94ddb7846c453e10fde0c8e389d0785d9\"\n",
+          "current": "          \"sha256\": \"b4873f3748eeb8a12375d780328f23d754547e60e4363977438017d2ae603c83\"\n"
+        },
+        {
+          "start": 1946664,
+          "previous": "          \"sha256\": \"e04e0844f709fef4224951956e365df94ddb7846c453e10fde0c8e389d0785d9\"\n",
+          "current": "          \"sha256\": \"b4873f3748eeb8a12375d780328f23d754547e60e4363977438017d2ae603c83\"\n"
+        },
+        {
+          "start": 2159018,
+          "previous": "          \"sha256\": \"b90d64ef4343b97a788a5790f332ae45067251fb04959f616a4d179e636cd565\"\n",
+          "current": "          \"sha256\": \"f753db79c126c0112beb86917152647a939eeea54b6038616b8c5a99d99047ce\"\n"
+        },
+        {
+          "start": 2175536,
+          "previous": "          \"sha256\": \"b90d64ef4343b97a788a5790f332ae45067251fb04959f616a4d179e636cd565\"\n",
+          "current": "          \"sha256\": \"f753db79c126c0112beb86917152647a939eeea54b6038616b8c5a99d99047ce\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fin-container-entry-ci.test.mjs",
+      "currentSha256": "a39904fa40eaed73425bfeef7ace872766df72931980758dde347cf6052c5b64",
+      "previousSha256": "adcad1e8a52d49ab0e9495f737c964411f7bb10d628dbfc57f462e13aae8a008",
+      "edits": [
+        {
+          "start": 575,
+          "previous": "",
+          "current": "import { sha256 } from \"../src/capsule/node.mjs\";\n"
+        },
+        {
+          "start": 1042,
+          "previous": "",
+          "current": "import { finContainerEntrySourceDigests } from \"./helpers/fin-container-entry-probes.mjs\";\nimport { cppFinContainerEntryProbe } from \"./helpers/cpp-fin-container-entry-probe.mjs\";\nimport { assertContainerEntryItem } from \"./helpers/fin-container-entry-evidence.mjs\";\n"
+        },
+        {
+          "start": 6800,
+          "previous": "test(\"the report gate accepts the actual installed reports of all seven hosts in their CI selections\", async () => {\n\tlet hosts = 0;\n",
+          "current": "test(\"original seven-host reports retain their archived diagnostic probes and rows\", async () => {\n"
+        },
+        {
+          "start": 7037,
+          "previous": "",
+          "current": "\t\tfor(const report of value.reports.filter(report => report.profile !== \"c\")) assertContainerEntryItem(report, route);\n\t\tassert.throws(() => assertFinContainerEntryCiReport(value, item.profiles, route), assert.AssertionError, \"old diagnostics cannot stand in for current acceptance\");\n\t}\n});\n\n// In-memory checker fixtures only, not new execution evidence. Original archive bytes above remain unchanged.\n// Keep the historical package/definer structure and substitute current probe identities and expected rows so\n// every negative control starts from a passing current-format report instead of an already-stale archive.\nconst fixture = async (profiles, route) => {\n\tconst value = await actual(profiles, route), sources = finContainerEntrySourceDigests();\n\tconst probes = { cpp: sha256(cppFinContainerEntryProbe())\n\t\t, \"php-native\": sources.php, \"wit-wasi\": sources.wit, ruby: sources.ruby\n\t\t, dotnet: sources.dotnet, java: sources.java, kotlin: sources.kotlin };\n\tfor(const report of value.reports.filter(report => report.profile !== \"c\"))\n\t{\n\t\treport.dispatch.public.probeSha256 = probes[report.profile];\n\t\treport.dispatch.public.observed = structuredClone(finContainerEntryExpected);\n\t}\n\treturn value;\n};\n\ntest(\"the current report gate accepts synthetic format fixtures for all seven hosted selections\", async () => {\n\tlet hosts = 0;\n\tfor(const item of finContainerEntryCiSelections) for(const route of routes(item))\n\t{\n\t\tconst value = await fixture(item.profiles, route);\n"
+        },
+        {
+          "start": 15592,
+          "previous": "\t\tconst route = profiles.includes(\"c\") ? \"reviewed-ir\" : \"ordinary-source\", value = await actual(profiles, route);\n",
+          "current": "\t\tconst route = profiles.includes(\"c\") ? \"reviewed-ir\" : \"ordinary-source\", value = await fixture(profiles, route);\n\t\tassertFinContainerEntryCiReport(value, profiles, route);\n"
+        },
+        {
+          "start": 16371,
+          "previous": "\t\tconst value = await actual(profiles, route === \"relocated\" ? \"ordinary-source\" : route);\n",
+          "current": "\t\tconst value = await fixture(profiles, route === \"relocated\" ? \"ordinary-source\" : route);\n"
+        },
+        {
+          "start": 17224,
+          "previous": "",
+          "current": "\tassert.notEqual(run(\"dotnet\", ordinary, reviewed).status, 0, \"historical probes cannot pass the live checker\");\n\tawait writeFile(ordinary, JSON.stringify(await fixture([\"dotnet\"], \"ordinary-source\")));\n\tawait writeFile(reviewed, JSON.stringify(await fixture([\"dotnet\"], \"reviewed-ir\")));\n"
+        },
+        {
+          "start": 17984,
+          "previous": "\tconst unobserved = await actual([\"dotnet\"], \"reviewed-ir\"); unobserved.reports[0].dispatch = { observed: false };\n",
+          "current": "\tconst unobserved = await fixture([\"dotnet\"], \"reviewed-ir\"); unobserved.reports[0].dispatch = { observed: false };\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/generic-record-array-rollout-history.test.mjs",
+      "currentSha256": "a222a1b6e3bf4ffb65a2b30910c0d59f5bc3f962ba5ae7afc49310b90bf40afa",
+      "previousSha256": "256f2d00a1309d81c58edcdf4f27eebea3a271e42c9f889602a19493a003052d",
+      "edits": [
+        {
+          "start": 595,
+          "previous": "import { beforeFinRefinementSource } from \"./helpers/fin-refinement-source-history.mjs\";\n",
+          "current": "import { beforeFinRefinementSource, finRefinementNormalizationPaths } from \"./helpers/fin-refinement-source-history.mjs\";\n"
+        },
+        {
+          "start": 1016,
+          "previous": "",
+          "current": "import { beforeFinDiagnosticSource } from \"./helpers/native-fin-diagnostic-source-history.mjs\";\n\nconst historicalRead = async path => {\n\tconst bytes = await readFile(path);\n\treturn finRefinementNormalizationPaths.includes(path)\n\t\t? Buffer.from(beforeFinDiagnosticSource(path, bytes.toString(\"utf8\"))) : bytes;\n};\n"
+        },
+        {
+          "start": 1815,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\"), previous = reverseArrayRolloutUpdate(current, update);\n",
+          "current": "\t\tconst current = (await historicalRead(update.path)).toString(\"utf8\"), previous = reverseArrayRolloutUpdate(current, update);\n"
+        },
+        {
+          "start": 3003,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = await readFile(path, \"utf8\"), current = JSON.parse(source);\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = (await historicalRead(path)).toString(\"utf8\"), current = JSON.parse(source);\n"
+        },
+        {
+          "start": 3272,
+          "previous": "\tconst expected = await supplementArrayRolloutInventory(previous);\n",
+          "current": "\tconst expected = await supplementArrayRolloutInventory(previous, historicalRead);\n"
+        },
+        {
+          "start": 3915,
+          "previous": "\tassert.deepEqual((await readTypeSurface()).document, current);\n",
+          "current": "\tassert.deepEqual((await readTypeSurface()).document, JSON.parse(await readFile(path, \"utf8\")));\n"
+        },
+        {
+          "start": 4110,
+          "previous": "\t\tif(!files.has(file.path)) files.set(file.path, sha256(await readFile(file.path)));\n",
+          "current": "\t\tif(!files.has(file.path)) files.set(file.path, sha256(await historicalRead(file.path)));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-container-edge-evidence.mjs",
+      "currentSha256": "5c4266874f69b5443d7439548799a308e7a80ce436ebc31750eecf7b9ffc066e",
+      "previousSha256": "af544ff8363a2a6d390c23d1a0e9d9dafe630720df0622f9d6a8e407ea0ce12a",
+      "edits": [
+        {
+          "start": 570,
+          "previous": "import { finContainerEdgeConsumer, finContainerEdgeRefinements, finContainerEdgeSource } from \"./fin-container-edges.mjs\";\n",
+          "current": "import { finContainerEdgeRefinements, finContainerEdgeSource } from \"./fin-container-edges.mjs\";\nimport { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\n"
+        },
+        {
+          "start": 19497,
+          "previous": "\t\tfor(const profile of Object.keys(expected)) assert.equal(await finContainerEdgeConsumer(profile), rebuilt.consumers[profile], `live ${profile} consumer`);\n",
+          "current": "\t\tconst restored = new Map();\n\t\tfor(const [path, digest] of Object.entries(edgeEvidenceSources))\n\t\t{\n\t\t\tconst previous = beforeFinRefinementSource(path, await read(path), digest).toString(\"utf8\");\n\t\t\tassert.equal(sha256(previous), digest, `producer source ${path}`);\n\t\t\tassert.equal(previous, source(path), `archived source ${path}`);\n\t\t\trestored.set(path, previous);\n\t\t}\n\t\tfor(const profile of Object.keys(expected))\n\t\t\tassert.equal(composeEdgeEvidenceConsumer(profile, path => restored.get(path)), rebuilt.consumers[profile], `historical ${profile} consumer`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "38697bd52dbb820521a0939f097ae8f460f66858df07e6c9b441bb32fd7f2728",
+      "previousSha256": "62a539dbcd500ff92323b7528280a2e61147fb46e60a9b6ad8bf26dbab23d8bb",
+      "edits": [
+        {
+          "start": 14949,
+          "previous": "",
+          "current": "import { finDiagnosticCiChangedPaths } from \"./native-fin-diagnostic-ci-history.mjs\";\n"
+        },
+        {
+          "start": 54151,
+          "previous": "",
+          "current": "\t, ...finDiagnosticCiChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/inherited-record-evidence.mjs",
+      "currentSha256": "b4873f3748eeb8a12375d780328f23d754547e60e4363977438017d2ae603c83",
+      "previousSha256": "e04e0844f709fef4224951956e365df94ddb7846c453e10fde0c8e389d0785d9",
+      "edits": [
+        {
+          "start": 515,
+          "previous": "",
+          "current": "import { beforeFinDiagnosticSource } from \"./native-fin-diagnostic-source-history.mjs\";\n"
+        },
+        {
+          "start": 2731,
+          "previous": "\t\tassert.equal(item.consumerSha256, sha256(await readFile(`tests/fixtures/${directory}-consumers/${item.profile}.${item.profile}`)));\n",
+          "current": "\t\tconst consumer = `tests/fixtures/${directory}-consumers/${item.profile}.${item.profile}`;\n\t\tassert.equal(item.consumerSha256, sha256(beforeFinDiagnosticSource(consumer, await readFile(consumer, \"utf8\"))));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-diagnostic-tests.mjs",
+      "currentSha256": "5376a07b76cefd98cc1bd8d4b535517edf06c8c25b75cd16ef6e08dfc7de4e2c",
+      "previousSha256": "9b7e61dc3540dbeaf2c55951152714ca7b1b9c4b6cd768c10ae4cd36cabbfc56",
+      "edits": [
+        {
+          "start": 1478,
+          "previous": "",
+          "current": "import \"./native-fin-diagnostic-ci-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-nix-boundary-history.mjs",
+      "currentSha256": "df29f15a1eaf3c4eae90628f7c28672f07a6e8f8a34b8b9f4fd827301065bfb5",
+      "previousSha256": "f0f13e86584bdf3fcdf123c475b9a5a02339f4a5975d93bbc72cc6f56c68989b",
+      "edits": [
+        {
+          "start": 238,
+          "previous": "",
+          "current": "import { beforeFinDiagnosticCiSource } from \"./native-fin-diagnostic-ci-history.mjs\";\n"
+        },
+        {
+          "start": 2058,
+          "previous": "",
+          "current": "\tsource = beforeFinDiagnosticCiSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-nix-boundary-tests.mjs",
+      "currentSha256": "aa1053e8a8a49f5109c6bf313bde3371679d5fecd1d6e8c197af123eaa7dc44b",
+      "previousSha256": "4db994f199829b58ce95feb939f25fa340af403e91bc08221905ea7171708ac3",
+      "edits": [
+        {
+          "start": 510,
+          "previous": "",
+          "current": "import { beforeFinDiagnosticCiSource } from \"./native-fin-diagnostic-ci-history.mjs\";\n"
+        },
+        {
+          "start": 3029,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\"), previous = reverseFinNixBoundaryUpdate(current, update);\n",
+          "current": "\t\tconst current = beforeFinDiagnosticCiSource(update.path, await readFile(update.path, \"utf8\")), previous = reverseFinNixBoundaryUpdate(current, update);\n"
+        },
+        {
+          "start": 4801,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = beforeFinDiagnosticCiSource(path, await readFile(path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/python-refinement-evidence-tests.mjs",
+      "currentSha256": "c8e0f74c652f1966c2feef7c8ccaf2ac90fbaf959a75e0cd8d9f7f32341de8de",
+      "previousSha256": "0aab7307674948e7aac70c680a9038695b67517cdae5ecd61ef6d0ee662d7998",
+      "edits": [
+        {
+          "start": 1399,
+          "previous": "\t\t: sha256(await readFile(`tests/fixtures/${consumer}-consumers/python.py`));\n",
+          "current": "\t\t: await (async () => {\n\t\t\tconst path = `tests/fixtures/${consumer}-consumers/python.py`;\n\t\t\treturn sha256(beforeFinRefinementSource(path, await readFile(path), receipt.sources[path]));\n\t\t})();\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-fin-host-evidence-tests.mjs",
+      "currentSha256": "63e8f8dabfb0767e8bfec068c95473017c5bc93f10f159705a126d8ac17851ef",
+      "previousSha256": "3f5ee5995e7a63c34e948ce6ae9a869280bedf4d257d90c05bd28db5d3181f28",
+      "edits": [
+        {
+          "start": 547,
+          "previous": "",
+          "current": "import { beforeFinDiagnosticSource } from \"./native-fin-diagnostic-source-history.mjs\";\n"
+        },
+        {
+          "start": 3393,
+          "previous": "\t\t\tassert.equal(item.consumerSha256, sha256(await readFile(`tests/fixtures/fin-container-consumers/${item.profile}.${extensions[item.profile]}`)));\n",
+          "current": "\t\t\tconst consumer = `tests/fixtures/fin-container-consumers/${item.profile}.${extensions[item.profile]}`;\n\t\t\tassert.equal(item.consumerSha256, sha256(beforeFinDiagnosticSource(consumer, await readFile(consumer, \"utf8\"))));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/perl-scalar-promotion.test.mjs",
+      "currentSha256": "f753db79c126c0112beb86917152647a939eeea54b6038616b8c5a99d99047ce",
+      "previousSha256": "b90d64ef4343b97a788a5790f332ae45067251fb04959f616a4d179e636cd565",
+      "edits": [
+        {
+          "start": 584,
+          "previous": "import { beforeFinRefinementSource } from \"./helpers/fin-refinement-source-history.mjs\";\n",
+          "current": "import { beforeFinRefinementSource, finRefinementNormalizationPaths } from \"./helpers/fin-refinement-source-history.mjs\";\n"
+        },
+        {
+          "start": 1146,
+          "previous": "import { beforeWasmEntrySupplementSource, wasmEntrySupplementChangedPaths } from \"./helpers/wasm-entry-supplement-source-history.mjs\";\nimport { arrayRolloutChangedPaths } from \"./helpers/generic-record-array-rollout-source-history.mjs\";\n",
+          "current": "import { beforeWasmEntrySupplementSource } from \"./helpers/wasm-entry-supplement-source-history.mjs\";\n"
+        },
+        {
+          "start": 1325,
+          "previous": "\treturn [...wasmEntrySupplementChangedPaths, ...arrayRolloutChangedPaths].includes(path)\n",
+          "current": "\treturn finRefinementNormalizationPaths.includes(path)\n"
+        }
+      ]
+    }
+  ]
+}

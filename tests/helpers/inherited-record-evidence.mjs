@@ -9,6 +9,7 @@ import { dirname } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import identities from "../fixtures/inherited-record-evidence-identities.json" with { type: "json" };
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeFinDiagnosticSource } from "./native-fin-diagnostic-source-history.mjs";
 import { expectedGenericInheritanceRecords, genericInheritanceNodeConsumer } from "./generic-inheritance-packages.mjs";
 
 export const inheritedRecordEvidenceDirectory = "docs/evidence/inherited-records-20261008";
@@ -45,7 +46,8 @@ export const assertInheritedNativeReport = async (report, kind) => {
 		for(const key of ["bindingIrSha256", "modelSha256", "receiptSha256", "consumerSha256"]) digest(item[key]);
 		if(kind === "generic") assert.equal(item.modelBindingIrSha256, item.bindingIrSha256);
 		const directory = kind === "plain" ? "inherited-record" : "generic-inheritance";
-		assert.equal(item.consumerSha256, sha256(await readFile(`tests/fixtures/${directory}-consumers/${item.profile}.${item.profile}`)));
+		const consumer = `tests/fixtures/${directory}-consumers/${item.profile}.${item.profile}`;
+		assert.equal(item.consumerSha256, sha256(beforeFinDiagnosticSource(consumer, await readFile(consumer, "utf8"))));
 		assert.equal(item.packages.length, 1);
 		const [pkg] = item.packages;
 		assert.deepEqual([pkg.target, pkg.name, pkg.version, pkg.role], [item.profile, name, "1.0.0", "component"]);

@@ -11,8 +11,12 @@ import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
+import { sha256 } from "../src/capsule/node.mjs";
 import { assertFinContainerEntryCiReport, assertFinContainerEntryWorkflow, disableFinContainerEntryWorkflow, enableFinContainerEntryWorkflow, finContainerEntryCiBlock, finContainerEntryCiChecker, finContainerEntryCiFlag, finContainerEntryCiInvocation, finContainerEntryCiSelections } from "./helpers/fin-container-entry-ci.mjs";
 import { finContainerEntryExpected } from "./helpers/fin-container-entry-dispatch.mjs";
+import { finContainerEntrySourceDigests } from "./helpers/fin-container-entry-probes.mjs";
+import { cppFinContainerEntryProbe } from "./helpers/cpp-fin-container-entry-probe.mjs";
+import { assertContainerEntryItem } from "./helpers/fin-container-entry-evidence.mjs";
 
 const workflow = () => readFile(".github/workflows/consumer-matrix.yml", "utf8");
 const selection = report => finContainerEntryCiSelections.find(item => item.report === report);
@@ -95,11 +99,36 @@ const actual = async (profiles, route) => {
 };
 const routes = selection => (selection.profiles.includes("c") ? ["reviewed-ir"] : ["ordinary-source", "reviewed-ir"]);
 
-test("the report gate accepts the actual installed reports of all seven hosts in their CI selections", async () => {
-	let hosts = 0;
+test("original seven-host reports retain their archived diagnostic probes and rows", async () => {
 	for(const item of finContainerEntryCiSelections) for(const route of routes(item))
 	{
 		const value = await actual(item.profiles, route);
+		for(const report of value.reports.filter(report => report.profile !== "c")) assertContainerEntryItem(report, route);
+		assert.throws(() => assertFinContainerEntryCiReport(value, item.profiles, route), assert.AssertionError, "old diagnostics cannot stand in for current acceptance");
+	}
+});
+
+// In-memory checker fixtures only, not new execution evidence. Original archive bytes above remain unchanged.
+// Keep the historical package/definer structure and substitute current probe identities and expected rows so
+// every negative control starts from a passing current-format report instead of an already-stale archive.
+const fixture = async (profiles, route) => {
+	const value = await actual(profiles, route), sources = finContainerEntrySourceDigests();
+	const probes = { cpp: sha256(cppFinContainerEntryProbe())
+		, "php-native": sources.php, "wit-wasi": sources.wit, ruby: sources.ruby
+		, dotnet: sources.dotnet, java: sources.java, kotlin: sources.kotlin };
+	for(const report of value.reports.filter(report => report.profile !== "c"))
+	{
+		report.dispatch.public.probeSha256 = probes[report.profile];
+		report.dispatch.public.observed = structuredClone(finContainerEntryExpected);
+	}
+	return value;
+};
+
+test("the current report gate accepts synthetic format fixtures for all seven hosted selections", async () => {
+	let hosts = 0;
+	for(const item of finContainerEntryCiSelections) for(const route of routes(item))
+	{
+		const value = await fixture(item.profiles, route);
 		assert.deepEqual(value.reports.map(report => [report.profile, report.path]), item.profiles.map(profile => [profile, route]));
 		assertFinContainerEntryCiReport(value, item.profiles, route);
 		hosts += item.counted.length;
@@ -186,7 +215,8 @@ test("the report gate refuses unobserved, partial, relabelled or foreign-bound r
 	];
 	for(const [index, [profiles, mutate]] of mutations.entries())
 	{
-		const route = profiles.includes("c") ? "reviewed-ir" : "ordinary-source", value = await actual(profiles, route);
+		const route = profiles.includes("c") ? "reviewed-ir" : "ordinary-source", value = await fixture(profiles, route);
+		assertFinContainerEntryCiReport(value, profiles, route);
 		const before = JSON.stringify(value); mutate(value);
 		assert.notEqual(JSON.stringify(value), before, `mutation ${index} applies`);
 		assert.throws(() => assertFinContainerEntryCiReport(value, profiles, route), assert.AssertionError, `mutation ${index}`);
@@ -194,7 +224,7 @@ test("the report gate refuses unobserved, partial, relabelled or foreign-bound r
 	// Requested sets other than a wired selection: duplicated, partial, widened or reordered hosts, and an unknown route.
 	for(const [profiles, route] of [[["dotnet", "dotnet"], "ordinary-source"], [["java"], "ordinary-source"], [["cpp", "php-native"], "ordinary-source"], [["kotlin", "java"], "ordinary-source"], [["dotnet"], "relocated"]])
 	{
-		const value = await actual(profiles, route === "relocated" ? "ordinary-source" : route);
+		const value = await fixture(profiles, route === "relocated" ? "ordinary-source" : route);
 		assert.throws(() => assertFinContainerEntryCiReport(value, profiles, route), assert.AssertionError, `${profiles} ${route}`);
 	}
 });
@@ -206,13 +236,16 @@ test("the report gate command fails on a missing, skipped or unobserved route re
 	const ordinary = join(root, "dotnet.json"), reviewed = join(root, "reviewed-dotnet.json");
 	await writeFile(ordinary, JSON.stringify(await actual(["dotnet"], "ordinary-source")));
 	await writeFile(reviewed, JSON.stringify(await actual(["dotnet"], "reviewed-ir")));
+	assert.notEqual(run("dotnet", ordinary, reviewed).status, 0, "historical probes cannot pass the live checker");
+	await writeFile(ordinary, JSON.stringify(await fixture(["dotnet"], "ordinary-source")));
+	await writeFile(reviewed, JSON.stringify(await fixture(["dotnet"], "reviewed-ir")));
 	const accepted = run("dotnet", ordinary, reviewed);
 	assert.equal(accepted.status, 0, accepted.stderr); assert.equal(accepted.stdout, "FinContainers entry counters observed for dotnet on both routes.\n");
 	assert.notEqual(run("dotnet", ordinary, join(root, "missing.json")).status, 0);
 	assert.notEqual(run("dotnet", reviewed, ordinary).status, 0);
 	assert.notEqual(run("dotnet,ruby", ordinary, reviewed).status, 0);
 	assert.notEqual(run("dotnet", ordinary).status, 0);
-	const unobserved = await actual(["dotnet"], "reviewed-ir"); unobserved.reports[0].dispatch = { observed: false };
+	const unobserved = await fixture(["dotnet"], "reviewed-ir"); unobserved.reports[0].dispatch = { observed: false };
 	await writeFile(reviewed, JSON.stringify(unobserved));
 	assert.notEqual(run("dotnet", ordinary, reviewed).status, 0);
 });

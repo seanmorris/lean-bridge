@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeFinDiagnosticCiSource } from "./native-fin-diagnostic-ci-history.mjs";
 
 export const finNixBoundaryHistoryPath = "docs/evidence/native-fin-nix-boundary-source-history-20261010.json";
 export const finNixBoundaryPredecessor = "a1916306286ae10ce6568e94116fdc2f6b1d7411";
@@ -46,6 +47,7 @@ export const reverseFinNixBoundaryUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeFinNixBoundarySource = (path, source, expected) => {
+	source = beforeFinDiagnosticCiSource(path, source, expected);
 	if(typeof source !== "string" || !finNixBoundaryChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
