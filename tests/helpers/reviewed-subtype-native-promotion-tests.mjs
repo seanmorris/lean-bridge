@@ -22,6 +22,8 @@ import { reviewedSubtypePackageRecordHistoryPath } from "./reviewed-subtype-pack
 import { reviewedSubtypePackageCiHistoryPath } from "./reviewed-subtype-package-ci-history.mjs";
 import { reviewedSubtypeBrowserHistoryPath } from "./reviewed-subtype-browser-history.mjs";
 import { reviewedSubtypeBrowserCiHistoryPath } from "./reviewed-subtype-browser-ci-history.mjs";
+import { reviewedSubtypeBrowserPromotionHistoryPath } from "./reviewed-subtype-browser-promotion-history.mjs";
+import { browserSubtypeEvidenceId, browserSubtypeObservationId } from "./reviewed-subtype-browser-promotion.mjs";
 
 const predecessor = async () => JSON.parse(beforeReviewedSubtypeNativePromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
 
@@ -79,7 +81,7 @@ test("native Subtype promotion adds exactly eighteen cells and preserves every o
 		changed.push(`${cell.profile}/${cell.position}`);
 	}
 	assert.deepEqual(changed.sort(), reviewedSubtypeNativeProfiles.flatMap(profile => [profile + "/parameter", profile + "/result"]).sort());
-	for(const path of [reviewedSubtypeNativePromotionHistoryPath, reviewedSubtypeHostCiReportHistoryPath, reviewedSubtypeHostCiHistoryPath, mavenPrerequisiteHistoryPath, reviewedSubtypePackageRecordHistoryPath, reviewedSubtypePackageCiHistoryPath, reviewedSubtypeBrowserHistoryPath, reviewedSubtypeBrowserCiHistoryPath])
+	for(const path of [reviewedSubtypeNativePromotionHistoryPath, reviewedSubtypeHostCiReportHistoryPath, reviewedSubtypeHostCiHistoryPath, mavenPrerequisiteHistoryPath, reviewedSubtypePackageRecordHistoryPath, reviewedSubtypePackageCiHistoryPath, reviewedSubtypeBrowserHistoryPath, reviewedSubtypeBrowserCiHistoryPath, reviewedSubtypeBrowserPromotionHistoryPath])
 	{
 		const history = JSON.parse(await readFile(path));
 		for(const entry of proposed.evidence) for(const file of entry.files)
@@ -88,7 +90,10 @@ test("native Subtype promotion adds exactly eighteen cells and preserves every o
 			if(update) file.sha256 = update.currentSha256;
 		}
 	}
-	assert.deepEqual(current.document, proposed);
+	const comparable = structuredClone(current.document);
+	comparable.evidence = comparable.evidence.filter(item => item.id !== browserSubtypeEvidenceId);
+	comparable.observations = comparable.observations.filter(item => item.id !== browserSubtypeObservationId);
+	assert.deepEqual(comparable, proposed);
 });
 
 test("native Subtype promotion refuses altered references, overlaps and repeat promotion", async () => {
@@ -126,7 +131,7 @@ test("native Subtype guides document both routes and retain the tested boundary"
 		assert.doesNotMatch(source, /Reviewed-IR Subtype remains separate work/u);
 	}
 	const author = await readFile("docs/lean/existing-package.md", "utf8");
-	assert.ok(author.includes("C/C++, Node, native hosts, CPAN and PHP-Wasm installed; reviewed browser pending"));
+	assert.ok(author.includes("C/C++, Node, browser/React/worker, native hosts, CPAN and PHP-Wasm installed"));
 	assert.doesNotMatch(author, /other reviewed hosts remain pending|C\/C\+\+, Node and PHP-Wasm installed; other profiles pending/u);
 });
 

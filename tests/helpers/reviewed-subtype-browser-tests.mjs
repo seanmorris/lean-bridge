@@ -13,6 +13,7 @@ import "./reviewed-subtype-browser-history-tests.mjs";
 import "./reviewed-subtype-browser-archive-tests.mjs";
 import "./reviewed-subtype-browser-report-tests.mjs";
 import "./reviewed-subtype-browser-ci-history-tests.mjs";
+import "./reviewed-subtype-browser-promotion-tests.mjs";
 import { reviewedSubtypeBrowserExpected, reviewedSubtypeBrowserPackage, reviewedSubtypeBrowserPhases, reviewedSubtypeBrowserProfiles, validateReviewedSubtypeBrowserObservation, validateReviewedSubtypeBrowserPhases } from "./reviewed-subtype-browser-fixture.mjs";
 
 const engines = ["chromium", "firefox", "webkit"];

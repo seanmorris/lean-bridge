@@ -505,11 +505,11 @@ test("checked Subtype evidence promotes only top-level parameters and results", 
 	const installed = cells.filter(cell => cell.stages.installedExecution.state === "passed");
 	const ordinary = installed.filter(cell => cell.path === "ordinary-source");
 	const reviewed = installed.filter(cell => cell.path === "reviewed-ir");
-	// Ordinary all profiles; reviewed all native profiles, Node and PHP-Wasm.
+	// Both source routes cover top-level parameters/results in all seventeen profiles.
 	const native = ["c", "cpp", "python", "rust", "ruby", "dotnet", "java", "kotlin", "php-native", "wit-wasi"];
 	const browser = ["browser-javascript", "browser-react", "browser-worker"];
 	assert.equal(ordinary.length, 2 * (2 + native.length + 1 + browser.length + 1));
-	assert.equal(reviewed.length, 28);
+	assert.equal(reviewed.length, 34);
 	assert.equal(installed.length, ordinary.length + reviewed.length);
 	assert.deepEqual([...new Set(installed.map(cell => cell.profile))].sort(), ["node-javascript", "node-typescript", ...native, "perl", ...browser, "php-wasm"].sort());
 	assert.deepEqual([...new Set(installed.map(cell => cell.position))], ["parameter", "result"]);
@@ -539,10 +539,17 @@ test("checked Subtype evidence promotes only top-level parameters and results", 
 		assert.deepEqual(cell.stages.installedExecution.evidence, [browser.includes(cell.profile) ? "npm-browser-refinements-installed" : "npm-subtype-refinements-installed"]);
 		assert.match(cell.hostType, /declared primitive/u);
 	}
-	assert.deepEqual([...new Set(reviewed.map(cell => cell.profile))].sort(), ["c", "cpp", "node-javascript", "node-typescript", "php-wasm", ...reviewedSubtypeNativeProfiles].sort());
+	assert.deepEqual([...new Set(reviewed.map(cell => cell.profile))].sort(), ["c", "cpp", "node-javascript", "node-typescript", "php-wasm", ...reviewedSubtypeNativeProfiles, ...browser].sort());
 	const references = await reviewedSubtypeNativeReferences();
 	for(const cell of reviewed)
 	{
+		if(browser.includes(cell.profile))
+		{
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["reviewed-browser-subtype-installed"]);
+			for(const stage of Object.values(cell.stages)) assert.equal(stage.state, "passed");
+			assert.match(cell.hostType, /declared primitive/u);
+			continue;
+		}
 		if(reviewedSubtypeNativeProfiles.includes(cell.profile))
 		{
 			assert.deepEqual(cell.stages.installedExecution.evidence, references.filter(item => item.profiles.includes(cell.profile)).map(item => item.id));

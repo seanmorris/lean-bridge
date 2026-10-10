@@ -1,0 +1,661 @@
+{
+  "schemaVersion": 1,
+  "milestone": "reviewed-subtype-browser-promotion-v1",
+  "predecessorCommit": "3e35c2f41213bb35be37fd379796accb004f8962",
+  "updates": [
+    {
+      "path": "docs/evidence/refinement-closure-audit-20261007.md",
+      "currentSha256": "1ddea1fe363bfd378b20bde76439d31e1db04829592bd08f02e0fc9c664732d5",
+      "previousSha256": "7622b7de2243d84014c3f2a02164b904d2a276282cd9f6cd36268f2622cbd144",
+      "edits": [
+        {
+          "start": 4162,
+          "previous": "| Checked Subtype | Ordinary top-level primitive-base parameters and results for Node, browser, C, C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI. Reviewed C/C++ and Node JavaScript/strict TypeScript now cite the [Subtype archive](reviewed-subtype-20261008/receipt.json): C 2033 checks, C++ 2026, npm 2036 checks and 2024 rejections. | None for these reviewed reports; the archive also preserves both failed attempts. | PHP-Wasm's [installed Subtype archive](php-wasm-subtype-installed-20261010/index.json) adds four ordinary/reviewed parameter/result cells with twelve configurations and 2,024 checks each per route. Other reviewed native hosts and npm browser execution remain separate. Nested and nominal Subtype positions are not admitted. |\n",
+          "current": "| Checked Subtype | Ordinary top-level primitive-base parameters/results across npm, native, CPAN and PHP-Wasm profiles. Reviewed C/C++ and Node retain their [original archive](reviewed-subtype-20261008/receipt.json). The [native promotion](reviewed-subtype-native-promotion-20261010.md) adds Python, Rust, Ruby, .NET, Java, Kotlin, native PHP, WIT/WASI and all four Perl ABIs. The [browser promotion](reviewed-subtype-browser-promotion-20261010.md) adds six page/React/worker parameter/result cells from twelve engine/build configurations and 51 lifecycle observations, each with 2,036 checks and 2,024 rejections. | None for these promoted reports. Original failed attempts remain archived. | PHP-Wasm has separate [ordinary/reviewed installed evidence](php-wasm-subtype-installed-20261010/index.json). Nested containers, nominal fields, callback positions and remaining generic combinations stay open. Browser execution uses local engines; hosted locked-Nix acceptance, entry counters and relocated browser replay are not established by that run. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/javascript-typescript.md",
+      "currentSha256": "742396564eeb77e6b7740d674b8e3f76578caf38f0488a26bfe57d61ea98481a",
+      "previousSha256": "12ec028020f515667a2fa03bcb3390d554c229acbcc3536fb106eff8158fbb29",
+      "edits": [
+        {
+          "start": 38546,
+          "previous": "| `Subtype / {x // p x}` | `host type of the declared primitive, checked by the compiled Lean constructor before dispatch` (input); `host type of the declared primitive, projected from a proof-backed Lean result` (result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Node JavaScript / TypeScript: Installed checks passed (input, result); Not audited (field, callback input, callback result); Browser / React / Worker: Not audited | Node JavaScript / TypeScript: The host uses the base primitive representation. Compiled Lean validates inputs and constructs the proof-carrying subtype before the source call; heap-backed inputs are retained for validation and all decoded objects are released if validation rejects. Results are projected through .val after Lean returns. Reviewed Binding IR selects the checked constructor, including normalizing constructors that preserve the caller's input. Browser / React / Worker: The host uses the base primitive representation. Compiled Lean validates inputs and constructs the proof-carrying subtype before the source call; results are projected through .val after Lean returns. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n",
+          "current": "| `Subtype / {x // p x}` | `host type of the declared primitive, checked by the compiled Lean constructor before dispatch` (input); `host type of the declared primitive, projected from a proof-backed Lean result` (result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Installed checks passed (input, result); Not audited (field, callback input, callback result) | Node JavaScript / TypeScript: The host uses the base primitive representation. Compiled Lean validates inputs and constructs the proof-carrying subtype before the source call; heap-backed inputs are retained for validation and all decoded objects are released if validation rejects. Results are projected through .val after Lean returns. Reviewed Binding IR selects the checked constructor, including normalizing constructors that preserve the caller's input. Browser / React / Worker: The host uses the base primitive representation. Compiled Lean validates inputs and constructs the proof-carrying subtype before the source call; results are projected through .val after Lean returns. Pass the base value: string, bigint, number or Uint8Array for the tested primitive. The reviewed API selects the checked Lean constructor. Rejection throws; accepted normalization becomes the value received by the export. Results expose the proof-backed base value. Pages, React and workers use the same generated exports. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n"
+        },
+        {
+          "start": 49075,
+          "previous": "",
+          "current": "### Checked Subtypes\n\nYou pass the base value to a checked `Subtype` parameter: a `string`, `bigint`,\n`number` or `Uint8Array`, as specified by the generated declaration. You do not\nconstruct a proof object. Compiled Lean runs the package author's selected\nconstructor before calling the export. Rejection throws; if the constructor\nnormalizes an accepted value, the export receives that normalized value.\nResults expose the subtype's base value.\n\nUse the same generated exports in Node, browser pages, React and workers.\nThere is no extra consumer-side validator to install. For a reviewed API,\nthe review selects each constructor and Lean Bridge checks it against fresh\nLean compilation. A publisher changing that choice can change the API's\naccepted inputs and normalization.\n\n[Installed reviewed browser checks](evidence/reviewed-subtype-browser-promotion-20261010.md)\ncover top-level parameters and results over `String`, `Nat`, `Int`, `ByteArray`\nand `UInt8`, including React lifecycle changes, worker restart and missing-Wasm\nrecovery. Subtypes nested in containers, record fields or callback signatures\nare not supported by this mapping.\n\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/existing-package.md",
+      "currentSha256": "f4e7006c5f2958128076e61aa808b92578d02bff35be13f83aa91c0534d48dca",
+      "previousSha256": "57c51c5fc39bf24e36fcd23a405908476ed4c28b5e50b871747fafd33cd61dee",
+      "edits": [
+        {
+          "start": 48793,
+          "previous": "Keep `lean-bridge.exports.json` limited to modules and target package settings. The review supplies each constructor; configuration `contracts` cannot override it. Analysis, build and target recompilation retain the same selection, and fresh Lean checks the constructor and exported signature. A specialization uses its public export name, so two specializations of one generic can choose different constructors. Changing to another valid constructor is an API change, including when it normalizes accepted inputs. [Installed reviewed Subtype checks](../evidence/reviewed-subtype-20261008/receipt.json) cover C, C++ and Node JavaScript/strict TypeScript. [PHP-Wasm installed checks](../evidence/php-wasm-subtype-installed-20261010.md) also cover ordinary and reviewed packages in Node and Chromium. Other reviewed native hosts and npm browser profiles remain pending.\n",
+          "current": "Keep `lean-bridge.exports.json` limited to modules and target package settings. The review supplies each constructor; configuration `contracts` cannot override it. Analysis, build and target recompilation retain the same selection, and fresh Lean checks the constructor and exported signature. A specialization uses its public export name, so two specializations of one generic can choose different constructors. Changing to another valid constructor is an API change, including when it normalizes accepted inputs. [Installed reviewed Subtype checks](../evidence/reviewed-subtype-20261008/receipt.json) cover C, C++ and Node JavaScript/strict TypeScript. [PHP-Wasm installed checks](../evidence/php-wasm-subtype-installed-20261010.md) also cover ordinary and reviewed packages in Node and Chromium. [Reviewed native checks](../evidence/reviewed-subtype-native-promotion-20261010.md) cover the remaining native targets and CPAN. [Reviewed browser checks](../evidence/reviewed-subtype-browser-promotion-20261010.md) cover pages, React and workers in Chromium, Firefox and WebKit.\n"
+        },
+        {
+          "start": 51755,
+          "previous": "| `Subtype` parameter or result over a primitive | Installed | Installed | Installed, both source routes on four ABIs | Installed, both source routes | C/C++, Node, native hosts, CPAN and PHP-Wasm installed; reviewed browser pending |\n",
+          "current": "| `Subtype` parameter or result over a primitive | Installed | Installed | Installed, both source routes on four ABIs | Installed, both source routes | C/C++, Node, browser/React/worker, native hosts, CPAN and PHP-Wasm installed |\n"
+        },
+        {
+          "start": 54305,
+          "previous": "Installed reviewed scalar and container reports cover [C/C++](../evidence/reviewed-fin-20261007/receipt.json), [Python and Rust scalar](../evidence/reviewed-scalar-hosts-20261007/receipt.json), [managed/PHP/Ruby/WIT scalar](../evidence/reviewed-scalar-rollout-20261007/receipt.json), [the other native container hosts](../evidence/reviewed-fin-hosts-20261007/receipt.json), and CPAN [scalar](../evidence/reviewed-perl-scalar-20261007/receipt.json) and [containers](../evidence/reviewed-perl-containers-20261007/receipt.json). They record two-root reproduction, source-free consumers and each local runtime floor. The structural and nominal-field receipts above add Python, Ruby, Rust, .NET and WIT/WASI coverage at their named sites. [Reviewed Subtype acceptance](../evidence/reviewed-subtype-20261008/receipt.json) covers C/C++ and Node. The [PHP-Wasm Subtype archive](../evidence/php-wasm-subtype-installed-20261010/index.json) adds both source routes in Node and Chromium. The [reviewed native Subtype checks](../evidence/reviewed-subtype-native-promotion-20261010.md) add Python, Rust, .NET, Java, Kotlin, Ruby, native PHP, WIT/WASI and Perl. They retain both Python runtime floors and all four Perl ABIs, with two-root reproduction, author removal, offline installation and installed-tree relocation. These reports cover top-level primitive-base parameters and results; reviewed browser and nested or callback Subtypes remain separate. Callback checks have their own receipts and do not follow from scalar or container checks.\n",
+          "current": "Installed reviewed scalar and container reports cover [C/C++](../evidence/reviewed-fin-20261007/receipt.json), [Python and Rust scalar](../evidence/reviewed-scalar-hosts-20261007/receipt.json), [managed/PHP/Ruby/WIT scalar](../evidence/reviewed-scalar-rollout-20261007/receipt.json), [the other native container hosts](../evidence/reviewed-fin-hosts-20261007/receipt.json), and CPAN [scalar](../evidence/reviewed-perl-scalar-20261007/receipt.json) and [containers](../evidence/reviewed-perl-containers-20261007/receipt.json). They record two-root reproduction, source-free consumers and each local runtime floor. The structural and nominal-field receipts above add Python, Ruby, Rust, .NET and WIT/WASI coverage at their named sites. [Reviewed Subtype acceptance](../evidence/reviewed-subtype-20261008/receipt.json) covers C/C++ and Node. The [PHP-Wasm Subtype archive](../evidence/php-wasm-subtype-installed-20261010/index.json) adds both source routes in Node and Chromium. The [reviewed native Subtype checks](../evidence/reviewed-subtype-native-promotion-20261010.md) add Python, Rust, .NET, Java, Kotlin, Ruby, native PHP, WIT/WASI and Perl. They retain both Python runtime floors and all four Perl ABIs, with two-root reproduction, author removal, offline installation and installed-tree relocation. The [reviewed browser archive](../evidence/reviewed-subtype-browser-promotion-20261010.md) adds twelve engine/build configurations and 51 lifecycle observations, including React remounts, pending unmounts, worker restart and missing-asset recovery. These reports cover top-level primitive-base parameters and results. Nested, nominal-field and callback Subtypes remain unsupported. Callback checks have their own receipts and do not follow from scalar or container checks.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/export-decisions.md",
+      "currentSha256": "f38ab07cae963d2e5a3f929811d937c5795b2a97d3058182df1cbe20853bf056",
+      "previousSha256": "ac5af40142a6a98e28bf51bfa1fde381018b2491d7a568cbeaab976087a18cd9",
+      "edits": [
+        {
+          "start": 4006,
+          "previous": "",
+          "current": "For a reviewed `Subtype` API, select the checked constructor by public export\nname in the review. Two finite specializations of one generic can select\ndifferent constructors. Lean Bridge reconciles the exact input base type,\nresult subtype and selected constructor with fresh Lean compilation; the\nconsumer passes the base value. [Reviewed native checks](../evidence/reviewed-subtype-native-promotion-20261010.md)\nand [reviewed browser checks](../evidence/reviewed-subtype-browser-promotion-20261010.md)\nrecord installed top-level primitive-base parameters and results. Nested,\nnominal-field and callback Subtypes still require a mapping.\n\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "e8fb2d43115c55e3453301162f58987f45b106db9bd2196ada0ccc43edbcb826",
+      "previousSha256": "b947e6d88c5d709cd079d6ad3741a0dd78059bf2bdfd9bc48e7393a10292e977",
+      "edits": [
+        {
+          "start": 50871,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 707695,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 721726,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 733101,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 747321,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 758775,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 770846,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 782134,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 790717,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 797175,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 805561,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 813538,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 836468,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 1072635,
+          "previous": "          \"sha256\": \"57c51c5fc39bf24e36fcd23a405908476ed4c28b5e50b871747fafd33cd61dee\"\n",
+          "current": "          \"sha256\": \"f4e7006c5f2958128076e61aa808b92578d02bff35be13f83aa91c0534d48dca\"\n"
+        },
+        {
+          "start": 1072794,
+          "previous": "          \"sha256\": \"ac5af40142a6a98e28bf51bfa1fde381018b2491d7a568cbeaab976087a18cd9\"\n",
+          "current": "          \"sha256\": \"f38ab07cae963d2e5a3f929811d937c5795b2a97d3058182df1cbe20853bf056\"\n"
+        },
+        {
+          "start": 1078061,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 1080224,
+          "previous": "          \"sha256\": \"57c51c5fc39bf24e36fcd23a405908476ed4c28b5e50b871747fafd33cd61dee\"\n",
+          "current": "          \"sha256\": \"f4e7006c5f2958128076e61aa808b92578d02bff35be13f83aa91c0534d48dca\"\n"
+        },
+        {
+          "start": 1080383,
+          "previous": "          \"sha256\": \"ac5af40142a6a98e28bf51bfa1fde381018b2491d7a568cbeaab976087a18cd9\"\n",
+          "current": "          \"sha256\": \"f38ab07cae963d2e5a3f929811d937c5795b2a97d3058182df1cbe20853bf056\"\n"
+        },
+        {
+          "start": 1084759,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 1086825,
+          "previous": "          \"sha256\": \"57c51c5fc39bf24e36fcd23a405908476ed4c28b5e50b871747fafd33cd61dee\"\n",
+          "current": "          \"sha256\": \"f4e7006c5f2958128076e61aa808b92578d02bff35be13f83aa91c0534d48dca\"\n"
+        },
+        {
+          "start": 1086984,
+          "previous": "          \"sha256\": \"ac5af40142a6a98e28bf51bfa1fde381018b2491d7a568cbeaab976087a18cd9\"\n",
+          "current": "          \"sha256\": \"f38ab07cae963d2e5a3f929811d937c5795b2a97d3058182df1cbe20853bf056\"\n"
+        },
+        {
+          "start": 1091762,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 1093933,
+          "previous": "          \"sha256\": \"57c51c5fc39bf24e36fcd23a405908476ed4c28b5e50b871747fafd33cd61dee\"\n",
+          "current": "          \"sha256\": \"f4e7006c5f2958128076e61aa808b92578d02bff35be13f83aa91c0534d48dca\"\n"
+        },
+        {
+          "start": 1094092,
+          "previous": "          \"sha256\": \"ac5af40142a6a98e28bf51bfa1fde381018b2491d7a568cbeaab976087a18cd9\"\n",
+          "current": "          \"sha256\": \"f38ab07cae963d2e5a3f929811d937c5795b2a97d3058182df1cbe20853bf056\"\n"
+        },
+        {
+          "start": 1099268,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 1101427,
+          "previous": "          \"sha256\": \"57c51c5fc39bf24e36fcd23a405908476ed4c28b5e50b871747fafd33cd61dee\"\n",
+          "current": "          \"sha256\": \"f4e7006c5f2958128076e61aa808b92578d02bff35be13f83aa91c0534d48dca\"\n"
+        },
+        {
+          "start": 1101586,
+          "previous": "          \"sha256\": \"ac5af40142a6a98e28bf51bfa1fde381018b2491d7a568cbeaab976087a18cd9\"\n",
+          "current": "          \"sha256\": \"f38ab07cae963d2e5a3f929811d937c5795b2a97d3058182df1cbe20853bf056\"\n"
+        },
+        {
+          "start": 1106222,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 1108483,
+          "previous": "          \"sha256\": \"57c51c5fc39bf24e36fcd23a405908476ed4c28b5e50b871747fafd33cd61dee\"\n",
+          "current": "          \"sha256\": \"f4e7006c5f2958128076e61aa808b92578d02bff35be13f83aa91c0534d48dca\"\n"
+        },
+        {
+          "start": 1108642,
+          "previous": "          \"sha256\": \"ac5af40142a6a98e28bf51bfa1fde381018b2491d7a568cbeaab976087a18cd9\"\n",
+          "current": "          \"sha256\": \"f38ab07cae963d2e5a3f929811d937c5795b2a97d3058182df1cbe20853bf056\"\n"
+        },
+        {
+          "start": 1113856,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 1116084,
+          "previous": "          \"sha256\": \"57c51c5fc39bf24e36fcd23a405908476ed4c28b5e50b871747fafd33cd61dee\"\n",
+          "current": "          \"sha256\": \"f4e7006c5f2958128076e61aa808b92578d02bff35be13f83aa91c0534d48dca\"\n"
+        },
+        {
+          "start": 1116243,
+          "previous": "          \"sha256\": \"ac5af40142a6a98e28bf51bfa1fde381018b2491d7a568cbeaab976087a18cd9\"\n",
+          "current": "          \"sha256\": \"f38ab07cae963d2e5a3f929811d937c5795b2a97d3058182df1cbe20853bf056\"\n"
+        },
+        {
+          "start": 1123094,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 1126365,
+          "previous": "          \"sha256\": \"57c51c5fc39bf24e36fcd23a405908476ed4c28b5e50b871747fafd33cd61dee\"\n",
+          "current": "          \"sha256\": \"f4e7006c5f2958128076e61aa808b92578d02bff35be13f83aa91c0534d48dca\"\n"
+        },
+        {
+          "start": 1126524,
+          "previous": "          \"sha256\": \"ac5af40142a6a98e28bf51bfa1fde381018b2491d7a568cbeaab976087a18cd9\"\n",
+          "current": "          \"sha256\": \"f38ab07cae963d2e5a3f929811d937c5795b2a97d3058182df1cbe20853bf056\"\n"
+        },
+        {
+          "start": 1132221,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 1138698,
+          "previous": "          \"sha256\": \"57c51c5fc39bf24e36fcd23a405908476ed4c28b5e50b871747fafd33cd61dee\"\n",
+          "current": "          \"sha256\": \"f4e7006c5f2958128076e61aa808b92578d02bff35be13f83aa91c0534d48dca\"\n"
+        },
+        {
+          "start": 1138857,
+          "previous": "          \"sha256\": \"ac5af40142a6a98e28bf51bfa1fde381018b2491d7a568cbeaab976087a18cd9\"\n",
+          "current": "          \"sha256\": \"f38ab07cae963d2e5a3f929811d937c5795b2a97d3058182df1cbe20853bf056\"\n"
+        },
+        {
+          "start": 1147156,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 1149945,
+          "previous": "          \"sha256\": \"ac5af40142a6a98e28bf51bfa1fde381018b2491d7a568cbeaab976087a18cd9\"\n",
+          "current": "          \"sha256\": \"f38ab07cae963d2e5a3f929811d937c5795b2a97d3058182df1cbe20853bf056\"\n"
+        },
+        {
+          "start": 1155203,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 1157831,
+          "previous": "          \"sha256\": \"ac5af40142a6a98e28bf51bfa1fde381018b2491d7a568cbeaab976087a18cd9\"\n",
+          "current": "          \"sha256\": \"f38ab07cae963d2e5a3f929811d937c5795b2a97d3058182df1cbe20853bf056\"\n"
+        },
+        {
+          "start": 1164175,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 1168255,
+          "previous": "          \"sha256\": \"ac5af40142a6a98e28bf51bfa1fde381018b2491d7a568cbeaab976087a18cd9\"\n",
+          "current": "          \"sha256\": \"f38ab07cae963d2e5a3f929811d937c5795b2a97d3058182df1cbe20853bf056\"\n"
+        },
+        {
+          "start": 1173566,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 1178373,
+          "previous": "          \"sha256\": \"ac5af40142a6a98e28bf51bfa1fde381018b2491d7a568cbeaab976087a18cd9\"\n",
+          "current": "          \"sha256\": \"f38ab07cae963d2e5a3f929811d937c5795b2a97d3058182df1cbe20853bf056\"\n"
+        },
+        {
+          "start": 1186589,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 1192157,
+          "previous": "          \"sha256\": \"57c51c5fc39bf24e36fcd23a405908476ed4c28b5e50b871747fafd33cd61dee\"\n",
+          "current": "          \"sha256\": \"f4e7006c5f2958128076e61aa808b92578d02bff35be13f83aa91c0534d48dca\"\n"
+        },
+        {
+          "start": 1192316,
+          "previous": "          \"sha256\": \"ac5af40142a6a98e28bf51bfa1fde381018b2491d7a568cbeaab976087a18cd9\"\n",
+          "current": "          \"sha256\": \"f38ab07cae963d2e5a3f929811d937c5795b2a97d3058182df1cbe20853bf056\"\n"
+        },
+        {
+          "start": 1219701,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 1224700,
+          "previous": "          \"sha256\": \"57c51c5fc39bf24e36fcd23a405908476ed4c28b5e50b871747fafd33cd61dee\"\n",
+          "current": "          \"sha256\": \"f4e7006c5f2958128076e61aa808b92578d02bff35be13f83aa91c0534d48dca\"\n"
+        },
+        {
+          "start": 1224859,
+          "previous": "          \"sha256\": \"ac5af40142a6a98e28bf51bfa1fde381018b2491d7a568cbeaab976087a18cd9\"\n",
+          "current": "          \"sha256\": \"f38ab07cae963d2e5a3f929811d937c5795b2a97d3058182df1cbe20853bf056\"\n"
+        },
+        {
+          "start": 1249945,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 1254979,
+          "previous": "          \"sha256\": \"57c51c5fc39bf24e36fcd23a405908476ed4c28b5e50b871747fafd33cd61dee\"\n",
+          "current": "          \"sha256\": \"f4e7006c5f2958128076e61aa808b92578d02bff35be13f83aa91c0534d48dca\"\n"
+        },
+        {
+          "start": 1255138,
+          "previous": "          \"sha256\": \"ac5af40142a6a98e28bf51bfa1fde381018b2491d7a568cbeaab976087a18cd9\"\n",
+          "current": "          \"sha256\": \"f38ab07cae963d2e5a3f929811d937c5795b2a97d3058182df1cbe20853bf056\"\n"
+        },
+        {
+          "start": 1282881,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 1287946,
+          "previous": "          \"sha256\": \"57c51c5fc39bf24e36fcd23a405908476ed4c28b5e50b871747fafd33cd61dee\"\n",
+          "current": "          \"sha256\": \"f4e7006c5f2958128076e61aa808b92578d02bff35be13f83aa91c0534d48dca\"\n"
+        },
+        {
+          "start": 1288105,
+          "previous": "          \"sha256\": \"ac5af40142a6a98e28bf51bfa1fde381018b2491d7a568cbeaab976087a18cd9\"\n",
+          "current": "          \"sha256\": \"f38ab07cae963d2e5a3f929811d937c5795b2a97d3058182df1cbe20853bf056\"\n"
+        },
+        {
+          "start": 1322184,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 1329356,
+          "previous": "          \"sha256\": \"57c51c5fc39bf24e36fcd23a405908476ed4c28b5e50b871747fafd33cd61dee\"\n",
+          "current": "          \"sha256\": \"f4e7006c5f2958128076e61aa808b92578d02bff35be13f83aa91c0534d48dca\"\n"
+        },
+        {
+          "start": 1329515,
+          "previous": "          \"sha256\": \"ac5af40142a6a98e28bf51bfa1fde381018b2491d7a568cbeaab976087a18cd9\"\n",
+          "current": "          \"sha256\": \"f38ab07cae963d2e5a3f929811d937c5795b2a97d3058182df1cbe20853bf056\"\n"
+        },
+        {
+          "start": 1348725,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 1355204,
+          "previous": "          \"sha256\": \"57c51c5fc39bf24e36fcd23a405908476ed4c28b5e50b871747fafd33cd61dee\"\n",
+          "current": "          \"sha256\": \"f4e7006c5f2958128076e61aa808b92578d02bff35be13f83aa91c0534d48dca\"\n"
+        },
+        {
+          "start": 1355363,
+          "previous": "          \"sha256\": \"ac5af40142a6a98e28bf51bfa1fde381018b2491d7a568cbeaab976087a18cd9\"\n",
+          "current": "          \"sha256\": \"f38ab07cae963d2e5a3f929811d937c5795b2a97d3058182df1cbe20853bf056\"\n"
+        },
+        {
+          "start": 1371105,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 1377884,
+          "previous": "          \"sha256\": \"57c51c5fc39bf24e36fcd23a405908476ed4c28b5e50b871747fafd33cd61dee\"\n",
+          "current": "          \"sha256\": \"f4e7006c5f2958128076e61aa808b92578d02bff35be13f83aa91c0534d48dca\"\n"
+        },
+        {
+          "start": 1378043,
+          "previous": "          \"sha256\": \"ac5af40142a6a98e28bf51bfa1fde381018b2491d7a568cbeaab976087a18cd9\"\n",
+          "current": "          \"sha256\": \"f38ab07cae963d2e5a3f929811d937c5795b2a97d3058182df1cbe20853bf056\"\n"
+        },
+        {
+          "start": 1390997,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 1397576,
+          "previous": "          \"sha256\": \"57c51c5fc39bf24e36fcd23a405908476ed4c28b5e50b871747fafd33cd61dee\"\n",
+          "current": "          \"sha256\": \"f4e7006c5f2958128076e61aa808b92578d02bff35be13f83aa91c0534d48dca\"\n"
+        },
+        {
+          "start": 1397735,
+          "previous": "          \"sha256\": \"ac5af40142a6a98e28bf51bfa1fde381018b2491d7a568cbeaab976087a18cd9\"\n",
+          "current": "          \"sha256\": \"f38ab07cae963d2e5a3f929811d937c5795b2a97d3058182df1cbe20853bf056\"\n"
+        },
+        {
+          "start": 1412450,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 1418061,
+          "previous": "          \"sha256\": \"57c51c5fc39bf24e36fcd23a405908476ed4c28b5e50b871747fafd33cd61dee\"\n",
+          "current": "          \"sha256\": \"f4e7006c5f2958128076e61aa808b92578d02bff35be13f83aa91c0534d48dca\"\n"
+        },
+        {
+          "start": 1418220,
+          "previous": "          \"sha256\": \"ac5af40142a6a98e28bf51bfa1fde381018b2491d7a568cbeaab976087a18cd9\"\n",
+          "current": "          \"sha256\": \"f38ab07cae963d2e5a3f929811d937c5795b2a97d3058182df1cbe20853bf056\"\n"
+        },
+        {
+          "start": 1425469,
+          "previous": "          \"sha256\": \"48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd\"\n",
+          "current": "          \"sha256\": \"5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38\"\n"
+        },
+        {
+          "start": 3423031,
+          "previous": "          \"sha256\": \"8486a3c0073841364e4b82118cec2bff65eb8fdf48097d73b2b63a7fa17ca693\"\n",
+          "current": "          \"sha256\": \"356576426e4337a5365235ff60accbd537fae5bc43ea3ef5442d9d04baae5750\"\n"
+        },
+        {
+          "start": 3433658,
+          "previous": "          \"sha256\": \"8486a3c0073841364e4b82118cec2bff65eb8fdf48097d73b2b63a7fa17ca693\"\n",
+          "current": "          \"sha256\": \"356576426e4337a5365235ff60accbd537fae5bc43ea3ef5442d9d04baae5750\"\n"
+        },
+        {
+          "start": 3444259,
+          "previous": "          \"sha256\": \"8486a3c0073841364e4b82118cec2bff65eb8fdf48097d73b2b63a7fa17ca693\"\n",
+          "current": "          \"sha256\": \"356576426e4337a5365235ff60accbd537fae5bc43ea3ef5442d9d04baae5750\"\n"
+        },
+        {
+          "start": 3456127,
+          "previous": "          \"sha256\": \"8486a3c0073841364e4b82118cec2bff65eb8fdf48097d73b2b63a7fa17ca693\"\n",
+          "current": "          \"sha256\": \"356576426e4337a5365235ff60accbd537fae5bc43ea3ef5442d9d04baae5750\"\n"
+        },
+        {
+          "start": 3468323,
+          "previous": "          \"sha256\": \"8486a3c0073841364e4b82118cec2bff65eb8fdf48097d73b2b63a7fa17ca693\"\n",
+          "current": "          \"sha256\": \"356576426e4337a5365235ff60accbd537fae5bc43ea3ef5442d9d04baae5750\"\n"
+        },
+        {
+          "start": 3482041,
+          "previous": "          \"sha256\": \"8486a3c0073841364e4b82118cec2bff65eb8fdf48097d73b2b63a7fa17ca693\"\n",
+          "current": "          \"sha256\": \"356576426e4337a5365235ff60accbd537fae5bc43ea3ef5442d9d04baae5750\"\n"
+        },
+        {
+          "start": 3495891,
+          "previous": "          \"sha256\": \"8486a3c0073841364e4b82118cec2bff65eb8fdf48097d73b2b63a7fa17ca693\"\n",
+          "current": "          \"sha256\": \"356576426e4337a5365235ff60accbd537fae5bc43ea3ef5442d9d04baae5750\"\n"
+        },
+        {
+          "start": 3509746,
+          "previous": "          \"sha256\": \"8486a3c0073841364e4b82118cec2bff65eb8fdf48097d73b2b63a7fa17ca693\"\n",
+          "current": "          \"sha256\": \"356576426e4337a5365235ff60accbd537fae5bc43ea3ef5442d9d04baae5750\"\n"
+        },
+        {
+          "start": 3523757,
+          "previous": "          \"sha256\": \"8486a3c0073841364e4b82118cec2bff65eb8fdf48097d73b2b63a7fa17ca693\"\n",
+          "current": "          \"sha256\": \"356576426e4337a5365235ff60accbd537fae5bc43ea3ef5442d9d04baae5750\"\n"
+        },
+        {
+          "start": 3538509,
+          "previous": "          \"sha256\": \"8486a3c0073841364e4b82118cec2bff65eb8fdf48097d73b2b63a7fa17ca693\"\n",
+          "current": "          \"sha256\": \"356576426e4337a5365235ff60accbd537fae5bc43ea3ef5442d9d04baae5750\"\n"
+        },
+        {
+          "start": 3553291,
+          "previous": "          \"sha256\": \"8486a3c0073841364e4b82118cec2bff65eb8fdf48097d73b2b63a7fa17ca693\"\n",
+          "current": "          \"sha256\": \"356576426e4337a5365235ff60accbd537fae5bc43ea3ef5442d9d04baae5750\"\n"
+        },
+        {
+          "start": 3568043,
+          "previous": "          \"sha256\": \"8486a3c0073841364e4b82118cec2bff65eb8fdf48097d73b2b63a7fa17ca693\"\n",
+          "current": "          \"sha256\": \"356576426e4337a5365235ff60accbd537fae5bc43ea3ef5442d9d04baae5750\"\n"
+        },
+        {
+          "start": 3580522,
+          "previous": "",
+          "current": "    },\n    {\n      \"id\": \"reviewed-browser-subtype-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"f07c86d23f75b9b07ae66f6e9c7101c47b29b58e\",\n      \"command\": \"PLAYWRIGHT_BROWSERS_PATH='/app/.toolchains/playwright' LEAN_BRIDGE_LEAN_PREFIX='/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2' LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR='2.36' LEAN_BRIDGE_REVIEWED_SUBTYPE_PACKAGE_RECORDS='/app/build/vo1444-browser-npm-r1-f07c86d-records' LEAN_BRIDGE_REVIEWED_SUBTYPE_BROWSER_TEST='1' LEAN_BRIDGE_TYPE_CORPUS_BROWSERS='chromium,firefox,webkit' LEAN_BRIDGE_REVIEWED_SUBTYPE_NPM_TEST='1' LEAN_BRIDGE_REVIEWED_SUBTYPE_NPM_REPORT='/app/build/vo1444-browser-npm-r1-f07c86d-records/report.json' LEAN_BRIDGE_LAKE_RUNTIME_ROOT='/app/build/lean-link-spike/lazy' LEAN_NUM_THREADS='1' OMP_NUM_THREADS='1' MAKEFLAGS='-j1' '/usr/bin/taskset' '-c' '3' '/usr/bin/node' '--test' '--test-concurrency=1' '--test-reporter=tap' '--test-name-pattern=^source-free reviewed npm archives execute checked Subtype constructors for Node and strict TypeScript$' 'tests/reviewed-subtype-installed.test.mjs'\",\n      \"scope\": \"Twelve independently reviewed exports; two reproduced author roots deleted before offline compiler-free npm installation. Node and strict TypeScript pass, then Chromium, Firefox and WebKit execute pages, React production/strict mode and dedicated workers. Twelve engine/build executions and fifty-one lifecycle observations each pass 2036 checks and 2024 rejections. Wasm asset identity, reruns, missing-asset recovery, pending unmounts and worker disposal are checked. Reviewed top-level Subtype parameters and results over String, Nat, Int, ByteArray and UInt8 bases. Two finite instantiations select different constructors; other generic combinations, nested containers, nominal fields, callbacks and owned-value transports are not established by this run. Local-engine acceptance, not hosted locked-Nix acceptance. No entry counters or relocated browser replay were measured. The archive retains selected sources and package digests, not binaries or a complete toolchain closure.\",\n      \"files\": [\n        {\n          \"path\": \"tests/helpers/reviewed-subtype-browser-promotion.mjs\",\n          \"sha256\": \"069596dc22291ecdf3c9c6a866e12e28ef0c0c1e959a69b5fccfc8cac5c5695f\"\n        },\n        {\n          \"path\": \"tests/helpers/reviewed-subtype-browser-promotion-tests.mjs\",\n          \"sha256\": \"a6b980b8be5a1b7dfd2194adf4963992da32c377f464282cef234d43c5dac1a8\"\n        },\n        {\n          \"path\": \"tests/helpers/reviewed-subtype-browser-report.mjs\",\n          \"sha256\": \"ffa6973f629c7d8c0f556715971a5c18f4ed2988609451a337aa78dd467656c0\"\n        },\n        {\n          \"path\": \"tests/helpers/reviewed-subtype-browser-report-tests.mjs\",\n          \"sha256\": \"f649052d4c5f8712d90c4803654ada1c7e55583bcc1d734ddea7dfcd432b27f9\"\n        },\n        {\n          \"path\": \"tests/helpers/reviewed-subtype-browser-fixture.mjs\",\n          \"sha256\": \"53558f1a6662fb7a5a746f1e76995445990577a18ca8163cf2f0ae08c3c3ebd6\"\n        },\n        {\n          \"path\": \"tests/helpers/reviewed-subtype-browser-archive-tests.mjs\",\n          \"sha256\": \"3685da52d280a5666afd91ca500444fc6cdb0b7719a10f31cdeaf9ea035b78fa\"\n        },\n        {\n          \"path\": \"scripts/check-reviewed-subtype-browser-reports.mjs\",\n          \"sha256\": \"fd5c34b4292026fc807c65f939d77ba0fecfab716dc62f11ae6e5f1770cf71f7\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/index.json\",\n          \"sha256\": \"f2992a5696da474d6dce426c4b6c4aaee5d6eb5f0f989723e9a68a77a0cc5b7a\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/archive-writer.mjs.txt\",\n          \"sha256\": \"af71fbdac90f5d37a756932ff79a4252303c46535ea8bc006c321f5e5fd08a9d\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-javascript/check.mjs\",\n          \"sha256\": \"89101f60207834d46cdd977a49ce9fb5f4116940988eeed013910daf0cce0e16\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-javascript/index.html\",\n          \"sha256\": \"41b59ece64724a031e286e6080e8cb1d43b45ec4f6c131f7881adb061950ef37\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-javascript/inputs.json\",\n          \"sha256\": \"796e1d54a6a8d34ad7cba8de1ab71a970ced39983de1168f274669220bb1392d\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-javascript/installed-binding-ir.json\",\n          \"sha256\": \"f080ba4da71d77719fbafb6433e2a2a2ae807770ddcb121c1bacbb067cebd3f8\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-javascript/installed-component-package.json\",\n          \"sha256\": \"fa9fd14146f6ba48d376aeed194781a75bbda817015bd75d9309d4af5d47da60\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-javascript/installed-index.d.ts\",\n          \"sha256\": \"601c63df7828f6ea509b0d4a454e51d7fcad39ae3cae992d2add99bd195a0298\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-javascript/installed-runtime-identity.json\",\n          \"sha256\": \"07a71dcf1da81cec4ef2224bcaca042dd626cb9795ed28a2713fda1a7dbe38ca\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-javascript/installed-runtime-package.json\",\n          \"sha256\": \"42dd43c4823770a7dcd4c179a5b268abad3e29fb7d149bc1844a372232f5b8e0\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-javascript/javascript.mjs\",\n          \"sha256\": \"17813c975b714c67e9ace7b7d319a16c8041f372cf39cc83fae763a228db0c80\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-javascript/observations.json\",\n          \"sha256\": \"c9fd1aa561479d0e761053ef874ced9c77294f0ee8f80bca169aabbb5de32298\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-javascript/package-lock.json\",\n          \"sha256\": \"19dc2bd2f55fc45518a37fcf0737603a825877e2ea340adf7003aed350cfdbd1\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-javascript/package.json\",\n          \"sha256\": \"f098dc3b01c0599fad0862a12cbe1eca51eb6d2ee5016209f91c00d079bb2240\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-javascript/package.mjs\",\n          \"sha256\": \"be44970c17beee9de2dbf5bf9e95fcefbe768708379bc4ea24bc2728141042ef\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-javascript/plain.mjs\",\n          \"sha256\": \"f986b2be494f621c126e4579b1006641324f36fdeaf0a57ee6ca54540ece24f8\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-javascript/report.json\",\n          \"sha256\": \"8ffb37ca3c5854a72e7da56d7533268fb7f66eebbc0486b48e6b931be4468d33\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-javascript/request.json\",\n          \"sha256\": \"8b72f5f1ddb5c8f145ab580170a8d1aaf75a1228b0004c56c7e818909e87e348\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-react/check.mjs\",\n          \"sha256\": \"89101f60207834d46cdd977a49ce9fb5f4116940988eeed013910daf0cce0e16\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-react/index.html\",\n          \"sha256\": \"f1924291e843aff6f831a527b53a8f67aa1ac07624ee0e645736e79fe99eaa1d\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-react/inputs.json\",\n          \"sha256\": \"dd31da9ae66d9641f1cea9d9864e9fa3bc9786d4cb4fe0e09bdc65eddee182cf\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-react/installed-binding-ir.json\",\n          \"sha256\": \"f080ba4da71d77719fbafb6433e2a2a2ae807770ddcb121c1bacbb067cebd3f8\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-react/installed-component-package.json\",\n          \"sha256\": \"fa9fd14146f6ba48d376aeed194781a75bbda817015bd75d9309d4af5d47da60\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-react/installed-index.d.ts\",\n          \"sha256\": \"601c63df7828f6ea509b0d4a454e51d7fcad39ae3cae992d2add99bd195a0298\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-react/installed-runtime-identity.json\",\n          \"sha256\": \"07a71dcf1da81cec4ef2224bcaca042dd626cb9795ed28a2713fda1a7dbe38ca\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-react/installed-runtime-package.json\",\n          \"sha256\": \"42dd43c4823770a7dcd4c179a5b268abad3e29fb7d149bc1844a372232f5b8e0\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-react/javascript.mjs\",\n          \"sha256\": \"17813c975b714c67e9ace7b7d319a16c8041f372cf39cc83fae763a228db0c80\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-react/observations.json\",\n          \"sha256\": \"5e29d7361207c5d8bf467f453213cac20f1c8174b26aba2f86919cf3b648829a\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-react/package-lock.json\",\n          \"sha256\": \"f39b97187b5d7d4abdc3a311a858b3a9d1c3643998d1ff04955d004dfc6597f8\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-react/package.json\",\n          \"sha256\": \"9f83bb0aa489db80e075198925e58eeeebfa30dfc63ffe25322babeff3ea48b3\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-react/package.mjs\",\n          \"sha256\": \"be44970c17beee9de2dbf5bf9e95fcefbe768708379bc4ea24bc2728141042ef\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-react/react.mjs\",\n          \"sha256\": \"8596690c5bdb64912efc10d7abce14f6083b7e6d855297596c3834ddd44a3b48\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-react/report.json\",\n          \"sha256\": \"9db1cd96cd4f275bbddbf5f9edd481512af7f8061344541aacf0dad849acc026\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-react/request.json\",\n          \"sha256\": \"7fcde9851eb78f61ec732ca277f7a4b2c7240cf72d38e43b68356c47d8ead1e2\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-worker/check.mjs\",\n          \"sha256\": \"89101f60207834d46cdd977a49ce9fb5f4116940988eeed013910daf0cce0e16\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-worker/index.html\",\n          \"sha256\": \"4c13109fc6ef171276cb9646b1815079b4966acc9e6e31efab6900b6c17b7a4b\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-worker/inputs.json\",\n          \"sha256\": \"561ad20c9d5211398cf55a48907de178de480ac19a2288b9fa2e93e5de13ca00\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-worker/installed-binding-ir.json\",\n          \"sha256\": \"f080ba4da71d77719fbafb6433e2a2a2ae807770ddcb121c1bacbb067cebd3f8\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-worker/installed-component-package.json\",\n          \"sha256\": \"fa9fd14146f6ba48d376aeed194781a75bbda817015bd75d9309d4af5d47da60\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-worker/installed-index.d.ts\",\n          \"sha256\": \"601c63df7828f6ea509b0d4a454e51d7fcad39ae3cae992d2add99bd195a0298\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-worker/installed-runtime-identity.json\",\n          \"sha256\": \"07a71dcf1da81cec4ef2224bcaca042dd626cb9795ed28a2713fda1a7dbe38ca\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-worker/installed-runtime-package.json\",\n          \"sha256\": \"42dd43c4823770a7dcd4c179a5b268abad3e29fb7d149bc1844a372232f5b8e0\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-worker/javascript.mjs\",\n          \"sha256\": \"17813c975b714c67e9ace7b7d319a16c8041f372cf39cc83fae763a228db0c80\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-worker/observations.json\",\n          \"sha256\": \"c1779498c634250d4f6d8139377f4e801e98561420c1014d84cf1e1ff4d1065f\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-worker/package-lock.json\",\n          \"sha256\": \"f0f2123eba4986ba23589dd4c131a5f60cd4d16e1ddf917b0967c1326235bfb5\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-worker/package.json\",\n          \"sha256\": \"f098dc3b01c0599fad0862a12cbe1eca51eb6d2ee5016209f91c00d079bb2240\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-worker/package.mjs\",\n          \"sha256\": \"be44970c17beee9de2dbf5bf9e95fcefbe768708379bc4ea24bc2728141042ef\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-worker/report.json\",\n          \"sha256\": \"f29d0976715e4efd5332e5b01f02022bffe3dae9753622b20aa6a9a6061f1dc4\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-worker/request.json\",\n          \"sha256\": \"bed05f7ae40403a321e7abcc1172a56fefe8fd56d53e7c4aac7bafcbb770ce0a\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-worker/worker-main.mjs\",\n          \"sha256\": \"d96f676358d61fd6d7bb1c8a3db68f289924e60d966014c161f3f3535415b633\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser-worker/worker.mjs\",\n          \"sha256\": \"41a1217c2a96a83d6c38272c0bbb3a0b02b0f6c4a09d817c0846aef0fc78d178\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/browser.json\",\n          \"sha256\": \"d2d86cf61209e0d38635de103f59f24e1261e02ad067a0b317a5f5f47852c7a5\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/build-0/binding-ir.json\",\n          \"sha256\": \"f080ba4da71d77719fbafb6433e2a2a2ae807770ddcb121c1bacbb067cebd3f8\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/build-0/compiler-adapters.json\",\n          \"sha256\": \"e4264b89632eb18baec75536cd19c07bb27a2375c2c5032944e1801e8da561ba\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/build-0/component-build-plan.json\",\n          \"sha256\": \"fbe7a34784f97642101d3d1fba712ddfb52846a2edf0a34857321641cc4e35e5\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/build-0/component-package-receipt.json\",\n          \"sha256\": \"1cc3b9bb13a51c0171133c93ab38d8fe2e90c63f0c80a45d5f091fec3bd15751\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/build-0/component-release-bundle.json\",\n          \"sha256\": \"ecbf7e6b69f955854c7d1f8b2cf3966dc9293a2ffaebc61bc03e727bdcae8b80\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/build-0/lean-bridge.exports.json\",\n          \"sha256\": \"d35f3882a78088ea90cb5c2c1b1a02fe96c307b6bf0c11026944c8b5e08d8e27\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/build-0/provenance.json\",\n          \"sha256\": \"c5a12e4af48fc284c8561fbdd9d514a6b0e24e5a8d9a8c5f3c45078279f1eb53\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/build-0/review.json\",\n          \"sha256\": \"941ff4ebed33a2f01c777ecfec7124d9a1ce6af6585fd8995972910d955cdd5a\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/build-0/runtime-requirement.json\",\n          \"sha256\": \"b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/build-0/Subtypes.lean\",\n          \"sha256\": \"9da073e32017c1c93d2272e8269d9e2b97b3398d146d5d33ce5a4fc47af5a4c2\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/build-1/binding-ir.json\",\n          \"sha256\": \"f080ba4da71d77719fbafb6433e2a2a2ae807770ddcb121c1bacbb067cebd3f8\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/build-1/compiler-adapters.json\",\n          \"sha256\": \"e4264b89632eb18baec75536cd19c07bb27a2375c2c5032944e1801e8da561ba\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/build-1/component-build-plan.json\",\n          \"sha256\": \"fbe7a34784f97642101d3d1fba712ddfb52846a2edf0a34857321641cc4e35e5\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/build-1/component-package-receipt.json\",\n          \"sha256\": \"1cc3b9bb13a51c0171133c93ab38d8fe2e90c63f0c80a45d5f091fec3bd15751\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/build-1/component-release-bundle.json\",\n          \"sha256\": \"ecbf7e6b69f955854c7d1f8b2cf3966dc9293a2ffaebc61bc03e727bdcae8b80\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/build-1/lean-bridge.exports.json\",\n          \"sha256\": \"d35f3882a78088ea90cb5c2c1b1a02fe96c307b6bf0c11026944c8b5e08d8e27\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/build-1/provenance.json\",\n          \"sha256\": \"c5a12e4af48fc284c8561fbdd9d514a6b0e24e5a8d9a8c5f3c45078279f1eb53\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/build-1/review.json\",\n          \"sha256\": \"941ff4ebed33a2f01c777ecfec7124d9a1ce6af6585fd8995972910d955cdd5a\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/build-1/runtime-requirement.json\",\n          \"sha256\": \"b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/build-1/Subtypes.lean\",\n          \"sha256\": \"9da073e32017c1c93d2272e8269d9e2b97b3398d146d5d33ce5a4fc47af5a4c2\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/check.mjs\",\n          \"sha256\": \"89101f60207834d46cdd977a49ce9fb5f4116940988eeed013910daf0cce0e16\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/checker.mjs.txt\",\n          \"sha256\": \"5d328681f2c8cc93e1d8c06f2bd2c7cfd7390671d482212195df07093e7e878a\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/independent-check.json\",\n          \"sha256\": \"f1dbc9d6bfbea7d493676dbb776cba6e7d324636fb7550686e3ce9adb8cdf870\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/index.d.ts\",\n          \"sha256\": \"601c63df7828f6ea509b0d4a454e51d7fcad39ae3cae992d2add99bd195a0298\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/index.mjs\",\n          \"sha256\": \"895d50722eaa482254ce93ca42eaadc23ef7d60feeaa711a407fae2a5a564b0e\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/index.mts\",\n          \"sha256\": \"570c9a8450c86e0129dbf9cbae98865ebb72d4f2c7b985017f6c6f5ccd46c833\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/mutation-check.json\",\n          \"sha256\": \"e14b8b6ef7615ed468172b043423b47142abf60907fe8d2d2611b53ff30e898f\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/mutation-checker.mjs.txt\",\n          \"sha256\": \"fa2b2666404432dc8a83137f5a95ab3af001b12241313ccfb5dfe0b10f68a689\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/node-observation.json\",\n          \"sha256\": \"1b1b320d9765233318f25f07ec051e888f49197454d15aa169ced9fd0629fd5f\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/preflight.jsonl\",\n          \"sha256\": \"7f58be1abaa0fc1d637a37b132494d01b3f6b7e71a2a40408c00689de942634e\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/report.json\",\n          \"sha256\": \"963d3e25e0dce2c7abb560f18f2f80f930c24cf61a6d6e1b142190792f83988f\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/run.end.json\",\n          \"sha256\": \"a198421c24f3790aeb3ab27baff4abcd93b03bf34c1b85dcb609580fcd01ea2c\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/run.finished.json\",\n          \"sha256\": \"73e10ddbe43c9c9f8916e01741d111fc526612f0c5ce9f68a6bd66fdc84fe99c\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/run.start.json\",\n          \"sha256\": \"913a963c571a4be25fc10359dc2ec6a3a1a7e9e3429fa7f9aae7aa414f7f8286\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/run.tap\",\n          \"sha256\": \"54585691db38e20ecd2eaabe2b56ea449820ddf7db3a2e6ecd9c9e98eb1c51fe\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/runner.mjs.txt\",\n          \"sha256\": \"8a97385c78362b0fc65daa831aa4b965efbdba48cd66dc4ea9d2bfa56037627a\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/sources/package-lock.json.txt\",\n          \"sha256\": \"e34bcc0814ddf2923e977b290795f9f2dbf677dbc53d04b762bb6e89b0272138\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/sources/src/release/component-npm-package.mjs.txt\",\n          \"sha256\": \"f7c4e8196814cdb6dafe16173740f762c9bf2208b6fa10650be8855f12b1b3c4\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/sources/tests/fixtures/onboarding/native-subtype/lakefile.toml.txt\",\n          \"sha256\": \"7cc9357b8eaa2dc868fed6c1ac4c44499eb29ccfe26016e6ed6361e88b5429ba\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/sources/tests/fixtures/onboarding/native-subtype/lean-toolchain.txt\",\n          \"sha256\": \"2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/sources/tests/fixtures/onboarding/native-subtype/LICENSE.txt\",\n          \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/sources/tests/fixtures/onboarding/native-subtype/package.json.txt\",\n          \"sha256\": \"db736971b2c14dc3aa16fc7113d32fd28f89a2abba58f601ece3613d87ffd2ee\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/sources/tests/fixtures/onboarding/native-subtype/Subtypes.lean.txt\",\n          \"sha256\": \"bc6065620ea7ba38b270362ae7aa93feb68e8e316b4c0fca196477f62103175c\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/sources/tests/fixtures/reviewed-subtype-consumers/browser.mjs.txt\",\n          \"sha256\": \"17813c975b714c67e9ace7b7d319a16c8041f372cf39cc83fae763a228db0c80\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/sources/tests/fixtures/reviewed-subtype-consumers/javascript.mjs.txt\",\n          \"sha256\": \"89101f60207834d46cdd977a49ce9fb5f4116940988eeed013910daf0cce0e16\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/sources/tests/fixtures/type-corpus/consumers/browser/plain.mjs.txt\",\n          \"sha256\": \"f986b2be494f621c126e4579b1006641324f36fdeaf0a57ee6ca54540ece24f8\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/sources/tests/fixtures/type-corpus/consumers/browser/react.mjs.txt\",\n          \"sha256\": \"8596690c5bdb64912efc10d7abce14f6083b7e6d855297596c3834ddd44a3b48\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/sources/tests/fixtures/type-corpus/consumers/browser/worker-main.mjs.txt\",\n          \"sha256\": \"d96f676358d61fd6d7bb1c8a3db68f289924e60d966014c161f3f3535415b633\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/sources/tests/fixtures/type-corpus/consumers/browser/worker.mjs.txt\",\n          \"sha256\": \"41a1217c2a96a83d6c38272c0bbb3a0b02b0f6c4a09d817c0846aef0fc78d178\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/sources/tests/helpers/lake-workspace.mjs.txt\",\n          \"sha256\": \"56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/sources/tests/helpers/refinement-engine.mjs.txt\",\n          \"sha256\": \"91e69b67d355d2b436fa699a5e4a4692362bdc4f9536634877b6af41e968d3b4\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/sources/tests/helpers/reviewed-subtype-browser-fixture.mjs.txt\",\n          \"sha256\": \"53558f1a6662fb7a5a746f1e76995445990577a18ca8163cf2f0ae08c3c3ebd6\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/sources/tests/helpers/reviewed-subtype-browser.mjs.txt\",\n          \"sha256\": \"d44006274d80864f91218dc6181e0f39901f680b782815d8624835ee0313b8fd\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/sources/tests/helpers/reviewed-subtype-fixture.mjs.txt\",\n          \"sha256\": \"98f50aa4b5075142bb29f0938827e0a5b0fbd0713eb0b76b374db64fb550a197\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/sources/tests/helpers/reviewed-subtype-installed-fixture.mjs.txt\",\n          \"sha256\": \"81ccd2fa3d62bc9d7e4061898dc262d8d5276e71e42ea142ac2f63b2317e781d\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/sources/tests/helpers/reviewed-subtype-npm-report.mjs.txt\",\n          \"sha256\": \"0051134ad65ed653deb7d97129411cda3db669c06f28f65c2417b64268467100\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/sources/tests/helpers/reviewed-subtype-npm-tests.mjs.txt\",\n          \"sha256\": \"142dc172d3ae593b2c1dcbc298b6c7bbe9506cc521b7142a870bfb18fdcb0dfa\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/sources/tests/helpers/reviewed-subtype-package-ci-common.mjs.txt\",\n          \"sha256\": \"f4364f9d7e325dbc9c209fa1a9445f362e00a6ef14195ad9e49c7f9fa0499e34\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/sources/tests/helpers/reviewed-subtype-package-fixture.mjs.txt\",\n          \"sha256\": \"9b32433b6a084ee43cf5dcad4baebc0fd35134299351b9bb2974fcbba9669599\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/sources/tests/helpers/reviewed-subtype-package-records.mjs.txt\",\n          \"sha256\": \"7d10769b13c33987f430c09113c771b276d1b774da0bf631736df8d704f32af2\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/sources/tests/helpers/type-corpus-browser-build.mjs.txt\",\n          \"sha256\": \"9e6618c2653b6700a61a3591db9f2fc3b5718f8362aa1e64dca923c82665f852\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/sources/tests/helpers/type-corpus-browser.mjs.txt\",\n          \"sha256\": \"ca503281cfeed8d7968cc866fdb5ee8b0728a6efbc5f79acef4fcf992bf6f932\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-browser-runs-20261010/sources/tests/reviewed-subtype-installed.test.mjs.txt\",\n          \"sha256\": \"1ebd807769e9af6ada6c6434616eb55b8ce553d845fa79d8a32e3f1d59365c1d\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"reviewed-browser-subtype-installed/subtypes-1.0.0.tgz\",\n          \"sha256\": \"c5b7d456956a5a370da5fd6f52e8b25353fca1e75167e69f56d7eb603512c05f\"\n        },\n        {\n          \"path\": \"reviewed-browser-subtype-installed/lean-bridge-runtime-0.0.0-abi2.07a71dcf1da81cec4ef2224bcaca042dd626cb9795ed28a2713fda1a7dbe38ca.tgz\",\n          \"sha256\": \"7b6e5d6a300e87312c49b3e70699c84c73014b750025a56d72c49f5ae638b5f5\"\n        }\n      ]\n"
+        },
+        {
+          "start": 6372886,
+          "previous": "",
+          "current": "    },\n    {\n      \"id\": \"reviewed-browser-subtype\",\n      \"profiles\": [\n        \"browser-javascript\",\n        \"browser-react\",\n        \"browser-worker\"\n      ],\n      \"shapes\": [\n        \"subtype\"\n      ],\n      \"positions\": [\n        \"parameter\",\n        \"result\"\n      ],\n      \"path\": \"reviewed-ir\",\n      \"scope\": \"Twelve independently reviewed exports; two reproduced author roots deleted before offline compiler-free npm installation. Node and strict TypeScript pass, then Chromium, Firefox and WebKit execute pages, React production/strict mode and dedicated workers. Twelve engine/build executions and fifty-one lifecycle observations each pass 2036 checks and 2024 rejections. Wasm asset identity, reruns, missing-asset recovery, pending unmounts and worker disposal are checked. Reviewed top-level Subtype parameters and results over String, Nat, Int, ByteArray and UInt8 bases. Two finite instantiations select different constructors; other generic combinations, nested containers, nominal fields, callbacks and owned-value transports are not established by this run. Local-engine acceptance, not hosted locked-Nix acceptance. No entry counters or relocated browser replay were measured. The archive retains selected sources and package digests, not binaries or a complete toolchain closure.\",\n      \"hostTypes\": {\n        \"subtype\": {\n          \"parameter\": \"host type of the declared primitive, checked by the compiled Lean constructor before dispatch\",\n          \"result\": \"host type of the declared primitive, projected from a proof-backed Lean result\"\n        }\n      },\n      \"conversionNotes\": {\n        \"subtype\": \"Pass the base value: string, bigint, number or Uint8Array for the tested primitive. The reviewed API selects the checked Lean constructor. Rejection throws; accepted normalization becomes the value received by the export. Results expose the proof-backed base value. Pages, React and workers use the same generated exports.\"\n      },\n      \"limitations\": [\n        \"Reviewed top-level Subtype parameters and results over String, Nat, Int, ByteArray and UInt8 bases. Two finite instantiations select different constructors; other generic combinations, nested containers, nominal fields, callbacks and owned-value transports are not established by this run. Local-engine acceptance, not hosted locked-Nix acceptance. No entry counters or relocated browser replay were measured. The archive retains selected sources and package digests, not binaries or a complete toolchain closure.\"\n      ],\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"reviewed-browser-subtype-installed\"\n          ],\n          \"note\": \"Fresh Lean reconciles the independent review's exact constructors and specialization choices.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"reviewed-browser-subtype-installed\"\n          ],\n          \"note\": \"Generated declarations expose primitive base values and preserve the selected public export names.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"reviewed-browser-subtype-installed\"\n          ],\n          \"note\": \"Compiled Lean constructs checked Subtypes and projects proof-backed results.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"reviewed-browser-subtype-installed\"\n          ],\n          \"note\": \"Two author roots reproduce the archives; consumers install offline after deleting both producers. Browsers use source-free static deployments.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"reviewed-browser-subtype-installed\"\n          ],\n          \"note\": \"Twelve independently reviewed exports; two reproduced author roots deleted before offline compiler-free npm installation. Node and strict TypeScript pass, then Chromium, Firefox and WebKit execute pages, React production/strict mode and dedicated workers. Twelve engine/build executions and fifty-one lifecycle observations each pass 2036 checks and 2024 rejections. Wasm asset identity, reruns, missing-asset recovery, pending unmounts and worker disposal are checked. Reviewed top-level Subtype parameters and results over String, Nat, Int, ByteArray and UInt8 bases. Two finite instantiations select different constructors; other generic combinations, nested containers, nominal fields, callbacks and owned-value transports are not established by this run. Local-engine acceptance, not hosted locked-Nix acceptance. No entry counters or relocated browser replay were measured. The archive retains selected sources and package digests, not binaries or a complete toolchain closure.\"\n        }\n      }\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "74e8ef3b715122f3f52c7eba77b5e97514e38539c28fe7aeb174fbd3316677d5",
+      "previousSha256": "58a4c1e3df281cc05eb1297ea83087b8c84dbcc8c59a5df10ccd9041a725ff2c",
+      "edits": [
+        {
+          "start": 1595,
+          "previous": "",
+          "current": "import { reviewedSubtypeBrowserPromotionChangedPaths } from \"./reviewed-subtype-browser-promotion-history.mjs\";\n"
+        },
+        {
+          "start": 58204,
+          "previous": "",
+          "current": "\t, ...reviewedSubtypeBrowserPromotionChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-browser-ci-history-tests.mjs",
+      "currentSha256": "7039349d08df40005aaef29506555af7d324982b5069fdd0b0058d41c35f12e1",
+      "previousSha256": "d3017fe0d330015a96968e1884eba277e33a2d70f897243befda50374f7c14b5",
+      "edits": [
+        {
+          "start": 502,
+          "previous": "",
+          "current": "import { beforeReviewedSubtypeBrowserPromotionSource } from \"./reviewed-subtype-browser-promotion-history.mjs\";\n"
+        },
+        {
+          "start": 1384,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\"), previous = reverseReviewedSubtypeBrowserCiUpdate(current, update);\n",
+          "current": "\t\tconst current = beforeReviewedSubtypeBrowserPromotionSource(update.path, await readFile(update.path, \"utf8\"));\n\t\tconst previous = reverseReviewedSubtypeBrowserCiUpdate(current, update);\n"
+        },
+        {
+          "start": 2757,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\";\n\tconst source = beforeReviewedSubtypeBrowserPromotionSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 3631,
+          "previous": "\t\tif(!hashes.has(file.path)) hashes.set(file.path, sha256(await readFile(file.path)));\n\t\tassert.equal(hashes.get(file.path), file.sha256, file.path);\n",
+          "current": "\t\tconst key = file.path + \":\" + file.sha256;\n\t\tif(!hashes.has(key)) hashes.set(key, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n\t\tassert.equal(hashes.get(key), file.sha256, file.path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-browser-ci-history.mjs",
+      "currentSha256": "55d2d12045254e8b0b3fe33d4e220a209be7f23df687887ea22f5917c7ec38b0",
+      "previousSha256": "5f0dde5dfeab43c28bf8ebee49a4b201077db81bedd80f983cc3f4058ae6e2b0",
+      "edits": [
+        {
+          "start": 238,
+          "previous": "",
+          "current": "import { beforeReviewedSubtypeBrowserPromotionSource } from \"./reviewed-subtype-browser-promotion-history.mjs\";\n"
+        },
+        {
+          "start": 2517,
+          "previous": "",
+          "current": "\tsource = beforeReviewedSubtypeBrowserPromotionSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-browser-tests.mjs",
+      "currentSha256": "2dffed2dc2ac12b3cc24c30776f5b6b23c44030aa41e5739e169d2dac6ec356f",
+      "previousSha256": "d63417e6c3de52f3873df513c18ba7993fd5cae8943b344d4ae026e902849ac1",
+      "edits": [
+        {
+          "start": 584,
+          "previous": "",
+          "current": "import \"./reviewed-subtype-browser-promotion-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-native-promotion-tests.mjs",
+      "currentSha256": "356576426e4337a5365235ff60accbd537fae5bc43ea3ef5442d9d04baae5750",
+      "previousSha256": "8486a3c0073841364e4b82118cec2bff65eb8fdf48097d73b2b63a7fa17ca693",
+      "edits": [
+        {
+          "start": 1873,
+          "previous": "",
+          "current": "import { reviewedSubtypeBrowserPromotionHistoryPath } from \"./reviewed-subtype-browser-promotion-history.mjs\";\nimport { browserSubtypeEvidenceId, browserSubtypeObservationId } from \"./reviewed-subtype-browser-promotion.mjs\";\n"
+        },
+        {
+          "start": 5994,
+          "previous": "\tfor(const path of [reviewedSubtypeNativePromotionHistoryPath, reviewedSubtypeHostCiReportHistoryPath, reviewedSubtypeHostCiHistoryPath, mavenPrerequisiteHistoryPath, reviewedSubtypePackageRecordHistoryPath, reviewedSubtypePackageCiHistoryPath, reviewedSubtypeBrowserHistoryPath, reviewedSubtypeBrowserCiHistoryPath])\n",
+          "current": "\tfor(const path of [reviewedSubtypeNativePromotionHistoryPath, reviewedSubtypeHostCiReportHistoryPath, reviewedSubtypeHostCiHistoryPath, mavenPrerequisiteHistoryPath, reviewedSubtypePackageRecordHistoryPath, reviewedSubtypePackageCiHistoryPath, reviewedSubtypeBrowserHistoryPath, reviewedSubtypeBrowserCiHistoryPath, reviewedSubtypeBrowserPromotionHistoryPath])\n"
+        },
+        {
+          "start": 6655,
+          "previous": "\tassert.deepEqual(current.document, proposed);\n",
+          "current": "\tconst comparable = structuredClone(current.document);\n\tcomparable.evidence = comparable.evidence.filter(item => item.id !== browserSubtypeEvidenceId);\n\tcomparable.observations = comparable.observations.filter(item => item.id !== browserSubtypeObservationId);\n\tassert.deepEqual(comparable, proposed);\n"
+        },
+        {
+          "start": 9265,
+          "previous": "\tassert.ok(author.includes(\"C/C++, Node, native hosts, CPAN and PHP-Wasm installed; reviewed browser pending\"));\n",
+          "current": "\tassert.ok(author.includes(\"C/C++, Node, browser/React/worker, native hosts, CPAN and PHP-Wasm installed\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/lean-author-documentation.test.mjs",
+      "currentSha256": "7d3124b28665353caf144fb6c6b75e77ac0231445dacde97a103849e8796e937",
+      "previousSha256": "71de7268545aed42adb5f75b6afe8d87a0a94d7c789b62e93d483168716d4273",
+      "edits": [
+        {
+          "start": 19217,
+          "previous": "\tassert.match(document, /C\\/C\\+\\+, Node, native hosts, CPAN and PHP-Wasm installed; reviewed browser pending/u);\n",
+          "current": "\tassert.match(document, /C\\/C\\+\\+, Node, browser\\/React\\/worker, native hosts, CPAN and PHP-Wasm installed/u);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/type-surface.test.mjs",
+      "currentSha256": "5ed41c39b0b14e69adeae22791f0198a0d4cbc6b690d93cc74b9c2b0881ede38",
+      "previousSha256": "48ed4ff1f333a6c4de1393de5236327a760f0e8303758afe9b942188e94535dd",
+      "edits": [
+        {
+          "start": 35853,
+          "previous": "\t// Ordinary all profiles; reviewed all native profiles, Node and PHP-Wasm.\n",
+          "current": "\t// Both source routes cover top-level parameters/results in all seventeen profiles.\n"
+        },
+        {
+          "start": 36206,
+          "previous": "\tassert.equal(reviewed.length, 28);\n",
+          "current": "\tassert.equal(reviewed.length, 34);\n"
+        },
+        {
+          "start": 38011,
+          "previous": "\tassert.deepEqual([...new Set(reviewed.map(cell => cell.profile))].sort(), [\"c\", \"cpp\", \"node-javascript\", \"node-typescript\", \"php-wasm\", ...reviewedSubtypeNativeProfiles].sort());\n",
+          "current": "\tassert.deepEqual([...new Set(reviewed.map(cell => cell.profile))].sort(), [\"c\", \"cpp\", \"node-javascript\", \"node-typescript\", \"php-wasm\", ...reviewedSubtypeNativeProfiles, ...browser].sort());\n"
+        },
+        {
+          "start": 38297,
+          "previous": "",
+          "current": "\t\tif(browser.includes(cell.profile))\n\t\t{\n\t\t\tassert.deepEqual(cell.stages.installedExecution.evidence, [\"reviewed-browser-subtype-installed\"]);\n\t\t\tfor(const stage of Object.values(cell.stages)) assert.equal(stage.state, \"passed\");\n\t\t\tassert.match(cell.hostType, /declared primitive/u);\n\t\t\tcontinue;\n\t\t}\n"
+        }
+      ]
+    }
+  ]
+}

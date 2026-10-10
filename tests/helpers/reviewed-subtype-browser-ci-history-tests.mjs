@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeReviewedSubtypeBrowserPromotionSource } from "./reviewed-subtype-browser-promotion-history.mjs";
 import { beforeReviewedSubtypeBrowserCiSource, reviewedSubtypeBrowserCiChangedPaths, reviewedSubtypeBrowserCiHistoryPath, reviewedSubtypeBrowserCiPredecessor, reverseReviewedSubtypeBrowserCiUpdate } from "./reviewed-subtype-browser-ci-history.mjs";
 
 test("Reviewed browser CI history authenticates exact transitions and refuses unknown edits", async () => {
@@ -21,7 +22,8 @@ test("Reviewed browser CI history authenticates exact transitions and refuses un
 	assert.deepEqual(history.updates.map(update => update.path), reviewedSubtypeBrowserCiChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = await readFile(update.path, "utf8"), previous = reverseReviewedSubtypeBrowserCiUpdate(current, update);
+		const current = beforeReviewedSubtypeBrowserPromotionSource(update.path, await readFile(update.path, "utf8"));
+		const previous = reverseReviewedSubtypeBrowserCiUpdate(current, update);
 		assert.equal(beforeReviewedSubtypeBrowserCiSource(update.path, current), previous);
 		const bytes = Buffer.from(current);
 		assert.equal(beforeFinRefinementSource(update.path, bytes, update.currentSha256), bytes);
@@ -42,7 +44,8 @@ test("Reviewed browser CI history authenticates exact transitions and refuses un
 
 test("Reviewed browser CI gate changes source pins without adding or changing installed observations", async () => {
 	const history = JSON.parse(await readFile(reviewedSubtypeBrowserCiHistoryPath));
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json";
+	const source = beforeReviewedSubtypeBrowserPromotionSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(source), previous = JSON.parse(beforeReviewedSubtypeBrowserCiSource(path, source));
 	const expected = structuredClone(previous); let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
@@ -57,8 +60,9 @@ test("Reviewed browser CI gate changes source pins without adding or changing in
 	const hashes = new Map();
 	for(const file of current.evidence.flatMap(entry => entry.files))
 	{
-		if(!hashes.has(file.path)) hashes.set(file.path, sha256(await readFile(file.path)));
-		assert.equal(hashes.get(file.path), file.sha256, file.path);
+		const key = file.path + ":" + file.sha256;
+		if(!hashes.has(key)) hashes.set(key, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));
+		assert.equal(hashes.get(key), file.sha256, file.path);
 	}
 	assert.equal(sha256(await readFile("docs/evidence/reviewed-subtype-browser-source-history-20261010.json")), "2f17e2c885f7d82a38f1b5fa993b830d8d08e08a1693005ffbd59dff2ff6ea66");
 });

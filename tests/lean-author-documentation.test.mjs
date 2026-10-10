@@ -261,7 +261,7 @@ test("CPAN guidance distinguishes scalar and container four-ABI relocation from 
 	assert.match(document, /\| `Subtype` parameter or result over a primitive \| Installed \| Installed \| Installed, both source routes on four ABIs \|/u);
 	assert.match(document, /Separate scalar checks.*perl-scalar-20261009\.md.*top-level `Fin` on the same four configurations.*installed-tree relocation and entry counts for `mirror`, `impossible` and `label`/u);
 	assert.match(document, /\| `Fin n` parameter or result \| Installed \| Installed \| Installed, both source routes on four ABIs \|/u);
-	assert.match(document, /C\/C\+\+, Node, native hosts, CPAN and PHP-Wasm installed; reviewed browser pending/u);
+	assert.match(document, /C\/C\+\+, Node, browser\/React\/worker, native hosts, CPAN and PHP-Wasm installed/u);
 	const reviewedNative = await reviewedSubtypeNativeReferences();
 	assert.equal(reviewedNative.length, 12);
 	assert.deepEqual(reviewedNative.filter(item => item.profiles.includes("perl")).map(item => item.group), ["perl-5.36.3-threaded", "perl-5.36.3-unthreaded", "perl-5.38.2-threaded", "perl-5.38.2-unthreaded"]);
