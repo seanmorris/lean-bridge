@@ -111,7 +111,10 @@ test("PHP-Wasm Fin promotion states nested-only coverage in the evidence and gen
 		assert.ok(observation.stages.installedExecution.note.includes(phpWasmFinPromotionNestedOnly));
 	}
 	for(const entry of document.evidence.slice(-4)) assert.ok(entry.scope.includes(phpWasmFinPromotionNestedOnly));
-	const row = (await readFile("docs/php.md", "utf8")).split("\n").find(line => line.startsWith("| `Fin n` |"));
+	const path = "docs/php.md", expected = "630780f3e3297e4ab0287bbe9bb4e125aeca1199286500cae7b0090800bfd282";
+	const historical = beforeFinRefinementSource(path, await readFile(path, "utf8"), expected);
+	assert.equal(sha256(historical), expected);
+	const row = historical.split("\n").find(line => line.startsWith("| `Fin n` |"));
 	assert.ok(row.includes(phpWasmFinPromotionNestedOnly));
 });
 

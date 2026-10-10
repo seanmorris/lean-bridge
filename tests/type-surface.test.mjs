@@ -417,7 +417,9 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 						: ["php-native", "wit-wasi", "ruby", "dotnet"].includes(profile) ? [profile] : [];
 				if(phpWasmFin)
 				{
-					assert.deepEqual(stage.evidence, [`php-wasm-fin-${cell.position === "field" ? "records" : "products"}-ordinary-installed`]);
+					const evidence = cell.position === "field" ? ["php-wasm-fin-records-ordinary-installed"]
+						: ["php-wasm-fin-products-ordinary-installed", "php-wasm-direct-fin-scalar-ordinary-installed", "php-wasm-direct-fin-containers-ordinary-installed"];
+					assert.deepEqual(stage.evidence, evidence);
 					continue;
 				}
 				const earlierFinEvidence = cell.position === "field"

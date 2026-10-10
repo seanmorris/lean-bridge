@@ -17,6 +17,7 @@ import { finAliasClosureHistoryPath } from "./fin-alias-closure-history.mjs";
 import { phpWasmDirectFinHistoryPath } from "./php-wasm-fin-direct-history.mjs";
 import { finCoreRepairHistoryPath } from "./fin-core-repair-history.mjs";
 import { restorePerlFinOptionNotes } from "./fin-core-repair-notes.mjs";
+import { beforePhpWasmDirectPromotionSource, phpWasmDirectPromotionHistoryPath } from "./php-wasm-direct-fin-promotion-history.mjs";
 import "./fin-native-hosted-promotion-history-tests.mjs";
 
 const references = finHostedPromotionReferences();
@@ -86,7 +87,15 @@ test("hosted Fin promotion adds 78 evidence entries without rewriting an earlier
 			if(update) file.sha256 = update.currentSha256;
 		}
 	}
-	assert.deepEqual(current.document, expected, "Only the promotion, exact source pins and Perl option guidance may change the inventory");
+	// Later PHP-Wasm acceptance has its own gate. Authenticate this comparison at the Core-repair epoch.
+	const later = JSON.parse(await readFile(phpWasmDirectPromotionHistoryPath, "utf8"));
+	for(const entry of expected.evidence) for(const file of entry.files)
+	{
+		const update = later.updates.find(item => item.path === file.path && item.currentSha256 === file.sha256);
+		if(update) file.sha256 = update.previousSha256;
+	}
+	const comparison = JSON.parse(beforePhpWasmDirectPromotionSource("docs/type-surface.v1.json", JSON.stringify(current.document, null, 2) + "\n"));
+	assert.deepEqual(comparison, expected, "Only the promotion, exact source pins and Perl option guidance may change this historical inventory");
 });
 
 test("hosted Fin promotion supplements 31 observations and adds only eight missing field cells", async () => {

@@ -12,6 +12,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { perlFinOptionNote, perlFinOptionNoteIds, restorePerlFinOptionNotes } from "./fin-core-repair-notes.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforePhpWasmDirectPromotionSource } from "./php-wasm-direct-fin-promotion-history.mjs";
 import { beforeFinCoreRepairSource, finCoreRepairChangedPaths, finCoreRepairHistoryPath, finCoreRepairPredecessor, reverseFinCoreRepairUpdate } from "./fin-core-repair-history.mjs";
 
 test("Fin Core repair integration authenticates every transition and refuses unrecorded edits", async () => {
@@ -22,7 +23,8 @@ test("Fin Core repair integration authenticates every transition and refuses unr
 	assert.deepEqual(history.updates.map(update => update.path), finCoreRepairChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = await readFile(update.path, "utf8"), previous = reverseFinCoreRepairUpdate(current, update);
+		const current = beforePhpWasmDirectPromotionSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const previous = reverseFinCoreRepairUpdate(current, update);
 		assert.equal(beforeFinCoreRepairSource(update.path, current), previous);
 		assert.equal(beforeFinCoreRepairSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeFinCoreRepairSource(update.path, previous), previous);
@@ -75,7 +77,7 @@ test("Fin Core repair integration history writer refuses an unrelated HEAD befor
 });
 
 test("Fin Core repair integration changes exact source pins and Perl option guidance only", async () => {
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", source = beforePhpWasmDirectPromotionSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(source), previous = JSON.parse(beforeFinCoreRepairSource(path, source));
 	const expected = restorePerlFinOptionNotes(previous), history = JSON.parse(await readFile(finCoreRepairHistoryPath, "utf8"));
 	let refreshed = 0;
@@ -91,7 +93,7 @@ test("Fin Core repair integration changes exact source pins and Perl option guid
 	const digests = new Map();
 	for(const file of current.evidence.flatMap(entry => entry.files))
 	{
-		if(!digests.has(file.path)) digests.set(file.path, sha256(await readFile(file.path)));
+		if(!digests.has(file.path)) digests.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));
 		assert.equal(file.sha256, digests.get(file.path), file.path);
 	}
 });

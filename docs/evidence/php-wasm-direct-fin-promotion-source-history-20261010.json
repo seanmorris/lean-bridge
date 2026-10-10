@@ -1,0 +1,1009 @@
+{
+  "schemaVersion": 1,
+  "milestone": "php-wasm-direct-fin-promotion-v1",
+  "predecessorCommit": "4748e2c85700db76be65342b9de153b6f0adb14b",
+  "updates": [
+    {
+      "path": "docs/evidence/refinement-closure-audit-20261007.md",
+      "currentSha256": "496faaa7377f145e609b3c2b8cfbb0b2ca7e3dc17132a0832552e22ac18e3ea4",
+      "previousSha256": "4b86e93168064a1f3229fba43de7e621d062db929c7cf909720d5f407ffbb787",
+      "edits": [
+        {
+          "start": 7543,
+          "previous": "| PHP-Wasm refinements | Six ordinary/reviewed parameter, result and field cells cite the [ordinary](php-wasm-fin-20261008/receipt.json) and [reviewed](reviewed-php-wasm-fin-20261008/receipt.json) archives. No bare top-level Fin or direct Array/List/Option (Fin n) export is executed. Each route executes the complete product and record fixtures in twelve Node/Chromium arrangements, with 2039 and 2053 checks per execution. | None for these four selections. The earlier reserved-name failure and original producer bytes remain unchanged. | Checked Subtype, measured source/adapter dispatch, integrated hosted acceptance and graph/owned/callback refinement transports remain open. No native PHP or other browser-engine claim is added. |\n",
+          "current": "| PHP-Wasm refinements | Six ordinary/reviewed parameter, result and field cells retain the [ordinary](php-wasm-fin-20261008/receipt.json) and [reviewed](reviewed-php-wasm-fin-20261008/receipt.json) nested-product/field evidence. The [direct-value supplement](php-wasm-fin-direct-20261010/index.json) adds scalar and complete direct/nested Array/List/Option acceptance on both routes: seven scalar exports with 2,028 checks and twelve container exports with 14,089 checks, each in twelve Node/Chromium configurations. | Four direct-value evidence entries supplement the existing parameter/result observations. Consumer and author guides cite each run's actual environment; older reports remain unchanged. | Checked Subtype, measured source/adapter dispatch, integrated hosted acceptance and graph/owned/callback refinement transports remain open. No native PHP or other browser-engine claim is added. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/existing-package.md",
+      "currentSha256": "d4721a4a094703224b0c266b9e23134943b251cceaeaf220c9b34406fa859e04",
+      "previousSha256": "644098e53955258b62b0e940db2fb80687ad79a9e0d05fb597e05cff4cb3b889",
+      "edits": [
+        {
+          "start": 50043,
+          "previous": "| `Fin n` parameter or result | Installed | Installed | Installed, both source routes on four ABIs | Nested only; bare scalar pending | Installed: npm, browser and native hosts including CPAN. PHP-Wasm: nested only; bare scalar pending |\n| `Fin n` inside `Array`, `List`, `Option` | Installed | Installed | Installed, both source routes on four ABIs | Nested products/fields only; direct containers pending | Installed: npm, browser and native hosts including CPAN. PHP-Wasm: nested products/fields only; direct containers pending |\n| `Fin n` inside pairs and `Except` | Installed | C/C++, Python, Ruby, Rust and .NET installed; others pending | Generated; pending | Installed, both source routes | Installed: npm, browser, C/C++, Python, Ruby, Rust, .NET and PHP-Wasm; others pending |\n| `Fin n` inside `Array` of pairs and `Except` | Generated; separate installed run pending | C/C++, Python, Ruby, Rust and .NET installed; others pending | Generated; pending | Generated; pending | C/C++, Python, Ruby, Rust and .NET installed; others pending |\n| `Fin n` in record or variant fields | Node installed; browser pending | C/C++, Python, Ruby, Rust, .NET and WIT/WASI installed; Java/Kotlin and native PHP pending | Generated; pending | Installed, both source routes | C/C++, Python, Ruby, Rust, .NET, WIT/WASI and PHP-Wasm installed; others pending |\n",
+          "current": "| `Fin n` parameter or result | Installed | Installed | Installed, both source routes on four ABIs | Installed, both source routes | Installed: npm, browser, native hosts, CPAN and PHP-Wasm |\n| `Fin n` inside `Array`, `List`, `Option` | Installed | Installed | Installed, both source routes on four ABIs | Installed, both source routes | Installed: npm, browser, native hosts, CPAN and PHP-Wasm |\n| `Fin n` inside pairs and `Except` | Installed | Installed | Installed, both source routes on four ABIs | Installed, both source routes | Installed: npm, browser, native hosts, CPAN and PHP-Wasm |\n| `Fin n` inside `Array` of pairs and `Except` | Generated; separate installed run pending | Installed | Installed, both source routes on four ABIs | Generated; pending | Native hosts and CPAN installed; npm and PHP-Wasm pending |\n| `Fin n` in record or variant fields | Node installed; browser pending | Installed | Installed, both source routes on four ABIs | Installed, both source routes | Native hosts, CPAN and PHP-Wasm installed; npm field acceptance is separate |\n"
+        },
+        {
+          "start": 59888,
+          "previous": "",
+          "current": "The [direct PHP-Wasm Fin checks](../evidence/php-wasm-fin-direct-20261010/index.json) separately execute seven scalar exports with 2,028 checks and twelve direct/nested Array/List/Option exports with 14,089 checks per execution. Both ordinary-source and independently reviewed packages run in all twelve Node/Chromium configurations, totaling 48 executions. These runs use Node 22.23.2, Chromium 152.0.7977.75 and PHP 8.4.1 on wasm32. They include empty Array/List (Fin 0), absent/present Option (Fin 0), wide bounds, invalid element positions, input immutability and recovery. Six fresh-Lean cases reject altered or omitted bounds before package output. Dispatch remains unmeasured.\n\nThe [hosted native product and field matrix](../evidence/fin-native-hosted-20261010/receipt.json) supplies the table's native and CPAN pair, Except, Array-of-products and nominal-field acceptance. Its 78 original reports cover all eleven native/Perl host profiles, both source routes, Python 3.11/3.12 and four Perl ABIs. The native runs do not establish PHP-Wasm acceptance.\n\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/php.md",
+      "currentSha256": "a82c3518d39445264999cc1d34aacf16c8619dd42bd78f63c4f898d84de198f5",
+      "previousSha256": "0f2913cdd8882abea73268896b7de311e46b1ff3536c28a22ae35d84408f9315",
+      "edits": [
+        {
+          "start": 44111,
+          "previous": "PHP-Wasm plain copied packages also preserve `Fin` bounds in pairs, active\n`Except` branches, copied record/variant fields and their tested `Array`, `List`\nand `Option` combinations. Use `Brick\\Math\\BigInteger`, including for bounds\nwider than 64 bits. `none` is valid for `Option (Fin 0)`;\na present `Fin 0` value is rejected. Both weak and strict callers retain their\ninput values and can call the package again after a rejection.\n",
+          "current": "PHP-Wasm plain copied packages preserve `Fin` bounds in scalar parameters and\nresults, `Array`, `List`, `Option`, pairs, active `Except` branches and copied\nrecord/variant fields. Use `Brick\\Math\\BigInteger`, including for bounds wider\nthan 64 bits. Empty arrays and lists of `Fin 0`, and `none` for `Option (Fin 0)`,\nare valid; a present `Fin 0` value is rejected. Both weak and strict callers\nretain their input values and can call the package again after a rejection.\n\nThe [direct-value checks](evidence/php-wasm-fin-direct-20261010/index.json)\nexecute seven scalar exports with 2,028 checks and twelve container exports with\n14,089 checks per execution. Ordinary-source and independently reviewed packages\neach run in twelve Node/Chromium configurations. These separate runs use\nNode 22.23.2, Chromium 152.0.7977.75, PHP 8.4.1 and php-wasm 0.1.0. They cover\ndirect and nested containers, `Fin 0`, bounds wider than 64 bits, invalid\nelement positions, unchanged inputs and repeated rejection/recovery. Six\nfresh-Lean checks reject altered or omitted review bounds before producing a package.\n"
+        },
+        {
+          "start": 45642,
+          "previous": "These fixtures do not execute bare top-level `Fin` or direct\n",
+          "current": "Those earlier fixtures do not execute bare top-level `Fin` or direct\n"
+        },
+        {
+          "start": 97144,
+          "previous": "| `Fin n` | Native PHP: `Brick\\Math\\BigInteger checked against the declared bound` (input); `BigInteger below the declared bound` (result); `Brick\\Math\\BigInteger checked against the field's closed bound` (field); PHP-Wasm: `Brick\\Math\\BigInteger checked against the declared closed Fin bound` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Native PHP: Use Brick\\Math\\BigInteger with the exact closed bound, including inside Array/List/Option/Prod/Except compositions, plain records and active variant fields. Empty containers, absent options and inactive Fin 0 branches are valid; present Fin 0 values are rejected. Rejections preserve caller values and name the failing path and bound. PHP-Wasm: Only Fin nested in products, Except branches or copied fields is exercised; no bare top-level Fin or direct Array/List/Option (Fin n) export is executed. Use Brick Math integers with exact closed bounds. Products, active Except branches and copied record/variant fields keep their constraints through the tested containers; none is valid for Option (Fin 0), but present Fin 0 values reject. Both weak and strict PHP callers preserve inputs and recover after rejection. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "current": "| `Fin n` | Native PHP: `Brick\\Math\\BigInteger checked against the declared bound` (input); `BigInteger below the declared bound` (result); `Brick\\Math\\BigInteger checked against the field's closed bound` (field); PHP-Wasm: `Brick\\Math\\BigInteger checked against the declared closed Fin bound` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Native PHP: Use Brick\\Math\\BigInteger with the exact closed bound, including inside Array/List/Option/Prod/Except compositions, plain records and active variant fields. Empty containers, absent options and inactive Fin 0 branches are valid; present Fin 0 values are rejected. Rejections preserve caller values and name the failing path and bound. PHP-Wasm: Use Brick Math integers with exact closed bounds for scalar Fin, direct Array/List/Option compositions, pairs, active Except branches and copied record/variant fields. Empty Array/List (Fin 0) and absent Option (Fin 0) are valid; present Fin 0 values reject. Bounds wider than 64 bits stay exact on wasm32. Weak and strict callers retain inputs and can recover after rejection. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "3dc544faca1308462c3c8bfef4e65dc1f29e581f629dd6ccf600be9262738190",
+      "previousSha256": "27e7b5b9ac40af977e6ce8b358e4f0aafe7a8a3e255a33877cdf5c451a3c4731",
+      "edits": [
+        {
+          "start": 49666,
+          "previous": "          \"sha256\": \"0f2913cdd8882abea73268896b7de311e46b1ff3536c28a22ae35d84408f9315\"\n",
+          "current": "          \"sha256\": \"a82c3518d39445264999cc1d34aacf16c8619dd42bd78f63c4f898d84de198f5\"\n"
+        },
+        {
+          "start": 50871,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 181878,
+          "previous": "          \"sha256\": \"0f2913cdd8882abea73268896b7de311e46b1ff3536c28a22ae35d84408f9315\"\n",
+          "current": "          \"sha256\": \"a82c3518d39445264999cc1d34aacf16c8619dd42bd78f63c4f898d84de198f5\"\n"
+        },
+        {
+          "start": 196777,
+          "previous": "          \"sha256\": \"0f2913cdd8882abea73268896b7de311e46b1ff3536c28a22ae35d84408f9315\"\n",
+          "current": "          \"sha256\": \"a82c3518d39445264999cc1d34aacf16c8619dd42bd78f63c4f898d84de198f5\"\n"
+        },
+        {
+          "start": 707695,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 721726,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 733101,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 747321,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 758775,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 770846,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 782134,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 790717,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 797175,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 805561,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 813538,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 836468,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 1072635,
+          "previous": "          \"sha256\": \"644098e53955258b62b0e940db2fb80687ad79a9e0d05fb597e05cff4cb3b889\"\n",
+          "current": "          \"sha256\": \"d4721a4a094703224b0c266b9e23134943b251cceaeaf220c9b34406fa859e04\"\n"
+        },
+        {
+          "start": 1078061,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 1080224,
+          "previous": "          \"sha256\": \"644098e53955258b62b0e940db2fb80687ad79a9e0d05fb597e05cff4cb3b889\"\n",
+          "current": "          \"sha256\": \"d4721a4a094703224b0c266b9e23134943b251cceaeaf220c9b34406fa859e04\"\n"
+        },
+        {
+          "start": 1084759,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 1086825,
+          "previous": "          \"sha256\": \"644098e53955258b62b0e940db2fb80687ad79a9e0d05fb597e05cff4cb3b889\"\n",
+          "current": "          \"sha256\": \"d4721a4a094703224b0c266b9e23134943b251cceaeaf220c9b34406fa859e04\"\n"
+        },
+        {
+          "start": 1091762,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 1093933,
+          "previous": "          \"sha256\": \"644098e53955258b62b0e940db2fb80687ad79a9e0d05fb597e05cff4cb3b889\"\n",
+          "current": "          \"sha256\": \"d4721a4a094703224b0c266b9e23134943b251cceaeaf220c9b34406fa859e04\"\n"
+        },
+        {
+          "start": 1099268,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 1101427,
+          "previous": "          \"sha256\": \"644098e53955258b62b0e940db2fb80687ad79a9e0d05fb597e05cff4cb3b889\"\n",
+          "current": "          \"sha256\": \"d4721a4a094703224b0c266b9e23134943b251cceaeaf220c9b34406fa859e04\"\n"
+        },
+        {
+          "start": 1106222,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 1108483,
+          "previous": "          \"sha256\": \"644098e53955258b62b0e940db2fb80687ad79a9e0d05fb597e05cff4cb3b889\"\n",
+          "current": "          \"sha256\": \"d4721a4a094703224b0c266b9e23134943b251cceaeaf220c9b34406fa859e04\"\n"
+        },
+        {
+          "start": 1113856,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 1116084,
+          "previous": "          \"sha256\": \"644098e53955258b62b0e940db2fb80687ad79a9e0d05fb597e05cff4cb3b889\"\n",
+          "current": "          \"sha256\": \"d4721a4a094703224b0c266b9e23134943b251cceaeaf220c9b34406fa859e04\"\n"
+        },
+        {
+          "start": 1123094,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 1126365,
+          "previous": "          \"sha256\": \"644098e53955258b62b0e940db2fb80687ad79a9e0d05fb597e05cff4cb3b889\"\n",
+          "current": "          \"sha256\": \"d4721a4a094703224b0c266b9e23134943b251cceaeaf220c9b34406fa859e04\"\n"
+        },
+        {
+          "start": 1132221,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 1138698,
+          "previous": "          \"sha256\": \"644098e53955258b62b0e940db2fb80687ad79a9e0d05fb597e05cff4cb3b889\"\n",
+          "current": "          \"sha256\": \"d4721a4a094703224b0c266b9e23134943b251cceaeaf220c9b34406fa859e04\"\n"
+        },
+        {
+          "start": 1147156,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 1155203,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 1164175,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 1173566,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 1186589,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 1192157,
+          "previous": "          \"sha256\": \"644098e53955258b62b0e940db2fb80687ad79a9e0d05fb597e05cff4cb3b889\"\n",
+          "current": "          \"sha256\": \"d4721a4a094703224b0c266b9e23134943b251cceaeaf220c9b34406fa859e04\"\n"
+        },
+        {
+          "start": 1219701,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 1224700,
+          "previous": "          \"sha256\": \"644098e53955258b62b0e940db2fb80687ad79a9e0d05fb597e05cff4cb3b889\"\n",
+          "current": "          \"sha256\": \"d4721a4a094703224b0c266b9e23134943b251cceaeaf220c9b34406fa859e04\"\n"
+        },
+        {
+          "start": 1249945,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 1254979,
+          "previous": "          \"sha256\": \"644098e53955258b62b0e940db2fb80687ad79a9e0d05fb597e05cff4cb3b889\"\n",
+          "current": "          \"sha256\": \"d4721a4a094703224b0c266b9e23134943b251cceaeaf220c9b34406fa859e04\"\n"
+        },
+        {
+          "start": 1282881,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 1287946,
+          "previous": "          \"sha256\": \"644098e53955258b62b0e940db2fb80687ad79a9e0d05fb597e05cff4cb3b889\"\n",
+          "current": "          \"sha256\": \"d4721a4a094703224b0c266b9e23134943b251cceaeaf220c9b34406fa859e04\"\n"
+        },
+        {
+          "start": 1322184,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 1329356,
+          "previous": "          \"sha256\": \"644098e53955258b62b0e940db2fb80687ad79a9e0d05fb597e05cff4cb3b889\"\n",
+          "current": "          \"sha256\": \"d4721a4a094703224b0c266b9e23134943b251cceaeaf220c9b34406fa859e04\"\n"
+        },
+        {
+          "start": 1329656,
+          "previous": "          \"sha256\": \"0f2913cdd8882abea73268896b7de311e46b1ff3536c28a22ae35d84408f9315\"\n",
+          "current": "          \"sha256\": \"a82c3518d39445264999cc1d34aacf16c8619dd42bd78f63c4f898d84de198f5\"\n"
+        },
+        {
+          "start": 1348725,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 1355204,
+          "previous": "          \"sha256\": \"644098e53955258b62b0e940db2fb80687ad79a9e0d05fb597e05cff4cb3b889\"\n",
+          "current": "          \"sha256\": \"d4721a4a094703224b0c266b9e23134943b251cceaeaf220c9b34406fa859e04\"\n"
+        },
+        {
+          "start": 1355504,
+          "previous": "          \"sha256\": \"0f2913cdd8882abea73268896b7de311e46b1ff3536c28a22ae35d84408f9315\"\n",
+          "current": "          \"sha256\": \"a82c3518d39445264999cc1d34aacf16c8619dd42bd78f63c4f898d84de198f5\"\n"
+        },
+        {
+          "start": 1371105,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 1377884,
+          "previous": "          \"sha256\": \"644098e53955258b62b0e940db2fb80687ad79a9e0d05fb597e05cff4cb3b889\"\n",
+          "current": "          \"sha256\": \"d4721a4a094703224b0c266b9e23134943b251cceaeaf220c9b34406fa859e04\"\n"
+        },
+        {
+          "start": 1390997,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 1397576,
+          "previous": "          \"sha256\": \"644098e53955258b62b0e940db2fb80687ad79a9e0d05fb597e05cff4cb3b889\"\n",
+          "current": "          \"sha256\": \"d4721a4a094703224b0c266b9e23134943b251cceaeaf220c9b34406fa859e04\"\n"
+        },
+        {
+          "start": 1412450,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 1418061,
+          "previous": "          \"sha256\": \"644098e53955258b62b0e940db2fb80687ad79a9e0d05fb597e05cff4cb3b889\"\n",
+          "current": "          \"sha256\": \"d4721a4a094703224b0c266b9e23134943b251cceaeaf220c9b34406fa859e04\"\n"
+        },
+        {
+          "start": 1425469,
+          "previous": "          \"sha256\": \"a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732\"\n",
+          "current": "          \"sha256\": \"6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61\"\n"
+        },
+        {
+          "start": 1428884,
+          "previous": "          \"sha256\": \"0f2913cdd8882abea73268896b7de311e46b1ff3536c28a22ae35d84408f9315\"\n",
+          "current": "          \"sha256\": \"a82c3518d39445264999cc1d34aacf16c8619dd42bd78f63c4f898d84de198f5\"\n"
+        },
+        {
+          "start": 3011407,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3015744,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3020124,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3024519,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3028892,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3033219,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3037563,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3041701,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3046091,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3050474,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3054661,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3058846,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3063307,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3067761,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3071930,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3076060,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3080438,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3084809,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3088885,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3092906,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3096970,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3101038,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3105084,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3109097,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3113128,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3117160,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3121235,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3125314,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3129371,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3133395,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3137447,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3141492,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3145580,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3149672,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3153742,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3157779,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3161864,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3166148,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3170475,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3174817,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3179137,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3183411,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3187693,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3191793,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3195936,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3200083,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3204208,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3208300,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3212400,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3216471,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3220585,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3224703,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3228799,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3232862,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3237044,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3241559,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3246117,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3250685,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3255231,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3259737,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3264265,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3268792,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3273362,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3277942,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3282500,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3287018,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3291550,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3296065,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3300623,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3305191,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3309737,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3314243,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3318771,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3323298,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3327868,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3332448,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3337006,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3341524,
+          "previous": "          \"sha256\": \"27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884\"\n",
+          "current": "          \"sha256\": \"86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24\"\n"
+        },
+        {
+          "start": 3343811,
+          "previous": "",
+          "current": "    },\n    {\n      \"id\": \"php-wasm-direct-fin-scalar-ordinary-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"ccb44b24d17b96bd3327cb976b6d45921f7f3af2\",\n      \"scope\": \"ordinary-source scalar: 7 exports, twelve installed executions with 2028 checks each, two-root package reproduction and source-free offline installation. Local Node 22.23.2 and Chromium 152.0.7977.75 execute PHP 8.4.1 on wasm32, with php-wasm 0.1.0, Lean 4.32.2 and Emscripten 3.1.68. Each fixture runs eight Node configurations (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled configurations (startup/lazy, weak/strict). Source and adapter dispatch are unmeasured. These local runs do not establish hosted acceptance, native PHP, Firefox/WebKit, browser Composer, checked Subtype, refined callbacks or graph/owned refinement transports. Selected source snapshots are not a complete dependency closure. Package digests and sizes are retained, not their binary archives.\",\n      \"command\": \"LEAN_BRIDGE_PHP_WASM_DIRECT_FIN_TEST=1 LEAN_BRIDGE_PHP_WASM_DIRECT_FIN_LEAN_TEST=1 node --test --test-concurrency=1 tests/helpers/php-wasm-fin-direct-tests.mjs && node scripts/check-php-wasm-direct-fin-reports.mjs --directory build/php-wasm-fin-direct\",\n      \"files\": [\n        {\n          \"path\": \"tests/helpers/php-wasm-direct-fin-promotion.mjs\",\n          \"sha256\": \"b30cd3ba34a63721835a15de35c8ab191fd335c4098e394f33becbc0996eeb56\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-direct-fin-promotion-tests.mjs\",\n          \"sha256\": \"fd1766ac84187233a1eb9d850cf3a6418447aa1ed4fff65c708f34d30bb75672\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-fin-direct-archive.mjs\",\n          \"sha256\": \"304b796869c13224535f0e619888784e640df7f183db72ed360d059d2893977f\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-fin-direct-report.mjs\",\n          \"sha256\": \"4889a728db65d46bb7c0d373c549c322ca1b03c6b9a783cfcc4324166a72e280\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-fin-observation.mjs\",\n          \"sha256\": \"fca5daa2a4a6f7e632a6b0f566952331e3300030f1d69a1776e158e468c7ec36\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/index.json\",\n          \"sha256\": \"0584e1582db5f6afabf4f6509cc415ef1df0aa3bfca3581681a23ef67b1290ce\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/start.json\",\n          \"sha256\": \"add33812f4f1f36a01377d8a81d12bce0b179329f04d4f4825f88be99d651e3c\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/end.json\",\n          \"sha256\": \"acd6edfd52af7d97eb72de71661bab5ca7d7b423cba102bf3c70474e2e897c71\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/run.tap\",\n          \"sha256\": \"5027ad9a10260be3bc109391013df8847b15a4de00bbf9a4d5b720d8dbe138d2\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/ordinary.json\",\n          \"sha256\": \"abfb927ac57de70659018a9718408c68d38a470b7683aefe4cb97722c013adfe\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/reviewed.json\",\n          \"sha256\": \"7c58ab9c6467af9427bab5abe051bb9e1ff14a55290e11e0428d02d48da9aa55\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/runtime.json\",\n          \"sha256\": \"44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/verified.json\",\n          \"sha256\": \"558e6caa51ce4b518398ec60b2aaf63438f5c45a74c23662ab8a90079c5e063b\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/runner.mjs\",\n          \"sha256\": \"088fab6eb75a52830bed984aa1bed06e1d7510960359fef3fcdafcbffcbfdefa\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/php-wasm-fin-direct-tests.mjs\",\n          \"sha256\": \"14ee26ada31281d38348a78972c3198013cbf3969d9f4135f2eec7be7d652396\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/php-wasm-fin-direct-fixtures.mjs\",\n          \"sha256\": \"8ff45cd072a42b4fa84888bcc3d39884edc156cf729e72155e13348a9d89b632\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/php-wasm-fin-fixtures.mjs\",\n          \"sha256\": \"02c8bd4820f9444c6ec8542f030a4fe137986ee6a2eb733a761903e3cb3617e9\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/fin-container-edges.mjs\",\n          \"sha256\": \"cad710d6b65e715bd156a5fbb052b56b313b5e195c769a44243edcb8a881f226\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/fin-container-install.mjs\",\n          \"sha256\": \"2024d6c6a44687293750c3ee5c25f092d689065e17beb8d535610963921c9329\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/reviewed-fin-container-fixture.mjs\",\n          \"sha256\": \"5e4d92f9bb4ccff65fb9356cc3a6613f5102665e59dbe38b99868e4804c8a132\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/reviewed-scalar-host-fixture.mjs\",\n          \"sha256\": \"88fe947a03cde2c0356e67cc13e875120f3813baf3f5b119a8e4852b8015678c\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/type-corpus-reviewed-ir.mjs\",\n          \"sha256\": \"621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/type-corpus-php-wasm-install.mjs\",\n          \"sha256\": \"1231106d14bf66afeffa79ee9c999867e90359f6cc82c8ed117c84beb13d20dc\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/type-corpus-php-wasm-evidence.mjs\",\n          \"sha256\": \"708809054b1af4ff864a8cf04343c79fc783f60ce770325131d7004006a03aa1\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/copied-fixture-install.mjs\",\n          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/php-fin.test.mjs\",\n          \"sha256\": \"ebf0ce859e6883891bc43dc082b02d4c789be521f292a8a737a9e0ad99394502\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/php-wasm-fin-scalar.php\",\n          \"sha256\": \"6985560358f35b451ae02655e724f1966b9e3b44622e8d6f38dfe47e731b6447\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/fin-container-edges.lean\",\n          \"sha256\": \"6c2b2250f52557b39b0267762b029af38ba695dccd63065c01a069a6b37cea45\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/fin-container-consumers/php-native.php\",\n          \"sha256\": \"a947199bba1e5bb0bc4e56d8c0ac589f6adc823f024108faf310fdc45d89ac14\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/fin-container-edge-consumers/php-native.php\",\n          \"sha256\": \"e832d3533dd9f9e50415884ab4c6097fbfc1c2c87282a3ed76c641e889cdfa5f\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin/NativeFin.lean\",\n          \"sha256\": \"7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin/LICENSE\",\n          \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin/lakefile.toml\",\n          \"sha256\": \"3e4ab246fa022e05e124c7d3e21d026b0a0b56ec74e1ab71071e648c2aba1389\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin/lean-toolchain\",\n          \"sha256\": \"2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin/package.json\",\n          \"sha256\": \"f5a88aca2a417d5d5f56ed6c825dfec4267e3a66cced8e5f61a9e11e4dd778d0\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin-containers/FinContainers.lean\",\n          \"sha256\": \"f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin-containers/LICENSE\",\n          \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin-containers/lakefile.toml\",\n          \"sha256\": \"c6846d4ad1a6d03a46227896f0a40b9fd07e367c168e2c9e51876ba6b4c8d8cc\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin-containers/lean-toolchain\",\n          \"sha256\": \"2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin-containers/package.json\",\n          \"sha256\": \"b413a6e8f579fe18b487297b33ddaeabd2a44861a55e8ce85ecb0d398e7cc0bf\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/analyze/NativeExports.lean\",\n          \"sha256\": \"8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/analyze/native-metadata.mjs\",\n          \"sha256\": \"dae540c8c48bd6146e2dbeb28a62399faaa87dfbd67111a6c0947107976f314d\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/analyze/reviewed-source.mjs\",\n          \"sha256\": \"d3a875e4fc6dca6b7a93e70db62980d01f5b2a68f2e5e8999b93bbf0ca04a462\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/analyze/reviewed-refinements.mjs\",\n          \"sha256\": \"ba87773c1738ced6131e800e497a92b99ae6b10b26d9782e2562d2b2159a9dda\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/build/native-model.mjs\",\n          \"sha256\": \"aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/build/component-refinements.mjs\",\n          \"sha256\": \"ee003a614e93bbfa542625357eb5ff752c5af4805f9e2f81ca5168ccd1134df8\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/build/php-wasm-copied-component.mjs\",\n          \"sha256\": \"1820fa19a86f827e378334e847cebe9511863401b08a5e9c2e60c72bf09cc7ae\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/build/php-wasm-copied-artifacts.mjs\",\n          \"sha256\": \"c6d31833738b791ac43e9ec970cbbd75830658b040cd8ef2cd3467c4a04ba3fe\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/backends/c/native-copied-values.mjs\",\n          \"sha256\": \"492fd83a246d7d1c58b18812ddc7c90e1fb5d7a999b368cbe56456b5a9d6b7be\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/backends/php/copied-values.mjs\",\n          \"sha256\": \"eb62ac337326372d41b184c1628d3a1bc63d3f968bc429a5e6142d74f1b9bb7d\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/release/php-wasm-copied-package.mjs\",\n          \"sha256\": \"a9e288361a83f6023f83ff1bbce82fc5362a308ebf8b22881cbf971a485ebe42\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"php-wasm-direct-fin-scalar-ordinary-installed/packages/php-wasm/archives/lean-bridge-native-fin-wasm-1.0.0-php-wasm.zip\",\n          \"sha256\": \"75c104fd5b65c85ffc120e13bc7488657d253cb50bc394dd2e840733ea3f5eeb\"\n        },\n        {\n          \"path\": \"php-wasm-direct-fin-scalar-ordinary-installed/packages/php-wasm/archives/lean-bridge-native-fin-wasm-1.0.0.tgz\",\n          \"sha256\": \"cd3bce3a0ccd1cba233070d9868f4440ca9221e8bf59b70d0a7201e03a1b16cb\"\n        },\n        {\n          \"path\": \"php-wasm-direct-fin-scalar-ordinary-installed/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.3dce13b8754fc980a65ef847b7bcaa347e082f294ebcbe848849664ff32eced5.tgz\",\n          \"sha256\": \"b11606d41073337278a173eb9a82e28caa7124e199f7dd0cae2333ef291b61a5\"\n        }\n      ]\n    },\n    {\n      \"id\": \"php-wasm-direct-fin-containers-ordinary-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"ccb44b24d17b96bd3327cb976b6d45921f7f3af2\",\n      \"scope\": \"ordinary-source containers: 12 exports, twelve installed executions with 14089 checks each, two-root package reproduction and source-free offline installation. Local Node 22.23.2 and Chromium 152.0.7977.75 execute PHP 8.4.1 on wasm32, with php-wasm 0.1.0, Lean 4.32.2 and Emscripten 3.1.68. Each fixture runs eight Node configurations (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled configurations (startup/lazy, weak/strict). Source and adapter dispatch are unmeasured. These local runs do not establish hosted acceptance, native PHP, Firefox/WebKit, browser Composer, checked Subtype, refined callbacks or graph/owned refinement transports. Selected source snapshots are not a complete dependency closure. Package digests and sizes are retained, not their binary archives.\",\n      \"command\": \"LEAN_BRIDGE_PHP_WASM_DIRECT_FIN_TEST=1 LEAN_BRIDGE_PHP_WASM_DIRECT_FIN_LEAN_TEST=1 node --test --test-concurrency=1 tests/helpers/php-wasm-fin-direct-tests.mjs && node scripts/check-php-wasm-direct-fin-reports.mjs --directory build/php-wasm-fin-direct\",\n      \"files\": [\n        {\n          \"path\": \"tests/helpers/php-wasm-direct-fin-promotion.mjs\",\n          \"sha256\": \"b30cd3ba34a63721835a15de35c8ab191fd335c4098e394f33becbc0996eeb56\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-direct-fin-promotion-tests.mjs\",\n          \"sha256\": \"fd1766ac84187233a1eb9d850cf3a6418447aa1ed4fff65c708f34d30bb75672\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-fin-direct-archive.mjs\",\n          \"sha256\": \"304b796869c13224535f0e619888784e640df7f183db72ed360d059d2893977f\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-fin-direct-report.mjs\",\n          \"sha256\": \"4889a728db65d46bb7c0d373c549c322ca1b03c6b9a783cfcc4324166a72e280\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-fin-observation.mjs\",\n          \"sha256\": \"fca5daa2a4a6f7e632a6b0f566952331e3300030f1d69a1776e158e468c7ec36\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/index.json\",\n          \"sha256\": \"0584e1582db5f6afabf4f6509cc415ef1df0aa3bfca3581681a23ef67b1290ce\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/start.json\",\n          \"sha256\": \"add33812f4f1f36a01377d8a81d12bce0b179329f04d4f4825f88be99d651e3c\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/end.json\",\n          \"sha256\": \"acd6edfd52af7d97eb72de71661bab5ca7d7b423cba102bf3c70474e2e897c71\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/run.tap\",\n          \"sha256\": \"5027ad9a10260be3bc109391013df8847b15a4de00bbf9a4d5b720d8dbe138d2\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/ordinary.json\",\n          \"sha256\": \"abfb927ac57de70659018a9718408c68d38a470b7683aefe4cb97722c013adfe\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/reviewed.json\",\n          \"sha256\": \"7c58ab9c6467af9427bab5abe051bb9e1ff14a55290e11e0428d02d48da9aa55\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/runtime.json\",\n          \"sha256\": \"44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/verified.json\",\n          \"sha256\": \"558e6caa51ce4b518398ec60b2aaf63438f5c45a74c23662ab8a90079c5e063b\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/runner.mjs\",\n          \"sha256\": \"088fab6eb75a52830bed984aa1bed06e1d7510960359fef3fcdafcbffcbfdefa\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/php-wasm-fin-direct-tests.mjs\",\n          \"sha256\": \"14ee26ada31281d38348a78972c3198013cbf3969d9f4135f2eec7be7d652396\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/php-wasm-fin-direct-fixtures.mjs\",\n          \"sha256\": \"8ff45cd072a42b4fa84888bcc3d39884edc156cf729e72155e13348a9d89b632\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/php-wasm-fin-fixtures.mjs\",\n          \"sha256\": \"02c8bd4820f9444c6ec8542f030a4fe137986ee6a2eb733a761903e3cb3617e9\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/fin-container-edges.mjs\",\n          \"sha256\": \"cad710d6b65e715bd156a5fbb052b56b313b5e195c769a44243edcb8a881f226\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/fin-container-install.mjs\",\n          \"sha256\": \"2024d6c6a44687293750c3ee5c25f092d689065e17beb8d535610963921c9329\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/reviewed-fin-container-fixture.mjs\",\n          \"sha256\": \"5e4d92f9bb4ccff65fb9356cc3a6613f5102665e59dbe38b99868e4804c8a132\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/reviewed-scalar-host-fixture.mjs\",\n          \"sha256\": \"88fe947a03cde2c0356e67cc13e875120f3813baf3f5b119a8e4852b8015678c\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/type-corpus-reviewed-ir.mjs\",\n          \"sha256\": \"621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/type-corpus-php-wasm-install.mjs\",\n          \"sha256\": \"1231106d14bf66afeffa79ee9c999867e90359f6cc82c8ed117c84beb13d20dc\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/type-corpus-php-wasm-evidence.mjs\",\n          \"sha256\": \"708809054b1af4ff864a8cf04343c79fc783f60ce770325131d7004006a03aa1\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/copied-fixture-install.mjs\",\n          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/php-fin.test.mjs\",\n          \"sha256\": \"ebf0ce859e6883891bc43dc082b02d4c789be521f292a8a737a9e0ad99394502\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/php-wasm-fin-scalar.php\",\n          \"sha256\": \"6985560358f35b451ae02655e724f1966b9e3b44622e8d6f38dfe47e731b6447\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/fin-container-edges.lean\",\n          \"sha256\": \"6c2b2250f52557b39b0267762b029af38ba695dccd63065c01a069a6b37cea45\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/fin-container-consumers/php-native.php\",\n          \"sha256\": \"a947199bba1e5bb0bc4e56d8c0ac589f6adc823f024108faf310fdc45d89ac14\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/fin-container-edge-consumers/php-native.php\",\n          \"sha256\": \"e832d3533dd9f9e50415884ab4c6097fbfc1c2c87282a3ed76c641e889cdfa5f\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin/NativeFin.lean\",\n          \"sha256\": \"7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin/LICENSE\",\n          \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin/lakefile.toml\",\n          \"sha256\": \"3e4ab246fa022e05e124c7d3e21d026b0a0b56ec74e1ab71071e648c2aba1389\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin/lean-toolchain\",\n          \"sha256\": \"2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin/package.json\",\n          \"sha256\": \"f5a88aca2a417d5d5f56ed6c825dfec4267e3a66cced8e5f61a9e11e4dd778d0\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin-containers/FinContainers.lean\",\n          \"sha256\": \"f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin-containers/LICENSE\",\n          \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin-containers/lakefile.toml\",\n          \"sha256\": \"c6846d4ad1a6d03a46227896f0a40b9fd07e367c168e2c9e51876ba6b4c8d8cc\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin-containers/lean-toolchain\",\n          \"sha256\": \"2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin-containers/package.json\",\n          \"sha256\": \"b413a6e8f579fe18b487297b33ddaeabd2a44861a55e8ce85ecb0d398e7cc0bf\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/analyze/NativeExports.lean\",\n          \"sha256\": \"8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/analyze/native-metadata.mjs\",\n          \"sha256\": \"dae540c8c48bd6146e2dbeb28a62399faaa87dfbd67111a6c0947107976f314d\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/analyze/reviewed-source.mjs\",\n          \"sha256\": \"d3a875e4fc6dca6b7a93e70db62980d01f5b2a68f2e5e8999b93bbf0ca04a462\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/analyze/reviewed-refinements.mjs\",\n          \"sha256\": \"ba87773c1738ced6131e800e497a92b99ae6b10b26d9782e2562d2b2159a9dda\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/build/native-model.mjs\",\n          \"sha256\": \"aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/build/component-refinements.mjs\",\n          \"sha256\": \"ee003a614e93bbfa542625357eb5ff752c5af4805f9e2f81ca5168ccd1134df8\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/build/php-wasm-copied-component.mjs\",\n          \"sha256\": \"1820fa19a86f827e378334e847cebe9511863401b08a5e9c2e60c72bf09cc7ae\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/build/php-wasm-copied-artifacts.mjs\",\n          \"sha256\": \"c6d31833738b791ac43e9ec970cbbd75830658b040cd8ef2cd3467c4a04ba3fe\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/backends/c/native-copied-values.mjs\",\n          \"sha256\": \"492fd83a246d7d1c58b18812ddc7c90e1fb5d7a999b368cbe56456b5a9d6b7be\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/backends/php/copied-values.mjs\",\n          \"sha256\": \"eb62ac337326372d41b184c1628d3a1bc63d3f968bc429a5e6142d74f1b9bb7d\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/release/php-wasm-copied-package.mjs\",\n          \"sha256\": \"a9e288361a83f6023f83ff1bbce82fc5362a308ebf8b22881cbf971a485ebe42\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"php-wasm-direct-fin-containers-ordinary-installed/packages/php-wasm/archives/lean-bridge-fincontainers-wasm-1.0.0-php-wasm.zip\",\n          \"sha256\": \"e6fc43637cae0ef3185a4100146132b43ebbb88bc1f29e7e6e7f664585a0c743\"\n        },\n        {\n          \"path\": \"php-wasm-direct-fin-containers-ordinary-installed/packages/php-wasm/archives/lean-bridge-fincontainers-wasm-1.0.0.tgz\",\n          \"sha256\": \"ed06fb8bb12ef66d796495b85fb57f73f45e44b44c1157c4c796f17b216631f7\"\n        },\n        {\n          \"path\": \"php-wasm-direct-fin-containers-ordinary-installed/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.3dce13b8754fc980a65ef847b7bcaa347e082f294ebcbe848849664ff32eced5.tgz\",\n          \"sha256\": \"b11606d41073337278a173eb9a82e28caa7124e199f7dd0cae2333ef291b61a5\"\n        }\n      ]\n    },\n    {\n      \"id\": \"php-wasm-direct-fin-scalar-reviewed-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"ccb44b24d17b96bd3327cb976b6d45921f7f3af2\",\n      \"scope\": \"reviewed-ir scalar: 7 exports, twelve installed executions with 2028 checks each, two-root package reproduction and source-free offline installation. Local Node 22.23.2 and Chromium 152.0.7977.75 execute PHP 8.4.1 on wasm32, with php-wasm 0.1.0, Lean 4.32.2 and Emscripten 3.1.68. Each fixture runs eight Node configurations (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled configurations (startup/lazy, weak/strict). Source and adapter dispatch are unmeasured. These local runs do not establish hosted acceptance, native PHP, Firefox/WebKit, browser Composer, checked Subtype, refined callbacks or graph/owned refinement transports. Selected source snapshots are not a complete dependency closure. Package digests and sizes are retained, not their binary archives.\",\n      \"command\": \"LEAN_BRIDGE_PHP_WASM_DIRECT_FIN_TEST=1 LEAN_BRIDGE_PHP_WASM_DIRECT_FIN_LEAN_TEST=1 node --test --test-concurrency=1 tests/helpers/php-wasm-fin-direct-tests.mjs && node scripts/check-php-wasm-direct-fin-reports.mjs --directory build/php-wasm-fin-direct\",\n      \"files\": [\n        {\n          \"path\": \"tests/helpers/php-wasm-direct-fin-promotion.mjs\",\n          \"sha256\": \"b30cd3ba34a63721835a15de35c8ab191fd335c4098e394f33becbc0996eeb56\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-direct-fin-promotion-tests.mjs\",\n          \"sha256\": \"fd1766ac84187233a1eb9d850cf3a6418447aa1ed4fff65c708f34d30bb75672\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-fin-direct-archive.mjs\",\n          \"sha256\": \"304b796869c13224535f0e619888784e640df7f183db72ed360d059d2893977f\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-fin-direct-report.mjs\",\n          \"sha256\": \"4889a728db65d46bb7c0d373c549c322ca1b03c6b9a783cfcc4324166a72e280\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-fin-observation.mjs\",\n          \"sha256\": \"fca5daa2a4a6f7e632a6b0f566952331e3300030f1d69a1776e158e468c7ec36\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/index.json\",\n          \"sha256\": \"0584e1582db5f6afabf4f6509cc415ef1df0aa3bfca3581681a23ef67b1290ce\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/start.json\",\n          \"sha256\": \"add33812f4f1f36a01377d8a81d12bce0b179329f04d4f4825f88be99d651e3c\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/end.json\",\n          \"sha256\": \"acd6edfd52af7d97eb72de71661bab5ca7d7b423cba102bf3c70474e2e897c71\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/run.tap\",\n          \"sha256\": \"5027ad9a10260be3bc109391013df8847b15a4de00bbf9a4d5b720d8dbe138d2\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/ordinary.json\",\n          \"sha256\": \"abfb927ac57de70659018a9718408c68d38a470b7683aefe4cb97722c013adfe\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/reviewed.json\",\n          \"sha256\": \"7c58ab9c6467af9427bab5abe051bb9e1ff14a55290e11e0428d02d48da9aa55\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/runtime.json\",\n          \"sha256\": \"44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/verified.json\",\n          \"sha256\": \"558e6caa51ce4b518398ec60b2aaf63438f5c45a74c23662ab8a90079c5e063b\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/runner.mjs\",\n          \"sha256\": \"088fab6eb75a52830bed984aa1bed06e1d7510960359fef3fcdafcbffcbfdefa\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/php-wasm-fin-direct-tests.mjs\",\n          \"sha256\": \"14ee26ada31281d38348a78972c3198013cbf3969d9f4135f2eec7be7d652396\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/php-wasm-fin-direct-fixtures.mjs\",\n          \"sha256\": \"8ff45cd072a42b4fa84888bcc3d39884edc156cf729e72155e13348a9d89b632\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/php-wasm-fin-fixtures.mjs\",\n          \"sha256\": \"02c8bd4820f9444c6ec8542f030a4fe137986ee6a2eb733a761903e3cb3617e9\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/fin-container-edges.mjs\",\n          \"sha256\": \"cad710d6b65e715bd156a5fbb052b56b313b5e195c769a44243edcb8a881f226\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/fin-container-install.mjs\",\n          \"sha256\": \"2024d6c6a44687293750c3ee5c25f092d689065e17beb8d535610963921c9329\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/reviewed-fin-container-fixture.mjs\",\n          \"sha256\": \"5e4d92f9bb4ccff65fb9356cc3a6613f5102665e59dbe38b99868e4804c8a132\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/reviewed-scalar-host-fixture.mjs\",\n          \"sha256\": \"88fe947a03cde2c0356e67cc13e875120f3813baf3f5b119a8e4852b8015678c\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/type-corpus-reviewed-ir.mjs\",\n          \"sha256\": \"621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/type-corpus-php-wasm-install.mjs\",\n          \"sha256\": \"1231106d14bf66afeffa79ee9c999867e90359f6cc82c8ed117c84beb13d20dc\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/type-corpus-php-wasm-evidence.mjs\",\n          \"sha256\": \"708809054b1af4ff864a8cf04343c79fc783f60ce770325131d7004006a03aa1\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/copied-fixture-install.mjs\",\n          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/php-fin.test.mjs\",\n          \"sha256\": \"ebf0ce859e6883891bc43dc082b02d4c789be521f292a8a737a9e0ad99394502\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/php-wasm-fin-scalar.php\",\n          \"sha256\": \"6985560358f35b451ae02655e724f1966b9e3b44622e8d6f38dfe47e731b6447\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/fin-container-edges.lean\",\n          \"sha256\": \"6c2b2250f52557b39b0267762b029af38ba695dccd63065c01a069a6b37cea45\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/fin-container-consumers/php-native.php\",\n          \"sha256\": \"a947199bba1e5bb0bc4e56d8c0ac589f6adc823f024108faf310fdc45d89ac14\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/fin-container-edge-consumers/php-native.php\",\n          \"sha256\": \"e832d3533dd9f9e50415884ab4c6097fbfc1c2c87282a3ed76c641e889cdfa5f\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin/NativeFin.lean\",\n          \"sha256\": \"7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin/LICENSE\",\n          \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin/lakefile.toml\",\n          \"sha256\": \"3e4ab246fa022e05e124c7d3e21d026b0a0b56ec74e1ab71071e648c2aba1389\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin/lean-toolchain\",\n          \"sha256\": \"2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin/package.json\",\n          \"sha256\": \"f5a88aca2a417d5d5f56ed6c825dfec4267e3a66cced8e5f61a9e11e4dd778d0\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin-containers/FinContainers.lean\",\n          \"sha256\": \"f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin-containers/LICENSE\",\n          \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin-containers/lakefile.toml\",\n          \"sha256\": \"c6846d4ad1a6d03a46227896f0a40b9fd07e367c168e2c9e51876ba6b4c8d8cc\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin-containers/lean-toolchain\",\n          \"sha256\": \"2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin-containers/package.json\",\n          \"sha256\": \"b413a6e8f579fe18b487297b33ddaeabd2a44861a55e8ce85ecb0d398e7cc0bf\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/analyze/NativeExports.lean\",\n          \"sha256\": \"8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/analyze/native-metadata.mjs\",\n          \"sha256\": \"dae540c8c48bd6146e2dbeb28a62399faaa87dfbd67111a6c0947107976f314d\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/analyze/reviewed-source.mjs\",\n          \"sha256\": \"d3a875e4fc6dca6b7a93e70db62980d01f5b2a68f2e5e8999b93bbf0ca04a462\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/analyze/reviewed-refinements.mjs\",\n          \"sha256\": \"ba87773c1738ced6131e800e497a92b99ae6b10b26d9782e2562d2b2159a9dda\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/build/native-model.mjs\",\n          \"sha256\": \"aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/build/component-refinements.mjs\",\n          \"sha256\": \"ee003a614e93bbfa542625357eb5ff752c5af4805f9e2f81ca5168ccd1134df8\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/build/php-wasm-copied-component.mjs\",\n          \"sha256\": \"1820fa19a86f827e378334e847cebe9511863401b08a5e9c2e60c72bf09cc7ae\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/build/php-wasm-copied-artifacts.mjs\",\n          \"sha256\": \"c6d31833738b791ac43e9ec970cbbd75830658b040cd8ef2cd3467c4a04ba3fe\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/backends/c/native-copied-values.mjs\",\n          \"sha256\": \"492fd83a246d7d1c58b18812ddc7c90e1fb5d7a999b368cbe56456b5a9d6b7be\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/backends/php/copied-values.mjs\",\n          \"sha256\": \"eb62ac337326372d41b184c1628d3a1bc63d3f968bc429a5e6142d74f1b9bb7d\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/release/php-wasm-copied-package.mjs\",\n          \"sha256\": \"a9e288361a83f6023f83ff1bbce82fc5362a308ebf8b22881cbf971a485ebe42\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"php-wasm-direct-fin-scalar-reviewed-installed/packages/php-wasm/archives/lean-bridge-native-fin-wasm-1.0.0-php-wasm.zip\",\n          \"sha256\": \"402603a6787349e5be7cfaf28b8868b6c3e26e89187321792ccf96ea9ba237cc\"\n        },\n        {\n          \"path\": \"php-wasm-direct-fin-scalar-reviewed-installed/packages/php-wasm/archives/lean-bridge-native-fin-wasm-1.0.0.tgz\",\n          \"sha256\": \"e014d9ae02ebb8e1c8d19765193545786e3d4dff77f885319fbc5eec5a13ed36\"\n        },\n        {\n          \"path\": \"php-wasm-direct-fin-scalar-reviewed-installed/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.3dce13b8754fc980a65ef847b7bcaa347e082f294ebcbe848849664ff32eced5.tgz\",\n          \"sha256\": \"b11606d41073337278a173eb9a82e28caa7124e199f7dd0cae2333ef291b61a5\"\n        }\n      ]\n    },\n    {\n      \"id\": \"php-wasm-direct-fin-containers-reviewed-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"ccb44b24d17b96bd3327cb976b6d45921f7f3af2\",\n      \"scope\": \"reviewed-ir containers: 12 exports, twelve installed executions with 14089 checks each, two-root package reproduction and source-free offline installation. Local Node 22.23.2 and Chromium 152.0.7977.75 execute PHP 8.4.1 on wasm32, with php-wasm 0.1.0, Lean 4.32.2 and Emscripten 3.1.68. Each fixture runs eight Node configurations (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled configurations (startup/lazy, weak/strict). Source and adapter dispatch are unmeasured. These local runs do not establish hosted acceptance, native PHP, Firefox/WebKit, browser Composer, checked Subtype, refined callbacks or graph/owned refinement transports. Selected source snapshots are not a complete dependency closure. Package digests and sizes are retained, not their binary archives.\",\n      \"command\": \"LEAN_BRIDGE_PHP_WASM_DIRECT_FIN_TEST=1 LEAN_BRIDGE_PHP_WASM_DIRECT_FIN_LEAN_TEST=1 node --test --test-concurrency=1 tests/helpers/php-wasm-fin-direct-tests.mjs && node scripts/check-php-wasm-direct-fin-reports.mjs --directory build/php-wasm-fin-direct\",\n      \"files\": [\n        {\n          \"path\": \"tests/helpers/php-wasm-direct-fin-promotion.mjs\",\n          \"sha256\": \"b30cd3ba34a63721835a15de35c8ab191fd335c4098e394f33becbc0996eeb56\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-direct-fin-promotion-tests.mjs\",\n          \"sha256\": \"fd1766ac84187233a1eb9d850cf3a6418447aa1ed4fff65c708f34d30bb75672\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-fin-direct-archive.mjs\",\n          \"sha256\": \"304b796869c13224535f0e619888784e640df7f183db72ed360d059d2893977f\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-fin-direct-report.mjs\",\n          \"sha256\": \"4889a728db65d46bb7c0d373c549c322ca1b03c6b9a783cfcc4324166a72e280\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-fin-observation.mjs\",\n          \"sha256\": \"fca5daa2a4a6f7e632a6b0f566952331e3300030f1d69a1776e158e468c7ec36\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/index.json\",\n          \"sha256\": \"0584e1582db5f6afabf4f6509cc415ef1df0aa3bfca3581681a23ef67b1290ce\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/start.json\",\n          \"sha256\": \"add33812f4f1f36a01377d8a81d12bce0b179329f04d4f4825f88be99d651e3c\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/end.json\",\n          \"sha256\": \"acd6edfd52af7d97eb72de71661bab5ca7d7b423cba102bf3c70474e2e897c71\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/run.tap\",\n          \"sha256\": \"5027ad9a10260be3bc109391013df8847b15a4de00bbf9a4d5b720d8dbe138d2\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/ordinary.json\",\n          \"sha256\": \"abfb927ac57de70659018a9718408c68d38a470b7683aefe4cb97722c013adfe\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/reviewed.json\",\n          \"sha256\": \"7c58ab9c6467af9427bab5abe051bb9e1ff14a55290e11e0428d02d48da9aa55\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/runtime.json\",\n          \"sha256\": \"44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/verified.json\",\n          \"sha256\": \"558e6caa51ce4b518398ec60b2aaf63438f5c45a74c23662ab8a90079c5e063b\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/runner.mjs\",\n          \"sha256\": \"088fab6eb75a52830bed984aa1bed06e1d7510960359fef3fcdafcbffcbfdefa\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/php-wasm-fin-direct-tests.mjs\",\n          \"sha256\": \"14ee26ada31281d38348a78972c3198013cbf3969d9f4135f2eec7be7d652396\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/php-wasm-fin-direct-fixtures.mjs\",\n          \"sha256\": \"8ff45cd072a42b4fa84888bcc3d39884edc156cf729e72155e13348a9d89b632\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/php-wasm-fin-fixtures.mjs\",\n          \"sha256\": \"02c8bd4820f9444c6ec8542f030a4fe137986ee6a2eb733a761903e3cb3617e9\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/fin-container-edges.mjs\",\n          \"sha256\": \"cad710d6b65e715bd156a5fbb052b56b313b5e195c769a44243edcb8a881f226\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/fin-container-install.mjs\",\n          \"sha256\": \"2024d6c6a44687293750c3ee5c25f092d689065e17beb8d535610963921c9329\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/reviewed-fin-container-fixture.mjs\",\n          \"sha256\": \"5e4d92f9bb4ccff65fb9356cc3a6613f5102665e59dbe38b99868e4804c8a132\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/reviewed-scalar-host-fixture.mjs\",\n          \"sha256\": \"88fe947a03cde2c0356e67cc13e875120f3813baf3f5b119a8e4852b8015678c\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/type-corpus-reviewed-ir.mjs\",\n          \"sha256\": \"621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/type-corpus-php-wasm-install.mjs\",\n          \"sha256\": \"1231106d14bf66afeffa79ee9c999867e90359f6cc82c8ed117c84beb13d20dc\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/type-corpus-php-wasm-evidence.mjs\",\n          \"sha256\": \"708809054b1af4ff864a8cf04343c79fc783f60ce770325131d7004006a03aa1\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/helpers/copied-fixture-install.mjs\",\n          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/php-fin.test.mjs\",\n          \"sha256\": \"ebf0ce859e6883891bc43dc082b02d4c789be521f292a8a737a9e0ad99394502\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/php-wasm-fin-scalar.php\",\n          \"sha256\": \"6985560358f35b451ae02655e724f1966b9e3b44622e8d6f38dfe47e731b6447\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/fin-container-edges.lean\",\n          \"sha256\": \"6c2b2250f52557b39b0267762b029af38ba695dccd63065c01a069a6b37cea45\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/fin-container-consumers/php-native.php\",\n          \"sha256\": \"a947199bba1e5bb0bc4e56d8c0ac589f6adc823f024108faf310fdc45d89ac14\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/fin-container-edge-consumers/php-native.php\",\n          \"sha256\": \"e832d3533dd9f9e50415884ab4c6097fbfc1c2c87282a3ed76c641e889cdfa5f\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin/NativeFin.lean\",\n          \"sha256\": \"7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin/LICENSE\",\n          \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin/lakefile.toml\",\n          \"sha256\": \"3e4ab246fa022e05e124c7d3e21d026b0a0b56ec74e1ab71071e648c2aba1389\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin/lean-toolchain\",\n          \"sha256\": \"2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin/package.json\",\n          \"sha256\": \"f5a88aca2a417d5d5f56ed6c825dfec4267e3a66cced8e5f61a9e11e4dd778d0\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin-containers/FinContainers.lean\",\n          \"sha256\": \"f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin-containers/LICENSE\",\n          \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin-containers/lakefile.toml\",\n          \"sha256\": \"c6846d4ad1a6d03a46227896f0a40b9fd07e367c168e2c9e51876ba6b4c8d8cc\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin-containers/lean-toolchain\",\n          \"sha256\": \"2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/tests/fixtures/onboarding/native-fin-containers/package.json\",\n          \"sha256\": \"b413a6e8f579fe18b487297b33ddaeabd2a44861a55e8ce85ecb0d398e7cc0bf\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/analyze/NativeExports.lean\",\n          \"sha256\": \"8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/analyze/native-metadata.mjs\",\n          \"sha256\": \"dae540c8c48bd6146e2dbeb28a62399faaa87dfbd67111a6c0947107976f314d\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/analyze/reviewed-source.mjs\",\n          \"sha256\": \"d3a875e4fc6dca6b7a93e70db62980d01f5b2a68f2e5e8999b93bbf0ca04a462\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/analyze/reviewed-refinements.mjs\",\n          \"sha256\": \"ba87773c1738ced6131e800e497a92b99ae6b10b26d9782e2562d2b2159a9dda\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/build/native-model.mjs\",\n          \"sha256\": \"aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/build/component-refinements.mjs\",\n          \"sha256\": \"ee003a614e93bbfa542625357eb5ff752c5af4805f9e2f81ca5168ccd1134df8\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/build/php-wasm-copied-component.mjs\",\n          \"sha256\": \"1820fa19a86f827e378334e847cebe9511863401b08a5e9c2e60c72bf09cc7ae\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/build/php-wasm-copied-artifacts.mjs\",\n          \"sha256\": \"c6d31833738b791ac43e9ec970cbbd75830658b040cd8ef2cd3467c4a04ba3fe\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/backends/c/native-copied-values.mjs\",\n          \"sha256\": \"492fd83a246d7d1c58b18812ddc7c90e1fb5d7a999b368cbe56456b5a9d6b7be\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/backends/php/copied-values.mjs\",\n          \"sha256\": \"eb62ac337326372d41b184c1628d3a1bc63d3f968bc429a5e6142d74f1b9bb7d\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-direct-20261010/sources/src/release/php-wasm-copied-package.mjs\",\n          \"sha256\": \"a9e288361a83f6023f83ff1bbce82fc5362a308ebf8b22881cbf971a485ebe42\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"php-wasm-direct-fin-containers-reviewed-installed/packages/php-wasm/archives/lean-bridge-fincontainers-wasm-1.0.0-php-wasm.zip\",\n          \"sha256\": \"3aab120dbb1612ac13e1f889573eaac6e329a4af324301b2dce019526af82b5f\"\n        },\n        {\n          \"path\": \"php-wasm-direct-fin-containers-reviewed-installed/packages/php-wasm/archives/lean-bridge-fincontainers-wasm-1.0.0.tgz\",\n          \"sha256\": \"f34f513a08000d9640307fd7f1efea2f4af8fc1bba21bee58b8f934bdd7b3452\"\n        },\n        {\n          \"path\": \"php-wasm-direct-fin-containers-reviewed-installed/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.3dce13b8754fc980a65ef847b7bcaa347e082f294ebcbe848849664ff32eced5.tgz\",\n          \"sha256\": \"b11606d41073337278a173eb9a82e28caa7124e199f7dd0cae2333ef291b61a5\"\n        }\n      ]\n"
+        },
+        {
+          "start": 5968496,
+          "previous": "      \"scope\": \"Ordinary-source products: 11 exports, twelve installed executions with 2039 checks each, two-root package reproduction and source-free offline installation.\",\n",
+          "current": "      \"scope\": \"Ordinary-source products: 11 exports, twelve installed executions with 2039 checks each, two-root package reproduction and source-free offline installation. Additional direct scalar and Array/List/Option exports have separate local installed observations: seven scalar exports with 2,028 checks and twelve container exports with 14,089 checks per execution.\",\n"
+        },
+        {
+          "start": 5969210,
+          "previous": "            \"php-wasm-fin-products-ordinary-installed\"\n",
+          "current": "            \"php-wasm-fin-products-ordinary-installed\",\n            \"php-wasm-direct-fin-scalar-ordinary-installed\",\n            \"php-wasm-direct-fin-containers-ordinary-installed\"\n"
+        },
+        {
+          "start": 5969404,
+          "previous": "          \"note\": \"Fresh Lean metadata retains the exact closed bounds.\"\n",
+          "current": "          \"note\": \"Fresh Lean metadata retains the exact closed bounds. Direct scalar and Array/List/Option acceptance uses producer ccb44b24d17b96bd3327cb976b6d45921f7f3af2. Local Node 22.23.2 and Chromium 152.0.7977.75 execute PHP 8.4.1 on wasm32, with php-wasm 0.1.0, Lean 4.32.2 and Emscripten 3.1.68. Each fixture runs eight Node configurations (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled configurations (startup/lazy, weak/strict). Source and adapter dispatch are unmeasured. These local runs do not establish hosted acceptance, native PHP, Firefox/WebKit, browser Composer, checked Subtype, refined callbacks or graph/owned refinement transports. Selected source snapshots are not a complete dependency closure. Package digests and sizes are retained, not their binary archives.\"\n"
+        },
+        {
+          "start": 5970308,
+          "previous": "            \"php-wasm-fin-products-ordinary-installed\"\n",
+          "current": "            \"php-wasm-fin-products-ordinary-installed\",\n            \"php-wasm-direct-fin-scalar-ordinary-installed\",\n            \"php-wasm-direct-fin-containers-ordinary-installed\"\n"
+        },
+        {
+          "start": 5970502,
+          "previous": "          \"note\": \"Plain copied PHP-Wasm preserves Fin bounds in products, active result branches, copied fields and their tested container combinations.\"\n",
+          "current": "          \"note\": \"Plain copied PHP-Wasm preserves Fin bounds in products, active result branches, copied fields and their tested container combinations. Direct scalar and Array/List/Option acceptance uses producer ccb44b24d17b96bd3327cb976b6d45921f7f3af2. Local Node 22.23.2 and Chromium 152.0.7977.75 execute PHP 8.4.1 on wasm32, with php-wasm 0.1.0, Lean 4.32.2 and Emscripten 3.1.68. Each fixture runs eight Node configurations (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled configurations (startup/lazy, weak/strict). Source and adapter dispatch are unmeasured. These local runs do not establish hosted acceptance, native PHP, Firefox/WebKit, browser Composer, checked Subtype, refined callbacks or graph/owned refinement transports. Selected source snapshots are not a complete dependency closure. Package digests and sizes are retained, not their binary archives.\"\n"
+        },
+        {
+          "start": 5971489,
+          "previous": "            \"php-wasm-fin-products-ordinary-installed\"\n",
+          "current": "            \"php-wasm-fin-products-ordinary-installed\",\n            \"php-wasm-direct-fin-scalar-ordinary-installed\",\n            \"php-wasm-direct-fin-containers-ordinary-installed\"\n"
+        },
+        {
+          "start": 5971683,
+          "previous": "          \"note\": \"The wasm32 adapter checks Nat limbs and constructs Fin with a decidable Lean proof.\"\n",
+          "current": "          \"note\": \"The wasm32 adapter checks Nat limbs and constructs Fin with a decidable Lean proof. Direct scalar and Array/List/Option acceptance uses producer ccb44b24d17b96bd3327cb976b6d45921f7f3af2. Local Node 22.23.2 and Chromium 152.0.7977.75 execute PHP 8.4.1 on wasm32, with php-wasm 0.1.0, Lean 4.32.2 and Emscripten 3.1.68. Each fixture runs eight Node configurations (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled configurations (startup/lazy, weak/strict). Source and adapter dispatch are unmeasured. These local runs do not establish hosted acceptance, native PHP, Firefox/WebKit, browser Composer, checked Subtype, refined callbacks or graph/owned refinement transports. Selected source snapshots are not a complete dependency closure. Package digests and sizes are retained, not their binary archives.\"\n"
+        },
+        {
+          "start": 5972617,
+          "previous": "            \"php-wasm-fin-products-ordinary-installed\"\n",
+          "current": "            \"php-wasm-fin-products-ordinary-installed\",\n            \"php-wasm-direct-fin-scalar-ordinary-installed\",\n            \"php-wasm-direct-fin-containers-ordinary-installed\"\n"
+        },
+        {
+          "start": 5972811,
+          "previous": "          \"note\": \"Two author roots reproduce three package archives before source-free offline installation. Local Node 22.23.3 and Chromium 154.0.8037.57 execute PHP 8.4.1 on wasm32; the runtime pins Emscripten 3.1.68 and php-wasm 0.1.0. Each fixture runs eight Node arrangements (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled arrangements (startup/lazy, weak/strict). No Firefox, WebKit or browser Composer execution is claimed.\"\n",
+          "current": "          \"note\": \"Two author roots reproduce three package archives before source-free offline installation. Local Node 22.23.3 and Chromium 154.0.8037.57 execute PHP 8.4.1 on wasm32; the runtime pins Emscripten 3.1.68 and php-wasm 0.1.0. Each fixture runs eight Node arrangements (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled arrangements (startup/lazy, weak/strict). No Firefox, WebKit or browser Composer execution is claimed. Direct scalar and Array/List/Option acceptance uses producer ccb44b24d17b96bd3327cb976b6d45921f7f3af2. Local Node 22.23.2 and Chromium 152.0.7977.75 execute PHP 8.4.1 on wasm32, with php-wasm 0.1.0, Lean 4.32.2 and Emscripten 3.1.68. Each fixture runs eight Node configurations (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled configurations (startup/lazy, weak/strict). Source and adapter dispatch are unmeasured. These local runs do not establish hosted acceptance, native PHP, Firefox/WebKit, browser Composer, checked Subtype, refined callbacks or graph/owned refinement transports. Selected source snapshots are not a complete dependency closure. Package digests and sizes are retained, not their binary archives.\"\n"
+        },
+        {
+          "start": 5974109,
+          "previous": "            \"php-wasm-fin-products-ordinary-installed\"\n",
+          "current": "            \"php-wasm-fin-products-ordinary-installed\",\n            \"php-wasm-direct-fin-scalar-ordinary-installed\",\n            \"php-wasm-direct-fin-containers-ordinary-installed\"\n"
+        },
+        {
+          "start": 5974303,
+          "previous": "          \"note\": \"Ordinary-source products: 11 exports, twelve installed executions with 2039 checks each, two-root package reproduction and source-free offline installation. Only Fin nested in products, Except branches or copied fields is exercised; no bare top-level Fin or direct Array/List/Option (Fin n) export is executed. Source and adapter dispatch are not measured. These local reports do not establish hosted CI, native PHP, a native glibc floor, checked Subtype, callback replies, generic/recursive refined fields, or graph/owned refinement transports. Selected producer source identities are not a complete dependency closure. Package archive hashes are retained, not the binary archives.\"\n",
+          "current": "          \"note\": \"Ordinary-source products: 11 exports, twelve installed executions with 2039 checks each, two-root package reproduction and source-free offline installation. The earlier product report covers nested values; direct values are established separately below. Direct scalar and Array/List/Option acceptance uses producer ccb44b24d17b96bd3327cb976b6d45921f7f3af2. Local Node 22.23.2 and Chromium 152.0.7977.75 execute PHP 8.4.1 on wasm32, with php-wasm 0.1.0, Lean 4.32.2 and Emscripten 3.1.68. Each fixture runs eight Node configurations (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled configurations (startup/lazy, weak/strict). Source and adapter dispatch are unmeasured. These local runs do not establish hosted acceptance, native PHP, Firefox/WebKit, browser Composer, checked Subtype, refined callbacks or graph/owned refinement transports. Selected source snapshots are not a complete dependency closure. Package digests and sizes are retained, not their binary archives.\"\n"
+        },
+        {
+          "start": 5975362,
+          "previous": "        \"Only Fin nested in products, Except branches or copied fields is exercised; no bare top-level Fin or direct Array/List/Option (Fin n) export is executed. Source and adapter dispatch are not measured. These local reports do not establish hosted CI, native PHP, a native glibc floor, checked Subtype, callback replies, generic/recursive refined fields, or graph/owned refinement transports. Selected producer source identities are not a complete dependency closure. Package archive hashes are retained, not the binary archives.\",\n        \"Local Node 22.23.3 and Chromium 154.0.8037.57 execute PHP 8.4.1 on wasm32; the runtime pins Emscripten 3.1.68 and php-wasm 0.1.0. Each fixture runs eight Node arrangements (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled arrangements (startup/lazy, weak/strict). No Firefox, WebKit or browser Composer execution is claimed.\"\n",
+          "current": "        \"Source and adapter dispatch are unmeasured. These local runs do not establish hosted acceptance, native PHP, Firefox/WebKit, browser Composer, checked Subtype, refined callbacks or graph/owned refinement transports. Selected source snapshots are not a complete dependency closure. Package digests and sizes are retained, not their binary archives.\",\n        \"Local Node 22.23.3 and Chromium 154.0.8037.57 execute PHP 8.4.1 on wasm32; the runtime pins Emscripten 3.1.68 and php-wasm 0.1.0. Each fixture runs eight Node arrangements (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled arrangements (startup/lazy, weak/strict). No Firefox, WebKit or browser Composer execution is claimed.\",\n        \"The earlier product reports retain their original nested-only scope and Node/Chromium versions. The direct-value supplement records its own producer and runtime.\",\n        \"Local Node 22.23.2 and Chromium 152.0.7977.75 execute PHP 8.4.1 on wasm32, with php-wasm 0.1.0, Lean 4.32.2 and Emscripten 3.1.68. Each fixture runs eight Node configurations (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled configurations (startup/lazy, weak/strict).\"\n"
+        },
+        {
+          "start": 5976591,
+          "previous": "        \"fin\": \"Only Fin nested in products, Except branches or copied fields is exercised; no bare top-level Fin or direct Array/List/Option (Fin n) export is executed. Use Brick Math integers with exact closed bounds. Products, active Except branches and copied record/variant fields keep their constraints through the tested containers; none is valid for Option (Fin 0), but present Fin 0 values reject. Both weak and strict PHP callers preserve inputs and recover after rejection.\"\n",
+          "current": "        \"fin\": \"Use Brick Math integers with exact closed bounds for scalar Fin, direct Array/List/Option compositions, pairs, active Except branches and copied record/variant fields. Empty Array/List (Fin 0) and absent Option (Fin 0) are valid; present Fin 0 values reject. Bounds wider than 64 bits stay exact on wasm32. Weak and strict callers retain inputs and can recover after rejection.\"\n"
+        },
+        {
+          "start": 5980796,
+          "previous": "        \"fin\": \"Only Fin nested in products, Except branches or copied fields is exercised; no bare top-level Fin or direct Array/List/Option (Fin n) export is executed. Use Brick Math integers with exact closed bounds. Products, active Except branches and copied record/variant fields keep their constraints through the tested containers; none is valid for Option (Fin 0), but present Fin 0 values reject. Both weak and strict PHP callers preserve inputs and recover after rejection.\"\n",
+          "current": "        \"fin\": \"Use Brick Math integers with exact closed bounds for scalar Fin, direct Array/List/Option compositions, pairs, active Except branches and copied record/variant fields. Empty Array/List (Fin 0) and absent Option (Fin 0) are valid; present Fin 0 values reject. Bounds wider than 64 bits stay exact on wasm32. Weak and strict callers retain inputs and can recover after rejection.\"\n"
+        },
+        {
+          "start": 5981444,
+          "previous": "      \"scope\": \"Independently reviewed products: 11 exports, twelve installed executions with 2039 checks each, two-root package reproduction and source-free offline installation.\",\n",
+          "current": "      \"scope\": \"Independently reviewed products: 11 exports, twelve installed executions with 2039 checks each, two-root package reproduction and source-free offline installation. Additional direct scalar and Array/List/Option exports have separate local installed observations: seven scalar exports with 2,028 checks and twelve container exports with 14,089 checks per execution.\",\n"
+        },
+        {
+          "start": 5982165,
+          "previous": "            \"php-wasm-fin-products-reviewed-installed\"\n",
+          "current": "            \"php-wasm-fin-products-reviewed-installed\",\n            \"php-wasm-direct-fin-scalar-reviewed-installed\",\n            \"php-wasm-direct-fin-containers-reviewed-installed\"\n"
+        },
+        {
+          "start": 5982359,
+          "previous": "          \"note\": \"Independently reviewed bounds reconcile with fresh Lean metadata.\"\n",
+          "current": "          \"note\": \"Independently reviewed bounds reconcile with fresh Lean metadata. Direct scalar and Array/List/Option acceptance uses producer ccb44b24d17b96bd3327cb976b6d45921f7f3af2. Local Node 22.23.2 and Chromium 152.0.7977.75 execute PHP 8.4.1 on wasm32, with php-wasm 0.1.0, Lean 4.32.2 and Emscripten 3.1.68. Each fixture runs eight Node configurations (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled configurations (startup/lazy, weak/strict). Source and adapter dispatch are unmeasured. These local runs do not establish hosted acceptance, native PHP, Firefox/WebKit, browser Composer, checked Subtype, refined callbacks or graph/owned refinement transports. Selected source snapshots are not a complete dependency closure. Package digests and sizes are retained, not their binary archives.\"\n"
+        },
+        {
+          "start": 5983276,
+          "previous": "            \"php-wasm-fin-products-reviewed-installed\"\n",
+          "current": "            \"php-wasm-fin-products-reviewed-installed\",\n            \"php-wasm-direct-fin-scalar-reviewed-installed\",\n            \"php-wasm-direct-fin-containers-reviewed-installed\"\n"
+        },
+        {
+          "start": 5983470,
+          "previous": "          \"note\": \"Plain copied PHP-Wasm preserves Fin bounds in products, active result branches, copied fields and their tested container combinations.\"\n",
+          "current": "          \"note\": \"Plain copied PHP-Wasm preserves Fin bounds in products, active result branches, copied fields and their tested container combinations. Direct scalar and Array/List/Option acceptance uses producer ccb44b24d17b96bd3327cb976b6d45921f7f3af2. Local Node 22.23.2 and Chromium 152.0.7977.75 execute PHP 8.4.1 on wasm32, with php-wasm 0.1.0, Lean 4.32.2 and Emscripten 3.1.68. Each fixture runs eight Node configurations (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled configurations (startup/lazy, weak/strict). Source and adapter dispatch are unmeasured. These local runs do not establish hosted acceptance, native PHP, Firefox/WebKit, browser Composer, checked Subtype, refined callbacks or graph/owned refinement transports. Selected source snapshots are not a complete dependency closure. Package digests and sizes are retained, not their binary archives.\"\n"
+        },
+        {
+          "start": 5984457,
+          "previous": "            \"php-wasm-fin-products-reviewed-installed\"\n",
+          "current": "            \"php-wasm-fin-products-reviewed-installed\",\n            \"php-wasm-direct-fin-scalar-reviewed-installed\",\n            \"php-wasm-direct-fin-containers-reviewed-installed\"\n"
+        },
+        {
+          "start": 5984651,
+          "previous": "          \"note\": \"The wasm32 adapter checks Nat limbs and constructs Fin with a decidable Lean proof.\"\n",
+          "current": "          \"note\": \"The wasm32 adapter checks Nat limbs and constructs Fin with a decidable Lean proof. Direct scalar and Array/List/Option acceptance uses producer ccb44b24d17b96bd3327cb976b6d45921f7f3af2. Local Node 22.23.2 and Chromium 152.0.7977.75 execute PHP 8.4.1 on wasm32, with php-wasm 0.1.0, Lean 4.32.2 and Emscripten 3.1.68. Each fixture runs eight Node configurations (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled configurations (startup/lazy, weak/strict). Source and adapter dispatch are unmeasured. These local runs do not establish hosted acceptance, native PHP, Firefox/WebKit, browser Composer, checked Subtype, refined callbacks or graph/owned refinement transports. Selected source snapshots are not a complete dependency closure. Package digests and sizes are retained, not their binary archives.\"\n"
+        },
+        {
+          "start": 5985585,
+          "previous": "            \"php-wasm-fin-products-reviewed-installed\"\n",
+          "current": "            \"php-wasm-fin-products-reviewed-installed\",\n            \"php-wasm-direct-fin-scalar-reviewed-installed\",\n            \"php-wasm-direct-fin-containers-reviewed-installed\"\n"
+        },
+        {
+          "start": 5985779,
+          "previous": "          \"note\": \"Two author roots reproduce three package archives before source-free offline installation. Local Node 22.23.3 and Chromium 154.0.8037.57 execute PHP 8.4.1 on wasm32; the runtime pins Emscripten 3.1.68 and php-wasm 0.1.0. Each fixture runs eight Node arrangements (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled arrangements (startup/lazy, weak/strict). No Firefox, WebKit or browser Composer execution is claimed.\"\n",
+          "current": "          \"note\": \"Two author roots reproduce three package archives before source-free offline installation. Local Node 22.23.3 and Chromium 154.0.8037.57 execute PHP 8.4.1 on wasm32; the runtime pins Emscripten 3.1.68 and php-wasm 0.1.0. Each fixture runs eight Node arrangements (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled arrangements (startup/lazy, weak/strict). No Firefox, WebKit or browser Composer execution is claimed. Direct scalar and Array/List/Option acceptance uses producer ccb44b24d17b96bd3327cb976b6d45921f7f3af2. Local Node 22.23.2 and Chromium 152.0.7977.75 execute PHP 8.4.1 on wasm32, with php-wasm 0.1.0, Lean 4.32.2 and Emscripten 3.1.68. Each fixture runs eight Node configurations (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled configurations (startup/lazy, weak/strict). Source and adapter dispatch are unmeasured. These local runs do not establish hosted acceptance, native PHP, Firefox/WebKit, browser Composer, checked Subtype, refined callbacks or graph/owned refinement transports. Selected source snapshots are not a complete dependency closure. Package digests and sizes are retained, not their binary archives.\"\n"
+        },
+        {
+          "start": 5987077,
+          "previous": "            \"php-wasm-fin-products-reviewed-installed\"\n",
+          "current": "            \"php-wasm-fin-products-reviewed-installed\",\n            \"php-wasm-direct-fin-scalar-reviewed-installed\",\n            \"php-wasm-direct-fin-containers-reviewed-installed\"\n"
+        },
+        {
+          "start": 5987271,
+          "previous": "          \"note\": \"Independently reviewed products: 11 exports, twelve installed executions with 2039 checks each, two-root package reproduction and source-free offline installation. Only Fin nested in products, Except branches or copied fields is exercised; no bare top-level Fin or direct Array/List/Option (Fin n) export is executed. Source and adapter dispatch are not measured. These local reports do not establish hosted CI, native PHP, a native glibc floor, checked Subtype, callback replies, generic/recursive refined fields, or graph/owned refinement transports. Selected producer source identities are not a complete dependency closure. Package archive hashes are retained, not the binary archives.\"\n",
+          "current": "          \"note\": \"Independently reviewed products: 11 exports, twelve installed executions with 2039 checks each, two-root package reproduction and source-free offline installation. The earlier product report covers nested values; direct values are established separately below. Direct scalar and Array/List/Option acceptance uses producer ccb44b24d17b96bd3327cb976b6d45921f7f3af2. Local Node 22.23.2 and Chromium 152.0.7977.75 execute PHP 8.4.1 on wasm32, with php-wasm 0.1.0, Lean 4.32.2 and Emscripten 3.1.68. Each fixture runs eight Node configurations (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled configurations (startup/lazy, weak/strict). Source and adapter dispatch are unmeasured. These local runs do not establish hosted acceptance, native PHP, Firefox/WebKit, browser Composer, checked Subtype, refined callbacks or graph/owned refinement transports. Selected source snapshots are not a complete dependency closure. Package digests and sizes are retained, not their binary archives.\"\n"
+        },
+        {
+          "start": 5988337,
+          "previous": "        \"Only Fin nested in products, Except branches or copied fields is exercised; no bare top-level Fin or direct Array/List/Option (Fin n) export is executed. Source and adapter dispatch are not measured. These local reports do not establish hosted CI, native PHP, a native glibc floor, checked Subtype, callback replies, generic/recursive refined fields, or graph/owned refinement transports. Selected producer source identities are not a complete dependency closure. Package archive hashes are retained, not the binary archives.\",\n        \"Local Node 22.23.3 and Chromium 154.0.8037.57 execute PHP 8.4.1 on wasm32; the runtime pins Emscripten 3.1.68 and php-wasm 0.1.0. Each fixture runs eight Node arrangements (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled arrangements (startup/lazy, weak/strict). No Firefox, WebKit or browser Composer execution is claimed.\"\n",
+          "current": "        \"Source and adapter dispatch are unmeasured. These local runs do not establish hosted acceptance, native PHP, Firefox/WebKit, browser Composer, checked Subtype, refined callbacks or graph/owned refinement transports. Selected source snapshots are not a complete dependency closure. Package digests and sizes are retained, not their binary archives.\",\n        \"Local Node 22.23.3 and Chromium 154.0.8037.57 execute PHP 8.4.1 on wasm32; the runtime pins Emscripten 3.1.68 and php-wasm 0.1.0. Each fixture runs eight Node arrangements (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled arrangements (startup/lazy, weak/strict). No Firefox, WebKit or browser Composer execution is claimed.\",\n        \"The earlier product reports retain their original nested-only scope and Node/Chromium versions. The direct-value supplement records its own producer and runtime.\",\n        \"Local Node 22.23.2 and Chromium 152.0.7977.75 execute PHP 8.4.1 on wasm32, with php-wasm 0.1.0, Lean 4.32.2 and Emscripten 3.1.68. Each fixture runs eight Node configurations (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled configurations (startup/lazy, weak/strict).\"\n"
+        },
+        {
+          "start": 5989566,
+          "previous": "        \"fin\": \"Only Fin nested in products, Except branches or copied fields is exercised; no bare top-level Fin or direct Array/List/Option (Fin n) export is executed. Use Brick Math integers with exact closed bounds. Products, active Except branches and copied record/variant fields keep their constraints through the tested containers; none is valid for Option (Fin 0), but present Fin 0 values reject. Both weak and strict PHP callers preserve inputs and recover after rejection.\"\n",
+          "current": "        \"fin\": \"Use Brick Math integers with exact closed bounds for scalar Fin, direct Array/List/Option compositions, pairs, active Except branches and copied record/variant fields. Empty Array/List (Fin 0) and absent Option (Fin 0) are valid; present Fin 0 values reject. Bounds wider than 64 bits stay exact on wasm32. Weak and strict callers retain inputs and can recover after rejection.\"\n"
+        },
+        {
+          "start": 5993794,
+          "previous": "        \"fin\": \"Only Fin nested in products, Except branches or copied fields is exercised; no bare top-level Fin or direct Array/List/Option (Fin n) export is executed. Use Brick Math integers with exact closed bounds. Products, active Except branches and copied record/variant fields keep their constraints through the tested containers; none is valid for Option (Fin 0), but present Fin 0 values reject. Both weak and strict PHP callers preserve inputs and recover after rejection.\"\n",
+          "current": "        \"fin\": \"Use Brick Math integers with exact closed bounds for scalar Fin, direct Array/List/Option compositions, pairs, active Except branches and copied record/variant fields. Empty Array/List (Fin 0) and absent Option (Fin 0) are valid; present Fin 0 values reject. Bounds wider than 64 bits stay exact on wasm32. Weak and strict callers retain inputs and can recover after rejection.\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-core-repair-history-tests.mjs",
+      "currentSha256": "985ed46eb13ee293a574fe2292bd7f37c61d4d4d409b4ff202fc5dec16a9b41d",
+      "previousSha256": "19feec27158e48c63ed278722e6268910b85beee7b00d08c41536603154c7149",
+      "edits": [
+        {
+          "start": 630,
+          "previous": "",
+          "current": "import { beforePhpWasmDirectPromotionSource } from \"./php-wasm-direct-fin-promotion-history.mjs\";\n"
+        },
+        {
+          "start": 1396,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\"), previous = reverseFinCoreRepairUpdate(current, update);\n",
+          "current": "\t\tconst current = beforePhpWasmDirectPromotionSource(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n\t\tconst previous = reverseFinCoreRepairUpdate(current, update);\n"
+        },
+        {
+          "start": 5801,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = beforePhpWasmDirectPromotionSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 6728,
+          "previous": "\t\tif(!digests.has(file.path)) digests.set(file.path, sha256(await readFile(file.path)));\n",
+          "current": "\t\tif(!digests.has(file.path)) digests.set(file.path, sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-core-repair-history.mjs",
+      "currentSha256": "6fcca43a15d5278c0d1b89acd7d30c38ed5495623ef5f606e5b9bdb651f0f90e",
+      "previousSha256": "36b0cef77b94603474a2d0bded59d6cc93dc1951f1ffc17ae2b09af2e6074477",
+      "edits": [
+        {
+          "start": 234,
+          "previous": "",
+          "current": "import { beforePhpWasmDirectPromotionSource } from \"./php-wasm-direct-fin-promotion-history.mjs\";\n"
+        },
+        {
+          "start": 2616,
+          "previous": "",
+          "current": "\tsource = beforePhpWasmDirectPromotionSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-native-hosted-promotion-tests.mjs",
+      "currentSha256": "86a4f539ff0c56e4874e9ef9f5b5b4c7598318eccfd0a2c1b6b7f04fd0ed9e24",
+      "previousSha256": "27ff168487d89dda0af948cf40450cd4ab29b0e25f5225868b3b1a1c028e2884",
+      "edits": [
+        {
+          "start": 1171,
+          "previous": "",
+          "current": "import { beforePhpWasmDirectPromotionSource, phpWasmDirectPromotionHistoryPath } from \"./php-wasm-direct-fin-promotion-history.mjs\";\n"
+        },
+        {
+          "start": 5618,
+          "previous": "\tassert.deepEqual(current.document, expected, \"Only the promotion, exact source pins and Perl option guidance may change the inventory\");\n",
+          "current": "\t// Later PHP-Wasm acceptance has its own gate. Authenticate this comparison at the Core-repair epoch.\n\tconst later = JSON.parse(await readFile(phpWasmDirectPromotionHistoryPath, \"utf8\"));\n\tfor(const entry of expected.evidence) for(const file of entry.files)\n\t{\n\t\tconst update = later.updates.find(item => item.path === file.path && item.currentSha256 === file.sha256);\n\t\tif(update) file.sha256 = update.previousSha256;\n\t}\n\tconst comparison = JSON.parse(beforePhpWasmDirectPromotionSource(\"docs/type-surface.v1.json\", JSON.stringify(current.document, null, 2) + \"\\n\"));\n\tassert.deepEqual(comparison, expected, \"Only the promotion, exact source pins and Perl option guidance may change this historical inventory\");\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "e9a335858ad002b1d975d03b7854f852673cb30d609b3690e152bc05d10a9632",
+      "previousSha256": "c5bd7febb7df2f2586f35d7efa2274024fda106c09183b58c1675f4cb248293b",
+      "edits": [
+        {
+          "start": 15860,
+          "previous": "",
+          "current": "import { phpWasmDirectPromotionChangedPaths } from \"./php-wasm-direct-fin-promotion-history.mjs\";\n"
+        },
+        {
+          "start": 55440,
+          "previous": "",
+          "current": "\t, ...phpWasmDirectPromotionChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-wasm-fin-promotion-tests.mjs",
+      "currentSha256": "204438a0e5a2c6ad56d19d6dc741f27aa930c3b70884d8c513bc498728e64141",
+      "previousSha256": "cf9e9aabd25595eeb024766bc7864740be1847b9a15546b2887b437b8ddeab9f",
+      "edits": [
+        {
+          "start": 7247,
+          "previous": "\tconst row = (await readFile(\"docs/php.md\", \"utf8\")).split(\"\\n\").find(line => line.startsWith(\"| `Fin n` |\"));\n",
+          "current": "\tconst path = \"docs/php.md\", expected = \"630780f3e3297e4ab0287bbe9bb4e125aeca1199286500cae7b0090800bfd282\";\n\tconst historical = beforeFinRefinementSource(path, await readFile(path, \"utf8\"), expected);\n\tassert.equal(sha256(historical), expected);\n\tconst row = historical.split(\"\\n\").find(line => line.startsWith(\"| `Fin n` |\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/php-wasm-fin.test.mjs",
+      "currentSha256": "46f1a3faf8703e910e7189fa57803e68f7e8a74fc573909546ba1630ec27bf0f",
+      "previousSha256": "dd514c4570642eec4bec6ec25d7c70f885d9c344b3af409a4766266922ced9f6",
+      "edits": [
+        {
+          "start": 2273,
+          "previous": "",
+          "current": "import \"./helpers/php-wasm-direct-fin-promotion-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/type-surface.test.mjs",
+      "currentSha256": "6a981453b740e7b9e1619d9b0edc9fb70f8a00f94cbfb29b8e853687c4c7da61",
+      "previousSha256": "a2ee5f7cffcdda70780e6dd204018cb8cc9cf1997436029a3cf5dd27e85f7732",
+      "edits": [
+        {
+          "start": 28596,
+          "previous": "\t\t\t\t\tassert.deepEqual(stage.evidence, [`php-wasm-fin-${cell.position === \"field\" ? \"records\" : \"products\"}-ordinary-installed`]);\n",
+          "current": "\t\t\t\t\tconst evidence = cell.position === \"field\" ? [\"php-wasm-fin-records-ordinary-installed\"]\n\t\t\t\t\t\t: [\"php-wasm-fin-products-ordinary-installed\", \"php-wasm-direct-fin-scalar-ordinary-installed\", \"php-wasm-direct-fin-containers-ordinary-installed\"];\n\t\t\t\t\tassert.deepEqual(stage.evidence, evidence);\n"
+        }
+      ]
+    }
+  ]
+}
