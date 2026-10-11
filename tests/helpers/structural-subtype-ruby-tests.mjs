@@ -13,6 +13,7 @@ import { structuralSubtypeConfiguration } from "./structural-subtype-installed-f
 import { structuralSubtypeRubyConfiguration, structuralSubtypeRubyCaller, structuralSubtypeRubyCounts, parseStructuralSubtypeRubyResult } from "./structural-subtype-ruby-fixture.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { runCopied } from "./copied-fixture-install.mjs";
+import "./structural-subtype-ruby-evidence-tests.mjs";
 
 const ruby = process.env.LEAN_BRIDGE_RUBY ?? resolve(".toolchains/ruby33/bin/ruby");
 // Contract-only jobs need no Ruby installation. Explicit toolchain selections must work.

@@ -1,0 +1,365 @@
+{
+  "files": [
+    {
+      "bytes": 9985,
+      "path": "checker.mjs",
+      "sha256": "69d4a777b5261832f5fab6f647a255e6d0d61577fe8b500143af957617823e26"
+    },
+    {
+      "bytes": 203,
+      "path": "ordinary/end.json",
+      "sha256": "bfeb35a209614d63860f8699f44fc20c0f568e9d0d41d8adc36b2d8852f00839"
+    },
+    {
+      "bytes": 131797,
+      "path": "ordinary/records/build-0/model.json",
+      "sha256": "4fdec900a5235e2f93a2fecdbbc573c01d86a569f64edad109f48a0307284fdc"
+    },
+    {
+      "bytes": 1150,
+      "path": "ordinary/records/build-0/package-set-receipt.json",
+      "sha256": "1ebdcf92f54554bd2bdb28eeb8d8ef9063010ee0a038adcbc2881c9fa6368bea"
+    },
+    {
+      "bytes": 2349,
+      "path": "ordinary/records/build-0/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 131797,
+      "path": "ordinary/records/build-1/model.json",
+      "sha256": "4fdec900a5235e2f93a2fecdbbc573c01d86a569f64edad109f48a0307284fdc"
+    },
+    {
+      "bytes": 1150,
+      "path": "ordinary/records/build-1/package-set-receipt.json",
+      "sha256": "1ebdcf92f54554bd2bdb28eeb8d8ef9063010ee0a038adcbc2881c9fa6368bea"
+    },
+    {
+      "bytes": 2349,
+      "path": "ordinary/records/build-1/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 11183,
+      "path": "ordinary/records/configuration.json",
+      "sha256": "096fc54d8d8fad90db3f8f962f67792c52ded8e5cb2b56ee1c5153ddf71a45eb"
+    },
+    {
+      "bytes": 5995,
+      "path": "ordinary/records/consumer.rb",
+      "sha256": "322bcbe977f9e8ffb18f9005c2456e7aab87c2bb12446dd0058c6aad9a0702ee"
+    },
+    {
+      "bytes": 34558,
+      "path": "ordinary/records/expected.binding-ir.json",
+      "sha256": "fcb7bfa656ac6d6262a9773712f02b6c0bd5a08a72483c9ba9225f83fe90c36f"
+    },
+    {
+      "bytes": 721,
+      "path": "ordinary/records/installed.json",
+      "sha256": "8f0124e7fb46cd9d60f62eb9f5822bc3ea560b6155d45b59013a6074cbb903fe"
+    },
+    {
+      "bytes": 720,
+      "path": "ordinary/records/relocated.json",
+      "sha256": "c222225fff736d653f37d44c4ad2a22cc5ed4aff766e711848afb7d781b21c0c"
+    },
+    {
+      "bytes": 58496,
+      "path": "ordinary/records/report.json",
+      "sha256": "b2e3678a597a270da40edb02fb1b7e83f0ac7e61119c845f1215b12b7b082d8d"
+    },
+    {
+      "bytes": 381,
+      "path": "ordinary/run.tap",
+      "sha256": "e9c6ba0b1718d6d5654949d0f22ba4a86d84a34fd0174234886a4ac526be33a7"
+    },
+    {
+      "bytes": 905,
+      "path": "ordinary/start.json",
+      "sha256": "dc0b133f68d7edf11c16b67b1aa9abee50000a0ca855de2adf09048089f1d52f"
+    },
+    {
+      "bytes": 203,
+      "path": "reviewed/end.json",
+      "sha256": "1c7677cf5016e83e5539fe8d3c00a3d48c0245be9cbacec72c6f94ab65227a3a"
+    },
+    {
+      "bytes": 157742,
+      "path": "reviewed/records/build-0/model.json",
+      "sha256": "072ee249ded7feb59206a7d48908b5e4af2686b1c0b24a3b336549db65764ed0"
+    },
+    {
+      "bytes": 1150,
+      "path": "reviewed/records/build-0/package-set-receipt.json",
+      "sha256": "ad2cb0ace32589d9360ef7b528f5eecd99f580a11766bd9499cc7f0d3b262612"
+    },
+    {
+      "bytes": 2349,
+      "path": "reviewed/records/build-0/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 157742,
+      "path": "reviewed/records/build-1/model.json",
+      "sha256": "072ee249ded7feb59206a7d48908b5e4af2686b1c0b24a3b336549db65764ed0"
+    },
+    {
+      "bytes": 1150,
+      "path": "reviewed/records/build-1/package-set-receipt.json",
+      "sha256": "ad2cb0ace32589d9360ef7b528f5eecd99f580a11766bd9499cc7f0d3b262612"
+    },
+    {
+      "bytes": 2349,
+      "path": "reviewed/records/build-1/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 175,
+      "path": "reviewed/records/configuration.json",
+      "sha256": "71b8b478fdf037ef709441930aabe14ba98c8ff5d7e3affd06f5da880ddf9022"
+    },
+    {
+      "bytes": 6025,
+      "path": "reviewed/records/consumer.rb",
+      "sha256": "a89bc95af16f082fce3a411b5231eb685728bd85222f74761fe40f2e5fc5112e"
+    },
+    {
+      "bytes": 34558,
+      "path": "reviewed/records/expected.binding-ir.json",
+      "sha256": "fcb7bfa656ac6d6262a9773712f02b6c0bd5a08a72483c9ba9225f83fe90c36f"
+    },
+    {
+      "bytes": 721,
+      "path": "reviewed/records/installed.json",
+      "sha256": "389f5e1c495ffabfe567dd231f6ef5251e1d118ceebdbb9144d39a6252a5a852"
+    },
+    {
+      "bytes": 720,
+      "path": "reviewed/records/relocated.json",
+      "sha256": "5f651ac9bde381de7b8921461549bf3cb9faabeb0de0141f28d5c7eb3e1ad72c"
+    },
+    {
+      "bytes": 77574,
+      "path": "reviewed/records/report.json",
+      "sha256": "1d504fbe842a9943b2e3175b8cc9cc23858348c6d33e854317463ad35d60700d"
+    },
+    {
+      "bytes": 382,
+      "path": "reviewed/run.tap",
+      "sha256": "4594f1a22e5eb05117d311613ddb1c0306e7ab330d2bad474d4f80c841407fd6"
+    },
+    {
+      "bytes": 905,
+      "path": "reviewed/start.json",
+      "sha256": "438169742811bb06c20553f7b1e56dde169823bcbb26edc7d541cc41f84f8d7d"
+    },
+    {
+      "bytes": 3004,
+      "path": "runner.mjs",
+      "sha256": "aaffef46e890e78b0df46048fb50ceefb6d9ec515853182bb811d11f99ef571b"
+    },
+    {
+      "bytes": 92606,
+      "path": "sources/src/analyze/NativeExports.lean",
+      "sha256": "4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f"
+    },
+    {
+      "bytes": 23547,
+      "path": "sources/src/backends/c/native-copied-values.mjs",
+      "sha256": "7415b894cb1d4f560fb00766a7668ab015393da1d02f9ab252dc157b383ea10c"
+    },
+    {
+      "bytes": 1165,
+      "path": "sources/src/backends/ruby/copied-assets.mjs",
+      "sha256": "501e2ad9936e09d58131f9995164ec27fa28d222bfeeded3ed64ae2b5bda0c4f"
+    },
+    {
+      "bytes": 12944,
+      "path": "sources/src/backends/ruby/copied-conversions.mjs",
+      "sha256": "ce15adec396be01282ccb353fc486359693d032ccc46442dbe897d80e45fb52a"
+    },
+    {
+      "bytes": 6931,
+      "path": "sources/src/backends/ruby/copied-model.mjs",
+      "sha256": "76b2b404b57a16604bb396997ba371f67c9dac3b6b37caf4bae017d1e597734d"
+    },
+    {
+      "bytes": 16925,
+      "path": "sources/src/backends/ruby/copied-values.mjs",
+      "sha256": "44580dc2129a996655284ea7df86250cf3a671a0930259c05b58fd6e1d1c51c7"
+    },
+    {
+      "bytes": 8271,
+      "path": "sources/src/build/component-refinements.mjs",
+      "sha256": "1c936270da51e3991148681a317e30727936bc8c4e74f7a79330f4b7393a927c"
+    },
+    {
+      "bytes": 12579,
+      "path": "sources/src/build/native-component.mjs",
+      "sha256": "2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867"
+    },
+    {
+      "bytes": 42189,
+      "path": "sources/src/build/native-model.mjs",
+      "sha256": "18e1072bac272ecf76c8d56aec0b2e21efa06e2adf4d49096598271dc5eb2d4a"
+    },
+    {
+      "bytes": 3459,
+      "path": "sources/src/build/native-ruby-artifacts.mjs",
+      "sha256": "296ccf9cbafd02ff8a0c0f8e4608c40e5379a681a2682ea795af818af65e4145"
+    },
+    {
+      "bytes": 8171,
+      "path": "sources/src/release/native-rubygems.mjs",
+      "sha256": "5f4451473d73e8b5224e23c0e1107436dbfe117fa2261292426a80ce6b7b44bb"
+    },
+    {
+      "bytes": 87,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/lakefile.toml",
+      "sha256": "16a51fbc493627ffd1a5beebdccbe577039cc22ce333e4233417444417cf188f"
+    },
+    {
+      "bytes": 25,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/lean-toolchain",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "bytes": 1093,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 64,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/package.json",
+      "sha256": "5cc3610c19032e010e0c18c017695d0a2f16b46828effec79bb5089ccf1932df"
+    },
+    {
+      "bytes": 2349,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 5995,
+      "path": "sources/tests/fixtures/structural-subtype-consumers/ruby.rb",
+      "sha256": "322bcbe977f9e8ffb18f9005c2456e7aab87c2bb12446dd0058c6aad9a0702ee"
+    },
+    {
+      "bytes": 15505,
+      "path": "sources/tests/helpers/copied-fixture-install.mjs",
+      "sha256": "dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df"
+    },
+    {
+      "bytes": 3517,
+      "path": "sources/tests/helpers/fin-container-edge-closure.mjs",
+      "sha256": "2d1788a27ccd388a5779c251b01b0dc1370c8047362dc3720a7189815dd141a2"
+    },
+    {
+      "bytes": 8330,
+      "path": "sources/tests/helpers/fin-container-edge-ruby-closure.mjs",
+      "sha256": "76556c24a4d540695aed2fd5dcb20cb25d98a7da0ceabff99ad291a92c444a5c"
+    },
+    {
+      "bytes": 5465,
+      "path": "sources/tests/helpers/structural-subtype-installed-fixture.mjs",
+      "sha256": "5743bb3d0fd00301c22587a0111edcb1301c7f43c3dda0c4746340c18c0a201f"
+    },
+    {
+      "bytes": 1493,
+      "path": "sources/tests/helpers/structural-subtype-ruby-fixture.mjs",
+      "sha256": "4ed656316148575ab6ef49e6fb808cbf9ac5cdc52c97f47746963f2ce4748c08"
+    },
+    {
+      "bytes": 7629,
+      "path": "sources/tests/helpers/structural-subtype-ruby-installed-tests.mjs",
+      "sha256": "6c8f2c29a3dfc118aa299d760eb1cee77a9c7d7e0f30fffb842539eefaed9cfb"
+    },
+    {
+      "bytes": 4238,
+      "path": "sources/tests/helpers/structural-subtype-ruby-model.rb",
+      "sha256": "58ba22cf6b9d95703505d387127f66da00c98e8f13aa814b2353ba086e5f7fad"
+    },
+    {
+      "bytes": 2860,
+      "path": "sources/tests/helpers/structural-subtype-ruby-tests.mjs",
+      "sha256": "641d17cfc36bf11dca2051a030bca1ef7eccfee052d5efad5bace6f6920d8533"
+    },
+    {
+      "bytes": 11027,
+      "path": "sources/tests/structural-subtype-installed.test.mjs",
+      "sha256": "ece7abb90ea980e07cf75cbeb37fcffb3104c4a05088a1d3391b9717883469e9"
+    }
+  ],
+  "kind": "structural-subtype-ruby-installed-v1",
+  "limitations": [
+    "Local Linux x86-64 glibc 2.36 acceptance, not hosted release-floor acceptance.",
+    "No Ruby constructor/source entry counts or memory measurement.",
+    "Package binaries and complete toolchain closures are not retained.",
+    "No support-inventory promotion or recurring installed CI gate follows from this archive."
+  ],
+  "producerCommit": "abb792dbcce4e83cae8bbc853a63d0cf6398145c",
+  "runs": [
+    {
+      "archives": {
+        "archives/structuralsubtypes-1.0.0-x86_64-linux.gem": "f4b171720d6113ed42a7319108008b13712b27fe7e02d105214d050c6c388dd1"
+      },
+      "checks": 4119,
+      "dispatchObserved": false,
+      "executions": 2,
+      "label": "ordinary",
+      "producerCommit": "abb792dbcce4e83cae8bbc853a63d0cf6398145c",
+      "rejections": 1042,
+      "reportSha256": "b2e3678a597a270da40edb02fb1b7e83f0ac7e61119c845f1215b12b7b082d8d",
+      "route": "ordinary",
+      "ruby": "3.3.12",
+      "snapshotControls": 6,
+      "tapSha256": "e9c6ba0b1718d6d5654949d0f22ba4a86d84a34fd0174234886a4ac526be33a7"
+    },
+    {
+      "archives": {
+        "archives/structuralsubtypes-1.0.0-x86_64-linux.gem": "3c46ad820aef5ac867ac2ea419453025cfd1a907964e7aace58418783785bc3b"
+      },
+      "checks": 4119,
+      "dispatchObserved": false,
+      "executions": 2,
+      "label": "reviewed",
+      "producerCommit": "abb792dbcce4e83cae8bbc853a63d0cf6398145c",
+      "rejections": 1042,
+      "reportSha256": "1d504fbe842a9943b2e3175b8cc9cc23858348c6d33e854317463ad35d60700d",
+      "route": "reviewed",
+      "ruby": "3.3.12",
+      "snapshotControls": 6,
+      "tapSha256": "4594f1a22e5eb05117d311613ddb1c0306e7ab330d2bad474d4f80c841407fd6"
+    }
+  ],
+  "schemaVersion": 1,
+  "selectedSources": [
+    "src/analyze/NativeExports.lean",
+    "src/build/native-model.mjs",
+    "src/build/component-refinements.mjs",
+    "src/build/native-component.mjs",
+    "src/backends/c/native-copied-values.mjs",
+    "src/backends/ruby/copied-values.mjs",
+    "src/backends/ruby/copied-conversions.mjs",
+    "src/backends/ruby/copied-model.mjs",
+    "src/backends/ruby/copied-assets.mjs",
+    "src/build/native-ruby-artifacts.mjs",
+    "src/release/native-rubygems.mjs",
+    "tests/structural-subtype-installed.test.mjs",
+    "tests/helpers/structural-subtype-installed-fixture.mjs",
+    "tests/helpers/structural-subtype-ruby-fixture.mjs",
+    "tests/helpers/structural-subtype-ruby-installed-tests.mjs",
+    "tests/helpers/structural-subtype-ruby-tests.mjs",
+    "tests/helpers/structural-subtype-ruby-model.rb",
+    "tests/helpers/copied-fixture-install.mjs",
+    "tests/helpers/fin-container-edge-ruby-closure.mjs",
+    "tests/helpers/fin-container-edge-closure.mjs",
+    "tests/fixtures/structural-subtype-consumers/ruby.rb",
+    "tests/fixtures/onboarding/structural-subtypes/StructuralSubtypes.lean",
+    "tests/fixtures/onboarding/structural-subtypes/lakefile.toml",
+    "tests/fixtures/onboarding/structural-subtypes/lean-toolchain",
+    "tests/fixtures/onboarding/structural-subtypes/package.json",
+    "tests/fixtures/onboarding/structural-subtypes/LICENSE"
+  ]
+}
