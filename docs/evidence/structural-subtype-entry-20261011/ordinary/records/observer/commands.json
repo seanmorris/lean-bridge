@@ -1,0 +1,59 @@
+[
+  {
+    "args": [
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-isystem",
+      "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2/include",
+      "-I",
+      "/tmp/lean-bridge-structural-entry-installed-zBJnC6/consumer/c/structuralsubtypes-1.0.0-c/include",
+      "-shared",
+      "-fPIC",
+      "interposer.c",
+      "-ldl",
+      "-o",
+      "libentry.so"
+    ],
+    "command": "/usr/bin/cc"
+  },
+  {
+    "args": [
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-isystem",
+      "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2/include",
+      "raw.c",
+      "-I/tmp/lean-bridge-structural-entry-installed-zBJnC6/consumer/c/structuralsubtypes-1.0.0-c/lib/pkgconfig/../../include",
+      "-L/tmp/lean-bridge-structural-entry-installed-zBJnC6/consumer/c/structuralsubtypes-1.0.0-c/lib/pkgconfig/../../lib",
+      "-Wl,-rpath,/tmp/lean-bridge-structural-entry-installed-zBJnC6/consumer/c/structuralsubtypes-1.0.0-c/lib/pkgconfig/../../lib",
+      "-lstructuralsubtypes_gmp",
+      "-l:libgmp.so.10",
+      "-lleanshared",
+      "-ldl",
+      "-o",
+      "raw"
+    ],
+    "command": "/usr/bin/cc"
+  },
+  {
+    "args": [
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "control.c",
+      "-I/tmp/lean-bridge-structural-entry-installed-zBJnC6/consumer/c/structuralsubtypes-1.0.0-c/lib/pkgconfig/../../include",
+      "-L/tmp/lean-bridge-structural-entry-installed-zBJnC6/consumer/c/structuralsubtypes-1.0.0-c/lib/pkgconfig/../../lib",
+      "-Wl,-rpath,/tmp/lean-bridge-structural-entry-installed-zBJnC6/consumer/c/structuralsubtypes-1.0.0-c/lib/pkgconfig/../../lib",
+      "-lstructuralsubtypes_gmp",
+      "-l:libgmp.so.10",
+      "-o",
+      "control"
+    ],
+    "command": "/usr/bin/cc"
+  }
+]

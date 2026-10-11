@@ -1,0 +1,244 @@
+{
+  "appendedControl": "\nnamespace StructuralSubtypes\n@[noinline, export lb_structural_source_unrestricted]\ndef unrestricted (value : Nat) : Nat := value\nend StructuralSubtypes\n",
+  "edits": [
+    {
+      "current": "@[noinline, export lb_structural_source_generic]\ndef generic",
+      "offset": 1954,
+      "previous": "def generic"
+    },
+    {
+      "current": "@[noinline, export lb_structural_source_plainFin]\ndef plainFin",
+      "offset": 1884,
+      "previous": "def plainFin"
+    },
+    {
+      "current": "@[noinline, export lb_structural_source_aliasArguments]\ndef aliasArguments",
+      "offset": 1805,
+      "previous": "def aliasArguments"
+    },
+    {
+      "current": "@[noinline, export lb_structural_source_aliasPair]\ndef aliasPair",
+      "offset": 1730,
+      "previous": "def aliasPair"
+    },
+    {
+      "current": "@[noinline, export lb_structural_source_nested]\ndef nested",
+      "offset": 1623,
+      "previous": "def nested"
+    },
+    {
+      "current": "@[noinline, export lb_structural_source_byteBranches]\ndef byteBranches",
+      "offset": 1517,
+      "previous": "def byteBranches"
+    },
+    {
+      "current": "@[noinline, export lb_structural_source_branch]\ndef branch",
+      "offset": 1443,
+      "previous": "def branch"
+    },
+    {
+      "current": "@[noinline, export lb_structural_source_product]\ndef product",
+      "offset": 1378,
+      "previous": "def product"
+    },
+    {
+      "current": "@[noinline, export lb_structural_source_options]\ndef options",
+      "offset": 1313,
+      "previous": "def options"
+    },
+    {
+      "current": "@[noinline, export lb_structural_source_lists]\ndef lists",
+      "offset": 1252,
+      "previous": "def lists"
+    },
+    {
+      "current": "@[noinline, export lb_structural_source_scalar]\ndef scalar",
+      "offset": 975,
+      "previous": "def scalar"
+    },
+    {
+      "current": "@[noinline, export lb_structural_source_arrays]\ndef arrays",
+      "offset": 911,
+      "previous": "def arrays"
+    },
+    {
+      "current": "@[noinline, export lb_structural_constructor_checkedByte]\ndef checkedByte",
+      "offset": 605,
+      "previous": "def checkedByte"
+    },
+    {
+      "current": "@[noinline, export lb_structural_constructor_checkedWord]\ndef checkedWord",
+      "offset": 489,
+      "previous": "def checkedWord"
+    },
+    {
+      "current": "@[noinline, export lb_structural_constructor_normalizePositive]\ndef normalizePositive",
+      "offset": 360,
+      "previous": "def normalizePositive"
+    },
+    {
+      "current": "@[noinline, export lb_structural_constructor_checkedPositive]\ndef checkedPositive",
+      "offset": 246,
+      "previous": "def checkedPositive"
+    }
+  ],
+  "entries": [
+    {
+      "kind": "constructor",
+      "label": "StructuralSubtypes.checkedPositive",
+      "parameters": [
+        "lean_object *"
+      ],
+      "result": "lean_object *",
+      "symbol": "lb_structural_constructor_checkedPositive"
+    },
+    {
+      "kind": "constructor",
+      "label": "StructuralSubtypes.normalizePositive",
+      "parameters": [
+        "lean_object *"
+      ],
+      "result": "lean_object *",
+      "symbol": "lb_structural_constructor_normalizePositive"
+    },
+    {
+      "kind": "constructor",
+      "label": "StructuralSubtypes.checkedWord",
+      "parameters": [
+        "lean_object *"
+      ],
+      "result": "lean_object *",
+      "symbol": "lb_structural_constructor_checkedWord"
+    },
+    {
+      "kind": "constructor",
+      "label": "StructuralSubtypes.checkedByte",
+      "parameters": [
+        "uint8_t"
+      ],
+      "result": "lean_object *",
+      "symbol": "lb_structural_constructor_checkedByte"
+    },
+    {
+      "kind": "source",
+      "label": "StructuralSubtypes.scalar",
+      "parameters": [
+        "lean_object *"
+      ],
+      "result": "lean_object *",
+      "symbol": "lb_structural_source_scalar"
+    },
+    {
+      "kind": "source",
+      "label": "StructuralSubtypes.arrays",
+      "parameters": [
+        "lean_object *"
+      ],
+      "result": "lean_object *",
+      "symbol": "lb_structural_source_arrays"
+    },
+    {
+      "kind": "source",
+      "label": "StructuralSubtypes.lists",
+      "parameters": [
+        "lean_object *"
+      ],
+      "result": "lean_object *",
+      "symbol": "lb_structural_source_lists"
+    },
+    {
+      "kind": "source",
+      "label": "StructuralSubtypes.options",
+      "parameters": [
+        "lean_object *"
+      ],
+      "result": "lean_object *",
+      "symbol": "lb_structural_source_options"
+    },
+    {
+      "kind": "source",
+      "label": "StructuralSubtypes.product",
+      "parameters": [
+        "lean_object *"
+      ],
+      "result": "lean_object *",
+      "symbol": "lb_structural_source_product"
+    },
+    {
+      "kind": "source",
+      "label": "StructuralSubtypes.branch",
+      "parameters": [
+        "lean_object *"
+      ],
+      "result": "lean_object *",
+      "symbol": "lb_structural_source_branch"
+    },
+    {
+      "kind": "source",
+      "label": "StructuralSubtypes.byteBranches",
+      "parameters": [
+        "lean_object *"
+      ],
+      "result": "lean_object *",
+      "symbol": "lb_structural_source_byteBranches"
+    },
+    {
+      "kind": "source",
+      "label": "StructuralSubtypes.nested",
+      "parameters": [
+        "lean_object *"
+      ],
+      "result": "lean_object *",
+      "symbol": "lb_structural_source_nested"
+    },
+    {
+      "kind": "source",
+      "label": "StructuralSubtypes.aliasPair",
+      "parameters": [
+        "lean_object *"
+      ],
+      "result": "lean_object *",
+      "symbol": "lb_structural_source_aliasPair"
+    },
+    {
+      "kind": "source",
+      "label": "StructuralSubtypes.aliasArguments",
+      "parameters": [
+        "lean_object *",
+        "lean_object *"
+      ],
+      "result": "lean_object *",
+      "symbol": "lb_structural_source_aliasArguments"
+    },
+    {
+      "kind": "source",
+      "label": "StructuralSubtypes.plainFin",
+      "parameters": [
+        "lean_object *"
+      ],
+      "result": "lean_object *",
+      "symbol": "lb_structural_source_plainFin"
+    },
+    {
+      "kind": "source",
+      "label": "StructuralSubtypes.generic",
+      "parameters": [
+        "lean_object *"
+      ],
+      "result": "lean_object *",
+      "symbol": "l_StructuralSubtypes_generic___redArg"
+    },
+    {
+      "kind": "source",
+      "label": "StructuralSubtypes.unrestricted",
+      "parameters": [
+        "lean_object *"
+      ],
+      "result": "lean_object *",
+      "symbol": "lb_structural_source_unrestricted"
+    }
+  ],
+  "originalSha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f",
+  "probeSha256": "9afc9a9f79e2ac37ad04475dfb31a8d8ae8e42074d7edb2f7bc67446f25f58ef",
+  "source": "namespace StructuralSubtypes\n\nabbrev Positive := { value : Nat // 0 < value }\nabbrev Word := { value : String // 0 < value.length }\nabbrev Byte := { value : UInt8 // value ≠ 0 }\nabbrev Group := Array (Option Positive)\nabbrev OtherGroup := Group\n\n@[noinline, export lb_structural_constructor_checkedPositive]\ndef checkedPositive (value : Nat) : Option Positive :=\n  if proof : 0 < value then some ⟨value, proof⟩ else none\n\n@[noinline, export lb_structural_constructor_normalizePositive]\ndef normalizePositive (value : Nat) : Option Positive :=\n  if 0 < value then some ⟨value + 1, Nat.zero_lt_succ value⟩ else none\n\n@[noinline, export lb_structural_constructor_checkedWord]\ndef checkedWord (value : String) : Option Word :=\n  if proof : 0 < value.length then some ⟨value, proof⟩ else none\n\n@[noinline, export lb_structural_constructor_checkedByte]\ndef checkedByte (value : UInt8) : Option Byte :=\n  if proof : value ≠ 0 then some ⟨value, proof⟩ else none\n\ndef wrongPredicate (value : Nat) : Option (Fin 10) :=\n  if proof : value < 10 then some ⟨value, proof⟩ else none\n\nunsafe def unsafePositive (value : Nat) : Option Positive := checkedPositive value\n\n@[noinline, export lb_structural_source_arrays]\ndef arrays (values : Array Positive) : Array Positive := values\n@[noinline, export lb_structural_source_scalar]\ndef scalar (value : Positive) : Positive := value\ndef wrongInput := arrays\ndef wrongResult := arrays\ndef unsafeChoice := arrays\ndef wrongShape := arrays\ndef emptyChoice := arrays\ndef extraChoice := arrays\ndef missingChoice := arrays\ndef tooDeep := arrays\ndef tooWide := arrays\n@[noinline, export lb_structural_source_lists]\ndef lists (values : List Positive) : List Positive := values\n@[noinline, export lb_structural_source_options]\ndef options (value : Option Positive) : Option Positive := value\n@[noinline, export lb_structural_source_product]\ndef product (value : Positive × Word) : Positive × Word := value\n@[noinline, export lb_structural_source_branch]\ndef branch (value : Except Word Positive) : Except Word Positive := value\n@[noinline, export lb_structural_source_byteBranches]\ndef byteBranches (values : Array (Option (Byte × Positive))) : Array (Option (Byte × Positive)) := values\n@[noinline, export lb_structural_source_nested]\ndef nested (values : Array (List (Option (Positive × Fin 184467440737095516170)))) : Nat :=\n  values.size\n\n@[noinline, export lb_structural_source_aliasPair]\ndef aliasPair (values : Group × OtherGroup) : Group × OtherGroup := values\n@[noinline, export lb_structural_source_aliasArguments]\ndef aliasArguments (first : Group) (second : Group) : Group := first ++ second\n@[noinline, export lb_structural_source_plainFin]\ndef plainFin (values : Array (Option (Fin 10))) : Nat := values.size\n\n@[noinline, export lb_structural_source_generic]\ndef generic {α : Type} (values : List α) : List α := values\n\nstructure Box where\n  value : Positive\n\ndef field (box : Box) : Nat := box.value.val\ndef callback (run : Positive → Nat) : Nat := run ⟨1, by decide⟩\ndef callbackAlias (run : Group → Nat) : Nat := run #[]\ndef callbackReply (run : Nat → Positive) : Nat := (run 1).val\n\nend StructuralSubtypes\n\nnamespace StructuralSubtypes\n@[noinline, export lb_structural_source_unrestricted]\ndef unrestricted (value : Nat) : Nat := value\nend StructuralSubtypes\n"
+}

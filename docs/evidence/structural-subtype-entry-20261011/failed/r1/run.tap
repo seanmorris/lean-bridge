@@ -1,0 +1,30 @@
+TAP version 13
+# Subtest: installed structural Subtype entry probe ordinary reproduces and relocates
+not ok 1 - installed structural Subtype entry probe ordinary reproduces and relocates
+  ---
+  duration_ms: 383605.605534
+  type: 'test'
+  location: '/app/tests/structural-subtype-entry-installed.test.mjs:29:28'
+  failureType: 'testCodeFailure'
+  error: '/tmp/lean-bridge-structural-entry-installed-9CQLnf/consumer/c/raw exited with status 1: {"command":"/tmp/lean-bridge-structural-entry-installed-9CQLnf/consumer/c/raw","args":["aliasArguments","-1"],"stderr":"LB_SUBTYPE_ENTRY_V1 begin public unrestricted\\nLB_SUBTYPE_ENTRY_V1 enter adapter StructuralSubtypes.unrestricted\\nLB_SUBTYPE_ENTRY_V1 enter source StructuralSubtypes.unrestricted\\nLB_SUBTYPE_ENTRY_V1 end public unrestricted\\nmissing raw symbol lb_tundefined_some\\n","stdout":""}'
+  code: 'build-command-failed'
+  name: 'CanonicalBuildError'
+  stack: |-
+    ChildProcess.<anonymous> (file:///app/src/build/process-runner.mjs:77:21)
+    Object.onceWrapper (node:events:634:26)
+    ChildProcess.emit (node:events:519:28)
+    maybeClose (node:internal/child_process:1101:16)
+    ChildProcess._handle.onexit (node:internal/child_process:304:5)
+  ...
+# ordinary: structural entry author 0
+# ordinary: structural entry author 1
+# Retained structural entry inputs: /tmp/lean-bridge-structural-entry-installed-9CQLnf
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 383946.001113

@@ -1,0 +1,628 @@
+[
+  {
+    "kind": "constructor",
+    "label": "StructuralSubtypes.checkedPositive",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "lean_object *",
+    "symbol": "lb_structural_constructor_checkedPositive"
+  },
+  {
+    "kind": "constructor",
+    "label": "StructuralSubtypes.normalizePositive",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "lean_object *",
+    "symbol": "lb_structural_constructor_normalizePositive"
+  },
+  {
+    "kind": "constructor",
+    "label": "StructuralSubtypes.checkedWord",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "lean_object *",
+    "symbol": "lb_structural_constructor_checkedWord"
+  },
+  {
+    "kind": "constructor",
+    "label": "StructuralSubtypes.checkedByte",
+    "parameters": [
+      "uint8_t"
+    ],
+    "result": "lean_object *",
+    "symbol": "lb_structural_constructor_checkedByte"
+  },
+  {
+    "kind": "source",
+    "label": "StructuralSubtypes.scalar",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "lean_object *",
+    "symbol": "lb_structural_source_scalar"
+  },
+  {
+    "kind": "source",
+    "label": "StructuralSubtypes.arrays",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "lean_object *",
+    "symbol": "lb_structural_source_arrays"
+  },
+  {
+    "kind": "source",
+    "label": "StructuralSubtypes.lists",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "lean_object *",
+    "symbol": "lb_structural_source_lists"
+  },
+  {
+    "kind": "source",
+    "label": "StructuralSubtypes.options",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "lean_object *",
+    "symbol": "lb_structural_source_options"
+  },
+  {
+    "kind": "source",
+    "label": "StructuralSubtypes.product",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "lean_object *",
+    "symbol": "lb_structural_source_product"
+  },
+  {
+    "kind": "source",
+    "label": "StructuralSubtypes.branch",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "lean_object *",
+    "symbol": "lb_structural_source_branch"
+  },
+  {
+    "kind": "source",
+    "label": "StructuralSubtypes.byteBranches",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "lean_object *",
+    "symbol": "lb_structural_source_byteBranches"
+  },
+  {
+    "kind": "source",
+    "label": "StructuralSubtypes.nested",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "lean_object *",
+    "symbol": "lb_structural_source_nested"
+  },
+  {
+    "kind": "source",
+    "label": "StructuralSubtypes.aliasPair",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "lean_object *",
+    "symbol": "lb_structural_source_aliasPair"
+  },
+  {
+    "kind": "source",
+    "label": "StructuralSubtypes.aliasArguments",
+    "parameters": [
+      "lean_object *",
+      "lean_object *"
+    ],
+    "result": "lean_object *",
+    "symbol": "lb_structural_source_aliasArguments"
+  },
+  {
+    "kind": "source",
+    "label": "StructuralSubtypes.plainFin",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "lean_object *",
+    "symbol": "lb_structural_source_plainFin"
+  },
+  {
+    "kind": "source",
+    "label": "StructuralSubtypes.generic",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "lean_object *",
+    "symbol": "l_StructuralSubtypes_generic___redArg"
+  },
+  {
+    "kind": "source",
+    "label": "StructuralSubtypes.unrestricted",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "lean_object *",
+    "symbol": "lb_structural_source_unrestricted"
+  },
+  {
+    "kind": "adapter",
+    "label": "StructuralSubtypes.aliasArguments",
+    "parameters": [
+      "lean_object *",
+      "lean_object *"
+    ],
+    "result": "lean_object *",
+    "symbol": "lb_486d24ee5849ed09fee4459f"
+  },
+  {
+    "kind": "validator",
+    "label": "StructuralSubtypes.aliasArguments:0_0_0",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "uint8_t",
+    "symbol": "lb_486d24ee5849ed09fee4459f_refinement_0_0_0"
+  },
+  {
+    "kind": "validator",
+    "label": "StructuralSubtypes.aliasArguments:1_0_0",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "uint8_t",
+    "symbol": "lb_486d24ee5849ed09fee4459f_refinement_1_0_0"
+  },
+  {
+    "kind": "adapter",
+    "label": "StructuralSubtypes.aliasPair",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "lean_object *",
+    "symbol": "lb_85ecd6046aa1f73f83abcf27"
+  },
+  {
+    "kind": "validator",
+    "label": "StructuralSubtypes.aliasPair:0_0_0_0",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "uint8_t",
+    "symbol": "lb_85ecd6046aa1f73f83abcf27_refinement_0_0_0_0"
+  },
+  {
+    "kind": "validator",
+    "label": "StructuralSubtypes.aliasPair:0_1_0_0",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "uint8_t",
+    "symbol": "lb_85ecd6046aa1f73f83abcf27_refinement_0_1_0_0"
+  },
+  {
+    "kind": "adapter",
+    "label": "StructuralSubtypes.arrays",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "lean_object *",
+    "symbol": "lb_a8afafdcdccfd487c60aab47"
+  },
+  {
+    "kind": "validator",
+    "label": "StructuralSubtypes.arrays:0_0",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "uint8_t",
+    "symbol": "lb_a8afafdcdccfd487c60aab47_refinement_0_0"
+  },
+  {
+    "kind": "adapter",
+    "label": "StructuralSubtypes.branch",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "lean_object *",
+    "symbol": "lb_78e54ba4d815e6e77c4895b1"
+  },
+  {
+    "kind": "validator",
+    "label": "StructuralSubtypes.branch:0_0",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "uint8_t",
+    "symbol": "lb_78e54ba4d815e6e77c4895b1_refinement_0_0"
+  },
+  {
+    "kind": "validator",
+    "label": "StructuralSubtypes.branch:0_1",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "uint8_t",
+    "symbol": "lb_78e54ba4d815e6e77c4895b1_refinement_0_1"
+  },
+  {
+    "kind": "adapter",
+    "label": "StructuralSubtypes.byteBranches",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "lean_object *",
+    "symbol": "lb_d848cf752c7261f24cfd5b10"
+  },
+  {
+    "kind": "validator",
+    "label": "StructuralSubtypes.byteBranches:0_0_0_0",
+    "parameters": [
+      "uint8_t"
+    ],
+    "result": "uint8_t",
+    "symbol": "lb_d848cf752c7261f24cfd5b10_refinement_0_0_0_0"
+  },
+  {
+    "kind": "validator",
+    "label": "StructuralSubtypes.byteBranches:0_0_0_1",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "uint8_t",
+    "symbol": "lb_d848cf752c7261f24cfd5b10_refinement_0_0_0_1"
+  },
+  {
+    "kind": "adapter",
+    "label": "StructuralSubtypes.lists",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "lean_object *",
+    "symbol": "lb_0b5409d057862ec3f96beec1"
+  },
+  {
+    "kind": "validator",
+    "label": "StructuralSubtypes.lists:0_0",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "uint8_t",
+    "symbol": "lb_0b5409d057862ec3f96beec1_refinement_0_0"
+  },
+  {
+    "kind": "adapter",
+    "label": "StructuralSubtypes.nested",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "lean_object *",
+    "symbol": "lb_d0560c47cb866c2fde2d7214"
+  },
+  {
+    "kind": "validator",
+    "label": "StructuralSubtypes.nested:0_0_0_0_0",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "uint8_t",
+    "symbol": "lb_d0560c47cb866c2fde2d7214_refinement_0_0_0_0_0"
+  },
+  {
+    "kind": "adapter",
+    "label": "StructuralSubtypes.options",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "lean_object *",
+    "symbol": "lb_4518d0e9e129c150c099cebd"
+  },
+  {
+    "kind": "validator",
+    "label": "StructuralSubtypes.options:0_0",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "uint8_t",
+    "symbol": "lb_4518d0e9e129c150c099cebd_refinement_0_0"
+  },
+  {
+    "kind": "adapter",
+    "label": "StructuralSubtypes.plainFin",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "lean_object *",
+    "symbol": "lb_9dc502b24e87182eae2912ae"
+  },
+  {
+    "kind": "adapter",
+    "label": "StructuralSubtypes.product",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "lean_object *",
+    "symbol": "lb_679f47fcbb2f10761b9db312"
+  },
+  {
+    "kind": "validator",
+    "label": "StructuralSubtypes.product:0_0",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "uint8_t",
+    "symbol": "lb_679f47fcbb2f10761b9db312_refinement_0_0"
+  },
+  {
+    "kind": "validator",
+    "label": "StructuralSubtypes.product:0_1",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "uint8_t",
+    "symbol": "lb_679f47fcbb2f10761b9db312_refinement_0_1"
+  },
+  {
+    "kind": "adapter",
+    "label": "StructuralSubtypes.scalar",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "lean_object *",
+    "symbol": "lb_76da6e2b36bf2bc74bb2d821"
+  },
+  {
+    "kind": "validator",
+    "label": "StructuralSubtypes.scalar:0",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "uint8_t",
+    "symbol": "lb_76da6e2b36bf2bc74bb2d821_refinement_0"
+  },
+  {
+    "kind": "adapter",
+    "label": "StructuralSubtypes.specialized",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "lean_object *",
+    "symbol": "lb_9f6df65d361b8f96297241fd"
+  },
+  {
+    "kind": "validator",
+    "label": "StructuralSubtypes.specialized:0_0",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "uint8_t",
+    "symbol": "lb_9f6df65d361b8f96297241fd_refinement_0_0"
+  },
+  {
+    "kind": "adapter",
+    "label": "StructuralSubtypes.unrestricted",
+    "parameters": [
+      "lean_object *"
+    ],
+    "result": "lean_object *",
+    "symbol": "lb_175d3f87e2d0b869723dd6dd"
+  },
+  {
+    "args": [
+      "_lb_arg0",
+      "_lb_arg1",
+      "out",
+      "error"
+    ],
+    "declarations": [
+      "structuralsubtypes_gmp_array_option_nat_span const* _lb_arg0",
+      "structuralsubtypes_gmp_array_option_nat_span const* _lb_arg1",
+      "structuralsubtypes_gmp_array_option_nat_span* out",
+      "structuralsubtypes_gmp_error* error"
+    ],
+    "kind": "public",
+    "label": "aliasArguments",
+    "result": "structuralsubtypes_gmp_status",
+    "symbol": "structuralsubtypes_gmp_alias_arguments"
+  },
+  {
+    "args": [
+      "_lb_arg0",
+      "out",
+      "error"
+    ],
+    "declarations": [
+      "structuralsubtypes_gmp_tuple_array_option_nat_array_option_nat_value const* _lb_arg0",
+      "structuralsubtypes_gmp_tuple_array_option_nat_array_option_nat_value* out",
+      "structuralsubtypes_gmp_error* error"
+    ],
+    "kind": "public",
+    "label": "aliasPair",
+    "result": "structuralsubtypes_gmp_status",
+    "symbol": "structuralsubtypes_gmp_alias_pair"
+  },
+  {
+    "args": [
+      "_lb_arg0",
+      "out",
+      "error"
+    ],
+    "declarations": [
+      "structuralsubtypes_gmp_array_nat_span const* _lb_arg0",
+      "structuralsubtypes_gmp_array_nat_span* out",
+      "structuralsubtypes_gmp_error* error"
+    ],
+    "kind": "public",
+    "label": "arrays",
+    "result": "structuralsubtypes_gmp_status",
+    "symbol": "structuralsubtypes_gmp_arrays"
+  },
+  {
+    "args": [
+      "_lb_arg0",
+      "out",
+      "error"
+    ],
+    "declarations": [
+      "structuralsubtypes_gmp_result_nat_string_value const* _lb_arg0",
+      "structuralsubtypes_gmp_result_nat_string_value* out",
+      "structuralsubtypes_gmp_error* error"
+    ],
+    "kind": "public",
+    "label": "branch",
+    "result": "structuralsubtypes_gmp_status",
+    "symbol": "structuralsubtypes_gmp_branch"
+  },
+  {
+    "args": [
+      "_lb_arg0",
+      "out",
+      "error"
+    ],
+    "declarations": [
+      "structuralsubtypes_gmp_array_option_tuple_uint8_nat_span const* _lb_arg0",
+      "structuralsubtypes_gmp_array_option_tuple_uint8_nat_span* out",
+      "structuralsubtypes_gmp_error* error"
+    ],
+    "kind": "public",
+    "label": "byteBranches",
+    "result": "structuralsubtypes_gmp_status",
+    "symbol": "structuralsubtypes_gmp_byte_branches"
+  },
+  {
+    "args": [
+      "_lb_arg0",
+      "out",
+      "error"
+    ],
+    "declarations": [
+      "structuralsubtypes_gmp_list_nat_span const* _lb_arg0",
+      "structuralsubtypes_gmp_list_nat_span* out",
+      "structuralsubtypes_gmp_error* error"
+    ],
+    "kind": "public",
+    "label": "lists",
+    "result": "structuralsubtypes_gmp_status",
+    "symbol": "structuralsubtypes_gmp_lists"
+  },
+  {
+    "args": [
+      "_lb_arg0",
+      "out",
+      "error"
+    ],
+    "declarations": [
+      "structuralsubtypes_gmp_array_list_option_tuple_nat_nat_span const* _lb_arg0",
+      "mpz_ptr out",
+      "structuralsubtypes_gmp_error* error"
+    ],
+    "kind": "public",
+    "label": "nested",
+    "result": "structuralsubtypes_gmp_status",
+    "symbol": "structuralsubtypes_gmp_nested"
+  },
+  {
+    "args": [
+      "_lb_arg0",
+      "out",
+      "error"
+    ],
+    "declarations": [
+      "structuralsubtypes_gmp_option_nat_value const* _lb_arg0",
+      "structuralsubtypes_gmp_option_nat_value* out",
+      "structuralsubtypes_gmp_error* error"
+    ],
+    "kind": "public",
+    "label": "options",
+    "result": "structuralsubtypes_gmp_status",
+    "symbol": "structuralsubtypes_gmp_options"
+  },
+  {
+    "args": [
+      "_lb_arg0",
+      "out",
+      "error"
+    ],
+    "declarations": [
+      "structuralsubtypes_gmp_array_option_nat_span const* _lb_arg0",
+      "mpz_ptr out",
+      "structuralsubtypes_gmp_error* error"
+    ],
+    "kind": "public",
+    "label": "plainFin",
+    "result": "structuralsubtypes_gmp_status",
+    "symbol": "structuralsubtypes_gmp_plain_fin"
+  },
+  {
+    "args": [
+      "_lb_arg0",
+      "out",
+      "error"
+    ],
+    "declarations": [
+      "structuralsubtypes_gmp_tuple_nat_string_value const* _lb_arg0",
+      "structuralsubtypes_gmp_tuple_nat_string_value* out",
+      "structuralsubtypes_gmp_error* error"
+    ],
+    "kind": "public",
+    "label": "product",
+    "result": "structuralsubtypes_gmp_status",
+    "symbol": "structuralsubtypes_gmp_product"
+  },
+  {
+    "args": [
+      "_lb_arg0",
+      "out",
+      "error"
+    ],
+    "declarations": [
+      "mpz_srcptr _lb_arg0",
+      "mpz_ptr out",
+      "structuralsubtypes_gmp_error* error"
+    ],
+    "kind": "public",
+    "label": "scalar",
+    "result": "structuralsubtypes_gmp_status",
+    "symbol": "structuralsubtypes_gmp_scalar"
+  },
+  {
+    "args": [
+      "_lb_arg0",
+      "out",
+      "error"
+    ],
+    "declarations": [
+      "structuralsubtypes_gmp_list_nat_span const* _lb_arg0",
+      "structuralsubtypes_gmp_list_nat_span* out",
+      "structuralsubtypes_gmp_error* error"
+    ],
+    "kind": "public",
+    "label": "specialized",
+    "result": "structuralsubtypes_gmp_status",
+    "symbol": "structuralsubtypes_gmp_specialized"
+  },
+  {
+    "args": [
+      "_lb_arg0",
+      "out",
+      "error"
+    ],
+    "declarations": [
+      "mpz_srcptr _lb_arg0",
+      "mpz_ptr out",
+      "structuralsubtypes_gmp_error* error"
+    ],
+    "kind": "public",
+    "label": "unrestricted",
+    "result": "structuralsubtypes_gmp_status",
+    "symbol": "structuralsubtypes_gmp_unrestricted"
+  }
+]

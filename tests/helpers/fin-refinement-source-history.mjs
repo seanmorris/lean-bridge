@@ -9,6 +9,7 @@ import assert from "node:assert/strict";
 import { checkedRecordPerlPromotionChangedPaths } from "./checked-record-perl-promotion-history.mjs";
 import { structuralSubtypeSelectionChangedPaths } from "./structural-subtype-selection-history.mjs";
 import { structuralSubtypeRuntimeChangedPaths } from "./structural-subtype-runtime-history.mjs";
+import { structuralSubtypeRegistrationChangedPaths } from "./structural-subtype-registration-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeSubtypeRefinementSource, subtypeRefinementChangedPaths } from "./subtype-refinement-source-history.mjs";
 import { subtypeHeapChangedPaths } from "./subtype-heap-source-history.mjs";
@@ -883,6 +884,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...checkedRecordPerlPromotionChangedPaths
 	, ...structuralSubtypeSelectionChangedPaths
 	, ...structuralSubtypeRuntimeChangedPaths
+	, ...structuralSubtypeRegistrationChangedPaths
 ])].sort());
 
 /**

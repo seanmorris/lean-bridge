@@ -8,6 +8,14 @@
 const profileManifest = Object.freeze({
 	contract: Object.freeze([
 		"archive-subjects"
+		, "structural-subtype-entry-evidence"
+		, "structural-subtype-entry-installed"
+		, "structural-subtype-entry"
+		, "structural-subtype-installed"
+		, "structural-subtype-native-evidence"
+		, "structural-subtype-npm-evidence"
+		, "structural-subtype-npm-installed"
+		, "structural-subtype-npm"
 		, "binding-ir-contract"
 		, "binding-ir-structured"
 		, "owned-aggregate-contract"

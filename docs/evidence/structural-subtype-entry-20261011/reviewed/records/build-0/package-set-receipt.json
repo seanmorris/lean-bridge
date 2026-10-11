@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "structuralsubtypes@1.0.0",
+    "name": "structuralsubtypes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 53888080,
+          "path": "archives/structuralsubtypes-1.0.0-c.tar.gz",
+          "sha256": "f9635b2c5d8c996eb7497bb8b3f16fbca1eba3f816ffdb788796cbacd3dd4b04"
+        }
+      ],
+      "ecosystem": "c",
+      "name": "structuralsubtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "c",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "111d1cfe4bb6140748d6ef1eb4b8e314ca8403e199d6aaf942016c861d238c71",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "6afb703b9eb5ac963b27a49bf1aa866da883411247c4d42cdb7bcab196ba1be1"
+  }
+}
