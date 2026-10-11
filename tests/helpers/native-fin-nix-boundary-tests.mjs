@@ -4,7 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { copyFile, mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
@@ -13,6 +13,7 @@ import { sha256 } from "./source-history-digest.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeFinDiagnosticCiSource } from "./native-fin-diagnostic-ci-history.mjs";
 import { beforeFinNixBoundarySource, finNixBoundaryChangedPaths, finNixBoundaryHistoryPath, finNixBoundaryPredecessor, reverseFinNixBoundaryUpdate } from "./native-fin-nix-boundary-history.mjs";
+import "./native-fin-nix-comparison-history-tests.mjs";
 
 test("the exact Nix Perl source boundary imports its engine and detects a missing Fin diagnostic module", async t => {
 	const root = await mkdtemp(join(tmpdir(), "lean-bridge-perl-boundary-"));
@@ -71,8 +72,16 @@ test("Nix Fin boundary history authenticates both source identities and preserve
 test("Nix Fin boundary refreshes exactly eighteen source pins without changing support or observations", async () => {
 	const path = "docs/type-surface.v1.json", source = beforeFinDiagnosticCiSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(source), previous = JSON.parse(beforeFinNixBoundarySource(path, source));
-	const boundaryPath = "nix/perl-engine-source-boundary.json", boundary = await readFile(boundaryPath, "utf8");
+	const boundaryPath = "nix/perl-engine-source-boundary.json";
+	const boundary = beforeFinDiagnosticCiSource(boundaryPath, await readFile(boundaryPath, "utf8"));
 	const previousDigest = sha256(beforeFinNixBoundarySource(boundaryPath, boundary)), currentDigest = sha256(boundary);
+	const history = JSON.parse(await readFile(finNixBoundaryHistoryPath, "utf8"));
+	const transition = history.updates.find(update => update.path === boundaryPath);
+	assert.equal(currentDigest, transition.currentSha256);
+	assert.equal(previousDigest, transition.previousSha256);
+	const original = path => execFileSync("git", ["show", `${finNixBoundaryPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	assert.equal(beforeFinNixBoundarySource(boundaryPath, boundary), original(boundaryPath));
+	assert.deepEqual(previous, JSON.parse(original(path)));
 	const expected = structuredClone(previous); let count = 0;
 	for(const entry of expected.evidence) for(const file of entry.files) if(file.path === boundaryPath)
 	{

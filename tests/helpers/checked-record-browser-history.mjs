@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeFinNixComparisonSource } from "./native-fin-nix-comparison-history.mjs";
 
 export const checkedRecordBrowserHistoryPath = "docs/evidence/checked-record-browser-source-history-20261011.json";
 export const checkedRecordBrowserPredecessor = "5387cfe33ac97ecccdef9fa54be4dc31339c487d";
@@ -52,6 +53,7 @@ export const reverseCheckedRecordBrowserUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeCheckedRecordBrowserSource = (path, source, expected) => {
+	source = beforeFinNixComparisonSource(path, source, expected);
 	if(typeof source !== "string" || !checkedRecordBrowserChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

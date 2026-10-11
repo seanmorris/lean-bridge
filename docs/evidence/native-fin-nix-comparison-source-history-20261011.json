@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "milestone": "native-fin-nix-comparison-v1",
+  "predecessorCommit": "6f4aeaf349a0b696650e43a5aa677a1f073e869d",
+  "updates": [
+    {
+      "path": "tests/helpers/checked-record-browser-history.mjs",
+      "currentSha256": "4c382e80f58cf4220a5520a707ef2b83adae0fdab5c67db7f68da5c29ab0b6a8",
+      "previousSha256": "972adcab81848e3221b0240610e16b9fd1ba3ce9c9ea76c577d812d494cd8f82",
+      "edits": [
+        {
+          "start": 267,
+          "previous": "",
+          "current": "import { beforeFinNixComparisonSource } from \"./native-fin-nix-comparison-history.mjs\";\n"
+        },
+        {
+          "start": 2278,
+          "previous": "",
+          "current": "\tsource = beforeFinNixComparisonSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "262f469a1fc54b678a850aaeba0deeb54a31c308516d7a37f652f67cb4bb74e5",
+      "previousSha256": "550fdf62e3ade90558b7091746907f997132b2d1b7ae5f0b555d6e1f7d882eef",
+      "edits": [
+        {
+          "start": 1202,
+          "previous": "",
+          "current": "import { finNixComparisonChangedPaths } from \"./native-fin-nix-comparison-history.mjs\";\n"
+        },
+        {
+          "start": 61046,
+          "previous": "",
+          "current": "\t, ...finNixComparisonChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-nix-boundary-tests.mjs",
+      "currentSha256": "92dfb26669c81257818198250b058b99b5fb4023bee74f5e96e3ef74f37baaff",
+      "previousSha256": "aa1053e8a8a49f5109c6bf313bde3371679d5fecd1d6e8c197af123eaa7dc44b",
+      "edits": [
+        {
+          "start": 145,
+          "previous": "import { spawnSync } from \"node:child_process\";\n",
+          "current": "import { execFileSync, spawnSync } from \"node:child_process\";\n"
+        },
+        {
+          "start": 805,
+          "previous": "",
+          "current": "import \"./native-fin-nix-comparison-history-tests.mjs\";\n"
+        },
+        {
+          "start": 5090,
+          "previous": "\tconst boundaryPath = \"nix/perl-engine-source-boundary.json\", boundary = await readFile(boundaryPath, \"utf8\");\n",
+          "current": "\tconst boundaryPath = \"nix/perl-engine-source-boundary.json\";\n\tconst boundary = beforeFinDiagnosticCiSource(boundaryPath, await readFile(boundaryPath, \"utf8\"));\n"
+        },
+        {
+          "start": 5369,
+          "previous": "",
+          "current": "\tconst history = JSON.parse(await readFile(finNixBoundaryHistoryPath, \"utf8\"));\n\tconst transition = history.updates.find(update => update.path === boundaryPath);\n\tassert.equal(currentDigest, transition.currentSha256);\n\tassert.equal(previousDigest, transition.previousSha256);\n\tconst original = path => execFileSync(\"git\", [\"show\", `${finNixBoundaryPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n\tassert.equal(beforeFinNixBoundarySource(boundaryPath, boundary), original(boundaryPath));\n\tassert.deepEqual(previous, JSON.parse(original(path)));\n"
+        }
+      ]
+    }
+  ]
+}
