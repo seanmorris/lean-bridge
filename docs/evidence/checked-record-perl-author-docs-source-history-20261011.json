@@ -1,0 +1,212 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-perl-author-docs-source-v1",
+  "predecessorCommit": "20539c53406f365d90e07251fd141c14ebf5fb0e",
+  "updates": [
+    {
+      "path": "docs/lean/existing-package.md",
+      "currentSha256": "29c59a16eaf0e15a6aed7b6ff527853f9a540f15b511937523aa8341a93e611b",
+      "previousSha256": "0d11beadd94fd4fc1f9a1e939cb873028e6e5ec9a838fb5de18938bd3d941d60",
+      "edits": [
+        {
+          "start": 54026,
+          "previous": "| Record with erased proof fields and a checked input constructor | Node installed; browser pending | C/C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI installed | Rejected | Rejected | C/C++, Node and all eight additional native hosts installed; browser pending; CPAN and PHP-Wasm rejected |\n",
+          "current": "| Record with erased proof fields and a checked input constructor | Node installed; browser pending | C/C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI installed | Installed, both source routes on four ABIs | Rejected | C/C++, Node, all eight additional native hosts and CPAN installed; browser pending; PHP-Wasm rejected |\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/lean-author-documentation.test.mjs",
+      "currentSha256": "bd841313d0739db8d91b6bcbcb7eff81864623d51074d50de2367dd6333582c5",
+      "previousSha256": "ab93df1ec898f8325bde01046ae2e5b5136ece1516eddf4c09ea5e98ff12a6a9",
+      "edits": [
+        {
+          "start": 217,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-perl-author-docs-history-tests.mjs\";\n"
+        },
+        {
+          "start": 1231,
+          "previous": "",
+          "current": "import { checkedRecordPerlReferences } from \"./helpers/checked-record-perl-promotion.mjs\";\n"
+        },
+        {
+          "start": 11876,
+          "previous": "\tassert.match(section, /Browser execution remains pending/);\n",
+          "current": "\tassert.match(section, /checked-record-perl-installed-20261011\\.md/);\n\tassert.match(section, /Perl 5\\.36\\.3 and 5\\.38\\.2, each threaded and unthreaded/);\n\tassert.match(section, /Both prebuilt-only and generated-XS installation modes pass/);\n\tassert.match(section, /PHP-Wasm and browser checked-record execution remain pending/);\n"
+        },
+        {
+          "start": 12696,
+          "previous": "test(\"the checked-record author table agrees with the retained native, npm and Python selections\", async () => {\n",
+          "current": "test(\"the checked-record author table agrees with the retained native, npm and Perl selections\", async () => {\n"
+        },
+        {
+          "start": 12984,
+          "previous": "\tassert.equal(row, \"| Record with erased proof fields and a checked input constructor | Node installed; browser pending | C/C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI installed | Rejected | Rejected | C/C++, Node and all eight additional native hosts installed; browser pending; CPAN and PHP-Wasm rejected |\");\n",
+          "current": "\tassert.equal(row, \"| Record with erased proof fields and a checked input constructor | Node installed; browser pending | C/C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI installed | Installed, both source routes on four ABIs | Rejected | C/C++, Node, all eight additional native hosts and CPAN installed; browser pending; PHP-Wasm rejected |\");\n"
+        },
+        {
+          "start": 14252,
+          "previous": "",
+          "current": "\tconst perlReferences = await checkedRecordPerlReferences();\n\tassert.deepEqual(perlReferences.map(reference => reference.id), [\n\t\t\"checked-record-perl-ordinary-source-installed\"\n\t\t, \"checked-record-perl-reviewed-ir-installed\"\n\t\t, \"checked-record-perl-result-only-ordinary-source-installed\"\n\t\t, \"checked-record-perl-result-only-reviewed-ir-installed\"\n\t]);\n"
+        },
+        {
+          "start": 14683,
+          "previous": "\tfor(const reference of references) for(const profile of reference.profiles) for(const position of reference.positions)\n",
+          "current": "\tfor(const reference of [...references, ...perlReferences]) for(const profile of reference.profiles) for(const position of reference.positions)\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-perl-promotion-tests.mjs",
+      "currentSha256": "43d4c5025994521358e00a9041b63e6c035bd7d7fa80b475ca3feb16aa0e8cc1",
+      "previousSha256": "71bd2ed06e4dc6e04fda7bdc797008559ce53287e1d5d81f9997db28b03f2c39",
+      "edits": [
+        {
+          "start": 4992,
+          "previous": "\tassert.deepEqual(proposed, current.document);\n",
+          "current": "\tconst inventoryPath = \"docs/type-surface.v1.json\";\n\tconst recorded = history.updates.find(update => update.path === inventoryPath);\n\tconst atPromotion = beforeCheckedRecordPerlPromotionSource(inventoryPath,\n\t\tawait readFile(inventoryPath, \"utf8\"), recorded.currentSha256);\n\tassert.equal(sha256(atPromotion), recorded.currentSha256);\n\tconst milestone = JSON.parse(atPromotion);\n\t// New references use today's validators; authenticate their exact promotion-era bytes.\n\tconst authenticated = [];\n\tfor(const entry of proposed.evidence.slice(previous.evidence.length))\n\t\tfor(const file of entry.files.filter(item => !item.path.startsWith(\"docs/evidence/\")))\n\t\t{\n\t\t\tconst original = milestone.evidence.find(item => item.id === entry.id)?.files.find(item => item.path === file.path);\n\t\t\tassert.ok(original, file.path);\n\t\t\tconst source = await readFile(file.path, \"utf8\");\n\t\t\tassert.equal(sha256(source), file.sha256, file.path);\n\t\t\tassert.equal(sha256(beforeCheckedRecordPerlPromotionSource(file.path, source, original.sha256)), original.sha256, file.path);\n\t\t\tauthenticated.push([file, original.sha256]);\n\t\t}\n\t// Validator objects are shared by all four references. Mutate only after checking every one.\n\tfor(const [file, digest] of authenticated) file.sha256 = digest;\n\tassert.deepEqual(proposed, milestone);\n"
+        },
+        {
+          "start": 9774,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeCheckedRecordPerlPromotionSource(update.path,\n\t\t\tawait readFile(update.path, \"utf8\"), update.currentSha256);\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "92217f51fa4c131cf8a147e2f8aef5603c9c34add9129a86f4bf777c1fa11cec",
+      "previousSha256": "d149c5d66296b286c8ec48ae98bb3379a283ce0e57f7e45351d80aa88205ac7c",
+      "edits": [
+        {
+          "start": 1072635,
+          "previous": "          \"sha256\": \"0d11beadd94fd4fc1f9a1e939cb873028e6e5ec9a838fb5de18938bd3d941d60\"\n",
+          "current": "          \"sha256\": \"29c59a16eaf0e15a6aed7b6ff527853f9a540f15b511937523aa8341a93e611b\"\n"
+        },
+        {
+          "start": 1080224,
+          "previous": "          \"sha256\": \"0d11beadd94fd4fc1f9a1e939cb873028e6e5ec9a838fb5de18938bd3d941d60\"\n",
+          "current": "          \"sha256\": \"29c59a16eaf0e15a6aed7b6ff527853f9a540f15b511937523aa8341a93e611b\"\n"
+        },
+        {
+          "start": 1086825,
+          "previous": "          \"sha256\": \"0d11beadd94fd4fc1f9a1e939cb873028e6e5ec9a838fb5de18938bd3d941d60\"\n",
+          "current": "          \"sha256\": \"29c59a16eaf0e15a6aed7b6ff527853f9a540f15b511937523aa8341a93e611b\"\n"
+        },
+        {
+          "start": 1093933,
+          "previous": "          \"sha256\": \"0d11beadd94fd4fc1f9a1e939cb873028e6e5ec9a838fb5de18938bd3d941d60\"\n",
+          "current": "          \"sha256\": \"29c59a16eaf0e15a6aed7b6ff527853f9a540f15b511937523aa8341a93e611b\"\n"
+        },
+        {
+          "start": 1101427,
+          "previous": "          \"sha256\": \"0d11beadd94fd4fc1f9a1e939cb873028e6e5ec9a838fb5de18938bd3d941d60\"\n",
+          "current": "          \"sha256\": \"29c59a16eaf0e15a6aed7b6ff527853f9a540f15b511937523aa8341a93e611b\"\n"
+        },
+        {
+          "start": 1108483,
+          "previous": "          \"sha256\": \"0d11beadd94fd4fc1f9a1e939cb873028e6e5ec9a838fb5de18938bd3d941d60\"\n",
+          "current": "          \"sha256\": \"29c59a16eaf0e15a6aed7b6ff527853f9a540f15b511937523aa8341a93e611b\"\n"
+        },
+        {
+          "start": 1116084,
+          "previous": "          \"sha256\": \"0d11beadd94fd4fc1f9a1e939cb873028e6e5ec9a838fb5de18938bd3d941d60\"\n",
+          "current": "          \"sha256\": \"29c59a16eaf0e15a6aed7b6ff527853f9a540f15b511937523aa8341a93e611b\"\n"
+        },
+        {
+          "start": 1126365,
+          "previous": "          \"sha256\": \"0d11beadd94fd4fc1f9a1e939cb873028e6e5ec9a838fb5de18938bd3d941d60\"\n",
+          "current": "          \"sha256\": \"29c59a16eaf0e15a6aed7b6ff527853f9a540f15b511937523aa8341a93e611b\"\n"
+        },
+        {
+          "start": 1138698,
+          "previous": "          \"sha256\": \"0d11beadd94fd4fc1f9a1e939cb873028e6e5ec9a838fb5de18938bd3d941d60\"\n",
+          "current": "          \"sha256\": \"29c59a16eaf0e15a6aed7b6ff527853f9a540f15b511937523aa8341a93e611b\"\n"
+        },
+        {
+          "start": 1192157,
+          "previous": "          \"sha256\": \"0d11beadd94fd4fc1f9a1e939cb873028e6e5ec9a838fb5de18938bd3d941d60\"\n",
+          "current": "          \"sha256\": \"29c59a16eaf0e15a6aed7b6ff527853f9a540f15b511937523aa8341a93e611b\"\n"
+        },
+        {
+          "start": 1224700,
+          "previous": "          \"sha256\": \"0d11beadd94fd4fc1f9a1e939cb873028e6e5ec9a838fb5de18938bd3d941d60\"\n",
+          "current": "          \"sha256\": \"29c59a16eaf0e15a6aed7b6ff527853f9a540f15b511937523aa8341a93e611b\"\n"
+        },
+        {
+          "start": 1254979,
+          "previous": "          \"sha256\": \"0d11beadd94fd4fc1f9a1e939cb873028e6e5ec9a838fb5de18938bd3d941d60\"\n",
+          "current": "          \"sha256\": \"29c59a16eaf0e15a6aed7b6ff527853f9a540f15b511937523aa8341a93e611b\"\n"
+        },
+        {
+          "start": 1287946,
+          "previous": "          \"sha256\": \"0d11beadd94fd4fc1f9a1e939cb873028e6e5ec9a838fb5de18938bd3d941d60\"\n",
+          "current": "          \"sha256\": \"29c59a16eaf0e15a6aed7b6ff527853f9a540f15b511937523aa8341a93e611b\"\n"
+        },
+        {
+          "start": 1329356,
+          "previous": "          \"sha256\": \"0d11beadd94fd4fc1f9a1e939cb873028e6e5ec9a838fb5de18938bd3d941d60\"\n",
+          "current": "          \"sha256\": \"29c59a16eaf0e15a6aed7b6ff527853f9a540f15b511937523aa8341a93e611b\"\n"
+        },
+        {
+          "start": 1355204,
+          "previous": "          \"sha256\": \"0d11beadd94fd4fc1f9a1e939cb873028e6e5ec9a838fb5de18938bd3d941d60\"\n",
+          "current": "          \"sha256\": \"29c59a16eaf0e15a6aed7b6ff527853f9a540f15b511937523aa8341a93e611b\"\n"
+        },
+        {
+          "start": 1377884,
+          "previous": "          \"sha256\": \"0d11beadd94fd4fc1f9a1e939cb873028e6e5ec9a838fb5de18938bd3d941d60\"\n",
+          "current": "          \"sha256\": \"29c59a16eaf0e15a6aed7b6ff527853f9a540f15b511937523aa8341a93e611b\"\n"
+        },
+        {
+          "start": 1397576,
+          "previous": "          \"sha256\": \"0d11beadd94fd4fc1f9a1e939cb873028e6e5ec9a838fb5de18938bd3d941d60\"\n",
+          "current": "          \"sha256\": \"29c59a16eaf0e15a6aed7b6ff527853f9a540f15b511937523aa8341a93e611b\"\n"
+        },
+        {
+          "start": 1418061,
+          "previous": "          \"sha256\": \"0d11beadd94fd4fc1f9a1e939cb873028e6e5ec9a838fb5de18938bd3d941d60\"\n",
+          "current": "          \"sha256\": \"29c59a16eaf0e15a6aed7b6ff527853f9a540f15b511937523aa8341a93e611b\"\n"
+        },
+        {
+          "start": 3854571,
+          "previous": "          \"sha256\": \"71bd2ed06e4dc6e04fda7bdc797008559ce53287e1d5d81f9997db28b03f2c39\"\n",
+          "current": "          \"sha256\": \"43d4c5025994521358e00a9041b63e6c035bd7d7fa80b475ca3feb16aa0e8cc1\"\n"
+        },
+        {
+          "start": 3892824,
+          "previous": "          \"sha256\": \"71bd2ed06e4dc6e04fda7bdc797008559ce53287e1d5d81f9997db28b03f2c39\"\n",
+          "current": "          \"sha256\": \"43d4c5025994521358e00a9041b63e6c035bd7d7fa80b475ca3feb16aa0e8cc1\"\n"
+        },
+        {
+          "start": 3931096,
+          "previous": "          \"sha256\": \"71bd2ed06e4dc6e04fda7bdc797008559ce53287e1d5d81f9997db28b03f2c39\"\n",
+          "current": "          \"sha256\": \"43d4c5025994521358e00a9041b63e6c035bd7d7fa80b475ca3feb16aa0e8cc1\"\n"
+        },
+        {
+          "start": 3970768,
+          "previous": "          \"sha256\": \"71bd2ed06e4dc6e04fda7bdc797008559ce53287e1d5d81f9997db28b03f2c39\"\n",
+          "current": "          \"sha256\": \"43d4c5025994521358e00a9041b63e6c035bd7d7fa80b475ca3feb16aa0e8cc1\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-observation-split-history.mjs",
+      "currentSha256": "21592bc6e7032fed34c98c3b295c11728c19e2632ebffcbf48b25f5d051962d3",
+      "previousSha256": "f131f9687049966ac2a32aa5231e0fa5b066eb6977486a53fbdb0d101c6ef30a",
+      "edits": [
+        {
+          "start": 243,
+          "previous": "",
+          "current": "import { beforePerlAuthorDocsSource } from \"./checked-record-perl-author-docs-history.mjs\";\n"
+        },
+        {
+          "start": 2255,
+          "previous": "",
+          "current": "\tsource = beforePerlAuthorDocsSource(path, source, expected);\n"
+        }
+      ]
+    }
+  ]
+}

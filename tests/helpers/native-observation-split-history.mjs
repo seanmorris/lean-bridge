@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforePerlAuthorDocsSource } from "./checked-record-perl-author-docs-history.mjs";
 
 export const nativeObservationSplitHistoryPath = "docs/evidence/native-observation-split-source-history-20261011.json";
 export const nativeObservationSplitPredecessor = "49d84e7557db042bd4d6d53ade0638acd69f68ae";
@@ -50,6 +51,7 @@ export const reverseNativeObservationSplitUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeNativeObservationSplitSource = (path, source, expected) => {
+	source = beforePerlAuthorDocsSource(path, source, expected);
 	if(typeof source !== "string" || !nativeObservationSplitChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

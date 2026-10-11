@@ -75,7 +75,27 @@ test("Perl checked-record promotion changes exactly four cells and retains every
 		const update = history.updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);
 		if(update) file.sha256 = update.currentSha256;
 	}
-	assert.deepEqual(proposed, current.document);
+	const inventoryPath = "docs/type-surface.v1.json";
+	const recorded = history.updates.find(update => update.path === inventoryPath);
+	const atPromotion = beforeCheckedRecordPerlPromotionSource(inventoryPath,
+		await readFile(inventoryPath, "utf8"), recorded.currentSha256);
+	assert.equal(sha256(atPromotion), recorded.currentSha256);
+	const milestone = JSON.parse(atPromotion);
+	// New references use today's validators; authenticate their exact promotion-era bytes.
+	const authenticated = [];
+	for(const entry of proposed.evidence.slice(previous.evidence.length))
+		for(const file of entry.files.filter(item => !item.path.startsWith("docs/evidence/")))
+		{
+			const original = milestone.evidence.find(item => item.id === entry.id)?.files.find(item => item.path === file.path);
+			assert.ok(original, file.path);
+			const source = await readFile(file.path, "utf8");
+			assert.equal(sha256(source), file.sha256, file.path);
+			assert.equal(sha256(beforeCheckedRecordPerlPromotionSource(file.path, source, original.sha256)), original.sha256, file.path);
+			authenticated.push([file, original.sha256]);
+		}
+	// Validator objects are shared by all four references. Mutate only after checking every one.
+	for(const [file, digest] of authenticated) file.sha256 = digest;
+	assert.deepEqual(proposed, milestone);
 });
 
 test("Perl checked-record promotion refuses narrowed matrices, forged references and overlapping claims", async () => {
@@ -130,7 +150,8 @@ test("Perl checked-record promotion history authenticates exact transitions and 
 	assert.deepEqual(history.updates.map(update => update.path), checkedRecordPerlPromotionChangedPaths);
 	for(const update of history.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeCheckedRecordPerlPromotionSource(update.path,
+			await readFile(update.path, "utf8"), update.currentSha256);
 		const previous = reverseCheckedRecordPerlPromotionUpdate(source, update);
 		assert.equal(beforeCheckedRecordPerlPromotionSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
