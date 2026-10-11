@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "kind": "fin-container-jvm-hosted-v1",
+  "revision": "c9d11f7ac8fd76d13bcc48f6f679eb22fd86b722",
+  "runId": 38095922360,
+  "jobId": 114341674825,
+  "artifactId": 11687334246,
+  "jobConclusion": "failure",
+  "profiles": [
+    "java",
+    "kotlin"
+  ],
+  "files": [
+    {
+      "path": "artifact.zip",
+      "bytes": 1784117,
+      "sha256": "095b7c285a58c9e01f07ac88623f878b308cbe4cadaee8d3b71c525972dfc474",
+      "original": "GitHub Actions artifact11687334246 original ZIP"
+    },
+    {
+      "path": "artifact.json",
+      "bytes": 771,
+      "sha256": "f8d5bdb1a9484b0ff47ac81a6310149d30319f28313d0189c4209bcf28f2bbff",
+      "original": "GitHub API metadata for artifact11687334246"
+    },
+    {
+      "path": "report.json",
+      "bytes": 7332092,
+      "sha256": "60b4593a5fdb80cf69d1b3aa189bbd792ef839cf24d4d7970538974f53b74590",
+      "original": "artifact.zip!/native-fin-container-edges/edges-java-kotlin.json"
+    },
+    {
+      "path": "sources/.github/workflows/consumer-matrix.yml.txt",
+      "bytes": 326614,
+      "sha256": "2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02",
+      "original": "git:c9d11f7ac8fd76d13bcc48f6f679eb22fd86b722:.github/workflows/consumer-matrix.yml"
+    },
+    {
+      "path": "sources/tests/fixtures/onboarding/native-fin-containers/FinContainers.lean.txt",
+      "bytes": 1562,
+      "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be",
+      "original": "git:c9d11f7ac8fd76d13bcc48f6f679eb22fd86b722:tests/fixtures/onboarding/native-fin-containers/FinContainers.lean"
+    },
+    {
+      "path": "sources/tests/fixtures/fin-container-edges.lean.txt",
+      "bytes": 593,
+      "sha256": "6c2b2250f52557b39b0267762b029af38ba695dccd63065c01a069a6b37cea45",
+      "original": "git:c9d11f7ac8fd76d13bcc48f6f679eb22fd86b722:tests/fixtures/fin-container-edges.lean"
+    },
+    {
+      "path": "sources/tests/fixtures/fin-container-consumers/java.java.txt",
+      "bytes": 5243,
+      "sha256": "6cd49e8ee18aa2d6d74ccf79a1b8402262cbdaa0fa308b9e94e8f87f8fc7b041",
+      "original": "git:c9d11f7ac8fd76d13bcc48f6f679eb22fd86b722:tests/fixtures/fin-container-consumers/java.java"
+    },
+    {
+      "path": "sources/tests/fixtures/fin-container-consumers/kotlin.kt.txt",
+      "bytes": 4094,
+      "sha256": "9b7a9b4b7f2e2a88306a08d53b7a4e121e58ebc3ca0a5296c3ec3515fd0fe437",
+      "original": "git:c9d11f7ac8fd76d13bcc48f6f679eb22fd86b722:tests/fixtures/fin-container-consumers/kotlin.kt"
+    },
+    {
+      "path": "sources/tests/fixtures/fin-container-edge-consumers/java.java.txt",
+      "bytes": 6543,
+      "sha256": "6649824001203b670175005a1bf378e7d99f40446c7daa84e2dfe7262b33f85f",
+      "original": "git:c9d11f7ac8fd76d13bcc48f6f679eb22fd86b722:tests/fixtures/fin-container-edge-consumers/java.java"
+    },
+    {
+      "path": "sources/tests/fixtures/fin-container-edge-consumers/kotlin.kt.txt",
+      "bytes": 5282,
+      "sha256": "6876cffdd436316fd7bb2f3dcaf33a1760c70a62042e20f4c85b956af0e666a9",
+      "original": "git:c9d11f7ac8fd76d13bcc48f6f679eb22fd86b722:tests/fixtures/fin-container-edge-consumers/kotlin.kt"
+    },
+    {
+      "path": "sources/tests/helpers/fin-container-edge-install.mjs.txt",
+      "bytes": 31327,
+      "sha256": "01f8601bac2b4608a53693e524cfca1f0bc6bbe7af110b001b341698a833813d",
+      "original": "git:c9d11f7ac8fd76d13bcc48f6f679eb22fd86b722:tests/helpers/fin-container-edge-install.mjs"
+    },
+    {
+      "path": "sources/tests/helpers/fin-container-edges.mjs.txt",
+      "bytes": 5396,
+      "sha256": "cad710d6b65e715bd156a5fbb052b56b313b5e195c769a44243edcb8a881f226",
+      "original": "git:c9d11f7ac8fd76d13bcc48f6f679eb22fd86b722:tests/helpers/fin-container-edges.mjs"
+    },
+    {
+      "path": "sources/tests/helpers/fin-container-edge-jvm-observer.mjs.txt",
+      "bytes": 10268,
+      "sha256": "11ba154d68e4af38a7d5ca77c64fe4879bcc3bb87930896f63e975c39b935a06",
+      "original": "git:c9d11f7ac8fd76d13bcc48f6f679eb22fd86b722:tests/helpers/fin-container-edge-jvm-observer.mjs"
+    },
+    {
+      "path": "sources/tests/helpers/fin-container-edge-jvm.mjs.txt",
+      "bytes": 10299,
+      "sha256": "9b3c9f5212957e1ad80d46e2bd42705a2e17bf238889b9bc1fe4df927bbee296",
+      "original": "git:c9d11f7ac8fd76d13bcc48f6f679eb22fd86b722:tests/helpers/fin-container-edge-jvm.mjs"
+    },
+    {
+      "path": "sources/tests/helpers/fin-container-edge-jvm-closure.mjs.txt",
+      "bytes": 7620,
+      "sha256": "e8a90d5af4b86588f82c044992c2eec50fe09f1e139aefba0799767a8813a98c",
+      "original": "git:c9d11f7ac8fd76d13bcc48f6f679eb22fd86b722:tests/helpers/fin-container-edge-jvm-closure.mjs"
+    },
+    {
+      "path": "sources/tests/helpers/fin-container-edge-report.mjs.txt",
+      "bytes": 12387,
+      "sha256": "9591db08b2593ba07cbf208450f469779d900e48d2236696a82e3c7f2b9a8297",
+      "original": "git:c9d11f7ac8fd76d13bcc48f6f679eb22fd86b722:tests/helpers/fin-container-edge-report.mjs"
+    },
+    {
+      "path": "sources/tests/helpers/fin-container-edge-report-hosts.mjs.txt",
+      "bytes": 14734,
+      "sha256": "60bccfd74b8c1f8d36ef3655052fb5438143600da4635d454f60c3897174ed28",
+      "original": "git:c9d11f7ac8fd76d13bcc48f6f679eb22fd86b722:tests/helpers/fin-container-edge-report-hosts.mjs"
+    },
+    {
+      "path": "sources/tests/helpers/fin-container-foreign-report.mjs.txt",
+      "bytes": 5511,
+      "sha256": "236ff5bd893e983cad390f953c41429251dc6694381931473da7efe6c1e2180f",
+      "original": "git:c9d11f7ac8fd76d13bcc48f6f679eb22fd86b722:tests/helpers/fin-container-foreign-report.mjs"
+    },
+    {
+      "path": "sources/scripts/check-fin-container-foreign-report.mjs.txt",
+      "bytes": 824,
+      "sha256": "680fb729d9452df7c136e1650ece84e46f41087b1828834fa39f8c841f8766eb",
+      "original": "git:c9d11f7ac8fd76d13bcc48f6f679eb22fd86b722:scripts/check-fin-container-foreign-report.mjs"
+    }
+  ],
+  "references": [
+    {
+      "path": "docs/evidence/refinement-perl-ci-20261011/114341674825.json",
+      "bytes": 7707,
+      "sha256": "88b8e872befae77ffba4c5a0f60f4b74f9373e608a8f4e3b5be0a8db2e4db31e"
+    },
+    {
+      "path": "docs/evidence/refinement-perl-ci-20261011/114341674825.log",
+      "bytes": 488945,
+      "sha256": "824d6a527ed865f7cf9b023ed39e0dac1266fc73753f8eb61db85e2c5ed1a092"
+    }
+  ],
+  "scope": "Completed installed Fin edge gate and strict raw/public/foreign checker only. The later product-documentation assertion failed. The older JVM shutdown failure remains unexplained. Full late-argument caller-input preservation needs a separate supplement."
+}

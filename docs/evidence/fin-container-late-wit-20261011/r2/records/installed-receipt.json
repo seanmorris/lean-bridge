@@ -1,0 +1,344 @@
+{
+  "bindingIrSha256": "9006f701275f2a524e04db64566466775a2bfbe0230c0d168089a215e4823bf8",
+  "component": {
+    "id": "fincontainers@1.0.0",
+    "name": "fincontainers",
+    "version": "1.0.0"
+  },
+  "componentSha256": "2270ca5c40373fa038c5e79a37e5f4a252b5299e23e5c4a6ee7c03cc4ff88dc7",
+  "ecosystem": "wit-wasi",
+  "files": {
+    "README.md": {
+      "bytes": 5516,
+      "sha256": "8322394d203057b57383f862f20ec585c3ea4889cbb77ae72a817760b70e063c"
+    },
+    "binding-manifest.json": {
+      "bytes": 7368,
+      "sha256": "2c5db16816cfea51d086e06e7cdcc549f3de2f350e49da2799353f6256e28ade"
+    },
+    "component/fincontainers.wasm": {
+      "bytes": 3509,
+      "sha256": "2270ca5c40373fa038c5e79a37e5f4a252b5299e23e5c4a6ee7c03cc4ff88dc7"
+    },
+    "component/fincontainers.wat": {
+      "bytes": 12691,
+      "sha256": "2a1278f176220750ecd09221c141879932dee6185b0d304c96742404788243bc"
+    },
+    "include/doc-wasm.h": {
+      "bytes": 79667,
+      "sha256": "7b66bccb05c26f62d73880f9db1b5dadd55ab9e93555bc80d2d38434336dfcea"
+    },
+    "include/fincontainers.h": {
+      "bytes": 5518,
+      "sha256": "5ab741a357b57a2fe53307984065bc1b77bd78fbbca26db89dc7d6c35f51a184"
+    },
+    "include/fincontainers_wasmtime.h": {
+      "bytes": 1087,
+      "sha256": "fd8e7d839cf13277fe585f40ef48bec64425cf67b0b62d78dec31137bb03c780"
+    },
+    "include/wasi.h": {
+      "bytes": 9235,
+      "sha256": "06278fe344c9fb668439033b6fbdd11e53fe6065600dcc3a567f427331edd215"
+    },
+    "include/wasm.h": {
+      "bytes": 23219,
+      "sha256": "371ffb914950ebf5374555939dbeecbde35fd52b1c39b06ae9c84df6c8d431d6"
+    },
+    "include/wasmtime.h": {
+      "bytes": 9380,
+      "sha256": "c4a0b95cdd1d46b79e6e06eca71e436163ea226f8d8b15fa6d86a07da8a41ac2"
+    },
+    "include/wasmtime/async.h": {
+      "bytes": 13954,
+      "sha256": "414023002bf027fdcf1f32f97cb24241c9393ff272525f1d390de19100b027d8"
+    },
+    "include/wasmtime/component.h": {
+      "bytes": 324,
+      "sha256": "7230a0a2ef79976c079225a193006289d5538b2d6cb7e6180649c4526b9dd898"
+    },
+    "include/wasmtime/component/component.h": {
+      "bytes": 5709,
+      "sha256": "10508561342b18de23858dcb74945c395c8932bfbaf94ac00ff5d72b80e82e25"
+    },
+    "include/wasmtime/component/func.h": {
+      "bytes": 2856,
+      "sha256": "4129fe2706381e94b14d165f9f143faad30bafe135f46b26d857e729f1d9b3c9"
+    },
+    "include/wasmtime/component/instance.h": {
+      "bytes": 2428,
+      "sha256": "5f2928c0fa8a5b016560d2582b489ddeca28a1200227a7cd351ab4b16d2c8c3f"
+    },
+    "include/wasmtime/component/linker.h": {
+      "bytes": 7678,
+      "sha256": "f6cf1eb863c3d4bdc5743cb8b5fd8f7cba613d64c1c5daa6d685a7314772360c"
+    },
+    "include/wasmtime/component/types.h": {
+      "bytes": 419,
+      "sha256": "178795777a58f5ec7138a5932498904ed37fd37a1935b58f739fbd9e48a16614"
+    },
+    "include/wasmtime/component/types/component.h": {
+      "bytes": 6411,
+      "sha256": "92384d95d3f49c47c094e4da0f5fa2a4396c2ed012d46621171b02f446fdc7bc"
+    },
+    "include/wasmtime/component/types/func.h": {
+      "bytes": 2021,
+      "sha256": "217cb6fc6e86685dd5dc49604a47eb4b9b83e18ba3fd9dee11de54fc2f4d0e3d"
+    },
+    "include/wasmtime/component/types/instance.h": {
+      "bytes": 2065,
+      "sha256": "c1297d66711bfc896a969f8fed5f70c4ba1d8b43075b7ac19cf74a3aa1c3faba"
+    },
+    "include/wasmtime/component/types/module.h": {
+      "bytes": 1930,
+      "sha256": "705554a35f8fa35154e32b28d4c508a26739a594cbc38a3720193b5cdae2a48b"
+    },
+    "include/wasmtime/component/types/resource.h": {
+      "bytes": 2363,
+      "sha256": "29e8ea2ef512969f9bf82700d932d89cd78437c31c2a9c4b9919f2b0581fcdd9"
+    },
+    "include/wasmtime/component/types/val.h": {
+      "bytes": 21121,
+      "sha256": "a4e15d61ac405f5d08aa5d6fe7b69815a194d8b1f96496409d680a8cff64d706"
+    },
+    "include/wasmtime/component/val.h": {
+      "bytes": 19882,
+      "sha256": "c1080a34feea3711fb21c184e661376f76ac83853568b883ed734d69454353f3"
+    },
+    "include/wasmtime/conf.h": {
+      "bytes": 1190,
+      "sha256": "b63a6236773a02d4acc7d1b85433a3f90a65ed50ccbd4ff6c7a8c83a909d1da6"
+    },
+    "include/wasmtime/config.h": {
+      "bytes": 28137,
+      "sha256": "2bada4fe74d4d48b592a29c33462c2c2f22d00e7ece8eb3d9a73901c5ef06009"
+    },
+    "include/wasmtime/engine.h": {
+      "bytes": 1222,
+      "sha256": "026633dbd9328db187ccb86097479c02a7278de9eef59ae6d0eeb11d5b2868fa"
+    },
+    "include/wasmtime/error.h": {
+      "bytes": 2420,
+      "sha256": "6905acdfe81f5a7d31c49ac1af8221b3d98b61d5341b91a4a8232f2466dce8f0"
+    },
+    "include/wasmtime/extern.h": {
+      "bytes": 6028,
+      "sha256": "37e5062f8672ee07a9334f6e193a1875f194b9e2ea5a67dee75b708f28259d7c"
+    },
+    "include/wasmtime/func.h": {
+      "bytes": 12787,
+      "sha256": "9a4fee4a295a2b19a141cf84be4ceb9355bfc25394ae761d7f780ac49f2d65ad"
+    },
+    "include/wasmtime/global.h": {
+      "bytes": 2521,
+      "sha256": "0a328daecce4090157e99fbbf8398fce0ed78b30c9b7dbdfeb10f247a51e543d"
+    },
+    "include/wasmtime/instance.h": {
+      "bytes": 6356,
+      "sha256": "c476b65bee52ebf7bcbdd291e0c8c036496cff3c09e9ea61c7f4577fa7c736d2"
+    },
+    "include/wasmtime/linker.h": {
+      "bytes": 12873,
+      "sha256": "6549b3ee8d7264d4c8119682dc09e702ba2e0979fadff74f66b70c5d294159f3"
+    },
+    "include/wasmtime/memory.h": {
+      "bytes": 6005,
+      "sha256": "ebd6c718c6e9d2ee5beb1c32bdca401e281773586e43e5df8d2e02b7980f4ad2"
+    },
+    "include/wasmtime/module.h": {
+      "bytes": 5729,
+      "sha256": "b7ba6f0a0b15c5f252f63697707dbb9c0c854a65694b4b134bec13e7c43864e4"
+    },
+    "include/wasmtime/profiling.h": {
+      "bytes": 4400,
+      "sha256": "92ac5516a561bd062aaf302051373512970a0ea9641836a47993d32b1ab8b205"
+    },
+    "include/wasmtime/sharedmemory.h": {
+      "bytes": 3027,
+      "sha256": "521d632a5f5ee3e28125b22fdf4f517edb2965a49ebd838278d620368377a1fe"
+    },
+    "include/wasmtime/store.h": {
+      "bytes": 9653,
+      "sha256": "f96ef6fb062e8358d0a46a780283a8f7dc1733a14998b41d8aa8c536f45e5b51"
+    },
+    "include/wasmtime/table.h": {
+      "bytes": 3924,
+      "sha256": "1d4313d41a85989ae00c8c744c2e2415ac0694ea3bc3fb15d51cddf5fd74d1ba"
+    },
+    "include/wasmtime/trap.h": {
+      "bytes": 6726,
+      "sha256": "b786bf286f69b11c6b4e91ec9c40eb700b1791422d1bf501fa666c057e369106"
+    },
+    "include/wasmtime/val.h": {
+      "bytes": 18939,
+      "sha256": "4db26e438a8b66f237f19fc9e669f1d7f3f3a0a93cf49ca4fce977f3e16d7cd1"
+    },
+    "include/wasmtime/wat.h": {
+      "bytes": 1153,
+      "sha256": "7533f9c25ee267c88ea64e21a7550bf28585183184a29c575ceb419eb711fe9f"
+    },
+    "lib/libcomponent_3acdf22f1550490d7b06.so": {
+      "bytes": 65736,
+      "sha256": "9a0a98be48056cf243f74cda1d73f57f849e359f07fc6dda4e33e93a79042445"
+    },
+    "lib/libfincontainers.so": {
+      "bytes": 44408,
+      "sha256": "c4ea449ec48115425c39db5653af8afa32a4ef11421dacd24ed88d7d281953f4"
+    },
+    "lib/libfincontainers_wasmtime.so": {
+      "bytes": 47872,
+      "sha256": "e544705b4d9556ccf12bafaf6b69af54869c48f4e425b9055dddd8603a22e1aa"
+    },
+    "lib/liblean_bridge_native.so": {
+      "bytes": 21464,
+      "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+    },
+    "lib/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "lib/libwasmtime.so": {
+      "bytes": 22277728,
+      "sha256": "566e57cfeabafd6d44fab1b5e6660b4569a71aae4cff2e4d89563a424ee799f3"
+    },
+    "lib/pkgconfig/fincontainers-wit.pc": {
+      "bytes": 275,
+      "sha256": "ed1aea3150622672a9595f8061a2c2825d8e6418bb29398ce3cb8e667921e38c"
+    },
+    "native-wit-adapter.json": {
+      "bytes": 13933,
+      "sha256": "a067dea18af95f9c2b56d9d116c0f4c9624052e219439f152d05ca37942654e1"
+    },
+    "package-metadata.json": {
+      "bytes": 3,
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+    },
+    "share/lean-bridge/component/allocation-guard.h": {
+      "bytes": 1309,
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    "share/lean-bridge/component/artifacts.json": {
+      "bytes": 1530,
+      "sha256": "e6a856de975ae4632042370499778f4531a43071c51733911ba611c076a0068c"
+    },
+    "share/lean-bridge/component/binding-ir.json": {
+      "bytes": 18565,
+      "sha256": "c2c0aaf97b136ffafcc9a4fee219038fe515a78eda03307772b40de0cfa852b6"
+    },
+    "share/lean-bridge/component/component.h": {
+      "bytes": 1551,
+      "sha256": "7e053177f931600bd8cbabe242327f8bef7db01da686b460ffb0f003035b86dd"
+    },
+    "share/lean-bridge/component/generated.lean": {
+      "bytes": 7309,
+      "sha256": "0a3e94c886ee736e094cc7d8839637b1a8fa717e67f9afd4a1d7bc51863ecf6d"
+    },
+    "share/lean-bridge/component/metadata.json": {
+      "bytes": 29037,
+      "sha256": "ae6835f9e805187eb3651bc368f95a628780f7b306590be2ccdbf43121287603"
+    },
+    "share/lean-bridge/component/model.json": {
+      "bytes": 42603,
+      "sha256": "71fc993a44d03827501e0c896214abc6a84ea02517763e599bc1230a49f1320c"
+    },
+    "share/lean-bridge/component/native-component.json": {
+      "bytes": 3916,
+      "sha256": "05e38895f15e22e0add331a35165327bfb88f5b60203341de79147b73ca4e5d2"
+    },
+    "share/lean-bridge/licenses/Lean-LICENSE": {
+      "bytes": 9160,
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    "share/lean-bridge/licenses/Lean-LICENSES": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "share/lean-bridge/licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "share/lean-bridge/licenses/Wasmtime-LICENSE": {
+      "bytes": 12243,
+      "sha256": "268872b9816f90fd8e85db5a28d33f8150ebb8dd016653fb39ef1f94f2686bc5"
+    },
+    "share/lean-bridge/licenses/source-notices.json": {
+      "bytes": 1900,
+      "sha256": "a4f98a73a595af5f491c642f9ccf0f47e209a00f954e59268fce38d745a29c5b"
+    },
+    "share/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "share/lean-bridge/native-c-adapter.json": {
+      "bytes": 1373,
+      "sha256": "b3d426729f5018def7dd291ab1c7d5d6fb5bfd0b44ec358463565af0616e228d"
+    },
+    "share/lean-bridge/runtime.json": {
+      "bytes": 1466,
+      "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    },
+    "src/fincontainers_wasmtime.c": {
+      "bytes": 57244,
+      "sha256": "31a453387c12dcd338d4e5f27885c9c303bf70dae2254a0593f7bd1d8c3824a0"
+    },
+    "wit/fincontainers.wit": {
+      "bytes": 1666,
+      "sha256": "b645936da1f0db3e4cb823f0901c46d71a83b10151442ebfe3e99dddc2837f27"
+    }
+  },
+  "glibcMinimumVersion": "2.36",
+  "kind": "lean-bridge-ordinary-wit-package",
+  "name": "fincontainers",
+  "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+  "schemaVersion": 1,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "402805872e22e5ed6215adf40f21a9ec1d0e7f34799708e03c674e62a2b62b19",
+    "exportConfigurationSource": "{\n  \"modules\": [\n    \"FinContainers\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"wit-wasi\": {\n      \"name\": \"fincontainers\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+    "extractorSha256": "8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 121112,
+          "interfaceSha256": "c9d140885d9d28f7a2befe7750313191f549a872f5b45381f173d75da22dd6b2",
+          "sha256": "62cd4e683bf6082a29beb0bcc85ad8d97ee13cee6f5ceff09ad0a6f029e52906"
+        },
+        "module": "FinContainers",
+        "source": {
+          "bytes": 1562,
+          "path": "FinContainers.lean",
+          "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "exportModules": [
+        "FinContainers"
+      ],
+      "exports": [],
+      "metadata": {
+        "invocationIdentitySha256": "e7cfce497ae24f86c839a1176ab5b433c1e90eea57fe3c182658830b8ebbcbc8",
+        "modules": [
+          {
+            "interfaceSha256": "c9d140885d9d28f7a2befe7750313191f549a872f5b45381f173d75da22dd6b2",
+            "name": "FinContainers",
+            "sourcePath": "FinContainers.lean",
+            "sourceSha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "FinContainers"
+      ],
+      "profile": "native-library-v1",
+      "resources": []
+    },
+    "sourceNoticesSha256": "a4f98a73a595af5f491c642f9ccf0f47e209a00f954e59268fce38d745a29c5b",
+    "sourceTreeSha256": "6e46fca3152f09942cc87afcc995ef9e52a8e73f8374b9d3938a012755f8ddab"
+  },
+  "version": "1.0.0",
+  "wasmtime": "42.0.1"
+}

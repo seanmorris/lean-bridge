@@ -1,0 +1,20 @@
+{
+  "revision": "95507000a4ab783b1380889369f55ecdc9eec59a",
+  "started": "2026-10-11T02:26:08.017Z",
+  "command": "/usr/bin/taskset",
+  "args": [
+    "-c",
+    "3",
+    "/usr/bin/node",
+    "--test",
+    "--test-concurrency=1",
+    "tests/helpers/fin-container-late-wit-installed-tests.mjs"
+  ],
+  "environment": {
+    "LEAN_BRIDGE_FIN_LATE_WIT_TEST": "1",
+    "LEAN_BRIDGE_FIN_LATE_WIT_OUTPUT": "build/vo1454-late-wit-installed-r1-records",
+    "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+    "LEAN_NUM_THREADS": "1"
+  },
+  "minimumMiB": 2584
+}

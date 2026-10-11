@@ -22,6 +22,7 @@ import { copiedCleanEnvironment, installCopiedConsumer, runCopied } from "./help
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import "./helpers/fin-container-late-wit-source-tests.mjs";
 import "./helpers/fin-container-late-wit-installed-tests.mjs";
+import "./helpers/fin-container-late-archive-tests.mjs";
 
 const transcript = rows => rows.map(([step, method, status, counts]) => `edge-wit ${step} ${method} ${status} ${counts.join(" ")}\n`).join("") + `fin-container-ok:${finContainerEdgeWitChecks}\n`;
 

@@ -1,0 +1,343 @@
+{
+  "schemaVersion": 1,
+  "kind": "fin-container-late-wit-archive-v1",
+  "runs": [
+    {
+      "attempt": 1,
+      "revision": "95507000a4ab783b1380889369f55ecdc9eec59a",
+      "conclusion": "failed"
+    },
+    {
+      "attempt": 2,
+      "revision": "0c4318d21478fafc57873dbb91f3035d174bbb00",
+      "conclusion": "passed"
+    }
+  ],
+  "files": [
+    {
+      "path": "r1/run.start.json",
+      "bytes": 549,
+      "sha256": "843458c3189f6b5d6e3df6aa1464cf9dba9f1e33fa313461e350914ae9b1e72b",
+      "original": "build/vo1454-late-wit-installed-r1.start.json"
+    },
+    {
+      "path": "r1/run.end.json",
+      "bytes": 202,
+      "sha256": "7fbda77f10b2868ee1c9404d12f5a8e0125851d527655bc58e4b19aec58ab325",
+      "original": "build/vo1454-late-wit-installed-r1.end.json"
+    },
+    {
+      "path": "r1/run.tap",
+      "bytes": 1334,
+      "sha256": "e2d6cef3614e97e745a061870fa0fd85a3ebc22d5d240aa6bace5ac3fc40824c",
+      "original": "build/vo1454-late-wit-installed-r1.tap"
+    },
+    {
+      "path": "r1/run.queue.log",
+      "bytes": 915,
+      "sha256": "4d11fc80b4fde0500831cc8d658072bcb1aa154f1e07a880e96d5af0b644076b",
+      "original": "build/vo1454-late-wit-installed-r1.queue.log"
+    },
+    {
+      "path": "r1/records/author-0/FinContainers.lean",
+      "bytes": 1562,
+      "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be",
+      "original": "build/vo1454-late-wit-installed-r1-records/author-0/FinContainers.lean"
+    },
+    {
+      "path": "r1/records/author-0/lean-bridge.exports.json",
+      "bytes": 165,
+      "sha256": "402805872e22e5ed6215adf40f21a9ec1d0e7f34799708e03c674e62a2b62b19",
+      "original": "build/vo1454-late-wit-installed-r1-records/author-0/lean-bridge.exports.json"
+    },
+    {
+      "path": "r1/records/author-0/model.json",
+      "bytes": 42603,
+      "sha256": "71fc993a44d03827501e0c896214abc6a84ea02517763e599bc1230a49f1320c",
+      "original": "build/vo1454-late-wit-installed-r1-records/author-0/model.json"
+    },
+    {
+      "path": "r1/records/author-0/package-set-receipt.json",
+      "bytes": 1129,
+      "sha256": "a2c9710683c00d807a4496898541a901360acb15ea26358cbedb89a1b845c0df",
+      "original": "build/vo1454-late-wit-installed-r1-records/author-0/package-set-receipt.json"
+    },
+    {
+      "path": "r1/records/author-1/FinContainers.lean",
+      "bytes": 1562,
+      "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be",
+      "original": "build/vo1454-late-wit-installed-r1-records/author-1/FinContainers.lean"
+    },
+    {
+      "path": "r1/records/author-1/lean-bridge.exports.json",
+      "bytes": 165,
+      "sha256": "402805872e22e5ed6215adf40f21a9ec1d0e7f34799708e03c674e62a2b62b19",
+      "original": "build/vo1454-late-wit-installed-r1-records/author-1/lean-bridge.exports.json"
+    },
+    {
+      "path": "r1/records/author-1/model.json",
+      "bytes": 42603,
+      "sha256": "71fc993a44d03827501e0c896214abc6a84ea02517763e599bc1230a49f1320c",
+      "original": "build/vo1454-late-wit-installed-r1-records/author-1/model.json"
+    },
+    {
+      "path": "r1/records/author-1/package-set-receipt.json",
+      "bytes": 1129,
+      "sha256": "a2c9710683c00d807a4496898541a901360acb15ea26358cbedb89a1b845c0df",
+      "original": "build/vo1454-late-wit-installed-r1-records/author-1/package-set-receipt.json"
+    },
+    {
+      "path": "r1/records/consumer.c",
+      "bytes": 7681,
+      "sha256": "3b655129600f5778e1dc7c381c1b65fb82f06d22a6439946b8854a711b0379ff",
+      "original": "build/vo1454-late-wit-installed-r1-records/consumer.c"
+    },
+    {
+      "path": "r1/records/context.json",
+      "bytes": 216,
+      "sha256": "1487b51dff71aa8ca637ce4c0796df1aaa7c9adff8091e948c17ab4d0a634bd2",
+      "original": "build/vo1454-late-wit-installed-r1-records/context.json"
+    },
+    {
+      "path": "r1/sources/tests/fixtures/fin-container-late-consumers/wit-values.h.txt",
+      "bytes": 4257,
+      "sha256": "dc0f6a313e0251d43e941626112250f8e509e5445f0e338ba43c97e27363068b",
+      "original": "git:95507000a4ab783b1380889369f55ecdc9eec59a:tests/fixtures/fin-container-late-consumers/wit-values.h"
+    },
+    {
+      "path": "r1/sources/tests/fixtures/fin-container-late-consumers/wit-wasi.c.txt",
+      "bytes": 3447,
+      "sha256": "ed153e8d9bbcbdbab3bae3380cfd1cb78025f225a5de7211215d19c7755d1696",
+      "original": "git:95507000a4ab783b1380889369f55ecdc9eec59a:tests/fixtures/fin-container-late-consumers/wit-wasi.c"
+    },
+    {
+      "path": "r1/sources/tests/helpers/fin-container-late-wit.mjs.txt",
+      "bytes": 778,
+      "sha256": "c7ae14821ac47ed6024d7489009ce0b19465e062eb07df466c74024c5cff8f2f",
+      "original": "git:95507000a4ab783b1380889369f55ecdc9eec59a:tests/helpers/fin-container-late-wit.mjs"
+    },
+    {
+      "path": "r1/sources/tests/helpers/fin-container-late-wit-installed-tests.mjs.txt",
+      "bytes": 8275,
+      "sha256": "94598df0f8b627ce0ab5efed2063420b62778c581efd48d3a5717f70568fe4e8",
+      "original": "git:95507000a4ab783b1380889369f55ecdc9eec59a:tests/helpers/fin-container-late-wit-installed-tests.mjs"
+    },
+    {
+      "path": "r1/sources/tests/helpers/copied-fixture-install.mjs.txt",
+      "bytes": 15505,
+      "sha256": "dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df",
+      "original": "git:95507000a4ab783b1380889369f55ecdc9eec59a:tests/helpers/copied-fixture-install.mjs"
+    },
+    {
+      "path": "r1/sources/tests/helpers/fin-container-edge-install.mjs.txt",
+      "bytes": 31327,
+      "sha256": "01f8601bac2b4608a53693e524cfca1f0bc6bbe7af110b001b341698a833813d",
+      "original": "git:95507000a4ab783b1380889369f55ecdc9eec59a:tests/helpers/fin-container-edge-install.mjs"
+    },
+    {
+      "path": "r1/sources/tests/helpers/fin-container-edge-closure.mjs.txt",
+      "bytes": 3517,
+      "sha256": "2d1788a27ccd388a5779c251b01b0dc1370c8047362dc3720a7189815dd141a2",
+      "original": "git:95507000a4ab783b1380889369f55ecdc9eec59a:tests/helpers/fin-container-edge-closure.mjs"
+    },
+    {
+      "path": "r1/sources/tests/helpers/fin-container-install.mjs.txt",
+      "bytes": 2979,
+      "sha256": "2024d6c6a44687293750c3ee5c25f092d689065e17beb8d535610963921c9329",
+      "original": "git:95507000a4ab783b1380889369f55ecdc9eec59a:tests/helpers/fin-container-install.mjs"
+    },
+    {
+      "path": "r1/sources/tests/fixtures/onboarding/native-fin-containers/FinContainers.lean.txt",
+      "bytes": 1562,
+      "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be",
+      "original": "git:95507000a4ab783b1380889369f55ecdc9eec59a:tests/fixtures/onboarding/native-fin-containers/FinContainers.lean"
+    },
+    {
+      "path": "r2/run.start.json",
+      "bytes": 549,
+      "sha256": "f203c36ffeaed1ebedb7097930b24fba466eaf03a37ef9b952dce92584b67c93",
+      "original": "build/vo1454-late-wit-installed-r2.start.json"
+    },
+    {
+      "path": "r2/run.end.json",
+      "bytes": 202,
+      "sha256": "deafb2cbec290083bb0151935ebbb9a70828f957234ff92db1971b6d3930c9eb",
+      "original": "build/vo1454-late-wit-installed-r2.end.json"
+    },
+    {
+      "path": "r2/run.tap",
+      "bytes": 442,
+      "sha256": "681959e3e060092e4c88d4b6b589340ad59ae3ff66712aabe685b4378019897f",
+      "original": "build/vo1454-late-wit-installed-r2.tap"
+    },
+    {
+      "path": "r2/run.queue.log",
+      "bytes": 997,
+      "sha256": "766e99950e05576da130c575c5ef5911ac4a810837af196facfcec441bb1c4b7",
+      "original": "build/vo1454-late-wit-installed-r2.queue.log"
+    },
+    {
+      "path": "r2/records/author-0/FinContainers.lean",
+      "bytes": 1562,
+      "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be",
+      "original": "build/vo1454-late-wit-installed-r2-records/author-0/FinContainers.lean"
+    },
+    {
+      "path": "r2/records/author-0/lean-bridge.exports.json",
+      "bytes": 165,
+      "sha256": "402805872e22e5ed6215adf40f21a9ec1d0e7f34799708e03c674e62a2b62b19",
+      "original": "build/vo1454-late-wit-installed-r2-records/author-0/lean-bridge.exports.json"
+    },
+    {
+      "path": "r2/records/author-0/model.json",
+      "bytes": 42603,
+      "sha256": "71fc993a44d03827501e0c896214abc6a84ea02517763e599bc1230a49f1320c",
+      "original": "build/vo1454-late-wit-installed-r2-records/author-0/model.json"
+    },
+    {
+      "path": "r2/records/author-0/package-set-receipt.json",
+      "bytes": 1129,
+      "sha256": "a2c9710683c00d807a4496898541a901360acb15ea26358cbedb89a1b845c0df",
+      "original": "build/vo1454-late-wit-installed-r2-records/author-0/package-set-receipt.json"
+    },
+    {
+      "path": "r2/records/author-1/FinContainers.lean",
+      "bytes": 1562,
+      "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be",
+      "original": "build/vo1454-late-wit-installed-r2-records/author-1/FinContainers.lean"
+    },
+    {
+      "path": "r2/records/author-1/lean-bridge.exports.json",
+      "bytes": 165,
+      "sha256": "402805872e22e5ed6215adf40f21a9ec1d0e7f34799708e03c674e62a2b62b19",
+      "original": "build/vo1454-late-wit-installed-r2-records/author-1/lean-bridge.exports.json"
+    },
+    {
+      "path": "r2/records/author-1/model.json",
+      "bytes": 42603,
+      "sha256": "71fc993a44d03827501e0c896214abc6a84ea02517763e599bc1230a49f1320c",
+      "original": "build/vo1454-late-wit-installed-r2-records/author-1/model.json"
+    },
+    {
+      "path": "r2/records/author-1/package-set-receipt.json",
+      "bytes": 1129,
+      "sha256": "a2c9710683c00d807a4496898541a901360acb15ea26358cbedb89a1b845c0df",
+      "original": "build/vo1454-late-wit-installed-r2-records/author-1/package-set-receipt.json"
+    },
+    {
+      "path": "r2/records/before.stdout",
+      "bytes": 17,
+      "sha256": "33256c10368c4a27cdf0bd5f1430d0187769fdbe7b50ec8a1682ec33de30ed57",
+      "original": "build/vo1454-late-wit-installed-r2-records/before.stdout"
+    },
+    {
+      "path": "r2/records/consumer.c",
+      "bytes": 8093,
+      "sha256": "5f46191bfbd0eb445e97f608a866cf579d1a4c1f3647b5510520d424f2c7594c",
+      "original": "build/vo1454-late-wit-installed-r2-records/consumer.c"
+    },
+    {
+      "path": "r2/records/context.json",
+      "bytes": 216,
+      "sha256": "0c376c2026a5603fd3b95e2470e4a8efccd212233776f8e32e484886bdad05da",
+      "original": "build/vo1454-late-wit-installed-r2-records/context.json"
+    },
+    {
+      "path": "r2/records/installed-receipt.json",
+      "bytes": 13223,
+      "sha256": "6db8d65d090fab5e0d9d2de1f44593fbad10407e5cb26bd1294e109d7d52071d",
+      "original": "build/vo1454-late-wit-installed-r2-records/installed-receipt.json"
+    },
+    {
+      "path": "r2/records/relocated.stdout",
+      "bytes": 17,
+      "sha256": "33256c10368c4a27cdf0bd5f1430d0187769fdbe7b50ec8a1682ec33de30ed57",
+      "original": "build/vo1454-late-wit-installed-r2-records/relocated.stdout"
+    },
+    {
+      "path": "r2/records/report.json",
+      "bytes": 2920,
+      "sha256": "daaeced151c781e91e8b3e17ac5d6d996703afecb59fa4b63c76f18e1a2e5f5f",
+      "original": "build/vo1454-late-wit-installed-r2-records/report.json"
+    },
+    {
+      "path": "r2/sources/tests/fixtures/fin-container-late-consumers/wit-values.h.txt",
+      "bytes": 4257,
+      "sha256": "dc0f6a313e0251d43e941626112250f8e509e5445f0e338ba43c97e27363068b",
+      "original": "git:0c4318d21478fafc57873dbb91f3035d174bbb00:tests/fixtures/fin-container-late-consumers/wit-values.h"
+    },
+    {
+      "path": "r2/sources/tests/fixtures/fin-container-late-consumers/wit-wasi.c.txt",
+      "bytes": 3859,
+      "sha256": "4bffac1f2fa3299620de6125347f86d31329efea27af09bf23994f4cec09ce04",
+      "original": "git:0c4318d21478fafc57873dbb91f3035d174bbb00:tests/fixtures/fin-container-late-consumers/wit-wasi.c"
+    },
+    {
+      "path": "r2/sources/tests/helpers/fin-container-late-wit.mjs.txt",
+      "bytes": 778,
+      "sha256": "c7ae14821ac47ed6024d7489009ce0b19465e062eb07df466c74024c5cff8f2f",
+      "original": "git:0c4318d21478fafc57873dbb91f3035d174bbb00:tests/helpers/fin-container-late-wit.mjs"
+    },
+    {
+      "path": "r2/sources/tests/helpers/fin-container-late-wit-installed-tests.mjs.txt",
+      "bytes": 8351,
+      "sha256": "847f3be6884a8fb25766ec7b33ecdcc4f1b252d626e4ea2feb52dc4a09fcc2b8",
+      "original": "git:0c4318d21478fafc57873dbb91f3035d174bbb00:tests/helpers/fin-container-late-wit-installed-tests.mjs"
+    },
+    {
+      "path": "r2/sources/tests/helpers/copied-fixture-install.mjs.txt",
+      "bytes": 15505,
+      "sha256": "dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df",
+      "original": "git:0c4318d21478fafc57873dbb91f3035d174bbb00:tests/helpers/copied-fixture-install.mjs"
+    },
+    {
+      "path": "r2/sources/tests/helpers/fin-container-edge-install.mjs.txt",
+      "bytes": 31327,
+      "sha256": "01f8601bac2b4608a53693e524cfca1f0bc6bbe7af110b001b341698a833813d",
+      "original": "git:0c4318d21478fafc57873dbb91f3035d174bbb00:tests/helpers/fin-container-edge-install.mjs"
+    },
+    {
+      "path": "r2/sources/tests/helpers/fin-container-edge-closure.mjs.txt",
+      "bytes": 3517,
+      "sha256": "2d1788a27ccd388a5779c251b01b0dc1370c8047362dc3720a7189815dd141a2",
+      "original": "git:0c4318d21478fafc57873dbb91f3035d174bbb00:tests/helpers/fin-container-edge-closure.mjs"
+    },
+    {
+      "path": "r2/sources/tests/helpers/fin-container-install.mjs.txt",
+      "bytes": 2979,
+      "sha256": "2024d6c6a44687293750c3ee5c25f092d689065e17beb8d535610963921c9329",
+      "original": "git:0c4318d21478fafc57873dbb91f3035d174bbb00:tests/helpers/fin-container-install.mjs"
+    },
+    {
+      "path": "r2/sources/tests/fixtures/onboarding/native-fin-containers/FinContainers.lean.txt",
+      "bytes": 1562,
+      "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be",
+      "original": "git:0c4318d21478fafc57873dbb91f3035d174bbb00:tests/fixtures/onboarding/native-fin-containers/FinContainers.lean"
+    },
+    {
+      "path": "runner.mjs.txt",
+      "bytes": 2188,
+      "sha256": "e07eff56ff42e325755e8935b521d6fecfca522469aaa71fb5dd4ab8003a0be0",
+      "original": "build/vo1454-late-wit-runner.mjs"
+    },
+    {
+      "path": "diagnostic/stdout.txt",
+      "bytes": 17,
+      "sha256": "33256c10368c4a27cdf0bd5f1430d0187769fdbe7b50ec8a1682ec33de30ed57",
+      "original": "build/vo1454-late-wit-diagnostic-r1/stdout.txt"
+    },
+    {
+      "path": "diagnostic/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "build/vo1454-late-wit-diagnostic-r1/stderr.txt"
+    },
+    {
+      "path": "diagnostic/consumer.c",
+      "bytes": 8093,
+      "sha256": "5f46191bfbd0eb445e97f608a866cf579d1a4c1f3647b5510520d424f2c7594c",
+      "original": "build/vo1454-late-wit-diagnostic-r1/consumer.c"
+    }
+  ],
+  "scope": "WIT ordinary-source public late-argument preservation only; local glibc2.36; entry counts unmeasured; package hashes rather than binaries. Other nine native late-input supplements and the full original parent scope remain open."
+}

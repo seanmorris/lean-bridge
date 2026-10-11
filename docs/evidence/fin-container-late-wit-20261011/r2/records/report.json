@@ -1,0 +1,75 @@
+{
+  "authorRoots": 2,
+  "boundRejectionsPerExecution": 673,
+  "builds": [
+    {
+      "archives": {
+        "archives/fincontainers-1.0.0-wit-wasi.tar.gz": "938714d1043336e36748352d6727fe27ed96048179f8d6b3e76caee11ef9d5af"
+      },
+      "bindingIrSha256": "9006f701275f2a524e04db64566466775a2bfbe0230c0d168089a215e4823bf8",
+      "modelSha256": "71fc993a44d03827501e0c896214abc6a84ea02517763e599bc1230a49f1320c",
+      "receiptSha256": "a2c9710683c00d807a4496898541a901360acb15ea26358cbedb89a1b845c0df",
+      "sourceTreeSha256": "6e46fca3152f09942cc87afcc995ef9e52a8e73f8374b9d3938a012755f8ddab"
+    },
+    {
+      "archives": {
+        "archives/fincontainers-1.0.0-wit-wasi.tar.gz": "938714d1043336e36748352d6727fe27ed96048179f8d6b3e76caee11ef9d5af"
+      },
+      "bindingIrSha256": "9006f701275f2a524e04db64566466775a2bfbe0230c0d168089a215e4823bf8",
+      "modelSha256": "71fc993a44d03827501e0c896214abc6a84ea02517763e599bc1230a49f1320c",
+      "receiptSha256": "a2c9710683c00d807a4496898541a901360acb15ea26358cbedb89a1b845c0df",
+      "sourceTreeSha256": "6e46fca3152f09942cc87afcc995ef9e52a8e73f8374b9d3938a012755f8ddab"
+    }
+  ],
+  "callerSha256": "5f46191bfbd0eb445e97f608a866cf579d1a4c1f3647b5510520d424f2c7594c",
+  "callerUnchanged": true,
+  "checks": 7065,
+  "compilerFreePath": true,
+  "dispatch": {
+    "observed": false,
+    "reason": "Public rejection, caller preservation and recovery; no entry counters in this supplement."
+  },
+  "executableSha256": "9a711c7544ab7a9d75685a245c05c97cc74704e632996e2767572f8011f08eb3",
+  "glibcMinimumVersion": "2.36",
+  "inputTreesCompared": [
+    "arg0",
+    "arg1"
+  ],
+  "installedFilesUnchanged": true,
+  "kind": "fin-container-late-wit-v1",
+  "offlineInstall": true,
+  "packageFileSetSha256": "825f8aeb400feb8a8f72159fbe56778af8681034911a5e6f38c560ee3515e242",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 59247113,
+          "path": "archives/fincontainers-1.0.0-wit-wasi.tar.gz",
+          "sha256": "938714d1043336e36748352d6727fe27ed96048179f8d6b3e76caee11ef9d5af"
+        }
+      ],
+      "ecosystem": "wit-wasi",
+      "name": "fincontainers",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "wit-wasi",
+      "version": "1.0.0"
+    }
+  ],
+  "path": "ordinary-source",
+  "profile": "wit-wasi",
+  "receiptSha256": "6db8d65d090fab5e0d9d2de1f44593fbad10407e5cb26bd1294e109d7d52071d",
+  "recoveriesPerExecution": 1009,
+  "rejectionsPerExecution": 1009,
+  "relocatedInstallation": true,
+  "repeatExecution": true,
+  "reproducible": true,
+  "runtimeSearchPath": "$ORIGIN/fincontainers-1.0.0-wit-wasi/lib",
+  "schemaVersion": 1,
+  "snapshotNegativeControls": 11,
+  "sourceRemovedBeforeInstallation": true,
+  "structuralRejectionsPerExecution": 336
+}

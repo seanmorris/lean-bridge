@@ -1,0 +1,1644 @@
+{
+  "bindingIr": {
+    "assurance": [],
+    "capabilities": [],
+    "component": {
+      "id": "fincontainers@1.0.0",
+      "name": "fincontainers",
+      "version": "1.0.0"
+    },
+    "declarations": [
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Fin 0 has no values, so only the empty array is accepted. "
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:FinContainers.countNone",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "countNone",
+        "overloadKey": "FinContainers.countNone",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "FinContainers.countNone",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "0",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              ],
+              "result": null
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 59,
+              "endLine": 14,
+              "path": "FinContainers.lean",
+              "startColumn": 0,
+              "startLine": 13
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Nested containers: rows are concatenated; no rows yields none. "
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:FinContainers.flatten",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "flatten",
+        "overloadKey": "FinContainers.flatten",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "arguments": [
+                {
+                  "id": "lean:FinContainers.Digits",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "list",
+              "kind": "apply"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "kind": "primitive",
+                    "name": "nat"
+                  }
+                ],
+                "constructor": "list",
+                "kind": "apply"
+              }
+            ],
+            "constructor": "option",
+            "kind": "apply"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "FinContainers.flatten",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                null
+              ],
+              "result": {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "bound": "10",
+                        "kind": "fin"
+                      }
+                    ],
+                    "kind": "list"
+                  }
+                ],
+                "kind": "option"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 84,
+              "endLine": 27,
+              "path": "FinContainers.lean",
+              "startColumn": 0,
+              "startLine": 25
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "A late refined argument after an unrefined one. "
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:FinContainers.label",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "label",
+        "overloadKey": "FinContainers.label",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "string"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          },
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg1",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "string"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "FinContainers.label",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                null,
+                {
+                  "arguments": [
+                    {
+                      "bound": "4",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              ],
+              "result": null
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 89,
+              "endLine": 31,
+              "path": "FinContainers.lean",
+              "startColumn": 0,
+              "startLine": 29
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Every element is checked; the result's elements stay below the bound. "
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:FinContainers.mirrorAll",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "mirrorAll",
+        "overloadKey": "FinContainers.mirrorAll",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "id": "lean:FinContainers.Digits",
+              "kind": "named"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:FinContainers.Digits",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "FinContainers.mirrorAll",
+          "extensions": {
+            "lean-lang.org/source-position": {
+              "endColumn": 87,
+              "endLine": 11,
+              "path": "FinContainers.lean",
+              "startColumn": 0,
+              "startLine": 10
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "A present option value is checked; none is valid even for Fin 1. "
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:FinContainers.orDefault",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "orDefault",
+        "overloadKey": "FinContainers.orDefault",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "FinContainers.orDefault",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "1",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "result": null
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 74,
+              "endLine": 20,
+              "path": "FinContainers.lean",
+              "startColumn": 0,
+              "startLine": 19
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Nested containers: present digits are kept. "
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:FinContainers.present",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "present",
+        "overloadKey": "FinContainers.present",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "kind": "primitive",
+                      "name": "nat"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:FinContainers.Digits",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "FinContainers.present",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "bound": "10",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "option"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              ],
+              "result": null
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 75,
+              "endLine": 23,
+              "path": "FinContainers.lean",
+              "startColumn": 0,
+              "startLine": 22
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Lists are checked element by element, with a wide bound. "
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:FinContainers.sumHuge",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "sumHuge",
+        "overloadKey": "FinContainers.sumHuge",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "list",
+              "kind": "apply"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "FinContainers.sumHuge",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "1180591620717411303424",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "list"
+                }
+              ],
+              "result": null
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 83,
+              "endLine": 17,
+              "path": "FinContainers.lean",
+              "startColumn": 0,
+              "startLine": 16
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "A result-only container refinement. "
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:FinContainers.wrapAll",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "wrapAll",
+        "overloadKey": "FinContainers.wrapAll",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "arguments": [
+              {
+                "kind": "primitive",
+                "name": "nat"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "FinContainers.wrapAll",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                null
+              ],
+              "result": {
+                "arguments": [
+                  {
+                    "bound": "7",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "array"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 57,
+              "endLine": 35,
+              "path": "FinContainers.lean",
+              "startColumn": 0,
+              "startLine": 33
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      }
+    ],
+    "documentation": {
+      "details": "",
+      "summary": "Compiler-checked exports for fincontainers."
+    },
+    "errors": [],
+    "producers": [
+      {
+        "adapter": "lean-bridge-elaborator",
+        "adapterVersion": 2,
+        "extensions": {
+          "lean-lang.org/elaboration-sha256": "dcb61cbbd607ae393477a20d7a4772c1f8b39853c145e6f85fe58798ca3768c1",
+          "lean-lang.org/toolchain": "leanprover/lean4:v4.32.2"
+        },
+        "id": "lean",
+        "tool": "Lean",
+        "toolVersion": "4.32.2"
+      }
+    ],
+    "schemaVersion": 3,
+    "types": [
+      {
+        "assurance": [],
+        "callable": null,
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Checked Lean FinContainers.Digits."
+        },
+        "fields": [],
+        "host": null,
+        "id": "lean:FinContainers.Digits",
+        "kind": "alias",
+        "mutability": "immutable",
+        "name": "Digits",
+        "representation": "copied",
+        "resource": null,
+        "source": {
+          "declaration": "FinContainers.Digits",
+          "extensions": {
+            "lean-lang.org/nominal-refinements": {
+              "kind": "alias",
+              "target": {
+                "arguments": [
+                  {
+                    "bound": "10",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "array"
+              }
+            }
+          },
+          "producer": "lean"
+        },
+        "target": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "constructor": "array",
+          "kind": "apply"
+        },
+        "typeParameters": []
+      }
+    ]
+  },
+  "bindingIrSha256": "9006f701275f2a524e04db64566466775a2bfbe0230c0d168089a215e4823bf8",
+  "byteOrder": "little",
+  "component": {
+    "id": "fincontainers@1.0.0",
+    "name": "fincontainers",
+    "version": "1.0.0"
+  },
+  "exports": [
+    {
+      "documentation": "Fin 0 has no values, so only the empty array is accepted. ",
+      "module": "FinContainers",
+      "name": "FinContainers.countNone",
+      "parameters": [
+        {
+          "name": "values",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "element": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "kind": "array"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "bound": "0",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        ],
+        "result": null
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "sourcePosition": {
+        "endColumn": 59,
+        "endLine": 14,
+        "path": "FinContainers.lean",
+        "startColumn": 0,
+        "startLine": 13
+      },
+      "symbol": "lb_fb2e99a1a0e64d0d60d00c2a",
+      "theoremReferences": []
+    },
+    {
+      "documentation": "Nested containers: rows are concatenated; no rows yields none. ",
+      "module": "FinContainers",
+      "name": "FinContainers.flatten",
+      "parameters": [
+        {
+          "name": "rows",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "element": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "Nat",
+                "name": "nat"
+              },
+              "kind": "array"
+            },
+            "kind": "list"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "10",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "array"
+              }
+            ],
+            "kind": "list"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "kind": "option"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "element": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "element": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          },
+          "kind": "list"
+        },
+        "kind": "option"
+      },
+      "sourcePosition": {
+        "endColumn": 84,
+        "endLine": 27,
+        "path": "FinContainers.lean",
+        "startColumn": 0,
+        "startLine": 25
+      },
+      "symbol": "lb_b7e9b211e04cb18fd70f7eda",
+      "theoremReferences": []
+    },
+    {
+      "documentation": "A late refined argument after an unrefined one. ",
+      "module": "FinContainers",
+      "name": "FinContainers.label",
+      "parameters": [
+        {
+          "name": "names",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "element": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "String",
+              "name": "string"
+            },
+            "kind": "array"
+          }
+        },
+        {
+          "name": "offsets",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "element": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "kind": "array"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null,
+          {
+            "arguments": [
+              {
+                "bound": "4",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        ],
+        "result": null
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "String",
+        "name": "string"
+      },
+      "sourcePosition": {
+        "endColumn": 89,
+        "endLine": 31,
+        "path": "FinContainers.lean",
+        "startColumn": 0,
+        "startLine": 29
+      },
+      "symbol": "lb_c17e7c3bb2285b12d5e64ccc",
+      "theoremReferences": []
+    },
+    {
+      "documentation": "Every element is checked; the result's elements stay below the bound. ",
+      "module": "FinContainers",
+      "name": "FinContainers.mirrorAll",
+      "parameters": [
+        {
+          "name": "values",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "element": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "kind": "array"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "bound": "10",
+              "kind": "fin"
+            }
+          ],
+          "kind": "array"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "element": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "kind": "primitive",
+          "lean": "Nat",
+          "name": "nat"
+        },
+        "kind": "array"
+      },
+      "sourcePosition": {
+        "endColumn": 87,
+        "endLine": 11,
+        "path": "FinContainers.lean",
+        "startColumn": 0,
+        "startLine": 10
+      },
+      "symbol": "lb_aba29fbaeffa9ce68e9e3ae2",
+      "theoremReferences": []
+    },
+    {
+      "documentation": "A present option value is checked; none is valid even for Fin 1. ",
+      "module": "FinContainers",
+      "name": "FinContainers.orDefault",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "element": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "kind": "option"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "bound": "1",
+                "kind": "fin"
+              }
+            ],
+            "kind": "option"
+          }
+        ],
+        "result": null
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "sourcePosition": {
+        "endColumn": 74,
+        "endLine": 20,
+        "path": "FinContainers.lean",
+        "startColumn": 0,
+        "startLine": 19
+      },
+      "symbol": "lb_d6e2d2cd1dc6db4690d6dfb7",
+      "theoremReferences": []
+    },
+    {
+      "documentation": "Nested containers: present digits are kept. ",
+      "module": "FinContainers",
+      "name": "FinContainers.present",
+      "parameters": [
+        {
+          "name": "values",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "element": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "Nat",
+                "name": "nat"
+              },
+              "kind": "option"
+            },
+            "kind": "array"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "10",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "option"
+              }
+            ],
+            "kind": "array"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "bound": "10",
+              "kind": "fin"
+            }
+          ],
+          "kind": "array"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "element": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "kind": "primitive",
+          "lean": "Nat",
+          "name": "nat"
+        },
+        "kind": "array"
+      },
+      "sourcePosition": {
+        "endColumn": 75,
+        "endLine": 23,
+        "path": "FinContainers.lean",
+        "startColumn": 0,
+        "startLine": 22
+      },
+      "symbol": "lb_947649dd882592d17d97bd16",
+      "theoremReferences": []
+    },
+    {
+      "documentation": "Lists are checked element by element, with a wide bound. ",
+      "module": "FinContainers",
+      "name": "FinContainers.sumHuge",
+      "parameters": [
+        {
+          "name": "values",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "element": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "kind": "list"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "bound": "1180591620717411303424",
+                "kind": "fin"
+              }
+            ],
+            "kind": "list"
+          }
+        ],
+        "result": null
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "sourcePosition": {
+        "endColumn": 83,
+        "endLine": 17,
+        "path": "FinContainers.lean",
+        "startColumn": 0,
+        "startLine": 16
+      },
+      "symbol": "lb_921d0c87bdee631623d4307c",
+      "theoremReferences": []
+    },
+    {
+      "documentation": "A result-only container refinement. ",
+      "module": "FinContainers",
+      "name": "FinContainers.wrapAll",
+      "parameters": [
+        {
+          "name": "values",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "element": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "kind": "array"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "arguments": [
+            {
+              "bound": "7",
+              "kind": "fin"
+            }
+          ],
+          "kind": "array"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "element": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "kind": "primitive",
+          "lean": "Nat",
+          "name": "nat"
+        },
+        "kind": "array"
+      },
+      "sourcePosition": {
+        "endColumn": 57,
+        "endLine": 35,
+        "path": "FinContainers.lean",
+        "startColumn": 0,
+        "startLine": 33
+      },
+      "symbol": "lb_4c49445c030d735cc38d9a65",
+      "theoremReferences": []
+    }
+  ],
+  "pointerBits": 64,
+  "profile": "native-library-v1",
+  "schemaVersion": 2,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "402805872e22e5ed6215adf40f21a9ec1d0e7f34799708e03c674e62a2b62b19",
+    "exportConfigurationSource": "{\n  \"modules\": [\n    \"FinContainers\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"wit-wasi\": {\n      \"name\": \"fincontainers\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+    "extractorSha256": "8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 121112,
+          "interfaceSha256": "c9d140885d9d28f7a2befe7750313191f549a872f5b45381f173d75da22dd6b2",
+          "sha256": "62cd4e683bf6082a29beb0bcc85ad8d97ee13cee6f5ceff09ad0a6f029e52906"
+        },
+        "module": "FinContainers",
+        "source": {
+          "bytes": 1562,
+          "path": "FinContainers.lean",
+          "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "exportModules": [
+        "FinContainers"
+      ],
+      "exports": [],
+      "metadata": {
+        "invocationIdentitySha256": "e7cfce497ae24f86c839a1176ab5b433c1e90eea57fe3c182658830b8ebbcbc8",
+        "modules": [
+          {
+            "interfaceSha256": "c9d140885d9d28f7a2befe7750313191f549a872f5b45381f173d75da22dd6b2",
+            "name": "FinContainers",
+            "sourcePath": "FinContainers.lean",
+            "sourceSha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "FinContainers"
+      ],
+      "profile": "native-library-v1",
+      "resources": []
+    },
+    "sourceNoticesSha256": "a4f98a73a595af5f491c642f9ccf0f47e209a00f954e59268fce38d745a29c5b",
+    "sourceTreeSha256": "6e46fca3152f09942cc87afcc995ef9e52a8e73f8374b9d3938a012755f8ddab"
+  },
+  "types": [
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "key": "bcb803bc837008bec599",
+      "kind": "primitive",
+      "lean": "Nat",
+      "name": "nat"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": true,
+        "unbox": "lean_unbox"
+      },
+      "element": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "key": "224517b0527dd01c7a6b",
+      "kind": "array"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "element": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "element": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "kind": "primitive",
+          "lean": "Nat",
+          "name": "nat"
+        },
+        "kind": "array"
+      },
+      "key": "8b49fe37d72b9417aba0",
+      "kind": "list"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "element": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "key": "f487892807ab67e30881",
+      "kind": "list"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "element": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "element": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "kind": "primitive",
+          "lean": "Nat",
+          "name": "nat"
+        },
+        "kind": "list"
+      },
+      "key": "8343535efdea9534fe34",
+      "kind": "option"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": true,
+        "unbox": "lean_unbox"
+      },
+      "key": "fef73841aaed14bc1688",
+      "kind": "primitive",
+      "lean": "String",
+      "name": "string"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": true,
+        "unbox": "lean_unbox"
+      },
+      "element": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "String",
+        "name": "string"
+      },
+      "key": "10924e23d23f284bb22e",
+      "kind": "array"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "element": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "key": "3d0403c7f86fde2ead4d",
+      "kind": "option"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": true,
+        "unbox": "lean_unbox"
+      },
+      "element": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "element": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "kind": "primitive",
+          "lean": "Nat",
+          "name": "nat"
+        },
+        "kind": "option"
+      },
+      "key": "cbf1a822cab24c3df8da",
+      "kind": "array"
+    }
+  ]
+}

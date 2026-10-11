@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "fincontainers@1.0.0",
+    "name": "fincontainers",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 59247113,
+          "path": "archives/fincontainers-1.0.0-wit-wasi.tar.gz",
+          "sha256": "938714d1043336e36748352d6727fe27ed96048179f8d6b3e76caee11ef9d5af"
+        }
+      ],
+      "ecosystem": "wit-wasi",
+      "name": "fincontainers",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "wit-wasi",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "9006f701275f2a524e04db64566466775a2bfbe0230c0d168089a215e4823bf8",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "6e46fca3152f09942cc87afcc995ef9e52a8e73f8374b9d3938a012755f8ddab"
+  }
+}
