@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-browser-source-v1",
+  "predecessorCommit": "5387cfe33ac97ecccdef9fa54be4dc31339c487d",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "998293fd9f2c953cc35a896bc0e93b92416d2e13383ea380646e57da07c2f30b",
+      "previousSha256": "9e25b87fe5ab12ad433a7c267b2a8342eeb266a7bd92ff4651d4247c0ff1b8a7",
+      "edits": [
+        {
+          "start": 137112,
+          "previous": "          \"sha256\": \"531f2a5e22243e84a13821a606254ff4bbc65e59acab093f7ac9a0bbb6771c76\"\n",
+          "current": "          \"sha256\": \"37093d0851b0ec707d2352c4636259c3295338dd9afc10e17f4d6682ef2d3086\"\n"
+        },
+        {
+          "start": 466132,
+          "previous": "          \"sha256\": \"531f2a5e22243e84a13821a606254ff4bbc65e59acab093f7ac9a0bbb6771c76\"\n",
+          "current": "          \"sha256\": \"37093d0851b0ec707d2352c4636259c3295338dd9afc10e17f4d6682ef2d3086\"\n"
+        },
+        {
+          "start": 665529,
+          "previous": "          \"sha256\": \"531f2a5e22243e84a13821a606254ff4bbc65e59acab093f7ac9a0bbb6771c76\"\n",
+          "current": "          \"sha256\": \"37093d0851b0ec707d2352c4636259c3295338dd9afc10e17f4d6682ef2d3086\"\n"
+        },
+        {
+          "start": 674744,
+          "previous": "          \"sha256\": \"531f2a5e22243e84a13821a606254ff4bbc65e59acab093f7ac9a0bbb6771c76\"\n",
+          "current": "          \"sha256\": \"37093d0851b0ec707d2352c4636259c3295338dd9afc10e17f4d6682ef2d3086\"\n"
+        },
+        {
+          "start": 682268,
+          "previous": "          \"sha256\": \"531f2a5e22243e84a13821a606254ff4bbc65e59acab093f7ac9a0bbb6771c76\"\n",
+          "current": "          \"sha256\": \"37093d0851b0ec707d2352c4636259c3295338dd9afc10e17f4d6682ef2d3086\"\n"
+        },
+        {
+          "start": 692850,
+          "previous": "          \"sha256\": \"531f2a5e22243e84a13821a606254ff4bbc65e59acab093f7ac9a0bbb6771c76\"\n",
+          "current": "          \"sha256\": \"37093d0851b0ec707d2352c4636259c3295338dd9afc10e17f4d6682ef2d3086\"\n"
+        },
+        {
+          "start": 1139489,
+          "previous": "          \"sha256\": \"531f2a5e22243e84a13821a606254ff4bbc65e59acab093f7ac9a0bbb6771c76\"\n",
+          "current": "          \"sha256\": \"37093d0851b0ec707d2352c4636259c3295338dd9afc10e17f4d6682ef2d3086\"\n"
+        },
+        {
+          "start": 1433587,
+          "previous": "          \"sha256\": \"531f2a5e22243e84a13821a606254ff4bbc65e59acab093f7ac9a0bbb6771c76\"\n",
+          "current": "          \"sha256\": \"37093d0851b0ec707d2352c4636259c3295338dd9afc10e17f4d6682ef2d3086\"\n"
+        },
+        {
+          "start": 1443633,
+          "previous": "          \"sha256\": \"531f2a5e22243e84a13821a606254ff4bbc65e59acab093f7ac9a0bbb6771c76\"\n",
+          "current": "          \"sha256\": \"37093d0851b0ec707d2352c4636259c3295338dd9afc10e17f4d6682ef2d3086\"\n"
+        },
+        {
+          "start": 1489406,
+          "previous": "          \"sha256\": \"531f2a5e22243e84a13821a606254ff4bbc65e59acab093f7ac9a0bbb6771c76\"\n",
+          "current": "          \"sha256\": \"37093d0851b0ec707d2352c4636259c3295338dd9afc10e17f4d6682ef2d3086\"\n"
+        }
+      ]
+    },
+    {
+      "path": "schema/compiler-adapter-plan.schema.json",
+      "currentSha256": "37093d0851b0ec707d2352c4636259c3295338dd9afc10e17f4d6682ef2d3086",
+      "previousSha256": "531f2a5e22243e84a13821a606254ff4bbc65e59acab093f7ac9a0bbb6771c76",
+      "edits": [
+        {
+          "start": 6848,
+          "previous": "",
+          "current": "        { \"if\": { \"properties\": { \"version\": { \"not\": { \"const\": 8 } } } }, \"then\": { \"properties\": { \"types\": { \"items\": { \"not\": { \"required\": [\"erased\"] } } } } } },\n"
+        },
+        {
+          "start": 9789,
+          "previous": "",
+          "current": "        \"erased\": {\n          \"type\": \"array\", \"minItems\": 1, \"maxItems\": 1024, \"uniqueItems\": true,\n          \"items\": { \"type\": \"string\", \"pattern\": \"^[A-Za-z_][A-Za-z0-9_]*$\" }\n        },\n"
+        },
+        {
+          "start": 10360,
+          "previous": "",
+          "current": "      \"allOf\": [\n        { \"if\": { \"required\": [\"erased\"] }, \"then\": { \"properties\": { \"kind\": { \"const\": \"record\" }, \"fields\": { \"minItems\": 1 } } } }\n      ],\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/checked-records.test.mjs",
+      "currentSha256": "4d3eac114874f141caaf1482f56a09a98b9d409bd11320f61698dc16467b4a69",
+      "previousSha256": "18b1bcffec4ad0e250ae1a673de75dffab498897462137f41ddc84447da910d5",
+      "edits": [
+        {
+          "start": 1787,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-browser-tests.mjs\";\nimport \"./helpers/checked-record-browser-installed-tests.mjs\";\nimport \"./helpers/checked-record-browser-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "550fdf62e3ade90558b7091746907f997132b2d1b7ae5f0b555d6e1f7d882eef",
+      "previousSha256": "84756fba1d1b236ccb5c466e4a1db17d37b28c2cccb506ee639cd6c12ef1387d",
+      "edits": [
+        {
+          "start": 1113,
+          "previous": "",
+          "current": "import { checkedRecordBrowserChangedPaths } from \"./checked-record-browser-history.mjs\";\n"
+        },
+        {
+          "start": 60919,
+          "previous": "",
+          "current": "\t, ...checkedRecordBrowserChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/structural-subtype-core-ci-history.mjs",
+      "currentSha256": "ae2071d8910f6f55781c9a0e175b62331b905881e92b5f59e25f1f2406389792",
+      "previousSha256": "b98de2e65d0a83da071bb3e3f9f4dffa500a81105e7fbb866590a840d9a91955",
+      "edits": [
+        {
+          "start": 269,
+          "previous": "",
+          "current": "import { beforeCheckedRecordBrowserSource } from \"./checked-record-browser-history.mjs\";\n"
+        },
+        {
+          "start": 2303,
+          "previous": "",
+          "current": "\tsource = beforeCheckedRecordBrowserSource(path, source, expected);\n"
+        }
+      ]
+    }
+  ]
+}

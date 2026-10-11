@@ -147,6 +147,7 @@
       },
       "allOf": [
         { "if": { "properties": { "version": { "enum": [2, 3, 4, 5, 6] } } }, "then": { "not": { "required": ["types"] } } },
+        { "if": { "properties": { "version": { "not": { "const": 8 } } } }, "then": { "properties": { "types": { "items": { "not": { "required": ["erased"] } } } } } },
         { "if": { "properties": { "version": { "not": { "const": 9 } } } }, "then": { "not": { "required": ["nominalRefinements"] } } }
       ],
       "oneOf": [
@@ -180,6 +181,10 @@
         "id": { "$ref": "#/$defs/record/properties/id" },
         "target": { "$ref": "binding-ir.schema.json#/$defs/typeRef" },
         "fields": { "$ref": "#/$defs/record/properties/fields" },
+        "erased": {
+          "type": "array", "minItems": 1, "maxItems": 1024, "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$" }
+        },
         "cases": { "type": "array", "minItems": 1, "maxItems": 1024, "items": {
           "type": "object", "additionalProperties": false, "required": ["name", "fields"],
           "properties": {
@@ -188,6 +193,9 @@
           }
         } }
       },
+      "allOf": [
+        { "if": { "required": ["erased"] }, "then": { "properties": { "kind": { "const": "record" }, "fields": { "minItems": 1 } } } }
+      ],
       "oneOf": [
         { "properties": { "kind": { "const": "record" } }, "required": ["fields"], "not": { "anyOf": [{ "required": ["cases"] }, { "required": ["target"] }] } },
         { "properties": { "kind": { "const": "alias" } }, "required": ["target"], "not": { "anyOf": [{ "required": ["cases"] }, { "required": ["fields"] }] } },

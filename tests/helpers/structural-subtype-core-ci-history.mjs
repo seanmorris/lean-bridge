@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeCheckedRecordBrowserSource } from "./checked-record-browser-history.mjs";
 
 export const structuralSubtypeCoreCiHistoryPath = "docs/evidence/structural-subtype-core-ci-source-history-20261011.json";
 export const structuralSubtypeCoreCiPredecessor = "68d6e3ba1b6bfbc8171a813d6a565ad330584076";
@@ -52,6 +53,7 @@ export const reverseStructuralSubtypeCoreCiUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeStructuralSubtypeCoreCiSource = (path, source, expected) => {
+	source = beforeCheckedRecordBrowserSource(path, source, expected);
 	if(typeof source !== "string" || !structuralSubtypeCoreCiChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
