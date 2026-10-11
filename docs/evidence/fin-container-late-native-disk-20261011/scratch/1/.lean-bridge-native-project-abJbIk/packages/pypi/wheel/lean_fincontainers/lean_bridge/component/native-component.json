@@ -1,0 +1,117 @@
+{
+  "adaptersSha256": "cbfbc275937a4bc8286054018097a6921c15629428f4a5161dd79a34578edb12",
+  "allocationGuardSha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83",
+  "bindingIrSha256": "f9140f15d16921d3f73d2e9e5d03321610bd78f2bf51623747434c1575a16ebb",
+  "compiler": "cc (Debian 12.2.0-14+deb12u1) 12.2.0",
+  "exports": [
+    {
+      "declaration": "FinContainers.countNone",
+      "symbol": "lb_fb2e99a1a0e64d0d60d00c2a"
+    },
+    {
+      "declaration": "FinContainers.emptyArray",
+      "symbol": "lb_86c7a64da8ee24b35d1d85b6"
+    },
+    {
+      "declaration": "FinContainers.emptyList",
+      "symbol": "lb_b244d40ec7c4abc4b049ea54"
+    },
+    {
+      "declaration": "FinContainers.emptyOption",
+      "symbol": "lb_e428745a932de5c8398c1557"
+    },
+    {
+      "declaration": "FinContainers.flatten",
+      "symbol": "lb_b7e9b211e04cb18fd70f7eda"
+    },
+    {
+      "declaration": "FinContainers.label",
+      "symbol": "lb_c17e7c3bb2285b12d5e64ccc"
+    },
+    {
+      "declaration": "FinContainers.mirrorAll",
+      "symbol": "lb_aba29fbaeffa9ce68e9e3ae2"
+    },
+    {
+      "declaration": "FinContainers.optionalDigits",
+      "symbol": "lb_8f62bcc162693eda87120faa"
+    },
+    {
+      "declaration": "FinContainers.orDefault",
+      "symbol": "lb_d6e2d2cd1dc6db4690d6dfb7"
+    },
+    {
+      "declaration": "FinContainers.present",
+      "symbol": "lb_947649dd882592d17d97bd16"
+    },
+    {
+      "declaration": "FinContainers.sumHuge",
+      "symbol": "lb_921d0c87bdee631623d4307c"
+    },
+    {
+      "declaration": "FinContainers.wrapAll",
+      "symbol": "lb_4c49445c030d735cc38d9a65"
+    }
+  ],
+  "headerSha256": "b1cacf94eca5120acfda12803c878e8e9ed5d3dd33908f82fea71d54588364c5",
+  "initializer": "initialize_LeanBridgeNative3acdf22f1550490d",
+  "library": "libcomponent_3acdf22f1550490d7b06.so",
+  "metadataSha256": "2583000f4330e9aa2dccc839bedc40f1577ec08aa566fa11d65ff708dbdcfb9c",
+  "modelSha256": "d44ffafea2560477850a2668fb31f0c2301606f022832d3275b314bd83140ee3",
+  "nativeLibrary": {
+    "bytes": 74880,
+    "sha256": "83a7b20759f9c65d363fc158796ed8f7941afd34de74f536acef48d13e86fcc5"
+  },
+  "profile": "native-library-v1",
+  "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+  "schemaVersion": 2,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "ea4a265f6c864f0729ac457f76b4326b3440a84833b36d944602d4b0d35b9e08",
+    "exportConfigurationSource": "{\n  \"modules\": [\n    \"FinContainers\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"cargo\": {\n      \"name\": \"fincontainers\",\n      \"version\": \"1.0.0\"\n    },\n    \"pypi\": {\n      \"name\": \"fincontainers\",\n      \"version\": \"1.0.0\"\n    },\n    \"rubygems\": {\n      \"name\": \"fincontainers\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+    "extractorSha256": "8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 126744,
+          "interfaceSha256": "9fd87088fb33aadb835215136591700005f63604fdd5ab07ae98b01157a79e52",
+          "sha256": "73de8cafb6d528f7d9b465fd2370cdf1521d77cc93310657edb8291c5fd37e38"
+        },
+        "module": "FinContainers",
+        "source": {
+          "bytes": 2156,
+          "path": "FinContainers.lean",
+          "sha256": "5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "exportModules": [
+        "FinContainers"
+      ],
+      "exports": [],
+      "metadata": {
+        "invocationIdentitySha256": "6c956d2ccd42c972d2aa6adb2288dc7645f6bc1209c462999447bdc838133088",
+        "modules": [
+          {
+            "interfaceSha256": "9fd87088fb33aadb835215136591700005f63604fdd5ab07ae98b01157a79e52",
+            "name": "FinContainers",
+            "sourcePath": "FinContainers.lean",
+            "sourceSha256": "5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "FinContainers"
+      ],
+      "profile": "native-library-v1",
+      "resources": []
+    },
+    "sourceNoticesSha256": "d2d31e0157a0b9d2d779b2fcf6b9b60a43deb09602a8ca711d577bf9f7131c07",
+    "sourceTreeSha256": "abaf4f27ca3ed480edb396e5af5c5485f6868363b78a528e06ec19dbab391b63"
+  }
+}

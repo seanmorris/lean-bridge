@@ -1,0 +1,50 @@
+Started 3512254: python,ruby,rust; 2449 MiB free
+{"time":"2026-10-11T03:13:16.188Z","pid":3512254,"freeMiB":2297,"diskStop":false}
+{"time":"2026-10-11T03:13:26.196Z","pid":3512254,"freeMiB":2297,"diskStop":false}
+{"time":"2026-10-11T03:13:36.206Z","pid":3512254,"freeMiB":2297,"diskStop":false}
+{"time":"2026-10-11T03:13:46.216Z","pid":3512254,"freeMiB":2145,"diskStop":false}
+{"time":"2026-10-11T03:13:56.226Z","pid":3512254,"freeMiB":2143,"diskStop":false}
+{"time":"2026-10-11T03:14:06.235Z","pid":3512254,"freeMiB":1937,"diskStop":false}
+{"time":"2026-10-11T03:14:16.243Z","pid":3512254,"freeMiB":1895,"diskStop":false}
+{"time":"2026-10-11T03:14:26.252Z","pid":3512254,"freeMiB":1544,"diskStop":false}
+{"time":"2026-10-11T03:14:36.261Z","pid":3512254,"freeMiB":2299,"diskStop":false}
+{"time":"2026-10-11T03:14:46.271Z","pid":3512254,"freeMiB":2119,"diskStop":false}
+{"time":"2026-10-11T03:14:56.279Z","pid":3512254,"freeMiB":2119,"diskStop":false}
+{"time":"2026-10-11T03:15:06.288Z","pid":3512254,"freeMiB":1919,"diskStop":false}
+{"time":"2026-10-11T03:15:16.295Z","pid":3512254,"freeMiB":1919,"diskStop":false}
+{"time":"2026-10-11T03:15:26.303Z","pid":3512254,"freeMiB":1741,"diskStop":false}
+{"time":"2026-10-11T03:15:36.313Z","pid":3512254,"freeMiB":1432,"diskStop":false}
+{"time":"2026-10-11T03:15:46.319Z","pid":3512254,"freeMiB":1431,"diskStop":false}
+{"time":"2026-10-11T03:15:56.327Z","pid":3512254,"freeMiB":1280,"diskStop":false}
+{"time":"2026-10-11T03:16:06.335Z","pid":3512254,"freeMiB":1284,"diskStop":false}
+{"time":"2026-10-11T03:16:16.343Z","pid":3512254,"freeMiB":1277,"diskStop":false}
+{"time":"2026-10-11T03:16:26.351Z","pid":3512254,"freeMiB":1126,"diskStop":false}
+{"time":"2026-10-11T03:16:36.359Z","pid":3512254,"freeMiB":924,"diskStop":false}
+{"time":"2026-10-11T03:16:46.367Z","pid":3512254,"freeMiB":893,"diskStop":false}
+{"time":"2026-10-11T03:16:56.378Z","pid":3512254,"freeMiB":525,"diskStop":true}
+{"code":1,"signal":null,"finished":"2026-10-11T03:16:56.382Z","minimumMiB":525,"diskStop":true,"tapSha256":"7cb03ab03edf5190a8aa546c78285344395fad3d42d4011cd224f934aef96b3f"}
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
+  [
++   1,
+-   0,
+    null,
++   true
+-   false
+  ]
+
+    at file:///app/build/run-fin-late-native.mjs:44:8 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: [ 1, null, true ],
+  expected: [ 0, null, false ],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v22.23.2

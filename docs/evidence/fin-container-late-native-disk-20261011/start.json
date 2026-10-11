@@ -1,0 +1,28 @@
+{
+  "revision": "f3a7a89eb126abf89dbb0f7750f7b8be781aba35",
+  "started": "2026-10-11T03:13:06.180Z",
+  "runnerSha256": "50f2bc4bd0ed23432c1f4c81b1660968fbf4b36903048d64ca6114731412db07",
+  "command": "/usr/bin/taskset",
+  "args": [
+    "-c",
+    "3",
+    "/usr/bin/node",
+    "--test",
+    "--test-concurrency=1",
+    "tests/helpers/fin-container-late-installed-tests.mjs"
+  ],
+  "environment": {
+    "LEAN_BRIDGE_FIN_LATE_PROFILES": "python,ruby,rust",
+    "LEAN_BRIDGE_FIN_LATE_REPORT": "/app/build/vo1454-late-native-copied-hosts-r1-f3a7a89/edges-python-ruby-rust.json",
+    "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+    "LEAN_BRIDGE_PYTHON": "/app/.toolchains/python311/bin/python3",
+    "LEAN_BRIDGE_RUBY": "/app/.toolchains/ruby33/bin/ruby",
+    "LEAN_BRIDGE_PHP": "/app/.toolchains/php-8.5.10-ffi/bin/php",
+    "LEAN_BRIDGE_COMPOSER": "/usr/bin/composer",
+    "LEAN_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MAKEFLAGS": "-j1"
+  },
+  "minimumMiB": 2449
+}

@@ -1,0 +1,38 @@
+{
+  "bindingIrSha256": "f9140f15d16921d3f73d2e9e5d03321610bd78f2bf51623747434c1575a16ebb",
+  "componentReceiptSha256": "eb596323f4a22d4d49231c721c32b59b363740592f3afa491d0f8c89ada7fb63",
+  "files": {
+    "README.md": {
+      "bytes": 923,
+      "sha256": "14890de396516e74b3f2c0686f9311fef3b4210b05b621815264f3b2877e8c08"
+    },
+    "binding-manifest.json": {
+      "bytes": 917,
+      "sha256": "3cebbc1f4e849920a6b5db99120955c20c42d5f34170b05628aacd3f79f9619d"
+    },
+    "include/fincontainers.h": {
+      "bytes": 6150,
+      "sha256": "6d2fb4e120ce2eab357dc8c826a3fd87b9e8e08cb7a7b8ebe259053b120f4a1b"
+    },
+    "internal/fincontainers_runtime.h": {
+      "bytes": 2446,
+      "sha256": "17ef1781ac16041ff7b78f7f55d4a34d532138a8d16d828d82d55bdc2e3512f1"
+    },
+    "lib/libfincontainers.so": {
+      "bytes": 53728,
+      "sha256": "517cd6dbc3c379671357ba627a4dbffb1b4a3495987bed10c2b3cb4880717fa3"
+    },
+    "src/fincontainers.c": {
+      "bytes": 14256,
+      "sha256": "72452e8dd96b0adbbddf18594bb64897a2e43f6c902609ac1d418c435be74d0d"
+    },
+    "src/native.c": {
+      "bytes": 40810,
+      "sha256": "db24184a0eb2aa34083bbf36ab4e1d881b6755dab3dc1c5f8fea861a80c9c4ff"
+    }
+  },
+  "library": "libfincontainers.so",
+  "profile": "native-library-v1",
+  "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+  "schemaVersion": 1
+}

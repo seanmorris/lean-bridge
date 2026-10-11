@@ -1,0 +1,75 @@
+{
+  "component": {
+    "id": "fincontainers@1.0.0",
+    "name": "fincontainers",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51373270,
+          "path": "archives/fincontainers-1.0.0.crate",
+          "sha256": "9f67b2a644a364787d8788fe9abdc1d6f31f6e205d0f441e41e46ece7e658eec"
+        }
+      ],
+      "ecosystem": "cargo",
+      "name": "fincontainers",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "cargo",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 51386263,
+          "path": "archives/fincontainers-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+          "sha256": "5ea602d5a08351fd1be52a17dd0ed782ba0975eeaaf2c9d09f07f6a1f67197ca"
+        }
+      ],
+      "ecosystem": "pypi",
+      "name": "fincontainers",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "pypi",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 50117632,
+          "path": "archives/fincontainers-1.0.0-x86_64-linux.gem",
+          "sha256": "ead57ff8c5e29654da408149bf26a6d61f2581cf524fc2a25bc820c8dfbd7efb"
+        }
+      ],
+      "ecosystem": "rubygems",
+      "name": "fincontainers",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "rubygems",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "f9140f15d16921d3f73d2e9e5d03321610bd78f2bf51623747434c1575a16ebb",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "abaf4f27ca3ed480edb396e5af5c5485f6868363b78a528e06ec19dbab391b63"
+  }
+}

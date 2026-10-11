@@ -1,0 +1,379 @@
+{
+  "conclusion": "stopped-for-disk",
+  "files": [
+    {
+      "bytes": 200,
+      "original": "build/vo1454-late-native-copied-hosts-r1-f3a7a89.end.json",
+      "path": "end.json",
+      "sha256": "8dd0646f5629a222c427b0220f4e29d66963a1be329f888ca509332c45f819d4"
+    },
+    {
+      "bytes": 2562,
+      "original": "build/vo1454-late-native-copied-hosts-r1.queue.log",
+      "path": "queue.log",
+      "sha256": "a39a8a2f496e58e6b5af35e71e8d0aa731b0f246b8457f42e34266558bc3ddc0"
+    },
+    {
+      "bytes": 2156,
+      "original": "build/vo1454-late-native-copied-hosts-r1-f3a7a89/edges-python-ruby-rust.json.records/author-0/FinContainers.lean",
+      "path": "records/author-0/FinContainers.lean",
+      "sha256": "5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57"
+    },
+    {
+      "bytes": 320,
+      "original": "build/vo1454-late-native-copied-hosts-r1-f3a7a89/edges-python-ruby-rust.json.records/author-0/lean-bridge.exports.json",
+      "path": "records/author-0/lean-bridge.exports.json",
+      "sha256": "ea4a265f6c864f0729ac457f76b4326b3440a84833b36d944602d4b0d35b9e08"
+    },
+    {
+      "bytes": 62077,
+      "original": "build/vo1454-late-native-copied-hosts-r1-f3a7a89/edges-python-ruby-rust.json.records/author-0/model.json",
+      "path": "records/author-0/model.json",
+      "sha256": "d44ffafea2560477850a2668fb31f0c2301606f022832d3275b314bd83140ee3"
+    },
+    {
+      "bytes": 2279,
+      "original": "build/vo1454-late-native-copied-hosts-r1-f3a7a89/edges-python-ruby-rust.json.records/author-0/package-set-receipt.json",
+      "path": "records/author-0/package-set-receipt.json",
+      "sha256": "a38037e3b1a417b7a46480db452f44a7ea0c6ea8a77d2d4f44d62cf53cf945f6"
+    },
+    {
+      "bytes": 292,
+      "original": "build/vo1454-late-native-copied-hosts-r1-f3a7a89/edges-python-ruby-rust.json.records/context.json",
+      "path": "records/context.json",
+      "sha256": "859549213d3ffa6d57857ee30c0d5179f02ad85662902b6c1d78a9f777fa0558"
+    },
+    {
+      "bytes": 23,
+      "original": "build/vo1454-late-native-copied-hosts-r1-f3a7a89/edges-python-ruby-rust.json.records/python.before.stdout",
+      "path": "records/python.before.stdout",
+      "sha256": "7809d6813b8b876c8ac5700f4cfab7a2457789cf3b87c80ec2c02c07f020a661"
+    },
+    {
+      "bytes": 296,
+      "original": "build/vo1454-late-native-copied-hosts-r1-f3a7a89/edges-python-ruby-rust.json.records/python.closure.json",
+      "path": "records/python.closure.json",
+      "sha256": "21b1f2a65d9282581c7ea2b748d62b21bde4e29b891fe8e5c256efaba4017083"
+    },
+    {
+      "bytes": 7834,
+      "original": "build/vo1454-late-native-copied-hosts-r1-f3a7a89/edges-python-ruby-rust.json.records/python.receipt.json",
+      "path": "records/python.receipt.json",
+      "sha256": "41f9cf159a75cd351b72b8799fd26208cce7fa10ecfbc262b26609a49b1c59a8"
+    },
+    {
+      "bytes": 23,
+      "original": "build/vo1454-late-native-copied-hosts-r1-f3a7a89/edges-python-ruby-rust.json.records/python.relocated.stdout",
+      "path": "records/python.relocated.stdout",
+      "sha256": "7809d6813b8b876c8ac5700f4cfab7a2457789cf3b87c80ec2c02c07f020a661"
+    },
+    {
+      "bytes": 9302,
+      "original": "build/vo1454-late-native-copied-hosts-r1-f3a7a89/edges-python-ruby-rust.json.records/python.source",
+      "path": "records/python.source",
+      "sha256": "09f5bb6dd54e72187ee515bd736b89ece4491fd847593e0cf7a04748f94859be"
+    },
+    {
+      "bytes": 23,
+      "original": "build/vo1454-late-native-copied-hosts-r1-f3a7a89/edges-python-ruby-rust.json.records/ruby.before.stdout",
+      "path": "records/ruby.before.stdout",
+      "sha256": "6cacbdcb2a1bf2474316d9110988bd587e9e282c0c0e28a4b66e1523486434fc"
+    },
+    {
+      "bytes": 453,
+      "original": "build/vo1454-late-native-copied-hosts-r1-f3a7a89/edges-python-ruby-rust.json.records/ruby.closure.json",
+      "path": "records/ruby.closure.json",
+      "sha256": "ea0d60a1e7c3d774fb8679c8279f459870ccf9f261bd2f514eccfbd3f7a032c8"
+    },
+    {
+      "bytes": 6923,
+      "original": "build/vo1454-late-native-copied-hosts-r1-f3a7a89/edges-python-ruby-rust.json.records/ruby.receipt.json",
+      "path": "records/ruby.receipt.json",
+      "sha256": "ceaac751038d8f429a163f9877e53ef8eb8c564c575991de719fc5a9ae0b3665"
+    },
+    {
+      "bytes": 23,
+      "original": "build/vo1454-late-native-copied-hosts-r1-f3a7a89/edges-python-ruby-rust.json.records/ruby.relocated.stdout",
+      "path": "records/ruby.relocated.stdout",
+      "sha256": "6cacbdcb2a1bf2474316d9110988bd587e9e282c0c0e28a4b66e1523486434fc"
+    },
+    {
+      "bytes": 8721,
+      "original": "build/vo1454-late-native-copied-hosts-r1-f3a7a89/edges-python-ruby-rust.json.records/ruby.source",
+      "path": "records/ruby.source",
+      "sha256": "1441fffba126993afe3f9bcd7a0a7c485116c573832677cfae5871f70309f0e6"
+    },
+    {
+      "bytes": 23,
+      "original": "build/vo1454-late-native-copied-hosts-r1-f3a7a89/edges-python-ruby-rust.json.records/rust.before.stdout",
+      "path": "records/rust.before.stdout",
+      "sha256": "93f7d139500e6bd2c75d524b5b7de2f9b6ce84e7b1c83ef524d3053273bfb8a7"
+    },
+    {
+      "bytes": 184,
+      "original": "build/vo1454-late-native-copied-hosts-r1-f3a7a89/edges-python-ruby-rust.json.records/rust.closure.json",
+      "path": "records/rust.closure.json",
+      "sha256": "a00ea782a08550ef5fd93e1e5a5c40d2d7b048e69988cef3991d5b309a381330"
+    },
+    {
+      "bytes": 6996,
+      "original": "build/vo1454-late-native-copied-hosts-r1-f3a7a89/edges-python-ruby-rust.json.records/rust.receipt.json",
+      "path": "records/rust.receipt.json",
+      "sha256": "570ea4e44d2aa4d79e8a63f4ec73d11ca11ae90714d6e87827f41703e1974004"
+    },
+    {
+      "bytes": 23,
+      "original": "build/vo1454-late-native-copied-hosts-r1-f3a7a89/edges-python-ruby-rust.json.records/rust.relocated.stdout",
+      "path": "records/rust.relocated.stdout",
+      "sha256": "93f7d139500e6bd2c75d524b5b7de2f9b6ce84e7b1c83ef524d3053273bfb8a7"
+    },
+    {
+      "bytes": 8418,
+      "original": "build/vo1454-late-native-copied-hosts-r1-f3a7a89/edges-python-ruby-rust.json.records/rust.source",
+      "path": "records/rust.source",
+      "sha256": "6f897c1504dcda665b395c30f110dbb7acf6bc7e8719cc13671f52a0d8540063"
+    },
+    {
+      "bytes": 15,
+      "original": "build/vo1454-late-native-copied-hosts-r1-f3a7a89.tap",
+      "path": "run.tap",
+      "sha256": "7cb03ab03edf5190a8aa546c78285344395fad3d42d4011cd224f934aef96b3f"
+    },
+    {
+      "bytes": 4040,
+      "original": "build/run-fin-late-native.mjs",
+      "path": "runner.mjs",
+      "sha256": "50f2bc4bd0ed23432c1f4c81b1660968fbf4b36903048d64ca6114731412db07"
+    },
+    {
+      "bytes": 928188,
+      "path": "scratch-inventory.json",
+      "sha256": "534c3f9aafdddd88ac5cb2909798629e93778130b1515a3d951c418134509c0a"
+    },
+    {
+      "bytes": 2279,
+      "original": "/tmp/lean-bridge-fin-edges-consumer-I3KYlJ/handoff/package-set-receipt.json",
+      "path": "scratch/0/handoff/package-set-receipt.json",
+      "sha256": "a38037e3b1a417b7a46480db452f44a7ea0c6ea8a77d2d4f44d62cf53cf945f6"
+    },
+    {
+      "bytes": 9302,
+      "original": "/tmp/lean-bridge-fin-edges-consumer-I3KYlJ/python-relocated/consumer.py",
+      "path": "scratch/0/python-relocated/consumer.py",
+      "sha256": "09f5bb6dd54e72187ee515bd736b89ece4491fd847593e0cf7a04748f94859be"
+    },
+    {
+      "bytes": 62077,
+      "original": "/tmp/lean-bridge-fin-edges-consumer-I3KYlJ/python-relocated/venv/lib/python3.11/site-packages/lean_fincontainers/lean_bridge/component/model.json",
+      "path": "scratch/0/python-relocated/venv/lib/python3.11/site-packages/lean_fincontainers/lean_bridge/component/model.json",
+      "sha256": "d44ffafea2560477850a2668fb31f0c2301606f022832d3275b314bd83140ee3"
+    },
+    {
+      "bytes": 4535,
+      "original": "/tmp/lean-bridge-fin-edges-consumer-I3KYlJ/python-relocated/venv/lib/python3.11/site-packages/lean_fincontainers/lean_bridge/component/native-component.json",
+      "path": "scratch/0/python-relocated/venv/lib/python3.11/site-packages/lean_fincontainers/lean_bridge/component/native-component.json",
+      "sha256": "eb596323f4a22d4d49231c721c32b59b363740592f3afa491d0f8c89ada7fb63"
+    },
+    {
+      "bytes": 1373,
+      "original": "/tmp/lean-bridge-fin-edges-consumer-I3KYlJ/python-relocated/venv/lib/python3.11/site-packages/lean_fincontainers/lean_bridge/native-c-adapter.json",
+      "path": "scratch/0/python-relocated/venv/lib/python3.11/site-packages/lean_fincontainers/lean_bridge/native-c-adapter.json",
+      "sha256": "81225c859259d45204cb8da6b53980fdacab9bc0090a176f2b123393ffec896e"
+    },
+    {
+      "bytes": 8721,
+      "original": "/tmp/lean-bridge-fin-edges-consumer-I3KYlJ/ruby-relocated/consumer.rb",
+      "path": "scratch/0/ruby-relocated/consumer.rb",
+      "sha256": "1441fffba126993afe3f9bcd7a0a7c485116c573832677cfae5871f70309f0e6"
+    },
+    {
+      "bytes": 62077,
+      "original": "/tmp/lean-bridge-fin-edges-consumer-I3KYlJ/ruby-relocated/gems/gems/fincontainers-1.0.0-x86_64-linux/lean-bridge/component/model.json",
+      "path": "scratch/0/ruby-relocated/gems/gems/fincontainers-1.0.0-x86_64-linux/lean-bridge/component/model.json",
+      "sha256": "d44ffafea2560477850a2668fb31f0c2301606f022832d3275b314bd83140ee3"
+    },
+    {
+      "bytes": 4535,
+      "original": "/tmp/lean-bridge-fin-edges-consumer-I3KYlJ/ruby-relocated/gems/gems/fincontainers-1.0.0-x86_64-linux/lean-bridge/component/native-component.json",
+      "path": "scratch/0/ruby-relocated/gems/gems/fincontainers-1.0.0-x86_64-linux/lean-bridge/component/native-component.json",
+      "sha256": "eb596323f4a22d4d49231c721c32b59b363740592f3afa491d0f8c89ada7fb63"
+    },
+    {
+      "bytes": 1373,
+      "original": "/tmp/lean-bridge-fin-edges-consumer-I3KYlJ/ruby-relocated/gems/gems/fincontainers-1.0.0-x86_64-linux/lean-bridge/native-c-adapter.json",
+      "path": "scratch/0/ruby-relocated/gems/gems/fincontainers-1.0.0-x86_64-linux/lean-bridge/native-c-adapter.json",
+      "sha256": "81225c859259d45204cb8da6b53980fdacab9bc0090a176f2b123393ffec896e"
+    },
+    {
+      "bytes": 8418,
+      "original": "/tmp/lean-bridge-fin-edges-consumer-I3KYlJ/rust-relocated/consumer.rs",
+      "path": "scratch/0/rust-relocated/consumer.rs",
+      "sha256": "6f897c1504dcda665b395c30f110dbb7acf6bc7e8719cc13671f52a0d8540063"
+    },
+    {
+      "bytes": 62077,
+      "original": "/tmp/lean-bridge-fin-edges-consumer-I3KYlJ/rust-relocated/fincontainers-1.0.0/lean-bridge/component/model.json",
+      "path": "scratch/0/rust-relocated/fincontainers-1.0.0/lean-bridge/component/model.json",
+      "sha256": "d44ffafea2560477850a2668fb31f0c2301606f022832d3275b314bd83140ee3"
+    },
+    {
+      "bytes": 4535,
+      "original": "/tmp/lean-bridge-fin-edges-consumer-I3KYlJ/rust-relocated/fincontainers-1.0.0/lean-bridge/component/native-component.json",
+      "path": "scratch/0/rust-relocated/fincontainers-1.0.0/lean-bridge/component/native-component.json",
+      "sha256": "eb596323f4a22d4d49231c721c32b59b363740592f3afa491d0f8c89ada7fb63"
+    },
+    {
+      "bytes": 1373,
+      "original": "/tmp/lean-bridge-fin-edges-consumer-I3KYlJ/rust-relocated/fincontainers-1.0.0/lean-bridge/native-c-adapter.json",
+      "path": "scratch/0/rust-relocated/fincontainers-1.0.0/lean-bridge/native-c-adapter.json",
+      "sha256": "81225c859259d45204cb8da6b53980fdacab9bc0090a176f2b123393ffec896e"
+    },
+    {
+      "bytes": 1373,
+      "original": "/tmp/lean-bridge-fin-edges-author-aFdgUm/.lean-bridge-native-project-abJbIk/native/c-binding/native-c-adapter.json",
+      "path": "scratch/1/.lean-bridge-native-project-abJbIk/native/c-binding/native-c-adapter.json",
+      "sha256": "81225c859259d45204cb8da6b53980fdacab9bc0090a176f2b123393ffec896e"
+    },
+    {
+      "bytes": 62077,
+      "original": "/tmp/lean-bridge-fin-edges-author-aFdgUm/.lean-bridge-native-project-abJbIk/native/component/model.json",
+      "path": "scratch/1/.lean-bridge-native-project-abJbIk/native/component/model.json",
+      "sha256": "d44ffafea2560477850a2668fb31f0c2301606f022832d3275b314bd83140ee3"
+    },
+    {
+      "bytes": 4535,
+      "original": "/tmp/lean-bridge-fin-edges-author-aFdgUm/.lean-bridge-native-project-abJbIk/native/component/native-component.json",
+      "path": "scratch/1/.lean-bridge-native-project-abJbIk/native/component/native-component.json",
+      "sha256": "eb596323f4a22d4d49231c721c32b59b363740592f3afa491d0f8c89ada7fb63"
+    },
+    {
+      "bytes": 62077,
+      "original": "/tmp/lean-bridge-fin-edges-author-aFdgUm/.lean-bridge-native-project-abJbIk/packages/cargo/fincontainers-1.0.0/lean-bridge/component/model.json",
+      "path": "scratch/1/.lean-bridge-native-project-abJbIk/packages/cargo/fincontainers-1.0.0/lean-bridge/component/model.json",
+      "sha256": "d44ffafea2560477850a2668fb31f0c2301606f022832d3275b314bd83140ee3"
+    },
+    {
+      "bytes": 4535,
+      "original": "/tmp/lean-bridge-fin-edges-author-aFdgUm/.lean-bridge-native-project-abJbIk/packages/cargo/fincontainers-1.0.0/lean-bridge/component/native-component.json",
+      "path": "scratch/1/.lean-bridge-native-project-abJbIk/packages/cargo/fincontainers-1.0.0/lean-bridge/component/native-component.json",
+      "sha256": "eb596323f4a22d4d49231c721c32b59b363740592f3afa491d0f8c89ada7fb63"
+    },
+    {
+      "bytes": 1373,
+      "original": "/tmp/lean-bridge-fin-edges-author-aFdgUm/.lean-bridge-native-project-abJbIk/packages/cargo/fincontainers-1.0.0/lean-bridge/native-c-adapter.json",
+      "path": "scratch/1/.lean-bridge-native-project-abJbIk/packages/cargo/fincontainers-1.0.0/lean-bridge/native-c-adapter.json",
+      "sha256": "81225c859259d45204cb8da6b53980fdacab9bc0090a176f2b123393ffec896e"
+    },
+    {
+      "bytes": 62077,
+      "original": "/tmp/lean-bridge-fin-edges-author-aFdgUm/.lean-bridge-native-project-abJbIk/packages/pypi/wheel/lean_fincontainers/lean_bridge/component/model.json",
+      "path": "scratch/1/.lean-bridge-native-project-abJbIk/packages/pypi/wheel/lean_fincontainers/lean_bridge/component/model.json",
+      "sha256": "d44ffafea2560477850a2668fb31f0c2301606f022832d3275b314bd83140ee3"
+    },
+    {
+      "bytes": 4535,
+      "original": "/tmp/lean-bridge-fin-edges-author-aFdgUm/.lean-bridge-native-project-abJbIk/packages/pypi/wheel/lean_fincontainers/lean_bridge/component/native-component.json",
+      "path": "scratch/1/.lean-bridge-native-project-abJbIk/packages/pypi/wheel/lean_fincontainers/lean_bridge/component/native-component.json",
+      "sha256": "eb596323f4a22d4d49231c721c32b59b363740592f3afa491d0f8c89ada7fb63"
+    },
+    {
+      "bytes": 1373,
+      "original": "/tmp/lean-bridge-fin-edges-author-aFdgUm/.lean-bridge-native-project-abJbIk/packages/pypi/wheel/lean_fincontainers/lean_bridge/native-c-adapter.json",
+      "path": "scratch/1/.lean-bridge-native-project-abJbIk/packages/pypi/wheel/lean_fincontainers/lean_bridge/native-c-adapter.json",
+      "sha256": "81225c859259d45204cb8da6b53980fdacab9bc0090a176f2b123393ffec896e"
+    },
+    {
+      "bytes": 62077,
+      "original": "/tmp/lean-bridge-fin-edges-author-aFdgUm/.lean-bridge-native-project-abJbIk/packages/rubygems/package/lean-bridge/component/model.json",
+      "path": "scratch/1/.lean-bridge-native-project-abJbIk/packages/rubygems/package/lean-bridge/component/model.json",
+      "sha256": "d44ffafea2560477850a2668fb31f0c2301606f022832d3275b314bd83140ee3"
+    },
+    {
+      "bytes": 4535,
+      "original": "/tmp/lean-bridge-fin-edges-author-aFdgUm/.lean-bridge-native-project-abJbIk/packages/rubygems/package/lean-bridge/component/native-component.json",
+      "path": "scratch/1/.lean-bridge-native-project-abJbIk/packages/rubygems/package/lean-bridge/component/native-component.json",
+      "sha256": "eb596323f4a22d4d49231c721c32b59b363740592f3afa491d0f8c89ada7fb63"
+    },
+    {
+      "bytes": 1373,
+      "original": "/tmp/lean-bridge-fin-edges-author-aFdgUm/.lean-bridge-native-project-abJbIk/packages/rubygems/package/lean-bridge/native-c-adapter.json",
+      "path": "scratch/1/.lean-bridge-native-project-abJbIk/packages/rubygems/package/lean-bridge/native-c-adapter.json",
+      "sha256": "81225c859259d45204cb8da6b53980fdacab9bc0090a176f2b123393ffec896e"
+    },
+    {
+      "bytes": 2156,
+      "original": "/tmp/lean-bridge-fin-edges-author-aFdgUm/project/FinContainers.lean",
+      "path": "scratch/1/project/FinContainers.lean",
+      "sha256": "5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57"
+    },
+    {
+      "bytes": 320,
+      "original": "/tmp/lean-bridge-fin-edges-author-aFdgUm/project/lean-bridge.exports.json",
+      "path": "scratch/1/project/lean-bridge.exports.json",
+      "sha256": "ea4a265f6c864f0729ac457f76b4326b3440a84833b36d944602d4b0d35b9e08"
+    },
+    {
+      "bytes": 1863,
+      "gitPath": "tests/fixtures/fin-container-late-consumers/python.py",
+      "gitRevision": "f3a7a89eb126abf89dbb0f7750f7b8be781aba35",
+      "path": "sources/tests/fixtures/fin-container-late-consumers/python.py.txt",
+      "sha256": "08541d334efed8cda40ad0d29a9aa2bc097b0ca87862e7adc03c05274ad0b143"
+    },
+    {
+      "bytes": 1731,
+      "gitPath": "tests/fixtures/fin-container-late-consumers/ruby.rb",
+      "gitRevision": "f3a7a89eb126abf89dbb0f7750f7b8be781aba35",
+      "path": "sources/tests/fixtures/fin-container-late-consumers/ruby.rb.txt",
+      "sha256": "bf9b85533bf367b60422e2db76cc4418ec0e79e885edd68717825043ceca2ccc"
+    },
+    {
+      "bytes": 1559,
+      "gitPath": "tests/fixtures/fin-container-late-consumers/rust.rs",
+      "gitRevision": "f3a7a89eb126abf89dbb0f7750f7b8be781aba35",
+      "path": "sources/tests/fixtures/fin-container-late-consumers/rust.rs.txt",
+      "sha256": "aaa606120a3a6fcd8e9c23a66c541eea3edea61cbdd586452faa37438ebc79d0"
+    },
+    {
+      "bytes": 34751,
+      "gitPath": "tests/helpers/fin-container-edge-install.mjs",
+      "gitRevision": "f3a7a89eb126abf89dbb0f7750f7b8be781aba35",
+      "path": "sources/tests/helpers/fin-container-edge-install.mjs.txt",
+      "sha256": "187b75df0f862f8861715fb2e3c432574368e66be9aacbe96dbfa0f05b8f6274"
+    },
+    {
+      "bytes": 1748,
+      "gitPath": "tests/helpers/fin-container-late-consumers.mjs",
+      "gitRevision": "f3a7a89eb126abf89dbb0f7750f7b8be781aba35",
+      "path": "sources/tests/helpers/fin-container-late-consumers.mjs.txt",
+      "sha256": "f7ef3c6b8c3d21bda190c62ed6f157aa507dc7f44ae1a0d53433daf59c805e11"
+    },
+    {
+      "bytes": 1016,
+      "gitPath": "tests/helpers/fin-container-late-installed-tests.mjs",
+      "gitRevision": "f3a7a89eb126abf89dbb0f7750f7b8be781aba35",
+      "path": "sources/tests/helpers/fin-container-late-installed-tests.mjs.txt",
+      "sha256": "817c6954f2f2e0d506e5c65fd21548c8da5d512c64a7a2a2366c2a6cbd0592a0"
+    },
+    {
+      "bytes": 13241,
+      "gitPath": "tests/helpers/fin-container-late-report.mjs",
+      "gitRevision": "f3a7a89eb126abf89dbb0f7750f7b8be781aba35",
+      "path": "sources/tests/helpers/fin-container-late-report.mjs.txt",
+      "sha256": "f0d67d0f66e192bf7ec4a1e58e1e425e19ff892a25fa4df0b30115a468c7fab3"
+    },
+    {
+      "bytes": 1071,
+      "original": "build/vo1454-late-native-copied-hosts-r1-f3a7a89.start.json",
+      "path": "start.json",
+      "sha256": "c6af9d4bb1eb45219915751f601b88f9dae24c1a5a063672dd318c3a833f6fc4"
+    }
+  ],
+  "kind": "fin-container-late-native-disk-stop-v1",
+  "retainedRoots": [
+    "/tmp/lean-bridge-fin-edges-consumer-I3KYlJ",
+    "/tmp/lean-bridge-fin-edges-author-aFdgUm",
+    "/tmp/lean-bridge-fin-edges-consumer-oOY3y1"
+  ],
+  "revision": "f3a7a89eb126abf89dbb0f7750f7b8be781aba35",
+  "schemaVersion": 1
+}

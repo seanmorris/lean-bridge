@@ -1,0 +1,184 @@
+{
+  "bindingIrSha256": "f9140f15d16921d3f73d2e9e5d03321610bd78f2bf51623747434c1575a16ebb",
+  "component": {
+    "id": "fincontainers@1.0.0",
+    "name": "fincontainers",
+    "version": "1.0.0"
+  },
+  "ecosystem": "pypi",
+  "files": {
+    "fincontainers-1.0.0.dist-info/METADATA": {
+      "bytes": 5852,
+      "sha256": "f20c06d82ee65cf143e8d479404cfb1cf066dc8e8f14af5e586b5edc4ff606c3"
+    },
+    "fincontainers-1.0.0.dist-info/WHEEL": {
+      "bytes": 117,
+      "sha256": "e41d55df53f77c6c728e826dfa1a3da95b2c97b543ab1de222ccea3f2bb9f4f4"
+    },
+    "fincontainers-1.0.0.dist-info/licenses/Lean-LICENSE": {
+      "bytes": 9160,
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    "fincontainers-1.0.0.dist-info/licenses/Lean-LICENSES": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "fincontainers-1.0.0.dist-info/licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "fincontainers-1.0.0.dist-info/licenses/source-notices.json": {
+      "bytes": 2083,
+      "sha256": "d2d31e0157a0b9d2d779b2fcf6b9b60a43deb09602a8ca711d577bf9f7131c07"
+    },
+    "fincontainers-1.0.0.dist-info/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "fincontainers-1.0.0.dist-info/top_level.txt": {
+      "bytes": 19,
+      "sha256": "74d1800fc9ef9c37fd2cd7a68ad1a7e5283ab7d131dad62f2714651f8ea6d43e"
+    },
+    "lean_fincontainers/__init__.py": {
+      "bytes": 2621,
+      "sha256": "96c041e09ba5fa07904c3e775f41d804ac57c1cc1e3c0284120bb251ab5e01e6"
+    },
+    "lean_fincontainers/__init__.pyi": {
+      "bytes": 2252,
+      "sha256": "c4126dc8cfa79ed6ac16acd9bce08819e69a9836d9c9e8dcaaae6b4a8dce6ccc"
+    },
+    "lean_fincontainers/_native.py": {
+      "bytes": 20667,
+      "sha256": "0a703f3988c933767ec95136ef3118594235612d0486fd90c0724cef59cd3e06"
+    },
+    "lean_fincontainers/lean_bridge/README.md": {
+      "bytes": 5436,
+      "sha256": "34d887f51b335a3f88f82b580c7cb94f135cfd83a1d420450f362e5ec8d3ac6e"
+    },
+    "lean_fincontainers/lean_bridge/binding-manifest.json": {
+      "bytes": 1272,
+      "sha256": "36c81b36562c2da72474feb5c5f761765a772043f16b437512f514fab5d711b3"
+    },
+    "lean_fincontainers/lean_bridge/component/allocation-guard.h": {
+      "bytes": 1309,
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    "lean_fincontainers/lean_bridge/component/artifacts.json": {
+      "bytes": 1530,
+      "sha256": "119dba57c532c1fa873489f56cdeb28d514d8ea7f2b0446a54f3d2fda481028c"
+    },
+    "lean_fincontainers/lean_bridge/component/binding-ir.json": {
+      "bytes": 28473,
+      "sha256": "3b21160bdfc4cff02797a8f385a31bd5402afb94b2028c1a00a5477e53979e16"
+    },
+    "lean_fincontainers/lean_bridge/component/component.h": {
+      "bytes": 1795,
+      "sha256": "b1cacf94eca5120acfda12803c878e8e9ed5d3dd33908f82fea71d54588364c5"
+    },
+    "lean_fincontainers/lean_bridge/component/generated.lean": {
+      "bytes": 9820,
+      "sha256": "cbfbc275937a4bc8286054018097a6921c15629428f4a5161dd79a34578edb12"
+    },
+    "lean_fincontainers/lean_bridge/component/metadata.json": {
+      "bytes": 42553,
+      "sha256": "2583000f4330e9aa2dccc839bedc40f1577ec08aa566fa11d65ff708dbdcfb9c"
+    },
+    "lean_fincontainers/lean_bridge/component/model.json": {
+      "bytes": 62077,
+      "sha256": "d44ffafea2560477850a2668fb31f0c2301606f022832d3275b314bd83140ee3"
+    },
+    "lean_fincontainers/lean_bridge/component/native-component.json": {
+      "bytes": 4535,
+      "sha256": "eb596323f4a22d4d49231c721c32b59b363740592f3afa491d0f8c89ada7fb63"
+    },
+    "lean_fincontainers/lean_bridge/include/fincontainers.h": {
+      "bytes": 6150,
+      "sha256": "6d2fb4e120ce2eab357dc8c826a3fd87b9e8e08cb7a7b8ebe259053b120f4a1b"
+    },
+    "lean_fincontainers/lean_bridge/native-c-adapter.json": {
+      "bytes": 1373,
+      "sha256": "81225c859259d45204cb8da6b53980fdacab9bc0090a176f2b123393ffec896e"
+    },
+    "lean_fincontainers/lean_bridge/runtime.json": {
+      "bytes": 1466,
+      "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    },
+    "lean_fincontainers/native/linux-x64/libcomponent_3acdf22f1550490d7b06.so": {
+      "bytes": 74880,
+      "sha256": "83a7b20759f9c65d363fc158796ed8f7941afd34de74f536acef48d13e86fcc5"
+    },
+    "lean_fincontainers/native/linux-x64/libfincontainers.so": {
+      "bytes": 53728,
+      "sha256": "517cd6dbc3c379671357ba627a4dbffb1b4a3495987bed10c2b3cb4880717fa3"
+    },
+    "lean_fincontainers/native/linux-x64/liblean_bridge_native.so": {
+      "bytes": 21464,
+      "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+    },
+    "lean_fincontainers/native/linux-x64/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "lean_fincontainers/py.typed": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "glibcMinimumVersion": "2.36",
+  "kind": "lean-bridge-ordinary-python-package",
+  "moduleName": "lean_fincontainers",
+  "name": "fincontainers",
+  "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+  "schemaVersion": 1,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "ea4a265f6c864f0729ac457f76b4326b3440a84833b36d944602d4b0d35b9e08",
+    "exportConfigurationSource": "{\n  \"modules\": [\n    \"FinContainers\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"cargo\": {\n      \"name\": \"fincontainers\",\n      \"version\": \"1.0.0\"\n    },\n    \"pypi\": {\n      \"name\": \"fincontainers\",\n      \"version\": \"1.0.0\"\n    },\n    \"rubygems\": {\n      \"name\": \"fincontainers\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+    "extractorSha256": "8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 126744,
+          "interfaceSha256": "9fd87088fb33aadb835215136591700005f63604fdd5ab07ae98b01157a79e52",
+          "sha256": "73de8cafb6d528f7d9b465fd2370cdf1521d77cc93310657edb8291c5fd37e38"
+        },
+        "module": "FinContainers",
+        "source": {
+          "bytes": 2156,
+          "path": "FinContainers.lean",
+          "sha256": "5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "exportModules": [
+        "FinContainers"
+      ],
+      "exports": [],
+      "metadata": {
+        "invocationIdentitySha256": "6c956d2ccd42c972d2aa6adb2288dc7645f6bc1209c462999447bdc838133088",
+        "modules": [
+          {
+            "interfaceSha256": "9fd87088fb33aadb835215136591700005f63604fdd5ab07ae98b01157a79e52",
+            "name": "FinContainers",
+            "sourcePath": "FinContainers.lean",
+            "sourceSha256": "5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "FinContainers"
+      ],
+      "profile": "native-library-v1",
+      "resources": []
+    },
+    "sourceNoticesSha256": "d2d31e0157a0b9d2d779b2fcf6b9b60a43deb09602a8ca711d577bf9f7131c07",
+    "sourceTreeSha256": "abaf4f27ca3ed480edb396e5af5c5485f6868363b78a528e06ec19dbab391b63"
+  },
+  "tag": "py3-none-manylinux_2_36_x86_64",
+  "version": "1.0.0"
+}

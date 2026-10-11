@@ -13,6 +13,7 @@ import { finContainerTargets } from "./fin-container-install.mjs";
 import { finLateAdditionalChecks, finLateConsumer, finLateProfiles } from "./fin-container-late-consumers.mjs";
 import { assertFinLateReport, assertFinLateTap } from "./fin-container-late-report.mjs";
 import "./fin-container-late-ci-tests.mjs";
+import "./fin-container-late-disk-tests.mjs";
 
 const synthetic = async () => {
 	const profiles = [...finLateProfiles].sort(), source = await finContainerEdgeSource(), hash = sha256("synthetic, not an installed observation");
