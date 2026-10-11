@@ -1,0 +1,90 @@
+name: Installed checked records in browsers
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: checked-record-browser-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checked-record-browser:
+    name: Four checked-record routes in Node and three browsers
+    runs-on: ubuntu-24.04
+    # Keep runtime preparation and all four routes outside the 330-minute Node matrix job.
+    timeout-minutes: 180
+    env:
+      EMCC_CORES: "2"
+      LEAN_BRIDGE_LAKE_ENGINE: build/locked-lake-engine/bin/lean-bridge-component-engine
+      LEAN_BRIDGE_LAKE_RUNTIME_ROOT: build/lean-link-spike/lazy
+    steps:
+      - name: Check out the exact revision and original evidence history
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install compiler and archive dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev pkg-config python3 ripgrep xz-utils zstd
+      - name: Install dependencies and pinned compiler tools
+        timeout-minutes: 30
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          bash scripts/bootstrap-toolchains.sh
+      - name: Install Chromium, Firefox and WebKit
+        timeout-minutes: 20
+        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit
+      - name: Build the locked component engine
+        timeout-minutes: 40
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          nix build .#component-build-engine --out-link build/locked-lake-engine 2>&1 | tee build/checked-record-browser-engine.log
+          test -x build/locked-lake-engine/bin/lean-bridge-component-engine
+      - name: Build the pinned shared Wasm runtime
+        timeout-minutes: 60
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/build-lean-link-spike.sh 2>&1 | tee build/checked-record-browser-runtime.log
+          test -s build/lean-link-spike/lazy/main.wasm
+      - name: Require ordinary, reviewed and both result-only installed packages
+        id: acceptance
+        timeout-minutes: 60
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-checked-record-browser-ci.sh
+      - name: Preserve original and partial installed records
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: checked-record-browser-${{ github.sha }}
+          path: |
+            build/checked-record-browser-ci/
+            build/checked-record-browser-engine.log
+            build/checked-record-browser-runtime.log
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce installed browser acceptance
+        if: always() && steps.acceptance.outcome != 'success'
+        run: exit 1

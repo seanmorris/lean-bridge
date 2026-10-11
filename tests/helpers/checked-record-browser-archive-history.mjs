@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeCheckedRecordBrowserCiSource } from "./checked-record-browser-ci-history.mjs";
 
 export const checkedRecordBrowserArchiveHistoryPath = "docs/evidence/checked-record-browser-archive-source-history-20261011.json";
 export const checkedRecordBrowserArchivePredecessor = "db18006038829bf87c020f081d99b27a8932ee20";
@@ -50,6 +51,7 @@ export const reverseCheckedRecordBrowserArchiveUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeCheckedRecordBrowserArchiveSource = (path, source, expected) => {
+	source = beforeCheckedRecordBrowserCiSource(path, source, expected);
 	if(typeof source !== "string" || !checkedRecordBrowserArchiveChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-browser-ci-v1",
+  "predecessorCommit": "86406da5c59d790b8abfecd14af03853aaf9d276",
+  "updates": [
+    {
+      "path": "tests/checked-records.test.mjs",
+      "currentSha256": "fb48b94a6a4cbdbc52436e9c34f90acf423909158920f2d19000dc0b6cca6853",
+      "previousSha256": "c88af2a97e417959adeb3e1667ce94bfa82df57820e580416c22b9581d1e74da",
+      "edits": [
+        {
+          "start": 2095,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-browser-ci-tests.mjs\";\nimport \"./helpers/checked-record-browser-ci-shell-tests.mjs\";\nimport \"./helpers/checked-record-browser-ci-workflow-tests.mjs\";\nimport \"./helpers/checked-record-browser-ci-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-browser-archive-history.mjs",
+      "currentSha256": "e598c2eaf4582258e31c60acbfd7b968af74febc16e3d575e2922e9c408419d0",
+      "previousSha256": "867cc855da72e6556cb865394552681910678921055c7a103eb5df999d7d3dd0",
+      "edits": [
+        {
+          "start": 242,
+          "previous": "",
+          "current": "import { beforeCheckedRecordBrowserCiSource } from \"./checked-record-browser-ci-history.mjs\";\n"
+        },
+        {
+          "start": 2231,
+          "previous": "",
+          "current": "\tsource = beforeCheckedRecordBrowserCiSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "7a51aa45b43edb42e0e814e2c0050f48c19ce1545d564748a560f259f85a1f4e",
+      "previousSha256": "069c05ae90d266bae69729c4c42b4826997519081ee9dbb67a3cf8a410fa34d1",
+      "edits": [
+        {
+          "start": 1488,
+          "previous": "",
+          "current": "import { checkedRecordBrowserCiChangedPaths } from \"./checked-record-browser-ci-history.mjs\";\n"
+        },
+        {
+          "start": 61460,
+          "previous": "",
+          "current": "\t, ...checkedRecordBrowserCiChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}
