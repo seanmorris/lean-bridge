@@ -48,7 +48,8 @@ test("WIT history checkout authenticates exact changes without changing support 
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
 	assert.equal(pins, 92);
-	assert.deepEqual(JSON.parse(await readFile(inventoryPath, "utf8")), expected);
+	const currentInventory = beforeWitHistoryCheckoutSource(inventoryPath, await readFile(inventoryPath, "utf8"), record.updates.find(item => item.path === inventoryPath).currentSha256);
+	assert.deepEqual(JSON.parse(currentInventory), expected);
 	assert.equal(expected.evidence.length, 472); assert.equal(expected.observations.length, 571);
 	const workflowPath = ".github/workflows/consumer-matrix.yml";
 	const [earlierJobs, witAndLaterJobs] = original(workflowPath).split("\n  wasi-consumer:\n");

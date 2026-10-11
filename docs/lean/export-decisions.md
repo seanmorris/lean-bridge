@@ -42,9 +42,13 @@ normalization, including through transparent aliases and the tested closed
 [native](../evidence/nominal-subtype-native-20261011.md) and
 [component](../evidence/component-nominal-subtype-20261011.md) compiler checks,
 with constructor choices attached to each use rather than to the shared type.
-Both compiler paths also project constructor-free results. Installed acceptance
-for these additions is pending. Refined callbacks, owned and recursive Subtypes,
-and Subtype fields in generic records remain unfinished.
+Both compiler paths also project constructor-free results.
+[Installed npm checks](../evidence/nominal-subtype-npm-acceptance-20261011.md)
+cover the tested Nat fields, aliases and constructor-free outputs on both source
+routes in Node 22.23.2 with strict TypeScript, including result-only packages.
+Browser, native and PHP-Wasm nominal acceptance remains pending. Refined
+callbacks, owned and recursive Subtypes, and Subtype fields in generic records
+remain unfinished.
 
 ### Select constructors inside containers
 
@@ -126,8 +130,9 @@ refinement trees and reconcile them against fresh Lean metadata.
 
 This native compiler-stage example uses a copied record with a Subtype field
 and a Fin sibling. The shared component compiler now admits the same field
-choices and result projections. Installed-package acceptance for native, npm
-and PHP-Wasm packages is pending. Save `NominalSubtypes.lean`:
+choices and result projections. [Installed npm acceptance](../evidence/nominal-subtype-npm-acceptance-20261011.md)
+covers the separate Nat nominal fixture on Node. Native and PHP-Wasm nominal
+acceptance remains pending. Save `NominalSubtypes.lean`:
 
 ```lean
 namespace NominalSubtypes

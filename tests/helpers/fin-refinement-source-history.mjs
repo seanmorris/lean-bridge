@@ -35,6 +35,7 @@ import { jvmPendingExitChangedPaths } from "./jvm-pending-exit-history.mjs";
 import { nativeHistoryCheckoutChangedPaths } from "./native-history-checkout-history.mjs";
 import { componentNominalSubtypeChangedPaths } from "./component-nominal-subtype-history.mjs";
 import { witHistoryCheckoutChangedPaths } from "./wit-history-checkout-history.mjs";
+import { nominalSubtypeNpmPromotionChangedPaths } from "./nominal-subtype-npm-promotion-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeSubtypeRefinementSource, subtypeRefinementChangedPaths } from "./subtype-refinement-source-history.mjs";
 import { subtypeHeapChangedPaths } from "./subtype-heap-source-history.mjs";
@@ -935,6 +936,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nativeHistoryCheckoutChangedPaths
 	, ...componentNominalSubtypeChangedPaths
 	, ...witHistoryCheckoutChangedPaths
+	, ...nominalSubtypeNpmPromotionChangedPaths
 ])].sort());
 
 /**

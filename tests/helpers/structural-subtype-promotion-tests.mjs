@@ -20,12 +20,21 @@ test("structural Subtype guides describe the installed scope and use the actual 
 		const source = await readFile(path, "utf8");
 		const row = source.split("\n").find(line => line.startsWith("| `Subtype /"));
 		assert.ok(row.includes(structuralSubtypeConversion), path);
-		assert.ok(row.includes("Ordinary source: Installed checks passed (input, result)"), path);
-		assert.ok(row.includes("Reviewed IR: Installed checks passed (input, result)"), path);
+		if(path === "docs/javascript-typescript.md")
+		{
+			assert.ok(row.includes("Ordinary source: Node JavaScript / TypeScript: Installed checks passed (input, result, field)"));
+			assert.ok(row.includes("Reviewed IR: Node JavaScript / TypeScript: Installed checks passed (input, result, field)"));
+			assert.ok(row.includes("Browser / React / Worker: Installed checks passed (input, result)"));
+		}
+		else
+		{
+			assert.ok(row.includes("Ordinary source: Installed checks passed (input, result)"), path);
+			assert.ok(row.includes("Reviewed IR: Installed checks passed (input, result)"), path);
+		}
 		assert.ok(row.includes("Not audited (field, callback input, callback result)"), path);
 		assert.ok(source.includes("### Subtypes inside containers\n"), path);
 		assert.ok(source.includes("structural-subtype-promotion-20261011.md"), path);
-		assert.ok(source.includes("hosted release-floor acceptance"), path);
+		assert.ok(source.replace(/\s+/gu, " ").includes("hosted release-floor acceptance"), path);
 		assert.doesNotMatch(source, /Only top-level parameters and results are supported|Nested and callback\nSubtype support remains separate|Subtypes nested in containers, record fields or callback signatures\nare not supported/u);
 	}
 	const author = await readFile("docs/lean/existing-package.md", "utf8");
