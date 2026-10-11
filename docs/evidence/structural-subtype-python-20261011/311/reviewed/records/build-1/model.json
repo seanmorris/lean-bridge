@@ -1,0 +1,4298 @@
+{
+  "bindingIr": {
+    "assurance": [],
+    "capabilities": [],
+    "component": {
+      "id": "structuralsubtypes@1.0.0",
+      "name": "structuralsubtypes",
+      "version": "1.0.0"
+    },
+    "declarations": [
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:StructuralSubtypes.aliasArguments",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "aliasArguments",
+        "overloadKey": "StructuralSubtypes.aliasArguments",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "kind": "primitive",
+                      "name": "nat"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          },
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value1",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "kind": "primitive",
+                      "name": "nat"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "kind": "primitive",
+                    "name": "nat"
+                  }
+                ],
+                "constructor": "option",
+                "kind": "apply"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "StructuralSubtypes.aliasArguments",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy",
+                  "refinement": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "constructor": "StructuralSubtypes.checkedPositive"
+                          }
+                        ],
+                        "kind": "option"
+                      }
+                    ],
+                    "kind": "array"
+                  }
+                },
+                {
+                  "lifetime": null,
+                  "ownership": "copy",
+                  "refinement": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "constructor": "StructuralSubtypes.normalizePositive"
+                          }
+                        ],
+                        "kind": "option"
+                      }
+                    ],
+                    "kind": "array"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "constructor": "StructuralSubtypes.checkedPositive"
+                        }
+                      ],
+                      "kind": "option"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "constructor": "StructuralSubtypes.checkedPositive",
+                          "kind": "subtype"
+                        }
+                      ],
+                      "kind": "option"
+                    }
+                  ],
+                  "kind": "array"
+                },
+                {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "constructor": "StructuralSubtypes.normalizePositive",
+                          "kind": "subtype"
+                        }
+                      ],
+                      "kind": "option"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              ],
+              "result": {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "constructor": "StructuralSubtypes.checkedPositive",
+                        "kind": "subtype"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 78,
+              "endLine": 46,
+              "path": "StructuralSubtypes.lean",
+              "startColumn": 0,
+              "startLine": 46
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:StructuralSubtypes.aliasPair",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "aliasPair",
+        "overloadKey": "StructuralSubtypes.aliasPair",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "kind": "primitive",
+                          "name": "nat"
+                        }
+                      ],
+                      "constructor": "option",
+                      "kind": "apply"
+                    }
+                  ],
+                  "constructor": "array",
+                  "kind": "apply"
+                },
+                {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "kind": "primitive",
+                          "name": "nat"
+                        }
+                      ],
+                      "constructor": "option",
+                      "kind": "apply"
+                    }
+                  ],
+                  "constructor": "array",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "tuple",
+              "kind": "apply"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "constructor": "option",
+                    "kind": "apply"
+                  }
+                ],
+                "constructor": "array",
+                "kind": "apply"
+              },
+              {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "constructor": "option",
+                    "kind": "apply"
+                  }
+                ],
+                "constructor": "array",
+                "kind": "apply"
+              }
+            ],
+            "constructor": "tuple",
+            "kind": "apply"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "StructuralSubtypes.aliasPair",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy",
+                  "refinement": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "arguments": [
+                              {
+                                "constructor": "StructuralSubtypes.checkedPositive"
+                              }
+                            ],
+                            "kind": "option"
+                          }
+                        ],
+                        "kind": "array"
+                      },
+                      {
+                        "arguments": [
+                          {
+                            "arguments": [
+                              {
+                                "constructor": "StructuralSubtypes.normalizePositive"
+                              }
+                            ],
+                            "kind": "option"
+                          }
+                        ],
+                        "kind": "array"
+                      }
+                    ],
+                    "kind": "tuple"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "arguments": [
+                            {
+                              "constructor": "StructuralSubtypes.checkedPositive"
+                            }
+                          ],
+                          "kind": "option"
+                        }
+                      ],
+                      "kind": "array"
+                    },
+                    {
+                      "arguments": [
+                        {
+                          "arguments": [
+                            {
+                              "constructor": "StructuralSubtypes.normalizePositive"
+                            }
+                          ],
+                          "kind": "option"
+                        }
+                      ],
+                      "kind": "array"
+                    }
+                  ],
+                  "kind": "tuple"
+                }
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "arguments": [
+                            {
+                              "constructor": "StructuralSubtypes.checkedPositive",
+                              "kind": "subtype"
+                            }
+                          ],
+                          "kind": "option"
+                        }
+                      ],
+                      "kind": "array"
+                    },
+                    {
+                      "arguments": [
+                        {
+                          "arguments": [
+                            {
+                              "constructor": "StructuralSubtypes.normalizePositive",
+                              "kind": "subtype"
+                            }
+                          ],
+                          "kind": "option"
+                        }
+                      ],
+                      "kind": "array"
+                    }
+                  ],
+                  "kind": "tuple"
+                }
+              ],
+              "result": {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "constructor": "StructuralSubtypes.checkedPositive",
+                            "kind": "subtype"
+                          }
+                        ],
+                        "kind": "option"
+                      }
+                    ],
+                    "kind": "array"
+                  },
+                  {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "constructor": "StructuralSubtypes.normalizePositive",
+                            "kind": "subtype"
+                          }
+                        ],
+                        "kind": "option"
+                      }
+                    ],
+                    "kind": "array"
+                  }
+                ],
+                "kind": "tuple"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 74,
+              "endLine": 45,
+              "path": "StructuralSubtypes.lean",
+              "startColumn": 0,
+              "startLine": 45
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:StructuralSubtypes.arrays",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "arrays",
+        "overloadKey": "StructuralSubtypes.arrays",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "arguments": [
+              {
+                "kind": "primitive",
+                "name": "nat"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "StructuralSubtypes.arrays",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy",
+                  "refinement": {
+                    "arguments": [
+                      {
+                        "constructor": "StructuralSubtypes.checkedPositive"
+                      }
+                    ],
+                    "kind": "array"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "arguments": [
+                    {
+                      "constructor": "StructuralSubtypes.checkedPositive"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "arguments": [
+                    {
+                      "constructor": "StructuralSubtypes.checkedPositive",
+                      "kind": "subtype"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              ],
+              "result": {
+                "arguments": [
+                  {
+                    "constructor": "StructuralSubtypes.checkedPositive",
+                    "kind": "subtype"
+                  }
+                ],
+                "kind": "array"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 63,
+              "endLine": 26,
+              "path": "StructuralSubtypes.lean",
+              "startColumn": 0,
+              "startLine": 26
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:StructuralSubtypes.branch",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "branch",
+        "overloadKey": "StructuralSubtypes.branch",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                },
+                {
+                  "kind": "primitive",
+                  "name": "string"
+                }
+              ],
+              "constructor": "result",
+              "kind": "apply"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "arguments": [
+              {
+                "kind": "primitive",
+                "name": "nat"
+              },
+              {
+                "kind": "primitive",
+                "name": "string"
+              }
+            ],
+            "constructor": "result",
+            "kind": "apply"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "StructuralSubtypes.branch",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy",
+                  "refinement": {
+                    "arguments": [
+                      {
+                        "constructor": "StructuralSubtypes.checkedPositive"
+                      },
+                      {
+                        "constructor": "StructuralSubtypes.checkedWord"
+                      }
+                    ],
+                    "kind": "result"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "arguments": [
+                    {
+                      "constructor": "StructuralSubtypes.checkedPositive"
+                    },
+                    {
+                      "constructor": "StructuralSubtypes.checkedWord"
+                    }
+                  ],
+                  "kind": "result"
+                }
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "arguments": [
+                    {
+                      "constructor": "StructuralSubtypes.checkedPositive",
+                      "kind": "subtype"
+                    },
+                    {
+                      "constructor": "StructuralSubtypes.checkedWord",
+                      "kind": "subtype"
+                    }
+                  ],
+                  "kind": "result"
+                }
+              ],
+              "result": {
+                "arguments": [
+                  {
+                    "constructor": "StructuralSubtypes.checkedPositive",
+                    "kind": "subtype"
+                  },
+                  {
+                    "constructor": "StructuralSubtypes.checkedWord",
+                    "kind": "subtype"
+                  }
+                ],
+                "kind": "result"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 73,
+              "endLine": 40,
+              "path": "StructuralSubtypes.lean",
+              "startColumn": 0,
+              "startLine": 40
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:StructuralSubtypes.byteBranches",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "byteBranches",
+        "overloadKey": "StructuralSubtypes.byteBranches",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "kind": "primitive",
+                          "name": "uint8"
+                        },
+                        {
+                          "kind": "primitive",
+                          "name": "nat"
+                        }
+                      ],
+                      "constructor": "tuple",
+                      "kind": "apply"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "uint8"
+                      },
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "constructor": "tuple",
+                    "kind": "apply"
+                  }
+                ],
+                "constructor": "option",
+                "kind": "apply"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "StructuralSubtypes.byteBranches",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy",
+                  "refinement": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "arguments": [
+                              {
+                                "constructor": "StructuralSubtypes.checkedByte"
+                              },
+                              {
+                                "constructor": "StructuralSubtypes.checkedPositive"
+                              }
+                            ],
+                            "kind": "tuple"
+                          }
+                        ],
+                        "kind": "option"
+                      }
+                    ],
+                    "kind": "array"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "arguments": [
+                            {
+                              "constructor": "StructuralSubtypes.checkedByte"
+                            },
+                            {
+                              "constructor": "StructuralSubtypes.checkedPositive"
+                            }
+                          ],
+                          "kind": "tuple"
+                        }
+                      ],
+                      "kind": "option"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "arguments": [
+                            {
+                              "constructor": "StructuralSubtypes.checkedByte",
+                              "kind": "subtype"
+                            },
+                            {
+                              "constructor": "StructuralSubtypes.checkedPositive",
+                              "kind": "subtype"
+                            }
+                          ],
+                          "kind": "tuple"
+                        }
+                      ],
+                      "kind": "option"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              ],
+              "result": {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "constructor": "StructuralSubtypes.checkedByte",
+                            "kind": "subtype"
+                          },
+                          {
+                            "constructor": "StructuralSubtypes.checkedPositive",
+                            "kind": "subtype"
+                          }
+                        ],
+                        "kind": "tuple"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 105,
+              "endLine": 41,
+              "path": "StructuralSubtypes.lean",
+              "startColumn": 0,
+              "startLine": 41
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:StructuralSubtypes.lists",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "lists",
+        "overloadKey": "StructuralSubtypes.lists",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "list",
+              "kind": "apply"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "arguments": [
+              {
+                "kind": "primitive",
+                "name": "nat"
+              }
+            ],
+            "constructor": "list",
+            "kind": "apply"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "StructuralSubtypes.lists",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy",
+                  "refinement": {
+                    "arguments": [
+                      {
+                        "constructor": "StructuralSubtypes.checkedPositive"
+                      }
+                    ],
+                    "kind": "list"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "arguments": [
+                    {
+                      "constructor": "StructuralSubtypes.checkedPositive"
+                    }
+                  ],
+                  "kind": "list"
+                }
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "arguments": [
+                    {
+                      "constructor": "StructuralSubtypes.checkedPositive",
+                      "kind": "subtype"
+                    }
+                  ],
+                  "kind": "list"
+                }
+              ],
+              "result": {
+                "arguments": [
+                  {
+                    "constructor": "StructuralSubtypes.checkedPositive",
+                    "kind": "subtype"
+                  }
+                ],
+                "kind": "list"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 60,
+              "endLine": 37,
+              "path": "StructuralSubtypes.lean",
+              "startColumn": 0,
+              "startLine": 37
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:StructuralSubtypes.nested",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "nested",
+        "overloadKey": "StructuralSubtypes.nested",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "arguments": [
+                            {
+                              "kind": "primitive",
+                              "name": "nat"
+                            },
+                            {
+                              "kind": "primitive",
+                              "name": "nat"
+                            }
+                          ],
+                          "constructor": "tuple",
+                          "kind": "apply"
+                        }
+                      ],
+                      "constructor": "option",
+                      "kind": "apply"
+                    }
+                  ],
+                  "constructor": "list",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "StructuralSubtypes.nested",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy",
+                  "refinement": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "arguments": [
+                              {
+                                "arguments": [
+                                  {
+                                    "constructor": "StructuralSubtypes.checkedPositive"
+                                  },
+                                  null
+                                ],
+                                "kind": "tuple"
+                              }
+                            ],
+                            "kind": "option"
+                          }
+                        ],
+                        "kind": "list"
+                      }
+                    ],
+                    "kind": "array"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "arguments": [
+                            {
+                              "arguments": [
+                                {
+                                  "constructor": "StructuralSubtypes.checkedPositive",
+                                  "kind": "subtype"
+                                },
+                                {
+                                  "bound": "184467440737095516170",
+                                  "kind": "fin"
+                                }
+                              ],
+                              "kind": "tuple"
+                            }
+                          ],
+                          "kind": "option"
+                        }
+                      ],
+                      "kind": "list"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              ],
+              "result": null
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 13,
+              "endLine": 43,
+              "path": "StructuralSubtypes.lean",
+              "startColumn": 0,
+              "startLine": 42
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:StructuralSubtypes.options",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "options",
+        "overloadKey": "StructuralSubtypes.options",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "arguments": [
+              {
+                "kind": "primitive",
+                "name": "nat"
+              }
+            ],
+            "constructor": "option",
+            "kind": "apply"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "StructuralSubtypes.options",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy",
+                  "refinement": {
+                    "arguments": [
+                      {
+                        "constructor": "StructuralSubtypes.checkedPositive"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "arguments": [
+                    {
+                      "constructor": "StructuralSubtypes.checkedPositive"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "arguments": [
+                    {
+                      "constructor": "StructuralSubtypes.checkedPositive",
+                      "kind": "subtype"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "result": {
+                "arguments": [
+                  {
+                    "constructor": "StructuralSubtypes.checkedPositive",
+                    "kind": "subtype"
+                  }
+                ],
+                "kind": "option"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 64,
+              "endLine": 38,
+              "path": "StructuralSubtypes.lean",
+              "startColumn": 0,
+              "startLine": 38
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:StructuralSubtypes.plainFin",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "plainFin",
+        "overloadKey": "StructuralSubtypes.plainFin",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "kind": "primitive",
+                      "name": "nat"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "StructuralSubtypes.plainFin",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "bound": "10",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "option"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              ],
+              "result": null
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 68,
+              "endLine": 47,
+              "path": "StructuralSubtypes.lean",
+              "startColumn": 0,
+              "startLine": 47
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:StructuralSubtypes.product",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "product",
+        "overloadKey": "StructuralSubtypes.product",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                },
+                {
+                  "kind": "primitive",
+                  "name": "string"
+                }
+              ],
+              "constructor": "tuple",
+              "kind": "apply"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "arguments": [
+              {
+                "kind": "primitive",
+                "name": "nat"
+              },
+              {
+                "kind": "primitive",
+                "name": "string"
+              }
+            ],
+            "constructor": "tuple",
+            "kind": "apply"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "StructuralSubtypes.product",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy",
+                  "refinement": {
+                    "arguments": [
+                      {
+                        "constructor": "StructuralSubtypes.checkedPositive"
+                      },
+                      {
+                        "constructor": "StructuralSubtypes.checkedWord"
+                      }
+                    ],
+                    "kind": "tuple"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "arguments": [
+                    {
+                      "constructor": "StructuralSubtypes.checkedPositive"
+                    },
+                    {
+                      "constructor": "StructuralSubtypes.checkedWord"
+                    }
+                  ],
+                  "kind": "tuple"
+                }
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "arguments": [
+                    {
+                      "constructor": "StructuralSubtypes.checkedPositive",
+                      "kind": "subtype"
+                    },
+                    {
+                      "constructor": "StructuralSubtypes.checkedWord",
+                      "kind": "subtype"
+                    }
+                  ],
+                  "kind": "tuple"
+                }
+              ],
+              "result": {
+                "arguments": [
+                  {
+                    "constructor": "StructuralSubtypes.checkedPositive",
+                    "kind": "subtype"
+                  },
+                  {
+                    "constructor": "StructuralSubtypes.checkedWord",
+                    "kind": "subtype"
+                  }
+                ],
+                "kind": "tuple"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 64,
+              "endLine": 39,
+              "path": "StructuralSubtypes.lean",
+              "startColumn": 0,
+              "startLine": 39
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:StructuralSubtypes.scalar",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "scalar",
+        "overloadKey": "StructuralSubtypes.scalar",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "StructuralSubtypes.scalar",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy",
+                  "refinement": {
+                    "constructor": "StructuralSubtypes.checkedPositive"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "StructuralSubtypes.checkedPositive"
+                }
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "constructor": "StructuralSubtypes.checkedPositive",
+                  "kind": "subtype"
+                }
+              ],
+              "result": {
+                "constructor": "StructuralSubtypes.checkedPositive",
+                "kind": "subtype"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 49,
+              "endLine": 27,
+              "path": "StructuralSubtypes.lean",
+              "startColumn": 0,
+              "startLine": 27
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:StructuralSubtypes.specialized",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "specialized",
+        "overloadKey": "StructuralSubtypes.specialized",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "list",
+              "kind": "apply"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "arguments": [
+              {
+                "kind": "primitive",
+                "name": "nat"
+              }
+            ],
+            "constructor": "list",
+            "kind": "apply"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "StructuralSubtypes.generic",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy",
+                  "refinement": {
+                    "arguments": [
+                      {
+                        "constructor": "StructuralSubtypes.checkedPositive"
+                      }
+                    ],
+                    "kind": "list"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "arguments": [
+                    {
+                      "constructor": "StructuralSubtypes.checkedPositive"
+                    }
+                  ],
+                  "kind": "list"
+                }
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "arguments": [
+                    {
+                      "constructor": "StructuralSubtypes.checkedPositive",
+                      "kind": "subtype"
+                    }
+                  ],
+                  "kind": "list"
+                }
+              ],
+              "result": {
+                "arguments": [
+                  {
+                    "constructor": "StructuralSubtypes.checkedPositive",
+                    "kind": "subtype"
+                  }
+                ],
+                "kind": "list"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 59,
+              "endLine": 49,
+              "path": "StructuralSubtypes.lean",
+              "startColumn": 0,
+              "startLine": 49
+            },
+            "lean-lang.org/specialization": {
+              "application": "(@_root_.StructuralSubtypes.generic (@_root_.StructuralSubtypes.Positive))",
+              "declaration": "StructuralSubtypes.generic",
+              "name": "StructuralSubtypes.specialized",
+              "types": [
+                "StructuralSubtypes.Positive"
+              ]
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      }
+    ],
+    "documentation": {
+      "details": "",
+      "summary": "Independent corpus contract."
+    },
+    "errors": [],
+    "producers": [
+      {
+        "adapter": "lean-bridge-elaborator",
+        "adapterVersion": 2,
+        "extensions": {
+          "lean-lang.org/elaboration-sha256": "be3754d01efee6ee6fa139e214a0127a5595a389b6b22014611a97a7ff861c0d",
+          "lean-lang.org/toolchain": "leanprover/lean4:v4.32.2"
+        },
+        "id": "lean",
+        "tool": "Lean",
+        "toolVersion": "4.32.2"
+      }
+    ],
+    "schemaVersion": 3,
+    "types": []
+  },
+  "bindingIrSha256": "416a8bcd34a14a77d8bdf0ebc1d69fce2ff21fda6f9b2cc50c87644c54a7f2ae",
+  "byteOrder": "little",
+  "component": {
+    "id": "structuralsubtypes@1.0.0",
+    "name": "structuralsubtypes",
+    "version": "1.0.0"
+  },
+  "exports": [
+    {
+      "documentation": null,
+      "module": "StructuralSubtypes",
+      "name": "StructuralSubtypes.aliasArguments",
+      "parameters": [
+        {
+          "name": "first",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "element": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "Nat",
+                "name": "nat"
+              },
+              "kind": "option"
+            },
+            "kind": "array"
+          }
+        },
+        {
+          "name": "second",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "element": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "Nat",
+                "name": "nat"
+              },
+              "kind": "option"
+            },
+            "kind": "array"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "constructor": "StructuralSubtypes.checkedPositive",
+                    "kind": "subtype"
+                  }
+                ],
+                "kind": "option"
+              }
+            ],
+            "kind": "array"
+          },
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "constructor": "StructuralSubtypes.normalizePositive",
+                    "kind": "subtype"
+                  }
+                ],
+                "kind": "option"
+              }
+            ],
+            "kind": "array"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "constructor": "StructuralSubtypes.checkedPositive",
+                  "kind": "subtype"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "kind": "array"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "element": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "element": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          },
+          "kind": "option"
+        },
+        "kind": "array"
+      },
+      "sourcePosition": {
+        "endColumn": 78,
+        "endLine": 46,
+        "path": "StructuralSubtypes.lean",
+        "startColumn": 0,
+        "startLine": 46
+      },
+      "symbol": "lb_486d24ee5849ed09fee4459f",
+      "theoremReferences": []
+    },
+    {
+      "documentation": null,
+      "module": "StructuralSubtypes",
+      "name": "StructuralSubtypes.aliasPair",
+      "parameters": [
+        {
+          "name": "values",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "arguments": [
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "element": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "element": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Nat",
+                    "name": "nat"
+                  },
+                  "kind": "option"
+                },
+                "kind": "array"
+              },
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "element": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "element": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Nat",
+                    "name": "nat"
+                  },
+                  "kind": "option"
+                },
+                "kind": "array"
+              }
+            ],
+            "kind": "tuple"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "constructor": "StructuralSubtypes.checkedPositive",
+                        "kind": "subtype"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              },
+              {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "constructor": "StructuralSubtypes.normalizePositive",
+                        "kind": "subtype"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              }
+            ],
+            "kind": "tuple"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "constructor": "StructuralSubtypes.checkedPositive",
+                      "kind": "subtype"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            },
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "constructor": "StructuralSubtypes.normalizePositive",
+                      "kind": "subtype"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "kind": "tuple"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "arguments": [
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "element": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "Nat",
+                "name": "nat"
+              },
+              "kind": "option"
+            },
+            "kind": "array"
+          },
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "element": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "Nat",
+                "name": "nat"
+              },
+              "kind": "option"
+            },
+            "kind": "array"
+          }
+        ],
+        "kind": "tuple"
+      },
+      "sourcePosition": {
+        "endColumn": 74,
+        "endLine": 45,
+        "path": "StructuralSubtypes.lean",
+        "startColumn": 0,
+        "startLine": 45
+      },
+      "symbol": "lb_85ecd6046aa1f73f83abcf27",
+      "theoremReferences": []
+    },
+    {
+      "documentation": null,
+      "module": "StructuralSubtypes",
+      "name": "StructuralSubtypes.arrays",
+      "parameters": [
+        {
+          "name": "values",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "element": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "kind": "array"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "constructor": "StructuralSubtypes.checkedPositive",
+                "kind": "subtype"
+              }
+            ],
+            "kind": "array"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "constructor": "StructuralSubtypes.checkedPositive",
+              "kind": "subtype"
+            }
+          ],
+          "kind": "array"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "element": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "kind": "primitive",
+          "lean": "Nat",
+          "name": "nat"
+        },
+        "kind": "array"
+      },
+      "sourcePosition": {
+        "endColumn": 63,
+        "endLine": 26,
+        "path": "StructuralSubtypes.lean",
+        "startColumn": 0,
+        "startLine": 26
+      },
+      "symbol": "lb_a8afafdcdccfd487c60aab47",
+      "theoremReferences": []
+    },
+    {
+      "documentation": null,
+      "module": "StructuralSubtypes",
+      "name": "StructuralSubtypes.branch",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "arguments": [
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "Nat",
+                "name": "nat"
+              },
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "String",
+                "name": "string"
+              }
+            ],
+            "kind": "result"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "constructor": "StructuralSubtypes.checkedPositive",
+                "kind": "subtype"
+              },
+              {
+                "constructor": "StructuralSubtypes.checkedWord",
+                "kind": "subtype"
+              }
+            ],
+            "kind": "result"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "constructor": "StructuralSubtypes.checkedPositive",
+              "kind": "subtype"
+            },
+            {
+              "constructor": "StructuralSubtypes.checkedWord",
+              "kind": "subtype"
+            }
+          ],
+          "kind": "result"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "arguments": [
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          },
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "String",
+            "name": "string"
+          }
+        ],
+        "kind": "result"
+      },
+      "sourcePosition": {
+        "endColumn": 73,
+        "endLine": 40,
+        "path": "StructuralSubtypes.lean",
+        "startColumn": 0,
+        "startLine": 40
+      },
+      "symbol": "lb_78e54ba4d815e6e77c4895b1",
+      "theoremReferences": []
+    },
+    {
+      "documentation": null,
+      "module": "StructuralSubtypes",
+      "name": "StructuralSubtypes.byteBranches",
+      "parameters": [
+        {
+          "name": "values",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "element": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "arguments": [
+                  {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "uint8_t",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "UInt8",
+                    "name": "uint8"
+                  },
+                  {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Nat",
+                    "name": "nat"
+                  }
+                ],
+                "kind": "tuple"
+              },
+              "kind": "option"
+            },
+            "kind": "array"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "constructor": "StructuralSubtypes.checkedByte",
+                        "kind": "subtype"
+                      },
+                      {
+                        "constructor": "StructuralSubtypes.checkedPositive",
+                        "kind": "subtype"
+                      }
+                    ],
+                    "kind": "tuple"
+                  }
+                ],
+                "kind": "option"
+              }
+            ],
+            "kind": "array"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "constructor": "StructuralSubtypes.checkedByte",
+                      "kind": "subtype"
+                    },
+                    {
+                      "constructor": "StructuralSubtypes.checkedPositive",
+                      "kind": "subtype"
+                    }
+                  ],
+                  "kind": "tuple"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "kind": "array"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "element": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "element": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "arguments": [
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "uint8_t",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "UInt8",
+                "name": "uint8"
+              },
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "Nat",
+                "name": "nat"
+              }
+            ],
+            "kind": "tuple"
+          },
+          "kind": "option"
+        },
+        "kind": "array"
+      },
+      "sourcePosition": {
+        "endColumn": 105,
+        "endLine": 41,
+        "path": "StructuralSubtypes.lean",
+        "startColumn": 0,
+        "startLine": 41
+      },
+      "symbol": "lb_d848cf752c7261f24cfd5b10",
+      "theoremReferences": []
+    },
+    {
+      "documentation": null,
+      "module": "StructuralSubtypes",
+      "name": "StructuralSubtypes.lists",
+      "parameters": [
+        {
+          "name": "values",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "element": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "kind": "list"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "constructor": "StructuralSubtypes.checkedPositive",
+                "kind": "subtype"
+              }
+            ],
+            "kind": "list"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "constructor": "StructuralSubtypes.checkedPositive",
+              "kind": "subtype"
+            }
+          ],
+          "kind": "list"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "element": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "kind": "primitive",
+          "lean": "Nat",
+          "name": "nat"
+        },
+        "kind": "list"
+      },
+      "sourcePosition": {
+        "endColumn": 60,
+        "endLine": 37,
+        "path": "StructuralSubtypes.lean",
+        "startColumn": 0,
+        "startLine": 37
+      },
+      "symbol": "lb_0b5409d057862ec3f96beec1",
+      "theoremReferences": []
+    },
+    {
+      "documentation": null,
+      "module": "StructuralSubtypes",
+      "name": "StructuralSubtypes.nested",
+      "parameters": [
+        {
+          "name": "values",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "element": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "element": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "arguments": [
+                    {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "Nat",
+                      "name": "nat"
+                    },
+                    {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "Nat",
+                      "name": "nat"
+                    }
+                  ],
+                  "kind": "tuple"
+                },
+                "kind": "option"
+              },
+              "kind": "list"
+            },
+            "kind": "array"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "constructor": "StructuralSubtypes.checkedPositive",
+                            "kind": "subtype"
+                          },
+                          {
+                            "bound": "184467440737095516170",
+                            "kind": "fin"
+                          }
+                        ],
+                        "kind": "tuple"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "list"
+              }
+            ],
+            "kind": "array"
+          }
+        ],
+        "result": null
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "sourcePosition": {
+        "endColumn": 13,
+        "endLine": 43,
+        "path": "StructuralSubtypes.lean",
+        "startColumn": 0,
+        "startLine": 42
+      },
+      "symbol": "lb_d0560c47cb866c2fde2d7214",
+      "theoremReferences": []
+    },
+    {
+      "documentation": null,
+      "module": "StructuralSubtypes",
+      "name": "StructuralSubtypes.options",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "element": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "kind": "option"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "constructor": "StructuralSubtypes.checkedPositive",
+                "kind": "subtype"
+              }
+            ],
+            "kind": "option"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "constructor": "StructuralSubtypes.checkedPositive",
+              "kind": "subtype"
+            }
+          ],
+          "kind": "option"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "element": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "kind": "primitive",
+          "lean": "Nat",
+          "name": "nat"
+        },
+        "kind": "option"
+      },
+      "sourcePosition": {
+        "endColumn": 64,
+        "endLine": 38,
+        "path": "StructuralSubtypes.lean",
+        "startColumn": 0,
+        "startLine": 38
+      },
+      "symbol": "lb_4518d0e9e129c150c099cebd",
+      "theoremReferences": []
+    },
+    {
+      "documentation": null,
+      "module": "StructuralSubtypes",
+      "name": "StructuralSubtypes.plainFin",
+      "parameters": [
+        {
+          "name": "values",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "element": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "Nat",
+                "name": "nat"
+              },
+              "kind": "option"
+            },
+            "kind": "array"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "10",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "option"
+              }
+            ],
+            "kind": "array"
+          }
+        ],
+        "result": null
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "sourcePosition": {
+        "endColumn": 68,
+        "endLine": 47,
+        "path": "StructuralSubtypes.lean",
+        "startColumn": 0,
+        "startLine": 47
+      },
+      "symbol": "lb_9dc502b24e87182eae2912ae",
+      "theoremReferences": []
+    },
+    {
+      "documentation": null,
+      "module": "StructuralSubtypes",
+      "name": "StructuralSubtypes.product",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "arguments": [
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "Nat",
+                "name": "nat"
+              },
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "String",
+                "name": "string"
+              }
+            ],
+            "kind": "tuple"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "constructor": "StructuralSubtypes.checkedPositive",
+                "kind": "subtype"
+              },
+              {
+                "constructor": "StructuralSubtypes.checkedWord",
+                "kind": "subtype"
+              }
+            ],
+            "kind": "tuple"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "constructor": "StructuralSubtypes.checkedPositive",
+              "kind": "subtype"
+            },
+            {
+              "constructor": "StructuralSubtypes.checkedWord",
+              "kind": "subtype"
+            }
+          ],
+          "kind": "tuple"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "arguments": [
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          },
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "String",
+            "name": "string"
+          }
+        ],
+        "kind": "tuple"
+      },
+      "sourcePosition": {
+        "endColumn": 64,
+        "endLine": 39,
+        "path": "StructuralSubtypes.lean",
+        "startColumn": 0,
+        "startLine": 39
+      },
+      "symbol": "lb_679f47fcbb2f10761b9db312",
+      "theoremReferences": []
+    },
+    {
+      "documentation": null,
+      "module": "StructuralSubtypes",
+      "name": "StructuralSubtypes.scalar",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "StructuralSubtypes.checkedPositive",
+            "kind": "subtype"
+          }
+        ],
+        "result": {
+          "constructor": "StructuralSubtypes.checkedPositive",
+          "kind": "subtype"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "sourcePosition": {
+        "endColumn": 49,
+        "endLine": 27,
+        "path": "StructuralSubtypes.lean",
+        "startColumn": 0,
+        "startLine": 27
+      },
+      "symbol": "lb_76da6e2b36bf2bc74bb2d821",
+      "theoremReferences": []
+    },
+    {
+      "documentation": null,
+      "module": "StructuralSubtypes",
+      "name": "StructuralSubtypes.specialized",
+      "parameters": [
+        {
+          "name": "values",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "element": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "kind": "list"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "constructor": "StructuralSubtypes.checkedPositive",
+                "kind": "subtype"
+              }
+            ],
+            "kind": "list"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "constructor": "StructuralSubtypes.checkedPositive",
+              "kind": "subtype"
+            }
+          ],
+          "kind": "list"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "element": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "kind": "primitive",
+          "lean": "Nat",
+          "name": "nat"
+        },
+        "kind": "list"
+      },
+      "sourcePosition": {
+        "endColumn": 59,
+        "endLine": 49,
+        "path": "StructuralSubtypes.lean",
+        "startColumn": 0,
+        "startLine": 49
+      },
+      "specialization": {
+        "application": "(@_root_.StructuralSubtypes.generic (@_root_.StructuralSubtypes.Positive))",
+        "declaration": "StructuralSubtypes.generic",
+        "name": "StructuralSubtypes.specialized",
+        "types": [
+          "StructuralSubtypes.Positive"
+        ]
+      },
+      "symbol": "lb_9f6df65d361b8f96297241fd",
+      "theoremReferences": []
+    }
+  ],
+  "pointerBits": 64,
+  "profile": "native-library-v1",
+  "schemaVersion": 3,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "a028d051d472389e0a897a1f312ee7ddcaf41ed9214ac726b4baa93e63b5622e",
+    "exportConfigurationSource": "{\n  \"modules\": [\n    \"StructuralSubtypes\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"pypi\": {\n      \"name\": \"structuralsubtypes\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+    "extractorSha256": "4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 97808,
+          "interfaceSha256": "78435946d9b8b19253fe55147c81e2b2f128f6a8f884c6193835bb60d87053ce",
+          "sha256": "dc0423c9032999bc6d9234ea6f23e5818e03a0b0b16e77a0b8a0b91d6070bee9"
+        },
+        "module": "StructuralSubtypes",
+        "source": {
+          "bytes": 2349,
+          "path": "StructuralSubtypes.lean",
+          "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "contracts": {
+        "StructuralSubtypes.aliasArguments": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "constructor": "StructuralSubtypes.checkedPositive"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              }
+            },
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "constructor": "StructuralSubtypes.normalizePositive"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "constructor": "StructuralSubtypes.checkedPositive"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          }
+        },
+        "StructuralSubtypes.aliasPair": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "constructor": "StructuralSubtypes.checkedPositive"
+                          }
+                        ],
+                        "kind": "option"
+                      }
+                    ],
+                    "kind": "array"
+                  },
+                  {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "constructor": "StructuralSubtypes.normalizePositive"
+                          }
+                        ],
+                        "kind": "option"
+                      }
+                    ],
+                    "kind": "array"
+                  }
+                ],
+                "kind": "tuple"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "constructor": "StructuralSubtypes.checkedPositive"
+                        }
+                      ],
+                      "kind": "option"
+                    }
+                  ],
+                  "kind": "array"
+                },
+                {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "constructor": "StructuralSubtypes.normalizePositive"
+                        }
+                      ],
+                      "kind": "option"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              ],
+              "kind": "tuple"
+            }
+          }
+        },
+        "StructuralSubtypes.arrays": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "constructor": "StructuralSubtypes.checkedPositive"
+                  }
+                ],
+                "kind": "array"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "constructor": "StructuralSubtypes.checkedPositive"
+                }
+              ],
+              "kind": "array"
+            }
+          }
+        },
+        "StructuralSubtypes.branch": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "constructor": "StructuralSubtypes.checkedPositive"
+                  },
+                  {
+                    "constructor": "StructuralSubtypes.checkedWord"
+                  }
+                ],
+                "kind": "result"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "constructor": "StructuralSubtypes.checkedPositive"
+                },
+                {
+                  "constructor": "StructuralSubtypes.checkedWord"
+                }
+              ],
+              "kind": "result"
+            }
+          }
+        },
+        "StructuralSubtypes.byteBranches": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "constructor": "StructuralSubtypes.checkedByte"
+                          },
+                          {
+                            "constructor": "StructuralSubtypes.checkedPositive"
+                          }
+                        ],
+                        "kind": "tuple"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "constructor": "StructuralSubtypes.checkedByte"
+                        },
+                        {
+                          "constructor": "StructuralSubtypes.checkedPositive"
+                        }
+                      ],
+                      "kind": "tuple"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          }
+        },
+        "StructuralSubtypes.lists": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "constructor": "StructuralSubtypes.checkedPositive"
+                  }
+                ],
+                "kind": "list"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "constructor": "StructuralSubtypes.checkedPositive"
+                }
+              ],
+              "kind": "list"
+            }
+          }
+        },
+        "StructuralSubtypes.nested": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "arguments": [
+                              {
+                                "constructor": "StructuralSubtypes.checkedPositive"
+                              },
+                              null
+                            ],
+                            "kind": "tuple"
+                          }
+                        ],
+                        "kind": "option"
+                      }
+                    ],
+                    "kind": "list"
+                  }
+                ],
+                "kind": "array"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "StructuralSubtypes.options": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "constructor": "StructuralSubtypes.checkedPositive"
+                  }
+                ],
+                "kind": "option"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "constructor": "StructuralSubtypes.checkedPositive"
+                }
+              ],
+              "kind": "option"
+            }
+          }
+        },
+        "StructuralSubtypes.product": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "constructor": "StructuralSubtypes.checkedPositive"
+                  },
+                  {
+                    "constructor": "StructuralSubtypes.checkedWord"
+                  }
+                ],
+                "kind": "tuple"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "constructor": "StructuralSubtypes.checkedPositive"
+                },
+                {
+                  "constructor": "StructuralSubtypes.checkedWord"
+                }
+              ],
+              "kind": "tuple"
+            }
+          }
+        },
+        "StructuralSubtypes.scalar": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "StructuralSubtypes.checkedPositive"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "StructuralSubtypes.checkedPositive"
+            }
+          }
+        },
+        "StructuralSubtypes.specialized": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "constructor": "StructuralSubtypes.checkedPositive"
+                  }
+                ],
+                "kind": "list"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "constructor": "StructuralSubtypes.checkedPositive"
+                }
+              ],
+              "kind": "list"
+            }
+          }
+        }
+      },
+      "exportModules": [
+        "StructuralSubtypes"
+      ],
+      "exports": [
+        "StructuralSubtypes.aliasArguments",
+        "StructuralSubtypes.aliasPair",
+        "StructuralSubtypes.arrays",
+        "StructuralSubtypes.branch",
+        "StructuralSubtypes.byteBranches",
+        "StructuralSubtypes.lists",
+        "StructuralSubtypes.nested",
+        "StructuralSubtypes.options",
+        "StructuralSubtypes.plainFin",
+        "StructuralSubtypes.product",
+        "StructuralSubtypes.scalar",
+        "StructuralSubtypes.specialized"
+      ],
+      "metadata": {
+        "invocationIdentitySha256": "d2fa3205a7f859505cb27493fcc46bbe73f69664ee6ab8fe5cfd19b2e75bb708",
+        "modules": [
+          {
+            "interfaceSha256": "78435946d9b8b19253fe55147c81e2b2f128f6a8f884c6193835bb60d87053ce",
+            "name": "StructuralSubtypes",
+            "sourcePath": "StructuralSubtypes.lean",
+            "sourceSha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "StructuralSubtypes"
+      ],
+      "profile": "native-library-v1",
+      "resources": [],
+      "specializations": [
+        {
+          "declaration": "StructuralSubtypes.generic",
+          "name": "StructuralSubtypes.specialized",
+          "types": [
+            "StructuralSubtypes.Positive"
+          ]
+        }
+      ]
+    },
+    "reviewedBindingIr": {
+      "path": "api.binding-ir.json",
+      "schemaVersion": 1,
+      "semanticSha256": "6ca095623cdf425a28546d3fb8a5428fc461242aed9f24b91d40009dd77a3e20",
+      "source": "{\n  \"assurance\": [],\n  \"capabilities\": [],\n  \"component\": {\n    \"id\": \"structuralsubtypes@1.0.0\",\n    \"name\": \"structuralsubtypes\",\n    \"version\": \"1.0.0\"\n  },\n  \"declarations\": [\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:StructuralSubtypes.scalar\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"scalar\",\n      \"overloadKey\": \"StructuralSubtypes.scalar\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"StructuralSubtypes.scalar\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"StructuralSubtypes.checkedPositive\",\n                \"kind\": \"subtype\"\n              }\n            ],\n            \"result\": {\n              \"constructor\": \"StructuralSubtypes.checkedPositive\",\n              \"kind\": \"subtype\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:StructuralSubtypes.arrays\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"arrays\",\n      \"overloadKey\": \"StructuralSubtypes.arrays\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"kind\": \"primitive\",\n                \"name\": \"nat\"\n              }\n            ],\n            \"constructor\": \"array\",\n            \"kind\": \"apply\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"arguments\": [\n            {\n              \"kind\": \"primitive\",\n              \"name\": \"nat\"\n            }\n          ],\n          \"constructor\": \"array\",\n          \"kind\": \"apply\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"StructuralSubtypes.arrays\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"arguments\": [\n                  {\n                    \"constructor\": \"StructuralSubtypes.checkedPositive\",\n                    \"kind\": \"subtype\"\n                  }\n                ],\n                \"kind\": \"array\"\n              }\n            ],\n            \"result\": {\n              \"arguments\": [\n                {\n                  \"constructor\": \"StructuralSubtypes.checkedPositive\",\n                  \"kind\": \"subtype\"\n                }\n              ],\n              \"kind\": \"array\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:StructuralSubtypes.lists\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"lists\",\n      \"overloadKey\": \"StructuralSubtypes.lists\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"kind\": \"primitive\",\n                \"name\": \"nat\"\n              }\n            ],\n            \"constructor\": \"list\",\n            \"kind\": \"apply\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"arguments\": [\n            {\n              \"kind\": \"primitive\",\n              \"name\": \"nat\"\n            }\n          ],\n          \"constructor\": \"list\",\n          \"kind\": \"apply\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"StructuralSubtypes.lists\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"arguments\": [\n                  {\n                    \"constructor\": \"StructuralSubtypes.checkedPositive\",\n                    \"kind\": \"subtype\"\n                  }\n                ],\n                \"kind\": \"list\"\n              }\n            ],\n            \"result\": {\n              \"arguments\": [\n                {\n                  \"constructor\": \"StructuralSubtypes.checkedPositive\",\n                  \"kind\": \"subtype\"\n                }\n              ],\n              \"kind\": \"list\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:StructuralSubtypes.options\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"options\",\n      \"overloadKey\": \"StructuralSubtypes.options\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"kind\": \"primitive\",\n                \"name\": \"nat\"\n              }\n            ],\n            \"constructor\": \"option\",\n            \"kind\": \"apply\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"arguments\": [\n            {\n              \"kind\": \"primitive\",\n              \"name\": \"nat\"\n            }\n          ],\n          \"constructor\": \"option\",\n          \"kind\": \"apply\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"StructuralSubtypes.options\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"arguments\": [\n                  {\n                    \"constructor\": \"StructuralSubtypes.checkedPositive\",\n                    \"kind\": \"subtype\"\n                  }\n                ],\n                \"kind\": \"option\"\n              }\n            ],\n            \"result\": {\n              \"arguments\": [\n                {\n                  \"constructor\": \"StructuralSubtypes.checkedPositive\",\n                  \"kind\": \"subtype\"\n                }\n              ],\n              \"kind\": \"option\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:StructuralSubtypes.product\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"product\",\n      \"overloadKey\": \"StructuralSubtypes.product\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"kind\": \"primitive\",\n                \"name\": \"nat\"\n              },\n              {\n                \"kind\": \"primitive\",\n                \"name\": \"string\"\n              }\n            ],\n            \"constructor\": \"tuple\",\n            \"kind\": \"apply\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"arguments\": [\n            {\n              \"kind\": \"primitive\",\n              \"name\": \"nat\"\n            },\n            {\n              \"kind\": \"primitive\",\n              \"name\": \"string\"\n            }\n          ],\n          \"constructor\": \"tuple\",\n          \"kind\": \"apply\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"StructuralSubtypes.product\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"arguments\": [\n                  {\n                    \"constructor\": \"StructuralSubtypes.checkedPositive\",\n                    \"kind\": \"subtype\"\n                  },\n                  {\n                    \"constructor\": \"StructuralSubtypes.checkedWord\",\n                    \"kind\": \"subtype\"\n                  }\n                ],\n                \"kind\": \"tuple\"\n              }\n            ],\n            \"result\": {\n              \"arguments\": [\n                {\n                  \"constructor\": \"StructuralSubtypes.checkedPositive\",\n                  \"kind\": \"subtype\"\n                },\n                {\n                  \"constructor\": \"StructuralSubtypes.checkedWord\",\n                  \"kind\": \"subtype\"\n                }\n              ],\n              \"kind\": \"tuple\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:StructuralSubtypes.branch\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"branch\",\n      \"overloadKey\": \"StructuralSubtypes.branch\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"kind\": \"primitive\",\n                \"name\": \"nat\"\n              },\n              {\n                \"kind\": \"primitive\",\n                \"name\": \"string\"\n              }\n            ],\n            \"constructor\": \"result\",\n            \"kind\": \"apply\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"arguments\": [\n            {\n              \"kind\": \"primitive\",\n              \"name\": \"nat\"\n            },\n            {\n              \"kind\": \"primitive\",\n              \"name\": \"string\"\n            }\n          ],\n          \"constructor\": \"result\",\n          \"kind\": \"apply\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"StructuralSubtypes.branch\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"arguments\": [\n                  {\n                    \"constructor\": \"StructuralSubtypes.checkedPositive\",\n                    \"kind\": \"subtype\"\n                  },\n                  {\n                    \"constructor\": \"StructuralSubtypes.checkedWord\",\n                    \"kind\": \"subtype\"\n                  }\n                ],\n                \"kind\": \"result\"\n              }\n            ],\n            \"result\": {\n              \"arguments\": [\n                {\n                  \"constructor\": \"StructuralSubtypes.checkedPositive\",\n                  \"kind\": \"subtype\"\n                },\n                {\n                  \"constructor\": \"StructuralSubtypes.checkedWord\",\n                  \"kind\": \"subtype\"\n                }\n              ],\n              \"kind\": \"result\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:StructuralSubtypes.byteBranches\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"byteBranches\",\n      \"overloadKey\": \"StructuralSubtypes.byteBranches\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"arguments\": [\n                  {\n                    \"arguments\": [\n                      {\n                        \"kind\": \"primitive\",\n                        \"name\": \"uint8\"\n                      },\n                      {\n                        \"kind\": \"primitive\",\n                        \"name\": \"nat\"\n                      }\n                    ],\n                    \"constructor\": \"tuple\",\n                    \"kind\": \"apply\"\n                  }\n                ],\n                \"constructor\": \"option\",\n                \"kind\": \"apply\"\n              }\n            ],\n            \"constructor\": \"array\",\n            \"kind\": \"apply\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"arguments\": [\n            {\n              \"arguments\": [\n                {\n                  \"arguments\": [\n                    {\n                      \"kind\": \"primitive\",\n                      \"name\": \"uint8\"\n                    },\n                    {\n                      \"kind\": \"primitive\",\n                      \"name\": \"nat\"\n                    }\n                  ],\n                  \"constructor\": \"tuple\",\n                  \"kind\": \"apply\"\n                }\n              ],\n              \"constructor\": \"option\",\n              \"kind\": \"apply\"\n            }\n          ],\n          \"constructor\": \"array\",\n          \"kind\": \"apply\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"StructuralSubtypes.byteBranches\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"arguments\": [\n                  {\n                    \"arguments\": [\n                      {\n                        \"arguments\": [\n                          {\n                            \"constructor\": \"StructuralSubtypes.checkedByte\",\n                            \"kind\": \"subtype\"\n                          },\n                          {\n                            \"constructor\": \"StructuralSubtypes.checkedPositive\",\n                            \"kind\": \"subtype\"\n                          }\n                        ],\n                        \"kind\": \"tuple\"\n                      }\n                    ],\n                    \"kind\": \"option\"\n                  }\n                ],\n                \"kind\": \"array\"\n              }\n            ],\n            \"result\": {\n              \"arguments\": [\n                {\n                  \"arguments\": [\n                    {\n                      \"arguments\": [\n                        {\n                          \"constructor\": \"StructuralSubtypes.checkedByte\",\n                          \"kind\": \"subtype\"\n                        },\n                        {\n                          \"constructor\": \"StructuralSubtypes.checkedPositive\",\n                          \"kind\": \"subtype\"\n                        }\n                      ],\n                      \"kind\": \"tuple\"\n                    }\n                  ],\n                  \"kind\": \"option\"\n                }\n              ],\n              \"kind\": \"array\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:StructuralSubtypes.nested\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"nested\",\n      \"overloadKey\": \"StructuralSubtypes.nested\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"arguments\": [\n                  {\n                    \"arguments\": [\n                      {\n                        \"arguments\": [\n                          {\n                            \"kind\": \"primitive\",\n                            \"name\": \"nat\"\n                          },\n                          {\n                            \"kind\": \"primitive\",\n                            \"name\": \"nat\"\n                          }\n                        ],\n                        \"constructor\": \"tuple\",\n                        \"kind\": \"apply\"\n                      }\n                    ],\n                    \"constructor\": \"option\",\n                    \"kind\": \"apply\"\n                  }\n                ],\n                \"constructor\": \"list\",\n                \"kind\": \"apply\"\n              }\n            ],\n            \"constructor\": \"array\",\n            \"kind\": \"apply\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"StructuralSubtypes.nested\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"arguments\": [\n                  {\n                    \"arguments\": [\n                      {\n                        \"arguments\": [\n                          {\n                            \"arguments\": [\n                              {\n                                \"constructor\": \"StructuralSubtypes.checkedPositive\",\n                                \"kind\": \"subtype\"\n                              },\n                              {\n                                \"bound\": \"184467440737095516170\",\n                                \"kind\": \"fin\"\n                              }\n                            ],\n                            \"kind\": \"tuple\"\n                          }\n                        ],\n                        \"kind\": \"option\"\n                      }\n                    ],\n                    \"kind\": \"list\"\n                  }\n                ],\n                \"kind\": \"array\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:StructuralSubtypes.aliasPair\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"aliasPair\",\n      \"overloadKey\": \"StructuralSubtypes.aliasPair\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"arguments\": [\n                  {\n                    \"arguments\": [\n                      {\n                        \"kind\": \"primitive\",\n                        \"name\": \"nat\"\n                      }\n                    ],\n                    \"constructor\": \"option\",\n                    \"kind\": \"apply\"\n                  }\n                ],\n                \"constructor\": \"array\",\n                \"kind\": \"apply\"\n              },\n              {\n                \"arguments\": [\n                  {\n                    \"arguments\": [\n                      {\n                        \"kind\": \"primitive\",\n                        \"name\": \"nat\"\n                      }\n                    ],\n                    \"constructor\": \"option\",\n                    \"kind\": \"apply\"\n                  }\n                ],\n                \"constructor\": \"array\",\n                \"kind\": \"apply\"\n              }\n            ],\n            \"constructor\": \"tuple\",\n            \"kind\": \"apply\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"arguments\": [\n            {\n              \"arguments\": [\n                {\n                  \"arguments\": [\n                    {\n                      \"kind\": \"primitive\",\n                      \"name\": \"nat\"\n                    }\n                  ],\n                  \"constructor\": \"option\",\n                  \"kind\": \"apply\"\n                }\n              ],\n              \"constructor\": \"array\",\n              \"kind\": \"apply\"\n            },\n            {\n              \"arguments\": [\n                {\n                  \"arguments\": [\n                    {\n                      \"kind\": \"primitive\",\n                      \"name\": \"nat\"\n                    }\n                  ],\n                  \"constructor\": \"option\",\n                  \"kind\": \"apply\"\n                }\n              ],\n              \"constructor\": \"array\",\n              \"kind\": \"apply\"\n            }\n          ],\n          \"constructor\": \"tuple\",\n          \"kind\": \"apply\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"StructuralSubtypes.aliasPair\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"arguments\": [\n                  {\n                    \"arguments\": [\n                      {\n                        \"arguments\": [\n                          {\n                            \"constructor\": \"StructuralSubtypes.checkedPositive\",\n                            \"kind\": \"subtype\"\n                          }\n                        ],\n                        \"kind\": \"option\"\n                      }\n                    ],\n                    \"kind\": \"array\"\n                  },\n                  {\n                    \"arguments\": [\n                      {\n                        \"arguments\": [\n                          {\n                            \"constructor\": \"StructuralSubtypes.normalizePositive\",\n                            \"kind\": \"subtype\"\n                          }\n                        ],\n                        \"kind\": \"option\"\n                      }\n                    ],\n                    \"kind\": \"array\"\n                  }\n                ],\n                \"kind\": \"tuple\"\n              }\n            ],\n            \"result\": {\n              \"arguments\": [\n                {\n                  \"arguments\": [\n                    {\n                      \"arguments\": [\n                        {\n                          \"constructor\": \"StructuralSubtypes.checkedPositive\",\n                          \"kind\": \"subtype\"\n                        }\n                      ],\n                      \"kind\": \"option\"\n                    }\n                  ],\n                  \"kind\": \"array\"\n                },\n                {\n                  \"arguments\": [\n                    {\n                      \"arguments\": [\n                        {\n                          \"constructor\": \"StructuralSubtypes.normalizePositive\",\n                          \"kind\": \"subtype\"\n                        }\n                      ],\n                      \"kind\": \"option\"\n                    }\n                  ],\n                  \"kind\": \"array\"\n                }\n              ],\n              \"kind\": \"tuple\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:StructuralSubtypes.aliasArguments\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"aliasArguments\",\n      \"overloadKey\": \"StructuralSubtypes.aliasArguments\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"arguments\": [\n                  {\n                    \"kind\": \"primitive\",\n                    \"name\": \"nat\"\n                  }\n                ],\n                \"constructor\": \"option\",\n                \"kind\": \"apply\"\n              }\n            ],\n            \"constructor\": \"array\",\n            \"kind\": \"apply\"\n          }\n        },\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value1\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"arguments\": [\n                  {\n                    \"kind\": \"primitive\",\n                    \"name\": \"nat\"\n                  }\n                ],\n                \"constructor\": \"option\",\n                \"kind\": \"apply\"\n              }\n            ],\n            \"constructor\": \"array\",\n            \"kind\": \"apply\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"arguments\": [\n            {\n              \"arguments\": [\n                {\n                  \"kind\": \"primitive\",\n                  \"name\": \"nat\"\n                }\n              ],\n              \"constructor\": \"option\",\n              \"kind\": \"apply\"\n            }\n          ],\n          \"constructor\": \"array\",\n          \"kind\": \"apply\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"StructuralSubtypes.aliasArguments\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"arguments\": [\n                  {\n                    \"arguments\": [\n                      {\n                        \"constructor\": \"StructuralSubtypes.checkedPositive\",\n                        \"kind\": \"subtype\"\n                      }\n                    ],\n                    \"kind\": \"option\"\n                  }\n                ],\n                \"kind\": \"array\"\n              },\n              {\n                \"arguments\": [\n                  {\n                    \"arguments\": [\n                      {\n                        \"constructor\": \"StructuralSubtypes.normalizePositive\",\n                        \"kind\": \"subtype\"\n                      }\n                    ],\n                    \"kind\": \"option\"\n                  }\n                ],\n                \"kind\": \"array\"\n              }\n            ],\n            \"result\": {\n              \"arguments\": [\n                {\n                  \"arguments\": [\n                    {\n                      \"constructor\": \"StructuralSubtypes.checkedPositive\",\n                      \"kind\": \"subtype\"\n                    }\n                  ],\n                  \"kind\": \"option\"\n                }\n              ],\n              \"kind\": \"array\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:StructuralSubtypes.plainFin\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"plainFin\",\n      \"overloadKey\": \"StructuralSubtypes.plainFin\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"arguments\": [\n                  {\n                    \"kind\": \"primitive\",\n                    \"name\": \"nat\"\n                  }\n                ],\n                \"constructor\": \"option\",\n                \"kind\": \"apply\"\n              }\n            ],\n            \"constructor\": \"array\",\n            \"kind\": \"apply\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"StructuralSubtypes.plainFin\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"arguments\": [\n                  {\n                    \"arguments\": [\n                      {\n                        \"bound\": \"10\",\n                        \"kind\": \"fin\"\n                      }\n                    ],\n                    \"kind\": \"option\"\n                  }\n                ],\n                \"kind\": \"array\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:StructuralSubtypes.specialized\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"specialized\",\n      \"overloadKey\": \"StructuralSubtypes.specialized\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"kind\": \"primitive\",\n                \"name\": \"nat\"\n              }\n            ],\n            \"constructor\": \"list\",\n            \"kind\": \"apply\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"arguments\": [\n            {\n              \"kind\": \"primitive\",\n              \"name\": \"nat\"\n            }\n          ],\n          \"constructor\": \"list\",\n          \"kind\": \"apply\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"StructuralSubtypes.generic\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"arguments\": [\n                  {\n                    \"constructor\": \"StructuralSubtypes.checkedPositive\",\n                    \"kind\": \"subtype\"\n                  }\n                ],\n                \"kind\": \"list\"\n              }\n            ],\n            \"result\": {\n              \"arguments\": [\n                {\n                  \"constructor\": \"StructuralSubtypes.checkedPositive\",\n                  \"kind\": \"subtype\"\n                }\n              ],\n              \"kind\": \"list\"\n            }\n          },\n          \"lean-lang.org/specialization\": {\n            \"application\": \"(@_root_.StructuralSubtypes.generic (@_root_.StructuralSubtypes.Positive))\",\n            \"declaration\": \"StructuralSubtypes.generic\",\n            \"name\": \"StructuralSubtypes.specialized\",\n            \"types\": [\n              \"StructuralSubtypes.Positive\"\n            ]\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    }\n  ],\n  \"documentation\": {\n    \"details\": \"\",\n    \"summary\": \"Independent corpus contract.\"\n  },\n  \"errors\": [],\n  \"producers\": [\n    {\n      \"adapter\": \"independent-corpus-contract\",\n      \"adapterVersion\": 1,\n      \"extensions\": {},\n      \"id\": \"corpusReview\",\n      \"tool\": \"Corpus contract review\",\n      \"toolVersion\": \"1\"\n    }\n  ],\n  \"schemaVersion\": 3,\n  \"types\": []\n}\n",
+      "sourceSha256": "fcb7bfa656ac6d6262a9773712f02b6c0bd5a08a72483c9ba9225f83fe90c36f"
+    },
+    "sourceNoticesSha256": "e0b8c17da7927e47ad974039fdeca4e7e79975fa3ba1b9a68ab3069b093f496e",
+    "sourceTreeSha256": "8ff877cc1227585217c7800d66d2ac6fd65e5357b9b11596d56156e6693a207d"
+  },
+  "types": [
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "key": "bcb803bc837008bec599",
+      "kind": "primitive",
+      "lean": "Nat",
+      "name": "nat"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "element": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "key": "3d0403c7f86fde2ead4d",
+      "kind": "option"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": true,
+        "unbox": "lean_unbox"
+      },
+      "element": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "element": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "kind": "primitive",
+          "lean": "Nat",
+          "name": "nat"
+        },
+        "kind": "option"
+      },
+      "key": "cbf1a822cab24c3df8da",
+      "kind": "array"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": true,
+        "unbox": "lean_unbox"
+      },
+      "arguments": [
+        {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": true,
+            "unbox": "lean_unbox"
+          },
+          "element": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "element": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "kind": "option"
+          },
+          "kind": "array"
+        },
+        {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": true,
+            "unbox": "lean_unbox"
+          },
+          "element": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "element": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "kind": "option"
+          },
+          "kind": "array"
+        }
+      ],
+      "key": "97011fb08c2a924880ed",
+      "kind": "tuple"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": true,
+        "unbox": "lean_unbox"
+      },
+      "element": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "key": "224517b0527dd01c7a6b",
+      "kind": "array"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": true,
+        "unbox": "lean_unbox"
+      },
+      "key": "fef73841aaed14bc1688",
+      "kind": "primitive",
+      "lean": "String",
+      "name": "string"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": true,
+        "unbox": "lean_unbox"
+      },
+      "arguments": [
+        {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "kind": "primitive",
+          "lean": "Nat",
+          "name": "nat"
+        },
+        {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": true,
+            "unbox": "lean_unbox"
+          },
+          "kind": "primitive",
+          "lean": "String",
+          "name": "string"
+        }
+      ],
+      "key": "593a10b514c47b999735",
+      "kind": "result"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "uint8_t",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "key": "23919de1caf8120217dd",
+      "kind": "primitive",
+      "lean": "UInt8",
+      "name": "uint8"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": true,
+        "unbox": "lean_unbox"
+      },
+      "arguments": [
+        {
+          "abi": {
+            "box": "lean_box",
+            "cType": "uint8_t",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "kind": "primitive",
+          "lean": "UInt8",
+          "name": "uint8"
+        },
+        {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "kind": "primitive",
+          "lean": "Nat",
+          "name": "nat"
+        }
+      ],
+      "key": "36feb3e81b74ee424c50",
+      "kind": "tuple"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "element": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "arguments": [
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "uint8_t",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "UInt8",
+            "name": "uint8"
+          },
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          }
+        ],
+        "kind": "tuple"
+      },
+      "key": "fc95d19b5edc3a6ae7ea",
+      "kind": "option"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": true,
+        "unbox": "lean_unbox"
+      },
+      "element": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "element": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": true,
+            "unbox": "lean_unbox"
+          },
+          "arguments": [
+            {
+              "abi": {
+                "box": "lean_box",
+                "cType": "uint8_t",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "UInt8",
+              "name": "uint8"
+            },
+            {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            }
+          ],
+          "kind": "tuple"
+        },
+        "kind": "option"
+      },
+      "key": "274af85abd2df6cb24ee",
+      "kind": "array"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "element": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "key": "f487892807ab67e30881",
+      "kind": "list"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": true,
+        "unbox": "lean_unbox"
+      },
+      "arguments": [
+        {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "kind": "primitive",
+          "lean": "Nat",
+          "name": "nat"
+        },
+        {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "kind": "primitive",
+          "lean": "Nat",
+          "name": "nat"
+        }
+      ],
+      "key": "75ac24c77bb2fef233a2",
+      "kind": "tuple"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "element": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "arguments": [
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          },
+          {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          }
+        ],
+        "kind": "tuple"
+      },
+      "key": "d53e659a13ae624cd586",
+      "kind": "option"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "element": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "element": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": true,
+            "unbox": "lean_unbox"
+          },
+          "arguments": [
+            {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            }
+          ],
+          "kind": "tuple"
+        },
+        "kind": "option"
+      },
+      "key": "9009c0d4e53637c1de0f",
+      "kind": "list"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": true,
+        "unbox": "lean_unbox"
+      },
+      "element": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "element": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "element": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "arguments": [
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "Nat",
+                "name": "nat"
+              },
+              {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "Nat",
+                "name": "nat"
+              }
+            ],
+            "kind": "tuple"
+          },
+          "kind": "option"
+        },
+        "kind": "list"
+      },
+      "key": "336715e4bb81c4e69d6b",
+      "kind": "array"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": true,
+        "unbox": "lean_unbox"
+      },
+      "arguments": [
+        {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "kind": "primitive",
+          "lean": "Nat",
+          "name": "nat"
+        },
+        {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": true,
+            "unbox": "lean_unbox"
+          },
+          "kind": "primitive",
+          "lean": "String",
+          "name": "string"
+        }
+      ],
+      "key": "54b454fa5cf029ff92b0",
+      "kind": "tuple"
+    }
+  ]
+}

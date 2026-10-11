@@ -12,6 +12,7 @@ import { structuralSubtypeConfiguration } from "./structural-subtype-installed-f
 import { structuralSubtypePythonConfiguration, structuralSubtypePythonCaller, structuralSubtypePythonCounts, parseStructuralSubtypePythonResult } from "./structural-subtype-python-fixture.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { runCopied } from "./copied-fixture-install.mjs";
+import "./structural-subtype-python-evidence-tests.mjs";
 
 test("structural Python configurations retain independent ordinary and reviewed contracts", async () => {
 	for(const route of ["ordinary", "reviewed"])

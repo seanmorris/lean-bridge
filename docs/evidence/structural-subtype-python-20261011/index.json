@@ -1,0 +1,548 @@
+{
+  "files": [
+    {
+      "bytes": 203,
+      "path": "311/ordinary/end.json",
+      "sha256": "5ac7a2ab8294b1a88f8027dfcc55a489996bbf03283633fba4bef1247a04fb68"
+    },
+    {
+      "bytes": 131793,
+      "path": "311/ordinary/records/build-0/model.json",
+      "sha256": "7c20578952a344f359ac2b9d8ecd2247bceaed3e012f6b83a467b2d4e254b93a"
+    },
+    {
+      "bytes": 1160,
+      "path": "311/ordinary/records/build-0/package-set-receipt.json",
+      "sha256": "c18bc1221460b48b3e24ee7408d4c544dd1d716e90714172d7f289e2d023d737"
+    },
+    {
+      "bytes": 2349,
+      "path": "311/ordinary/records/build-0/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 131793,
+      "path": "311/ordinary/records/build-1/model.json",
+      "sha256": "7c20578952a344f359ac2b9d8ecd2247bceaed3e012f6b83a467b2d4e254b93a"
+    },
+    {
+      "bytes": 1160,
+      "path": "311/ordinary/records/build-1/package-set-receipt.json",
+      "sha256": "c18bc1221460b48b3e24ee7408d4c544dd1d716e90714172d7f289e2d023d737"
+    },
+    {
+      "bytes": 2349,
+      "path": "311/ordinary/records/build-1/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 11179,
+      "path": "311/ordinary/records/configuration.json",
+      "sha256": "e6b38d8ad72473479044cb399da6936431e727d00e1d26e994eadb2f0d6af601"
+    },
+    {
+      "bytes": 6007,
+      "path": "311/ordinary/records/consumer.py",
+      "sha256": "8e509dc22a1cbf5081ab47250ff1b1d9ee23b05248ac3df6ad9a5888f6898bde"
+    },
+    {
+      "bytes": 34558,
+      "path": "311/ordinary/records/expected.binding-ir.json",
+      "sha256": "fcb7bfa656ac6d6262a9773712f02b6c0bd5a08a72483c9ba9225f83fe90c36f"
+    },
+    {
+      "bytes": 567,
+      "path": "311/ordinary/records/installed.json",
+      "sha256": "471f34ce9dd4d2fa59dd9b4423ff16907ac630ce216b1efead2c60e8ffae7d5f"
+    },
+    {
+      "bytes": 566,
+      "path": "311/ordinary/records/relocated.json",
+      "sha256": "e965ae0b7029b5267ef73dc039828b502ea29d85d425572c78b6defc574c4ce7"
+    },
+    {
+      "bytes": 511687,
+      "path": "311/ordinary/records/report.json",
+      "sha256": "0367937ab3e3c079d44346c6cbb789208256cf0dd82544a2fc65c254d5d6b7b0"
+    },
+    {
+      "bytes": 410,
+      "path": "311/ordinary/run.tap",
+      "sha256": "d273a87be35279dc48c1264bcea64791498dcf9f077e0c83c01127e60b095a1c"
+    },
+    {
+      "bytes": 1068,
+      "path": "311/ordinary/start.json",
+      "sha256": "223cf5323e33193e7428c4a4fd3655a3aff418e2c490b3a89c90f07b3747ece1"
+    },
+    {
+      "bytes": 203,
+      "path": "311/reviewed/end.json",
+      "sha256": "bdaca3e9ad5ddc55d71bf0c4863474c4dffe9c40646f8abf4f7ead4154ee97c7"
+    },
+    {
+      "bytes": 157738,
+      "path": "311/reviewed/records/build-0/model.json",
+      "sha256": "86c997ab371072775fc861ddf24b9869b02331e4b44f5e54088d0c19cb374489"
+    },
+    {
+      "bytes": 1160,
+      "path": "311/reviewed/records/build-0/package-set-receipt.json",
+      "sha256": "8616d1d02cb772773dec8f158805ca63f753e1a412dfeb9f359ac9f820154308"
+    },
+    {
+      "bytes": 2349,
+      "path": "311/reviewed/records/build-0/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 157738,
+      "path": "311/reviewed/records/build-1/model.json",
+      "sha256": "86c997ab371072775fc861ddf24b9869b02331e4b44f5e54088d0c19cb374489"
+    },
+    {
+      "bytes": 1160,
+      "path": "311/reviewed/records/build-1/package-set-receipt.json",
+      "sha256": "8616d1d02cb772773dec8f158805ca63f753e1a412dfeb9f359ac9f820154308"
+    },
+    {
+      "bytes": 2349,
+      "path": "311/reviewed/records/build-1/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 171,
+      "path": "311/reviewed/records/configuration.json",
+      "sha256": "a028d051d472389e0a897a1f312ee7ddcaf41ed9214ac726b4baa93e63b5622e"
+    },
+    {
+      "bytes": 6037,
+      "path": "311/reviewed/records/consumer.py",
+      "sha256": "611c10623f353b85b3647761c6861ab85f5415fff4fbd820f747df5dfc11bb34"
+    },
+    {
+      "bytes": 34558,
+      "path": "311/reviewed/records/expected.binding-ir.json",
+      "sha256": "fcb7bfa656ac6d6262a9773712f02b6c0bd5a08a72483c9ba9225f83fe90c36f"
+    },
+    {
+      "bytes": 567,
+      "path": "311/reviewed/records/installed.json",
+      "sha256": "e3abcb81d19b5608c7f574abac94974ded2ea2dac58c9570cfd20bcc5e0ce521"
+    },
+    {
+      "bytes": 566,
+      "path": "311/reviewed/records/relocated.json",
+      "sha256": "659a8cba7280aa72f51b10c67046cb2dfb125be1a84dad2afcf9f8011d3405ac"
+    },
+    {
+      "bytes": 499770,
+      "path": "311/reviewed/records/report.json",
+      "sha256": "e24e93ebc7a112fc61b6866935398b39885eecbcb00de7fa0aade95cb7c46c36"
+    },
+    {
+      "bytes": 410,
+      "path": "311/reviewed/run.tap",
+      "sha256": "f2706879d2b00f63581d6cafbd402806106013dca165bc34361525c418ca7850"
+    },
+    {
+      "bytes": 1068,
+      "path": "311/reviewed/start.json",
+      "sha256": "d50729de4fa7e1dfb5b24d781946648fed6f2fa0abddb0d43a13cf5879f79f28"
+    },
+    {
+      "bytes": 203,
+      "path": "312/ordinary/end.json",
+      "sha256": "8c4fe7b6a07c4905ce3e60b2cdfe0485c77f52ca0892c04682891fd70fadef80"
+    },
+    {
+      "bytes": 131793,
+      "path": "312/ordinary/records/build-0/model.json",
+      "sha256": "7c20578952a344f359ac2b9d8ecd2247bceaed3e012f6b83a467b2d4e254b93a"
+    },
+    {
+      "bytes": 1160,
+      "path": "312/ordinary/records/build-0/package-set-receipt.json",
+      "sha256": "c18bc1221460b48b3e24ee7408d4c544dd1d716e90714172d7f289e2d023d737"
+    },
+    {
+      "bytes": 2349,
+      "path": "312/ordinary/records/build-0/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 131793,
+      "path": "312/ordinary/records/build-1/model.json",
+      "sha256": "7c20578952a344f359ac2b9d8ecd2247bceaed3e012f6b83a467b2d4e254b93a"
+    },
+    {
+      "bytes": 1160,
+      "path": "312/ordinary/records/build-1/package-set-receipt.json",
+      "sha256": "c18bc1221460b48b3e24ee7408d4c544dd1d716e90714172d7f289e2d023d737"
+    },
+    {
+      "bytes": 2349,
+      "path": "312/ordinary/records/build-1/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 11179,
+      "path": "312/ordinary/records/configuration.json",
+      "sha256": "e6b38d8ad72473479044cb399da6936431e727d00e1d26e994eadb2f0d6af601"
+    },
+    {
+      "bytes": 6007,
+      "path": "312/ordinary/records/consumer.py",
+      "sha256": "8e509dc22a1cbf5081ab47250ff1b1d9ee23b05248ac3df6ad9a5888f6898bde"
+    },
+    {
+      "bytes": 34558,
+      "path": "312/ordinary/records/expected.binding-ir.json",
+      "sha256": "fcb7bfa656ac6d6262a9773712f02b6c0bd5a08a72483c9ba9225f83fe90c36f"
+    },
+    {
+      "bytes": 567,
+      "path": "312/ordinary/records/installed.json",
+      "sha256": "ed2943c8614cf24ab86b8ea17e10b29a1947f36e2754582828f1defa1260754b"
+    },
+    {
+      "bytes": 566,
+      "path": "312/ordinary/records/relocated.json",
+      "sha256": "1d159502feec743729a662b46a6761e88c5af9c9e2d0eba4de6850eaeba01448"
+    },
+    {
+      "bytes": 242335,
+      "path": "312/ordinary/records/report.json",
+      "sha256": "8893b0f0adeb2e92a54cb4936dee1633c2e004aa002351f6fdd38ee25bf098de"
+    },
+    {
+      "bytes": 409,
+      "path": "312/ordinary/run.tap",
+      "sha256": "1492d09520a51c16a811c0a20faf2958b2ac88b9cd525d3e83f3164fc70b09c3"
+    },
+    {
+      "bytes": 1068,
+      "path": "312/ordinary/start.json",
+      "sha256": "bcc8dd9a5211a7c941358fd7eba58d8a573071ec63e009954477f293c5f99f45"
+    },
+    {
+      "bytes": 203,
+      "path": "312/reviewed/end.json",
+      "sha256": "1c09623195564a46105d49ffd7d8f214fab05c5b66d1e22f858908274201c8dd"
+    },
+    {
+      "bytes": 157738,
+      "path": "312/reviewed/records/build-0/model.json",
+      "sha256": "86c997ab371072775fc861ddf24b9869b02331e4b44f5e54088d0c19cb374489"
+    },
+    {
+      "bytes": 1160,
+      "path": "312/reviewed/records/build-0/package-set-receipt.json",
+      "sha256": "8616d1d02cb772773dec8f158805ca63f753e1a412dfeb9f359ac9f820154308"
+    },
+    {
+      "bytes": 2349,
+      "path": "312/reviewed/records/build-0/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 157738,
+      "path": "312/reviewed/records/build-1/model.json",
+      "sha256": "86c997ab371072775fc861ddf24b9869b02331e4b44f5e54088d0c19cb374489"
+    },
+    {
+      "bytes": 1160,
+      "path": "312/reviewed/records/build-1/package-set-receipt.json",
+      "sha256": "8616d1d02cb772773dec8f158805ca63f753e1a412dfeb9f359ac9f820154308"
+    },
+    {
+      "bytes": 2349,
+      "path": "312/reviewed/records/build-1/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 171,
+      "path": "312/reviewed/records/configuration.json",
+      "sha256": "a028d051d472389e0a897a1f312ee7ddcaf41ed9214ac726b4baa93e63b5622e"
+    },
+    {
+      "bytes": 6037,
+      "path": "312/reviewed/records/consumer.py",
+      "sha256": "611c10623f353b85b3647761c6861ab85f5415fff4fbd820f747df5dfc11bb34"
+    },
+    {
+      "bytes": 34558,
+      "path": "312/reviewed/records/expected.binding-ir.json",
+      "sha256": "fcb7bfa656ac6d6262a9773712f02b6c0bd5a08a72483c9ba9225f83fe90c36f"
+    },
+    {
+      "bytes": 567,
+      "path": "312/reviewed/records/installed.json",
+      "sha256": "64c171d236a237ca57d4dff123d0fbb3e24f4f0432d886ef2c7b7ed3fb08befe"
+    },
+    {
+      "bytes": 566,
+      "path": "312/reviewed/records/relocated.json",
+      "sha256": "1eaf0bc44598f7b44cd27750c53f77faf7b7cf7fa9a6a34e56c339c577f68008"
+    },
+    {
+      "bytes": 230418,
+      "path": "312/reviewed/records/report.json",
+      "sha256": "50cd6efdbd395fef21b0fbcf1230e278673fa8f200c4791dd9199c28504322b4"
+    },
+    {
+      "bytes": 410,
+      "path": "312/reviewed/run.tap",
+      "sha256": "bb268bd73ee4edb3bed98b115d58959df8ff205d8b681f04d0462a95af595297"
+    },
+    {
+      "bytes": 1068,
+      "path": "312/reviewed/start.json",
+      "sha256": "4dee81c6a99bb95047320f11612e038bc07b911ae1a9168bf14380fa797274cb"
+    },
+    {
+      "bytes": 8369,
+      "path": "checker.mjs",
+      "sha256": "e41e3cc3dd0d9680f2971d726ce20290287df32cda7e41977667b52f9637629a"
+    },
+    {
+      "bytes": 1568,
+      "path": "queue/queue-structural-python.mjs",
+      "sha256": "05529973e63a58712b150c1765446744535968bb0caea694169535cf5ee5b41c"
+    },
+    {
+      "bytes": 116,
+      "path": "queue/vo1444-structural-python-remaining-r1.end.json",
+      "sha256": "c541e49aabf7e912ffe6fde2829d3c28b041bfcf7aef23b2158f8448be9cf3a0"
+    },
+    {
+      "bytes": 256,
+      "path": "queue/vo1444-structural-python-remaining-r1.start.json",
+      "sha256": "551f73d838f41be997c801d12a50ea8d57b33abe426276e6fae59588478a3db4"
+    },
+    {
+      "bytes": 3248,
+      "path": "runner.mjs",
+      "sha256": "786eb07df182aa769f299ceaec0f2423d57731e6b8a068ca584803295ba4ac45"
+    },
+    {
+      "bytes": 92606,
+      "path": "sources/src/analyze/NativeExports.lean",
+      "sha256": "4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f"
+    },
+    {
+      "bytes": 23547,
+      "path": "sources/src/backends/c/native-copied-values.mjs",
+      "sha256": "7415b894cb1d4f560fb00766a7668ab015393da1d02f9ab252dc157b383ea10c"
+    },
+    {
+      "bytes": 4054,
+      "path": "sources/src/backends/python/copied-assets.mjs",
+      "sha256": "01be4dbe0c3e92f8791b888ff58c07bc64408166f7551645372e7a5d388fdb33"
+    },
+    {
+      "bytes": 10261,
+      "path": "sources/src/backends/python/copied-conversions.mjs",
+      "sha256": "658271a8cfad111215b7072f8df29189f71f56dc15e3f7104e82bd8b50f2f936"
+    },
+    {
+      "bytes": 7378,
+      "path": "sources/src/backends/python/copied-model.mjs",
+      "sha256": "4557b83311c0ece7cbcca6da0d9bd69fdd4e1544076975a265f838566dbe299b"
+    },
+    {
+      "bytes": 14861,
+      "path": "sources/src/backends/python/copied-values.mjs",
+      "sha256": "8c0c6432d1bbccca1d6608757d56345ae5f50fa7746ee8e615c212cbf0799cc7"
+    },
+    {
+      "bytes": 8271,
+      "path": "sources/src/build/component-refinements.mjs",
+      "sha256": "1c936270da51e3991148681a317e30727936bc8c4e74f7a79330f4b7393a927c"
+    },
+    {
+      "bytes": 12579,
+      "path": "sources/src/build/native-component.mjs",
+      "sha256": "2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867"
+    },
+    {
+      "bytes": 42189,
+      "path": "sources/src/build/native-model.mjs",
+      "sha256": "18e1072bac272ecf76c8d56aec0b2e21efa06e2adf4d49096598271dc5eb2d4a"
+    },
+    {
+      "bytes": 87,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/lakefile.toml",
+      "sha256": "16a51fbc493627ffd1a5beebdccbe577039cc22ce333e4233417444417cf188f"
+    },
+    {
+      "bytes": 25,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/lean-toolchain",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "bytes": 1093,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 64,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/package.json",
+      "sha256": "5cc3610c19032e010e0c18c017695d0a2f16b46828effec79bb5089ccf1932df"
+    },
+    {
+      "bytes": 2349,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 6007,
+      "path": "sources/tests/fixtures/structural-subtype-consumers/python.py",
+      "sha256": "8e509dc22a1cbf5081ab47250ff1b1d9ee23b05248ac3df6ad9a5888f6898bde"
+    },
+    {
+      "bytes": 15505,
+      "path": "sources/tests/helpers/copied-fixture-install.mjs",
+      "sha256": "dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df"
+    },
+    {
+      "bytes": 11484,
+      "path": "sources/tests/helpers/fin-container-edge-python-closure.mjs",
+      "sha256": "914a6193f83495a8d27d9bc8c9b3b69f6bd1dd84dc19793cdbd9c57fdcf641ed"
+    },
+    {
+      "bytes": 5465,
+      "path": "sources/tests/helpers/structural-subtype-installed-fixture.mjs",
+      "sha256": "5743bb3d0fd00301c22587a0111edcb1301c7f43c3dda0c4746340c18c0a201f"
+    },
+    {
+      "bytes": 1499,
+      "path": "sources/tests/helpers/structural-subtype-python-fixture.mjs",
+      "sha256": "9f80905924cd0933687dd30719488d2fb7b3537b2fe4026623007a52eadff126"
+    },
+    {
+      "bytes": 7691,
+      "path": "sources/tests/helpers/structural-subtype-python-installed-tests.mjs",
+      "sha256": "a3dd376ebaadeb4a45c447cdbace6b624fdd70dd0ce0bc372db570c6e34ebcae"
+    },
+    {
+      "bytes": 4638,
+      "path": "sources/tests/helpers/structural-subtype-python-model.py",
+      "sha256": "30f8485b5f045f00f1f903ffa09e4ad7d52fd54a93ccefa8df85d27ee97a64e6"
+    },
+    {
+      "bytes": 2556,
+      "path": "sources/tests/helpers/structural-subtype-python-tests.mjs",
+      "sha256": "83dd062dccbab2deec62f049bf39a401bc0a300d17f6630ddf1a844c840bf70f"
+    },
+    {
+      "bytes": 10791,
+      "path": "sources/tests/structural-subtype-installed.test.mjs",
+      "sha256": "8b5922587202538e59dc416e0cff6c0adb3a84bf0ce6c509b353f649a13b44f3"
+    }
+  ],
+  "kind": "structural-subtype-python-installed-v1",
+  "limitations": [
+    "Local Linux x86-64 glibc 2.36 acceptance, not hosted release-floor acceptance.",
+    "No Python constructor/source entry counts or memory measurement.",
+    "Package binaries and complete toolchain closures are not retained.",
+    "No support-inventory promotion or recurring installed CI gate follows from this archive."
+  ],
+  "producerCommit": "f68b3200138e475bc605bd692e6ad06be57390a6",
+  "runs": [
+    {
+      "archives": {
+        "archives/structuralsubtypes-1.0.0-py3-none-manylinux_2_36_x86_64.whl": "16b01fa4d9234ce7332e9239fee44936cacf8fbf2d37ab3da55366f1d3206394"
+      },
+      "checks": 4119,
+      "dispatchObserved": false,
+      "executions": 2,
+      "label": "311/ordinary",
+      "minor": "3.11",
+      "producerCommit": "f68b3200138e475bc605bd692e6ad06be57390a6",
+      "python": "3.11.16",
+      "rejections": 1042,
+      "reportSha256": "0367937ab3e3c079d44346c6cbb789208256cf0dd82544a2fc65c254d5d6b7b0",
+      "route": "ordinary",
+      "snapshotControls": 6,
+      "tapSha256": "d273a87be35279dc48c1264bcea64791498dcf9f077e0c83c01127e60b095a1c"
+    },
+    {
+      "archives": {
+        "archives/structuralsubtypes-1.0.0-py3-none-manylinux_2_36_x86_64.whl": "2b1a266a986b2a190aaad672e1c7e61b2b9e50d6cabaa2aa2068ccb4f8bb1160"
+      },
+      "checks": 4119,
+      "dispatchObserved": false,
+      "executions": 2,
+      "label": "311/reviewed",
+      "minor": "3.11",
+      "producerCommit": "f68b3200138e475bc605bd692e6ad06be57390a6",
+      "python": "3.11.16",
+      "rejections": 1042,
+      "reportSha256": "e24e93ebc7a112fc61b6866935398b39885eecbcb00de7fa0aade95cb7c46c36",
+      "route": "reviewed",
+      "snapshotControls": 6,
+      "tapSha256": "f2706879d2b00f63581d6cafbd402806106013dca165bc34361525c418ca7850"
+    },
+    {
+      "archives": {
+        "archives/structuralsubtypes-1.0.0-py3-none-manylinux_2_36_x86_64.whl": "16b01fa4d9234ce7332e9239fee44936cacf8fbf2d37ab3da55366f1d3206394"
+      },
+      "checks": 4119,
+      "dispatchObserved": false,
+      "executions": 2,
+      "label": "312/ordinary",
+      "minor": "3.12",
+      "producerCommit": "f68b3200138e475bc605bd692e6ad06be57390a6",
+      "python": "3.12.14",
+      "rejections": 1042,
+      "reportSha256": "8893b0f0adeb2e92a54cb4936dee1633c2e004aa002351f6fdd38ee25bf098de",
+      "route": "ordinary",
+      "snapshotControls": 6,
+      "tapSha256": "1492d09520a51c16a811c0a20faf2958b2ac88b9cd525d3e83f3164fc70b09c3"
+    },
+    {
+      "archives": {
+        "archives/structuralsubtypes-1.0.0-py3-none-manylinux_2_36_x86_64.whl": "2b1a266a986b2a190aaad672e1c7e61b2b9e50d6cabaa2aa2068ccb4f8bb1160"
+      },
+      "checks": 4119,
+      "dispatchObserved": false,
+      "executions": 2,
+      "label": "312/reviewed",
+      "minor": "3.12",
+      "producerCommit": "f68b3200138e475bc605bd692e6ad06be57390a6",
+      "python": "3.12.14",
+      "rejections": 1042,
+      "reportSha256": "50cd6efdbd395fef21b0fbcf1230e278673fa8f200c4791dd9199c28504322b4",
+      "route": "reviewed",
+      "snapshotControls": 6,
+      "tapSha256": "bb268bd73ee4edb3bed98b115d58959df8ff205d8b681f04d0462a95af595297"
+    }
+  ],
+  "schemaVersion": 1,
+  "selectedSources": [
+    "src/analyze/NativeExports.lean",
+    "src/build/native-model.mjs",
+    "src/build/component-refinements.mjs",
+    "src/build/native-component.mjs",
+    "src/backends/c/native-copied-values.mjs",
+    "src/backends/python/copied-values.mjs",
+    "src/backends/python/copied-conversions.mjs",
+    "src/backends/python/copied-model.mjs",
+    "src/backends/python/copied-assets.mjs",
+    "tests/structural-subtype-installed.test.mjs",
+    "tests/helpers/structural-subtype-installed-fixture.mjs",
+    "tests/helpers/structural-subtype-python-fixture.mjs",
+    "tests/helpers/structural-subtype-python-installed-tests.mjs",
+    "tests/helpers/structural-subtype-python-tests.mjs",
+    "tests/helpers/structural-subtype-python-model.py",
+    "tests/helpers/copied-fixture-install.mjs",
+    "tests/helpers/fin-container-edge-python-closure.mjs",
+    "tests/fixtures/structural-subtype-consumers/python.py",
+    "tests/fixtures/onboarding/structural-subtypes/StructuralSubtypes.lean",
+    "tests/fixtures/onboarding/structural-subtypes/lakefile.toml",
+    "tests/fixtures/onboarding/structural-subtypes/lean-toolchain",
+    "tests/fixtures/onboarding/structural-subtypes/package.json",
+    "tests/fixtures/onboarding/structural-subtypes/LICENSE"
+  ]
+}
