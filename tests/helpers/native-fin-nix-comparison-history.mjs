@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforePerlContainerSubtypeCiSource } from "./perl-container-subtype-ci-history.mjs";
 
 export const finNixComparisonHistoryPath = "docs/evidence/native-fin-nix-comparison-source-history-20261011.json";
 export const finNixComparisonPredecessor = "6f4aeaf349a0b696650e43a5aa677a1f073e869d";
@@ -50,6 +51,7 @@ export const reverseFinNixComparisonUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeFinNixComparisonSource = (path, source, expected) => {
+	source = beforePerlContainerSubtypeCiSource(path, source, expected);
 	if(typeof source !== "string" || !finNixComparisonChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
@@ -57,4 +59,3 @@ export const beforeFinNixComparisonSource = (path, source, expected) => {
 	const update = record.updates.find(item => item.path === path);
 	return update?.currentSha256 === digest ? reverseFinNixComparisonUpdate(source, update) : source;
 };
-

@@ -10,6 +10,7 @@ import { createNativeModel, generateNativeLeanAdapters, nativeTypeKey } from "..
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { perlSubtypeInterposer } from "./helpers/perl-subtype-dispatch.mjs";
 import { perlContainerDispatchColumns, perlContainerDispatchSteps, perlContainerInterposer } from "./helpers/perl-fin-container-dispatch.mjs";
+import "./helpers/perl-container-subtype-ci-history-tests.mjs";
 
 const huge = "1180591620717411303424";
 const heap = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
@@ -114,9 +115,19 @@ test("a checked constructor beside container bounds runs after every bound, thro
 	const adapters = generateNativeLeanAdapters({ component: { id: "sample@1.0.0" }, pointerBits: 64, types: [], exports: [{ ...tiny, module: "Sample", parameters: [{ name: "p0", type: word }] }] });
 	assert.ok(adapters.header.includes("uint8_t lb_tiny_refinement_0(uint32_t value);"));
 	assert.match(adapters.leanSource, /def f_lb_tiny_refinement_0 \(value : _root_\.UInt32\) : _root_\.UInt8 :=\n {2}match _root_\.Sample\.checkedDigit32 value with/);
-	// A constructor inside a container has no accessor in the XS walker; the native model rejects it first, and the generator never erases it.
+	// Structural Subtypes retain the selected constructor at each indexed leaf before dispatch.
 	const odd = { ...mix, name: "Sample.odd", publicName: "odd", symbol: "lb_odd", refinements: { parameters: [null, inside("array", { kind: "subtype", constructor: "Sample.checkedNat" })], result: null } };
-	assert.throws(() => generatePerlBindingPackage({ ...base, types: [nat, text, digits].map(keyed), exports: [odd] }, receipt), /arg1: checked subtype refinements are not implemented for cpan packages/);
+	const nested = generatePerlBindingPackage({ ...base, types: [nat, text, digits].map(keyed), exports: [odd] }, receipt)["Component.xs"];
+	const start = nested.indexOf("\nodd(...)"), finish = nested.indexOf("XSRETURN(1);", start);
+	assert.ok(start >= 0 && finish > start);
+	const body = nested.slice(start, finish);
+	assert.match(body, /for \(size_t k0 = 0; k0 < lean_array_size\(a1\); \+\+k0\)/u);
+	assert.match(body, /lean_object \*e0 = lean_array_get_core\(a1, k0\);\s+lean_inc\(e0\); if \(!lb_odd_refinement_1_0\(e0\)\) croak\("%s\[%zu\] was rejected by Sample\.checkedNat", "arg1", \(size_t\)k0\);/u);
+	assert.ok(body.indexOf("lb_odd_refinement_1_0(e0)") < body.indexOf("lean_object *checked = lb_odd(a0, a1);"));
+	assert.doesNotMatch(body, /lb_odd_refinement_1\(a1\)/u);
+	const nestedAdapters = generateNativeLeanAdapters({ component: { id: "sample@1.0.0" }, pointerBits: 64, types: [nat, text, digits].map(keyed), exports: [{ ...odd, module: "Sample" }] });
+	assert.ok(nestedAdapters.header.includes("uint8_t lb_odd_refinement_1_0(lean_object * value);"), nestedAdapters.header);
+	assert.match(nestedAdapters.leanSource, /def f_lb_odd_refinement_1_0 \(value : _root_\.Nat\) : _root_\.UInt8 :=\n {2}match _root_\.Sample\.checkedNat value with/u);
 });
 
 test("the Perl dispatch interposers repeat the exported prototypes they wrap", () => {

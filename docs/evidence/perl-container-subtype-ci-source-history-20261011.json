@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "milestone": "perl-container-subtype-ci-v1",
+  "predecessorCommit": "ccc372392997ea0de2ef72a1b29474df96e3af39",
+  "updates": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "ad30e9f255cc1e000c5b6efed6f15c1df1fff407a0ba652238231c5233fded95",
+      "previousSha256": "262f469a1fc54b678a850aaeba0deeb54a31c308516d7a37f652f67cb4bb74e5",
+      "edits": [
+        {
+          "start": 1290,
+          "previous": "",
+          "current": "import { perlContainerSubtypeCiChangedPaths } from \"./perl-container-subtype-ci-history.mjs\";\n"
+        },
+        {
+          "start": 61175,
+          "previous": "",
+          "current": "\t, ...perlContainerSubtypeCiChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-nix-comparison-history.mjs",
+      "currentSha256": "3dc3259caab4c408ee18c0aaeecde6504d2e9a57985f339cf9a5daf1f1e52c8c",
+      "previousSha256": "2b81c7050607ef2301783922d800a8d61ab482fe8d610351eaa256bb81ff13c5",
+      "edits": [
+        {
+          "start": 244,
+          "previous": "",
+          "current": "import { beforePerlContainerSubtypeCiSource } from \"./perl-container-subtype-ci-history.mjs\";\n"
+        },
+        {
+          "start": 2176,
+          "previous": "",
+          "current": "\tsource = beforePerlContainerSubtypeCiSource(path, source, expected);\n"
+        },
+        {
+          "start": 2671,
+          "previous": "\n",
+          "current": ""
+        }
+      ]
+    },
+    {
+      "path": "tests/perl-fin-containers.test.mjs",
+      "currentSha256": "9565d50e81101ee3c6e69792d2c14eeef2ba4e4c54ecf7c048ff481635793eff",
+      "previousSha256": "a00df6c4b1b6118ae619b060cec8979e38c7d3b46253faa6d03a4b14d1d0f523",
+      "edits": [
+        {
+          "start": 655,
+          "previous": "",
+          "current": "import \"./helpers/perl-container-subtype-ci-history-tests.mjs\";\n"
+        },
+        {
+          "start": 11315,
+          "previous": "\t// A constructor inside a container has no accessor in the XS walker; the native model rejects it first, and the generator never erases it.\n",
+          "current": "\t// Structural Subtypes retain the selected constructor at each indexed leaf before dispatch.\n"
+        },
+        {
+          "start": 11614,
+          "previous": "\tassert.throws(() => generatePerlBindingPackage({ ...base, types: [nat, text, digits].map(keyed), exports: [odd] }, receipt), /arg1: checked subtype refinements are not implemented for cpan packages/);\n",
+          "current": "\tconst nested = generatePerlBindingPackage({ ...base, types: [nat, text, digits].map(keyed), exports: [odd] }, receipt)[\"Component.xs\"];\n\tconst start = nested.indexOf(\"\\nodd(...)\"), finish = nested.indexOf(\"XSRETURN(1);\", start);\n\tassert.ok(start >= 0 && finish > start);\n\tconst body = nested.slice(start, finish);\n\tassert.match(body, /for \\(size_t k0 = 0; k0 < lean_array_size\\(a1\\); \\+\\+k0\\)/u);\n\tassert.match(body, /lean_object \\*e0 = lean_array_get_core\\(a1, k0\\);\\s+lean_inc\\(e0\\); if \\(!lb_odd_refinement_1_0\\(e0\\)\\) croak\\(\"%s\\[%zu\\] was rejected by Sample\\.checkedNat\", \"arg1\", \\(size_t\\)k0\\);/u);\n\tassert.ok(body.indexOf(\"lb_odd_refinement_1_0(e0)\") < body.indexOf(\"lean_object *checked = lb_odd(a0, a1);\"));\n\tassert.doesNotMatch(body, /lb_odd_refinement_1\\(a1\\)/u);\n\tconst nestedAdapters = generateNativeLeanAdapters({ component: { id: \"sample@1.0.0\" }, pointerBits: 64, types: [nat, text, digits].map(keyed), exports: [{ ...odd, module: \"Sample\" }] });\n\tassert.ok(nestedAdapters.header.includes(\"uint8_t lb_odd_refinement_1_0(lean_object * value);\"), nestedAdapters.header);\n\tassert.match(nestedAdapters.leanSource, /def f_lb_odd_refinement_1_0 \\(value : _root_\\.Nat\\) : _root_\\.UInt8 :=\\n {2}match _root_\\.Sample\\.checkedNat value with/u);\n"
+        }
+      ]
+    }
+  ]
+}
