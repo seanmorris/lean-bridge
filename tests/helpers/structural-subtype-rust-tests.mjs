@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { structuralSubtypeConfiguration } from "./structural-subtype-installed-fixture.mjs";
 import { structuralSubtypeRustConfiguration, structuralSubtypeRustCaller, structuralSubtypeRustCounts, parseStructuralSubtypeRustResult } from "./structural-subtype-rust-fixture.mjs";
+import "./structural-subtype-rust-evidence-tests.mjs";
 
 test("structural Rust author routes preserve independent contracts and caller identities", async () => {
 	for(const route of ["ordinary", "reviewed"])

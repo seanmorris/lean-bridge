@@ -1,0 +1,628 @@
+{
+  "bindingIrSha256": "8f65f0e952d4d66dd1cf773cdc304636dfc19a1d5dc26bc73f4f1ab698588f6e",
+  "compiledProjectionSha256": "09021d18c50f6cedaf306a92cd2b38703a22af4d940c82e81913b7dbf1ff3ccc",
+  "component": {
+    "id": "structuralsubtypes@1.0.0",
+    "name": "structuralsubtypes",
+    "version": "1.0.0"
+  },
+  "ecosystem": "cargo",
+  "files": {
+    "Cargo.lock": {
+      "bytes": 3307,
+      "sha256": "5d39c4b71fdbcde97623069a18d77ba4c0e43ff3f7fea040f617ab15e2812ec7"
+    },
+    "Cargo.toml": {
+      "bytes": 339,
+      "sha256": "4c9a764fb090f8c0631d713c8776ecce0a8849dcbd942ae831765c666209b692"
+    },
+    "README.md": {
+      "bytes": 6971,
+      "sha256": "f6258417151b7791cad8087ad1cc232399344f3a0534d80c492d0fac202b6dba"
+    },
+    "binding-manifest.json": {
+      "bytes": 1095,
+      "sha256": "9aa6232c4a6fda29e1cefdba3dc0ecd2583f3403ae7bd26ee1f71ca481cea0e5"
+    },
+    "lean-bridge/component/allocation-guard.h": {
+      "bytes": 1309,
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    "lean-bridge/component/artifacts.json": {
+      "bytes": 1535,
+      "sha256": "4138328b03cf054bd34744444b3a3055e096fd6e35e89d867cefd5f1c545f943"
+    },
+    "lean-bridge/component/binding-ir.json": {
+      "bytes": 50843,
+      "sha256": "a6e679dcbdf45cda19978b1ef1ece9a5f792f1dd55896ae7046bd9dc92ace7a8"
+    },
+    "lean-bridge/component/component.h": {
+      "bytes": 4399,
+      "sha256": "c8e245f50660b898b2ff93bf80b6af98d0e4e2fe28cf500e59a9ce58cfb9721c"
+    },
+    "lean-bridge/component/generated.lean": {
+      "bytes": 19947,
+      "sha256": "90dc480b3a1073d5a62f35cf0de41d12063f66da2e9f34e04020f5b9792545b9"
+    },
+    "lean-bridge/component/metadata.json": {
+      "bytes": 82709,
+      "sha256": "867786b5cb582e9ddf44f5dfacc28fc5dfe666f8043704863f26be0d3ed898d7"
+    },
+    "lean-bridge/component/model.json": {
+      "bytes": 131794,
+      "sha256": "3a9881cf553a9bfee9ecec554cd8ffc43bf581b1eb40f7b1e587e1d7cbbc4eeb"
+    },
+    "lean-bridge/component/native-component.json": {
+      "bytes": 29363,
+      "sha256": "eefae1024ed67caa4de071869b24d5113fd8a59419aa3b4abb4d49266313066d"
+    },
+    "lean-bridge/licenses/Lean-LICENSE": {
+      "bytes": 9160,
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    "lean-bridge/licenses/Lean-LICENSES": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "lean-bridge/licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "lean-bridge/licenses/source-notices.json": {
+      "bytes": 14037,
+      "sha256": "a41737c5d879d06ac0b23fce1cd43d947c81f39ecc4e33234b83298a6bf93a8b"
+    },
+    "lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "lean-bridge/native-c-adapter.json": {
+      "bytes": 1399,
+      "sha256": "69381e00c210e56891e2fdabc9e040660c9cd22ecd438bd9e9f5e148bdab777b"
+    },
+    "lean-bridge/native-rust.json": {
+      "bytes": 2762,
+      "sha256": "09021d18c50f6cedaf306a92cd2b38703a22af4d940c82e81913b7dbf1ff3ccc"
+    },
+    "lean-bridge/runtime.json": {
+      "bytes": 1466,
+      "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    },
+    "native/linux-x64/libcomponent_85dc6ef3dd30a6b68269.so": {
+      "bytes": 118240,
+      "sha256": "7e70da88f20e3c962b655518dcb523dbb8b60311b41b526133fb7c98c206eb5d"
+    },
+    "native/linux-x64/liblean_bridge_native.so": {
+      "bytes": 21464,
+      "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+    },
+    "native/linux-x64/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "native/linux-x64/libstructuralsubtypes.so": {
+      "bytes": 73624,
+      "sha256": "3ecb0d16ea25099d4ea0aaa2bfa3f27d2d1dd81dd284a2f9512910c61eca928a"
+    },
+    "src/__runtime.rs": {
+      "bytes": 27747,
+      "sha256": "95cf94ff82eb39be12427781878a0e77bc91caf8706b9279031ccb6e156db857"
+    },
+    "src/assets.rs": {
+      "bytes": 8099,
+      "sha256": "e714eda88aee8b3d92f6c6fa858d66dee3d0b533c9cb9583aa64238ec6d2b7cf"
+    },
+    "src/lib.rs": {
+      "bytes": 5199,
+      "sha256": "ee1940b66d45d74ed4d28a674391cc1ec7e7629076a0b222eb074de05436649c"
+    }
+  },
+  "glibcMinimumVersion": "2.36",
+  "kind": "lean-bridge-ordinary-cargo-package",
+  "name": "structuralsubtypes",
+  "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+  "schemaVersion": 1,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "68070d8d9ac1226bf3acfb0a3b7773db4f5c1bd671da29c1af7345ba4ae65e9e",
+    "exportConfigurationSource": "{\n  \"contracts\": {\n    \"StructuralSubtypes.aliasArguments\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"arguments\": [\n              {\n                \"arguments\": [\n                  {\n                    \"constructor\": \"StructuralSubtypes.checkedPositive\"\n                  }\n                ],\n                \"kind\": \"option\"\n              }\n            ],\n            \"kind\": \"array\"\n          }\n        },\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"arguments\": [\n              {\n                \"arguments\": [\n                  {\n                    \"constructor\": \"StructuralSubtypes.normalizePositive\"\n                  }\n                ],\n                \"kind\": \"option\"\n              }\n            ],\n            \"kind\": \"array\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"refinement\": {\n          \"arguments\": [\n            {\n              \"arguments\": [\n                {\n                  \"constructor\": \"StructuralSubtypes.checkedPositive\"\n                }\n              ],\n              \"kind\": \"option\"\n            }\n          ],\n          \"kind\": \"array\"\n        }\n      }\n    },\n    \"StructuralSubtypes.aliasPair\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"arguments\": [\n              {\n                \"arguments\": [\n                  {\n                    \"arguments\": [\n                      {\n                        \"constructor\": \"StructuralSubtypes.checkedPositive\"\n                      }\n                    ],\n                    \"kind\": \"option\"\n                  }\n                ],\n                \"kind\": \"array\"\n              },\n              {\n                \"arguments\": [\n                  {\n                    \"arguments\": [\n                      {\n                        \"constructor\": \"StructuralSubtypes.normalizePositive\"\n                      }\n                    ],\n                    \"kind\": \"option\"\n                  }\n                ],\n                \"kind\": \"array\"\n              }\n            ],\n            \"kind\": \"tuple\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"refinement\": {\n          \"arguments\": [\n            {\n              \"arguments\": [\n                {\n                  \"arguments\": [\n                    {\n                      \"constructor\": \"StructuralSubtypes.checkedPositive\"\n                    }\n                  ],\n                  \"kind\": \"option\"\n                }\n              ],\n              \"kind\": \"array\"\n            },\n            {\n              \"arguments\": [\n                {\n                  \"arguments\": [\n                    {\n                      \"constructor\": \"StructuralSubtypes.normalizePositive\"\n                    }\n                  ],\n                  \"kind\": \"option\"\n                }\n              ],\n              \"kind\": \"array\"\n            }\n          ],\n          \"kind\": \"tuple\"\n        }\n      }\n    },\n    \"StructuralSubtypes.arrays\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"arguments\": [\n              {\n                \"constructor\": \"StructuralSubtypes.checkedPositive\"\n              }\n            ],\n            \"kind\": \"array\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"refinement\": {\n          \"arguments\": [\n            {\n              \"constructor\": \"StructuralSubtypes.checkedPositive\"\n            }\n          ],\n          \"kind\": \"array\"\n        }\n      }\n    },\n    \"StructuralSubtypes.branch\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"arguments\": [\n              {\n                \"constructor\": \"StructuralSubtypes.checkedPositive\"\n              },\n              {\n                \"constructor\": \"StructuralSubtypes.checkedWord\"\n              }\n            ],\n            \"kind\": \"result\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"refinement\": {\n          \"arguments\": [\n            {\n              \"constructor\": \"StructuralSubtypes.checkedPositive\"\n            },\n            {\n              \"constructor\": \"StructuralSubtypes.checkedWord\"\n            }\n          ],\n          \"kind\": \"result\"\n        }\n      }\n    },\n    \"StructuralSubtypes.byteBranches\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"arguments\": [\n              {\n                \"arguments\": [\n                  {\n                    \"arguments\": [\n                      {\n                        \"constructor\": \"StructuralSubtypes.checkedByte\"\n                      },\n                      {\n                        \"constructor\": \"StructuralSubtypes.checkedPositive\"\n                      }\n                    ],\n                    \"kind\": \"tuple\"\n                  }\n                ],\n                \"kind\": \"option\"\n              }\n            ],\n            \"kind\": \"array\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"refinement\": {\n          \"arguments\": [\n            {\n              \"arguments\": [\n                {\n                  \"arguments\": [\n                    {\n                      \"constructor\": \"StructuralSubtypes.checkedByte\"\n                    },\n                    {\n                      \"constructor\": \"StructuralSubtypes.checkedPositive\"\n                    }\n                  ],\n                  \"kind\": \"tuple\"\n                }\n              ],\n              \"kind\": \"option\"\n            }\n          ],\n          \"kind\": \"array\"\n        }\n      }\n    },\n    \"StructuralSubtypes.lists\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"arguments\": [\n              {\n                \"constructor\": \"StructuralSubtypes.checkedPositive\"\n              }\n            ],\n            \"kind\": \"list\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"refinement\": {\n          \"arguments\": [\n            {\n              \"constructor\": \"StructuralSubtypes.checkedPositive\"\n            }\n          ],\n          \"kind\": \"list\"\n        }\n      }\n    },\n    \"StructuralSubtypes.nested\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"arguments\": [\n              {\n                \"arguments\": [\n                  {\n                    \"arguments\": [\n                      {\n                        \"arguments\": [\n                          {\n                            \"constructor\": \"StructuralSubtypes.checkedPositive\"\n                          },\n                          null\n                        ],\n                        \"kind\": \"tuple\"\n                      }\n                    ],\n                    \"kind\": \"option\"\n                  }\n                ],\n                \"kind\": \"list\"\n              }\n            ],\n            \"kind\": \"array\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"StructuralSubtypes.options\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"arguments\": [\n              {\n                \"constructor\": \"StructuralSubtypes.checkedPositive\"\n              }\n            ],\n            \"kind\": \"option\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"refinement\": {\n          \"arguments\": [\n            {\n              \"constructor\": \"StructuralSubtypes.checkedPositive\"\n            }\n          ],\n          \"kind\": \"option\"\n        }\n      }\n    },\n    \"StructuralSubtypes.plainFin\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"StructuralSubtypes.product\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"arguments\": [\n              {\n                \"constructor\": \"StructuralSubtypes.checkedPositive\"\n              },\n              {\n                \"constructor\": \"StructuralSubtypes.checkedWord\"\n              }\n            ],\n            \"kind\": \"tuple\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"refinement\": {\n          \"arguments\": [\n            {\n              \"constructor\": \"StructuralSubtypes.checkedPositive\"\n            },\n            {\n              \"constructor\": \"StructuralSubtypes.checkedWord\"\n            }\n          ],\n          \"kind\": \"tuple\"\n        }\n      }\n    },\n    \"StructuralSubtypes.scalar\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"StructuralSubtypes.checkedPositive\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"refinement\": {\n          \"constructor\": \"StructuralSubtypes.checkedPositive\"\n        }\n      }\n    },\n    \"StructuralSubtypes.specialized\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"arguments\": [\n              {\n                \"constructor\": \"StructuralSubtypes.checkedPositive\"\n              }\n            ],\n            \"kind\": \"list\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"refinement\": {\n          \"arguments\": [\n            {\n              \"constructor\": \"StructuralSubtypes.checkedPositive\"\n            }\n          ],\n          \"kind\": \"list\"\n        }\n      }\n    }\n  },\n  \"exports\": [\n    \"StructuralSubtypes.scalar\",\n    \"StructuralSubtypes.arrays\",\n    \"StructuralSubtypes.lists\",\n    \"StructuralSubtypes.options\",\n    \"StructuralSubtypes.product\",\n    \"StructuralSubtypes.branch\",\n    \"StructuralSubtypes.byteBranches\",\n    \"StructuralSubtypes.nested\",\n    \"StructuralSubtypes.aliasPair\",\n    \"StructuralSubtypes.aliasArguments\",\n    \"StructuralSubtypes.plainFin\",\n    \"StructuralSubtypes.specialized\"\n  ],\n  \"modules\": [\n    \"StructuralSubtypes\"\n  ],\n  \"schemaVersion\": 1,\n  \"specializations\": [\n    {\n      \"declaration\": \"StructuralSubtypes.generic\",\n      \"name\": \"StructuralSubtypes.specialized\",\n      \"types\": [\n        \"StructuralSubtypes.Positive\"\n      ]\n    }\n  ],\n  \"targets\": {\n    \"cargo\": {\n      \"name\": \"structuralsubtypes\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+    "extractorSha256": "4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 97808,
+          "interfaceSha256": "78435946d9b8b19253fe55147c81e2b2f128f6a8f884c6193835bb60d87053ce",
+          "sha256": "dc0423c9032999bc6d9234ea6f23e5818e03a0b0b16e77a0b8a0b91d6070bee9"
+        },
+        "module": "StructuralSubtypes",
+        "source": {
+          "bytes": 2349,
+          "path": "StructuralSubtypes.lean",
+          "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "contracts": {
+        "StructuralSubtypes.aliasArguments": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "constructor": "StructuralSubtypes.checkedPositive"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              }
+            },
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "constructor": "StructuralSubtypes.normalizePositive"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "constructor": "StructuralSubtypes.checkedPositive"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          }
+        },
+        "StructuralSubtypes.aliasPair": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "constructor": "StructuralSubtypes.checkedPositive"
+                          }
+                        ],
+                        "kind": "option"
+                      }
+                    ],
+                    "kind": "array"
+                  },
+                  {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "constructor": "StructuralSubtypes.normalizePositive"
+                          }
+                        ],
+                        "kind": "option"
+                      }
+                    ],
+                    "kind": "array"
+                  }
+                ],
+                "kind": "tuple"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "constructor": "StructuralSubtypes.checkedPositive"
+                        }
+                      ],
+                      "kind": "option"
+                    }
+                  ],
+                  "kind": "array"
+                },
+                {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "constructor": "StructuralSubtypes.normalizePositive"
+                        }
+                      ],
+                      "kind": "option"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              ],
+              "kind": "tuple"
+            }
+          }
+        },
+        "StructuralSubtypes.arrays": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "constructor": "StructuralSubtypes.checkedPositive"
+                  }
+                ],
+                "kind": "array"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "constructor": "StructuralSubtypes.checkedPositive"
+                }
+              ],
+              "kind": "array"
+            }
+          }
+        },
+        "StructuralSubtypes.branch": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "constructor": "StructuralSubtypes.checkedPositive"
+                  },
+                  {
+                    "constructor": "StructuralSubtypes.checkedWord"
+                  }
+                ],
+                "kind": "result"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "constructor": "StructuralSubtypes.checkedPositive"
+                },
+                {
+                  "constructor": "StructuralSubtypes.checkedWord"
+                }
+              ],
+              "kind": "result"
+            }
+          }
+        },
+        "StructuralSubtypes.byteBranches": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "constructor": "StructuralSubtypes.checkedByte"
+                          },
+                          {
+                            "constructor": "StructuralSubtypes.checkedPositive"
+                          }
+                        ],
+                        "kind": "tuple"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "constructor": "StructuralSubtypes.checkedByte"
+                        },
+                        {
+                          "constructor": "StructuralSubtypes.checkedPositive"
+                        }
+                      ],
+                      "kind": "tuple"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          }
+        },
+        "StructuralSubtypes.lists": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "constructor": "StructuralSubtypes.checkedPositive"
+                  }
+                ],
+                "kind": "list"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "constructor": "StructuralSubtypes.checkedPositive"
+                }
+              ],
+              "kind": "list"
+            }
+          }
+        },
+        "StructuralSubtypes.nested": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "arguments": [
+                              {
+                                "constructor": "StructuralSubtypes.checkedPositive"
+                              },
+                              null
+                            ],
+                            "kind": "tuple"
+                          }
+                        ],
+                        "kind": "option"
+                      }
+                    ],
+                    "kind": "list"
+                  }
+                ],
+                "kind": "array"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "StructuralSubtypes.options": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "constructor": "StructuralSubtypes.checkedPositive"
+                  }
+                ],
+                "kind": "option"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "constructor": "StructuralSubtypes.checkedPositive"
+                }
+              ],
+              "kind": "option"
+            }
+          }
+        },
+        "StructuralSubtypes.plainFin": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "StructuralSubtypes.product": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "constructor": "StructuralSubtypes.checkedPositive"
+                  },
+                  {
+                    "constructor": "StructuralSubtypes.checkedWord"
+                  }
+                ],
+                "kind": "tuple"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "constructor": "StructuralSubtypes.checkedPositive"
+                },
+                {
+                  "constructor": "StructuralSubtypes.checkedWord"
+                }
+              ],
+              "kind": "tuple"
+            }
+          }
+        },
+        "StructuralSubtypes.scalar": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "StructuralSubtypes.checkedPositive"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "StructuralSubtypes.checkedPositive"
+            }
+          }
+        },
+        "StructuralSubtypes.specialized": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "constructor": "StructuralSubtypes.checkedPositive"
+                  }
+                ],
+                "kind": "list"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "constructor": "StructuralSubtypes.checkedPositive"
+                }
+              ],
+              "kind": "list"
+            }
+          }
+        }
+      },
+      "exportModules": [
+        "StructuralSubtypes"
+      ],
+      "exports": [
+        "StructuralSubtypes.scalar",
+        "StructuralSubtypes.arrays",
+        "StructuralSubtypes.lists",
+        "StructuralSubtypes.options",
+        "StructuralSubtypes.product",
+        "StructuralSubtypes.branch",
+        "StructuralSubtypes.byteBranches",
+        "StructuralSubtypes.nested",
+        "StructuralSubtypes.aliasPair",
+        "StructuralSubtypes.aliasArguments",
+        "StructuralSubtypes.plainFin",
+        "StructuralSubtypes.specialized"
+      ],
+      "metadata": {
+        "invocationIdentitySha256": "d06e7cdea0b0e94f3ae3b4e30859003aff9cd1f92b0662769212eb3532c5cd33",
+        "modules": [
+          {
+            "interfaceSha256": "78435946d9b8b19253fe55147c81e2b2f128f6a8f884c6193835bb60d87053ce",
+            "name": "StructuralSubtypes",
+            "sourcePath": "StructuralSubtypes.lean",
+            "sourceSha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "StructuralSubtypes"
+      ],
+      "profile": "native-library-v1",
+      "resources": [],
+      "specializations": [
+        {
+          "declaration": "StructuralSubtypes.generic",
+          "name": "StructuralSubtypes.specialized",
+          "types": [
+            "StructuralSubtypes.Positive"
+          ]
+        }
+      ]
+    },
+    "sourceNoticesSha256": "a41737c5d879d06ac0b23fce1cd43d947c81f39ecc4e33234b83298a6bf93a8b",
+    "sourceTreeSha256": "102111ad67bb59ff7f257d4d28cceaa961fcaf1296e8f1e2fd4a66cd3cb96783"
+  },
+  "version": "1.0.0"
+}
