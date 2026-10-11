@@ -38,13 +38,13 @@ export const nativeFinRefinements = (declaration, types = []) => {
 	if(value.parameters.some((refinement, index) => (refinement?.kind === "checked-record") !== checkedRecord(declaration.parameters[index]))
 		|| value.result?.kind === "checked-record")
 		throw new TypeError(`${declaration.id}: checked records need an input constructor and proof-backed result projection`);
-	// Primitive Subtypes and checked-record constructors are top-level sites. Fin also
-	// crosses copied containers; other constraints must fail rather than vanish from docs.
-	const supported = (refinement, top) => refinement === null || refinement.kind === "fin" || (top && ["subtype", "checked-record"].includes(refinement.kind))
+	// Fin and primitive Subtypes cross structural containers. Checked records remain
+	// top-level sites; other constraints must fail rather than vanish from docs.
+	const supported = (refinement, top) => refinement === null || ["fin", "subtype"].includes(refinement.kind) || (top && refinement.kind === "checked-record")
 		|| (["array", "list", "option"].includes(refinement.kind) && refinement.arguments.length === 1 && supported(refinement.arguments[0], false))
 		|| (["tuple", "result"].includes(refinement.kind) && refinement.arguments.length === 2 && refinement.arguments.every(child => supported(child, false)));
 	if(![...value.parameters, value.result].every(refinement => supported(refinement, true)))
-		throw new TypeError(`${declaration.id}: native packages document only top-level Subtype/checked records and Fin refinements at top level or inside arrays, lists, options, products and results`);
+		throw new TypeError(`${declaration.id}: native packages document top-level checked records and Fin/Subtype refinements at top level or inside arrays, lists, options, products and results`);
 	return withResult(expanded ?? value);
 };
 
@@ -183,7 +183,7 @@ export const nativeRefinementReadme = (declarations, finParagraph, packages, typ
 	}
 	const parts = [];
 	if(kinds.has("fin")) parts.push(finParagraph);
-	if(kinds.has("subtype")) parts.push(`Lean Subtype parameters cross as their base value. The bundled native library runs the author's checked constructor, named below, before the export runs; a value the constructor rejects fails the call with the invalid-argument error naming the parameter and constructor, and the export receives the constructed value, which may differ from the input. Subtype results are the base value. Reviewed APIs select the constructor and reconcile it with fresh Lean compilation. Subtype inside containers, records, variants or callbacks is not supported in ${packages}.`);
+	if(kinds.has("subtype")) parts.push(`Lean Subtype parameters cross as their base value. The bundled native library runs the author's checked constructor, named below, before the export runs; a value the constructor rejects fails the call with the invalid-argument error naming the parameter and constructor, and the export receives the constructed value, which may differ from the input. Arrays, Lists, options, products and active result branches apply the same constructor checks to each Subtype leaf. Rejections identify the argument and nested element path. Subtype results are the base value. Reviewed APIs select the constructor and reconcile it with fresh Lean compilation. Subtype inside records, variants or callbacks is not supported in ${packages}.`);
 	if(kinds.has("checked-record")) parts.push("Checked records cross as generated record values containing only their payload fields. The bundled native library validates each input through the selected Lean constructor before calling the export. A rejected record reports the parameter and constructor; a normalizing constructor changes the value received by Lean without changing the caller's record. Results project the payload fields of a record whose proofs Lean has already constructed. No proof object or input constructor is needed for a result-only export. Ordinary and reviewed APIs retain each parameter's constructor choice. Nested checked records, other dependent payloads and checked-record callbacks remain unsupported.");
 	return parts.join("\n\n");
 };

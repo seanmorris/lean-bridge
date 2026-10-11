@@ -33,8 +33,34 @@ different constructors. Lean Bridge reconciles the exact input base type,
 result subtype and selected constructor with fresh Lean compilation; the
 consumer passes the base value. [Reviewed native checks](../evidence/reviewed-subtype-native-promotion-20261010.md)
 and [reviewed browser checks](../evidence/reviewed-subtype-browser-promotion-20261010.md)
-record installed top-level primitive-base parameters and results. Nested,
-nominal-field and callback Subtypes still require a mapping.
+record installed top-level primitive-base parameters and results. Structural
+Subtype support is being extended to `Array`, `List`, `Option`, products and
+`Except`. Compiler and adapter checks now preserve per-leaf constructor choices
+and normalization; installed-package acceptance for these combinations is still
+in progress. Nominal-field, callback and owned Subtypes remain unfinished.
+
+### Select constructors inside containers
+
+An ordinary export contract describes nested constructor choices in transport
+order. For `Array (Option Positive)`, the site's `refinement` is:
+
+```json
+{
+  "kind": "array",
+  "arguments": [
+    {
+      "kind": "option",
+      "arguments": [{ "constructor": "Library.checkedPositive" }]
+    }
+  ]
+}
+```
+
+Products list the first and second components. Results list success and error,
+the reverse of Lean's `Except Error Success` type arguments. A `null` child
+means no author-selected constructor on that branch; it does not remove a
+compiler-derived `Fin` bound. Reviewed APIs derive these choices from their
+refinement trees and reconcile them against fresh Lean metadata.
 
 C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP, PHP-Wasm, JavaScript/TypeScript and WIT/WASI packages also support [parameter-anchored function results](../publish/c.md#anchor-a-result-to-an-input). The [JavaScript/TypeScript owner API](../javascript-typescript.md#borrowed-results-and-whole-value-owners) uses `LeanValue<T>`; the [WIT/WASI API](../consume/wit-wasi.md#borrowed-results) carries the original owner through the Component Model call.
 The result expires with the selected input owner; callers explicitly retain or

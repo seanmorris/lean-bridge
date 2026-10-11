@@ -43,16 +43,15 @@ test("readers without the checked capability refuse refined metadata before any 
 	}
 });
 
-test("checked exports never share a component with callbacks, and Subtype never enters a container", () => {
+test("checked exports retain callback gates while structural Subtype trees remain checked", () => {
 	const callback = { kind: "callback", parameters: [nat], result: nat, abi: heap };
 	unsupported(() => createNativeModel(refined(fin("10"), callback), { refinements: true }), /cannot share a native export with callbacks/);
-	// The type validator refuses a nested Subtype before the model's own guard can.
 	const nested = { kind: "array", element: checked("Sample.checkedText"), abi: heap };
-	assert.throws(() => createNativeModel(refined(nested), { refinements: true }), /Subtype refinements require a top-level native parameter or result/);
-	// A product is a structural container (VO #1441); Subtype still never enters one.
+	assert.deepEqual(createNativeModel(refined(nested), { refinements: true }).exports[0].refinements.parameters[0], { kind: "array", arguments: [{ kind: "subtype", constructor: "Sample.checkedText" }] });
+	// Products retain either leaf kind, never just its erased transport.
 	const product = { kind: "tuple", arguments: [fin("10"), nat], abi: heap };
 	assert.deepEqual(createNativeModel(refined(product), { refinements: true }).exports[0].refinements.parameters[0], { kind: "tuple", arguments: [{ kind: "fin", bound: "10" }, null] });
-	assert.throws(() => createNativeModel(refined({ ...product, arguments: [checked("Sample.checkedText"), nat] }), { refinements: true }), /Subtype refinements require a top-level native parameter or result/);
+	assert.deepEqual(createNativeModel(refined({ ...product, arguments: [checked("Sample.checkedText"), nat] }), { refinements: true }).exports[0].refinements.parameters[0], { kind: "tuple", arguments: [{ kind: "subtype", constructor: "Sample.checkedText" }, null] });
 });
 
 // Reviewed Binding IR rejection needs a real build with a reviewed document; tests/native-fin.test.mjs covers it.

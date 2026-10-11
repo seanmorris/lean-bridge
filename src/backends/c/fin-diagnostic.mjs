@@ -16,12 +16,23 @@
  * @param options.indent - Indentation of the enclosing condition.
  * @param options.reject - Generate a rejection from a C string expression.
  */
-export const finDiagnosticRejection = ({ path, bound, name, indent, reject }) => {
+export const finDiagnosticRejection = ({ path, bound, name, indent, reject }) => refinementDiagnosticRejection({ path, suffix: ` is not below its Fin ${bound} bound`, name, indent, reject });
+
+/**
+ * Emit a leaf's rejection without treating source text as a printf directive.
+ *
+ * @param options - Failed leaf and rejection renderer.
+ * @param options.path - Literal path segments and generated indices.
+ * @param options.suffix - Literal diagnostic suffix.
+ * @param options.name - Unique generated buffer identifier.
+ * @param options.indent - Indentation of the enclosing condition.
+ * @param options.reject - Render rejection from a C string expression.
+ */
+export const refinementDiagnosticRejection = ({ path, suffix, name, indent, reject }) => {
 	const indices = path.filter(part => typeof part !== "string").map(part => part.index);
-	const suffix = ` is not below its Fin ${bound} bound`;
 	if(!indices.length) return reject(JSON.stringify(path.join("") + suffix));
 	// Source names can contain percent signs. Only generated indices are format directives.
-	const format = JSON.stringify(path.map(part => typeof part === "string" ? part.replaceAll("%", "%%") : "%zu").join("") + suffix);
+	const format = JSON.stringify(path.map(part => typeof part === "string" ? part.replaceAll("%", "%%") : "%zu").join("") + suffix.replaceAll("%", "%%"));
 	const buffer = `${name}_message`;
 	return `{
 ${indent}  static _Thread_local char ${buffer}[sizeof(${format}) + ${indices.length} * 3 * sizeof(size_t)];

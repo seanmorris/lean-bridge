@@ -54,7 +54,7 @@ const representation = type => {
 // a result's callback is a Lean closure leased to the host, whose arguments are checked before it runs.
 export const validateNativeType = (type, depth = 0, copied = false, site = undefined) => {
 	if(site !== undefined && (!["parameter", "result"].includes(site) || depth !== 0 || copied)) fail("invalid native callback site");
-	return validate(type, depth, copied, undefined, undefined, false, depth === 0 && !copied, site);
+	return validate(type, depth, copied, undefined, undefined, false, depth === 0 && !copied, site, depth === 0 && !copied);
 };
 
 /**
@@ -70,7 +70,7 @@ export const validateOwnedNativeType = (type, policy) => {
 
 // `structural` stays true while only arrays, lists, options, products, results and aliases separate a
 // position from its top-level parameter or result.
-const validate = (type, depth, copied, references, policy, owned = false, structural = true, site = undefined) => {
+const validate = (type, depth, copied, references, policy, owned = false, structural = true, site = undefined, subtypeStructural = false) => {
 	if(!type || depth > 32) fail("type nesting exceeds 32");
 	if(!Object.hasOwn(Object.getOwnPropertyDescriptor(type, "kind") ?? {}, "value")) fail("type kind must be a data field");
 	if(type.kind === "owned-graph")
@@ -95,7 +95,7 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 	if(!fields) fail("unknown native type");
 	closed(type, fields, "native type");
 	representation(type);
-	const recurse = (child, copy = copied, inner = structural) => validate(child, depth + 1, copy, references, policy, owned, inner);
+	const recurse = (child, copy = copied, inner = structural, subtype = subtypeStructural) => validate(child, depth + 1, copy, references, policy, owned, inner, undefined, subtype);
 	if(type.kind === "graph")
 	{
 		if(references) fail("nested copied graph");
@@ -126,8 +126,8 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 		}
 		else if(type.predicate?.kind === "subtype")
 		{
-			// An author-supplied checked constructor runs only at a top-level site over a primitive base.
-			if(depth !== 0 || copied) fail("Subtype refinements require a top-level native parameter or result");
+			// Only structural edges preserve the site's author-selected primitive constructor.
+			if(!subtypeStructural) fail("Subtype refinements require a top-level or structural-container native parameter or result");
 			closed(type.predicate, ["kind", "constructor"], "refinement predicate");
 			if(typeof type.predicate.constructor !== "string" || !identifier.test(type.predicate.constructor)) fail("invalid Subtype refinement");
 			recurse(type.base, true);
@@ -173,11 +173,11 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 				if(child?.kind === "value")
 				{
 					closed(child, ["kind", "type", "value"], "record value argument");
-					recurse(child.type, true, false);
+					recurse(child.type, true, false, false);
 					if(child.type.kind !== "primitive" || child.type.name !== "nat" || typeof child.value !== "string" || !/^(?:0|[1-9][0-9]*)$/.test(child.value)) fail("invalid record value argument");
 					continue;
 				}
-				recurse(child, true, false);
+				recurse(child, true, false, false);
 				if(containsKind(child, ["resource", "callback", "refinement"], references)) fail("record provenance arguments cannot carry resource, callback or refinement types");
 			}
 		}
@@ -197,7 +197,7 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 			if(!/^[A-Za-z][A-Za-z0-9_]*$/.test(field.name) || !identifier.test(field.projection)
 	      || ["new", "DESTROY", "CLONE", "CLONE_SKIP"].includes(field.name)) fail("invalid or reserved record field");
 			// Plain record fields are structural; an instantiated generic structure's fields are not.
-			recurse(field.type, true, !Object.hasOwn(type, "provenance"));
+			recurse(field.type, true, !Object.hasOwn(type, "provenance"), false);
 		}
 	} else if(type.kind === "variant")
 	{
@@ -215,7 +215,7 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 				closed(field, ["name", "type"], "variant field");
 				if(typeof field.name !== "string" || !/^[A-Za-z][A-Za-z0-9_]*$/.test(field.name)
 					|| ["kind", "new", "DESTROY", "CLONE", "CLONE_SKIP"].includes(field.name)) fail("invalid or reserved variant field");
-				recurse(field.type, true, true);
+				recurse(field.type, true, true, false);
 			}
 		}
 	} else if(type.kind === "resource")
@@ -228,7 +228,7 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 		if(!Array.isArray(type.parameters) || !type.parameters.length || type.parameters.length > 16) fail("callback arity must be 1 through 16");
 		// A host callback's result is produced by the host while Lean runs; the native model admits
 		// its bounds only when its failure value holds no Fin.
-		type.parameters.forEach(parameter => recurse(parameter, copied, site !== undefined)); recurse(type.result, copied, site !== undefined);
+		type.parameters.forEach(parameter => recurse(parameter, copied, site !== undefined, false)); recurse(type.result, copied, site !== undefined, false);
 	} else fail(`unsupported type kind ${type.kind}`);
 	return type;
 };

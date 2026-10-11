@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import test from "node:test";
-import { checkedRefinementSelection, validateCheckedRefinementSelection } from "../../src/analyze/checked-refinement-selection.mjs";
+import { checkedRefinementSelection, projectionCheckedSelection, validateCheckedRefinementSelection } from "../../src/analyze/checked-refinement-selection.mjs";
 import { compilerExportSelection, exportContractProblem, validateExportConfiguration } from "../../src/analyze/export-configuration.mjs";
 import { assertJsonSchema } from "./json-schema.mjs";
 
@@ -55,6 +55,32 @@ test("accepting constructor-choice syntax does not admit an unchecked runtime pr
 		, parameters: [{ type: erased }]
 		, result: { kind: "primitive", name: "nat" }
 	}), /checked refinement constructor does not match/);
+});
+
+test("contract reconciliation checks exact constructor placement without supplying or dropping Fin bounds", () => {
+	const scalar = { kind: "primitive", name: "nat" };
+	const refined = constructor => ({ kind: "refinement", base: scalar, predicate: subtype(constructor) });
+	const bounded = { kind: "refinement", base: scalar, predicate: fin };
+	const parameter = {
+		kind: "tuple"
+		, arguments: [
+		{ kind: "array", element: { kind: "alias", name: "Library.Value", target: refined("Library.normalize") } }
+		, { kind: "result", arguments: [bounded, refined("Library.checked")] }
+		]
+	};
+	const selection = tree("tuple", tree("array", leaf("Library.normalize")), tree("result", null, leaf("Library.checked")));
+	const projection = { status: "supported", parameters: [{ type: parameter }], result: scalar };
+	const snapshot = structuredClone(projection);
+	assert.deepEqual(projectionCheckedSelection(parameter), selection);
+	assert.equal(exportContractProblem(config(selection).contracts["Library.run"], projection), null);
+	assert.deepEqual(projection, snapshot);
+	for(const altered of [tree("tuple", null, tree("result", null, leaf("Library.checked")))
+		, tree("tuple", tree("array", leaf("Library.other")), tree("result", null, leaf("Library.checked")))
+		, tree("tuple", tree("array", leaf("Library.normalize")), tree("result", leaf("Library.checked"), null))
+		, tree("tuple", tree("list", leaf("Library.normalize")), tree("result", null, leaf("Library.checked")))
+	]) assert.match(exportContractProblem(config(altered).contracts["Library.run"], projection), /does not match/);
+	assert.match(exportContractProblem(config("reject").contracts["Library.run"], projection), /rejects compiler-checked/);
+	assert.equal(projectionCheckedSelection({ kind: "array", element: bounded }), null);
 });
 
 test("structural constructor choices retain both branches and preserve source predicates", () => {

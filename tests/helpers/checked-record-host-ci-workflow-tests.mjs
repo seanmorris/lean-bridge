@@ -7,18 +7,24 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { assertCheckedRecordHostWorkflow, disableCheckedRecordHostWorkflow, enableCheckedRecordHostWorkflow, checkedRecordHostCiBlock, checkedRecordHostCiCommand, checkedRecordHostCiGroups, checkedRecordHostCiUpload } from "./checked-record-host-ci-workflow.mjs";
-import { beforeCheckedRecordHostCiSource } from "./checked-record-host-ci-history.mjs";
+import { beforeCheckedRecordHostCiSource, checkedRecordHostCiHistoryPath } from "./checked-record-host-ci-history.mjs";
+import { sha256 } from "../../src/capsule/node.mjs";
 import { reviewedSubtypeHostCiBlock, reviewedSubtypeHostCiCommand } from "./reviewed-subtype-host-ci-workflow.mjs";
 import "./checked-record-host-ci-history-tests.mjs";
 
 const path = ".github/workflows/consumer-matrix.yml";
 
 test("checked-record native CI preserves all previous commands and adds eight explicit lanes", async () => {
-	const current = await readFile(path, "utf8"), previous = beforeCheckedRecordHostCiSource(path, current);
+	const current = await readFile(path, "utf8");
+	const record = JSON.parse(await readFile(checkedRecordHostCiHistoryPath));
+	const update = record.updates.find(item => item.path === path);
+	const milestone = beforeCheckedRecordHostCiSource(path, current, update.currentSha256);
+	assert.equal(sha256(milestone), update.currentSha256);
+	const previous = beforeCheckedRecordHostCiSource(path, milestone);
 	assertCheckedRecordHostWorkflow(current);
-	assert.notEqual(current, previous);
-	assert.equal(disableCheckedRecordHostWorkflow(current), previous);
-	assert.equal(enableCheckedRecordHostWorkflow(previous), current);
+	assert.notEqual(milestone, previous);
+	assert.equal(sha256(disableCheckedRecordHostWorkflow(milestone)), sha256(previous));
+	assert.equal(sha256(enableCheckedRecordHostWorkflow(previous)), sha256(milestone));
 	assert.throws(() => enableCheckedRecordHostWorkflow(current));
 	assert.throws(() => disableCheckedRecordHostWorkflow(previous));
 	assert.deepEqual(checkedRecordHostCiGroups.flatMap(item => item.lanes), ["php-native", "python311", "python312", "rust", "dotnet", "jvm", "ruby", "wit-wasi"]);

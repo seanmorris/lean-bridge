@@ -56,8 +56,13 @@ test("ordinary IO exports are blocked before compilation", async () => {
   await assert.rejects(generate("tests/fixtures/onboarding/async"), { code: "component-binding-ir-required" });
 });
 
-test("existing hand-authored Binding IR cannot silently enter the inferred adapter generator", async () => {
-  const analysis = await analyzeLeanProject(process.cwd());
+test("existing hand-authored Binding IR cannot silently enter the inferred adapter generator", async t => {
+  const root = await mkdtemp(join(tmpdir(), "lean-bridge-compiler-reviewed-origin-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  await cp("tests/fixtures/onboarding/small", root, { recursive: true });
+  await cp("poc/lean-link-spike/bindings/alpha.binding-ir.json", join(root, "api.binding-ir.json"));
+  const analysis = await analyzeLeanProject(root);
+  assert.equal(analysis.bindingIr.origin, "existing-validated");
   const runtime = JSON.parse(await readFile("poc/lean-link-spike/graph-lock.json", "utf8")).runtime;
   const componentPlan = createComponentBuildPlan({ analysis, runtime });
   assert.throws(

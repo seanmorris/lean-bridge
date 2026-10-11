@@ -12,6 +12,7 @@ import { compileCallablePerlGraphPackageModel } from "./callable-graph-model.mjs
 import { generateCallablePerlGraphPackage } from "./callable-graph-package.mjs";
 import { perlStringLiteral } from "./naming.mjs";
 import { nativeFinBoundPaths } from "../native/fin-refinements.mjs";
+import { constructorRefinementLeaves } from "../../build/component-refinements.mjs";
 
 const q = JSON.stringify;
 const read = type => `lb_read_${nativeTypeKey(type)}`;
@@ -316,12 +317,57 @@ const finGuard = (type, refinement, value, name, depth = 0, path = { format: "",
 // consumes; an unboxed base passes by value. The scope still owns every argument on croak.
 const constructorGuard = (type, symbol, index, constructor, name) => `${retain(type, `a${index}`)} if (!${symbol}_refinement_${index}(a${index})) croak("%s", ${q(`${name} was rejected by ${constructor}`)});`;
 const constructorRefinement = refinement => ["subtype", "checked-record"].includes(refinement.kind);
+// Prune only constructor leaves, retaining every Fin in mixed structural/nominal trees.
+const finOnly = refinement => {
+	if(refinement === null || constructorRefinement(refinement)) return null;
+	if(refinement.kind === "fin") return refinement;
+	if(refinement.kind === "variant")
+	{
+		const cases = refinement.cases.map(branch => ({ ...branch, arguments: branch.arguments.map(finOnly) }));
+		return cases.some(branch => branch.arguments.some(Boolean)) ? { ...refinement, cases } : null;
+	}
+	const children = refinement.arguments.map(finOnly);
+	return children.some(Boolean) ? { ...refinement, arguments: children } : null;
+};
+// Project through scope-owned accessors, but retain only object leaves for validators.
+// Array elements are borrowed boxes and scalar leaves must be unboxed before calling Lean.
+const structuralConstructorGuard = (type, refinement, value, symbol, name, depth = 0, path = { format: "", indices: [] }) => {
+	if(!constructorRefinementLeaves(refinement, type).length) return "";
+	if(type.kind === "alias") return structuralConstructorGuard(type.target, refinement, value, symbol, name, depth, path);
+	if(constructorRefinement(refinement))
+	{
+		const suffix = ` was rejected by ${refinement.constructor}`;
+		const message = path.format ? [q(`%s${path.format}${suffix}`), q(name), ...path.indices.map(index => `(size_t)${index}`)].join(", ") : `"%s", ${q(name + suffix)}`;
+		return `${retain(type, value)} if (!${symbol}(${value})) croak(${message});`;
+	}
+	const child = (index, expression, segment, indices = path.indices) => structuralConstructorGuard(type.arguments?.[index] ?? type.element, refinement.arguments[index], expression, `${symbol}_${index}`, name, depth + 1, { format: path.format + segment, indices });
+	if(["array", "list"].includes(type.kind))
+	{
+		const items = type.kind === "list" ? `items${depth}` : value, index = `k${depth}`, element = `e${depth}`;
+		return `{ ${type.kind === "list" ? `lean_inc(${value}); lean_object *${items} = ${keep(`lb_t${nativeTypeKey(type)}_to_array(${value})`)};` : ""}
+      for (size_t ${index} = 0; ${index} < lean_array_size(${items}); ++${index}) { lean_object *${element} = lean_array_get_core(${items}, ${index});
+      ${child(0, unbox(type.element, element), "[%zu]", [...path.indices, index])} } }`;
+	}
+	const project = index => {
+		const inner = type.arguments?.[index] ?? type.element;
+		if(!constructorRefinementLeaves(refinement.arguments[index], inner).length) return "";
+		const local = `v${depth}_${index}`, call = `lb_t${nativeTypeKey(type)}_get${index}(${value})`;
+		const segment = type.kind === "option" ? "?" : type.kind === "result" ? `.${index ? "error" : "ok"}` : `.${index}`;
+		return `lean_inc(${value}); ${nativeCType(inner)} ${local} = ${nativeObjectType(inner) ? keep(call) : call};\n      ${child(index, local, segment)}`;
+	};
+	if(type.kind === "tuple") return `{ ${[0, 1].map(project).filter(Boolean).join("\n      ")} }`;
+	if(type.kind === "option") return `{ lean_inc(${value}); if (lb_t${nativeTypeKey(type)}_has(${value})) { ${project(0)} } }`;
+	if(type.kind === "result") return `{ lean_inc(${value}); if (lb_t${nativeTypeKey(type)}_has(${value})) { ${project(0)} } else { ${project(1)} } }`;
+	throw new TypeError(`${name}: unsupported structural constructor transport`);
+};
 const publicXsub = (name, symbol, parameters, result, refinements = null, names = []) => {
 	const refined = (refinements?.parameters ?? []).map((refinement, index) => [refinement, index]).filter(([refinement]) => refinement);
 	const guards = [
-		...refined.filter(([refinement]) => !constructorRefinement(refinement)).map(([refinement, index]) => finGuard(parameters[index], refinement, `a${index}`, names[index]))
-		, ...refined.filter(([refinement]) => constructorRefinement(refinement)).map(([refinement, index]) => constructorGuard(parameters[index], symbol, index, refinement.constructor, names[index]))];
-	const rejection = refined.some(([refinement]) => constructorRefinement(refinement)) ? "Lean rejected an argument outside its checked refinement" : "Lean rejected an argument outside its Fin bound";
+		...refined.map(([refinement, index]) => [finOnly(refinement), index]).filter(([refinement]) => refinement).map(([refinement, index]) => finGuard(parameters[index], refinement, `a${index}`, names[index]))
+		, ...refined.filter(([refinement, index]) => constructorRefinementLeaves(refinement, parameters[index]).length).map(([refinement, index]) => constructorRefinement(refinement)
+			? constructorGuard(parameters[index], symbol, index, refinement.constructor, names[index])
+			: structuralConstructorGuard(parameters[index], refinement, `a${index}`, `${symbol}_refinement_${index}`, names[index]))];
+	const rejection = refined.some(([refinement, index]) => constructorRefinementLeaves(refinement, parameters[index]).length) ? "Lean rejected an argument outside its checked refinement" : "Lean rejected an argument outside its Fin bound";
 	const invoke = `${symbol}(${parameters.map((_, i) => `a${i}`).join(", ") || "lean_box(0)"})`;
 	// A guarded adapter returns Option: none is a rejected refinement, some holds the boxed result.
 	const call = guards.length ? `lean_object *checked = ${invoke};
@@ -532,7 +578,8 @@ _callback_${type.key}(...)
 		, "Synchronous callbacks accept and return acyclic copied arrays, Lists, options, results, products, records, variants and aliases. Use the same generated classes and plain containers as ordinary arguments and results. Callback arguments, results and returned Lean closure captures own independent copied storage."
 		, "", "Pass host callbacks as CODE references. Lean may not retain them after the exported call returns. Returned Lean closures provide call, close and closed; close each closure when finished. Original Perl exception objects are rethrown after native cleanup. Closing a closure during argument conversion does not invalidate the borrow held by its active call."
 		, "", "Copied-value conversion uses the existing 16 MiB scope budget and 32-level schema bound. Recursive callback payloads, resource-containing aggregates and asynchronous callbacks remain unsupported.", "");
-	if(model.exports.some(item => item.refinements?.parameters.some(refinement => refinement?.kind === "subtype") || item.refinements?.result?.kind === "subtype"))
+	const subtype = tree => tree?.kind === "subtype" || (tree?.arguments ?? []).some(subtype);
+	if(model.exports.some(item => item.refinements && [...item.refinements.parameters, item.refinements.result].some(subtype)))
 		pm.push("=head1 CHECKED VALUES", ""
 			, "A Lean C<Subtype> parameter over a primitive base takes the plain base value: L<Math::BigInt> for C<Nat> and C<Int>, an ordinary integer for machine words, a text scalar for C<String> and an octet string for C<ByteArray>. The exported checked constructor named at each function runs on the argument after every Fin bound passed and before the guarded adapter or the exported function; a rejected value dies with a message naming the parameter and the constructor, and the function receives the constructed value. Results are projected to their base value after Lean returns. Each checked site is listed as C<arg0 checked by Module.constructor> at its function.", "");
 	const checkedRecords = model.exports.some(item => item.refinements && [...item.refinements.parameters, item.refinements.result].some(tree => tree?.kind === "checked-record"));
@@ -540,7 +587,7 @@ _callback_${type.key}(...)
 		, "Checked records use generated classes containing only payload fields. Pass L<Math::BigInt> for C<Nat> fields and plain array references for copied arrays. The selected Lean constructor validates each input before source dispatch. A rejected record dies with a message naming the parameter and constructor. A normalizing constructor changes the record received by Lean without changing the caller's record. Results project the payload fields after Lean constructs the proofs. No proof object or input constructor is needed for a result-only export. Ordinary and independently reviewed APIs preserve each parameter's constructor choice. Nested checked records, other dependent payloads and checked-record callbacks remain unsupported.", "");
 	if(model.exports.some(item => {
 		const bounds = perlFinBounds(model, item);
-		return bounds && (!checkedRecords || bounds.includes(" < "));
+		return bounds && bounds.includes(" < ");
 	})) pm.push("=head1 BOUNDED INTEGERS", ""
 		, "Lean C<Fin n> parameters and results are L<Math::BigInt> values below C<n>. Each argument is compared with its exact bound, including bounds wider than 64 bits, before the guarded adapter or the exported function runs. A value that is not a Math::BigInt, or a negative one, is rejected as for Nat; a value at or above its bound dies with a message naming the Lean parameter and bound. C<Fin 0> has no values, so every call to a function taking one dies. Results are Math::BigInt values below their declared bound. Inside arrays, Lists and options every present element is checked the same way before the guarded adapter or the exported function runs, so a C<Fin 0> element is rejected while an empty array or an undefined option is accepted; each checked path is listed as C<arg0[*]? < n> at its function, and a rejection names the failing element's own path and bound, such as C<arg0[2]? is not below its Fin 10 bound>. " + perlNominalFinNote(model), "");
 	pm.push("=head1 OWNERSHIP", "", "Close resource and closure objects when finished. Host callbacks are synchronous and may not be retained by Lean.", "", "=cut", "");

@@ -11,7 +11,7 @@ import { validateOrdinaryPhpSettings } from "../backends/php/copied-model.mjs";
 import { validateGeneratorConfiguration } from "./generator-configuration.mjs";
 import { validatePackageMetadata } from "./package-metadata.mjs";
 import { validateOwnedAggregatePolicy } from "./owned-aggregate-policy.mjs";
-import { validateCheckedRefinementSelection } from "./checked-refinement-selection.mjs";
+import { projectionCheckedSelection, validateCheckedRefinementSelection } from "./checked-refinement-selection.mjs";
 
 export const exportConfigurationFile = "lean-bridge.exports.json";
 const legacyFile = "lean-bridge.native.json";
@@ -341,7 +341,7 @@ export const exportContractProblem = (contract, projection, ownedAggregates = fa
 								: ["tuple", "result"].includes(type.kind) && type.arguments.some(refined));
 		if(site.refinement === "reject" && refined(type)) return `${label}: the contract rejects compiler-checked refined values`;
 		if(site.refinement !== undefined && site.refinement !== "reject"
-			&& (type.kind !== "refinement" || !["subtype", "checked-record"].includes(type.predicate.kind) || type.predicate.constructor !== site.refinement.constructor))
+			&& canonicalJson(projectionCheckedSelection(type)) !== canonicalJson(site.refinement))
 			return `${label}: checked refinement constructor does not match the compiler-checked Subtype`;
 		if(site.callable !== undefined)
 		{

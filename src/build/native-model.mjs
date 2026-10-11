@@ -10,7 +10,7 @@ import { createElaboratedSemanticModel } from "../analyze/semantic-model.mjs";
 import { reconcileReviewedSource } from "../analyze/reviewed-source.mjs";
 import { hashBindingIr } from "../binding-ir/canonical.mjs";
 import { projectPerlNames } from "../backends/perl/naming.mjs";
-import { checkedRecordVia, componentRefinedCall, componentRefinementConversion, componentRefinementGuards } from "./component-refinements.mjs";
+import { checkedRecordVia, componentRefinedCall, componentRefinementConversion, componentRefinementGuards, constructorRefinementLeaves } from "./component-refinements.mjs";
 
 export { validateNativeType };
 
@@ -185,7 +185,7 @@ const containmentSafe = tree => {
 
 const nativeRefinements = (declaration, callbacks = false) => {
 	const unsupported = message => Object.assign(new TypeError(`${declaration.name}: ${message}`), { code: "native-refinements-unsupported", details: { declaration: declaration.name } });
-	const tree = (type, top = true, site = undefined) => {
+	const tree = (type, top = true, site = undefined, subtypeStructural = top) => {
 		if(type.kind === "callback")
 		{
 			if(site === undefined)
@@ -209,21 +209,21 @@ const nativeRefinements = (declaration, callbacks = false) => {
 			}
 			if(type.predicate.kind === "subtype")
 			{
-				if(!top) throw Object.assign(new TypeError(`${declaration.name}: checked Subtype refinements inside containers are not supported by native packages`), { code: "native-refinements-unsupported", details: { declaration: declaration.name } });
+				if(!subtypeStructural) throw unsupported("checked Subtype refinements require a top-level or structural-container parameter or result");
 				return { kind: "subtype", constructor: type.predicate.constructor };
 			}
 			return { kind: type.predicate.kind, bound: type.predicate.bound };
 		}
-		if(type.kind === "alias") return tree(type.target, top);
+		if(type.kind === "alias") return tree(type.target, top, site, subtypeStructural);
 		if(["array", "list", "option"].includes(type.kind))
 		{
-			const element = tree(type.element, false);
+			const element = tree(type.element, false, undefined, subtypeStructural);
 			return element === null ? null : { kind: type.kind, arguments: [element] };
 		}
 		// Products keep [first, second]; results keep [ok, error], as the transport does.
 		if(["tuple", "result"].includes(type.kind))
 		{
-			const children = type.arguments.map(child => tree(child, false));
+			const children = type.arguments.map(child => tree(child, false, undefined, subtypeStructural));
 			return children.every(child => child === null) ? null : { kind: type.kind, arguments: children };
 		}
 		// A Lean-produced record with erased proofs is projected to its payload mirror; no constructor runs.
@@ -568,11 +568,11 @@ export const generateNativeLeanAdapters = model => {
 		if(!guards.length) emit(item.symbol, parameters, item.result, call);
 		else emit(item.symbol, parameters, nativeRefinedResult(item.result)
 			, componentRefinementGuards(guards, `_root_.Option.some (${call})`, "_root_.Option.none").replaceAll("\n", "\n  "));
-		// One validator per author-constructed parameter lets the C adapter name the rejected site before dispatch.
+		// One validator per constructor leaf lets adapters report the exact rejected path.
 		item.refinements.parameters.forEach((refinement, i) => {
-			if(!["subtype", "checked-record"].includes(refinement?.kind)) return;
-			emit(`${item.symbol}_refinement_${i}`, [{ name: "value", type: item.parameters[i].type }], { kind: "primitive", name: "uint8", lean: "UInt8", abi: { cType: "uint8_t", box: "lean_box", unbox: "lean_unbox", heap: false } }
-				, `match ${refinement.kind === "subtype" ? `_root_.${refinement.constructor} value` : componentRefinementConversion(refinement, "value")} with\n  | .some _ => 1\n  | .none => 0`);
+			for(const leaf of constructorRefinementLeaves(refinement, item.parameters[i].type))
+				emit(`${item.symbol}_refinement_${i}${leaf.suffix}`, [{ name: "value", type: leaf.type }], { kind: "primitive", name: "uint8", lean: "UInt8", abi: { cType: "uint8_t", box: "lean_box", unbox: "lean_unbox", heap: false } }
+					, `match ${componentRefinementConversion(leaf.refinement, "value")} with\n  | .some _ => 1\n  | .none => 0`);
 		});
 	}
 	for(const type of model.types)

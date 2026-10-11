@@ -26,6 +26,9 @@ import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
 import "./helpers/subtype-alias-position-source-history-tests.mjs";
 import "./helpers/subtype-xs-archive-source-history-tests.mjs";
 import "./helpers/checked-record-admission-source-history-tests.mjs";
+import "./helpers/structural-subtype-extractor-tests.mjs";
+import "./helpers/structural-subtype-runtime-tests.mjs";
+import "./helpers/structural-subtype-runtime-history-tests.mjs";
 
 const profiles = process.env.LEAN_BRIDGE_SUBTYPE_PROFILES?.split(",").sort() ?? [];
 assert.equal(new Set(profiles).size, profiles.length, "Duplicate Subtype profile");
@@ -51,15 +54,15 @@ test("archived Subtype XS remains readable without a PATH-provided decompressor"
 	assert.equal(await readArchivedSubtypeXs(archive, directory), source);
 });
 
-test("native types admit Subtype only at a top-level site over a primitive base", () => {
+test("native types admit primitive Subtype at top-level and structural-container sites", () => {
 	const text = { kind: "primitive", name: "string", lean: "String", abi: { ...heap } };
 	const word = { kind: "refinement", base: text, predicate: { kind: "subtype", constructor: "Subtypes.checkedWord" }, abi: { ...heap } };
 	validateNativeType(word);
 	validateNativeType({ ...word, base: nat, predicate: { kind: "subtype", constructor: "Subtypes.checkedEven" }, abi: nat.abi });
 	assert.throws(() => validateNativeType(word, 1), /top-level/);
 	assert.throws(() => validateNativeType(word, 0, true), /top-level/);
-	assert.throws(() => validateNativeType(container("array", word)), /top-level/);
-	assert.throws(() => validateNativeType(container("option", word)), /top-level/);
+	validateNativeType(container("array", word));
+	validateNativeType(container("option", word));
 	assert.throws(() => validateNativeType({ ...word, predicate: { kind: "subtype", constructor: "not valid" } }), /invalid Subtype refinement/);
 	assert.throws(() => validateNativeType({ ...word, predicate: { kind: "subtype" } }), /refinement predicate fields/);
 	assert.throws(() => validateNativeType({ ...word, base: container("array", text), predicate: { kind: "subtype", constructor: "Subtypes.checkedWords" } }), /primitive base/);
@@ -89,17 +92,17 @@ test("every native profile has a Subtype consumer", async () => {
 	for(const [profile, extension] of Object.entries(extensions)) await access(`tests/fixtures/subtype-consumers/${profile}.${extension}`);
 });
 
-test("native builds reject Subtype outside top-level sites and without a constructor", { skip: !profiles.includes("c"), timeout: 1_800_000 }, async t => {
+test("native builds reject misplaced or missing Subtype constructors and unsupported positions", { skip: !profiles.includes("c"), timeout: 1_800_000 }, async t => {
 	const site = constructor => ({ ownership: "copy", lifetime: null, refinement: { constructor } });
 	const plain = { ownership: "copy", lifetime: null, refinement: "reject" };
 	const cases = [
-		["array", "def arraySite (values : Array Word) : Nat := values.size", { "Subtypes.arraySite": { parameters: [site("Subtypes.checkedWord")], result: plain } }, /Subtype refinements currently require a top-level parameter or result/]
-		, ["option", "def optionSite (value : Option Word) : Nat := 0", { "Subtypes.optionSite": { parameters: [site("Subtypes.checkedWord")], result: plain } }, /Subtype refinements currently require a top-level parameter or result/]
-		, ["field", "structure Box where\n  word : Word\ndef fieldSite (value : Box) : Nat := value.word.val.length", { "Subtypes.fieldSite": { parameters: [plain], result: plain } }, /Subtype refinements currently require a top-level parameter or result/]
-		, ["callback", "def callbackSite (value : Word → Nat) : Nat := value ⟨\"a\", by decide⟩", { "Subtypes.callbackSite": { parameters: [plain], result: plain } }, /Subtype refinements currently require a top-level parameter or result/]
-		, ["callbackAlias", "abbrev OtherWord := Word\ndef callbackAliasSite (value : OtherWord → Nat) : Nat := value ⟨\"a\", by decide⟩", { "Subtypes.callbackAliasSite": { parameters: [plain], result: plain } }, /Subtype refinements currently require a top-level parameter or result/]
-		, ["callbackResult", "def callbackResultSite (value : Nat → Word) : Nat := (value 0).val.length", { "Subtypes.callbackResultSite": { parameters: [plain], result: plain } }, /Subtype refinements currently require a top-level parameter or result/]
-		, ["closure", "def closureSite (_ : Nat) : Word → Nat := fun value => value.val.length", { "Subtypes.closureSite": { parameters: [plain], result: plain } }, /Subtype refinements currently require a top-level parameter or result/, 1]
+		["array", "def arraySite (values : Array Word) : Nat := values.size", { "Subtypes.arraySite": { parameters: [site("Subtypes.checkedWord")], result: plain } }, /Subtype refinements require a configured checked constructor/]
+		, ["option", "def optionSite (value : Option Word) : Nat := 0", { "Subtypes.optionSite": { parameters: [site("Subtypes.checkedWord")], result: plain } }, /Subtype refinements require a configured checked constructor/]
+		, ["field", "structure Box where\n  word : Word\ndef fieldSite (value : Box) : Nat := value.word.val.length", { "Subtypes.fieldSite": { parameters: [plain], result: plain } }, /Subtype refinements require a top-level or structural-container parameter or result/]
+		, ["callback", "def callbackSite (value : Word → Nat) : Nat := value ⟨\"a\", by decide⟩", { "Subtypes.callbackSite": { parameters: [plain], result: plain } }, /Subtype refinements require a top-level or structural-container parameter or result/]
+		, ["callbackAlias", "abbrev OtherWord := Word\ndef callbackAliasSite (value : OtherWord → Nat) : Nat := value ⟨\"a\", by decide⟩", { "Subtypes.callbackAliasSite": { parameters: [plain], result: plain } }, /Subtype refinements require a top-level or structural-container parameter or result/]
+		, ["callbackResult", "def callbackResultSite (value : Nat → Word) : Nat := (value 0).val.length", { "Subtypes.callbackResultSite": { parameters: [plain], result: plain } }, /Subtype refinements require a top-level or structural-container parameter or result/]
+		, ["closure", "def closureSite (_ : Nat) : Word → Nat := fun value => value.val.length", { "Subtypes.closureSite": { parameters: [plain], result: plain } }, /Subtype refinements require a top-level or structural-container parameter or result/, 1]
 		, ["missing", "def missingSite (value : Word) : Nat := value.val.length", {}, /Subtype refinements require a configured checked constructor/]
 		, ["wrong", "def wrongSite (value : Word) : Nat := value.val.length", { "Subtypes.wrongSite": { parameters: [site("Subtypes.checkedEven")], result: plain } }, /Subtype checked constructor input must equal the subtype base/]];
 	for(const [name, source, contracts, pattern, arity] of cases)

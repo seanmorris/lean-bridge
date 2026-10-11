@@ -83,3 +83,24 @@ export const checkedRefinementSelection = refinement => {
 	};
 	return visit(refinement, 0);
 };
+
+/**
+ * Recover only constructor choices from a separately validated compiler projection.
+ * Bounds and source types remain compiler facts, outside the author selection.
+ *
+ * @param type - Fresh compiler metadata type, before transport erasure.
+ */
+export const projectionCheckedSelection = type => {
+	let nodes = 0;
+	const visit = (value, depth) => {
+		if(++nodes > 4096 || depth > 32) fail();
+		if(value.kind === "alias") return visit(value.target, depth + 1);
+		if(value.kind === "refinement") return ["subtype", "checked-record"].includes(value.predicate.kind)
+			? { constructor: value.predicate.constructor } : null;
+		if(!Object.hasOwn(arities, value.kind)) return null;
+		const arguments_ = ["array", "list", "option"].includes(value.kind) ? [value.element] : value.arguments;
+		const children = arguments_.map(child => visit(child, depth + 1));
+		return children.every(child => child === null) ? null : { kind: value.kind, arguments: children };
+	};
+	return visit(type, 0);
+};

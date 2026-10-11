@@ -616,6 +616,11 @@ const validatorName = (typeRef, typeMap) => {
 };
 
 const emitValidators = (ir, typeMap) => {
+	const subtype = tree => tree?.kind === "subtype" || (tree?.arguments ?? []).some(subtype);
+	const structuralSubtype = ir.declarations.some(item => {
+		const value = declarationRefinements(item);
+		return [...value.parameters, value.result].some(tree => tree?.arguments && subtype(tree));
+	});
 	const lines = [
 		"// Generated copied-value validators. This file is package-internal."
 		, "const invalid = (path, expected) => { throw new TypeError(`${path} must be ${expected}`); };"
@@ -640,7 +645,7 @@ const emitValidators = (ir, typeMap) => {
 			return [...value.parameters, value.result].some(refinement => refinement && !["fin", "subtype", "checked-record"].includes(refinement.kind));
 		})) ? [
 				"export const assertNestedFin = (value, refinement, path) => {"
-				, "  if (refinement === null) return;"
+				, structuralSubtype ? "  if (refinement === null || refinement.kind === 'subtype') return;" : "  if (refinement === null) return;"
 				, "  if (refinement.kind === 'fin') { assertFin(value, refinement.bound, path); return; }"
 				, "  const child = (index, value, suffix) => assertNestedFin(value, refinement.arguments[index], path + suffix);"
 				, "  if (refinement.kind === 'array' || refinement.kind === 'list') { value.forEach((item, index) => child(0, item, '[' + index + ']')); return; }"

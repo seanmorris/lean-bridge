@@ -14,10 +14,30 @@ import { sha256 } from "../capsule/node.mjs";
  */
 export const checkedRecordVia = constructor => `via_${sha256(constructor).slice(0, 16)}`;
 
+/**
+ * Enumerate constructor leaves and their erased native inputs in transport order.
+ * The suffix identifies a type position, not a runtime collection index.
+ *
+ * @param refinement - Validated refinement tree.
+ * @param type - Matching erased native type.
+ * @param suffix - Exported validator suffix, empty for an existing scalar site.
+ */
+export const constructorRefinementLeaves = (refinement, type, suffix = "") => {
+	if(refinement === null || refinement.kind === "fin") return [];
+	if(type.kind === "alias") return constructorRefinementLeaves(refinement, type.target, suffix);
+	if(["subtype", "checked-record"].includes(refinement.kind)) return [{ refinement, type, suffix }];
+	if(!["array", "list", "option", "tuple", "result"].includes(refinement.kind)) return [];
+	return refinement.arguments.flatMap((child, index) => constructorRefinementLeaves(child, type.arguments?.[index] ?? type.element, `${suffix}_${index}`));
+};
+
 const refinements = (item, count) => item.refinements ?? {
 	parameters: Array.from({ length: count }, () => null)
 	, result: null
 };
+
+// New structural Subtype expressions may be elaborated before a monadic product's
+// expected type is known. Qualify sum patterns so Lean can infer their input shape.
+const containsSubtype = refinement => refinement?.kind === "subtype" || (refinement?.arguments ?? []).some(containsSubtype);
 
 /**
  * Convert an erased value to proof-carrying Lean data through Option, or project
@@ -47,14 +67,15 @@ export const componentRefinementConversion = (refinement, value, checked = true,
 	if(["record", "variant"].includes(refinement.kind)) return `(LbErased.${refinement.definition}.${checked ? "check" : "erase"} ${input})`;
 	const child = (index, expression) => componentRefinementConversion(refinement.arguments[index], expression, checked, depth + 1);
 	if(["array", "list"].includes(refinement.kind)) return `(${input}.${checked ? "mapM" : "map"} (fun ${name} => ${child(0, name)}))`;
+	const qualified = containsSubtype(refinement);
 	if(refinement.kind === "option") return checked
-		? `(match ${input} with | .none => _root_.Option.some _root_.Option.none | .some ${name} => (${child(0, name)}).map _root_.Option.some)`
+		? `(match ${input} with | ${qualified ? "_root_.Option" : ""}.none => _root_.Option.some _root_.Option.none | ${qualified ? "_root_.Option" : ""}.some ${name} => (${child(0, name)}).map _root_.Option.some)`
 		: `(${input}.map (fun ${name} => ${child(0, name)}))`;
 	if(refinement.kind === "tuple") return checked
 		? `(do let ${name}a ← ${child(0, `${input}.fst`)}; let ${name}b ← ${child(1, `${input}.snd`)}; pure (${name}a, ${name}b))`
 		: `(${child(0, `${input}.fst`)}, ${child(1, `${input}.snd`)})`;
-	return `(match ${input} with | .ok ${name} => ${checked ? `(${child(0, name)}).map _root_.Except.ok` : `.ok ${child(0, name)}`}`
-		+ ` | .error ${name} => ${checked ? `(${child(1, name)}).map _root_.Except.error` : `.error ${child(1, name)}`})`;
+	return `(match ${input} with | ${qualified ? "_root_.Except" : ""}.ok ${name} => ${checked ? `(${child(0, name)}).map _root_.Except.ok` : `.ok ${child(0, name)}`}`
+		+ ` | ${qualified ? "_root_.Except" : ""}.error ${name} => ${checked ? `(${child(1, name)}).map _root_.Except.error` : `.error ${child(1, name)}`})`;
 };
 
 /**

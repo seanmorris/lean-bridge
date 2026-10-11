@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeStructuralSubtypeRuntimeSource } from "./structural-subtype-runtime-history.mjs";
 
 export const structuralSubtypeSelectionHistoryPath = "docs/evidence/structural-subtype-selection-source-history-20261011.json";
 export const structuralSubtypeSelectionPredecessor = "452c96b1df39e5faec7f8b8bbd95e475736e7921";
@@ -57,6 +58,7 @@ export const reverseStructuralSubtypeSelectionUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeStructuralSubtypeSelectionSource = (path, source, expected) => {
+	source = beforeStructuralSubtypeRuntimeSource(path, source, expected);
 	if(typeof source !== "string" || !structuralSubtypeSelectionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

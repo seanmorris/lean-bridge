@@ -5,6 +5,7 @@
  * @file
  */
 import { assertRefinement } from "../abi/refinements.mjs";
+import { checkedRefinementSelection } from "./checked-refinement-selection.mjs";
 import { compilerExportSelection, validateExportConfiguration } from "./export-configuration.mjs";
 
 const key = "lean-lang.org/refinements";
@@ -13,14 +14,15 @@ const fail = () => { throw new TypeError("Invalid reviewed Subtype constructor d
 const contractSite = (site, refinement) => {
 	assertRefinement(refinement, site.type);
 	// A Subtype or checked-record constructor is selected per site, over a copied value.
-	const constructed = ["subtype", "checked-record"].includes(refinement?.kind);
-	if(constructed && (site.ownership !== "copy" || site.lifetime !== null)) fail();
+	const selection = checkedRefinementSelection(refinement);
+	if(selection && (site.ownership !== "copy" || site.lifetime !== null)) fail();
 	return { ownership: site.ownership, lifetime: structuredClone(site.lifetime)
-		, ...(constructed ? { refinement: { constructor: refinement.constructor } } : {}) };
+		, ...(selection ? { refinement: selection } : {}) };
 };
 
 /**
- * Select only the constructors named at top-level primitive Subtype sites.
+ * Select constructors at primitive Subtype sites inside structural containers,
+ * and at top-level checked-record sites.
  * The caller must validate the complete Binding IR, including specializations,
  * and reconcile fresh metadata. Contracts use the public specialization name.
  * No contract is added for Fin-only or unrefined declarations. Other sites of a

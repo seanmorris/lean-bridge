@@ -5,7 +5,8 @@
  */
 import { nativeCType, nativeObjectType, nativeTypeKey } from "../../build/native-model.mjs";
 import { canonicalJson, sha256 } from "../../capsule/node.mjs";
-import { finDiagnosticRejection } from "./fin-diagnostic.mjs";
+import { finDiagnosticRejection, refinementDiagnosticRejection } from "./fin-diagnostic.mjs";
+import { constructorRefinementLeaves } from "../../build/component-refinements.mjs";
 
 /**
  * Convert a compiler type to its semantic C reference.
@@ -56,6 +57,7 @@ const finBelow = `static inline int lb_fin_below(const uint32_t *data, size_t le
 export const finRefinementWalk = ({ refinement, type: root, value: argument, constant, label, copy, bounds, reject }) => {
 	let sites = 0;
 	const check = (site, type, value, indent, path) => {
+		if(site === null || ["subtype", "checked-record"].includes(site.kind)) return [];
 		if(type.kind === "alias") return check(site, type.target, value, indent, path);
 		if(site.kind === "fin")
 		{
@@ -91,6 +93,50 @@ export const finRefinementWalk = ({ refinement, type: root, value: argument, con
 		});
 	};
 	return check(refinement, root, argument, "  ", [label]);
+};
+
+/**
+ * Check each author constructor after all raw-shape and Fin checks have passed.
+ * Each leaf validator consumes its own fresh conversion, never the dispatch input.
+ *
+ * @param options - Checked constructor traversal.
+ * @param options.refinement - Validated refinement tree.
+ * @param options.type - Erased native type.
+ * @param options.value - C expression pointing to the caller value.
+ * @param options.symbol - Validator symbol prefix.
+ * @param options.label - Caller argument name.
+ * @param options.copy - Lookup a copied C type.
+ * @param options.input - Convert a copied leaf to a fresh Lean value.
+ * @param options.reject - Render rejection from a C string expression.
+ */
+export const constructorRefinementWalk = ({ refinement, type: root, value: argument, symbol, label, copy, input, reject }) => {
+	const check = (site, type, value, indent, path, suffix) => {
+		if(site === null || site.kind === "fin") return [];
+		if(type.kind === "alias") return check(site, type.target, value, indent, path, suffix);
+		if(["subtype", "checked-record"].includes(site.kind))
+		{
+			const name = `${symbol}${suffix}`;
+			const rejected = refinementDiagnosticRejection({ path, suffix: ` was rejected by ${site.constructor}`, name, indent, reject });
+			return [`${indent}if (!${name}(${input(type, value)})) ${rejected}`];
+		}
+		// Nominal/callback constructor positions have independent admission gates.
+		if(!["array", "list", "option", "tuple", "result"].includes(site.kind)) return [];
+		if(["array", "list"].includes(site.kind))
+		{
+			const index = `k${indent.length}`;
+			return [`${indent}for (size_t ${index} = 0; ${index} < ${value}->length; ++${index}) {`
+				, ...check(site.arguments[0], type.element, `(&${value}->data[${index}])`, `${indent}  `, [...path, "[", { index }, "]"], `${suffix}_0`)
+				, `${indent}}`];
+		}
+		const fields = copy(type).fields, flag = { option: "has_value", result: "is_ok" }[site.kind];
+		return site.arguments.flatMap((child, index) => {
+			if(child === null) return [];
+			const segment = site.kind === "option" ? "?" : site.kind === "result" ? `.${index ? "error" : "ok"}` : `.${index}`;
+			const inner = check(child, type.arguments?.[index] ?? type.element, `(&${value}->${fields[index].name})`, flag ? `${indent}  ` : indent, [...path, segment], `${suffix}_${index}`);
+			return flag ? [`${indent}if (${index === 1 ? "!" : ""}${value}->${flag}) {`, ...inner, `${indent}}`] : inner;
+		});
+	};
+	return check(refinement, root, argument, "  ", [label], "");
 };
 
 /**
@@ -265,14 +311,20 @@ export const generateCopiedNativeCalls = (model, surface) => {
 		// conversion that the exported validator owns and releases; the call converts again.
 		// A checked record's conversion builds only its payload mirror; the constructor builds the record.
 		refinements.forEach((refinement, i) => {
-			if(!constructed(refinement)) return;
+			if(!refinement || !constructorRefinementLeaves(refinement, native.parameters[i].type).length) return;
 			const type = native.parameters[i].type, value = copy(type).aggregate ? fn.parameters[i].name : `&${fn.parameters[i].name}`;
-			lines.push(`  if (!${native.symbol}_refinement_${i}(${id(type)}_in(${value}))) return lb_invalid(error, ${JSON.stringify(`${fn.parameters[i].name} was rejected by ${refinement.constructor}`)});`);
+			lines.push(...constructorRefinementWalk({ refinement, type, value
+				, symbol: `${native.symbol}_refinement_${i}`
+				, label: fn.parameters[i].name, copy
+				, input: (child, expression) => `${id(child)}_in(${expression})`
+				, reject: message => `return lb_invalid(error, ${message});` }));
 		});
 		if(refinements.some(Boolean))
 		{
+			const nestedConstructor = refinements.some((refinement, i) => refinement && !constructed(refinement) && constructorRefinementLeaves(refinement, native.parameters[i].type).length);
+			const checkedRejection = nestedConstructor || (refinements.some(constructed) && !refinements.some(refinement => refinement && !constructed(refinement)));
 			lines.push(`  lean_object *checked = ${native.symbol}(${args.join(", ") || "lean_box(0)"});`
-				, `  if (lean_is_scalar(checked)) return lb_invalid(error, ${JSON.stringify(refinements.some(constructed) && !refinements.some(refinement => refinement && !constructed(refinement)) ? "Lean rejected an argument outside its checked refinement" : "Lean rejected an argument outside its Fin bound")});`
+				, `  if (lean_is_scalar(checked)) return lb_invalid(error, ${JSON.stringify(checkedRejection ? "Lean rejected an argument outside its checked refinement" : "Lean rejected an argument outside its Fin bound")});`
 				, "  lean_object *boxed = lean_ctor_get(checked, 0);");
 			if(nativeObjectType(native.result)) lines.push("  lean_inc(boxed);");
 			lines.push(`  ${nativeCType(native.result)} value = ${unboxed(native.result, "boxed")};`, "  lean_dec(checked);");

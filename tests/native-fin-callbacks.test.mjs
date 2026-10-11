@@ -272,8 +272,8 @@ test("host replies without a Fin-free failure value, nested callbacks, mixed bou
 		// A record's field is structural wherever the record appears, so the host-reply rule is the model's.
 		, ["a host callback's record result", { reply: [finCallback([nat], finCallbackTile), nat] }, true, /a host callback result needs a Fin-free failure value/u]
 		// Subtype and checked records are refused by native type validation before any reply rule applies.
-		, ["a host callback's Subtype result", { reply: [finCallback([nat], replySubtype), nat] }, true, /Subtype refinements require a top-level native parameter or result/u]
-		, ["a host callback's optional Subtype result", { reply: [finCallback([nat], { kind: "option", element: replySubtype, abi: replyHeap }), nat] }, true, /Subtype refinements require a top-level native parameter or result/u]
+		, ["a host callback's Subtype result", { reply: [finCallback([nat], replySubtype), nat] }, true, /Subtype refinements require a top-level or structural-container native parameter or result/u]
+		, ["a host callback's optional Subtype result", { reply: [finCallback([nat], { kind: "option", element: replySubtype, abi: replyHeap }), nat] }, true, /Subtype refinements require a top-level or structural-container native parameter or result/u]
 		, ["a host callback's checked-record result", { reply: [finCallback([nat], replyInterval), nat] }, true, /checked records cross only through a parameter constructor or as a result/u]
 		, ["a host callback's optional checked-record result", { reply: [finCallback([nat], { kind: "option", element: replyInterval, abi: replyHeap }), nat] }, true, /checked records cross only through a parameter constructor or as a result/u]];
 	for(const [label, signatures, callbacks, pattern] of refused)
@@ -532,7 +532,7 @@ test("fresh Lean refuses a host callback's result without a Fin-free failure val
 			name: "replySubtype"
 			, definition: "def replySubtype (host : Nat → Option { n : Nat // n < 5 }) : Nat := match host 0 with | none => 0 | some value => value.val"
 			, configuration: {}
-			, pattern: /Subtype refinements currently require a top-level parameter or result: /u
+			, pattern: /Subtype refinements require a top-level or structural-container parameter or result: /u
 		}
 		, {
 			name: "replyInterval"

@@ -169,6 +169,8 @@ test("malformed reviewed constraints fail before selecting compiler exports", ()
 	for(const transport of ["int", "uint64", "string", { array: "nat" }])
 		assert.throws(() => validateReviewedSource(reviewInput(document(transport))), { code: "reviewed-ir-build-unsupported" });
 	const nestedSubtype = document({ option: "nat" }, decision(wrap("option", { kind: "subtype", constructor: "Sample.checked" })));
+	validateReviewedSource(reviewInput(nestedSubtype));
+	nestedSubtype.declarations[0].parameters[0].type.constructor = "list";
 	assert.throws(() => validateReviewedSource(reviewInput(nestedSubtype)), { code: "reviewed-ir-build-unsupported" });
 });
 

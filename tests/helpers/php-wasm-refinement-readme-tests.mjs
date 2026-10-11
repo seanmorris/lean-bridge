@@ -28,7 +28,7 @@ test("PHP-Wasm refinement READMEs do not mislabel supported fields, containers o
 	}
 	const subtype = phpWasmFinReadme(compileCopiedPhpModel(phpWasmSubtypeReview(), { integerBits: 32 }));
 	assert.match(subtype, /^\n## Checked refinements\n/u);
-	assert.match(subtype, /Subtype inside containers, records, variants or callbacks is not supported/u);
+	assert.match(subtype, /Subtype inside records, variants or callbacks is not supported/u);
 	assert.match(subtype, /Subtypes\.normalizedEven/u);
 	const scalar = phpWasmFinReadme(compileCopiedPhpModel(reviewedScalarHostIr(), { integerBits: 32 }));
 	assert.match(scalar, /^\n## Bounded integers\n/u);

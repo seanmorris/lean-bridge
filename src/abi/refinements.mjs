@@ -5,14 +5,15 @@
  */
 
 /**
- * Admit scalar refinements and structural containers of Fin, never silently
+ * Admit scalar refinements and structural containers of Fin and Subtype, never silently
  * discard a constraint on a nominal field or callable signature.
  *
  * @param refinement - Compiler-owned predicate tree, or null for no constraint.
  * @param type - Matching public transport type reference.
  * @param depth - Bounded structural nesting; callers start at zero.
+ * @param subtypeStructural - Whether only structural edges separate this site from an export.
  */
-export const assertRefinement = (refinement, type, depth = 0) => {
+export const assertRefinement = (refinement, type, depth = 0, subtypeStructural = depth === 0) => {
 	if(refinement === null) return;
 	const fail = () => { throw new TypeError("Refinement does not match its transport type"); };
 	if(depth > 32 || !refinement || typeof refinement !== "object" || Array.isArray(refinement)) fail();
@@ -29,7 +30,7 @@ export const assertRefinement = (refinement, type, depth = 0) => {
 	if(refinement.kind === "subtype")
 	{
 		keys(["kind", "constructor"]);
-		if(depth !== 0 || type?.kind !== "primitive" || typeof refinement.constructor !== "string"
+		if(!subtypeStructural || type?.kind !== "primitive" || typeof refinement.constructor !== "string"
 			|| !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$/.test(refinement.constructor)) fail();
 		return;
 	}
@@ -47,7 +48,7 @@ export const assertRefinement = (refinement, type, depth = 0) => {
 		|| type?.kind !== "apply" || type.constructor !== refinement.kind || !Array.isArray(type.arguments) || type.arguments.length !== count
 		|| !Array.isArray(refinement.arguments) || refinement.arguments.length !== count
 		|| !refinement.arguments.some(value => value !== null)) fail();
-	for(let index = 0; index < count; index++) assertRefinement(refinement.arguments[index], type.arguments[index], depth + 1);
+	for(let index = 0; index < count; index++) assertRefinement(refinement.arguments[index], type.arguments[index], depth + 1, subtypeStructural);
 };
 
 /**

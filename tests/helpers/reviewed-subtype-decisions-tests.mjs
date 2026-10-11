@@ -80,7 +80,7 @@ test("constructor requests sort deterministically and bind the selected name int
 	assert.equal(request().contracts["Checks.alpha"].parameters[0].refinement.constructor, "Checks.normalizingWord");
 });
 
-test("malformed, nested and ownership-bearing Subtype decisions are refused", () => {
+test("malformed and ownership-bearing Subtype decisions are refused while structural choices remain explicit", () => {
 	const mutations = [
 		ir => { ir.declarations[0].source.extensions[key].extra = "proof"; }
 		, ir => { ir.declarations[0].source.extensions[key].parameters = []; }
@@ -100,10 +100,15 @@ test("malformed, nested and ownership-bearing Subtype decisions are refused", ()
 		assert.throws(() => reviewedSubtypeContracts(ir));
 	}
 	for(const constructor of ["array", "list", "option"])
-		assert.throws(() => reviewedSubtypeContracts(document([{ [constructor]: "nat" }], "nat", {
+	{
+		const ir = document([{ [constructor]: "nat" }], "nat", {
 			parameters: [{ kind: constructor, arguments: [subtype("Checks.even")] }]
 			, result: null
-		})));
+		});
+		assert.deepEqual(reviewedSubtypeContracts(ir)["Checks.echo"].parameters[0].refinement, { kind: constructor, arguments: [{ constructor: "Checks.even" }] });
+		ir.declarations[0].source.extensions[key].parameters[0].arguments[0].constructor = "Checks.even forged";
+		assert.throws(() => reviewedSubtypeContracts(ir));
+	}
 });
 
 test("derived constructor selections retain the existing 128-export contract bound", () => {

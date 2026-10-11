@@ -124,7 +124,7 @@ test("native Subtype package documentation names reviewed constructor reconcilia
 	declaration.source.extensions[refinementsKey].parameters[0] = { kind: "subtype", constructor: "Library.checkedEven" };
 	const readme = nativeRefinementReadme([declaration], "", "native packages");
 	assert.ok(readme.includes("Reviewed APIs select the constructor and reconcile it with fresh Lean compilation"));
-	assert.ok(readme.includes("Subtype inside containers, records, variants or callbacks is not supported"));
+	assert.ok(readme.includes("Subtype inside records, variants or callbacks is not supported"));
 	assert.doesNotMatch(readme, /reviewed Binding IR is not supported/u);
 });
 
