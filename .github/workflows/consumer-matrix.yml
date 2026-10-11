@@ -3346,7 +3346,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
       - name: Record native consumer observations
-        if: always()
+        if: always() && matrix.profile == 'c-family'
         shell: bash
         run: |
           test_result="${{ steps.consumer.outcome == 'success' && 'passed' || 'failed' }}"
@@ -3399,6 +3399,18 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_CPP_CALLABLE_TEST=1 node --test tests/cpp-callables.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_CPP_STRUCTURED_CALLABLE_TEST=1 node --test tests/cpp-structured-callables.test.mjs"
             fi
+            node scripts/consumer-ci.mjs record --consumer "$consumer" --output "build/consumer-ci/results/native-${{ matrix.profile }}/$consumer.json" --performance "build/consumer-ci/performance/$consumer.json" --test-result "$result" --package-installation "$installed" --real-lean-execution "$installed" --command "$consumer_command"
+          done
+      - name: Record native Python and Rust consumer observations
+        if: always() && (matrix.profile == 'python' || matrix.profile == 'rust')
+        shell: bash
+        run: |
+          test_result="${{ steps.consumer.outcome == 'success' && 'passed' || 'failed' }}"
+          executed="${{ steps.consumer.outcome == 'success' && 'true' || 'false' }}"
+          for consumer in ${{ matrix.consumers }}; do
+            result="$test_result"
+            installed="$executed"
+            consumer_command="npm run test:consumer:native"
             if [ "$consumer" = python ]; then
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_PYTHON_TEST=1 node --test tests/native-python.test.mjs && npm run test:type-corpus:python && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=python node --test tests/type-corpus-reviewed-native.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_CALLABLE_TEST=1 node --test tests/python-callables.test.mjs"

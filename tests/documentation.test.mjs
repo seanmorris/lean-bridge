@@ -12,6 +12,7 @@ import "./helpers/node-consumer-budget-ci-tests.mjs";
 import "./helpers/node-consumer-budget-source-history-tests.mjs";
 import "./helpers/perl-xs-budget-source-history-tests.mjs";
 import "./helpers/ruby-gdb-ci-source-history-tests.mjs";
+import "./helpers/native-observation-split-tests.mjs";
 
 import { analyzeLeanProject } from "../src/analyze/lean-project.mjs";
 import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
@@ -28,6 +29,7 @@ import { assertReviewedSubtypePackageWorkflow, disableReviewedSubtypePackageWork
 import { assertCheckedRecordHostWorkflow, disableCheckedRecordHostWorkflow } from "./helpers/checked-record-host-ci-workflow.mjs";
 import { assertManagedCiIsolation } from "./helpers/managed-ci-isolation.mjs";
 import { assertNativeCiIsolation } from "./helpers/native-ci-isolation.mjs";
+import { assertWorkflowRunBudget, joinNativeObservations } from "./helpers/native-observation-split.mjs";
 import {
 	ConsumerSupportError,
 	consumerSummaryMarkdown,
@@ -619,15 +621,16 @@ test("CI result contract detects support loss", async () => {
 });
 
 test("dedicated CI covers every consumer with Node 22 and pinned build paths", async () => {
-  const [lateWorkflow, packageDocument, currentPerlWorkflow, toolchainBootstrap] = await Promise.all([
+  const [splitWorkflow, packageDocument, currentPerlWorkflow, toolchainBootstrap] = await Promise.all([
     readFile(".github/workflows/consumer-matrix.yml", "utf8")
     , readFile("package.json", "utf8").then(JSON.parse)
     , readFile(".github/workflows/perl-consumer.yml", "utf8")
     , readFile("scripts/bootstrap-toolchains.sh", "utf8")
   ]);
-  // Validate all measured edge gates before checking the unchanged earlier command/upload order.
-  assertFinLateWorkflow(lateWorkflow);
-  const packageWorkflow = disableFinLateWorkflow(lateWorkflow);
+  // Check the actual recording split and measured gates before earlier layout comparisons.
+  assertWorkflowRunBudget(splitWorkflow);
+  assertFinLateWorkflow(splitWorkflow);
+  const packageWorkflow = disableFinLateWorkflow(joinNativeObservations(splitWorkflow));
   assertCheckedRecordHostWorkflow(packageWorkflow);
   const withoutCheckedRecords = disableCheckedRecordHostWorkflow(packageWorkflow);
   assertReviewedSubtypePackageWorkflow(withoutCheckedRecords);

@@ -82,9 +82,13 @@ const evaluate = (expression, profile, overrides = {}) => runInNewContext(
  * @param profile - Known native matrix profile.
  * @param overrides - Explicit step outcomes for failure-path checks.
  */
-export const nativeCiRecordScript = (workflow, profile, overrides = {}) => nativeCiCommands(
-	nativeCiSteps(workflow).find(step => step.name === "Record native consumer observations")
-).replace(/\$\{\{ (.+?) \}\}/gu, (_, expression) => String(evaluate(expression, profile, overrides)));
+export const nativeCiRecordScript = (workflow, profile, overrides = {}) => {
+	const names = ["Record native consumer observations", "Record native Python and Rust consumer observations"];
+	const selected = nativeCiSteps(workflow).filter(step => names.includes(step.name)
+		&& (!step.condition || evaluate(step.condition, profile, overrides)));
+	assert.equal(selected.length, 1, `exactly one observation step for ${profile}`);
+	return nativeCiCommands(selected[0]).replace(/\$\{\{ (.+?) \}\}/gu, (_, expression) => String(evaluate(expression, profile, overrides)));
+};
 
 /**
  * Preserve all native acceptance commands while isolating outcomes and uploads.

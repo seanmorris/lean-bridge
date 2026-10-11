@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeNativeObservationSplitSource } from "./native-observation-split-history.mjs";
 
 export const phpWasmHostedHistoryPath = "docs/evidence/php-wasm-hosted-refinements-source-history-20261011.json";
 export const phpWasmHostedPredecessor = "672471416df428309639410b34c8e87e558d3898";
@@ -50,6 +51,7 @@ export const reversePhpWasmHostedUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforePhpWasmHostedSource = (path, source, expected) => {
+	source = beforeNativeObservationSplitSource(path, source, expected);
 	if(typeof source !== "string" || !phpWasmHostedChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
