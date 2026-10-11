@@ -48,7 +48,8 @@ test("Component nominal Subtype authenticates exact changes and restores the ori
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
 	assert.equal(pins, 315);
-	assert.deepEqual(JSON.parse(await readFile(inventoryPath, "utf8")), expected);
+	const currentInventory = beforeComponentNominalSubtypeSource(inventoryPath, await readFile(inventoryPath, "utf8"), record.updates.find(item => item.path === inventoryPath).currentSha256);
+	assert.deepEqual(JSON.parse(currentInventory), expected);
 	assert.equal(expected.evidence.length, 472); assert.equal(expected.observations.length, 571);
 });
 

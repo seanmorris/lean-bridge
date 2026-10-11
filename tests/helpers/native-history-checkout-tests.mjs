@@ -1,5 +1,5 @@
 /**
- * Require historical Git sources before native and managed consumer builds.
+ * Require historical Git sources before native, managed and WIT consumer builds.
  *
  * @file
  */
@@ -11,11 +11,12 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import test from "node:test";
 import "./native-history-checkout-history-tests.mjs";
+import "./wit-history-checkout-history-tests.mjs";
 
 const checkout = "      - name: Check out the exact revision\n        uses: actions/checkout@v6\n        with:\n          fetch-depth: 0\n          persist-credentials: false\n";
-const preflight = family => `      - name: Require source history before ${family} consumer builds\n        run: test "$(git rev-parse --is-shallow-repository)" = false\n`;
+const preflight = family => `      - name: Require source history before ${family === "wasi" ? "WIT" : family} consumer builds\n        run: test "$(git rev-parse --is-shallow-repository)" = false\n`;
 const jobOf = (source, family) => {
-	const parts = source.split(`\n  ${family}-consumers:\n`);
+	const parts = source.split(`\n  ${family === "wasi" ? "wasi-consumer" : `${family}-consumers`}:\n`);
 	assert.equal(parts.length, 2);
 	return parts[1].split(/\n {2}[a-z][a-z0-9-]*:\n/u)[0];
 };
@@ -27,20 +28,21 @@ const requireHistory = (source, family) => {
 	assert.doesNotMatch(job, /^ {4}(?:if|continue-on-error):/mu);
 	assert.ok(job.indexOf(guard) < job.indexOf("uses: actions/setup-node@v6"));
 	assert.ok(job.indexOf(guard) < job.indexOf("uses: cachix/install-nix-action@v31"));
-	assert.ok(job.includes(family === "native" ? "        profile: [c-family, python, rust]\n" : "        profile: [dotnet, jvm, ruby]\n"));
+	if(family !== "wasi")
+		assert.ok(job.includes(family === "native" ? "        profile: [c-family, python, rust]\n" : "        profile: [dotnet, jvm, ruby]\n"));
 };
 
-test("native and managed consumer CI require full source history before installing tools", async () => {
+test("native, managed and WIT consumer CI require full source history before installing tools", async () => {
 	const source = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
-	for(const family of ["native", "managed"]) requireHistory(source, family);
+	for(const family of ["native", "managed", "wasi"]) requireHistory(source, family);
 	const root = await readFile("tests/helpers/native-fin-nix-boundary-tests.mjs", "utf8");
 	assert.ok(root.includes('import "./native-history-checkout-tests.mjs";'));
 });
 
-test("native and managed history gates reject shallow, missing, misplaced or bypassed checks", async t => {
+test("native, managed and WIT history gates reject shallow, missing, misplaced or bypassed checks", async t => {
 	const source = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	let controls = 0;
-	for(const family of ["native", "managed"])
+	for(const family of ["native", "managed", "wasi"])
 	{
 		const job = jobOf(source, family), guard = preflight(family);
 		for(const changed of [
@@ -82,7 +84,9 @@ test("the source-history preflight refuses a real shallow clone and accepts its 
 		git(source, ["-c", "user.name=Test", "-c", "user.email=test@example.invalid", "-c", "commit.gpgsign=false", "commit", "--quiet", "--allow-empty", "-m", message]);
 	git(root, ["clone", "--quiet", "--depth=1", pathToFileURL(source).href, clone]);
 	const head = git(clone, ["rev-parse", "HEAD"]);
-	const command = preflight("native").split("        run: ")[1].trim();
+	const command = preflight("wasi").split("        run: ")[1].trim();
+	for(const family of ["native", "managed"])
+		assert.equal(preflight(family).split("        run: ")[1].trim(), command);
 	const check = cwd => spawnSync("bash", ["--noprofile", "--norc", "-euo", "pipefail", "-c", command], { cwd, env, encoding: "utf8", timeout: 10_000 });
 	assert.equal(check(root).status, 1);
 	assert.equal(check(clone).status, 1);

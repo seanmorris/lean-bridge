@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeWitHistoryCheckoutSource } from "./wit-history-checkout-history.mjs";
 
 export const componentNominalSubtypeHistoryPath = "docs/evidence/component-nominal-subtype-source-history-20261011.json";
 export const componentNominalSubtypePredecessor = "aca7821c8b7b9f52363fbd00ee8b6400baea52dd";
@@ -67,6 +68,7 @@ export const reverseComponentNominalSubtypeUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeComponentNominalSubtypeSource = (path, source, expected) => {
+	source = beforeWitHistoryCheckoutSource(path, source, expected);
 	if(typeof source !== "string" || !componentNominalSubtypeChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

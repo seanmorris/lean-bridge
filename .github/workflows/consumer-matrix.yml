@@ -4563,7 +4563,10 @@ jobs:
       - name: Check out the exact revision
         uses: actions/checkout@v6
         with:
+          fetch-depth: 0
           persist-credentials: false
+      - name: Require source history before WIT consumer builds
+        run: test "$(git rev-parse --is-shallow-repository)" = false
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
