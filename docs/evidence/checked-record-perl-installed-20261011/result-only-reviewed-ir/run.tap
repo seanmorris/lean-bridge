@@ -1,0 +1,26 @@
+TAP version 13
+# Subtest: installed checked-record Perl packages reproduce and relocate both delivery modes for result-only-reviewed-ir
+ok 1 - installed checked-record Perl packages reproduce and relocate both delivery modes for result-only-reviewed-ir
+  ---
+  duration_ms: 268370.775387
+  type: 'test'
+  ...
+# result-only-reviewed-ir author 0: four Perl ABIs
+# result-only-reviewed-ir author 1: four Perl ABIs
+# Installing 5.36.3-threaded/prebuilt-only/result-only-reviewed-ir
+# Installing 5.36.3-threaded/build-xs/result-only-reviewed-ir
+# Installing 5.36.3-unthreaded/prebuilt-only/result-only-reviewed-ir
+# Installing 5.36.3-unthreaded/build-xs/result-only-reviewed-ir
+# Installing 5.38.2-threaded/prebuilt-only/result-only-reviewed-ir
+# Installing 5.38.2-threaded/build-xs/result-only-reviewed-ir
+# Installing 5.38.2-unthreaded/prebuilt-only/result-only-reviewed-ir
+# Installing 5.38.2-unthreaded/build-xs/result-only-reviewed-ir
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 268715.014534

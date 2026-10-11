@@ -1,0 +1,26 @@
+TAP version 13
+# Subtest: installed checked-record Perl packages reproduce and relocate both delivery modes for result-only-ordinary-source
+ok 1 - installed checked-record Perl packages reproduce and relocate both delivery modes for result-only-ordinary-source
+  ---
+  duration_ms: 269701.832276
+  type: 'test'
+  ...
+# result-only-ordinary-source author 0: four Perl ABIs
+# result-only-ordinary-source author 1: four Perl ABIs
+# Installing 5.36.3-threaded/prebuilt-only/result-only-ordinary-source
+# Installing 5.36.3-threaded/build-xs/result-only-ordinary-source
+# Installing 5.36.3-unthreaded/prebuilt-only/result-only-ordinary-source
+# Installing 5.36.3-unthreaded/build-xs/result-only-ordinary-source
+# Installing 5.38.2-threaded/prebuilt-only/result-only-ordinary-source
+# Installing 5.38.2-threaded/build-xs/result-only-ordinary-source
+# Installing 5.38.2-unthreaded/prebuilt-only/result-only-ordinary-source
+# Installing 5.38.2-unthreaded/build-xs/result-only-ordinary-source
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 270109.687991

@@ -1,0 +1,152 @@
+{
+  "contracts": {
+    "CheckedRecords.complement": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "CheckedRecords.mkPercent"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CheckedRecords.firstOf": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "CheckedRecords.mkTriple"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CheckedRecords.repeated": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CheckedRecords.scale": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        },
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "CheckedRecords.mkTriple"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CheckedRecords.smallest": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "CheckedRecords.sortedTriple"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CheckedRecords.span": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "CheckedRecords.mkInterval"
+          }
+        },
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "CheckedRecords.mkInterval"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CheckedRecords.total": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "CheckedRecords.mkTriple"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CheckedRecords.width": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "CheckedRecords.mkInterval"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    }
+  },
+  "exports": [
+    "CheckedRecords.width",
+    "CheckedRecords.span",
+    "CheckedRecords.total",
+    "CheckedRecords.firstOf",
+    "CheckedRecords.smallest",
+    "CheckedRecords.scale",
+    "CheckedRecords.repeated",
+    "CheckedRecords.complement"
+  ],
+  "modules": [
+    "CheckedRecords"
+  ],
+  "schemaVersion": 1,
+  "targets": {
+    "cpan": {
+      "module": "LeanBridge::CheckedRecords",
+      "version": "1.000"
+    }
+  }
+}

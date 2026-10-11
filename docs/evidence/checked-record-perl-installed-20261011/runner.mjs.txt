@@ -1,0 +1,73 @@
+import assert from "node:assert/strict";
+import { spawn, execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
+import { access, open, readFile, statfs, writeFile } from "node:fs/promises";
+
+const cwd = "/app", [revision, route, label] = process.argv.slice(2);
+assert.match(revision ?? "", /^[a-f0-9]{40}$/);
+assert.match(label ?? "", /^[a-z0-9-]+$/);
+assert.ok(["ordinary-source", "reviewed-ir", "result-only-ordinary-source", "result-only-reviewed-ir"].includes(route));
+const prefix = `/app/build/vo1446-perl-${label}-${revision.slice(0, 7)}`;
+const output = prefix + "-records";
+const sha256 = value => createHash("sha256").update(value).digest("hex");
+const git = args => execFileSync("git", args, { cwd, encoding: "utf8" }).trim();
+const freeMiB = async () => { const value = await statfs(cwd); return Math.floor(value.bavail * value.bsize / 1048576); };
+assert.equal(git(["rev-parse", "HEAD"]), revision);
+assert.equal(git(["status", "--porcelain", "--untracked-files=no"]), "");
+await assert.rejects(access(output), { code: "ENOENT" });
+let minimumFreeMiB = await freeMiB();
+assert.ok(minimumFreeMiB >= 2048, `Insufficient disk to start: ${minimumFreeMiB} MiB`);
+const environment = {
+  ...Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith("LEAN_BRIDGE_") && !key.startsWith("NODE_TEST_")))
+  , LEAN_BRIDGE_LEAN_PREFIX: "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2"
+  , LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR: "2.36"
+  , LEAN_BRIDGE_CHECKED_RECORD_PERL_TEST: "1"
+  , LEAN_BRIDGE_CHECKED_RECORD_PERL_OUTPUT: output
+  , LEAN_BRIDGE_CHECKED_RECORD_PERL_ROUTES: route
+  , LEAN_NUM_THREADS: "1", OMP_NUM_THREADS: "1", MAKEFLAGS: "-j1"
+};
+const args = ["-c", "3", process.execPath, "--test", "--test-concurrency=1", "--test-reporter=tap"
+  , "tests/helpers/checked-record-perl-installed-tests.mjs"];
+const log = await open(`${prefix}.tap`, "wx");
+const start = { revision, tree: git(["rev-parse", "HEAD^{tree}"]), cwd
+  , startedAt: new Date().toISOString(), runnerSha256: sha256(await readFile(import.meta.filename))
+  , scope: "Local two-root checked-record Perl acceptance on all four pinned ABIs, prebuilt-only and build-xs, source removal, isolated installation and compiler-free execution after relocation. XS compilation is permitted only for build-xs; Lean compilation is unavailable in both install modes. No entry counters. Local glibc floor 2.36."
+  , command: "/usr/bin/taskset", args, output, route, initialFreeMiB: minimumFreeMiB
+  , environment: Object.fromEntries(Object.entries(environment).filter(([key]) => key.startsWith("LEAN_BRIDGE_") || ["LEAN_NUM_THREADS", "OMP_NUM_THREADS", "MAKEFLAGS"].includes(key))) };
+await writeFile(`${prefix}.start.json`, JSON.stringify(start, null, 2) + "\n", { flag: "wx" });
+const child = spawn("/usr/bin/taskset", args, { cwd, env: environment, detached: true, stdio: ["ignore", log.fd, log.fd] });
+process.stdout.write(`Started ${child.pid} at ${revision}; free ${minimumFreeMiB} MiB; output ${output}\n`);
+let stoppedForDisk = false;
+const timer = setInterval(async () => {
+  try {
+    minimumFreeMiB = Math.min(minimumFreeMiB, await freeMiB());
+    if(minimumFreeMiB < 768 && !stoppedForDisk) {
+      stoppedForDisk = true;
+      process.stdout.write(`Stopping producer before disk exhaustion: ${minimumFreeMiB} MiB\n`);
+      process.kill(-child.pid, "SIGTERM");
+    }
+  } catch(error) { process.stderr.write(`Disk monitor: ${error.message}\n`); }
+}, 10000);
+const outcome = await new Promise(resolve => {
+  child.once("error", error => resolve({ code: null, signal: null, spawnError: error.message }));
+  child.once("close", (code, signal) => resolve({ code, signal }));
+});
+clearInterval(timer);
+await log.close();
+minimumFreeMiB = Math.min(minimumFreeMiB, await freeMiB());
+const tap = await readFile(`${prefix}.tap`);
+const end = { ...outcome, pid: child.pid, stoppedForDisk, minimumFreeMiB, endedAt: new Date().toISOString(), tapSha256: sha256(tap) };
+await writeFile(`${prefix}.end.json`, JSON.stringify(end, null, 2) + "\n", { flag: "wx" });
+process.stdout.write(JSON.stringify(end) + "\n");
+assert.deepEqual([outcome.code, outcome.signal, stoppedForDisk], [0, null, false]);
+assert.equal(git(["rev-parse", "HEAD"]), revision);
+assert.equal(git(["status", "--porcelain", "--untracked-files=no"]), "");
+const count = name => Number(tap.toString().match(new RegExp(`^# ${name} (\\d+)$`, "m"))?.[1]);
+assert.deepEqual([count("tests"), count("pass"), count("fail"), count("skipped")], [1, 1, 0, 0]);
+const reportBytes = await readFile(output + "/" + route + "/report.json"), report = JSON.parse(reportBytes);
+assert.deepEqual(report.configurations, ["5.36.3-threaded", "5.36.3-unthreaded", "5.38.2-threaded", "5.38.2-unthreaded"]);
+assert.deepEqual(report.modes, ["prebuilt-only", "build-xs"]);
+assert.equal(report.reports.length, 8);
+assert.equal(report.glibcMinimumVersion, "2.36");
+assert.equal(report.reproducible, true);
+await writeFile(`${prefix}.finished.json`, JSON.stringify({ revision, output, reportSha256: sha256(reportBytes), completeAt: new Date().toISOString() }, null, 2) + "\n", { flag: "wx" });

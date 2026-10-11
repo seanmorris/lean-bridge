@@ -1,0 +1,58 @@
+import assert from 'node:assert/strict';
+import { readFile, readdir } from 'node:fs/promises';
+import { join } from 'node:path';
+import { canonicalJson } from '../src/capsule/node.mjs';
+import { assertCheckedRecordPerlRecords } from '../tests/helpers/checked-record-perl-records.mjs';
+
+const [root, route] = process.argv.slice(2);
+assert.ok(root && route);
+const originals = new Map();
+const collect = async (directory, prefix='') => {
+  for(const entry of await readdir(directory,{withFileTypes:true})) {
+    const path = prefix + entry.name;
+    if(entry.isDirectory()) await collect(join(directory,entry.name),path+'/');
+    else { assert.ok(entry.isFile()); originals.set(path,await readFile(join(directory,entry.name))); }
+  }
+};
+await collect(root);
+const read = map => async path => { assert.ok(map.has(path), path); return map.get(path); };
+await assertCheckedRecordPerlRecords({route,read:read(originals)});
+let refused = 0;
+const reject = async (label, mutate) => {
+  const changed = new Map(originals); mutate(changed);
+  await assert.rejects(()=>assertCheckedRecordPerlRecords({route,read:read(changed)}),undefined,label);
+  refused++;
+};
+const json = (files,path,change) => {
+  const value=JSON.parse(files.get(path)); change(value); files.set(path,Buffer.from(canonicalJson(value)));
+};
+for(const [label,change] of [
+  ['omitted configuration',r=>{r.configurations.pop();}],
+  ['omitted install mode',r=>{r.modes.pop();}],
+  ['missing consumer',r=>{r.reports.pop();}],
+  ['missing author',r=>{r.builds.pop();}],
+  ['reproducibility false',r=>{r.reproducible=false;}],
+  ['sources retained',r=>{r.sourceRemovedBeforeInstallation=false;}],
+  ['wrong floor',r=>{r.glibcMinimumVersion='2.99';}],
+  ['wrong interpreter',r=>{r.interpreters[0].identity.version='5.40.0';}],
+  ['wrong threading',r=>{r.interpreters[0].identity.useithreads=null;}],
+  ['repeated executable',r=>{r.interpreters[0].executableSha256='wrong';}],
+  ['changed second receipt',r=>{r.builds[1].receiptSha256='0'.repeat(64);}],
+]) await reject(label,files=>json(files,'report.json',change));
+const base='5.36.3-threaded/prebuilt-only/';
+for(const field of ['offlineInstall','compilerFreeExecution','leanCompilerUnavailable','extractedDistributionsRemoved','nativePayloadUnchanged','installedBytesUnchanged','relocatedInstallation','compilerFreeReplay','sourceUnchangedAfterReplay'])
+  await reject(field,files=>{
+    json(files,'report.json',r=>{r.reports[0][field]=false;});
+    json(files,base+'report.json',r=>{r[field]=false;});
+  });
+for(const [label,change] of [
+  ['wrong count',r=>{r.checks--;}],['invented dispatch',r=>{r.dispatch.observed=true;}],
+  ['no repeat',r=>{r.repeatedRuns=1;}],['compiler in prebuilt install',r=>{r.installationCCompilerAvailable=true;}],
+]) await reject(label,files=>{
+    json(files,'report.json',r=>change(r.reports[0]));json(files,base+'report.json',change);
+  });
+for(const path of ['consumer.pl',base+'first.stdout',base+'repeated.stdout',base+'runtime-source.xs',base+'component-source.xs'])
+  await reject(path,files=>files.set(path,Buffer.concat([files.get(path),Buffer.from('\nchanged\n')])));
+for(const path of ['build-0/model.json','build-0/expected.json','build-0/lean-bridge.exports.json',base+'runtime-manifest.json',base+'component-manifest.json',base+'runtime-install-receipt.json',base+'component-install-receipt.json',base+'installed-files.json'])
+  await reject('missing '+path,files=>files.delete(path));
+console.log(JSON.stringify({route,files:originals.size,original:'accepted',mutationsRefused:refused}));

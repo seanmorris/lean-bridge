@@ -1,0 +1,63 @@
+{
+  "component": {
+    "id": "checkedrecords@1.0.0",
+    "name": "checkedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 69149,
+          "path": "archives/LeanBridge-CheckedRecords-1.000.tar.gz",
+          "sha256": "b5941e5dfe18aaeafd4e6f742a0bc4e712b707c7be15f7daa19f36795b1f4a29"
+        }
+      ],
+      "ecosystem": "cpan",
+      "name": "LeanBridge-CheckedRecords",
+      "profile": "native-library-v1",
+      "requires": [
+        {
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "version": "0.0020592716822581412637753637152461205682916576183240901183894178635322362377514011"
+        }
+      ],
+      "role": "component",
+      "runtimeDelivery": "dependency",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "cpan",
+      "version": "1.000"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 51386352,
+          "path": "archives/LeanBridge-Runtime-0.0020592716822581412637753637152461205682916576183240901183894178635322362377514011.tar.gz",
+          "sha256": "3bb112e3e6904d1ad757f78b5aa3957f1c8068db472dc508c418663ec1439e76"
+        }
+      ],
+      "ecosystem": "cpan",
+      "name": "LeanBridge-Runtime",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "runtime",
+      "runtimeDelivery": "provided",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "cpan",
+      "version": "0.0020592716822581412637753637152461205682916576183240901183894178635322362377514011"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "7dd40408de4a86c8dd9e8a074b315569e3c14cff269c9f3ee0c92d63bc2b5a53",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "fac2265fffbfd558577c59ee73e9c3f8bf7d0bc30f4d1fd22171d1f6ca08be56"
+  }
+}
