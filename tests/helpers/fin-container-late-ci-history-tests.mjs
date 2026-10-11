@@ -21,7 +21,8 @@ test("late-input CI history preserves exact predecessors and prior inventory cla
 	assert.deepEqual(record.updates.map(update => update.path), finLateCiChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8"), previous = reverseFinLateCiUpdate(current, update);
+		const current = beforeFinLateCiSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const previous = reverseFinLateCiUpdate(current, update);
 		assert.equal(beforeFinLateCiSource(update.path, current), previous);
 		assert.equal(beforeFinLateCiSource(update.path, current, update.currentSha256), current);
 		if([".github/workflows/consumer-matrix.yml", "docs/type-surface.v1.json", "tests/documentation.test.mjs"].includes(update.path))

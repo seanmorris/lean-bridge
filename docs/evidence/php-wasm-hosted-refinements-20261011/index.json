@@ -1,0 +1,735 @@
+{
+  "artifactId": 11685379051,
+  "conclusion": "success",
+  "files": [
+    {
+      "bytes": 3016912,
+      "original": "build/vo1443-hosted-artifact-11685379051.zip",
+      "path": "artifact.zip",
+      "sha256": "046a23daad626a480eb007e434ffa053ed2392f79ea1f9d10842d98ff82942df"
+    },
+    {
+      "bytes": 776,
+      "original": "build/vo1443-hosted-artifact-11685379051.json",
+      "path": "artifact.json",
+      "sha256": "e240e4d3f67cecfc2601814a072d3d8da5c19f1980e01ef04a0e2cf0d788bfdd"
+    },
+    {
+      "bytes": 5599,
+      "original": "build/vo1220-php-wasm-d177236-114270644073.json",
+      "path": "job.json",
+      "sha256": "98cc10a9e868725ed1f4ecf3eeba90013ecf0aee19e65c6cd88cafb735437f25"
+    },
+    {
+      "bytes": 1291791,
+      "original": "build/vo1220-php-wasm-d177236-114270644073.log",
+      "path": "job.log",
+      "sha256": "da74f0eb71f90cea0f54784ffd40824b837a08cb9e7004e2161e1a635be44516"
+    },
+    {
+      "bytes": 18329,
+      "derivedFrom": "artifact.zip",
+      "path": "members.json",
+      "sha256": "bd53d02445ccf05fc0056b4a1d1989e95b55beb4ff775961f49e355afc7b419e"
+    },
+    {
+      "bytes": 323850,
+      "gitPath": ".github/workflows/consumer-matrix.yml",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/.github/workflows/consumer-matrix.yml.txt",
+      "sha256": "3265ba8c2c5f425a46ef9cbf9a6fe9723f275f5341125d8c3f48a630dd734ad5"
+    },
+    {
+      "bytes": 954,
+      "gitPath": "scripts/check-php-wasm-direct-fin-reports.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/scripts/check-php-wasm-direct-fin-reports.mjs.txt",
+      "sha256": "ffb76fc23d89f8c34b25e9548539c4d29499afddd945f9543a11c743f5a358ca"
+    },
+    {
+      "bytes": 1511,
+      "gitPath": "scripts/check-php-wasm-subtype-entry-reports.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/scripts/check-php-wasm-subtype-entry-reports.mjs.txt",
+      "sha256": "0d1d44e7e97e6ebf4c07b10142ff42df453b400fc1d16f0207163e78894e9e50"
+    },
+    {
+      "bytes": 959,
+      "gitPath": "scripts/check-php-wasm-subtype-reports.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/scripts/check-php-wasm-subtype-reports.mjs.txt",
+      "sha256": "e1155f29427dbe879589c4bee592cd24b01a07fadec37c024b9819d45afe8304"
+    },
+    {
+      "bytes": 1262,
+      "gitPath": "scripts/prepare-php-wasm-subtype-entry-runtime.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/scripts/prepare-php-wasm-subtype-entry-runtime.mjs.txt",
+      "sha256": "dceaa4f7183ab13e13f558268563024fc5b6c66ce8797d75c2005062e3bd5c9f"
+    },
+    {
+      "bytes": 11312,
+      "gitPath": "src/build/php-wasm-copied-artifacts.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/src/build/php-wasm-copied-artifacts.mjs.txt",
+      "sha256": "c6d31833738b791ac43e9ec970cbbd75830658b040cd8ef2cd3467c4a04ba3fe"
+    },
+    {
+      "bytes": 4088,
+      "gitPath": "tests/fixtures/fin-container-consumers/php-native.php",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/fin-container-consumers/php-native.php.txt",
+      "sha256": "a947199bba1e5bb0bc4e56d8c0ac589f6adc823f024108faf310fdc45d89ac14"
+    },
+    {
+      "bytes": 5118,
+      "gitPath": "tests/fixtures/fin-container-edge-consumers/php-native.php",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/fin-container-edge-consumers/php-native.php.txt",
+      "sha256": "e832d3533dd9f9e50415884ab4c6097fbfc1c2c87282a3ed76c641e889cdfa5f"
+    },
+    {
+      "bytes": 593,
+      "gitPath": "tests/fixtures/fin-container-edges.lean",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/fin-container-edges.lean.txt",
+      "sha256": "6c2b2250f52557b39b0267762b029af38ba695dccd63065c01a069a6b37cea45"
+    },
+    {
+      "bytes": 2736,
+      "gitPath": "tests/fixtures/onboarding/native-fin-callbacks/FinCallbacks.lean",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-callbacks/FinCallbacks.lean.txt",
+      "sha256": "32f94fc752b2afa92b202c75a6650587449ab7e9ad77104603c61db10749e240"
+    },
+    {
+      "bytes": 1093,
+      "gitPath": "tests/fixtures/onboarding/native-fin-callbacks/LICENSE",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-callbacks/LICENSE.txt",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 75,
+      "gitPath": "tests/fixtures/onboarding/native-fin-callbacks/lakefile.toml",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-callbacks/lakefile.toml.txt",
+      "sha256": "63f3c904450cacc5ebda6fa3c7efe7b5dd4ab7301afa0a24639bcfbb090cf238"
+    },
+    {
+      "bytes": 25,
+      "gitPath": "tests/fixtures/onboarding/native-fin-callbacks/lean-toolchain",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-callbacks/lean-toolchain.txt",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "bytes": 58,
+      "gitPath": "tests/fixtures/onboarding/native-fin-callbacks/package.json",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-callbacks/package.json.txt",
+      "sha256": "c076b4769d52e2b5b5888dc991b598ca0d2b8fe48fb4a3075fee8412a3d977cf"
+    },
+    {
+      "bytes": 1562,
+      "gitPath": "tests/fixtures/onboarding/native-fin-containers/FinContainers.lean",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-containers/FinContainers.lean.txt",
+      "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be"
+    },
+    {
+      "bytes": 1093,
+      "gitPath": "tests/fixtures/onboarding/native-fin-containers/LICENSE",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-containers/LICENSE.txt",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 77,
+      "gitPath": "tests/fixtures/onboarding/native-fin-containers/lakefile.toml",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-containers/lakefile.toml.txt",
+      "sha256": "c6846d4ad1a6d03a46227896f0a40b9fd07e367c168e2c9e51876ba6b4c8d8cc"
+    },
+    {
+      "bytes": 25,
+      "gitPath": "tests/fixtures/onboarding/native-fin-containers/lean-toolchain",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-containers/lean-toolchain.txt",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "bytes": 59,
+      "gitPath": "tests/fixtures/onboarding/native-fin-containers/package.json",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-containers/package.json.txt",
+      "sha256": "b413a6e8f579fe18b487297b33ddaeabd2a44861a55e8ce85ecb0d398e7cc0bf"
+    },
+    {
+      "bytes": 601,
+      "gitPath": "tests/fixtures/onboarding/native-fin-product-arrays/FinProductArrays.lean",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-product-arrays/FinProductArrays.lean.txt",
+      "sha256": "72cd38b5cb424e5d652dbf9e45bc697583965aba7f01fdbff3bb02a3623710b3"
+    },
+    {
+      "bytes": 1093,
+      "gitPath": "tests/fixtures/onboarding/native-fin-product-arrays/LICENSE",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-product-arrays/LICENSE.txt",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 83,
+      "gitPath": "tests/fixtures/onboarding/native-fin-product-arrays/lakefile.toml",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-product-arrays/lakefile.toml.txt",
+      "sha256": "9748a039831c11f26fbdcd4c92ec533e292b9dd68d65cadc7493cb1379e8a7a4"
+    },
+    {
+      "bytes": 25,
+      "gitPath": "tests/fixtures/onboarding/native-fin-product-arrays/lean-toolchain",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-product-arrays/lean-toolchain.txt",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "bytes": 62,
+      "gitPath": "tests/fixtures/onboarding/native-fin-product-arrays/package.json",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-product-arrays/package.json.txt",
+      "sha256": "0a0304720bc3260859e3057e733e7e8a16aa009c6e82919afe81cae2e4a2f5ec"
+    },
+    {
+      "bytes": 2082,
+      "gitPath": "tests/fixtures/onboarding/native-fin-products/FinProducts.lean",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-products/FinProducts.lean.txt",
+      "sha256": "aa79a2cb232c968d1e2e1e7d640630df97adc40dee506e5c4e26ad56c41ff220"
+    },
+    {
+      "bytes": 1093,
+      "gitPath": "tests/fixtures/onboarding/native-fin-products/LICENSE",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-products/LICENSE.txt",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 73,
+      "gitPath": "tests/fixtures/onboarding/native-fin-products/lakefile.toml",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-products/lakefile.toml.txt",
+      "sha256": "04a6e0397d15bf464a8f3ae42f00e2d9d357f0949b4666385d7bfab8b658d58b"
+    },
+    {
+      "bytes": 25,
+      "gitPath": "tests/fixtures/onboarding/native-fin-products/lean-toolchain",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-products/lean-toolchain.txt",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "bytes": 57,
+      "gitPath": "tests/fixtures/onboarding/native-fin-products/package.json",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-products/package.json.txt",
+      "sha256": "fdc856c0235c414118e684669f51543af6cd079e261412922c82eff41d25a023"
+    },
+    {
+      "bytes": 700,
+      "gitPath": "tests/fixtures/onboarding/native-fin-record-zero/FinRecordZero.lean",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-record-zero/FinRecordZero.lean.txt",
+      "sha256": "9835cfb2006804e81abb732891c0592f6677a6dcfb7c949f3ed404d295afdc9b"
+    },
+    {
+      "bytes": 1081,
+      "gitPath": "tests/fixtures/onboarding/native-fin-record-zero/LICENSE",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-record-zero/LICENSE.txt",
+      "sha256": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca"
+    },
+    {
+      "bytes": 77,
+      "gitPath": "tests/fixtures/onboarding/native-fin-record-zero/lakefile.toml",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-record-zero/lakefile.toml.txt",
+      "sha256": "8a6eeb0fbe305dc8787cf3532a82bcf777aca4df32739da83a8325a0c2658ceb"
+    },
+    {
+      "bytes": 25,
+      "gitPath": "tests/fixtures/onboarding/native-fin-record-zero/lean-toolchain",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-record-zero/lean-toolchain.txt",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "bytes": 59,
+      "gitPath": "tests/fixtures/onboarding/native-fin-record-zero/package.json",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-record-zero/package.json.txt",
+      "sha256": "59f469b028bd2466c0c4f1d4bf990e5a8b27203f5946e3631133160d77d60740"
+    },
+    {
+      "bytes": 2653,
+      "gitPath": "tests/fixtures/onboarding/native-fin-records/FinRecords.lean",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-records/FinRecords.lean.txt",
+      "sha256": "419dcccad2f2a6cafb828315e0e51ee3747ad15a3fe3c7a5e74deb7a532dd299"
+    },
+    {
+      "bytes": 1093,
+      "gitPath": "tests/fixtures/onboarding/native-fin-records/LICENSE",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-records/LICENSE.txt",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 71,
+      "gitPath": "tests/fixtures/onboarding/native-fin-records/lakefile.toml",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-records/lakefile.toml.txt",
+      "sha256": "876cf2bc655ac6d95d6b144b8ac9d4ad755d3565e13c87c2e742ccc425f506df"
+    },
+    {
+      "bytes": 25,
+      "gitPath": "tests/fixtures/onboarding/native-fin-records/lean-toolchain",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-records/lean-toolchain.txt",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "bytes": 56,
+      "gitPath": "tests/fixtures/onboarding/native-fin-records/package.json",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-records/package.json.txt",
+      "sha256": "1d16d863f29a946af4e8be43fc9f101a433d70258499da070495d6aeae12dfc2"
+    },
+    {
+      "bytes": 3312,
+      "gitPath": "tests/fixtures/onboarding/native-fin-replies/FinReplies.lean",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-replies/FinReplies.lean.txt",
+      "sha256": "25b147e9634f9353ca95ec8b83596f387718fb736db7721630776ceb8f9bb2bc"
+    },
+    {
+      "bytes": 1093,
+      "gitPath": "tests/fixtures/onboarding/native-fin-replies/LICENSE",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-replies/LICENSE.txt",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 71,
+      "gitPath": "tests/fixtures/onboarding/native-fin-replies/lakefile.toml",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-replies/lakefile.toml.txt",
+      "sha256": "9f2f09d0b646a28445820812decd1ff59dbd26f84164c7ba7a7ef7d1bbae7681"
+    },
+    {
+      "bytes": 25,
+      "gitPath": "tests/fixtures/onboarding/native-fin-replies/lean-toolchain",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-replies/lean-toolchain.txt",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "bytes": 56,
+      "gitPath": "tests/fixtures/onboarding/native-fin-replies/package.json",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin-replies/package.json.txt",
+      "sha256": "72cedc8951753b29406a044473df6551b5bc91b08445ef43f3d793470a1e33d3"
+    },
+    {
+      "bytes": 1093,
+      "gitPath": "tests/fixtures/onboarding/native-fin/LICENSE",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin/LICENSE.txt",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 787,
+      "gitPath": "tests/fixtures/onboarding/native-fin/NativeFin.lean",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin/NativeFin.lean.txt",
+      "sha256": "7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b"
+    },
+    {
+      "bytes": 70,
+      "gitPath": "tests/fixtures/onboarding/native-fin/lakefile.toml",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin/lakefile.toml.txt",
+      "sha256": "3e4ab246fa022e05e124c7d3e21d026b0a0b56ec74e1ab71071e648c2aba1389"
+    },
+    {
+      "bytes": 25,
+      "gitPath": "tests/fixtures/onboarding/native-fin/lean-toolchain",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin/lean-toolchain.txt",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "bytes": 56,
+      "gitPath": "tests/fixtures/onboarding/native-fin/package.json",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-fin/package.json.txt",
+      "sha256": "f5a88aca2a417d5d5f56ed6c825dfec4267e3a66cced8e5f61a9e11e4dd778d0"
+    },
+    {
+      "bytes": 1093,
+      "gitPath": "tests/fixtures/onboarding/native-subtype/LICENSE",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-subtype/LICENSE.txt",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 2276,
+      "gitPath": "tests/fixtures/onboarding/native-subtype/Subtypes.lean",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-subtype/Subtypes.lean.txt",
+      "sha256": "bc6065620ea7ba38b270362ae7aa93feb68e8e316b4c0fca196477f62103175c"
+    },
+    {
+      "bytes": 67,
+      "gitPath": "tests/fixtures/onboarding/native-subtype/lakefile.toml",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-subtype/lakefile.toml.txt",
+      "sha256": "7cc9357b8eaa2dc868fed6c1ac4c44499eb29ccfe26016e6ed6361e88b5429ba"
+    },
+    {
+      "bytes": 25,
+      "gitPath": "tests/fixtures/onboarding/native-subtype/lean-toolchain",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-subtype/lean-toolchain.txt",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "bytes": 54,
+      "gitPath": "tests/fixtures/onboarding/native-subtype/package.json",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/onboarding/native-subtype/package.json.txt",
+      "sha256": "db736971b2c14dc3aa16fc7113d32fd28f89a2abba58f601ece3613d87ffd2ee"
+    },
+    {
+      "bytes": 3444,
+      "gitPath": "tests/fixtures/php-wasm-fin-scalar.php",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/php-wasm-fin-scalar.php.txt",
+      "sha256": "6985560358f35b451ae02655e724f1966b9e3b44622e8d6f38dfe47e731b6447"
+    },
+    {
+      "bytes": 3896,
+      "gitPath": "tests/fixtures/php-wasm-subtype-entry/driver.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/fixtures/php-wasm-subtype-entry/driver.mjs.txt",
+      "sha256": "b442c9e6712e631cca243bc56284216bb45138ace5d5cf4c4a066c7014bfab24"
+    },
+    {
+      "bytes": 5396,
+      "gitPath": "tests/helpers/fin-container-edges.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/fin-container-edges.mjs.txt",
+      "sha256": "cad710d6b65e715bd156a5fbb052b56b313b5e195c769a44243edcb8a881f226"
+    },
+    {
+      "bytes": 2979,
+      "gitPath": "tests/helpers/fin-container-install.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/fin-container-install.mjs.txt",
+      "sha256": "2024d6c6a44687293750c3ee5c25f092d689065e17beb8d535610963921c9329"
+    },
+    {
+      "bytes": 6333,
+      "gitPath": "tests/helpers/php-wasm-fin-direct-archive.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-fin-direct-archive.mjs.txt",
+      "sha256": "304b796869c13224535f0e619888784e640df7f183db72ed360d059d2893977f"
+    },
+    {
+      "bytes": 2671,
+      "gitPath": "tests/helpers/php-wasm-fin-direct-ci-tests.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-fin-direct-ci-tests.mjs.txt",
+      "sha256": "2245f582f6cce62ed4cbe5153585f4610580b9bf061bf90fa1144b3b7aaecf36"
+    },
+    {
+      "bytes": 3630,
+      "gitPath": "tests/helpers/php-wasm-fin-direct-ci.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-fin-direct-ci.mjs.txt",
+      "sha256": "09f8a3bf1111cc8228be84022483629e7b7ada0e865e849660c6485389dbbebe"
+    },
+    {
+      "bytes": 2769,
+      "gitPath": "tests/helpers/php-wasm-fin-direct-fixtures.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-fin-direct-fixtures.mjs.txt",
+      "sha256": "21c5c3deed1b808c915f8148be44e1c5d3d843f8e9983bca7c0f5e4391b3fea6"
+    },
+    {
+      "bytes": 6671,
+      "gitPath": "tests/helpers/php-wasm-fin-direct-history-tests.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-fin-direct-history-tests.mjs.txt",
+      "sha256": "ceb42365564c6f6b7741a7dd4c806e4d2980b6655f6bd641562015001ff615cb"
+    },
+    {
+      "bytes": 3202,
+      "gitPath": "tests/helpers/php-wasm-fin-direct-history.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-fin-direct-history.mjs.txt",
+      "sha256": "46881a405688a8ac5ac1aea213f610e878f7d58b61b6d335ba4f30fa2d5d3e29"
+    },
+    {
+      "bytes": 6208,
+      "gitPath": "tests/helpers/php-wasm-fin-direct-report-tests.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-fin-direct-report-tests.mjs.txt",
+      "sha256": "6be96ce54ad39c5aef3bb895fc0287d71a376613f939935d03e225655361cbfe"
+    },
+    {
+      "bytes": 10180,
+      "gitPath": "tests/helpers/php-wasm-fin-direct-report.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-fin-direct-report.mjs.txt",
+      "sha256": "ff17d6e7e7cfcfa062ebfc04e5989e8844f015cfd0eef045abb9ff8781474195"
+    },
+    {
+      "bytes": 7175,
+      "gitPath": "tests/helpers/php-wasm-fin-direct-tests.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-fin-direct-tests.mjs.txt",
+      "sha256": "14ee26ada31281d38348a78972c3198013cbf3969d9f4135f2eec7be7d652396"
+    },
+    {
+      "bytes": 9651,
+      "gitPath": "tests/helpers/php-wasm-fin-fixtures.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-fin-fixtures.mjs.txt",
+      "sha256": "a85cb80188630dd4355f1ca97ea7c52c741f999652ca4d1e24f8e4b7972c6e16"
+    },
+    {
+      "bytes": 7382,
+      "gitPath": "tests/helpers/php-wasm-subtype-acceptance-history-tests.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-acceptance-history-tests.mjs.txt",
+      "sha256": "5278f636fc730d0252d178863fd26899401346eb22425be3d7b1c205cfd93a2b"
+    },
+    {
+      "bytes": 3070,
+      "gitPath": "tests/helpers/php-wasm-subtype-acceptance-history.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-acceptance-history.mjs.txt",
+      "sha256": "5d47b4df6d1393960a7fb2dcf230d54f41d6be5c2236c862bbe01e1713429d64"
+    },
+    {
+      "bytes": 6572,
+      "gitPath": "tests/helpers/php-wasm-subtype-archive.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-archive.mjs.txt",
+      "sha256": "11a6ff1fca31edde52dde5fa8a318b943aa21281a8518ba7af503030a0606297"
+    },
+    {
+      "bytes": 2737,
+      "gitPath": "tests/helpers/php-wasm-subtype-ci-tests.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-ci-tests.mjs.txt",
+      "sha256": "24e2f8cabf706e715965f075cae75d55ea5e69c2aae6426423d324c473d04e3f"
+    },
+    {
+      "bytes": 3653,
+      "gitPath": "tests/helpers/php-wasm-subtype-ci.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-ci.mjs.txt",
+      "sha256": "b1a026072c58a92e52358937d33398aedb2d2aadf072e9f265a924c61c9ad4d2"
+    },
+    {
+      "bytes": 9490,
+      "gitPath": "tests/helpers/php-wasm-subtype-entry-build.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-entry-build.mjs.txt",
+      "sha256": "e38618aa7ee9c5bbf7988e2a763cf385bccc22da3208b201ec89917356d3694f"
+    },
+    {
+      "bytes": 4665,
+      "gitPath": "tests/helpers/php-wasm-subtype-entry-c.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-entry-c.mjs.txt",
+      "sha256": "4a363c286ca9528e7b27e6b53a12cdfacb9ce6f36548e518cc25252093b5cef5"
+    },
+    {
+      "bytes": 2862,
+      "gitPath": "tests/helpers/php-wasm-subtype-entry-cases.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-entry-cases.mjs.txt",
+      "sha256": "d51f90ddc7abfafac6fdce6b385a8aac54013af22c59dce702f05a9abeb016ca"
+    },
+    {
+      "bytes": 1471,
+      "gitPath": "tests/helpers/php-wasm-subtype-entry-ci-tap.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-entry-ci-tap.mjs.txt",
+      "sha256": "2aa8d92214f38ffdab1d4491468e70ef16c562a5956e92f02e6764f95ef8e28c"
+    },
+    {
+      "bytes": 9645,
+      "gitPath": "tests/helpers/php-wasm-subtype-entry-ci-tests.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-entry-ci-tests.mjs.txt",
+      "sha256": "45c85cb069e92f8c12d75744c1d5966f688ab9401d27b4f82d2ee4c549c2c5e9"
+    },
+    {
+      "bytes": 4670,
+      "gitPath": "tests/helpers/php-wasm-subtype-entry-ci.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-entry-ci.mjs.txt",
+      "sha256": "be42f9444389a3cbd3816fb2e65d94f7ce362b12a63622d548b2d3d5f2fdd1fa"
+    },
+    {
+      "bytes": 4984,
+      "gitPath": "tests/helpers/php-wasm-subtype-entry-driver-tests.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-entry-driver-tests.mjs.txt",
+      "sha256": "52cf650a3ec5b02b5a2484c7d91cb61b3ca805830800c90ab71429c600031961"
+    },
+    {
+      "bytes": 7981,
+      "gitPath": "tests/helpers/php-wasm-subtype-entry-history-tests.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-entry-history-tests.mjs.txt",
+      "sha256": "ee731e797cf1e1d2cbe4496aec6654b3241ca757bcf136051eb148cf38726f1b"
+    },
+    {
+      "bytes": 2878,
+      "gitPath": "tests/helpers/php-wasm-subtype-entry-history.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-entry-history.mjs.txt",
+      "sha256": "595b5be9429d475396c1f375e6288ac5af0e8730ff70542c99e3bc53e68635f6"
+    },
+    {
+      "bytes": 2331,
+      "gitPath": "tests/helpers/php-wasm-subtype-entry-installed-archive.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-entry-installed-archive.mjs.txt",
+      "sha256": "9f9e5d0e7d2ac240756438d5cd5e1fc4e56cdad3ebbd839e7a891d50a75b0f9e"
+    },
+    {
+      "bytes": 7994,
+      "gitPath": "tests/helpers/php-wasm-subtype-entry-installed-tests.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-entry-installed-tests.mjs.txt",
+      "sha256": "1cc6c50e2ebf0a36d495ca319ed9140685bb270e742084d01a9f1512a0b4e31a"
+    },
+    {
+      "bytes": 6918,
+      "gitPath": "tests/helpers/php-wasm-subtype-entry-report-tests.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-entry-report-tests.mjs.txt",
+      "sha256": "a89b709b6063f75c7685e411a7ed01f90edbf441223a8611e726dd1a410f3490"
+    },
+    {
+      "bytes": 20687,
+      "gitPath": "tests/helpers/php-wasm-subtype-entry-report.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-entry-report.mjs.txt",
+      "sha256": "970fad364d88b45903b1fd784b8ae4fee6184f0481719f422cf5819b2528cacc"
+    },
+    {
+      "bytes": 6700,
+      "gitPath": "tests/helpers/php-wasm-subtype-entry-tests.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-entry-tests.mjs.txt",
+      "sha256": "142c152ac4a7ca95cb594040afb424933a43f3d61e88ecd0ff5ff452b39bcdee"
+    },
+    {
+      "bytes": 2551,
+      "gitPath": "tests/helpers/php-wasm-subtype-entry-trace.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-entry-trace.mjs.txt",
+      "sha256": "2324b8766ccbcffda2005d7737981380f747afe73c8cb153fc9ede53a18e3666"
+    },
+    {
+      "bytes": 4556,
+      "gitPath": "tests/helpers/php-wasm-subtype-fixture.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-fixture.mjs.txt",
+      "sha256": "77043084402799ce0f7a413263231ff58438030b9298bf624ad6838488252cb3"
+    },
+    {
+      "bytes": 6953,
+      "gitPath": "tests/helpers/php-wasm-subtype-history-tests.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-history-tests.mjs.txt",
+      "sha256": "448a4606d936539c42f64cc17733b0ff64578f5b6e432edb084ec96aa44de265"
+    },
+    {
+      "bytes": 3017,
+      "gitPath": "tests/helpers/php-wasm-subtype-history.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-history.mjs.txt",
+      "sha256": "7bf671208a513e040f55c42877afa35d4ebf931c2259c7387595792ee2db0cc9"
+    },
+    {
+      "bytes": 6350,
+      "gitPath": "tests/helpers/php-wasm-subtype-promotion-history-tests.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-promotion-history-tests.mjs.txt",
+      "sha256": "ed1ad80b678ba5fdf13b9f83686537425b154d94ff2d78b137ea10b3fe331364"
+    },
+    {
+      "bytes": 3040,
+      "gitPath": "tests/helpers/php-wasm-subtype-promotion-history.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-promotion-history.mjs.txt",
+      "sha256": "abd18d68f8099574037217d49bd4eb4e27c2e73a76006e9216be7e1e61863633"
+    },
+    {
+      "bytes": 7912,
+      "gitPath": "tests/helpers/php-wasm-subtype-promotion-tests.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-promotion-tests.mjs.txt",
+      "sha256": "ddbfa711473a535f283ea95d26ec6951cc12d92b9d736d314074655c1f5f1391"
+    },
+    {
+      "bytes": 6599,
+      "gitPath": "tests/helpers/php-wasm-subtype-promotion.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-promotion.mjs.txt",
+      "sha256": "3a1a8b3c9ad08faf556042e85beb1fb82880b534266d93cc3ab527bd83963b4d"
+    },
+    {
+      "bytes": 7273,
+      "gitPath": "tests/helpers/php-wasm-subtype-report-tests.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-report-tests.mjs.txt",
+      "sha256": "e4e8d65488cf1f9a94f06b6ac0a1cf25cb1d6ea67e94e74dd4f3933230ec0e93"
+    },
+    {
+      "bytes": 3630,
+      "gitPath": "tests/helpers/php-wasm-subtype-report.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-report.mjs.txt",
+      "sha256": "49b7a812340d57259bfe379a2a974cccd51909689123a2a63e64dc35f5cf7c1c"
+    },
+    {
+      "bytes": 11875,
+      "gitPath": "tests/helpers/php-wasm-subtype-tests.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/php-wasm-subtype-tests.mjs.txt",
+      "sha256": "e8bfb1ebcffc46b05e0415ca63d8e46fcafdb1ffa43e2bf9fd30e09474a9ba7d"
+    },
+    {
+      "bytes": 16676,
+      "gitPath": "tests/helpers/type-corpus-php-wasm-evidence.mjs",
+      "gitRevision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+      "path": "sources/tests/helpers/type-corpus-php-wasm-evidence.mjs.txt",
+      "sha256": "708809054b1af4ff864a8cf04343c79fc783f60ce770325131d7004006a03aa1"
+    }
+  ],
+  "jobId": 114270644073,
+  "kind": "php-wasm-hosted-refinements-v1",
+  "revision": "d177236cdc80b69ca2210b8fd19f59ba440d1dea",
+  "runId": 38071834965,
+  "schemaVersion": 1,
+  "scope": "Original successful hosted PHP-Wasm job, with authenticated direct Fin and primitive Subtype ordinary/reviewed reports and separate instrumented entry probes. Other archive members are retained without new support claims."
+}

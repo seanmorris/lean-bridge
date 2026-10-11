@@ -1,0 +1,446 @@
+{
+  "aliases/php-wasm-zend-faults.json": {
+    "bytes": 7326,
+    "sha256": "52fc7a95ce7f33168cc1dc56710573c67340832ec92ad13fd3d70c97b3f4c3f2"
+  },
+  "aliases/php-wasm.json": {
+    "bytes": 733963,
+    "sha256": "12413f66faabaa086e2b6442b5f913ef3dc627cc6c7a518f1bd43dc8bf5dfb3e"
+  },
+  "callables/php-wasm.json": {
+    "bytes": 56374,
+    "sha256": "a22da984446eaa01990656eb464a2716e82c93abd6782aa4d7d46067471eb1ee"
+  },
+  "char-native/php-wasm.json": {
+    "bytes": 15596,
+    "sha256": "6cbb534feff615479a1feff89fd32ffda027619cc7805fc895d456f0fe68810c"
+  },
+  "collections/php-wasm-zend-faults.json": {
+    "bytes": 2000,
+    "sha256": "92127b35f90ad7136bf1733370226870b35afbfd93f3856512ceb6c114c259bd"
+  },
+  "collections/php-wasm.json": {
+    "bytes": 766500,
+    "sha256": "d0c0dfeb139ccb9a44aa7bc4246be0f02786f3eb96a8b3d45f3594c418095ad5"
+  },
+  "compounds/php-wasm-zend-faults.json": {
+    "bytes": 914,
+    "sha256": "55b8b47c3c72b2f4405a71c7c93801f92c9f4e3bd72bc83418ce32001fb357d5"
+  },
+  "compounds/php-wasm.json": {
+    "bytes": 809682,
+    "sha256": "976522d6f0d25f1316a3daf57c2c58baca968199d1278117a03c2a565a5814d9"
+  },
+  "generic-records/php-wasm.json": {
+    "bytes": 241039,
+    "sha256": "153a58d82d2be5fc5af8e22f44ec91f99c5b489dc291ca7e9e2c40f34afd2c39"
+  },
+  "lists/php-wasm-zend-faults.json": {
+    "bytes": 976,
+    "sha256": "61aeca1886264990ee55881d386dd378ac8d325f9d3054939d9ae5fbcf720903"
+  },
+  "lists/php-wasm.json": {
+    "bytes": 680518,
+    "sha256": "6ed144e6e227a02192d7d07dbdc8b7aef676cb1fa26b908199329bd9eace4c3f"
+  },
+  "php-wasm-fin-direct/ordinary.json": {
+    "bytes": 530214,
+    "sha256": "307b99552dfce5198e65f40fe72041b7ecafda064c048df39ebfd035afe8e6cb"
+  },
+  "php-wasm-fin-direct/reviewed.json": {
+    "bytes": 571752,
+    "sha256": "831b5940878bb80c52c9d4f7e15c494134faca8b1e34e055afb025a02b53efc9"
+  },
+  "php-wasm-fin/ordinary.json": {
+    "bytes": 540167,
+    "sha256": "af64f944d6aa17bd78240c12794095dc4f75a9d7d570b22354a55e0b7f4b8561"
+  },
+  "php-wasm-fin/reviewed.json": {
+    "bytes": 598664,
+    "sha256": "eca51eec9d7b8417726e95c68504540d02887d14a771d422e436cfe91ef189d7"
+  },
+  "php-wasm-subtype-entry/ordinary/build-0/c-inputs/1-Subtypes.c": {
+    "bytes": 14191,
+    "sha256": "35e5a115ad62460e8e505ee24318ac55bce5ee85fbdbc2f611db3077e103dd59"
+  },
+  "php-wasm-subtype-entry/ordinary/build-0/c-inputs/2-adapter.c": {
+    "bytes": 29725,
+    "sha256": "f9cb07dd248efdb60a5025aedd09b0e075300e731449f8ce262db7fe66d3d6c5"
+  },
+  "php-wasm-subtype-entry/ordinary/build-0/c-inputs/3-provider.c": {
+    "bytes": 26091,
+    "sha256": "bceeba036563a92976c983cd1d7fa2d1f8ca6502513f25ebfba88993a5b2c66b"
+  },
+  "php-wasm-subtype-entry/ordinary/build-0/c-inputs/4-callbacks.c": {
+    "bytes": 63,
+    "sha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c"
+  },
+  "php-wasm-subtype-entry/ordinary/build-0/c-inputs/5-width.c": {
+    "bytes": 236,
+    "sha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e"
+  },
+  "php-wasm-subtype-entry/ordinary/build-0/c-inputs/6-subtypes.c": {
+    "bytes": 11924,
+    "sha256": "b4dd529ec97ff0226f57d1835289eba3348104f1daf777bb5932f2ea60ad02ff"
+  },
+  "php-wasm-subtype-entry/ordinary/build-0/c-inputs/7-lb_subtypes_c28d025face37606.c": {
+    "bytes": 43600,
+    "sha256": "d5a04bddd37fe7ff0a86d1be3cd30bbddacb9a34fb0e33c7a340661a87ee9355"
+  },
+  "php-wasm-subtype-entry/ordinary/build-0/c-probes/1-Subtypes.c": {
+    "bytes": 15573,
+    "sha256": "15e5d88e874f9b8c0884f770217b5abd2a6db0b122ab74e0a3a1df349969e274"
+  },
+  "php-wasm-subtype-entry/ordinary/build-0/c-probes/2-adapter.c": {
+    "bytes": 31529,
+    "sha256": "a2ca97377e2f83638b902771f06838985f7ec37077c5fae93e764060d27be14b"
+  },
+  "php-wasm-subtype-entry/ordinary/build-0/c-probes/3-provider.c": {
+    "bytes": 26091,
+    "sha256": "bceeba036563a92976c983cd1d7fa2d1f8ca6502513f25ebfba88993a5b2c66b"
+  },
+  "php-wasm-subtype-entry/ordinary/build-0/c-probes/4-callbacks.c": {
+    "bytes": 63,
+    "sha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c"
+  },
+  "php-wasm-subtype-entry/ordinary/build-0/c-probes/5-width.c": {
+    "bytes": 236,
+    "sha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e"
+  },
+  "php-wasm-subtype-entry/ordinary/build-0/c-probes/6-subtypes.c": {
+    "bytes": 14002,
+    "sha256": "81e019d535782fb4b3a758246a13c215337140562b0d9d327e150422c7e32067"
+  },
+  "php-wasm-subtype-entry/ordinary/build-0/c-probes/7-lb_subtypes_c28d025face37606.c": {
+    "bytes": 43600,
+    "sha256": "d5a04bddd37fe7ff0a86d1be3cd30bbddacb9a34fb0e33c7a340661a87ee9355"
+  },
+  "php-wasm-subtype-entry/ordinary/build-0/commands.json": {
+    "bytes": 64186,
+    "sha256": "f79808df35ab4345950f88cd594ee61e9e0de3b67976a9395fb7441fcd3792e5"
+  },
+  "php-wasm-subtype-entry/ordinary/build-0/model.json": {
+    "bytes": 65877,
+    "sha256": "a4ed83e59769ac47d5a41ee84938ceca13f1f7e20522355d9e2cf4e3e8ab4f05"
+  },
+  "php-wasm-subtype-entry/ordinary/build-0/observation.json": {
+    "bytes": 93149,
+    "sha256": "87698e49b72d44f3253817751bb42fc918766dd8b3ad300cf224b26d243855af"
+  },
+  "php-wasm-subtype-entry/ordinary/build-0/source-probe.json": {
+    "bytes": 9023,
+    "sha256": "ae88cac0f5c4a504616721514ee28602fe7ca9fa163d337aafa86b877d676a05"
+  },
+  "php-wasm-subtype-entry/ordinary/build-1/c-inputs/1-Subtypes.c": {
+    "bytes": 14191,
+    "sha256": "35e5a115ad62460e8e505ee24318ac55bce5ee85fbdbc2f611db3077e103dd59"
+  },
+  "php-wasm-subtype-entry/ordinary/build-1/c-inputs/2-adapter.c": {
+    "bytes": 29725,
+    "sha256": "f9cb07dd248efdb60a5025aedd09b0e075300e731449f8ce262db7fe66d3d6c5"
+  },
+  "php-wasm-subtype-entry/ordinary/build-1/c-inputs/3-provider.c": {
+    "bytes": 26091,
+    "sha256": "bceeba036563a92976c983cd1d7fa2d1f8ca6502513f25ebfba88993a5b2c66b"
+  },
+  "php-wasm-subtype-entry/ordinary/build-1/c-inputs/4-callbacks.c": {
+    "bytes": 63,
+    "sha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c"
+  },
+  "php-wasm-subtype-entry/ordinary/build-1/c-inputs/5-width.c": {
+    "bytes": 236,
+    "sha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e"
+  },
+  "php-wasm-subtype-entry/ordinary/build-1/c-inputs/6-subtypes.c": {
+    "bytes": 11924,
+    "sha256": "b4dd529ec97ff0226f57d1835289eba3348104f1daf777bb5932f2ea60ad02ff"
+  },
+  "php-wasm-subtype-entry/ordinary/build-1/c-inputs/7-lb_subtypes_c28d025face37606.c": {
+    "bytes": 43600,
+    "sha256": "d5a04bddd37fe7ff0a86d1be3cd30bbddacb9a34fb0e33c7a340661a87ee9355"
+  },
+  "php-wasm-subtype-entry/ordinary/build-1/c-probes/1-Subtypes.c": {
+    "bytes": 15573,
+    "sha256": "15e5d88e874f9b8c0884f770217b5abd2a6db0b122ab74e0a3a1df349969e274"
+  },
+  "php-wasm-subtype-entry/ordinary/build-1/c-probes/2-adapter.c": {
+    "bytes": 31529,
+    "sha256": "a2ca97377e2f83638b902771f06838985f7ec37077c5fae93e764060d27be14b"
+  },
+  "php-wasm-subtype-entry/ordinary/build-1/c-probes/3-provider.c": {
+    "bytes": 26091,
+    "sha256": "bceeba036563a92976c983cd1d7fa2d1f8ca6502513f25ebfba88993a5b2c66b"
+  },
+  "php-wasm-subtype-entry/ordinary/build-1/c-probes/4-callbacks.c": {
+    "bytes": 63,
+    "sha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c"
+  },
+  "php-wasm-subtype-entry/ordinary/build-1/c-probes/5-width.c": {
+    "bytes": 236,
+    "sha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e"
+  },
+  "php-wasm-subtype-entry/ordinary/build-1/c-probes/6-subtypes.c": {
+    "bytes": 14002,
+    "sha256": "81e019d535782fb4b3a758246a13c215337140562b0d9d327e150422c7e32067"
+  },
+  "php-wasm-subtype-entry/ordinary/build-1/c-probes/7-lb_subtypes_c28d025face37606.c": {
+    "bytes": 43600,
+    "sha256": "d5a04bddd37fe7ff0a86d1be3cd30bbddacb9a34fb0e33c7a340661a87ee9355"
+  },
+  "php-wasm-subtype-entry/ordinary/build-1/commands.json": {
+    "bytes": 64186,
+    "sha256": "e5bca8c3d5380e4365358f1494a3b1bd0b218015e98d60e3ee24ab1f6b0d52d3"
+  },
+  "php-wasm-subtype-entry/ordinary/build-1/model.json": {
+    "bytes": 65877,
+    "sha256": "a4ed83e59769ac47d5a41ee84938ceca13f1f7e20522355d9e2cf4e3e8ab4f05"
+  },
+  "php-wasm-subtype-entry/ordinary/build-1/observation.json": {
+    "bytes": 93149,
+    "sha256": "2a89f08d0f49bbdb255baaeba9b5a968665be7cb03d92d90b255c831bbdd78c9"
+  },
+  "php-wasm-subtype-entry/ordinary/build-1/source-probe.json": {
+    "bytes": 9023,
+    "sha256": "ae88cac0f5c4a504616721514ee28602fe7ca9fa163d337aafa86b877d676a05"
+  },
+  "php-wasm-subtype-entry/ordinary/report.json": {
+    "bytes": 6976198,
+    "sha256": "67d2697d4c770591eb7495f98049b197ed9255775c9532894fe8c24af581c67e"
+  },
+  "php-wasm-subtype-entry/reviewed/build-0/c-inputs/1-Subtypes.c": {
+    "bytes": 14191,
+    "sha256": "35e5a115ad62460e8e505ee24318ac55bce5ee85fbdbc2f611db3077e103dd59"
+  },
+  "php-wasm-subtype-entry/reviewed/build-0/c-inputs/2-adapter.c": {
+    "bytes": 29725,
+    "sha256": "f9cb07dd248efdb60a5025aedd09b0e075300e731449f8ce262db7fe66d3d6c5"
+  },
+  "php-wasm-subtype-entry/reviewed/build-0/c-inputs/3-provider.c": {
+    "bytes": 26091,
+    "sha256": "bceeba036563a92976c983cd1d7fa2d1f8ca6502513f25ebfba88993a5b2c66b"
+  },
+  "php-wasm-subtype-entry/reviewed/build-0/c-inputs/4-callbacks.c": {
+    "bytes": 63,
+    "sha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c"
+  },
+  "php-wasm-subtype-entry/reviewed/build-0/c-inputs/5-width.c": {
+    "bytes": 236,
+    "sha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e"
+  },
+  "php-wasm-subtype-entry/reviewed/build-0/c-inputs/6-subtypes.c": {
+    "bytes": 11924,
+    "sha256": "b4dd529ec97ff0226f57d1835289eba3348104f1daf777bb5932f2ea60ad02ff"
+  },
+  "php-wasm-subtype-entry/reviewed/build-0/c-inputs/7-lb_subtypes_c786e4fda4ba9960.c": {
+    "bytes": 43600,
+    "sha256": "ea3afad3426426623fa0c07ebe39d55fa2352d9149ff1d73b625989019f4d854"
+  },
+  "php-wasm-subtype-entry/reviewed/build-0/c-probes/1-Subtypes.c": {
+    "bytes": 15573,
+    "sha256": "15e5d88e874f9b8c0884f770217b5abd2a6db0b122ab74e0a3a1df349969e274"
+  },
+  "php-wasm-subtype-entry/reviewed/build-0/c-probes/2-adapter.c": {
+    "bytes": 31529,
+    "sha256": "a2ca97377e2f83638b902771f06838985f7ec37077c5fae93e764060d27be14b"
+  },
+  "php-wasm-subtype-entry/reviewed/build-0/c-probes/3-provider.c": {
+    "bytes": 26091,
+    "sha256": "bceeba036563a92976c983cd1d7fa2d1f8ca6502513f25ebfba88993a5b2c66b"
+  },
+  "php-wasm-subtype-entry/reviewed/build-0/c-probes/4-callbacks.c": {
+    "bytes": 63,
+    "sha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c"
+  },
+  "php-wasm-subtype-entry/reviewed/build-0/c-probes/5-width.c": {
+    "bytes": 236,
+    "sha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e"
+  },
+  "php-wasm-subtype-entry/reviewed/build-0/c-probes/6-subtypes.c": {
+    "bytes": 14002,
+    "sha256": "81e019d535782fb4b3a758246a13c215337140562b0d9d327e150422c7e32067"
+  },
+  "php-wasm-subtype-entry/reviewed/build-0/c-probes/7-lb_subtypes_c786e4fda4ba9960.c": {
+    "bytes": 43600,
+    "sha256": "ea3afad3426426623fa0c07ebe39d55fa2352d9149ff1d73b625989019f4d854"
+  },
+  "php-wasm-subtype-entry/reviewed/build-0/commands.json": {
+    "bytes": 64186,
+    "sha256": "b94523c2116fdc34fa31ee95b08631b17006050c5923742a003b5b76814c6997"
+  },
+  "php-wasm-subtype-entry/reviewed/build-0/model.json": {
+    "bytes": 82979,
+    "sha256": "b8a0db181f17da9d4be9c5a4b01f2eb1231d941896e0de4cf3503b0d463a6306"
+  },
+  "php-wasm-subtype-entry/reviewed/build-0/observation.json": {
+    "bytes": 110792,
+    "sha256": "abe101b231d29633245f7d48741baabf50841ca4c7f09e2b3293d8a54eb72be2"
+  },
+  "php-wasm-subtype-entry/reviewed/build-0/source-probe.json": {
+    "bytes": 9023,
+    "sha256": "ae88cac0f5c4a504616721514ee28602fe7ca9fa163d337aafa86b877d676a05"
+  },
+  "php-wasm-subtype-entry/reviewed/build-1/c-inputs/1-Subtypes.c": {
+    "bytes": 14191,
+    "sha256": "35e5a115ad62460e8e505ee24318ac55bce5ee85fbdbc2f611db3077e103dd59"
+  },
+  "php-wasm-subtype-entry/reviewed/build-1/c-inputs/2-adapter.c": {
+    "bytes": 29725,
+    "sha256": "f9cb07dd248efdb60a5025aedd09b0e075300e731449f8ce262db7fe66d3d6c5"
+  },
+  "php-wasm-subtype-entry/reviewed/build-1/c-inputs/3-provider.c": {
+    "bytes": 26091,
+    "sha256": "bceeba036563a92976c983cd1d7fa2d1f8ca6502513f25ebfba88993a5b2c66b"
+  },
+  "php-wasm-subtype-entry/reviewed/build-1/c-inputs/4-callbacks.c": {
+    "bytes": 63,
+    "sha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c"
+  },
+  "php-wasm-subtype-entry/reviewed/build-1/c-inputs/5-width.c": {
+    "bytes": 236,
+    "sha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e"
+  },
+  "php-wasm-subtype-entry/reviewed/build-1/c-inputs/6-subtypes.c": {
+    "bytes": 11924,
+    "sha256": "b4dd529ec97ff0226f57d1835289eba3348104f1daf777bb5932f2ea60ad02ff"
+  },
+  "php-wasm-subtype-entry/reviewed/build-1/c-inputs/7-lb_subtypes_c786e4fda4ba9960.c": {
+    "bytes": 43600,
+    "sha256": "ea3afad3426426623fa0c07ebe39d55fa2352d9149ff1d73b625989019f4d854"
+  },
+  "php-wasm-subtype-entry/reviewed/build-1/c-probes/1-Subtypes.c": {
+    "bytes": 15573,
+    "sha256": "15e5d88e874f9b8c0884f770217b5abd2a6db0b122ab74e0a3a1df349969e274"
+  },
+  "php-wasm-subtype-entry/reviewed/build-1/c-probes/2-adapter.c": {
+    "bytes": 31529,
+    "sha256": "a2ca97377e2f83638b902771f06838985f7ec37077c5fae93e764060d27be14b"
+  },
+  "php-wasm-subtype-entry/reviewed/build-1/c-probes/3-provider.c": {
+    "bytes": 26091,
+    "sha256": "bceeba036563a92976c983cd1d7fa2d1f8ca6502513f25ebfba88993a5b2c66b"
+  },
+  "php-wasm-subtype-entry/reviewed/build-1/c-probes/4-callbacks.c": {
+    "bytes": 63,
+    "sha256": "57fca410285f79f9a58f3f5b23f97203e9cc9e76066139cb529ff406afa92c2c"
+  },
+  "php-wasm-subtype-entry/reviewed/build-1/c-probes/5-width.c": {
+    "bytes": 236,
+    "sha256": "94f94bd37af397f400f10b97b24efb34a1ecab8f8aae613e50376f1ab2218d1e"
+  },
+  "php-wasm-subtype-entry/reviewed/build-1/c-probes/6-subtypes.c": {
+    "bytes": 14002,
+    "sha256": "81e019d535782fb4b3a758246a13c215337140562b0d9d327e150422c7e32067"
+  },
+  "php-wasm-subtype-entry/reviewed/build-1/c-probes/7-lb_subtypes_c786e4fda4ba9960.c": {
+    "bytes": 43600,
+    "sha256": "ea3afad3426426623fa0c07ebe39d55fa2352d9149ff1d73b625989019f4d854"
+  },
+  "php-wasm-subtype-entry/reviewed/build-1/commands.json": {
+    "bytes": 64186,
+    "sha256": "b1b84d655bb5e48d6c68a40d6dee62c5fb4c05d8481f5e6fd7c0398397460d26"
+  },
+  "php-wasm-subtype-entry/reviewed/build-1/model.json": {
+    "bytes": 82979,
+    "sha256": "b8a0db181f17da9d4be9c5a4b01f2eb1231d941896e0de4cf3503b0d463a6306"
+  },
+  "php-wasm-subtype-entry/reviewed/build-1/observation.json": {
+    "bytes": 110792,
+    "sha256": "5dfb6e877994e0c840aed46114265bd3eaef41f8d5a57e0c3ddf1ca5e982151d"
+  },
+  "php-wasm-subtype-entry/reviewed/build-1/source-probe.json": {
+    "bytes": 9023,
+    "sha256": "ae88cac0f5c4a504616721514ee28602fe7ca9fa163d337aafa86b877d676a05"
+  },
+  "php-wasm-subtype-entry/reviewed/report.json": {
+    "bytes": 7029127,
+    "sha256": "870d21f4b07724c14148e8913ac208d7642942264bb1cd41cb173e26f05146ed"
+  },
+  "php-wasm-subtype-entry/run.tap": {
+    "bytes": 2418,
+    "sha256": "6633111657c965421597c17c9fda3d216aae81919cfb66d6a205825c723c6dec"
+  },
+  "php-wasm-subtype-entry/runtime-prepare.log": {
+    "bytes": 261,
+    "sha256": "b0e2d26c7aba736e706fac66e7913ee472e9c56939fda26d40d0cea5865620ed"
+  },
+  "php-wasm-subtype/ordinary.json": {
+    "bytes": 253581,
+    "sha256": "e06f245d628d9d12c62ca0d1b7b9778b02ecad087d7f82f80de184e666e11c5a"
+  },
+  "php-wasm-subtype/reviewed.json": {
+    "bytes": 270216,
+    "sha256": "a9f8dbdc765e91442cb82ee615f0bd37501a16bb1fb99f426a7efe2958a07638"
+  },
+  "recursive-callables/php-wasm-generated.json": {
+    "bytes": 88521,
+    "sha256": "e872a9f625d3e86a9371780963f46ee505d74fa92c7228d7c704621b432870a3"
+  },
+  "recursive-callables/php-wasm-mixed-packages.json": {
+    "bytes": 5242004,
+    "sha256": "977b76525729dd5ed899ff267564d0cde9cc0fed38b2af2320264f188d32457f"
+  },
+  "recursive-callables/php-wasm-packages.json": {
+    "bytes": 3148197,
+    "sha256": "d7c9a349e133d2a36d6771d568b2e6b7e415c570b8a8cc4898cbabdf8e3b241e"
+  },
+  "recursive/php-wasm-graph-loading.json": {
+    "bytes": 771794,
+    "sha256": "607e0b27a4e6986f2f0bb4e7eacffd431a8875a94a763c8d898ad651ede422f5"
+  },
+  "recursive/php-wasm-graph-packages.json": {
+    "bytes": 3573761,
+    "sha256": "320d49460f09e8874163f0678b7d1ac6d35a04397403f079ca215338da10f241"
+  },
+  "recursive/php-wasm-graph-reproduction.json": {
+    "bytes": 3735115,
+    "sha256": "eaab0d4f36839a39db96700b3575d782ae622c8b9ebc1af47dea3021be62a03a"
+  },
+  "recursive/php-wasm-shared-regressions.json": {
+    "bytes": 169268,
+    "sha256": "9021fbc8ea3b3a104059f3b678e9260d2e46c79161b334cb804823029ac773bc"
+  },
+  "recursive/php-wasm-values.json": {
+    "bytes": 3055,
+    "sha256": "8628693b6e253cbcdb78440e2bb9cf609a3f20d08a884ad4032520b12360c834"
+  },
+  "recursive/php-wasm-zend-lean.json": {
+    "bytes": 874411,
+    "sha256": "08b9ce556f123ef4a864ee645ef2a64ee9f6754f38a035868cc6e9131abac1a6"
+  },
+  "recursive/php-wasm-zend.json": {
+    "bytes": 168374,
+    "sha256": "548021a58110715eb0bbe2200197c46a790378cc5b97d34c9e86b9a333ec766a"
+  },
+  "recursive/wasm32-transport.json": {
+    "bytes": 826127,
+    "sha256": "53c52bf5c126ae233e06da92f1e27684f546a54ff6599fb97a1a486cd5606ce4"
+  },
+  "structured-callables/php-wasm-zend-faults.json": {
+    "bytes": 7263,
+    "sha256": "e8a9e19183065483ea96bb9500a93a1a709ce9945a78496388e051406b2e3e03"
+  },
+  "structured-callables/php-wasm.json": {
+    "bytes": 391225,
+    "sha256": "96ec32ed1a8b1beb191a416d19bd1b8818c1ab2cbb6c857b35a0548511bd714c"
+  },
+  "type-corpus/php-wasm.json": {
+    "bytes": 3454523,
+    "sha256": "dd5e3c3e3b0771d6c30ed865558fd1bfed924a0afe8ee41cdefbd1b32bc983be"
+  },
+  "type-corpus/reviewed-wasm-php-wasm.json": {
+    "bytes": 4062637,
+    "sha256": "a30e079c6ea6bc63ba54a5b4f6ca86caded018bd199692b75afab21892e8df2c"
+  },
+  "variants/php-wasm-zend-faults.json": {
+    "bytes": 2758,
+    "sha256": "474d8ee99c9a884849bdffd8c89aeea94b8b5c37ef3bc59e6e1d10315bfe3aff"
+  },
+  "variants/php-wasm.json": {
+    "bytes": 627415,
+    "sha256": "205c2b208fa2d5d9a9cc7b63af441054b8d4f8c25fab975274d2ef973ace621c"
+  },
+  "word-native/php-wasm.json": {
+    "bytes": 17840,
+    "sha256": "108aa947b4f64070e1c7059bb06002eecbbef26ec5bda2d7f8e1b043ac024a52"
+  }
+}

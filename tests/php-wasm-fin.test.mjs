@@ -44,6 +44,8 @@ import "./helpers/php-wasm-subtype-promotion-tests.mjs";
 import "./helpers/php-wasm-subtype-promotion-history-tests.mjs";
 import "./helpers/php-wasm-refinement-readme-tests.mjs";
 import "./helpers/php-wasm-subtype-entry-tests.mjs";
+import "./helpers/php-wasm-hosted-refinements-tests.mjs";
+import "./helpers/php-wasm-hosted-refinements-history-tests.mjs";
 
 const heap = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
 const refinedError = pattern => error => error.code === "native-refinements-unsupported" && pattern.test(error.message);

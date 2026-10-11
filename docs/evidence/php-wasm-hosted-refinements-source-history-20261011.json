@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "milestone": "php-wasm-hosted-refinements-source-v1",
+  "predecessorCommit": "672471416df428309639410b34c8e87e558d3898",
+  "updates": [
+    {
+      "path": "src/release/php-wasm-copied-package.mjs",
+      "currentSha256": "2cda0775c0dd22b6d27e190829f6cf9a9e07666b12af065c5ff8ac56c2c7a06b",
+      "previousSha256": "56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2",
+      "edits": [
+        {
+          "start": 3578,
+          "previous": "\t\t.replace(/Fin inside (?:containers, records, variants, callbacks or reviewed Binding IR|records, variants, callbacks or reviewed Binding IR|records, variants or callbacks) is not supported in PHP-Wasm packages\\./u,\n",
+          "current": "\t\t.replace(/Fin inside (?:containers, records, variants, callbacks or reviewed Binding IR|containers, records, variants or callbacks|records, variants, callbacks or reviewed Binding IR|records, variants or callbacks) is not supported in PHP-Wasm packages\\./u,\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "437d03fb428be3cbc017c634d2073abade2f8e14fd4f47e0ca6d691cfc5a2367",
+      "previousSha256": "572c66dff801f8695ea5356d75765e41c281651ab96c895d22c9baf468391bd2",
+      "edits": [
+        {
+          "start": 185686,
+          "previous": "          \"sha256\": \"56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2\"\n",
+          "current": "          \"sha256\": \"2cda0775c0dd22b6d27e190829f6cf9a9e07666b12af065c5ff8ac56c2c7a06b\"\n"
+        },
+        {
+          "start": 289583,
+          "previous": "          \"sha256\": \"56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2\"\n",
+          "current": "          \"sha256\": \"2cda0775c0dd22b6d27e190829f6cf9a9e07666b12af065c5ff8ac56c2c7a06b\"\n"
+        },
+        {
+          "start": 393793,
+          "previous": "          \"sha256\": \"56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2\"\n",
+          "current": "          \"sha256\": \"2cda0775c0dd22b6d27e190829f6cf9a9e07666b12af065c5ff8ac56c2c7a06b\"\n"
+        },
+        {
+          "start": 486709,
+          "previous": "          \"sha256\": \"56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2\"\n",
+          "current": "          \"sha256\": \"2cda0775c0dd22b6d27e190829f6cf9a9e07666b12af065c5ff8ac56c2c7a06b\"\n"
+        },
+        {
+          "start": 498380,
+          "previous": "          \"sha256\": \"56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2\"\n",
+          "current": "          \"sha256\": \"2cda0775c0dd22b6d27e190829f6cf9a9e07666b12af065c5ff8ac56c2c7a06b\"\n"
+        },
+        {
+          "start": 508069,
+          "previous": "          \"sha256\": \"56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2\"\n",
+          "current": "          \"sha256\": \"2cda0775c0dd22b6d27e190829f6cf9a9e07666b12af065c5ff8ac56c2c7a06b\"\n"
+        },
+        {
+          "start": 586858,
+          "previous": "          \"sha256\": \"56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2\"\n",
+          "current": "          \"sha256\": \"2cda0775c0dd22b6d27e190829f6cf9a9e07666b12af065c5ff8ac56c2c7a06b\"\n"
+        },
+        {
+          "start": 597235,
+          "previous": "          \"sha256\": \"56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2\"\n",
+          "current": "          \"sha256\": \"2cda0775c0dd22b6d27e190829f6cf9a9e07666b12af065c5ff8ac56c2c7a06b\"\n"
+        },
+        {
+          "start": 706033,
+          "previous": "          \"sha256\": \"56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2\"\n",
+          "current": "          \"sha256\": \"2cda0775c0dd22b6d27e190829f6cf9a9e07666b12af065c5ff8ac56c2c7a06b\"\n"
+        },
+        {
+          "start": 867557,
+          "previous": "          \"sha256\": \"56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2\"\n",
+          "current": "          \"sha256\": \"2cda0775c0dd22b6d27e190829f6cf9a9e07666b12af065c5ff8ac56c2c7a06b\"\n"
+        },
+        {
+          "start": 1057157,
+          "previous": "          \"sha256\": \"56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2\"\n",
+          "current": "          \"sha256\": \"2cda0775c0dd22b6d27e190829f6cf9a9e07666b12af065c5ff8ac56c2c7a06b\"\n"
+        },
+        {
+          "start": 1159465,
+          "previous": "          \"sha256\": \"56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2\"\n",
+          "current": "          \"sha256\": \"2cda0775c0dd22b6d27e190829f6cf9a9e07666b12af065c5ff8ac56c2c7a06b\"\n"
+        },
+        {
+          "start": 1401227,
+          "previous": "          \"sha256\": \"56be7783486a56282eeb6dc601b1db21e6bc4f700df98ab24aeba49dff0d0db2\"\n",
+          "current": "          \"sha256\": \"2cda0775c0dd22b6d27e190829f6cf9a9e07666b12af065c5ff8ac56c2c7a06b\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/php-wasm-fin.test.mjs",
+      "currentSha256": "2e373848710b14f885b119b089e1223f0924828dbd6879016b4be256b8b1da59",
+      "previousSha256": "f6bd80f0acb5a95e5d0470cd0ae1c1e897d50173d767b6a4f4e61cea27f93a1f",
+      "edits": [
+        {
+          "start": 2837,
+          "previous": "",
+          "current": "import \"./helpers/php-wasm-hosted-refinements-tests.mjs\";\nimport \"./helpers/php-wasm-hosted-refinements-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-container-late-ci-history-tests.mjs",
+      "currentSha256": "8a900fadada4c9f603fbf0037fc839436aa22a6ff04668343edcd1273dd45b60",
+      "previousSha256": "f57655560f75f3f310e69a2084c54b070c6d3746a5a800c7d874be57d440b935",
+      "edits": [
+        {
+          "start": 1215,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\"), previous = reverseFinLateCiUpdate(current, update);\n",
+          "current": "\t\tconst current = beforeFinLateCiSource(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n\t\tconst previous = reverseFinLateCiUpdate(current, update);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-container-late-ci-history.mjs",
+      "currentSha256": "52c6f47e7df5a50fd02d20dccec308447c9ef31da6ded8e5c08a5a1e2c391afd",
+      "previousSha256": "3976bd07765753d4ffe5016b19e5e417aa38d28cb9e572dd3456fad8328d67c9",
+      "edits": [
+        {
+          "start": 243,
+          "previous": "",
+          "current": "import { beforePhpWasmHostedSource } from \"./php-wasm-hosted-refinements-history.mjs\";\n"
+        },
+        {
+          "start": 2207,
+          "previous": "",
+          "current": "\tsource = beforePhpWasmHostedSource(path, source, expected);\n"
+        }
+      ]
+    }
+  ]
+}

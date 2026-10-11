@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforePhpWasmHostedSource } from "./php-wasm-hosted-refinements-history.mjs";
 
 export const finLateCiHistoryPath = "docs/evidence/fin-container-late-ci-source-history-20261011.json";
 export const finLateCiPredecessor = "838c5546f91df93b14c8b0cb4f04157cc3d8a36d";
@@ -50,6 +51,7 @@ export const reverseFinLateCiUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeFinLateCiSource = (path, source, expected) => {
+	source = beforePhpWasmHostedSource(path, source, expected);
 	if(typeof source !== "string" || !finLateCiChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
