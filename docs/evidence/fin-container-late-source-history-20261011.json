@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 1,
+  "milestone": "fin-container-late-native-source-v1",
+  "predecessorCommit": "9f26b9b1f497c20d489893dd95c112e69051d27c",
+  "updates": [
+    {
+      "path": "tests/fin-container-edges.test.mjs",
+      "currentSha256": "a0ba2ace77750f9ddb5344b6ecdef78d43bfc42cb8e5578c376401731a88d657",
+      "previousSha256": "d48c56fa9dfa29440878467115375350434922023574d2e12d6baae3299aed38",
+      "edits": [
+        {
+          "start": 2221,
+          "previous": "",
+          "current": "import \"./helpers/fin-container-late-source-tests.mjs\";\nimport \"./helpers/fin-container-late-installed-tests.mjs\";\nimport \"./helpers/fin-container-late-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-container-edge-install.mjs",
+      "currentSha256": "187b75df0f862f8861715fb2e3c432574368e66be9aacbe96dbfa0f05b8f6274",
+      "previousSha256": "01f8601bac2b4608a53693e524cfca1f0bc6bbe7af110b001b341698a833813d",
+      "edits": [
+        {
+          "start": 613,
+          "previous": "import { verifyNativeFiles } from \"../../src/build/native-artifacts.mjs\";\n",
+          "current": "import { nativeArtifactPaths, verifyNativeFiles } from \"../../src/build/native-artifacts.mjs\";\n"
+        },
+        {
+          "start": 1113,
+          "previous": "",
+          "current": "import { finLateAdditionalChecks, finLateConsumer, finLateProfiles } from \"./fin-container-late-consumers.mjs\";\n"
+        },
+        {
+          "start": 10142,
+          "previous": "",
+          "current": " * @param options.lateInputs - Include the separately counted complete late-input supplement.\n * @param options.records - Original record directory for the late-input supplement only.\n"
+        },
+        {
+          "start": 10330,
+          "previous": "export const repeatFinContainerEdges = async ({ profile, consumer, handoff, packages, command, measureDispatch = false, expectedModelSha256, leanPrefix, dependencies, toolchainEnvironment, pythonEnvironment, rubyEnvironment, jvmEnvironment, dotnetEnvironment, phpEnvironment }) => {\n",
+          "current": "export const repeatFinContainerEdges = async ({ profile, consumer, handoff, packages, command, measureDispatch = false, expectedModelSha256, leanPrefix, dependencies, toolchainEnvironment, pythonEnvironment, rubyEnvironment, jvmEnvironment, dotnetEnvironment, phpEnvironment, lateInputs = false, records }) => {\n"
+        },
+        {
+          "start": 10692,
+          "previous": "",
+          "current": "\tassert.equal(typeof lateInputs, \"boolean\");\n\tif(lateInputs) assert.ok(finLateProfiles.includes(profile) && !measureDispatch, \"Late-input checks have their own uninstrumented caller\");\n\tconst expectedChecks = finContainerEdgeChecks[profile] + (lateInputs ? finLateAdditionalChecks[profile] : 0);\n"
+        },
+        {
+          "start": 18113,
+          "previous": "",
+          "current": "\tif(records)\n\t{\n\t\tassert.equal(lateInputs, true);\n\t\tawait saveLakeFile(records, `${profile}.receipt.json`, archiveBytes);\n\t\tawait saveLakeFile(records, `${profile}.closure.json`, canonicalJson(fileClosure));\n\t}\n"
+        },
+        {
+          "start": 19600,
+          "previous": "\t\tassert.equal(before.stdout, `fin-container-ok:${finContainerEdgeChecks[profile]}\\n`);\n",
+          "current": "\t\tassert.equal(before.stdout, `fin-container-ok:${expectedChecks}\\n`);\n"
+        },
+        {
+          "start": 21419,
+          "previous": "\tassert.equal(repeated.stdout, `fin-container-ok:${finContainerEdgeChecks[profile]}\\n`);\n",
+          "current": "\tassert.equal(repeated.stdout, `fin-container-ok:${expectedChecks}\\n`);\n\tif(records) await saveLakeFile(records, `${profile}.relocated.stdout`, repeated.stdout);\n"
+        },
+        {
+          "start": 21775,
+          "previous": "",
+          "current": "\t\tif(records) await saveLakeFile(records, `${profile}.strict.stdout`, strict.stdout);\n"
+        },
+        {
+          "start": 26859,
+          "previous": "",
+          "current": " * @param options.lateInputs - Append full late-input checks and preserve their original build records.\n"
+        },
+        {
+          "start": 26967,
+          "previous": "export const checkInstalledFinContainerEdges = async (t, profiles, reportPath, { measureDispatch = false } = {}) => {\n",
+          "current": "export const checkInstalledFinContainerEdges = async (t, profiles, reportPath, { measureDispatch = false, lateInputs = false } = {}) => {\n"
+        },
+        {
+          "start": 27155,
+          "previous": "",
+          "current": "\tassert.equal(typeof lateInputs, \"boolean\");\n\tif(lateInputs) assert.ok(profiles.every(profile => finLateProfiles.includes(profile)) && !measureDispatch, \"Late-input checks require the uninstrumented nine-host selection\");\n"
+        },
+        {
+          "start": 27506,
+          "previous": "",
+          "current": "\tconst records = lateInputs ? `${resolve(reportPath)}.records` : null;\n\tif(records)\n\t{\n\t\tawait assert.rejects(lstat(records), { code: \"ENOENT\" });\n\t\tawait mkdir(records, { recursive: true });\n\t}\n"
+        },
+        {
+          "start": 27800,
+          "previous": "",
+          "current": "\tconst roots = [];\n\tlet completed = false;\n"
+        },
+        {
+          "start": 28182,
+          "previous": "\t\tt.after(() => Promise.all([author, consumer].map(root => rm(root, { recursive: true, force: true }))));\n",
+          "current": "\t\tt.after(async () => {\n\t\t\tif(lateInputs && !completed)\n\t\t\t{ t.diagnostic(`Retained failed late-input roots: ${author}, ${consumer}`); return; }\n\t\t\tawait Promise.all([author, consumer].map(root => rm(root, { recursive: true, force: true })));\n\t\t});\n\t\troots.push({ author, consumer });\n\t\tif(records) await saveLakeFile(records, \"context.json\", canonicalJson({ roots }));\n"
+        },
+        {
+          "start": 30012,
+          "previous": "",
+          "current": "\t\tif(records)\n\t\t{\n\t\t\tfor(const [name, bytes] of [[\"model.json\", modelBytes]\n\t\t\t\t, [\"package-set-receipt.json\", await readFile(join(handoff, \"package-set-receipt.json\"))]\n\t\t\t\t, [\"FinContainers.lean\", source]\n\t\t\t\t, [\"lean-bridge.exports.json\", await readFile(join(projectRoot, \"lean-bridge.exports.json\"))]])\n\t\t\t\tawait saveLakeFile(join(records, `author-${attempt}`), name, bytes);\n\t\t}\n"
+        },
+        {
+          "start": 30917,
+          "previous": "\t\t\tconst consumerSource = await finContainerEdgeConsumer(profile);\n",
+          "current": "\t\t\tconst consumerSource = await (lateInputs ? finLateConsumer(profile) : finContainerEdgeConsumer(profile));\n\t\t\tif(records) await saveLakeFile(records, `${profile}.source`, consumerSource);\n\t\t\tlet originalStdout;\n"
+        },
+        {
+          "start": 31753,
+          "previous": "\t\t\t\t\t, expectedChecks: finContainerEdgeChecks[profile]\n",
+          "current": "\t\t\t\t\t, expectedChecks: finContainerEdgeChecks[profile] + (lateInputs ? finLateAdditionalChecks[profile] : 0)\n\t\t\t\t\t, ...(lateInputs ? { parseResult: stdout => {\n\t\t\t\t\t\tassert.equal(stdout, `fin-container-ok:${finContainerEdgeChecks[profile] + finLateAdditionalChecks[profile]}\\n`);\n\t\t\t\t\t\toriginalStdout = stdout;\n\t\t\t\t\t\treturn { checks: finContainerEdgeChecks[profile] + finLateAdditionalChecks[profile] };\n\t\t\t\t\t} } : {})\n"
+        },
+        {
+          "start": 32428,
+          "previous": "",
+          "current": "\t\t\tif(records) await saveLakeFile(records, `${profile}.before.stdout`, originalStdout);\n"
+        },
+        {
+          "start": 32689,
+          "previous": "\t\t\t\t, measureDispatch, pythonEnvironment, rubyEnvironment\n",
+          "current": "\t\t\t\t, measureDispatch, pythonEnvironment, rubyEnvironment, lateInputs, records\n"
+        },
+        {
+          "start": 33874,
+          "previous": "",
+          "current": "\t\t\t\t, ...(lateInputs ? { lateInputs: { additionalChecks: finLateAdditionalChecks[profile]\n\t\t\t\t\t, rejections: 1009, recoveries: 1009, snapshotMutationControls: 6\n\t\t\t\t\t, inputTreesCompared: [\"arg0\", \"arg1\"] } } : {})\n"
+        },
+        {
+          "start": 34188,
+          "previous": "\tconst report = { schemaVersion: 1, profiles, reports, archives: archives[0], reproducible: true, authorRoots: 2 };\n",
+          "current": "\tconst recordFiles = records ? Object.fromEntries(await Promise.all((await nativeArtifactPaths(records)).map(async path => {\n\t\tconst bytes = await readFile(join(records, path)); return [path, { bytes: bytes.length, sha256: sha256(bytes) }];\n\t}))) : undefined;\n\tconst report = { schemaVersion: 1, profiles, reports, archives: archives[0]\n\t\t, reproducible: true, authorRoots: 2\n\t\t, ...(lateInputs ? { kind: \"fin-container-late-native-v1\", recordFiles } : {}) };\n"
+        },
+        {
+          "start": 34713,
+          "previous": "",
+          "current": "\tcompleted = true;\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-perl-promotion-history.mjs",
+      "currentSha256": "1827ef67b42890a164194a4ecca288d6e1c8816edfe9f4546add5c4e32bada08",
+      "previousSha256": "788ac2834ef3922994e8a88e180e0772acd890d5cf87b5df6953d30707e88a8f",
+      "edits": [
+        {
+          "start": 248,
+          "previous": "",
+          "current": "import { beforeFinLateSource } from \"./fin-container-late-history.mjs\";\n"
+        },
+        {
+          "start": 2458,
+          "previous": "",
+          "current": "\tsource = beforeFinLateSource(path, source, expected);\n"
+        }
+      ]
+    }
+  ]
+}

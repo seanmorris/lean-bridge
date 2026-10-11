@@ -10,11 +10,12 @@ import { tmpdir } from "node:os";
 import { basename, dirname, join, relative, resolve } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { buildCanonicalProject } from "../../src/build/canonical-build.mjs";
-import { verifyNativeFiles } from "../../src/build/native-artifacts.mjs";
+import { nativeArtifactPaths, verifyNativeFiles } from "../../src/build/native-artifacts.mjs";
 import { verifyPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { copiedCleanEnvironment, installCopiedConsumer, runCopied } from "./copied-fixture-install.mjs";
 import { finContainerEnvironment, finContainerTargets } from "./fin-container-install.mjs";
 import { finContainerEdgeConsumer, finContainerEdgeRefinements, finContainerEdgeSource } from "./fin-container-edges.mjs";
+import { finLateAdditionalChecks, finLateConsumer, finLateProfiles } from "./fin-container-late-consumers.mjs";
 import { observeFinContainerEdgeRaw } from "./fin-container-edge-observer.mjs";
 import { observeFinForeignCarriers } from "./fin-container-foreign-observer.mjs";
 import { observeFinContainerEdgePublic } from "./fin-container-edge-public-observer.mjs";
@@ -170,9 +171,14 @@ export const prepareFinContainerEdgeExecutable = async ({ profile, root, directo
  * @param options.jvmEnvironment - JVM archive identity and isolated host compilation outputs.
  * @param options.dotnetEnvironment - Original NuGet inputs and verified deployed application.
  * @param options.phpEnvironment - Original Composer payloads and verified generated autoload inputs.
+ * @param options.lateInputs - Include the separately counted complete late-input supplement.
+ * @param options.records - Original record directory for the late-input supplement only.
  */
-export const repeatFinContainerEdges = async ({ profile, consumer, handoff, packages, command, measureDispatch = false, expectedModelSha256, leanPrefix, dependencies, toolchainEnvironment, pythonEnvironment, rubyEnvironment, jvmEnvironment, dotnetEnvironment, phpEnvironment }) => {
+export const repeatFinContainerEdges = async ({ profile, consumer, handoff, packages, command, measureDispatch = false, expectedModelSha256, leanPrefix, dependencies, toolchainEnvironment, pythonEnvironment, rubyEnvironment, jvmEnvironment, dotnetEnvironment, phpEnvironment, lateInputs = false, records }) => {
 	assert.equal(typeof measureDispatch, "boolean");
+	assert.equal(typeof lateInputs, "boolean");
+	if(lateInputs) assert.ok(finLateProfiles.includes(profile) && !measureDispatch, "Late-input checks have their own uninstrumented caller");
+	const expectedChecks = finContainerEdgeChecks[profile] + (lateInputs ? finLateAdditionalChecks[profile] : 0);
 	const root = join(consumer, profile), pkg = packages.find(item => item.role === "component");
 	assert.ok(pkg);
 	const jvm = ["java", "kotlin"].includes(profile);
@@ -289,6 +295,12 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 				: exactFileClosure ? verifyFinContainerEdgeFileClosure({ installed: path, receiptPath, receiptBytes: archiveBytes }) : null;
 	};
 	const fileClosure = await checkClosure(installed);
+	if(records)
+	{
+		assert.equal(lateInputs, true);
+		await saveLakeFile(records, `${profile}.receipt.json`, archiveBytes);
+		await saveLakeFile(records, `${profile}.closure.json`, canonicalJson(fileClosure));
+	}
 	if(profile === "dotnet")
 	{
 		// The application loads the copied assembly and native libraries, not the NuGet cache originals.
@@ -312,7 +324,7 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 		assert.equal(command, join(root, "consumer"));
 		const before = await runCopied(command, args, root, copiedCleanEnvironment);
 		assert.equal(before.stderr, "");
-		assert.equal(before.stdout, `fin-container-ok:${finContainerEdgeChecks[profile]}\n`);
+		assert.equal(before.stdout, `fin-container-ok:${expectedChecks}\n`);
 		assert.equal(sha256(await readFile(command)), executable.executableSha256);
 	}
 	const moved = `${root}-relocated`;
@@ -334,12 +346,14 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 					: profile === "php-native" ? await runFinContainerEdgePhp(phpAt(movedInstall)) : await runCopied(movedCommand, args, moved, environment);
 	assert.deepEqual(await checkClosure(movedInstall), fileClosure, "package file set after relocated execution");
 	assert.equal(repeated.stderr, "");
-	assert.equal(repeated.stdout, `fin-container-ok:${finContainerEdgeChecks[profile]}\n`);
+	assert.equal(repeated.stdout, `fin-container-ok:${expectedChecks}\n`);
+	if(records) await saveLakeFile(records, `${profile}.relocated.stdout`, repeated.stdout);
 	if(profile === "php-native")
 	{
 		const strict = await runFinContainerEdgePhp(phpAt(movedInstall), "strict");
 		assert.equal(strict.stderr, "");
 		assert.equal(strict.stdout, repeated.stdout);
+		if(records) await saveLakeFile(records, `${profile}.strict.stdout`, strict.stdout);
 	}
 	assert.equal(await readFile(join(movedInstall, receiptPath), "utf8"), archiveBytes);
 	await verifyNativeFiles(movedInstall, receipt.files);
@@ -420,19 +434,36 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
  * @param reportPath - Fresh separated report path, validated before any compilation.
  * @param options - Explicit optional acceptance measurements.
  * @param options.measureDispatch - Measure raw C adapters of each installed package after its move.
+ * @param options.lateInputs - Append full late-input checks and preserve their original build records.
  */
-export const checkInstalledFinContainerEdges = async (t, profiles, reportPath, { measureDispatch = false } = {}) => {
+export const checkInstalledFinContainerEdges = async (t, profiles, reportPath, { measureDispatch = false, lateInputs = false } = {}) => {
 	assert.equal(typeof measureDispatch, "boolean");
+	assert.equal(typeof lateInputs, "boolean");
+	if(lateInputs) assert.ok(profiles.every(profile => finLateProfiles.includes(profile)) && !measureDispatch, "Late-input checks require the uninstrumented nine-host selection");
 	assert.deepEqual(finContainerEdgeSelection(profiles.join(",")), profiles);
 	await requireNewFinContainerEdgeReport(reportPath);
+	const records = lateInputs ? `${resolve(reportPath)}.records` : null;
+	if(records)
+	{
+		await assert.rejects(lstat(records), { code: "ENOENT" });
+		await mkdir(records, { recursive: true });
+	}
 	const environment = finContainerEnvironment(profiles), reports = [], archives = [], authors = [];
+	const roots = [];
+	let completed = false;
 	const targets = Object.fromEntries(profiles.map(profile => finContainerTargets[profile]));
 	const source = await finContainerEdgeSource();
 	for(const attempt of [0, 1])
 	{
 		const author = await mkdtemp(join(tmpdir(), "lean-bridge-fin-edges-author-"));
 		const consumer = await mkdtemp(join(tmpdir(), "lean-bridge-fin-edges-consumer-"));
-		t.after(() => Promise.all([author, consumer].map(root => rm(root, { recursive: true, force: true }))));
+		t.after(async () => {
+			if(lateInputs && !completed)
+			{ t.diagnostic(`Retained failed late-input roots: ${author}, ${consumer}`); return; }
+			await Promise.all([author, consumer].map(root => rm(root, { recursive: true, force: true })));
+		});
+		roots.push({ author, consumer });
+		if(records) await saveLakeFile(records, "context.json", canonicalJson({ roots }));
 		assert.ok(!authors.includes(author) && relative(author, consumer).startsWith("..")); authors.push(author);
 		const projectRoot = join(author, "project"), outputRoot = join(author, "release"), handoff = join(consumer, "handoff");
 		await cp("tests/fixtures/onboarding/native-fin-containers", projectRoot, { recursive: true });
@@ -449,6 +480,14 @@ export const checkInstalledFinContainerEdges = async (t, profiles, reportPath, {
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 		archives.push(Object.fromEntries(receipt.packages.flatMap(pkg => pkg.artifacts.map(artifact => [artifact.path, artifact.sha256]))));
 		const receiptSha256 = sha256(await readFile(join(handoff, "package-set-receipt.json")));
+		if(records)
+		{
+			for(const [name, bytes] of [["model.json", modelBytes]
+				, ["package-set-receipt.json", await readFile(join(handoff, "package-set-receipt.json"))]
+				, ["FinContainers.lean", source]
+				, ["lean-bridge.exports.json", await readFile(join(projectRoot, "lean-bridge.exports.json"))]])
+				await saveLakeFile(join(records, `author-${attempt}`), name, bytes);
+		}
 		const dependencies = attempt === 0 && profiles.includes("rust")
 			? await prepareRustCorpusDependencies({ rustRoot: join(outputRoot, "native/rust"), directory: author, handoff: join(consumer, "dependencies"), environment }) : undefined;
 		await rm(author, { recursive: true, force: true });
@@ -457,7 +496,9 @@ export const checkInstalledFinContainerEdges = async (t, profiles, reportPath, {
 		for(const profile of profiles)
 		{
 			const packages = receipt.packages.filter(pkg => pkg.target === finContainerTargets[profile][0]);
-			const consumerSource = await finContainerEdgeConsumer(profile);
+			const consumerSource = await (lateInputs ? finLateConsumer(profile) : finContainerEdgeConsumer(profile));
+			if(records) await saveLakeFile(records, `${profile}.source`, consumerSource);
+			let originalStdout;
 			const { command, pythonEnvironment, rubyEnvironment, jvmEnvironment, dotnetEnvironment, phpEnvironment, ...observation } = await installCopiedConsumer({ profile
 				, consumer, handoff, packages, environment, dependencies
 				, fixture: {
@@ -469,15 +510,21 @@ export const checkInstalledFinContainerEdges = async (t, profiles, reportPath, {
 					, installDotnet: installFinContainerEdgeDotnet
 					, installPhp: installFinContainerEdgePhp
 					, success: "fin-container-ok"
-					, expectedChecks: finContainerEdgeChecks[profile]
+					, expectedChecks: finContainerEdgeChecks[profile] + (lateInputs ? finLateAdditionalChecks[profile] : 0)
+					, ...(lateInputs ? { parseResult: stdout => {
+						assert.equal(stdout, `fin-container-ok:${finContainerEdgeChecks[profile] + finLateAdditionalChecks[profile]}\n`);
+						originalStdout = stdout;
+						return { checks: finContainerEdgeChecks[profile] + finLateAdditionalChecks[profile] };
+					} } : {})
 					, wit: [
 						"mirror-all", "count-none", "sum-huge", "or-default"
 						, "present", "flatten", "label", "wrap-all", "empty-array"
 						, "empty-list", "empty-option", "optional-digits"
 					].map(name => new RegExp(`${name}: func\\(`, "u")) } });
+			if(records) await saveLakeFile(records, `${profile}.before.stdout`, originalStdout);
 			const { rawAdapterDispatch, publicHostDispatch, foreignCarrierDispatch, ...repeated } = await repeatFinContainerEdges({
 				profile, consumer, handoff, packages, command
-				, measureDispatch, pythonEnvironment, rubyEnvironment
+				, measureDispatch, pythonEnvironment, rubyEnvironment, lateInputs, records
 				, jvmEnvironment, dotnetEnvironment, phpEnvironment
 				, expectedModelSha256: sha256(modelBytes)
 				, leanPrefix: environment.LEAN_BRIDGE_LEAN_PREFIX
@@ -499,11 +546,20 @@ export const checkInstalledFinContainerEdges = async (t, profiles, reportPath, {
 					, rawAdapter: rawAdapterDispatch }
 					: { observed: false, reason: "This supplement measures public behavior. Expanded source/adapter counters remain a separate required gate." }
 				, ...(foreignCarrierDispatch ? { foreignCarriers: foreignCarrierDispatch } : {})
+				, ...(lateInputs ? { lateInputs: { additionalChecks: finLateAdditionalChecks[profile]
+					, rejections: 1009, recoveries: 1009, snapshotMutationControls: 6
+					, inputTreesCompared: ["arg0", "arg1"] } } : {})
 			});
 		}
 	}
 	assert.equal(new Set(authors).size, 2); assert.deepEqual(archives[1], archives[0]);
-	const report = { schemaVersion: 1, profiles, reports, archives: archives[0], reproducible: true, authorRoots: 2 };
+	const recordFiles = records ? Object.fromEntries(await Promise.all((await nativeArtifactPaths(records)).map(async path => {
+		const bytes = await readFile(join(records, path)); return [path, { bytes: bytes.length, sha256: sha256(bytes) }];
+	}))) : undefined;
+	const report = { schemaVersion: 1, profiles, reports, archives: archives[0]
+		, reproducible: true, authorRoots: 2
+		, ...(lateInputs ? { kind: "fin-container-late-native-v1", recordFiles } : {}) };
 	await writeFinContainerEdgeReport(resolve(reportPath), report);
+	completed = true;
 	return report;
 };

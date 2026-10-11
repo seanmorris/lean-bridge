@@ -27,6 +27,9 @@ import { finContainerRefinements } from "./helpers/fin-container-install.mjs";
 import { checkInstalledFinContainerEdges, finContainerEdgeChecks, finContainerEdgeDispatchEnabled, finContainerEdgeGemReceipt, finContainerEdgeSelection, prepareFinContainerEdgeExecutable, requireNewFinContainerEdgeReport, writeFinContainerEdgeReport } from "./helpers/fin-container-edge-install.mjs";
 import { finContainerReviewedIr } from "./helpers/reviewed-fin-container-fixture.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
+import "./helpers/fin-container-late-source-tests.mjs";
+import "./helpers/fin-container-late-installed-tests.mjs";
+import "./helpers/fin-container-late-history-tests.mjs";
 
 test("the edge fixture preserves the eight original exports and adds four explicit round trips", async () => {
 	const original = await readFile("tests/fixtures/onboarding/native-fin-containers/FinContainers.lean", "utf8");
