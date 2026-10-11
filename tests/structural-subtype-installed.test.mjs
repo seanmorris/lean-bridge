@@ -49,6 +49,8 @@ import "./helpers/structural-subtype-ci-shell-tests.mjs";
 import "./helpers/structural-subtype-ci-foundation-history-tests.mjs";
 import "./helpers/structural-subtype-ci-workflow-tests.mjs";
 import "./helpers/structural-subtype-ci-workflow-history-tests.mjs";
+import "./helpers/structural-subtype-promotion-tests.mjs";
+import "./helpers/structural-subtype-promotion-history-tests.mjs";
 
 const profiles = process.env.LEAN_BRIDGE_STRUCTURAL_SUBTYPE_PROFILES?.split(",") ?? [];
 assert.ok(profiles.every(profile => ["c", "cpp"].includes(profile)), "Select implemented native installed profiles explicitly");

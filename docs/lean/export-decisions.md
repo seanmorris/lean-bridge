@@ -33,13 +33,67 @@ different constructors. Lean Bridge reconciles the exact input base type,
 result subtype and selected constructor with fresh Lean compilation; the
 consumer passes the base value. [Reviewed native checks](../evidence/reviewed-subtype-native-promotion-20261010.md)
 and [reviewed browser checks](../evidence/reviewed-subtype-browser-promotion-20261010.md)
-record installed top-level primitive-base parameters and results. Structural
-Subtype support is being extended to `Array`, `List`, `Option`, products and
-`Except`. Compiler and adapter checks now preserve per-leaf constructor choices
-and normalization; installed-package acceptance for these combinations is still
-in progress. Nominal-field, callback and owned Subtypes remain unfinished.
+record installed top-level primitive-base parameters and results. The later
+[structural checks](../evidence/structural-subtype-promotion-20261011.md) cover
+`Array`, `List`, `Option`, products and `Except` on both source routes across
+all seventeen profiles. Each present leaf keeps its selected constructor and
+normalization, including through transparent aliases and the tested closed
+`List` specialization. Nominal-field, callback and owned Subtypes remain unfinished.
 
 ### Select constructors inside containers
+
+For example, save `StructuralSubtypes.lean` in the Lean package:
+
+```lean
+namespace StructuralSubtypes
+
+abbrev Positive := { value : Nat // 0 < value }
+
+def checkedPositive (value : Nat) : Option Positive :=
+  if proof : 0 < value then some ⟨value, proof⟩ else none
+
+def arrays (values : Array Positive) : Array Positive := values
+
+end StructuralSubtypes
+```
+
+Select the export and its input/result constructors in
+`lean-bridge.exports.json`. This example selects npm; the same checked function
+can target any consumer profile listed above.
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["StructuralSubtypes"],
+  "exports": ["StructuralSubtypes.arrays"],
+  "targets": { "npm": { "name": "structuralsubtypes", "version": "1.0.0" } },
+  "contracts": {
+    "StructuralSubtypes.arrays": {
+      "parameters": [{
+        "ownership": "copy",
+        "lifetime": null,
+        "refinement": {
+          "kind": "array",
+          "arguments": [{ "constructor": "StructuralSubtypes.checkedPositive" }]
+        }
+      }],
+      "result": {
+        "ownership": "copy",
+        "lifetime": null,
+        "refinement": {
+          "kind": "array",
+          "arguments": [{ "constructor": "StructuralSubtypes.checkedPositive" }]
+        }
+      }
+    }
+  }
+}
+```
+
+JavaScript passes an array of `bigint` values. `[1n, 2n]` succeeds, `[]`
+succeeds without constructing an element, and `[1n, 0n]` rejects without
+changing the array. Other consumers use their generated array and `Nat` types.
+No consumer supplies a proof or implements the predicate.
 
 An ordinary export contract describes nested constructor choices in transport
 order. For `Array (Option Positive)`, the site's `refinement` is:

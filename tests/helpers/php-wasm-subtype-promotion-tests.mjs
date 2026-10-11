@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { beforeStructuralSubtypePromotionSource, structuralSubtypePromotionHistoryPath } from "./structural-subtype-promotion-history.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
@@ -46,7 +47,7 @@ test("PHP-Wasm Subtype promotion changes only four cells and preserves every old
 	const current = await readTypeSurface(), previous = await predecessor();
 	current.document = JSON.parse(beforeFinDotnetSdkSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
 	const references = await phpWasmSubtypePromotionReferences(), proposed = await promotePhpWasmSubtype(previous, references);
-	for(const path of [reviewedSubtypeHostHistoryPath, phpWasmEntryCiHistoryPath, phpWasmEntryHarnessHistoryPath, phpWasmSubtypeEntryHistoryPath, finJvmDiagnosticsHistoryPath, finDotnetSdkHistoryPath])
+	for(const path of [structuralSubtypePromotionHistoryPath, reviewedSubtypeHostHistoryPath, phpWasmEntryCiHistoryPath, phpWasmEntryHarnessHistoryPath, phpWasmSubtypeEntryHistoryPath, finJvmDiagnosticsHistoryPath, finDotnetSdkHistoryPath])
 	{
 		const later = JSON.parse(await readFile(path));
 		for(const entry of proposed.evidence) for(const file of entry.files)
@@ -110,7 +111,8 @@ test("PHP-Wasm Subtype promotion refuses missing, duplicate, weakened or repeate
 test("PHP-Wasm consumer and author guides describe installed Subtypes and retain unmeasured entry counts", async () => {
 	const consumer = await readFile("docs/php.md", "utf8"), author = await readFile("docs/lean/existing-package.md", "utf8");
 	const row = consumer.split("\n").find(line => line.startsWith("| `Subtype /"));
-	assert.ok(row.includes(phpWasmSubtypePromotionConversion));
+	const previous = beforeStructuralSubtypePromotionSource("docs/php.md", consumer);
+	assert.ok(previous.split("\n").find(line => line.startsWith("| `Subtype /")).includes(phpWasmSubtypePromotionConversion));
 	assert.ok(row.includes("PHP-Wasm:")); assert.ok(!row.includes("No host mapping recorded"));
 	for(const source of [consumer, author])
 	{
@@ -120,5 +122,5 @@ test("PHP-Wasm consumer and author guides describe installed Subtypes and retain
 	}
 	assert.ok(consumer.includes("Constructor and dispatch counts were not measured."));
 	assert.ok(author.includes("runtime entry counts remain unmeasured"));
-	assert.ok(author.includes("PHP-Wasm keeps nested Subtype and packages combining refinements with graph, owned or callable transports rejected."));
+	assert.ok(beforeStructuralSubtypePromotionSource("docs/lean/existing-package.md", author).includes("PHP-Wasm keeps nested Subtype and packages combining refinements with graph, owned or callable transports rejected."));
 });

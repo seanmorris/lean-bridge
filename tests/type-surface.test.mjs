@@ -22,6 +22,13 @@ const execute = promisify(execFile);
 const root = path.resolve(import.meta.dirname, "..");
 const { document, ...contracts } = await readTypeSurface();
 const clone = value => structuredClone(value);
+const structuralSubtypeEvidence = (profile, route) => {
+	const lanes = profile === "python" ? ["python311", "python312"]
+		: [["c", "cpp"].includes(profile) ? "c-cpp"
+			: ["java", "kotlin"].includes(profile) ? "jvm"
+				: profile.startsWith("node-") || profile.startsWith("browser-") ? "node-browser" : profile];
+	return lanes.map(lane => `structural-subtype-${lane}-${route}-installed`);
+};
 const stage = (state = "unreviewed") => ({ state, evidence: state === "unreviewed" ? [] : ["test-evidence"], note: "Scope of this test observation." });
 const observationFixture = () => {
 	const candidate = clone(document);
@@ -449,7 +456,8 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 			}
 			if(cell.shape === "subtype")
 			{
-				assert.deepEqual(stage.evidence, [profile === "php-wasm" ? "php-wasm-subtype-ordinary-installed" : `native-subtype-${specializationEvidence}-installed`]);
+				assert.deepEqual(stage.evidence, [profile === "php-wasm" ? "php-wasm-subtype-ordinary-installed" : `native-subtype-${specializationEvidence}-installed`
+					, ...structuralSubtypeEvidence(profile, "ordinary")]);
 				continue;
 			}
 			if(specialized.includes(cell.shape))
@@ -513,11 +521,23 @@ test("refinements, host null and erased proofs retain their individual value pos
 	}
 });
 
-test("checked Subtype evidence promotes only top-level parameters and results", async () => {
+test("checked Subtype evidence supplements parameter and result containers without promoting fields or callbacks", async () => {
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "subtype");
 	const installed = cells.filter(cell => cell.stages.installedExecution.state === "passed");
-	const ordinary = installed.filter(cell => cell.path === "ordinary-source");
-	const reviewed = installed.filter(cell => cell.path === "reviewed-ir");
+	const primitive = installed.map(cell => {
+		const expected = structuralSubtypeEvidence(cell.profile, cell.path === "ordinary-source" ? "ordinary" : "reviewed");
+		const suffix = "; also in generated structural containers";
+		assert.ok(cell.hostType.endsWith(suffix));
+		const stages = Object.fromEntries(Object.entries(cell.stages).map(([name, stage]) => {
+			assert.deepEqual(stage.evidence.filter(id => id.startsWith("structural-subtype-")), expected);
+			return [name, { ...stage, evidence: stage.evidence.filter(id => !expected.includes(id)) }];
+		}));
+		// Require the exact structural supplement above, then retain every earlier
+		// primitive-receipt assertion below. No field/callback cell is promoted.
+		return { ...cell, stages, hostType: cell.hostType.slice(0, -suffix.length) };
+	});
+	const ordinary = primitive.filter(cell => cell.path === "ordinary-source");
+	const reviewed = primitive.filter(cell => cell.path === "reviewed-ir");
 	// Both source routes cover top-level parameters/results in all seventeen profiles.
 	const native = ["c", "cpp", "python", "rust", "ruby", "dotnet", "java", "kotlin", "php-native", "wit-wasi"];
 	const browser = ["browser-javascript", "browser-react", "browser-worker"];

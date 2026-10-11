@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { beforeStructuralSubtypePromotionSource } from "./structural-subtype-promotion-history.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -130,7 +131,8 @@ test("native Subtype guides document both routes and retain the tested boundary"
 		const source = await readFile(path, "utf8");
 		assert.ok(source.includes("reviewed-subtype-native-promotion-20261010.md"), path);
 		const row = source.split("\n").find(line => line.startsWith("| `Subtype /"));
-		assert.ok(row.includes(reviewedSubtypeNativeConversion), path);
+		const previous = beforeStructuralSubtypePromotionSource(path, source);
+		assert.ok(previous.split("\n").find(line => line.startsWith("| `Subtype /")).includes(reviewedSubtypeNativeConversion), path);
 		assert.ok(row.includes("Reviewed IR: Installed checks passed (input, result)"), path);
 		assert.ok(row.includes("Not audited (field, callback input, callback result)"), path);
 		assert.doesNotMatch(source, /Reviewed-IR Subtype remains separate work/u);

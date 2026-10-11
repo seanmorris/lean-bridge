@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { beforeStructuralSubtypePromotionSource } from "./structural-subtype-promotion-history.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -121,7 +122,8 @@ test("reviewed browser promotion refuses invented scope, omitted records, overla
 test("reviewed browser guides expose primitive inputs and retain unsupported positions", async () => {
 	const consumer = await readFile("docs/javascript-typescript.md", "utf8");
 	const row = consumer.split("\n").find(line => line.startsWith("| `Subtype /"));
-	assert.ok(row.includes(browserSubtypeConversion));
+	const previous = beforeStructuralSubtypePromotionSource("docs/javascript-typescript.md", consumer);
+	assert.ok(previous.split("\n").find(line => line.startsWith("| `Subtype /")).includes(browserSubtypeConversion));
 	assert.ok(row.includes("Reviewed IR: Installed checks passed (input, result)"));
 	assert.ok(row.includes("Not audited (field, callback input, callback result)"));
 	assert.ok(consumer.includes("### Checked Subtypes\n"));

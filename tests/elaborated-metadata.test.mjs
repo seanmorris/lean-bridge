@@ -163,17 +163,50 @@ end Shop
 	assert.deepEqual(await lakeInputState(context.workspace), before);
 });
 
-test("callback and nested Subtype constraints are rejected rather than erased", () => {
+test("callback and nominal-field Subtype constraints are rejected rather than erased", () => {
 	const fin = { kind: "refinement", base: { kind: "primitive", name: "nat" }, predicate: { kind: "subtype", constructor: "Sample.checked" } };
 	for(const type of [
 		{ kind: "callback", parameters: [fin], result: { kind: "primitive", name: "nat" } }
 		, { kind: "callback", parameters: [{ kind: "primitive", name: "nat" }], result: { kind: "array", element: fin } }
 		, { kind: "callback", parameters: [{ kind: "record", name: "Sample.Record", fields: [{ name: "value", type: fin }] }], result: { kind: "primitive", name: "nat" } }
-		, { kind: "array", element: { ...fin, predicate: { kind: "subtype", constructor: "Sample.checked" } } }
+		, { kind: "record", name: "Sample.Record", fields: [{ name: "value", type: { kind: "array", element: fin } }] }
+		, { kind: "variant", name: "Sample.Choice", cases: [{ name: "item", fields: [{ name: "value", type: fin }] }] }
 	]) {
 		const { request, report } = sample();
 		report.modules[0].declarations[0].projection.parameters[0].type = type;
 		assert.throws(() => validateElaboratedMetadata(report, request), /Unsupported nested refinement position/);
+	}
+});
+
+test("structural Subtype metadata retains checked leaves and refuses malformed constructors", async () => {
+	const leaf = { kind: "refinement", base: { kind: "primitive", name: "nat" }, predicate: { kind: "subtype", constructor: "Sample.checked" } };
+	const wrappers = [value => ({ kind: "array", element: value })
+		, value => ({ kind: "list", element: value })
+		, value => ({ kind: "option", element: value })
+		, value => ({ kind: "tuple", arguments: [value, { kind: "primitive", name: "string" }] })
+		, value => ({ kind: "result", arguments: [{ kind: "primitive", name: "string" }, value] })
+		, value => ({ kind: "alias", name: "Sample.Values", target: { kind: "array", element: { kind: "option", element: value } } })];
+	for(const wrap of wrappers) for(const result of [false, true])
+	{
+		const { request, report } = sample();
+		const projection = report.modules[0].declarations[0].projection;
+		if(result) projection.result = wrap(structuredClone(leaf));
+		else projection.parameters[0].type = wrap(structuredClone(leaf));
+		const before = structuredClone(report);
+		assert.equal(validateElaboratedMetadata(report, request), true);
+		await assertJsonSchema("elaborated-export-metadata", report);
+		assert.deepEqual(report, before);
+		for(const constructor of [undefined, "", "invalid name", "Sample.checked()"])
+		{
+			const malformed = structuredClone(leaf);
+			if(constructor === undefined) delete malformed.predicate.constructor;
+			else malformed.predicate.constructor = constructor;
+			if(result) projection.result = wrap(malformed);
+			else projection.parameters[0].type = wrap(malformed);
+			assert.throws(() => validateElaboratedMetadata(report, request), {
+				message: constructor === undefined ? "Elaborated metadata fields must be closed" : "Invalid Subtype refinement"
+			});
+		}
 	}
 });
 
