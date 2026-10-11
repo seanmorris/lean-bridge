@@ -1,0 +1,475 @@
+{
+  "builds": [
+    {
+      "archives": {
+        "archives/LeanBridge-Runtime-0.0020592716822581412637753637152461205682916576183240901183894178635322362377514011.tar.gz": "3bb112e3e6904d1ad757f78b5aa3957f1c8068db472dc508c418663ec1439e76",
+        "archives/LeanBridge-StructuralSubtypes-1.000.tar.gz": "3c25e4b1b6ac0b264fe4cb8b8304671d1212b23126f75978263b4cc29f392bf4"
+      },
+      "bindingIrSha256": "8120953cf1e64d87548e0192f58dc4c2e7b559ef762ed3e78fb9325d9e1c4847",
+      "modelSha256": "7d063195852446bf1ef02f84a123cb2ed88c4f535263484509b4be5cfa6b86a3",
+      "receiptSha256": "e8f6d450814be66f8f8a89d63379c0a554d593d3507308f91c23403402e0b965"
+    },
+    {
+      "archives": {
+        "archives/LeanBridge-Runtime-0.0020592716822581412637753637152461205682916576183240901183894178635322362377514011.tar.gz": "3bb112e3e6904d1ad757f78b5aa3957f1c8068db472dc508c418663ec1439e76",
+        "archives/LeanBridge-StructuralSubtypes-1.000.tar.gz": "3c25e4b1b6ac0b264fe4cb8b8304671d1212b23126f75978263b4cc29f392bf4"
+      },
+      "bindingIrSha256": "8120953cf1e64d87548e0192f58dc4c2e7b559ef762ed3e78fb9325d9e1c4847",
+      "modelSha256": "7d063195852446bf1ef02f84a123cb2ed88c4f535263484509b4be5cfa6b86a3",
+      "receiptSha256": "e8f6d450814be66f8f8a89d63379c0a554d593d3507308f91c23403402e0b965"
+    }
+  ],
+  "configurations": [
+    "5.36.3-threaded",
+    "5.36.3-unthreaded",
+    "5.38.2-threaded",
+    "5.38.2-unthreaded"
+  ],
+  "expectedBindingIrSha256": "6ca095623cdf425a28546d3fb8a5428fc461242aed9f24b91d40009dd77a3e20",
+  "glibcMinimumVersion": "2.36",
+  "interpreters": [
+    {
+      "configuration": "5.36.3-threaded",
+      "executableSha256": "c42996ff51604c680e750f3f445765436a04292575f8b15095930af02faba4c8",
+      "identity": {
+        "archname": "x86_64-linux-thread-multi",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": "define",
+        "usemultiplicity": "define",
+        "version": "5.36.3"
+      }
+    },
+    {
+      "configuration": "5.36.3-unthreaded",
+      "executableSha256": "5526d24ded88c1c02c6166a45fe34b064c2f9f6d3e3cfae82525049572d77a3d",
+      "identity": {
+        "archname": "x86_64-linux",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": null,
+        "usemultiplicity": null,
+        "version": "5.36.3"
+      }
+    },
+    {
+      "configuration": "5.38.2-threaded",
+      "executableSha256": "03f8e3368d9f5ee75c77b2c139a99b09a2326967e448639c1584f5fc725e04fc",
+      "identity": {
+        "archname": "x86_64-linux-thread-multi",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": "define",
+        "usemultiplicity": "define",
+        "version": "5.38.2"
+      }
+    },
+    {
+      "configuration": "5.38.2-unthreaded",
+      "executableSha256": "4379d8d286f8795c9033af2d66d333571fe234d45889cd6778a57aec9344130c",
+      "identity": {
+        "archname": "x86_64-linux",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": null,
+        "usemultiplicity": null,
+        "version": "5.38.2"
+      }
+    }
+  ],
+  "modes": [
+    "prebuilt-only",
+    "build-xs"
+  ],
+  "producerCommit": "bbf659d51a97732d3f32c8a8e1add1fa502af88a",
+  "reports": [
+    {
+      "checks": 4119,
+      "compilerFreeExecution": true,
+      "compilerFreeReplay": true,
+      "configuration": "5.36.3-threaded",
+      "consumerSha256": "0badfb75a8bb3cf7cf557468dfdccca30b35c45b1147103eb05f5dd4f1469142",
+      "dispatch": {
+        "observed": false,
+        "reason": "No entry instrumentation in this Perl installed acceptance"
+      },
+      "executableSha256": "c42996ff51604c680e750f3f445765436a04292575f8b15095930af02faba4c8",
+      "extractedDistributionsRemoved": true,
+      "identity": {
+        "archname": "x86_64-linux-thread-multi",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": "define",
+        "usemultiplicity": "define",
+        "version": "5.36.3"
+      },
+      "installationCCompilerAvailable": false,
+      "installedBytesUnchanged": true,
+      "installedFilesSha256": "50e24184dd16bc189a876410957a571f0795d138e854efcc9c2d6a5c561147e4",
+      "leanCompilerUnavailable": true,
+      "mode": "prebuilt-only",
+      "nativePayloadUnchanged": true,
+      "offlineInstall": true,
+      "rejections": 1042,
+      "relocatedInstallation": true,
+      "repeatedRuns": 2,
+      "route": "reviewed",
+      "snapshotControls": 6,
+      "sourceUnchangedAfterReplay": true,
+      "traces": [
+        {
+          "manifestSha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124",
+          "receiptSha256": "440854dc97f5d57bad62ce364d6acd2321fc7406ee85b39a6e86b70d36598215",
+          "role": "runtime",
+          "traceSha256": "5647a8df3ccc1498a20bc91981fb55be0c995f0ed135f7a47b148effda1fdb81"
+        },
+        {
+          "manifestSha256": "f019e62f263d8d88e6cb16ea9f0afa8e47a35451338423a52ffcfe5919bf8395",
+          "receiptSha256": "3f51f65d9b62b80ddfd094d4774568364e5b9f1d1cbb0b96e35775c4771a7924",
+          "role": "component",
+          "traceSha256": "a2bc7cb33f05642ca9ebcd68b68ae1b27ed7c480761659f7d7e1724bdf7a2fe7"
+        }
+      ]
+    },
+    {
+      "checks": 4119,
+      "compilerFreeExecution": true,
+      "compilerFreeReplay": true,
+      "configuration": "5.36.3-threaded",
+      "consumerSha256": "0badfb75a8bb3cf7cf557468dfdccca30b35c45b1147103eb05f5dd4f1469142",
+      "dispatch": {
+        "observed": false,
+        "reason": "No entry instrumentation in this Perl installed acceptance"
+      },
+      "executableSha256": "c42996ff51604c680e750f3f445765436a04292575f8b15095930af02faba4c8",
+      "extractedDistributionsRemoved": true,
+      "identity": {
+        "archname": "x86_64-linux-thread-multi",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": "define",
+        "usemultiplicity": "define",
+        "version": "5.36.3"
+      },
+      "installationCCompilerAvailable": true,
+      "installedBytesUnchanged": true,
+      "installedFilesSha256": "f9069f9494488e94f6c117b777588b3e38a87f030b951fd985457112d02f857e",
+      "leanCompilerUnavailable": true,
+      "mode": "build-xs",
+      "nativePayloadUnchanged": true,
+      "offlineInstall": true,
+      "rejections": 1042,
+      "relocatedInstallation": true,
+      "repeatedRuns": 2,
+      "route": "reviewed",
+      "snapshotControls": 6,
+      "sourceUnchangedAfterReplay": true,
+      "traces": [
+        {
+          "manifestSha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124",
+          "receiptSha256": "14c87872f1c272b8467aa1139da92a522e8634126115a646ecb22be667e5eb7d",
+          "role": "runtime",
+          "traceSha256": "8d03e05dd5a2d2a7c6bbe45fd5069793b05429b749d1f3a489dccc90c28b4f61"
+        },
+        {
+          "manifestSha256": "f019e62f263d8d88e6cb16ea9f0afa8e47a35451338423a52ffcfe5919bf8395",
+          "receiptSha256": "40d2b1d134ff0a938a3ee3bb9542e8e0fcccf30234b2fa0c5b9e0c855ac420a0",
+          "role": "component",
+          "traceSha256": "5a5cc1f48a0abe8d5669ae2660d7e4cf998a006270324298d34a4fb32858f6e8"
+        }
+      ]
+    },
+    {
+      "checks": 4119,
+      "compilerFreeExecution": true,
+      "compilerFreeReplay": true,
+      "configuration": "5.36.3-unthreaded",
+      "consumerSha256": "0badfb75a8bb3cf7cf557468dfdccca30b35c45b1147103eb05f5dd4f1469142",
+      "dispatch": {
+        "observed": false,
+        "reason": "No entry instrumentation in this Perl installed acceptance"
+      },
+      "executableSha256": "5526d24ded88c1c02c6166a45fe34b064c2f9f6d3e3cfae82525049572d77a3d",
+      "extractedDistributionsRemoved": true,
+      "identity": {
+        "archname": "x86_64-linux",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": null,
+        "usemultiplicity": null,
+        "version": "5.36.3"
+      },
+      "installationCCompilerAvailable": false,
+      "installedBytesUnchanged": true,
+      "installedFilesSha256": "e3cfbe961df8607faaa62283e948c0d30b58c29c7d1999611e7db90ea6af4928",
+      "leanCompilerUnavailable": true,
+      "mode": "prebuilt-only",
+      "nativePayloadUnchanged": true,
+      "offlineInstall": true,
+      "rejections": 1042,
+      "relocatedInstallation": true,
+      "repeatedRuns": 2,
+      "route": "reviewed",
+      "snapshotControls": 6,
+      "sourceUnchangedAfterReplay": true,
+      "traces": [
+        {
+          "manifestSha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124",
+          "receiptSha256": "c2b6ed629e3dd78670e00e8b13ac332eae1a407e705efc81d20af453933dc290",
+          "role": "runtime",
+          "traceSha256": "02ba5dde209d924cf6b637ff1b92475b8867fe43a139f82ce489793cea46aa12"
+        },
+        {
+          "manifestSha256": "f019e62f263d8d88e6cb16ea9f0afa8e47a35451338423a52ffcfe5919bf8395",
+          "receiptSha256": "d9181bd97a252b6551bdbf622b180baad8bdd3b6100755b6c9d3e5962d09f3dd",
+          "role": "component",
+          "traceSha256": "93a3eb1662a83804d2424fad722ceac102ca1ccd5e05f6eea580823ec233e308"
+        }
+      ]
+    },
+    {
+      "checks": 4119,
+      "compilerFreeExecution": true,
+      "compilerFreeReplay": true,
+      "configuration": "5.36.3-unthreaded",
+      "consumerSha256": "0badfb75a8bb3cf7cf557468dfdccca30b35c45b1147103eb05f5dd4f1469142",
+      "dispatch": {
+        "observed": false,
+        "reason": "No entry instrumentation in this Perl installed acceptance"
+      },
+      "executableSha256": "5526d24ded88c1c02c6166a45fe34b064c2f9f6d3e3cfae82525049572d77a3d",
+      "extractedDistributionsRemoved": true,
+      "identity": {
+        "archname": "x86_64-linux",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": null,
+        "usemultiplicity": null,
+        "version": "5.36.3"
+      },
+      "installationCCompilerAvailable": true,
+      "installedBytesUnchanged": true,
+      "installedFilesSha256": "76493519df844a13ecf151cf9e5d37fcd116bd0200aa8091bdd063eb9ee934a8",
+      "leanCompilerUnavailable": true,
+      "mode": "build-xs",
+      "nativePayloadUnchanged": true,
+      "offlineInstall": true,
+      "rejections": 1042,
+      "relocatedInstallation": true,
+      "repeatedRuns": 2,
+      "route": "reviewed",
+      "snapshotControls": 6,
+      "sourceUnchangedAfterReplay": true,
+      "traces": [
+        {
+          "manifestSha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124",
+          "receiptSha256": "ee31f04bc47713ee1e7af7eec4c79757f5da95358146b058fa875ab63bf3d535",
+          "role": "runtime",
+          "traceSha256": "06a13638c2adf6f6864e131f79eedbcb7a305e7305427648b75470c2a28b83b3"
+        },
+        {
+          "manifestSha256": "f019e62f263d8d88e6cb16ea9f0afa8e47a35451338423a52ffcfe5919bf8395",
+          "receiptSha256": "c1f8ff6056c3ac5778413bbbe381f7c877b0700d821274c3119934f7f6c6129a",
+          "role": "component",
+          "traceSha256": "a8d2abd4b5370974666694a851bad0290c6c5d6d4fedb6c722e1440def91f35f"
+        }
+      ]
+    },
+    {
+      "checks": 4119,
+      "compilerFreeExecution": true,
+      "compilerFreeReplay": true,
+      "configuration": "5.38.2-threaded",
+      "consumerSha256": "0badfb75a8bb3cf7cf557468dfdccca30b35c45b1147103eb05f5dd4f1469142",
+      "dispatch": {
+        "observed": false,
+        "reason": "No entry instrumentation in this Perl installed acceptance"
+      },
+      "executableSha256": "03f8e3368d9f5ee75c77b2c139a99b09a2326967e448639c1584f5fc725e04fc",
+      "extractedDistributionsRemoved": true,
+      "identity": {
+        "archname": "x86_64-linux-thread-multi",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": "define",
+        "usemultiplicity": "define",
+        "version": "5.38.2"
+      },
+      "installationCCompilerAvailable": false,
+      "installedBytesUnchanged": true,
+      "installedFilesSha256": "c22953a13de1ad8fc2e8de7760ecd8000ea09f788324570ce3a44052cb4c9954",
+      "leanCompilerUnavailable": true,
+      "mode": "prebuilt-only",
+      "nativePayloadUnchanged": true,
+      "offlineInstall": true,
+      "rejections": 1042,
+      "relocatedInstallation": true,
+      "repeatedRuns": 2,
+      "route": "reviewed",
+      "snapshotControls": 6,
+      "sourceUnchangedAfterReplay": true,
+      "traces": [
+        {
+          "manifestSha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124",
+          "receiptSha256": "7197ee40f85be2d67ffe57d0830384efc5328bde74215519560a1df57073b5d1",
+          "role": "runtime",
+          "traceSha256": "a8eaa2f967092669e2d42cae391fb335e3e355de8a4c2219e7eb13d36ebe0c02"
+        },
+        {
+          "manifestSha256": "f019e62f263d8d88e6cb16ea9f0afa8e47a35451338423a52ffcfe5919bf8395",
+          "receiptSha256": "f6b9d822af3630945436c0279b76446b790b154e347f0148f4d6e04abfe72033",
+          "role": "component",
+          "traceSha256": "2579e857280b4ea3c3eb852b882411a39b59078ebcfc031063a4a3e0d9f4be3a"
+        }
+      ]
+    },
+    {
+      "checks": 4119,
+      "compilerFreeExecution": true,
+      "compilerFreeReplay": true,
+      "configuration": "5.38.2-threaded",
+      "consumerSha256": "0badfb75a8bb3cf7cf557468dfdccca30b35c45b1147103eb05f5dd4f1469142",
+      "dispatch": {
+        "observed": false,
+        "reason": "No entry instrumentation in this Perl installed acceptance"
+      },
+      "executableSha256": "03f8e3368d9f5ee75c77b2c139a99b09a2326967e448639c1584f5fc725e04fc",
+      "extractedDistributionsRemoved": true,
+      "identity": {
+        "archname": "x86_64-linux-thread-multi",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": "define",
+        "usemultiplicity": "define",
+        "version": "5.38.2"
+      },
+      "installationCCompilerAvailable": true,
+      "installedBytesUnchanged": true,
+      "installedFilesSha256": "d1b986ea3a5b8a3bfb195e11924114af6ee9d59795712bf8e811390c75c5b688",
+      "leanCompilerUnavailable": true,
+      "mode": "build-xs",
+      "nativePayloadUnchanged": true,
+      "offlineInstall": true,
+      "rejections": 1042,
+      "relocatedInstallation": true,
+      "repeatedRuns": 2,
+      "route": "reviewed",
+      "snapshotControls": 6,
+      "sourceUnchangedAfterReplay": true,
+      "traces": [
+        {
+          "manifestSha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124",
+          "receiptSha256": "b701e19412fedf35103f2c37d0aa5f45426d6dcd1db25d44ae2cc6b536577036",
+          "role": "runtime",
+          "traceSha256": "a8714ab500eaa1503c6d8e87c7bbea02b6a2c9d0eb313444f5e076aae3afa563"
+        },
+        {
+          "manifestSha256": "f019e62f263d8d88e6cb16ea9f0afa8e47a35451338423a52ffcfe5919bf8395",
+          "receiptSha256": "4823a56f6d8d1cf76774f9a62ce9aba16c848e19e76611f9ddb2f183b53587a3",
+          "role": "component",
+          "traceSha256": "3919acbb9339aff83e7818f3d7168c3b72c66b033dc59371d61ec3823c1c233e"
+        }
+      ]
+    },
+    {
+      "checks": 4119,
+      "compilerFreeExecution": true,
+      "compilerFreeReplay": true,
+      "configuration": "5.38.2-unthreaded",
+      "consumerSha256": "0badfb75a8bb3cf7cf557468dfdccca30b35c45b1147103eb05f5dd4f1469142",
+      "dispatch": {
+        "observed": false,
+        "reason": "No entry instrumentation in this Perl installed acceptance"
+      },
+      "executableSha256": "4379d8d286f8795c9033af2d66d333571fe234d45889cd6778a57aec9344130c",
+      "extractedDistributionsRemoved": true,
+      "identity": {
+        "archname": "x86_64-linux",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": null,
+        "usemultiplicity": null,
+        "version": "5.38.2"
+      },
+      "installationCCompilerAvailable": false,
+      "installedBytesUnchanged": true,
+      "installedFilesSha256": "aca6863e52c326c48baa3e19be752fa2de375dafc7ea489caa268e031329d1be",
+      "leanCompilerUnavailable": true,
+      "mode": "prebuilt-only",
+      "nativePayloadUnchanged": true,
+      "offlineInstall": true,
+      "rejections": 1042,
+      "relocatedInstallation": true,
+      "repeatedRuns": 2,
+      "route": "reviewed",
+      "snapshotControls": 6,
+      "sourceUnchangedAfterReplay": true,
+      "traces": [
+        {
+          "manifestSha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124",
+          "receiptSha256": "debea81d3582997b2ae4c08d48d6d63947ea28e2e5e472f5123bacbd48ea0052",
+          "role": "runtime",
+          "traceSha256": "4370b545a49462b73e77622e32819e0afe43a088034fc146d2c3509e535fbdd6"
+        },
+        {
+          "manifestSha256": "f019e62f263d8d88e6cb16ea9f0afa8e47a35451338423a52ffcfe5919bf8395",
+          "receiptSha256": "038d972465aa17475964e5eb90c565374111aef4db4b106e09754cb438abec98",
+          "role": "component",
+          "traceSha256": "9490a54ff697ab7ddc467620e6955dd773d57fd43aed1ab0b18893fcea34f6c1"
+        }
+      ]
+    },
+    {
+      "checks": 4119,
+      "compilerFreeExecution": true,
+      "compilerFreeReplay": true,
+      "configuration": "5.38.2-unthreaded",
+      "consumerSha256": "0badfb75a8bb3cf7cf557468dfdccca30b35c45b1147103eb05f5dd4f1469142",
+      "dispatch": {
+        "observed": false,
+        "reason": "No entry instrumentation in this Perl installed acceptance"
+      },
+      "executableSha256": "4379d8d286f8795c9033af2d66d333571fe234d45889cd6778a57aec9344130c",
+      "extractedDistributionsRemoved": true,
+      "identity": {
+        "archname": "x86_64-linux",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": null,
+        "usemultiplicity": null,
+        "version": "5.38.2"
+      },
+      "installationCCompilerAvailable": true,
+      "installedBytesUnchanged": true,
+      "installedFilesSha256": "b353d6c9e08bba8ad0e9d8287cef72d078050c60ca209d7c64bc9f92c2a6d2c4",
+      "leanCompilerUnavailable": true,
+      "mode": "build-xs",
+      "nativePayloadUnchanged": true,
+      "offlineInstall": true,
+      "rejections": 1042,
+      "relocatedInstallation": true,
+      "repeatedRuns": 2,
+      "route": "reviewed",
+      "snapshotControls": 6,
+      "sourceUnchangedAfterReplay": true,
+      "traces": [
+        {
+          "manifestSha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124",
+          "receiptSha256": "76c71076342101b1b5f3982e28a24b2ad0808f7a26ccd5df86890f068f50ec9e",
+          "role": "runtime",
+          "traceSha256": "805293363e0456cca364e6530a60b6fe9946b2a68d485ccf03fd5c1a9346b206"
+        },
+        {
+          "manifestSha256": "f019e62f263d8d88e6cb16ea9f0afa8e47a35451338423a52ffcfe5919bf8395",
+          "receiptSha256": "fbd849be909dac4dadeb055ef750e00d968cf0e1bca162dfa0a4f92a1d865fb4",
+          "role": "component",
+          "traceSha256": "c28e9b9cdea4308750a82a6f87d7c10fcd3188c4a844fca70e63b26df8f14862"
+        }
+      ]
+    }
+  ],
+  "reproducible": true,
+  "route": "reviewed",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}

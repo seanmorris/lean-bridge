@@ -17,6 +17,7 @@ import { structuralSubtypePerlConfiguration, structuralSubtypePerlCaller, struct
 import { checkedRecordPerlConfigurations, checkedRecordPerlExecutables, probeCheckedRecordPerl } from "./checked-record-perl-install.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { runCopied } from "./copied-fixture-install.mjs";
+import "./structural-subtype-perl-evidence-tests.mjs";
 
 test("structural Perl configurations retain independent ordinary and reviewed contracts", async () => {
 	for(const route of ["ordinary", "reviewed"])

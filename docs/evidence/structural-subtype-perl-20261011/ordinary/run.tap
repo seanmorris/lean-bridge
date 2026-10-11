@@ -1,0 +1,26 @@
+TAP version 13
+# Subtest: installed structural-subtype Perl packages reproduce and relocate both delivery modes for ordinary
+ok 1 - installed structural-subtype Perl packages reproduce and relocate both delivery modes for ordinary
+  ---
+  duration_ms: 316453.675063
+  type: 'test'
+  ...
+# ordinary author 0: four Perl ABIs
+# ordinary author 1: four Perl ABIs
+# Installing 5.36.3-threaded/prebuilt-only/ordinary
+# Installing 5.36.3-threaded/build-xs/ordinary
+# Installing 5.36.3-unthreaded/prebuilt-only/ordinary
+# Installing 5.36.3-unthreaded/build-xs/ordinary
+# Installing 5.38.2-threaded/prebuilt-only/ordinary
+# Installing 5.38.2-threaded/build-xs/ordinary
+# Installing 5.38.2-unthreaded/prebuilt-only/ordinary
+# Installing 5.38.2-unthreaded/build-xs/ordinary
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 316804.231877
