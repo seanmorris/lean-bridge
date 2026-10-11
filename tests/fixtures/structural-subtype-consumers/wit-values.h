@@ -70,6 +70,10 @@ static bool exact_cause(const char *bytes, size_t size, const char *expected) {
   static const char start[] = "error while executing at wasm backtrace:\n";
   static const char marker[] = "\n\nCaused by:\n    ";
   if (size < sizeof(start) - 1 + sizeof(marker) - 1 + length || memcmp(bytes, start, sizeof(start) - 1)) return false;
+  /* Wasmtime's formatted error chain terminates in one newline. A bare cause
+   * still requires byte-for-byte equality, and extra trailing data rejects. */
+  if (bytes[size - 1] == '\n') --size;
+  if (size < sizeof(start) - 1 + sizeof(marker) - 1 + length) return false;
   size_t end = size - length, at = end - (sizeof(marker) - 1);
   if (memcmp(bytes + at, marker, sizeof(marker) - 1) || memcmp(bytes + end, expected, length)) return false;
   /* A cause marker embedded in the backtrace would make the chain ambiguous. */

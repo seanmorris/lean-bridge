@@ -50,7 +50,7 @@ int main(void) {
   (void)small; (void)wide;
   unsigned snapshots = snapshot_controls(); if (snapshots != 12) return 1;
   const char *cause = "arg0 was rejected by StructuralSubtypes.checkedPositive";
-  const char *good[] = {cause, "error while executing at wasm backtrace:\n    0: 0x7a - <unknown>!<wasm function 0>\n\nCaused by:\n    arg0 was rejected by StructuralSubtypes.checkedPositive"};
+  const char *good[] = {cause, "error while executing at wasm backtrace:\n    0: 0x7a - <unknown>!<wasm function 0>\n\nCaused by:\n    arg0 was rejected by StructuralSubtypes.checkedPositive", "error while executing at wasm backtrace:\n    0: 0x8fa - forward!<wasm function 23>\n\nCaused by:\n    arg0 was rejected by StructuralSubtypes.checkedPositive\n"};
   const char *bad[] = {
     "prefix arg0 was rejected by StructuralSubtypes.checkedPositive",
     "arg0 was rejected by StructuralSubtypes.checkedPositive suffix",
@@ -58,16 +58,17 @@ int main(void) {
     "arg1 was rejected by StructuralSubtypes.checkedPositive",
     "error while executing at wasm backtrace:\n    0: frame\n\nCaused by:\n    arg0 was rejected by StructuralSubtypes.checkedPositive suffix",
     "some other error\n\nCaused by:\n    arg0 was rejected by StructuralSubtypes.checkedPositive",
-    "error while executing at wasm backtrace:\n    0: frame\n\nCaused by:\n    first cause\n\nCaused by:\n    arg0 was rejected by StructuralSubtypes.checkedPositive"
+    "error while executing at wasm backtrace:\n    0: frame\n\nCaused by:\n    first cause\n\nCaused by:\n    arg0 was rejected by StructuralSubtypes.checkedPositive",
+    "error while executing at wasm backtrace:\n    0: frame\n\nCaused by:\n    arg0 was rejected by StructuralSubtypes.checkedPositive\n\n"
   };
-  for (unsigned i = 0; i < 2; ++i) if (!exact_cause(good[i], strlen(good[i]), cause)) return 2;
-  for (unsigned i = 0; i < 7; ++i) if (exact_cause(bad[i], strlen(bad[i]), cause)) return 3;
+  for (unsigned i = 0; i < 3; ++i) if (!exact_cause(good[i], strlen(good[i]), cause)) return 2;
+  for (unsigned i = 0; i < 8; ++i) if (exact_cause(bad[i], strlen(bad[i]), cause)) return 3;
   const char hidden[] = "arg0 was rejected by StructuralSubtypes.checkedPositive\0hidden";
   if (exact_cause(hidden, sizeof(hidden) - 1, cause)) return 4;
-  printf("{\"snapshots\":%u,\"diagnosticControls\":10}\n", snapshots);
+  printf("{\"snapshots\":%u,\"diagnosticControls\":12}\n", snapshots);
 }
 `);
 	await runCopied("/usr/bin/cc", [...flags, "controls.c", `-L${join(wasmtime, "lib")}`, `-Wl,-rpath,${join(wasmtime, "lib")}`, "-lwasmtime", "-o", "controls"], root, { ...copiedCleanEnvironment, PATH: "/usr/bin:/bin" });
 	const observed = await runCopied(join(root, "controls"), [], root);
-	assert.equal(observed.stderr, ""); assert.deepEqual(JSON.parse(observed.stdout), { snapshots: 12, diagnosticControls: 10 });
+	assert.equal(observed.stderr, ""); assert.deepEqual(JSON.parse(observed.stdout), { snapshots: 12, diagnosticControls: 12 });
 });
