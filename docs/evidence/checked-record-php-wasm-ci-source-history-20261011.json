@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-php-wasm-ci-v1",
+  "predecessorCommit": "d65842fa5ac87dda2a364adc43c510685730027c",
+  "updates": [
+    {
+      "path": "tests/checked-records.test.mjs",
+      "currentSha256": "11a3debab91de4da6516102dd7efb91cdd1ad22559ff468f12e29b8e60772459",
+      "previousSha256": "402e293027ea9ea5ec453f247ebb40d22c4910ce6c5ab5bfe4c01d2d3efa952e",
+      "edits": [
+        {
+          "start": 2981,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-php-wasm-ci-tests.mjs\";\nimport \"./helpers/checked-record-php-wasm-ci-shell-tests.mjs\";\nimport \"./helpers/checked-record-php-wasm-ci-workflow-tests.mjs\";\nimport \"./helpers/checked-record-php-wasm-ci-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-php-wasm-archive-history.mjs",
+      "currentSha256": "43630720b5a04fdc262c41ab27443edf5bd0f70c9b5c6096435b544c7cbd2395",
+      "previousSha256": "f976c55a6c6702db599e1c03ccc5fd012e89a3485725044a9718b9143ca82c76",
+      "edits": [
+        {
+          "start": 149,
+          "previous": "",
+          "current": "import { beforeCheckedRecordPhpWasmCiSource } from \"./checked-record-php-wasm-ci-history.mjs\";\n"
+        },
+        {
+          "start": 2232,
+          "previous": "",
+          "current": "\tsource = beforeCheckedRecordPhpWasmCiSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "8466dae663e1bc55c09dc52f1e0d88cdbe9ad21c7f2dc2222e1ebd72a7eab2a7",
+      "previousSha256": "2f0c8eeae980f703600f6e1f9c7a2660e3ccb9e86c6387a98fd496de67aaac6c",
+      "edits": [
+        {
+          "start": 1885,
+          "previous": "",
+          "current": "import { checkedRecordPhpWasmCiChangedPaths } from \"./checked-record-php-wasm-ci-history.mjs\";\n"
+        },
+        {
+          "start": 62032,
+          "previous": "",
+          "current": "\t, ...checkedRecordPhpWasmCiChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}
