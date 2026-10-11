@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "fincontainers@1.0.0",
+    "name": "fincontainers",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51386193,
+          "path": "archives/fincontainers-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+          "sha256": "883a94bbbabd80c8caa77c9d4bb8dd8618cd37c25d1852db88a63eb821f60f19"
+        }
+      ],
+      "ecosystem": "pypi",
+      "name": "fincontainers",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "pypi",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "78285c576051d34e3e6f477ef1f976e346d8bb5bac1c7854d0526b7f02fd0ecc",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "7f0b1f0b3e3b96203c2a0339e37bb435bf897913332709d26b5575a61f2c61e7"
+  }
+}

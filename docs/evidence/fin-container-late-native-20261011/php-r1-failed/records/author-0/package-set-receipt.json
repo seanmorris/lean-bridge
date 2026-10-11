@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "fincontainers@1.0.0",
+    "name": "fincontainers",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51383988,
+          "path": "archives/example-fincontainers-1.0.0-linux-x86_64.zip",
+          "sha256": "e610396adbdbcc3ae5aa9781cbdf4687d11caf5e59ce3eec12bd72838937188b"
+        }
+      ],
+      "ecosystem": "composer",
+      "name": "example/fincontainers",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "php-native",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "04b65644714e1c8e0005edeeca05046267504df82da2140a00cad9a29f58997b",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "7e4b9d200754a1927768a970c2aede15acfcea7fbf52ecba2e299d8f3793f362"
+  }
+}

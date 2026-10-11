@@ -1,0 +1,171 @@
+{
+  "bindingIrSha256": "04b65644714e1c8e0005edeeca05046267504df82da2140a00cad9a29f58997b",
+  "component": {
+    "id": "fincontainers@1.0.0",
+    "name": "fincontainers",
+    "version": "1.0.0"
+  },
+  "ecosystem": "composer",
+  "files": {
+    "README.md": {
+      "bytes": 7014,
+      "sha256": "c580b106cc0d9fdcc335aa53210182097667021cbce41f1d383b2536b99579e8"
+    },
+    "binding-manifest.json": {
+      "bytes": 1751,
+      "sha256": "87eba8232d2432ac5eb0b88dbd04a2fdde624f1917c79f92570738bc1ed33a27"
+    },
+    "composer.json": {
+      "bytes": 544,
+      "sha256": "f5ecf34694a697ae92c37bd6037666aabbd33484f6d838754ffbfbba65a87295"
+    },
+    "lean-bridge/component/allocation-guard.h": {
+      "bytes": 1309,
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    "lean-bridge/component/artifacts.json": {
+      "bytes": 1530,
+      "sha256": "72bf7df65008e19f0212698398dc8790af2c8eac493d6cf613d3565f80ea51c9"
+    },
+    "lean-bridge/component/binding-ir.json": {
+      "bytes": 28473,
+      "sha256": "4ba82ff0fd0fdd73648ac5002e59cad99ce5d49074cd645fe7c7174832dd4e98"
+    },
+    "lean-bridge/component/component.h": {
+      "bytes": 1795,
+      "sha256": "b1cacf94eca5120acfda12803c878e8e9ed5d3dd33908f82fea71d54588364c5"
+    },
+    "lean-bridge/component/generated.lean": {
+      "bytes": 9820,
+      "sha256": "cbfbc275937a4bc8286054018097a6921c15629428f4a5161dd79a34578edb12"
+    },
+    "lean-bridge/component/metadata.json": {
+      "bytes": 42553,
+      "sha256": "2583000f4330e9aa2dccc839bedc40f1577ec08aa566fa11d65ff708dbdcfb9c"
+    },
+    "lean-bridge/component/model.json": {
+      "bytes": 61904,
+      "sha256": "c561fe54bcf18dfda165c00e1c7680960204bacb51ca773367e01072fc822a90"
+    },
+    "lean-bridge/component/native-component.json": {
+      "bytes": 4362,
+      "sha256": "9da06cf98fa5a04a279a811f26314ba8e52f5b882b495bbfe950c521d2cf7487"
+    },
+    "lean-bridge/include/fincontainers.h": {
+      "bytes": 6150,
+      "sha256": "ca67b6db7ae7aa3c514e9bd8dd3ee2db1646a35fe544e00d96870fbe8bdd97b1"
+    },
+    "lean-bridge/native-c-adapter.json": {
+      "bytes": 1373,
+      "sha256": "72ec4d4e65e53e2db553ae2d62497d7e02c94293ede1d93fc3227a2dd89f6374"
+    },
+    "lean-bridge/runtime.json": {
+      "bytes": 1466,
+      "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    },
+    "licenses/Lean-LICENSE": {
+      "bytes": 9160,
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    "licenses/Lean-LICENSES": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "licenses/source-notices.json": {
+      "bytes": 1910,
+      "sha256": "8cfb9da9d3419bce478b4a5055a8caa9e65ef8958b64cd7aa35df345bae2dfbd"
+    },
+    "licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "native/linux-x64/libcomponent_3acdf22f1550490d7b06.so": {
+      "bytes": 74880,
+      "sha256": "83a7b20759f9c65d363fc158796ed8f7941afd34de74f536acef48d13e86fcc5"
+    },
+    "native/linux-x64/libfincontainers.so": {
+      "bytes": 53728,
+      "sha256": "517cd6dbc3c379671357ba627a4dbffb1b4a3495987bed10c2b3cb4880717fa3"
+    },
+    "native/linux-x64/liblean_bridge_native.so": {
+      "bytes": 21464,
+      "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+    },
+    "native/linux-x64/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "src/Api.php": {
+      "bytes": 5332,
+      "sha256": "d7911012e1091a67d18af085ea4b2d770bbcb7f2c73bfb5bcd7f175ae75a630e"
+    },
+    "src/Internal/Native.php": {
+      "bytes": 40300,
+      "sha256": "4b4c53768f59455ef14391b38ba8a7ddcff972ef85d9343166a8901a32c5f49b"
+    },
+    "src/Internal/Runtime.php": {
+      "bytes": 4336,
+      "sha256": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14"
+    }
+  },
+  "glibcMinimumVersion": "2.36",
+  "kind": "lean-bridge-ordinary-php-package",
+  "name": "example/fincontainers",
+  "namespace": "LeanFincontainers",
+  "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+  "schemaVersion": 1,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "337ef08502b9bbdb7cede451ca8b8f0bfbaa1dd0a809dc38ae73c4a89109804d",
+    "exportConfigurationSource": "{\n  \"modules\": [\n    \"FinContainers\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"php-native\": {\n      \"name\": \"example/fincontainers\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+    "extractorSha256": "8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 126744,
+          "interfaceSha256": "9fd87088fb33aadb835215136591700005f63604fdd5ab07ae98b01157a79e52",
+          "sha256": "73de8cafb6d528f7d9b465fd2370cdf1521d77cc93310657edb8291c5fd37e38"
+        },
+        "module": "FinContainers",
+        "source": {
+          "bytes": 2156,
+          "path": "FinContainers.lean",
+          "sha256": "5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "exportModules": [
+        "FinContainers"
+      ],
+      "exports": [],
+      "metadata": {
+        "invocationIdentitySha256": "6c956d2ccd42c972d2aa6adb2288dc7645f6bc1209c462999447bdc838133088",
+        "modules": [
+          {
+            "interfaceSha256": "9fd87088fb33aadb835215136591700005f63604fdd5ab07ae98b01157a79e52",
+            "name": "FinContainers",
+            "sourcePath": "FinContainers.lean",
+            "sourceSha256": "5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "FinContainers"
+      ],
+      "profile": "native-library-v1",
+      "resources": []
+    },
+    "sourceNoticesSha256": "8cfb9da9d3419bce478b4a5055a8caa9e65ef8958b64cd7aa35df345bae2dfbd",
+    "sourceTreeSha256": "7e4b9d200754a1927768a970c2aede15acfcea7fbf52ecba2e299d8f3793f362"
+  },
+  "version": "1.0.0"
+}

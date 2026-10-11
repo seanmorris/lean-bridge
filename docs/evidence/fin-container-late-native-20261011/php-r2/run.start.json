@@ -1,0 +1,28 @@
+{
+  "revision": "838c5546f91df93b14c8b0cb4f04157cc3d8a36d",
+  "started": "2026-10-11T03:39:59.413Z",
+  "runnerSha256": "9ed8ebca609345184ba9f996c5f50a7e5e4af1047e009ea03ab02f9fae64ae68",
+  "command": "/usr/bin/taskset",
+  "args": [
+    "-c",
+    "3",
+    "/usr/bin/node",
+    "--test",
+    "--test-concurrency=1",
+    "tests/helpers/fin-container-late-installed-tests.mjs"
+  ],
+  "environment": {
+    "LEAN_BRIDGE_FIN_LATE_PROFILES": "php-native",
+    "LEAN_BRIDGE_FIN_LATE_REPORT": "/app/build/vo1454-late-native-php-r2-838c554/edges-php-native.json",
+    "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+    "LEAN_BRIDGE_PYTHON": "/app/.toolchains/python311/bin/python3",
+    "LEAN_BRIDGE_RUBY": "/app/.toolchains/ruby33/bin/ruby",
+    "LEAN_BRIDGE_PHP": "/usr/bin/php",
+    "LEAN_BRIDGE_COMPOSER": "/usr/bin/composer",
+    "LEAN_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MAKEFLAGS": "-j1"
+  },
+  "minimumMiB": 2352
+}

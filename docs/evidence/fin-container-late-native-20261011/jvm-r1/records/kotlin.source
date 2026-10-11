@@ -1,0 +1,163 @@
+import java.math.BigInteger
+import org.leanbridge.fincontainers.Api
+import org.leanbridge.fincontainers.Option
+
+private var checks = 0
+private fun check(value: Boolean, label: String) { if (!value) throw AssertionError("failed: " + label); checks++ }
+private fun rejected(parameter: String, bound: String, action: () -> Any?): Boolean =
+    try { action(); false }
+    catch (error: IllegalArgumentException) { error.message == parameter + " is not below its Fin " + bound + " bound" }
+private fun illegal(action: () -> Any?): Boolean = try { action(); false } catch (error: IllegalArgumentException) { true }
+private fun n(value: Long): BigInteger = BigInteger.valueOf(value)
+
+fun main() {
+    val huge = BigInteger.ONE.shiftLeft(70)
+    val word = BigInteger.ONE.shiftLeft(32)
+    val digits = Array(10) { n(it.toLong()) }
+    // Array (Fin 10): every element is checked; results stay below the bound.
+    check(Api.mirrorAll(digits).contentEquals(Array(10) { n(9L - it) }), "mirror endpoints")
+    check(Api.mirrorAll(arrayOf()).isEmpty(), "empty array")
+    for (position in 0 until 3) {
+        val bad = arrayOf(n(1), n(2), n(3))
+        bad[position] = n(10)
+        check(rejected("arg0[$position]", "10") { Api.mirrorAll(bad) }, "invalid element at " + position)
+        check(bad[position] == n(10), "input unchanged")
+    }
+    check(rejected("arg0[0]", "10") { Api.mirrorAll(arrayOf(word, n(1), n(2))) }, "word element")
+    check(illegal { Api.mirrorAll(arrayOf(n(-1), n(1))) } && !rejected("arg0[0]", "10") { Api.mirrorAll(arrayOf(n(-1), n(1))) }, "negative is the Nat error")
+    // Array (Fin 0): only the empty array has values.
+    check(Api.countNone(arrayOf()) == n(0), "Fin 0 empty")
+    check(rejected("arg0[0]", "0") { Api.countNone(arrayOf(n(0))) }, "Fin 0 present")
+    // List Huge: a 2^70 bound compared limb by limb.
+    val last = huge - BigInteger.ONE
+    check(Api.sumHuge(arrayOf(word, last)) == word + last && Api.sumHuge(arrayOf()) == n(0), "huge sums")
+    check(rejected("arg0[1]", huge.toString()) { Api.sumHuge(arrayOf(word, huge)) }, "huge bound")
+    // Option (Fin 1): none is valid; a present value is checked.
+    check(Api.orDefault(Option.none()) == n(7) && Api.orDefault(Option.some(n(0))) == n(0), "option values")
+    check(rejected("arg0?", "1") { Api.orDefault(Option.some(n(1))) }, "present Fin 1")
+    // Array (Option Digit): only present elements are checked.
+    val mixed: Array<Option<BigInteger>> = arrayOf(Option.some(n(1)), Option.none(), Option.some(n(9)))
+    check(Api.present(mixed).contentEquals(arrayOf(n(1), n(9))), "present digits")
+    mixed[2] = Option.some(n(10))
+    check(rejected("arg0[2]?", "10") { Api.present(mixed) }, "present invalid")
+    mixed[2] = Option.none()
+    check(Api.present(mixed).size == 1, "absent is never read")
+    // List (Array Digit) -> Option (List Digit): nested rows.
+    val rows = arrayOf(arrayOf(n(1), n(2)), arrayOf(n(3)))
+    val flat = Api.flatten(rows)
+    check(flat.isSome() && flat.value().contentEquals(arrayOf(n(1), n(2), n(3))), "flatten rows")
+    check(!Api.flatten(arrayOf()).isSome(), "no rows")
+    rows[1][0] = n(10)
+    check(rejected("arg0[1][0]", "10") { Api.flatten(rows) }, "nested invalid last")
+    // A late refined argument after an unrefined one.
+    val names = arrayOf("a", "b")
+    check(Api.label(names, arrayOf(n(1), n(3))) == "a:1,b:3", "label")
+    check(rejected("arg1[1]", "4") { Api.label(names, arrayOf(n(1), n(4))) } && names[1] == "b", "late argument, caller data unchanged")
+    // A result-only container refinement projects each element after Lean returns.
+    check(Api.wrapAll(arrayOf(n(100), huge)).contentEquals(arrayOf(n(2), n(2))) && Api.wrapAll(arrayOf()).isEmpty(), "wrapped results")
+    for (i in 0 until 1000) {
+        if (!rejected("arg0[0]", "10") { Api.mirrorAll(arrayOf(n(10L + i % 5))) }) throw AssertionError("invalid call accepted at " + i)
+        if (Api.mirrorAll(arrayOf(n(i % 10L)))[0] != n(9L - i % 10)) throw AssertionError("valid call failed at " + i)
+    }
+    checks += 2000
+    // All original checks precede this zero-bound and nested-position supplement.
+    val edgeBefore = checks
+    check(Api.emptyArray(arrayOf()).isEmpty(), "Fin 0 array round trip")
+    check(Api.emptyList(arrayOf()).isEmpty(), "Fin 0 list round trip")
+    check(!Api.emptyOption(Option.none()).isSome(), "Fin 0 none round trip")
+    for (value in arrayOf(n(0), n(1), huge)) {
+        val input = arrayOf(value)
+        val option = Option.some(value)
+        check(rejected("arg0[0]", "0") { Api.emptyArray(input) }, "Fin 0 nonempty array")
+        check(rejected("arg0[0]", "0") { Api.emptyList(input) }, "Fin 0 nonempty list")
+        check(rejected("arg0?", "0") { Api.emptyOption(option) }, "Fin 0 some")
+        check(input.contentEquals(arrayOf(value)) && option.isSome() && option.value() == value, "Fin 0 inputs unchanged")
+    }
+    check(!Api.optionalDigits(Option.none()).isSome(), "optional list absent")
+    val edgeEmpty = Api.optionalDigits(Option.some(arrayOf<BigInteger>()))
+    check(edgeEmpty.isSome() && edgeEmpty.value().isEmpty(), "optional list present empty")
+    check(Api.optionalDigits(Option.some(arrayOf(n(0), n(9)))).value().contentEquals(arrayOf(n(0), n(9))), "optional list endpoints")
+    for (position in 0 until 3) {
+        val values = arrayOf(n(1), n(2), n(3))
+        values[position] = n(10)
+        val snapshot = values.copyOf()
+        val options = values.map { Option.some(it) }.toTypedArray()
+        check(rejected("arg0[$position]?", "10") { Api.present(options) }, "nested option invalid position")
+        check(options.all { it.isSome() } && options.map { it.value() }.toTypedArray().contentEquals(snapshot), "nested options unchanged")
+        check(rejected("arg0?[$position]", "10") { Api.optionalDigits(Option.some(values)) }, "optional list invalid position")
+        check(values.contentEquals(snapshot), "optional list unchanged")
+        for (column in 0 until 3) {
+            val table = arrayOf(arrayOf(n(1), n(2), n(3)), arrayOf(n(4), n(5), n(6)), arrayOf(n(7), n(8), n(9)))
+            table[position][column] = n(10)
+            val before = table.map { it.copyOf() }.toTypedArray()
+            check(rejected("arg0[$position][$column]", "10") { Api.flatten(table) }, "nested row and member positions")
+            check(table.contentDeepEquals(before), "nested rows unchanged")
+        }
+    }
+    check(Api.present(arrayOf(Option.none(), Option.none(), Option.none())).isEmpty(), "absent options")
+    val edgeRows = Api.flatten(arrayOf(arrayOf(), arrayOf(), arrayOf()))
+    check(edgeRows.isSome() && edgeRows.value().isEmpty(), "present empty rows")
+    fun edgeNull(action: () -> Any?): Boolean = try { action(); false } catch (error: NullPointerException) { true }
+    check(edgeNull { Api.emptyArray(null) }, "null Array")
+    check(edgeNull { Api.emptyList(null) }, "null List")
+    check(edgeNull { Api.optionalDigits(Option.some(null)) }, "present null List")
+    fun edgeNegative(action: () -> Any?): Boolean = try { action(); false }
+        catch (error: IllegalArgumentException) { error.javaClass == IllegalArgumentException::class.java && error.message == "Nat cannot be negative" }
+    check(edgeNegative { Api.emptyArray(arrayOf(n(-1))) }, "negative Fin 0 Array is Nat error")
+    check(edgeNegative { Api.emptyList(arrayOf(n(-1))) }, "negative Fin 0 List is Nat error")
+    check(edgeNegative { Api.emptyOption(Option.some(n(-1))) }, "negative Fin 0 Option is Nat error")
+    for (position in 0 until 3) {
+        val values = arrayOf(n(1), n(2), n(3))
+        values[position] = n(-1)
+        val before = values.copyOf()
+        check(edgeNegative { Api.optionalDigits(Option.some(values)) }, "negative nested Nat")
+        check(values.contentEquals(before), "negative input unchanged")
+    }
+    for (cycle in 0 until 1000) {
+        check(rejected("arg0[0]", "0") { Api.emptyArray(arrayOf(n(0))) }, "cycle invalid Array")
+        check(Api.emptyArray(arrayOf()).isEmpty(), "cycle valid Array")
+        check(rejected("arg0[0]", "0") { Api.emptyList(arrayOf(n(0))) }, "cycle invalid List")
+        check(Api.emptyList(arrayOf()).isEmpty(), "cycle valid List")
+        check(rejected("arg0?", "0") { Api.emptyOption(Option.some(n(0))) }, "cycle invalid Option")
+        check(!Api.emptyOption(Option.none()).isSome(), "cycle valid Option")
+        check(rejected("arg0[1]?", "10") { Api.present(arrayOf(Option.some(n(1)), Option.some(n(10)), Option.none())) }, "cycle invalid nested option")
+        check(Api.present(arrayOf(Option.some(n(1)), Option.none(), Option.some(n(9)))).contentEquals(arrayOf(n(1), n(9))), "cycle valid nested option")
+        check(rejected("arg0[1][0]", "10") { Api.flatten(arrayOf(arrayOf(n(1)), arrayOf(n(10)), arrayOf(n(9)))) }, "cycle invalid nested rows")
+        check(Api.flatten(arrayOf(arrayOf(n(1)), arrayOf(), arrayOf(n(9)))).value().contentEquals(arrayOf(n(1), n(9))), "cycle valid nested rows")
+        check(rejected("arg0?[1]", "10") { Api.optionalDigits(Option.some(arrayOf(n(1), n(10), n(9)))) }, "cycle invalid optional list")
+        check(Api.optionalDigits(Option.some(arrayOf(n(1), n(9)))).value().contentEquals(arrayOf(n(1), n(9))), "cycle valid optional list")
+    }
+    check(checks - edgeBefore == 12062, "exact edge assertion coverage")
+
+    run {
+        val lateBefore = checks
+        val lateNames = arrayOf("alpha", "mid\u0000dle", "omega")
+        val savedNames = lateNames.copyOf()
+        var lateOffsets = arrayOf(n(1), n(2), n(3))
+        var savedOffsets = lateOffsets.copyOf()
+        for (i in 0..2) {
+            lateNames[i] += "!"; check(!lateNames.contentEquals(savedNames), "name snapshot detects mutation"); lateNames[i] = savedNames[i]
+            lateOffsets[i] += BigInteger.ONE; check(!lateOffsets.contentEquals(savedOffsets), "offset snapshot detects mutation"); lateOffsets[i] -= BigInteger.ONE
+        }
+        check(lateNames.contentEquals(savedNames), "name controls restored")
+        check(lateOffsets.contentEquals(savedOffsets), "offset controls restored")
+        // Nine position/value combinations, then 1,000 rejection/recovery pairs.
+        for (cycle in 0 until 1009) {
+            val position = cycle % 3
+            val representation = (cycle / 3) % 3
+            lateOffsets = arrayOf(n(1), n(2), n(3))
+            lateOffsets[position] = if (representation == 2) BigInteger.ONE.shiftLeft(70) else n(4L + representation)
+            savedOffsets = lateOffsets.copyOf()
+            check(rejected("arg1[$position]", "4") { Api.label(lateNames, lateOffsets) }, "late bound diagnostic")
+            check(lateNames.contentEquals(savedNames), "all names unchanged after rejection")
+            check(lateOffsets.contentEquals(savedOffsets), "all offsets unchanged after rejection")
+            lateOffsets = arrayOf(n(1), n(2), n(3)); savedOffsets = lateOffsets.copyOf()
+            check(Api.label(lateNames, lateOffsets) == "alpha:1,mid\u0000dle:2,omega:3", "late recovery output")
+            check(lateNames.contentEquals(savedNames), "all names unchanged after recovery")
+            check(lateOffsets.contentEquals(savedOffsets), "all offsets unchanged after recovery")
+        }
+        check(checks - lateBefore == 6062, "complete late-input assertion count")
+    }
+
+    println("fin-container-ok:$checks")
+}

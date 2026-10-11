@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "fincontainers@1.0.0",
+    "name": "fincontainers",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51397355,
+          "path": "archives/FinContainers.Api.1.0.0.nupkg",
+          "sha256": "33dcf93414e1733fc7f65129712269b9fc447d5bd98180ebd3f551c18231847c"
+        }
+      ],
+      "ecosystem": "nuget",
+      "name": "FinContainers.Api",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "nuget",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "df1b2c8df77d63fb270fd87fbb363044d8c44659b13ec1c7eab3abccc3a18d56",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "34ccde538f829040cbfc9024b71845d46f16bec86a44a779af7f2d9944243004"
+  }
+}

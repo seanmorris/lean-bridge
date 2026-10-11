@@ -1,0 +1,746 @@
+{
+  "archives": {
+    "archives/fincontainers-1.0.0.jar": "532eeca81c3a691d36701bb436c6dd7424848f20f28f5daafe188ae8a990d86e",
+    "archives/fincontainers-1.0.0.pom": "92fac75f9c98c589f03820b64e50474ee00fdc076fdf49df2310712dfffd6dbf"
+  },
+  "authorRoots": 2,
+  "kind": "fin-container-late-native-v1",
+  "profiles": [
+    "java",
+    "kotlin"
+  ],
+  "recordFiles": {
+    "author-0/FinContainers.lean": {
+      "bytes": 2156,
+      "sha256": "5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57"
+    },
+    "author-0/lean-bridge.exports.json": {
+      "bytes": 177,
+      "sha256": "48ed7763a77692edd9511480f67e867786e0bf520e7e534889c1c42d2aa44dd2"
+    },
+    "author-0/model.json": {
+      "bytes": 61906,
+      "sha256": "708733121fd6b8ccca0ba133cc73181c74c96651adb2ae783645fb2c5c9d1592"
+    },
+    "author-0/package-set-receipt.json": {
+      "bytes": 1312,
+      "sha256": "17a2a72fa37ea4769bb842114a93cf49ed31b48bfc2d43fd660937cabb92b901"
+    },
+    "author-1/FinContainers.lean": {
+      "bytes": 2156,
+      "sha256": "5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57"
+    },
+    "author-1/lean-bridge.exports.json": {
+      "bytes": 177,
+      "sha256": "48ed7763a77692edd9511480f67e867786e0bf520e7e534889c1c42d2aa44dd2"
+    },
+    "author-1/model.json": {
+      "bytes": 61906,
+      "sha256": "708733121fd6b8ccca0ba133cc73181c74c96651adb2ae783645fb2c5c9d1592"
+    },
+    "author-1/package-set-receipt.json": {
+      "bytes": 1312,
+      "sha256": "17a2a72fa37ea4769bb842114a93cf49ed31b48bfc2d43fd660937cabb92b901"
+    },
+    "context.json": {
+      "bytes": 292,
+      "sha256": "d105aa9be7f2c6bf40b5fa8bac9f36b7c67c45bbe1ec87178b387d3f5565574f"
+    },
+    "java.before.stdout": {
+      "bytes": 23,
+      "sha256": "c14310cc7d74e3e35ee8e74f163ba53dca20087d563078834bb05ecd172a1062"
+    },
+    "java.closure.json": {
+      "bytes": 369,
+      "sha256": "afc7e44fce2ded0a989cd8f8931ff69a8b53ef9ced490db9bf3905334732fb99"
+    },
+    "java.receipt.json": {
+      "bytes": 15815,
+      "sha256": "8255a4e347d36e6c43fc5e6a92809515d5d270b92d540fd2b1478bec92e81fef"
+    },
+    "java.relocated.stdout": {
+      "bytes": 23,
+      "sha256": "c14310cc7d74e3e35ee8e74f163ba53dca20087d563078834bb05ecd172a1062"
+    },
+    "java.source": {
+      "bytes": 13932,
+      "sha256": "25568b9fdda3e4edf76adb1d3af7f879c248f5da6343608ee0aad5a278c9d0e4"
+    },
+    "kotlin.before.stdout": {
+      "bytes": 23,
+      "sha256": "3b5c4dca0bb4f771e70677ee15f7e378c38967e05d1b72fed22d615dd18deabc"
+    },
+    "kotlin.closure.json": {
+      "bytes": 369,
+      "sha256": "9c8f289b27f0a8f5b89215b1c377c008f373fb54ef4893e51c8cd1f26bca26c1"
+    },
+    "kotlin.receipt.json": {
+      "bytes": 15815,
+      "sha256": "8255a4e347d36e6c43fc5e6a92809515d5d270b92d540fd2b1478bec92e81fef"
+    },
+    "kotlin.relocated.stdout": {
+      "bytes": 23,
+      "sha256": "3b5c4dca0bb4f771e70677ee15f7e378c38967e05d1b72fed22d615dd18deabc"
+    },
+    "kotlin.source": {
+      "bytes": 11356,
+      "sha256": "c1ee985124197528f02a8f8add6133a8de412fa8b07d8493a62f1910a9fdc68c"
+    }
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "cf943fc40bad3905f1a43102b089e884d0fc70f701ef9a29cd206605b74115bc",
+      "checks": 20152,
+      "compilerFreePath": true,
+      "consumerSha256": "25568b9fdda3e4edf76adb1d3af7f879c248f5da6343608ee0aad5a278c9d0e4",
+      "deployedFiles": {
+        "classes/Consumer.class": "7fc8e0f4563135af916d285d5c63b33e16db70a5ed5f41c743869fd17089c1da",
+        "component.jar": "532eeca81c3a691d36701bb436c6dd7424848f20f28f5daafe188ae8a990d86e",
+        "consumer.java": "25568b9fdda3e4edf76adb1d3af7f879c248f5da6343608ee0aad5a278c9d0e4"
+      },
+      "dispatch": {
+        "observed": false,
+        "reason": "This supplement measures public behavior. Expanded source/adapter counters remain a separate required gate."
+      },
+      "exactPackageFiles": true,
+      "fixtureSha256": "5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57",
+      "installedFilesSha256": "8a90f0fb98eb3ac2c4d73ee4a1cf3c52fad7d243d260eb6e6cc8f62933d77aa8",
+      "installedFilesUnchanged": true,
+      "installedReceiptSha256": "8255a4e347d36e6c43fc5e6a92809515d5d270b92d540fd2b1478bec92e81fef",
+      "jvmEnvironment": {
+        "classpathFilesSha256": "089fb1c8a0350742ffc325eaf92f8d9436052eb3fbffcbdc191b89b3f58a5b36",
+        "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+        "packageFileSetSha256": "a8f19b6f7c2d42aa0bd5cf876b27324f98a2ee824471427a5fcc6e38fd48c01e",
+        "receiptSha256": "8255a4e347d36e6c43fc5e6a92809515d5d270b92d540fd2b1478bec92e81fef"
+      },
+      "lateInputs": {
+        "additionalChecks": 6063,
+        "inputTreesCompared": [
+          "arg0",
+          "arg1"
+        ],
+        "recoveries": 1009,
+        "rejections": 1009,
+        "snapshotMutationControls": 6
+      },
+      "modelSha256": "708733121fd6b8ccca0ba133cc73181c74c96651adb2ae783645fb2c5c9d1592",
+      "offlineInstall": true,
+      "packageFileSetSha256": "a8f19b6f7c2d42aa0bd5cf876b27324f98a2ee824471427a5fcc6e38fd48c01e",
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51446574,
+              "path": "archives/fincontainers-1.0.0.jar",
+              "sha256": "532eeca81c3a691d36701bb436c6dd7424848f20f28f5daafe188ae8a990d86e"
+            },
+            {
+              "bytes": 623,
+              "path": "archives/fincontainers-1.0.0.pom",
+              "sha256": "92fac75f9c98c589f03820b64e50474ee00fdc076fdf49df2310712dfffd6dbf"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:fincontainers",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "java",
+      "receiptSha256": "17a2a72fa37ea4769bb842114a93cf49ed31b48bfc2d43fd660937cabb92b901",
+      "refinements": {
+        "FinContainers.countNone": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "0",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.emptyArray": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "0",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "0",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.emptyList": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "0",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "0",
+                "kind": "fin"
+              }
+            ],
+            "kind": "list"
+          }
+        },
+        "FinContainers.emptyOption": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "0",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "0",
+                "kind": "fin"
+              }
+            ],
+            "kind": "option"
+          }
+        },
+        "FinContainers.flatten": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "10",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "list"
+              }
+            ],
+            "kind": "option"
+          }
+        },
+        "FinContainers.label": {
+          "parameters": [
+            null,
+            {
+              "arguments": [
+                {
+                  "bound": "4",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.mirrorAll": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.optionalDigits": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "list"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "10",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "list"
+              }
+            ],
+            "kind": "option"
+          }
+        },
+        "FinContainers.orDefault": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "1",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.present": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.sumHuge": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "1180591620717411303424",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.wrapAll": {
+          "parameters": [
+            null
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "7",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        }
+      },
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "result": {
+        "checks": 20152
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "7ba6e3c8153f3f7370cb621cf63fa65d509f204e1dc6784d5847e211c68651dd"
+    },
+    {
+      "bindingIrSha256": "cf943fc40bad3905f1a43102b089e884d0fc70f701ef9a29cd206605b74115bc",
+      "checks": 20151,
+      "compilerFreePath": true,
+      "consumerSha256": "c1ee985124197528f02a8f8add6133a8de412fa8b07d8493a62f1910a9fdc68c",
+      "deployedFiles": {
+        "component.jar": "532eeca81c3a691d36701bb436c6dd7424848f20f28f5daafe188ae8a990d86e",
+        "consumer.jar": "77d8a1dee7167bc34c68a151d1702f26c451f635dfe380663aa5cd9c0de92e07",
+        "consumer.kt": "c1ee985124197528f02a8f8add6133a8de412fa8b07d8493a62f1910a9fdc68c"
+      },
+      "dispatch": {
+        "observed": false,
+        "reason": "This supplement measures public behavior. Expanded source/adapter counters remain a separate required gate."
+      },
+      "exactPackageFiles": true,
+      "fixtureSha256": "5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57",
+      "installedFilesSha256": "8a90f0fb98eb3ac2c4d73ee4a1cf3c52fad7d243d260eb6e6cc8f62933d77aa8",
+      "installedFilesUnchanged": true,
+      "installedReceiptSha256": "8255a4e347d36e6c43fc5e6a92809515d5d270b92d540fd2b1478bec92e81fef",
+      "jvmEnvironment": {
+        "classpathFilesSha256": "2dbec6ba6de5cd4824fa504bf7a96b9e197dfce7355e9a5b188dda4c76813cf0",
+        "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+        "packageFileSetSha256": "a8f19b6f7c2d42aa0bd5cf876b27324f98a2ee824471427a5fcc6e38fd48c01e",
+        "receiptSha256": "8255a4e347d36e6c43fc5e6a92809515d5d270b92d540fd2b1478bec92e81fef"
+      },
+      "lateInputs": {
+        "additionalChecks": 6063,
+        "inputTreesCompared": [
+          "arg0",
+          "arg1"
+        ],
+        "recoveries": 1009,
+        "rejections": 1009,
+        "snapshotMutationControls": 6
+      },
+      "modelSha256": "708733121fd6b8ccca0ba133cc73181c74c96651adb2ae783645fb2c5c9d1592",
+      "offlineInstall": true,
+      "packageFileSetSha256": "a8f19b6f7c2d42aa0bd5cf876b27324f98a2ee824471427a5fcc6e38fd48c01e",
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51446574,
+              "path": "archives/fincontainers-1.0.0.jar",
+              "sha256": "532eeca81c3a691d36701bb436c6dd7424848f20f28f5daafe188ae8a990d86e"
+            },
+            {
+              "bytes": 623,
+              "path": "archives/fincontainers-1.0.0.pom",
+              "sha256": "92fac75f9c98c589f03820b64e50474ee00fdc076fdf49df2310712dfffd6dbf"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:fincontainers",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "kotlin",
+      "receiptSha256": "17a2a72fa37ea4769bb842114a93cf49ed31b48bfc2d43fd660937cabb92b901",
+      "refinements": {
+        "FinContainers.countNone": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "0",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.emptyArray": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "0",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "0",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.emptyList": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "0",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "0",
+                "kind": "fin"
+              }
+            ],
+            "kind": "list"
+          }
+        },
+        "FinContainers.emptyOption": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "0",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "0",
+                "kind": "fin"
+              }
+            ],
+            "kind": "option"
+          }
+        },
+        "FinContainers.flatten": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "10",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "list"
+              }
+            ],
+            "kind": "option"
+          }
+        },
+        "FinContainers.label": {
+          "parameters": [
+            null,
+            {
+              "arguments": [
+                {
+                  "bound": "4",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.mirrorAll": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.optionalDigits": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "list"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "10",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "list"
+              }
+            ],
+            "kind": "option"
+          }
+        },
+        "FinContainers.orDefault": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "1",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.present": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.sumHuge": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "1180591620717411303424",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.wrapAll": {
+          "parameters": [
+            null
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "7",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        }
+      },
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "result": {
+        "checks": 20151
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "7ba6e3c8153f3f7370cb621cf63fa65d509f204e1dc6784d5847e211c68651dd"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

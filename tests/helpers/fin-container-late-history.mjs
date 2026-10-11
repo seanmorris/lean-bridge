@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeFinLateCiSource } from "./fin-container-late-ci-history.mjs";
 
 export const finLateHistoryPath = "docs/evidence/fin-container-late-source-history-20261011.json";
 export const finLatePredecessor = "9f26b9b1f497c20d489893dd95c112e69051d27c";
@@ -48,6 +49,7 @@ export const reverseFinLateUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeFinLateSource = (path, source, expected) => {
+	source = beforeFinLateCiSource(path, source, expected);
 	if(typeof source !== "string" || !finLateChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

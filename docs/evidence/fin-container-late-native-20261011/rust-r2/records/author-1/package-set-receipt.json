@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "fincontainers@1.0.0",
+    "name": "fincontainers",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51373228,
+          "path": "archives/fincontainers-1.0.0.crate",
+          "sha256": "a29d58fb21dfd92b761206a62046437b97404b1955fd24046076986035fd7f73"
+        }
+      ],
+      "ecosystem": "cargo",
+      "name": "fincontainers",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "cargo",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "98051ec63951ae4cec62daf3de1ec6f08ae20fcfa11e5a409552a69613b29a3e",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "2ef6d87936afb6427f4328e63a0907e07b1406a68f24eb64fea9480abf694d79"
+  }
+}

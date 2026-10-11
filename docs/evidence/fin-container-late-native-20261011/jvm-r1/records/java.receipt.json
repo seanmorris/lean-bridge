@@ -1,0 +1,364 @@
+{
+  "bindingIrSha256": "cf943fc40bad3905f1a43102b089e884d0fc70f701ef9a29cd206605b74115bc",
+  "compiledProjectionSha256": "35d80b52ed63d128bdb26256a603deacc1305e210e645b19eed61957a6d46c31",
+  "component": {
+    "id": "fincontainers@1.0.0",
+    "name": "fincontainers",
+    "version": "1.0.0"
+  },
+  "ecosystem": "maven",
+  "files": {
+    "META-INF/MANIFEST.MF": {
+      "bytes": 23,
+      "sha256": "172b7aa6ab69ed805e5a9b5bbdbc6e770091086734509d44117852fc10592f6b"
+    },
+    "META-INF/lean-bridge/component/allocation-guard.h": {
+      "bytes": 1309,
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    "META-INF/lean-bridge/component/artifacts.json": {
+      "bytes": 1530,
+      "sha256": "f20aa8398dc909e81a5411b1f13bff2e61d6bcb5a23b4d407478553d04c3ec45"
+    },
+    "META-INF/lean-bridge/component/binding-ir.json": {
+      "bytes": 28473,
+      "sha256": "e0de05da766b6309fa0fe6efaf323c36efc317dc9bc710fef7095aaa74a018c8"
+    },
+    "META-INF/lean-bridge/component/component.h": {
+      "bytes": 1795,
+      "sha256": "b1cacf94eca5120acfda12803c878e8e9ed5d3dd33908f82fea71d54588364c5"
+    },
+    "META-INF/lean-bridge/component/generated.lean": {
+      "bytes": 9820,
+      "sha256": "cbfbc275937a4bc8286054018097a6921c15629428f4a5161dd79a34578edb12"
+    },
+    "META-INF/lean-bridge/component/metadata.json": {
+      "bytes": 42553,
+      "sha256": "2583000f4330e9aa2dccc839bedc40f1577ec08aa566fa11d65ff708dbdcfb9c"
+    },
+    "META-INF/lean-bridge/component/model.json": {
+      "bytes": 61906,
+      "sha256": "708733121fd6b8ccca0ba133cc73181c74c96651adb2ae783645fb2c5c9d1592"
+    },
+    "META-INF/lean-bridge/component/native-component.json": {
+      "bytes": 4364,
+      "sha256": "f37f29ac5bc4eb0beee263cb6005f11f6d05869624b5b689f52fc53f7c048135"
+    },
+    "META-INF/lean-bridge/jvm/binding-manifest.json": {
+      "bytes": 4390,
+      "sha256": "9597f5a52ef6dcb45ebe125274132ae8504875df9fd1f4c75ba92f010d6971c3"
+    },
+    "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/fincontainers/Api.java": {
+      "bytes": 4112,
+      "sha256": "5ad3452736b520224cc36d516567c239448430731323ebe3633b87682b88e33e"
+    },
+    "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/fincontainers/KotlinBridge.java": {
+      "bytes": 1668,
+      "sha256": "f244ad1e057732c075a6c85a8e6dabdc2eb9ad3c4eaded0d3fe96d6b2da48873"
+    },
+    "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/fincontainers/KotlinRuntime.java": {
+      "bytes": 25452,
+      "sha256": "4b9722f7de5b9a0d81cb3cfa4c61ec4139e01aac53c58ed05be827d1e3b0e19b"
+    },
+    "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/fincontainers/LeanBridgeException.java": {
+      "bytes": 243,
+      "sha256": "59f65fc31fe812c994b25ddb68c7f68d829ed9e8570fddea170740c3798ae191"
+    },
+    "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/fincontainers/NativeAssets.java": {
+      "bytes": 13519,
+      "sha256": "f78c02f9b8b9808a5ad91c21e7052ff8371f66d0ef798e5fc5b8cb331a6b0a79"
+    },
+    "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/fincontainers/Option.java": {
+      "bytes": 1046,
+      "sha256": "2af8e406772b79a9cb1b758b4d96842585df294c2e6c6ab13e7564894a401c42"
+    },
+    "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/fincontainers/Pair.java": {
+      "bytes": 710,
+      "sha256": "8070988a2d8923f66886889e57916d7d100478584c80d0d87fbd6e2672e67d35"
+    },
+    "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/fincontainers/Result.java": {
+      "bytes": 1611,
+      "sha256": "c12e81edd272cf08092f35e64fd4833470568ea7bef624101d2fcd182238dbd2"
+    },
+    "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/fincontainers/Runtime.java": {
+      "bytes": 24756,
+      "sha256": "ee2e23b85f7f36aea5014e56e791831f911cfbdd977940b4c4201bb19349173f"
+    },
+    "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/fincontainers/Scope.java": {
+      "bytes": 546,
+      "sha256": "9cca141f8f78b3c7f60e89d7f3579d1dfb155a7cc6f47bb2498f58ad252fc181"
+    },
+    "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/fincontainers/Unit.java": {
+      "bytes": 68,
+      "sha256": "5140bdcac0a01ff5f7f11351d5246295a18e2d8ffbffda75be171bdfee39387f"
+    },
+    "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/fincontainers/KotlinCalls.kt": {
+      "bytes": 1280,
+      "sha256": "7daf16ade5c4c1d9763dccf5ed0680e4f1a02d96f0b122e057c777e997850709"
+    },
+    "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/fincontainers/kotlin/Api.kt": {
+      "bytes": 4069,
+      "sha256": "2fb6dab43b5ec3fcdfe86d006be690886dd6745d5e1bfdaf845ab9f364c238ed"
+    },
+    "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/fincontainers/kotlin/LeanBridgeException.kt": {
+      "bytes": 140,
+      "sha256": "34d1f3aec7f87eda2bf8cc1bc0c802a7a1526e69af22a454211a01ddf2da3d45"
+    },
+    "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/fincontainers/kotlin/Option.kt": {
+      "bytes": 1388,
+      "sha256": "a1f8928f54097b6f61029401570842b4544642db02e12aadaaf9cf1ddf3d1dc7"
+    },
+    "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/fincontainers/kotlin/Pair.kt": {
+      "bytes": 769,
+      "sha256": "17661ac7f240c8bf29fc747725b0b02e7130e3fde03da4fbd7ec9877c53d0ca4"
+    },
+    "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/fincontainers/kotlin/Result.kt": {
+      "bytes": 1816,
+      "sha256": "4cba80faef6ced6d905682a20d38facaae75f06a4feec823cf0c2a86d59794c9"
+    },
+    "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/fincontainers/kotlin/Unit.kt": {
+      "bytes": 110,
+      "sha256": "4aae0988c325cecaa339d43c05d9d308bf35be7d35d93be1e1459983c5100962"
+    },
+    "META-INF/lean-bridge/licenses/Lean-LICENSE": {
+      "bytes": 9160,
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    "META-INF/lean-bridge/licenses/Lean-LICENSES": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "META-INF/lean-bridge/licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "META-INF/lean-bridge/licenses/source-notices.json": {
+      "bytes": 1912,
+      "sha256": "ce646c91b1b1b303733bc72a88858750a2818d2f9ddfe009242fcbfde1e04ce0"
+    },
+    "META-INF/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "META-INF/lean-bridge/native-c-adapter.json": {
+      "bytes": 1373,
+      "sha256": "4034f3d46c1682aaac8221bc9ba3a77763df72de96c536b1ff8c884cab61ee1c"
+    },
+    "META-INF/lean-bridge/native-jvm.json": {
+      "bytes": 16393,
+      "sha256": "35d80b52ed63d128bdb26256a603deacc1305e210e645b19eed61957a6d46c31"
+    },
+    "META-INF/lean-bridge/native/linux-x64/libcomponent_3acdf22f1550490d7b06.so": {
+      "bytes": 74880,
+      "sha256": "83a7b20759f9c65d363fc158796ed8f7941afd34de74f536acef48d13e86fcc5"
+    },
+    "META-INF/lean-bridge/native/linux-x64/libfincontainers.so": {
+      "bytes": 53728,
+      "sha256": "517cd6dbc3c379671357ba627a4dbffb1b4a3495987bed10c2b3cb4880717fa3"
+    },
+    "META-INF/lean-bridge/native/linux-x64/liblean_bridge_native.so": {
+      "bytes": 21464,
+      "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+    },
+    "META-INF/lean-bridge/native/linux-x64/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "META-INF/lean-bridge/runtime.json": {
+      "bytes": 1466,
+      "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    },
+    "META-INF/lean_bridge_org_leanbridge_fincontainers.kotlin_module": {
+      "bytes": 94,
+      "sha256": "7600a6c7aa7a5442e590ffad8391e7c8029acc60de0421a6df0b3f30191841c2"
+    },
+    "META-INF/maven/org.leanbridge/fincontainers/pom.xml": {
+      "bytes": 623,
+      "sha256": "92fac75f9c98c589f03820b64e50474ee00fdc076fdf49df2310712dfffd6dbf"
+    },
+    "README.md": {
+      "bytes": 5770,
+      "sha256": "6f11da38ce49e6a4febc64ed46ed04ec106bbf3014760d62f28fee1ebbc70c15"
+    },
+    "org/leanbridge/fincontainers/Api.class": {
+      "bytes": 1938,
+      "sha256": "7fb6e6bc4b1f370112b67ff6471aa8de12c437442eba7fa43592e9fe567e894a"
+    },
+    "org/leanbridge/fincontainers/KotlinBridge.class": {
+      "bytes": 1593,
+      "sha256": "c568b55957f25d2683060de275697ac3d839a64fd5aba204b2e17775b9bdb0ad"
+    },
+    "org/leanbridge/fincontainers/KotlinCalls.class": {
+      "bytes": 2279,
+      "sha256": "18ab8058bbc7e70643aa434462782a6fd1308f50f4870140e081fe04564b3ff3"
+    },
+    "org/leanbridge/fincontainers/KotlinRuntime.class": {
+      "bytes": 20048,
+      "sha256": "883e84c87619b6581df1402a672a22ee2b72ff98696f50ec9022840b5c0144af"
+    },
+    "org/leanbridge/fincontainers/LeanBridgeException.class": {
+      "bytes": 278,
+      "sha256": "a5eb4324fc66c1db582d4eb907f606adee6c28630db67e5e161fd87ff3c63e38"
+    },
+    "org/leanbridge/fincontainers/NativeAssets$_Assets.class": {
+      "bytes": 13380,
+      "sha256": "d95bf0149aa3c8e9e5a85533c9d3a1a9066adb30d7609a375d3d853140db5b6a"
+    },
+    "org/leanbridge/fincontainers/NativeAssets.class": {
+      "bytes": 418,
+      "sha256": "f8f536ab670271612ad9c5bb8e81badc09ebe16b0fff3d385bf93e6c56781053"
+    },
+    "org/leanbridge/fincontainers/Option$None.class": {
+      "bytes": 1370,
+      "sha256": "083952449266c6be18917dd1c6a4ac1356448f339b2ff4eaef88b9febf7690f0"
+    },
+    "org/leanbridge/fincontainers/Option$Some.class": {
+      "bytes": 1610,
+      "sha256": "4ebef651818f1f9a96f833be5a0f7f5a7a5cdc76385f2f0183129c50df907074"
+    },
+    "org/leanbridge/fincontainers/Option.class": {
+      "bytes": 841,
+      "sha256": "8d8a276285900c47a1acd00ea59693c902892f937dd482ee3283aee6d94163d6"
+    },
+    "org/leanbridge/fincontainers/Pair.class": {
+      "bytes": 1633,
+      "sha256": "dd966c5db0d3c2263459ab636cfad2729d52b16a31dc6300b8fba3be9ffe8314"
+    },
+    "org/leanbridge/fincontainers/Result$Err.class": {
+      "bytes": 1789,
+      "sha256": "9eb4ab8ed255591852d72804aeb89631a3b044d6964173314d2f464c55e531cb"
+    },
+    "org/leanbridge/fincontainers/Result$Ok.class": {
+      "bytes": 1777,
+      "sha256": "a8e1fa00e7783681ecf1a4d2f618a27eb8026f7c3afc45b71771d9c46b6e7204"
+    },
+    "org/leanbridge/fincontainers/Result.class": {
+      "bytes": 879,
+      "sha256": "e228beae6afdaea200534088bc4e4e394e9b08a7784f4a1bc3e36be1e031738c"
+    },
+    "org/leanbridge/fincontainers/Runtime.class": {
+      "bytes": 19860,
+      "sha256": "f4e4fb061ee60bc7f73dd15f48591b42c83ae1d7dd1bb66fc5819e30266f1b48"
+    },
+    "org/leanbridge/fincontainers/Scope.class": {
+      "bytes": 666,
+      "sha256": "f08754d178188a3226b8b3a5099c95d394a7a80be35899f15d839e8392d8db12"
+    },
+    "org/leanbridge/fincontainers/Unit.class": {
+      "bytes": 858,
+      "sha256": "d44f3f893148ac0ec5b224300c0e657a7f1dec7f8d34faeb2227fd59abaea42e"
+    },
+    "org/leanbridge/fincontainers/kotlin/Api$Companion.class": {
+      "bytes": 5597,
+      "sha256": "02eb913f619fdc63f1052ee83b074ba830f72e2fe1cc44c5e2577a3623ce1eb2"
+    },
+    "org/leanbridge/fincontainers/kotlin/Api.class": {
+      "bytes": 3758,
+      "sha256": "20de78805bc7557933f0b683f6f777a48b53087ca8b20a9cad141c8e8bfbde82"
+    },
+    "org/leanbridge/fincontainers/kotlin/LeanBridgeExceptionKt.class": {
+      "bytes": 451,
+      "sha256": "db6ca29585ecb6e746d3a81509599216793ff29303b658e09e801962d4d0e66e"
+    },
+    "org/leanbridge/fincontainers/kotlin/Option$Companion.class": {
+      "bytes": 1875,
+      "sha256": "829f51ffdc52d46e9dc19fdf6ac342edd43e4d4017ac49ac14c9ced2602d9343"
+    },
+    "org/leanbridge/fincontainers/kotlin/Option$None.class": {
+      "bytes": 1724,
+      "sha256": "c47c8e5a4848ce80ac9fc8f064567314aea9536c3fe33172ccb6ac6c29f9a140"
+    },
+    "org/leanbridge/fincontainers/kotlin/Option$Some.class": {
+      "bytes": 2135,
+      "sha256": "71a74f0a27f521a05350422643baecc2d98105ba5bf9940749b3396902ab68b5"
+    },
+    "org/leanbridge/fincontainers/kotlin/Option.class": {
+      "bytes": 1892,
+      "sha256": "75b879e63731513ba5320c219d207973f1b417c886d932da831e939592954ee3"
+    },
+    "org/leanbridge/fincontainers/kotlin/Pair.class": {
+      "bytes": 2157,
+      "sha256": "2c74c2b98cbedf4af53dc615b8cf9920f300e48871097df0c325c823868ea416"
+    },
+    "org/leanbridge/fincontainers/kotlin/Result$Companion.class": {
+      "bytes": 1963,
+      "sha256": "8c83d33199cb5c5edbbe47e037a8e443fd8161df8429ee2fc704aab1ca4810d6"
+    },
+    "org/leanbridge/fincontainers/kotlin/Result$Err.class": {
+      "bytes": 2403,
+      "sha256": "b6b2393723476cc18fe20ede9efa24e1c27ac59ba2437e03dc659fa23c560ac7"
+    },
+    "org/leanbridge/fincontainers/kotlin/Result$Ok.class": {
+      "bytes": 2391,
+      "sha256": "53089c86dc96b6da63220964f3258235cbbbf0fd28117878a87048c17ff40f21"
+    },
+    "org/leanbridge/fincontainers/kotlin/Result.class": {
+      "bytes": 2013,
+      "sha256": "8f6c1d9b2b82000f17ba582914fa49935ea24de77aaebede4b9c1821a307f817"
+    },
+    "org/leanbridge/fincontainers/kotlin/UnitKt.class": {
+      "bytes": 391,
+      "sha256": "8137310e10f36956f42ac8a99e1fb9eb2ee02d165d43525559bc985d6bd820fb"
+    }
+  },
+  "glibcMinimumVersion": "2.36",
+  "kind": "lean-bridge-ordinary-maven-package",
+  "kotlin": {
+    "namespace": "org.leanbridge.fincontainers.kotlin",
+    "standardLibraryVersion": "2.2.0"
+  },
+  "name": "org.leanbridge:fincontainers",
+  "namespace": "org.leanbridge.fincontainers",
+  "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+  "schemaVersion": 1,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "48ed7763a77692edd9511480f67e867786e0bf520e7e534889c1c42d2aa44dd2",
+    "exportConfigurationSource": "{\n  \"modules\": [\n    \"FinContainers\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"maven\": {\n      \"name\": \"org.leanbridge:fincontainers\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+    "extractorSha256": "8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 126744,
+          "interfaceSha256": "9fd87088fb33aadb835215136591700005f63604fdd5ab07ae98b01157a79e52",
+          "sha256": "73de8cafb6d528f7d9b465fd2370cdf1521d77cc93310657edb8291c5fd37e38"
+        },
+        "module": "FinContainers",
+        "source": {
+          "bytes": 2156,
+          "path": "FinContainers.lean",
+          "sha256": "5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "exportModules": [
+        "FinContainers"
+      ],
+      "exports": [],
+      "metadata": {
+        "invocationIdentitySha256": "6c956d2ccd42c972d2aa6adb2288dc7645f6bc1209c462999447bdc838133088",
+        "modules": [
+          {
+            "interfaceSha256": "9fd87088fb33aadb835215136591700005f63604fdd5ab07ae98b01157a79e52",
+            "name": "FinContainers",
+            "sourcePath": "FinContainers.lean",
+            "sourceSha256": "5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "FinContainers"
+      ],
+      "profile": "native-library-v1",
+      "resources": []
+    },
+    "sourceNoticesSha256": "ce646c91b1b1b303733bc72a88858750a2818d2f9ddfe009242fcbfde1e04ce0",
+    "sourceTreeSha256": "7ba6e3c8153f3f7370cb621cf63fa65d509f204e1dc6784d5847e211c68651dd"
+  },
+  "version": "1.0.0"
+}

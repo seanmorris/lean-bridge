@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "fincontainers@1.0.0",
+    "name": "fincontainers",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 50117632,
+          "path": "archives/fincontainers-1.0.0-x86_64-linux.gem",
+          "sha256": "8c147f228b91dcac62ade3a9c1e2ae5554f98e09248b0e5195095c97f1699350"
+        }
+      ],
+      "ecosystem": "rubygems",
+      "name": "fincontainers",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "rubygems",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "cddb3dd014b6b75972fd7a1321482985c60e0ad6176268535e97ead8aeef00c5",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "87718ce385ae1f6ac4902b2a19637811b9ea93e86724b664fcd513b7244d7d11"
+  }
+}

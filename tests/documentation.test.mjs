@@ -18,6 +18,7 @@ import { generateJavaScriptPackage } from "../src/backends/javascript/generate.m
 import { docPages } from "../site/registry.mjs";
 import { finContainerEntryCiInvocation, finContainerEntryCiSelections } from "./helpers/fin-container-entry-ci.mjs";
 import { assertFinContainerEdgeWorkflow, disableFinContainerEdgeWorkflow } from "./helpers/fin-container-edge-ci.mjs";
+import { assertFinLateWorkflow, disableFinLateWorkflow } from "./helpers/fin-container-late-ci-workflow.mjs";
 import { assertFinRecordZeroWorkflow, disableFinRecordZeroWorkflow } from "./helpers/fin-record-zero-ci.mjs";
 import { assertPhpWasmDirectFinWorkflow, disablePhpWasmDirectFinWorkflow } from "./helpers/php-wasm-fin-direct-ci.mjs";
 import { assertPhpWasmSubtypeWorkflow, disablePhpWasmSubtypeWorkflow } from "./helpers/php-wasm-subtype-ci.mjs";
@@ -618,13 +619,15 @@ test("CI result contract detects support loss", async () => {
 });
 
 test("dedicated CI covers every consumer with Node 22 and pinned build paths", async () => {
-  const [packageWorkflow, packageDocument, currentPerlWorkflow, toolchainBootstrap] = await Promise.all([
+  const [lateWorkflow, packageDocument, currentPerlWorkflow, toolchainBootstrap] = await Promise.all([
     readFile(".github/workflows/consumer-matrix.yml", "utf8")
     , readFile("package.json", "utf8").then(JSON.parse)
     , readFile(".github/workflows/perl-consumer.yml", "utf8")
     , readFile("scripts/bootstrap-toolchains.sh", "utf8")
   ]);
   // Validate all measured edge gates before checking the unchanged earlier command/upload order.
+  assertFinLateWorkflow(lateWorkflow);
+  const packageWorkflow = disableFinLateWorkflow(lateWorkflow);
   assertCheckedRecordHostWorkflow(packageWorkflow);
   const withoutCheckedRecords = disableCheckedRecordHostWorkflow(packageWorkflow);
   assertReviewedSubtypePackageWorkflow(withoutCheckedRecords);

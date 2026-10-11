@@ -1,0 +1,57 @@
+{
+  "component": {
+    "id": "fincontainers@1.0.0",
+    "name": "fincontainers",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 53860804,
+          "path": "archives/fincontainers-1.0.0-c.tar.gz",
+          "sha256": "1b5e75721fc34ef68177207ddafc6fe8209db9b812d27b91a29f6c1bd37cb4d1"
+        }
+      ],
+      "ecosystem": "c",
+      "name": "fincontainers",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "c",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 51789286,
+          "path": "archives/fincontainers-1.0.0-cpp.tar.gz",
+          "sha256": "2cfac9f8198923f41082db9e25063967584556bdd092a911f315cf2102ec2036"
+        }
+      ],
+      "ecosystem": "cpp",
+      "name": "fincontainers",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "cpp",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "de5b71a38d8cb02d9f5c080866c8d0b2fd761667a4b4f89090b7e0115d02d7a8",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "854ae2e7e40f7ea90ae120f4fc8780195a64f40f26952d97564949f28dca2742"
+  }
+}

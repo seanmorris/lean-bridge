@@ -1,0 +1,399 @@
+{
+  "archives": {
+    "archives/example-fincontainers-1.0.0-linux-x86_64.zip": "e610396adbdbcc3ae5aa9781cbdf4687d11caf5e59ce3eec12bd72838937188b"
+  },
+  "authorRoots": 2,
+  "kind": "fin-container-late-native-v1",
+  "profiles": [
+    "php-native"
+  ],
+  "recordFiles": {
+    "author-0/FinContainers.lean": {
+      "bytes": 2156,
+      "sha256": "5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57"
+    },
+    "author-0/lean-bridge.exports.json": {
+      "bytes": 175,
+      "sha256": "337ef08502b9bbdb7cede451ca8b8f0bfbaa1dd0a809dc38ae73c4a89109804d"
+    },
+    "author-0/model.json": {
+      "bytes": 61904,
+      "sha256": "c561fe54bcf18dfda165c00e1c7680960204bacb51ca773367e01072fc822a90"
+    },
+    "author-0/package-set-receipt.json": {
+      "bytes": 1148,
+      "sha256": "5d4bb971830b9271ad4c67f844f979bf8f71047d587c598de878f6ea15a32d81"
+    },
+    "author-1/FinContainers.lean": {
+      "bytes": 2156,
+      "sha256": "5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57"
+    },
+    "author-1/lean-bridge.exports.json": {
+      "bytes": 175,
+      "sha256": "337ef08502b9bbdb7cede451ca8b8f0bfbaa1dd0a809dc38ae73c4a89109804d"
+    },
+    "author-1/model.json": {
+      "bytes": 61904,
+      "sha256": "c561fe54bcf18dfda165c00e1c7680960204bacb51ca773367e01072fc822a90"
+    },
+    "author-1/package-set-receipt.json": {
+      "bytes": 1148,
+      "sha256": "5d4bb971830b9271ad4c67f844f979bf8f71047d587c598de878f6ea15a32d81"
+    },
+    "context.json": {
+      "bytes": 292,
+      "sha256": "059198f98b86ab207321b95f2d7e64e546ead96d19f1203fed8b8569da56bc2e"
+    },
+    "php-native.before.stdout": {
+      "bytes": 23,
+      "sha256": "c14310cc7d74e3e35ee8e74f163ba53dca20087d563078834bb05ecd172a1062"
+    },
+    "php-native.closure.json": {
+      "bytes": 549,
+      "sha256": "ae117296440822050478285b3842b0eb3a79d833864dbda99b90fa77630caff3"
+    },
+    "php-native.receipt.json": {
+      "bytes": 6608,
+      "sha256": "98f9b5d81bcb5895f7ad15b8b4ef27640e44be07a0353ba649e2af8fdafc75cd"
+    },
+    "php-native.relocated.stdout": {
+      "bytes": 23,
+      "sha256": "c14310cc7d74e3e35ee8e74f163ba53dca20087d563078834bb05ecd172a1062"
+    },
+    "php-native.source": {
+      "bytes": 11183,
+      "sha256": "b1648b6bf9518eec5af00696aa9c8765dcb002a699a2cfe490989ede10670bd1"
+    },
+    "php-native.strict.stdout": {
+      "bytes": 23,
+      "sha256": "c14310cc7d74e3e35ee8e74f163ba53dca20087d563078834bb05ecd172a1062"
+    }
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "04b65644714e1c8e0005edeeca05046267504df82da2140a00cad9a29f58997b",
+      "checks": 20152,
+      "compilerFreePath": true,
+      "consumerSha256": "b1648b6bf9518eec5af00696aa9c8765dcb002a699a2cfe490989ede10670bd1",
+      "deployedFiles": {
+        "consumer.php": "b1648b6bf9518eec5af00696aa9c8765dcb002a699a2cfe490989ede10670bd1",
+        "strict.php": "251515fdb25ab672eaed2f1a498f10410c13adbd69b5b0418b74cc4a930f8c69"
+      },
+      "dispatch": {
+        "observed": false,
+        "reason": "This supplement measures public behavior. Expanded source/adapter counters remain a separate required gate."
+      },
+      "exactPackageFiles": true,
+      "fixtureSha256": "5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57",
+      "installedFilesSha256": "078c51e19f5ad77823cd84b601ddd1c26bd54f0f480ac49425db4174ea229e2b",
+      "installedFilesUnchanged": true,
+      "installedReceiptSha256": "98f9b5d81bcb5895f7ad15b8b4ef27640e44be07a0353ba649e2af8fdafc75cd",
+      "lateInputs": {
+        "additionalChecks": 6063,
+        "inputTreesCompared": [
+          "arg0",
+          "arg1"
+        ],
+        "recoveries": 1009,
+        "rejections": 1009,
+        "snapshotMutationControls": 6
+      },
+      "modelSha256": "c561fe54bcf18dfda165c00e1c7680960204bacb51ca773367e01072fc822a90",
+      "offlineInstall": true,
+      "packageFileSetSha256": "815ee346e6bd90fe31e1ee8a293b9a30ff593b8164b1ea28afd3b594d0d8f297",
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51383988,
+              "path": "archives/example-fincontainers-1.0.0-linux-x86_64.zip",
+              "sha256": "e610396adbdbcc3ae5aa9781cbdf4687d11caf5e59ce3eec12bd72838937188b"
+            }
+          ],
+          "ecosystem": "composer",
+          "name": "example/fincontainers",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "php-native",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "phpEnvironment": {
+        "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+        "generatedFilesSha256": "32333d7f8dacdef8695d5ba4e44a89452e08a3de91ff21460f33684c58385959",
+        "packageFileSetSha256": "815ee346e6bd90fe31e1ee8a293b9a30ff593b8164b1ea28afd3b594d0d8f297",
+        "receiptSha256": "98f9b5d81bcb5895f7ad15b8b4ef27640e44be07a0353ba649e2af8fdafc75cd",
+        "toolsSha256": "928927b055e8c58d26f331b055f2a17155d6470c3a969891b72b9714f2da1510",
+        "vendorFilesSha256": "cd8662609385ab22658f3b9df347d83bb9042506e58bce1121d86e78e5ff2b80"
+      },
+      "profile": "php-native",
+      "receiptSha256": "5d4bb971830b9271ad4c67f844f979bf8f71047d587c598de878f6ea15a32d81",
+      "refinements": {
+        "FinContainers.countNone": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "0",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.emptyArray": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "0",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "0",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.emptyList": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "0",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "0",
+                "kind": "fin"
+              }
+            ],
+            "kind": "list"
+          }
+        },
+        "FinContainers.emptyOption": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "0",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "0",
+                "kind": "fin"
+              }
+            ],
+            "kind": "option"
+          }
+        },
+        "FinContainers.flatten": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "10",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "list"
+              }
+            ],
+            "kind": "option"
+          }
+        },
+        "FinContainers.label": {
+          "parameters": [
+            null,
+            {
+              "arguments": [
+                {
+                  "bound": "4",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.mirrorAll": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.optionalDigits": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "list"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "10",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "list"
+              }
+            ],
+            "kind": "option"
+          }
+        },
+        "FinContainers.orDefault": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "1",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.present": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.sumHuge": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "1180591620717411303424",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.wrapAll": {
+          "parameters": [
+            null
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "7",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        }
+      },
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "repeatStrictExecution": true,
+      "result": {
+        "checks": 20152
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "7e4b9d200754a1927768a970c2aede15acfcea7fbf52ecba2e299d8f3793f362"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

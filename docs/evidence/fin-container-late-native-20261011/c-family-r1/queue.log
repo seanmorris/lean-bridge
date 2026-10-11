@@ -1,0 +1,637 @@
+Started 3431336: c,cpp; 2503 MiB free
+{"time":"2026-10-11T03:02:24.728Z","pid":3431336,"freeMiB":2330,"diskStop":false}
+{"time":"2026-10-11T03:02:34.732Z","pid":3431336,"freeMiB":2329,"diskStop":false}
+{"time":"2026-10-11T03:02:44.742Z","pid":3431336,"freeMiB":2329,"diskStop":false}
+{"time":"2026-10-11T03:02:54.751Z","pid":3431336,"freeMiB":2323,"diskStop":false}
+{"time":"2026-10-11T03:03:04.759Z","pid":3431336,"freeMiB":2299,"diskStop":false}
+{"time":"2026-10-11T03:03:14.767Z","pid":3431336,"freeMiB":2289,"diskStop":false}
+{"time":"2026-10-11T03:03:24.776Z","pid":3431336,"freeMiB":2287,"diskStop":false}
+{"time":"2026-10-11T03:03:34.784Z","pid":3431336,"freeMiB":2286,"diskStop":false}
+{"time":"2026-10-11T03:03:44.791Z","pid":3431336,"freeMiB":2284,"diskStop":false}
+{"time":"2026-10-11T03:03:54.801Z","pid":3431336,"freeMiB":2282,"diskStop":false}
+{"time":"2026-10-11T03:04:04.807Z","pid":3431336,"freeMiB":2280,"diskStop":false}
+{"time":"2026-10-11T03:04:14.815Z","pid":3431336,"freeMiB":2278,"diskStop":false}
+{"time":"2026-10-11T03:04:24.824Z","pid":3431336,"freeMiB":2273,"diskStop":false}
+{"time":"2026-10-11T03:04:34.835Z","pid":3431336,"freeMiB":2271,"diskStop":false}
+{"time":"2026-10-11T03:04:44.844Z","pid":3431336,"freeMiB":2269,"diskStop":false}
+{"time":"2026-10-11T03:04:54.853Z","pid":3431336,"freeMiB":2267,"diskStop":false}
+{"time":"2026-10-11T03:05:04.859Z","pid":3431336,"freeMiB":2155,"diskStop":false}
+{"time":"2026-10-11T03:05:14.867Z","pid":3431336,"freeMiB":1949,"diskStop":false}
+{"time":"2026-10-11T03:05:24.878Z","pid":3431336,"freeMiB":1948,"diskStop":false}
+{"time":"2026-10-11T03:05:34.887Z","pid":3431336,"freeMiB":2211,"diskStop":false}
+{"time":"2026-10-11T03:05:44.895Z","pid":3431336,"freeMiB":2056,"diskStop":false}
+{"time":"2026-10-11T03:05:54.903Z","pid":3431336,"freeMiB":2055,"diskStop":false}
+{"time":"2026-10-11T03:06:04.911Z","pid":3431336,"freeMiB":1944,"diskStop":false}
+{"time":"2026-10-11T03:06:14.919Z","pid":3431336,"freeMiB":1944,"diskStop":false}
+{"time":"2026-10-11T03:06:24.927Z","pid":3431336,"freeMiB":1943,"diskStop":false}
+{"time":"2026-10-11T03:06:34.935Z","pid":3431336,"freeMiB":1938,"diskStop":false}
+{"time":"2026-10-11T03:06:44.943Z","pid":3431336,"freeMiB":1912,"diskStop":false}
+{"time":"2026-10-11T03:06:54.954Z","pid":3431336,"freeMiB":1908,"diskStop":false}
+{"time":"2026-10-11T03:07:04.963Z","pid":3431336,"freeMiB":1907,"diskStop":false}
+{"time":"2026-10-11T03:07:14.983Z","pid":3431336,"freeMiB":1906,"diskStop":false}
+{"time":"2026-10-11T03:07:24.987Z","pid":3431336,"freeMiB":1904,"diskStop":false}
+{"time":"2026-10-11T03:07:34.995Z","pid":3431336,"freeMiB":1902,"diskStop":false}
+{"time":"2026-10-11T03:07:45.004Z","pid":3431336,"freeMiB":1900,"diskStop":false}
+{"time":"2026-10-11T03:07:55.013Z","pid":3431336,"freeMiB":1893,"diskStop":false}
+{"time":"2026-10-11T03:08:05.022Z","pid":3431336,"freeMiB":1889,"diskStop":false}
+{"time":"2026-10-11T03:08:15.031Z","pid":3431336,"freeMiB":1888,"diskStop":false}
+{"time":"2026-10-11T03:08:25.039Z","pid":3431336,"freeMiB":1882,"diskStop":false}
+{"time":"2026-10-11T03:08:35.047Z","pid":3431336,"freeMiB":1880,"diskStop":false}
+{"time":"2026-10-11T03:08:45.055Z","pid":3431336,"freeMiB":1766,"diskStop":false}
+{"time":"2026-10-11T03:08:55.063Z","pid":3431336,"freeMiB":1714,"diskStop":false}
+{"time":"2026-10-11T03:09:05.072Z","pid":3431336,"freeMiB":1559,"diskStop":false}
+{"code":0,"signal":null,"finished":"2026-10-11T03:09:07.159Z","minimumMiB":1559,"diskStop":false,"tapSha256":"132f862a10c330d188789e84b2a98e48ae1de2d802ec4da32764e756c22ce3cd"}
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
++ undefined
+- {
+-   exportConfigurationSha256: 'f8d277226cc157f8f0ddda370ac396ed906381634c87d8df809723eb32ac59e5',
+-   exportConfigurationSource: '{\n' +
+-     '  "modules": [\n' +
+-     '    "FinContainers"\n' +
+-     '  ],\n' +
+-     '  "schemaVersion": 1,\n' +
+-     '  "targets": {\n' +
+-     '    "c": {\n' +
+-     '      "name": "fincontainers",\n' +
+-     '      "version": "1.0.0"\n' +
+-     '    },\n' +
+-     '    "cpp": {\n' +
+-     '      "name": "fincontainers",\n' +
+-     '      "version": "1.0.0"\n' +
+-     '    }\n' +
+-     '  }\n' +
+-     '}\n',
+-   extractorSha256: '8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f',
+-   leanCommit: 'f3b06c705e6c85f5314019d5d3baab0fec5b580c',
+-   leanCompilerSha256: 'e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550',
+-   leanVersion: '4.32.2',
+-   modules: [
+-     {
+-       interface: {
+-         bytes: 126744,
+-         interfaceSha256: '9fd87088fb33aadb835215136591700005f63604fdd5ab07ae98b01157a79e52',
+-         sha256: '73de8cafb6d528f7d9b465fd2370cdf1521d77cc93310657edb8291c5fd37e38'
+-       },
+-       module: 'FinContainers',
+-       source: {
+-         bytes: 2156,
+-         path: 'FinContainers.lean',
+-         sha256: '5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57'
+-       }
+-     }
+-   ],
+-   request: {
+-     arities: [],
+-     exportModules: [
+-       'FinContainers'
+-     ],
+-     exports: [],
+-     metadata: {
+-       invocationIdentitySha256: '6c956d2ccd42c972d2aa6adb2288dc7645f6bc1209c462999447bdc838133088',
+-       modules: [
+-         {
+-           interfaceSha256: '9fd87088fb33aadb835215136591700005f63604fdd5ab07ae98b01157a79e52',
+-           name: 'FinContainers',
+-           sourcePath: 'FinContainers.lean',
+-           sourceSha256: '5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57'
+-         }
+-       ],
+-       toolchain: 'leanprover/lean4:v4.32.2'
+-     },
+-     modules: [
+-       'FinContainers'
+-     ],
+-     profile: 'native-library-v1',
+-     resources: []
+-   },
+-   sourceNoticesSha256: '96d07984ef29f227323cf933b31a90d7c0e56dc0308dc89a83850e3b7c74d6b6',
+-   sourceTreeSha256: '854ae2e7e40f7ea90ae120f4fc8780195a64f40f26952d97564949f28dca2742'
+- }
+
+    at assertFinLateReport (file:///app/tests/helpers/fin-container-late-report.mjs:143:10)
+    at async file:///app/scripts/check-fin-late-native-report.mjs:19:16 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: undefined,
+  expected: {
+    exportConfigurationSha256: 'f8d277226cc157f8f0ddda370ac396ed906381634c87d8df809723eb32ac59e5',
+    exportConfigurationSource: '{\n' +
+      '  "modules": [\n' +
+      '    "FinContainers"\n' +
+      '  ],\n' +
+      '  "schemaVersion": 1,\n' +
+      '  "targets": {\n' +
+      '    "c": {\n' +
+      '      "name": "fincontainers",\n' +
+      '      "version": "1.0.0"\n' +
+      '    },\n' +
+      '    "cpp": {\n' +
+      '      "name": "fincontainers",\n' +
+      '      "version": "1.0.0"\n' +
+      '    }\n' +
+      '  }\n' +
+      '}\n',
+    extractorSha256: '8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f',
+    leanCommit: 'f3b06c705e6c85f5314019d5d3baab0fec5b580c',
+    leanCompilerSha256: 'e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550',
+    leanVersion: '4.32.2',
+    modules: [
+      {
+        interface: {
+          bytes: 126744,
+          interfaceSha256: '9fd87088fb33aadb835215136591700005f63604fdd5ab07ae98b01157a79e52',
+          sha256: '73de8cafb6d528f7d9b465fd2370cdf1521d77cc93310657edb8291c5fd37e38'
+        },
+        module: 'FinContainers',
+        source: {
+          bytes: 2156,
+          path: 'FinContainers.lean',
+          sha256: '5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57'
+        }
+      }
+    ],
+    request: {
+      arities: [],
+      exportModules: [ 'FinContainers' ],
+      exports: [],
+      metadata: {
+        invocationIdentitySha256: '6c956d2ccd42c972d2aa6adb2288dc7645f6bc1209c462999447bdc838133088',
+        modules: [
+          {
+            interfaceSha256: '9fd87088fb33aadb835215136591700005f63604fdd5ab07ae98b01157a79e52',
+            name: 'FinContainers',
+            sourcePath: 'FinContainers.lean',
+            sourceSha256: '5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57'
+          }
+        ],
+        toolchain: 'leanprover/lean4:v4.32.2'
+      },
+      modules: [ 'FinContainers' ],
+      profile: 'native-library-v1',
+      resources: []
+    },
+    sourceNoticesSha256: '96d07984ef29f227323cf933b31a90d7c0e56dc0308dc89a83850e3b7c74d6b6',
+    sourceTreeSha256: '854ae2e7e40f7ea90ae120f4fc8780195a64f40f26952d97564949f28dca2742'
+  },
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v22.23.2
+node:internal/errors:983
+  const err = new Error(message);
+              ^
+
+Error: Command failed: /usr/bin/node scripts/check-fin-late-native-report.mjs --report /app/build/vo1454-late-native-c-family-r1-5c5d7c6/edges-c-cpp.json --tap /app/build/vo1454-late-native-c-family-r1-5c5d7c6.tap --profiles c,cpp --glibc 2.36
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
++ undefined
+- {
+-   exportConfigurationSha256: 'f8d277226cc157f8f0ddda370ac396ed906381634c87d8df809723eb32ac59e5',
+-   exportConfigurationSource: '{\n' +
+-     '  "modules": [\n' +
+-     '    "FinContainers"\n' +
+-     '  ],\n' +
+-     '  "schemaVersion": 1,\n' +
+-     '  "targets": {\n' +
+-     '    "c": {\n' +
+-     '      "name": "fincontainers",\n' +
+-     '      "version": "1.0.0"\n' +
+-     '    },\n' +
+-     '    "cpp": {\n' +
+-     '      "name": "fincontainers",\n' +
+-     '      "version": "1.0.0"\n' +
+-     '    }\n' +
+-     '  }\n' +
+-     '}\n',
+-   extractorSha256: '8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f',
+-   leanCommit: 'f3b06c705e6c85f5314019d5d3baab0fec5b580c',
+-   leanCompilerSha256: 'e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550',
+-   leanVersion: '4.32.2',
+-   modules: [
+-     {
+-       interface: {
+-         bytes: 126744,
+-         interfaceSha256: '9fd87088fb33aadb835215136591700005f63604fdd5ab07ae98b01157a79e52',
+-         sha256: '73de8cafb6d528f7d9b465fd2370cdf1521d77cc93310657edb8291c5fd37e38'
+-       },
+-       module: 'FinContainers',
+-       source: {
+-         bytes: 2156,
+-         path: 'FinContainers.lean',
+-         sha256: '5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57'
+-       }
+-     }
+-   ],
+-   request: {
+-     arities: [],
+-     exportModules: [
+-       'FinContainers'
+-     ],
+-     exports: [],
+-     metadata: {
+-       invocationIdentitySha256: '6c956d2ccd42c972d2aa6adb2288dc7645f6bc1209c462999447bdc838133088',
+-       modules: [
+-         {
+-           interfaceSha256: '9fd87088fb33aadb835215136591700005f63604fdd5ab07ae98b01157a79e52',
+-           name: 'FinContainers',
+-           sourcePath: 'FinContainers.lean',
+-           sourceSha256: '5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57'
+-         }
+-       ],
+-       toolchain: 'leanprover/lean4:v4.32.2'
+-     },
+-     modules: [
+-       'FinContainers'
+-     ],
+-     profile: 'native-library-v1',
+-     resources: []
+-   },
+-   sourceNoticesSha256: '96d07984ef29f227323cf933b31a90d7c0e56dc0308dc89a83850e3b7c74d6b6',
+-   sourceTreeSha256: '854ae2e7e40f7ea90ae120f4fc8780195a64f40f26952d97564949f28dca2742'
+- }
+
+    at assertFinLateReport (file:///app/tests/helpers/fin-container-late-report.mjs:143:10)
+    at async file:///app/scripts/check-fin-late-native-report.mjs:19:16 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: undefined,
+  expected: {
+    exportConfigurationSha256: 'f8d277226cc157f8f0ddda370ac396ed906381634c87d8df809723eb32ac59e5',
+    exportConfigurationSource: '{\n' +
+      '  "modules": [\n' +
+      '    "FinContainers"\n' +
+      '  ],\n' +
+      '  "schemaVersion": 1,\n' +
+      '  "targets": {\n' +
+      '    "c": {\n' +
+      '      "name": "fincontainers",\n' +
+      '      "version": "1.0.0"\n' +
+      '    },\n' +
+      '    "cpp": {\n' +
+      '      "name": "fincontainers",\n' +
+      '      "version": "1.0.0"\n' +
+      '    }\n' +
+      '  }\n' +
+      '}\n',
+    extractorSha256: '8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f',
+    leanCommit: 'f3b06c705e6c85f5314019d5d3baab0fec5b580c',
+    leanCompilerSha256: 'e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550',
+    leanVersion: '4.32.2',
+    modules: [
+      {
+        interface: {
+          bytes: 126744,
+          interfaceSha256: '9fd87088fb33aadb835215136591700005f63604fdd5ab07ae98b01157a79e52',
+          sha256: '73de8cafb6d528f7d9b465fd2370cdf1521d77cc93310657edb8291c5fd37e38'
+        },
+        module: 'FinContainers',
+        source: {
+          bytes: 2156,
+          path: 'FinContainers.lean',
+          sha256: '5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57'
+        }
+      }
+    ],
+    request: {
+      arities: [],
+      exportModules: [ 'FinContainers' ],
+      exports: [],
+      metadata: {
+        invocationIdentitySha256: '6c956d2ccd42c972d2aa6adb2288dc7645f6bc1209c462999447bdc838133088',
+        modules: [
+          {
+            interfaceSha256: '9fd87088fb33aadb835215136591700005f63604fdd5ab07ae98b01157a79e52',
+            name: 'FinContainers',
+            sourcePath: 'FinContainers.lean',
+            sourceSha256: '5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57'
+          }
+        ],
+        toolchain: 'leanprover/lean4:v4.32.2'
+      },
+      modules: [ 'FinContainers' ],
+      profile: 'native-library-v1',
+      resources: []
+    },
+    sourceNoticesSha256: '96d07984ef29f227323cf933b31a90d7c0e56dc0308dc89a83850e3b7c74d6b6',
+    sourceTreeSha256: '854ae2e7e40f7ea90ae120f4fc8780195a64f40f26952d97564949f28dca2742'
+  },
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v22.23.2
+
+    at genericNodeError (node:internal/errors:983:15)
+    at wrappedFn (node:internal/errors:537:14)
+    at checkExecSyncError (node:child_process:916:11)
+    at execFileSync (node:child_process:952:15)
+    at file:///app/build/run-fin-late-native.mjs:47:15 {
+  status: 1,
+  signal: null,
+  output: [
+    null,
+    '',
+    'node:internal/modules/run_main:123\n' +
+      '    triggerUncaughtException(\n' +
+      '    ^\n' +
+      '\n' +
+      'AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n' +
+      '+ actual - expected\n' +
+      '\n' +
+      '+ undefined\n' +
+      '- {\n' +
+      "-   exportConfigurationSha256: 'f8d277226cc157f8f0ddda370ac396ed906381634c87d8df809723eb32ac59e5',\n" +
+      "-   exportConfigurationSource: '{\\n' +\n" +
+      `-     '  "modules": [\\n' +\n` +
+      `-     '    "FinContainers"\\n' +\n` +
+      "-     '  ],\\n' +\n" +
+      `-     '  "schemaVersion": 1,\\n' +\n` +
+      `-     '  "targets": {\\n' +\n` +
+      `-     '    "c": {\\n' +\n` +
+      `-     '      "name": "fincontainers",\\n' +\n` +
+      `-     '      "version": "1.0.0"\\n' +\n` +
+      "-     '    },\\n' +\n" +
+      `-     '    "cpp": {\\n' +\n` +
+      `-     '      "name": "fincontainers",\\n' +\n` +
+      `-     '      "version": "1.0.0"\\n' +\n` +
+      "-     '    }\\n' +\n" +
+      "-     '  }\\n' +\n" +
+      "-     '}\\n',\n" +
+      "-   extractorSha256: '8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f',\n" +
+      "-   leanCommit: 'f3b06c705e6c85f5314019d5d3baab0fec5b580c',\n" +
+      "-   leanCompilerSha256: 'e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550',\n" +
+      "-   leanVersion: '4.32.2',\n" +
+      '-   modules: [\n' +
+      '-     {\n' +
+      '-       interface: {\n' +
+      '-         bytes: 126744,\n' +
+      "-         interfaceSha256: '9fd87088fb33aadb835215136591700005f63604fdd5ab07ae98b01157a79e52',\n" +
+      "-         sha256: '73de8cafb6d528f7d9b465fd2370cdf1521d77cc93310657edb8291c5fd37e38'\n" +
+      '-       },\n' +
+      "-       module: 'FinContainers',\n" +
+      '-       source: {\n' +
+      '-         bytes: 2156,\n' +
+      "-         path: 'FinContainers.lean',\n" +
+      "-         sha256: '5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57'\n" +
+      '-       }\n' +
+      '-     }\n' +
+      '-   ],\n' +
+      '-   request: {\n' +
+      '-     arities: [],\n' +
+      '-     exportModules: [\n' +
+      "-       'FinContainers'\n" +
+      '-     ],\n' +
+      '-     exports: [],\n' +
+      '-     metadata: {\n' +
+      "-       invocationIdentitySha256: '6c956d2ccd42c972d2aa6adb2288dc7645f6bc1209c462999447bdc838133088',\n" +
+      '-       modules: [\n' +
+      '-         {\n' +
+      "-           interfaceSha256: '9fd87088fb33aadb835215136591700005f63604fdd5ab07ae98b01157a79e52',\n" +
+      "-           name: 'FinContainers',\n" +
+      "-           sourcePath: 'FinContainers.lean',\n" +
+      "-           sourceSha256: '5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57'\n" +
+      '-         }\n' +
+      '-       ],\n' +
+      "-       toolchain: 'leanprover/lean4:v4.32.2'\n" +
+      '-     },\n' +
+      '-     modules: [\n' +
+      "-       'FinContainers'\n" +
+      '-     ],\n' +
+      "-     profile: 'native-library-v1',\n" +
+      '-     resources: []\n' +
+      '-   },\n' +
+      "-   sourceNoticesSha256: '96d07984ef29f227323cf933b31a90d7c0e56dc0308dc89a83850e3b7c74d6b6',\n" +
+      "-   sourceTreeSha256: '854ae2e7e40f7ea90ae120f4fc8780195a64f40f26952d97564949f28dca2742'\n" +
+      '- }\n' +
+      '\n' +
+      '    at assertFinLateReport (file:///app/tests/helpers/fin-container-late-report.mjs:143:10)\n' +
+      '    at async file:///app/scripts/check-fin-late-native-report.mjs:19:16 {\n' +
+      '  generatedMessage: true,\n' +
+      "  code: 'ERR_ASSERTION',\n" +
+      '  actual: undefined,\n' +
+      '  expected: {\n' +
+      "    exportConfigurationSha256: 'f8d277226cc157f8f0ddda370ac396ed906381634c87d8df809723eb32ac59e5',\n" +
+      "    exportConfigurationSource: '{\\n' +\n" +
+      `      '  "modules": [\\n' +\n` +
+      `      '    "FinContainers"\\n' +\n` +
+      "      '  ],\\n' +\n" +
+      `      '  "schemaVersion": 1,\\n' +\n` +
+      `      '  "targets": {\\n' +\n` +
+      `      '    "c": {\\n' +\n` +
+      `      '      "name": "fincontainers",\\n' +\n` +
+      `      '      "version": "1.0.0"\\n' +\n` +
+      "      '    },\\n' +\n" +
+      `      '    "cpp": {\\n' +\n` +
+      `      '      "name": "fincontainers",\\n' +\n` +
+      `      '      "version": "1.0.0"\\n' +\n` +
+      "      '    }\\n' +\n" +
+      "      '  }\\n' +\n" +
+      "      '}\\n',\n" +
+      "    extractorSha256: '8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f',\n" +
+      "    leanCommit: 'f3b06c705e6c85f5314019d5d3baab0fec5b580c',\n" +
+      "    leanCompilerSha256: 'e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550',\n" +
+      "    leanVersion: '4.32.2',\n" +
+      '    modules: [\n' +
+      '      {\n' +
+      '        interface: {\n' +
+      '          bytes: 126744,\n' +
+      "          interfaceSha256: '9fd87088fb33aadb835215136591700005f63604fdd5ab07ae98b01157a79e52',\n" +
+      "          sha256: '73de8cafb6d528f7d9b465fd2370cdf1521d77cc93310657edb8291c5fd37e38'\n" +
+      '        },\n' +
+      "        module: 'FinContainers',\n" +
+      '        source: {\n' +
+      '          bytes: 2156,\n' +
+      "          path: 'FinContainers.lean',\n" +
+      "          sha256: '5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57'\n" +
+      '        }\n' +
+      '      }\n' +
+      '    ],\n' +
+      '    request: {\n' +
+      '      arities: [],\n' +
+      "      exportModules: [ 'FinContainers' ],\n" +
+      '      exports: [],\n' +
+      '      metadata: {\n' +
+      "        invocationIdentitySha256: '6c956d2ccd42c972d2aa6adb2288dc7645f6bc1209c462999447bdc838133088',\n" +
+      '        modules: [\n' +
+      '          {\n' +
+      "            interfaceSha256: '9fd87088fb33aadb835215136591700005f63604fdd5ab07ae98b01157a79e52',\n" +
+      "            name: 'FinContainers',\n" +
+      "            sourcePath: 'FinContainers.lean',\n" +
+      "            sourceSha256: '5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57'\n" +
+      '          }\n' +
+      '        ],\n' +
+      "        toolchain: 'leanprover/lean4:v4.32.2'\n" +
+      '      },\n' +
+      "      modules: [ 'FinContainers' ],\n" +
+      "      profile: 'native-library-v1',\n" +
+      '      resources: []\n' +
+      '    },\n' +
+      "    sourceNoticesSha256: '96d07984ef29f227323cf933b31a90d7c0e56dc0308dc89a83850e3b7c74d6b6',\n" +
+      "    sourceTreeSha256: '854ae2e7e40f7ea90ae120f4fc8780195a64f40f26952d97564949f28dca2742'\n" +
+      '  },\n' +
+      "  operator: 'deepStrictEqual',\n" +
+      "  diff: 'simple'\n" +
+      '}\n' +
+      '\n' +
+      'Node.js v22.23.2\n'
+  ],
+  pid: 3511613,
+  stdout: '',
+  stderr: 'node:internal/modules/run_main:123\n' +
+    '    triggerUncaughtException(\n' +
+    '    ^\n' +
+    '\n' +
+    'AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n' +
+    '+ actual - expected\n' +
+    '\n' +
+    '+ undefined\n' +
+    '- {\n' +
+    "-   exportConfigurationSha256: 'f8d277226cc157f8f0ddda370ac396ed906381634c87d8df809723eb32ac59e5',\n" +
+    "-   exportConfigurationSource: '{\\n' +\n" +
+    `-     '  "modules": [\\n' +\n` +
+    `-     '    "FinContainers"\\n' +\n` +
+    "-     '  ],\\n' +\n" +
+    `-     '  "schemaVersion": 1,\\n' +\n` +
+    `-     '  "targets": {\\n' +\n` +
+    `-     '    "c": {\\n' +\n` +
+    `-     '      "name": "fincontainers",\\n' +\n` +
+    `-     '      "version": "1.0.0"\\n' +\n` +
+    "-     '    },\\n' +\n" +
+    `-     '    "cpp": {\\n' +\n` +
+    `-     '      "name": "fincontainers",\\n' +\n` +
+    `-     '      "version": "1.0.0"\\n' +\n` +
+    "-     '    }\\n' +\n" +
+    "-     '  }\\n' +\n" +
+    "-     '}\\n',\n" +
+    "-   extractorSha256: '8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f',\n" +
+    "-   leanCommit: 'f3b06c705e6c85f5314019d5d3baab0fec5b580c',\n" +
+    "-   leanCompilerSha256: 'e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550',\n" +
+    "-   leanVersion: '4.32.2',\n" +
+    '-   modules: [\n' +
+    '-     {\n' +
+    '-       interface: {\n' +
+    '-         bytes: 126744,\n' +
+    "-         interfaceSha256: '9fd87088fb33aadb835215136591700005f63604fdd5ab07ae98b01157a79e52',\n" +
+    "-         sha256: '73de8cafb6d528f7d9b465fd2370cdf1521d77cc93310657edb8291c5fd37e38'\n" +
+    '-       },\n' +
+    "-       module: 'FinContainers',\n" +
+    '-       source: {\n' +
+    '-         bytes: 2156,\n' +
+    "-         path: 'FinContainers.lean',\n" +
+    "-         sha256: '5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57'\n" +
+    '-       }\n' +
+    '-     }\n' +
+    '-   ],\n' +
+    '-   request: {\n' +
+    '-     arities: [],\n' +
+    '-     exportModules: [\n' +
+    "-       'FinContainers'\n" +
+    '-     ],\n' +
+    '-     exports: [],\n' +
+    '-     metadata: {\n' +
+    "-       invocationIdentitySha256: '6c956d2ccd42c972d2aa6adb2288dc7645f6bc1209c462999447bdc838133088',\n" +
+    '-       modules: [\n' +
+    '-         {\n' +
+    "-           interfaceSha256: '9fd87088fb33aadb835215136591700005f63604fdd5ab07ae98b01157a79e52',\n" +
+    "-           name: 'FinContainers',\n" +
+    "-           sourcePath: 'FinContainers.lean',\n" +
+    "-           sourceSha256: '5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57'\n" +
+    '-         }\n' +
+    '-       ],\n' +
+    "-       toolchain: 'leanprover/lean4:v4.32.2'\n" +
+    '-     },\n' +
+    '-     modules: [\n' +
+    "-       'FinContainers'\n" +
+    '-     ],\n' +
+    "-     profile: 'native-library-v1',\n" +
+    '-     resources: []\n' +
+    '-   },\n' +
+    "-   sourceNoticesSha256: '96d07984ef29f227323cf933b31a90d7c0e56dc0308dc89a83850e3b7c74d6b6',\n" +
+    "-   sourceTreeSha256: '854ae2e7e40f7ea90ae120f4fc8780195a64f40f26952d97564949f28dca2742'\n" +
+    '- }\n' +
+    '\n' +
+    '    at assertFinLateReport (file:///app/tests/helpers/fin-container-late-report.mjs:143:10)\n' +
+    '    at async file:///app/scripts/check-fin-late-native-report.mjs:19:16 {\n' +
+    '  generatedMessage: true,\n' +
+    "  code: 'ERR_ASSERTION',\n" +
+    '  actual: undefined,\n' +
+    '  expected: {\n' +
+    "    exportConfigurationSha256: 'f8d277226cc157f8f0ddda370ac396ed906381634c87d8df809723eb32ac59e5',\n" +
+    "    exportConfigurationSource: '{\\n' +\n" +
+    `      '  "modules": [\\n' +\n` +
+    `      '    "FinContainers"\\n' +\n` +
+    "      '  ],\\n' +\n" +
+    `      '  "schemaVersion": 1,\\n' +\n` +
+    `      '  "targets": {\\n' +\n` +
+    `      '    "c": {\\n' +\n` +
+    `      '      "name": "fincontainers",\\n' +\n` +
+    `      '      "version": "1.0.0"\\n' +\n` +
+    "      '    },\\n' +\n" +
+    `      '    "cpp": {\\n' +\n` +
+    `      '      "name": "fincontainers",\\n' +\n` +
+    `      '      "version": "1.0.0"\\n' +\n` +
+    "      '    }\\n' +\n" +
+    "      '  }\\n' +\n" +
+    "      '}\\n',\n" +
+    "    extractorSha256: '8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f',\n" +
+    "    leanCommit: 'f3b06c705e6c85f5314019d5d3baab0fec5b580c',\n" +
+    "    leanCompilerSha256: 'e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550',\n" +
+    "    leanVersion: '4.32.2',\n" +
+    '    modules: [\n' +
+    '      {\n' +
+    '        interface: {\n' +
+    '          bytes: 126744,\n' +
+    "          interfaceSha256: '9fd87088fb33aadb835215136591700005f63604fdd5ab07ae98b01157a79e52',\n" +
+    "          sha256: '73de8cafb6d528f7d9b465fd2370cdf1521d77cc93310657edb8291c5fd37e38'\n" +
+    '        },\n' +
+    "        module: 'FinContainers',\n" +
+    '        source: {\n' +
+    '          bytes: 2156,\n' +
+    "          path: 'FinContainers.lean',\n" +
+    "          sha256: '5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57'\n" +
+    '        }\n' +
+    '      }\n' +
+    '    ],\n' +
+    '    request: {\n' +
+    '      arities: [],\n' +
+    "      exportModules: [ 'FinContainers' ],\n" +
+    '      exports: [],\n' +
+    '      metadata: {\n' +
+    "        invocationIdentitySha256: '6c956d2ccd42c972d2aa6adb2288dc7645f6bc1209c462999447bdc838133088',\n" +
+    '        modules: [\n' +
+    '          {\n' +
+    "            interfaceSha256: '9fd87088fb33aadb835215136591700005f63604fdd5ab07ae98b01157a79e52',\n" +
+    "            name: 'FinContainers',\n" +
+    "            sourcePath: 'FinContainers.lean',\n" +
+    "            sourceSha256: '5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57'\n" +
+    '          }\n' +
+    '        ],\n' +
+    "        toolchain: 'leanprover/lean4:v4.32.2'\n" +
+    '      },\n' +
+    "      modules: [ 'FinContainers' ],\n" +
+    "      profile: 'native-library-v1',\n" +
+    '      resources: []\n' +
+    '    },\n' +
+    "    sourceNoticesSha256: '96d07984ef29f227323cf933b31a90d7c0e56dc0308dc89a83850e3b7c74d6b6',\n" +
+    "    sourceTreeSha256: '854ae2e7e40f7ea90ae120f4fc8780195a64f40f26952d97564949f28dca2742'\n" +
+    '  },\n' +
+    "  operator: 'deepStrictEqual',\n" +
+    "  diff: 'simple'\n" +
+    '}\n' +
+    '\n' +
+    'Node.js v22.23.2\n'
+}
+
+Node.js v22.23.2

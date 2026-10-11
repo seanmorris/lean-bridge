@@ -1,0 +1,44 @@
+{
+  "component": {
+    "id": "fincontainers@1.0.0",
+    "name": "fincontainers",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51446574,
+          "path": "archives/fincontainers-1.0.0.jar",
+          "sha256": "532eeca81c3a691d36701bb436c6dd7424848f20f28f5daafe188ae8a990d86e"
+        },
+        {
+          "bytes": 623,
+          "path": "archives/fincontainers-1.0.0.pom",
+          "sha256": "92fac75f9c98c589f03820b64e50474ee00fdc076fdf49df2310712dfffd6dbf"
+        }
+      ],
+      "ecosystem": "maven",
+      "name": "org.leanbridge:fincontainers",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "maven",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "cf943fc40bad3905f1a43102b089e884d0fc70f701ef9a29cd206605b74115bc",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "7ba6e3c8153f3f7370cb621cf63fa65d509f204e1dc6784d5847e211c68651dd"
+  }
+}
