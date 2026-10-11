@@ -423,7 +423,9 @@ This mapping currently requires a nonempty, closed copied payload at a top-level
 
 [Installed Rust, .NET, native PHP and WIT/WASI checks](../evidence/checked-record-remaining-hosts-20261010.md) pass the same four source/result-only routes, with two reproduced author builds, offline installation and relocated replay. Native PHP runs in weak and strict modes. These local runs use glibc 2.36 without entry-count measurements. The archive also retains the earlier PHP setup failure caused by a missing extension in the selected local PHP tool.
 
-Perl and PHP-Wasm checked-record adapters remain pending. Browser execution remains pending. Nested checked records, value-dependent runtime fields, recursive checked records, other index kinds and callbacks remain unsupported. npm uses private ABI 8 for its proof-free carriers.
+[Installed Perl checks](../evidence/checked-record-perl-installed-20261011.md) pass all four source/result-only routes on Perl 5.36.3 and 5.38.2, each threaded and unthreaded. Both prebuilt-only and generated-XS installation modes pass after author/build removal, with two-root reproduction and unchanged relocated replay. Perl callers use generated record objects containing `Math::BigInt` values and array references, without proof fields. These local runs use glibc 2.36 without entry-count measurements. See the [Perl example](../consume/perl.md#checked-records).
+
+PHP-Wasm and browser checked-record execution remain pending. Nested, refined, recursive and inherited checked records, value-dependent runtime fields, other index kinds, zero-payload records, callbacks and owned positions remain unsupported. npm uses private ABI 8 for its proof-free carriers.
 
 ### Export a checked Subtype
 

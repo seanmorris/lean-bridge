@@ -674,6 +674,49 @@ A Lean `Subtype` parameter or result over a primitive base, such as `{ value : S
 
 Ordinary-source packages have [installed checks](../evidence/perl-refinements-20261009.md) for `String`, `Nat`, `Int`, `ByteArray` and `UInt32` on Perl 5.36.3 and 5.38.2, threaded and unthreaded. These checks include rejection, normalization, recovery and a full rerun after moving the installed package. Reviewed packages have the separate twelve-export acceptance described above.
 
+### Checked records
+
+A Lean record can carry proofs relating its runtime fields. Pass only those
+fields in the generated Perl class. The Lean function call runs the selected
+checked constructor; creating the Perl object alone does not establish the
+Lean invariant.
+
+For the installed `LeanBridge::CheckedRecords` acceptance package, save
+`checked-records.pl`:
+
+```perl
+use strict;
+use warnings;
+use Math::BigInt;
+use LeanBridge::CheckedRecords;
+
+my $interval = LeanBridge::CheckedRecords::Interval->new(
+    lo => Math::BigInt->new(3),
+    hi => Math::BigInt->new(10)
+);
+print LeanBridge::CheckedRecords::width($interval)->bstr, "\n"; # 7
+```
+
+The [Lean example and export contract](../lean/existing-package.md#export-a-record-with-proof-fields)
+select `CheckedRecords.mkInterval` to check `lo <= hi`. An invalid interval
+dies with the parameter and constructor name. A selected constructor can
+normalize accepted payloads without changing the caller's record. Results
+contain copied payload fields and no proofs.
+
+For a type such as `Sized 3`, the generated record contains its `data` array
+reference; the fixed length stays in the package's type metadata. Pass
+`Math::BigInt` elements. The checked constructor validates the length at the
+call boundary. Lean-produced records also work in packages that have no
+checked inputs.
+
+[Installed checks](../evidence/checked-record-perl-installed-20261011.md) cover
+ordinary and independently reviewed packages, including separate result-only
+packages, on all four pinned Perl ABIs and both installation modes. They use
+local glibc 2.36; hosted glibc 2.38 acceptance is a separate CI gate. Field and
+callback positions, nested/refined/recursive/inherited checked records,
+value-dependent runtime fields, other index kinds, zero-payload records and
+owned combinations remain unfinished.
+
 ## Values and cleanup
 
 ### Arrays of generic records
@@ -719,7 +762,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `ISize` | `signed integer scalar (IV)` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, -9223372036854775808..9223372036854775807. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. Required: Bind signed width to the compiled Lean target and record architecture explicitly. |
 | `Fin n` | `Math::BigInt checked against the declared bound` (input); `Math::BigInt below the bound` (result); `Math::BigInt checked against the field's closed bound` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Use Math::BigInt with the exact closed bound, including inside Array/List/Option/Prod/Except compositions, plain records and active variant fields. Empty containers, absent options and inactive Fin 0 branches are valid; present Fin 0 values are rejected. Rejections preserve caller values and name the failing path and bound. For Option, use undef for absence and the generated Some->new(value) for presence. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
 | `Subtype / {x // p x}` | `Primitive base value checked by the named Lean constructor` (input); `Constructed subtype projected to its primitive base value` (result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Installed checks passed (input, result); Not audited (field, callback input, callback result) | Use Math::BigInt for Nat/Int, an integer scalar for UInt32, text for String and an octet string for ByteArray. Fin checks run first. Constructor rejection dies naming the parameter and constructor without changing caller data. The export receives the constructed value; results expose its base. Pass the primitive base value. The reviewed API selects Lean's checked constructor; the export receives the constructed value, including any normalization. Rejection preserves the caller's input and identifies the reviewed parameter and constructor. Results project the proof-backed base value. These installed checks cover top-level parameters and results; dispatch counts were not measured. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
-| `Checked records and closed Nat indices` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Construct inputs only through the selected safe Lean constructor over the exact payload fields. Preserve closed indices and per-site choices; project proof-backed results without fabricating proofs. |
+| `Checked records and closed Nat indices` | `Generated Perl record with Math::BigInt and plain array-reference payload fields` (input, result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Installed checks passed (input, result); Not audited (field, callback input, callback result) | Pass generated record objects containing Math::BigInt values and plain array references, without proofs. Lean runs the selected constructor for each input; it may normalize accepted data, or reject with the parameter and constructor name while preserving caller values. Results contain independent copied payload fields with proofs erased. Ordinary and reviewed packages, including standalone result-only packages, passed installed checks. Required: Construct inputs only through the selected safe Lean constructor over the exact payload fields. Preserve closed indices and per-site choices; project proof-backed results without fabricating proofs. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
 | `Recursive copied structures` | `Named Perl record/constructor classes, plain array references, explicit Some/Ok/Err` (input, result, field); `Named Perl records and constructors, array references, synchronous CODE callbacks and owned LeanClosure values` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Use exact generated classes and named fields. Arrays and Lists use plain dense array references; aliases retain their target representation. Unit uses undef, Option presence uses Some, and Nat/Int use Math::BigInt. Values own independent copied storage. Calls reject cycles, malformed branches and excessive copies before native entry. Registered destructors release scratch storage and native outputs on exceptions and delivered signals. Malformed native output retires the shared runtime; retained copied values remain usable. Process, interpreter and thread ownership remain enforced. Recursive records, variants and aliases retain their public representations and independent copied storage. Callback frames retain reply buffers until native copying finishes; callback exceptions propagate after cleanup without losing their identity. Malformed native output retires the runtime. Private closure leases release on close or finalization, with deferred release during active invocation. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
 | `Polymorphic exports` | `Concrete named Perl subroutine for each configured specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Each configured type application becomes a distinct monomorphic Perl subroutine. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Array-valued fields and arrays of alias-named records use the host's ordinary array representation with recursive element checks. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |

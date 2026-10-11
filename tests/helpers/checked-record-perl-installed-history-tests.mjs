@@ -22,7 +22,7 @@ test("Perl checked-record installed harness history authenticates exact transiti
 	assert.deepEqual(history.updates.map(update => update.path), checkedRecordPerlInstalledChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = beforeCheckedRecordPerlCiSource(update.path, await readFile(update.path, "utf8"));
 		const previous = reverseCheckedRecordPerlInstalledUpdate(current, update);
 		assert.equal(beforeCheckedRecordPerlInstalledSource(update.path, current), previous);
 		const bytes = Buffer.from(current);

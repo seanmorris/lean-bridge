@@ -6,6 +6,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { checkedRecordPerlPromotionChangedPaths } from "./checked-record-perl-promotion-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeSubtypeRefinementSource, subtypeRefinementChangedPaths } from "./subtype-refinement-source-history.mjs";
 import { subtypeHeapChangedPaths } from "./subtype-heap-source-history.mjs";
@@ -877,6 +878,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...refinementCoreCiChangedPaths
 	, ...checkedRecordPerlChangedPaths
 	, ...checkedRecordPerlInstalledChangedPaths
+	, ...checkedRecordPerlPromotionChangedPaths
 ])].sort());
 
 /**

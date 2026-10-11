@@ -16,6 +16,7 @@ import "./checked-record-perl-archive-tests.mjs";
 import "./checked-record-perl-ci-shell-tests.mjs";
 import "./checked-record-perl-ci-workflow-tests.mjs";
 import "./checked-record-perl-ci-history-tests.mjs";
+import "./checked-record-perl-promotion-tests.mjs";
 
 test("installed Perl checked-record selection cannot silently drop or alias an ABI", () => {
 	const selected = checkedRecordPerlExecutables();

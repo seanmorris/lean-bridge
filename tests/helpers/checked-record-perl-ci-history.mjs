@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeCheckedRecordPerlPromotionSource } from "./checked-record-perl-promotion-history.mjs";
 
 export const checkedRecordPerlCiHistoryPath = "docs/evidence/checked-record-perl-ci-source-history-20261011.json";
 export const checkedRecordPerlCiPredecessor = "e6ea18b0ab28021a18cf9cb8bdf764af5f070bc5";
@@ -52,6 +53,7 @@ export const reverseCheckedRecordPerlCiUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeCheckedRecordPerlCiSource = (path, source, expected) => {
+	source = beforeCheckedRecordPerlPromotionSource(path, source, expected);
 	if(typeof source !== "string" || !checkedRecordPerlCiChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
