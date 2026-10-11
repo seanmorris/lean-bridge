@@ -11,6 +11,7 @@ import { pathToFileURL } from "node:url";
 import test from "node:test";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { structuralSubtypeBrowserExpected, structuralSubtypeBrowserPackage, structuralSubtypeBrowserPhases, structuralSubtypeBrowserProfiles, validateStructuralSubtypeBrowserObservation, validateStructuralSubtypeBrowserPhases } from "./structural-subtype-browser-fixture.mjs";
+import "./structural-subtype-browser-evidence-tests.mjs";
 
 const engines = ["chromium", "firefox", "webkit"];
 const result = profile => ({ schemaVersion: 1, profile

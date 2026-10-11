@@ -1,0 +1,631 @@
+{
+  "builds": [
+    {
+      "bindingIrSha256": "135475dc7186ce36f93cb1d31171d6f2c2d6c814e762fe0a1a284f854105599d",
+      "componentArchiveSha256": "d3b05a114f15f5c59fa73c22cf18c76ae644e9533363708a294eda1090191b4d",
+      "receiptSha256": "d3f4b202deb2f3355145be8df10840c9d41c9562108eca1f9f744f67697940b9",
+      "runtimeArchiveSha256": "9bbc253318501d32461698dc063493b177bcf8346bc281897850c3368a9441a4"
+    },
+    {
+      "bindingIrSha256": "135475dc7186ce36f93cb1d31171d6f2c2d6c814e762fe0a1a284f854105599d",
+      "componentArchiveSha256": "d3b05a114f15f5c59fa73c22cf18c76ae644e9533363708a294eda1090191b4d",
+      "receiptSha256": "d3f4b202deb2f3355145be8df10840c9d41c9562108eca1f9f744f67697940b9",
+      "runtimeArchiveSha256": "9bbc253318501d32461698dc063493b177bcf8346bc281897850c3368a9441a4"
+    }
+  ],
+  "compilerFreePath": true,
+  "configuration": {
+    "contracts": {
+      "StructuralSubtypes.aliasArguments": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "constructor": "StructuralSubtypes.checkedPositive"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          },
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "constructor": "StructuralSubtypes.normalizePositive"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "constructor": "StructuralSubtypes.checkedPositive"
+                  }
+                ],
+                "kind": "option"
+              }
+            ],
+            "kind": "array"
+          }
+        }
+      },
+      "StructuralSubtypes.aliasPair": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "constructor": "StructuralSubtypes.checkedPositive"
+                        }
+                      ],
+                      "kind": "option"
+                    }
+                  ],
+                  "kind": "array"
+                },
+                {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "constructor": "StructuralSubtypes.normalizePositive"
+                        }
+                      ],
+                      "kind": "option"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              ],
+              "kind": "tuple"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "constructor": "StructuralSubtypes.checkedPositive"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              },
+              {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "constructor": "StructuralSubtypes.normalizePositive"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              }
+            ],
+            "kind": "tuple"
+          }
+        }
+      },
+      "StructuralSubtypes.arrays": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "constructor": "StructuralSubtypes.checkedPositive"
+                }
+              ],
+              "kind": "array"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "arguments": [
+              {
+                "constructor": "StructuralSubtypes.checkedPositive"
+              }
+            ],
+            "kind": "array"
+          }
+        }
+      },
+      "StructuralSubtypes.branch": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "constructor": "StructuralSubtypes.checkedPositive"
+                },
+                {
+                  "constructor": "StructuralSubtypes.checkedWord"
+                }
+              ],
+              "kind": "result"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "arguments": [
+              {
+                "constructor": "StructuralSubtypes.checkedPositive"
+              },
+              {
+                "constructor": "StructuralSubtypes.checkedWord"
+              }
+            ],
+            "kind": "result"
+          }
+        }
+      },
+      "StructuralSubtypes.byteBranches": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "constructor": "StructuralSubtypes.checkedByte"
+                        },
+                        {
+                          "constructor": "StructuralSubtypes.checkedPositive"
+                        }
+                      ],
+                      "kind": "tuple"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "constructor": "StructuralSubtypes.checkedByte"
+                      },
+                      {
+                        "constructor": "StructuralSubtypes.checkedPositive"
+                      }
+                    ],
+                    "kind": "tuple"
+                  }
+                ],
+                "kind": "option"
+              }
+            ],
+            "kind": "array"
+          }
+        }
+      },
+      "StructuralSubtypes.lists": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "constructor": "StructuralSubtypes.checkedPositive"
+                }
+              ],
+              "kind": "list"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "arguments": [
+              {
+                "constructor": "StructuralSubtypes.checkedPositive"
+              }
+            ],
+            "kind": "list"
+          }
+        }
+      },
+      "StructuralSubtypes.nested": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "arguments": [
+                            {
+                              "constructor": "StructuralSubtypes.checkedPositive"
+                            },
+                            null
+                          ],
+                          "kind": "tuple"
+                        }
+                      ],
+                      "kind": "option"
+                    }
+                  ],
+                  "kind": "list"
+                }
+              ],
+              "kind": "array"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "StructuralSubtypes.options": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "constructor": "StructuralSubtypes.checkedPositive"
+                }
+              ],
+              "kind": "option"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "arguments": [
+              {
+                "constructor": "StructuralSubtypes.checkedPositive"
+              }
+            ],
+            "kind": "option"
+          }
+        }
+      },
+      "StructuralSubtypes.plainFin": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "StructuralSubtypes.product": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "constructor": "StructuralSubtypes.checkedPositive"
+                },
+                {
+                  "constructor": "StructuralSubtypes.checkedWord"
+                }
+              ],
+              "kind": "tuple"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "arguments": [
+              {
+                "constructor": "StructuralSubtypes.checkedPositive"
+              },
+              {
+                "constructor": "StructuralSubtypes.checkedWord"
+              }
+            ],
+            "kind": "tuple"
+          }
+        }
+      },
+      "StructuralSubtypes.scalar": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "StructuralSubtypes.checkedPositive"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "StructuralSubtypes.checkedPositive"
+          }
+        }
+      },
+      "StructuralSubtypes.specialized": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "constructor": "StructuralSubtypes.checkedPositive"
+                }
+              ],
+              "kind": "list"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "arguments": [
+              {
+                "constructor": "StructuralSubtypes.checkedPositive"
+              }
+            ],
+            "kind": "list"
+          }
+        }
+      }
+    },
+    "exports": [
+      "StructuralSubtypes.scalar",
+      "StructuralSubtypes.arrays",
+      "StructuralSubtypes.lists",
+      "StructuralSubtypes.options",
+      "StructuralSubtypes.product",
+      "StructuralSubtypes.branch",
+      "StructuralSubtypes.byteBranches",
+      "StructuralSubtypes.nested",
+      "StructuralSubtypes.aliasPair",
+      "StructuralSubtypes.aliasArguments",
+      "StructuralSubtypes.plainFin",
+      "StructuralSubtypes.specialized"
+    ],
+    "modules": [
+      "StructuralSubtypes"
+    ],
+    "schemaVersion": 1,
+    "specializations": [
+      {
+        "declaration": "StructuralSubtypes.generic",
+        "name": "StructuralSubtypes.specialized",
+        "types": [
+          "StructuralSubtypes.Positive"
+        ]
+      }
+    ],
+    "targets": {
+      "npm": {
+        "name": "structuralsubtypes",
+        "version": "1.0.0"
+      }
+    }
+  },
+  "consumerSha256": "43bd0c2619bc65da54ab7a5d01eb5fe186832b081151bf8e8a2ea669d1901ac1",
+  "corpusSha256": "b3cb460391e0b65f23a6b59b73beacd9643e33821345ffd730d82d7050c9c632",
+  "dispatch": {
+    "observed": false,
+    "reason": "No constructor/source entry counters in this npm caller"
+  },
+  "expectedBindingIrSha256": "6ca095623cdf425a28546d3fb8a5428fc461242aed9f24b91d40009dd77a3e20",
+  "independentBuilds": 2,
+  "observations": [
+    {
+      "relocated": false,
+      "result": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":3028,\"rejections\":1020}\n"
+      },
+      "typescript": {
+        "code": 0,
+        "stderr": "",
+        "stdout": ""
+      }
+    },
+    {
+      "relocated": true,
+      "result": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":3028,\"rejections\":1020}\n"
+      },
+      "typescript": {
+        "code": 0,
+        "stderr": "",
+        "stdout": ""
+      }
+    }
+  ],
+  "offlineInstall": true,
+  "producerCommit": "6080ad606975aea3e54fba6f4f652a78df223171",
+  "receipt": {
+    "bindingIrSha256": "135475dc7186ce36f93cb1d31171d6f2c2d6c814e762fe0a1a284f854105599d",
+    "component": {
+      "id": "structuralsubtypes@1.0.0",
+      "name": "structuralsubtypes",
+      "version": "1.0.0"
+    },
+    "componentArtifactSha256": "05e5c187726aa2024c15420b19fd76aca6bfbae07a373c27ba4e85a4a79c931c",
+    "componentBundleSha256": "5609addebd8450d2c58f805e85f6184b6b7c135f8ffa15a753c87512925ccfb2",
+    "componentIdentitySha256": "991d6623a6f06a7ca2fb9f168df2d7f978992a661c93ddfa64735620f9c791a9",
+    "kind": "lean-bridge-component-package-receipt",
+    "package": {
+      "archive": "structuralsubtypes-1.0.0.tgz",
+      "package": "structuralsubtypes@1.0.0",
+      "sha256": "d3b05a114f15f5c59fa73c22cf18c76ae644e9533363708a294eda1090191b4d"
+    },
+    "policies": {
+      "componentCompiledOnce": true,
+      "nativeCallablesOnly": true,
+      "runtimeBinaryInComponent": false,
+      "runtimeShared": true
+    },
+    "provenanceSha256": "d91a369c51c18eb54e38681e1126b8b34b1ae2392f65add60efb51a43333c856",
+    "runtime": {
+      "archive": "lean-bridge-runtime-0.0.0-abi2.ac86f7b767448dde0e546b6db9b1c5f04c7df061c436d57e50546139a92cb301.tgz",
+      "package": "@lean-bridge/runtime@0.0.0-abi2.ac86f7b767448dde0e546b6db9b1c5f04c7df061c436d57e50546139a92cb301",
+      "sha256": "9bbc253318501d32461698dc063493b177bcf8346bc281897850c3368a9441a4"
+    },
+    "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "8b192492f3620c14cbda4e11af086aaead4cbf3ff72f88987a41a36ad31c05fe"
+    },
+    "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "route": "ordinary",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true,
+  "trees": {
+    "@lean-bridge/runtime": {
+      "LICENSE": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996",
+      "index.mjs": "6efcbfb1a03a8844ce69fa2694501761375219b965234776f9498f8d5e5a9d4e",
+      "internal/binding-ir/canonical.mjs": "28e22e614fc532a99baeeb34ee9d054f3bc6db82239fa89059a9518cb06d3d20",
+      "internal/binding-ir/contract.mjs": "51f39115f198cadb22edcee1bc09d9205024c1ba622f86588056bca7aac6faf6",
+      "internal/binding-ir/sha256.mjs": "f9bcbce580e88f31c3a63e8aa0d1d834228afa796a74a4c2f708da68e99a15ac",
+      "internal/component-callable-runtime.mjs": "7d4e6ea8065ff239e4538333c6449e4a6dfcaf8d5982da96c38f119b9e591885",
+      "internal/component-callables.mjs": "abb7093a48c6bfaf7cf3f5510d0e26816af5639718659a3d87397f96a5e7bafe",
+      "internal/component-copied-codec.mjs": "06385bc88bc1359fb8bcbfbdb0bf01d79b372a2a6cbfd8f539f6d05c04b5f1a4",
+      "internal/component-copied-runtime.mjs": "87fe66a826b6f1399908d7f04fd2616d30c73408a8b9ccfc860f3a18c1ced79a",
+      "internal/component-copied.mjs": "c06dc4bf621d1a0d255478b62d4d03cd77fed580cd37ff058bbe061c6145d599",
+      "internal/component-owned-wasm.mjs": "d010d30b13af35cc1a5409c65cffe7dd2f3fdbd23e8627e70089b51b6bbac211",
+      "internal/component-records.mjs": "c24c4216667ce99e0a1e5b0e56fa02ab266114128e92760bd2aa1d65a6c99ff2",
+      "internal/component-recursive-abi.mjs": "2c6313445c66f51c504044f948139f7e576db534cffcbaf507f2c300ec57eee4",
+      "internal/component-recursive-codec.mjs": "ee698c1f12c5da59aa51ed907656d72f84a687c1ee0ef80001c4f541833e0b8c",
+      "internal/component-recursive-ownership.mjs": "7c363357647ea821e6d977ad524d5473ecfa2951e6759d03fcb46e5a19012e7a",
+      "internal/component-recursive.mjs": "4002752b124460c95cd9461e7c9a77173f211507f8a3f4d38b08c1293e006e5e",
+      "internal/component-runtime.mjs": "3c525383e5cde9342882f47b143362bfb5a17e7b37c5cb810d14b4b1eb4ab9fd",
+      "internal/component-scalar-codec.mjs": "24c8d8430545ec0ab4b767b7cbe70a411e55ce3b39cd9ecef76975e39b1e3416",
+      "internal/component-scalars.mjs": "745058db0327c9060222ff58d45c272595e23125c2169d80287ff9035cf3608e",
+      "internal/component-structured-callable-runtime.mjs": "bdeb55ce78ddfb7fcd76537904fb1b813d78fd12a98899564305dc24cab077f0",
+      "internal/component-structured-callables.mjs": "ca1ba92c7d00f168d26b007b21c4add381b760f76685b0a55dfffca2d40b97e2",
+      "internal/main.mjs": "8b791a4711e58876e29b5e0a7c3fcbab500b02d7550fe6f7c3321020a736be02",
+      "internal/main.wasm": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+      "internal/owned-wasm-bindings.mjs": "cd74f944785fae8d45b64ab1c18e714acdfd4c0a328e64021794d8c816827e1b",
+      "internal/owned-wasm-borrow-registry.mjs": "3d2b6c3b1956ebd66c813359a8bb18a54f162f4316bdb83d26fec226915a05fd",
+      "internal/owned-wasm-callbacks.mjs": "14d28bc1b0d92191bb7567f7fb3a6eca35c57e9fdf824666b39318ef51ddc7ab",
+      "internal/owned-wasm-calls.mjs": "af3671bee249f9a49f50160e4cf3f24e217e6727b1af1849fde39065dd94814c",
+      "internal/owned-wasm-component-runtime.mjs": "c0153f72184053c526168b87236a74a8f12251d05d0b0be28deadb1b2ba08531",
+      "internal/owned-wasm-control.mjs": "9e05a5b7653dd1409220a233d26492adf916789169896b59940b8c60c87fbb6f",
+      "internal/owned-wasm-registry.mjs": "ea549d40212cf3e423c03763e09af19e41614662df74cf604a070b9c0ab34717",
+      "internal/owned-wasm-scalars.mjs": "f187769507e97821b931a1a61321a9fc9bca085a56404481d025d4541e051aab",
+      "internal/owned-wasm-values.mjs": "12e10dbd344900de88beb96af2ab1c72a9be433e296b85fd6974f26a5397aebe",
+      "internal/refinements.mjs": "8bd430b6788472ff848091f06d0f078041b566377f746c78655038760b30fde0",
+      "notices/NOTICE.txt": "2b3402d0d98f7ad752153038319af37135f57552b434b286f9b0633403490117",
+      "notices/emscripten.txt": "51aea7641f81d560eb039bc97ce35e2517e2656fe8731eb49ce6a18498eb22fe",
+      "notices/lean-bundled.txt": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce",
+      "notices/lean.txt": "7ef159fd8db5a7a9e8051aac48997353f26d744e25f730a0594a806c126d2114",
+      "notices/libuv.txt": "16de0c32b265cb7d46a6d3bd614f259dd4d693a5e26b3407b04aae8d73041f0c",
+      "notices/llvm.txt": "539dd7aed86e8a4f12cbdd0e6c50c189c7d74847e4fecc64ce2c6ee3a01da38b",
+      "notices/musl.txt": "b870108ec5e7790e9f9919064f1b9421d62d5f9b0e6c230c6adf7ea2da62e97b",
+      "package.json": "0740b76bed614d69a0a4504492dbf0fcc4404658f7cfe4e3501f2aeb52cc2ae4",
+      "runtime-identity.json": "ac86f7b767448dde0e546b6db9b1c5f04c7df061c436d57e50546139a92cb301"
+    },
+    "structuralsubtypes": {
+      "LICENSE": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996",
+      "README.md": "1e42cb19d7744a2a9ee2a886140698358f458896150a169e458952354c94ddff",
+      "binding-manifest.json": "7d5ae857457d3e4bca431abb9e6eea8cc0e5b633307f5b63d9bf6fcec467f95c",
+      "index.d.ts": "39d1ffd12acb86e0f44dc25f6ae123f9066abfb8e6fcb215783cf141e1785e5a",
+      "index.mjs": "b798c41c6e360e8d9b2fb30a4097fa8f68b16392bef2016352d961055f4f96f0",
+      "internal/descriptor.mjs": "9a6ded2d55bbfc4f7c4853f6256b649dab47a9fe6cbaa2d84f404d4222d82c65",
+      "internal/runtime.mjs": "796a86405ac3d463f1af06a4c056b2ee440a36934f9957cff2058402fac39358",
+      "internal/validators.mjs": "246060d338db0b50ab3821eee8cb3697f55318498a7015fc205890704e76d31c",
+      "internal/wasm/structuralsubtypes-85dc6ef3dd30a6b6.so.wasm": "05e5c187726aa2024c15420b19fd76aca6bfbae07a373c27ba4e85a4a79c931c",
+      "metadata/assurance.json": "b89a17ba1a4f29f8b8a0eed8a2006f6265f3d84739b89c674b424d38344d69c5",
+      "metadata/binding-ir.json": "b4e7570617806665f8250f19fdea34b954e166d594e91f6aa2f873235872f4d0",
+      "metadata/component-release-bundle.json": "5609addebd8450d2c58f805e85f6184b6b7c135f8ffa15a753c87512925ccfb2",
+      "metadata/lean-bridge.exports.json": "4c811d8865df8b92ad3cbf84029af7e3a5c704f7c3744c853482e494afae2db9",
+      "metadata/provenance.json": "d91a369c51c18eb54e38681e1126b8b34b1ae2392f65add60efb51a43333c856",
+      "metadata/runtime-requirement.json": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+      "metadata/sbom.json": "d51a30ba08d2201c6528577fca0e1d560763dbb51ebbbfc4c21843aac70c9bde",
+      "package.json": "100442ab77c02bc7683c648cfcf74ed44a4d4124839781122712b6ee09fc67a0"
+    }
+  },
+  "typescript": {
+    "skipLibCheck": false,
+    "sourceSha256": "ff786c3877319a2602723077a26fd7ee34d8a789b5796740ec957770dfae27fb",
+    "strict": true
+  }
+}

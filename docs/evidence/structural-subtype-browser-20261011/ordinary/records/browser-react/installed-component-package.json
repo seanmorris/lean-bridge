@@ -1,0 +1,39 @@
+{
+  "version": "1.0.0",
+  "type": "module",
+  "sideEffects": false,
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.mjs",
+      "default": "./index.mjs",
+      "browser": "./index.mjs"
+    }
+  },
+  "files": [
+    "index.mjs",
+    "index.d.ts",
+    "README.md",
+    "binding-manifest.json",
+    "internal",
+    "notices",
+    "LICENSE"
+  ],
+  "name": "structuralsubtypes",
+  "license": "MIT",
+  "description": "Compiler-checked exports for structuralsubtypes.",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@lean-bridge/runtime": "0.0.0-abi2.ac86f7b767448dde0e546b6db9b1c5f04c7df061c436d57e50546139a92cb301"
+  },
+  "leanBridge": {
+    "component": "structuralsubtypes@1.0.0",
+    "componentBundleSha256": "5609addebd8450d2c58f805e85f6184b6b7c135f8ffa15a753c87512925ccfb2",
+    "componentIdentitySha256": "991d6623a6f06a7ca2fb9f168df2d7f978992a661c93ddfa64735620f9c791a9",
+    "bindingIrSha256": "135475dc7186ce36f93cb1d31171d6f2c2d6c814e762fe0a1a284f854105599d",
+    "sharedRuntime": true
+  }
+}
