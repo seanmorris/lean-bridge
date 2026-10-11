@@ -1,0 +1,30 @@
+TAP version 13
+# Subtest: installed checked records PHP-Wasm reviewed-ir reproduce and relocate
+ok 1 - installed checked records PHP-Wasm reviewed-ir reproduce and relocate
+  ---
+  duration_ms: 205883.281802
+  type: 'test'
+  ...
+# PHP-Wasm reviewed-ir: author 0
+# PHP-Wasm reviewed-ir: author 1
+# checked-records-reviewed-ir: PHP-Wasm Node embedded/startup/weak
+# checked-records-reviewed-ir: PHP-Wasm Node embedded/startup/strict
+# checked-records-reviewed-ir: PHP-Wasm Node embedded/lazy/weak
+# checked-records-reviewed-ir: PHP-Wasm Node embedded/lazy/strict
+# checked-records-reviewed-ir: PHP-Wasm Node composer/startup/weak
+# checked-records-reviewed-ir: PHP-Wasm Node composer/startup/strict
+# checked-records-reviewed-ir: PHP-Wasm Node composer/lazy/weak
+# checked-records-reviewed-ir: PHP-Wasm Node composer/lazy/strict
+# checked-records-reviewed-ir: PHP-Wasm Chromium bundled/startup/weak
+# checked-records-reviewed-ir: PHP-Wasm Chromium bundled/startup/strict
+# checked-records-reviewed-ir: PHP-Wasm Chromium bundled/lazy/weak
+# checked-records-reviewed-ir: PHP-Wasm Chromium bundled/lazy/strict
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 207107.700873

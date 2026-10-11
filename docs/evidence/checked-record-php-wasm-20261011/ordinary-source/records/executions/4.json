@@ -1,0 +1,44 @@
+{
+  "arrangement": "composer",
+  "loading": "startup",
+  "mode": "weak",
+  "observation": {
+    "checks": 18048,
+    "constructor_rejections": 4009,
+    "input_snapshots": 9023,
+    "php": "8.4.1",
+    "public_calls": 9023,
+    "word_bits": 32
+  },
+  "phases": [
+    {
+      "libraries": [
+        "php8.4-lb_checkedrecords_dd64d25ac194d047.so",
+        "liblean_bridge_php_wasm_copied_abe4dea500dab9519b8d.so"
+      ],
+      "stage": "ready"
+    },
+    {
+      "libraries": [
+        "php8.4-lb_checkedrecords_dd64d25ac194d047.so",
+        "liblean_bridge_php_wasm_copied_abe4dea500dab9519b8d.so"
+      ],
+      "stage": "autoload"
+    },
+    {
+      "libraries": [
+        "php8.4-lb_checkedrecords_dd64d25ac194d047.so",
+        "liblean_bridge_php_wasm_copied_abe4dea500dab9519b8d.so"
+      ],
+      "stage": "invalid"
+    },
+    {
+      "libraries": [
+        "php8.4-lb_checkedrecords_dd64d25ac194d047.so",
+        "liblean_bridge_php_wasm_copied_abe4dea500dab9519b8d.so"
+      ],
+      "stage": "complete"
+    }
+  ],
+  "realm": "node"
+}

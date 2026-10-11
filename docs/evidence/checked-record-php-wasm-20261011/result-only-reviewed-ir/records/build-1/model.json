@@ -1,0 +1,518 @@
+{
+  "bindingIr": {
+    "assurance": [],
+    "capabilities": [],
+    "component": {
+      "id": "checkedrecords@1.0.0",
+      "name": "checkedrecords",
+      "version": "1.0.0"
+    },
+    "declarations": [
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:CheckedRecords.repeated",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "repeated",
+        "overloadKey": "CheckedRecords.repeated",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:CheckedRecords.Triple",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "CheckedRecords.repeated",
+          "extensions": {
+            "lean-lang.org/source-position": {
+              "endColumn": 68,
+              "endLine": 57,
+              "path": "root/CheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 56
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      }
+    ],
+    "documentation": {
+      "details": "",
+      "summary": "Independent corpus contract."
+    },
+    "errors": [],
+    "producers": [
+      {
+        "adapter": "lean-bridge-elaborator",
+        "adapterVersion": 2,
+        "extensions": {
+          "lean-lang.org/elaboration-sha256": "7e1095cb0fa349841837e57f5809c71c628892fb4e4fa1ddd6dc3d07046d9ae4",
+          "lean-lang.org/toolchain": "leanprover/lean4:v4.32.2"
+        },
+        "id": "lean",
+        "tool": "Lean",
+        "toolVersion": "4.32.2"
+      }
+    ],
+    "schemaVersion": 3,
+    "types": [
+      {
+        "assurance": [],
+        "callable": null,
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "fields": [
+          {
+            "documentation": {
+              "details": "",
+              "summary": "Independent corpus contract."
+            },
+            "mutability": "immutable",
+            "name": "data",
+            "type": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          }
+        ],
+        "host": null,
+        "id": "lean:CheckedRecords.Triple",
+        "kind": "record",
+        "mutability": "immutable",
+        "name": "Triple",
+        "representation": "copied",
+        "resource": null,
+        "source": {
+          "declaration": "CheckedRecords.Triple",
+          "extensions": {
+            "lean-lang.org/erased-proofs": {
+              "fields": [
+                "sized"
+              ]
+            },
+            "lean-lang.org/instantiation": {
+              "arguments": [
+                {
+                  "kind": "value",
+                  "type": {
+                    "kind": "primitive",
+                    "name": "nat"
+                  },
+                  "value": "3"
+                }
+              ],
+              "structure": "CheckedRecords.Sized"
+            }
+          },
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      }
+    ]
+  },
+  "bindingIrSha256": "508c64a09967c5a6d295a786fc8b93a395923bdfa9f6038a0bd82e9d780f9ccc",
+  "byteOrder": "little",
+  "component": {
+    "id": "checkedrecords@1.0.0",
+    "name": "checkedrecords",
+    "version": "1.0.0"
+  },
+  "exports": [
+    {
+      "documentation": "A result-only checked record: Lean produces the proof. ",
+      "module": "CheckedRecords",
+      "name": "CheckedRecords.repeated",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "constructor": null,
+          "definition": "CheckedRecords.Triple",
+          "fields": [
+            "data"
+          ],
+          "kind": "checked-record"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "constructor": "CheckedRecords.Sized.mk",
+        "erased": [
+          "sized"
+        ],
+        "fields": [
+          {
+            "name": "data",
+            "projection": "CheckedRecords.Sized.data",
+            "type": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "Nat",
+                "name": "nat"
+              },
+              "kind": "array"
+            }
+          }
+        ],
+        "kind": "record",
+        "lean": "CheckedRecords.Triple",
+        "name": "CheckedRecords.Triple",
+        "provenance": {
+          "arguments": [
+            {
+              "kind": "value",
+              "type": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "Nat",
+                "name": "nat"
+              },
+              "value": "3"
+            }
+          ],
+          "structure": "CheckedRecords.Sized"
+        }
+      },
+      "sourcePosition": {
+        "endColumn": 68,
+        "endLine": 57,
+        "path": "root/CheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 56
+      },
+      "symbol": "lb_4c18758fdab8ddafcc87474a",
+      "theoremReferences": []
+    }
+  ],
+  "pointerBits": 32,
+  "profile": "php-wasm-copied-v1",
+  "schemaVersion": 3,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "c3524f4fd720676b918cee3a9a98fe12d9c217a95d8351dd214b6e2d502147b7",
+    "exportConfigurationSource": "{\n  \"modules\": [\n    \"CheckedRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"php-wasm\": {\n      \"composer\": {\n        \"name\": \"lean-bridge-checkedrecords/wasm\",\n        \"version\": \"1.0.0\"\n      },\n      \"npm\": {\n        \"name\": \"lean-bridge-checkedrecords-wasm\",\n        \"version\": \"1.0.0\"\n      }\n    }\n  }\n}\n",
+    "extractorSha256": "4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f",
+    "lakeDependencies": {
+      "resolution": {
+        "externalImports": [
+          "Init"
+        ],
+        "lakeLibrarySha256": "e29bbb0c9e1b46fcff3a507bed00e44dec287dd510ee6586c4b61e3e40547579",
+        "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+        "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+        "leanVersion": "4.32.2",
+        "modules": [
+          {
+            "imports": [
+              "Init",
+              "Init"
+            ],
+            "module": "CheckedRecords",
+            "package": "checkedrecords",
+            "path": "root/CheckedRecords.lean",
+            "source": {
+              "bytes": 2396,
+              "mode": 420,
+              "path": "CheckedRecords.lean",
+              "sha256": "368d74e1c5abd242ec96ac8bc9cf9648377ccbe8b0f8608ab46efe14cfec34b7"
+            }
+          }
+        ],
+        "packages": [
+          {
+            "configFile": "root/lakefile.toml",
+            "dependencies": [],
+            "name": "checkedrecords"
+          }
+        ],
+        "resolver": "lean-lake-locked",
+        "resolverSha256": "52e9367229eeabb2625d1e573f051eecd8d15dd250bd2fc50ba30255cfe9b306",
+        "schemaVersion": 1,
+        "snapshotSha256": "d5d27ca03bdb65fecb2daf6f6e9312538a9caacab4fabc0ebae7cbb2e9dbffe0"
+      },
+      "resolutionSha256": "380b8ce34885893ca3c2b6d7ece960b330b6f03e87c4f1a39361f885e4d28a11",
+      "snapshot": {
+        "kind": "lean-bridge-lake-dependency-snapshot",
+        "packages": [],
+        "rootInputs": [
+          {
+            "bytes": 2396,
+            "mode": 420,
+            "path": "CheckedRecords.lean",
+            "sha256": "368d74e1c5abd242ec96ac8bc9cf9648377ccbe8b0f8608ab46efe14cfec34b7"
+          },
+          {
+            "bytes": 1093,
+            "mode": 420,
+            "path": "LICENSE",
+            "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+          },
+          {
+            "bytes": 3294,
+            "mode": 420,
+            "path": "api.binding-ir.json",
+            "sha256": "7c77685d3a2b92567e69f3cc3de381caf3819d9414adf37fc43d13dbfe0eb8db"
+          },
+          {
+            "bytes": 79,
+            "mode": 420,
+            "path": "lakefile.toml",
+            "sha256": "5de2968e65079e02690fddda2dec4f721b4593c70c425c39274a49ecb64fee63"
+          },
+          {
+            "bytes": 318,
+            "mode": 420,
+            "path": "lean-bridge.exports.json",
+            "sha256": "c3524f4fd720676b918cee3a9a98fe12d9c217a95d8351dd214b6e2d502147b7"
+          },
+          {
+            "bytes": 25,
+            "mode": 420,
+            "path": "lean-toolchain",
+            "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+          },
+          {
+            "bytes": 59,
+            "mode": 420,
+            "path": "package.json",
+            "sha256": "3f2a82aebead09bdef17353ef89de32d37e77a04df857b127989c7010c189822"
+          }
+        ],
+        "schemaVersion": 3,
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "snapshotSha256": "d5d27ca03bdb65fecb2daf6f6e9312538a9caacab4fabc0ebae7cbb2e9dbffe0"
+    },
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 212984,
+          "interfaceSha256": "9266352966cf6c2be6c82d2622ffe556a121d9da74857956721013397e518e9f",
+          "sha256": "36a44a802ba099c216a0fb4c7806e5875c8c2830df4505c0a75d99f857231e6e"
+        },
+        "module": "CheckedRecords",
+        "source": {
+          "bytes": 2396,
+          "mode": 420,
+          "path": "root/CheckedRecords.lean",
+          "sha256": "368d74e1c5abd242ec96ac8bc9cf9648377ccbe8b0f8608ab46efe14cfec34b7"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "exportModules": [
+        "CheckedRecords"
+      ],
+      "exports": [
+        "CheckedRecords.repeated"
+      ],
+      "metadata": {
+        "invocationIdentitySha256": "d926cc8ac8748d6ea94682ac1f9fdea7e8e49d3eea6fe817e40e8f23856e9909",
+        "modules": [
+          {
+            "interfaceSha256": "9266352966cf6c2be6c82d2622ffe556a121d9da74857956721013397e518e9f",
+            "name": "CheckedRecords",
+            "sourcePath": "root/CheckedRecords.lean",
+            "sourceSha256": "368d74e1c5abd242ec96ac8bc9cf9648377ccbe8b0f8608ab46efe14cfec34b7"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "CheckedRecords"
+      ],
+      "profile": "native-library-v1",
+      "resources": []
+    },
+    "reviewedBindingIr": {
+      "path": "api.binding-ir.json",
+      "schemaVersion": 1,
+      "semanticSha256": "2c63d8386d6d7c063182ecb9652889a1f6596e5091ae3e21a876ec122cca0b02",
+      "source": "{\n  \"assurance\": [],\n  \"capabilities\": [],\n  \"component\": {\n    \"id\": \"checkedrecords@1.0.0\",\n    \"name\": \"checkedrecords\",\n    \"version\": \"1.0.0\"\n  },\n  \"declarations\": [\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:CheckedRecords.repeated\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"repeated\",\n      \"overloadKey\": \"CheckedRecords.repeated\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"id\": \"lean:CheckedRecords.Triple\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"CheckedRecords.repeated\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    }\n  ],\n  \"documentation\": {\n    \"details\": \"\",\n    \"summary\": \"Independent corpus contract.\"\n  },\n  \"errors\": [],\n  \"producers\": [\n    {\n      \"adapter\": \"independent-corpus-contract\",\n      \"adapterVersion\": 1,\n      \"extensions\": {},\n      \"id\": \"corpusReview\",\n      \"tool\": \"Corpus contract review\",\n      \"toolVersion\": \"1\"\n    }\n  ],\n  \"schemaVersion\": 3,\n  \"types\": [\n    {\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent corpus contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"data\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"kind\": \"primitive\",\n                \"name\": \"nat\"\n              }\n            ],\n            \"constructor\": \"array\",\n            \"kind\": \"apply\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:CheckedRecords.Triple\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Triple\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"CheckedRecords.Triple\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"sized\"\n            ]\n          },\n          \"lean-lang.org/instantiation\": {\n            \"arguments\": [\n              {\n                \"kind\": \"value\",\n                \"type\": {\n                  \"kind\": \"primitive\",\n                  \"name\": \"nat\"\n                },\n                \"value\": \"3\"\n              }\n            ],\n            \"structure\": \"CheckedRecords.Sized\"\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    }\n  ]\n}\n",
+      "sourceSha256": "7c77685d3a2b92567e69f3cc3de381caf3819d9414adf37fc43d13dbfe0eb8db"
+    },
+    "sourceNoticesSha256": "e71c87ec6d1bb7214f9df19dfee2564d69d3726174a03b6455952ea7697d0be8",
+    "sourceTreeSha256": "5d96468192c07fa6eb4aa8a5023812645afa28950b0fbf16e1b6eed2c1d0de27"
+  },
+  "types": [
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "key": "bcb803bc837008bec599",
+      "kind": "primitive",
+      "lean": "Nat",
+      "name": "nat"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": true,
+        "unbox": "lean_unbox"
+      },
+      "element": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "key": "224517b0527dd01c7a6b",
+      "kind": "array"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": true,
+        "unbox": "lean_unbox"
+      },
+      "constructor": "CheckedRecords.Sized.mk",
+      "erased": [
+        "sized"
+      ],
+      "fields": [
+        {
+          "name": "data",
+          "projection": "CheckedRecords.Sized.data",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "element": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "kind": "array"
+          }
+        }
+      ],
+      "key": "bf20058b8573a6a30bee",
+      "kind": "record",
+      "lean": "CheckedRecords.Triple",
+      "name": "CheckedRecords.Triple",
+      "provenance": {
+        "arguments": [
+          {
+            "kind": "value",
+            "type": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "value": "3"
+          }
+        ],
+        "structure": "CheckedRecords.Sized"
+      }
+    }
+  ]
+}

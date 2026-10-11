@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-php-wasm-archive-v1",
+  "predecessorCommit": "d329faf45141be46e2e875c529ea4be14732c13b",
+  "updates": [
+    {
+      "path": "tests/checked-records.test.mjs",
+      "currentSha256": "402e293027ea9ea5ec453f247ebb40d22c4910ce6c5ab5bfe4c01d2d3efa952e",
+      "previousSha256": "2a4c52161689b95c4b411b9104d99ce9aa190c2f2a043cccd8631e78dbe8181b",
+      "edits": [
+        {
+          "start": 2848,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-php-wasm-evidence-tests.mjs\";\nimport \"./helpers/checked-record-php-wasm-archive-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-php-wasm-history.mjs",
+      "currentSha256": "3dcb00671dea96320acf4c1c35f4ce14b8db2fd669068328f265070d1b034597",
+      "previousSha256": "731d5d36dda9f01ff381434b5f122358d728f405eb93573b7f4652bd18104649",
+      "edits": [
+        {
+          "start": 152,
+          "previous": "",
+          "current": "import { beforeCheckedRecordPhpWasmArchiveSource } from \"./checked-record-php-wasm-archive-history.mjs\";\n"
+        },
+        {
+          "start": 2204,
+          "previous": "",
+          "current": "\tsource = beforeCheckedRecordPhpWasmArchiveSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "2f0c8eeae980f703600f6e1f9c7a2660e3ccb9e86c6387a98fd496de67aaac6c",
+      "previousSha256": "51304fa5a4736861eae0b02ca599e798d7ab9248320536003a4fa685de5c0260",
+      "edits": [
+        {
+          "start": 1780,
+          "previous": "",
+          "current": "import { checkedRecordPhpWasmArchiveChangedPaths } from \"./checked-record-php-wasm-archive-history.mjs\";\n"
+        },
+        {
+          "start": 61891,
+          "previous": "",
+          "current": "\t, ...checkedRecordPhpWasmArchiveChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}

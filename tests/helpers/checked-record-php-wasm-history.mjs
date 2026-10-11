@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { beforeCheckedRecordPhpWasmArchiveSource } from "./checked-record-php-wasm-archive-history.mjs";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
 
@@ -50,6 +51,7 @@ export const reverseCheckedRecordPhpWasmUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeCheckedRecordPhpWasmSource = (path, source, expected) => {
+	source = beforeCheckedRecordPhpWasmArchiveSource(path, source, expected);
 	if(typeof source !== "string" || !checkedRecordPhpWasmChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

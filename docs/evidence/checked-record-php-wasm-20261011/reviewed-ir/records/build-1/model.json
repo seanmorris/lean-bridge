@@ -1,0 +1,2341 @@
+{
+  "bindingIr": {
+    "assurance": [],
+    "capabilities": [],
+    "component": {
+      "id": "checkedrecords@1.0.0",
+      "name": "checkedrecords",
+      "version": "1.0.0"
+    },
+    "declarations": [
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:CheckedRecords.complement",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "complement",
+        "overloadKey": "CheckedRecords.complement",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "id": "lean:CheckedRecords.Percent",
+              "kind": "named"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "CheckedRecords.complement",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy",
+                  "refinement": {
+                    "constructor": "CheckedRecords.mkPercent"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "constructor": "CheckedRecords.mkPercent",
+                  "kind": "checked-record"
+                }
+              ],
+              "result": null
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 59,
+              "endLine": 60,
+              "path": "root/CheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 59
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:CheckedRecords.firstOf",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "firstOf",
+        "overloadKey": "CheckedRecords.firstOf",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "id": "lean:CheckedRecords.Triple",
+              "kind": "named"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "CheckedRecords.firstOf",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy",
+                  "refinement": {
+                    "constructor": "CheckedRecords.mkTriple"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "constructor": "CheckedRecords.mkTriple",
+                  "kind": "checked-record"
+                }
+              ],
+              "result": null
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 81,
+              "endLine": 48,
+              "path": "root/CheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 47
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:CheckedRecords.repeated",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "repeated",
+        "overloadKey": "CheckedRecords.repeated",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:CheckedRecords.Triple",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "CheckedRecords.repeated",
+          "extensions": {
+            "lean-lang.org/source-position": {
+              "endColumn": 68,
+              "endLine": 57,
+              "path": "root/CheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 56
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:CheckedRecords.scale",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "scale",
+        "overloadKey": "CheckedRecords.scale",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value1",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "id": "lean:CheckedRecords.Triple",
+              "kind": "named"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:CheckedRecords.Triple",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "CheckedRecords.scale",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy"
+                },
+                {
+                  "lifetime": null,
+                  "ownership": "copy",
+                  "refinement": {
+                    "constructor": "CheckedRecords.mkTriple"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                null,
+                {
+                  "constructor": "CheckedRecords.mkTriple",
+                  "kind": "checked-record"
+                }
+              ],
+              "result": null
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 106,
+              "endLine": 54,
+              "path": "root/CheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 53
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:CheckedRecords.smallest",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "smallest",
+        "overloadKey": "CheckedRecords.smallest",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "id": "lean:CheckedRecords.Triple",
+              "kind": "named"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "CheckedRecords.smallest",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy",
+                  "refinement": {
+                    "constructor": "CheckedRecords.sortedTriple"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "constructor": "CheckedRecords.sortedTriple",
+                  "kind": "checked-record"
+                }
+              ],
+              "result": null
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 82,
+              "endLine": 51,
+              "path": "root/CheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 50
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:CheckedRecords.span",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "span",
+        "overloadKey": "CheckedRecords.span",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "id": "lean:CheckedRecords.Interval",
+              "kind": "named"
+            }
+          },
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value1",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "id": "lean:CheckedRecords.Interval",
+              "kind": "named"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "CheckedRecords.span",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy",
+                  "refinement": {
+                    "constructor": "CheckedRecords.mkInterval"
+                  }
+                },
+                {
+                  "lifetime": null,
+                  "ownership": "copy",
+                  "refinement": {
+                    "constructor": "CheckedRecords.mkInterval"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "constructor": "CheckedRecords.mkInterval",
+                  "kind": "checked-record"
+                },
+                {
+                  "constructor": "CheckedRecords.mkInterval",
+                  "kind": "checked-record"
+                }
+              ],
+              "result": null
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 72,
+              "endLine": 42,
+              "path": "root/CheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 41
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:CheckedRecords.total",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "total",
+        "overloadKey": "CheckedRecords.total",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "id": "lean:CheckedRecords.Triple",
+              "kind": "named"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "CheckedRecords.total",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy",
+                  "refinement": {
+                    "constructor": "CheckedRecords.mkTriple"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "constructor": "CheckedRecords.mkTriple",
+                  "kind": "checked-record"
+                }
+              ],
+              "result": null
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 62,
+              "endLine": 45,
+              "path": "root/CheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 44
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:CheckedRecords.width",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "width",
+        "overloadKey": "CheckedRecords.width",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "id": "lean:CheckedRecords.Interval",
+              "kind": "named"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "CheckedRecords.width",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy",
+                  "refinement": {
+                    "constructor": "CheckedRecords.mkInterval"
+                  }
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "constructor": "CheckedRecords.mkInterval",
+                  "kind": "checked-record"
+                }
+              ],
+              "result": null
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 69,
+              "endLine": 39,
+              "path": "root/CheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 38
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      }
+    ],
+    "documentation": {
+      "details": "",
+      "summary": "Independent corpus contract."
+    },
+    "errors": [],
+    "producers": [
+      {
+        "adapter": "lean-bridge-elaborator",
+        "adapterVersion": 2,
+        "extensions": {
+          "lean-lang.org/elaboration-sha256": "14b58bd2fe775bd3335849dff733eea789111c45c9d87f5a20461b3dd2e964d8",
+          "lean-lang.org/toolchain": "leanprover/lean4:v4.32.2"
+        },
+        "id": "lean",
+        "tool": "Lean",
+        "toolVersion": "4.32.2"
+      }
+    ],
+    "schemaVersion": 3,
+    "types": [
+      {
+        "assurance": [],
+        "callable": null,
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "fields": [
+          {
+            "documentation": {
+              "details": "",
+              "summary": "Independent corpus contract."
+            },
+            "mutability": "immutable",
+            "name": "lo",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "documentation": {
+              "details": "",
+              "summary": "Independent corpus contract."
+            },
+            "mutability": "immutable",
+            "name": "hi",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "host": null,
+        "id": "lean:CheckedRecords.Interval",
+        "kind": "record",
+        "mutability": "immutable",
+        "name": "Interval",
+        "representation": "copied",
+        "resource": null,
+        "source": {
+          "declaration": "CheckedRecords.Interval",
+          "extensions": {
+            "lean-lang.org/erased-proofs": {
+              "fields": [
+                "ordered"
+              ]
+            }
+          },
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "callable": null,
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "fields": [
+          {
+            "documentation": {
+              "details": "",
+              "summary": "Independent corpus contract."
+            },
+            "mutability": "immutable",
+            "name": "value",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "host": null,
+        "id": "lean:CheckedRecords.Percent",
+        "kind": "record",
+        "mutability": "immutable",
+        "name": "Percent",
+        "representation": "copied",
+        "resource": null,
+        "source": {
+          "declaration": "CheckedRecords.Percent",
+          "extensions": {
+            "lean-lang.org/erased-proofs": {
+              "fields": [
+                "above",
+                "below"
+              ]
+            },
+            "lean-lang.org/instantiation": {
+              "arguments": [
+                {
+                  "kind": "value",
+                  "type": {
+                    "kind": "primitive",
+                    "name": "nat"
+                  },
+                  "value": "0"
+                },
+                {
+                  "kind": "value",
+                  "type": {
+                    "kind": "primitive",
+                    "name": "nat"
+                  },
+                  "value": "101"
+                }
+              ],
+              "structure": "CheckedRecords.Bounded"
+            }
+          },
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "callable": null,
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "fields": [
+          {
+            "documentation": {
+              "details": "",
+              "summary": "Independent corpus contract."
+            },
+            "mutability": "immutable",
+            "name": "data",
+            "type": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          }
+        ],
+        "host": null,
+        "id": "lean:CheckedRecords.Triple",
+        "kind": "record",
+        "mutability": "immutable",
+        "name": "Triple",
+        "representation": "copied",
+        "resource": null,
+        "source": {
+          "declaration": "CheckedRecords.Triple",
+          "extensions": {
+            "lean-lang.org/erased-proofs": {
+              "fields": [
+                "sized"
+              ]
+            },
+            "lean-lang.org/instantiation": {
+              "arguments": [
+                {
+                  "kind": "value",
+                  "type": {
+                    "kind": "primitive",
+                    "name": "nat"
+                  },
+                  "value": "3"
+                }
+              ],
+              "structure": "CheckedRecords.Sized"
+            }
+          },
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      }
+    ]
+  },
+  "bindingIrSha256": "30109e5c295c50d35206e5d08d5967bb8f91bb48b2aa1c5875f1e43ff7f28625",
+  "byteOrder": "little",
+  "component": {
+    "id": "checkedrecords@1.0.0",
+    "name": "checkedrecords",
+    "version": "1.0.0"
+  },
+  "exports": [
+    {
+      "documentation": "The distance from a checked percentage to 100. ",
+      "module": "CheckedRecords",
+      "name": "CheckedRecords.complement",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "constructor": "CheckedRecords.Bounded.mk",
+            "erased": [
+              "above",
+              "below"
+            ],
+            "fields": [
+              {
+                "name": "value",
+                "projection": "CheckedRecords.Bounded.value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "kind": "record",
+            "lean": "CheckedRecords.Percent",
+            "name": "CheckedRecords.Percent",
+            "provenance": {
+              "arguments": [
+                {
+                  "kind": "value",
+                  "type": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Nat",
+                    "name": "nat"
+                  },
+                  "value": "0"
+                },
+                {
+                  "kind": "value",
+                  "type": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Nat",
+                    "name": "nat"
+                  },
+                  "value": "101"
+                }
+              ],
+              "structure": "CheckedRecords.Bounded"
+            }
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "CheckedRecords.mkPercent",
+            "definition": "CheckedRecords.Percent",
+            "fields": [
+              "value"
+            ],
+            "kind": "checked-record"
+          }
+        ],
+        "result": null
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "sourcePosition": {
+        "endColumn": 59,
+        "endLine": 60,
+        "path": "root/CheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 59
+      },
+      "symbol": "lb_e576ee8305e380910c850b82",
+      "theoremReferences": []
+    },
+    {
+      "documentation": "The first number, as the caller ordered it. ",
+      "module": "CheckedRecords",
+      "name": "CheckedRecords.firstOf",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "constructor": "CheckedRecords.Sized.mk",
+            "erased": [
+              "sized"
+            ],
+            "fields": [
+              {
+                "name": "data",
+                "projection": "CheckedRecords.Sized.data",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "element": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Nat",
+                    "name": "nat"
+                  },
+                  "kind": "array"
+                }
+              }
+            ],
+            "kind": "record",
+            "lean": "CheckedRecords.Triple",
+            "name": "CheckedRecords.Triple",
+            "provenance": {
+              "arguments": [
+                {
+                  "kind": "value",
+                  "type": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Nat",
+                    "name": "nat"
+                  },
+                  "value": "3"
+                }
+              ],
+              "structure": "CheckedRecords.Sized"
+            }
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "CheckedRecords.mkTriple",
+            "definition": "CheckedRecords.Triple",
+            "fields": [
+              "data"
+            ],
+            "kind": "checked-record"
+          }
+        ],
+        "result": null
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "sourcePosition": {
+        "endColumn": 81,
+        "endLine": 48,
+        "path": "root/CheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 47
+      },
+      "symbol": "lb_6020322b80f8b9017fcfa3cd",
+      "theoremReferences": []
+    },
+    {
+      "documentation": "A result-only checked record: Lean produces the proof. ",
+      "module": "CheckedRecords",
+      "name": "CheckedRecords.repeated",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "constructor": null,
+          "definition": "CheckedRecords.Triple",
+          "fields": [
+            "data"
+          ],
+          "kind": "checked-record"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "constructor": "CheckedRecords.Sized.mk",
+        "erased": [
+          "sized"
+        ],
+        "fields": [
+          {
+            "name": "data",
+            "projection": "CheckedRecords.Sized.data",
+            "type": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "Nat",
+                "name": "nat"
+              },
+              "kind": "array"
+            }
+          }
+        ],
+        "kind": "record",
+        "lean": "CheckedRecords.Triple",
+        "name": "CheckedRecords.Triple",
+        "provenance": {
+          "arguments": [
+            {
+              "kind": "value",
+              "type": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "Nat",
+                "name": "nat"
+              },
+              "value": "3"
+            }
+          ],
+          "structure": "CheckedRecords.Sized"
+        }
+      },
+      "sourcePosition": {
+        "endColumn": 68,
+        "endLine": 57,
+        "path": "root/CheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 56
+      },
+      "symbol": "lb_4c18758fdab8ddafcc87474a",
+      "theoremReferences": []
+    },
+    {
+      "documentation": "An unchecked argument before a checked one, and a Lean-produced checked result. ",
+      "module": "CheckedRecords",
+      "name": "CheckedRecords.scale",
+      "parameters": [
+        {
+          "name": "factor",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          }
+        },
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "constructor": "CheckedRecords.Sized.mk",
+            "erased": [
+              "sized"
+            ],
+            "fields": [
+              {
+                "name": "data",
+                "projection": "CheckedRecords.Sized.data",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "element": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Nat",
+                    "name": "nat"
+                  },
+                  "kind": "array"
+                }
+              }
+            ],
+            "kind": "record",
+            "lean": "CheckedRecords.Triple",
+            "name": "CheckedRecords.Triple",
+            "provenance": {
+              "arguments": [
+                {
+                  "kind": "value",
+                  "type": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Nat",
+                    "name": "nat"
+                  },
+                  "value": "3"
+                }
+              ],
+              "structure": "CheckedRecords.Sized"
+            }
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null,
+          {
+            "constructor": "CheckedRecords.mkTriple",
+            "definition": "CheckedRecords.Triple",
+            "fields": [
+              "data"
+            ],
+            "kind": "checked-record"
+          }
+        ],
+        "result": {
+          "constructor": null,
+          "definition": "CheckedRecords.Triple",
+          "fields": [
+            "data"
+          ],
+          "kind": "checked-record"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "constructor": "CheckedRecords.Sized.mk",
+        "erased": [
+          "sized"
+        ],
+        "fields": [
+          {
+            "name": "data",
+            "projection": "CheckedRecords.Sized.data",
+            "type": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "Nat",
+                "name": "nat"
+              },
+              "kind": "array"
+            }
+          }
+        ],
+        "kind": "record",
+        "lean": "CheckedRecords.Triple",
+        "name": "CheckedRecords.Triple",
+        "provenance": {
+          "arguments": [
+            {
+              "kind": "value",
+              "type": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "Nat",
+                "name": "nat"
+              },
+              "value": "3"
+            }
+          ],
+          "structure": "CheckedRecords.Sized"
+        }
+      },
+      "sourcePosition": {
+        "endColumn": 106,
+        "endLine": 54,
+        "path": "root/CheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 53
+      },
+      "symbol": "lb_2a443e55ebb87a4b42d08148",
+      "theoremReferences": []
+    },
+    {
+      "documentation": "The first number after the sorting constructor ran: normalization is visible only to Lean. ",
+      "module": "CheckedRecords",
+      "name": "CheckedRecords.smallest",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "constructor": "CheckedRecords.Sized.mk",
+            "erased": [
+              "sized"
+            ],
+            "fields": [
+              {
+                "name": "data",
+                "projection": "CheckedRecords.Sized.data",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "element": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Nat",
+                    "name": "nat"
+                  },
+                  "kind": "array"
+                }
+              }
+            ],
+            "kind": "record",
+            "lean": "CheckedRecords.Triple",
+            "name": "CheckedRecords.Triple",
+            "provenance": {
+              "arguments": [
+                {
+                  "kind": "value",
+                  "type": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Nat",
+                    "name": "nat"
+                  },
+                  "value": "3"
+                }
+              ],
+              "structure": "CheckedRecords.Sized"
+            }
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "CheckedRecords.sortedTriple",
+            "definition": "CheckedRecords.Triple",
+            "fields": [
+              "data"
+            ],
+            "kind": "checked-record"
+          }
+        ],
+        "result": null
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "sourcePosition": {
+        "endColumn": 82,
+        "endLine": 51,
+        "path": "root/CheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 50
+      },
+      "symbol": "lb_c5d6822b1d53e0688e082812",
+      "theoremReferences": []
+    },
+    {
+      "documentation": "Two checked arguments: the second is refused after the first passed. ",
+      "module": "CheckedRecords",
+      "name": "CheckedRecords.span",
+      "parameters": [
+        {
+          "name": "left",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "constructor": "CheckedRecords.Interval.mk",
+            "erased": [
+              "ordered"
+            ],
+            "fields": [
+              {
+                "name": "lo",
+                "projection": "CheckedRecords.Interval.lo",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              },
+              {
+                "name": "hi",
+                "projection": "CheckedRecords.Interval.hi",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "kind": "record",
+            "lean": "CheckedRecords.Interval",
+            "name": "CheckedRecords.Interval"
+          }
+        },
+        {
+          "name": "right",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "constructor": "CheckedRecords.Interval.mk",
+            "erased": [
+              "ordered"
+            ],
+            "fields": [
+              {
+                "name": "lo",
+                "projection": "CheckedRecords.Interval.lo",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              },
+              {
+                "name": "hi",
+                "projection": "CheckedRecords.Interval.hi",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "kind": "record",
+            "lean": "CheckedRecords.Interval",
+            "name": "CheckedRecords.Interval"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "CheckedRecords.mkInterval",
+            "definition": "CheckedRecords.Interval",
+            "fields": [
+              "lo",
+              "hi"
+            ],
+            "kind": "checked-record"
+          },
+          {
+            "constructor": "CheckedRecords.mkInterval",
+            "definition": "CheckedRecords.Interval",
+            "fields": [
+              "lo",
+              "hi"
+            ],
+            "kind": "checked-record"
+          }
+        ],
+        "result": null
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "sourcePosition": {
+        "endColumn": 72,
+        "endLine": 42,
+        "path": "root/CheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 41
+      },
+      "symbol": "lb_a6305cd0ef2e210efa593d33",
+      "theoremReferences": []
+    },
+    {
+      "documentation": "The sum of exactly three numbers. ",
+      "module": "CheckedRecords",
+      "name": "CheckedRecords.total",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "constructor": "CheckedRecords.Sized.mk",
+            "erased": [
+              "sized"
+            ],
+            "fields": [
+              {
+                "name": "data",
+                "projection": "CheckedRecords.Sized.data",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "element": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Nat",
+                    "name": "nat"
+                  },
+                  "kind": "array"
+                }
+              }
+            ],
+            "kind": "record",
+            "lean": "CheckedRecords.Triple",
+            "name": "CheckedRecords.Triple",
+            "provenance": {
+              "arguments": [
+                {
+                  "kind": "value",
+                  "type": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Nat",
+                    "name": "nat"
+                  },
+                  "value": "3"
+                }
+              ],
+              "structure": "CheckedRecords.Sized"
+            }
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "CheckedRecords.mkTriple",
+            "definition": "CheckedRecords.Triple",
+            "fields": [
+              "data"
+            ],
+            "kind": "checked-record"
+          }
+        ],
+        "result": null
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "sourcePosition": {
+        "endColumn": 62,
+        "endLine": 45,
+        "path": "root/CheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 44
+      },
+      "symbol": "lb_dd4efd56947fae04424545d2",
+      "theoremReferences": []
+    },
+    {
+      "documentation": "The width of a checked interval. ",
+      "module": "CheckedRecords",
+      "name": "CheckedRecords.width",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "constructor": "CheckedRecords.Interval.mk",
+            "erased": [
+              "ordered"
+            ],
+            "fields": [
+              {
+                "name": "lo",
+                "projection": "CheckedRecords.Interval.lo",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              },
+              {
+                "name": "hi",
+                "projection": "CheckedRecords.Interval.hi",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "kind": "record",
+            "lean": "CheckedRecords.Interval",
+            "name": "CheckedRecords.Interval"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "CheckedRecords.mkInterval",
+            "definition": "CheckedRecords.Interval",
+            "fields": [
+              "lo",
+              "hi"
+            ],
+            "kind": "checked-record"
+          }
+        ],
+        "result": null
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "sourcePosition": {
+        "endColumn": 69,
+        "endLine": 39,
+        "path": "root/CheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 38
+      },
+      "symbol": "lb_aad2b63e65ac8fb15f3f227a",
+      "theoremReferences": []
+    }
+  ],
+  "pointerBits": 32,
+  "profile": "php-wasm-copied-v1",
+  "schemaVersion": 3,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "c3524f4fd720676b918cee3a9a98fe12d9c217a95d8351dd214b6e2d502147b7",
+    "exportConfigurationSource": "{\n  \"modules\": [\n    \"CheckedRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"php-wasm\": {\n      \"composer\": {\n        \"name\": \"lean-bridge-checkedrecords/wasm\",\n        \"version\": \"1.0.0\"\n      },\n      \"npm\": {\n        \"name\": \"lean-bridge-checkedrecords-wasm\",\n        \"version\": \"1.0.0\"\n      }\n    }\n  }\n}\n",
+    "extractorSha256": "4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f",
+    "lakeDependencies": {
+      "resolution": {
+        "externalImports": [
+          "Init"
+        ],
+        "lakeLibrarySha256": "e29bbb0c9e1b46fcff3a507bed00e44dec287dd510ee6586c4b61e3e40547579",
+        "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+        "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+        "leanVersion": "4.32.2",
+        "modules": [
+          {
+            "imports": [
+              "Init",
+              "Init"
+            ],
+            "module": "CheckedRecords",
+            "package": "checkedrecords",
+            "path": "root/CheckedRecords.lean",
+            "source": {
+              "bytes": 2396,
+              "mode": 420,
+              "path": "CheckedRecords.lean",
+              "sha256": "368d74e1c5abd242ec96ac8bc9cf9648377ccbe8b0f8608ab46efe14cfec34b7"
+            }
+          }
+        ],
+        "packages": [
+          {
+            "configFile": "root/lakefile.toml",
+            "dependencies": [],
+            "name": "checkedrecords"
+          }
+        ],
+        "resolver": "lean-lake-locked",
+        "resolverSha256": "52e9367229eeabb2625d1e573f051eecd8d15dd250bd2fc50ba30255cfe9b306",
+        "schemaVersion": 1,
+        "snapshotSha256": "d4e65d8cff53c2ae171e693f3d97991865761859edfa9b6e9259f3e0b78d1951"
+      },
+      "resolutionSha256": "66dbc92cdc644fa6c06e18b5fb2ec2706dd3513e4ee28050e103987b612826d6",
+      "snapshot": {
+        "kind": "lean-bridge-lake-dependency-snapshot",
+        "packages": [],
+        "rootInputs": [
+          {
+            "bytes": 2396,
+            "mode": 420,
+            "path": "CheckedRecords.lean",
+            "sha256": "368d74e1c5abd242ec96ac8bc9cf9648377ccbe8b0f8608ab46efe14cfec34b7"
+          },
+          {
+            "bytes": 1093,
+            "mode": 420,
+            "path": "LICENSE",
+            "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+          },
+          {
+            "bytes": 17376,
+            "mode": 420,
+            "path": "api.binding-ir.json",
+            "sha256": "cf7d6a01ce32450d267bb5613e8255b057569fd05d107edd12237b090b70bbb8"
+          },
+          {
+            "bytes": 79,
+            "mode": 420,
+            "path": "lakefile.toml",
+            "sha256": "5de2968e65079e02690fddda2dec4f721b4593c70c425c39274a49ecb64fee63"
+          },
+          {
+            "bytes": 318,
+            "mode": 420,
+            "path": "lean-bridge.exports.json",
+            "sha256": "c3524f4fd720676b918cee3a9a98fe12d9c217a95d8351dd214b6e2d502147b7"
+          },
+          {
+            "bytes": 25,
+            "mode": 420,
+            "path": "lean-toolchain",
+            "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+          },
+          {
+            "bytes": 59,
+            "mode": 420,
+            "path": "package.json",
+            "sha256": "3f2a82aebead09bdef17353ef89de32d37e77a04df857b127989c7010c189822"
+          }
+        ],
+        "schemaVersion": 3,
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "snapshotSha256": "d4e65d8cff53c2ae171e693f3d97991865761859edfa9b6e9259f3e0b78d1951"
+    },
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 212984,
+          "interfaceSha256": "9266352966cf6c2be6c82d2622ffe556a121d9da74857956721013397e518e9f",
+          "sha256": "36a44a802ba099c216a0fb4c7806e5875c8c2830df4505c0a75d99f857231e6e"
+        },
+        "module": "CheckedRecords",
+        "source": {
+          "bytes": 2396,
+          "mode": 420,
+          "path": "root/CheckedRecords.lean",
+          "sha256": "368d74e1c5abd242ec96ac8bc9cf9648377ccbe8b0f8608ab46efe14cfec34b7"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "contracts": {
+        "CheckedRecords.complement": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CheckedRecords.mkPercent"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecords.firstOf": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CheckedRecords.mkTriple"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecords.scale": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy"
+            },
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CheckedRecords.mkTriple"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecords.smallest": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CheckedRecords.sortedTriple"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecords.span": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CheckedRecords.mkInterval"
+              }
+            },
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CheckedRecords.mkInterval"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecords.total": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CheckedRecords.mkTriple"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecords.width": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CheckedRecords.mkInterval"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        }
+      },
+      "exportModules": [
+        "CheckedRecords"
+      ],
+      "exports": [
+        "CheckedRecords.complement",
+        "CheckedRecords.firstOf",
+        "CheckedRecords.repeated",
+        "CheckedRecords.scale",
+        "CheckedRecords.smallest",
+        "CheckedRecords.span",
+        "CheckedRecords.total",
+        "CheckedRecords.width"
+      ],
+      "metadata": {
+        "invocationIdentitySha256": "a28f49e8af0101a5a8a9261d6912944db19fb265fe1c7f5ee738ab2c3141a646",
+        "modules": [
+          {
+            "interfaceSha256": "9266352966cf6c2be6c82d2622ffe556a121d9da74857956721013397e518e9f",
+            "name": "CheckedRecords",
+            "sourcePath": "root/CheckedRecords.lean",
+            "sourceSha256": "368d74e1c5abd242ec96ac8bc9cf9648377ccbe8b0f8608ab46efe14cfec34b7"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "CheckedRecords"
+      ],
+      "profile": "native-library-v1",
+      "resources": []
+    },
+    "reviewedBindingIr": {
+      "path": "api.binding-ir.json",
+      "schemaVersion": 1,
+      "semanticSha256": "26f8b5ce11c01bfa51ee98a162d3d3d15258a5030816af59c5b64e2cb4b6b14e",
+      "source": "{\n  \"assurance\": [],\n  \"capabilities\": [],\n  \"component\": {\n    \"id\": \"checkedrecords@1.0.0\",\n    \"name\": \"checkedrecords\",\n    \"version\": \"1.0.0\"\n  },\n  \"declarations\": [\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:CheckedRecords.width\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"width\",\n      \"overloadKey\": \"CheckedRecords.width\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:CheckedRecords.Interval\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"CheckedRecords.width\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"CheckedRecords.mkInterval\",\n                \"kind\": \"checked-record\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:CheckedRecords.span\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"span\",\n      \"overloadKey\": \"CheckedRecords.span\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:CheckedRecords.Interval\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value1\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:CheckedRecords.Interval\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"CheckedRecords.span\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"CheckedRecords.mkInterval\",\n                \"kind\": \"checked-record\"\n              },\n              {\n                \"constructor\": \"CheckedRecords.mkInterval\",\n                \"kind\": \"checked-record\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:CheckedRecords.total\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"total\",\n      \"overloadKey\": \"CheckedRecords.total\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:CheckedRecords.Triple\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"CheckedRecords.total\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"CheckedRecords.mkTriple\",\n                \"kind\": \"checked-record\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:CheckedRecords.firstOf\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"firstOf\",\n      \"overloadKey\": \"CheckedRecords.firstOf\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:CheckedRecords.Triple\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"CheckedRecords.firstOf\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"CheckedRecords.mkTriple\",\n                \"kind\": \"checked-record\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:CheckedRecords.smallest\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"smallest\",\n      \"overloadKey\": \"CheckedRecords.smallest\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:CheckedRecords.Triple\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"CheckedRecords.smallest\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"CheckedRecords.sortedTriple\",\n                \"kind\": \"checked-record\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:CheckedRecords.scale\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"scale\",\n      \"overloadKey\": \"CheckedRecords.scale\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        },\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value1\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:CheckedRecords.Triple\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"id\": \"lean:CheckedRecords.Triple\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"CheckedRecords.scale\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              null,\n              {\n                \"constructor\": \"CheckedRecords.mkTriple\",\n                \"kind\": \"checked-record\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:CheckedRecords.repeated\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"repeated\",\n      \"overloadKey\": \"CheckedRecords.repeated\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"id\": \"lean:CheckedRecords.Triple\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"CheckedRecords.repeated\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:CheckedRecords.complement\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"complement\",\n      \"overloadKey\": \"CheckedRecords.complement\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:CheckedRecords.Percent\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"CheckedRecords.complement\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"CheckedRecords.mkPercent\",\n                \"kind\": \"checked-record\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    }\n  ],\n  \"documentation\": {\n    \"details\": \"\",\n    \"summary\": \"Independent corpus contract.\"\n  },\n  \"errors\": [],\n  \"producers\": [\n    {\n      \"adapter\": \"independent-corpus-contract\",\n      \"adapterVersion\": 1,\n      \"extensions\": {},\n      \"id\": \"corpusReview\",\n      \"tool\": \"Corpus contract review\",\n      \"toolVersion\": \"1\"\n    }\n  ],\n  \"schemaVersion\": 3,\n  \"types\": [\n    {\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent corpus contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"lo\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent corpus contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"hi\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:CheckedRecords.Interval\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Interval\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"CheckedRecords.Interval\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"ordered\"\n            ]\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent corpus contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"data\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"kind\": \"primitive\",\n                \"name\": \"nat\"\n              }\n            ],\n            \"constructor\": \"array\",\n            \"kind\": \"apply\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:CheckedRecords.Triple\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Triple\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"CheckedRecords.Triple\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"sized\"\n            ]\n          },\n          \"lean-lang.org/instantiation\": {\n            \"arguments\": [\n              {\n                \"kind\": \"value\",\n                \"type\": {\n                  \"kind\": \"primitive\",\n                  \"name\": \"nat\"\n                },\n                \"value\": \"3\"\n              }\n            ],\n            \"structure\": \"CheckedRecords.Sized\"\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent corpus contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"value\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:CheckedRecords.Percent\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Percent\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"CheckedRecords.Percent\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"above\",\n              \"below\"\n            ]\n          },\n          \"lean-lang.org/instantiation\": {\n            \"arguments\": [\n              {\n                \"kind\": \"value\",\n                \"type\": {\n                  \"kind\": \"primitive\",\n                  \"name\": \"nat\"\n                },\n                \"value\": \"0\"\n              },\n              {\n                \"kind\": \"value\",\n                \"type\": {\n                  \"kind\": \"primitive\",\n                  \"name\": \"nat\"\n                },\n                \"value\": \"101\"\n              }\n            ],\n            \"structure\": \"CheckedRecords.Bounded\"\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    }\n  ]\n}\n",
+      "sourceSha256": "cf7d6a01ce32450d267bb5613e8255b057569fd05d107edd12237b090b70bbb8"
+    },
+    "sourceNoticesSha256": "7fb5c53e1278eb95b1fc73a5f5230372b18dcadbba1e7570fc6a5937ea28c583",
+    "sourceTreeSha256": "5faa52ce61d4a96353663191f65aee34e9e0bd1ade81d3aba8616610fb080870"
+  },
+  "types": [
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "key": "bcb803bc837008bec599",
+      "kind": "primitive",
+      "lean": "Nat",
+      "name": "nat"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "constructor": "CheckedRecords.Bounded.mk",
+      "erased": [
+        "above",
+        "below"
+      ],
+      "fields": [
+        {
+          "name": "value",
+          "projection": "CheckedRecords.Bounded.value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          }
+        }
+      ],
+      "key": "2b4e50dd17df301ed218",
+      "kind": "record",
+      "lean": "CheckedRecords.Percent",
+      "name": "CheckedRecords.Percent",
+      "provenance": {
+        "arguments": [
+          {
+            "kind": "value",
+            "type": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "value": "0"
+          },
+          {
+            "kind": "value",
+            "type": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "value": "101"
+          }
+        ],
+        "structure": "CheckedRecords.Bounded"
+      }
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": true,
+        "unbox": "lean_unbox"
+      },
+      "element": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "kind": "primitive",
+        "lean": "Nat",
+        "name": "nat"
+      },
+      "key": "224517b0527dd01c7a6b",
+      "kind": "array"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": true,
+        "unbox": "lean_unbox"
+      },
+      "constructor": "CheckedRecords.Sized.mk",
+      "erased": [
+        "sized"
+      ],
+      "fields": [
+        {
+          "name": "data",
+          "projection": "CheckedRecords.Sized.data",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": true,
+              "unbox": "lean_unbox"
+            },
+            "element": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "kind": "array"
+          }
+        }
+      ],
+      "key": "bf20058b8573a6a30bee",
+      "kind": "record",
+      "lean": "CheckedRecords.Triple",
+      "name": "CheckedRecords.Triple",
+      "provenance": {
+        "arguments": [
+          {
+            "kind": "value",
+            "type": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "value": "3"
+          }
+        ],
+        "structure": "CheckedRecords.Sized"
+      }
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": true,
+        "unbox": "lean_unbox"
+      },
+      "constructor": "CheckedRecords.Interval.mk",
+      "erased": [
+        "ordered"
+      ],
+      "fields": [
+        {
+          "name": "lo",
+          "projection": "CheckedRecords.Interval.lo",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          }
+        },
+        {
+          "name": "hi",
+          "projection": "CheckedRecords.Interval.hi",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          }
+        }
+      ],
+      "key": "c3f448eba7f824e0e035",
+      "kind": "record",
+      "lean": "CheckedRecords.Interval",
+      "name": "CheckedRecords.Interval"
+    }
+  ]
+}
