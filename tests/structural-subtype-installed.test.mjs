@@ -32,6 +32,8 @@ import "./helpers/structural-subtype-rust-tests.mjs";
 import "./helpers/structural-subtype-rust-installed-tests.mjs";
 import "./helpers/structural-subtype-ruby-tests.mjs";
 import "./helpers/structural-subtype-ruby-installed-tests.mjs";
+import "./helpers/structural-subtype-dotnet-tests.mjs";
+import "./helpers/structural-subtype-dotnet-installed-tests.mjs";
 
 const profiles = process.env.LEAN_BRIDGE_STRUCTURAL_SUBTYPE_PROFILES?.split(",") ?? [];
 assert.ok(profiles.every(profile => ["c", "cpp"].includes(profile)), "Select implemented native installed profiles explicitly");
