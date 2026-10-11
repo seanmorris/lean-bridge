@@ -1,0 +1,623 @@
+{
+  "files": [
+    {
+      "bytes": 15508,
+      "path": "checker.mjs",
+      "sha256": "8ea8a452d8bfd044de15f5128b2f1abcee250f9098bc7ca0a0ea1baf1ca1288a"
+    },
+    {
+      "bytes": 203,
+      "path": "ordinary/end.json",
+      "sha256": "0de75f6fafb8f6b17ffdc1772f6db2b597fe27d05f1bf5ba1d96722e4c5be8d7"
+    },
+    {
+      "bytes": 131807,
+      "path": "ordinary/records/build-0/model.json",
+      "sha256": "62105e177e6edc76a060316575a115f30ee22c0ce60ea099b3c705a0f0326f22"
+    },
+    {
+      "bytes": 1168,
+      "path": "ordinary/records/build-0/package-set-receipt.json",
+      "sha256": "f0d603e10d454ec673598e458181b5177c856934b18bc3bb9ab281548e8eee94"
+    },
+    {
+      "bytes": 2349,
+      "path": "ordinary/records/build-0/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 131807,
+      "path": "ordinary/records/build-1/model.json",
+      "sha256": "62105e177e6edc76a060316575a115f30ee22c0ce60ea099b3c705a0f0326f22"
+    },
+    {
+      "bytes": 1168,
+      "path": "ordinary/records/build-1/package-set-receipt.json",
+      "sha256": "f0d603e10d454ec673598e458181b5177c856934b18bc3bb9ab281548e8eee94"
+    },
+    {
+      "bytes": 2349,
+      "path": "ordinary/records/build-1/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 11193,
+      "path": "ordinary/records/configuration.json",
+      "sha256": "a94cd0629dd59381f9b5b290d72c7e8c3351af3a585b980b3c70e79eb71cbae2"
+    },
+    {
+      "bytes": 7501,
+      "path": "ordinary/records/consumer.php",
+      "sha256": "c94a3ee22954956a266f237a5bf55b72bb2273d83c00b59f6fb581deca550ffb"
+    },
+    {
+      "bytes": 34558,
+      "path": "ordinary/records/expected.binding-ir.json",
+      "sha256": "fcb7bfa656ac6d6262a9773712f02b6c0bd5a08a72483c9ba9225f83fe90c36f"
+    },
+    {
+      "bytes": 2353,
+      "path": "ordinary/records/installation/composer.json",
+      "sha256": "1c46edfd542b3db76f93d571293cc26053a69e717a845345351213c0842f83d7"
+    },
+    {
+      "bytes": 3038,
+      "path": "ordinary/records/installation/composer.lock",
+      "sha256": "99cc694983341af2a45e4b3fc9c6faefcf0d086646484b3aa05eb549d7d4e45b"
+    },
+    {
+      "bytes": 7501,
+      "path": "ordinary/records/installation/consumer.php",
+      "sha256": "c94a3ee22954956a266f237a5bf55b72bb2273d83c00b59f6fb581deca550ffb"
+    },
+    {
+      "bytes": 7501,
+      "path": "ordinary/records/installation/strict.php",
+      "sha256": "df54ae7c726c91512f23e6146c8858a79fd777022badc4096f2923213dfaa493"
+    },
+    {
+      "bytes": 771,
+      "path": "ordinary/records/installation/vendor/autoload.php",
+      "sha256": "5601d55295a26ada00ea8811451d3af4cecf6ea776a6426db341c64e477bdf5e"
+    },
+    {
+      "bytes": 222,
+      "path": "ordinary/records/installation/vendor/composer/autoload_classmap.php",
+      "sha256": "375085d0d6690301081436cd75755cb2c882f8a7f6fc385c8814a11734fc413a"
+    },
+    {
+      "bytes": 232,
+      "path": "ordinary/records/installation/vendor/composer/autoload_files.php",
+      "sha256": "8d7542219c474caad00d91cdf916b23bb56245fcc94a2fb9914a73cb4d95473f"
+    },
+    {
+      "bytes": 139,
+      "path": "ordinary/records/installation/vendor/composer/autoload_namespaces.php",
+      "sha256": "ede505407590638a435137f4e060136f1008de79fc169b3de9793423b0cea38c"
+    },
+    {
+      "bytes": 195,
+      "path": "ordinary/records/installation/vendor/composer/autoload_psr4.php",
+      "sha256": "d84c58712d49fd62ea528610fc277a36664abd37e1087cec8c1efb0af6918590"
+    },
+    {
+      "bytes": 1672,
+      "path": "ordinary/records/installation/vendor/composer/autoload_real.php",
+      "sha256": "6c0043a45a2d878423161f45a21831c66381ce973584f5286346c6fc58fb5095"
+    },
+    {
+      "bytes": 1216,
+      "path": "ordinary/records/installation/vendor/composer/autoload_static.php",
+      "sha256": "fba2ca392b2e5650ddce36e2452ab99d333dc53f4e7f5fa28da3085afcccd4a7"
+    },
+    {
+      "bytes": 16528,
+      "path": "ordinary/records/installation/vendor/composer/ClassLoader.php",
+      "sha256": "42b8c5525dbc133045f47f4275f017071c82144a34acb9396d955ca10729cb2e"
+    },
+    {
+      "bytes": 2819,
+      "path": "ordinary/records/installation/vendor/composer/installed.json",
+      "sha256": "a82c75904232a986597da1ed8c6af6c9afe2b0e8196bc9045a23831763c0a31b"
+    },
+    {
+      "bytes": 1371,
+      "path": "ordinary/records/installation/vendor/composer/installed.php",
+      "sha256": "2d9a278b24dc2917f98d8387bf5a076498542cbbb6ea841423a853571ccd9aae"
+    },
+    {
+      "bytes": 16143,
+      "path": "ordinary/records/installation/vendor/composer/InstalledVersions.php",
+      "sha256": "21f4ba19e7859cb3f85b8b1680c970ee25d972546c1606dcae0e7e5f43f626f0"
+    },
+    {
+      "bytes": 1068,
+      "path": "ordinary/records/installation/vendor/composer/LICENSE",
+      "sha256": "7855ac293067aebe7e51afdd23b9dea54b8be24187dbecc9b9142581c37f596c"
+    },
+    {
+      "bytes": 925,
+      "path": "ordinary/records/installation/vendor/composer/platform_check.php",
+      "sha256": "230c364d17607b4f0500630f1c1bcca4e08e1486748340d2ec85024f3a0b73b4"
+    },
+    {
+      "bytes": 839,
+      "path": "ordinary/records/installed-strict.json",
+      "sha256": "d849c7c83437d4e8a11cbda454b2d22de300a56d59e695af67fc590de7cf4520"
+    },
+    {
+      "bytes": 837,
+      "path": "ordinary/records/installed-weak.json",
+      "sha256": "1fd6c7ea593fed7144c55953c9a11d3355b1099ec9422f243bd8d931f7f03c9c"
+    },
+    {
+      "bytes": 1545,
+      "path": "ordinary/records/package/binding-manifest.json",
+      "sha256": "f8b5b742493a8c69776a30fa3b7ea56c17cc5318b3ed307e836695bfa8707cca"
+    },
+    {
+      "bytes": 554,
+      "path": "ordinary/records/package/composer.json",
+      "sha256": "6eecffe93ce0171ebfc991227fc02082b5b8f17cd91884594534e1a5171ebfac"
+    },
+    {
+      "bytes": 7112,
+      "path": "ordinary/records/package/src/Api.php",
+      "sha256": "3155b57a13bd821631aada00552d3b906161fcb9a047e2157d5b4a9cb6fb71cd"
+    },
+    {
+      "bytes": 838,
+      "path": "ordinary/records/relocated-strict.json",
+      "sha256": "5b3cbcb3c4bf34f341e45c0ccc39468e3105f0128069a2a4e56df37c7cf2dd9f"
+    },
+    {
+      "bytes": 836,
+      "path": "ordinary/records/relocated-weak.json",
+      "sha256": "61f11faee82b8f76e580c79d17d47bc8cd38249d95ed818f571dce6bb9d928d0"
+    },
+    {
+      "bytes": 77943,
+      "path": "ordinary/records/report.json",
+      "sha256": "6a003851bd9a0305afaae3e8738b5af2ffa5a24e90866561da2f96563ef6e70d"
+    },
+    {
+      "bytes": 378,
+      "path": "ordinary/run.tap",
+      "sha256": "cf001e88dcdeb07946fef646709680452f6993afc6302075a2cce501fd238958"
+    },
+    {
+      "bytes": 900,
+      "path": "ordinary/start.json",
+      "sha256": "3a96a6b610dcc1a1cbcebd3db18d3713c8102ae7d2158543cae2d61a827e16fd"
+    },
+    {
+      "bytes": 203,
+      "path": "reviewed/end.json",
+      "sha256": "27f4f9d139f612de9baeb927147b8c778d36a501a83387c87c67ce8fac9a4e14"
+    },
+    {
+      "bytes": 157752,
+      "path": "reviewed/records/build-0/model.json",
+      "sha256": "8cb26cf9fbf4e2d681388d8a0665f8a2bdafa816e8076109c218af0f517b4b94"
+    },
+    {
+      "bytes": 1168,
+      "path": "reviewed/records/build-0/package-set-receipt.json",
+      "sha256": "c6833099f744f5ecb0be46abdd15491bbd181f0b9e0cfb3aead3ca8c11150a8f"
+    },
+    {
+      "bytes": 2349,
+      "path": "reviewed/records/build-0/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 157752,
+      "path": "reviewed/records/build-1/model.json",
+      "sha256": "8cb26cf9fbf4e2d681388d8a0665f8a2bdafa816e8076109c218af0f517b4b94"
+    },
+    {
+      "bytes": 1168,
+      "path": "reviewed/records/build-1/package-set-receipt.json",
+      "sha256": "c6833099f744f5ecb0be46abdd15491bbd181f0b9e0cfb3aead3ca8c11150a8f"
+    },
+    {
+      "bytes": 2349,
+      "path": "reviewed/records/build-1/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 185,
+      "path": "reviewed/records/configuration.json",
+      "sha256": "57441962fa5b7b3cc407d30c35e3dff930b8d5c53e607554b22f60a683219855"
+    },
+    {
+      "bytes": 7531,
+      "path": "reviewed/records/consumer.php",
+      "sha256": "cdb125125c9ec0a36cb86424b8fcc33d15e1e33b3a31865c587d23fd0c8b6e82"
+    },
+    {
+      "bytes": 34558,
+      "path": "reviewed/records/expected.binding-ir.json",
+      "sha256": "fcb7bfa656ac6d6262a9773712f02b6c0bd5a08a72483c9ba9225f83fe90c36f"
+    },
+    {
+      "bytes": 2353,
+      "path": "reviewed/records/installation/composer.json",
+      "sha256": "13f41a562cde799ddd5fac923bd4815e2a0b0cac05d428bc57e07c7c212bbb10"
+    },
+    {
+      "bytes": 3038,
+      "path": "reviewed/records/installation/composer.lock",
+      "sha256": "c4d9214e5d567d8891d52b9d29b6e41481883d2dd71eabdf9899a8981bcb21cc"
+    },
+    {
+      "bytes": 7531,
+      "path": "reviewed/records/installation/consumer.php",
+      "sha256": "cdb125125c9ec0a36cb86424b8fcc33d15e1e33b3a31865c587d23fd0c8b6e82"
+    },
+    {
+      "bytes": 7531,
+      "path": "reviewed/records/installation/strict.php",
+      "sha256": "7b7c6b95f6fc411341be432f8e6b69fa981540a7a9b2a84fece71fcbefb334b0"
+    },
+    {
+      "bytes": 771,
+      "path": "reviewed/records/installation/vendor/autoload.php",
+      "sha256": "e37f3b9794e11ae005dfdde44d85a849d0f1ebdf784b958518fd4b0aab1294f4"
+    },
+    {
+      "bytes": 222,
+      "path": "reviewed/records/installation/vendor/composer/autoload_classmap.php",
+      "sha256": "375085d0d6690301081436cd75755cb2c882f8a7f6fc385c8814a11734fc413a"
+    },
+    {
+      "bytes": 232,
+      "path": "reviewed/records/installation/vendor/composer/autoload_files.php",
+      "sha256": "8d7542219c474caad00d91cdf916b23bb56245fcc94a2fb9914a73cb4d95473f"
+    },
+    {
+      "bytes": 139,
+      "path": "reviewed/records/installation/vendor/composer/autoload_namespaces.php",
+      "sha256": "ede505407590638a435137f4e060136f1008de79fc169b3de9793423b0cea38c"
+    },
+    {
+      "bytes": 195,
+      "path": "reviewed/records/installation/vendor/composer/autoload_psr4.php",
+      "sha256": "d84c58712d49fd62ea528610fc277a36664abd37e1087cec8c1efb0af6918590"
+    },
+    {
+      "bytes": 1672,
+      "path": "reviewed/records/installation/vendor/composer/autoload_real.php",
+      "sha256": "a9659cd9d7f275df58f8d08bae607a8d3292c926c2cf92d438018b5623c50ef1"
+    },
+    {
+      "bytes": 1216,
+      "path": "reviewed/records/installation/vendor/composer/autoload_static.php",
+      "sha256": "e005023bead7bdd52e65d7453d5cb9ea7aaa6454bb7a40789799f07122f67b62"
+    },
+    {
+      "bytes": 16528,
+      "path": "reviewed/records/installation/vendor/composer/ClassLoader.php",
+      "sha256": "42b8c5525dbc133045f47f4275f017071c82144a34acb9396d955ca10729cb2e"
+    },
+    {
+      "bytes": 2819,
+      "path": "reviewed/records/installation/vendor/composer/installed.json",
+      "sha256": "584e9f465586fe77253545a5acef40f27b9bcaa185b4c0ffb29222fdb805723d"
+    },
+    {
+      "bytes": 1371,
+      "path": "reviewed/records/installation/vendor/composer/installed.php",
+      "sha256": "2d9a278b24dc2917f98d8387bf5a076498542cbbb6ea841423a853571ccd9aae"
+    },
+    {
+      "bytes": 16143,
+      "path": "reviewed/records/installation/vendor/composer/InstalledVersions.php",
+      "sha256": "21f4ba19e7859cb3f85b8b1680c970ee25d972546c1606dcae0e7e5f43f626f0"
+    },
+    {
+      "bytes": 1068,
+      "path": "reviewed/records/installation/vendor/composer/LICENSE",
+      "sha256": "7855ac293067aebe7e51afdd23b9dea54b8be24187dbecc9b9142581c37f596c"
+    },
+    {
+      "bytes": 925,
+      "path": "reviewed/records/installation/vendor/composer/platform_check.php",
+      "sha256": "230c364d17607b4f0500630f1c1bcca4e08e1486748340d2ec85024f3a0b73b4"
+    },
+    {
+      "bytes": 839,
+      "path": "reviewed/records/installed-strict.json",
+      "sha256": "7f233be1655464f784a229e644b7682abce33817b544b06147f33cc758c842b3"
+    },
+    {
+      "bytes": 837,
+      "path": "reviewed/records/installed-weak.json",
+      "sha256": "3e091c611355d42f192f1af901595a57bd7c0e949d2da0ddd235868bd51ffdf6"
+    },
+    {
+      "bytes": 1545,
+      "path": "reviewed/records/package/binding-manifest.json",
+      "sha256": "bf558886dafeb287466dcc01cf8c3ee8e80536682093908cee1f139f015f77d5"
+    },
+    {
+      "bytes": 554,
+      "path": "reviewed/records/package/composer.json",
+      "sha256": "6eecffe93ce0171ebfc991227fc02082b5b8f17cd91884594534e1a5171ebfac"
+    },
+    {
+      "bytes": 7226,
+      "path": "reviewed/records/package/src/Api.php",
+      "sha256": "74408863f44c77b6f164e368d56073c4bf635490030104e34c3892371839e95a"
+    },
+    {
+      "bytes": 838,
+      "path": "reviewed/records/relocated-strict.json",
+      "sha256": "10106a78050f1d34c6fbc1756b8c46b94c3eb45d55cc1244de5a0aa2c39577f3"
+    },
+    {
+      "bytes": 836,
+      "path": "reviewed/records/relocated-weak.json",
+      "sha256": "3f56ab3ade42ab5570c441e9f732846f02803c9d64e4edd1440bf9a3f74860de"
+    },
+    {
+      "bytes": 97021,
+      "path": "reviewed/records/report.json",
+      "sha256": "be72970e4892f368c835b53a4d9bb3d604605a4b91fe1dcb59bbef90b676664c"
+    },
+    {
+      "bytes": 378,
+      "path": "reviewed/run.tap",
+      "sha256": "92e34e78bdfc51df1b36dd4318cf549e12d5332d4315c6a604c4fb6ffd9f0835"
+    },
+    {
+      "bytes": 900,
+      "path": "reviewed/start.json",
+      "sha256": "bd3257c6efba59b4c15c1acbddedb6c0d06b201ec2aa64253bb1b8082e7a4dc4"
+    },
+    {
+      "bytes": 2999,
+      "path": "runner.mjs",
+      "sha256": "610e1204217358db67ba6237f979564a5ce745647a0471a708c4975f9c48df4d"
+    },
+    {
+      "bytes": 92606,
+      "path": "sources/src/analyze/NativeExports.lean",
+      "sha256": "4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f"
+    },
+    {
+      "bytes": 23547,
+      "path": "sources/src/backends/c/native-copied-values.mjs",
+      "sha256": "7415b894cb1d4f560fb00766a7668ab015393da1d02f9ab252dc157b383ea10c"
+    },
+    {
+      "bytes": 1778,
+      "path": "sources/src/backends/php/brick-math.mjs",
+      "sha256": "a1712d1ed8d43dc86a0d4f99a325efdfbb4cc3d238b8025592452d578a7179cc"
+    },
+    {
+      "bytes": 223039,
+      "path": "sources/src/backends/php/brick-math.source.json",
+      "sha256": "d6e99c476f8d959a70f4548ff4a7d2a2500402a0046213a9836564a301d09b2e"
+    },
+    {
+      "bytes": 5416,
+      "path": "sources/src/backends/php/copied-assets.mjs",
+      "sha256": "7c17badd4f5232adc70fb13dea0a06d9bdcf929cd20fe10d7f63762f3afc1de1"
+    },
+    {
+      "bytes": 13542,
+      "path": "sources/src/backends/php/copied-conversions.mjs",
+      "sha256": "025ecb45d698eb18520392a304d5771792c2df2c616e45dc591ee3a0938637c1"
+    },
+    {
+      "bytes": 5629,
+      "path": "sources/src/backends/php/copied-model.mjs",
+      "sha256": "92250b77404eb0ae0c620bbc11a5d8ce7cbbf3df313d7fdccad8d93a2edffdf6"
+    },
+    {
+      "bytes": 5250,
+      "path": "sources/src/backends/php/copied-support.mjs",
+      "sha256": "11e71b391dd00a4e4acdd85239eed44bf46870973bcbb295573ab3bac193fc74"
+    },
+    {
+      "bytes": 14384,
+      "path": "sources/src/backends/php/copied-values.mjs",
+      "sha256": "eb62ac337326372d41b184c1628d3a1bc63d3f968bc429a5e6142d74f1b9bb7d"
+    },
+    {
+      "bytes": 8271,
+      "path": "sources/src/build/component-refinements.mjs",
+      "sha256": "1c936270da51e3991148681a317e30727936bc8c4e74f7a79330f4b7393a927c"
+    },
+    {
+      "bytes": 12579,
+      "path": "sources/src/build/native-component.mjs",
+      "sha256": "2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867"
+    },
+    {
+      "bytes": 42189,
+      "path": "sources/src/build/native-model.mjs",
+      "sha256": "18e1072bac272ecf76c8d56aec0b2e21efa06e2adf4d49096598271dc5eb2d4a"
+    },
+    {
+      "bytes": 3473,
+      "path": "sources/src/build/native-php-artifacts.mjs",
+      "sha256": "f918a4a6031de9a419062dfe4276181c98bd8f7ea7ff3d4c2ae29f8749983a24"
+    },
+    {
+      "bytes": 6373,
+      "path": "sources/src/release/native-composer.mjs",
+      "sha256": "40f64a230fafb4ddb477d99df2ce357532ff4448511ddd68276a83e16a0a8816"
+    },
+    {
+      "bytes": 87,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/lakefile.toml",
+      "sha256": "16a51fbc493627ffd1a5beebdccbe577039cc22ce333e4233417444417cf188f"
+    },
+    {
+      "bytes": 25,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/lean-toolchain",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "bytes": 1093,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 64,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/package.json",
+      "sha256": "5cc3610c19032e010e0c18c017695d0a2f16b46828effec79bb5089ccf1932df"
+    },
+    {
+      "bytes": 2349,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 7501,
+      "path": "sources/tests/fixtures/structural-subtype-consumers/php-native.php",
+      "sha256": "c94a3ee22954956a266f237a5bf55b72bb2273d83c00b59f6fb581deca550ffb"
+    },
+    {
+      "bytes": 3926,
+      "path": "sources/tests/helpers/brick-math.mjs",
+      "sha256": "ca360a3ecce5717a4d495459cfb09d6dba0f075393a28c91d2f725a2c8691eb6"
+    },
+    {
+      "bytes": 4345,
+      "path": "sources/tests/helpers/closed-package-zip.mjs",
+      "sha256": "c0195e5c1145f1a9b8bdcbbd5f55a1477886714e1633fd2593687fdb6e45bdcf"
+    },
+    {
+      "bytes": 15505,
+      "path": "sources/tests/helpers/copied-fixture-install.mjs",
+      "sha256": "dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df"
+    },
+    {
+      "bytes": 3517,
+      "path": "sources/tests/helpers/fin-container-edge-closure.mjs",
+      "sha256": "2d1788a27ccd388a5779c251b01b0dc1370c8047362dc3720a7189815dd141a2"
+    },
+    {
+      "bytes": 12945,
+      "path": "sources/tests/helpers/fin-container-edge-php-closure.mjs",
+      "sha256": "8911c5b5a50bc184e249b74451b8e90daa53a576510dc53e859dcb936e4ccae5"
+    },
+    {
+      "bytes": 5465,
+      "path": "sources/tests/helpers/structural-subtype-installed-fixture.mjs",
+      "sha256": "5743bb3d0fd00301c22587a0111edcb1301c7f43c3dda0c4746340c18c0a201f"
+    },
+    {
+      "bytes": 1471,
+      "path": "sources/tests/helpers/structural-subtype-php-fixture.mjs",
+      "sha256": "14c23b9b82296307d2fef72b7fe5db13526b99a98b94effc843759a599608f97"
+    },
+    {
+      "bytes": 8333,
+      "path": "sources/tests/helpers/structural-subtype-php-installed-tests.mjs",
+      "sha256": "a64e0d512bcceae75e9f98e73e7d1d61bacd950bc9691980076bde39523551b7"
+    },
+    {
+      "bytes": 5348,
+      "path": "sources/tests/helpers/structural-subtype-php-model.php",
+      "sha256": "a79fd1a9449447c610af26e4373f93d5e0149fa55b7da7748dbe18fadfcb6afe"
+    },
+    {
+      "bytes": 3534,
+      "path": "sources/tests/helpers/structural-subtype-php-tests.mjs",
+      "sha256": "47590fb76550583de5a34c66032c386fc38aee1210b1159bb708b7912e6fb9b4"
+    },
+    {
+      "bytes": 11381,
+      "path": "sources/tests/structural-subtype-installed.test.mjs",
+      "sha256": "16df6ac45d29aac75883787b55613af68323e7621d5a02617cb29ceb414f7ab4"
+    }
+  ],
+  "kind": "structural-subtype-php-installed-v1",
+  "limitations": [
+    "Local Linux x86-64 glibc 2.36 acceptance, not hosted release-floor acceptance.",
+    "No PHP constructor/source entry counts or memory measurement.",
+    "Package binaries and complete toolchain closures are not retained.",
+    "No support-inventory promotion or recurring installed CI gate follows from this archive."
+  ],
+  "producerCommit": "79dbeb20fdbab984500dcd420c770a807bf8ac40",
+  "runs": [
+    {
+      "archives": {
+        "archives/example-structuralsubtypes-1.0.0-linux-x86_64.zip": "f27d95af04ed10c3a519aabad5d1ecabe1e508f56419586b115149d6b6fbf707"
+      },
+      "checks": 4119,
+      "dispatchObserved": false,
+      "executions": 4,
+      "label": "ordinary",
+      "modes": [
+        "weak",
+        "strict"
+      ],
+      "php": "8.2.33",
+      "producerCommit": "79dbeb20fdbab984500dcd420c770a807bf8ac40",
+      "rejections": 1042,
+      "reportSha256": "6a003851bd9a0305afaae3e8738b5af2ffa5a24e90866561da2f96563ef6e70d",
+      "route": "ordinary",
+      "snapshotControls": 6,
+      "tapSha256": "cf001e88dcdeb07946fef646709680452f6993afc6302075a2cce501fd238958"
+    },
+    {
+      "archives": {
+        "archives/example-structuralsubtypes-1.0.0-linux-x86_64.zip": "f3a32af5f7dc2372b16b43613603094e07f7a59fdd67ef0e20affb5b536aa56f"
+      },
+      "checks": 4119,
+      "dispatchObserved": false,
+      "executions": 4,
+      "label": "reviewed",
+      "modes": [
+        "weak",
+        "strict"
+      ],
+      "php": "8.2.33",
+      "producerCommit": "79dbeb20fdbab984500dcd420c770a807bf8ac40",
+      "rejections": 1042,
+      "reportSha256": "be72970e4892f368c835b53a4d9bb3d604605a4b91fe1dcb59bbef90b676664c",
+      "route": "reviewed",
+      "snapshotControls": 6,
+      "tapSha256": "92e34e78bdfc51df1b36dd4318cf549e12d5332d4315c6a604c4fb6ffd9f0835"
+    }
+  ],
+  "schemaVersion": 1,
+  "selectedSources": [
+    "src/analyze/NativeExports.lean",
+    "src/build/native-model.mjs",
+    "src/build/component-refinements.mjs",
+    "src/build/native-component.mjs",
+    "src/backends/c/native-copied-values.mjs",
+    "src/backends/php/copied-values.mjs",
+    "src/backends/php/copied-conversions.mjs",
+    "src/backends/php/copied-model.mjs",
+    "src/backends/php/copied-assets.mjs",
+    "src/backends/php/copied-support.mjs",
+    "src/backends/php/brick-math.mjs",
+    "src/backends/php/brick-math.source.json",
+    "src/build/native-php-artifacts.mjs",
+    "src/release/native-composer.mjs",
+    "tests/structural-subtype-installed.test.mjs",
+    "tests/helpers/structural-subtype-installed-fixture.mjs",
+    "tests/helpers/structural-subtype-php-fixture.mjs",
+    "tests/helpers/structural-subtype-php-installed-tests.mjs",
+    "tests/helpers/structural-subtype-php-tests.mjs",
+    "tests/helpers/structural-subtype-php-model.php",
+    "tests/helpers/copied-fixture-install.mjs",
+    "tests/helpers/brick-math.mjs",
+    "tests/helpers/fin-container-edge-php-closure.mjs",
+    "tests/helpers/fin-container-edge-closure.mjs",
+    "tests/helpers/closed-package-zip.mjs",
+    "tests/fixtures/structural-subtype-consumers/php-native.php",
+    "tests/fixtures/onboarding/structural-subtypes/StructuralSubtypes.lean",
+    "tests/fixtures/onboarding/structural-subtypes/lakefile.toml",
+    "tests/fixtures/onboarding/structural-subtypes/lean-toolchain",
+    "tests/fixtures/onboarding/structural-subtypes/package.json",
+    "tests/fixtures/onboarding/structural-subtypes/LICENSE"
+  ]
+}

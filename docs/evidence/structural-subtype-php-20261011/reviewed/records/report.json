@@ -1,0 +1,770 @@
+{
+  "builds": [
+    {
+      "archives": {
+        "archives/example-structuralsubtypes-1.0.0-linux-x86_64.zip": "f3a32af5f7dc2372b16b43613603094e07f7a59fdd67ef0e20affb5b536aa56f"
+      },
+      "modelSha256": "8cb26cf9fbf4e2d681388d8a0665f8a2bdafa816e8076109c218af0f517b4b94",
+      "receiptSha256": "c6833099f744f5ecb0be46abdd15491bbd181f0b9e0cfb3aead3ca8c11150a8f"
+    },
+    {
+      "archives": {
+        "archives/example-structuralsubtypes-1.0.0-linux-x86_64.zip": "f3a32af5f7dc2372b16b43613603094e07f7a59fdd67ef0e20affb5b536aa56f"
+      },
+      "modelSha256": "8cb26cf9fbf4e2d681388d8a0665f8a2bdafa816e8076109c218af0f517b4b94",
+      "receiptSha256": "c6833099f744f5ecb0be46abdd15491bbd181f0b9e0cfb3aead3ca8c11150a8f"
+    }
+  ],
+  "compilerFreeReplay": true,
+  "configuration": {
+    "modules": [
+      "StructuralSubtypes"
+    ],
+    "schemaVersion": 1,
+    "targets": {
+      "php-native": {
+        "name": "example/structuralsubtypes",
+        "version": "1.0.0"
+      }
+    }
+  },
+  "declaredGlibcFloor": "2.36",
+  "dispatch": {
+    "observed": false,
+    "reason": "No PHP entry counters in this installed acceptance"
+  },
+  "expectedBindingIrSha256": "6ca095623cdf425a28546d3fb8a5428fc461242aed9f24b91d40009dd77a3e20",
+  "independentBuilds": 2,
+  "installation": {
+    "command": "/usr/bin/php8.2",
+    "composer": "/usr/bin/composer",
+    "dependencyFiles": {
+      "LICENSE": {
+        "bytes": 1089,
+        "sha256": "d2625cc652e6ffa9f16827f1dba2d83ac12b050dc8150a38720420dbb810cae3"
+      },
+      "composer.json": {
+        "bytes": 816,
+        "sha256": "fe93d538393d24617d615b373389d8a8970d8be18a8928d17c5a5cd9381a6522"
+      },
+      "src/BigDecimal.php": {
+        "bytes": 38820,
+        "sha256": "ccf44c9e463182dd158190fd3b27b631ea7a58968505157e2bc715b61604515c"
+      },
+      "src/BigInteger.php": {
+        "bytes": 47781,
+        "sha256": "a6d7b7824a8399ece864332672800f13be4ef57609f868dd577de2cf586bc3a1"
+      },
+      "src/BigNumber.php": {
+        "bytes": 31254,
+        "sha256": "5a2a5ad1e73835fb200bbf1f959dbd36b8785b5e4a1c7c9ef505992130c08049"
+      },
+      "src/BigRational.php": {
+        "bytes": 18121,
+        "sha256": "99d999ae1d4ccb9bbe231a2e5242f315b9483f317b8b5bd226277ced1a4ba2ab"
+      },
+      "src/Exception/DivisionByZeroException.php": {
+        "bytes": 1296,
+        "sha256": "6dad71505461e21c56db4222659891b1a4efa8bf7737290418668aa881f6c3d3"
+      },
+      "src/Exception/IntegerOverflowException.php": {
+        "bytes": 1174,
+        "sha256": "d4264eb4bc039baa7cb8a4aa62c8928c85ff947e9823532095e156d87392455b"
+      },
+      "src/Exception/InvalidArgumentException.php": {
+        "bytes": 2957,
+        "sha256": "c25c58c48379436ce704ea28cc3c5cff5f853ed5e2b439e639d198ed7bdfddf9"
+      },
+      "src/Exception/MathException.php": {
+        "bytes": 179,
+        "sha256": "34033cc2b90fa897e9e79d05a589c8e6411b9a117a80765b58013eacad0b255e"
+      },
+      "src/Exception/NegativeNumberException.php": {
+        "bytes": 1316,
+        "sha256": "2c6a1c878e96bbb06d07fcd64ce06b66e5ac56f5ba51a2ba69cdd62b1f5dfd6d"
+      },
+      "src/Exception/NoInverseException.php": {
+        "bytes": 658,
+        "sha256": "1e072b6b8802ef678cd8aed6aab4f5534e83e514c67c10cfbd457aa9e67d77d2"
+      },
+      "src/Exception/NumberFormatException.php": {
+        "bytes": 3718,
+        "sha256": "9513693ceea593b6686ca7ef9253c595c6502145382f9da9872c791b37b5a258"
+      },
+      "src/Exception/PlatformException.php": {
+        "bytes": 1283,
+        "sha256": "b2bc33189336bf6c8b3b145bd8c8397218e90588cca9ead140ef4a66d1c6be51"
+      },
+      "src/Exception/RandomSourceException.php": {
+        "bytes": 1343,
+        "sha256": "462eb152713684b4d5ac0efe2fa27f8b2fd0d877ceb3e7315516757c5640e67c"
+      },
+      "src/Exception/RoundingNecessaryException.php": {
+        "bytes": 3878,
+        "sha256": "3f9e061a0eeda28fc35d6f70cd1625c74d3002891c2d063ed2bede16155c8549"
+      },
+      "src/Internal/Calculator.php": {
+        "bytes": 20316,
+        "sha256": "a92ba12d6e6487ef8ee6cf435ede5b2d4f4d4684b7bca14aa9c133b842724655"
+      },
+      "src/Internal/Calculator/BcMathCalculator.php": {
+        "bytes": 2078,
+        "sha256": "aaf790516424d97f2257bf6fdc7eee9a95fc5440abd11d2fbc4f09ba73549b6a"
+      },
+      "src/Internal/Calculator/GmpCalculator.php": {
+        "bytes": 3668,
+        "sha256": "0351a740b49e88cf379319af9fccab8c8f437cd5d54b2d57b79c1ea72fcc0420"
+      },
+      "src/Internal/Calculator/NativeCalculator.php": {
+        "bytes": 14245,
+        "sha256": "4980f1a9b620a8de0588a018276044ed20c01293c2a0254613094e81e1cb6c1a"
+      },
+      "src/Internal/CalculatorRegistry.php": {
+        "bytes": 1887,
+        "sha256": "7047026d82935de4736cb9f2f73915a75c2e9a776c68476b72bd430cab115088"
+      },
+      "src/Internal/DecimalHelper.php": {
+        "bytes": 4779,
+        "sha256": "6884286a2dd2ebbba5d373140e2cca58d6efb8dd63b0868e517fb39eff4ad016"
+      },
+      "src/Internal/Safe.php": {
+        "bytes": 1645,
+        "sha256": "26100429b186305ee9143f0b45c36168c1a7d039099dff13f5ab1a9ca2e32ccf"
+      },
+      "src/NumberSyntax.php": {
+        "bytes": 1705,
+        "sha256": "f5ad04274721dd3bbc4572b90eb8e71fb47d052fd1ab6974e08aa013fef94b9e"
+      },
+      "src/RoundingMode.php": {
+        "bytes": 5370,
+        "sha256": "1b7e6399d071d1ee922ec6ee928ae06bfa092b6d932af5faac8fbe65ef9b258d"
+      }
+    },
+    "feedFiles": {
+      "brick-math-1.0.0.zip": {
+        "bytes": 48201,
+        "sha256": "4563893ce709e3be081c369fd9799289c2a97791b5df2113524bc85696ffefd2"
+      },
+      "brick-math/LICENSE": {
+        "bytes": 1089,
+        "sha256": "d2625cc652e6ffa9f16827f1dba2d83ac12b050dc8150a38720420dbb810cae3"
+      },
+      "brick-math/composer.json": {
+        "bytes": 816,
+        "sha256": "fe93d538393d24617d615b373389d8a8970d8be18a8928d17c5a5cd9381a6522"
+      },
+      "brick-math/src/BigDecimal.php": {
+        "bytes": 38820,
+        "sha256": "ccf44c9e463182dd158190fd3b27b631ea7a58968505157e2bc715b61604515c"
+      },
+      "brick-math/src/BigInteger.php": {
+        "bytes": 47781,
+        "sha256": "a6d7b7824a8399ece864332672800f13be4ef57609f868dd577de2cf586bc3a1"
+      },
+      "brick-math/src/BigNumber.php": {
+        "bytes": 31254,
+        "sha256": "5a2a5ad1e73835fb200bbf1f959dbd36b8785b5e4a1c7c9ef505992130c08049"
+      },
+      "brick-math/src/BigRational.php": {
+        "bytes": 18121,
+        "sha256": "99d999ae1d4ccb9bbe231a2e5242f315b9483f317b8b5bd226277ced1a4ba2ab"
+      },
+      "brick-math/src/Exception/DivisionByZeroException.php": {
+        "bytes": 1296,
+        "sha256": "6dad71505461e21c56db4222659891b1a4efa8bf7737290418668aa881f6c3d3"
+      },
+      "brick-math/src/Exception/IntegerOverflowException.php": {
+        "bytes": 1174,
+        "sha256": "d4264eb4bc039baa7cb8a4aa62c8928c85ff947e9823532095e156d87392455b"
+      },
+      "brick-math/src/Exception/InvalidArgumentException.php": {
+        "bytes": 2957,
+        "sha256": "c25c58c48379436ce704ea28cc3c5cff5f853ed5e2b439e639d198ed7bdfddf9"
+      },
+      "brick-math/src/Exception/MathException.php": {
+        "bytes": 179,
+        "sha256": "34033cc2b90fa897e9e79d05a589c8e6411b9a117a80765b58013eacad0b255e"
+      },
+      "brick-math/src/Exception/NegativeNumberException.php": {
+        "bytes": 1316,
+        "sha256": "2c6a1c878e96bbb06d07fcd64ce06b66e5ac56f5ba51a2ba69cdd62b1f5dfd6d"
+      },
+      "brick-math/src/Exception/NoInverseException.php": {
+        "bytes": 658,
+        "sha256": "1e072b6b8802ef678cd8aed6aab4f5534e83e514c67c10cfbd457aa9e67d77d2"
+      },
+      "brick-math/src/Exception/NumberFormatException.php": {
+        "bytes": 3718,
+        "sha256": "9513693ceea593b6686ca7ef9253c595c6502145382f9da9872c791b37b5a258"
+      },
+      "brick-math/src/Exception/PlatformException.php": {
+        "bytes": 1283,
+        "sha256": "b2bc33189336bf6c8b3b145bd8c8397218e90588cca9ead140ef4a66d1c6be51"
+      },
+      "brick-math/src/Exception/RandomSourceException.php": {
+        "bytes": 1343,
+        "sha256": "462eb152713684b4d5ac0efe2fa27f8b2fd0d877ceb3e7315516757c5640e67c"
+      },
+      "brick-math/src/Exception/RoundingNecessaryException.php": {
+        "bytes": 3878,
+        "sha256": "3f9e061a0eeda28fc35d6f70cd1625c74d3002891c2d063ed2bede16155c8549"
+      },
+      "brick-math/src/Internal/Calculator.php": {
+        "bytes": 20316,
+        "sha256": "a92ba12d6e6487ef8ee6cf435ede5b2d4f4d4684b7bca14aa9c133b842724655"
+      },
+      "brick-math/src/Internal/Calculator/BcMathCalculator.php": {
+        "bytes": 2078,
+        "sha256": "aaf790516424d97f2257bf6fdc7eee9a95fc5440abd11d2fbc4f09ba73549b6a"
+      },
+      "brick-math/src/Internal/Calculator/GmpCalculator.php": {
+        "bytes": 3668,
+        "sha256": "0351a740b49e88cf379319af9fccab8c8f437cd5d54b2d57b79c1ea72fcc0420"
+      },
+      "brick-math/src/Internal/Calculator/NativeCalculator.php": {
+        "bytes": 14245,
+        "sha256": "4980f1a9b620a8de0588a018276044ed20c01293c2a0254613094e81e1cb6c1a"
+      },
+      "brick-math/src/Internal/CalculatorRegistry.php": {
+        "bytes": 1887,
+        "sha256": "7047026d82935de4736cb9f2f73915a75c2e9a776c68476b72bd430cab115088"
+      },
+      "brick-math/src/Internal/DecimalHelper.php": {
+        "bytes": 4779,
+        "sha256": "6884286a2dd2ebbba5d373140e2cca58d6efb8dd63b0868e517fb39eff4ad016"
+      },
+      "brick-math/src/Internal/Safe.php": {
+        "bytes": 1645,
+        "sha256": "26100429b186305ee9143f0b45c36168c1a7d039099dff13f5ab1a9ca2e32ccf"
+      },
+      "brick-math/src/NumberSyntax.php": {
+        "bytes": 1705,
+        "sha256": "f5ad04274721dd3bbc4572b90eb8e71fb47d052fd1ab6974e08aa013fef94b9e"
+      },
+      "brick-math/src/RoundingMode.php": {
+        "bytes": 5370,
+        "sha256": "1b7e6399d071d1ee922ec6ee928ae06bfa092b6d932af5faac8fbe65ef9b258d"
+      },
+      "component.zip": {
+        "bytes": 51417094,
+        "sha256": "f3a32af5f7dc2372b16b43613603094e07f7a59fdd67ef0e20affb5b536aa56f"
+      }
+    },
+    "generatedFiles": {
+      "composer.lock": {
+        "bytes": 3038,
+        "sha256": "c4d9214e5d567d8891d52b9d29b6e41481883d2dd71eabdf9899a8981bcb21cc"
+      },
+      "vendor/autoload.php": {
+        "bytes": 771,
+        "sha256": "e37f3b9794e11ae005dfdde44d85a849d0f1ebdf784b958518fd4b0aab1294f4"
+      },
+      "vendor/composer/ClassLoader.php": {
+        "bytes": 16528,
+        "sha256": "42b8c5525dbc133045f47f4275f017071c82144a34acb9396d955ca10729cb2e"
+      },
+      "vendor/composer/InstalledVersions.php": {
+        "bytes": 16143,
+        "sha256": "21f4ba19e7859cb3f85b8b1680c970ee25d972546c1606dcae0e7e5f43f626f0"
+      },
+      "vendor/composer/LICENSE": {
+        "bytes": 1068,
+        "sha256": "7855ac293067aebe7e51afdd23b9dea54b8be24187dbecc9b9142581c37f596c"
+      },
+      "vendor/composer/autoload_classmap.php": {
+        "bytes": 222,
+        "sha256": "375085d0d6690301081436cd75755cb2c882f8a7f6fc385c8814a11734fc413a"
+      },
+      "vendor/composer/autoload_files.php": {
+        "bytes": 232,
+        "sha256": "8d7542219c474caad00d91cdf916b23bb56245fcc94a2fb9914a73cb4d95473f"
+      },
+      "vendor/composer/autoload_namespaces.php": {
+        "bytes": 139,
+        "sha256": "ede505407590638a435137f4e060136f1008de79fc169b3de9793423b0cea38c"
+      },
+      "vendor/composer/autoload_psr4.php": {
+        "bytes": 195,
+        "sha256": "d84c58712d49fd62ea528610fc277a36664abd37e1087cec8c1efb0af6918590"
+      },
+      "vendor/composer/autoload_real.php": {
+        "bytes": 1672,
+        "sha256": "a9659cd9d7f275df58f8d08bae607a8d3292c926c2cf92d438018b5623c50ef1"
+      },
+      "vendor/composer/autoload_static.php": {
+        "bytes": 1216,
+        "sha256": "e005023bead7bdd52e65d7453d5cb9ea7aaa6454bb7a40789799f07122f67b62"
+      },
+      "vendor/composer/installed.json": {
+        "bytes": 2819,
+        "sha256": "584e9f465586fe77253545a5acef40f27b9bcaa185b4c0ffb29222fdb805723d"
+      },
+      "vendor/composer/installed.php": {
+        "bytes": 1371,
+        "sha256": "2d9a278b24dc2917f98d8387bf5a076498542cbbb6ea841423a853571ccd9aae"
+      },
+      "vendor/composer/platform_check.php": {
+        "bytes": 925,
+        "sha256": "230c364d17607b4f0500630f1c1bcca4e08e1486748340d2ec85024f3a0b73b4"
+      }
+    },
+    "inputs": {
+      "composer.json": {
+        "bytes": 2353,
+        "sha256": "13f41a562cde799ddd5fac923bd4815e2a0b0cac05d428bc57e07c7c212bbb10"
+      },
+      "consumer.php": {
+        "bytes": 7531,
+        "sha256": "cdb125125c9ec0a36cb86424b8fcc33d15e1e33b3a31865c587d23fd0c8b6e82"
+      },
+      "strict.php": {
+        "bytes": 7531,
+        "sha256": "7b7c6b95f6fc411341be432f8e6b69fa981540a7a9b2a84fece71fcbefb334b0"
+      }
+    },
+    "name": "example/structuralsubtypes",
+    "packageFileSetSha256": "54a73c906ee221fbf023090a0c8dcc23f0f723ef93dfc489e348b105770e9678",
+    "receiptBytes": "{\n  \"bindingIrSha256\": \"33eb72e82691efa7abb76e73da15f436c3c7b956af368fb36e8ffc32aa0912d5\",\n  \"component\": {\n    \"id\": \"structuralsubtypes@1.0.0\",\n    \"name\": \"structuralsubtypes\",\n    \"version\": \"1.0.0\"\n  },\n  \"ecosystem\": \"composer\",\n  \"files\": {\n    \"README.md\": {\n      \"bytes\": 8868,\n      \"sha256\": \"954e693b4d7f878673acf6ad4a3a393c11b486f4a43590327cfb27bcd3f92a47\"\n    },\n    \"binding-manifest.json\": {\n      \"bytes\": 1545,\n      \"sha256\": \"bf558886dafeb287466dcc01cf8c3ee8e80536682093908cee1f139f015f77d5\"\n    },\n    \"composer.json\": {\n      \"bytes\": 554,\n      \"sha256\": \"6eecffe93ce0171ebfc991227fc02082b5b8f17cd91884594534e1a5171ebfac\"\n    },\n    \"lean-bridge/component/allocation-guard.h\": {\n      \"bytes\": 1309,\n      \"sha256\": \"f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83\"\n    },\n    \"lean-bridge/component/artifacts.json\": {\n      \"bytes\": 1534,\n      \"sha256\": \"f8110743f64ba485662d10cb3ed15687765ae71a5974bb4f80c7716820882899\"\n    },\n    \"lean-bridge/component/binding-ir.json\": {\n      \"bytes\": 50481,\n      \"sha256\": \"8dc62be9f9786cba70905987d14ce3b78893341a87e3e546cdf1c151131de527\"\n    },\n    \"lean-bridge/component/component.h\": {\n      \"bytes\": 4399,\n      \"sha256\": \"c8e245f50660b898b2ff93bf80b6af98d0e4e2fe28cf500e59a9ce58cfb9721c\"\n    },\n    \"lean-bridge/component/generated.lean\": {\n      \"bytes\": 19947,\n      \"sha256\": \"90dc480b3a1073d5a62f35cf0de41d12063f66da2e9f34e04020f5b9792545b9\"\n    },\n    \"lean-bridge/component/metadata.json\": {\n      \"bytes\": 82709,\n      \"sha256\": \"be31bc3311b8ee59bcf8366c16dd9081ae49b53f94f143c4657c9b8ed39ed581\"\n    },\n    \"lean-bridge/component/model.json\": {\n      \"bytes\": 157752,\n      \"sha256\": \"8cb26cf9fbf4e2d681388d8a0665f8a2bdafa816e8076109c218af0f517b4b94\"\n    },\n    \"lean-bridge/component/native-component.json\": {\n      \"bytes\": 55707,\n      \"sha256\": \"43c281f4b38d3eacbbd1989cf30d9979cb387383df957e6ced2cf4af3612d9df\"\n    },\n    \"lean-bridge/include/structuralsubtypes.h\": {\n      \"bytes\": 9878,\n      \"sha256\": \"05d749ee76cdc135d8f00c2415b8609cd64359f63f2bbd67a6a4e6236e1f18c9\"\n    },\n    \"lean-bridge/native-c-adapter.json\": {\n      \"bytes\": 1399,\n      \"sha256\": \"8fcf1e8ab032c02594a7e3cfdc1835487298e1b001b4c6c6603b25050e4af7d9\"\n    },\n    \"lean-bridge/runtime.json\": {\n      \"bytes\": 1466,\n      \"sha256\": \"137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf\"\n    },\n    \"licenses/Lean-LICENSE\": {\n      \"bytes\": 9160,\n      \"sha256\": \"8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e\"\n    },\n    \"licenses/Lean-LICENSES\": {\n      \"bytes\": 81854,\n      \"sha256\": \"00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce\"\n    },\n    \"licenses/LeanBridge-LICENSE\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"licenses/source-notices.json\": {\n      \"bytes\": 2115,\n      \"sha256\": \"ceee06cfeda05a9da8af0050757559df2a1774009547260379d947b7c934f94a\"\n    },\n    \"licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"native/linux-x64/libcomponent_85dc6ef3dd30a6b68269.so\": {\n      \"bytes\": 118240,\n      \"sha256\": \"7e70da88f20e3c962b655518dcb523dbb8b60311b41b526133fb7c98c206eb5d\"\n    },\n    \"native/linux-x64/liblean_bridge_native.so\": {\n      \"bytes\": 21464,\n      \"sha256\": \"25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7\"\n    },\n    \"native/linux-x64/libleanshared.so\": {\n      \"bytes\": 158401256,\n      \"sha256\": \"d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4\"\n    },\n    \"native/linux-x64/libstructuralsubtypes.so\": {\n      \"bytes\": 73624,\n      \"sha256\": \"6b764b7337cc557426c13debf6c6fcde43004b3df92a13d184d68d890394b80a\"\n    },\n    \"src/Api.php\": {\n      \"bytes\": 7226,\n      \"sha256\": \"74408863f44c77b6f164e368d56073c4bf635490030104e34c3892371839e95a\"\n    },\n    \"src/Internal/Native.php\": {\n      \"bytes\": 52727,\n      \"sha256\": \"d417e0388b98b1039c899bc79de7d99f35777d3f51a3b4e9a8e54e4f2d40a7b5\"\n    },\n    \"src/Internal/Runtime.php\": {\n      \"bytes\": 4336,\n      \"sha256\": \"057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14\"\n    }\n  },\n  \"glibcMinimumVersion\": \"2.36\",\n  \"kind\": \"lean-bridge-ordinary-php-package\",\n  \"name\": \"example/structuralsubtypes\",\n  \"namespace\": \"LeanStructuralsubtypes\",\n  \"runtimeIdentity\": \"137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf\",\n  \"schemaVersion\": 1,\n  \"sourceIdentity\": {\n    \"exportConfigurationSha256\": \"57441962fa5b7b3cc407d30c35e3dff930b8d5c53e607554b22f60a683219855\",\n    \"exportConfigurationSource\": \"{\\n  \\\"modules\\\": [\\n    \\\"StructuralSubtypes\\\"\\n  ],\\n  \\\"schemaVersion\\\": 1,\\n  \\\"targets\\\": {\\n    \\\"php-native\\\": {\\n      \\\"name\\\": \\\"example/structuralsubtypes\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    }\\n  }\\n}\\n\",\n    \"extractorSha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\",\n    \"leanCommit\": \"f3b06c705e6c85f5314019d5d3baab0fec5b580c\",\n    \"leanCompilerSha256\": \"e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550\",\n    \"leanVersion\": \"4.32.2\",\n    \"modules\": [\n      {\n        \"interface\": {\n          \"bytes\": 97808,\n          \"interfaceSha256\": \"78435946d9b8b19253fe55147c81e2b2f128f6a8f884c6193835bb60d87053ce\",\n          \"sha256\": \"dc0423c9032999bc6d9234ea6f23e5818e03a0b0b16e77a0b8a0b91d6070bee9\"\n        },\n        \"module\": \"StructuralSubtypes\",\n        \"source\": {\n          \"bytes\": 2349,\n          \"path\": \"StructuralSubtypes.lean\",\n          \"sha256\": \"a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f\"\n        }\n      }\n    ],\n    \"request\": {\n      \"arities\": [],\n      \"contracts\": {\n        \"StructuralSubtypes.aliasArguments\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"arguments\": [\n                  {\n                    \"arguments\": [\n                      {\n                        \"constructor\": \"StructuralSubtypes.checkedPositive\"\n                      }\n                    ],\n                    \"kind\": \"option\"\n                  }\n                ],\n                \"kind\": \"array\"\n              }\n            },\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"arguments\": [\n                  {\n                    \"arguments\": [\n                      {\n                        \"constructor\": \"StructuralSubtypes.normalizePositive\"\n                      }\n                    ],\n                    \"kind\": \"option\"\n                  }\n                ],\n                \"kind\": \"array\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\",\n            \"refinement\": {\n              \"arguments\": [\n                {\n                  \"arguments\": [\n                    {\n                      \"constructor\": \"StructuralSubtypes.checkedPositive\"\n                    }\n                  ],\n                  \"kind\": \"option\"\n                }\n              ],\n              \"kind\": \"array\"\n            }\n          }\n        },\n        \"StructuralSubtypes.aliasPair\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"arguments\": [\n                  {\n                    \"arguments\": [\n                      {\n                        \"arguments\": [\n                          {\n                            \"constructor\": \"StructuralSubtypes.checkedPositive\"\n                          }\n                        ],\n                        \"kind\": \"option\"\n                      }\n                    ],\n                    \"kind\": \"array\"\n                  },\n                  {\n                    \"arguments\": [\n                      {\n                        \"arguments\": [\n                          {\n                            \"constructor\": \"StructuralSubtypes.normalizePositive\"\n                          }\n                        ],\n                        \"kind\": \"option\"\n                      }\n                    ],\n                    \"kind\": \"array\"\n                  }\n                ],\n                \"kind\": \"tuple\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\",\n            \"refinement\": {\n              \"arguments\": [\n                {\n                  \"arguments\": [\n                    {\n                      \"arguments\": [\n                        {\n                          \"constructor\": \"StructuralSubtypes.checkedPositive\"\n                        }\n                      ],\n                      \"kind\": \"option\"\n                    }\n                  ],\n                  \"kind\": \"array\"\n                },\n                {\n                  \"arguments\": [\n                    {\n                      \"arguments\": [\n                        {\n                          \"constructor\": \"StructuralSubtypes.normalizePositive\"\n                        }\n                      ],\n                      \"kind\": \"option\"\n                    }\n                  ],\n                  \"kind\": \"array\"\n                }\n              ],\n              \"kind\": \"tuple\"\n            }\n          }\n        },\n        \"StructuralSubtypes.arrays\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"arguments\": [\n                  {\n                    \"constructor\": \"StructuralSubtypes.checkedPositive\"\n                  }\n                ],\n                \"kind\": \"array\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\",\n            \"refinement\": {\n              \"arguments\": [\n                {\n                  \"constructor\": \"StructuralSubtypes.checkedPositive\"\n                }\n              ],\n              \"kind\": \"array\"\n            }\n          }\n        },\n        \"StructuralSubtypes.branch\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"arguments\": [\n                  {\n                    \"constructor\": \"StructuralSubtypes.checkedPositive\"\n                  },\n                  {\n                    \"constructor\": \"StructuralSubtypes.checkedWord\"\n                  }\n                ],\n                \"kind\": \"result\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\",\n            \"refinement\": {\n              \"arguments\": [\n                {\n                  \"constructor\": \"StructuralSubtypes.checkedPositive\"\n                },\n                {\n                  \"constructor\": \"StructuralSubtypes.checkedWord\"\n                }\n              ],\n              \"kind\": \"result\"\n            }\n          }\n        },\n        \"StructuralSubtypes.byteBranches\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"arguments\": [\n                  {\n                    \"arguments\": [\n                      {\n                        \"arguments\": [\n                          {\n                            \"constructor\": \"StructuralSubtypes.checkedByte\"\n                          },\n                          {\n                            \"constructor\": \"StructuralSubtypes.checkedPositive\"\n                          }\n                        ],\n                        \"kind\": \"tuple\"\n                      }\n                    ],\n                    \"kind\": \"option\"\n                  }\n                ],\n                \"kind\": \"array\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\",\n            \"refinement\": {\n              \"arguments\": [\n                {\n                  \"arguments\": [\n                    {\n                      \"arguments\": [\n                        {\n                          \"constructor\": \"StructuralSubtypes.checkedByte\"\n                        },\n                        {\n                          \"constructor\": \"StructuralSubtypes.checkedPositive\"\n                        }\n                      ],\n                      \"kind\": \"tuple\"\n                    }\n                  ],\n                  \"kind\": \"option\"\n                }\n              ],\n              \"kind\": \"array\"\n            }\n          }\n        },\n        \"StructuralSubtypes.lists\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"arguments\": [\n                  {\n                    \"constructor\": \"StructuralSubtypes.checkedPositive\"\n                  }\n                ],\n                \"kind\": \"list\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\",\n            \"refinement\": {\n              \"arguments\": [\n                {\n                  \"constructor\": \"StructuralSubtypes.checkedPositive\"\n                }\n              ],\n              \"kind\": \"list\"\n            }\n          }\n        },\n        \"StructuralSubtypes.nested\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"arguments\": [\n                  {\n                    \"arguments\": [\n                      {\n                        \"arguments\": [\n                          {\n                            \"arguments\": [\n                              {\n                                \"constructor\": \"StructuralSubtypes.checkedPositive\"\n                              },\n                              null\n                            ],\n                            \"kind\": \"tuple\"\n                          }\n                        ],\n                        \"kind\": \"option\"\n                      }\n                    ],\n                    \"kind\": \"list\"\n                  }\n                ],\n                \"kind\": \"array\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"StructuralSubtypes.options\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"arguments\": [\n                  {\n                    \"constructor\": \"StructuralSubtypes.checkedPositive\"\n                  }\n                ],\n                \"kind\": \"option\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\",\n            \"refinement\": {\n              \"arguments\": [\n                {\n                  \"constructor\": \"StructuralSubtypes.checkedPositive\"\n                }\n              ],\n              \"kind\": \"option\"\n            }\n          }\n        },\n        \"StructuralSubtypes.product\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"arguments\": [\n                  {\n                    \"constructor\": \"StructuralSubtypes.checkedPositive\"\n                  },\n                  {\n                    \"constructor\": \"StructuralSubtypes.checkedWord\"\n                  }\n                ],\n                \"kind\": \"tuple\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\",\n            \"refinement\": {\n              \"arguments\": [\n                {\n                  \"constructor\": \"StructuralSubtypes.checkedPositive\"\n                },\n                {\n                  \"constructor\": \"StructuralSubtypes.checkedWord\"\n                }\n              ],\n              \"kind\": \"tuple\"\n            }\n          }\n        },\n        \"StructuralSubtypes.scalar\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"StructuralSubtypes.checkedPositive\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\",\n            \"refinement\": {\n              \"constructor\": \"StructuralSubtypes.checkedPositive\"\n            }\n          }\n        },\n        \"StructuralSubtypes.specialized\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"arguments\": [\n                  {\n                    \"constructor\": \"StructuralSubtypes.checkedPositive\"\n                  }\n                ],\n                \"kind\": \"list\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\",\n            \"refinement\": {\n              \"arguments\": [\n                {\n                  \"constructor\": \"StructuralSubtypes.checkedPositive\"\n                }\n              ],\n              \"kind\": \"list\"\n            }\n          }\n        }\n      },\n      \"exportModules\": [\n        \"StructuralSubtypes\"\n      ],\n      \"exports\": [\n        \"StructuralSubtypes.aliasArguments\",\n        \"StructuralSubtypes.aliasPair\",\n        \"StructuralSubtypes.arrays\",\n        \"StructuralSubtypes.branch\",\n        \"StructuralSubtypes.byteBranches\",\n        \"StructuralSubtypes.lists\",\n        \"StructuralSubtypes.nested\",\n        \"StructuralSubtypes.options\",\n        \"StructuralSubtypes.plainFin\",\n        \"StructuralSubtypes.product\",\n        \"StructuralSubtypes.scalar\",\n        \"StructuralSubtypes.specialized\"\n      ],\n      \"metadata\": {\n        \"invocationIdentitySha256\": \"d2fa3205a7f859505cb27493fcc46bbe73f69664ee6ab8fe5cfd19b2e75bb708\",\n        \"modules\": [\n          {\n            \"interfaceSha256\": \"78435946d9b8b19253fe55147c81e2b2f128f6a8f884c6193835bb60d87053ce\",\n            \"name\": \"StructuralSubtypes\",\n            \"sourcePath\": \"StructuralSubtypes.lean\",\n            \"sourceSha256\": \"a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f\"\n          }\n        ],\n        \"toolchain\": \"leanprover/lean4:v4.32.2\"\n      },\n      \"modules\": [\n        \"StructuralSubtypes\"\n      ],\n      \"profile\": \"native-library-v1\",\n      \"resources\": [],\n      \"specializations\": [\n        {\n          \"declaration\": \"StructuralSubtypes.generic\",\n          \"name\": \"StructuralSubtypes.specialized\",\n          \"types\": [\n            \"StructuralSubtypes.Positive\"\n          ]\n        }\n      ]\n    },\n    \"reviewedBindingIr\": {\n      \"path\": \"api.binding-ir.json\",\n      \"schemaVersion\": 1,\n      \"semanticSha256\": \"6ca095623cdf425a28546d3fb8a5428fc461242aed9f24b91d40009dd77a3e20\",\n      \"source\": \"{\\n  \\\"assurance\\\": [],\\n  \\\"capabilities\\\": [],\\n  \\\"component\\\": {\\n    \\\"id\\\": \\\"structuralsubtypes@1.0.0\\\",\\n    \\\"name\\\": \\\"structuralsubtypes\\\",\\n    \\\"version\\\": \\\"1.0.0\\\"\\n  },\\n  \\\"declarations\\\": [\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:StructuralSubtypes.scalar\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"scalar\\\",\\n      \\\"overloadKey\\\": \\\"StructuralSubtypes.scalar\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"kind\\\": \\\"primitive\\\",\\n            \\\"name\\\": \\\"nat\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"kind\\\": \\\"primitive\\\",\\n          \\\"name\\\": \\\"nat\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"StructuralSubtypes.scalar\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [\\n              {\\n                \\\"constructor\\\": \\\"StructuralSubtypes.checkedPositive\\\",\\n                \\\"kind\\\": \\\"subtype\\\"\\n              }\\n            ],\\n            \\\"result\\\": {\\n              \\\"constructor\\\": \\\"StructuralSubtypes.checkedPositive\\\",\\n              \\\"kind\\\": \\\"subtype\\\"\\n            }\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    },\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:StructuralSubtypes.arrays\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"arrays\\\",\\n      \\\"overloadKey\\\": \\\"StructuralSubtypes.arrays\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"arguments\\\": [\\n              {\\n                \\\"kind\\\": \\\"primitive\\\",\\n                \\\"name\\\": \\\"nat\\\"\\n              }\\n            ],\\n            \\\"constructor\\\": \\\"array\\\",\\n            \\\"kind\\\": \\\"apply\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"arguments\\\": [\\n            {\\n              \\\"kind\\\": \\\"primitive\\\",\\n              \\\"name\\\": \\\"nat\\\"\\n            }\\n          ],\\n          \\\"constructor\\\": \\\"array\\\",\\n          \\\"kind\\\": \\\"apply\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"StructuralSubtypes.arrays\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [\\n              {\\n                \\\"arguments\\\": [\\n                  {\\n                    \\\"constructor\\\": \\\"StructuralSubtypes.checkedPositive\\\",\\n                    \\\"kind\\\": \\\"subtype\\\"\\n                  }\\n                ],\\n                \\\"kind\\\": \\\"array\\\"\\n              }\\n            ],\\n            \\\"result\\\": {\\n              \\\"arguments\\\": [\\n                {\\n                  \\\"constructor\\\": \\\"StructuralSubtypes.checkedPositive\\\",\\n                  \\\"kind\\\": \\\"subtype\\\"\\n                }\\n              ],\\n              \\\"kind\\\": \\\"array\\\"\\n            }\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    },\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:StructuralSubtypes.lists\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"lists\\\",\\n      \\\"overloadKey\\\": \\\"StructuralSubtypes.lists\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"arguments\\\": [\\n              {\\n                \\\"kind\\\": \\\"primitive\\\",\\n                \\\"name\\\": \\\"nat\\\"\\n              }\\n            ],\\n            \\\"constructor\\\": \\\"list\\\",\\n            \\\"kind\\\": \\\"apply\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"arguments\\\": [\\n            {\\n              \\\"kind\\\": \\\"primitive\\\",\\n              \\\"name\\\": \\\"nat\\\"\\n            }\\n          ],\\n          \\\"constructor\\\": \\\"list\\\",\\n          \\\"kind\\\": \\\"apply\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"StructuralSubtypes.lists\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [\\n              {\\n                \\\"arguments\\\": [\\n                  {\\n                    \\\"constructor\\\": \\\"StructuralSubtypes.checkedPositive\\\",\\n                    \\\"kind\\\": \\\"subtype\\\"\\n                  }\\n                ],\\n                \\\"kind\\\": \\\"list\\\"\\n              }\\n            ],\\n            \\\"result\\\": {\\n              \\\"arguments\\\": [\\n                {\\n                  \\\"constructor\\\": \\\"StructuralSubtypes.checkedPositive\\\",\\n                  \\\"kind\\\": \\\"subtype\\\"\\n                }\\n              ],\\n              \\\"kind\\\": \\\"list\\\"\\n            }\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    },\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:StructuralSubtypes.options\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"options\\\",\\n      \\\"overloadKey\\\": \\\"StructuralSubtypes.options\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"arguments\\\": [\\n              {\\n                \\\"kind\\\": \\\"primitive\\\",\\n                \\\"name\\\": \\\"nat\\\"\\n              }\\n            ],\\n            \\\"constructor\\\": \\\"option\\\",\\n            \\\"kind\\\": \\\"apply\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"arguments\\\": [\\n            {\\n              \\\"kind\\\": \\\"primitive\\\",\\n              \\\"name\\\": \\\"nat\\\"\\n            }\\n          ],\\n          \\\"constructor\\\": \\\"option\\\",\\n          \\\"kind\\\": \\\"apply\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"StructuralSubtypes.options\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [\\n              {\\n                \\\"arguments\\\": [\\n                  {\\n                    \\\"constructor\\\": \\\"StructuralSubtypes.checkedPositive\\\",\\n                    \\\"kind\\\": \\\"subtype\\\"\\n                  }\\n                ],\\n                \\\"kind\\\": \\\"option\\\"\\n              }\\n            ],\\n            \\\"result\\\": {\\n              \\\"arguments\\\": [\\n                {\\n                  \\\"constructor\\\": \\\"StructuralSubtypes.checkedPositive\\\",\\n                  \\\"kind\\\": \\\"subtype\\\"\\n                }\\n              ],\\n              \\\"kind\\\": \\\"option\\\"\\n            }\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    },\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:StructuralSubtypes.product\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"product\\\",\\n      \\\"overloadKey\\\": \\\"StructuralSubtypes.product\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"arguments\\\": [\\n              {\\n                \\\"kind\\\": \\\"primitive\\\",\\n                \\\"name\\\": \\\"nat\\\"\\n              },\\n              {\\n                \\\"kind\\\": \\\"primitive\\\",\\n                \\\"name\\\": \\\"string\\\"\\n              }\\n            ],\\n            \\\"constructor\\\": \\\"tuple\\\",\\n            \\\"kind\\\": \\\"apply\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"arguments\\\": [\\n            {\\n              \\\"kind\\\": \\\"primitive\\\",\\n              \\\"name\\\": \\\"nat\\\"\\n            },\\n            {\\n              \\\"kind\\\": \\\"primitive\\\",\\n              \\\"name\\\": \\\"string\\\"\\n            }\\n          ],\\n          \\\"constructor\\\": \\\"tuple\\\",\\n          \\\"kind\\\": \\\"apply\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"StructuralSubtypes.product\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [\\n              {\\n                \\\"arguments\\\": [\\n                  {\\n                    \\\"constructor\\\": \\\"StructuralSubtypes.checkedPositive\\\",\\n                    \\\"kind\\\": \\\"subtype\\\"\\n                  },\\n                  {\\n                    \\\"constructor\\\": \\\"StructuralSubtypes.checkedWord\\\",\\n                    \\\"kind\\\": \\\"subtype\\\"\\n                  }\\n                ],\\n                \\\"kind\\\": \\\"tuple\\\"\\n              }\\n            ],\\n            \\\"result\\\": {\\n              \\\"arguments\\\": [\\n                {\\n                  \\\"constructor\\\": \\\"StructuralSubtypes.checkedPositive\\\",\\n                  \\\"kind\\\": \\\"subtype\\\"\\n                },\\n                {\\n                  \\\"constructor\\\": \\\"StructuralSubtypes.checkedWord\\\",\\n                  \\\"kind\\\": \\\"subtype\\\"\\n                }\\n              ],\\n              \\\"kind\\\": \\\"tuple\\\"\\n            }\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    },\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:StructuralSubtypes.branch\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"branch\\\",\\n      \\\"overloadKey\\\": \\\"StructuralSubtypes.branch\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"arguments\\\": [\\n              {\\n                \\\"kind\\\": \\\"primitive\\\",\\n                \\\"name\\\": \\\"nat\\\"\\n              },\\n              {\\n                \\\"kind\\\": \\\"primitive\\\",\\n                \\\"name\\\": \\\"string\\\"\\n              }\\n            ],\\n            \\\"constructor\\\": \\\"result\\\",\\n            \\\"kind\\\": \\\"apply\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"arguments\\\": [\\n            {\\n              \\\"kind\\\": \\\"primitive\\\",\\n              \\\"name\\\": \\\"nat\\\"\\n            },\\n            {\\n              \\\"kind\\\": \\\"primitive\\\",\\n              \\\"name\\\": \\\"string\\\"\\n            }\\n          ],\\n          \\\"constructor\\\": \\\"result\\\",\\n          \\\"kind\\\": \\\"apply\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"StructuralSubtypes.branch\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [\\n              {\\n                \\\"arguments\\\": [\\n                  {\\n                    \\\"constructor\\\": \\\"StructuralSubtypes.checkedPositive\\\",\\n                    \\\"kind\\\": \\\"subtype\\\"\\n                  },\\n                  {\\n                    \\\"constructor\\\": \\\"StructuralSubtypes.checkedWord\\\",\\n                    \\\"kind\\\": \\\"subtype\\\"\\n                  }\\n                ],\\n                \\\"kind\\\": \\\"result\\\"\\n              }\\n            ],\\n            \\\"result\\\": {\\n              \\\"arguments\\\": [\\n                {\\n                  \\\"constructor\\\": \\\"StructuralSubtypes.checkedPositive\\\",\\n                  \\\"kind\\\": \\\"subtype\\\"\\n                },\\n                {\\n                  \\\"constructor\\\": \\\"StructuralSubtypes.checkedWord\\\",\\n                  \\\"kind\\\": \\\"subtype\\\"\\n                }\\n              ],\\n              \\\"kind\\\": \\\"result\\\"\\n            }\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    },\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:StructuralSubtypes.byteBranches\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"byteBranches\\\",\\n      \\\"overloadKey\\\": \\\"StructuralSubtypes.byteBranches\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"arguments\\\": [\\n              {\\n                \\\"arguments\\\": [\\n                  {\\n                    \\\"arguments\\\": [\\n                      {\\n                        \\\"kind\\\": \\\"primitive\\\",\\n                        \\\"name\\\": \\\"uint8\\\"\\n                      },\\n                      {\\n                        \\\"kind\\\": \\\"primitive\\\",\\n                        \\\"name\\\": \\\"nat\\\"\\n                      }\\n                    ],\\n                    \\\"constructor\\\": \\\"tuple\\\",\\n                    \\\"kind\\\": \\\"apply\\\"\\n                  }\\n                ],\\n                \\\"constructor\\\": \\\"option\\\",\\n                \\\"kind\\\": \\\"apply\\\"\\n              }\\n            ],\\n            \\\"constructor\\\": \\\"array\\\",\\n            \\\"kind\\\": \\\"apply\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"arguments\\\": [\\n            {\\n              \\\"arguments\\\": [\\n                {\\n                  \\\"arguments\\\": [\\n                    {\\n                      \\\"kind\\\": \\\"primitive\\\",\\n                      \\\"name\\\": \\\"uint8\\\"\\n                    },\\n                    {\\n                      \\\"kind\\\": \\\"primitive\\\",\\n                      \\\"name\\\": \\\"nat\\\"\\n                    }\\n                  ],\\n                  \\\"constructor\\\": \\\"tuple\\\",\\n                  \\\"kind\\\": \\\"apply\\\"\\n                }\\n              ],\\n              \\\"constructor\\\": \\\"option\\\",\\n              \\\"kind\\\": \\\"apply\\\"\\n            }\\n          ],\\n          \\\"constructor\\\": \\\"array\\\",\\n          \\\"kind\\\": \\\"apply\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"StructuralSubtypes.byteBranches\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [\\n              {\\n                \\\"arguments\\\": [\\n                  {\\n                    \\\"arguments\\\": [\\n                      {\\n                        \\\"arguments\\\": [\\n                          {\\n                            \\\"constructor\\\": \\\"StructuralSubtypes.checkedByte\\\",\\n                            \\\"kind\\\": \\\"subtype\\\"\\n                          },\\n                          {\\n                            \\\"constructor\\\": \\\"StructuralSubtypes.checkedPositive\\\",\\n                            \\\"kind\\\": \\\"subtype\\\"\\n                          }\\n                        ],\\n                        \\\"kind\\\": \\\"tuple\\\"\\n                      }\\n                    ],\\n                    \\\"kind\\\": \\\"option\\\"\\n                  }\\n                ],\\n                \\\"kind\\\": \\\"array\\\"\\n              }\\n            ],\\n            \\\"result\\\": {\\n              \\\"arguments\\\": [\\n                {\\n                  \\\"arguments\\\": [\\n                    {\\n                      \\\"arguments\\\": [\\n                        {\\n                          \\\"constructor\\\": \\\"StructuralSubtypes.checkedByte\\\",\\n                          \\\"kind\\\": \\\"subtype\\\"\\n                        },\\n                        {\\n                          \\\"constructor\\\": \\\"StructuralSubtypes.checkedPositive\\\",\\n                          \\\"kind\\\": \\\"subtype\\\"\\n                        }\\n                      ],\\n                      \\\"kind\\\": \\\"tuple\\\"\\n                    }\\n                  ],\\n                  \\\"kind\\\": \\\"option\\\"\\n                }\\n              ],\\n              \\\"kind\\\": \\\"array\\\"\\n            }\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    },\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:StructuralSubtypes.nested\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"nested\\\",\\n      \\\"overloadKey\\\": \\\"StructuralSubtypes.nested\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"arguments\\\": [\\n              {\\n                \\\"arguments\\\": [\\n                  {\\n                    \\\"arguments\\\": [\\n                      {\\n                        \\\"arguments\\\": [\\n                          {\\n                            \\\"kind\\\": \\\"primitive\\\",\\n                            \\\"name\\\": \\\"nat\\\"\\n                          },\\n                          {\\n                            \\\"kind\\\": \\\"primitive\\\",\\n                            \\\"name\\\": \\\"nat\\\"\\n                          }\\n                        ],\\n                        \\\"constructor\\\": \\\"tuple\\\",\\n                        \\\"kind\\\": \\\"apply\\\"\\n                      }\\n                    ],\\n                    \\\"constructor\\\": \\\"option\\\",\\n                    \\\"kind\\\": \\\"apply\\\"\\n                  }\\n                ],\\n                \\\"constructor\\\": \\\"list\\\",\\n                \\\"kind\\\": \\\"apply\\\"\\n              }\\n            ],\\n            \\\"constructor\\\": \\\"array\\\",\\n            \\\"kind\\\": \\\"apply\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"kind\\\": \\\"primitive\\\",\\n          \\\"name\\\": \\\"nat\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"StructuralSubtypes.nested\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [\\n              {\\n                \\\"arguments\\\": [\\n                  {\\n                    \\\"arguments\\\": [\\n                      {\\n                        \\\"arguments\\\": [\\n                          {\\n                            \\\"arguments\\\": [\\n                              {\\n                                \\\"constructor\\\": \\\"StructuralSubtypes.checkedPositive\\\",\\n                                \\\"kind\\\": \\\"subtype\\\"\\n                              },\\n                              {\\n                                \\\"bound\\\": \\\"184467440737095516170\\\",\\n                                \\\"kind\\\": \\\"fin\\\"\\n                              }\\n                            ],\\n                            \\\"kind\\\": \\\"tuple\\\"\\n                          }\\n                        ],\\n                        \\\"kind\\\": \\\"option\\\"\\n                      }\\n                    ],\\n                    \\\"kind\\\": \\\"list\\\"\\n                  }\\n                ],\\n                \\\"kind\\\": \\\"array\\\"\\n              }\\n            ],\\n            \\\"result\\\": null\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    },\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:StructuralSubtypes.aliasPair\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"aliasPair\\\",\\n      \\\"overloadKey\\\": \\\"StructuralSubtypes.aliasPair\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"arguments\\\": [\\n              {\\n                \\\"arguments\\\": [\\n                  {\\n                    \\\"arguments\\\": [\\n                      {\\n                        \\\"kind\\\": \\\"primitive\\\",\\n                        \\\"name\\\": \\\"nat\\\"\\n                      }\\n                    ],\\n                    \\\"constructor\\\": \\\"option\\\",\\n                    \\\"kind\\\": \\\"apply\\\"\\n                  }\\n                ],\\n                \\\"constructor\\\": \\\"array\\\",\\n                \\\"kind\\\": \\\"apply\\\"\\n              },\\n              {\\n                \\\"arguments\\\": [\\n                  {\\n                    \\\"arguments\\\": [\\n                      {\\n                        \\\"kind\\\": \\\"primitive\\\",\\n                        \\\"name\\\": \\\"nat\\\"\\n                      }\\n                    ],\\n                    \\\"constructor\\\": \\\"option\\\",\\n                    \\\"kind\\\": \\\"apply\\\"\\n                  }\\n                ],\\n                \\\"constructor\\\": \\\"array\\\",\\n                \\\"kind\\\": \\\"apply\\\"\\n              }\\n            ],\\n            \\\"constructor\\\": \\\"tuple\\\",\\n            \\\"kind\\\": \\\"apply\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"arguments\\\": [\\n            {\\n              \\\"arguments\\\": [\\n                {\\n                  \\\"arguments\\\": [\\n                    {\\n                      \\\"kind\\\": \\\"primitive\\\",\\n                      \\\"name\\\": \\\"nat\\\"\\n                    }\\n                  ],\\n                  \\\"constructor\\\": \\\"option\\\",\\n                  \\\"kind\\\": \\\"apply\\\"\\n                }\\n              ],\\n              \\\"constructor\\\": \\\"array\\\",\\n              \\\"kind\\\": \\\"apply\\\"\\n            },\\n            {\\n              \\\"arguments\\\": [\\n                {\\n                  \\\"arguments\\\": [\\n                    {\\n                      \\\"kind\\\": \\\"primitive\\\",\\n                      \\\"name\\\": \\\"nat\\\"\\n                    }\\n                  ],\\n                  \\\"constructor\\\": \\\"option\\\",\\n                  \\\"kind\\\": \\\"apply\\\"\\n                }\\n              ],\\n              \\\"constructor\\\": \\\"array\\\",\\n              \\\"kind\\\": \\\"apply\\\"\\n            }\\n          ],\\n          \\\"constructor\\\": \\\"tuple\\\",\\n          \\\"kind\\\": \\\"apply\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"StructuralSubtypes.aliasPair\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [\\n              {\\n                \\\"arguments\\\": [\\n                  {\\n                    \\\"arguments\\\": [\\n                      {\\n                        \\\"arguments\\\": [\\n                          {\\n                            \\\"constructor\\\": \\\"StructuralSubtypes.checkedPositive\\\",\\n                            \\\"kind\\\": \\\"subtype\\\"\\n                          }\\n                        ],\\n                        \\\"kind\\\": \\\"option\\\"\\n                      }\\n                    ],\\n                    \\\"kind\\\": \\\"array\\\"\\n                  },\\n                  {\\n                    \\\"arguments\\\": [\\n                      {\\n                        \\\"arguments\\\": [\\n                          {\\n                            \\\"constructor\\\": \\\"StructuralSubtypes.normalizePositive\\\",\\n                            \\\"kind\\\": \\\"subtype\\\"\\n                          }\\n                        ],\\n                        \\\"kind\\\": \\\"option\\\"\\n                      }\\n                    ],\\n                    \\\"kind\\\": \\\"array\\\"\\n                  }\\n                ],\\n                \\\"kind\\\": \\\"tuple\\\"\\n              }\\n            ],\\n            \\\"result\\\": {\\n              \\\"arguments\\\": [\\n                {\\n                  \\\"arguments\\\": [\\n                    {\\n                      \\\"arguments\\\": [\\n                        {\\n                          \\\"constructor\\\": \\\"StructuralSubtypes.checkedPositive\\\",\\n                          \\\"kind\\\": \\\"subtype\\\"\\n                        }\\n                      ],\\n                      \\\"kind\\\": \\\"option\\\"\\n                    }\\n                  ],\\n                  \\\"kind\\\": \\\"array\\\"\\n                },\\n                {\\n                  \\\"arguments\\\": [\\n                    {\\n                      \\\"arguments\\\": [\\n                        {\\n                          \\\"constructor\\\": \\\"StructuralSubtypes.normalizePositive\\\",\\n                          \\\"kind\\\": \\\"subtype\\\"\\n                        }\\n                      ],\\n                      \\\"kind\\\": \\\"option\\\"\\n                    }\\n                  ],\\n                  \\\"kind\\\": \\\"array\\\"\\n                }\\n              ],\\n              \\\"kind\\\": \\\"tuple\\\"\\n            }\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    },\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:StructuralSubtypes.aliasArguments\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"aliasArguments\\\",\\n      \\\"overloadKey\\\": \\\"StructuralSubtypes.aliasArguments\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"arguments\\\": [\\n              {\\n                \\\"arguments\\\": [\\n                  {\\n                    \\\"kind\\\": \\\"primitive\\\",\\n                    \\\"name\\\": \\\"nat\\\"\\n                  }\\n                ],\\n                \\\"constructor\\\": \\\"option\\\",\\n                \\\"kind\\\": \\\"apply\\\"\\n              }\\n            ],\\n            \\\"constructor\\\": \\\"array\\\",\\n            \\\"kind\\\": \\\"apply\\\"\\n          }\\n        },\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value1\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"arguments\\\": [\\n              {\\n                \\\"arguments\\\": [\\n                  {\\n                    \\\"kind\\\": \\\"primitive\\\",\\n                    \\\"name\\\": \\\"nat\\\"\\n                  }\\n                ],\\n                \\\"constructor\\\": \\\"option\\\",\\n                \\\"kind\\\": \\\"apply\\\"\\n              }\\n            ],\\n            \\\"constructor\\\": \\\"array\\\",\\n            \\\"kind\\\": \\\"apply\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"arguments\\\": [\\n            {\\n              \\\"arguments\\\": [\\n                {\\n                  \\\"kind\\\": \\\"primitive\\\",\\n                  \\\"name\\\": \\\"nat\\\"\\n                }\\n              ],\\n              \\\"constructor\\\": \\\"option\\\",\\n              \\\"kind\\\": \\\"apply\\\"\\n            }\\n          ],\\n          \\\"constructor\\\": \\\"array\\\",\\n          \\\"kind\\\": \\\"apply\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"StructuralSubtypes.aliasArguments\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [\\n              {\\n                \\\"arguments\\\": [\\n                  {\\n                    \\\"arguments\\\": [\\n                      {\\n                        \\\"constructor\\\": \\\"StructuralSubtypes.checkedPositive\\\",\\n                        \\\"kind\\\": \\\"subtype\\\"\\n                      }\\n                    ],\\n                    \\\"kind\\\": \\\"option\\\"\\n                  }\\n                ],\\n                \\\"kind\\\": \\\"array\\\"\\n              },\\n              {\\n                \\\"arguments\\\": [\\n                  {\\n                    \\\"arguments\\\": [\\n                      {\\n                        \\\"constructor\\\": \\\"StructuralSubtypes.normalizePositive\\\",\\n                        \\\"kind\\\": \\\"subtype\\\"\\n                      }\\n                    ],\\n                    \\\"kind\\\": \\\"option\\\"\\n                  }\\n                ],\\n                \\\"kind\\\": \\\"array\\\"\\n              }\\n            ],\\n            \\\"result\\\": {\\n              \\\"arguments\\\": [\\n                {\\n                  \\\"arguments\\\": [\\n                    {\\n                      \\\"constructor\\\": \\\"StructuralSubtypes.checkedPositive\\\",\\n                      \\\"kind\\\": \\\"subtype\\\"\\n                    }\\n                  ],\\n                  \\\"kind\\\": \\\"option\\\"\\n                }\\n              ],\\n              \\\"kind\\\": \\\"array\\\"\\n            }\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    },\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:StructuralSubtypes.plainFin\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"plainFin\\\",\\n      \\\"overloadKey\\\": \\\"StructuralSubtypes.plainFin\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"arguments\\\": [\\n              {\\n                \\\"arguments\\\": [\\n                  {\\n                    \\\"kind\\\": \\\"primitive\\\",\\n                    \\\"name\\\": \\\"nat\\\"\\n                  }\\n                ],\\n                \\\"constructor\\\": \\\"option\\\",\\n                \\\"kind\\\": \\\"apply\\\"\\n              }\\n            ],\\n            \\\"constructor\\\": \\\"array\\\",\\n            \\\"kind\\\": \\\"apply\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"kind\\\": \\\"primitive\\\",\\n          \\\"name\\\": \\\"nat\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"StructuralSubtypes.plainFin\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [\\n              {\\n                \\\"arguments\\\": [\\n                  {\\n                    \\\"arguments\\\": [\\n                      {\\n                        \\\"bound\\\": \\\"10\\\",\\n                        \\\"kind\\\": \\\"fin\\\"\\n                      }\\n                    ],\\n                    \\\"kind\\\": \\\"option\\\"\\n                  }\\n                ],\\n                \\\"kind\\\": \\\"array\\\"\\n              }\\n            ],\\n            \\\"result\\\": null\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    },\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:StructuralSubtypes.specialized\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"specialized\\\",\\n      \\\"overloadKey\\\": \\\"StructuralSubtypes.specialized\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"arguments\\\": [\\n              {\\n                \\\"kind\\\": \\\"primitive\\\",\\n                \\\"name\\\": \\\"nat\\\"\\n              }\\n            ],\\n            \\\"constructor\\\": \\\"list\\\",\\n            \\\"kind\\\": \\\"apply\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"arguments\\\": [\\n            {\\n              \\\"kind\\\": \\\"primitive\\\",\\n              \\\"name\\\": \\\"nat\\\"\\n            }\\n          ],\\n          \\\"constructor\\\": \\\"list\\\",\\n          \\\"kind\\\": \\\"apply\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"StructuralSubtypes.generic\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [\\n              {\\n                \\\"arguments\\\": [\\n                  {\\n                    \\\"constructor\\\": \\\"StructuralSubtypes.checkedPositive\\\",\\n                    \\\"kind\\\": \\\"subtype\\\"\\n                  }\\n                ],\\n                \\\"kind\\\": \\\"list\\\"\\n              }\\n            ],\\n            \\\"result\\\": {\\n              \\\"arguments\\\": [\\n                {\\n                  \\\"constructor\\\": \\\"StructuralSubtypes.checkedPositive\\\",\\n                  \\\"kind\\\": \\\"subtype\\\"\\n                }\\n              ],\\n              \\\"kind\\\": \\\"list\\\"\\n            }\\n          },\\n          \\\"lean-lang.org/specialization\\\": {\\n            \\\"application\\\": \\\"(@_root_.StructuralSubtypes.generic (@_root_.StructuralSubtypes.Positive))\\\",\\n            \\\"declaration\\\": \\\"StructuralSubtypes.generic\\\",\\n            \\\"name\\\": \\\"StructuralSubtypes.specialized\\\",\\n            \\\"types\\\": [\\n              \\\"StructuralSubtypes.Positive\\\"\\n            ]\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    }\\n  ],\\n  \\\"documentation\\\": {\\n    \\\"details\\\": \\\"\\\",\\n    \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n  },\\n  \\\"errors\\\": [],\\n  \\\"producers\\\": [\\n    {\\n      \\\"adapter\\\": \\\"independent-corpus-contract\\\",\\n      \\\"adapterVersion\\\": 1,\\n      \\\"extensions\\\": {},\\n      \\\"id\\\": \\\"corpusReview\\\",\\n      \\\"tool\\\": \\\"Corpus contract review\\\",\\n      \\\"toolVersion\\\": \\\"1\\\"\\n    }\\n  ],\\n  \\\"schemaVersion\\\": 3,\\n  \\\"types\\\": []\\n}\\n\",\n      \"sourceSha256\": \"fcb7bfa656ac6d6262a9773712f02b6c0bd5a08a72483c9ba9225f83fe90c36f\"\n    },\n    \"sourceNoticesSha256\": \"ceee06cfeda05a9da8af0050757559df2a1774009547260379d947b7c934f94a\",\n    \"sourceTreeSha256\": \"400d9f6c19493028c97fa50374c9397bf3ac776fcd605e7af51533dd9793149f\"\n  },\n  \"version\": \"1.0.0\"\n}\n",
+    "root": "/tmp/lean-bridge-structural-php-installed-Mq1kHI/consumer",
+    "runtimeFlags": [
+      "-n",
+      "-d",
+      "extension=/usr/lib/php/20220829/ffi.so",
+      "-d",
+      "ffi.enable=1"
+    ],
+    "tools": {
+      "/usr/bin/composer": {
+        "bytes": 3156,
+        "sha256": "5cf51f9912671912136317d889df7a5b8219f2a77f2b311b9a100989106847e2"
+      },
+      "/usr/bin/php8.2": {
+        "bytes": 5662424,
+        "sha256": "f44be0fe6c6c19b4a296f5b051bbe7d7924dc2d63ad4711ef666c4626e4a0e7a"
+      },
+      "/usr/lib/php/20220829/ctype.so": {
+        "bytes": 14440,
+        "sha256": "36647c21faefa76190aa32b33dc6e6ccf2b15f4a0d87184cfc213c327e3e9e0a"
+      },
+      "/usr/lib/php/20220829/ffi.so": {
+        "bytes": 174184,
+        "sha256": "a3c29e39e21f98d4f9178482445eae0bd69e818e067b21e7dbd3a63e54100dc8"
+      },
+      "/usr/lib/php/20220829/iconv.so": {
+        "bytes": 51304,
+        "sha256": "1d136532a8fe77caec4bd265e0539cce37248b6ef5b8e2ed07e1d0de171e90cd"
+      },
+      "/usr/lib/php/20220829/mbstring.so": {
+        "bytes": 1192704,
+        "sha256": "b42880230e64842003486160651ae42b7d2f44b657861f41dd01faccae0db11c"
+      },
+      "/usr/lib/php/20220829/phar.so": {
+        "bytes": 284776,
+        "sha256": "33a5b0822126d5233ab4853d597419c988b7b3f3edbbd492604070e4737d6bd3"
+      },
+      "/usr/lib/php/20220829/tokenizer.so": {
+        "bytes": 34920,
+        "sha256": "c7bc1d8ea1e79010c2cfde2ee898421aa99b6c70a203e2f266c469f42e16d001"
+      }
+    },
+    "vendorFiles": {
+      "autoload.php": {
+        "bytes": 771,
+        "sha256": "e37f3b9794e11ae005dfdde44d85a849d0f1ebdf784b958518fd4b0aab1294f4"
+      },
+      "brick/math/LICENSE": {
+        "bytes": 1089,
+        "sha256": "d2625cc652e6ffa9f16827f1dba2d83ac12b050dc8150a38720420dbb810cae3"
+      },
+      "brick/math/composer.json": {
+        "bytes": 816,
+        "sha256": "fe93d538393d24617d615b373389d8a8970d8be18a8928d17c5a5cd9381a6522"
+      },
+      "brick/math/src/BigDecimal.php": {
+        "bytes": 38820,
+        "sha256": "ccf44c9e463182dd158190fd3b27b631ea7a58968505157e2bc715b61604515c"
+      },
+      "brick/math/src/BigInteger.php": {
+        "bytes": 47781,
+        "sha256": "a6d7b7824a8399ece864332672800f13be4ef57609f868dd577de2cf586bc3a1"
+      },
+      "brick/math/src/BigNumber.php": {
+        "bytes": 31254,
+        "sha256": "5a2a5ad1e73835fb200bbf1f959dbd36b8785b5e4a1c7c9ef505992130c08049"
+      },
+      "brick/math/src/BigRational.php": {
+        "bytes": 18121,
+        "sha256": "99d999ae1d4ccb9bbe231a2e5242f315b9483f317b8b5bd226277ced1a4ba2ab"
+      },
+      "brick/math/src/Exception/DivisionByZeroException.php": {
+        "bytes": 1296,
+        "sha256": "6dad71505461e21c56db4222659891b1a4efa8bf7737290418668aa881f6c3d3"
+      },
+      "brick/math/src/Exception/IntegerOverflowException.php": {
+        "bytes": 1174,
+        "sha256": "d4264eb4bc039baa7cb8a4aa62c8928c85ff947e9823532095e156d87392455b"
+      },
+      "brick/math/src/Exception/InvalidArgumentException.php": {
+        "bytes": 2957,
+        "sha256": "c25c58c48379436ce704ea28cc3c5cff5f853ed5e2b439e639d198ed7bdfddf9"
+      },
+      "brick/math/src/Exception/MathException.php": {
+        "bytes": 179,
+        "sha256": "34033cc2b90fa897e9e79d05a589c8e6411b9a117a80765b58013eacad0b255e"
+      },
+      "brick/math/src/Exception/NegativeNumberException.php": {
+        "bytes": 1316,
+        "sha256": "2c6a1c878e96bbb06d07fcd64ce06b66e5ac56f5ba51a2ba69cdd62b1f5dfd6d"
+      },
+      "brick/math/src/Exception/NoInverseException.php": {
+        "bytes": 658,
+        "sha256": "1e072b6b8802ef678cd8aed6aab4f5534e83e514c67c10cfbd457aa9e67d77d2"
+      },
+      "brick/math/src/Exception/NumberFormatException.php": {
+        "bytes": 3718,
+        "sha256": "9513693ceea593b6686ca7ef9253c595c6502145382f9da9872c791b37b5a258"
+      },
+      "brick/math/src/Exception/PlatformException.php": {
+        "bytes": 1283,
+        "sha256": "b2bc33189336bf6c8b3b145bd8c8397218e90588cca9ead140ef4a66d1c6be51"
+      },
+      "brick/math/src/Exception/RandomSourceException.php": {
+        "bytes": 1343,
+        "sha256": "462eb152713684b4d5ac0efe2fa27f8b2fd0d877ceb3e7315516757c5640e67c"
+      },
+      "brick/math/src/Exception/RoundingNecessaryException.php": {
+        "bytes": 3878,
+        "sha256": "3f9e061a0eeda28fc35d6f70cd1625c74d3002891c2d063ed2bede16155c8549"
+      },
+      "brick/math/src/Internal/Calculator.php": {
+        "bytes": 20316,
+        "sha256": "a92ba12d6e6487ef8ee6cf435ede5b2d4f4d4684b7bca14aa9c133b842724655"
+      },
+      "brick/math/src/Internal/Calculator/BcMathCalculator.php": {
+        "bytes": 2078,
+        "sha256": "aaf790516424d97f2257bf6fdc7eee9a95fc5440abd11d2fbc4f09ba73549b6a"
+      },
+      "brick/math/src/Internal/Calculator/GmpCalculator.php": {
+        "bytes": 3668,
+        "sha256": "0351a740b49e88cf379319af9fccab8c8f437cd5d54b2d57b79c1ea72fcc0420"
+      },
+      "brick/math/src/Internal/Calculator/NativeCalculator.php": {
+        "bytes": 14245,
+        "sha256": "4980f1a9b620a8de0588a018276044ed20c01293c2a0254613094e81e1cb6c1a"
+      },
+      "brick/math/src/Internal/CalculatorRegistry.php": {
+        "bytes": 1887,
+        "sha256": "7047026d82935de4736cb9f2f73915a75c2e9a776c68476b72bd430cab115088"
+      },
+      "brick/math/src/Internal/DecimalHelper.php": {
+        "bytes": 4779,
+        "sha256": "6884286a2dd2ebbba5d373140e2cca58d6efb8dd63b0868e517fb39eff4ad016"
+      },
+      "brick/math/src/Internal/Safe.php": {
+        "bytes": 1645,
+        "sha256": "26100429b186305ee9143f0b45c36168c1a7d039099dff13f5ab1a9ca2e32ccf"
+      },
+      "brick/math/src/NumberSyntax.php": {
+        "bytes": 1705,
+        "sha256": "f5ad04274721dd3bbc4572b90eb8e71fb47d052fd1ab6974e08aa013fef94b9e"
+      },
+      "brick/math/src/RoundingMode.php": {
+        "bytes": 5370,
+        "sha256": "1b7e6399d071d1ee922ec6ee928ae06bfa092b6d932af5faac8fbe65ef9b258d"
+      },
+      "composer/ClassLoader.php": {
+        "bytes": 16528,
+        "sha256": "42b8c5525dbc133045f47f4275f017071c82144a34acb9396d955ca10729cb2e"
+      },
+      "composer/InstalledVersions.php": {
+        "bytes": 16143,
+        "sha256": "21f4ba19e7859cb3f85b8b1680c970ee25d972546c1606dcae0e7e5f43f626f0"
+      },
+      "composer/LICENSE": {
+        "bytes": 1068,
+        "sha256": "7855ac293067aebe7e51afdd23b9dea54b8be24187dbecc9b9142581c37f596c"
+      },
+      "composer/autoload_classmap.php": {
+        "bytes": 222,
+        "sha256": "375085d0d6690301081436cd75755cb2c882f8a7f6fc385c8814a11734fc413a"
+      },
+      "composer/autoload_files.php": {
+        "bytes": 232,
+        "sha256": "8d7542219c474caad00d91cdf916b23bb56245fcc94a2fb9914a73cb4d95473f"
+      },
+      "composer/autoload_namespaces.php": {
+        "bytes": 139,
+        "sha256": "ede505407590638a435137f4e060136f1008de79fc169b3de9793423b0cea38c"
+      },
+      "composer/autoload_psr4.php": {
+        "bytes": 195,
+        "sha256": "d84c58712d49fd62ea528610fc277a36664abd37e1087cec8c1efb0af6918590"
+      },
+      "composer/autoload_real.php": {
+        "bytes": 1672,
+        "sha256": "a9659cd9d7f275df58f8d08bae607a8d3292c926c2cf92d438018b5623c50ef1"
+      },
+      "composer/autoload_static.php": {
+        "bytes": 1216,
+        "sha256": "e005023bead7bdd52e65d7453d5cb9ea7aaa6454bb7a40789799f07122f67b62"
+      },
+      "composer/installed.json": {
+        "bytes": 2819,
+        "sha256": "584e9f465586fe77253545a5acef40f27b9bcaa185b4c0ffb29222fdb805723d"
+      },
+      "composer/installed.php": {
+        "bytes": 1371,
+        "sha256": "2d9a278b24dc2917f98d8387bf5a076498542cbbb6ea841423a853571ccd9aae"
+      },
+      "composer/platform_check.php": {
+        "bytes": 925,
+        "sha256": "230c364d17607b4f0500630f1c1bcca4e08e1486748340d2ec85024f3a0b73b4"
+      },
+      "example/structuralsubtypes/README.md": {
+        "bytes": 8868,
+        "sha256": "954e693b4d7f878673acf6ad4a3a393c11b486f4a43590327cfb27bcd3f92a47"
+      },
+      "example/structuralsubtypes/binding-manifest.json": {
+        "bytes": 1545,
+        "sha256": "bf558886dafeb287466dcc01cf8c3ee8e80536682093908cee1f139f015f77d5"
+      },
+      "example/structuralsubtypes/composer.json": {
+        "bytes": 554,
+        "sha256": "6eecffe93ce0171ebfc991227fc02082b5b8f17cd91884594534e1a5171ebfac"
+      },
+      "example/structuralsubtypes/lean-bridge/component/allocation-guard.h": {
+        "bytes": 1309,
+        "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+      },
+      "example/structuralsubtypes/lean-bridge/component/artifacts.json": {
+        "bytes": 1534,
+        "sha256": "f8110743f64ba485662d10cb3ed15687765ae71a5974bb4f80c7716820882899"
+      },
+      "example/structuralsubtypes/lean-bridge/component/binding-ir.json": {
+        "bytes": 50481,
+        "sha256": "8dc62be9f9786cba70905987d14ce3b78893341a87e3e546cdf1c151131de527"
+      },
+      "example/structuralsubtypes/lean-bridge/component/component.h": {
+        "bytes": 4399,
+        "sha256": "c8e245f50660b898b2ff93bf80b6af98d0e4e2fe28cf500e59a9ce58cfb9721c"
+      },
+      "example/structuralsubtypes/lean-bridge/component/generated.lean": {
+        "bytes": 19947,
+        "sha256": "90dc480b3a1073d5a62f35cf0de41d12063f66da2e9f34e04020f5b9792545b9"
+      },
+      "example/structuralsubtypes/lean-bridge/component/metadata.json": {
+        "bytes": 82709,
+        "sha256": "be31bc3311b8ee59bcf8366c16dd9081ae49b53f94f143c4657c9b8ed39ed581"
+      },
+      "example/structuralsubtypes/lean-bridge/component/model.json": {
+        "bytes": 157752,
+        "sha256": "8cb26cf9fbf4e2d681388d8a0665f8a2bdafa816e8076109c218af0f517b4b94"
+      },
+      "example/structuralsubtypes/lean-bridge/component/native-component.json": {
+        "bytes": 55707,
+        "sha256": "43c281f4b38d3eacbbd1989cf30d9979cb387383df957e6ced2cf4af3612d9df"
+      },
+      "example/structuralsubtypes/lean-bridge/include/structuralsubtypes.h": {
+        "bytes": 9878,
+        "sha256": "05d749ee76cdc135d8f00c2415b8609cd64359f63f2bbd67a6a4e6236e1f18c9"
+      },
+      "example/structuralsubtypes/lean-bridge/native-c-adapter.json": {
+        "bytes": 1399,
+        "sha256": "8fcf1e8ab032c02594a7e3cfdc1835487298e1b001b4c6c6603b25050e4af7d9"
+      },
+      "example/structuralsubtypes/lean-bridge/package-receipt.json": {
+        "bytes": 57933,
+        "sha256": "1730bfad7508fd86494c27f884b3a38c4640dfcd94a209f8870e5f194c283033"
+      },
+      "example/structuralsubtypes/lean-bridge/runtime.json": {
+        "bytes": 1466,
+        "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+      },
+      "example/structuralsubtypes/licenses/Lean-LICENSE": {
+        "bytes": 9160,
+        "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+      },
+      "example/structuralsubtypes/licenses/Lean-LICENSES": {
+        "bytes": 81854,
+        "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+      },
+      "example/structuralsubtypes/licenses/LeanBridge-LICENSE": {
+        "bytes": 1093,
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      "example/structuralsubtypes/licenses/source-notices.json": {
+        "bytes": 2115,
+        "sha256": "ceee06cfeda05a9da8af0050757559df2a1774009547260379d947b7c934f94a"
+      },
+      "example/structuralsubtypes/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+        "bytes": 1093,
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      "example/structuralsubtypes/native/linux-x64/libcomponent_85dc6ef3dd30a6b68269.so": {
+        "bytes": 118240,
+        "sha256": "7e70da88f20e3c962b655518dcb523dbb8b60311b41b526133fb7c98c206eb5d"
+      },
+      "example/structuralsubtypes/native/linux-x64/liblean_bridge_native.so": {
+        "bytes": 21464,
+        "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+      },
+      "example/structuralsubtypes/native/linux-x64/libleanshared.so": {
+        "bytes": 158401256,
+        "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+      },
+      "example/structuralsubtypes/native/linux-x64/libstructuralsubtypes.so": {
+        "bytes": 73624,
+        "sha256": "6b764b7337cc557426c13debf6c6fcde43004b3df92a13d184d68d890394b80a"
+      },
+      "example/structuralsubtypes/src/Api.php": {
+        "bytes": 7226,
+        "sha256": "74408863f44c77b6f164e368d56073c4bf635490030104e34c3892371839e95a"
+      },
+      "example/structuralsubtypes/src/Internal/Native.php": {
+        "bytes": 52727,
+        "sha256": "d417e0388b98b1039c899bc79de7d99f35777d3f51a3b4e9a8e54e4f2d40a7b5"
+      },
+      "example/structuralsubtypes/src/Internal/Runtime.php": {
+        "bytes": 4336,
+        "sha256": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14"
+      }
+    }
+  },
+  "observations": [
+    {
+      "closure": {
+        "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+        "generatedFilesSha256": "98fb34c9e5adc110351adc55d50303a4de7b8f515002a9d146506760d36a19d6",
+        "packageFileSetSha256": "54a73c906ee221fbf023090a0c8dcc23f0f723ef93dfc489e348b105770e9678",
+        "receiptSha256": "1730bfad7508fd86494c27f884b3a38c4640dfcd94a209f8870e5f194c283033",
+        "toolsSha256": "928927b055e8c58d26f331b055f2a17155d6470c3a969891b72b9714f2da1510",
+        "vendorFilesSha256": "d32deb7056f9755a98901b53a6595a43d269a213c0d5c62768467f4d034f05bc"
+      },
+      "counts": {
+        "checks": 4119,
+        "rejections": 1042,
+        "snapshotControls": 6
+      },
+      "mode": "weak",
+      "relocated": false,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":4119,\"rejections\":1042,\"snapshotControls\":6}\n"
+      }
+    },
+    {
+      "closure": {
+        "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+        "generatedFilesSha256": "98fb34c9e5adc110351adc55d50303a4de7b8f515002a9d146506760d36a19d6",
+        "packageFileSetSha256": "54a73c906ee221fbf023090a0c8dcc23f0f723ef93dfc489e348b105770e9678",
+        "receiptSha256": "1730bfad7508fd86494c27f884b3a38c4640dfcd94a209f8870e5f194c283033",
+        "toolsSha256": "928927b055e8c58d26f331b055f2a17155d6470c3a969891b72b9714f2da1510",
+        "vendorFilesSha256": "d32deb7056f9755a98901b53a6595a43d269a213c0d5c62768467f4d034f05bc"
+      },
+      "counts": {
+        "checks": 4119,
+        "rejections": 1042,
+        "snapshotControls": 6
+      },
+      "mode": "strict",
+      "relocated": false,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":4119,\"rejections\":1042,\"snapshotControls\":6}\n"
+      }
+    },
+    {
+      "closure": {
+        "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+        "generatedFilesSha256": "98fb34c9e5adc110351adc55d50303a4de7b8f515002a9d146506760d36a19d6",
+        "packageFileSetSha256": "54a73c906ee221fbf023090a0c8dcc23f0f723ef93dfc489e348b105770e9678",
+        "receiptSha256": "1730bfad7508fd86494c27f884b3a38c4640dfcd94a209f8870e5f194c283033",
+        "toolsSha256": "928927b055e8c58d26f331b055f2a17155d6470c3a969891b72b9714f2da1510",
+        "vendorFilesSha256": "d32deb7056f9755a98901b53a6595a43d269a213c0d5c62768467f4d034f05bc"
+      },
+      "counts": {
+        "checks": 4119,
+        "rejections": 1042,
+        "snapshotControls": 6
+      },
+      "mode": "weak",
+      "relocated": true,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":4119,\"rejections\":1042,\"snapshotControls\":6}\n"
+      }
+    },
+    {
+      "closure": {
+        "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+        "generatedFilesSha256": "98fb34c9e5adc110351adc55d50303a4de7b8f515002a9d146506760d36a19d6",
+        "packageFileSetSha256": "54a73c906ee221fbf023090a0c8dcc23f0f723ef93dfc489e348b105770e9678",
+        "receiptSha256": "1730bfad7508fd86494c27f884b3a38c4640dfcd94a209f8870e5f194c283033",
+        "toolsSha256": "928927b055e8c58d26f331b055f2a17155d6470c3a969891b72b9714f2da1510",
+        "vendorFilesSha256": "d32deb7056f9755a98901b53a6595a43d269a213c0d5c62768467f4d034f05bc"
+      },
+      "counts": {
+        "checks": 4119,
+        "rejections": 1042,
+        "snapshotControls": 6
+      },
+      "mode": "strict",
+      "relocated": true,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":4119,\"rejections\":1042,\"snapshotControls\":6}\n"
+      }
+    }
+  ],
+  "offlineInstall": true,
+  "php": "8.2.33",
+  "producerCommit": "79dbeb20fdbab984500dcd420c770a807bf8ac40",
+  "receipt": {
+    "component": {
+      "id": "structuralsubtypes@1.0.0",
+      "name": "structuralsubtypes",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 51417094,
+            "path": "archives/example-structuralsubtypes-1.0.0-linux-x86_64.zip",
+            "sha256": "f3a32af5f7dc2372b16b43613603094e07f7a59fdd67ef0e20affb5b536aa56f"
+          }
+        ],
+        "ecosystem": "composer",
+        "name": "example/structuralsubtypes",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+        "target": "php-native",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "33eb72e82691efa7abb76e73da15f436c3c7b956af368fb36e8ffc32aa0912d5",
+        "id": "native-library-v1",
+        "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "400d9f6c19493028c97fa50374c9397bf3ac776fcd605e7af51533dd9793149f"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "route": "reviewed",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}

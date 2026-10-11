@@ -1,0 +1,45 @@
+{
+  "bindingIrSha256": "33eb72e82691efa7abb76e73da15f436c3c7b956af368fb36e8ffc32aa0912d5",
+  "component": "structuralsubtypes@1.0.0",
+  "exports": [
+    "LeanStructuralsubtypes\\Bytes",
+    "LeanStructuralsubtypes\\LeanBridgeError",
+    "LeanStructuralsubtypes\\Some",
+    "LeanStructuralsubtypes\\Ok",
+    "LeanStructuralsubtypes\\Err",
+    "LeanStructuralsubtypes\\alias_arguments",
+    "LeanStructuralsubtypes\\alias_pair",
+    "LeanStructuralsubtypes\\arrays",
+    "LeanStructuralsubtypes\\branch",
+    "LeanStructuralsubtypes\\byte_branches",
+    "LeanStructuralsubtypes\\lists",
+    "LeanStructuralsubtypes\\nested",
+    "LeanStructuralsubtypes\\options",
+    "LeanStructuralsubtypes\\plain_fin",
+    "LeanStructuralsubtypes\\product",
+    "LeanStructuralsubtypes\\scalar",
+    "LeanStructuralsubtypes\\specialized"
+  ],
+  "files": [
+    "src/Api.php",
+    "src/Internal/Native.php",
+    "src/Internal/Runtime.php",
+    "README.md",
+    "binding-manifest.json"
+  ],
+  "filesSha256": {
+    "README.md": "954e693b4d7f878673acf6ad4a3a393c11b486f4a43590327cfb27bcd3f92a47",
+    "src/Api.php": "74408863f44c77b6f164e368d56073c4bf635490030104e34c3892371839e95a",
+    "src/Internal/Native.php": "d417e0388b98b1039c899bc79de7d99f35777d3f51a3b4e9a8e54e4f2d40a7b5",
+    "src/Internal/Runtime.php": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14"
+  },
+  "generator": {
+    "id": "lean-wasm/php-copied",
+    "version": 1
+  },
+  "namespace": "LeanStructuralsubtypes",
+  "publicFiles": [
+    "src/Api.php"
+  ],
+  "schemaVersion": 1
+}

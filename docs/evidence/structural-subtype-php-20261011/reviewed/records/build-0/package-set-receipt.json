@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "structuralsubtypes@1.0.0",
+    "name": "structuralsubtypes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51417094,
+          "path": "archives/example-structuralsubtypes-1.0.0-linux-x86_64.zip",
+          "sha256": "f3a32af5f7dc2372b16b43613603094e07f7a59fdd67ef0e20affb5b536aa56f"
+        }
+      ],
+      "ecosystem": "composer",
+      "name": "example/structuralsubtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "php-native",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "33eb72e82691efa7abb76e73da15f436c3c7b956af368fb36e8ffc32aa0912d5",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "400d9f6c19493028c97fa50374c9397bf3ac776fcd605e7af51533dd9793149f"
+  }
+}

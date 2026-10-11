@@ -16,6 +16,7 @@ import { structuralSubtypeConfiguration, structuralSubtypeReview } from "./struc
 import { structuralSubtypePhpConfiguration, structuralSubtypePhpCaller, structuralSubtypePhpCounts, parseStructuralSubtypePhpResult } from "./structural-subtype-php-fixture.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { runCopied } from "./copied-fixture-install.mjs";
+import "./structural-subtype-php-evidence-tests.mjs";
 
 const php = process.env.LEAN_BRIDGE_PHP ?? "/usr/bin/php";
 const callerControls = Boolean(process.env.LEAN_BRIDGE_PHP) || existsSync(php);
