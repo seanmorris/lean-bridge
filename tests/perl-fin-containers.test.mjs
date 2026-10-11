@@ -11,6 +11,8 @@ import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { perlSubtypeInterposer } from "./helpers/perl-subtype-dispatch.mjs";
 import { perlContainerDispatchColumns, perlContainerDispatchSteps, perlContainerInterposer } from "./helpers/perl-fin-container-dispatch.mjs";
 import "./helpers/perl-container-subtype-ci-history-tests.mjs";
+import "./helpers/perl-history-checkout-tests.mjs";
+import "./helpers/perl-history-checkout-history-tests.mjs";
 
 const huge = "1180591620717411303424";
 const heap = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };

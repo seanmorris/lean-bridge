@@ -9,6 +9,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { assertStructuralSubtypeWorkflow, disableStructuralSubtypeWorkflow, enableStructuralSubtypeWorkflow, structuralSubtypeWorkflowCommand, structuralSubtypeWorkflowGroups, structuralSubtypeWorkflowUpload, structuralSubtypeNodeBlock, structuralSubtypePerlBlock } from "./structural-subtype-ci-workflow.mjs";
 import { structuralSubtypeCiWorkflowPredecessor } from "./structural-subtype-ci-workflow-history.mjs";
+import { beforePerlHistoryCheckoutSource } from "./perl-history-checkout-history.mjs";
 import { assertWorkflowRunBudget, workflowExpressionLength, workflowRunScalars } from "./native-observation-split.mjs";
 
 const runner = "bash scripts/run-structural-subtype-ci.sh";
@@ -20,9 +21,10 @@ const checkMutation = (source, changed, name, label) => {
 test("structural workflow adds twelve enforced lanes and preserves every previous gate and budget", async t => {
 	for(const name of ["consumer-matrix.yml", "perl-consumer.yml"])
 	{
-		const path = `.github/workflows/${name}`, current = await readFile(path, "utf8");
+		const path = `.github/workflows/${name}`, live = await readFile(path, "utf8");
+		const current = beforePerlHistoryCheckoutSource(path, live);
 		const previous = execFileSync("git", ["show", `${structuralSubtypeCiWorkflowPredecessor}:${path}`], { encoding: "utf8" });
-		assertStructuralSubtypeWorkflow(current, name);
+		assertStructuralSubtypeWorkflow(live, name);
 		assert.equal(disableStructuralSubtypeWorkflow(current, name), previous);
 		assert.equal(enableStructuralSubtypeWorkflow(previous, name), current);
 		assert.throws(() => enableStructuralSubtypeWorkflow(current, name));

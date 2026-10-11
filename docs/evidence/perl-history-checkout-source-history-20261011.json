@@ -1,0 +1,181 @@
+{
+  "schemaVersion": 1,
+  "milestone": "perl-history-checkout-source-v1",
+  "predecessorCommit": "459fa8eaf0547d4f2cba488dbb135bb6adfc72f5",
+  "updates": [
+    {
+      "path": ".github/workflows/perl-consumer.yml",
+      "currentSha256": "ae806736c522ff83864c1f9026affb8230d99e3c8fa9c7a6a1a7364d5e8007fe",
+      "previousSha256": "00fd9b43121898966353172209c261dc605fb3295be630bde4be61dcc5bedf03",
+      "edits": [
+        {
+          "start": 8026,
+          "previous": "",
+          "current": "          fetch-depth: 0\n"
+        },
+        {
+          "start": 8088,
+          "previous": "",
+          "current": "      - name: Require source history before the Perl ABI build\n        run: test \"$(git rev-parse --is-shallow-repository)\" = false\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "b70b571cf2eb2d6425e28f717e552ac1a0139b9a4c91369b7240caf9cc386659",
+      "previousSha256": "02ccf27263219ba2bef7db4daf64a9421f73bcfa7e7a5bba6ca93d97a7f483f1",
+      "edits": [
+        {
+          "start": 55301,
+          "previous": "          \"sha256\": \"00fd9b43121898966353172209c261dc605fb3295be630bde4be61dcc5bedf03\"\n",
+          "current": "          \"sha256\": \"ae806736c522ff83864c1f9026affb8230d99e3c8fa9c7a6a1a7364d5e8007fe\"\n"
+        },
+        {
+          "start": 266507,
+          "previous": "          \"sha256\": \"00fd9b43121898966353172209c261dc605fb3295be630bde4be61dcc5bedf03\"\n",
+          "current": "          \"sha256\": \"ae806736c522ff83864c1f9026affb8230d99e3c8fa9c7a6a1a7364d5e8007fe\"\n"
+        },
+        {
+          "start": 307770,
+          "previous": "          \"sha256\": \"00fd9b43121898966353172209c261dc605fb3295be630bde4be61dcc5bedf03\"\n",
+          "current": "          \"sha256\": \"ae806736c522ff83864c1f9026affb8230d99e3c8fa9c7a6a1a7364d5e8007fe\"\n"
+        },
+        {
+          "start": 407851,
+          "previous": "          \"sha256\": \"00fd9b43121898966353172209c261dc605fb3295be630bde4be61dcc5bedf03\"\n",
+          "current": "          \"sha256\": \"ae806736c522ff83864c1f9026affb8230d99e3c8fa9c7a6a1a7364d5e8007fe\"\n"
+        },
+        {
+          "start": 458930,
+          "previous": "          \"sha256\": \"00fd9b43121898966353172209c261dc605fb3295be630bde4be61dcc5bedf03\"\n",
+          "current": "          \"sha256\": \"ae806736c522ff83864c1f9026affb8230d99e3c8fa9c7a6a1a7364d5e8007fe\"\n"
+        },
+        {
+          "start": 512770,
+          "previous": "          \"sha256\": \"00fd9b43121898966353172209c261dc605fb3295be630bde4be61dcc5bedf03\"\n",
+          "current": "          \"sha256\": \"ae806736c522ff83864c1f9026affb8230d99e3c8fa9c7a6a1a7364d5e8007fe\"\n"
+        },
+        {
+          "start": 601971,
+          "previous": "          \"sha256\": \"00fd9b43121898966353172209c261dc605fb3295be630bde4be61dcc5bedf03\"\n",
+          "current": "          \"sha256\": \"ae806736c522ff83864c1f9026affb8230d99e3c8fa9c7a6a1a7364d5e8007fe\"\n"
+        },
+        {
+          "start": 814021,
+          "previous": "          \"sha256\": \"00fd9b43121898966353172209c261dc605fb3295be630bde4be61dcc5bedf03\"\n",
+          "current": "          \"sha256\": \"ae806736c522ff83864c1f9026affb8230d99e3c8fa9c7a6a1a7364d5e8007fe\"\n"
+        },
+        {
+          "start": 823643,
+          "previous": "          \"sha256\": \"00fd9b43121898966353172209c261dc605fb3295be630bde4be61dcc5bedf03\"\n",
+          "current": "          \"sha256\": \"ae806736c522ff83864c1f9026affb8230d99e3c8fa9c7a6a1a7364d5e8007fe\"\n"
+        },
+        {
+          "start": 844639,
+          "previous": "          \"sha256\": \"00fd9b43121898966353172209c261dc605fb3295be630bde4be61dcc5bedf03\"\n",
+          "current": "          \"sha256\": \"ae806736c522ff83864c1f9026affb8230d99e3c8fa9c7a6a1a7364d5e8007fe\"\n"
+        },
+        {
+          "start": 1125650,
+          "previous": "          \"sha256\": \"00fd9b43121898966353172209c261dc605fb3295be630bde4be61dcc5bedf03\"\n",
+          "current": "          \"sha256\": \"ae806736c522ff83864c1f9026affb8230d99e3c8fa9c7a6a1a7364d5e8007fe\"\n"
+        },
+        {
+          "start": 1284935,
+          "previous": "          \"sha256\": \"00fd9b43121898966353172209c261dc605fb3295be630bde4be61dcc5bedf03\"\n",
+          "current": "          \"sha256\": \"ae806736c522ff83864c1f9026affb8230d99e3c8fa9c7a6a1a7364d5e8007fe\"\n"
+        },
+        {
+          "start": 1324736,
+          "previous": "          \"sha256\": \"00fd9b43121898966353172209c261dc605fb3295be630bde4be61dcc5bedf03\"\n",
+          "current": "          \"sha256\": \"ae806736c522ff83864c1f9026affb8230d99e3c8fa9c7a6a1a7364d5e8007fe\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-perl-ci-workflow-tests.mjs",
+      "currentSha256": "43f27837eff70fb1f74ee7c37b2ca00109d7bbf2eea72228225f30af563fdf95",
+      "previousSha256": "63281587d1a4cac33889945cedf433ad0c90823b915b12a315625ace8c71e5c4",
+      "edits": [
+        {
+          "start": 309,
+          "previous": "",
+          "current": "import { beforePerlHistoryCheckoutSource } from \"./perl-history-checkout-history.mjs\";\n"
+        },
+        {
+          "start": 3238,
+          "previous": "\tconst source = withoutStructuralSubtypeWorkflow(await readFile(path, \"utf8\"), \"perl-consumer.yml\");\n",
+          "current": "\tconst source = withoutStructuralSubtypeWorkflow(beforePerlHistoryCheckoutSource(path, await readFile(path, \"utf8\")), \"perl-consumer.yml\");\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "8cfdb5722e5b00ccd99f7c18f8a65a3ebe064a1cdd0e62b521fd69e04a372634",
+      "previousSha256": "57e94629d3a0ae2ff008593d07bccff6228e1975385f5e950d1bbaf1144c7396",
+      "edits": [
+        {
+          "start": 2186,
+          "previous": "",
+          "current": "import { perlHistoryCheckoutChangedPaths } from \"./perl-history-checkout-history.mjs\";\n"
+        },
+        {
+          "start": 62457,
+          "previous": "",
+          "current": "\t, ...perlHistoryCheckoutChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-conversion-history.mjs",
+      "currentSha256": "5864c734621cad96eeccb5d64c672b004b8490d40916464098f785385895e6b8",
+      "previousSha256": "5c536a2527d03d3f90ec2d8b1d98e086d23e6e1a36cd49a95463b3373a6b56a7",
+      "edits": [
+        {
+          "start": 154,
+          "previous": "",
+          "current": "import { beforePerlHistoryCheckoutSource } from \"./perl-history-checkout-history.mjs\";\n"
+        },
+        {
+          "start": 2319,
+          "previous": "",
+          "current": "\tsource = beforePerlHistoryCheckoutSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/structural-subtype-ci-workflow-tests.mjs",
+      "currentSha256": "b4cf079ee375b06d5ac04a05c67b175203abcb7e06d970541f36f70f019c7b71",
+      "previousSha256": "4d0a0a5a64ed38afcc98dd21ac6409b4995b26a23928f368f87edf81073e3190",
+      "edits": [
+        {
+          "start": 697,
+          "previous": "",
+          "current": "import { beforePerlHistoryCheckoutSource } from \"./perl-history-checkout-history.mjs\";\n"
+        },
+        {
+          "start": 1353,
+          "previous": "\t\tconst path = `.github/workflows/${name}`, current = await readFile(path, \"utf8\");\n",
+          "current": "\t\tconst path = `.github/workflows/${name}`, live = await readFile(path, \"utf8\");\n\t\tconst current = beforePerlHistoryCheckoutSource(path, live);\n"
+        },
+        {
+          "start": 1622,
+          "previous": "\t\tassertStructuralSubtypeWorkflow(current, name);\n",
+          "current": "\t\tassertStructuralSubtypeWorkflow(live, name);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/perl-fin-containers.test.mjs",
+      "currentSha256": "cf43bb3af986bf58f448715a9b6c8c5644b1753c2689c3fbadffd417c713902c",
+      "previousSha256": "9565d50e81101ee3c6e69792d2c14eeef2ba4e4c54ecf7c048ff481635793eff",
+      "edits": [
+        {
+          "start": 719,
+          "previous": "",
+          "current": "import \"./helpers/perl-history-checkout-tests.mjs\";\nimport \"./helpers/perl-history-checkout-history-tests.mjs\";\n"
+        }
+      ]
+    }
+  ]
+}

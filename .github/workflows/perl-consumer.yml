@@ -181,7 +181,10 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
+          fetch-depth: 0
           persist-credentials: false
+      - name: Require source history before the Perl ABI build
+        run: test "$(git rev-parse --is-shallow-repository)" = false
       - uses: actions/setup-node@v6
         with:
           node-version: "22"
