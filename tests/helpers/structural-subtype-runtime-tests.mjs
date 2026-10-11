@@ -34,7 +34,7 @@ const model = (parameter, result = nat, options = {}) => {
 };
 const mixed = () => model(one("array", one("option", two("tuple", sub(), two("result", fin, sub("Sample.checked"))))));
 
-test("independent admission gates preserve structural Subtypes without admitting nominal or callback leaves", () => {
+test("independent admission gates preserve copied Subtypes without admitting callback leaves", () => {
 	for(const kind of ["array", "list", "option"])
 	{
 		const value = model(one(kind, sub()));
@@ -42,12 +42,12 @@ test("independent admission gates preserve structural Subtypes without admitting
 		assertRefinement(tree(kind, sub().predicate), { kind: "apply", constructor: kind, arguments: [{ kind: "primitive", name: "nat" }] });
 		assert.throws(() => assertRefinement(tree(kind, sub().predicate), { kind: "apply", constructor: kind, arguments: [{ kind: "primitive", name: "nat" }] }, 1), /Refinement does not match/);
 	}
-	const forbidden = [
+	const nominal = [
 		{ kind: "record", name: "Sample.Box", lean: "Sample.Box", constructor: "Sample.Box.mk", fields: [{ name: "value", projection: "Sample.Box.value", type: one("array", sub()) }], abi: heap }
 		, { kind: "variant", name: "Sample.Choice", lean: "Sample.Choice", cases: [{ name: "value", constructor: "Sample.Choice.value", fields: [{ name: "value", type: sub() }] }], abi: heap }
-		, { kind: "callback", parameters: [one("list", sub())], result: nat, abi: heap }
 	];
-	for(const type of forbidden) assert.throws(() => validateNativeType(type, 0, false, "parameter"), /Subtype refinements require/);
+	for(const type of nominal) validateNativeType(type, 0, false, "parameter");
+	assert.throws(() => validateNativeType({ kind: "callback", parameters: [one("list", sub())], result: nat, abi: heap }, 0, false, "parameter"), /Subtype refinements require/);
 	assert.throws(() => validateNativeType(one("array", sub()), 1), /refinements require/);
 });
 

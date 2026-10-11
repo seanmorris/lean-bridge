@@ -96,6 +96,35 @@ export const checkedRefinementSelection = refinement => {
 			if(value.kind === "checked-record" && depth !== 0) fail();
 			return validateCheckedRefinementSelection({ constructor: value.constructor });
 		}
+		if(["record", "variant"].includes(Object.getOwnPropertyDescriptor(value ?? {}, "kind")?.value))
+		{
+			const variant = value.kind === "variant";
+			closed(value, ["kind", "name", variant ? "cases" : "fields"]);
+			if(typeof value.name !== "string" || !leanName.test(value.name)) fail();
+			let selected = false;
+			const members = (values, keys, project, empty) => {
+				if(!Array.isArray(values) || values.length > 1024 || (!empty && values.length === 0)) fail();
+				const names = new Set(), result = [];
+				for(let index = 0; index < values.length; index++)
+				{
+					if(++nodes > 4096 || !Object.hasOwn(Object.getOwnPropertyDescriptor(values, index) ?? {}, "value")) fail();
+					const member = values[index];
+					closed(member, ["name", ...keys]);
+					if(typeof member.name !== "string" || !memberName.test(member.name) || names.has(member.name)) fail();
+					names.add(member.name);
+					result.push(project(member));
+				}
+				return result;
+			};
+			const fields = values => members(values, ["refinement"], field => {
+				const refinement = visit(field.refinement, depth + 1);
+				selected ||= refinement !== null;
+				return { name: field.name, refinement };
+			}, true);
+			const result = variant ? { kind: value.kind, name: value.name, cases: members(value.cases, ["fields"], branch => ({ name: branch.name, fields: fields(branch.fields) }), false) }
+				: { kind: value.kind, name: value.name, fields: fields(value.fields) };
+			return selected ? result : null;
+		}
 		closed(value, ["kind", "arguments"]);
 		if(!Object.hasOwn(arities, value.kind) || !Array.isArray(value.arguments)
 			|| value.arguments.length !== arities[value.kind]) fail();

@@ -209,7 +209,7 @@ const nativeRefinements = (declaration, callbacks = false) => {
 			}
 			if(type.predicate.kind === "subtype")
 			{
-				if(!subtypeStructural) throw unsupported("checked Subtype refinements require a top-level or structural-container parameter or result");
+				if(!subtypeStructural) throw unsupported("checked Subtype refinements require a top-level or structural-container parameter or result, including copied plain records and variants but excluding callbacks, recursive graphs and generic records");
 				return { kind: "subtype", constructor: type.predicate.constructor };
 			}
 			return { kind: type.predicate.kind, bound: type.predicate.bound };
@@ -236,13 +236,13 @@ const nativeRefinements = (declaration, callbacks = false) => {
 		// declaration order; a variant checks only its active case. Definitions are acyclic here.
 		if(type.kind === "record" && !Object.hasOwn(type, "provenance") && !containsGraph(type, "callback"))
 		{
-			const fields = type.fields.map(field => tree(field.type, false));
+			const fields = type.fields.map(field => tree(field.type, false, undefined, subtypeStructural));
 			return fields.every(child => child === null) ? null
 				: { kind: "record", definition: type.lean, fields: type.fields.map(field => field.name), arguments: fields };
 		}
 		if(type.kind === "variant" && !containsGraph(type, "callback"))
 		{
-			const cases = type.cases.map(branch => ({ name: branch.name, fields: branch.fields.map(field => field.name), arguments: branch.fields.map(field => tree(field.type, false)) }));
+			const cases = type.cases.map(branch => ({ name: branch.name, fields: branch.fields.map(field => field.name), arguments: branch.fields.map(field => tree(field.type, false, undefined, subtypeStructural)) }));
 			return cases.flatMap(branch => branch.arguments).every(child => child === null) ? null : { kind: "variant", definition: type.lean, cases };
 		}
 		// Any other container would erase a bound the extractor admitted; refuse rather than drop it.

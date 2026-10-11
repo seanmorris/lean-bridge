@@ -340,6 +340,22 @@ const structuralConstructorGuard = (type, refinement, value, symbol, name, depth
 		const message = path.format ? [q(`%s${path.format}${suffix}`), q(name), ...path.indices.map(index => `(size_t)${index}`)].join(", ") : `"%s", ${q(name + suffix)}`;
 		return `${retain(type, value)} if (!${symbol}(${value})) croak(${message});`;
 	}
+	if(type.kind === "record" || type.kind === "variant")
+	{
+		const project = (field, tree, suffix, segment) => {
+			if(!constructorRefinementLeaves(tree, field.type).length) return "";
+			const local = `v${depth}${suffix}`, call = `lb_t${nativeTypeKey(type)}_get${suffix.slice(1)}(${value})`;
+			return `lean_inc(${value}); ${nativeCType(field.type)} ${local} = ${nativeObjectType(field.type) ? keep(call) : call};
+      ${structuralConstructorGuard(field.type, tree, local, symbol + suffix, name, depth + 1, { format: path.format + segment, indices: path.indices })}`;
+		};
+		if(type.kind === "record") return `{ ${type.fields.map((field, index) => project(field, refinement.arguments[index], `_${index}`, `.${field.name}`)).filter(Boolean).join("\n      ")} }`;
+		const cases = type.cases.map((branch, index) => {
+			const fields = branch.fields.map((field, position) => project(field, refinement.cases[index].arguments[position], `_${index}_${position}`, `.${branch.name}.${field.name}`)).filter(Boolean);
+			return fields.length ? `if (t${depth} == ${index}u) { ${fields.join("\n      ")} }` : "";
+		}).filter(Boolean);
+		return `{ lean_inc(${value}); uint32_t t${depth} = lb_t${nativeTypeKey(type)}_tag(${value});
+      ${cases.join(" else ")} }`;
+	}
 	const child = (index, expression, segment, indices = path.indices) => structuralConstructorGuard(type.arguments?.[index] ?? type.element, refinement.arguments[index], expression, `${symbol}_${index}`, name, depth + 1, { format: path.format + segment, indices });
 	if(["array", "list"].includes(type.kind))
 	{
@@ -578,7 +594,8 @@ _callback_${type.key}(...)
 		, "Synchronous callbacks accept and return acyclic copied arrays, Lists, options, results, products, records, variants and aliases. Use the same generated classes and plain containers as ordinary arguments and results. Callback arguments, results and returned Lean closure captures own independent copied storage."
 		, "", "Pass host callbacks as CODE references. Lean may not retain them after the exported call returns. Returned Lean closures provide call, close and closed; close each closure when finished. Original Perl exception objects are rethrown after native cleanup. Closing a closure during argument conversion does not invalidate the borrow held by its active call."
 		, "", "Copied-value conversion uses the existing 16 MiB scope budget and 32-level schema bound. Recursive callback payloads, resource-containing aggregates and asynchronous callbacks remain unsupported.", "");
-	const subtype = tree => tree?.kind === "subtype" || (tree?.arguments ?? []).some(subtype);
+	const subtype = tree => tree?.kind === "subtype" || (tree?.arguments ?? []).some(subtype)
+		|| (tree?.cases ?? []).some(branch => branch.arguments.some(subtype));
 	if(model.exports.some(item => item.refinements && [...item.refinements.parameters, item.refinements.result].some(subtype)))
 		pm.push("=head1 CHECKED VALUES", ""
 			, "A Lean C<Subtype> parameter over a primitive base takes the plain base value: L<Math::BigInt> for C<Nat> and C<Int>, an ordinary integer for machine words, a text scalar for C<String> and an octet string for C<ByteArray>. The exported checked constructor named at each function runs on the argument after every Fin bound passed and before the guarded adapter or the exported function; a rejected value dies with a message naming the parameter and the constructor, and the function receives the constructed value. Results are projected to their base value after Lean returns. Each checked site is listed as C<arg0 checked by Module.constructor> at its function.", "");

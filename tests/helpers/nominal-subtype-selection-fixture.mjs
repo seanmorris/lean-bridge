@@ -1,6 +1,6 @@
 /**
  * Per-use constructor choices for the nominal source-compiler fixture.
- * These requests do not admit nominal Subtypes to a public runtime profile.
+ * Choices name constructors; fresh Lean remains responsible for types and bounds.
  *
  * @file
  */
@@ -92,7 +92,7 @@ export const nominalSelectionContracts = () => {
 		, "NominalConversion.produce": contract([null], first)
 		, "NominalConversion.produceEvent": contract([null], selectedEvent("plusOne", "plusTwo"))
 		, "NominalSelection.aliases": contract([selectedGroup("plusOne"), selectedGroup("plusTwo")])
-		, "NominalSelection.aliasPair": contract([selectedRecord("NominalSelection.AliasPair",
+		, "NominalSelection.inspectAliasPair": contract([selectedRecord("NominalSelection.AliasPair",
 			selectedField("left", selectedGroup("plusOne")), selectedField("right", selectedGroup("plusTwo")))])
 		, "NominalSelection.plainFin": contract([null])
 	};

@@ -1,5 +1,5 @@
 /**
- * Constructor syntax preserves exact nominal member identity, without opening admission.
+ * Constructor syntax preserves nominal member identity and independent position gates.
  *
  * @file
  */
@@ -113,7 +113,7 @@ test("projection choices retain nominal identity and member order independently 
 	assert.deepEqual(projection, before);
 });
 
-test("nominal constructor syntax and metadata projections do not open native runtime admission", () => {
+test("nominal native admission preserves callback, generic and nested-site refusal gates", () => {
 	const abi = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
 	const type = {
 		kind: "record", name: "Library.Record", lean: "Library.Record"
@@ -128,5 +128,13 @@ test("nominal constructor syntax and metadata projections do not open native run
 	};
 	const selection = projectionCheckedSelection(type);
 	validateExportConfiguration(configuration(selection));
-	assert.throws(() => validateNativeType(type), /Subtype refinements require a top-level or structural-container/);
+	validateNativeType(type, 0, false, "parameter");
+	assert.throws(() => validateNativeType(type, 1), /Subtype refinements require/u);
+	assert.throws(() => validateNativeType({ kind: "callback", parameters: [type], result: type.fields[0].type.base, abi }, 0, false, "parameter"), /Subtype refinements require/u);
+	const generic = {
+		...type, name: "Library.Instance", lean: "Library.Instance"
+		, constructor: "Library.Generic.mk"
+		, provenance: { structure: "Library.Generic", arguments: [type.fields[0].type.base] }
+	};
+	assert.throws(() => validateNativeType(generic, 0, false, "parameter"), /refinements require/u);
 });

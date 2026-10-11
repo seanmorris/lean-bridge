@@ -11,7 +11,7 @@ structure AliasPair where
   right : Group
 
 def aliases (left right : Group) : Nat := left.size + right.size
-def aliasPair (value : AliasPair) : Nat := aliases value.left value.right
+def inspectAliasPair (value : AliasPair) : Nat := aliases value.left value.right
 def plainFin (value : Fin 3) : Nat := value.val
 
 def wrongInput (_ : String) : Option Positive := none

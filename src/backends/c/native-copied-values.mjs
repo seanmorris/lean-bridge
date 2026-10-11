@@ -119,8 +119,23 @@ export const constructorRefinementWalk = ({ refinement, type: root, value: argum
 			const rejected = refinementDiagnosticRejection({ path, suffix: ` was rejected by ${site.constructor}`, name, indent, reject });
 			return [`${indent}if (!${name}(${input(type, value)})) ${rejected}`];
 		}
-		// Nominal/callback constructor positions have independent admission gates.
-		if(!["array", "list", "option", "tuple", "result"].includes(site.kind)) return [];
+		if(site.kind === "record")
+		{
+			const fields = copy(type).fields;
+			return site.arguments.flatMap((child, index) => check(child, type.fields[index].type,
+				`(&${value}->${fields[index].name})`, indent, [...path, `.${site.fields[index]}`], `${suffix}_${index}`));
+		}
+		if(site.kind === "variant")
+		{
+			const cases = copy(type).cases;
+			return site.cases.flatMap((branch, index) => {
+				const inner = branch.arguments.flatMap((child, field) => check(child, type.cases[index].fields[field].type,
+					`(&${value}->cases.${cases[index].name}.${cases[index].fields[field].name})`, `${indent}  `,
+					[...path, `.${branch.name}.${branch.fields[field]}`], `${suffix}_${index}_${field}`));
+				return inner.length ? [`${indent}if (${value}->kind == ${index}u) {`, ...inner, `${indent}}`] : [];
+			});
+		}
+		if(!["array", "list", "option", "tuple", "result"].includes(site.kind)) throw new TypeError("Unsupported constructor refinement transport");
 		if(["array", "list"].includes(site.kind))
 		{
 			const index = `k${indent.length}`;

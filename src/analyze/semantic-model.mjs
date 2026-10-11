@@ -87,7 +87,12 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 			return remember(type.root);
 		}
 		const value = { ...type };
-		if(type.kind === "refinement") value.base = remember(type.base);
+		if(type.kind === "refinement")
+		{
+			value.base = remember(type.base);
+			// A constructor is a site's decision, not part of the shared nominal definition.
+			if(type.predicate.kind === "subtype") value.predicate = { kind: "subtype" };
+		}
 		if(type.kind === "alias") value.target = remember(type.target);
 		if(["array", "list", "option"].includes(type.kind)) value.element = remember(type.element);
 		if(["result", "tuple"].includes(type.kind)) value.arguments = type.arguments.map(remember);
@@ -129,7 +134,7 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 			parameters: type.parameters.map((type, index) => parameter(type, index, decision?.parameters?.[index]))
 			, result: site(type.result, true, decision?.result)
 		} : null;
-		const callbackRefinements = callable && { parameters: type.parameters.map(refinement), result: refinement(type.result) };
+		const callbackRefinements = callable && { parameters: type.parameters.map(type => refinement(type)), result: refinement(type.result) };
 		const constrainedCallback = callbackRefinements && [...callbackRefinements.parameters, callbackRefinements.result].some(value => value !== null);
 		const signature = callable && { ...callbackSemanticSignature(callable), ...(constrainedCallback ? { refinements: callbackRefinements } : {}) };
 		const callbackName = signature && `Callback${sha256(canonicalJson(signature)).slice(0, 20)}`;
@@ -156,9 +161,9 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 				, effects: ["host-call", "fails"], failure: callbackFailure
 				, resultMode: "value", invocation: "many", reentry: "same-agent"
 				, selfDisposal: "defer" };
-			const constraints = type.kind === "alias" ? { kind: "alias", target: refinement(type.target) }
-				: type.kind === "record" ? { kind: "record", fields: type.fields.map(field => refinement(field.type)) }
-					: type.kind === "variant" ? { kind: "variant", cases: type.cases.map(item => item.fields.map(field => refinement(field.type))) } : null;
+			const constraints = type.kind === "alias" ? { kind: "alias", target: refinement(type.target, false, true) }
+				: type.kind === "record" ? { kind: "record", fields: type.fields.map(field => refinement(field.type, false, true)) }
+					: type.kind === "variant" ? { kind: "variant", cases: type.cases.map(item => item.fields.map(field => refinement(field.type, false, true))) } : null;
 			const constrained = constraints && (constraints.kind === "alias" ? constraints.target !== null
 				: (constraints.kind === "record" ? constraints.fields : constraints.cases.flat()).some(value => value !== null));
 			if(constrained) definition.source.extensions["lean-lang.org/nominal-refinements"] = constraints;
@@ -172,19 +177,38 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 		}
 		return { kind: "named", id };
 	};
-	const refinement = type => {
-		if(type.kind === "graph") return refinement(type.root);
-		if(type.kind === "refinement") return structuredClone(type.predicate);
+	const hasSubtype = type => type.kind === "refinement" ? type.predicate.kind === "subtype"
+		: type.kind === "alias" ? hasSubtype(type.target)
+			: type.kind === "record" ? type.fields.some(field => hasSubtype(field.type))
+				: type.kind === "variant" ? type.cases.some(branch => branch.fields.some(field => hasSubtype(field.type)))
+					: ["array", "list", "option"].includes(type.kind) ? hasSubtype(type.element)
+						: ["tuple", "result"].includes(type.kind) && type.arguments.some(hasSubtype);
+	const refinement = (type, nominal = false, shared = false) => {
+		if(type.kind === "graph") return refinement(type.root, nominal, shared);
+		if(type.kind === "refinement") return shared && type.predicate.kind === "subtype" ? null : structuredClone(type.predicate);
+		if(nominal && type.kind === "alias") return refinement(type.target, true, shared);
+		if(nominal && ["record", "variant"].includes(type.kind))
+		{
+			let constrained = false;
+			const fields = members => members.map(field => {
+				const value = refinement(field.type, true, shared);
+				constrained ||= value !== null;
+				return { name: field.name, refinement: value };
+			});
+			const value = type.kind === "record" ? { kind: type.kind, name: type.name, fields: fields(type.fields) }
+				: { kind: type.kind, name: type.name, cases: type.cases.map(branch => ({ name: branch.name, fields: fields(branch.fields) })) };
+			return constrained ? value : null;
+		}
 		const children = ["array", "list", "option"].includes(type.kind) ? [type.element]
 			: ["tuple", "result"].includes(type.kind) ? type.arguments : [];
-		const arguments_ = children.map(refinement);
+		const arguments_ = children.map(child => refinement(child, nominal, shared));
 		return arguments_.some(value => value !== null) ? { kind: type.kind, arguments: arguments_ } : null;
 	};
 	const declarations = included.map(item => {
 		const { projection } = item;
 		const contract = exportContractFor(request.contracts, item.identity);
-		const refinements = { parameters: projection.parameters.map(parameter => refinement(parameter.type))
-			, result: refinement(projection.result) };
+		const refinements = { parameters: projection.parameters.map(parameter => refinement(parameter.type, hasSubtype(parameter.type)))
+			, result: refinement(projection.result, hasSubtype(projection.result)) };
 		const hasRefinements = refinements.result !== null || refinements.parameters.some(value => value !== null);
 		const hasCallback = projection.parameters.some(parameter => parameter.type.kind === "callback");
 		const parameters = projection.parameters.map((p, i) => parameter(p.type, i, contract?.parameters?.[i]));

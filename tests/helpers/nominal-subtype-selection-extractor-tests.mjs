@@ -1,5 +1,5 @@
 /**
- * Fresh Lean preserves nominal decisions per use before runtime admission is enabled.
+ * Fresh Lean preserves per-use decisions through native adapters and independently reviewed APIs.
  *
  * @file
  */
@@ -16,6 +16,9 @@ import { projectionCheckedSelection } from "../../src/analyze/checked-refinement
 import { exportContractProblem } from "../../src/analyze/export-configuration.mjs";
 import { assertJsonSchema } from "./json-schema.mjs";
 import { nominalSelectionContracts, selectedCase, selectedConstructor, selectedEnvelope, selectedEvent, selectedField, selectedRecord, selectedSite, selectedTree, selectedVariant } from "./nominal-subtype-selection-fixture.mjs";
+import { reviewedSourceSelection } from "../../src/analyze/reviewed-source.mjs";
+import { nominalSubtypeReviewInput } from "./nominal-subtype-reviewed-fixture.mjs";
+import { checkNominalNativeSource } from "./nominal-subtype-native-source.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_SELECTION_TEST === "1"
 	|| process.env.LEAN_BRIDGE_STRUCTURAL_SUBTYPE_EXTRACTOR_TEST === "1"
@@ -34,14 +37,14 @@ test("fresh Lean preserves nominal constructor selections and rejects false sour
 	const extractor = resolve("src/analyze/NativeExports.lean");
 	const environment = { ...process.env, LEAN_PATH: directory, PATH: `${dirname(lean)}:${process.env.PATH ?? "/usr/bin:/bin"}` };
 	const commands = [];
-	const run = async args => {
+	const run = async (args, command = lean) => {
 		try
 		{
-			const result = await promisify(execFile)(lean, args, {
+			const result = await promisify(execFile)(command, args, {
 				cwd: directory, env: environment
 				, maxBuffer: 16 * 1024 * 1024, signal: t.signal
 			});
-			commands.push({ arguments: args.map(value => value === extractor ? "src/analyze/NativeExports.lean" : value), ...result });
+			commands.push({ command: command === lean ? "lean" : command, arguments: args.map(value => value === extractor ? "src/analyze/NativeExports.lean" : value), ...result });
 			return result;
 		}
 		catch(error)
@@ -67,14 +70,15 @@ test("fresh Lean preserves nominal constructor selections and rejects false sour
 		, modules
 	};
 	const observations = [];
-	const extract = async (profile, contracts, route) => {
+	const extract = async (profile, contracts, route, review) => {
 		const selection = {
 			profile
 			, modules: modules.map(module => module.name)
 			, exportModules: modules.map(module => module.name)
 			, exports: Object.keys(contracts), resources: [], arities: [], contracts
+			, ...(review ? reviewedSourceSelection(review) : {})
 		};
-		const request = createMetadataRequest(selection, context);
+		const request = createMetadataRequest(selection, { ...context, ...(review ? { reviewedBindingIrSha256: sha256(canonicalJson(review)) } : {}) });
 		const path = join(directory, `${route}-request.json`);
 		await writeFile(path, canonicalJson(request));
 		const output = await run(["--run", extractor, "--metadata", path]);
@@ -91,6 +95,8 @@ test("fresh Lean preserves nominal constructor selections and rejects false sour
 			.map(item => [item.identity, item.projection])));
 		assert.deepEqual([...projections.keys()].sort(), selection.exports.toSorted());
 		observations.push({ route, profile, requestSha256: sha256(canonicalJson(request)), metadataSha256: sha256(output.stdout), selected: projections.size });
+		if(profile === "native-library-v1" && !route.endsWith("refusals"))
+			observations.push(await checkNominalNativeSource({ report, request, context, directory, reports, route, run, lean, review }));
 		return { report, request, projections };
 	};
 	const checkPositive = ({ projections }, contracts) => {
@@ -150,15 +156,19 @@ test("fresh Lean preserves nominal constructor selections and rejects false sour
 		const contracts = nominalSelectionContracts();
 		const forward = await extract(profile, contracts, `${profile}-forward`);
 		checkPositive(forward, contracts);
-		// Raw source typing is a prerequisite only; the public validators retain their runtime gate.
-		assert.throws(() => validateElaboratedMetadata(forward.report, forward.request),
-			profile === "native-library-v1" ? /Subtype refinements require a top-level or structural-container/u : /Unsupported nested refinement position/u);
+		// Native per-use adapters are integrated; component carriers retain their separate gate.
+		if(profile === "native-library-v1") validateElaboratedMetadata(forward.report, forward.request);
+		else assert.throws(() => validateElaboratedMetadata(forward.report, forward.request), /Unsupported nested refinement position/u);
 		if(profile === "native-library-v1")
 		{
 			const reverseContracts = Object.fromEntries(Object.entries(contracts).toReversed());
 			const reverse = await extract(profile, reverseContracts, `${profile}-reverse`);
 			checkPositive(reverse, contracts);
 			assert.deepEqual(reverse.projections, forward.projections);
+			const review = nominalSubtypeReviewInput();
+			const reviewed = await extract(profile, contracts, `${profile}-reviewed`, review);
+			validateElaboratedMetadata(reviewed.report, reviewed.request);
+			assert.deepEqual(reviewed.projections, forward.projections);
 		}
 		const invalid = await extract(profile, invalidContracts(), `${profile}-refusals`);
 		for(const [name, projection] of invalid.projections)

@@ -11,8 +11,8 @@ import { compilerExportSelection, validateExportConfiguration } from "./export-c
 const key = "lean-lang.org/refinements";
 const exportName = item => item.source.extensions["lean-lang.org/specialization"]?.name ?? item.source.declaration;
 const fail = () => { throw new TypeError("Invalid reviewed Subtype constructor decision"); };
-const contractSite = (site, refinement) => {
-	assertRefinement(refinement, site.type);
+const contractSite = (site, refinement, types) => {
+	assertRefinement(refinement, site.type, 0, true, types);
 	// A Subtype or checked-record constructor is selected per site, over a copied value.
 	const selection = checkedRefinementSelection(refinement);
 	if(selection && (site.ownership !== "copy" || site.lifetime !== null)) fail();
@@ -21,8 +21,8 @@ const contractSite = (site, refinement) => {
 };
 
 /**
- * Select constructors at primitive Subtype sites inside structural containers,
- * and at top-level checked-record sites.
+ * Select primitive Subtype constructors through structural containers, aliases,
+ * copied plain records and variants, and top-level checked-record constructors.
  * The caller must validate the complete Binding IR, including specializations,
  * and reconcile fresh metadata. Contracts use the public specialization name.
  * No contract is added for Fin-only or unrefined declarations. Other sites of a
@@ -42,8 +42,8 @@ export const reviewedSubtypeContracts = document => {
 			|| Object.keys(value).length !== 2 || !Object.hasOwn(value, "parameters") || !Object.hasOwn(value, "result")
 			|| !Array.isArray(value.parameters) || value.parameters.length !== declaration.parameters.length
 			|| (value.result === null && value.parameters.every(item => item === null))) fail();
-		const parameters = declaration.parameters.map((site, index) => contractSite(site, value.parameters[index]));
-		const result = contractSite(declaration.result, value.result);
+		const parameters = declaration.parameters.map((site, index) => contractSite(site, value.parameters[index], document.types));
+		const result = contractSite(declaration.result, value.result, document.types);
 		if(!parameters.some(site => site.refinement) && !result.refinement) continue;
 		entries.push([exportName(declaration), { parameters, result }]);
 	}

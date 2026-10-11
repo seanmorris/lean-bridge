@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeNominalSubtypeNativeSource } from "./nominal-subtype-native-history.mjs";
 
 export const nominalSubtypeSelectionHistoryPath = "docs/evidence/nominal-subtype-selection-source-history-20261011.json";
 export const nominalSubtypeSelectionPredecessor = "b0cabee3ac47be0feeb4cf7154b3ce32ecfa56f5";
@@ -55,6 +56,7 @@ export const reverseNominalSubtypeSelectionUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeNominalSubtypeSelectionSource = (path, source, expected) => {
+	source = beforeNominalSubtypeNativeSource(path, source, expected);
 	if(typeof source !== "string" || !nominalSubtypeSelectionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

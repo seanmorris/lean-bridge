@@ -126,8 +126,8 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 		}
 		else if(type.predicate?.kind === "subtype")
 		{
-			// Only structural edges preserve the site's author-selected primitive constructor.
-			if(!subtypeStructural) fail("Subtype refinements require a top-level or structural-container native parameter or result");
+			// Copied plain records and variants retain a constructor at each use, not on the shared type.
+			if(!subtypeStructural) fail("Subtype refinements require a top-level or structural-container native parameter or result, including copied plain records and variants but excluding callbacks, recursive graphs and generic records");
 			closed(type.predicate, ["kind", "constructor"], "refinement predicate");
 			if(typeof type.predicate.constructor !== "string" || !identifier.test(type.predicate.constructor)) fail("invalid Subtype refinement");
 			recurse(type.base, true);
@@ -197,7 +197,7 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 			if(!/^[A-Za-z][A-Za-z0-9_]*$/.test(field.name) || !identifier.test(field.projection)
 	      || ["new", "DESTROY", "CLONE", "CLONE_SKIP"].includes(field.name)) fail("invalid or reserved record field");
 			// Plain record fields are structural; an instantiated generic structure's fields are not.
-			recurse(field.type, true, !Object.hasOwn(type, "provenance"), false);
+			recurse(field.type, true, !Object.hasOwn(type, "provenance"), subtypeStructural && !Object.hasOwn(type, "provenance") && !Object.hasOwn(type, "erased"));
 		}
 	} else if(type.kind === "variant")
 	{
@@ -215,7 +215,7 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 				closed(field, ["name", "type"], "variant field");
 				if(typeof field.name !== "string" || !/^[A-Za-z][A-Za-z0-9_]*$/.test(field.name)
 					|| ["kind", "new", "DESTROY", "CLONE", "CLONE_SKIP"].includes(field.name)) fail("invalid or reserved variant field");
-				recurse(field.type, true, true, false);
+				recurse(field.type, true, true, subtypeStructural);
 			}
 		}
 	} else if(type.kind === "resource")

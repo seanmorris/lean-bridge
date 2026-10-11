@@ -27,6 +27,7 @@ import { checkedRecordPhpWasmPromotionChangedPaths } from "./checked-record-php-
 import { nominalSubtypeConversionChangedPaths } from "./nominal-subtype-conversion-history.mjs";
 import { perlHistoryCheckoutChangedPaths } from "./perl-history-checkout-history.mjs";
 import { nominalSubtypeSelectionChangedPaths } from "./nominal-subtype-selection-history.mjs";
+import { nominalSubtypeNativeChangedPaths } from "./nominal-subtype-native-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeSubtypeRefinementSource, subtypeRefinementChangedPaths } from "./subtype-refinement-source-history.mjs";
 import { subtypeHeapChangedPaths } from "./subtype-heap-source-history.mjs";
@@ -919,6 +920,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nominalSubtypeConversionChangedPaths
 	, ...perlHistoryCheckoutChangedPaths
 	, ...nominalSubtypeSelectionChangedPaths
+	, ...nominalSubtypeNativeChangedPaths
 ])].sort());
 
 /**

@@ -28,20 +28,21 @@ export const assertReviewedFinCallback = definition => {
 };
 
 /**
- * Admit nonempty Fin trees and primitive top-level Subtype decisions matching
- * a declaration's erased signature. Fresh Lean metadata must match the bounds
- * and checked constructors selected by the review.
+ * Match Fin and per-use Subtype decisions to a declaration's erased signature,
+ * including copied plain records and variants. Fresh Lean metadata must match
+ * every bound and checked constructor selected by the review.
  *
  * @param declaration - Reviewed function and its transport signature.
  * @param value - Authored parameter/result constraints.
+ * @param types - Reviewed definitions for per-use record and variant choices.
  */
-export const assertReviewedRefinements = (declaration, value) => {
+export const assertReviewedRefinements = (declaration, value, types = []) => {
 	const fail = () => { throw new TypeError("Invalid reviewed refinement decision"); };
 	if(!value || typeof value !== "object" || Array.isArray(value)
 		|| Object.keys(value).length !== 2 || !Object.hasOwn(value, "parameters") || !Object.hasOwn(value, "result")
 		|| !Array.isArray(value.parameters) || value.parameters.length !== declaration.parameters.length) fail();
-	for(const [index, refinement] of value.parameters.entries()) assertRefinement(refinement, declaration.parameters[index].type);
-	assertRefinement(value.result, declaration.result.type);
+	for(const [index, refinement] of value.parameters.entries()) assertRefinement(refinement, declaration.parameters[index].type, 0, true, types);
+	assertRefinement(value.result, declaration.result.type, 0, true, types);
 	if(value.result === null && value.parameters.every(refinement => refinement === null)) fail();
 };
 

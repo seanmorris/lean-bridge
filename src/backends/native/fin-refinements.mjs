@@ -15,7 +15,6 @@ import { assertRefinement } from "../../abi/refinements.mjs";
  */
 export const nativeFinRefinements = (declaration, types = []) => {
 	const declared = declaration.source?.extensions?.["lean-lang.org/refinements"];
-	const expanded = nativeFinExpansion(declaration, types);
 	const checkedRecord = site => site.type.kind === "named" && types.some(type => type.id === site.type.id
 		&& type.kind === "record" && type.source?.extensions?.["lean-lang.org/erased-proofs"] !== undefined);
 	// Lean-produced records carry no input constructor, including result-only packages.
@@ -26,33 +25,35 @@ export const nativeFinRefinements = (declaration, types = []) => {
 	{
 		if(declaration.parameters.some(checkedRecord))
 			throw new TypeError(`${declaration.id}: a checked record parameter needs its selected constructor`);
-		return withResult(expanded);
+		return withResult(nativeFinExpansion(declaration, types));
 	}
 	const value = declared;
 	if(value === null || typeof value !== "object" || Array.isArray(value)
 		|| JSON.stringify(Object.keys(value).sort()) !== JSON.stringify(["parameters", "result"])
 		|| !Array.isArray(value.parameters) || value.parameters.length !== declaration.parameters.length)
 		throw new TypeError(`${declaration.id} has malformed refinement metadata`);
-	value.parameters.forEach((refinement, index) => assertRefinement(refinement, declaration.parameters[index].type));
-	assertRefinement(value.result, declaration.result.type);
+	value.parameters.forEach((refinement, index) => assertRefinement(refinement, declaration.parameters[index].type, 0, true, types));
+	assertRefinement(value.result, declaration.result.type, 0, true, types);
 	if(value.parameters.some((refinement, index) => (refinement?.kind === "checked-record") !== checkedRecord(declaration.parameters[index]))
 		|| value.result?.kind === "checked-record")
 		throw new TypeError(`${declaration.id}: checked records need an input constructor and proof-backed result projection`);
-	// Fin and primitive Subtypes cross structural containers. Checked records remain
-	// top-level sites; other constraints must fail rather than vanish from docs.
+	// Checked records remain top-level sites. Nominal Subtypes keep their selected
+	// field/case decisions separate from the shared Fin bounds.
 	const supported = (refinement, top) => refinement === null || ["fin", "subtype"].includes(refinement.kind) || (top && refinement.kind === "checked-record")
+		|| (refinement.kind === "record" && refinement.fields.every(field => supported(field.refinement, false)))
+		|| (refinement.kind === "variant" && refinement.cases.every(branch => branch.fields.every(field => supported(field.refinement, false))))
 		|| (["array", "list", "option"].includes(refinement.kind) && refinement.arguments.length === 1 && supported(refinement.arguments[0], false))
 		|| (["tuple", "result"].includes(refinement.kind) && refinement.arguments.length === 2 && refinement.arguments.every(child => supported(child, false)));
 	if(![...value.parameters, value.result].every(refinement => supported(refinement, true)))
 		throw new TypeError(`${declaration.id}: native packages document top-level checked records and Fin/Subtype refinements at top level or inside arrays, lists, options, products and results`);
-	return withResult(expanded ?? value);
+	return withResult(nativeFinExpansion(declaration, types) ?? value);
 };
 
 /**
  * Add the bounds of records and variants with checked fields to a declaration's trees.
- * Declaration trees stop at a nominal type; its definition carries the field bounds as
- * lean-lang.org/nominal-refinements. Aliases are not expanded, so packages without refined
- * records or variants document exactly what they did before.
+ * Shared definitions carry Fin bounds as lean-lang.org/nominal-refinements.
+ * Per-use nominal trees retain each selected constructor and merge matching shared bounds.
+ * Aliases resolve only when a site needs nominal paths.
  *
  * @param declaration - Binding IR declaration.
  * @param types - Binding IR type definitions of the same document.
@@ -61,34 +62,52 @@ const nativeFinExpansion = (declaration, types) => {
 	const definitions = new Map(types.map(type => [type.id, type]));
 	const refined = type => type?.kind === "named" && ["record", "variant"].includes(definitions.get(type.id)?.kind)
 		&& definitions.get(type.id).source?.extensions?.["lean-lang.org/nominal-refinements"] !== undefined;
-	const reaches = (type, seen = new Set()) => refined(type) || (type?.kind === "apply" && type.arguments.some(child => reaches(child, seen)))
-		|| (type?.kind === "named" && definitions.get(type.id)?.kind === "alias" && !seen.has(type.id) && reaches(definitions.get(type.id).target, new Set([...seen, type.id])));
+	const reaches = (type, seen = new Set()) => {
+		if(refined(type)) return true;
+		if(type?.kind === "apply") return type.arguments.some(child => reaches(child, seen));
+		if(type?.kind !== "named" || seen.has(type.id)) return false;
+		const definition = definitions.get(type.id), inner = new Set([...seen, type.id]);
+		const children = definition?.kind === "alias" ? [definition.target]
+			: definition?.kind === "record" ? definition.fields.map(field => field.type)
+				: definition?.kind === "variant" ? definition.cases.flatMap(branch => branch.fields.map(field => field.type)) : [];
+		return children.some(child => reaches(child, inner));
+	};
 	const sites = [...declaration.parameters.map(parameter => parameter.type), declaration.result.type];
-	if(!sites.some(type => reaches(type))) return null;
+	const declared = declaration.source?.extensions?.["lean-lang.org/refinements"];
+	const nominalSite = tree => tree !== null && (["record", "variant"].includes(tree.kind) || (tree.arguments ?? []).some(nominalSite));
+	if(!sites.some(type => reaches(type)) && ![...declared?.parameters ?? [], declared?.result ?? null].some(nominalSite)) return null;
+	const merge = (tree, shared) => {
+		if(shared === null || shared === undefined) return tree;
+		if(tree === null) return shared;
+		if(tree.kind !== shared.kind || (tree.kind === "fin" && tree.bound !== shared.bound))
+			throw new TypeError("Per-use refinement conflicts with shared nominal bounds");
+		return tree.kind === "fin" ? tree : { ...tree, arguments: tree.arguments.map((child, index) => merge(child, shared.arguments[index])) };
+	};
 	const expand = (type, tree, seen = new Set()) => {
+		if(tree?.kind === "checked-record") return tree;
 		if(type?.kind === "named")
 		{
 			const definition = definitions.get(type.id);
 			if(definition?.kind === "alias" && !seen.has(type.id)) return expand(definition.target, tree, new Set([...seen, type.id]));
-			if(!refined(type) || seen.has(type.id)) return tree;
-			const inner = new Set([...seen, type.id]), nominal = definition.source.extensions["lean-lang.org/nominal-refinements"];
+			if(!["record", "variant"].includes(definition?.kind) || seen.has(type.id)) return tree;
+			const inner = new Set([...seen, type.id]), nominal = definition.source?.extensions?.["lean-lang.org/nominal-refinements"];
 			const names = fields => fields.map(field => field.name);
 			if(definition.kind === "record")
 			{
-				const children = definition.fields.map((field, index) => expand(field.type, nominal.fields[index], inner));
-				return { kind: "record", definition: type.id, fields: names(definition.fields), arguments: children };
+				const children = definition.fields.map((field, index) => expand(field.type, merge(tree?.fields[index].refinement ?? null, nominal?.fields[index]), inner));
+				return children.every(child => child === null) ? tree : { kind: "record", definition: type.id, fields: names(definition.fields), arguments: children };
 			}
 			const branch = (item, index) => {
-				const children = item.fields.map((field, position) => expand(field.type, nominal.cases[index][position], inner));
+				const children = item.fields.map((field, position) => expand(field.type, merge(tree?.cases[index].fields[position].refinement ?? null, nominal?.cases[index][position]), inner));
 				return { name: item.name, fields: names(item.fields), arguments: children };
 			};
-			return { kind: "variant", definition: type.id, cases: definition.cases.map(branch) };
+			const cases = definition.cases.map(branch);
+			return cases.every(branch => branch.arguments.every(child => child === null)) ? tree : { kind: "variant", definition: type.id, cases };
 		}
 		if(type?.kind !== "apply" || !["array", "list", "option", "tuple", "result"].includes(type.constructor)) return tree;
 		const children = type.arguments.map((child, index) => expand(child, tree?.arguments?.[index] ?? null, seen));
 		return children.every(child => child === null) ? null : { kind: type.constructor, arguments: children };
 	};
-	const declared = declaration.source?.extensions?.["lean-lang.org/refinements"];
 	return { parameters: declaration.parameters.map((parameter, index) => expand(parameter.type, declared?.parameters[index] ?? null))
 		, result: expand(declaration.result.type, declared?.result ?? null) };
 };
@@ -171,8 +190,12 @@ export const nativeFinContainerNote = (declarations, packages, types = []) => {
  */
 export const nativeRefinementReadme = (declarations, finParagraph, packages, types = []) => {
 	const kinds = new Set();
+	let nominalSubtype = false;
+	const hasSubtype = tree => tree?.kind === "subtype" || (tree?.arguments ?? []).some(hasSubtype)
+		|| (tree?.cases ?? []).some(branch => branch.arguments.some(hasSubtype));
 	const walk = refinement => {
 		if(refinement === null) return;
+		if(["record", "variant"].includes(refinement.kind) && hasSubtype(refinement)) nominalSubtype = true;
 		if(["fin", "subtype", "checked-record"].includes(refinement.kind)) kinds.add(refinement.kind);
 		else (refinement.kind === "variant" ? refinement.cases.flatMap(branch => branch.arguments) : refinement.arguments).forEach(walk);
 	};
@@ -183,7 +206,7 @@ export const nativeRefinementReadme = (declarations, finParagraph, packages, typ
 	}
 	const parts = [];
 	if(kinds.has("fin")) parts.push(finParagraph);
-	if(kinds.has("subtype")) parts.push(`Lean Subtype parameters cross as their base value. The bundled native library runs the author's checked constructor, named below, before the export runs; a value the constructor rejects fails the call with the invalid-argument error naming the parameter and constructor, and the export receives the constructed value, which may differ from the input. Arrays, Lists, options, products and active result branches apply the same constructor checks to each Subtype leaf. Rejections identify the argument and nested element path. Subtype results are the base value. Reviewed APIs select the constructor and reconcile it with fresh Lean compilation. Subtype inside records, variants or callbacks is not supported in ${packages}.`);
+	if(kinds.has("subtype")) parts.push(`Lean Subtype parameters cross as their base value. The bundled native library runs the author's checked constructor, named below, before the export runs; a value the constructor rejects fails the call with the invalid-argument error naming the parameter and constructor, and the export receives the constructed value, which may differ from the input. Arrays, Lists, options, products and active result branches apply the same constructor checks to each Subtype leaf. Rejections identify the argument and nested element path. Subtype results are the base value. Reviewed APIs select the constructor and reconcile it with fresh Lean compilation. ${nominalSubtype ? "Copied plain records check each selected field; variants check only the active case. Repeated uses of one type retain their own constructor choices, and every Fin bound is checked before any constructor. Recursive, generic, owned and callback Subtype positions remain unsupported." : `Subtype inside records, variants or callbacks is not supported in ${packages}.`}`);
 	if(kinds.has("checked-record")) parts.push("Checked records cross as generated record values containing only their payload fields. The bundled native library validates each input through the selected Lean constructor before calling the export. A rejected record reports the parameter and constructor; a normalizing constructor changes the value received by Lean without changing the caller's record. Results project the payload fields of a record whose proofs Lean has already constructed. No proof object or input constructor is needed for a result-only export. Ordinary and reviewed APIs retain each parameter's constructor choice. Nested checked records, other dependent payloads and checked-record callbacks remain unsupported.");
 	return parts.join("\n\n");
 };
