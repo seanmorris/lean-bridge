@@ -401,15 +401,28 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	}[profile] ?? [];
 	// Author-checked Subtype cells are promoted per build group by their own receipt, at top-level parameters and results.
 	const subtypes = specializationEvidence || profile === "php-wasm" ? ["subtype"] : [];
-	assert.equal(observed.length, 63 + 3 * (compounds.length + lists.length + aliases.length + variants.length + recursive.length) + 2 * fins.length + 2 * subtypes.length + specialized.length + (nominalFin ? 1 : 0));
-	assert.deepEqual([...new Set(observed.map(cell => cell.shape))].sort(), [...document.irFacets.primitive, "array", "record", ...compounds, ...lists, ...aliases, ...variants, ...recursive, ...fins, ...subtypes, ...specialized].sort());
+	const checkedRecordGroups = {
+		python: ["python-3-11", "python-3-12"], ruby: ["ruby-jvm"]
+		, java: ["ruby-jvm"], kotlin: ["ruby-jvm"], dotnet: ["remaining"]
+		, rust: ["remaining"], "php-native": ["remaining"], "wit-wasi": ["remaining"]
+	}[profile] ?? [];
+	const checkedRecords = checkedRecordGroups.length ? ["checked-record"] : [];
+	assert.equal(observed.length, 63 + 3 * (compounds.length + lists.length + aliases.length + variants.length + recursive.length) + 2 * fins.length + 2 * subtypes.length + 2 * checkedRecords.length + specialized.length + (nominalFin ? 1 : 0));
+	assert.deepEqual([...new Set(observed.map(cell => cell.shape))].sort(), [...document.irFacets.primitive, "array", "record", ...compounds, ...lists, ...aliases, ...variants, ...recursive, ...fins, ...subtypes, ...checkedRecords, ...specialized].sort());
 	for(const cell of observed)
 	{
 		assert.ok([...(specialized.includes(cell.shape) ? ["signature"] : []), "parameter", "result", "field"].includes(cell.position));
-		if(cell.shape === "subtype" || (cell.shape === "fin" && !nominalFin)) assert.notEqual(cell.position, "field");
+		if(["subtype", "checked-record"].includes(cell.shape) || (cell.shape === "fin" && !nominalFin)) assert.notEqual(cell.position, "field");
 		for(const [stageName, stage] of Object.entries(cell.stages))
 		{
 			assert.equal(stage.state, "passed");
+			if(cell.shape === "checked-record")
+			{
+				assert.deepEqual(stage.evidence, checkedRecordGroups.flatMap(group =>
+					(cell.position === "result" ? ["ordinary-source", "result-only-ordinary-source"] : ["ordinary-source"])
+						.map(route => `checked-record-native-${group}-${route}-installed`)));
+				continue;
+			}
 			// Structural Fin keeps existing scalar/container evidence; fields cite only the new record runs.
 			if(cell.shape === "fin")
 			{

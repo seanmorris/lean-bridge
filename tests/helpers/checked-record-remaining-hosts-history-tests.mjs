@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeCheckedRecordNativePromotionSource } from "./checked-record-native-promotion-history.mjs";
 import { beforeCheckedRecordRemainingHostsArchiveSource, checkedRecordRemainingHostsArchiveChangedPaths, checkedRecordRemainingHostsArchiveHistoryPath, checkedRecordRemainingHostsArchivePredecessor, reverseCheckedRecordRemainingHostsArchiveUpdate } from "./checked-record-remaining-hosts-history.mjs";
 
 test("Checked-record remaining native hosts archive history authenticates exact transitions and refuses unknown edits", async () => {
@@ -21,7 +22,7 @@ test("Checked-record remaining native hosts archive history authenticates exact 
 	assert.deepEqual(history.updates.map(update => update.path), checkedRecordRemainingHostsArchiveChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = beforeCheckedRecordNativePromotionSource(update.path, await readFile(update.path, "utf8"));
 		const previous = reverseCheckedRecordRemainingHostsArchiveUpdate(current, update);
 		assert.equal(beforeCheckedRecordRemainingHostsArchiveSource(update.path, current), previous);
 		const bytes = Buffer.from(current);
@@ -44,7 +45,7 @@ test("Checked-record remaining native hosts archive history authenticates exact 
 test("Checked-record remaining native hosts archive changes only source pins and preserves all installed observations", async () => {
 	const history = JSON.parse(await readFile(checkedRecordRemainingHostsArchiveHistoryPath));
 	const path = "docs/type-surface.v1.json";
-	const source = await readFile(path, "utf8");
+	const source = beforeCheckedRecordNativePromotionSource(path, await readFile(path, "utf8"));
 	const restored = beforeCheckedRecordRemainingHostsArchiveSource(path, source);
 	assert.equal(sha256(restored), "1d19487acb2230cdec3388dd95e15b898ce2dc2d59d0104ee71612a39929ed12");
 	const current = JSON.parse(source), previous = JSON.parse(restored);
@@ -79,4 +80,3 @@ test("Checked-record remaining native hosts archive history writer refuses an un
 	assert.equal(result.status, 1); assert.match(result.stderr, /draft-only/u);
 	assert.deepEqual(await readdir(directory), [".git"]);
 });
-

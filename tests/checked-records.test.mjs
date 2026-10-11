@@ -23,6 +23,7 @@ import "./helpers/checked-record-remaining-hosts-archive-tests.mjs";
 import "./helpers/checked-record-remaining-hosts-history-tests.mjs";
 import "./helpers/checked-record-host-ci-report-tests.mjs";
 import "./helpers/checked-record-host-ci-shell-tests.mjs";
+import "./helpers/checked-record-native-promotion-tests.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
 import { assertRefinement } from "../src/abi/refinements.mjs";
