@@ -1,0 +1,39 @@
+TAP version 13
+# Subtest: installed checked-record Perl packages reproduce and relocate both delivery modes for ordinary-source
+not ok 1 - installed checked-record Perl packages reproduce and relocate both delivery modes for ordinary-source
+  ---
+  duration_ms: 161711.54859
+  type: 'test'
+  location: '/app/tests/helpers/checked-record-perl-installed-tests.mjs:32:28'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + '12ae9a901392dc563536477c96fa46c1f72387387097b7c4d3e2c22d01815302'
+    - '137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf'
+  actual: '12ae9a901392dc563536477c96fa46c1f72387387097b7c4d3e2c22d01815302'
+  operator: 'strictEqual'
+  stack: |-
+    installCheckedRecordPerl (file:///app/tests/helpers/checked-record-perl-install.mjs:131:10)
+    async TestContext.<anonymous> (file:///app/tests/helpers/checked-record-perl-installed-tests.mjs:95:18)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# ordinary-source author 0: four Perl ABIs
+# ordinary-source author 1: four Perl ABIs
+# Installing 5.36.3-threaded/prebuilt-only/ordinary-source
+# Retained failed Perl checked-record inputs: /tmp/lean-bridge-checked-record-perl-rgRTAb
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 162031.935885

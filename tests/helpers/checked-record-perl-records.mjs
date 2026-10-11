@@ -9,7 +9,7 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { reviewedContractDifference, reviewedSourceSelection } from "../../src/analyze/reviewed-source.mjs";
 import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
-import { checkedRecordPerlConfigurations, checkedRecordPerlModes, assertCheckedRecordPerlIdentity } from "./checked-record-perl-install.mjs";
+import { checkedRecordPerlConfigurations, checkedRecordPerlModes, assertCheckedRecordPerlIdentity, assertCheckedRecordPerlPackageIdentity } from "./checked-record-perl-install.mjs";
 import { checkedRecordPerlConsumer, checkedRecordPerlSelection } from "./checked-record-perl-fixture.mjs";
 import { refinementsKey } from "./checked-record-fixture.mjs";
 
@@ -129,6 +129,7 @@ export const assertCheckedRecordPerlRecords = async ({ route, read }) => {
 		for(const name of ["first.stdout", "repeated.stdout"])
 			assert.equal(Buffer.from(await read(prefix + name)).toString(), `checked-record-ok:${selection.checks}\n`);
 		assert.deepEqual(item.traces.map(trace => trace.role), ["runtime", "component"]);
+		const runtime = await json(prefix + "runtime-manifest.json");
 		for(const recorded of item.traces)
 		{
 			const role = recorded.role, manifest = await json(prefix + `${role}-manifest.json`);
@@ -136,7 +137,7 @@ export const assertCheckedRecordPerlRecords = async ({ route, read }) => {
 			const trace = await json(prefix + `${role}-trace.json`);
 			assert.equal(recorded.manifestSha256, sha256(canonicalJson(manifest)));
 			assert.equal(recorded.receiptSha256, sha256(receiptBytes)); assert.equal(recorded.traceSha256, sha256(canonicalJson(trace)));
-			assert.equal(manifest.runtimeIdentity, receipt.packages.find(pkg => pkg.role === role).runtimeIdentity);
+			assertCheckedRecordPerlPackageIdentity(manifest, receipt.packages.find(pkg => pkg.role === role), runtime);
 			assert.equal(manifest.module, role === "runtime" ? "LeanBridge::Runtime" : "LeanBridge::CheckedRecords");
 			assert.equal(manifest.glibcMinimumVersion, report.glibcMinimumVersion);
 			assert.equal(sha256(await read(prefix + `${role}-source.xs`)), manifest.files[manifest.xs]);

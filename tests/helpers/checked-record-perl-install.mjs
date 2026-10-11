@@ -86,6 +86,32 @@ export const checkedRecordPerlInstalledFiles = async root => {
 };
 
 /**
+ * Bind the native package-set identity to the separate CPAN binding and dependency.
+ *
+ * @param manifest - Verified prepared CPAN manifest.
+ * @param pkg - Corresponding native package-set entry.
+ * @param runtime - Verified prepared CPAN runtime manifest shared by the pair.
+ */
+export const assertCheckedRecordPerlPackageIdentity = (manifest, pkg, runtime) => {
+	assert.ok(["runtime", "component"].includes(pkg.role));
+	assert.equal(pkg.target, "cpan"); assert.equal(pkg.ecosystem, "cpan");
+	assert.equal(pkg.profile, "native-library-v1");
+	assert.equal(manifest.module, pkg.role === "runtime" ? "LeanBridge::Runtime" : "LeanBridge::CheckedRecords");
+	assert.equal(manifest.distribution, pkg.name); assert.equal(manifest.version, pkg.version);
+	assert.match(pkg.runtimeIdentity, /^[a-f0-9]{64}$/u);
+	assert.equal(manifest.nativeRuntimeIdentity, pkg.runtimeIdentity);
+	assert.equal(runtime.module, "LeanBridge::Runtime");
+	assert.equal(runtime.nativeRuntimeIdentity, manifest.nativeRuntimeIdentity);
+	assert.match(runtime.runtimeIdentity, /^[a-f0-9]{64}$/u);
+	assert.equal(manifest.runtimeIdentity, runtime.runtimeIdentity);
+	assert.equal(manifest.runtimeVersion, runtime.version);
+	assert.equal(runtime.files["lib/LeanBridge/Runtime/runtime.json"], runtime.nativeRuntimeIdentity);
+	assert.equal(runtime.files["lib/LeanBridge/Runtime/binding.json"], runtime.runtimeIdentity);
+	assert.deepEqual(pkg.requires, pkg.role === "runtime" ? []
+		: [{ ecosystem: "cpan", name: runtime.distribution, version: runtime.version }]);
+};
+
+/**
  * Inspect exact prepared bytes, install offline, authenticate installed payloads and run twice.
  * C compilation is available only in build-xs; neither mode can rebuild Lean.
  *
@@ -117,7 +143,7 @@ export const installCheckedRecordPerl = async ({ configuration, command, mode, r
 	for(const name of allowed) await symlink(`/usr/bin/${name}`, join(tools, name));
 	const environment = { ...copiedCleanEnvironment, PATH: tools
 		, ...mode === "build-xs" ? { CC: "/usr/bin/cc" } : {} };
-	const traces = [];
+	const traces = []; let runtime;
 	for(const role of ["runtime", "component"])
 	{
 		const pkg = packages.find(item => item.role === role), artifact = pkg.artifacts[0];
@@ -128,7 +154,8 @@ export const installCheckedRecordPerl = async ({ configuration, command, mode, r
 		const children = await readdir(inspection); assert.equal(children.length, 1);
 		const packageRoot = join(inspection, children[0]);
 		const { manifest } = await readVerifiedCpanPackage(packageRoot);
-		assert.equal(manifest.runtimeIdentity, pkg.runtimeIdentity);
+		if(role === "runtime") runtime = manifest;
+		assertCheckedRecordPerlPackageIdentity(manifest, pkg, runtime);
 		await saveLakeFile(output, `${role}-manifest.json`, canonicalJson(manifest));
 		await saveLakeFile(output, `${role}-source.xs`, await readFile(join(packageRoot, manifest.xs)));
 		await installCpanArchive({ archive, workingRoot: root, prefix, perl: command, mode, environment });

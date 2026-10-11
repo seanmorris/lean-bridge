@@ -1,0 +1,26 @@
+Started 3388158 at 64a015549e71af6cec1d9d8e8ad947466b6842a9; free 2813 MiB; output /app/build/vo1446-perl-ordinary-r1-64a0155-records
+{"code":1,"signal":null,"pid":3388158,"stoppedForDisk":false,"minimumFreeMiB":1954,"endedAt":"2026-10-11T01:12:43.937Z","tapSha256":"1a300531b82441d6fdd26e0c46cb18bbaf69fb8f22ff91373cc567c9b32ee5d5"}
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
+  [
++   1,
+-   0,
+    null,
+    false
+  ]
+
+    at file:///app/build/run-checked-record-perl-installed.mjs:62:8 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: [ 1, null, false ],
+  expected: [ 0, null, false ],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v22.23.2

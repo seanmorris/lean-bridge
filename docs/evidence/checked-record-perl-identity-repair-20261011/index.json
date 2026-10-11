@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "failedProducer": "64a015549e71af6cec1d9d8e8ad947466b6842a9",
+  "scope": "Original failed frozen producer and successful one-interpreter diagnostic against its retained packages. Not full installed acceptance.",
+  "files": {
+    "original-failed.tap": {
+      "bytes": 1569,
+      "sha256": "1a300531b82441d6fdd26e0c46cb18bbaf69fb8f22ff91373cc567c9b32ee5d5"
+    },
+    "original-failed.start.json": {
+      "bytes": 1406,
+      "sha256": "3e836221bbb7a93ef68798f9267b4e69ebfeda39a430a7addfcbd2ab0b3a9438"
+    },
+    "original-failed.end.json": {
+      "bytes": 229,
+      "sha256": "15da2aca3f9372995eb674a75e328af3113e2ab2c149b11727991399b77797b0"
+    },
+    "original-failed.queue.log": {
+      "bytes": 796,
+      "sha256": "de3934a06f7de268046189bf47de40ba48c23dc5552fbab10f0c71b2bd28b225"
+    },
+    "diagnostic.log": {
+      "bytes": 332,
+      "sha256": "7f0c368b10027c91be3fadc3537b1ccdcdc43c64c440c12a6ada391fce41adeb"
+    },
+    "diagnostic-runner.mjs": {
+      "bytes": 1142,
+      "sha256": "913d48240f5da20ae25f2cf99e5b9a4464c37a5d552903a95f74811195a9a71f"
+    },
+    "before/tests/helpers/checked-record-perl-install.mjs.txt": {
+      "bytes": 10956,
+      "sha256": "5e65498cb2ff999ada38bba5e2b161f1b21f88919dedf4b758c2b0eb78ad1ae9"
+    },
+    "draft/tests/helpers/checked-record-perl-install.mjs.txt": {
+      "bytes": 12548,
+      "sha256": "765361bbf6ad8e68fdfafa915aa52c015d9a7ca051db1ca53aaf7ce837449b0d"
+    },
+    "before/tests/helpers/checked-record-perl-records.mjs.txt": {
+      "bytes": 12623,
+      "sha256": "287fe0aa0e2e00806c2c3dbbad7ae8dda968cbf025dd82e68c2e40b392d5ec07"
+    },
+    "draft/tests/helpers/checked-record-perl-records.mjs.txt": {
+      "bytes": 12730,
+      "sha256": "4ca945c08e7420abe038d0a09c761b6e83c5554f83791784924af0e2111a69b2"
+    },
+    "before/tests/helpers/checked-record-perl-installed-source-tests.mjs.txt": {
+      "bytes": 4412,
+      "sha256": "639a67239a538019257da80a5758075ddd5472103a2e3f454e96bd8a8ee4d3e1"
+    },
+    "draft/tests/helpers/checked-record-perl-installed-source-tests.mjs.txt": {
+      "bytes": 6601,
+      "sha256": "42ffce1400a335850fb4adc4e6950b386a004b18db082bb685838af384d6bcc6"
+    },
+    "diagnostic/prebuilt-only/component-install-receipt.json": {
+      "bytes": 531,
+      "sha256": "e4ce9b13014cf3c309c0abf1c0a86fbbbd6f3241e07922b8bc71a132e0681f1d"
+    },
+    "diagnostic/prebuilt-only/component-manifest.json": {
+      "bytes": 7419,
+      "sha256": "f6de43ba0f3894641f58abd418fcb66d00c35570e078a0fe81acd568fd1fba5e"
+    },
+    "diagnostic/prebuilt-only/component-source.xs": {
+      "bytes": 15338,
+      "sha256": "21d3f6abfbe0b3b4ca434e4324acb28dd546e02c395a75dba2dbd167b5765e92"
+    },
+    "diagnostic/prebuilt-only/component-trace.json": {
+      "bytes": 808,
+      "sha256": "e40b00ac0f34417d4850b2698e31410f3a1e5c2f3ceb4cd5e8af1a3c4634f472"
+    },
+    "diagnostic/prebuilt-only/first.stdout": {
+      "bytes": 23,
+      "sha256": "5f3f06524f55ce5e1d9f1a8fe6bd4e89820721b526da201af1c34becef34e771"
+    },
+    "diagnostic/prebuilt-only/installed-files.json": {
+      "bytes": 4683,
+      "sha256": "8a33c867228599efd020288032fe9eabe30486b67cd3304af779cfa556170d64"
+    },
+    "diagnostic/prebuilt-only/repeated.stdout": {
+      "bytes": 23,
+      "sha256": "5f3f06524f55ce5e1d9f1a8fe6bd4e89820721b526da201af1c34becef34e771"
+    },
+    "diagnostic/prebuilt-only/report.json": {
+      "bytes": 1705,
+      "sha256": "501d474b3bda9b2d90d86872bdd147bfc45637a5f1f2f8d2ece1af3e93145822"
+    },
+    "diagnostic/prebuilt-only/runtime-install-receipt.json": {
+      "bytes": 531,
+      "sha256": "440854dc97f5d57bad62ce364d6acd2321fc7406ee85b39a6e86b70d36598215"
+    },
+    "diagnostic/prebuilt-only/runtime-manifest.json": {
+      "bytes": 8392,
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    "diagnostic/prebuilt-only/runtime-source.xs": {
+      "bytes": 11859,
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    "diagnostic/prebuilt-only/runtime-trace.json": {
+      "bytes": 3403,
+      "sha256": "5647a8df3ccc1498a20bc91981fb55be0c995f0ed135f7a47b148effda1fdb81"
+    },
+    "diagnostic/build-xs/component-install-receipt.json": {
+      "bytes": 1697,
+      "sha256": "58547405372147cf0498162f306f7b17f2aaa2150f5a7a83cf11cec2bce62482"
+    },
+    "diagnostic/build-xs/component-manifest.json": {
+      "bytes": 7419,
+      "sha256": "f6de43ba0f3894641f58abd418fcb66d00c35570e078a0fe81acd568fd1fba5e"
+    },
+    "diagnostic/build-xs/component-source.xs": {
+      "bytes": 15338,
+      "sha256": "21d3f6abfbe0b3b4ca434e4324acb28dd546e02c395a75dba2dbd167b5765e92"
+    },
+    "diagnostic/build-xs/component-trace.json": {
+      "bytes": 820,
+      "sha256": "bdf4415bbc1a5e5e63cf5a0c9520a3bcc20e04a801150d7e40f5e3f355b32fae"
+    },
+    "diagnostic/build-xs/first.stdout": {
+      "bytes": 23,
+      "sha256": "5f3f06524f55ce5e1d9f1a8fe6bd4e89820721b526da201af1c34becef34e771"
+    },
+    "diagnostic/build-xs/installed-files.json": {
+      "bytes": 4685,
+      "sha256": "5d1f4fd8fbab8c517474d8370b44d27a3150857593b3daf9c859317a76900a19"
+    },
+    "diagnostic/build-xs/repeated.stdout": {
+      "bytes": 23,
+      "sha256": "5f3f06524f55ce5e1d9f1a8fe6bd4e89820721b526da201af1c34becef34e771"
+    },
+    "diagnostic/build-xs/report.json": {
+      "bytes": 1699,
+      "sha256": "f96b402dcb577c45339d3bc29cd973ebfb328a14ba9348817e74de9b3600a9a2"
+    },
+    "diagnostic/build-xs/runtime-install-receipt.json": {
+      "bytes": 1661,
+      "sha256": "14c87872f1c272b8467aa1139da92a522e8634126115a646ecb22be667e5eb7d"
+    },
+    "diagnostic/build-xs/runtime-manifest.json": {
+      "bytes": 8392,
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    "diagnostic/build-xs/runtime-source.xs": {
+      "bytes": 11859,
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    "diagnostic/build-xs/runtime-trace.json": {
+      "bytes": 3415,
+      "sha256": "8d03e05dd5a2d2a7c6bbe45fd5069793b05429b749d1f3a489dccc90c28b4f61"
+    }
+  }
+}
