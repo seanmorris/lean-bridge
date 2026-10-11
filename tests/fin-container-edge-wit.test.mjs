@@ -20,6 +20,8 @@ import { finContainerEdgeWitFixture } from "./helpers/fin-container-edge-wit-fix
 import { finContainerEdgeWitDefinitions, observeFinContainerEdgeWit } from "./helpers/fin-container-edge-wit-observer.mjs";
 import { copiedCleanEnvironment, installCopiedConsumer, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
+import "./helpers/fin-container-late-wit-source-tests.mjs";
+import "./helpers/fin-container-late-wit-installed-tests.mjs";
 
 const transcript = rows => rows.map(([step, method, status, counts]) => `edge-wit ${step} ${method} ${status} ${counts.join(" ")}\n`).join("") + `fin-container-ok:${finContainerEdgeWitChecks}\n`;
 
