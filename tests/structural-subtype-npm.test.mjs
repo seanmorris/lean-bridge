@@ -45,14 +45,14 @@ const mockedApi = () => ({
 	, byteBranches: values => values.map(value => option(value, ([byte, nat]) => [byte ? byte : failure(), positive(nat)]))
 	, nested: values => {
 		const leaves = values.flat().filter(value => value.tag === "some").map(value => value.value);
-		if(leaves.some(([, fin]) => fin >= 184467440737095516170n)) throw new Error("must be below 184467440737095516170");
+		if(leaves.some(([, fin]) => fin >= 184467440737095516170n)) throw new Error("nested.arg0[2][0].value[1] must be bigint below 184467440737095516170");
 		leaves.forEach(([value]) => positive(value));
 		return BigInt(values.length);
 	}
 	, aliasPair: ([left, right]) => [group(left), group(right, true)]
 	, aliasArguments: (left, right) => [...group(left), ...group(right, true)]
 	, plainFin: values => {
-		if(values.some(value => value.tag === "some" && value.value >= 10n)) throw new Error("must be below 10");
+		if(values.some(value => value.tag === "some" && value.value >= 10n)) throw new Error("plainFin.arg0[0].value must be bigint below 10");
 		return BigInt(values.length);
 	}
 });
@@ -66,6 +66,10 @@ test("the structural npm caller detects skipped checks, wrong constructors, NUL 
 		, { aliasPair: values => values }
 		, { product: ([value, text]) => [positive(value), text.split("\0")[0]] }
 		, { nested: values => { values.flat().forEach(value => { if(value.tag === "some") positive(value.value[0]); }); return BigInt(values.length); } }
+		, { plainFin: values => {
+			if(values.some(value => value.tag === "some" && value.value >= 10n)) throw new Error("plainFin.arg0[1].value must be bigint below 10");
+			return original.plainFin(values);
+		} }
 		, { aliasArguments: (left, right) => {
 			if(right.some(value => value.tag === "some" && value.value === 0n))
 			{ left[0].value = 999n; return failure(); }

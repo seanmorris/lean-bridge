@@ -58,7 +58,7 @@ export const checkStructuralSubtypes = api => {
 	const nested = [[none, some([huge, wide - 1n])], [], [some([2n, 3n])]];
 	check(api.nested(nested) === 3n, "nested valid");
 	nested[2][0] = some([0n, wide]); const before = snapshot(nested);
-	refused(() => api.nested(nested), "mixed Fin before constructor", /must be below 184467440737095516170/u);
+	refused(() => api.nested(nested), "mixed Fin before constructor", /^nested\.(?:arg0|value0)\[2\]\[0\]\.value\[1\] must be bigint below 184467440737095516170$/u);
 	check(snapshot(nested) === before, "mixed input unchanged");
 	nested[2][0] = some([0n, wide - 1n]);
 	refused(() => api.nested(nested), "nested positive");
@@ -68,7 +68,7 @@ export const checkStructuralSubtypes = api => {
 	equal(api.aliasPair([first, second]), [first, normalized], "per-site alias choices");
 	equal(api.aliasArguments(first, second), [...first, ...normalized], "two alias parameters");
 	check(api.plainFin([none, some(0n), some(9n)]) === 3n, "Fin-only tree");
-	refused(() => api.plainFin([some(10n)]), "Fin-only rejection", /must be below 10/u);
+	refused(() => api.plainFin([some(10n)]), "Fin-only rejection", /^plainFin\.(?:arg0|value0)\[0\]\.value must be bigint below 10$/u);
 	for(let round = 0; round < 1000; round++)
 	{
 		const late = [some(huge), some(3n), some(4n)]; late[round % 3] = some(0n);
