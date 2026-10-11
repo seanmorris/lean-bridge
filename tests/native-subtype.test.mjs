@@ -39,6 +39,7 @@ import "./helpers/subtype-result-tests.mjs";
 import "./helpers/subtype-result-source-tests.mjs";
 import "./helpers/subtype-result-history-tests.mjs";
 import "./helpers/nominal-subtype-author-history-tests.mjs";
+import "./helpers/component-refinement-mirror-history-tests.mjs";
 import "./helpers/nominal-subtype-author-tests.mjs";
 import "./helpers/nominal-subtype-selection-history-tests.mjs";
 

@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { beforeComponentRefinementMirrorSource } from "./component-refinement-mirror-history.mjs";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
 
@@ -54,6 +55,7 @@ export const reverseNominalSubtypeAuthorUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeNominalSubtypeAuthorSource = (path, source, expected) => {
+	source = beforeComponentRefinementMirrorSource(path, source, expected);
 	if(typeof source !== "string" || !nominalSubtypeAuthorChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

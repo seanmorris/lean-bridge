@@ -8,6 +8,8 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { assertComponentRecursiveAbi } from "../abi/component-recursive-abi.mjs";
 import { componentRecursiveLimits } from "../abi/component-recursive.mjs";
 import { checkedRecordVia, componentRefinedCall, componentRefinementGuards, componentCarrierRefinementValidators, componentRefinementConversion } from "./component-refinements.mjs";
+import { componentRefinementMirrors, hasComponentNominalRefinements } from "./component-refinement-mirrors.mjs";
+import { componentFinGuard } from "./component-fin-guards.mjs";
 
 const identity = type => type.kind === "named" ? type.id : canonicalJson(type);
 const key = type => sha256(identity(type)).slice(0, 20);
@@ -58,14 +60,17 @@ export const componentRecursiveTypes = abi => {
 export const componentRecursiveLeanSource = (abi, exports, leanType, nominalRefinements = []) => {
 	const types = componentRecursiveTypes(abi), definitions = new Map(abi.types.map(type => [type.id, type]));
 	const constraints = new Map(nominalRefinements.map(entry => [entry.id, entry.refinement]));
+	const selected = exports.some(item => [...item.refinements?.parameters ?? [], item.refinements?.result ?? null].some(tree => hasComponentNominalRefinements(tree)));
+	const conversion = selected ? componentRefinementMirrors(abi, exports, leanType, nominalRefinements) : null;
 	// A checked record crosses as its payload mirror: carriers build and read only the mirror, and
 	// each site's constructor alone builds the source record from it.
 	const checkedRecords = new Map(abi.types.filter(type => type.kind === "record" && type.erased).map(type => [type.id, type]));
-	const mirror = type => type.kind === "named" && checkedRecords.has(type.id) ? `LbErased.${type.id.slice(5)}` : null;
-	const sourceType = type => type.kind === "named" ? `_root_.${type.id.slice(5)}` : leanType(type);
+	const mirror = type => type.kind === "named" && (conversion ? conversion.names.has(type.id.slice(5)) : checkedRecords.has(type.id)) ? `LbErased.${type.id.slice(5)}` : null;
+	const sourceType = type => conversion ? conversion.renderType(type) : type.kind === "named" ? `_root_.${type.id.slice(5)}` : leanType(type);
 	const carrier = type => `(_root_.Array ${mirror(type) ?? sourceType(type)})`;
 	const lines = [
-		"def carrierValue {α : Type} (value : _root_.Array α) : _root_.Option α :="
+		...conversion?.lines ?? []
+		, "def carrierValue {α : Type} (value : _root_.Array α) : _root_.Option α :="
 		, "  if bound : 0 < value.size then"
 		, "    if value.size == 1 then .some (value[0]'bound) else .none"
 		, "  else .none", ""
@@ -87,7 +92,7 @@ export const componentRecursiveLeanSource = (abi, exports, leanType, nominalRefi
 		, `  loop ${componentRecursiveLimits.valueNodes + 1} values #[]`, ""
 	];
 	const checked = (names, body) => ["carrierResult (do", ...names.map(name => `  let ${name} ← carrierValue ${name}`), ...body.map(line => `  ${line}`), ")"];
-	const sites = exports.map(item => {
+	const sites = conversion?.sites ?? exports.map(item => {
 		const signature = abi.exports.find(value => value.bindingId === item.bindingId);
 		if(!signature) throw new TypeError("Missing recursive export signature");
 		const parameters = (item.refinements?.parameters ?? signature.parameters.map(() => null)).map((refinement, index) => refinement?.kind === "checked-record"
@@ -103,7 +108,7 @@ export const componentRecursiveLeanSource = (abi, exports, leanType, nominalRefi
 		return { ...item, parameters: item.parameters.map((parameter, index) => mirror(signature.parameters[index]) ? { ...parameter, leanType: mirror(signature.parameters[index]) } : parameter)
 			, ...refinements ? { refinements } : {} };
 	});
-	for(const [id, type] of checkedRecords)
+	for(const [id, type] of conversion ? [] : checkedRecords)
 	{
 		const name = `LbErased.${id.slice(5)}`, source = `_root_.${id.slice(5)}`, payload = type.fields.map(field => `value.«${field.name}»`).join(" ");
 		lines.push(`structure ${name} where`, ...type.fields.map(field => `  «${field.name}» : ${mirror(field.type) ?? sourceType(field.type)}`), ""
@@ -127,7 +132,9 @@ export const componentRecursiveLeanSource = (abi, exports, leanType, nominalRefi
 		const field = (name, child, body) => emit(name, input, carrier(child), checked(["value"], body));
 		const branch = cases => emit("branch", input, "_root_.UInt32", ["match carrierValue value with", "| .none => 4294967295", "| .some value =>", "  match value with", ...cases.map((pattern, index) => `  | ${pattern} => ${index}`)]);
 		const definition = type.kind === "named" ? definitions.get(type.id) : null;
-		const refinement = constraints.get(type.id);
+		// Mirrored values are checked once at their export site, not while assembling raw carriers.
+		const erased = conversion && definition && (definition.kind === "alias" || conversion.names.has(type.id.slice(5)));
+		const refinement = erased ? null : constraints.get(type.id);
 		const project = (value, constraint) => constraint ? componentRefinementConversion(constraint, value, false) : value;
 		if(definition?.kind === "alias")
 		{
@@ -182,12 +189,20 @@ export const componentRecursiveLeanSource = (abi, exports, leanType, nominalRefi
 	}
 	for(const item of sites)
 	{
-		lines.push(...componentCarrierRefinementValidators(item, nominalRefinements.length > 0));
+		if(conversion) item.parameters.forEach((parameter, index) => lines.push(
+			`@[export ${item.symbol}_fin_guard_${index}]`
+			, `def ${item.wrapper}_fin_guard_${index} (carrier : _root_.Array ${parameter.leanType}) : _root_.UInt8 :=`
+			, "  match carrierValue carrier with", "  | .none => 0", "  | .some _bridgeValue =>"
+			, `    if ${componentFinGuard(item.refinements.parameters[index], "_bridgeValue")} then 1 else 0`, ""
+		));
+		lines.push(...componentCarrierRefinementValidators(item, nominalRefinements.length > 0 || Boolean(conversion), conversion ? componentFinGuard : undefined));
 		const signature = abi.exports.find(value => value.bindingId === item.bindingId);
 		const names = signature.parameters.map((_, index) => `a${index}`);
 		const parameters = signature.parameters.map((type, index) => `(${names[index]} : ${carrier(type)})`).join(" ");
 		const refined = componentRefinedCall(item, names, true);
-		const body = componentRefinementGuards(refined.guards, `pure (${refined.call})`, ".none");
+		const call = componentRefinementGuards(refined.guards, `pure (${refined.call})`, ".none");
+		const bounds = conversion ? item.refinements.parameters.map((tree, index) => componentFinGuard(tree, names[index])).filter(guard => guard !== "true") : [];
+		const body = bounds.length ? `if ${bounds.join(" && ")} then\n  ${call.replaceAll("\n", "\n  ")}\nelse\n  .none` : call;
 		lines.push(`@[export ${item.symbol}_lean]`, `def ${item.wrapper} ${parameters || "(_bridgeUnit : _root_.Unit)"} : ${carrier(signature.result)} :=`
 			, ...checked(names, body.split("\n")).map(line => `  ${line}`), "");
 	}

@@ -308,6 +308,7 @@ const profileManifest = Object.freeze({
 		, "component-structured-callable-lean"
 		, "component-array-contract"
 		, "component-record-contract"
+		, "component-refinement-mirrors"
 		, "component-compound-contract"
 		, "component-list-contract"
 		, "component-variant-contract"

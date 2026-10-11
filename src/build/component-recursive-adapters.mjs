@@ -8,6 +8,7 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { componentScalarTypes } from "../abi/component-scalars.mjs";
 import { compileComponentCopiedGraph, componentRecursiveLimits } from "../abi/component-recursive.mjs";
 import { componentRecursiveHelper, componentRecursiveTypes } from "./component-recursive-lean.mjs";
+import { hasComponentNominalRefinements } from "./component-refinement-mirrors.mjs";
 
 /**
  * Identify a shared copied-value walker after resolving transparent aliases.
@@ -37,6 +38,7 @@ export const componentRecursiveWalker = (abi, type, nominalRefinements = []) => 
  */
 export const generateComponentRecursiveAdapters = (abi, { exportFrames = true, exports = [], nominalRefinements = [] } = {}) => {
 	const refs = componentRecursiveTypes(abi);
+	const nominal = exports.some(item => [...item.refinements?.parameters ?? [], item.refinements?.result ?? null].some(tree => hasComponentNominalRefinements(tree)));
 	const { resolve } = compileComponentCopiedGraph({ schemaVersion: 1, root: abi.exports[0].result, types: abi.types });
 	const definitions = new Map(abi.types.map(type => [type.id, type]));
 	const definitionOf = type => nominalRefinements.length && type.kind === "named" && definitions.get(type.id)?.kind === "alias"
@@ -214,6 +216,7 @@ export const generateComponentRecursiveAdapters = (abi, { exportFrames = true, e
 	for(const item of exportFrames ? abi.exports : [])
 	{
 		const refinements = exports.find(value => value.bindingId === item.bindingId)?.refinements?.parameters ?? [];
+		if(nominal) item.parameters.forEach((_, index) => lines.push(`extern uint8_t ${item.symbol}_fin_guard_${index}(lean_object *);`));
 		const cleanup = item.parameters.map((_, index) => `lean_dec(a${index});`).join(" ");
 		for(const [index, refinement] of refinements.entries()) if(refinement && (nominalRefinements.length || refinement.kind !== "fin"))
 			lines.push(`extern uint8_t ${item.symbol}_refinement_${index}(lean_object *);`);
@@ -228,6 +231,9 @@ export const generateComponentRecursiveAdapters = (abi, { exportFrames = true, e
 		item.parameters.forEach((type, index) => lines.push(`  lean_object *a${index} = ${walker(type)}_decode(&frame->args[${index}]);`));
 		if(nominalRefinements.length) item.parameters.forEach((_, index) => lines.push(
 			`  if (!lean_is_array(a${index}) || lean_array_size(a${index}) != 1) { ${cleanup} bridge_recursive_frame_clear(frame); frame->status = 5; return 5; }`));
+		// Validate bounds across every argument before any parameter's constructor validator.
+		if(nominal) item.parameters.forEach((_, index) => lines.push(`  lean_inc(a${index});`
+			, `  if (!${item.symbol}_fin_guard_${index}(a${index})) { ${cleanup} bridge_recursive_frame_clear(frame); frame->status = 5; return 5; }`));
 		for(const [index, refinement] of refinements.entries()) if(refinement && (nominalRefinements.length || refinement.kind !== "fin"))
 			lines.push(`  lean_inc(a${index});`
 				, `  if (!${item.symbol}_refinement_${index}(a${index})) { ${cleanup} bridge_recursive_frame_clear(frame); frame->status = 5; return 5; }`);

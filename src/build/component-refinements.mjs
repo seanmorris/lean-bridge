@@ -149,13 +149,19 @@ export const componentRefinementGuards = (guards, success, rejected) => {
  *
  * @param item - Compiler-owned source export with primitive refinement bases.
  * @param includeFin - Check scalar Fin when nominal construction selects graph transport.
+ * @param inputGuard - Optional Fin-only predicate, evaluated before any selected constructor.
  */
-export const componentCarrierRefinementValidators = (item, includeFin = false) => (item.refinements?.parameters ?? []).flatMap((refinement, index) => refinement && (includeFin || refinement.kind !== "fin") ? [
-	`@[export ${item.symbol}_refinement_${index}]`
-	, `def ${item.wrapper}_refinement_${index} (carrier : _root_.Array ${item.parameters[index].leanType}) : _root_.UInt8 :=`
-	, "  match carrierValue carrier with"
-	, "  | .none => 0"
-	, "  | .some value =>"
-	, `    match ${componentRefinementConversion(refinement, "value")} with`
-	, "    | .some _ => 1", "    | .none => 0", ""
-] : []);
+export const componentCarrierRefinementValidators = (item, includeFin = false, inputGuard) => (item.refinements?.parameters ?? []).flatMap((refinement, index) => {
+	if(!refinement || (!includeFin && refinement.kind === "fin")) return [];
+	const guard = inputGuard?.(refinement, "value");
+	const body = [`match ${componentRefinementConversion(refinement, "value")} with`, "| .some _ => 1", "| .none => 0"];
+	return [
+		`@[export ${item.symbol}_refinement_${index}]`
+		, `def ${item.wrapper}_refinement_${index} (carrier : _root_.Array ${item.parameters[index].leanType}) : _root_.UInt8 :=`
+		, "  match carrierValue carrier with"
+		, "  | .none => 0"
+		, "  | .some value =>"
+		, ...guard && guard !== "true" ? [`    if ${guard} then`, ...body.map(line => `      ${line}`), "    else 0"] : body.map(line => `    ${line}`)
+		, ""
+	];
+});
