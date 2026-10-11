@@ -39,6 +39,8 @@ import "./helpers/checked-record-browser-ci-tests.mjs";
 import "./helpers/checked-record-browser-ci-shell-tests.mjs";
 import "./helpers/checked-record-browser-ci-workflow-tests.mjs";
 import "./helpers/checked-record-browser-ci-history-tests.mjs";
+import "./helpers/checked-record-browser-promotion-tests.mjs";
+import "./helpers/checked-record-browser-promotion-history-tests.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
 import { assertRefinement } from "../src/abi/refinements.mjs";

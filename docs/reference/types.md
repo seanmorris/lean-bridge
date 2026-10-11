@@ -28,6 +28,8 @@ Inventory 0.109.0 covers 49 source forms and 17 consumer profiles. The language 
 
 [Structural Subtype packages](../evidence/structural-subtype-promotion-20261011.md) have installed checks across all seventeen profiles on both source routes. The fixtures cover primitive leaves inside Array, List, Option, products and Except, mixed Fin, transparent aliases and one closed List specialization. Nominal fields, refined callback signatures and owned Subtypes remain unsupported.
 
+[Checked-record browser packages](../evidence/checked-record-browser-promotion-20261011.md) have installed checks in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers on both source routes, including standalone result-only packages. Top-level Interval, Sized 3 and Bounded 0 101 use proof-free payloads and selected checked Lean constructors. PHP-Wasm and nested, recursive, inherited, dependent, callback and owned checked-record combinations remain unverified.
+
 | Lean type or source form | Meaning | Bounds and representation | Ownership, absence and failure |
 | --- | --- | --- | --- |
 | `Unit` | The single unit value. | One inhabitant. A result with no host return value still requires an explicit argument and field mapping. | Copied values have no retained Lean identity. Host-owned buffers may require a generated cleanup function. No implicit null, omission or default conversion. Unit, Option, optional parameters and host null are separate cases. Reject invalid host values before calling Lean. Preserve declared errors and unexpected-failure policy. |

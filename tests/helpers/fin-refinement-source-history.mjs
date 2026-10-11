@@ -19,6 +19,7 @@ import { finNixComparisonChangedPaths } from "./native-fin-nix-comparison-histor
 import { perlContainerSubtypeCiChangedPaths } from "./perl-container-subtype-ci-history.mjs";
 import { checkedRecordBrowserArchiveChangedPaths } from "./checked-record-browser-archive-history.mjs";
 import { checkedRecordBrowserCiChangedPaths } from "./checked-record-browser-ci-history.mjs";
+import { checkedRecordBrowserPromotionChangedPaths } from "./checked-record-browser-promotion-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeSubtypeRefinementSource, subtypeRefinementChangedPaths } from "./subtype-refinement-source-history.mjs";
 import { subtypeHeapChangedPaths } from "./subtype-heap-source-history.mjs";
@@ -903,6 +904,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...perlContainerSubtypeCiChangedPaths
 	, ...checkedRecordBrowserArchiveChangedPaths
 	, ...checkedRecordBrowserCiChangedPaths
+	, ...checkedRecordBrowserPromotionChangedPaths
 ])].sort());
 
 /**

@@ -20,6 +20,7 @@ import { readCheckedRecordPythonArchive } from "./helpers/checked-record-python-
 import { readCheckedRecordRubyJvmArchive } from "./helpers/checked-record-ruby-jvm-archive.mjs";
 import { readCheckedRecordRemainingHostsArchive } from "./helpers/checked-record-remaining-hosts-archive.mjs";
 import { checkedRecordPerlReferences } from "./helpers/checked-record-perl-promotion.mjs";
+import { checkedRecordBrowserReferences } from "./helpers/checked-record-browser-promotion.mjs";
 import { callbackFinPromotionReferences } from "./helpers/callback-fin-promotion-references.mjs";
 import { sha256 } from "../src/capsule/node.mjs";
 import { finHostedReceiptSha256 } from "./helpers/fin-native-hosted-evidence.mjs";
@@ -162,7 +163,10 @@ test("checked-record guidance uses the tested payload and per-site constructor c
 	assert.match(section, /checked-record-perl-installed-20261011\.md/);
 	assert.match(section, /Perl 5\.36\.3 and 5\.38\.2, each threaded and unthreaded/);
 	assert.match(section, /Both prebuilt-only and generated-XS installation modes pass/);
-	assert.match(section, /PHP-Wasm and browser checked-record execution remain pending/);
+	assert.match(section, /checked-record-browser-promotion-20261011\.md/);
+	assert.match(section, /all four ordinary\/reviewed full and result-only routes/);
+	assert.match(section, /Chromium, Firefox and WebKit pages, React production\/Strict Mode and workers/);
+	assert.match(section, /PHP-Wasm checked-record execution remains pending/);
 	assert.doesNotMatch(section, /Installed-package acceptance for this mapping is pending|do not establish installed C\/C\+\+/);
 	assert.match(section, /exact names, order and types/);
 	assert.match(section, /result already has its proofs/);
@@ -171,10 +175,10 @@ test("checked-record guidance uses the tested payload and per-site constructor c
 	assert.match(await readFile("docs/lean/export-decisions.md", "utf8"), /existing-package.md#export-a-record-with-proof-fields/);
 });
 
-test("the checked-record author table agrees with the retained native, npm and Perl selections", async () => {
+test("the checked-record author table agrees with the retained native, npm, browser and Perl selections", async () => {
 	const document = await readFile("docs/lean/existing-package.md", "utf8");
 	const row = document.split("\n").find(line => line.startsWith("| Record with erased proof fields"));
-	assert.equal(row, "| Record with erased proof fields and a checked input constructor | Node installed; browser pending | C/C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI installed | Installed, both source routes on four ABIs | Rejected | C/C++, Node, all eight additional native hosts and CPAN installed; browser pending; PHP-Wasm rejected |");
+	assert.equal(row, "| Record with erased proof fields and a checked input constructor | Node, browser, React and worker installed, both source routes | C/C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI installed | Installed, both source routes on four ABIs | Not yet verified | C/C++, Node, browser, React, worker, all eight additional native hosts and CPAN installed; PHP-Wasm pending |");
 	const python = await readCheckedRecordPythonArchive();
 	assert.equal(python.reports.length, 8);
 	assert.deepEqual([...new Set(python.index.runs.map(run => run.floor))], ["3.11", "3.12"]);
@@ -197,6 +201,16 @@ test("the checked-record author table agrees with the retained native, npm and P
 		, "checked-record-perl-result-only-reviewed-ir-installed"
 	]);
 	const inventory = JSON.parse(await readFile("docs/type-surface.v1.json"));
+	const browserReferences = await checkedRecordBrowserReferences();
+	assert.equal(browserReferences.length, 4);
+	assert.equal(browserReferences.filter(reference => reference.resultOnly).length, 2);
+	for(const reference of browserReferences) for(const profile of reference.profiles) for(const position of reference.positions)
+	{
+		const observations = inventory.observations.filter(item => item.profiles.includes(profile) && item.path === reference.sourcePath && item.shapes.includes("checked-record") && item.positions.includes(position));
+		assert.equal(observations.length, 1);
+		assert.equal(observations[0].stages.installedExecution.state, "passed");
+		assert.ok(observations[0].stages.installedExecution.evidence.includes(reference.id));
+	}
 	for(const reference of [...references, ...perlReferences]) for(const profile of reference.profiles) for(const position of reference.positions)
 	{
 		const observation = inventory.observations.find(item => item.id === `checked-record-${profile}-${reference.sourcePath}-${position}`);

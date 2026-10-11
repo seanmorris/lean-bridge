@@ -192,6 +192,8 @@ export async function renderTypeDocuments({ root })
 			, ""
 			, "[Structural Subtype packages](../evidence/structural-subtype-promotion-20261011.md) have installed checks across all seventeen profiles on both source routes. The fixtures cover primitive leaves inside Array, List, Option, products and Except, mixed Fin, transparent aliases and one closed List specialization. Nominal fields, refined callback signatures and owned Subtypes remain unsupported."
 			, ""
+			, "[Checked-record browser packages](../evidence/checked-record-browser-promotion-20261011.md) have installed checks in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers on both source routes, including standalone result-only packages. Top-level Interval, Sized 3 and Bounded 0 101 use proof-free payloads and selected checked Lean constructors. PHP-Wasm and nested, recursive, inherited, dependent, callback and owned checked-record combinations remain unverified."
+			, ""
 			, table(["Lean type or source form", "Meaning", "Bounds and representation", "Ownership, absence and failure"], shapeRows)
 			, ""
 			, "Both ordinary-source and compiler-checked reviewed packages have installed corpus runs across all seventeen consumer profiles. The [native](../evidence/reviewed-native-20260918.md) and [Wasm](../evidence/reviewed-wasm-20260918.md) records list tested signatures and gaps. All profiles accept nineteen primitive parameter/result types, including [Char in npm](../evidence/char-npm-20260918.md), [native/PHP-Wasm Char](../evidence/char-native-20260918.md), and [USize/ISize](../evidence/platform-words-20260918.md). All profiles also accept copied arrays and acyclic records containing these primitives."

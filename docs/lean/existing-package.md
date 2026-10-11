@@ -425,7 +425,9 @@ This mapping currently requires a nonempty, closed copied payload at a top-level
 
 [Installed Perl checks](../evidence/checked-record-perl-installed-20261011.md) pass all four source/result-only routes on Perl 5.36.3 and 5.38.2, each threaded and unthreaded. Both prebuilt-only and generated-XS installation modes pass after author/build removal, with two-root reproduction and unchanged relocated replay. Perl callers use generated record objects containing `Math::BigInt` values and array references, without proof fields. These local runs use glibc 2.36 without entry-count measurements. See the [Perl example](../consume/perl.md#checked-records).
 
-PHP-Wasm and browser checked-record execution remain pending. Nested, refined, recursive and inherited checked records, value-dependent runtime fields, other index kinds, zero-payload records, callbacks and owned positions remain unsupported. npm uses private ABI 8 for its proof-free carriers.
+[Installed browser checks](../evidence/checked-record-browser-promotion-20261011.md) pass all four ordinary/reviewed full and result-only routes. They cover Node and strict TypeScript, plus Chromium, Firefox and WebKit pages, React production/Strict Mode and workers. Two author roots reproduce the packages before source removal and offline installation; the installed Node tree relocates and unchanged callers run again. Browser bundles run without author/build sources or external network access. The callers check complete input snapshots, rejection/recovery, normalization and exact wide-integer results.
+
+PHP-Wasm checked-record execution remains pending. Nested, refined, recursive and inherited checked records, value-dependent runtime fields, other index kinds, zero-payload records, callbacks and owned positions remain unsupported. npm uses private ABI 8 for its proof-free carriers.
 
 ### Export a checked Subtype
 
@@ -501,7 +503,7 @@ Keep `lean-bridge.exports.json` limited to modules and target package settings. 
 | `Subtype` parameter or result over a primitive | Installed | Installed | Installed, both source routes on four ABIs | Installed, both source routes | C/C++, Node, browser/React/worker, native hosts, CPAN and PHP-Wasm installed |
 | `Subtype` inside `Array`, `List`, `Option`, products or `Except` | Installed, both source routes | Installed, both source routes | Installed, both source routes on four ABIs | Installed, both source routes | Installed across all seventeen profiles |
 | `Subtype` elsewhere, or without a checked constructor | Rejected at the source | Rejected at the source | Rejected | Rejected | Rejected |
-| Record with erased proof fields and a checked input constructor | Node installed; browser pending | C/C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI installed | Installed, both source routes on four ABIs | Rejected | C/C++, Node, all eight additional native hosts and CPAN installed; browser pending; PHP-Wasm rejected |
+| Record with erased proof fields and a checked input constructor | Node, browser, React and worker installed, both source routes | C/C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI installed | Installed, both source routes on four ABIs | Not yet verified | C/C++, Node, browser, React, worker, all eight additional native hosts and CPAN installed; PHP-Wasm pending |
 
 Reviewed `Fin` signatures describe the erased `Nat` transport and exact bounds in `source.extensions["lean-lang.org/refinements"]`. Aliases, records and variants keep their field constraints in `lean-lang.org/nominal-refinements`. Fresh Lean metadata must match every constraint, including nested bounds and parameter/result positions. A missing, invented or changed bound fails with `reviewed-ir-source-mismatch`. Reviewed parameter names remain in host error messages.
 
