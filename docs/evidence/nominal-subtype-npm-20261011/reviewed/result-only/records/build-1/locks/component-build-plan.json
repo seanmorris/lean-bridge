@@ -1,0 +1,86 @@
+{
+  "bindingIr": {
+    "declarations": [
+      "lean:NominalSubtypes.arrayValues",
+      "lean:NominalSubtypes.branch",
+      "lean:NominalSubtypes.eventChoices",
+      "lean:NominalSubtypes.eventEmpty",
+      "lean:NominalSubtypes.eventValue",
+      "lean:NominalSubtypes.groupValues",
+      "lean:NominalSubtypes.listValues",
+      "lean:NominalSubtypes.noItems",
+      "lean:NominalSubtypes.optional",
+      "lean:NominalSubtypes.pairValues",
+      "lean:NominalSubtypes.produceEnvelope",
+      "lean:NominalSubtypes.product",
+      "lean:NominalSubtypes.scalar"
+    ],
+    "origin": "lean-elaborated",
+    "schemaVersion": 3,
+    "semanticSha256": "2f38ccd2d87c26c3372cc5b97bb33ae078c10cdcaafd2cb040fb80865cdd4e18"
+  },
+  "component": {
+    "id": "nominalsubtypes@1.0.0",
+    "name": "nominalsubtypes",
+    "version": "1.0.0"
+  },
+  "policies": {
+    "compileOnce": true,
+    "privateRuntime": false,
+    "sourceReadOnly": true,
+    "targetSpecificRebuild": false
+  },
+  "runtime": {
+    "abiVersion": 1,
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "patchSetSha256": "743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3",
+    "profile": "side-lazy",
+    "shared": true
+  },
+  "schemaVersion": 2,
+  "source": {
+    "inputs": [
+      {
+        "bytes": 38880,
+        "path": "api.binding-ir.json",
+        "sha256": "9846960a169a460df677ff7770ad4056a3cf9afb5eaedd274a6064fbd25930ab"
+      },
+      {
+        "bytes": 81,
+        "path": "lakefile.toml",
+        "sha256": "c29eeed5f6f853d55bb7100b160d0ec0224fd7375f5b05c87381326b60112d29"
+      },
+      {
+        "bytes": 164,
+        "path": "lean-bridge.exports.json",
+        "sha256": "4e4d1e54b8d797b97a91ff4e8220cd00fb3c06c46e77ec8239d298b08f03d1be"
+      },
+      {
+        "bytes": 25,
+        "path": "lean-toolchain",
+        "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+      },
+      {
+        "bytes": 1093,
+        "path": "LICENSE",
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      {
+        "bytes": 3005,
+        "path": "NominalSubtypes.lean",
+        "sha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+      },
+      {
+        "bytes": 61,
+        "path": "package.json",
+        "sha256": "9662c63237f11b189dddbbdf22ed631a7804aae99235d3f595e4b3ed5ebda9f0"
+      }
+    ],
+    "lakeSnapshotSha256": "1a881e6ebc75ddd8bf8792a64c7ea6e89158498216a8377bc24f882b90e0dc43",
+    "toolchain": "leanprover/lean4:v4.32.2",
+    "treeSha256": "32a20ffd26470689086f9c8dcd4e68dc9ed09ed5d0eaaaa70abeb68d9f656315"
+  },
+  "targets": [
+    "npm"
+  ]
+}

@@ -1,0 +1,822 @@
+{
+  "files": [
+    {
+      "bytes": 11584,
+      "path": "checker.mjs",
+      "sha256": "da7a00f779dcd0d29dfc495207ccbd45cb27f258d568bff9249d7862583c81e0"
+    },
+    {
+      "bytes": 329,
+      "path": "ordinary/full/end.json",
+      "sha256": "eb6463406c541ae84de9bc1379d2065734aeaa1b33c0ff54bff8b12321783b3a"
+    },
+    {
+      "bytes": 117057,
+      "path": "ordinary/full/records/build-0/binding/binding-ir.json",
+      "sha256": "36935cf17ff6e6060b885ac5a21449754ea54006858ef223addf001a4bcddae6"
+    },
+    {
+      "bytes": 1641,
+      "path": "ordinary/full/records/build-0/component-package-receipt.json",
+      "sha256": "8a25e4cfa7aa289909ddba9b4f3b7176a321bc1bfe7c6846cc7783b9973d6dd8"
+    },
+    {
+      "bytes": 67945,
+      "path": "ordinary/full/records/build-0/locks/compiler-adapters.json",
+      "sha256": "476f4a28a75a92976ad308132ab99d6c3fb472c1965981d5d9c42551a4bf0cf9"
+    },
+    {
+      "bytes": 2996,
+      "path": "ordinary/full/records/build-0/locks/component-build-plan.json",
+      "sha256": "b932cbafe762d723c381c9eb6edbaedb285e8f0d4533b9e2bbd84d3d748fd0da"
+    },
+    {
+      "bytes": 838,
+      "path": "ordinary/full/records/build-0/metadata/provenance.json",
+      "sha256": "f7389cbf98973f3154a228963ccc93a5df4cf0ebcba3fbbcbb77b136a3f8e6a2"
+    },
+    {
+      "bytes": 3005,
+      "path": "ordinary/full/records/build-0/NominalSubtypes.lean",
+      "sha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+    },
+    {
+      "bytes": 117057,
+      "path": "ordinary/full/records/build-1/binding/binding-ir.json",
+      "sha256": "36935cf17ff6e6060b885ac5a21449754ea54006858ef223addf001a4bcddae6"
+    },
+    {
+      "bytes": 1641,
+      "path": "ordinary/full/records/build-1/component-package-receipt.json",
+      "sha256": "8a25e4cfa7aa289909ddba9b4f3b7176a321bc1bfe7c6846cc7783b9973d6dd8"
+    },
+    {
+      "bytes": 67945,
+      "path": "ordinary/full/records/build-1/locks/compiler-adapters.json",
+      "sha256": "476f4a28a75a92976ad308132ab99d6c3fb472c1965981d5d9c42551a4bf0cf9"
+    },
+    {
+      "bytes": 2996,
+      "path": "ordinary/full/records/build-1/locks/component-build-plan.json",
+      "sha256": "b932cbafe762d723c381c9eb6edbaedb285e8f0d4533b9e2bbd84d3d748fd0da"
+    },
+    {
+      "bytes": 838,
+      "path": "ordinary/full/records/build-1/metadata/provenance.json",
+      "sha256": "f7389cbf98973f3154a228963ccc93a5df4cf0ebcba3fbbcbb77b136a3f8e6a2"
+    },
+    {
+      "bytes": 3005,
+      "path": "ordinary/full/records/build-1/NominalSubtypes.lean",
+      "sha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+    },
+    {
+      "bytes": 6515,
+      "path": "ordinary/full/records/callers/fixtures/nominal-subtype-consumers/javascript.mjs",
+      "sha256": "5442f1ccf6ed2e99a3fe66e46a3e956fa8f9b8325c7378157c9a5e19cfce39d0"
+    },
+    {
+      "bytes": 5837,
+      "path": "ordinary/full/records/callers/fixtures/structural-subtype-consumers/javascript.mjs",
+      "sha256": "b3cb460391e0b65f23a6b59b73beacd9643e33821345ffd730d82d7050c9c632"
+    },
+    {
+      "bytes": 207,
+      "path": "ordinary/full/records/callers/index.mjs",
+      "sha256": "e1521ab9f9a9c97f2b98dd5139d1f90dc2e001f665e430c10c1730c86f4c7f5c"
+    },
+    {
+      "bytes": 1096,
+      "path": "ordinary/full/records/callers/index.mts",
+      "sha256": "a1a4df080228fb8575a1df91dc9641a461a2c356ce301632b5c764b001252d4e"
+    },
+    {
+      "bytes": 1066,
+      "path": "ordinary/full/records/callers/results.mts",
+      "sha256": "f71a1438ed0dab3dca2d487e379b74c73f60726b69d07cf6adbdffba979e858c"
+    },
+    {
+      "bytes": 20082,
+      "path": "ordinary/full/records/configuration.json",
+      "sha256": "64cdc05acc23c84156381ff1026bf0f9ca2ce26180e6eb69e2cf71458042b05f"
+    },
+    {
+      "bytes": 87211,
+      "path": "ordinary/full/records/expected.binding-ir.json",
+      "sha256": "be260fc29f845b403fa730c80869993711104639443c83210c7cee432fbe8974"
+    },
+    {
+      "bytes": 290,
+      "path": "ordinary/full/records/install.json",
+      "sha256": "29b5e72235a6b48042c7ab01c31bcc09b896b8ef4f6db596d9dc91baa20e3c07"
+    },
+    {
+      "bytes": 341,
+      "path": "ordinary/full/records/installed.json",
+      "sha256": "158f639ef5938aa84cc60c62ddfa88ca247270ff2a24c72f319e6b0a3faeddd8"
+    },
+    {
+      "bytes": 340,
+      "path": "ordinary/full/records/relocated.json",
+      "sha256": "49bd9a0b071e5c06e326ada0089d860aa527201b989bf7d4619f744f0d6c0e0f"
+    },
+    {
+      "bytes": 32329,
+      "path": "ordinary/full/records/report.json",
+      "sha256": "990c2f1dd948b61a434623082c408f1565869a1890c5c362b0341dbf48c2bb59"
+    },
+    {
+      "bytes": 392,
+      "path": "ordinary/full/run.tap",
+      "sha256": "a55cdf6c59692b5356a46d872ad9e5c4a1dcd9becdaa9260d946a44d7a37d62c"
+    },
+    {
+      "bytes": 1126,
+      "path": "ordinary/full/start.json",
+      "sha256": "95def101062750748cd0d67a4881fa17caa3198c375a839d312f5950ed545aee"
+    },
+    {
+      "bytes": 329,
+      "path": "ordinary/result-only/end.json",
+      "sha256": "347bb125a20ed7fa537dedd5c55cc8aeff83a1c3b36f842641ed28a97ac86cf6"
+    },
+    {
+      "bytes": 42250,
+      "path": "ordinary/result-only/records/build-0/binding/binding-ir.json",
+      "sha256": "1d114d2a3e230f96062370087918d28f6cd32a0fad0c2c6fbe5b8819d42647ed"
+    },
+    {
+      "bytes": 1641,
+      "path": "ordinary/result-only/records/build-0/component-package-receipt.json",
+      "sha256": "4ca08b8002a344d9e1560545c27575a376c75872b071a7c0317ec0323b89360a"
+    },
+    {
+      "bytes": 28840,
+      "path": "ordinary/result-only/records/build-0/locks/compiler-adapters.json",
+      "sha256": "ace9c6a0736383d9623c5835051df80c258d8aa97d76c146ca6b3829f58231a5"
+    },
+    {
+      "bytes": 2484,
+      "path": "ordinary/result-only/records/build-0/locks/component-build-plan.json",
+      "sha256": "d5d7629270489ff7704743bcc0be988281ab1aa0ccde28ff1ef4d84a379a4d03"
+    },
+    {
+      "bytes": 838,
+      "path": "ordinary/result-only/records/build-0/metadata/provenance.json",
+      "sha256": "a56c4033d51a3f9b7585daf2dfe5890170ea0a49f3ed4d16fce92a1b22330425"
+    },
+    {
+      "bytes": 3005,
+      "path": "ordinary/result-only/records/build-0/NominalSubtypes.lean",
+      "sha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+    },
+    {
+      "bytes": 42250,
+      "path": "ordinary/result-only/records/build-1/binding/binding-ir.json",
+      "sha256": "1d114d2a3e230f96062370087918d28f6cd32a0fad0c2c6fbe5b8819d42647ed"
+    },
+    {
+      "bytes": 1641,
+      "path": "ordinary/result-only/records/build-1/component-package-receipt.json",
+      "sha256": "4ca08b8002a344d9e1560545c27575a376c75872b071a7c0317ec0323b89360a"
+    },
+    {
+      "bytes": 28840,
+      "path": "ordinary/result-only/records/build-1/locks/compiler-adapters.json",
+      "sha256": "ace9c6a0736383d9623c5835051df80c258d8aa97d76c146ca6b3829f58231a5"
+    },
+    {
+      "bytes": 2484,
+      "path": "ordinary/result-only/records/build-1/locks/component-build-plan.json",
+      "sha256": "d5d7629270489ff7704743bcc0be988281ab1aa0ccde28ff1ef4d84a379a4d03"
+    },
+    {
+      "bytes": 838,
+      "path": "ordinary/result-only/records/build-1/metadata/provenance.json",
+      "sha256": "a56c4033d51a3f9b7585daf2dfe5890170ea0a49f3ed4d16fce92a1b22330425"
+    },
+    {
+      "bytes": 3005,
+      "path": "ordinary/result-only/records/build-1/NominalSubtypes.lean",
+      "sha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+    },
+    {
+      "bytes": 6515,
+      "path": "ordinary/result-only/records/callers/fixtures/nominal-subtype-consumers/javascript.mjs",
+      "sha256": "5442f1ccf6ed2e99a3fe66e46a3e956fa8f9b8325c7378157c9a5e19cfce39d0"
+    },
+    {
+      "bytes": 5837,
+      "path": "ordinary/result-only/records/callers/fixtures/structural-subtype-consumers/javascript.mjs",
+      "sha256": "b3cb460391e0b65f23a6b59b73beacd9643e33821345ffd730d82d7050c9c632"
+    },
+    {
+      "bytes": 206,
+      "path": "ordinary/result-only/records/callers/index.mjs",
+      "sha256": "b7a90bb6416c5f0c53ab39be481d8659d0b7288509541132590da48393ce0bb0"
+    },
+    {
+      "bytes": 1066,
+      "path": "ordinary/result-only/records/callers/results.mts",
+      "sha256": "f71a1438ed0dab3dca2d487e379b74c73f60726b69d07cf6adbdffba979e858c"
+    },
+    {
+      "bytes": 618,
+      "path": "ordinary/result-only/records/configuration.json",
+      "sha256": "3e97669b7a4a73aae33227d10bccd388e7a4c3e5b979213cb8c836fe64211d78"
+    },
+    {
+      "bytes": 38880,
+      "path": "ordinary/result-only/records/expected.binding-ir.json",
+      "sha256": "9846960a169a460df677ff7770ad4056a3cf9afb5eaedd274a6064fbd25930ab"
+    },
+    {
+      "bytes": 290,
+      "path": "ordinary/result-only/records/install.json",
+      "sha256": "433a18384c65b247efbb52016de8ecf67f24b59023b2d6b52803582075e24cd7"
+    },
+    {
+      "bytes": 338,
+      "path": "ordinary/result-only/records/installed.json",
+      "sha256": "3ae2f20e6eb7f8aedea89934135026433d9b6014cb138a056774961111ff8a65"
+    },
+    {
+      "bytes": 337,
+      "path": "ordinary/result-only/records/relocated.json",
+      "sha256": "951c42c2b132ed0cb6581248713a5c60e154857295cd94c61d69c1acb221fc47"
+    },
+    {
+      "bytes": 11409,
+      "path": "ordinary/result-only/records/report.json",
+      "sha256": "15d7893dbdd484f79c50c4c43df79c88601c80aa9a860839330eab3eb97ddc41"
+    },
+    {
+      "bytes": 420,
+      "path": "ordinary/result-only/run.tap",
+      "sha256": "a95c60ce189f5832789c7c875df847c7337ba1b3e622ec4ecb4d286e3ef9edc9"
+    },
+    {
+      "bytes": 1146,
+      "path": "ordinary/result-only/start.json",
+      "sha256": "0f9676cd9c6b455324efd871db6e9e7bd189ef3100b8ffe56294831d04801b43"
+    },
+    {
+      "bytes": 329,
+      "path": "reviewed/full/end.json",
+      "sha256": "1c5d80fff5ce0bb84b049cf4722516778993a18b04b1bd40cef39c709562d0cb"
+    },
+    {
+      "bytes": 117111,
+      "path": "reviewed/full/records/build-0/binding/binding-ir.json",
+      "sha256": "1f93b0b66d11789e23b7f6d47458a9964a08e7584e9e3050e19c4731f48a3e96"
+    },
+    {
+      "bytes": 1641,
+      "path": "reviewed/full/records/build-0/component-package-receipt.json",
+      "sha256": "605a822817bcc62d0e51539904b2994e64a96263a6dda9bcd06a0ffba8dc3771"
+    },
+    {
+      "bytes": 68001,
+      "path": "reviewed/full/records/build-0/locks/compiler-adapters.json",
+      "sha256": "f5e9fc9ac9c7d5660e2e93774bb27e857188fd447d5a41bcd5996962fb9bdbfc"
+    },
+    {
+      "bytes": 3159,
+      "path": "reviewed/full/records/build-0/locks/component-build-plan.json",
+      "sha256": "d6cabfa6fedd124179091aba64b268f63721626e62c5c1009f6000082de09abb"
+    },
+    {
+      "bytes": 838,
+      "path": "reviewed/full/records/build-0/metadata/provenance.json",
+      "sha256": "40cab25ec85e049c56116e73e2b93afa43cb3d4831c866ea055dcf9c91885763"
+    },
+    {
+      "bytes": 3005,
+      "path": "reviewed/full/records/build-0/NominalSubtypes.lean",
+      "sha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+    },
+    {
+      "bytes": 117111,
+      "path": "reviewed/full/records/build-1/binding/binding-ir.json",
+      "sha256": "1f93b0b66d11789e23b7f6d47458a9964a08e7584e9e3050e19c4731f48a3e96"
+    },
+    {
+      "bytes": 1641,
+      "path": "reviewed/full/records/build-1/component-package-receipt.json",
+      "sha256": "605a822817bcc62d0e51539904b2994e64a96263a6dda9bcd06a0ffba8dc3771"
+    },
+    {
+      "bytes": 68001,
+      "path": "reviewed/full/records/build-1/locks/compiler-adapters.json",
+      "sha256": "f5e9fc9ac9c7d5660e2e93774bb27e857188fd447d5a41bcd5996962fb9bdbfc"
+    },
+    {
+      "bytes": 3159,
+      "path": "reviewed/full/records/build-1/locks/component-build-plan.json",
+      "sha256": "d6cabfa6fedd124179091aba64b268f63721626e62c5c1009f6000082de09abb"
+    },
+    {
+      "bytes": 838,
+      "path": "reviewed/full/records/build-1/metadata/provenance.json",
+      "sha256": "40cab25ec85e049c56116e73e2b93afa43cb3d4831c866ea055dcf9c91885763"
+    },
+    {
+      "bytes": 3005,
+      "path": "reviewed/full/records/build-1/NominalSubtypes.lean",
+      "sha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+    },
+    {
+      "bytes": 6515,
+      "path": "reviewed/full/records/callers/fixtures/nominal-subtype-consumers/javascript.mjs",
+      "sha256": "5442f1ccf6ed2e99a3fe66e46a3e956fa8f9b8325c7378157c9a5e19cfce39d0"
+    },
+    {
+      "bytes": 5837,
+      "path": "reviewed/full/records/callers/fixtures/structural-subtype-consumers/javascript.mjs",
+      "sha256": "b3cb460391e0b65f23a6b59b73beacd9643e33821345ffd730d82d7050c9c632"
+    },
+    {
+      "bytes": 207,
+      "path": "reviewed/full/records/callers/index.mjs",
+      "sha256": "e1521ab9f9a9c97f2b98dd5139d1f90dc2e001f665e430c10c1730c86f4c7f5c"
+    },
+    {
+      "bytes": 1096,
+      "path": "reviewed/full/records/callers/index.mts",
+      "sha256": "a1a4df080228fb8575a1df91dc9641a461a2c356ce301632b5c764b001252d4e"
+    },
+    {
+      "bytes": 1066,
+      "path": "reviewed/full/records/callers/results.mts",
+      "sha256": "f71a1438ed0dab3dca2d487e379b74c73f60726b69d07cf6adbdffba979e858c"
+    },
+    {
+      "bytes": 164,
+      "path": "reviewed/full/records/configuration.json",
+      "sha256": "4e4d1e54b8d797b97a91ff4e8220cd00fb3c06c46e77ec8239d298b08f03d1be"
+    },
+    {
+      "bytes": 87211,
+      "path": "reviewed/full/records/expected.binding-ir.json",
+      "sha256": "be260fc29f845b403fa730c80869993711104639443c83210c7cee432fbe8974"
+    },
+    {
+      "bytes": 290,
+      "path": "reviewed/full/records/install.json",
+      "sha256": "1ff3a83cc018c8638eb03c774f895390e6a7a7b7956bbb3e66ee5129c0085e43"
+    },
+    {
+      "bytes": 341,
+      "path": "reviewed/full/records/installed.json",
+      "sha256": "158f639ef5938aa84cc60c62ddfa88ca247270ff2a24c72f319e6b0a3faeddd8"
+    },
+    {
+      "bytes": 340,
+      "path": "reviewed/full/records/relocated.json",
+      "sha256": "49bd9a0b071e5c06e326ada0089d860aa527201b989bf7d4619f744f0d6c0e0f"
+    },
+    {
+      "bytes": 11009,
+      "path": "reviewed/full/records/report.json",
+      "sha256": "89c19a648126cee5df678343291be246d02e52ddd8c67ad4a347fe491155af00"
+    },
+    {
+      "bytes": 392,
+      "path": "reviewed/full/run.tap",
+      "sha256": "93d8457411773d439da5210f31fa4a0a610b11ba0d196bc0a9b9bd6f09d64901"
+    },
+    {
+      "bytes": 1126,
+      "path": "reviewed/full/start.json",
+      "sha256": "25d8bafbd750af3443085c4fba73e65fca16d9d573f2a18a7ccb5b930c4fcd74"
+    },
+    {
+      "bytes": 329,
+      "path": "reviewed/result-only/end.json",
+      "sha256": "095755245c5b9d742a856daf514a03a478f2ee144fabf4caa9ec7bfd5feb8e40"
+    },
+    {
+      "bytes": 42262,
+      "path": "reviewed/result-only/records/build-0/binding/binding-ir.json",
+      "sha256": "94f437df4b4479e871892c300746ac03a23ac05aa2173f41a1266cdccf0fd18a"
+    },
+    {
+      "bytes": 1641,
+      "path": "reviewed/result-only/records/build-0/component-package-receipt.json",
+      "sha256": "b1e5423473590f22d976c025955639e2cb8e6a2c67cd184206c3e2c97613234c"
+    },
+    {
+      "bytes": 28866,
+      "path": "reviewed/result-only/records/build-0/locks/compiler-adapters.json",
+      "sha256": "aad2804d862936b3f618e6eef4b065d9ea28268a71d0a83117826b188b8dcdcd"
+    },
+    {
+      "bytes": 2649,
+      "path": "reviewed/result-only/records/build-0/locks/component-build-plan.json",
+      "sha256": "b7653cb9f7358b87c8d55b76bc83ff4f501f87a74c859cafc13115f2693ef33f"
+    },
+    {
+      "bytes": 838,
+      "path": "reviewed/result-only/records/build-0/metadata/provenance.json",
+      "sha256": "cc58066a865d8f10a850ec655b38bd2beceaa114c5cdd229396618d7f5d1ec0d"
+    },
+    {
+      "bytes": 3005,
+      "path": "reviewed/result-only/records/build-0/NominalSubtypes.lean",
+      "sha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+    },
+    {
+      "bytes": 42262,
+      "path": "reviewed/result-only/records/build-1/binding/binding-ir.json",
+      "sha256": "94f437df4b4479e871892c300746ac03a23ac05aa2173f41a1266cdccf0fd18a"
+    },
+    {
+      "bytes": 1641,
+      "path": "reviewed/result-only/records/build-1/component-package-receipt.json",
+      "sha256": "b1e5423473590f22d976c025955639e2cb8e6a2c67cd184206c3e2c97613234c"
+    },
+    {
+      "bytes": 28866,
+      "path": "reviewed/result-only/records/build-1/locks/compiler-adapters.json",
+      "sha256": "aad2804d862936b3f618e6eef4b065d9ea28268a71d0a83117826b188b8dcdcd"
+    },
+    {
+      "bytes": 2649,
+      "path": "reviewed/result-only/records/build-1/locks/component-build-plan.json",
+      "sha256": "b7653cb9f7358b87c8d55b76bc83ff4f501f87a74c859cafc13115f2693ef33f"
+    },
+    {
+      "bytes": 838,
+      "path": "reviewed/result-only/records/build-1/metadata/provenance.json",
+      "sha256": "cc58066a865d8f10a850ec655b38bd2beceaa114c5cdd229396618d7f5d1ec0d"
+    },
+    {
+      "bytes": 3005,
+      "path": "reviewed/result-only/records/build-1/NominalSubtypes.lean",
+      "sha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+    },
+    {
+      "bytes": 6515,
+      "path": "reviewed/result-only/records/callers/fixtures/nominal-subtype-consumers/javascript.mjs",
+      "sha256": "5442f1ccf6ed2e99a3fe66e46a3e956fa8f9b8325c7378157c9a5e19cfce39d0"
+    },
+    {
+      "bytes": 5837,
+      "path": "reviewed/result-only/records/callers/fixtures/structural-subtype-consumers/javascript.mjs",
+      "sha256": "b3cb460391e0b65f23a6b59b73beacd9643e33821345ffd730d82d7050c9c632"
+    },
+    {
+      "bytes": 206,
+      "path": "reviewed/result-only/records/callers/index.mjs",
+      "sha256": "b7a90bb6416c5f0c53ab39be481d8659d0b7288509541132590da48393ce0bb0"
+    },
+    {
+      "bytes": 1066,
+      "path": "reviewed/result-only/records/callers/results.mts",
+      "sha256": "f71a1438ed0dab3dca2d487e379b74c73f60726b69d07cf6adbdffba979e858c"
+    },
+    {
+      "bytes": 164,
+      "path": "reviewed/result-only/records/configuration.json",
+      "sha256": "4e4d1e54b8d797b97a91ff4e8220cd00fb3c06c46e77ec8239d298b08f03d1be"
+    },
+    {
+      "bytes": 38880,
+      "path": "reviewed/result-only/records/expected.binding-ir.json",
+      "sha256": "9846960a169a460df677ff7770ad4056a3cf9afb5eaedd274a6064fbd25930ab"
+    },
+    {
+      "bytes": 290,
+      "path": "reviewed/result-only/records/install.json",
+      "sha256": "b37db5e10bb846bae60d640e4fd9a8d502811b2cd7af020532454a1c63a0074a"
+    },
+    {
+      "bytes": 338,
+      "path": "reviewed/result-only/records/installed.json",
+      "sha256": "3ae2f20e6eb7f8aedea89934135026433d9b6014cb138a056774961111ff8a65"
+    },
+    {
+      "bytes": 337,
+      "path": "reviewed/result-only/records/relocated.json",
+      "sha256": "951c42c2b132ed0cb6581248713a5c60e154857295cd94c61d69c1acb221fc47"
+    },
+    {
+      "bytes": 10925,
+      "path": "reviewed/result-only/records/report.json",
+      "sha256": "438f423f47902e81fb2addcc08d537752480601f24870696f1fb254f9258aa1d"
+    },
+    {
+      "bytes": 420,
+      "path": "reviewed/result-only/run.tap",
+      "sha256": "fa05be612669652d9a76f9d31f94b65171bf21de235935aae476b7ab34d72a81"
+    },
+    {
+      "bytes": 1147,
+      "path": "reviewed/result-only/start.json",
+      "sha256": "7a0ab87f025a60094c30abcb472bdd78d215538297085ba7bddb2057976c4c00"
+    },
+    {
+      "bytes": 4223,
+      "path": "runner.mjs",
+      "sha256": "1e129657cb84547cfb87abb38e19cf86a0a4f00d699f8e34d29993f66676956e"
+    },
+    {
+      "bytes": 8556,
+      "path": "sources/src/abi/refinements.mjs",
+      "sha256": "57fcd7bfa6c2ae7b7d696c1c95a88282c725fef2c15486744e683c258fa2ce07"
+    },
+    {
+      "bytes": 7873,
+      "path": "sources/src/analyze/checked-refinement-selection.mjs",
+      "sha256": "a93acd6f91edf592286db1fd255505adddf03a76bd8d2026962c5d2e7dfca64c"
+    },
+    {
+      "bytes": 24921,
+      "path": "sources/src/analyze/elaborated-metadata.mjs",
+      "sha256": "51a7927edbd9ec0467b0b0d5772c8081a190d257de992a0f58e8522b9c673166"
+    },
+    {
+      "bytes": 26409,
+      "path": "sources/src/analyze/export-configuration.mjs",
+      "sha256": "91a3c1a9be0ff57e837edd7a10b9b1886d7eefc4e89e0b67ef61eb8487c02e8e"
+    },
+    {
+      "bytes": 15868,
+      "path": "sources/src/analyze/native-types.mjs",
+      "sha256": "df316023935340250a966b6daf9d32cacc12370f8b611d96e9770d9b28fcc9f4"
+    },
+    {
+      "bytes": 99428,
+      "path": "sources/src/analyze/NativeExports.lean",
+      "sha256": "a6e5738d497fa57e2ff7eb98d2da7761277dc72c6584802909c3a4960c6ee6f3"
+    },
+    {
+      "bytes": 3029,
+      "path": "sources/src/analyze/reviewed-subtypes.mjs",
+      "sha256": "8f0b4abd0d39f44a20ccb7b5b4a0960fb8670bc440e7e636e684e3eea2ba329f"
+    },
+    {
+      "bytes": 36872,
+      "path": "sources/src/backends/javascript/generate.mjs",
+      "sha256": "8b5fdfb1627982617392364cd7fd5441141e75dcff5f181d9dc8a84b03477075"
+    },
+    {
+      "bytes": 26678,
+      "path": "sources/src/build/compiler-adapters.mjs",
+      "sha256": "e07a504718e76fb2e220e7a10014d209cfd3964d8d4eced3d49edc7274c4b52f"
+    },
+    {
+      "bytes": 15873,
+      "path": "sources/src/build/component-callable-adapters.mjs",
+      "sha256": "9069b7342c53a943cdb9e85f3a79943a6298772fb8699c0f5f85f9580ced6cbc"
+    },
+    {
+      "bytes": 3012,
+      "path": "sources/src/build/component-fin-guards.mjs",
+      "sha256": "c8aa6218488c0d8010eed23fcf98d22efaa7007791adbfe7d8fd29669af5451c"
+    },
+    {
+      "bytes": 16689,
+      "path": "sources/src/build/component-recursive-adapters.mjs",
+      "sha256": "fe2e6b88ff16020d5526a70624d2114e734d4747fc858c21777dc0f65567af88"
+    },
+    {
+      "bytes": 13565,
+      "path": "sources/src/build/component-recursive-lean.mjs",
+      "sha256": "7338df31e23f594ba2e5a519c8989c739b6fbac0ad82c1d51892964b8ea580e6"
+    },
+    {
+      "bytes": 12855,
+      "path": "sources/src/build/component-refinement-mirrors.mjs",
+      "sha256": "d23d883ab69257ce033f0d6aa7b4ae8918da094843129329d02aba3f1943f53f"
+    },
+    {
+      "bytes": 9673,
+      "path": "sources/src/build/component-refinements.mjs",
+      "sha256": "424d53a08172711e2213e787a4caeee7db843242059c88e3b6c6ec431a5b46a4"
+    },
+    {
+      "bytes": 7467,
+      "path": "sources/src/build/refinement-mirrors.mjs",
+      "sha256": "27e7219ee097ec6b90ae8c4a270295feb55d87099815bce9bbaee97cdc9ff6cc"
+    },
+    {
+      "bytes": 25664,
+      "path": "sources/src/release/component-npm-package.mjs",
+      "sha256": "f7c4e8196814cdb6dafe16173740f762c9bf2208b6fa10650be8855f12b1b3c4"
+    },
+    {
+      "bytes": 8610,
+      "path": "sources/src/release/component-package-receipt.mjs",
+      "sha256": "76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"
+    },
+    {
+      "bytes": 1096,
+      "path": "sources/tests/fixtures/nominal-subtype-consumers/index.mts",
+      "sha256": "a1a4df080228fb8575a1df91dc9641a461a2c356ce301632b5c764b001252d4e"
+    },
+    {
+      "bytes": 6515,
+      "path": "sources/tests/fixtures/nominal-subtype-consumers/javascript.mjs",
+      "sha256": "5442f1ccf6ed2e99a3fe66e46a3e956fa8f9b8325c7378157c9a5e19cfce39d0"
+    },
+    {
+      "bytes": 1066,
+      "path": "sources/tests/fixtures/nominal-subtype-consumers/results.mts",
+      "sha256": "f71a1438ed0dab3dca2d487e379b74c73f60726b69d07cf6adbdffba979e858c"
+    },
+    {
+      "bytes": 81,
+      "path": "sources/tests/fixtures/onboarding/nominal-subtypes/lakefile.toml",
+      "sha256": "c29eeed5f6f853d55bb7100b160d0ec0224fd7375f5b05c87381326b60112d29"
+    },
+    {
+      "bytes": 25,
+      "path": "sources/tests/fixtures/onboarding/nominal-subtypes/lean-toolchain",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "bytes": 1093,
+      "path": "sources/tests/fixtures/onboarding/nominal-subtypes/LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 3005,
+      "path": "sources/tests/fixtures/onboarding/nominal-subtypes/NominalSubtypes.lean",
+      "sha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+    },
+    {
+      "bytes": 61,
+      "path": "sources/tests/fixtures/onboarding/nominal-subtypes/package.json",
+      "sha256": "9662c63237f11b189dddbbdf22ed631a7804aae99235d3f595e4b3ed5ebda9f0"
+    },
+    {
+      "bytes": 5837,
+      "path": "sources/tests/fixtures/structural-subtype-consumers/javascript.mjs",
+      "sha256": "b3cb460391e0b65f23a6b59b73beacd9643e33821345ffd730d82d7050c9c632"
+    },
+    {
+      "bytes": 15505,
+      "path": "sources/tests/helpers/copied-fixture-install.mjs",
+      "sha256": "dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df"
+    },
+    {
+      "bytes": 3206,
+      "path": "sources/tests/helpers/nominal-subtype-caller-model.mjs",
+      "sha256": "2fb57064e807563bf9be98a947c13a3190626673c5691c58335b1d84fc75db67"
+    },
+    {
+      "bytes": 6912,
+      "path": "sources/tests/helpers/nominal-subtype-installed-fixture-tests.mjs",
+      "sha256": "9e39c974c4e1e16203c01e8036f5b98abdd3e608bfe4364a1055bba388876216"
+    },
+    {
+      "bytes": 8247,
+      "path": "sources/tests/helpers/nominal-subtype-installed-fixture.mjs",
+      "sha256": "2521c4af98f9e90becbbe298cff9738f4408dcdf433ddd221d42367d76886c69"
+    },
+    {
+      "bytes": 11622,
+      "path": "sources/tests/helpers/nominal-subtype-npm-installed-tests.mjs",
+      "sha256": "654d5f296d65b8c629db5ce90a2cd766ff4bcc2fffd2b2daf38cdf4f31fb07a9"
+    },
+    {
+      "bytes": 1655,
+      "path": "sources/tests/helpers/refinement-engine.mjs",
+      "sha256": "91e69b67d355d2b436fa699a5e4a4692362bdc4f9536634877b6af41e968d3b4"
+    },
+    {
+      "bytes": 799,
+      "path": "sources/tests/helpers/structural-subtype-npm-package.mjs",
+      "sha256": "bd0416f9a053f54fda37e3dfb214cf9fa38b56ade39484e841e5fa3f627abf13"
+    }
+  ],
+  "kind": "nominal-subtype-npm-installed-v1",
+  "limitations": [
+    "Only ordinary/reviewed full and result-only Node and strict TypeScript nominal fixtures.",
+    "Runtime observation is Node 22.23.2 on Linux x64; no other runtime floor is inferred.",
+    "Constructor/source dispatch and memory usage are unmeasured.",
+    "Package binaries and full toolchain closures are not retained; original receipts and installed-file hashes are retained.",
+    "No browser, hosted acceptance, support-cell promotion or required recurring gate follows from this archive."
+  ],
+  "producerCommit": "fab6d1b1c054a7a818bf70e4be84c80d7e8ec5c7",
+  "runs": [
+    {
+      "checks": 3172,
+      "dispatchObserved": false,
+      "executions": 2,
+      "finished": "2026-10-11T22:35:16.369Z",
+      "label": "ordinary/full",
+      "mode": "full",
+      "prefix": "build/vo1444-nominal-npm-ordinary-full-r1-fab6d1b",
+      "producerCommit": "fab6d1b1c054a7a818bf70e4be84c80d7e8ec5c7",
+      "rejections": 1032,
+      "reportSha256": "990c2f1dd948b61a434623082c408f1565869a1890c5c362b0341dbf48c2bb59",
+      "route": "ordinary",
+      "runtime": {
+        "arch": "x64",
+        "node": "v22.23.2",
+        "platform": "linux"
+      },
+      "started": "2026-10-11T22:33:28.422Z",
+      "tapSha256": "a55cdf6c59692b5356a46d872ad9e5c4a1dcd9becdaa9260d946a44d7a37d62c"
+    },
+    {
+      "checks": 2078,
+      "dispatchObserved": false,
+      "executions": 2,
+      "finished": "2026-10-11T22:40:55.305Z",
+      "label": "ordinary/result-only",
+      "mode": "result-only",
+      "prefix": "build/vo1444-nominal-npm-ordinary-result-only-r1-fab6d1b",
+      "producerCommit": "fab6d1b1c054a7a818bf70e4be84c80d7e8ec5c7",
+      "rejections": 0,
+      "reportSha256": "15d7893dbdd484f79c50c4c43df79c88601c80aa9a860839330eab3eb97ddc41",
+      "route": "ordinary",
+      "runtime": {
+        "arch": "x64",
+        "node": "v22.23.2",
+        "platform": "linux"
+      },
+      "started": "2026-10-11T22:39:07.250Z",
+      "tapSha256": "a95c60ce189f5832789c7c875df847c7337ba1b3e622ec4ecb4d286e3ef9edc9"
+    },
+    {
+      "checks": 3172,
+      "dispatchObserved": false,
+      "executions": 2,
+      "finished": "2026-10-11T22:37:31.085Z",
+      "label": "reviewed/full",
+      "mode": "full",
+      "prefix": "build/vo1444-nominal-npm-reviewed-full-r1-fab6d1b",
+      "producerCommit": "fab6d1b1c054a7a818bf70e4be84c80d7e8ec5c7",
+      "rejections": 1032,
+      "reportSha256": "89c19a648126cee5df678343291be246d02e52ddd8c67ad4a347fe491155af00",
+      "route": "reviewed",
+      "runtime": {
+        "arch": "x64",
+        "node": "v22.23.2",
+        "platform": "linux"
+      },
+      "started": "2026-10-11T22:35:45.276Z",
+      "tapSha256": "93d8457411773d439da5210f31fa4a0a610b11ba0d196bc0a9b9bd6f09d64901"
+    },
+    {
+      "checks": 2078,
+      "dispatchObserved": false,
+      "executions": 2,
+      "finished": "2026-10-11T22:48:13.189Z",
+      "label": "reviewed/result-only",
+      "mode": "result-only",
+      "prefix": "build/vo1444-nominal-npm-reviewed-result-only-r1-fab6d1b",
+      "producerCommit": "fab6d1b1c054a7a818bf70e4be84c80d7e8ec5c7",
+      "rejections": 0,
+      "reportSha256": "438f423f47902e81fb2addcc08d537752480601f24870696f1fb254f9258aa1d",
+      "route": "reviewed",
+      "runtime": {
+        "arch": "x64",
+        "node": "v22.23.2",
+        "platform": "linux"
+      },
+      "started": "2026-10-11T22:46:26.115Z",
+      "tapSha256": "fa05be612669652d9a76f9d31f94b65171bf21de235935aae476b7ab34d72a81"
+    }
+  ],
+  "schemaVersion": 1,
+  "selectedSources": [
+    "src/abi/refinements.mjs",
+    "src/analyze/NativeExports.lean",
+    "src/analyze/native-types.mjs",
+    "src/analyze/export-configuration.mjs",
+    "src/analyze/reviewed-subtypes.mjs",
+    "src/analyze/checked-refinement-selection.mjs",
+    "src/analyze/elaborated-metadata.mjs",
+    "src/build/component-refinements.mjs",
+    "src/build/compiler-adapters.mjs",
+    "src/build/component-callable-adapters.mjs",
+    "src/build/component-refinement-mirrors.mjs",
+    "src/build/component-recursive-adapters.mjs",
+    "src/build/component-recursive-lean.mjs",
+    "src/build/component-fin-guards.mjs",
+    "src/build/refinement-mirrors.mjs",
+    "src/backends/javascript/generate.mjs",
+    "src/release/component-npm-package.mjs",
+    "src/release/component-package-receipt.mjs",
+    "tests/helpers/nominal-subtype-npm-installed-tests.mjs",
+    "tests/helpers/nominal-subtype-installed-fixture.mjs",
+    "tests/helpers/nominal-subtype-installed-fixture-tests.mjs",
+    "tests/helpers/nominal-subtype-caller-model.mjs",
+    "tests/helpers/structural-subtype-npm-package.mjs",
+    "tests/helpers/copied-fixture-install.mjs",
+    "tests/helpers/refinement-engine.mjs",
+    "tests/fixtures/nominal-subtype-consumers/javascript.mjs",
+    "tests/fixtures/nominal-subtype-consumers/index.mts",
+    "tests/fixtures/nominal-subtype-consumers/results.mts",
+    "tests/fixtures/structural-subtype-consumers/javascript.mjs",
+    "tests/fixtures/onboarding/nominal-subtypes/NominalSubtypes.lean",
+    "tests/fixtures/onboarding/nominal-subtypes/lakefile.toml",
+    "tests/fixtures/onboarding/nominal-subtypes/lean-toolchain",
+    "tests/fixtures/onboarding/nominal-subtypes/package.json",
+    "tests/fixtures/onboarding/nominal-subtypes/LICENSE"
+  ]
+}

@@ -1,0 +1,1082 @@
+{
+  "component": "nominalsubtypes@1.0.0",
+  "componentPlanSha256": "b7653cb9f7358b87c8d55b76bc83ff4f501f87a74c859cafc13115f2693ef33f",
+  "exports": [
+    {
+      "bindingId": "lean:NominalSubtypes.arrayValues",
+      "leanEffect": null,
+      "leanResultType": "(_root_.Array _root_.Nat)",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "arguments": [
+            {
+              "constructor": null,
+              "kind": "subtype"
+            }
+          ],
+          "kind": "array"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "NominalSubtypes.arrayValues",
+      "sourceModule": "NominalSubtypes",
+      "symbol": "lean_bridge_b89c706e69af8b02b12c48db",
+      "wrapper": "export_e1b6ed9c1aa789790c48"
+    },
+    {
+      "bindingId": "lean:NominalSubtypes.branch",
+      "leanEffect": null,
+      "leanResultType": "(_root_.Except _root_.Nat _root_.Nat)",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "arguments": [
+            {
+              "constructor": null,
+              "kind": "subtype"
+            },
+            {
+              "constructor": null,
+              "kind": "subtype"
+            }
+          ],
+          "kind": "result"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "NominalSubtypes.branch",
+      "sourceModule": "NominalSubtypes",
+      "symbol": "lean_bridge_04b1a0d01df143b1b9422bb7",
+      "wrapper": "export_d76d24248dac98ec4505"
+    },
+    {
+      "bindingId": "lean:NominalSubtypes.eventChoices",
+      "leanEffect": null,
+      "leanResultType": "NominalSubtypes.Event",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "cases": [
+            {
+              "fields": [],
+              "name": "empty"
+            },
+            {
+              "fields": [
+                {
+                  "name": "value",
+                  "refinement": {
+                    "fields": [
+                      {
+                        "name": "payload",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "digit",
+                        "refinement": {
+                          "bound": "3",
+                          "kind": "fin"
+                        }
+                      }
+                    ],
+                    "kind": "record",
+                    "name": "NominalSubtypes.Envelope"
+                  }
+                }
+              ],
+              "name": "box"
+            },
+            {
+              "fields": [
+                {
+                  "name": "values",
+                  "refinement": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "arguments": [
+                              {
+                                "constructor": null,
+                                "kind": "subtype"
+                              },
+                              {
+                                "constructor": null,
+                                "kind": "subtype"
+                              }
+                            ],
+                            "kind": "result"
+                          }
+                        ],
+                        "kind": "option"
+                      }
+                    ],
+                    "kind": "array"
+                  }
+                }
+              ],
+              "name": "choices"
+            }
+          ],
+          "kind": "variant",
+          "name": "NominalSubtypes.Event"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "NominalSubtypes.eventChoices",
+      "sourceModule": "NominalSubtypes",
+      "symbol": "lean_bridge_e8020f8edd748bc54251cb41",
+      "wrapper": "export_d9972a798b026c22c11d"
+    },
+    {
+      "bindingId": "lean:NominalSubtypes.eventEmpty",
+      "leanEffect": null,
+      "leanResultType": "NominalSubtypes.Event",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "cases": [
+            {
+              "fields": [],
+              "name": "empty"
+            },
+            {
+              "fields": [
+                {
+                  "name": "value",
+                  "refinement": {
+                    "fields": [
+                      {
+                        "name": "payload",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "digit",
+                        "refinement": {
+                          "bound": "3",
+                          "kind": "fin"
+                        }
+                      }
+                    ],
+                    "kind": "record",
+                    "name": "NominalSubtypes.Envelope"
+                  }
+                }
+              ],
+              "name": "box"
+            },
+            {
+              "fields": [
+                {
+                  "name": "values",
+                  "refinement": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "arguments": [
+                              {
+                                "constructor": null,
+                                "kind": "subtype"
+                              },
+                              {
+                                "constructor": null,
+                                "kind": "subtype"
+                              }
+                            ],
+                            "kind": "result"
+                          }
+                        ],
+                        "kind": "option"
+                      }
+                    ],
+                    "kind": "array"
+                  }
+                }
+              ],
+              "name": "choices"
+            }
+          ],
+          "kind": "variant",
+          "name": "NominalSubtypes.Event"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "NominalSubtypes.eventEmpty",
+      "sourceModule": "NominalSubtypes",
+      "symbol": "lean_bridge_7910aec184bb6eb389d404d6",
+      "wrapper": "export_91e1f23e186a3368ada7"
+    },
+    {
+      "bindingId": "lean:NominalSubtypes.eventValue",
+      "leanEffect": null,
+      "leanResultType": "NominalSubtypes.Event",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "cases": [
+            {
+              "fields": [],
+              "name": "empty"
+            },
+            {
+              "fields": [
+                {
+                  "name": "value",
+                  "refinement": {
+                    "fields": [
+                      {
+                        "name": "payload",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "digit",
+                        "refinement": {
+                          "bound": "3",
+                          "kind": "fin"
+                        }
+                      }
+                    ],
+                    "kind": "record",
+                    "name": "NominalSubtypes.Envelope"
+                  }
+                }
+              ],
+              "name": "box"
+            },
+            {
+              "fields": [
+                {
+                  "name": "values",
+                  "refinement": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "arguments": [
+                              {
+                                "constructor": null,
+                                "kind": "subtype"
+                              },
+                              {
+                                "constructor": null,
+                                "kind": "subtype"
+                              }
+                            ],
+                            "kind": "result"
+                          }
+                        ],
+                        "kind": "option"
+                      }
+                    ],
+                    "kind": "array"
+                  }
+                }
+              ],
+              "name": "choices"
+            }
+          ],
+          "kind": "variant",
+          "name": "NominalSubtypes.Event"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "NominalSubtypes.eventValue",
+      "sourceModule": "NominalSubtypes",
+      "symbol": "lean_bridge_88ad42e4c0f46c2b7a8d3ba2",
+      "wrapper": "export_89b0eee30ae6685588be"
+    },
+    {
+      "bindingId": "lean:NominalSubtypes.groupValues",
+      "leanEffect": null,
+      "leanResultType": "(_root_.Array (_root_.Option NominalSubtypes.EnvelopeAlias))",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "fields": [
+                    {
+                      "name": "payload",
+                      "refinement": {
+                        "constructor": null,
+                        "kind": "subtype"
+                      }
+                    },
+                    {
+                      "name": "digit",
+                      "refinement": {
+                        "bound": "3",
+                        "kind": "fin"
+                      }
+                    }
+                  ],
+                  "kind": "record",
+                  "name": "NominalSubtypes.Envelope"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "kind": "array"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "NominalSubtypes.groupValues",
+      "sourceModule": "NominalSubtypes",
+      "symbol": "lean_bridge_89b672e35a146e16e02bcffc",
+      "wrapper": "export_03a775e499a2bb4202b5"
+    },
+    {
+      "bindingId": "lean:NominalSubtypes.listValues",
+      "leanEffect": null,
+      "leanResultType": "(_root_.List _root_.Nat)",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "arguments": [
+            {
+              "constructor": null,
+              "kind": "subtype"
+            }
+          ],
+          "kind": "list"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "NominalSubtypes.listValues",
+      "sourceModule": "NominalSubtypes",
+      "symbol": "lean_bridge_5954dd7ed566b48d1359c852",
+      "wrapper": "export_c89dd418b69677fd4466"
+    },
+    {
+      "bindingId": "lean:NominalSubtypes.noItems",
+      "leanEffect": null,
+      "leanResultType": "(_root_.Array _root_.Nat)",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "arguments": [
+            {
+              "constructor": null,
+              "kind": "subtype"
+            }
+          ],
+          "kind": "array"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "NominalSubtypes.noItems",
+      "sourceModule": "NominalSubtypes",
+      "symbol": "lean_bridge_304be8e80e36eb9e3b494575",
+      "wrapper": "export_a3fa04380d8feb659450"
+    },
+    {
+      "bindingId": "lean:NominalSubtypes.optional",
+      "leanEffect": null,
+      "leanResultType": "(_root_.Option _root_.Nat)",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "arguments": [
+            {
+              "constructor": null,
+              "kind": "subtype"
+            }
+          ],
+          "kind": "option"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "NominalSubtypes.optional",
+      "sourceModule": "NominalSubtypes",
+      "symbol": "lean_bridge_c873a9505037c9093a99b595",
+      "wrapper": "export_da83222e34a4e74ff540"
+    },
+    {
+      "bindingId": "lean:NominalSubtypes.pairValues",
+      "leanEffect": null,
+      "leanResultType": "NominalSubtypes.AliasPair",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "fields": [
+            {
+              "name": "left",
+              "refinement": {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "fields": [
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "refinement": {
+                              "bound": "3",
+                              "kind": "fin"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "NominalSubtypes.Envelope"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              }
+            },
+            {
+              "name": "right",
+              "refinement": {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "fields": [
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "refinement": {
+                              "bound": "3",
+                              "kind": "fin"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "NominalSubtypes.Envelope"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              }
+            }
+          ],
+          "kind": "record",
+          "name": "NominalSubtypes.AliasPair"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "NominalSubtypes.pairValues",
+      "sourceModule": "NominalSubtypes",
+      "symbol": "lean_bridge_0e0bc20a4a09c37ebc19b9cb",
+      "wrapper": "export_4dd1d94f0b680044dc89"
+    },
+    {
+      "bindingId": "lean:NominalSubtypes.produceEnvelope",
+      "leanEffect": null,
+      "leanResultType": "NominalSubtypes.Envelope",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "fields": [
+            {
+              "name": "payload",
+              "refinement": {
+                "constructor": null,
+                "kind": "subtype"
+              }
+            },
+            {
+              "name": "digit",
+              "refinement": {
+                "bound": "3",
+                "kind": "fin"
+              }
+            }
+          ],
+          "kind": "record",
+          "name": "NominalSubtypes.Envelope"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "NominalSubtypes.produceEnvelope",
+      "sourceModule": "NominalSubtypes",
+      "symbol": "lean_bridge_af309c3f9f07c65c825b91f1",
+      "wrapper": "export_bb2bbdd78007ec940b1f"
+    },
+    {
+      "bindingId": "lean:NominalSubtypes.product",
+      "leanEffect": null,
+      "leanResultType": "(_root_.Nat × _root_.Nat)",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "arguments": [
+            {
+              "constructor": null,
+              "kind": "subtype"
+            },
+            {
+              "constructor": null,
+              "kind": "subtype"
+            }
+          ],
+          "kind": "tuple"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "NominalSubtypes.product",
+      "sourceModule": "NominalSubtypes",
+      "symbol": "lean_bridge_7ac8bdd719e64805147f08ae",
+      "wrapper": "export_7995b76794e44f685d2c"
+    },
+    {
+      "bindingId": "lean:NominalSubtypes.scalar",
+      "leanEffect": null,
+      "leanResultType": "_root_.Nat",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "constructor": null,
+          "kind": "subtype"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "NominalSubtypes.scalar",
+      "sourceModule": "NominalSubtypes",
+      "symbol": "lean_bridge_e98bc38095233214a834587d",
+      "wrapper": "export_643a9594c9d8c4facf15"
+    }
+  ],
+  "imports": [
+    "NominalSubtypes"
+  ],
+  "leanSourceSha256": "fce9e7ee4f0f2a6ced0a9686dc3e3141c190d2791eb7f36b45f593733cd22833",
+  "module": "LeanBridgeGenerated7f8bfe55e5831a91",
+  "nominalRefinements": [
+    {
+      "id": "lean:NominalSubtypes.Envelope",
+      "refinement": {
+        "fields": [
+          null,
+          {
+            "bound": "3",
+            "kind": "fin"
+          }
+        ],
+        "kind": "record"
+      }
+    }
+  ],
+  "privateAbi": {
+    "dispatch": "copied-graph-frame-v1",
+    "exports": [
+      {
+        "bindingId": "lean:NominalSubtypes.arrayValues",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "constructor": "array",
+          "kind": "apply"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_b89c706e69af8b02b12c48db"
+      },
+      {
+        "bindingId": "lean:NominalSubtypes.branch",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "constructor": "result",
+          "kind": "apply"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_04b1a0d01df143b1b9422bb7"
+      },
+      {
+        "bindingId": "lean:NominalSubtypes.eventChoices",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "id": "lean:NominalSubtypes.Event",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_e8020f8edd748bc54251cb41"
+      },
+      {
+        "bindingId": "lean:NominalSubtypes.eventEmpty",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "id": "lean:NominalSubtypes.Event",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_7910aec184bb6eb389d404d6"
+      },
+      {
+        "bindingId": "lean:NominalSubtypes.eventValue",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "id": "lean:NominalSubtypes.Event",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_88ad42e4c0f46c2b7a8d3ba2"
+      },
+      {
+        "bindingId": "lean:NominalSubtypes.groupValues",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "id": "lean:NominalSubtypes.EnvelopeAlias",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "constructor": "array",
+          "kind": "apply"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_89b672e35a146e16e02bcffc"
+      },
+      {
+        "bindingId": "lean:NominalSubtypes.listValues",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "constructor": "list",
+          "kind": "apply"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_5954dd7ed566b48d1359c852"
+      },
+      {
+        "bindingId": "lean:NominalSubtypes.noItems",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "constructor": "array",
+          "kind": "apply"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_304be8e80e36eb9e3b494575"
+      },
+      {
+        "bindingId": "lean:NominalSubtypes.optional",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "constructor": "option",
+          "kind": "apply"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_c873a9505037c9093a99b595"
+      },
+      {
+        "bindingId": "lean:NominalSubtypes.pairValues",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "id": "lean:NominalSubtypes.AliasPair",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_0e0bc20a4a09c37ebc19b9cb"
+      },
+      {
+        "bindingId": "lean:NominalSubtypes.produceEnvelope",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "id": "lean:NominalSubtypes.Envelope",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_af309c3f9f07c65c825b91f1"
+      },
+      {
+        "bindingId": "lean:NominalSubtypes.product",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "constructor": "tuple",
+          "kind": "apply"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_7ac8bdd719e64805147f08ae"
+      },
+      {
+        "bindingId": "lean:NominalSubtypes.scalar",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_e98bc38095233214a834587d"
+      }
+    ],
+    "types": [
+      {
+        "fields": [
+          {
+            "name": "left",
+            "type": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:NominalSubtypes.EnvelopeAlias",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          },
+          {
+            "name": "right",
+            "type": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:NominalSubtypes.EnvelopeAlias",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          }
+        ],
+        "id": "lean:NominalSubtypes.AliasPair",
+        "kind": "record"
+      },
+      {
+        "fields": [
+          {
+            "name": "payload",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "name": "digit",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "id": "lean:NominalSubtypes.Envelope",
+        "kind": "record"
+      },
+      {
+        "id": "lean:NominalSubtypes.EnvelopeAlias",
+        "kind": "alias",
+        "target": {
+          "id": "lean:NominalSubtypes.Envelope",
+          "kind": "named"
+        }
+      },
+      {
+        "cases": [
+          {
+            "fields": [],
+            "name": "empty"
+          },
+          {
+            "fields": [
+              {
+                "name": "value",
+                "type": {
+                  "id": "lean:NominalSubtypes.Envelope",
+                  "kind": "named"
+                }
+              }
+            ],
+            "name": "box"
+          },
+          {
+            "fields": [
+              {
+                "name": "values",
+                "type": {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "arguments": [
+                            {
+                              "kind": "primitive",
+                              "name": "nat"
+                            },
+                            {
+                              "kind": "primitive",
+                              "name": "nat"
+                            }
+                          ],
+                          "constructor": "result",
+                          "kind": "apply"
+                        }
+                      ],
+                      "constructor": "option",
+                      "kind": "apply"
+                    }
+                  ],
+                  "constructor": "array",
+                  "kind": "apply"
+                }
+              }
+            ],
+            "name": "choices"
+          }
+        ],
+        "id": "lean:NominalSubtypes.Event",
+        "kind": "variant"
+      }
+    ],
+    "version": 8
+  },
+  "schemaVersion": 1
+}
