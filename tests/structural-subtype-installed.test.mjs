@@ -26,6 +26,8 @@ import { copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { verifyFinContainerEdgeArchiveClosure } from "./helpers/fin-container-edge-closure.mjs";
 import { structuralSubtypeConfiguration, structuralSubtypeFixture, structuralSubtypeModule, structuralSubtypeReview } from "./helpers/structural-subtype-installed-fixture.mjs";
+import "./helpers/structural-subtype-python-tests.mjs";
+import "./helpers/structural-subtype-python-installed-tests.mjs";
 
 const profiles = process.env.LEAN_BRIDGE_STRUCTURAL_SUBTYPE_PROFILES?.split(",") ?? [];
 assert.ok(profiles.every(profile => ["c", "cpp"].includes(profile)), "Select implemented native installed profiles explicitly");
