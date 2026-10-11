@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "structuralsubtypes@1.0.0",
+    "name": "structuralsubtypes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51431379,
+          "path": "archives/StructuralSubtypes.Api.1.0.0.nupkg",
+          "sha256": "019fdd41958797646c11492001f26fb870b5de89500b0654f6015855523dfe3c"
+        }
+      ],
+      "ecosystem": "nuget",
+      "name": "StructuralSubtypes.Api",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "nuget",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "5e0bd0e2afb0c36d01f2e742f1dde42adb6af32d8a4fd4ae013ead6e82670158",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "e549beb04f53e6b1d0421cd3ddec3598ecf5e9b7ce24f1a397b7d62c5ccbddd0"
+  }
+}

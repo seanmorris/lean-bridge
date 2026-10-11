@@ -1,0 +1,152 @@
+{
+  "version": 3,
+  "targets": {
+    "net8.0": {
+      "StructuralSubtypes.Api/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/LeanBridge.Structuralsubtypes.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/LeanBridge.Structuralsubtypes.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/linux-x64/native/libcomponent_85dc6ef3dd30a6b68269.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/linux-x64/native/liblean_bridge_native.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/linux-x64/native/libleanshared.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/linux-x64/native/libstructuralsubtypes.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "StructuralSubtypes.Api/1.0.0": {
+      "sha512": "DPXvZ6415564gm8EyaBhSKxoB8PEjGJpIjXM69jZprmTT5V5tWjR/0s+96kRvAxEH4STvVoBf1hvdruNz8Nh9g==",
+      "type": "package",
+      "path": "structuralsubtypes.api/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        "README.md",
+        "lean-bridge/component/allocation-guard.h",
+        "lean-bridge/component/artifacts.json",
+        "lean-bridge/component/binding-ir.json",
+        "lean-bridge/component/component.h",
+        "lean-bridge/component/generated.lean",
+        "lean-bridge/component/metadata.json",
+        "lean-bridge/component/model.json",
+        "lean-bridge/component/native-component.json",
+        "lean-bridge/dotnet/binding-manifest.json",
+        "lean-bridge/dotnet/global.json",
+        "lean-bridge/dotnet/src/LeanBridge.Structuralsubtypes/Api.cs",
+        "lean-bridge/dotnet/src/LeanBridge.Structuralsubtypes/LeanBridge.Structuralsubtypes.csproj",
+        "lean-bridge/dotnet/src/LeanBridge.Structuralsubtypes/Runtime.cs",
+        "lean-bridge/licenses/Lean-LICENSE",
+        "lean-bridge/licenses/Lean-LICENSES",
+        "lean-bridge/licenses/LeanBridge-LICENSE",
+        "lean-bridge/licenses/source-notices.json",
+        "lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+        "lean-bridge/native-c-adapter.json",
+        "lean-bridge/native-dotnet.json",
+        "lean-bridge/package-receipt.json",
+        "lean-bridge/runtime.json",
+        "lib/net8.0/LeanBridge.Structuralsubtypes.dll",
+        "lib/net8.0/LeanBridge.Structuralsubtypes.xml",
+        "runtimes/linux-x64/native/libcomponent_85dc6ef3dd30a6b68269.so",
+        "runtimes/linux-x64/native/liblean_bridge_native.so",
+        "runtimes/linux-x64/native/libleanshared.so",
+        "runtimes/linux-x64/native/libstructuralsubtypes.so",
+        "structuralsubtypes.api.1.0.0.nupkg.sha512",
+        "structuralsubtypes.api.nuspec"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net8.0": [
+      "StructuralSubtypes.Api >= 1.0.0 <= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "/tmp/lean-bridge-structural-dotnet-installed-54ot0s/consumer/dotnet/packages": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "/tmp/lean-bridge-structural-dotnet-installed-54ot0s/consumer/dotnet/Consumer.csproj",
+      "projectName": "Consumer",
+      "projectPath": "/tmp/lean-bridge-structural-dotnet-installed-54ot0s/consumer/dotnet/Consumer.csproj",
+      "packagesPath": "/tmp/lean-bridge-structural-dotnet-installed-54ot0s/consumer/dotnet/packages",
+      "outputPath": "/tmp/lean-bridge-structural-dotnet-installed-54ot0s/consumer/dotnet/obj/",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "/tmp/lean-bridge-structural-dotnet-installed-54ot0s/consumer/dotnet/NuGet.Config"
+      ],
+      "originalTargetFrameworks": [
+        "net8.0"
+      ],
+      "sources": {
+        "/tmp/lean-bridge-structural-dotnet-installed-54ot0s/consumer/dotnet/feed": {}
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "allWarningsAsErrors": true,
+        "warnAsError": [
+          "NU1605"
+        ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "false",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      }
+    },
+    "frameworks": {
+      "net8.0": {
+        "targetAlias": "net8.0",
+        "dependencies": {
+          "StructuralSubtypes.Api": {
+            "target": "Package",
+            "version": "[1.0.0, 1.0.0]"
+          }
+        },
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "/app/.toolchains/dotnet/sdk/8.0.424/PortableRuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

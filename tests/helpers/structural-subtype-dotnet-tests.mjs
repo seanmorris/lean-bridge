@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { structuralSubtypeConfiguration } from "./structural-subtype-installed-fixture.mjs";
 import { structuralSubtypeDotnetConfiguration, structuralSubtypeDotnetCaller, structuralSubtypeDotnetCounts, parseStructuralSubtypeDotnetResult } from "./structural-subtype-dotnet-fixture.mjs";
+import "./structural-subtype-dotnet-evidence-tests.mjs";
 
 test("structural Dotnet author routes preserve independent contracts and caller identities", async () => {
 	for(const route of ["ordinary", "reviewed"])

@@ -1,0 +1,501 @@
+{
+  "files": [
+    {
+      "bytes": 15846,
+      "path": "checker.mjs",
+      "sha256": "7145ed8103cfbd38ab40466d36801097a6c2597f6a861f366495c0e656e4b201"
+    },
+    {
+      "bytes": 203,
+      "path": "ordinary/end.json",
+      "sha256": "8ea4160637f3b65dd2bafe928444d36b01d4f15daceb45f4251053aef3098a46"
+    },
+    {
+      "bytes": 131798,
+      "path": "ordinary/records/build-0/model.json",
+      "sha256": "144cf26c25c23c5db567b803e0f93aef34c99a52cc131590db605a989e33d2d5"
+    },
+    {
+      "bytes": 1141,
+      "path": "ordinary/records/build-0/package-set-receipt.json",
+      "sha256": "cf3f58c176530f1b3584c822e03fd519842214cc4786f6b5975fe4c775c29077"
+    },
+    {
+      "bytes": 2349,
+      "path": "ordinary/records/build-0/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 131798,
+      "path": "ordinary/records/build-1/model.json",
+      "sha256": "144cf26c25c23c5db567b803e0f93aef34c99a52cc131590db605a989e33d2d5"
+    },
+    {
+      "bytes": 1141,
+      "path": "ordinary/records/build-1/package-set-receipt.json",
+      "sha256": "cf3f58c176530f1b3584c822e03fd519842214cc4786f6b5975fe4c775c29077"
+    },
+    {
+      "bytes": 2349,
+      "path": "ordinary/records/build-1/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 11184,
+      "path": "ordinary/records/configuration.json",
+      "sha256": "58d13d5b86b72b82dcf89668dcdb41da2947aaace3a4c1311d385e7a3e354ad1"
+    },
+    {
+      "bytes": 215,
+      "path": "ordinary/records/consumer-environment/cache/.nupkg.metadata",
+      "sha256": "1d1f9f310e13360be1b03044e565e429487d8bc94a5fff33e769e375443ec71d"
+    },
+    {
+      "bytes": 88,
+      "path": "ordinary/records/consumer-environment/cache/structuralsubtypes.api.1.0.0.nupkg.sha512",
+      "sha256": "4c39b9a8970a1fd61aaf693852ceeba0d32610506d45c2b8c36698d0ec2519de"
+    },
+    {
+      "bytes": 480,
+      "path": "ordinary/records/consumer-environment/cache/structuralsubtypes.api.nuspec",
+      "sha256": "1a4cf8a2f87c4ec29d0d1994c73c12d265f339c5c4078c557fe71ea96133fbb3"
+    },
+    {
+      "bytes": 512,
+      "path": "ordinary/records/consumer-environment/Consumer.csproj",
+      "sha256": "44265b0f1e21320b0b6b08d0f204655c09cd66b5f1a6f8284ae5d6d7c0e99a13"
+    },
+    {
+      "bytes": 104,
+      "path": "ordinary/records/consumer-environment/global.json",
+      "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+    },
+    {
+      "bytes": 163,
+      "path": "ordinary/records/consumer-environment/NuGet.Config",
+      "sha256": "e5dfa74aa48869dd2bafb18e20e440493a866c00eeb4710769f3422d0e6cba25"
+    },
+    {
+      "bytes": 2329,
+      "path": "ordinary/records/consumer-environment/obj/Consumer.csproj.nuget.dgspec.json",
+      "sha256": "382b4fab5da7a814331bb41d665e2d83a32fc2e1befd87ed56ba6d0ab51c9a1b"
+    },
+    {
+      "bytes": 1258,
+      "path": "ordinary/records/consumer-environment/obj/Consumer.csproj.nuget.g.props",
+      "sha256": "8d33b972ea1c9a1d743b7e1531363333bd8b3e782c0c34513711a98551433cc5"
+    },
+    {
+      "bytes": 149,
+      "path": "ordinary/records/consumer-environment/obj/Consumer.csproj.nuget.g.targets",
+      "sha256": "b14461e0cb1be3f77fcf9fe2fdd62889325ca92523d0f606980ed59eb5c4aa1c"
+    },
+    {
+      "bytes": 5202,
+      "path": "ordinary/records/consumer-environment/obj/project.assets.json",
+      "sha256": "67e3cdd5e86b7120c9be6ae9f4784342d9c8ba3df0a3da576fb2f67174c7a67d"
+    },
+    {
+      "bytes": 378,
+      "path": "ordinary/records/consumer-environment/obj/project.nuget.cache",
+      "sha256": "75b07463d90cb73003c225866ef0020e41d15ceed879b3caa3c14a181153d864"
+    },
+    {
+      "bytes": 1800,
+      "path": "ordinary/records/consumer-environment/out/Consumer.deps.json",
+      "sha256": "6a1592e871032f15bece9e3ae3dd969bcfba6562bde516df65de38fc856f687d"
+    },
+    {
+      "bytes": 257,
+      "path": "ordinary/records/consumer-environment/out/Consumer.runtimeconfig.json",
+      "sha256": "088bcc1a867d80d3923a812855f7ae9297fc8ac3d844cf9a83510bd8d1352af8"
+    },
+    {
+      "bytes": 9663,
+      "path": "ordinary/records/consumer.cs",
+      "sha256": "99126506ee190944b6edc52720016b9398c35830ddb8a1e24e3ea89629f8d410"
+    },
+    {
+      "bytes": 34558,
+      "path": "ordinary/records/expected.binding-ir.json",
+      "sha256": "fcb7bfa656ac6d6262a9773712f02b6c0bd5a08a72483c9ba9225f83fe90c36f"
+    },
+    {
+      "bytes": 819,
+      "path": "ordinary/records/installed.json",
+      "sha256": "e75c408022fb5f76d9d8e37342ccd1a7d62e021d0cd8050ab188b6ed67678c2c"
+    },
+    {
+      "bytes": 818,
+      "path": "ordinary/records/relocated.json",
+      "sha256": "e3ea09319757d0b310305510a5e8d674f3cbff0d65e95ea42b23bc6285349c29"
+    },
+    {
+      "bytes": 63709,
+      "path": "ordinary/records/report.json",
+      "sha256": "20455e103a941138f453339aa61de55fe0edfd22d5fca2fad7b030ebb25cd7ff"
+    },
+    {
+      "bytes": 390,
+      "path": "ordinary/run.tap",
+      "sha256": "faa36dcbb27b822a168f672aa8ede8c016fe0dcfb412e5cff5e49857ad4c9930"
+    },
+    {
+      "bytes": 915,
+      "path": "ordinary/start.json",
+      "sha256": "cc7ac98d799fc10cd8d49860c3f7397d968f1e563beaff2178482f9da1f58324"
+    },
+    {
+      "bytes": 203,
+      "path": "reviewed/end.json",
+      "sha256": "9114d37b17aec6568b0ff3c1ca50342c5b378d407739d280204c059a8b4e5f97"
+    },
+    {
+      "bytes": 157743,
+      "path": "reviewed/records/build-0/model.json",
+      "sha256": "7aac3b3fdbb4fa52e60e6e7cb2c8a854ef0014dd4f6b55cc0191fd3049ecf416"
+    },
+    {
+      "bytes": 1141,
+      "path": "reviewed/records/build-0/package-set-receipt.json",
+      "sha256": "665a12a0e4c1a177a70aa5874bb88edc38361acf3c8d4ad5e365a2d26e5f3e18"
+    },
+    {
+      "bytes": 2349,
+      "path": "reviewed/records/build-0/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 157743,
+      "path": "reviewed/records/build-1/model.json",
+      "sha256": "7aac3b3fdbb4fa52e60e6e7cb2c8a854ef0014dd4f6b55cc0191fd3049ecf416"
+    },
+    {
+      "bytes": 1141,
+      "path": "reviewed/records/build-1/package-set-receipt.json",
+      "sha256": "665a12a0e4c1a177a70aa5874bb88edc38361acf3c8d4ad5e365a2d26e5f3e18"
+    },
+    {
+      "bytes": 2349,
+      "path": "reviewed/records/build-1/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 176,
+      "path": "reviewed/records/configuration.json",
+      "sha256": "9098e4a54baeaa799c4f27f9822fd848c2344ae3db53e3443c9247865abe7f88"
+    },
+    {
+      "bytes": 215,
+      "path": "reviewed/records/consumer-environment/cache/.nupkg.metadata",
+      "sha256": "40620ad9cb83d1c7564c5e8683444fde0714305e9b7c35e9a76f5e216652cf67"
+    },
+    {
+      "bytes": 88,
+      "path": "reviewed/records/consumer-environment/cache/structuralsubtypes.api.1.0.0.nupkg.sha512",
+      "sha256": "e88efed00470aa7ce6e7e580fff3ebf6c870b364c697d951a0a5ba16df404f6e"
+    },
+    {
+      "bytes": 480,
+      "path": "reviewed/records/consumer-environment/cache/structuralsubtypes.api.nuspec",
+      "sha256": "1a4cf8a2f87c4ec29d0d1994c73c12d265f339c5c4078c557fe71ea96133fbb3"
+    },
+    {
+      "bytes": 512,
+      "path": "reviewed/records/consumer-environment/Consumer.csproj",
+      "sha256": "44265b0f1e21320b0b6b08d0f204655c09cd66b5f1a6f8284ae5d6d7c0e99a13"
+    },
+    {
+      "bytes": 104,
+      "path": "reviewed/records/consumer-environment/global.json",
+      "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+    },
+    {
+      "bytes": 163,
+      "path": "reviewed/records/consumer-environment/NuGet.Config",
+      "sha256": "e5dfa74aa48869dd2bafb18e20e440493a866c00eeb4710769f3422d0e6cba25"
+    },
+    {
+      "bytes": 2329,
+      "path": "reviewed/records/consumer-environment/obj/Consumer.csproj.nuget.dgspec.json",
+      "sha256": "4937560a481fbde5f8ef666ea1aaf0ebd67c945931e90c0999f2e3dfdee4bcb0"
+    },
+    {
+      "bytes": 1258,
+      "path": "reviewed/records/consumer-environment/obj/Consumer.csproj.nuget.g.props",
+      "sha256": "763b484b07b37f5e53cbe2f7e7fe09671f26c2fc66c0cac24a22e0b9f8083127"
+    },
+    {
+      "bytes": 149,
+      "path": "reviewed/records/consumer-environment/obj/Consumer.csproj.nuget.g.targets",
+      "sha256": "b14461e0cb1be3f77fcf9fe2fdd62889325ca92523d0f606980ed59eb5c4aa1c"
+    },
+    {
+      "bytes": 5202,
+      "path": "reviewed/records/consumer-environment/obj/project.assets.json",
+      "sha256": "7d4196cd1fe6d1d1e3f45c1f27864135f649e2586daeadd76f4ee1159874d5f0"
+    },
+    {
+      "bytes": 378,
+      "path": "reviewed/records/consumer-environment/obj/project.nuget.cache",
+      "sha256": "9557b86eaf294ac3acd04d397cef7484168157e34c002a84ed2f8ca663f54952"
+    },
+    {
+      "bytes": 1800,
+      "path": "reviewed/records/consumer-environment/out/Consumer.deps.json",
+      "sha256": "fe2d2c1bf27e995bd699b0997c0fa6a89c89bb46ece3aa8a8725cbd0cb81a077"
+    },
+    {
+      "bytes": 257,
+      "path": "reviewed/records/consumer-environment/out/Consumer.runtimeconfig.json",
+      "sha256": "088bcc1a867d80d3923a812855f7ae9297fc8ac3d844cf9a83510bd8d1352af8"
+    },
+    {
+      "bytes": 9693,
+      "path": "reviewed/records/consumer.cs",
+      "sha256": "b7a297d24bf8ba81864f10037544d5035bdf988b3308562e59ba8a41a84a8716"
+    },
+    {
+      "bytes": 34558,
+      "path": "reviewed/records/expected.binding-ir.json",
+      "sha256": "fcb7bfa656ac6d6262a9773712f02b6c0bd5a08a72483c9ba9225f83fe90c36f"
+    },
+    {
+      "bytes": 819,
+      "path": "reviewed/records/installed.json",
+      "sha256": "6c85d79f157022e432de2c3ab8fb2491b1aee0377ab00f17c3bfd5fede4f91f7"
+    },
+    {
+      "bytes": 818,
+      "path": "reviewed/records/relocated.json",
+      "sha256": "684faaa8dfd978a753f4d92c1760ff8b9de30f7996e8965ad7ed868e2b4e6459"
+    },
+    {
+      "bytes": 82787,
+      "path": "reviewed/records/report.json",
+      "sha256": "b6e859526c970864284b6d47bcc242b5f1039cc4e4fbfa6c72ddf8bb5505ab2b"
+    },
+    {
+      "bytes": 390,
+      "path": "reviewed/run.tap",
+      "sha256": "d2ab49f7e81f1833cf4d5a960e6d4d20408426167182f3593e65fb440898d221"
+    },
+    {
+      "bytes": 915,
+      "path": "reviewed/start.json",
+      "sha256": "223bfd644844e3796d3330b3773df384796478558207e0ade4afb53c3639afb5"
+    },
+    {
+      "bytes": 3014,
+      "path": "runner.mjs",
+      "sha256": "6174b1db82171817eb3318b5d13643bec0f95220b56e345be22f1a8e2a8909e7"
+    },
+    {
+      "bytes": 92606,
+      "path": "sources/src/analyze/NativeExports.lean",
+      "sha256": "4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f"
+    },
+    {
+      "bytes": 23547,
+      "path": "sources/src/backends/c/native-copied-values.mjs",
+      "sha256": "7415b894cb1d4f560fb00766a7668ab015393da1d02f9ab252dc157b383ea10c"
+    },
+    {
+      "bytes": 14044,
+      "path": "sources/src/backends/dotnet/copied-conversions.mjs",
+      "sha256": "c61e403a86d9dfbd76f6e28a96eb3006c5ea360192e92928b7d05d26ae3b5e77"
+    },
+    {
+      "bytes": 6501,
+      "path": "sources/src/backends/dotnet/copied-model.mjs",
+      "sha256": "ae2c93521614952d4c96748e8d5bdabb803f1a4663299cf3542ddd0add073d4b"
+    },
+    {
+      "bytes": 16397,
+      "path": "sources/src/backends/dotnet/copied-values.mjs",
+      "sha256": "b4ec94f1da85ad3cab476520ca0ce19d1e4807c54dab25fef7370c46295fc82c"
+    },
+    {
+      "bytes": 11610,
+      "path": "sources/src/backends/dotnet/verified-assets.mjs",
+      "sha256": "972aa8ddd973f71fa7e8177fcada0eceaf567c1d3b4519da0591157f646332ff"
+    },
+    {
+      "bytes": 8271,
+      "path": "sources/src/build/component-refinements.mjs",
+      "sha256": "1c936270da51e3991148681a317e30727936bc8c4e74f7a79330f4b7393a927c"
+    },
+    {
+      "bytes": 12579,
+      "path": "sources/src/build/native-component.mjs",
+      "sha256": "2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867"
+    },
+    {
+      "bytes": 3384,
+      "path": "sources/src/build/native-dotnet-artifacts.mjs",
+      "sha256": "6f99f52f9216cf4bd040aee0f5b82f60d88755da6261a48604ffc69220ddf1b3"
+    },
+    {
+      "bytes": 4505,
+      "path": "sources/src/build/native-dotnet-projection.mjs",
+      "sha256": "b193f3b7fa86bcf8c7ad976922fcdac84528b30872a8c0ba827d1c60d88f1597"
+    },
+    {
+      "bytes": 42189,
+      "path": "sources/src/build/native-model.mjs",
+      "sha256": "18e1072bac272ecf76c8d56aec0b2e21efa06e2adf4d49096598271dc5eb2d4a"
+    },
+    {
+      "bytes": 8479,
+      "path": "sources/src/release/native-nuget.mjs",
+      "sha256": "da154e0b96bcbff3d813a58b722c1f92019082a224ff8ba96a1ddd5fdd5fd861"
+    },
+    {
+      "bytes": 87,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/lakefile.toml",
+      "sha256": "16a51fbc493627ffd1a5beebdccbe577039cc22ce333e4233417444417cf188f"
+    },
+    {
+      "bytes": 25,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/lean-toolchain",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "bytes": 1093,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 64,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/package.json",
+      "sha256": "5cc3610c19032e010e0c18c017695d0a2f16b46828effec79bb5089ccf1932df"
+    },
+    {
+      "bytes": 2349,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 9663,
+      "path": "sources/tests/fixtures/structural-subtype-consumers/dotnet.cs",
+      "sha256": "99126506ee190944b6edc52720016b9398c35830ddb8a1e24e3ea89629f8d410"
+    },
+    {
+      "bytes": 4345,
+      "path": "sources/tests/helpers/closed-package-zip.mjs",
+      "sha256": "c0195e5c1145f1a9b8bdcbbd5f55a1477886714e1633fd2593687fdb6e45bdcf"
+    },
+    {
+      "bytes": 15505,
+      "path": "sources/tests/helpers/copied-fixture-install.mjs",
+      "sha256": "dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df"
+    },
+    {
+      "bytes": 3517,
+      "path": "sources/tests/helpers/fin-container-edge-closure.mjs",
+      "sha256": "2d1788a27ccd388a5779c251b01b0dc1370c8047362dc3720a7189815dd141a2"
+    },
+    {
+      "bytes": 14369,
+      "path": "sources/tests/helpers/fin-container-edge-dotnet-closure.mjs",
+      "sha256": "3b8ef4a910a6d095fd4d8ae32a80c29499b4cad92a53dfaddfa2dca72b4f3918"
+    },
+    {
+      "bytes": 1477,
+      "path": "sources/tests/helpers/structural-subtype-dotnet-fixture.mjs",
+      "sha256": "edc59879388785a9211d1b1fea885b467f730d62e305326ca3ba322c6a131370"
+    },
+    {
+      "bytes": 8032,
+      "path": "sources/tests/helpers/structural-subtype-dotnet-installed-tests.mjs",
+      "sha256": "b6382b70bc84537f70d2c13664c95f4a1d004531d4012457addc47d0212b6e30"
+    },
+    {
+      "bytes": 2020,
+      "path": "sources/tests/helpers/structural-subtype-dotnet-tests.mjs",
+      "sha256": "25d6d8401d474e9c867f71f1239754fcc087183fa3e67750c7aa942713d8e9ce"
+    },
+    {
+      "bytes": 5465,
+      "path": "sources/tests/helpers/structural-subtype-installed-fixture.mjs",
+      "sha256": "5743bb3d0fd00301c22587a0111edcb1301c7f43c3dda0c4746340c18c0a201f"
+    },
+    {
+      "bytes": 11149,
+      "path": "sources/tests/structural-subtype-installed.test.mjs",
+      "sha256": "8db43cdfddb092567316508eab20f480e5506bd4ab6e37f1d0473f8d08138d23"
+    }
+  ],
+  "kind": "structural-subtype-dotnet-installed-v1",
+  "limitations": [
+    "Local Linux x86-64 glibc 2.36 acceptance, not hosted release-floor acceptance.",
+    "No Dotnet constructor/source entry counts or memory measurement.",
+    "Package binaries and complete toolchain closures are not retained.",
+    "No support-inventory promotion or recurring installed CI gate follows from this archive."
+  ],
+  "producerCommit": "dba45a058734a0bc5e390786383000fbf4609bf7",
+  "runs": [
+    {
+      "archives": {
+        "archives/StructuralSubtypes.Api.1.0.0.nupkg": "b513bb584a615a3cf8e97867279099d97f83e611f376a7f3f5151efd6c78cf01"
+      },
+      "checks": 4119,
+      "dispatchObserved": false,
+      "dotnetSdk": "8.0.424",
+      "executions": 2,
+      "label": "ordinary",
+      "producerCommit": "dba45a058734a0bc5e390786383000fbf4609bf7",
+      "rejections": 1042,
+      "reportSha256": "20455e103a941138f453339aa61de55fe0edfd22d5fca2fad7b030ebb25cd7ff",
+      "route": "ordinary",
+      "snapshotControls": 6,
+      "tapSha256": "faa36dcbb27b822a168f672aa8ede8c016fe0dcfb412e5cff5e49857ad4c9930"
+    },
+    {
+      "archives": {
+        "archives/StructuralSubtypes.Api.1.0.0.nupkg": "019fdd41958797646c11492001f26fb870b5de89500b0654f6015855523dfe3c"
+      },
+      "checks": 4119,
+      "dispatchObserved": false,
+      "dotnetSdk": "8.0.424",
+      "executions": 2,
+      "label": "reviewed",
+      "producerCommit": "dba45a058734a0bc5e390786383000fbf4609bf7",
+      "rejections": 1042,
+      "reportSha256": "b6e859526c970864284b6d47bcc242b5f1039cc4e4fbfa6c72ddf8bb5505ab2b",
+      "route": "reviewed",
+      "snapshotControls": 6,
+      "tapSha256": "d2ab49f7e81f1833cf4d5a960e6d4d20408426167182f3593e65fb440898d221"
+    }
+  ],
+  "schemaVersion": 1,
+  "selectedSources": [
+    "src/analyze/NativeExports.lean",
+    "src/build/native-model.mjs",
+    "src/build/component-refinements.mjs",
+    "src/build/native-component.mjs",
+    "src/backends/c/native-copied-values.mjs",
+    "src/backends/dotnet/copied-values.mjs",
+    "src/backends/dotnet/copied-conversions.mjs",
+    "src/backends/dotnet/copied-model.mjs",
+    "src/backends/dotnet/verified-assets.mjs",
+    "src/build/native-dotnet-projection.mjs",
+    "src/build/native-dotnet-artifacts.mjs",
+    "src/release/native-nuget.mjs",
+    "tests/structural-subtype-installed.test.mjs",
+    "tests/helpers/structural-subtype-installed-fixture.mjs",
+    "tests/helpers/structural-subtype-dotnet-fixture.mjs",
+    "tests/helpers/structural-subtype-dotnet-installed-tests.mjs",
+    "tests/helpers/structural-subtype-dotnet-tests.mjs",
+    "tests/helpers/copied-fixture-install.mjs",
+    "tests/helpers/fin-container-edge-dotnet-closure.mjs",
+    "tests/helpers/fin-container-edge-closure.mjs",
+    "tests/helpers/closed-package-zip.mjs",
+    "tests/fixtures/structural-subtype-consumers/dotnet.cs",
+    "tests/fixtures/onboarding/structural-subtypes/StructuralSubtypes.lean",
+    "tests/fixtures/onboarding/structural-subtypes/lakefile.toml",
+    "tests/fixtures/onboarding/structural-subtypes/lean-toolchain",
+    "tests/fixtures/onboarding/structural-subtypes/package.json",
+    "tests/fixtures/onboarding/structural-subtypes/LICENSE"
+  ]
+}
