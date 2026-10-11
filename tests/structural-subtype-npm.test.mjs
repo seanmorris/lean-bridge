@@ -14,6 +14,21 @@ import { structuralSubtypeReview } from "./helpers/structural-subtype-installed-
 import { checkStructuralSubtypes } from "./fixtures/structural-subtype-consumers/javascript.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { runCopied } from "./helpers/copied-fixture-install.mjs";
+import { structuralSubtypeNpmPackageName } from "./helpers/structural-subtype-npm-package.mjs";
+
+test("npm installed-tree names come from archive manifests authenticated against receipt package identities", () => {
+	for(const name of ["structuralsubtypes", "@lean-bridge/runtime"])
+	{
+		const entry = { package: `${name}@1.0.0`, archive: "release.tgz", sha256: "0".repeat(64) };
+		const manifest = { name, version: "1.0.0" };
+		assert.equal(structuralSubtypeNpmPackageName(entry, manifest, name), name);
+		assert.throws(() => structuralSubtypeNpmPackageName(entry, { ...manifest, name: "different" }, name));
+		assert.throws(() => structuralSubtypeNpmPackageName(entry, { ...manifest, version: "2.0.0" }, name));
+		assert.throws(() => structuralSubtypeNpmPackageName(entry, { version: "1.0.0" }, name));
+		assert.throws(() => structuralSubtypeNpmPackageName(entry, { name }, name));
+		assert.throws(() => structuralSubtypeNpmPackageName({ name }, manifest, name));
+	}
+});
 
 const failure = () => { throw new Error("Component recursive call failed (5)"); };
 const positive = value => value > 0n ? value : failure();

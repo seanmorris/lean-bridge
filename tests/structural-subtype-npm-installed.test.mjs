@@ -21,6 +21,7 @@ import { refinementEngineTransport } from "./helpers/refinement-engine.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { structuralSubtypeConfiguration, structuralSubtypeFixture, structuralSubtypeName, structuralSubtypeReview } from "./helpers/structural-subtype-installed-fixture.mjs";
+import { structuralSubtypeNpmPackageName } from "./helpers/structural-subtype-npm-package.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_STRUCTURAL_SUBTYPE_NPM_TEST === "1";
 const routes = process.env.LEAN_BRIDGE_STRUCTURAL_SUBTYPE_NPM_ROUTES?.split(",") ?? ["ordinary", "reviewed"];
@@ -83,7 +84,10 @@ for(const route of routes) test(`installed npm structural Subtypes reproduce and
 	{
 		const extracted = join(directory, `original-${role}`); await mkdir(extracted);
 		await runCopied("/usr/bin/tar", ["--use-compress-program=/usr/bin/gzip", "-xf", join(handoff, item.archive), "-C", extracted], directory);
-		trees[item.name] = await fileTree(join(extracted, "package"));
+		const manifest = JSON.parse(await readFile(join(extracted, "package/package.json")));
+		const name = structuralSubtypeNpmPackageName(item, manifest, role === "component" ? structuralSubtypeName : "@lean-bridge/runtime");
+		assert.ok(!Object.hasOwn(trees, name));
+		trees[name] = await fileTree(join(extracted, "package"));
 	}
 	const consumer = join(directory, "consumer"), moved = join(directory, "moved"), bin = join(consumer, "bin");
 	await mkdir(bin, { recursive: true }); await symlink(process.execPath, join(bin, "node"));

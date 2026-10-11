@@ -1,13 +1,40 @@
+/**
+ * Positive and negative public TypeScript calls for structural Subtypes.
+ *
+ * @file
+ */
 import * as api from "structuralsubtypes";
 
-const some = <T,>(value: T): { readonly tag: "some"; readonly value: T } => ({ tag: "some", value });
+/** An inhabited optional carrier preserves its exact payload type. */
+type Some<T> = {
+	/** The public present-value discriminator. */
+	readonly tag: "some";
+	/** The payload after Lean erases the proof. */
+	readonly value: T;
+};
+/** An absent optional carrier has no payload. */
+type None = {
+	/** The public absent-value discriminator. */
+	readonly tag: "none";
+};
+/** A successful result carries the erased Nat base. */
+type Success = {
+	/** The successfully returned Nat. */
+	readonly ok: bigint;
+};
+/** A failed result carries the erased String base. */
+type Failure = {
+	/** The error-side String payload. */
+	readonly error: string;
+};
+const some = <T,>(value: T): Some<T> => ({ tag: "some", value });
 const none = { tag: "none" } as const;
 const nats: ReadonlyArray<bigint> = api.arrays([1n, 2n]);
 const lists: ReadonlyArray<bigint> = api.lists(nats);
 const specialized: ReadonlyArray<bigint> = api.specialized(lists);
-const option: { readonly tag: "none" } | { readonly tag: "some"; readonly value: bigint } = api.options(some(1n));
+const option: None | Some<bigint> = api.options(some(1n));
 const product: readonly [bigint, string] = api.product([2n, "hi"]);
-const result: { readonly ok: bigint } | { readonly error: string } = api.branch({ error: "hi" });
+const result: Success | Failure = api.branch({ error: "hi" });
 const bytePairs = api.byteBranches([none, some([255, 1n] as const)]);
 const total: bigint = api.nested([[some([1n, 2n] as const)]]);
 const groups = api.aliasPair([[some(1n)], [none]]);
