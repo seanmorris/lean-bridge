@@ -42,7 +42,7 @@ export const assertReviewedRefinements = (declaration, value, types = []) => {
 		|| Object.keys(value).length !== 2 || !Object.hasOwn(value, "parameters") || !Object.hasOwn(value, "result")
 		|| !Array.isArray(value.parameters) || value.parameters.length !== declaration.parameters.length) fail();
 	for(const [index, refinement] of value.parameters.entries()) assertRefinement(refinement, declaration.parameters[index].type, 0, true, types);
-	assertRefinement(value.result, declaration.result.type, 0, true, types);
+	assertRefinement(value.result, declaration.result.type, 0, true, types, true);
 	if(value.result === null && value.parameters.every(refinement => refinement === null)) fail();
 };
 

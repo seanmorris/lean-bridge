@@ -170,7 +170,10 @@ test("fresh Lean preserves nominal constructor selections and rejects false sour
 			validateElaboratedMetadata(reviewed.report, reviewed.request);
 			assert.deepEqual(reviewed.projections, forward.projections);
 		}
-		const invalid = await extract(profile, invalidContracts(), `${profile}-refusals`);
+		const refused = invalidContracts();
+		// Native result-only projection is checked by its separate constructor-free source fixture.
+		if(profile === "native-library-v1") delete refused["NominalSelection.resultOnly"];
+		const invalid = await extract(profile, refused, `${profile}-refusals`);
 		for(const [name, projection] of invalid.projections)
 			assert.equal(projection.status, "unsupported", `${profile}/${name}: ${canonicalJson(projection)}`);
 		const diagnostic = name => invalid.projections.get(`NominalSelection.${name}`).expression;

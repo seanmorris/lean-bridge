@@ -33,7 +33,7 @@ export const nativeFinRefinements = (declaration, types = []) => {
 		|| !Array.isArray(value.parameters) || value.parameters.length !== declaration.parameters.length)
 		throw new TypeError(`${declaration.id} has malformed refinement metadata`);
 	value.parameters.forEach((refinement, index) => assertRefinement(refinement, declaration.parameters[index].type, 0, true, types));
-	assertRefinement(value.result, declaration.result.type, 0, true, types);
+	assertRefinement(value.result, declaration.result.type, 0, true, types, true);
 	if(value.parameters.some((refinement, index) => (refinement?.kind === "checked-record") !== checkedRecord(declaration.parameters[index]))
 		|| value.result?.kind === "checked-record")
 		throw new TypeError(`${declaration.id}: checked records need an input constructor and proof-backed result projection`);
@@ -121,18 +121,20 @@ const nativeFinExpansion = (declaration, types) => {
  *
  * @param refinement - Validated refinement tree.
  * @param path - Site name followed by the path so far.
+ * @param produced - Whether Lean produces this export result, rather than checking an input.
  */
-export const nativeFinBoundPaths = (refinement, path) => {
+export const nativeFinBoundPaths = (refinement, path, produced = false) => {
 	if(refinement === null) return [];
 	if(refinement.kind === "checked-record") return [refinement.constructor === null
 		? `${path} projects proof-backed record payload fields` : `${path} checked by ${refinement.constructor}`];
-	if(refinement.kind === "subtype") return [`${path} checked by ${refinement.constructor}`];
+	if(refinement.kind === "subtype") return [produced || refinement.constructor === null
+		? `${path} projects the Subtype base value` : `${path} checked by ${refinement.constructor}`];
 	if(refinement.kind === "fin") return [`${path} < ${refinement.bound}`];
-	if(refinement.kind === "tuple") return refinement.arguments.flatMap((child, index) => nativeFinBoundPaths(child, `${path}.${index}`));
-	if(refinement.kind === "result") return refinement.arguments.flatMap((child, index) => nativeFinBoundPaths(child, `${path}.${index ? "error" : "ok"}`));
-	if(refinement.kind === "record") return refinement.arguments.flatMap((child, index) => nativeFinBoundPaths(child, `${path}.${refinement.fields[index]}`));
-	if(refinement.kind === "variant") return refinement.cases.flatMap(branch => branch.arguments.flatMap((child, index) => nativeFinBoundPaths(child, `${path}.${branch.name}.${branch.fields[index]}`)));
-	return nativeFinBoundPaths(refinement.arguments[0], `${path}${refinement.kind === "option" ? "?" : "[*]"}`);
+	if(refinement.kind === "tuple") return refinement.arguments.flatMap((child, index) => nativeFinBoundPaths(child, `${path}.${index}`, produced));
+	if(refinement.kind === "result") return refinement.arguments.flatMap((child, index) => nativeFinBoundPaths(child, `${path}.${index ? "error" : "ok"}`, produced));
+	if(refinement.kind === "record") return refinement.arguments.flatMap((child, index) => nativeFinBoundPaths(child, `${path}.${refinement.fields[index]}`, produced));
+	if(refinement.kind === "variant") return refinement.cases.flatMap(branch => branch.arguments.flatMap((child, index) => nativeFinBoundPaths(child, `${path}.${branch.name}.${branch.fields[index]}`, produced)));
+	return nativeFinBoundPaths(refinement.arguments[0], `${path}${refinement.kind === "option" ? "?" : "[*]"}`, produced);
 };
 
 /**
@@ -146,7 +148,7 @@ export const nativeFinSummary = (declaration, names, types = []) => {
 	const value = nativeFinRefinements(declaration, types);
 	if(!value) return null;
 	const parts = value.parameters.flatMap((refinement, index) => nativeFinBoundPaths(refinement, names[index]));
-	parts.push(...nativeFinBoundPaths(value.result, "result"));
+	parts.push(...nativeFinBoundPaths(value.result, "result", true));
 	return parts.length ? parts.join("; ") : null;
 };
 

@@ -297,7 +297,16 @@
       "properties": {
         "kind": { "const": "refinement" },
         "base": { "allOf": [{ "$ref": "#" }, { "properties": { "kind": { "const": "primitive" } } }] },
-        "predicate": { "$ref": "#/$defs/constructorPredicate", "properties": { "kind": { "const": "subtype" } } },
+        "predicate": {
+          "type": "object", "additionalProperties": false, "required": ["kind", "constructor"],
+          "properties": {
+            "kind": { "const": "subtype" },
+            "constructor": { "anyOf": [
+              { "$ref": "#/$defs/constructorPredicate/properties/constructor" },
+              { "type": "null" }
+            ] }
+          }
+        },
         "abi": { "$ref": "#/$defs/abi" }
       }
     },

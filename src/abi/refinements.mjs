@@ -13,8 +13,9 @@
  * @param depth - Bounded structural nesting; callers start at zero.
  * @param subtypeStructural - Whether this export site permits selected Subtype constructors.
  * @param types - Definitions used to authenticate selected record and variant members.
+ * @param subtypeResult - Whether this is a copied export result produced by Lean.
  */
-export const assertRefinement = (refinement, type, depth = 0, subtypeStructural = depth === 0, types = []) => {
+export const assertRefinement = (refinement, type, depth = 0, subtypeStructural = depth === 0, types = [], subtypeResult = false) => {
 	const fail = () => { throw new TypeError("Refinement does not match its transport type"); };
 	const definitions = new Map(types.map(definition => [definition.id, definition]));
 	if(definitions.size !== types.length) fail();
@@ -49,7 +50,8 @@ export const assertRefinement = (refinement, type, depth = 0, subtypeStructural 
 		if(["subtype", "checked-record"].includes(value.kind))
 		{
 			closed(value, ["kind", "constructor"]);
-			if(typeof value.constructor !== "string" || !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$(?![\s\S])/.test(value.constructor)) fail();
+			const projected = value.kind === "subtype" && subtypeResult === true && value.constructor === null;
+			if(!projected && (typeof value.constructor !== "string" || !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$(?![\s\S])/.test(value.constructor))) fail();
 			if(value.kind === "subtype" ? !subtypeStructural || transport?.kind !== "primitive"
 				: level !== 0 || transport?.kind !== "named") fail();
 			return true;

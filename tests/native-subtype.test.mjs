@@ -35,6 +35,9 @@ import "./helpers/nominal-subtype-selection-tests.mjs";
 import "./helpers/nominal-subtype-selection-extractor-tests.mjs";
 import "./helpers/nominal-subtype-native-tests.mjs";
 import "./helpers/nominal-subtype-native-history-tests.mjs";
+import "./helpers/subtype-result-tests.mjs";
+import "./helpers/subtype-result-source-tests.mjs";
+import "./helpers/subtype-result-history-tests.mjs";
 import "./helpers/nominal-subtype-selection-history-tests.mjs";
 
 const profiles = process.env.LEAN_BRIDGE_SUBTYPE_PROFILES?.split(",").sort() ?? [];

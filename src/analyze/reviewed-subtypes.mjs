@@ -11,11 +11,11 @@ import { compilerExportSelection, validateExportConfiguration } from "./export-c
 const key = "lean-lang.org/refinements";
 const exportName = item => item.source.extensions["lean-lang.org/specialization"]?.name ?? item.source.declaration;
 const fail = () => { throw new TypeError("Invalid reviewed Subtype constructor decision"); };
-const contractSite = (site, refinement, types) => {
-	assertRefinement(refinement, site.type, 0, true, types);
+const contractSite = (site, refinement, types, produced = false) => {
+	assertRefinement(refinement, site.type, 0, true, types, produced);
 	// A Subtype or checked-record constructor is selected per site, over a copied value.
 	const selection = checkedRefinementSelection(refinement);
-	if(selection && (site.ownership !== "copy" || site.lifetime !== null)) fail();
+	if(refinement !== null && (site.ownership !== "copy" || site.lifetime !== null)) fail();
 	return { ownership: site.ownership, lifetime: structuredClone(site.lifetime)
 		, ...(selection ? { refinement: selection } : {}) };
 };
@@ -43,7 +43,7 @@ export const reviewedSubtypeContracts = document => {
 			|| !Array.isArray(value.parameters) || value.parameters.length !== declaration.parameters.length
 			|| (value.result === null && value.parameters.every(item => item === null))) fail();
 		const parameters = declaration.parameters.map((site, index) => contractSite(site, value.parameters[index], document.types));
-		const result = contractSite(declaration.result, value.result, document.types);
+		const result = contractSite(declaration.result, value.result, document.types, true);
 		if(!parameters.some(site => site.refinement) && !result.refinement) continue;
 		entries.push([exportName(declaration), { parameters, result }]);
 	}

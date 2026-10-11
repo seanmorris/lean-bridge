@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { beforeSubtypeResultSource } from "./subtype-result-history.mjs";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
 
@@ -67,6 +68,7 @@ export const reverseNominalSubtypeNativeUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeNominalSubtypeNativeSource = (path, source, expected) => {
+	source = beforeSubtypeResultSource(path, source, expected);
 	if(typeof source !== "string" || !nominalSubtypeNativeChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

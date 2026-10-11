@@ -94,6 +94,7 @@ export const checkedRefinementSelection = refinement => {
 		{
 			closed(value, ["kind", "constructor"]);
 			if(value.kind === "checked-record" && depth !== 0) fail();
+			if(value.kind === "subtype" && value.constructor === null) return null;
 			return validateCheckedRefinementSelection({ constructor: value.constructor });
 		}
 		if(["record", "variant"].includes(Object.getOwnPropertyDescriptor(value ?? {}, "kind")?.value))
@@ -150,7 +151,7 @@ export const projectionCheckedSelection = type => {
 	const visit = (value, depth) => {
 		if(++nodes > 4096 || depth > 32) fail();
 		if(value.kind === "alias") return visit(value.target, depth + 1);
-		if(value.kind === "refinement") return ["subtype", "checked-record"].includes(value.predicate.kind)
+		if(value.kind === "refinement") return ["subtype", "checked-record"].includes(value.predicate.kind) && value.predicate.constructor !== null
 			? { constructor: value.predicate.constructor } : null;
 		if(["record", "variant"].includes(value.kind))
 		{

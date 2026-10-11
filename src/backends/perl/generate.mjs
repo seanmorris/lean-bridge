@@ -244,7 +244,7 @@ const perlFinBounds = (model, item) => {
 	// Reviewed APIs own their parameter names; ordinary-source positional names stay stable.
 	const names = perlParameterNames(model, item);
 	const parts = item.refinements.parameters.flatMap((refinement, index) => nativeFinBoundPaths(refinement, names[index]));
-	parts.push(...nativeFinBoundPaths(item.refinements.result, "result"));
+	parts.push(...nativeFinBoundPaths(item.refinements.result, "result", true));
 	return parts.length ? parts.join("; ") : null;
 };
 const scalarFastType = type => type.kind === "primitive" && !["nat", "int", "string", "bytes"].includes(type.name);
