@@ -4,7 +4,7 @@
  *
  * @file
  */
-import { sha256 } from "../capsule/node.mjs";
+import { canonicalJson, sha256 } from "../capsule/node.mjs";
 
 /**
  * Name the conversion that builds a checked record from its payload mirror with one constructor.
@@ -26,6 +26,10 @@ export const constructorRefinementLeaves = (refinement, type, suffix = "") => {
 	if(refinement === null || refinement.kind === "fin") return [];
 	if(type.kind === "alias") return constructorRefinementLeaves(refinement, type.target, suffix);
 	if(["subtype", "checked-record"].includes(refinement.kind)) return [{ refinement, type, suffix }];
+	if(refinement.kind === "record") return refinement.arguments.flatMap((child, index) =>
+		constructorRefinementLeaves(child, type.fields[index].type, `${suffix}_${index}`));
+	if(refinement.kind === "variant") return refinement.cases.flatMap((branch, index) => branch.arguments.flatMap((child, field) =>
+		constructorRefinementLeaves(child, type.cases[index].fields[field].type, `${suffix}_${index}_${field}`)));
 	if(!["array", "list", "option", "tuple", "result"].includes(refinement.kind)) return [];
 	return refinement.arguments.flatMap((child, index) => constructorRefinementLeaves(child, type.arguments?.[index] ?? type.element, `${suffix}_${index}`));
 };
@@ -37,7 +41,18 @@ const refinements = (item, count) => item.refinements ?? {
 
 // New structural Subtype expressions may be elaborated before a monadic product's
 // expected type is known. Qualify sum patterns so Lean can infer their input shape.
-const containsSubtype = refinement => refinement?.kind === "subtype" || (refinement?.arguments ?? []).some(containsSubtype);
+const containsSubtype = refinement => refinement?.kind === "subtype"
+	|| (refinement?.arguments ?? []).some(containsSubtype)
+	|| (refinement?.cases ?? []).some(branch => branch.arguments.some(containsSubtype));
+
+/**
+ * Share Fin-only checks, but key constructor-bearing conversions by the complete site tree.
+ * Field/case order, nested choices and bounds are part of that identity.
+ *
+ * @param refinement - A validated record or variant refinement tree.
+ */
+export const nominalRefinementCheck = refinement => containsSubtype(refinement)
+	? `via_${sha256(canonicalJson(refinement))}` : "check";
 
 /**
  * Convert an erased value to proof-carrying Lean data through Option, or project
@@ -54,7 +69,11 @@ export const componentRefinementConversion = (refinement, value, checked = true,
 	if(refinement.kind === "fin") return checked
 		? `(if proof : ${input} < ${refinement.bound} then _root_.Option.some (⟨${input}, proof⟩ : _root_.Fin ${refinement.bound}) else _root_.Option.none)`
 		: `${input}.val`;
-	if(refinement.kind === "subtype") return checked ? `_root_.${refinement.constructor} ${value}` : `${input}.val`;
+	if(refinement.kind === "subtype")
+	{
+		if(checked && typeof refinement.constructor !== "string") throw new TypeError("A Subtype input requires its site's constructor");
+		return checked ? `_root_.${refinement.constructor} ${value}` : `${input}.val`;
+	}
 	// A checked record crosses as its payload mirror: only the site's constructor builds the source
 	// value, and a Lean-produced one is projected back without any check.
 	if(refinement.kind === "checked-record")
@@ -64,7 +83,7 @@ export const componentRefinementConversion = (refinement, value, checked = true,
 	}
 	// Native packages pass records and variants with checked fields as erased mirrors whose
 	// check and erase functions the native adapter module defines.
-	if(["record", "variant"].includes(refinement.kind)) return `(LbErased.${refinement.definition}.${checked ? "check" : "erase"} ${input})`;
+	if(["record", "variant"].includes(refinement.kind)) return `(LbErased.${refinement.definition}.${checked ? nominalRefinementCheck(refinement) : "erase"} ${input})`;
 	const child = (index, expression) => componentRefinementConversion(refinement.arguments[index], expression, checked, depth + 1);
 	if(["array", "list"].includes(refinement.kind)) return `(${input}.${checked ? "mapM" : "map"} (fun ${name} => ${child(0, name)}))`;
 	const qualified = containsSubtype(refinement);

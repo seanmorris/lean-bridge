@@ -29,6 +29,8 @@ import "./helpers/checked-record-admission-source-history-tests.mjs";
 import "./helpers/structural-subtype-extractor-tests.mjs";
 import "./helpers/structural-subtype-runtime-tests.mjs";
 import "./helpers/structural-subtype-runtime-history-tests.mjs";
+import "./helpers/nominal-subtype-conversion-tests.mjs";
+import "./helpers/nominal-subtype-conversion-history-tests.mjs";
 
 const profiles = process.env.LEAN_BRIDGE_SUBTYPE_PROFILES?.split(",").sort() ?? [];
 assert.equal(new Set(profiles).size, profiles.length, "Duplicate Subtype profile");

@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { beforeNominalSubtypeConversionSource } from "./nominal-subtype-conversion-history.mjs";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
 
@@ -60,6 +61,7 @@ export const reverseCheckedRecordPhpWasmPromotionUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeCheckedRecordPhpWasmPromotionSource = (path, source, expected) => {
+	source = beforeNominalSubtypeConversionSource(path, source, expected);
 	if(typeof source !== "string" || !checkedRecordPhpWasmPromotionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
