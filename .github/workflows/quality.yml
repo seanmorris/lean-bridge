@@ -21,6 +21,8 @@ jobs:
       - name: Check out the exact revision
         uses: actions/checkout@v6
         with:
+          # Evidence tests authenticate source bytes at their original producer commits.
+          fetch-depth: 0
           persist-credentials: false
       - name: Install Node.js
         uses: actions/setup-node@v6

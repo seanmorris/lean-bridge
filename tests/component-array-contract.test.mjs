@@ -59,6 +59,8 @@ import "./helpers/perl-indexed-errors-source-history-tests.mjs";
 import "./helpers/refinement-ci-repair-source-history-tests.mjs";
 import "./helpers/python-refinement-evidence-tests.mjs";
 import "./helpers/python-refinement-evidence-source-history-tests.mjs";
+import "./helpers/structural-subtype-core-ci-tests.mjs";
+import "./helpers/structural-subtype-core-ci-history-tests.mjs";
 
 test("nested Fin constraints match their full erased shape and emit checked Lean construction", async () => {
 	const ir = corpusReviewedIr({ id: "refinements" }, [{ name: "Refinements.echo", parameters: [{ array: { array: "nat" } }], result: { array: { array: "nat" } } }]);
@@ -86,8 +88,23 @@ test("nested Fin constraints match their full erased shape and emit checked Lean
 		{ kind: "array", arguments: [null] }, { kind: "array", arguments: [] }
 		, { kind: "array", arguments: [{ kind: "fin", bound: "10" }] }
 		, { kind: "array", arguments: [{ kind: "array", arguments: [{ kind: "fin", bound: "01" }] }] }
-		, { kind: "array", arguments: [{ kind: "array", arguments: [{ kind: "subtype", constructor: "Refinements.checked" }] }] }
+		, { kind: "array", arguments: [{ kind: "array", arguments: [{ kind: "subtype", constructor: "Refinements.checked!" }] }] }
 	]) assert.throws(() => assertRefinement(bad, ir.declarations[0].parameters[0].type));
+	const nestedSubtype = { kind: "array", arguments: [{ kind: "array", arguments: [{ kind: "subtype", constructor: "Refinements.checked" }] }] };
+	assert.doesNotThrow(() => assertRefinement(nestedSubtype, ir.declarations[0].parameters[0].type));
+	// The same tree remains forbidden through a nominal-field or callback edge.
+	assert.throws(() => assertRefinement(nestedSubtype, ir.declarations[0].parameters[0].type, 1), /transport type/u);
+	const subtypeIr = structuredClone(ir);
+	subtypeIr.declarations[0].source.extensions["lean-lang.org/refinements"] = { parameters: [nestedSubtype], result: nestedSubtype };
+	const subtypeGenerated = generateCompilerAdapters({ analysis: {
+		bindingIr: { origin: "lean-elaborated", document: subtypeIr, semanticSha256: "3".repeat(64) }
+		, exportCandidates: [{ declaration: "Refinements.echo", sourceModule: "Refinements", status: "exportable" }]
+	}
+	, componentPlan: { sha256: "4".repeat(64), document: { bindingIr: { semanticSha256: "3".repeat(64) } } } });
+	await assertJsonSchema("compiler-adapter-plan", subtypeGenerated.plan);
+	assert.deepEqual(subtypeGenerated.plan.exports[0].refinements, { parameters: [nestedSubtype], result: nestedSubtype });
+	assert.match(subtypeGenerated.files["LeanBridgeGenerated.lean"], /_root_\.Refinements\.checked/u);
+	assert.doesNotMatch(subtypeGenerated.files["LeanBridgeGenerated.lean"], /sorry|unsafeCast|axiom/u);
 	const forged = structuredClone(generated.plan);
 	forged.exports[0].refinements.parameters[0] = { kind: "fin", bound: "10" };
 	assert.throws(() => validateCompilerAdapterPlan(forged), /Fin bound over Nat|transport type/);

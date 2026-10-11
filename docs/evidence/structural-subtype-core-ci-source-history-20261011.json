@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "milestone": "structural-subtype-core-ci-source-v1",
+  "predecessorCommit": "68d6e3ba1b6bfbc8171a813d6a565ad330584076",
+  "updates": [
+    {
+      "path": ".github/workflows/quality.yml",
+      "currentSha256": "b31136b679581777a9bc93bb74ba725901517829289a94d2bd747730e1b2946b",
+      "previousSha256": "becc5b8def220cf5429f94ed718ef67b9f664cdd1f3ff622432009ecfb25584d",
+      "edits": [
+        {
+          "start": 438,
+          "previous": "",
+          "current": "          # Evidence tests authenticate source bytes at their original producer commits.\n          fetch-depth: 0\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "9e25b87fe5ab12ad433a7c267b2a8342eeb266a7bd92ff4651d4247c0ff1b8a7",
+      "previousSha256": "878b0a20efdc5e8dab63489030d672c8f4b800bfbac79c61de81c56cc6c7c2be",
+      "edits": [
+        {
+          "start": 685240,
+          "previous": "          \"sha256\": \"db0ee729566fce5e51f90579ca08f682ea49b877cce8b751d4145b5c170f276a\"\n",
+          "current": "          \"sha256\": \"0424250e4ca1664117bbba0c2cfb648afdc97c27d2dd1f9b5acb01479b8c0383\"\n"
+        },
+        {
+          "start": 1351306,
+          "previous": "          \"sha256\": \"becc5b8def220cf5429f94ed718ef67b9f664cdd1f3ff622432009ecfb25584d\"\n",
+          "current": "          \"sha256\": \"b31136b679581777a9bc93bb74ba725901517829289a94d2bd747730e1b2946b\"\n"
+        },
+        {
+          "start": 1440808,
+          "previous": "          \"sha256\": \"db0ee729566fce5e51f90579ca08f682ea49b877cce8b751d4145b5c170f276a\"\n",
+          "current": "          \"sha256\": \"0424250e4ca1664117bbba0c2cfb648afdc97c27d2dd1f9b5acb01479b8c0383\"\n"
+        },
+        {
+          "start": 1447342,
+          "previous": "          \"sha256\": \"db0ee729566fce5e51f90579ca08f682ea49b877cce8b751d4145b5c170f276a\"\n",
+          "current": "          \"sha256\": \"0424250e4ca1664117bbba0c2cfb648afdc97c27d2dd1f9b5acb01479b8c0383\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "currentSha256": "0424250e4ca1664117bbba0c2cfb648afdc97c27d2dd1f9b5acb01479b8c0383",
+      "previousSha256": "db0ee729566fce5e51f90579ca08f682ea49b877cce8b751d4145b5c170f276a",
+      "edits": [
+        {
+          "start": 3928,
+          "previous": "",
+          "current": "import \"./helpers/structural-subtype-core-ci-tests.mjs\";\nimport \"./helpers/structural-subtype-core-ci-history-tests.mjs\";\n"
+        },
+        {
+          "start": 6125,
+          "previous": "\t\t, { kind: \"array\", arguments: [{ kind: \"array\", arguments: [{ kind: \"subtype\", constructor: \"Refinements.checked\" }] }] }\n",
+          "current": "\t\t, { kind: \"array\", arguments: [{ kind: \"array\", arguments: [{ kind: \"subtype\", constructor: \"Refinements.checked!\" }] }] }\n"
+        },
+        {
+          "start": 6337,
+          "previous": "",
+          "current": "\tconst nestedSubtype = { kind: \"array\", arguments: [{ kind: \"array\", arguments: [{ kind: \"subtype\", constructor: \"Refinements.checked\" }] }] };\n\tassert.doesNotThrow(() => assertRefinement(nestedSubtype, ir.declarations[0].parameters[0].type));\n\t// The same tree remains forbidden through a nominal-field or callback edge.\n\tassert.throws(() => assertRefinement(nestedSubtype, ir.declarations[0].parameters[0].type, 1), /transport type/u);\n\tconst subtypeIr = structuredClone(ir);\n\tsubtypeIr.declarations[0].source.extensions[\"lean-lang.org/refinements\"] = { parameters: [nestedSubtype], result: nestedSubtype };\n\tconst subtypeGenerated = generateCompilerAdapters({ analysis: {\n\t\tbindingIr: { origin: \"lean-elaborated\", document: subtypeIr, semanticSha256: \"3\".repeat(64) }\n\t\t, exportCandidates: [{ declaration: \"Refinements.echo\", sourceModule: \"Refinements\", status: \"exportable\" }]\n\t}\n\t, componentPlan: { sha256: \"4\".repeat(64), document: { bindingIr: { semanticSha256: \"3\".repeat(64) } } } });\n\tawait assertJsonSchema(\"compiler-adapter-plan\", subtypeGenerated.plan);\n\tassert.deepEqual(subtypeGenerated.plan.exports[0].refinements, { parameters: [nestedSubtype], result: nestedSubtype });\n\tassert.match(subtypeGenerated.files[\"LeanBridgeGenerated.lean\"], /_root_\\.Refinements\\.checked/u);\n\tassert.doesNotMatch(subtypeGenerated.files[\"LeanBridgeGenerated.lean\"], /sorry|unsafeCast|axiom/u);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "84756fba1d1b236ccb5c466e4a1db17d37b28c2cccb506ee639cd6c12ef1387d",
+      "previousSha256": "a13b295258d8ad1a0a8d7c9a2858d1194458ecf2fa4fe4bc5674e21d5ec66813",
+      "edits": [
+        {
+          "start": 1017,
+          "previous": "",
+          "current": "import { structuralSubtypeCoreCiChangedPaths } from \"./structural-subtype-core-ci-history.mjs\";\n"
+        },
+        {
+          "start": 60788,
+          "previous": "",
+          "current": "\t, ...structuralSubtypeCoreCiChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/structural-subtype-promotion-history.mjs",
+      "currentSha256": "926b6956ae2f24c2fb1d9745bb09b23ff781897175c3741112f73813c3a0de9c",
+      "previousSha256": "de703705c30226d152356087404c426650d12f2f94f3b96cae7b09d093b03cf3",
+      "edits": [
+        {
+          "start": 267,
+          "previous": "",
+          "current": "import { beforeStructuralSubtypeCoreCiSource } from \"./structural-subtype-core-ci-history.mjs\";\n"
+        },
+        {
+          "start": 3008,
+          "previous": "",
+          "current": "\tsource = beforeStructuralSubtypeCoreCiSource(path, source, expected);\n"
+        }
+      ]
+    }
+  ]
+}

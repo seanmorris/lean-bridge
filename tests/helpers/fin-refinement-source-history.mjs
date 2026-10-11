@@ -13,6 +13,7 @@ import { structuralSubtypeRegistrationChangedPaths } from "./structural-subtype-
 import { structuralSubtypeCiFoundationChangedPaths } from "./structural-subtype-ci-foundation-history.mjs";
 import { structuralSubtypeCiWorkflowChangedPaths } from "./structural-subtype-ci-workflow-history.mjs";
 import { structuralSubtypePromotionChangedPaths } from "./structural-subtype-promotion-history.mjs";
+import { structuralSubtypeCoreCiChangedPaths } from "./structural-subtype-core-ci-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeSubtypeRefinementSource, subtypeRefinementChangedPaths } from "./subtype-refinement-source-history.mjs";
 import { subtypeHeapChangedPaths } from "./subtype-heap-source-history.mjs";
@@ -891,6 +892,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...structuralSubtypeCiFoundationChangedPaths
 	, ...structuralSubtypeCiWorkflowChangedPaths
 	, ...structuralSubtypePromotionChangedPaths
+	, ...structuralSubtypeCoreCiChangedPaths
 ])].sort());
 
 /**
