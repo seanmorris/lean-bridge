@@ -14,8 +14,9 @@ import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeFinDiagnosticCiSource } from "./native-fin-diagnostic-ci-history.mjs";
 import { beforeFinNixBoundarySource, finNixBoundaryChangedPaths, finNixBoundaryHistoryPath, finNixBoundaryPredecessor, reverseFinNixBoundaryUpdate } from "./native-fin-nix-boundary-history.mjs";
 import "./native-fin-nix-comparison-history-tests.mjs";
+import "./native-history-checkout-tests.mjs";
 
-test("the exact Nix Perl source boundary imports its engine and detects a missing Fin diagnostic module", async t => {
+test("the exact Nix Perl source boundary imports its engine and detects missing refinement modules", async t => {
 	const root = await mkdtemp(join(tmpdir(), "lean-bridge-perl-boundary-"));
 	t.after(() => rm(root, { recursive: true, force: true }));
 	const boundary = JSON.parse(await readFile("nix/perl-engine-source-boundary.json", "utf8"));
@@ -35,6 +36,17 @@ test("the exact Nix Perl source boundary imports its engine and detects a missin
 	assert.equal(entrypoint.status, 1);
 	assert.match(entrypoint.stderr, /project and output are required/u);
 	assert.doesNotMatch(entrypoint.stderr, /ERR_MODULE_NOT_FOUND/u);
+	for(const path of ["src/build/refinement-mirrors.mjs", "src/build/component-refinement-mirrors.mjs", "src/build/component-fin-guards.mjs"])
+	{
+		assert.ok(boundary.includedFiles.includes(path));
+		await rm(join(root, path));
+		const missing = run();
+		assert.equal(missing.status, 1);
+		assert.match(missing.stderr, /ERR_MODULE_NOT_FOUND/u);
+		assert.ok(missing.stderr.includes(path));
+		await copyFile(path, join(root, path));
+		assert.equal(run().status, 0);
+	}
 	await rm(join(root, "src/backends/c/fin-diagnostic.mjs"));
 	const missing = run();
 	assert.equal(missing.status, 1);

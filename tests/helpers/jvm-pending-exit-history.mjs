@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeNativeHistoryCheckoutSource } from "./native-history-checkout-history.mjs";
 
 export const jvmPendingExitHistoryPath = "docs/evidence/jvm-pending-exit-source-history-20261011.json";
 export const jvmPendingExitPredecessor = "66639ddbe17be8d1d5264725c1e2816972a649ba";
@@ -52,6 +53,7 @@ export const reverseJvmPendingExitUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeJvmPendingExitSource = (path, source, expected) => {
+	source = beforeNativeHistoryCheckoutSource(path, source, expected);
 	if(typeof source !== "string" || !jvmPendingExitChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
