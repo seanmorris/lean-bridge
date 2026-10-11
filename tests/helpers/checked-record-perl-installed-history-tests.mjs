@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeCheckedRecordPerlCiSource } from "./checked-record-perl-ci-history.mjs";
 import { beforeCheckedRecordPerlInstalledSource, checkedRecordPerlInstalledChangedPaths, checkedRecordPerlInstalledHistoryPath, checkedRecordPerlInstalledPredecessor, reverseCheckedRecordPerlInstalledUpdate } from "./checked-record-perl-installed-history.mjs";
 
 test("Perl checked-record installed harness history authenticates exact transitions and refuses unknown edits", async () => {
@@ -44,7 +45,7 @@ test("Perl checked-record installed harness history authenticates exact transiti
 test("Perl checked-record installed harness changes only source pins and preserves all installed observations", async () => {
 	const history = JSON.parse(await readFile(checkedRecordPerlInstalledHistoryPath));
 	const path = "docs/type-surface.v1.json";
-	const source = await readFile(path, "utf8");
+	const source = beforeCheckedRecordPerlCiSource(path, await readFile(path, "utf8"));
 	const restored = beforeCheckedRecordPerlInstalledSource(path, source);
 	assert.equal(sha256(restored), "272c84a3d4fb5db30f96c3d120eb11bedea9c8392ad0cc5b7e1f220cf0919811");
 	const current = JSON.parse(source), previous = JSON.parse(restored);

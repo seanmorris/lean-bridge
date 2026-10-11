@@ -13,6 +13,9 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { checkedRecordPerlConfigurations, checkedRecordPerlExecutables, checkedRecordPerlInstalledFiles, assertCheckedRecordPerlIdentity, assertCheckedRecordPerlPackageIdentity } from "./checked-record-perl-install.mjs";
 import { assertCheckedRecordPerlRecords } from "./checked-record-perl-records.mjs";
 import "./checked-record-perl-archive-tests.mjs";
+import "./checked-record-perl-ci-shell-tests.mjs";
+import "./checked-record-perl-ci-workflow-tests.mjs";
+import "./checked-record-perl-ci-history-tests.mjs";
 
 test("installed Perl checked-record selection cannot silently drop or alias an ABI", () => {
 	const selected = checkedRecordPerlExecutables();

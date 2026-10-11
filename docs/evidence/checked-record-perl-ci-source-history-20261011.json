@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-perl-ci-v1",
+  "predecessorCommit": "e6ea18b0ab28021a18cf9cb8bdf764af5f070bc5",
+  "updates": [
+    {
+      "path": ".github/workflows/perl-consumer.yml",
+      "currentSha256": "80f9e7eac6bd0d51361830c529c911d81beade77896b60d3bb73668f2c00dd65",
+      "previousSha256": "66fd3048101369800b39b4a31df3d0d2f3f2df16d6af94c89eb90b56c779d1ac",
+      "edits": [
+        {
+          "start": 108,
+          "previous": "",
+          "current": "  checked-records:\n    name: Checked records across all four Perl ABIs\n    runs-on: ubuntu-24.04\n    timeout-minutes: 120\n    steps:\n      - uses: actions/checkout@v6\n        with:\n          persist-credentials: false\n      - uses: actions/setup-node@v6\n        with:\n          node-version: \"22\"\n          cache: npm\n      - name: Install the checkout dependencies\n        run: npm ci --ignore-scripts --no-audit --no-fund\n      - name: Bound apt network waits\n        uses: ./.github/actions/bounded-apt\n        timeout-minutes: 1\n      - name: Install the native build tools\n        timeout-minutes: 20\n        run: sudo apt-get update && sudo apt-get install -y build-essential curl zstd\n      - name: Install only the pinned Lean compiler\n        run: bash scripts/bootstrap-toolchains.sh --lean-only\n      - name: Restore the complete checksummed Perl toolchain matrix\n        uses: actions/cache@v4\n        with:\n          path: .toolchains/perl\n          key: perl-checked-record-abi-v1-${{ runner.os }}-${{ hashFiles('scripts/build-perl-toolchains.mjs') }}\n      - name: Build or verify every pinned Perl interpreter\n        run: |\n          node scripts/build-perl-toolchains.mjs 5.36.3 threaded\n          node scripts/build-perl-toolchains.mjs 5.36.3 unthreaded\n          node scripts/build-perl-toolchains.mjs 5.38.2 threaded\n          node scripts/build-perl-toolchains.mjs 5.38.2 unthreaded\n      - name: Require four source routes and both CPAN installation modes\n        env:\n          LEAN_NUM_THREADS: \"2\"\n        run: |\n          source scripts/env.sh\n          bash scripts/run-checked-record-perl-ci.sh\n      - name: Preserve complete and partial Perl checked-record observations\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: checked-record-perl-${{ github.sha }}\n          path: build/checked-record-perl-ci/\n          if-no-files-found: error\n\n"
+        },
+        {
+          "start": 23355,
+          "previous": "",
+          "current": "      - checked-records\n"
+        },
+        {
+          "start": 23994,
+          "previous": "          PERL_ACCEPTED: ${{ needs.compiler-checks.result == 'success' && needs.nix-engine.result == 'success' && needs.perl.result == 'success' && steps.evidence.outcome == 'success' }}\n",
+          "current": "          PERL_ACCEPTED: ${{ needs.checked-records.result == 'success' && needs.compiler-checks.result == 'success' && needs.nix-engine.result == 'success' && needs.perl.result == 'success' && steps.evidence.outcome == 'success' }}\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "9975d321ccc9732ebe28b3495d40c961282813caf9adb2e4590f682b69abfa38",
+      "previousSha256": "272c84a3d4fb5db30f96c3d120eb11bedea9c8392ad0cc5b7e1f220cf0919811",
+      "edits": [
+        {
+          "start": 55301,
+          "previous": "          \"sha256\": \"66fd3048101369800b39b4a31df3d0d2f3f2df16d6af94c89eb90b56c779d1ac\"\n",
+          "current": "          \"sha256\": \"80f9e7eac6bd0d51361830c529c911d81beade77896b60d3bb73668f2c00dd65\"\n"
+        },
+        {
+          "start": 266507,
+          "previous": "          \"sha256\": \"66fd3048101369800b39b4a31df3d0d2f3f2df16d6af94c89eb90b56c779d1ac\"\n",
+          "current": "          \"sha256\": \"80f9e7eac6bd0d51361830c529c911d81beade77896b60d3bb73668f2c00dd65\"\n"
+        },
+        {
+          "start": 307770,
+          "previous": "          \"sha256\": \"66fd3048101369800b39b4a31df3d0d2f3f2df16d6af94c89eb90b56c779d1ac\"\n",
+          "current": "          \"sha256\": \"80f9e7eac6bd0d51361830c529c911d81beade77896b60d3bb73668f2c00dd65\"\n"
+        },
+        {
+          "start": 407851,
+          "previous": "          \"sha256\": \"66fd3048101369800b39b4a31df3d0d2f3f2df16d6af94c89eb90b56c779d1ac\"\n",
+          "current": "          \"sha256\": \"80f9e7eac6bd0d51361830c529c911d81beade77896b60d3bb73668f2c00dd65\"\n"
+        },
+        {
+          "start": 458930,
+          "previous": "          \"sha256\": \"66fd3048101369800b39b4a31df3d0d2f3f2df16d6af94c89eb90b56c779d1ac\"\n",
+          "current": "          \"sha256\": \"80f9e7eac6bd0d51361830c529c911d81beade77896b60d3bb73668f2c00dd65\"\n"
+        },
+        {
+          "start": 512770,
+          "previous": "          \"sha256\": \"66fd3048101369800b39b4a31df3d0d2f3f2df16d6af94c89eb90b56c779d1ac\"\n",
+          "current": "          \"sha256\": \"80f9e7eac6bd0d51361830c529c911d81beade77896b60d3bb73668f2c00dd65\"\n"
+        },
+        {
+          "start": 601971,
+          "previous": "          \"sha256\": \"66fd3048101369800b39b4a31df3d0d2f3f2df16d6af94c89eb90b56c779d1ac\"\n",
+          "current": "          \"sha256\": \"80f9e7eac6bd0d51361830c529c911d81beade77896b60d3bb73668f2c00dd65\"\n"
+        },
+        {
+          "start": 814021,
+          "previous": "          \"sha256\": \"66fd3048101369800b39b4a31df3d0d2f3f2df16d6af94c89eb90b56c779d1ac\"\n",
+          "current": "          \"sha256\": \"80f9e7eac6bd0d51361830c529c911d81beade77896b60d3bb73668f2c00dd65\"\n"
+        },
+        {
+          "start": 823643,
+          "previous": "          \"sha256\": \"66fd3048101369800b39b4a31df3d0d2f3f2df16d6af94c89eb90b56c779d1ac\"\n",
+          "current": "          \"sha256\": \"80f9e7eac6bd0d51361830c529c911d81beade77896b60d3bb73668f2c00dd65\"\n"
+        },
+        {
+          "start": 844639,
+          "previous": "          \"sha256\": \"66fd3048101369800b39b4a31df3d0d2f3f2df16d6af94c89eb90b56c779d1ac\"\n",
+          "current": "          \"sha256\": \"80f9e7eac6bd0d51361830c529c911d81beade77896b60d3bb73668f2c00dd65\"\n"
+        },
+        {
+          "start": 1125650,
+          "previous": "          \"sha256\": \"66fd3048101369800b39b4a31df3d0d2f3f2df16d6af94c89eb90b56c779d1ac\"\n",
+          "current": "          \"sha256\": \"80f9e7eac6bd0d51361830c529c911d81beade77896b60d3bb73668f2c00dd65\"\n"
+        },
+        {
+          "start": 1284935,
+          "previous": "          \"sha256\": \"66fd3048101369800b39b4a31df3d0d2f3f2df16d6af94c89eb90b56c779d1ac\"\n",
+          "current": "          \"sha256\": \"80f9e7eac6bd0d51361830c529c911d81beade77896b60d3bb73668f2c00dd65\"\n"
+        },
+        {
+          "start": 1324736,
+          "previous": "          \"sha256\": \"66fd3048101369800b39b4a31df3d0d2f3f2df16d6af94c89eb90b56c779d1ac\"\n",
+          "current": "          \"sha256\": \"80f9e7eac6bd0d51361830c529c911d81beade77896b60d3bb73668f2c00dd65\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-perl-installed-history-tests.mjs",
+      "currentSha256": "80882a04bdf987ca68bcca5d422a3dbc583d67937b488bb2eda783f3a1932c9b",
+      "previousSha256": "dfa8d258ad4465f3d464c84727a06907510deb70307cd976c62131d420cd2b1b",
+      "edits": [
+        {
+          "start": 528,
+          "previous": "",
+          "current": "import { beforeCheckedRecordPerlCiSource } from \"./checked-record-perl-ci-history.mjs\";\n"
+        },
+        {
+          "start": 2803,
+          "previous": "\tconst source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst source = beforeCheckedRecordPerlCiSource(path, await readFile(path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/refinement-perl-ci-history-tests.mjs",
+      "currentSha256": "e0c12d0bbae34d13cdc73cf153d571ba9045da889998b1be6ed7254e2f43b6c0",
+      "previousSha256": "3e8b6f490374dd2ad3ecf12f6e7332cb4681bb539c3d856116bcf002418a5680",
+      "edits": [
+        {
+          "start": 523,
+          "previous": "",
+          "current": "import { beforeCheckedRecordPerlCiSource } from \"./checked-record-perl-ci-history.mjs\";\n"
+        },
+        {
+          "start": 2504,
+          "previous": "\tassert.equal(sha256(await readFile(\"docs/type-surface.v1.json\")), \"272c84a3d4fb5db30f96c3d120eb11bedea9c8392ad0cc5b7e1f220cf0919811\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\";\n\tassert.equal(sha256(beforeCheckedRecordPerlCiSource(path, await readFile(path, \"utf8\"))), \"272c84a3d4fb5db30f96c3d120eb11bedea9c8392ad0cc5b7e1f220cf0919811\");\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/refinement-perl-ci-history.mjs",
+      "currentSha256": "a6e7f29060d02ea53a5a27718d3e27a5f5363d235e6bffde422eb6ed4dab249b",
+      "previousSha256": "43e77af86929f91ff773f34ca23c9aabccf646a88d7aba8e8386878a63cc480f",
+      "edits": [
+        {
+          "start": 257,
+          "previous": "",
+          "current": "import { beforeCheckedRecordPerlCiSource } from \"./checked-record-perl-ci-history.mjs\";\n"
+        },
+        {
+          "start": 2152,
+          "previous": "",
+          "current": "\tsource = beforeCheckedRecordPerlCiSource(path, source, expected);\n"
+        }
+      ]
+    }
+  ]
+}

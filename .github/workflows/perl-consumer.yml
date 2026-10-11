@@ -8,6 +8,53 @@ permissions:
   contents: read
 
 jobs:
+  checked-records:
+    name: Checked records across all four Perl ABIs
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install the checkout dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install the native build tools
+        timeout-minutes: 20
+        run: sudo apt-get update && sudo apt-get install -y build-essential curl zstd
+      - name: Install only the pinned Lean compiler
+        run: bash scripts/bootstrap-toolchains.sh --lean-only
+      - name: Restore the complete checksummed Perl toolchain matrix
+        uses: actions/cache@v4
+        with:
+          path: .toolchains/perl
+          key: perl-checked-record-abi-v1-${{ runner.os }}-${{ hashFiles('scripts/build-perl-toolchains.mjs') }}
+      - name: Build or verify every pinned Perl interpreter
+        run: |
+          node scripts/build-perl-toolchains.mjs 5.36.3 threaded
+          node scripts/build-perl-toolchains.mjs 5.36.3 unthreaded
+          node scripts/build-perl-toolchains.mjs 5.38.2 threaded
+          node scripts/build-perl-toolchains.mjs 5.38.2 unthreaded
+      - name: Require four source routes and both CPAN installation modes
+        env:
+          LEAN_NUM_THREADS: "2"
+        run: |
+          source scripts/env.sh
+          bash scripts/run-checked-record-perl-ci.sh
+      - name: Preserve complete and partial Perl checked-record observations
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: checked-record-perl-${{ github.sha }}
+          path: build/checked-record-perl-ci/
+          if-no-files-found: error
+
   nix-engine:
     name: Pinned Nix Perl engine and installed consumer
     runs-on: ubuntu-24.04
@@ -397,6 +444,7 @@ jobs:
     name: Combined Perl consumer observation
     if: always()
     needs:
+      - checked-records
       - compiler-checks
       - nix-engine
       - perl
@@ -419,7 +467,7 @@ jobs:
       - name: Record Perl consumer observation
         if: always()
         env:
-          PERL_ACCEPTED: ${{ needs.compiler-checks.result == 'success' && needs.nix-engine.result == 'success' && needs.perl.result == 'success' && steps.evidence.outcome == 'success' }}
+          PERL_ACCEPTED: ${{ needs.checked-records.result == 'success' && needs.compiler-checks.result == 'success' && needs.nix-engine.result == 'success' && needs.perl.result == 'success' && steps.evidence.outcome == 'success' }}
         run: |
           test_result=failed
           if [[ "$PERL_ACCEPTED" == true ]]; then test_result=passed; fi

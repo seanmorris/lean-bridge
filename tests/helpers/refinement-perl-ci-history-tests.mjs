@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeCheckedRecordPerlCiSource } from "./checked-record-perl-ci-history.mjs";
 import { beforeRefinementPerlCiSource, refinementPerlCiChangedPaths, refinementPerlCiHistoryPath, refinementPerlCiPredecessor, reverseRefinementPerlCiUpdate } from "./refinement-perl-ci-history.mjs";
 
 test("Perl CI documentation repair restores exact predecessors and rejects unrecorded edits", async () => {
@@ -41,7 +42,8 @@ test("Perl CI documentation repair restores exact predecessors and rejects unrec
 });
 
 test("Perl CI documentation repair leaves support observations and earlier ledger bytes unchanged", async () => {
-	assert.equal(sha256(await readFile("docs/type-surface.v1.json")), "272c84a3d4fb5db30f96c3d120eb11bedea9c8392ad0cc5b7e1f220cf0919811");
+	const path = "docs/type-surface.v1.json";
+	assert.equal(sha256(beforeCheckedRecordPerlCiSource(path, await readFile(path, "utf8"))), "272c84a3d4fb5db30f96c3d120eb11bedea9c8392ad0cc5b7e1f220cf0919811");
 	assert.equal(sha256(await readFile("docs/evidence/checked-record-perl-installed-source-history-20261011.json")), "593830197492964f868d745e9e3c9c79fd86ffdcb16b557b6153e0af6a73e0b1");
 });
 
