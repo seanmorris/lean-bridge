@@ -12,6 +12,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeCheckedRecordHostCiSource } from "./checked-record-host-ci-history.mjs";
 import { checkedRecordNativeProfiles, checkedRecordNativeReferences, promoteCheckedRecordNative, checkedRecordNativeLimit, checkedRecordNativeConversion } from "./checked-record-native-promotion.mjs";
 import { beforeCheckedRecordNativePromotionSource, checkedRecordNativePromotionChangedPaths, checkedRecordNativePromotionHistoryPath, checkedRecordNativePromotionPredecessor, reverseCheckedRecordNativePromotionUpdate } from "./checked-record-native-promotion-history.mjs";
 
@@ -88,7 +89,18 @@ test("native checked-record promotion changes exactly thirty-two cells without b
 		const update = history.updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);
 		if(update) file.sha256 = update.currentSha256;
 	}
-	assert.deepEqual(JSON.parse(await readFile("docs/type-surface.v1.json")), proposed);
+	const path = "docs/type-surface.v1.json";
+	const milestone = JSON.parse(beforeCheckedRecordHostCiSource(path, await readFile(path, "utf8")));
+	// Authenticate the validators at this promotion, even after later CI integration.
+	for(const entry of proposed.evidence.slice(previous.evidence.length))
+		for(const file of entry.files.filter(item => !item.path.startsWith("docs/evidence/")))
+		{
+			const original = milestone.evidence.find(item => item.id === entry.id)?.files.find(item => item.path === file.path);
+			assert.ok(original, file.path);
+			assert.equal(sha256(beforeFinRefinementSource(file.path, await readFile(file.path), original.sha256)), original.sha256, file.path);
+			file.sha256 = original.sha256;
+		}
+	assert.deepEqual(milestone, proposed);
 });
 
 test("native checked-record promotion refuses forged references, overlaps and repeated promotion", async () => {
@@ -143,7 +155,7 @@ test("native checked-record promotion history authenticates exact transitions an
 	assert.deepEqual(history.updates.map(update => update.path), checkedRecordNativePromotionChangedPaths);
 	for(const update of history.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeCheckedRecordHostCiSource(update.path, await readFile(update.path, "utf8"));
 		const previous = reverseCheckedRecordNativePromotionUpdate(source, update);
 		assert.equal(beforeCheckedRecordNativePromotionSource(update.path, source), previous);
 		const bytes = Buffer.from(source);

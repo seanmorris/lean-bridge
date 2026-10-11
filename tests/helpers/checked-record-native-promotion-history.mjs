@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeCheckedRecordHostCiSource } from "./checked-record-host-ci-history.mjs";
 
 export const checkedRecordNativePromotionHistoryPath = "docs/evidence/checked-record-native-promotion-source-history-20261011.json";
 export const checkedRecordNativePromotionPredecessor = "0ff897e7dbb27845238d4ad0dc3311e2f6dfe75e";
@@ -61,6 +62,7 @@ export const reverseCheckedRecordNativePromotionUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeCheckedRecordNativePromotionSource = (path, source, expected) => {
+	source = beforeCheckedRecordHostCiSource(path, source, expected);
 	if(typeof source !== "string" || !checkedRecordNativePromotionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

@@ -1,0 +1,876 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-host-ci-v1",
+  "predecessorCommit": "5721e52d338fd0b93b6400cb4b73e26d84e69c57",
+  "updates": [
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "currentSha256": "fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa",
+      "previousSha256": "2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02",
+      "edits": [
+        {
+          "start": 109769,
+          "previous": "",
+          "current": "          bash scripts/run-checked-record-host-ci.sh php-native\n"
+        },
+        {
+          "start": 114955,
+          "previous": "",
+          "current": "            build/checked-record-ci/php-native/\n"
+        },
+        {
+          "start": 116060,
+          "previous": "          node scripts/consumer-ci.mjs record --consumer php-native --output build/consumer-ci/results/php-native.json --performance build/consumer-ci/performance/php-native.json --test-result \"$native_result\" --package-installation \"$native_executed\" --real-lean-execution \"$native_executed\" --command \"npm run test:consumer:php-native && LEAN_BRIDGE_NATIVE_PHP_TEST=1 node --test tests/native-php.test.mjs && npm run test:type-corpus:php-native && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=php-native node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_PHP_CALLABLE_TEST=1 node --test tests/php-callables.test.mjs tests/php-callable-contract.test.mjs && LEAN_BRIDGE_PHP_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/php-structured-callables.test.mjs tests/php-structured-callable-contract.test.mjs && npm run test:php-recursive-callables && LEAN_BRIDGE_PHP_COMPOUND_TEST=1 node --test tests/php-compounds.test.mjs tests/php-compound-contract.test.mjs && LEAN_BRIDGE_PHP_LIST_TEST=1 node --test tests/php-lists.test.mjs tests/php-list-contract.test.mjs && LEAN_BRIDGE_PHP_ALIAS_TEST=1 node --test tests/php-aliases.test.mjs tests/php-alias-contract.test.mjs && LEAN_BRIDGE_PHP_FIN_TEST=1 node --test tests/php-fin.test.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=php-native node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=php-native node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES=php-native node --test --test-concurrency=1 tests/generic-record-arrays.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS=1 LEAN_BRIDGE_FIN_CONTAINER_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=php-native node --test tests/native-fin-containers.test.mjs && LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES=php-native LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH=1 LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT=build/native-fin-container-edges/edges-php-native.json node --test --test-concurrency=1 --test-name-pattern='^installed source-free native packages execute zero-bound and nested-position Fin edge cases$' tests/fin-container-edges.test.mjs && node scripts/check-fin-container-foreign-report.mjs php-native build/native-fin-container-edges/edges-php-native.json && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=php-native node --test tests/native-fin-products.test.mjs && LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=php-native node --test tests/native-fin-product-arrays.test.mjs && LEAN_BRIDGE_FIN_RECORD_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=php-native node --test tests/native-fin-records.test.mjs && LEAN_BRIDGE_FIN_RECORD_ZERO_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_PROFILES=php-native LEAN_BRIDGE_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/php-native.json LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/reviewed-php-native.json node --test --test-concurrency=1 tests/native-fin-record-zero.test.mjs && node scripts/check-fin-record-zero-report.mjs php-native build/native-fin-record-zero/php-native.json build/native-fin-record-zero/reviewed-php-native.json && LEAN_BRIDGE_SUBTYPE_PROFILES=php-native node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-host-ci.sh php-native && LEAN_BRIDGE_PHP_VARIANT_TEST=1 node --test tests/php-variants.test.mjs tests/php-variant-contract.test.mjs && LEAN_BRIDGE_PHP_CONVERSIONS_TEST=1 node --test tests/php-collection-conversions.test.mjs && LEAN_BRIDGE_PHP_EQUALITY_TEST=1 node --test tests/php-value-equality.test.mjs && LEAN_BRIDGE_PHP_COLLECTION_TEST=1 node --test tests/php-collections.test.mjs tests/php-collection-contract.test.mjs && LEAN_BRIDGE_OWNED_PHP_VALUES_TEST=1 node --test --test-name-pattern='^(?!.*32-bit PHP-Wasm)' tests/owned-php-values.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-runtime.test.mjs tests/owned-php-conversions.test.mjs tests/owned-php-calls.test.mjs tests/owned-php-package.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-packaging.test.mjs tests/owned-php-coexistence.test.mjs tests/owned-php-documentation.test.mjs && npm run test:owned-php-transfers && npm run test:owned-php-borrows\"\n",
+          "current": "          node scripts/consumer-ci.mjs record --consumer php-native --output build/consumer-ci/results/php-native.json --performance build/consumer-ci/performance/php-native.json --test-result \"$native_result\" --package-installation \"$native_executed\" --real-lean-execution \"$native_executed\" --command \"npm run test:consumer:php-native && LEAN_BRIDGE_NATIVE_PHP_TEST=1 node --test tests/native-php.test.mjs && npm run test:type-corpus:php-native && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=php-native node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_PHP_CALLABLE_TEST=1 node --test tests/php-callables.test.mjs tests/php-callable-contract.test.mjs && LEAN_BRIDGE_PHP_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/php-structured-callables.test.mjs tests/php-structured-callable-contract.test.mjs && npm run test:php-recursive-callables && LEAN_BRIDGE_PHP_COMPOUND_TEST=1 node --test tests/php-compounds.test.mjs tests/php-compound-contract.test.mjs && LEAN_BRIDGE_PHP_LIST_TEST=1 node --test tests/php-lists.test.mjs tests/php-list-contract.test.mjs && LEAN_BRIDGE_PHP_ALIAS_TEST=1 node --test tests/php-aliases.test.mjs tests/php-alias-contract.test.mjs && LEAN_BRIDGE_PHP_FIN_TEST=1 node --test tests/php-fin.test.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=php-native node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=php-native node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES=php-native node --test --test-concurrency=1 tests/generic-record-arrays.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS=1 LEAN_BRIDGE_FIN_CONTAINER_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=php-native node --test tests/native-fin-containers.test.mjs && LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES=php-native LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH=1 LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT=build/native-fin-container-edges/edges-php-native.json node --test --test-concurrency=1 --test-name-pattern='^installed source-free native packages execute zero-bound and nested-position Fin edge cases$' tests/fin-container-edges.test.mjs && node scripts/check-fin-container-foreign-report.mjs php-native build/native-fin-container-edges/edges-php-native.json && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=php-native node --test tests/native-fin-products.test.mjs && LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=php-native node --test tests/native-fin-product-arrays.test.mjs && LEAN_BRIDGE_FIN_RECORD_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=php-native node --test tests/native-fin-records.test.mjs && LEAN_BRIDGE_FIN_RECORD_ZERO_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_PROFILES=php-native LEAN_BRIDGE_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/php-native.json LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/reviewed-php-native.json node --test --test-concurrency=1 tests/native-fin-record-zero.test.mjs && node scripts/check-fin-record-zero-report.mjs php-native build/native-fin-record-zero/php-native.json build/native-fin-record-zero/reviewed-php-native.json && LEAN_BRIDGE_SUBTYPE_PROFILES=php-native node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-host-ci.sh php-native && bash scripts/run-checked-record-host-ci.sh php-native && LEAN_BRIDGE_PHP_VARIANT_TEST=1 node --test tests/php-variants.test.mjs tests/php-variant-contract.test.mjs && LEAN_BRIDGE_PHP_CONVERSIONS_TEST=1 node --test tests/php-collection-conversions.test.mjs && LEAN_BRIDGE_PHP_EQUALITY_TEST=1 node --test tests/php-value-equality.test.mjs && LEAN_BRIDGE_PHP_COLLECTION_TEST=1 node --test tests/php-collections.test.mjs tests/php-collection-contract.test.mjs && LEAN_BRIDGE_OWNED_PHP_VALUES_TEST=1 node --test --test-name-pattern='^(?!.*32-bit PHP-Wasm)' tests/owned-php-values.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-runtime.test.mjs tests/owned-php-conversions.test.mjs tests/owned-php-calls.test.mjs tests/owned-php-package.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-packaging.test.mjs tests/owned-php-coexistence.test.mjs tests/owned-php-documentation.test.mjs && npm run test:owned-php-transfers && npm run test:owned-php-borrows\"\n"
+        },
+        {
+          "start": 177818,
+          "previous": "",
+          "current": "          LEAN_BRIDGE_PYTHON='${{ steps.collection_python311.outputs.python-path }}' bash scripts/run-checked-record-host-ci.sh python311\n          LEAN_BRIDGE_PYTHON='${{ steps.collection_python312.outputs.python-path }}' bash scripts/run-checked-record-host-ci.sh python312\n"
+        },
+        {
+          "start": 184376,
+          "previous": "",
+          "current": "            build/checked-record-ci/python311/\n            build/checked-record-ci/python312/\n"
+        },
+        {
+          "start": 192894,
+          "previous": "",
+          "current": "          bash scripts/run-checked-record-host-ci.sh rust\n"
+        },
+        {
+          "start": 196219,
+          "previous": "",
+          "current": "            build/checked-record-ci/rust/\n"
+        },
+        {
+          "start": 210977,
+          "previous": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=python node --test tests/native-subtype.test.mjs && LEAN_BRIDGE_PYTHON='${{ steps.collection_python311.outputs.python-path }}' bash scripts/run-reviewed-subtype-host-ci.sh python311 && LEAN_BRIDGE_PYTHON='${{ steps.collection_python312.outputs.python-path }}' bash scripts/run-reviewed-subtype-host-ci.sh python312\"\n",
+          "current": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=python node --test tests/native-subtype.test.mjs && LEAN_BRIDGE_PYTHON='${{ steps.collection_python311.outputs.python-path }}' bash scripts/run-reviewed-subtype-host-ci.sh python311 && LEAN_BRIDGE_PYTHON='${{ steps.collection_python312.outputs.python-path }}' bash scripts/run-reviewed-subtype-host-ci.sh python312 && LEAN_BRIDGE_PYTHON='${{ steps.collection_python311.outputs.python-path }}' bash scripts/run-checked-record-host-ci.sh python311 && LEAN_BRIDGE_PYTHON='${{ steps.collection_python312.outputs.python-path }}' bash scripts/run-checked-record-host-ci.sh python312\"\n"
+        },
+        {
+          "start": 217413,
+          "previous": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=rust node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-host-ci.sh rust\"\n",
+          "current": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=rust node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-host-ci.sh rust && bash scripts/run-checked-record-host-ci.sh rust\"\n"
+        },
+        {
+          "start": 230939,
+          "previous": "",
+          "current": "          bash scripts/run-checked-record-host-ci.sh dotnet\n"
+        },
+        {
+          "start": 234470,
+          "previous": "",
+          "current": "            build/checked-record-ci/dotnet/\n"
+        },
+        {
+          "start": 243933,
+          "previous": "",
+          "current": "          bash scripts/run-checked-record-host-ci.sh jvm\n"
+        },
+        {
+          "start": 247746,
+          "previous": "",
+          "current": "            build/checked-record-ci/jvm/\n"
+        },
+        {
+          "start": 258188,
+          "previous": "",
+          "current": "          bash scripts/run-checked-record-host-ci.sh ruby\n"
+        },
+        {
+          "start": 260075,
+          "previous": "",
+          "current": "            build/checked-record-ci/ruby/\n"
+        },
+        {
+          "start": 266036,
+          "previous": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=dotnet node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-host-ci.sh dotnet\"\n",
+          "current": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=dotnet node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-host-ci.sh dotnet && bash scripts/run-checked-record-host-ci.sh dotnet\"\n"
+        },
+        {
+          "start": 271756,
+          "previous": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=java,kotlin node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-host-ci.sh jvm\"\n",
+          "current": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=java,kotlin node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-host-ci.sh jvm && bash scripts/run-checked-record-host-ci.sh jvm\"\n"
+        },
+        {
+          "start": 278197,
+          "previous": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=ruby node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-host-ci.sh ruby\"\n",
+          "current": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=ruby node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-host-ci.sh ruby && bash scripts/run-checked-record-host-ci.sh ruby\"\n"
+        },
+        {
+          "start": 300292,
+          "previous": "",
+          "current": "          bash scripts/run-checked-record-host-ci.sh wit-wasi\n"
+        },
+        {
+          "start": 312984,
+          "previous": "          node scripts/consumer-ci.mjs record --consumer wit-wasi --output build/consumer-ci/results/wit-wasi.json --performance build/consumer-ci/performance/wit-wasi.json --test-result \"$test_result\" --package-installation \"$executed\" --real-lean-execution \"$executed\" --command \"npm run test:consumer:wasi && LEAN_BRIDGE_NATIVE_WIT_TEST=1 node --test tests/native-wit.test.mjs && LEAN_BRIDGE_WIT_CALLABLE_COMPONENT_TEST=1 node --test tests/wit-callable-contract.test.mjs && LEAN_BRIDGE_WIT_CALLABLE_TEST=1 node --test tests/wit-callables.test.mjs && LEAN_BRIDGE_WIT_COMPOUND_TEST=1 node --test tests/wit-compounds.test.mjs tests/wit-compound-contract.test.mjs tests/wit-compound-conversions.test.mjs && LEAN_BRIDGE_WIT_LIST_TEST=1 node --test tests/wit-lists.test.mjs tests/wit-list-contract.test.mjs tests/wit-list-conversions.test.mjs && LEAN_BRIDGE_WIT_ALIAS_TEST=1 node --test --test-concurrency=1 tests/wit-aliases.test.mjs tests/wit-alias-contract.test.mjs tests/wit-alias-conversions.test.mjs && LEAN_BRIDGE_WIT_FIN_TEST=1 node --test tests/wit-fin.test.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=wit-wasi node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=wit-wasi node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES=wit-wasi node --test --test-concurrency=1 tests/generic-record-arrays.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS=1 LEAN_BRIDGE_FIN_CONTAINER_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=wit-wasi node --test tests/native-fin-containers.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES=wit-wasi LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH=1 LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT=build/native-fin-container-edges/edges-wit-wasi.json node --test --test-concurrency=1 --test-name-pattern='^installed source-free native packages execute zero-bound and nested-position Fin edge cases$' tests/fin-container-edges.test.mjs && node scripts/check-fin-container-foreign-report.mjs wit-wasi build/native-fin-container-edges/edges-wit-wasi.json && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=wit-wasi node --test tests/native-fin-products.test.mjs && LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=wit-wasi node --test tests/native-fin-product-arrays.test.mjs && LEAN_BRIDGE_FIN_RECORD_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=wit-wasi node --test tests/native-fin-records.test.mjs && LEAN_BRIDGE_FIN_RECORD_ZERO_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_PROFILES=wit-wasi LEAN_BRIDGE_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/wit-wasi.json LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/reviewed-wit-wasi.json node --test --test-concurrency=1 tests/native-fin-record-zero.test.mjs && node scripts/check-fin-record-zero-report.mjs wit-wasi build/native-fin-record-zero/wit-wasi.json build/native-fin-record-zero/reviewed-wit-wasi.json && LEAN_BRIDGE_SUBTYPE_PROFILES=wit-wasi node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-host-ci.sh wit-wasi && LEAN_BRIDGE_WIT_VARIANT_TEST=1 node --test --test-concurrency=1 tests/wit-variants.test.mjs tests/wit-variant-contract.test.mjs tests/wit-variant-conversions.test.mjs && LEAN_BRIDGE_WIT_COLLECTION_TEST=1 node --test --test-concurrency=1 tests/wit-collections.test.mjs tests/wit-collection-contract.test.mjs tests/wit-collection-conversions.test.mjs && LEAN_BRIDGE_WIT_GRAPH_TEST=1 node --test tests/wit-copied-graph-conversions.test.mjs && LEAN_BRIDGE_WIT_GRAPH_NATIVE_TEST=1 node --test tests/wit-copied-graph-native.test.mjs && LEAN_BRIDGE_WIT_GRAPH_INSTALLED_TEST=1 node --test tests/wit-copied-graph-package.test.mjs && LEAN_BRIDGE_WIT_GRAPH_REPRO_TEST=1 node --test tests/wit-copied-graph-package.test.mjs && LEAN_BRIDGE_WIT_HOST_TEST=1 node --test tests/wit-host-evidence.test.mjs && LEAN_BRIDGE_WIT_HOST_PACKAGES_TEST=1 node --test tests/wit-host-packages.test.mjs && LEAN_BRIDGE_WIT_GRAPH_COMPOSITION_TEST=1 LEAN_BRIDGE_WIT_MIXED_PACKAGES_TEST=1 node --test tests/wit-graph-composition.test.mjs && npm run test:type-corpus:wit-wasi && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=wit-wasi node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_WIT_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/native-callback-alias-contract.test.mjs tests/wit-structured-callable-contract.test.mjs tests/wit-structured-callable-faults.test.mjs tests/wit-structured-callables.test.mjs tests/wit-structured-aliases.test.mjs tests/wit-structured-documentation.test.mjs && npm run test:wit-recursive-generated && npm run test:wit-recursive-packages && npm run test:owned-wit-transfers && npm run test:owned-wit-borrows && npm run test:owned-wit-callback-packages\"\n",
+          "current": "          node scripts/consumer-ci.mjs record --consumer wit-wasi --output build/consumer-ci/results/wit-wasi.json --performance build/consumer-ci/performance/wit-wasi.json --test-result \"$test_result\" --package-installation \"$executed\" --real-lean-execution \"$executed\" --command \"npm run test:consumer:wasi && LEAN_BRIDGE_NATIVE_WIT_TEST=1 node --test tests/native-wit.test.mjs && LEAN_BRIDGE_WIT_CALLABLE_COMPONENT_TEST=1 node --test tests/wit-callable-contract.test.mjs && LEAN_BRIDGE_WIT_CALLABLE_TEST=1 node --test tests/wit-callables.test.mjs && LEAN_BRIDGE_WIT_COMPOUND_TEST=1 node --test tests/wit-compounds.test.mjs tests/wit-compound-contract.test.mjs tests/wit-compound-conversions.test.mjs && LEAN_BRIDGE_WIT_LIST_TEST=1 node --test tests/wit-lists.test.mjs tests/wit-list-contract.test.mjs tests/wit-list-conversions.test.mjs && LEAN_BRIDGE_WIT_ALIAS_TEST=1 node --test --test-concurrency=1 tests/wit-aliases.test.mjs tests/wit-alias-contract.test.mjs tests/wit-alias-conversions.test.mjs && LEAN_BRIDGE_WIT_FIN_TEST=1 node --test tests/wit-fin.test.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=wit-wasi node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=wit-wasi node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES=wit-wasi node --test --test-concurrency=1 tests/generic-record-arrays.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS=1 LEAN_BRIDGE_FIN_CONTAINER_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=wit-wasi node --test tests/native-fin-containers.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES=wit-wasi LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH=1 LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT=build/native-fin-container-edges/edges-wit-wasi.json node --test --test-concurrency=1 --test-name-pattern='^installed source-free native packages execute zero-bound and nested-position Fin edge cases$' tests/fin-container-edges.test.mjs && node scripts/check-fin-container-foreign-report.mjs wit-wasi build/native-fin-container-edges/edges-wit-wasi.json && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=wit-wasi node --test tests/native-fin-products.test.mjs && LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=wit-wasi node --test tests/native-fin-product-arrays.test.mjs && LEAN_BRIDGE_FIN_RECORD_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=wit-wasi node --test tests/native-fin-records.test.mjs && LEAN_BRIDGE_FIN_RECORD_ZERO_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_PROFILES=wit-wasi LEAN_BRIDGE_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/wit-wasi.json LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/reviewed-wit-wasi.json node --test --test-concurrency=1 tests/native-fin-record-zero.test.mjs && node scripts/check-fin-record-zero-report.mjs wit-wasi build/native-fin-record-zero/wit-wasi.json build/native-fin-record-zero/reviewed-wit-wasi.json && LEAN_BRIDGE_SUBTYPE_PROFILES=wit-wasi node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-host-ci.sh wit-wasi && bash scripts/run-checked-record-host-ci.sh wit-wasi && LEAN_BRIDGE_WIT_VARIANT_TEST=1 node --test --test-concurrency=1 tests/wit-variants.test.mjs tests/wit-variant-contract.test.mjs tests/wit-variant-conversions.test.mjs && LEAN_BRIDGE_WIT_COLLECTION_TEST=1 node --test --test-concurrency=1 tests/wit-collections.test.mjs tests/wit-collection-contract.test.mjs tests/wit-collection-conversions.test.mjs && LEAN_BRIDGE_WIT_GRAPH_TEST=1 node --test tests/wit-copied-graph-conversions.test.mjs && LEAN_BRIDGE_WIT_GRAPH_NATIVE_TEST=1 node --test tests/wit-copied-graph-native.test.mjs && LEAN_BRIDGE_WIT_GRAPH_INSTALLED_TEST=1 node --test tests/wit-copied-graph-package.test.mjs && LEAN_BRIDGE_WIT_GRAPH_REPRO_TEST=1 node --test tests/wit-copied-graph-package.test.mjs && LEAN_BRIDGE_WIT_HOST_TEST=1 node --test tests/wit-host-evidence.test.mjs && LEAN_BRIDGE_WIT_HOST_PACKAGES_TEST=1 node --test tests/wit-host-packages.test.mjs && LEAN_BRIDGE_WIT_GRAPH_COMPOSITION_TEST=1 LEAN_BRIDGE_WIT_MIXED_PACKAGES_TEST=1 node --test tests/wit-graph-composition.test.mjs && npm run test:type-corpus:wit-wasi && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=wit-wasi node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_WIT_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/native-callback-alias-contract.test.mjs tests/wit-structured-callable-contract.test.mjs tests/wit-structured-callable-faults.test.mjs tests/wit-structured-callables.test.mjs tests/wit-structured-aliases.test.mjs tests/wit-structured-documentation.test.mjs && npm run test:wit-recursive-generated && npm run test:wit-recursive-packages && npm run test:owned-wit-transfers && npm run test:owned-wit-borrows && npm run test:owned-wit-callback-packages\"\n"
+        },
+        {
+          "start": 319655,
+          "previous": "",
+          "current": "            build/checked-record-ci/wit-wasi/\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "986d6c39e6cf292c706b106f721748651e5f59f00d08f42ca05f4fed917a7756",
+      "previousSha256": "0d3fc42e3dfe1fe694939770d6c70fcfda61b2eef65c76f91987560a75095972",
+      "edits": [
+        {
+          "start": 77859,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 95054,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 111355,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 126123,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 135405,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 145030,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 168414,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 181383,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 196278,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 209062,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 222282,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 230815,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 239245,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 248262,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 256636,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 275916,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 285755,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 297890,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 316488,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 325784,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 338467,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 347722,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 357005,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 366138,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 374997,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 382384,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 390308,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 400954,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 415060,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 422158,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 432387,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 440131,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 446505,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 452668,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 458765,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 465286,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 472952,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 482246,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 493468,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 503165,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 524300,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 532865,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 543873,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 575758,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 582387,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 592646,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 613519,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 622042,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 632992,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 664510,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 673729,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 681069,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 693352,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 700212,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 709240,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 723266,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 734308,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 748356,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 759102,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 771173,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 782461,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 791044,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 797502,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 805888,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 813696,
+          "previous": "          \"sha256\": \"8237337647fbd8d0952f4641b6e1a14d544c664402440f40b20aafb89ec54dd9\"\n",
+          "current": "          \"sha256\": \"5257242cb8b940bec252b6f57e39e47fa361a32e3f410a4546d58582799ae6ca\"\n"
+        },
+        {
+          "start": 823478,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 832071,
+          "previous": "          \"sha256\": \"8237337647fbd8d0952f4641b6e1a14d544c664402440f40b20aafb89ec54dd9\"\n",
+          "current": "          \"sha256\": \"5257242cb8b940bec252b6f57e39e47fa361a32e3f410a4546d58582799ae6ca\"\n"
+        },
+        {
+          "start": 844474,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 899815,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 1011877,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 1058278,
+          "previous": "          \"sha256\": \"8237337647fbd8d0952f4641b6e1a14d544c664402440f40b20aafb89ec54dd9\"\n",
+          "current": "          \"sha256\": \"5257242cb8b940bec252b6f57e39e47fa361a32e3f410a4546d58582799ae6ca\"\n"
+        },
+        {
+          "start": 1072118,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 1075395,
+          "previous": "          \"sha256\": \"8237337647fbd8d0952f4641b6e1a14d544c664402440f40b20aafb89ec54dd9\"\n",
+          "current": "          \"sha256\": \"5257242cb8b940bec252b6f57e39e47fa361a32e3f410a4546d58582799ae6ca\"\n"
+        },
+        {
+          "start": 1079512,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 1083169,
+          "previous": "          \"sha256\": \"8237337647fbd8d0952f4641b6e1a14d544c664402440f40b20aafb89ec54dd9\"\n",
+          "current": "          \"sha256\": \"5257242cb8b940bec252b6f57e39e47fa361a32e3f410a4546d58582799ae6ca\"\n"
+        },
+        {
+          "start": 1086110,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 1088601,
+          "previous": "          \"sha256\": \"8237337647fbd8d0952f4641b6e1a14d544c664402440f40b20aafb89ec54dd9\"\n",
+          "current": "          \"sha256\": \"5257242cb8b940bec252b6f57e39e47fa361a32e3f410a4546d58582799ae6ca\"\n"
+        },
+        {
+          "start": 1093212,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 1095702,
+          "previous": "          \"sha256\": \"8237337647fbd8d0952f4641b6e1a14d544c664402440f40b20aafb89ec54dd9\"\n",
+          "current": "          \"sha256\": \"5257242cb8b940bec252b6f57e39e47fa361a32e3f410a4546d58582799ae6ca\"\n"
+        },
+        {
+          "start": 1100712,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 1102868,
+          "previous": "          \"sha256\": \"8237337647fbd8d0952f4641b6e1a14d544c664402440f40b20aafb89ec54dd9\"\n",
+          "current": "          \"sha256\": \"5257242cb8b940bec252b6f57e39e47fa361a32e3f410a4546d58582799ae6ca\"\n"
+        },
+        {
+          "start": 1107762,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 1109925,
+          "previous": "          \"sha256\": \"8237337647fbd8d0952f4641b6e1a14d544c664402440f40b20aafb89ec54dd9\"\n",
+          "current": "          \"sha256\": \"5257242cb8b940bec252b6f57e39e47fa361a32e3f410a4546d58582799ae6ca\"\n"
+        },
+        {
+          "start": 1115372,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 1118177,
+          "previous": "          \"sha256\": \"8237337647fbd8d0952f4641b6e1a14d544c664402440f40b20aafb89ec54dd9\"\n",
+          "current": "          \"sha256\": \"5257242cb8b940bec252b6f57e39e47fa361a32e3f410a4546d58582799ae6ca\"\n"
+        },
+        {
+          "start": 1127640,
+          "previous": "          \"sha256\": \"8237337647fbd8d0952f4641b6e1a14d544c664402440f40b20aafb89ec54dd9\"\n",
+          "current": "          \"sha256\": \"5257242cb8b940bec252b6f57e39e47fa361a32e3f410a4546d58582799ae6ca\"\n"
+        },
+        {
+          "start": 1137346,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 1144651,
+          "previous": "          \"sha256\": \"8237337647fbd8d0952f4641b6e1a14d544c664402440f40b20aafb89ec54dd9\"\n",
+          "current": "          \"sha256\": \"5257242cb8b940bec252b6f57e39e47fa361a32e3f410a4546d58582799ae6ca\"\n"
+        },
+        {
+          "start": 1149233,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 1151726,
+          "previous": "          \"sha256\": \"8237337647fbd8d0952f4641b6e1a14d544c664402440f40b20aafb89ec54dd9\"\n",
+          "current": "          \"sha256\": \"5257242cb8b940bec252b6f57e39e47fa361a32e3f410a4546d58582799ae6ca\"\n"
+        },
+        {
+          "start": 1157104,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 1159623,
+          "previous": "          \"sha256\": \"8237337647fbd8d0952f4641b6e1a14d544c664402440f40b20aafb89ec54dd9\"\n",
+          "current": "          \"sha256\": \"5257242cb8b940bec252b6f57e39e47fa361a32e3f410a4546d58582799ae6ca\"\n"
+        },
+        {
+          "start": 1167069,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 1170503,
+          "previous": "          \"sha256\": \"8237337647fbd8d0952f4641b6e1a14d544c664402440f40b20aafb89ec54dd9\"\n",
+          "current": "          \"sha256\": \"5257242cb8b940bec252b6f57e39e47fa361a32e3f410a4546d58582799ae6ca\"\n"
+        },
+        {
+          "start": 1177183,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 1182665,
+          "previous": "          \"sha256\": \"8237337647fbd8d0952f4641b6e1a14d544c664402440f40b20aafb89ec54dd9\"\n",
+          "current": "          \"sha256\": \"5257242cb8b940bec252b6f57e39e47fa361a32e3f410a4546d58582799ae6ca\"\n"
+        },
+        {
+          "start": 1188944,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 1206191,
+          "previous": "          \"sha256\": \"8237337647fbd8d0952f4641b6e1a14d544c664402440f40b20aafb89ec54dd9\"\n",
+          "current": "          \"sha256\": \"5257242cb8b940bec252b6f57e39e47fa361a32e3f410a4546d58582799ae6ca\"\n"
+        },
+        {
+          "start": 1221505,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 1237546,
+          "previous": "          \"sha256\": \"8237337647fbd8d0952f4641b6e1a14d544c664402440f40b20aafb89ec54dd9\"\n",
+          "current": "          \"sha256\": \"5257242cb8b940bec252b6f57e39e47fa361a32e3f410a4546d58582799ae6ca\"\n"
+        },
+        {
+          "start": 1251784,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 1270346,
+          "previous": "          \"sha256\": \"8237337647fbd8d0952f4641b6e1a14d544c664402440f40b20aafb89ec54dd9\"\n",
+          "current": "          \"sha256\": \"5257242cb8b940bec252b6f57e39e47fa361a32e3f410a4546d58582799ae6ca\"\n"
+        },
+        {
+          "start": 1284770,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 1305446,
+          "previous": "          \"sha256\": \"8237337647fbd8d0952f4641b6e1a14d544c664402440f40b20aafb89ec54dd9\"\n",
+          "current": "          \"sha256\": \"5257242cb8b940bec252b6f57e39e47fa361a32e3f410a4546d58582799ae6ca\"\n"
+        },
+        {
+          "start": 1324571,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 1336292,
+          "previous": "          \"sha256\": \"8237337647fbd8d0952f4641b6e1a14d544c664402440f40b20aafb89ec54dd9\"\n",
+          "current": "          \"sha256\": \"5257242cb8b940bec252b6f57e39e47fa361a32e3f410a4546d58582799ae6ca\"\n"
+        },
+        {
+          "start": 1351147,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 1359589,
+          "previous": "          \"sha256\": \"8237337647fbd8d0952f4641b6e1a14d544c664402440f40b20aafb89ec54dd9\"\n",
+          "current": "          \"sha256\": \"5257242cb8b940bec252b6f57e39e47fa361a32e3f410a4546d58582799ae6ca\"\n"
+        },
+        {
+          "start": 1373684,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 1381480,
+          "previous": "          \"sha256\": \"8237337647fbd8d0952f4641b6e1a14d544c664402440f40b20aafb89ec54dd9\"\n",
+          "current": "          \"sha256\": \"5257242cb8b940bec252b6f57e39e47fa361a32e3f410a4546d58582799ae6ca\"\n"
+        },
+        {
+          "start": 1393351,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 1401553,
+          "previous": "          \"sha256\": \"8237337647fbd8d0952f4641b6e1a14d544c664402440f40b20aafb89ec54dd9\"\n",
+          "current": "          \"sha256\": \"5257242cb8b940bec252b6f57e39e47fa361a32e3f410a4546d58582799ae6ca\"\n"
+        },
+        {
+          "start": 1416739,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 1421333,
+          "previous": "          \"sha256\": \"8237337647fbd8d0952f4641b6e1a14d544c664402440f40b20aafb89ec54dd9\"\n",
+          "current": "          \"sha256\": \"5257242cb8b940bec252b6f57e39e47fa361a32e3f410a4546d58582799ae6ca\"\n"
+        },
+        {
+          "start": 1428367,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 1451513,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 1951650,
+          "previous": "          \"sha256\": \"2a7430e539249299dc511754f6d32b70072668260e4615278d3e3e349ffb7b02\"\n",
+          "current": "          \"sha256\": \"fa2b701170dfadea0c3b838e2a000506bc5c2f12a8825c6ce9e2c4fb20c4e5fa\"\n"
+        },
+        {
+          "start": 3611663,
+          "previous": "          \"sha256\": \"5181aae4077cb11c6e54fb011fccb671632aa05335b9323b4aa887143057f83d\"\n",
+          "current": "          \"sha256\": \"47b610d8a6198ca5150fb2825daa6a6f717f25a920d52e481b9498f445a4ada3\"\n"
+        },
+        {
+          "start": 3624354,
+          "previous": "          \"sha256\": \"5181aae4077cb11c6e54fb011fccb671632aa05335b9323b4aa887143057f83d\"\n",
+          "current": "          \"sha256\": \"47b610d8a6198ca5150fb2825daa6a6f717f25a920d52e481b9498f445a4ada3\"\n"
+        },
+        {
+          "start": 3637462,
+          "previous": "          \"sha256\": \"5181aae4077cb11c6e54fb011fccb671632aa05335b9323b4aa887143057f83d\"\n",
+          "current": "          \"sha256\": \"47b610d8a6198ca5150fb2825daa6a6f717f25a920d52e481b9498f445a4ada3\"\n"
+        },
+        {
+          "start": 3650396,
+          "previous": "          \"sha256\": \"5181aae4077cb11c6e54fb011fccb671632aa05335b9323b4aa887143057f83d\"\n",
+          "current": "          \"sha256\": \"47b610d8a6198ca5150fb2825daa6a6f717f25a920d52e481b9498f445a4ada3\"\n"
+        },
+        {
+          "start": 3663720,
+          "previous": "          \"sha256\": \"5181aae4077cb11c6e54fb011fccb671632aa05335b9323b4aa887143057f83d\"\n",
+          "current": "          \"sha256\": \"47b610d8a6198ca5150fb2825daa6a6f717f25a920d52e481b9498f445a4ada3\"\n"
+        },
+        {
+          "start": 3676414,
+          "previous": "          \"sha256\": \"5181aae4077cb11c6e54fb011fccb671632aa05335b9323b4aa887143057f83d\"\n",
+          "current": "          \"sha256\": \"47b610d8a6198ca5150fb2825daa6a6f717f25a920d52e481b9498f445a4ada3\"\n"
+        },
+        {
+          "start": 3689525,
+          "previous": "          \"sha256\": \"5181aae4077cb11c6e54fb011fccb671632aa05335b9323b4aa887143057f83d\"\n",
+          "current": "          \"sha256\": \"47b610d8a6198ca5150fb2825daa6a6f717f25a920d52e481b9498f445a4ada3\"\n"
+        },
+        {
+          "start": 3702462,
+          "previous": "          \"sha256\": \"5181aae4077cb11c6e54fb011fccb671632aa05335b9323b4aa887143057f83d\"\n",
+          "current": "          \"sha256\": \"47b610d8a6198ca5150fb2825daa6a6f717f25a920d52e481b9498f445a4ada3\"\n"
+        },
+        {
+          "start": 3715796,
+          "previous": "          \"sha256\": \"5181aae4077cb11c6e54fb011fccb671632aa05335b9323b4aa887143057f83d\"\n",
+          "current": "          \"sha256\": \"47b610d8a6198ca5150fb2825daa6a6f717f25a920d52e481b9498f445a4ada3\"\n"
+        },
+        {
+          "start": 3731328,
+          "previous": "          \"sha256\": \"5181aae4077cb11c6e54fb011fccb671632aa05335b9323b4aa887143057f83d\"\n",
+          "current": "          \"sha256\": \"47b610d8a6198ca5150fb2825daa6a6f717f25a920d52e481b9498f445a4ada3\"\n"
+        },
+        {
+          "start": 3747235,
+          "previous": "          \"sha256\": \"5181aae4077cb11c6e54fb011fccb671632aa05335b9323b4aa887143057f83d\"\n",
+          "current": "          \"sha256\": \"47b610d8a6198ca5150fb2825daa6a6f717f25a920d52e481b9498f445a4ada3\"\n"
+        },
+        {
+          "start": 3763082,
+          "previous": "          \"sha256\": \"5181aae4077cb11c6e54fb011fccb671632aa05335b9323b4aa887143057f83d\"\n",
+          "current": "          \"sha256\": \"47b610d8a6198ca5150fb2825daa6a6f717f25a920d52e481b9498f445a4ada3\"\n"
+        },
+        {
+          "start": 3779290,
+          "previous": "          \"sha256\": \"5181aae4077cb11c6e54fb011fccb671632aa05335b9323b4aa887143057f83d\"\n",
+          "current": "          \"sha256\": \"47b610d8a6198ca5150fb2825daa6a6f717f25a920d52e481b9498f445a4ada3\"\n"
+        },
+        {
+          "start": 3797780,
+          "previous": "          \"sha256\": \"5181aae4077cb11c6e54fb011fccb671632aa05335b9323b4aa887143057f83d\"\n",
+          "current": "          \"sha256\": \"47b610d8a6198ca5150fb2825daa6a6f717f25a920d52e481b9498f445a4ada3\"\n"
+        },
+        {
+          "start": 3816647,
+          "previous": "          \"sha256\": \"5181aae4077cb11c6e54fb011fccb671632aa05335b9323b4aa887143057f83d\"\n",
+          "current": "          \"sha256\": \"47b610d8a6198ca5150fb2825daa6a6f717f25a920d52e481b9498f445a4ada3\"\n"
+        },
+        {
+          "start": 3835488,
+          "previous": "          \"sha256\": \"5181aae4077cb11c6e54fb011fccb671632aa05335b9323b4aa887143057f83d\"\n",
+          "current": "          \"sha256\": \"47b610d8a6198ca5150fb2825daa6a6f717f25a920d52e481b9498f445a4ada3\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/documentation.test.mjs",
+      "currentSha256": "5257242cb8b940bec252b6f57e39e47fa361a32e3f410a4546d58582799ae6ca",
+      "previousSha256": "8237337647fbd8d0952f4641b6e1a14d544c664402440f40b20aafb89ec54dd9",
+      "edits": [
+        {
+          "start": 1662,
+          "previous": "",
+          "current": "import { assertCheckedRecordHostWorkflow, disableCheckedRecordHostWorkflow } from \"./helpers/checked-record-host-ci-workflow.mjs\";\n"
+        },
+        {
+          "start": 34204,
+          "previous": "  assertReviewedSubtypePackageWorkflow(packageWorkflow);\n  const currentWorkflow = disableReviewedSubtypePackageWorkflow(packageWorkflow);\n",
+          "current": "  assertCheckedRecordHostWorkflow(packageWorkflow);\n  const withoutCheckedRecords = disableCheckedRecordHostWorkflow(packageWorkflow);\n  assertReviewedSubtypePackageWorkflow(withoutCheckedRecords);\n  const currentWorkflow = disableReviewedSubtypePackageWorkflow(withoutCheckedRecords);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-host-ci-report-tests.mjs",
+      "currentSha256": "af87a6bb28f73deeff92b2e01abbfb383d5076810567eb7f9e0f1c6629d41840",
+      "previousSha256": "bd97f4dfb88649bb76cbaf655a33b92fb1931314d21bb12b113c89a24694edd1",
+      "edits": [
+        {
+          "start": 792,
+          "previous": "",
+          "current": "import \"./checked-record-host-ci-workflow-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-native-promotion-history.mjs",
+      "currentSha256": "b2ad8f3df7030452749f0a28dd69949cbab167c149c0ff5f2ef1abc55be928d3",
+      "previousSha256": "d857d703f1d5562529ef1775cccd0d5e6bf80475886ed201b55934f296073d72",
+      "edits": [
+        {
+          "start": 246,
+          "previous": "",
+          "current": "import { beforeCheckedRecordHostCiSource } from \"./checked-record-host-ci-history.mjs\";\n"
+        },
+        {
+          "start": 2591,
+          "previous": "",
+          "current": "\tsource = beforeCheckedRecordHostCiSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-native-promotion-tests.mjs",
+      "currentSha256": "47b610d8a6198ca5150fb2825daa6a6f717f25a920d52e481b9498f445a4ada3",
+      "previousSha256": "5181aae4077cb11c6e54fb011fccb671632aa05335b9323b4aa887143057f83d",
+      "edits": [
+        {
+          "start": 624,
+          "previous": "",
+          "current": "import { beforeCheckedRecordHostCiSource } from \"./checked-record-host-ci-history.mjs\";\n"
+        },
+        {
+          "start": 6025,
+          "previous": "\tassert.deepEqual(JSON.parse(await readFile(\"docs/type-surface.v1.json\")), proposed);\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\";\n\tconst milestone = JSON.parse(beforeCheckedRecordHostCiSource(path, await readFile(path, \"utf8\")));\n\t// Authenticate the validators at this promotion, even after later CI integration.\n\tfor(const entry of proposed.evidence.slice(previous.evidence.length))\n\t\tfor(const file of entry.files.filter(item => !item.path.startsWith(\"docs/evidence/\")))\n\t\t{\n\t\t\tconst original = milestone.evidence.find(item => item.id === entry.id)?.files.find(item => item.path === file.path);\n\t\t\tassert.ok(original, file.path);\n\t\t\tassert.equal(sha256(beforeFinRefinementSource(file.path, await readFile(file.path), original.sha256)), original.sha256, file.path);\n\t\t\tfile.sha256 = original.sha256;\n\t\t}\n\tassert.deepEqual(milestone, proposed);\n"
+        },
+        {
+          "start": 9790,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeCheckedRecordHostCiSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "8354bbbb29586e4d65534dc39140657e2f79b566fd62e6549c155c5cf6f73685",
+      "previousSha256": "65d367290b0b6c5183fe03af44bf2c4fd1cde8e26702ac364d31f22cb3b5fff0",
+      "edits": [
+        {
+          "start": 2317,
+          "previous": "",
+          "current": "import { checkedRecordHostCiChangedPaths } from \"./checked-record-host-ci-history.mjs\";\n"
+        },
+        {
+          "start": 59232,
+          "previous": "",
+          "current": "\t, ...checkedRecordHostCiChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}

@@ -11,6 +11,7 @@ import { parseCheckedRecordHostCiArgs, assertCheckedRecordHostCiTap, assertCheck
 import { checkedRecordPythonRoot, readCheckedRecordPythonArchive } from "./checked-record-python-archive.mjs";
 import { checkedRecordRubyJvmRoot, readCheckedRecordRubyJvmArchive } from "./checked-record-ruby-jvm-archive.mjs";
 import { checkedRecordRemainingHostsRoot, readCheckedRecordRemainingHostsArchive } from "./checked-record-remaining-hosts-archive.mjs";
+import "./checked-record-host-ci-workflow-tests.mjs";
 
 const args = ["--profiles", "python", "--route", "ordinary-source", "--directory", "records", "--tap", "run.tap", "--glibc", "2.36", "--python", "3.11"];
 
