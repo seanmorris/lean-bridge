@@ -30,6 +30,7 @@ import { checkedRecordNativePromotionChangedPaths } from "./checked-record-nativ
 import { checkedRecordHostCiChangedPaths } from "./checked-record-host-ci-history.mjs";
 import { refinementCoreCiChangedPaths } from "./refinement-core-ci-history.mjs";
 import { checkedRecordPerlChangedPaths } from "./checked-record-perl-history.mjs";
+import { checkedRecordPerlInstalledChangedPaths } from "./checked-record-perl-installed-history.mjs";
 import { subtypeComponentChangedPaths } from "./subtype-component-source-history.mjs";
 import { nestedFinChangedPaths, refinementClosureChangedPaths } from "./nested-fin-source-history.mjs";
 import { nominalFinChangedPaths } from "./nominal-fin-source-history.mjs";
@@ -875,6 +876,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...checkedRecordHostCiChangedPaths
 	, ...refinementCoreCiChangedPaths
 	, ...checkedRecordPerlChangedPaths
+	, ...checkedRecordPerlInstalledChangedPaths
 ])].sort());
 
 /**

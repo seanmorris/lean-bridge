@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-perl-installed-v1",
+  "predecessorCommit": "70989c90670341d1dd2a82da0423fb3230356496",
+  "updates": [
+    {
+      "path": "tests/checked-records.test.mjs",
+      "currentSha256": "18b1bcffec4ad0e250ae1a673de75dffab498897462137f41ddc84447da910d5",
+      "previousSha256": "8b736452bdc1ba038410d762f14409afa2a43a1fd006d9f4e7ea049d53188c4a",
+      "edits": [
+        {
+          "start": 1592,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-perl-installed-source-tests.mjs\";\nimport \"./helpers/checked-record-perl-installed-tests.mjs\";\nimport \"./helpers/checked-record-perl-installed-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-perl-history-tests.mjs",
+      "currentSha256": "ecd4b87e002353109fcb18b266b4de254792ec167fb815aa8bc710aa566adc85",
+      "previousSha256": "cb6a12934442936afc4c20ae48a9af036783a3b182fcf0f2678fb6002930cced",
+      "edits": [
+        {
+          "start": 517,
+          "previous": "",
+          "current": "import { beforeCheckedRecordPerlInstalledSource } from \"./checked-record-perl-installed-history.mjs\";\n"
+        },
+        {
+          "start": 1324,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst current = beforeCheckedRecordPerlInstalledSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2691,
+          "previous": "\tconst source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst source = beforeCheckedRecordPerlInstalledSource(path, await readFile(path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-perl-history.mjs",
+      "currentSha256": "ce07fe612385585e6a8d591ab6f6196a0d02e008c2a5ed79ec9d5e631e77360b",
+      "previousSha256": "b2ce1d72ef3e53d9ccc1330c9485c916a9f73727b1b248fbceb501a105f09b38",
+      "edits": [
+        {
+          "start": 233,
+          "previous": "",
+          "current": "import { beforeCheckedRecordPerlInstalledSource } from \"./checked-record-perl-installed-history.mjs\";\n"
+        },
+        {
+          "start": 2318,
+          "previous": "",
+          "current": "\tsource = beforeCheckedRecordPerlInstalledSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "7f9a7c3f88d9937e582aab29472e28b82ee40ecbbf1fb7f878f6fdeffe94b345",
+      "previousSha256": "ecdc13ae6adca9990018f21edb78dfe0d5a6401d904cefc4e91c4f93d02760b4",
+      "edits": [
+        {
+          "start": 2569,
+          "previous": "",
+          "current": "import { checkedRecordPerlInstalledChangedPaths } from \"./checked-record-perl-installed-history.mjs\";\n"
+        },
+        {
+          "start": 59607,
+          "previous": "",
+          "current": "\t, ...checkedRecordPerlInstalledChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}

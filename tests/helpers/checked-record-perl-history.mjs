@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeCheckedRecordPerlInstalledSource } from "./checked-record-perl-installed-history.mjs";
 
 export const checkedRecordPerlHistoryPath = "docs/evidence/checked-record-perl-source-history-20261011.json";
 export const checkedRecordPerlPredecessor = "987237658a24f326ac8b023eef6bb25ea0a34d46";
@@ -54,6 +55,7 @@ export const reverseCheckedRecordPerlUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeCheckedRecordPerlSource = (path, source, expected) => {
+	source = beforeCheckedRecordPerlInstalledSource(path, source, expected);
 	if(typeof source !== "string" || !checkedRecordPerlChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

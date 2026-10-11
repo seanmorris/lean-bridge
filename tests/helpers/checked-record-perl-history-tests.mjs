@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeCheckedRecordPerlInstalledSource } from "./checked-record-perl-installed-history.mjs";
 import { beforeCheckedRecordPerlSource, checkedRecordPerlChangedPaths, checkedRecordPerlHistoryPath, checkedRecordPerlPredecessor, reverseCheckedRecordPerlUpdate } from "./checked-record-perl-history.mjs";
 
 test("Perl checked-record source history authenticates exact transitions and refuses unknown edits", async () => {
@@ -21,7 +22,7 @@ test("Perl checked-record source history authenticates exact transitions and ref
 	assert.deepEqual(history.updates.map(update => update.path), checkedRecordPerlChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = beforeCheckedRecordPerlInstalledSource(update.path, await readFile(update.path, "utf8"));
 		const previous = reverseCheckedRecordPerlUpdate(current, update);
 		assert.equal(beforeCheckedRecordPerlSource(update.path, current), previous);
 		const bytes = Buffer.from(current);
@@ -44,7 +45,7 @@ test("Perl checked-record source history authenticates exact transitions and ref
 test("Perl checked-record source changes only source pins and preserves all installed observations", async () => {
 	const history = JSON.parse(await readFile(checkedRecordPerlHistoryPath));
 	const path = "docs/type-surface.v1.json";
-	const source = await readFile(path, "utf8");
+	const source = beforeCheckedRecordPerlInstalledSource(path, await readFile(path, "utf8"));
 	const restored = beforeCheckedRecordPerlSource(path, source);
 	assert.equal(sha256(restored), "cb14e391d61e1953cc6d213a8b29bacbb629b9fa325fe57495950db9e1029e32");
 	const current = JSON.parse(source), previous = JSON.parse(restored);
