@@ -1,0 +1,16 @@
+{"event":"starting","revision":"c9d11f7ac8fd76d13bcc48f6f679eb22fd86b722","profiles":"dotnet,php-native,rust,wit-wasi","route":"ordinary-source","label":"remaining-systemphp-ordinary-r1","time":"2026-10-10T23:36:55.785Z"}
+Started 3353837 at c9d11f7ac8fd76d13bcc48f6f679eb22fd86b722; free 3013 MiB; output /app/build/vo1446-host-remaining-systemphp-ordinary-r1-c9d11f7-records
+{"code":0,"signal":null,"pid":3353837,"stoppedForDisk":false,"minimumFreeMiB":1641,"endedAt":"2026-10-10T23:41:29.742Z","tapSha256":"60428133946ef269f4c4f3e7324822920e1b8f653443b63a6676e362bfc3bb41"}
+{"event":"completed","route":"ordinary-source","label":"remaining-systemphp-ordinary-r1","result":{"code":0,"signal":null},"time":"2026-10-10T23:41:29.762Z"}
+{"event":"starting","revision":"c9d11f7ac8fd76d13bcc48f6f679eb22fd86b722","profiles":"dotnet,php-native,rust,wit-wasi","route":"reviewed-ir","label":"remaining-systemphp-reviewed-r1","time":"2026-10-10T23:41:29.762Z"}
+Started 3355416 at c9d11f7ac8fd76d13bcc48f6f679eb22fd86b722; free 3046 MiB; output /app/build/vo1446-host-remaining-systemphp-reviewed-r1-c9d11f7-records
+{"code":0,"signal":null,"pid":3355416,"stoppedForDisk":false,"minimumFreeMiB":1680,"endedAt":"2026-10-10T23:46:04.230Z","tapSha256":"b8d422e5e38423ba90cbf033d4d1e809bc0b785cf9038930341d0959ed842077"}
+{"event":"completed","route":"reviewed-ir","label":"remaining-systemphp-reviewed-r1","result":{"code":0,"signal":null},"time":"2026-10-10T23:46:04.279Z"}
+{"event":"starting","revision":"c9d11f7ac8fd76d13bcc48f6f679eb22fd86b722","profiles":"dotnet,php-native,rust,wit-wasi","route":"result-only-ordinary-source","label":"remaining-systemphp-result-ordinary-r1","time":"2026-10-10T23:46:04.279Z"}
+Started 3357048 at c9d11f7ac8fd76d13bcc48f6f679eb22fd86b722; free 2965 MiB; output /app/build/vo1446-host-remaining-systemphp-result-ordinary-r1-c9d11f7-records
+{"code":0,"signal":null,"pid":3357048,"stoppedForDisk":false,"minimumFreeMiB":1657,"endedAt":"2026-10-10T23:50:36.230Z","tapSha256":"0a2e3dd00de6eeb5fc1c66e7ec5ecd745696918e827edd714480479b4f3979e5"}
+{"event":"completed","route":"result-only-ordinary-source","label":"remaining-systemphp-result-ordinary-r1","result":{"code":0,"signal":null},"time":"2026-10-10T23:50:36.252Z"}
+{"event":"starting","revision":"c9d11f7ac8fd76d13bcc48f6f679eb22fd86b722","profiles":"dotnet,php-native,rust,wit-wasi","route":"result-only-reviewed-ir","label":"remaining-systemphp-result-reviewed-r1","time":"2026-10-10T23:50:36.252Z"}
+Started 3360782 at c9d11f7ac8fd76d13bcc48f6f679eb22fd86b722; free 2959 MiB; output /app/build/vo1446-host-remaining-systemphp-result-reviewed-r1-c9d11f7-records
+{"code":0,"signal":null,"pid":3360782,"stoppedForDisk":false,"minimumFreeMiB":1642,"endedAt":"2026-10-10T23:55:04.334Z","tapSha256":"5c09f759b8beff223f53de30b86c1b4f8ad4af17e4a04839f6bc8fc6c490eb4d"}
+{"event":"completed","route":"result-only-reviewed-ir","label":"remaining-systemphp-result-reviewed-r1","result":{"code":0,"signal":null},"time":"2026-10-10T23:55:04.354Z"}

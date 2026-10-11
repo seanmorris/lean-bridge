@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeCheckedRecordRemainingHostsArchiveSource } from "./checked-record-remaining-hosts-history.mjs";
 
 export const checkedRecordRubyJvmArchiveHistoryPath = "docs/evidence/checked-record-ruby-jvm-source-history-20261010.json";
 export const checkedRecordRubyJvmArchivePredecessor = "71ef6f081bfab86e9556545250a44bb04c420604";
@@ -54,6 +55,7 @@ export const reverseCheckedRecordRubyJvmArchiveUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeCheckedRecordRubyJvmArchiveSource = (path, source, expected) => {
+	source = beforeCheckedRecordRemainingHostsArchiveSource(path, source, expected);
 	if(typeof source !== "string" || !checkedRecordRubyJvmArchiveChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

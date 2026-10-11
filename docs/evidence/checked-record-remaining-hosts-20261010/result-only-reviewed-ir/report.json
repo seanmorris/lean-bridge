@@ -1,0 +1,1060 @@
+{
+  "builds": [
+    {
+      "archives": {
+        "archives/Checkedrecords.Api.1.0.0.nupkg": "8cd0832a11f7973526bb2d89ce5e2b7b6fef088f6e4c2e357c6b2871a3944781",
+        "archives/checkedrecords-1.0.0-wit-wasi.tar.gz": "7f8e7412148fc1bb897c65a1607b2b7bc6d215fbd665266e3ecdad668fdfd4ac",
+        "archives/checkedrecords-1.0.0.crate": "a4297a088270aad1fbdcf1c75db0434c62f996d0035a8bca31b80d4483eb55ba",
+        "archives/example-checkedrecords-1.0.0-linux-x86_64.zip": "92708269342b49b62c84364cfa33f1d9f88d4de8e26c04a5d667ce6ef8975059"
+      },
+      "bindingIrSha256": "9f24770f8aa01b640040774f1945faa64dd95b2e4d4cd65dae9d25cb6df4f951",
+      "modelSha256": "903ead6942479791d14296316f71b162c0e81da8b7c484a3a2de9721d87710a2",
+      "receiptSha256": "f0e307784e38a43c7ecf01d0144c51add1ebc5b5e34bc8a72218ab1c47441d61"
+    },
+    {
+      "archives": {
+        "archives/Checkedrecords.Api.1.0.0.nupkg": "8cd0832a11f7973526bb2d89ce5e2b7b6fef088f6e4c2e357c6b2871a3944781",
+        "archives/checkedrecords-1.0.0-wit-wasi.tar.gz": "7f8e7412148fc1bb897c65a1607b2b7bc6d215fbd665266e3ecdad668fdfd4ac",
+        "archives/checkedrecords-1.0.0.crate": "a4297a088270aad1fbdcf1c75db0434c62f996d0035a8bca31b80d4483eb55ba",
+        "archives/example-checkedrecords-1.0.0-linux-x86_64.zip": "92708269342b49b62c84364cfa33f1d9f88d4de8e26c04a5d667ce6ef8975059"
+      },
+      "bindingIrSha256": "9f24770f8aa01b640040774f1945faa64dd95b2e4d4cd65dae9d25cb6df4f951",
+      "modelSha256": "903ead6942479791d14296316f71b162c0e81da8b7c484a3a2de9721d87710a2",
+      "receiptSha256": "f0e307784e38a43c7ecf01d0144c51add1ebc5b5e34bc8a72218ab1c47441d61"
+    }
+  ],
+  "profiles": [
+    "dotnet",
+    "php-native",
+    "rust",
+    "wit-wasi"
+  ],
+  "reports": [
+    {
+      "archives": {
+        "archives/Checkedrecords.Api.1.0.0.nupkg": "8cd0832a11f7973526bb2d89ce5e2b7b6fef088f6e4c2e357c6b2871a3944781",
+        "archives/checkedrecords-1.0.0-wit-wasi.tar.gz": "7f8e7412148fc1bb897c65a1607b2b7bc6d215fbd665266e3ecdad668fdfd4ac",
+        "archives/checkedrecords-1.0.0.crate": "a4297a088270aad1fbdcf1c75db0434c62f996d0035a8bca31b80d4483eb55ba",
+        "archives/example-checkedrecords-1.0.0-linux-x86_64.zip": "92708269342b49b62c84364cfa33f1d9f88d4de8e26c04a5d667ce6ef8975059"
+      },
+      "bindingIrSha256": "9f24770f8aa01b640040774f1945faa64dd95b2e4d4cd65dae9d25cb6df4f951",
+      "checks": 1002,
+      "compilerFreePath": true,
+      "compilerFreeReplay": true,
+      "consumerSha256": "5e81bf700a8f6c4d9789b676dcba9d5b287423dc3e48bc9f4d6eabbb85d2a5c3",
+      "dispatch": {
+        "observed": false,
+        "reason": "No entry counters in this installed host acceptance"
+      },
+      "dotnetEnvironment": {
+        "archiveName": "Checkedrecords.Api.1.0.0.nupkg",
+        "buildInputs": {
+          "Consumer.csproj.nuget.dgspec.json": {
+            "bytes": 2269,
+            "sha256": "47976e4f6110c6190d4326c5d6cc3b490d798c576bf8fef2e16f2c8dfa9e1918"
+          },
+          "Consumer.csproj.nuget.g.props": {
+            "bytes": 1237,
+            "sha256": "f8c62d1cb10c62f15656d0c35ebd4c467aee5b38acbdba5dbd18fea2d2e3133b"
+          },
+          "Consumer.csproj.nuget.g.targets": {
+            "bytes": 149,
+            "sha256": "b14461e0cb1be3f77fcf9fe2fdd62889325ca92523d0f606980ed59eb5c4aa1c"
+          },
+          "project.assets.json": {
+            "bytes": 5085,
+            "sha256": "13dbee14ee9625a9aee7cf3e5491b89a5bc79b9242a1307fcd5f84c6b4ee7571"
+          },
+          "project.nuget.cache": {
+            "bytes": 356,
+            "sha256": "27f61659842653b6dbc9d5efd2877ddf8ef535e2c1ebad84a07f1142869edf91"
+          }
+        },
+        "cacheFiles": {
+          "checkedrecords.api/1.0.0/.nupkg.metadata": {
+            "bytes": 208,
+            "sha256": "7675455d205dee55cabad80eb49d8769c0d0c3a47b9b0a0cdadc3482bea7d9e5"
+          },
+          "checkedrecords.api/1.0.0/README.md": {
+            "bytes": 3513,
+            "sha256": "76e974ed414dd74697a9bbe0f3130328dcca90b9a955af0da0b29b54d601480f"
+          },
+          "checkedrecords.api/1.0.0/checkedrecords.api.1.0.0.nupkg": {
+            "bytes": 51361856,
+            "sha256": "8cd0832a11f7973526bb2d89ce5e2b7b6fef088f6e4c2e357c6b2871a3944781"
+          },
+          "checkedrecords.api/1.0.0/checkedrecords.api.1.0.0.nupkg.sha512": {
+            "bytes": 88,
+            "sha256": "75377eb8be0b25dda6f6d8cad6ca77771dd74ca81e2d640c0ee7d1d0744d2963"
+          },
+          "checkedrecords.api/1.0.0/checkedrecords.api.nuspec": {
+            "bytes": 476,
+            "sha256": "7987b1d59cba99b1aeccd551b07cdb3a1306253ad37a790989d5803fa53ed4a5"
+          },
+          "checkedrecords.api/1.0.0/lean-bridge/component/allocation-guard.h": {
+            "bytes": 1309,
+            "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+          },
+          "checkedrecords.api/1.0.0/lean-bridge/component/artifacts.json": {
+            "bytes": 1528,
+            "sha256": "eda03a9c7b1cca98b2705c13694aba9a482e564c845e4934ba175cc02d827af2"
+          },
+          "checkedrecords.api/1.0.0/lean-bridge/component/binding-ir.json": {
+            "bytes": 3706,
+            "sha256": "ff6ccf32fcfd864f1cd5925365c2c477fca67003c2f44814a0a1f892005506ea"
+          },
+          "checkedrecords.api/1.0.0/lean-bridge/component/component.h": {
+            "bytes": 439,
+            "sha256": "fa42693606b08c9c5e89e44c55dba2f53866d00864779c4b5ddcf6e2f7f28d18"
+          },
+          "checkedrecords.api/1.0.0/lean-bridge/component/generated.lean": {
+            "bytes": 1316,
+            "sha256": "906ccb2d3088bc08658566c42c66def4498cbea742bb583e5189c003496de317"
+          },
+          "checkedrecords.api/1.0.0/lean-bridge/component/metadata.json": {
+            "bytes": 17670,
+            "sha256": "e9f30f71ff058e32128d57c37bbc8dd214f14c9861d2e0af46281530922c71b0"
+          },
+          "checkedrecords.api/1.0.0/lean-bridge/component/model.json": {
+            "bytes": 15809,
+            "sha256": "903ead6942479791d14296316f71b162c0e81da8b7c484a3a2de9721d87710a2"
+          },
+          "checkedrecords.api/1.0.0/lean-bridge/component/native-component.json": {
+            "bytes": 7561,
+            "sha256": "654d577cee8e44a7d0d9fc604388a5f2950bbc97aaa63aecd2b14d7e6d8cd4ed"
+          },
+          "checkedrecords.api/1.0.0/lean-bridge/dotnet/binding-manifest.json": {
+            "bytes": 1226,
+            "sha256": "056915d4f5b57637d1767a1a515a7d0a11cd7cdd4102de124f5d70a4da5f3a49"
+          },
+          "checkedrecords.api/1.0.0/lean-bridge/dotnet/global.json": {
+            "bytes": 104,
+            "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+          },
+          "checkedrecords.api/1.0.0/lean-bridge/dotnet/src/LeanBridge.Checkedrecords/Api.cs": {
+            "bytes": 1295,
+            "sha256": "34278bd5bf1e2ab6479f2074a9c30429e53f75b41db49faab6978b8591c56207"
+          },
+          "checkedrecords.api/1.0.0/lean-bridge/dotnet/src/LeanBridge.Checkedrecords/LeanBridge.Checkedrecords.csproj": {
+            "bytes": 610,
+            "sha256": "b707639f2861db4e5954cd7846773b098c039295c9bcc94909423759f47c0c85"
+          },
+          "checkedrecords.api/1.0.0/lean-bridge/dotnet/src/LeanBridge.Checkedrecords/Runtime.cs": {
+            "bytes": 17002,
+            "sha256": "c742118ef1f903730050fe249f6fee3b652a93fa437c563898f210ec2b652c09"
+          },
+          "checkedrecords.api/1.0.0/lean-bridge/licenses/Lean-LICENSE": {
+            "bytes": 9160,
+            "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+          },
+          "checkedrecords.api/1.0.0/lean-bridge/licenses/Lean-LICENSES": {
+            "bytes": 81854,
+            "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+          },
+          "checkedrecords.api/1.0.0/lean-bridge/licenses/LeanBridge-LICENSE": {
+            "bytes": 1093,
+            "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+          },
+          "checkedrecords.api/1.0.0/lean-bridge/licenses/source-notices.json": {
+            "bytes": 2384,
+            "sha256": "d192fc7f79bf6a98c6d62fbdee10162817b5124b3be1746041605268ce7062dc"
+          },
+          "checkedrecords.api/1.0.0/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+            "bytes": 1093,
+            "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+          },
+          "checkedrecords.api/1.0.0/lean-bridge/native-c-adapter.json": {
+            "bytes": 1375,
+            "sha256": "ad7626cb4b029bee34ba40ec540b6241126f05b153fb8d848fb15f77f5f46aed"
+          },
+          "checkedrecords.api/1.0.0/lean-bridge/native-dotnet.json": {
+            "bytes": 2476,
+            "sha256": "328d8894267e6fe4de9792dfd99dd72fd27a348afc6f75c75f29cb469afc6d3a"
+          },
+          "checkedrecords.api/1.0.0/lean-bridge/package-receipt.json": {
+            "bytes": 12127,
+            "sha256": "29c5284c125f4e9f8af9138c8aca9a11237d5597a02f8ef92b66968db7daa881"
+          },
+          "checkedrecords.api/1.0.0/lean-bridge/runtime.json": {
+            "bytes": 1466,
+            "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+          },
+          "checkedrecords.api/1.0.0/lib/net8.0/LeanBridge.Checkedrecords.dll": {
+            "bytes": 18432,
+            "sha256": "ac2142e7b3e5170443f311582d64b6750e2e236f5994d249b1df0d3699faf510"
+          },
+          "checkedrecords.api/1.0.0/lib/net8.0/LeanBridge.Checkedrecords.xml": {
+            "bytes": 1121,
+            "sha256": "5bdfb20f60edf6b3247e75e7281c9630353a91f5738eda15031898c1d60c46a7"
+          },
+          "checkedrecords.api/1.0.0/runtimes/linux-x64/native/libcheckedrecords.so": {
+            "bytes": 21136,
+            "sha256": "7166f708f640b1d4b2517182f642b206953bf4dee9d38ac4e63cc8e0dab5c8f0"
+          },
+          "checkedrecords.api/1.0.0/runtimes/linux-x64/native/libcomponent_d3803aad486f3d2e4a02.so": {
+            "bytes": 36936,
+            "sha256": "829ac10b0035ddbb640abc91d4e3679c83efdb1b64275fb551fd0baacff99844"
+          },
+          "checkedrecords.api/1.0.0/runtimes/linux-x64/native/liblean_bridge_native.so": {
+            "bytes": 21464,
+            "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+          },
+          "checkedrecords.api/1.0.0/runtimes/linux-x64/native/libleanshared.so": {
+            "bytes": 158401256,
+            "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+          }
+        },
+        "command": "/app/.toolchains/dotnet/dotnet",
+        "inputs": {
+          "Consumer.csproj": {
+            "bytes": 508,
+            "sha256": "b40b7aae5d6bb2336024a33a0756a8a0d6d6023622ba0a6e2200792fc071dd87"
+          },
+          "NuGet.Config": {
+            "bytes": 163,
+            "sha256": "e5dfa74aa48869dd2bafb18e20e440493a866c00eeb4710769f3422d0e6cba25"
+          },
+          "consumer.cs": {
+            "bytes": 869,
+            "sha256": "5e81bf700a8f6c4d9789b676dcba9d5b287423dc3e48bc9f4d6eabbb85d2a5c3"
+          },
+          "feed/Checkedrecords.Api.1.0.0.nupkg": {
+            "bytes": 51361856,
+            "sha256": "8cd0832a11f7973526bb2d89ce5e2b7b6fef088f6e4c2e357c6b2871a3944781"
+          },
+          "global.json": {
+            "bytes": 104,
+            "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+          }
+        },
+        "interpreter": {
+          "bytes": 68424,
+          "sha256": "c61ff7f8665688b95ad0f34e780daaa67b978d26115b82797c07ea6044c566ed"
+        },
+        "outputs": {
+          "Consumer.deps.json": {
+            "bytes": 1772,
+            "sha256": "43bd4f3b426f68bfc41b18e97149a792bc158f971ae9548e9a3745714b3404a7"
+          },
+          "Consumer.dll": {
+            "bytes": 5632,
+            "sha256": "ece43a8c2b44b4746b423b835ad4de467c7c77b6305a3d9f3ee27092518182b1"
+          },
+          "Consumer.pdb": {
+            "bytes": 10736,
+            "sha256": "763913356b79c747a5037488e53ed79238158f5693a5f2ebfde7b2786eb40b03"
+          },
+          "Consumer.runtimeconfig.json": {
+            "bytes": 257,
+            "sha256": "088bcc1a867d80d3923a812855f7ae9297fc8ac3d844cf9a83510bd8d1352af8"
+          },
+          "LeanBridge.Checkedrecords.dll": {
+            "bytes": 18432,
+            "sha256": "ac2142e7b3e5170443f311582d64b6750e2e236f5994d249b1df0d3699faf510"
+          },
+          "runtimes/linux-x64/native/libcheckedrecords.so": {
+            "bytes": 21136,
+            "sha256": "7166f708f640b1d4b2517182f642b206953bf4dee9d38ac4e63cc8e0dab5c8f0"
+          },
+          "runtimes/linux-x64/native/libcomponent_d3803aad486f3d2e4a02.so": {
+            "bytes": 36936,
+            "sha256": "829ac10b0035ddbb640abc91d4e3679c83efdb1b64275fb551fd0baacff99844"
+          },
+          "runtimes/linux-x64/native/liblean_bridge_native.so": {
+            "bytes": 21464,
+            "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+          },
+          "runtimes/linux-x64/native/libleanshared.so": {
+            "bytes": 158401256,
+            "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+          }
+        },
+        "packageDirectory": "checkedrecords.api/1.0.0",
+        "packageFileSetSha256": "018d61c0666a14e6f0e0daa75f8960704b9713f9701d4fefb12c9fdcda0deeaf",
+        "receiptBytes": "{\n  \"assembly\": \"LeanBridge.Checkedrecords\",\n  \"bindingIrSha256\": \"9f24770f8aa01b640040774f1945faa64dd95b2e4d4cd65dae9d25cb6df4f951\",\n  \"compiledProjectionSha256\": \"328d8894267e6fe4de9792dfd99dd72fd27a348afc6f75c75f29cb469afc6d3a\",\n  \"component\": {\n    \"id\": \"checkedrecords@1.0.0\",\n    \"name\": \"checkedrecords\",\n    \"version\": \"1.0.0\"\n  },\n  \"ecosystem\": \"nuget\",\n  \"files\": {\n    \"Checkedrecords.Api.nuspec\": {\n      \"bytes\": 476,\n      \"sha256\": \"7987b1d59cba99b1aeccd551b07cdb3a1306253ad37a790989d5803fa53ed4a5\"\n    },\n    \"README.md\": {\n      \"bytes\": 3513,\n      \"sha256\": \"76e974ed414dd74697a9bbe0f3130328dcca90b9a955af0da0b29b54d601480f\"\n    },\n    \"[Content_Types].xml\": {\n      \"bytes\": 939,\n      \"sha256\": \"f40a2ae0edf63af7046ff54e97e247dd6b2cf07e5d650a8b6d9c51370378b42b\"\n    },\n    \"_rels/.rels\": {\n      \"bytes\": 262,\n      \"sha256\": \"bc3c871bbc579d2e0cfb3eae677ef5f369522072ea66c281e9d32c1cd0ee0936\"\n    },\n    \"lean-bridge/component/allocation-guard.h\": {\n      \"bytes\": 1309,\n      \"sha256\": \"f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83\"\n    },\n    \"lean-bridge/component/artifacts.json\": {\n      \"bytes\": 1528,\n      \"sha256\": \"eda03a9c7b1cca98b2705c13694aba9a482e564c845e4934ba175cc02d827af2\"\n    },\n    \"lean-bridge/component/binding-ir.json\": {\n      \"bytes\": 3706,\n      \"sha256\": \"ff6ccf32fcfd864f1cd5925365c2c477fca67003c2f44814a0a1f892005506ea\"\n    },\n    \"lean-bridge/component/component.h\": {\n      \"bytes\": 439,\n      \"sha256\": \"fa42693606b08c9c5e89e44c55dba2f53866d00864779c4b5ddcf6e2f7f28d18\"\n    },\n    \"lean-bridge/component/generated.lean\": {\n      \"bytes\": 1316,\n      \"sha256\": \"906ccb2d3088bc08658566c42c66def4498cbea742bb583e5189c003496de317\"\n    },\n    \"lean-bridge/component/metadata.json\": {\n      \"bytes\": 17670,\n      \"sha256\": \"e9f30f71ff058e32128d57c37bbc8dd214f14c9861d2e0af46281530922c71b0\"\n    },\n    \"lean-bridge/component/model.json\": {\n      \"bytes\": 15809,\n      \"sha256\": \"903ead6942479791d14296316f71b162c0e81da8b7c484a3a2de9721d87710a2\"\n    },\n    \"lean-bridge/component/native-component.json\": {\n      \"bytes\": 7561,\n      \"sha256\": \"654d577cee8e44a7d0d9fc604388a5f2950bbc97aaa63aecd2b14d7e6d8cd4ed\"\n    },\n    \"lean-bridge/dotnet/binding-manifest.json\": {\n      \"bytes\": 1226,\n      \"sha256\": \"056915d4f5b57637d1767a1a515a7d0a11cd7cdd4102de124f5d70a4da5f3a49\"\n    },\n    \"lean-bridge/dotnet/global.json\": {\n      \"bytes\": 104,\n      \"sha256\": \"d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc\"\n    },\n    \"lean-bridge/dotnet/src/LeanBridge.Checkedrecords/Api.cs\": {\n      \"bytes\": 1295,\n      \"sha256\": \"34278bd5bf1e2ab6479f2074a9c30429e53f75b41db49faab6978b8591c56207\"\n    },\n    \"lean-bridge/dotnet/src/LeanBridge.Checkedrecords/LeanBridge.Checkedrecords.csproj\": {\n      \"bytes\": 610,\n      \"sha256\": \"b707639f2861db4e5954cd7846773b098c039295c9bcc94909423759f47c0c85\"\n    },\n    \"lean-bridge/dotnet/src/LeanBridge.Checkedrecords/Runtime.cs\": {\n      \"bytes\": 17002,\n      \"sha256\": \"c742118ef1f903730050fe249f6fee3b652a93fa437c563898f210ec2b652c09\"\n    },\n    \"lean-bridge/licenses/Lean-LICENSE\": {\n      \"bytes\": 9160,\n      \"sha256\": \"8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e\"\n    },\n    \"lean-bridge/licenses/Lean-LICENSES\": {\n      \"bytes\": 81854,\n      \"sha256\": \"00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce\"\n    },\n    \"lean-bridge/licenses/LeanBridge-LICENSE\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"lean-bridge/licenses/source-notices.json\": {\n      \"bytes\": 2384,\n      \"sha256\": \"d192fc7f79bf6a98c6d62fbdee10162817b5124b3be1746041605268ce7062dc\"\n    },\n    \"lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"lean-bridge/native-c-adapter.json\": {\n      \"bytes\": 1375,\n      \"sha256\": \"ad7626cb4b029bee34ba40ec540b6241126f05b153fb8d848fb15f77f5f46aed\"\n    },\n    \"lean-bridge/native-dotnet.json\": {\n      \"bytes\": 2476,\n      \"sha256\": \"328d8894267e6fe4de9792dfd99dd72fd27a348afc6f75c75f29cb469afc6d3a\"\n    },\n    \"lean-bridge/runtime.json\": {\n      \"bytes\": 1466,\n      \"sha256\": \"137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf\"\n    },\n    \"lib/net8.0/LeanBridge.Checkedrecords.dll\": {\n      \"bytes\": 18432,\n      \"sha256\": \"ac2142e7b3e5170443f311582d64b6750e2e236f5994d249b1df0d3699faf510\"\n    },\n    \"lib/net8.0/LeanBridge.Checkedrecords.xml\": {\n      \"bytes\": 1121,\n      \"sha256\": \"5bdfb20f60edf6b3247e75e7281c9630353a91f5738eda15031898c1d60c46a7\"\n    },\n    \"runtimes/linux-x64/native/libcheckedrecords.so\": {\n      \"bytes\": 21136,\n      \"sha256\": \"7166f708f640b1d4b2517182f642b206953bf4dee9d38ac4e63cc8e0dab5c8f0\"\n    },\n    \"runtimes/linux-x64/native/libcomponent_d3803aad486f3d2e4a02.so\": {\n      \"bytes\": 36936,\n      \"sha256\": \"829ac10b0035ddbb640abc91d4e3679c83efdb1b64275fb551fd0baacff99844\"\n    },\n    \"runtimes/linux-x64/native/liblean_bridge_native.so\": {\n      \"bytes\": 21464,\n      \"sha256\": \"25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7\"\n    },\n    \"runtimes/linux-x64/native/libleanshared.so\": {\n      \"bytes\": 158401256,\n      \"sha256\": \"d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4\"\n    }\n  },\n  \"glibcMinimumVersion\": \"2.36\",\n  \"kind\": \"lean-bridge-ordinary-nuget-package\",\n  \"name\": \"Checkedrecords.Api\",\n  \"namespace\": \"LeanBridge.Checkedrecords\",\n  \"runtimeIdentity\": \"137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf\",\n  \"schemaVersion\": 1,\n  \"sourceIdentity\": {\n    \"exportConfigurationSha256\": \"1da3c677daaafc124bf46e6b75f501b900bf78248e2c37898af7dcc7846e7a0f\",\n    \"exportConfigurationSource\": \"{\\n  \\\"modules\\\": [\\n    \\\"CheckedRecords\\\"\\n  ],\\n  \\\"schemaVersion\\\": 1,\\n  \\\"targets\\\": {\\n    \\\"cargo\\\": {\\n      \\\"name\\\": \\\"checkedrecords\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    },\\n    \\\"nuget\\\": {\\n      \\\"name\\\": \\\"Checkedrecords.Api\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    },\\n    \\\"php-native\\\": {\\n      \\\"name\\\": \\\"example/checkedrecords\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    },\\n    \\\"wit-wasi\\\": {\\n      \\\"name\\\": \\\"checkedrecords\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    }\\n  }\\n}\\n\",\n    \"extractorSha256\": \"8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f\",\n    \"leanCommit\": \"f3b06c705e6c85f5314019d5d3baab0fec5b580c\",\n    \"leanCompilerSha256\": \"e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550\",\n    \"leanVersion\": \"4.32.2\",\n    \"modules\": [\n      {\n        \"interface\": {\n          \"bytes\": 212984,\n          \"interfaceSha256\": \"9266352966cf6c2be6c82d2622ffe556a121d9da74857956721013397e518e9f\",\n          \"sha256\": \"36a44a802ba099c216a0fb4c7806e5875c8c2830df4505c0a75d99f857231e6e\"\n        },\n        \"module\": \"CheckedRecords\",\n        \"source\": {\n          \"bytes\": 2396,\n          \"path\": \"CheckedRecords.lean\",\n          \"sha256\": \"368d74e1c5abd242ec96ac8bc9cf9648377ccbe8b0f8608ab46efe14cfec34b7\"\n        }\n      }\n    ],\n    \"request\": {\n      \"arities\": [],\n      \"exportModules\": [\n        \"CheckedRecords\"\n      ],\n      \"exports\": [\n        \"CheckedRecords.repeated\"\n      ],\n      \"metadata\": {\n        \"invocationIdentitySha256\": \"fa7507870f6279369ae3b873ba958395a2f9fbae754f4131e814293f72298c3a\",\n        \"modules\": [\n          {\n            \"interfaceSha256\": \"9266352966cf6c2be6c82d2622ffe556a121d9da74857956721013397e518e9f\",\n            \"name\": \"CheckedRecords\",\n            \"sourcePath\": \"CheckedRecords.lean\",\n            \"sourceSha256\": \"368d74e1c5abd242ec96ac8bc9cf9648377ccbe8b0f8608ab46efe14cfec34b7\"\n          }\n        ],\n        \"toolchain\": \"leanprover/lean4:v4.32.2\"\n      },\n      \"modules\": [\n        \"CheckedRecords\"\n      ],\n      \"profile\": \"native-library-v1\",\n      \"resources\": []\n    },\n    \"reviewedBindingIr\": {\n      \"path\": \"api.binding-ir.json\",\n      \"schemaVersion\": 1,\n      \"semanticSha256\": \"2c63d8386d6d7c063182ecb9652889a1f6596e5091ae3e21a876ec122cca0b02\",\n      \"source\": \"{\\n  \\\"assurance\\\": [],\\n  \\\"capabilities\\\": [],\\n  \\\"component\\\": {\\n    \\\"id\\\": \\\"checkedrecords@1.0.0\\\",\\n    \\\"name\\\": \\\"checkedrecords\\\",\\n    \\\"version\\\": \\\"1.0.0\\\"\\n  },\\n  \\\"declarations\\\": [\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:CheckedRecords.repeated\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"repeated\\\",\\n      \\\"overloadKey\\\": \\\"CheckedRecords.repeated\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"kind\\\": \\\"primitive\\\",\\n            \\\"name\\\": \\\"nat\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"id\\\": \\\"lean:CheckedRecords.Triple\\\",\\n          \\\"kind\\\": \\\"named\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"CheckedRecords.repeated\\\",\\n        \\\"extensions\\\": {},\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    }\\n  ],\\n  \\\"documentation\\\": {\\n    \\\"details\\\": \\\"\\\",\\n    \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n  },\\n  \\\"errors\\\": [],\\n  \\\"producers\\\": [\\n    {\\n      \\\"adapter\\\": \\\"independent-corpus-contract\\\",\\n      \\\"adapterVersion\\\": 1,\\n      \\\"extensions\\\": {},\\n      \\\"id\\\": \\\"corpusReview\\\",\\n      \\\"tool\\\": \\\"Corpus contract review\\\",\\n      \\\"toolVersion\\\": \\\"1\\\"\\n    }\\n  ],\\n  \\\"schemaVersion\\\": 3,\\n  \\\"types\\\": [\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"callable\\\": null,\\n      \\\"cases\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"fields\\\": [\\n        {\\n          \\\"documentation\\\": {\\n            \\\"details\\\": \\\"\\\",\\n            \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n          },\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"data\\\",\\n          \\\"type\\\": {\\n            \\\"arguments\\\": [\\n              {\\n                \\\"kind\\\": \\\"primitive\\\",\\n                \\\"name\\\": \\\"nat\\\"\\n              }\\n            ],\\n            \\\"constructor\\\": \\\"array\\\",\\n            \\\"kind\\\": \\\"apply\\\"\\n          }\\n        }\\n      ],\\n      \\\"host\\\": null,\\n      \\\"id\\\": \\\"lean:CheckedRecords.Triple\\\",\\n      \\\"kind\\\": \\\"record\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"Triple\\\",\\n      \\\"representation\\\": \\\"copied\\\",\\n      \\\"resource\\\": null,\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"CheckedRecords.Triple\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/erased-proofs\\\": {\\n            \\\"fields\\\": [\\n              \\\"sized\\\"\\n            ]\\n          },\\n          \\\"lean-lang.org/instantiation\\\": {\\n            \\\"arguments\\\": [\\n              {\\n                \\\"kind\\\": \\\"value\\\",\\n                \\\"type\\\": {\\n                  \\\"kind\\\": \\\"primitive\\\",\\n                  \\\"name\\\": \\\"nat\\\"\\n                },\\n                \\\"value\\\": \\\"3\\\"\\n              }\\n            ],\\n            \\\"structure\\\": \\\"CheckedRecords.Sized\\\"\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"target\\\": null,\\n      \\\"typeParameters\\\": []\\n    }\\n  ]\\n}\\n\",\n      \"sourceSha256\": \"7c77685d3a2b92567e69f3cc3de381caf3819d9414adf37fc43d13dbfe0eb8db\"\n    },\n    \"sourceNoticesSha256\": \"d192fc7f79bf6a98c6d62fbdee10162817b5124b3be1746041605268ce7062dc\",\n    \"sourceTreeSha256\": \"02f0dfb0643756e9c1bc73018850b37e727eeb091513b2e13748fe1194588a22\"\n  },\n  \"version\": \"1.0.0\"\n}\n",
+        "root": "/tmp/lean-bridge-checked-record-hosts-t544eK/consumer/dotnet"
+      },
+      "expectedBindingIrSha256": "2c63d8386d6d7c063182ecb9652889a1f6596e5091ae3e21a876ec122cca0b02",
+      "modelSha256": "903ead6942479791d14296316f71b162c0e81da8b7c484a3a2de9721d87710a2",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51361856,
+              "path": "archives/Checkedrecords.Api.1.0.0.nupkg",
+              "sha256": "8cd0832a11f7973526bb2d89ce5e2b7b6fef088f6e4c2e357c6b2871a3944781"
+            }
+          ],
+          "ecosystem": "nuget",
+          "name": "Checkedrecords.Api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "nuget",
+          "version": "1.0.0"
+        }
+      ],
+      "profile": "dotnet",
+      "receiptSha256": "f0e307784e38a43c7ecf01d0144c51add1ebc5b5e34bc8a72218ab1c47441d61",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "repeatedRuns": 1,
+      "resultOnly": true,
+      "reviewed": true,
+      "route": "result-only-reviewed-ir",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceUnchangedAfterReplay": true
+    },
+    {
+      "archives": {
+        "archives/Checkedrecords.Api.1.0.0.nupkg": "8cd0832a11f7973526bb2d89ce5e2b7b6fef088f6e4c2e357c6b2871a3944781",
+        "archives/checkedrecords-1.0.0-wit-wasi.tar.gz": "7f8e7412148fc1bb897c65a1607b2b7bc6d215fbd665266e3ecdad668fdfd4ac",
+        "archives/checkedrecords-1.0.0.crate": "a4297a088270aad1fbdcf1c75db0434c62f996d0035a8bca31b80d4483eb55ba",
+        "archives/example-checkedrecords-1.0.0-linux-x86_64.zip": "92708269342b49b62c84364cfa33f1d9f88d4de8e26c04a5d667ce6ef8975059"
+      },
+      "bindingIrSha256": "9f24770f8aa01b640040774f1945faa64dd95b2e4d4cd65dae9d25cb6df4f951",
+      "checks": 1002,
+      "compilerFreePath": true,
+      "compilerFreeReplay": true,
+      "consumerSha256": "2c3c5d0650acca82a971bbb24428f3a61d423e581d3a3e35c93a54e8a0d183dc",
+      "dispatch": {
+        "observed": false,
+        "reason": "No entry counters in this installed host acceptance"
+      },
+      "expectedBindingIrSha256": "2c63d8386d6d7c063182ecb9652889a1f6596e5091ae3e21a876ec122cca0b02",
+      "modelSha256": "903ead6942479791d14296316f71b162c0e81da8b7c484a3a2de9721d87710a2",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51351346,
+              "path": "archives/example-checkedrecords-1.0.0-linux-x86_64.zip",
+              "sha256": "92708269342b49b62c84364cfa33f1d9f88d4de8e26c04a5d667ce6ef8975059"
+            }
+          ],
+          "ecosystem": "composer",
+          "name": "example/checkedrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "php-native",
+          "version": "1.0.0"
+        }
+      ],
+      "phpEnvironment": {
+        "command": "/usr/bin/php8.2",
+        "composer": "/usr/bin/composer",
+        "dependencyFiles": {
+          "LICENSE": {
+            "bytes": 1089,
+            "sha256": "d2625cc652e6ffa9f16827f1dba2d83ac12b050dc8150a38720420dbb810cae3"
+          },
+          "composer.json": {
+            "bytes": 816,
+            "sha256": "fe93d538393d24617d615b373389d8a8970d8be18a8928d17c5a5cd9381a6522"
+          },
+          "src/BigDecimal.php": {
+            "bytes": 38820,
+            "sha256": "ccf44c9e463182dd158190fd3b27b631ea7a58968505157e2bc715b61604515c"
+          },
+          "src/BigInteger.php": {
+            "bytes": 47781,
+            "sha256": "a6d7b7824a8399ece864332672800f13be4ef57609f868dd577de2cf586bc3a1"
+          },
+          "src/BigNumber.php": {
+            "bytes": 31254,
+            "sha256": "5a2a5ad1e73835fb200bbf1f959dbd36b8785b5e4a1c7c9ef505992130c08049"
+          },
+          "src/BigRational.php": {
+            "bytes": 18121,
+            "sha256": "99d999ae1d4ccb9bbe231a2e5242f315b9483f317b8b5bd226277ced1a4ba2ab"
+          },
+          "src/Exception/DivisionByZeroException.php": {
+            "bytes": 1296,
+            "sha256": "6dad71505461e21c56db4222659891b1a4efa8bf7737290418668aa881f6c3d3"
+          },
+          "src/Exception/IntegerOverflowException.php": {
+            "bytes": 1174,
+            "sha256": "d4264eb4bc039baa7cb8a4aa62c8928c85ff947e9823532095e156d87392455b"
+          },
+          "src/Exception/InvalidArgumentException.php": {
+            "bytes": 2957,
+            "sha256": "c25c58c48379436ce704ea28cc3c5cff5f853ed5e2b439e639d198ed7bdfddf9"
+          },
+          "src/Exception/MathException.php": {
+            "bytes": 179,
+            "sha256": "34033cc2b90fa897e9e79d05a589c8e6411b9a117a80765b58013eacad0b255e"
+          },
+          "src/Exception/NegativeNumberException.php": {
+            "bytes": 1316,
+            "sha256": "2c6a1c878e96bbb06d07fcd64ce06b66e5ac56f5ba51a2ba69cdd62b1f5dfd6d"
+          },
+          "src/Exception/NoInverseException.php": {
+            "bytes": 658,
+            "sha256": "1e072b6b8802ef678cd8aed6aab4f5534e83e514c67c10cfbd457aa9e67d77d2"
+          },
+          "src/Exception/NumberFormatException.php": {
+            "bytes": 3718,
+            "sha256": "9513693ceea593b6686ca7ef9253c595c6502145382f9da9872c791b37b5a258"
+          },
+          "src/Exception/PlatformException.php": {
+            "bytes": 1283,
+            "sha256": "b2bc33189336bf6c8b3b145bd8c8397218e90588cca9ead140ef4a66d1c6be51"
+          },
+          "src/Exception/RandomSourceException.php": {
+            "bytes": 1343,
+            "sha256": "462eb152713684b4d5ac0efe2fa27f8b2fd0d877ceb3e7315516757c5640e67c"
+          },
+          "src/Exception/RoundingNecessaryException.php": {
+            "bytes": 3878,
+            "sha256": "3f9e061a0eeda28fc35d6f70cd1625c74d3002891c2d063ed2bede16155c8549"
+          },
+          "src/Internal/Calculator.php": {
+            "bytes": 20316,
+            "sha256": "a92ba12d6e6487ef8ee6cf435ede5b2d4f4d4684b7bca14aa9c133b842724655"
+          },
+          "src/Internal/Calculator/BcMathCalculator.php": {
+            "bytes": 2078,
+            "sha256": "aaf790516424d97f2257bf6fdc7eee9a95fc5440abd11d2fbc4f09ba73549b6a"
+          },
+          "src/Internal/Calculator/GmpCalculator.php": {
+            "bytes": 3668,
+            "sha256": "0351a740b49e88cf379319af9fccab8c8f437cd5d54b2d57b79c1ea72fcc0420"
+          },
+          "src/Internal/Calculator/NativeCalculator.php": {
+            "bytes": 14245,
+            "sha256": "4980f1a9b620a8de0588a018276044ed20c01293c2a0254613094e81e1cb6c1a"
+          },
+          "src/Internal/CalculatorRegistry.php": {
+            "bytes": 1887,
+            "sha256": "7047026d82935de4736cb9f2f73915a75c2e9a776c68476b72bd430cab115088"
+          },
+          "src/Internal/DecimalHelper.php": {
+            "bytes": 4779,
+            "sha256": "6884286a2dd2ebbba5d373140e2cca58d6efb8dd63b0868e517fb39eff4ad016"
+          },
+          "src/Internal/Safe.php": {
+            "bytes": 1645,
+            "sha256": "26100429b186305ee9143f0b45c36168c1a7d039099dff13f5ab1a9ca2e32ccf"
+          },
+          "src/NumberSyntax.php": {
+            "bytes": 1705,
+            "sha256": "f5ad04274721dd3bbc4572b90eb8e71fb47d052fd1ab6974e08aa013fef94b9e"
+          },
+          "src/RoundingMode.php": {
+            "bytes": 5370,
+            "sha256": "1b7e6399d071d1ee922ec6ee928ae06bfa092b6d932af5faac8fbe65ef9b258d"
+          }
+        },
+        "feedFiles": {
+          "brick-math-1.0.0.zip": {
+            "bytes": 48201,
+            "sha256": "4563893ce709e3be081c369fd9799289c2a97791b5df2113524bc85696ffefd2"
+          },
+          "brick-math/LICENSE": {
+            "bytes": 1089,
+            "sha256": "d2625cc652e6ffa9f16827f1dba2d83ac12b050dc8150a38720420dbb810cae3"
+          },
+          "brick-math/composer.json": {
+            "bytes": 816,
+            "sha256": "fe93d538393d24617d615b373389d8a8970d8be18a8928d17c5a5cd9381a6522"
+          },
+          "brick-math/src/BigDecimal.php": {
+            "bytes": 38820,
+            "sha256": "ccf44c9e463182dd158190fd3b27b631ea7a58968505157e2bc715b61604515c"
+          },
+          "brick-math/src/BigInteger.php": {
+            "bytes": 47781,
+            "sha256": "a6d7b7824a8399ece864332672800f13be4ef57609f868dd577de2cf586bc3a1"
+          },
+          "brick-math/src/BigNumber.php": {
+            "bytes": 31254,
+            "sha256": "5a2a5ad1e73835fb200bbf1f959dbd36b8785b5e4a1c7c9ef505992130c08049"
+          },
+          "brick-math/src/BigRational.php": {
+            "bytes": 18121,
+            "sha256": "99d999ae1d4ccb9bbe231a2e5242f315b9483f317b8b5bd226277ced1a4ba2ab"
+          },
+          "brick-math/src/Exception/DivisionByZeroException.php": {
+            "bytes": 1296,
+            "sha256": "6dad71505461e21c56db4222659891b1a4efa8bf7737290418668aa881f6c3d3"
+          },
+          "brick-math/src/Exception/IntegerOverflowException.php": {
+            "bytes": 1174,
+            "sha256": "d4264eb4bc039baa7cb8a4aa62c8928c85ff947e9823532095e156d87392455b"
+          },
+          "brick-math/src/Exception/InvalidArgumentException.php": {
+            "bytes": 2957,
+            "sha256": "c25c58c48379436ce704ea28cc3c5cff5f853ed5e2b439e639d198ed7bdfddf9"
+          },
+          "brick-math/src/Exception/MathException.php": {
+            "bytes": 179,
+            "sha256": "34033cc2b90fa897e9e79d05a589c8e6411b9a117a80765b58013eacad0b255e"
+          },
+          "brick-math/src/Exception/NegativeNumberException.php": {
+            "bytes": 1316,
+            "sha256": "2c6a1c878e96bbb06d07fcd64ce06b66e5ac56f5ba51a2ba69cdd62b1f5dfd6d"
+          },
+          "brick-math/src/Exception/NoInverseException.php": {
+            "bytes": 658,
+            "sha256": "1e072b6b8802ef678cd8aed6aab4f5534e83e514c67c10cfbd457aa9e67d77d2"
+          },
+          "brick-math/src/Exception/NumberFormatException.php": {
+            "bytes": 3718,
+            "sha256": "9513693ceea593b6686ca7ef9253c595c6502145382f9da9872c791b37b5a258"
+          },
+          "brick-math/src/Exception/PlatformException.php": {
+            "bytes": 1283,
+            "sha256": "b2bc33189336bf6c8b3b145bd8c8397218e90588cca9ead140ef4a66d1c6be51"
+          },
+          "brick-math/src/Exception/RandomSourceException.php": {
+            "bytes": 1343,
+            "sha256": "462eb152713684b4d5ac0efe2fa27f8b2fd0d877ceb3e7315516757c5640e67c"
+          },
+          "brick-math/src/Exception/RoundingNecessaryException.php": {
+            "bytes": 3878,
+            "sha256": "3f9e061a0eeda28fc35d6f70cd1625c74d3002891c2d063ed2bede16155c8549"
+          },
+          "brick-math/src/Internal/Calculator.php": {
+            "bytes": 20316,
+            "sha256": "a92ba12d6e6487ef8ee6cf435ede5b2d4f4d4684b7bca14aa9c133b842724655"
+          },
+          "brick-math/src/Internal/Calculator/BcMathCalculator.php": {
+            "bytes": 2078,
+            "sha256": "aaf790516424d97f2257bf6fdc7eee9a95fc5440abd11d2fbc4f09ba73549b6a"
+          },
+          "brick-math/src/Internal/Calculator/GmpCalculator.php": {
+            "bytes": 3668,
+            "sha256": "0351a740b49e88cf379319af9fccab8c8f437cd5d54b2d57b79c1ea72fcc0420"
+          },
+          "brick-math/src/Internal/Calculator/NativeCalculator.php": {
+            "bytes": 14245,
+            "sha256": "4980f1a9b620a8de0588a018276044ed20c01293c2a0254613094e81e1cb6c1a"
+          },
+          "brick-math/src/Internal/CalculatorRegistry.php": {
+            "bytes": 1887,
+            "sha256": "7047026d82935de4736cb9f2f73915a75c2e9a776c68476b72bd430cab115088"
+          },
+          "brick-math/src/Internal/DecimalHelper.php": {
+            "bytes": 4779,
+            "sha256": "6884286a2dd2ebbba5d373140e2cca58d6efb8dd63b0868e517fb39eff4ad016"
+          },
+          "brick-math/src/Internal/Safe.php": {
+            "bytes": 1645,
+            "sha256": "26100429b186305ee9143f0b45c36168c1a7d039099dff13f5ab1a9ca2e32ccf"
+          },
+          "brick-math/src/NumberSyntax.php": {
+            "bytes": 1705,
+            "sha256": "f5ad04274721dd3bbc4572b90eb8e71fb47d052fd1ab6974e08aa013fef94b9e"
+          },
+          "brick-math/src/RoundingMode.php": {
+            "bytes": 5370,
+            "sha256": "1b7e6399d071d1ee922ec6ee928ae06bfa092b6d932af5faac8fbe65ef9b258d"
+          },
+          "component.zip": {
+            "bytes": 51351346,
+            "sha256": "92708269342b49b62c84364cfa33f1d9f88d4de8e26c04a5d667ce6ef8975059"
+          }
+        },
+        "generatedFiles": {
+          "composer.lock": {
+            "bytes": 3044,
+            "sha256": "409beedc970384e0eaa074dbd2d332fe998343bb6e69aa105e2b680857a6278b"
+          },
+          "vendor/autoload.php": {
+            "bytes": 771,
+            "sha256": "a6a9e8adad465a7e82648984e7e4873b5fee00c6e1c63a8b62e4c5a151ddf012"
+          },
+          "vendor/composer/ClassLoader.php": {
+            "bytes": 16528,
+            "sha256": "42b8c5525dbc133045f47f4275f017071c82144a34acb9396d955ca10729cb2e"
+          },
+          "vendor/composer/InstalledVersions.php": {
+            "bytes": 16143,
+            "sha256": "21f4ba19e7859cb3f85b8b1680c970ee25d972546c1606dcae0e7e5f43f626f0"
+          },
+          "vendor/composer/LICENSE": {
+            "bytes": 1068,
+            "sha256": "7855ac293067aebe7e51afdd23b9dea54b8be24187dbecc9b9142581c37f596c"
+          },
+          "vendor/composer/autoload_classmap.php": {
+            "bytes": 222,
+            "sha256": "375085d0d6690301081436cd75755cb2c882f8a7f6fc385c8814a11734fc413a"
+          },
+          "vendor/composer/autoload_files.php": {
+            "bytes": 228,
+            "sha256": "c43ffbf9b13e9251a021b9732306a0a00fe7e1bb7641a676c6e7cbcc29de2036"
+          },
+          "vendor/composer/autoload_namespaces.php": {
+            "bytes": 139,
+            "sha256": "ede505407590638a435137f4e060136f1008de79fc169b3de9793423b0cea38c"
+          },
+          "vendor/composer/autoload_psr4.php": {
+            "bytes": 195,
+            "sha256": "d84c58712d49fd62ea528610fc277a36664abd37e1087cec8c1efb0af6918590"
+          },
+          "vendor/composer/autoload_real.php": {
+            "bytes": 1672,
+            "sha256": "6798be3844d6a1d71ac271539361ff1136353771645f3b9964220340f8028b82"
+          },
+          "vendor/composer/autoload_static.php": {
+            "bytes": 1212,
+            "sha256": "3257678e76e918062084aa9dd6d8730b4a168f1092063958d2685d9c4c644084"
+          },
+          "vendor/composer/installed.json": {
+            "bytes": 2821,
+            "sha256": "326a34bb7ccf92870a37aab85d87eaf930681832aab853a2acba9979ac8e4d06"
+          },
+          "vendor/composer/installed.php": {
+            "bytes": 1363,
+            "sha256": "766d7ba11d382a7d2d9d460c53b8ee007e709c9b70f154e79d06f1c8a785a9c5"
+          },
+          "vendor/composer/platform_check.php": {
+            "bytes": 925,
+            "sha256": "230c364d17607b4f0500630f1c1bcca4e08e1486748340d2ec85024f3a0b73b4"
+          }
+        },
+        "inputs": {
+          "composer.json": {
+            "bytes": 2355,
+            "sha256": "77873b4be9d10f1f3526041ab2b344375bdc37c94069db6ec9b3b5724aa03c68"
+          },
+          "consumer.php": {
+            "bytes": 1144,
+            "sha256": "2c3c5d0650acca82a971bbb24428f3a61d423e581d3a3e35c93a54e8a0d183dc"
+          },
+          "strict.php": {
+            "bytes": 1144,
+            "sha256": "842043e7c0662725d6f80ec05c5a5531a61b237f57a2fed70bcefb28669fd1bd"
+          }
+        },
+        "name": "example/checkedrecords",
+        "packageFileSetSha256": "cf1228cf2611fdbe1a41c576bbcc914e71d31ba354f459b9881064b5b5224a85",
+        "receiptBytes": "{\n  \"bindingIrSha256\": \"9f24770f8aa01b640040774f1945faa64dd95b2e4d4cd65dae9d25cb6df4f951\",\n  \"component\": {\n    \"id\": \"checkedrecords@1.0.0\",\n    \"name\": \"checkedrecords\",\n    \"version\": \"1.0.0\"\n  },\n  \"ecosystem\": \"composer\",\n  \"files\": {\n    \"README.md\": {\n      \"bytes\": 3318,\n      \"sha256\": \"b3818239282f5d56a257d5fbf769a81ca48875c6f749612e5a9d5197822ada10\"\n    },\n    \"binding-manifest.json\": {\n      \"bytes\": 1009,\n      \"sha256\": \"743f4259151ea4edc225e290abbdf651efc31ab7c0d48dbd2b99ded0fd0c3181\"\n    },\n    \"composer.json\": {\n      \"bytes\": 546,\n      \"sha256\": \"c75fbd7a20794f09d3b379bcefd95f11b8a65daeee848fc698daebd6cb80b339\"\n    },\n    \"lean-bridge/component/allocation-guard.h\": {\n      \"bytes\": 1309,\n      \"sha256\": \"f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83\"\n    },\n    \"lean-bridge/component/artifacts.json\": {\n      \"bytes\": 1528,\n      \"sha256\": \"eda03a9c7b1cca98b2705c13694aba9a482e564c845e4934ba175cc02d827af2\"\n    },\n    \"lean-bridge/component/binding-ir.json\": {\n      \"bytes\": 3706,\n      \"sha256\": \"ff6ccf32fcfd864f1cd5925365c2c477fca67003c2f44814a0a1f892005506ea\"\n    },\n    \"lean-bridge/component/component.h\": {\n      \"bytes\": 439,\n      \"sha256\": \"fa42693606b08c9c5e89e44c55dba2f53866d00864779c4b5ddcf6e2f7f28d18\"\n    },\n    \"lean-bridge/component/generated.lean\": {\n      \"bytes\": 1316,\n      \"sha256\": \"906ccb2d3088bc08658566c42c66def4498cbea742bb583e5189c003496de317\"\n    },\n    \"lean-bridge/component/metadata.json\": {\n      \"bytes\": 17670,\n      \"sha256\": \"e9f30f71ff058e32128d57c37bbc8dd214f14c9861d2e0af46281530922c71b0\"\n    },\n    \"lean-bridge/component/model.json\": {\n      \"bytes\": 15809,\n      \"sha256\": \"903ead6942479791d14296316f71b162c0e81da8b7c484a3a2de9721d87710a2\"\n    },\n    \"lean-bridge/component/native-component.json\": {\n      \"bytes\": 7561,\n      \"sha256\": \"654d577cee8e44a7d0d9fc604388a5f2950bbc97aaa63aecd2b14d7e6d8cd4ed\"\n    },\n    \"lean-bridge/include/checkedrecords.h\": {\n      \"bytes\": 2040,\n      \"sha256\": \"07f21a81627dc0f2cff85a43b1697ef28cca072aa795d5bcbeb74c41aa686586\"\n    },\n    \"lean-bridge/native-c-adapter.json\": {\n      \"bytes\": 1375,\n      \"sha256\": \"ad7626cb4b029bee34ba40ec540b6241126f05b153fb8d848fb15f77f5f46aed\"\n    },\n    \"lean-bridge/runtime.json\": {\n      \"bytes\": 1466,\n      \"sha256\": \"137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf\"\n    },\n    \"licenses/Lean-LICENSE\": {\n      \"bytes\": 9160,\n      \"sha256\": \"8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e\"\n    },\n    \"licenses/Lean-LICENSES\": {\n      \"bytes\": 81854,\n      \"sha256\": \"00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce\"\n    },\n    \"licenses/LeanBridge-LICENSE\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"licenses/source-notices.json\": {\n      \"bytes\": 2384,\n      \"sha256\": \"d192fc7f79bf6a98c6d62fbdee10162817b5124b3be1746041605268ce7062dc\"\n    },\n    \"licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"native/linux-x64/libcheckedrecords.so\": {\n      \"bytes\": 21136,\n      \"sha256\": \"7166f708f640b1d4b2517182f642b206953bf4dee9d38ac4e63cc8e0dab5c8f0\"\n    },\n    \"native/linux-x64/libcomponent_d3803aad486f3d2e4a02.so\": {\n      \"bytes\": 36936,\n      \"sha256\": \"829ac10b0035ddbb640abc91d4e3679c83efdb1b64275fb551fd0baacff99844\"\n    },\n    \"native/linux-x64/liblean_bridge_native.so\": {\n      \"bytes\": 21464,\n      \"sha256\": \"25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7\"\n    },\n    \"native/linux-x64/libleanshared.so\": {\n      \"bytes\": 158401256,\n      \"sha256\": \"d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4\"\n    },\n    \"src/Api.php\": {\n      \"bytes\": 1716,\n      \"sha256\": \"e9c78187f68f654607c17aa6c076bcd82210ab4085f1b39f87c43abd11720d57\"\n    },\n    \"src/Internal/Native.php\": {\n      \"bytes\": 16031,\n      \"sha256\": \"bf550952f29a5f37686a9c834d05fd4cb3880af87b1eceb74119a9a53281de09\"\n    },\n    \"src/Internal/Runtime.php\": {\n      \"bytes\": 4336,\n      \"sha256\": \"057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14\"\n    }\n  },\n  \"glibcMinimumVersion\": \"2.36\",\n  \"kind\": \"lean-bridge-ordinary-php-package\",\n  \"name\": \"example/checkedrecords\",\n  \"namespace\": \"LeanCheckedrecords\",\n  \"runtimeIdentity\": \"137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf\",\n  \"schemaVersion\": 1,\n  \"sourceIdentity\": {\n    \"exportConfigurationSha256\": \"1da3c677daaafc124bf46e6b75f501b900bf78248e2c37898af7dcc7846e7a0f\",\n    \"exportConfigurationSource\": \"{\\n  \\\"modules\\\": [\\n    \\\"CheckedRecords\\\"\\n  ],\\n  \\\"schemaVersion\\\": 1,\\n  \\\"targets\\\": {\\n    \\\"cargo\\\": {\\n      \\\"name\\\": \\\"checkedrecords\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    },\\n    \\\"nuget\\\": {\\n      \\\"name\\\": \\\"Checkedrecords.Api\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    },\\n    \\\"php-native\\\": {\\n      \\\"name\\\": \\\"example/checkedrecords\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    },\\n    \\\"wit-wasi\\\": {\\n      \\\"name\\\": \\\"checkedrecords\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    }\\n  }\\n}\\n\",\n    \"extractorSha256\": \"8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f\",\n    \"leanCommit\": \"f3b06c705e6c85f5314019d5d3baab0fec5b580c\",\n    \"leanCompilerSha256\": \"e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550\",\n    \"leanVersion\": \"4.32.2\",\n    \"modules\": [\n      {\n        \"interface\": {\n          \"bytes\": 212984,\n          \"interfaceSha256\": \"9266352966cf6c2be6c82d2622ffe556a121d9da74857956721013397e518e9f\",\n          \"sha256\": \"36a44a802ba099c216a0fb4c7806e5875c8c2830df4505c0a75d99f857231e6e\"\n        },\n        \"module\": \"CheckedRecords\",\n        \"source\": {\n          \"bytes\": 2396,\n          \"path\": \"CheckedRecords.lean\",\n          \"sha256\": \"368d74e1c5abd242ec96ac8bc9cf9648377ccbe8b0f8608ab46efe14cfec34b7\"\n        }\n      }\n    ],\n    \"request\": {\n      \"arities\": [],\n      \"exportModules\": [\n        \"CheckedRecords\"\n      ],\n      \"exports\": [\n        \"CheckedRecords.repeated\"\n      ],\n      \"metadata\": {\n        \"invocationIdentitySha256\": \"fa7507870f6279369ae3b873ba958395a2f9fbae754f4131e814293f72298c3a\",\n        \"modules\": [\n          {\n            \"interfaceSha256\": \"9266352966cf6c2be6c82d2622ffe556a121d9da74857956721013397e518e9f\",\n            \"name\": \"CheckedRecords\",\n            \"sourcePath\": \"CheckedRecords.lean\",\n            \"sourceSha256\": \"368d74e1c5abd242ec96ac8bc9cf9648377ccbe8b0f8608ab46efe14cfec34b7\"\n          }\n        ],\n        \"toolchain\": \"leanprover/lean4:v4.32.2\"\n      },\n      \"modules\": [\n        \"CheckedRecords\"\n      ],\n      \"profile\": \"native-library-v1\",\n      \"resources\": []\n    },\n    \"reviewedBindingIr\": {\n      \"path\": \"api.binding-ir.json\",\n      \"schemaVersion\": 1,\n      \"semanticSha256\": \"2c63d8386d6d7c063182ecb9652889a1f6596e5091ae3e21a876ec122cca0b02\",\n      \"source\": \"{\\n  \\\"assurance\\\": [],\\n  \\\"capabilities\\\": [],\\n  \\\"component\\\": {\\n    \\\"id\\\": \\\"checkedrecords@1.0.0\\\",\\n    \\\"name\\\": \\\"checkedrecords\\\",\\n    \\\"version\\\": \\\"1.0.0\\\"\\n  },\\n  \\\"declarations\\\": [\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:CheckedRecords.repeated\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"repeated\\\",\\n      \\\"overloadKey\\\": \\\"CheckedRecords.repeated\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"kind\\\": \\\"primitive\\\",\\n            \\\"name\\\": \\\"nat\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"id\\\": \\\"lean:CheckedRecords.Triple\\\",\\n          \\\"kind\\\": \\\"named\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"CheckedRecords.repeated\\\",\\n        \\\"extensions\\\": {},\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    }\\n  ],\\n  \\\"documentation\\\": {\\n    \\\"details\\\": \\\"\\\",\\n    \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n  },\\n  \\\"errors\\\": [],\\n  \\\"producers\\\": [\\n    {\\n      \\\"adapter\\\": \\\"independent-corpus-contract\\\",\\n      \\\"adapterVersion\\\": 1,\\n      \\\"extensions\\\": {},\\n      \\\"id\\\": \\\"corpusReview\\\",\\n      \\\"tool\\\": \\\"Corpus contract review\\\",\\n      \\\"toolVersion\\\": \\\"1\\\"\\n    }\\n  ],\\n  \\\"schemaVersion\\\": 3,\\n  \\\"types\\\": [\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"callable\\\": null,\\n      \\\"cases\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"fields\\\": [\\n        {\\n          \\\"documentation\\\": {\\n            \\\"details\\\": \\\"\\\",\\n            \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n          },\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"data\\\",\\n          \\\"type\\\": {\\n            \\\"arguments\\\": [\\n              {\\n                \\\"kind\\\": \\\"primitive\\\",\\n                \\\"name\\\": \\\"nat\\\"\\n              }\\n            ],\\n            \\\"constructor\\\": \\\"array\\\",\\n            \\\"kind\\\": \\\"apply\\\"\\n          }\\n        }\\n      ],\\n      \\\"host\\\": null,\\n      \\\"id\\\": \\\"lean:CheckedRecords.Triple\\\",\\n      \\\"kind\\\": \\\"record\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"Triple\\\",\\n      \\\"representation\\\": \\\"copied\\\",\\n      \\\"resource\\\": null,\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"CheckedRecords.Triple\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/erased-proofs\\\": {\\n            \\\"fields\\\": [\\n              \\\"sized\\\"\\n            ]\\n          },\\n          \\\"lean-lang.org/instantiation\\\": {\\n            \\\"arguments\\\": [\\n              {\\n                \\\"kind\\\": \\\"value\\\",\\n                \\\"type\\\": {\\n                  \\\"kind\\\": \\\"primitive\\\",\\n                  \\\"name\\\": \\\"nat\\\"\\n                },\\n                \\\"value\\\": \\\"3\\\"\\n              }\\n            ],\\n            \\\"structure\\\": \\\"CheckedRecords.Sized\\\"\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"target\\\": null,\\n      \\\"typeParameters\\\": []\\n    }\\n  ]\\n}\\n\",\n      \"sourceSha256\": \"7c77685d3a2b92567e69f3cc3de381caf3819d9414adf37fc43d13dbfe0eb8db\"\n    },\n    \"sourceNoticesSha256\": \"d192fc7f79bf6a98c6d62fbdee10162817b5124b3be1746041605268ce7062dc\",\n    \"sourceTreeSha256\": \"02f0dfb0643756e9c1bc73018850b37e727eeb091513b2e13748fe1194588a22\"\n  },\n  \"version\": \"1.0.0\"\n}\n",
+        "root": "/tmp/lean-bridge-checked-record-hosts-t544eK/consumer/php-native",
+        "runtimeFlags": [
+          "-n",
+          "-d",
+          "extension=/usr/lib/php/20220829/ffi.so",
+          "-d",
+          "ffi.enable=1"
+        ],
+        "tools": {
+          "/usr/bin/composer": {
+            "bytes": 3156,
+            "sha256": "5cf51f9912671912136317d889df7a5b8219f2a77f2b311b9a100989106847e2"
+          },
+          "/usr/bin/php8.2": {
+            "bytes": 5662424,
+            "sha256": "f44be0fe6c6c19b4a296f5b051bbe7d7924dc2d63ad4711ef666c4626e4a0e7a"
+          },
+          "/usr/lib/php/20220829/ctype.so": {
+            "bytes": 14440,
+            "sha256": "36647c21faefa76190aa32b33dc6e6ccf2b15f4a0d87184cfc213c327e3e9e0a"
+          },
+          "/usr/lib/php/20220829/ffi.so": {
+            "bytes": 174184,
+            "sha256": "a3c29e39e21f98d4f9178482445eae0bd69e818e067b21e7dbd3a63e54100dc8"
+          },
+          "/usr/lib/php/20220829/iconv.so": {
+            "bytes": 51304,
+            "sha256": "1d136532a8fe77caec4bd265e0539cce37248b6ef5b8e2ed07e1d0de171e90cd"
+          },
+          "/usr/lib/php/20220829/mbstring.so": {
+            "bytes": 1192704,
+            "sha256": "b42880230e64842003486160651ae42b7d2f44b657861f41dd01faccae0db11c"
+          },
+          "/usr/lib/php/20220829/phar.so": {
+            "bytes": 284776,
+            "sha256": "33a5b0822126d5233ab4853d597419c988b7b3f3edbbd492604070e4737d6bd3"
+          },
+          "/usr/lib/php/20220829/tokenizer.so": {
+            "bytes": 34920,
+            "sha256": "c7bc1d8ea1e79010c2cfde2ee898421aa99b6c70a203e2f266c469f42e16d001"
+          }
+        },
+        "vendorFiles": {
+          "autoload.php": {
+            "bytes": 771,
+            "sha256": "a6a9e8adad465a7e82648984e7e4873b5fee00c6e1c63a8b62e4c5a151ddf012"
+          },
+          "brick/math/LICENSE": {
+            "bytes": 1089,
+            "sha256": "d2625cc652e6ffa9f16827f1dba2d83ac12b050dc8150a38720420dbb810cae3"
+          },
+          "brick/math/composer.json": {
+            "bytes": 816,
+            "sha256": "fe93d538393d24617d615b373389d8a8970d8be18a8928d17c5a5cd9381a6522"
+          },
+          "brick/math/src/BigDecimal.php": {
+            "bytes": 38820,
+            "sha256": "ccf44c9e463182dd158190fd3b27b631ea7a58968505157e2bc715b61604515c"
+          },
+          "brick/math/src/BigInteger.php": {
+            "bytes": 47781,
+            "sha256": "a6d7b7824a8399ece864332672800f13be4ef57609f868dd577de2cf586bc3a1"
+          },
+          "brick/math/src/BigNumber.php": {
+            "bytes": 31254,
+            "sha256": "5a2a5ad1e73835fb200bbf1f959dbd36b8785b5e4a1c7c9ef505992130c08049"
+          },
+          "brick/math/src/BigRational.php": {
+            "bytes": 18121,
+            "sha256": "99d999ae1d4ccb9bbe231a2e5242f315b9483f317b8b5bd226277ced1a4ba2ab"
+          },
+          "brick/math/src/Exception/DivisionByZeroException.php": {
+            "bytes": 1296,
+            "sha256": "6dad71505461e21c56db4222659891b1a4efa8bf7737290418668aa881f6c3d3"
+          },
+          "brick/math/src/Exception/IntegerOverflowException.php": {
+            "bytes": 1174,
+            "sha256": "d4264eb4bc039baa7cb8a4aa62c8928c85ff947e9823532095e156d87392455b"
+          },
+          "brick/math/src/Exception/InvalidArgumentException.php": {
+            "bytes": 2957,
+            "sha256": "c25c58c48379436ce704ea28cc3c5cff5f853ed5e2b439e639d198ed7bdfddf9"
+          },
+          "brick/math/src/Exception/MathException.php": {
+            "bytes": 179,
+            "sha256": "34033cc2b90fa897e9e79d05a589c8e6411b9a117a80765b58013eacad0b255e"
+          },
+          "brick/math/src/Exception/NegativeNumberException.php": {
+            "bytes": 1316,
+            "sha256": "2c6a1c878e96bbb06d07fcd64ce06b66e5ac56f5ba51a2ba69cdd62b1f5dfd6d"
+          },
+          "brick/math/src/Exception/NoInverseException.php": {
+            "bytes": 658,
+            "sha256": "1e072b6b8802ef678cd8aed6aab4f5534e83e514c67c10cfbd457aa9e67d77d2"
+          },
+          "brick/math/src/Exception/NumberFormatException.php": {
+            "bytes": 3718,
+            "sha256": "9513693ceea593b6686ca7ef9253c595c6502145382f9da9872c791b37b5a258"
+          },
+          "brick/math/src/Exception/PlatformException.php": {
+            "bytes": 1283,
+            "sha256": "b2bc33189336bf6c8b3b145bd8c8397218e90588cca9ead140ef4a66d1c6be51"
+          },
+          "brick/math/src/Exception/RandomSourceException.php": {
+            "bytes": 1343,
+            "sha256": "462eb152713684b4d5ac0efe2fa27f8b2fd0d877ceb3e7315516757c5640e67c"
+          },
+          "brick/math/src/Exception/RoundingNecessaryException.php": {
+            "bytes": 3878,
+            "sha256": "3f9e061a0eeda28fc35d6f70cd1625c74d3002891c2d063ed2bede16155c8549"
+          },
+          "brick/math/src/Internal/Calculator.php": {
+            "bytes": 20316,
+            "sha256": "a92ba12d6e6487ef8ee6cf435ede5b2d4f4d4684b7bca14aa9c133b842724655"
+          },
+          "brick/math/src/Internal/Calculator/BcMathCalculator.php": {
+            "bytes": 2078,
+            "sha256": "aaf790516424d97f2257bf6fdc7eee9a95fc5440abd11d2fbc4f09ba73549b6a"
+          },
+          "brick/math/src/Internal/Calculator/GmpCalculator.php": {
+            "bytes": 3668,
+            "sha256": "0351a740b49e88cf379319af9fccab8c8f437cd5d54b2d57b79c1ea72fcc0420"
+          },
+          "brick/math/src/Internal/Calculator/NativeCalculator.php": {
+            "bytes": 14245,
+            "sha256": "4980f1a9b620a8de0588a018276044ed20c01293c2a0254613094e81e1cb6c1a"
+          },
+          "brick/math/src/Internal/CalculatorRegistry.php": {
+            "bytes": 1887,
+            "sha256": "7047026d82935de4736cb9f2f73915a75c2e9a776c68476b72bd430cab115088"
+          },
+          "brick/math/src/Internal/DecimalHelper.php": {
+            "bytes": 4779,
+            "sha256": "6884286a2dd2ebbba5d373140e2cca58d6efb8dd63b0868e517fb39eff4ad016"
+          },
+          "brick/math/src/Internal/Safe.php": {
+            "bytes": 1645,
+            "sha256": "26100429b186305ee9143f0b45c36168c1a7d039099dff13f5ab1a9ca2e32ccf"
+          },
+          "brick/math/src/NumberSyntax.php": {
+            "bytes": 1705,
+            "sha256": "f5ad04274721dd3bbc4572b90eb8e71fb47d052fd1ab6974e08aa013fef94b9e"
+          },
+          "brick/math/src/RoundingMode.php": {
+            "bytes": 5370,
+            "sha256": "1b7e6399d071d1ee922ec6ee928ae06bfa092b6d932af5faac8fbe65ef9b258d"
+          },
+          "composer/ClassLoader.php": {
+            "bytes": 16528,
+            "sha256": "42b8c5525dbc133045f47f4275f017071c82144a34acb9396d955ca10729cb2e"
+          },
+          "composer/InstalledVersions.php": {
+            "bytes": 16143,
+            "sha256": "21f4ba19e7859cb3f85b8b1680c970ee25d972546c1606dcae0e7e5f43f626f0"
+          },
+          "composer/LICENSE": {
+            "bytes": 1068,
+            "sha256": "7855ac293067aebe7e51afdd23b9dea54b8be24187dbecc9b9142581c37f596c"
+          },
+          "composer/autoload_classmap.php": {
+            "bytes": 222,
+            "sha256": "375085d0d6690301081436cd75755cb2c882f8a7f6fc385c8814a11734fc413a"
+          },
+          "composer/autoload_files.php": {
+            "bytes": 228,
+            "sha256": "c43ffbf9b13e9251a021b9732306a0a00fe7e1bb7641a676c6e7cbcc29de2036"
+          },
+          "composer/autoload_namespaces.php": {
+            "bytes": 139,
+            "sha256": "ede505407590638a435137f4e060136f1008de79fc169b3de9793423b0cea38c"
+          },
+          "composer/autoload_psr4.php": {
+            "bytes": 195,
+            "sha256": "d84c58712d49fd62ea528610fc277a36664abd37e1087cec8c1efb0af6918590"
+          },
+          "composer/autoload_real.php": {
+            "bytes": 1672,
+            "sha256": "6798be3844d6a1d71ac271539361ff1136353771645f3b9964220340f8028b82"
+          },
+          "composer/autoload_static.php": {
+            "bytes": 1212,
+            "sha256": "3257678e76e918062084aa9dd6d8730b4a168f1092063958d2685d9c4c644084"
+          },
+          "composer/installed.json": {
+            "bytes": 2821,
+            "sha256": "326a34bb7ccf92870a37aab85d87eaf930681832aab853a2acba9979ac8e4d06"
+          },
+          "composer/installed.php": {
+            "bytes": 1363,
+            "sha256": "766d7ba11d382a7d2d9d460c53b8ee007e709c9b70f154e79d06f1c8a785a9c5"
+          },
+          "composer/platform_check.php": {
+            "bytes": 925,
+            "sha256": "230c364d17607b4f0500630f1c1bcca4e08e1486748340d2ec85024f3a0b73b4"
+          },
+          "example/checkedrecords/README.md": {
+            "bytes": 3318,
+            "sha256": "b3818239282f5d56a257d5fbf769a81ca48875c6f749612e5a9d5197822ada10"
+          },
+          "example/checkedrecords/binding-manifest.json": {
+            "bytes": 1009,
+            "sha256": "743f4259151ea4edc225e290abbdf651efc31ab7c0d48dbd2b99ded0fd0c3181"
+          },
+          "example/checkedrecords/composer.json": {
+            "bytes": 546,
+            "sha256": "c75fbd7a20794f09d3b379bcefd95f11b8a65daeee848fc698daebd6cb80b339"
+          },
+          "example/checkedrecords/lean-bridge/component/allocation-guard.h": {
+            "bytes": 1309,
+            "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+          },
+          "example/checkedrecords/lean-bridge/component/artifacts.json": {
+            "bytes": 1528,
+            "sha256": "eda03a9c7b1cca98b2705c13694aba9a482e564c845e4934ba175cc02d827af2"
+          },
+          "example/checkedrecords/lean-bridge/component/binding-ir.json": {
+            "bytes": 3706,
+            "sha256": "ff6ccf32fcfd864f1cd5925365c2c477fca67003c2f44814a0a1f892005506ea"
+          },
+          "example/checkedrecords/lean-bridge/component/component.h": {
+            "bytes": 439,
+            "sha256": "fa42693606b08c9c5e89e44c55dba2f53866d00864779c4b5ddcf6e2f7f28d18"
+          },
+          "example/checkedrecords/lean-bridge/component/generated.lean": {
+            "bytes": 1316,
+            "sha256": "906ccb2d3088bc08658566c42c66def4498cbea742bb583e5189c003496de317"
+          },
+          "example/checkedrecords/lean-bridge/component/metadata.json": {
+            "bytes": 17670,
+            "sha256": "e9f30f71ff058e32128d57c37bbc8dd214f14c9861d2e0af46281530922c71b0"
+          },
+          "example/checkedrecords/lean-bridge/component/model.json": {
+            "bytes": 15809,
+            "sha256": "903ead6942479791d14296316f71b162c0e81da8b7c484a3a2de9721d87710a2"
+          },
+          "example/checkedrecords/lean-bridge/component/native-component.json": {
+            "bytes": 7561,
+            "sha256": "654d577cee8e44a7d0d9fc604388a5f2950bbc97aaa63aecd2b14d7e6d8cd4ed"
+          },
+          "example/checkedrecords/lean-bridge/include/checkedrecords.h": {
+            "bytes": 2040,
+            "sha256": "07f21a81627dc0f2cff85a43b1697ef28cca072aa795d5bcbeb74c41aa686586"
+          },
+          "example/checkedrecords/lean-bridge/native-c-adapter.json": {
+            "bytes": 1375,
+            "sha256": "ad7626cb4b029bee34ba40ec540b6241126f05b153fb8d848fb15f77f5f46aed"
+          },
+          "example/checkedrecords/lean-bridge/package-receipt.json": {
+            "bytes": 10984,
+            "sha256": "5cf1f8bab046122116cfb86850ccb7e894fb1a0b422484a037d326b88c093a04"
+          },
+          "example/checkedrecords/lean-bridge/runtime.json": {
+            "bytes": 1466,
+            "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+          },
+          "example/checkedrecords/licenses/Lean-LICENSE": {
+            "bytes": 9160,
+            "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+          },
+          "example/checkedrecords/licenses/Lean-LICENSES": {
+            "bytes": 81854,
+            "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+          },
+          "example/checkedrecords/licenses/LeanBridge-LICENSE": {
+            "bytes": 1093,
+            "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+          },
+          "example/checkedrecords/licenses/source-notices.json": {
+            "bytes": 2384,
+            "sha256": "d192fc7f79bf6a98c6d62fbdee10162817b5124b3be1746041605268ce7062dc"
+          },
+          "example/checkedrecords/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+            "bytes": 1093,
+            "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+          },
+          "example/checkedrecords/native/linux-x64/libcheckedrecords.so": {
+            "bytes": 21136,
+            "sha256": "7166f708f640b1d4b2517182f642b206953bf4dee9d38ac4e63cc8e0dab5c8f0"
+          },
+          "example/checkedrecords/native/linux-x64/libcomponent_d3803aad486f3d2e4a02.so": {
+            "bytes": 36936,
+            "sha256": "829ac10b0035ddbb640abc91d4e3679c83efdb1b64275fb551fd0baacff99844"
+          },
+          "example/checkedrecords/native/linux-x64/liblean_bridge_native.so": {
+            "bytes": 21464,
+            "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+          },
+          "example/checkedrecords/native/linux-x64/libleanshared.so": {
+            "bytes": 158401256,
+            "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+          },
+          "example/checkedrecords/src/Api.php": {
+            "bytes": 1716,
+            "sha256": "e9c78187f68f654607c17aa6c076bcd82210ab4085f1b39f87c43abd11720d57"
+          },
+          "example/checkedrecords/src/Internal/Native.php": {
+            "bytes": 16031,
+            "sha256": "bf550952f29a5f37686a9c834d05fd4cb3880af87b1eceb74119a9a53281de09"
+          },
+          "example/checkedrecords/src/Internal/Runtime.php": {
+            "bytes": 4336,
+            "sha256": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14"
+          }
+        }
+      },
+      "profile": "php-native",
+      "receiptSha256": "f0e307784e38a43c7ecf01d0144c51add1ebc5b5e34bc8a72218ab1c47441d61",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "repeatedRuns": 2,
+      "resultOnly": true,
+      "reviewed": true,
+      "route": "result-only-reviewed-ir",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceUnchangedAfterReplay": true
+    },
+    {
+      "archives": {
+        "archives/Checkedrecords.Api.1.0.0.nupkg": "8cd0832a11f7973526bb2d89ce5e2b7b6fef088f6e4c2e357c6b2871a3944781",
+        "archives/checkedrecords-1.0.0-wit-wasi.tar.gz": "7f8e7412148fc1bb897c65a1607b2b7bc6d215fbd665266e3ecdad668fdfd4ac",
+        "archives/checkedrecords-1.0.0.crate": "a4297a088270aad1fbdcf1c75db0434c62f996d0035a8bca31b80d4483eb55ba",
+        "archives/example-checkedrecords-1.0.0-linux-x86_64.zip": "92708269342b49b62c84364cfa33f1d9f88d4de8e26c04a5d667ce6ef8975059"
+      },
+      "bindingIrSha256": "9f24770f8aa01b640040774f1945faa64dd95b2e4d4cd65dae9d25cb6df4f951",
+      "checks": 1002,
+      "compilerFreePath": true,
+      "compilerFreeReplay": true,
+      "consumerSha256": "0370df4d3cbc8a2d5888933c025e2a920dbe18007d93d24fd22abfb1b8ad5a30",
+      "dispatch": {
+        "observed": false,
+        "reason": "No entry counters in this installed host acceptance"
+      },
+      "expectedBindingIrSha256": "2c63d8386d6d7c063182ecb9652889a1f6596e5091ae3e21a876ec122cca0b02",
+      "modelSha256": "903ead6942479791d14296316f71b162c0e81da8b7c484a3a2de9721d87710a2",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51340279,
+              "path": "archives/checkedrecords-1.0.0.crate",
+              "sha256": "a4297a088270aad1fbdcf1c75db0434c62f996d0035a8bca31b80d4483eb55ba"
+            }
+          ],
+          "ecosystem": "cargo",
+          "name": "checkedrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "cargo",
+          "version": "1.0.0"
+        }
+      ],
+      "profile": "rust",
+      "receiptSha256": "f0e307784e38a43c7ecf01d0144c51add1ebc5b5e34bc8a72218ab1c47441d61",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "repeatedRuns": 1,
+      "resultOnly": true,
+      "reviewed": true,
+      "route": "result-only-reviewed-ir",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceUnchangedAfterReplay": true
+    },
+    {
+      "archives": {
+        "archives/Checkedrecords.Api.1.0.0.nupkg": "8cd0832a11f7973526bb2d89ce5e2b7b6fef088f6e4c2e357c6b2871a3944781",
+        "archives/checkedrecords-1.0.0-wit-wasi.tar.gz": "7f8e7412148fc1bb897c65a1607b2b7bc6d215fbd665266e3ecdad668fdfd4ac",
+        "archives/checkedrecords-1.0.0.crate": "a4297a088270aad1fbdcf1c75db0434c62f996d0035a8bca31b80d4483eb55ba",
+        "archives/example-checkedrecords-1.0.0-linux-x86_64.zip": "92708269342b49b62c84364cfa33f1d9f88d4de8e26c04a5d667ce6ef8975059"
+      },
+      "bindingIrSha256": "9f24770f8aa01b640040774f1945faa64dd95b2e4d4cd65dae9d25cb6df4f951",
+      "checks": 1002,
+      "compilerFreePath": true,
+      "compilerFreeReplay": true,
+      "consumerSha256": "e1c507f28ec5ad68c251cb31447644a6ca499208461632a73a9edbfee562a703",
+      "dispatch": {
+        "observed": false,
+        "reason": "No entry counters in this installed host acceptance"
+      },
+      "expectedBindingIrSha256": "2c63d8386d6d7c063182ecb9652889a1f6596e5091ae3e21a876ec122cca0b02",
+      "modelSha256": "903ead6942479791d14296316f71b162c0e81da8b7c484a3a2de9721d87710a2",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 59203993,
+              "path": "archives/checkedrecords-1.0.0-wit-wasi.tar.gz",
+              "sha256": "7f8e7412148fc1bb897c65a1607b2b7bc6d215fbd665266e3ecdad668fdfd4ac"
+            }
+          ],
+          "ecosystem": "wit-wasi",
+          "name": "checkedrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "wit-wasi",
+          "version": "1.0.0"
+        }
+      ],
+      "profile": "wit-wasi",
+      "receiptSha256": "f0e307784e38a43c7ecf01d0144c51add1ebc5b5e34bc8a72218ab1c47441d61",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "repeatedRuns": 1,
+      "resultOnly": true,
+      "reviewed": true,
+      "route": "result-only-reviewed-ir",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceUnchangedAfterReplay": true
+    }
+  ],
+  "reproducible": true,
+  "route": "result-only-reviewed-ir",
+  "schemaVersion": 1
+}

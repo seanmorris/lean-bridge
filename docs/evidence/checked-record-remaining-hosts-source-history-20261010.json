@@ -1,0 +1,216 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-remaining-hosts-v1",
+  "predecessorCommit": "c9d11f7ac8fd76d13bcc48f6f679eb22fd86b722",
+  "updates": [
+    {
+      "path": "docs/lean/existing-package.md",
+      "currentSha256": "6d99648964c964b78e14f17a01f28da88edff6a415ea893db09bc04b0c309cc1",
+      "previousSha256": "613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232",
+      "edits": [
+        {
+          "start": 45302,
+          "previous": "Native adapters also generate Rust, .NET, native PHP and WIT/WASI packages using the same C payload mirrors. Their [source checks](../evidence/checked-record-native-hosts-20261010.md) cover conversion layouts and constructor metadata; installed-package acceptance for those four hosts remains pending. Perl and PHP-Wasm checked-record adapters remain pending. Browser execution remains pending. Nested checked records, value-dependent runtime fields, recursive checked records, other index kinds and callbacks remain unsupported. npm uses private ABI 8 for its proof-free carriers.\n",
+          "current": "[Installed Rust, .NET, native PHP and WIT/WASI checks](../evidence/checked-record-remaining-hosts-20261010.md) pass the same four source/result-only routes, with two reproduced author builds, offline installation and relocated replay. Native PHP runs in weak and strict modes. These local runs use glibc 2.36 without entry-count measurements. The archive also retains the earlier PHP setup failure caused by a missing extension in the selected local PHP tool.\n\nPerl and PHP-Wasm checked-record adapters remain pending. Browser execution remains pending. Nested checked records, value-dependent runtime fields, recursive checked records, other index kinds and callbacks remain unsupported. npm uses private ABI 8 for its proof-free carriers.\n"
+        },
+        {
+          "start": 53442,
+          "previous": "| Record with erased proof fields and a checked input constructor | Node installed; browser pending | C/C++, Python, Ruby, Java and Kotlin installed; other native hosts generated, pending | Rejected | Rejected | C/C++, Python, Ruby, Java, Kotlin and Node installed; other native hosts generated, pending; browser pending; CPAN and PHP-Wasm rejected |\n",
+          "current": "| Record with erased proof fields and a checked input constructor | Node installed; browser pending | C/C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI installed | Rejected | Rejected | C/C++, Node and all eight additional native hosts installed; browser pending; CPAN and PHP-Wasm rejected |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "c004b7475093daa2864857850dfcf6bddb994bea7114a2882ba2e892ffe03dff",
+      "previousSha256": "1d19487acb2230cdec3388dd95e15b898ce2dc2d59d0104ee71612a39929ed12",
+      "edits": [
+        {
+          "start": 1072635,
+          "previous": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n",
+          "current": "          \"sha256\": \"6d99648964c964b78e14f17a01f28da88edff6a415ea893db09bc04b0c309cc1\"\n"
+        },
+        {
+          "start": 1080224,
+          "previous": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n",
+          "current": "          \"sha256\": \"6d99648964c964b78e14f17a01f28da88edff6a415ea893db09bc04b0c309cc1\"\n"
+        },
+        {
+          "start": 1086825,
+          "previous": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n",
+          "current": "          \"sha256\": \"6d99648964c964b78e14f17a01f28da88edff6a415ea893db09bc04b0c309cc1\"\n"
+        },
+        {
+          "start": 1093933,
+          "previous": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n",
+          "current": "          \"sha256\": \"6d99648964c964b78e14f17a01f28da88edff6a415ea893db09bc04b0c309cc1\"\n"
+        },
+        {
+          "start": 1101427,
+          "previous": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n",
+          "current": "          \"sha256\": \"6d99648964c964b78e14f17a01f28da88edff6a415ea893db09bc04b0c309cc1\"\n"
+        },
+        {
+          "start": 1108483,
+          "previous": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n",
+          "current": "          \"sha256\": \"6d99648964c964b78e14f17a01f28da88edff6a415ea893db09bc04b0c309cc1\"\n"
+        },
+        {
+          "start": 1116084,
+          "previous": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n",
+          "current": "          \"sha256\": \"6d99648964c964b78e14f17a01f28da88edff6a415ea893db09bc04b0c309cc1\"\n"
+        },
+        {
+          "start": 1126365,
+          "previous": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n",
+          "current": "          \"sha256\": \"6d99648964c964b78e14f17a01f28da88edff6a415ea893db09bc04b0c309cc1\"\n"
+        },
+        {
+          "start": 1138698,
+          "previous": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n",
+          "current": "          \"sha256\": \"6d99648964c964b78e14f17a01f28da88edff6a415ea893db09bc04b0c309cc1\"\n"
+        },
+        {
+          "start": 1192157,
+          "previous": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n",
+          "current": "          \"sha256\": \"6d99648964c964b78e14f17a01f28da88edff6a415ea893db09bc04b0c309cc1\"\n"
+        },
+        {
+          "start": 1224700,
+          "previous": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n",
+          "current": "          \"sha256\": \"6d99648964c964b78e14f17a01f28da88edff6a415ea893db09bc04b0c309cc1\"\n"
+        },
+        {
+          "start": 1254979,
+          "previous": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n",
+          "current": "          \"sha256\": \"6d99648964c964b78e14f17a01f28da88edff6a415ea893db09bc04b0c309cc1\"\n"
+        },
+        {
+          "start": 1287946,
+          "previous": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n",
+          "current": "          \"sha256\": \"6d99648964c964b78e14f17a01f28da88edff6a415ea893db09bc04b0c309cc1\"\n"
+        },
+        {
+          "start": 1329356,
+          "previous": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n",
+          "current": "          \"sha256\": \"6d99648964c964b78e14f17a01f28da88edff6a415ea893db09bc04b0c309cc1\"\n"
+        },
+        {
+          "start": 1355204,
+          "previous": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n",
+          "current": "          \"sha256\": \"6d99648964c964b78e14f17a01f28da88edff6a415ea893db09bc04b0c309cc1\"\n"
+        },
+        {
+          "start": 1377884,
+          "previous": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n",
+          "current": "          \"sha256\": \"6d99648964c964b78e14f17a01f28da88edff6a415ea893db09bc04b0c309cc1\"\n"
+        },
+        {
+          "start": 1397576,
+          "previous": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n",
+          "current": "          \"sha256\": \"6d99648964c964b78e14f17a01f28da88edff6a415ea893db09bc04b0c309cc1\"\n"
+        },
+        {
+          "start": 1418061,
+          "previous": "          \"sha256\": \"613949523c6315041f597e0a3835017d7a012297b19d01b61155e568f1404232\"\n",
+          "current": "          \"sha256\": \"6d99648964c964b78e14f17a01f28da88edff6a415ea893db09bc04b0c309cc1\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/checked-records.test.mjs",
+      "currentSha256": "3248d4f348ae147c214d9777a3383956fb7f6a042ef77c91a55eb59a4ce5677e",
+      "previousSha256": "1728134bff23b2c70ff5970cd77d9a8612dd271343809e633af511cad0bb0d00",
+      "edits": [
+        {
+          "start": 1100,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-remaining-hosts-archive-tests.mjs\";\nimport \"./helpers/checked-record-remaining-hosts-history-tests.mjs\";\nimport \"./helpers/checked-record-host-ci-report-tests.mjs\";\nimport \"./helpers/checked-record-host-ci-shell-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-ruby-jvm-history-tests.mjs",
+      "currentSha256": "0bf250413a1edcfc293ba735febc8652985213e83e1908f3892ac785fa26eba7",
+      "previousSha256": "c227dd221ce877e0bf3b11648aaa9b4cadd8934834bf07ac50dee46cff9eaa64",
+      "edits": [
+        {
+          "start": 514,
+          "previous": "",
+          "current": "import { beforeCheckedRecordRemainingHostsArchiveSource } from \"./checked-record-remaining-hosts-history.mjs\";\n"
+        },
+        {
+          "start": 1423,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst current = beforeCheckedRecordRemainingHostsArchiveSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2863,
+          "previous": "\tconst source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst source = beforeCheckedRecordRemainingHostsArchiveSource(path, await readFile(path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-ruby-jvm-history.mjs",
+      "currentSha256": "9454eda163fc86fae0027be781453399f7616d073e23d0ac9316a96d9ceb180f",
+      "previousSha256": "51fdb5ab52d94c2dd77bf0921eedc4574c57e7b5253abfdff3708f71894d1d94",
+      "edits": [
+        {
+          "start": 238,
+          "previous": "",
+          "current": "import { beforeCheckedRecordRemainingHostsArchiveSource } from \"./checked-record-remaining-hosts-history.mjs\";\n"
+        },
+        {
+          "start": 2413,
+          "previous": "",
+          "current": "\tsource = beforeCheckedRecordRemainingHostsArchiveSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "2ad7d88e1d43227d864b2331f37e419e35e486ae4430fae74a8509f0b1322f68",
+      "previousSha256": "6258cced2343691ac1fae2a23a4b6aeaeb77a89d481870709d2ce3c01b322a73",
+      "edits": [
+        {
+          "start": 2100,
+          "previous": "",
+          "current": "import { checkedRecordRemainingHostsArchiveChangedPaths } from \"./checked-record-remaining-hosts-history.mjs\";\n"
+        },
+        {
+          "start": 58938,
+          "previous": "",
+          "current": "\t, ...checkedRecordRemainingHostsArchiveChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/lean-author-documentation.test.mjs",
+      "currentSha256": "ab93df1ec898f8325bde01046ae2e5b5136ece1516eddf4c09ea5e98ff12a6a9",
+      "previousSha256": "c39e8d555c9a64c27cf3302e0cee5743674da2d64b08e5b8e778312b20eea733",
+      "edits": [
+        {
+          "start": 1050,
+          "previous": "",
+          "current": "import { readCheckedRecordRemainingHostsArchive } from \"./helpers/checked-record-remaining-hosts-archive.mjs\";\n"
+        },
+        {
+          "start": 11576,
+          "previous": "\tassert.match(section, /installed-package acceptance for those four hosts remains pending/);\n",
+          "current": "\tassert.match(section, /checked-record-remaining-hosts-20261010\\.md/);\n\tassert.match(section, /Native PHP runs in weak and strict modes/);\n"
+        },
+        {
+          "start": 12557,
+          "previous": "\tassert.equal(row, \"| Record with erased proof fields and a checked input constructor | Node installed; browser pending | C/C++, Python, Ruby, Java and Kotlin installed; other native hosts generated, pending | Rejected | Rejected | C/C++, Python, Ruby, Java, Kotlin and Node installed; other native hosts generated, pending; browser pending; CPAN and PHP-Wasm rejected |\");\n",
+          "current": "\tassert.equal(row, \"| Record with erased proof fields and a checked input constructor | Node installed; browser pending | C/C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI installed | Rejected | Rejected | C/C++, Node and all eight additional native hosts installed; browser pending; CPAN and PHP-Wasm rejected |\");\n"
+        },
+        {
+          "start": 13284,
+          "previous": "",
+          "current": "\tconst remaining = await readCheckedRecordRemainingHostsArchive();\n\tassert.equal(remaining.reports.length, 4);\n\tfor(const report of remaining.reports) assert.deepEqual(report.profiles, [\"dotnet\", \"php-native\", \"rust\", \"wit-wasi\"]);\n"
+        }
+      ]
+    }
+  ]
+}

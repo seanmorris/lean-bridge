@@ -1,0 +1,50 @@
+{
+  "archives": {
+    "archives/Checkedrecords.Api.1.0.0.nupkg": "8c498ae24e80ba3a7cb8db2f7e1ac0ed94f740e3543da71aecc9ede1c9795bc7",
+    "archives/checkedrecords-1.0.0-wit-wasi.tar.gz": "ae29cd5eb0e8f3e20ee9391d89c460590236ab6f214a76e719f92016eb00b60a",
+    "archives/checkedrecords-1.0.0.crate": "562f3b276c8652b879dbabec33041b8aeb4694de5d9d4c8f6614e610686d86be",
+    "archives/example-checkedrecords-1.0.0-linux-x86_64.zip": "89584ca6a50b4c1fef3e97631964076c3494b4ac1de0633621e311d435098840"
+  },
+  "bindingIrSha256": "64e9f96e9ce6cc6a5ab9dcac1bfde2480b4fd11f397ba3a5619edb124c2a0d9e",
+  "checks": 9024,
+  "compilerFreePath": true,
+  "compilerFreeReplay": true,
+  "consumerSha256": "7aaeaa3019842714371f37e8ac7703870c11d6206fca7e22f9cf4ec17744f6fa",
+  "dispatch": {
+    "observed": false,
+    "reason": "No entry counters in this installed host acceptance"
+  },
+  "expectedBindingIrSha256": "26f8b5ce11c01bfa51ee98a162d3d3d15258a5030816af59c5b64e2cb4b6b14e",
+  "modelSha256": "f170bd6245d0f3cf6b8cfaf4e2fba3373debca1df10541835002ecdb59878f02",
+  "offlineInstall": true,
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 59235908,
+          "path": "archives/checkedrecords-1.0.0-wit-wasi.tar.gz",
+          "sha256": "ae29cd5eb0e8f3e20ee9391d89c460590236ab6f214a76e719f92016eb00b60a"
+        }
+      ],
+      "ecosystem": "wit-wasi",
+      "name": "checkedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "wit-wasi",
+      "version": "1.0.0"
+    }
+  ],
+  "profile": "wit-wasi",
+  "receiptSha256": "a7cfb850d33095b5f73d0cf2d55a04872248a528cd96c8c14887e232101b512d",
+  "relocatedInstallation": true,
+  "repeatExecution": true,
+  "repeatedRuns": 1,
+  "resultOnly": false,
+  "reviewed": true,
+  "route": "reviewed-ir",
+  "sourceRemovedBeforeInstallation": true,
+  "sourceUnchangedAfterReplay": true
+}

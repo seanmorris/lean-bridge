@@ -1,0 +1,22 @@
+TAP version 13
+# Subtest: installed checked-record native hosts reproduce and relocate ordinary-source
+ok 1 - installed checked-record native hosts reproduce and relocate ordinary-source
+  ---
+  duration_ms: 273436.41464
+  type: 'test'
+  ...
+# ordinary-source author 0: dotnet, php-native, rust, wit-wasi
+# ordinary-source author 1: dotnet, php-native, rust, wit-wasi
+# Installing and relocating ordinary-source dotnet
+# Installing and relocating ordinary-source php-native
+# Installing and relocating ordinary-source rust
+# Installing and relocating ordinary-source wit-wasi
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 273833.635933

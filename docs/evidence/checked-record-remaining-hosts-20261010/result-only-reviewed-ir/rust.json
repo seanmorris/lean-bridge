@@ -1,0 +1,50 @@
+{
+  "archives": {
+    "archives/Checkedrecords.Api.1.0.0.nupkg": "8cd0832a11f7973526bb2d89ce5e2b7b6fef088f6e4c2e357c6b2871a3944781",
+    "archives/checkedrecords-1.0.0-wit-wasi.tar.gz": "7f8e7412148fc1bb897c65a1607b2b7bc6d215fbd665266e3ecdad668fdfd4ac",
+    "archives/checkedrecords-1.0.0.crate": "a4297a088270aad1fbdcf1c75db0434c62f996d0035a8bca31b80d4483eb55ba",
+    "archives/example-checkedrecords-1.0.0-linux-x86_64.zip": "92708269342b49b62c84364cfa33f1d9f88d4de8e26c04a5d667ce6ef8975059"
+  },
+  "bindingIrSha256": "9f24770f8aa01b640040774f1945faa64dd95b2e4d4cd65dae9d25cb6df4f951",
+  "checks": 1002,
+  "compilerFreePath": true,
+  "compilerFreeReplay": true,
+  "consumerSha256": "0370df4d3cbc8a2d5888933c025e2a920dbe18007d93d24fd22abfb1b8ad5a30",
+  "dispatch": {
+    "observed": false,
+    "reason": "No entry counters in this installed host acceptance"
+  },
+  "expectedBindingIrSha256": "2c63d8386d6d7c063182ecb9652889a1f6596e5091ae3e21a876ec122cca0b02",
+  "modelSha256": "903ead6942479791d14296316f71b162c0e81da8b7c484a3a2de9721d87710a2",
+  "offlineInstall": true,
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51340279,
+          "path": "archives/checkedrecords-1.0.0.crate",
+          "sha256": "a4297a088270aad1fbdcf1c75db0434c62f996d0035a8bca31b80d4483eb55ba"
+        }
+      ],
+      "ecosystem": "cargo",
+      "name": "checkedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "cargo",
+      "version": "1.0.0"
+    }
+  ],
+  "profile": "rust",
+  "receiptSha256": "f0e307784e38a43c7ecf01d0144c51add1ebc5b5e34bc8a72218ab1c47441d61",
+  "relocatedInstallation": true,
+  "repeatExecution": true,
+  "repeatedRuns": 1,
+  "resultOnly": true,
+  "reviewed": true,
+  "route": "result-only-reviewed-ir",
+  "sourceRemovedBeforeInstallation": true,
+  "sourceUnchangedAfterReplay": true
+}

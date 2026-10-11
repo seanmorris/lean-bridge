@@ -1,0 +1,50 @@
+{
+  "archives": {
+    "archives/Checkedrecords.Api.1.0.0.nupkg": "d04ed56ad06575951bdaecfe1353536d0174c2e78410513b0e84f6ac6e63f7cf",
+    "archives/checkedrecords-1.0.0-wit-wasi.tar.gz": "c76cefbae185ae7a6d04d4079325abe1dba982c3786fc4b8946bfe0488e5410a",
+    "archives/checkedrecords-1.0.0.crate": "f4823cfb6f066f46508a874d895bfb965a4c826b5f40bf6547566e23c71127ce",
+    "archives/example-checkedrecords-1.0.0-linux-x86_64.zip": "174d8061429d2deb8db95de41af89f8c952d6c602f0bf5e7961a9262e07d8ba7"
+  },
+  "bindingIrSha256": "7e40ed68b3aca0e68aa62205f5220a7e6fa0a9b476124e19a9b99bb574ef12bc",
+  "checks": 9024,
+  "compilerFreePath": true,
+  "compilerFreeReplay": true,
+  "consumerSha256": "7a89a8c8cf58cbf80519977a72bfa79d7cada2f170d756811829d3e6d0786c74",
+  "dispatch": {
+    "observed": false,
+    "reason": "No entry counters in this installed host acceptance"
+  },
+  "expectedBindingIrSha256": "26f8b5ce11c01bfa51ee98a162d3d3d15258a5030816af59c5b64e2cb4b6b14e",
+  "modelSha256": "bd01fc152dc3018953e8120a33dfc0d6e6b96812bbe2ad061d6b183139d13fc7",
+  "offlineInstall": true,
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51360498,
+          "path": "archives/checkedrecords-1.0.0.crate",
+          "sha256": "f4823cfb6f066f46508a874d895bfb965a4c826b5f40bf6547566e23c71127ce"
+        }
+      ],
+      "ecosystem": "cargo",
+      "name": "checkedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "cargo",
+      "version": "1.0.0"
+    }
+  ],
+  "profile": "rust",
+  "receiptSha256": "c4033bd0c8c9bfe6fea41840cd41f3d07cac0590b6cdd61bd151fb28ece53b66",
+  "relocatedInstallation": true,
+  "repeatExecution": true,
+  "repeatedRuns": 1,
+  "resultOnly": false,
+  "reviewed": false,
+  "route": "ordinary-source",
+  "sourceRemovedBeforeInstallation": true,
+  "sourceUnchangedAfterReplay": true
+}

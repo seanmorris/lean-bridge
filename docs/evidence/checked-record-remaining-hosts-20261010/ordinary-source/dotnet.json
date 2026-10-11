@@ -1,0 +1,278 @@
+{
+  "archives": {
+    "archives/Checkedrecords.Api.1.0.0.nupkg": "d04ed56ad06575951bdaecfe1353536d0174c2e78410513b0e84f6ac6e63f7cf",
+    "archives/checkedrecords-1.0.0-wit-wasi.tar.gz": "c76cefbae185ae7a6d04d4079325abe1dba982c3786fc4b8946bfe0488e5410a",
+    "archives/checkedrecords-1.0.0.crate": "f4823cfb6f066f46508a874d895bfb965a4c826b5f40bf6547566e23c71127ce",
+    "archives/example-checkedrecords-1.0.0-linux-x86_64.zip": "174d8061429d2deb8db95de41af89f8c952d6c602f0bf5e7961a9262e07d8ba7"
+  },
+  "bindingIrSha256": "7e40ed68b3aca0e68aa62205f5220a7e6fa0a9b476124e19a9b99bb574ef12bc",
+  "checks": 9024,
+  "compilerFreePath": true,
+  "compilerFreeReplay": true,
+  "consumerSha256": "1c696f3f5d0dc32d829cf13409044a093e5c2709d88d904dbf91586e00e6cb56",
+  "dispatch": {
+    "observed": false,
+    "reason": "No entry counters in this installed host acceptance"
+  },
+  "dotnetEnvironment": {
+    "archiveName": "Checkedrecords.Api.1.0.0.nupkg",
+    "buildInputs": {
+      "Consumer.csproj.nuget.dgspec.json": {
+        "bytes": 2269,
+        "sha256": "b8fe39131db48493e3448adef32d83f884a894fc69765d5f66e350a8d60a14f9"
+      },
+      "Consumer.csproj.nuget.g.props": {
+        "bytes": 1237,
+        "sha256": "ff90e0d1baa830d56bbf452725a648a3546a37da0236f673c4f97e3777dc3400"
+      },
+      "Consumer.csproj.nuget.g.targets": {
+        "bytes": 149,
+        "sha256": "b14461e0cb1be3f77fcf9fe2fdd62889325ca92523d0f606980ed59eb5c4aa1c"
+      },
+      "project.assets.json": {
+        "bytes": 5085,
+        "sha256": "424d4a8e3c08d5ac7854bbc52f2655cf82eb6fc0e643bf52aae10d2a070e7829"
+      },
+      "project.nuget.cache": {
+        "bytes": 356,
+        "sha256": "d54f13beed4e44c0ea87a1c76edb2e09c69aaee2db7d85cbdc85412a98b5100d"
+      }
+    },
+    "cacheFiles": {
+      "checkedrecords.api/1.0.0/.nupkg.metadata": {
+        "bytes": 208,
+        "sha256": "7742480e57c7af5d9175bea17a33241dbf1c915aaa18d5e2ed538afa48e0729b"
+      },
+      "checkedrecords.api/1.0.0/README.md": {
+        "bytes": 4179,
+        "sha256": "4ae25ec1e6a9d331d2bb718db0c2ebb492bddb359f4f3093e96a9734da4005c4"
+      },
+      "checkedrecords.api/1.0.0/checkedrecords.api.1.0.0.nupkg": {
+        "bytes": 51382633,
+        "sha256": "d04ed56ad06575951bdaecfe1353536d0174c2e78410513b0e84f6ac6e63f7cf"
+      },
+      "checkedrecords.api/1.0.0/checkedrecords.api.1.0.0.nupkg.sha512": {
+        "bytes": 88,
+        "sha256": "8410b205e877effbdaf6925dcbdaa4a3c70114a7638fd62ec5c8cf452fc9cd05"
+      },
+      "checkedrecords.api/1.0.0/checkedrecords.api.nuspec": {
+        "bytes": 476,
+        "sha256": "7987b1d59cba99b1aeccd551b07cdb3a1306253ad37a790989d5803fa53ed4a5"
+      },
+      "checkedrecords.api/1.0.0/lean-bridge/component/allocation-guard.h": {
+        "bytes": 1309,
+        "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+      },
+      "checkedrecords.api/1.0.0/lean-bridge/component/artifacts.json": {
+        "bytes": 1531,
+        "sha256": "dc68052cc2e548c6067802fad01594ffd493da27a47d902eda83117e58f5d6e6"
+      },
+      "checkedrecords.api/1.0.0/lean-bridge/component/binding-ir.json": {
+        "bytes": 23275,
+        "sha256": "048380d7dcb247dc70e2f9f10b3ae823d861280b4c2b39f3efacf094e0bad6f7"
+      },
+      "checkedrecords.api/1.0.0/lean-bridge/component/component.h": {
+        "bytes": 1812,
+        "sha256": "280fb9b635c27c4218b9705b69be47347183f26b93e434926d891c383e642479"
+      },
+      "checkedrecords.api/1.0.0/lean-bridge/component/generated.lean": {
+        "bytes": 8391,
+        "sha256": "de93dff206e9f43efa3056789f4847836d8ceb0375e069ccd238fdebee8cbd82"
+      },
+      "checkedrecords.api/1.0.0/lean-bridge/component/metadata.json": {
+        "bytes": 43265,
+        "sha256": "7804e7d7452592ba64afb45984aad45ee559743b12c3c1f4c994b3b5918ce4ca"
+      },
+      "checkedrecords.api/1.0.0/lean-bridge/component/model.json": {
+        "bytes": 66336,
+        "sha256": "bd01fc152dc3018953e8120a33dfc0d6e6b96812bbe2ad061d6b183139d13fc7"
+      },
+      "checkedrecords.api/1.0.0/lean-bridge/component/native-component.json": {
+        "bytes": 11125,
+        "sha256": "ef535db86fe3b57b3a825f435c274e28ded97645091df66fa4e37b279dab614a"
+      },
+      "checkedrecords.api/1.0.0/lean-bridge/dotnet/binding-manifest.json": {
+        "bytes": 1226,
+        "sha256": "a0a0a753ebbe6262d57a4ebd6877c4904302e3591cb09172cda8f91b0001337b"
+      },
+      "checkedrecords.api/1.0.0/lean-bridge/dotnet/global.json": {
+        "bytes": 104,
+        "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+      },
+      "checkedrecords.api/1.0.0/lean-bridge/dotnet/src/LeanBridge.Checkedrecords/Api.cs": {
+        "bytes": 4254,
+        "sha256": "21a8c372aeb54373f3401f25b73aa42183375b89d97d25ddbd14d63bab3b58ed"
+      },
+      "checkedrecords.api/1.0.0/lean-bridge/dotnet/src/LeanBridge.Checkedrecords/LeanBridge.Checkedrecords.csproj": {
+        "bytes": 610,
+        "sha256": "b707639f2861db4e5954cd7846773b098c039295c9bcc94909423759f47c0c85"
+      },
+      "checkedrecords.api/1.0.0/lean-bridge/dotnet/src/LeanBridge.Checkedrecords/Runtime.cs": {
+        "bytes": 23295,
+        "sha256": "36a7b036bb45c83bc7777f138bd08208af5b0b00e269c9d60a0607359ca45855"
+      },
+      "checkedrecords.api/1.0.0/lean-bridge/licenses/Lean-LICENSE": {
+        "bytes": 9160,
+        "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+      },
+      "checkedrecords.api/1.0.0/lean-bridge/licenses/Lean-LICENSES": {
+        "bytes": 81854,
+        "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+      },
+      "checkedrecords.api/1.0.0/lean-bridge/licenses/LeanBridge-LICENSE": {
+        "bytes": 1093,
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      "checkedrecords.api/1.0.0/lean-bridge/licenses/source-notices.json": {
+        "bytes": 5566,
+        "sha256": "0d110d3b8b87e97d9c8291d781dcc68d6a235552ec6026ebc8cb3f9d3ff75bc5"
+      },
+      "checkedrecords.api/1.0.0/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+        "bytes": 1093,
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      "checkedrecords.api/1.0.0/lean-bridge/native-c-adapter.json": {
+        "bytes": 1378,
+        "sha256": "7b75e22e5e29f0eb43a7c03ae30b3185f2e42681cad07a4f3c9f3c12ffa22cb1"
+      },
+      "checkedrecords.api/1.0.0/lean-bridge/native-dotnet.json": {
+        "bytes": 2476,
+        "sha256": "578576a68565c95234bab9b4a462168736fe96facd1e02a92ab5d42048134498"
+      },
+      "checkedrecords.api/1.0.0/lean-bridge/package-receipt.json": {
+        "bytes": 14957,
+        "sha256": "25077f3c62df510cb4d2b8facfe435c8cd4db4163cdf2bdf0983edeabdf60df4"
+      },
+      "checkedrecords.api/1.0.0/lean-bridge/runtime.json": {
+        "bytes": 1466,
+        "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+      },
+      "checkedrecords.api/1.0.0/lib/net8.0/LeanBridge.Checkedrecords.dll": {
+        "bytes": 23040,
+        "sha256": "4a8279f05116870c791bf8c13ee94b868ce7e85bf2d3858bf649c50b7a7adf31"
+      },
+      "checkedrecords.api/1.0.0/lib/net8.0/LeanBridge.Checkedrecords.xml": {
+        "bytes": 3399,
+        "sha256": "b4081de2c835b41b71abcb3f79782eba214893d21f21ecd17f45b09eee62005d"
+      },
+      "checkedrecords.api/1.0.0/runtimes/linux-x64/native/libcheckedrecords.so": {
+        "bytes": 39680,
+        "sha256": "b2890f05d13b37cd276dbd5e5433941cccc6447611eba2071851dc21d4ff2494"
+      },
+      "checkedrecords.api/1.0.0/runtimes/linux-x64/native/libcomponent_d3803aad486f3d2e4a02.so": {
+        "bytes": 60344,
+        "sha256": "5342b43886aa8fff09a23979e2217e5cbca4f5538a4fc1b23b6314379c342f80"
+      },
+      "checkedrecords.api/1.0.0/runtimes/linux-x64/native/liblean_bridge_native.so": {
+        "bytes": 21464,
+        "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+      },
+      "checkedrecords.api/1.0.0/runtimes/linux-x64/native/libleanshared.so": {
+        "bytes": 158401256,
+        "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+      }
+    },
+    "command": "/app/.toolchains/dotnet/dotnet",
+    "inputs": {
+      "Consumer.csproj": {
+        "bytes": 508,
+        "sha256": "b40b7aae5d6bb2336024a33a0756a8a0d6d6023622ba0a6e2200792fc071dd87"
+      },
+      "NuGet.Config": {
+        "bytes": 163,
+        "sha256": "e5dfa74aa48869dd2bafb18e20e440493a866c00eeb4710769f3422d0e6cba25"
+      },
+      "consumer.cs": {
+        "bytes": 4450,
+        "sha256": "1c696f3f5d0dc32d829cf13409044a093e5c2709d88d904dbf91586e00e6cb56"
+      },
+      "feed/Checkedrecords.Api.1.0.0.nupkg": {
+        "bytes": 51382633,
+        "sha256": "d04ed56ad06575951bdaecfe1353536d0174c2e78410513b0e84f6ac6e63f7cf"
+      },
+      "global.json": {
+        "bytes": 104,
+        "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+      }
+    },
+    "interpreter": {
+      "bytes": 68424,
+      "sha256": "c61ff7f8665688b95ad0f34e780daaa67b978d26115b82797c07ea6044c566ed"
+    },
+    "outputs": {
+      "Consumer.deps.json": {
+        "bytes": 1772,
+        "sha256": "240c8fa220ca11008509756ed4f1c545a30950a5f17a60aea3a21e7e443be281"
+      },
+      "Consumer.dll": {
+        "bytes": 9728,
+        "sha256": "9b90d554fa74aa60520b82cb9a4011f94e58deb69e133a83608f55d2cbbe3ce5"
+      },
+      "Consumer.pdb": {
+        "bytes": 11600,
+        "sha256": "bbe4c640264f759476a0f5db7997ca6216be46c970465000797a0d9e895f020a"
+      },
+      "Consumer.runtimeconfig.json": {
+        "bytes": 257,
+        "sha256": "088bcc1a867d80d3923a812855f7ae9297fc8ac3d844cf9a83510bd8d1352af8"
+      },
+      "LeanBridge.Checkedrecords.dll": {
+        "bytes": 23040,
+        "sha256": "4a8279f05116870c791bf8c13ee94b868ce7e85bf2d3858bf649c50b7a7adf31"
+      },
+      "runtimes/linux-x64/native/libcheckedrecords.so": {
+        "bytes": 39680,
+        "sha256": "b2890f05d13b37cd276dbd5e5433941cccc6447611eba2071851dc21d4ff2494"
+      },
+      "runtimes/linux-x64/native/libcomponent_d3803aad486f3d2e4a02.so": {
+        "bytes": 60344,
+        "sha256": "5342b43886aa8fff09a23979e2217e5cbca4f5538a4fc1b23b6314379c342f80"
+      },
+      "runtimes/linux-x64/native/liblean_bridge_native.so": {
+        "bytes": 21464,
+        "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+      },
+      "runtimes/linux-x64/native/libleanshared.so": {
+        "bytes": 158401256,
+        "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+      }
+    },
+    "packageDirectory": "checkedrecords.api/1.0.0",
+    "packageFileSetSha256": "018d61c0666a14e6f0e0daa75f8960704b9713f9701d4fefb12c9fdcda0deeaf",
+    "receiptBytes": "{\n  \"assembly\": \"LeanBridge.Checkedrecords\",\n  \"bindingIrSha256\": \"7e40ed68b3aca0e68aa62205f5220a7e6fa0a9b476124e19a9b99bb574ef12bc\",\n  \"compiledProjectionSha256\": \"578576a68565c95234bab9b4a462168736fe96facd1e02a92ab5d42048134498\",\n  \"component\": {\n    \"id\": \"checkedrecords@1.0.0\",\n    \"name\": \"checkedrecords\",\n    \"version\": \"1.0.0\"\n  },\n  \"ecosystem\": \"nuget\",\n  \"files\": {\n    \"Checkedrecords.Api.nuspec\": {\n      \"bytes\": 476,\n      \"sha256\": \"7987b1d59cba99b1aeccd551b07cdb3a1306253ad37a790989d5803fa53ed4a5\"\n    },\n    \"README.md\": {\n      \"bytes\": 4179,\n      \"sha256\": \"4ae25ec1e6a9d331d2bb718db0c2ebb492bddb359f4f3093e96a9734da4005c4\"\n    },\n    \"[Content_Types].xml\": {\n      \"bytes\": 939,\n      \"sha256\": \"f40a2ae0edf63af7046ff54e97e247dd6b2cf07e5d650a8b6d9c51370378b42b\"\n    },\n    \"_rels/.rels\": {\n      \"bytes\": 262,\n      \"sha256\": \"bc3c871bbc579d2e0cfb3eae677ef5f369522072ea66c281e9d32c1cd0ee0936\"\n    },\n    \"lean-bridge/component/allocation-guard.h\": {\n      \"bytes\": 1309,\n      \"sha256\": \"f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83\"\n    },\n    \"lean-bridge/component/artifacts.json\": {\n      \"bytes\": 1531,\n      \"sha256\": \"dc68052cc2e548c6067802fad01594ffd493da27a47d902eda83117e58f5d6e6\"\n    },\n    \"lean-bridge/component/binding-ir.json\": {\n      \"bytes\": 23275,\n      \"sha256\": \"048380d7dcb247dc70e2f9f10b3ae823d861280b4c2b39f3efacf094e0bad6f7\"\n    },\n    \"lean-bridge/component/component.h\": {\n      \"bytes\": 1812,\n      \"sha256\": \"280fb9b635c27c4218b9705b69be47347183f26b93e434926d891c383e642479\"\n    },\n    \"lean-bridge/component/generated.lean\": {\n      \"bytes\": 8391,\n      \"sha256\": \"de93dff206e9f43efa3056789f4847836d8ceb0375e069ccd238fdebee8cbd82\"\n    },\n    \"lean-bridge/component/metadata.json\": {\n      \"bytes\": 43265,\n      \"sha256\": \"7804e7d7452592ba64afb45984aad45ee559743b12c3c1f4c994b3b5918ce4ca\"\n    },\n    \"lean-bridge/component/model.json\": {\n      \"bytes\": 66336,\n      \"sha256\": \"bd01fc152dc3018953e8120a33dfc0d6e6b96812bbe2ad061d6b183139d13fc7\"\n    },\n    \"lean-bridge/component/native-component.json\": {\n      \"bytes\": 11125,\n      \"sha256\": \"ef535db86fe3b57b3a825f435c274e28ded97645091df66fa4e37b279dab614a\"\n    },\n    \"lean-bridge/dotnet/binding-manifest.json\": {\n      \"bytes\": 1226,\n      \"sha256\": \"a0a0a753ebbe6262d57a4ebd6877c4904302e3591cb09172cda8f91b0001337b\"\n    },\n    \"lean-bridge/dotnet/global.json\": {\n      \"bytes\": 104,\n      \"sha256\": \"d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc\"\n    },\n    \"lean-bridge/dotnet/src/LeanBridge.Checkedrecords/Api.cs\": {\n      \"bytes\": 4254,\n      \"sha256\": \"21a8c372aeb54373f3401f25b73aa42183375b89d97d25ddbd14d63bab3b58ed\"\n    },\n    \"lean-bridge/dotnet/src/LeanBridge.Checkedrecords/LeanBridge.Checkedrecords.csproj\": {\n      \"bytes\": 610,\n      \"sha256\": \"b707639f2861db4e5954cd7846773b098c039295c9bcc94909423759f47c0c85\"\n    },\n    \"lean-bridge/dotnet/src/LeanBridge.Checkedrecords/Runtime.cs\": {\n      \"bytes\": 23295,\n      \"sha256\": \"36a7b036bb45c83bc7777f138bd08208af5b0b00e269c9d60a0607359ca45855\"\n    },\n    \"lean-bridge/licenses/Lean-LICENSE\": {\n      \"bytes\": 9160,\n      \"sha256\": \"8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e\"\n    },\n    \"lean-bridge/licenses/Lean-LICENSES\": {\n      \"bytes\": 81854,\n      \"sha256\": \"00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce\"\n    },\n    \"lean-bridge/licenses/LeanBridge-LICENSE\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"lean-bridge/licenses/source-notices.json\": {\n      \"bytes\": 5566,\n      \"sha256\": \"0d110d3b8b87e97d9c8291d781dcc68d6a235552ec6026ebc8cb3f9d3ff75bc5\"\n    },\n    \"lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"lean-bridge/native-c-adapter.json\": {\n      \"bytes\": 1378,\n      \"sha256\": \"7b75e22e5e29f0eb43a7c03ae30b3185f2e42681cad07a4f3c9f3c12ffa22cb1\"\n    },\n    \"lean-bridge/native-dotnet.json\": {\n      \"bytes\": 2476,\n      \"sha256\": \"578576a68565c95234bab9b4a462168736fe96facd1e02a92ab5d42048134498\"\n    },\n    \"lean-bridge/runtime.json\": {\n      \"bytes\": 1466,\n      \"sha256\": \"137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf\"\n    },\n    \"lib/net8.0/LeanBridge.Checkedrecords.dll\": {\n      \"bytes\": 23040,\n      \"sha256\": \"4a8279f05116870c791bf8c13ee94b868ce7e85bf2d3858bf649c50b7a7adf31\"\n    },\n    \"lib/net8.0/LeanBridge.Checkedrecords.xml\": {\n      \"bytes\": 3399,\n      \"sha256\": \"b4081de2c835b41b71abcb3f79782eba214893d21f21ecd17f45b09eee62005d\"\n    },\n    \"runtimes/linux-x64/native/libcheckedrecords.so\": {\n      \"bytes\": 39680,\n      \"sha256\": \"b2890f05d13b37cd276dbd5e5433941cccc6447611eba2071851dc21d4ff2494\"\n    },\n    \"runtimes/linux-x64/native/libcomponent_d3803aad486f3d2e4a02.so\": {\n      \"bytes\": 60344,\n      \"sha256\": \"5342b43886aa8fff09a23979e2217e5cbca4f5538a4fc1b23b6314379c342f80\"\n    },\n    \"runtimes/linux-x64/native/liblean_bridge_native.so\": {\n      \"bytes\": 21464,\n      \"sha256\": \"25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7\"\n    },\n    \"runtimes/linux-x64/native/libleanshared.so\": {\n      \"bytes\": 158401256,\n      \"sha256\": \"d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4\"\n    }\n  },\n  \"glibcMinimumVersion\": \"2.36\",\n  \"kind\": \"lean-bridge-ordinary-nuget-package\",\n  \"name\": \"Checkedrecords.Api\",\n  \"namespace\": \"LeanBridge.Checkedrecords\",\n  \"runtimeIdentity\": \"137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf\",\n  \"schemaVersion\": 1,\n  \"sourceIdentity\": {\n    \"exportConfigurationSha256\": \"7430b75597b6bedf040663fae0db6f1ba5ee3cd1dec0c82cdeca047cfc35b11d\",\n    \"exportConfigurationSource\": \"{\\n  \\\"contracts\\\": {\\n    \\\"CheckedRecords.complement\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"refinement\\\": {\\n            \\\"constructor\\\": \\\"CheckedRecords.mkPercent\\\"\\n          }\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"CheckedRecords.firstOf\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"refinement\\\": {\\n            \\\"constructor\\\": \\\"CheckedRecords.mkTriple\\\"\\n          }\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"CheckedRecords.repeated\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\"\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"CheckedRecords.scale\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\"\\n        },\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"refinement\\\": {\\n            \\\"constructor\\\": \\\"CheckedRecords.mkTriple\\\"\\n          }\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"CheckedRecords.smallest\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"refinement\\\": {\\n            \\\"constructor\\\": \\\"CheckedRecords.sortedTriple\\\"\\n          }\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"CheckedRecords.span\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"refinement\\\": {\\n            \\\"constructor\\\": \\\"CheckedRecords.mkInterval\\\"\\n          }\\n        },\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"refinement\\\": {\\n            \\\"constructor\\\": \\\"CheckedRecords.mkInterval\\\"\\n          }\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"CheckedRecords.total\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"refinement\\\": {\\n            \\\"constructor\\\": \\\"CheckedRecords.mkTriple\\\"\\n          }\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"CheckedRecords.width\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"refinement\\\": {\\n            \\\"constructor\\\": \\\"CheckedRecords.mkInterval\\\"\\n          }\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    }\\n  },\\n  \\\"exports\\\": [\\n    \\\"CheckedRecords.width\\\",\\n    \\\"CheckedRecords.span\\\",\\n    \\\"CheckedRecords.total\\\",\\n    \\\"CheckedRecords.firstOf\\\",\\n    \\\"CheckedRecords.smallest\\\",\\n    \\\"CheckedRecords.scale\\\",\\n    \\\"CheckedRecords.repeated\\\",\\n    \\\"CheckedRecords.complement\\\"\\n  ],\\n  \\\"modules\\\": [\\n    \\\"CheckedRecords\\\"\\n  ],\\n  \\\"schemaVersion\\\": 1,\\n  \\\"targets\\\": {\\n    \\\"cargo\\\": {\\n      \\\"name\\\": \\\"checkedrecords\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    },\\n    \\\"nuget\\\": {\\n      \\\"name\\\": \\\"Checkedrecords.Api\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    },\\n    \\\"php-native\\\": {\\n      \\\"name\\\": \\\"example/checkedrecords\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    },\\n    \\\"wit-wasi\\\": {\\n      \\\"name\\\": \\\"checkedrecords\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    }\\n  }\\n}\\n\",\n    \"extractorSha256\": \"8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f\",\n    \"leanCommit\": \"f3b06c705e6c85f5314019d5d3baab0fec5b580c\",\n    \"leanCompilerSha256\": \"e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550\",\n    \"leanVersion\": \"4.32.2\",\n    \"modules\": [\n      {\n        \"interface\": {\n          \"bytes\": 212984,\n          \"interfaceSha256\": \"9266352966cf6c2be6c82d2622ffe556a121d9da74857956721013397e518e9f\",\n          \"sha256\": \"36a44a802ba099c216a0fb4c7806e5875c8c2830df4505c0a75d99f857231e6e\"\n        },\n        \"module\": \"CheckedRecords\",\n        \"source\": {\n          \"bytes\": 2396,\n          \"path\": \"CheckedRecords.lean\",\n          \"sha256\": \"368d74e1c5abd242ec96ac8bc9cf9648377ccbe8b0f8608ab46efe14cfec34b7\"\n        }\n      }\n    ],\n    \"request\": {\n      \"arities\": [],\n      \"contracts\": {\n        \"CheckedRecords.complement\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"CheckedRecords.mkPercent\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"CheckedRecords.firstOf\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"CheckedRecords.mkTriple\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"CheckedRecords.repeated\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\"\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"CheckedRecords.scale\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\"\n            },\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"CheckedRecords.mkTriple\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"CheckedRecords.smallest\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"CheckedRecords.sortedTriple\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"CheckedRecords.span\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"CheckedRecords.mkInterval\"\n              }\n            },\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"CheckedRecords.mkInterval\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"CheckedRecords.total\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"CheckedRecords.mkTriple\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"CheckedRecords.width\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"CheckedRecords.mkInterval\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        }\n      },\n      \"exportModules\": [\n        \"CheckedRecords\"\n      ],\n      \"exports\": [\n        \"CheckedRecords.width\",\n        \"CheckedRecords.span\",\n        \"CheckedRecords.total\",\n        \"CheckedRecords.firstOf\",\n        \"CheckedRecords.smallest\",\n        \"CheckedRecords.scale\",\n        \"CheckedRecords.repeated\",\n        \"CheckedRecords.complement\"\n      ],\n      \"metadata\": {\n        \"invocationIdentitySha256\": \"2be94c9d1e3d33c563025632795febcbb296bdd031086aaf102ec9f2c70be308\",\n        \"modules\": [\n          {\n            \"interfaceSha256\": \"9266352966cf6c2be6c82d2622ffe556a121d9da74857956721013397e518e9f\",\n            \"name\": \"CheckedRecords\",\n            \"sourcePath\": \"CheckedRecords.lean\",\n            \"sourceSha256\": \"368d74e1c5abd242ec96ac8bc9cf9648377ccbe8b0f8608ab46efe14cfec34b7\"\n          }\n        ],\n        \"toolchain\": \"leanprover/lean4:v4.32.2\"\n      },\n      \"modules\": [\n        \"CheckedRecords\"\n      ],\n      \"profile\": \"native-library-v1\",\n      \"resources\": []\n    },\n    \"sourceNoticesSha256\": \"0d110d3b8b87e97d9c8291d781dcc68d6a235552ec6026ebc8cb3f9d3ff75bc5\",\n    \"sourceTreeSha256\": \"bd8584e1cd36773845200ea7e3e34bde4927cb378583a138d7f1b24d76ba5d65\"\n  },\n  \"version\": \"1.0.0\"\n}\n",
+    "root": "/tmp/lean-bridge-checked-record-hosts-otIUq2/consumer/dotnet"
+  },
+  "expectedBindingIrSha256": "26f8b5ce11c01bfa51ee98a162d3d3d15258a5030816af59c5b64e2cb4b6b14e",
+  "modelSha256": "bd01fc152dc3018953e8120a33dfc0d6e6b96812bbe2ad061d6b183139d13fc7",
+  "offlineInstall": true,
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51382633,
+          "path": "archives/Checkedrecords.Api.1.0.0.nupkg",
+          "sha256": "d04ed56ad06575951bdaecfe1353536d0174c2e78410513b0e84f6ac6e63f7cf"
+        }
+      ],
+      "ecosystem": "nuget",
+      "name": "Checkedrecords.Api",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "nuget",
+      "version": "1.0.0"
+    }
+  ],
+  "profile": "dotnet",
+  "receiptSha256": "c4033bd0c8c9bfe6fea41840cd41f3d07cac0590b6cdd61bd151fb28ece53b66",
+  "relocatedInstallation": true,
+  "repeatExecution": true,
+  "repeatedRuns": 1,
+  "resultOnly": false,
+  "reviewed": false,
+  "route": "ordinary-source",
+  "sourceRemovedBeforeInstallation": true,
+  "sourceUnchangedAfterReplay": true
+}

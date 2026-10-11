@@ -1,0 +1,52 @@
+{"event":"starting","revision":"aed50e1a6e16da3856931cf035d70d673fd2cb95","profiles":"dotnet,php-native,rust,wit-wasi","route":"ordinary-source","label":"remaining-ordinary-r1","time":"2026-10-10T23:25:05.040Z"}
+Started 3351318 at aed50e1a6e16da3856931cf035d70d673fd2cb95; free 2439 MiB; output /app/build/vo1446-host-remaining-ordinary-r1-aed50e1-records
+{"code":1,"signal":null,"pid":3351318,"stoppedForDisk":false,"minimumFreeMiB":1041,"endedAt":"2026-10-10T23:28:49.170Z","tapSha256":"3ca41163c97ab1952eb3414a3e34bfb9fbe899561894bd5260d37ff03bab0b7d"}
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
+  [
++   1,
+-   0,
+    null,
+    false
+  ]
+
+    at file:///app/build/run-checked-record-native-hosts-v1.mjs:68:8 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: [ 1, null, false ],
+  expected: [ 0, null, false ],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v22.23.2
+{"event":"completed","route":"ordinary-source","label":"remaining-ordinary-r1","result":{"code":1,"signal":null},"time":"2026-10-10T23:28:49.174Z"}
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
+  {
++   code: 1,
+-   code: 0,
+    signal: null
+  }
+
+    at file:///app/build/queue-vo1446-native-group.mjs:26:10
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: { code: 1, signal: null },
+  expected: { code: 0, signal: null },
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v22.23.2

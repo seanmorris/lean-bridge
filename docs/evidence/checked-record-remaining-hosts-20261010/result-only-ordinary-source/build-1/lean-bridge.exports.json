@@ -1,0 +1,41 @@
+{
+  "contracts": {
+    "CheckedRecords.repeated": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    }
+  },
+  "exports": [
+    "CheckedRecords.repeated"
+  ],
+  "modules": [
+    "CheckedRecords"
+  ],
+  "schemaVersion": 1,
+  "targets": {
+    "cargo": {
+      "name": "checkedrecords",
+      "version": "1.0.0"
+    },
+    "nuget": {
+      "name": "Checkedrecords.Api",
+      "version": "1.0.0"
+    },
+    "php-native": {
+      "name": "example/checkedrecords",
+      "version": "1.0.0"
+    },
+    "wit-wasi": {
+      "name": "checkedrecords",
+      "version": "1.0.0"
+    }
+  }
+}

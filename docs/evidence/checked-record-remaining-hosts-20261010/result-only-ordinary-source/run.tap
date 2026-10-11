@@ -1,0 +1,22 @@
+TAP version 13
+# Subtest: installed checked-record native hosts reproduce and relocate result-only-ordinary-source
+ok 1 - installed checked-record native hosts reproduce and relocate result-only-ordinary-source
+  ---
+  duration_ms: 271454.731812
+  type: 'test'
+  ...
+# result-only-ordinary-source author 0: dotnet, php-native, rust, wit-wasi
+# result-only-ordinary-source author 1: dotnet, php-native, rust, wit-wasi
+# Installing and relocating result-only-ordinary-source dotnet
+# Installing and relocating result-only-ordinary-source php-native
+# Installing and relocating result-only-ordinary-source rust
+# Installing and relocating result-only-ordinary-source wit-wasi
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 271826.363764

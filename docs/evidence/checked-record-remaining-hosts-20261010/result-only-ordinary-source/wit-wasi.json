@@ -1,0 +1,50 @@
+{
+  "archives": {
+    "archives/Checkedrecords.Api.1.0.0.nupkg": "cb0b0dce1bc3d1316291017254f046db0759462e1e5245c3eaa79f516ee1b2fe",
+    "archives/checkedrecords-1.0.0-wit-wasi.tar.gz": "dc761dc408239de2faea4e71a4564f944822cc5c1f8dfb885754c7d2c7f5c229",
+    "archives/checkedrecords-1.0.0.crate": "6401ba29a36bd83a3b122b3cc8326b045f6b8a600a596d38b240c601548fed31",
+    "archives/example-checkedrecords-1.0.0-linux-x86_64.zip": "8de906534567b0bc6f47eac3915b11d782a995f84d2068af6b82c667554d47ab"
+  },
+  "bindingIrSha256": "c5d3ba3339ab9a1c750fbbd7dc90277ebf688372461d3e39ce3469690e19abfa",
+  "checks": 1002,
+  "compilerFreePath": true,
+  "compilerFreeReplay": true,
+  "consumerSha256": "e1c507f28ec5ad68c251cb31447644a6ca499208461632a73a9edbfee562a703",
+  "dispatch": {
+    "observed": false,
+    "reason": "No entry counters in this installed host acceptance"
+  },
+  "expectedBindingIrSha256": "2c63d8386d6d7c063182ecb9652889a1f6596e5091ae3e21a876ec122cca0b02",
+  "modelSha256": "d64afb7e827016a9cfecf97899489c9176af3a402113f5ebe855ac87d250eb21",
+  "offlineInstall": true,
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 59202940,
+          "path": "archives/checkedrecords-1.0.0-wit-wasi.tar.gz",
+          "sha256": "dc761dc408239de2faea4e71a4564f944822cc5c1f8dfb885754c7d2c7f5c229"
+        }
+      ],
+      "ecosystem": "wit-wasi",
+      "name": "checkedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "wit-wasi",
+      "version": "1.0.0"
+    }
+  ],
+  "profile": "wit-wasi",
+  "receiptSha256": "7c83d2ac3ef5464a2ee447deb9a883bb2ce351f2f03870fb09397d68688fd0d3",
+  "relocatedInstallation": true,
+  "repeatExecution": true,
+  "repeatedRuns": 1,
+  "resultOnly": true,
+  "reviewed": false,
+  "route": "result-only-ordinary-source",
+  "sourceRemovedBeforeInstallation": true,
+  "sourceUnchangedAfterReplay": true
+}

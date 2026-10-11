@@ -1,0 +1,645 @@
+{
+  "archives": {
+    "archives/Checkedrecords.Api.1.0.0.nupkg": "d04ed56ad06575951bdaecfe1353536d0174c2e78410513b0e84f6ac6e63f7cf",
+    "archives/checkedrecords-1.0.0-wit-wasi.tar.gz": "c76cefbae185ae7a6d04d4079325abe1dba982c3786fc4b8946bfe0488e5410a",
+    "archives/checkedrecords-1.0.0.crate": "f4823cfb6f066f46508a874d895bfb965a4c826b5f40bf6547566e23c71127ce",
+    "archives/example-checkedrecords-1.0.0-linux-x86_64.zip": "174d8061429d2deb8db95de41af89f8c952d6c602f0bf5e7961a9262e07d8ba7"
+  },
+  "bindingIrSha256": "7e40ed68b3aca0e68aa62205f5220a7e6fa0a9b476124e19a9b99bb574ef12bc",
+  "checks": 9024,
+  "compilerFreePath": true,
+  "compilerFreeReplay": true,
+  "consumerSha256": "502b58c8bd34a8e38e4622cd0d7cc3bbe0de23f0c760dc70997f26e6e40c2998",
+  "dispatch": {
+    "observed": false,
+    "reason": "No entry counters in this installed host acceptance"
+  },
+  "expectedBindingIrSha256": "26f8b5ce11c01bfa51ee98a162d3d3d15258a5030816af59c5b64e2cb4b6b14e",
+  "modelSha256": "bd01fc152dc3018953e8120a33dfc0d6e6b96812bbe2ad061d6b183139d13fc7",
+  "offlineInstall": true,
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51370808,
+          "path": "archives/example-checkedrecords-1.0.0-linux-x86_64.zip",
+          "sha256": "174d8061429d2deb8db95de41af89f8c952d6c602f0bf5e7961a9262e07d8ba7"
+        }
+      ],
+      "ecosystem": "composer",
+      "name": "example/checkedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "php-native",
+      "version": "1.0.0"
+    }
+  ],
+  "phpEnvironment": {
+    "command": "/usr/bin/php8.2",
+    "composer": "/usr/bin/composer",
+    "dependencyFiles": {
+      "LICENSE": {
+        "bytes": 1089,
+        "sha256": "d2625cc652e6ffa9f16827f1dba2d83ac12b050dc8150a38720420dbb810cae3"
+      },
+      "composer.json": {
+        "bytes": 816,
+        "sha256": "fe93d538393d24617d615b373389d8a8970d8be18a8928d17c5a5cd9381a6522"
+      },
+      "src/BigDecimal.php": {
+        "bytes": 38820,
+        "sha256": "ccf44c9e463182dd158190fd3b27b631ea7a58968505157e2bc715b61604515c"
+      },
+      "src/BigInteger.php": {
+        "bytes": 47781,
+        "sha256": "a6d7b7824a8399ece864332672800f13be4ef57609f868dd577de2cf586bc3a1"
+      },
+      "src/BigNumber.php": {
+        "bytes": 31254,
+        "sha256": "5a2a5ad1e73835fb200bbf1f959dbd36b8785b5e4a1c7c9ef505992130c08049"
+      },
+      "src/BigRational.php": {
+        "bytes": 18121,
+        "sha256": "99d999ae1d4ccb9bbe231a2e5242f315b9483f317b8b5bd226277ced1a4ba2ab"
+      },
+      "src/Exception/DivisionByZeroException.php": {
+        "bytes": 1296,
+        "sha256": "6dad71505461e21c56db4222659891b1a4efa8bf7737290418668aa881f6c3d3"
+      },
+      "src/Exception/IntegerOverflowException.php": {
+        "bytes": 1174,
+        "sha256": "d4264eb4bc039baa7cb8a4aa62c8928c85ff947e9823532095e156d87392455b"
+      },
+      "src/Exception/InvalidArgumentException.php": {
+        "bytes": 2957,
+        "sha256": "c25c58c48379436ce704ea28cc3c5cff5f853ed5e2b439e639d198ed7bdfddf9"
+      },
+      "src/Exception/MathException.php": {
+        "bytes": 179,
+        "sha256": "34033cc2b90fa897e9e79d05a589c8e6411b9a117a80765b58013eacad0b255e"
+      },
+      "src/Exception/NegativeNumberException.php": {
+        "bytes": 1316,
+        "sha256": "2c6a1c878e96bbb06d07fcd64ce06b66e5ac56f5ba51a2ba69cdd62b1f5dfd6d"
+      },
+      "src/Exception/NoInverseException.php": {
+        "bytes": 658,
+        "sha256": "1e072b6b8802ef678cd8aed6aab4f5534e83e514c67c10cfbd457aa9e67d77d2"
+      },
+      "src/Exception/NumberFormatException.php": {
+        "bytes": 3718,
+        "sha256": "9513693ceea593b6686ca7ef9253c595c6502145382f9da9872c791b37b5a258"
+      },
+      "src/Exception/PlatformException.php": {
+        "bytes": 1283,
+        "sha256": "b2bc33189336bf6c8b3b145bd8c8397218e90588cca9ead140ef4a66d1c6be51"
+      },
+      "src/Exception/RandomSourceException.php": {
+        "bytes": 1343,
+        "sha256": "462eb152713684b4d5ac0efe2fa27f8b2fd0d877ceb3e7315516757c5640e67c"
+      },
+      "src/Exception/RoundingNecessaryException.php": {
+        "bytes": 3878,
+        "sha256": "3f9e061a0eeda28fc35d6f70cd1625c74d3002891c2d063ed2bede16155c8549"
+      },
+      "src/Internal/Calculator.php": {
+        "bytes": 20316,
+        "sha256": "a92ba12d6e6487ef8ee6cf435ede5b2d4f4d4684b7bca14aa9c133b842724655"
+      },
+      "src/Internal/Calculator/BcMathCalculator.php": {
+        "bytes": 2078,
+        "sha256": "aaf790516424d97f2257bf6fdc7eee9a95fc5440abd11d2fbc4f09ba73549b6a"
+      },
+      "src/Internal/Calculator/GmpCalculator.php": {
+        "bytes": 3668,
+        "sha256": "0351a740b49e88cf379319af9fccab8c8f437cd5d54b2d57b79c1ea72fcc0420"
+      },
+      "src/Internal/Calculator/NativeCalculator.php": {
+        "bytes": 14245,
+        "sha256": "4980f1a9b620a8de0588a018276044ed20c01293c2a0254613094e81e1cb6c1a"
+      },
+      "src/Internal/CalculatorRegistry.php": {
+        "bytes": 1887,
+        "sha256": "7047026d82935de4736cb9f2f73915a75c2e9a776c68476b72bd430cab115088"
+      },
+      "src/Internal/DecimalHelper.php": {
+        "bytes": 4779,
+        "sha256": "6884286a2dd2ebbba5d373140e2cca58d6efb8dd63b0868e517fb39eff4ad016"
+      },
+      "src/Internal/Safe.php": {
+        "bytes": 1645,
+        "sha256": "26100429b186305ee9143f0b45c36168c1a7d039099dff13f5ab1a9ca2e32ccf"
+      },
+      "src/NumberSyntax.php": {
+        "bytes": 1705,
+        "sha256": "f5ad04274721dd3bbc4572b90eb8e71fb47d052fd1ab6974e08aa013fef94b9e"
+      },
+      "src/RoundingMode.php": {
+        "bytes": 5370,
+        "sha256": "1b7e6399d071d1ee922ec6ee928ae06bfa092b6d932af5faac8fbe65ef9b258d"
+      }
+    },
+    "feedFiles": {
+      "brick-math-1.0.0.zip": {
+        "bytes": 48201,
+        "sha256": "4563893ce709e3be081c369fd9799289c2a97791b5df2113524bc85696ffefd2"
+      },
+      "brick-math/LICENSE": {
+        "bytes": 1089,
+        "sha256": "d2625cc652e6ffa9f16827f1dba2d83ac12b050dc8150a38720420dbb810cae3"
+      },
+      "brick-math/composer.json": {
+        "bytes": 816,
+        "sha256": "fe93d538393d24617d615b373389d8a8970d8be18a8928d17c5a5cd9381a6522"
+      },
+      "brick-math/src/BigDecimal.php": {
+        "bytes": 38820,
+        "sha256": "ccf44c9e463182dd158190fd3b27b631ea7a58968505157e2bc715b61604515c"
+      },
+      "brick-math/src/BigInteger.php": {
+        "bytes": 47781,
+        "sha256": "a6d7b7824a8399ece864332672800f13be4ef57609f868dd577de2cf586bc3a1"
+      },
+      "brick-math/src/BigNumber.php": {
+        "bytes": 31254,
+        "sha256": "5a2a5ad1e73835fb200bbf1f959dbd36b8785b5e4a1c7c9ef505992130c08049"
+      },
+      "brick-math/src/BigRational.php": {
+        "bytes": 18121,
+        "sha256": "99d999ae1d4ccb9bbe231a2e5242f315b9483f317b8b5bd226277ced1a4ba2ab"
+      },
+      "brick-math/src/Exception/DivisionByZeroException.php": {
+        "bytes": 1296,
+        "sha256": "6dad71505461e21c56db4222659891b1a4efa8bf7737290418668aa881f6c3d3"
+      },
+      "brick-math/src/Exception/IntegerOverflowException.php": {
+        "bytes": 1174,
+        "sha256": "d4264eb4bc039baa7cb8a4aa62c8928c85ff947e9823532095e156d87392455b"
+      },
+      "brick-math/src/Exception/InvalidArgumentException.php": {
+        "bytes": 2957,
+        "sha256": "c25c58c48379436ce704ea28cc3c5cff5f853ed5e2b439e639d198ed7bdfddf9"
+      },
+      "brick-math/src/Exception/MathException.php": {
+        "bytes": 179,
+        "sha256": "34033cc2b90fa897e9e79d05a589c8e6411b9a117a80765b58013eacad0b255e"
+      },
+      "brick-math/src/Exception/NegativeNumberException.php": {
+        "bytes": 1316,
+        "sha256": "2c6a1c878e96bbb06d07fcd64ce06b66e5ac56f5ba51a2ba69cdd62b1f5dfd6d"
+      },
+      "brick-math/src/Exception/NoInverseException.php": {
+        "bytes": 658,
+        "sha256": "1e072b6b8802ef678cd8aed6aab4f5534e83e514c67c10cfbd457aa9e67d77d2"
+      },
+      "brick-math/src/Exception/NumberFormatException.php": {
+        "bytes": 3718,
+        "sha256": "9513693ceea593b6686ca7ef9253c595c6502145382f9da9872c791b37b5a258"
+      },
+      "brick-math/src/Exception/PlatformException.php": {
+        "bytes": 1283,
+        "sha256": "b2bc33189336bf6c8b3b145bd8c8397218e90588cca9ead140ef4a66d1c6be51"
+      },
+      "brick-math/src/Exception/RandomSourceException.php": {
+        "bytes": 1343,
+        "sha256": "462eb152713684b4d5ac0efe2fa27f8b2fd0d877ceb3e7315516757c5640e67c"
+      },
+      "brick-math/src/Exception/RoundingNecessaryException.php": {
+        "bytes": 3878,
+        "sha256": "3f9e061a0eeda28fc35d6f70cd1625c74d3002891c2d063ed2bede16155c8549"
+      },
+      "brick-math/src/Internal/Calculator.php": {
+        "bytes": 20316,
+        "sha256": "a92ba12d6e6487ef8ee6cf435ede5b2d4f4d4684b7bca14aa9c133b842724655"
+      },
+      "brick-math/src/Internal/Calculator/BcMathCalculator.php": {
+        "bytes": 2078,
+        "sha256": "aaf790516424d97f2257bf6fdc7eee9a95fc5440abd11d2fbc4f09ba73549b6a"
+      },
+      "brick-math/src/Internal/Calculator/GmpCalculator.php": {
+        "bytes": 3668,
+        "sha256": "0351a740b49e88cf379319af9fccab8c8f437cd5d54b2d57b79c1ea72fcc0420"
+      },
+      "brick-math/src/Internal/Calculator/NativeCalculator.php": {
+        "bytes": 14245,
+        "sha256": "4980f1a9b620a8de0588a018276044ed20c01293c2a0254613094e81e1cb6c1a"
+      },
+      "brick-math/src/Internal/CalculatorRegistry.php": {
+        "bytes": 1887,
+        "sha256": "7047026d82935de4736cb9f2f73915a75c2e9a776c68476b72bd430cab115088"
+      },
+      "brick-math/src/Internal/DecimalHelper.php": {
+        "bytes": 4779,
+        "sha256": "6884286a2dd2ebbba5d373140e2cca58d6efb8dd63b0868e517fb39eff4ad016"
+      },
+      "brick-math/src/Internal/Safe.php": {
+        "bytes": 1645,
+        "sha256": "26100429b186305ee9143f0b45c36168c1a7d039099dff13f5ab1a9ca2e32ccf"
+      },
+      "brick-math/src/NumberSyntax.php": {
+        "bytes": 1705,
+        "sha256": "f5ad04274721dd3bbc4572b90eb8e71fb47d052fd1ab6974e08aa013fef94b9e"
+      },
+      "brick-math/src/RoundingMode.php": {
+        "bytes": 5370,
+        "sha256": "1b7e6399d071d1ee922ec6ee928ae06bfa092b6d932af5faac8fbe65ef9b258d"
+      },
+      "component.zip": {
+        "bytes": 51370808,
+        "sha256": "174d8061429d2deb8db95de41af89f8c952d6c602f0bf5e7961a9262e07d8ba7"
+      }
+    },
+    "generatedFiles": {
+      "composer.lock": {
+        "bytes": 3044,
+        "sha256": "5a6dbedcaf2aba8033c4cebf7cc262edbd6069ee814c79446df3eec4126daf0d"
+      },
+      "vendor/autoload.php": {
+        "bytes": 771,
+        "sha256": "1203d8e3e1a31a8aa087c68dcf5019c12df4d480a369dced2ae968837d1973af"
+      },
+      "vendor/composer/ClassLoader.php": {
+        "bytes": 16528,
+        "sha256": "42b8c5525dbc133045f47f4275f017071c82144a34acb9396d955ca10729cb2e"
+      },
+      "vendor/composer/InstalledVersions.php": {
+        "bytes": 16143,
+        "sha256": "21f4ba19e7859cb3f85b8b1680c970ee25d972546c1606dcae0e7e5f43f626f0"
+      },
+      "vendor/composer/LICENSE": {
+        "bytes": 1068,
+        "sha256": "7855ac293067aebe7e51afdd23b9dea54b8be24187dbecc9b9142581c37f596c"
+      },
+      "vendor/composer/autoload_classmap.php": {
+        "bytes": 222,
+        "sha256": "375085d0d6690301081436cd75755cb2c882f8a7f6fc385c8814a11734fc413a"
+      },
+      "vendor/composer/autoload_files.php": {
+        "bytes": 228,
+        "sha256": "c43ffbf9b13e9251a021b9732306a0a00fe7e1bb7641a676c6e7cbcc29de2036"
+      },
+      "vendor/composer/autoload_namespaces.php": {
+        "bytes": 139,
+        "sha256": "ede505407590638a435137f4e060136f1008de79fc169b3de9793423b0cea38c"
+      },
+      "vendor/composer/autoload_psr4.php": {
+        "bytes": 195,
+        "sha256": "d84c58712d49fd62ea528610fc277a36664abd37e1087cec8c1efb0af6918590"
+      },
+      "vendor/composer/autoload_real.php": {
+        "bytes": 1672,
+        "sha256": "190a62d73644f232796989bfa1a6b41fc4587573eb37d10bd1942837813780d1"
+      },
+      "vendor/composer/autoload_static.php": {
+        "bytes": 1212,
+        "sha256": "2022c9f9d7da4b1c89cac313e38fb8294b1fc4a68a3c6a6cd58575223be8f0f2"
+      },
+      "vendor/composer/installed.json": {
+        "bytes": 2821,
+        "sha256": "99ad6362c47f6a07d935b2f513f73a37e5be945d675bb57d14f63daa7c520457"
+      },
+      "vendor/composer/installed.php": {
+        "bytes": 1363,
+        "sha256": "766d7ba11d382a7d2d9d460c53b8ee007e709c9b70f154e79d06f1c8a785a9c5"
+      },
+      "vendor/composer/platform_check.php": {
+        "bytes": 925,
+        "sha256": "230c364d17607b4f0500630f1c1bcca4e08e1486748340d2ec85024f3a0b73b4"
+      }
+    },
+    "inputs": {
+      "composer.json": {
+        "bytes": 2355,
+        "sha256": "959072fdc92da8b7e592a0a37b58b0acfcd571b32964148bb30a4c575a2e92c1"
+      },
+      "consumer.php": {
+        "bytes": 4214,
+        "sha256": "502b58c8bd34a8e38e4622cd0d7cc3bbe0de23f0c760dc70997f26e6e40c2998"
+      },
+      "strict.php": {
+        "bytes": 4214,
+        "sha256": "031afc9ede62ea41bee37b970c4c0e43e2f3677dad25a22ecd4be05414ca65da"
+      }
+    },
+    "name": "example/checkedrecords",
+    "packageFileSetSha256": "cf1228cf2611fdbe1a41c576bbcc914e71d31ba354f459b9881064b5b5224a85",
+    "receiptBytes": "{\n  \"bindingIrSha256\": \"7e40ed68b3aca0e68aa62205f5220a7e6fa0a9b476124e19a9b99bb574ef12bc\",\n  \"component\": {\n    \"id\": \"checkedrecords@1.0.0\",\n    \"name\": \"checkedrecords\",\n    \"version\": \"1.0.0\"\n  },\n  \"ecosystem\": \"composer\",\n  \"files\": {\n    \"README.md\": {\n      \"bytes\": 4313,\n      \"sha256\": \"ae0ab666f434e7f5ffedd64e51ea704073a7d871c03830f00fb1b041b64c6324\"\n    },\n    \"binding-manifest.json\": {\n      \"bytes\": 1321,\n      \"sha256\": \"0358195b2c5610caa9aa701c7f23351fdfff04dea1e53c8fc6efda3dabc8c3f8\"\n    },\n    \"composer.json\": {\n      \"bytes\": 546,\n      \"sha256\": \"c75fbd7a20794f09d3b379bcefd95f11b8a65daeee848fc698daebd6cb80b339\"\n    },\n    \"lean-bridge/component/allocation-guard.h\": {\n      \"bytes\": 1309,\n      \"sha256\": \"f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83\"\n    },\n    \"lean-bridge/component/artifacts.json\": {\n      \"bytes\": 1531,\n      \"sha256\": \"dc68052cc2e548c6067802fad01594ffd493da27a47d902eda83117e58f5d6e6\"\n    },\n    \"lean-bridge/component/binding-ir.json\": {\n      \"bytes\": 23275,\n      \"sha256\": \"048380d7dcb247dc70e2f9f10b3ae823d861280b4c2b39f3efacf094e0bad6f7\"\n    },\n    \"lean-bridge/component/component.h\": {\n      \"bytes\": 1812,\n      \"sha256\": \"280fb9b635c27c4218b9705b69be47347183f26b93e434926d891c383e642479\"\n    },\n    \"lean-bridge/component/generated.lean\": {\n      \"bytes\": 8391,\n      \"sha256\": \"de93dff206e9f43efa3056789f4847836d8ceb0375e069ccd238fdebee8cbd82\"\n    },\n    \"lean-bridge/component/metadata.json\": {\n      \"bytes\": 43265,\n      \"sha256\": \"7804e7d7452592ba64afb45984aad45ee559743b12c3c1f4c994b3b5918ce4ca\"\n    },\n    \"lean-bridge/component/model.json\": {\n      \"bytes\": 66336,\n      \"sha256\": \"bd01fc152dc3018953e8120a33dfc0d6e6b96812bbe2ad061d6b183139d13fc7\"\n    },\n    \"lean-bridge/component/native-component.json\": {\n      \"bytes\": 11125,\n      \"sha256\": \"ef535db86fe3b57b3a825f435c274e28ded97645091df66fa4e37b279dab614a\"\n    },\n    \"lean-bridge/include/checkedrecords.h\": {\n      \"bytes\": 3532,\n      \"sha256\": \"721fd258f26e76b642b6ec5bf7ebd06323281cb11f4a08f7a69172f4425b8155\"\n    },\n    \"lean-bridge/native-c-adapter.json\": {\n      \"bytes\": 1378,\n      \"sha256\": \"7b75e22e5e29f0eb43a7c03ae30b3185f2e42681cad07a4f3c9f3c12ffa22cb1\"\n    },\n    \"lean-bridge/runtime.json\": {\n      \"bytes\": 1466,\n      \"sha256\": \"137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf\"\n    },\n    \"licenses/Lean-LICENSE\": {\n      \"bytes\": 9160,\n      \"sha256\": \"8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e\"\n    },\n    \"licenses/Lean-LICENSES\": {\n      \"bytes\": 81854,\n      \"sha256\": \"00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce\"\n    },\n    \"licenses/LeanBridge-LICENSE\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"licenses/source-notices.json\": {\n      \"bytes\": 5566,\n      \"sha256\": \"0d110d3b8b87e97d9c8291d781dcc68d6a235552ec6026ebc8cb3f9d3ff75bc5\"\n    },\n    \"licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"native/linux-x64/libcheckedrecords.so\": {\n      \"bytes\": 39680,\n      \"sha256\": \"b2890f05d13b37cd276dbd5e5433941cccc6447611eba2071851dc21d4ff2494\"\n    },\n    \"native/linux-x64/libcomponent_d3803aad486f3d2e4a02.so\": {\n      \"bytes\": 60344,\n      \"sha256\": \"5342b43886aa8fff09a23979e2217e5cbca4f5538a4fc1b23b6314379c342f80\"\n    },\n    \"native/linux-x64/liblean_bridge_native.so\": {\n      \"bytes\": 21464,\n      \"sha256\": \"25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7\"\n    },\n    \"native/linux-x64/libleanshared.so\": {\n      \"bytes\": 158401256,\n      \"sha256\": \"d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4\"\n    },\n    \"src/Api.php\": {\n      \"bytes\": 4909,\n      \"sha256\": \"1111d17f90fb6ce9bd677d06b6a2ad21bee1284abce94c214f4f989ebe73fbeb\"\n    },\n    \"src/Internal/Native.php\": {\n      \"bytes\": 26970,\n      \"sha256\": \"7b02e52ed332be756bfd8f8f95d5d21c7efb57ed74e89917861960f5ce2e110e\"\n    },\n    \"src/Internal/Runtime.php\": {\n      \"bytes\": 4336,\n      \"sha256\": \"057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14\"\n    }\n  },\n  \"glibcMinimumVersion\": \"2.36\",\n  \"kind\": \"lean-bridge-ordinary-php-package\",\n  \"name\": \"example/checkedrecords\",\n  \"namespace\": \"LeanCheckedrecords\",\n  \"runtimeIdentity\": \"137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf\",\n  \"schemaVersion\": 1,\n  \"sourceIdentity\": {\n    \"exportConfigurationSha256\": \"7430b75597b6bedf040663fae0db6f1ba5ee3cd1dec0c82cdeca047cfc35b11d\",\n    \"exportConfigurationSource\": \"{\\n  \\\"contracts\\\": {\\n    \\\"CheckedRecords.complement\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"refinement\\\": {\\n            \\\"constructor\\\": \\\"CheckedRecords.mkPercent\\\"\\n          }\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"CheckedRecords.firstOf\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"refinement\\\": {\\n            \\\"constructor\\\": \\\"CheckedRecords.mkTriple\\\"\\n          }\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"CheckedRecords.repeated\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\"\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"CheckedRecords.scale\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\"\\n        },\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"refinement\\\": {\\n            \\\"constructor\\\": \\\"CheckedRecords.mkTriple\\\"\\n          }\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"CheckedRecords.smallest\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"refinement\\\": {\\n            \\\"constructor\\\": \\\"CheckedRecords.sortedTriple\\\"\\n          }\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"CheckedRecords.span\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"refinement\\\": {\\n            \\\"constructor\\\": \\\"CheckedRecords.mkInterval\\\"\\n          }\\n        },\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"refinement\\\": {\\n            \\\"constructor\\\": \\\"CheckedRecords.mkInterval\\\"\\n          }\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"CheckedRecords.total\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"refinement\\\": {\\n            \\\"constructor\\\": \\\"CheckedRecords.mkTriple\\\"\\n          }\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"CheckedRecords.width\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"refinement\\\": {\\n            \\\"constructor\\\": \\\"CheckedRecords.mkInterval\\\"\\n          }\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    }\\n  },\\n  \\\"exports\\\": [\\n    \\\"CheckedRecords.width\\\",\\n    \\\"CheckedRecords.span\\\",\\n    \\\"CheckedRecords.total\\\",\\n    \\\"CheckedRecords.firstOf\\\",\\n    \\\"CheckedRecords.smallest\\\",\\n    \\\"CheckedRecords.scale\\\",\\n    \\\"CheckedRecords.repeated\\\",\\n    \\\"CheckedRecords.complement\\\"\\n  ],\\n  \\\"modules\\\": [\\n    \\\"CheckedRecords\\\"\\n  ],\\n  \\\"schemaVersion\\\": 1,\\n  \\\"targets\\\": {\\n    \\\"cargo\\\": {\\n      \\\"name\\\": \\\"checkedrecords\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    },\\n    \\\"nuget\\\": {\\n      \\\"name\\\": \\\"Checkedrecords.Api\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    },\\n    \\\"php-native\\\": {\\n      \\\"name\\\": \\\"example/checkedrecords\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    },\\n    \\\"wit-wasi\\\": {\\n      \\\"name\\\": \\\"checkedrecords\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    }\\n  }\\n}\\n\",\n    \"extractorSha256\": \"8853b149200206b9c2f352237a64027618c75294b3213a30b4b7e0c75166889f\",\n    \"leanCommit\": \"f3b06c705e6c85f5314019d5d3baab0fec5b580c\",\n    \"leanCompilerSha256\": \"e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550\",\n    \"leanVersion\": \"4.32.2\",\n    \"modules\": [\n      {\n        \"interface\": {\n          \"bytes\": 212984,\n          \"interfaceSha256\": \"9266352966cf6c2be6c82d2622ffe556a121d9da74857956721013397e518e9f\",\n          \"sha256\": \"36a44a802ba099c216a0fb4c7806e5875c8c2830df4505c0a75d99f857231e6e\"\n        },\n        \"module\": \"CheckedRecords\",\n        \"source\": {\n          \"bytes\": 2396,\n          \"path\": \"CheckedRecords.lean\",\n          \"sha256\": \"368d74e1c5abd242ec96ac8bc9cf9648377ccbe8b0f8608ab46efe14cfec34b7\"\n        }\n      }\n    ],\n    \"request\": {\n      \"arities\": [],\n      \"contracts\": {\n        \"CheckedRecords.complement\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"CheckedRecords.mkPercent\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"CheckedRecords.firstOf\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"CheckedRecords.mkTriple\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"CheckedRecords.repeated\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\"\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"CheckedRecords.scale\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\"\n            },\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"CheckedRecords.mkTriple\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"CheckedRecords.smallest\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"CheckedRecords.sortedTriple\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"CheckedRecords.span\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"CheckedRecords.mkInterval\"\n              }\n            },\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"CheckedRecords.mkInterval\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"CheckedRecords.total\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"CheckedRecords.mkTriple\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"CheckedRecords.width\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"CheckedRecords.mkInterval\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        }\n      },\n      \"exportModules\": [\n        \"CheckedRecords\"\n      ],\n      \"exports\": [\n        \"CheckedRecords.width\",\n        \"CheckedRecords.span\",\n        \"CheckedRecords.total\",\n        \"CheckedRecords.firstOf\",\n        \"CheckedRecords.smallest\",\n        \"CheckedRecords.scale\",\n        \"CheckedRecords.repeated\",\n        \"CheckedRecords.complement\"\n      ],\n      \"metadata\": {\n        \"invocationIdentitySha256\": \"2be94c9d1e3d33c563025632795febcbb296bdd031086aaf102ec9f2c70be308\",\n        \"modules\": [\n          {\n            \"interfaceSha256\": \"9266352966cf6c2be6c82d2622ffe556a121d9da74857956721013397e518e9f\",\n            \"name\": \"CheckedRecords\",\n            \"sourcePath\": \"CheckedRecords.lean\",\n            \"sourceSha256\": \"368d74e1c5abd242ec96ac8bc9cf9648377ccbe8b0f8608ab46efe14cfec34b7\"\n          }\n        ],\n        \"toolchain\": \"leanprover/lean4:v4.32.2\"\n      },\n      \"modules\": [\n        \"CheckedRecords\"\n      ],\n      \"profile\": \"native-library-v1\",\n      \"resources\": []\n    },\n    \"sourceNoticesSha256\": \"0d110d3b8b87e97d9c8291d781dcc68d6a235552ec6026ebc8cb3f9d3ff75bc5\",\n    \"sourceTreeSha256\": \"bd8584e1cd36773845200ea7e3e34bde4927cb378583a138d7f1b24d76ba5d65\"\n  },\n  \"version\": \"1.0.0\"\n}\n",
+    "root": "/tmp/lean-bridge-checked-record-hosts-otIUq2/consumer/php-native",
+    "runtimeFlags": [
+      "-n",
+      "-d",
+      "extension=/usr/lib/php/20220829/ffi.so",
+      "-d",
+      "ffi.enable=1"
+    ],
+    "tools": {
+      "/usr/bin/composer": {
+        "bytes": 3156,
+        "sha256": "5cf51f9912671912136317d889df7a5b8219f2a77f2b311b9a100989106847e2"
+      },
+      "/usr/bin/php8.2": {
+        "bytes": 5662424,
+        "sha256": "f44be0fe6c6c19b4a296f5b051bbe7d7924dc2d63ad4711ef666c4626e4a0e7a"
+      },
+      "/usr/lib/php/20220829/ctype.so": {
+        "bytes": 14440,
+        "sha256": "36647c21faefa76190aa32b33dc6e6ccf2b15f4a0d87184cfc213c327e3e9e0a"
+      },
+      "/usr/lib/php/20220829/ffi.so": {
+        "bytes": 174184,
+        "sha256": "a3c29e39e21f98d4f9178482445eae0bd69e818e067b21e7dbd3a63e54100dc8"
+      },
+      "/usr/lib/php/20220829/iconv.so": {
+        "bytes": 51304,
+        "sha256": "1d136532a8fe77caec4bd265e0539cce37248b6ef5b8e2ed07e1d0de171e90cd"
+      },
+      "/usr/lib/php/20220829/mbstring.so": {
+        "bytes": 1192704,
+        "sha256": "b42880230e64842003486160651ae42b7d2f44b657861f41dd01faccae0db11c"
+      },
+      "/usr/lib/php/20220829/phar.so": {
+        "bytes": 284776,
+        "sha256": "33a5b0822126d5233ab4853d597419c988b7b3f3edbbd492604070e4737d6bd3"
+      },
+      "/usr/lib/php/20220829/tokenizer.so": {
+        "bytes": 34920,
+        "sha256": "c7bc1d8ea1e79010c2cfde2ee898421aa99b6c70a203e2f266c469f42e16d001"
+      }
+    },
+    "vendorFiles": {
+      "autoload.php": {
+        "bytes": 771,
+        "sha256": "1203d8e3e1a31a8aa087c68dcf5019c12df4d480a369dced2ae968837d1973af"
+      },
+      "brick/math/LICENSE": {
+        "bytes": 1089,
+        "sha256": "d2625cc652e6ffa9f16827f1dba2d83ac12b050dc8150a38720420dbb810cae3"
+      },
+      "brick/math/composer.json": {
+        "bytes": 816,
+        "sha256": "fe93d538393d24617d615b373389d8a8970d8be18a8928d17c5a5cd9381a6522"
+      },
+      "brick/math/src/BigDecimal.php": {
+        "bytes": 38820,
+        "sha256": "ccf44c9e463182dd158190fd3b27b631ea7a58968505157e2bc715b61604515c"
+      },
+      "brick/math/src/BigInteger.php": {
+        "bytes": 47781,
+        "sha256": "a6d7b7824a8399ece864332672800f13be4ef57609f868dd577de2cf586bc3a1"
+      },
+      "brick/math/src/BigNumber.php": {
+        "bytes": 31254,
+        "sha256": "5a2a5ad1e73835fb200bbf1f959dbd36b8785b5e4a1c7c9ef505992130c08049"
+      },
+      "brick/math/src/BigRational.php": {
+        "bytes": 18121,
+        "sha256": "99d999ae1d4ccb9bbe231a2e5242f315b9483f317b8b5bd226277ced1a4ba2ab"
+      },
+      "brick/math/src/Exception/DivisionByZeroException.php": {
+        "bytes": 1296,
+        "sha256": "6dad71505461e21c56db4222659891b1a4efa8bf7737290418668aa881f6c3d3"
+      },
+      "brick/math/src/Exception/IntegerOverflowException.php": {
+        "bytes": 1174,
+        "sha256": "d4264eb4bc039baa7cb8a4aa62c8928c85ff947e9823532095e156d87392455b"
+      },
+      "brick/math/src/Exception/InvalidArgumentException.php": {
+        "bytes": 2957,
+        "sha256": "c25c58c48379436ce704ea28cc3c5cff5f853ed5e2b439e639d198ed7bdfddf9"
+      },
+      "brick/math/src/Exception/MathException.php": {
+        "bytes": 179,
+        "sha256": "34033cc2b90fa897e9e79d05a589c8e6411b9a117a80765b58013eacad0b255e"
+      },
+      "brick/math/src/Exception/NegativeNumberException.php": {
+        "bytes": 1316,
+        "sha256": "2c6a1c878e96bbb06d07fcd64ce06b66e5ac56f5ba51a2ba69cdd62b1f5dfd6d"
+      },
+      "brick/math/src/Exception/NoInverseException.php": {
+        "bytes": 658,
+        "sha256": "1e072b6b8802ef678cd8aed6aab4f5534e83e514c67c10cfbd457aa9e67d77d2"
+      },
+      "brick/math/src/Exception/NumberFormatException.php": {
+        "bytes": 3718,
+        "sha256": "9513693ceea593b6686ca7ef9253c595c6502145382f9da9872c791b37b5a258"
+      },
+      "brick/math/src/Exception/PlatformException.php": {
+        "bytes": 1283,
+        "sha256": "b2bc33189336bf6c8b3b145bd8c8397218e90588cca9ead140ef4a66d1c6be51"
+      },
+      "brick/math/src/Exception/RandomSourceException.php": {
+        "bytes": 1343,
+        "sha256": "462eb152713684b4d5ac0efe2fa27f8b2fd0d877ceb3e7315516757c5640e67c"
+      },
+      "brick/math/src/Exception/RoundingNecessaryException.php": {
+        "bytes": 3878,
+        "sha256": "3f9e061a0eeda28fc35d6f70cd1625c74d3002891c2d063ed2bede16155c8549"
+      },
+      "brick/math/src/Internal/Calculator.php": {
+        "bytes": 20316,
+        "sha256": "a92ba12d6e6487ef8ee6cf435ede5b2d4f4d4684b7bca14aa9c133b842724655"
+      },
+      "brick/math/src/Internal/Calculator/BcMathCalculator.php": {
+        "bytes": 2078,
+        "sha256": "aaf790516424d97f2257bf6fdc7eee9a95fc5440abd11d2fbc4f09ba73549b6a"
+      },
+      "brick/math/src/Internal/Calculator/GmpCalculator.php": {
+        "bytes": 3668,
+        "sha256": "0351a740b49e88cf379319af9fccab8c8f437cd5d54b2d57b79c1ea72fcc0420"
+      },
+      "brick/math/src/Internal/Calculator/NativeCalculator.php": {
+        "bytes": 14245,
+        "sha256": "4980f1a9b620a8de0588a018276044ed20c01293c2a0254613094e81e1cb6c1a"
+      },
+      "brick/math/src/Internal/CalculatorRegistry.php": {
+        "bytes": 1887,
+        "sha256": "7047026d82935de4736cb9f2f73915a75c2e9a776c68476b72bd430cab115088"
+      },
+      "brick/math/src/Internal/DecimalHelper.php": {
+        "bytes": 4779,
+        "sha256": "6884286a2dd2ebbba5d373140e2cca58d6efb8dd63b0868e517fb39eff4ad016"
+      },
+      "brick/math/src/Internal/Safe.php": {
+        "bytes": 1645,
+        "sha256": "26100429b186305ee9143f0b45c36168c1a7d039099dff13f5ab1a9ca2e32ccf"
+      },
+      "brick/math/src/NumberSyntax.php": {
+        "bytes": 1705,
+        "sha256": "f5ad04274721dd3bbc4572b90eb8e71fb47d052fd1ab6974e08aa013fef94b9e"
+      },
+      "brick/math/src/RoundingMode.php": {
+        "bytes": 5370,
+        "sha256": "1b7e6399d071d1ee922ec6ee928ae06bfa092b6d932af5faac8fbe65ef9b258d"
+      },
+      "composer/ClassLoader.php": {
+        "bytes": 16528,
+        "sha256": "42b8c5525dbc133045f47f4275f017071c82144a34acb9396d955ca10729cb2e"
+      },
+      "composer/InstalledVersions.php": {
+        "bytes": 16143,
+        "sha256": "21f4ba19e7859cb3f85b8b1680c970ee25d972546c1606dcae0e7e5f43f626f0"
+      },
+      "composer/LICENSE": {
+        "bytes": 1068,
+        "sha256": "7855ac293067aebe7e51afdd23b9dea54b8be24187dbecc9b9142581c37f596c"
+      },
+      "composer/autoload_classmap.php": {
+        "bytes": 222,
+        "sha256": "375085d0d6690301081436cd75755cb2c882f8a7f6fc385c8814a11734fc413a"
+      },
+      "composer/autoload_files.php": {
+        "bytes": 228,
+        "sha256": "c43ffbf9b13e9251a021b9732306a0a00fe7e1bb7641a676c6e7cbcc29de2036"
+      },
+      "composer/autoload_namespaces.php": {
+        "bytes": 139,
+        "sha256": "ede505407590638a435137f4e060136f1008de79fc169b3de9793423b0cea38c"
+      },
+      "composer/autoload_psr4.php": {
+        "bytes": 195,
+        "sha256": "d84c58712d49fd62ea528610fc277a36664abd37e1087cec8c1efb0af6918590"
+      },
+      "composer/autoload_real.php": {
+        "bytes": 1672,
+        "sha256": "190a62d73644f232796989bfa1a6b41fc4587573eb37d10bd1942837813780d1"
+      },
+      "composer/autoload_static.php": {
+        "bytes": 1212,
+        "sha256": "2022c9f9d7da4b1c89cac313e38fb8294b1fc4a68a3c6a6cd58575223be8f0f2"
+      },
+      "composer/installed.json": {
+        "bytes": 2821,
+        "sha256": "99ad6362c47f6a07d935b2f513f73a37e5be945d675bb57d14f63daa7c520457"
+      },
+      "composer/installed.php": {
+        "bytes": 1363,
+        "sha256": "766d7ba11d382a7d2d9d460c53b8ee007e709c9b70f154e79d06f1c8a785a9c5"
+      },
+      "composer/platform_check.php": {
+        "bytes": 925,
+        "sha256": "230c364d17607b4f0500630f1c1bcca4e08e1486748340d2ec85024f3a0b73b4"
+      },
+      "example/checkedrecords/README.md": {
+        "bytes": 4313,
+        "sha256": "ae0ab666f434e7f5ffedd64e51ea704073a7d871c03830f00fb1b041b64c6324"
+      },
+      "example/checkedrecords/binding-manifest.json": {
+        "bytes": 1321,
+        "sha256": "0358195b2c5610caa9aa701c7f23351fdfff04dea1e53c8fc6efda3dabc8c3f8"
+      },
+      "example/checkedrecords/composer.json": {
+        "bytes": 546,
+        "sha256": "c75fbd7a20794f09d3b379bcefd95f11b8a65daeee848fc698daebd6cb80b339"
+      },
+      "example/checkedrecords/lean-bridge/component/allocation-guard.h": {
+        "bytes": 1309,
+        "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+      },
+      "example/checkedrecords/lean-bridge/component/artifacts.json": {
+        "bytes": 1531,
+        "sha256": "dc68052cc2e548c6067802fad01594ffd493da27a47d902eda83117e58f5d6e6"
+      },
+      "example/checkedrecords/lean-bridge/component/binding-ir.json": {
+        "bytes": 23275,
+        "sha256": "048380d7dcb247dc70e2f9f10b3ae823d861280b4c2b39f3efacf094e0bad6f7"
+      },
+      "example/checkedrecords/lean-bridge/component/component.h": {
+        "bytes": 1812,
+        "sha256": "280fb9b635c27c4218b9705b69be47347183f26b93e434926d891c383e642479"
+      },
+      "example/checkedrecords/lean-bridge/component/generated.lean": {
+        "bytes": 8391,
+        "sha256": "de93dff206e9f43efa3056789f4847836d8ceb0375e069ccd238fdebee8cbd82"
+      },
+      "example/checkedrecords/lean-bridge/component/metadata.json": {
+        "bytes": 43265,
+        "sha256": "7804e7d7452592ba64afb45984aad45ee559743b12c3c1f4c994b3b5918ce4ca"
+      },
+      "example/checkedrecords/lean-bridge/component/model.json": {
+        "bytes": 66336,
+        "sha256": "bd01fc152dc3018953e8120a33dfc0d6e6b96812bbe2ad061d6b183139d13fc7"
+      },
+      "example/checkedrecords/lean-bridge/component/native-component.json": {
+        "bytes": 11125,
+        "sha256": "ef535db86fe3b57b3a825f435c274e28ded97645091df66fa4e37b279dab614a"
+      },
+      "example/checkedrecords/lean-bridge/include/checkedrecords.h": {
+        "bytes": 3532,
+        "sha256": "721fd258f26e76b642b6ec5bf7ebd06323281cb11f4a08f7a69172f4425b8155"
+      },
+      "example/checkedrecords/lean-bridge/native-c-adapter.json": {
+        "bytes": 1378,
+        "sha256": "7b75e22e5e29f0eb43a7c03ae30b3185f2e42681cad07a4f3c9f3c12ffa22cb1"
+      },
+      "example/checkedrecords/lean-bridge/package-receipt.json": {
+        "bytes": 13814,
+        "sha256": "87436f2909d5909a1d25da4a398d8bd0cddafa0f0dec287da6db666727493eb9"
+      },
+      "example/checkedrecords/lean-bridge/runtime.json": {
+        "bytes": 1466,
+        "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+      },
+      "example/checkedrecords/licenses/Lean-LICENSE": {
+        "bytes": 9160,
+        "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+      },
+      "example/checkedrecords/licenses/Lean-LICENSES": {
+        "bytes": 81854,
+        "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+      },
+      "example/checkedrecords/licenses/LeanBridge-LICENSE": {
+        "bytes": 1093,
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      "example/checkedrecords/licenses/source-notices.json": {
+        "bytes": 5566,
+        "sha256": "0d110d3b8b87e97d9c8291d781dcc68d6a235552ec6026ebc8cb3f9d3ff75bc5"
+      },
+      "example/checkedrecords/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+        "bytes": 1093,
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      "example/checkedrecords/native/linux-x64/libcheckedrecords.so": {
+        "bytes": 39680,
+        "sha256": "b2890f05d13b37cd276dbd5e5433941cccc6447611eba2071851dc21d4ff2494"
+      },
+      "example/checkedrecords/native/linux-x64/libcomponent_d3803aad486f3d2e4a02.so": {
+        "bytes": 60344,
+        "sha256": "5342b43886aa8fff09a23979e2217e5cbca4f5538a4fc1b23b6314379c342f80"
+      },
+      "example/checkedrecords/native/linux-x64/liblean_bridge_native.so": {
+        "bytes": 21464,
+        "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+      },
+      "example/checkedrecords/native/linux-x64/libleanshared.so": {
+        "bytes": 158401256,
+        "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+      },
+      "example/checkedrecords/src/Api.php": {
+        "bytes": 4909,
+        "sha256": "1111d17f90fb6ce9bd677d06b6a2ad21bee1284abce94c214f4f989ebe73fbeb"
+      },
+      "example/checkedrecords/src/Internal/Native.php": {
+        "bytes": 26970,
+        "sha256": "7b02e52ed332be756bfd8f8f95d5d21c7efb57ed74e89917861960f5ce2e110e"
+      },
+      "example/checkedrecords/src/Internal/Runtime.php": {
+        "bytes": 4336,
+        "sha256": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14"
+      }
+    }
+  },
+  "profile": "php-native",
+  "receiptSha256": "c4033bd0c8c9bfe6fea41840cd41f3d07cac0590b6cdd61bd151fb28ece53b66",
+  "relocatedInstallation": true,
+  "repeatExecution": true,
+  "repeatedRuns": 2,
+  "resultOnly": false,
+  "reviewed": false,
+  "route": "ordinary-source",
+  "sourceRemovedBeforeInstallation": true,
+  "sourceUnchangedAfterReplay": true
+}

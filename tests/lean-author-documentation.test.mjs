@@ -17,6 +17,7 @@ import { checkedRecordContracts } from "./helpers/checked-record-fixture.mjs";
 import { checkedRecordPromotionReferences } from "./helpers/checked-record-promotion-references.mjs";
 import { readCheckedRecordPythonArchive } from "./helpers/checked-record-python-archive.mjs";
 import { readCheckedRecordRubyJvmArchive } from "./helpers/checked-record-ruby-jvm-archive.mjs";
+import { readCheckedRecordRemainingHostsArchive } from "./helpers/checked-record-remaining-hosts-archive.mjs";
 import { callbackFinPromotionReferences } from "./helpers/callback-fin-promotion-references.mjs";
 import { sha256 } from "../src/capsule/node.mjs";
 import { finHostedReceiptSha256 } from "./helpers/fin-native-hosted-evidence.mjs";
@@ -154,7 +155,8 @@ test("checked-record guidance uses the tested payload and per-site constructor c
 	assert.match(section, /checked-record-python-hosts-20261010\.md/);
 	assert.match(section, /Python 3\.11 and 3\.12/);
 	assert.match(section, /checked-record-ruby-jvm-20261010\.md/);
-	assert.match(section, /installed-package acceptance for those four hosts remains pending/);
+	assert.match(section, /checked-record-remaining-hosts-20261010\.md/);
+	assert.match(section, /Native PHP runs in weak and strict modes/);
 	assert.match(section, /Browser execution remains pending/);
 	assert.doesNotMatch(section, /Installed-package acceptance for this mapping is pending|do not establish installed C\/C\+\+/);
 	assert.match(section, /exact names, order and types/);
@@ -167,13 +169,16 @@ test("checked-record guidance uses the tested payload and per-site constructor c
 test("the checked-record author table agrees with the retained native, npm and Python selections", async () => {
 	const document = await readFile("docs/lean/existing-package.md", "utf8");
 	const row = document.split("\n").find(line => line.startsWith("| Record with erased proof fields"));
-	assert.equal(row, "| Record with erased proof fields and a checked input constructor | Node installed; browser pending | C/C++, Python, Ruby, Java and Kotlin installed; other native hosts generated, pending | Rejected | Rejected | C/C++, Python, Ruby, Java, Kotlin and Node installed; other native hosts generated, pending; browser pending; CPAN and PHP-Wasm rejected |");
+	assert.equal(row, "| Record with erased proof fields and a checked input constructor | Node installed; browser pending | C/C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI installed | Rejected | Rejected | C/C++, Node and all eight additional native hosts installed; browser pending; CPAN and PHP-Wasm rejected |");
 	const python = await readCheckedRecordPythonArchive();
 	assert.equal(python.reports.length, 8);
 	assert.deepEqual([...new Set(python.index.runs.map(run => run.floor))], ["3.11", "3.12"]);
 	const rubyJvm = await readCheckedRecordRubyJvmArchive();
 	assert.equal(rubyJvm.reports.length, 4);
 	for(const report of rubyJvm.reports) assert.deepEqual(report.profiles, ["java", "kotlin", "ruby"]);
+	const remaining = await readCheckedRecordRemainingHostsArchive();
+	assert.equal(remaining.reports.length, 4);
+	for(const report of remaining.reports) assert.deepEqual(report.profiles, ["dotnet", "php-native", "rust", "wit-wasi"]);
 	const references = await checkedRecordPromotionReferences();
 	assert.deepEqual(references.map(item => [item.host, item.route]), [
 		["c-cpp", "ordinary"], ["c-cpp", "reviewed"], ["c-cpp", "result-only"]

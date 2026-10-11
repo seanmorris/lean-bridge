@@ -1,0 +1,93 @@
+{
+  "component": {
+    "id": "checkedrecords@1.0.0",
+    "name": "checkedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51363363,
+          "path": "archives/checkedrecords-1.0.0.crate",
+          "sha256": "562f3b276c8652b879dbabec33041b8aeb4694de5d9d4c8f6614e610686d86be"
+        }
+      ],
+      "ecosystem": "cargo",
+      "name": "checkedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "cargo",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 51373559,
+          "path": "archives/example-checkedrecords-1.0.0-linux-x86_64.zip",
+          "sha256": "89584ca6a50b4c1fef3e97631964076c3494b4ac1de0633621e311d435098840"
+        }
+      ],
+      "ecosystem": "composer",
+      "name": "example/checkedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "php-native",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 51385394,
+          "path": "archives/Checkedrecords.Api.1.0.0.nupkg",
+          "sha256": "8c498ae24e80ba3a7cb8db2f7e1ac0ed94f740e3543da71aecc9ede1c9795bc7"
+        }
+      ],
+      "ecosystem": "nuget",
+      "name": "Checkedrecords.Api",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "nuget",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 59235908,
+          "path": "archives/checkedrecords-1.0.0-wit-wasi.tar.gz",
+          "sha256": "ae29cd5eb0e8f3e20ee9391d89c460590236ab6f214a76e719f92016eb00b60a"
+        }
+      ],
+      "ecosystem": "wit-wasi",
+      "name": "checkedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "wit-wasi",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "64e9f96e9ce6cc6a5ab9dcac1bfde2480b4fd11f397ba3a5619edb124c2a0d9e",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "a458f4c88ca25e914f1333e290b7c74065e3b9e4c61cd35dfefb34ca0b5e52bb"
+  }
+}
