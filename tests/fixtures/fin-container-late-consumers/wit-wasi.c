@@ -19,7 +19,12 @@ static void late_pair(fincontainers_wasmtime *session, size_t position, unsigned
   CHECK(late_equal(&arguments[1], &snapshots[1]));
   CHECK(output.kind == WASMTIME_COMPONENT_U32 && output.of.u32 == 991);
   char expected[128];
-  snprintf(expected, sizeof(expected), "arg1[%zu] is not below its Fin 4 bound", position);
+  /* Padded limbs are not canonical Nat input. Require that structural error,
+   * not a Fin error, while preserving the same complete snapshots and output. */
+  if (representation == 2)
+    snprintf(expected, sizeof(expected), "Unknown export, invalid WIT input or 16 MiB conversion limit");
+  else
+    snprintf(expected, sizeof(expected), "arg1[%zu] is not below its Fin 4 bound", position);
   bool diagnosed = false;
   if (error) {
     wasm_name_t message;
@@ -27,8 +32,8 @@ static void late_pair(fincontainers_wasmtime *session, size_t position, unsigned
     char *copy = calloc(message.size + 1, 1);
     if (!copy) abort();
     memcpy(copy, message.data, message.size);
-    diagnosed = strstr(copy, expected) != NULL;
-    if (!diagnosed) fprintf(stderr, "unexpected error: %s\n", copy);
+    diagnosed = representation == 2 ? strcmp(copy, expected) == 0 : strstr(copy, expected) != NULL;
+    if (!diagnosed) fprintf(stderr, "position %zu representation %u: unexpected error: %s\n", position, representation, copy);
     free(copy); wasm_name_delete(&message); wasmtime_error_delete(error);
   }
   CHECK(diagnosed);

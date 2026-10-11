@@ -114,6 +114,7 @@ test("installed WIT late Fin rejection preserves both complete caller inputs and
 		, relocatedInstallation: true, installedFilesUnchanged: true
 		, callerUnchanged: true, repeatExecution: true
 		, rejectionsPerExecution: 1009, recoveriesPerExecution: 1009
+		, boundRejectionsPerExecution: 673, structuralRejectionsPerExecution: 336
 		, inputTreesCompared: ["arg0", "arg1"]
 		, glibcMinimumVersion: environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR ?? "2.38"
 		, dispatch: { observed: false, reason: "Public rejection, caller preservation and recovery; no entry counters in this supplement." } }));
