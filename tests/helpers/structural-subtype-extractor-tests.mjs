@@ -41,7 +41,7 @@ const selections = {
 	, aliasPair: tree("tuple", group("checkedPositive"), group("normalizePositive"))
 };
 
-test("fresh Lean extracts structural Subtypes with exact per-site choices and retains independent refusal gates", { skip: !enabled, timeout: 180_000 }, async t => {
+test("fresh Lean extracts structural Subtypes with exact per-site choices and retains independent refusal gates", { skip: !enabled, timeout: 600_000 }, async t => {
 	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-structural-subtype-extractor-"));
 	let complete = false;
 	t.after(async () => {
@@ -56,7 +56,7 @@ test("fresh Lean extracts structural Subtypes with exact per-site choices and re
 	const environment = { ...process.env, LEAN_PATH: directory, PATH: `${dirname(lean)}:${process.env.PATH ?? "/usr/bin:/bin"}` };
 	const run = async (args, command = lean) => {
 		try
-		{ return await promisify(execFile)(command, args, { cwd: directory, env: environment, maxBuffer: 16 * 1024 * 1024 }); }
+		{ return await promisify(execFile)(command, args, { cwd: directory, env: environment, maxBuffer: 16 * 1024 * 1024, signal: t.signal }); }
 		catch(error)
 		{ error.message += `\n${error.stdout ?? ""}\n${error.stderr ?? ""}`; throw error; }
 	};

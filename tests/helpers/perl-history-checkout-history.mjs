@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeNominalSubtypeSelectionSource } from "./nominal-subtype-selection-history.mjs";
 
 export const perlHistoryCheckoutHistoryPath = "docs/evidence/perl-history-checkout-source-history-20261011.json";
 export const perlHistoryCheckoutPredecessor = "459fa8eaf0547d4f2cba488dbb135bb6adfc72f5";
@@ -54,6 +55,7 @@ export const reversePerlHistoryCheckoutUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforePerlHistoryCheckoutSource = (path, source, expected) => {
+	source = beforeNominalSubtypeSelectionSource(path, source, expected);
 	if(typeof source !== "string" || !perlHistoryCheckoutChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

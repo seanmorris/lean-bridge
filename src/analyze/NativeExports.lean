@@ -152,9 +152,14 @@ structure ShapeState where
 
 abbrev ShapeM := StateT ShapeState MetaM
 
-def rememberShape (e : Expr) (name : Name) (value : Json) : ShapeM Json := do
+def rememberShape (e : Expr) (name : Name) (value : Json) (perSite : Bool := false) : ShapeM Json := do
   if (← get).types.size >= 1024 then reject e "copied graph exceeds 1024 nominal definitions"
   if (← get).nodes >= 4096 then reject e "copied type graph exceeds its node limit"
+  -- Constructor choices belong to this use, not the table entry for its nominal name.
+  -- Keep the selected tree inline so two fields can use different constructors for one type.
+  if perSite then
+    modify fun state => { state with nodes := state.nodes + 1 }
+    return value
   modify fun state => { state with types := state.types.push value, nodes := state.nodes + 1 }
   return ← nominalReference e name
 
@@ -306,6 +311,26 @@ def selectedChild (checked : Option Json) (kind : String) (index : Nat) : Option
   let child ← arguments[index]?
   if child == Json.null then none else some child
 
+def nominalSelection (checked : Option Json) (kind : String) (name : Name) : Bool :=
+  checked.any fun value => (value.getObjValAs? String "kind").toOption == some kind &&
+    (value.getObjValAs? String "name").toOption == some name.toString
+
+/-- Look up one named decision; final projection reconciliation also checks every member's order
+and refuses missing or surplus fields/cases. A null field never supplies a constructor. -/
+def selectedField (checked : Option Json) (kind : String) (name : Name)
+    (field : String) (caseName : Option String := none) : Option Json := do
+  if !nominalSelection checked kind name then return ← none
+  let value ← checked
+  let owner ← match caseName with
+    | none => some value
+    | some caseName => do
+      let cases ← (value.getObjValAs? (Array Json) "cases").toOption
+      cases.find? fun branch => (branch.getObjValAs? String "name").toOption == some caseName
+  let fields ← (owner.getObjValAs? (Array Json) "fields").toOption
+  let member ← fields.find? fun member => (member.getObjValAs? String "name").toOption == some field
+  let child ← (member.getObjVal? "refinement").toOption
+  if child == Json.null then none else some child
+
 /-- Validate choices independently of the JavaScript request reader. Null is allowed only
 inside a nonempty structural selection; it never supplies or removes a Fin constraint. -/
 partial def checkedSelectionProblem (value : Json) (depth : Nat := 0) : StateM Nat (Option String) := do
@@ -317,6 +342,42 @@ partial def checkedSelectionProblem (value : Json) (depth : Nat := 0) : StateM N
     if fields.size != 1 || !nativeIdentifier constructor then return some "invalid checked constructor name"
     return none
   let kind := (value.getObjValAs? String "kind").toOption.getD ""
+  if ["record", "variant"].contains kind then
+    let name := (value.getObjValAs? String "name").toOption.getD ""
+    if fields.size != 3 || !nativeIdentifier name then return some "invalid checked nominal selection"
+    let cases ← if kind == "variant" then
+        match (value.getObjValAs? (Array Json) "cases").toOption with
+        | some cases => pure cases
+        | none => return some "checked variant selection requires ordered cases"
+      else pure #[value]
+    if cases.isEmpty || cases.size > 1024 then return some "invalid checked nominal cases"
+    let mut caseNames : List String := []
+    let mut selected := false
+    for branch in cases do
+      if kind == "variant" then
+        modify (· + 1)
+        if (← get) > 4096 then return some "checked refinement selection exceeds its depth or node limit"
+        let some branchFields := branch.getObj?.toOption | return some "invalid checked variant case"
+        let caseName := (branch.getObjValAs? String "name").toOption.getD ""
+        if branchFields.size != 2 || !nativeIdentifier caseName || (caseName.splitOn ".").length != 1 ||
+            caseNames.contains caseName then return some "invalid checked variant case"
+        caseNames := caseName :: caseNames
+      let some members := (branch.getObjValAs? (Array Json) "fields").toOption
+        | return some "checked nominal selection requires ordered fields"
+      if members.size > 1024 then return some "too many checked nominal fields"
+      let mut names : List String := []
+      for member in members do
+        modify (· + 1)
+        if (← get) > 4096 then return some "checked refinement selection exceeds its depth or node limit"
+        let some memberFields := member.getObj?.toOption | return some "invalid checked nominal field"
+        let fieldName := (member.getObjValAs? String "name").toOption.getD ""
+        if memberFields.size != 2 || !nativeIdentifier fieldName || (fieldName.splitOn ".").length != 1 ||
+            names.contains fieldName then return some "invalid checked nominal field"
+        names := fieldName :: names
+        let some child := (member.getObjVal? "refinement").toOption | return some "missing checked nominal field decision"
+        if let some problem ← checkedSelectionProblem child (depth + 1) then return some problem
+        selected := selected || child != Json.null
+    return if selected then none else some "empty checked nominal selection"
   let some arguments := (value.getObjValAs? (Array Json) "arguments").toOption
     | return some "checked structural selection requires ordered arguments"
   if fields.size != 2 || !["array", "list", "option", "tuple", "result"].contains kind ||
@@ -407,6 +468,7 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
               if !nativeIdentifier name.toString || !levels.isEmpty || !definition.levelParams.isEmpty ||
                   info.isUnsafe || info.isPartial then reject e "unsupported copied alias definition"
               if seen.contains name then
+                if checked.isSome || subtypeStructural then reject e "recursive nominal constructor selections are not implemented"
                 let guarded ← (seen.takeWhile (· != name)).anyM fun other => do
                   return (← getConstInfo other) matches .inductInfo _
                 unless guarded do reject e "cyclic copied alias"
@@ -428,8 +490,8 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
               if (target.getObjValAs? String "kind").toOption == some "reference" &&
                   (target.getObjValAs? String "name").toOption == some name.toString then
                 return target
-              return ← rememberShape e name <| obj [("kind", str "alias"), ("name", str name.toString),
-                ("lean", str name.toString), ("target", target), ("abi", ← abi e)]
+              return ← rememberShape e name (obj [("kind", str "alias"), ("name", str name.toString),
+                ("lean", str name.toString), ("target", target), ("abi", ← abi e)]) checked.isSome
   if (← isDefEq e (mkConst ``Unit)) then
     return obj [("kind", str "primitive"), ("name", str "unit"), ("lean", str "Unit"), ("abi", ← abi e)]
   -- Established structural constructors keep their mappings ahead of generic-record admission.
@@ -558,7 +620,9 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
       return obj [("kind", str "resource"), ("name", str name.toString), ("lean", str name.toString),
         ("module", str (← getEnv).header.moduleNames[index.toNat]!.toString), ("abi", lowered)]
     if let some info := getStructureInfo? (← getEnv) name then
-      if seen.contains name then return ← nominalReference e name
+      if seen.contains name then
+        if checked.isSome || subtypeStructural then reject e "recursive nominal constructor selections are not implemented"
+        return ← nominalReference e name
       let .inductInfo induct ← getConstInfo name | reject e "invalid record"
       if !nativeIdentifier name.toString || !nativeIdentifier induct.ctors.head!.toString then
         reject e "unsupported native record identifier"
@@ -592,20 +656,24 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
           continue
         -- A payload field that depends on another field stays refused as a dependent type.
         payload := payload.push (field, fieldType)
-        -- A plain record's fields are structural: each Fin field is checked where the record crosses.
+        -- Fin bounds stay type-owned; Subtype constructor choices follow this use's named fields.
         fields := fields.push (obj [("name", str field.toString),
           ("projection", str projection.toString),
-          ("type", ← shapeTree request fieldType (name :: seen) 0 true none containerFin true)])
+          ("type", ← shapeTree request fieldType (name :: seen) 0 true
+            (selectedField checked "record" name field.toString) containerFin true
+            (subtypeStructural := subtypeStructural && nominalSelection checked "record" name))])
       let types := (← get).types
       if !erased.isEmpty && fields.any (fun field => containsKind types ((field.getObjVal? "type").toOption.getD Json.null) "refinement") then
         reject e "checked record payload fields cannot carry refinements yet"
-      let reference ← rememberShape e name <| obj ([("kind", str "record"), ("name", str name.toString),
+      let reference ← rememberShape e name (obj ([("kind", str "record"), ("name", str name.toString),
         ("lean", str name.toString), ("constructor", str induct.ctors.head!.toString), ("fields", toJson fields)] ++
-        (if erased.isEmpty then [] else [("erased", toJson (erased.map toString))]) ++ [("abi", ← abi e)])
+        (if erased.isEmpty then [] else [("erased", toJson (erased.map toString))]) ++ [("abi", ← abi e)])) checked.isSome
       if erased.isEmpty then return reference
       return ← checkedRecordSite request e reference payload depth copied structural (selectedConstructor checked) callbackSite hostReply
     if let .inductInfo induct ← getConstInfo name then
-      if seen.contains name then return ← nominalReference e name
+      if seen.contains name then
+        if checked.isSome || subtypeStructural then reject e "recursive nominal constructor selections are not implemented"
+        return ← nominalReference e name
       if !nativeIdentifier name.toString || induct.numParams != 0 || induct.numIndices != 0 then
         reject e "generic or indexed variants require a checked specialization"
       if induct.ctors.isEmpty || induct.ctors.length > 1024 || (← isProp e) then
@@ -642,13 +710,15 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
             reject e s!"invalid, reserved or duplicate variant field name {fieldName}"
           -- Variant fields are structural too; only the active case is checked.
           fields := fields.push (obj [("name", str fieldName),
-            ("type", ← shapeTree request fieldType (name :: seen) 0 true none containerFin true)])
+            ("type", ← shapeTree request fieldType (name :: seen) 0 true
+              (selectedField checked "variant" name fieldName (some caseName)) containerFin true
+              (subtypeStructural := subtypeStructural && nominalSelection checked "variant" name))])
           names := fieldName :: names
           rest := body
         unless ← isDefEq rest e do reject e "variant constructor has a dependent result"
         cases := cases.push (obj [("name", str caseName), ("constructor", str constructor.toString), ("fields", toJson fields)])
-      return ← rememberShape e name <| obj [("kind", str "variant"), ("name", str name.toString),
-        ("lean", str name.toString), ("cases", toJson cases), ("abi", ← abi e)]
+      return ← rememberShape e name (obj [("kind", str "variant"), ("name", str name.toString),
+        ("lean", str name.toString), ("cases", toJson cases), ("abi", ← abi e)]) checked.isSome
   if e.isForall then
     if copied then reject e "callbacks inside copied values require a retention policy"
     let mut result := e
@@ -949,6 +1019,22 @@ partial def projectionCheckedSelection (type : Json) : Json := Id.run do
     let predicate := (type.getObjVal? "predicate").toOption.getD Json.null
     if ["subtype", "checked-record"].contains ((predicate.getObjValAs? String "kind").toOption.getD "") then
       return obj [("constructor", (predicate.getObjVal? "constructor").toOption.getD Json.null)]
+    return Json.null
+  if ["record", "variant"].contains kind then
+    let fieldChoices := fun (owner : Json) =>
+      ((owner.getObjValAs? (Array Json) "fields").toOption.getD #[]).map fun field =>
+        obj [("name", (field.getObjVal? "name").toOption.getD Json.null),
+          ("refinement", projectionCheckedSelection ((field.getObjVal? "type").toOption.getD Json.null))]
+    let selected := fun (fields : Array Json) => fields.any fun field =>
+      (field.getObjVal? "refinement").toOption != some Json.null
+    let identity := [("kind", str kind), ("name", (type.getObjVal? "name").toOption.getD Json.null)]
+    if kind == "record" then
+      let fields := fieldChoices type
+      return if selected fields then obj (identity ++ [("fields", toJson fields)]) else Json.null
+    let cases := ((type.getObjValAs? (Array Json) "cases").toOption.getD #[]).map fun branch =>
+      obj [("name", (branch.getObjVal? "name").toOption.getD Json.null), ("fields", toJson (fieldChoices branch))]
+    if cases.any (fun branch => selected ((branch.getObjValAs? (Array Json) "fields").toOption.getD #[])) then
+      return obj (identity ++ [("cases", toJson cases)])
     return Json.null
   let children := if ["array", "list", "option"].contains kind then
       #[(type.getObjVal? "element").toOption.getD Json.null]

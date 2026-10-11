@@ -1,10 +1,11 @@
 /**
- * Author-selected constructors follow structural transport order, independently of Fin bounds.
+ * Author-selected constructors follow transport order, independently of Fin bounds.
  *
  * @file
  */
 const arities = Object.freeze({ array: 1, list: 1, option: 1, tuple: 2, result: 2 });
 const leanName = /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$(?![\s\S])/;
+const memberName = /^[A-Za-z][A-Za-z0-9_]*$(?![\s\S])/;
 const fail = () => { throw new TypeError("Invalid checked refinement selection"); };
 const closed = (value, keys) => {
 	if(!value || ![Object.prototype, null].includes(Object.getPrototypeOf(value))
@@ -16,7 +17,7 @@ const closed = (value, keys) => {
  * Validate a nonempty constructor selection without authoring any predicate or bound.
  * A null child means that branch has no author-selected constructor, including a Fin-only branch.
  *
- * @param selection - A scalar constructor or a structural kind/arguments tree.
+ * @param selection - A scalar constructor, structural arguments or named nominal fields/cases.
  */
 export const validateCheckedRefinementSelection = selection => {
 	let nodes = 0;
@@ -29,8 +30,33 @@ export const validateCheckedRefinementSelection = selection => {
 			if(typeof value.constructor !== "string" || !leanName.test(value.constructor)) fail();
 			return true;
 		}
+		if(["record", "variant"].includes(Object.getOwnPropertyDescriptor(value ?? {}, "kind")?.value))
+		{
+			const variant = value.kind === "variant";
+			closed(value, ["kind", "name", variant ? "cases" : "fields"]);
+			if(typeof value.name !== "string" || !leanName.test(value.name)) fail();
+			const members = (values, keys, inspect, empty) => {
+				if(!Array.isArray(values) || values.length > 1024 || (!empty && values.length === 0)) fail();
+				const names = new Set();
+				let selected = false;
+				for(let index = 0; index < values.length; index++)
+				{
+					if(++nodes > 4096 || !Object.hasOwn(Object.getOwnPropertyDescriptor(values, index) ?? {}, "value")) fail();
+					const member = values[index];
+					closed(member, ["name", ...keys]);
+					if(typeof member.name !== "string" || !memberName.test(member.name) || names.has(member.name)) fail();
+					names.add(member.name);
+					selected = inspect(member) || selected;
+				}
+				return selected;
+			};
+			const fields = values => members(values, ["refinement"], field => visit(field.refinement, depth + 1), true);
+			const selected = variant ? members(value.cases, ["fields"], branch => fields(branch.fields), false) : fields(value.fields);
+			if(!selected) fail();
+			return true;
+		}
 		closed(value, ["kind", "arguments"]);
-		if(!Object.hasOwn(arities, value.kind) || !Array.isArray(value.arguments)
+		if(typeof value.kind !== "string" || !Object.hasOwn(arities, value.kind) || !Array.isArray(value.arguments)
 			|| value.arguments.length !== arities[value.kind]) fail();
 		let selected = false;
 		for(let index = 0; index < value.arguments.length; index++)
@@ -97,6 +123,18 @@ export const projectionCheckedSelection = type => {
 		if(value.kind === "alias") return visit(value.target, depth + 1);
 		if(value.kind === "refinement") return ["subtype", "checked-record"].includes(value.predicate.kind)
 			? { constructor: value.predicate.constructor } : null;
+		if(["record", "variant"].includes(value.kind))
+		{
+			let selected = false;
+			const fields = values => values.map(field => {
+				const refinement = visit(field.type, depth + 1);
+				selected ||= refinement !== null;
+				return { name: field.name, refinement };
+			});
+			const result = value.kind === "record" ? { kind: value.kind, name: value.name, fields: fields(value.fields) }
+				: { kind: value.kind, name: value.name, cases: value.cases.map(branch => ({ name: branch.name, fields: fields(branch.fields) })) };
+			return selected ? result : null;
+		}
 		if(!Object.hasOwn(arities, value.kind)) return null;
 		const arguments_ = ["array", "list", "option"].includes(value.kind) ? [value.element] : value.arguments;
 		const children = arguments_.map(child => visit(child, depth + 1));

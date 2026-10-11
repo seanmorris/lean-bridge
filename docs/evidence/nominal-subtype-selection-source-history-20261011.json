@@ -1,0 +1,1038 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nominal-subtype-selection-source-v1",
+  "predecessorCommit": "b0cabee3ac47be0feeb4cf7154b3ce32ecfa56f5",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "b2b721063915ebad1ce31cbc10b69fde77f30eeb0a9ce5a977a2fbd63121edf9",
+      "previousSha256": "b70b571cf2eb2d6425e28f717e552ac1a0139b9a4c91369b7240caf9cc386659",
+      "edits": [
+        {
+          "start": 24485,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 27856,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 35572,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 38820,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 42837,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 44483,
+          "previous": "          \"sha256\": \"05525b3dbabcc1ca7a786a4c0202e7ec9d7defe2fd7c0fd5f64425e3e3778f9f\"\n",
+          "current": "          \"sha256\": \"132bcca1046ef85426593516135d85e9272f23b35da0b4dabd2a91f60948092c\"\n"
+        },
+        {
+          "start": 57299,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 79857,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 97060,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 113353,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 126973,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 137765,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 169232,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 182198,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 197097,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 210030,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 223249,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 231787,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 240218,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 249232,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 257898,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 267473,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 276574,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 286423,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 298562,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 308596,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 317148,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 326442,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 339131,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 348382,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 357669,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 366792,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 375655,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 383040,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 390974,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 401624,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 408509,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 415718,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 422814,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 433673,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 440789,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 447167,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 453330,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 460089,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 466931,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 473773,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 483077,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 494311,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 504000,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 513593,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 525123,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 533686,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 544700,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 553032,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 560762,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 568309,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 577553,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 583226,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 593489,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 602802,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 614350,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 622871,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 633827,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 642076,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 649540,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 656938,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 666503,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 675558,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 683243,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 691185,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 810933,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 826463,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 856590,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 900644,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 976538,
+          "previous": "          \"sha256\": \"c3102dac3617a04311e0b57d5d9f1a97cde7376128eeb933ca5d87eb5af0c4e5\"\n",
+          "current": "          \"sha256\": \"0090cc91c3478c7d164d61ee7206f07d7d2cf5493b689eed70a42058a7812fed\"\n"
+        },
+        {
+          "start": 977717,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1016219,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1140316,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1193876,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1226420,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1256702,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1289665,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1431905,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1433900,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1438147,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1444299,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1460497,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1462258,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1465897,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1469832,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1473563,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1476192,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1479181,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1481773,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1484383,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1486973,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1489891,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1494733,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1517690,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1521701,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1525207,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1529083,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1532562,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1536046,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1539534,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1543573,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1545219,
+          "previous": "          \"sha256\": \"05525b3dbabcc1ca7a786a4c0202e7ec9d7defe2fd7c0fd5f64425e3e3778f9f\"\n",
+          "current": "          \"sha256\": \"132bcca1046ef85426593516135d85e9272f23b35da0b4dabd2a91f60948092c\"\n"
+        },
+        {
+          "start": 1547705,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1549351,
+          "previous": "          \"sha256\": \"05525b3dbabcc1ca7a786a4c0202e7ec9d7defe2fd7c0fd5f64425e3e3778f9f\"\n",
+          "current": "          \"sha256\": \"132bcca1046ef85426593516135d85e9272f23b35da0b4dabd2a91f60948092c\"\n"
+        },
+        {
+          "start": 1551349,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1552995,
+          "previous": "          \"sha256\": \"05525b3dbabcc1ca7a786a4c0202e7ec9d7defe2fd7c0fd5f64425e3e3778f9f\"\n",
+          "current": "          \"sha256\": \"132bcca1046ef85426593516135d85e9272f23b35da0b4dabd2a91f60948092c\"\n"
+        },
+        {
+          "start": 1555345,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1556991,
+          "previous": "          \"sha256\": \"05525b3dbabcc1ca7a786a4c0202e7ec9d7defe2fd7c0fd5f64425e3e3778f9f\"\n",
+          "current": "          \"sha256\": \"132bcca1046ef85426593516135d85e9272f23b35da0b4dabd2a91f60948092c\"\n"
+        },
+        {
+          "start": 1558962,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1560608,
+          "previous": "          \"sha256\": \"05525b3dbabcc1ca7a786a4c0202e7ec9d7defe2fd7c0fd5f64425e3e3778f9f\"\n",
+          "current": "          \"sha256\": \"132bcca1046ef85426593516135d85e9272f23b35da0b4dabd2a91f60948092c\"\n"
+        },
+        {
+          "start": 1562584,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1564230,
+          "previous": "          \"sha256\": \"05525b3dbabcc1ca7a786a4c0202e7ec9d7defe2fd7c0fd5f64425e3e3778f9f\"\n",
+          "current": "          \"sha256\": \"132bcca1046ef85426593516135d85e9272f23b35da0b4dabd2a91f60948092c\"\n"
+        },
+        {
+          "start": 1566210,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1567856,
+          "previous": "          \"sha256\": \"05525b3dbabcc1ca7a786a4c0202e7ec9d7defe2fd7c0fd5f64425e3e3778f9f\"\n",
+          "current": "          \"sha256\": \"132bcca1046ef85426593516135d85e9272f23b35da0b4dabd2a91f60948092c\"\n"
+        },
+        {
+          "start": 1569688,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1574462,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1579017,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1583998,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1588886,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1593260,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1597632,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1602006,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1606597,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1610160,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1613691,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1617482,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1621202,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1624588,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1628442,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1632316,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1636374,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1640264,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1644139,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1647783,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1651524,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1655344,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1659164,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1662984,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1666731,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1671076,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1675433,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1679798,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1684190,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1687944,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1691617,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1695131,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1698807,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1702538,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1706164,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1709716,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1713223,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1719002,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1724778,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1728944,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1914463,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1923253,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1930501,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1936279,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        },
+        {
+          "start": 1942616,
+          "previous": "          \"sha256\": \"4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f\"\n",
+          "current": "          \"sha256\": \"26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43\"\n"
+        }
+      ]
+    },
+    {
+      "path": "schema/lean-export-configuration.schema.json",
+      "currentSha256": "0090cc91c3478c7d164d61ee7206f07d7d2cf5493b689eed70a42058a7812fed",
+      "previousSha256": "c3102dac3617a04311e0b57d5d9f1a97cde7376128eeb933ca5d87eb5af0c4e5",
+      "edits": [
+        {
+          "start": 7459,
+          "previous": "      \"description\": \"Constructor choices only. Structural arguments use transport order, including [success, error] for result. A null child selects no constructor and does not erase compiler-owned Fin bounds. The configuration reader enforces 32 edges and 4096 visited nodes; fresh Lean must independently check each selection against the source type.\",\n",
+          "current": "      \"description\": \"Constructor choices only. Structural arguments use transport order, including [success, error] for result. Nominal selections name the exact record or variant and every field/case in source order. A null child selects no constructor and does not erase compiler-owned Fin bounds. The reader and fresh Lean enforce unique member names, 32 type edges and 4096 visited nodes. Selection syntax does not admit a runtime mapping.\",\n"
+        },
+        {
+          "start": 8789,
+          "previous": "",
+          "current": "        },\n        {\n          \"type\": \"object\", \"additionalProperties\": false, \"required\": [\"kind\", \"name\", \"fields\"],\n          \"properties\": {\n            \"kind\": {\"const\": \"record\"},\n            \"name\": {\"$ref\": \"#/$defs/specializationName\"},\n            \"fields\": {\"allOf\": [{\"$ref\": \"#/$defs/checkedNominalFields\"}, {\"$ref\": \"#/$defs/selectedNominalField\"}]}\n          }\n        },\n        {\n          \"type\": \"object\", \"additionalProperties\": false, \"required\": [\"kind\", \"name\", \"cases\"],\n          \"properties\": {\n            \"kind\": {\"const\": \"variant\"},\n            \"name\": {\"$ref\": \"#/$defs/specializationName\"},\n            \"cases\": {\n              \"type\": \"array\", \"minItems\": 1, \"maxItems\": 1024, \"uniqueItems\": true,\n              \"items\": {\n                \"type\": \"object\", \"additionalProperties\": false, \"required\": [\"name\", \"fields\"],\n                \"properties\": {\n                  \"name\": {\"$ref\": \"#/$defs/checkedMemberName\"},\n                  \"fields\": {\"$ref\": \"#/$defs/checkedNominalFields\"}\n                }\n              },\n              \"contains\": {\"properties\": {\"fields\": {\"$ref\": \"#/$defs/selectedNominalField\"}}}, \"minContains\": 1\n            }\n          }\n"
+        },
+        {
+          "start": 10008,
+          "previous": "",
+          "current": "    \"checkedMemberName\": {\"type\": \"string\", \"pattern\": \"^[A-Za-z][A-Za-z0-9_]*$(?![\\\\s\\\\S])\"},\n    \"selectedNominalField\": {\n      \"contains\": {\"properties\": {\"refinement\": {\"not\": {\"type\": \"null\"}}}}, \"minContains\": 1\n    },\n    \"checkedNominalFields\": {\n      \"type\": \"array\", \"maxItems\": 1024, \"uniqueItems\": true,\n      \"items\": {\n        \"type\": \"object\", \"additionalProperties\": false, \"required\": [\"name\", \"refinement\"],\n        \"properties\": {\n          \"name\": {\"$ref\": \"#/$defs/checkedMemberName\"},\n          \"refinement\": {\"oneOf\": [{\"type\": \"null\"}, {\"$ref\": \"#/$defs/checkedRefinementSelection\"}]}\n        }\n      }\n    },\n"
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/NativeExports.lean",
+      "currentSha256": "26d31063750710346fbcfca096cb32ddab7c2ffedd0c03d36ee0a3cf8e6dcf43",
+      "previousSha256": "4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f",
+      "edits": [
+        {
+          "start": 6811,
+          "previous": "def rememberShape (e : Expr) (name : Name) (value : Json) : ShapeM Json := do\n",
+          "current": "def rememberShape (e : Expr) (name : Name) (value : Json) (perSite : Bool := false) : ShapeM Json := do\n"
+        },
+        {
+          "start": 7093,
+          "previous": "",
+          "current": "  -- Constructor choices belong to this use, not the table entry for its nominal name.\n  -- Keep the selected tree inline so two fields can use different constructors for one type.\n  if perSite then\n    modify fun state => { state with nodes := state.nodes + 1 }\n    return value\n"
+        },
+        {
+          "start": 16591,
+          "previous": "",
+          "current": "def nominalSelection (checked : Option Json) (kind : String) (name : Name) : Bool :=\n  checked.any fun value => (value.getObjValAs? String \"kind\").toOption == some kind &&\n    (value.getObjValAs? String \"name\").toOption == some name.toString\n\n/-- Look up one named decision; final projection reconciliation also checks every member's order\nand refuses missing or surplus fields/cases. A null field never supplies a constructor. -/\ndef selectedField (checked : Option Json) (kind : String) (name : Name)\n    (field : String) (caseName : Option String := none) : Option Json := do\n  if !nominalSelection checked kind name then return ← none\n  let value ← checked\n  let owner ← match caseName with\n    | none => some value\n    | some caseName => do\n      let cases ← (value.getObjValAs? (Array Json) \"cases\").toOption\n      cases.find? fun branch => (branch.getObjValAs? String \"name\").toOption == some caseName\n  let fields ← (owner.getObjValAs? (Array Json) \"fields\").toOption\n  let member ← fields.find? fun member => (member.getObjValAs? String \"name\").toOption == some field\n  let child ← (member.getObjVal? \"refinement\").toOption\n  if child == Json.null then none else some child\n\n"
+        },
+        {
+          "start": 18593,
+          "previous": "",
+          "current": "  if [\"record\", \"variant\"].contains kind then\n    let name := (value.getObjValAs? String \"name\").toOption.getD \"\"\n    if fields.size != 3 || !nativeIdentifier name then return some \"invalid checked nominal selection\"\n    let cases ← if kind == \"variant\" then\n        match (value.getObjValAs? (Array Json) \"cases\").toOption with\n        | some cases => pure cases\n        | none => return some \"checked variant selection requires ordered cases\"\n      else pure #[value]\n    if cases.isEmpty || cases.size > 1024 then return some \"invalid checked nominal cases\"\n    let mut caseNames : List String := []\n    let mut selected := false\n    for branch in cases do\n      if kind == \"variant\" then\n        modify (· + 1)\n        if (← get) > 4096 then return some \"checked refinement selection exceeds its depth or node limit\"\n        let some branchFields := branch.getObj?.toOption | return some \"invalid checked variant case\"\n        let caseName := (branch.getObjValAs? String \"name\").toOption.getD \"\"\n        if branchFields.size != 2 || !nativeIdentifier caseName || (caseName.splitOn \".\").length != 1 ||\n            caseNames.contains caseName then return some \"invalid checked variant case\"\n        caseNames := caseName :: caseNames\n      let some members := (branch.getObjValAs? (Array Json) \"fields\").toOption\n        | return some \"checked nominal selection requires ordered fields\"\n      if members.size > 1024 then return some \"too many checked nominal fields\"\n      let mut names : List String := []\n      for member in members do\n        modify (· + 1)\n        if (← get) > 4096 then return some \"checked refinement selection exceeds its depth or node limit\"\n        let some memberFields := member.getObj?.toOption | return some \"invalid checked nominal field\"\n        let fieldName := (member.getObjValAs? String \"name\").toOption.getD \"\"\n        if memberFields.size != 2 || !nativeIdentifier fieldName || (fieldName.splitOn \".\").length != 1 ||\n            names.contains fieldName then return some \"invalid checked nominal field\"\n        names := fieldName :: names\n        let some child := (member.getObjVal? \"refinement\").toOption | return some \"missing checked nominal field decision\"\n        if let some problem ← checkedSelectionProblem child (depth + 1) then return some problem\n        selected := selected || child != Json.null\n    return if selected then none else some \"empty checked nominal selection\"\n"
+        },
+        {
+          "start": 27169,
+          "previous": "",
+          "current": "                if checked.isSome || subtypeStructural then reject e \"recursive nominal constructor selections are not implemented\"\n"
+        },
+        {
+          "start": 29173,
+          "previous": "              return ← rememberShape e name <| obj [(\"kind\", str \"alias\"), (\"name\", str name.toString),\n                (\"lean\", str name.toString), (\"target\", target), (\"abi\", ← abi e)]\n",
+          "current": "              return ← rememberShape e name (obj [(\"kind\", str \"alias\"), (\"name\", str name.toString),\n                (\"lean\", str name.toString), (\"target\", target), (\"abi\", ← abi e)]) checked.isSome\n"
+        },
+        {
+          "start": 39845,
+          "previous": "      if seen.contains name then return ← nominalReference e name\n",
+          "current": "      if seen.contains name then\n        if checked.isSome || subtypeStructural then reject e \"recursive nominal constructor selections are not implemented\"\n        return ← nominalReference e name\n"
+        },
+        {
+          "start": 42623,
+          "previous": "        -- A plain record's fields are structural: each Fin field is checked where the record crosses.\n",
+          "current": "        -- Fin bounds stay type-owned; Subtype constructor choices follow this use's named fields.\n"
+        },
+        {
+          "start": 42839,
+          "previous": "          (\"type\", ← shapeTree request fieldType (name :: seen) 0 true none containerFin true)])\n",
+          "current": "          (\"type\", ← shapeTree request fieldType (name :: seen) 0 true\n            (selectedField checked \"record\" name field.toString) containerFin true\n            (subtypeStructural := subtypeStructural && nominalSelection checked \"record\" name))])\n"
+        },
+        {
+          "start": 43345,
+          "previous": "      let reference ← rememberShape e name <| obj ([(\"kind\", str \"record\"), (\"name\", str name.toString),\n",
+          "current": "      let reference ← rememberShape e name (obj ([(\"kind\", str \"record\"), (\"name\", str name.toString),\n"
+        },
+        {
+          "start": 43565,
+          "previous": "        (if erased.isEmpty then [] else [(\"erased\", toJson (erased.map toString))]) ++ [(\"abi\", ← abi e)])\n",
+          "current": "        (if erased.isEmpty then [] else [(\"erased\", toJson (erased.map toString))]) ++ [(\"abi\", ← abi e)])) checked.isSome\n"
+        },
+        {
+          "start": 43927,
+          "previous": "      if seen.contains name then return ← nominalReference e name\n",
+          "current": "      if seen.contains name then\n        if checked.isSome || subtypeStructural then reject e \"recursive nominal constructor selections are not implemented\"\n        return ← nominalReference e name\n"
+        },
+        {
+          "start": 46617,
+          "previous": "            (\"type\", ← shapeTree request fieldType (name :: seen) 0 true none containerFin true)])\n",
+          "current": "            (\"type\", ← shapeTree request fieldType (name :: seen) 0 true\n              (selectedField checked \"variant\" name fieldName (some caseName)) containerFin true\n              (subtypeStructural := subtypeStructural && nominalSelection checked \"variant\" name))])\n"
+        },
+        {
+          "start": 47167,
+          "previous": "      return ← rememberShape e name <| obj [(\"kind\", str \"variant\"), (\"name\", str name.toString),\n        (\"lean\", str name.toString), (\"cases\", toJson cases), (\"abi\", ← abi e)]\n",
+          "current": "      return ← rememberShape e name (obj [(\"kind\", str \"variant\"), (\"name\", str name.toString),\n        (\"lean\", str name.toString), (\"cases\", toJson cases), (\"abi\", ← abi e)]) checked.isSome\n"
+        },
+        {
+          "start": 65606,
+          "previous": "",
+          "current": "  if [\"record\", \"variant\"].contains kind then\n    let fieldChoices := fun (owner : Json) =>\n      ((owner.getObjValAs? (Array Json) \"fields\").toOption.getD #[]).map fun field =>\n        obj [(\"name\", (field.getObjVal? \"name\").toOption.getD Json.null),\n          (\"refinement\", projectionCheckedSelection ((field.getObjVal? \"type\").toOption.getD Json.null))]\n    let selected := fun (fields : Array Json) => fields.any fun field =>\n      (field.getObjVal? \"refinement\").toOption != some Json.null\n    let identity := [(\"kind\", str kind), (\"name\", (type.getObjVal? \"name\").toOption.getD Json.null)]\n    if kind == \"record\" then\n      let fields := fieldChoices type\n      return if selected fields then obj (identity ++ [(\"fields\", toJson fields)]) else Json.null\n    let cases := ((type.getObjValAs? (Array Json) \"cases\").toOption.getD #[]).map fun branch =>\n      obj [(\"name\", (branch.getObjVal? \"name\").toOption.getD Json.null), (\"fields\", toJson (fieldChoices branch))]\n    if cases.any (fun branch => selected ((branch.getObjValAs? (Array Json) \"fields\").toOption.getD #[])) then\n      return obj (identity ++ [(\"cases\", toJson cases)])\n    return Json.null\n"
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/checked-refinement-selection.mjs",
+      "currentSha256": "9185583f850320db74f3d9d5a2b20173c75a6c42734622ad84fa0f01560290a1",
+      "previousSha256": "f4c7e3d20c4c6050f98cfcc0fa97195a09c02edef49d38d8c1c37381e3830495",
+      "edits": [
+        {
+          "start": 4,
+          "previous": " * Author-selected constructors follow structural transport order, independently of Fin bounds.\n",
+          "current": " * Author-selected constructors follow transport order, independently of Fin bounds.\n"
+        },
+        {
+          "start": 273,
+          "previous": "",
+          "current": "const memberName = /^[A-Za-z][A-Za-z0-9_]*$(?![\\s\\S])/;\n"
+        },
+        {
+          "start": 882,
+          "previous": " * @param selection - A scalar constructor or a structural kind/arguments tree.\n",
+          "current": " * @param selection - A scalar constructor, structural arguments or named nominal fields/cases.\n"
+        },
+        {
+          "start": 1373,
+          "previous": "",
+          "current": "\t\tif([\"record\", \"variant\"].includes(Object.getOwnPropertyDescriptor(value ?? {}, \"kind\")?.value))\n\t\t{\n\t\t\tconst variant = value.kind === \"variant\";\n\t\t\tclosed(value, [\"kind\", \"name\", variant ? \"cases\" : \"fields\"]);\n\t\t\tif(typeof value.name !== \"string\" || !leanName.test(value.name)) fail();\n\t\t\tconst members = (values, keys, inspect, empty) => {\n\t\t\t\tif(!Array.isArray(values) || values.length > 1024 || (!empty && values.length === 0)) fail();\n\t\t\t\tconst names = new Set();\n\t\t\t\tlet selected = false;\n\t\t\t\tfor(let index = 0; index < values.length; index++)\n\t\t\t\t{\n\t\t\t\t\tif(++nodes > 4096 || !Object.hasOwn(Object.getOwnPropertyDescriptor(values, index) ?? {}, \"value\")) fail();\n\t\t\t\t\tconst member = values[index];\n\t\t\t\t\tclosed(member, [\"name\", ...keys]);\n\t\t\t\t\tif(typeof member.name !== \"string\" || !memberName.test(member.name) || names.has(member.name)) fail();\n\t\t\t\t\tnames.add(member.name);\n\t\t\t\t\tselected = inspect(member) || selected;\n\t\t\t\t}\n\t\t\t\treturn selected;\n\t\t\t};\n\t\t\tconst fields = values => members(values, [\"refinement\"], field => visit(field.refinement, depth + 1), true);\n\t\t\tconst selected = variant ? members(value.cases, [\"fields\"], branch => fields(branch.fields), false) : fields(value.fields);\n\t\t\tif(!selected) fail();\n\t\t\treturn true;\n\t\t}\n"
+        },
+        {
+          "start": 2658,
+          "previous": "\t\tif(!Object.hasOwn(arities, value.kind) || !Array.isArray(value.arguments)\n",
+          "current": "\t\tif(typeof value.kind !== \"string\" || !Object.hasOwn(arities, value.kind) || !Array.isArray(value.arguments)\n"
+        },
+        {
+          "start": 5351,
+          "previous": "",
+          "current": "\t\tif([\"record\", \"variant\"].includes(value.kind))\n\t\t{\n\t\t\tlet selected = false;\n\t\t\tconst fields = values => values.map(field => {\n\t\t\t\tconst refinement = visit(field.type, depth + 1);\n\t\t\t\tselected ||= refinement !== null;\n\t\t\t\treturn { name: field.name, refinement };\n\t\t\t});\n\t\t\tconst result = value.kind === \"record\" ? { kind: value.kind, name: value.name, fields: fields(value.fields) }\n\t\t\t\t: { kind: value.kind, name: value.name, cases: value.cases.map(branch => ({ name: branch.name, fields: fields(branch.fields) })) };\n\t\t\treturn selected ? result : null;\n\t\t}\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "409e26da455428d10431a6792dd8746fc1ad52187de392358b19544353c68643",
+      "previousSha256": "8cfdb5722e5b00ccd99f7c18f8a65a3ebe064a1cdd0e62b521fd69e04a372634",
+      "edits": [
+        {
+          "start": 2273,
+          "previous": "",
+          "current": "import { nominalSubtypeSelectionChangedPaths } from \"./nominal-subtype-selection-history.mjs\";\n"
+        },
+        {
+          "start": 62590,
+          "previous": "",
+          "current": "\t, ...nominalSubtypeSelectionChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/perl-history-checkout-history.mjs",
+      "currentSha256": "b4c10e30172ce19d798fe181533a9a36de8d030dfc0a76e415437307b6bd43ab",
+      "previousSha256": "7f7770b5e412c4b52bbdbfa6e46017e6657d77f15d77f50ce5ba51b2a8ca426b",
+      "edits": [
+        {
+          "start": 242,
+          "previous": "",
+          "current": "import { beforeNominalSubtypeSelectionSource } from \"./nominal-subtype-selection-history.mjs\";\n"
+        },
+        {
+          "start": 2373,
+          "previous": "",
+          "current": "\tsource = beforeNominalSubtypeSelectionSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/structural-subtype-extractor-tests.mjs",
+      "currentSha256": "4430d7e4124fc7c81dc23e31aee7c2d705d7249715f5ee59abf0e74943f3e2d6",
+      "previousSha256": "f75e94b3584e931a71b0605c9cfa22ea4e49d8b970fa6572759604101db57a35",
+      "edits": [
+        {
+          "start": 2379,
+          "previous": "test(\"fresh Lean extracts structural Subtypes with exact per-site choices and retains independent refusal gates\", { skip: !enabled, timeout: 180_000 }, async t => {\n",
+          "current": "test(\"fresh Lean extracts structural Subtypes with exact per-site choices and retains independent refusal gates\", { skip: !enabled, timeout: 600_000 }, async t => {\n"
+        },
+        {
+          "start": 3440,
+          "previous": "\t\t{ return await promisify(execFile)(command, args, { cwd: directory, env: environment, maxBuffer: 16 * 1024 * 1024 }); }\n",
+          "current": "\t\t{ return await promisify(execFile)(command, args, { cwd: directory, env: environment, maxBuffer: 16 * 1024 * 1024, signal: t.signal }); }\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/native-subtype.test.mjs",
+      "currentSha256": "132bcca1046ef85426593516135d85e9272f23b35da0b4dabd2a91f60948092c",
+      "previousSha256": "05525b3dbabcc1ca7a786a4c0202e7ec9d7defe2fd7c0fd5f64425e3e3778f9f",
+      "edits": [
+        {
+          "start": 2248,
+          "previous": "",
+          "current": "import \"./helpers/nominal-subtype-selection-tests.mjs\";\nimport \"./helpers/nominal-subtype-selection-extractor-tests.mjs\";\nimport \"./helpers/nominal-subtype-selection-history-tests.mjs\";\n"
+        }
+      ]
+    }
+  ]
+}
