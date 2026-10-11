@@ -44,6 +44,20 @@ test("structural entry annotations are reversible and never silently invent miss
 	assert.equal(selected.find(item => item.label === "StructuralSubtypes.generic").symbol, "l_StructuralSubtypes_generic___redArg");
 });
 
+test("raw carrier constructors resolve through the actual type table, not unkeyed parameter trees", async () => {
+	const { model } = await fixture();
+	const source = structuralSubtypeRawProbe(model);
+	assert.doesNotMatch(source, /undefined/u);
+	const symbols = [...source.matchAll(/lookup\("lb_t([a-f0-9]+)_(some|make|from_array)"\)/gu)];
+	assert.equal(symbols.length, 4);
+	for(const [, key] of symbols) assert.ok(model.types.some(type => type.key === key));
+	for(const [, key] of symbols)
+	{
+		const changed = structuredClone(model); changed.types = changed.types.filter(type => type.key !== key);
+		assert.throws(() => structuralSubtypeRawProbe(changed), /compiled type table/u);
+	}
+});
+
 test("structural entry expectations retain every original public call and reject missing instrumentation", async () => {
 	const { selected } = await fixture(), calls = structuralSubtypeEntryCorpus();
 	assert.equal(calls.length, 2037);

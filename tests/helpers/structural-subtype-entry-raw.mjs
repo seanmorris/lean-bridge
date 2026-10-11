@@ -5,6 +5,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { nativeTypeKey } from "../../src/build/native-model.mjs";
 
 /**
  * Compile a raw-call driver against the installed package and pinned Lean object API.
@@ -18,6 +19,11 @@ export const structuralSubtypeRawProbe = model => {
 	const maybe = alias.parameters[0].type.element;
 	const list = nested.parameters[0].type.element, option = list.element, pair = option.element;
 	assert.equal(maybe.kind, "option"); assert.equal(list.kind, "list"); assert.equal(option.kind, "option"); assert.equal(pair.kind, "tuple");
+	const key = type => {
+		const id = nativeTypeKey(type);
+		assert.ok(model.types.some(item => item.key === id && item.kind === type.kind), "raw constructor must belong to the compiled type table");
+		return id;
+	};
 	return `#define _GNU_SOURCE
 #include <structuralsubtypes.h>
 #include <lean/lean.h>
@@ -51,11 +57,11 @@ int main(int argc, char **argv) {
   const int nested_case = strcmp(argv[1], "nested") == 0;
   if (array_case) { *(void **)&call = lookup("${arrays.symbol}"); first = values(bad, NULL); }
   else if (alias_case) {
-    *(void **)&call2 = lookup("${alias.symbol}"); *(void **)&some = lookup("lb_t${maybe.key}_some");
+    *(void **)&call2 = lookup("${alias.symbol}"); *(void **)&some = lookup("lb_t${key(maybe)}_some");
     first = values(-1, some); second = values(bad, some);
   } else if (nested_case) {
-    *(void **)&call = lookup("${nested.symbol}"); *(void **)&some = lookup("lb_t${option.key}_some");
-    *(void **)&make_pair = lookup("lb_t${pair.key}_make"); *(void **)&list_from_array = lookup("lb_t${list.key}_from_array");
+    *(void **)&call = lookup("${nested.symbol}"); *(void **)&some = lookup("lb_t${key(option)}_some");
+    *(void **)&make_pair = lookup("lb_t${key(pair)}_make"); *(void **)&list_from_array = lookup("lb_t${key(list)}_from_array");
     lean_object *number = lean_unsigned_to_nat(bad == 1 ? 0 : 1);
     lean_object *index = bad == 0 ? lean_cstr_to_nat("184467440737095516170") : lean_unsigned_to_nat(0);
     lean_object *row = some(make_pair(number, index));
