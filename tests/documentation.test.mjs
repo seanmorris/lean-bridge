@@ -27,6 +27,7 @@ import { assertPhpWasmEntryWorkflow, disablePhpWasmEntryWorkflow } from "./helpe
 import { assertReviewedSubtypeHostWorkflow, disableReviewedSubtypeHostWorkflow } from "./helpers/reviewed-subtype-host-ci-workflow.mjs";
 import { assertReviewedSubtypePackageWorkflow, disableReviewedSubtypePackageWorkflow } from "./helpers/reviewed-subtype-package-ci-workflow.mjs";
 import { assertCheckedRecordHostWorkflow, disableCheckedRecordHostWorkflow } from "./helpers/checked-record-host-ci-workflow.mjs";
+import { assertStructuralSubtypeWorkflow, disableStructuralSubtypeWorkflow } from "./helpers/structural-subtype-ci-workflow.mjs";
 import { assertManagedCiIsolation } from "./helpers/managed-ci-isolation.mjs";
 import { assertNativeCiIsolation } from "./helpers/native-ci-isolation.mjs";
 import { assertWorkflowRunBudget, joinNativeObservations } from "./helpers/native-observation-split.mjs";
@@ -621,12 +622,18 @@ test("CI result contract detects support loss", async () => {
 });
 
 test("dedicated CI covers every consumer with Node 22 and pinned build paths", async () => {
-  const [splitWorkflow, packageDocument, currentPerlWorkflow, toolchainBootstrap] = await Promise.all([
+  const [structuralWorkflow, packageDocument, structuralPerlWorkflow, toolchainBootstrap] = await Promise.all([
     readFile(".github/workflows/consumer-matrix.yml", "utf8")
     , readFile("package.json", "utf8").then(JSON.parse)
     , readFile(".github/workflows/perl-consumer.yml", "utf8")
     , readFile("scripts/bootstrap-toolchains.sh", "utf8")
   ]);
+  // Validate each required structural gate before removing only its additions for older comparisons.
+  assertStructuralSubtypeWorkflow(structuralWorkflow, "consumer-matrix.yml");
+  assertStructuralSubtypeWorkflow(structuralPerlWorkflow, "perl-consumer.yml");
+  assertWorkflowRunBudget(structuralWorkflow);
+  const splitWorkflow = disableStructuralSubtypeWorkflow(structuralWorkflow, "consumer-matrix.yml");
+  const currentPerlWorkflow = disableStructuralSubtypeWorkflow(structuralPerlWorkflow, "perl-consumer.yml");
   // Check the actual recording split and measured gates before earlier layout comparisons.
   assertWorkflowRunBudget(splitWorkflow);
   assertFinLateWorkflow(splitWorkflow);

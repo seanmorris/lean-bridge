@@ -14,6 +14,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { assertSourceEntryRun, sourceEntryLateMultiplicities } from "./scalar-fin-source-entry-run.mjs";
 import { assertSourceEntryWorkflow, insertSourceEntryWorkflow, sourceEntryStepName, sourceEntryUploadLine, sourceEntryWorkflowStep } from "./scalar-fin-source-entry-ci.mjs";
 import { assertReviewedSubtypePackageWorkflow, disableReviewedSubtypePackageWorkflow } from "./reviewed-subtype-package-ci-workflow.mjs";
+import { assertStructuralSubtypeWorkflow, disableStructuralSubtypeWorkflow } from "./structural-subtype-ci-workflow.mjs";
 
 // The archived six-ABI run has the layout CI writes: run.tap, report.json and calls/.
 const archive = "docs/evidence/scalar-fin-source-entry-20261008";
@@ -199,7 +200,9 @@ test("the checker command exits zero on a complete run and nonzero without a rep
 });
 
 test("the CI step runs right after locked compilation, cannot be skipped or hidden by tee and uploads its whole directory", async () => {
-	const current = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	const actual = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	assertStructuralSubtypeWorkflow(actual, "consumer-matrix.yml");
+	const current = disableStructuralSubtypeWorkflow(actual, "consumer-matrix.yml");
 	// The newer Subtype package checks run between compilation and this probe.
 	// Validate that entire required layer before checking the original adjacency.
 	assertReviewedSubtypePackageWorkflow(current);

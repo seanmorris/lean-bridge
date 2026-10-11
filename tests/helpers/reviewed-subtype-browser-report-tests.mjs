@@ -11,6 +11,7 @@ import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { assertReviewedSubtypeBrowserRecords } from "./reviewed-subtype-browser-report.mjs";
 import { assertReviewedSubtypePackageWorkflow } from "./reviewed-subtype-package-ci-workflow.mjs";
+import { assertStructuralSubtypeWorkflow, disableStructuralSubtypeWorkflow } from "./structural-subtype-ci-workflow.mjs";
 
 const root = "docs/evidence/reviewed-subtype-browser-runs-20261010";
 const cli = "scripts/check-reviewed-subtype-browser-reports.mjs";
@@ -130,7 +131,8 @@ test("reviewed browser CI rejects substituted callers, runtime manifests and ins
 
 test("reviewed browser CI remains enforced by the existing npm outcome and original-record upload", async () => {
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
-	assertReviewedSubtypePackageWorkflow(workflow);
+	assertStructuralSubtypeWorkflow(workflow, "consumer-matrix.yml");
+	assertReviewedSubtypePackageWorkflow(disableStructuralSubtypeWorkflow(workflow, "consumer-matrix.yml"));
 	const runner = await readFile("scripts/run-reviewed-subtype-package-ci.sh", "utf8");
 	assert.ok(runner.includes("export LEAN_BRIDGE_REVIEWED_SUBTYPE_BROWSER_TEST=1"));
 	assert.ok(runner.includes("export LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit"));

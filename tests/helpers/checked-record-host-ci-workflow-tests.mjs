@@ -6,11 +6,14 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { assertCheckedRecordHostWorkflow, disableCheckedRecordHostWorkflow, enableCheckedRecordHostWorkflow, checkedRecordHostCiBlock, checkedRecordHostCiCommand, checkedRecordHostCiGroups, checkedRecordHostCiUpload } from "./checked-record-host-ci-workflow.mjs";
+import { assertCheckedRecordHostWorkflow as assertPreviousWorkflow, disableCheckedRecordHostWorkflow, enableCheckedRecordHostWorkflow, checkedRecordHostCiBlock, checkedRecordHostCiCommand, checkedRecordHostCiGroups, checkedRecordHostCiUpload } from "./checked-record-host-ci-workflow.mjs";
 import { beforeCheckedRecordHostCiSource, checkedRecordHostCiHistoryPath } from "./checked-record-host-ci-history.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { reviewedSubtypeHostCiBlock, reviewedSubtypeHostCiCommand } from "./reviewed-subtype-host-ci-workflow.mjs";
 import "./checked-record-host-ci-history-tests.mjs";
+import { withoutStructuralSubtypeWorkflow } from "./structural-subtype-ci-workflow.mjs";
+
+const assertCheckedRecordHostWorkflow = source => assertPreviousWorkflow(withoutStructuralSubtypeWorkflow(source, "consumer-matrix.yml"));
 
 const path = ".github/workflows/consumer-matrix.yml";
 

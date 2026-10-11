@@ -6,16 +6,24 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { assertReviewedSubtypePackageWorkflow, disableReviewedSubtypePackageWorkflow, enableReviewedSubtypePackageWorkflow, reviewedSubtypePackageNativeBlock, reviewedSubtypePackageNativeUpload, reviewedSubtypePackageNpmBlock } from "./reviewed-subtype-package-ci-workflow.mjs";
-import { beforeReviewedSubtypePackageCiSource } from "./reviewed-subtype-package-ci-history.mjs";
+import { assertReviewedSubtypePackageWorkflow as assertPreviousWorkflow, disableReviewedSubtypePackageWorkflow, enableReviewedSubtypePackageWorkflow, reviewedSubtypePackageNativeBlock, reviewedSubtypePackageNativeUpload, reviewedSubtypePackageNpmBlock } from "./reviewed-subtype-package-ci-workflow.mjs";
+import { beforeReviewedSubtypePackageCiSource, reviewedSubtypePackageCiHistoryPath } from "./reviewed-subtype-package-ci-history.mjs";
+import { withoutStructuralSubtypeWorkflow } from "./structural-subtype-ci-workflow.mjs";
+import { sha256 } from "../../src/capsule/node.mjs";
+
+const assertReviewedSubtypePackageWorkflow = source => assertPreviousWorkflow(withoutStructuralSubtypeWorkflow(source, "consumer-matrix.yml"));
 
 test("reviewed package workflow adds enforced C-family and locked-engine npm gates without deleting earlier commands", async () => {
 	const path = ".github/workflows/consumer-matrix.yml", source = await readFile(path, "utf8");
 	assertReviewedSubtypePackageWorkflow(source);
-	const previous = beforeReviewedSubtypePackageCiSource(path, source);
-	assert.notEqual(previous, source);
-	assert.equal(disableReviewedSubtypePackageWorkflow(source), previous);
-	assert.equal(enableReviewedSubtypePackageWorkflow(previous), source);
+	const record = JSON.parse(await readFile(reviewedSubtypePackageCiHistoryPath));
+	const update = record.updates.find(item => item.path === path);
+	const milestone = beforeReviewedSubtypePackageCiSource(path, source, update.currentSha256);
+	assert.equal(sha256(milestone), update.currentSha256);
+	const previous = beforeReviewedSubtypePackageCiSource(path, milestone);
+	assert.notEqual(previous, milestone);
+	assert.equal(disableReviewedSubtypePackageWorkflow(milestone), previous);
+	assert.equal(enableReviewedSubtypePackageWorkflow(previous), milestone);
 	assert.ok((await readFile("tests/reviewed-subtype-installed.test.mjs", "utf8")).includes('import "./helpers/reviewed-subtype-package-ci-tests.mjs";'));
 });
 

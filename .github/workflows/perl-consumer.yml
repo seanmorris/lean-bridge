@@ -54,6 +54,20 @@ jobs:
           name: checked-record-perl-${{ github.sha }}
           path: build/checked-record-perl-ci/
           if-no-files-found: error
+      - name: Require both structural Subtype routes across all four Perl ABIs
+        env:
+          LEAN_NUM_THREADS: "2"
+        run: |
+          source scripts/env.sh
+          bash scripts/run-structural-subtype-ci.sh perl
+      - name: Preserve complete and partial structural Perl records
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: structural-subtype-perl-${{ github.sha }}
+          path: build/structural-subtype-ci/perl/
+          if-no-files-found: error
+          retention-days: 30
 
   nix-engine:
     name: Pinned Nix Perl engine and installed consumer
