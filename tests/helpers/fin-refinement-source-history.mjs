@@ -10,6 +10,7 @@ import { checkedRecordPerlPromotionChangedPaths } from "./checked-record-perl-pr
 import { structuralSubtypeSelectionChangedPaths } from "./structural-subtype-selection-history.mjs";
 import { structuralSubtypeRuntimeChangedPaths } from "./structural-subtype-runtime-history.mjs";
 import { structuralSubtypeRegistrationChangedPaths } from "./structural-subtype-registration-history.mjs";
+import { structuralSubtypeCiFoundationChangedPaths } from "./structural-subtype-ci-foundation-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeSubtypeRefinementSource, subtypeRefinementChangedPaths } from "./subtype-refinement-source-history.mjs";
 import { subtypeHeapChangedPaths } from "./subtype-heap-source-history.mjs";
@@ -885,6 +886,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...structuralSubtypeSelectionChangedPaths
 	, ...structuralSubtypeRuntimeChangedPaths
 	, ...structuralSubtypeRegistrationChangedPaths
+	, ...structuralSubtypeCiFoundationChangedPaths
 ])].sort());
 
 /**

@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "milestone": "structural-subtype-ci-foundation-source-v1",
+  "predecessorCommit": "f00ea7bfab11216cc6d1fc31f848560b0d88c960",
+  "updates": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "f95a8ed8a20ef31408b2309f17d935adb2a38808459a30e8171c90495c88dd63",
+      "previousSha256": "40a3fae881f417579b6bf01fc40ecca5a1f4e489180debda06cc445d587db09d",
+      "edits": [
+        {
+          "start": 704,
+          "previous": "",
+          "current": "import { structuralSubtypeCiFoundationChangedPaths } from \"./structural-subtype-ci-foundation-history.mjs\";\n"
+        },
+        {
+          "start": 60348,
+          "previous": "",
+          "current": "\t, ...structuralSubtypeCiFoundationChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/structural-subtype-registration-history.mjs",
+      "currentSha256": "139d039d1cd669c4dba202244e1fe46f9739d4f041ca29761af542326ea1d172",
+      "previousSha256": "32b0bf040cdd6439d301757cc2a2b9e1f0d3be3f9d042803f8bddb47040cf394",
+      "edits": [
+        {
+          "start": 273,
+          "previous": "",
+          "current": "import { beforeStructuralSubtypeCiFoundationSource } from \"./structural-subtype-ci-foundation-history.mjs\";\n"
+        },
+        {
+          "start": 2321,
+          "previous": "",
+          "current": "\tsource = beforeStructuralSubtypeCiFoundationSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/php-wasm-fin.test.mjs",
+      "currentSha256": "cc85a12830c619674b269d31402dfee516756ffc6bac61242a13f1543205c07d",
+      "previousSha256": "2e373848710b14f885b119b089e1223f0924828dbd6879016b4be256b8b1da59",
+      "edits": [
+        {
+          "start": 7214,
+          "previous": "test(\"PHP-Wasm preserves top-level Subtype checks while refined callable, graph and owned packages remain refused\", async () => {\n",
+          "current": "test(\"PHP-Wasm preserves scalar and structural Subtype checks while refined callable, graph and owned packages remain refused\", async () => {\n"
+        },
+        {
+          "start": 8023,
+          "previous": "\tassert.throws(() => createPhpWasmCopiedModel(input({ kind: \"array\", element: subtype, abi: heap })), /Subtype refinements require a top-level native parameter or result/u);\n",
+          "current": "\tconst array = createPhpWasmCopiedModel(input({ kind: \"array\", element: subtype, abi: heap }));\n\tassert.deepEqual(array.exports[0].refinements, {\n\t\tparameters: [{ kind: \"array\", arguments: [subtype.predicate] }]\n\t\t, result: null\n\t});\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/structural-subtype-installed.test.mjs",
+      "currentSha256": "cd4fa7e5980bf1cc3432ead571528534133acebbec733c09d88034dce48f4cd8",
+      "previousSha256": "d049b10a3175402b2527c676f341b75a7800fc40953dee1be656a421872b1400",
+      "edits": [
+        {
+          "start": 2903,
+          "previous": "",
+          "current": "import \"./helpers/structural-subtype-ci-report-tests.mjs\";\nimport \"./helpers/structural-subtype-ci-shell-tests.mjs\";\nimport \"./helpers/structural-subtype-ci-foundation-history-tests.mjs\";\n"
+        }
+      ]
+    }
+  ]
+}
