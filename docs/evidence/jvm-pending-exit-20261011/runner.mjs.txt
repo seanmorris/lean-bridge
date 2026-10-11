@@ -1,0 +1,81 @@
+import assert from 'node:assert/strict';
+import { randomBytes } from 'node:crypto';
+import { spawnSync } from 'node:child_process';
+import { mkdir, readFile, readdir, statfs, writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
+import { canonicalJson, sha256 } from '../src/capsule/node.mjs';
+import { finContainerEdgeJvmWaitGdbScript, assertFinContainerEdgeJvmGdbRun } from '../tests/helpers/fin-container-edge-jvm-gdb.mjs';
+import { readFinContainerEdgeJvm } from '../tests/helpers/fin-container-edge-jvm.mjs';
+
+const root = '/app/build/vo1454-actual-edge-jvm-3beb2ca';
+const output = '/app/build/vo1454-jvm-wait-runtime-r1';
+const free = async () => { const s = await statfs('/app'); return Math.floor(s.bavail*s.bsize/1048576); };
+assert.ok(await free() >= 2048, 'Keep two GiB before runtime-only replay');
+await mkdir(output);
+await mkdir(join(output, 'cache'));
+const baseline = JSON.parse(await readFile(join(root, 'baseline-dispatch.json'))).publicHostDispatch;
+const original = JSON.parse(await readFile(join(root, 'consumer/java-edge-public/gdb/run-1.json')));
+const jar = join(root, 'consumer/java-relocated/component.jar');
+const packageDigest = sha256(await readFile(jar));
+const listings = {};
+for (const name of original.identity.libraries) {
+  assert.equal(sha256(await readFile(join(original.root, name))), baseline.libraries[name]);
+  const result = spawnSync('/usr/bin/nm', ['-D', '--defined-only', join(original.root, name)], { encoding:'utf8', maxBuffer:32*1024*1024 });
+  assert.equal(result.status,0,result.stderr);
+  listings[name] = result.stdout;
+}
+for(const [path,digest] of Object.entries(baseline.probeFiles).filter(([p])=>p.endsWith('.class')))
+  assert.equal(sha256(await readFile(join(root,'consumer/java-edge-public',path))),digest,path);
+const observer = {identity:original.identity,configSha256:original.configSha256,listings,definerIndices:original.identity.definers.map(name=>original.identity.libraries.indexOf(name))};
+const results = [];
+const start = { startedAt:new Date().toISOString(), scope:'Replay the unchanged archived installed Java edge fixture. Not a fresh build, hosted-race reproduction, or new installed support.', packageDigest, libraries:baseline.libraries };
+await writeFile(join(output,'start.json'), JSON.stringify(start,null,2)+'\n', {flag:'wx'});
+for(const [index, mode] of ['production','reaped-without-gdb-status'].entries()) {
+  assert.ok(await free() >= 1536);
+  const stem = join(output,'run-'+index), extractionRoot=join(output,'jvm-'+index), nonce=randomBytes(16).toString('hex');
+  await mkdir(extractionRoot);
+  const config = {...original,nonce,record:stem+'.record',armed:stem+'.armed.json',stdout:stem+'.stdout',stderr:stem+'.stderr',argv:[...original.argv]};
+  config.argv[2] = '-Djava.io.tmpdir='+extractionRoot;
+  config.argv[6] = config.record; config.argv[7] = nonce;
+  let script = finContainerEdgeJvmWaitGdbScript({nativeDirectory:original.root,extractionRoot,libraries:baseline.libraries});
+  if(mode === 'reaped-without-gdb-status') {
+    const marker = '    jvm_exit = jvm_observe_exit()';
+    assert.equal(script.split(marker).length,2);
+    script = script.replace(marker,'    gdb.set_convenience_variable("_exitcode", None)\n'+marker);
+  }
+  await writeFile(stem+'.json',canonicalJson(config),{flag:'wx'});
+  await writeFile(stem+'.py',script,{flag:'wx'});
+  const startedAt = new Date().toISOString();
+  const processResult = spawnSync('/usr/bin/gdb', ['-batch','-q','-nx','-x',stem+'.py'], {
+    cwd:output,env:{PATH:'/unavailable',LC_ALL:'C',TZ:'UTC',LEAN_NUM_THREADS:'1',XDG_CACHE_HOME:join(output,'cache'),LEAN_BRIDGE_FIN_EDGE_GDB_CONFIG:stem+'.json'},
+    encoding:'utf8',timeout:180000,maxBuffer:32*1024*1024
+  });
+  const raw = {status:processResult.status,signal:processResult.signal,stdout:processResult.stdout,stderr:processResult.stderr,error:processResult.error?.message,startedAt,endedAt:new Date().toISOString()};
+  await writeFile(stem+'.result.json',JSON.stringify(raw,null,2)+'\n',{flag:'wx'});
+  let checks = 'passed', receipt=null;
+  try {
+    assert.equal(raw.signal,null);
+    const stdout = await readFile(config.stdout,'utf8'), stderr = await readFile(config.stderr,'utf8');
+    const rows = readFinContainerEdgeJvm(stdout,'java');
+    assert.equal(rows.length,12046);
+    const run = {code:raw.status,output:raw.stdout+raw.stderr,stdout,stderr,record:config.record,armed:config.armed,nonce,extractionRoot,scriptSha256:sha256(script)};
+    if(mode === 'production') {
+      assert.equal(raw.status,0,run.output);
+      const manifest = await assertFinContainerEdgeJvmGdbRun(observer,run,rows,baseline.libraries);
+      assert.equal(manifest.jvmExit.kind,'gdb-exit');
+      assert.equal(manifest.jvmExit.code,0);receipt=manifest.jvmExit;
+    } else {
+      assert.equal(raw.status,72,run.output);
+      assert.match(raw.stderr,/fin instrumentation refused: the inferior did not exit normally/u);
+      await assert.rejects(assertFinContainerEdgeJvmGdbRun(observer,run,rows,baseline.libraries));
+    }
+    assert.deepEqual(await readdir(extractionRoot),[]);
+    assert.equal(sha256(await readFile(jar)),packageDigest);
+    for(const [name,digest] of Object.entries(baseline.libraries)) assert.equal(sha256(await readFile(join(original.root,name))),digest);
+  } catch(error) {checks=error.stack;}
+  results.push({index,mode,status:raw.status,checks,receipt,scriptSha256:sha256(script),freeMiB:await free()});
+  console.log(JSON.stringify(results.at(-1)));
+  if(checks !== 'passed') break;
+}
+await writeFile(join(output,'summary.json'),JSON.stringify({...start,endedAt:new Date().toISOString(),results},null,2)+'\n',{flag:'wx'});
+assert.equal(results.length,2);assert.ok(results.every(result=>result.checks==='passed'));

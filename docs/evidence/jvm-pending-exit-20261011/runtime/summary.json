@@ -1,0 +1,37 @@
+{
+  "startedAt": "2026-10-11T21:08:29.301Z",
+  "scope": "Replay the unchanged archived installed Java edge fixture. Not a fresh build, hosted-race reproduction, or new installed support.",
+  "packageDigest": "9d09c5e9a58c1c5a79d70bbfdac53e20d5cf3028f4bf77449cdd61859d8baa83",
+  "libraries": {
+    "libcomponent_3acdf22f1550490d7b06.so": "83a7b20759f9c65d363fc158796ed8f7941afd34de74f536acef48d13e86fcc5",
+    "libfincontainers.so": "517cd6dbc3c379671357ba627a4dbffb1b4a3495987bed10c2b3cb4880717fa3",
+    "liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+    "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+  },
+  "endedAt": "2026-10-11T21:08:48.135Z",
+  "results": [
+    {
+      "index": 0,
+      "mode": "production",
+      "status": 0,
+      "checks": "passed",
+      "receipt": {
+        "schemaVersion": 1,
+        "kind": "gdb-exit",
+        "pid": 625273,
+        "code": 0
+      },
+      "scriptSha256": "7addbdfa814901d12ce8c37cf348c4dfbb032c4b3a8c962bd95158dc8acbcfb2",
+      "freeMiB": 7995
+    },
+    {
+      "index": 1,
+      "mode": "reaped-without-gdb-status",
+      "status": 72,
+      "checks": "passed",
+      "receipt": null,
+      "scriptSha256": "5f9a54fc44a59c6461abdde632dc701d2737d0219054cce54806ae0338fcb047",
+      "freeMiB": 7994
+    }
+  ]
+}

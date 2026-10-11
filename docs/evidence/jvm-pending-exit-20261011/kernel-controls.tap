@@ -1,0 +1,47 @@
+TAP version 13
+# Subtest: JVM pending exit authenticates exact changes and restores the original support inventory
+ok 1 - JVM pending exit authenticates exact changes and restores the original support inventory
+  ---
+  duration_ms: 142.418731
+  type: 'test'
+  ...
+# Subtest: JVM pending exit history writer refuses an unrelated checkout before writing
+ok 2 - JVM pending exit history writer refuses an unrelated checkout before writing
+  ---
+  duration_ms: 81.598373
+  type: 'test'
+  ...
+# Subtest: JVM exit recovery observes real kernel children without consuming their exit status
+ok 3 - JVM exit recovery observes real kernel children without consuming their exit status
+  ---
+  duration_ms: 1158.681098
+  type: 'test'
+  ...
+# real kernel exit controls: kernel-exit-0, kernel-exit-7, kernel-exit-255, traced-kernel-exit-0, traced-kernel-exit-7, live-child-timeout, signal-exit, wrong-inferior, live-debugger-thread, contradictory-code, contradictory-signal, contradictory-event, sticky-failure, changed-identity, wrong-child-handle, already-reaped-child, closed-handle, missing-handle, gdb-exit-0, gdb-exit-7
+# Subtest: JVM exit receipts require exact successful process identity and CLD_EXITED
+ok 4 - JVM exit receipts require exact successful process identity and CLD_EXITED
+  ---
+  duration_ms: 5.445102
+  type: 'test'
+  ...
+# Subtest: the pending-exit observer binds its child before continuing and retains refusal paths
+ok 5 - the pending-exit observer binds its child before continuing and retains refusal paths
+  ---
+  duration_ms: 1.362235
+  type: 'test'
+  ...
+# Subtest: JVM reports bind new exit receipts to the exact new script and preserve both older versions
+ok 6 - JVM reports bind new exit receipts to the exact new script and preserve both older versions
+  ---
+  duration_ms: 1799.332613
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3648.903051

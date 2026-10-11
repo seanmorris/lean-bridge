@@ -18,8 +18,9 @@ import { finContainerEdgeJvmProbe } from "./fin-container-edge-jvm.mjs";
 import { finContainerEdgePhpProbe } from "./fin-container-edge-php.mjs";
 import { finContainerEdgeWitProbe } from "./fin-container-edge-wit.mjs";
 import { finContainerEdgeGdbScript } from "./fin-container-edge-gdb.mjs";
-import { finContainerEdgeJvmGdbScript } from "./fin-container-edge-jvm-gdb.mjs";
+import { finContainerEdgeJvmGdbScript, finContainerEdgeJvmWaitGdbScript } from "./fin-container-edge-jvm-gdb.mjs";
 import { withoutFinContainerEdgeJvmExitDiagnostics } from "./fin-container-edge-jvm-exit.mjs";
+import { assertFinContainerEdgeJvmExit } from "./fin-container-edge-jvm-wait.mjs";
 
 const digest = /^[a-f0-9]{64}$/u;
 const positive = value => assert.ok(Number.isSafeInteger(value) && value > 0);
@@ -77,11 +78,14 @@ const gdbRuns = (host, observation, jvm = false) => {
 		if(jvm)
 		{
 			absolute(run.extractionRoot);
-			const script = finContainerEdgeJvmGdbScript({
+			const options = {
 				nativeDirectory: host.libraryDirectory
-				, extractionRoot: run.extractionRoot, libraries: host.libraries });
-			// Logging does not change acceptance. Preserve exactly the original and diagnostic versions.
-			assert.ok([sha256(script), sha256(withoutFinContainerEdgeJvmExitDiagnostics(script))].includes(run.scriptSha256), "one exact JVM observer version");
+				, extractionRoot: run.extractionRoot, libraries: host.libraries };
+			const script = finContainerEdgeJvmGdbScript(options);
+			const current = sha256(finContainerEdgeJvmWaitGdbScript(options));
+			assert.ok([current, sha256(script), sha256(withoutFinContainerEdgeJvmExitDiagnostics(script))].includes(run.scriptSha256), "one exact JVM observer version");
+			if(run.scriptSha256 === current) assertFinContainerEdgeJvmExit(manifest.jvmExit, manifest.pid);
+			else assert.equal(Object.hasOwn(manifest, "jvmExit"), false, "historical observers cannot acquire new exit observations");
 			const extracted = manifest.jvmExtraction;
 			assert.equal(extracted.parent, run.extractionRoot);
 			assert.ok(extracted.root.startsWith(run.extractionRoot + "/"));

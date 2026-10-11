@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "milestone": "jvm-pending-exit-source-v1",
+  "predecessorCommit": "66639ddbe17be8d1d5264725c1e2816972a649ba",
+  "updates": [
+    {
+      "path": "tests/helpers/component-refinement-mirror-history.mjs",
+      "currentSha256": "113fc09555523da8085d18fd4b618a4ff031af883da41835638ff212f675612d",
+      "previousSha256": "606a59e594514b81a87fadee2674b46ff6f01000b2db904b2d09cac93baa60cc",
+      "edits": [
+        {
+          "start": 264,
+          "previous": "",
+          "current": "import { beforeJvmPendingExitSource } from \"./jvm-pending-exit-history.mjs\";\n"
+        },
+        {
+          "start": 2467,
+          "previous": "",
+          "current": "\tsource = beforeJvmPendingExitSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-container-edge-jvm-gdb.mjs",
+      "currentSha256": "5747e1c579eed721cb067d9ead5e7dec51d5ac534982f0e467e014f3e8bdf6df",
+      "previousSha256": "bc8d76c745dafaf955947c8e74fb3c5c49af5ea27d766a256af48d39ed543fd4",
+      "edits": [
+        {
+          "start": 237,
+          "previous": "import { mkdtemp, readdir } from \"node:fs/promises\";\n",
+          "current": "import { mkdtemp, readFile, readdir } from \"node:fs/promises\";\n"
+        },
+        {
+          "start": 634,
+          "previous": "",
+          "current": "import { assertFinContainerEdgeJvmExit, withFinContainerEdgeJvmWait } from \"./fin-container-edge-jvm-wait.mjs\";\n"
+        },
+        {
+          "start": 6850,
+          "previous": "",
+          "current": "/**\n * Current observer: keep the original script reproducible and add exact-child kernel exit observation.\n *\n * @param options - Original native library and exclusive JVM extraction identities.\n */\nexport const finContainerEdgeJvmWaitGdbScript = options => withFinContainerEdgeJvmWait(finContainerEdgeJvmGdbScript(options));\n\n"
+        },
+        {
+          "start": 7927,
+          "previous": "\t\t\tconst source = finContainerEdgeJvmGdbScript({ ...options, extractionRoot });\n",
+          "current": "\t\t\tconst source = finContainerEdgeJvmWaitGdbScript({ ...options, extractionRoot });\n"
+        },
+        {
+          "start": 8111,
+          "previous": "\t\t\tif(run.code === 0) assert.deepEqual(await readdir(extractionRoot), [], \"normal JVM shutdown removes every extracted library\");\n",
+          "current": "\t\t\tif(run.code === 0)\n\t\t\t{\n\t\t\t\tconst manifest = JSON.parse(await readFile(run.armed, \"utf8\"));\n\t\t\t\tassertFinContainerEdgeJvmExit(manifest.jvmExit, manifest.pid);\n\t\t\t\tassert.deepEqual(await readdir(extractionRoot), [], \"normal JVM shutdown removes every extracted library\");\n\t\t\t}\n"
+        },
+        {
+          "start": 8998,
+          "previous": "",
+          "current": "\tif(Object.hasOwn(manifest, \"jvmExit\")) assertFinContainerEdgeJvmExit(manifest.jvmExit, manifest.pid);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-container-edge-report-hosts.mjs",
+      "currentSha256": "0bee0698930c786db9e7db0bda592a5c3406cae2506dc3f155df2861a821b076",
+      "previousSha256": "60bccfd74b8c1f8d36ef3655052fb5438143600da4635d454f60c3897174ed28",
+      "edits": [
+        {
+          "start": 1229,
+          "previous": "import { finContainerEdgeJvmGdbScript } from \"./fin-container-edge-jvm-gdb.mjs\";\n",
+          "current": "import { finContainerEdgeJvmGdbScript, finContainerEdgeJvmWaitGdbScript } from \"./fin-container-edge-jvm-gdb.mjs\";\n"
+        },
+        {
+          "start": 1439,
+          "previous": "",
+          "current": "import { assertFinContainerEdgeJvmExit } from \"./fin-container-edge-jvm-wait.mjs\";\n"
+        },
+        {
+          "start": 4279,
+          "previous": "\t\t\tconst script = finContainerEdgeJvmGdbScript({\n",
+          "current": "\t\t\tconst options = {\n"
+        },
+        {
+          "start": 4343,
+          "previous": "\t\t\t\t, extractionRoot: run.extractionRoot, libraries: host.libraries });\n\t\t\t// Logging does not change acceptance. Preserve exactly the original and diagnostic versions.\n\t\t\tassert.ok([sha256(script), sha256(withoutFinContainerEdgeJvmExitDiagnostics(script))].includes(run.scriptSha256), \"one exact JVM observer version\");\n",
+          "current": "\t\t\t\t, extractionRoot: run.extractionRoot, libraries: host.libraries };\n\t\t\tconst script = finContainerEdgeJvmGdbScript(options);\n\t\t\tconst current = sha256(finContainerEdgeJvmWaitGdbScript(options));\n\t\t\tassert.ok([current, sha256(script), sha256(withoutFinContainerEdgeJvmExitDiagnostics(script))].includes(run.scriptSha256), \"one exact JVM observer version\");\n\t\t\tif(run.scriptSha256 === current) assertFinContainerEdgeJvmExit(manifest.jvmExit, manifest.pid);\n\t\t\telse assert.equal(Object.hasOwn(manifest, \"jvmExit\"), false, \"historical observers cannot acquire new exit observations\");\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-container-edge-sdk-tests.mjs",
+      "currentSha256": "6592bb0aae570d4b0a14efeec550a035224f266c2ce71d5e43dd13e5aecdb89c",
+      "previousSha256": "c2ec10dc7c8dce034369eedc9c9dba9dd235b9302f804a9e97c2851810c0d948",
+      "edits": [
+        {
+          "start": 708,
+          "previous": "",
+          "current": "import \"./fin-container-edge-jvm-wait-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "1b28dd67ddeff49debc557194ed18ba94bd9fb7e79298186700109922fa2e52f",
+      "previousSha256": "d1667ed57c1f7eae21f438e3d2448eeee361d2d87ab7dbbb43072d23a88ff676",
+      "edits": [
+        {
+          "start": 2719,
+          "previous": "",
+          "current": "import { jvmPendingExitChangedPaths } from \"./jvm-pending-exit-history.mjs\";\n"
+        },
+        {
+          "start": 63214,
+          "previous": "",
+          "current": "\t, ...jvmPendingExitChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}

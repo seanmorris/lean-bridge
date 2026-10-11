@@ -5,11 +5,12 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { mkdtemp, readdir } from "node:fs/promises";
+import { mkdtemp, readFile, readdir } from "node:fs/promises";
 import { isAbsolute, join } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { assertFinContainerEdgeGdbRun, finContainerEdgeGdbScript, prepareFinContainerEdgeGdb } from "./fin-container-edge-gdb.mjs";
 import { finContainerEdgeJvmExitDiagnostics } from "./fin-container-edge-jvm-exit.mjs";
+import { assertFinContainerEdgeJvmExit, withFinContainerEdgeJvmWait } from "./fin-container-edge-jvm-wait.mjs";
 
 const replace = (source, before, after) => {
 	assert.equal(source.split(before).length, 2, `one JVM instrumentation site: ${before}`);
@@ -132,6 +133,13 @@ try:
 };
 
 /**
+ * Current observer: keep the original script reproducible and add exact-child kernel exit observation.
+ *
+ * @param options - Original native library and exclusive JVM extraction identities.
+ */
+export const finContainerEdgeJvmWaitGdbScript = options => withFinContainerEdgeJvmWait(finContainerEdgeJvmGdbScript(options));
+
+/**
  * Prepare normal address breakpoints plus authenticated per-process JVM extraction discovery.
  *
  * @param options - Fixed-directory observer options; argv additionally receives extractionRoot.
@@ -147,10 +155,15 @@ export const prepareFinContainerEdgeJvmGdb = async options => {
 		try
 		{
 			extractionRoot = await mkdtemp(join(options.probeRoot, "jvm-run-"));
-			const source = finContainerEdgeJvmGdbScript({ ...options, extractionRoot });
+			const source = finContainerEdgeJvmWaitGdbScript({ ...options, extractionRoot });
 			const script = mutateScript(source);
 			const run = await observer.run({ ...settings, script });
-			if(run.code === 0) assert.deepEqual(await readdir(extractionRoot), [], "normal JVM shutdown removes every extracted library");
+			if(run.code === 0)
+			{
+				const manifest = JSON.parse(await readFile(run.armed, "utf8"));
+				assertFinContainerEdgeJvmExit(manifest.jvmExit, manifest.pid);
+				assert.deepEqual(await readdir(extractionRoot), [], "normal JVM shutdown removes every extracted library");
+			}
 			return { ...run, extractionRoot, scriptSha256: sha256(script) };
 		}
 		finally
@@ -168,6 +181,7 @@ export const prepareFinContainerEdgeJvmGdb = async options => {
  */
 export const assertFinContainerEdgeJvmGdbRun = async (observer, run, rows, libraries) => {
 	const manifest = await assertFinContainerEdgeGdbRun(observer, run, rows);
+	if(Object.hasOwn(manifest, "jvmExit")) assertFinContainerEdgeJvmExit(manifest.jvmExit, manifest.pid);
 	const extracted = manifest.jvmExtraction;
 	assert.deepEqual(Object.keys(extracted).sort(), ["afterExit", "libraries", "parent", "root"]);
 	assert.equal(extracted.parent, run.extractionRoot);

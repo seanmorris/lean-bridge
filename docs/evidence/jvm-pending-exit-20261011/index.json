@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 1,
+  "scope": "Observed JVM exit and genuine kernel-child controls. The hosted race is not locally reproduced; no new installed support is claimed.",
+  "files": [
+    {
+      "path": "hosted-failure.log",
+      "bytes": 481021,
+      "sha256": "59270c458277d79b2f1ce519be491bef81882ad7a9e68cf0e6006c1c146e9d97",
+      "original": "build/vo1220-jvm-114537520888.log"
+    },
+    {
+      "path": "kernel-controls.tap",
+      "bytes": 1933,
+      "sha256": "f7caa462dda2ae929016504bd36ba4f8655c7ba9b81bbb1b76cb8df970bf9bf0",
+      "original": "build/vo1454-jvm-wait-unit-r3.tap"
+    },
+    {
+      "path": "runner.mjs.txt",
+      "bytes": 5745,
+      "sha256": "4314db494c0046b2ff0f1c074178f806f21bb0a3bef13789bb9dcafecf43ad2d",
+      "original": "build/check-vo1454-jvm-wait-runtime.mjs"
+    },
+    {
+      "path": "runtime/listings.json",
+      "bytes": 520,
+      "sha256": "20a8aa42cb8d9feede316831979834ffa760bc0e38d2dc5a66c6d77c6f633e81"
+    },
+    {
+      "path": "runtime/run-0.armed.json",
+      "bytes": 2692,
+      "sha256": "1eddab4247c1ad20f9ee65631883b40b74e37bd86c7f898358a1e7625d7a6164",
+      "original": "build/vo1454-jvm-wait-runtime-r1/run-0.armed.json"
+    },
+    {
+      "path": "runtime/run-0.json",
+      "bytes": 2139,
+      "sha256": "0b940e6613ec5251dee99bcd7ea23cece172d613fe79a1d4386a817f0cbedfc1",
+      "original": "build/vo1454-jvm-wait-runtime-r1/run-0.json"
+    },
+    {
+      "path": "runtime/run-0.py",
+      "bytes": 16056,
+      "sha256": "7addbdfa814901d12ce8c37cf348c4dfbb032c4b3a8c962bd95158dc8acbcfb2",
+      "original": "build/vo1454-jvm-wait-runtime-r1/run-0.py"
+    },
+    {
+      "path": "runtime/run-0.record",
+      "bytes": 328,
+      "sha256": "348fe6111052ecb89c0a71b211c8ec29616370ed2a235b62f463f9db4cfbe01a",
+      "original": "build/vo1454-jvm-wait-runtime-r1/run-0.record"
+    },
+    {
+      "path": "runtime/run-0.result.json",
+      "bytes": 1604,
+      "sha256": "ab568cc135d97bb87d9ddbc40b5f2ab40de52de9dff099c33a3546ec09942083",
+      "original": "build/vo1454-jvm-wait-runtime-r1/run-0.result.json"
+    },
+    {
+      "path": "runtime/run-0.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "build/vo1454-jvm-wait-runtime-r1/run-0.stderr"
+    },
+    {
+      "path": "runtime/run-0.stdout",
+      "bytes": 727276,
+      "sha256": "d85058fc9d50c547f462ea143b627f9cb4397964ba073fbfa3f3f88927827f61",
+      "original": "build/vo1454-jvm-wait-runtime-r1/run-0.stdout"
+    },
+    {
+      "path": "runtime/run-1.armed.json",
+      "bytes": 2082,
+      "sha256": "ed6bfbc6ddffe154d85bc73d4b4316d2b6a545f33927b6873c54088e5709aa6e",
+      "original": "build/vo1454-jvm-wait-runtime-r1/run-1.armed.json"
+    },
+    {
+      "path": "runtime/run-1.json",
+      "bytes": 2139,
+      "sha256": "4f0c884bf382b66d287700ded3fb54350ff39f9e91c602d69ce36b40efbf4515",
+      "original": "build/vo1454-jvm-wait-runtime-r1/run-1.json"
+    },
+    {
+      "path": "runtime/run-1.py",
+      "bytes": 16108,
+      "sha256": "5f9a54fc44a59c6461abdde632dc701d2737d0219054cce54806ae0338fcb047",
+      "original": "build/vo1454-jvm-wait-runtime-r1/run-1.py"
+    },
+    {
+      "path": "runtime/run-1.record",
+      "bytes": 328,
+      "sha256": "669c767736552a6a3a891124a6d26ad462b287b13ea8c6acb8f3e27f2167f8d0",
+      "original": "build/vo1454-jvm-wait-runtime-r1/run-1.record"
+    },
+    {
+      "path": "runtime/run-1.result.json",
+      "bytes": 2059,
+      "sha256": "cd55c59b8838b321203523afbb86db53ff07b26b48cde03e290385b6199d16bd",
+      "original": "build/vo1454-jvm-wait-runtime-r1/run-1.result.json"
+    },
+    {
+      "path": "runtime/run-1.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "build/vo1454-jvm-wait-runtime-r1/run-1.stderr"
+    },
+    {
+      "path": "runtime/run-1.stdout",
+      "bytes": 727276,
+      "sha256": "d85058fc9d50c547f462ea143b627f9cb4397964ba073fbfa3f3f88927827f61",
+      "original": "build/vo1454-jvm-wait-runtime-r1/run-1.stdout"
+    },
+    {
+      "path": "runtime/start.json",
+      "bytes": 697,
+      "sha256": "4463573294f9f21b2878da1bbd4c0bf18df40e36aa8a3e85964c04f85d67006e",
+      "original": "build/vo1454-jvm-wait-runtime-r1/start.json"
+    },
+    {
+      "path": "runtime/summary.json",
+      "bytes": 1353,
+      "sha256": "934074b1a75b09dc250141176dae91393cffd52440ee6f8910ff92c134b26158",
+      "original": "build/vo1454-jvm-wait-runtime-r1/summary.json"
+    },
+    {
+      "path": "sources/fin-container-edge-jvm-exit.mjs",
+      "bytes": 2698,
+      "sha256": "d567d8d138f547649f915dd8b7751795c505370769064770753d343fb6903de6",
+      "original": "tests/helpers/fin-container-edge-jvm-exit.mjs"
+    },
+    {
+      "path": "sources/fin-container-edge-jvm-gdb.mjs",
+      "bytes": 10084,
+      "sha256": "5747e1c579eed721cb067d9ead5e7dec51d5ac534982f0e467e014f3e8bdf6df",
+      "original": "tests/helpers/fin-container-edge-jvm-gdb.mjs"
+    },
+    {
+      "path": "sources/fin-container-edge-jvm-wait-tests.mjs",
+      "bytes": 10071,
+      "sha256": "d8c5cbb2bc9355fd04571613b09e1126a6c2c04fcbf96d76fda990ce0df77251",
+      "original": "tests/helpers/fin-container-edge-jvm-wait-tests.mjs"
+    },
+    {
+      "path": "sources/fin-container-edge-jvm-wait.mjs",
+      "bytes": 6041,
+      "sha256": "dc8f711539050c9231ec83c7ce46b97bc0e27d015f08079d6932546605442034",
+      "original": "tests/helpers/fin-container-edge-jvm-wait.mjs"
+    },
+    {
+      "path": "sources/fin-container-edge-report-hosts.mjs",
+      "bytes": 15086,
+      "sha256": "0bee0698930c786db9e7db0bda592a5c3406cae2506dc3f155df2861a821b076",
+      "original": "tests/helpers/fin-container-edge-report-hosts.mjs"
+    }
+  ]
+}
