@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "predecessor": "987237658a24f326ac8b023eef6bb25ea0a34d46",
+  "scope": "Local worktree source verification. Fresh Lean checks all four Perl routes; no C/XS compilation, installed package execution or hosted acceptance is claimed. Selected source digests are not a complete toolchain or source closure.",
+  "records": [
+    {
+      "path": "before.tap",
+      "sha256": "334a2cbc342614f3127e3111522196620b78e2d4262b83b06585aeb68c859603",
+      "bytes": 4735,
+      "source": "build/vo1446-perl-source-before-r1.tap"
+    },
+    {
+      "path": "fresh-lean.tap",
+      "sha256": "e3d8cdb0901448050ee07ff83aba94a1e97dfe060e7c23d635c3d95bbb6a8e96",
+      "bytes": 2322,
+      "source": "build/vo1446-perl-fresh-lean-r1.tap"
+    },
+    {
+      "path": "fixture.tap",
+      "sha256": "eddc9a58e12cc573f6e0aec67959a2b3815a30cc6c758eb39a8558180e5453dc",
+      "bytes": 579,
+      "source": "build/vo1446-perl-fixture-r1.tap"
+    }
+  ],
+  "sources": [
+    {
+      "path": "src/backends/perl/generate.mjs",
+      "sha256": "d911aecada0c63b18046f097fa8c250bd0bf47ec2944a9c2914e3f3aa1ac285b"
+    },
+    {
+      "path": "src/release/cpan-package.mjs",
+      "sha256": "b0fffc682d28c55dd38ad36cc507a8c719d3223a0a510e1f19573b4d477e1636"
+    },
+    {
+      "path": "tests/helpers/checked-record-perl-source-tests.mjs",
+      "sha256": "a6f3c8e42fa41f5e1443340a8c1235671145a7c69a08441046e849aa0cadc801"
+    },
+    {
+      "path": "tests/fixtures/checked-record-consumers/perl.pl",
+      "sha256": "4f191115800c811456ac4318d7fab3ccb97c1f5b1c270d2e15c2a7161d737944"
+    }
+  ]
+}

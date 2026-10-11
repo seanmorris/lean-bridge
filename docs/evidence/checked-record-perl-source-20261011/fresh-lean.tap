@@ -1,0 +1,64 @@
+TAP version 13
+# Subtest: Perl checked-record source uses payload mirrors and selected constructors for ordinary-source
+ok 1 - Perl checked-record source uses payload mirrors and selected constructors for ordinary-source
+  ---
+  duration_ms: 336.220021
+  type: 'test'
+  ...
+# Subtest: Perl checked-record source uses payload mirrors and selected constructors for reviewed-ir
+ok 2 - Perl checked-record source uses payload mirrors and selected constructors for reviewed-ir
+  ---
+  duration_ms: 3.808288
+  type: 'test'
+  ...
+# Subtest: Perl checked-record source uses payload mirrors and selected constructors for result-only-ordinary-source
+ok 3 - Perl checked-record source uses payload mirrors and selected constructors for result-only-ordinary-source
+  ---
+  duration_ms: 0.97557
+  type: 'test'
+  ...
+# Subtest: Perl checked-record source uses payload mirrors and selected constructors for result-only-reviewed-ir
+ok 4 - Perl checked-record source uses payload mirrors and selected constructors for result-only-reviewed-ir
+  ---
+  duration_ms: 0.745604
+  type: 'test'
+  ...
+# Subtest: Perl checked-record package reader enables only the copied transport
+ok 5 - Perl checked-record package reader enables only the copied transport
+  ---
+  duration_ms: 5.438433
+  type: 'test'
+  ...
+# Subtest: fresh Lean compiles checked-record Perl mirror adapters for ordinary-source
+ok 6 - fresh Lean compiles checked-record Perl mirror adapters for ordinary-source
+  ---
+  duration_ms: 27697.846933
+  type: 'test'
+  ...
+# Subtest: fresh Lean compiles checked-record Perl mirror adapters for reviewed-ir
+ok 7 - fresh Lean compiles checked-record Perl mirror adapters for reviewed-ir
+  ---
+  duration_ms: 26761.721783
+  type: 'test'
+  ...
+# Subtest: fresh Lean compiles checked-record Perl mirror adapters for result-only-ordinary-source
+ok 8 - fresh Lean compiles checked-record Perl mirror adapters for result-only-ordinary-source
+  ---
+  duration_ms: 26485.867622
+  type: 'test'
+  ...
+# Subtest: fresh Lean compiles checked-record Perl mirror adapters for result-only-reviewed-ir
+ok 9 - fresh Lean compiles checked-record Perl mirror adapters for result-only-reviewed-ir
+  ---
+  duration_ms: 27244.977839
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 108658.052175

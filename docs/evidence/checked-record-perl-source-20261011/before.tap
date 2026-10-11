@@ -1,0 +1,116 @@
+TAP version 13
+# Subtest: Perl checked-record source uses payload mirrors and selected constructors for ordinary-source
+not ok 1 - Perl checked-record source uses payload mirrors and selected constructors for ordinary-source
+  ---
+  duration_ms: 288.433311
+  type: 'test'
+  location: '/app/tests/helpers/checked-record-perl-source-tests.mjs:27:2'
+  failureType: 'testCodeFailure'
+  error: 'arg0: checked checked-record refinements are not implemented for cpan packages'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    finGuard (file:///app/src/backends/perl/generate.mjs:312:8)
+    file:///app/src/backends/perl/generate.mjs:321:99
+    Array.map (<anonymous>)
+    publicXsub (file:///app/src/backends/perl/generate.mjs:321:70)
+    generatePerlBindingPackage (file:///app/src/backends/perl/generate.mjs:439:46)
+    TestContext.<anonymous> (file:///app/tests/helpers/checked-record-perl-source-tests.mjs:29:17)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: Perl checked-record source uses payload mirrors and selected constructors for reviewed-ir
+not ok 2 - Perl checked-record source uses payload mirrors and selected constructors for reviewed-ir
+  ---
+  duration_ms: 2.244119
+  type: 'test'
+  location: '/app/tests/helpers/checked-record-perl-source-tests.mjs:27:2'
+  failureType: 'testCodeFailure'
+  error: 'value0: checked checked-record refinements are not implemented for cpan packages'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    finGuard (file:///app/src/backends/perl/generate.mjs:312:8)
+    file:///app/src/backends/perl/generate.mjs:321:99
+    Array.map (<anonymous>)
+    publicXsub (file:///app/src/backends/perl/generate.mjs:321:70)
+    generatePerlBindingPackage (file:///app/src/backends/perl/generate.mjs:439:46)
+    TestContext.<anonymous> (file:///app/tests/helpers/checked-record-perl-source-tests.mjs:29:17)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: Perl checked-record source uses payload mirrors and selected constructors for result-only-ordinary-source
+not ok 3 - Perl checked-record source uses payload mirrors and selected constructors for result-only-ordinary-source
+  ---
+  duration_ms: 5.724945
+  type: 'test'
+  location: '/app/tests/helpers/checked-record-perl-source-tests.mjs:27:2'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(pod.includes("=head1 CHECKED RECORDS"))
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///app/tests/helpers/checked-record-perl-source-tests.mjs:33:10)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: Perl checked-record source uses payload mirrors and selected constructors for result-only-reviewed-ir
+not ok 4 - Perl checked-record source uses payload mirrors and selected constructors for result-only-reviewed-ir
+  ---
+  duration_ms: 1.132368
+  type: 'test'
+  location: '/app/tests/helpers/checked-record-perl-source-tests.mjs:27:2'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(pod.includes("=head1 CHECKED RECORDS"))
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///app/tests/helpers/checked-record-perl-source-tests.mjs:33:10)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: Perl checked-record package reader enables only the copied transport
+not ok 5 - Perl checked-record package reader enables only the copied transport
+  ---
+  duration_ms: 9.564097
+  type: 'test'
+  location: '/app/tests/helpers/checked-record-perl-source-tests.mjs:76:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(source.includes("nativeCheckedRecords: !isOwned"))
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///app/tests/helpers/checked-record-perl-source-tests.mjs:78:9)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 0
+# fail 5
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 423.336925

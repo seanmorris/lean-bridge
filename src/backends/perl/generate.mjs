@@ -315,12 +315,13 @@ const finGuard = (type, refinement, value, name, depth = 0, path = { format: "",
 // in parameter order. An object argument lends the validator one retained reference, which it
 // consumes; an unboxed base passes by value. The scope still owns every argument on croak.
 const constructorGuard = (type, symbol, index, constructor, name) => `${retain(type, `a${index}`)} if (!${symbol}_refinement_${index}(a${index})) croak("%s", ${q(`${name} was rejected by ${constructor}`)});`;
+const constructorRefinement = refinement => ["subtype", "checked-record"].includes(refinement.kind);
 const publicXsub = (name, symbol, parameters, result, refinements = null, names = []) => {
 	const refined = (refinements?.parameters ?? []).map((refinement, index) => [refinement, index]).filter(([refinement]) => refinement);
 	const guards = [
-		...refined.filter(([refinement]) => refinement.kind !== "subtype").map(([refinement, index]) => finGuard(parameters[index], refinement, `a${index}`, names[index]))
-		, ...refined.filter(([refinement]) => refinement.kind === "subtype").map(([refinement, index]) => constructorGuard(parameters[index], symbol, index, refinement.constructor, names[index]))];
-	const rejection = refined.some(([refinement]) => refinement.kind === "subtype") ? "Lean rejected an argument outside its checked refinement" : "Lean rejected an argument outside its Fin bound";
+		...refined.filter(([refinement]) => !constructorRefinement(refinement)).map(([refinement, index]) => finGuard(parameters[index], refinement, `a${index}`, names[index]))
+		, ...refined.filter(([refinement]) => constructorRefinement(refinement)).map(([refinement, index]) => constructorGuard(parameters[index], symbol, index, refinement.constructor, names[index]))];
+	const rejection = refined.some(([refinement]) => constructorRefinement(refinement)) ? "Lean rejected an argument outside its checked refinement" : "Lean rejected an argument outside its Fin bound";
 	const invoke = `${symbol}(${parameters.map((_, i) => `a${i}`).join(", ") || "lean_box(0)"})`;
 	// A guarded adapter returns Option: none is a rejected refinement, some holds the boxed result.
 	const call = guards.length ? `lean_object *checked = ${invoke};
@@ -514,7 +515,7 @@ _callback_${type.key}(...)
 	{
 		pm.push(`=head2 ${item.publicName}`, "", `Calls C<${item.name}> in the compiled Lean component.`, "");
 		const bounds = perlFinBounds(model, item);
-		if(bounds) pm.push(`Checked Lean ${bounds.includes(" checked by ") ? "refinements" : "Fin bounds"}: ${bounds}.`, "");
+		if(bounds) pm.push(`Checked Lean ${bounds.includes(" checked by ") || bounds.includes("proof-backed record") ? "refinements" : "Fin bounds"}: ${bounds}.`, "");
 		if(aliases.length) pm.push(perlAliasApiDocs(model, item), "");
 	}
 	if(aliases.length) pm.push(...perlAliasPod(model, aliases, structuredCallables));
@@ -534,7 +535,13 @@ _callback_${type.key}(...)
 	if(model.exports.some(item => item.refinements?.parameters.some(refinement => refinement?.kind === "subtype") || item.refinements?.result?.kind === "subtype"))
 		pm.push("=head1 CHECKED VALUES", ""
 			, "A Lean C<Subtype> parameter over a primitive base takes the plain base value: L<Math::BigInt> for C<Nat> and C<Int>, an ordinary integer for machine words, a text scalar for C<String> and an octet string for C<ByteArray>. The exported checked constructor named at each function runs on the argument after every Fin bound passed and before the guarded adapter or the exported function; a rejected value dies with a message naming the parameter and the constructor, and the function receives the constructed value. Results are projected to their base value after Lean returns. Each checked site is listed as C<arg0 checked by Module.constructor> at its function.", "");
-	if(model.exports.some(item => perlFinBounds(model, item))) pm.push("=head1 BOUNDED INTEGERS", ""
+	const checkedRecords = model.exports.some(item => item.refinements && [...item.refinements.parameters, item.refinements.result].some(tree => tree?.kind === "checked-record"));
+	if(checkedRecords) pm.push("=head1 CHECKED RECORDS", ""
+		, "Checked records use generated classes containing only payload fields. Pass L<Math::BigInt> for C<Nat> fields and plain array references for copied arrays. The selected Lean constructor validates each input before source dispatch. A rejected record dies with a message naming the parameter and constructor. A normalizing constructor changes the record received by Lean without changing the caller's record. Results project the payload fields after Lean constructs the proofs. No proof object or input constructor is needed for a result-only export. Ordinary and independently reviewed APIs preserve each parameter's constructor choice. Nested checked records, other dependent payloads and checked-record callbacks remain unsupported.", "");
+	if(model.exports.some(item => {
+		const bounds = perlFinBounds(model, item);
+		return bounds && (!checkedRecords || bounds.includes(" < "));
+	})) pm.push("=head1 BOUNDED INTEGERS", ""
 		, "Lean C<Fin n> parameters and results are L<Math::BigInt> values below C<n>. Each argument is compared with its exact bound, including bounds wider than 64 bits, before the guarded adapter or the exported function runs. A value that is not a Math::BigInt, or a negative one, is rejected as for Nat; a value at or above its bound dies with a message naming the Lean parameter and bound. C<Fin 0> has no values, so every call to a function taking one dies. Results are Math::BigInt values below their declared bound. Inside arrays, Lists and options every present element is checked the same way before the guarded adapter or the exported function runs, so a C<Fin 0> element is rejected while an empty array or an undefined option is accepted; each checked path is listed as C<arg0[*]? < n> at its function, and a rejection names the failing element's own path and bound, such as C<arg0[2]? is not below its Fin 10 bound>. " + perlNominalFinNote(model), "");
 	pm.push("=head1 OWNERSHIP", "", "Close resource and closure objects when finished. Host callbacks are synchronous and may not be retained by Lean.", "", "=cut", "");
 	const publicModule = `lib/${model.moduleName.replaceAll("::", "/")}.pm`;

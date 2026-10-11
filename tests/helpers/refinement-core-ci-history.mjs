@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeCheckedRecordPerlSource } from "./checked-record-perl-history.mjs";
 
 export const refinementCoreCiHistoryPath = "docs/evidence/refinement-core-ci-source-history-20261011.json";
 export const refinementCoreCiPredecessor = "08eb94ef6321b8a58ea4c57b9e13dfa7522ee49b";
@@ -55,6 +56,7 @@ export const reverseRefinementCoreCiUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeRefinementCoreCiSource = (path, source, expected) => {
+	source = beforeCheckedRecordPerlSource(path, source, expected);
 	if(typeof source !== "string" || !refinementCoreCiChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
