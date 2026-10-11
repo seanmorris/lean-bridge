@@ -6,7 +6,7 @@
 
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -436,16 +436,24 @@ test("cancellation has a stable status, diagnostic, progress state, and exit cod
   assert.deepEqual(outcome.response.progress.events.map(event => event.state), ["started", "cancelled"]);
 });
 
-test("the executable analyzes the project and reports pending commands honestly", async () => {
-  // The full declaration report grows with the verified algorithm portfolio.
+test("the executable analyzes the project and reports pending commands honestly", async t => {
+  // Keep the component boundary explicit; the repository also contains archived reviews.
+  const project = await mkdtemp(join(tmpdir(), "lean-bridge-cli-reviewed-project-"));
+  t.after(() => rm(project, { recursive: true, force: true }));
+  await cp("tests/fixtures/onboarding/small", project, { recursive: true });
+  const reviewed = await readFile("poc/lean-link-spike/bindings/alpha.binding-ir.json");
+  await writeFile(join(project, "reviewed.binding-ir.json"), reviewed);
   const analysisOptions = { cwd: process.cwd(), maxBuffer: 16 * 1024 * 1024 };
-  const analyzed = await execute("node", ["scripts/lean-bridge.mjs", "analyze", "--json"], analysisOptions);
+  const analyzed = await execute("node", ["scripts/lean-bridge.mjs", "analyze", "--project", project, "--json"], analysisOptions);
   const response = JSON.parse(analyzed.stdout);
   assert.equal(response.status, "ok");
   assert.equal(response.result.bindingIr.origin, "existing-validated");
+  assert.equal(response.result.bindingIr.path, "reviewed.binding-ir.json");
   const withProgress = await execute("node", [
     "scripts/lean-bridge.mjs"
     , "analyze"
+    , "--project"
+    , project
     , "--json"
     , "--progress"
     , "json"
@@ -457,6 +465,18 @@ test("the executable analyzes the project and reports pending commands honestly"
   assert.equal(events.length, progressResponse.progress.events.length);
   assert.deepEqual(events, progressResponse.progress.events);
   assert.deepEqual(progressResponse.selection.targets, ["npm"]);
+  await writeFile(join(project, "second.binding-ir.json"), reviewed);
+  await assert.rejects(
+    execute("node", ["scripts/lean-bridge.mjs", "analyze", "--project", project, "--json"], analysisOptions),
+    error => {
+      assert.equal(error.code, 2);
+      const ambiguous = JSON.parse(error.stdout);
+      assert.equal(ambiguous.status, "needs-input");
+      assert.equal(ambiguous.result.bindingIr, null);
+      assert.deepEqual(ambiguous.result.adapterHints[0].choices, ["reviewed.binding-ir.json", "second.binding-ir.json"]);
+      return true;
+    },
+  );
   await assert.rejects(
     execute("node", ["scripts/lean-bridge.mjs", "publish"], { cwd: process.cwd() }),
     error => error.code === 2 && /publish-manifest-required/.test(error.stderr),

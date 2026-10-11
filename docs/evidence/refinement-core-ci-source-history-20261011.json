@@ -1,0 +1,183 @@
+{
+  "schemaVersion": 1,
+  "milestone": "refinement-core-ci-v1",
+  "predecessorCommit": "08eb94ef6321b8a58ea4c57b9e13dfa7522ee49b",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "cb14e391d61e1953cc6d213a8b29bacbb629b9fa325fe57495950db9e1029e32",
+      "previousSha256": "986d6c39e6cf292c706b106f721748651e5f59f00d08f42ca05f4fed917a7756",
+      "edits": [
+        {
+          "start": 989826,
+          "previous": "          \"sha256\": \"f7f4126a5f61169866986e06f71fa06a736a3963a5757535370a2e0e6c1b0cf0\"\n",
+          "current": "          \"sha256\": \"51d5ffefa8960f9591e1995df294bcab986398553a6943e2ecd03721363facd2\"\n"
+        },
+        {
+          "start": 2027159,
+          "previous": "          \"sha256\": \"811f4cd9adb8c184dd650d4aaffb4874e4b956e6e8afeec423aeb2c653e8e706\"\n",
+          "current": "          \"sha256\": \"cdb5afcd4fa920de0436a65adf8a88290db23f770716988be4c88695050fd0a7\"\n"
+        },
+        {
+          "start": 2049309,
+          "previous": "          \"sha256\": \"811f4cd9adb8c184dd650d4aaffb4874e4b956e6e8afeec423aeb2c653e8e706\"\n",
+          "current": "          \"sha256\": \"cdb5afcd4fa920de0436a65adf8a88290db23f770716988be4c88695050fd0a7\"\n"
+        },
+        {
+          "start": 2071523,
+          "previous": "          \"sha256\": \"811f4cd9adb8c184dd650d4aaffb4874e4b956e6e8afeec423aeb2c653e8e706\"\n",
+          "current": "          \"sha256\": \"cdb5afcd4fa920de0436a65adf8a88290db23f770716988be4c88695050fd0a7\"\n"
+        },
+        {
+          "start": 2093550,
+          "previous": "          \"sha256\": \"811f4cd9adb8c184dd650d4aaffb4874e4b956e6e8afeec423aeb2c653e8e706\"\n",
+          "current": "          \"sha256\": \"cdb5afcd4fa920de0436a65adf8a88290db23f770716988be4c88695050fd0a7\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/cli-contract.test.mjs",
+      "currentSha256": "477ebcdf81c2621c61904c77ae6d915747d39fde666ce8f8d48710a17bd89a95",
+      "previousSha256": "8f3efed111a43823ef690aa0057797854115b103333fadc91f4ba8518aca7878",
+      "edits": [
+        {
+          "start": 145,
+          "previous": "import { mkdtemp, readFile, rm, writeFile } from \"node:fs/promises\";\n",
+          "current": "import { cp, mkdtemp, readFile, rm, writeFile } from \"node:fs/promises\";\n"
+        },
+        {
+          "start": 16038,
+          "previous": "test(\"the executable analyzes the project and reports pending commands honestly\", async () => {\n  // The full declaration report grows with the verified algorithm portfolio.\n",
+          "current": "test(\"the executable analyzes the project and reports pending commands honestly\", async t => {\n  // Keep the component boundary explicit; the repository also contains archived reviews.\n  const project = await mkdtemp(join(tmpdir(), \"lean-bridge-cli-reviewed-project-\"));\n  t.after(() => rm(project, { recursive: true, force: true }));\n  await cp(\"tests/fixtures/onboarding/small\", project, { recursive: true });\n  const reviewed = await readFile(\"poc/lean-link-spike/bindings/alpha.binding-ir.json\");\n  await writeFile(join(project, \"reviewed.binding-ir.json\"), reviewed);\n"
+        },
+        {
+          "start": 16690,
+          "previous": "  const analyzed = await execute(\"node\", [\"scripts/lean-bridge.mjs\", \"analyze\", \"--json\"], analysisOptions);\n",
+          "current": "  const analyzed = await execute(\"node\", [\"scripts/lean-bridge.mjs\", \"analyze\", \"--project\", project, \"--json\"], analysisOptions);\n"
+        },
+        {
+          "start": 16980,
+          "previous": "",
+          "current": "  assert.equal(response.result.bindingIr.path, \"reviewed.binding-ir.json\");\n"
+        },
+        {
+          "start": 17149,
+          "previous": "",
+          "current": "    , \"--project\"\n    , project\n"
+        },
+        {
+          "start": 17626,
+          "previous": "",
+          "current": "  await writeFile(join(project, \"second.binding-ir.json\"), reviewed);\n  await assert.rejects(\n    execute(\"node\", [\"scripts/lean-bridge.mjs\", \"analyze\", \"--project\", project, \"--json\"], analysisOptions),\n    error => {\n      assert.equal(error.code, 2);\n      const ambiguous = JSON.parse(error.stdout);\n      assert.equal(ambiguous.status, \"needs-input\");\n      assert.equal(ambiguous.result.bindingIr, null);\n      assert.deepEqual(ambiguous.result.adapterHints[0].choices, [\"reviewed.binding-ir.json\", \"second.binding-ir.json\"]);\n      return true;\n    },\n  );\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-host-ci-history-tests.mjs",
+      "currentSha256": "34f69504da2f944f65931eafed2ab58a14753e028e0cb8a7099fb1f7169478e6",
+      "previousSha256": "bd39efea6aaafbce45f0ebcfc35ec9b179d6e4b3b46ae93f55154eaf8d226ef6",
+      "edits": [
+        {
+          "start": 516,
+          "previous": "",
+          "current": "import { beforeRefinementCoreCiSource } from \"./refinement-core-ci-history.mjs\";\n"
+        },
+        {
+          "start": 1331,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst current = beforeRefinementCoreCiSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2707,
+          "previous": "\tconst source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst source = beforeRefinementCoreCiSource(path, await readFile(path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-host-ci-history.mjs",
+      "currentSha256": "00720cf9af9bba30f00c3998a27b82273030c8cf478c0fe86ee6055f41be12c9",
+      "previousSha256": "73beb2ad19fd95058ec5d2f7eea149bddfda5e24a68460fedc8c118736ee7e42",
+      "edits": [
+        {
+          "start": 241,
+          "previous": "",
+          "current": "import { beforeRefinementCoreCiSource } from \"./refinement-core-ci-history.mjs\";\n"
+        },
+        {
+          "start": 2368,
+          "previous": "",
+          "current": "\tsource = beforeRefinementCoreCiSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "b2fb359889579b25b84c29f31ba9795e335350987efbae365e285f2b5ab597e3",
+      "previousSha256": "8354bbbb29586e4d65534dc39140657e2f79b566fd62e6549c155c5cf6f73685",
+      "edits": [
+        {
+          "start": 2405,
+          "previous": "",
+          "current": "import { refinementCoreCiChangedPaths } from \"./refinement-core-ci-history.mjs\";\n"
+        },
+        {
+          "start": 59351,
+          "previous": "",
+          "current": "\t, ...refinementCoreCiChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/scalar-fin-source-entry-run-tests.mjs",
+      "currentSha256": "a9cb14da028343be3a9049f75327a510c0caf28678dbd2dcbb2ba3a8a1603d9c",
+      "previousSha256": "76e502d958fb88ba5f0819d059ea4e169e9442c50a47ea7ae003055bd52525ec",
+      "edits": [
+        {
+          "start": 818,
+          "previous": "",
+          "current": "import { assertReviewedSubtypePackageWorkflow, disableReviewedSubtypePackageWorkflow } from \"./reviewed-subtype-package-ci-workflow.mjs\";\n"
+        },
+        {
+          "start": 11829,
+          "previous": "\tconst workflow = await readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\");\n",
+          "current": "\tconst current = await readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\");\n\t// The newer Subtype package checks run between compilation and this probe.\n\t// Validate that entire required layer before checking the original adjacency.\n\tassertReviewedSubtypePackageWorkflow(current);\n\tconst workflow = disableReviewedSubtypePackageWorkflow(current);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/lean-project-analyzer.test.mjs",
+      "currentSha256": "51d5ffefa8960f9591e1995df294bcab986398553a6943e2ecd03721363facd2",
+      "previousSha256": "f7f4126a5f61169866986e06f71fa06a736a3963a5757535370a2e0e6c1b0cf0",
+      "edits": [
+        {
+          "start": 10080,
+          "previous": "test(\"analysis treats one existing Binding IR as the explicit component boundary\", async () => {\n  const report = await analyzeLeanProject(process.cwd());\n  const path = \"poc/lean-link-spike/bindings/alpha.binding-ir.json\";\n  const document = parseBindingIr(await readFile(path, \"utf8\"));\n",
+          "current": "test(\"analysis treats one existing Binding IR as the explicit component boundary\", async t => {\n  const root = await makePureProject();\n  t.after(() => rm(root, { recursive: true, force: true }));\n  const path = \"reviewed.binding-ir.json\";\n  const bytes = await readFile(\"poc/lean-link-spike/bindings/alpha.binding-ir.json\", \"utf8\");\n  await writeFile(join(root, path), bytes);\n  const before = await snapshot(root);\n  const report = await analyzeLeanProject(root);\n  const document = parseBindingIr(bytes);\n"
+        },
+        {
+          "start": 10815,
+          "previous": "",
+          "current": "  assert.deepEqual(await snapshot(root), before);\n});\n\ntest(\"analysis does not silently select a component when a second reviewed IR is under docs/evidence\", async t => {\n  const root = await makePureProject();\n  t.after(() => rm(root, { recursive: true, force: true }));\n  const bytes = await readFile(\"poc/lean-link-spike/bindings/alpha.binding-ir.json\");\n  await writeFile(join(root, \"reviewed.binding-ir.json\"), bytes);\n  await mkdir(join(root, \"docs/evidence/archive\"), { recursive: true });\n  await writeFile(join(root, \"docs/evidence/archive/api.binding-ir.json\"), bytes);\n  const report = await analyzeLeanProject(root);\n  assert.equal(report.bindingIr, null);\n  assert.deepEqual(report.adapterHints.map(hint => ({ reason: hint.reason, required: hint.required, choices: hint.choices })), [{\n    reason: \"multiple-binding-ir-documents\", required: true\n    , choices: [\"docs/evidence/archive/api.binding-ir.json\", \"reviewed.binding-ir.json\"]\n  }]);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/perl-relocated-promotion.test.mjs",
+      "currentSha256": "cdb5afcd4fa920de0436a65adf8a88290db23f770716988be4c88695050fd0a7",
+      "previousSha256": "811f4cd9adb8c184dd650d4aaffb4874e4b956e6e8afeec423aeb2c653e8e706",
+      "edits": [
+        {
+          "start": 604,
+          "previous": "",
+          "current": "import \"./helpers/refinement-core-ci-history-tests.mjs\";\n"
+        },
+        {
+          "start": 5725,
+          "previous": "\tconst consumer = await readFile(\"docs/consume/perl.md\", \"utf8\");\n",
+          "current": "\t// This promotion predates the independently accepted reviewed Subtype rollout.\n\tconst path = \"docs/consume/perl.md\";\n\tconst consumer = beforePerlClosureNativeBudgetSource(path, await readFile(path, \"utf8\"));\n"
+        }
+      ]
+    }
+  ]
+}

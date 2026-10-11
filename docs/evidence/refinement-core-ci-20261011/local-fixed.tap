@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: the executable analyzes the project and reports pending commands honestly
+ok 1 - the executable analyzes the project and reports pending commands honestly
+  ---
+  duration_ms: 1488.61223
+  type: 'test'
+  ...
+# Subtest: the CI step runs right after locked compilation, cannot be skipped or hidden by tee and uploads its whole directory
+ok 2 - the CI step runs right after locked compilation, cannot be skipped or hidden by tee and uploads its whole directory
+  ---
+  duration_ms: 63.809718
+  type: 'test'
+  ...
+# Subtest: analysis treats one existing Binding IR as the explicit component boundary
+ok 3 - analysis treats one existing Binding IR as the explicit component boundary
+  ---
+  duration_ms: 81.079813
+  type: 'test'
+  ...
+# Subtest: analysis does not silently select a component when a second reviewed IR is under docs/evidence
+ok 4 - analysis does not silently select a component when a second reviewed IR is under docs/evidence
+  ---
+  duration_ms: 10.20559
+  type: 'test'
+  ...
+# Subtest: Perl promotion evidence binds four configurations per selection and does not invent scalar relocation
+ok 5 - Perl promotion evidence binds four configurations per selection and does not invent scalar relocation
+  ---
+  duration_ms: 71.069183
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2858.368533

@@ -238,14 +238,35 @@ end Two
 }
 });
 
-test("analysis treats one existing Binding IR as the explicit component boundary", async () => {
-  const report = await analyzeLeanProject(process.cwd());
-  const path = "poc/lean-link-spike/bindings/alpha.binding-ir.json";
-  const document = parseBindingIr(await readFile(path, "utf8"));
+test("analysis treats one existing Binding IR as the explicit component boundary", async t => {
+  const root = await makePureProject();
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const path = "reviewed.binding-ir.json";
+  const bytes = await readFile("poc/lean-link-spike/bindings/alpha.binding-ir.json", "utf8");
+  await writeFile(join(root, path), bytes);
+  const before = await snapshot(root);
+  const report = await analyzeLeanProject(root);
+  const document = parseBindingIr(bytes);
   assert.equal(report.bindingIr.origin, "existing-validated");
   assert.equal(report.bindingIr.path, path);
   assert.equal(report.bindingIr.semanticSha256, hashBindingIr(document));
   assert.deepEqual(report.adapterHints, []);
+  assert.deepEqual(await snapshot(root), before);
+});
+
+test("analysis does not silently select a component when a second reviewed IR is under docs/evidence", async t => {
+  const root = await makePureProject();
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const bytes = await readFile("poc/lean-link-spike/bindings/alpha.binding-ir.json");
+  await writeFile(join(root, "reviewed.binding-ir.json"), bytes);
+  await mkdir(join(root, "docs/evidence/archive"), { recursive: true });
+  await writeFile(join(root, "docs/evidence/archive/api.binding-ir.json"), bytes);
+  const report = await analyzeLeanProject(root);
+  assert.equal(report.bindingIr, null);
+  assert.deepEqual(report.adapterHints.map(hint => ({ reason: hint.reason, required: hint.required, choices: hint.choices })), [{
+    reason: "multiple-binding-ir-documents", required: true
+    , choices: ["docs/evidence/archive/api.binding-ir.json", "reviewed.binding-ir.json"]
+  }]);
 });
 
 test("the published analysis schema closes the report and adapter questions", async () => {

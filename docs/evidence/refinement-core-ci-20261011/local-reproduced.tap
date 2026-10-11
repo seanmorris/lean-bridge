@@ -1,0 +1,89 @@
+TAP version 13
+# Subtest: the executable analyzes the project and reports pending commands honestly
+not ok 1 - the executable analyzes the project and reports pending commands honestly
+  ---
+  duration_ms: 1002.013794
+  type: 'test'
+  location: '/app/tests/cli-contract.test.mjs:439:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Command failed: node scripts/lean-bridge.mjs analyze --json
+    
+  code: 2
+  stack: |-
+    genericNodeError (node:internal/errors:983:15)
+    wrappedFn (node:internal/errors:537:14)
+    ChildProcess.exithandler (node:child_process:417:12)
+    ChildProcess.emit (node:events:519:28)
+    maybeClose (node:internal/child_process:1101:16)
+    ChildProcess._handle.onexit (node:internal/child_process:304:5)
+  ...
+# Subtest: the CI step runs right after locked compilation, cannot be skipped or hidden by tee and uploads its whole directory
+not ok 2 - the CI step runs right after locked compilation, cannot be skipped or hidden by tee and uploads its whole directory
+  ---
+  duration_ms: 10.664906
+  type: 'test'
+  location: '/app/tests/helpers/scalar-fin-source-entry-run-tests.mjs:200:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    the probe step follows the locked compilation step
+    
+    63371 !== 64079
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 64079
+  actual: 63371
+  operator: 'strictEqual'
+  stack: |-
+    assertSourceEntryWorkflow (file:///app/tests/helpers/scalar-fin-source-entry-ci.mjs:75:9)
+    TestContext.<anonymous> (file:///app/tests/helpers/scalar-fin-source-entry-run-tests.mjs:203:2)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: analysis treats one existing Binding IR as the explicit component boundary
+not ok 3 - analysis treats one existing Binding IR as the explicit component boundary
+  ---
+  duration_ms: 6984.441977
+  type: 'test'
+  location: '/app/tests/lean-project-analyzer.test.mjs:241:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of null (reading 'origin')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///app/tests/lean-project-analyzer.test.mjs:245:33)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: Perl promotion evidence binds four configurations per selection and does not invent scalar relocation
+not ok 4 - Perl promotion evidence binds four configurations per selection and does not invent scalar relocation
+  ---
+  duration_ms: 66.809204
+  type: 'test'
+  location: '/app/tests/perl-relocated-promotion.test.mjs:70:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /Reviewed IR: Not audited/u. Input:
+    
+    "| `Subtype / {x // p x}` | `Primitive base value checked by the named Lean constructor` (input); `Constructed subtype projected to its primitive base value` (result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Installed checks passed (input, result); Not audited (field, callback input, callback result) | Use Math::BigInt for Nat/Int, an integer scalar for UInt32, text for String and an octet string for ByteArray. Fin checks run first. Constructor rejection dies naming the parameter and constructor without changing caller data. The export receives the constructed value; results expose its base. Pass the primitive base value. The reviewed API selects Lean's checked constructor; the export receives the constructed value, including any normalization. Rejection preserves the caller's input and identifies the reviewed parameter and constructor. Results project the proof-backed base value. These installed checks cover top-level parameters and results; dispatch counts were not measured. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |"
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: "| `Subtype / {x // p x}` | `Primitive base value checked by the named Lean constructor` (input); `Constructed subtype projected to its primitive base value` (result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Installed checks passed (input, result); Not audited (field, callback input, callback result) | Use Math::BigInt for Nat/Int, an integer scalar for UInt32, text for String and an octet string for ByteArray. Fin checks run first. Constructor rejection dies naming the parameter and constructor without changing caller data. The export receives the constructed value; results expose its base. Pass the primitive base value. The reviewed API selects Lean's checked constructor; the export receives the constructed value, including any normalization. Rejection preserves the caller's input and identifies the reviewed parameter and constructor. Results project the proof-backed base value. These installed checks cover top-level parameters and results; dispatch counts were not measured. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |"
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (file:///app/tests/perl-relocated-promotion.test.mjs:91:9)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 0
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 9268.944868

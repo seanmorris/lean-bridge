@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "kind": "refinement-core-ci-repair",
+  "hosted": {
+    "runId": 38095922167,
+    "jobId": 114341673721,
+    "commit": "c9d11f7ac8fd76d13bcc48f6f679eb22fd86b722",
+    "conclusion": "failure"
+  },
+  "localPredecessor": "08eb94ef6321b8a58ea4c57b9e13dfa7522ee49b",
+  "scope": "Original hosted Core failure, local reproduction and focused repair. No hosted repair pass or installed consumer acceptance is claimed.",
+  "records": [
+    {
+      "path": "hosted-failure.log",
+      "source": "build/vo1220-core-c9d11f7-failed.log",
+      "sha256": "2fc744a9fcb9a4b6db42ca918f6593adb2033f5104ec1002875c5c2b6e2d0586",
+      "byteLength": 4024170
+    },
+    {
+      "path": "hosted-run.json",
+      "source": "build/vo1220-core-c9d11f7-run.json",
+      "sha256": "68fa7d6dbd860bede988d7f8447578bbbffaf47c621a291f785c1c8b44173ebd",
+      "byteLength": 12475
+    },
+    {
+      "path": "hosted-job.json",
+      "source": "build/vo1220-core-c9d11f7-job.json",
+      "sha256": "6c4979785fe3f81ec5d142d19ec0825f022e23666c34ed0fbbc6dd781f78427c",
+      "byteLength": 2984
+    },
+    {
+      "path": "local-analysis.json",
+      "source": "build/vo1220-core-analyze-current-r1.json",
+      "sha256": "8581c93fb9fbf9a7c4b651de4e4d7c903b63359b281a23e36e86c6fc2422a1f4",
+      "byteLength": 144842
+    },
+    {
+      "path": "local-analysis.stderr",
+      "source": "build/vo1220-core-analyze-current-r1.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byteLength": 0
+    },
+    {
+      "path": "local-reproduced.tap",
+      "source": "build/vo1220-core-c9d11f7-reproduced-r1.tap",
+      "sha256": "c3ec21d17bf1aaa31dd72e3299527e1f05858e53b98ff8983a5be18bcdab0f2d",
+      "byteLength": 5716
+    },
+    {
+      "path": "local-fixed.tap",
+      "source": "build/vo1220-core-followup-fixed-r1.tap",
+      "sha256": "4d4080304069b1efaafaed6a70d0ac79e58df569d04bc143b8f9334d58771a27",
+      "byteLength": 1394
+    }
+  ]
+}

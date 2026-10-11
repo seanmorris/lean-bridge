@@ -12,6 +12,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
+import "./helpers/refinement-core-ci-history-tests.mjs";
 import { beforePerlClosureNativeBudgetSource } from "./helpers/perl-closure-native-budget-source-history.mjs";
 import { perlRelocatedPromotionIds, perlRelocatedReviewedId, promotePerlRelocatedInventory, promotePerlRelocatedObservations } from "./helpers/perl-relocated-promotion.mjs";
 import { beforePerlRelocatedPromotionSource, perlRelocatedPromotionChangedPaths, perlRelocatedPromotionHistoryPath, perlRelocatedPromotionPredecessor, reversePerlRelocatedPromotionUpdate } from "./helpers/perl-relocated-promotion-source-history.mjs";
@@ -80,7 +81,9 @@ test("Perl promotion evidence binds four configurations per selection and does n
 		assert.match(entry.scope, /Package binaries are not retained/u);
 	}
 	assert.match(evidence.find(item => item.id === "perl-relocated-container-hosted-installed").scope, /does not establish relocated scalar/u);
-	const consumer = await readFile("docs/consume/perl.md", "utf8");
+	// This promotion predates the independently accepted reviewed Subtype rollout.
+	const path = "docs/consume/perl.md";
+	const consumer = beforePerlClosureNativeBudgetSource(path, await readFile(path, "utf8"));
 	assert.ok(consumer.includes("perl-refinements-20261009.md"));
 	const subtypeRow = consumer.split("\n").find(line => line.startsWith("| `Subtype /"));
 	const finRow = consumer.split("\n").find(line => line.startsWith("| `Fin n`"));

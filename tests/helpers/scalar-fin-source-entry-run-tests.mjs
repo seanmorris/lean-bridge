@@ -13,6 +13,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { assertSourceEntryRun, sourceEntryLateMultiplicities } from "./scalar-fin-source-entry-run.mjs";
 import { assertSourceEntryWorkflow, insertSourceEntryWorkflow, sourceEntryStepName, sourceEntryUploadLine, sourceEntryWorkflowStep } from "./scalar-fin-source-entry-ci.mjs";
+import { assertReviewedSubtypePackageWorkflow, disableReviewedSubtypePackageWorkflow } from "./reviewed-subtype-package-ci-workflow.mjs";
 
 // The archived six-ABI run has the layout CI writes: run.tap, report.json and calls/.
 const archive = "docs/evidence/scalar-fin-source-entry-20261008";
@@ -198,7 +199,11 @@ test("the checker command exits zero on a complete run and nonzero without a rep
 });
 
 test("the CI step runs right after locked compilation, cannot be skipped or hidden by tee and uploads its whole directory", async () => {
-	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	const current = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	// The newer Subtype package checks run between compilation and this probe.
+	// Validate that entire required layer before checking the original adjacency.
+	assertReviewedSubtypePackageWorkflow(current);
+	const workflow = disableReviewedSubtypePackageWorkflow(current);
 	// Validate the checked-in step before exercising the insertion helper. A missing step must fail.
 	assertSourceEntryWorkflow(workflow);
 	const previous = workflow.replace(sourceEntryWorkflowStep, "").replace(sourceEntryUploadLine, "");

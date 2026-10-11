@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeRefinementCoreCiSource } from "./refinement-core-ci-history.mjs";
 
 export const checkedRecordHostCiHistoryPath = "docs/evidence/checked-record-host-ci-source-history-20261011.json";
 export const checkedRecordHostCiPredecessor = "5721e52d338fd0b93b6400cb4b73e26d84e69c57";
@@ -54,6 +55,7 @@ export const reverseCheckedRecordHostCiUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeCheckedRecordHostCiSource = (path, source, expected) => {
+	source = beforeRefinementCoreCiSource(path, source, expected);
 	if(typeof source !== "string" || !checkedRecordHostCiChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
