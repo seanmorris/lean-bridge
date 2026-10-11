@@ -22,8 +22,13 @@ import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { structuralSubtypeConfiguration, structuralSubtypeFixture, structuralSubtypeName, structuralSubtypeReview } from "./helpers/structural-subtype-installed-fixture.mjs";
 import { structuralSubtypeNpmPackageName } from "./helpers/structural-subtype-npm-package.mjs";
+import { checkStructuralSubtypeBrowsers } from "./helpers/structural-subtype-browser.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_STRUCTURAL_SUBTYPE_NPM_TEST === "1";
+const browsers = process.env.LEAN_BRIDGE_STRUCTURAL_SUBTYPE_BROWSER_TEST === "1";
+for(const flag of ["LEAN_BRIDGE_STRUCTURAL_SUBTYPE_NPM_TEST", "LEAN_BRIDGE_STRUCTURAL_SUBTYPE_BROWSER_TEST"])
+	if(process.env[flag] !== undefined) assert.ok(["0", "1"].includes(process.env[flag]), `Invalid ${flag}`);
+if(browsers) assert.ok(enabled, "Browser acceptance requires actual installed npm packages");
 const routes = process.env.LEAN_BRIDGE_STRUCTURAL_SUBTYPE_NPM_ROUTES?.split(",") ?? ["ordinary", "reviewed"];
 assert.ok(routes.length && routes.every(route => ["ordinary", "reviewed"].includes(route)));
 assert.equal(new Set(routes).size, routes.length);
@@ -141,5 +146,6 @@ for(const route of routes) test(`installed npm structural Subtypes reproduce and
 		, sourceRemovedBeforeInstallation: true
 		, offlineInstall: true, compilerFreePath: true, relocatedInstallation: true
 		, dispatch: { observed: false, reason: "No constructor/source entry counters in this npm caller" } }));
+	if(browsers) await checkStructuralSubtypeBrowsers({ directory, handoff, receipt, records: output, route, producerCommit });
 	complete = true;
 });

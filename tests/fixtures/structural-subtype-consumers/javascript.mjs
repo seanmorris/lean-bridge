@@ -5,6 +5,44 @@
  * @file
  */
 /**
+ * Preserve host types, absent properties, array holes and every string code unit.
+ * Never invoke a caller's getters or toJSON method while constructing the oracle.
+ *
+ * @param value - A copied structural public value.
+ */
+export const structuralValueSnapshot = value => {
+	const visiting = new Set();
+	const encode = item => {
+		if(item === null) return ["null"];
+		const type = typeof item;
+		if(type === "undefined") return [type];
+		if(type === "bigint") return [type, item.toString()];
+		if(type === "number") return [type, Object.is(item, -0) ? "-0" : String(item)];
+		if(type === "string" || type === "boolean") return [type, item];
+		if(type !== "object") throw new TypeError(`Unsupported snapshot type: ${type}`);
+		if(visiting.has(item)) throw new TypeError("Cyclic snapshot input");
+		const prototype = Object.getPrototypeOf(item), array = Array.isArray(item);
+		if(array ? prototype !== Array.prototype : prototype !== Object.prototype && prototype !== null)
+			throw new TypeError("Unsupported snapshot prototype");
+		const keys = Reflect.ownKeys(item);
+		if(keys.some(key => typeof key !== "string")) throw new TypeError("Unsupported snapshot symbol key");
+		visiting.add(item);
+		try
+		{
+			const entries = keys.sort().map(key => {
+				const descriptor = Object.getOwnPropertyDescriptor(item, key);
+				if(!Object.hasOwn(descriptor, "value")) throw new TypeError("Unsupported snapshot accessor");
+				return [key, encode(descriptor.value)];
+			});
+			return [array ? "array" : prototype === null ? "null-prototype-object" : "object", entries];
+		}
+		finally
+		{ visiting.delete(item); }
+	};
+	return JSON.stringify(encode(value));
+};
+
+/**
  * Check public values, constructor refusals and caller-input preservation.
  *
  * @param api - Installed generated public API, or a deliberate unit-test double.
@@ -12,7 +50,7 @@
 export const checkStructuralSubtypes = api => {
 	let checks = 0, rejections = 0;
 	const check = (ok, label) => { if(!ok) throw new Error(`failed: ${label}`); checks++; };
-	const snapshot = value => JSON.stringify(value, (_, item) => typeof item === "bigint" ? `${item}n` : item);
+	const snapshot = structuralValueSnapshot;
 	const equal = (actual, expected, label) => check(snapshot(actual) === snapshot(expected), label);
 	const refused = (call, label, pattern = /failed \(5\)/u) => {
 		try

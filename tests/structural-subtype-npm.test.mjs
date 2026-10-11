@@ -11,10 +11,34 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
 import { structuralSubtypeReview } from "./helpers/structural-subtype-installed-fixture.mjs";
-import { checkStructuralSubtypes } from "./fixtures/structural-subtype-consumers/javascript.mjs";
+import { checkStructuralSubtypes, structuralValueSnapshot } from "./fixtures/structural-subtype-consumers/javascript.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { runCopied } from "./helpers/copied-fixture-install.mjs";
 import { structuralSubtypeNpmPackageName } from "./helpers/structural-subtype-npm-package.mjs";
+import "./helpers/structural-subtype-browser-tests.mjs";
+
+test("structural snapshots distinguish host types, holes, absent properties and complete text", () => {
+	const pairs = [
+		[123n, "123n"], [123n, 123], [255, "255"], [0, -0]
+		, [NaN, null], [Infinity, null], [undefined, null], [false, 0]
+		, [[undefined], [null]], [Array(1), [undefined]], [[], {}]
+		, [{}, { value: undefined }], [{ value: 1n }, { value: "1n" }]
+		, ["héllo\0tail🙂", "héllo\0changed🙂"], ["héllo\0tail🙂", "hello\0tail🙂"]
+		, ["\uD800", "\uFFFD"], [{ tag: "some", value: 1n }, { tag: "none" }]
+		, [Object.assign(Object.create(null), { value: 1n }), { value: 1n }]
+	];
+	for(const [left, right] of pairs) assert.notEqual(structuralValueSnapshot(left), structuralValueSnapshot(right));
+	const shared = { tag: "none" };
+	assert.equal(structuralValueSnapshot([shared, shared]), structuralValueSnapshot([{ tag: "none" }, { tag: "none" }]));
+	assert.equal(structuralValueSnapshot({ b: 2n, a: 1n }), structuralValueSnapshot({ a: 1n, b: 2n }));
+	let invoked = false;
+	const getter = { /** Fail if snapshotting executes an input getter. */ get value() { invoked = true; return 1n; } };
+	const serializable = { /** Fail if snapshotting executes custom serialization. */ toJSON() { invoked = true; return "1n"; } };
+	const cycle = {}; cycle.self = cycle;
+	for(const value of [getter, serializable, cycle, new Date(), { [Symbol("hidden")]: 1 }])
+		assert.throws(() => structuralValueSnapshot(value), /snapshot/iu);
+	assert.equal(invoked, false);
+});
 
 test("npm installed-tree names come from archive manifests authenticated against receipt package identities", () => {
 	for(const name of ["structuralsubtypes", "@lean-bridge/runtime"])
@@ -65,6 +89,11 @@ test("the structural npm caller detects skipped checks, wrong constructors, NUL 
 		, { lists: values => values.map(value => positive(value) + 1n) }
 		, { aliasPair: values => values }
 		, { product: ([value, text]) => [positive(value), text.split("\0")[0]] }
+		, { arrays: values => original.arrays(values).map(value => `${value}n`) }
+		, { lists: values => original.lists(values).map(value => Number(value)) }
+		, { options: value => ({ ...original.options(value), extra: undefined }) }
+		, { product: values => ({ ...original.product(values) }) }
+		, { byteBranches: values => original.byteBranches(values).map(value => value.tag === "none" ? value : { tag: "some", value: [String(value.value[0]), value.value[1]] }) }
 		, { nested: values => { values.flat().forEach(value => { if(value.tag === "some") positive(value.value[0]); }); return BigInt(values.length); } }
 		, { plainFin: values => {
 			if(values.some(value => value.tag === "some" && value.value >= 10n)) throw new Error("plainFin.arg0[1].value must be bigint below 10");
