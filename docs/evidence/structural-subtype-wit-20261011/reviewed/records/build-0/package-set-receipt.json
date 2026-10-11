@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "structuralsubtypes@1.0.0",
+    "name": "structuralsubtypes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 59290021,
+          "path": "archives/structuralsubtypes-1.0.0-wit-wasi.tar.gz",
+          "sha256": "18f2670b98e391e52cce9f58884ecead77fb7756d3a390a1c71c2e745cc6b6c7"
+        }
+      ],
+      "ecosystem": "wit-wasi",
+      "name": "structuralsubtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "wit-wasi",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "fb028588d9f40023bf1c1b709a802e7db3d0102c4f6ac827281514e95eb56130",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "eaf9a2690c77ebddf11448ef6dc96b32695f6e3c5908a6f09dd224c4ee95410e"
+  }
+}

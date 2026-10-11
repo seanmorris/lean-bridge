@@ -1,0 +1,68 @@
+{
+  "assurance": [],
+  "backend": "ordinary-wit-native-v1",
+  "bindingIrSha256": "2443d78c3743ed22100629c7cfa35d1afe5036a39760bd5382ef295a3d06fb98",
+  "component": {
+    "id": "structuralsubtypes@1.0.0",
+    "name": "structuralsubtypes",
+    "version": "1.0.0"
+  },
+  "declarations": [
+    {
+      "id": "lean:StructuralSubtypes.aliasArguments",
+      "witName": "alias-arguments"
+    },
+    {
+      "id": "lean:StructuralSubtypes.aliasPair",
+      "witName": "alias-pair"
+    },
+    {
+      "id": "lean:StructuralSubtypes.arrays",
+      "witName": "arrays"
+    },
+    {
+      "id": "lean:StructuralSubtypes.branch",
+      "witName": "branch"
+    },
+    {
+      "id": "lean:StructuralSubtypes.byteBranches",
+      "witName": "byte-branches"
+    },
+    {
+      "id": "lean:StructuralSubtypes.lists",
+      "witName": "lists"
+    },
+    {
+      "id": "lean:StructuralSubtypes.nested",
+      "witName": "nested"
+    },
+    {
+      "id": "lean:StructuralSubtypes.options",
+      "witName": "options"
+    },
+    {
+      "id": "lean:StructuralSubtypes.plainFin",
+      "witName": "plain-fin"
+    },
+    {
+      "id": "lean:StructuralSubtypes.product",
+      "witName": "product"
+    },
+    {
+      "id": "lean:StructuralSubtypes.scalar",
+      "witName": "scalar"
+    },
+    {
+      "id": "lean:StructuralSubtypes.specialized",
+      "witName": "specialized"
+    }
+  ],
+  "deferred": [],
+  "schemaVersion": 1,
+  "wit": {
+    "apiInterface": "lean-bridge:structuralsubtypes/api@1.0.0",
+    "nativeImport": "lean-bridge:structuralsubtypes/native@1.0.0",
+    "package": "lean-bridge:structuralsubtypes@1.0.0",
+    "world": "structuralsubtypes"
+  }
+}

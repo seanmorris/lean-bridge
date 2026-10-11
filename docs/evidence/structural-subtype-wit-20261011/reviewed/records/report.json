@@ -1,0 +1,135 @@
+{
+  "builds": [
+    {
+      "archives": {
+        "archives/structuralsubtypes-1.0.0-wit-wasi.tar.gz": "18f2670b98e391e52cce9f58884ecead77fb7756d3a390a1c71c2e745cc6b6c7"
+      },
+      "modelSha256": "1333bbfbf2e51191fe2d5db32d06a9ba46b79a9830a461256678e17d8c4355c1",
+      "receiptSha256": "ddc181fa469c4f6f52c2799f8b7f5cfcbb0e2d4cf95983d261773f8c191a425d"
+    },
+    {
+      "archives": {
+        "archives/structuralsubtypes-1.0.0-wit-wasi.tar.gz": "18f2670b98e391e52cce9f58884ecead77fb7756d3a390a1c71c2e745cc6b6c7"
+      },
+      "modelSha256": "1333bbfbf2e51191fe2d5db32d06a9ba46b79a9830a461256678e17d8c4355c1",
+      "receiptSha256": "ddc181fa469c4f6f52c2799f8b7f5cfcbb0e2d4cf95983d261773f8c191a425d"
+    }
+  ],
+  "compilerFreeReplay": true,
+  "configuration": {
+    "modules": [
+      "StructuralSubtypes"
+    ],
+    "schemaVersion": 1,
+    "targets": {
+      "wit-wasi": {
+        "name": "structuralsubtypes",
+        "version": "1.0.0"
+      }
+    }
+  },
+  "declaredGlibcFloor": "2.36",
+  "dispatch": {
+    "observed": false,
+    "reason": "No WIT entry counters in this installed acceptance"
+  },
+  "executable": {
+    "executableSha256": "b754143b0dd6d7523c0a9713a39b862526ded3c0b56781d9ff4553c6ad4ec41d",
+    "runtimeSearchPath": "$ORIGIN/structuralsubtypes-1.0.0-wit-wasi/lib"
+  },
+  "expectedBindingIrSha256": "6ca095623cdf425a28546d3fb8a5428fc461242aed9f24b91d40009dd77a3e20",
+  "independentBuilds": 2,
+  "installed": {
+    "checks": 9262,
+    "compilerFreePath": true,
+    "consumerSha256": "c46dfabb94807e1e36608dc450c668ee7ed98b18b3e7718ed67a5ddc4f30dfc9",
+    "offlineInstall": true,
+    "result": {
+      "checks": 9262,
+      "rejections": 1042,
+      "snapshotControls": 12
+    }
+  },
+  "observations": [
+    {
+      "closure": {
+        "packageFileSetSha256": "b8d8ee7dec71ee4f93472a679552fbddb575baab541b5deaa4a1a90594d85997",
+        "receiptSha256": "2e3444d830043a0b820a4f1e0558bcca071f6bb4151ed4a413e2e12292e05477"
+      },
+      "counts": {
+        "checks": 9262,
+        "rejections": 1042,
+        "snapshotControls": 12
+      },
+      "relocated": false,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":9262,\"rejections\":1042,\"snapshotControls\":12}\n"
+      }
+    },
+    {
+      "closure": {
+        "packageFileSetSha256": "b8d8ee7dec71ee4f93472a679552fbddb575baab541b5deaa4a1a90594d85997",
+        "receiptSha256": "2e3444d830043a0b820a4f1e0558bcca071f6bb4151ed4a413e2e12292e05477"
+      },
+      "counts": {
+        "checks": 9262,
+        "rejections": 1042,
+        "snapshotControls": 12
+      },
+      "relocated": true,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":9262,\"rejections\":1042,\"snapshotControls\":12}\n"
+      }
+    }
+  ],
+  "offlineInstall": true,
+  "producerCommit": "3a9cea971aca9cae52900abdd5d705e1b9d41adf",
+  "receipt": {
+    "component": {
+      "id": "structuralsubtypes@1.0.0",
+      "name": "structuralsubtypes",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 59290021,
+            "path": "archives/structuralsubtypes-1.0.0-wit-wasi.tar.gz",
+            "sha256": "18f2670b98e391e52cce9f58884ecead77fb7756d3a390a1c71c2e745cc6b6c7"
+          }
+        ],
+        "ecosystem": "wit-wasi",
+        "name": "structuralsubtypes",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+        "target": "wit-wasi",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "fb028588d9f40023bf1c1b709a802e7db3d0102c4f6ac827281514e95eb56130",
+        "id": "native-library-v1",
+        "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "eaf9a2690c77ebddf11448ef6dc96b32695f6e3c5908a6f09dd224c4ee95410e"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "route": "reviewed",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}

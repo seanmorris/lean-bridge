@@ -15,6 +15,7 @@ import { structuralSubtypeConfiguration, structuralSubtypeReview } from "./struc
 import { structuralSubtypeWitConfiguration, structuralSubtypeWitCaller, structuralSubtypeWitCounts, parseStructuralSubtypeWitResult } from "./structural-subtype-wit-fixture.mjs";
 import { copiedCleanEnvironment, runCopied } from "./copied-fixture-install.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
+import "./structural-subtype-wit-evidence-tests.mjs";
 
 test("structural WIT configurations retain independent author contracts and complete callers", async () => {
 	for(const route of ["ordinary", "reviewed"])

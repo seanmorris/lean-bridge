@@ -1,0 +1,30 @@
+TAP version 13
+# Subtest: installed structural Subtypes WIT ordinary reproduce and relocate
+not ok 1 - installed structural Subtypes WIT ordinary reproduce and relocate
+  ---
+  duration_ms: 122518.343734
+  type: 'test'
+  location: '/app/tests/helpers/structural-subtype-wit-installed-tests.mjs:30:28'
+  failureType: 'testCodeFailure'
+  error: `/tmp/lean-bridge-structural-wit-installed-yuKFFN/consumer/wit-wasi/consumer exited with status 1: {"command":"/tmp/lean-bridge-structural-wit-installed-yuKFFN/consumer/wit-wasi/consumer","args":[],"stderr":"scalar: expected 'arg0 was rejected by StructuralSubtypes.checkedPositive', got 'error while executing at wasm backtrace:\\n    0:    0x8fa - forward!<wasm function 23>\\n\\nCaused by:\\n    arg0 was rejected by StructuralSubtypes.checkedPositive\\n'\\nstructural WIT check failed at 133: exact\\n","stdout":""}`
+  code: 'build-command-failed'
+  name: 'CanonicalBuildError'
+  stack: |-
+    ChildProcess.<anonymous> (file:///app/src/build/process-runner.mjs:77:21)
+    Object.onceWrapper (node:events:634:26)
+    ChildProcess.emit (node:events:519:28)
+    maybeClose (node:internal/child_process:1101:16)
+    ChildProcess._handle.onexit (node:internal/child_process:304:5)
+  ...
+# WIT ordinary: author 0
+# WIT ordinary: author 1
+# Retained structural WIT inputs: /tmp/lean-bridge-structural-wit-installed-yuKFFN
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 123017.428797

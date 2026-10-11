@@ -1,0 +1,565 @@
+{
+  "failed": {
+    "producerCommit": "7a1b8ac10f50b0951d39f98746ccc58aca4cfc5f",
+    "reason": "The independent caller did not account for Wasmtime's formatted-chain final newline. Corrected in 3a9cea9 before the successful installed runs.",
+    "records": [
+      "build-0/StructuralSubtypes.lean",
+      "build-0/model.json",
+      "build-0/package-set-receipt.json",
+      "build-1/StructuralSubtypes.lean",
+      "build-1/model.json",
+      "build-1/package-set-receipt.json",
+      "configuration.json",
+      "consumer.c",
+      "expected.binding-ir.json"
+    ],
+    "sources": [
+      "tests/fixtures/structural-subtype-consumers/wit-values.h",
+      "tests/fixtures/structural-subtype-consumers/wit-wasi.c",
+      "tests/helpers/structural-subtype-wit-fixture.mjs",
+      "tests/helpers/structural-subtype-wit-installed-tests.mjs"
+    ],
+    "tapSha256": "9d4e87cce3aa139a94de211061c144bc2c5966a0097d9497a02eebbbb4759835"
+  },
+  "files": [
+    {
+      "bytes": 12440,
+      "path": "checker.mjs",
+      "sha256": "4ccfaeb8c0ad97d75579b0167159bd4b6cc2bc5bcf6e948d7f5173fa0ff4d027"
+    },
+    {
+      "bytes": 203,
+      "path": "failed/end.json",
+      "sha256": "612b15dfc2633e5a28d50b513728506a09bd7d34c3dcf21bad239d8d7a49b38c"
+    },
+    {
+      "bytes": 131797,
+      "path": "failed/records/build-0/model.json",
+      "sha256": "2abc16b967cf6df8c04e4022568c4ffce89d38abc4c41c5facd693d0b62c8ef6"
+    },
+    {
+      "bytes": 1149,
+      "path": "failed/records/build-0/package-set-receipt.json",
+      "sha256": "adf91990c3eb234fcff2e0327b27d09927ed5f9ba1ee121f4821f843d61ea7d3"
+    },
+    {
+      "bytes": 2349,
+      "path": "failed/records/build-0/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 131797,
+      "path": "failed/records/build-1/model.json",
+      "sha256": "2abc16b967cf6df8c04e4022568c4ffce89d38abc4c41c5facd693d0b62c8ef6"
+    },
+    {
+      "bytes": 1149,
+      "path": "failed/records/build-1/package-set-receipt.json",
+      "sha256": "adf91990c3eb234fcff2e0327b27d09927ed5f9ba1ee121f4821f843d61ea7d3"
+    },
+    {
+      "bytes": 2349,
+      "path": "failed/records/build-1/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 11183,
+      "path": "failed/records/configuration.json",
+      "sha256": "cb947270a280fa27505e1c48919240488be21cd2dc0ac9678cdfe54d0158ad8a"
+    },
+    {
+      "bytes": 14541,
+      "path": "failed/records/consumer.c",
+      "sha256": "0eb52409c5e0a0b4e6f11841ccb960ec0808dd922bf06f901e80e37a02163b3a"
+    },
+    {
+      "bytes": 34558,
+      "path": "failed/records/expected.binding-ir.json",
+      "sha256": "fcb7bfa656ac6d6262a9773712f02b6c0bd5a08a72483c9ba9225f83fe90c36f"
+    },
+    {
+      "bytes": 1469,
+      "path": "failed/run.tap",
+      "sha256": "9d4e87cce3aa139a94de211061c144bc2c5966a0097d9497a02eebbbb4759835"
+    },
+    {
+      "bytes": 6101,
+      "path": "failed/sources/tests/fixtures/structural-subtype-consumers/wit-values.h",
+      "sha256": "62207c8fd96e9eff93cb1e86de27cbc4b9f99a2a2f7791a93b6db59553175484"
+    },
+    {
+      "bytes": 8463,
+      "path": "failed/sources/tests/fixtures/structural-subtype-consumers/wit-wasi.c",
+      "sha256": "196708a1dda45dd01660d964bb1959ec0a5d28a7f27257061e8a99912d34e348"
+    },
+    {
+      "bytes": 1890,
+      "path": "failed/sources/tests/helpers/structural-subtype-wit-fixture.mjs",
+      "sha256": "e518f76e9f15d25870671ef2653c8d59d57b5b36beef43b503e4f5efbe10e99d"
+    },
+    {
+      "bytes": 8763,
+      "path": "failed/sources/tests/helpers/structural-subtype-wit-installed-tests.mjs",
+      "sha256": "e242401df4471814467b105e82a411556e92780d59ef047d1ca50856fc4c1933"
+    },
+    {
+      "bytes": 900,
+      "path": "failed/start.json",
+      "sha256": "6a2b45f90ff23747cf6da80bf4036aa6047a6f7ea38b6627326ecb0c128733dd"
+    },
+    {
+      "bytes": 202,
+      "path": "ordinary/end.json",
+      "sha256": "d35d95080d44009fb19adbe8f696195619a63ec3cf8348aaa16b3b9c7f428bf0"
+    },
+    {
+      "bytes": 131797,
+      "path": "ordinary/records/build-0/model.json",
+      "sha256": "2abc16b967cf6df8c04e4022568c4ffce89d38abc4c41c5facd693d0b62c8ef6"
+    },
+    {
+      "bytes": 1149,
+      "path": "ordinary/records/build-0/package-set-receipt.json",
+      "sha256": "adf91990c3eb234fcff2e0327b27d09927ed5f9ba1ee121f4821f843d61ea7d3"
+    },
+    {
+      "bytes": 2349,
+      "path": "ordinary/records/build-0/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 131797,
+      "path": "ordinary/records/build-1/model.json",
+      "sha256": "2abc16b967cf6df8c04e4022568c4ffce89d38abc4c41c5facd693d0b62c8ef6"
+    },
+    {
+      "bytes": 1149,
+      "path": "ordinary/records/build-1/package-set-receipt.json",
+      "sha256": "adf91990c3eb234fcff2e0327b27d09927ed5f9ba1ee121f4821f843d61ea7d3"
+    },
+    {
+      "bytes": 2349,
+      "path": "ordinary/records/build-1/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 11183,
+      "path": "ordinary/records/configuration.json",
+      "sha256": "cb947270a280fa27505e1c48919240488be21cd2dc0ac9678cdfe54d0158ad8a"
+    },
+    {
+      "bytes": 14814,
+      "path": "ordinary/records/consumer.c",
+      "sha256": "2c244dc43256f9c4e582bd0b86e01b104ba2aef7235d8454f4baa9b937a1114f"
+    },
+    {
+      "bytes": 34558,
+      "path": "ordinary/records/expected.binding-ir.json",
+      "sha256": "fcb7bfa656ac6d6262a9773712f02b6c0bd5a08a72483c9ba9225f83fe90c36f"
+    },
+    {
+      "bytes": 38248,
+      "path": "ordinary/records/installed-receipt.json",
+      "sha256": "b901f7536ed4e2159ebf95e485076425ebc9b41b0150357c0cdce02fbad3e6b8"
+    },
+    {
+      "bytes": 448,
+      "path": "ordinary/records/installed.json",
+      "sha256": "595d192989c9d2aba20496a54437b66c8803b9131ecf8e4ca9711e7769bd4de9"
+    },
+    {
+      "bytes": 1641,
+      "path": "ordinary/records/package/binding-manifest.json",
+      "sha256": "4b883e915453125f71286e82a7254222feacc64d28a71da8fe4a1ec71b2ee74f"
+    },
+    {
+      "bytes": 3925,
+      "path": "ordinary/records/package/component/structuralsubtypes.wasm",
+      "sha256": "dac654fccd20996ceeaccbd6622d636ef86ea0f9fcc65f8ae17e4c8fd33057d2"
+    },
+    {
+      "bytes": 14761,
+      "path": "ordinary/records/package/component/structuralsubtypes.wat",
+      "sha256": "07e4f6042673e2e3481e6c828c0566cfdd1769b07234ad2af2866effafe7a9fa"
+    },
+    {
+      "bytes": 1142,
+      "path": "ordinary/records/package/include/structuralsubtypes_wasmtime.h",
+      "sha256": "771e58830a7c273339c773abe46f64f56853cff645fac4ecefc159e495d672d5"
+    },
+    {
+      "bytes": 285,
+      "path": "ordinary/records/package/lib/pkgconfig/structuralsubtypes-wit.pc",
+      "sha256": "48c68a095bbeb620f174b2227b446f359363da5780a50dc3c82bd5aaefe4a01d"
+    },
+    {
+      "bytes": 13978,
+      "path": "ordinary/records/package/native-wit-adapter.json",
+      "sha256": "3bc5f2984616287c8a08a83b4561d0adba0db6ec014018c9218539509e7fbf46"
+    },
+    {
+      "bytes": 2627,
+      "path": "ordinary/records/package/wit/structuralsubtypes.wit",
+      "sha256": "1288a8e7f0ce6002fb9866342532cb0d0874658f709d6f341a967241dc29fc0a"
+    },
+    {
+      "bytes": 447,
+      "path": "ordinary/records/relocated.json",
+      "sha256": "42d55ee4e128d7b237d6a12695d4e805c535c3f3249c7fc5ab9b6d865c39b7a5"
+    },
+    {
+      "bytes": 16156,
+      "path": "ordinary/records/report.json",
+      "sha256": "49196ac1fa00be0eee7b21717911fb4809106d1018812390537162af0867f458"
+    },
+    {
+      "bytes": 377,
+      "path": "ordinary/run.tap",
+      "sha256": "bbff229f2a9ddebe41a46597df52d3d0d51a8e9b64275b9ba83b5b1702a5368f"
+    },
+    {
+      "bytes": 900,
+      "path": "ordinary/start.json",
+      "sha256": "e181c9976b504b3a5a244f0561de29765d6ca7e22e713cf8d23072ad398cbcbc"
+    },
+    {
+      "bytes": 203,
+      "path": "reviewed/end.json",
+      "sha256": "d601ba8e49c2711e966fe78584508a86434cda119ba05c7943110feaac8fa108"
+    },
+    {
+      "bytes": 157742,
+      "path": "reviewed/records/build-0/model.json",
+      "sha256": "1333bbfbf2e51191fe2d5db32d06a9ba46b79a9830a461256678e17d8c4355c1"
+    },
+    {
+      "bytes": 1149,
+      "path": "reviewed/records/build-0/package-set-receipt.json",
+      "sha256": "ddc181fa469c4f6f52c2799f8b7f5cfcbb0e2d4cf95983d261773f8c191a425d"
+    },
+    {
+      "bytes": 2349,
+      "path": "reviewed/records/build-0/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 157742,
+      "path": "reviewed/records/build-1/model.json",
+      "sha256": "1333bbfbf2e51191fe2d5db32d06a9ba46b79a9830a461256678e17d8c4355c1"
+    },
+    {
+      "bytes": 1149,
+      "path": "reviewed/records/build-1/package-set-receipt.json",
+      "sha256": "ddc181fa469c4f6f52c2799f8b7f5cfcbb0e2d4cf95983d261773f8c191a425d"
+    },
+    {
+      "bytes": 2349,
+      "path": "reviewed/records/build-1/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 175,
+      "path": "reviewed/records/configuration.json",
+      "sha256": "c0bca06c84ba5d3694004660d5f4200689eaff98cc5f3e239a788f1c9b949343"
+    },
+    {
+      "bytes": 14844,
+      "path": "reviewed/records/consumer.c",
+      "sha256": "c46dfabb94807e1e36608dc450c668ee7ed98b18b3e7718ed67a5ddc4f30dfc9"
+    },
+    {
+      "bytes": 34558,
+      "path": "reviewed/records/expected.binding-ir.json",
+      "sha256": "fcb7bfa656ac6d6262a9773712f02b6c0bd5a08a72483c9ba9225f83fe90c36f"
+    },
+    {
+      "bytes": 64578,
+      "path": "reviewed/records/installed-receipt.json",
+      "sha256": "2e3444d830043a0b820a4f1e0558bcca071f6bb4151ed4a413e2e12292e05477"
+    },
+    {
+      "bytes": 448,
+      "path": "reviewed/records/installed.json",
+      "sha256": "3939c57e75c0f643a6fa1c70e9aba2864a9b532738ed70bd4ca915b38df98f9d"
+    },
+    {
+      "bytes": 1641,
+      "path": "reviewed/records/package/binding-manifest.json",
+      "sha256": "87b40530b63c3087a2fd5424ede7266c502ad1872630f4042c2bb470a09471f7"
+    },
+    {
+      "bytes": 3977,
+      "path": "reviewed/records/package/component/structuralsubtypes.wasm",
+      "sha256": "162d6a87d0fe4ec6ddb41d939ee220c8cad5f0a0ffbca86c24ed938eae702a86"
+    },
+    {
+      "bytes": 14813,
+      "path": "reviewed/records/package/component/structuralsubtypes.wat",
+      "sha256": "0f2afb04aad6f979e920af0ac96e48652d977465737a6fadd43d943fdc7dac49"
+    },
+    {
+      "bytes": 1142,
+      "path": "reviewed/records/package/include/structuralsubtypes_wasmtime.h",
+      "sha256": "771e58830a7c273339c773abe46f64f56853cff645fac4ecefc159e495d672d5"
+    },
+    {
+      "bytes": 285,
+      "path": "reviewed/records/package/lib/pkgconfig/structuralsubtypes-wit.pc",
+      "sha256": "48c68a095bbeb620f174b2227b446f359363da5780a50dc3c82bd5aaefe4a01d"
+    },
+    {
+      "bytes": 13978,
+      "path": "reviewed/records/package/native-wit-adapter.json",
+      "sha256": "36f5a9a368cf0addeccbb688654fded3b979fe4537e7e7167ba9129beca66d9a"
+    },
+    {
+      "bytes": 2679,
+      "path": "reviewed/records/package/wit/structuralsubtypes.wit",
+      "sha256": "2203a6554a98f72d851ca4f6cdc2223a73952516c8c30ffa025b84fb4a1d25fe"
+    },
+    {
+      "bytes": 447,
+      "path": "reviewed/records/relocated.json",
+      "sha256": "7e288c0371eedb28e50f8947d71adbde0038953ef7575a6d0286cb5fc815b1cb"
+    },
+    {
+      "bytes": 4240,
+      "path": "reviewed/records/report.json",
+      "sha256": "fc7816a57c921e38f6a553b5b3a025242dbbec42cb97e5f8976cb4ea38cd1ba0"
+    },
+    {
+      "bytes": 377,
+      "path": "reviewed/run.tap",
+      "sha256": "5b15394ac21d09b5819e93e39a94239f1e841a71b8f45daa9c075f5d342985c7"
+    },
+    {
+      "bytes": 900,
+      "path": "reviewed/start.json",
+      "sha256": "508f86d16d3f5743610f8f6235e0ff8a5601cf5b784a343a57db01dc45353109"
+    },
+    {
+      "bytes": 2999,
+      "path": "runner.mjs",
+      "sha256": "d4a260ddc07934c93dd53650008973b8dbcdd662c2e945b021c99082122f8436"
+    },
+    {
+      "bytes": 92606,
+      "path": "sources/src/analyze/NativeExports.lean",
+      "sha256": "4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f"
+    },
+    {
+      "bytes": 23547,
+      "path": "sources/src/backends/c/native-copied-values.mjs",
+      "sha256": "7415b894cb1d4f560fb00766a7668ab015393da1d02f9ab252dc157b383ea10c"
+    },
+    {
+      "bytes": 5091,
+      "path": "sources/src/backends/wit/copied-aliases.mjs",
+      "sha256": "bee5b067c84547858cc60186443d5ce6302684a72919f0ed82111d47831068f9"
+    },
+    {
+      "bytes": 13254,
+      "path": "sources/src/backends/wit/copied-component.mjs",
+      "sha256": "91aabbb9a0bb18a0c64854873b6f7651a24ea48dc714d59e8cb4988b7214b701"
+    },
+    {
+      "bytes": 14699,
+      "path": "sources/src/backends/wit/copied-conversions.mjs",
+      "sha256": "c9e56185eba0a61d8d5c4da006d2ce6a95fae28e932063dbfcb1b279b710f59d"
+    },
+    {
+      "bytes": 9091,
+      "path": "sources/src/backends/wit/copied-host.mjs",
+      "sha256": "d93a198b62f7b70f3756abe6d305902abfb02087faca2b56fb063ef553c7bfdf"
+    },
+    {
+      "bytes": 14222,
+      "path": "sources/src/backends/wit/copied-model.mjs",
+      "sha256": "eee9f9a456a92bc4d9680e92afead3b27fe42e239d586cadc3af9c84926e85d0"
+    },
+    {
+      "bytes": 7082,
+      "path": "sources/src/backends/wit/host-evidence.mjs",
+      "sha256": "c9fda8065d0797d7760a7c964719208c7f4261e8043c341c39206732242ca996"
+    },
+    {
+      "bytes": 8271,
+      "path": "sources/src/build/component-refinements.mjs",
+      "sha256": "1c936270da51e3991148681a317e30727936bc8c4e74f7a79330f4b7393a927c"
+    },
+    {
+      "bytes": 12579,
+      "path": "sources/src/build/native-component.mjs",
+      "sha256": "2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867"
+    },
+    {
+      "bytes": 42189,
+      "path": "sources/src/build/native-model.mjs",
+      "sha256": "18e1072bac272ecf76c8d56aec0b2e21efa06e2adf4d49096598271dc5eb2d4a"
+    },
+    {
+      "bytes": 3298,
+      "path": "sources/src/build/native-wit-artifacts.mjs",
+      "sha256": "6ba23b3b290a571e903db62dcfb22a2ead78c237fb06b9f71e155f7f50816d8a"
+    },
+    {
+      "bytes": 6543,
+      "path": "sources/src/build/native-wit-projection.mjs",
+      "sha256": "2154c3c3752f39547d1cdeeee4ebed6cb3579513ecbf7d293eee26ed46877397"
+    },
+    {
+      "bytes": 18403,
+      "path": "sources/src/release/native-wasi.mjs",
+      "sha256": "e92de6958b36809dd7a406a8c36e2da5d0324cf5186475fcec6ea2a545bf8610"
+    },
+    {
+      "bytes": 87,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/lakefile.toml",
+      "sha256": "16a51fbc493627ffd1a5beebdccbe577039cc22ce333e4233417444417cf188f"
+    },
+    {
+      "bytes": 25,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/lean-toolchain",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "bytes": 1093,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 64,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/package.json",
+      "sha256": "5cc3610c19032e010e0c18c017695d0a2f16b46828effec79bb5089ccf1932df"
+    },
+    {
+      "bytes": 2349,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 6374,
+      "path": "sources/tests/fixtures/structural-subtype-consumers/wit-values.h",
+      "sha256": "68d0fd45721fe24bb60b97fc4abe5b662e6e86ebfcf367327f38822bd73632c3"
+    },
+    {
+      "bytes": 8463,
+      "path": "sources/tests/fixtures/structural-subtype-consumers/wit-wasi.c",
+      "sha256": "196708a1dda45dd01660d964bb1959ec0a5d28a7f27257061e8a99912d34e348"
+    },
+    {
+      "bytes": 15505,
+      "path": "sources/tests/helpers/copied-fixture-install.mjs",
+      "sha256": "dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df"
+    },
+    {
+      "bytes": 3517,
+      "path": "sources/tests/helpers/fin-container-edge-closure.mjs",
+      "sha256": "2d1788a27ccd388a5779c251b01b0dc1370c8047362dc3720a7189815dd141a2"
+    },
+    {
+      "bytes": 34751,
+      "path": "sources/tests/helpers/fin-container-edge-install.mjs",
+      "sha256": "187b75df0f862f8861715fb2e3c432574368e66be9aacbe96dbfa0f05b8f6274"
+    },
+    {
+      "bytes": 5465,
+      "path": "sources/tests/helpers/structural-subtype-installed-fixture.mjs",
+      "sha256": "5743bb3d0fd00301c22587a0111edcb1301c7f43c3dda0c4746340c18c0a201f"
+    },
+    {
+      "bytes": 1890,
+      "path": "sources/tests/helpers/structural-subtype-wit-fixture.mjs",
+      "sha256": "e518f76e9f15d25870671ef2653c8d59d57b5b36beef43b503e4f5efbe10e99d"
+    },
+    {
+      "bytes": 8763,
+      "path": "sources/tests/helpers/structural-subtype-wit-installed-tests.mjs",
+      "sha256": "e242401df4471814467b105e82a411556e92780d59ef047d1ca50856fc4c1933"
+    },
+    {
+      "bytes": 5418,
+      "path": "sources/tests/helpers/structural-subtype-wit-tests.mjs",
+      "sha256": "af274e937a73ac8fc49fd73a95f74de2ad9ef417b7063e1ae29691ef72bce381"
+    },
+    {
+      "bytes": 11497,
+      "path": "sources/tests/structural-subtype-installed.test.mjs",
+      "sha256": "308184ad4ed82884870c93b065b9c82b365beccc43df79ff7519d4a29f7b7edb"
+    }
+  ],
+  "kind": "structural-subtype-wit-installed-v1",
+  "limitations": [
+    "Local Linux x86-64 glibc 2.36 acceptance, not hosted release-floor acceptance.",
+    "No WIT constructor/source entry counts or memory measurement.",
+    "Package binaries and complete toolchain closures are not retained.",
+    "No support-inventory promotion or recurring installed CI gate follows from this archive."
+  ],
+  "producerCommit": "3a9cea971aca9cae52900abdd5d705e1b9d41adf",
+  "runs": [
+    {
+      "archives": {
+        "archives/structuralsubtypes-1.0.0-wit-wasi.tar.gz": "9634a89c1f896fd294beabbc016c0a816358bdc64ac597a22459dc1dae0c5cd7"
+      },
+      "checks": 9262,
+      "dispatchObserved": false,
+      "executions": 2,
+      "label": "ordinary",
+      "producerCommit": "3a9cea971aca9cae52900abdd5d705e1b9d41adf",
+      "rejections": 1042,
+      "reportSha256": "49196ac1fa00be0eee7b21717911fb4809106d1018812390537162af0867f458",
+      "route": "ordinary",
+      "snapshotControls": 12,
+      "tapSha256": "bbff229f2a9ddebe41a46597df52d3d0d51a8e9b64275b9ba83b5b1702a5368f",
+      "wasmtime": "42.0.1"
+    },
+    {
+      "archives": {
+        "archives/structuralsubtypes-1.0.0-wit-wasi.tar.gz": "18f2670b98e391e52cce9f58884ecead77fb7756d3a390a1c71c2e745cc6b6c7"
+      },
+      "checks": 9262,
+      "dispatchObserved": false,
+      "executions": 2,
+      "label": "reviewed",
+      "producerCommit": "3a9cea971aca9cae52900abdd5d705e1b9d41adf",
+      "rejections": 1042,
+      "reportSha256": "fc7816a57c921e38f6a553b5b3a025242dbbec42cb97e5f8976cb4ea38cd1ba0",
+      "route": "reviewed",
+      "snapshotControls": 12,
+      "tapSha256": "5b15394ac21d09b5819e93e39a94239f1e841a71b8f45daa9c075f5d342985c7",
+      "wasmtime": "42.0.1"
+    }
+  ],
+  "schemaVersion": 1,
+  "selectedSources": [
+    "src/analyze/NativeExports.lean",
+    "src/build/native-model.mjs",
+    "src/build/component-refinements.mjs",
+    "src/build/native-component.mjs",
+    "src/backends/c/native-copied-values.mjs",
+    "src/backends/wit/copied-model.mjs",
+    "src/backends/wit/copied-host.mjs",
+    "src/backends/wit/copied-conversions.mjs",
+    "src/backends/wit/copied-component.mjs",
+    "src/backends/wit/copied-aliases.mjs",
+    "src/build/native-wit-artifacts.mjs",
+    "src/build/native-wit-projection.mjs",
+    "src/release/native-wasi.mjs",
+    "src/backends/wit/host-evidence.mjs",
+    "tests/structural-subtype-installed.test.mjs",
+    "tests/helpers/structural-subtype-installed-fixture.mjs",
+    "tests/helpers/structural-subtype-wit-fixture.mjs",
+    "tests/helpers/structural-subtype-wit-installed-tests.mjs",
+    "tests/helpers/structural-subtype-wit-tests.mjs",
+    "tests/helpers/copied-fixture-install.mjs",
+    "tests/helpers/fin-container-edge-install.mjs",
+    "tests/helpers/fin-container-edge-closure.mjs",
+    "tests/fixtures/structural-subtype-consumers/wit-wasi.c",
+    "tests/fixtures/structural-subtype-consumers/wit-values.h",
+    "tests/fixtures/onboarding/structural-subtypes/StructuralSubtypes.lean",
+    "tests/fixtures/onboarding/structural-subtypes/lakefile.toml",
+    "tests/fixtures/onboarding/structural-subtypes/lean-toolchain",
+    "tests/fixtures/onboarding/structural-subtypes/package.json",
+    "tests/fixtures/onboarding/structural-subtypes/LICENSE"
+  ]
+}

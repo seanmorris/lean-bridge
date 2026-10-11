@@ -1,0 +1,52 @@
+package lean-bridge:structuralsubtypes@1.0.0;
+
+interface native {
+  type bridge-value-0 = list<u32>;
+  type bridge-value-1 = option<bridge-value-0>;
+  type bridge-value-2 = list<bridge-value-1>;
+  type bridge-value-3 = tuple<bridge-value-2, bridge-value-2>;
+  type bridge-value-4 = list<bridge-value-0>;
+  type bridge-value-6 = result<bridge-value-0, string>;
+  type bridge-value-8 = tuple<u8, bridge-value-0>;
+  type bridge-value-9 = option<bridge-value-8>;
+  type bridge-value-10 = list<bridge-value-9>;
+  type bridge-value-11 = list<bridge-value-0>;
+  type bridge-value-12 = tuple<bridge-value-0, bridge-value-0>;
+  type bridge-value-13 = option<bridge-value-12>;
+  type bridge-value-14 = list<bridge-value-13>;
+  type bridge-value-15 = list<bridge-value-14>;
+  type bridge-value-16 = tuple<bridge-value-0, string>;
+  alias-arguments: func(value0: bridge-value-2, value1: bridge-value-2) -> bridge-value-2;
+  alias-pair: func(value0: bridge-value-3) -> bridge-value-3;
+  arrays: func(value0: bridge-value-4) -> bridge-value-4;
+  branch: func(value0: bridge-value-6) -> bridge-value-6;
+  byte-branches: func(value0: bridge-value-10) -> bridge-value-10;
+  lists: func(value0: bridge-value-11) -> bridge-value-11;
+  nested: func(value0: bridge-value-15) -> bridge-value-0;
+  options: func(value0: bridge-value-1) -> bridge-value-1;
+  plain-fin: func(value0: bridge-value-2) -> bridge-value-0;
+  product: func(value0: bridge-value-16) -> bridge-value-16;
+  scalar: func(value0: bridge-value-0) -> bridge-value-0;
+  specialized: func(value0: bridge-value-11) -> bridge-value-11;
+}
+
+interface api {
+  use native.{bridge-value-0, bridge-value-1, bridge-value-2, bridge-value-3, bridge-value-4, bridge-value-6, bridge-value-8, bridge-value-9, bridge-value-10, bridge-value-11, bridge-value-12, bridge-value-13, bridge-value-14, bridge-value-15, bridge-value-16};
+  alias-arguments: func(value0: bridge-value-2, value1: bridge-value-2) -> bridge-value-2;
+  alias-pair: func(value0: bridge-value-3) -> bridge-value-3;
+  arrays: func(value0: bridge-value-4) -> bridge-value-4;
+  branch: func(value0: bridge-value-6) -> bridge-value-6;
+  byte-branches: func(value0: bridge-value-10) -> bridge-value-10;
+  lists: func(value0: bridge-value-11) -> bridge-value-11;
+  nested: func(value0: bridge-value-15) -> bridge-value-0;
+  options: func(value0: bridge-value-1) -> bridge-value-1;
+  plain-fin: func(value0: bridge-value-2) -> bridge-value-0;
+  product: func(value0: bridge-value-16) -> bridge-value-16;
+  scalar: func(value0: bridge-value-0) -> bridge-value-0;
+  specialized: func(value0: bridge-value-11) -> bridge-value-11;
+}
+
+world structuralsubtypes {
+  import native;
+  export api;
+}
