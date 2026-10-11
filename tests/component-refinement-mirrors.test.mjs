@@ -15,6 +15,8 @@ import { componentRecursiveLeanSource } from "../src/build/component-recursive-l
 import { componentRefinementMirrorsFixture } from "./helpers/component-refinement-mirrors-fixture.mjs";
 import { nominalFinConversionFixture, nominalSubtypeConversionFixture } from "./helpers/nominal-subtype-conversion-fixture.mjs";
 import "./helpers/component-refinement-mirrors-source-tests.mjs";
+import "./helpers/component-nominal-subtype-tests.mjs";
+import "./helpers/component-nominal-subtype-history-tests.mjs";
 
 const render = type => {
 	assert.equal(type.kind, "primitive"); assert.equal(type.name, "nat");

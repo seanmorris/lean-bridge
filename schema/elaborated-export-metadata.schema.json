@@ -329,7 +329,7 @@
                 "type": "object", "additionalProperties": false, "required": ["kind", "constructor"],
                 "properties": {
                   "kind": { "const": "subtype" },
-                  "constructor": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)*$" }
+                  "constructor": { "type": ["string", "null"], "pattern": "^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)*$" }
                 }
               }
             ] }

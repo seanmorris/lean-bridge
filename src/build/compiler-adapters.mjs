@@ -20,6 +20,7 @@ import { componentRecursiveLeanSource } from "./component-recursive-lean.mjs";
 import { assertComponentStructuredCallableAbi, componentStructuredCallableAbi } from "../abi/component-structured-callables.mjs";
 import { componentStructuredCallableLeanSource, componentStructuredLeanType } from "./component-structured-callable-lean.mjs";
 import { componentRefinedCall, componentRefinementGuards, componentRefinementConversion } from "./component-refinements.mjs";
+import { componentRefinementDefinitions, hasComponentNominalRefinements } from "./component-refinement-mirrors.mjs";
 
 const primitiveLeanTypes = new Map([
 	["unit", "Unit"], ["bool", "Bool"], ["uint8", "UInt8"], ["uint16", "UInt16"]
@@ -106,7 +107,8 @@ const validateParameter = (parameter, path) => {
 	if(typeof parameter.leanType !== "string" || parameter.leanType === "") fail("invalid-compiler-adapter-plan", `${path} has no Lean type`);
 };
 
-const validateRefinement = (value, path, leanType, depth = 0) => {
+const validateRefinement = (value, path, leanType, depth = 0, produced = false, budget = { nodes: 0 }) => {
+	if(++budget.nodes > 4096) fail("invalid-compiler-adapter-plan", `${path} exceeds the refinement node budget`);
 	if(value === null) return;
 	if(!value || typeof value !== "object" || depth > 32) fail("invalid-compiler-adapter-plan", `${path} has an invalid refinement tree`);
 	if(["array", "list", "option", "tuple", "result"].includes(value.kind))
@@ -114,7 +116,35 @@ const validateRefinement = (value, path, leanType, depth = 0) => {
 		exactKeys(value, ["kind", "arguments"], path);
 		if(!Array.isArray(value.arguments) || value.arguments.length !== (["tuple", "result"].includes(value.kind) ? 2 : 1))
 			fail("invalid-compiler-adapter-plan", `${path} has invalid refinement arguments`);
-		value.arguments.forEach(child => validateRefinement(child, path, undefined, depth + 1));
+		value.arguments.forEach(child => validateRefinement(child, path, undefined, depth + 1, produced, budget));
+		return;
+	}
+	if(["record", "variant"].includes(value.kind))
+	{
+		const variant = value.kind === "variant";
+		exactKeys(value, ["kind", "name", variant ? "cases" : "fields"], path);
+		if(typeof value.name !== "string" || !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$/.test(value.name))
+			fail("invalid-compiler-adapter-plan", `${path} must name its copied definition`);
+		const fields = members => {
+			if(!Array.isArray(members) || members.length > 1024) fail("invalid-compiler-adapter-plan", `${path} has invalid fields`);
+			for(const member of members)
+			{
+				exactKeys(member, ["name", "refinement"], path);
+				if(typeof member.name !== "string" || !member.name.length) fail("invalid-compiler-adapter-plan", `${path} has an invalid field name`);
+				validateRefinement(member.refinement, path, undefined, depth + 1, produced, budget);
+			}
+		};
+		if(!variant) fields(value.fields);
+		else
+		{
+			if(!Array.isArray(value.cases) || !value.cases.length || value.cases.length > 1024) fail("invalid-compiler-adapter-plan", `${path} has invalid cases`);
+			for(const branch of value.cases)
+			{
+				exactKeys(branch, ["name", "fields"], path);
+				if(typeof branch.name !== "string" || !branch.name.length) fail("invalid-compiler-adapter-plan", `${path} has an invalid case name`);
+				fields(branch.fields);
+			}
+		}
 		return;
 	}
 	if(value.kind === "fin")
@@ -125,8 +155,9 @@ const validateRefinement = (value, path, leanType, depth = 0) => {
 		return;
 	}
 	exactKeys(value, ["kind", "constructor"], path);
-	if(!["subtype", "checked-record"].includes(value.kind) || (value.kind === "checked-record" && depth !== 0) || typeof value.constructor !== "string"
-		|| !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$/.test(value.constructor))
+	const projected = value.kind === "subtype" && produced && value.constructor === null;
+	if(!["subtype", "checked-record"].includes(value.kind) || (value.kind === "checked-record" && depth !== 0) || (!projected && (typeof value.constructor !== "string"
+		|| !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$/.test(value.constructor))))
 		fail("invalid-compiler-adapter-plan", `${path} must name a checked Subtype constructor`);
 };
 
@@ -137,7 +168,7 @@ const validateRefinements = (value, item) => {
 	value.parameters.forEach((refinement, index) => {
 		validateRefinement(refinement, `parameter ${index} refinement`, item.parameters[index].leanType);
 	});
-	validateRefinement(value.result, "result refinement", item.leanResultType);
+	validateRefinement(value.result, "result refinement", item.leanResultType, 0, true);
 };
 
 /**
@@ -199,6 +230,7 @@ export const validateCompilerAdapterPlan = plan => {
 	if(plan.privateAbi.version === componentStructuredCallableAbi && canonicalJson(plan.nominalRefinements ?? []) !== canonicalJson(plan.privateAbi.nominalRefinements ?? []))
 		fail("invalid-compiler-adapter-plan", "Callable nominal refinements must match their private descriptor");
 	if(!Array.isArray(plan.privateAbi.exports) || plan.privateAbi.exports.length !== plan.exports.length) fail("invalid-compiler-adapter-plan", "private ABI must cover every generated export");
+	const types = componentRefinementDefinitions(plan.privateAbi.types ?? plan.privateAbi.records ?? []);
 	for(const [index, item] of plan.privateAbi.exports.entries())
 	{
 		exactKeys(item, ["bindingId", "symbol", "parameters", "result", "resultMode"], `private ABI export ${index}`);
@@ -210,10 +242,12 @@ export const validateCompilerAdapterPlan = plan => {
 		const refinements = plan.exports[index].refinements;
 		if(refinements)
 		{
+			if([...refinements.parameters, refinements.result].some(tree => hasComponentNominalRefinements(tree)) && plan.privateAbi.version !== componentRecursiveAbi)
+				fail("invalid-compiler-adapter-plan", "Per-use nominal refinements require copied graph carriers");
 			try
 			{
-				refinements.parameters.forEach((refinement, i) => assertRefinement(refinement, item.parameters[i]));
-				assertRefinement(refinements.result, item.result);
+				refinements.parameters.forEach((refinement, i) => assertRefinement(refinement, item.parameters[i], 0, true, types));
+				assertRefinement(refinements.result, item.result, 0, true, types, true);
 			}
 			catch(error)
 			{ fail("invalid-compiler-adapter-plan", error.message); }

@@ -163,18 +163,63 @@ end Shop
 	assert.deepEqual(await lakeInputState(context.workspace), before);
 });
 
-test("callback and nominal-field Subtype constraints are rejected rather than erased", () => {
+test("callback Subtype constraints are rejected rather than erased", () => {
 	const fin = { kind: "refinement", base: { kind: "primitive", name: "nat" }, predicate: { kind: "subtype", constructor: "Sample.checked" } };
 	for(const type of [
 		{ kind: "callback", parameters: [fin], result: { kind: "primitive", name: "nat" } }
 		, { kind: "callback", parameters: [{ kind: "primitive", name: "nat" }], result: { kind: "array", element: fin } }
 		, { kind: "callback", parameters: [{ kind: "record", name: "Sample.Record", fields: [{ name: "value", type: fin }] }], result: { kind: "primitive", name: "nat" } }
-		, { kind: "record", name: "Sample.Record", fields: [{ name: "value", type: { kind: "array", element: fin } }] }
-		, { kind: "variant", name: "Sample.Choice", cases: [{ name: "item", fields: [{ name: "value", type: fin }] }] }
 	]) {
 		const { request, report } = sample();
 		report.modules[0].declarations[0].projection.parameters[0].type = type;
 		assert.throws(() => validateElaboratedMetadata(report, request), /Unsupported nested refinement position/);
+	}
+});
+
+test("component nominal metadata preserves per-use Subtypes and constructor-free result leaves", async () => {
+	const leaf = { kind: "refinement", base: { kind: "primitive", name: "nat" }, predicate: { kind: "subtype", constructor: "Sample.checked" } };
+	const wrappers = [
+		value => ({ kind: "record", name: "Sample.Record", fields: [{ name: "value", type: { kind: "array", element: value } }] })
+		, value => ({ kind: "variant", name: "Sample.Choice", cases: [{ name: "empty", fields: [] }, { name: "item", fields: [{ name: "value", type: value }] }] })
+		, value => ({ kind: "alias", name: "Sample.Records", target: { kind: "list", element: { kind: "record", name: "Sample.Record", fields: [{ name: "value", type: value }] } } })
+	];
+	for(const wrap of wrappers) for(const result of [false, true])
+	{
+		const { request, report } = sample(), projection = report.modules[0].declarations[0].projection;
+		const refined = structuredClone(leaf);
+		if(result) refined.predicate.constructor = null;
+		const type = wrap(refined);
+		if(result) projection.result = type;
+		else projection.parameters[0].type = type;
+		const before = canonicalJson(report);
+		assert.equal(validateElaboratedMetadata(report, request), true);
+		await assertJsonSchema("elaborated-export-metadata", report);
+		assert.equal(canonicalJson(report), before);
+		const project = { name: "sample", version: "1.0.0", toolchain: request.metadata.toolchain, toolVersion: "4.32.2" };
+		const analysis = projectElaboratedMetadata({ project, inputs: [], sourceTreeSha256: "e".repeat(64) }, [{ module: "Sample", path: "Sample.lean" }], { request, metadata: report });
+		const selection = analysis.bindingIr.document.declarations[0].source.extensions["lean-lang.org/refinements"];
+		const expected = JSON.stringify({ kind: "subtype", constructor: result ? null : "Sample.checked" });
+		assert.ok(JSON.stringify(result ? selection.result : selection.parameters[0]).includes(expected));
+		assert.doesNotMatch(JSON.stringify(analysis.bindingIr.document.types), /Sample\.checked/u);
+		refined.predicate.constructor = null;
+		projection.parameters[0].type = wrap(refined);
+		assert.throws(() => validateElaboratedMetadata(report, request), /Invalid Subtype refinement/u);
+	}
+});
+
+test("component nominal Subtypes do not discard generic or erased-proof restrictions", () => {
+	const leaf = { kind: "refinement", base: { kind: "primitive", name: "nat" }, predicate: { kind: "subtype", constructor: "Sample.checked" } };
+	for(const extension of [
+		{ provenance: { structure: "Sample.Generic", arguments: [{ kind: "primitive", name: "nat" }] } }
+		, { erased: ["proof"] }
+	]) for(const result of [false, true])
+	{
+		const { request, report } = sample(), projection = report.modules[0].declarations[0].projection;
+		const type = { kind: "record", name: "Sample.Record", fields: [{ name: "value", type: structuredClone(leaf) }], ...extension };
+		if(result)
+{ type.fields[0].type.predicate.constructor = null; projection.result = type; }
+		else projection.parameters[0].type = type;
+		assert.throws(() => validateElaboratedMetadata(report, request), /Unsupported nested refinement position/u);
 	}
 });
 

@@ -849,7 +849,7 @@ def shape (request : Request) (e : Expr) (checked : Option Json := none)
     unless policy.ownership == "lease" && policy.disposal == "required" &&
         ["none", "queued-finalizer"].contains policy.fallback && policy.cycles == "reject" do
       reject e "invalid resource aggregate ownership policy"
-  let subtypeResult := callbackSite == some true && request.profile == some "native-library-v1" && request.ownedAggregates.isNone
+  let subtypeResult := callbackSite == some true && request.ownedAggregates.isNone
   let (value, state) ← (shapeTree request e (checked := checked) (callbackSite := callbackSite)
     (subtypeStructural := true) (subtypeResult := subtypeResult)).run { parentAliases }
   let result ← finiteCopiedGraph state.types value request.ownedAggregates

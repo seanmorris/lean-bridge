@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeComponentNominalSubtypeSource } from "./component-nominal-subtype-history.mjs";
 
 export const nativeHistoryCheckoutHistoryPath = "docs/evidence/native-history-checkout-source-history-20261011.json";
 export const nativeHistoryCheckoutPredecessor = "616dd5ee55dfe8ca1adbb126f448e6af25ec27ba";
@@ -53,6 +54,7 @@ export const reverseNativeHistoryCheckoutUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeNativeHistoryCheckoutSource = (path, source, expected) => {
+	source = beforeComponentNominalSubtypeSource(path, source, expected);
 	if(typeof source !== "string" || !nativeHistoryCheckoutChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

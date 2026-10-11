@@ -17,8 +17,9 @@ import { exportContractProblem } from "../../src/analyze/export-configuration.mj
 import { assertJsonSchema } from "./json-schema.mjs";
 import { nominalSelectionContracts, selectedCase, selectedConstructor, selectedEnvelope, selectedEvent, selectedField, selectedRecord, selectedSite, selectedTree, selectedVariant } from "./nominal-subtype-selection-fixture.mjs";
 import { reviewedSourceSelection } from "../../src/analyze/reviewed-source.mjs";
-import { nominalSubtypeReviewInput } from "./nominal-subtype-reviewed-fixture.mjs";
+import { nominalSubtypeReviewInput, nominalSubtypeReviewedFixture } from "./nominal-subtype-reviewed-fixture.mjs";
 import { checkNominalNativeSource } from "./nominal-subtype-native-source.mjs";
+import { checkComponentSubtypeSource, nominalComponentAssertions } from "./component-nominal-subtype-source.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_SELECTION_TEST === "1"
 	|| process.env.LEAN_BRIDGE_STRUCTURAL_SUBTYPE_EXTRACTOR_TEST === "1"
@@ -97,6 +98,11 @@ test("fresh Lean preserves nominal constructor selections and rejects false sour
 		observations.push({ route, profile, requestSha256: sha256(canonicalJson(request)), metadataSha256: sha256(output.stdout), selected: projections.size });
 		if(profile === "native-library-v1" && !route.endsWith("refusals"))
 			observations.push(await checkNominalNativeSource({ report, request, context, directory, reports, route, run, lean, review }));
+		if(profile === "component-scalars-v1" && !route.endsWith("refusals"))
+			observations.push(await checkComponentSubtypeSource({ report
+				, request, context, directory, reports, route, run, review
+				, expected: nominalSubtypeReviewedFixture()
+				, assertions: nominalComponentAssertions }));
 		return { report, request, projections };
 	};
 	const checkPositive = ({ projections }, contracts) => {
@@ -156,23 +162,18 @@ test("fresh Lean preserves nominal constructor selections and rejects false sour
 		const contracts = nominalSelectionContracts();
 		const forward = await extract(profile, contracts, `${profile}-forward`);
 		checkPositive(forward, contracts);
-		// Native per-use adapters are integrated; component carriers retain their separate gate.
-		if(profile === "native-library-v1") validateElaboratedMetadata(forward.report, forward.request);
-		else assert.throws(() => validateElaboratedMetadata(forward.report, forward.request), /Unsupported nested refinement position/u);
-		if(profile === "native-library-v1")
-		{
-			const reverseContracts = Object.fromEntries(Object.entries(contracts).toReversed());
-			const reverse = await extract(profile, reverseContracts, `${profile}-reverse`);
-			checkPositive(reverse, contracts);
-			assert.deepEqual(reverse.projections, forward.projections);
-			const review = nominalSubtypeReviewInput();
-			const reviewed = await extract(profile, contracts, `${profile}-reviewed`, review);
-			validateElaboratedMetadata(reviewed.report, reviewed.request);
-			assert.deepEqual(reviewed.projections, forward.projections);
-		}
+		validateElaboratedMetadata(forward.report, forward.request);
+		const reverseContracts = Object.fromEntries(Object.entries(contracts).toReversed());
+		const reverse = await extract(profile, reverseContracts, `${profile}-reverse`);
+		checkPositive(reverse, contracts);
+		assert.deepEqual(reverse.projections, forward.projections);
+		const review = nominalSubtypeReviewInput();
+		const reviewed = await extract(profile, contracts, `${profile}-reviewed`, review);
+		validateElaboratedMetadata(reviewed.report, reviewed.request);
+		assert.deepEqual(reviewed.projections, forward.projections);
 		const refused = invalidContracts();
-		// Native result-only projection is checked by its separate constructor-free source fixture.
-		if(profile === "native-library-v1") delete refused["NominalSelection.resultOnly"];
+		// Both profiles check constructor-free results in their separate result source fixture.
+		delete refused["NominalSelection.resultOnly"];
 		const invalid = await extract(profile, refused, `${profile}-refusals`);
 		for(const [name, projection] of invalid.projections)
 			assert.equal(projection.status, "unsupported", `${profile}/${name}: ${canonicalJson(projection)}`);

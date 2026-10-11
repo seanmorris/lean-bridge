@@ -48,7 +48,8 @@ test("Native history checkout authenticates exact changes and restores the origi
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
 	assert.equal(pins, 110);
-	assert.deepEqual(JSON.parse(await readFile(inventoryPath, "utf8")), expected);
+	const currentInventory = beforeNativeHistoryCheckoutSource(inventoryPath, await readFile(inventoryPath, "utf8"), record.updates.find(item => item.path === inventoryPath).currentSha256);
+	assert.deepEqual(JSON.parse(currentInventory), expected);
 	assert.equal(expected.evidence.length, 472); assert.equal(expected.observations.length, 571);
 	const boundaryPath = "nix/perl-engine-source-boundary.json";
 	const previousBoundary = JSON.parse(original(boundaryPath)), boundary = JSON.parse(await readFile(boundaryPath, "utf8"));

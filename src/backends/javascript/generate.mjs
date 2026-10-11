@@ -26,7 +26,7 @@ const fail = (code, message, details = {}) => {
 const quote = value => JSON.stringify(value);
 const namedTypeId = typeRef => (typeRef.kind === "named" ? typeRef.id : undefined);
 
-const declarationRefinements = declaration => {
+const declarationRefinements = (declaration, types) => {
 	const value = declaration.source.extensions["lean-lang.org/refinements"];
 	if(value === undefined) return { parameters: declaration.parameters.map(() => null), result: null };
 	if(value === null || typeof value !== "object" || Array.isArray(value)
@@ -35,8 +35,8 @@ const declarationRefinements = declaration => {
 		fail("invalid-refinement", `${declaration.id} has malformed refinement metadata`);
 	try
 	{
-		value.parameters.forEach((refinement, index) => assertRefinement(refinement, declaration.parameters[index].type));
-		assertRefinement(value.result, declaration.result.type);
+		value.parameters.forEach((refinement, index) => assertRefinement(refinement, declaration.parameters[index].type, 0, true, types));
+		assertRefinement(value.result, declaration.result.type, 0, true, types, true);
 	}
 	catch(error)
 	{ fail("invalid-refinement", `${declaration.id}: ${error.message}`); }
@@ -480,7 +480,7 @@ const emitDeclarations = (ir, typeMap) => {
 			for(const branch of dispatch.branches)
 			{
 				const target = overloads.find(item => item.id === branch.declarationId);
-				const refinements = declarationRefinements(target);
+				const refinements = declarationRefinements(target, ir.types);
 				output.push(`    case ${branch.arity}: {`);
 				if(target.parameters.length > 0)
 				{
@@ -551,7 +551,7 @@ const emitDeclarations = (ir, typeMap) => {
 			continue;
 		}
 		ensureSupportedGenerics(declaration);
-		const refinements = declarationRefinements(declaration);
+		const refinements = declarationRefinements(declaration, ir.types);
 		const asyncPrefix = declaration.resultMode === "promise" ? "async " : "";
 		output.push(docComment(declaration.documentation));
 		output.push(
@@ -616,10 +616,17 @@ const validatorName = (typeRef, typeMap) => {
 };
 
 const emitValidators = (ir, typeMap) => {
-	const subtype = tree => tree?.kind === "subtype" || (tree?.arguments ?? []).some(subtype);
+	const subtype = tree => tree?.kind === "subtype" || (tree?.arguments ?? []).some(subtype)
+		|| (tree?.fields ?? []).some(field => subtype(field.refinement))
+		|| (tree?.cases ?? []).some(branch => branch.fields.some(field => subtype(field.refinement)));
+	const nominal = tree => ["record", "variant"].includes(tree?.kind) || (tree?.arguments ?? []).some(nominal);
+	const nominalSites = ir.declarations.some(item => {
+		const value = declarationRefinements(item, ir.types);
+		return [...value.parameters, value.result].some(nominal);
+	});
 	const structuralSubtype = ir.declarations.some(item => {
-		const value = declarationRefinements(item);
-		return [...value.parameters, value.result].some(tree => tree?.arguments && subtype(tree));
+		const value = declarationRefinements(item, ir.types);
+		return [...value.parameters, value.result].some(tree => (tree?.arguments || nominal(tree)) && subtype(tree));
 	});
 	const lines = [
 		"// Generated copied-value validators. This file is package-internal."
@@ -641,12 +648,19 @@ const emitValidators = (ir, typeMap) => {
 		, "export const assertNat = (value, path) => { assertBigInt(value, path); if (value < 0n) invalid(path, \"non-negative bigint\"); return value; };"
 		, "export const assertFin = (value, bound, path) => { assertNat(value, path); if (value >= BigInt(bound)) invalid(path, `bigint below ${bound}`); return value; };"
 		, ...(nominalRefinementEntries(ir.types).length || ir.types.some(type => type.kind === "callback" && callbackDefinitionRefinement(type)) || ir.declarations.some(item => {
-			const value = declarationRefinements(item);
+			const value = declarationRefinements(item, ir.types);
 			return [...value.parameters, value.result].some(refinement => refinement && !["fin", "subtype", "checked-record"].includes(refinement.kind));
 		})) ? [
 				"export const assertNestedFin = (value, refinement, path) => {"
 				, structuralSubtype ? "  if (refinement === null || refinement.kind === 'subtype') return;" : "  if (refinement === null) return;"
 				, "  if (refinement.kind === 'fin') { assertFin(value, refinement.bound, path); return; }"
+				, ...nominalSites ? [
+					"  if (refinement.kind === 'record' || refinement.kind === 'variant') {"
+					, "    const fields = refinement.kind === 'record' ? refinement.fields : refinement.cases.find(branch => branch.name === value.kind).fields;"
+					, "    for (const field of fields) assertNestedFin(value[field.name], field.refinement, path + '.' + field.name);"
+					, "    return;"
+					, "  }"
+				] : []
 				, "  const child = (index, value, suffix) => assertNestedFin(value, refinement.arguments[index], path + suffix);"
 				, "  if (refinement.kind === 'array' || refinement.kind === 'list') { value.forEach((item, index) => child(0, item, '[' + index + ']')); return; }"
 				, "  if (refinement.kind === 'option') { if (value.tag === 'some') child(0, value.value, '.value'); return; }"

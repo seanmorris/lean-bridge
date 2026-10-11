@@ -38,12 +38,13 @@ record installed top-level primitive-base parameters and results. The later
 `Array`, `List`, `Option`, products and `Except` on both source routes across
 all seventeen profiles. Each present leaf keeps its selected constructor and
 normalization, including through transparent aliases and the tested closed
-`List` specialization. Native acyclic plain record and variant fields now have
-[fresh compiler coverage](../evidence/nominal-subtype-native-20261011.md), with
-constructor choices attached to each use rather than to the shared type.
-[Constructor-free native results](../evidence/subtype-result-20261011.md) also
-pass fresh compilation. Installed acceptance for these additions is pending;
-component carriers, refined callbacks and owned Subtypes remain unfinished.
+`List` specialization. Acyclic plain record and variant fields have
+[native](../evidence/nominal-subtype-native-20261011.md) and
+[component](../evidence/component-nominal-subtype-20261011.md) compiler checks,
+with constructor choices attached to each use rather than to the shared type.
+Both compiler paths also project constructor-free results. Installed acceptance
+for these additions is pending. Refined callbacks, owned and recursive Subtypes,
+and Subtype fields in generic records remain unfinished.
 
 ### Select constructors inside containers
 
@@ -124,8 +125,9 @@ refinement trees and reconcile them against fresh Lean metadata.
 ### Select constructors in native records
 
 This native compiler-stage example uses a copied record with a Subtype field
-and a Fin sibling. Its installed-package acceptance is pending; npm and
-PHP-Wasm do not yet admit these fields. Save `NominalSubtypes.lean`:
+and a Fin sibling. The shared component compiler now admits the same field
+choices and result projections. Installed-package acceptance for native, npm
+and PHP-Wasm packages is pending. Save `NominalSubtypes.lean`:
 
 ```lean
 namespace NominalSubtypes

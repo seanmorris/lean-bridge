@@ -8,10 +8,11 @@ import { componentScalarTypes, assertComponentSignature } from "../abi/component
 import { generateComponentScalarAdapters } from "./component-scalar-adapters.mjs";
 import { assertComponentCopiedBindings, componentCopiedAbi, componentCopiedDispatch } from "../abi/component-copied.mjs";
 import { sha256 } from "../capsule/node.mjs";
-import { nominalRefinementEntries, callbackDefinitionRefinement } from "../abi/refinements.mjs";
+import { assertRefinement, nominalRefinementEntries, callbackDefinitionRefinement } from "../abi/refinements.mjs";
 import { componentRecordAbi, componentRecordDispatch, componentCompoundAbi, componentCompoundDispatch, componentNominalAbi, componentNominalDispatch, componentRecordDefinitions, assertComponentRecordBindings } from "../abi/component-records.mjs";
 import { componentRecursiveAbi, componentRecursiveDispatch, assertComponentRecursiveBindings } from "../abi/component-recursive-abi.mjs";
 import { componentStructuredCallableAbi, componentStructuredCallableDispatch, componentStructuredCallableSignatureText, assertComponentStructuredCallableBindings } from "../abi/component-structured-callables.mjs";
+import { hasComponentNominalRefinements } from "./component-refinement-mirrors.mjs";
 
 /**
  * Derive private scalar, copied-value or copied-payload callable protocols.
@@ -19,6 +20,20 @@ import { componentStructuredCallableAbi, componentStructuredCallableDispatch, co
  * @param document - Validated compiler-owned Binding IR.
  */
 export const createComponentPrivateAbi = document => {
+	let selectedNominal = false;
+	// Check original public provenance before reducing definitions to private transport layouts.
+	// A private descriptor cannot establish whether a record came from an unsupported instantiation.
+	for(const declaration of document.declarations)
+	{
+		const value = declaration.source.extensions["lean-lang.org/refinements"];
+		if(value === undefined) continue;
+		if(!value || typeof value !== "object" || Array.isArray(value)
+			|| Object.keys(value).sort().join(",") !== "parameters,result" || !Array.isArray(value.parameters)
+			|| value.parameters.length !== declaration.parameters.length) throw new TypeError("Invalid component export refinements");
+		value.parameters.forEach((tree, index) => assertRefinement(tree, declaration.parameters[index].type, 0, true, document.types));
+		assertRefinement(value.result, declaration.result.type, 0, true, document.types, true);
+		selectedNominal ||= [...value.parameters, value.result].some(tree => hasComponentNominalRefinements(tree));
+	}
 	const records = document.types.some(type => type.kind === "record");
 	const nominal = document.types.some(type => ["alias", "variant"].includes(type.kind));
 	const compound = type => type.kind === "apply" && (type.constructor !== "array" || type.arguments.some(compound));
@@ -27,9 +42,11 @@ export const createComponentPrivateAbi = document => {
 	const copied = document.declarations.some(item => [...item.parameters.map(p => p.type), item.result.type].some(type => type.kind === "apply"));
 	const callbackTypes = document.types.filter(type => type.kind === "callback");
 	// Checked records cross only as payload mirrors, which the recursive graph carriers generate.
-	if(document.types.some(type => Object.hasOwn(type.source?.extensions ?? {}, "lean-lang.org/erased-proofs")))
+	if(selectedNominal || document.types.some(type => Object.hasOwn(type.source?.extensions ?? {}, "lean-lang.org/erased-proofs")))
 	{
-		if(callbackTypes.length) throw new TypeError("Checked records cannot share a component with callbacks yet");
+		if(callbackTypes.length) throw new TypeError(selectedNominal
+			? "Nominal Subtype selections cannot share a component with callbacks yet"
+			: "Checked records cannot share a component with callbacks yet");
 		const exports = document.declarations.map(declaration => ({ bindingId: declaration.id
 			, symbol: `lean_bridge_${sha256(`${document.component.id}\0${declaration.id}`).slice(0, 24)}`
 			, parameters: declaration.parameters.map(parameter => parameter.type)

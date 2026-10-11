@@ -33,6 +33,7 @@ import { nominalSubtypeAuthorChangedPaths } from "./nominal-subtype-author-histo
 import { componentRefinementMirrorChangedPaths } from "./component-refinement-mirror-history.mjs";
 import { jvmPendingExitChangedPaths } from "./jvm-pending-exit-history.mjs";
 import { nativeHistoryCheckoutChangedPaths } from "./native-history-checkout-history.mjs";
+import { componentNominalSubtypeChangedPaths } from "./component-nominal-subtype-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeSubtypeRefinementSource, subtypeRefinementChangedPaths } from "./subtype-refinement-source-history.mjs";
 import { subtypeHeapChangedPaths } from "./subtype-heap-source-history.mjs";
@@ -931,6 +932,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...componentRefinementMirrorChangedPaths
 	, ...jvmPendingExitChangedPaths
 	, ...nativeHistoryCheckoutChangedPaths
+	, ...componentNominalSubtypeChangedPaths
 ])].sort());
 
 /**

@@ -25,27 +25,27 @@ const example = async () => {
 		, configuration: JSON.parse(section.match(/```json\n([^]*?)\n```/u)[1]) };
 };
 
-test("native nominal Subtype author guides distinguish compilation, installed support and result direction", async () => {
+test("nominal Subtype author guides distinguish compilation, installed support and result direction", async () => {
 	const author = await readFile("docs/lean/existing-package.md", "utf8"), { section } = await example();
 	assert.doesNotMatch(author, /For a top-level `Subtype` parameter or result, provide|Name that constructor at every refined boundary site|Nominal-field and refined callback Subtypes remain unsupported/u);
-	for(const text of ["Native copied results do not need an input constructor"
-		, "installed acceptance is pending"
-		, "npm and PHP-Wasm still require a result constructor selection"
+	for(const text of ["Copied results do not need an input constructor"
+		, "installed acceptance for these additions is pending"
+		, "shared component compiler no longer requires a result constructor selection"
 		, "its constructor-selection syntax does not accept a null constructor"
-		, "nominal-subtype-native-20261011.md", "subtype-result-20261011.md"])
+		, "nominal-subtype-native-20261011.md", "subtype-result-20261011.md"
+		, "component-nominal-subtype-20261011.md"])
 		assert.ok(author.includes(text), text);
 	for(const prefix of ["| `Subtype` in acyclic", "| Lean-produced `Subtype` result without"])
 	{
 		const row = author.split("\n").find(line => line.startsWith(prefix));
 		assert.ok(row);
-		assert.equal((row.match(/Generated; pending/gu) ?? []).length, 2);
-		assert.ok(row.includes("| Rejected |"));
+		assert.equal((row.match(/Generated; pending/gu) ?? []).length, 4);
 		assert.doesNotMatch(row, /Installed/u);
 	}
 	assert.ok(section.includes("`NominalSubtypes.lean`"));
 	assert.ok(section.includes("`lean-bridge.exports.json`"));
 	assert.ok(section.includes("Only the active case runs its constructors"));
-	assert.ok(section.includes("Installed") === false);
+	assert.match(section, /Installed-package acceptance for native, npm\nand PHP-Wasm packages is pending/u);
 });
 
 test("the native nominal author configuration selects only the input and preserves its Fin sibling", async () => {

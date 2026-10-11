@@ -106,8 +106,9 @@ test("nominal native documentation preserves each constructor and every sibling 
 	const changed = structuredClone(document), item = declaration(changed, "first");
 	item.source.extensions[key].parameters[0].fields[1].refinement.bound = "4";
 	assert.throws(() => nativeFinRefinements(item, changed.types), /conflicts with shared nominal bounds/u);
-	// The component model still needs its own erased nominal carriers.
-	assert.throws(() => generateJavaScriptPackage(document), /Refinement does not match/u);
+	const javascript = generateJavaScriptPackage(document);
+	assert.match(javascript["internal/validators.mjs"], /refinement\.cases\.find/u);
+	assert.match(javascript["index.mjs"], /validate\.assertNestedFin/u);
 });
 
 test("nominal C and Perl guards check Fin first and only enter the active variant case", () => {

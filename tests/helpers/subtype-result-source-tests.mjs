@@ -27,6 +27,7 @@ import { generateNativePrimitiveC } from "../../src/backends/c/native-primitives
 import { brokerHeader } from "../../src/backends/native/runtime-broker.mjs";
 import { nativeCallbackHeader } from "../../src/build/native-component.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
+import { checkComponentSubtypeSource, resultComponentAssertions } from "./component-nominal-subtype-source.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_SUBTYPE_RESULT_SOURCE_TEST === "1"
 	|| process.env.LEAN_BRIDGE_STRUCTURAL_SUBTYPE_EXTRACTOR_TEST === "1"
@@ -47,8 +48,9 @@ test("fresh Lean projects constructor-free native Subtype results and retains in
 	const run = async (args, command = lean) => {
 		try
 		{
-			const result = await promisify(execFile)(command, args, { cwd: directory, env: environment, maxBuffer: 16 * 1024 * 1024, signal: t.signal });
-			commands.push({ command: command === lean ? "lean" : command, arguments: args.map(value => value === extractor ? "src/analyze/NativeExports.lean" : value), ...result });
+			const invocation = command === lean ? ["-j1", ...args] : args;
+			const result = await promisify(execFile)(command, invocation, { cwd: directory, env: environment, maxBuffer: 16 * 1024 * 1024, signal: t.signal });
+			commands.push({ command: command === lean ? "lean" : command, arguments: invocation.map(value => value === extractor ? "src/analyze/NativeExports.lean" : value), ...result });
 			return result;
 		}
 		catch(error)
@@ -169,6 +171,12 @@ test("fresh Lean projects constructor-free native Subtype results and retains in
 		await run(["-std=c++20", "-Wall", "-Wextra", "-Werror", "-fsyntax-only", "-I", join(directory, "include"), "src/subtype_results.cpp"], "/usr/bin/c++");
 		if(reports) for(const [suffix, value] of [["lean", adapter], ["c", native], ["model.json", canonicalJson(model)]]) await writeFile(join(reports, `${route}-adapters.${suffix}`), value, { flag: "wx" });
 		observations.push({ route, leanAssertions: checks.length, cSyntax: true, cppSyntax: true, adapterSha256: sha256(adapter), nativeSha256: sha256(native), modelSha256: sha256(canonicalJson(model)) });
+		const componentRoute = `component-${route}`;
+		const component = await extract(componentRoute, { ...selection, profile: "component-scalars-v1" }, review);
+		assert.ok([...component.projections.values()].every(projection => projection.status === "supported"));
+		observations.push(await checkComponentSubtypeSource({ ...component
+			, context, directory, reports, route: componentRoute, run, review, expected
+			, assertions: call => resultComponentAssertions(call, mixed) }));
 	}
 	const refusedNames = ["uncheckedInput", "uncheckedEnvelope", "callbackResult", "genericResult", "recursiveResult", "checkedResult"];
 	const refused = await extract("refusals", { exports: refusedNames.map(name => `NominalResults.${name}`), arities: [["NominalResults.callbackResult", 1]] });
@@ -178,7 +186,7 @@ test("fresh Lean projects constructor-free native Subtype results and retains in
 	assert.ok([...control.projections.values()].every(projection => projection.status === "supported"));
 	assert.equal(control.projections.get("NominalResults.plainRecursive").result.kind, "graph");
 	assert.deepEqual(control.projections.get("NominalResults.finOnly").result.fields[0].type.predicate, { kind: "fin", bound: "3" });
-	const component = await extract("component-refusals", { profile: "component-scalars-v1", exports: authored.declarations.map(item => item.source.declaration) });
+	const component = await extract("component-refusals", { profile: "component-scalars-v1", exports: refusedNames.map(name => `NominalResults.${name}`), arities: [["NominalResults.callbackResult", 1]] });
 	assert.ok([...component.projections.values()].every(projection => projection.status === "unsupported"));
 	if(reports) await writeFile(join(reports, "report.json"), canonicalJson({ schemaVersion: 1, context, observations, commands, installedSupport: false }), { flag: "wx" });
 	complete = true;
