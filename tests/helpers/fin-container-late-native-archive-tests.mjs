@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { finLateNativeArchive, readFinLateNativeArchive } from "./fin-container-late-native-archive.mjs";
+import "./fin-container-hosted-tests.mjs";
 
 test("complete native late-input archive binds all nine hosts, both Python floors and original runs", async () => {
 	const { index, files } = await readFinLateNativeArchive();
