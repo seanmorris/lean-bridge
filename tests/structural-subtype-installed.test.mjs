@@ -36,6 +36,8 @@ import "./helpers/structural-subtype-dotnet-tests.mjs";
 import "./helpers/structural-subtype-dotnet-installed-tests.mjs";
 import "./helpers/structural-subtype-jvm-tests.mjs";
 import "./helpers/structural-subtype-jvm-installed-tests.mjs";
+import "./helpers/structural-subtype-php-tests.mjs";
+import "./helpers/structural-subtype-php-installed-tests.mjs";
 
 const profiles = process.env.LEAN_BRIDGE_STRUCTURAL_SUBTYPE_PROFILES?.split(",") ?? [];
 assert.ok(profiles.every(profile => ["c", "cpp"].includes(profile)), "Select implemented native installed profiles explicitly");
