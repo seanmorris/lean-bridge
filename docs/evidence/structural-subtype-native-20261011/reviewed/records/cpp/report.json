@@ -1,0 +1,53 @@
+{
+  "checks": 4047,
+  "compilerFreePath": true,
+  "compilerFreeReplay": true,
+  "consumerSha256": "4f955305c2b0b5d272a0d68f21056a1085dde6d38fe50b17f9a453f62af33ff4",
+  "dispatch": {
+    "observed": false,
+    "reason": "Separate constructor/source entry probe remains required"
+  },
+  "executableSha256": "20ddbfcfe20dd371d13783435f6888d60fc27c88767ef6fe8358972785d6140e",
+  "offlineInstall": true,
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51820720,
+          "path": "archives/structuralsubtypes-1.0.0-cpp.tar.gz",
+          "sha256": "48e12004c0d9e4406bc7df4b5683a567f0c505aba9069cc1301625cc7953fdd6"
+        }
+      ],
+      "ecosystem": "cpp",
+      "name": "structuralsubtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "cpp",
+      "version": "1.0.0"
+    }
+  ],
+  "profile": "cpp",
+  "relocatedInstallation": true,
+  "runs": [
+    {
+      "code": 0,
+      "packageFileSetSha256": "58aa73b1f57274df4d122d54ca4f4430f25929e97130973f9c090459aeb03418",
+      "receiptSha256": "4af8ad96f7c8b1f11cf772d7b1fb44cbe904daf8d410ecc82cdc466c8b46ad6e",
+      "relocated": false,
+      "stderr": "",
+      "stdout": "structural-subtype-ok:4047\n"
+    },
+    {
+      "code": 0,
+      "packageFileSetSha256": "58aa73b1f57274df4d122d54ca4f4430f25929e97130973f9c090459aeb03418",
+      "receiptSha256": "4af8ad96f7c8b1f11cf772d7b1fb44cbe904daf8d410ecc82cdc466c8b46ad6e",
+      "relocated": true,
+      "stderr": "",
+      "stdout": "structural-subtype-ok:4047\n"
+    }
+  ],
+  "sourceRemovedBeforeInstallation": true
+}

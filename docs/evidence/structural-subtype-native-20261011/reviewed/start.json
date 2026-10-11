@@ -1,0 +1,26 @@
+{
+  "revision": "d3f12b2afe15973e58d66de81c7646e4b2020bdb",
+  "route": "reviewed",
+  "started": "2026-10-11T06:09:14.435Z",
+  "runnerSha256": "e7c13fc2bde60931d1d4f903f712fd6292d75c542e829628360717220ccb9be4",
+  "command": "/usr/bin/taskset",
+  "args": [
+    "-c",
+    "3",
+    "/usr/bin/node",
+    "--test",
+    "--test-concurrency=1",
+    "tests/structural-subtype-installed.test.mjs"
+  ],
+  "environment": {
+    "LEAN_BRIDGE_STRUCTURAL_SUBTYPE_PROFILES": "c,cpp",
+    "LEAN_BRIDGE_STRUCTURAL_SUBTYPE_ROUTES": "reviewed",
+    "LEAN_BRIDGE_STRUCTURAL_SUBTYPE_OUTPUT": "build/vo1444-structural-native-reviewed-r1-d3f12b2-records",
+    "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+    "LEAN_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MAKEFLAGS": "-j1"
+  },
+  "minimumMiB": 11193
+}
