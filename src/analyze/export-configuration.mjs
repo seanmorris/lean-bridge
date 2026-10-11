@@ -11,6 +11,7 @@ import { validateOrdinaryPhpSettings } from "../backends/php/copied-model.mjs";
 import { validateGeneratorConfiguration } from "./generator-configuration.mjs";
 import { validatePackageMetadata } from "./package-metadata.mjs";
 import { validateOwnedAggregatePolicy } from "./owned-aggregate-policy.mjs";
+import { validateCheckedRefinementSelection } from "./checked-refinement-selection.mjs";
 
 export const exportConfigurationFile = "lean-bridge.exports.json";
 const legacyFile = "lean-bridge.native.json";
@@ -120,9 +121,10 @@ export const validateExportConfiguration = configuration => {
 				}
 				if(site.refinement !== undefined && site.refinement !== "reject")
 				{
-					closed(site.refinement, ["constructor"], `Contract ${name} checked refinement`);
-					if(typeof site.refinement.constructor !== "string" || !specializationName.test(site.refinement.constructor))
-						fail("invalid-export-configuration", `Contract ${name} refinement needs a checked constructor name`);
+					try
+					{ validateCheckedRefinementSelection(site.refinement); }
+					catch(error)
+					{ fail("invalid-export-configuration", `Contract ${name}: ${error.message}`); }
 				}
 				if(site.callable !== undefined)
 				{

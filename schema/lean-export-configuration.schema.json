@@ -137,12 +137,32 @@
         "callable": {"$ref": "#/$defs/callableContract"},
         "refinement": {"oneOf": [
           {"const": "reject"},
-          {"type": "object", "additionalProperties": false, "required": ["constructor"], "properties": {"constructor": {"$ref": "#/$defs/specializationName"}}}
+          {"$ref": "#/$defs/checkedRefinementSelection"}
         ]}
       },
       "if": {"properties": {"ownership": {"const": "copy"}}},
       "then": {"properties": {"lifetime": {"type": "null"}}},
       "else": {"properties": {"lifetime": {"$ref": "#/$defs/contractLifetime"}}}
+    },
+    "checkedRefinementSelection": {
+      "description": "Constructor choices only. Structural arguments use transport order, including [success, error] for result. A null child selects no constructor and does not erase compiler-owned Fin bounds. The configuration reader enforces 32 edges and 4096 visited nodes; fresh Lean must independently check each selection against the source type.",
+      "oneOf": [
+        {"type": "object", "additionalProperties": false, "required": ["constructor"], "properties": {"constructor": {"$ref": "#/$defs/specializationName"}}},
+        {
+          "type": "object", "additionalProperties": false, "required": ["kind", "arguments"],
+          "properties": {
+            "kind": {"enum": ["array", "list", "option", "tuple", "result"]},
+            "arguments": {
+              "type": "array", "minItems": 1, "maxItems": 2,
+              "items": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/checkedRefinementSelection"}]},
+              "contains": {"not": {"type": "null"}}, "minContains": 1
+            }
+          },
+          "if": {"properties": {"kind": {"enum": ["array", "list", "option"]}}},
+          "then": {"properties": {"arguments": {"maxItems": 1}}},
+          "else": {"properties": {"arguments": {"minItems": 2}}}
+        }
+      ]
     },
     "callableContract": {
       "type": "object", "additionalProperties": false, "minProperties": 1,

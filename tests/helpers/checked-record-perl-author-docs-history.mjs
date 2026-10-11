@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeStructuralSubtypeSelectionSource } from "./structural-subtype-selection-history.mjs";
 
 export const perlAuthorDocsHistoryPath = "docs/evidence/checked-record-perl-author-docs-source-history-20261011.json";
 export const perlAuthorDocsPredecessor = "20539c53406f365d90e07251fd141c14ebf5fb0e";
@@ -50,6 +51,7 @@ export const reversePerlAuthorDocsUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforePerlAuthorDocsSource = (path, source, expected) => {
+	source = beforeStructuralSubtypeSelectionSource(path, source, expected);
 	if(typeof source !== "string" || !perlAuthorDocsChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

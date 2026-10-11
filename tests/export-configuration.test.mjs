@@ -4,6 +4,8 @@
  * @file
  */
 import assert from "node:assert/strict";
+import "./helpers/checked-refinement-selection-tests.mjs";
+import "./helpers/structural-subtype-selection-history-tests.mjs";
 import { access, cp, mkdtemp, readFile, readdir, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
