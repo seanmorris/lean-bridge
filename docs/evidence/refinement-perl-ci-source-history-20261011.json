@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "milestone": "refinement-perl-ci-v1",
+  "predecessorCommit": "0f0baca890a48ae2a0e1170746a39c1e13f3c5f4",
+  "updates": [
+    {
+      "path": "tests/helpers/checked-record-perl-installed-history.mjs",
+      "currentSha256": "2d3b019c2f40da042bb022948295b7f0df7a86d749e17e5d3b5920a482b20e0d",
+      "previousSha256": "3cbe79cdea25973a45633a11bd649f092c0c7d99bb87a10f5dd25cc88d16b6aa",
+      "edits": [
+        {
+          "start": 244,
+          "previous": "",
+          "current": "import { beforeRefinementPerlCiSource } from \"./refinement-perl-ci-history.mjs\";\n"
+        },
+        {
+          "start": 2273,
+          "previous": "",
+          "current": "\tsource = beforeRefinementPerlCiSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/native-fin-products.test.mjs",
+      "currentSha256": "a13c998c41d6cce32e07a90754b62d0ea5f37ef01c24b29d89bd91c1773e1aba",
+      "previousSha256": "16f8effeedc7535c51a8a2da73bccb6a97cfcbbd78b2a9b1453db7ec5bde83eb",
+      "edits": [
+        {
+          "start": 1527,
+          "previous": "",
+          "current": "import \"./helpers/refinement-perl-ci-history-tests.mjs\";\n"
+        },
+        {
+          "start": 6030,
+          "previous": "\t// Packages without product or result bounds keep their earlier sentences byte for byte.\n",
+          "current": "\t// Structural-only documentation retains its paths without excluding supported reviewed IR.\n"
+        },
+        {
+          "start": 6584,
+          "previous": "\t\t, \"Fin inside arrays, lists and options is checked element by element before Lean runs; an empty array or an absent option is valid even for Fin 0. Bounds below list every element as name[*] and a present option value as name?. Fin inside records, variants, callbacks or reviewed Binding IR is not supported in Ruby gems.\");\n",
+          "current": "\t\t, \"Fin inside arrays, lists and options is checked element by element before Lean runs; an empty array or an absent option is valid even for Fin 0. Bounds below list every element as name[*] and a present option value as name?. Fin inside records, variants or callbacks is not supported in Ruby gems.\");\n"
+        }
+      ]
+    }
+  ]
+}

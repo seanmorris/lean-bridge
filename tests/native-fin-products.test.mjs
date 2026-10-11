@@ -22,6 +22,7 @@ import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
 import "./helpers/fin-products-source-history-tests.mjs";
 import "./helpers/fin-products-ci-source-history-tests.mjs";
 import "./helpers/fin-products-floors-source-history-tests.mjs";
+import "./helpers/refinement-perl-ci-history-tests.mjs";
 import { createNativeModel, generateNativeLeanAdapters } from "../src/build/native-model.mjs";
 import { compilePrimitiveCSurface } from "../src/backends/c/primitive-surface.mjs";
 import { generateCopiedNativeCalls } from "../src/backends/c/native-copied-values.mjs";
@@ -72,12 +73,12 @@ test("documentation paths name product components and the active Except branch",
 	const tree = { kind: "list", arguments: [{ kind: "option", arguments: [{ kind: "tuple", arguments: [leaf("3"), { kind: "result", arguments: [leaf("5"), leaf("2")] }] }] }] };
 	assert.deepEqual(nativeFinBoundPaths(tree, "arg0"), ["arg0[*]?.0 < 3", "arg0[*]?.1.ok < 5", "arg0[*]?.1.error < 2"]);
 	assert.deepEqual(nativeFinBoundPaths({ kind: "result", arguments: [null, leaf("1")] }, "result"), ["result.error < 1"]);
-	// Packages without product or result bounds keep their earlier sentences byte for byte.
+	// Structural-only documentation retains its paths without excluding supported reviewed IR.
 	const natType = { kind: "primitive", name: "nat" };
 	const parameters = [{ type: { kind: "apply", constructor: "array", arguments: [natType] } }];
 	const declaration = refinements => ({ id: "lean:Sample.f", parameters, result: { type: natType }, source: { extensions: { "lean-lang.org/refinements": refinements } } });
 	assert.equal(nativeFinContainerNote([declaration({ parameters: [{ kind: "array", arguments: [leaf("10")] }], result: null })], "Ruby gems")
-		, "Fin inside arrays, lists and options is checked element by element before Lean runs; an empty array or an absent option is valid even for Fin 0. Bounds below list every element as name[*] and a present option value as name?. Fin inside records, variants, callbacks or reviewed Binding IR is not supported in Ruby gems.");
+		, "Fin inside arrays, lists and options is checked element by element before Lean runs; an empty array or an absent option is valid even for Fin 0. Bounds below list every element as name[*] and a present option value as name?. Fin inside records, variants or callbacks is not supported in Ruby gems.");
 	const ir = mixed().bindingIr;
 	const note = nativeFinContainerNote(ir.declarations, "Ruby gems");
 	assert.match(note, /^Fin inside arrays, lists, options, products and Except values is checked before Lean runs: /);
