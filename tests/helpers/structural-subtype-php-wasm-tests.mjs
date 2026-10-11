@@ -16,6 +16,7 @@ import { adaptStructuralSubtypePhpWasm, structuralSubtypePhpWasmCaller, structur
 import { phpWasmExecutionTuples } from "./php-wasm-fin-fixtures.mjs";
 import { runCopied } from "./copied-fixture-install.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
+import "./structural-subtype-php-wasm-evidence-tests.mjs";
 
 test("structural PHP-Wasm preserves every native assertion and both independent author routes", async () => {
 	for(const route of ["ordinary", "reviewed"])

@@ -1,0 +1,43 @@
+{
+  "arrangement": "embedded",
+  "loading": "startup",
+  "mode": "strict",
+  "observation": {
+    "checks": 4119,
+    "php": "8.4.1",
+    "rejections": 1042,
+    "snapshotControls": 6,
+    "word_bits": 32
+  },
+  "phases": [
+    {
+      "libraries": [
+        "php8.4-lb_structuralsubtypes_1c7393a665ab3d62.so",
+        "liblean_bridge_php_wasm_copied_abe4dea500dab9519b8d.so"
+      ],
+      "stage": "ready"
+    },
+    {
+      "libraries": [
+        "php8.4-lb_structuralsubtypes_1c7393a665ab3d62.so",
+        "liblean_bridge_php_wasm_copied_abe4dea500dab9519b8d.so"
+      ],
+      "stage": "autoload"
+    },
+    {
+      "libraries": [
+        "php8.4-lb_structuralsubtypes_1c7393a665ab3d62.so",
+        "liblean_bridge_php_wasm_copied_abe4dea500dab9519b8d.so"
+      ],
+      "stage": "invalid"
+    },
+    {
+      "libraries": [
+        "php8.4-lb_structuralsubtypes_1c7393a665ab3d62.so",
+        "liblean_bridge_php_wasm_copied_abe4dea500dab9519b8d.so"
+      ],
+      "stage": "complete"
+    }
+  ],
+  "realm": "node"
+}
