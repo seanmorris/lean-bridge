@@ -1,0 +1,44 @@
+{
+  "component": {
+    "id": "structuralsubtypes@1.0.0",
+    "name": "structuralsubtypes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51480936,
+          "path": "archives/structuralsubtypes-1.0.0.jar",
+          "sha256": "9c98cf9165467bbfe9a459deb3aed08180af6938b8e6b7c79903fbf95be860ff"
+        },
+        {
+          "bytes": 628,
+          "path": "archives/structuralsubtypes-1.0.0.pom",
+          "sha256": "dfb79cfdea80cfaca727d027e1fb25dbbeabff4eea3e776de668f897156b5a3f"
+        }
+      ],
+      "ecosystem": "maven",
+      "name": "org.leanbridge:structuralsubtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "maven",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "89b3e068ab5ec614755e994d069e3348634b9976b3c0e6a7a8fc2e2cd03270bd",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "3b47d20aedbb2195e1cf39e60822f301492125b1a8baa4c0088a0fa76ebb4552"
+  }
+}

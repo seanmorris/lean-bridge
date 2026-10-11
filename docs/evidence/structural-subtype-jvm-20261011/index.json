@@ -1,0 +1,453 @@
+{
+  "files": [
+    {
+      "bytes": 12055,
+      "path": "checker.mjs",
+      "sha256": "0ad0155324bed2c3d3f7aa7e060d52a6d83392403907bde429a52245b836f23d"
+    },
+    {
+      "bytes": 203,
+      "path": "ordinary/end.json",
+      "sha256": "ef47e47a39e3016db5d331ac20b07fb65f3f575787b45b7dec1d5d86739499f6"
+    },
+    {
+      "bytes": 131809,
+      "path": "ordinary/records/build-0/model.json",
+      "sha256": "7f6b99cddc350e640ca39008076c361e024254ceaeabb490c655ef0a97ebfd33"
+    },
+    {
+      "bytes": 16673,
+      "path": "ordinary/records/build-0/native-jvm.json",
+      "sha256": "48e70d5e352d198a6fba04117f598b80693a9db931d718aa06acfb6a2a276f5c"
+    },
+    {
+      "bytes": 1337,
+      "path": "ordinary/records/build-0/package-set-receipt.json",
+      "sha256": "ffb4daa8031cc424e1f630afb9141358349c25bf75faddecece01816f746241d"
+    },
+    {
+      "bytes": 2349,
+      "path": "ordinary/records/build-0/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 131809,
+      "path": "ordinary/records/build-1/model.json",
+      "sha256": "7f6b99cddc350e640ca39008076c361e024254ceaeabb490c655ef0a97ebfd33"
+    },
+    {
+      "bytes": 16673,
+      "path": "ordinary/records/build-1/native-jvm.json",
+      "sha256": "48e70d5e352d198a6fba04117f598b80693a9db931d718aa06acfb6a2a276f5c"
+    },
+    {
+      "bytes": 1337,
+      "path": "ordinary/records/build-1/package-set-receipt.json",
+      "sha256": "ffb4daa8031cc424e1f630afb9141358349c25bf75faddecece01816f746241d"
+    },
+    {
+      "bytes": 2349,
+      "path": "ordinary/records/build-1/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 11195,
+      "path": "ordinary/records/configuration.json",
+      "sha256": "34a56cb82f68d88a7dc25547839d1ee00d3ba72e2e6d514acd7d5958f09ec471"
+    },
+    {
+      "bytes": 10670,
+      "path": "ordinary/records/consumer.java",
+      "sha256": "7bf6e5ff3fa29dd3ba99ab24de8462b64505725714cf1be9eb02e975a4b86139"
+    },
+    {
+      "bytes": 8413,
+      "path": "ordinary/records/consumer.kt",
+      "sha256": "9d7aa11c5bd5ee6e6cbde812678f0f4bef93397813c6b921fa5fc7caa12c4855"
+    },
+    {
+      "bytes": 34558,
+      "path": "ordinary/records/expected.binding-ir.json",
+      "sha256": "fcb7bfa656ac6d6262a9773712f02b6c0bd5a08a72483c9ba9225f83fe90c36f"
+    },
+    {
+      "bytes": 635,
+      "path": "ordinary/records/java/installed.json",
+      "sha256": "4455795380b37138a66a5db829c28e283ca02439e27a38c450d1e21e94371e71"
+    },
+    {
+      "bytes": 634,
+      "path": "ordinary/records/java/relocated.json",
+      "sha256": "bb95786a367ac333f960e4a7f8238c7465c8db2580897622fcf68aeea249226c"
+    },
+    {
+      "bytes": 635,
+      "path": "ordinary/records/kotlin/installed.json",
+      "sha256": "dd1f03b395211dffa5ef0e1733f622c36dd82e74e45660bee0ec7f75ad5ac8b8"
+    },
+    {
+      "bytes": 634,
+      "path": "ordinary/records/kotlin/relocated.json",
+      "sha256": "ff23b47d8e6b8a21b022d0adec8c5f7043f5cf2311d5d080262cd188a1e18495"
+    },
+    {
+      "bytes": 111770,
+      "path": "ordinary/records/report.json",
+      "sha256": "c1326741a8559dab99d40d7935c18d335b66a3b21027a451a14711fb28d1742d"
+    },
+    {
+      "bytes": 378,
+      "path": "ordinary/run.tap",
+      "sha256": "5ff646c5fddd804c7157e9a371b735340485139265b6e5c549ef9d4c6b7828ff"
+    },
+    {
+      "bytes": 900,
+      "path": "ordinary/start.json",
+      "sha256": "0691e2abb4ded2c97b66bdb1d20776d618a0efb6d69b745769138567dd72f84c"
+    },
+    {
+      "bytes": 203,
+      "path": "reviewed/end.json",
+      "sha256": "d4f5f4875b29213a52a22a22ace969b107cdcf287a2e19274039625bfd0b424d"
+    },
+    {
+      "bytes": 157754,
+      "path": "reviewed/records/build-0/model.json",
+      "sha256": "a346d4c3a90f0ca99a59b8954b1ee1eddae4aaca74076f593e175c71ed92f8ac"
+    },
+    {
+      "bytes": 16673,
+      "path": "reviewed/records/build-0/native-jvm.json",
+      "sha256": "017aec16919c34a59eab0159c55edef2c1b25abbce0b0580bf85f92f3eb63b21"
+    },
+    {
+      "bytes": 1337,
+      "path": "reviewed/records/build-0/package-set-receipt.json",
+      "sha256": "91bc1ac29fd44b590d7526db6e084855e2bbc79dd0bbae49bb186d8422e114d2"
+    },
+    {
+      "bytes": 2349,
+      "path": "reviewed/records/build-0/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 157754,
+      "path": "reviewed/records/build-1/model.json",
+      "sha256": "a346d4c3a90f0ca99a59b8954b1ee1eddae4aaca74076f593e175c71ed92f8ac"
+    },
+    {
+      "bytes": 16673,
+      "path": "reviewed/records/build-1/native-jvm.json",
+      "sha256": "017aec16919c34a59eab0159c55edef2c1b25abbce0b0580bf85f92f3eb63b21"
+    },
+    {
+      "bytes": 1337,
+      "path": "reviewed/records/build-1/package-set-receipt.json",
+      "sha256": "91bc1ac29fd44b590d7526db6e084855e2bbc79dd0bbae49bb186d8422e114d2"
+    },
+    {
+      "bytes": 2349,
+      "path": "reviewed/records/build-1/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 187,
+      "path": "reviewed/records/configuration.json",
+      "sha256": "76cffa05ec3ce88a34a008d8e99613ea7c6de23501f8a83e8d285769058d6147"
+    },
+    {
+      "bytes": 10700,
+      "path": "reviewed/records/consumer.java",
+      "sha256": "0142d969b62e390115782edbcb3fcd6a2c081f7537ea56635bf572dbc744f4a8"
+    },
+    {
+      "bytes": 8443,
+      "path": "reviewed/records/consumer.kt",
+      "sha256": "37265558430108a73156688990acfd6dcef111f79039b23c1985e5a51294a2ae"
+    },
+    {
+      "bytes": 34558,
+      "path": "reviewed/records/expected.binding-ir.json",
+      "sha256": "fcb7bfa656ac6d6262a9773712f02b6c0bd5a08a72483c9ba9225f83fe90c36f"
+    },
+    {
+      "bytes": 635,
+      "path": "reviewed/records/java/installed.json",
+      "sha256": "1d2e09128d620fc0c24dde110e8843d32926143a82259f620c96174d0509371e"
+    },
+    {
+      "bytes": 634,
+      "path": "reviewed/records/java/relocated.json",
+      "sha256": "0425f72920d48e58807043c1078299b07a4e75c05ac2e9a9d548ffbbc2a98604"
+    },
+    {
+      "bytes": 635,
+      "path": "reviewed/records/kotlin/installed.json",
+      "sha256": "9f458a2e27eb43f43394dec98f70f8fa6b9a24642109a7d5fd75e80ab1237c60"
+    },
+    {
+      "bytes": 634,
+      "path": "reviewed/records/kotlin/relocated.json",
+      "sha256": "342b4eee4b04b61788fd8fc170b0480d7132828b9546a6c849d927ba2b56e7dd"
+    },
+    {
+      "bytes": 161844,
+      "path": "reviewed/records/report.json",
+      "sha256": "2c6eadce82586d6cf11c03ec3411f9c00e25e13da4f0a6501b75a19be37ff3ad"
+    },
+    {
+      "bytes": 378,
+      "path": "reviewed/run.tap",
+      "sha256": "22f0b207078b0cbd644850d08cfd70b41f544b29ea8c0005281d923105904828"
+    },
+    {
+      "bytes": 900,
+      "path": "reviewed/start.json",
+      "sha256": "c9604da20e31abc349d423c5a31b02d9ad7f80363ec7f857ba7ef0604838a373"
+    },
+    {
+      "bytes": 2999,
+      "path": "runner.mjs",
+      "sha256": "a57f7a01cb8c0ecc9e18b144dcf984739a887e5e80b5b9b2e714ae0d276aaa42"
+    },
+    {
+      "bytes": 92606,
+      "path": "sources/src/analyze/NativeExports.lean",
+      "sha256": "4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f"
+    },
+    {
+      "bytes": 23547,
+      "path": "sources/src/backends/c/native-copied-values.mjs",
+      "sha256": "7415b894cb1d4f560fb00766a7668ab015393da1d02f9ab252dc157b383ea10c"
+    },
+    {
+      "bytes": 13442,
+      "path": "sources/src/backends/jvm/copied-conversions.mjs",
+      "sha256": "d41050ddcad1ebbbe19c74d681f311903764128ebed212616b0f6098b4fbefbe"
+    },
+    {
+      "bytes": 13123,
+      "path": "sources/src/backends/jvm/copied-kotlin.mjs",
+      "sha256": "bca0eaf8fd637c524cc4e7d0756dc683037cb8e426cbfad02d7cfc733bac8d17"
+    },
+    {
+      "bytes": 9054,
+      "path": "sources/src/backends/jvm/copied-model.mjs",
+      "sha256": "d586a7a26f856377bcdb68cded3b64793ebb3c628112c6a693bd8c863515c246"
+    },
+    {
+      "bytes": 2389,
+      "path": "sources/src/backends/jvm/copied-runtime.mjs",
+      "sha256": "21aa41d1087ea4fe83e2b7a620f58eb893add37cce7fe11f6fa04d500cd047c9"
+    },
+    {
+      "bytes": 15051,
+      "path": "sources/src/backends/jvm/copied-values.mjs",
+      "sha256": "b4ab3f1bc62f8d1a16abc768e7abcc3c9e2ae6dd768904891f658128f0318fab"
+    },
+    {
+      "bytes": 6632,
+      "path": "sources/src/build/compile-jvm-sources.mjs",
+      "sha256": "3006f6fd85211daf7c21e5e79b6373d46b2952f1b7d9d0fea04e98e533da6402"
+    },
+    {
+      "bytes": 8271,
+      "path": "sources/src/build/component-refinements.mjs",
+      "sha256": "1c936270da51e3991148681a317e30727936bc8c4e74f7a79330f4b7393a927c"
+    },
+    {
+      "bytes": 12579,
+      "path": "sources/src/build/native-component.mjs",
+      "sha256": "2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867"
+    },
+    {
+      "bytes": 3440,
+      "path": "sources/src/build/native-jvm-artifacts.mjs",
+      "sha256": "e60076860021983a46fefe2fb2cb22c218b915bf8b13753c083db3ef0150ee81"
+    },
+    {
+      "bytes": 3075,
+      "path": "sources/src/build/native-jvm-projection.mjs",
+      "sha256": "49187b08795c0a7e1c05179d8a6651b7308498685c035290def5699ee300ae86"
+    },
+    {
+      "bytes": 42189,
+      "path": "sources/src/build/native-model.mjs",
+      "sha256": "18e1072bac272ecf76c8d56aec0b2e21efa06e2adf4d49096598271dc5eb2d4a"
+    },
+    {
+      "bytes": 8767,
+      "path": "sources/src/release/native-maven.mjs",
+      "sha256": "ca4ac5403b4ba8a6ef237f74ef84f573a13661d414c3129bc06c8ffc0fd60f3a"
+    },
+    {
+      "bytes": 87,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/lakefile.toml",
+      "sha256": "16a51fbc493627ffd1a5beebdccbe577039cc22ce333e4233417444417cf188f"
+    },
+    {
+      "bytes": 25,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/lean-toolchain",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "bytes": 1093,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 64,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/package.json",
+      "sha256": "5cc3610c19032e010e0c18c017695d0a2f16b46828effec79bb5089ccf1932df"
+    },
+    {
+      "bytes": 2349,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 10670,
+      "path": "sources/tests/fixtures/structural-subtype-consumers/java.java",
+      "sha256": "7bf6e5ff3fa29dd3ba99ab24de8462b64505725714cf1be9eb02e975a4b86139"
+    },
+    {
+      "bytes": 8413,
+      "path": "sources/tests/fixtures/structural-subtype-consumers/kotlin.kt",
+      "sha256": "9d7aa11c5bd5ee6e6cbde812678f0f4bef93397813c6b921fa5fc7caa12c4855"
+    },
+    {
+      "bytes": 4345,
+      "path": "sources/tests/helpers/closed-package-zip.mjs",
+      "sha256": "c0195e5c1145f1a9b8bdcbbd5f55a1477886714e1633fd2593687fdb6e45bdcf"
+    },
+    {
+      "bytes": 15505,
+      "path": "sources/tests/helpers/copied-fixture-install.mjs",
+      "sha256": "dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df"
+    },
+    {
+      "bytes": 3517,
+      "path": "sources/tests/helpers/fin-container-edge-closure.mjs",
+      "sha256": "2d1788a27ccd388a5779c251b01b0dc1370c8047362dc3720a7189815dd141a2"
+    },
+    {
+      "bytes": 7620,
+      "path": "sources/tests/helpers/fin-container-edge-jvm-closure.mjs",
+      "sha256": "e8a90d5af4b86588f82c044992c2eec50fe09f1e139aefba0799767a8813a98c"
+    },
+    {
+      "bytes": 5465,
+      "path": "sources/tests/helpers/structural-subtype-installed-fixture.mjs",
+      "sha256": "5743bb3d0fd00301c22587a0111edcb1301c7f43c3dda0c4746340c18c0a201f"
+    },
+    {
+      "bytes": 2132,
+      "path": "sources/tests/helpers/structural-subtype-jvm-caller-tests.mjs",
+      "sha256": "5507277adbf1c3fb6f5c87ec988766a421030ce49195223d39d6a646a52e61db"
+    },
+    {
+      "bytes": 1617,
+      "path": "sources/tests/helpers/structural-subtype-jvm-fixture.mjs",
+      "sha256": "2eec1365091697ccdebbc5e8a92d8da22eb0b3dcc4a6860d72c6dd94ab6c73b1"
+    },
+    {
+      "bytes": 7647,
+      "path": "sources/tests/helpers/structural-subtype-jvm-installed-tests.mjs",
+      "sha256": "b7170038a177c0b17ed3758c30360964ee32fbdb177dd65c219a4a8d0b67eb92"
+    },
+    {
+      "bytes": 2151,
+      "path": "sources/tests/helpers/structural-subtype-jvm-tests.mjs",
+      "sha256": "8643d5a738ec46b9cd1210df198cd709eb3ec13a3af1545dc1b3d5097b7aadc0"
+    },
+    {
+      "bytes": 11265,
+      "path": "sources/tests/structural-subtype-installed.test.mjs",
+      "sha256": "4bca8859e3d5c18148dca8f36dd108a12015d9227124805b365aa20414e8a949"
+    }
+  ],
+  "kind": "structural-subtype-jvm-installed-v1",
+  "limitations": [
+    "Local Linux x86-64 glibc 2.36 acceptance, not hosted release-floor acceptance.",
+    "No Jvm constructor/source entry counts or memory measurement.",
+    "Package binaries and complete toolchain closures are not retained.",
+    "No support-inventory promotion or recurring installed CI gate follows from this archive."
+  ],
+  "producerCommit": "5935a5a97723c5feaa9a79d61b1cb636b71ac9f0",
+  "runs": [
+    {
+      "archives": {
+        "archives/structuralsubtypes-1.0.0.jar": "9c98cf9165467bbfe9a459deb3aed08180af6938b8e6b7c79903fbf95be860ff",
+        "archives/structuralsubtypes-1.0.0.pom": "dfb79cfdea80cfaca727d027e1fb25dbbeabff4eea3e776de668f897156b5a3f"
+      },
+      "checks": 4119,
+      "dispatchObserved": false,
+      "executions": 4,
+      "label": "ordinary",
+      "producerCommit": "5935a5a97723c5feaa9a79d61b1cb636b71ac9f0",
+      "profiles": [
+        "java",
+        "kotlin"
+      ],
+      "rejections": 1042,
+      "reportSha256": "c1326741a8559dab99d40d7935c18d335b66a3b21027a451a14711fb28d1742d",
+      "route": "ordinary",
+      "snapshotControls": 6,
+      "tapSha256": "5ff646c5fddd804c7157e9a371b735340485139265b6e5c549ef9d4c6b7828ff"
+    },
+    {
+      "archives": {
+        "archives/structuralsubtypes-1.0.0.jar": "de235538143a7f0ea51650303c67c1e13869467a9c51b60412a7e2f91a5ce2c6",
+        "archives/structuralsubtypes-1.0.0.pom": "dfb79cfdea80cfaca727d027e1fb25dbbeabff4eea3e776de668f897156b5a3f"
+      },
+      "checks": 4119,
+      "dispatchObserved": false,
+      "executions": 4,
+      "label": "reviewed",
+      "producerCommit": "5935a5a97723c5feaa9a79d61b1cb636b71ac9f0",
+      "profiles": [
+        "java",
+        "kotlin"
+      ],
+      "rejections": 1042,
+      "reportSha256": "2c6eadce82586d6cf11c03ec3411f9c00e25e13da4f0a6501b75a19be37ff3ad",
+      "route": "reviewed",
+      "snapshotControls": 6,
+      "tapSha256": "22f0b207078b0cbd644850d08cfd70b41f544b29ea8c0005281d923105904828"
+    }
+  ],
+  "schemaVersion": 1,
+  "selectedSources": [
+    "src/analyze/NativeExports.lean",
+    "src/build/native-model.mjs",
+    "src/build/component-refinements.mjs",
+    "src/build/native-component.mjs",
+    "src/backends/c/native-copied-values.mjs",
+    "src/backends/jvm/copied-values.mjs",
+    "src/backends/jvm/copied-conversions.mjs",
+    "src/backends/jvm/copied-model.mjs",
+    "src/backends/jvm/copied-kotlin.mjs",
+    "src/backends/jvm/copied-runtime.mjs",
+    "src/build/compile-jvm-sources.mjs",
+    "src/build/native-jvm-projection.mjs",
+    "src/build/native-jvm-artifacts.mjs",
+    "src/release/native-maven.mjs",
+    "tests/structural-subtype-installed.test.mjs",
+    "tests/helpers/structural-subtype-installed-fixture.mjs",
+    "tests/helpers/structural-subtype-jvm-fixture.mjs",
+    "tests/helpers/structural-subtype-jvm-installed-tests.mjs",
+    "tests/helpers/structural-subtype-jvm-tests.mjs",
+    "tests/helpers/copied-fixture-install.mjs",
+    "tests/helpers/fin-container-edge-jvm-closure.mjs",
+    "tests/helpers/fin-container-edge-closure.mjs",
+    "tests/helpers/closed-package-zip.mjs",
+    "tests/fixtures/structural-subtype-consumers/java.java",
+    "tests/fixtures/structural-subtype-consumers/kotlin.kt",
+    "tests/helpers/structural-subtype-jvm-caller-tests.mjs",
+    "tests/fixtures/onboarding/structural-subtypes/StructuralSubtypes.lean",
+    "tests/fixtures/onboarding/structural-subtypes/lakefile.toml",
+    "tests/fixtures/onboarding/structural-subtypes/lean-toolchain",
+    "tests/fixtures/onboarding/structural-subtypes/package.json",
+    "tests/fixtures/onboarding/structural-subtypes/LICENSE"
+  ]
+}

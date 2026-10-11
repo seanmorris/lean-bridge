@@ -8,6 +8,7 @@ import test from "node:test";
 import { structuralSubtypeConfiguration } from "./structural-subtype-installed-fixture.mjs";
 import { structuralSubtypeJvmConfiguration, structuralSubtypeJvmCaller, structuralSubtypeJvmCounts, parseStructuralSubtypeJvmResult } from "./structural-subtype-jvm-fixture.mjs";
 import "./structural-subtype-jvm-caller-tests.mjs";
+import "./structural-subtype-jvm-evidence-tests.mjs";
 
 test("structural Jvm author routes preserve independent contracts and caller identities", async () => {
 	for(const route of ["ordinary", "reviewed"])
