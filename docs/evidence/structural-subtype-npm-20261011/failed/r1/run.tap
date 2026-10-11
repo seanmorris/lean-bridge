@@ -1,0 +1,31 @@
+TAP version 13
+# Subtest: installed npm structural Subtypes reproduce and relocate ordinary
+not ok 1 - installed npm structural Subtypes reproduce and relocate ordinary
+  ---
+  duration_ms: 89317.564352
+  type: 'test'
+  location: '/app/tests/structural-subtype-npm-installed.test.mjs:32:28'
+  failureType: 'testCodeFailure'
+  error: "ENOENT: no such file or directory, scandir '/tmp/lean-bridge-structural-subtype-npm-Db0nIx/consumer/node_modules/undefined'"
+  code: 'ENOENT'
+  stack: |-
+    async readdir (node:internal/fs/promises:955:18)
+    async nativeArtifactPaths (file:///app/src/build/native-artifacts.mjs:25:21)
+    async fileTree (file:///app/tests/structural-subtype-npm-installed.test.mjs:29:75)
+    async verify (file:///app/tests/structural-subtype-npm-installed.test.mjs:115:71)
+    async TestContext.<anonymous> (file:///app/tests/structural-subtype-npm-installed.test.mjs:117:3)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# ordinary npm author 0
+# ordinary npm author 1
+# Retained failed npm inputs: /tmp/lean-bridge-structural-subtype-npm-Db0nIx
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 89700.570531

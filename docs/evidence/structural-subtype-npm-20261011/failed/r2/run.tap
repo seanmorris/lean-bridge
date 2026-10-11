@@ -1,0 +1,30 @@
+TAP version 13
+# Subtest: installed npm structural Subtypes reproduce and relocate ordinary
+not ok 1 - installed npm structural Subtypes reproduce and relocate ordinary
+  ---
+  duration_ms: 96468.119523
+  type: 'test'
+  location: '/app/tests/structural-subtype-npm-installed.test.mjs:33:28'
+  failureType: 'testCodeFailure'
+  error: '/usr/bin/node exited with status 1: {"command":"/usr/bin/node","args":["index.mjs"],"stderr":"file:///tmp/lean-bridge-structural-subtype-npm-KymxUu/consumer/check.mjs:22\\n\\t\\t\\tif(!pattern.test(String(error?.message))) throw new Error(`wrong rejection: ${label}: ${error?.message}`, { cause: error });\\n\\t\\t\\t                                                ^\\n\\nError: wrong rejection: mixed Fin before constructor: nested.arg0[2][0].value[1] must be bigint below 184467440737095516170\\n    at refused (file:///tmp/lean-bridge-structural-subtype-npm-KymxUu/consumer/check.mjs:22:52)\\n    at checkStructuralSubtypes (file:///tmp/lean-bridge-structural-subtype-npm-KymxUu/consumer/check.mjs:61:2)\\n    at file:///tmp/lean-bridge-structural-subtype-npm-KymxUu/consumer/index.mjs:3:28 {\\n  [cause]: TypeError: nested.arg0[2][0].value[1] must be bigint below 184467440737095516170\\n      at invalid (file:///tmp/lean-bridge-structural-subtype-npm-KymxUu/consumer/node_modules/structuralsubtypes/internal/validators.mjs:2:45)\\n      at assertFin (file:///tmp/lean-bridge-structural-subtype-npm-KymxUu/consumer/node_modules/structuralsubtypes/internal/validators.mjs:18:104)\\n      at assertNestedFin (file:///tmp/lean-bridge-structural-subtype-npm-KymxUu/consumer/node_modules/structuralsubtypes/internal/validators.mjs:21:36)\\n      at child (file:///tmp/lean-bridge-structural-subtype-npm-KymxUu/consumer/node_modules/structuralsubtypes/internal/validators.mjs:22:43)\\n      at assertNestedFin (file:///tmp/lean-bridge-structural-subtype-npm-KymxUu/consumer/node_modules/structuralsubtypes/internal/validators.mjs:25:65)\\n      at child (file:///tmp/lean-bridge-structural-subtype-npm-KymxUu/consumer/node_modules/structuralsubtypes/internal/validators.mjs:22:43)\\n      at assertNestedFin (file:///tmp/lean-bridge-structural-subtype-npm-KymxUu/consumer/node_modules/structuralsubtypes/internal/validators.mjs:24:65)\\n      at child (file:///tmp/lean-bridge-structural-subtype-npm-KymxUu/consumer/node_modules/structuralsubtypes/internal/validators.mjs:22:43)\\n      at file:///tmp/lean-bridge-structural-subtype-npm-KymxUu/consumer/node_modules/structuralsubtypes/internal/validators.mjs:23:99\\n      at Array.forEach (<anonymous>)\\n}\\n\\nNode.js v22.23.2\\n","stdout":""}'
+  code: 'build-command-failed'
+  name: 'CanonicalBuildError'
+  stack: |-
+    ChildProcess.<anonymous> (file:///app/src/build/process-runner.mjs:77:21)
+    Object.onceWrapper (node:events:634:26)
+    ChildProcess.emit (node:events:519:28)
+    maybeClose (node:internal/child_process:1101:16)
+    ChildProcess._handle.onexit (node:internal/child_process:304:5)
+  ...
+# ordinary npm author 0
+# ordinary npm author 1
+# Retained failed npm inputs: /tmp/lean-bridge-structural-subtype-npm-KymxUu
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 96840.015249

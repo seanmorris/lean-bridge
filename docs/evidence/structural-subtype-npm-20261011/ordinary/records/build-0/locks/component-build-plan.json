@@ -1,0 +1,80 @@
+{
+  "bindingIr": {
+    "declarations": [
+      "lean:StructuralSubtypes.aliasArguments",
+      "lean:StructuralSubtypes.aliasPair",
+      "lean:StructuralSubtypes.arrays",
+      "lean:StructuralSubtypes.branch",
+      "lean:StructuralSubtypes.byteBranches",
+      "lean:StructuralSubtypes.lists",
+      "lean:StructuralSubtypes.nested",
+      "lean:StructuralSubtypes.options",
+      "lean:StructuralSubtypes.plainFin",
+      "lean:StructuralSubtypes.product",
+      "lean:StructuralSubtypes.scalar",
+      "lean:StructuralSubtypes.specialized"
+    ],
+    "origin": "lean-elaborated",
+    "schemaVersion": 3,
+    "semanticSha256": "135475dc7186ce36f93cb1d31171d6f2c2d6c814e762fe0a1a284f854105599d"
+  },
+  "component": {
+    "id": "structuralsubtypes@1.0.0",
+    "name": "structuralsubtypes",
+    "version": "1.0.0"
+  },
+  "policies": {
+    "compileOnce": true,
+    "privateRuntime": false,
+    "sourceReadOnly": true,
+    "targetSpecificRebuild": false
+  },
+  "runtime": {
+    "abiVersion": 1,
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "patchSetSha256": "743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3",
+    "profile": "side-lazy",
+    "shared": true
+  },
+  "schemaVersion": 2,
+  "source": {
+    "inputs": [
+      {
+        "bytes": 87,
+        "path": "lakefile.toml",
+        "sha256": "16a51fbc493627ffd1a5beebdccbe577039cc22ce333e4233417444417cf188f"
+      },
+      {
+        "bytes": 11178,
+        "path": "lean-bridge.exports.json",
+        "sha256": "4c811d8865df8b92ad3cbf84029af7e3a5c704f7c3744c853482e494afae2db9"
+      },
+      {
+        "bytes": 25,
+        "path": "lean-toolchain",
+        "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+      },
+      {
+        "bytes": 1093,
+        "path": "LICENSE",
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      {
+        "bytes": 64,
+        "path": "package.json",
+        "sha256": "5cc3610c19032e010e0c18c017695d0a2f16b46828effec79bb5089ccf1932df"
+      },
+      {
+        "bytes": 2349,
+        "path": "StructuralSubtypes.lean",
+        "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+      }
+    ],
+    "lakeSnapshotSha256": "8fdf6854b6d761ca599e26653846ce9a996b0f5a23353d3e6f0b21a036ed6470",
+    "toolchain": "leanprover/lean4:v4.32.2",
+    "treeSha256": "8b192492f3620c14cbda4e11af086aaead4cbf3ff72f88987a41a36ad31c05fe"
+  },
+  "targets": [
+    "npm"
+  ]
+}

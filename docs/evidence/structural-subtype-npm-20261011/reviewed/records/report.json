@@ -1,0 +1,177 @@
+{
+  "builds": [
+    {
+      "bindingIrSha256": "3c79b04031f90de64c417ca26618d0dd4a6fb65afa89141d60ada7f28015e766",
+      "componentArchiveSha256": "b1c9216e5a96b17ffffd12e8d0fa6db5a58e3829b7e475101844d0a00fd9bc2f",
+      "receiptSha256": "a355187b074c9f01aea62e4678745ee5036a76dd1037382b99297a8400b10357",
+      "runtimeArchiveSha256": "9bbc253318501d32461698dc063493b177bcf8346bc281897850c3368a9441a4"
+    },
+    {
+      "bindingIrSha256": "3c79b04031f90de64c417ca26618d0dd4a6fb65afa89141d60ada7f28015e766",
+      "componentArchiveSha256": "b1c9216e5a96b17ffffd12e8d0fa6db5a58e3829b7e475101844d0a00fd9bc2f",
+      "receiptSha256": "a355187b074c9f01aea62e4678745ee5036a76dd1037382b99297a8400b10357",
+      "runtimeArchiveSha256": "9bbc253318501d32461698dc063493b177bcf8346bc281897850c3368a9441a4"
+    }
+  ],
+  "compilerFreePath": true,
+  "configuration": {
+    "modules": [
+      "StructuralSubtypes"
+    ],
+    "schemaVersion": 1,
+    "targets": {
+      "npm": {
+        "name": "structuralsubtypes",
+        "version": "1.0.0"
+      }
+    }
+  },
+  "consumerSha256": "43bd0c2619bc65da54ab7a5d01eb5fe186832b081151bf8e8a2ea669d1901ac1",
+  "corpusSha256": "533f53ed0d489c48b2fe5ac67dbb59ef4873f1e44252c5c7918982cd3d3832a3",
+  "dispatch": {
+    "observed": false,
+    "reason": "No constructor/source entry counters in this npm caller"
+  },
+  "expectedBindingIrSha256": "6ca095623cdf425a28546d3fb8a5428fc461242aed9f24b91d40009dd77a3e20",
+  "independentBuilds": 2,
+  "observations": [
+    {
+      "relocated": false,
+      "result": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":3028,\"rejections\":1020}\n"
+      },
+      "typescript": {
+        "code": 0,
+        "stderr": "",
+        "stdout": ""
+      }
+    },
+    {
+      "relocated": true,
+      "result": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":3028,\"rejections\":1020}\n"
+      },
+      "typescript": {
+        "code": 0,
+        "stderr": "",
+        "stdout": ""
+      }
+    }
+  ],
+  "offlineInstall": true,
+  "producerCommit": "8a114eff75094d760874f422996213dd37271613",
+  "receipt": {
+    "bindingIrSha256": "3c79b04031f90de64c417ca26618d0dd4a6fb65afa89141d60ada7f28015e766",
+    "component": {
+      "id": "structuralsubtypes@1.0.0",
+      "name": "structuralsubtypes",
+      "version": "1.0.0"
+    },
+    "componentArtifactSha256": "05e5c187726aa2024c15420b19fd76aca6bfbae07a373c27ba4e85a4a79c931c",
+    "componentBundleSha256": "a4e82db67e2633d2dc43513ac21776bd80aa7412c05d02272ba1457ab4e5abb6",
+    "componentIdentitySha256": "bf44a2dfe8c719a6ceccd1da350c753b788e5c2496fe9d9e570bc995fda0b40a",
+    "kind": "lean-bridge-component-package-receipt",
+    "package": {
+      "archive": "structuralsubtypes-1.0.0.tgz",
+      "package": "structuralsubtypes@1.0.0",
+      "sha256": "b1c9216e5a96b17ffffd12e8d0fa6db5a58e3829b7e475101844d0a00fd9bc2f"
+    },
+    "policies": {
+      "componentCompiledOnce": true,
+      "nativeCallablesOnly": true,
+      "runtimeBinaryInComponent": false,
+      "runtimeShared": true
+    },
+    "provenanceSha256": "2bd82a1dbd969ff793088e21f4e821f1f5330a8a79ebf5d3ed9215ecd8af30a4",
+    "runtime": {
+      "archive": "lean-bridge-runtime-0.0.0-abi2.ac86f7b767448dde0e546b6db9b1c5f04c7df061c436d57e50546139a92cb301.tgz",
+      "package": "@lean-bridge/runtime@0.0.0-abi2.ac86f7b767448dde0e546b6db9b1c5f04c7df061c436d57e50546139a92cb301",
+      "sha256": "9bbc253318501d32461698dc063493b177bcf8346bc281897850c3368a9441a4"
+    },
+    "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "b2e78f25862ddb79877958d93a38e326201669cdb4b6bf2ab180539dc4a097fd"
+    },
+    "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "route": "reviewed",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true,
+  "trees": {
+    "@lean-bridge/runtime": {
+      "LICENSE": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996",
+      "index.mjs": "6efcbfb1a03a8844ce69fa2694501761375219b965234776f9498f8d5e5a9d4e",
+      "internal/binding-ir/canonical.mjs": "28e22e614fc532a99baeeb34ee9d054f3bc6db82239fa89059a9518cb06d3d20",
+      "internal/binding-ir/contract.mjs": "51f39115f198cadb22edcee1bc09d9205024c1ba622f86588056bca7aac6faf6",
+      "internal/binding-ir/sha256.mjs": "f9bcbce580e88f31c3a63e8aa0d1d834228afa796a74a4c2f708da68e99a15ac",
+      "internal/component-callable-runtime.mjs": "7d4e6ea8065ff239e4538333c6449e4a6dfcaf8d5982da96c38f119b9e591885",
+      "internal/component-callables.mjs": "abb7093a48c6bfaf7cf3f5510d0e26816af5639718659a3d87397f96a5e7bafe",
+      "internal/component-copied-codec.mjs": "06385bc88bc1359fb8bcbfbdb0bf01d79b372a2a6cbfd8f539f6d05c04b5f1a4",
+      "internal/component-copied-runtime.mjs": "87fe66a826b6f1399908d7f04fd2616d30c73408a8b9ccfc860f3a18c1ced79a",
+      "internal/component-copied.mjs": "c06dc4bf621d1a0d255478b62d4d03cd77fed580cd37ff058bbe061c6145d599",
+      "internal/component-owned-wasm.mjs": "d010d30b13af35cc1a5409c65cffe7dd2f3fdbd23e8627e70089b51b6bbac211",
+      "internal/component-records.mjs": "c24c4216667ce99e0a1e5b0e56fa02ab266114128e92760bd2aa1d65a6c99ff2",
+      "internal/component-recursive-abi.mjs": "2c6313445c66f51c504044f948139f7e576db534cffcbaf507f2c300ec57eee4",
+      "internal/component-recursive-codec.mjs": "ee698c1f12c5da59aa51ed907656d72f84a687c1ee0ef80001c4f541833e0b8c",
+      "internal/component-recursive-ownership.mjs": "7c363357647ea821e6d977ad524d5473ecfa2951e6759d03fcb46e5a19012e7a",
+      "internal/component-recursive.mjs": "4002752b124460c95cd9461e7c9a77173f211507f8a3f4d38b08c1293e006e5e",
+      "internal/component-runtime.mjs": "3c525383e5cde9342882f47b143362bfb5a17e7b37c5cb810d14b4b1eb4ab9fd",
+      "internal/component-scalar-codec.mjs": "24c8d8430545ec0ab4b767b7cbe70a411e55ce3b39cd9ecef76975e39b1e3416",
+      "internal/component-scalars.mjs": "745058db0327c9060222ff58d45c272595e23125c2169d80287ff9035cf3608e",
+      "internal/component-structured-callable-runtime.mjs": "bdeb55ce78ddfb7fcd76537904fb1b813d78fd12a98899564305dc24cab077f0",
+      "internal/component-structured-callables.mjs": "ca1ba92c7d00f168d26b007b21c4add381b760f76685b0a55dfffca2d40b97e2",
+      "internal/main.mjs": "8b791a4711e58876e29b5e0a7c3fcbab500b02d7550fe6f7c3321020a736be02",
+      "internal/main.wasm": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+      "internal/owned-wasm-bindings.mjs": "cd74f944785fae8d45b64ab1c18e714acdfd4c0a328e64021794d8c816827e1b",
+      "internal/owned-wasm-borrow-registry.mjs": "3d2b6c3b1956ebd66c813359a8bb18a54f162f4316bdb83d26fec226915a05fd",
+      "internal/owned-wasm-callbacks.mjs": "14d28bc1b0d92191bb7567f7fb3a6eca35c57e9fdf824666b39318ef51ddc7ab",
+      "internal/owned-wasm-calls.mjs": "af3671bee249f9a49f50160e4cf3f24e217e6727b1af1849fde39065dd94814c",
+      "internal/owned-wasm-component-runtime.mjs": "c0153f72184053c526168b87236a74a8f12251d05d0b0be28deadb1b2ba08531",
+      "internal/owned-wasm-control.mjs": "9e05a5b7653dd1409220a233d26492adf916789169896b59940b8c60c87fbb6f",
+      "internal/owned-wasm-registry.mjs": "ea549d40212cf3e423c03763e09af19e41614662df74cf604a070b9c0ab34717",
+      "internal/owned-wasm-scalars.mjs": "f187769507e97821b931a1a61321a9fc9bca085a56404481d025d4541e051aab",
+      "internal/owned-wasm-values.mjs": "12e10dbd344900de88beb96af2ab1c72a9be433e296b85fd6974f26a5397aebe",
+      "internal/refinements.mjs": "8bd430b6788472ff848091f06d0f078041b566377f746c78655038760b30fde0",
+      "notices/NOTICE.txt": "2b3402d0d98f7ad752153038319af37135f57552b434b286f9b0633403490117",
+      "notices/emscripten.txt": "51aea7641f81d560eb039bc97ce35e2517e2656fe8731eb49ce6a18498eb22fe",
+      "notices/lean-bundled.txt": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce",
+      "notices/lean.txt": "7ef159fd8db5a7a9e8051aac48997353f26d744e25f730a0594a806c126d2114",
+      "notices/libuv.txt": "16de0c32b265cb7d46a6d3bd614f259dd4d693a5e26b3407b04aae8d73041f0c",
+      "notices/llvm.txt": "539dd7aed86e8a4f12cbdd0e6c50c189c7d74847e4fecc64ce2c6ee3a01da38b",
+      "notices/musl.txt": "b870108ec5e7790e9f9919064f1b9421d62d5f9b0e6c230c6adf7ea2da62e97b",
+      "package.json": "0740b76bed614d69a0a4504492dbf0fcc4404658f7cfe4e3501f2aeb52cc2ae4",
+      "runtime-identity.json": "ac86f7b767448dde0e546b6db9b1c5f04c7df061c436d57e50546139a92cb301"
+    },
+    "structuralsubtypes": {
+      "LICENSE": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996",
+      "README.md": "0cd62473929c05c521b5944a14ea63a4e0f7e5df38fd35bcd9861e5dcee7af5a",
+      "binding-manifest.json": "797a89aeeb65c6adc5399030c1827e8b016ab712242ef1e2f3ef6f0437dd4d20",
+      "index.d.ts": "0a42af082d5a52aef33d0a98cd85e33a009a05f58b8b1c0dea3150fb4fe01639",
+      "index.mjs": "8e266e018a18395273f5a36bb7bd8e8bd66f0c77269c278be832f097ab6a4779",
+      "internal/descriptor.mjs": "58a6c3d961b4e8badca75d34115223bccfe54dde72d128e18e8e64ad1408bd83",
+      "internal/runtime.mjs": "796a86405ac3d463f1af06a4c056b2ee440a36934f9957cff2058402fac39358",
+      "internal/validators.mjs": "246060d338db0b50ab3821eee8cb3697f55318498a7015fc205890704e76d31c",
+      "internal/wasm/structuralsubtypes-85dc6ef3dd30a6b6.so.wasm": "05e5c187726aa2024c15420b19fd76aca6bfbae07a373c27ba4e85a4a79c931c",
+      "metadata/assurance.json": "3cf7c6ec3ba92ef0e57bb23c0a579e8b2347e4e94b62583b9873fea8a72fa84d",
+      "metadata/binding-ir.json": "a2b71d2256dd63c392b68ff62fdaf24b5d66f44a1482026d7bc85448bc75e496",
+      "metadata/component-release-bundle.json": "a4e82db67e2633d2dc43513ac21776bd80aa7412c05d02272ba1457ab4e5abb6",
+      "metadata/lean-bridge.exports.json": "eacdd5fd78dbfa1ffc73512bcae8a3fe9d2242cb9f65be97ecbbb131bf610f77",
+      "metadata/provenance.json": "2bd82a1dbd969ff793088e21f4e821f1f5330a8a79ebf5d3ed9215ecd8af30a4",
+      "metadata/runtime-requirement.json": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+      "metadata/sbom.json": "81e618489e71717235fb2c914b513d2f7f5710bda782052bf8a2a0971e86fd67",
+      "package.json": "b84d058ba200c940bfa123bfd43d3cc361087d87bdb47a464c9c65f415f21865"
+    }
+  },
+  "typescript": {
+    "skipLibCheck": false,
+    "sourceSha256": "ff786c3877319a2602723077a26fd7ee34d8a789b5796740ec957770dfae27fb",
+    "strict": true
+  }
+}

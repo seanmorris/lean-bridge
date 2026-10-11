@@ -1,0 +1,809 @@
+{
+  "attempts": [
+    {
+      "label": "failed/r1",
+      "producerCommit": "ec5902f186cac8a372e788f1a9da29568aa2a0f9",
+      "records": [
+        "build-0/StructuralSubtypes.lean",
+        "build-0/binding/binding-ir.json",
+        "build-0/component-package-receipt.json",
+        "build-0/locks/compiler-adapters.json",
+        "build-0/locks/component-build-plan.json",
+        "build-0/metadata/provenance.json",
+        "build-1/StructuralSubtypes.lean",
+        "build-1/binding/binding-ir.json",
+        "build-1/component-package-receipt.json",
+        "build-1/locks/compiler-adapters.json",
+        "build-1/locks/component-build-plan.json",
+        "build-1/metadata/provenance.json",
+        "check.mjs",
+        "configuration.json",
+        "expected.binding-ir.json",
+        "index.mjs",
+        "index.mts",
+        "install.json"
+      ],
+      "route": "ordinary",
+      "success": false,
+      "tapSha256": "f27f8b1b67a6d6e29ad80ed94f28a049baf27094f87da2b978639f33dc830614"
+    },
+    {
+      "label": "failed/r2",
+      "producerCommit": "ec568c0a4e4793041872679d2bb6986d325dcb97",
+      "records": [
+        "build-0/StructuralSubtypes.lean",
+        "build-0/binding/binding-ir.json",
+        "build-0/component-package-receipt.json",
+        "build-0/locks/compiler-adapters.json",
+        "build-0/locks/component-build-plan.json",
+        "build-0/metadata/provenance.json",
+        "build-1/StructuralSubtypes.lean",
+        "build-1/binding/binding-ir.json",
+        "build-1/component-package-receipt.json",
+        "build-1/locks/compiler-adapters.json",
+        "build-1/locks/component-build-plan.json",
+        "build-1/metadata/provenance.json",
+        "check.mjs",
+        "configuration.json",
+        "expected.binding-ir.json",
+        "index.mjs",
+        "index.mts",
+        "install.json"
+      ],
+      "route": "ordinary",
+      "success": false,
+      "tapSha256": "46dc7c7d5492eb188a7d4315c881ebc2350a832b249d6ec8c13cb84c12d630b6"
+    },
+    {
+      "label": "ordinary",
+      "producerCommit": "8a114eff75094d760874f422996213dd37271613",
+      "records": [
+        "build-0/StructuralSubtypes.lean",
+        "build-0/binding/binding-ir.json",
+        "build-0/component-package-receipt.json",
+        "build-0/locks/compiler-adapters.json",
+        "build-0/locks/component-build-plan.json",
+        "build-0/metadata/provenance.json",
+        "build-1/StructuralSubtypes.lean",
+        "build-1/binding/binding-ir.json",
+        "build-1/component-package-receipt.json",
+        "build-1/locks/compiler-adapters.json",
+        "build-1/locks/component-build-plan.json",
+        "build-1/metadata/provenance.json",
+        "check.mjs",
+        "configuration.json",
+        "expected.binding-ir.json",
+        "index.mjs",
+        "index.mts",
+        "install.json",
+        "installed.json",
+        "relocated.json",
+        "report.json"
+      ],
+      "route": "ordinary",
+      "success": true,
+      "tapSha256": "a275201deacb64c5b63c7ae27b06cc5b5d466428099ea7323ab2c8d205d1e7e4"
+    },
+    {
+      "label": "reviewed",
+      "producerCommit": "8a114eff75094d760874f422996213dd37271613",
+      "records": [
+        "build-0/StructuralSubtypes.lean",
+        "build-0/binding/binding-ir.json",
+        "build-0/component-package-receipt.json",
+        "build-0/locks/compiler-adapters.json",
+        "build-0/locks/component-build-plan.json",
+        "build-0/metadata/provenance.json",
+        "build-1/StructuralSubtypes.lean",
+        "build-1/binding/binding-ir.json",
+        "build-1/component-package-receipt.json",
+        "build-1/locks/compiler-adapters.json",
+        "build-1/locks/component-build-plan.json",
+        "build-1/metadata/provenance.json",
+        "check.mjs",
+        "configuration.json",
+        "expected.binding-ir.json",
+        "index.mjs",
+        "index.mts",
+        "install.json",
+        "installed.json",
+        "relocated.json",
+        "report.json"
+      ],
+      "route": "reviewed",
+      "success": true,
+      "tapSha256": "4211c98f3b61a7c879dd659332aa8ce68735d193cc15d153041ddf57c6f6cd65"
+    }
+  ],
+  "files": [
+    {
+      "bytes": 10311,
+      "path": "checker.mjs",
+      "sha256": "50d1c96662834d64c67de4d31e738287c47172ab90b1594dffa55f6c580015fc"
+    },
+    {
+      "bytes": 203,
+      "path": "failed/r1/end.json",
+      "sha256": "699d6a17e73405150fc264432a64573547beb16face95a10d7a1d0774d3fea26"
+    },
+    {
+      "bytes": 50903,
+      "path": "failed/r1/records/build-0/binding/binding-ir.json",
+      "sha256": "b4e7570617806665f8250f19fdea34b954e166d594e91f6aa2f873235872f4d0"
+    },
+    {
+      "bytes": 1653,
+      "path": "failed/r1/records/build-0/component-package-receipt.json",
+      "sha256": "d3f4b202deb2f3355145be8df10840c9d41c9562108eca1f9f744f67697940b9"
+    },
+    {
+      "bytes": 28510,
+      "path": "failed/r1/records/build-0/locks/compiler-adapters.json",
+      "sha256": "ab5b5b684c73c24b52af35ec812b582b5e5d3e93663ef07e57e6c613b78ea9c4"
+    },
+    {
+      "bytes": 2474,
+      "path": "failed/r1/records/build-0/locks/component-build-plan.json",
+      "sha256": "0d92f357df19951c98f9531d9733c6d0ceb9a1ba65b2d79e6f7224eb0a464b89"
+    },
+    {
+      "bytes": 841,
+      "path": "failed/r1/records/build-0/metadata/provenance.json",
+      "sha256": "d91a369c51c18eb54e38681e1126b8b34b1ae2392f65add60efb51a43333c856"
+    },
+    {
+      "bytes": 2349,
+      "path": "failed/r1/records/build-0/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 50903,
+      "path": "failed/r1/records/build-1/binding/binding-ir.json",
+      "sha256": "b4e7570617806665f8250f19fdea34b954e166d594e91f6aa2f873235872f4d0"
+    },
+    {
+      "bytes": 1653,
+      "path": "failed/r1/records/build-1/component-package-receipt.json",
+      "sha256": "d3f4b202deb2f3355145be8df10840c9d41c9562108eca1f9f744f67697940b9"
+    },
+    {
+      "bytes": 28510,
+      "path": "failed/r1/records/build-1/locks/compiler-adapters.json",
+      "sha256": "ab5b5b684c73c24b52af35ec812b582b5e5d3e93663ef07e57e6c613b78ea9c4"
+    },
+    {
+      "bytes": 2474,
+      "path": "failed/r1/records/build-1/locks/component-build-plan.json",
+      "sha256": "0d92f357df19951c98f9531d9733c6d0ceb9a1ba65b2d79e6f7224eb0a464b89"
+    },
+    {
+      "bytes": 841,
+      "path": "failed/r1/records/build-1/metadata/provenance.json",
+      "sha256": "d91a369c51c18eb54e38681e1126b8b34b1ae2392f65add60efb51a43333c856"
+    },
+    {
+      "bytes": 2349,
+      "path": "failed/r1/records/build-1/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 4146,
+      "path": "failed/r1/records/check.mjs",
+      "sha256": "06f9491f7380506507fccd045611c28344a3f77037c21f6c2aa81662b2e4f139"
+    },
+    {
+      "bytes": 11178,
+      "path": "failed/r1/records/configuration.json",
+      "sha256": "4c811d8865df8b92ad3cbf84029af7e3a5c704f7c3744c853482e494afae2db9"
+    },
+    {
+      "bytes": 34558,
+      "path": "failed/r1/records/expected.binding-ir.json",
+      "sha256": "fcb7bfa656ac6d6262a9773712f02b6c0bd5a08a72483c9ba9225f83fe90c36f"
+    },
+    {
+      "bytes": 155,
+      "path": "failed/r1/records/index.mjs",
+      "sha256": "43bd0c2619bc65da54ab7a5d01eb5fe186832b081151bf8e8a2ea669d1901ac1"
+    },
+    {
+      "bytes": 1448,
+      "path": "failed/r1/records/index.mts",
+      "sha256": "259a5445eaef8f46cecb710d729d41ade35cefdb8657c2adfac79d34a090c94d"
+    },
+    {
+      "bytes": 290,
+      "path": "failed/r1/records/install.json",
+      "sha256": "03832388db0bd09423b5af467806fda00e5bfa7a0b5e81cc4269938c4e4abc4b"
+    },
+    {
+      "bytes": 1272,
+      "path": "failed/r1/run.tap",
+      "sha256": "f27f8b1b67a6d6e29ad80ed94f28a049baf27094f87da2b978639f33dc830614"
+    },
+    {
+      "bytes": 1448,
+      "path": "failed/r1/sources/tests/fixtures/structural-subtype-consumers/index.mts",
+      "sha256": "259a5445eaef8f46cecb710d729d41ade35cefdb8657c2adfac79d34a090c94d"
+    },
+    {
+      "bytes": 4146,
+      "path": "failed/r1/sources/tests/fixtures/structural-subtype-consumers/javascript.mjs",
+      "sha256": "06f9491f7380506507fccd045611c28344a3f77037c21f6c2aa81662b2e4f139"
+    },
+    {
+      "bytes": 10009,
+      "path": "failed/r1/sources/tests/structural-subtype-npm-installed.test.mjs",
+      "sha256": "45ee46aad0dcd0418618ec0c2f36d400306f6ef652248732cdc7a74d1db9ca3a"
+    },
+    {
+      "bytes": 4203,
+      "path": "failed/r1/sources/tests/structural-subtype-npm.test.mjs",
+      "sha256": "aa219f83c4f641536244cb351e6a95454379f7fab43a454360215da3a08942e2"
+    },
+    {
+      "bytes": 912,
+      "path": "failed/r1/start.json",
+      "sha256": "b891b984ed411cba316073d4ec6bafe117bb79774f54519cd9bcb9c24a6a3f85"
+    },
+    {
+      "bytes": 203,
+      "path": "failed/r2/end.json",
+      "sha256": "a560ec63c891d7c1a45d1b559a7c691c2a4d79bcf83fcb03750a2f6546920c4f"
+    },
+    {
+      "bytes": 50903,
+      "path": "failed/r2/records/build-0/binding/binding-ir.json",
+      "sha256": "b4e7570617806665f8250f19fdea34b954e166d594e91f6aa2f873235872f4d0"
+    },
+    {
+      "bytes": 1653,
+      "path": "failed/r2/records/build-0/component-package-receipt.json",
+      "sha256": "d3f4b202deb2f3355145be8df10840c9d41c9562108eca1f9f744f67697940b9"
+    },
+    {
+      "bytes": 28510,
+      "path": "failed/r2/records/build-0/locks/compiler-adapters.json",
+      "sha256": "ab5b5b684c73c24b52af35ec812b582b5e5d3e93663ef07e57e6c613b78ea9c4"
+    },
+    {
+      "bytes": 2474,
+      "path": "failed/r2/records/build-0/locks/component-build-plan.json",
+      "sha256": "0d92f357df19951c98f9531d9733c6d0ceb9a1ba65b2d79e6f7224eb0a464b89"
+    },
+    {
+      "bytes": 841,
+      "path": "failed/r2/records/build-0/metadata/provenance.json",
+      "sha256": "d91a369c51c18eb54e38681e1126b8b34b1ae2392f65add60efb51a43333c856"
+    },
+    {
+      "bytes": 2349,
+      "path": "failed/r2/records/build-0/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 50903,
+      "path": "failed/r2/records/build-1/binding/binding-ir.json",
+      "sha256": "b4e7570617806665f8250f19fdea34b954e166d594e91f6aa2f873235872f4d0"
+    },
+    {
+      "bytes": 1653,
+      "path": "failed/r2/records/build-1/component-package-receipt.json",
+      "sha256": "d3f4b202deb2f3355145be8df10840c9d41c9562108eca1f9f744f67697940b9"
+    },
+    {
+      "bytes": 28510,
+      "path": "failed/r2/records/build-1/locks/compiler-adapters.json",
+      "sha256": "ab5b5b684c73c24b52af35ec812b582b5e5d3e93663ef07e57e6c613b78ea9c4"
+    },
+    {
+      "bytes": 2474,
+      "path": "failed/r2/records/build-1/locks/component-build-plan.json",
+      "sha256": "0d92f357df19951c98f9531d9733c6d0ceb9a1ba65b2d79e6f7224eb0a464b89"
+    },
+    {
+      "bytes": 841,
+      "path": "failed/r2/records/build-1/metadata/provenance.json",
+      "sha256": "d91a369c51c18eb54e38681e1126b8b34b1ae2392f65add60efb51a43333c856"
+    },
+    {
+      "bytes": 2349,
+      "path": "failed/r2/records/build-1/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 4146,
+      "path": "failed/r2/records/check.mjs",
+      "sha256": "06f9491f7380506507fccd045611c28344a3f77037c21f6c2aa81662b2e4f139"
+    },
+    {
+      "bytes": 11178,
+      "path": "failed/r2/records/configuration.json",
+      "sha256": "4c811d8865df8b92ad3cbf84029af7e3a5c704f7c3744c853482e494afae2db9"
+    },
+    {
+      "bytes": 34558,
+      "path": "failed/r2/records/expected.binding-ir.json",
+      "sha256": "fcb7bfa656ac6d6262a9773712f02b6c0bd5a08a72483c9ba9225f83fe90c36f"
+    },
+    {
+      "bytes": 155,
+      "path": "failed/r2/records/index.mjs",
+      "sha256": "43bd0c2619bc65da54ab7a5d01eb5fe186832b081151bf8e8a2ea669d1901ac1"
+    },
+    {
+      "bytes": 2059,
+      "path": "failed/r2/records/index.mts",
+      "sha256": "ff786c3877319a2602723077a26fd7ee34d8a789b5796740ec957770dfae27fb"
+    },
+    {
+      "bytes": 290,
+      "path": "failed/r2/records/install.json",
+      "sha256": "dee2935c93c8368af1d9a1d78337654a084ebb064880d2141b78f3407d38a3df"
+    },
+    {
+      "bytes": 3227,
+      "path": "failed/r2/run.tap",
+      "sha256": "46dc7c7d5492eb188a7d4315c881ebc2350a832b249d6ec8c13cb84c12d630b6"
+    },
+    {
+      "bytes": 2059,
+      "path": "failed/r2/sources/tests/fixtures/structural-subtype-consumers/index.mts",
+      "sha256": "ff786c3877319a2602723077a26fd7ee34d8a789b5796740ec957770dfae27fb"
+    },
+    {
+      "bytes": 4146,
+      "path": "failed/r2/sources/tests/fixtures/structural-subtype-consumers/javascript.mjs",
+      "sha256": "06f9491f7380506507fccd045611c28344a3f77037c21f6c2aa81662b2e4f139"
+    },
+    {
+      "bytes": 10365,
+      "path": "failed/r2/sources/tests/structural-subtype-npm-installed.test.mjs",
+      "sha256": "1b00255d0298275bfb4feaf5c2df4d27da15ce59d626263c0c5507090e8f55a6"
+    },
+    {
+      "bytes": 5175,
+      "path": "failed/r2/sources/tests/structural-subtype-npm.test.mjs",
+      "sha256": "021936dc28b0c99ddac6afcdaa114467ea177c616a59a3d040748c5ae8595999"
+    },
+    {
+      "bytes": 912,
+      "path": "failed/r2/start.json",
+      "sha256": "2d974e015d73e9ab64d1b65d8a50a0142c58ad5b18ab3caeeda276586fc75430"
+    },
+    {
+      "bytes": 203,
+      "path": "ordinary/end.json",
+      "sha256": "9206c04bc5d75103bc437014638dac4d692f54e84f2e31243dc7e570596054b7"
+    },
+    {
+      "bytes": 50903,
+      "path": "ordinary/records/build-0/binding/binding-ir.json",
+      "sha256": "b4e7570617806665f8250f19fdea34b954e166d594e91f6aa2f873235872f4d0"
+    },
+    {
+      "bytes": 1653,
+      "path": "ordinary/records/build-0/component-package-receipt.json",
+      "sha256": "d3f4b202deb2f3355145be8df10840c9d41c9562108eca1f9f744f67697940b9"
+    },
+    {
+      "bytes": 28510,
+      "path": "ordinary/records/build-0/locks/compiler-adapters.json",
+      "sha256": "ab5b5b684c73c24b52af35ec812b582b5e5d3e93663ef07e57e6c613b78ea9c4"
+    },
+    {
+      "bytes": 2474,
+      "path": "ordinary/records/build-0/locks/component-build-plan.json",
+      "sha256": "0d92f357df19951c98f9531d9733c6d0ceb9a1ba65b2d79e6f7224eb0a464b89"
+    },
+    {
+      "bytes": 841,
+      "path": "ordinary/records/build-0/metadata/provenance.json",
+      "sha256": "d91a369c51c18eb54e38681e1126b8b34b1ae2392f65add60efb51a43333c856"
+    },
+    {
+      "bytes": 2349,
+      "path": "ordinary/records/build-0/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 50903,
+      "path": "ordinary/records/build-1/binding/binding-ir.json",
+      "sha256": "b4e7570617806665f8250f19fdea34b954e166d594e91f6aa2f873235872f4d0"
+    },
+    {
+      "bytes": 1653,
+      "path": "ordinary/records/build-1/component-package-receipt.json",
+      "sha256": "d3f4b202deb2f3355145be8df10840c9d41c9562108eca1f9f744f67697940b9"
+    },
+    {
+      "bytes": 28510,
+      "path": "ordinary/records/build-1/locks/compiler-adapters.json",
+      "sha256": "ab5b5b684c73c24b52af35ec812b582b5e5d3e93663ef07e57e6c613b78ea9c4"
+    },
+    {
+      "bytes": 2474,
+      "path": "ordinary/records/build-1/locks/component-build-plan.json",
+      "sha256": "0d92f357df19951c98f9531d9733c6d0ceb9a1ba65b2d79e6f7224eb0a464b89"
+    },
+    {
+      "bytes": 841,
+      "path": "ordinary/records/build-1/metadata/provenance.json",
+      "sha256": "d91a369c51c18eb54e38681e1126b8b34b1ae2392f65add60efb51a43333c856"
+    },
+    {
+      "bytes": 2349,
+      "path": "ordinary/records/build-1/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 4248,
+      "path": "ordinary/records/check.mjs",
+      "sha256": "533f53ed0d489c48b2fe5ac67dbb59ef4873f1e44252c5c7918982cd3d3832a3"
+    },
+    {
+      "bytes": 11178,
+      "path": "ordinary/records/configuration.json",
+      "sha256": "4c811d8865df8b92ad3cbf84029af7e3a5c704f7c3744c853482e494afae2db9"
+    },
+    {
+      "bytes": 34558,
+      "path": "ordinary/records/expected.binding-ir.json",
+      "sha256": "fcb7bfa656ac6d6262a9773712f02b6c0bd5a08a72483c9ba9225f83fe90c36f"
+    },
+    {
+      "bytes": 155,
+      "path": "ordinary/records/index.mjs",
+      "sha256": "43bd0c2619bc65da54ab7a5d01eb5fe186832b081151bf8e8a2ea669d1901ac1"
+    },
+    {
+      "bytes": 2059,
+      "path": "ordinary/records/index.mts",
+      "sha256": "ff786c3877319a2602723077a26fd7ee34d8a789b5796740ec957770dfae27fb"
+    },
+    {
+      "bytes": 290,
+      "path": "ordinary/records/install.json",
+      "sha256": "2ea296640be0ffba6dedfdf0bfe66f285aa56bcf2b5c3793fc32dbf690f5227f"
+    },
+    {
+      "bytes": 206,
+      "path": "ordinary/records/installed.json",
+      "sha256": "723dd73e4b9a2660686bc137a1c6f514eeec6e44d2778e2e17cdbc77fb344ee0"
+    },
+    {
+      "bytes": 205,
+      "path": "ordinary/records/relocated.json",
+      "sha256": "4df57e280bb437c51168ff8b92207c8a9edd407a9bd1d4bfdbcc73f0e58a4cd5"
+    },
+    {
+      "bytes": 22320,
+      "path": "ordinary/records/report.json",
+      "sha256": "7a2ef7d5d5dfadc9a9c8c96d4aabfe9df8c3c729db47932706837dec0ce412ee"
+    },
+    {
+      "bytes": 376,
+      "path": "ordinary/run.tap",
+      "sha256": "a275201deacb64c5b63c7ae27b06cc5b5d466428099ea7323ab2c8d205d1e7e4"
+    },
+    {
+      "bytes": 912,
+      "path": "ordinary/start.json",
+      "sha256": "28d3a56a729a91bf5a53ca97e3f43203771cef5984f7ab72a72cd72f1fa71586"
+    },
+    {
+      "bytes": 203,
+      "path": "reviewed/end.json",
+      "sha256": "65b6d75f5337db793ba11afc142b9a6eb9caf13b4b7362fd21bf8c1632d87086"
+    },
+    {
+      "bytes": 50541,
+      "path": "reviewed/records/build-0/binding/binding-ir.json",
+      "sha256": "a2b71d2256dd63c392b68ff62fdaf24b5d66f44a1482026d7bc85448bc75e496"
+    },
+    {
+      "bytes": 1653,
+      "path": "reviewed/records/build-0/component-package-receipt.json",
+      "sha256": "a355187b074c9f01aea62e4678745ee5036a76dd1037382b99297a8400b10357"
+    },
+    {
+      "bytes": 28536,
+      "path": "reviewed/records/build-0/locks/compiler-adapters.json",
+      "sha256": "f3c2ea1936e481da1a28ecea285e665c5f78fa1daca3ef0f46aec120f5d8c8a3"
+    },
+    {
+      "bytes": 2637,
+      "path": "reviewed/records/build-0/locks/component-build-plan.json",
+      "sha256": "0fcef33d121d7899e266ba0684c26a85da76ea743ccd09a83638d80c6e08ff6b"
+    },
+    {
+      "bytes": 841,
+      "path": "reviewed/records/build-0/metadata/provenance.json",
+      "sha256": "2bd82a1dbd969ff793088e21f4e821f1f5330a8a79ebf5d3ed9215ecd8af30a4"
+    },
+    {
+      "bytes": 2349,
+      "path": "reviewed/records/build-0/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 50541,
+      "path": "reviewed/records/build-1/binding/binding-ir.json",
+      "sha256": "a2b71d2256dd63c392b68ff62fdaf24b5d66f44a1482026d7bc85448bc75e496"
+    },
+    {
+      "bytes": 1653,
+      "path": "reviewed/records/build-1/component-package-receipt.json",
+      "sha256": "a355187b074c9f01aea62e4678745ee5036a76dd1037382b99297a8400b10357"
+    },
+    {
+      "bytes": 28536,
+      "path": "reviewed/records/build-1/locks/compiler-adapters.json",
+      "sha256": "f3c2ea1936e481da1a28ecea285e665c5f78fa1daca3ef0f46aec120f5d8c8a3"
+    },
+    {
+      "bytes": 2637,
+      "path": "reviewed/records/build-1/locks/component-build-plan.json",
+      "sha256": "0fcef33d121d7899e266ba0684c26a85da76ea743ccd09a83638d80c6e08ff6b"
+    },
+    {
+      "bytes": 841,
+      "path": "reviewed/records/build-1/metadata/provenance.json",
+      "sha256": "2bd82a1dbd969ff793088e21f4e821f1f5330a8a79ebf5d3ed9215ecd8af30a4"
+    },
+    {
+      "bytes": 2349,
+      "path": "reviewed/records/build-1/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 4248,
+      "path": "reviewed/records/check.mjs",
+      "sha256": "533f53ed0d489c48b2fe5ac67dbb59ef4873f1e44252c5c7918982cd3d3832a3"
+    },
+    {
+      "bytes": 170,
+      "path": "reviewed/records/configuration.json",
+      "sha256": "eacdd5fd78dbfa1ffc73512bcae8a3fe9d2242cb9f65be97ecbbb131bf610f77"
+    },
+    {
+      "bytes": 34558,
+      "path": "reviewed/records/expected.binding-ir.json",
+      "sha256": "fcb7bfa656ac6d6262a9773712f02b6c0bd5a08a72483c9ba9225f83fe90c36f"
+    },
+    {
+      "bytes": 155,
+      "path": "reviewed/records/index.mjs",
+      "sha256": "43bd0c2619bc65da54ab7a5d01eb5fe186832b081151bf8e8a2ea669d1901ac1"
+    },
+    {
+      "bytes": 2059,
+      "path": "reviewed/records/index.mts",
+      "sha256": "ff786c3877319a2602723077a26fd7ee34d8a789b5796740ec957770dfae27fb"
+    },
+    {
+      "bytes": 290,
+      "path": "reviewed/records/install.json",
+      "sha256": "60cd17bb8d7740eace63fea7963dfbad023c9307b4cfad40e1ea15952f6a0114"
+    },
+    {
+      "bytes": 206,
+      "path": "reviewed/records/installed.json",
+      "sha256": "723dd73e4b9a2660686bc137a1c6f514eeec6e44d2778e2e17cdbc77fb344ee0"
+    },
+    {
+      "bytes": 205,
+      "path": "reviewed/records/relocated.json",
+      "sha256": "4df57e280bb437c51168ff8b92207c8a9edd407a9bd1d4bfdbcc73f0e58a4cd5"
+    },
+    {
+      "bytes": 10404,
+      "path": "reviewed/records/report.json",
+      "sha256": "2ef343e301e4520ba236b372cc3cc7ab0af0a424d67170dc81e1ee9dc5f3722c"
+    },
+    {
+      "bytes": 376,
+      "path": "reviewed/run.tap",
+      "sha256": "4211c98f3b61a7c879dd659332aa8ce68735d193cc15d153041ddf57c6f6cd65"
+    },
+    {
+      "bytes": 912,
+      "path": "reviewed/start.json",
+      "sha256": "bd67234b0e24bb8a534510c1246a4385d250b6d2740671d9fec54f4282736241"
+    },
+    {
+      "bytes": 3117,
+      "path": "runner.mjs",
+      "sha256": "e9e29e8b2dc33047d169549a2877fbde8881b41456b7d27161ccc775d9b96bbf"
+    },
+    {
+      "bytes": 5947,
+      "path": "sources/src/abi/refinements.mjs",
+      "sha256": "8bd430b6788472ff848091f06d0f078041b566377f746c78655038760b30fde0"
+    },
+    {
+      "bytes": 4374,
+      "path": "sources/src/analyze/checked-refinement-selection.mjs",
+      "sha256": "f4c7e3d20c4c6050f98cfcc0fa97195a09c02edef49d38d8c1c37381e3830495"
+    },
+    {
+      "bytes": 24617,
+      "path": "sources/src/analyze/elaborated-metadata.mjs",
+      "sha256": "8b4620316551a30edfcabbf7e464b19726d39028b0ae2ea70bf0f9d152a17e57"
+    },
+    {
+      "bytes": 26409,
+      "path": "sources/src/analyze/export-configuration.mjs",
+      "sha256": "91a3c1a9be0ff57e837edd7a10b9b1886d7eefc4e89e0b67ef61eb8487c02e8e"
+    },
+    {
+      "bytes": 15435,
+      "path": "sources/src/analyze/native-types.mjs",
+      "sha256": "839c0b786f3d32c3c039e7c884d2f111929874c111cd393b1c302875ed1a0641"
+    },
+    {
+      "bytes": 92606,
+      "path": "sources/src/analyze/NativeExports.lean",
+      "sha256": "4e0365fc20c8fabb04f2c9247284954f37e20005aa1c6baa7e0277897231be6f"
+    },
+    {
+      "bytes": 2890,
+      "path": "sources/src/analyze/reviewed-subtypes.mjs",
+      "sha256": "bdbf9bfc44a129cd223c299acb432b45f2f337d758f2305081e597bde4ca0856"
+    },
+    {
+      "bytes": 35903,
+      "path": "sources/src/backends/javascript/generate.mjs",
+      "sha256": "748d746b7ca78d27a28b251f8d3e29068a73ef8a26e0c57903e518ce30258d12"
+    },
+    {
+      "bytes": 24545,
+      "path": "sources/src/build/compiler-adapters.mjs",
+      "sha256": "335d5a7ce36223c240626c0462e6eb5938d291f38f24d17b7c66218739ca6e36"
+    },
+    {
+      "bytes": 14638,
+      "path": "sources/src/build/component-callable-adapters.mjs",
+      "sha256": "958e629d9012f0ef7c94b72318b520a4181bb2f585e5558188ddd72503c96425"
+    },
+    {
+      "bytes": 8271,
+      "path": "sources/src/build/component-refinements.mjs",
+      "sha256": "1c936270da51e3991148681a317e30727936bc8c4e74f7a79330f4b7393a927c"
+    },
+    {
+      "bytes": 25664,
+      "path": "sources/src/release/component-npm-package.mjs",
+      "sha256": "f7c4e8196814cdb6dafe16173740f762c9bf2208b6fa10650be8855f12b1b3c4"
+    },
+    {
+      "bytes": 8610,
+      "path": "sources/src/release/component-package-receipt.mjs",
+      "sha256": "76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"
+    },
+    {
+      "bytes": 87,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/lakefile.toml",
+      "sha256": "16a51fbc493627ffd1a5beebdccbe577039cc22ce333e4233417444417cf188f"
+    },
+    {
+      "bytes": 25,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/lean-toolchain",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "bytes": 1093,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 64,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/package.json",
+      "sha256": "5cc3610c19032e010e0c18c017695d0a2f16b46828effec79bb5089ccf1932df"
+    },
+    {
+      "bytes": 2349,
+      "path": "sources/tests/fixtures/onboarding/structural-subtypes/StructuralSubtypes.lean",
+      "sha256": "a5c559c1122a1bdc2a2264b2d1a0f5987b71fcbb1fddd400948f34a0cb211a5f"
+    },
+    {
+      "bytes": 2059,
+      "path": "sources/tests/fixtures/structural-subtype-consumers/index.mts",
+      "sha256": "ff786c3877319a2602723077a26fd7ee34d8a789b5796740ec957770dfae27fb"
+    },
+    {
+      "bytes": 4248,
+      "path": "sources/tests/fixtures/structural-subtype-consumers/javascript.mjs",
+      "sha256": "533f53ed0d489c48b2fe5ac67dbb59ef4873f1e44252c5c7918982cd3d3832a3"
+    },
+    {
+      "bytes": 15505,
+      "path": "sources/tests/helpers/copied-fixture-install.mjs",
+      "sha256": "dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df"
+    },
+    {
+      "bytes": 1655,
+      "path": "sources/tests/helpers/refinement-engine.mjs",
+      "sha256": "91e69b67d355d2b436fa699a5e4a4692362bdc4f9536634877b6af41e968d3b4"
+    },
+    {
+      "bytes": 5465,
+      "path": "sources/tests/helpers/structural-subtype-installed-fixture.mjs",
+      "sha256": "5743bb3d0fd00301c22587a0111edcb1301c7f43c3dda0c4746340c18c0a201f"
+    },
+    {
+      "bytes": 799,
+      "path": "sources/tests/helpers/structural-subtype-npm-package.mjs",
+      "sha256": "bd0416f9a053f54fda37e3dfb214cf9fa38b56ade39484e841e5fa3f627abf13"
+    },
+    {
+      "bytes": 10365,
+      "path": "sources/tests/structural-subtype-npm-installed.test.mjs",
+      "sha256": "1b00255d0298275bfb4feaf5c2df4d27da15ce59d626263c0c5507090e8f55a6"
+    },
+    {
+      "bytes": 5449,
+      "path": "sources/tests/structural-subtype-npm.test.mjs",
+      "sha256": "a699479e939a4758cbe7c10e3b9fb9dff8a5fd327da41496c30e3d8cc17984b0"
+    }
+  ],
+  "kind": "structural-subtype-npm-installed-v1",
+  "limitations": [
+    "Only the named ordinary/reviewed Node and strict TypeScript structural fixture.",
+    "Constructor/source dispatch and memory usage are unmeasured.",
+    "Package binaries and full toolchain closures are not retained; original receipts and installed-file hashes are retained.",
+    "No browser, hosted acceptance, support-cell promotion or required recurring gate follows from this archive."
+  ],
+  "producerCommit": "8a114eff75094d760874f422996213dd37271613",
+  "runs": [
+    {
+      "checks": 3028,
+      "dispatchObserved": false,
+      "executions": 2,
+      "producerCommit": "8a114eff75094d760874f422996213dd37271613",
+      "rejections": 1020,
+      "reportSha256": "7a2ef7d5d5dfadc9a9c8c96d4aabfe9df8c3c729db47932706837dec0ce412ee",
+      "route": "ordinary",
+      "tapSha256": "a275201deacb64c5b63c7ae27b06cc5b5d466428099ea7323ab2c8d205d1e7e4"
+    },
+    {
+      "checks": 3028,
+      "dispatchObserved": false,
+      "executions": 2,
+      "producerCommit": "8a114eff75094d760874f422996213dd37271613",
+      "rejections": 1020,
+      "reportSha256": "2ef343e301e4520ba236b372cc3cc7ab0af0a424d67170dc81e1ee9dc5f3722c",
+      "route": "reviewed",
+      "tapSha256": "4211c98f3b61a7c879dd659332aa8ce68735d193cc15d153041ddf57c6f6cd65"
+    }
+  ],
+  "schemaVersion": 1,
+  "selectedSources": [
+    "src/abi/refinements.mjs",
+    "src/analyze/NativeExports.lean",
+    "src/analyze/native-types.mjs",
+    "src/analyze/export-configuration.mjs",
+    "src/analyze/reviewed-subtypes.mjs",
+    "src/analyze/checked-refinement-selection.mjs",
+    "src/analyze/elaborated-metadata.mjs",
+    "src/build/component-refinements.mjs",
+    "src/build/compiler-adapters.mjs",
+    "src/build/component-callable-adapters.mjs",
+    "src/backends/javascript/generate.mjs",
+    "src/release/component-npm-package.mjs",
+    "src/release/component-package-receipt.mjs",
+    "tests/structural-subtype-npm-installed.test.mjs",
+    "tests/structural-subtype-npm.test.mjs",
+    "tests/helpers/structural-subtype-installed-fixture.mjs",
+    "tests/helpers/structural-subtype-npm-package.mjs",
+    "tests/helpers/copied-fixture-install.mjs",
+    "tests/helpers/refinement-engine.mjs",
+    "tests/fixtures/structural-subtype-consumers/javascript.mjs",
+    "tests/fixtures/structural-subtype-consumers/index.mts",
+    "tests/fixtures/onboarding/structural-subtypes/StructuralSubtypes.lean",
+    "tests/fixtures/onboarding/structural-subtypes/lakefile.toml",
+    "tests/fixtures/onboarding/structural-subtypes/lean-toolchain",
+    "tests/fixtures/onboarding/structural-subtypes/package.json",
+    "tests/fixtures/onboarding/structural-subtypes/LICENSE"
+  ]
+}

@@ -1,0 +1,1054 @@
+{
+  "component": "structuralsubtypes@1.0.0",
+  "componentPlanSha256": "0d92f357df19951c98f9531d9733c6d0ceb9a1ba65b2d79e6f7224eb0a464b89",
+  "exports": [
+    {
+      "bindingId": "lean:StructuralSubtypes.aliasArguments",
+      "leanEffect": null,
+      "leanResultType": "(_root_.Array (_root_.Option _root_.Nat))",
+      "parameters": [
+        {
+          "leanType": "(_root_.Array (_root_.Option _root_.Nat))",
+          "name": "arg0"
+        },
+        {
+          "leanType": "(_root_.Array (_root_.Option _root_.Nat))",
+          "name": "arg1"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "constructor": "StructuralSubtypes.checkedPositive",
+                    "kind": "subtype"
+                  }
+                ],
+                "kind": "option"
+              }
+            ],
+            "kind": "array"
+          },
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "constructor": "StructuralSubtypes.normalizePositive",
+                    "kind": "subtype"
+                  }
+                ],
+                "kind": "option"
+              }
+            ],
+            "kind": "array"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "constructor": "StructuralSubtypes.checkedPositive",
+                  "kind": "subtype"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "kind": "array"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "StructuralSubtypes.aliasArguments",
+      "sourceModule": "StructuralSubtypes",
+      "symbol": "lean_bridge_1f7f9ef7671f418674baa362",
+      "wrapper": "export_ba0a60e8010da1578d85"
+    },
+    {
+      "bindingId": "lean:StructuralSubtypes.aliasPair",
+      "leanEffect": null,
+      "leanResultType": "((_root_.Array (_root_.Option _root_.Nat)) × (_root_.Array (_root_.Option _root_.Nat)))",
+      "parameters": [
+        {
+          "leanType": "((_root_.Array (_root_.Option _root_.Nat)) × (_root_.Array (_root_.Option _root_.Nat)))",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "constructor": "StructuralSubtypes.checkedPositive",
+                        "kind": "subtype"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              },
+              {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "constructor": "StructuralSubtypes.normalizePositive",
+                        "kind": "subtype"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              }
+            ],
+            "kind": "tuple"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "constructor": "StructuralSubtypes.checkedPositive",
+                      "kind": "subtype"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            },
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "constructor": "StructuralSubtypes.normalizePositive",
+                      "kind": "subtype"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "kind": "tuple"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "StructuralSubtypes.aliasPair",
+      "sourceModule": "StructuralSubtypes",
+      "symbol": "lean_bridge_136a21a7efc04e309affb48a",
+      "wrapper": "export_4127481291e04dbc5e6c"
+    },
+    {
+      "bindingId": "lean:StructuralSubtypes.arrays",
+      "leanEffect": null,
+      "leanResultType": "(_root_.Array _root_.Nat)",
+      "parameters": [
+        {
+          "leanType": "(_root_.Array _root_.Nat)",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "constructor": "StructuralSubtypes.checkedPositive",
+                "kind": "subtype"
+              }
+            ],
+            "kind": "array"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "constructor": "StructuralSubtypes.checkedPositive",
+              "kind": "subtype"
+            }
+          ],
+          "kind": "array"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "StructuralSubtypes.arrays",
+      "sourceModule": "StructuralSubtypes",
+      "symbol": "lean_bridge_1c29864381f66a491ff16e02",
+      "wrapper": "export_30a44def312ee51a3caf"
+    },
+    {
+      "bindingId": "lean:StructuralSubtypes.branch",
+      "leanEffect": null,
+      "leanResultType": "(_root_.Except _root_.String _root_.Nat)",
+      "parameters": [
+        {
+          "leanType": "(_root_.Except _root_.String _root_.Nat)",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "constructor": "StructuralSubtypes.checkedPositive",
+                "kind": "subtype"
+              },
+              {
+                "constructor": "StructuralSubtypes.checkedWord",
+                "kind": "subtype"
+              }
+            ],
+            "kind": "result"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "constructor": "StructuralSubtypes.checkedPositive",
+              "kind": "subtype"
+            },
+            {
+              "constructor": "StructuralSubtypes.checkedWord",
+              "kind": "subtype"
+            }
+          ],
+          "kind": "result"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "StructuralSubtypes.branch",
+      "sourceModule": "StructuralSubtypes",
+      "symbol": "lean_bridge_a9625a28a1efa7eea792fc9a",
+      "wrapper": "export_47362968e3173cc10d87"
+    },
+    {
+      "bindingId": "lean:StructuralSubtypes.byteBranches",
+      "leanEffect": null,
+      "leanResultType": "(_root_.Array (_root_.Option (_root_.UInt8 × _root_.Nat)))",
+      "parameters": [
+        {
+          "leanType": "(_root_.Array (_root_.Option (_root_.UInt8 × _root_.Nat)))",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "constructor": "StructuralSubtypes.checkedByte",
+                        "kind": "subtype"
+                      },
+                      {
+                        "constructor": "StructuralSubtypes.checkedPositive",
+                        "kind": "subtype"
+                      }
+                    ],
+                    "kind": "tuple"
+                  }
+                ],
+                "kind": "option"
+              }
+            ],
+            "kind": "array"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "constructor": "StructuralSubtypes.checkedByte",
+                      "kind": "subtype"
+                    },
+                    {
+                      "constructor": "StructuralSubtypes.checkedPositive",
+                      "kind": "subtype"
+                    }
+                  ],
+                  "kind": "tuple"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "kind": "array"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "StructuralSubtypes.byteBranches",
+      "sourceModule": "StructuralSubtypes",
+      "symbol": "lean_bridge_1420389f62a92e79a0dec989",
+      "wrapper": "export_f468a2ffb4fa37585890"
+    },
+    {
+      "bindingId": "lean:StructuralSubtypes.lists",
+      "leanEffect": null,
+      "leanResultType": "(_root_.List _root_.Nat)",
+      "parameters": [
+        {
+          "leanType": "(_root_.List _root_.Nat)",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "constructor": "StructuralSubtypes.checkedPositive",
+                "kind": "subtype"
+              }
+            ],
+            "kind": "list"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "constructor": "StructuralSubtypes.checkedPositive",
+              "kind": "subtype"
+            }
+          ],
+          "kind": "list"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "StructuralSubtypes.lists",
+      "sourceModule": "StructuralSubtypes",
+      "symbol": "lean_bridge_d09f4a740ec09810010501ce",
+      "wrapper": "export_1dd4d851c80160377a42"
+    },
+    {
+      "bindingId": "lean:StructuralSubtypes.nested",
+      "leanEffect": null,
+      "leanResultType": "_root_.Nat",
+      "parameters": [
+        {
+          "leanType": "(_root_.Array (_root_.List (_root_.Option (_root_.Nat × _root_.Nat))))",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "constructor": "StructuralSubtypes.checkedPositive",
+                            "kind": "subtype"
+                          },
+                          {
+                            "bound": "184467440737095516170",
+                            "kind": "fin"
+                          }
+                        ],
+                        "kind": "tuple"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "list"
+              }
+            ],
+            "kind": "array"
+          }
+        ],
+        "result": null
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "StructuralSubtypes.nested",
+      "sourceModule": "StructuralSubtypes",
+      "symbol": "lean_bridge_d902877f9ada5a566acf1fe7",
+      "wrapper": "export_550b28725ec7b95d45d8"
+    },
+    {
+      "bindingId": "lean:StructuralSubtypes.options",
+      "leanEffect": null,
+      "leanResultType": "(_root_.Option _root_.Nat)",
+      "parameters": [
+        {
+          "leanType": "(_root_.Option _root_.Nat)",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "constructor": "StructuralSubtypes.checkedPositive",
+                "kind": "subtype"
+              }
+            ],
+            "kind": "option"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "constructor": "StructuralSubtypes.checkedPositive",
+              "kind": "subtype"
+            }
+          ],
+          "kind": "option"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "StructuralSubtypes.options",
+      "sourceModule": "StructuralSubtypes",
+      "symbol": "lean_bridge_4cfe6a2f4300106daf439277",
+      "wrapper": "export_f871f89cee3544f4b9e1"
+    },
+    {
+      "bindingId": "lean:StructuralSubtypes.plainFin",
+      "leanEffect": null,
+      "leanResultType": "_root_.Nat",
+      "parameters": [
+        {
+          "leanType": "(_root_.Array (_root_.Option _root_.Nat))",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "10",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "option"
+              }
+            ],
+            "kind": "array"
+          }
+        ],
+        "result": null
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "StructuralSubtypes.plainFin",
+      "sourceModule": "StructuralSubtypes",
+      "symbol": "lean_bridge_9dc34a74bf47aa74806d820e",
+      "wrapper": "export_2263f721fd0e4ba9557c"
+    },
+    {
+      "bindingId": "lean:StructuralSubtypes.product",
+      "leanEffect": null,
+      "leanResultType": "(_root_.Nat × _root_.String)",
+      "parameters": [
+        {
+          "leanType": "(_root_.Nat × _root_.String)",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "constructor": "StructuralSubtypes.checkedPositive",
+                "kind": "subtype"
+              },
+              {
+                "constructor": "StructuralSubtypes.checkedWord",
+                "kind": "subtype"
+              }
+            ],
+            "kind": "tuple"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "constructor": "StructuralSubtypes.checkedPositive",
+              "kind": "subtype"
+            },
+            {
+              "constructor": "StructuralSubtypes.checkedWord",
+              "kind": "subtype"
+            }
+          ],
+          "kind": "tuple"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "StructuralSubtypes.product",
+      "sourceModule": "StructuralSubtypes",
+      "symbol": "lean_bridge_ffb3237dc24d69e18d8349d1",
+      "wrapper": "export_11b57bcb3610ac706ed4"
+    },
+    {
+      "bindingId": "lean:StructuralSubtypes.scalar",
+      "leanEffect": null,
+      "leanResultType": "_root_.Nat",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "StructuralSubtypes.checkedPositive",
+            "kind": "subtype"
+          }
+        ],
+        "result": {
+          "constructor": "StructuralSubtypes.checkedPositive",
+          "kind": "subtype"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "StructuralSubtypes.scalar",
+      "sourceModule": "StructuralSubtypes",
+      "symbol": "lean_bridge_70b3f88cfbabffab9f9b5872",
+      "wrapper": "export_2e94a43bc42b711067e6"
+    },
+    {
+      "bindingId": "lean:StructuralSubtypes.specialized",
+      "leanEffect": null,
+      "leanResultType": "(_root_.List _root_.Nat)",
+      "parameters": [
+        {
+          "leanType": "(_root_.List _root_.Nat)",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "constructor": "StructuralSubtypes.checkedPositive",
+                "kind": "subtype"
+              }
+            ],
+            "kind": "list"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "constructor": "StructuralSubtypes.checkedPositive",
+              "kind": "subtype"
+            }
+          ],
+          "kind": "list"
+        }
+      },
+      "resultMode": "value",
+      "sourceApplication": "(@_root_.StructuralSubtypes.generic (@_root_.StructuralSubtypes.Positive))",
+      "sourceDeclaration": "StructuralSubtypes.generic",
+      "sourceModule": "StructuralSubtypes",
+      "symbol": "lean_bridge_c42abc040b7e56feca04426f",
+      "wrapper": "export_49564039a906dcbe8ed8"
+    }
+  ],
+  "imports": [
+    "StructuralSubtypes"
+  ],
+  "leanSourceSha256": "151b068bc44c07060369b8397eaea64ec7a0135a0436f411110b6d0fd481c7e8",
+  "module": "LeanBridgeGenerated85dc6ef3dd30a6b6",
+  "privateAbi": {
+    "dispatch": "copied-compound-frame-v1",
+    "exports": [
+      {
+        "bindingId": "lean:StructuralSubtypes.aliasArguments",
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "kind": "primitive",
+                    "name": "nat"
+                  }
+                ],
+                "constructor": "option",
+                "kind": "apply"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          },
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "kind": "primitive",
+                    "name": "nat"
+                  }
+                ],
+                "constructor": "option",
+                "kind": "apply"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "constructor": "array",
+          "kind": "apply"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_1f7f9ef7671f418674baa362"
+      },
+      {
+        "bindingId": "lean:StructuralSubtypes.aliasPair",
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "constructor": "option",
+                    "kind": "apply"
+                  }
+                ],
+                "constructor": "array",
+                "kind": "apply"
+              },
+              {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "constructor": "option",
+                    "kind": "apply"
+                  }
+                ],
+                "constructor": "array",
+                "kind": "apply"
+              }
+            ],
+            "constructor": "tuple",
+            "kind": "apply"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "kind": "primitive",
+                      "name": "nat"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            },
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "kind": "primitive",
+                      "name": "nat"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          ],
+          "constructor": "tuple",
+          "kind": "apply"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_136a21a7efc04e309affb48a"
+      },
+      {
+        "bindingId": "lean:StructuralSubtypes.arrays",
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "kind": "primitive",
+                "name": "nat"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "constructor": "array",
+          "kind": "apply"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_1c29864381f66a491ff16e02"
+      },
+      {
+        "bindingId": "lean:StructuralSubtypes.branch",
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "kind": "primitive",
+                "name": "nat"
+              },
+              {
+                "kind": "primitive",
+                "name": "string"
+              }
+            ],
+            "constructor": "result",
+            "kind": "apply"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            {
+              "kind": "primitive",
+              "name": "string"
+            }
+          ],
+          "constructor": "result",
+          "kind": "apply"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_a9625a28a1efa7eea792fc9a"
+      },
+      {
+        "bindingId": "lean:StructuralSubtypes.byteBranches",
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "uint8"
+                      },
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "constructor": "tuple",
+                    "kind": "apply"
+                  }
+                ],
+                "constructor": "option",
+                "kind": "apply"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "kind": "primitive",
+                      "name": "uint8"
+                    },
+                    {
+                      "kind": "primitive",
+                      "name": "nat"
+                    }
+                  ],
+                  "constructor": "tuple",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "constructor": "array",
+          "kind": "apply"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_1420389f62a92e79a0dec989"
+      },
+      {
+        "bindingId": "lean:StructuralSubtypes.lists",
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "kind": "primitive",
+                "name": "nat"
+              }
+            ],
+            "constructor": "list",
+            "kind": "apply"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "constructor": "list",
+          "kind": "apply"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_d09f4a740ec09810010501ce"
+      },
+      {
+        "bindingId": "lean:StructuralSubtypes.nested",
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "kind": "primitive",
+                            "name": "nat"
+                          },
+                          {
+                            "kind": "primitive",
+                            "name": "nat"
+                          }
+                        ],
+                        "constructor": "tuple",
+                        "kind": "apply"
+                      }
+                    ],
+                    "constructor": "option",
+                    "kind": "apply"
+                  }
+                ],
+                "constructor": "list",
+                "kind": "apply"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_d902877f9ada5a566acf1fe7"
+      },
+      {
+        "bindingId": "lean:StructuralSubtypes.options",
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "kind": "primitive",
+                "name": "nat"
+              }
+            ],
+            "constructor": "option",
+            "kind": "apply"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "constructor": "option",
+          "kind": "apply"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_4cfe6a2f4300106daf439277"
+      },
+      {
+        "bindingId": "lean:StructuralSubtypes.plainFin",
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "kind": "primitive",
+                    "name": "nat"
+                  }
+                ],
+                "constructor": "option",
+                "kind": "apply"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_9dc34a74bf47aa74806d820e"
+      },
+      {
+        "bindingId": "lean:StructuralSubtypes.product",
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "kind": "primitive",
+                "name": "nat"
+              },
+              {
+                "kind": "primitive",
+                "name": "string"
+              }
+            ],
+            "constructor": "tuple",
+            "kind": "apply"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            {
+              "kind": "primitive",
+              "name": "string"
+            }
+          ],
+          "constructor": "tuple",
+          "kind": "apply"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_ffb3237dc24d69e18d8349d1"
+      },
+      {
+        "bindingId": "lean:StructuralSubtypes.scalar",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_70b3f88cfbabffab9f9b5872"
+      },
+      {
+        "bindingId": "lean:StructuralSubtypes.specialized",
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "kind": "primitive",
+                "name": "nat"
+              }
+            ],
+            "constructor": "list",
+            "kind": "apply"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "constructor": "list",
+          "kind": "apply"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_c42abc040b7e56feca04426f"
+      }
+    ],
+    "records": [],
+    "version": 6
+  },
+  "schemaVersion": 1
+}
