@@ -141,7 +141,8 @@ test("native checked-record consumer guides match the promoted routes and retain
 		if(profile === "php-native")
 		{
 			assert.ok(source.includes("These results apply to native PHP, not PHP-Wasm."));
-			assert.ok(row.includes("PHP-Wasm: Not audited"));
+			assert.ok(source.includes("checked-record-php-wasm-promotion-20261011.md"));
+			assert.ok(!row.includes("PHP-Wasm: Not audited"));
 		}
 		else assert.ok(row.includes("Reviewed IR: Installed checks passed (input, result)"), path);
 	}

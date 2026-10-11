@@ -21,6 +21,7 @@ import { readCheckedRecordRubyJvmArchive } from "./helpers/checked-record-ruby-j
 import { readCheckedRecordRemainingHostsArchive } from "./helpers/checked-record-remaining-hosts-archive.mjs";
 import { checkedRecordPerlReferences } from "./helpers/checked-record-perl-promotion.mjs";
 import { checkedRecordBrowserReferences } from "./helpers/checked-record-browser-promotion.mjs";
+import { checkedRecordPhpWasmReferences } from "./helpers/checked-record-php-wasm-promotion.mjs";
 import { callbackFinPromotionReferences } from "./helpers/callback-fin-promotion-references.mjs";
 import { sha256 } from "../src/capsule/node.mjs";
 import { finHostedReceiptSha256 } from "./helpers/fin-native-hosted-evidence.mjs";
@@ -166,7 +167,9 @@ test("checked-record guidance uses the tested payload and per-site constructor c
 	assert.match(section, /checked-record-browser-promotion-20261011\.md/);
 	assert.match(section, /all four ordinary\/reviewed full and result-only routes/);
 	assert.match(section, /Chromium, Firefox and WebKit pages, React production\/Strict Mode and workers/);
-	assert.match(section, /PHP-Wasm checked-record execution remains pending/);
+	assert.match(section, /checked-record-php-wasm-promotion-20261011\.md/);
+	assert.match(section, /twelve Node\/Chromium configurations on wasm32 PHP 8\.4\.1/);
+	assert.doesNotMatch(section, /PHP-Wasm checked-record execution remains pending/);
 	assert.doesNotMatch(section, /Installed-package acceptance for this mapping is pending|do not establish installed C\/C\+\+/);
 	assert.match(section, /exact names, order and types/);
 	assert.match(section, /result already has its proofs/);
@@ -175,10 +178,10 @@ test("checked-record guidance uses the tested payload and per-site constructor c
 	assert.match(await readFile("docs/lean/export-decisions.md", "utf8"), /existing-package.md#export-a-record-with-proof-fields/);
 });
 
-test("the checked-record author table agrees with the retained native, npm, browser and Perl selections", async () => {
+test("the checked-record author table agrees with all seventeen installed consumer profiles", async () => {
 	const document = await readFile("docs/lean/existing-package.md", "utf8");
 	const row = document.split("\n").find(line => line.startsWith("| Record with erased proof fields"));
-	assert.equal(row, "| Record with erased proof fields and a checked input constructor | Node, browser, React and worker installed, both source routes | C/C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI installed | Installed, both source routes on four ABIs | Not yet verified | C/C++, Node, browser, React, worker, all eight additional native hosts and CPAN installed; PHP-Wasm pending |");
+	assert.equal(row, "| Record with erased proof fields and a checked input constructor | Node, browser, React and worker installed, both source routes | C/C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI installed | Installed, both source routes on four ABIs | Installed, both source routes in Node/Chromium | All seventeen profiles have installed top-level input/result checks; nested and other dependent combinations remain unfinished |");
 	const python = await readCheckedRecordPythonArchive();
 	assert.equal(python.reports.length, 8);
 	assert.deepEqual([...new Set(python.index.runs.map(run => run.floor))], ["3.11", "3.12"]);
@@ -204,7 +207,10 @@ test("the checked-record author table agrees with the retained native, npm, brow
 	const browserReferences = await checkedRecordBrowserReferences();
 	assert.equal(browserReferences.length, 4);
 	assert.equal(browserReferences.filter(reference => reference.resultOnly).length, 2);
-	for(const reference of browserReferences) for(const profile of reference.profiles) for(const position of reference.positions)
+	const phpWasmReferences = await checkedRecordPhpWasmReferences();
+	assert.equal(phpWasmReferences.length, 4);
+	assert.equal(phpWasmReferences.filter(reference => reference.resultOnly).length, 2);
+	for(const reference of [...browserReferences, ...phpWasmReferences]) for(const profile of reference.profiles) for(const position of reference.positions)
 	{
 		const observations = inventory.observations.filter(item => item.profiles.includes(profile) && item.path === reference.sourcePath && item.shapes.includes("checked-record") && item.positions.includes(position));
 		assert.equal(observations.length, 1);

@@ -412,6 +412,7 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 		python: ["python-3-11", "python-3-12"], ruby: ["ruby-jvm"]
 		, java: ["ruby-jvm"], kotlin: ["ruby-jvm"], dotnet: ["remaining"]
 		, rust: ["remaining"], "php-native": ["remaining"], "wit-wasi": ["remaining"]
+		, "php-wasm": ["php-wasm"]
 	}[profile] ?? [];
 	const checkedRecords = checkedRecordGroups.length ? ["checked-record"] : [];
 	assert.equal(observed.length, 63 + 3 * (compounds.length + lists.length + aliases.length + variants.length + recursive.length) + 2 * fins.length + 2 * subtypes.length + 2 * checkedRecords.length + specialized.length + (nominalFin ? 1 : 0));
@@ -427,7 +428,7 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 			{
 				assert.deepEqual(stage.evidence, checkedRecordGroups.flatMap(group =>
 					(cell.position === "result" ? ["ordinary-source", "result-only-ordinary-source"] : ["ordinary-source"])
-						.map(route => `checked-record-native-${group}-${route}-installed`)));
+						.map(route => `${profile === "php-wasm" ? "checked-record" : "checked-record-native"}-${group}-${route}-installed`)));
 				continue;
 			}
 			// Structural Fin keeps existing scalar/container evidence; fields cite only the new record runs.

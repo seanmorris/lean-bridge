@@ -53,6 +53,8 @@ import "./helpers/checked-record-php-wasm-ci-tests.mjs";
 import "./helpers/checked-record-php-wasm-ci-shell-tests.mjs";
 import "./helpers/checked-record-php-wasm-ci-workflow-tests.mjs";
 import "./helpers/checked-record-php-wasm-ci-history-tests.mjs";
+import "./helpers/checked-record-php-wasm-promotion-tests.mjs";
+import "./helpers/checked-record-php-wasm-promotion-history-tests.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
 import { assertRefinement } from "../src/abi/refinements.mjs";

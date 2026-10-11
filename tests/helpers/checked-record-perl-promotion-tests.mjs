@@ -137,13 +137,14 @@ test("Perl consumer and author guides distinguish installed checked records from
 	const author = await readFile("docs/lean/existing-package.md", "utf8");
 	assert.ok(author.includes("[Installed Perl checks](../evidence/checked-record-perl-installed-20261011.md)"));
 	assert.ok(author.includes("[Installed browser checks](../evidence/checked-record-browser-promotion-20261011.md)"));
-	assert.ok(author.includes("PHP-Wasm checked-record execution remains pending."));
+	assert.ok(author.includes("[Installed PHP-Wasm checks](../evidence/checked-record-php-wasm-promotion-20261011.md)"));
+	assert.ok(!author.includes("PHP-Wasm checked-record execution remains pending."));
 	assert.ok(author.includes("callbacks and owned positions remain unsupported."));
 	assert.ok(!author.includes("PHP-Wasm and browser checked-record execution remain pending."));
 	assert.ok(!author.includes("Perl and PHP-Wasm checked-record adapters remain pending."));
 	const decisions = await readFile("docs/lean/export-decisions.md", "utf8");
 	assert.ok(!decisions.includes("Installed acceptance for this mapping is pending."));
-	assert.ok(decisions.includes("Perl, native PHP and WIT/WASI"));
+	assert.ok(decisions.includes("Perl, native PHP, PHP-Wasm and WIT/WASI"));
 });
 
 test("Perl checked-record promotion history authenticates exact transitions and rejects unknown edits", async () => {
