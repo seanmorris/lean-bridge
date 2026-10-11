@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-php-wasm-v1",
+  "predecessorCommit": "ebad9755490619052a87c1385af49f669ac48f86",
+  "updates": [
+    {
+      "path": "tests/checked-records.test.mjs",
+      "currentSha256": "2a4c52161689b95c4b411b9104d99ce9aa190c2f2a043cccd8631e78dbe8181b",
+      "previousSha256": "da15bab9aa63f212de1c3223bab0d034a78a252bd339a35f3f68f3c7d72d1fd7",
+      "edits": [
+        {
+          "start": 2476,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-php-wasm-tests.mjs\";\nimport \"./helpers/checked-record-php-wasm-caller-control-tests.mjs\";\nimport \"./helpers/checked-record-php-wasm-lean-tests.mjs\";\nimport \"./helpers/checked-record-php-wasm-reconcile-tests.mjs\";\nimport \"./helpers/checked-record-php-wasm-installed-tests.mjs\";\nimport \"./helpers/checked-record-php-wasm-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-browser-promotion-history.mjs",
+      "currentSha256": "4c0a89d1f99c9128dd0aac5ee59a5a6cc7a262490e1d37619a027afa5fe87683",
+      "previousSha256": "1412721a00eefe76551d5a4575ae2c837603e0019a7d42bea129f3dbdce0cd6b",
+      "edits": [
+        {
+          "start": 251,
+          "previous": "",
+          "current": "import { beforeCheckedRecordPhpWasmSource } from \"./checked-record-php-wasm-history.mjs\";\n"
+        },
+        {
+          "start": 2556,
+          "previous": "",
+          "current": "\tsource = beforeCheckedRecordPhpWasmSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "51304fa5a4736861eae0b02ca599e798d7ab9248320536003a4fa685de5c0260",
+      "previousSha256": "1bc201658045909b1793f8f30a13a373c1504b6bacd5fc85df1f1ed700c0d5c5",
+      "edits": [
+        {
+          "start": 1690,
+          "previous": "",
+          "current": "import { checkedRecordPhpWasmChangedPaths } from \"./checked-record-php-wasm-history.mjs\";\n"
+        },
+        {
+          "start": 61747,
+          "previous": "",
+          "current": "\t, ...checkedRecordPhpWasmChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}

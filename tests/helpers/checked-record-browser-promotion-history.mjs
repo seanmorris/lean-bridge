@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeCheckedRecordPhpWasmSource } from "./checked-record-php-wasm-history.mjs";
 
 export const checkedRecordBrowserPromotionHistoryPath = "docs/evidence/checked-record-browser-promotion-source-history-20261011.json";
 export const checkedRecordBrowserPromotionPredecessor = "0052726d1845afec0815feccbb104adaadbd4d95";
@@ -58,6 +59,7 @@ export const reverseCheckedRecordBrowserPromotionUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeCheckedRecordBrowserPromotionSource = (path, source, expected) => {
+	source = beforeCheckedRecordPhpWasmSource(path, source, expected);
 	if(typeof source !== "string" || !checkedRecordBrowserPromotionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

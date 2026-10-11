@@ -1,0 +1,75 @@
+/**
+ * Fresh Lean compiler checks for all four PHP-Wasm checked-record selections.
+ *
+ * @file
+ */
+import assert from "node:assert/strict";
+import { access, cp, mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
+import test from "node:test";
+import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { buildElaboratedComponent } from "../../src/build/elaborated-component.mjs";
+import { createCompiledPhpWasmModel } from "../../src/build/php-wasm-graph-model.mjs";
+import { generateNativeLeanAdapters } from "../../src/build/native-model.mjs";
+import { generateNativePrimitiveC } from "../../src/backends/c/native-primitives.mjs";
+import { checkedRecordFixture } from "./checked-record-fixture.mjs";
+import { saveLakeFile } from "./lake-workspace.mjs";
+import { checkedRecordPhpWasmSelection, checkCheckedRecordPhpWasmModel } from "./checked-record-php-wasm-fixture.mjs";
+
+const flag = process.env.LEAN_BRIDGE_CHECKED_RECORD_PHP_WASM_LEAN_TEST;
+assert.ok(flag === undefined || ["0", "1"].includes(flag));
+
+for(const route of ["ordinary-source", "reviewed-ir", "result-only-ordinary-source", "result-only-reviewed-ir"])
+	test(`fresh Lean PHP-Wasm checked-record ${route}`, { skip: flag !== "1", timeout: 600000 }, async t => {
+		const records = resolve(process.env.LEAN_BRIDGE_CHECKED_RECORD_PHP_WASM_LEAN_OUTPUT ?? "build/checked-record-php-wasm-lean", route);
+		await assert.rejects(access(records), { code: "ENOENT" }); await mkdir(records, { recursive: true });
+		const directory = await mkdtemp(join(tmpdir(), "lean-bridge-checked-php-wasm-lean-"));
+		let complete = false;
+		t.after(async () => {
+			if(complete) await rm(directory, { recursive: true });
+			else t.diagnostic(`Retained compiler probe: ${directory}`);
+		});
+		const selection = checkedRecordPhpWasmSelection(route);
+		const projectRoot = join(directory, "project"), outputRoot = join(directory, "release");
+		await cp(checkedRecordFixture, projectRoot, { recursive: true });
+		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson(selection.configuration));
+		if(selection.reviewed) await saveLakeFile(projectRoot, "api.binding-ir.json", canonicalJson(selection.expected));
+		let observed;
+		const stopped = new Error("Checked-record PHP-Wasm adapters compiled; stop before C compilation");
+		const compileComponent = async ({ model, adapters, generatedC }) => {
+			observed = { model, adapters, c: await readFile(generatedC, "utf8") };
+			throw stopped;
+		};
+		const options = { projectRoot, outputRoot
+			, leanPrefix: resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX ?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2")
+			, targets: ["php-wasm"], profile: "php-wasm-copied-v1"
+			, receiptName: "php-wasm-component.json"
+			, createModel: createCompiledPhpWasmModel
+			, createAdapters: generateNativeLeanAdapters, compileComponent };
+		await assert.rejects(buildElaboratedComponent(options), error => {
+			if(error !== stopped)
+			{ error.message += ": " + JSON.stringify(error.details); throw error; }
+			return true;
+		});
+		await assert.rejects(access(outputRoot), { code: "ENOENT" });
+		assert.ok(observed);
+		checkCheckedRecordPhpWasmModel(observed.model, route);
+		assert.ok(observed.c.includes('#include "component.h"'));
+		const provider = generateNativePrimitiveC(observed.model, { initializer: `initialize_${observed.adapters.module}` });
+		for(const item of observed.model.exports) item.refinements.parameters.forEach((refinement, index) => {
+			if(refinement?.kind !== "checked-record") return;
+			assert.ok(provider.includes(`${item.symbol}_refinement_${index}(`));
+			assert.ok(provider.includes(`was rejected by ${refinement.constructor}`));
+			assert.ok(observed.adapters.leanSource.includes(`@[export ${item.symbol}_refinement_${index}]`));
+		});
+		await saveLakeFile(records, "model.json", canonicalJson(observed.model));
+		await saveLakeFile(records, "adapters.lean", observed.adapters.leanSource);
+		await saveLakeFile(records, "generated.c", observed.c);
+		await saveLakeFile(records, "provider.c", provider);
+		t.diagnostic(JSON.stringify({ sourceCompilationOnly: true, route
+			, pointerBits: observed.model.pointerBits
+			, exports: observed.model.exports.length
+			, generatedCSha256: sha256(observed.c), installedAcceptance: false }));
+		complete = true;
+	});

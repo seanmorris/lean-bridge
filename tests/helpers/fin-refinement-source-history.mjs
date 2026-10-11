@@ -20,6 +20,7 @@ import { perlContainerSubtypeCiChangedPaths } from "./perl-container-subtype-ci-
 import { checkedRecordBrowserArchiveChangedPaths } from "./checked-record-browser-archive-history.mjs";
 import { checkedRecordBrowserCiChangedPaths } from "./checked-record-browser-ci-history.mjs";
 import { checkedRecordBrowserPromotionChangedPaths } from "./checked-record-browser-promotion-history.mjs";
+import { checkedRecordPhpWasmChangedPaths } from "./checked-record-php-wasm-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeSubtypeRefinementSource, subtypeRefinementChangedPaths } from "./subtype-refinement-source-history.mjs";
 import { subtypeHeapChangedPaths } from "./subtype-heap-source-history.mjs";
@@ -905,6 +906,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...checkedRecordBrowserArchiveChangedPaths
 	, ...checkedRecordBrowserCiChangedPaths
 	, ...checkedRecordBrowserPromotionChangedPaths
+	, ...checkedRecordPhpWasmChangedPaths
 ])].sort());
 
 /**
