@@ -25,6 +25,8 @@ import { compoundReviewedIr } from "./compound-fixture.mjs";
 import { callableReviewedIr } from "./callable-fixture.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { assertJsonSchema, jsonSchemaErrors } from "./json-schema.mjs";
+import "./nominal-subtype-installed-fixture-tests.mjs";
+import "./nominal-subtype-npm-installed-tests.mjs";
 
 const key = "lean-lang.org/refinements";
 const named = (document, name) => document.declarations.find(item => item.name === name);
