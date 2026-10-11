@@ -38,7 +38,12 @@ record installed top-level primitive-base parameters and results. The later
 `Array`, `List`, `Option`, products and `Except` on both source routes across
 all seventeen profiles. Each present leaf keeps its selected constructor and
 normalization, including through transparent aliases and the tested closed
-`List` specialization. Nominal-field, callback and owned Subtypes remain unfinished.
+`List` specialization. Native acyclic plain record and variant fields now have
+[fresh compiler coverage](../evidence/nominal-subtype-native-20261011.md), with
+constructor choices attached to each use rather than to the shared type.
+[Constructor-free native results](../evidence/subtype-result-20261011.md) also
+pass fresh compilation. Installed acceptance for these additions is pending;
+component carriers, refined callbacks and owned Subtypes remain unfinished.
 
 ### Select constructors inside containers
 
@@ -115,6 +120,80 @@ the reverse of Lean's `Except Error Success` type arguments. A `null` child
 means no author-selected constructor on that branch; it does not remove a
 compiler-derived `Fin` bound. Reviewed APIs derive these choices from their
 refinement trees and reconcile them against fresh Lean metadata.
+
+### Select constructors in native records
+
+This native compiler-stage example uses a copied record with a Subtype field
+and a Fin sibling. Its installed-package acceptance is pending; npm and
+PHP-Wasm do not yet admit these fields. Save `NominalSubtypes.lean`:
+
+```lean
+namespace NominalSubtypes
+
+abbrev Positive := { value : Nat // 0 < value }
+
+def checkedPositive (value : Nat) : Option Positive :=
+  if proof : 0 < value then some ⟨value, proof⟩ else none
+
+structure Packet where
+  count : Positive
+  digit : Fin 3
+
+def echoPacket (value : Packet) : Packet := value
+
+def producePacket (value : Nat) : Packet :=
+  ⟨⟨value + 1, Nat.zero_lt_succ value⟩, ⟨2, by decide⟩⟩
+
+end NominalSubtypes
+```
+
+In `lean-bridge.exports.json`, name the record and every field in source order:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["NominalSubtypes"],
+  "exports": ["NominalSubtypes.echoPacket", "NominalSubtypes.producePacket"],
+  "targets": { "c": { "name": "nominal-subtypes", "version": "1.0.0" } },
+  "contracts": {
+    "NominalSubtypes.echoPacket": {
+      "parameters": [{
+        "ownership": "copy",
+        "lifetime": null,
+        "refinement": {
+          "kind": "record",
+          "name": "NominalSubtypes.Packet",
+          "fields": [
+            { "name": "count", "refinement": { "constructor": "NominalSubtypes.checkedPositive" } },
+            { "name": "digit", "refinement": null }
+          ]
+        }
+      }],
+      "result": { "ownership": "copy", "lifetime": null }
+    }
+  }
+}
+```
+
+`count` uses the checked constructor. The null selection on `digit` leaves its
+compiler-derived `Fin 3` check intact. Neither result selects a constructor:
+Lean produces each `Packet`, and the adapter projects its payload. A package
+exporting only `producePacket` needs no `contracts` entry.
+
+Two export sites can select different checked constructors for the same
+`Packet` type, including two fields of one enclosing record. For a variant,
+select `kind: "variant"`, its qualified `name`, and every `cases` entry in source
+order. Each case has its source `name` and ordered `fields`, including an empty
+array for a payload-free case. Only the active case runs its constructors. The
+[selection fixture](../../tests/helpers/nominal-subtype-selection-fixture.mjs)
+shows variants, nested aliases and repeated records with different choices.
+
+A reviewed API puts the same named record/case structure in the declaration's
+`lean-lang.org/refinements` tree. It includes exact Fin bounds, not a null
+selection in their place. Constructor-free result leaves use
+`{ "kind": "subtype", "constructor": null }`; input leaves must name a checked
+constructor. The null marker belongs to reviewed result metadata, not ordinary
+configuration syntax. Fresh Lean reconciles every member, bound and choice.
 
 C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP, PHP-Wasm, JavaScript/TypeScript and WIT/WASI packages also support [parameter-anchored function results](../publish/c.md#anchor-a-result-to-an-input). The [JavaScript/TypeScript owner API](../javascript-typescript.md#borrowed-results-and-whole-value-owners) uses `LeanValue<T>`; the [WIT/WASI API](../consume/wit-wasi.md#borrowed-results) carries the original owner through the Component Model call.
 The result expires with the selected input owner; callers explicitly retain or

@@ -307,7 +307,7 @@ test("CPAN guidance distinguishes scalar and container four-ABI relocation from 
 	assert.match(moved.scope.relocation, /unchanged consumer.pl reruns once/u);
 	assert.match(document, /Four-ABI CPAN acceptance.*perl-refinements-20261009\.md/u);
 	assert.match(document, /Installed, both source routes on four ABIs/u);
-	assert.match(document, /\| `Subtype` parameter or result over a primitive \| Installed \| Installed \| Installed, both source routes on four ABIs \|/u);
+	assert.match(document, /\| `Subtype` parameter or result over a primitive, with constructor selections \| Installed \| Installed \| Installed, both source routes on four ABIs \|/u);
 	assert.match(document, /Separate scalar checks.*perl-scalar-20261009\.md.*top-level `Fin` on the same four configurations.*installed-tree relocation and entry counts for `mirror`, `impossible` and `label`/u);
 	assert.match(document, /\| `Fin n` parameter or result \| Installed \| Installed \| Installed, both source routes on four ABIs \|/u);
 	assert.match(document, /C\/C\+\+, Node, browser\/React\/worker, native hosts, CPAN and PHP-Wasm installed/u);

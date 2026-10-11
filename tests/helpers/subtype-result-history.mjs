@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { beforeNominalSubtypeAuthorSource } from "./nominal-subtype-author-history.mjs";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
 
@@ -61,6 +62,7 @@ export const reverseSubtypeResultUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeSubtypeResultSource = (path, source, expected) => {
+	source = beforeNominalSubtypeAuthorSource(path, source, expected);
 	if(typeof source !== "string" || !subtypeResultChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

@@ -1,0 +1,371 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nominal-subtype-author-source-v1",
+  "predecessorCommit": "8af7aea7f2488554a3ad1fb340d7a8af2a4b6f4c",
+  "updates": [
+    {
+      "path": "docs/lean/existing-package.md",
+      "currentSha256": "aa7229274d87e6149f89dc32a13d95622026a58a925e6ee9f1a0d88643f15bb0",
+      "previousSha256": "ef2f43581edc437950c256ee36493d8c1b17725d92bd6be977f2a3fc69fe80fb",
+      "edits": [
+        {
+          "start": 47779,
+          "previous": "For a top-level `Subtype` parameter or result, provide a total Lean function that checks a host value and returns the exact subtype:\n",
+          "current": "For a `Subtype` input, provide a total Lean function that checks a host value and returns the exact subtype:\n"
+        },
+        {
+          "start": 48143,
+          "previous": "Name that constructor at every refined boundary site:\n",
+          "current": "Select the constructor at each input site. This cross-target example also selects it on the result because component builds still require that selection:\n"
+        },
+        {
+          "start": 49101,
+          "previous": "",
+          "current": "Native copied results do not need an input constructor: Lean has already produced the proof-carrying value. Omit the result's `refinement` in an ordinary export contract, or omit `contracts` entirely for a result-only package with unrefined inputs. The adapter projects `.val`; it does not run a constructor on the output. [Fresh compiler checks](../evidence/subtype-result-20261011.md) cover primitive bases inside scalars, structural containers, aliases and acyclic plain records and variants. These constructor-free native results have passed Lean/C/C++ compilation; installed acceptance is pending. npm and PHP-Wasm still require a result constructor selection at their admitted Subtype sites.\n\n"
+        },
+        {
+          "start": 51038,
+          "previous": "The native targets `c`, `cpp`, `pypi`, `cargo`, `rubygems`, `nuget`, `maven`, `php-native` and `wit-wasi` accept the same top-level primitive-base sites with the same constructor checks. The host passes the base value; the bundled adapter validates every argument's structure and every `Fin` bound first, then runs each checked constructor through an exported validator before the exported function runs, so a rejected value fails the call with the host's invalid-argument error naming the parameter and constructor, for example `arg0 was rejected by Library.checkedSmall`, and no caller data or output changes. A valid call runs the constructor twice (once in the validator, once in the adapter that builds the proof-carrying value) and the exported function once; the exported function receives the constructed value, so a normalizing constructor such as `fun value => some ⟨min value 100, _⟩` changes what it sees. Results are projected through `.val`. Generated documentation names each constructor, for example `arg0 checked by Library.checkedSmall`. CPAN packages run the same exported validators from the generated XS, after every `Fin` bound and before the guarded adapter or the exported function, with the same message. [Installed CPAN checks](../evidence/perl-refinements-20261009.md) cover ordinary-source `String`, `Nat`, `Int`, `ByteArray` and `UInt32` subtypes on all four pinned Perl ABIs, including a full rerun after moving the installed tree. See also the [other native installed checks](../evidence/native-subtype-20261007.md).\n",
+          "current": "The native targets `c`, `cpp`, `pypi`, `cargo`, `rubygems`, `nuget`, `maven`, `php-native` and `wit-wasi` accept the same top-level primitive-base sites with the same constructor checks. The host passes the base value; the bundled adapter validates every argument's structure and every `Fin` bound first, then runs each checked constructor through an exported validator before the exported function runs, so a rejected value fails the call with the host's invalid-argument error naming the parameter and constructor, for example `arg0 was rejected by Library.checkedSmall`, and no caller data or output changes. A valid call runs the constructor twice (once in the validator, once in the adapter that builds the proof-carrying value) and the exported function once; the exported function receives the constructed value, so a normalizing constructor such as `fun value => some ⟨min value 100, _⟩` changes what it sees. Results are projected through `.val`. Generated documentation names each input constructor, for example `arg0 checked by Library.checkedSmall`, and describes result projection separately. CPAN packages run the same exported validators from the generated XS, after every `Fin` bound and before the guarded adapter or the exported function, with the same message. [Installed CPAN checks](../evidence/perl-refinements-20261009.md) cover ordinary-source `String`, `Nat`, `Int`, `ByteArray` and `UInt32` subtypes on all four pinned Perl ABIs, including a full rerun after moving the installed tree. See also the [other native installed checks](../evidence/native-subtype-20261007.md).\n\nNative metadata and reviewed APIs also admit primitive-base Subtypes in acyclic copied plain record and variant fields. Select constructors per export site, including different choices for two uses of the same record. Shared nominal types retain their identity and Fin bounds. [Native source checks](../evidence/nominal-subtype-native-20261011.md) cover fresh ordinary/reviewed extraction and Lean/C/C++ compilation; C and Perl generators retain field and active-case validation. Installed acceptance is pending, and component carriers still reject these fields. See the [named-field selection example](export-decisions.md#select-constructors-in-native-records).\n"
+        },
+        {
+          "start": 54732,
+          "previous": "",
+          "current": "For a constructor-free native result, the reviewed refinement leaf is `{ \"kind\": \"subtype\", \"constructor\": null }`. Put it only in the declaration's result tree. An ordinary configuration omits the result selection instead; its constructor-selection syntax does not accept a null constructor. Moving the reviewed null marker into an input fails validation.\n\n"
+        },
+        {
+          "start": 56973,
+          "previous": "| `Subtype` parameter or result over a primitive | Installed | Installed | Installed, both source routes on four ABIs | Installed, both source routes | C/C++, Node, browser/React/worker, native hosts, CPAN and PHP-Wasm installed |\n| `Subtype` inside `Array`, `List`, `Option`, products or `Except` | Installed, both source routes | Installed, both source routes | Installed, both source routes on four ABIs | Installed, both source routes | Installed across all seventeen profiles |\n| `Subtype` elsewhere, or without a checked constructor | Rejected at the source | Rejected at the source | Rejected | Rejected | Rejected |\n",
+          "current": "| `Subtype` parameter or result over a primitive, with constructor selections | Installed | Installed | Installed, both source routes on four ABIs | Installed, both source routes | C/C++, Node, browser/React/worker, native hosts, CPAN and PHP-Wasm installed |\n| `Subtype` inside `Array`, `List`, `Option`, products or `Except`, with constructor selections | Installed, both source routes | Installed, both source routes | Installed, both source routes on four ABIs | Installed, both source routes | Installed across all seventeen profiles |\n| `Subtype` in acyclic copied plain record or variant fields | Rejected | Generated; pending | Generated; pending | Rejected | Native ordinary/reviewed Lean/C/C++ compilation passed; installed acceptance pending |\n| Lean-produced `Subtype` result without a constructor selection | Rejected | Generated; pending | Generated; pending | Rejected | Native result-only and mixed ordinary/reviewed source checks passed; installed acceptance pending |\n| `Subtype` input without a checked constructor | Rejected at the source | Rejected at the source | Rejected | Rejected | Rejected |\n| `Subtype` inside callback signatures, owned values, recursive graphs or generic record fields | Rejected | Rejected | Rejected | Rejected | Pending implementation and acceptance |\n"
+        },
+        {
+          "start": 60658,
+          "previous": "Installed reviewed scalar and container reports cover [C/C++](../evidence/reviewed-fin-20261007/receipt.json), [Python and Rust scalar](../evidence/reviewed-scalar-hosts-20261007/receipt.json), [managed/PHP/Ruby/WIT scalar](../evidence/reviewed-scalar-rollout-20261007/receipt.json), [the other native container hosts](../evidence/reviewed-fin-hosts-20261007/receipt.json), and CPAN [scalar](../evidence/reviewed-perl-scalar-20261007/receipt.json) and [containers](../evidence/reviewed-perl-containers-20261007/receipt.json). They record two-root reproduction, source-free consumers and each local runtime floor. The structural and nominal-field receipts above add Python, Ruby, Rust, .NET and WIT/WASI coverage at their named sites. [Reviewed Subtype acceptance](../evidence/reviewed-subtype-20261008/receipt.json) covers C/C++ and Node. The [PHP-Wasm Subtype archive](../evidence/php-wasm-subtype-installed-20261010/index.json) adds both source routes in Node and Chromium. The [reviewed native Subtype checks](../evidence/reviewed-subtype-native-promotion-20261010.md) add Python, Rust, .NET, Java, Kotlin, Ruby, native PHP, WIT/WASI and Perl. They retain both Python runtime floors and all four Perl ABIs, with two-root reproduction, author removal, offline installation and installed-tree relocation. The [reviewed browser archive](../evidence/reviewed-subtype-browser-promotion-20261010.md) adds twelve engine/build configurations and 51 lifecycle observations, including React remounts, pending unmounts, worker restart and missing-asset recovery. These earlier reports cover top-level primitive-base parameters and results. The [structural Subtype archive](../evidence/structural-subtype-promotion-20261011.md) adds the container combinations listed above. Nominal-field and refined callback Subtypes remain unsupported. Callback checks have their own receipts and do not follow from scalar or container checks.\n",
+          "current": "Installed reviewed scalar and container reports cover [C/C++](../evidence/reviewed-fin-20261007/receipt.json), [Python and Rust scalar](../evidence/reviewed-scalar-hosts-20261007/receipt.json), [managed/PHP/Ruby/WIT scalar](../evidence/reviewed-scalar-rollout-20261007/receipt.json), [the other native container hosts](../evidence/reviewed-fin-hosts-20261007/receipt.json), and CPAN [scalar](../evidence/reviewed-perl-scalar-20261007/receipt.json) and [containers](../evidence/reviewed-perl-containers-20261007/receipt.json). They record two-root reproduction, source-free consumers and each local runtime floor. The structural and nominal-field receipts above add Python, Ruby, Rust, .NET and WIT/WASI coverage at their named sites. [Reviewed Subtype acceptance](../evidence/reviewed-subtype-20261008/receipt.json) covers C/C++ and Node. The [PHP-Wasm Subtype archive](../evidence/php-wasm-subtype-installed-20261010/index.json) adds both source routes in Node and Chromium. The [reviewed native Subtype checks](../evidence/reviewed-subtype-native-promotion-20261010.md) add Python, Rust, .NET, Java, Kotlin, Ruby, native PHP, WIT/WASI and Perl. They retain both Python runtime floors and all four Perl ABIs, with two-root reproduction, author removal, offline installation and installed-tree relocation. The [reviewed browser archive](../evidence/reviewed-subtype-browser-promotion-20261010.md) adds twelve engine/build configurations and 51 lifecycle observations, including React remounts, pending unmounts, worker restart and missing-asset recovery. These earlier reports cover top-level primitive-base parameters and results. The [structural Subtype archive](../evidence/structural-subtype-promotion-20261011.md) adds the container combinations listed above. Native nominal-field Subtypes have passed source compilation, with installed acceptance pending; component fields and refined callback Subtypes remain unsupported. Callback checks have their own receipts and do not follow from scalar or container checks.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/export-decisions.md",
+      "currentSha256": "75fb8b7fd549e442cdb406bffe4aa1c7004f6e47453b063cf77eab3f68688516",
+      "previousSha256": "97c65fe60ed959197bbb8fdd026fabc44c516756ab082ea9cc6ce7cc3f7fa6d9",
+      "edits": [
+        {
+          "start": 4896,
+          "previous": "`List` specialization. Nominal-field, callback and owned Subtypes remain unfinished.\n",
+          "current": "`List` specialization. Native acyclic plain record and variant fields now have\n[fresh compiler coverage](../evidence/nominal-subtype-native-20261011.md), with\nconstructor choices attached to each use rather than to the shared type.\n[Constructor-free native results](../evidence/subtype-result-20261011.md) also\npass fresh compilation. Installed acceptance for these additions is pending;\ncomponent carriers, refined callbacks and owned Subtypes remain unfinished.\n"
+        },
+        {
+          "start": 7618,
+          "previous": "",
+          "current": "### Select constructors in native records\n\nThis native compiler-stage example uses a copied record with a Subtype field\nand a Fin sibling. Its installed-package acceptance is pending; npm and\nPHP-Wasm do not yet admit these fields. Save `NominalSubtypes.lean`:\n\n```lean\nnamespace NominalSubtypes\n\nabbrev Positive := { value : Nat // 0 < value }\n\ndef checkedPositive (value : Nat) : Option Positive :=\n  if proof : 0 < value then some ⟨value, proof⟩ else none\n\nstructure Packet where\n  count : Positive\n  digit : Fin 3\n\ndef echoPacket (value : Packet) : Packet := value\n\ndef producePacket (value : Nat) : Packet :=\n  ⟨⟨value + 1, Nat.zero_lt_succ value⟩, ⟨2, by decide⟩⟩\n\nend NominalSubtypes\n```\n\nIn `lean-bridge.exports.json`, name the record and every field in source order:\n\n```json\n{\n  \"schemaVersion\": 1,\n  \"modules\": [\"NominalSubtypes\"],\n  \"exports\": [\"NominalSubtypes.echoPacket\", \"NominalSubtypes.producePacket\"],\n  \"targets\": { \"c\": { \"name\": \"nominal-subtypes\", \"version\": \"1.0.0\" } },\n  \"contracts\": {\n    \"NominalSubtypes.echoPacket\": {\n      \"parameters\": [{\n        \"ownership\": \"copy\",\n        \"lifetime\": null,\n        \"refinement\": {\n          \"kind\": \"record\",\n          \"name\": \"NominalSubtypes.Packet\",\n          \"fields\": [\n            { \"name\": \"count\", \"refinement\": { \"constructor\": \"NominalSubtypes.checkedPositive\" } },\n            { \"name\": \"digit\", \"refinement\": null }\n          ]\n        }\n      }],\n      \"result\": { \"ownership\": \"copy\", \"lifetime\": null }\n    }\n  }\n}\n```\n\n`count` uses the checked constructor. The null selection on `digit` leaves its\ncompiler-derived `Fin 3` check intact. Neither result selects a constructor:\nLean produces each `Packet`, and the adapter projects its payload. A package\nexporting only `producePacket` needs no `contracts` entry.\n\nTwo export sites can select different checked constructors for the same\n`Packet` type, including two fields of one enclosing record. For a variant,\nselect `kind: \"variant\"`, its qualified `name`, and every `cases` entry in source\norder. Each case has its source `name` and ordered `fields`, including an empty\narray for a payload-free case. Only the active case runs its constructors. The\n[selection fixture](../../tests/helpers/nominal-subtype-selection-fixture.mjs)\nshows variants, nested aliases and repeated records with different choices.\n\nA reviewed API puts the same named record/case structure in the declaration's\n`lean-lang.org/refinements` tree. It includes exact Fin bounds, not a null\nselection in their place. Constructor-free result leaves use\n`{ \"kind\": \"subtype\", \"constructor\": null }`; input leaves must name a checked\nconstructor. The null marker belongs to reviewed result metadata, not ordinary\nconfiguration syntax. Fresh Lean reconciles every member, bound and choice.\n\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "e936311cec7a89ee92167e4de3435df49c669da6cecf5285f2504714d796ed2e",
+      "previousSha256": "02074aa9bbebb7747938b3078f4f2e5aac5a942d7795e56817ce931c6063d3a3",
+      "edits": [
+        {
+          "start": 44483,
+          "previous": "          \"sha256\": \"a29b9107960ec4e926a65a7f29f0692fbd00d89adbc82d200f0dd2aea9e29e85\"\n",
+          "current": "          \"sha256\": \"54392bf57cde0ba65a98922be0faca0d914d5a65b41f1350c5a05f08681ff49e\"\n"
+        },
+        {
+          "start": 1072635,
+          "previous": "          \"sha256\": \"ef2f43581edc437950c256ee36493d8c1b17725d92bd6be977f2a3fc69fe80fb\"\n",
+          "current": "          \"sha256\": \"aa7229274d87e6149f89dc32a13d95622026a58a925e6ee9f1a0d88643f15bb0\"\n"
+        },
+        {
+          "start": 1072794,
+          "previous": "          \"sha256\": \"97c65fe60ed959197bbb8fdd026fabc44c516756ab082ea9cc6ce7cc3f7fa6d9\"\n",
+          "current": "          \"sha256\": \"75fb8b7fd549e442cdb406bffe4aa1c7004f6e47453b063cf77eab3f68688516\"\n"
+        },
+        {
+          "start": 1080224,
+          "previous": "          \"sha256\": \"ef2f43581edc437950c256ee36493d8c1b17725d92bd6be977f2a3fc69fe80fb\"\n",
+          "current": "          \"sha256\": \"aa7229274d87e6149f89dc32a13d95622026a58a925e6ee9f1a0d88643f15bb0\"\n"
+        },
+        {
+          "start": 1080383,
+          "previous": "          \"sha256\": \"97c65fe60ed959197bbb8fdd026fabc44c516756ab082ea9cc6ce7cc3f7fa6d9\"\n",
+          "current": "          \"sha256\": \"75fb8b7fd549e442cdb406bffe4aa1c7004f6e47453b063cf77eab3f68688516\"\n"
+        },
+        {
+          "start": 1086825,
+          "previous": "          \"sha256\": \"ef2f43581edc437950c256ee36493d8c1b17725d92bd6be977f2a3fc69fe80fb\"\n",
+          "current": "          \"sha256\": \"aa7229274d87e6149f89dc32a13d95622026a58a925e6ee9f1a0d88643f15bb0\"\n"
+        },
+        {
+          "start": 1086984,
+          "previous": "          \"sha256\": \"97c65fe60ed959197bbb8fdd026fabc44c516756ab082ea9cc6ce7cc3f7fa6d9\"\n",
+          "current": "          \"sha256\": \"75fb8b7fd549e442cdb406bffe4aa1c7004f6e47453b063cf77eab3f68688516\"\n"
+        },
+        {
+          "start": 1093933,
+          "previous": "          \"sha256\": \"ef2f43581edc437950c256ee36493d8c1b17725d92bd6be977f2a3fc69fe80fb\"\n",
+          "current": "          \"sha256\": \"aa7229274d87e6149f89dc32a13d95622026a58a925e6ee9f1a0d88643f15bb0\"\n"
+        },
+        {
+          "start": 1094092,
+          "previous": "          \"sha256\": \"97c65fe60ed959197bbb8fdd026fabc44c516756ab082ea9cc6ce7cc3f7fa6d9\"\n",
+          "current": "          \"sha256\": \"75fb8b7fd549e442cdb406bffe4aa1c7004f6e47453b063cf77eab3f68688516\"\n"
+        },
+        {
+          "start": 1101427,
+          "previous": "          \"sha256\": \"ef2f43581edc437950c256ee36493d8c1b17725d92bd6be977f2a3fc69fe80fb\"\n",
+          "current": "          \"sha256\": \"aa7229274d87e6149f89dc32a13d95622026a58a925e6ee9f1a0d88643f15bb0\"\n"
+        },
+        {
+          "start": 1101586,
+          "previous": "          \"sha256\": \"97c65fe60ed959197bbb8fdd026fabc44c516756ab082ea9cc6ce7cc3f7fa6d9\"\n",
+          "current": "          \"sha256\": \"75fb8b7fd549e442cdb406bffe4aa1c7004f6e47453b063cf77eab3f68688516\"\n"
+        },
+        {
+          "start": 1108483,
+          "previous": "          \"sha256\": \"ef2f43581edc437950c256ee36493d8c1b17725d92bd6be977f2a3fc69fe80fb\"\n",
+          "current": "          \"sha256\": \"aa7229274d87e6149f89dc32a13d95622026a58a925e6ee9f1a0d88643f15bb0\"\n"
+        },
+        {
+          "start": 1108642,
+          "previous": "          \"sha256\": \"97c65fe60ed959197bbb8fdd026fabc44c516756ab082ea9cc6ce7cc3f7fa6d9\"\n",
+          "current": "          \"sha256\": \"75fb8b7fd549e442cdb406bffe4aa1c7004f6e47453b063cf77eab3f68688516\"\n"
+        },
+        {
+          "start": 1116084,
+          "previous": "          \"sha256\": \"ef2f43581edc437950c256ee36493d8c1b17725d92bd6be977f2a3fc69fe80fb\"\n",
+          "current": "          \"sha256\": \"aa7229274d87e6149f89dc32a13d95622026a58a925e6ee9f1a0d88643f15bb0\"\n"
+        },
+        {
+          "start": 1116243,
+          "previous": "          \"sha256\": \"97c65fe60ed959197bbb8fdd026fabc44c516756ab082ea9cc6ce7cc3f7fa6d9\"\n",
+          "current": "          \"sha256\": \"75fb8b7fd549e442cdb406bffe4aa1c7004f6e47453b063cf77eab3f68688516\"\n"
+        },
+        {
+          "start": 1126365,
+          "previous": "          \"sha256\": \"ef2f43581edc437950c256ee36493d8c1b17725d92bd6be977f2a3fc69fe80fb\"\n",
+          "current": "          \"sha256\": \"aa7229274d87e6149f89dc32a13d95622026a58a925e6ee9f1a0d88643f15bb0\"\n"
+        },
+        {
+          "start": 1126524,
+          "previous": "          \"sha256\": \"97c65fe60ed959197bbb8fdd026fabc44c516756ab082ea9cc6ce7cc3f7fa6d9\"\n",
+          "current": "          \"sha256\": \"75fb8b7fd549e442cdb406bffe4aa1c7004f6e47453b063cf77eab3f68688516\"\n"
+        },
+        {
+          "start": 1138698,
+          "previous": "          \"sha256\": \"ef2f43581edc437950c256ee36493d8c1b17725d92bd6be977f2a3fc69fe80fb\"\n",
+          "current": "          \"sha256\": \"aa7229274d87e6149f89dc32a13d95622026a58a925e6ee9f1a0d88643f15bb0\"\n"
+        },
+        {
+          "start": 1138857,
+          "previous": "          \"sha256\": \"97c65fe60ed959197bbb8fdd026fabc44c516756ab082ea9cc6ce7cc3f7fa6d9\"\n",
+          "current": "          \"sha256\": \"75fb8b7fd549e442cdb406bffe4aa1c7004f6e47453b063cf77eab3f68688516\"\n"
+        },
+        {
+          "start": 1149945,
+          "previous": "          \"sha256\": \"97c65fe60ed959197bbb8fdd026fabc44c516756ab082ea9cc6ce7cc3f7fa6d9\"\n",
+          "current": "          \"sha256\": \"75fb8b7fd549e442cdb406bffe4aa1c7004f6e47453b063cf77eab3f68688516\"\n"
+        },
+        {
+          "start": 1157831,
+          "previous": "          \"sha256\": \"97c65fe60ed959197bbb8fdd026fabc44c516756ab082ea9cc6ce7cc3f7fa6d9\"\n",
+          "current": "          \"sha256\": \"75fb8b7fd549e442cdb406bffe4aa1c7004f6e47453b063cf77eab3f68688516\"\n"
+        },
+        {
+          "start": 1168255,
+          "previous": "          \"sha256\": \"97c65fe60ed959197bbb8fdd026fabc44c516756ab082ea9cc6ce7cc3f7fa6d9\"\n",
+          "current": "          \"sha256\": \"75fb8b7fd549e442cdb406bffe4aa1c7004f6e47453b063cf77eab3f68688516\"\n"
+        },
+        {
+          "start": 1178373,
+          "previous": "          \"sha256\": \"97c65fe60ed959197bbb8fdd026fabc44c516756ab082ea9cc6ce7cc3f7fa6d9\"\n",
+          "current": "          \"sha256\": \"75fb8b7fd549e442cdb406bffe4aa1c7004f6e47453b063cf77eab3f68688516\"\n"
+        },
+        {
+          "start": 1192157,
+          "previous": "          \"sha256\": \"ef2f43581edc437950c256ee36493d8c1b17725d92bd6be977f2a3fc69fe80fb\"\n",
+          "current": "          \"sha256\": \"aa7229274d87e6149f89dc32a13d95622026a58a925e6ee9f1a0d88643f15bb0\"\n"
+        },
+        {
+          "start": 1192316,
+          "previous": "          \"sha256\": \"97c65fe60ed959197bbb8fdd026fabc44c516756ab082ea9cc6ce7cc3f7fa6d9\"\n",
+          "current": "          \"sha256\": \"75fb8b7fd549e442cdb406bffe4aa1c7004f6e47453b063cf77eab3f68688516\"\n"
+        },
+        {
+          "start": 1224700,
+          "previous": "          \"sha256\": \"ef2f43581edc437950c256ee36493d8c1b17725d92bd6be977f2a3fc69fe80fb\"\n",
+          "current": "          \"sha256\": \"aa7229274d87e6149f89dc32a13d95622026a58a925e6ee9f1a0d88643f15bb0\"\n"
+        },
+        {
+          "start": 1224859,
+          "previous": "          \"sha256\": \"97c65fe60ed959197bbb8fdd026fabc44c516756ab082ea9cc6ce7cc3f7fa6d9\"\n",
+          "current": "          \"sha256\": \"75fb8b7fd549e442cdb406bffe4aa1c7004f6e47453b063cf77eab3f68688516\"\n"
+        },
+        {
+          "start": 1254979,
+          "previous": "          \"sha256\": \"ef2f43581edc437950c256ee36493d8c1b17725d92bd6be977f2a3fc69fe80fb\"\n",
+          "current": "          \"sha256\": \"aa7229274d87e6149f89dc32a13d95622026a58a925e6ee9f1a0d88643f15bb0\"\n"
+        },
+        {
+          "start": 1255138,
+          "previous": "          \"sha256\": \"97c65fe60ed959197bbb8fdd026fabc44c516756ab082ea9cc6ce7cc3f7fa6d9\"\n",
+          "current": "          \"sha256\": \"75fb8b7fd549e442cdb406bffe4aa1c7004f6e47453b063cf77eab3f68688516\"\n"
+        },
+        {
+          "start": 1287946,
+          "previous": "          \"sha256\": \"ef2f43581edc437950c256ee36493d8c1b17725d92bd6be977f2a3fc69fe80fb\"\n",
+          "current": "          \"sha256\": \"aa7229274d87e6149f89dc32a13d95622026a58a925e6ee9f1a0d88643f15bb0\"\n"
+        },
+        {
+          "start": 1288105,
+          "previous": "          \"sha256\": \"97c65fe60ed959197bbb8fdd026fabc44c516756ab082ea9cc6ce7cc3f7fa6d9\"\n",
+          "current": "          \"sha256\": \"75fb8b7fd549e442cdb406bffe4aa1c7004f6e47453b063cf77eab3f68688516\"\n"
+        },
+        {
+          "start": 1329356,
+          "previous": "          \"sha256\": \"ef2f43581edc437950c256ee36493d8c1b17725d92bd6be977f2a3fc69fe80fb\"\n",
+          "current": "          \"sha256\": \"aa7229274d87e6149f89dc32a13d95622026a58a925e6ee9f1a0d88643f15bb0\"\n"
+        },
+        {
+          "start": 1329515,
+          "previous": "          \"sha256\": \"97c65fe60ed959197bbb8fdd026fabc44c516756ab082ea9cc6ce7cc3f7fa6d9\"\n",
+          "current": "          \"sha256\": \"75fb8b7fd549e442cdb406bffe4aa1c7004f6e47453b063cf77eab3f68688516\"\n"
+        },
+        {
+          "start": 1355204,
+          "previous": "          \"sha256\": \"ef2f43581edc437950c256ee36493d8c1b17725d92bd6be977f2a3fc69fe80fb\"\n",
+          "current": "          \"sha256\": \"aa7229274d87e6149f89dc32a13d95622026a58a925e6ee9f1a0d88643f15bb0\"\n"
+        },
+        {
+          "start": 1355363,
+          "previous": "          \"sha256\": \"97c65fe60ed959197bbb8fdd026fabc44c516756ab082ea9cc6ce7cc3f7fa6d9\"\n",
+          "current": "          \"sha256\": \"75fb8b7fd549e442cdb406bffe4aa1c7004f6e47453b063cf77eab3f68688516\"\n"
+        },
+        {
+          "start": 1377884,
+          "previous": "          \"sha256\": \"ef2f43581edc437950c256ee36493d8c1b17725d92bd6be977f2a3fc69fe80fb\"\n",
+          "current": "          \"sha256\": \"aa7229274d87e6149f89dc32a13d95622026a58a925e6ee9f1a0d88643f15bb0\"\n"
+        },
+        {
+          "start": 1378043,
+          "previous": "          \"sha256\": \"97c65fe60ed959197bbb8fdd026fabc44c516756ab082ea9cc6ce7cc3f7fa6d9\"\n",
+          "current": "          \"sha256\": \"75fb8b7fd549e442cdb406bffe4aa1c7004f6e47453b063cf77eab3f68688516\"\n"
+        },
+        {
+          "start": 1397576,
+          "previous": "          \"sha256\": \"ef2f43581edc437950c256ee36493d8c1b17725d92bd6be977f2a3fc69fe80fb\"\n",
+          "current": "          \"sha256\": \"aa7229274d87e6149f89dc32a13d95622026a58a925e6ee9f1a0d88643f15bb0\"\n"
+        },
+        {
+          "start": 1397735,
+          "previous": "          \"sha256\": \"97c65fe60ed959197bbb8fdd026fabc44c516756ab082ea9cc6ce7cc3f7fa6d9\"\n",
+          "current": "          \"sha256\": \"75fb8b7fd549e442cdb406bffe4aa1c7004f6e47453b063cf77eab3f68688516\"\n"
+        },
+        {
+          "start": 1418061,
+          "previous": "          \"sha256\": \"ef2f43581edc437950c256ee36493d8c1b17725d92bd6be977f2a3fc69fe80fb\"\n",
+          "current": "          \"sha256\": \"aa7229274d87e6149f89dc32a13d95622026a58a925e6ee9f1a0d88643f15bb0\"\n"
+        },
+        {
+          "start": 1418220,
+          "previous": "          \"sha256\": \"97c65fe60ed959197bbb8fdd026fabc44c516756ab082ea9cc6ce7cc3f7fa6d9\"\n",
+          "current": "          \"sha256\": \"75fb8b7fd549e442cdb406bffe4aa1c7004f6e47453b063cf77eab3f68688516\"\n"
+        },
+        {
+          "start": 1545219,
+          "previous": "          \"sha256\": \"a29b9107960ec4e926a65a7f29f0692fbd00d89adbc82d200f0dd2aea9e29e85\"\n",
+          "current": "          \"sha256\": \"54392bf57cde0ba65a98922be0faca0d914d5a65b41f1350c5a05f08681ff49e\"\n"
+        },
+        {
+          "start": 1549351,
+          "previous": "          \"sha256\": \"a29b9107960ec4e926a65a7f29f0692fbd00d89adbc82d200f0dd2aea9e29e85\"\n",
+          "current": "          \"sha256\": \"54392bf57cde0ba65a98922be0faca0d914d5a65b41f1350c5a05f08681ff49e\"\n"
+        },
+        {
+          "start": 1552995,
+          "previous": "          \"sha256\": \"a29b9107960ec4e926a65a7f29f0692fbd00d89adbc82d200f0dd2aea9e29e85\"\n",
+          "current": "          \"sha256\": \"54392bf57cde0ba65a98922be0faca0d914d5a65b41f1350c5a05f08681ff49e\"\n"
+        },
+        {
+          "start": 1556991,
+          "previous": "          \"sha256\": \"a29b9107960ec4e926a65a7f29f0692fbd00d89adbc82d200f0dd2aea9e29e85\"\n",
+          "current": "          \"sha256\": \"54392bf57cde0ba65a98922be0faca0d914d5a65b41f1350c5a05f08681ff49e\"\n"
+        },
+        {
+          "start": 1560608,
+          "previous": "          \"sha256\": \"a29b9107960ec4e926a65a7f29f0692fbd00d89adbc82d200f0dd2aea9e29e85\"\n",
+          "current": "          \"sha256\": \"54392bf57cde0ba65a98922be0faca0d914d5a65b41f1350c5a05f08681ff49e\"\n"
+        },
+        {
+          "start": 1564230,
+          "previous": "          \"sha256\": \"a29b9107960ec4e926a65a7f29f0692fbd00d89adbc82d200f0dd2aea9e29e85\"\n",
+          "current": "          \"sha256\": \"54392bf57cde0ba65a98922be0faca0d914d5a65b41f1350c5a05f08681ff49e\"\n"
+        },
+        {
+          "start": 1567856,
+          "previous": "          \"sha256\": \"a29b9107960ec4e926a65a7f29f0692fbd00d89adbc82d200f0dd2aea9e29e85\"\n",
+          "current": "          \"sha256\": \"54392bf57cde0ba65a98922be0faca0d914d5a65b41f1350c5a05f08681ff49e\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "bee82ce78cb5e365de67cfd3cb43fe9ad3c386c87f897d46d22029b0db5a3773",
+      "previousSha256": "42b09773ed4e814b54db8fe0daa0cd4478986ec4956994969e0de6f3084e7973",
+      "edits": [
+        {
+          "start": 2531,
+          "previous": "",
+          "current": "import { nominalSubtypeAuthorChangedPaths } from \"./nominal-subtype-author-history.mjs\";\n"
+        },
+        {
+          "start": 62955,
+          "previous": "",
+          "current": "\t, ...nominalSubtypeAuthorChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/subtype-result-history.mjs",
+      "currentSha256": "6e8bdf8c0f2b67276ae68af93e0588bfcb54ea82c9eab78cebba9176e3afd744",
+      "previousSha256": "a83e6f85d969934d06429688d9457207d4ec86ffc17aabefb128a514fd1099a5",
+      "edits": [
+        {
+          "start": 160,
+          "previous": "",
+          "current": "import { beforeNominalSubtypeAuthorSource } from \"./nominal-subtype-author-history.mjs\";\n"
+        },
+        {
+          "start": 2586,
+          "previous": "",
+          "current": "\tsource = beforeNominalSubtypeAuthorSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/lean-author-documentation.test.mjs",
+      "currentSha256": "2842dcbac5c1cd962b2977a6cf88a3c225cee3e1cd9e795844c720929dca2acd",
+      "previousSha256": "e4e9f659ad8066a02bc126522ea9c029509569751db72975c8ed8a18d8de59f7",
+      "edits": [
+        {
+          "start": 22562,
+          "previous": "\tassert.match(document, /\\| `Subtype` parameter or result over a primitive \\| Installed \\| Installed \\| Installed, both source routes on four ABIs \\|/u);\n",
+          "current": "\tassert.match(document, /\\| `Subtype` parameter or result over a primitive, with constructor selections \\| Installed \\| Installed \\| Installed, both source routes on four ABIs \\|/u);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/native-subtype.test.mjs",
+      "currentSha256": "54392bf57cde0ba65a98922be0faca0d914d5a65b41f1350c5a05f08681ff49e",
+      "previousSha256": "a29b9107960ec4e926a65a7f29f0692fbd00d89adbc82d200f0dd2aea9e29e85",
+      "edits": [
+        {
+          "start": 2634,
+          "previous": "",
+          "current": "import \"./helpers/nominal-subtype-author-history-tests.mjs\";\nimport \"./helpers/nominal-subtype-author-tests.mjs\";\n"
+        }
+      ]
+    }
+  ]
+}
