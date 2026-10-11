@@ -38,6 +38,8 @@ import "./helpers/structural-subtype-jvm-tests.mjs";
 import "./helpers/structural-subtype-jvm-installed-tests.mjs";
 import "./helpers/structural-subtype-php-tests.mjs";
 import "./helpers/structural-subtype-php-installed-tests.mjs";
+import "./helpers/structural-subtype-php-wasm-tests.mjs";
+import "./helpers/structural-subtype-php-wasm-installed-tests.mjs";
 import "./helpers/structural-subtype-wit-tests.mjs";
 import "./helpers/structural-subtype-wit-installed-tests.mjs";
 import "./helpers/structural-subtype-perl-tests.mjs";
