@@ -1,0 +1,906 @@
+{
+  "assurance": [],
+  "capabilities": [],
+  "component": {
+    "id": "checkedrecords@1.0.0",
+    "name": "checkedrecords",
+    "version": "1.0.0"
+  },
+  "declarations": [
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "The distance from a checked percentage to 100. "
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:CheckedRecords.complement",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "complement",
+      "overloadKey": "CheckedRecords.complement",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "arg0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:CheckedRecords.Percent",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "CheckedRecords.complement",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "CheckedRecords.mkPercent"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "constructor": "CheckedRecords.mkPercent",
+                "kind": "checked-record"
+              }
+            ],
+            "result": null
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 59,
+            "endLine": 60,
+            "path": "root/CheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 59
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "The first number, as the caller ordered it. "
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:CheckedRecords.firstOf",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "firstOf",
+      "overloadKey": "CheckedRecords.firstOf",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "arg0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:CheckedRecords.Triple",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "CheckedRecords.firstOf",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "CheckedRecords.mkTriple"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "constructor": "CheckedRecords.mkTriple",
+                "kind": "checked-record"
+              }
+            ],
+            "result": null
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 81,
+            "endLine": 48,
+            "path": "root/CheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 47
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "A result-only checked record: Lean produces the proof. "
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:CheckedRecords.repeated",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "repeated",
+      "overloadKey": "CheckedRecords.repeated",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "arg0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "id": "lean:CheckedRecords.Triple",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "CheckedRecords.repeated",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 68,
+            "endLine": 57,
+            "path": "root/CheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 56
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "An unchecked argument before a checked one, and a Lean-produced checked result. "
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:CheckedRecords.scale",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "scale",
+      "overloadKey": "CheckedRecords.scale",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "arg0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "arg1",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:CheckedRecords.Triple",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "id": "lean:CheckedRecords.Triple",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "CheckedRecords.scale",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy"
+              },
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "CheckedRecords.mkTriple"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              null,
+              {
+                "constructor": "CheckedRecords.mkTriple",
+                "kind": "checked-record"
+              }
+            ],
+            "result": null
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 106,
+            "endLine": 54,
+            "path": "root/CheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 53
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "The first number after the sorting constructor ran: normalization is visible only to Lean. "
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:CheckedRecords.smallest",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "smallest",
+      "overloadKey": "CheckedRecords.smallest",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "arg0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:CheckedRecords.Triple",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "CheckedRecords.smallest",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "CheckedRecords.sortedTriple"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "constructor": "CheckedRecords.sortedTriple",
+                "kind": "checked-record"
+              }
+            ],
+            "result": null
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 82,
+            "endLine": 51,
+            "path": "root/CheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 50
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Two checked arguments: the second is refused after the first passed. "
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:CheckedRecords.span",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "span",
+      "overloadKey": "CheckedRecords.span",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "arg0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:CheckedRecords.Interval",
+            "kind": "named"
+          }
+        },
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "arg1",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:CheckedRecords.Interval",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "CheckedRecords.span",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "CheckedRecords.mkInterval"
+                }
+              },
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "CheckedRecords.mkInterval"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "constructor": "CheckedRecords.mkInterval",
+                "kind": "checked-record"
+              },
+              {
+                "constructor": "CheckedRecords.mkInterval",
+                "kind": "checked-record"
+              }
+            ],
+            "result": null
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 72,
+            "endLine": 42,
+            "path": "root/CheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 41
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "The sum of exactly three numbers. "
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:CheckedRecords.total",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "total",
+      "overloadKey": "CheckedRecords.total",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "arg0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:CheckedRecords.Triple",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "CheckedRecords.total",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "CheckedRecords.mkTriple"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "constructor": "CheckedRecords.mkTriple",
+                "kind": "checked-record"
+              }
+            ],
+            "result": null
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 62,
+            "endLine": 45,
+            "path": "root/CheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 44
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "The width of a checked interval. "
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:CheckedRecords.width",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "width",
+      "overloadKey": "CheckedRecords.width",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "arg0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:CheckedRecords.Interval",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "CheckedRecords.width",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "CheckedRecords.mkInterval"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "constructor": "CheckedRecords.mkInterval",
+                "kind": "checked-record"
+              }
+            ],
+            "result": null
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 69,
+            "endLine": 39,
+            "path": "root/CheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 38
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    }
+  ],
+  "documentation": {
+    "details": "",
+    "summary": "Compiler-checked exports for checkedrecords."
+  },
+  "errors": [],
+  "producers": [
+    {
+      "adapter": "lean-bridge-elaborator",
+      "adapterVersion": 2,
+      "extensions": {
+        "lean-lang.org/elaboration-sha256": "79ca738a5b258f807573e11ad2467f884bb63823486cc6cb1b5963df66e29665",
+        "lean-lang.org/toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "id": "lean",
+      "tool": "Lean",
+      "toolVersion": "4.32.2"
+    }
+  ],
+  "schemaVersion": 3,
+  "types": [
+    {
+      "assurance": [],
+      "callable": null,
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Checked Lean CheckedRecords.Interval."
+      },
+      "fields": [
+        {
+          "documentation": {
+            "details": "",
+            "summary": "lo"
+          },
+          "mutability": "immutable",
+          "name": "lo",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        {
+          "documentation": {
+            "details": "",
+            "summary": "hi"
+          },
+          "mutability": "immutable",
+          "name": "hi",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "host": null,
+      "id": "lean:CheckedRecords.Interval",
+      "kind": "record",
+      "mutability": "immutable",
+      "name": "Interval",
+      "representation": "copied",
+      "resource": null,
+      "source": {
+        "declaration": "CheckedRecords.Interval",
+        "extensions": {
+          "lean-lang.org/erased-proofs": {
+            "fields": [
+              "ordered"
+            ]
+          }
+        },
+        "producer": "lean"
+      },
+      "target": null,
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": null,
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Checked Lean CheckedRecords.Percent."
+      },
+      "fields": [
+        {
+          "documentation": {
+            "details": "",
+            "summary": "value"
+          },
+          "mutability": "immutable",
+          "name": "value",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "host": null,
+      "id": "lean:CheckedRecords.Percent",
+      "kind": "record",
+      "mutability": "immutable",
+      "name": "Percent",
+      "representation": "copied",
+      "resource": null,
+      "source": {
+        "declaration": "CheckedRecords.Percent",
+        "extensions": {
+          "lean-lang.org/erased-proofs": {
+            "fields": [
+              "above",
+              "below"
+            ]
+          },
+          "lean-lang.org/instantiation": {
+            "arguments": [
+              {
+                "kind": "value",
+                "type": {
+                  "kind": "primitive",
+                  "name": "nat"
+                },
+                "value": "0"
+              },
+              {
+                "kind": "value",
+                "type": {
+                  "kind": "primitive",
+                  "name": "nat"
+                },
+                "value": "101"
+              }
+            ],
+            "structure": "CheckedRecords.Bounded"
+          }
+        },
+        "producer": "lean"
+      },
+      "target": null,
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": null,
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Checked Lean CheckedRecords.Triple."
+      },
+      "fields": [
+        {
+          "documentation": {
+            "details": "",
+            "summary": "data"
+          },
+          "mutability": "immutable",
+          "name": "data",
+          "type": {
+            "arguments": [
+              {
+                "kind": "primitive",
+                "name": "nat"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        }
+      ],
+      "host": null,
+      "id": "lean:CheckedRecords.Triple",
+      "kind": "record",
+      "mutability": "immutable",
+      "name": "Triple",
+      "representation": "copied",
+      "resource": null,
+      "source": {
+        "declaration": "CheckedRecords.Triple",
+        "extensions": {
+          "lean-lang.org/erased-proofs": {
+            "fields": [
+              "sized"
+            ]
+          },
+          "lean-lang.org/instantiation": {
+            "arguments": [
+              {
+                "kind": "value",
+                "type": {
+                  "kind": "primitive",
+                  "name": "nat"
+                },
+                "value": "3"
+              }
+            ],
+            "structure": "CheckedRecords.Sized"
+          }
+        },
+        "producer": "lean"
+      },
+      "target": null,
+      "typeParameters": []
+    }
+  ]
+}

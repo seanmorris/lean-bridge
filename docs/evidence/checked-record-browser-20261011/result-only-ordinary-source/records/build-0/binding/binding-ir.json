@@ -1,0 +1,165 @@
+{
+  "assurance": [],
+  "capabilities": [],
+  "component": {
+    "id": "checkedrecords@1.0.0",
+    "name": "checkedrecords",
+    "version": "1.0.0"
+  },
+  "declarations": [
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "A result-only checked record: Lean produces the proof. "
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:CheckedRecords.repeated",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "repeated",
+      "overloadKey": "CheckedRecords.repeated",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "arg0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "id": "lean:CheckedRecords.Triple",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "CheckedRecords.repeated",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 68,
+            "endLine": 57,
+            "path": "root/CheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 56
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    }
+  ],
+  "documentation": {
+    "details": "",
+    "summary": "Compiler-checked exports for checkedrecords."
+  },
+  "errors": [],
+  "producers": [
+    {
+      "adapter": "lean-bridge-elaborator",
+      "adapterVersion": 2,
+      "extensions": {
+        "lean-lang.org/elaboration-sha256": "d0a5e024a56760a7ca9b2fb5603e55e0ac753b3f0492b72ac3fdff817fbb6003",
+        "lean-lang.org/toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "id": "lean",
+      "tool": "Lean",
+      "toolVersion": "4.32.2"
+    }
+  ],
+  "schemaVersion": 3,
+  "types": [
+    {
+      "assurance": [],
+      "callable": null,
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Checked Lean CheckedRecords.Triple."
+      },
+      "fields": [
+        {
+          "documentation": {
+            "details": "",
+            "summary": "data"
+          },
+          "mutability": "immutable",
+          "name": "data",
+          "type": {
+            "arguments": [
+              {
+                "kind": "primitive",
+                "name": "nat"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        }
+      ],
+      "host": null,
+      "id": "lean:CheckedRecords.Triple",
+      "kind": "record",
+      "mutability": "immutable",
+      "name": "Triple",
+      "representation": "copied",
+      "resource": null,
+      "source": {
+        "declaration": "CheckedRecords.Triple",
+        "extensions": {
+          "lean-lang.org/erased-proofs": {
+            "fields": [
+              "sized"
+            ]
+          },
+          "lean-lang.org/instantiation": {
+            "arguments": [
+              {
+                "kind": "value",
+                "type": {
+                  "kind": "primitive",
+                  "name": "nat"
+                },
+                "value": "3"
+              }
+            ],
+            "structure": "CheckedRecords.Sized"
+          }
+        },
+        "producer": "lean"
+      },
+      "target": null,
+      "typeParameters": []
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "version": "1.0.0",
+  "type": "module",
+  "sideEffects": false,
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.mjs",
+      "default": "./index.mjs",
+      "browser": "./index.mjs"
+    }
+  },
+  "files": [
+    "index.mjs",
+    "index.d.ts",
+    "README.md",
+    "binding-manifest.json",
+    "internal",
+    "notices",
+    "LICENSE"
+  ],
+  "name": "checkedrecords",
+  "license": "MIT",
+  "description": "Independent corpus contract.",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@lean-bridge/runtime": "0.0.0-abi2.ac86f7b767448dde0e546b6db9b1c5f04c7df061c436d57e50546139a92cb301"
+  },
+  "leanBridge": {
+    "component": "checkedrecords@1.0.0",
+    "componentBundleSha256": "4938ead6b915495e01bc93a35b601d1658a4076fa0127fee02bf0a3dedb22307",
+    "componentIdentitySha256": "4fe26733cbb3eab683f372d608c74f14f173c25495238fcb97a02ff60923a218",
+    "bindingIrSha256": "3e61c32da744788dbcde3231f9fe8a5318648ce631fc61240fe8f87ac3f3043d",
+    "sharedRuntime": true
+  }
+}

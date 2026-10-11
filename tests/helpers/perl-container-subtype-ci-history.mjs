@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeCheckedRecordBrowserArchiveSource } from "./checked-record-browser-archive-history.mjs";
 
 export const perlContainerSubtypeCiHistoryPath = "docs/evidence/perl-container-subtype-ci-source-history-20261011.json";
 export const perlContainerSubtypeCiPredecessor = "ccc372392997ea0de2ef72a1b29474df96e3af39";
@@ -50,6 +51,7 @@ export const reversePerlContainerSubtypeCiUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforePerlContainerSubtypeCiSource = (path, source, expected) => {
+	source = beforeCheckedRecordBrowserArchiveSource(path, source, expected);
 	if(typeof source !== "string" || !perlContainerSubtypeCiChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
@@ -57,5 +59,4 @@ export const beforePerlContainerSubtypeCiSource = (path, source, expected) => {
 	const update = record.updates.find(item => item.path === path);
 	return update?.currentSha256 === digest ? reversePerlContainerSubtypeCiUpdate(source, update) : source;
 };
-
 

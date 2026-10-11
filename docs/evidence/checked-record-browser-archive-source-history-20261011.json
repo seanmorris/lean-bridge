@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-browser-archive-v1",
+  "predecessorCommit": "db18006038829bf87c020f081d99b27a8932ee20",
+  "updates": [
+    {
+      "path": "tests/checked-records.test.mjs",
+      "currentSha256": "c88af2a97e417959adeb3e1667ce94bfa82df57820e580416c22b9581d1e74da",
+      "previousSha256": "4d3eac114874f141caaf1482f56a09a98b9d409bd11320f61698dc16467b4a69",
+      "edits": [
+        {
+          "start": 1964,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-browser-evidence-tests.mjs\";\nimport \"./helpers/checked-record-browser-archive-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "069c05ae90d266bae69729c4c42b4826997519081ee9dbb67a3cf8a410fa34d1",
+      "previousSha256": "ad30e9f255cc1e000c5b6efed6f15c1df1fff407a0ba652238231c5233fded95",
+      "edits": [
+        {
+          "start": 1384,
+          "previous": "",
+          "current": "import { checkedRecordBrowserArchiveChangedPaths } from \"./checked-record-browser-archive-history.mjs\";\n"
+        },
+        {
+          "start": 61320,
+          "previous": "",
+          "current": "\t, ...checkedRecordBrowserArchiveChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/perl-container-subtype-ci-history.mjs",
+      "currentSha256": "2040307a42716981b9559f9f8b5b24cec9e92a90a4d2ce45308e261e9d0acbab",
+      "previousSha256": "cb3892c48d62759b577c53835f9e484ed7f1b9d9e1a5522609c7f9cb4706f185",
+      "edits": [
+        {
+          "start": 252,
+          "previous": "",
+          "current": "import { beforeCheckedRecordBrowserArchiveSource } from \"./checked-record-browser-archive-history.mjs\";\n"
+        },
+        {
+          "start": 2220,
+          "previous": "",
+          "current": "\tsource = beforeCheckedRecordBrowserArchiveSource(path, source, expected);\n"
+        },
+        {
+          "start": 2739,
+          "previous": "\n",
+          "current": ""
+        }
+      ]
+    }
+  ]
+}

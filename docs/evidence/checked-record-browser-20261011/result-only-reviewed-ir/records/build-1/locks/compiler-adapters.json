@@ -1,0 +1,73 @@
+{
+  "component": "checkedrecords@1.0.0",
+  "componentPlanSha256": "e43f1bcbc53f8c6e1437484c472da9587a8600878fc4d08936164ae02cc72a07",
+  "exports": [
+    {
+      "bindingId": "lean:CheckedRecords.repeated",
+      "leanEffect": null,
+      "leanResultType": "CheckedRecords.Triple",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        }
+      ],
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecords.repeated",
+      "sourceModule": "CheckedRecords",
+      "symbol": "lean_bridge_a07b302236aaacbaf56d34a7",
+      "wrapper": "export_56b0cc3df88478b90a9a"
+    }
+  ],
+  "imports": [
+    "CheckedRecords"
+  ],
+  "leanSourceSha256": "0be2ed1841ee3567d11943446d500a2343fb9aecada3d45f8685165d8974c32c",
+  "module": "LeanBridgeGeneratedd3803aad486f3d2e",
+  "privateAbi": {
+    "dispatch": "copied-graph-frame-v1",
+    "exports": [
+      {
+        "bindingId": "lean:CheckedRecords.repeated",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "id": "lean:CheckedRecords.Triple",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_a07b302236aaacbaf56d34a7"
+      }
+    ],
+    "types": [
+      {
+        "erased": [
+          "sized"
+        ],
+        "fields": [
+          {
+            "name": "data",
+            "type": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          }
+        ],
+        "id": "lean:CheckedRecords.Triple",
+        "kind": "record"
+      }
+    ],
+    "version": 8
+  },
+  "schemaVersion": 1
+}

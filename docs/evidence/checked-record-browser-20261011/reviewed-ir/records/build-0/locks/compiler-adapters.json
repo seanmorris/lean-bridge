@@ -1,0 +1,414 @@
+{
+  "component": "checkedrecords@1.0.0",
+  "componentPlanSha256": "f2b7ea05d0f60854177b993f647305becc5bb0f6c427425e64322b6109e78fb3",
+  "exports": [
+    {
+      "bindingId": "lean:CheckedRecords.complement",
+      "leanEffect": null,
+      "leanResultType": "_root_.Nat",
+      "parameters": [
+        {
+          "leanType": "CheckedRecords.Percent",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "CheckedRecords.mkPercent",
+            "kind": "checked-record"
+          }
+        ],
+        "result": null
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecords.complement",
+      "sourceModule": "CheckedRecords",
+      "symbol": "lean_bridge_52799c5aed1be99117346c8f",
+      "wrapper": "export_c7e57d841973676a3fb6"
+    },
+    {
+      "bindingId": "lean:CheckedRecords.firstOf",
+      "leanEffect": null,
+      "leanResultType": "_root_.Nat",
+      "parameters": [
+        {
+          "leanType": "CheckedRecords.Triple",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "CheckedRecords.mkTriple",
+            "kind": "checked-record"
+          }
+        ],
+        "result": null
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecords.firstOf",
+      "sourceModule": "CheckedRecords",
+      "symbol": "lean_bridge_aff59a52c1a41f0d7138836f",
+      "wrapper": "export_37bc586c7baaaea25d35"
+    },
+    {
+      "bindingId": "lean:CheckedRecords.repeated",
+      "leanEffect": null,
+      "leanResultType": "CheckedRecords.Triple",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        }
+      ],
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecords.repeated",
+      "sourceModule": "CheckedRecords",
+      "symbol": "lean_bridge_a07b302236aaacbaf56d34a7",
+      "wrapper": "export_56b0cc3df88478b90a9a"
+    },
+    {
+      "bindingId": "lean:CheckedRecords.scale",
+      "leanEffect": null,
+      "leanResultType": "CheckedRecords.Triple",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        },
+        {
+          "leanType": "CheckedRecords.Triple",
+          "name": "value1"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null,
+          {
+            "constructor": "CheckedRecords.mkTriple",
+            "kind": "checked-record"
+          }
+        ],
+        "result": null
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecords.scale",
+      "sourceModule": "CheckedRecords",
+      "symbol": "lean_bridge_b298c43d56b81400cca83db9",
+      "wrapper": "export_f840589a37c5ce0f03b3"
+    },
+    {
+      "bindingId": "lean:CheckedRecords.smallest",
+      "leanEffect": null,
+      "leanResultType": "_root_.Nat",
+      "parameters": [
+        {
+          "leanType": "CheckedRecords.Triple",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "CheckedRecords.sortedTriple",
+            "kind": "checked-record"
+          }
+        ],
+        "result": null
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecords.smallest",
+      "sourceModule": "CheckedRecords",
+      "symbol": "lean_bridge_7dcca080e5e3629a7e7e3ec5",
+      "wrapper": "export_4e2344b05257a05cf048"
+    },
+    {
+      "bindingId": "lean:CheckedRecords.span",
+      "leanEffect": null,
+      "leanResultType": "_root_.Nat",
+      "parameters": [
+        {
+          "leanType": "CheckedRecords.Interval",
+          "name": "value0"
+        },
+        {
+          "leanType": "CheckedRecords.Interval",
+          "name": "value1"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "CheckedRecords.mkInterval",
+            "kind": "checked-record"
+          },
+          {
+            "constructor": "CheckedRecords.mkInterval",
+            "kind": "checked-record"
+          }
+        ],
+        "result": null
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecords.span",
+      "sourceModule": "CheckedRecords",
+      "symbol": "lean_bridge_090903f0fb85fe46d7efbbd5",
+      "wrapper": "export_4ef74a81f117d10a861f"
+    },
+    {
+      "bindingId": "lean:CheckedRecords.total",
+      "leanEffect": null,
+      "leanResultType": "_root_.Nat",
+      "parameters": [
+        {
+          "leanType": "CheckedRecords.Triple",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "CheckedRecords.mkTriple",
+            "kind": "checked-record"
+          }
+        ],
+        "result": null
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecords.total",
+      "sourceModule": "CheckedRecords",
+      "symbol": "lean_bridge_aec30f0564f8e66de8ddf76f",
+      "wrapper": "export_af3fb0e00b61db948229"
+    },
+    {
+      "bindingId": "lean:CheckedRecords.width",
+      "leanEffect": null,
+      "leanResultType": "_root_.Nat",
+      "parameters": [
+        {
+          "leanType": "CheckedRecords.Interval",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "CheckedRecords.mkInterval",
+            "kind": "checked-record"
+          }
+        ],
+        "result": null
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecords.width",
+      "sourceModule": "CheckedRecords",
+      "symbol": "lean_bridge_503421172a97792cdad0da0f",
+      "wrapper": "export_5b8d2ffd0acf4abc5103"
+    }
+  ],
+  "imports": [
+    "CheckedRecords"
+  ],
+  "leanSourceSha256": "be9d1600ad8fe856666c2a1a732853188d28e5cfdc58c5aed0fdd4d4d007afb3",
+  "module": "LeanBridgeGeneratedd3803aad486f3d2e",
+  "privateAbi": {
+    "dispatch": "copied-graph-frame-v1",
+    "exports": [
+      {
+        "bindingId": "lean:CheckedRecords.complement",
+        "parameters": [
+          {
+            "id": "lean:CheckedRecords.Percent",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_52799c5aed1be99117346c8f"
+      },
+      {
+        "bindingId": "lean:CheckedRecords.firstOf",
+        "parameters": [
+          {
+            "id": "lean:CheckedRecords.Triple",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_aff59a52c1a41f0d7138836f"
+      },
+      {
+        "bindingId": "lean:CheckedRecords.repeated",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "id": "lean:CheckedRecords.Triple",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_a07b302236aaacbaf56d34a7"
+      },
+      {
+        "bindingId": "lean:CheckedRecords.scale",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          {
+            "id": "lean:CheckedRecords.Triple",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "id": "lean:CheckedRecords.Triple",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_b298c43d56b81400cca83db9"
+      },
+      {
+        "bindingId": "lean:CheckedRecords.smallest",
+        "parameters": [
+          {
+            "id": "lean:CheckedRecords.Triple",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_7dcca080e5e3629a7e7e3ec5"
+      },
+      {
+        "bindingId": "lean:CheckedRecords.span",
+        "parameters": [
+          {
+            "id": "lean:CheckedRecords.Interval",
+            "kind": "named"
+          },
+          {
+            "id": "lean:CheckedRecords.Interval",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_090903f0fb85fe46d7efbbd5"
+      },
+      {
+        "bindingId": "lean:CheckedRecords.total",
+        "parameters": [
+          {
+            "id": "lean:CheckedRecords.Triple",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_aec30f0564f8e66de8ddf76f"
+      },
+      {
+        "bindingId": "lean:CheckedRecords.width",
+        "parameters": [
+          {
+            "id": "lean:CheckedRecords.Interval",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_503421172a97792cdad0da0f"
+      }
+    ],
+    "types": [
+      {
+        "erased": [
+          "ordered"
+        ],
+        "fields": [
+          {
+            "name": "lo",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "name": "hi",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "id": "lean:CheckedRecords.Interval",
+        "kind": "record"
+      },
+      {
+        "erased": [
+          "above",
+          "below"
+        ],
+        "fields": [
+          {
+            "name": "value",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "id": "lean:CheckedRecords.Percent",
+        "kind": "record"
+      },
+      {
+        "erased": [
+          "sized"
+        ],
+        "fields": [
+          {
+            "name": "data",
+            "type": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          }
+        ],
+        "id": "lean:CheckedRecords.Triple",
+        "kind": "record"
+      }
+    ],
+    "version": 8
+  },
+  "schemaVersion": 1
+}

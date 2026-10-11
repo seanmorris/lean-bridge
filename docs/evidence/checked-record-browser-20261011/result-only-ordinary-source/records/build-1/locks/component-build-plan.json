@@ -1,0 +1,69 @@
+{
+  "bindingIr": {
+    "declarations": [
+      "lean:CheckedRecords.repeated"
+    ],
+    "origin": "lean-elaborated",
+    "schemaVersion": 3,
+    "semanticSha256": "8d219ee2ae9436719de04f357fefd5da12d754890fb8e36c70493e6be6ee63e5"
+  },
+  "component": {
+    "id": "checkedrecords@1.0.0",
+    "name": "checkedrecords",
+    "version": "1.0.0"
+  },
+  "policies": {
+    "compileOnce": true,
+    "privateRuntime": false,
+    "sourceReadOnly": true,
+    "targetSpecificRebuild": false
+  },
+  "runtime": {
+    "abiVersion": 1,
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "patchSetSha256": "743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3",
+    "profile": "side-lazy",
+    "shared": true
+  },
+  "schemaVersion": 2,
+  "source": {
+    "inputs": [
+      {
+        "bytes": 2396,
+        "path": "CheckedRecords.lean",
+        "sha256": "368d74e1c5abd242ec96ac8bc9cf9648377ccbe8b0f8608ab46efe14cfec34b7"
+      },
+      {
+        "bytes": 79,
+        "path": "lakefile.toml",
+        "sha256": "5de2968e65079e02690fddda2dec4f721b4593c70c425c39274a49ecb64fee63"
+      },
+      {
+        "bytes": 462,
+        "path": "lean-bridge.exports.json",
+        "sha256": "a4bfccafcab1a571f2e99bb1bdf8304ba0245484306dd7ef3a7a1449ebb67d1a"
+      },
+      {
+        "bytes": 25,
+        "path": "lean-toolchain",
+        "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+      },
+      {
+        "bytes": 1093,
+        "path": "LICENSE",
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      {
+        "bytes": 59,
+        "path": "package.json",
+        "sha256": "3f2a82aebead09bdef17353ef89de32d37e77a04df857b127989c7010c189822"
+      }
+    ],
+    "lakeSnapshotSha256": "2e5f14c404620f7f1f74813e2be8b4d9796417e7576fff7ef9ffddfdf3055ace",
+    "toolchain": "leanprover/lean4:v4.32.2",
+    "treeSha256": "35ee878803a2870c65652a79625959607b1cdedb0644325be71c40abcb73de28"
+  },
+  "targets": [
+    "npm"
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "version": "1.0.0",
+  "type": "module",
+  "sideEffects": false,
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.mjs",
+      "default": "./index.mjs",
+      "browser": "./index.mjs"
+    }
+  },
+  "files": [
+    "index.mjs",
+    "index.d.ts",
+    "README.md",
+    "binding-manifest.json",
+    "internal",
+    "notices",
+    "LICENSE"
+  ],
+  "name": "checkedrecords",
+  "license": "MIT",
+  "description": "Compiler-checked exports for checkedrecords.",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@lean-bridge/runtime": "0.0.0-abi2.ac86f7b767448dde0e546b6db9b1c5f04c7df061c436d57e50546139a92cb301"
+  },
+  "leanBridge": {
+    "component": "checkedrecords@1.0.0",
+    "componentBundleSha256": "a77ca26e65b6701dd1cbee01ec13d66345a7622ee1c375993f389cb16bcd5213",
+    "componentIdentitySha256": "f5587a7a4e201d55db9b0d7deae473217d09cd58f6392c86e08a412920263955",
+    "bindingIrSha256": "8d219ee2ae9436719de04f357fefd5da12d754890fb8e36c70493e6be6ee63e5",
+    "sharedRuntime": true
+  }
+}

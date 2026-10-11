@@ -33,6 +33,8 @@ import "./helpers/checked-record-perl-installed-history-tests.mjs";
 import "./helpers/checked-record-browser-tests.mjs";
 import "./helpers/checked-record-browser-installed-tests.mjs";
 import "./helpers/checked-record-browser-history-tests.mjs";
+import "./helpers/checked-record-browser-evidence-tests.mjs";
+import "./helpers/checked-record-browser-archive-history-tests.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
 import { assertRefinement } from "../src/abi/refinements.mjs";
