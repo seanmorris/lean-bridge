@@ -140,7 +140,18 @@ export const assertFinLateReport = async (report, profiles, { read, python, glib
 		assert.equal(pkg.name, coordinate.name); assert.equal(pkg.version, coordinate.version);
 		assert.equal(installed.name, pkg.name); assert.equal(installed.version, pkg.version);
 		assert.equal(installed.bindingIrSha256, item.bindingIrSha256);
-		assert.deepEqual(installed.sourceIdentity, model.sourceIdentity);
+		if(["c", "cpp"].includes(profile))
+		{
+			assert.equal(installed.kind, "lean-bridge-native-c-package");
+			assert.equal(installed.ecosystem, profile);
+			assert.equal(Object.hasOwn(installed, "sourceIdentity"), false);
+			assert.deepEqual(installed.files["share/lean-bridge/component/model.json"], report.recordFiles["author-0/model.json"]);
+			for(const [field, path] of [["adapterReceiptSha256", "share/lean-bridge/native-c-adapter.json"]
+				, ["componentReceiptSha256", "share/lean-bridge/component/native-component.json"]]) {
+				assert.match(installed[field], digest); assert.equal(installed.files[path].sha256, installed[field]);
+				}
+		}
+		else assert.deepEqual(installed.sourceIdentity, model.sourceIdentity);
 		assert.equal(installed.runtimeIdentity, pkg.runtimeIdentity);
 		assert.equal(installed.glibcMinimumVersion, glibc);
 		assert.ok(Object.keys(installed.files).length > 0);

@@ -12,6 +12,7 @@ import { finContainerEdgeRefinements, finContainerEdgeReviewedIr, finContainerEd
 import { finContainerTargets } from "./fin-container-install.mjs";
 import { finLateAdditionalChecks, finLateConsumer, finLateProfiles } from "./fin-container-late-consumers.mjs";
 import { assertFinLateReport, assertFinLateTap } from "./fin-container-late-report.mjs";
+import "./fin-container-late-ci-tests.mjs";
 
 const synthetic = async () => {
 	const profiles = [...finLateProfiles].sort(), source = await finContainerEdgeSource(), hash = sha256("synthetic, not an installed observation");
@@ -48,6 +49,15 @@ const synthetic = async () => {
 			, sourceIdentity: model.sourceIdentity
 			, runtimeIdentity: hash, glibcMinimumVersion: "2.36"
 			, files: { "synthetic.txt": { bytes: 0, sha256: sha256("") } } };
+		if(["c", "cpp"].includes(profile))
+		{
+			delete installed.sourceIdentity;
+			installed.kind = "lean-bridge-native-c-package"; installed.ecosystem = profile;
+			installed.adapterReceiptSha256 = hash; installed.componentReceiptSha256 = hash;
+			installed.files["share/lean-bridge/component/model.json"] = { bytes: files.get("author-0/model.json").length, sha256: sha256(files.get("author-0/model.json")) };
+			for(const path of ["share/lean-bridge/native-c-adapter.json", "share/lean-bridge/component/native-component.json"])
+				installed.files[path] = { bytes: 0, sha256: hash };
+		}
 		put(`${profile}.source`, await finLateConsumer(profile)); put(`${profile}.receipt.json`, installed);
 		const item = { profile, path: "ordinary-source"
 			, checks: finContainerEdgeChecks[profile] + finLateAdditionalChecks[profile]
@@ -76,7 +86,7 @@ const synthetic = async () => {
 		}
 		else
 		{
-			item.exactPackageFiles = true; item.packageFileSetSha256 = sha256(canonicalJson(["synthetic.txt", receiptPath].sort()));
+			item.exactPackageFiles = true; item.packageFileSetSha256 = sha256(canonicalJson([...Object.keys(installed.files), receiptPath].sort()));
 			closure = { receiptSha256: item.installedReceiptSha256, packageFileSetSha256: item.packageFileSetSha256 };
 			const hosts = { ruby: ["rubyEnvironment", ["environmentSha256", "interpreterSha256", "gemspecSha256"]]
 				, java: ["jvmEnvironment", ["classpathFilesSha256", "interpreterSha256"]]
@@ -133,4 +143,21 @@ test("late-input TAP checker refuses wrong gates, skips, failures and ambiguous 
 		, tap.replace("native packages", "source-only fixtures")
 		, tap + "# pass 1\n", tap.replace("recovery\n", "recovery # SKIP\n")])
 		assert.throws(() => assertFinLateTap(changed));
+});
+
+test("late-input C-family checker requires the receipt-pinned original model and component metadata", async () => {
+	const { report, profiles, options, files } = await synthetic();
+	for(const profile of ["c", "cpp"])
+		for(const mutate of [value => { delete value.files["share/lean-bridge/component/model.json"]; }
+			, value => { value.files["share/lean-bridge/component/model.json"].sha256 = "0".repeat(64); }
+			, value => { value.componentReceiptSha256 = "0".repeat(64); }
+			, value => { value.adapterReceiptSha256 = "0".repeat(64); }
+			, value => { value.sourceIdentity = {}; }]) {
+			const name = `${profile}.receipt.json`, altered = structuredClone(report), receipt = JSON.parse(files.get(name));
+			mutate(receipt);
+			const bytes = Buffer.from(canonicalJson(receipt)), item = altered.reports.find(item => item.profile === profile);
+			altered.recordFiles[name] = { bytes: bytes.length, sha256: sha256(bytes) };
+			item.installedReceiptSha256 = sha256(bytes); item.installedFilesSha256 = sha256(canonicalJson(receipt.files));
+			await assert.rejects(assertFinLateReport(altered, profiles, { ...options, read: async path => path === name ? bytes : files.get(path) }));
+			}
 });
