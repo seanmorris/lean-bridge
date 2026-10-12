@@ -40,9 +40,10 @@ test("nominal Subtype author guides distinguish compilation, installed support a
 	{
 		const row = author.split("\n").find(line => line.startsWith(prefix));
 		assert.ok(row);
-		assert.equal((row.match(/Generated; pending/gu) ?? []).length, 2);
+		assert.equal((row.match(/Generated; pending/gu) ?? []).length, 1);
+		assert.ok(row.includes("All four ABIs installed"));
 		assert.ok(row.includes("Node installed; browser pending"));
-		assert.ok(row.includes("Node and C/C++ ordinary/reviewed installed"));
+		assert.ok(row.includes("Node, C/C++ and Perl ordinary/reviewed installed"));
 	}
 	assert.ok(section.includes("`NominalSubtypes.lean`"));
 	assert.ok(section.includes("`lean-bridge.exports.json`"));

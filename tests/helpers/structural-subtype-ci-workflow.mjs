@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { nominalSubtypePerlCiBlock, withoutNominalSubtypePerlWorkflow } from "./nominal-subtype-perl-ci-workflow.mjs";
 
 const runner = "bash scripts/run-structural-subtype-ci.sh";
 const nativeRunner = "bash scripts/run-checked-record-host-ci.sh";
@@ -92,7 +93,7 @@ const transform = (source, name, enabled) => {
 	const insert = (before, addition) => { source = enabled ? once(source, before, before + addition) : once(source, addition, ""); };
 	if(name === "perl-consumer.yml")
 	{
-		const anchor = "\n  nix-engine:\n";
+		const anchor = source.includes("run-nominal-subtype-perl-ci.sh") ? nominalSubtypePerlCiBlock : "\n  nix-engine:\n";
 		source = enabled ? once(source, anchor, structuralSubtypePerlBlock + anchor) : once(source, structuralSubtypePerlBlock, "");
 		return source;
 	}
@@ -141,7 +142,10 @@ export const disableStructuralSubtypeWorkflow = (source, name) => transform(sour
  * @param source - Current or earlier workflow text.
  * @param name - Consumer workflow basename.
  */
-export const withoutStructuralSubtypeWorkflow = (source, name) => source.includes(runner) ? disableStructuralSubtypeWorkflow(source, name) : source;
+export const withoutStructuralSubtypeWorkflow = (source, name) => {
+	if(name === "perl-consumer.yml") source = withoutNominalSubtypePerlWorkflow(source);
+	return source.includes(runner) ? disableStructuralSubtypeWorkflow(source, name) : source;
+};
 
 const stepAt = (source, index) => {
 	assert.ok(index >= 0);
@@ -170,7 +174,7 @@ export const assertStructuralSubtypeWorkflow = (source, name) => {
 	{
 		const index = source.indexOf(structuralSubtypePerlBlock); assert.equal(jobAt(source, index), "checked-records");
 		const job = jobBody(source, "checked-records");
-		assert.doesNotMatch(job, /continue-on-error:|set \+e|\|\| true|\n {4}if:/u);
+		assert.doesNotMatch(job, /continue-on-error:|set \+e|\|\| true|^ {4}if:/mu);
 		assert.match(job, /^ {4}timeout-minutes: 120$/mu);
 		for(const selection of ["5.36.3 threaded", "5.36.3 unthreaded", "5.38.2 threaded", "5.38.2 unthreaded"])
 			assert.ok(job.indexOf(`node scripts/build-perl-toolchains.mjs ${selection}\n`) < job.indexOf(runner) && job.includes(`node scripts/build-perl-toolchains.mjs ${selection}\n`));

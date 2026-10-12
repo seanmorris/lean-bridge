@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeNominalSubtypePerlPromotionSource } from "./nominal-subtype-perl-promotion-history.mjs";
 
 export const coreContractRepairHistoryPath = "docs/evidence/core-contract-repair-source-history-20261012.json";
 export const coreContractRepairPredecessor = "c9bb5c1a182994c6408117f278f574d1dfe9b188";
@@ -55,6 +56,7 @@ export const reverseCoreContractRepairUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeCoreContractRepairSource = (path, source, expected) => {
+	source = beforeNominalSubtypePerlPromotionSource(path, source, expected);
 	if(typeof source !== "string" || !coreContractRepairChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

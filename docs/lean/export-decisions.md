@@ -48,8 +48,10 @@ cover the tested Nat fields, aliases and constructor-free outputs on both source
 routes in Node 22.23.2 with strict TypeScript, including result-only packages.
 [Installed C/C++ checks](../evidence/nominal-subtype-native-acceptance-20261011.md)
 cover the same Nat forms on both source routes in Linux x64/glibc 2.36, including
-standalone result-only packages. Browser, other native hosts and PHP-Wasm
-nominal acceptance remains pending. Refined
+standalone result-only packages. [Installed Perl checks](../evidence/nominal-subtype-perl-acceptance-20261012.md)
+cover those Nat fields and constructor-free outputs on both source routes, with
+all four pinned ABIs and both installation modes on Linux x64/glibc 2.36.
+Browser, other native hosts and PHP-Wasm nominal acceptance remains pending. Refined
 callbacks, owned and recursive Subtypes, and Subtype fields in generic records
 remain unfinished.
 
@@ -136,6 +138,8 @@ and a Fin sibling. The shared component compiler now admits the same field
 choices and result projections. [Installed npm acceptance](../evidence/nominal-subtype-npm-acceptance-20261011.md)
 and [installed C/C++ acceptance](../evidence/nominal-subtype-native-acceptance-20261011.md)
 cover the separate Nat nominal fixture on Node and Linux x64/glibc 2.36.
+[Installed Perl acceptance](../evidence/nominal-subtype-perl-acceptance-20261012.md)
+adds all four pinned Perl ABIs and both installation modes on the same glibc floor.
 Other native hosts and PHP-Wasm nominal acceptance remains pending.
 Save `NominalSubtypes.lean`:
 

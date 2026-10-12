@@ -8,6 +8,7 @@ import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { beforeNominalSubtypePerlPromotionSource } from "./nominal-subtype-perl-promotion-history.mjs";
 import { nominalSubtypeNativeArchive, nominalSubtypeNativeProfiles, nominalSubtypeNativeReferences, promoteNominalSubtypeNative, nominalSubtypeNativeConversion, nominalSubtypeNativeLimit } from "./nominal-subtype-native-promotion.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", "4d9424e6c1fa551d0c6802d39ee7c5d469ed8c23:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
@@ -72,13 +73,14 @@ test("nominal native promotion refuses missing originals and substituted scope o
 
 test("nominal native promotion adds four C/C++ field cells and supplements eight existing cells only", async () => {
 	const original = predecessor(), references = await nominalSubtypeNativeReferences();
-	const proposed = await promoteNominalSubtypeNative(original, references), { document, ...contracts } = await readTypeSurface();
+	const proposed = await promoteNominalSubtypeNative(original, references), { document: current, ...contracts } = await readTypeSurface();
+	const document = JSON.parse(beforeNominalSubtypePerlPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
 	validateTypeSurface(proposed, contracts);
 	assert.equal(original.evidence.length, 476); assert.equal(proposed.evidence.length, 480);
 	assert.equal(original.observations.length, 573); assert.equal(proposed.observations.length, 575);
 	assert.deepEqual(proposed.evidence.slice(0, 476), original.evidence);
 	assert.deepEqual(document.observations, proposed.observations);
-	assert.deepEqual(document.evidence.slice(476), proposed.evidence.slice(476));
+	assert.deepEqual(current.evidence.slice(476, 480), proposed.evidence.slice(476));
 	const before = typeSurfaceCells(original, contracts), after = typeSurfaceCells(proposed, contracts);
 	const changed = [], added = [];
 	for(const [index, cell] of after.entries())
@@ -110,9 +112,10 @@ test("nominal native docs distinguish verified C/C++ from other hosts and callba
 	{
 		const row = author.split("\n").find(line => line.startsWith(prefix));
 		assert.ok(row.includes("Node installed; browser pending"));
-		assert.equal((row.match(/Generated; pending/gu) ?? []).length, 2);
+		assert.equal((row.match(/Generated; pending/gu) ?? []).length, 1);
+		assert.ok(row.includes("All four ABIs installed"));
 		assert.ok(row.includes("C/C++ installed; other native hosts pending"));
-		assert.ok(row.includes("Node and C/C++ ordinary/reviewed installed"));
+		assert.ok(row.includes("Node, C/C++ and Perl ordinary/reviewed installed"));
 	}
 	for(const path of ["docs/lean/existing-package.md", "docs/lean/export-decisions.md", "docs/consume/c.md", "docs/consume/cpp.md", "docs/reference/types.md"])
 		assert.ok((await readFile(path, "utf8")).includes("nominal-subtype-native-acceptance-20261011.md"), path);

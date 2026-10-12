@@ -19,6 +19,7 @@ import { beforeCallbackFinPromotionSource } from "./helpers/callback-fin-promoti
 import { reviewedSubtypeNativeProfiles, reviewedSubtypeNativeReferences } from "./helpers/reviewed-subtype-native-promotion.mjs";
 import { nominalSubtypeNpmProfiles, nominalSubtypeNpmHostSuffix } from "./helpers/nominal-subtype-npm-promotion.mjs";
 import { nominalSubtypeNativeProfiles, nominalSubtypeNativeHostSuffix } from "./helpers/nominal-subtype-native-promotion.mjs";
+import { nominalSubtypePerlProfiles, nominalSubtypePerlHostSuffix } from "./helpers/nominal-subtype-perl-promotion.mjs";
 
 const execute = promisify(execFile);
 const root = path.resolve(import.meta.dirname, "..");
@@ -524,23 +525,23 @@ test("refinements, host null and erased proofs retain their individual value pos
 	}
 });
 
-test("checked Subtype evidence preserves structural inputs and results and limits nominal fields to Node and C/C++", async () => {
+test("checked Subtype evidence preserves structural inputs and results and limits nominal fields to Node, C/C++ and Perl", async () => {
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "subtype");
 	const allInstalled = cells.filter(cell => cell.stages.installedExecution.state === "passed");
 	const fields = allInstalled.filter(cell => cell.position === "field");
-	const nominalProfiles = [...nominalSubtypeNpmProfiles, ...nominalSubtypeNativeProfiles];
-	const nominalLane = profile => nominalSubtypeNpmProfiles.includes(profile) ? "npm" : "native";
+	const nominalProfiles = [...nominalSubtypeNpmProfiles, ...nominalSubtypeNativeProfiles, ...nominalSubtypePerlProfiles];
+	const nominalLane = profile => nominalSubtypeNpmProfiles.includes(profile) ? "npm" : profile === "perl" ? "perl" : "native";
 	assert.deepEqual(fields.map(cell => cell.id).sort(), nominalProfiles.flatMap(profile => ["ordinary-source", "reviewed-ir"].map(path => `${profile}/subtype/${path}/field`)).sort());
 	for(const cell of fields) for(const stage of Object.values(cell.stages))
 		assert.deepEqual(stage.evidence, ["full", "result-only"].map(mode => `nominal-subtype-${nominalLane(cell.profile)}-${cell.path === "ordinary-source" ? "ordinary" : "reviewed"}-${mode}-installed`));
 	const installed = allInstalled.filter(cell => ["parameter", "result"].includes(cell.position));
-	assert.equal(allInstalled.length, installed.length + 8);
+	assert.equal(allInstalled.length, installed.length + 10);
 	const primitive = installed.map(cell => {
 		const nominal = nominalProfiles.includes(cell.profile)
 			? ["full", "result-only"].map(mode => `nominal-subtype-${nominalLane(cell.profile)}-${cell.path === "ordinary-source" ? "ordinary" : "reviewed"}-${mode}-installed`) : [];
 		if(nominal.length)
 		{
-			const hostSuffix = nominalSubtypeNpmProfiles.includes(cell.profile) ? nominalSubtypeNpmHostSuffix : nominalSubtypeNativeHostSuffix;
+			const hostSuffix = nominalSubtypeNpmProfiles.includes(cell.profile) ? nominalSubtypeNpmHostSuffix : cell.profile === "perl" ? nominalSubtypePerlHostSuffix : nominalSubtypeNativeHostSuffix;
 			assert.ok(cell.hostType.endsWith(hostSuffix));
 			cell = { ...cell, hostType: cell.hostType.slice(0, -hostSuffix.length) };
 		}
