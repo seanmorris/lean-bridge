@@ -1,0 +1,3980 @@
+{
+  "assurance": [],
+  "capabilities": [],
+  "component": {
+    "id": "nominalsubtypes@1.0.0",
+    "name": "nominalsubtypes",
+    "version": "1.0.0"
+  },
+  "declarations": [
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:NominalSubtypes.aliases",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "aliases",
+      "overloadKey": "NominalSubtypes.aliases",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "id": "lean:NominalSubtypes.EnvelopeAlias",
+                    "kind": "named"
+                  }
+                ],
+                "constructor": "option",
+                "kind": "apply"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        },
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value1",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "id": "lean:NominalSubtypes.EnvelopeAlias",
+                    "kind": "named"
+                  }
+                ],
+                "constructor": "option",
+                "kind": "apply"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "NominalSubtypes.aliases",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "fields": [
+                            {
+                              "name": "payload",
+                              "refinement": {
+                                "constructor": "NominalSubtypes.plusOne"
+                              }
+                            },
+                            {
+                              "name": "digit",
+                              "refinement": null
+                            }
+                          ],
+                          "kind": "record",
+                          "name": "NominalSubtypes.Envelope"
+                        }
+                      ],
+                      "kind": "option"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              },
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "fields": [
+                            {
+                              "name": "payload",
+                              "refinement": {
+                                "constructor": "NominalSubtypes.plusTwo"
+                              }
+                            },
+                            {
+                              "name": "digit",
+                              "refinement": null
+                            }
+                          ],
+                          "kind": "record",
+                          "name": "NominalSubtypes.Envelope"
+                        }
+                      ],
+                      "kind": "option"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "fields": [
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "constructor": "NominalSubtypes.plusOne",
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "refinement": {
+                              "bound": "3",
+                              "kind": "fin"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "NominalSubtypes.Envelope"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              },
+              {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "fields": [
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "constructor": "NominalSubtypes.plusTwo",
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "refinement": {
+                              "bound": "3",
+                              "kind": "fin"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "NominalSubtypes.Envelope"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              }
+            ],
+            "result": null
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 40,
+            "endLine": 49,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 46
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:NominalSubtypes.arrayValues",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "arrayValues",
+      "overloadKey": "NominalSubtypes.arrayValues",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "constructor": "array",
+          "kind": "apply"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "NominalSubtypes.arrayValues",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              null
+            ],
+            "result": {
+              "arguments": [
+                {
+                  "constructor": null,
+                  "kind": "subtype"
+                }
+              ],
+              "kind": "array"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 85,
+            "endLine": 59,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 59
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:NominalSubtypes.branch",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "branch",
+      "overloadKey": "NominalSubtypes.branch",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "constructor": "result",
+          "kind": "apply"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "NominalSubtypes.branch",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              null
+            ],
+            "result": {
+              "arguments": [
+                {
+                  "constructor": null,
+                  "kind": "subtype"
+                },
+                {
+                  "constructor": null,
+                  "kind": "subtype"
+                }
+              ],
+              "kind": "result"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 66,
+            "endLine": 64,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 63
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:NominalSubtypes.combine",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "combine",
+      "overloadKey": "NominalSubtypes.combine",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:NominalSubtypes.Envelope",
+            "kind": "named"
+          }
+        },
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value1",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:NominalSubtypes.Envelope",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "NominalSubtypes.combine",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "fields": [
+                    {
+                      "name": "payload",
+                      "refinement": {
+                        "constructor": "NominalSubtypes.plusOne"
+                      }
+                    },
+                    {
+                      "name": "digit",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "record",
+                  "name": "NominalSubtypes.Envelope"
+                }
+              },
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "fields": [
+                    {
+                      "name": "payload",
+                      "refinement": {
+                        "constructor": "NominalSubtypes.plusTwo"
+                      }
+                    },
+                    {
+                      "name": "digit",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "record",
+                  "name": "NominalSubtypes.Envelope"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "fields": [
+                  {
+                    "name": "payload",
+                    "refinement": {
+                      "constructor": "NominalSubtypes.plusOne",
+                      "kind": "subtype"
+                    }
+                  },
+                  {
+                    "name": "digit",
+                    "refinement": {
+                      "bound": "3",
+                      "kind": "fin"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "name": "NominalSubtypes.Envelope"
+              },
+              {
+                "fields": [
+                  {
+                    "name": "payload",
+                    "refinement": {
+                      "constructor": "NominalSubtypes.plusTwo",
+                      "kind": "subtype"
+                    }
+                  },
+                  {
+                    "name": "digit",
+                    "refinement": {
+                      "bound": "3",
+                      "kind": "fin"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "name": "NominalSubtypes.Envelope"
+              }
+            ],
+            "result": null
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 87,
+            "endLine": 35,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 35
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:NominalSubtypes.echo",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "echo",
+      "overloadKey": "NominalSubtypes.echo",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:NominalSubtypes.Envelope",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "id": "lean:NominalSubtypes.Envelope",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "NominalSubtypes.echo",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "fields": [
+                    {
+                      "name": "payload",
+                      "refinement": {
+                        "constructor": "NominalSubtypes.plusOne"
+                      }
+                    },
+                    {
+                      "name": "digit",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "record",
+                  "name": "NominalSubtypes.Envelope"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "fields": [
+                  {
+                    "name": "payload",
+                    "refinement": {
+                      "constructor": "NominalSubtypes.plusOne",
+                      "kind": "subtype"
+                    }
+                  },
+                  {
+                    "name": "digit",
+                    "refinement": {
+                      "bound": "3",
+                      "kind": "fin"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "name": "NominalSubtypes.Envelope"
+              }
+            ],
+            "result": {
+              "fields": [
+                {
+                  "name": "payload",
+                  "refinement": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "name": "digit",
+                  "refinement": {
+                    "bound": "3",
+                    "kind": "fin"
+                  }
+                }
+              ],
+              "kind": "record",
+              "name": "NominalSubtypes.Envelope"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 47,
+            "endLine": 45,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 45
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:NominalSubtypes.echoEvent",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "echoEvent",
+      "overloadKey": "NominalSubtypes.echoEvent",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:NominalSubtypes.Event",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "id": "lean:NominalSubtypes.Event",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "NominalSubtypes.echoEvent",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "cases": [
+                    {
+                      "fields": [],
+                      "name": "empty"
+                    },
+                    {
+                      "fields": [
+                        {
+                          "name": "value",
+                          "refinement": {
+                            "fields": [
+                              {
+                                "name": "payload",
+                                "refinement": {
+                                  "constructor": "NominalSubtypes.plusOne"
+                                }
+                              },
+                              {
+                                "name": "digit",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "record",
+                            "name": "NominalSubtypes.Envelope"
+                          }
+                        }
+                      ],
+                      "name": "box"
+                    },
+                    {
+                      "fields": [
+                        {
+                          "name": "values",
+                          "refinement": {
+                            "arguments": [
+                              {
+                                "arguments": [
+                                  {
+                                    "arguments": [
+                                      {
+                                        "constructor": "NominalSubtypes.plusOne"
+                                      },
+                                      {
+                                        "constructor": "NominalSubtypes.plusTwo"
+                                      }
+                                    ],
+                                    "kind": "result"
+                                  }
+                                ],
+                                "kind": "option"
+                              }
+                            ],
+                            "kind": "array"
+                          }
+                        }
+                      ],
+                      "name": "choices"
+                    }
+                  ],
+                  "kind": "variant",
+                  "name": "NominalSubtypes.Event"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "cases": [
+                  {
+                    "fields": [],
+                    "name": "empty"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "name": "value",
+                        "refinement": {
+                          "fields": [
+                            {
+                              "name": "payload",
+                              "refinement": {
+                                "constructor": "NominalSubtypes.plusOne",
+                                "kind": "subtype"
+                              }
+                            },
+                            {
+                              "name": "digit",
+                              "refinement": {
+                                "bound": "3",
+                                "kind": "fin"
+                              }
+                            }
+                          ],
+                          "kind": "record",
+                          "name": "NominalSubtypes.Envelope"
+                        }
+                      }
+                    ],
+                    "name": "box"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "name": "values",
+                        "refinement": {
+                          "arguments": [
+                            {
+                              "arguments": [
+                                {
+                                  "arguments": [
+                                    {
+                                      "constructor": "NominalSubtypes.plusOne",
+                                      "kind": "subtype"
+                                    },
+                                    {
+                                      "constructor": "NominalSubtypes.plusTwo",
+                                      "kind": "subtype"
+                                    }
+                                  ],
+                                  "kind": "result"
+                                }
+                              ],
+                              "kind": "option"
+                            }
+                          ],
+                          "kind": "array"
+                        }
+                      }
+                    ],
+                    "name": "choices"
+                  }
+                ],
+                "kind": "variant",
+                "name": "NominalSubtypes.Event"
+              }
+            ],
+            "result": {
+              "cases": [
+                {
+                  "fields": [],
+                  "name": "empty"
+                },
+                {
+                  "fields": [
+                    {
+                      "name": "value",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "refinement": {
+                              "bound": "3",
+                              "kind": "fin"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "NominalSubtypes.Envelope"
+                      }
+                    }
+                  ],
+                  "name": "box"
+                },
+                {
+                  "fields": [
+                    {
+                      "name": "values",
+                      "refinement": {
+                        "arguments": [
+                          {
+                            "arguments": [
+                              {
+                                "arguments": [
+                                  {
+                                    "constructor": null,
+                                    "kind": "subtype"
+                                  },
+                                  {
+                                    "constructor": null,
+                                    "kind": "subtype"
+                                  }
+                                ],
+                                "kind": "result"
+                              }
+                            ],
+                            "kind": "option"
+                          }
+                        ],
+                        "kind": "array"
+                      }
+                    }
+                  ],
+                  "name": "choices"
+                }
+              ],
+              "kind": "variant",
+              "name": "NominalSubtypes.Event"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 46,
+            "endLine": 53,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 53
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:NominalSubtypes.echoGroups",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "echoGroups",
+      "overloadKey": "NominalSubtypes.echoGroups",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "id": "lean:NominalSubtypes.EnvelopeAlias",
+                    "kind": "named"
+                  }
+                ],
+                "constructor": "option",
+                "kind": "apply"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "id": "lean:NominalSubtypes.EnvelopeAlias",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "constructor": "array",
+          "kind": "apply"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "NominalSubtypes.echoGroups",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "fields": [
+                            {
+                              "name": "payload",
+                              "refinement": {
+                                "constructor": "NominalSubtypes.plusOne"
+                              }
+                            },
+                            {
+                              "name": "digit",
+                              "refinement": null
+                            }
+                          ],
+                          "kind": "record",
+                          "name": "NominalSubtypes.Envelope"
+                        }
+                      ],
+                      "kind": "option"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "fields": [
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "constructor": "NominalSubtypes.plusOne",
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "refinement": {
+                              "bound": "3",
+                              "kind": "fin"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "NominalSubtypes.Envelope"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              }
+            ],
+            "result": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "fields": [
+                        {
+                          "name": "payload",
+                          "refinement": {
+                            "constructor": null,
+                            "kind": "subtype"
+                          }
+                        },
+                        {
+                          "name": "digit",
+                          "refinement": {
+                            "bound": "3",
+                            "kind": "fin"
+                          }
+                        }
+                      ],
+                      "kind": "record",
+                      "name": "NominalSubtypes.Envelope"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 47,
+            "endLine": 51,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 51
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:NominalSubtypes.echoPair",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "echoPair",
+      "overloadKey": "NominalSubtypes.echoPair",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:NominalSubtypes.AliasPair",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "id": "lean:NominalSubtypes.AliasPair",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "NominalSubtypes.echoPair",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "fields": [
+                    {
+                      "name": "left",
+                      "refinement": {
+                        "arguments": [
+                          {
+                            "arguments": [
+                              {
+                                "fields": [
+                                  {
+                                    "name": "payload",
+                                    "refinement": {
+                                      "constructor": "NominalSubtypes.plusOne"
+                                    }
+                                  },
+                                  {
+                                    "name": "digit",
+                                    "refinement": null
+                                  }
+                                ],
+                                "kind": "record",
+                                "name": "NominalSubtypes.Envelope"
+                              }
+                            ],
+                            "kind": "option"
+                          }
+                        ],
+                        "kind": "array"
+                      }
+                    },
+                    {
+                      "name": "right",
+                      "refinement": {
+                        "arguments": [
+                          {
+                            "arguments": [
+                              {
+                                "fields": [
+                                  {
+                                    "name": "payload",
+                                    "refinement": {
+                                      "constructor": "NominalSubtypes.plusTwo"
+                                    }
+                                  },
+                                  {
+                                    "name": "digit",
+                                    "refinement": null
+                                  }
+                                ],
+                                "kind": "record",
+                                "name": "NominalSubtypes.Envelope"
+                              }
+                            ],
+                            "kind": "option"
+                          }
+                        ],
+                        "kind": "array"
+                      }
+                    }
+                  ],
+                  "kind": "record",
+                  "name": "NominalSubtypes.AliasPair"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "fields": [
+                  {
+                    "name": "left",
+                    "refinement": {
+                      "arguments": [
+                        {
+                          "arguments": [
+                            {
+                              "fields": [
+                                {
+                                  "name": "payload",
+                                  "refinement": {
+                                    "constructor": "NominalSubtypes.plusOne",
+                                    "kind": "subtype"
+                                  }
+                                },
+                                {
+                                  "name": "digit",
+                                  "refinement": {
+                                    "bound": "3",
+                                    "kind": "fin"
+                                  }
+                                }
+                              ],
+                              "kind": "record",
+                              "name": "NominalSubtypes.Envelope"
+                            }
+                          ],
+                          "kind": "option"
+                        }
+                      ],
+                      "kind": "array"
+                    }
+                  },
+                  {
+                    "name": "right",
+                    "refinement": {
+                      "arguments": [
+                        {
+                          "arguments": [
+                            {
+                              "fields": [
+                                {
+                                  "name": "payload",
+                                  "refinement": {
+                                    "constructor": "NominalSubtypes.plusTwo",
+                                    "kind": "subtype"
+                                  }
+                                },
+                                {
+                                  "name": "digit",
+                                  "refinement": {
+                                    "bound": "3",
+                                    "kind": "fin"
+                                  }
+                                }
+                              ],
+                              "kind": "record",
+                              "name": "NominalSubtypes.Envelope"
+                            }
+                          ],
+                          "kind": "option"
+                        }
+                      ],
+                      "kind": "array"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "name": "NominalSubtypes.AliasPair"
+              }
+            ],
+            "result": {
+              "fields": [
+                {
+                  "name": "left",
+                  "refinement": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "fields": [
+                              {
+                                "name": "payload",
+                                "refinement": {
+                                  "constructor": null,
+                                  "kind": "subtype"
+                                }
+                              },
+                              {
+                                "name": "digit",
+                                "refinement": {
+                                  "bound": "3",
+                                  "kind": "fin"
+                                }
+                              }
+                            ],
+                            "kind": "record",
+                            "name": "NominalSubtypes.Envelope"
+                          }
+                        ],
+                        "kind": "option"
+                      }
+                    ],
+                    "kind": "array"
+                  }
+                },
+                {
+                  "name": "right",
+                  "refinement": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "fields": [
+                              {
+                                "name": "payload",
+                                "refinement": {
+                                  "constructor": null,
+                                  "kind": "subtype"
+                                }
+                              },
+                              {
+                                "name": "digit",
+                                "refinement": {
+                                  "bound": "3",
+                                  "kind": "fin"
+                                }
+                              }
+                            ],
+                            "kind": "record",
+                            "name": "NominalSubtypes.Envelope"
+                          }
+                        ],
+                        "kind": "option"
+                      }
+                    ],
+                    "kind": "array"
+                  }
+                }
+              ],
+              "kind": "record",
+              "name": "NominalSubtypes.AliasPair"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 53,
+            "endLine": 52,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 52
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:NominalSubtypes.eventChoices",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "eventChoices",
+      "overloadKey": "NominalSubtypes.eventChoices",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "id": "lean:NominalSubtypes.Event",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "NominalSubtypes.eventChoices",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              null
+            ],
+            "result": {
+              "cases": [
+                {
+                  "fields": [],
+                  "name": "empty"
+                },
+                {
+                  "fields": [
+                    {
+                      "name": "value",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "refinement": {
+                              "bound": "3",
+                              "kind": "fin"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "NominalSubtypes.Envelope"
+                      }
+                    }
+                  ],
+                  "name": "box"
+                },
+                {
+                  "fields": [
+                    {
+                      "name": "values",
+                      "refinement": {
+                        "arguments": [
+                          {
+                            "arguments": [
+                              {
+                                "arguments": [
+                                  {
+                                    "constructor": null,
+                                    "kind": "subtype"
+                                  },
+                                  {
+                                    "constructor": null,
+                                    "kind": "subtype"
+                                  }
+                                ],
+                                "kind": "result"
+                              }
+                            ],
+                            "kind": "option"
+                          }
+                        ],
+                        "kind": "array"
+                      }
+                    }
+                  ],
+                  "name": "choices"
+                }
+              ],
+              "kind": "variant",
+              "name": "NominalSubtypes.Event"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 121,
+            "endLine": 69,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 69
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:NominalSubtypes.eventEmpty",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "eventEmpty",
+      "overloadKey": "NominalSubtypes.eventEmpty",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "id": "lean:NominalSubtypes.Event",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "NominalSubtypes.eventEmpty",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              null
+            ],
+            "result": {
+              "cases": [
+                {
+                  "fields": [],
+                  "name": "empty"
+                },
+                {
+                  "fields": [
+                    {
+                      "name": "value",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "refinement": {
+                              "bound": "3",
+                              "kind": "fin"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "NominalSubtypes.Envelope"
+                      }
+                    }
+                  ],
+                  "name": "box"
+                },
+                {
+                  "fields": [
+                    {
+                      "name": "values",
+                      "refinement": {
+                        "arguments": [
+                          {
+                            "arguments": [
+                              {
+                                "arguments": [
+                                  {
+                                    "constructor": null,
+                                    "kind": "subtype"
+                                  },
+                                  {
+                                    "constructor": null,
+                                    "kind": "subtype"
+                                  }
+                                ],
+                                "kind": "result"
+                              }
+                            ],
+                            "kind": "option"
+                          }
+                        ],
+                        "kind": "array"
+                      }
+                    }
+                  ],
+                  "name": "choices"
+                }
+              ],
+              "kind": "variant",
+              "name": "NominalSubtypes.Event"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 42,
+            "endLine": 68,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 68
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:NominalSubtypes.eventFirst",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "eventFirst",
+      "overloadKey": "NominalSubtypes.eventFirst",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:NominalSubtypes.Event",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "NominalSubtypes.eventFirst",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "cases": [
+                    {
+                      "fields": [],
+                      "name": "empty"
+                    },
+                    {
+                      "fields": [
+                        {
+                          "name": "value",
+                          "refinement": {
+                            "fields": [
+                              {
+                                "name": "payload",
+                                "refinement": {
+                                  "constructor": "NominalSubtypes.plusOne"
+                                }
+                              },
+                              {
+                                "name": "digit",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "record",
+                            "name": "NominalSubtypes.Envelope"
+                          }
+                        }
+                      ],
+                      "name": "box"
+                    },
+                    {
+                      "fields": [
+                        {
+                          "name": "values",
+                          "refinement": {
+                            "arguments": [
+                              {
+                                "arguments": [
+                                  {
+                                    "arguments": [
+                                      {
+                                        "constructor": "NominalSubtypes.plusOne"
+                                      },
+                                      {
+                                        "constructor": "NominalSubtypes.plusTwo"
+                                      }
+                                    ],
+                                    "kind": "result"
+                                  }
+                                ],
+                                "kind": "option"
+                              }
+                            ],
+                            "kind": "array"
+                          }
+                        }
+                      ],
+                      "name": "choices"
+                    }
+                  ],
+                  "kind": "variant",
+                  "name": "NominalSubtypes.Event"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "cases": [
+                  {
+                    "fields": [],
+                    "name": "empty"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "name": "value",
+                        "refinement": {
+                          "fields": [
+                            {
+                              "name": "payload",
+                              "refinement": {
+                                "constructor": "NominalSubtypes.plusOne",
+                                "kind": "subtype"
+                              }
+                            },
+                            {
+                              "name": "digit",
+                              "refinement": {
+                                "bound": "3",
+                                "kind": "fin"
+                              }
+                            }
+                          ],
+                          "kind": "record",
+                          "name": "NominalSubtypes.Envelope"
+                        }
+                      }
+                    ],
+                    "name": "box"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "name": "values",
+                        "refinement": {
+                          "arguments": [
+                            {
+                              "arguments": [
+                                {
+                                  "arguments": [
+                                    {
+                                      "constructor": "NominalSubtypes.plusOne",
+                                      "kind": "subtype"
+                                    },
+                                    {
+                                      "constructor": "NominalSubtypes.plusTwo",
+                                      "kind": "subtype"
+                                    }
+                                  ],
+                                  "kind": "result"
+                                }
+                              ],
+                              "kind": "option"
+                            }
+                          ],
+                          "kind": "array"
+                        }
+                      }
+                    ],
+                    "name": "choices"
+                  }
+                ],
+                "kind": "variant",
+                "name": "NominalSubtypes.Event"
+              }
+            ],
+            "result": null
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 43,
+            "endLine": 43,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 37
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:NominalSubtypes.eventSecond",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "eventSecond",
+      "overloadKey": "NominalSubtypes.eventSecond",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:NominalSubtypes.Event",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "NominalSubtypes.eventSecond",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "cases": [
+                    {
+                      "fields": [],
+                      "name": "empty"
+                    },
+                    {
+                      "fields": [
+                        {
+                          "name": "value",
+                          "refinement": {
+                            "fields": [
+                              {
+                                "name": "payload",
+                                "refinement": {
+                                  "constructor": "NominalSubtypes.plusTwo"
+                                }
+                              },
+                              {
+                                "name": "digit",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "record",
+                            "name": "NominalSubtypes.Envelope"
+                          }
+                        }
+                      ],
+                      "name": "box"
+                    },
+                    {
+                      "fields": [
+                        {
+                          "name": "values",
+                          "refinement": {
+                            "arguments": [
+                              {
+                                "arguments": [
+                                  {
+                                    "arguments": [
+                                      {
+                                        "constructor": "NominalSubtypes.plusTwo"
+                                      },
+                                      {
+                                        "constructor": "NominalSubtypes.plusOne"
+                                      }
+                                    ],
+                                    "kind": "result"
+                                  }
+                                ],
+                                "kind": "option"
+                              }
+                            ],
+                            "kind": "array"
+                          }
+                        }
+                      ],
+                      "name": "choices"
+                    }
+                  ],
+                  "kind": "variant",
+                  "name": "NominalSubtypes.Event"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "cases": [
+                  {
+                    "fields": [],
+                    "name": "empty"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "name": "value",
+                        "refinement": {
+                          "fields": [
+                            {
+                              "name": "payload",
+                              "refinement": {
+                                "constructor": "NominalSubtypes.plusTwo",
+                                "kind": "subtype"
+                              }
+                            },
+                            {
+                              "name": "digit",
+                              "refinement": {
+                                "bound": "3",
+                                "kind": "fin"
+                              }
+                            }
+                          ],
+                          "kind": "record",
+                          "name": "NominalSubtypes.Envelope"
+                        }
+                      }
+                    ],
+                    "name": "box"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "name": "values",
+                        "refinement": {
+                          "arguments": [
+                            {
+                              "arguments": [
+                                {
+                                  "arguments": [
+                                    {
+                                      "constructor": "NominalSubtypes.plusTwo",
+                                      "kind": "subtype"
+                                    },
+                                    {
+                                      "constructor": "NominalSubtypes.plusOne",
+                                      "kind": "subtype"
+                                    }
+                                  ],
+                                  "kind": "result"
+                                }
+                              ],
+                              "kind": "option"
+                            }
+                          ],
+                          "kind": "array"
+                        }
+                      }
+                    ],
+                    "name": "choices"
+                  }
+                ],
+                "kind": "variant",
+                "name": "NominalSubtypes.Event"
+              }
+            ],
+            "result": null
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 57,
+            "endLine": 44,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 44
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:NominalSubtypes.eventValue",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "eventValue",
+      "overloadKey": "NominalSubtypes.eventValue",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "id": "lean:NominalSubtypes.Event",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "NominalSubtypes.eventValue",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              null
+            ],
+            "result": {
+              "cases": [
+                {
+                  "fields": [],
+                  "name": "empty"
+                },
+                {
+                  "fields": [
+                    {
+                      "name": "value",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "refinement": {
+                              "bound": "3",
+                              "kind": "fin"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "NominalSubtypes.Envelope"
+                      }
+                    }
+                  ],
+                  "name": "box"
+                },
+                {
+                  "fields": [
+                    {
+                      "name": "values",
+                      "refinement": {
+                        "arguments": [
+                          {
+                            "arguments": [
+                              {
+                                "arguments": [
+                                  {
+                                    "constructor": null,
+                                    "kind": "subtype"
+                                  },
+                                  {
+                                    "constructor": null,
+                                    "kind": "subtype"
+                                  }
+                                ],
+                                "kind": "result"
+                              }
+                            ],
+                            "kind": "option"
+                          }
+                        ],
+                        "kind": "array"
+                      }
+                    }
+                  ],
+                  "name": "choices"
+                }
+              ],
+              "kind": "variant",
+              "name": "NominalSubtypes.Event"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 68,
+            "endLine": 67,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 67
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:NominalSubtypes.first",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "first",
+      "overloadKey": "NominalSubtypes.first",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:NominalSubtypes.Envelope",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "NominalSubtypes.first",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "fields": [
+                    {
+                      "name": "payload",
+                      "refinement": {
+                        "constructor": "NominalSubtypes.plusOne"
+                      }
+                    },
+                    {
+                      "name": "digit",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "record",
+                  "name": "NominalSubtypes.Envelope"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "fields": [
+                  {
+                    "name": "payload",
+                    "refinement": {
+                      "constructor": "NominalSubtypes.plusOne",
+                      "kind": "subtype"
+                    }
+                  },
+                  {
+                    "name": "digit",
+                    "refinement": {
+                      "bound": "3",
+                      "kind": "fin"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "name": "NominalSubtypes.Envelope"
+              }
+            ],
+            "result": null
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 55,
+            "endLine": 33,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 33
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:NominalSubtypes.groupValues",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "groupValues",
+      "overloadKey": "NominalSubtypes.groupValues",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "id": "lean:NominalSubtypes.EnvelopeAlias",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "constructor": "array",
+          "kind": "apply"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "NominalSubtypes.groupValues",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              null
+            ],
+            "result": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "fields": [
+                        {
+                          "name": "payload",
+                          "refinement": {
+                            "constructor": null,
+                            "kind": "subtype"
+                          }
+                        },
+                        {
+                          "name": "digit",
+                          "refinement": {
+                            "bound": "3",
+                            "kind": "fin"
+                          }
+                        }
+                      ],
+                      "kind": "record",
+                      "name": "NominalSubtypes.Envelope"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 78,
+            "endLine": 65,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 65
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:NominalSubtypes.inspectAliasPair",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "inspectAliasPair",
+      "overloadKey": "NominalSubtypes.inspectAliasPair",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:NominalSubtypes.AliasPair",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "NominalSubtypes.inspectAliasPair",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "fields": [
+                    {
+                      "name": "left",
+                      "refinement": {
+                        "arguments": [
+                          {
+                            "arguments": [
+                              {
+                                "fields": [
+                                  {
+                                    "name": "payload",
+                                    "refinement": {
+                                      "constructor": "NominalSubtypes.plusOne"
+                                    }
+                                  },
+                                  {
+                                    "name": "digit",
+                                    "refinement": null
+                                  }
+                                ],
+                                "kind": "record",
+                                "name": "NominalSubtypes.Envelope"
+                              }
+                            ],
+                            "kind": "option"
+                          }
+                        ],
+                        "kind": "array"
+                      }
+                    },
+                    {
+                      "name": "right",
+                      "refinement": {
+                        "arguments": [
+                          {
+                            "arguments": [
+                              {
+                                "fields": [
+                                  {
+                                    "name": "payload",
+                                    "refinement": {
+                                      "constructor": "NominalSubtypes.plusTwo"
+                                    }
+                                  },
+                                  {
+                                    "name": "digit",
+                                    "refinement": null
+                                  }
+                                ],
+                                "kind": "record",
+                                "name": "NominalSubtypes.Envelope"
+                              }
+                            ],
+                            "kind": "option"
+                          }
+                        ],
+                        "kind": "array"
+                      }
+                    }
+                  ],
+                  "kind": "record",
+                  "name": "NominalSubtypes.AliasPair"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "fields": [
+                  {
+                    "name": "left",
+                    "refinement": {
+                      "arguments": [
+                        {
+                          "arguments": [
+                            {
+                              "fields": [
+                                {
+                                  "name": "payload",
+                                  "refinement": {
+                                    "constructor": "NominalSubtypes.plusOne",
+                                    "kind": "subtype"
+                                  }
+                                },
+                                {
+                                  "name": "digit",
+                                  "refinement": {
+                                    "bound": "3",
+                                    "kind": "fin"
+                                  }
+                                }
+                              ],
+                              "kind": "record",
+                              "name": "NominalSubtypes.Envelope"
+                            }
+                          ],
+                          "kind": "option"
+                        }
+                      ],
+                      "kind": "array"
+                    }
+                  },
+                  {
+                    "name": "right",
+                    "refinement": {
+                      "arguments": [
+                        {
+                          "arguments": [
+                            {
+                              "fields": [
+                                {
+                                  "name": "payload",
+                                  "refinement": {
+                                    "constructor": "NominalSubtypes.plusTwo",
+                                    "kind": "subtype"
+                                  }
+                                },
+                                {
+                                  "name": "digit",
+                                  "refinement": {
+                                    "bound": "3",
+                                    "kind": "fin"
+                                  }
+                                }
+                              ],
+                              "kind": "record",
+                              "name": "NominalSubtypes.Envelope"
+                            }
+                          ],
+                          "kind": "option"
+                        }
+                      ],
+                      "kind": "array"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "name": "NominalSubtypes.AliasPair"
+              }
+            ],
+            "result": null
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 80,
+            "endLine": 50,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 50
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:NominalSubtypes.listValues",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "listValues",
+      "overloadKey": "NominalSubtypes.listValues",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "constructor": "list",
+          "kind": "apply"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "NominalSubtypes.listValues",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              null
+            ],
+            "result": {
+              "arguments": [
+                {
+                  "constructor": null,
+                  "kind": "subtype"
+                }
+              ],
+              "kind": "list"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 82,
+            "endLine": 60,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 60
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:NominalSubtypes.nested",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "nested",
+      "overloadKey": "NominalSubtypes.nested",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:NominalSubtypes.Pair",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "NominalSubtypes.nested",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "fields": [
+                    {
+                      "name": "left",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "constructor": "NominalSubtypes.plusOne"
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "NominalSubtypes.Envelope"
+                      }
+                    },
+                    {
+                      "name": "right",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "constructor": "NominalSubtypes.plusTwo"
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "NominalSubtypes.Envelope"
+                      }
+                    }
+                  ],
+                  "kind": "record",
+                  "name": "NominalSubtypes.Pair"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "fields": [
+                  {
+                    "name": "left",
+                    "refinement": {
+                      "fields": [
+                        {
+                          "name": "payload",
+                          "refinement": {
+                            "constructor": "NominalSubtypes.plusOne",
+                            "kind": "subtype"
+                          }
+                        },
+                        {
+                          "name": "digit",
+                          "refinement": {
+                            "bound": "3",
+                            "kind": "fin"
+                          }
+                        }
+                      ],
+                      "kind": "record",
+                      "name": "NominalSubtypes.Envelope"
+                    }
+                  },
+                  {
+                    "name": "right",
+                    "refinement": {
+                      "fields": [
+                        {
+                          "name": "payload",
+                          "refinement": {
+                            "constructor": "NominalSubtypes.plusTwo",
+                            "kind": "subtype"
+                          }
+                        },
+                        {
+                          "name": "digit",
+                          "refinement": {
+                            "bound": "3",
+                            "kind": "fin"
+                          }
+                        }
+                      ],
+                      "kind": "record",
+                      "name": "NominalSubtypes.Envelope"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "name": "NominalSubtypes.Pair"
+              }
+            ],
+            "result": null
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 65,
+            "endLine": 36,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 36
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:NominalSubtypes.noItems",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "noItems",
+      "overloadKey": "NominalSubtypes.noItems",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "constructor": "array",
+          "kind": "apply"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "NominalSubtypes.noItems",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              null
+            ],
+            "result": {
+              "arguments": [
+                {
+                  "constructor": null,
+                  "kind": "subtype"
+                }
+              ],
+              "kind": "array"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 45,
+            "endLine": 70,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 70
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:NominalSubtypes.optional",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "optional",
+      "overloadKey": "NominalSubtypes.optional",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "constructor": "option",
+          "kind": "apply"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "NominalSubtypes.optional",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              null
+            ],
+            "result": {
+              "arguments": [
+                {
+                  "constructor": null,
+                  "kind": "subtype"
+                }
+              ],
+              "kind": "option"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 96,
+            "endLine": 61,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 61
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:NominalSubtypes.pairValues",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "pairValues",
+      "overloadKey": "NominalSubtypes.pairValues",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "id": "lean:NominalSubtypes.AliasPair",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "NominalSubtypes.pairValues",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              null
+            ],
+            "result": {
+              "fields": [
+                {
+                  "name": "left",
+                  "refinement": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "fields": [
+                              {
+                                "name": "payload",
+                                "refinement": {
+                                  "constructor": null,
+                                  "kind": "subtype"
+                                }
+                              },
+                              {
+                                "name": "digit",
+                                "refinement": {
+                                  "bound": "3",
+                                  "kind": "fin"
+                                }
+                              }
+                            ],
+                            "kind": "record",
+                            "name": "NominalSubtypes.Envelope"
+                          }
+                        ],
+                        "kind": "option"
+                      }
+                    ],
+                    "kind": "array"
+                  }
+                },
+                {
+                  "name": "right",
+                  "refinement": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "fields": [
+                              {
+                                "name": "payload",
+                                "refinement": {
+                                  "constructor": null,
+                                  "kind": "subtype"
+                                }
+                              },
+                              {
+                                "name": "digit",
+                                "refinement": {
+                                  "bound": "3",
+                                  "kind": "fin"
+                                }
+                              }
+                            ],
+                            "kind": "record",
+                            "name": "NominalSubtypes.Envelope"
+                          }
+                        ],
+                        "kind": "option"
+                      }
+                    ],
+                    "kind": "array"
+                  }
+                }
+              ],
+              "kind": "record",
+              "name": "NominalSubtypes.AliasPair"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 88,
+            "endLine": 66,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 66
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:NominalSubtypes.plainFin",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "plainFin",
+      "overloadKey": "NominalSubtypes.plainFin",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "NominalSubtypes.plainFin",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "bound": "3",
+                "kind": "fin"
+              }
+            ],
+            "result": null
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 47,
+            "endLine": 54,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 54
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:NominalSubtypes.produceEnvelope",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "produceEnvelope",
+      "overloadKey": "NominalSubtypes.produceEnvelope",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "id": "lean:NominalSubtypes.Envelope",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "NominalSubtypes.produceEnvelope",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              null
+            ],
+            "result": {
+              "fields": [
+                {
+                  "name": "payload",
+                  "refinement": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "name": "digit",
+                  "refinement": {
+                    "bound": "3",
+                    "kind": "fin"
+                  }
+                }
+              ],
+              "kind": "record",
+              "name": "NominalSubtypes.Envelope"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 78,
+            "endLine": 58,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 58
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:NominalSubtypes.product",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "product",
+      "overloadKey": "NominalSubtypes.product",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "constructor": "tuple",
+          "kind": "apply"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "NominalSubtypes.product",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              null
+            ],
+            "result": {
+              "arguments": [
+                {
+                  "constructor": null,
+                  "kind": "subtype"
+                },
+                {
+                  "constructor": null,
+                  "kind": "subtype"
+                }
+              ],
+              "kind": "tuple"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 85,
+            "endLine": 62,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 62
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:NominalSubtypes.scalar",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "scalar",
+      "overloadKey": "NominalSubtypes.scalar",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "NominalSubtypes.scalar",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              null
+            ],
+            "result": {
+              "constructor": null,
+              "kind": "subtype"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 74,
+            "endLine": 5,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 5
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:NominalSubtypes.second",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "second",
+      "overloadKey": "NominalSubtypes.second",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:NominalSubtypes.Envelope",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "NominalSubtypes.second",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "fields": [
+                    {
+                      "name": "payload",
+                      "refinement": {
+                        "constructor": "NominalSubtypes.plusTwo"
+                      }
+                    },
+                    {
+                      "name": "digit",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "record",
+                  "name": "NominalSubtypes.Envelope"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "fields": [
+                  {
+                    "name": "payload",
+                    "refinement": {
+                      "constructor": "NominalSubtypes.plusTwo",
+                      "kind": "subtype"
+                    }
+                  },
+                  {
+                    "name": "digit",
+                    "refinement": {
+                      "bound": "3",
+                      "kind": "fin"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "name": "NominalSubtypes.Envelope"
+              }
+            ],
+            "result": null
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 56,
+            "endLine": 34,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 34
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    }
+  ],
+  "documentation": {
+    "details": "",
+    "summary": "Independent corpus contract."
+  },
+  "errors": [],
+  "producers": [
+    {
+      "adapter": "lean-bridge-elaborator",
+      "adapterVersion": 2,
+      "extensions": {
+        "lean-lang.org/elaboration-sha256": "280de2606e582c930e1860b4f42888e98dc555bac85ed7e16dfeb0976e403736",
+        "lean-lang.org/toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "id": "lean",
+      "tool": "Lean",
+      "toolVersion": "4.32.2"
+    }
+  ],
+  "schemaVersion": 3,
+  "types": [
+    {
+      "assurance": [],
+      "callable": null,
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "fields": [
+        {
+          "documentation": {
+            "details": "",
+            "summary": "Independent corpus contract."
+          },
+          "mutability": "immutable",
+          "name": "left",
+          "type": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "id": "lean:NominalSubtypes.EnvelopeAlias",
+                    "kind": "named"
+                  }
+                ],
+                "constructor": "option",
+                "kind": "apply"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        },
+        {
+          "documentation": {
+            "details": "",
+            "summary": "Independent corpus contract."
+          },
+          "mutability": "immutable",
+          "name": "right",
+          "type": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "id": "lean:NominalSubtypes.EnvelopeAlias",
+                    "kind": "named"
+                  }
+                ],
+                "constructor": "option",
+                "kind": "apply"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        }
+      ],
+      "host": null,
+      "id": "lean:NominalSubtypes.AliasPair",
+      "kind": "record",
+      "mutability": "immutable",
+      "name": "AliasPair",
+      "representation": "copied",
+      "resource": null,
+      "source": {
+        "declaration": "NominalSubtypes.AliasPair",
+        "extensions": {},
+        "producer": "lean"
+      },
+      "target": null,
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": null,
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "fields": [
+        {
+          "documentation": {
+            "details": "",
+            "summary": "Independent corpus contract."
+          },
+          "mutability": "immutable",
+          "name": "payload",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        {
+          "documentation": {
+            "details": "",
+            "summary": "Independent corpus contract."
+          },
+          "mutability": "immutable",
+          "name": "digit",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "host": null,
+      "id": "lean:NominalSubtypes.Envelope",
+      "kind": "record",
+      "mutability": "immutable",
+      "name": "Envelope",
+      "representation": "copied",
+      "resource": null,
+      "source": {
+        "declaration": "NominalSubtypes.Envelope",
+        "extensions": {
+          "lean-lang.org/nominal-refinements": {
+            "fields": [
+              null,
+              {
+                "bound": "3",
+                "kind": "fin"
+              }
+            ],
+            "kind": "record"
+          }
+        },
+        "producer": "lean"
+      },
+      "target": null,
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": null,
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "fields": [],
+      "host": null,
+      "id": "lean:NominalSubtypes.EnvelopeAlias",
+      "kind": "alias",
+      "mutability": "immutable",
+      "name": "EnvelopeAlias",
+      "representation": "copied",
+      "resource": null,
+      "source": {
+        "declaration": "NominalSubtypes.EnvelopeAlias",
+        "extensions": {},
+        "producer": "lean"
+      },
+      "target": {
+        "id": "lean:NominalSubtypes.Envelope",
+        "kind": "named"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": null,
+      "cases": [
+        {
+          "documentation": {
+            "details": "",
+            "summary": "empty"
+          },
+          "fields": [],
+          "name": "empty"
+        },
+        {
+          "documentation": {
+            "details": "",
+            "summary": "box"
+          },
+          "fields": [
+            {
+              "documentation": {
+                "details": "",
+                "summary": "value"
+              },
+              "mutability": "immutable",
+              "name": "value",
+              "type": {
+                "id": "lean:NominalSubtypes.Envelope",
+                "kind": "named"
+              }
+            }
+          ],
+          "name": "box"
+        },
+        {
+          "documentation": {
+            "details": "",
+            "summary": "choices"
+          },
+          "fields": [
+            {
+              "documentation": {
+                "details": "",
+                "summary": "values"
+              },
+              "mutability": "immutable",
+              "name": "values",
+              "type": {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "kind": "primitive",
+                            "name": "nat"
+                          },
+                          {
+                            "kind": "primitive",
+                            "name": "nat"
+                          }
+                        ],
+                        "constructor": "result",
+                        "kind": "apply"
+                      }
+                    ],
+                    "constructor": "option",
+                    "kind": "apply"
+                  }
+                ],
+                "constructor": "array",
+                "kind": "apply"
+              }
+            }
+          ],
+          "name": "choices"
+        }
+      ],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "fields": [],
+      "host": null,
+      "id": "lean:NominalSubtypes.Event",
+      "kind": "variant",
+      "mutability": "immutable",
+      "name": "Event",
+      "representation": "copied",
+      "resource": null,
+      "source": {
+        "declaration": "NominalSubtypes.Event",
+        "extensions": {},
+        "producer": "lean"
+      },
+      "target": null,
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": null,
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "fields": [
+        {
+          "documentation": {
+            "details": "",
+            "summary": "Independent corpus contract."
+          },
+          "mutability": "immutable",
+          "name": "left",
+          "type": {
+            "id": "lean:NominalSubtypes.Envelope",
+            "kind": "named"
+          }
+        },
+        {
+          "documentation": {
+            "details": "",
+            "summary": "Independent corpus contract."
+          },
+          "mutability": "immutable",
+          "name": "right",
+          "type": {
+            "id": "lean:NominalSubtypes.Envelope",
+            "kind": "named"
+          }
+        }
+      ],
+      "host": null,
+      "id": "lean:NominalSubtypes.Pair",
+      "kind": "record",
+      "mutability": "immutable",
+      "name": "Pair",
+      "representation": "copied",
+      "resource": null,
+      "source": {
+        "declaration": "NominalSubtypes.Pair",
+        "extensions": {},
+        "producer": "lean"
+      },
+      "target": null,
+      "typeParameters": []
+    }
+  ]
+}

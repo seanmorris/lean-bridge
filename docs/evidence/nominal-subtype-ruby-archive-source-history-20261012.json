@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nominal-subtype-ruby-archive-source-v1",
+  "predecessorCommit": "d829cd1533907b9bf1f4a60a00e63c918655b2c7",
+  "updates": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "9f24d85094b4b86d7e62b6073df9b44b2a8e17946ce0676ebc37fb0d958f366e",
+      "previousSha256": "2f629a8aef135a09dfdf41d10606a8aa80228c631364412deb759e8e9704d155",
+      "edits": [
+        {
+          "start": 4184,
+          "previous": "",
+          "current": "import { nominalSubtypeRubyArchiveChangedPaths } from \"./nominal-subtype-ruby-archive-history.mjs\";\n"
+        },
+        {
+          "start": 65348,
+          "previous": "",
+          "current": "\t, ...nominalSubtypeRubyArchiveChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-installed-fixture-tests.mjs",
+      "currentSha256": "6c095f95c5c7369cc33ca47616fd601efc8ce1d494e24cc9639d70b338ab716c",
+      "previousSha256": "26088a131989b4462f2756687982328680337dbafb8c3bd13493c95bc3031f18",
+      "edits": [
+        {
+          "start": 2665,
+          "previous": "",
+          "current": "import \"./nominal-subtype-ruby-evidence-tests.mjs\";\nimport \"./nominal-subtype-ruby-archive-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-ruby-registration-history.mjs",
+      "currentSha256": "724396cdbf0386a0f773688d12cf00731656a045433392bae5cc8e3ae2d2b8b2",
+      "previousSha256": "bd56a4664b6ec1df91a49a2166279a82715a99e187a74a339484edf8b131eac9",
+      "edits": [
+        {
+          "start": 233,
+          "previous": "",
+          "current": "import { beforeNominalSubtypeRubyArchiveSource } from \"./nominal-subtype-ruby-archive-history.mjs\";\n"
+        },
+        {
+          "start": 2318,
+          "previous": "",
+          "current": "\tsource = beforeNominalSubtypeRubyArchiveSource(path, source, expected);\n"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "kind": "lean-bridge-source-notices",
+  "packages": [
+    {
+      "configurationSource": "{\n  \"exports\": [\n    \"NominalSubtypes.scalar\",\n    \"NominalSubtypes.produceEnvelope\",\n    \"NominalSubtypes.arrayValues\",\n    \"NominalSubtypes.listValues\",\n    \"NominalSubtypes.optional\",\n    \"NominalSubtypes.product\",\n    \"NominalSubtypes.branch\",\n    \"NominalSubtypes.groupValues\",\n    \"NominalSubtypes.pairValues\",\n    \"NominalSubtypes.eventValue\",\n    \"NominalSubtypes.eventEmpty\",\n    \"NominalSubtypes.eventChoices\",\n    \"NominalSubtypes.noItems\"\n  ],\n  \"modules\": [\n    \"NominalSubtypes\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"rubygems\": {\n      \"name\": \"nominalsubtypes\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+      "name": "nominalsubtypes",
+      "notices": [
+        {
+          "bytes": 1093,
+          "path": "LICENSE",
+          "payload": "source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        }
+      ],
+      "source": {
+        "inputs": [
+          {
+            "bytes": 81,
+            "path": "lakefile.toml",
+            "sha256": "c29eeed5f6f853d55bb7100b160d0ec0224fd7375f5b05c87381326b60112d29"
+          },
+          {
+            "bytes": 623,
+            "path": "lean-bridge.exports.json",
+            "sha256": "7ad74aa764aa5339e072a77f5f3fb6cf0c714f71a44b4922ab8a9fd2cfd91ad3"
+          },
+          {
+            "bytes": 25,
+            "path": "lean-toolchain",
+            "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+          },
+          {
+            "bytes": 1093,
+            "path": "LICENSE",
+            "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+          },
+          {
+            "bytes": 3005,
+            "path": "NominalSubtypes.lean",
+            "sha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+          },
+          {
+            "bytes": 61,
+            "path": "package.json",
+            "sha256": "9662c63237f11b189dddbbdf22ed631a7804aae99235d3f595e4b3ed5ebda9f0"
+          }
+        ],
+        "kind": "root",
+        "sourceTreeSha256": "dee898c7cc85334a034435050ac9a99939e6368ba97e3c21b7b7909198696ed0"
+      }
+    }
+  ],
+  "schemaVersion": 2
+}

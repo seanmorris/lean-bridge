@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "generator": "ruby-copied-v1",
+  "target": "ruby",
+  "component": "nominalsubtypes@1.0.0",
+  "bindingIrSha256": "ac5dd32ea42f189e1766a9dce6a472658c9a8a257dc23f8e607691bf16eb9ab2",
+  "namespace": "LeanBridge::Nominalsubtypes",
+  "files": [
+    "lib/lean_bridge/nominalsubtypes.rb",
+    "lib/lean_bridge/nominalsubtypes/native.rb",
+    "lib/lean_bridge/native_copied_runtime_v1.rb",
+    "README.md"
+  ],
+  "publicFiles": [
+    "lib/lean_bridge/nominalsubtypes.rb"
+  ],
+  "internalFiles": [
+    "lib/lean_bridge/nominalsubtypes/native.rb",
+    "lib/lean_bridge/native_copied_runtime_v1.rb"
+  ],
+  "packageFiles": [],
+  "supportedFeatures": [
+    "direct-functions",
+    "copied-values",
+    "deterministic-close"
+  ],
+  "capabilityGaps": [
+    {
+      "feature": "identity-and-effects",
+      "reason": "Ordinary RubyGems admits copied values and synchronous primitive callables; resource identities, compound callables and async effects remain unsupported."
+    },
+    {
+      "feature": "additional-platforms",
+      "reason": "The compiled profile is MRI Ruby 3.3 on Linux x86-64."
+    }
+  ],
+  "aliases": [
+    {
+      "id": "lean:NominalSubtypes.EnvelopeAlias",
+      "name": "EnvelopeAlias",
+      "target": {
+        "id": "lean:NominalSubtypes.Envelope",
+        "kind": "named"
+      },
+      "rubyType": "LeanBridge::Nominalsubtypes::Envelope"
+    }
+  ]
+}

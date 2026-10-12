@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "nominalsubtypes@1.0.0",
+    "name": "nominalsubtypes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 50179584,
+          "path": "archives/nominalsubtypes-1.0.0-x86_64-linux.gem",
+          "sha256": "67fc5dd50644a1f4af75222214e574abb6c5bc6f6cf3ded49d5c37c622a6a5df"
+        }
+      ],
+      "ecosystem": "rubygems",
+      "name": "nominalsubtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "rubygems",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "ac5dd32ea42f189e1766a9dce6a472658c9a8a257dc23f8e607691bf16eb9ab2",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "d755ec8c8fbeef951c775f7a8e23c796efd94df9057cc878bcb57a5baf91c320"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "args": [
+    "consumer.rb"
+  ],
+  "closure": {
+    "environmentSha256": "b3f8ad67957866b7df4f7322032e014364f4b79613c362cd664bd5935b79e958",
+    "gemspecSha256": "840400d0c1e6c0afc50d7cf31e3fad5ef4fb9500dd5083322c4b723b6b7881dc",
+    "interpreterSha256": "28eea9e1f4c7eef2f6812b0535409dce29f71ca86bbbddeccb6df6d3279bf6bb",
+    "packageFileSetSha256": "5f2d06f70f52c037a11ee613f4a12c1d7d50d1d809ca96dd203b746ff892430e",
+    "receiptSha256": "51f8900c2c95b37326322a2cc3f2d0ebbf58127bc54a621dfcdbf7f5b62e673f"
+  },
+  "command": "/app/.toolchains/ruby33/bin/ruby",
+  "counts": {
+    "checks": 4212,
+    "rejections": 1032,
+    "snapshotControls": 8
+  },
+  "cwd": "/tmp/lean-bridge-nominal-subtype-ruby-8tXcIn/consumer",
+  "gems": "/tmp/lean-bridge-nominal-subtype-ruby-8tXcIn/consumer/gems",
+  "relocated": false,
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":4212,\"rejections\":1032,\"snapshotControls\":8}\n"
+  }
+}

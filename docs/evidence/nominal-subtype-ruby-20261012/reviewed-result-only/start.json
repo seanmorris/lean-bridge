@@ -1,0 +1,40 @@
+{
+  "revision": "d829cd1533907b9bf1f4a60a00e63c918655b2c7",
+  "route": "reviewed",
+  "mode": "result-only",
+  "started": "2026-10-12T05:38:56.875Z",
+  "runnerSha256": "3b563117a7da8018bcbff7b90a8725627f10669044081aa81151b83617a2888f",
+  "command": "/usr/bin/nice",
+  "args": [
+    "-n",
+    "19",
+    "/usr/bin/ionice",
+    "-c",
+    "3",
+    "/usr/bin/taskset",
+    "-c",
+    "3",
+    "/usr/bin/node",
+    "--test",
+    "--test-concurrency=1",
+    "tests/helpers/nominal-subtype-ruby-installed-tests.mjs"
+  ],
+  "environment": {
+    "LEAN_BRIDGE_NOMINAL_SUBTYPE_RUBY_TEST": "1",
+    "LEAN_BRIDGE_RUBY": "/app/.toolchains/ruby33/bin/ruby",
+    "LEAN_BRIDGE_GEM": "/app/.toolchains/ruby33/bin/gem",
+    "LEAN_BRIDGE_NOMINAL_SUBTYPE_RUBY_ROUTES": "reviewed",
+    "LEAN_BRIDGE_NOMINAL_SUBTYPE_RUBY_MODES": "result-only",
+    "LEAN_BRIDGE_NOMINAL_SUBTYPE_RUBY_OUTPUT": "build/vo1444-nominal-ruby-reviewed-result-only-r1-d829cd1-records",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+    "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+    "LEAN_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MAKEFLAGS": "-j1"
+  },
+  "initial": {
+    "freeMiB": 7510,
+    "availableMiB": 6861,
+    "load": 5
+  }
+}

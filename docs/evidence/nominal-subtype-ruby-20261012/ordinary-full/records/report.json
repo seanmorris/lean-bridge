@@ -1,0 +1,152 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/nominalsubtypes-1.0.0-x86_64-linux.gem": "67fc5dd50644a1f4af75222214e574abb6c5bc6f6cf3ded49d5c37c622a6a5df"
+      },
+      "bindingIrSha256": "ac5dd32ea42f189e1766a9dce6a472658c9a8a257dc23f8e607691bf16eb9ab2",
+      "modelSha256": "4ad8f96bc163181f55fb4d0192c1030aca1f95123c37f9038a097aeb170eacbe",
+      "receiptSha256": "27cc77efe1581f3b76d0b9dc35673e58fcbd4cc8316921375157d416b55a6540"
+    },
+    {
+      "archives": {
+        "archives/nominalsubtypes-1.0.0-x86_64-linux.gem": "67fc5dd50644a1f4af75222214e574abb6c5bc6f6cf3ded49d5c37c622a6a5df"
+      },
+      "bindingIrSha256": "ac5dd32ea42f189e1766a9dce6a472658c9a8a257dc23f8e607691bf16eb9ab2",
+      "modelSha256": "4ad8f96bc163181f55fb4d0192c1030aca1f95123c37f9038a097aeb170eacbe",
+      "receiptSha256": "27cc77efe1581f3b76d0b9dc35673e58fcbd4cc8316921375157d416b55a6540"
+    }
+  ],
+  "compilerFreeReplay": true,
+  "declaredGlibcFloor": "2.36",
+  "dispatch": {
+    "observed": false,
+    "reason": "No Ruby constructor/source entry counters in this installed acceptance"
+  },
+  "expectedBindingIrSha256": "258f890466f6cd2ac574b344dc50af8697949de971ee760e86f4f6be6e50979a",
+  "gemReceiptSha256": "bff7fda1acdf8a5b2592a27f05674ebd875dfd26a889dfcb5bfec20664f660f8",
+  "independentBuilds": 2,
+  "interpreter": {
+    "command": "/app/.toolchains/ruby33/bin/ruby",
+    "identity": {
+      "bytes": 31101696,
+      "sha256": "28eea9e1f4c7eef2f6812b0535409dce29f71ca86bbbddeccb6df6d3279bf6bb"
+    },
+    "run": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "{\"engine\":\"ruby\",\"version\":\"3.3.12\",\"platform\":\"x86_64-linux\"}"
+    }
+  },
+  "mode": "full",
+  "observations": [
+    {
+      "args": [
+        "consumer.rb"
+      ],
+      "closure": {
+        "environmentSha256": "347ac03b4e7d684621ca08404bdbba95c92548935224dbe5e2f504e905adf53f",
+        "gemspecSha256": "325bc7d0644981d6a175efe2b6f8ab9801016d2a928d5ab5bd618046ea1ac41d",
+        "interpreterSha256": "28eea9e1f4c7eef2f6812b0535409dce29f71ca86bbbddeccb6df6d3279bf6bb",
+        "packageFileSetSha256": "5f2d06f70f52c037a11ee613f4a12c1d7d50d1d809ca96dd203b746ff892430e",
+        "receiptSha256": "bff7fda1acdf8a5b2592a27f05674ebd875dfd26a889dfcb5bfec20664f660f8"
+      },
+      "command": "/app/.toolchains/ruby33/bin/ruby",
+      "counts": {
+        "checks": 4212,
+        "rejections": 1032,
+        "snapshotControls": 8
+      },
+      "cwd": "/tmp/lean-bridge-nominal-subtype-ruby-BM3PSB/consumer",
+      "gems": "/tmp/lean-bridge-nominal-subtype-ruby-BM3PSB/consumer/gems",
+      "relocated": false,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":4212,\"rejections\":1032,\"snapshotControls\":8}\n"
+      }
+    },
+    {
+      "args": [
+        "consumer.rb"
+      ],
+      "closure": {
+        "environmentSha256": "347ac03b4e7d684621ca08404bdbba95c92548935224dbe5e2f504e905adf53f",
+        "gemspecSha256": "325bc7d0644981d6a175efe2b6f8ab9801016d2a928d5ab5bd618046ea1ac41d",
+        "interpreterSha256": "28eea9e1f4c7eef2f6812b0535409dce29f71ca86bbbddeccb6df6d3279bf6bb",
+        "packageFileSetSha256": "5f2d06f70f52c037a11ee613f4a12c1d7d50d1d809ca96dd203b746ff892430e",
+        "receiptSha256": "bff7fda1acdf8a5b2592a27f05674ebd875dfd26a889dfcb5bfec20664f660f8"
+      },
+      "command": "/app/.toolchains/ruby33/bin/ruby",
+      "counts": {
+        "checks": 4212,
+        "rejections": 1032,
+        "snapshotControls": 8
+      },
+      "cwd": "/tmp/lean-bridge-nominal-subtype-ruby-BM3PSB/consumer-relocated",
+      "gems": "/tmp/lean-bridge-nominal-subtype-ruby-BM3PSB/consumer-relocated/gems",
+      "relocated": true,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":4212,\"rejections\":1032,\"snapshotControls\":8}\n"
+      }
+    }
+  ],
+  "offlineInstall": true,
+  "producerCommit": "d829cd1533907b9bf1f4a60a00e63c918655b2c7",
+  "receipt": {
+    "component": {
+      "id": "nominalsubtypes@1.0.0",
+      "name": "nominalsubtypes",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 50179584,
+            "path": "archives/nominalsubtypes-1.0.0-x86_64-linux.gem",
+            "sha256": "67fc5dd50644a1f4af75222214e574abb6c5bc6f6cf3ded49d5c37c622a6a5df"
+          }
+        ],
+        "ecosystem": "rubygems",
+        "name": "nominalsubtypes",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+        "target": "rubygems",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "ac5dd32ea42f189e1766a9dce6a472658c9a8a257dc23f8e607691bf16eb9ab2",
+        "id": "native-library-v1",
+        "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "d755ec8c8fbeef951c775f7a8e23c796efd94df9057cc878bcb57a5baf91c320"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "route": "ordinary",
+  "runtime": {
+    "arch": "x64",
+    "glibc": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "glibc 2.36\n"
+    },
+    "platform": "linux"
+  },
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}
