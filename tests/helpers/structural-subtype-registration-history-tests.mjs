@@ -14,7 +14,11 @@ import { beforeStructuralSubtypeRegistrationSource, structuralSubtypeRegistratio
 import { classifyRepositoryTest } from "../../src/adoption/test-profiles.mjs";
 
 test("structural Subtype registration adds all eight roots without changing any previous profile", async () => {
-	let source = await readFile("src/adoption/test-profiles.mjs", "utf8");
+	const path = "src/adoption/test-profiles.mjs";
+	const history = JSON.parse(await readFile(structuralSubtypeRegistrationHistoryPath));
+	const update = history.updates.find(item => item.path === path);
+	assert.ok(update);
+	let source = beforeStructuralSubtypeRegistrationSource(path, await readFile(path, "utf8"), update.currentSha256);
 	for(const name of ["entry-evidence", "entry-installed", "entry", "installed", "native-evidence", "npm-evidence", "npm-installed", "npm"])
 	{
 		assert.equal(classifyRepositoryTest(`tests/structural-subtype-${name}.test.mjs`), "contract");

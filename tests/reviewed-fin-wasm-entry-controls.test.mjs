@@ -87,7 +87,7 @@ test("the selection authenticates the installed bytes, contract and private ABI 
 		assert.deepEqual(reviewedFinWasmEntrySymbols(selection, mode).map(item => item.bindingId), compiled.declarations.map(item => item.id), "columns follow binding ID order");
 	}
 	const flipped = Buffer.from(bytes); flipped[9] ^= 1;
-	// Each changed contract keeps a freshly rederived private ABI, as a rebuilt package would.
+	// Each well-formed changed contract keeps a freshly rederived private ABI, as a rebuilt package would.
 	const changed = (selection, mode, change) => {
 		const ir = structuredClone(mode === "original" ? reviewedFinWasmIr(selection) : instrumentReviewedFinWasmIr(selection)); change(ir);
 		return { descriptor: descriptorOf(ir), bytes, selection, mode };
@@ -103,8 +103,6 @@ test("the selection authenticates the installed bytes, contract and private ABI 
 		, ["bound 10 to 11", changed("structural", "original", ir => { refinement(ir, "mirror").parameters[0].bound = "11"; })]
 		, ["result-only bound", changed("scalar", "original", ir => { refinement(ir, "tenth").result.bound = "11"; })]
 		, ["nested bound", changed("structural", "original", ir => { refinement(ir, "nested").parameters[0].arguments[0].arguments[0].arguments[0].bound = "4"; })]
-		, ["parameter type", changed("scalar", "original", ir => { ir.declarations[0].parameters[0].type = { kind: "primitive", name: "int" }; })]
-		, ["bound position", changed("scalar", "original", ir => { const value = refinement(ir, "label"); value.parameters = [value.parameters[1], value.parameters[0], value.parameters[2]]; })]
 		, ["probe control omitted", changed("scalar", "probe", ir => { ir.declarations.pop(); })]
 		, ["probe control refined", changed("scalar", "probe", ir => { ir.declarations.at(-1).source.extensions["lean-lang.org/refinements"] = { parameters: [{ kind: "fin", bound: "10" }], result: null }; })]
 		, ["probe control substituted", changed("scalar", "probe", ir => { ir.declarations.at(-1).parameters[0].type = { kind: "primitive", name: "int" }; })]
@@ -116,6 +114,12 @@ test("the selection authenticates the installed bytes, contract and private ABI 
 		, ["a duplicated adapter symbol", { descriptor: { ...original, privateAbi: { ...original.privateAbi, exports: original.privateAbi.exports.map((item, index, all) => ({ ...item, symbol: all[0].symbol })) } }, bytes, selection: "structural", mode: "original" }]
 		, ["original as probe", { descriptor: descriptorOf(reviewedFinWasmIr("scalar")), bytes, selection: "scalar", mode: "probe" }]
 	]) assert.throws(() => reviewedFinWasmEntrySelection(options), assert.AssertionError, label);
+	// Mismatched refinement/transport pairs cannot produce a private ABI at all.
+	// Keep these separate from valid rebuilt descriptors rejected by selection.
+	for(const [label, change] of [
+		["parameter type", ir => { ir.declarations[0].parameters[0].type = { kind: "primitive", name: "int" }; }]
+		, ["bound position", ir => { const value = refinement(ir, "label"); value.parameters = [value.parameters[1], value.parameters[0], value.parameters[2]]; }]
+	]) assert.throws(() => changed("scalar", "original", change), { name: "TypeError", message: "Refinement does not match its transport type" }, label);
 	// A contract duplicating an export is refused, here already by the production ABI derivation.
 	const duplicated = structuredClone(reviewedFinWasmIr("structural")); duplicated.declarations.push(structuredClone(duplicated.declarations[0]));
 	assert.throws(() => reviewedFinWasmEntrySelection({ descriptor: { ...original, bindingIr: duplicated }, bytes, selection: "structural", mode: "original" }));

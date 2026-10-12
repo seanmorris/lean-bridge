@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeCoreContractRepairSource } from "./core-contract-repair-history.mjs";
 
 export const cliImportRepairHistoryPath = "docs/evidence/cli-import-repair-source-history-20261012.json";
 export const cliImportRepairPredecessor = "32d235a179a0aad87f4e709fd6dd1b3bfd26a9dc";
@@ -57,6 +58,7 @@ export const reverseCliImportRepairUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeCliImportRepairSource = (path, source, expected) => {
+	source = beforeCoreContractRepairSource(path, source, expected);
 	if(typeof source !== "string" || !cliImportRepairChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

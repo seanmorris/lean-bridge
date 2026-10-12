@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeCoreContractRepairSource } from "./core-contract-repair-history.mjs";
 import { beforeCliImportRepairSource, cliImportRepairChangedPaths, cliImportRepairHistoryPath, cliImportRepairPredecessor, reverseCliImportRepairUpdate } from "./cli-import-repair-history.mjs";
 
 test("CLI import repair history authenticates exact changes without changing support claims", async t => {
@@ -48,7 +49,7 @@ test("CLI import repair history authenticates exact changes without changing sup
 		if(update && file.sha256 === update.previousSha256)
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
-	assert.ok(pins > 0); assert.deepEqual(JSON.parse(await readFile(inventoryPath, "utf8")), expected);
+	assert.ok(pins > 0); assert.deepEqual(JSON.parse(beforeCoreContractRepairSource(inventoryPath, await readFile(inventoryPath, "utf8"))), expected);
 	assert.equal(expected.evidence.length, 480); assert.equal(expected.observations.length, 575);
 	t.diagnostic(`${pins} current-source pins refreshed; all support claims unchanged`);
 });

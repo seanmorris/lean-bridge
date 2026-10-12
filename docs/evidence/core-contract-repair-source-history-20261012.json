@@ -1,0 +1,213 @@
+{
+  "schemaVersion": 1,
+  "milestone": "core-contract-repair-source-v1",
+  "predecessorCommit": "c9bb5c1a182994c6408117f278f574d1dfe9b188",
+  "updates": [
+    {
+      "path": "config/checked-javascript.json",
+      "currentSha256": "9612c8e4ad54250534d5bf09c4ac8c7f780bc253cf0e2d8d17781c0df6ea3edc",
+      "previousSha256": "46945949954a38776e9dd9b766e2c309d01a3fe9e3c61b41ea4fcb502fbb6d1b",
+      "edits": [
+        {
+          "start": 222,
+          "previous": "",
+          "current": "\t\t{ \"path\": \"src/build/component-fin-guards.mjs\", \"classification\": \"strict-migration-backlog\" },\n\t\t{ \"path\": \"src/build/component-refinement-mirrors.mjs\", \"classification\": \"strict-migration-backlog\" },\n\t\t{ \"path\": \"src/build/refinement-mirrors.mjs\", \"classification\": \"strict-migration-backlog\" },\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "ff7eff671e30dceb3bea9e4e4acde37bf930e780d379e8b2f2db65cdb22c2f46",
+      "previousSha256": "7ae1a43d9cd0d08cfc96f58c056f3df4b466510f8be3bbf3dd0900640e8ed041",
+      "edits": [
+        {
+          "start": 55461,
+          "previous": "          \"sha256\": \"46945949954a38776e9dd9b766e2c309d01a3fe9e3c61b41ea4fcb502fbb6d1b\"\n",
+          "current": "          \"sha256\": \"9612c8e4ad54250534d5bf09c4ac8c7f780bc253cf0e2d8d17781c0df6ea3edc\"\n"
+        },
+        {
+          "start": 78019,
+          "previous": "          \"sha256\": \"46945949954a38776e9dd9b766e2c309d01a3fe9e3c61b41ea4fcb502fbb6d1b\"\n",
+          "current": "          \"sha256\": \"9612c8e4ad54250534d5bf09c4ac8c7f780bc253cf0e2d8d17781c0df6ea3edc\"\n"
+        },
+        {
+          "start": 95214,
+          "previous": "          \"sha256\": \"46945949954a38776e9dd9b766e2c309d01a3fe9e3c61b41ea4fcb502fbb6d1b\"\n",
+          "current": "          \"sha256\": \"9612c8e4ad54250534d5bf09c4ac8c7f780bc253cf0e2d8d17781c0df6ea3edc\"\n"
+        },
+        {
+          "start": 111515,
+          "previous": "          \"sha256\": \"46945949954a38776e9dd9b766e2c309d01a3fe9e3c61b41ea4fcb502fbb6d1b\"\n",
+          "current": "          \"sha256\": \"9612c8e4ad54250534d5bf09c4ac8c7f780bc253cf0e2d8d17781c0df6ea3edc\"\n"
+        },
+        {
+          "start": 432547,
+          "previous": "          \"sha256\": \"46945949954a38776e9dd9b766e2c309d01a3fe9e3c61b41ea4fcb502fbb6d1b\"\n",
+          "current": "          \"sha256\": \"9612c8e4ad54250534d5bf09c4ac8c7f780bc253cf0e2d8d17781c0df6ea3edc\"\n"
+        },
+        {
+          "start": 1012037,
+          "previous": "          \"sha256\": \"46945949954a38776e9dd9b766e2c309d01a3fe9e3c61b41ea4fcb502fbb6d1b\"\n",
+          "current": "          \"sha256\": \"9612c8e4ad54250534d5bf09c4ac8c7f780bc253cf0e2d8d17781c0df6ea3edc\"\n"
+        },
+        {
+          "start": 1137669,
+          "previous": "          \"sha256\": \"46945949954a38776e9dd9b766e2c309d01a3fe9e3c61b41ea4fcb502fbb6d1b\"\n",
+          "current": "          \"sha256\": \"9612c8e4ad54250534d5bf09c4ac8c7f780bc253cf0e2d8d17781c0df6ea3edc\"\n"
+        },
+        {
+          "start": 1167229,
+          "previous": "          \"sha256\": \"46945949954a38776e9dd9b766e2c309d01a3fe9e3c61b41ea4fcb502fbb6d1b\"\n",
+          "current": "          \"sha256\": \"9612c8e4ad54250534d5bf09c4ac8c7f780bc253cf0e2d8d17781c0df6ea3edc\"\n"
+        },
+        {
+          "start": 1177343,
+          "previous": "          \"sha256\": \"46945949954a38776e9dd9b766e2c309d01a3fe9e3c61b41ea4fcb502fbb6d1b\"\n",
+          "current": "          \"sha256\": \"9612c8e4ad54250534d5bf09c4ac8c7f780bc253cf0e2d8d17781c0df6ea3edc\"\n"
+        },
+        {
+          "start": 1189104,
+          "previous": "          \"sha256\": \"46945949954a38776e9dd9b766e2c309d01a3fe9e3c61b41ea4fcb502fbb6d1b\"\n",
+          "current": "          \"sha256\": \"9612c8e4ad54250534d5bf09c4ac8c7f780bc253cf0e2d8d17781c0df6ea3edc\"\n"
+        },
+        {
+          "start": 1221665,
+          "previous": "          \"sha256\": \"46945949954a38776e9dd9b766e2c309d01a3fe9e3c61b41ea4fcb502fbb6d1b\"\n",
+          "current": "          \"sha256\": \"9612c8e4ad54250534d5bf09c4ac8c7f780bc253cf0e2d8d17781c0df6ea3edc\"\n"
+        },
+        {
+          "start": 1251944,
+          "previous": "          \"sha256\": \"46945949954a38776e9dd9b766e2c309d01a3fe9e3c61b41ea4fcb502fbb6d1b\"\n",
+          "current": "          \"sha256\": \"9612c8e4ad54250534d5bf09c4ac8c7f780bc253cf0e2d8d17781c0df6ea3edc\"\n"
+        },
+        {
+          "start": 1285095,
+          "previous": "          \"sha256\": \"46945949954a38776e9dd9b766e2c309d01a3fe9e3c61b41ea4fcb502fbb6d1b\"\n",
+          "current": "          \"sha256\": \"9612c8e4ad54250534d5bf09c4ac8c7f780bc253cf0e2d8d17781c0df6ea3edc\"\n"
+        },
+        {
+          "start": 1324896,
+          "previous": "          \"sha256\": \"46945949954a38776e9dd9b766e2c309d01a3fe9e3c61b41ea4fcb502fbb6d1b\"\n",
+          "current": "          \"sha256\": \"9612c8e4ad54250534d5bf09c4ac8c7f780bc253cf0e2d8d17781c0df6ea3edc\"\n"
+        },
+        {
+          "start": 1351466,
+          "previous": "          \"sha256\": \"46945949954a38776e9dd9b766e2c309d01a3fe9e3c61b41ea4fcb502fbb6d1b\"\n",
+          "current": "          \"sha256\": \"9612c8e4ad54250534d5bf09c4ac8c7f780bc253cf0e2d8d17781c0df6ea3edc\"\n"
+        },
+        {
+          "start": 1373844,
+          "previous": "          \"sha256\": \"46945949954a38776e9dd9b766e2c309d01a3fe9e3c61b41ea4fcb502fbb6d1b\"\n",
+          "current": "          \"sha256\": \"9612c8e4ad54250534d5bf09c4ac8c7f780bc253cf0e2d8d17781c0df6ea3edc\"\n"
+        },
+        {
+          "start": 1393511,
+          "previous": "          \"sha256\": \"46945949954a38776e9dd9b766e2c309d01a3fe9e3c61b41ea4fcb502fbb6d1b\"\n",
+          "current": "          \"sha256\": \"9612c8e4ad54250534d5bf09c4ac8c7f780bc253cf0e2d8d17781c0df6ea3edc\"\n"
+        },
+        {
+          "start": 1416899,
+          "previous": "          \"sha256\": \"46945949954a38776e9dd9b766e2c309d01a3fe9e3c61b41ea4fcb502fbb6d1b\"\n",
+          "current": "          \"sha256\": \"9612c8e4ad54250534d5bf09c4ac8c7f780bc253cf0e2d8d17781c0df6ea3edc\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/checked-javascript.test.mjs",
+      "currentSha256": "b3f2ec6ce9706f2f171a4df73ffd1df0dec17e9b27d4730c4257a319e2901e94",
+      "previousSha256": "8de9ec2786c67f5ced9ac94835de2748b90c5a22abe06c71273a6045d8fd4a7b",
+      "edits": [
+        {
+          "start": 253,
+          "previous": "",
+          "current": "import \"./helpers/core-contract-repair-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/cli-import-repair-history-tests.mjs",
+      "currentSha256": "d568583a2165c96b21e9e22fd08e6e98a26165c83bbfe464e74b9cf8a2957ba7",
+      "previousSha256": "258e872357ee215c5d5833fdbd9f413b7bf0071ec08086a114f7326a34518417",
+      "edits": [
+        {
+          "start": 470,
+          "previous": "",
+          "current": "import { beforeCoreContractRepairSource } from \"./core-contract-repair-history.mjs\";\n"
+        },
+        {
+          "start": 3025,
+          "previous": "\tassert.ok(pins > 0); assert.deepEqual(JSON.parse(await readFile(inventoryPath, \"utf8\")), expected);\n",
+          "current": "\tassert.ok(pins > 0); assert.deepEqual(JSON.parse(beforeCoreContractRepairSource(inventoryPath, await readFile(inventoryPath, \"utf8\"))), expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/cli-import-repair-history.mjs",
+      "currentSha256": "6efc81245f38fef731199599fe6f01a342e6e873e539ebdadec8484028c01534",
+      "previousSha256": "9f23eb213e4233740e3e2fd69b88dc6315c39bb1b1b63a0736b59f7d4c0d3748",
+      "edits": [
+        {
+          "start": 229,
+          "previous": "",
+          "current": "import { beforeCoreContractRepairSource } from \"./core-contract-repair-history.mjs\";\n"
+        },
+        {
+          "start": 2470,
+          "previous": "",
+          "current": "\tsource = beforeCoreContractRepairSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "0b03160f2111d61daada8d6bacdc08b60c08f184335f68f58bcb93b24964964e",
+      "previousSha256": "cb730eb6052447405bfba83071e9c48e062ff211eb20c7cffbd604d895efea09",
+      "edits": [
+        {
+          "start": 3559,
+          "previous": "",
+          "current": "import { coreContractRepairChangedPaths } from \"./core-contract-repair-history.mjs\";\n"
+        },
+        {
+          "start": 64431,
+          "previous": "",
+          "current": "\t, ...coreContractRepairChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/structural-subtype-registration-history-tests.mjs",
+      "currentSha256": "3ac6ffd7917ab517054cc456c506f52356b0d5d1d26fe909bd55dd6a349e4f90",
+      "previousSha256": "100a05974ab04cd2e754dee01ce5187f37b753c7a961bafb4eb84d33041f1a46",
+      "edits": [
+        {
+          "start": 921,
+          "previous": "\tlet source = await readFile(\"src/adoption/test-profiles.mjs\", \"utf8\");\n",
+          "current": "\tconst path = \"src/adoption/test-profiles.mjs\";\n\tconst history = JSON.parse(await readFile(structuralSubtypeRegistrationHistoryPath));\n\tconst update = history.updates.find(item => item.path === path);\n\tassert.ok(update);\n\tlet source = beforeStructuralSubtypeRegistrationSource(path, await readFile(path, \"utf8\"), update.currentSha256);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/reviewed-fin-wasm-entry-controls.test.mjs",
+      "currentSha256": "f3fa6f59a35698a31cde6908351331a2c56de617e4c9106d5acb6ae4193d9c2c",
+      "previousSha256": "8c4a04da002d520dc583fc4fad62a99a8f469933cc9fe204ddcf760ca9b005cb",
+      "edits": [
+        {
+          "start": 7211,
+          "previous": "\t// Each changed contract keeps a freshly rederived private ABI, as a rebuilt package would.\n",
+          "current": "\t// Each well-formed changed contract keeps a freshly rederived private ABI, as a rebuilt package would.\n"
+        },
+        {
+          "start": 8908,
+          "previous": "\t\t, [\"parameter type\", changed(\"scalar\", \"original\", ir => { ir.declarations[0].parameters[0].type = { kind: \"primitive\", name: \"int\" }; })]\n\t\t, [\"bound position\", changed(\"scalar\", \"original\", ir => { const value = refinement(ir, \"label\"); value.parameters = [value.parameters[1], value.parameters[0], value.parameters[2]]; })]\n",
+          "current": ""
+        },
+        {
+          "start": 10811,
+          "previous": "",
+          "current": "\t// Mismatched refinement/transport pairs cannot produce a private ABI at all.\n\t// Keep these separate from valid rebuilt descriptors rejected by selection.\n\tfor(const [label, change] of [\n\t\t[\"parameter type\", ir => { ir.declarations[0].parameters[0].type = { kind: \"primitive\", name: \"int\" }; }]\n\t\t, [\"bound position\", ir => { const value = refinement(ir, \"label\"); value.parameters = [value.parameters[1], value.parameters[0], value.parameters[2]]; }]\n\t]) assert.throws(() => changed(\"scalar\", \"original\", change), { name: \"TypeError\", message: \"Refinement does not match its transport type\" }, label);\n"
+        }
+      ]
+    }
+  ]
+}
