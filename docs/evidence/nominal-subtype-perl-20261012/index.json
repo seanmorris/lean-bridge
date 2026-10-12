@@ -1,0 +1,3513 @@
+{
+  "checkers": [
+    "report",
+    "model-records",
+    "package-records",
+    "generators",
+    "provenance"
+  ],
+  "files": [
+    {
+      "bytes": 2976,
+      "path": "checkers/generators.mjs",
+      "sha256": "a879b18185451b361b3cc29f2a922205b33062b0196ece6ae7d4202c900101f3"
+    },
+    {
+      "bytes": 7903,
+      "path": "checkers/model-records.mjs",
+      "sha256": "1f09bb2c5e0b13cc4951cf34b85a988b5c0941fdfcd25df591cb6fb141f7653a"
+    },
+    {
+      "bytes": 8387,
+      "path": "checkers/package-records.mjs",
+      "sha256": "d4bb760e23caedfa16d985a22cedb4c6047cad77af78f19798c393b37d1d3298"
+    },
+    {
+      "bytes": 2957,
+      "path": "checkers/provenance.mjs",
+      "sha256": "9a67328f64ff113177dbe433b00536f143bf14ec63b84bf26bcfd018ff110a44"
+    },
+    {
+      "bytes": 7399,
+      "path": "checkers/report.mjs",
+      "sha256": "4c7e3541bdcf93ff04c4aa408c5c560acb5b842e791da5e2e9e411edf922c7be"
+    },
+    {
+      "bytes": 329,
+      "path": "ordinary-full/end.json",
+      "sha256": "a4245428fc05a2c2de497092730845daf2fa8b8489a0fc54874bab15a3bb0cd6"
+    },
+    {
+      "bytes": 1701,
+      "path": "ordinary-full/records/5.36.3-threaded/build-xs/component-install-receipt.json",
+      "sha256": "07771a9ddea7a9ed03f37c85bc89b1d5e088b32d0aa5452b68f2f15ecb0821ec"
+    },
+    {
+      "bytes": 7431,
+      "path": "ordinary-full/records/5.36.3-threaded/build-xs/component-manifest.json",
+      "sha256": "bbb07e64ca0f3da710a8719e4c5dad5c6c5a96c86cdba11ad2617b5133048634"
+    },
+    {
+      "bytes": 20859,
+      "path": "ordinary-full/records/5.36.3-threaded/build-xs/component-public.pm",
+      "sha256": "66bdd98b62a8d80c0ce2452a279bef8bd6542a4dc6a57122bc8d3291e0ebdd2e"
+    },
+    {
+      "bytes": 62563,
+      "path": "ordinary-full/records/5.36.3-threaded/build-xs/component-source.xs",
+      "sha256": "142bb8e5ca901ba30f4d3fd1d43e577554a2bf7c48133d873d3d9808efc6b1da"
+    },
+    {
+      "bytes": 824,
+      "path": "ordinary-full/records/5.36.3-threaded/build-xs/component-trace.json",
+      "sha256": "cb493ebde8c8f18d819d6be15d5d72ea0a0a0e324aa2c62816583e2503c25d28"
+    },
+    {
+      "bytes": 110,
+      "path": "ordinary-full/records/5.36.3-threaded/build-xs/first.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 4693,
+      "path": "ordinary-full/records/5.36.3-threaded/build-xs/installed-files.json",
+      "sha256": "d75c1016a3514fdbe2f49b7cfe54c82f92aaf41be15999440097e8773ab5ce96"
+    },
+    {
+      "bytes": 110,
+      "path": "ordinary-full/records/5.36.3-threaded/build-xs/repeated.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 1799,
+      "path": "ordinary-full/records/5.36.3-threaded/build-xs/report.json",
+      "sha256": "44b328e332d4d57b7bcb1549e62ea004acb14b084f74d9e6a912f9674f9866be"
+    },
+    {
+      "bytes": 1661,
+      "path": "ordinary-full/records/5.36.3-threaded/build-xs/runtime-install-receipt.json",
+      "sha256": "14c87872f1c272b8467aa1139da92a522e8634126115a646ecb22be667e5eb7d"
+    },
+    {
+      "bytes": 8392,
+      "path": "ordinary-full/records/5.36.3-threaded/build-xs/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "ordinary-full/records/5.36.3-threaded/build-xs/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "ordinary-full/records/5.36.3-threaded/build-xs/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3415,
+      "path": "ordinary-full/records/5.36.3-threaded/build-xs/runtime-trace.json",
+      "sha256": "8d03e05dd5a2d2a7c6bbe45fd5069793b05429b749d1f3a489dccc90c28b4f61"
+    },
+    {
+      "bytes": 531,
+      "path": "ordinary-full/records/5.36.3-threaded/prebuilt-only/component-install-receipt.json",
+      "sha256": "b94e459bcc7746943e3bfc7143abf3bdfbb636bf3945dd745349c84c24ab7505"
+    },
+    {
+      "bytes": 7431,
+      "path": "ordinary-full/records/5.36.3-threaded/prebuilt-only/component-manifest.json",
+      "sha256": "bbb07e64ca0f3da710a8719e4c5dad5c6c5a96c86cdba11ad2617b5133048634"
+    },
+    {
+      "bytes": 20859,
+      "path": "ordinary-full/records/5.36.3-threaded/prebuilt-only/component-public.pm",
+      "sha256": "66bdd98b62a8d80c0ce2452a279bef8bd6542a4dc6a57122bc8d3291e0ebdd2e"
+    },
+    {
+      "bytes": 62563,
+      "path": "ordinary-full/records/5.36.3-threaded/prebuilt-only/component-source.xs",
+      "sha256": "142bb8e5ca901ba30f4d3fd1d43e577554a2bf7c48133d873d3d9808efc6b1da"
+    },
+    {
+      "bytes": 812,
+      "path": "ordinary-full/records/5.36.3-threaded/prebuilt-only/component-trace.json",
+      "sha256": "f15601da685cdd2bb90491aa415b8cb0dc377f3eed40720c2dab89c4f569796b"
+    },
+    {
+      "bytes": 110,
+      "path": "ordinary-full/records/5.36.3-threaded/prebuilt-only/first.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 4691,
+      "path": "ordinary-full/records/5.36.3-threaded/prebuilt-only/installed-files.json",
+      "sha256": "be5970c36fc72ca62cfe411fbe4919f4dd24867b2daf3eaaec2efd4e564d5973"
+    },
+    {
+      "bytes": 110,
+      "path": "ordinary-full/records/5.36.3-threaded/prebuilt-only/repeated.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 1805,
+      "path": "ordinary-full/records/5.36.3-threaded/prebuilt-only/report.json",
+      "sha256": "8e88c6709ecc5fc1f2264d23476c0e1065c6847af4662340b3d48534e6bcf3eb"
+    },
+    {
+      "bytes": 531,
+      "path": "ordinary-full/records/5.36.3-threaded/prebuilt-only/runtime-install-receipt.json",
+      "sha256": "440854dc97f5d57bad62ce364d6acd2321fc7406ee85b39a6e86b70d36598215"
+    },
+    {
+      "bytes": 8392,
+      "path": "ordinary-full/records/5.36.3-threaded/prebuilt-only/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "ordinary-full/records/5.36.3-threaded/prebuilt-only/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "ordinary-full/records/5.36.3-threaded/prebuilt-only/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3403,
+      "path": "ordinary-full/records/5.36.3-threaded/prebuilt-only/runtime-trace.json",
+      "sha256": "5647a8df3ccc1498a20bc91981fb55be0c995f0ed135f7a47b148effda1fdb81"
+    },
+    {
+      "bytes": 1618,
+      "path": "ordinary-full/records/5.36.3-unthreaded/build-xs/component-install-receipt.json",
+      "sha256": "c3779b56aeb346f4dd184a9484f92b640b59f52d1185d5589a036cc67ab00dd9"
+    },
+    {
+      "bytes": 7431,
+      "path": "ordinary-full/records/5.36.3-unthreaded/build-xs/component-manifest.json",
+      "sha256": "bbb07e64ca0f3da710a8719e4c5dad5c6c5a96c86cdba11ad2617b5133048634"
+    },
+    {
+      "bytes": 20859,
+      "path": "ordinary-full/records/5.36.3-unthreaded/build-xs/component-public.pm",
+      "sha256": "66bdd98b62a8d80c0ce2452a279bef8bd6542a4dc6a57122bc8d3291e0ebdd2e"
+    },
+    {
+      "bytes": 62563,
+      "path": "ordinary-full/records/5.36.3-unthreaded/build-xs/component-source.xs",
+      "sha256": "142bb8e5ca901ba30f4d3fd1d43e577554a2bf7c48133d873d3d9808efc6b1da"
+    },
+    {
+      "bytes": 824,
+      "path": "ordinary-full/records/5.36.3-unthreaded/build-xs/component-trace.json",
+      "sha256": "6e5bb218282fc885f97d615d26cfb7f8f3a69dc54bed00ee1e0da50d915e43ca"
+    },
+    {
+      "bytes": 110,
+      "path": "ordinary-full/records/5.36.3-unthreaded/build-xs/first.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 4368,
+      "path": "ordinary-full/records/5.36.3-unthreaded/build-xs/installed-files.json",
+      "sha256": "0979a099d47eb7ae6b0144f5bb01bcd529fc7e3b6ffe8b230c2b3e93a5d90263"
+    },
+    {
+      "bytes": 110,
+      "path": "ordinary-full/records/5.36.3-unthreaded/build-xs/repeated.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 1780,
+      "path": "ordinary-full/records/5.36.3-unthreaded/build-xs/report.json",
+      "sha256": "bb66bb489e31e6f8403fc54ed6e57e4cac8924600a29086ef4e2145536eacde0"
+    },
+    {
+      "bytes": 1578,
+      "path": "ordinary-full/records/5.36.3-unthreaded/build-xs/runtime-install-receipt.json",
+      "sha256": "ee31f04bc47713ee1e7af7eec4c79757f5da95358146b058fa875ab63bf3d535"
+    },
+    {
+      "bytes": 8392,
+      "path": "ordinary-full/records/5.36.3-unthreaded/build-xs/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "ordinary-full/records/5.36.3-unthreaded/build-xs/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "ordinary-full/records/5.36.3-unthreaded/build-xs/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3415,
+      "path": "ordinary-full/records/5.36.3-unthreaded/build-xs/runtime-trace.json",
+      "sha256": "06a13638c2adf6f6864e131f79eedbcb7a305e7305427648b75470c2a28b83b3"
+    },
+    {
+      "bytes": 506,
+      "path": "ordinary-full/records/5.36.3-unthreaded/prebuilt-only/component-install-receipt.json",
+      "sha256": "ec5027ab1b93bc57fc9deaf55eef480ee3dd73c7519c7adcb56d64ee1bc5bac3"
+    },
+    {
+      "bytes": 7431,
+      "path": "ordinary-full/records/5.36.3-unthreaded/prebuilt-only/component-manifest.json",
+      "sha256": "bbb07e64ca0f3da710a8719e4c5dad5c6c5a96c86cdba11ad2617b5133048634"
+    },
+    {
+      "bytes": 20859,
+      "path": "ordinary-full/records/5.36.3-unthreaded/prebuilt-only/component-public.pm",
+      "sha256": "66bdd98b62a8d80c0ce2452a279bef8bd6542a4dc6a57122bc8d3291e0ebdd2e"
+    },
+    {
+      "bytes": 62563,
+      "path": "ordinary-full/records/5.36.3-unthreaded/prebuilt-only/component-source.xs",
+      "sha256": "142bb8e5ca901ba30f4d3fd1d43e577554a2bf7c48133d873d3d9808efc6b1da"
+    },
+    {
+      "bytes": 812,
+      "path": "ordinary-full/records/5.36.3-unthreaded/prebuilt-only/component-trace.json",
+      "sha256": "07e9502d45e5af5c58d6d7ecaf620770bd7dbf5b9c80e623b5355690f457e2f2"
+    },
+    {
+      "bytes": 110,
+      "path": "ordinary-full/records/5.36.3-unthreaded/prebuilt-only/first.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 4366,
+      "path": "ordinary-full/records/5.36.3-unthreaded/prebuilt-only/installed-files.json",
+      "sha256": "163f928582f6c4dc2ee0c2f88387a0490d0c777e56e65539c9cb3eb5eb7235ed"
+    },
+    {
+      "bytes": 110,
+      "path": "ordinary-full/records/5.36.3-unthreaded/prebuilt-only/repeated.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 1786,
+      "path": "ordinary-full/records/5.36.3-unthreaded/prebuilt-only/report.json",
+      "sha256": "4be947547b7b70cb7d51b1417ef4091c8f43831b9c1d2ec4003b0127a07d4eff"
+    },
+    {
+      "bytes": 506,
+      "path": "ordinary-full/records/5.36.3-unthreaded/prebuilt-only/runtime-install-receipt.json",
+      "sha256": "c2b6ed629e3dd78670e00e8b13ac332eae1a407e705efc81d20af453933dc290"
+    },
+    {
+      "bytes": 8392,
+      "path": "ordinary-full/records/5.36.3-unthreaded/prebuilt-only/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "ordinary-full/records/5.36.3-unthreaded/prebuilt-only/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "ordinary-full/records/5.36.3-unthreaded/prebuilt-only/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3403,
+      "path": "ordinary-full/records/5.36.3-unthreaded/prebuilt-only/runtime-trace.json",
+      "sha256": "02ba5dde209d924cf6b637ff1b92475b8867fe43a139f82ce489793cea46aa12"
+    },
+    {
+      "bytes": 1701,
+      "path": "ordinary-full/records/5.38.2-threaded/build-xs/component-install-receipt.json",
+      "sha256": "a2e422ef1544527e9d57c6e63e4e5ea5ca2a516d46002f5463c854eee9e212c9"
+    },
+    {
+      "bytes": 7431,
+      "path": "ordinary-full/records/5.38.2-threaded/build-xs/component-manifest.json",
+      "sha256": "bbb07e64ca0f3da710a8719e4c5dad5c6c5a96c86cdba11ad2617b5133048634"
+    },
+    {
+      "bytes": 20859,
+      "path": "ordinary-full/records/5.38.2-threaded/build-xs/component-public.pm",
+      "sha256": "66bdd98b62a8d80c0ce2452a279bef8bd6542a4dc6a57122bc8d3291e0ebdd2e"
+    },
+    {
+      "bytes": 62563,
+      "path": "ordinary-full/records/5.38.2-threaded/build-xs/component-source.xs",
+      "sha256": "142bb8e5ca901ba30f4d3fd1d43e577554a2bf7c48133d873d3d9808efc6b1da"
+    },
+    {
+      "bytes": 824,
+      "path": "ordinary-full/records/5.38.2-threaded/build-xs/component-trace.json",
+      "sha256": "1c202d9b2e1c702cc7da990a76b53856c44d472e8936741b0588407b86e957dd"
+    },
+    {
+      "bytes": 110,
+      "path": "ordinary-full/records/5.38.2-threaded/build-xs/first.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 4693,
+      "path": "ordinary-full/records/5.38.2-threaded/build-xs/installed-files.json",
+      "sha256": "72ab0c885f6c0aad70c8f32f86d58ce37627feefe050aec280b13e277314ee54"
+    },
+    {
+      "bytes": 110,
+      "path": "ordinary-full/records/5.38.2-threaded/build-xs/repeated.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 1799,
+      "path": "ordinary-full/records/5.38.2-threaded/build-xs/report.json",
+      "sha256": "9fdcfb17ff0e7f93c341e0c66705704dfd1f6797b9d15f545b85fd3c140514c2"
+    },
+    {
+      "bytes": 1661,
+      "path": "ordinary-full/records/5.38.2-threaded/build-xs/runtime-install-receipt.json",
+      "sha256": "b701e19412fedf35103f2c37d0aa5f45426d6dcd1db25d44ae2cc6b536577036"
+    },
+    {
+      "bytes": 8392,
+      "path": "ordinary-full/records/5.38.2-threaded/build-xs/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "ordinary-full/records/5.38.2-threaded/build-xs/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "ordinary-full/records/5.38.2-threaded/build-xs/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3415,
+      "path": "ordinary-full/records/5.38.2-threaded/build-xs/runtime-trace.json",
+      "sha256": "a8714ab500eaa1503c6d8e87c7bbea02b6a2c9d0eb313444f5e076aae3afa563"
+    },
+    {
+      "bytes": 531,
+      "path": "ordinary-full/records/5.38.2-threaded/prebuilt-only/component-install-receipt.json",
+      "sha256": "1a89731d2c7429e5778cbdd4caef97e3454d611d29b9903eacfa6eb6d0d92dd1"
+    },
+    {
+      "bytes": 7431,
+      "path": "ordinary-full/records/5.38.2-threaded/prebuilt-only/component-manifest.json",
+      "sha256": "bbb07e64ca0f3da710a8719e4c5dad5c6c5a96c86cdba11ad2617b5133048634"
+    },
+    {
+      "bytes": 20859,
+      "path": "ordinary-full/records/5.38.2-threaded/prebuilt-only/component-public.pm",
+      "sha256": "66bdd98b62a8d80c0ce2452a279bef8bd6542a4dc6a57122bc8d3291e0ebdd2e"
+    },
+    {
+      "bytes": 62563,
+      "path": "ordinary-full/records/5.38.2-threaded/prebuilt-only/component-source.xs",
+      "sha256": "142bb8e5ca901ba30f4d3fd1d43e577554a2bf7c48133d873d3d9808efc6b1da"
+    },
+    {
+      "bytes": 812,
+      "path": "ordinary-full/records/5.38.2-threaded/prebuilt-only/component-trace.json",
+      "sha256": "2b9d62a1649ccb42f4225a3b19a5ed581491fa0b2ebd06fd356385a25bb56383"
+    },
+    {
+      "bytes": 110,
+      "path": "ordinary-full/records/5.38.2-threaded/prebuilt-only/first.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 4691,
+      "path": "ordinary-full/records/5.38.2-threaded/prebuilt-only/installed-files.json",
+      "sha256": "632fc6fbc9e00ec543a964693d3a2d76eb11963ccf1bd2ea69b816c904348ac2"
+    },
+    {
+      "bytes": 110,
+      "path": "ordinary-full/records/5.38.2-threaded/prebuilt-only/repeated.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 1805,
+      "path": "ordinary-full/records/5.38.2-threaded/prebuilt-only/report.json",
+      "sha256": "6eb7587243015fd7208404bb76391b4e98dc2617837a3a8950225899fc625b63"
+    },
+    {
+      "bytes": 531,
+      "path": "ordinary-full/records/5.38.2-threaded/prebuilt-only/runtime-install-receipt.json",
+      "sha256": "7197ee40f85be2d67ffe57d0830384efc5328bde74215519560a1df57073b5d1"
+    },
+    {
+      "bytes": 8392,
+      "path": "ordinary-full/records/5.38.2-threaded/prebuilt-only/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "ordinary-full/records/5.38.2-threaded/prebuilt-only/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "ordinary-full/records/5.38.2-threaded/prebuilt-only/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3403,
+      "path": "ordinary-full/records/5.38.2-threaded/prebuilt-only/runtime-trace.json",
+      "sha256": "a8eaa2f967092669e2d42cae391fb335e3e355de8a4c2219e7eb13d36ebe0c02"
+    },
+    {
+      "bytes": 1618,
+      "path": "ordinary-full/records/5.38.2-unthreaded/build-xs/component-install-receipt.json",
+      "sha256": "f4af17cbd841851c74c9740ff0b1c7de075f514fe7a465eb90f9156fe8134d50"
+    },
+    {
+      "bytes": 7431,
+      "path": "ordinary-full/records/5.38.2-unthreaded/build-xs/component-manifest.json",
+      "sha256": "bbb07e64ca0f3da710a8719e4c5dad5c6c5a96c86cdba11ad2617b5133048634"
+    },
+    {
+      "bytes": 20859,
+      "path": "ordinary-full/records/5.38.2-unthreaded/build-xs/component-public.pm",
+      "sha256": "66bdd98b62a8d80c0ce2452a279bef8bd6542a4dc6a57122bc8d3291e0ebdd2e"
+    },
+    {
+      "bytes": 62563,
+      "path": "ordinary-full/records/5.38.2-unthreaded/build-xs/component-source.xs",
+      "sha256": "142bb8e5ca901ba30f4d3fd1d43e577554a2bf7c48133d873d3d9808efc6b1da"
+    },
+    {
+      "bytes": 824,
+      "path": "ordinary-full/records/5.38.2-unthreaded/build-xs/component-trace.json",
+      "sha256": "d60bed23e1b51fc61e5226e6cfbf806e731584fe224252a9f6aa7e72a2970d87"
+    },
+    {
+      "bytes": 110,
+      "path": "ordinary-full/records/5.38.2-unthreaded/build-xs/first.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 4368,
+      "path": "ordinary-full/records/5.38.2-unthreaded/build-xs/installed-files.json",
+      "sha256": "7dd62e0a5d0f87b3b08b6f4d3bdf053b682b4c47497a28eec6b8707616036b15"
+    },
+    {
+      "bytes": 110,
+      "path": "ordinary-full/records/5.38.2-unthreaded/build-xs/repeated.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 1780,
+      "path": "ordinary-full/records/5.38.2-unthreaded/build-xs/report.json",
+      "sha256": "b58fd17be476c42806c1e66b311524d934986d619d2cf299f43b340ecf2dab90"
+    },
+    {
+      "bytes": 1578,
+      "path": "ordinary-full/records/5.38.2-unthreaded/build-xs/runtime-install-receipt.json",
+      "sha256": "76c71076342101b1b5f3982e28a24b2ad0808f7a26ccd5df86890f068f50ec9e"
+    },
+    {
+      "bytes": 8392,
+      "path": "ordinary-full/records/5.38.2-unthreaded/build-xs/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "ordinary-full/records/5.38.2-unthreaded/build-xs/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "ordinary-full/records/5.38.2-unthreaded/build-xs/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3415,
+      "path": "ordinary-full/records/5.38.2-unthreaded/build-xs/runtime-trace.json",
+      "sha256": "805293363e0456cca364e6530a60b6fe9946b2a68d485ccf03fd5c1a9346b206"
+    },
+    {
+      "bytes": 506,
+      "path": "ordinary-full/records/5.38.2-unthreaded/prebuilt-only/component-install-receipt.json",
+      "sha256": "39a1a2441893971b1f395c8e4b58ac4dde8358ffe65f40faa90b1ab34268d421"
+    },
+    {
+      "bytes": 7431,
+      "path": "ordinary-full/records/5.38.2-unthreaded/prebuilt-only/component-manifest.json",
+      "sha256": "bbb07e64ca0f3da710a8719e4c5dad5c6c5a96c86cdba11ad2617b5133048634"
+    },
+    {
+      "bytes": 20859,
+      "path": "ordinary-full/records/5.38.2-unthreaded/prebuilt-only/component-public.pm",
+      "sha256": "66bdd98b62a8d80c0ce2452a279bef8bd6542a4dc6a57122bc8d3291e0ebdd2e"
+    },
+    {
+      "bytes": 62563,
+      "path": "ordinary-full/records/5.38.2-unthreaded/prebuilt-only/component-source.xs",
+      "sha256": "142bb8e5ca901ba30f4d3fd1d43e577554a2bf7c48133d873d3d9808efc6b1da"
+    },
+    {
+      "bytes": 812,
+      "path": "ordinary-full/records/5.38.2-unthreaded/prebuilt-only/component-trace.json",
+      "sha256": "060dd6a9446c1368e378a494b24fcbb0903f42e1ffb406062e3f869dff096af0"
+    },
+    {
+      "bytes": 110,
+      "path": "ordinary-full/records/5.38.2-unthreaded/prebuilt-only/first.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 4366,
+      "path": "ordinary-full/records/5.38.2-unthreaded/prebuilt-only/installed-files.json",
+      "sha256": "0c26c832c2f744585e5863209d62e6419c760b141927665b2e91fdc85a83326a"
+    },
+    {
+      "bytes": 110,
+      "path": "ordinary-full/records/5.38.2-unthreaded/prebuilt-only/repeated.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 1786,
+      "path": "ordinary-full/records/5.38.2-unthreaded/prebuilt-only/report.json",
+      "sha256": "3561d5e63538cacd0f6bcad36011fc00930b25a3062b9e821f1d87fb97f0dcbd"
+    },
+    {
+      "bytes": 506,
+      "path": "ordinary-full/records/5.38.2-unthreaded/prebuilt-only/runtime-install-receipt.json",
+      "sha256": "debea81d3582997b2ae4c08d48d6d63947ea28e2e5e472f5123bacbd48ea0052"
+    },
+    {
+      "bytes": 8392,
+      "path": "ordinary-full/records/5.38.2-unthreaded/prebuilt-only/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "ordinary-full/records/5.38.2-unthreaded/prebuilt-only/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "ordinary-full/records/5.38.2-unthreaded/prebuilt-only/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3403,
+      "path": "ordinary-full/records/5.38.2-unthreaded/prebuilt-only/runtime-trace.json",
+      "sha256": "4370b545a49462b73e77622e32819e0afe43a088034fc146d2c3509e535fbdd6"
+    },
+    {
+      "bytes": 1239,
+      "path": "ordinary-full/records/build-0/author-inputs.json",
+      "sha256": "0932057def61a52be21dda39c57f24e305f8d9d58528af3dac447e324b6c451f"
+    },
+    {
+      "bytes": 20097,
+      "path": "ordinary-full/records/build-0/lean-bridge.exports.json",
+      "sha256": "1786018f39de649c3e32c8ba2757f8a4878092ce8ab5d6447d4c4401246b4b09"
+    },
+    {
+      "bytes": 327180,
+      "path": "ordinary-full/records/build-0/model.json",
+      "sha256": "4b099e1389713805ac6500733afdeb0a8af3a6c10859b9437224617e0f77215e"
+    },
+    {
+      "bytes": 3005,
+      "path": "ordinary-full/records/build-0/NominalSubtypes.lean",
+      "sha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+    },
+    {
+      "bytes": 2074,
+      "path": "ordinary-full/records/build-0/package-set-receipt.json",
+      "sha256": "7d90319304280804198b666a168b0db06015497b9668f7c91dd8780a8a94f6bc"
+    },
+    {
+      "bytes": 1239,
+      "path": "ordinary-full/records/build-1/author-inputs.json",
+      "sha256": "215eef47bbbb638830a32b110b7aebe2089a4ec6a982b10dd743ab8df77c6534"
+    },
+    {
+      "bytes": 20097,
+      "path": "ordinary-full/records/build-1/lean-bridge.exports.json",
+      "sha256": "1786018f39de649c3e32c8ba2757f8a4878092ce8ab5d6447d4c4401246b4b09"
+    },
+    {
+      "bytes": 327180,
+      "path": "ordinary-full/records/build-1/model.json",
+      "sha256": "4b099e1389713805ac6500733afdeb0a8af3a6c10859b9437224617e0f77215e"
+    },
+    {
+      "bytes": 3005,
+      "path": "ordinary-full/records/build-1/NominalSubtypes.lean",
+      "sha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+    },
+    {
+      "bytes": 2074,
+      "path": "ordinary-full/records/build-1/package-set-receipt.json",
+      "sha256": "7d90319304280804198b666a168b0db06015497b9668f7c91dd8780a8a94f6bc"
+    },
+    {
+      "bytes": 20097,
+      "path": "ordinary-full/records/configuration.json",
+      "sha256": "1786018f39de649c3e32c8ba2757f8a4878092ce8ab5d6447d4c4401246b4b09"
+    },
+    {
+      "bytes": 11736,
+      "path": "ordinary-full/records/consumer.pl",
+      "sha256": "3cdb85b19aeabb5b3402d6a54468e17288da8d45c5c160430d12f207833b6f23"
+    },
+    {
+      "bytes": 87211,
+      "path": "ordinary-full/records/expected.binding-ir.json",
+      "sha256": "be260fc29f845b403fa730c80869993711104639443c83210c7cee432fbe8974"
+    },
+    {
+      "bytes": 19521,
+      "path": "ordinary-full/records/report.json",
+      "sha256": "0d2767251b3d3ad9d6d39e42e1c1971665a6c009dac1d9bd0f885a11f421e082"
+    },
+    {
+      "bytes": 123,
+      "path": "ordinary-full/records/runtime.json",
+      "sha256": "c2f1b9d72bf412b57880eaf2e5f14f071577bea6210298d5c0d82c529f20d81e"
+    },
+    {
+      "bytes": 860,
+      "path": "ordinary-full/run.tap",
+      "sha256": "74b7535cb45df16d8eff5a8c34f4d14f7eb32d21db27fbeaf6debc01668e9ebc"
+    },
+    {
+      "bytes": 1109,
+      "path": "ordinary-full/start.json",
+      "sha256": "b448db1ce26b88e5a441117182eb4db4c4c982fbcd265c1ebc9f9aa700a3be64"
+    },
+    {
+      "bytes": 329,
+      "path": "ordinary-result-only/end.json",
+      "sha256": "a509a3637d0f46621eaf1fe2dc9a55e67e6ce60213ee29646dfadead45aaad49"
+    },
+    {
+      "bytes": 1701,
+      "path": "ordinary-result-only/records/5.36.3-threaded/build-xs/component-install-receipt.json",
+      "sha256": "3300b3f0b568f9b27ff5fec5b66f3cf2d4ae7cc5d75a25a476396e28df8ef036"
+    },
+    {
+      "bytes": 7431,
+      "path": "ordinary-result-only/records/5.36.3-threaded/build-xs/component-manifest.json",
+      "sha256": "d21767df31132c149ca66952aaeef8225d13544926bd51a3179778b0ca643e31"
+    },
+    {
+      "bytes": 15611,
+      "path": "ordinary-result-only/records/5.36.3-threaded/build-xs/component-public.pm",
+      "sha256": "7a13dc4b570b01586d704294fea261c4aae8686c80f3cdfa9bbe939ef1d5b6b1"
+    },
+    {
+      "bytes": 31358,
+      "path": "ordinary-result-only/records/5.36.3-threaded/build-xs/component-source.xs",
+      "sha256": "2b7ddaf360c7e9dd339fb40c06bc367699c9d467d76193a785210b4a7067214a"
+    },
+    {
+      "bytes": 824,
+      "path": "ordinary-result-only/records/5.36.3-threaded/build-xs/component-trace.json",
+      "sha256": "9ae3e78cb3ee2a3d9ac73e891b30c4df6389f1b134b32b686068654ddc40ee8e"
+    },
+    {
+      "bytes": 107,
+      "path": "ordinary-result-only/records/5.36.3-threaded/build-xs/first.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 4692,
+      "path": "ordinary-result-only/records/5.36.3-threaded/build-xs/installed-files.json",
+      "sha256": "48d5b8f9801e67ad6150debe9fe1c8db9650954cd55c369f1f6f38a8a1ae62c8"
+    },
+    {
+      "bytes": 107,
+      "path": "ordinary-result-only/records/5.36.3-threaded/build-xs/repeated.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 1824,
+      "path": "ordinary-result-only/records/5.36.3-threaded/build-xs/report.json",
+      "sha256": "2185da4d02fdb6f95b0c5642d51446f38b6f41659fb3a07b309c1f1bf8c17ff9"
+    },
+    {
+      "bytes": 1661,
+      "path": "ordinary-result-only/records/5.36.3-threaded/build-xs/runtime-install-receipt.json",
+      "sha256": "14c87872f1c272b8467aa1139da92a522e8634126115a646ecb22be667e5eb7d"
+    },
+    {
+      "bytes": 8392,
+      "path": "ordinary-result-only/records/5.36.3-threaded/build-xs/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "ordinary-result-only/records/5.36.3-threaded/build-xs/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "ordinary-result-only/records/5.36.3-threaded/build-xs/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3415,
+      "path": "ordinary-result-only/records/5.36.3-threaded/build-xs/runtime-trace.json",
+      "sha256": "8d03e05dd5a2d2a7c6bbe45fd5069793b05429b749d1f3a489dccc90c28b4f61"
+    },
+    {
+      "bytes": 531,
+      "path": "ordinary-result-only/records/5.36.3-threaded/prebuilt-only/component-install-receipt.json",
+      "sha256": "0154debcc935891146106036a5dbda9f934f68465747197506d01656a2f93a96"
+    },
+    {
+      "bytes": 7431,
+      "path": "ordinary-result-only/records/5.36.3-threaded/prebuilt-only/component-manifest.json",
+      "sha256": "d21767df31132c149ca66952aaeef8225d13544926bd51a3179778b0ca643e31"
+    },
+    {
+      "bytes": 15611,
+      "path": "ordinary-result-only/records/5.36.3-threaded/prebuilt-only/component-public.pm",
+      "sha256": "7a13dc4b570b01586d704294fea261c4aae8686c80f3cdfa9bbe939ef1d5b6b1"
+    },
+    {
+      "bytes": 31358,
+      "path": "ordinary-result-only/records/5.36.3-threaded/prebuilt-only/component-source.xs",
+      "sha256": "2b7ddaf360c7e9dd339fb40c06bc367699c9d467d76193a785210b4a7067214a"
+    },
+    {
+      "bytes": 812,
+      "path": "ordinary-result-only/records/5.36.3-threaded/prebuilt-only/component-trace.json",
+      "sha256": "00e793f6342ba3e300a9d1b8f8e3b6f068f1fbb9be4b9eb262cec1a5ffb47943"
+    },
+    {
+      "bytes": 107,
+      "path": "ordinary-result-only/records/5.36.3-threaded/prebuilt-only/first.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 4690,
+      "path": "ordinary-result-only/records/5.36.3-threaded/prebuilt-only/installed-files.json",
+      "sha256": "51236ce72cbf61a6af39c652665ae8a78f6b7d5ed53dc9011cdf938baf98c76c"
+    },
+    {
+      "bytes": 107,
+      "path": "ordinary-result-only/records/5.36.3-threaded/prebuilt-only/repeated.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 1830,
+      "path": "ordinary-result-only/records/5.36.3-threaded/prebuilt-only/report.json",
+      "sha256": "c065e98fffa91db788da1a7944ccb837cf3ed796539e77cc42868825d905a4e9"
+    },
+    {
+      "bytes": 531,
+      "path": "ordinary-result-only/records/5.36.3-threaded/prebuilt-only/runtime-install-receipt.json",
+      "sha256": "440854dc97f5d57bad62ce364d6acd2321fc7406ee85b39a6e86b70d36598215"
+    },
+    {
+      "bytes": 8392,
+      "path": "ordinary-result-only/records/5.36.3-threaded/prebuilt-only/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "ordinary-result-only/records/5.36.3-threaded/prebuilt-only/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "ordinary-result-only/records/5.36.3-threaded/prebuilt-only/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3403,
+      "path": "ordinary-result-only/records/5.36.3-threaded/prebuilt-only/runtime-trace.json",
+      "sha256": "5647a8df3ccc1498a20bc91981fb55be0c995f0ed135f7a47b148effda1fdb81"
+    },
+    {
+      "bytes": 1618,
+      "path": "ordinary-result-only/records/5.36.3-unthreaded/build-xs/component-install-receipt.json",
+      "sha256": "ea25041d8abdbba8ce5700704f54dd26b1748a0d0e9906b8367169a9b14ca534"
+    },
+    {
+      "bytes": 7431,
+      "path": "ordinary-result-only/records/5.36.3-unthreaded/build-xs/component-manifest.json",
+      "sha256": "d21767df31132c149ca66952aaeef8225d13544926bd51a3179778b0ca643e31"
+    },
+    {
+      "bytes": 15611,
+      "path": "ordinary-result-only/records/5.36.3-unthreaded/build-xs/component-public.pm",
+      "sha256": "7a13dc4b570b01586d704294fea261c4aae8686c80f3cdfa9bbe939ef1d5b6b1"
+    },
+    {
+      "bytes": 31358,
+      "path": "ordinary-result-only/records/5.36.3-unthreaded/build-xs/component-source.xs",
+      "sha256": "2b7ddaf360c7e9dd339fb40c06bc367699c9d467d76193a785210b4a7067214a"
+    },
+    {
+      "bytes": 824,
+      "path": "ordinary-result-only/records/5.36.3-unthreaded/build-xs/component-trace.json",
+      "sha256": "1e01cf7ba136011078764fcdb4bd47984c7749657b571bb104a7fca2b369474f"
+    },
+    {
+      "bytes": 107,
+      "path": "ordinary-result-only/records/5.36.3-unthreaded/build-xs/first.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 4367,
+      "path": "ordinary-result-only/records/5.36.3-unthreaded/build-xs/installed-files.json",
+      "sha256": "aba78ac7c37545e8b0af04f3852cab9e51796f202f3b047e772c4b9f9b774347"
+    },
+    {
+      "bytes": 107,
+      "path": "ordinary-result-only/records/5.36.3-unthreaded/build-xs/repeated.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 1805,
+      "path": "ordinary-result-only/records/5.36.3-unthreaded/build-xs/report.json",
+      "sha256": "eb360352fd26ae824b1dc165a086c4402bc0f9fa48e8ebeda385a64c78404d30"
+    },
+    {
+      "bytes": 1578,
+      "path": "ordinary-result-only/records/5.36.3-unthreaded/build-xs/runtime-install-receipt.json",
+      "sha256": "ee31f04bc47713ee1e7af7eec4c79757f5da95358146b058fa875ab63bf3d535"
+    },
+    {
+      "bytes": 8392,
+      "path": "ordinary-result-only/records/5.36.3-unthreaded/build-xs/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "ordinary-result-only/records/5.36.3-unthreaded/build-xs/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "ordinary-result-only/records/5.36.3-unthreaded/build-xs/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3415,
+      "path": "ordinary-result-only/records/5.36.3-unthreaded/build-xs/runtime-trace.json",
+      "sha256": "06a13638c2adf6f6864e131f79eedbcb7a305e7305427648b75470c2a28b83b3"
+    },
+    {
+      "bytes": 506,
+      "path": "ordinary-result-only/records/5.36.3-unthreaded/prebuilt-only/component-install-receipt.json",
+      "sha256": "7678190a2d2080e7a0aec55fbaa8295f5db93cd50b32cc9a22e70281086b32cb"
+    },
+    {
+      "bytes": 7431,
+      "path": "ordinary-result-only/records/5.36.3-unthreaded/prebuilt-only/component-manifest.json",
+      "sha256": "d21767df31132c149ca66952aaeef8225d13544926bd51a3179778b0ca643e31"
+    },
+    {
+      "bytes": 15611,
+      "path": "ordinary-result-only/records/5.36.3-unthreaded/prebuilt-only/component-public.pm",
+      "sha256": "7a13dc4b570b01586d704294fea261c4aae8686c80f3cdfa9bbe939ef1d5b6b1"
+    },
+    {
+      "bytes": 31358,
+      "path": "ordinary-result-only/records/5.36.3-unthreaded/prebuilt-only/component-source.xs",
+      "sha256": "2b7ddaf360c7e9dd339fb40c06bc367699c9d467d76193a785210b4a7067214a"
+    },
+    {
+      "bytes": 812,
+      "path": "ordinary-result-only/records/5.36.3-unthreaded/prebuilt-only/component-trace.json",
+      "sha256": "a4752dea69719212d637b6f9a0a50097c123a2321264a2d54d20809203b409bb"
+    },
+    {
+      "bytes": 107,
+      "path": "ordinary-result-only/records/5.36.3-unthreaded/prebuilt-only/first.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 4365,
+      "path": "ordinary-result-only/records/5.36.3-unthreaded/prebuilt-only/installed-files.json",
+      "sha256": "9e0ef56492b336908c242e007c36f7a43fc317bbce158f14f20d9bd646da6b34"
+    },
+    {
+      "bytes": 107,
+      "path": "ordinary-result-only/records/5.36.3-unthreaded/prebuilt-only/repeated.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 1811,
+      "path": "ordinary-result-only/records/5.36.3-unthreaded/prebuilt-only/report.json",
+      "sha256": "1d18d6ac7f6e56115ec7d73fba453495d9cd1bda1afd99c8d6ef0a1534921b3a"
+    },
+    {
+      "bytes": 506,
+      "path": "ordinary-result-only/records/5.36.3-unthreaded/prebuilt-only/runtime-install-receipt.json",
+      "sha256": "c2b6ed629e3dd78670e00e8b13ac332eae1a407e705efc81d20af453933dc290"
+    },
+    {
+      "bytes": 8392,
+      "path": "ordinary-result-only/records/5.36.3-unthreaded/prebuilt-only/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "ordinary-result-only/records/5.36.3-unthreaded/prebuilt-only/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "ordinary-result-only/records/5.36.3-unthreaded/prebuilt-only/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3403,
+      "path": "ordinary-result-only/records/5.36.3-unthreaded/prebuilt-only/runtime-trace.json",
+      "sha256": "02ba5dde209d924cf6b637ff1b92475b8867fe43a139f82ce489793cea46aa12"
+    },
+    {
+      "bytes": 1701,
+      "path": "ordinary-result-only/records/5.38.2-threaded/build-xs/component-install-receipt.json",
+      "sha256": "20a282e2724168ff6a42f3c63452a9486062777459e39a3d01dc5860d29f7b62"
+    },
+    {
+      "bytes": 7431,
+      "path": "ordinary-result-only/records/5.38.2-threaded/build-xs/component-manifest.json",
+      "sha256": "d21767df31132c149ca66952aaeef8225d13544926bd51a3179778b0ca643e31"
+    },
+    {
+      "bytes": 15611,
+      "path": "ordinary-result-only/records/5.38.2-threaded/build-xs/component-public.pm",
+      "sha256": "7a13dc4b570b01586d704294fea261c4aae8686c80f3cdfa9bbe939ef1d5b6b1"
+    },
+    {
+      "bytes": 31358,
+      "path": "ordinary-result-only/records/5.38.2-threaded/build-xs/component-source.xs",
+      "sha256": "2b7ddaf360c7e9dd339fb40c06bc367699c9d467d76193a785210b4a7067214a"
+    },
+    {
+      "bytes": 824,
+      "path": "ordinary-result-only/records/5.38.2-threaded/build-xs/component-trace.json",
+      "sha256": "7e0d6e2b2aaf1e6b685701a601b2c2ef2c7a3bec03b15090c0a7a88f44678a1e"
+    },
+    {
+      "bytes": 107,
+      "path": "ordinary-result-only/records/5.38.2-threaded/build-xs/first.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 4692,
+      "path": "ordinary-result-only/records/5.38.2-threaded/build-xs/installed-files.json",
+      "sha256": "16994e0c6cbb3051cccc3f2d0b930d15591908a442633883e73439f48b507afb"
+    },
+    {
+      "bytes": 107,
+      "path": "ordinary-result-only/records/5.38.2-threaded/build-xs/repeated.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 1824,
+      "path": "ordinary-result-only/records/5.38.2-threaded/build-xs/report.json",
+      "sha256": "eb0ebfb787f3445bec921c10701697c5697d6615a2c3462318e2e6d37519e032"
+    },
+    {
+      "bytes": 1661,
+      "path": "ordinary-result-only/records/5.38.2-threaded/build-xs/runtime-install-receipt.json",
+      "sha256": "b701e19412fedf35103f2c37d0aa5f45426d6dcd1db25d44ae2cc6b536577036"
+    },
+    {
+      "bytes": 8392,
+      "path": "ordinary-result-only/records/5.38.2-threaded/build-xs/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "ordinary-result-only/records/5.38.2-threaded/build-xs/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "ordinary-result-only/records/5.38.2-threaded/build-xs/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3415,
+      "path": "ordinary-result-only/records/5.38.2-threaded/build-xs/runtime-trace.json",
+      "sha256": "a8714ab500eaa1503c6d8e87c7bbea02b6a2c9d0eb313444f5e076aae3afa563"
+    },
+    {
+      "bytes": 531,
+      "path": "ordinary-result-only/records/5.38.2-threaded/prebuilt-only/component-install-receipt.json",
+      "sha256": "316f233f90d93f30ac60e1e375f4fb08e9b8711a3dfa08c3f5a9f9eab932795d"
+    },
+    {
+      "bytes": 7431,
+      "path": "ordinary-result-only/records/5.38.2-threaded/prebuilt-only/component-manifest.json",
+      "sha256": "d21767df31132c149ca66952aaeef8225d13544926bd51a3179778b0ca643e31"
+    },
+    {
+      "bytes": 15611,
+      "path": "ordinary-result-only/records/5.38.2-threaded/prebuilt-only/component-public.pm",
+      "sha256": "7a13dc4b570b01586d704294fea261c4aae8686c80f3cdfa9bbe939ef1d5b6b1"
+    },
+    {
+      "bytes": 31358,
+      "path": "ordinary-result-only/records/5.38.2-threaded/prebuilt-only/component-source.xs",
+      "sha256": "2b7ddaf360c7e9dd339fb40c06bc367699c9d467d76193a785210b4a7067214a"
+    },
+    {
+      "bytes": 812,
+      "path": "ordinary-result-only/records/5.38.2-threaded/prebuilt-only/component-trace.json",
+      "sha256": "f7fdd8b97f5bf40502054813c73be64fb7ebe5a0472664b0c55132dacbeb7417"
+    },
+    {
+      "bytes": 107,
+      "path": "ordinary-result-only/records/5.38.2-threaded/prebuilt-only/first.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 4690,
+      "path": "ordinary-result-only/records/5.38.2-threaded/prebuilt-only/installed-files.json",
+      "sha256": "77a545079a1bf2970b46af9a5f64ae8de42c41696fb853cf0752f178362c9dda"
+    },
+    {
+      "bytes": 107,
+      "path": "ordinary-result-only/records/5.38.2-threaded/prebuilt-only/repeated.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 1830,
+      "path": "ordinary-result-only/records/5.38.2-threaded/prebuilt-only/report.json",
+      "sha256": "b61f3b877efe33d43f93fabba8fa60b5aa2171173292d3ad5e963118893b7abd"
+    },
+    {
+      "bytes": 531,
+      "path": "ordinary-result-only/records/5.38.2-threaded/prebuilt-only/runtime-install-receipt.json",
+      "sha256": "7197ee40f85be2d67ffe57d0830384efc5328bde74215519560a1df57073b5d1"
+    },
+    {
+      "bytes": 8392,
+      "path": "ordinary-result-only/records/5.38.2-threaded/prebuilt-only/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "ordinary-result-only/records/5.38.2-threaded/prebuilt-only/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "ordinary-result-only/records/5.38.2-threaded/prebuilt-only/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3403,
+      "path": "ordinary-result-only/records/5.38.2-threaded/prebuilt-only/runtime-trace.json",
+      "sha256": "a8eaa2f967092669e2d42cae391fb335e3e355de8a4c2219e7eb13d36ebe0c02"
+    },
+    {
+      "bytes": 1618,
+      "path": "ordinary-result-only/records/5.38.2-unthreaded/build-xs/component-install-receipt.json",
+      "sha256": "90552be3214d226b32963dca115c5606e4e5194979b09c548bd07c81095762e5"
+    },
+    {
+      "bytes": 7431,
+      "path": "ordinary-result-only/records/5.38.2-unthreaded/build-xs/component-manifest.json",
+      "sha256": "d21767df31132c149ca66952aaeef8225d13544926bd51a3179778b0ca643e31"
+    },
+    {
+      "bytes": 15611,
+      "path": "ordinary-result-only/records/5.38.2-unthreaded/build-xs/component-public.pm",
+      "sha256": "7a13dc4b570b01586d704294fea261c4aae8686c80f3cdfa9bbe939ef1d5b6b1"
+    },
+    {
+      "bytes": 31358,
+      "path": "ordinary-result-only/records/5.38.2-unthreaded/build-xs/component-source.xs",
+      "sha256": "2b7ddaf360c7e9dd339fb40c06bc367699c9d467d76193a785210b4a7067214a"
+    },
+    {
+      "bytes": 824,
+      "path": "ordinary-result-only/records/5.38.2-unthreaded/build-xs/component-trace.json",
+      "sha256": "000928e6a0e173371aa2c7b742f03e1b1895f4bd5e19aedeeea0ded37fe227c9"
+    },
+    {
+      "bytes": 107,
+      "path": "ordinary-result-only/records/5.38.2-unthreaded/build-xs/first.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 4367,
+      "path": "ordinary-result-only/records/5.38.2-unthreaded/build-xs/installed-files.json",
+      "sha256": "ac00b51c18920c4c5c4cd99ad62c00462af70ed202ff60cb5c17e03982ed52c9"
+    },
+    {
+      "bytes": 107,
+      "path": "ordinary-result-only/records/5.38.2-unthreaded/build-xs/repeated.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 1805,
+      "path": "ordinary-result-only/records/5.38.2-unthreaded/build-xs/report.json",
+      "sha256": "9bb95d827bfb03428b57541b1f838ffec133a7e9b3bd917e01e59c1f688995ad"
+    },
+    {
+      "bytes": 1578,
+      "path": "ordinary-result-only/records/5.38.2-unthreaded/build-xs/runtime-install-receipt.json",
+      "sha256": "76c71076342101b1b5f3982e28a24b2ad0808f7a26ccd5df86890f068f50ec9e"
+    },
+    {
+      "bytes": 8392,
+      "path": "ordinary-result-only/records/5.38.2-unthreaded/build-xs/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "ordinary-result-only/records/5.38.2-unthreaded/build-xs/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "ordinary-result-only/records/5.38.2-unthreaded/build-xs/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3415,
+      "path": "ordinary-result-only/records/5.38.2-unthreaded/build-xs/runtime-trace.json",
+      "sha256": "805293363e0456cca364e6530a60b6fe9946b2a68d485ccf03fd5c1a9346b206"
+    },
+    {
+      "bytes": 506,
+      "path": "ordinary-result-only/records/5.38.2-unthreaded/prebuilt-only/component-install-receipt.json",
+      "sha256": "7f29151aade6d8d4deafc3ba6d96abe790bd31af286f34d661969bc0b1fead39"
+    },
+    {
+      "bytes": 7431,
+      "path": "ordinary-result-only/records/5.38.2-unthreaded/prebuilt-only/component-manifest.json",
+      "sha256": "d21767df31132c149ca66952aaeef8225d13544926bd51a3179778b0ca643e31"
+    },
+    {
+      "bytes": 15611,
+      "path": "ordinary-result-only/records/5.38.2-unthreaded/prebuilt-only/component-public.pm",
+      "sha256": "7a13dc4b570b01586d704294fea261c4aae8686c80f3cdfa9bbe939ef1d5b6b1"
+    },
+    {
+      "bytes": 31358,
+      "path": "ordinary-result-only/records/5.38.2-unthreaded/prebuilt-only/component-source.xs",
+      "sha256": "2b7ddaf360c7e9dd339fb40c06bc367699c9d467d76193a785210b4a7067214a"
+    },
+    {
+      "bytes": 812,
+      "path": "ordinary-result-only/records/5.38.2-unthreaded/prebuilt-only/component-trace.json",
+      "sha256": "1d84cbc2373149ba8f2a8bf126df039effe4cf16df2231d101781924342a7dec"
+    },
+    {
+      "bytes": 107,
+      "path": "ordinary-result-only/records/5.38.2-unthreaded/prebuilt-only/first.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 4365,
+      "path": "ordinary-result-only/records/5.38.2-unthreaded/prebuilt-only/installed-files.json",
+      "sha256": "d95a2350f8ab7f0dfb2d2ae17c0d8a889fc345eccb289daf180b04b7dbd236a6"
+    },
+    {
+      "bytes": 107,
+      "path": "ordinary-result-only/records/5.38.2-unthreaded/prebuilt-only/repeated.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 1811,
+      "path": "ordinary-result-only/records/5.38.2-unthreaded/prebuilt-only/report.json",
+      "sha256": "49aac2e2b37629ec9147174b0ef50a5e96026803bfa9485d3b7f44687c005e78"
+    },
+    {
+      "bytes": 506,
+      "path": "ordinary-result-only/records/5.38.2-unthreaded/prebuilt-only/runtime-install-receipt.json",
+      "sha256": "debea81d3582997b2ae4c08d48d6d63947ea28e2e5e472f5123bacbd48ea0052"
+    },
+    {
+      "bytes": 8392,
+      "path": "ordinary-result-only/records/5.38.2-unthreaded/prebuilt-only/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "ordinary-result-only/records/5.38.2-unthreaded/prebuilt-only/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "ordinary-result-only/records/5.38.2-unthreaded/prebuilt-only/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3403,
+      "path": "ordinary-result-only/records/5.38.2-unthreaded/prebuilt-only/runtime-trace.json",
+      "sha256": "4370b545a49462b73e77622e32819e0afe43a088034fc146d2c3509e535fbdd6"
+    },
+    {
+      "bytes": 1239,
+      "path": "ordinary-result-only/records/build-0/author-inputs.json",
+      "sha256": "9852e6f3417c1a396f2810587a277fffabc5d2071f4c7ed93ff6db5a754f61cd"
+    },
+    {
+      "bytes": 633,
+      "path": "ordinary-result-only/records/build-0/lean-bridge.exports.json",
+      "sha256": "4535a7287bebaf7a5dad776cd296f95bad9ef583f4f86f3db7908283603b7875"
+    },
+    {
+      "bytes": 113876,
+      "path": "ordinary-result-only/records/build-0/model.json",
+      "sha256": "e39823a6a1c56c1ecb642f07a61c1cd2381b1e37386e8616ac37ff4b512b9d07"
+    },
+    {
+      "bytes": 3005,
+      "path": "ordinary-result-only/records/build-0/NominalSubtypes.lean",
+      "sha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+    },
+    {
+      "bytes": 2074,
+      "path": "ordinary-result-only/records/build-0/package-set-receipt.json",
+      "sha256": "fc5b614e1c77695a680b19528a4a50a23cdf0d113603a1d0355103e20d48fdd5"
+    },
+    {
+      "bytes": 1239,
+      "path": "ordinary-result-only/records/build-1/author-inputs.json",
+      "sha256": "f8ed9a23edbb3e7b8724b835f4c904b94c22b9ca05a97b75d897122ba15717b7"
+    },
+    {
+      "bytes": 633,
+      "path": "ordinary-result-only/records/build-1/lean-bridge.exports.json",
+      "sha256": "4535a7287bebaf7a5dad776cd296f95bad9ef583f4f86f3db7908283603b7875"
+    },
+    {
+      "bytes": 113876,
+      "path": "ordinary-result-only/records/build-1/model.json",
+      "sha256": "e39823a6a1c56c1ecb642f07a61c1cd2381b1e37386e8616ac37ff4b512b9d07"
+    },
+    {
+      "bytes": 3005,
+      "path": "ordinary-result-only/records/build-1/NominalSubtypes.lean",
+      "sha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+    },
+    {
+      "bytes": 2074,
+      "path": "ordinary-result-only/records/build-1/package-set-receipt.json",
+      "sha256": "fc5b614e1c77695a680b19528a4a50a23cdf0d113603a1d0355103e20d48fdd5"
+    },
+    {
+      "bytes": 633,
+      "path": "ordinary-result-only/records/configuration.json",
+      "sha256": "4535a7287bebaf7a5dad776cd296f95bad9ef583f4f86f3db7908283603b7875"
+    },
+    {
+      "bytes": 11736,
+      "path": "ordinary-result-only/records/consumer.pl",
+      "sha256": "3cdb85b19aeabb5b3402d6a54468e17288da8d45c5c160430d12f207833b6f23"
+    },
+    {
+      "bytes": 38880,
+      "path": "ordinary-result-only/records/expected.binding-ir.json",
+      "sha256": "9846960a169a460df677ff7770ad4056a3cf9afb5eaedd274a6064fbd25930ab"
+    },
+    {
+      "bytes": 19760,
+      "path": "ordinary-result-only/records/report.json",
+      "sha256": "f3282504012ae6c91c6f8c157988a136ab87f0bb6c49e7c86e0453868e88b167"
+    },
+    {
+      "bytes": 123,
+      "path": "ordinary-result-only/records/runtime.json",
+      "sha256": "c2f1b9d72bf412b57880eaf2e5f14f071577bea6210298d5c0d82c529f20d81e"
+    },
+    {
+      "bytes": 943,
+      "path": "ordinary-result-only/run.tap",
+      "sha256": "15921b425b9e8040393a0ce9129ea27a65fb52519728f8bf72ddfc64bfe85d38"
+    },
+    {
+      "bytes": 1130,
+      "path": "ordinary-result-only/start.json",
+      "sha256": "20b68c27ed5aa6466490b415b1edb0e766ead323398c1f1b62afc39f0ffb741b"
+    },
+    {
+      "bytes": 329,
+      "path": "reviewed-full/end.json",
+      "sha256": "b8647578d8f85021e77c52cc779b416d073987c42603abe5c29f6043c78f2c61"
+    },
+    {
+      "bytes": 1701,
+      "path": "reviewed-full/records/5.36.3-threaded/build-xs/component-install-receipt.json",
+      "sha256": "c6003ef43ae44425e37a8289c2d2ee5ef8a4997fca4ed2c635cf5e1c3e0d3a97"
+    },
+    {
+      "bytes": 7431,
+      "path": "reviewed-full/records/5.36.3-threaded/build-xs/component-manifest.json",
+      "sha256": "bfd357ca35f4f461500ffbbbc4ef7b0f59256c1fb220ff4dd264c9c75e772604"
+    },
+    {
+      "bytes": 20997,
+      "path": "reviewed-full/records/5.36.3-threaded/build-xs/component-public.pm",
+      "sha256": "87ad1fc0a19a3e73e116b54a4aceb486b1a0ddff6722e99b43c5514c5edfc982"
+    },
+    {
+      "bytes": 62645,
+      "path": "reviewed-full/records/5.36.3-threaded/build-xs/component-source.xs",
+      "sha256": "09ec34e7be964d5e6f6b093bc2d5ff5511f4bc27c6af7b776b8740840f540e36"
+    },
+    {
+      "bytes": 824,
+      "path": "reviewed-full/records/5.36.3-threaded/build-xs/component-trace.json",
+      "sha256": "51750c1bc1b40eea84331114e7c04622b43a57fc0128ee869ad974fda0e5c8b8"
+    },
+    {
+      "bytes": 110,
+      "path": "reviewed-full/records/5.36.3-threaded/build-xs/first.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 4693,
+      "path": "reviewed-full/records/5.36.3-threaded/build-xs/installed-files.json",
+      "sha256": "4265c43c4d98a4ad9add215dc488ec2081a55373716bc5cd62e7c27734db5310"
+    },
+    {
+      "bytes": 110,
+      "path": "reviewed-full/records/5.36.3-threaded/build-xs/repeated.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 1799,
+      "path": "reviewed-full/records/5.36.3-threaded/build-xs/report.json",
+      "sha256": "1085c92c9ba4dd6b5c2a6ce3bcca8e877401c8893e03da4ef76d090df943b9a4"
+    },
+    {
+      "bytes": 1661,
+      "path": "reviewed-full/records/5.36.3-threaded/build-xs/runtime-install-receipt.json",
+      "sha256": "14c87872f1c272b8467aa1139da92a522e8634126115a646ecb22be667e5eb7d"
+    },
+    {
+      "bytes": 8392,
+      "path": "reviewed-full/records/5.36.3-threaded/build-xs/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "reviewed-full/records/5.36.3-threaded/build-xs/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "reviewed-full/records/5.36.3-threaded/build-xs/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3415,
+      "path": "reviewed-full/records/5.36.3-threaded/build-xs/runtime-trace.json",
+      "sha256": "8d03e05dd5a2d2a7c6bbe45fd5069793b05429b749d1f3a489dccc90c28b4f61"
+    },
+    {
+      "bytes": 531,
+      "path": "reviewed-full/records/5.36.3-threaded/prebuilt-only/component-install-receipt.json",
+      "sha256": "90e88fc4e4e8505d09d58a25129c101be0b1ab8e5fd034b8629cd4ca48b58d69"
+    },
+    {
+      "bytes": 7431,
+      "path": "reviewed-full/records/5.36.3-threaded/prebuilt-only/component-manifest.json",
+      "sha256": "bfd357ca35f4f461500ffbbbc4ef7b0f59256c1fb220ff4dd264c9c75e772604"
+    },
+    {
+      "bytes": 20997,
+      "path": "reviewed-full/records/5.36.3-threaded/prebuilt-only/component-public.pm",
+      "sha256": "87ad1fc0a19a3e73e116b54a4aceb486b1a0ddff6722e99b43c5514c5edfc982"
+    },
+    {
+      "bytes": 62645,
+      "path": "reviewed-full/records/5.36.3-threaded/prebuilt-only/component-source.xs",
+      "sha256": "09ec34e7be964d5e6f6b093bc2d5ff5511f4bc27c6af7b776b8740840f540e36"
+    },
+    {
+      "bytes": 812,
+      "path": "reviewed-full/records/5.36.3-threaded/prebuilt-only/component-trace.json",
+      "sha256": "063ae2e5149f00c7b6e4c3d6bea985f996a40147a722858d17a0d4e7dc5ae626"
+    },
+    {
+      "bytes": 110,
+      "path": "reviewed-full/records/5.36.3-threaded/prebuilt-only/first.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 4691,
+      "path": "reviewed-full/records/5.36.3-threaded/prebuilt-only/installed-files.json",
+      "sha256": "9dbbba7564e8c903d18db46b05b947933de0bfdd5ae38ce6f5fbac5b1494c39b"
+    },
+    {
+      "bytes": 110,
+      "path": "reviewed-full/records/5.36.3-threaded/prebuilt-only/repeated.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 1805,
+      "path": "reviewed-full/records/5.36.3-threaded/prebuilt-only/report.json",
+      "sha256": "c4df2a79777aea45fb81a53868ff7dd76bb5f30d0608c47d960f93148626013f"
+    },
+    {
+      "bytes": 531,
+      "path": "reviewed-full/records/5.36.3-threaded/prebuilt-only/runtime-install-receipt.json",
+      "sha256": "440854dc97f5d57bad62ce364d6acd2321fc7406ee85b39a6e86b70d36598215"
+    },
+    {
+      "bytes": 8392,
+      "path": "reviewed-full/records/5.36.3-threaded/prebuilt-only/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "reviewed-full/records/5.36.3-threaded/prebuilt-only/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "reviewed-full/records/5.36.3-threaded/prebuilt-only/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3403,
+      "path": "reviewed-full/records/5.36.3-threaded/prebuilt-only/runtime-trace.json",
+      "sha256": "5647a8df3ccc1498a20bc91981fb55be0c995f0ed135f7a47b148effda1fdb81"
+    },
+    {
+      "bytes": 1618,
+      "path": "reviewed-full/records/5.36.3-unthreaded/build-xs/component-install-receipt.json",
+      "sha256": "fa4574280f77f08d512a17ed2a5a6f56a1b982436b25f7d7c4c557f547c3ba15"
+    },
+    {
+      "bytes": 7431,
+      "path": "reviewed-full/records/5.36.3-unthreaded/build-xs/component-manifest.json",
+      "sha256": "bfd357ca35f4f461500ffbbbc4ef7b0f59256c1fb220ff4dd264c9c75e772604"
+    },
+    {
+      "bytes": 20997,
+      "path": "reviewed-full/records/5.36.3-unthreaded/build-xs/component-public.pm",
+      "sha256": "87ad1fc0a19a3e73e116b54a4aceb486b1a0ddff6722e99b43c5514c5edfc982"
+    },
+    {
+      "bytes": 62645,
+      "path": "reviewed-full/records/5.36.3-unthreaded/build-xs/component-source.xs",
+      "sha256": "09ec34e7be964d5e6f6b093bc2d5ff5511f4bc27c6af7b776b8740840f540e36"
+    },
+    {
+      "bytes": 824,
+      "path": "reviewed-full/records/5.36.3-unthreaded/build-xs/component-trace.json",
+      "sha256": "1721a7ddb1509e01e9a51222e8e7ecc4061ef77958becb492843fab83db22987"
+    },
+    {
+      "bytes": 110,
+      "path": "reviewed-full/records/5.36.3-unthreaded/build-xs/first.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 4368,
+      "path": "reviewed-full/records/5.36.3-unthreaded/build-xs/installed-files.json",
+      "sha256": "a49fef51ad090a3b957e271fa2e07ace78d9060b43eaf62f47b9fe5a1b5388cc"
+    },
+    {
+      "bytes": 110,
+      "path": "reviewed-full/records/5.36.3-unthreaded/build-xs/repeated.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 1780,
+      "path": "reviewed-full/records/5.36.3-unthreaded/build-xs/report.json",
+      "sha256": "f592e40a77f24fda2965119e94220d94854310b8e4e1e6c99ef3864daf5cce63"
+    },
+    {
+      "bytes": 1578,
+      "path": "reviewed-full/records/5.36.3-unthreaded/build-xs/runtime-install-receipt.json",
+      "sha256": "ee31f04bc47713ee1e7af7eec4c79757f5da95358146b058fa875ab63bf3d535"
+    },
+    {
+      "bytes": 8392,
+      "path": "reviewed-full/records/5.36.3-unthreaded/build-xs/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "reviewed-full/records/5.36.3-unthreaded/build-xs/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "reviewed-full/records/5.36.3-unthreaded/build-xs/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3415,
+      "path": "reviewed-full/records/5.36.3-unthreaded/build-xs/runtime-trace.json",
+      "sha256": "06a13638c2adf6f6864e131f79eedbcb7a305e7305427648b75470c2a28b83b3"
+    },
+    {
+      "bytes": 506,
+      "path": "reviewed-full/records/5.36.3-unthreaded/prebuilt-only/component-install-receipt.json",
+      "sha256": "d0d803d350cf3808c8595bdc051322a116aa975284642fc8d94c85ef3e488599"
+    },
+    {
+      "bytes": 7431,
+      "path": "reviewed-full/records/5.36.3-unthreaded/prebuilt-only/component-manifest.json",
+      "sha256": "bfd357ca35f4f461500ffbbbc4ef7b0f59256c1fb220ff4dd264c9c75e772604"
+    },
+    {
+      "bytes": 20997,
+      "path": "reviewed-full/records/5.36.3-unthreaded/prebuilt-only/component-public.pm",
+      "sha256": "87ad1fc0a19a3e73e116b54a4aceb486b1a0ddff6722e99b43c5514c5edfc982"
+    },
+    {
+      "bytes": 62645,
+      "path": "reviewed-full/records/5.36.3-unthreaded/prebuilt-only/component-source.xs",
+      "sha256": "09ec34e7be964d5e6f6b093bc2d5ff5511f4bc27c6af7b776b8740840f540e36"
+    },
+    {
+      "bytes": 812,
+      "path": "reviewed-full/records/5.36.3-unthreaded/prebuilt-only/component-trace.json",
+      "sha256": "f330ef310f2ecb5c06d623e841d9896f3b94296b7848511d23c8c395f78aaf75"
+    },
+    {
+      "bytes": 110,
+      "path": "reviewed-full/records/5.36.3-unthreaded/prebuilt-only/first.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 4366,
+      "path": "reviewed-full/records/5.36.3-unthreaded/prebuilt-only/installed-files.json",
+      "sha256": "83a54cb8a9196cd9bf474167e47bfeaa3c749d916b811ddd04adf7111f74d8db"
+    },
+    {
+      "bytes": 110,
+      "path": "reviewed-full/records/5.36.3-unthreaded/prebuilt-only/repeated.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 1786,
+      "path": "reviewed-full/records/5.36.3-unthreaded/prebuilt-only/report.json",
+      "sha256": "5c17e0a46ed80401dd1b11a8fe67ae75a459ab47df5eaf2e47e5922b0c9a0973"
+    },
+    {
+      "bytes": 506,
+      "path": "reviewed-full/records/5.36.3-unthreaded/prebuilt-only/runtime-install-receipt.json",
+      "sha256": "c2b6ed629e3dd78670e00e8b13ac332eae1a407e705efc81d20af453933dc290"
+    },
+    {
+      "bytes": 8392,
+      "path": "reviewed-full/records/5.36.3-unthreaded/prebuilt-only/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "reviewed-full/records/5.36.3-unthreaded/prebuilt-only/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "reviewed-full/records/5.36.3-unthreaded/prebuilt-only/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3403,
+      "path": "reviewed-full/records/5.36.3-unthreaded/prebuilt-only/runtime-trace.json",
+      "sha256": "02ba5dde209d924cf6b637ff1b92475b8867fe43a139f82ce489793cea46aa12"
+    },
+    {
+      "bytes": 1701,
+      "path": "reviewed-full/records/5.38.2-threaded/build-xs/component-install-receipt.json",
+      "sha256": "fa3e57da325e635570e3cd31ac879f97f9af198c2e89b6226959b02403277ef4"
+    },
+    {
+      "bytes": 7431,
+      "path": "reviewed-full/records/5.38.2-threaded/build-xs/component-manifest.json",
+      "sha256": "bfd357ca35f4f461500ffbbbc4ef7b0f59256c1fb220ff4dd264c9c75e772604"
+    },
+    {
+      "bytes": 20997,
+      "path": "reviewed-full/records/5.38.2-threaded/build-xs/component-public.pm",
+      "sha256": "87ad1fc0a19a3e73e116b54a4aceb486b1a0ddff6722e99b43c5514c5edfc982"
+    },
+    {
+      "bytes": 62645,
+      "path": "reviewed-full/records/5.38.2-threaded/build-xs/component-source.xs",
+      "sha256": "09ec34e7be964d5e6f6b093bc2d5ff5511f4bc27c6af7b776b8740840f540e36"
+    },
+    {
+      "bytes": 824,
+      "path": "reviewed-full/records/5.38.2-threaded/build-xs/component-trace.json",
+      "sha256": "c29ba1374a877e63f8f0f3c36ab7420c8e848e854d90b0d78c176300a66df015"
+    },
+    {
+      "bytes": 110,
+      "path": "reviewed-full/records/5.38.2-threaded/build-xs/first.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 4693,
+      "path": "reviewed-full/records/5.38.2-threaded/build-xs/installed-files.json",
+      "sha256": "d40305b4ac3a853147ce6e634f329b8f8a0ffe1f373c8ca7ce67f7698c9bb0d1"
+    },
+    {
+      "bytes": 110,
+      "path": "reviewed-full/records/5.38.2-threaded/build-xs/repeated.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 1799,
+      "path": "reviewed-full/records/5.38.2-threaded/build-xs/report.json",
+      "sha256": "42d17db4feed6609401631681ce94e5c8c0bb87f0e6c2e7273b3ba5f99cd3279"
+    },
+    {
+      "bytes": 1661,
+      "path": "reviewed-full/records/5.38.2-threaded/build-xs/runtime-install-receipt.json",
+      "sha256": "b701e19412fedf35103f2c37d0aa5f45426d6dcd1db25d44ae2cc6b536577036"
+    },
+    {
+      "bytes": 8392,
+      "path": "reviewed-full/records/5.38.2-threaded/build-xs/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "reviewed-full/records/5.38.2-threaded/build-xs/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "reviewed-full/records/5.38.2-threaded/build-xs/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3415,
+      "path": "reviewed-full/records/5.38.2-threaded/build-xs/runtime-trace.json",
+      "sha256": "a8714ab500eaa1503c6d8e87c7bbea02b6a2c9d0eb313444f5e076aae3afa563"
+    },
+    {
+      "bytes": 531,
+      "path": "reviewed-full/records/5.38.2-threaded/prebuilt-only/component-install-receipt.json",
+      "sha256": "c75e215371256aff204aa780f8fd0da1d785c8006f070ab4af4ca7f9db2c6735"
+    },
+    {
+      "bytes": 7431,
+      "path": "reviewed-full/records/5.38.2-threaded/prebuilt-only/component-manifest.json",
+      "sha256": "bfd357ca35f4f461500ffbbbc4ef7b0f59256c1fb220ff4dd264c9c75e772604"
+    },
+    {
+      "bytes": 20997,
+      "path": "reviewed-full/records/5.38.2-threaded/prebuilt-only/component-public.pm",
+      "sha256": "87ad1fc0a19a3e73e116b54a4aceb486b1a0ddff6722e99b43c5514c5edfc982"
+    },
+    {
+      "bytes": 62645,
+      "path": "reviewed-full/records/5.38.2-threaded/prebuilt-only/component-source.xs",
+      "sha256": "09ec34e7be964d5e6f6b093bc2d5ff5511f4bc27c6af7b776b8740840f540e36"
+    },
+    {
+      "bytes": 812,
+      "path": "reviewed-full/records/5.38.2-threaded/prebuilt-only/component-trace.json",
+      "sha256": "c212be7ce4c6b64fa0099088136e1c99460242909156fc4b46327ee8bbd3b5d6"
+    },
+    {
+      "bytes": 110,
+      "path": "reviewed-full/records/5.38.2-threaded/prebuilt-only/first.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 4691,
+      "path": "reviewed-full/records/5.38.2-threaded/prebuilt-only/installed-files.json",
+      "sha256": "5121d737963047de102687a6a6424f36046bc2d670d921c0f309a253af8cd96b"
+    },
+    {
+      "bytes": 110,
+      "path": "reviewed-full/records/5.38.2-threaded/prebuilt-only/repeated.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 1805,
+      "path": "reviewed-full/records/5.38.2-threaded/prebuilt-only/report.json",
+      "sha256": "e3b47c0960fa95be428500c0a0d3d7f2e1d96509e730538276d9debc7b928b51"
+    },
+    {
+      "bytes": 531,
+      "path": "reviewed-full/records/5.38.2-threaded/prebuilt-only/runtime-install-receipt.json",
+      "sha256": "7197ee40f85be2d67ffe57d0830384efc5328bde74215519560a1df57073b5d1"
+    },
+    {
+      "bytes": 8392,
+      "path": "reviewed-full/records/5.38.2-threaded/prebuilt-only/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "reviewed-full/records/5.38.2-threaded/prebuilt-only/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "reviewed-full/records/5.38.2-threaded/prebuilt-only/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3403,
+      "path": "reviewed-full/records/5.38.2-threaded/prebuilt-only/runtime-trace.json",
+      "sha256": "a8eaa2f967092669e2d42cae391fb335e3e355de8a4c2219e7eb13d36ebe0c02"
+    },
+    {
+      "bytes": 1618,
+      "path": "reviewed-full/records/5.38.2-unthreaded/build-xs/component-install-receipt.json",
+      "sha256": "50cee3467a3c606f4f324d520edf72be2cf9a596cc6ebe2121e3072ae6b1c993"
+    },
+    {
+      "bytes": 7431,
+      "path": "reviewed-full/records/5.38.2-unthreaded/build-xs/component-manifest.json",
+      "sha256": "bfd357ca35f4f461500ffbbbc4ef7b0f59256c1fb220ff4dd264c9c75e772604"
+    },
+    {
+      "bytes": 20997,
+      "path": "reviewed-full/records/5.38.2-unthreaded/build-xs/component-public.pm",
+      "sha256": "87ad1fc0a19a3e73e116b54a4aceb486b1a0ddff6722e99b43c5514c5edfc982"
+    },
+    {
+      "bytes": 62645,
+      "path": "reviewed-full/records/5.38.2-unthreaded/build-xs/component-source.xs",
+      "sha256": "09ec34e7be964d5e6f6b093bc2d5ff5511f4bc27c6af7b776b8740840f540e36"
+    },
+    {
+      "bytes": 824,
+      "path": "reviewed-full/records/5.38.2-unthreaded/build-xs/component-trace.json",
+      "sha256": "5a2ba8f083dacba82da55ad92d32821af3a1e1fb29d7834e48e5cad2471ead98"
+    },
+    {
+      "bytes": 110,
+      "path": "reviewed-full/records/5.38.2-unthreaded/build-xs/first.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 4368,
+      "path": "reviewed-full/records/5.38.2-unthreaded/build-xs/installed-files.json",
+      "sha256": "5e7370dbe4267cec986ad8f1c80f1396abdd5dd1f19765d0d8a3244f085c2992"
+    },
+    {
+      "bytes": 110,
+      "path": "reviewed-full/records/5.38.2-unthreaded/build-xs/repeated.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 1780,
+      "path": "reviewed-full/records/5.38.2-unthreaded/build-xs/report.json",
+      "sha256": "7401f7d7ab404206b07fda65fcdcd3e83ca7e224d1a43a5cbf41875d232a5486"
+    },
+    {
+      "bytes": 1578,
+      "path": "reviewed-full/records/5.38.2-unthreaded/build-xs/runtime-install-receipt.json",
+      "sha256": "76c71076342101b1b5f3982e28a24b2ad0808f7a26ccd5df86890f068f50ec9e"
+    },
+    {
+      "bytes": 8392,
+      "path": "reviewed-full/records/5.38.2-unthreaded/build-xs/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "reviewed-full/records/5.38.2-unthreaded/build-xs/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "reviewed-full/records/5.38.2-unthreaded/build-xs/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3415,
+      "path": "reviewed-full/records/5.38.2-unthreaded/build-xs/runtime-trace.json",
+      "sha256": "805293363e0456cca364e6530a60b6fe9946b2a68d485ccf03fd5c1a9346b206"
+    },
+    {
+      "bytes": 506,
+      "path": "reviewed-full/records/5.38.2-unthreaded/prebuilt-only/component-install-receipt.json",
+      "sha256": "98937b215696c1537832839c455fd1ea64df51c52ddeaa63e79a0c808ede7b88"
+    },
+    {
+      "bytes": 7431,
+      "path": "reviewed-full/records/5.38.2-unthreaded/prebuilt-only/component-manifest.json",
+      "sha256": "bfd357ca35f4f461500ffbbbc4ef7b0f59256c1fb220ff4dd264c9c75e772604"
+    },
+    {
+      "bytes": 20997,
+      "path": "reviewed-full/records/5.38.2-unthreaded/prebuilt-only/component-public.pm",
+      "sha256": "87ad1fc0a19a3e73e116b54a4aceb486b1a0ddff6722e99b43c5514c5edfc982"
+    },
+    {
+      "bytes": 62645,
+      "path": "reviewed-full/records/5.38.2-unthreaded/prebuilt-only/component-source.xs",
+      "sha256": "09ec34e7be964d5e6f6b093bc2d5ff5511f4bc27c6af7b776b8740840f540e36"
+    },
+    {
+      "bytes": 812,
+      "path": "reviewed-full/records/5.38.2-unthreaded/prebuilt-only/component-trace.json",
+      "sha256": "a5ad895c15495685f34825d50b0ee70f594fda5496949c22ff8441f91fe02a0b"
+    },
+    {
+      "bytes": 110,
+      "path": "reviewed-full/records/5.38.2-unthreaded/prebuilt-only/first.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 4366,
+      "path": "reviewed-full/records/5.38.2-unthreaded/prebuilt-only/installed-files.json",
+      "sha256": "b87bf32878466e7c548eef04b0324579e57c3701f37623c6052163f69eb08e49"
+    },
+    {
+      "bytes": 110,
+      "path": "reviewed-full/records/5.38.2-unthreaded/prebuilt-only/repeated.json",
+      "sha256": "0c160bd75a6e5c572c930ead91a7b9e151fdb61020f41aa145261a88132a0671"
+    },
+    {
+      "bytes": 1786,
+      "path": "reviewed-full/records/5.38.2-unthreaded/prebuilt-only/report.json",
+      "sha256": "e128ddf026b989d1ad3ce72e8ca2ac99c26305fdf54e2bb6c719a1f245892d0f"
+    },
+    {
+      "bytes": 506,
+      "path": "reviewed-full/records/5.38.2-unthreaded/prebuilt-only/runtime-install-receipt.json",
+      "sha256": "debea81d3582997b2ae4c08d48d6d63947ea28e2e5e472f5123bacbd48ea0052"
+    },
+    {
+      "bytes": 8392,
+      "path": "reviewed-full/records/5.38.2-unthreaded/prebuilt-only/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "reviewed-full/records/5.38.2-unthreaded/prebuilt-only/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "reviewed-full/records/5.38.2-unthreaded/prebuilt-only/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3403,
+      "path": "reviewed-full/records/5.38.2-unthreaded/prebuilt-only/runtime-trace.json",
+      "sha256": "4370b545a49462b73e77622e32819e0afe43a088034fc146d2c3509e535fbdd6"
+    },
+    {
+      "bytes": 87211,
+      "path": "reviewed-full/records/build-0/api.binding-ir.json",
+      "sha256": "be260fc29f845b403fa730c80869993711104639443c83210c7cee432fbe8974"
+    },
+    {
+      "bytes": 1449,
+      "path": "reviewed-full/records/build-0/author-inputs.json",
+      "sha256": "1f43b16fa981095510b8e99611f441b2ee8c07f2aa7df87a9813f8292ec2a5fd"
+    },
+    {
+      "bytes": 179,
+      "path": "reviewed-full/records/build-0/lean-bridge.exports.json",
+      "sha256": "37adc5f84664212fa12a89907b2f7770f760376fda15a53f200b000480fa362b"
+    },
+    {
+      "bytes": 402242,
+      "path": "reviewed-full/records/build-0/model.json",
+      "sha256": "165ca65aa9d59f89aefccb7f7ceb019e66bff760a492673922bb8816e7bc6ba9"
+    },
+    {
+      "bytes": 3005,
+      "path": "reviewed-full/records/build-0/NominalSubtypes.lean",
+      "sha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+    },
+    {
+      "bytes": 2074,
+      "path": "reviewed-full/records/build-0/package-set-receipt.json",
+      "sha256": "b2b8cf6e16932696a324f3e856eee245f3180cccdd93c420be1dbd0ce11398ca"
+    },
+    {
+      "bytes": 87211,
+      "path": "reviewed-full/records/build-1/api.binding-ir.json",
+      "sha256": "be260fc29f845b403fa730c80869993711104639443c83210c7cee432fbe8974"
+    },
+    {
+      "bytes": 1449,
+      "path": "reviewed-full/records/build-1/author-inputs.json",
+      "sha256": "fa10b6f3614fbec7a8481ce75323b00af14420f3a1b1e599ac58d58afc4fcd37"
+    },
+    {
+      "bytes": 179,
+      "path": "reviewed-full/records/build-1/lean-bridge.exports.json",
+      "sha256": "37adc5f84664212fa12a89907b2f7770f760376fda15a53f200b000480fa362b"
+    },
+    {
+      "bytes": 402242,
+      "path": "reviewed-full/records/build-1/model.json",
+      "sha256": "165ca65aa9d59f89aefccb7f7ceb019e66bff760a492673922bb8816e7bc6ba9"
+    },
+    {
+      "bytes": 3005,
+      "path": "reviewed-full/records/build-1/NominalSubtypes.lean",
+      "sha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+    },
+    {
+      "bytes": 2074,
+      "path": "reviewed-full/records/build-1/package-set-receipt.json",
+      "sha256": "b2b8cf6e16932696a324f3e856eee245f3180cccdd93c420be1dbd0ce11398ca"
+    },
+    {
+      "bytes": 179,
+      "path": "reviewed-full/records/configuration.json",
+      "sha256": "37adc5f84664212fa12a89907b2f7770f760376fda15a53f200b000480fa362b"
+    },
+    {
+      "bytes": 11768,
+      "path": "reviewed-full/records/consumer.pl",
+      "sha256": "7ae99ac8ea1d7037e5b8a0380697cfe602b9f3130ab56d2169343cfe4c9e9c29"
+    },
+    {
+      "bytes": 87211,
+      "path": "reviewed-full/records/expected.binding-ir.json",
+      "sha256": "be260fc29f845b403fa730c80869993711104639443c83210c7cee432fbe8974"
+    },
+    {
+      "bytes": 19521,
+      "path": "reviewed-full/records/report.json",
+      "sha256": "f91f7a9dbb752201ac5101804cb9c4d3bf8269cc9baa73e5ecf1a33588e252c8"
+    },
+    {
+      "bytes": 123,
+      "path": "reviewed-full/records/runtime.json",
+      "sha256": "c2f1b9d72bf412b57880eaf2e5f14f071577bea6210298d5c0d82c529f20d81e"
+    },
+    {
+      "bytes": 860,
+      "path": "reviewed-full/run.tap",
+      "sha256": "ac8de63eac7af9ec859be9f3c52b25ffc36bba9e8181430cedf697423e4c2a9a"
+    },
+    {
+      "bytes": 1109,
+      "path": "reviewed-full/start.json",
+      "sha256": "8f078698fbb4595de75ce89a2159f5b4112159a0cc4d38be35d17fd4b7b3fd80"
+    },
+    {
+      "bytes": 329,
+      "path": "reviewed-result-only/end.json",
+      "sha256": "abd68114967028578d51d4b30df5fd3f488ca82d6633228a5d89b11c596651b2"
+    },
+    {
+      "bytes": 1701,
+      "path": "reviewed-result-only/records/5.36.3-threaded/build-xs/component-install-receipt.json",
+      "sha256": "3300b3f0b568f9b27ff5fec5b66f3cf2d4ae7cc5d75a25a476396e28df8ef036"
+    },
+    {
+      "bytes": 7431,
+      "path": "reviewed-result-only/records/5.36.3-threaded/build-xs/component-manifest.json",
+      "sha256": "d0ff1cc22261e75744736707e8370907c6a47f345491ac90a18bcfe93e5d6063"
+    },
+    {
+      "bytes": 15637,
+      "path": "reviewed-result-only/records/5.36.3-threaded/build-xs/component-public.pm",
+      "sha256": "15096bd1f4eaaa6d9f028d9346c21057ccf6a3f7fb45d58bf706f8d688aea406"
+    },
+    {
+      "bytes": 31358,
+      "path": "reviewed-result-only/records/5.36.3-threaded/build-xs/component-source.xs",
+      "sha256": "2b7ddaf360c7e9dd339fb40c06bc367699c9d467d76193a785210b4a7067214a"
+    },
+    {
+      "bytes": 824,
+      "path": "reviewed-result-only/records/5.36.3-threaded/build-xs/component-trace.json",
+      "sha256": "2110124ae6d1f3f0ed153ce14c9a0ba7258352772bdfcca2d7d18bd29b6648b9"
+    },
+    {
+      "bytes": 107,
+      "path": "reviewed-result-only/records/5.36.3-threaded/build-xs/first.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 4692,
+      "path": "reviewed-result-only/records/5.36.3-threaded/build-xs/installed-files.json",
+      "sha256": "0740fb4373737e7e4c88689c765d0c281cfc5bce2024c707dbe3073e9c58b0f3"
+    },
+    {
+      "bytes": 107,
+      "path": "reviewed-result-only/records/5.36.3-threaded/build-xs/repeated.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 1824,
+      "path": "reviewed-result-only/records/5.36.3-threaded/build-xs/report.json",
+      "sha256": "6541369c4a2ec35ac3b6a09220d6ae5eeeb51e2f784a7c9ed336f659e776c101"
+    },
+    {
+      "bytes": 1661,
+      "path": "reviewed-result-only/records/5.36.3-threaded/build-xs/runtime-install-receipt.json",
+      "sha256": "14c87872f1c272b8467aa1139da92a522e8634126115a646ecb22be667e5eb7d"
+    },
+    {
+      "bytes": 8392,
+      "path": "reviewed-result-only/records/5.36.3-threaded/build-xs/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "reviewed-result-only/records/5.36.3-threaded/build-xs/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "reviewed-result-only/records/5.36.3-threaded/build-xs/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3415,
+      "path": "reviewed-result-only/records/5.36.3-threaded/build-xs/runtime-trace.json",
+      "sha256": "8d03e05dd5a2d2a7c6bbe45fd5069793b05429b749d1f3a489dccc90c28b4f61"
+    },
+    {
+      "bytes": 531,
+      "path": "reviewed-result-only/records/5.36.3-threaded/prebuilt-only/component-install-receipt.json",
+      "sha256": "0154debcc935891146106036a5dbda9f934f68465747197506d01656a2f93a96"
+    },
+    {
+      "bytes": 7431,
+      "path": "reviewed-result-only/records/5.36.3-threaded/prebuilt-only/component-manifest.json",
+      "sha256": "d0ff1cc22261e75744736707e8370907c6a47f345491ac90a18bcfe93e5d6063"
+    },
+    {
+      "bytes": 15637,
+      "path": "reviewed-result-only/records/5.36.3-threaded/prebuilt-only/component-public.pm",
+      "sha256": "15096bd1f4eaaa6d9f028d9346c21057ccf6a3f7fb45d58bf706f8d688aea406"
+    },
+    {
+      "bytes": 31358,
+      "path": "reviewed-result-only/records/5.36.3-threaded/prebuilt-only/component-source.xs",
+      "sha256": "2b7ddaf360c7e9dd339fb40c06bc367699c9d467d76193a785210b4a7067214a"
+    },
+    {
+      "bytes": 812,
+      "path": "reviewed-result-only/records/5.36.3-threaded/prebuilt-only/component-trace.json",
+      "sha256": "aa98e24a9bc2dc7a586b17a4ed60fc2a7d30a457b342936746cf84b17ec476cd"
+    },
+    {
+      "bytes": 107,
+      "path": "reviewed-result-only/records/5.36.3-threaded/prebuilt-only/first.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 4690,
+      "path": "reviewed-result-only/records/5.36.3-threaded/prebuilt-only/installed-files.json",
+      "sha256": "25310ea9a048f727c91307bc3cf34696393daf240d7fdd04817b7b548276bbcd"
+    },
+    {
+      "bytes": 107,
+      "path": "reviewed-result-only/records/5.36.3-threaded/prebuilt-only/repeated.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 1830,
+      "path": "reviewed-result-only/records/5.36.3-threaded/prebuilt-only/report.json",
+      "sha256": "f7bc222bdb3a9664127cef71275235d8381786082fdb169b2d7d3d81714928c3"
+    },
+    {
+      "bytes": 531,
+      "path": "reviewed-result-only/records/5.36.3-threaded/prebuilt-only/runtime-install-receipt.json",
+      "sha256": "440854dc97f5d57bad62ce364d6acd2321fc7406ee85b39a6e86b70d36598215"
+    },
+    {
+      "bytes": 8392,
+      "path": "reviewed-result-only/records/5.36.3-threaded/prebuilt-only/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "reviewed-result-only/records/5.36.3-threaded/prebuilt-only/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "reviewed-result-only/records/5.36.3-threaded/prebuilt-only/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3403,
+      "path": "reviewed-result-only/records/5.36.3-threaded/prebuilt-only/runtime-trace.json",
+      "sha256": "5647a8df3ccc1498a20bc91981fb55be0c995f0ed135f7a47b148effda1fdb81"
+    },
+    {
+      "bytes": 1618,
+      "path": "reviewed-result-only/records/5.36.3-unthreaded/build-xs/component-install-receipt.json",
+      "sha256": "ea25041d8abdbba8ce5700704f54dd26b1748a0d0e9906b8367169a9b14ca534"
+    },
+    {
+      "bytes": 7431,
+      "path": "reviewed-result-only/records/5.36.3-unthreaded/build-xs/component-manifest.json",
+      "sha256": "d0ff1cc22261e75744736707e8370907c6a47f345491ac90a18bcfe93e5d6063"
+    },
+    {
+      "bytes": 15637,
+      "path": "reviewed-result-only/records/5.36.3-unthreaded/build-xs/component-public.pm",
+      "sha256": "15096bd1f4eaaa6d9f028d9346c21057ccf6a3f7fb45d58bf706f8d688aea406"
+    },
+    {
+      "bytes": 31358,
+      "path": "reviewed-result-only/records/5.36.3-unthreaded/build-xs/component-source.xs",
+      "sha256": "2b7ddaf360c7e9dd339fb40c06bc367699c9d467d76193a785210b4a7067214a"
+    },
+    {
+      "bytes": 824,
+      "path": "reviewed-result-only/records/5.36.3-unthreaded/build-xs/component-trace.json",
+      "sha256": "8103870682eff39b9147f4833d7d3e1f9ba64ec6cd48b2d414deb70e4f81f967"
+    },
+    {
+      "bytes": 107,
+      "path": "reviewed-result-only/records/5.36.3-unthreaded/build-xs/first.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 4367,
+      "path": "reviewed-result-only/records/5.36.3-unthreaded/build-xs/installed-files.json",
+      "sha256": "14187e2ded502ea81701337021f1585103841b7d54a5378af75f58f5e4925dd5"
+    },
+    {
+      "bytes": 107,
+      "path": "reviewed-result-only/records/5.36.3-unthreaded/build-xs/repeated.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 1805,
+      "path": "reviewed-result-only/records/5.36.3-unthreaded/build-xs/report.json",
+      "sha256": "a693bbe7b930b21e6c745496b3fa8a607ad39e0e3de6cd32c3542569db289c5e"
+    },
+    {
+      "bytes": 1578,
+      "path": "reviewed-result-only/records/5.36.3-unthreaded/build-xs/runtime-install-receipt.json",
+      "sha256": "ee31f04bc47713ee1e7af7eec4c79757f5da95358146b058fa875ab63bf3d535"
+    },
+    {
+      "bytes": 8392,
+      "path": "reviewed-result-only/records/5.36.3-unthreaded/build-xs/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "reviewed-result-only/records/5.36.3-unthreaded/build-xs/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "reviewed-result-only/records/5.36.3-unthreaded/build-xs/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3415,
+      "path": "reviewed-result-only/records/5.36.3-unthreaded/build-xs/runtime-trace.json",
+      "sha256": "06a13638c2adf6f6864e131f79eedbcb7a305e7305427648b75470c2a28b83b3"
+    },
+    {
+      "bytes": 506,
+      "path": "reviewed-result-only/records/5.36.3-unthreaded/prebuilt-only/component-install-receipt.json",
+      "sha256": "7678190a2d2080e7a0aec55fbaa8295f5db93cd50b32cc9a22e70281086b32cb"
+    },
+    {
+      "bytes": 7431,
+      "path": "reviewed-result-only/records/5.36.3-unthreaded/prebuilt-only/component-manifest.json",
+      "sha256": "d0ff1cc22261e75744736707e8370907c6a47f345491ac90a18bcfe93e5d6063"
+    },
+    {
+      "bytes": 15637,
+      "path": "reviewed-result-only/records/5.36.3-unthreaded/prebuilt-only/component-public.pm",
+      "sha256": "15096bd1f4eaaa6d9f028d9346c21057ccf6a3f7fb45d58bf706f8d688aea406"
+    },
+    {
+      "bytes": 31358,
+      "path": "reviewed-result-only/records/5.36.3-unthreaded/prebuilt-only/component-source.xs",
+      "sha256": "2b7ddaf360c7e9dd339fb40c06bc367699c9d467d76193a785210b4a7067214a"
+    },
+    {
+      "bytes": 812,
+      "path": "reviewed-result-only/records/5.36.3-unthreaded/prebuilt-only/component-trace.json",
+      "sha256": "0f6cdcb0b517751affe8bb80cb58edfeff53f69d26ecff32d20b774a6ca50499"
+    },
+    {
+      "bytes": 107,
+      "path": "reviewed-result-only/records/5.36.3-unthreaded/prebuilt-only/first.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 4365,
+      "path": "reviewed-result-only/records/5.36.3-unthreaded/prebuilt-only/installed-files.json",
+      "sha256": "5989837204c597144ab6bfd14dc411a7624fa9b845e36737c8ef57ac99085e91"
+    },
+    {
+      "bytes": 107,
+      "path": "reviewed-result-only/records/5.36.3-unthreaded/prebuilt-only/repeated.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 1811,
+      "path": "reviewed-result-only/records/5.36.3-unthreaded/prebuilt-only/report.json",
+      "sha256": "f4e49550d4e77324fb589634367cdb18ac33da4e1bc9655dbceacdb7a6c8e2ed"
+    },
+    {
+      "bytes": 506,
+      "path": "reviewed-result-only/records/5.36.3-unthreaded/prebuilt-only/runtime-install-receipt.json",
+      "sha256": "c2b6ed629e3dd78670e00e8b13ac332eae1a407e705efc81d20af453933dc290"
+    },
+    {
+      "bytes": 8392,
+      "path": "reviewed-result-only/records/5.36.3-unthreaded/prebuilt-only/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "reviewed-result-only/records/5.36.3-unthreaded/prebuilt-only/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "reviewed-result-only/records/5.36.3-unthreaded/prebuilt-only/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3403,
+      "path": "reviewed-result-only/records/5.36.3-unthreaded/prebuilt-only/runtime-trace.json",
+      "sha256": "02ba5dde209d924cf6b637ff1b92475b8867fe43a139f82ce489793cea46aa12"
+    },
+    {
+      "bytes": 1701,
+      "path": "reviewed-result-only/records/5.38.2-threaded/build-xs/component-install-receipt.json",
+      "sha256": "20a282e2724168ff6a42f3c63452a9486062777459e39a3d01dc5860d29f7b62"
+    },
+    {
+      "bytes": 7431,
+      "path": "reviewed-result-only/records/5.38.2-threaded/build-xs/component-manifest.json",
+      "sha256": "d0ff1cc22261e75744736707e8370907c6a47f345491ac90a18bcfe93e5d6063"
+    },
+    {
+      "bytes": 15637,
+      "path": "reviewed-result-only/records/5.38.2-threaded/build-xs/component-public.pm",
+      "sha256": "15096bd1f4eaaa6d9f028d9346c21057ccf6a3f7fb45d58bf706f8d688aea406"
+    },
+    {
+      "bytes": 31358,
+      "path": "reviewed-result-only/records/5.38.2-threaded/build-xs/component-source.xs",
+      "sha256": "2b7ddaf360c7e9dd339fb40c06bc367699c9d467d76193a785210b4a7067214a"
+    },
+    {
+      "bytes": 824,
+      "path": "reviewed-result-only/records/5.38.2-threaded/build-xs/component-trace.json",
+      "sha256": "783bf90aac65fa5327e158769d7c1235f00a60236f7a81171fdfb9fdf8a61a5a"
+    },
+    {
+      "bytes": 107,
+      "path": "reviewed-result-only/records/5.38.2-threaded/build-xs/first.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 4692,
+      "path": "reviewed-result-only/records/5.38.2-threaded/build-xs/installed-files.json",
+      "sha256": "d55fd369769298e8754cea204012f0d65b3e8343900c66bdc6d32fe53aadca35"
+    },
+    {
+      "bytes": 107,
+      "path": "reviewed-result-only/records/5.38.2-threaded/build-xs/repeated.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 1824,
+      "path": "reviewed-result-only/records/5.38.2-threaded/build-xs/report.json",
+      "sha256": "6cfc7b6706be7b3a345066fe96f3e57b1fab84a99adc35813695901e329deca8"
+    },
+    {
+      "bytes": 1661,
+      "path": "reviewed-result-only/records/5.38.2-threaded/build-xs/runtime-install-receipt.json",
+      "sha256": "b701e19412fedf35103f2c37d0aa5f45426d6dcd1db25d44ae2cc6b536577036"
+    },
+    {
+      "bytes": 8392,
+      "path": "reviewed-result-only/records/5.38.2-threaded/build-xs/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "reviewed-result-only/records/5.38.2-threaded/build-xs/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "reviewed-result-only/records/5.38.2-threaded/build-xs/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3415,
+      "path": "reviewed-result-only/records/5.38.2-threaded/build-xs/runtime-trace.json",
+      "sha256": "a8714ab500eaa1503c6d8e87c7bbea02b6a2c9d0eb313444f5e076aae3afa563"
+    },
+    {
+      "bytes": 531,
+      "path": "reviewed-result-only/records/5.38.2-threaded/prebuilt-only/component-install-receipt.json",
+      "sha256": "316f233f90d93f30ac60e1e375f4fb08e9b8711a3dfa08c3f5a9f9eab932795d"
+    },
+    {
+      "bytes": 7431,
+      "path": "reviewed-result-only/records/5.38.2-threaded/prebuilt-only/component-manifest.json",
+      "sha256": "d0ff1cc22261e75744736707e8370907c6a47f345491ac90a18bcfe93e5d6063"
+    },
+    {
+      "bytes": 15637,
+      "path": "reviewed-result-only/records/5.38.2-threaded/prebuilt-only/component-public.pm",
+      "sha256": "15096bd1f4eaaa6d9f028d9346c21057ccf6a3f7fb45d58bf706f8d688aea406"
+    },
+    {
+      "bytes": 31358,
+      "path": "reviewed-result-only/records/5.38.2-threaded/prebuilt-only/component-source.xs",
+      "sha256": "2b7ddaf360c7e9dd339fb40c06bc367699c9d467d76193a785210b4a7067214a"
+    },
+    {
+      "bytes": 812,
+      "path": "reviewed-result-only/records/5.38.2-threaded/prebuilt-only/component-trace.json",
+      "sha256": "d4549a9a73a6fee728f12aed02965a8072eef9fb94c06c5fc712fab9a4df44d7"
+    },
+    {
+      "bytes": 107,
+      "path": "reviewed-result-only/records/5.38.2-threaded/prebuilt-only/first.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 4690,
+      "path": "reviewed-result-only/records/5.38.2-threaded/prebuilt-only/installed-files.json",
+      "sha256": "20e775713c25e64a933a136c8cf5b1e74f569c08a0f228a5d8eb2f3d3c3cd708"
+    },
+    {
+      "bytes": 107,
+      "path": "reviewed-result-only/records/5.38.2-threaded/prebuilt-only/repeated.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 1830,
+      "path": "reviewed-result-only/records/5.38.2-threaded/prebuilt-only/report.json",
+      "sha256": "26ce9aed8b470ea24a3c4903e8d86c882c78dc10a638581f32d2513817d198b6"
+    },
+    {
+      "bytes": 531,
+      "path": "reviewed-result-only/records/5.38.2-threaded/prebuilt-only/runtime-install-receipt.json",
+      "sha256": "7197ee40f85be2d67ffe57d0830384efc5328bde74215519560a1df57073b5d1"
+    },
+    {
+      "bytes": 8392,
+      "path": "reviewed-result-only/records/5.38.2-threaded/prebuilt-only/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "reviewed-result-only/records/5.38.2-threaded/prebuilt-only/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "reviewed-result-only/records/5.38.2-threaded/prebuilt-only/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3403,
+      "path": "reviewed-result-only/records/5.38.2-threaded/prebuilt-only/runtime-trace.json",
+      "sha256": "a8eaa2f967092669e2d42cae391fb335e3e355de8a4c2219e7eb13d36ebe0c02"
+    },
+    {
+      "bytes": 1618,
+      "path": "reviewed-result-only/records/5.38.2-unthreaded/build-xs/component-install-receipt.json",
+      "sha256": "90552be3214d226b32963dca115c5606e4e5194979b09c548bd07c81095762e5"
+    },
+    {
+      "bytes": 7431,
+      "path": "reviewed-result-only/records/5.38.2-unthreaded/build-xs/component-manifest.json",
+      "sha256": "d0ff1cc22261e75744736707e8370907c6a47f345491ac90a18bcfe93e5d6063"
+    },
+    {
+      "bytes": 15637,
+      "path": "reviewed-result-only/records/5.38.2-unthreaded/build-xs/component-public.pm",
+      "sha256": "15096bd1f4eaaa6d9f028d9346c21057ccf6a3f7fb45d58bf706f8d688aea406"
+    },
+    {
+      "bytes": 31358,
+      "path": "reviewed-result-only/records/5.38.2-unthreaded/build-xs/component-source.xs",
+      "sha256": "2b7ddaf360c7e9dd339fb40c06bc367699c9d467d76193a785210b4a7067214a"
+    },
+    {
+      "bytes": 824,
+      "path": "reviewed-result-only/records/5.38.2-unthreaded/build-xs/component-trace.json",
+      "sha256": "456690390d0026a3dba279b1931136aacb26fed3e85d9dddeaf0e4271761b797"
+    },
+    {
+      "bytes": 107,
+      "path": "reviewed-result-only/records/5.38.2-unthreaded/build-xs/first.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 4367,
+      "path": "reviewed-result-only/records/5.38.2-unthreaded/build-xs/installed-files.json",
+      "sha256": "4da8de5c540b1ffb2493b671998c3290d8b06c239f9ce1655d455c0b6b57da42"
+    },
+    {
+      "bytes": 107,
+      "path": "reviewed-result-only/records/5.38.2-unthreaded/build-xs/repeated.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 1805,
+      "path": "reviewed-result-only/records/5.38.2-unthreaded/build-xs/report.json",
+      "sha256": "66cd7bc7eda57edcadc09e021e806a01f4782e056182c5372cfe03fcdbd12caa"
+    },
+    {
+      "bytes": 1578,
+      "path": "reviewed-result-only/records/5.38.2-unthreaded/build-xs/runtime-install-receipt.json",
+      "sha256": "76c71076342101b1b5f3982e28a24b2ad0808f7a26ccd5df86890f068f50ec9e"
+    },
+    {
+      "bytes": 8392,
+      "path": "reviewed-result-only/records/5.38.2-unthreaded/build-xs/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "reviewed-result-only/records/5.38.2-unthreaded/build-xs/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "reviewed-result-only/records/5.38.2-unthreaded/build-xs/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3415,
+      "path": "reviewed-result-only/records/5.38.2-unthreaded/build-xs/runtime-trace.json",
+      "sha256": "805293363e0456cca364e6530a60b6fe9946b2a68d485ccf03fd5c1a9346b206"
+    },
+    {
+      "bytes": 506,
+      "path": "reviewed-result-only/records/5.38.2-unthreaded/prebuilt-only/component-install-receipt.json",
+      "sha256": "7f29151aade6d8d4deafc3ba6d96abe790bd31af286f34d661969bc0b1fead39"
+    },
+    {
+      "bytes": 7431,
+      "path": "reviewed-result-only/records/5.38.2-unthreaded/prebuilt-only/component-manifest.json",
+      "sha256": "d0ff1cc22261e75744736707e8370907c6a47f345491ac90a18bcfe93e5d6063"
+    },
+    {
+      "bytes": 15637,
+      "path": "reviewed-result-only/records/5.38.2-unthreaded/prebuilt-only/component-public.pm",
+      "sha256": "15096bd1f4eaaa6d9f028d9346c21057ccf6a3f7fb45d58bf706f8d688aea406"
+    },
+    {
+      "bytes": 31358,
+      "path": "reviewed-result-only/records/5.38.2-unthreaded/prebuilt-only/component-source.xs",
+      "sha256": "2b7ddaf360c7e9dd339fb40c06bc367699c9d467d76193a785210b4a7067214a"
+    },
+    {
+      "bytes": 812,
+      "path": "reviewed-result-only/records/5.38.2-unthreaded/prebuilt-only/component-trace.json",
+      "sha256": "e35566020ecc9d63f95e9828e6b92db8f2c136a694214fd893d59b01433c306b"
+    },
+    {
+      "bytes": 107,
+      "path": "reviewed-result-only/records/5.38.2-unthreaded/prebuilt-only/first.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 4365,
+      "path": "reviewed-result-only/records/5.38.2-unthreaded/prebuilt-only/installed-files.json",
+      "sha256": "29bf1498078b4f6d5784540d7c6aa6478b9035794cd27df9911f9d9d243f9162"
+    },
+    {
+      "bytes": 107,
+      "path": "reviewed-result-only/records/5.38.2-unthreaded/prebuilt-only/repeated.json",
+      "sha256": "54236dd8ef3a7ef43f08a2407343c50ee85dee2d4f32a4e034c4a3578212580e"
+    },
+    {
+      "bytes": 1811,
+      "path": "reviewed-result-only/records/5.38.2-unthreaded/prebuilt-only/report.json",
+      "sha256": "c7f1dcbdc1a53d2bf557300fa441059a10b7c9b9e1904c8666c3fe0f32516af8"
+    },
+    {
+      "bytes": 506,
+      "path": "reviewed-result-only/records/5.38.2-unthreaded/prebuilt-only/runtime-install-receipt.json",
+      "sha256": "debea81d3582997b2ae4c08d48d6d63947ea28e2e5e472f5123bacbd48ea0052"
+    },
+    {
+      "bytes": 8392,
+      "path": "reviewed-result-only/records/5.38.2-unthreaded/prebuilt-only/runtime-manifest.json",
+      "sha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124"
+    },
+    {
+      "bytes": 3899,
+      "path": "reviewed-result-only/records/5.38.2-unthreaded/prebuilt-only/runtime-public.pm",
+      "sha256": "d8cca1e7c6fa8daf8e84a8fe8b593d90ea0718eb63e7c49eb9a0fc94e1cb32cf"
+    },
+    {
+      "bytes": 11859,
+      "path": "reviewed-result-only/records/5.38.2-unthreaded/prebuilt-only/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3403,
+      "path": "reviewed-result-only/records/5.38.2-unthreaded/prebuilt-only/runtime-trace.json",
+      "sha256": "4370b545a49462b73e77622e32819e0afe43a088034fc146d2c3509e535fbdd6"
+    },
+    {
+      "bytes": 38880,
+      "path": "reviewed-result-only/records/build-0/api.binding-ir.json",
+      "sha256": "9846960a169a460df677ff7770ad4056a3cf9afb5eaedd274a6064fbd25930ab"
+    },
+    {
+      "bytes": 1435,
+      "path": "reviewed-result-only/records/build-0/author-inputs.json",
+      "sha256": "b41f6b13a4315a0dd663a754f368d4a8f6fb84fea822d5cd188e9b1caa8e4c45"
+    },
+    {
+      "bytes": 179,
+      "path": "reviewed-result-only/records/build-0/lean-bridge.exports.json",
+      "sha256": "37adc5f84664212fa12a89907b2f7770f760376fda15a53f200b000480fa362b"
+    },
+    {
+      "bytes": 156960,
+      "path": "reviewed-result-only/records/build-0/model.json",
+      "sha256": "653aeba87e2ccd96b9d1feafaa69c74c7380c271a686b3584a2c7cd3c82d1555"
+    },
+    {
+      "bytes": 3005,
+      "path": "reviewed-result-only/records/build-0/NominalSubtypes.lean",
+      "sha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+    },
+    {
+      "bytes": 2074,
+      "path": "reviewed-result-only/records/build-0/package-set-receipt.json",
+      "sha256": "08dff7f1c7612a5b6ece643a81f22acce955bbec793975e450e1732dd7d4da74"
+    },
+    {
+      "bytes": 38880,
+      "path": "reviewed-result-only/records/build-1/api.binding-ir.json",
+      "sha256": "9846960a169a460df677ff7770ad4056a3cf9afb5eaedd274a6064fbd25930ab"
+    },
+    {
+      "bytes": 1449,
+      "path": "reviewed-result-only/records/build-1/author-inputs.json",
+      "sha256": "dea87334f694b876fe7d6287c40057eda76cdff3aa1125e49ecd6f3c920513e7"
+    },
+    {
+      "bytes": 179,
+      "path": "reviewed-result-only/records/build-1/lean-bridge.exports.json",
+      "sha256": "37adc5f84664212fa12a89907b2f7770f760376fda15a53f200b000480fa362b"
+    },
+    {
+      "bytes": 156960,
+      "path": "reviewed-result-only/records/build-1/model.json",
+      "sha256": "653aeba87e2ccd96b9d1feafaa69c74c7380c271a686b3584a2c7cd3c82d1555"
+    },
+    {
+      "bytes": 3005,
+      "path": "reviewed-result-only/records/build-1/NominalSubtypes.lean",
+      "sha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+    },
+    {
+      "bytes": 2074,
+      "path": "reviewed-result-only/records/build-1/package-set-receipt.json",
+      "sha256": "08dff7f1c7612a5b6ece643a81f22acce955bbec793975e450e1732dd7d4da74"
+    },
+    {
+      "bytes": 179,
+      "path": "reviewed-result-only/records/configuration.json",
+      "sha256": "37adc5f84664212fa12a89907b2f7770f760376fda15a53f200b000480fa362b"
+    },
+    {
+      "bytes": 11768,
+      "path": "reviewed-result-only/records/consumer.pl",
+      "sha256": "7ae99ac8ea1d7037e5b8a0380697cfe602b9f3130ab56d2169343cfe4c9e9c29"
+    },
+    {
+      "bytes": 38880,
+      "path": "reviewed-result-only/records/expected.binding-ir.json",
+      "sha256": "9846960a169a460df677ff7770ad4056a3cf9afb5eaedd274a6064fbd25930ab"
+    },
+    {
+      "bytes": 19760,
+      "path": "reviewed-result-only/records/report.json",
+      "sha256": "86a75bd2c5702166ee638c69c8dcecc7e7dfa94c39f41bf21fb66c9dbda983f2"
+    },
+    {
+      "bytes": 123,
+      "path": "reviewed-result-only/records/runtime.json",
+      "sha256": "c2f1b9d72bf412b57880eaf2e5f14f071577bea6210298d5c0d82c529f20d81e"
+    },
+    {
+      "bytes": 944,
+      "path": "reviewed-result-only/run.tap",
+      "sha256": "fb42f8d0425131115f3e213d4a5212d6087b2356467e7530142d8f44f0508883"
+    },
+    {
+      "bytes": 1130,
+      "path": "reviewed-result-only/start.json",
+      "sha256": "caa607cd34327cc6d82aee8b2e6b55ceb172b25fecb579a2b25bd5a4a6795f60"
+    },
+    {
+      "bytes": 4091,
+      "path": "runner.mjs",
+      "sha256": "8cbceac8e080fc3d8d20b46550545381c481c0c2223ea5036fa9a1526c9f6408"
+    },
+    {
+      "bytes": 7386,
+      "path": "sources/src/abi/component-callables.mjs",
+      "sha256": "abb7093a48c6bfaf7cf3f5510d0e26816af5639718659a3d87397f96a5e7bafe"
+    },
+    {
+      "bytes": 10970,
+      "path": "sources/src/abi/component-copied.mjs",
+      "sha256": "c06dc4bf621d1a0d255478b62d4d03cd77fed580cd37ff058bbe061c6145d599"
+    },
+    {
+      "bytes": 10397,
+      "path": "sources/src/abi/component-records.mjs",
+      "sha256": "c24c4216667ce99e0a1e5b0e56fa02ab266114128e92760bd2aa1d65a6c99ff2"
+    },
+    {
+      "bytes": 3332,
+      "path": "sources/src/abi/component-recursive-abi.mjs",
+      "sha256": "2c6313445c66f51c504044f948139f7e576db534cffcbaf507f2c300ec57eee4"
+    },
+    {
+      "bytes": 9974,
+      "path": "sources/src/abi/component-recursive.mjs",
+      "sha256": "4002752b124460c95cd9461e7c9a77173f211507f8a3f4d38b08c1293e006e5e"
+    },
+    {
+      "bytes": 4437,
+      "path": "sources/src/abi/component-scalars.mjs",
+      "sha256": "745058db0327c9060222ff58d45c272595e23125c2169d80287ff9035cf3608e"
+    },
+    {
+      "bytes": 10651,
+      "path": "sources/src/abi/component-structured-callables.mjs",
+      "sha256": "ca1ba92c7d00f168d26b007b21c4add381b760f76685b0a55dfffca2d40b97e2"
+    },
+    {
+      "bytes": 5961,
+      "path": "sources/src/abi/generic-specialization.mjs",
+      "sha256": "5c7472382e4426adf5f280037965d39d7eb16949414db80226ee5962dca05df9"
+    },
+    {
+      "bytes": 5313,
+      "path": "sources/src/abi/owned-aggregate-model.mjs",
+      "sha256": "f6c049ce1261af434c99aa8ac0a58acb86307430adf5b79dc0ea9e2396971a95"
+    },
+    {
+      "bytes": 8556,
+      "path": "sources/src/abi/refinements.mjs",
+      "sha256": "57fcd7bfa6c2ae7b7d696c1c95a88282c725fef2c15486744e683c258fa2ce07"
+    },
+    {
+      "bytes": 988,
+      "path": "sources/src/analyze/callback-signature.mjs",
+      "sha256": "8fa38ae4186f67fd8cca4c4545cbc4872b569ddd178d704a943074d7896419dd"
+    },
+    {
+      "bytes": 7873,
+      "path": "sources/src/analyze/checked-refinement-selection.mjs",
+      "sha256": "a93acd6f91edf592286db1fd255505adddf03a76bd8d2026962c5d2e7dfca64c"
+    },
+    {
+      "bytes": 5208,
+      "path": "sources/src/analyze/copied-metadata-graph.mjs",
+      "sha256": "4020e5a4804d6f404065d42608e50f56a9235f9ac518f4532985a5cb2f9c522a"
+    },
+    {
+      "bytes": 24921,
+      "path": "sources/src/analyze/elaborated-metadata.mjs",
+      "sha256": "51a7927edbd9ec0467b0b0d5772c8081a190d257de992a0f58e8522b9c673166"
+    },
+    {
+      "bytes": 26409,
+      "path": "sources/src/analyze/export-configuration.mjs",
+      "sha256": "91a3c1a9be0ff57e837edd7a10b9b1886d7eefc4e89e0b67ef61eb8487c02e8e"
+    },
+    {
+      "bytes": 3714,
+      "path": "sources/src/analyze/generator-configuration.mjs",
+      "sha256": "c3fe383a04ae977a6144f80507967ffe3077b450ec7dedce03bb7c8c12123c38"
+    },
+    {
+      "bytes": 6736,
+      "path": "sources/src/analyze/native-metadata.mjs",
+      "sha256": "dae540c8c48bd6146e2dbeb28a62399faaa87dfbd67111a6c0947107976f314d"
+    },
+    {
+      "bytes": 15868,
+      "path": "sources/src/analyze/native-types.mjs",
+      "sha256": "df316023935340250a966b6daf9d32cacc12370f8b611d96e9770d9b28fcc9f4"
+    },
+    {
+      "bytes": 99428,
+      "path": "sources/src/analyze/NativeExports.lean",
+      "sha256": "a6e5738d497fa57e2ff7eb98d2da7761277dc72c6584802909c3a4960c6ee6f3"
+    },
+    {
+      "bytes": 1011,
+      "path": "sources/src/analyze/owned-aggregate-policy.mjs",
+      "sha256": "e0061654f70ee68ccf706e8f8e90d892a9aa9e920dacc5b5e2c95742513a1f4d"
+    },
+    {
+      "bytes": 7175,
+      "path": "sources/src/analyze/owned-metadata-graph.mjs",
+      "sha256": "61db690927b14a98904f5d38430be04095ad1ffe572608a587ce35b7a34fc959"
+    },
+    {
+      "bytes": 4317,
+      "path": "sources/src/analyze/package-license.mjs",
+      "sha256": "c74fe23a652541ff210dcf4d402b9e0bb383fe9755b6087d12847ea6c85fbb70"
+    },
+    {
+      "bytes": 10419,
+      "path": "sources/src/analyze/package-metadata.mjs",
+      "sha256": "9299d99704984b17dbf840c366c92260f3eedeeca0506020c06ee5257f2ee850"
+    },
+    {
+      "bytes": 5581,
+      "path": "sources/src/analyze/reviewed-instantiation.mjs",
+      "sha256": "2f1b3c64f6056771bfe2a58fa448c1302cd45e4f2d1bafe203e7c23b13bf6747"
+    },
+    {
+      "bytes": 20431,
+      "path": "sources/src/analyze/reviewed-owned-source.mjs",
+      "sha256": "cb25d914ebcc8d30707789c1f39941dc6965fe2b4d5a728f76b7e94f8586c528"
+    },
+    {
+      "bytes": 3916,
+      "path": "sources/src/analyze/reviewed-refinements.mjs",
+      "sha256": "e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd"
+    },
+    {
+      "bytes": 24352,
+      "path": "sources/src/analyze/reviewed-source.mjs",
+      "sha256": "7a560e55ea1c5888a8192c40fbb381dc5f40760488d25f73689ce6a0277ed703"
+    },
+    {
+      "bytes": 3029,
+      "path": "sources/src/analyze/reviewed-subtypes.mjs",
+      "sha256": "8f0b4abd0d39f44a20ccb7b5b4a0960fb8670bc440e7e636e684e3eea2ba329f"
+    },
+    {
+      "bytes": 18634,
+      "path": "sources/src/analyze/semantic-model.mjs",
+      "sha256": "2270a8274dca71bc193bb2dd2bac666cf92c9a5cc304acf4e38fd20bcac24e65"
+    },
+    {
+      "bytes": 16123,
+      "path": "sources/src/analyze/spdx-data.json",
+      "sha256": "20dda7478849c88845a6e15ee9998b1ccdba84687e86473353a13142c07634d5"
+    },
+    {
+      "bytes": 15789,
+      "path": "sources/src/backends/c/copied-graph-layout.mjs",
+      "sha256": "bf3e31b5ba6c37446b34db7fe830259c9108df3508de0a76ba8009bb9267737d"
+    },
+    {
+      "bytes": 45870,
+      "path": "sources/src/backends/c/generate.mjs",
+      "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
+    },
+    {
+      "bytes": 4393,
+      "path": "sources/src/backends/c/native-callable-graph-borrows.mjs",
+      "sha256": "f391330bf46a4ef89cde083249159e80e6f93ae9524757ac1a89662cda02b5b7"
+    },
+    {
+      "bytes": 11039,
+      "path": "sources/src/backends/c/native-callable-graph-calls.mjs",
+      "sha256": "752ac5531be705aa5287b8a55e07124cf1e41f413ef6ef2a5dea15fd43410e6e"
+    },
+    {
+      "bytes": 2700,
+      "path": "sources/src/backends/c/native-callable-graph-payloads.mjs",
+      "sha256": "6d74a564de2323b9b32cbad70799fd1c7e8cab966de17668e2f351fcd96748e9"
+    },
+    {
+      "bytes": 23164,
+      "path": "sources/src/backends/c/native-graph-adapters.mjs",
+      "sha256": "827bb1e9c17b0d6b4c695274db0747de9f9059a50d36439504054e6d7bd82034"
+    },
+    {
+      "bytes": 3006,
+      "path": "sources/src/backends/c/package-audit.mjs",
+      "sha256": "bbcc42ebdc6c7d69e46860e48bbc1573e70af04ca8cb85ce4123496788b5395c"
+    },
+    {
+      "bytes": 11921,
+      "path": "sources/src/backends/c/primitive-surface.mjs",
+      "sha256": "893d7f649bf489c766e5d38f04ce4e1b7cb7967acc8f63bf6f82b9b6f5cd64df"
+    },
+    {
+      "bytes": 16607,
+      "path": "sources/src/backends/native/fin-refinements.mjs",
+      "sha256": "ed719cbb1d4de13a9bbd110703eb0fffb4d2cea356fdc91bcdfbbed0b89039c3"
+    },
+    {
+      "bytes": 8891,
+      "path": "sources/src/backends/native/owned-value-layout.mjs",
+      "sha256": "cb428c90f352222f93d922338d02cac24111e20a3bdcdc086384b184ccb6c140"
+    },
+    {
+      "bytes": 14542,
+      "path": "sources/src/backends/perl/Build.pm",
+      "sha256": "f918100b124156391555ee3d1011fc1ff5c6550b250039255845ef29bde0cf3c"
+    },
+    {
+      "bytes": 3007,
+      "path": "sources/src/backends/perl/callable-graph-model.mjs",
+      "sha256": "06f47c2a91f42f76683db460456f87b22298f3205fd854ea74ded46bd702c71d"
+    },
+    {
+      "bytes": 4786,
+      "path": "sources/src/backends/perl/callable-graph-package.mjs",
+      "sha256": "e12454dba97eb2c3c1fcf69985f81ab01a16dec2a685661bdfa47e6bf8cc77e0"
+    },
+    {
+      "bytes": 6517,
+      "path": "sources/src/backends/perl/callable-graph-runtime.mjs",
+      "sha256": "05fc0e3decaf5ce8145e723d211ac984493ef3105c5adb80fe0b227cad8d0140"
+    },
+    {
+      "bytes": 6537,
+      "path": "sources/src/backends/perl/callable-graph-xs.mjs",
+      "sha256": "9d8e0cf5cc582886e78d6a7791e5d6505e2e86a1ebba76d519b5818a9d14582a"
+    },
+    {
+      "bytes": 5034,
+      "path": "sources/src/backends/perl/copied-aliases.mjs",
+      "sha256": "3e77c70117d27939a323383a9ef772a6d713d4ed23483445a777d8e277bd0956"
+    },
+    {
+      "bytes": 12363,
+      "path": "sources/src/backends/perl/copied-graph-conversions.mjs",
+      "sha256": "eac9937c2361496fd38011e812b3a0c1f37cbbb386e3ea46b666f75e65391c42"
+    },
+    {
+      "bytes": 6226,
+      "path": "sources/src/backends/perl/copied-graph-package.mjs",
+      "sha256": "9cc3467d0ce3549b8d8b10c785bdd0b2b43698dacfc94b4333221248c503b852"
+    },
+    {
+      "bytes": 12260,
+      "path": "sources/src/backends/perl/copied-graph-runtime.mjs",
+      "sha256": "cd2f2b345c66a7f5f1a82f4e75a47985ce5b5dd8dd464f05bc24982e4f2e325f"
+    },
+    {
+      "bytes": 6475,
+      "path": "sources/src/backends/perl/copied-graph-values.mjs",
+      "sha256": "01990917bc261d4875f96fad26918563617f0ce3c8e462b8340efbb9f0eef734"
+    },
+    {
+      "bytes": 3293,
+      "path": "sources/src/backends/perl/copied-graph-xs.mjs",
+      "sha256": "a493440cd6a34d11860ab8c98e06abd8715866e4e2077b2fc3bf1472a84a8610"
+    },
+    {
+      "bytes": 6631,
+      "path": "sources/src/backends/perl/copied-variants.mjs",
+      "sha256": "9331f4b7cbd781d633a2e04987c80cdd0f35507fd28ee828fc8f21725e2e5b32"
+    },
+    {
+      "bytes": 47014,
+      "path": "sources/src/backends/perl/generate.mjs",
+      "sha256": "8a2de5e0052bfc7e4ac625db367bd43a085cc27c0894ba4c75852664dc6bd054"
+    },
+    {
+      "bytes": 1478,
+      "path": "sources/src/backends/perl/naming.mjs",
+      "sha256": "052c47c48e5528fab5de26790dbf96d71be72516487d9e977700754ed5f6ae0d"
+    },
+    {
+      "bytes": 3613,
+      "path": "sources/src/backends/perl/runtime.h",
+      "sha256": "bf0d34b2885bd90e6de50c73e1f13a250bc872e3cc965b9c2e8a330cf7ab0679"
+    },
+    {
+      "bytes": 3820,
+      "path": "sources/src/backends/perl/Runtime.pm",
+      "sha256": "e90a35ecd9c21fd028fd958b16368b7f9bb6bcf129406035b4ce5268c4865e74"
+    },
+    {
+      "bytes": 11859,
+      "path": "sources/src/backends/perl/Runtime.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 10979,
+      "path": "sources/src/backends/php/callables.mjs",
+      "sha256": "5552cfc08b928676b183173ca656e4c05a9a0275880645db191b4ab0ab64d0ab"
+    },
+    {
+      "bytes": 6282,
+      "path": "sources/src/backends/php/copied-equality.mjs",
+      "sha256": "9eec1bcc845f5494897b631f5d8829bf7cf52c3ef4dd440eb970a1ff07f078a7"
+    },
+    {
+      "bytes": 5629,
+      "path": "sources/src/backends/php/copied-model.mjs",
+      "sha256": "92250b77404eb0ae0c620bbc11a5d8ce7cbbf3df313d7fdccad8d93a2edffdf6"
+    },
+    {
+      "bytes": 1647,
+      "path": "sources/src/backends/php/copied-names.mjs",
+      "sha256": "8c0a0bd0cbbb8d785daa12986f345141ee763769f0a70cd6b812e4e1542a5f16"
+    },
+    {
+      "bytes": 6439,
+      "path": "sources/src/backends/php/copied-variants.mjs",
+      "sha256": "e02c4841e6780a17a37c2c32520243ef56e6535daf3ac6ddda6b7f3b36923e27"
+    },
+    {
+      "bytes": 9938,
+      "path": "sources/src/binding-ir/canonical.mjs",
+      "sha256": "28e22e614fc532a99baeeb34ee9d054f3bc6db82239fa89059a9518cb06d3d20"
+    },
+    {
+      "bytes": 46487,
+      "path": "sources/src/binding-ir/contract.mjs",
+      "sha256": "51f39115f198cadb22edcee1bc09d9205024c1ba622f86588056bca7aac6faf6"
+    },
+    {
+      "bytes": 3297,
+      "path": "sources/src/binding-ir/sha256.mjs",
+      "sha256": "f9bcbce580e88f31c3a63e8aa0d1d834228afa796a74a4c2f708da68e99a15ac"
+    },
+    {
+      "bytes": 3012,
+      "path": "sources/src/build/component-fin-guards.mjs",
+      "sha256": "c8aa6218488c0d8010eed23fcf98d22efaa7007791adbfe7d8fd29669af5451c"
+    },
+    {
+      "bytes": 13565,
+      "path": "sources/src/build/component-recursive-lean.mjs",
+      "sha256": "7338df31e23f594ba2e5a519c8989c739b6fbac0ad82c1d51892964b8ea580e6"
+    },
+    {
+      "bytes": 12855,
+      "path": "sources/src/build/component-refinement-mirrors.mjs",
+      "sha256": "d23d883ab69257ce033f0d6aa7b4ae8918da094843129329d02aba3f1943f53f"
+    },
+    {
+      "bytes": 9673,
+      "path": "sources/src/build/component-refinements.mjs",
+      "sha256": "424d53a08172711e2213e787a4caeee7db843242059c88e3b6c6ec431a5b46a4"
+    },
+    {
+      "bytes": 4392,
+      "path": "sources/src/build/component-structured-callable-defaults.mjs",
+      "sha256": "fd71f5eaf447ba1c2ce685c25c15bd1a8007b87ccaf191861a06d17cda54ff69"
+    },
+    {
+      "bytes": 9166,
+      "path": "sources/src/build/component-structured-callable-lean.mjs",
+      "sha256": "c9203867763fdb97339cb69b6f38f914d3b9845c031399f16963ee519201287d"
+    },
+    {
+      "bytes": 3419,
+      "path": "sources/src/build/cpan-projection.mjs",
+      "sha256": "04ea1433b30fbe02618bef171ecf0e2a63ab7422a194bcb1c8ce467a001aeb7e"
+    },
+    {
+      "bytes": 4561,
+      "path": "sources/src/build/native-callable-graph.mjs",
+      "sha256": "579ae663754e27b166500b6701bfefab2ad0ba16c69fb7e4cb24d34b904624e8"
+    },
+    {
+      "bytes": 12579,
+      "path": "sources/src/build/native-component.mjs",
+      "sha256": "2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867"
+    },
+    {
+      "bytes": 11579,
+      "path": "sources/src/build/native-graph-model.mjs",
+      "sha256": "14fca0d2c8eb7bfd17dbbd1c2381d7bf0b416576e0cb69d43a2eb628d0b4ded5"
+    },
+    {
+      "bytes": 37483,
+      "path": "sources/src/build/native-model.mjs",
+      "sha256": "9ef30755679a2dd205a5eeeb2dade17259c7ed67c605208458792eb3ca83da7c"
+    },
+    {
+      "bytes": 12680,
+      "path": "sources/src/build/owned-aggregate-carriers.mjs",
+      "sha256": "3b240658392b8614acc73d8f7b217fd4c3a2685fdbc3904fc9afaff5aa17e7b7"
+    },
+    {
+      "bytes": 6500,
+      "path": "sources/src/build/owned-callback-carriers.mjs",
+      "sha256": "a2bb7ddcb79b242ba7330541d9df52a706afbfeca2d8be31935de6fcaee0abe3"
+    },
+    {
+      "bytes": 11804,
+      "path": "sources/src/build/owned-native-model.mjs",
+      "sha256": "658b370775befe1f17e6b76450978fab5d43591932311f62bb8cc99abb556034"
+    },
+    {
+      "bytes": 2121,
+      "path": "sources/src/build/perl-xs.mjs",
+      "sha256": "3ee79018362d3b99ae5fa351351f3d2160dc12ff35edb82707e5092be6cb8836"
+    },
+    {
+      "bytes": 7467,
+      "path": "sources/src/build/refinement-mirrors.mjs",
+      "sha256": "27e7219ee097ec6b90ae8c4a270295feb55d87099815bce9bbaee97cdc9ff6cc"
+    },
+    {
+      "bytes": 19177,
+      "path": "sources/src/capsule/contract.mjs",
+      "sha256": "590f6758e4b25f7a73e04333276facec891fd26debd2fa5621e183b27ca6082f"
+    },
+    {
+      "bytes": 3332,
+      "path": "sources/src/capsule/node.mjs",
+      "sha256": "2ffbff5c27dbdd89fac9dd6ce5a1a3082430c9bdfbdcc3908941eaf1d009fb1b"
+    },
+    {
+      "bytes": 8610,
+      "path": "sources/src/release/component-package-receipt.mjs",
+      "sha256": "76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"
+    },
+    {
+      "bytes": 3215,
+      "path": "sources/src/release/cpan-install-trace.mjs",
+      "sha256": "97f350aba5f9d4e67702cba6d8a98af834477799799f68eb1f38e2435b888d47"
+    },
+    {
+      "bytes": 1923,
+      "path": "sources/src/release/cpan-install.mjs",
+      "sha256": "1b19d72d6926f9b23ff7d5b6f325bc21c60934214d28cdd3f53e2c1fd819a10f"
+    },
+    {
+      "bytes": 20490,
+      "path": "sources/src/release/cpan-package.mjs",
+      "sha256": "b0fffc682d28c55dd38ad36cc507a8c719d3223a0a510e1f19573b4d477e1636"
+    },
+    {
+      "bytes": 11736,
+      "path": "sources/tests/fixtures/nominal-subtype-consumers/perl.pl",
+      "sha256": "3cdb85b19aeabb5b3402d6a54468e17288da8d45c5c160430d12f207833b6f23"
+    },
+    {
+      "bytes": 81,
+      "path": "sources/tests/fixtures/onboarding/nominal-subtypes/lakefile.toml",
+      "sha256": "c29eeed5f6f853d55bb7100b160d0ec0224fd7375f5b05c87381326b60112d29"
+    },
+    {
+      "bytes": 25,
+      "path": "sources/tests/fixtures/onboarding/nominal-subtypes/lean-toolchain",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "bytes": 1093,
+      "path": "sources/tests/fixtures/onboarding/nominal-subtypes/LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 3005,
+      "path": "sources/tests/fixtures/onboarding/nominal-subtypes/NominalSubtypes.lean",
+      "sha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+    },
+    {
+      "bytes": 61,
+      "path": "sources/tests/fixtures/onboarding/nominal-subtypes/package.json",
+      "sha256": "9662c63237f11b189dddbbdf22ed631a7804aae99235d3f595e4b3ed5ebda9f0"
+    },
+    {
+      "bytes": 12548,
+      "path": "sources/tests/helpers/checked-record-perl-install.mjs",
+      "sha256": "765361bbf6ad8e68fdfafa915aa52c015d9a7ca051db1ca53aaf7ce837449b0d"
+    },
+    {
+      "bytes": 15505,
+      "path": "sources/tests/helpers/copied-fixture-install.mjs",
+      "sha256": "dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df"
+    },
+    {
+      "bytes": 9902,
+      "path": "sources/tests/helpers/lake-workspace.mjs",
+      "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082"
+    },
+    {
+      "bytes": 8247,
+      "path": "sources/tests/helpers/nominal-subtype-installed-fixture.mjs",
+      "sha256": "2521c4af98f9e90becbbe298cff9738f4408dcdf433ddd221d42367d76886c69"
+    },
+    {
+      "bytes": 3194,
+      "path": "sources/tests/helpers/nominal-subtype-perl-fixture.mjs",
+      "sha256": "af1a7f27137e7ae4474a8e256a7dc532309aae015a0f1de115e56130ccfca5e7"
+    },
+    {
+      "bytes": 9751,
+      "path": "sources/tests/helpers/nominal-subtype-perl-install.mjs",
+      "sha256": "004e3a142d8115af1f5e3a1ed4ca9d9476278a840b2d04c322bff811f721dd02"
+    },
+    {
+      "bytes": 8072,
+      "path": "sources/tests/helpers/nominal-subtype-perl-installed-tests.mjs",
+      "sha256": "5f8fa5d4459b7a510a35de9960bb0cd9312d1c9244797d01b19c31822e693154"
+    },
+    {
+      "bytes": 9275,
+      "path": "sources/tests/helpers/nominal-subtype-perl-model.pl",
+      "sha256": "b567944fb2c4da02ab52b0ff1aca3749b0f84602be185708b25cae67bc0582e7"
+    },
+    {
+      "bytes": 8430,
+      "path": "sources/tests/helpers/nominal-subtype-perl-tests.mjs",
+      "sha256": "af184e251469d571fcc0fbefa93948e7d51104f6dd0cbaeb3648ba8252e1e539"
+    },
+    {
+      "bytes": 5283,
+      "path": "sources/tests/helpers/package-set.mjs",
+      "sha256": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c"
+    }
+  ],
+  "generatorClosure": [
+    "src/abi/component-callables.mjs",
+    "src/abi/component-copied.mjs",
+    "src/abi/component-records.mjs",
+    "src/abi/component-recursive-abi.mjs",
+    "src/abi/component-recursive.mjs",
+    "src/abi/component-scalars.mjs",
+    "src/abi/component-structured-callables.mjs",
+    "src/abi/generic-specialization.mjs",
+    "src/abi/owned-aggregate-model.mjs",
+    "src/abi/refinements.mjs",
+    "src/analyze/callback-signature.mjs",
+    "src/analyze/checked-refinement-selection.mjs",
+    "src/analyze/copied-metadata-graph.mjs",
+    "src/analyze/elaborated-metadata.mjs",
+    "src/analyze/export-configuration.mjs",
+    "src/analyze/generator-configuration.mjs",
+    "src/analyze/native-metadata.mjs",
+    "src/analyze/native-types.mjs",
+    "src/analyze/owned-aggregate-policy.mjs",
+    "src/analyze/owned-metadata-graph.mjs",
+    "src/analyze/package-license.mjs",
+    "src/analyze/package-metadata.mjs",
+    "src/analyze/reviewed-instantiation.mjs",
+    "src/analyze/reviewed-owned-source.mjs",
+    "src/analyze/reviewed-refinements.mjs",
+    "src/analyze/reviewed-source.mjs",
+    "src/analyze/reviewed-subtypes.mjs",
+    "src/analyze/semantic-model.mjs",
+    "src/analyze/spdx-data.json",
+    "src/backends/c/copied-graph-layout.mjs",
+    "src/backends/c/generate.mjs",
+    "src/backends/c/native-callable-graph-borrows.mjs",
+    "src/backends/c/native-callable-graph-calls.mjs",
+    "src/backends/c/native-callable-graph-payloads.mjs",
+    "src/backends/c/native-graph-adapters.mjs",
+    "src/backends/c/package-audit.mjs",
+    "src/backends/c/primitive-surface.mjs",
+    "src/backends/native/fin-refinements.mjs",
+    "src/backends/native/owned-value-layout.mjs",
+    "src/backends/perl/callable-graph-model.mjs",
+    "src/backends/perl/callable-graph-package.mjs",
+    "src/backends/perl/callable-graph-runtime.mjs",
+    "src/backends/perl/callable-graph-xs.mjs",
+    "src/backends/perl/copied-aliases.mjs",
+    "src/backends/perl/copied-graph-conversions.mjs",
+    "src/backends/perl/copied-graph-package.mjs",
+    "src/backends/perl/copied-graph-runtime.mjs",
+    "src/backends/perl/copied-graph-values.mjs",
+    "src/backends/perl/copied-graph-xs.mjs",
+    "src/backends/perl/copied-variants.mjs",
+    "src/backends/perl/generate.mjs",
+    "src/backends/perl/naming.mjs",
+    "src/backends/php/callables.mjs",
+    "src/backends/php/copied-equality.mjs",
+    "src/backends/php/copied-model.mjs",
+    "src/backends/php/copied-names.mjs",
+    "src/backends/php/copied-variants.mjs",
+    "src/binding-ir/canonical.mjs",
+    "src/binding-ir/contract.mjs",
+    "src/binding-ir/sha256.mjs",
+    "src/build/component-fin-guards.mjs",
+    "src/build/component-recursive-lean.mjs",
+    "src/build/component-refinement-mirrors.mjs",
+    "src/build/component-refinements.mjs",
+    "src/build/component-structured-callable-defaults.mjs",
+    "src/build/component-structured-callable-lean.mjs",
+    "src/build/native-callable-graph.mjs",
+    "src/build/native-graph-model.mjs",
+    "src/build/native-model.mjs",
+    "src/build/owned-aggregate-carriers.mjs",
+    "src/build/owned-callback-carriers.mjs",
+    "src/build/owned-native-model.mjs",
+    "src/build/refinement-mirrors.mjs",
+    "src/capsule/contract.mjs",
+    "src/capsule/node.mjs",
+    "src/release/component-package-receipt.mjs"
+  ],
+  "kind": "nominal-subtype-perl-installed-v1",
+  "limitations": [
+    "Local Linux x64/glibc 2.36 acceptance, not hosted release-floor acceptance.",
+    "Only the named ordinary/reviewed full/result-only nominal Nat fixture and mixed Fin fields.",
+    "No Perl constructor/source entry counts or memory measurement.",
+    "Package binaries and full toolchain closures are not retained.",
+    "Original receipts, package hashes, execution records and the complete producer JavaScript generator closure are retained.",
+    "The process tree uses one CPU and one Lean thread. GMP explicitly uses make -j2 despite MAKEFLAGS=-j1.",
+    "This archive does not promote support or establish recurring installed CI gates."
+  ],
+  "producerCommit": "875fbc9fb3191ad9eea959499abca5c01e631394",
+  "runs": [
+    {
+      "configurations": [
+        "5.36.3-threaded",
+        "5.36.3-unthreaded",
+        "5.38.2-threaded",
+        "5.38.2-unthreaded"
+      ],
+      "counts": {
+        "checks": 4212,
+        "rejections": 1032,
+        "snapshotControls": 8
+      },
+      "deliveryModes": [
+        "prebuilt-only",
+        "build-xs"
+      ],
+      "dispatchObserved": false,
+      "executions": 16,
+      "finished": "2026-10-12T01:32:49.168Z",
+      "floor": "2.36",
+      "label": "ordinary-full",
+      "mode": "full",
+      "prefix": "build/vo1444-nominal-perl-ordinary-full-r1-875fbc9",
+      "producerCommit": "875fbc9fb3191ad9eea959499abca5c01e631394",
+      "records": 127,
+      "reportSha256": "0d2767251b3d3ad9d6d39e42e1c1971665a6c009dac1d9bd0f885a11f421e082",
+      "route": "ordinary",
+      "runtime": {
+        "arch": "x64",
+        "glibc": "2.36",
+        "platform": "linux"
+      },
+      "started": "2026-10-12T01:27:14.893Z",
+      "tapSha256": "74b7535cb45df16d8eff5a8c34f4d14f7eb32d21db27fbeaf6debc01668e9ebc"
+    },
+    {
+      "configurations": [
+        "5.36.3-threaded",
+        "5.36.3-unthreaded",
+        "5.38.2-threaded",
+        "5.38.2-unthreaded"
+      ],
+      "counts": {
+        "checks": 4212,
+        "rejections": 1032,
+        "snapshotControls": 8
+      },
+      "deliveryModes": [
+        "prebuilt-only",
+        "build-xs"
+      ],
+      "dispatchObserved": false,
+      "executions": 16,
+      "finished": "2026-10-12T01:40:20.757Z",
+      "floor": "2.36",
+      "label": "reviewed-full",
+      "mode": "full",
+      "prefix": "build/vo1444-nominal-perl-reviewed-full-r1-875fbc9",
+      "producerCommit": "875fbc9fb3191ad9eea959499abca5c01e631394",
+      "records": 129,
+      "reportSha256": "f91f7a9dbb752201ac5101804cb9c4d3bf8269cc9baa73e5ecf1a33588e252c8",
+      "route": "reviewed",
+      "runtime": {
+        "arch": "x64",
+        "glibc": "2.36",
+        "platform": "linux"
+      },
+      "started": "2026-10-12T01:34:53.551Z",
+      "tapSha256": "ac8de63eac7af9ec859be9f3c52b25ffc36bba9e8181430cedf697423e4c2a9a"
+    },
+    {
+      "configurations": [
+        "5.36.3-threaded",
+        "5.36.3-unthreaded",
+        "5.38.2-threaded",
+        "5.38.2-unthreaded"
+      ],
+      "counts": {
+        "checks": 2086,
+        "rejections": 0,
+        "snapshotControls": 8
+      },
+      "deliveryModes": [
+        "prebuilt-only",
+        "build-xs"
+      ],
+      "dispatchObserved": false,
+      "executions": 16,
+      "finished": "2026-10-12T01:47:32.939Z",
+      "floor": "2.36",
+      "label": "ordinary-result-only",
+      "mode": "result-only",
+      "prefix": "build/vo1444-nominal-perl-ordinary-result-only-r1-875fbc9",
+      "producerCommit": "875fbc9fb3191ad9eea959499abca5c01e631394",
+      "records": 127,
+      "reportSha256": "f3282504012ae6c91c6f8c157988a136ab87f0bb6c49e7c86e0453868e88b167",
+      "route": "ordinary",
+      "runtime": {
+        "arch": "x64",
+        "glibc": "2.36",
+        "platform": "linux"
+      },
+      "started": "2026-10-12T01:42:37.573Z",
+      "tapSha256": "15921b425b9e8040393a0ce9129ea27a65fb52519728f8bf72ddfc64bfe85d38"
+    },
+    {
+      "configurations": [
+        "5.36.3-threaded",
+        "5.36.3-unthreaded",
+        "5.38.2-threaded",
+        "5.38.2-unthreaded"
+      ],
+      "counts": {
+        "checks": 2086,
+        "rejections": 0,
+        "snapshotControls": 8
+      },
+      "deliveryModes": [
+        "prebuilt-only",
+        "build-xs"
+      ],
+      "dispatchObserved": false,
+      "executions": 16,
+      "finished": "2026-10-12T01:53:13.920Z",
+      "floor": "2.36",
+      "label": "reviewed-result-only",
+      "mode": "result-only",
+      "prefix": "build/vo1444-nominal-perl-reviewed-result-only-r1-875fbc9",
+      "producerCommit": "875fbc9fb3191ad9eea959499abca5c01e631394",
+      "records": 129,
+      "reportSha256": "86a75bd2c5702166ee638c69c8dcecc7e7dfa94c39f41bf21fb66c9dbda983f2",
+      "route": "reviewed",
+      "runtime": {
+        "arch": "x64",
+        "glibc": "2.36",
+        "platform": "linux"
+      },
+      "started": "2026-10-12T01:48:04.815Z",
+      "tapSha256": "fb42f8d0425131115f3e213d4a5212d6087b2356467e7530142d8f44f0508883"
+    }
+  ],
+  "schemaVersion": 1,
+  "selectedSources": [
+    "src/abi/component-callables.mjs",
+    "src/abi/component-copied.mjs",
+    "src/abi/component-records.mjs",
+    "src/abi/component-recursive-abi.mjs",
+    "src/abi/component-recursive.mjs",
+    "src/abi/component-scalars.mjs",
+    "src/abi/component-structured-callables.mjs",
+    "src/abi/generic-specialization.mjs",
+    "src/abi/owned-aggregate-model.mjs",
+    "src/abi/refinements.mjs",
+    "src/analyze/NativeExports.lean",
+    "src/analyze/callback-signature.mjs",
+    "src/analyze/checked-refinement-selection.mjs",
+    "src/analyze/copied-metadata-graph.mjs",
+    "src/analyze/elaborated-metadata.mjs",
+    "src/analyze/export-configuration.mjs",
+    "src/analyze/generator-configuration.mjs",
+    "src/analyze/native-metadata.mjs",
+    "src/analyze/native-types.mjs",
+    "src/analyze/owned-aggregate-policy.mjs",
+    "src/analyze/owned-metadata-graph.mjs",
+    "src/analyze/package-license.mjs",
+    "src/analyze/package-metadata.mjs",
+    "src/analyze/reviewed-instantiation.mjs",
+    "src/analyze/reviewed-owned-source.mjs",
+    "src/analyze/reviewed-refinements.mjs",
+    "src/analyze/reviewed-source.mjs",
+    "src/analyze/reviewed-subtypes.mjs",
+    "src/analyze/semantic-model.mjs",
+    "src/analyze/spdx-data.json",
+    "src/backends/c/copied-graph-layout.mjs",
+    "src/backends/c/generate.mjs",
+    "src/backends/c/native-callable-graph-borrows.mjs",
+    "src/backends/c/native-callable-graph-calls.mjs",
+    "src/backends/c/native-callable-graph-payloads.mjs",
+    "src/backends/c/native-graph-adapters.mjs",
+    "src/backends/c/package-audit.mjs",
+    "src/backends/c/primitive-surface.mjs",
+    "src/backends/native/fin-refinements.mjs",
+    "src/backends/native/owned-value-layout.mjs",
+    "src/backends/perl/Build.pm",
+    "src/backends/perl/Runtime.pm",
+    "src/backends/perl/Runtime.xs",
+    "src/backends/perl/callable-graph-model.mjs",
+    "src/backends/perl/callable-graph-package.mjs",
+    "src/backends/perl/callable-graph-runtime.mjs",
+    "src/backends/perl/callable-graph-xs.mjs",
+    "src/backends/perl/copied-aliases.mjs",
+    "src/backends/perl/copied-graph-conversions.mjs",
+    "src/backends/perl/copied-graph-package.mjs",
+    "src/backends/perl/copied-graph-runtime.mjs",
+    "src/backends/perl/copied-graph-values.mjs",
+    "src/backends/perl/copied-graph-xs.mjs",
+    "src/backends/perl/copied-variants.mjs",
+    "src/backends/perl/generate.mjs",
+    "src/backends/perl/naming.mjs",
+    "src/backends/perl/runtime.h",
+    "src/backends/php/callables.mjs",
+    "src/backends/php/copied-equality.mjs",
+    "src/backends/php/copied-model.mjs",
+    "src/backends/php/copied-names.mjs",
+    "src/backends/php/copied-variants.mjs",
+    "src/binding-ir/canonical.mjs",
+    "src/binding-ir/contract.mjs",
+    "src/binding-ir/sha256.mjs",
+    "src/build/component-fin-guards.mjs",
+    "src/build/component-recursive-lean.mjs",
+    "src/build/component-refinement-mirrors.mjs",
+    "src/build/component-refinements.mjs",
+    "src/build/component-structured-callable-defaults.mjs",
+    "src/build/component-structured-callable-lean.mjs",
+    "src/build/cpan-projection.mjs",
+    "src/build/native-callable-graph.mjs",
+    "src/build/native-component.mjs",
+    "src/build/native-graph-model.mjs",
+    "src/build/native-model.mjs",
+    "src/build/owned-aggregate-carriers.mjs",
+    "src/build/owned-callback-carriers.mjs",
+    "src/build/owned-native-model.mjs",
+    "src/build/perl-xs.mjs",
+    "src/build/refinement-mirrors.mjs",
+    "src/capsule/contract.mjs",
+    "src/capsule/node.mjs",
+    "src/release/component-package-receipt.mjs",
+    "src/release/cpan-install-trace.mjs",
+    "src/release/cpan-install.mjs",
+    "src/release/cpan-package.mjs",
+    "tests/fixtures/nominal-subtype-consumers/perl.pl",
+    "tests/fixtures/onboarding/nominal-subtypes/LICENSE",
+    "tests/fixtures/onboarding/nominal-subtypes/NominalSubtypes.lean",
+    "tests/fixtures/onboarding/nominal-subtypes/lakefile.toml",
+    "tests/fixtures/onboarding/nominal-subtypes/lean-toolchain",
+    "tests/fixtures/onboarding/nominal-subtypes/package.json",
+    "tests/helpers/checked-record-perl-install.mjs",
+    "tests/helpers/copied-fixture-install.mjs",
+    "tests/helpers/lake-workspace.mjs",
+    "tests/helpers/nominal-subtype-installed-fixture.mjs",
+    "tests/helpers/nominal-subtype-perl-fixture.mjs",
+    "tests/helpers/nominal-subtype-perl-install.mjs",
+    "tests/helpers/nominal-subtype-perl-installed-tests.mjs",
+    "tests/helpers/nominal-subtype-perl-model.pl",
+    "tests/helpers/nominal-subtype-perl-tests.mjs",
+    "tests/helpers/package-set.mjs"
+  ]
+}
