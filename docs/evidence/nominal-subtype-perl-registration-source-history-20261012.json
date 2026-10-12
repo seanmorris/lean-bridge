@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nominal-subtype-perl-registration-source-v1",
+  "predecessorCommit": "d2921624c47665f7a622f5bba96c4e306459e983",
+  "updates": [
+    {
+      "path": "tests/helpers/component-engine-closure-history.mjs",
+      "currentSha256": "a0dfc90542ceec5d86776508e89cf3c325dea8fa325c2904fafd0dba52a40f00",
+      "previousSha256": "635b0b72b420c23f2583bbc836d95cea6b3e5e9edbcacbc3a27fa79510ed191f",
+      "edits": [
+        {
+          "start": 243,
+          "previous": "",
+          "current": "import { beforeNominalSubtypePerlRegistrationSource } from \"./nominal-subtype-perl-registration-history.mjs\";\n"
+        },
+        {
+          "start": 2550,
+          "previous": "",
+          "current": "\tsource = beforeNominalSubtypePerlRegistrationSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "189db60ff0e1b28f4f78c144f312760a89b92ae2c99a5dfa0a0030e35ebdc4d9",
+      "previousSha256": "d0caa01b7668852db9cdbb8bdaa62463a2953a67d04960d3396d33967c84811f",
+      "edits": [
+        {
+          "start": 3370,
+          "previous": "",
+          "current": "import { nominalSubtypePerlRegistrationChangedPaths } from \"./nominal-subtype-perl-registration-history.mjs\";\n"
+        },
+        {
+          "start": 64184,
+          "previous": "",
+          "current": "\t, ...nominalSubtypePerlRegistrationChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-installed-fixture-tests.mjs",
+      "currentSha256": "c464393892f74f5b243c548ff5a65caa848aff45ee52918d3daf14a7a700c239",
+      "previousSha256": "15ceeba1e3eccd73f9b16328db74c85e20ab0f343d02c353cc15af801d01c475",
+      "edits": [
+        {
+          "start": 1454,
+          "previous": "",
+          "current": "import \"./nominal-subtype-perl-tests.mjs\";\nimport \"./nominal-subtype-perl-installed-tests.mjs\";\nimport \"./nominal-subtype-perl-evidence-tests.mjs\";\nimport \"./nominal-subtype-perl-registration-history-tests.mjs\";\n"
+        }
+      ]
+    }
+  ]
+}

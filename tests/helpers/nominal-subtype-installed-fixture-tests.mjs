@@ -24,6 +24,10 @@ import "./nominal-subtype-native-installed-tests.mjs";
 import "./nominal-subtype-native-evidence-tests.mjs";
 import "./nominal-subtype-native-promotion-tests.mjs";
 import "./nominal-subtype-native-promotion-history-tests.mjs";
+import "./nominal-subtype-perl-tests.mjs";
+import "./nominal-subtype-perl-installed-tests.mjs";
+import "./nominal-subtype-perl-evidence-tests.mjs";
+import "./nominal-subtype-perl-registration-history-tests.mjs";
 
 test("nominal package review independently matches ordinary choices and retains constructor-free results", () => {
 	for(const resultOnly of [false, true])

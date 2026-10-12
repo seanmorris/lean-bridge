@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeNominalSubtypePerlRegistrationSource } from "./nominal-subtype-perl-registration-history.mjs";
 
 export const componentEngineClosureHistoryPath = "docs/evidence/component-engine-closure-source-history-20261012.json";
 export const componentEngineClosurePredecessor = "3bff1f0340a57870ca94cb851d750fd5c5d5f18e";
@@ -56,6 +57,7 @@ export const reverseComponentEngineClosureUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeComponentEngineClosureSource = (path, source, expected) => {
+	source = beforeNominalSubtypePerlRegistrationSource(path, source, expected);
 	if(typeof source !== "string" || !componentEngineClosureChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
