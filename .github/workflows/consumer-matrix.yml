@@ -3335,6 +3335,25 @@ jobs:
           test -s build/collections/rust.json
           test -s build/type-corpus/rust.json
           test -s build/type-corpus/reviewed-native-rust.json
+      - name: Require nominal Rust packages on the pinned toolchain
+        if: matrix.profile == 'rust'
+        timeout-minutes: 45
+        env:
+          LEAN_NUM_THREADS: "1"
+          CARGO_BUILD_JOBS: "1"
+        run: |
+          set -euo pipefail
+          bash scripts/bootstrap-rust-ci.sh
+          source scripts/env.sh
+          bash scripts/run-nominal-subtype-rust-ci.sh "$PWD/.toolchains/rust-1.90.0/bin/rustc" "$PWD/.toolchains/rust-1.90.0/bin/cargo"
+      - name: Preserve complete and partial nominal Rust records
+        if: always() && matrix.profile == 'rust'
+        uses: actions/upload-artifact@v7
+        with:
+          name: nominal-subtype-rust-${{ github.sha }}
+          path: build/nominal-subtype-rust-ci/
+          if-no-files-found: error
+          retention-days: 30
       - name: Upload installed Rust corpus observations
         if: always() && matrix.profile == 'rust'
         uses: actions/upload-artifact@v7

@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeNominalSubtypeRustPromotionSource } from "./nominal-subtype-rust-promotion-history.mjs";
 import { beforeNominalSubtypeRustArchiveSource, nominalSubtypeRustArchiveChangedPaths, nominalSubtypeRustArchiveHistoryPath, nominalSubtypeRustArchivePredecessor, reverseNominalSubtypeRustArchiveUpdate } from "./nominal-subtype-rust-archive-history.mjs";
 
 test("nominal Rust harness archive authenticates exact changes without adding support claims", async () => {
@@ -40,7 +41,7 @@ test("nominal Rust harness archive authenticates exact changes without adding su
 		}
 	}
 	const path = "docs/type-surface.v1.json", inventory = JSON.parse(original(path));
-	assert.equal(await readFile(path, "utf8"), original(path));
+	assert.equal(beforeNominalSubtypeRustPromotionSource(path, await readFile(path, "utf8")), original(path));
 	assert.equal(inventory.evidence.length, 492); assert.equal(inventory.observations.length, 581);
 	for(const entry of inventory.evidence) for(const file of entry.files)
 		assert.ok(!nominalSubtypeRustArchiveChangedPaths.includes(file.path));

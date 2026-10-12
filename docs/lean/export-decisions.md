@@ -57,6 +57,9 @@ same reproduced wheel installed offline and replayed after relocation.
 [Installed Ruby checks](../evidence/nominal-subtype-ruby-acceptance-20261012.md)
 add those Nat forms on MRI Ruby 3.3.12, with reproduced gems, offline installation
 and relocated replay on Linux x64/glibc 2.36.
+[Installed Rust checks](../evidence/nominal-subtype-rust-acceptance-20261012.md)
+add those Nat forms with Rust and Cargo 1.90.0, offline crate installation,
+relocated replay and execution after deleting all consumer sources.
 Browser, other native hosts and PHP-Wasm nominal acceptance remains pending. Refined
 callbacks, owned and recursive Subtypes, and Subtype fields in generic records
 remain unfinished.
@@ -150,6 +153,9 @@ adds all four pinned Perl ABIs and both installation modes on the same glibc flo
 adds CPython 3.11 and 3.12 with offline installation and relocated replay.
 [Installed Ruby acceptance](../evidence/nominal-subtype-ruby-acceptance-20261012.md)
 adds MRI Ruby 3.3.12 with offline gem installation and relocated replay.
+[Installed Rust acceptance](../evidence/nominal-subtype-rust-acceptance-20261012.md)
+adds Rust and Cargo 1.90.0 with offline crate installation, relocated replay
+and execution after deleting all consumer sources.
 Other native hosts and PHP-Wasm nominal acceptance remains pending.
 Save `NominalSubtypes.lean`:
 

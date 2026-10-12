@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeNominalSubtypeRustPromotionSource } from "./nominal-subtype-rust-promotion-history.mjs";
 
 export const nominalSubtypeRustArchiveHistoryPath = "docs/evidence/nominal-subtype-rust-archive-source-history-20261012.json";
 export const nominalSubtypeRustArchivePredecessor = "5f3dd63b943efa9d5e49d2683da8ab2ebc7d2e59";
@@ -49,6 +50,7 @@ export const reverseNominalSubtypeRustArchiveUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeNominalSubtypeRustArchiveSource = (path, source, expected) => {
+	source = beforeNominalSubtypeRustPromotionSource(path, source, expected);
 	if(typeof source !== "string" || !nominalSubtypeRustArchiveChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = history ??= JSON.parse(readFileSync(nominalSubtypeRustArchiveHistoryPath, "utf8"));

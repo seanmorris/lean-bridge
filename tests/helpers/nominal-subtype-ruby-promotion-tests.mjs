@@ -8,6 +8,7 @@ import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { beforeNominalSubtypeRustPromotionSource, nominalSubtypeRustPromotionHistoryPath } from "./nominal-subtype-rust-promotion-history.mjs";
 import { nominalSubtypeRubyArchive, nominalSubtypeRubyReferences, promoteNominalSubtypeRuby, nominalSubtypeRubyConversion, nominalSubtypeRubyLimit } from "./nominal-subtype-ruby-promotion.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", "e5020a56b2750c42160567ca931d24772679e6e7:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
@@ -82,7 +83,15 @@ test("nominal Ruby promotion refuses missing originals and substituted scope or 
 
 test("nominal Ruby promotion adds two field cells and supplements four existing cells only", async () => {
 	const original = predecessor(), references = await nominalSubtypeRubyReferences();
-	const proposed = await promoteNominalSubtypeRuby(original, references), { document, ...contracts } = await readTypeSurface();
+	const proposed = await promoteNominalSubtypeRuby(original, references), { document: current, ...contracts } = await readTypeSurface();
+	const document = JSON.parse(beforeNominalSubtypeRustPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+	assert.ok(current.evidence.length >= document.evidence.length);
+	const later = JSON.parse(await readFile(nominalSubtypeRustPromotionHistoryPath));
+	for(const entry of proposed.evidence) for(const file of entry.files)
+	{
+		const update = later.updates.find(item => item.path === file.path);
+		if(update && file.sha256 === update.currentSha256) file.sha256 = update.previousSha256;
+	}
 	validateTypeSurface(proposed, contracts);
 	assert.equal(original.evidence.length, 488); assert.equal(proposed.evidence.length, 492);
 	assert.equal(original.observations.length, 579); assert.equal(proposed.observations.length, 581);
@@ -122,9 +131,9 @@ test("nominal Ruby documentation distinguishes verified packages from pending ho
 		const row = author.split("\n").find(line => line.startsWith(prefix));
 		assert.ok(row.includes("Node installed; browser pending"));
 		assert.equal((row.match(/Generated; pending/gu) ?? []).length, 1);
-		assert.ok(row.includes("C/C++, Python and Ruby installed; other native hosts pending"));
+		assert.ok(row.includes("C/C++, Python, Ruby and Rust installed; other native hosts pending"));
 		assert.ok(row.includes("All four ABIs installed"));
-		assert.ok(row.includes("Node, C/C++, Perl, Python and Ruby ordinary/reviewed installed"));
+		assert.ok(row.includes("Node, C/C++, Perl, Python, Ruby and Rust ordinary/reviewed installed"));
 	}
 	for(const path of ["docs/lean/existing-package.md", "docs/lean/export-decisions.md", "docs/consume/ruby.md", "docs/reference/types.md"])
 		assert.ok((await readFile(path, "utf8")).includes("nominal-subtype-ruby-acceptance-20261012.md"), path);

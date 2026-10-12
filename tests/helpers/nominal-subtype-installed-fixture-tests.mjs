@@ -59,6 +59,12 @@ import "./nominal-subtype-rust-installed-tests.mjs";
 import "./nominal-subtype-rust-registration-history-tests.mjs";
 import "./nominal-subtype-rust-evidence-tests.mjs";
 import "./nominal-subtype-rust-archive-history-tests.mjs";
+import "./nominal-subtype-rust-ci-report-tests.mjs";
+import "./nominal-subtype-rust-ci-dependency-tests.mjs";
+import "./nominal-subtype-rust-ci-shell-tests.mjs";
+import "./nominal-subtype-rust-ci-workflow-tests.mjs";
+import "./nominal-subtype-rust-promotion-tests.mjs";
+import "./nominal-subtype-rust-promotion-history-tests.mjs";
 
 test("nominal package review independently matches ordinary choices and retains constructor-free results", () => {
 	for(const resultOnly of [false, true])

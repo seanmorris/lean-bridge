@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { nominalSubtypeRubyPromotionHistoryPath } from "./nominal-subtype-ruby-promotion-history.mjs";
+import { nominalSubtypeRustPromotionHistoryPath } from "./nominal-subtype-rust-promotion-history.mjs";
 import { nominalSubtypePerlReferences, promoteNominalSubtypePerl } from "./nominal-subtype-perl-promotion.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeNominalSubtypePythonPromotionSource, nominalSubtypePythonPromotionHistoryPath } from "./nominal-subtype-python-promotion-history.mjs";
@@ -44,7 +45,7 @@ test("nominal Perl promotion history authenticates exact changes and the six obs
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
 	const expected = await promoteNominalSubtypePerl(JSON.parse(original(inventoryPath)), await nominalSubtypePerlReferences());
-	for(const path of [nominalSubtypeRubyPromotionHistoryPath, nominalSubtypePythonPromotionHistoryPath])
+	for(const path of [nominalSubtypeRustPromotionHistoryPath, nominalSubtypeRubyPromotionHistoryPath, nominalSubtypePythonPromotionHistoryPath])
 	{
 		const later = JSON.parse(await readFile(path));
 		for(const entry of expected.evidence) for(const file of entry.files)

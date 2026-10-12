@@ -10,12 +10,13 @@ import test from "node:test";
 import { nominalSubtypePythonCiBlock, enableNominalSubtypePythonWorkflow, disableNominalSubtypePythonWorkflow, assertNominalSubtypePythonWorkflow } from "./nominal-subtype-python-ci-workflow.mjs";
 import { assertStructuralSubtypeWorkflow } from "./structural-subtype-ci-workflow.mjs";
 import { withoutNominalSubtypeRubyWorkflow } from "./nominal-subtype-ruby-ci-workflow.mjs";
+import { withoutNominalSubtypeRustWorkflow } from "./nominal-subtype-rust-ci-workflow.mjs";
 
 const path = ".github/workflows/consumer-matrix.yml";
 const predecessor = "ad3f7716d997ef8a4331ec8a3f2a6524a2ca3b30";
 
 test("nominal Python CI preserves older jobs and requires four complete two-floor selections", async () => {
-	const source = await readFile(path, "utf8");
+	const source = withoutNominalSubtypeRustWorkflow(await readFile(path, "utf8"));
 	assertNominalSubtypePythonWorkflow(source);
 	const previous = execFileSync("git", ["show", `${predecessor}:${path}`], { encoding: "utf8", maxBuffer: 4 * 1024 * 1024 });
 	assert.equal(disableNominalSubtypePythonWorkflow(withoutNominalSubtypeRubyWorkflow(source)), previous);

@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeNominalSubtypeRustPromotionSource } from "./nominal-subtype-rust-promotion-history.mjs";
 import { beforeNominalSubtypeRustRegistrationSource, nominalSubtypeRustRegistrationChangedPaths, nominalSubtypeRustRegistrationHistoryPath, nominalSubtypeRustRegistrationPredecessor, reverseNominalSubtypeRustRegistrationUpdate } from "./nominal-subtype-rust-registration-history.mjs";
 
 test("nominal Rust harness registration authenticates exact changes without adding support claims", async () => {
@@ -40,7 +41,7 @@ test("nominal Rust harness registration authenticates exact changes without addi
 		}
 	}
 	const path = "docs/type-surface.v1.json", inventory = JSON.parse(original(path));
-	assert.equal(await readFile(path, "utf8"), original(path));
+	assert.equal(beforeNominalSubtypeRustPromotionSource(path, await readFile(path, "utf8")), original(path));
 	assert.equal(inventory.evidence.length, 492); assert.equal(inventory.observations.length, 581);
 	for(const entry of inventory.evidence) for(const file of entry.files)
 		assert.ok(!nominalSubtypeRustRegistrationChangedPaths.includes(file.path));
