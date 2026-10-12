@@ -114,8 +114,8 @@ test("nominal native docs distinguish verified C/C++ from other hosts and callba
 		assert.ok(row.includes("Node installed; browser pending"));
 		assert.equal((row.match(/Generated; pending/gu) ?? []).length, 1);
 		assert.ok(row.includes("All four ABIs installed"));
-		assert.ok(row.includes("C/C++ and Python installed; other native hosts pending"));
-		assert.ok(row.includes("Node, C/C++, Perl and Python ordinary/reviewed installed"));
+		assert.ok(row.includes("C/C++, Python and Ruby installed; other native hosts pending"));
+		assert.ok(row.includes("Node, C/C++, Perl, Python and Ruby ordinary/reviewed installed"));
 	}
 	for(const path of ["docs/lean/existing-package.md", "docs/lean/export-decisions.md", "docs/consume/c.md", "docs/consume/cpp.md", "docs/reference/types.md"])
 		assert.ok((await readFile(path, "utf8")).includes("nominal-subtype-native-acceptance-20261011.md"), path);

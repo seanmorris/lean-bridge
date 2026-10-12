@@ -4136,6 +4136,22 @@ jobs:
           test -s build/collections/ruby.json
           test -s build/type-corpus/ruby.json
           test -s build/type-corpus/reviewed-native-ruby.json
+      - name: Require nominal Ruby packages on the pinned interpreter
+        if: matrix.profile == 'ruby'
+        timeout-minutes: 45
+        env:
+          LEAN_NUM_THREADS: "2"
+        run: |
+          source scripts/env.sh
+          bash scripts/run-nominal-subtype-ruby-ci.sh "$(command -v ruby)" "$(command -v gem)"
+      - name: Preserve complete and partial nominal Ruby records
+        if: always() && matrix.profile == 'ruby'
+        uses: actions/upload-artifact@v7
+        with:
+          name: nominal-subtype-ruby-${{ github.sha }}
+          path: build/nominal-subtype-ruby-ci/
+          if-no-files-found: error
+          retention-days: 30
       - name: Upload the Ruby real-Lean type corpus report
         if: always() && matrix.profile == 'ruby'
         uses: actions/upload-artifact@v7

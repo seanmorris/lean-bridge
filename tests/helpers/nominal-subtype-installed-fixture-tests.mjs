@@ -48,6 +48,11 @@ import "./nominal-subtype-ruby-installed-tests.mjs";
 import "./nominal-subtype-ruby-registration-history-tests.mjs";
 import "./nominal-subtype-ruby-evidence-tests.mjs";
 import "./nominal-subtype-ruby-archive-history-tests.mjs";
+import "./nominal-subtype-ruby-ci-report-tests.mjs";
+import "./nominal-subtype-ruby-ci-shell-tests.mjs";
+import "./nominal-subtype-ruby-ci-workflow-tests.mjs";
+import "./nominal-subtype-ruby-promotion-tests.mjs";
+import "./nominal-subtype-ruby-promotion-history-tests.mjs";
 
 test("nominal package review independently matches ordinary choices and retains constructor-free results", () => {
 	for(const resultOnly of [false, true])

@@ -9,6 +9,7 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { nominalSubtypeRubyPromotionHistoryPath } from "./nominal-subtype-ruby-promotion-history.mjs";
 import { nominalSubtypeNativeReferences, promoteNominalSubtypeNative } from "./nominal-subtype-native-promotion.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { nominalSubtypePythonPromotionHistoryPath } from "./nominal-subtype-python-promotion-history.mjs";
@@ -44,7 +45,7 @@ test("Nominal native promotion authenticates exact changes and the scoped C/C++ 
 	const inventoryPath = "docs/type-surface.v1.json";
 	assert.equal(beforeNominalSubtypeNativePromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
 	const expected = await promoteNominalSubtypeNative(JSON.parse(original(inventoryPath)), await nominalSubtypeNativeReferences());
-	for(const path of [nominalSubtypePythonPromotionHistoryPath, nominalSubtypePerlPromotionHistoryPath])
+	for(const path of [nominalSubtypeRubyPromotionHistoryPath, nominalSubtypePythonPromotionHistoryPath, nominalSubtypePerlPromotionHistoryPath])
 	{
 		const later = JSON.parse(await readFile(path));
 		for(const entry of expected.evidence) for(const file of entry.files)

@@ -43,7 +43,7 @@ test("nominal Subtype author guides distinguish compilation, installed support a
 		assert.equal((row.match(/Generated; pending/gu) ?? []).length, 1);
 		assert.ok(row.includes("All four ABIs installed"));
 		assert.ok(row.includes("Node installed; browser pending"));
-		assert.ok(row.includes("Node, C/C++, Perl and Python ordinary/reviewed installed"));
+		assert.ok(row.includes("Node, C/C++, Perl, Python and Ruby ordinary/reviewed installed"));
 	}
 	assert.ok(section.includes("`NominalSubtypes.lean`"));
 	assert.ok(section.includes("`lean-bridge.exports.json`"));

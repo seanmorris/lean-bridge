@@ -47,6 +47,7 @@ import { nominalSubtypePythonArchiveChangedPaths } from "./nominal-subtype-pytho
 import { nominalSubtypePythonPromotionChangedPaths } from "./nominal-subtype-python-promotion-history.mjs";
 import { nominalSubtypeRubyRegistrationChangedPaths } from "./nominal-subtype-ruby-registration-history.mjs";
 import { nominalSubtypeRubyArchiveChangedPaths } from "./nominal-subtype-ruby-archive-history.mjs";
+import { nominalSubtypeRubyPromotionChangedPaths } from "./nominal-subtype-ruby-promotion-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeSubtypeRefinementSource, subtypeRefinementChangedPaths } from "./subtype-refinement-source-history.mjs";
 import { subtypeHeapChangedPaths } from "./subtype-heap-source-history.mjs";
@@ -959,6 +960,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nominalSubtypePythonPromotionChangedPaths
 	, ...nominalSubtypeRubyRegistrationChangedPaths
 	, ...nominalSubtypeRubyArchiveChangedPaths
+	, ...nominalSubtypeRubyPromotionChangedPaths
 ])].sort());
 
 /**

@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { nominalSubtypePythonReferences, promoteNominalSubtypePython } from "./nominal-subtype-python-promotion.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeNominalSubtypeRubyPromotionSource, nominalSubtypeRubyPromotionHistoryPath } from "./nominal-subtype-ruby-promotion-history.mjs";
 import { beforeNominalSubtypePythonPromotionSource, nominalSubtypePythonPromotionChangedPaths, nominalSubtypePythonPromotionHistoryPath, nominalSubtypePythonPromotionPredecessor, reverseNominalSubtypePythonPromotionUpdate } from "./nominal-subtype-python-promotion-history.mjs";
 
 test("nominal Python promotion history authenticates exact changes and the six observed Python cells", async t => {
@@ -42,6 +43,12 @@ test("nominal Python promotion history authenticates exact changes and the six o
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
 	const expected = await promoteNominalSubtypePython(JSON.parse(original(inventoryPath)), await nominalSubtypePythonReferences());
+	const later = JSON.parse(await readFile(nominalSubtypeRubyPromotionHistoryPath));
+	for(const entry of expected.evidence) for(const file of entry.files)
+	{
+		const update = later.updates.find(item => item.path === file.path);
+		if(update && file.sha256 === update.currentSha256) file.sha256 = update.previousSha256;
+	}
 	assert.equal(beforeNominalSubtypePythonPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
@@ -50,7 +57,7 @@ test("nominal Python promotion history authenticates exact changes and the six o
 		if(update && file.sha256 === update.previousSha256)
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
-	assert.ok(pins > 0); assert.deepEqual(JSON.parse(await readFile(inventoryPath, "utf8")), expected);
+	assert.ok(pins > 0); assert.deepEqual(JSON.parse(beforeNominalSubtypeRubyPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8"))), expected);
 	assert.equal(expected.evidence.length, 488); assert.equal(expected.observations.length, 579);
 	t.diagnostic(`${pins} current-source pins refreshed; exactly six observed Python cells promoted or supplemented`);
 });

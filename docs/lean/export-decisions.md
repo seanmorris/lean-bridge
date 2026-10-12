@@ -54,6 +54,9 @@ all four pinned ABIs and both installation modes on Linux x64/glibc 2.36.
 [Installed Python checks](../evidence/nominal-subtype-python-acceptance-20261012.md)
 cover those Nat forms on both source routes in CPython 3.11 and 3.12, with the
 same reproduced wheel installed offline and replayed after relocation.
+[Installed Ruby checks](../evidence/nominal-subtype-ruby-acceptance-20261012.md)
+add those Nat forms on MRI Ruby 3.3.12, with reproduced gems, offline installation
+and relocated replay on Linux x64/glibc 2.36.
 Browser, other native hosts and PHP-Wasm nominal acceptance remains pending. Refined
 callbacks, owned and recursive Subtypes, and Subtype fields in generic records
 remain unfinished.
@@ -145,6 +148,8 @@ cover the separate Nat nominal fixture on Node and Linux x64/glibc 2.36.
 adds all four pinned Perl ABIs and both installation modes on the same glibc floor.
 [Installed Python acceptance](../evidence/nominal-subtype-python-acceptance-20261012.md)
 adds CPython 3.11 and 3.12 with offline installation and relocated replay.
+[Installed Ruby acceptance](../evidence/nominal-subtype-ruby-acceptance-20261012.md)
+adds MRI Ruby 3.3.12 with offline gem installation and relocated replay.
 Other native hosts and PHP-Wasm nominal acceptance remains pending.
 Save `NominalSubtypes.lean`:
 
