@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeNominalSubtypePythonRegistrationSource } from "./nominal-subtype-python-registration-history.mjs";
 
 export const nominalSubtypePerlPromotionHistoryPath = "docs/evidence/nominal-subtype-perl-promotion-source-history-20261012.json";
 export const nominalSubtypePerlPromotionPredecessor = "7c9fbfee9c31b60dc7433ca6945be62e39810754";
@@ -65,6 +66,7 @@ export const reverseNominalSubtypePerlPromotionUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeNominalSubtypePerlPromotionSource = (path, source, expected) => {
+	source = beforeNominalSubtypePythonRegistrationSource(path, source, expected);
 	if(typeof source !== "string" || !nominalSubtypePerlPromotionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

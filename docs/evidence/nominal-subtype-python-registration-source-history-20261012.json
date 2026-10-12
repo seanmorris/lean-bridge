@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nominal-subtype-python-registration-source-v1",
+  "predecessorCommit": "479684ae6d5d5c6b9f2ce0791f5ccbd16531aa23",
+  "updates": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "8b161e35cef9873ddcabd439ed5da603ff2dbf62f173d5a25dd509369b575816",
+      "previousSha256": "5979a7e02fbc695b08260836e692c872ab4f57e9fb71b56484e356187a107dd1",
+      "edits": [
+        {
+          "start": 3748,
+          "previous": "",
+          "current": "import { nominalSubtypePythonRegistrationChangedPaths } from \"./nominal-subtype-python-registration-history.mjs\";\n"
+        },
+        {
+          "start": 64732,
+          "previous": "",
+          "current": "\t, ...nominalSubtypePythonRegistrationChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-installed-fixture-tests.mjs",
+      "currentSha256": "41499d5ac01209a9def454dc1c68a9a80df7aa80379d7a9fd2f07f0e0e11a26b",
+      "previousSha256": "67665a041a9dc7a62300bcaefdf672b043c72fff6c7e0755b0e21cbdcf4d1e20",
+      "edits": [
+        {
+          "start": 1940,
+          "previous": "",
+          "current": "import \"./nominal-subtype-python-tests.mjs\";\nimport \"./nominal-subtype-python-installed-tests.mjs\";\nimport \"./nominal-subtype-python-registration-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-perl-promotion-history.mjs",
+      "currentSha256": "c435550d69a1f5e025575b36ffbefd899f758bedc26fc8db0614dd4cc7b832ba",
+      "previousSha256": "631abc5b9319b81f9819e3f5fa5a8e4a3fb4de58eb2c540145c2716d16bb5f02",
+      "edits": [
+        {
+          "start": 234,
+          "previous": "",
+          "current": "import { beforeNominalSubtypePythonRegistrationSource } from \"./nominal-subtype-python-registration-history.mjs\";\n"
+        },
+        {
+          "start": 2955,
+          "previous": "",
+          "current": "\tsource = beforeNominalSubtypePythonRegistrationSource(path, source, expected);\n"
+        }
+      ]
+    }
+  ]
+}

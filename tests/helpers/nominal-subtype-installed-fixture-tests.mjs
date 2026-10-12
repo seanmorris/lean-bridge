@@ -33,6 +33,9 @@ import "./nominal-subtype-perl-ci-shell-tests.mjs";
 import "./nominal-subtype-perl-ci-workflow-tests.mjs";
 import "./nominal-subtype-perl-promotion-tests.mjs";
 import "./nominal-subtype-perl-promotion-history-tests.mjs";
+import "./nominal-subtype-python-tests.mjs";
+import "./nominal-subtype-python-installed-tests.mjs";
+import "./nominal-subtype-python-registration-history-tests.mjs";
 
 test("nominal package review independently matches ordinary choices and retains constructor-free results", () => {
 	for(const resultOnly of [false, true])

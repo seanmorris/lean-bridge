@@ -42,6 +42,7 @@ import { nominalSubtypePerlRegistrationChangedPaths } from "./nominal-subtype-pe
 import { cliImportRepairChangedPaths } from "./cli-import-repair-history.mjs";
 import { coreContractRepairChangedPaths } from "./core-contract-repair-history.mjs";
 import { nominalSubtypePerlPromotionChangedPaths } from "./nominal-subtype-perl-promotion-history.mjs";
+import { nominalSubtypePythonRegistrationChangedPaths } from "./nominal-subtype-python-registration-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeSubtypeRefinementSource, subtypeRefinementChangedPaths } from "./subtype-refinement-source-history.mjs";
 import { subtypeHeapChangedPaths } from "./subtype-heap-source-history.mjs";
@@ -949,6 +950,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...cliImportRepairChangedPaths
 	, ...coreContractRepairChangedPaths
 	, ...nominalSubtypePerlPromotionChangedPaths
+	, ...nominalSubtypePythonRegistrationChangedPaths
 ])].sort());
 
 /**
