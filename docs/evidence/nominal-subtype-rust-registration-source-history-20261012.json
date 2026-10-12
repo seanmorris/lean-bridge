@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nominal-subtype-rust-registration-source-v1",
+  "predecessorCommit": "587142a6387b908cd1209a8022d1d25e1766d771",
+  "updates": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "96a8e5b69f71bbdfa7b4b8154230efe25f955b665e4d56416e3538442a9a0ccc",
+      "previousSha256": "2d0fa0a96f42166b188d2077eaae2c2fa0fadf3849bcc2aae1748b200494b6db",
+      "edits": [
+        {
+          "start": 4388,
+          "previous": "",
+          "current": "import { nominalSubtypeRustRegistrationChangedPaths } from \"./nominal-subtype-rust-registration-history.mjs\";\n"
+        },
+        {
+          "start": 65652,
+          "previous": "",
+          "current": "\t, ...nominalSubtypeRustRegistrationChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-installed-fixture-tests.mjs",
+      "currentSha256": "4bf6bd79a91443f901f5739be61aaeec5ef3f88b23028b6394d07ccfa6cfb6ca",
+      "previousSha256": "b3e7aa2bdb6a8c72a59721e4d7baf1c07c3362b214c8c01ef85bb4c0bd7c76c8",
+      "edits": [
+        {
+          "start": 3050,
+          "previous": "",
+          "current": "import \"./nominal-subtype-rust-tests.mjs\";\nimport \"./nominal-subtype-rust-package-tests.mjs\";\nimport \"./nominal-subtype-rust-installed-tests.mjs\";\nimport \"./nominal-subtype-rust-registration-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-ruby-promotion-history.mjs",
+      "currentSha256": "159b9983b48de1f319f43f5a459062d3f3dff33bf15bb0331ac1da8026669ff8",
+      "previousSha256": "1f5516aec70609328121e70bcceb765e1480eeb0eca112ad249f8b2cd722e53b",
+      "edits": [
+        {
+          "start": 234,
+          "previous": "",
+          "current": "import { beforeNominalSubtypeRustRegistrationSource } from \"./nominal-subtype-rust-registration-history.mjs\";\n"
+        },
+        {
+          "start": 3368,
+          "previous": "",
+          "current": "\tsource = beforeNominalSubtypeRustRegistrationSource(path, source, expected);\n"
+        }
+      ]
+    }
+  ]
+}

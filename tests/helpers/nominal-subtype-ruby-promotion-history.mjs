@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeNominalSubtypeRustRegistrationSource } from "./nominal-subtype-rust-registration-history.mjs";
 
 export const nominalSubtypeRubyPromotionHistoryPath = "docs/evidence/nominal-subtype-ruby-promotion-source-history-20261012.json";
 export const nominalSubtypeRubyPromotionPredecessor = "e5020a56b2750c42160567ca931d24772679e6e7";
@@ -71,6 +72,7 @@ export const reverseNominalSubtypeRubyPromotionUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeNominalSubtypeRubyPromotionSource = (path, source, expected) => {
+	source = beforeNominalSubtypeRustRegistrationSource(path, source, expected);
 	if(typeof source !== "string" || !nominalSubtypeRubyPromotionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
