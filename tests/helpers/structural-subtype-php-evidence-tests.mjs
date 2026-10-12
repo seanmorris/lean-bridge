@@ -9,6 +9,8 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { checkStructuralSubtypePhpReport, structuralSubtypePhpRecords } from "./structural-subtype-php-report.mjs";
+import { generateCopiedPhpPackage } from "../../src/backends/php/copied-values.mjs";
+import { structuralSubtypePhpGenerators } from "./structural-subtype-php-generators.mjs";
 
 const root = "docs/evidence/structural-subtype-php-20261011";
 const indexSha256 = "a745724cce2e53f0064c352d346d42ce2413221aa4406c22e4bfa067b0aa05cd";
@@ -44,6 +46,37 @@ test("structural PHP originals authenticate both installed and relocated selecti
 		const read = async path => files.get(`${run.label}/records/${path}`), checked = await checkStructuralSubtypePhpReport(read, run);
 		assert.deepEqual(checked, Object.fromEntries(Object.entries(run).filter(([key]) => !["label", "tapSha256", "reportSha256"].includes(key))));
 		assert.equal(run.reportSha256, sha256(await read("report.json")));
+	}
+});
+
+test("structural PHP replay keeps original result documentation and rejects substituted public code", async () => {
+	const { index, files } = await checkArchive(path => readFile(`${root}/${path}`));
+	const original = await structuralSubtypePhpGenerators(index.producerCommit);
+	assert.equal(await structuralSubtypePhpGenerators(index.producerCommit), original);
+	assert.throws(() => structuralSubtypePhpGenerators("HEAD"));
+	for(const run of index.runs)
+	{
+		const prefix = `${run.label}/records/`, read = async path => files.get(prefix + path);
+		const model = JSON.parse(await read("build-0/model.json"));
+		const api = (await read("package/src/Api.php")).toString();
+		const generated = original.generateCopiedPhpPackage(model.bindingIr);
+		assert.equal(generated["src/Api.php"], api);
+		const current = generateCopiedPhpPackage(model.bindingIr)["src/Api.php"];
+		assert.notEqual(current, api);
+		assert.match(api, /result\[\*\] checked by StructuralSubtypes.checkedPositive/u);
+		assert.match(current, /result\[\*\] projects the Subtype base value/u);
+		for(const replacement of [current
+			, api.replace("return Internal\\Native::call0", "return Internal\\Native::call1")
+			, api.replace("StructuralSubtypes.checkedPositive", "StructuralSubtypes.wrongConstructor")]) {
+			assert.notEqual(replacement, api);
+			const manifest = JSON.parse(await read("package/binding-manifest.json"));
+			manifest.filesSha256["src/Api.php"] = sha256(replacement);
+			await assert.rejects(checkStructuralSubtypePhpReport(async path => {
+				if(path === "package/src/Api.php") return Buffer.from(replacement);
+				if(path === "package/binding-manifest.json") return Buffer.from(canonicalJson(manifest));
+				return read(path);
+			}, run), /Public API must match its recorded producer/u);
+			}
 	}
 });
 

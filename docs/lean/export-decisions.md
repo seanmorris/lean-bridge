@@ -46,7 +46,10 @@ Both compiler paths also project constructor-free results.
 [Installed npm checks](../evidence/nominal-subtype-npm-acceptance-20261011.md)
 cover the tested Nat fields, aliases and constructor-free outputs on both source
 routes in Node 22.23.2 with strict TypeScript, including result-only packages.
-Browser, native and PHP-Wasm nominal acceptance remains pending. Refined
+[Installed C/C++ checks](../evidence/nominal-subtype-native-acceptance-20261011.md)
+cover the same Nat forms on both source routes in Linux x64/glibc 2.36, including
+standalone result-only packages. Browser, other native hosts and PHP-Wasm
+nominal acceptance remains pending. Refined
 callbacks, owned and recursive Subtypes, and Subtype fields in generic records
 remain unfinished.
 
@@ -131,8 +134,10 @@ refinement trees and reconcile them against fresh Lean metadata.
 This native compiler-stage example uses a copied record with a Subtype field
 and a Fin sibling. The shared component compiler now admits the same field
 choices and result projections. [Installed npm acceptance](../evidence/nominal-subtype-npm-acceptance-20261011.md)
-covers the separate Nat nominal fixture on Node. Native and PHP-Wasm nominal
-acceptance remains pending. Save `NominalSubtypes.lean`:
+and [installed C/C++ acceptance](../evidence/nominal-subtype-native-acceptance-20261011.md)
+cover the separate Nat nominal fixture on Node and Linux x64/glibc 2.36.
+Other native hosts and PHP-Wasm nominal acceptance remains pending.
+Save `NominalSubtypes.lean`:
 
 ```lean
 namespace NominalSubtypes

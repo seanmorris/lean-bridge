@@ -9,6 +9,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { nominalSubtypeNpmArchive, nominalSubtypeNpmProfiles, nominalSubtypeNpmReferences, promoteNominalSubtypeNpm, nominalSubtypeNpmConversion, nominalSubtypeNpmLimit } from "./nominal-subtype-npm-promotion.mjs";
+import { beforeNominalSubtypeNativePromotionSource } from "./nominal-subtype-native-promotion-history.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", "d5aedc154ed94073c85c0087c466b426c7991d56:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -71,13 +72,15 @@ test("nominal npm promotion refuses missing originals and substituted scope or r
 
 test("nominal npm promotion adds four Node field cells and supplements eight existing cells only", async () => {
 	const original = predecessor(), references = await nominalSubtypeNpmReferences();
-	const proposed = await promoteNominalSubtypeNpm(original, references), { document, ...contracts } = await readTypeSurface();
+	const proposed = await promoteNominalSubtypeNpm(original, references), { document: current, ...contracts } = await readTypeSurface();
+	const inventoryPath = "docs/type-surface.v1.json";
+	const document = JSON.parse(beforeNominalSubtypeNativePromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")));
 	validateTypeSurface(proposed, contracts);
 	assert.equal(original.evidence.length, 472); assert.equal(proposed.evidence.length, 476);
 	assert.equal(original.observations.length, 571); assert.equal(proposed.observations.length, 573);
 	assert.deepEqual(proposed.evidence.slice(0, 472), original.evidence);
 	assert.deepEqual(document.observations, proposed.observations);
-	assert.deepEqual(document.evidence.slice(472), proposed.evidence.slice(472));
+	assert.deepEqual(current.evidence.slice(472, 476), proposed.evidence.slice(472));
 	const before = typeSurfaceCells(original, contracts), after = typeSurfaceCells(proposed, contracts);
 	const changed = [], added = [];
 	for(const [index, cell] of after.entries())
@@ -109,8 +112,8 @@ test("nominal npm docs separate Node acceptance from pending browser, native and
 	{
 		const row = author.split("\n").find(line => line.startsWith(prefix));
 		assert.ok(row.includes("Node installed; browser pending"));
-		assert.equal((row.match(/Generated; pending/gu) ?? []).length, 3);
-		assert.ok(row.includes("Node ordinary/reviewed installed"));
+		assert.equal((row.match(/Generated; pending/gu) ?? []).length, 2);
+		assert.ok(row.includes("Node and C/C++ ordinary/reviewed installed"));
 	}
 	for(const path of ["docs/lean/existing-package.md", "docs/lean/export-decisions.md", "docs/javascript-typescript.md", "docs/reference/types.md"])
 		assert.ok((await readFile(path, "utf8")).includes("nominal-subtype-npm-acceptance-20261011.md"), path);

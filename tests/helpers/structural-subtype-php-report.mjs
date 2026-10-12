@@ -10,7 +10,7 @@ import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mjs";
 import { brickMathSources } from "../../src/backends/php/brick-math.mjs";
-import { generateCopiedPhpPackage } from "../../src/backends/php/copied-values.mjs";
+import { structuralSubtypePhpGenerators } from "./structural-subtype-php-generators.mjs";
 import { validateBrickMathInstall } from "./brick-math.mjs";
 import { structuralSubtypeReview } from "./structural-subtype-installed-fixture.mjs";
 import { structuralSubtypePhpConfiguration, structuralSubtypePhpCounts, parseStructuralSubtypePhpResult } from "./structural-subtype-php-fixture.mjs";
@@ -143,12 +143,13 @@ export const checkStructuralSubtypePhpReport = async (read, { route, producerCom
 	assert.deepEqual(metadata.autoload, { files: ["src/Api.php"] });
 	for(const key of ["scripts", "repositories", "autoload-dev", "config", "bin", "target-dir", "include-path", "replace", "provide", "conflict"])
 		assert.ok(!Object.hasOwn(metadata, key), key);
+	const { generateCopiedPhpPackage } = await structuralSubtypePhpGenerators(producerCommit);
 	const generated = generateCopiedPhpPackage(model.bindingIr), expectedManifest = JSON.parse(generated["binding-manifest.json"]);
 	assert.equal(manifest.bindingIrSha256, model.bindingIrSha256);
 	assert.equal(manifest.namespace, "LeanStructuralsubtypes");
 	assert.deepEqual(manifest.exports, expectedManifest.exports);
 	assert.deepEqual(manifest.publicFiles, ["src/Api.php"]);
-	assert.equal((await read("package/src/Api.php")).toString(), generated["src/Api.php"]);
+	assert.equal((await read("package/src/Api.php")).toString(), generated["src/Api.php"], "Public API must match its recorded producer");
 	assert.equal(manifest.filesSha256["src/Api.php"], sha256(generated["src/Api.php"]));
 	for(const path of ["composer.json", "binding-manifest.json", "src/Api.php"])
 		assert.deepEqual(receipt.files[path], identity(await read(`package/${path}`)));

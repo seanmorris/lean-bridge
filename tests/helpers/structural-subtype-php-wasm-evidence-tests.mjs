@@ -10,6 +10,9 @@ import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { checkStructuralSubtypePhpWasmReport, structuralSubtypePhpWasmRecords } from "./structural-subtype-php-wasm-report.mjs";
 import { phpWasmIsolationFlags } from "./type-corpus-php-wasm-evidence.mjs";
+import { copiedPhpPublicSource } from "../../src/backends/php/copied-values.mjs";
+import { compileCopiedPhpModel } from "../../src/backends/php/copied-model.mjs";
+import { structuralSubtypePhpGenerators } from "./structural-subtype-php-generators.mjs";
 
 const root = "docs/evidence/structural-subtype-php-wasm-20261011";
 const indexSha256 = "da25a7fe6aae70c6f5c23713f7e65e0195fdccb59e5d7b27672007afaa825c5c";
@@ -70,6 +73,29 @@ test("structural PHP-Wasm archive authenticates both author routes and all twelv
 		assert.deepEqual(checked, Object.fromEntries(Object.entries(run).filter(([key]) => !["label", "tapSha256", "reportSha256"].includes(key))));
 		assert.equal(run.reportSha256, sha256(records.get("report.json")));
 		assert.deepEqual(load(records, "report.json").phpWasm.runtime, JSON.parse(runtime));
+	}
+});
+
+test("structural PHP-Wasm public API identities replay the recorded producer, not today's result comments", async () => {
+	const { index, files } = await checkArchive(path => readFile(`${root}/${path}`));
+	const original = await structuralSubtypePhpGenerators(index.producerCommit);
+	for(const run of index.runs)
+	{
+		const records = routeRecords(files, run), model = load(records, "build-0/model.json");
+		const options = { integerBits: 32, structuredCallables: true, lists: true, variants: true };
+		const generated = original.copiedPhpPublicSource(original.compileCopiedPhpModel(model.bindingIr, options));
+		const current = copiedPhpPublicSource(compileCopiedPhpModel(model.bindingIr, options));
+		assert.notEqual(generated, current);
+		assert.match(generated, /result\[\*\] checked by StructuralSubtypes.checkedPositive/u);
+		assert.match(current, /result\[\*\] projects the Subtype base value/u);
+		const deployment = load(records, "report.json").phpWasm.deployment;
+		const apis = Object.entries(deployment).filter(([path]) => path.endsWith("/src/Api.php"));
+		assert.equal(apis.length, 2);
+		for(const [, recorded] of apis)
+		{
+			assert.deepEqual(recorded, identity(Buffer.from(generated)));
+			assert.notDeepEqual(recorded, identity(Buffer.from(current)));
+		}
 	}
 });
 

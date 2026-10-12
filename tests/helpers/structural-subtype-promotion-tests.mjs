@@ -26,12 +26,19 @@ test("structural Subtype guides describe the installed scope and use the actual 
 			assert.ok(row.includes("Reviewed IR: Node JavaScript / TypeScript: Installed checks passed (input, result, field)"));
 			assert.ok(row.includes("Browser / React / Worker: Installed checks passed (input, result)"));
 		}
+		else if(["docs/consume/c.md", "docs/consume/cpp.md"].includes(path))
+		{
+			assert.ok(row.includes("Ordinary source: Installed checks passed (input, result, field)"), path);
+			assert.ok(row.includes("Reviewed IR: Installed checks passed (input, result, field)"), path);
+			assert.ok(row.includes("Not audited (callback input, callback result)"), path);
+		}
 		else
 		{
 			assert.ok(row.includes("Ordinary source: Installed checks passed (input, result)"), path);
 			assert.ok(row.includes("Reviewed IR: Installed checks passed (input, result)"), path);
 		}
-		assert.ok(row.includes("Not audited (field, callback input, callback result)"), path);
+		if(!["docs/consume/c.md", "docs/consume/cpp.md"].includes(path))
+			assert.ok(row.includes("Not audited (field, callback input, callback result)"), path);
 		assert.ok(source.includes("### Subtypes inside containers\n"), path);
 		assert.ok(source.includes("structural-subtype-promotion-20261011.md"), path);
 		assert.ok(source.replace(/\s+/gu, " ").includes("hosted release-floor acceptance"), path);

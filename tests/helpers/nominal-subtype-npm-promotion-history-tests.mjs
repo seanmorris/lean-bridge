@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { nominalSubtypeNpmReferences, promoteNominalSubtypeNpm } from "./nominal-subtype-npm-promotion.mjs";
+import { beforeNominalSubtypeNativePromotionSource, nominalSubtypeNativePromotionHistoryPath } from "./nominal-subtype-native-promotion-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeNominalSubtypeNpmPromotionSource, nominalSubtypeNpmPromotionChangedPaths, nominalSubtypeNpmPromotionHistoryPath, nominalSubtypeNpmPromotionPredecessor, reverseNominalSubtypeNpmPromotionUpdate } from "./nominal-subtype-npm-promotion-history.mjs";
 
@@ -41,6 +42,12 @@ test("Nominal npm promotion authenticates exact changes and the scoped Node supp
 	const inventoryPath = "docs/type-surface.v1.json";
 	assert.equal(beforeNominalSubtypeNpmPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
 	const expected = await promoteNominalSubtypeNpm(JSON.parse(original(inventoryPath)), await nominalSubtypeNpmReferences());
+	const later = JSON.parse(await readFile(nominalSubtypeNativePromotionHistoryPath));
+	for(const entry of expected.evidence) for(const file of entry.files)
+	{
+		const update = later.updates.find(item => item.path === file.path);
+		if(update && file.sha256 === update.currentSha256) file.sha256 = update.previousSha256;
+	}
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{
@@ -49,7 +56,7 @@ test("Nominal npm promotion authenticates exact changes and the scoped Node supp
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
 	assert.equal(pins, 123);
-	assert.deepEqual(JSON.parse(await readFile(inventoryPath, "utf8")), expected);
+	assert.deepEqual(JSON.parse(beforeNominalSubtypeNativePromotionSource(inventoryPath, await readFile(inventoryPath, "utf8"))), expected);
 	assert.equal(expected.evidence.length, 476); assert.equal(expected.observations.length, 573);
 });
 
