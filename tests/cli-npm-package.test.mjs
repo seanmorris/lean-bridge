@@ -16,6 +16,8 @@ import test from "node:test";
 import { buildCliNpmPackage } from "../src/release/cli-npm-package.mjs";
 import { identifyBuildEngine } from "../src/build/engine-execution-request.mjs";
 import { readBuilderManifest } from "../src/build/canonical-build.mjs";
+import "./helpers/cli-import-repair-tests.mjs";
+import "./helpers/cli-import-repair-history-tests.mjs";
 
 const execute = (...args) => promisify(execFile)(...args).catch(error => {
 	error.message += `\nstdout:\n${error.stdout ?? ""}\nstderr:\n${error.stderr ?? ""}`;

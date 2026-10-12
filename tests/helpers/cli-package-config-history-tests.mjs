@@ -10,6 +10,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { authenticatedCliPackageConfigs, cliPackageConfigPath, retargetCliInventory, selectCliPackageConfig } from "./cli-package-config-history.mjs";
 import { beforeNpmFinDiagnosticsSource } from "./npm-fin-diagnostics-source-history.mjs";
 import { beforeFinDistributionSource } from "./fin-distribution-source-history.mjs";
+import { beforeCliImportRepairSource } from "./cli-import-repair-history.mjs";
 
 const inventory = config => {
 	const files = [...config.files, "README.md", "package.json"].map(path => ({ path }));
@@ -21,15 +22,21 @@ test("CLI package configurations come only from the current source and its recor
 	const candidates = await authenticatedCliPackageConfigs();
 	assert.equal(candidates[0].sha256, sha256(current));
 	assert.equal(new Set(candidates.map(item => item.sha256)).size, candidates.length);
+	const previous = candidates.find(item => item.sha256 === sha256(beforeCliImportRepairSource(cliPackageConfigPath, current)));
+	assert.ok(previous);
+	assert.ok(!previous.config.files.includes("src/build/component-refinement-mirrors.mjs"));
+	assert.ok(candidates[0].config.files.includes("src/build/component-refinement-mirrors.mjs"));
 	// Registering the Fin documentation modules reconstructs its predecessor exactly.
 	const finModule = "src/backends/native/fin-refinements.mjs";
-	assert.equal(candidates[1].sha256, sha256(beforeFinDistributionSource(cliPackageConfigPath, current)));
+	const beforeFin = candidates.find(item => item.sha256 === sha256(beforeFinDistributionSource(cliPackageConfigPath, current)));
+	assert.ok(beforeFin);
 	assert.ok(candidates[0].config.files.includes(finModule));
-	assert.ok(!candidates[1].config.files.includes(finModule));
+	assert.ok(!beforeFin.config.files.includes(finModule));
 	// The #1419 module transition reconstructs its predecessor exactly.
-	assert.equal(candidates[2].sha256, sha256(beforeNpmFinDiagnosticsSource(cliPackageConfigPath, current)));
-	assert.ok(candidates[1].config.files.includes("src/build/component-engine-failure.mjs"));
-	assert.ok(!candidates[2].config.files.includes("src/build/component-engine-failure.mjs"));
+	const beforeDiagnostics = candidates.find(item => item.sha256 === sha256(beforeNpmFinDiagnosticsSource(cliPackageConfigPath, current)));
+	assert.ok(beforeDiagnostics);
+	assert.ok(beforeFin.config.files.includes("src/build/component-engine-failure.mjs"));
+	assert.ok(!beforeDiagnostics.config.files.includes("src/build/component-engine-failure.mjs"));
 	for(const { config } of candidates) assert.deepEqual(await selectCliPackageConfig(inventory(config)), config);
 	const base = candidates[0].config;
 	for(const forged of [

@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeCliImportRepairSource } from "./cli-import-repair-history.mjs";
 import { beforeNominalSubtypePerlRegistrationSource, nominalSubtypePerlRegistrationChangedPaths, nominalSubtypePerlRegistrationHistoryPath, nominalSubtypePerlRegistrationPredecessor, reverseNominalSubtypePerlRegistrationUpdate } from "./nominal-subtype-perl-registration-history.mjs";
 
 test("nominal Perl registration history authenticates exact changes without changing support claims", async t => {
@@ -48,7 +49,7 @@ test("nominal Perl registration history authenticates exact changes without chan
 		if(update && file.sha256 === update.previousSha256)
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
-	assert.equal(pins, 0); assert.deepEqual(JSON.parse(await readFile(inventoryPath, "utf8")), expected);
+	assert.equal(pins, 0); assert.deepEqual(JSON.parse(beforeCliImportRepairSource(inventoryPath, await readFile(inventoryPath, "utf8"))), expected);
 	assert.equal(expected.evidence.length, 480); assert.equal(expected.observations.length, 575);
 	t.diagnostic(`${pins} current-source pins refreshed; all support claims unchanged`);
 });

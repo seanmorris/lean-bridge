@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeCliImportRepairSource } from "./cli-import-repair-history.mjs";
 
 export const nominalSubtypePerlRegistrationHistoryPath = "docs/evidence/nominal-subtype-perl-registration-source-history-20261012.json";
 export const nominalSubtypePerlRegistrationPredecessor = "d2921624c47665f7a622f5bba96c4e306459e983";
@@ -50,6 +51,7 @@ export const reverseNominalSubtypePerlRegistrationUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeNominalSubtypePerlRegistrationSource = (path, source, expected) => {
+	source = beforeCliImportRepairSource(path, source, expected);
 	if(typeof source !== "string" || !nominalSubtypePerlRegistrationChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

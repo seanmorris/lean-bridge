@@ -1238,7 +1238,8 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   const consumerWorkflows = `${workflow}\n${perlWorkflow}`;
   const contract = await readConsumerSupport();
   const managed = assertManagedCiIsolation(workflow);
-  const native = assertNativeCiIsolation(workflow, JSON.parse(await readFile("tests/fixtures/ci/native-acceptance-before-isolation.json")));
+  // The historical verifier needs the complete workflow identity before exact rewinds.
+  const native = assertNativeCiIsolation(structuralWorkflow, JSON.parse(await readFile("tests/fixtures/ci/native-acceptance-before-isolation.json")));
   for(const consumer of contract.consumers)
 {
     if(!managed.profiles.includes(consumer.id) && !native.selectedConsumers.includes(consumer.id))

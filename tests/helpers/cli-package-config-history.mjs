@@ -7,6 +7,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeCliImportRepairSource } from "./cli-import-repair-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeFinDistributionSource } from "./fin-distribution-source-history.mjs";
 import { beforeCombinedLineageSource } from "./combined-lineage-source-history.mjs";
@@ -24,7 +25,8 @@ export const cliPackageConfigPath = "config/cli-package.v1.json";
 export const cliPackageExtras = Object.freeze(["README.md", "package.json"]);
 // Newest first. Each step reverses only a transition whose current digest was recorded.
 const lineage = [
-	beforeFinDistributionSource
+	beforeCliImportRepairSource
+	, beforeFinDistributionSource
 	, beforeCombinedLineageSource
 	, beforeDiagnosticFollowupSource
 	, beforeNpmFinDiagnosticsSource
