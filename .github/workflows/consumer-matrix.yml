@@ -3754,6 +3754,32 @@ jobs:
           test -s build/recursive/dotnet-conflicts.json
           test -s build/type-corpus/dotnet.json
           test -s build/type-corpus/reviewed-native-dotnet.json
+      - name: Install the isolated nominal C# SDK
+        if: matrix.profile == 'dotnet'
+        timeout-minutes: 20
+        uses: actions/setup-dotnet@v6
+        env:
+          DOTNET_INSTALL_DIR: ${{ runner.temp }}/lean-bridge-nominal-dotnet-8.0.424
+        with:
+          dotnet-version: '8.0.424'
+      - name: Require nominal C# packages on the pinned SDK
+        if: matrix.profile == 'dotnet'
+        timeout-minutes: 45
+        env:
+          LEAN_NUM_THREADS: "1"
+          MSBUILDDISABLENODEREUSE: "1"
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-nominal-subtype-dotnet-ci.sh "$RUNNER_TEMP/lean-bridge-nominal-dotnet-8.0.424/dotnet"
+      - name: Preserve complete and partial nominal C# records
+        if: always() && matrix.profile == 'dotnet'
+        uses: actions/upload-artifact@v7
+        with:
+          name: nominal-subtype-dotnet-${{ github.sha }}
+          path: build/nominal-subtype-dotnet-ci/
+          if-no-files-found: error
+          retention-days: 30
       - name: Upload the .NET real-Lean type corpus report
         if: always() && matrix.profile == 'dotnet'
         uses: actions/upload-artifact@v7

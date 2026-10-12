@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeWitHistoryCheckoutRepairSource, witHistoryCheckoutRepairChangedPaths, witHistoryCheckoutRepairHistoryPath, witHistoryCheckoutRepairPredecessor, reverseWitHistoryCheckoutRepairUpdate } from "./wit-history-checkout-repair-history.mjs";
 
 test("WIT workflow comparison repair preserves exact original sources and support claims", async () => {
@@ -50,13 +51,13 @@ test("WIT workflow comparison repair preserves exact original sources and suppor
 	}
 	const path = "docs/type-surface.v1.json";
 	const inventory = JSON.parse(original(path));
-	assert.equal(await readFile(path, "utf8"), original(path));
+	assert.equal(beforeFinRefinementSource(path, await readFile(path, "utf8"), sha256(original(path))), original(path));
 	assert.equal(inventory.evidence.length, 496);
 	assert.equal(inventory.observations.length, 583);
 	for(const entry of inventory.evidence) for(const file of entry.files)
 		assert.ok(!witHistoryCheckoutRepairChangedPaths.includes(file.path));
 	const workflow = ".github/workflows/consumer-matrix.yml";
-	assert.equal(await readFile(workflow, "utf8"), original(workflow));
+	assert.equal(beforeFinRefinementSource(workflow, await readFile(workflow, "utf8"), sha256(original(workflow))), original(workflow));
 });
 
 test("WIT workflow repair writer refuses an unrelated checkout before writing", async t => {

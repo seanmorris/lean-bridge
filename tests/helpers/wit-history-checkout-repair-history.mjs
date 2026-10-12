@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeNominalSubtypeDotnetCiSource } from "./nominal-subtype-dotnet-ci-history.mjs";
 
 export const witHistoryCheckoutRepairHistoryPath = "docs/evidence/wit-history-checkout-repair-source-history-20261012.json";
 export const witHistoryCheckoutRepairPredecessor = "5762111059313672f23825b65df2f91ec05437a3";
@@ -53,6 +54,7 @@ export const reverseWitHistoryCheckoutRepairUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeWitHistoryCheckoutRepairSource = (path, source, expected) => {
+	source = beforeNominalSubtypeDotnetCiSource(path, source, expected);
 	if(typeof source !== "string"
 		|| !witHistoryCheckoutRepairChangedPaths.includes(path)) return source;
 	const digest = sha256(source);

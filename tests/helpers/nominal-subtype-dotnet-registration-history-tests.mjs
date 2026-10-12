@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeNominalSubtypeDotnetRegistrationSource, nominalSubtypeDotnetRegistrationChangedPaths, nominalSubtypeDotnetRegistrationHistoryPath, nominalSubtypeDotnetRegistrationPredecessor, reverseNominalSubtypeDotnetRegistrationUpdate } from "./nominal-subtype-dotnet-registration-history.mjs";
 
 test("nominal C# harness registration authenticates exact changes without adding support claims", async () => {
@@ -40,7 +41,7 @@ test("nominal C# harness registration authenticates exact changes without adding
 		}
 	}
 	const path = "docs/type-surface.v1.json", inventory = JSON.parse(original(path));
-	assert.equal(await readFile(path, "utf8"), original(path));
+	assert.equal(beforeFinRefinementSource(path, await readFile(path, "utf8"), sha256(original(path))), original(path));
 	assert.equal(inventory.evidence.length, 496); assert.equal(inventory.observations.length, 583);
 	for(const entry of inventory.evidence) for(const file of entry.files)
 		assert.ok(!nominalSubtypeDotnetRegistrationChangedPaths.includes(file.path));

@@ -50,7 +50,9 @@ test("nominal Rust promotion history authenticates exact changes and the six obs
 		if(update && file.sha256 === update.previousSha256)
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
-	assert.ok(pins > 0); assert.deepEqual(JSON.parse(await readFile(inventoryPath, "utf8")), expected);
+	const inventoryUpdate = record.updates.find(update => update.path === inventoryPath);
+	const checkpoint = beforeNominalSubtypeRustPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8"), inventoryUpdate.currentSha256);
+	assert.ok(pins > 0); assert.deepEqual(JSON.parse(checkpoint), expected);
 	assert.equal(expected.evidence.length, 496); assert.equal(expected.observations.length, 583);
 	t.diagnostic(`${pins} current-source pins refreshed; exactly six observed Rust cells promoted or supplemented`);
 });
