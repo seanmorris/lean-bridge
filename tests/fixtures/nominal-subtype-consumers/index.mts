@@ -1,3 +1,8 @@
+/**
+ * Positive and negative public TypeScript calls for nominal Subtypes.
+ *
+ * @file
+ */
 import * as api from "nominalsubtypes";
 import "./results.mjs";
 
