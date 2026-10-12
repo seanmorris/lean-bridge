@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nominal-subtype-rust-archive-source-v1",
+  "predecessorCommit": "5f3dd63b943efa9d5e49d2683da8ab2ebc7d2e59",
+  "updates": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "dfe9432491e81ec97bbab7a623041f6b8b59e91a2d49fb7985da612519ad6d13",
+      "previousSha256": "96a8e5b69f71bbdfa7b4b8154230efe25f955b665e4d56416e3538442a9a0ccc",
+      "edits": [
+        {
+          "start": 4498,
+          "previous": "",
+          "current": "import { nominalSubtypeRustArchiveChangedPaths } from \"./nominal-subtype-rust-archive-history.mjs\";\n"
+        },
+        {
+          "start": 65801,
+          "previous": "",
+          "current": "\t, ...nominalSubtypeRustArchiveChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-installed-fixture-tests.mjs",
+      "currentSha256": "2b65cb593f8d999d7d082ee6909f7b39187a6e125e503e34e3bb3ef4463df345",
+      "previousSha256": "4bf6bd79a91443f901f5739be61aaeec5ef3f88b23028b6394d07ccfa6cfb6ca",
+      "edits": [
+        {
+          "start": 3261,
+          "previous": "",
+          "current": "import \"./nominal-subtype-rust-evidence-tests.mjs\";\nimport \"./nominal-subtype-rust-archive-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-rust-registration-history.mjs",
+      "currentSha256": "70225826ed802d78c2d9cc3ddb1bf33c26017d5fe4c9109cc66c51d16a4f4cbd",
+      "previousSha256": "e6a990fac155fde73a19edbfa14b84fc6f03bd9115867b361420d6b31b16f19f",
+      "edits": [
+        {
+          "start": 233,
+          "previous": "",
+          "current": "import { beforeNominalSubtypeRustArchiveSource } from \"./nominal-subtype-rust-archive-history.mjs\";\n"
+        },
+        {
+          "start": 2316,
+          "previous": "",
+          "current": "\tsource = beforeNominalSubtypeRustArchiveSource(path, source, expected);\n"
+        }
+      ]
+    }
+  ]
+}

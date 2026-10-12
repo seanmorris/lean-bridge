@@ -57,6 +57,8 @@ import "./nominal-subtype-rust-tests.mjs";
 import "./nominal-subtype-rust-package-tests.mjs";
 import "./nominal-subtype-rust-installed-tests.mjs";
 import "./nominal-subtype-rust-registration-history-tests.mjs";
+import "./nominal-subtype-rust-evidence-tests.mjs";
+import "./nominal-subtype-rust-archive-history-tests.mjs";
 
 test("nominal package review independently matches ordinary choices and retains constructor-free results", () => {
 	for(const resultOnly of [false, true])
