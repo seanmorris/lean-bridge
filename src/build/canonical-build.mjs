@@ -28,6 +28,7 @@ import { captureLockedLakeProject } from "./lake-workspace.mjs";
 import { verifyLakeSnapshotProject } from "./lake-dependency-snapshot.mjs";
 import { writeEngineExecutionRequest } from "./engine-execution-request.mjs";
 import { canonicalJson } from "../capsule/node.mjs";
+import { hashBindingIr, parseBindingIr } from "../binding-ir/canonical.mjs";
 import { readVerifiedCanonicalBundle } from "../release/canonical-bundle-input.mjs";
 import { validateComponentReleaseBundleManifest } from "../release/component-release-bundle.mjs";
 import { parsePublicationIndex } from "../release/release-rehearsal.mjs";
@@ -867,9 +868,25 @@ export const buildCanonicalProject = async ({
 		if(root === engine)
 		{
 			// The repository's universal fixture has its own package projections.
-			// Its Lean component name is not an ordinary-component npm coordinate.
-			const analysis = await analyzeLeanProject(root, { signal, targets });
+			// Reviewed contracts in tests and evidence do not select this API.
+			const inspected = await inspectLeanProject(root, { signal });
 			const graph = JSON.parse(await readFile(join(engine, "poc/lean-link-spike/graph-lock.json"), "utf8"));
+			const path = "poc/lean-link-spike/bindings/alpha.binding-ir.json";
+			const bytes = await readFile(join(root, path));
+			const document = parseBindingIr(bytes.toString("utf8"));
+			const semanticSha256 = hashBindingIr(document);
+			const matching = graph.libraries.filter(library => library.id === document.component.id);
+			const binding = matching[0]?.bindingIr;
+			if(matching.length !== 1
+				|| binding?.path !== "bindings/alpha.binding-ir.json"
+				|| binding.sha256 !== sha256(bytes)
+				|| binding.semanticSha256 !== semanticSha256
+				|| inspected.inputs.find(input => input.path === path)?.sha256 !== sha256(bytes)
+			) {
+				fail("universal-fixture-binding-ir-mismatch", "The universal fixture requires its exact graph-pinned Alpha contract");
+			}
+			const analysis = { ...inspected, adapterHints: []
+				, bindingIr: { origin: "existing-validated", path, semanticSha256, document } };
 			componentPlan = createComponentBuildPlan({ analysis, runtime: graph.runtime, targets });
 		}
 		else

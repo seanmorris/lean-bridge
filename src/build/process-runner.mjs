@@ -65,7 +65,7 @@ const capture = ({ command, args, cwd, env = process.env, timeoutMs = 30 * 60 * 
 	child.once("error", error => {
     rejectOnce(error);
 	});
-	child.once("close", code => {
+	child.once("close", (code, terminationSignal) => {
 		if(cancellation)
 		{ rejectOnce(cancellation); return; }
     const result = {
@@ -74,9 +74,16 @@ const capture = ({ command, args, cwd, env = process.env, timeoutMs = 30 * 60 * 
       , stderr: Buffer.concat(stderr).toString("utf8")
     };
     if(code === 0) acceptOnce(result);
-    else rejectOnce(new CanonicalBuildError("build-command-failed", `${command} exited with status ${code}`, {
-      details: { command, args, stderr: result.stderr.slice(-8000), stdout: result.stdout.slice(-8000) }
-    }));
+		else
+		{
+			const reason = terminationSignal
+				? `terminated by signal ${terminationSignal}`
+				: `exited with status ${code}`;
+			rejectOnce(new CanonicalBuildError("build-command-failed", `${command} ${reason}`, {
+				details: { command, args, exitCode: code, signal: terminationSignal
+					, stderr: result.stderr.slice(-8000), stdout: result.stdout.slice(-8000) }
+			}));
+		}
 	});
 });
 

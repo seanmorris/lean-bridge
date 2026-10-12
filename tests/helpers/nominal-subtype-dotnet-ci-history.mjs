@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforePhpWasmFailureDiagnosticsSource } from "./php-wasm-failure-diagnostics-history.mjs";
 
 export const nominalSubtypeDotnetCiHistoryPath = "docs/evidence/nominal-subtype-dotnet-ci-source-history-20261012.json";
 export const nominalSubtypeDotnetCiPredecessor = "51f55c70d0aa7fc08e582e2de9fb51f12e1869f7";
@@ -59,6 +60,7 @@ export const reverseNominalSubtypeDotnetCiUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeNominalSubtypeDotnetCiSource = (path, source, expected) => {
+	source = beforePhpWasmFailureDiagnosticsSource(path, source, expected);
 	if(typeof source !== "string"
 		|| !nominalSubtypeDotnetCiChangedPaths.includes(path)) return source;
 	const digest = sha256(source);

@@ -12,6 +12,7 @@ import { assertNominalSubtypeRustWorkflow } from "./nominal-subtype-rust-ci-work
 import { assertNominalSubtypeRubyWorkflow } from "./nominal-subtype-ruby-ci-workflow.mjs";
 import { assertNominalSubtypePythonWorkflow } from "./nominal-subtype-python-ci-workflow.mjs";
 import { assertStructuralSubtypeWorkflow } from "./structural-subtype-ci-workflow.mjs";
+import { beforePhpWasmFailureDiagnosticsSource } from "./php-wasm-failure-diagnostics-history.mjs";
 
 const path = ".github/workflows/consumer-matrix.yml";
 const predecessor = "51f55c70d0aa7fc08e582e2de9fb51f12e1869f7";
@@ -20,8 +21,9 @@ test("nominal C# CI preserves every earlier step and requires an isolated pinned
 	const source = await readFile(path, "utf8");
 	assertNominalSubtypeDotnetWorkflow(source);
 	const previous = execFileSync("git", ["show", `${predecessor}:${path}`], { encoding: "utf8", maxBuffer: 4 * 1024 * 1024 });
-	assert.equal(disableNominalSubtypeDotnetWorkflow(source), previous);
-	assert.equal(enableNominalSubtypeDotnetWorkflow(previous), source);
+	const checkpoint = beforePhpWasmFailureDiagnosticsSource(path, source);
+	assert.equal(disableNominalSubtypeDotnetWorkflow(checkpoint), previous);
+	assert.equal(enableNominalSubtypeDotnetWorkflow(previous), checkpoint);
 	assertNominalSubtypeRustWorkflow(source);
 	assertNominalSubtypePythonWorkflow(source);
 	assertNominalSubtypeRubyWorkflow(source);

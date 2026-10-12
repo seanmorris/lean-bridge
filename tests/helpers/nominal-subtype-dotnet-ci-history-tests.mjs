@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforePhpWasmFailureDiagnosticsSource } from "./php-wasm-failure-diagnostics-history.mjs";
 import { beforeNominalSubtypeDotnetCiSource, nominalSubtypeDotnetCiChangedPaths, nominalSubtypeDotnetCiHistoryPath, nominalSubtypeDotnetCiPredecessor, reverseNominalSubtypeDotnetCiUpdate } from "./nominal-subtype-dotnet-ci-history.mjs";
 
 test("nominal C# CI preserves exact original sources and support claims", async () => {
@@ -53,7 +54,7 @@ test("nominal C# CI preserves exact original sources and support claims", async 
 	assert.equal(beforeNominalSubtypeDotnetCiSource(path, await readFile(path, "utf8")), original(path));
 	assert.equal(inventory.evidence.length, 496);
 	assert.equal(inventory.observations.length, 583);
-	const current = JSON.parse(await readFile(path));
+	const current = JSON.parse(beforePhpWasmFailureDiagnosticsSource(path, await readFile(path, "utf8")));
 	const expected = structuredClone(inventory); let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{

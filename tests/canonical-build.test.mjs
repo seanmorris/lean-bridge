@@ -10,6 +10,8 @@ import { access, mkdir, mkdtemp, readFile, readdir, realpath, rm, writeFile } fr
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
+import "./helpers/process-failure-diagnostics-tests.mjs";
+import "./helpers/canonical-fixture-plan-tests.mjs";
 
 import {
 	buildCanonicalProject,
