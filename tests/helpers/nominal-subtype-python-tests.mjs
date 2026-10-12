@@ -12,7 +12,8 @@ import test from "node:test";
 import { generateCopiedPythonPackage } from "../../src/backends/python/copied-values.mjs";
 import { nominalSubtypeInstalledConfiguration, nominalSubtypeInstalledReview } from "./nominal-subtype-installed-fixture.mjs";
 import { nominalSubtypePythonRoutes, nominalSubtypePythonModes, nominalSubtypePythonConfiguration, nominalSubtypePythonCaller, nominalSubtypePythonCounts, nominalSubtypePythonSelection, nominalSubtypePythonExecutables, parseNominalSubtypePythonResult } from "./nominal-subtype-python-fixture.mjs";
-import { assertNominalSubtypePythonIdentity } from "./nominal-subtype-python-wheel.mjs";
+import { assertNominalSubtypePythonIdentity, nominalSubtypePythonNativeEvidence } from "./nominal-subtype-python-wheel.mjs";
+import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { nominalSubtypePythonGenerator, nominalSubtypePythonOriginal } from "./nominal-subtype-python-generators.mjs";
 import { runCopied } from "./copied-fixture-install.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
@@ -143,4 +144,26 @@ test("nominal Python evidence generator loads its complete frozen source closure
 	for(const invalid of ["/tmp/source", "src/../package.json", "build/model.json"])
 		assert.throws(() => nominalSubtypePythonOriginal(revision, invalid));
 	t.diagnostic(`${generator.paths.length} frozen transitive generator modules`);
+});
+
+test("nominal Python source reconstruction preserves producer library order without trusting receipt order", () => {
+	const file = digit => ({ sha256: digit.repeat(64), bytes: 1 });
+	const runtime = { files: { "include/runtime.h": file("1"), "lib/libruntime.so": file("2") } };
+	const identity = { runtimeIdentity: sha256(canonicalJson(runtime)), bindingIrSha256: "3".repeat(64) };
+	const component = { ...identity, library: "libcomponent.so", nativeLibrary: file("4") };
+	const adapter = { ...identity, library: "libadapter.so"
+		, componentReceiptSha256: sha256(canonicalJson(component))
+		, files: { "lib/libadapter.so": file("5") } };
+	const receipt = { ...identity, component: { id: "synthetic" }
+		, files: { "lean_nominalsubtypes/native/linux-x64/libruntime.so": file("2")
+			, "lean_nominalsubtypes/native/linux-x64/libcomponent.so": file("4")
+			, "lean_nominalsubtypes/native/linux-x64/libadapter.so": file("5") } };
+	const evidence = nominalSubtypePythonNativeEvidence(receipt, component, adapter, runtime);
+	assert.deepEqual(Object.keys(evidence.libraries), ["libadapter.so", "libcomponent.so", "libruntime.so"]);
+	const reordered = { ...receipt, files: Object.fromEntries(Object.entries(receipt.files).reverse()) };
+	assert.equal(JSON.stringify(nominalSubtypePythonNativeEvidence(reordered, component, adapter, runtime)), JSON.stringify(evidence));
+	const bad = structuredClone(receipt); bad.files["lean_nominalsubtypes/native/linux-x64/libcomponent.so"].sha256 = "0".repeat(64);
+	assert.throws(() => nominalSubtypePythonNativeEvidence(bad, component, adapter, runtime));
+	assert.throws(() => nominalSubtypePythonNativeEvidence(receipt, { ...component, runtimeIdentity: "0".repeat(64) }, adapter, runtime));
+	assert.throws(() => nominalSubtypePythonNativeEvidence(receipt, component, { ...adapter, componentReceiptSha256: "0".repeat(64) }, runtime));
 });

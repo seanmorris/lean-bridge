@@ -17,6 +17,32 @@ import { nominalSubtypePythonPackage } from "./nominal-subtype-python-fixture.mj
 export const nominalSubtypePythonReceipt = `${nominalSubtypePythonPackage}/lean_bridge/package-receipt.json`;
 
 /**
+ * Reconstruct generator evidence in producer order, independently of receipt key order.
+ *
+ * @param receipt - Original wheel receipt.
+ * @param component - Compiler-owned native component receipt.
+ * @param adapter - Native C adapter receipt.
+ * @param runtime - Shared runtime manifest.
+ */
+export const nominalSubtypePythonNativeEvidence = (receipt, component, adapter, runtime) => {
+	assert.equal(sha256(canonicalJson(runtime)), receipt.runtimeIdentity);
+	assert.equal(component.runtimeIdentity, receipt.runtimeIdentity); assert.equal(adapter.runtimeIdentity, receipt.runtimeIdentity);
+	assert.equal(component.bindingIrSha256, receipt.bindingIrSha256); assert.equal(adapter.bindingIrSha256, receipt.bindingIrSha256);
+	assert.equal(adapter.componentReceiptSha256, sha256(canonicalJson(component)));
+	const libraries = { [adapter.library]: adapter.files[`lib/${adapter.library}`].sha256
+		, [component.library]: component.nativeLibrary.sha256
+		, ...Object.fromEntries(Object.entries(runtime.files).filter(([path]) => path.startsWith("lib/")).map(([path, file]) => [path.slice(4), file.sha256])) };
+	const actual = Object.fromEntries(Object.entries(receipt.files)
+		.filter(([path]) => path.startsWith(`${nominalSubtypePythonPackage}/native/linux-x64/`))
+		.map(([path, file]) => [path.split("/").at(-1), file.sha256]));
+	assert.deepEqual(actual, libraries);
+	return { runtimeIdentity: receipt.runtimeIdentity
+		, componentId: receipt.component.id
+		, componentReceiptSha256: sha256(canonicalJson(component))
+		, library: adapter.library, libraries };
+};
+
+/**
  * Require exact package coordinates, source authority and native identities.
  *
  * @param receipt - Original wheel receipt.
@@ -72,21 +98,7 @@ export const inspectNominalSubtypePythonWheel = async ({ root, archive, pkg, mod
 	const json = async path => JSON.parse(await readFile(join(root, `${nominalSubtypePythonPackage}/lean_bridge/${path}`)));
 	assert.deepEqual(await json("component/model.json"), model);
 	const component = await json("component/native-component.json"), adapter = await json("native-c-adapter.json"), runtime = await json("runtime.json");
-	assert.equal(sha256(canonicalJson(runtime)), receipt.runtimeIdentity);
-	assert.equal(component.runtimeIdentity, receipt.runtimeIdentity); assert.equal(adapter.runtimeIdentity, receipt.runtimeIdentity);
-	assert.equal(component.bindingIrSha256, model.bindingIrSha256); assert.equal(adapter.bindingIrSha256, model.bindingIrSha256);
-	assert.equal(adapter.componentReceiptSha256, sha256(canonicalJson(component)));
-	const libraries = Object.fromEntries(Object.entries(receipt.files)
-		.filter(([path]) => path.startsWith(`${nominalSubtypePythonPackage}/native/linux-x64/`))
-		.map(([path, file]) => [path.split("/").at(-1), file.sha256]));
-	const expectedLibraries = { [adapter.library]: adapter.files[`lib/${adapter.library}`].sha256
-		, [component.library]: component.nativeLibrary.sha256
-		, ...Object.fromEntries(Object.entries(runtime.files).filter(([path]) => path.startsWith("lib/")).map(([path, file]) => [path.slice(4), file.sha256])) };
-	assert.deepEqual(libraries, expectedLibraries);
-	const evidence = { runtimeIdentity: receipt.runtimeIdentity
-		, componentId: model.component.id
-		, componentReceiptSha256: sha256(canonicalJson(component))
-		, library: adapter.library, libraries };
+	const evidence = nominalSubtypePythonNativeEvidence(receipt, component, adapter, runtime);
 	const generated = generateCopiedPythonPackage(model.bindingIr, evidence);
 	for(const [path, source] of Object.entries(generated))
 		assert.equal(await readFile(join(root, path.startsWith(`${nominalSubtypePythonPackage}/`) ? path : `${nominalSubtypePythonPackage}/lean_bridge/${path}`), "utf8"), source);
