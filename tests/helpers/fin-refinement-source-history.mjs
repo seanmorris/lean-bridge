@@ -52,6 +52,7 @@ import { nominalSubtypeRustRegistrationChangedPaths } from "./nominal-subtype-ru
 import { nominalSubtypeRustArchiveChangedPaths } from "./nominal-subtype-rust-archive-history.mjs";
 import { nominalSubtypeRustPromotionChangedPaths } from "./nominal-subtype-rust-promotion-history.mjs";
 import { nominalSubtypeDotnetRegistrationChangedPaths } from "./nominal-subtype-dotnet-registration-history.mjs";
+import { witHistoryCheckoutRepairChangedPaths } from "./wit-history-checkout-repair-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeSubtypeRefinementSource, subtypeRefinementChangedPaths } from "./subtype-refinement-source-history.mjs";
 import { subtypeHeapChangedPaths } from "./subtype-heap-source-history.mjs";
@@ -969,6 +970,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nominalSubtypeRustArchiveChangedPaths
 	, ...nominalSubtypeRustPromotionChangedPaths
 	, ...nominalSubtypeDotnetRegistrationChangedPaths
+	, ...witHistoryCheckoutRepairChangedPaths
 ])].sort());
 
 /**

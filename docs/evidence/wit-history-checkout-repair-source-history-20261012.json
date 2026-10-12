@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "milestone": "wit-history-checkout-repair-source-v1",
+  "predecessorCommit": "5762111059313672f23825b65df2f91ec05437a3",
+  "updates": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "c757dda1c7900a94ccd4fbc02e7ce2fc84bc8e766dff937c0c9b570052b29cbf",
+      "previousSha256": "e64f96bfd777e95fd09c69bbf7edab2851b2d1f6b6648a645a0b6c8122bcc49c",
+      "edits": [
+        {
+          "start": 4816,
+          "previous": "",
+          "current": "import { witHistoryCheckoutRepairChangedPaths } from \"./wit-history-checkout-repair-history.mjs\";\n"
+        },
+        {
+          "start": 66258,
+          "previous": "",
+          "current": "\t, ...witHistoryCheckoutRepairChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-dotnet-registration-history.mjs",
+      "currentSha256": "c0788e31ebfa66e35758438299b4162c3d2c51beba0e7b041878bd4acda45a37",
+      "previousSha256": "335748ace902d971bf92c43f2d119333fc0f50c849267296355c10af88c29921",
+      "edits": [
+        {
+          "start": 231,
+          "previous": "",
+          "current": "import { beforeWitHistoryCheckoutRepairSource } from \"./wit-history-checkout-repair-history.mjs\";\n"
+        },
+        {
+          "start": 2326,
+          "previous": "",
+          "current": "\tsource = beforeWitHistoryCheckoutRepairSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/wit-history-checkout-history-tests.mjs",
+      "currentSha256": "13a741b5e990850d3887c33fe5bd6003634a5375944d4c5cb2a1e04020e6d4a7",
+      "previousSha256": "de417bf59d810aad2b4c3c34e9963acfb64966cff36707162feba9eb23f7bad3",
+      "edits": [
+        {
+          "start": 371,
+          "previous": "",
+          "current": "import \"./wit-history-checkout-repair-history-tests.mjs\";\n"
+        },
+        {
+          "start": 3969,
+          "previous": "\tassert.equal(await readFile(workflowPath, \"utf8\"), earlierJobs + \"\\n  wasi-consumer:\\n\" + witAndLaterJobs.replace(checkout, fixed));\n",
+          "current": "\tconst workflow = await readFile(workflowPath, \"utf8\");\n\tconst checkpoint = record.updates.find(item => item.path === workflowPath);\n\tassert.ok(checkpoint);\n\tconst expectedWorkflow = earlierJobs + \"\\n  wasi-consumer:\\n\"\n\t\t+ witAndLaterJobs.replace(checkout, fixed);\n\tassert.equal(beforeWitHistoryCheckoutSource(\n\t\tworkflowPath, workflow, checkpoint.currentSha256\n\t), expectedWorkflow);\n\tfor(const source of [workflow, expectedWorkflow])\n\t{\n\t\tconst parts = source.split(\"\\n  wasi-consumer:\\n\");\n\t\tassert.equal(parts.length, 2);\n\t\tconst [earlier, wasi] = parts;\n\t\tfor(const changed of [\n\t\t\twasi + \"\\n# unknown workflow edit\\n\"\n\t\t\t, wasi.replace(\"fetch-depth: 0\", \"fetch-depth: 1\")\n\t\t\t, wasi.replace(\"          fetch-depth: 0\\n\", \"\")\n\t\t\t, wasi.replace(\"persist-credentials: false\", \"persist-credentials: true\")\n\t\t\t, wasi.replace(\"= false\\n\", \"= false || true\\n\")\n\t\t\t, wasi.replace(\"      - name: Require source history before WIT consumer builds\\n\",\n\t\t\t\t\"      - name: Require source history before WIT consumer builds\\n        if: false\\n\")\n\t\t]) {\n\t\t\tassert.notEqual(changed, wasi);\n\t\t\tconst mutated = earlier + \"\\n  wasi-consumer:\\n\" + changed;\n\t\t\tconst normalized = beforeWitHistoryCheckoutSource(\n\t\t\t\tworkflowPath, mutated, checkpoint.currentSha256\n\t\t\t);\n\t\t\tassert.equal(normalized, mutated, \"Unknown edits must remain visible\");\n\t\t\tassert.notEqual(normalized, expectedWorkflow);\n\t\t}\n\t}\n"
+        }
+      ]
+    }
+  ]
+}

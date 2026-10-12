@@ -9,6 +9,7 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import "./wit-history-checkout-repair-history-tests.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeWitHistoryCheckoutSource, witHistoryCheckoutChangedPaths, witHistoryCheckoutHistoryPath, witHistoryCheckoutPredecessor, reverseWitHistoryCheckoutUpdate } from "./wit-history-checkout-history.mjs";
 
@@ -59,7 +60,37 @@ test("WIT history checkout authenticates exact changes without changing support 
 		+ "        run: test \"$(git rev-parse --is-shallow-repository)\" = false\n"
 		+ "      - name: Install Node.js\n";
 	assert.ok(witAndLaterJobs.includes(checkout));
-	assert.equal(await readFile(workflowPath, "utf8"), earlierJobs + "\n  wasi-consumer:\n" + witAndLaterJobs.replace(checkout, fixed));
+	const workflow = await readFile(workflowPath, "utf8");
+	const checkpoint = record.updates.find(item => item.path === workflowPath);
+	assert.ok(checkpoint);
+	const expectedWorkflow = earlierJobs + "\n  wasi-consumer:\n"
+		+ witAndLaterJobs.replace(checkout, fixed);
+	assert.equal(beforeWitHistoryCheckoutSource(
+		workflowPath, workflow, checkpoint.currentSha256
+	), expectedWorkflow);
+	for(const source of [workflow, expectedWorkflow])
+	{
+		const parts = source.split("\n  wasi-consumer:\n");
+		assert.equal(parts.length, 2);
+		const [earlier, wasi] = parts;
+		for(const changed of [
+			wasi + "\n# unknown workflow edit\n"
+			, wasi.replace("fetch-depth: 0", "fetch-depth: 1")
+			, wasi.replace("          fetch-depth: 0\n", "")
+			, wasi.replace("persist-credentials: false", "persist-credentials: true")
+			, wasi.replace("= false\n", "= false || true\n")
+			, wasi.replace("      - name: Require source history before WIT consumer builds\n",
+				"      - name: Require source history before WIT consumer builds\n        if: false\n")
+		]) {
+			assert.notEqual(changed, wasi);
+			const mutated = earlier + "\n  wasi-consumer:\n" + changed;
+			const normalized = beforeWitHistoryCheckoutSource(
+				workflowPath, mutated, checkpoint.currentSha256
+			);
+			assert.equal(normalized, mutated, "Unknown edits must remain visible");
+			assert.notEqual(normalized, expectedWorkflow);
+		}
+	}
 });
 
 test("WIT history checkout writer refuses an unrelated checkout before writing", async t => {

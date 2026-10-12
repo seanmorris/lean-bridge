@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeWitHistoryCheckoutRepairSource } from "./wit-history-checkout-repair-history.mjs";
 
 export const nominalSubtypeDotnetRegistrationHistoryPath = "docs/evidence/nominal-subtype-dotnet-registration-source-history-20261012.json";
 export const nominalSubtypeDotnetRegistrationPredecessor = "8e55991afe355068b22b227d5e50446d2f229be5";
@@ -49,6 +50,7 @@ export const reverseNominalSubtypeDotnetRegistrationUpdate = (source, update) =>
  * @param expected - Optional stopping digest.
  */
 export const beforeNominalSubtypeDotnetRegistrationSource = (path, source, expected) => {
+	source = beforeWitHistoryCheckoutRepairSource(path, source, expected);
 	if(typeof source !== "string" || !nominalSubtypeDotnetRegistrationChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = history ??= JSON.parse(readFileSync(nominalSubtypeDotnetRegistrationHistoryPath, "utf8"));
