@@ -65,6 +65,10 @@ import "./nominal-subtype-rust-ci-shell-tests.mjs";
 import "./nominal-subtype-rust-ci-workflow-tests.mjs";
 import "./nominal-subtype-rust-promotion-tests.mjs";
 import "./nominal-subtype-rust-promotion-history-tests.mjs";
+import "./nominal-subtype-dotnet-tests.mjs";
+import "./nominal-subtype-dotnet-package-tests.mjs";
+import "./nominal-subtype-dotnet-installed-tests.mjs";
+import "./nominal-subtype-dotnet-registration-history-tests.mjs";
 
 test("nominal package review independently matches ordinary choices and retains constructor-free results", () => {
 	for(const resultOnly of [false, true])

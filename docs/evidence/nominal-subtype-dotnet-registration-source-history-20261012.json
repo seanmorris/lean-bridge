@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nominal-subtype-dotnet-registration-source-v1",
+  "predecessorCommit": "8e55991afe355068b22b227d5e50446d2f229be5",
+  "updates": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "e64f96bfd777e95fd09c69bbf7edab2851b2d1f6b6648a645a0b6c8122bcc49c",
+      "previousSha256": "08240e78714d31aea330daabe437e1537c22b8ef3bf7bb1f4e69d19eb9250eee",
+      "edits": [
+        {
+          "start": 4702,
+          "previous": "",
+          "current": "import { nominalSubtypeDotnetRegistrationChangedPaths } from \"./nominal-subtype-dotnet-registration-history.mjs\";\n"
+        },
+        {
+          "start": 66109,
+          "previous": "",
+          "current": "\t, ...nominalSubtypeDotnetRegistrationChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-installed-fixture-tests.mjs",
+      "currentSha256": "40ffd47c33eaea4f1caf5dc18b12fd2f60b1fb851c6739cfe124b1bec674ee21",
+      "previousSha256": "081a13dbd5da8b2608202af303ad5471accdcf5db1c01faa845165754718a12c",
+      "edits": [
+        {
+          "start": 3703,
+          "previous": "",
+          "current": "import \"./nominal-subtype-dotnet-tests.mjs\";\nimport \"./nominal-subtype-dotnet-package-tests.mjs\";\nimport \"./nominal-subtype-dotnet-installed-tests.mjs\";\nimport \"./nominal-subtype-dotnet-registration-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-rust-promotion-history.mjs",
+      "currentSha256": "c69994c553a8c15fd71071dd2758eff997846cfa44115a3097a767dd87a64c5c",
+      "previousSha256": "354a2a22f830add2ede87bd2e857286546d675e83fa73f003865a4bd8afe0dd4",
+      "edits": [
+        {
+          "start": 234,
+          "previous": "",
+          "current": "import { beforeNominalSubtypeDotnetRegistrationSource } from \"./nominal-subtype-dotnet-registration-history.mjs\";\n"
+        },
+        {
+          "start": 3562,
+          "previous": "",
+          "current": "\tsource = beforeNominalSubtypeDotnetRegistrationSource(path, source, expected);\n"
+        }
+      ]
+    }
+  ]
+}
