@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "milestone": "jvm-container-entry-exit-source-v1",
+  "predecessorCommit": "42bd530c3c1edab1fe5764144f7965f845b69f81",
+  "updates": [
+    {
+      "path": "tests/fin-container-entry-ci.test.mjs",
+      "currentSha256": "8367cc1f99f372368f8c78c9ed1c5c797b3e52e8084a2cf4b8e5216ae1740e9a",
+      "previousSha256": "a39904fa40eaed73425bfeef7ace872766df72931980758dde347cf6052c5b64",
+      "edits": [
+        {
+          "start": 8224,
+          "previous": "",
+          "current": "\t\tif([\"java\", \"kotlin\"].includes(report.profile))\n\t\t{\n\t\t\treport.dispatch.public.scriptSha256 = sources.extractedScript;\n\t\t\treport.dispatch.public.processId = 42;\n\t\t\treport.dispatch.public.jvmExit = { schemaVersion: 1, kind: \"gdb-exit\", pid: 42, code: 0 };\n\t\t}\n"
+        },
+        {
+          "start": 9110,
+          "previous": "",
+          "current": "test(\"fresh JVM entry reports refuse absent, signalled, unsuccessful or unrelated exit receipts\", async () => {\n\tconst original = await fixture([\"java\", \"kotlin\"], \"reviewed-ir\");\n\tassertFinContainerEntryCiReport(original, [\"java\", \"kotlin\"], \"reviewed-ir\");\n\tfor(const mutate of [\n\t\thost => { delete host.jvmExit; }\n\t\t, host => { delete host.processId; }\n\t\t, host => { host.jvmExit.code = 7; }\n\t\t, host => { host.jvmExit.pid++; }\n\t\t, host => { host.jvmExit.kind = \"signal\"; }\n\t\t, host => { host.scriptSha256 = \"0\".repeat(64); }\n\t]) {\n\t\tfor(const index of [0, 1])\n\t\t{\n\t\t\tconst changed = structuredClone(original);\n\t\t\tmutate(changed.reports[index].dispatch.public);\n\t\t\tassert.throws(() => assertFinContainerEntryCiReport(changed, [\"java\", \"kotlin\"], \"reviewed-ir\"));\n\t\t}\n\t}\n});\n\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fin-container-entry-dispatch.test.mjs",
+      "currentSha256": "9cf6357dff222d57b0ea5b85f830edf88cbe99b99e3601db017a6b1839323e3d",
+      "previousSha256": "0d65bac2b0c989217e3933b4dead34e0ce1c506364f57a525f30640032d7cc79",
+      "edits": [
+        {
+          "start": 589,
+          "previous": "",
+          "current": "import \"./helpers/fin-container-jvm-entry-wait-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-container-dispatch-gdb-extracted.mjs",
+      "currentSha256": "a6b55806133cc8f13583ce25e5b9860d3153624d9c1248f18f16786a6f6f2d40",
+      "previousSha256": "1374c778c8ba45ab7076a6cfa3c4ce885b1154b66ddd34e1808c1de11d0b174c",
+      "edits": [
+        {
+          "start": 1730,
+          "previous": "",
+          "current": "import { withFinContainerJvmEntryWait } from \"./fin-container-jvm-entry-wait.mjs\";\nimport { assertFinContainerEdgeJvmExit } from \"./fin-container-edge-jvm-wait.mjs\";\n"
+        },
+        {
+          "start": 14894,
+          "previous": "",
+          "current": "/** Current instrumentation also binds and records the same child's normal exit. */\nexport const finContainerGdbExtractedWaitScript = withFinContainerJvmEntryWait(finContainerGdbExtractedScript);\n\n"
+        },
+        {
+          "start": 18084,
+          "previous": "\tawait saveLakeFile(probeRoot, \"fin-container-extracted.gdb.py\", finContainerGdbExtractedScript);\n",
+          "current": "\tawait saveLakeFile(probeRoot, \"fin-container-extracted.gdb.py\", finContainerGdbExtractedWaitScript);\n"
+        },
+        {
+          "start": 19892,
+          "previous": "",
+          "current": "\t\tconst scriptSha256 = sha256(await readFile(join(probeRoot, \"fin-container-extracted.gdb.py\")));\n"
+        },
+        {
+          "start": 20709,
+          "previous": "\t\treturn { record, nonce, armed, parent, code, output: stdout + stderr, stdout: await read(config.stdout), stderr: await read(config.stderr) };\n",
+          "current": "\t\treturn { record, nonce, armed, parent, code\n\t\t\t, scriptSha256\n\t\t\t, output: stdout + stderr\n\t\t\t, stdout: await read(config.stdout), stderr: await read(config.stderr) };\n"
+        },
+        {
+          "start": 21404,
+          "previous": "",
+          "current": " * @param root0.code - Debugger exit status, which must be successful.\n * @param root0.scriptSha256 - Exact current observer identity.\n"
+        },
+        {
+          "start": 21593,
+          "previous": "export const assertExtractedFinContainerGdbRun = async (observer, { record, nonce, armed, parent }, observed) => {\n",
+          "current": "export const assertExtractedFinContainerGdbRun = async (observer, { record, nonce, armed, parent, code, scriptSha256 }, observed) => {\n\tassert.equal(code, 0, \"the instrumented JVM must exit successfully\");\n\tassert.equal(scriptSha256, sha256(finContainerGdbExtractedWaitScript));\n"
+        },
+        {
+          "start": 22753,
+          "previous": "",
+          "current": "\tassertFinContainerEdgeJvmExit(manifest.jvmExit, mapped.pid);\n"
+        },
+        {
+          "start": 23731,
+          "previous": "\treturn { root: manifest.root, breakpoints: breakpoints.map(({ symbol, library: owner, offset }) => ({ symbol, library: owner, offset: `0x${offset.toString(16)}` })) };\n",
+          "current": "\treturn { root: manifest.root, processId: mapped.pid, jvmExit: manifest.jvmExit\n\t\t, breakpoints: breakpoints.map(({ symbol, library: owner, offset }) => ({ symbol, library: owner, offset: `0x${offset.toString(16)}` })) };\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-container-entry-ci.mjs",
+      "currentSha256": "4e1ae21aaa7d78d011686f25c3c0296d3513ee5b52b422859955368ef96daee0",
+      "previousSha256": "759d92c871d0f2060c4e4bc50060a1078af19b982041a3a553738ec7c525eed3",
+      "edits": [
+        {
+          "start": 1036,
+          "previous": "",
+          "current": "import { assertFinContainerEdgeJvmExit } from \"./fin-container-edge-jvm-wait.mjs\";\n"
+        },
+        {
+          "start": 14540,
+          "previous": "",
+          "current": "\t\t\tassertFinContainerEdgeJvmExit(host.jvmExit, host.processId);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-container-entry-probes.mjs",
+      "currentSha256": "afd4bb5e2126841c2c48571c65e0dd6d2d38f258f919c7f2514e41f24b54fb2d",
+      "previousSha256": "cb0664fe9d7dbf2efab67b93b339ef5cf523b1272d213e8541aae8db239996eb",
+      "edits": [
+        {
+          "start": 1178,
+          "previous": "import { assertExtractedFinContainerGdbRun, finContainerGdbExtractedScript, observeExtractedFinContainerDispatch } from \"./fin-container-dispatch-gdb-extracted.mjs\";\n",
+          "current": "import { assertExtractedFinContainerGdbRun, finContainerGdbExtractedWaitScript, observeExtractedFinContainerDispatch } from \"./fin-container-dispatch-gdb-extracted.mjs\";\n"
+        },
+        {
+          "start": 41620,
+          "previous": "\tconst { breakpoints: armed } = await assertExtractedFinContainerGdbRun(observer, accepted, observed);\n",
+          "current": "\tconst { breakpoints: armed, processId, jvmExit } = await assertExtractedFinContainerGdbRun(observer, accepted, observed);\n"
+        },
+        {
+          "start": 41765,
+          "previous": "\t\tscriptSha256: sha256(finContainerGdbExtractedScript)\n",
+          "current": "\t\tscriptSha256: sha256(finContainerGdbExtractedWaitScript)\n\t\t, processId, jvmExit\n"
+        },
+        {
+          "start": 54005,
+          "previous": "\t, extractedScript: sha256(finContainerGdbExtractedScript)\n",
+          "current": "\t, extractedScript: sha256(finContainerGdbExtractedWaitScript)\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "99004a6ac2bfe2819636fb22befbf635dd45f35cb3b2ea547be7aaa4c5089c8a",
+      "previousSha256": "c7dd494fa20a399481529deef9c15680d8c05fbe9f11a1b44aa6c6204b83dd54",
+      "edits": [
+        {
+          "start": 5108,
+          "previous": "",
+          "current": "import { jvmContainerEntryExitChangedPaths } from \"./jvm-container-entry-exit-history.mjs\";\n"
+        },
+        {
+          "start": 66672,
+          "previous": "",
+          "current": "\t, ...jvmContainerEntryExitChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-wasm-failure-diagnostics-history.mjs",
+      "currentSha256": "7ff3d9c78056ddfb3b614a401f440a35e83e8f5f74ff09a482034d349beb0480",
+      "previousSha256": "e49d56e72f8472896a9624d4cf5c74197ce636c26500c639bb8f89d24c9631ea",
+      "edits": [
+        {
+          "start": 236,
+          "previous": "",
+          "current": "import { beforeJvmContainerEntryExitSource } from \"./jvm-container-entry-exit-history.mjs\";\n"
+        },
+        {
+          "start": 2536,
+          "previous": "",
+          "current": "\tsource = beforeJvmContainerEntryExitSource(path, source, expected);\n"
+        }
+      ]
+    }
+  ]
+}

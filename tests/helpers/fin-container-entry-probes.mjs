@@ -15,7 +15,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { verifyNativeFiles } from "../../src/build/native-artifacts.mjs";
 import { copiedCleanEnvironment, runCopied } from "./copied-fixture-install.mjs";
 import { assertFinContainerGdbRun, finContainerDefiners, finContainerGdbCommand, finContainerGdbExit, finContainerGdbRecord, finContainerGdbScript, observeFinContainerGdbDispatch, readFinContainerGdbRecord } from "./fin-container-dispatch-gdb.mjs";
-import { assertExtractedFinContainerGdbRun, finContainerGdbExtractedScript, observeExtractedFinContainerDispatch } from "./fin-container-dispatch-gdb-extracted.mjs";
+import { assertExtractedFinContainerGdbRun, finContainerGdbExtractedWaitScript, observeExtractedFinContainerDispatch } from "./fin-container-dispatch-gdb-extracted.mjs";
 import { finContainerEntryColumns, finContainerEntryExpected, finContainerEntryInterposer, finContainerEntryRawExpected, finContainerEntryRawMissing, finContainerEntryRawProbe, finContainerEntryReport, finContainerEntryStatus, finContainerEntrySteps, readFinContainerEntry } from "./fin-container-entry-dispatch.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 
@@ -701,9 +701,10 @@ const extractedGdb = async ({ probeRoot, directory, componentId, argv, cwd, env 
 	assert.equal(accepted.code, 0, `instrumented probe failed (2 unattached, 3 uncovered, 4 trigger failed, 70 stale record or parent, 71 instrumentation or refused deployment, 72 signal): ${accepted.output}`);
 	assert.equal(accepted.stderr, "");
 	const observed = readFinContainerEntry(accepted.stdout, finContainerEntryExpected);
-	const { breakpoints: armed } = await assertExtractedFinContainerGdbRun(observer, accepted, observed);
+	const { breakpoints: armed, processId, jvmExit } = await assertExtractedFinContainerGdbRun(observer, accepted, observed);
 	const identities = {
-		scriptSha256: sha256(finContainerGdbExtractedScript)
+		scriptSha256: sha256(finContainerGdbExtractedWaitScript)
+		, processId, jvmExit
 		, configSha256: observer.configSha256
 		, definers: observer.identity.definers
 		, hashes: observer.hashes
@@ -861,5 +862,5 @@ export const finContainerEntrySourceDigests = () => ({
 	, java: sha256(javaFinContainerEntryProbe())
 	, kotlin: sha256(kotlinFinContainerEntryProbe())
 	, strictScript: sha256(finContainerGdbScript)
-	, extractedScript: sha256(finContainerGdbExtractedScript)
+	, extractedScript: sha256(finContainerGdbExtractedWaitScript)
 });

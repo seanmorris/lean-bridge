@@ -22,6 +22,8 @@ import { finContainerEntrySymbols } from "./fin-container-entry-dispatch.mjs";
 import { finContainerDefiners, finContainerGdbCommand, finContainerGdbRecord, readFinContainerGdbRecord } from "./fin-container-dispatch-gdb.mjs";
 import { copiedCleanEnvironment, runCopied } from "./copied-fixture-install.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
+import { withFinContainerJvmEntryWait } from "./fin-container-jvm-entry-wait.mjs";
+import { assertFinContainerEdgeJvmExit } from "./fin-container-edge-jvm-wait.mjs";
 
 const library = /^[A-Za-z0-9_.+-]+\.so(?:\.[0-9]+)*$/u;
 /** The JVM loader's Files.createTempDirectory prefix followed by its unsigned random digits. */
@@ -328,6 +330,9 @@ if signal is not None or code is None or gdb.selected_inferior().pid != 0:
 gdb.execute("quit " + str(int(code)))
 `;
 
+/** Current instrumentation also binds and records the same child's normal exit. */
+export const finContainerGdbExtractedWaitScript = withFinContainerJvmEntryWait(finContainerGdbExtractedScript);
+
 /**
  * GDB arguments and environment for one run. Control additions reach the inferior only, as explicit settings:
  * preloading the real Lean libraries into GDB itself replaces its C++ unwinder, and GDB then aborts on its
@@ -372,7 +377,7 @@ export const observeExtractedFinContainerDispatch = async ({ probeRoot, resource
 		hashes[name] = sha256(await readFile(join(resourceDirectory, name)));
 	}
 	const { identity, configSha256, definerIndices } = finContainerGdbExtractedIdentity({ componentId, hashes, definers: definers ?? finContainerDefiners(componentId, listings) });
-	await saveLakeFile(probeRoot, "fin-container-extracted.gdb.py", finContainerGdbExtractedScript);
+	await saveLakeFile(probeRoot, "fin-container-extracted.gdb.py", finContainerGdbExtractedWaitScript);
 	let runs = 0;
 	/**
 	 * One probe run; before() may plant a file at the record path or inside the parent first.
@@ -396,6 +401,7 @@ export const observeExtractedFinContainerDispatch = async ({ probeRoot, resource
 		const config = { identity, configSha256, parent, nonce, record, armed, argv: command, stdout: `${stem}.stdout`, stderr: `${stem}.stderr`, ...inject ? { inject } : {} };
 		await writeFile(`${stem}.json`, canonicalJson(config), { flag: "wx" });
 		const invocation = finContainerGdbInvocation({ script: join(probeRoot, "fin-container-extracted.gdb.py"), config: `${stem}.json`, env, extra });
+		const scriptSha256 = sha256(await readFile(join(probeRoot, "fin-container-extracted.gdb.py")));
 		const started = gdb
 			? runCopied(finContainerGdbCommand, invocation.args, cwd, invocation.environment)
 			: runCopied(command[0], command.slice(1), cwd, { ...env, ...extra });
@@ -411,7 +417,10 @@ export const observeExtractedFinContainerDispatch = async ({ probeRoot, resource
 		const read = async path => (existsSync(path) ? readFile(path, "utf8") : null);
 		// Under GDB the process streams carry GDB's own messages; the probe's streams are files.
 		if(!gdb) return { record, nonce, armed, parent, code, output: stdout + stderr, stdout, stderr };
-		return { record, nonce, armed, parent, code, output: stdout + stderr, stdout: await read(config.stdout), stderr: await read(config.stderr) };
+		return { record, nonce, armed, parent, code
+			, scriptSha256
+			, output: stdout + stderr
+			, stdout: await read(config.stdout), stderr: await read(config.stderr) };
 	};
 	return { identity, configSha256, definerIndices, listings, hashes, run };
 };
@@ -426,9 +435,13 @@ export const observeExtractedFinContainerDispatch = async ({ probeRoot, resource
  * @param root0.nonce - This run's nonce.
  * @param root0.armed - Armed manifest path.
  * @param root0.parent - This run's extraction parent.
+ * @param root0.code - Debugger exit status, which must be successful.
+ * @param root0.scriptSha256 - Exact current observer identity.
  * @param observed - Parsed rows of the same run.
  */
-export const assertExtractedFinContainerGdbRun = async (observer, { record, nonce, armed, parent }, observed) => {
+export const assertExtractedFinContainerGdbRun = async (observer, { record, nonce, armed, parent, code, scriptSha256 }, observed) => {
+	assert.equal(code, 0, "the instrumented JVM must exit successfully");
+	assert.equal(scriptSha256, sha256(finContainerGdbExtractedWaitScript));
 	const mapped = readFinContainerGdbRecord(await readFile(record)), { identity } = observer;
 	assert.deepEqual([mapped.magic, mapped.version, mapped.columns, mapped.config, mapped.nonce, mapped.attached], [finContainerGdbRecord.magic, 1, width, observer.configSha256, nonce, 1]);
 	assert.deepEqual([mapped.armed, mapped.conflicts, mapped.foreign, mapped.breakpoints], [finContainerGdbRecord.armed, 0, 0, Array(width).fill(1)]);
@@ -438,6 +451,7 @@ export const assertExtractedFinContainerGdbRun = async (observer, { record, nonc
 	assert.deepEqual([manifest.configSha256, manifest.nonce, manifest.parent], [observer.configSha256, nonce, parent]);
 	assert.ok(Number.isSafeInteger(manifest.pid) && manifest.pid > 0);
 	assert.equal(mapped.pid, manifest.pid, "the record belongs to the instrumented inferior");
+	assertFinContainerEdgeJvmExit(manifest.jvmExit, mapped.pid);
 	// One extraction root directly below this run's parent, holding exactly the verified images.
 	assert.equal(dirname(manifest.root), parent);
 	assert.match(basename(manifest.root), finContainerExtractedRoot);
@@ -450,5 +464,6 @@ export const assertExtractedFinContainerGdbRun = async (observer, { record, nonc
 		const line = observer.listings[owner].split("\n").find(entry => entry.trim().endsWith(` ${symbol}`));
 		assert.equal(offset, Number.parseInt(line.trim().split(" ")[0], 16), symbol);
 	}
-	return { root: manifest.root, breakpoints: breakpoints.map(({ symbol, library: owner, offset }) => ({ symbol, library: owner, offset: `0x${offset.toString(16)}` })) };
+	return { root: manifest.root, processId: mapped.pid, jvmExit: manifest.jvmExit
+		, breakpoints: breakpoints.map(({ symbol, library: owner, offset }) => ({ symbol, library: owner, offset: `0x${offset.toString(16)}` })) };
 };

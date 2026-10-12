@@ -120,6 +120,12 @@ const fixture = async (profiles, route) => {
 	{
 		report.dispatch.public.probeSha256 = probes[report.profile];
 		report.dispatch.public.observed = structuredClone(finContainerEntryExpected);
+		if(["java", "kotlin"].includes(report.profile))
+		{
+			report.dispatch.public.scriptSha256 = sources.extractedScript;
+			report.dispatch.public.processId = 42;
+			report.dispatch.public.jvmExit = { schemaVersion: 1, kind: "gdb-exit", pid: 42, code: 0 };
+		}
 	}
 	return value;
 };
@@ -134,6 +140,26 @@ test("the current report gate accepts synthetic format fixtures for all seven ho
 		hosts += item.counted.length;
 	}
 	assert.equal(hosts, 13, "seven hosts, six of them on both routes and cpp on the reviewed C selection");
+});
+
+test("fresh JVM entry reports refuse absent, signalled, unsuccessful or unrelated exit receipts", async () => {
+	const original = await fixture(["java", "kotlin"], "reviewed-ir");
+	assertFinContainerEntryCiReport(original, ["java", "kotlin"], "reviewed-ir");
+	for(const mutate of [
+		host => { delete host.jvmExit; }
+		, host => { delete host.processId; }
+		, host => { host.jvmExit.code = 7; }
+		, host => { host.jvmExit.pid++; }
+		, host => { host.jvmExit.kind = "signal"; }
+		, host => { host.scriptSha256 = "0".repeat(64); }
+	]) {
+		for(const index of [0, 1])
+		{
+			const changed = structuredClone(original);
+			mutate(changed.reports[index].dispatch.public);
+			assert.throws(() => assertFinContainerEntryCiReport(changed, ["java", "kotlin"], "reviewed-ir"));
+		}
+	}
 });
 
 /**

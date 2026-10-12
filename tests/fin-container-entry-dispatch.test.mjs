@@ -11,6 +11,7 @@ import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import test from "node:test";
+import "./helpers/fin-container-jvm-entry-wait-tests.mjs";
 import { sha256 } from "../src/capsule/node.mjs";
 import { renderWitHostHeader } from "../src/backends/wit/copied-host.mjs";
 import { generateNativeLeanAdapters } from "../src/build/native-model.mjs";

@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeJvmContainerEntryExitSource } from "./jvm-container-entry-exit-history.mjs";
 
 export const phpWasmFailureDiagnosticsHistoryPath = "docs/evidence/php-wasm-failure-diagnostics-source-history-20261012.json";
 export const phpWasmFailureDiagnosticsPredecessor = "41ed314cf35d1157daf21a9692a094c62976e22c";
@@ -60,6 +61,7 @@ export const reversePhpWasmFailureDiagnosticsUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforePhpWasmFailureDiagnosticsSource = (path, source, expected) => {
+	source = beforeJvmContainerEntryExitSource(path, source, expected);
 	if(typeof source !== "string"
 		|| !phpWasmFailureDiagnosticsChangedPaths.includes(path)) return source;
 	const digest = sha256(source);

@@ -11,6 +11,7 @@ import { cppFinContainerEntryLabels, cppFinContainerEntryProbe } from "./cpp-fin
 import { finContainerDispatchColumns, finContainerDispatchExpected } from "./fin-container-dispatch.mjs";
 import { finContainerEntryExpected, finContainerEntryInterposer, finContainerEntryKind, finContainerEntryRawExpected, finContainerEntryRawProbe, finContainerEntrySources, finContainerEntrySymbols } from "./fin-container-entry-dispatch.mjs";
 import { finContainerEntryLoadTrigger, finContainerEntryProfiles, finContainerEntrySourceDigests } from "./fin-container-entry-probes.mjs";
+import { assertFinContainerEdgeJvmExit } from "./fin-container-edge-jvm-wait.mjs";
 
 export const finContainerEntryCiFlag = "LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS=1";
 export const finContainerEntryCiChecker = "scripts/check-fin-container-entry-reports.mjs";
@@ -208,6 +209,7 @@ export const assertFinContainerEntryCiReport = (data, profiles, route) => {
 		}
 		if(instrument === "gdb-breakpoints-extracted-root")
 		{
+			assertFinContainerEdgeJvmExit(host.jvmExit, host.processId);
 			assert.ok(Object.keys(host.hashes ?? {}).length > 0, `${item.profile} extracted hashes`);
 			for(const [name, digest] of Object.entries(host.hashes)) assert.equal(libraries[name], digest, `${item.profile} extracted ${name}`);
 			for(const name of host.definers) assert.ok(Object.hasOwn(host.hashes, name), `${item.profile} definer ${name} was extracted`);

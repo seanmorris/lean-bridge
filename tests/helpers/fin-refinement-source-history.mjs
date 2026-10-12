@@ -55,6 +55,7 @@ import { nominalSubtypeDotnetRegistrationChangedPaths } from "./nominal-subtype-
 import { witHistoryCheckoutRepairChangedPaths } from "./wit-history-checkout-repair-history.mjs";
 import { nominalSubtypeDotnetCiChangedPaths } from "./nominal-subtype-dotnet-ci-history.mjs";
 import { phpWasmFailureDiagnosticsChangedPaths } from "./php-wasm-failure-diagnostics-history.mjs";
+import { jvmContainerEntryExitChangedPaths } from "./jvm-container-entry-exit-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeSubtypeRefinementSource, subtypeRefinementChangedPaths } from "./subtype-refinement-source-history.mjs";
 import { subtypeHeapChangedPaths } from "./subtype-heap-source-history.mjs";
@@ -975,6 +976,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...witHistoryCheckoutRepairChangedPaths
 	, ...nominalSubtypeDotnetCiChangedPaths
 	, ...phpWasmFailureDiagnosticsChangedPaths
+	, ...jvmContainerEntryExitChangedPaths
 ])].sort());
 
 /**

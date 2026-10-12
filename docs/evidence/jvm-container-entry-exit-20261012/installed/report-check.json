@@ -1,0 +1,27 @@
+{
+  "args": [
+    "scripts/check-fin-container-entry-reports.mjs",
+    "java,kotlin",
+    "/app/build/vo1220-jvm-entry-exit-installed-r1-ordinary.json",
+    "/app/build/vo1220-jvm-entry-exit-installed-r1-reviewed.json"
+  ],
+  "code": 0,
+  "context": "Corrected the local runner's java-kotlin selection typo to java,kotlin; reused both original successful compiled reports without rebuilding.",
+  "finished": "2026-10-12T12:22:26.008Z",
+  "inputs": [
+    {
+      "path": "/app/build/vo1220-jvm-entry-exit-installed-r1-ordinary.json",
+      "sha256": "dc36666253950fc8c10d39e3f86ae6190204dcdf6051b68474027cb022ea4ca0"
+    },
+    {
+      "path": "/app/build/vo1220-jvm-entry-exit-installed-r1-reviewed.json",
+      "sha256": "417aef4795d0af0f226109634df2dd910078ac5e05e1be83a69080bbe2707fe9"
+    }
+  ],
+  "node": "/app/build/vo1220-node-22.23.3-jyyoj4/node-v22.23.3-linux-x64/bin/node",
+  "nodeVersion": "v22.23.3",
+  "signal": null,
+  "started": "2026-10-12T12:22:25.915Z",
+  "stderr": "",
+  "stdout": "FinContainers entry counters observed for java, kotlin on both routes.\n"
+}

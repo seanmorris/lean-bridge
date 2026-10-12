@@ -1,0 +1,86 @@
+{
+  "records": [
+    {
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^(relocated source-free native packages check Fin inside arrays, lists and options|independently reviewed native packages check container and alias Fin bounds after source-free installation)$",
+        "tests/native-fin-containers.test.mjs"
+      ],
+      "bytes": 869,
+      "code": 0,
+      "finished": "2026-10-12T12:21:56.846Z",
+      "node": "/app/build/vo1220-node-22.23.3-jyyoj4/node-v22.23.3-linux-x64/bin/node",
+      "nodeVersion": "v22.23.3",
+      "path": "build/vo1220-jvm-entry-exit-installed-r1-0.log",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 9461846016,
+            "freeBytes": 6378303488,
+            "load": 2.97
+          }
+        ],
+        "waits": 0
+      },
+      "sha256": "812baece0953a79d9ec3aa0ecd50d0184143ea7c1d50688845738330cbb05172",
+      "signal": null,
+      "sources": {
+        "scripts/update-jvm-container-entry-exit-history.mjs": "1258f8e736f24e2fcf65e1245c6ce2272279a43da10379fa48c841526b7c447c",
+        "tests/fin-container-entry-ci.test.mjs": "8367cc1f99f372368f8c78c9ed1c5c797b3e52e8084a2cf4b8e5216ae1740e9a",
+        "tests/fin-container-entry-dispatch.test.mjs": "9cf6357dff222d57b0ea5b85f830edf88cbe99b99e3601db017a6b1839323e3d",
+        "tests/helpers/fin-container-dispatch-gdb-extracted.mjs": "a6b55806133cc8f13583ce25e5b9860d3153624d9c1248f18f16786a6f6f2d40",
+        "tests/helpers/fin-container-entry-ci.mjs": "4e1ae21aaa7d78d011686f25c3c0296d3513ee5b52b422859955368ef96daee0",
+        "tests/helpers/fin-container-entry-probes.mjs": "afd4bb5e2126841c2c48571c65e0dd6d2d38f258f919c7f2514e41f24b54fb2d",
+        "tests/helpers/fin-container-jvm-entry-wait-tests.mjs": "a3d13638955ac191cb75ca1c91dbca1c20f6d6b25a9108f231e0f5035bf002e1",
+        "tests/helpers/fin-container-jvm-entry-wait.mjs": "6900adc096393fd3530a5ac5dec2a297159c619f2ae41c75ca15abb3da1524b2",
+        "tests/helpers/fin-refinement-source-history.mjs": "99004a6ac2bfe2819636fb22befbf635dd45f35cb3b2ea547be7aaa4c5089c8a",
+        "tests/helpers/jvm-container-entry-exit-history-tests.mjs": "19cf404c3339987fb7e1f7ec608a3869738dba521c839d5568f49d102ad1778d",
+        "tests/helpers/jvm-container-entry-exit-history.mjs": "f75611c9beb0137215a5b78f4c04b425a6a6999e7cb8ddefce6c1528227ad8b7",
+        "tests/helpers/php-wasm-failure-diagnostics-history.mjs": "7ff3d9c78056ddfb3b614a401f440a35e83e8f5f74ff09a482034d349beb0480"
+      },
+      "started": "2026-10-12T12:15:35.110Z"
+    },
+    {
+      "args": [
+        "scripts/check-fin-container-entry-reports.mjs",
+        "java-kotlin",
+        "/app/build/vo1220-jvm-entry-exit-installed-r1-ordinary.json",
+        "/app/build/vo1220-jvm-entry-exit-installed-r1-reviewed.json"
+      ],
+      "bytes": 466,
+      "code": 1,
+      "finished": "2026-10-12T12:21:56.951Z",
+      "node": "/app/build/vo1220-node-22.23.3-jyyoj4/node-v22.23.3-linux-x64/bin/node",
+      "nodeVersion": "v22.23.3",
+      "path": "build/vo1220-jvm-entry-exit-installed-r1-1.log",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 9756372992,
+            "freeBytes": 6371926016,
+            "load": 5.01
+          }
+        ],
+        "waits": 0
+      },
+      "sha256": "c13fb88e4c212fbbcd470904b7188e33ccd9b0830180da94f0434ba1eb25f18f",
+      "signal": null,
+      "sources": {
+        "scripts/update-jvm-container-entry-exit-history.mjs": "1258f8e736f24e2fcf65e1245c6ce2272279a43da10379fa48c841526b7c447c",
+        "tests/fin-container-entry-ci.test.mjs": "8367cc1f99f372368f8c78c9ed1c5c797b3e52e8084a2cf4b8e5216ae1740e9a",
+        "tests/fin-container-entry-dispatch.test.mjs": "9cf6357dff222d57b0ea5b85f830edf88cbe99b99e3601db017a6b1839323e3d",
+        "tests/helpers/fin-container-dispatch-gdb-extracted.mjs": "a6b55806133cc8f13583ce25e5b9860d3153624d9c1248f18f16786a6f6f2d40",
+        "tests/helpers/fin-container-entry-ci.mjs": "4e1ae21aaa7d78d011686f25c3c0296d3513ee5b52b422859955368ef96daee0",
+        "tests/helpers/fin-container-entry-probes.mjs": "afd4bb5e2126841c2c48571c65e0dd6d2d38f258f919c7f2514e41f24b54fb2d",
+        "tests/helpers/fin-container-jvm-entry-wait-tests.mjs": "a3d13638955ac191cb75ca1c91dbca1c20f6d6b25a9108f231e0f5035bf002e1",
+        "tests/helpers/fin-container-jvm-entry-wait.mjs": "6900adc096393fd3530a5ac5dec2a297159c619f2ae41c75ca15abb3da1524b2",
+        "tests/helpers/fin-refinement-source-history.mjs": "99004a6ac2bfe2819636fb22befbf635dd45f35cb3b2ea547be7aaa4c5089c8a",
+        "tests/helpers/jvm-container-entry-exit-history-tests.mjs": "19cf404c3339987fb7e1f7ec608a3869738dba521c839d5568f49d102ad1778d",
+        "tests/helpers/jvm-container-entry-exit-history.mjs": "f75611c9beb0137215a5b78f4c04b425a6a6999e7cb8ddefce6c1528227ad8b7",
+        "tests/helpers/php-wasm-failure-diagnostics-history.mjs": "7ff3d9c78056ddfb3b614a401f440a35e83e8f5f74ff09a482034d349beb0480"
+      },
+      "started": "2026-10-12T12:21:56.850Z"
+    }
+  ]
+}

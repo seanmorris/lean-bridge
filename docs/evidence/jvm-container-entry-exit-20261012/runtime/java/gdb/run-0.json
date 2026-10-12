@@ -1,0 +1,64 @@
+{
+  "argv": [
+    "/app/.toolchains/jdk22/bin/java",
+    "--enable-native-access=ALL-UNNAMED",
+    "-Djava.io.tmpdir=/app/build/vo1220-jvm-entry-exit-replay-r3/java/gdb/run-0.parent",
+    "-cp",
+    "/app/build/vo1427-actual-jvm-4748e2c/consumer/java/component.jar:/app/build/vo1220-jvm-entry-exit-replay-r3/java/classes",
+    "Probe",
+    "/app/build/vo1220-jvm-entry-exit-replay-r3/java/gdb/run-0.record",
+    "682c06fb9d3f2e6bcb31a5fb6a94a462",
+    "f773cfc96373b3e734e4ad8de922f7a7606183d659ac64d27a3e343b6c3e4c6d",
+    "0,0,0,0,0,0,0,0,0,0"
+  ],
+  "armed": "/app/build/vo1220-jvm-entry-exit-replay-r3/java/gdb/run-0.armed.json",
+  "configSha256": "f773cfc96373b3e734e4ad8de922f7a7606183d659ac64d27a3e343b6c3e4c6d",
+  "identity": {
+    "columns": [
+      "l_FinContainers_mirrorAll",
+      "l_FinContainers_sumHuge",
+      "l_FinContainers_orDefault",
+      "l_FinContainers_present",
+      "l_FinContainers_label",
+      "lb_aba29fbaeffa9ce68e9e3ae2",
+      "lb_921d0c87bdee631623d4307c",
+      "lb_d6e2d2cd1dc6db4690d6dfb7",
+      "lb_947649dd882592d17d97bd16",
+      "lb_c17e7c3bb2285b12d5e64ccc"
+    ],
+    "componentId": "fincontainers@1.0.0",
+    "definers": [
+      "libcomponent_3acdf22f1550490d7b06.so",
+      "libcomponent_3acdf22f1550490d7b06.so",
+      "libcomponent_3acdf22f1550490d7b06.so",
+      "libcomponent_3acdf22f1550490d7b06.so",
+      "libcomponent_3acdf22f1550490d7b06.so",
+      "libcomponent_3acdf22f1550490d7b06.so",
+      "libcomponent_3acdf22f1550490d7b06.so",
+      "libcomponent_3acdf22f1550490d7b06.so",
+      "libcomponent_3acdf22f1550490d7b06.so",
+      "libcomponent_3acdf22f1550490d7b06.so"
+    ],
+    "hashes": {
+      "libcomponent_3acdf22f1550490d7b06.so": "9a0a98be48056cf243f74cda1d73f57f849e359f07fc6dda4e33e93a79042445",
+      "libfincontainers.so": "c4ea449ec48115425c39db5653af8afa32a4ef11421dacd24ed88d7d281953f4",
+      "liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+      "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "instrument": "gdb-breakpoints-extracted-root",
+    "kind": "fin-container-entry",
+    "libraries": [
+      "libcomponent_3acdf22f1550490d7b06.so",
+      "libfincontainers.so",
+      "liblean_bridge_native.so",
+      "libleanshared.so"
+    ],
+    "platform": "x86_64-linux-gnu",
+    "schemaVersion": 1
+  },
+  "nonce": "682c06fb9d3f2e6bcb31a5fb6a94a462",
+  "parent": "/app/build/vo1220-jvm-entry-exit-replay-r3/java/gdb/run-0.parent",
+  "record": "/app/build/vo1220-jvm-entry-exit-replay-r3/java/gdb/run-0.record",
+  "stderr": "/app/build/vo1220-jvm-entry-exit-replay-r3/java/gdb/run-0.stderr",
+  "stdout": "/app/build/vo1220-jvm-entry-exit-replay-r3/java/gdb/run-0.stdout"
+}

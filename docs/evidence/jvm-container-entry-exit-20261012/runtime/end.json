@@ -1,0 +1,32 @@
+{
+  "finished": "2026-10-12T12:23:04.776Z",
+  "passed": true,
+  "results": [
+    {
+      "accepted": 0,
+      "exit": {
+        "code": 0,
+        "kind": "gdb-exit",
+        "pid": 1467963,
+        "schemaVersion": 1
+      },
+      "missingExitRefused": 72,
+      "probeSha256": "0d0316637d7a3cf341f45f5b4bf15f2b00843b2d21616175d32761c76814eca0",
+      "profile": "java",
+      "rows": 24
+    },
+    {
+      "accepted": 0,
+      "exit": {
+        "code": 0,
+        "kind": "gdb-exit",
+        "pid": 1468053,
+        "schemaVersion": 1
+      },
+      "missingExitRefused": 72,
+      "probeSha256": "c0f5291f6af341baafde291de46ae1c63a59eabf870a703965f67ee4ac3d0417",
+      "profile": "kotlin",
+      "rows": 24
+    }
+  ]
+}

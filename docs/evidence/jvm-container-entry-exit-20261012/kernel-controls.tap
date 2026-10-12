@@ -1,0 +1,126 @@
+TAP version 13
+# Subtest: every selected installed host runs counted, records that command and gates both route reports
+ok 1 - every selected installed host runs counted, records that command and gates both route reports
+  ---
+  duration_ms: 35.356038
+  type: 'test'
+  ...
+# Subtest: the workflow gate refuses a missing flag, recorded command, profile, route, report gate or enforcement
+ok 2 - the workflow gate refuses a missing flag, recorded command, profile, route, report gate or enforcement
+  ---
+  duration_ms: 26.942438
+  type: 'test'
+  ...
+# Subtest: original seven-host reports retain their archived diagnostic probes and rows
+ok 3 - original seven-host reports retain their archived diagnostic probes and rows
+  ---
+  duration_ms: 21.705193
+  type: 'test'
+  ...
+# Subtest: the current report gate accepts synthetic format fixtures for all seven hosted selections
+ok 4 - the current report gate accepts synthetic format fixtures for all seven hosted selections
+  ---
+  duration_ms: 54.229084
+  type: 'test'
+  ...
+# Subtest: fresh JVM entry reports refuse absent, signalled, unsuccessful or unrelated exit receipts
+ok 5 - fresh JVM entry reports refuse absent, signalled, unsuccessful or unrelated exit receipts
+  ---
+  duration_ms: 33.43807
+  type: 'test'
+  ...
+# Subtest: the report gate refuses unobserved, partial, relabelled or foreign-bound reports
+ok 6 - the report gate refuses unobserved, partial, relabelled or foreign-bound reports
+  ---
+  duration_ms: 291.274584
+  type: 'test'
+  ...
+# Subtest: the report gate command fails on a missing, skipped or unobserved route report
+ok 7 - the report gate command fails on a missing, skipped or unobserved route report
+  ---
+  duration_ms: 661.812372
+  type: 'test'
+  ...
+# Subtest: JVM pending exit authenticates exact changes and restores the original support inventory
+ok 8 - JVM pending exit authenticates exact changes and restores the original support inventory
+  ---
+  duration_ms: 671.60787
+  type: 'test'
+  ...
+# Subtest: JVM pending exit history writer refuses an unrelated checkout before writing
+ok 9 - JVM pending exit history writer refuses an unrelated checkout before writing
+  ---
+  duration_ms: 74.566837
+  type: 'test'
+  ...
+# Subtest: the pending JVM exit archive verifies the complete Java replay and refusal control
+ok 10 - the pending JVM exit archive verifies the complete Java replay and refusal control
+  ---
+  duration_ms: 161.83558
+  type: 'test'
+  ...
+# Subtest: the pending JVM exit archive refuses every missing or changed original
+ok 11 - the pending JVM exit archive refuses every missing or changed original
+  ---
+  duration_ms: 142.284643
+  type: 'test'
+  ...
+# Subtest: JVM exit recovery observes real kernel children without consuming their exit status
+ok 12 - JVM exit recovery observes real kernel children without consuming their exit status
+  ---
+  duration_ms: 1179.816135
+  type: 'test'
+  ...
+# real kernel exit controls: kernel-exit-0, kernel-exit-7, kernel-exit-255, traced-kernel-exit-0, traced-kernel-exit-7, live-child-timeout, signal-exit, wrong-inferior, live-debugger-thread, contradictory-code, contradictory-signal, contradictory-event, sticky-failure, changed-identity, wrong-child-handle, already-reaped-child, closed-handle, missing-handle, gdb-exit-0, gdb-exit-7
+# Subtest: JVM exit receipts require exact successful process identity and CLD_EXITED
+ok 13 - JVM exit receipts require exact successful process identity and CLD_EXITED
+  ---
+  duration_ms: 3.647164
+  type: 'test'
+  ...
+# Subtest: the pending-exit observer binds its child before continuing and retains refusal paths
+ok 14 - the pending-exit observer binds its child before continuing and retains refusal paths
+  ---
+  duration_ms: 0.612927
+  type: 'test'
+  ...
+# Subtest: JVM reports bind new exit receipts to the exact new script and preserve both older versions
+ok 15 - JVM reports bind new exit receipts to the exact new script and preserve both older versions
+  ---
+  duration_ms: 1524.629321
+  type: 'test'
+  ...
+# Subtest: JVM container-entry exit observation preserves exact original sources and support claims
+ok 16 - JVM container-entry exit observation preserves exact original sources and support claims
+  ---
+  duration_ms: 394.864205
+  type: 'test'
+  ...
+# Subtest: JVM container-entry exit observation history writer refuses an unrelated checkout before writing
+ok 17 - JVM container-entry exit observation history writer refuses an unrelated checkout before writing
+  ---
+  duration_ms: 89.972844
+  type: 'test'
+  ...
+# Subtest: JVM container entry keeps the historical script and changes only exit observation
+ok 18 - JVM container entry keeps the historical script and changes only exit observation
+  ---
+  duration_ms: 0.616203
+  type: 'test'
+  ...
+# Subtest: JVM container entry recovers this child's kernel exit and refuses unknown or unsuccessful exits
+ok 19 - JVM container entry recovers this child's kernel exit and refuses unknown or unsuccessful exits
+  ---
+  duration_ms: 99.862058
+  type: 'test'
+  ...
+# Real child exits; simulated lost-thread GDB state: [["original", 72], ["pending", 0], ["nonzero", 7], ["signal", 72], ["reaped", 72], ["normal-gdb", 0], ["missing-manifest", 71], ["foreign-manifest", 71]]
+1..19
+# tests 19
+# suites 0
+# pass 19
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 6376.077202
