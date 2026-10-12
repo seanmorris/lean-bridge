@@ -47,6 +47,7 @@ jobs:
         timeout-minutes: 30
         run: |
           npm ci --ignore-scripts --no-audit --no-fund
+          node --test --test-name-pattern='Nix component engine source boundary|filtered Nix engine' tests/engine-execution-request.test.mjs
           bash scripts/bootstrap-toolchains.sh
       - name: Install Chromium, Firefox and WebKit
         timeout-minutes: 20

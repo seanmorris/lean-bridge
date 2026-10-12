@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { nominalSubtypeNativeReferences, promoteNominalSubtypeNative } from "./nominal-subtype-native-promotion.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeComponentEngineClosureSource } from "./component-engine-closure-history.mjs";
 import { beforeNominalSubtypeNativePromotionSource, nominalSubtypeNativePromotionChangedPaths, nominalSubtypeNativePromotionHistoryPath, nominalSubtypeNativePromotionPredecessor, reverseNominalSubtypeNativePromotionUpdate } from "./nominal-subtype-native-promotion-history.mjs";
 
 test("Nominal native promotion authenticates exact changes and the scoped C/C++ support update", async () => {
@@ -49,7 +50,7 @@ test("Nominal native promotion authenticates exact changes and the scoped C/C++ 
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
 	assert.equal(pins, 177);
-	assert.deepEqual(JSON.parse(await readFile(inventoryPath, "utf8")), expected);
+	assert.deepEqual(JSON.parse(beforeComponentEngineClosureSource(inventoryPath, await readFile(inventoryPath, "utf8"))), expected);
 	assert.equal(expected.evidence.length, 480); assert.equal(expected.observations.length, 575);
 });
 

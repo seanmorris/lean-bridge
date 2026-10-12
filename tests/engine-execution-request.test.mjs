@@ -5,10 +5,14 @@
  */
 
 import assert from "node:assert/strict";
-import { chmod, cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { spawnSync } from "node:child_process";
+import { chmod, cp, mkdir, mkdtemp, readFile, rename, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { dirname, extname, join, normalize } from "node:path";
+import { dirname, join } from "node:path";
+import { pathToFileURL } from "node:url";
 import test from "node:test";
+import { collectModuleClosure } from "./helpers/module-closure.mjs";
+import "./helpers/component-engine-closure-history-tests.mjs";
 
 import { analyzeLeanProject } from "../src/analyze/lean-project.mjs";
 import { prepareComponentBuildPlan } from "../src/build/component-plan.mjs";
@@ -32,30 +36,6 @@ const prepare = async ({ projectRoot, scratch }) => {
 	const inputRoot = join(scratch, "component");
 	await writeComponentCompilationInputs({ projectRoot, outputRoot: inputRoot, analysis, componentPlan, compilerAdapters });
 	return { componentPlan, compilationPlan, inputRoot };
-};
-
-const collectModuleClosure = async entry => {
-	const files = new Set();
-	const visit = async path => {
-		if(files.has(path)) return;
-		files.add(path);
-		const source = await readFile(path, "utf8");
-		const patterns = [
-			/(?:^|\n)\s*import\s+(?:[^'"\n]*?\s+from\s+)?["'](\.\.?\/[^"']+)["']/g
-			, /(?:^|\n)\s*export\s+[^'"\n]*?\s+from\s+["'](\.\.?\/[^"']+)["']/g
-			, /import\(\s*["'](\.\.?\/[^"']+)["']\s*\)/g
-		];
-		for(const pattern of patterns)
-		{
-			for(const match of source.matchAll(pattern))
-			{
-				const imported = normalize(join(dirname(path), extname(match[1]) === "" ? `${match[1]}.mjs` : match[1]));
-				await visit(imported);
-			}
-		}
-	};
-	await visit(entry);
-	return [...files].sort();
 };
 
 test("the Nix component engine source boundary closes the executable module graph", async () => {
@@ -87,6 +67,43 @@ test("the filtered Nix engine retains every input needed to authenticate a host 
 	assert.match(filter, /coreSourceBoundary\.includedFiles/);
 	assert.match(filter, /coreSourceBoundary\.includedDirectoryPrefixes/);
 	assert.match(filter, /includedDirectory \|\| parentDirectory \|\| parentFile/);
+});
+
+test("the filtered Nix engine imports its real module graph and refuses omitted refinement dependencies", async t => {
+	const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-filtered-engine-imports-"));
+	t.after(() => rm(scratch, { recursive: true }));
+	const boundary = JSON.parse(await readFile("nix/component-engine-source-boundary.json", "utf8"));
+	const core = JSON.parse(await readFile("nix/core-source-boundary.json", "utf8"));
+	for(const path of new Set([...boundary.includedFiles, ...boundary.identityFiles, ...core.includedFiles, ...core.includedDirectoryPrefixes]))
+	{
+		await mkdir(dirname(join(scratch, path)), { recursive: true });
+		await cp(path, join(scratch, path), { recursive: true });
+	}
+	const entries = ["src/build/component-engine.mjs", "src/build/lean-component-compiler.mjs", "src/build/engine-execution-request.mjs"];
+	const run = () => spawnSync(process.execPath, ["--input-type=module", "-e"
+		, "for (const path of process.argv.slice(1)) await import(path);"
+		, ...entries.map(path => pathToFileURL(join(scratch, path)).href)]
+	, { cwd: scratch, encoding: "utf8", env: { PATH: "/unavailable" }, timeout: 30_000 });
+	const complete = run();
+	assert.equal(complete.status, 0, complete.stderr); assert.equal(complete.stdout, ""); assert.equal(complete.stderr, "");
+	const dependencies = ["src/abi/generic-specialization.mjs"
+		, "src/build/component-fin-guards.mjs"
+		, "src/build/component-refinement-mirrors.mjs"
+		, "src/build/refinement-mirrors.mjs"];
+	for(const path of dependencies)
+	{
+		const file = join(scratch, path), omitted = file + ".omitted";
+		await rename(file, omitted);
+		try
+		{
+			const missing = run(); assert.equal(missing.status, 1);
+			assert.ok(missing.stderr.includes("ERR_MODULE_NOT_FOUND"));
+			assert.ok(missing.stderr.includes(file), path);
+		}
+		finally
+		{ await rename(omitted, file); }
+	}
+	assert.equal(run().status, 0);
 });
 
 test("one closed execution request names engine, component, source, output, cache, and targets", async () => {

@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeComponentEngineClosureSource } from "./component-engine-closure-history.mjs";
 
 export const nominalSubtypeNativePromotionHistoryPath = "docs/evidence/nominal-subtype-native-promotion-source-history-20261012.json";
 export const nominalSubtypeNativePromotionPredecessor = "4d9424e6c1fa551d0c6802d39ee7c5d469ed8c23";
@@ -66,6 +67,7 @@ export const reverseNominalSubtypeNativePromotionUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeNominalSubtypeNativePromotionSource = (path, source, expected) => {
+	source = beforeComponentEngineClosureSource(path, source, expected);
 	if(typeof source !== "string" || !nominalSubtypeNativePromotionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

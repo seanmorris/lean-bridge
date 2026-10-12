@@ -45,7 +45,7 @@ export const assertCheckedRecordBrowserWorkflow = source => {
 	const commands = workflowRunScalars(source).map(run => run.source.trim());
 	assert.deepEqual(commands, [
 		"sudo apt-get update\nsudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev pkg-config python3 ripgrep xz-utils zstd"
-		, "npm ci --ignore-scripts --no-audit --no-fund\nbash scripts/bootstrap-toolchains.sh"
+		, "npm ci --ignore-scripts --no-audit --no-fund\nnode --test --test-name-pattern='Nix component engine source boundary|filtered Nix engine' tests/engine-execution-request.test.mjs\nbash scripts/bootstrap-toolchains.sh"
 		, "bash scripts/install-playwright-browsers.sh chromium firefox webkit"
 		, "set -euo pipefail\nmkdir -p build\nnix build .#component-build-engine --out-link build/locked-lake-engine 2>&1 | tee build/checked-record-browser-engine.log\ntest -x build/locked-lake-engine/bin/lean-bridge-component-engine"
 		, "set -euo pipefail\nbash scripts/build-lean-link-spike.sh 2>&1 | tee build/checked-record-browser-runtime.log\ntest -s build/lean-link-spike/lazy/main.wasm"

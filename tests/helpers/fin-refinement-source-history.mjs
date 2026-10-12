@@ -37,6 +37,7 @@ import { componentNominalSubtypeChangedPaths } from "./component-nominal-subtype
 import { witHistoryCheckoutChangedPaths } from "./wit-history-checkout-history.mjs";
 import { nominalSubtypeNpmPromotionChangedPaths } from "./nominal-subtype-npm-promotion-history.mjs";
 import { nominalSubtypeNativePromotionChangedPaths } from "./nominal-subtype-native-promotion-history.mjs";
+import { componentEngineClosureChangedPaths } from "./component-engine-closure-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeSubtypeRefinementSource, subtypeRefinementChangedPaths } from "./subtype-refinement-source-history.mjs";
 import { subtypeHeapChangedPaths } from "./subtype-heap-source-history.mjs";
@@ -939,6 +940,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...witHistoryCheckoutChangedPaths
 	, ...nominalSubtypeNpmPromotionChangedPaths
 	, ...nominalSubtypeNativePromotionChangedPaths
+	, ...componentEngineClosureChangedPaths
 ])].sort());
 
 /**

@@ -26,6 +26,8 @@ test("browser workflow controls refuse skipped acceptance, narrowed records and 
 		, ["persist-credentials: false", "persist-credentials: true"]
 		, ['node-version: "22"', 'node-version: "latest"']
 		, ["npm ci --ignore-scripts", "npm install"]
+		, ["node --test --test-name-pattern=", "true --test --test-name-pattern="]
+		, ["|filtered Nix engine", "|unknown filtered test"]
 		, ["bash scripts/bootstrap-toolchains.sh", "true missing-tools"]
 		, ["chromium firefox webkit", "chromium"]
 		, ["nix build .#component-build-engine", "true missing-engine"]

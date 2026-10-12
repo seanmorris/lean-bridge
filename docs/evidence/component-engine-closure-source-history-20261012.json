@@ -1,0 +1,200 @@
+{
+  "schemaVersion": 1,
+  "milestone": "component-engine-closure-source-v1",
+  "predecessorCommit": "3bff1f0340a57870ca94cb851d750fd5c5d5f18e",
+  "updates": [
+    {
+      "path": ".github/workflows/checked-record-browser.yml",
+      "currentSha256": "a6196deece63e8e4a501a699e1d563c8c897f790bb8d7428ea54302214926057",
+      "previousSha256": "6b2b24196c266d8c93c0a7ccde1dfe2566135c91349580e07e5acb2a4185b98e",
+      "edits": [
+        {
+          "start": 1556,
+          "previous": "",
+          "current": "          node --test --test-name-pattern='Nix component engine source boundary|filtered Nix engine' tests/engine-execution-request.test.mjs\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "9694749d807b98a067121dc663a5b7d30507291ba45a1747cfb456a89f87e289",
+      "previousSha256": "d56c66bf30e49a2e1c959f0c55bc9f6acec412bbfb305acfef248a4456b82377",
+      "edits": [
+        {
+          "start": 136445,
+          "previous": "          \"sha256\": \"bd3412109d743422a662f7c53c41cb05b7448f685668594bfb2db59f9174179f\"\n",
+          "current": "          \"sha256\": \"0478fd9eaa36b2a8fe0fa1cd93dabe45667997b200944e9f1e1ec38d252b3647\"\n"
+        },
+        {
+          "start": 665021,
+          "previous": "          \"sha256\": \"bd3412109d743422a662f7c53c41cb05b7448f685668594bfb2db59f9174179f\"\n",
+          "current": "          \"sha256\": \"0478fd9eaa36b2a8fe0fa1cd93dabe45667997b200944e9f1e1ec38d252b3647\"\n"
+        },
+        {
+          "start": 674236,
+          "previous": "          \"sha256\": \"bd3412109d743422a662f7c53c41cb05b7448f685668594bfb2db59f9174179f\"\n",
+          "current": "          \"sha256\": \"0478fd9eaa36b2a8fe0fa1cd93dabe45667997b200944e9f1e1ec38d252b3647\"\n"
+        },
+        {
+          "start": 681574,
+          "previous": "          \"sha256\": \"bd3412109d743422a662f7c53c41cb05b7448f685668594bfb2db59f9174179f\"\n",
+          "current": "          \"sha256\": \"0478fd9eaa36b2a8fe0fa1cd93dabe45667997b200944e9f1e1ec38d252b3647\"\n"
+        },
+        {
+          "start": 1139177,
+          "previous": "          \"sha256\": \"bd3412109d743422a662f7c53c41cb05b7448f685668594bfb2db59f9174179f\"\n",
+          "current": "          \"sha256\": \"0478fd9eaa36b2a8fe0fa1cd93dabe45667997b200944e9f1e1ec38d252b3647\"\n"
+        },
+        {
+          "start": 4705504,
+          "previous": "          \"sha256\": \"6b2b24196c266d8c93c0a7ccde1dfe2566135c91349580e07e5acb2a4185b98e\"\n",
+          "current": "          \"sha256\": \"a6196deece63e8e4a501a699e1d563c8c897f790bb8d7428ea54302214926057\"\n"
+        },
+        {
+          "start": 4738157,
+          "previous": "          \"sha256\": \"6b2b24196c266d8c93c0a7ccde1dfe2566135c91349580e07e5acb2a4185b98e\"\n",
+          "current": "          \"sha256\": \"a6196deece63e8e4a501a699e1d563c8c897f790bb8d7428ea54302214926057\"\n"
+        },
+        {
+          "start": 4770521,
+          "previous": "          \"sha256\": \"6b2b24196c266d8c93c0a7ccde1dfe2566135c91349580e07e5acb2a4185b98e\"\n",
+          "current": "          \"sha256\": \"a6196deece63e8e4a501a699e1d563c8c897f790bb8d7428ea54302214926057\"\n"
+        },
+        {
+          "start": 4804137,
+          "previous": "          \"sha256\": \"6b2b24196c266d8c93c0a7ccde1dfe2566135c91349580e07e5acb2a4185b98e\"\n",
+          "current": "          \"sha256\": \"a6196deece63e8e4a501a699e1d563c8c897f790bb8d7428ea54302214926057\"\n"
+        }
+      ]
+    },
+    {
+      "path": "nix/component-engine-source-boundary.json",
+      "currentSha256": "0478fd9eaa36b2a8fe0fa1cd93dabe45667997b200944e9f1e1ec38d252b3647",
+      "previousSha256": "bd3412109d743422a662f7c53c41cb05b7448f685668594bfb2db59f9174179f",
+      "edits": [
+        {
+          "start": 515,
+          "previous": "",
+          "current": "    \"src/abi/generic-specialization.mjs\",\n"
+        },
+        {
+          "start": 2608,
+          "previous": "",
+          "current": "    \"src/build/component-fin-guards.mjs\",\n"
+        },
+        {
+          "start": 2822,
+          "previous": "",
+          "current": "    \"src/build/component-refinement-mirrors.mjs\",\n    \"src/build/refinement-mirrors.mjs\",\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/engine-execution-request.test.mjs",
+      "currentSha256": "2b9385e38afe6e0c3672e6965e1f9a680c7a2e3319fef95375dc37d45e994193",
+      "previousSha256": "8758f2820b84f2b23fb6378b950f8f8849d83096c45349a31e9ab4e90a461ad1",
+      "edits": [
+        {
+          "start": 110,
+          "previous": "import { chmod, cp, mkdir, mkdtemp, readFile, rm, writeFile } from \"node:fs/promises\";\n",
+          "current": "import { spawnSync } from \"node:child_process\";\nimport { chmod, cp, mkdir, mkdtemp, readFile, rename, rm, writeFile } from \"node:fs/promises\";\n"
+        },
+        {
+          "start": 287,
+          "previous": "import { dirname, extname, join, normalize } from \"node:path\";\n",
+          "current": "import { dirname, join } from \"node:path\";\nimport { pathToFileURL } from \"node:url\";\n"
+        },
+        {
+          "start": 402,
+          "previous": "",
+          "current": "import { collectModuleClosure } from \"./helpers/module-closure.mjs\";\nimport \"./helpers/component-engine-closure-history-tests.mjs\";\n"
+        },
+        {
+          "start": 1819,
+          "previous": "const collectModuleClosure = async entry => {\n\tconst files = new Set();\n\tconst visit = async path => {\n\t\tif(files.has(path)) return;\n\t\tfiles.add(path);\n\t\tconst source = await readFile(path, \"utf8\");\n\t\tconst patterns = [\n\t\t\t/(?:^|\\n)\\s*import\\s+(?:[^'\"\\n]*?\\s+from\\s+)?[\"'](\\.\\.?\\/[^\"']+)[\"']/g\n\t\t\t, /(?:^|\\n)\\s*export\\s+[^'\"\\n]*?\\s+from\\s+[\"'](\\.\\.?\\/[^\"']+)[\"']/g\n\t\t\t, /import\\(\\s*[\"'](\\.\\.?\\/[^\"']+)[\"']\\s*\\)/g\n\t\t];\n\t\tfor(const pattern of patterns)\n\t\t{\n\t\t\tfor(const match of source.matchAll(pattern))\n\t\t\t{\n\t\t\t\tconst imported = normalize(join(dirname(path), extname(match[1]) === \"\" ? `${match[1]}.mjs` : match[1]));\n\t\t\t\tawait visit(imported);\n\t\t\t}\n\t\t}\n\t};\n\tawait visit(entry);\n\treturn [...files].sort();\n};\n\n",
+          "current": ""
+        },
+        {
+          "start": 4156,
+          "previous": "",
+          "current": "test(\"the filtered Nix engine imports its real module graph and refuses omitted refinement dependencies\", async t => {\n\tconst scratch = await mkdtemp(join(tmpdir(), \"lean-bridge-filtered-engine-imports-\"));\n\tt.after(() => rm(scratch, { recursive: true }));\n\tconst boundary = JSON.parse(await readFile(\"nix/component-engine-source-boundary.json\", \"utf8\"));\n\tconst core = JSON.parse(await readFile(\"nix/core-source-boundary.json\", \"utf8\"));\n\tfor(const path of new Set([...boundary.includedFiles, ...boundary.identityFiles, ...core.includedFiles, ...core.includedDirectoryPrefixes]))\n\t{\n\t\tawait mkdir(dirname(join(scratch, path)), { recursive: true });\n\t\tawait cp(path, join(scratch, path), { recursive: true });\n\t}\n\tconst entries = [\"src/build/component-engine.mjs\", \"src/build/lean-component-compiler.mjs\", \"src/build/engine-execution-request.mjs\"];\n\tconst run = () => spawnSync(process.execPath, [\"--input-type=module\", \"-e\"\n\t\t, \"for (const path of process.argv.slice(1)) await import(path);\"\n\t\t, ...entries.map(path => pathToFileURL(join(scratch, path)).href)]\n\t, { cwd: scratch, encoding: \"utf8\", env: { PATH: \"/unavailable\" }, timeout: 30_000 });\n\tconst complete = run();\n\tassert.equal(complete.status, 0, complete.stderr); assert.equal(complete.stdout, \"\"); assert.equal(complete.stderr, \"\");\n\tconst dependencies = [\"src/abi/generic-specialization.mjs\"\n\t\t, \"src/build/component-fin-guards.mjs\"\n\t\t, \"src/build/component-refinement-mirrors.mjs\"\n\t\t, \"src/build/refinement-mirrors.mjs\"];\n\tfor(const path of dependencies)\n\t{\n\t\tconst file = join(scratch, path), omitted = file + \".omitted\";\n\t\tawait rename(file, omitted);\n\t\ttry\n\t\t{\n\t\t\tconst missing = run(); assert.equal(missing.status, 1);\n\t\t\tassert.ok(missing.stderr.includes(\"ERR_MODULE_NOT_FOUND\"));\n\t\t\tassert.ok(missing.stderr.includes(file), path);\n\t\t}\n\t\tfinally\n\t\t{ await rename(omitted, file); }\n\t}\n\tassert.equal(run().status, 0);\n});\n\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-browser-ci-workflow-tests.mjs",
+      "currentSha256": "4f45b4bf43ae0006ca5b22a8e0be1cf92450a54ca2f94df198879e4267be40c4",
+      "previousSha256": "cd2bb110db56cde9441bf4a87c1b8521bb99c13744d0f05631bdf6d2c5c14584",
+      "edits": [
+        {
+          "start": 1494,
+          "previous": "",
+          "current": "\t\t, [\"node --test --test-name-pattern=\", \"true --test --test-name-pattern=\"]\n\t\t, [\"|filtered Nix engine\", \"|unknown filtered test\"]\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-browser-ci-workflow.mjs",
+      "currentSha256": "1a557ba1dbb470dcaef6666f09121ce0bca3866606ee75eb1ac88b6ae5d90333",
+      "previousSha256": "012ee5d2186a40769d5898e75608df381e56ae3ca6e8ef99420c54f91ec9a931",
+      "edits": [
+        {
+          "start": 3554,
+          "previous": "\t\t, \"npm ci --ignore-scripts --no-audit --no-fund\\nbash scripts/bootstrap-toolchains.sh\"\n",
+          "current": "\t\t, \"npm ci --ignore-scripts --no-audit --no-fund\\nnode --test --test-name-pattern='Nix component engine source boundary|filtered Nix engine' tests/engine-execution-request.test.mjs\\nbash scripts/bootstrap-toolchains.sh\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "d0caa01b7668852db9cdbb8bdaa62463a2953a67d04960d3396d33967c84811f",
+      "previousSha256": "1c6787e9ed43c6be7a0e37aa632f5ca44e6a042bd79c9b3aece5fb709a1d5c01",
+      "edits": [
+        {
+          "start": 3277,
+          "previous": "",
+          "current": "import { componentEngineClosureChangedPaths } from \"./component-engine-closure-history.mjs\";\n"
+        },
+        {
+          "start": 64033,
+          "previous": "",
+          "current": "\t, ...componentEngineClosureChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-native-promotion-history-tests.mjs",
+      "currentSha256": "2bf23e8fba2558624cff2d8ef6a396db58810f2ee6e57f1f796ff001f56e8222",
+      "previousSha256": "ccde47a573e7a0db5b305cfdd115b4f68bfcbf4319e7726476c8c7155f102e52",
+      "edits": [
+        {
+          "start": 575,
+          "previous": "",
+          "current": "import { beforeComponentEngineClosureSource } from \"./component-engine-closure-history.mjs\";\n"
+        },
+        {
+          "start": 3486,
+          "previous": "\tassert.deepEqual(JSON.parse(await readFile(inventoryPath, \"utf8\")), expected);\n",
+          "current": "\tassert.deepEqual(JSON.parse(beforeComponentEngineClosureSource(inventoryPath, await readFile(inventoryPath, \"utf8\"))), expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-native-promotion-history.mjs",
+      "currentSha256": "0002448ad1af81589af68794e59f12d458f66fff5502a826fc2165aa3cb43786",
+      "previousSha256": "79557fc5a587e04a976560421e35a4da6d6850b92a0ef847ecd53a6c6fe6671f",
+      "edits": [
+        {
+          "start": 240,
+          "previous": "",
+          "current": "import { beforeComponentEngineClosureSource } from \"./component-engine-closure-history.mjs\";\n"
+        },
+        {
+          "start": 2994,
+          "previous": "",
+          "current": "\tsource = beforeComponentEngineClosureSource(path, source, expected);\n"
+        }
+      ]
+    }
+  ]
+}
