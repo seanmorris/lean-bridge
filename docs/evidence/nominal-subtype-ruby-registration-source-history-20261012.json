@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nominal-subtype-ruby-registration-source-v1",
+  "predecessorCommit": "ae1f52cd0d9f7b1e17de552baa1ad6652f1da80f",
+  "updates": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "2f629a8aef135a09dfdf41d10606a8aa80228c631364412deb759e8e9704d155",
+      "previousSha256": "3f094d3019d4a250658f85f195e5df2d5129046f2c91a364e74c56b61cd5909f",
+      "edits": [
+        {
+          "start": 4074,
+          "previous": "",
+          "current": "import { nominalSubtypeRubyRegistrationChangedPaths } from \"./nominal-subtype-ruby-registration-history.mjs\";\n"
+        },
+        {
+          "start": 65199,
+          "previous": "",
+          "current": "\t, ...nominalSubtypeRubyRegistrationChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-installed-fixture-tests.mjs",
+      "currentSha256": "26088a131989b4462f2756687982328680337dbafb8c3bd13493c95bc3031f18",
+      "previousSha256": "eba4535488ecbb0ecb4375a55ddf154009d7ecf75cd95077399983d95cffe2ca",
+      "edits": [
+        {
+          "start": 2505,
+          "previous": "",
+          "current": "import \"./nominal-subtype-ruby-tests.mjs\";\nimport \"./nominal-subtype-ruby-installed-tests.mjs\";\nimport \"./nominal-subtype-ruby-registration-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-python-promotion-history.mjs",
+      "currentSha256": "de2683f0ca8a00d784a3a02f969cef024e3c9eeb20dd607d94d510e693f6dd03",
+      "previousSha256": "3e347187880e0766aa7c6955906c0925d10ae36d1c9561f6d35fbd824e86f418",
+      "edits": [
+        {
+          "start": 236,
+          "previous": "",
+          "current": "import { beforeNominalSubtypeRubyRegistrationSource } from \"./nominal-subtype-ruby-registration-history.mjs\";\n"
+        },
+        {
+          "start": 3222,
+          "previous": "",
+          "current": "\tsource = beforeNominalSubtypeRubyRegistrationSource(path, source, expected);\n"
+        }
+      ]
+    }
+  ]
+}
