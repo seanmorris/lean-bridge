@@ -1,0 +1,59 @@
+{
+  "checks": 4122,
+  "compiler": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "c++ (Debian 12.2.0-14+deb12u1) 12.2.0\nCopyright (C) 2022 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+  },
+  "compilerFreePath": true,
+  "compilerFreeReplay": true,
+  "consumerSha256": "7e3bff962ff00915d52919a064a87f25e2135ed4694178b3e4bf1d944502f0c3",
+  "dispatch": {
+    "observed": false,
+    "reason": "Separate constructor/source entry probe remains required"
+  },
+  "executableSha256": "c1842edb1e040f7aeecf63a23ce76bd59b5fc2fa4769976136cb3c0c99c960a7",
+  "offlineInstall": true,
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51852713,
+          "path": "archives/nominalsubtypes-1.0.0-cpp.tar.gz",
+          "sha256": "78c151598eee6e32b89f0c68666956976fd73b3307ef388e389e6426efc68a40"
+        }
+      ],
+      "ecosystem": "cpp",
+      "name": "nominalsubtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "cpp",
+      "version": "1.0.0"
+    }
+  ],
+  "profile": "cpp",
+  "relocatedInstallation": true,
+  "runs": [
+    {
+      "code": 0,
+      "packageFileSetSha256": "4acebf854068a911b2d8198bf43bd3b884c74142810593a69f22dfc82f52ef7a",
+      "receiptSha256": "108918dc32596b77be3efeb9cf18ae541d6176c4c07c0eb38da2813cedb73492",
+      "relocated": false,
+      "stderr": "",
+      "stdout": "nominal-subtype-ok:4122\n"
+    },
+    {
+      "code": 0,
+      "packageFileSetSha256": "4acebf854068a911b2d8198bf43bd3b884c74142810593a69f22dfc82f52ef7a",
+      "receiptSha256": "108918dc32596b77be3efeb9cf18ae541d6176c4c07c0eb38da2813cedb73492",
+      "relocated": true,
+      "stderr": "",
+      "stdout": "nominal-subtype-ok:4122\n"
+    }
+  ],
+  "sourceRemovedBeforeInstallation": true,
+  "sourceSha256": "7e3bff962ff00915d52919a064a87f25e2135ed4694178b3e4bf1d944502f0c3"
+}

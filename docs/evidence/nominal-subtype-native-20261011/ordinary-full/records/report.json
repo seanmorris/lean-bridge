@@ -1,0 +1,881 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/nominalsubtypes-1.0.0-c.tar.gz": "7891bfb4df1cae88ef23fb95c042732e127bf8d3cf5bbbb98e28871acc7c7703",
+        "archives/nominalsubtypes-1.0.0-cpp.tar.gz": "90ebc48a60d9df83fa0f51daa95445e9611a5e347e7f2b5adb54be011c8b7533"
+      },
+      "bindingIrSha256": "d6a95322d56bd2d4c856418e70d364fc286488ead4260abb14b40aab840fce9b",
+      "modelSha256": "689da5442a73ec4191f756d207ff61d2c5456cd5feae95ca619c2c76c4a8ff20",
+      "receiptSha256": "394d45899e96eb3c5d9cce91bbc1f6b9070375f37791d5612c5b96233834c546"
+    },
+    {
+      "archives": {
+        "archives/nominalsubtypes-1.0.0-c.tar.gz": "7891bfb4df1cae88ef23fb95c042732e127bf8d3cf5bbbb98e28871acc7c7703",
+        "archives/nominalsubtypes-1.0.0-cpp.tar.gz": "90ebc48a60d9df83fa0f51daa95445e9611a5e347e7f2b5adb54be011c8b7533"
+      },
+      "bindingIrSha256": "d6a95322d56bd2d4c856418e70d364fc286488ead4260abb14b40aab840fce9b",
+      "modelSha256": "689da5442a73ec4191f756d207ff61d2c5456cd5feae95ca619c2c76c4a8ff20",
+      "receiptSha256": "394d45899e96eb3c5d9cce91bbc1f6b9070375f37791d5612c5b96233834c546"
+    }
+  ],
+  "configuration": {
+    "contracts": {
+      "NominalSubtypes.aliases": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "fields": [
+                        {
+                          "name": "payload",
+                          "refinement": {
+                            "constructor": "NominalSubtypes.plusOne"
+                          }
+                        },
+                        {
+                          "name": "digit",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "record",
+                      "name": "NominalSubtypes.Envelope"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          },
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "fields": [
+                        {
+                          "name": "payload",
+                          "refinement": {
+                            "constructor": "NominalSubtypes.plusTwo"
+                          }
+                        },
+                        {
+                          "name": "digit",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "record",
+                      "name": "NominalSubtypes.Envelope"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "NominalSubtypes.combine": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "fields": [
+                {
+                  "name": "payload",
+                  "refinement": {
+                    "constructor": "NominalSubtypes.plusOne"
+                  }
+                },
+                {
+                  "name": "digit",
+                  "refinement": null
+                }
+              ],
+              "kind": "record",
+              "name": "NominalSubtypes.Envelope"
+            }
+          },
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "fields": [
+                {
+                  "name": "payload",
+                  "refinement": {
+                    "constructor": "NominalSubtypes.plusTwo"
+                  }
+                },
+                {
+                  "name": "digit",
+                  "refinement": null
+                }
+              ],
+              "kind": "record",
+              "name": "NominalSubtypes.Envelope"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "NominalSubtypes.echo": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "fields": [
+                {
+                  "name": "payload",
+                  "refinement": {
+                    "constructor": "NominalSubtypes.plusOne"
+                  }
+                },
+                {
+                  "name": "digit",
+                  "refinement": null
+                }
+              ],
+              "kind": "record",
+              "name": "NominalSubtypes.Envelope"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "NominalSubtypes.echoEvent": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "cases": [
+                {
+                  "fields": [],
+                  "name": "empty"
+                },
+                {
+                  "fields": [
+                    {
+                      "name": "value",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "constructor": "NominalSubtypes.plusOne"
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "NominalSubtypes.Envelope"
+                      }
+                    }
+                  ],
+                  "name": "box"
+                },
+                {
+                  "fields": [
+                    {
+                      "name": "values",
+                      "refinement": {
+                        "arguments": [
+                          {
+                            "arguments": [
+                              {
+                                "arguments": [
+                                  {
+                                    "constructor": "NominalSubtypes.plusOne"
+                                  },
+                                  {
+                                    "constructor": "NominalSubtypes.plusTwo"
+                                  }
+                                ],
+                                "kind": "result"
+                              }
+                            ],
+                            "kind": "option"
+                          }
+                        ],
+                        "kind": "array"
+                      }
+                    }
+                  ],
+                  "name": "choices"
+                }
+              ],
+              "kind": "variant",
+              "name": "NominalSubtypes.Event"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "NominalSubtypes.echoGroups": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "fields": [
+                        {
+                          "name": "payload",
+                          "refinement": {
+                            "constructor": "NominalSubtypes.plusOne"
+                          }
+                        },
+                        {
+                          "name": "digit",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "record",
+                      "name": "NominalSubtypes.Envelope"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "NominalSubtypes.echoPair": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "fields": [
+                {
+                  "name": "left",
+                  "refinement": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "fields": [
+                              {
+                                "name": "payload",
+                                "refinement": {
+                                  "constructor": "NominalSubtypes.plusOne"
+                                }
+                              },
+                              {
+                                "name": "digit",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "record",
+                            "name": "NominalSubtypes.Envelope"
+                          }
+                        ],
+                        "kind": "option"
+                      }
+                    ],
+                    "kind": "array"
+                  }
+                },
+                {
+                  "name": "right",
+                  "refinement": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "fields": [
+                              {
+                                "name": "payload",
+                                "refinement": {
+                                  "constructor": "NominalSubtypes.plusTwo"
+                                }
+                              },
+                              {
+                                "name": "digit",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "record",
+                            "name": "NominalSubtypes.Envelope"
+                          }
+                        ],
+                        "kind": "option"
+                      }
+                    ],
+                    "kind": "array"
+                  }
+                }
+              ],
+              "kind": "record",
+              "name": "NominalSubtypes.AliasPair"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "NominalSubtypes.eventFirst": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "cases": [
+                {
+                  "fields": [],
+                  "name": "empty"
+                },
+                {
+                  "fields": [
+                    {
+                      "name": "value",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "constructor": "NominalSubtypes.plusOne"
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "NominalSubtypes.Envelope"
+                      }
+                    }
+                  ],
+                  "name": "box"
+                },
+                {
+                  "fields": [
+                    {
+                      "name": "values",
+                      "refinement": {
+                        "arguments": [
+                          {
+                            "arguments": [
+                              {
+                                "arguments": [
+                                  {
+                                    "constructor": "NominalSubtypes.plusOne"
+                                  },
+                                  {
+                                    "constructor": "NominalSubtypes.plusTwo"
+                                  }
+                                ],
+                                "kind": "result"
+                              }
+                            ],
+                            "kind": "option"
+                          }
+                        ],
+                        "kind": "array"
+                      }
+                    }
+                  ],
+                  "name": "choices"
+                }
+              ],
+              "kind": "variant",
+              "name": "NominalSubtypes.Event"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "NominalSubtypes.eventSecond": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "cases": [
+                {
+                  "fields": [],
+                  "name": "empty"
+                },
+                {
+                  "fields": [
+                    {
+                      "name": "value",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "constructor": "NominalSubtypes.plusTwo"
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "NominalSubtypes.Envelope"
+                      }
+                    }
+                  ],
+                  "name": "box"
+                },
+                {
+                  "fields": [
+                    {
+                      "name": "values",
+                      "refinement": {
+                        "arguments": [
+                          {
+                            "arguments": [
+                              {
+                                "arguments": [
+                                  {
+                                    "constructor": "NominalSubtypes.plusTwo"
+                                  },
+                                  {
+                                    "constructor": "NominalSubtypes.plusOne"
+                                  }
+                                ],
+                                "kind": "result"
+                              }
+                            ],
+                            "kind": "option"
+                          }
+                        ],
+                        "kind": "array"
+                      }
+                    }
+                  ],
+                  "name": "choices"
+                }
+              ],
+              "kind": "variant",
+              "name": "NominalSubtypes.Event"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "NominalSubtypes.first": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "fields": [
+                {
+                  "name": "payload",
+                  "refinement": {
+                    "constructor": "NominalSubtypes.plusOne"
+                  }
+                },
+                {
+                  "name": "digit",
+                  "refinement": null
+                }
+              ],
+              "kind": "record",
+              "name": "NominalSubtypes.Envelope"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "NominalSubtypes.inspectAliasPair": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "fields": [
+                {
+                  "name": "left",
+                  "refinement": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "fields": [
+                              {
+                                "name": "payload",
+                                "refinement": {
+                                  "constructor": "NominalSubtypes.plusOne"
+                                }
+                              },
+                              {
+                                "name": "digit",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "record",
+                            "name": "NominalSubtypes.Envelope"
+                          }
+                        ],
+                        "kind": "option"
+                      }
+                    ],
+                    "kind": "array"
+                  }
+                },
+                {
+                  "name": "right",
+                  "refinement": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "fields": [
+                              {
+                                "name": "payload",
+                                "refinement": {
+                                  "constructor": "NominalSubtypes.plusTwo"
+                                }
+                              },
+                              {
+                                "name": "digit",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "record",
+                            "name": "NominalSubtypes.Envelope"
+                          }
+                        ],
+                        "kind": "option"
+                      }
+                    ],
+                    "kind": "array"
+                  }
+                }
+              ],
+              "kind": "record",
+              "name": "NominalSubtypes.AliasPair"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "NominalSubtypes.nested": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "fields": [
+                {
+                  "name": "left",
+                  "refinement": {
+                    "fields": [
+                      {
+                        "name": "payload",
+                        "refinement": {
+                          "constructor": "NominalSubtypes.plusOne"
+                        }
+                      },
+                      {
+                        "name": "digit",
+                        "refinement": null
+                      }
+                    ],
+                    "kind": "record",
+                    "name": "NominalSubtypes.Envelope"
+                  }
+                },
+                {
+                  "name": "right",
+                  "refinement": {
+                    "fields": [
+                      {
+                        "name": "payload",
+                        "refinement": {
+                          "constructor": "NominalSubtypes.plusTwo"
+                        }
+                      },
+                      {
+                        "name": "digit",
+                        "refinement": null
+                      }
+                    ],
+                    "kind": "record",
+                    "name": "NominalSubtypes.Envelope"
+                  }
+                }
+              ],
+              "kind": "record",
+              "name": "NominalSubtypes.Pair"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "NominalSubtypes.second": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "fields": [
+                {
+                  "name": "payload",
+                  "refinement": {
+                    "constructor": "NominalSubtypes.plusTwo"
+                  }
+                },
+                {
+                  "name": "digit",
+                  "refinement": null
+                }
+              ],
+              "kind": "record",
+              "name": "NominalSubtypes.Envelope"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      }
+    },
+    "exports": [
+      "NominalSubtypes.first",
+      "NominalSubtypes.second",
+      "NominalSubtypes.combine",
+      "NominalSubtypes.nested",
+      "NominalSubtypes.eventFirst",
+      "NominalSubtypes.eventSecond",
+      "NominalSubtypes.echo",
+      "NominalSubtypes.aliases",
+      "NominalSubtypes.inspectAliasPair",
+      "NominalSubtypes.echoGroups",
+      "NominalSubtypes.echoPair",
+      "NominalSubtypes.echoEvent",
+      "NominalSubtypes.plainFin",
+      "NominalSubtypes.scalar",
+      "NominalSubtypes.produceEnvelope",
+      "NominalSubtypes.arrayValues",
+      "NominalSubtypes.listValues",
+      "NominalSubtypes.optional",
+      "NominalSubtypes.product",
+      "NominalSubtypes.branch",
+      "NominalSubtypes.groupValues",
+      "NominalSubtypes.pairValues",
+      "NominalSubtypes.eventValue",
+      "NominalSubtypes.eventEmpty",
+      "NominalSubtypes.eventChoices",
+      "NominalSubtypes.noItems"
+    ],
+    "modules": [
+      "NominalSubtypes"
+    ],
+    "schemaVersion": 1,
+    "targets": {
+      "c": {
+        "name": "nominalsubtypes",
+        "version": "1.0.0"
+      },
+      "cpp": {
+        "name": "nominalsubtypes",
+        "version": "1.0.0"
+      }
+    }
+  },
+  "declaredGlibcFloor": "2.36",
+  "expectedBindingIrSha256": "258f890466f6cd2ac574b344dc50af8697949de971ee760e86f4f6be6e50979a",
+  "independentBuilds": 2,
+  "mode": "full",
+  "producerCommit": "f2600a5efb6f8e0a64c0ed9f6903bf75f40ea332",
+  "profiles": [
+    "c",
+    "cpp"
+  ],
+  "reports": [
+    {
+      "checks": 4149,
+      "compiler": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "cc (Debian 12.2.0-14+deb12u1) 12.2.0\nCopyright (C) 2022 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+      },
+      "compilerFreePath": true,
+      "compilerFreeReplay": true,
+      "consumerSha256": "6c87508fb1f56e4ca592d645d9f7b320613f5b52a9cb4e9c633748fafbc44209",
+      "dispatch": {
+        "observed": false,
+        "reason": "Separate constructor/source entry probe remains required"
+      },
+      "executableSha256": "2569211256e0633cc70635c1af2a56d19d7560ceff90179029cdc120fd5a7623",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 53931352,
+              "path": "archives/nominalsubtypes-1.0.0-c.tar.gz",
+              "sha256": "7891bfb4df1cae88ef23fb95c042732e127bf8d3cf5bbbb98e28871acc7c7703"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "nominalsubtypes",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "c",
+          "version": "1.0.0"
+        }
+      ],
+      "profile": "c",
+      "relocatedInstallation": true,
+      "runs": [
+        {
+          "code": 0,
+          "packageFileSetSha256": "8f43c5a61df60a36fbcabaf77d10e6c8e1473f6a88a00a169b93e6f96759164a",
+          "receiptSha256": "6c8774d26c9d440c824f5ee812d88d52278a5c3aec37725575161945ad275df6",
+          "relocated": false,
+          "stderr": "",
+          "stdout": "nominal-subtype-ok:4149\n"
+        },
+        {
+          "code": 0,
+          "packageFileSetSha256": "8f43c5a61df60a36fbcabaf77d10e6c8e1473f6a88a00a169b93e6f96759164a",
+          "receiptSha256": "6c8774d26c9d440c824f5ee812d88d52278a5c3aec37725575161945ad275df6",
+          "relocated": true,
+          "stderr": "",
+          "stdout": "nominal-subtype-ok:4149\n"
+        }
+      ],
+      "sourceRemovedBeforeInstallation": true,
+      "sourceSha256": "6c87508fb1f56e4ca592d645d9f7b320613f5b52a9cb4e9c633748fafbc44209"
+    },
+    {
+      "checks": 4122,
+      "compiler": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "c++ (Debian 12.2.0-14+deb12u1) 12.2.0\nCopyright (C) 2022 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+      },
+      "compilerFreePath": true,
+      "compilerFreeReplay": true,
+      "consumerSha256": "b428e886c20456e8cf5c9f991b4ba74cc3fd941a5e5affb61b8bd788ba9f12a1",
+      "dispatch": {
+        "observed": false,
+        "reason": "Separate constructor/source entry probe remains required"
+      },
+      "executableSha256": "c52ae9f26414d64b5c13b9264b78b7e1f8e769e554eda0c9907a79e253859fdd",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51849526,
+              "path": "archives/nominalsubtypes-1.0.0-cpp.tar.gz",
+              "sha256": "90ebc48a60d9df83fa0f51daa95445e9611a5e347e7f2b5adb54be011c8b7533"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "nominalsubtypes",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "profile": "cpp",
+      "relocatedInstallation": true,
+      "runs": [
+        {
+          "code": 0,
+          "packageFileSetSha256": "4acebf854068a911b2d8198bf43bd3b884c74142810593a69f22dfc82f52ef7a",
+          "receiptSha256": "e0470f977355eef65eb946195a5bf6f70bcc794c47d0aa274c8ddc94b2c5b4a2",
+          "relocated": false,
+          "stderr": "",
+          "stdout": "nominal-subtype-ok:4122\n"
+        },
+        {
+          "code": 0,
+          "packageFileSetSha256": "4acebf854068a911b2d8198bf43bd3b884c74142810593a69f22dfc82f52ef7a",
+          "receiptSha256": "e0470f977355eef65eb946195a5bf6f70bcc794c47d0aa274c8ddc94b2c5b4a2",
+          "relocated": true,
+          "stderr": "",
+          "stdout": "nominal-subtype-ok:4122\n"
+        }
+      ],
+      "sourceRemovedBeforeInstallation": true,
+      "sourceSha256": "b428e886c20456e8cf5c9f991b4ba74cc3fd941a5e5affb61b8bd788ba9f12a1"
+    }
+  ],
+  "reproducible": true,
+  "route": "ordinary",
+  "runtime": {
+    "arch": "x64",
+    "glibc": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "glibc 2.36\n"
+    },
+    "platform": "linux"
+  },
+  "schemaVersion": 1
+}

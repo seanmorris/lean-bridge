@@ -1,0 +1,195 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/nominalsubtypes-1.0.0-c.tar.gz": "8df22c6e6ef7f5419f43acbf694296642582e7b3ce6ef25b125179dcc2138925",
+        "archives/nominalsubtypes-1.0.0-cpp.tar.gz": "d04f621c80f500900a4cc8b0c4ddb4678ce98e2e4874d170e7de9d802c216673"
+      },
+      "bindingIrSha256": "561479c88f6a2ad7ecc1cf46d01b52828f11cd9ba2e1029e88a72964fb11033d",
+      "modelSha256": "a6d2117d021c1e8f509ea73240e48cc4ca84b1e52d4d0f2a7fa6444fa1f084fb",
+      "receiptSha256": "5beea9ab4569ca35d64c3fd5a629700b30e785b572464421826ef131f440f1d1"
+    },
+    {
+      "archives": {
+        "archives/nominalsubtypes-1.0.0-c.tar.gz": "8df22c6e6ef7f5419f43acbf694296642582e7b3ce6ef25b125179dcc2138925",
+        "archives/nominalsubtypes-1.0.0-cpp.tar.gz": "d04f621c80f500900a4cc8b0c4ddb4678ce98e2e4874d170e7de9d802c216673"
+      },
+      "bindingIrSha256": "561479c88f6a2ad7ecc1cf46d01b52828f11cd9ba2e1029e88a72964fb11033d",
+      "modelSha256": "a6d2117d021c1e8f509ea73240e48cc4ca84b1e52d4d0f2a7fa6444fa1f084fb",
+      "receiptSha256": "5beea9ab4569ca35d64c3fd5a629700b30e785b572464421826ef131f440f1d1"
+    }
+  ],
+  "configuration": {
+    "exports": [
+      "NominalSubtypes.scalar",
+      "NominalSubtypes.produceEnvelope",
+      "NominalSubtypes.arrayValues",
+      "NominalSubtypes.listValues",
+      "NominalSubtypes.optional",
+      "NominalSubtypes.product",
+      "NominalSubtypes.branch",
+      "NominalSubtypes.groupValues",
+      "NominalSubtypes.pairValues",
+      "NominalSubtypes.eventValue",
+      "NominalSubtypes.eventEmpty",
+      "NominalSubtypes.eventChoices",
+      "NominalSubtypes.noItems"
+    ],
+    "modules": [
+      "NominalSubtypes"
+    ],
+    "schemaVersion": 1,
+    "targets": {
+      "c": {
+        "name": "nominalsubtypes",
+        "version": "1.0.0"
+      },
+      "cpp": {
+        "name": "nominalsubtypes",
+        "version": "1.0.0"
+      }
+    }
+  },
+  "declaredGlibcFloor": "2.36",
+  "expectedBindingIrSha256": "506191df3010adf087fd83091d017d4c645f1d75d5c7a366b61d351c7a9268b5",
+  "independentBuilds": 2,
+  "mode": "result-only",
+  "producerCommit": "f2600a5efb6f8e0a64c0ed9f6903bf75f40ea332",
+  "profiles": [
+    "c",
+    "cpp"
+  ],
+  "reports": [
+    {
+      "checks": 2042,
+      "compiler": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "cc (Debian 12.2.0-14+deb12u1) 12.2.0\nCopyright (C) 2022 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+      },
+      "compilerFreePath": true,
+      "compilerFreeReplay": true,
+      "consumerSha256": "65584835c7a9ff9624df716755678b314087f51d8085ec11a2905fec262d33ad",
+      "dispatch": {
+        "observed": false,
+        "reason": "Separate constructor/source entry probe remains required"
+      },
+      "executableSha256": "2da82d372a4d7abbb8b9fb6e50821f7cc152b6d45e52b2099535716fe6643ac3",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 53868105,
+              "path": "archives/nominalsubtypes-1.0.0-c.tar.gz",
+              "sha256": "8df22c6e6ef7f5419f43acbf694296642582e7b3ce6ef25b125179dcc2138925"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "nominalsubtypes",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "c",
+          "version": "1.0.0"
+        }
+      ],
+      "profile": "c",
+      "relocatedInstallation": true,
+      "runs": [
+        {
+          "code": 0,
+          "packageFileSetSha256": "8f43c5a61df60a36fbcabaf77d10e6c8e1473f6a88a00a169b93e6f96759164a",
+          "receiptSha256": "b932514dec2205f7707697f96a259b0f885a6effbeeee6f3b68820612af287ba",
+          "relocated": false,
+          "stderr": "",
+          "stdout": "nominal-subtype-ok:2042\n"
+        },
+        {
+          "code": 0,
+          "packageFileSetSha256": "8f43c5a61df60a36fbcabaf77d10e6c8e1473f6a88a00a169b93e6f96759164a",
+          "receiptSha256": "b932514dec2205f7707697f96a259b0f885a6effbeeee6f3b68820612af287ba",
+          "relocated": true,
+          "stderr": "",
+          "stdout": "nominal-subtype-ok:2042\n"
+        }
+      ],
+      "sourceRemovedBeforeInstallation": true,
+      "sourceSha256": "65584835c7a9ff9624df716755678b314087f51d8085ec11a2905fec262d33ad"
+    },
+    {
+      "checks": 2042,
+      "compiler": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "c++ (Debian 12.2.0-14+deb12u1) 12.2.0\nCopyright (C) 2022 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+      },
+      "compilerFreePath": true,
+      "compilerFreeReplay": true,
+      "consumerSha256": "db653c39c01e548f0202a3b1fc3736a6028467db5d655bac11726d1c59d8383c",
+      "dispatch": {
+        "observed": false,
+        "reason": "Separate constructor/source entry probe remains required"
+      },
+      "executableSha256": "a69cc6fa2ff24f228479ccdf6b79b7331f766a5e31a110047ecc67df9775b1ba",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51797954,
+              "path": "archives/nominalsubtypes-1.0.0-cpp.tar.gz",
+              "sha256": "d04f621c80f500900a4cc8b0c4ddb4678ce98e2e4874d170e7de9d802c216673"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "nominalsubtypes",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "profile": "cpp",
+      "relocatedInstallation": true,
+      "runs": [
+        {
+          "code": 0,
+          "packageFileSetSha256": "4acebf854068a911b2d8198bf43bd3b884c74142810593a69f22dfc82f52ef7a",
+          "receiptSha256": "6a8210263ffd36633e12bc2febc6a007b979c5d684ce0940faa6ecb845ff1341",
+          "relocated": false,
+          "stderr": "",
+          "stdout": "nominal-subtype-ok:2042\n"
+        },
+        {
+          "code": 0,
+          "packageFileSetSha256": "4acebf854068a911b2d8198bf43bd3b884c74142810593a69f22dfc82f52ef7a",
+          "receiptSha256": "6a8210263ffd36633e12bc2febc6a007b979c5d684ce0940faa6ecb845ff1341",
+          "relocated": true,
+          "stderr": "",
+          "stdout": "nominal-subtype-ok:2042\n"
+        }
+      ],
+      "sourceRemovedBeforeInstallation": true,
+      "sourceSha256": "db653c39c01e548f0202a3b1fc3736a6028467db5d655bac11726d1c59d8383c"
+    }
+  ],
+  "reproducible": true,
+  "route": "ordinary",
+  "runtime": {
+    "arch": "x64",
+    "glibc": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "glibc 2.36\n"
+    },
+    "platform": "linux"
+  },
+  "schemaVersion": 1
+}

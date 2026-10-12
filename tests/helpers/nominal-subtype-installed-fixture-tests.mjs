@@ -21,6 +21,7 @@ import { saveLakeFile } from "./lake-workspace.mjs";
 import { runCopied } from "./copied-fixture-install.mjs";
 import "./nominal-subtype-native-caller-tests.mjs";
 import "./nominal-subtype-native-installed-tests.mjs";
+import "./nominal-subtype-native-evidence-tests.mjs";
 
 test("nominal package review independently matches ordinary choices and retains constructor-free results", () => {
 	for(const resultOnly of [false, true])
