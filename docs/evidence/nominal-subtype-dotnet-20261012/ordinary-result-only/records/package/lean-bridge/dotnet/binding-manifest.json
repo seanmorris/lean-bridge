@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "generator": "dotnet-copied-v1",
+  "target": "dotnet",
+  "component": "nominalsubtypes@1.0.0",
+  "bindingIrSha256": "95e6f725f5044201257b2a08413d169e4aeb8b2ec62d26165910f7539a81c677",
+  "namespace": "LeanBridge.Nominalsubtypes",
+  "assembly": "LeanBridge.Nominalsubtypes",
+  "files": [
+    "src/LeanBridge.Nominalsubtypes/Api.cs",
+    "src/LeanBridge.Nominalsubtypes/Runtime.cs",
+    "src/LeanBridge.Nominalsubtypes/LeanBridge.Nominalsubtypes.csproj",
+    "NuGet.Config",
+    "README.md"
+  ],
+  "publicFiles": [
+    "src/LeanBridge.Nominalsubtypes/Api.cs"
+  ],
+  "internalFiles": [
+    "src/LeanBridge.Nominalsubtypes/Runtime.cs"
+  ],
+  "packageFiles": [
+    "src/LeanBridge.Nominalsubtypes/LeanBridge.Nominalsubtypes.csproj",
+    "NuGet.Config"
+  ],
+  "aliases": [
+    {
+      "id": "lean:NominalSubtypes.EnvelopeAlias",
+      "name": "EnvelopeAlias",
+      "target": {
+        "id": "lean:NominalSubtypes.Envelope",
+        "kind": "named"
+      },
+      "managedType": "Envelope"
+    }
+  ],
+  "supportedFeatures": [
+    "direct-functions",
+    "copied-values",
+    "deterministic-close"
+  ],
+  "capabilityGaps": [
+    {
+      "feature": "identity-and-effects",
+      "reason": "Ordinary packages admit copied values and synchronous primitive callables, not resources, compound callables or async delivery."
+    },
+    {
+      "feature": "additional-platforms",
+      "reason": "Compiled releases target .NET 8 on Linux x86-64 with glibc."
+    }
+  ]
+}

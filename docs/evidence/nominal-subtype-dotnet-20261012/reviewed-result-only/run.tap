@@ -1,0 +1,30 @@
+TAP version 13
+# Subtest: installed nominal C\# packages reproduce and relocate reviewed result-only
+ok 1 - installed nominal C\# packages reproduce and relocate reviewed result-only
+  ---
+  duration_ms: 352876.356248
+  type: 'test'
+  ...
+# reviewed result-only author 0: reproducible NuGet package
+# Waiting for host load below 6 before the next C\# phase: 12.49
+# Waiting for host load below 6 before the next C\# phase: 13.09
+# Waiting for host load below 6 before the next C\# phase: 13.03
+# Waiting for host load below 6 before the next C\# phase: 11.84
+# Waiting for host load below 6 before the next C\# phase: 9.89
+# Waiting for host load below 6 before the next C\# phase: 8.87
+# Waiting for host load below 6 before the next C\# phase: 7.57
+# Waiting for host load below 6 before the next C\# phase: 7.53
+# Waiting for host load below 6 before the next C\# phase: 7.31
+# Waiting for host load below 6 before the next C\# phase: 6.35
+# Waiting for host load below 6 before the next C\# phase: 6.96
+# Waiting for host load below 6 before the next C\# phase: 6.08
+# reviewed result-only author 1: reproducible NuGet package
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 353236.306486

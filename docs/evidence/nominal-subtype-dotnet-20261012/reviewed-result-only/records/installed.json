@@ -1,0 +1,55 @@
+{
+  "closure": {
+    "buildInputsSha256": "f5a0cb13e2f48f9a0d61e912533ab4b153b0d93a47b7a1ea908b0f3995a58c84",
+    "cacheFilesSha256": "00f08698682f84c8f6d69035e7dfe5829538bb64695f4ec5d896656baaf612e6",
+    "deployedFilesSha256": "f692a457098c96753f62bf51474f37f493974b4d1a99a598ea76ae6f663394a4",
+    "interpreterSha256": "c61ff7f8665688b95ad0f34e780daaa67b978d26115b82797c07ea6044c566ed",
+    "packageFileSetSha256": "13eb2ce816ee2428f38df23eea12bc1564e2b1726888f894de88affb858448bd",
+    "receiptSha256": "0b7c3b144a790dc4d0bdc6b2fed70d6b176475c96176c03e5553002786d13ab2"
+  },
+  "counts": {
+    "checks": 2088,
+    "hostRejections": 1,
+    "rejections": 0,
+    "snapshotControls": 8
+  },
+  "cwd": "/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/consumer",
+  "framework": {
+    "args": [
+      "out/Consumer.dll",
+      "--runtime"
+    ],
+    "command": "/app/.toolchains/dotnet/dotnet",
+    "cwd": "/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/consumer",
+    "facts": {
+      "architecture": "X64",
+      "command": "/app/.toolchains/dotnet/dotnet",
+      "description": ".NET 8.0.30",
+      "directory": "/app/.toolchains/dotnet/shared/Microsoft.NETCore.App/8.0.30/",
+      "littleEndian": true,
+      "os": "Debian GNU/Linux 12 (bookworm)",
+      "version": "8.0.30"
+    },
+    "run": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "{\"version\":\"8.0.30\",\"description\":\".NET 8.0.30\",\"directory\":\"/app/.toolchains/dotnet/shared/Microsoft.NETCore.App/8.0.30/\",\"command\":\"/app/.toolchains/dotnet/dotnet\",\"architecture\":\"X64\",\"os\":\"Debian GNU/Linux 12 (bookworm)\",\"littleEndian\":true}\n"
+    },
+    "runtimeFiles": {
+      "System.Private.CoreLib.dll": {
+        "bytes": 12773888,
+        "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+      },
+      "libcoreclr.so": {
+        "bytes": 6906008,
+        "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+      }
+    }
+  },
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":2088,\"rejections\":0,\"hostRejections\":1,\"snapshotControls\":8}\n"
+  },
+  "stage": "installed"
+}

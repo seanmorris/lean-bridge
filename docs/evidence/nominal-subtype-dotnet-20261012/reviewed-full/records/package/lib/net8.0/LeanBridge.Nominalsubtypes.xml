@@ -1,0 +1,238 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LeanBridge.Nominalsubtypes</name>
+    </assembly>
+    <members>
+        <member name="T:LeanBridge.Nominalsubtypes.Unit">
+            <summary>The sole runtime value of Lean Unit.</summary>
+        </member>
+        <member name="T:LeanBridge.Nominalsubtypes.Option`1">
+            <summary>A copied Lean Option. Default is None; Some retains its payload, including nested None.</summary>
+        </member>
+        <member name="T:LeanBridge.Nominalsubtypes.Result`2">
+            <summary>A copied Lean Except. Use Ok or Err; default has no branch and cannot cross the boundary.</summary>
+        </member>
+        <member name="T:LeanBridge.Nominalsubtypes.LeanBridgeException">
+            <summary>A failure reported by a compiled Lean call.</summary>
+        </member>
+        <member name="T:LeanBridge.Nominalsubtypes.Envelope">
+            <summary>A copied Lean record.</summary>
+            <param name="Payload">Contract type: <c>nat</c>.</param>
+            <param name="Digit">Contract type: <c>nat</c>.</param>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.Envelope.#ctor(System.Numerics.BigInteger,System.Numerics.BigInteger)">
+            <summary>A copied Lean record.</summary>
+            <param name="Payload">Contract type: <c>nat</c>.</param>
+            <param name="Digit">Contract type: <c>nat</c>.</param>
+        </member>
+        <member name="P:LeanBridge.Nominalsubtypes.Envelope.Payload">
+            <summary>Contract type: <c>nat</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalsubtypes.Envelope.Digit">
+            <summary>Contract type: <c>nat</c>.</summary>
+        </member>
+        <member name="T:LeanBridge.Nominalsubtypes.Event">
+            <summary>A copied Lean variant. Construct a named case.</summary>
+        </member>
+        <member name="T:LeanBridge.Nominalsubtypes.EventEmpty">
+            <summary>A named Event constructor.</summary>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.EventEmpty.#ctor">
+            <summary>A named Event constructor.</summary>
+        </member>
+        <member name="T:LeanBridge.Nominalsubtypes.EventBox">
+            <summary>A named Event constructor.</summary>
+            <param name="Value">Contract type: <c>Envelope</c>.</param>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.EventBox.#ctor(LeanBridge.Nominalsubtypes.Envelope)">
+            <summary>A named Event constructor.</summary>
+            <param name="Value">Contract type: <c>Envelope</c>.</param>
+        </member>
+        <member name="P:LeanBridge.Nominalsubtypes.EventBox.Value">
+            <summary>Contract type: <c>Envelope</c>.</summary>
+        </member>
+        <member name="T:LeanBridge.Nominalsubtypes.EventChoices">
+            <summary>A named Event constructor.</summary>
+            <param name="Values">Contract type: <c>array&lt;option&lt;result&lt;nat, nat&gt;&gt;&gt;</c>.</param>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.EventChoices.#ctor(LeanBridge.Nominalsubtypes.Option{LeanBridge.Nominalsubtypes.Result{System.Numerics.BigInteger,System.Numerics.BigInteger}}[])">
+            <summary>A named Event constructor.</summary>
+            <param name="Values">Contract type: <c>array&lt;option&lt;result&lt;nat, nat&gt;&gt;&gt;</c>.</param>
+        </member>
+        <member name="P:LeanBridge.Nominalsubtypes.EventChoices.Values">
+            <summary>Contract type: <c>array&lt;option&lt;result&lt;nat, nat&gt;&gt;&gt;</c>.</summary>
+        </member>
+        <member name="T:LeanBridge.Nominalsubtypes.AliasPair">
+            <summary>A copied Lean record.</summary>
+            <param name="Left">Contract type: <c>array&lt;option&lt;EnvelopeAlias&gt;&gt;</c>.</param>
+            <param name="Right">Contract type: <c>array&lt;option&lt;EnvelopeAlias&gt;&gt;</c>.</param>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.AliasPair.#ctor(LeanBridge.Nominalsubtypes.Option{LeanBridge.Nominalsubtypes.Envelope}[],LeanBridge.Nominalsubtypes.Option{LeanBridge.Nominalsubtypes.Envelope}[])">
+            <summary>A copied Lean record.</summary>
+            <param name="Left">Contract type: <c>array&lt;option&lt;EnvelopeAlias&gt;&gt;</c>.</param>
+            <param name="Right">Contract type: <c>array&lt;option&lt;EnvelopeAlias&gt;&gt;</c>.</param>
+        </member>
+        <member name="P:LeanBridge.Nominalsubtypes.AliasPair.Left">
+            <summary>Contract type: <c>array&lt;option&lt;EnvelopeAlias&gt;&gt;</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalsubtypes.AliasPair.Right">
+            <summary>Contract type: <c>array&lt;option&lt;EnvelopeAlias&gt;&gt;</c>.</summary>
+        </member>
+        <member name="T:LeanBridge.Nominalsubtypes.Pair">
+            <summary>A copied Lean record.</summary>
+            <param name="Left">Contract type: <c>Envelope</c>.</param>
+            <param name="Right">Contract type: <c>Envelope</c>.</param>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.Pair.#ctor(LeanBridge.Nominalsubtypes.Envelope,LeanBridge.Nominalsubtypes.Envelope)">
+            <summary>A copied Lean record.</summary>
+            <param name="Left">Contract type: <c>Envelope</c>.</param>
+            <param name="Right">Contract type: <c>Envelope</c>.</param>
+        </member>
+        <member name="P:LeanBridge.Nominalsubtypes.Pair.Left">
+            <summary>Contract type: <c>Envelope</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalsubtypes.Pair.Right">
+            <summary>Contract type: <c>Envelope</c>.</summary>
+        </member>
+        <member name="T:LeanBridge.Nominalsubtypes.Api">
+            <summary>The functions selected by the Lean package author.</summary>
+            <remarks>Copied Lean aliases use their CLR target values. The binding manifest preserves their contract identities.
+            <list type="table">
+            <item><term><c>EnvelopeAlias</c></term><description><c>Envelope</c> projects to <c>Envelope</c>.</description></item>
+            </list></remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.Api.Aliases(LeanBridge.Nominalsubtypes.Option{LeanBridge.Nominalsubtypes.Envelope}[],LeanBridge.Nominalsubtypes.Option{LeanBridge.Nominalsubtypes.Envelope}[])">
+            <param name="value0">Contract type: <c>array&lt;option&lt;EnvelopeAlias&gt;&gt;</c>.</param>
+            <param name="value1">Contract type: <c>array&lt;option&lt;EnvelopeAlias&gt;&gt;</c>.</param>
+            <returns>Contract type: <c>nat</c>.</returns>
+            <remarks>Checked Lean Fin bounds: value0[*]?.payload checked by NominalSubtypes.plusOne; value0[*]?.digit &lt; 3; value1[*]?.payload checked by NominalSubtypes.plusTwo; value1[*]?.digit &lt; 3.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.Api.ArrayValues(System.Numerics.BigInteger)">
+            <param name="value0">Contract type: <c>nat</c>.</param>
+            <returns>Contract type: <c>array&lt;nat&gt;</c>.</returns>
+            <remarks>Checked Lean Fin bounds: result[*] projects the Subtype base value.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.Api.Branch(System.Numerics.BigInteger)">
+            <param name="value0">Contract type: <c>nat</c>.</param>
+            <returns>Contract type: <c>result&lt;nat, nat&gt;</c>.</returns>
+            <remarks>Checked Lean Fin bounds: result.ok projects the Subtype base value; result.error projects the Subtype base value.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.Api.Combine(LeanBridge.Nominalsubtypes.Envelope,LeanBridge.Nominalsubtypes.Envelope)">
+            <param name="value0">Contract type: <c>Envelope</c>.</param>
+            <param name="value1">Contract type: <c>Envelope</c>.</param>
+            <returns>Contract type: <c>nat</c>.</returns>
+            <remarks>Checked Lean Fin bounds: value0.payload checked by NominalSubtypes.plusOne; value0.digit &lt; 3; value1.payload checked by NominalSubtypes.plusTwo; value1.digit &lt; 3.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.Api.Echo(LeanBridge.Nominalsubtypes.Envelope)">
+            <param name="value0">Contract type: <c>Envelope</c>.</param>
+            <returns>Contract type: <c>Envelope</c>.</returns>
+            <remarks>Checked Lean Fin bounds: value0.payload checked by NominalSubtypes.plusOne; value0.digit &lt; 3; result.payload projects the Subtype base value; result.digit &lt; 3.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.Api.EchoEvent(LeanBridge.Nominalsubtypes.Event)">
+            <param name="value0">Contract type: <c>Event</c>.</param>
+            <returns>Contract type: <c>Event</c>.</returns>
+            <remarks>Checked Lean Fin bounds: value0.box.value.payload checked by NominalSubtypes.plusOne; value0.box.value.digit &lt; 3; value0.choices.values[*]?.ok checked by NominalSubtypes.plusOne; value0.choices.values[*]?.error checked by NominalSubtypes.plusTwo; result.box.value.payload projects the Subtype base value; result.box.value.digit &lt; 3; result.choices.values[*]?.ok projects the Subtype base value; result.choices.values[*]?.error projects the Subtype base value.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.Api.EchoGroups(LeanBridge.Nominalsubtypes.Option{LeanBridge.Nominalsubtypes.Envelope}[])">
+            <param name="value0">Contract type: <c>array&lt;option&lt;EnvelopeAlias&gt;&gt;</c>.</param>
+            <returns>Contract type: <c>array&lt;option&lt;EnvelopeAlias&gt;&gt;</c>.</returns>
+            <remarks>Checked Lean Fin bounds: value0[*]?.payload checked by NominalSubtypes.plusOne; value0[*]?.digit &lt; 3; result[*]?.payload projects the Subtype base value; result[*]?.digit &lt; 3.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.Api.EchoPair(LeanBridge.Nominalsubtypes.AliasPair)">
+            <param name="value0">Contract type: <c>AliasPair</c>.</param>
+            <returns>Contract type: <c>AliasPair</c>.</returns>
+            <remarks>Checked Lean Fin bounds: value0.left[*]?.payload checked by NominalSubtypes.plusOne; value0.left[*]?.digit &lt; 3; value0.right[*]?.payload checked by NominalSubtypes.plusTwo; value0.right[*]?.digit &lt; 3; result.left[*]?.payload projects the Subtype base value; result.left[*]?.digit &lt; 3; result.right[*]?.payload projects the Subtype base value; result.right[*]?.digit &lt; 3.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.Api.EventChoices(System.Numerics.BigInteger)">
+            <param name="value0">Contract type: <c>nat</c>.</param>
+            <returns>Contract type: <c>Event</c>.</returns>
+            <remarks>Checked Lean Fin bounds: result.box.value.payload projects the Subtype base value; result.box.value.digit &lt; 3; result.choices.values[*]?.ok projects the Subtype base value; result.choices.values[*]?.error projects the Subtype base value.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.Api.EventEmpty(System.Numerics.BigInteger)">
+            <param name="value0">Contract type: <c>nat</c>.</param>
+            <returns>Contract type: <c>Event</c>.</returns>
+            <remarks>Checked Lean Fin bounds: result.box.value.payload projects the Subtype base value; result.box.value.digit &lt; 3; result.choices.values[*]?.ok projects the Subtype base value; result.choices.values[*]?.error projects the Subtype base value.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.Api.EventFirst(LeanBridge.Nominalsubtypes.Event)">
+            <param name="value0">Contract type: <c>Event</c>.</param>
+            <returns>Contract type: <c>nat</c>.</returns>
+            <remarks>Checked Lean Fin bounds: value0.box.value.payload checked by NominalSubtypes.plusOne; value0.box.value.digit &lt; 3; value0.choices.values[*]?.ok checked by NominalSubtypes.plusOne; value0.choices.values[*]?.error checked by NominalSubtypes.plusTwo.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.Api.EventSecond(LeanBridge.Nominalsubtypes.Event)">
+            <param name="value0">Contract type: <c>Event</c>.</param>
+            <returns>Contract type: <c>nat</c>.</returns>
+            <remarks>Checked Lean Fin bounds: value0.box.value.payload checked by NominalSubtypes.plusTwo; value0.box.value.digit &lt; 3; value0.choices.values[*]?.ok checked by NominalSubtypes.plusTwo; value0.choices.values[*]?.error checked by NominalSubtypes.plusOne.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.Api.EventValue(System.Numerics.BigInteger)">
+            <param name="value0">Contract type: <c>nat</c>.</param>
+            <returns>Contract type: <c>Event</c>.</returns>
+            <remarks>Checked Lean Fin bounds: result.box.value.payload projects the Subtype base value; result.box.value.digit &lt; 3; result.choices.values[*]?.ok projects the Subtype base value; result.choices.values[*]?.error projects the Subtype base value.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.Api.First(LeanBridge.Nominalsubtypes.Envelope)">
+            <param name="value0">Contract type: <c>Envelope</c>.</param>
+            <returns>Contract type: <c>nat</c>.</returns>
+            <remarks>Checked Lean Fin bounds: value0.payload checked by NominalSubtypes.plusOne; value0.digit &lt; 3.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.Api.GroupValues(System.Numerics.BigInteger)">
+            <param name="value0">Contract type: <c>nat</c>.</param>
+            <returns>Contract type: <c>array&lt;option&lt;EnvelopeAlias&gt;&gt;</c>.</returns>
+            <remarks>Checked Lean Fin bounds: result[*]?.payload projects the Subtype base value; result[*]?.digit &lt; 3.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.Api.InspectAliasPair(LeanBridge.Nominalsubtypes.AliasPair)">
+            <param name="value0">Contract type: <c>AliasPair</c>.</param>
+            <returns>Contract type: <c>nat</c>.</returns>
+            <remarks>Checked Lean Fin bounds: value0.left[*]?.payload checked by NominalSubtypes.plusOne; value0.left[*]?.digit &lt; 3; value0.right[*]?.payload checked by NominalSubtypes.plusTwo; value0.right[*]?.digit &lt; 3.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.Api.ListValues(System.Numerics.BigInteger)">
+            <param name="value0">Contract type: <c>nat</c>.</param>
+            <returns>Contract type: <c>list&lt;nat&gt;</c>.</returns>
+            <remarks>Checked Lean Fin bounds: result[*] projects the Subtype base value.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.Api.Nested(LeanBridge.Nominalsubtypes.Pair)">
+            <param name="value0">Contract type: <c>Pair</c>.</param>
+            <returns>Contract type: <c>nat</c>.</returns>
+            <remarks>Checked Lean Fin bounds: value0.left.payload checked by NominalSubtypes.plusOne; value0.left.digit &lt; 3; value0.right.payload checked by NominalSubtypes.plusTwo; value0.right.digit &lt; 3.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.Api.NoItems(System.Numerics.BigInteger)">
+            <param name="value0">Contract type: <c>nat</c>.</param>
+            <returns>Contract type: <c>array&lt;nat&gt;</c>.</returns>
+            <remarks>Checked Lean Fin bounds: result[*] projects the Subtype base value.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.Api.Optional(System.Numerics.BigInteger)">
+            <param name="value0">Contract type: <c>nat</c>.</param>
+            <returns>Contract type: <c>option&lt;nat&gt;</c>.</returns>
+            <remarks>Checked Lean Fin bounds: result? projects the Subtype base value.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.Api.PairValues(System.Numerics.BigInteger)">
+            <param name="value0">Contract type: <c>nat</c>.</param>
+            <returns>Contract type: <c>AliasPair</c>.</returns>
+            <remarks>Checked Lean Fin bounds: result.left[*]?.payload projects the Subtype base value; result.left[*]?.digit &lt; 3; result.right[*]?.payload projects the Subtype base value; result.right[*]?.digit &lt; 3.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.Api.PlainFin(System.Numerics.BigInteger)">
+            <param name="value0">Contract type: <c>nat</c>.</param>
+            <returns>Contract type: <c>nat</c>.</returns>
+            <remarks>Checked Lean Fin bounds: value0 &lt; 3.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.Api.ProduceEnvelope(System.Numerics.BigInteger)">
+            <param name="value0">Contract type: <c>nat</c>.</param>
+            <returns>Contract type: <c>Envelope</c>.</returns>
+            <remarks>Checked Lean Fin bounds: result.payload projects the Subtype base value; result.digit &lt; 3.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.Api.Product(System.Numerics.BigInteger)">
+            <param name="value0">Contract type: <c>nat</c>.</param>
+            <returns>Contract type: <c>tuple&lt;nat, nat&gt;</c>.</returns>
+            <remarks>Checked Lean Fin bounds: result.0 projects the Subtype base value; result.1 projects the Subtype base value.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.Api.Scalar(System.Numerics.BigInteger)">
+            <param name="value0">Contract type: <c>nat</c>.</param>
+            <returns>Contract type: <c>nat</c>.</returns>
+            <remarks>Checked Lean Fin bounds: result projects the Subtype base value.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalsubtypes.Api.Second(LeanBridge.Nominalsubtypes.Envelope)">
+            <param name="value0">Contract type: <c>Envelope</c>.</param>
+            <returns>Contract type: <c>nat</c>.</returns>
+            <remarks>Checked Lean Fin bounds: value0.payload checked by NominalSubtypes.plusTwo; value0.digit &lt; 3.</remarks>
+        </member>
+    </members>
+</doc>

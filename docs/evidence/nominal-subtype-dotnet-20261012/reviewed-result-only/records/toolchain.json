@@ -1,0 +1,49 @@
+{
+  "command": "/app/.toolchains/dotnet/dotnet",
+  "interpreter": {
+    "bytes": 68424,
+    "sha256": "c61ff7f8665688b95ad0f34e780daaa67b978d26115b82797c07ea6044c566ed"
+  },
+  "measurements": [
+    {
+      "args": [
+        "--list-sdks"
+      ],
+      "command": "/app/.toolchains/dotnet/dotnet",
+      "cwd": "/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/toolchain",
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "8.0.424 [/app/.toolchains/dotnet/sdk]\n"
+      }
+    },
+    {
+      "args": [
+        "--version"
+      ],
+      "command": "/app/.toolchains/dotnet/dotnet",
+      "cwd": "/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/toolchain",
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "8.0.424\n"
+      }
+    },
+    {
+      "args": [
+        "--list-runtimes"
+      ],
+      "command": "/app/.toolchains/dotnet/dotnet",
+      "cwd": "/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/toolchain",
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "Microsoft.AspNetCore.App 8.0.30 [/app/.toolchains/dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.NETCore.App 8.0.30 [/app/.toolchains/dotnet/shared/Microsoft.NETCore.App]\n"
+      }
+    }
+  ],
+  "sdk": {
+    "directory": "/app/.toolchains/dotnet/sdk",
+    "version": "8.0.424"
+  }
+}

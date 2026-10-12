@@ -1,0 +1,1038 @@
+{
+  "apiProbe": {
+    "assemblySha256": "02c950efe2d4be6bef13eeaa6738fae80717a7e8c883444c18ed087e16fe4ae9",
+    "build": {
+      "code": 1,
+      "stderr": "",
+      "stdout": "/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs(18,19): error CS0246: The type or namespace name 'Pair' could not be found (are you missing a using directive or an assembly reference?) [/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/Probe.csproj]\n/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs(5,46): error CS0117: 'Api' does not contain a definition for 'First' [/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/Probe.csproj]\n/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs(6,46): error CS0117: 'Api' does not contain a definition for 'Second' [/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/Probe.csproj]\n/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs(7,46): error CS0117: 'Api' does not contain a definition for 'Combine' [/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/Probe.csproj]\n/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs(8,46): error CS0117: 'Api' does not contain a definition for 'Nested' [/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/Probe.csproj]\n/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs(9,46): error CS0117: 'Api' does not contain a definition for 'Echo' [/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/Probe.csproj]\n/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs(10,46): error CS0117: 'Api' does not contain a definition for 'EventFirst' [/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/Probe.csproj]\n/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs(11,46): error CS0117: 'Api' does not contain a definition for 'EventSecond' [/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/Probe.csproj]\n/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs(12,46): error CS0117: 'Api' does not contain a definition for 'Aliases' [/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/Probe.csproj]\n/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs(13,46): error CS0117: 'Api' does not contain a definition for 'InspectAliasPair' [/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/Probe.csproj]\n/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs(14,46): error CS0117: 'Api' does not contain a definition for 'EchoGroups' [/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/Probe.csproj]\n/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs(15,47): error CS0117: 'Api' does not contain a definition for 'EchoPair' [/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/Probe.csproj]\n/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs(16,47): error CS0117: 'Api' does not contain a definition for 'EchoEvent' [/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/Probe.csproj]\n/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs(17,47): error CS0117: 'Api' does not contain a definition for 'PlainFin' [/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/Probe.csproj]\n\nBuild FAILED.\n\n/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs(18,19): error CS0246: The type or namespace name 'Pair' could not be found (are you missing a using directive or an assembly reference?) [/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/Probe.csproj]\n/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs(5,46): error CS0117: 'Api' does not contain a definition for 'First' [/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/Probe.csproj]\n/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs(6,46): error CS0117: 'Api' does not contain a definition for 'Second' [/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/Probe.csproj]\n/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs(7,46): error CS0117: 'Api' does not contain a definition for 'Combine' [/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/Probe.csproj]\n/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs(8,46): error CS0117: 'Api' does not contain a definition for 'Nested' [/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/Probe.csproj]\n/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs(9,46): error CS0117: 'Api' does not contain a definition for 'Echo' [/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/Probe.csproj]\n/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs(10,46): error CS0117: 'Api' does not contain a definition for 'EventFirst' [/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/Probe.csproj]\n/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs(11,46): error CS0117: 'Api' does not contain a definition for 'EventSecond' [/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/Probe.csproj]\n/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs(12,46): error CS0117: 'Api' does not contain a definition for 'Aliases' [/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/Probe.csproj]\n/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs(13,46): error CS0117: 'Api' does not contain a definition for 'InspectAliasPair' [/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/Probe.csproj]\n/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs(14,46): error CS0117: 'Api' does not contain a definition for 'EchoGroups' [/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/Probe.csproj]\n/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs(15,47): error CS0117: 'Api' does not contain a definition for 'EchoPair' [/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/Probe.csproj]\n/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs(16,47): error CS0117: 'Api' does not contain a definition for 'EchoEvent' [/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/Probe.csproj]\n/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs(17,47): error CS0117: 'Api' does not contain a definition for 'PlainFin' [/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/Probe.csproj]\n    0 Warning(s)\n    14 Error(s)\n\nTime Elapsed 00:00:01.97\n"
+    },
+    "cwd": "/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe",
+    "diagnostics": {
+      "$schema": "http://json.schemastore.org/sarif-2.1.0",
+      "runs": [
+        {
+          "columnKind": "utf16CodeUnits",
+          "results": [
+            {
+              "level": "error",
+              "locations": [
+                {
+                  "physicalLocation": {
+                    "artifactLocation": {
+                      "uri": "file:///tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs"
+                    },
+                    "region": {
+                      "endColumn": 23,
+                      "endLine": 18,
+                      "startColumn": 19,
+                      "startLine": 18
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "The type or namespace name 'Pair' could not be found (are you missing a using directive or an assembly reference?)"
+              },
+              "ruleId": "CS0246",
+              "ruleIndex": 0
+            },
+            {
+              "level": "error",
+              "locations": [
+                {
+                  "physicalLocation": {
+                    "artifactLocation": {
+                      "uri": "file:///tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs"
+                    },
+                    "region": {
+                      "endColumn": 51,
+                      "endLine": 5,
+                      "startColumn": 46,
+                      "startLine": 5
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "'Api' does not contain a definition for 'First'"
+              },
+              "ruleId": "CS0117",
+              "ruleIndex": 1
+            },
+            {
+              "level": "error",
+              "locations": [
+                {
+                  "physicalLocation": {
+                    "artifactLocation": {
+                      "uri": "file:///tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs"
+                    },
+                    "region": {
+                      "endColumn": 52,
+                      "endLine": 6,
+                      "startColumn": 46,
+                      "startLine": 6
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "'Api' does not contain a definition for 'Second'"
+              },
+              "ruleId": "CS0117",
+              "ruleIndex": 1
+            },
+            {
+              "level": "error",
+              "locations": [
+                {
+                  "physicalLocation": {
+                    "artifactLocation": {
+                      "uri": "file:///tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs"
+                    },
+                    "region": {
+                      "endColumn": 53,
+                      "endLine": 7,
+                      "startColumn": 46,
+                      "startLine": 7
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "'Api' does not contain a definition for 'Combine'"
+              },
+              "ruleId": "CS0117",
+              "ruleIndex": 1
+            },
+            {
+              "level": "error",
+              "locations": [
+                {
+                  "physicalLocation": {
+                    "artifactLocation": {
+                      "uri": "file:///tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs"
+                    },
+                    "region": {
+                      "endColumn": 52,
+                      "endLine": 8,
+                      "startColumn": 46,
+                      "startLine": 8
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "'Api' does not contain a definition for 'Nested'"
+              },
+              "ruleId": "CS0117",
+              "ruleIndex": 1
+            },
+            {
+              "level": "error",
+              "locations": [
+                {
+                  "physicalLocation": {
+                    "artifactLocation": {
+                      "uri": "file:///tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs"
+                    },
+                    "region": {
+                      "endColumn": 50,
+                      "endLine": 9,
+                      "startColumn": 46,
+                      "startLine": 9
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "'Api' does not contain a definition for 'Echo'"
+              },
+              "ruleId": "CS0117",
+              "ruleIndex": 1
+            },
+            {
+              "level": "error",
+              "locations": [
+                {
+                  "physicalLocation": {
+                    "artifactLocation": {
+                      "uri": "file:///tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs"
+                    },
+                    "region": {
+                      "endColumn": 56,
+                      "endLine": 10,
+                      "startColumn": 46,
+                      "startLine": 10
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "'Api' does not contain a definition for 'EventFirst'"
+              },
+              "ruleId": "CS0117",
+              "ruleIndex": 1
+            },
+            {
+              "level": "error",
+              "locations": [
+                {
+                  "physicalLocation": {
+                    "artifactLocation": {
+                      "uri": "file:///tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs"
+                    },
+                    "region": {
+                      "endColumn": 57,
+                      "endLine": 11,
+                      "startColumn": 46,
+                      "startLine": 11
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "'Api' does not contain a definition for 'EventSecond'"
+              },
+              "ruleId": "CS0117",
+              "ruleIndex": 1
+            },
+            {
+              "level": "error",
+              "locations": [
+                {
+                  "physicalLocation": {
+                    "artifactLocation": {
+                      "uri": "file:///tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs"
+                    },
+                    "region": {
+                      "endColumn": 53,
+                      "endLine": 12,
+                      "startColumn": 46,
+                      "startLine": 12
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "'Api' does not contain a definition for 'Aliases'"
+              },
+              "ruleId": "CS0117",
+              "ruleIndex": 1
+            },
+            {
+              "level": "error",
+              "locations": [
+                {
+                  "physicalLocation": {
+                    "artifactLocation": {
+                      "uri": "file:///tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs"
+                    },
+                    "region": {
+                      "endColumn": 62,
+                      "endLine": 13,
+                      "startColumn": 46,
+                      "startLine": 13
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "'Api' does not contain a definition for 'InspectAliasPair'"
+              },
+              "ruleId": "CS0117",
+              "ruleIndex": 1
+            },
+            {
+              "level": "error",
+              "locations": [
+                {
+                  "physicalLocation": {
+                    "artifactLocation": {
+                      "uri": "file:///tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs"
+                    },
+                    "region": {
+                      "endColumn": 56,
+                      "endLine": 14,
+                      "startColumn": 46,
+                      "startLine": 14
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "'Api' does not contain a definition for 'EchoGroups'"
+              },
+              "ruleId": "CS0117",
+              "ruleIndex": 1
+            },
+            {
+              "level": "error",
+              "locations": [
+                {
+                  "physicalLocation": {
+                    "artifactLocation": {
+                      "uri": "file:///tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs"
+                    },
+                    "region": {
+                      "endColumn": 55,
+                      "endLine": 15,
+                      "startColumn": 47,
+                      "startLine": 15
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "'Api' does not contain a definition for 'EchoPair'"
+              },
+              "ruleId": "CS0117",
+              "ruleIndex": 1
+            },
+            {
+              "level": "error",
+              "locations": [
+                {
+                  "physicalLocation": {
+                    "artifactLocation": {
+                      "uri": "file:///tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs"
+                    },
+                    "region": {
+                      "endColumn": 56,
+                      "endLine": 16,
+                      "startColumn": 47,
+                      "startLine": 16
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "'Api' does not contain a definition for 'EchoEvent'"
+              },
+              "ruleId": "CS0117",
+              "ruleIndex": 1
+            },
+            {
+              "level": "error",
+              "locations": [
+                {
+                  "physicalLocation": {
+                    "artifactLocation": {
+                      "uri": "file:///tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/probe.cs"
+                    },
+                    "region": {
+                      "endColumn": 55,
+                      "endLine": 17,
+                      "startColumn": 47,
+                      "startLine": 17
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "'Api' does not contain a definition for 'PlainFin'"
+              },
+              "ruleId": "CS0117",
+              "ruleIndex": 1
+            }
+          ],
+          "tool": {
+            "driver": {
+              "dottedQuadFileVersion": "4.11.0.0",
+              "name": "Microsoft (R) Visual C# Compiler",
+              "rules": [
+                {
+                  "defaultConfiguration": {
+                    "level": "error"
+                  },
+                  "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS0246)",
+                  "id": "CS0246",
+                  "properties": {
+                    "category": "Compiler",
+                    "tags": [
+                      "Compiler",
+                      "Telemetry",
+                      "NotConfigurable"
+                    ]
+                  }
+                },
+                {
+                  "defaultConfiguration": {
+                    "level": "error"
+                  },
+                  "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS0117)",
+                  "id": "CS0117",
+                  "properties": {
+                    "category": "Compiler",
+                    "tags": [
+                      "Compiler",
+                      "Telemetry",
+                      "NotConfigurable"
+                    ]
+                  }
+                }
+              ],
+              "semanticVersion": "4.11.0",
+              "version": "4.11.0-3.25569.22 (3fb752d4)"
+            }
+          }
+        }
+      ],
+      "version": "2.1.0"
+    },
+    "outputs": {},
+    "restore": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "  Determining projects to restore...\n  Restored /tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/api-probe/Probe.csproj (in 67 ms).\n"
+    }
+  },
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/Nominalsubtypes.Api.1.0.0.nupkg": "eecd8170ee5ab1589af9f7814eaf3aa23e1b98033de2fa8b7abedbb7df5286ea"
+      },
+      "bindingIrSha256": "84cb587b9abbe321cf60b3e2f3c0cb0936eb1c7f907bccf32f2339e14f61c9ee",
+      "modelSha256": "0c18981b10b4e1870b180746bff8336c2ef9a38e4582e4835a543886a36e719e",
+      "receiptSha256": "8d1de5d2a8fc2b02cc66f8f6fcc1b7c3bcaef7a060c7507bf40467e34d9c6bf9"
+    },
+    {
+      "archives": {
+        "archives/Nominalsubtypes.Api.1.0.0.nupkg": "eecd8170ee5ab1589af9f7814eaf3aa23e1b98033de2fa8b7abedbb7df5286ea"
+      },
+      "bindingIrSha256": "84cb587b9abbe321cf60b3e2f3c0cb0936eb1c7f907bccf32f2339e14f61c9ee",
+      "modelSha256": "0c18981b10b4e1870b180746bff8336c2ef9a38e4582e4835a543886a36e719e",
+      "receiptSha256": "8d1de5d2a8fc2b02cc66f8f6fcc1b7c3bcaef7a060c7507bf40467e34d9c6bf9"
+    }
+  ],
+  "compilerFreeReplay": true,
+  "declaredGlibcFloor": "2.36",
+  "dispatch": {
+    "observed": false,
+    "reason": "No C# constructor/source entry counters in this installed acceptance"
+  },
+  "expectedBindingIrSha256": "506191df3010adf087fd83091d017d4c645f1d75d5c7a366b61d351c7a9268b5",
+  "independentBuilds": 2,
+  "installation": {
+    "archive": {
+      "bytes": 51414283,
+      "path": "archives/Nominalsubtypes.Api.1.0.0.nupkg",
+      "sha256": "eecd8170ee5ab1589af9f7814eaf3aa23e1b98033de2fa8b7abedbb7df5286ea"
+    },
+    "closure": {
+      "buildInputsSha256": "f5a0cb13e2f48f9a0d61e912533ab4b153b0d93a47b7a1ea908b0f3995a58c84",
+      "cacheFilesSha256": "00f08698682f84c8f6d69035e7dfe5829538bb64695f4ec5d896656baaf612e6",
+      "deployedFilesSha256": "f692a457098c96753f62bf51474f37f493974b4d1a99a598ea76ae6f663394a4",
+      "interpreterSha256": "c61ff7f8665688b95ad0f34e780daaa67b978d26115b82797c07ea6044c566ed",
+      "packageFileSetSha256": "13eb2ce816ee2428f38df23eea12bc1564e2b1726888f894de88affb858448bd",
+      "receiptSha256": "0b7c3b144a790dc4d0bdc6b2fed70d6b176475c96176c03e5553002786d13ab2"
+    },
+    "compiled": {
+      "assembly": "LeanBridge.Nominalsubtypes",
+      "bindingIrSha256": "84cb587b9abbe321cf60b3e2f3c0cb0936eb1c7f907bccf32f2339e14f61c9ee",
+      "evidence": {
+        "componentId": "nominalsubtypes@1.0.0",
+        "componentReceiptSha256": "89a8a93e6a32a841d7748d3bb0f6fdb6ec14d174c0c20a9e7643c6948571867b",
+        "libraries": {
+          "libcomponent_7f8bfe55e5831a9133c5.so": "2e275d73caf7f0f531dac887cee6833e3bb953d5098bc94483c2e82a04171990",
+          "liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+          "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+          "libnominalsubtypes.so": "ca835c86669d3cfcdb28cb28807d6e76d516c5671171729a85d17e25d0683570"
+        },
+        "library": "libnominalsubtypes.so",
+        "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+      },
+      "files": {
+        "NuGet.Config": {
+          "bytes": 74,
+          "sha256": "9508cae5f76364f56e80eb97cb16493977243cf38e5cca6284e3d74f83b20a2c"
+        },
+        "README.md": {
+          "bytes": 8201,
+          "sha256": "ff4462b06fbef478f2de43606e4c0c19b198712ca728b88478e52d0e9c90ecdc"
+        },
+        "binding-manifest.json": {
+          "bytes": 1480,
+          "sha256": "fc250d3904a2fb31c4239408535305552ed6ed57d637cb0470592bd5dfda3aba"
+        },
+        "global.json": {
+          "bytes": 104,
+          "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+        },
+        "lib/net8.0/LeanBridge.Nominalsubtypes.deps.json": {
+          "bytes": 448,
+          "sha256": "120a80165bc9d0ea5d4cdc9a62072affcd77209b6533e5a88ef99ae8e1a44295"
+        },
+        "lib/net8.0/LeanBridge.Nominalsubtypes.dll": {
+          "bytes": 35840,
+          "sha256": "02c950efe2d4be6bef13eeaa6738fae80717a7e8c883444c18ed087e16fe4ae9"
+        },
+        "lib/net8.0/LeanBridge.Nominalsubtypes.xml": {
+          "bytes": 10647,
+          "sha256": "0188f71f1243d2d57e1e54ebc09a9bfabc05f4ba4f6713b2dcba117ed1c731fe"
+        },
+        "src/LeanBridge.Nominalsubtypes/Api.cs": {
+          "bytes": 12850,
+          "sha256": "9c3ca9f8d7f399f08db12821796d5cfdd3033901be39c5314a6713f2df286830"
+        },
+        "src/LeanBridge.Nominalsubtypes/LeanBridge.Nominalsubtypes.csproj": {
+          "bytes": 611,
+          "sha256": "642174ac6dfe52d1edc06682e750be4e82b136b6a912bd44e2fbe97d1806704b"
+        },
+        "src/LeanBridge.Nominalsubtypes/Runtime.cs": {
+          "bytes": 37533,
+          "sha256": "dc6bbfb9b074ba6d8fed9db6fdaafdc011f2a2accc0e9035703fbc70b6a0927e"
+        }
+      },
+      "profile": "native-library-v1",
+      "schemaVersion": 1,
+      "sdk": "8.0.424"
+    },
+    "evidence": {
+      "componentId": "nominalsubtypes@1.0.0",
+      "componentReceiptSha256": "89a8a93e6a32a841d7748d3bb0f6fdb6ec14d174c0c20a9e7643c6948571867b",
+      "libraries": {
+        "libcomponent_7f8bfe55e5831a9133c5.so": "2e275d73caf7f0f531dac887cee6833e3bb953d5098bc94483c2e82a04171990",
+        "liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+        "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "libnominalsubtypes.so": "ca835c86669d3cfcdb28cb28807d6e76d516c5671171729a85d17e25d0683570"
+      },
+      "library": "libnominalsubtypes.so",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    },
+    "files": {
+      "Nominalsubtypes.Api.nuspec": {
+        "bytes": 477,
+        "sha256": "71d4d82df0eadd9ce05068e8a94de5baed72bea5c23d4a88817d6afb5a694fdb"
+      },
+      "README.md": {
+        "bytes": 8533,
+        "sha256": "ff5576b0f602a853ee79b56eadfecdf80b22f70f25184050becb525ea09f4ef7"
+      },
+      "[Content_Types].xml": {
+        "bytes": 939,
+        "sha256": "f40a2ae0edf63af7046ff54e97e247dd6b2cf07e5d650a8b6d9c51370378b42b"
+      },
+      "_rels/.rels": {
+        "bytes": 263,
+        "sha256": "c9b42c33fe88344e9d5c5c48873732ec1da2fc7b15ceb2ef7fc65d096042f5ec"
+      },
+      "lean-bridge/component/allocation-guard.h": {
+        "bytes": 1309,
+        "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+      },
+      "lean-bridge/component/artifacts.json": {
+        "bytes": 1533,
+        "sha256": "6d10ed40b56640ee79f80273d07e3bb2c735bb77f6e6e7cf1ee781017673dba8"
+      },
+      "lean-bridge/component/binding-ir.json": {
+        "bytes": 42197,
+        "sha256": "dd2592a54811d6d900290cb4a300d3e0941ababc7d63370de3d12a7b3b9efefc"
+      },
+      "lean-bridge/component/component.h": {
+        "bytes": 3303,
+        "sha256": "f0fe98df9ed9ca90cbf44c0062b17a0c6985ca3e8fab8cef88252be17f30c0a9"
+      },
+      "lean-bridge/component/generated.lean": {
+        "bytes": 12624,
+        "sha256": "90b03d3434832236548a7201bc65678a0551a3130408e541af4cec161d93d57b"
+      },
+      "lean-bridge/component/metadata.json": {
+        "bytes": 88065,
+        "sha256": "6030d980784b6c8f6f47cc5e6f0ea563a3667cedcbbbd319528964da19350bb1"
+      },
+      "lean-bridge/component/model.json": {
+        "bytes": 156460,
+        "sha256": "0c18981b10b4e1870b180746bff8336c2ef9a38e4582e4835a543886a36e719e"
+      },
+      "lean-bridge/component/native-component.json": {
+        "bytes": 48574,
+        "sha256": "89a8a93e6a32a841d7748d3bb0f6fdb6ec14d174c0c20a9e7643c6948571867b"
+      },
+      "lean-bridge/dotnet/binding-manifest.json": {
+        "bytes": 1480,
+        "sha256": "fc250d3904a2fb31c4239408535305552ed6ed57d637cb0470592bd5dfda3aba"
+      },
+      "lean-bridge/dotnet/global.json": {
+        "bytes": 104,
+        "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+      },
+      "lean-bridge/dotnet/src/LeanBridge.Nominalsubtypes/Api.cs": {
+        "bytes": 12850,
+        "sha256": "9c3ca9f8d7f399f08db12821796d5cfdd3033901be39c5314a6713f2df286830"
+      },
+      "lean-bridge/dotnet/src/LeanBridge.Nominalsubtypes/LeanBridge.Nominalsubtypes.csproj": {
+        "bytes": 611,
+        "sha256": "642174ac6dfe52d1edc06682e750be4e82b136b6a912bd44e2fbe97d1806704b"
+      },
+      "lean-bridge/dotnet/src/LeanBridge.Nominalsubtypes/Runtime.cs": {
+        "bytes": 37533,
+        "sha256": "dc6bbfb9b074ba6d8fed9db6fdaafdc011f2a2accc0e9035703fbc70b6a0927e"
+      },
+      "lean-bridge/licenses/Lean-LICENSE": {
+        "bytes": 9160,
+        "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+      },
+      "lean-bridge/licenses/Lean-LICENSES": {
+        "bytes": 81854,
+        "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+      },
+      "lean-bridge/licenses/LeanBridge-LICENSE": {
+        "bytes": 1093,
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      "lean-bridge/licenses/source-notices.json": {
+        "bytes": 2094,
+        "sha256": "b1631260ab74da8bf593c12de425244cf2e3408916d34d3f2fb802b77046c278"
+      },
+      "lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+        "bytes": 1093,
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      "lean-bridge/native-c-adapter.json": {
+        "bytes": 1383,
+        "sha256": "dfc4227db85b01e6e757b2f8f501830f4cfcd4b0a6a9745e9d67e3f8536f7681"
+      },
+      "lean-bridge/native-dotnet.json": {
+        "bytes": 2489,
+        "sha256": "9cd98b659c564c3e5a59f9a6b16fd8675ec9737d592e8e228a16ae6d12eddea9"
+      },
+      "lean-bridge/package-receipt.json": {
+        "bytes": 51844,
+        "sha256": "0b7c3b144a790dc4d0bdc6b2fed70d6b176475c96176c03e5553002786d13ab2"
+      },
+      "lean-bridge/runtime.json": {
+        "bytes": 1466,
+        "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+      },
+      "lib/net8.0/LeanBridge.Nominalsubtypes.dll": {
+        "bytes": 35840,
+        "sha256": "02c950efe2d4be6bef13eeaa6738fae80717a7e8c883444c18ed087e16fe4ae9"
+      },
+      "lib/net8.0/LeanBridge.Nominalsubtypes.xml": {
+        "bytes": 10647,
+        "sha256": "0188f71f1243d2d57e1e54ebc09a9bfabc05f4ba4f6713b2dcba117ed1c731fe"
+      },
+      "runtimes/linux-x64/native/libcomponent_7f8bfe55e5831a9133c5.so": {
+        "bytes": 90800,
+        "sha256": "2e275d73caf7f0f531dac887cee6833e3bb953d5098bc94483c2e82a04171990"
+      },
+      "runtimes/linux-x64/native/liblean_bridge_native.so": {
+        "bytes": 21464,
+        "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+      },
+      "runtimes/linux-x64/native/libleanshared.so": {
+        "bytes": 158401256,
+        "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+      },
+      "runtimes/linux-x64/native/libnominalsubtypes.so": {
+        "bytes": 53952,
+        "sha256": "ca835c86669d3cfcdb28cb28807d6e76d516c5671171729a85d17e25d0683570"
+      }
+    },
+    "receiptSha256": "0b7c3b144a790dc4d0bdc6b2fed70d6b176475c96176c03e5553002786d13ab2",
+    "retained": [
+      "Nominalsubtypes.Api.nuspec",
+      "README.md",
+      "[Content_Types].xml",
+      "_rels/.rels",
+      "lean-bridge/component/allocation-guard.h",
+      "lean-bridge/component/artifacts.json",
+      "lean-bridge/component/binding-ir.json",
+      "lean-bridge/component/component.h",
+      "lean-bridge/component/generated.lean",
+      "lean-bridge/component/metadata.json",
+      "lean-bridge/component/model.json",
+      "lean-bridge/component/native-component.json",
+      "lean-bridge/dotnet/binding-manifest.json",
+      "lean-bridge/dotnet/global.json",
+      "lean-bridge/dotnet/src/LeanBridge.Nominalsubtypes/Api.cs",
+      "lean-bridge/dotnet/src/LeanBridge.Nominalsubtypes/LeanBridge.Nominalsubtypes.csproj",
+      "lean-bridge/dotnet/src/LeanBridge.Nominalsubtypes/Runtime.cs",
+      "lean-bridge/licenses/Lean-LICENSE",
+      "lean-bridge/licenses/Lean-LICENSES",
+      "lean-bridge/licenses/LeanBridge-LICENSE",
+      "lean-bridge/licenses/source-notices.json",
+      "lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+      "lean-bridge/native-c-adapter.json",
+      "lean-bridge/native-dotnet.json",
+      "lean-bridge/package-receipt.json",
+      "lean-bridge/runtime.json",
+      "lib/net8.0/LeanBridge.Nominalsubtypes.xml"
+    ]
+  },
+  "installerCommandLogs": "Closed installer retains input/build-input/output identities, not restore/build stdout",
+  "mode": "result-only",
+  "observations": [
+    {
+      "closure": {
+        "buildInputsSha256": "f5a0cb13e2f48f9a0d61e912533ab4b153b0d93a47b7a1ea908b0f3995a58c84",
+        "cacheFilesSha256": "00f08698682f84c8f6d69035e7dfe5829538bb64695f4ec5d896656baaf612e6",
+        "deployedFilesSha256": "f692a457098c96753f62bf51474f37f493974b4d1a99a598ea76ae6f663394a4",
+        "interpreterSha256": "c61ff7f8665688b95ad0f34e780daaa67b978d26115b82797c07ea6044c566ed",
+        "packageFileSetSha256": "13eb2ce816ee2428f38df23eea12bc1564e2b1726888f894de88affb858448bd",
+        "receiptSha256": "0b7c3b144a790dc4d0bdc6b2fed70d6b176475c96176c03e5553002786d13ab2"
+      },
+      "counts": {
+        "checks": 2088,
+        "hostRejections": 1,
+        "rejections": 0,
+        "snapshotControls": 8
+      },
+      "cwd": "/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/consumer",
+      "framework": {
+        "args": [
+          "out/Consumer.dll",
+          "--runtime"
+        ],
+        "command": "/app/.toolchains/dotnet/dotnet",
+        "cwd": "/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/consumer",
+        "facts": {
+          "architecture": "X64",
+          "command": "/app/.toolchains/dotnet/dotnet",
+          "description": ".NET 8.0.30",
+          "directory": "/app/.toolchains/dotnet/shared/Microsoft.NETCore.App/8.0.30/",
+          "littleEndian": true,
+          "os": "Debian GNU/Linux 12 (bookworm)",
+          "version": "8.0.30"
+        },
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "{\"version\":\"8.0.30\",\"description\":\".NET 8.0.30\",\"directory\":\"/app/.toolchains/dotnet/shared/Microsoft.NETCore.App/8.0.30/\",\"command\":\"/app/.toolchains/dotnet/dotnet\",\"architecture\":\"X64\",\"os\":\"Debian GNU/Linux 12 (bookworm)\",\"littleEndian\":true}\n"
+        },
+        "runtimeFiles": {
+          "System.Private.CoreLib.dll": {
+            "bytes": 12773888,
+            "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+          },
+          "libcoreclr.so": {
+            "bytes": 6906008,
+            "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+          }
+        }
+      },
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":2088,\"rejections\":0,\"hostRejections\":1,\"snapshotControls\":8}\n"
+      },
+      "stage": "installed"
+    },
+    {
+      "closure": {
+        "buildInputsSha256": "f5a0cb13e2f48f9a0d61e912533ab4b153b0d93a47b7a1ea908b0f3995a58c84",
+        "cacheFilesSha256": "00f08698682f84c8f6d69035e7dfe5829538bb64695f4ec5d896656baaf612e6",
+        "deployedFilesSha256": "f692a457098c96753f62bf51474f37f493974b4d1a99a598ea76ae6f663394a4",
+        "interpreterSha256": "c61ff7f8665688b95ad0f34e780daaa67b978d26115b82797c07ea6044c566ed",
+        "packageFileSetSha256": "13eb2ce816ee2428f38df23eea12bc1564e2b1726888f894de88affb858448bd",
+        "receiptSha256": "0b7c3b144a790dc4d0bdc6b2fed70d6b176475c96176c03e5553002786d13ab2"
+      },
+      "counts": {
+        "checks": 2088,
+        "hostRejections": 1,
+        "rejections": 0,
+        "snapshotControls": 8
+      },
+      "cwd": "/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/consumer-relocated",
+      "framework": {
+        "args": [
+          "out/Consumer.dll",
+          "--runtime"
+        ],
+        "command": "/app/.toolchains/dotnet/dotnet",
+        "cwd": "/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/consumer-relocated",
+        "facts": {
+          "architecture": "X64",
+          "command": "/app/.toolchains/dotnet/dotnet",
+          "description": ".NET 8.0.30",
+          "directory": "/app/.toolchains/dotnet/shared/Microsoft.NETCore.App/8.0.30/",
+          "littleEndian": true,
+          "os": "Debian GNU/Linux 12 (bookworm)",
+          "version": "8.0.30"
+        },
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "{\"version\":\"8.0.30\",\"description\":\".NET 8.0.30\",\"directory\":\"/app/.toolchains/dotnet/shared/Microsoft.NETCore.App/8.0.30/\",\"command\":\"/app/.toolchains/dotnet/dotnet\",\"architecture\":\"X64\",\"os\":\"Debian GNU/Linux 12 (bookworm)\",\"littleEndian\":true}\n"
+        },
+        "runtimeFiles": {
+          "System.Private.CoreLib.dll": {
+            "bytes": 12773888,
+            "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+          },
+          "libcoreclr.so": {
+            "bytes": 6906008,
+            "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+          }
+        }
+      },
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":2088,\"rejections\":0,\"hostRejections\":1,\"snapshotControls\":8}\n"
+      },
+      "stage": "relocated"
+    },
+    {
+      "closure": {
+        "deployedFilesSha256": "f692a457098c96753f62bf51474f37f493974b4d1a99a598ea76ae6f663394a4"
+      },
+      "counts": {
+        "checks": 2088,
+        "hostRejections": 1,
+        "rejections": 0,
+        "snapshotControls": 8
+      },
+      "cwd": "/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/source-free",
+      "framework": {
+        "args": [
+          "Consumer.dll",
+          "--runtime"
+        ],
+        "command": "/app/.toolchains/dotnet/dotnet",
+        "cwd": "/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/source-free",
+        "facts": {
+          "architecture": "X64",
+          "command": "/app/.toolchains/dotnet/dotnet",
+          "description": ".NET 8.0.30",
+          "directory": "/app/.toolchains/dotnet/shared/Microsoft.NETCore.App/8.0.30/",
+          "littleEndian": true,
+          "os": "Debian GNU/Linux 12 (bookworm)",
+          "version": "8.0.30"
+        },
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "{\"version\":\"8.0.30\",\"description\":\".NET 8.0.30\",\"directory\":\"/app/.toolchains/dotnet/shared/Microsoft.NETCore.App/8.0.30/\",\"command\":\"/app/.toolchains/dotnet/dotnet\",\"architecture\":\"X64\",\"os\":\"Debian GNU/Linux 12 (bookworm)\",\"littleEndian\":true}\n"
+        },
+        "runtimeFiles": {
+          "System.Private.CoreLib.dll": {
+            "bytes": 12773888,
+            "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+          },
+          "libcoreclr.so": {
+            "bytes": 6906008,
+            "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+          }
+        }
+      },
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":2088,\"rejections\":0,\"hostRejections\":1,\"snapshotControls\":8}\n"
+      },
+      "sourcesRemoved": true,
+      "stage": "source-free"
+    }
+  ],
+  "offlineInstall": true,
+  "producerCommit": "5762111059313672f23825b65df2f91ec05437a3",
+  "receipt": {
+    "component": {
+      "id": "nominalsubtypes@1.0.0",
+      "name": "nominalsubtypes",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 51414283,
+            "path": "archives/Nominalsubtypes.Api.1.0.0.nupkg",
+            "sha256": "eecd8170ee5ab1589af9f7814eaf3aa23e1b98033de2fa8b7abedbb7df5286ea"
+          }
+        ],
+        "ecosystem": "nuget",
+        "name": "Nominalsubtypes.Api",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+        "target": "nuget",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "84cb587b9abbe321cf60b3e2f3c0cb0936eb1c7f907bccf32f2339e14f61c9ee",
+        "id": "native-library-v1",
+        "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "98ca475b7d16c5ff10cabfaf5101dc3b89eed57014825778e958c42ea86abd7d"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "resourceChecks": [
+    {
+      "observations": [
+        {
+          "availableBytes": 7953932288,
+          "freeBytes": 6999212032,
+          "load": 4.39
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 7920435200,
+          "freeBytes": 6999191552,
+          "load": 4.39
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 6733832192,
+          "freeBytes": 6864781312,
+          "load": 12.49
+        },
+        {
+          "availableBytes": 7250653184,
+          "freeBytes": 6887772160,
+          "load": 13.09
+        },
+        {
+          "availableBytes": 7156699136,
+          "freeBytes": 6878396416,
+          "load": 13.03
+        },
+        {
+          "availableBytes": 7744319488,
+          "freeBytes": 6891220992,
+          "load": 11.84
+        },
+        {
+          "availableBytes": 7911464960,
+          "freeBytes": 6890258432,
+          "load": 9.89
+        },
+        {
+          "availableBytes": 7857451008,
+          "freeBytes": 6889783296,
+          "load": 8.87
+        },
+        {
+          "availableBytes": 7874736128,
+          "freeBytes": 6889586688,
+          "load": 7.57
+        },
+        {
+          "availableBytes": 8058130432,
+          "freeBytes": 6888235008,
+          "load": 7.53
+        },
+        {
+          "availableBytes": 8136798208,
+          "freeBytes": 6887981056,
+          "load": 7.31
+        },
+        {
+          "availableBytes": 8116707328,
+          "freeBytes": 6887522304,
+          "load": 6.35
+        },
+        {
+          "availableBytes": 8154636288,
+          "freeBytes": 6886998016,
+          "load": 6.96
+        },
+        {
+          "availableBytes": 8107098112,
+          "freeBytes": 6886617088,
+          "load": 6.08
+        },
+        {
+          "availableBytes": 8109543424,
+          "freeBytes": 6886297600,
+          "load": 5.46
+        }
+      ],
+      "waits": 12
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 8142655488,
+          "freeBytes": 6885220352,
+          "load": 4.81
+        }
+      ],
+      "waits": 0
+    }
+  ],
+  "route": "reviewed",
+  "runtime": {
+    "arch": "x64",
+    "glibc": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "glibc 2.36\n"
+    },
+    "platform": "linux"
+  },
+  "schemaVersion": 1,
+  "sourceFreeDeployment": true,
+  "sourceRemovedBeforeInstallation": true,
+  "tools": {
+    "command": "/app/.toolchains/dotnet/dotnet",
+    "interpreter": {
+      "bytes": 68424,
+      "sha256": "c61ff7f8665688b95ad0f34e780daaa67b978d26115b82797c07ea6044c566ed"
+    },
+    "measurements": [
+      {
+        "args": [
+          "--list-sdks"
+        ],
+        "command": "/app/.toolchains/dotnet/dotnet",
+        "cwd": "/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/toolchain",
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "8.0.424 [/app/.toolchains/dotnet/sdk]\n"
+        }
+      },
+      {
+        "args": [
+          "--version"
+        ],
+        "command": "/app/.toolchains/dotnet/dotnet",
+        "cwd": "/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/toolchain",
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "8.0.424\n"
+        }
+      },
+      {
+        "args": [
+          "--list-runtimes"
+        ],
+        "command": "/app/.toolchains/dotnet/dotnet",
+        "cwd": "/tmp/lean-bridge-nominal-subtype-dotnet-9QFkbf/toolchain",
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "Microsoft.AspNetCore.App 8.0.30 [/app/.toolchains/dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.NETCore.App 8.0.30 [/app/.toolchains/dotnet/shared/Microsoft.NETCore.App]\n"
+        }
+      }
+    ],
+    "sdk": {
+      "directory": "/app/.toolchains/dotnet/sdk",
+      "version": "8.0.424"
+    }
+  },
+  "trustedToolchains": "Explicit .NET SDK and shared framework; their complete contents are not authenticated"
+}

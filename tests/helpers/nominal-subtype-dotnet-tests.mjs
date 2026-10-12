@@ -9,6 +9,7 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import "./nominal-subtype-dotnet-evidence-tests.mjs";
 import { generateCopiedDotnetPackage } from "../../src/backends/dotnet/copied-values.mjs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import { nominalSubtypeInstalledConfiguration, nominalSubtypeInstalledReview } from "./nominal-subtype-installed-fixture.mjs";

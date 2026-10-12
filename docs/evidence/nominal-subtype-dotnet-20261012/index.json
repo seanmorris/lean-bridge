@@ -1,0 +1,2138 @@
+{
+  "checkers": [
+    "generators",
+    "model-records",
+    "package-records",
+    "environment-records",
+    "restore-records",
+    "runtime-records",
+    "probe-records",
+    "report",
+    "controls",
+    "provenance"
+  ],
+  "files": [
+    {
+      "bytes": 11699,
+      "path": "checkers/controls.mjs",
+      "sha256": "b6abab7b15649d6be962be46d252e14e41441be99e188cbbc1dd3959b310ad11"
+    },
+    {
+      "bytes": 9173,
+      "path": "checkers/environment-records.mjs",
+      "sha256": "60329e99fcd1f7bd8ddadae7a2af2cf3b2afc48425127707799c43d6b981ec45"
+    },
+    {
+      "bytes": 2949,
+      "path": "checkers/generators.mjs",
+      "sha256": "41e690d571cb2201682427d028be157087896434b99d02fef16d0ec9dd59d1a6"
+    },
+    {
+      "bytes": 7725,
+      "path": "checkers/model-records.mjs",
+      "sha256": "96e0252e962b7714ab1ba85c2074ded9cd8b5208122bbed88da42a5ceea89b83"
+    },
+    {
+      "bytes": 7557,
+      "path": "checkers/package-records.mjs",
+      "sha256": "6ec1ea5abdce12f7929ac752f4d1e3772cb3e3530ac2d441bb78518995fb382a"
+    },
+    {
+      "bytes": 4104,
+      "path": "checkers/probe-records.mjs",
+      "sha256": "78df5a31e5a6b9795c7b49f5db51be943fc40ca808144b047ea281f1c08aab97"
+    },
+    {
+      "bytes": 3352,
+      "path": "checkers/provenance.mjs",
+      "sha256": "174f5399b2a8711cc3c7f16da0eabe1f0b7e99a4d59decd65fbef8c5a5b59686"
+    },
+    {
+      "bytes": 9895,
+      "path": "checkers/report.mjs",
+      "sha256": "412b2eae7890972b9c8568b2ceb4a7e4f0e17be75c632359b8f5b5c52a0fb3f1"
+    },
+    {
+      "bytes": 5691,
+      "path": "checkers/restore-records.mjs",
+      "sha256": "9cf68b80fb2e76df45eb9fed59b593edd293aadb1cdaa7f2dcc036d46df97b2d"
+    },
+    {
+      "bytes": 4781,
+      "path": "checkers/runtime-records.mjs",
+      "sha256": "bf90a808933040c7e16106d0fec18b3e66dcbffea6f1218d1fb802b15da7cc7c"
+    },
+    {
+      "bytes": 329,
+      "path": "ordinary-full/end.json",
+      "sha256": "7bd5535dfee53ceaa495d39f2c1b1456aa281a26783d283df870587f3298dfbe"
+    },
+    {
+      "bytes": 11296,
+      "path": "ordinary-full/records/api-probe/errors.sarif",
+      "sha256": "b517c2aade84e2bc3244e158bba504d2bbe9541988d0ee90b2feeebc5a2ae398"
+    },
+    {
+      "bytes": 104,
+      "path": "ordinary-full/records/api-probe/inputs/global.json",
+      "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+    },
+    {
+      "bytes": 40960,
+      "path": "ordinary-full/records/api-probe/inputs/library/LeanBridge.Nominalsubtypes.dll",
+      "sha256": "4db57755628e2e4b4c99103a7c5e907ccfb0a99bea751286ba43a46c67283cc5"
+    },
+    {
+      "bytes": 129,
+      "path": "ordinary-full/records/api-probe/inputs/NuGet.Config",
+      "sha256": "22706d2be0373c832ef6a7900c13a08885512ccfed2d4a0940a4d9dd7bcc7ae4"
+    },
+    {
+      "bytes": 866,
+      "path": "ordinary-full/records/api-probe/inputs/probe.cs",
+      "sha256": "15da9e874c42566e819df90dec77e1647fdcad5b87706d1777effbede83ac9e3"
+    },
+    {
+      "bytes": 647,
+      "path": "ordinary-full/records/api-probe/inputs/Probe.csproj",
+      "sha256": "0a05135a35073b6d44ba9ad510f483693e4eca9715a919840813a684533b5107"
+    },
+    {
+      "bytes": 4608,
+      "path": "ordinary-full/records/api-probe/out/Probe.dll",
+      "sha256": "606e8bad3897b993f91976258150367dabca2a5dd37c3d4b515b2e2b4a0c8fde"
+    },
+    {
+      "bytes": 2297,
+      "path": "ordinary-full/records/api-probe/processes.json",
+      "sha256": "e7c29fedbc9dfaf4efbb27aaaacdfe0cd143f352579705f7e4deae2a5974a8a6"
+    },
+    {
+      "bytes": 12508,
+      "path": "ordinary-full/records/api-probe/record.json",
+      "sha256": "fee7d1022ab0d211a0d2e8bc3e7d3826c22ab8b16061b9c7bc3ace84b0aaf8dd"
+    },
+    {
+      "bytes": 1232,
+      "path": "ordinary-full/records/build-0/author-inputs.json",
+      "sha256": "9fa3ccfcee4d40f1ff3fc2504e5eafd43524595d8d25833860a7a17aa17238ea"
+    },
+    {
+      "bytes": 20088,
+      "path": "ordinary-full/records/build-0/lean-bridge.exports.json",
+      "sha256": "0c2f47b98e4f75046ddb87409ff754aefb5e2994de79f8aa327def97dfd9129d"
+    },
+    {
+      "bytes": 326253,
+      "path": "ordinary-full/records/build-0/model.json",
+      "sha256": "747f1d68cb291d3df81c877b908e6f9f92b41143846c076195e8835ba78a5376"
+    },
+    {
+      "bytes": 3005,
+      "path": "ordinary-full/records/build-0/NominalSubtypes.lean",
+      "sha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+    },
+    {
+      "bytes": 1129,
+      "path": "ordinary-full/records/build-0/package-set-receipt.json",
+      "sha256": "06993923c58c67e10b76fec356ec2656483f0e0033ddccf95a916c86caea933f"
+    },
+    {
+      "bytes": 1239,
+      "path": "ordinary-full/records/build-1/author-inputs.json",
+      "sha256": "c4bae0a9ccd5acbeef50877735f6bbcd7d1be99b214ab563a67a264b62ffb799"
+    },
+    {
+      "bytes": 20088,
+      "path": "ordinary-full/records/build-1/lean-bridge.exports.json",
+      "sha256": "0c2f47b98e4f75046ddb87409ff754aefb5e2994de79f8aa327def97dfd9129d"
+    },
+    {
+      "bytes": 326253,
+      "path": "ordinary-full/records/build-1/model.json",
+      "sha256": "747f1d68cb291d3df81c877b908e6f9f92b41143846c076195e8835ba78a5376"
+    },
+    {
+      "bytes": 3005,
+      "path": "ordinary-full/records/build-1/NominalSubtypes.lean",
+      "sha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+    },
+    {
+      "bytes": 1129,
+      "path": "ordinary-full/records/build-1/package-set-receipt.json",
+      "sha256": "06993923c58c67e10b76fec356ec2656483f0e0033ddccf95a916c86caea933f"
+    },
+    {
+      "bytes": 20088,
+      "path": "ordinary-full/records/configuration.json",
+      "sha256": "0c2f47b98e4f75046ddb87409ff754aefb5e2994de79f8aa327def97dfd9129d"
+    },
+    {
+      "bytes": 203,
+      "path": "ordinary-full/records/consumer-environment/cache/.nupkg.metadata",
+      "sha256": "d059ecaf24d01eafefb7dba78c5c46ecdf27167fb2e54116e364e21143f12952"
+    },
+    {
+      "bytes": 88,
+      "path": "ordinary-full/records/consumer-environment/cache/nominalsubtypes.api.1.0.0.nupkg.sha512",
+      "sha256": "d3f9c069606d17c71a486b7c12e369eb2ad302bdbaf9c2e41c66bdce444d81fd"
+    },
+    {
+      "bytes": 477,
+      "path": "ordinary-full/records/consumer-environment/cache/nominalsubtypes.api.nuspec",
+      "sha256": "71d4d82df0eadd9ce05068e8a94de5baed72bea5c23d4a88817d6afb5a694fdb"
+    },
+    {
+      "bytes": 14189,
+      "path": "ordinary-full/records/consumer-environment/consumer.cs",
+      "sha256": "ec8d61d88e26310c2499d757200b0abd629b2464b2ac5f3b0bb9f62f867d5635"
+    },
+    {
+      "bytes": 509,
+      "path": "ordinary-full/records/consumer-environment/Consumer.csproj",
+      "sha256": "56801260b591768d9c4f36a57d02fe52b1eefb282b2a339d84b2be5f5ad234cd"
+    },
+    {
+      "bytes": 104,
+      "path": "ordinary-full/records/consumer-environment/global.json",
+      "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+    },
+    {
+      "bytes": 163,
+      "path": "ordinary-full/records/consumer-environment/NuGet.Config",
+      "sha256": "e5dfa74aa48869dd2bafb18e20e440493a866c00eeb4710769f3422d0e6cba25"
+    },
+    {
+      "bytes": 2230,
+      "path": "ordinary-full/records/consumer-environment/obj/Consumer.csproj.nuget.dgspec.json",
+      "sha256": "1579efbb2d6457615b12315867ee6c11721819cf9fa790fc177d80c0a6de99b1"
+    },
+    {
+      "bytes": 1222,
+      "path": "ordinary-full/records/consumer-environment/obj/Consumer.csproj.nuget.g.props",
+      "sha256": "fffa6c838ade4a8783ed5e865502acd4daa8c488829744e4d9061436599292e2"
+    },
+    {
+      "bytes": 149,
+      "path": "ordinary-full/records/consumer-environment/obj/Consumer.csproj.nuget.g.targets",
+      "sha256": "b14461e0cb1be3f77fcf9fe2fdd62889325ca92523d0f606980ed59eb5c4aa1c"
+    },
+    {
+      "bytes": 5067,
+      "path": "ordinary-full/records/consumer-environment/obj/project.assets.json",
+      "sha256": "64a7861cfa26f8a903b824b03f5788d16adbebf97c5562b6cad70fd6dd9407fa"
+    },
+    {
+      "bytes": 348,
+      "path": "ordinary-full/records/consumer-environment/obj/project.nuget.cache",
+      "sha256": "64e1571de162fa2ff745dfa0da2f6075a56ca4a7645da43715c44f671ff8f6b9"
+    },
+    {
+      "bytes": 1779,
+      "path": "ordinary-full/records/consumer-environment/out/Consumer.deps.json",
+      "sha256": "3d9c05df7bb9682652a7400473d3f1d2d4d5bfba5c659b71b3d3d25735876a69"
+    },
+    {
+      "bytes": 23552,
+      "path": "ordinary-full/records/consumer-environment/out/Consumer.dll",
+      "sha256": "111c9e3ac61cb6c5712117147d02aaf2c57f7ac6196950dec8aa503e724794aa"
+    },
+    {
+      "bytes": 13504,
+      "path": "ordinary-full/records/consumer-environment/out/Consumer.pdb",
+      "sha256": "44ec648e6762267625c173c72343d25f5098583a71b13db8dc3234cc5d3264fc"
+    },
+    {
+      "bytes": 257,
+      "path": "ordinary-full/records/consumer-environment/out/Consumer.runtimeconfig.json",
+      "sha256": "088bcc1a867d80d3923a812855f7ae9297fc8ac3d844cf9a83510bd8d1352af8"
+    },
+    {
+      "bytes": 14189,
+      "path": "ordinary-full/records/consumer.cs",
+      "sha256": "ec8d61d88e26310c2499d757200b0abd629b2464b2ac5f3b0bb9f62f867d5635"
+    },
+    {
+      "bytes": 87211,
+      "path": "ordinary-full/records/expected.binding-ir.json",
+      "sha256": "be260fc29f845b403fa730c80869993711104639443c83210c7cee432fbe8974"
+    },
+    {
+      "bytes": 67153,
+      "path": "ordinary-full/records/installation.json",
+      "sha256": "7efd5d99623dcc6d265a01ddef5b1ec3ef107af589323b3faafe8f4c11d698ba"
+    },
+    {
+      "bytes": 2142,
+      "path": "ordinary-full/records/installed.json",
+      "sha256": "5e64257605843caa51086d3054aaf7e59f8cff2257368670bfc718aed6a2e77d"
+    },
+    {
+      "bytes": 10659,
+      "path": "ordinary-full/records/nuget.json",
+      "sha256": "0ab5d8bff5c1fe70701eecda7377871a62dfdb01d07c050a78a59de47dfad1d4"
+    },
+    {
+      "bytes": 263,
+      "path": "ordinary-full/records/package/_rels/.rels",
+      "sha256": "c9b42c33fe88344e9d5c5c48873732ec1da2fc7b15ceb2ef7fc65d096042f5ec"
+    },
+    {
+      "bytes": 939,
+      "path": "ordinary-full/records/package/[Content_Types].xml",
+      "sha256": "f40a2ae0edf63af7046ff54e97e247dd6b2cf07e5d650a8b6d9c51370378b42b"
+    },
+    {
+      "bytes": 1309,
+      "path": "ordinary-full/records/package/lean-bridge/component/allocation-guard.h",
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    {
+      "bytes": 1537,
+      "path": "ordinary-full/records/package/lean-bridge/component/artifacts.json",
+      "sha256": "837383b4dbc222ec81b961e4f7c387b4c6f7d37a28e54019cd291b001a9b2009"
+    },
+    {
+      "bytes": 116927,
+      "path": "ordinary-full/records/package/lean-bridge/component/binding-ir.json",
+      "sha256": "3ec13f6d7b44f924b4393a510eb67f2644d313b6fe9377906160e26890acb546"
+    },
+    {
+      "bytes": 6124,
+      "path": "ordinary-full/records/package/lean-bridge/component/component.h",
+      "sha256": "32cf90bde70a5eb36d5d674520219de85396b87c4b82bbbe9d016ecc38fb51e5"
+    },
+    {
+      "bytes": 30168,
+      "path": "ordinary-full/records/package/lean-bridge/component/generated.lean",
+      "sha256": "943f6d6e5dfde224bd0aa9fbef4b3d53f2169ffb5c0492bf519c54a9a5f1ea4e"
+    },
+    {
+      "bytes": 192906,
+      "path": "ordinary-full/records/package/lean-bridge/component/metadata.json",
+      "sha256": "e39f169bde27433a10eb6cc277067f824dc82d2e3b3174f07b7981dc5d5cd9a1"
+    },
+    {
+      "bytes": 326253,
+      "path": "ordinary-full/records/package/lean-bridge/component/model.json",
+      "sha256": "747f1d68cb291d3df81c877b908e6f9f92b41143846c076195e8835ba78a5376"
+    },
+    {
+      "bytes": 50342,
+      "path": "ordinary-full/records/package/lean-bridge/component/native-component.json",
+      "sha256": "3098bb77f8b3653482b73a38b895ec7839f9789d492110174a14c7a7b975db4c"
+    },
+    {
+      "bytes": 1480,
+      "path": "ordinary-full/records/package/lean-bridge/dotnet/binding-manifest.json",
+      "sha256": "c92e900e7e1ac1c7fe68e13642e6da509c41b50d2c4190b51376084a9350948a"
+    },
+    {
+      "bytes": 104,
+      "path": "ordinary-full/records/package/lean-bridge/dotnet/global.json",
+      "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+    },
+    {
+      "bytes": 19927,
+      "path": "ordinary-full/records/package/lean-bridge/dotnet/src/LeanBridge.Nominalsubtypes/Api.cs",
+      "sha256": "4e1f54993a1c7a8add8a7930b32ca488e4b06f34affd4bcef8b8cdef77813d82"
+    },
+    {
+      "bytes": 611,
+      "path": "ordinary-full/records/package/lean-bridge/dotnet/src/LeanBridge.Nominalsubtypes/LeanBridge.Nominalsubtypes.csproj",
+      "sha256": "642174ac6dfe52d1edc06682e750be4e82b136b6a912bd44e2fbe97d1806704b"
+    },
+    {
+      "bytes": 47502,
+      "path": "ordinary-full/records/package/lean-bridge/dotnet/src/LeanBridge.Nominalsubtypes/Runtime.cs",
+      "sha256": "df78fff2fd8e42ba122aab7baf05863596defb15209fe2d21c46cbf057ec20bd"
+    },
+    {
+      "bytes": 9160,
+      "path": "ordinary-full/records/package/lean-bridge/licenses/Lean-LICENSE",
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    {
+      "bytes": 81854,
+      "path": "ordinary-full/records/package/lean-bridge/licenses/Lean-LICENSES",
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    {
+      "bytes": 1093,
+      "path": "ordinary-full/records/package/lean-bridge/licenses/LeanBridge-LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 23632,
+      "path": "ordinary-full/records/package/lean-bridge/licenses/source-notices.json",
+      "sha256": "dabd00b44ef8315867b9048b684414757a84d8bf41d4632d7bb8a9da0cc338df"
+    },
+    {
+      "bytes": 1093,
+      "path": "ordinary-full/records/package/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 1386,
+      "path": "ordinary-full/records/package/lean-bridge/native-c-adapter.json",
+      "sha256": "b02ad58026a9c55742b95455f99ef832d3fcc0793682bdf4c35c8092dad27002"
+    },
+    {
+      "bytes": 2490,
+      "path": "ordinary-full/records/package/lean-bridge/native-dotnet.json",
+      "sha256": "311fb390bed9717cf12f210f5e4fb7a40a2bf9022d7b73e53cd4abd81622250f"
+    },
+    {
+      "bytes": 52210,
+      "path": "ordinary-full/records/package/lean-bridge/package-receipt.json",
+      "sha256": "6fe6430f4b5e4dc12f74d96dad8802851e8fb61ec8c44bde7221364f9a760664"
+    },
+    {
+      "bytes": 1466,
+      "path": "ordinary-full/records/package/lean-bridge/runtime.json",
+      "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    },
+    {
+      "bytes": 18225,
+      "path": "ordinary-full/records/package/lib/net8.0/LeanBridge.Nominalsubtypes.xml",
+      "sha256": "b6d103f875c0b7c1bdc16ae0bc5920cc936c2196d418240da5c4472b13a565ae"
+    },
+    {
+      "bytes": 477,
+      "path": "ordinary-full/records/package/Nominalsubtypes.Api.nuspec",
+      "sha256": "71d4d82df0eadd9ce05068e8a94de5baed72bea5c23d4a88817d6afb5a694fdb"
+    },
+    {
+      "bytes": 11289,
+      "path": "ordinary-full/records/package/README.md",
+      "sha256": "19ad656e8de83e61980259d8aae5909e4227bf52c603f26d4ba9a0f786d65662"
+    },
+    {
+      "bytes": 2162,
+      "path": "ordinary-full/records/relocated.json",
+      "sha256": "9285e680198759838ddeb1ba39a7a99afa88d035e927056d88b26b271029c81e"
+    },
+    {
+      "bytes": 36349,
+      "path": "ordinary-full/records/report.json",
+      "sha256": "a8c72e6d740cb4555f5af84ded68873a58e2f8f29e82f6d5738f5f7435d62ab6"
+    },
+    {
+      "bytes": 647,
+      "path": "ordinary-full/records/resources.json",
+      "sha256": "4a1b573aa1572289f4e7d9df363886906f0a27a045eb9de653c3230cf4e5c068"
+    },
+    {
+      "bytes": 123,
+      "path": "ordinary-full/records/runtime.json",
+      "sha256": "c2f1b9d72bf412b57880eaf2e5f14f071577bea6210298d5c0d82c529f20d81e"
+    },
+    {
+      "bytes": 1709,
+      "path": "ordinary-full/records/source-free.json",
+      "sha256": "234cebcc648e16f2e106c6aef316f1da598629366bd50b6d108d15c5b21faf1d"
+    },
+    {
+      "bytes": 1321,
+      "path": "ordinary-full/records/toolchain.json",
+      "sha256": "d755fec3afd9a8f65ebad36c41ded055368c677a027bd6184150af25fc1da076"
+    },
+    {
+      "bytes": 438,
+      "path": "ordinary-full/run.tap",
+      "sha256": "73fbd6ef74d168df56dedc24df1e8b60661a3b34a3dfbf54f9d20405a5c18c93"
+    },
+    {
+      "bytes": 1219,
+      "path": "ordinary-full/start.json",
+      "sha256": "9bc0d39309311f739f865041dee4690824bdbae7d77b635e6f527dccec1274b8"
+    },
+    {
+      "bytes": 329,
+      "path": "ordinary-result-only/end.json",
+      "sha256": "ff47b333ff23afaa64862ab5dc2a5a9cc29739e85157c0017ac7b9af8cf7e433"
+    },
+    {
+      "bytes": 10882,
+      "path": "ordinary-result-only/records/api-probe/errors.sarif",
+      "sha256": "1ae63ed7c1651bf62c366661a8e473aaac7805f9fca375e5be9ca69f807b010b"
+    },
+    {
+      "bytes": 104,
+      "path": "ordinary-result-only/records/api-probe/inputs/global.json",
+      "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+    },
+    {
+      "bytes": 35840,
+      "path": "ordinary-result-only/records/api-probe/inputs/library/LeanBridge.Nominalsubtypes.dll",
+      "sha256": "9134c1bce2395a6c593b9c812081a4d8f7f99b7ab8912db52bdc3ac8b5d03371"
+    },
+    {
+      "bytes": 129,
+      "path": "ordinary-result-only/records/api-probe/inputs/NuGet.Config",
+      "sha256": "22706d2be0373c832ef6a7900c13a08885512ccfed2d4a0940a4d9dd7bcc7ae4"
+    },
+    {
+      "bytes": 866,
+      "path": "ordinary-result-only/records/api-probe/inputs/probe.cs",
+      "sha256": "15da9e874c42566e819df90dec77e1647fdcad5b87706d1777effbede83ac9e3"
+    },
+    {
+      "bytes": 647,
+      "path": "ordinary-result-only/records/api-probe/inputs/Probe.csproj",
+      "sha256": "0a05135a35073b6d44ba9ad510f483693e4eca9715a919840813a684533b5107"
+    },
+    {
+      "bytes": 8274,
+      "path": "ordinary-result-only/records/api-probe/processes.json",
+      "sha256": "a9afda3bba53afed92302c708f47ce24992cd72948853bb7e0dea9c77a74680e"
+    },
+    {
+      "bytes": 18146,
+      "path": "ordinary-result-only/records/api-probe/record.json",
+      "sha256": "6d19d2eef98851bfb12934645c8d35f8b0daee4d3c66ae610f80c65514298f04"
+    },
+    {
+      "bytes": 1239,
+      "path": "ordinary-result-only/records/build-0/author-inputs.json",
+      "sha256": "bc933f350d50bf4e1af163e77113adaa0b913d116d876bbeb7c230ea54e8ee2e"
+    },
+    {
+      "bytes": 624,
+      "path": "ordinary-result-only/records/build-0/lean-bridge.exports.json",
+      "sha256": "6937d7ad8b1f9e87bcb5e6b9c97195502a562e85129c4678171fb031517a2d55"
+    },
+    {
+      "bytes": 113376,
+      "path": "ordinary-result-only/records/build-0/model.json",
+      "sha256": "760e88ed1665b5bf917206074b56f7ddeb34ec2d91e340496f5bed7d17e994ab"
+    },
+    {
+      "bytes": 3005,
+      "path": "ordinary-result-only/records/build-0/NominalSubtypes.lean",
+      "sha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+    },
+    {
+      "bytes": 1129,
+      "path": "ordinary-result-only/records/build-0/package-set-receipt.json",
+      "sha256": "06f9a988f5fb36785b873412fb21784cc2df33fd979e014c29354cee56b7de12"
+    },
+    {
+      "bytes": 1239,
+      "path": "ordinary-result-only/records/build-1/author-inputs.json",
+      "sha256": "e2a67375a869f65165101e054631e151bcdeb72ce8953cd452aead96e8a6dfce"
+    },
+    {
+      "bytes": 624,
+      "path": "ordinary-result-only/records/build-1/lean-bridge.exports.json",
+      "sha256": "6937d7ad8b1f9e87bcb5e6b9c97195502a562e85129c4678171fb031517a2d55"
+    },
+    {
+      "bytes": 113376,
+      "path": "ordinary-result-only/records/build-1/model.json",
+      "sha256": "760e88ed1665b5bf917206074b56f7ddeb34ec2d91e340496f5bed7d17e994ab"
+    },
+    {
+      "bytes": 3005,
+      "path": "ordinary-result-only/records/build-1/NominalSubtypes.lean",
+      "sha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+    },
+    {
+      "bytes": 1129,
+      "path": "ordinary-result-only/records/build-1/package-set-receipt.json",
+      "sha256": "06f9a988f5fb36785b873412fb21784cc2df33fd979e014c29354cee56b7de12"
+    },
+    {
+      "bytes": 624,
+      "path": "ordinary-result-only/records/configuration.json",
+      "sha256": "6937d7ad8b1f9e87bcb5e6b9c97195502a562e85129c4678171fb031517a2d55"
+    },
+    {
+      "bytes": 203,
+      "path": "ordinary-result-only/records/consumer-environment/cache/.nupkg.metadata",
+      "sha256": "32a60998481c2a9e5a9b5906a3b76faaf9dc60d8cb62b82238877ab0dc33d07a"
+    },
+    {
+      "bytes": 88,
+      "path": "ordinary-result-only/records/consumer-environment/cache/nominalsubtypes.api.1.0.0.nupkg.sha512",
+      "sha256": "ffc40cb73d1a8a8d7c2cc80b58ec5410c5a6da4d15588155a09c702a536a0ff8"
+    },
+    {
+      "bytes": 477,
+      "path": "ordinary-result-only/records/consumer-environment/cache/nominalsubtypes.api.nuspec",
+      "sha256": "71d4d82df0eadd9ce05068e8a94de5baed72bea5c23d4a88817d6afb5a694fdb"
+    },
+    {
+      "bytes": 14209,
+      "path": "ordinary-result-only/records/consumer-environment/consumer.cs",
+      "sha256": "504d2640b19218a6a236b768076e9b3ac2cfdc349c136dcd8b3546b1deddce1e"
+    },
+    {
+      "bytes": 509,
+      "path": "ordinary-result-only/records/consumer-environment/Consumer.csproj",
+      "sha256": "56801260b591768d9c4f36a57d02fe52b1eefb282b2a339d84b2be5f5ad234cd"
+    },
+    {
+      "bytes": 104,
+      "path": "ordinary-result-only/records/consumer-environment/global.json",
+      "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+    },
+    {
+      "bytes": 163,
+      "path": "ordinary-result-only/records/consumer-environment/NuGet.Config",
+      "sha256": "e5dfa74aa48869dd2bafb18e20e440493a866c00eeb4710769f3422d0e6cba25"
+    },
+    {
+      "bytes": 2230,
+      "path": "ordinary-result-only/records/consumer-environment/obj/Consumer.csproj.nuget.dgspec.json",
+      "sha256": "da0df3eabeb94779f5fb292428b64f1872069b3fce80ba34d7e25681c7e38157"
+    },
+    {
+      "bytes": 1222,
+      "path": "ordinary-result-only/records/consumer-environment/obj/Consumer.csproj.nuget.g.props",
+      "sha256": "6c8cfa773ab88c8c3b1558101ef6902a4a52ec83fcfb7698d39f6492d116c90c"
+    },
+    {
+      "bytes": 149,
+      "path": "ordinary-result-only/records/consumer-environment/obj/Consumer.csproj.nuget.g.targets",
+      "sha256": "b14461e0cb1be3f77fcf9fe2fdd62889325ca92523d0f606980ed59eb5c4aa1c"
+    },
+    {
+      "bytes": 5067,
+      "path": "ordinary-result-only/records/consumer-environment/obj/project.assets.json",
+      "sha256": "dd28890291826c02d2ff9df37916c1dac44f635a87bc56687cb4693ea2e44b60"
+    },
+    {
+      "bytes": 348,
+      "path": "ordinary-result-only/records/consumer-environment/obj/project.nuget.cache",
+      "sha256": "77cb3a65b66f42ae842e58f94d03285d87e087e8b421280edf7d03902fd234e6"
+    },
+    {
+      "bytes": 1779,
+      "path": "ordinary-result-only/records/consumer-environment/out/Consumer.deps.json",
+      "sha256": "9df60168f92530051c9d5cec587ab3bef3c3bf50b290de5f186947ef3127836e"
+    },
+    {
+      "bytes": 16384,
+      "path": "ordinary-result-only/records/consumer-environment/out/Consumer.dll",
+      "sha256": "7c1f6b380dec83ed555f5731844faff94246f74c9de1f2358c25ed23442bba0b"
+    },
+    {
+      "bytes": 12268,
+      "path": "ordinary-result-only/records/consumer-environment/out/Consumer.pdb",
+      "sha256": "0c307429b1ae591c576438c1e5646c0c1413ff65f82fb03d269672791a4ca1e9"
+    },
+    {
+      "bytes": 257,
+      "path": "ordinary-result-only/records/consumer-environment/out/Consumer.runtimeconfig.json",
+      "sha256": "088bcc1a867d80d3923a812855f7ae9297fc8ac3d844cf9a83510bd8d1352af8"
+    },
+    {
+      "bytes": 14209,
+      "path": "ordinary-result-only/records/consumer.cs",
+      "sha256": "504d2640b19218a6a236b768076e9b3ac2cfdc349c136dcd8b3546b1deddce1e"
+    },
+    {
+      "bytes": 38880,
+      "path": "ordinary-result-only/records/expected.binding-ir.json",
+      "sha256": "9846960a169a460df677ff7770ad4056a3cf9afb5eaedd274a6064fbd25930ab"
+    },
+    {
+      "bytes": 19110,
+      "path": "ordinary-result-only/records/installation.json",
+      "sha256": "64fd97ff50c258ca28c430c3eea499ba915ef6e252f6a9cd7dda5b1d621dd48c"
+    },
+    {
+      "bytes": 2136,
+      "path": "ordinary-result-only/records/installed.json",
+      "sha256": "395ecb38e93af6d16cb6a3537a5bfad3bca59a8b95d0e930c92e6706ee618560"
+    },
+    {
+      "bytes": 10650,
+      "path": "ordinary-result-only/records/nuget.json",
+      "sha256": "4fa63310284bf13bbacbb6b152d0fbbe5709eeca131e7d2d17a86d2c57ef279a"
+    },
+    {
+      "bytes": 263,
+      "path": "ordinary-result-only/records/package/_rels/.rels",
+      "sha256": "c9b42c33fe88344e9d5c5c48873732ec1da2fc7b15ceb2ef7fc65d096042f5ec"
+    },
+    {
+      "bytes": 939,
+      "path": "ordinary-result-only/records/package/[Content_Types].xml",
+      "sha256": "f40a2ae0edf63af7046ff54e97e247dd6b2cf07e5d650a8b6d9c51370378b42b"
+    },
+    {
+      "bytes": 1309,
+      "path": "ordinary-result-only/records/package/lean-bridge/component/allocation-guard.h",
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    {
+      "bytes": 1532,
+      "path": "ordinary-result-only/records/package/lean-bridge/component/artifacts.json",
+      "sha256": "0d6d4225850c37ed3b798d2b0de255c401d39bcfeee35feb0678d9a4bb921c18"
+    },
+    {
+      "bytes": 42185,
+      "path": "ordinary-result-only/records/package/lean-bridge/component/binding-ir.json",
+      "sha256": "9a0c26f1fa5ac821261965d486c8f6ec9884c3db89bf229596e167fbebc9d0a8"
+    },
+    {
+      "bytes": 3303,
+      "path": "ordinary-result-only/records/package/lean-bridge/component/component.h",
+      "sha256": "f0fe98df9ed9ca90cbf44c0062b17a0c6985ca3e8fab8cef88252be17f30c0a9"
+    },
+    {
+      "bytes": 12624,
+      "path": "ordinary-result-only/records/package/lean-bridge/component/generated.lean",
+      "sha256": "90b03d3434832236548a7201bc65678a0551a3130408e541af4cec161d93d57b"
+    },
+    {
+      "bytes": 88065,
+      "path": "ordinary-result-only/records/package/lean-bridge/component/metadata.json",
+      "sha256": "a63c55df17994154b2f1b9048155fcd6151bfea8ff27b0e78b4d5f8145676bc2"
+    },
+    {
+      "bytes": 113376,
+      "path": "ordinary-result-only/records/package/lean-bridge/component/model.json",
+      "sha256": "760e88ed1665b5bf917206074b56f7ddeb34ec2d91e340496f5bed7d17e994ab"
+    },
+    {
+      "bytes": 5502,
+      "path": "ordinary-result-only/records/package/lean-bridge/component/native-component.json",
+      "sha256": "cad6fd0b92fc762e3be5671fd589914918e9a9cf01f4f06b1ba5cc691343f0bc"
+    },
+    {
+      "bytes": 1480,
+      "path": "ordinary-result-only/records/package/lean-bridge/dotnet/binding-manifest.json",
+      "sha256": "5e0744b878662bb3570c714828d02463715ca45e0ff977008eb024ed39f29cc9"
+    },
+    {
+      "bytes": 104,
+      "path": "ordinary-result-only/records/package/lean-bridge/dotnet/global.json",
+      "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+    },
+    {
+      "bytes": 12772,
+      "path": "ordinary-result-only/records/package/lean-bridge/dotnet/src/LeanBridge.Nominalsubtypes/Api.cs",
+      "sha256": "113e13e11a9d3e004b233245f8107ce2f6def7a80607257a8895674f707c3e3e"
+    },
+    {
+      "bytes": 611,
+      "path": "ordinary-result-only/records/package/lean-bridge/dotnet/src/LeanBridge.Nominalsubtypes/LeanBridge.Nominalsubtypes.csproj",
+      "sha256": "642174ac6dfe52d1edc06682e750be4e82b136b6a912bd44e2fbe97d1806704b"
+    },
+    {
+      "bytes": 37533,
+      "path": "ordinary-result-only/records/package/lean-bridge/dotnet/src/LeanBridge.Nominalsubtypes/Runtime.cs",
+      "sha256": "b511e4d2fd01a97f29af7e7f3801e81bd20c27047f1adb82cb16593be06d4311"
+    },
+    {
+      "bytes": 9160,
+      "path": "ordinary-result-only/records/package/lean-bridge/licenses/Lean-LICENSE",
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    {
+      "bytes": 81854,
+      "path": "ordinary-result-only/records/package/lean-bridge/licenses/Lean-LICENSES",
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    {
+      "bytes": 1093,
+      "path": "ordinary-result-only/records/package/lean-bridge/licenses/LeanBridge-LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 2406,
+      "path": "ordinary-result-only/records/package/lean-bridge/licenses/source-notices.json",
+      "sha256": "698ad2f3a35fd11a10253e127351bc25221701394c34062efa0bef694a117de3"
+    },
+    {
+      "bytes": 1093,
+      "path": "ordinary-result-only/records/package/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 1383,
+      "path": "ordinary-result-only/records/package/lean-bridge/native-c-adapter.json",
+      "sha256": "ccbed684363a1ab983ce8a8b1c9e34277ffe2229d77fc5bda095490ac5bff868"
+    },
+    {
+      "bytes": 2489,
+      "path": "ordinary-result-only/records/package/lean-bridge/native-dotnet.json",
+      "sha256": "446f9d13ed12d32925ddec3294aa29f029713c85eb0b1fe557f122da5499b081"
+    },
+    {
+      "bytes": 8771,
+      "path": "ordinary-result-only/records/package/lean-bridge/package-receipt.json",
+      "sha256": "37972abc12507f3e5de5261ba1074e1ea77254be07de17fc04c40be96c908575"
+    },
+    {
+      "bytes": 1466,
+      "path": "ordinary-result-only/records/package/lean-bridge/runtime.json",
+      "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    },
+    {
+      "bytes": 10621,
+      "path": "ordinary-result-only/records/package/lib/net8.0/LeanBridge.Nominalsubtypes.xml",
+      "sha256": "ad89eb3874d17f5bd30b198dc8baa13acd04a9c016e3555e372e8b880d170041"
+    },
+    {
+      "bytes": 477,
+      "path": "ordinary-result-only/records/package/Nominalsubtypes.Api.nuspec",
+      "sha256": "71d4d82df0eadd9ce05068e8a94de5baed72bea5c23d4a88817d6afb5a694fdb"
+    },
+    {
+      "bytes": 8533,
+      "path": "ordinary-result-only/records/package/README.md",
+      "sha256": "ff5576b0f602a853ee79b56eadfecdf80b22f70f25184050becb525ea09f4ef7"
+    },
+    {
+      "bytes": 2156,
+      "path": "ordinary-result-only/records/relocated.json",
+      "sha256": "fbf3952eadc810d118282448345841497df0f27b55b2e921740d6e3b3d436bf9"
+    },
+    {
+      "bytes": 42514,
+      "path": "ordinary-result-only/records/report.json",
+      "sha256": "30007cb972dc55e375f55fadb005a6ce5593b0888aaf2d07aee240b3736a81a4"
+    },
+    {
+      "bytes": 974,
+      "path": "ordinary-result-only/records/resources.json",
+      "sha256": "1719d38be9eb9e8879f3f6a1c92b83724dfc004c4a578b4d7f29704d3940aff0"
+    },
+    {
+      "bytes": 123,
+      "path": "ordinary-result-only/records/runtime.json",
+      "sha256": "c2f1b9d72bf412b57880eaf2e5f14f071577bea6210298d5c0d82c529f20d81e"
+    },
+    {
+      "bytes": 1703,
+      "path": "ordinary-result-only/records/source-free.json",
+      "sha256": "0e0242965f41a3c0abb197f757fc514061a0c42aac6741153415832022cedc0b"
+    },
+    {
+      "bytes": 1321,
+      "path": "ordinary-result-only/records/toolchain.json",
+      "sha256": "f3b992702ea11aea8661b967a51c688c29765f200fbac9550c950012e385cd14"
+    },
+    {
+      "bytes": 657,
+      "path": "ordinary-result-only/run.tap",
+      "sha256": "b81bfdfe9da888f2c9e6401b3c84198b396906cd9a4d427f71bb5ee840e1cee7"
+    },
+    {
+      "bytes": 1240,
+      "path": "ordinary-result-only/start.json",
+      "sha256": "4b2b32e0da603115944a984fa85c2fefc14124a803f84941f842bcbdc62bd36f"
+    },
+    {
+      "bytes": 329,
+      "path": "reviewed-full/end.json",
+      "sha256": "e27a2d61c6fbae0bc3deed67f41f65da289c603a444c091597ec5b88e947a01a"
+    },
+    {
+      "bytes": 11294,
+      "path": "reviewed-full/records/api-probe/errors.sarif",
+      "sha256": "ae1f2ca14540ce50151f1b132a820239cea80a11aaa6a3a3be30c95f4f7386b7"
+    },
+    {
+      "bytes": 104,
+      "path": "reviewed-full/records/api-probe/inputs/global.json",
+      "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+    },
+    {
+      "bytes": 40960,
+      "path": "reviewed-full/records/api-probe/inputs/library/LeanBridge.Nominalsubtypes.dll",
+      "sha256": "5e6aa126889f9bdd30432eb713f08d042e9c362c95aa6f4c9ce89e3357a06781"
+    },
+    {
+      "bytes": 129,
+      "path": "reviewed-full/records/api-probe/inputs/NuGet.Config",
+      "sha256": "22706d2be0373c832ef6a7900c13a08885512ccfed2d4a0940a4d9dd7bcc7ae4"
+    },
+    {
+      "bytes": 866,
+      "path": "reviewed-full/records/api-probe/inputs/probe.cs",
+      "sha256": "15da9e874c42566e819df90dec77e1647fdcad5b87706d1777effbede83ac9e3"
+    },
+    {
+      "bytes": 647,
+      "path": "reviewed-full/records/api-probe/inputs/Probe.csproj",
+      "sha256": "0a05135a35073b6d44ba9ad510f483693e4eca9715a919840813a684533b5107"
+    },
+    {
+      "bytes": 4608,
+      "path": "reviewed-full/records/api-probe/out/Probe.dll",
+      "sha256": "a00af656f3d314041718be2182a37b4083fdce4669747c3f44882c2ecb75198f"
+    },
+    {
+      "bytes": 2297,
+      "path": "reviewed-full/records/api-probe/processes.json",
+      "sha256": "cbdb51f74da31b656b774347ec17139af4146261ae717076039c6febc603017d"
+    },
+    {
+      "bytes": 12506,
+      "path": "reviewed-full/records/api-probe/record.json",
+      "sha256": "9b874e2144110993036f2cd8a0f8d8dcde64040019e0ecf020b5e58b05265e6b"
+    },
+    {
+      "bytes": 87211,
+      "path": "reviewed-full/records/build-0/api.binding-ir.json",
+      "sha256": "be260fc29f845b403fa730c80869993711104639443c83210c7cee432fbe8974"
+    },
+    {
+      "bytes": 1449,
+      "path": "reviewed-full/records/build-0/author-inputs.json",
+      "sha256": "c0d568578676f6b031139103d35934086e5df1715229f75a6dd1d855cc73a06c"
+    },
+    {
+      "bytes": 170,
+      "path": "reviewed-full/records/build-0/lean-bridge.exports.json",
+      "sha256": "ca4daf8bc482deeeaa059abd7a6a74bb3d65e234d65b15fa277792a99255d335"
+    },
+    {
+      "bytes": 401315,
+      "path": "reviewed-full/records/build-0/model.json",
+      "sha256": "e7600f4c9826af297cc03a4b1853e2b43219a077780c23073c917a3638099d30"
+    },
+    {
+      "bytes": 3005,
+      "path": "reviewed-full/records/build-0/NominalSubtypes.lean",
+      "sha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+    },
+    {
+      "bytes": 1129,
+      "path": "reviewed-full/records/build-0/package-set-receipt.json",
+      "sha256": "0af1889fa80381e9b876d6bb7596279919042c99488d93b58221d21a6d31bf70"
+    },
+    {
+      "bytes": 87211,
+      "path": "reviewed-full/records/build-1/api.binding-ir.json",
+      "sha256": "be260fc29f845b403fa730c80869993711104639443c83210c7cee432fbe8974"
+    },
+    {
+      "bytes": 1439,
+      "path": "reviewed-full/records/build-1/author-inputs.json",
+      "sha256": "65936eae829735d5992f1b2dfe14e186187f475ad2c7514712511fc896bc52b5"
+    },
+    {
+      "bytes": 170,
+      "path": "reviewed-full/records/build-1/lean-bridge.exports.json",
+      "sha256": "ca4daf8bc482deeeaa059abd7a6a74bb3d65e234d65b15fa277792a99255d335"
+    },
+    {
+      "bytes": 401315,
+      "path": "reviewed-full/records/build-1/model.json",
+      "sha256": "e7600f4c9826af297cc03a4b1853e2b43219a077780c23073c917a3638099d30"
+    },
+    {
+      "bytes": 3005,
+      "path": "reviewed-full/records/build-1/NominalSubtypes.lean",
+      "sha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+    },
+    {
+      "bytes": 1129,
+      "path": "reviewed-full/records/build-1/package-set-receipt.json",
+      "sha256": "0af1889fa80381e9b876d6bb7596279919042c99488d93b58221d21a6d31bf70"
+    },
+    {
+      "bytes": 170,
+      "path": "reviewed-full/records/configuration.json",
+      "sha256": "ca4daf8bc482deeeaa059abd7a6a74bb3d65e234d65b15fa277792a99255d335"
+    },
+    {
+      "bytes": 203,
+      "path": "reviewed-full/records/consumer-environment/cache/.nupkg.metadata",
+      "sha256": "3413d3e3228638c9d2f9fbbf193cf692c1f88d0f7da29df5065791ad9d59e6f2"
+    },
+    {
+      "bytes": 88,
+      "path": "reviewed-full/records/consumer-environment/cache/nominalsubtypes.api.1.0.0.nupkg.sha512",
+      "sha256": "994a80801d37cbe1ada248fe96fed58d42ed57bcb6ed77b0cb9c65ec54d59886"
+    },
+    {
+      "bytes": 477,
+      "path": "reviewed-full/records/consumer-environment/cache/nominalsubtypes.api.nuspec",
+      "sha256": "71d4d82df0eadd9ce05068e8a94de5baed72bea5c23d4a88817d6afb5a694fdb"
+    },
+    {
+      "bytes": 14221,
+      "path": "reviewed-full/records/consumer-environment/consumer.cs",
+      "sha256": "637700e3b79661c2dc2a1800a51655004f302861b8a24e74177c17f2b67b667f"
+    },
+    {
+      "bytes": 509,
+      "path": "reviewed-full/records/consumer-environment/Consumer.csproj",
+      "sha256": "56801260b591768d9c4f36a57d02fe52b1eefb282b2a339d84b2be5f5ad234cd"
+    },
+    {
+      "bytes": 104,
+      "path": "reviewed-full/records/consumer-environment/global.json",
+      "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+    },
+    {
+      "bytes": 163,
+      "path": "reviewed-full/records/consumer-environment/NuGet.Config",
+      "sha256": "e5dfa74aa48869dd2bafb18e20e440493a866c00eeb4710769f3422d0e6cba25"
+    },
+    {
+      "bytes": 2230,
+      "path": "reviewed-full/records/consumer-environment/obj/Consumer.csproj.nuget.dgspec.json",
+      "sha256": "d9e90a37aaf6e6946e2eb6919ac16987ea5c05acca24d15588b4e3f49c0d5901"
+    },
+    {
+      "bytes": 1222,
+      "path": "reviewed-full/records/consumer-environment/obj/Consumer.csproj.nuget.g.props",
+      "sha256": "4085b1aa26a0e08f507ec09930e2210e76d0298d3d620e914fdf4e2bd211a6db"
+    },
+    {
+      "bytes": 149,
+      "path": "reviewed-full/records/consumer-environment/obj/Consumer.csproj.nuget.g.targets",
+      "sha256": "b14461e0cb1be3f77fcf9fe2fdd62889325ca92523d0f606980ed59eb5c4aa1c"
+    },
+    {
+      "bytes": 5067,
+      "path": "reviewed-full/records/consumer-environment/obj/project.assets.json",
+      "sha256": "4c7152055a02de74e84ead17357ac9627f2caabe4265c2065e0d74d8ee3b7e25"
+    },
+    {
+      "bytes": 348,
+      "path": "reviewed-full/records/consumer-environment/obj/project.nuget.cache",
+      "sha256": "089487bd905ceaf7bb51426c449928d89325dd8de3979ba2f62d234419aeefe7"
+    },
+    {
+      "bytes": 1779,
+      "path": "reviewed-full/records/consumer-environment/out/Consumer.deps.json",
+      "sha256": "0e54c18797ad2a6dfc0d8fa4cba375106745f014af1aa84065474df3f506eb88"
+    },
+    {
+      "bytes": 23552,
+      "path": "reviewed-full/records/consumer-environment/out/Consumer.dll",
+      "sha256": "e3abae251b06df1c0e2ef837e250b27c0aadb0bcd5fa3572f8cbdc154b7ad64b"
+    },
+    {
+      "bytes": 13504,
+      "path": "reviewed-full/records/consumer-environment/out/Consumer.pdb",
+      "sha256": "48810ecb3279b100992cbfca1757fea759c69d5c8b483f4464d613edc70b2609"
+    },
+    {
+      "bytes": 257,
+      "path": "reviewed-full/records/consumer-environment/out/Consumer.runtimeconfig.json",
+      "sha256": "088bcc1a867d80d3923a812855f7ae9297fc8ac3d844cf9a83510bd8d1352af8"
+    },
+    {
+      "bytes": 14221,
+      "path": "reviewed-full/records/consumer.cs",
+      "sha256": "637700e3b79661c2dc2a1800a51655004f302861b8a24e74177c17f2b67b667f"
+    },
+    {
+      "bytes": 87211,
+      "path": "reviewed-full/records/expected.binding-ir.json",
+      "sha256": "be260fc29f845b403fa730c80869993711104639443c83210c7cee432fbe8974"
+    },
+    {
+      "bytes": 154626,
+      "path": "reviewed-full/records/installation.json",
+      "sha256": "a61a58f0e37cc68a69b10df36bfc7c3acab0f88c47c658e6030d8244a93c36b7"
+    },
+    {
+      "bytes": 2142,
+      "path": "reviewed-full/records/installed.json",
+      "sha256": "28157cd7c6f8639ee67cb92518c10774ffb4f65edd0b21d24b2064c242860fab"
+    },
+    {
+      "bytes": 10660,
+      "path": "reviewed-full/records/nuget.json",
+      "sha256": "270e243070278593a978cd5336166eed5b6f00d94cef1f3bcae7b6d0d7bd35dc"
+    },
+    {
+      "bytes": 263,
+      "path": "reviewed-full/records/package/_rels/.rels",
+      "sha256": "c9b42c33fe88344e9d5c5c48873732ec1da2fc7b15ceb2ef7fc65d096042f5ec"
+    },
+    {
+      "bytes": 939,
+      "path": "reviewed-full/records/package/[Content_Types].xml",
+      "sha256": "f40a2ae0edf63af7046ff54e97e247dd6b2cf07e5d650a8b6d9c51370378b42b"
+    },
+    {
+      "bytes": 1309,
+      "path": "reviewed-full/records/package/lean-bridge/component/allocation-guard.h",
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    {
+      "bytes": 1537,
+      "path": "reviewed-full/records/package/lean-bridge/component/artifacts.json",
+      "sha256": "eb18805240ef096d748cd69ef783c13a472be170af76399a75397e87b2028845"
+    },
+    {
+      "bytes": 116981,
+      "path": "reviewed-full/records/package/lean-bridge/component/binding-ir.json",
+      "sha256": "edf27a56ca7e72d0506b3d22d9b7d365941e43f9613d53870a86dde059c0b7b1"
+    },
+    {
+      "bytes": 6124,
+      "path": "reviewed-full/records/package/lean-bridge/component/component.h",
+      "sha256": "32cf90bde70a5eb36d5d674520219de85396b87c4b82bbbe9d016ecc38fb51e5"
+    },
+    {
+      "bytes": 30168,
+      "path": "reviewed-full/records/package/lean-bridge/component/generated.lean",
+      "sha256": "943f6d6e5dfde224bd0aa9fbef4b3d53f2169ffb5c0492bf519c54a9a5f1ea4e"
+    },
+    {
+      "bytes": 192906,
+      "path": "reviewed-full/records/package/lean-bridge/component/metadata.json",
+      "sha256": "ead92efb302400d55bfed0f11b42046e1c3cfe340648babc7bf487d964f64b89"
+    },
+    {
+      "bytes": 401315,
+      "path": "reviewed-full/records/package/lean-bridge/component/model.json",
+      "sha256": "e7600f4c9826af297cc03a4b1853e2b43219a077780c23073c917a3638099d30"
+    },
+    {
+      "bytes": 125350,
+      "path": "reviewed-full/records/package/lean-bridge/component/native-component.json",
+      "sha256": "5cf632919b39d3c6748a0a7ac933d7e3afb88b70323cd3f33200a7e0a84c59f0"
+    },
+    {
+      "bytes": 1480,
+      "path": "reviewed-full/records/package/lean-bridge/dotnet/binding-manifest.json",
+      "sha256": "d281a3701bac7e959e610e4d2282c4d42308b69fbee73a946bf24fd528e6eaaf"
+    },
+    {
+      "bytes": 104,
+      "path": "reviewed-full/records/package/lean-bridge/dotnet/global.json",
+      "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+    },
+    {
+      "bytes": 20177,
+      "path": "reviewed-full/records/package/lean-bridge/dotnet/src/LeanBridge.Nominalsubtypes/Api.cs",
+      "sha256": "947db42949a25a28e1969f9b7ff5025f1c973f5149a1f1970665885a73691b08"
+    },
+    {
+      "bytes": 611,
+      "path": "reviewed-full/records/package/lean-bridge/dotnet/src/LeanBridge.Nominalsubtypes/LeanBridge.Nominalsubtypes.csproj",
+      "sha256": "642174ac6dfe52d1edc06682e750be4e82b136b6a912bd44e2fbe97d1806704b"
+    },
+    {
+      "bytes": 47502,
+      "path": "reviewed-full/records/package/lean-bridge/dotnet/src/LeanBridge.Nominalsubtypes/Runtime.cs",
+      "sha256": "76eabd5ef3acbb594f7917a74166dee86a17c2e7a8c33a9ffb42a4cb716e09ec"
+    },
+    {
+      "bytes": 9160,
+      "path": "reviewed-full/records/package/lean-bridge/licenses/Lean-LICENSE",
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    {
+      "bytes": 81854,
+      "path": "reviewed-full/records/package/lean-bridge/licenses/Lean-LICENSES",
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    {
+      "bytes": 1093,
+      "path": "reviewed-full/records/package/lean-bridge/licenses/LeanBridge-LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 2094,
+      "path": "reviewed-full/records/package/lean-bridge/licenses/source-notices.json",
+      "sha256": "6cfc555325633141845f3f61ff601e2082d47305c5deb436567df14db2133762"
+    },
+    {
+      "bytes": 1093,
+      "path": "reviewed-full/records/package/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 1386,
+      "path": "reviewed-full/records/package/lean-bridge/native-c-adapter.json",
+      "sha256": "22882922babcf3ad4838960bc1336b61ad65035ef1177b157a86405c09167279"
+    },
+    {
+      "bytes": 2490,
+      "path": "reviewed-full/records/package/lean-bridge/native-dotnet.json",
+      "sha256": "c770ec30c36eb1a3aebe78aba7b51809ca7525b5a2f45fe7b6256f38dad79bc9"
+    },
+    {
+      "bytes": 127218,
+      "path": "reviewed-full/records/package/lean-bridge/package-receipt.json",
+      "sha256": "40fe1fa71db2e3498c36c01f36fafdd97a67510f9f1478b0155ef535a71ad41d"
+    },
+    {
+      "bytes": 1466,
+      "path": "reviewed-full/records/package/lean-bridge/runtime.json",
+      "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    },
+    {
+      "bytes": 18363,
+      "path": "reviewed-full/records/package/lib/net8.0/LeanBridge.Nominalsubtypes.xml",
+      "sha256": "c941586609919ea091a8691de0468a4dfc5af9d2a2ddcfc2952248e0a3916456"
+    },
+    {
+      "bytes": 477,
+      "path": "reviewed-full/records/package/Nominalsubtypes.Api.nuspec",
+      "sha256": "71d4d82df0eadd9ce05068e8a94de5baed72bea5c23d4a88817d6afb5a694fdb"
+    },
+    {
+      "bytes": 11371,
+      "path": "reviewed-full/records/package/README.md",
+      "sha256": "74cd3420d4f19ae163e052cee67f2016d0becf96addfe12a34d9ce06f034ae8f"
+    },
+    {
+      "bytes": 2162,
+      "path": "reviewed-full/records/relocated.json",
+      "sha256": "8f47c28b85a9f83e7f871dfab09b03253994b3d2ebaf8c0cd39eba9b8a6d726a"
+    },
+    {
+      "bytes": 36346,
+      "path": "reviewed-full/records/report.json",
+      "sha256": "b08d7a96be3893ab6823381bcb9fb3ec307eca1f8126d6b97f75fb76c9122004"
+    },
+    {
+      "bytes": 645,
+      "path": "reviewed-full/records/resources.json",
+      "sha256": "e99e4dc0f4e6fc7130901c82a443ece9c0643cc798d02d825b15cb178a6b8967"
+    },
+    {
+      "bytes": 123,
+      "path": "reviewed-full/records/runtime.json",
+      "sha256": "c2f1b9d72bf412b57880eaf2e5f14f071577bea6210298d5c0d82c529f20d81e"
+    },
+    {
+      "bytes": 1709,
+      "path": "reviewed-full/records/source-free.json",
+      "sha256": "3d723497d49416ddbe2b55066c67ee27c0cf1b599fe5bd51569fe4e6d1e343df"
+    },
+    {
+      "bytes": 1321,
+      "path": "reviewed-full/records/toolchain.json",
+      "sha256": "11fd038c68c48886074715eaf141901e0d98be67fcea2fd74abe6b3580171bae"
+    },
+    {
+      "bytes": 438,
+      "path": "reviewed-full/run.tap",
+      "sha256": "121aac88f7ed09b36f8914a8ec12b5ccc1262d30a0a7739051f20cf926dd315b"
+    },
+    {
+      "bytes": 1218,
+      "path": "reviewed-full/start.json",
+      "sha256": "920b039d5c2138ea1679641f3634f1f62694e27b24eb8aecd267e27b6d8c68fa"
+    },
+    {
+      "bytes": 329,
+      "path": "reviewed-result-only/end.json",
+      "sha256": "a2f93d96810fd37511872a2ca095773c9dccdb5fd9002f4df0d16bc6e0b1657e"
+    },
+    {
+      "bytes": 10882,
+      "path": "reviewed-result-only/records/api-probe/errors.sarif",
+      "sha256": "298084cdfe4a657aec23ae78bde739fb5cb335eeea0f6dcf30a5cc3bf95bb5de"
+    },
+    {
+      "bytes": 104,
+      "path": "reviewed-result-only/records/api-probe/inputs/global.json",
+      "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+    },
+    {
+      "bytes": 35840,
+      "path": "reviewed-result-only/records/api-probe/inputs/library/LeanBridge.Nominalsubtypes.dll",
+      "sha256": "02c950efe2d4be6bef13eeaa6738fae80717a7e8c883444c18ed087e16fe4ae9"
+    },
+    {
+      "bytes": 129,
+      "path": "reviewed-result-only/records/api-probe/inputs/NuGet.Config",
+      "sha256": "22706d2be0373c832ef6a7900c13a08885512ccfed2d4a0940a4d9dd7bcc7ae4"
+    },
+    {
+      "bytes": 866,
+      "path": "reviewed-result-only/records/api-probe/inputs/probe.cs",
+      "sha256": "15da9e874c42566e819df90dec77e1647fdcad5b87706d1777effbede83ac9e3"
+    },
+    {
+      "bytes": 647,
+      "path": "reviewed-result-only/records/api-probe/inputs/Probe.csproj",
+      "sha256": "0a05135a35073b6d44ba9ad510f483693e4eca9715a919840813a684533b5107"
+    },
+    {
+      "bytes": 8274,
+      "path": "reviewed-result-only/records/api-probe/processes.json",
+      "sha256": "78b1859d6326e39b5f1e293d5f8048b0aebf3e4f5cfcada206a3e9cf8435c2a4"
+    },
+    {
+      "bytes": 18146,
+      "path": "reviewed-result-only/records/api-probe/record.json",
+      "sha256": "09656ec8d9a9f546f0c7e39ed1ab09474577906f8a2da3fb2eaae837e91a1562"
+    },
+    {
+      "bytes": 38880,
+      "path": "reviewed-result-only/records/build-0/api.binding-ir.json",
+      "sha256": "9846960a169a460df677ff7770ad4056a3cf9afb5eaedd274a6064fbd25930ab"
+    },
+    {
+      "bytes": 1449,
+      "path": "reviewed-result-only/records/build-0/author-inputs.json",
+      "sha256": "7899511d95bcb12b1ef4ee319814a43ee651cc2fce19a7d04b55d0281f502a19"
+    },
+    {
+      "bytes": 170,
+      "path": "reviewed-result-only/records/build-0/lean-bridge.exports.json",
+      "sha256": "ca4daf8bc482deeeaa059abd7a6a74bb3d65e234d65b15fa277792a99255d335"
+    },
+    {
+      "bytes": 156460,
+      "path": "reviewed-result-only/records/build-0/model.json",
+      "sha256": "0c18981b10b4e1870b180746bff8336c2ef9a38e4582e4835a543886a36e719e"
+    },
+    {
+      "bytes": 3005,
+      "path": "reviewed-result-only/records/build-0/NominalSubtypes.lean",
+      "sha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+    },
+    {
+      "bytes": 1129,
+      "path": "reviewed-result-only/records/build-0/package-set-receipt.json",
+      "sha256": "8d1de5d2a8fc2b02cc66f8f6fcc1b7c3bcaef7a060c7507bf40467e34d9c6bf9"
+    },
+    {
+      "bytes": 38880,
+      "path": "reviewed-result-only/records/build-1/api.binding-ir.json",
+      "sha256": "9846960a169a460df677ff7770ad4056a3cf9afb5eaedd274a6064fbd25930ab"
+    },
+    {
+      "bytes": 1449,
+      "path": "reviewed-result-only/records/build-1/author-inputs.json",
+      "sha256": "dbbbab388d2cb6301b9c3b9ebedf438a4255582cea1afddff06313ab2d178e22"
+    },
+    {
+      "bytes": 170,
+      "path": "reviewed-result-only/records/build-1/lean-bridge.exports.json",
+      "sha256": "ca4daf8bc482deeeaa059abd7a6a74bb3d65e234d65b15fa277792a99255d335"
+    },
+    {
+      "bytes": 156460,
+      "path": "reviewed-result-only/records/build-1/model.json",
+      "sha256": "0c18981b10b4e1870b180746bff8336c2ef9a38e4582e4835a543886a36e719e"
+    },
+    {
+      "bytes": 3005,
+      "path": "reviewed-result-only/records/build-1/NominalSubtypes.lean",
+      "sha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+    },
+    {
+      "bytes": 1129,
+      "path": "reviewed-result-only/records/build-1/package-set-receipt.json",
+      "sha256": "8d1de5d2a8fc2b02cc66f8f6fcc1b7c3bcaef7a060c7507bf40467e34d9c6bf9"
+    },
+    {
+      "bytes": 170,
+      "path": "reviewed-result-only/records/configuration.json",
+      "sha256": "ca4daf8bc482deeeaa059abd7a6a74bb3d65e234d65b15fa277792a99255d335"
+    },
+    {
+      "bytes": 203,
+      "path": "reviewed-result-only/records/consumer-environment/cache/.nupkg.metadata",
+      "sha256": "fad4dc54675c30833b4ecb1590af2e668f50ec66c6987709cdc9a0d44c2f5788"
+    },
+    {
+      "bytes": 88,
+      "path": "reviewed-result-only/records/consumer-environment/cache/nominalsubtypes.api.1.0.0.nupkg.sha512",
+      "sha256": "71dc90f785d3f97daef12f05d89e3b74710be4650c26846f917839ee2de9ada2"
+    },
+    {
+      "bytes": 477,
+      "path": "reviewed-result-only/records/consumer-environment/cache/nominalsubtypes.api.nuspec",
+      "sha256": "71d4d82df0eadd9ce05068e8a94de5baed72bea5c23d4a88817d6afb5a694fdb"
+    },
+    {
+      "bytes": 14241,
+      "path": "reviewed-result-only/records/consumer-environment/consumer.cs",
+      "sha256": "5ecf1b4a04587c2d75b561e323bfbc72c8619484d36fb2e5aa8ec65da8a2f46b"
+    },
+    {
+      "bytes": 509,
+      "path": "reviewed-result-only/records/consumer-environment/Consumer.csproj",
+      "sha256": "56801260b591768d9c4f36a57d02fe52b1eefb282b2a339d84b2be5f5ad234cd"
+    },
+    {
+      "bytes": 104,
+      "path": "reviewed-result-only/records/consumer-environment/global.json",
+      "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+    },
+    {
+      "bytes": 163,
+      "path": "reviewed-result-only/records/consumer-environment/NuGet.Config",
+      "sha256": "e5dfa74aa48869dd2bafb18e20e440493a866c00eeb4710769f3422d0e6cba25"
+    },
+    {
+      "bytes": 2230,
+      "path": "reviewed-result-only/records/consumer-environment/obj/Consumer.csproj.nuget.dgspec.json",
+      "sha256": "9d36404c2aa180478300fc734b8fbc86db519b6bd80dd8b3442ed0c4061b2601"
+    },
+    {
+      "bytes": 1222,
+      "path": "reviewed-result-only/records/consumer-environment/obj/Consumer.csproj.nuget.g.props",
+      "sha256": "9cc105b4dc3e8dba9244a02f1e53ebc343e4f7f3b436c2012030d3c67714c931"
+    },
+    {
+      "bytes": 149,
+      "path": "reviewed-result-only/records/consumer-environment/obj/Consumer.csproj.nuget.g.targets",
+      "sha256": "b14461e0cb1be3f77fcf9fe2fdd62889325ca92523d0f606980ed59eb5c4aa1c"
+    },
+    {
+      "bytes": 5067,
+      "path": "reviewed-result-only/records/consumer-environment/obj/project.assets.json",
+      "sha256": "73f3d3ba2b08afd4c82a66cef8b7b96f806d28c2cae929cdc0986a8459c90f7a"
+    },
+    {
+      "bytes": 348,
+      "path": "reviewed-result-only/records/consumer-environment/obj/project.nuget.cache",
+      "sha256": "40988c7c7d8bbf5a6adb387efdcda2d1cd2838f5ff22950fe6b0be20ab841386"
+    },
+    {
+      "bytes": 1779,
+      "path": "reviewed-result-only/records/consumer-environment/out/Consumer.deps.json",
+      "sha256": "faf3ec80b1f161de4d400f9c1bad728f1c1a6e35d35630546205f3913e50db6e"
+    },
+    {
+      "bytes": 16384,
+      "path": "reviewed-result-only/records/consumer-environment/out/Consumer.dll",
+      "sha256": "003779533296eedc7106782cffa97d728ce6d1a45479742fef6e2b7ae6a132d9"
+    },
+    {
+      "bytes": 12268,
+      "path": "reviewed-result-only/records/consumer-environment/out/Consumer.pdb",
+      "sha256": "22d4f2162823a137eceddbc6699724f28f8d61236a176e6c606e128b5f58f6ff"
+    },
+    {
+      "bytes": 257,
+      "path": "reviewed-result-only/records/consumer-environment/out/Consumer.runtimeconfig.json",
+      "sha256": "088bcc1a867d80d3923a812855f7ae9297fc8ac3d844cf9a83510bd8d1352af8"
+    },
+    {
+      "bytes": 14241,
+      "path": "reviewed-result-only/records/consumer.cs",
+      "sha256": "5ecf1b4a04587c2d75b561e323bfbc72c8619484d36fb2e5aa8ec65da8a2f46b"
+    },
+    {
+      "bytes": 38880,
+      "path": "reviewed-result-only/records/expected.binding-ir.json",
+      "sha256": "9846960a169a460df677ff7770ad4056a3cf9afb5eaedd274a6064fbd25930ab"
+    },
+    {
+      "bytes": 69458,
+      "path": "reviewed-result-only/records/installation.json",
+      "sha256": "f374a675ffbf35a058ccbea44e1c043552f74ff0fcca92b6ae6900cb7241f8ca"
+    },
+    {
+      "bytes": 2136,
+      "path": "reviewed-result-only/records/installed.json",
+      "sha256": "c2346f1832c6ef61000a75ef1464c82d6e187edc3098fa014bd508f9386b8fe0"
+    },
+    {
+      "bytes": 10652,
+      "path": "reviewed-result-only/records/nuget.json",
+      "sha256": "fae3590993b63d1bbec835c74d7ad294e584908175edb6460a38ec3b424d7dfe"
+    },
+    {
+      "bytes": 263,
+      "path": "reviewed-result-only/records/package/_rels/.rels",
+      "sha256": "c9b42c33fe88344e9d5c5c48873732ec1da2fc7b15ceb2ef7fc65d096042f5ec"
+    },
+    {
+      "bytes": 939,
+      "path": "reviewed-result-only/records/package/[Content_Types].xml",
+      "sha256": "f40a2ae0edf63af7046ff54e97e247dd6b2cf07e5d650a8b6d9c51370378b42b"
+    },
+    {
+      "bytes": 1309,
+      "path": "reviewed-result-only/records/package/lean-bridge/component/allocation-guard.h",
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    {
+      "bytes": 1533,
+      "path": "reviewed-result-only/records/package/lean-bridge/component/artifacts.json",
+      "sha256": "6d10ed40b56640ee79f80273d07e3bb2c735bb77f6e6e7cf1ee781017673dba8"
+    },
+    {
+      "bytes": 42197,
+      "path": "reviewed-result-only/records/package/lean-bridge/component/binding-ir.json",
+      "sha256": "dd2592a54811d6d900290cb4a300d3e0941ababc7d63370de3d12a7b3b9efefc"
+    },
+    {
+      "bytes": 3303,
+      "path": "reviewed-result-only/records/package/lean-bridge/component/component.h",
+      "sha256": "f0fe98df9ed9ca90cbf44c0062b17a0c6985ca3e8fab8cef88252be17f30c0a9"
+    },
+    {
+      "bytes": 12624,
+      "path": "reviewed-result-only/records/package/lean-bridge/component/generated.lean",
+      "sha256": "90b03d3434832236548a7201bc65678a0551a3130408e541af4cec161d93d57b"
+    },
+    {
+      "bytes": 88065,
+      "path": "reviewed-result-only/records/package/lean-bridge/component/metadata.json",
+      "sha256": "6030d980784b6c8f6f47cc5e6f0ea563a3667cedcbbbd319528964da19350bb1"
+    },
+    {
+      "bytes": 156460,
+      "path": "reviewed-result-only/records/package/lean-bridge/component/model.json",
+      "sha256": "0c18981b10b4e1870b180746bff8336c2ef9a38e4582e4835a543886a36e719e"
+    },
+    {
+      "bytes": 48574,
+      "path": "reviewed-result-only/records/package/lean-bridge/component/native-component.json",
+      "sha256": "89a8a93e6a32a841d7748d3bb0f6fdb6ec14d174c0c20a9e7643c6948571867b"
+    },
+    {
+      "bytes": 1480,
+      "path": "reviewed-result-only/records/package/lean-bridge/dotnet/binding-manifest.json",
+      "sha256": "fc250d3904a2fb31c4239408535305552ed6ed57d637cb0470592bd5dfda3aba"
+    },
+    {
+      "bytes": 104,
+      "path": "reviewed-result-only/records/package/lean-bridge/dotnet/global.json",
+      "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+    },
+    {
+      "bytes": 12850,
+      "path": "reviewed-result-only/records/package/lean-bridge/dotnet/src/LeanBridge.Nominalsubtypes/Api.cs",
+      "sha256": "9c3ca9f8d7f399f08db12821796d5cfdd3033901be39c5314a6713f2df286830"
+    },
+    {
+      "bytes": 611,
+      "path": "reviewed-result-only/records/package/lean-bridge/dotnet/src/LeanBridge.Nominalsubtypes/LeanBridge.Nominalsubtypes.csproj",
+      "sha256": "642174ac6dfe52d1edc06682e750be4e82b136b6a912bd44e2fbe97d1806704b"
+    },
+    {
+      "bytes": 37533,
+      "path": "reviewed-result-only/records/package/lean-bridge/dotnet/src/LeanBridge.Nominalsubtypes/Runtime.cs",
+      "sha256": "dc6bbfb9b074ba6d8fed9db6fdaafdc011f2a2accc0e9035703fbc70b6a0927e"
+    },
+    {
+      "bytes": 9160,
+      "path": "reviewed-result-only/records/package/lean-bridge/licenses/Lean-LICENSE",
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    {
+      "bytes": 81854,
+      "path": "reviewed-result-only/records/package/lean-bridge/licenses/Lean-LICENSES",
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    {
+      "bytes": 1093,
+      "path": "reviewed-result-only/records/package/lean-bridge/licenses/LeanBridge-LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 2094,
+      "path": "reviewed-result-only/records/package/lean-bridge/licenses/source-notices.json",
+      "sha256": "b1631260ab74da8bf593c12de425244cf2e3408916d34d3f2fb802b77046c278"
+    },
+    {
+      "bytes": 1093,
+      "path": "reviewed-result-only/records/package/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 1383,
+      "path": "reviewed-result-only/records/package/lean-bridge/native-c-adapter.json",
+      "sha256": "dfc4227db85b01e6e757b2f8f501830f4cfcd4b0a6a9745e9d67e3f8536f7681"
+    },
+    {
+      "bytes": 2489,
+      "path": "reviewed-result-only/records/package/lean-bridge/native-dotnet.json",
+      "sha256": "9cd98b659c564c3e5a59f9a6b16fd8675ec9737d592e8e228a16ae6d12eddea9"
+    },
+    {
+      "bytes": 51844,
+      "path": "reviewed-result-only/records/package/lean-bridge/package-receipt.json",
+      "sha256": "0b7c3b144a790dc4d0bdc6b2fed70d6b176475c96176c03e5553002786d13ab2"
+    },
+    {
+      "bytes": 1466,
+      "path": "reviewed-result-only/records/package/lean-bridge/runtime.json",
+      "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    },
+    {
+      "bytes": 10647,
+      "path": "reviewed-result-only/records/package/lib/net8.0/LeanBridge.Nominalsubtypes.xml",
+      "sha256": "0188f71f1243d2d57e1e54ebc09a9bfabc05f4ba4f6713b2dcba117ed1c731fe"
+    },
+    {
+      "bytes": 477,
+      "path": "reviewed-result-only/records/package/Nominalsubtypes.Api.nuspec",
+      "sha256": "71d4d82df0eadd9ce05068e8a94de5baed72bea5c23d4a88817d6afb5a694fdb"
+    },
+    {
+      "bytes": 8533,
+      "path": "reviewed-result-only/records/package/README.md",
+      "sha256": "ff5576b0f602a853ee79b56eadfecdf80b22f70f25184050becb525ea09f4ef7"
+    },
+    {
+      "bytes": 2156,
+      "path": "reviewed-result-only/records/relocated.json",
+      "sha256": "5316cfa9c24fef7380f28e78a2b0df00d1ca02950b5669be00b004dd286b4204"
+    },
+    {
+      "bytes": 43592,
+      "path": "reviewed-result-only/records/report.json",
+      "sha256": "96aa7c35d14e23fbca0349a2ab5c4df2fbe3b65d897873e3b98413d58788e56e"
+    },
+    {
+      "bytes": 1960,
+      "path": "reviewed-result-only/records/resources.json",
+      "sha256": "9fb559966203842c67b4fd617de4386b69f9bf479a101f1ae4c32cee71f2e294"
+    },
+    {
+      "bytes": 123,
+      "path": "reviewed-result-only/records/runtime.json",
+      "sha256": "c2f1b9d72bf412b57880eaf2e5f14f071577bea6210298d5c0d82c529f20d81e"
+    },
+    {
+      "bytes": 1703,
+      "path": "reviewed-result-only/records/source-free.json",
+      "sha256": "67b46fe223b081139dbc7700bdcb4fc62ee081e57f862d1e2a4f4da0ff5784a9"
+    },
+    {
+      "bytes": 1321,
+      "path": "reviewed-result-only/records/toolchain.json",
+      "sha256": "2a3edfe805b844e2452683d3ebfb97e55c7b5d2151d51f20ac678cc1483fbe86"
+    },
+    {
+      "bytes": 1238,
+      "path": "reviewed-result-only/run.tap",
+      "sha256": "6f6f415f0672373983c9bef567d03b94928ce7b44159173b465a24d591ca5c5d"
+    },
+    {
+      "bytes": 1240,
+      "path": "reviewed-result-only/start.json",
+      "sha256": "c8332f7059f7c8c33a00d2f2c74f91a6900259c61b289939587addc887a41fbb"
+    },
+    {
+      "bytes": 4147,
+      "path": "runner.mjs",
+      "sha256": "9dcef9acd9d88fbc310439685953f4d3e752670a0921575b674071a83ac0273d"
+    },
+    {
+      "bytes": 4437,
+      "path": "sources/src/abi/component-scalars.mjs",
+      "sha256": "745058db0327c9060222ff58d45c272595e23125c2169d80287ff9035cf3608e"
+    },
+    {
+      "bytes": 5961,
+      "path": "sources/src/abi/generic-specialization.mjs",
+      "sha256": "5c7472382e4426adf5f280037965d39d7eb16949414db80226ee5962dca05df9"
+    },
+    {
+      "bytes": 8556,
+      "path": "sources/src/abi/refinements.mjs",
+      "sha256": "57fcd7bfa6c2ae7b7d696c1c95a88282c725fef2c15486744e683c258fa2ce07"
+    },
+    {
+      "bytes": 99428,
+      "path": "sources/src/analyze/NativeExports.lean",
+      "sha256": "a6e5738d497fa57e2ff7eb98d2da7761277dc72c6584802909c3a4960c6ee6f3"
+    },
+    {
+      "bytes": 45870,
+      "path": "sources/src/backends/c/generate.mjs",
+      "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
+    },
+    {
+      "bytes": 3006,
+      "path": "sources/src/backends/c/package-audit.mjs",
+      "sha256": "bbcc42ebdc6c7d69e46860e48bbc1573e70af04ca8cb85ce4123496788b5395c"
+    },
+    {
+      "bytes": 11921,
+      "path": "sources/src/backends/c/primitive-surface.mjs",
+      "sha256": "893d7f649bf489c766e5d38f04ce4e1b7cb7967acc8f63bf6f82b9b6f5cd64df"
+    },
+    {
+      "bytes": 11143,
+      "path": "sources/src/backends/dotnet/callables.mjs",
+      "sha256": "5f667b3c8738b53c9a1c5bc6c8212eab01a4ba055e7e390d6334d8e05885bac0"
+    },
+    {
+      "bytes": 3582,
+      "path": "sources/src/backends/dotnet/copied-aliases.mjs",
+      "sha256": "c39fd9bcc52691dd0c024e5c1e6686fba2cfdb1d966337029b97857ebcd70c9e"
+    },
+    {
+      "bytes": 14044,
+      "path": "sources/src/backends/dotnet/copied-conversions.mjs",
+      "sha256": "c61e403a86d9dfbd76f6e28a96eb3006c5ea360192e92928b7d05d26ae3b5e77"
+    },
+    {
+      "bytes": 6501,
+      "path": "sources/src/backends/dotnet/copied-model.mjs",
+      "sha256": "ae2c93521614952d4c96748e8d5bdabb803f1a4663299cf3542ddd0add073d4b"
+    },
+    {
+      "bytes": 16397,
+      "path": "sources/src/backends/dotnet/copied-values.mjs",
+      "sha256": "b4ec94f1da85ad3cab476520ca0ce19d1e4807c54dab25fef7370c46295fc82c"
+    },
+    {
+      "bytes": 11610,
+      "path": "sources/src/backends/dotnet/verified-assets.mjs",
+      "sha256": "972aa8ddd973f71fa7e8177fcada0eceaf567c1d3b4519da0591157f646332ff"
+    },
+    {
+      "bytes": 16607,
+      "path": "sources/src/backends/native/fin-refinements.mjs",
+      "sha256": "ed719cbb1d4de13a9bbd110703eb0fffb4d2cea356fdc91bcdfbbed0b89039c3"
+    },
+    {
+      "bytes": 9938,
+      "path": "sources/src/binding-ir/canonical.mjs",
+      "sha256": "28e22e614fc532a99baeeb34ee9d054f3bc6db82239fa89059a9518cb06d3d20"
+    },
+    {
+      "bytes": 46487,
+      "path": "sources/src/binding-ir/contract.mjs",
+      "sha256": "51f39115f198cadb22edcee1bc09d9205024c1ba622f86588056bca7aac6faf6"
+    },
+    {
+      "bytes": 3297,
+      "path": "sources/src/binding-ir/sha256.mjs",
+      "sha256": "f9bcbce580e88f31c3a63e8aa0d1d834228afa796a74a4c2f708da68e99a15ac"
+    },
+    {
+      "bytes": 19177,
+      "path": "sources/src/capsule/contract.mjs",
+      "sha256": "590f6758e4b25f7a73e04333276facec891fd26debd2fa5621e183b27ca6082f"
+    },
+    {
+      "bytes": 3332,
+      "path": "sources/src/capsule/node.mjs",
+      "sha256": "2ffbff5c27dbdd89fac9dd6ce5a1a3082430c9bdfbdcc3908941eaf1d009fb1b"
+    },
+    {
+      "bytes": 14189,
+      "path": "sources/tests/fixtures/nominal-subtype-consumers/dotnet.cs",
+      "sha256": "ec8d61d88e26310c2499d757200b0abd629b2464b2ac5f3b0bb9f62f867d5635"
+    },
+    {
+      "bytes": 81,
+      "path": "sources/tests/fixtures/onboarding/nominal-subtypes/lakefile.toml",
+      "sha256": "c29eeed5f6f853d55bb7100b160d0ec0224fd7375f5b05c87381326b60112d29"
+    },
+    {
+      "bytes": 25,
+      "path": "sources/tests/fixtures/onboarding/nominal-subtypes/lean-toolchain",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "bytes": 1093,
+      "path": "sources/tests/fixtures/onboarding/nominal-subtypes/LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 3005,
+      "path": "sources/tests/fixtures/onboarding/nominal-subtypes/NominalSubtypes.lean",
+      "sha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+    },
+    {
+      "bytes": 61,
+      "path": "sources/tests/fixtures/onboarding/nominal-subtypes/package.json",
+      "sha256": "9662c63237f11b189dddbbdf22ed631a7804aae99235d3f595e4b3ed5ebda9f0"
+    },
+    {
+      "bytes": 4345,
+      "path": "sources/tests/helpers/closed-package-zip.mjs",
+      "sha256": "c0195e5c1145f1a9b8bdcbbd5f55a1477886714e1633fd2593687fdb6e45bdcf"
+    },
+    {
+      "bytes": 15505,
+      "path": "sources/tests/helpers/copied-fixture-install.mjs",
+      "sha256": "dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df"
+    },
+    {
+      "bytes": 14369,
+      "path": "sources/tests/helpers/fin-container-edge-dotnet-closure.mjs",
+      "sha256": "3b8ef4a910a6d095fd4d8ae32a80c29499b4cad92a53dfaddfa2dca72b4f3918"
+    },
+    {
+      "bytes": 9902,
+      "path": "sources/tests/helpers/lake-workspace.mjs",
+      "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082"
+    },
+    {
+      "bytes": 3289,
+      "path": "sources/tests/helpers/nominal-subtype-dotnet-fixture.mjs",
+      "sha256": "b47eb1313e64b34f9d197ab1193cac9bb177097fe0b887b765e93b1ed536894c"
+    },
+    {
+      "bytes": 11719,
+      "path": "sources/tests/helpers/nominal-subtype-dotnet-installed-tests.mjs",
+      "sha256": "d08eae07b25e76f61b1deb91c1318c671025932e615f82cd6d5ffcc22d8908f6"
+    },
+    {
+      "bytes": 10181,
+      "path": "sources/tests/helpers/nominal-subtype-dotnet-package.mjs",
+      "sha256": "7344319f286152cb9d7c6096f6fdda931f05cad540a79c3e2bd9ec39833d78a7"
+    },
+    {
+      "bytes": 7050,
+      "path": "sources/tests/helpers/nominal-subtype-dotnet-probe.mjs",
+      "sha256": "f8bfea10dedb300bd1b9e18d5e80c7fc005e53011c6666d88bcdd17a35553ea3"
+    },
+    {
+      "bytes": 2028,
+      "path": "sources/tests/helpers/nominal-subtype-dotnet-resources.mjs",
+      "sha256": "a159173e82abae7bd48a82691f3025b329827bf03505347516a0768db140c63c"
+    },
+    {
+      "bytes": 5339,
+      "path": "sources/tests/helpers/nominal-subtype-dotnet-tools.mjs",
+      "sha256": "32701677b4d57fc7473271b19b02039dbc0c00b949698c51d80f508ec029f05c"
+    },
+    {
+      "bytes": 8247,
+      "path": "sources/tests/helpers/nominal-subtype-installed-fixture.mjs",
+      "sha256": "2521c4af98f9e90becbbe298cff9738f4408dcdf433ddd221d42367d76886c69"
+    },
+    {
+      "bytes": 1367,
+      "path": "sources/tests/helpers/type-corpus-compiler.mjs",
+      "sha256": "020290f8ed04a935b51fb1a2b53e3b213884d36d891c5eacba8850194f181fa0"
+    }
+  ],
+  "generatorClosure": [
+    "src/abi/component-scalars.mjs",
+    "src/abi/generic-specialization.mjs",
+    "src/abi/refinements.mjs",
+    "src/backends/c/generate.mjs",
+    "src/backends/c/package-audit.mjs",
+    "src/backends/c/primitive-surface.mjs",
+    "src/backends/dotnet/callables.mjs",
+    "src/backends/dotnet/copied-aliases.mjs",
+    "src/backends/dotnet/copied-conversions.mjs",
+    "src/backends/dotnet/copied-model.mjs",
+    "src/backends/dotnet/copied-values.mjs",
+    "src/backends/dotnet/verified-assets.mjs",
+    "src/backends/native/fin-refinements.mjs",
+    "src/binding-ir/canonical.mjs",
+    "src/binding-ir/contract.mjs",
+    "src/binding-ir/sha256.mjs",
+    "src/capsule/contract.mjs",
+    "src/capsule/node.mjs"
+  ],
+  "kind": "nominal-subtype-dotnet-installed-v1",
+  "producerCommit": "5762111059313672f23825b65df2f91ec05437a3",
+  "runs": [
+    {
+      "archiveSha512": "wdhIR9CFbrk9ZLOcpK1GIrR9MPtkQ/gSwQacE70twGmmsopFxS7PgI5qqWvqFpHNMJaWV0qzWyLHG+y4o9ZDzQ==",
+      "controls": {
+        "environment": 28,
+        "execution": 30,
+        "model": 5,
+        "package": 5,
+        "records": 148
+      },
+      "counts": {
+        "checks": 4226,
+        "hostRejections": 7,
+        "rejections": 1032,
+        "snapshotControls": 8
+      },
+      "dispatchObserved": false,
+      "executions": 3,
+      "finished": "2026-10-12T09:39:46.901Z",
+      "floor": "2.36",
+      "framework": {
+        "facts": {
+          "architecture": "X64",
+          "command": "/app/.toolchains/dotnet/dotnet",
+          "description": ".NET 8.0.30",
+          "directory": "/app/.toolchains/dotnet/shared/Microsoft.NETCore.App/8.0.30/",
+          "littleEndian": true,
+          "os": "Debian GNU/Linux 12 (bookworm)",
+          "version": "8.0.30"
+        },
+        "runtimeFiles": {
+          "System.Private.CoreLib.dll": {
+            "bytes": 12773888,
+            "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+          },
+          "libcoreclr.so": {
+            "bytes": 6906008,
+            "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+          }
+        }
+      },
+      "generatorModules": 18,
+      "label": "ordinary-full",
+      "mode": "full",
+      "prefix": "build/vo1444-nominal-dotnet-ordinary-full-r2-5762111",
+      "producerCommit": "5762111059313672f23825b65df2f91ec05437a3",
+      "records": 74,
+      "reportSha256": "a8c72e6d740cb4555f5af84ded68873a58e2f8f29e82f6d5738f5f7435d62ab6",
+      "route": "ordinary",
+      "runtime": {
+        "arch": "x64",
+        "glibc": "2.36",
+        "platform": "linux"
+      },
+      "started": "2026-10-12T09:37:03.558Z",
+      "tapSha256": "73fbd6ef74d168df56dedc24df1e8b60661a3b34a3dfbf54f9d20405a5c18c93",
+      "toolchain": {
+        "command": "/app/.toolchains/dotnet/dotnet",
+        "interpreter": {
+          "bytes": 68424,
+          "sha256": "c61ff7f8665688b95ad0f34e780daaa67b978d26115b82797c07ea6044c566ed"
+        },
+        "sdk": {
+          "directory": "/app/.toolchains/dotnet/sdk",
+          "version": "8.0.424"
+        }
+      }
+    },
+    {
+      "archiveSha512": "hZgaGjNEnwtkZp6H/b7o+XVeqox6Kz/vB7ZzZgRbUAjZ9hgUXYsUmlMq6Goi4oHJ8Bk7MWqLXrSOBlULSB25Sg==",
+      "controls": {
+        "environment": 28,
+        "execution": 30,
+        "model": 5,
+        "package": 5,
+        "records": 152
+      },
+      "counts": {
+        "checks": 4226,
+        "hostRejections": 7,
+        "rejections": 1032,
+        "snapshotControls": 8
+      },
+      "dispatchObserved": false,
+      "executions": 3,
+      "finished": "2026-10-12T09:42:53.371Z",
+      "floor": "2.36",
+      "framework": {
+        "facts": {
+          "architecture": "X64",
+          "command": "/app/.toolchains/dotnet/dotnet",
+          "description": ".NET 8.0.30",
+          "directory": "/app/.toolchains/dotnet/shared/Microsoft.NETCore.App/8.0.30/",
+          "littleEndian": true,
+          "os": "Debian GNU/Linux 12 (bookworm)",
+          "version": "8.0.30"
+        },
+        "runtimeFiles": {
+          "System.Private.CoreLib.dll": {
+            "bytes": 12773888,
+            "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+          },
+          "libcoreclr.so": {
+            "bytes": 6906008,
+            "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+          }
+        }
+      },
+      "generatorModules": 18,
+      "label": "reviewed-full",
+      "mode": "full",
+      "prefix": "build/vo1444-nominal-dotnet-reviewed-full-r1-5762111",
+      "producerCommit": "5762111059313672f23825b65df2f91ec05437a3",
+      "records": 76,
+      "reportSha256": "b08d7a96be3893ab6823381bcb9fb3ec307eca1f8126d6b97f75fb76c9122004",
+      "route": "reviewed",
+      "runtime": {
+        "arch": "x64",
+        "glibc": "2.36",
+        "platform": "linux"
+      },
+      "started": "2026-10-12T09:40:17.883Z",
+      "tapSha256": "121aac88f7ed09b36f8914a8ec12b5ccc1262d30a0a7739051f20cf926dd315b",
+      "toolchain": {
+        "command": "/app/.toolchains/dotnet/dotnet",
+        "interpreter": {
+          "bytes": 68424,
+          "sha256": "c61ff7f8665688b95ad0f34e780daaa67b978d26115b82797c07ea6044c566ed"
+        },
+        "sdk": {
+          "directory": "/app/.toolchains/dotnet/sdk",
+          "version": "8.0.424"
+        }
+      }
+    },
+    {
+      "archiveSha512": "klcNDqKQkB6e+KTihwkAMCPjRDTGb6HxIg00JwNVS0oWRBvFu+AwxafNpu9u/P8819JDqwDwxT7qnsLQwtqnzw==",
+      "controls": {
+        "environment": 28,
+        "execution": 30,
+        "model": 4,
+        "package": 5,
+        "records": 146
+      },
+      "counts": {
+        "checks": 2088,
+        "hostRejections": 1,
+        "rejections": 0,
+        "snapshotControls": 8
+      },
+      "dispatchObserved": false,
+      "executions": 3,
+      "finished": "2026-10-12T09:47:47.518Z",
+      "floor": "2.36",
+      "framework": {
+        "facts": {
+          "architecture": "X64",
+          "command": "/app/.toolchains/dotnet/dotnet",
+          "description": ".NET 8.0.30",
+          "directory": "/app/.toolchains/dotnet/shared/Microsoft.NETCore.App/8.0.30/",
+          "littleEndian": true,
+          "os": "Debian GNU/Linux 12 (bookworm)",
+          "version": "8.0.30"
+        },
+        "runtimeFiles": {
+          "System.Private.CoreLib.dll": {
+            "bytes": 12773888,
+            "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+          },
+          "libcoreclr.so": {
+            "bytes": 6906008,
+            "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+          }
+        }
+      },
+      "generatorModules": 18,
+      "label": "ordinary-result-only",
+      "mode": "result-only",
+      "prefix": "build/vo1444-nominal-dotnet-ordinary-result-only-r1-5762111",
+      "producerCommit": "5762111059313672f23825b65df2f91ec05437a3",
+      "records": 73,
+      "reportSha256": "30007cb972dc55e375f55fadb005a6ce5593b0888aaf2d07aee240b3736a81a4",
+      "route": "ordinary",
+      "runtime": {
+        "arch": "x64",
+        "glibc": "2.36",
+        "platform": "linux"
+      },
+      "started": "2026-10-12T09:44:20.475Z",
+      "tapSha256": "b81bfdfe9da888f2c9e6401b3c84198b396906cd9a4d427f71bb5ee840e1cee7",
+      "toolchain": {
+        "command": "/app/.toolchains/dotnet/dotnet",
+        "interpreter": {
+          "bytes": 68424,
+          "sha256": "c61ff7f8665688b95ad0f34e780daaa67b978d26115b82797c07ea6044c566ed"
+        },
+        "sdk": {
+          "directory": "/app/.toolchains/dotnet/sdk",
+          "version": "8.0.424"
+        }
+      }
+    },
+    {
+      "archiveSha512": "tPvr2U+kbuJ1w30V+N6yLWWJ98rxKOAww8oLmsRGY42wqQm5mSZwWZ/7y4KAC5/y9w8ZqCJjXufHSujNcPpLaA==",
+      "controls": {
+        "environment": 28,
+        "execution": 30,
+        "model": 4,
+        "package": 5,
+        "records": 150
+      },
+      "counts": {
+        "checks": 2088,
+        "hostRejections": 1,
+        "rejections": 0,
+        "snapshotControls": 8
+      },
+      "dispatchObserved": false,
+      "executions": 3,
+      "finished": "2026-10-12T09:56:06.470Z",
+      "floor": "2.36",
+      "framework": {
+        "facts": {
+          "architecture": "X64",
+          "command": "/app/.toolchains/dotnet/dotnet",
+          "description": ".NET 8.0.30",
+          "directory": "/app/.toolchains/dotnet/shared/Microsoft.NETCore.App/8.0.30/",
+          "littleEndian": true,
+          "os": "Debian GNU/Linux 12 (bookworm)",
+          "version": "8.0.30"
+        },
+        "runtimeFiles": {
+          "System.Private.CoreLib.dll": {
+            "bytes": 12773888,
+            "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+          },
+          "libcoreclr.so": {
+            "bytes": 6906008,
+            "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+          }
+        }
+      },
+      "generatorModules": 18,
+      "label": "reviewed-result-only",
+      "mode": "result-only",
+      "prefix": "build/vo1444-nominal-dotnet-reviewed-result-only-r1-5762111",
+      "producerCommit": "5762111059313672f23825b65df2f91ec05437a3",
+      "records": 75,
+      "reportSha256": "96aa7c35d14e23fbca0349a2ab5c4df2fbe3b65d897873e3b98413d58788e56e",
+      "route": "reviewed",
+      "runtime": {
+        "arch": "x64",
+        "glibc": "2.36",
+        "platform": "linux"
+      },
+      "started": "2026-10-12T09:50:13.194Z",
+      "tapSha256": "6f6f415f0672373983c9bef567d03b94928ce7b44159173b465a24d591ca5c5d",
+      "toolchain": {
+        "command": "/app/.toolchains/dotnet/dotnet",
+        "interpreter": {
+          "bytes": 68424,
+          "sha256": "c61ff7f8665688b95ad0f34e780daaa67b978d26115b82797c07ea6044c566ed"
+        },
+        "sdk": {
+          "directory": "/app/.toolchains/dotnet/sdk",
+          "version": "8.0.424"
+        }
+      }
+    }
+  ],
+  "schemaVersion": 1,
+  "selectedSources": [
+    "src/abi/component-scalars.mjs",
+    "src/abi/generic-specialization.mjs",
+    "src/abi/refinements.mjs",
+    "src/analyze/NativeExports.lean",
+    "src/backends/c/generate.mjs",
+    "src/backends/c/package-audit.mjs",
+    "src/backends/c/primitive-surface.mjs",
+    "src/backends/dotnet/callables.mjs",
+    "src/backends/dotnet/copied-aliases.mjs",
+    "src/backends/dotnet/copied-conversions.mjs",
+    "src/backends/dotnet/copied-model.mjs",
+    "src/backends/dotnet/copied-values.mjs",
+    "src/backends/dotnet/verified-assets.mjs",
+    "src/backends/native/fin-refinements.mjs",
+    "src/binding-ir/canonical.mjs",
+    "src/binding-ir/contract.mjs",
+    "src/binding-ir/sha256.mjs",
+    "src/capsule/contract.mjs",
+    "src/capsule/node.mjs",
+    "tests/fixtures/nominal-subtype-consumers/dotnet.cs",
+    "tests/fixtures/onboarding/nominal-subtypes/LICENSE",
+    "tests/fixtures/onboarding/nominal-subtypes/NominalSubtypes.lean",
+    "tests/fixtures/onboarding/nominal-subtypes/lakefile.toml",
+    "tests/fixtures/onboarding/nominal-subtypes/lean-toolchain",
+    "tests/fixtures/onboarding/nominal-subtypes/package.json",
+    "tests/helpers/closed-package-zip.mjs",
+    "tests/helpers/copied-fixture-install.mjs",
+    "tests/helpers/fin-container-edge-dotnet-closure.mjs",
+    "tests/helpers/lake-workspace.mjs",
+    "tests/helpers/nominal-subtype-dotnet-fixture.mjs",
+    "tests/helpers/nominal-subtype-dotnet-installed-tests.mjs",
+    "tests/helpers/nominal-subtype-dotnet-package.mjs",
+    "tests/helpers/nominal-subtype-dotnet-probe.mjs",
+    "tests/helpers/nominal-subtype-dotnet-resources.mjs",
+    "tests/helpers/nominal-subtype-dotnet-tools.mjs",
+    "tests/helpers/nominal-subtype-installed-fixture.mjs",
+    "tests/helpers/type-corpus-compiler.mjs"
+  ]
+}

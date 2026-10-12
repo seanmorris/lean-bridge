@@ -1,0 +1,51 @@
+{
+  "closure": {
+    "deployedFilesSha256": "464cb60254297cc4cd5c269727c26dbc5005c057502743f0e39eea06e7cbe381"
+  },
+  "counts": {
+    "checks": 4226,
+    "hostRejections": 7,
+    "rejections": 1032,
+    "snapshotControls": 8
+  },
+  "cwd": "/tmp/lean-bridge-nominal-subtype-dotnet-SNx3w3/source-free",
+  "framework": {
+    "args": [
+      "Consumer.dll",
+      "--runtime"
+    ],
+    "command": "/app/.toolchains/dotnet/dotnet",
+    "cwd": "/tmp/lean-bridge-nominal-subtype-dotnet-SNx3w3/source-free",
+    "facts": {
+      "architecture": "X64",
+      "command": "/app/.toolchains/dotnet/dotnet",
+      "description": ".NET 8.0.30",
+      "directory": "/app/.toolchains/dotnet/shared/Microsoft.NETCore.App/8.0.30/",
+      "littleEndian": true,
+      "os": "Debian GNU/Linux 12 (bookworm)",
+      "version": "8.0.30"
+    },
+    "run": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "{\"version\":\"8.0.30\",\"description\":\".NET 8.0.30\",\"directory\":\"/app/.toolchains/dotnet/shared/Microsoft.NETCore.App/8.0.30/\",\"command\":\"/app/.toolchains/dotnet/dotnet\",\"architecture\":\"X64\",\"os\":\"Debian GNU/Linux 12 (bookworm)\",\"littleEndian\":true}\n"
+    },
+    "runtimeFiles": {
+      "System.Private.CoreLib.dll": {
+        "bytes": 12773888,
+        "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+      },
+      "libcoreclr.so": {
+        "bytes": 6906008,
+        "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+      }
+    }
+  },
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":4226,\"rejections\":1032,\"hostRejections\":7,\"snapshotControls\":8}\n"
+  },
+  "sourcesRemoved": true,
+  "stage": "source-free"
+}
