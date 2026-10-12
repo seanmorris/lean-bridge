@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { nominalSubtypeNativeReferences, promoteNominalSubtypeNative } from "./nominal-subtype-native-promotion.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { nominalSubtypePythonPromotionHistoryPath } from "./nominal-subtype-python-promotion-history.mjs";
 import { beforeComponentEngineClosureSource } from "./component-engine-closure-history.mjs";
 import { nominalSubtypePerlPromotionHistoryPath } from "./nominal-subtype-perl-promotion-history.mjs";
 import { beforeNominalSubtypeNativePromotionSource, nominalSubtypeNativePromotionChangedPaths, nominalSubtypeNativePromotionHistoryPath, nominalSubtypeNativePromotionPredecessor, reverseNominalSubtypeNativePromotionUpdate } from "./nominal-subtype-native-promotion-history.mjs";
@@ -43,11 +44,14 @@ test("Nominal native promotion authenticates exact changes and the scoped C/C++ 
 	const inventoryPath = "docs/type-surface.v1.json";
 	assert.equal(beforeNominalSubtypeNativePromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
 	const expected = await promoteNominalSubtypeNative(JSON.parse(original(inventoryPath)), await nominalSubtypeNativeReferences());
-	const later = JSON.parse(await readFile(nominalSubtypePerlPromotionHistoryPath));
-	for(const entry of expected.evidence) for(const file of entry.files)
+	for(const path of [nominalSubtypePythonPromotionHistoryPath, nominalSubtypePerlPromotionHistoryPath])
 	{
-		const update = later.updates.find(item => item.path === file.path);
-		if(update && file.sha256 === update.currentSha256) file.sha256 = update.previousSha256;
+		const later = JSON.parse(await readFile(path));
+		for(const entry of expected.evidence) for(const file of entry.files)
+		{
+			const update = later.updates.find(item => item.path === file.path);
+			if(update && file.sha256 === update.currentSha256) file.sha256 = update.previousSha256;
+		}
 	}
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)

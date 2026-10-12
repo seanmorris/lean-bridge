@@ -114,7 +114,7 @@ test("nominal npm docs separate Node acceptance from pending browser, native and
 		assert.ok(row.includes("Node installed; browser pending"));
 		assert.equal((row.match(/Generated; pending/gu) ?? []).length, 1);
 		assert.ok(row.includes("All four ABIs installed"));
-		assert.ok(row.includes("Node, C/C++ and Perl ordinary/reviewed installed"));
+		assert.ok(row.includes("Node, C/C++, Perl and Python ordinary/reviewed installed"));
 	}
 	for(const path of ["docs/lean/existing-package.md", "docs/lean/export-decisions.md", "docs/javascript-typescript.md", "docs/reference/types.md"])
 		assert.ok((await readFile(path, "utf8")).includes("nominal-subtype-npm-acceptance-20261011.md"), path);

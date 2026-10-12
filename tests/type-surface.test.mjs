@@ -20,6 +20,7 @@ import { reviewedSubtypeNativeProfiles, reviewedSubtypeNativeReferences } from "
 import { nominalSubtypeNpmProfiles, nominalSubtypeNpmHostSuffix } from "./helpers/nominal-subtype-npm-promotion.mjs";
 import { nominalSubtypeNativeProfiles, nominalSubtypeNativeHostSuffix } from "./helpers/nominal-subtype-native-promotion.mjs";
 import { nominalSubtypePerlProfiles, nominalSubtypePerlHostSuffix } from "./helpers/nominal-subtype-perl-promotion.mjs";
+import { nominalSubtypePythonProfiles, nominalSubtypePythonHostSuffix } from "./helpers/nominal-subtype-python-promotion.mjs";
 
 const execute = promisify(execFile);
 const root = path.resolve(import.meta.dirname, "..");
@@ -409,8 +410,10 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 		, "php-native": ["php-native-ruby-wit-wasi"]
 		, "wit-wasi": ["php-native-ruby-wit-wasi"]
 	}[profile] ?? [];
-	// Author-checked Subtype cells are promoted per build group by their own receipt, at top-level parameters and results.
+	// Author-checked Subtype cells retain their earlier receipts; Python nominal fields have separate acceptance.
 	const subtypes = specializationEvidence || profile === "php-wasm" ? ["subtype"] : [];
+	const nominalSubtype = profile === "python";
+	const nominalSubtypeEvidence = nominalSubtype ? ["full", "result-only"].map(mode => `nominal-subtype-python-ordinary-${mode}-installed`) : [];
 	const checkedRecordGroups = {
 		python: ["python-3-11", "python-3-12"], ruby: ["ruby-jvm"]
 		, java: ["ruby-jvm"], kotlin: ["ruby-jvm"], dotnet: ["remaining"]
@@ -418,12 +421,12 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 		, "php-wasm": ["php-wasm"]
 	}[profile] ?? [];
 	const checkedRecords = checkedRecordGroups.length ? ["checked-record"] : [];
-	assert.equal(observed.length, 63 + 3 * (compounds.length + lists.length + aliases.length + variants.length + recursive.length) + 2 * fins.length + 2 * subtypes.length + 2 * checkedRecords.length + specialized.length + (nominalFin ? 1 : 0));
+	assert.equal(observed.length, 63 + 3 * (compounds.length + lists.length + aliases.length + variants.length + recursive.length) + 2 * fins.length + 2 * subtypes.length + 2 * checkedRecords.length + specialized.length + (nominalFin ? 1 : 0) + (nominalSubtype ? 1 : 0));
 	assert.deepEqual([...new Set(observed.map(cell => cell.shape))].sort(), [...document.irFacets.primitive, "array", "record", ...compounds, ...lists, ...aliases, ...variants, ...recursive, ...fins, ...subtypes, ...checkedRecords, ...specialized].sort());
 	for(const cell of observed)
 	{
 		assert.ok([...(specialized.includes(cell.shape) ? ["signature"] : []), "parameter", "result", "field"].includes(cell.position));
-		if(["subtype", "checked-record"].includes(cell.shape) || (cell.shape === "fin" && !nominalFin)) assert.notEqual(cell.position, "field");
+		if(cell.shape === "checked-record" || (cell.shape === "subtype" && !nominalSubtype) || (cell.shape === "fin" && !nominalFin)) assert.notEqual(cell.position, "field");
 		for(const [stageName, stage] of Object.entries(cell.stages))
 		{
 			assert.equal(stage.state, "passed");
@@ -460,8 +463,10 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 			}
 			if(cell.shape === "subtype")
 			{
-				assert.deepEqual(stage.evidence, [profile === "php-wasm" ? "php-wasm-subtype-ordinary-installed" : `native-subtype-${specializationEvidence}-installed`
-					, ...structuralSubtypeEvidence(profile, "ordinary")]);
+				assert.deepEqual(stage.evidence, [...(cell.position === "field" ? []
+					: [profile === "php-wasm" ? "php-wasm-subtype-ordinary-installed" : `native-subtype-${specializationEvidence}-installed`
+						, ...structuralSubtypeEvidence(profile, "ordinary")])
+					, ...nominalSubtypeEvidence]);
 				continue;
 			}
 			if(specialized.includes(cell.shape))
@@ -525,23 +530,23 @@ test("refinements, host null and erased proofs retain their individual value pos
 	}
 });
 
-test("checked Subtype evidence preserves structural inputs and results and limits nominal fields to Node, C/C++ and Perl", async () => {
+test("checked Subtype evidence preserves structural inputs and results and limits nominal fields to Node, C/C++, Perl and Python", async () => {
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "subtype");
 	const allInstalled = cells.filter(cell => cell.stages.installedExecution.state === "passed");
 	const fields = allInstalled.filter(cell => cell.position === "field");
-	const nominalProfiles = [...nominalSubtypeNpmProfiles, ...nominalSubtypeNativeProfiles, ...nominalSubtypePerlProfiles];
-	const nominalLane = profile => nominalSubtypeNpmProfiles.includes(profile) ? "npm" : profile === "perl" ? "perl" : "native";
+	const nominalProfiles = [...nominalSubtypeNpmProfiles, ...nominalSubtypeNativeProfiles, ...nominalSubtypePerlProfiles, ...nominalSubtypePythonProfiles];
+	const nominalLane = profile => nominalSubtypeNpmProfiles.includes(profile) ? "npm" : profile === "perl" ? "perl" : profile === "python" ? "python" : "native";
 	assert.deepEqual(fields.map(cell => cell.id).sort(), nominalProfiles.flatMap(profile => ["ordinary-source", "reviewed-ir"].map(path => `${profile}/subtype/${path}/field`)).sort());
 	for(const cell of fields) for(const stage of Object.values(cell.stages))
 		assert.deepEqual(stage.evidence, ["full", "result-only"].map(mode => `nominal-subtype-${nominalLane(cell.profile)}-${cell.path === "ordinary-source" ? "ordinary" : "reviewed"}-${mode}-installed`));
 	const installed = allInstalled.filter(cell => ["parameter", "result"].includes(cell.position));
-	assert.equal(allInstalled.length, installed.length + 10);
+	assert.equal(allInstalled.length, installed.length + 12);
 	const primitive = installed.map(cell => {
 		const nominal = nominalProfiles.includes(cell.profile)
 			? ["full", "result-only"].map(mode => `nominal-subtype-${nominalLane(cell.profile)}-${cell.path === "ordinary-source" ? "ordinary" : "reviewed"}-${mode}-installed`) : [];
 		if(nominal.length)
 		{
-			const hostSuffix = nominalSubtypeNpmProfiles.includes(cell.profile) ? nominalSubtypeNpmHostSuffix : cell.profile === "perl" ? nominalSubtypePerlHostSuffix : nominalSubtypeNativeHostSuffix;
+			const hostSuffix = nominalSubtypeNpmProfiles.includes(cell.profile) ? nominalSubtypeNpmHostSuffix : cell.profile === "perl" ? nominalSubtypePerlHostSuffix : cell.profile === "python" ? nominalSubtypePythonHostSuffix : nominalSubtypeNativeHostSuffix;
 			assert.ok(cell.hostType.endsWith(hostSuffix));
 			cell = { ...cell, hostType: cell.hostType.slice(0, -hostSuffix.length) };
 		}

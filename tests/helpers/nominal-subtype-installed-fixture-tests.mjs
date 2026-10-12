@@ -38,6 +38,11 @@ import "./nominal-subtype-python-installed-tests.mjs";
 import "./nominal-subtype-python-registration-history-tests.mjs";
 import "./nominal-subtype-python-evidence-tests.mjs";
 import "./nominal-subtype-python-archive-history-tests.mjs";
+import "./nominal-subtype-python-ci-report-tests.mjs";
+import "./nominal-subtype-python-ci-shell-tests.mjs";
+import "./nominal-subtype-python-ci-workflow-tests.mjs";
+import "./nominal-subtype-python-promotion-tests.mjs";
+import "./nominal-subtype-python-promotion-history-tests.mjs";
 
 test("nominal package review independently matches ordinary choices and retains constructor-free results", () => {
 	for(const resultOnly of [false, true])

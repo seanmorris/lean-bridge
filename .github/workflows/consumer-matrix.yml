@@ -3123,6 +3123,24 @@ jobs:
           test -s build/owned-python-packaging/scalars-reviewed.json
           test -s build/type-corpus/python.json
           test -s build/type-corpus/reviewed-native-python.json
+      - name: Require nominal Python packages on both interpreter floors
+        if: matrix.profile == 'python'
+        timeout-minutes: 45
+        env:
+          LEAN_NUM_THREADS: "2"
+          NOMINAL_PYTHON_311: ${{ steps.collection_python311.outputs.python-path }}
+          NOMINAL_PYTHON_312: ${{ steps.collection_python312.outputs.python-path }}
+        run: |
+          source scripts/env.sh
+          bash scripts/run-nominal-subtype-python-ci.sh "$NOMINAL_PYTHON_311" "$NOMINAL_PYTHON_312"
+      - name: Preserve complete and partial nominal Python records
+        if: always() && matrix.profile == 'python'
+        uses: actions/upload-artifact@v7
+        with:
+          name: nominal-subtype-python-${{ github.sha }}
+          path: build/nominal-subtype-python-ci/
+          if-no-files-found: error
+          retention-days: 30
       - name: Upload the real-Lean type corpus report
         if: always() && matrix.profile == 'python'
         uses: actions/upload-artifact@v7

@@ -51,6 +51,9 @@ cover the same Nat forms on both source routes in Linux x64/glibc 2.36, includin
 standalone result-only packages. [Installed Perl checks](../evidence/nominal-subtype-perl-acceptance-20261012.md)
 cover those Nat fields and constructor-free outputs on both source routes, with
 all four pinned ABIs and both installation modes on Linux x64/glibc 2.36.
+[Installed Python checks](../evidence/nominal-subtype-python-acceptance-20261012.md)
+cover those Nat forms on both source routes in CPython 3.11 and 3.12, with the
+same reproduced wheel installed offline and replayed after relocation.
 Browser, other native hosts and PHP-Wasm nominal acceptance remains pending. Refined
 callbacks, owned and recursive Subtypes, and Subtype fields in generic records
 remain unfinished.
@@ -140,6 +143,8 @@ and [installed C/C++ acceptance](../evidence/nominal-subtype-native-acceptance-2
 cover the separate Nat nominal fixture on Node and Linux x64/glibc 2.36.
 [Installed Perl acceptance](../evidence/nominal-subtype-perl-acceptance-20261012.md)
 adds all four pinned Perl ABIs and both installation modes on the same glibc floor.
+[Installed Python acceptance](../evidence/nominal-subtype-python-acceptance-20261012.md)
+adds CPython 3.11 and 3.12 with offline installation and relocated replay.
 Other native hosts and PHP-Wasm nominal acceptance remains pending.
 Save `NominalSubtypes.lean`:
 

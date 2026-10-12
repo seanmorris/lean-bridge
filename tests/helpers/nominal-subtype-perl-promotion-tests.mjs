@@ -8,6 +8,7 @@ import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { beforeNominalSubtypePythonPromotionSource, nominalSubtypePythonPromotionHistoryPath } from "./nominal-subtype-python-promotion-history.mjs";
 import { nominalSubtypePerlArchive, nominalSubtypePerlReferences, promoteNominalSubtypePerl, nominalSubtypePerlConversion, nominalSubtypePerlLimit } from "./nominal-subtype-perl-promotion.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", "7c9fbfee9c31b60dc7433ca6945be62e39810754:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
@@ -84,7 +85,15 @@ test("nominal Perl promotion refuses missing originals and substituted scope or 
 
 test("nominal Perl promotion adds two field cells and supplements four existing cells only", async () => {
 	const original = predecessor(), references = await nominalSubtypePerlReferences();
-	const proposed = await promoteNominalSubtypePerl(original, references), { document, ...contracts } = await readTypeSurface();
+	const proposed = await promoteNominalSubtypePerl(original, references), { document: current, ...contracts } = await readTypeSurface();
+	const document = JSON.parse(beforeNominalSubtypePythonPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+	assert.ok(current.evidence.length >= document.evidence.length);
+	const later = JSON.parse(await readFile(nominalSubtypePythonPromotionHistoryPath));
+	for(const entry of proposed.evidence) for(const file of entry.files)
+	{
+		const update = later.updates.find(item => item.path === file.path);
+		if(update && file.sha256 === update.currentSha256) file.sha256 = update.previousSha256;
+	}
 	validateTypeSurface(proposed, contracts);
 	assert.equal(original.evidence.length, 480); assert.equal(proposed.evidence.length, 484);
 	assert.equal(original.observations.length, 575); assert.equal(proposed.observations.length, 577);
@@ -123,9 +132,9 @@ test("nominal Perl documentation distinguishes verified packages from pending ho
 		const row = author.split("\n").find(line => line.startsWith(prefix));
 		assert.ok(row.includes("Node installed; browser pending"));
 		assert.equal((row.match(/Generated; pending/gu) ?? []).length, 1);
-		assert.ok(row.includes("C/C++ installed; other native hosts pending"));
+		assert.ok(row.includes("C/C++ and Python installed; other native hosts pending"));
 		assert.ok(row.includes("All four ABIs installed"));
-		assert.ok(row.includes("Node, C/C++ and Perl ordinary/reviewed installed"));
+		assert.ok(row.includes("Node, C/C++, Perl and Python ordinary/reviewed installed"));
 	}
 	for(const path of ["docs/lean/existing-package.md", "docs/lean/export-decisions.md", "docs/consume/perl.md", "docs/reference/types.md"])
 		assert.ok((await readFile(path, "utf8")).includes("nominal-subtype-perl-acceptance-20261012.md"), path);

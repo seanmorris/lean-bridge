@@ -738,7 +738,8 @@ cover primitive `Nat`, `String` and `UInt8` bases, mixed `Fin`, transparent
 aliases with distinct constructor choices, and one closed `List` specialization.
 They cover both author routes on all four pinned Perl ABIs in both installation modes.
 Refined callback signatures and owned Subtypes remain unsupported. These local
-runs do not measure dispatch counters or memory.
+runs do not measure dispatch counters or memory, or establish hosted
+release-floor acceptance.
 
 ### Subtypes in copied records
 

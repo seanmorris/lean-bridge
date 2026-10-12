@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { nominalSubtypePerlReferences, promoteNominalSubtypePerl } from "./nominal-subtype-perl-promotion.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeNominalSubtypePythonPromotionSource, nominalSubtypePythonPromotionHistoryPath } from "./nominal-subtype-python-promotion-history.mjs";
 import { beforeNominalSubtypePerlPromotionSource, nominalSubtypePerlPromotionChangedPaths, nominalSubtypePerlPromotionHistoryPath, nominalSubtypePerlPromotionPredecessor, reverseNominalSubtypePerlPromotionUpdate } from "./nominal-subtype-perl-promotion-history.mjs";
 
 test("nominal Perl promotion history authenticates exact changes and the six observed Perl cells", async t => {
@@ -42,6 +43,12 @@ test("nominal Perl promotion history authenticates exact changes and the six obs
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
 	const expected = await promoteNominalSubtypePerl(JSON.parse(original(inventoryPath)), await nominalSubtypePerlReferences());
+	const later = JSON.parse(await readFile(nominalSubtypePythonPromotionHistoryPath));
+	for(const entry of expected.evidence) for(const file of entry.files)
+	{
+		const update = later.updates.find(item => item.path === file.path);
+		if(update && file.sha256 === update.currentSha256) file.sha256 = update.previousSha256;
+	}
 	assert.equal(beforeNominalSubtypePerlPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
@@ -50,7 +57,7 @@ test("nominal Perl promotion history authenticates exact changes and the six obs
 		if(update && file.sha256 === update.previousSha256)
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
-	assert.ok(pins > 0); assert.deepEqual(JSON.parse(await readFile(inventoryPath, "utf8")), expected);
+	assert.ok(pins > 0); assert.deepEqual(JSON.parse(beforeNominalSubtypePythonPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8"))), expected);
 	assert.equal(expected.evidence.length, 484); assert.equal(expected.observations.length, 577);
 	t.diagnostic(`${pins} current-source pins refreshed; exactly six observed Perl cells promoted or supplemented`);
 });
