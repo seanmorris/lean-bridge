@@ -15,12 +15,39 @@ import { nominalSubtypeInstalledConfiguration, nominalSubtypeInstalledReview } f
 import { nominalSubtypeDotnetRoutes, nominalSubtypeDotnetModes, nominalSubtypeDotnetConfiguration, nominalSubtypeDotnetCaller, nominalSubtypeDotnetCounts, nominalSubtypeDotnetSelection, parseNominalSubtypeDotnetResult } from "./nominal-subtype-dotnet-fixture.mjs";
 import { nominalSubtypeDotnetBuildFlags, nominalSubtypeDotnetEmptyFeeds, nominalSubtypeDotnetEnvironment, observeNominalSubtypeDotnetRuntime, selectNominalSubtypeDotnetTools } from "./nominal-subtype-dotnet-tools.mjs";
 import { checkNominalSubtypeDotnetProbe, runNominalSubtypeDotnetProbe } from "./nominal-subtype-dotnet-probe.mjs";
+import { waitNominalSubtypeDotnetResources } from "./nominal-subtype-dotnet-resources.mjs";
 import { runCopied } from "./copied-fixture-install.mjs";
 import { captureCorpusCompiler } from "./type-corpus-compiler.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 
 const dotnet = process.env.LEAN_BRIDGE_DOTNET ?? resolve(".toolchains/dotnet/dotnet");
 const callerControls = process.env.LEAN_BRIDGE_DOTNET !== undefined || existsSync(dotnet);
+
+test("C# producer waits for load without relaxing memory or disk floors", async () => {
+	const healthy = { freeBytes: 3 * 1024 ** 3, availableBytes: 3 * 1024 ** 3, load: 1 };
+	assert.deepEqual(await waitNominalSubtypeDotnetResources("fixture", {
+		sample: async () => healthy
+		, pause: async () => assert.fail("Healthy host must not wait")
+	}), { observations: [healthy], waits: 0 });
+	const queue = [6, 9, 5.9], delays = [], notifications = [];
+	const result = await waitNominalSubtypeDotnetResources("fixture", {
+		sample: async root => { assert.equal(root, "fixture"); return { ...healthy, load: queue.shift() }; }
+		, pause: async value => { delays.push(value); }
+		, notify: message => { notifications.push(message); }
+	});
+	assert.deepEqual(result, { waits: 2, observations: [6, 9, 5.9].map(load => ({ ...healthy, load })) });
+	assert.deepEqual(delays, [15_000, 15_000]); assert.equal(notifications.length, 2);
+	for(const values of [{ ...healthy, freeBytes: 2 * 1024 ** 3 - 1 }
+		, { ...healthy, availableBytes: 2 * 1024 ** 3 - 1 }
+		, { ...healthy, load: NaN }, { ...healthy, load: -1 }])
+		await assert.rejects(waitNominalSubtypeDotnetResources("fixture", { sample: async () => values, pause: async () => assert.fail("Must refuse before waiting") }));
+	let waits = 0;
+	await assert.rejects(waitNominalSubtypeDotnetResources("fixture", {
+		sample: async () => ({ ...healthy, load: 6 })
+		, pause: async delay => { assert.equal(delay, 15_000); waits++; }
+	}), /five minutes/u);
+	assert.equal(waits, 20);
+});
 
 test("nominal C# configurations retain both author routes and constructor-free results", async () => {
 	for(const route of nominalSubtypeDotnetRoutes) for(const mode of nominalSubtypeDotnetModes)

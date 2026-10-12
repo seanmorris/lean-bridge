@@ -5,8 +5,8 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { access, cp, mkdir, mkdtemp, readFile, rename, rm, statfs } from "node:fs/promises";
-import { loadavg, tmpdir } from "node:os";
+import { access, cp, mkdir, mkdtemp, readFile, rename, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
@@ -19,25 +19,19 @@ import { nominalSubtypeDotnetCaller, nominalSubtypeDotnetConfiguration, nominalS
 import { nominalSubtypeDotnetAssembly, inspectNominalSubtypeDotnetPackage, verifyNominalSubtypeDotnetDeployment } from "./nominal-subtype-dotnet-package.mjs";
 import { nominalSubtypeDotnetEnvironment, observeNominalSubtypeDotnetRuntime, selectNominalSubtypeDotnetTools } from "./nominal-subtype-dotnet-tools.mjs";
 import { runNominalSubtypeDotnetProbe } from "./nominal-subtype-dotnet-probe.mjs";
+import { waitNominalSubtypeDotnetResources } from "./nominal-subtype-dotnet-resources.mjs";
 import { installFinContainerEdgeDotnet, runFinContainerEdgeDotnet, verifyFinContainerEdgeDotnetEnvironment } from "./fin-container-edge-dotnet-closure.mjs";
 import { nativeFixtureEnvironment, runCopied } from "./copied-fixture-install.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
 
 const { enabled, routes, modes } = nominalSubtypeDotnetSelection(process.env);
-const resourceCheck = async root => {
-	const disk = await statfs(root), memory = await readFile("/proc/meminfo", "utf8");
-	const available = Number(memory.match(/^MemAvailable:\s+(\d+) kB$/mu)?.[1]) * 1024;
-	assert.ok(disk.bavail * disk.bsize >= 2 * 1024 ** 3, "C# producer requires 2 GiB free disk");
-	assert.ok(available >= 2 * 1024 ** 3, "C# producer requires 2 GiB available memory");
-	assert.ok(loadavg()[0] < 6, "C# producer waits for host load below 6");
-};
 
 for(const route of routes) for(const mode of modes) test(`installed nominal C# packages reproduce and relocate ${route} ${mode}`, {
 	skip: !enabled, timeout: 3_600_000
 }, async t => {
 	const producerCommit = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
-	for(const path of ["fixture.mjs", "package.mjs", "tools.mjs", "probe.mjs", "installed-tests.mjs"])
+	for(const path of ["fixture.mjs", "package.mjs", "tools.mjs", "probe.mjs", "resources.mjs", "installed-tests.mjs"])
 		execFileSync("git", ["ls-files", "--error-unmatch", `tests/helpers/nominal-subtype-dotnet-${path}`]);
 	execFileSync("git", ["ls-files", "--error-unmatch", "tests/fixtures/nominal-subtype-consumers/dotnet.cs"]);
 	execFileSync("git", ["diff", "--quiet", "HEAD", "--", "src", "tests", "scripts"]);
@@ -54,7 +48,12 @@ for(const route of routes) for(const mode of modes) test(`installed nominal C# p
 	for(const [path, value] of Object.entries({ "runtime.json": runtime, "expected.binding-ir.json": expected, "configuration.json": configuration }))
 		await saveLakeFile(output, path, canonicalJson(value));
 	const caller = await nominalSubtypeDotnetCaller(route, mode); await saveLakeFile(output, "consumer.cs", caller);
-	await resourceCheck(output);
+	const resourceChecks = [];
+	const resourceCheck = async () => {
+		resourceChecks.push(await waitNominalSubtypeDotnetResources(output, { notify: message => t.diagnostic(message) }));
+		await saveLakeFile(output, "resources.json", canonicalJson(resourceChecks));
+	};
+	await resourceCheck();
 	const root = await mkdtemp(join(tmpdir(), "lean-bridge-nominal-subtype-dotnet-"));
 	let complete = false;
 	t.after(async () => {
@@ -68,7 +67,7 @@ for(const route of routes) for(const mode of modes) test(`installed nominal C# p
 	let model;
 	for(const attempt of [0, 1])
 	{
-		await resourceCheck(output);
+		await resourceCheck();
 		const author = join(root, `author-${attempt}`), projectRoot = join(author, "project"), outputRoot = join(author, "release"), record = join(output, `build-${attempt}`);
 		await cp(nominalSubtypeFixture, projectRoot, { recursive: true });
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson(configuration));
@@ -106,7 +105,7 @@ for(const route of routes) for(const mode of modes) test(`installed nominal C# p
 	await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 	const receipt = JSON.parse(await readFile(join(handoff, "package-set-receipt.json"))), pkg = receipt.packages[0];
 	const archive = join(handoff, pkg.artifacts[0].path), consumer = join(root, "consumer");
-	await resourceCheck(output); await saveLakeFile(consumer, "consumer.cs", caller);
+	await resourceCheck(); await saveLakeFile(consumer, "consumer.cs", caller);
 	const { context } = await installFinContainerEdgeDotnet({ root: consumer, archive, archiveSha256: pkg.artifacts[0].sha256, command: tools.command });
 	const installation = await inspectNominalSubtypeDotnetPackage({ context, pkg, model, floor, tools, output });
 	const probeRoot = join(root, "api-probe");
@@ -148,7 +147,7 @@ for(const route of routes) for(const mode of modes) test(`installed nominal C# p
 	await verifyPackageSetReceipt({ receiptPath: join(output, "handoff/package-set-receipt.json") });
 	await saveLakeFile(output, "report.json", canonicalJson({
 		schemaVersion: 1, route, mode, producerCommit, runtime, tools, builds
-		, receipt, observations, installation, apiProbe
+		, receipt, observations, installation, apiProbe, resourceChecks
 		, declaredGlibcFloor: floor, expectedBindingIrSha256: hashBindingIr(expected)
 		, reproducible: true, independentBuilds: 2, authorInputsUnchanged: true
 		, sourceRemovedBeforeInstallation: true, offlineInstall: true
