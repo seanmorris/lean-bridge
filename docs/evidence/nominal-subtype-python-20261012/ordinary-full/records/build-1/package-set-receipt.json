@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "nominalsubtypes@1.0.0",
+    "name": "nominalsubtypes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51449847,
+          "path": "archives/nominalsubtypes-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+          "sha256": "237a9e03d2c604cc1e1d3a88de089a3e2c0ec3d3777d82d2a8e377471618b141"
+        }
+      ],
+      "ecosystem": "pypi",
+      "name": "nominalsubtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "pypi",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "91cd2846d647079adbb567e7e99d6bf4795f92020998504a5c2e78cf332fb387",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "f2457f26131fa217b3c25324edc3e5068e8b7e20f8d5e1702889b57265571307"
+  }
+}

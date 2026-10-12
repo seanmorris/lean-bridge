@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nominal-subtype-python-archive-source-v1",
+  "predecessorCommit": "08add61bd0668060833cf7f107aeea33b6939b48",
+  "updates": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "8b181b8dfbd4d41e56040f9cfe6b196df86fbbafeb76f6e81c37927ea5fff460",
+      "previousSha256": "8b161e35cef9873ddcabd439ed5da603ff2dbf62f173d5a25dd509369b575816",
+      "edits": [
+        {
+          "start": 3862,
+          "previous": "",
+          "current": "import { nominalSubtypePythonArchiveChangedPaths } from \"./nominal-subtype-python-archive-history.mjs\";\n"
+        },
+        {
+          "start": 64887,
+          "previous": "",
+          "current": "\t, ...nominalSubtypePythonArchiveChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-installed-fixture-tests.mjs",
+      "currentSha256": "9b70db48f959cfd9cd3767719b5ed4dcd204ddd9d3a05cc5e9f15c7a2be6366f",
+      "previousSha256": "41499d5ac01209a9def454dc1c68a9a80df7aa80379d7a9fd2f07f0e0e11a26b",
+      "edits": [
+        {
+          "start": 2106,
+          "previous": "",
+          "current": "import \"./nominal-subtype-python-evidence-tests.mjs\";\nimport \"./nominal-subtype-python-archive-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-python-registration-history.mjs",
+      "currentSha256": "21623c606c747f3a6337e3401b06d4c24f15bb9a515a6b56ae1641ba5db82a2c",
+      "previousSha256": "c722e4587920b898791d4cae78ac792cedc342a12d492b10c4af0a77b936cb5a",
+      "edits": [
+        {
+          "start": 235,
+          "previous": "",
+          "current": "import { beforeNominalSubtypePythonArchiveSource } from \"./nominal-subtype-python-archive-history.mjs\";\n"
+        },
+        {
+          "start": 2336,
+          "previous": "",
+          "current": "\tsource = beforeNominalSubtypePythonArchiveSource(path, source, expected);\n"
+        }
+      ]
+    }
+  ]
+}

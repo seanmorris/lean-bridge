@@ -1,0 +1,29 @@
+{
+  "arguments": [
+    "-I",
+    "-B",
+    "-X",
+    "pycache_prefix=/tmp/lean-bridge-nominal-subtype-python-jJ5i2Q/python-3.12/.nominal-python-pip-bytecode-1DSGv9",
+    "-m",
+    "pip",
+    "--isolated",
+    "install",
+    "--no-index",
+    "--no-deps",
+    "--no-cache-dir",
+    "--no-compile",
+    "/tmp/lean-bridge-nominal-subtype-python-jJ5i2Q/handoff/archives/nominalsubtypes-1.0.0-py3-none-manylinux_2_36_x86_64.whl"
+  ],
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/unavailable"
+  },
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "Processing /tmp/lean-bridge-nominal-subtype-python-jJ5i2Q/handoff/archives/nominalsubtypes-1.0.0-py3-none-manylinux_2_36_x86_64.whl\nInstalling collected packages: nominalsubtypes\nSuccessfully installed nominalsubtypes-1.0.0\n"
+  }
+}

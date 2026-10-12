@@ -1,0 +1,175 @@
+{
+  "archive": {
+    "bytes": 51456358,
+    "path": "archives/nominalsubtypes-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+    "sha256": "563e4e3ff4f4cc598d2d4dc30c72ff832b2b4da7dcf22c070d5290188a16e713"
+  },
+  "evidence": {
+    "componentId": "nominalsubtypes@1.0.0",
+    "componentReceiptSha256": "70db54d92737e0c2748654e4a36c644b8d70fd0c88004150c1ad4b2687fe2ea1",
+    "libraries": {
+      "libcomponent_7f8bfe55e5831a9133c5.so": "87a82e65ee3397dcdf3de0fe28da6fc4d13593860b9126f1fe1fe0ef143e302c",
+      "liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+      "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+      "libnominalsubtypes.so": "d9f17b465ff4953a63c323967e40f954b118cde8bafd64e3ce03facb70cc3336"
+    },
+    "library": "libnominalsubtypes.so",
+    "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+  },
+  "files": {
+    "lean_nominalsubtypes/__init__.py": {
+      "bytes": 8884,
+      "sha256": "b90858b5f4b7c5c142baa8614e1130383bd27bd935ddcb3bca616fd0b072dcbb"
+    },
+    "lean_nominalsubtypes/__init__.pyi": {
+      "bytes": 8103,
+      "sha256": "9ef5d48dcdc4dd83df4445ce0a5bea74bf3ae50e1ddf33eb7f3fbd4cd1a2cf83"
+    },
+    "lean_nominalsubtypes/_native.py": {
+      "bytes": 31416,
+      "sha256": "9986e6ee791c152da1bd4e541b176e3c5ddaf4cf7edfe03ab746a90084de1ece"
+    },
+    "lean_nominalsubtypes/lean_bridge/README.md": {
+      "bytes": 12402,
+      "sha256": "61ef03b39f263b0cf465e837665d4c16fc147550fa8f6dcc71c7417307f8de1c"
+    },
+    "lean_nominalsubtypes/lean_bridge/binding-manifest.json": {
+      "bytes": 1688,
+      "sha256": "dfbd9c036e5dca0cfe3f30cb0aaa78754169f747cfd1dc5b42ba62e19ed02fa9"
+    },
+    "lean_nominalsubtypes/lean_bridge/component/allocation-guard.h": {
+      "bytes": 1309,
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    "lean_nominalsubtypes/lean_bridge/component/artifacts.json": {
+      "bytes": 1537,
+      "sha256": "2a266e6e9940a17e0299d4a14444f82d5f858fc9b74efd6a5e127cee3f16d85c"
+    },
+    "lean_nominalsubtypes/lean_bridge/component/binding-ir.json": {
+      "bytes": 116981,
+      "sha256": "f345cfde99b1d23a1e7ab7a816183bccf7b505014856f3b4d769c8ec2b5422f1"
+    },
+    "lean_nominalsubtypes/lean_bridge/component/component.h": {
+      "bytes": 6124,
+      "sha256": "32cf90bde70a5eb36d5d674520219de85396b87c4b82bbbe9d016ecc38fb51e5"
+    },
+    "lean_nominalsubtypes/lean_bridge/component/generated.lean": {
+      "bytes": 30168,
+      "sha256": "943f6d6e5dfde224bd0aa9fbef4b3d53f2169ffb5c0492bf519c54a9a5f1ea4e"
+    },
+    "lean_nominalsubtypes/lean_bridge/component/metadata.json": {
+      "bytes": 192906,
+      "sha256": "ead92efb302400d55bfed0f11b42046e1c3cfe340648babc7bf487d964f64b89"
+    },
+    "lean_nominalsubtypes/lean_bridge/component/model.json": {
+      "bytes": 401310,
+      "sha256": "18144f80a9007fb6de2bd0d730ab78331eaa48c999f7b502342f8adc421c0c3d"
+    },
+    "lean_nominalsubtypes/lean_bridge/component/native-component.json": {
+      "bytes": 125345,
+      "sha256": "70db54d92737e0c2748654e4a36c644b8d70fd0c88004150c1ad4b2687fe2ea1"
+    },
+    "lean_nominalsubtypes/lean_bridge/include/nominalsubtypes.h": {
+      "bytes": 11121,
+      "sha256": "fe9bf7b6282ea0ae61219498d07f7a95281026e2aa00ea0bffd55fd86d8520fb"
+    },
+    "lean_nominalsubtypes/lean_bridge/native-c-adapter.json": {
+      "bytes": 1386,
+      "sha256": "6b24a44e3b69b5c7095dd2e52587d712cfd14d4aa92769397a0a632d0f5e3a97"
+    },
+    "lean_nominalsubtypes/lean_bridge/package-receipt.json": {
+      "bytes": 127174,
+      "sha256": "40b625d648b168642f30738564ebf918393611ec53c6631c499206d735689131"
+    },
+    "lean_nominalsubtypes/lean_bridge/runtime.json": {
+      "bytes": 1466,
+      "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    },
+    "lean_nominalsubtypes/native/linux-x64/libcomponent_7f8bfe55e5831a9133c5.so": {
+      "bytes": 148904,
+      "sha256": "87a82e65ee3397dcdf3de0fe28da6fc4d13593860b9126f1fe1fe0ef143e302c"
+    },
+    "lean_nominalsubtypes/native/linux-x64/liblean_bridge_native.so": {
+      "bytes": 21464,
+      "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+    },
+    "lean_nominalsubtypes/native/linux-x64/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "lean_nominalsubtypes/native/linux-x64/libnominalsubtypes.so": {
+      "bytes": 109776,
+      "sha256": "d9f17b465ff4953a63c323967e40f954b118cde8bafd64e3ce03facb70cc3336"
+    },
+    "lean_nominalsubtypes/py.typed": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "nominalsubtypes-1.0.0.dist-info/METADATA": {
+      "bytes": 12820,
+      "sha256": "de2e1cefe6d83fd37b464990e1d23a1c53cbe520a6c031d0b58e2d82f7f530cc"
+    },
+    "nominalsubtypes-1.0.0.dist-info/RECORD": {
+      "bytes": 3383,
+      "sha256": "e767536f22ecb546dfe9f9495d7c0ceb6ea5b08e283993096ea09116e5bc53ac"
+    },
+    "nominalsubtypes-1.0.0.dist-info/WHEEL": {
+      "bytes": 117,
+      "sha256": "e41d55df53f77c6c728e826dfa1a3da95b2c97b543ab1de222ccea3f2bb9f4f4"
+    },
+    "nominalsubtypes-1.0.0.dist-info/licenses/Lean-LICENSE": {
+      "bytes": 9160,
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    "nominalsubtypes-1.0.0.dist-info/licenses/Lean-LICENSES": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "nominalsubtypes-1.0.0.dist-info/licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "nominalsubtypes-1.0.0.dist-info/licenses/source-notices.json": {
+      "bytes": 2089,
+      "sha256": "aef1657997f54e258e4f527342dab890759dbe7338811f86fe9c97423c641e78"
+    },
+    "nominalsubtypes-1.0.0.dist-info/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "nominalsubtypes-1.0.0.dist-info/top_level.txt": {
+      "bytes": 21,
+      "sha256": "0169dcf0374e767e75daa3834683765a6078c383704543a6118263619e0295e1"
+    }
+  },
+  "receiptSha256": "40b625d648b168642f30738564ebf918393611ec53c6631c499206d735689131",
+  "retained": [
+    "lean_nominalsubtypes/__init__.py",
+    "lean_nominalsubtypes/__init__.pyi",
+    "lean_nominalsubtypes/_native.py",
+    "lean_nominalsubtypes/lean_bridge/README.md",
+    "lean_nominalsubtypes/lean_bridge/binding-manifest.json",
+    "lean_nominalsubtypes/lean_bridge/component/allocation-guard.h",
+    "lean_nominalsubtypes/lean_bridge/component/artifacts.json",
+    "lean_nominalsubtypes/lean_bridge/component/binding-ir.json",
+    "lean_nominalsubtypes/lean_bridge/component/component.h",
+    "lean_nominalsubtypes/lean_bridge/component/generated.lean",
+    "lean_nominalsubtypes/lean_bridge/component/metadata.json",
+    "lean_nominalsubtypes/lean_bridge/component/model.json",
+    "lean_nominalsubtypes/lean_bridge/component/native-component.json",
+    "lean_nominalsubtypes/lean_bridge/include/nominalsubtypes.h",
+    "lean_nominalsubtypes/lean_bridge/native-c-adapter.json",
+    "lean_nominalsubtypes/lean_bridge/package-receipt.json",
+    "lean_nominalsubtypes/lean_bridge/runtime.json",
+    "lean_nominalsubtypes/py.typed",
+    "nominalsubtypes-1.0.0.dist-info/METADATA",
+    "nominalsubtypes-1.0.0.dist-info/RECORD",
+    "nominalsubtypes-1.0.0.dist-info/WHEEL",
+    "nominalsubtypes-1.0.0.dist-info/licenses/Lean-LICENSE",
+    "nominalsubtypes-1.0.0.dist-info/licenses/Lean-LICENSES",
+    "nominalsubtypes-1.0.0.dist-info/licenses/LeanBridge-LICENSE",
+    "nominalsubtypes-1.0.0.dist-info/licenses/source-notices.json",
+    "nominalsubtypes-1.0.0.dist-info/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+    "nominalsubtypes-1.0.0.dist-info/top_level.txt"
+  ]
+}

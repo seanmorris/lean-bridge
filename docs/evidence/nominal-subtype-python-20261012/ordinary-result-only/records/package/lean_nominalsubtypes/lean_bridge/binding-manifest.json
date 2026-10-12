@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "generator": {
+    "id": "lean-wasm/python-copied",
+    "version": 1
+  },
+  "component": "nominalsubtypes@1.0.0",
+  "bindingIrSha256": "dc9fe0346053e26085741fd0e85e05b44d7a18817d58148fb2e41e9cc824e4ec",
+  "publicModule": "lean_nominalsubtypes/__init__.py",
+  "typeStub": "lean_nominalsubtypes/__init__.pyi",
+  "internalModule": "lean_nominalsubtypes/_native.py",
+  "exports": [
+    "LeanBridgeError",
+    "Some",
+    "Option",
+    "Ok",
+    "Err",
+    "Result",
+    "Envelope",
+    "Event",
+    "EventEmpty",
+    "EventBox",
+    "EventChoices",
+    "AliasPair",
+    "EnvelopeAlias",
+    "array_values",
+    "branch",
+    "event_choices",
+    "event_empty",
+    "event_value",
+    "group_values",
+    "list_values",
+    "no_items",
+    "optional",
+    "pair_values",
+    "produce_envelope",
+    "product",
+    "scalar"
+  ],
+  "files": [
+    "lean_nominalsubtypes/__init__.py",
+    "lean_nominalsubtypes/__init__.pyi",
+    "lean_nominalsubtypes/_native.py",
+    "lean_nominalsubtypes/py.typed",
+    "README.md",
+    "binding-manifest.json"
+  ],
+  "capabilityGaps": [
+    {
+      "feature": "additional-identity-and-effects",
+      "reason": "Ordinary PyPI packages admit copied values and synchronous primitive callables; other identity and effect shapes remain unsupported."
+    },
+    {
+      "feature": "additional-platforms",
+      "reason": "The accepted native profile is GIL-enabled Python 3.11+ on Linux x86-64."
+    }
+  ]
+}
