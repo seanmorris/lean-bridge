@@ -67,6 +67,7 @@ import { nominalSubtypePhpRegistrationChangedPaths } from "./nominal-subtype-php
 import { managedNominalGateChangedPaths } from "./managed-nominal-gate-history.mjs";
 import { nominalSubtypePhpCiChangedPaths } from "./nominal-subtype-php-ci-history.mjs";
 import { nominalSubtypePhpPromotionChangedPaths } from "./nominal-subtype-php-promotion-history.mjs";
+import { nominalSubtypeWitRegistrationChangedPaths } from "./nominal-subtype-wit-registration-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeSubtypeRefinementSource, subtypeRefinementChangedPaths } from "./subtype-refinement-source-history.mjs";
 import { subtypeHeapChangedPaths } from "./subtype-heap-source-history.mjs";
@@ -999,6 +1000,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...managedNominalGateChangedPaths
 	, ...nominalSubtypePhpCiChangedPaths
 	, ...nominalSubtypePhpPromotionChangedPaths
+	, ...nominalSubtypeWitRegistrationChangedPaths
 ])].sort());
 
 /**
