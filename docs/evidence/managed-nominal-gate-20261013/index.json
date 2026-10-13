@@ -1,0 +1,487 @@
+{
+  "files": [
+    {
+      "bytes": 137179,
+      "path": "reproduction.tap",
+      "sha256": "9ec173f3e6605b6187737a905565fea83fd55d973c0c8c2f8d49dcf2694f509c"
+    },
+    {
+      "bytes": 1037,
+      "path": "reproduction.json",
+      "sha256": "b74ec7fd3b14ee74e446eff562bb84aa91d98de78d4bef1ef445f652d80846d3"
+    },
+    {
+      "bytes": 2721,
+      "path": "focused.tap",
+      "sha256": "428e4d1c270f1c075c1b674ade0ff3de18826428c1b985802a26c307fd2c2abe"
+    }
+  ],
+  "kind": "managed-nominal-gate-test-repair-v1",
+  "predecessorCommit": "968c1e9877c6cffe0667b81b4ea71bf18b46fd75",
+  "schemaVersion": 1,
+  "sourceHistory": {
+    "path": "docs/evidence/managed-nominal-gate-source-history-20261013.json",
+    "sha256": "b9b3b8c647d522c4b738c48a2d404b407058cfa7d89a67bdc3050c9aa2858731"
+  },
+  "validatedSourceCount": 5506,
+  "validations": [
+    {
+      "args": [
+        "node_modules/eslint/bin/eslint.js",
+        "tests/helpers/fin-refinement-source-history.mjs",
+        "tests/helpers/managed-ci-isolation.mjs",
+        "tests/helpers/nominal-subtype-php-registration-history.mjs",
+        "tests/managed-ci-isolation.test.mjs",
+        "scripts/update-managed-nominal-gate-history.mjs",
+        "tests/helpers/managed-nominal-gate-history.mjs",
+        "tests/helpers/managed-nominal-gate-history-tests.mjs",
+        "--max-warnings",
+        "0"
+      ],
+      "bytes": 0,
+      "code": 0,
+      "finished": "2026-10-13T17:59:10.629Z",
+      "log": "build/vo1220-managed-gate-lint-r2-0.log",
+      "phase": "lint",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 5969887232,
+            "freeBytes": 2309672960,
+            "load": 6.77
+          },
+          {
+            "availableBytes": 5995888640,
+            "freeBytes": 2305413120,
+            "load": 7.49
+          },
+          {
+            "availableBytes": 5936893952,
+            "freeBytes": 2308235264,
+            "load": 8.45
+          },
+          {
+            "availableBytes": 6124486656,
+            "freeBytes": 2309672960,
+            "load": 9.4
+          },
+          {
+            "availableBytes": 5938151424,
+            "freeBytes": 2300239872,
+            "load": 9.55
+          },
+          {
+            "availableBytes": 5784743936,
+            "freeBytes": 2282823680,
+            "load": 9.96
+          },
+          {
+            "availableBytes": 6185426944,
+            "freeBytes": 2282496000,
+            "load": 10.84
+          },
+          {
+            "availableBytes": 5988716544,
+            "freeBytes": 2281996288,
+            "load": 11.27
+          },
+          {
+            "availableBytes": 5940703232,
+            "freeBytes": 2277629952,
+            "load": 11.36
+          },
+          {
+            "availableBytes": 6644445184,
+            "freeBytes": 2310471680,
+            "load": 9.98
+          },
+          {
+            "availableBytes": 6517735424,
+            "freeBytes": 2310189056,
+            "load": 8.57
+          },
+          {
+            "availableBytes": 6612414464,
+            "freeBytes": 2309365760,
+            "load": 7.25
+          },
+          {
+            "availableBytes": 6605791232,
+            "freeBytes": 2309050368,
+            "load": 6.03
+          },
+          {
+            "availableBytes": 6619058176,
+            "freeBytes": 2308812800,
+            "load": 5.29
+          }
+        ],
+        "waits": 13
+      },
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "signal": null,
+      "started": "2026-10-13T17:59:08.444Z"
+    },
+    {
+      "args": [
+        "scripts/update-managed-nominal-gate-history.mjs"
+      ],
+      "bytes": 80,
+      "code": 0,
+      "finished": "2026-10-13T17:59:12.110Z",
+      "log": "build/vo1220-managed-gate-history-r1-0.log",
+      "phase": "history",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 6670200832,
+            "freeBytes": 2308087808,
+            "load": 5.29
+          }
+        ],
+        "waits": 0
+      },
+      "sha256": "e1ce6f92c54c02a484598516ca7451d923828d72223fa505f84ec0e43e50ba1c",
+      "signal": null,
+      "started": "2026-10-13T17:59:11.920Z"
+    },
+    {
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/managed-ci-isolation.test.mjs",
+        "tests/helpers/nominal-subtype-jvm-ci-workflow-tests.mjs",
+        "tests/helpers/nominal-subtype-php-registration-history-tests.mjs"
+      ],
+      "bytes": 2721,
+      "code": 0,
+      "finished": "2026-10-13T17:59:14.994Z",
+      "log": "build/vo1220-managed-gate-focused-r1-0.log",
+      "phase": "focused",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 6659244032,
+            "freeBytes": 2307305472,
+            "load": 5.1
+          }
+        ],
+        "waits": 0
+      },
+      "sha256": "428e4d1c270f1c075c1b674ade0ff3de18826428c1b985802a26c307fd2c2abe",
+      "signal": null,
+      "started": "2026-10-13T17:59:13.400Z"
+    },
+    {
+      "args": [
+        "--max-old-space-size=3072",
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/managed-ci-isolation-evidence.test.mjs"
+      ],
+      "bytes": 831,
+      "code": 0,
+      "finished": "2026-10-13T18:31:15.019Z",
+      "log": "build/vo1220-managed-gate-archives-r3-0.log",
+      "phase": "archives",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 7953862656,
+            "freeBytes": 2254823424,
+            "load": 10.76
+          },
+          {
+            "availableBytes": 7928893440,
+            "freeBytes": 2254548992,
+            "load": 9.81
+          },
+          {
+            "availableBytes": 7818981376,
+            "freeBytes": 2254180352,
+            "load": 9.07
+          },
+          {
+            "availableBytes": 7990358016,
+            "freeBytes": 2254462976,
+            "load": 8.87
+          },
+          {
+            "availableBytes": 7864430592,
+            "freeBytes": 2254454784,
+            "load": 9.04
+          },
+          {
+            "availableBytes": 7823339520,
+            "freeBytes": 2253410304,
+            "load": 8.11
+          },
+          {
+            "availableBytes": 7935528960,
+            "freeBytes": 2253082624,
+            "load": 7.48
+          },
+          {
+            "availableBytes": 7825420288,
+            "freeBytes": 2252754944,
+            "load": 7.52
+          },
+          {
+            "availableBytes": 7973384192,
+            "freeBytes": 2251231232,
+            "load": 6.76
+          },
+          {
+            "availableBytes": 7828971520,
+            "freeBytes": 2250919936,
+            "load": 6.5
+          },
+          {
+            "availableBytes": 7832948736,
+            "freeBytes": 2250604544,
+            "load": 6.23
+          },
+          {
+            "availableBytes": 7860453376,
+            "freeBytes": 2250129408,
+            "load": 6.25
+          },
+          {
+            "availableBytes": 7821058048,
+            "freeBytes": 2249867264,
+            "load": 5.99
+          }
+        ],
+        "waits": 12
+      },
+      "sha256": "5b77af072daf86453d51006bcf766f0cd7144a9467f1bfd9b5da0556e0e193fb",
+      "signal": null,
+      "started": "2026-10-13T18:27:14.112Z"
+    },
+    {
+      "args": [
+        "--max-old-space-size=3072",
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/native-fork-repair-evidence.test.mjs"
+      ],
+      "bytes": 857,
+      "code": 0,
+      "finished": "2026-10-13T18:36:04.022Z",
+      "log": "build/vo1220-managed-gate-archives-r3-1.log",
+      "phase": "archives",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 7959285760,
+            "freeBytes": 2307817472,
+            "load": 6.6
+          },
+          {
+            "availableBytes": 7864078336,
+            "freeBytes": 2307592192,
+            "load": 5.95
+          }
+        ],
+        "waits": 1
+      },
+      "sha256": "92b1d8f4d40fae0720b99cf82e26c5abaf25cd1b9804a78d88fa9b03e0e4edac",
+      "signal": null,
+      "started": "2026-10-13T18:31:31.240Z"
+    },
+    {
+      "args": [
+        "--max-old-space-size=3072",
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/owned-jvm-package-evidence.test.mjs"
+      ],
+      "bytes": 1520,
+      "code": 0,
+      "finished": "2026-10-13T18:43:17.361Z",
+      "log": "build/vo1220-managed-gate-archives-r3-2.log",
+      "phase": "archives",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 8766218240,
+            "freeBytes": 2315857920,
+            "load": 6.97
+          },
+          {
+            "availableBytes": 8610643968,
+            "freeBytes": 2314805248,
+            "load": 6.23
+          },
+          {
+            "availableBytes": 8712622080,
+            "freeBytes": 2314231808,
+            "load": 6.45
+          },
+          {
+            "availableBytes": 8696389632,
+            "freeBytes": 2314227712,
+            "load": 6.12
+          },
+          {
+            "availableBytes": 8734466048,
+            "freeBytes": 2313433088,
+            "load": 6.76
+          },
+          {
+            "availableBytes": 8942108672,
+            "freeBytes": 2318618624,
+            "load": 6.83
+          },
+          {
+            "availableBytes": 8941412352,
+            "freeBytes": 2317918208,
+            "load": 6.87
+          },
+          {
+            "availableBytes": 8818098176,
+            "freeBytes": 2317807616,
+            "load": 6.69
+          },
+          {
+            "availableBytes": 8975454208,
+            "freeBytes": 2317606912,
+            "load": 6.51
+          },
+          {
+            "availableBytes": 8943947776,
+            "freeBytes": 2317418496,
+            "load": 5.66
+          }
+        ],
+        "waits": 9
+      },
+      "sha256": "4cc6bcc2b26a6c30931aeecdf521d152a2ef799575f2058ef7187bf08c73dac7",
+      "signal": null,
+      "started": "2026-10-13T18:38:21.360Z"
+    },
+    {
+      "args": [
+        "--max-old-space-size=3072",
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/type-surface.test.mjs",
+        "tests/type-surface-docs.test.mjs",
+        "tests/checked-javascript.test.mjs",
+        "tests/test-profiles.test.mjs",
+        "tests/documentation.test.mjs",
+        "tests/helpers/nominal-subtype-php-evidence-tests.mjs",
+        "tests/helpers/nominal-subtype-jvm-evidence-tests.mjs"
+      ],
+      "bytes": 36910,
+      "code": 0,
+      "finished": "2026-10-13T18:47:46.106Z",
+      "log": "build/vo1220-managed-gate-regression-r1-0.log",
+      "phase": "regression",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 8580182016,
+            "freeBytes": 2353651712,
+            "load": 5.52
+          }
+        ],
+        "waits": 0
+      },
+      "sha256": "4225f4b2e2c4e6b57dc0676f7757d2c5ee4483767053659e6486e28c9288fb6c",
+      "signal": null,
+      "started": "2026-10-13T18:43:18.696Z"
+    },
+    {
+      "args": [
+        "node_modules/eslint/bin/eslint.js",
+        ".",
+        "--max-warnings",
+        "0"
+      ],
+      "bytes": 0,
+      "code": 0,
+      "finished": "2026-10-13T18:50:24.121Z",
+      "log": "build/vo1220-managed-gate-static-r1-0.log",
+      "phase": "static",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 8390889472,
+            "freeBytes": 2349510656,
+            "load": 5.25
+          }
+        ],
+        "waits": 0
+      },
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "signal": null,
+      "started": "2026-10-13T18:47:47.434Z"
+    },
+    {
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "jsconfig.checked.json"
+      ],
+      "bytes": 0,
+      "code": 0,
+      "finished": "2026-10-13T18:50:57.137Z",
+      "log": "build/vo1220-managed-gate-static-r1-1.log",
+      "phase": "static",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 8439676928,
+            "freeBytes": 2347266048,
+            "load": 6.94
+          },
+          {
+            "availableBytes": 8402137088,
+            "freeBytes": 2346995712,
+            "load": 6.31
+          },
+          {
+            "availableBytes": 8541986816,
+            "freeBytes": 2346856448,
+            "load": 5.57
+          }
+        ],
+        "waits": 2
+      },
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "signal": null,
+      "started": "2026-10-13T18:50:54.868Z"
+    },
+    {
+      "args": [
+        "scripts/generate-reference-docs.mjs",
+        "--check"
+      ],
+      "bytes": 44,
+      "code": 0,
+      "finished": "2026-10-13T18:51:05.540Z",
+      "log": "build/vo1220-managed-gate-static-r1-2.log",
+      "phase": "static",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 8489967616,
+            "freeBytes": 2346799104,
+            "load": 5.45
+          }
+        ],
+        "waits": 0
+      },
+      "sha256": "3088ca5fefbfe779e4429456bbacd6ec035a87a5ab5b487cf500ccc111ee014b",
+      "signal": null,
+      "started": "2026-10-13T18:50:57.782Z"
+    }
+  ],
+  "workflowSha256": "686215b06c3a2cb11128efd43c40754ee9b83a40ed145674e2504d9bece0feab"
+}

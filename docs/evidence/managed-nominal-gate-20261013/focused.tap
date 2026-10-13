@@ -1,0 +1,77 @@
+TAP version 13
+# Subtest: nominal JVM CI preserves all preceding jobs and enforces four pinned selections
+ok 1 - nominal JVM CI preserves all preceding jobs and enforces four pinned selections
+  ---
+  duration_ms: 63.450535
+  type: 'test'
+  ...
+# Subtest: nominal JVM CI rejects omitted gates, narrowed artifacts and false successful summaries
+ok 2 - nominal JVM CI rejects omitted gates, narrowed artifacts and false successful summaries
+  ---
+  duration_ms: 41.143175
+  type: 'test'
+  ...
+# 27 missing, skipped or weakened workflow controls
+# Subtest: nominal PHP harness registration authenticates exact changes without adding support claims
+ok 3 - nominal PHP harness registration authenticates exact changes without adding support claims
+  ---
+  duration_ms: 405.480708
+  type: 'test'
+  ...
+# Subtest: nominal PHP registration writer refuses an unrelated checkout before writing
+ok 4 - nominal PHP registration writer refuses an unrelated checkout before writing
+  ---
+  duration_ms: 60.527326
+  type: 'test'
+  ...
+# Subtest: managed nominal gate repair authenticates exact changes without changing support claims
+ok 5 - managed nominal gate repair authenticates exact changes without changing support claims
+  ---
+  duration_ms: 302.562811
+  type: 'test'
+  ...
+# Subtest: managed nominal gate history writer refuses an unrelated checkout before writing
+ok 6 - managed nominal gate history writer refuses an unrelated checkout before writing
+  ---
+  duration_ms: 77.137147
+  type: 'test'
+  ...
+# Subtest: managed JVM bootstrap downloads Kotlin into a fresh checkout
+ok 7 - managed JVM bootstrap downloads Kotlin into a fresh checkout
+  ---
+  duration_ms: 18.526691
+  type: 'test'
+  ...
+# Subtest: managed CI isolates timeout budgets, profile gates and artifact names
+ok 8 - managed CI isolates timeout budgets, profile gates and artifact names
+  ---
+  duration_ms: 58.788902
+  type: 'test'
+  ...
+# Subtest: managed CI rejects dropped gates, shared artifacts and incomplete bootstrap
+ok 9 - managed CI rejects dropped gates, shared artifacts and incomplete bootstrap
+  ---
+  duration_ms: 56.428288
+  type: 'test'
+  ...
+# Subtest: managed CI retains the historical baseline without accepting a removed current gate
+ok 10 - managed CI retains the historical baseline without accepting a removed current gate
+  ---
+  duration_ms: 45.53002
+  type: 'test'
+  ...
+# Subtest: managed CI rejects undeclared, missing, duplicated and misrouted additional acceptance IDs
+ok 11 - managed CI rejects undeclared, missing, duplicated and misrouted additional acceptance IDs
+  ---
+  duration_ms: 29.06774
+  type: 'test'
+  ...
+1..11
+# tests 11
+# suites 0
+# pass 11
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1558.844861

@@ -1,0 +1,35 @@
+{
+  "args": [
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "tests/managed-ci-isolation.test.mjs"
+  ],
+  "bytes": 137179,
+  "code": 1,
+  "finished": "2026-10-13T17:52:27.806Z",
+  "head": "968c1e9877c6cffe0667b81b4ea71bf18b46fd75",
+  "resources": {
+    "observations": [
+      {
+        "availableBytes": 6018445312,
+        "freeBytes": 2466308096,
+        "load": 6.4
+      },
+      {
+        "availableBytes": 5767278592,
+        "freeBytes": 2465325056,
+        "load": 5.71
+      }
+    ],
+    "waits": 1
+  },
+  "sha256": "9ec173f3e6605b6187737a905565fea83fd55d973c0c8c2f8d49dcf2694f509c",
+  "signal": null,
+  "sources": {
+    ".github/workflows/consumer-matrix.yml": "686215b06c3a2cb11128efd43c40754ee9b83a40ed145674e2504d9bece0feab",
+    "tests/helpers/managed-ci-isolation.mjs": "7a4090760b35afbfa86d5e5ec5545ce6fc82bbbb6e6e79fc81c31935581b263a",
+    "tests/managed-ci-isolation.test.mjs": "8903e3bf2fb5f9529c70205f906ed0e0a62a88b65f47bd05f5c98c5c3fd5049b"
+  },
+  "started": "2026-10-13T17:52:27.556Z"
+}

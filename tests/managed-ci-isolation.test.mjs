@@ -11,8 +11,11 @@ import test from "node:test";
 import { pathToFileURL } from "node:url";
 import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { assertManagedCiIsolation } from "./helpers/managed-ci-isolation.mjs";
+import { disableNominalSubtypeJvmWorkflow, nominalSubtypeJvmCiBlock } from "./helpers/nominal-subtype-jvm-ci-workflow.mjs";
+import "./helpers/managed-nominal-gate-history-tests.mjs";
 
 const workflow = () => readFile(".github/workflows/consumer-matrix.yml", "utf8");
+const checkCurrent = source => assertManagedCiIsolation(source, null, { jvm: ["nominal_jvm"] });
 
 test("managed JVM bootstrap downloads Kotlin into a fresh checkout", async t => {
 	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-jvm-bootstrap-"));
@@ -37,9 +40,9 @@ test("managed JVM bootstrap downloads Kotlin into a fresh checkout", async t => 
 });
 
 test("managed CI isolates timeout budgets, profile gates and artifact names", async () => {
-	assert.deepEqual(assertManagedCiIsolation(await workflow()), {
+	assert.deepEqual(checkCurrent(await workflow()), {
 		profiles: ["dotnet", "jvm", "ruby"], timeoutMinutesPerProfile: 240
-		, failFast: false, selectedOutcomeCases: 27
+		, failFast: false, selectedOutcomeCases: 30
 		, artifactNamesIncludeProfile: true, commandsCompared: 0
 	});
 });
@@ -60,10 +63,32 @@ test("managed CI rejects dropped gates, shared artifacts and incomplete bootstra
 		, ["      - name: Prepare the pinned native compiler\n", "      - name: Prepare the pinned native compiler\n        if: matrix.profile == 'dotnet'\n"]
 		, ["      - name: Install apt dependencies for Prepare the pinned native compiler\n", "      - name: Install apt dependencies for Prepare the pinned native compiler\n        if: matrix.profile == 'dotnet'\n"]
 		, ["          sudo apt-get update && sudo apt-get install -y build-essential zstd m4\n", ""]
-		, ["steps.type_corpus_jvm.outcome != 'success'))", "steps.type_corpus_jvm.outcome == 'failure'))"]
+		, ["steps.type_corpus_jvm.outcome != 'success'", "steps.type_corpus_jvm.outcome == 'failure'"]
+		, ["steps.nominal_jvm.outcome != 'success'", "steps.nominal_jvm.outcome == 'failure'"]
+		, [" || steps.nominal_jvm.outcome != 'success'", ""]
+		, ["id: nominal_jvm\n", "id: nominal_jvm\n        continue-on-error: true\n"]
+		, [nominalSubtypeJvmCiBlock, nominalSubtypeJvmCiBlock.replace("matrix.profile == 'jvm'", "matrix.profile == 'dotnet'")]
+		, [nominalSubtypeJvmCiBlock, ""]
 	]) {
 		const changed = body.replace(before, after);
 		assert.notEqual(changed, body, before);
-		assert.throws(() => assertManagedCiIsolation(source.replace(body, changed)), undefined, before);
+		assert.throws(() => checkCurrent(source.replace(body, changed)), undefined, before);
 	}
+});
+
+test("managed CI retains the historical baseline without accepting a removed current gate", async () => {
+	const previous = disableNominalSubtypeJvmWorkflow(await workflow());
+	assert.equal(assertManagedCiIsolation(previous).selectedOutcomeCases, 27);
+	assert.throws(() => checkCurrent(previous));
+});
+
+test("managed CI rejects undeclared, missing, duplicated and misrouted additional acceptance IDs", async () => {
+	const source = await workflow();
+	assert.throws(() => assertManagedCiIsolation(source));
+	for(const additional of [{ unknown: ["nominal_jvm"] }, { jvm: [] }
+		, { jvm: ["missing"] }, { jvm: ["consumer"] }
+		, { jvm: ["nominal_jvm", "nominal_jvm"] }
+		, { dotnet: ["nominal_jvm"] }, { jvm: ["invalid-id"] }])
+		assert.throws(() => assertManagedCiIsolation(source, null, additional));
+	assert.throws(() => checkCurrent(source.replace(nominalSubtypeJvmCiBlock, nominalSubtypeJvmCiBlock.repeat(2))));
 });

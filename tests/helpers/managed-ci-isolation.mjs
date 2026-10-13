@@ -25,10 +25,12 @@ const commands = step => {
 	const match = /^ {8}run: \|\n((?: {10}.*\n|\n)*)/mu.exec(step.text);
 	assert.ok(match, step.name + " has a literal command block"); return match[1];
 };
-const evaluate = (condition, profile, overrides = {}) => {
+const evaluate = (condition, profile, overrides = {}, additionalProfileSteps = {}) => {
 	const outcomes = { consumer: "success"
 		, ...Object.fromEntries(profiles.flatMap(name => ["ordinary_", "type_corpus_"].map(prefix =>
 			[prefix + name, name === profile ? "success" : "skipped"])))
+		, ...Object.fromEntries(Object.entries(additionalProfileSteps).flatMap(([name, ids]) =>
+			ids.map(id => [id, name === profile ? "success" : "skipped"])))
 		, ...overrides };
 	return runInNewContext(condition ?? "true", {
 		always: () => true, matrix: { profile }
@@ -42,11 +44,24 @@ const evaluate = (condition, profile, overrides = {}) => {
  *
  * @param workflow - Complete current workflow text.
  * @param previous - Optional exact workflow before the matrix split.
+ * @param additionalProfileSteps - Explicit required acceptance IDs added after the historical matrix split.
  */
-export const assertManagedCiIsolation = (workflow, previous = null) => {
+export const assertManagedCiIsolation = (workflow, previous = null, additionalProfileSteps = {}) => {
 	const body = job(workflow), parsed = steps(body);
 	const named = name => { const found = parsed.find(step => step.name === name); assert.ok(found, name); return found; };
 	const identified = id => { const found = parsed.find(step => step.id === id); assert.ok(found, id); return found; };
+	const registered = new Set(["consumer", ...profiles.flatMap(profile => ["ordinary_" + profile, "type_corpus_" + profile])]);
+	for(const [profile, ids] of Object.entries(additionalProfileSteps))
+	{
+		assert.ok(profiles.includes(profile)); assert.ok(Array.isArray(ids) && ids.length > 0);
+		for(const id of ids)
+		{
+			assert.match(id, /^[a-z][a-z0-9_]*$/u); assert.ok(!registered.has(id)); registered.add(id);
+			assert.equal(parsed.filter(step => step.id === id).length, 1, id + " has one acceptance step");
+		}
+	}
+	const evaluateForProfile = (condition, profile, overrides) => evaluate(condition, profile, overrides, additionalProfileSteps);
+	let selectedOutcomeCases = 0;
 	assert.match(body, /^ {4}timeout-minutes: 240$/mu);
 	assert.match(body, /^ {4}strategy:\n {6}fail-fast: false\n {6}matrix:\n {8}profile: \[dotnet, jvm, ruby\]$/mu);
 	const prepare = named("Prepare the pinned native compiler");
@@ -70,18 +85,31 @@ export const assertManagedCiIsolation = (workflow, previous = null) => {
 	for(const profile of profiles)
 	{
 		const ordinary = identified("ordinary_" + profile), corpus = identified("type_corpus_" + profile);
+		const additional = (additionalProfileSteps[profile] ?? []).map(identified);
 		const install = named(names[profile][0]), upload = named(names[profile][1]);
 		assert.ok(parsed.indexOf(prepare) < parsed.indexOf(ordinary));
 		assert.equal(ordinary.condition, "matrix.profile == '" + profile + "'");
 		assert.equal(corpus.condition, ordinary.condition); assert.equal(install.condition, ordinary.condition);
 		assert.equal(upload.condition, "always() && " + ordinary.condition);
+		for(const step of additional)
+		{
+			assert.equal(step.condition, ordinary.condition); assert.doesNotMatch(step.text, /continue-on-error/u);
+			assert.ok(parsed.indexOf(prepare) < parsed.indexOf(step) && parsed.indexOf(step) < parsed.indexOf(gate));
+		}
 		for(const selected of profiles)
-			for(const step of [ordinary, corpus, install, upload])
-				assert.equal(evaluate(step.condition, selected), selected === profile, step.name);
-		assert.equal(evaluate(gate.condition, profile), false, profile + " ignores other profiles' skipped steps");
+			for(const step of [ordinary, corpus, install, upload, ...additional])
+				assert.equal(evaluateForProfile(step.condition, selected), selected === profile, step.name);
+		assert.equal(evaluateForProfile(gate.condition, profile), false, profile + " ignores other profiles' skipped steps");
 		for(const outcome of ["failure", "skipped", "cancelled"])
-			for(const id of ["consumer", "ordinary_" + profile, "type_corpus_" + profile])
-				assert.equal(evaluate(gate.condition, profile, { [id]: outcome }), true, profile + "/" + id + "/" + outcome);
+			for(const id of ["consumer", "ordinary_" + profile, "type_corpus_" + profile, ...additional.map(step => step.id)])
+			{
+				assert.equal(evaluateForProfile(gate.condition, profile, { [id]: outcome }), true, profile + "/" + id + "/" + outcome);
+				selectedOutcomeCases++;
+			}
+		for(const other of profiles.filter(name => name !== profile))
+			for(const id of ["ordinary_" + other, "type_corpus_" + other, ...(additionalProfileSteps[other] ?? [])])
+				for(const outcome of ["failure", "skipped", "cancelled"])
+					assert.equal(evaluateForProfile(gate.condition, profile, { [id]: outcome }), false, profile + " ignores " + id + "/" + outcome);
 	}
 	const record = named("Record managed consumer observations");
 	assert.equal(record.condition, "always()");
@@ -112,6 +140,6 @@ export const assertManagedCiIsolation = (workflow, previous = null) => {
 		old.find(step => step.name === upload.name).text, "only the selected observation changes artifact identity");
 	}
 	return { profiles, timeoutMinutesPerProfile: 240, failFast: false
-		, selectedOutcomeCases: 27, artifactNamesIncludeProfile: true
+		, selectedOutcomeCases, artifactNamesIncludeProfile: true
 		, commandsCompared: previous === null ? 0 : 6 };
 };

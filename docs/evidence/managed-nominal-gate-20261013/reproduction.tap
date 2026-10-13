@@ -1,0 +1,1725 @@
+TAP version 13
+# Subtest: managed JVM bootstrap downloads Kotlin into a fresh checkout
+ok 1 - managed JVM bootstrap downloads Kotlin into a fresh checkout
+  ---
+  duration_ms: 38.052032
+  type: 'test'
+  ...
+# Subtest: managed CI isolates timeout budgets, profile gates and artifact names
+not ok 2 - managed CI isolates timeout budgets, profile gates and artifact names
+  ---
+  duration_ms: 34.689618
+  type: 'test'
+  location: '/app/tests/managed-ci-isolation.test.mjs:39:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'outcome')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    evalmachine.<anonymous>:1:318
+    Script.runInContext (node:vm:149:12)
+    Script.runInNewContext (node:vm:154:17)
+    runInNewContext (node:vm:310:38)
+    evaluate (file:///app/tests/helpers/managed-ci-isolation.mjs:33:9)
+    assertManagedCiIsolation (file:///app/tests/helpers/managed-ci-isolation.mjs:81:16)
+    TestContext.<anonymous> (file:///app/tests/managed-ci-isolation.test.mjs:40:19)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: managed CI rejects dropped gates, shared artifacts and incomplete bootstrap
+not ok 3 - managed CI rejects dropped gates, shared artifacts and incomplete bootstrap
+  ---
+  duration_ms: 42.28394
+  type: 'test'
+  location: '/app/tests/managed-ci-isolation.test.mjs:47:1'
+  failureType: 'testCodeFailure'
+  error: "steps.type_corpus_jvm.outcome != 'success'))"
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: |-
+      managed-consumers:
+        name: Managed consumer (${{ matrix.profile }})
+        runs-on: ubuntu-24.04
+        timeout-minutes: 240
+        strategy:
+          fail-fast: false
+          matrix:
+            profile: [dotnet, jvm, ruby]
+        steps:
+          - name: Check out the exact revision
+            uses: actions/checkout@v6
+            with:
+              fetch-depth: 0
+              persist-credentials: false
+          - name: Require source history before managed consumer builds
+            run: test "$(git rev-parse --is-shallow-repository)" = false
+          - name: Install Node.js
+            uses: actions/setup-node@v6
+            with:
+              node-version: ${{ env.NODE_VERSION }}
+              cache: npm
+          - name: Install Nix
+            uses: cachix/install-nix-action@v31
+          - name: Install dependencies without lifecycle scripts
+            run: npm ci --ignore-scripts
+          - name: Restore packages and execute real Lean
+            id: consumer
+            continue-on-error: true
+            run: npm run test:consumer:managed
+          - name: Bound apt network waits
+            uses: ./.github/actions/bounded-apt
+            timeout-minutes: 1
+          - name: Install apt dependencies for Prepare the pinned native compiler
+            timeout-minutes: 20
+            run: |
+              sudo apt-get update && sudo apt-get install -y build-essential zstd m4
+          - name: Prepare the pinned native compiler
+            run: |
+              bash scripts/bootstrap-toolchains.sh --lean-only
+          - name: Install the TAP log verifier
+            timeout-minutes: 20
+            run: sudo apt-get install -y ripgrep
+          - name: Install the ordinary C# compiler
+            if: matrix.profile == 'dotnet'
+            uses: actions/setup-dotnet@v6
+            with:
+              dotnet-version: '8.0.424'
+          - name: Install Ruby for the combined NuGet transfer build
+            if: matrix.profile == 'dotnet'
+            uses: ruby/setup-ruby@v1
+            with:
+              ruby-version: '3.3.12'
+          - name: Compile ordinary Lean APIs and install relocated NuGet releases
+            if: matrix.profile == 'dotnet'
+            id: ordinary_dotnet
+            continue-on-error: true
+            env:
+              LEAN_BRIDGE_NATIVE_DOTNET_TEST: "1"
+            run: |
+              source scripts/env.sh
+              node --test tests/native-dotnet.test.mjs
+          - name: Install dependencies for type_corpus_dotnet
+            timeout-minutes: 20
+            if: matrix.profile == 'dotnet'
+            run: |
+              sudo apt-get install -y python3-venv pkg-config gdb
+              # Installed .NET Fin entry counters run the probe as GDB's own child; record the debugger and ptrace policy.
+              test -x /usr/bin/gdb
+              /usr/bin/gdb --version
+              cat /proc/sys/kernel/yama/ptrace_scope
+          - name: Compare installed NuGet corpus packages with fresh Lean results
+            if: matrix.profile == 'dotnet'
+            id: type_corpus_dotnet
+            continue-on-error: true
+            run: |
+              bash scripts/bootstrap-rust-ci.sh
+              export LEAN_BRIDGE_RUSTC="$PWD/.toolchains/rust-1.90.0/bin/rustc"
+              export LEAN_BRIDGE_CARGO="$PWD/.toolchains/rust-1.90.0/bin/cargo"
+              export CARGO_HOME="${CARGO_HOME:-$HOME/.cargo}"
+              export LEAN_BRIDGE_PYTHON="$(command -v python3)"
+              export LEAN_BRIDGE_RUBY="$(command -v ruby)"
+              export LEAN_BRIDGE_GEM="$(command -v gem)"
+              export LEAN_BRIDGE_DOTNET="$(command -v dotnet)"
+              source scripts/env.sh
+              npm run test:type-corpus:dotnet && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=dotnet node --test tests/type-corpus-reviewed-native.test.mjs
+              LEAN_BRIDGE_CHAR_PROFILES=dotnet node --test tests/native-char.test.mjs
+              LEAN_BRIDGE_WORD_PROFILES=dotnet node --test tests/native-words.test.mjs
+              LEAN_BRIDGE_DOTNET_CALLABLE_TEST=1 node --test tests/dotnet-callables.test.mjs tests/dotnet-callable-contract.test.mjs
+              LEAN_BRIDGE_DOTNET_STRUCTURED_CALLABLE_TEST=1 node --test tests/dotnet-structured-callables.test.mjs
+              test -s build/structured-callables/dotnet.json
+              LEAN_BRIDGE_DOTNET_RECURSIVE_CALLABLE_TEST=1 node --test tests/dotnet-recursive-callables.test.mjs
+              test -s build/recursive-callables/dotnet.json
+              LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-dotnet-runtime.test.mjs tests/owned-dotnet-layout.test.mjs tests/owned-dotnet-values.test.mjs tests/owned-dotnet-conversions.test.mjs
+              LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-dotnet-callables.test.mjs tests/owned-dotnet-callback-signatures.test.mjs tests/owned-dotnet-package.test.mjs
+              LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-dotnet-packaging.test.mjs tests/owned-dotnet-coexistence.test.mjs
+              test -s build/owned-dotnet-packaging/compositions-ordinary.json
+              test -s build/owned-dotnet-packaging/compositions-reviewed.json
+              test -s build/owned-dotnet-packaging/scalars-ordinary.json
+              test -s build/owned-dotnet-packaging/scalars-reviewed.json
+              test -s build/owned-dotnet-packaging/coexistence.json
+              npm run test:owned-dotnet-transfers
+              npm run test:owned-dotnet-borrows > build/owned-dotnet-borrows.log 2>&1
+              cat build/owned-dotnet-borrows.log
+              rg '^# pass 7$' build/owned-dotnet-borrows.log
+              rg '^# fail 0$' build/owned-dotnet-borrows.log
+              rg '^# skipped 0$' build/owned-dotnet-borrows.log
+              test -s build/owned-dotnet-borrows/ordinary.json
+              test -s build/owned-dotnet-borrows/reviewed.json
+              test -s build/owned-dotnet-borrows/borrow-only.json
+              test -s build/owned-dotnet-borrow-packaging/ordinary.json
+              test -s build/owned-dotnet-borrow-packaging/reviewed.json
+              npm run test:owned-dotnet-receivers > build/owned-dotnet-receivers.log 2>&1
+              cat build/owned-dotnet-receivers.log
+              rg '^# tests 10$' build/owned-dotnet-receivers.log
+              rg '^# pass 10$' build/owned-dotnet-receivers.log
+              rg '^# fail 0$' build/owned-dotnet-receivers.log
+              rg '^# cancelled 0$' build/owned-dotnet-receivers.log
+              rg '^# skipped 0$' build/owned-dotnet-receivers.log
+              test -s build/owned-dotnet-receivers/ordinary.json
+              test -s build/owned-dotnet-receivers/ordinary-package.json
+              test -s build/owned-dotnet-receivers/ordinary-plain.json
+              test -s build/owned-dotnet-receivers/ordinary-consuming.json
+              test -s build/owned-dotnet-receivers/reviewed.json
+              test -s build/owned-dotnet-receivers/reviewed-package.json
+              test -s build/owned-dotnet-receivers/reviewed-plain.json
+              test -s build/owned-dotnet-receivers/reviewed-consuming.json
+              test -s build/owned-dotnet-transfers/ordinary.json
+              test -s build/owned-dotnet-transfers/reviewed.json
+              test -s build/owned-dotnet-transfer-packaging/ordinary.json
+              test -s build/owned-dotnet-transfer-packaging/reviewed.json
+              LEAN_BRIDGE_DOTNET_COMPOUND_TEST=1 node --test tests/dotnet-compounds.test.mjs tests/dotnet-compound-contract.test.mjs
+              test -s build/compounds/dotnet.json
+              LEAN_BRIDGE_DOTNET_LIST_TEST=1 node --test tests/dotnet-lists.test.mjs tests/dotnet-list-contract.test.mjs
+              test -s build/lists/dotnet.json
+              LEAN_BRIDGE_DOTNET_ALIAS_TEST=1 node --test tests/dotnet-aliases.test.mjs
+              test -s build/aliases/dotnet.json
+              LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_DOTNET_FIN_TEST=1 node --test tests/dotnet-fin.test.mjs
+              test -s build/native-fin/dotnet.json
+              test -s build/native-fin/dotnet-reviewed.json
+              LEAN_BRIDGE_SPECIALIZATION_PROFILES=dotnet node --test tests/native-specializations.test.mjs
+              test -s build/native-specializations/dotnet.json
+              LEAN_BRIDGE_GENERIC_RECORD_PROFILES=dotnet node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs
+              test -s build/generic-records/dotnet.json
+              test -s build/generic-records/specialized-dotnet.json
+              LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES=dotnet node --test --test-concurrency=1 tests/generic-record-arrays.test.mjs
+              test -s build/generic-records/array-dotnet.json
+              LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS=1 LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=dotnet node --test tests/native-fin-containers.test.mjs
+              test -s build/native-fin-containers/dotnet.json
+              test -s build/native-fin-containers/reviewed-dotnet.json
+              node scripts/check-fin-container-entry-reports.mjs dotnet build/native-fin-containers/dotnet.json build/native-fin-containers/reviewed-dotnet.json
+              LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES=dotnet LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH=1 LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT=build/native-fin-container-edges/edges-dotnet.json node --test --test-concurrency=1 --test-name-pattern='^installed source-free native packages execute zero-bound and nested-position Fin edge cases$' tests/fin-container-edges.test.mjs
+              test -s build/native-fin-container-edges/edges-dotnet.json
+              node scripts/check-fin-container-foreign-report.mjs dotnet build/native-fin-container-edges/edges-dotnet.json
+              LEAN_BRIDGE_FIN_PRODUCT_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=dotnet node --test tests/native-fin-products.test.mjs
+              bash scripts/run-fin-late-native-ci.sh dotnet
+              test -s build/native-fin-products/dotnet.json
+              test -s build/native-fin-products/reviewed-dotnet.json
+              LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=dotnet node --test tests/native-fin-product-arrays.test.mjs
+              test -s build/native-fin-product-arrays/dotnet.json
+              test -s build/native-fin-product-arrays/reviewed-dotnet.json
+              LEAN_BRIDGE_FIN_RECORD_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=dotnet node --test tests/native-fin-records.test.mjs
+              test -s build/native-fin-records/dotnet.json
+              test -s build/native-fin-records/reviewed-dotnet.json
+              LEAN_BRIDGE_FIN_RECORD_ZERO_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_PROFILES=dotnet LEAN_BRIDGE_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/dotnet.json LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/reviewed-dotnet.json node --test --test-concurrency=1 tests/native-fin-record-zero.test.mjs
+              test -s build/native-fin-record-zero/dotnet.json
+              test -s build/native-fin-record-zero/reviewed-dotnet.json
+              node scripts/check-fin-record-zero-report.mjs dotnet build/native-fin-record-zero/dotnet.json build/native-fin-record-zero/reviewed-dotnet.json
+              LEAN_BRIDGE_SUBTYPE_PROFILES=dotnet node --test tests/native-subtype.test.mjs
+              test -s build/native-subtype/dotnet.json
+              bash scripts/run-reviewed-subtype-host-ci.sh dotnet
+              bash scripts/run-checked-record-host-ci.sh dotnet
+              bash scripts/run-structural-subtype-ci.sh dotnet
+              LEAN_BRIDGE_DOTNET_VARIANT_TEST=1 node --test tests/dotnet-variants.test.mjs
+              test -s build/variants/dotnet.json
+              LEAN_BRIDGE_DOTNET_CONVERSION_TEST=1 node --test tests/dotnet-collection-conversions.test.mjs
+              test -s build/collections/dotnet-conversions.json
+              LEAN_BRIDGE_DOTNET_COLLECTION_TEST=1 node --test tests/dotnet-collections.test.mjs
+              test -s build/collections/dotnet.json
+              LEAN_BRIDGE_DOTNET_EQUALITY_TEST=1 node --test tests/dotnet-value-equality.test.mjs
+              test -s build/equality/dotnet.json
+              LEAN_BRIDGE_DOTNET_GRAPH_TEST=1 node --test tests/dotnet-copied-graph-values.test.mjs
+              test -s build/recursive/dotnet-values.json
+              LEAN_BRIDGE_DOTNET_GRAPH_CONVERSION_TEST=1 LEAN_BRIDGE_DOTNET_GRAPH_NATIVE_TEST=1 node --test tests/dotnet-copied-graph-conversions.test.mjs
+              test -s build/recursive/dotnet-conversions.json
+              test -s build/recursive/dotnet-native.json
+              LEAN_BRIDGE_DOTNET_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_DOTNET_GRAPH_INSTALLED_TEST=1 node --test tests/dotnet-graph-package.test.mjs
+              test -s build/recursive/dotnet-packages.json
+              LEAN_BRIDGE_DOTNET_GRAPH_COMPOSITION_TEST=1 node --test tests/dotnet-graph-package.test.mjs
+              test -s build/recursive/dotnet-composition.json
+              LEAN_BRIDGE_DOTNET_GRAPH_REPRODUCIBILITY_TEST=1 node --test tests/dotnet-graph-package.test.mjs
+              test -s build/recursive/dotnet-reproducibility.json
+              LEAN_BRIDGE_DOTNET_GRAPH_CONFLICT_TEST=1 node --test tests/dotnet-graph-package.test.mjs
+              test -s build/recursive/dotnet-conflicts.json
+              test -s build/type-corpus/dotnet.json
+              test -s build/type-corpus/reviewed-native-dotnet.json
+          - name: Install the isolated nominal C# SDK
+            if: matrix.profile == 'dotnet'
+            timeout-minutes: 20
+            uses: actions/setup-dotnet@v6
+            env:
+              DOTNET_INSTALL_DIR: ${{ runner.temp }}/lean-bridge-nominal-dotnet-8.0.424
+            with:
+              dotnet-version: '8.0.424'
+          - name: Require nominal C# packages on the pinned SDK
+            if: matrix.profile == 'dotnet'
+            timeout-minutes: 45
+            env:
+              LEAN_NUM_THREADS: "1"
+              MSBUILDDISABLENODEREUSE: "1"
+            run: |
+              set -euo pipefail
+              source scripts/env.sh
+              bash scripts/run-nominal-subtype-dotnet-ci.sh "$RUNNER_TEMP/lean-bridge-nominal-dotnet-8.0.424/dotnet"
+          - name: Preserve complete and partial nominal C# records
+            if: always() && matrix.profile == 'dotnet'
+            uses: actions/upload-artifact@v7
+            with:
+              name: nominal-subtype-dotnet-${{ github.sha }}
+              path: build/nominal-subtype-dotnet-ci/
+              if-no-files-found: error
+              retention-days: 30
+          - name: Upload the .NET real-Lean type corpus report
+            if: always() && matrix.profile == 'dotnet'
+            uses: actions/upload-artifact@v7
+            with:
+              name: type-corpus-dotnet-${{ github.sha }}
+              path: |
+                build/type-corpus/dotnet.json
+                build/type-corpus/reviewed-native-dotnet.json
+                build/char-native/dotnet.json
+                build/word-native/dotnet.json
+                build/callables/dotnet.json
+                build/structured-callables/dotnet.json
+                build/recursive-callables/dotnet.json
+                build/compounds/dotnet.json
+                build/lists/dotnet.json
+                build/aliases/dotnet.json
+                build/native-fin/dotnet.json
+                build/native-fin/dotnet-reviewed.json
+                build/native-specializations/dotnet.json
+                build/generic-records/dotnet.json
+                build/generic-records/specialized-dotnet.json
+                build/generic-records/array-dotnet.json
+                build/native-fin-containers/dotnet.json
+                build/native-fin-containers/reviewed-dotnet.json
+                build/native-fin-container-edges/edges-dotnet.json
+                build/fin-late-native-ci/dotnet
+                build/native-fin-products/dotnet.json
+                build/native-fin-products/reviewed-dotnet.json
+                build/native-fin-product-arrays/dotnet.json
+                build/native-fin-product-arrays/reviewed-dotnet.json
+                build/native-fin-records/dotnet.json
+                build/native-fin-records/reviewed-dotnet.json
+                build/native-fin-record-zero/dotnet.json
+                build/native-fin-record-zero/reviewed-dotnet.json
+                build/native-subtype/dotnet.json
+                build/reviewed-subtype-ci/dotnet/
+                build/checked-record-ci/dotnet/
+                build/structural-subtype-ci/dotnet/
+                build/variants/dotnet.json
+                build/collections/dotnet-conversions.json
+                build/collections/dotnet.json
+                build/equality/dotnet.json
+                build/recursive/dotnet-values.json
+                build/recursive/dotnet-conversions.json
+                build/recursive/dotnet-native.json
+                build/recursive/dotnet-packages.json
+                build/recursive/dotnet-composition.json
+                build/recursive/dotnet-reproducibility.json
+                build/recursive/dotnet-conflicts.json
+                build/owned-dotnet-runtime/
+                build/owned-dotnet-layout/
+                build/owned-dotnet-values/
+                build/owned-dotnet-conversions/
+                build/owned-dotnet-callables/
+                build/owned-dotnet-callback-signatures/
+                build/owned-dotnet-loading/
+                build/owned-dotnet-packaging/
+                build/owned-dotnet-transfers/
+                build/owned-dotnet-transfer-packaging/
+                build/owned-dotnet-borrows/
+                build/owned-dotnet-borrow-packaging/
+                build/owned-dotnet-borrows.log
+                build/owned-dotnet-receivers/
+                build/owned-dotnet-receivers.log
+              if-no-files-found: error
+              overwrite: true
+              retention-days: 30
+          - name: Install C# for the combined Maven receiver build
+            if: matrix.profile == 'jvm'
+            uses: actions/setup-dotnet@v6
+            with:
+              dotnet-version: '8.0.424'
+          - name: Install Ruby for the combined Maven receiver build
+            if: matrix.profile == 'jvm'
+            uses: ruby/setup-ruby@v1
+            with:
+              ruby-version: '3.3.12'
+          - name: Install the ordinary Java compiler
+            if: matrix.profile == 'jvm'
+            uses: actions/setup-java@v4
+            with:
+              distribution: temurin
+              java-version: '22.0.2'
+          - name: Install dependencies for ordinary_jvm
+            timeout-minutes: 20
+            if: matrix.profile == 'jvm'
+            run: |
+              sudo apt-get install -y maven unzip
+          - name: Compile ordinary Lean APIs and install Maven packages in Java and Kotlin
+            if: matrix.profile == 'jvm'
+            id: ordinary_jvm
+            continue-on-error: true
+            env:
+              LEAN_BRIDGE_NATIVE_JVM_TEST: "1"
+            run: |
+              mkdir -p build
+              curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip
+              echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check
+              unzip -q build/kotlin-compiler.zip -d build/kotlin-tools
+              export LEAN_BRIDGE_JAVAC="$JAVA_HOME/bin/javac"
+              export LEAN_BRIDGE_JAVA="$JAVA_HOME/bin/java"
+              export LEAN_BRIDGE_KOTLINC="$PWD/build/kotlin-tools/kotlinc/bin/kotlinc"
+              export LEAN_BRIDGE_KOTLIN="$PWD/build/kotlin-tools/kotlinc/bin/kotlin"
+              source scripts/env.sh
+              node --test tests/native-jvm.test.mjs
+          - name: Install dependencies for type_corpus_jvm
+            timeout-minutes: 20
+            if: matrix.profile == 'jvm'
+            run: |
+              sudo apt-get install -y python3-venv pkg-config gdb
+              # Installed JVM Fin entry counters run each probe as GDB's own child; record the debugger and ptrace policy.
+              test -x /usr/bin/gdb
+              /usr/bin/gdb --version
+              cat /proc/sys/kernel/yama/ptrace_scope
+          - name: Compare isolated Java and Kotlin corpus consumers with fresh Lean
+            if: matrix.profile == 'jvm'
+            id: type_corpus_jvm
+            continue-on-error: true
+            run: |
+              bash scripts/bootstrap-rust-ci.sh
+              export LEAN_BRIDGE_RUSTC="$PWD/.toolchains/rust-1.90.0/bin/rustc"
+              export LEAN_BRIDGE_CARGO="$PWD/.toolchains/rust-1.90.0/bin/cargo"
+              export CARGO_HOME="${CARGO_HOME:-$HOME/.cargo}"
+              export LEAN_BRIDGE_PYTHON="$(command -v python3)"
+              export LEAN_BRIDGE_RUBY="$(command -v ruby)"
+              export LEAN_BRIDGE_GEM="$(command -v gem)"
+              export LEAN_BRIDGE_DOTNET="$(command -v dotnet)"
+              export LEAN_BRIDGE_JAVAC="$JAVA_HOME/bin/javac"
+              export LEAN_BRIDGE_JAVA="$JAVA_HOME/bin/java"
+              export LEAN_BRIDGE_MAVEN="$(command -v mvn)"
+              export LEAN_BRIDGE_KOTLINC="$PWD/build/kotlin-tools/kotlinc/bin/kotlinc"
+              source scripts/env.sh
+              npm run test:type-corpus:jvm && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=java,kotlin node --test tests/type-corpus-reviewed-native.test.mjs
+              LEAN_BRIDGE_CHAR_PROFILES=java,kotlin node --test tests/native-char.test.mjs
+              LEAN_BRIDGE_WORD_PROFILES=java,kotlin node --test tests/native-words.test.mjs
+              LEAN_BRIDGE_JVM_CALLABLE_TEST=1 node --test tests/jvm-callables.test.mjs tests/jvm-callable-contract.test.mjs
+              LEAN_BRIDGE_JVM_STRUCTURED_CALLABLE_TEST=1 node --test tests/jvm-structured-callables.test.mjs
+              test -s build/structured-callables/jvm.json
+              LEAN_BRIDGE_JVM_RECURSIVE_CALLABLE_TEST=1 node --test tests/jvm-recursive-callables.test.mjs
+              test -s build/recursive-callables/jvm-recursive.json
+              test -s build/recursive-callables/jvm-mixed.json
+              LEAN_BRIDGE_JVM_COMPOUND_TEST=1 node --test tests/jvm-compounds.test.mjs tests/jvm-compound-contract.test.mjs
+              test -s build/compounds/jvm.json
+              LEAN_BRIDGE_JVM_LIST_TEST=1 node --test tests/jvm-lists.test.mjs tests/jvm-list-contract.test.mjs
+              test -s build/lists/jvm.json
+              LEAN_BRIDGE_JVM_ALIAS_TEST=1 node --test tests/jvm-aliases.test.mjs
+              test -s build/aliases/jvm.json
+              LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_JVM_FIN_TEST=1 node --test tests/jvm-fin.test.mjs
+              test -s build/native-fin/jvm.json
+              test -s build/native-fin/jvm-reviewed.json
+              LEAN_BRIDGE_SPECIALIZATION_PROFILES=java,kotlin node --test tests/native-specializations.test.mjs
+              test -s build/native-specializations/java-kotlin.json
+              LEAN_BRIDGE_GENERIC_RECORD_PROFILES=java,kotlin node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs
+              test -s build/generic-records/java-kotlin.json
+              test -s build/generic-records/specialized-java-kotlin.json
+              LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES=java,kotlin node --test --test-concurrency=1 tests/generic-record-arrays.test.mjs
+              test -s build/generic-records/array-java-kotlin.json
+              LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS=1 LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_PROFILES=java,kotlin LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=java,kotlin node --test tests/native-fin-containers.test.mjs
+              test -s build/native-fin-containers/java-kotlin.json
+              test -s build/native-fin-containers/reviewed-java-kotlin.json
+              node scripts/check-fin-container-entry-reports.mjs java,kotlin build/native-fin-containers/java-kotlin.json build/native-fin-containers/reviewed-java-kotlin.json
+              LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES=java,kotlin LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH=1 LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT=build/native-fin-container-edges/edges-java-kotlin.json node --test --test-concurrency=1 --test-name-pattern='^installed source-free native packages execute zero-bound and nested-position Fin edge cases$' tests/fin-container-edges.test.mjs
+              test -s build/native-fin-container-edges/edges-java-kotlin.json
+              node scripts/check-fin-container-foreign-report.mjs java,kotlin build/native-fin-container-edges/edges-java-kotlin.json
+              LEAN_BRIDGE_FIN_PRODUCT_PROFILES=java,kotlin LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=java,kotlin node --test tests/native-fin-products.test.mjs
+              bash scripts/run-fin-late-native-ci.sh jvm
+              test -s build/native-fin-products/java-kotlin.json
+              test -s build/native-fin-products/reviewed-java-kotlin.json
+              LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=java,kotlin LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=java,kotlin node --test tests/native-fin-product-arrays.test.mjs
+              test -s build/native-fin-product-arrays/java-kotlin.json
+              test -s build/native-fin-product-arrays/reviewed-java-kotlin.json
+              LEAN_BRIDGE_FIN_RECORD_PROFILES=java,kotlin LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=java,kotlin node --test tests/native-fin-records.test.mjs
+              test -s build/native-fin-records/java-kotlin.json
+              test -s build/native-fin-records/reviewed-java-kotlin.json
+              LEAN_BRIDGE_FIN_RECORD_ZERO_PROFILES=java,kotlin LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_PROFILES=java,kotlin LEAN_BRIDGE_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/java-kotlin.json LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/reviewed-java-kotlin.json node --test --test-concurrency=1 tests/native-fin-record-zero.test.mjs
+              test -s build/native-fin-record-zero/java-kotlin.json
+              test -s build/native-fin-record-zero/reviewed-java-kotlin.json
+              node scripts/check-fin-record-zero-report.mjs java,kotlin build/native-fin-record-zero/java-kotlin.json build/native-fin-record-zero/reviewed-java-kotlin.json
+              LEAN_BRIDGE_SUBTYPE_PROFILES=java,kotlin node --test tests/native-subtype.test.mjs
+              test -s build/native-subtype/java-kotlin.json
+              bash scripts/run-reviewed-subtype-host-ci.sh jvm
+              bash scripts/run-checked-record-host-ci.sh jvm
+              bash scripts/run-structural-subtype-ci.sh jvm
+              LEAN_BRIDGE_JVM_VARIANT_TEST=1 node --test tests/jvm-variants.test.mjs
+              test -s build/variants/jvm.json
+              LEAN_BRIDGE_JVM_EQUALITY_TEST=1 node --test tests/jvm-value-equality.test.mjs
+              test -s build/equality/jvm.json
+              LEAN_BRIDGE_JVM_GRAPH_TEST=1 node --test tests/jvm-copied-graph-values.test.mjs
+              test -s build/recursive/jvm-values.json
+              LEAN_BRIDGE_JVM_GRAPH_CONVERSION_TEST=1 LEAN_BRIDGE_JVM_GRAPH_NATIVE_TEST=1 node --test tests/jvm-copied-graph-conversions.test.mjs
+              test -s build/recursive/jvm-conversions.json
+              test -s build/recursive/jvm-native.json
+              LEAN_BRIDGE_KOTLIN_GRAPH_TEST=1 node --test tests/jvm-copied-graph-kotlin.test.mjs
+              LEAN_BRIDGE_JVM_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_JVM_GRAPH_INSTALLED_TEST=1 node --test tests/jvm-graph-package.test.mjs
+              test -s build/recursive/kotlin-values.json
+              test -s build/recursive/jvm-package-cold.json
+              test -s build/recursive/jvm-packages.json
+              LEAN_BRIDGE_JVM_GRAPH_REPRO_TEST=1 LEAN_BRIDGE_JVM_GRAPH_LOADING_TEST=1 node --test tests/jvm-graph-package.test.mjs
+              test -s build/recursive/jvm-reproducibility.json
+              test -s build/recursive/jvm-composition.json
+              test -s build/recursive/jvm-conflicts.json
+              LEAN_BRIDGE_JVM_CONVERSIONS_TEST=1 node --test tests/jvm-collection-conversions.test.mjs
+              test -s build/collections/jvm-conversions.json
+              LEAN_BRIDGE_JVM_COLLECTION_PREFLIGHT=1 LEAN_BRIDGE_JVM_COLLECTION_PROFILES=java,kotlin node --test tests/jvm-collection-callers.test.mjs
+              LEAN_BRIDGE_JVM_COLLECTION_TEST=1 LEAN_BRIDGE_JVM_COLLECTION_PROFILES=java,kotlin node --test tests/jvm-collections.test.mjs
+              test -s build/collections/jvm.json
+              test -s build/type-corpus/java-kotlin.json
+              test -s build/type-corpus/reviewed-native-java-kotlin.json
+          - name: Require nominal Java and Kotlin packages
+            if: matrix.profile == 'jvm'
+            id: nominal_jvm
+            timeout-minutes: 45
+            run: |
+              set -euo pipefail
+              source scripts/env.sh
+              bash scripts/run-nominal-subtype-jvm-ci.sh "$JAVA_HOME/bin/java" "$JAVA_HOME/bin/javac" "$PWD/build/kotlin-tools/kotlinc/bin/kotlinc"
+          - name: Preserve complete and partial nominal JVM records
+            if: always() && matrix.profile == 'jvm'
+            uses: actions/upload-artifact@v7
+            with:
+              name: nominal-subtype-jvm-${{ github.sha }}
+              path: build/nominal-subtype-jvm-ci/
+              if-no-files-found: error
+              retention-days: 30
+          - name: Upload installed Java and Kotlin corpus observations
+            if: always() && matrix.profile == 'jvm'
+            uses: actions/upload-artifact@v7
+            with:
+              name: type-corpus-jvm-${{ github.sha }}
+              path: |
+                build/type-corpus/java-kotlin.json
+                build/type-corpus/reviewed-native-java-kotlin.json
+                build/char-native/java-kotlin.json
+                build/word-native/java-kotlin.json
+                build/callables/jvm.json
+                build/structured-callables/jvm.json
+                build/recursive-callables/jvm-recursive.json
+                build/recursive-callables/jvm-mixed.json
+                build/compounds/jvm.json
+                build/lists/jvm.json
+                build/aliases/jvm.json
+                build/native-fin/jvm.json
+                build/native-fin/jvm-reviewed.json
+                build/native-specializations/java-kotlin.json
+                build/generic-records/java-kotlin.json
+                build/generic-records/specialized-java-kotlin.json
+                build/generic-records/array-java-kotlin.json
+                build/native-fin-containers/java-kotlin.json
+                build/native-fin-containers/reviewed-java-kotlin.json
+                build/native-fin-container-edges/edges-java-kotlin.json
+                build/fin-late-native-ci/jvm
+                build/native-fin-products/java-kotlin.json
+                build/native-fin-products/reviewed-java-kotlin.json
+                build/native-fin-product-arrays/java-kotlin.json
+                build/native-fin-product-arrays/reviewed-java-kotlin.json
+                build/native-fin-records/java-kotlin.json
+                build/native-fin-records/reviewed-java-kotlin.json
+                build/native-fin-record-zero/java-kotlin.json
+                build/native-fin-record-zero/reviewed-java-kotlin.json
+                build/native-subtype/java-kotlin.json
+                build/reviewed-subtype-ci/jvm/
+                build/checked-record-ci/jvm/
+                build/structural-subtype-ci/jvm/
+                build/variants/jvm.json
+                build/equality/jvm.json
+                build/recursive/jvm-values.json
+                build/recursive/jvm-conversions.json
+                build/recursive/jvm-native.json
+                build/recursive/kotlin-values.json
+                build/recursive/jvm-package-cold.json
+                build/recursive/jvm-packages.json
+                build/recursive/jvm-reproducibility.json
+                build/recursive/jvm-composition.json
+                build/recursive/jvm-conflicts.json
+                build/collections/jvm-conversions.json
+                build/collections/jvm.json
+              if-no-files-found: error
+              overwrite: true
+              retention-days: 30
+          - name: Install the ordinary Ruby runtime
+            if: matrix.profile == 'ruby'
+            uses: ruby/setup-ruby@v1
+            with:
+              ruby-version: '3.3.12'
+          - name: Build ordinary Lean APIs and install relocated RubyGems releases
+            if: matrix.profile == 'ruby'
+            id: ordinary_ruby
+            env:
+              LEAN_BRIDGE_NATIVE_RUBY_TEST: "1"
+            run: |
+              export LEAN_BRIDGE_RUBY="$(command -v ruby)"
+              export LEAN_BRIDGE_GEM="$(command -v gem)"
+              source scripts/env.sh
+              node --test tests/native-ruby.test.mjs
+          - name: Install dependencies for type_corpus_ruby
+            timeout-minutes: 20
+            if: matrix.profile == 'ruby'
+            run: |
+              sudo apt-get install -y python3-venv pkg-config gdb
+              # Installed Ruby Fin entry counters run the probe as GDB's own child; record the debugger and ptrace policy.
+              test -x /usr/bin/gdb
+              /usr/bin/gdb --version
+              cat /proc/sys/kernel/yama/ptrace_scope
+          - name: Compare installed Ruby corpus packages with fresh Lean results
+            if: matrix.profile == 'ruby'
+            id: type_corpus_ruby
+            continue-on-error: true
+            run: |
+              bash scripts/bootstrap-rust-ci.sh
+              export LEAN_BRIDGE_RUSTC="$PWD/.toolchains/rust-1.90.0/bin/rustc"
+              export LEAN_BRIDGE_CARGO="$PWD/.toolchains/rust-1.90.0/bin/cargo"
+              export CARGO_HOME="${CARGO_HOME:-$HOME/.cargo}"
+              export LEAN_BRIDGE_PYTHON="$(command -v python3)"
+              export LEAN_BRIDGE_RUBY="$(command -v ruby)"
+              export LEAN_BRIDGE_GEM="$(command -v gem)"
+              source scripts/env.sh
+              npm run test:type-corpus:ruby && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=ruby node --test tests/type-corpus-reviewed-native.test.mjs
+              LEAN_BRIDGE_CHAR_PROFILES=ruby node --test tests/native-char.test.mjs
+              LEAN_BRIDGE_WORD_PROFILES=ruby node --test tests/native-words.test.mjs
+              LEAN_BRIDGE_RUBY_CALLABLE_TEST=1 node --test tests/ruby-callables.test.mjs
+              LEAN_BRIDGE_RUBY_STRUCTURED_CALLABLE_TEST=1 node --test tests/ruby-structured-callables.test.mjs
+              LEAN_BRIDGE_RUBY_RECURSIVE_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/ruby-recursive-callables.test.mjs tests/ruby-recursive-callable-contract.test.mjs
+              LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-ruby-runtime.test.mjs tests/owned-ruby-values.test.mjs tests/owned-ruby-layout.test.mjs tests/owned-ruby-conversions.test.mjs
+              LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-ruby-gmp.test.mjs tests/owned-ruby-package.test.mjs tests/owned-ruby-packaging.test.mjs tests/owned-ruby-coexistence.test.mjs
+              test -s build/owned-ruby-packaging/ordinary.json
+              test -s build/owned-ruby-packaging/reviewed.json
+              test -s build/owned-ruby-packaging/scalars-ordinary.json
+              test -s build/owned-ruby-packaging/scalars-reviewed.json
+              test -s build/owned-ruby-packaging/coexistence.json
+              npm run test:owned-ruby-transfers
+              test -s build/owned-ruby-transfers/ordinary.json
+              test -s build/owned-ruby-transfers/reviewed.json
+              test -s build/owned-ruby-transfer-packaging/ordinary.json
+              test -s build/owned-ruby-transfer-packaging/reviewed.json
+              npm run test:owned-ruby-borrows > build/owned-ruby-borrows.log 2>&1
+              cat build/owned-ruby-borrows.log
+              rg '^# pass 7$' build/owned-ruby-borrows.log
+              rg '^# fail 0$' build/owned-ruby-borrows.log
+              rg '^# skipped 0$' build/owned-ruby-borrows.log
+              test -s build/owned-ruby-borrows/ordinary.json
+              test -s build/owned-ruby-borrows/reviewed.json
+              test -s build/owned-ruby-borrows/borrow-only.json
+              test -s build/owned-ruby-borrow-packaging/ordinary.json
+              test -s build/owned-ruby-borrow-packaging/reviewed.json
+              npm run test:owned-ruby-receivers > build/owned-ruby-receivers.log 2>&1
+              cat build/owned-ruby-receivers.log
+              rg '^# tests 10$' build/owned-ruby-receivers.log
+              rg '^# pass 10$' build/owned-ruby-receivers.log
+              rg '^# fail 0$' build/owned-ruby-receivers.log
+              rg '^# cancelled 0$' build/owned-ruby-receivers.log
+              rg '^# skipped 0$' build/owned-ruby-receivers.log
+              test -s build/owned-ruby-receivers/ordinary.json
+              test -s build/owned-ruby-receivers/ordinary-package.json
+              test -s build/owned-ruby-receivers/ordinary-plain.json
+              test -s build/owned-ruby-receivers/ordinary-consuming.json
+              test -s build/owned-ruby-receivers/reviewed.json
+              test -s build/owned-ruby-receivers/reviewed-package.json
+              test -s build/owned-ruby-receivers/reviewed-plain.json
+              test -s build/owned-ruby-receivers/reviewed-consuming.json
+              LEAN_BRIDGE_RUBY_COMPOUND_TEST=1 node --test tests/ruby-compounds.test.mjs tests/ruby-compound-contract.test.mjs
+              LEAN_BRIDGE_RUBY_LIST_TEST=1 node --test tests/ruby-lists.test.mjs tests/ruby-list-contract.test.mjs
+              LEAN_BRIDGE_RUBY_ALIAS_TEST=1 node --test tests/ruby-aliases.test.mjs
+              LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_RUBY_FIN_TEST=1 node --test tests/ruby-fin.test.mjs
+              LEAN_BRIDGE_RUBY_VARIANT_TEST=1 node --test tests/ruby-variants.test.mjs
+              LEAN_BRIDGE_RUBY_COLLECTION_TEST=1 node --test tests/ruby-collections.test.mjs tests/ruby-collection-contract.test.mjs
+              LEAN_BRIDGE_RUBY_GRAPH_TEST=1 node --test tests/ruby-copied-graph-values.test.mjs
+              test -s build/recursive/ruby-values.json
+              LEAN_BRIDGE_RUBY_GRAPH_TEST=1 LEAN_BRIDGE_RUBY_GRAPH_NATIVE_TEST=1 node --test tests/ruby-copied-graph-conversions.test.mjs
+              test -s build/recursive/ruby-conversions.json
+              test -s build/recursive/ruby-native.json
+              LEAN_BRIDGE_RUBY_GRAPH_PACKAGE_TEST=1 node --test tests/ruby-graph-package.test.mjs
+              test -s build/recursive/ruby-packages.json
+              test -s build/callables/ruby.json
+              test -s build/structured-callables/ruby.json
+              test -s build/recursive-callables/ruby.json
+              test -s build/compounds/ruby.json
+              test -s build/lists/ruby.json
+              test -s build/aliases/ruby.json
+              test -s build/native-fin/ruby.json
+              test -s build/native-fin/ruby-reviewed.json
+              LEAN_BRIDGE_SPECIALIZATION_PROFILES=ruby node --test tests/native-specializations.test.mjs
+              test -s build/native-specializations/ruby.json
+              LEAN_BRIDGE_GENERIC_RECORD_PROFILES=ruby node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs
+              test -s build/generic-records/ruby.json
+              test -s build/generic-records/specialized-ruby.json
+              LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES=ruby node --test --test-concurrency=1 tests/generic-record-arrays.test.mjs
+              test -s build/generic-records/array-ruby.json
+              LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS=1 LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_PROFILES=ruby LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=ruby node --test tests/native-fin-containers.test.mjs
+              test -s build/native-fin-containers/ruby.json
+              test -s build/native-fin-containers/reviewed-ruby.json
+              node scripts/check-fin-container-entry-reports.mjs ruby build/native-fin-containers/ruby.json build/native-fin-containers/reviewed-ruby.json
+              LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES=ruby LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH=1 LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT=build/native-fin-container-edges/edges-ruby.json node --test --test-concurrency=1 --test-name-pattern='^installed source-free native packages execute zero-bound and nested-position Fin edge cases$' tests/fin-container-edges.test.mjs
+              test -s build/native-fin-container-edges/edges-ruby.json
+              node scripts/check-fin-container-foreign-report.mjs ruby build/native-fin-container-edges/edges-ruby.json
+              LEAN_BRIDGE_FIN_PRODUCT_PROFILES=ruby LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=ruby node --test tests/native-fin-products.test.mjs
+              bash scripts/run-fin-late-native-ci.sh ruby
+              test -s build/native-fin-products/ruby.json
+              test -s build/native-fin-products/reviewed-ruby.json
+              LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=ruby LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=ruby node --test tests/native-fin-product-arrays.test.mjs
+              test -s build/native-fin-product-arrays/ruby.json
+              test -s build/native-fin-product-arrays/reviewed-ruby.json
+              LEAN_BRIDGE_FIN_RECORD_PROFILES=ruby LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=ruby node --test tests/native-fin-records.test.mjs
+              test -s build/native-fin-records/ruby.json
+              test -s build/native-fin-records/reviewed-ruby.json
+              LEAN_BRIDGE_FIN_RECORD_ZERO_PROFILES=ruby LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_PROFILES=ruby LEAN_BRIDGE_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/ruby.json LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/reviewed-ruby.json node --test --test-concurrency=1 tests/native-fin-record-zero.test.mjs
+              test -s build/native-fin-record-zero/ruby.json
+              test -s build/native-fin-record-zero/reviewed-ruby.json
+              node scripts/check-fin-record-zero-report.mjs ruby build/native-fin-record-zero/ruby.json build/native-fin-record-zero/reviewed-ruby.json
+              LEAN_BRIDGE_SUBTYPE_PROFILES=ruby node --test tests/native-subtype.test.mjs
+              test -s build/native-subtype/ruby.json
+              bash scripts/run-reviewed-subtype-host-ci.sh ruby
+              bash scripts/run-checked-record-host-ci.sh ruby
+              bash scripts/run-structural-subtype-ci.sh ruby
+              test -s build/variants/ruby.json
+              test -s build/collections/ruby.json
+              test -s build/type-corpus/ruby.json
+              test -s build/type-corpus/reviewed-native-ruby.json
+          - name: Require nominal Ruby packages on the pinned interpreter
+            if: matrix.profile == 'ruby'
+            timeout-minutes: 45
+            env:
+              LEAN_NUM_THREADS: "2"
+            run: |
+              source scripts/env.sh
+              bash scripts/run-nominal-subtype-ruby-ci.sh "$(command -v ruby)" "$(command -v gem)"
+          - name: Preserve complete and partial nominal Ruby records
+            if: always() && matrix.profile == 'ruby'
+            uses: actions/upload-artifact@v7
+            with:
+              name: nominal-subtype-ruby-${{ github.sha }}
+              path: build/nominal-subtype-ruby-ci/
+              if-no-files-found: error
+              retention-days: 30
+          - name: Upload the Ruby real-Lean type corpus report
+            if: always() && matrix.profile == 'ruby'
+            uses: actions/upload-artifact@v7
+            with:
+              name: type-corpus-ruby-${{ github.sha }}
+              path: |
+                build/type-corpus/ruby.json
+                build/type-corpus/reviewed-native-ruby.json
+                build/char-native/ruby.json
+                build/word-native/ruby.json
+                build/callables/ruby.json
+                build/structured-callables/ruby.json
+                build/recursive-callables/ruby.json
+                build/compounds/ruby.json
+                build/lists/ruby.json
+                build/aliases/ruby.json
+                build/native-fin/ruby.json
+                build/native-fin/ruby-reviewed.json
+                build/native-specializations/ruby.json
+                build/generic-records/ruby.json
+                build/generic-records/specialized-ruby.json
+                build/generic-records/array-ruby.json
+                build/native-fin-containers/ruby.json
+                build/native-fin-containers/reviewed-ruby.json
+                build/native-fin-container-edges/edges-ruby.json
+                build/fin-late-native-ci/ruby
+                build/native-fin-products/ruby.json
+                build/native-fin-products/reviewed-ruby.json
+                build/native-fin-product-arrays/ruby.json
+                build/native-fin-product-arrays/reviewed-ruby.json
+                build/native-fin-records/ruby.json
+                build/native-fin-records/reviewed-ruby.json
+                build/native-fin-record-zero/ruby.json
+                build/native-fin-record-zero/reviewed-ruby.json
+                build/native-subtype/ruby.json
+                build/reviewed-subtype-ci/ruby/
+                build/checked-record-ci/ruby/
+                build/structural-subtype-ci/ruby/
+                build/variants/ruby.json
+                build/collections/ruby.json
+                build/recursive/ruby-values.json
+                build/recursive/ruby-conversions.json
+                build/recursive/ruby-native.json
+                build/recursive/ruby-packages.json
+                build/owned-ruby-runtime/
+                build/owned-ruby-values/
+                build/owned-ruby-layout/
+                build/owned-ruby-conversions/
+                build/owned-ruby-gmp/
+                build/owned-ruby-loading/
+                build/owned-ruby-transfers/
+                build/owned-ruby-transfer-packaging/
+                build/owned-ruby-borrows/
+                build/owned-ruby-borrow-packaging/
+                build/owned-ruby-borrows.log
+                build/owned-ruby-receivers/
+                build/owned-ruby-receivers.log
+                build/owned-ruby-packaging/
+              if-no-files-found: error
+              overwrite: true
+              retention-days: 30
+          - name: Record managed consumer observations
+            if: always()
+            shell: bash
+            run: |
+              for consumer in ${{ matrix.profile }}; do
+                consumer_command="npm run test:consumer:managed"
+                test_result="${{ steps.consumer.outcome == 'success' && 'passed' || 'failed' }}"
+                executed="${{ steps.consumer.outcome == 'success' && 'true' || 'false' }}"
+                if [ "$consumer" = dotnet ]; then
+                  consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_DOTNET_TEST=1 node --test tests/native-dotnet.test.mjs && npm run test:type-corpus:dotnet && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=dotnet node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_DOTNET_CALLABLE_TEST=1 node --test tests/dotnet-callables.test.mjs tests/dotnet-callable-contract.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_STRUCTURED_CALLABLE_TEST=1 node --test tests/dotnet-structured-callables.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_RECURSIVE_CALLABLE_TEST=1 node --test tests/dotnet-recursive-callables.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-dotnet-runtime.test.mjs tests/owned-dotnet-layout.test.mjs tests/owned-dotnet-values.test.mjs tests/owned-dotnet-conversions.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-dotnet-callables.test.mjs tests/owned-dotnet-callback-signatures.test.mjs tests/owned-dotnet-package.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-dotnet-packaging.test.mjs tests/owned-dotnet-coexistence.test.mjs"
+                  consumer_command="$consumer_command && npm run test:owned-dotnet-transfers"
+                  consumer_command="$consumer_command && npm run test:owned-dotnet-borrows"
+                  consumer_command="$consumer_command && npm run test:owned-dotnet-receivers"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_COMPOUND_TEST=1 node --test tests/dotnet-compounds.test.mjs tests/dotnet-compound-contract.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_LIST_TEST=1 node --test tests/dotnet-lists.test.mjs tests/dotnet-list-contract.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_ALIAS_TEST=1 node --test tests/dotnet-aliases.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_DOTNET_FIN_TEST=1 node --test tests/dotnet-fin.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_SPECIALIZATION_PROFILES=dotnet node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=dotnet node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES=dotnet node --test --test-concurrency=1 tests/generic-record-arrays.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS=1 LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=dotnet node --test tests/native-fin-containers.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES=dotnet LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH=1 LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT=build/native-fin-container-edges/edges-dotnet.json node --test --test-concurrency=1 --test-name-pattern='^installed source-free native packages execute zero-bound and nested-position Fin edge cases$' tests/fin-container-edges.test.mjs && node scripts/check-fin-container-foreign-report.mjs dotnet build/native-fin-container-edges/edges-dotnet.json && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=dotnet node --test tests/native-fin-products.test.mjs && bash scripts/run-fin-late-native-ci.sh dotnet"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=dotnet node --test tests/native-fin-product-arrays.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_FIN_RECORD_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=dotnet node --test tests/native-fin-records.test.mjs && LEAN_BRIDGE_FIN_RECORD_ZERO_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_PROFILES=dotnet LEAN_BRIDGE_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/dotnet.json LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/reviewed-dotnet.json node --test --test-concurrency=1 tests/native-fin-record-zero.test.mjs && node scripts/check-fin-record-zero-report.mjs dotnet build/native-fin-record-zero/dotnet.json build/native-fin-record-zero/reviewed-dotnet.json"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=dotnet node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-host-ci.sh dotnet && bash scripts/run-checked-record-host-ci.sh dotnet && bash scripts/run-structural-subtype-ci.sh dotnet"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_VARIANT_TEST=1 node --test tests/dotnet-variants.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_CONVERSION_TEST=1 node --test tests/dotnet-collection-conversions.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_COLLECTION_TEST=1 node --test tests/dotnet-collections.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_EQUALITY_TEST=1 node --test tests/dotnet-value-equality.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_TEST=1 node --test tests/dotnet-copied-graph-values.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_CONVERSION_TEST=1 LEAN_BRIDGE_DOTNET_GRAPH_NATIVE_TEST=1 node --test tests/dotnet-copied-graph-conversions.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_DOTNET_GRAPH_INSTALLED_TEST=1 node --test tests/dotnet-graph-package.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_COMPOSITION_TEST=1 node --test tests/dotnet-graph-package.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_REPRODUCIBILITY_TEST=1 node --test tests/dotnet-graph-package.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_CONFLICT_TEST=1 node --test tests/dotnet-graph-package.test.mjs"
+                  if [ "${{ steps.ordinary_dotnet.outcome }}" != success ] || [ "${{ steps.type_corpus_dotnet.outcome }}" != success ]; then
+                    test_result=failed
+                    executed=false
+                  fi
+                fi
+                if [ "$consumer" = jvm ]; then
+                  consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_JVM_TEST=1 node --test tests/native-jvm.test.mjs && npm run test:type-corpus:jvm && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=java,kotlin node --test tests/type-corpus-reviewed-native.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_CALLABLE_TEST=1 node --test tests/jvm-callables.test.mjs tests/jvm-callable-contract.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_STRUCTURED_CALLABLE_TEST=1 node --test tests/jvm-structured-callables.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_RECURSIVE_CALLABLE_TEST=1 node --test tests/jvm-recursive-callables.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_COMPOUND_TEST=1 node --test tests/jvm-compounds.test.mjs tests/jvm-compound-contract.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_LIST_TEST=1 node --test tests/jvm-lists.test.mjs tests/jvm-list-contract.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_ALIAS_TEST=1 node --test tests/jvm-aliases.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_JVM_FIN_TEST=1 node --test tests/jvm-fin.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_SPECIALIZATION_PROFILES=java,kotlin node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=java,kotlin node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES=java,kotlin node --test --test-concurrency=1 tests/generic-record-arrays.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS=1 LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_PROFILES=java,kotlin LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=java,kotlin node --test tests/native-fin-containers.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES=java,kotlin LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH=1 LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT=build/native-fin-container-edges/edges-java-kotlin.json node --test --test-concurrency=1 --test-name-pattern='^installed source-free native packages execute zero-bound and nested-position Fin edge cases$' tests/fin-container-edges.test.mjs && node scripts/check-fin-container-foreign-report.mjs java,kotlin build/native-fin-container-edges/edges-java-kotlin.json && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=java,kotlin LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=java,kotlin node --test tests/native-fin-products.test.mjs && bash scripts/run-fin-late-native-ci.sh jvm"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=java,kotlin LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=java,kotlin node --test tests/native-fin-product-arrays.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_FIN_RECORD_PROFILES=java,kotlin LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=java,kotlin node --test tests/native-fin-records.test.mjs && LEAN_BRIDGE_FIN_RECORD_ZERO_PROFILES=java,kotlin LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_PROFILES=java,kotlin LEAN_BRIDGE_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/java-kotlin.json LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/reviewed-java-kotlin.json node --test --test-concurrency=1 tests/native-fin-record-zero.test.mjs && node scripts/check-fin-record-zero-report.mjs java,kotlin build/native-fin-record-zero/java-kotlin.json build/native-fin-record-zero/reviewed-java-kotlin.json"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=java,kotlin node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-host-ci.sh jvm && bash scripts/run-checked-record-host-ci.sh jvm && bash scripts/run-structural-subtype-ci.sh jvm"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_VARIANT_TEST=1 node --test tests/jvm-variants.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_EQUALITY_TEST=1 node --test tests/jvm-value-equality.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_GRAPH_TEST=1 node --test tests/jvm-copied-graph-values.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_KOTLIN_GRAPH_TEST=1 node --test tests/jvm-copied-graph-kotlin.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_JVM_GRAPH_INSTALLED_TEST=1 node --test tests/jvm-graph-package.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_GRAPH_REPRO_TEST=1 LEAN_BRIDGE_JVM_GRAPH_LOADING_TEST=1 node --test tests/jvm-graph-package.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_GRAPH_CONVERSION_TEST=1 LEAN_BRIDGE_JVM_GRAPH_NATIVE_TEST=1 node --test tests/jvm-copied-graph-conversions.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_CONVERSIONS_TEST=1 node --test tests/jvm-collection-conversions.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_COLLECTION_PREFLIGHT=1 LEAN_BRIDGE_JVM_COLLECTION_PROFILES=java,kotlin node --test tests/jvm-collection-callers.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_COLLECTION_TEST=1 LEAN_BRIDGE_JVM_COLLECTION_PROFILES=java,kotlin node --test tests/jvm-collections.test.mjs"
+                  consumer_command="$consumer_command && bash scripts/run-nominal-subtype-jvm-ci.sh \"$JAVA_HOME/bin/java\" \"$JAVA_HOME/bin/javac\" \"$PWD/build/kotlin-tools/kotlinc/bin/kotlinc\""
+                  if [ "${{ steps.ordinary_jvm.outcome }}" != success ] || [ "${{ steps.type_corpus_jvm.outcome }}" != success ] || [ "${{ steps.nominal_jvm.outcome }}" != success ]; then
+                    test_result=failed
+                    executed=false
+                  fi
+                fi
+                if [ "$consumer" = ruby ]; then
+                  consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_RUBY_TEST=1 node --test tests/native-ruby.test.mjs && npm run test:type-corpus:ruby && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=ruby node --test tests/type-corpus-reviewed-native.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_CALLABLE_TEST=1 node --test tests/ruby-callables.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_STRUCTURED_CALLABLE_TEST=1 node --test tests/ruby-structured-callables.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_RECURSIVE_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/ruby-recursive-callables.test.mjs tests/ruby-recursive-callable-contract.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-ruby-runtime.test.mjs tests/owned-ruby-values.test.mjs tests/owned-ruby-layout.test.mjs tests/owned-ruby-conversions.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-ruby-gmp.test.mjs tests/owned-ruby-package.test.mjs tests/owned-ruby-packaging.test.mjs tests/owned-ruby-coexistence.test.mjs"
+                  consumer_command="$consumer_command && npm run test:owned-ruby-transfers"
+                  consumer_command="$consumer_command && npm run test:owned-ruby-borrows"
+                  consumer_command="$consumer_command && npm run test:owned-ruby-receivers"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_COMPOUND_TEST=1 node --test tests/ruby-compounds.test.mjs tests/ruby-compound-contract.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_LIST_TEST=1 node --test tests/ruby-lists.test.mjs tests/ruby-list-contract.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_ALIAS_TEST=1 node --test tests/ruby-aliases.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_RUBY_FIN_TEST=1 node --test tests/ruby-fin.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_SPECIALIZATION_PROFILES=ruby node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=ruby node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES=ruby node --test --test-concurrency=1 tests/generic-record-arrays.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS=1 LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_PROFILES=ruby LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=ruby node --test tests/native-fin-containers.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES=ruby LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH=1 LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT=build/native-fin-container-edges/edges-ruby.json node --test --test-concurrency=1 --test-name-pattern='^installed source-free native packages execute zero-bound and nested-position Fin edge cases$' tests/fin-container-edges.test.mjs && node scripts/check-fin-container-foreign-report.mjs ruby build/native-fin-container-edges/edges-ruby.json && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=ruby LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=ruby node --test tests/native-fin-products.test.mjs && bash scripts/run-fin-late-native-ci.sh ruby"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=ruby LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=ruby node --test tests/native-fin-product-arrays.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_FIN_RECORD_PROFILES=ruby LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=ruby node --test tests/native-fin-records.test.mjs && LEAN_BRIDGE_FIN_RECORD_ZERO_PROFILES=ruby LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_PROFILES=ruby LEAN_BRIDGE_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/ruby.json LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/reviewed-ruby.json node --test --test-concurrency=1 tests/native-fin-record-zero.test.mjs && node scripts/check-fin-record-zero-report.mjs ruby build/native-fin-record-zero/ruby.json build/native-fin-record-zero/reviewed-ruby.json"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=ruby node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-host-ci.sh ruby && bash scripts/run-checked-record-host-ci.sh ruby && bash scripts/run-structural-subtype-ci.sh ruby"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_VARIANT_TEST=1 node --test tests/ruby-variants.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_COLLECTION_TEST=1 node --test tests/ruby-collections.test.mjs tests/ruby-collection-contract.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_GRAPH_TEST=1 node --test tests/ruby-copied-graph-values.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_GRAPH_TEST=1 LEAN_BRIDGE_RUBY_GRAPH_NATIVE_TEST=1 node --test tests/ruby-copied-graph-conversions.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_GRAPH_PACKAGE_TEST=1 node --test tests/ruby-graph-package.test.mjs"
+                  if [ "${{ steps.ordinary_ruby.outcome }}" != success ] || [ "${{ steps.type_corpus_ruby.outcome }}" != success ]; then
+                    test_result=failed
+                    executed=false
+                  fi
+                fi
+                node scripts/consumer-ci.mjs record --consumer "$consumer" --output "build/consumer-ci/results/$consumer.json" --performance "build/consumer-ci/performance/$consumer.json" --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "$consumer_command"
+              done
+          - name: Upload managed consumer observations
+            if: always()
+            uses: actions/upload-artifact@v7
+            with:
+              name: consumer-results-managed-${{ matrix.profile }}-${{ github.sha }}
+              path: build/consumer-ci/results/${{ matrix.profile }}.json
+              if-no-files-found: error
+              overwrite: true
+              retention-days: 30
+          - name: Enforce managed consumer support
+            if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'dotnet' && (steps.ordinary_dotnet.outcome != 'success' || steps.type_corpus_dotnet.outcome != 'success')) || (matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success' || steps.nominal_jvm.outcome != 'success')) || (matrix.profile == 'ruby' && (steps.ordinary_ruby.outcome != 'success' || steps.type_corpus_ruby.outcome != 'success')))
+            run: exit 1
+    
+    
+  actual: |-
+      managed-consumers:
+        name: Managed consumer (${{ matrix.profile }})
+        runs-on: ubuntu-24.04
+        timeout-minutes: 240
+        strategy:
+          fail-fast: false
+          matrix:
+            profile: [dotnet, jvm, ruby]
+        steps:
+          - name: Check out the exact revision
+            uses: actions/checkout@v6
+            with:
+              fetch-depth: 0
+              persist-credentials: false
+          - name: Require source history before managed consumer builds
+            run: test "$(git rev-parse --is-shallow-repository)" = false
+          - name: Install Node.js
+            uses: actions/setup-node@v6
+            with:
+              node-version: ${{ env.NODE_VERSION }}
+              cache: npm
+          - name: Install Nix
+            uses: cachix/install-nix-action@v31
+          - name: Install dependencies without lifecycle scripts
+            run: npm ci --ignore-scripts
+          - name: Restore packages and execute real Lean
+            id: consumer
+            continue-on-error: true
+            run: npm run test:consumer:managed
+          - name: Bound apt network waits
+            uses: ./.github/actions/bounded-apt
+            timeout-minutes: 1
+          - name: Install apt dependencies for Prepare the pinned native compiler
+            timeout-minutes: 20
+            run: |
+              sudo apt-get update && sudo apt-get install -y build-essential zstd m4
+          - name: Prepare the pinned native compiler
+            run: |
+              bash scripts/bootstrap-toolchains.sh --lean-only
+          - name: Install the TAP log verifier
+            timeout-minutes: 20
+            run: sudo apt-get install -y ripgrep
+          - name: Install the ordinary C# compiler
+            if: matrix.profile == 'dotnet'
+            uses: actions/setup-dotnet@v6
+            with:
+              dotnet-version: '8.0.424'
+          - name: Install Ruby for the combined NuGet transfer build
+            if: matrix.profile == 'dotnet'
+            uses: ruby/setup-ruby@v1
+            with:
+              ruby-version: '3.3.12'
+          - name: Compile ordinary Lean APIs and install relocated NuGet releases
+            if: matrix.profile == 'dotnet'
+            id: ordinary_dotnet
+            continue-on-error: true
+            env:
+              LEAN_BRIDGE_NATIVE_DOTNET_TEST: "1"
+            run: |
+              source scripts/env.sh
+              node --test tests/native-dotnet.test.mjs
+          - name: Install dependencies for type_corpus_dotnet
+            timeout-minutes: 20
+            if: matrix.profile == 'dotnet'
+            run: |
+              sudo apt-get install -y python3-venv pkg-config gdb
+              # Installed .NET Fin entry counters run the probe as GDB's own child; record the debugger and ptrace policy.
+              test -x /usr/bin/gdb
+              /usr/bin/gdb --version
+              cat /proc/sys/kernel/yama/ptrace_scope
+          - name: Compare installed NuGet corpus packages with fresh Lean results
+            if: matrix.profile == 'dotnet'
+            id: type_corpus_dotnet
+            continue-on-error: true
+            run: |
+              bash scripts/bootstrap-rust-ci.sh
+              export LEAN_BRIDGE_RUSTC="$PWD/.toolchains/rust-1.90.0/bin/rustc"
+              export LEAN_BRIDGE_CARGO="$PWD/.toolchains/rust-1.90.0/bin/cargo"
+              export CARGO_HOME="${CARGO_HOME:-$HOME/.cargo}"
+              export LEAN_BRIDGE_PYTHON="$(command -v python3)"
+              export LEAN_BRIDGE_RUBY="$(command -v ruby)"
+              export LEAN_BRIDGE_GEM="$(command -v gem)"
+              export LEAN_BRIDGE_DOTNET="$(command -v dotnet)"
+              source scripts/env.sh
+              npm run test:type-corpus:dotnet && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=dotnet node --test tests/type-corpus-reviewed-native.test.mjs
+              LEAN_BRIDGE_CHAR_PROFILES=dotnet node --test tests/native-char.test.mjs
+              LEAN_BRIDGE_WORD_PROFILES=dotnet node --test tests/native-words.test.mjs
+              LEAN_BRIDGE_DOTNET_CALLABLE_TEST=1 node --test tests/dotnet-callables.test.mjs tests/dotnet-callable-contract.test.mjs
+              LEAN_BRIDGE_DOTNET_STRUCTURED_CALLABLE_TEST=1 node --test tests/dotnet-structured-callables.test.mjs
+              test -s build/structured-callables/dotnet.json
+              LEAN_BRIDGE_DOTNET_RECURSIVE_CALLABLE_TEST=1 node --test tests/dotnet-recursive-callables.test.mjs
+              test -s build/recursive-callables/dotnet.json
+              LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-dotnet-runtime.test.mjs tests/owned-dotnet-layout.test.mjs tests/owned-dotnet-values.test.mjs tests/owned-dotnet-conversions.test.mjs
+              LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-dotnet-callables.test.mjs tests/owned-dotnet-callback-signatures.test.mjs tests/owned-dotnet-package.test.mjs
+              LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-dotnet-packaging.test.mjs tests/owned-dotnet-coexistence.test.mjs
+              test -s build/owned-dotnet-packaging/compositions-ordinary.json
+              test -s build/owned-dotnet-packaging/compositions-reviewed.json
+              test -s build/owned-dotnet-packaging/scalars-ordinary.json
+              test -s build/owned-dotnet-packaging/scalars-reviewed.json
+              test -s build/owned-dotnet-packaging/coexistence.json
+              npm run test:owned-dotnet-transfers
+              npm run test:owned-dotnet-borrows > build/owned-dotnet-borrows.log 2>&1
+              cat build/owned-dotnet-borrows.log
+              rg '^# pass 7$' build/owned-dotnet-borrows.log
+              rg '^# fail 0$' build/owned-dotnet-borrows.log
+              rg '^# skipped 0$' build/owned-dotnet-borrows.log
+              test -s build/owned-dotnet-borrows/ordinary.json
+              test -s build/owned-dotnet-borrows/reviewed.json
+              test -s build/owned-dotnet-borrows/borrow-only.json
+              test -s build/owned-dotnet-borrow-packaging/ordinary.json
+              test -s build/owned-dotnet-borrow-packaging/reviewed.json
+              npm run test:owned-dotnet-receivers > build/owned-dotnet-receivers.log 2>&1
+              cat build/owned-dotnet-receivers.log
+              rg '^# tests 10$' build/owned-dotnet-receivers.log
+              rg '^# pass 10$' build/owned-dotnet-receivers.log
+              rg '^# fail 0$' build/owned-dotnet-receivers.log
+              rg '^# cancelled 0$' build/owned-dotnet-receivers.log
+              rg '^# skipped 0$' build/owned-dotnet-receivers.log
+              test -s build/owned-dotnet-receivers/ordinary.json
+              test -s build/owned-dotnet-receivers/ordinary-package.json
+              test -s build/owned-dotnet-receivers/ordinary-plain.json
+              test -s build/owned-dotnet-receivers/ordinary-consuming.json
+              test -s build/owned-dotnet-receivers/reviewed.json
+              test -s build/owned-dotnet-receivers/reviewed-package.json
+              test -s build/owned-dotnet-receivers/reviewed-plain.json
+              test -s build/owned-dotnet-receivers/reviewed-consuming.json
+              test -s build/owned-dotnet-transfers/ordinary.json
+              test -s build/owned-dotnet-transfers/reviewed.json
+              test -s build/owned-dotnet-transfer-packaging/ordinary.json
+              test -s build/owned-dotnet-transfer-packaging/reviewed.json
+              LEAN_BRIDGE_DOTNET_COMPOUND_TEST=1 node --test tests/dotnet-compounds.test.mjs tests/dotnet-compound-contract.test.mjs
+              test -s build/compounds/dotnet.json
+              LEAN_BRIDGE_DOTNET_LIST_TEST=1 node --test tests/dotnet-lists.test.mjs tests/dotnet-list-contract.test.mjs
+              test -s build/lists/dotnet.json
+              LEAN_BRIDGE_DOTNET_ALIAS_TEST=1 node --test tests/dotnet-aliases.test.mjs
+              test -s build/aliases/dotnet.json
+              LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_DOTNET_FIN_TEST=1 node --test tests/dotnet-fin.test.mjs
+              test -s build/native-fin/dotnet.json
+              test -s build/native-fin/dotnet-reviewed.json
+              LEAN_BRIDGE_SPECIALIZATION_PROFILES=dotnet node --test tests/native-specializations.test.mjs
+              test -s build/native-specializations/dotnet.json
+              LEAN_BRIDGE_GENERIC_RECORD_PROFILES=dotnet node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs
+              test -s build/generic-records/dotnet.json
+              test -s build/generic-records/specialized-dotnet.json
+              LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES=dotnet node --test --test-concurrency=1 tests/generic-record-arrays.test.mjs
+              test -s build/generic-records/array-dotnet.json
+              LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS=1 LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=dotnet node --test tests/native-fin-containers.test.mjs
+              test -s build/native-fin-containers/dotnet.json
+              test -s build/native-fin-containers/reviewed-dotnet.json
+              node scripts/check-fin-container-entry-reports.mjs dotnet build/native-fin-containers/dotnet.json build/native-fin-containers/reviewed-dotnet.json
+              LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES=dotnet LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH=1 LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT=build/native-fin-container-edges/edges-dotnet.json node --test --test-concurrency=1 --test-name-pattern='^installed source-free native packages execute zero-bound and nested-position Fin edge cases$' tests/fin-container-edges.test.mjs
+              test -s build/native-fin-container-edges/edges-dotnet.json
+              node scripts/check-fin-container-foreign-report.mjs dotnet build/native-fin-container-edges/edges-dotnet.json
+              LEAN_BRIDGE_FIN_PRODUCT_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=dotnet node --test tests/native-fin-products.test.mjs
+              bash scripts/run-fin-late-native-ci.sh dotnet
+              test -s build/native-fin-products/dotnet.json
+              test -s build/native-fin-products/reviewed-dotnet.json
+              LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=dotnet node --test tests/native-fin-product-arrays.test.mjs
+              test -s build/native-fin-product-arrays/dotnet.json
+              test -s build/native-fin-product-arrays/reviewed-dotnet.json
+              LEAN_BRIDGE_FIN_RECORD_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=dotnet node --test tests/native-fin-records.test.mjs
+              test -s build/native-fin-records/dotnet.json
+              test -s build/native-fin-records/reviewed-dotnet.json
+              LEAN_BRIDGE_FIN_RECORD_ZERO_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_PROFILES=dotnet LEAN_BRIDGE_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/dotnet.json LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/reviewed-dotnet.json node --test --test-concurrency=1 tests/native-fin-record-zero.test.mjs
+              test -s build/native-fin-record-zero/dotnet.json
+              test -s build/native-fin-record-zero/reviewed-dotnet.json
+              node scripts/check-fin-record-zero-report.mjs dotnet build/native-fin-record-zero/dotnet.json build/native-fin-record-zero/reviewed-dotnet.json
+              LEAN_BRIDGE_SUBTYPE_PROFILES=dotnet node --test tests/native-subtype.test.mjs
+              test -s build/native-subtype/dotnet.json
+              bash scripts/run-reviewed-subtype-host-ci.sh dotnet
+              bash scripts/run-checked-record-host-ci.sh dotnet
+              bash scripts/run-structural-subtype-ci.sh dotnet
+              LEAN_BRIDGE_DOTNET_VARIANT_TEST=1 node --test tests/dotnet-variants.test.mjs
+              test -s build/variants/dotnet.json
+              LEAN_BRIDGE_DOTNET_CONVERSION_TEST=1 node --test tests/dotnet-collection-conversions.test.mjs
+              test -s build/collections/dotnet-conversions.json
+              LEAN_BRIDGE_DOTNET_COLLECTION_TEST=1 node --test tests/dotnet-collections.test.mjs
+              test -s build/collections/dotnet.json
+              LEAN_BRIDGE_DOTNET_EQUALITY_TEST=1 node --test tests/dotnet-value-equality.test.mjs
+              test -s build/equality/dotnet.json
+              LEAN_BRIDGE_DOTNET_GRAPH_TEST=1 node --test tests/dotnet-copied-graph-values.test.mjs
+              test -s build/recursive/dotnet-values.json
+              LEAN_BRIDGE_DOTNET_GRAPH_CONVERSION_TEST=1 LEAN_BRIDGE_DOTNET_GRAPH_NATIVE_TEST=1 node --test tests/dotnet-copied-graph-conversions.test.mjs
+              test -s build/recursive/dotnet-conversions.json
+              test -s build/recursive/dotnet-native.json
+              LEAN_BRIDGE_DOTNET_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_DOTNET_GRAPH_INSTALLED_TEST=1 node --test tests/dotnet-graph-package.test.mjs
+              test -s build/recursive/dotnet-packages.json
+              LEAN_BRIDGE_DOTNET_GRAPH_COMPOSITION_TEST=1 node --test tests/dotnet-graph-package.test.mjs
+              test -s build/recursive/dotnet-composition.json
+              LEAN_BRIDGE_DOTNET_GRAPH_REPRODUCIBILITY_TEST=1 node --test tests/dotnet-graph-package.test.mjs
+              test -s build/recursive/dotnet-reproducibility.json
+              LEAN_BRIDGE_DOTNET_GRAPH_CONFLICT_TEST=1 node --test tests/dotnet-graph-package.test.mjs
+              test -s build/recursive/dotnet-conflicts.json
+              test -s build/type-corpus/dotnet.json
+              test -s build/type-corpus/reviewed-native-dotnet.json
+          - name: Install the isolated nominal C# SDK
+            if: matrix.profile == 'dotnet'
+            timeout-minutes: 20
+            uses: actions/setup-dotnet@v6
+            env:
+              DOTNET_INSTALL_DIR: ${{ runner.temp }}/lean-bridge-nominal-dotnet-8.0.424
+            with:
+              dotnet-version: '8.0.424'
+          - name: Require nominal C# packages on the pinned SDK
+            if: matrix.profile == 'dotnet'
+            timeout-minutes: 45
+            env:
+              LEAN_NUM_THREADS: "1"
+              MSBUILDDISABLENODEREUSE: "1"
+            run: |
+              set -euo pipefail
+              source scripts/env.sh
+              bash scripts/run-nominal-subtype-dotnet-ci.sh "$RUNNER_TEMP/lean-bridge-nominal-dotnet-8.0.424/dotnet"
+          - name: Preserve complete and partial nominal C# records
+            if: always() && matrix.profile == 'dotnet'
+            uses: actions/upload-artifact@v7
+            with:
+              name: nominal-subtype-dotnet-${{ github.sha }}
+              path: build/nominal-subtype-dotnet-ci/
+              if-no-files-found: error
+              retention-days: 30
+          - name: Upload the .NET real-Lean type corpus report
+            if: always() && matrix.profile == 'dotnet'
+            uses: actions/upload-artifact@v7
+            with:
+              name: type-corpus-dotnet-${{ github.sha }}
+              path: |
+                build/type-corpus/dotnet.json
+                build/type-corpus/reviewed-native-dotnet.json
+                build/char-native/dotnet.json
+                build/word-native/dotnet.json
+                build/callables/dotnet.json
+                build/structured-callables/dotnet.json
+                build/recursive-callables/dotnet.json
+                build/compounds/dotnet.json
+                build/lists/dotnet.json
+                build/aliases/dotnet.json
+                build/native-fin/dotnet.json
+                build/native-fin/dotnet-reviewed.json
+                build/native-specializations/dotnet.json
+                build/generic-records/dotnet.json
+                build/generic-records/specialized-dotnet.json
+                build/generic-records/array-dotnet.json
+                build/native-fin-containers/dotnet.json
+                build/native-fin-containers/reviewed-dotnet.json
+                build/native-fin-container-edges/edges-dotnet.json
+                build/fin-late-native-ci/dotnet
+                build/native-fin-products/dotnet.json
+                build/native-fin-products/reviewed-dotnet.json
+                build/native-fin-product-arrays/dotnet.json
+                build/native-fin-product-arrays/reviewed-dotnet.json
+                build/native-fin-records/dotnet.json
+                build/native-fin-records/reviewed-dotnet.json
+                build/native-fin-record-zero/dotnet.json
+                build/native-fin-record-zero/reviewed-dotnet.json
+                build/native-subtype/dotnet.json
+                build/reviewed-subtype-ci/dotnet/
+                build/checked-record-ci/dotnet/
+                build/structural-subtype-ci/dotnet/
+                build/variants/dotnet.json
+                build/collections/dotnet-conversions.json
+                build/collections/dotnet.json
+                build/equality/dotnet.json
+                build/recursive/dotnet-values.json
+                build/recursive/dotnet-conversions.json
+                build/recursive/dotnet-native.json
+                build/recursive/dotnet-packages.json
+                build/recursive/dotnet-composition.json
+                build/recursive/dotnet-reproducibility.json
+                build/recursive/dotnet-conflicts.json
+                build/owned-dotnet-runtime/
+                build/owned-dotnet-layout/
+                build/owned-dotnet-values/
+                build/owned-dotnet-conversions/
+                build/owned-dotnet-callables/
+                build/owned-dotnet-callback-signatures/
+                build/owned-dotnet-loading/
+                build/owned-dotnet-packaging/
+                build/owned-dotnet-transfers/
+                build/owned-dotnet-transfer-packaging/
+                build/owned-dotnet-borrows/
+                build/owned-dotnet-borrow-packaging/
+                build/owned-dotnet-borrows.log
+                build/owned-dotnet-receivers/
+                build/owned-dotnet-receivers.log
+              if-no-files-found: error
+              overwrite: true
+              retention-days: 30
+          - name: Install C# for the combined Maven receiver build
+            if: matrix.profile == 'jvm'
+            uses: actions/setup-dotnet@v6
+            with:
+              dotnet-version: '8.0.424'
+          - name: Install Ruby for the combined Maven receiver build
+            if: matrix.profile == 'jvm'
+            uses: ruby/setup-ruby@v1
+            with:
+              ruby-version: '3.3.12'
+          - name: Install the ordinary Java compiler
+            if: matrix.profile == 'jvm'
+            uses: actions/setup-java@v4
+            with:
+              distribution: temurin
+              java-version: '22.0.2'
+          - name: Install dependencies for ordinary_jvm
+            timeout-minutes: 20
+            if: matrix.profile == 'jvm'
+            run: |
+              sudo apt-get install -y maven unzip
+          - name: Compile ordinary Lean APIs and install Maven packages in Java and Kotlin
+            if: matrix.profile == 'jvm'
+            id: ordinary_jvm
+            continue-on-error: true
+            env:
+              LEAN_BRIDGE_NATIVE_JVM_TEST: "1"
+            run: |
+              mkdir -p build
+              curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip
+              echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check
+              unzip -q build/kotlin-compiler.zip -d build/kotlin-tools
+              export LEAN_BRIDGE_JAVAC="$JAVA_HOME/bin/javac"
+              export LEAN_BRIDGE_JAVA="$JAVA_HOME/bin/java"
+              export LEAN_BRIDGE_KOTLINC="$PWD/build/kotlin-tools/kotlinc/bin/kotlinc"
+              export LEAN_BRIDGE_KOTLIN="$PWD/build/kotlin-tools/kotlinc/bin/kotlin"
+              source scripts/env.sh
+              node --test tests/native-jvm.test.mjs
+          - name: Install dependencies for type_corpus_jvm
+            timeout-minutes: 20
+            if: matrix.profile == 'jvm'
+            run: |
+              sudo apt-get install -y python3-venv pkg-config gdb
+              # Installed JVM Fin entry counters run each probe as GDB's own child; record the debugger and ptrace policy.
+              test -x /usr/bin/gdb
+              /usr/bin/gdb --version
+              cat /proc/sys/kernel/yama/ptrace_scope
+          - name: Compare isolated Java and Kotlin corpus consumers with fresh Lean
+            if: matrix.profile == 'jvm'
+            id: type_corpus_jvm
+            continue-on-error: true
+            run: |
+              bash scripts/bootstrap-rust-ci.sh
+              export LEAN_BRIDGE_RUSTC="$PWD/.toolchains/rust-1.90.0/bin/rustc"
+              export LEAN_BRIDGE_CARGO="$PWD/.toolchains/rust-1.90.0/bin/cargo"
+              export CARGO_HOME="${CARGO_HOME:-$HOME/.cargo}"
+              export LEAN_BRIDGE_PYTHON="$(command -v python3)"
+              export LEAN_BRIDGE_RUBY="$(command -v ruby)"
+              export LEAN_BRIDGE_GEM="$(command -v gem)"
+              export LEAN_BRIDGE_DOTNET="$(command -v dotnet)"
+              export LEAN_BRIDGE_JAVAC="$JAVA_HOME/bin/javac"
+              export LEAN_BRIDGE_JAVA="$JAVA_HOME/bin/java"
+              export LEAN_BRIDGE_MAVEN="$(command -v mvn)"
+              export LEAN_BRIDGE_KOTLINC="$PWD/build/kotlin-tools/kotlinc/bin/kotlinc"
+              source scripts/env.sh
+              npm run test:type-corpus:jvm && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=java,kotlin node --test tests/type-corpus-reviewed-native.test.mjs
+              LEAN_BRIDGE_CHAR_PROFILES=java,kotlin node --test tests/native-char.test.mjs
+              LEAN_BRIDGE_WORD_PROFILES=java,kotlin node --test tests/native-words.test.mjs
+              LEAN_BRIDGE_JVM_CALLABLE_TEST=1 node --test tests/jvm-callables.test.mjs tests/jvm-callable-contract.test.mjs
+              LEAN_BRIDGE_JVM_STRUCTURED_CALLABLE_TEST=1 node --test tests/jvm-structured-callables.test.mjs
+              test -s build/structured-callables/jvm.json
+              LEAN_BRIDGE_JVM_RECURSIVE_CALLABLE_TEST=1 node --test tests/jvm-recursive-callables.test.mjs
+              test -s build/recursive-callables/jvm-recursive.json
+              test -s build/recursive-callables/jvm-mixed.json
+              LEAN_BRIDGE_JVM_COMPOUND_TEST=1 node --test tests/jvm-compounds.test.mjs tests/jvm-compound-contract.test.mjs
+              test -s build/compounds/jvm.json
+              LEAN_BRIDGE_JVM_LIST_TEST=1 node --test tests/jvm-lists.test.mjs tests/jvm-list-contract.test.mjs
+              test -s build/lists/jvm.json
+              LEAN_BRIDGE_JVM_ALIAS_TEST=1 node --test tests/jvm-aliases.test.mjs
+              test -s build/aliases/jvm.json
+              LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_JVM_FIN_TEST=1 node --test tests/jvm-fin.test.mjs
+              test -s build/native-fin/jvm.json
+              test -s build/native-fin/jvm-reviewed.json
+              LEAN_BRIDGE_SPECIALIZATION_PROFILES=java,kotlin node --test tests/native-specializations.test.mjs
+              test -s build/native-specializations/java-kotlin.json
+              LEAN_BRIDGE_GENERIC_RECORD_PROFILES=java,kotlin node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs
+              test -s build/generic-records/java-kotlin.json
+              test -s build/generic-records/specialized-java-kotlin.json
+              LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES=java,kotlin node --test --test-concurrency=1 tests/generic-record-arrays.test.mjs
+              test -s build/generic-records/array-java-kotlin.json
+              LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS=1 LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_PROFILES=java,kotlin LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=java,kotlin node --test tests/native-fin-containers.test.mjs
+              test -s build/native-fin-containers/java-kotlin.json
+              test -s build/native-fin-containers/reviewed-java-kotlin.json
+              node scripts/check-fin-container-entry-reports.mjs java,kotlin build/native-fin-containers/java-kotlin.json build/native-fin-containers/reviewed-java-kotlin.json
+              LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES=java,kotlin LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH=1 LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT=build/native-fin-container-edges/edges-java-kotlin.json node --test --test-concurrency=1 --test-name-pattern='^installed source-free native packages execute zero-bound and nested-position Fin edge cases$' tests/fin-container-edges.test.mjs
+              test -s build/native-fin-container-edges/edges-java-kotlin.json
+              node scripts/check-fin-container-foreign-report.mjs java,kotlin build/native-fin-container-edges/edges-java-kotlin.json
+              LEAN_BRIDGE_FIN_PRODUCT_PROFILES=java,kotlin LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=java,kotlin node --test tests/native-fin-products.test.mjs
+              bash scripts/run-fin-late-native-ci.sh jvm
+              test -s build/native-fin-products/java-kotlin.json
+              test -s build/native-fin-products/reviewed-java-kotlin.json
+              LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=java,kotlin LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=java,kotlin node --test tests/native-fin-product-arrays.test.mjs
+              test -s build/native-fin-product-arrays/java-kotlin.json
+              test -s build/native-fin-product-arrays/reviewed-java-kotlin.json
+              LEAN_BRIDGE_FIN_RECORD_PROFILES=java,kotlin LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=java,kotlin node --test tests/native-fin-records.test.mjs
+              test -s build/native-fin-records/java-kotlin.json
+              test -s build/native-fin-records/reviewed-java-kotlin.json
+              LEAN_BRIDGE_FIN_RECORD_ZERO_PROFILES=java,kotlin LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_PROFILES=java,kotlin LEAN_BRIDGE_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/java-kotlin.json LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/reviewed-java-kotlin.json node --test --test-concurrency=1 tests/native-fin-record-zero.test.mjs
+              test -s build/native-fin-record-zero/java-kotlin.json
+              test -s build/native-fin-record-zero/reviewed-java-kotlin.json
+              node scripts/check-fin-record-zero-report.mjs java,kotlin build/native-fin-record-zero/java-kotlin.json build/native-fin-record-zero/reviewed-java-kotlin.json
+              LEAN_BRIDGE_SUBTYPE_PROFILES=java,kotlin node --test tests/native-subtype.test.mjs
+              test -s build/native-subtype/java-kotlin.json
+              bash scripts/run-reviewed-subtype-host-ci.sh jvm
+              bash scripts/run-checked-record-host-ci.sh jvm
+              bash scripts/run-structural-subtype-ci.sh jvm
+              LEAN_BRIDGE_JVM_VARIANT_TEST=1 node --test tests/jvm-variants.test.mjs
+              test -s build/variants/jvm.json
+              LEAN_BRIDGE_JVM_EQUALITY_TEST=1 node --test tests/jvm-value-equality.test.mjs
+              test -s build/equality/jvm.json
+              LEAN_BRIDGE_JVM_GRAPH_TEST=1 node --test tests/jvm-copied-graph-values.test.mjs
+              test -s build/recursive/jvm-values.json
+              LEAN_BRIDGE_JVM_GRAPH_CONVERSION_TEST=1 LEAN_BRIDGE_JVM_GRAPH_NATIVE_TEST=1 node --test tests/jvm-copied-graph-conversions.test.mjs
+              test -s build/recursive/jvm-conversions.json
+              test -s build/recursive/jvm-native.json
+              LEAN_BRIDGE_KOTLIN_GRAPH_TEST=1 node --test tests/jvm-copied-graph-kotlin.test.mjs
+              LEAN_BRIDGE_JVM_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_JVM_GRAPH_INSTALLED_TEST=1 node --test tests/jvm-graph-package.test.mjs
+              test -s build/recursive/kotlin-values.json
+              test -s build/recursive/jvm-package-cold.json
+              test -s build/recursive/jvm-packages.json
+              LEAN_BRIDGE_JVM_GRAPH_REPRO_TEST=1 LEAN_BRIDGE_JVM_GRAPH_LOADING_TEST=1 node --test tests/jvm-graph-package.test.mjs
+              test -s build/recursive/jvm-reproducibility.json
+              test -s build/recursive/jvm-composition.json
+              test -s build/recursive/jvm-conflicts.json
+              LEAN_BRIDGE_JVM_CONVERSIONS_TEST=1 node --test tests/jvm-collection-conversions.test.mjs
+              test -s build/collections/jvm-conversions.json
+              LEAN_BRIDGE_JVM_COLLECTION_PREFLIGHT=1 LEAN_BRIDGE_JVM_COLLECTION_PROFILES=java,kotlin node --test tests/jvm-collection-callers.test.mjs
+              LEAN_BRIDGE_JVM_COLLECTION_TEST=1 LEAN_BRIDGE_JVM_COLLECTION_PROFILES=java,kotlin node --test tests/jvm-collections.test.mjs
+              test -s build/collections/jvm.json
+              test -s build/type-corpus/java-kotlin.json
+              test -s build/type-corpus/reviewed-native-java-kotlin.json
+          - name: Require nominal Java and Kotlin packages
+            if: matrix.profile == 'jvm'
+            id: nominal_jvm
+            timeout-minutes: 45
+            run: |
+              set -euo pipefail
+              source scripts/env.sh
+              bash scripts/run-nominal-subtype-jvm-ci.sh "$JAVA_HOME/bin/java" "$JAVA_HOME/bin/javac" "$PWD/build/kotlin-tools/kotlinc/bin/kotlinc"
+          - name: Preserve complete and partial nominal JVM records
+            if: always() && matrix.profile == 'jvm'
+            uses: actions/upload-artifact@v7
+            with:
+              name: nominal-subtype-jvm-${{ github.sha }}
+              path: build/nominal-subtype-jvm-ci/
+              if-no-files-found: error
+              retention-days: 30
+          - name: Upload installed Java and Kotlin corpus observations
+            if: always() && matrix.profile == 'jvm'
+            uses: actions/upload-artifact@v7
+            with:
+              name: type-corpus-jvm-${{ github.sha }}
+              path: |
+                build/type-corpus/java-kotlin.json
+                build/type-corpus/reviewed-native-java-kotlin.json
+                build/char-native/java-kotlin.json
+                build/word-native/java-kotlin.json
+                build/callables/jvm.json
+                build/structured-callables/jvm.json
+                build/recursive-callables/jvm-recursive.json
+                build/recursive-callables/jvm-mixed.json
+                build/compounds/jvm.json
+                build/lists/jvm.json
+                build/aliases/jvm.json
+                build/native-fin/jvm.json
+                build/native-fin/jvm-reviewed.json
+                build/native-specializations/java-kotlin.json
+                build/generic-records/java-kotlin.json
+                build/generic-records/specialized-java-kotlin.json
+                build/generic-records/array-java-kotlin.json
+                build/native-fin-containers/java-kotlin.json
+                build/native-fin-containers/reviewed-java-kotlin.json
+                build/native-fin-container-edges/edges-java-kotlin.json
+                build/fin-late-native-ci/jvm
+                build/native-fin-products/java-kotlin.json
+                build/native-fin-products/reviewed-java-kotlin.json
+                build/native-fin-product-arrays/java-kotlin.json
+                build/native-fin-product-arrays/reviewed-java-kotlin.json
+                build/native-fin-records/java-kotlin.json
+                build/native-fin-records/reviewed-java-kotlin.json
+                build/native-fin-record-zero/java-kotlin.json
+                build/native-fin-record-zero/reviewed-java-kotlin.json
+                build/native-subtype/java-kotlin.json
+                build/reviewed-subtype-ci/jvm/
+                build/checked-record-ci/jvm/
+                build/structural-subtype-ci/jvm/
+                build/variants/jvm.json
+                build/equality/jvm.json
+                build/recursive/jvm-values.json
+                build/recursive/jvm-conversions.json
+                build/recursive/jvm-native.json
+                build/recursive/kotlin-values.json
+                build/recursive/jvm-package-cold.json
+                build/recursive/jvm-packages.json
+                build/recursive/jvm-reproducibility.json
+                build/recursive/jvm-composition.json
+                build/recursive/jvm-conflicts.json
+                build/collections/jvm-conversions.json
+                build/collections/jvm.json
+              if-no-files-found: error
+              overwrite: true
+              retention-days: 30
+          - name: Install the ordinary Ruby runtime
+            if: matrix.profile == 'ruby'
+            uses: ruby/setup-ruby@v1
+            with:
+              ruby-version: '3.3.12'
+          - name: Build ordinary Lean APIs and install relocated RubyGems releases
+            if: matrix.profile == 'ruby'
+            id: ordinary_ruby
+            env:
+              LEAN_BRIDGE_NATIVE_RUBY_TEST: "1"
+            run: |
+              export LEAN_BRIDGE_RUBY="$(command -v ruby)"
+              export LEAN_BRIDGE_GEM="$(command -v gem)"
+              source scripts/env.sh
+              node --test tests/native-ruby.test.mjs
+          - name: Install dependencies for type_corpus_ruby
+            timeout-minutes: 20
+            if: matrix.profile == 'ruby'
+            run: |
+              sudo apt-get install -y python3-venv pkg-config gdb
+              # Installed Ruby Fin entry counters run the probe as GDB's own child; record the debugger and ptrace policy.
+              test -x /usr/bin/gdb
+              /usr/bin/gdb --version
+              cat /proc/sys/kernel/yama/ptrace_scope
+          - name: Compare installed Ruby corpus packages with fresh Lean results
+            if: matrix.profile == 'ruby'
+            id: type_corpus_ruby
+            continue-on-error: true
+            run: |
+              bash scripts/bootstrap-rust-ci.sh
+              export LEAN_BRIDGE_RUSTC="$PWD/.toolchains/rust-1.90.0/bin/rustc"
+              export LEAN_BRIDGE_CARGO="$PWD/.toolchains/rust-1.90.0/bin/cargo"
+              export CARGO_HOME="${CARGO_HOME:-$HOME/.cargo}"
+              export LEAN_BRIDGE_PYTHON="$(command -v python3)"
+              export LEAN_BRIDGE_RUBY="$(command -v ruby)"
+              export LEAN_BRIDGE_GEM="$(command -v gem)"
+              source scripts/env.sh
+              npm run test:type-corpus:ruby && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=ruby node --test tests/type-corpus-reviewed-native.test.mjs
+              LEAN_BRIDGE_CHAR_PROFILES=ruby node --test tests/native-char.test.mjs
+              LEAN_BRIDGE_WORD_PROFILES=ruby node --test tests/native-words.test.mjs
+              LEAN_BRIDGE_RUBY_CALLABLE_TEST=1 node --test tests/ruby-callables.test.mjs
+              LEAN_BRIDGE_RUBY_STRUCTURED_CALLABLE_TEST=1 node --test tests/ruby-structured-callables.test.mjs
+              LEAN_BRIDGE_RUBY_RECURSIVE_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/ruby-recursive-callables.test.mjs tests/ruby-recursive-callable-contract.test.mjs
+              LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-ruby-runtime.test.mjs tests/owned-ruby-values.test.mjs tests/owned-ruby-layout.test.mjs tests/owned-ruby-conversions.test.mjs
+              LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-ruby-gmp.test.mjs tests/owned-ruby-package.test.mjs tests/owned-ruby-packaging.test.mjs tests/owned-ruby-coexistence.test.mjs
+              test -s build/owned-ruby-packaging/ordinary.json
+              test -s build/owned-ruby-packaging/reviewed.json
+              test -s build/owned-ruby-packaging/scalars-ordinary.json
+              test -s build/owned-ruby-packaging/scalars-reviewed.json
+              test -s build/owned-ruby-packaging/coexistence.json
+              npm run test:owned-ruby-transfers
+              test -s build/owned-ruby-transfers/ordinary.json
+              test -s build/owned-ruby-transfers/reviewed.json
+              test -s build/owned-ruby-transfer-packaging/ordinary.json
+              test -s build/owned-ruby-transfer-packaging/reviewed.json
+              npm run test:owned-ruby-borrows > build/owned-ruby-borrows.log 2>&1
+              cat build/owned-ruby-borrows.log
+              rg '^# pass 7$' build/owned-ruby-borrows.log
+              rg '^# fail 0$' build/owned-ruby-borrows.log
+              rg '^# skipped 0$' build/owned-ruby-borrows.log
+              test -s build/owned-ruby-borrows/ordinary.json
+              test -s build/owned-ruby-borrows/reviewed.json
+              test -s build/owned-ruby-borrows/borrow-only.json
+              test -s build/owned-ruby-borrow-packaging/ordinary.json
+              test -s build/owned-ruby-borrow-packaging/reviewed.json
+              npm run test:owned-ruby-receivers > build/owned-ruby-receivers.log 2>&1
+              cat build/owned-ruby-receivers.log
+              rg '^# tests 10$' build/owned-ruby-receivers.log
+              rg '^# pass 10$' build/owned-ruby-receivers.log
+              rg '^# fail 0$' build/owned-ruby-receivers.log
+              rg '^# cancelled 0$' build/owned-ruby-receivers.log
+              rg '^# skipped 0$' build/owned-ruby-receivers.log
+              test -s build/owned-ruby-receivers/ordinary.json
+              test -s build/owned-ruby-receivers/ordinary-package.json
+              test -s build/owned-ruby-receivers/ordinary-plain.json
+              test -s build/owned-ruby-receivers/ordinary-consuming.json
+              test -s build/owned-ruby-receivers/reviewed.json
+              test -s build/owned-ruby-receivers/reviewed-package.json
+              test -s build/owned-ruby-receivers/reviewed-plain.json
+              test -s build/owned-ruby-receivers/reviewed-consuming.json
+              LEAN_BRIDGE_RUBY_COMPOUND_TEST=1 node --test tests/ruby-compounds.test.mjs tests/ruby-compound-contract.test.mjs
+              LEAN_BRIDGE_RUBY_LIST_TEST=1 node --test tests/ruby-lists.test.mjs tests/ruby-list-contract.test.mjs
+              LEAN_BRIDGE_RUBY_ALIAS_TEST=1 node --test tests/ruby-aliases.test.mjs
+              LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_RUBY_FIN_TEST=1 node --test tests/ruby-fin.test.mjs
+              LEAN_BRIDGE_RUBY_VARIANT_TEST=1 node --test tests/ruby-variants.test.mjs
+              LEAN_BRIDGE_RUBY_COLLECTION_TEST=1 node --test tests/ruby-collections.test.mjs tests/ruby-collection-contract.test.mjs
+              LEAN_BRIDGE_RUBY_GRAPH_TEST=1 node --test tests/ruby-copied-graph-values.test.mjs
+              test -s build/recursive/ruby-values.json
+              LEAN_BRIDGE_RUBY_GRAPH_TEST=1 LEAN_BRIDGE_RUBY_GRAPH_NATIVE_TEST=1 node --test tests/ruby-copied-graph-conversions.test.mjs
+              test -s build/recursive/ruby-conversions.json
+              test -s build/recursive/ruby-native.json
+              LEAN_BRIDGE_RUBY_GRAPH_PACKAGE_TEST=1 node --test tests/ruby-graph-package.test.mjs
+              test -s build/recursive/ruby-packages.json
+              test -s build/callables/ruby.json
+              test -s build/structured-callables/ruby.json
+              test -s build/recursive-callables/ruby.json
+              test -s build/compounds/ruby.json
+              test -s build/lists/ruby.json
+              test -s build/aliases/ruby.json
+              test -s build/native-fin/ruby.json
+              test -s build/native-fin/ruby-reviewed.json
+              LEAN_BRIDGE_SPECIALIZATION_PROFILES=ruby node --test tests/native-specializations.test.mjs
+              test -s build/native-specializations/ruby.json
+              LEAN_BRIDGE_GENERIC_RECORD_PROFILES=ruby node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs
+              test -s build/generic-records/ruby.json
+              test -s build/generic-records/specialized-ruby.json
+              LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES=ruby node --test --test-concurrency=1 tests/generic-record-arrays.test.mjs
+              test -s build/generic-records/array-ruby.json
+              LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS=1 LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_PROFILES=ruby LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=ruby node --test tests/native-fin-containers.test.mjs
+              test -s build/native-fin-containers/ruby.json
+              test -s build/native-fin-containers/reviewed-ruby.json
+              node scripts/check-fin-container-entry-reports.mjs ruby build/native-fin-containers/ruby.json build/native-fin-containers/reviewed-ruby.json
+              LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES=ruby LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH=1 LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT=build/native-fin-container-edges/edges-ruby.json node --test --test-concurrency=1 --test-name-pattern='^installed source-free native packages execute zero-bound and nested-position Fin edge cases$' tests/fin-container-edges.test.mjs
+              test -s build/native-fin-container-edges/edges-ruby.json
+              node scripts/check-fin-container-foreign-report.mjs ruby build/native-fin-container-edges/edges-ruby.json
+              LEAN_BRIDGE_FIN_PRODUCT_PROFILES=ruby LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=ruby node --test tests/native-fin-products.test.mjs
+              bash scripts/run-fin-late-native-ci.sh ruby
+              test -s build/native-fin-products/ruby.json
+              test -s build/native-fin-products/reviewed-ruby.json
+              LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=ruby LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=ruby node --test tests/native-fin-product-arrays.test.mjs
+              test -s build/native-fin-product-arrays/ruby.json
+              test -s build/native-fin-product-arrays/reviewed-ruby.json
+              LEAN_BRIDGE_FIN_RECORD_PROFILES=ruby LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=ruby node --test tests/native-fin-records.test.mjs
+              test -s build/native-fin-records/ruby.json
+              test -s build/native-fin-records/reviewed-ruby.json
+              LEAN_BRIDGE_FIN_RECORD_ZERO_PROFILES=ruby LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_PROFILES=ruby LEAN_BRIDGE_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/ruby.json LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/reviewed-ruby.json node --test --test-concurrency=1 tests/native-fin-record-zero.test.mjs
+              test -s build/native-fin-record-zero/ruby.json
+              test -s build/native-fin-record-zero/reviewed-ruby.json
+              node scripts/check-fin-record-zero-report.mjs ruby build/native-fin-record-zero/ruby.json build/native-fin-record-zero/reviewed-ruby.json
+              LEAN_BRIDGE_SUBTYPE_PROFILES=ruby node --test tests/native-subtype.test.mjs
+              test -s build/native-subtype/ruby.json
+              bash scripts/run-reviewed-subtype-host-ci.sh ruby
+              bash scripts/run-checked-record-host-ci.sh ruby
+              bash scripts/run-structural-subtype-ci.sh ruby
+              test -s build/variants/ruby.json
+              test -s build/collections/ruby.json
+              test -s build/type-corpus/ruby.json
+              test -s build/type-corpus/reviewed-native-ruby.json
+          - name: Require nominal Ruby packages on the pinned interpreter
+            if: matrix.profile == 'ruby'
+            timeout-minutes: 45
+            env:
+              LEAN_NUM_THREADS: "2"
+            run: |
+              source scripts/env.sh
+              bash scripts/run-nominal-subtype-ruby-ci.sh "$(command -v ruby)" "$(command -v gem)"
+          - name: Preserve complete and partial nominal Ruby records
+            if: always() && matrix.profile == 'ruby'
+            uses: actions/upload-artifact@v7
+            with:
+              name: nominal-subtype-ruby-${{ github.sha }}
+              path: build/nominal-subtype-ruby-ci/
+              if-no-files-found: error
+              retention-days: 30
+          - name: Upload the Ruby real-Lean type corpus report
+            if: always() && matrix.profile == 'ruby'
+            uses: actions/upload-artifact@v7
+            with:
+              name: type-corpus-ruby-${{ github.sha }}
+              path: |
+                build/type-corpus/ruby.json
+                build/type-corpus/reviewed-native-ruby.json
+                build/char-native/ruby.json
+                build/word-native/ruby.json
+                build/callables/ruby.json
+                build/structured-callables/ruby.json
+                build/recursive-callables/ruby.json
+                build/compounds/ruby.json
+                build/lists/ruby.json
+                build/aliases/ruby.json
+                build/native-fin/ruby.json
+                build/native-fin/ruby-reviewed.json
+                build/native-specializations/ruby.json
+                build/generic-records/ruby.json
+                build/generic-records/specialized-ruby.json
+                build/generic-records/array-ruby.json
+                build/native-fin-containers/ruby.json
+                build/native-fin-containers/reviewed-ruby.json
+                build/native-fin-container-edges/edges-ruby.json
+                build/fin-late-native-ci/ruby
+                build/native-fin-products/ruby.json
+                build/native-fin-products/reviewed-ruby.json
+                build/native-fin-product-arrays/ruby.json
+                build/native-fin-product-arrays/reviewed-ruby.json
+                build/native-fin-records/ruby.json
+                build/native-fin-records/reviewed-ruby.json
+                build/native-fin-record-zero/ruby.json
+                build/native-fin-record-zero/reviewed-ruby.json
+                build/native-subtype/ruby.json
+                build/reviewed-subtype-ci/ruby/
+                build/checked-record-ci/ruby/
+                build/structural-subtype-ci/ruby/
+                build/variants/ruby.json
+                build/collections/ruby.json
+                build/recursive/ruby-values.json
+                build/recursive/ruby-conversions.json
+                build/recursive/ruby-native.json
+                build/recursive/ruby-packages.json
+                build/owned-ruby-runtime/
+                build/owned-ruby-values/
+                build/owned-ruby-layout/
+                build/owned-ruby-conversions/
+                build/owned-ruby-gmp/
+                build/owned-ruby-loading/
+                build/owned-ruby-transfers/
+                build/owned-ruby-transfer-packaging/
+                build/owned-ruby-borrows/
+                build/owned-ruby-borrow-packaging/
+                build/owned-ruby-borrows.log
+                build/owned-ruby-receivers/
+                build/owned-ruby-receivers.log
+                build/owned-ruby-packaging/
+              if-no-files-found: error
+              overwrite: true
+              retention-days: 30
+          - name: Record managed consumer observations
+            if: always()
+            shell: bash
+            run: |
+              for consumer in ${{ matrix.profile }}; do
+                consumer_command="npm run test:consumer:managed"
+                test_result="${{ steps.consumer.outcome == 'success' && 'passed' || 'failed' }}"
+                executed="${{ steps.consumer.outcome == 'success' && 'true' || 'false' }}"
+                if [ "$consumer" = dotnet ]; then
+                  consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_DOTNET_TEST=1 node --test tests/native-dotnet.test.mjs && npm run test:type-corpus:dotnet && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=dotnet node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_DOTNET_CALLABLE_TEST=1 node --test tests/dotnet-callables.test.mjs tests/dotnet-callable-contract.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_STRUCTURED_CALLABLE_TEST=1 node --test tests/dotnet-structured-callables.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_RECURSIVE_CALLABLE_TEST=1 node --test tests/dotnet-recursive-callables.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-dotnet-runtime.test.mjs tests/owned-dotnet-layout.test.mjs tests/owned-dotnet-values.test.mjs tests/owned-dotnet-conversions.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-dotnet-callables.test.mjs tests/owned-dotnet-callback-signatures.test.mjs tests/owned-dotnet-package.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-dotnet-packaging.test.mjs tests/owned-dotnet-coexistence.test.mjs"
+                  consumer_command="$consumer_command && npm run test:owned-dotnet-transfers"
+                  consumer_command="$consumer_command && npm run test:owned-dotnet-borrows"
+                  consumer_command="$consumer_command && npm run test:owned-dotnet-receivers"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_COMPOUND_TEST=1 node --test tests/dotnet-compounds.test.mjs tests/dotnet-compound-contract.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_LIST_TEST=1 node --test tests/dotnet-lists.test.mjs tests/dotnet-list-contract.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_ALIAS_TEST=1 node --test tests/dotnet-aliases.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_DOTNET_FIN_TEST=1 node --test tests/dotnet-fin.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_SPECIALIZATION_PROFILES=dotnet node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=dotnet node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES=dotnet node --test --test-concurrency=1 tests/generic-record-arrays.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS=1 LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=dotnet node --test tests/native-fin-containers.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES=dotnet LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH=1 LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT=build/native-fin-container-edges/edges-dotnet.json node --test --test-concurrency=1 --test-name-pattern='^installed source-free native packages execute zero-bound and nested-position Fin edge cases$' tests/fin-container-edges.test.mjs && node scripts/check-fin-container-foreign-report.mjs dotnet build/native-fin-container-edges/edges-dotnet.json && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=dotnet node --test tests/native-fin-products.test.mjs && bash scripts/run-fin-late-native-ci.sh dotnet"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=dotnet node --test tests/native-fin-product-arrays.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_FIN_RECORD_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=dotnet node --test tests/native-fin-records.test.mjs && LEAN_BRIDGE_FIN_RECORD_ZERO_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_PROFILES=dotnet LEAN_BRIDGE_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/dotnet.json LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/reviewed-dotnet.json node --test --test-concurrency=1 tests/native-fin-record-zero.test.mjs && node scripts/check-fin-record-zero-report.mjs dotnet build/native-fin-record-zero/dotnet.json build/native-fin-record-zero/reviewed-dotnet.json"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=dotnet node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-host-ci.sh dotnet && bash scripts/run-checked-record-host-ci.sh dotnet && bash scripts/run-structural-subtype-ci.sh dotnet"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_VARIANT_TEST=1 node --test tests/dotnet-variants.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_CONVERSION_TEST=1 node --test tests/dotnet-collection-conversions.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_COLLECTION_TEST=1 node --test tests/dotnet-collections.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_EQUALITY_TEST=1 node --test tests/dotnet-value-equality.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_TEST=1 node --test tests/dotnet-copied-graph-values.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_CONVERSION_TEST=1 LEAN_BRIDGE_DOTNET_GRAPH_NATIVE_TEST=1 node --test tests/dotnet-copied-graph-conversions.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_DOTNET_GRAPH_INSTALLED_TEST=1 node --test tests/dotnet-graph-package.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_COMPOSITION_TEST=1 node --test tests/dotnet-graph-package.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_REPRODUCIBILITY_TEST=1 node --test tests/dotnet-graph-package.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_CONFLICT_TEST=1 node --test tests/dotnet-graph-package.test.mjs"
+                  if [ "${{ steps.ordinary_dotnet.outcome }}" != success ] || [ "${{ steps.type_corpus_dotnet.outcome }}" != success ]; then
+                    test_result=failed
+                    executed=false
+                  fi
+                fi
+                if [ "$consumer" = jvm ]; then
+                  consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_JVM_TEST=1 node --test tests/native-jvm.test.mjs && npm run test:type-corpus:jvm && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=java,kotlin node --test tests/type-corpus-reviewed-native.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_CALLABLE_TEST=1 node --test tests/jvm-callables.test.mjs tests/jvm-callable-contract.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_STRUCTURED_CALLABLE_TEST=1 node --test tests/jvm-structured-callables.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_RECURSIVE_CALLABLE_TEST=1 node --test tests/jvm-recursive-callables.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_COMPOUND_TEST=1 node --test tests/jvm-compounds.test.mjs tests/jvm-compound-contract.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_LIST_TEST=1 node --test tests/jvm-lists.test.mjs tests/jvm-list-contract.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_ALIAS_TEST=1 node --test tests/jvm-aliases.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_JVM_FIN_TEST=1 node --test tests/jvm-fin.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_SPECIALIZATION_PROFILES=java,kotlin node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=java,kotlin node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES=java,kotlin node --test --test-concurrency=1 tests/generic-record-arrays.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS=1 LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_PROFILES=java,kotlin LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=java,kotlin node --test tests/native-fin-containers.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES=java,kotlin LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH=1 LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT=build/native-fin-container-edges/edges-java-kotlin.json node --test --test-concurrency=1 --test-name-pattern='^installed source-free native packages execute zero-bound and nested-position Fin edge cases$' tests/fin-container-edges.test.mjs && node scripts/check-fin-container-foreign-report.mjs java,kotlin build/native-fin-container-edges/edges-java-kotlin.json && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=java,kotlin LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=java,kotlin node --test tests/native-fin-products.test.mjs && bash scripts/run-fin-late-native-ci.sh jvm"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=java,kotlin LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=java,kotlin node --test tests/native-fin-product-arrays.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_FIN_RECORD_PROFILES=java,kotlin LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=java,kotlin node --test tests/native-fin-records.test.mjs && LEAN_BRIDGE_FIN_RECORD_ZERO_PROFILES=java,kotlin LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_PROFILES=java,kotlin LEAN_BRIDGE_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/java-kotlin.json LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/reviewed-java-kotlin.json node --test --test-concurrency=1 tests/native-fin-record-zero.test.mjs && node scripts/check-fin-record-zero-report.mjs java,kotlin build/native-fin-record-zero/java-kotlin.json build/native-fin-record-zero/reviewed-java-kotlin.json"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=java,kotlin node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-host-ci.sh jvm && bash scripts/run-checked-record-host-ci.sh jvm && bash scripts/run-structural-subtype-ci.sh jvm"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_VARIANT_TEST=1 node --test tests/jvm-variants.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_EQUALITY_TEST=1 node --test tests/jvm-value-equality.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_GRAPH_TEST=1 node --test tests/jvm-copied-graph-values.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_KOTLIN_GRAPH_TEST=1 node --test tests/jvm-copied-graph-kotlin.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_JVM_GRAPH_INSTALLED_TEST=1 node --test tests/jvm-graph-package.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_GRAPH_REPRO_TEST=1 LEAN_BRIDGE_JVM_GRAPH_LOADING_TEST=1 node --test tests/jvm-graph-package.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_GRAPH_CONVERSION_TEST=1 LEAN_BRIDGE_JVM_GRAPH_NATIVE_TEST=1 node --test tests/jvm-copied-graph-conversions.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_CONVERSIONS_TEST=1 node --test tests/jvm-collection-conversions.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_COLLECTION_PREFLIGHT=1 LEAN_BRIDGE_JVM_COLLECTION_PROFILES=java,kotlin node --test tests/jvm-collection-callers.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_JVM_COLLECTION_TEST=1 LEAN_BRIDGE_JVM_COLLECTION_PROFILES=java,kotlin node --test tests/jvm-collections.test.mjs"
+                  consumer_command="$consumer_command && bash scripts/run-nominal-subtype-jvm-ci.sh \"$JAVA_HOME/bin/java\" \"$JAVA_HOME/bin/javac\" \"$PWD/build/kotlin-tools/kotlinc/bin/kotlinc\""
+                  if [ "${{ steps.ordinary_jvm.outcome }}" != success ] || [ "${{ steps.type_corpus_jvm.outcome }}" != success ] || [ "${{ steps.nominal_jvm.outcome }}" != success ]; then
+                    test_result=failed
+                    executed=false
+                  fi
+                fi
+                if [ "$consumer" = ruby ]; then
+                  consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_RUBY_TEST=1 node --test tests/native-ruby.test.mjs && npm run test:type-corpus:ruby && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=ruby node --test tests/type-corpus-reviewed-native.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_CALLABLE_TEST=1 node --test tests/ruby-callables.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_STRUCTURED_CALLABLE_TEST=1 node --test tests/ruby-structured-callables.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_RECURSIVE_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/ruby-recursive-callables.test.mjs tests/ruby-recursive-callable-contract.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-ruby-runtime.test.mjs tests/owned-ruby-values.test.mjs tests/owned-ruby-layout.test.mjs tests/owned-ruby-conversions.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-ruby-gmp.test.mjs tests/owned-ruby-package.test.mjs tests/owned-ruby-packaging.test.mjs tests/owned-ruby-coexistence.test.mjs"
+                  consumer_command="$consumer_command && npm run test:owned-ruby-transfers"
+                  consumer_command="$consumer_command && npm run test:owned-ruby-borrows"
+                  consumer_command="$consumer_command && npm run test:owned-ruby-receivers"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_COMPOUND_TEST=1 node --test tests/ruby-compounds.test.mjs tests/ruby-compound-contract.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_LIST_TEST=1 node --test tests/ruby-lists.test.mjs tests/ruby-list-contract.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_ALIAS_TEST=1 node --test tests/ruby-aliases.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_RUBY_FIN_TEST=1 node --test tests/ruby-fin.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_SPECIALIZATION_PROFILES=ruby node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=ruby node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES=ruby node --test --test-concurrency=1 tests/generic-record-arrays.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS=1 LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_PROFILES=ruby LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=ruby node --test tests/native-fin-containers.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES=ruby LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH=1 LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT=build/native-fin-container-edges/edges-ruby.json node --test --test-concurrency=1 --test-name-pattern='^installed source-free native packages execute zero-bound and nested-position Fin edge cases$' tests/fin-container-edges.test.mjs && node scripts/check-fin-container-foreign-report.mjs ruby build/native-fin-container-edges/edges-ruby.json && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=ruby LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=ruby node --test tests/native-fin-products.test.mjs && bash scripts/run-fin-late-native-ci.sh ruby"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=ruby LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=ruby node --test tests/native-fin-product-arrays.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_FIN_RECORD_PROFILES=ruby LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=ruby node --test tests/native-fin-records.test.mjs && LEAN_BRIDGE_FIN_RECORD_ZERO_PROFILES=ruby LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_PROFILES=ruby LEAN_BRIDGE_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/ruby.json LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/reviewed-ruby.json node --test --test-concurrency=1 tests/native-fin-record-zero.test.mjs && node scripts/check-fin-record-zero-report.mjs ruby build/native-fin-record-zero/ruby.json build/native-fin-record-zero/reviewed-ruby.json"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=ruby node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-host-ci.sh ruby && bash scripts/run-checked-record-host-ci.sh ruby && bash scripts/run-structural-subtype-ci.sh ruby"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_VARIANT_TEST=1 node --test tests/ruby-variants.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_COLLECTION_TEST=1 node --test tests/ruby-collections.test.mjs tests/ruby-collection-contract.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_GRAPH_TEST=1 node --test tests/ruby-copied-graph-values.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_GRAPH_TEST=1 LEAN_BRIDGE_RUBY_GRAPH_NATIVE_TEST=1 node --test tests/ruby-copied-graph-conversions.test.mjs"
+                  consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_GRAPH_PACKAGE_TEST=1 node --test tests/ruby-graph-package.test.mjs"
+                  if [ "${{ steps.ordinary_ruby.outcome }}" != success ] || [ "${{ steps.type_corpus_ruby.outcome }}" != success ]; then
+                    test_result=failed
+                    executed=false
+                  fi
+                fi
+                node scripts/consumer-ci.mjs record --consumer "$consumer" --output "build/consumer-ci/results/$consumer.json" --performance "build/consumer-ci/performance/$consumer.json" --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "$consumer_command"
+              done
+          - name: Upload managed consumer observations
+            if: always()
+            uses: actions/upload-artifact@v7
+            with:
+              name: consumer-results-managed-${{ matrix.profile }}-${{ github.sha }}
+              path: build/consumer-ci/results/${{ matrix.profile }}.json
+              if-no-files-found: error
+              overwrite: true
+              retention-days: 30
+          - name: Enforce managed consumer support
+            if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'dotnet' && (steps.ordinary_dotnet.outcome != 'success' || steps.type_corpus_dotnet.outcome != 'success')) || (matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success' || steps.nominal_jvm.outcome != 'success')) || (matrix.profile == 'ruby' && (steps.ordinary_ruby.outcome != 'success' || steps.type_corpus_ruby.outcome != 'success')))
+            run: exit 1
+    
+    
+  operator: 'notStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///app/tests/managed-ci-isolation.test.mjs:66:10)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+1..3
+# tests 3
+# suites 0
+# pass 1
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 207.089131

@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeManagedNominalGateSource } from "./managed-nominal-gate-history.mjs";
 
 export const nominalSubtypePhpRegistrationHistoryPath = "docs/evidence/nominal-subtype-php-registration-source-history-20261013.json";
 export const nominalSubtypePhpRegistrationPredecessor = "befe459ccb133fe463367cdef48d77bd5b75acdc";
@@ -49,6 +50,7 @@ export const reverseNominalSubtypePhpRegistrationUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeNominalSubtypePhpRegistrationSource = (path, source, expected) => {
+	source = beforeManagedNominalGateSource(path, source, expected);
 	if(typeof source !== "string" || !nominalSubtypePhpRegistrationChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = history ??= JSON.parse(readFileSync(nominalSubtypePhpRegistrationHistoryPath, "utf8"));

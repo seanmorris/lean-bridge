@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "milestone": "managed-nominal-gate-source-v1",
+  "predecessorCommit": "968c1e9877c6cffe0667b81b4ea71bf18b46fd75",
+  "updates": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "8b3799e7d7d59d36e5cf42a602983bad8791d830da3cc269a47842533867b09e",
+      "previousSha256": "dc3c1da6a0f07358ecb2dd21ce48931c174bb2cee105cad8fb50f62ae3d4965b",
+      "edits": [
+        {
+          "start": 5970,
+          "previous": "",
+          "current": "import { managedNominalGateChangedPaths } from \"./managed-nominal-gate-history.mjs\";\n"
+        },
+        {
+          "start": 67905,
+          "previous": "",
+          "current": "\t, ...managedNominalGateChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/managed-ci-isolation.mjs",
+      "currentSha256": "9ae91ce902fa32a047cb9cd8590fc882769187c8ac8795a93068890abf35e239",
+      "previousSha256": "7a4090760b35afbfa86d5e5ec5545ce6fc82bbbb6e6e79fc81c31935581b263a",
+      "edits": [
+        {
+          "start": 1123,
+          "previous": "const evaluate = (condition, profile, overrides = {}) => {\n",
+          "current": "const evaluate = (condition, profile, overrides = {}, additionalProfileSteps = {}) => {\n"
+        },
+        {
+          "start": 1410,
+          "previous": "",
+          "current": "\t\t, ...Object.fromEntries(Object.entries(additionalProfileSteps).flatMap(([name, ids]) =>\n\t\t\tids.map(id => [id, name === profile ? \"success\" : \"skipped\"])))\n"
+        },
+        {
+          "start": 2100,
+          "previous": "",
+          "current": " * @param additionalProfileSteps - Explicit required acceptance IDs added after the historical matrix split.\n"
+        },
+        {
+          "start": 2213,
+          "previous": "export const assertManagedCiIsolation = (workflow, previous = null) => {\n",
+          "current": "export const assertManagedCiIsolation = (workflow, previous = null, additionalProfileSteps = {}) => {\n"
+        },
+        {
+          "start": 2605,
+          "previous": "",
+          "current": "\tconst registered = new Set([\"consumer\", ...profiles.flatMap(profile => [\"ordinary_\" + profile, \"type_corpus_\" + profile])]);\n\tfor(const [profile, ids] of Object.entries(additionalProfileSteps))\n\t{\n\t\tassert.ok(profiles.includes(profile)); assert.ok(Array.isArray(ids) && ids.length > 0);\n\t\tfor(const id of ids)\n\t\t{\n\t\t\tassert.match(id, /^[a-z][a-z0-9_]*$/u); assert.ok(!registered.has(id)); registered.add(id);\n\t\t\tassert.equal(parsed.filter(step => step.id === id).length, 1, id + \" has one acceptance step\");\n\t\t}\n\t}\n\tconst evaluateForProfile = (condition, profile, overrides) => evaluate(condition, profile, overrides, additionalProfileSteps);\n\tlet selectedOutcomeCases = 0;\n"
+        },
+        {
+          "start": 4657,
+          "previous": "",
+          "current": "\t\tconst additional = (additionalProfileSteps[profile] ?? []).map(identified);\n"
+        },
+        {
+          "start": 5132,
+          "previous": "",
+          "current": "\t\tfor(const step of additional)\n\t\t{\n\t\t\tassert.equal(step.condition, ordinary.condition); assert.doesNotMatch(step.text, /continue-on-error/u);\n\t\t\tassert.ok(parsed.indexOf(prepare) < parsed.indexOf(step) && parsed.indexOf(step) < parsed.indexOf(gate));\n\t\t}\n"
+        },
+        {
+          "start": 5422,
+          "previous": "\t\t\tfor(const step of [ordinary, corpus, install, upload])\n\t\t\t\tassert.equal(evaluate(step.condition, selected), selected === profile, step.name);\n\t\tassert.equal(evaluate(gate.condition, profile), false, profile + \" ignores other profiles' skipped steps\");\n",
+          "current": "\t\t\tfor(const step of [ordinary, corpus, install, upload, ...additional])\n\t\t\t\tassert.equal(evaluateForProfile(step.condition, selected), selected === profile, step.name);\n\t\tassert.equal(evaluateForProfile(gate.condition, profile), false, profile + \" ignores other profiles' skipped steps\");\n"
+        },
+        {
+          "start": 5772,
+          "previous": "\t\t\tfor(const id of [\"consumer\", \"ordinary_\" + profile, \"type_corpus_\" + profile])\n\t\t\t\tassert.equal(evaluate(gate.condition, profile, { [id]: outcome }), true, profile + \"/\" + id + \"/\" + outcome);\n",
+          "current": "\t\t\tfor(const id of [\"consumer\", \"ordinary_\" + profile, \"type_corpus_\" + profile, ...additional.map(step => step.id)])\n\t\t\t{\n\t\t\t\tassert.equal(evaluateForProfile(gate.condition, profile, { [id]: outcome }), true, profile + \"/\" + id + \"/\" + outcome);\n\t\t\t\tselectedOutcomeCases++;\n\t\t\t}\n\t\tfor(const other of profiles.filter(name => name !== profile))\n\t\t\tfor(const id of [\"ordinary_\" + other, \"type_corpus_\" + other, ...(additionalProfileSteps[other] ?? [])])\n\t\t\t\tfor(const outcome of [\"failure\", \"skipped\", \"cancelled\"])\n\t\t\t\t\tassert.equal(evaluateForProfile(gate.condition, profile, { [id]: outcome }), false, profile + \" ignores \" + id + \"/\" + outcome);\n"
+        },
+        {
+          "start": 8537,
+          "previous": "\t\t, selectedOutcomeCases: 27, artifactNamesIncludeProfile: true\n",
+          "current": "\t\t, selectedOutcomeCases, artifactNamesIncludeProfile: true\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-php-registration-history.mjs",
+      "currentSha256": "70c48b39943ffea326aecc400d78953d031f612cb6bf0bcb80554538d4149bd9",
+      "previousSha256": "94f76e3ffb68f37424eefb46a94ab4a4da72cbf386b328d334967793e09cae32",
+      "edits": [
+        {
+          "start": 232,
+          "previous": "",
+          "current": "import { beforeManagedNominalGateSource } from \"./managed-nominal-gate-history.mjs\";\n"
+        },
+        {
+          "start": 2292,
+          "previous": "",
+          "current": "\tsource = beforeManagedNominalGateSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/managed-ci-isolation.test.mjs",
+      "currentSha256": "0077925c229b19ec89b87f674c60dba4b3b8b93d1a2c705cd3c251fd5ad98538",
+      "previousSha256": "8903e3bf2fb5f9529c70205f906ed0e0a62a88b65f47bd05f5c98c5c3fd5049b",
+      "edits": [
+        {
+          "start": 496,
+          "previous": "",
+          "current": "import { disableNominalSubtypeJvmWorkflow, nominalSubtypeJvmCiBlock } from \"./helpers/nominal-subtype-jvm-ci-workflow.mjs\";\nimport \"./helpers/managed-nominal-gate-history-tests.mjs\";\n"
+        },
+        {
+          "start": 762,
+          "previous": "",
+          "current": "const checkCurrent = source => assertManagedCiIsolation(source, null, { jvm: [\"nominal_jvm\"] });\n"
+        },
+        {
+          "start": 2333,
+          "previous": "\tassert.deepEqual(assertManagedCiIsolation(await workflow()), {\n",
+          "current": "\tassert.deepEqual(checkCurrent(await workflow()), {\n"
+        },
+        {
+          "start": 2454,
+          "previous": "\t\t, failFast: false, selectedOutcomeCases: 27\n",
+          "current": "\t\t, failFast: false, selectedOutcomeCases: 30\n"
+        },
+        {
+          "start": 3898,
+          "previous": "\t\t, [\"steps.type_corpus_jvm.outcome != 'success'))\", \"steps.type_corpus_jvm.outcome == 'failure'))\"]\n",
+          "current": "\t\t, [\"steps.type_corpus_jvm.outcome != 'success'\", \"steps.type_corpus_jvm.outcome == 'failure'\"]\n\t\t, [\"steps.nominal_jvm.outcome != 'success'\", \"steps.nominal_jvm.outcome == 'failure'\"]\n\t\t, [\" || steps.nominal_jvm.outcome != 'success'\", \"\"]\n\t\t, [\"id: nominal_jvm\\n\", \"id: nominal_jvm\\n        continue-on-error: true\\n\"]\n\t\t, [nominalSubtypeJvmCiBlock, nominalSubtypeJvmCiBlock.replace(\"matrix.profile == 'jvm'\", \"matrix.profile == 'dotnet'\")]\n\t\t, [nominalSubtypeJvmCiBlock, \"\"]\n"
+        },
+        {
+          "start": 4471,
+          "previous": "\t\tassert.throws(() => assertManagedCiIsolation(source.replace(body, changed)), undefined, before);\n",
+          "current": "\t\tassert.throws(() => checkCurrent(source.replace(body, changed)), undefined, before);\n"
+        },
+        {
+          "start": 4565,
+          "previous": "",
+          "current": "\ntest(\"managed CI retains the historical baseline without accepting a removed current gate\", async () => {\n\tconst previous = disableNominalSubtypeJvmWorkflow(await workflow());\n\tassert.equal(assertManagedCiIsolation(previous).selectedOutcomeCases, 27);\n\tassert.throws(() => checkCurrent(previous));\n});\n\ntest(\"managed CI rejects undeclared, missing, duplicated and misrouted additional acceptance IDs\", async () => {\n\tconst source = await workflow();\n\tassert.throws(() => assertManagedCiIsolation(source));\n\tfor(const additional of [{ unknown: [\"nominal_jvm\"] }, { jvm: [] }\n\t\t, { jvm: [\"missing\"] }, { jvm: [\"consumer\"] }\n\t\t, { jvm: [\"nominal_jvm\", \"nominal_jvm\"] }\n\t\t, { dotnet: [\"nominal_jvm\"] }, { jvm: [\"invalid-id\"] }])\n\t\tassert.throws(() => assertManagedCiIsolation(source, null, additional));\n\tassert.throws(() => checkCurrent(source.replace(nominalSubtypeJvmCiBlock, nominalSubtypeJvmCiBlock.repeat(2))));\n});\n"
+        }
+      ]
+    }
+  ]
+}

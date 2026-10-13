@@ -64,6 +64,7 @@ import { nativeFinJvmExitChangedPaths } from "./native-fin-jvm-exit-history.mjs"
 import { nominalSubtypeJvmCiChangedPaths } from "./nominal-subtype-jvm-ci-history.mjs";
 import { nominalSubtypeJvmPromotionChangedPaths } from "./nominal-subtype-jvm-promotion-history.mjs";
 import { nominalSubtypePhpRegistrationChangedPaths } from "./nominal-subtype-php-registration-history.mjs";
+import { managedNominalGateChangedPaths } from "./managed-nominal-gate-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeSubtypeRefinementSource, subtypeRefinementChangedPaths } from "./subtype-refinement-source-history.mjs";
 import { subtypeHeapChangedPaths } from "./subtype-heap-source-history.mjs";
@@ -993,6 +994,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nominalSubtypeJvmCiChangedPaths
 	, ...nominalSubtypeJvmPromotionChangedPaths
 	, ...nominalSubtypePhpRegistrationChangedPaths
+	, ...managedNominalGateChangedPaths
 ])].sort());
 
 /**
