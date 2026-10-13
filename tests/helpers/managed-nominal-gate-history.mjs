@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeNominalSubtypePhpCiSource } from "./nominal-subtype-php-ci-history.mjs";
 
 export const managedNominalGateHistoryPath = "docs/evidence/managed-nominal-gate-source-history-20261013.json";
 export const managedNominalGatePredecessor = "968c1e9877c6cffe0667b81b4ea71bf18b46fd75";
@@ -50,6 +51,7 @@ export const reverseManagedNominalGateUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeManagedNominalGateSource = (path, source, expected) => {
+	source = beforeNominalSubtypePhpCiSource(path, source, expected);
 	if(typeof source !== "string" || !managedNominalGateChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = history ??= JSON.parse(readFileSync(managedNominalGateHistoryPath, "utf8"));

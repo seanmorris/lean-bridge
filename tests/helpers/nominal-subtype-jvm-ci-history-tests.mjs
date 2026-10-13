@@ -52,7 +52,7 @@ test("nominal JVM CI preserves exact historical producers and every support obse
 		const update = record.updates.find(update => update.path === file.path);
 		if(update && file.sha256 === update.currentSha256)
 		{
-			assert.equal(sha256(await readFile(file.path)), file.sha256);
+			assert.equal(sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)), file.sha256);
 			file.sha256 = update.previousSha256; pins++;
 		}
 	}

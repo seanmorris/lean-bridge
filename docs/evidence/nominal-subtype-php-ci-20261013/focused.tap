@@ -1,0 +1,161 @@
+TAP version 13
+# Subtest: managed nominal gate repair authenticates exact changes without changing support claims
+ok 1 - managed nominal gate repair authenticates exact changes without changing support claims
+  ---
+  duration_ms: 344.863735
+  type: 'test'
+  ...
+# Subtest: managed nominal gate history writer refuses an unrelated checkout before writing
+ok 2 - managed nominal gate history writer refuses an unrelated checkout before writing
+  ---
+  duration_ms: 101.127719
+  type: 'test'
+  ...
+# Subtest: nominal JVM CI preserves exact historical producers and every support observation
+ok 3 - nominal JVM CI preserves exact historical producers and every support observation
+  ---
+  duration_ms: 978.595039
+  type: 'test'
+  ...
+# Subtest: nominal JVM CI history writer refuses an unrelated checkout before writing
+ok 4 - nominal JVM CI history writer refuses an unrelated checkout before writing
+  ---
+  duration_ms: 61.29677
+  type: 'test'
+  ...
+# Subtest: nominal JVM CI preserves all preceding jobs and enforces four pinned selections
+ok 5 - nominal JVM CI preserves all preceding jobs and enforces four pinned selections
+  ---
+  duration_ms: 48.711754
+  type: 'test'
+  ...
+# Subtest: nominal JVM CI rejects omitted gates, narrowed artifacts and false successful summaries
+ok 6 - nominal JVM CI rejects omitted gates, narrowed artifacts and false successful summaries
+  ---
+  duration_ms: 40.530228
+  type: 'test'
+  ...
+# 27 missing, skipped or weakened workflow controls
+# Subtest: nominal PHP CI authenticates every ZIP member and retained original byte
+ok 7 - nominal PHP CI authenticates every ZIP member and retained original byte
+  ---
+  duration_ms: 42.233989
+  type: 'test'
+  ...
+# 25 missing, corrupt and coordinated ZIP controls; synthetic payloads never executed
+# Subtest: nominal native PHP CI preserves exact historical producers and every support observation
+ok 8 - nominal native PHP CI preserves exact historical producers and every support observation
+  ---
+  duration_ms: 808.677883
+  type: 'test'
+  ...
+# Subtest: nominal native PHP CI history writer refuses an unrelated checkout before writing
+ok 9 - nominal native PHP CI history writer refuses an unrelated checkout before writing
+  ---
+  duration_ms: 71.263009
+  type: 'test'
+  ...
+# Subtest: nominal PHP CI rejects unknown, repeated and incomplete selections
+ok 10 - nominal PHP CI rejects unknown, repeated and incomplete selections
+  ---
+  duration_ms: 20.952736
+  type: 'test'
+  ...
+# Subtest: nominal PHP CI requires complete zero-skip TAP for each exact selection
+ok 11 - nominal PHP CI requires complete zero-skip TAP for each exact selection
+  ---
+  duration_ms: 142.272244
+  type: 'test'
+  ...
+# 164 incomplete, mismatched, skipped or failed TAP controls
+# Subtest: nominal PHP CI binds original records to exact selected tools, versions and Composer ZIP
+ok 12 - nominal PHP CI binds original records to exact selected tools, versions and Composer ZIP
+  ---
+  duration_ms: 2803.076912
+  type: 'test'
+  ...
+# 140 selected tool, original package and complete record controls
+# Subtest: nominal PHP CI runs four serial selections and preserves preflight, producer and checker failures
+ok 13 - nominal PHP CI runs four serial selections and preserves preflight, producer and checker failures
+  ---
+  duration_ms: 2650.048535
+  type: 'test'
+  ...
+# Ten complete/failing shell scenarios, ten stale-output refusals and eight argument/floor controls; stand-ins do not claim compiled acceptance
+# Subtest: nominal PHP CI observes explicit commands, extensions and exact versions before production
+ok 14 - nominal PHP CI observes explicit commands, extensions and exact versions before production
+  ---
+  duration_ms: 637.193414
+  type: 'test'
+  ...
+# Nine argument, missing-input, version, output and drift controls; stand-ins do not claim installed PHP execution
+# Subtest: nominal PHP CI preserves every previous job and enforces all four Composer selections
+ok 15 - nominal PHP CI preserves every previous job and enforces all four Composer selections
+  ---
+  duration_ms: 50.249134
+  type: 'test'
+  ...
+# Subtest: nominal PHP CI refuses dropped gates, overwritten attempts and false successful summaries
+ok 16 - nominal PHP CI refuses dropped gates, overwritten attempts and false successful summaries
+  ---
+  duration_ms: 45.716816
+  type: 'test'
+  ...
+# 29 missing, skipped or weakened workflow controls
+# Subtest: nominal PHP final gate rejects failed, skipped and cancelled required outcomes
+ok 17 - nominal PHP final gate rejects failed, skipped and cancelled required outcomes
+  ---
+  duration_ms: 11.770994
+  type: 'test'
+  ...
+# Subtest: managed nominal gate repair authenticates exact changes without changing support claims
+ok 18 - managed nominal gate repair authenticates exact changes without changing support claims
+  ---
+  duration_ms: 356.107118
+  type: 'test'
+  ...
+# Subtest: managed nominal gate history writer refuses an unrelated checkout before writing
+ok 19 - managed nominal gate history writer refuses an unrelated checkout before writing
+  ---
+  duration_ms: 82.744103
+  type: 'test'
+  ...
+# Subtest: managed JVM bootstrap downloads Kotlin into a fresh checkout
+ok 20 - managed JVM bootstrap downloads Kotlin into a fresh checkout
+  ---
+  duration_ms: 17.004448
+  type: 'test'
+  ...
+# Subtest: managed CI isolates timeout budgets, profile gates and artifact names
+ok 21 - managed CI isolates timeout budgets, profile gates and artifact names
+  ---
+  duration_ms: 54.285966
+  type: 'test'
+  ...
+# Subtest: managed CI rejects dropped gates, shared artifacts and incomplete bootstrap
+ok 22 - managed CI rejects dropped gates, shared artifacts and incomplete bootstrap
+  ---
+  duration_ms: 29.528428
+  type: 'test'
+  ...
+# Subtest: managed CI retains the historical baseline without accepting a removed current gate
+ok 23 - managed CI retains the historical baseline without accepting a removed current gate
+  ---
+  duration_ms: 49.707068
+  type: 'test'
+  ...
+# Subtest: managed CI rejects undeclared, missing, duplicated and misrouted additional acceptance IDs
+ok 24 - managed CI rejects undeclared, missing, duplicated and misrouted additional acceptance IDs
+  ---
+  duration_ms: 34.277094
+  type: 'test'
+  ...
+1..24
+# tests 24
+# suites 0
+# pass 24
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 11229.485685

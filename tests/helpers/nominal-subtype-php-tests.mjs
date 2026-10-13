@@ -20,6 +20,12 @@ import { nominalSubtypePhpToolSelection } from "./nominal-subtype-php-tools.mjs"
 import { runCopied } from "./copied-fixture-install.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import "./nominal-subtype-php-evidence-tests.mjs";
+import "./nominal-subtype-php-ci-report-tests.mjs";
+import "./nominal-subtype-php-ci-handoff-tests.mjs";
+import "./nominal-subtype-php-ci-tools-tests.mjs";
+import "./nominal-subtype-php-ci-shell-tests.mjs";
+import "./nominal-subtype-php-ci-workflow-tests.mjs";
+import "./nominal-subtype-php-ci-history-tests.mjs";
 
 const php = process.env.LEAN_BRIDGE_PHP ?? "/usr/bin/php";
 const callerControls = process.env.LEAN_BRIDGE_PHP !== undefined || existsSync(php);

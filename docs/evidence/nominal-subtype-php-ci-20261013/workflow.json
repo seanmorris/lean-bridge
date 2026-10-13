@@ -1,0 +1,30 @@
+{
+  "commands": [
+    {
+      "args": [
+        "-shellcheck=",
+        ".github/workflows/consumer-matrix.yml"
+      ],
+      "code": 0,
+      "command": ".toolchains/actionlint-1.7.12/actionlint",
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "args": [
+        "-n",
+        "scripts/run-nominal-subtype-php-ci.sh"
+      ],
+      "code": 0,
+      "command": "/bin/bash",
+      "stderr": "",
+      "stdout": ""
+    }
+  ],
+  "finished": "2026-10-13T19:08:09.824Z",
+  "kind": "nominal-php-workflow-syntax-validation",
+  "shellBlocks": 243,
+  "shellcheck": false,
+  "started": "2026-10-13T19:08:09.211Z",
+  "workflowSha256": "23b12be4c4dc227980c6233e6eb309319b0e96d3ee70980bf8bf14991f4fc529"
+}

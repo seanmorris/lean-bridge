@@ -1,0 +1,506 @@
+{
+  "files": [
+    {
+      "bytes": 6328,
+      "path": "focused.tap",
+      "sha256": "ec0a67f3dc32fd2ee16c35cf9b8184fd1c8d01b1d4cafe3aa1f8901f5cd1585e"
+    },
+    {
+      "bytes": 704,
+      "path": "workflow.json",
+      "sha256": "7f577d52c87601311aba5eeaa04ca91506397cc4764f6972b22c911ff443847b"
+    },
+    {
+      "bytes": 8459,
+      "path": "ordinary-full.json",
+      "sha256": "520fcb41581f82e1eb6011126c6cadb7d140b9c84de15824ca5aab0c32c73d5e"
+    },
+    {
+      "bytes": 8459,
+      "path": "ordinary-result-only.json",
+      "sha256": "07f6e1464e77f67965e068ebda57b73a4a30546120ada02e71b1a9147e2d5777"
+    },
+    {
+      "bytes": 8529,
+      "path": "reviewed-full.json",
+      "sha256": "8e9f8843e74dfe3fdc846cd8d6ae263d126e6a8cc1e28d3940faf708cef6eceb"
+    },
+    {
+      "bytes": 8529,
+      "path": "reviewed-result-only.json",
+      "sha256": "3ebdce9ee2e8fe1aabaad68a9f9b226c6906b64261f95dba432871239fcd6374"
+    }
+  ],
+  "hostedExecutionClaim": false,
+  "kind": "nominal-subtype-php-ci-validation-v1",
+  "predecessorCommit": "4b42926238294237ce2019a1c79fe3e73db6dd5c",
+  "productionAdapterChange": false,
+  "schemaVersion": 1,
+  "sourceHistory": {
+    "path": "docs/evidence/nominal-subtype-php-ci-source-history-20261013.json",
+    "sha256": "ee827b4da87e8a5b4bad1650003edb56308c4f64b99acfbf7c360d64a99a91f2"
+  },
+  "supportClaimsChanged": false,
+  "validatedSourceCount": 5521,
+  "validations": [
+    {
+      "args": [
+        "--max-old-space-size=3072",
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/helpers/nominal-subtype-php-ci-report-tests.mjs",
+        "tests/helpers/nominal-subtype-php-ci-handoff-tests.mjs",
+        "tests/helpers/nominal-subtype-php-ci-tools-tests.mjs",
+        "tests/helpers/nominal-subtype-php-ci-shell-tests.mjs",
+        "tests/helpers/nominal-subtype-php-ci-workflow-tests.mjs",
+        "tests/helpers/nominal-subtype-php-ci-history-tests.mjs",
+        "tests/helpers/nominal-subtype-jvm-ci-workflow-tests.mjs",
+        "tests/helpers/nominal-subtype-jvm-ci-history-tests.mjs",
+        "tests/helpers/managed-nominal-gate-history-tests.mjs",
+        "tests/managed-ci-isolation.test.mjs"
+      ],
+      "bytes": 6328,
+      "code": 0,
+      "finished": "2026-10-13T19:05:34.149Z",
+      "log": "build/vo1466-php-ci-focused-r2-0.log",
+      "phase": "focused",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 7903539200,
+            "freeBytes": 2321727488,
+            "load": 1.18
+          }
+        ],
+        "waits": 0
+      },
+      "sha256": "ec0a67f3dc32fd2ee16c35cf9b8184fd1c8d01b1d4cafe3aa1f8901f5cd1585e",
+      "signal": null,
+      "started": "2026-10-13T19:05:22.870Z"
+    },
+    {
+      "args": [
+        "--max-old-space-size=3072",
+        "scripts/check-nominal-subtype-php-ci.mjs",
+        "--route",
+        "ordinary",
+        "--mode",
+        "full",
+        "--producer",
+        "39f7f06e3db8f47b554ef039dc71c4bbc42ed98b",
+        "--directory",
+        "build/vo1466-nominal-php-installed-ordinary-full-r1-output/ordinary/full",
+        "--tap",
+        "build/vo1466-nominal-php-installed-ordinary-full-r1.tap",
+        "--glibc",
+        "2.36",
+        "--php",
+        "/usr/bin/php",
+        "--composer",
+        "/usr/bin/composer",
+        "--php-version",
+        "8.2.33",
+        "--composer-version",
+        "2.5.5"
+      ],
+      "bytes": 8459,
+      "code": 0,
+      "finished": "2026-10-13T19:05:39.185Z",
+      "log": "build/vo1466-php-ci-originals-r1-0.log",
+      "phase": "originals",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 8033480704,
+            "freeBytes": 2320896000,
+            "load": 1.46
+          }
+        ],
+        "waits": 0
+      },
+      "sha256": "520fcb41581f82e1eb6011126c6cadb7d140b9c84de15824ca5aab0c32c73d5e",
+      "signal": null,
+      "started": "2026-10-13T19:05:35.440Z"
+    },
+    {
+      "args": [
+        "--max-old-space-size=3072",
+        "scripts/check-nominal-subtype-php-ci.mjs",
+        "--route",
+        "ordinary",
+        "--mode",
+        "result-only",
+        "--producer",
+        "39f7f06e3db8f47b554ef039dc71c4bbc42ed98b",
+        "--directory",
+        "build/vo1466-nominal-php-installed-ordinary-result-only-r1-output/ordinary/result-only",
+        "--tap",
+        "build/vo1466-nominal-php-installed-ordinary-result-only-r1.tap",
+        "--glibc",
+        "2.36",
+        "--php",
+        "/usr/bin/php",
+        "--composer",
+        "/usr/bin/composer",
+        "--php-version",
+        "8.2.33",
+        "--composer-version",
+        "2.5.5"
+      ],
+      "bytes": 8459,
+      "code": 0,
+      "finished": "2026-10-13T19:05:43.333Z",
+      "log": "build/vo1466-php-ci-originals-r1-1.log",
+      "phase": "originals",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 7910219776,
+            "freeBytes": 2320773120,
+            "load": 1.58
+          }
+        ],
+        "waits": 0
+      },
+      "sha256": "07f6e1464e77f67965e068ebda57b73a4a30546120ada02e71b1a9147e2d5777",
+      "signal": null,
+      "started": "2026-10-13T19:05:39.734Z"
+    },
+    {
+      "args": [
+        "--max-old-space-size=3072",
+        "scripts/check-nominal-subtype-php-ci.mjs",
+        "--route",
+        "reviewed",
+        "--mode",
+        "full",
+        "--producer",
+        "39f7f06e3db8f47b554ef039dc71c4bbc42ed98b",
+        "--directory",
+        "build/vo1466-nominal-php-installed-reviewed-full-r2-output/reviewed/full",
+        "--tap",
+        "build/vo1466-nominal-php-installed-reviewed-full-r2.tap",
+        "--glibc",
+        "2.36",
+        "--php",
+        "/usr/bin/php",
+        "--composer",
+        "/usr/bin/composer",
+        "--php-version",
+        "8.2.33",
+        "--composer-version",
+        "2.5.5"
+      ],
+      "bytes": 8529,
+      "code": 0,
+      "finished": "2026-10-13T19:05:47.748Z",
+      "log": "build/vo1466-php-ci-originals-r1-2.log",
+      "phase": "originals",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 8028061696,
+            "freeBytes": 2320719872,
+            "load": 1.62
+          }
+        ],
+        "waits": 0
+      },
+      "sha256": "8e9f8843e74dfe3fdc846cd8d6ae263d126e6a8cc1e28d3940faf708cef6eceb",
+      "signal": null,
+      "started": "2026-10-13T19:05:43.899Z"
+    },
+    {
+      "args": [
+        "--max-old-space-size=3072",
+        "scripts/check-nominal-subtype-php-ci.mjs",
+        "--route",
+        "reviewed",
+        "--mode",
+        "result-only",
+        "--producer",
+        "39f7f06e3db8f47b554ef039dc71c4bbc42ed98b",
+        "--directory",
+        "build/vo1466-nominal-php-installed-reviewed-result-only-r1-output/reviewed/result-only",
+        "--tap",
+        "build/vo1466-nominal-php-installed-reviewed-result-only-r1.tap",
+        "--glibc",
+        "2.36",
+        "--php",
+        "/usr/bin/php",
+        "--composer",
+        "/usr/bin/composer",
+        "--php-version",
+        "8.2.33",
+        "--composer-version",
+        "2.5.5"
+      ],
+      "bytes": 8529,
+      "code": 0,
+      "finished": "2026-10-13T19:05:51.946Z",
+      "log": "build/vo1466-php-ci-originals-r1-3.log",
+      "phase": "originals",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 7957004288,
+            "freeBytes": 2320601088,
+            "load": 1.65
+          }
+        ],
+        "waits": 0
+      },
+      "sha256": "3ebdce9ee2e8fe1aabaad68a9f9b226c6906b64261f95dba432871239fcd6374",
+      "signal": null,
+      "started": "2026-10-13T19:05:48.291Z"
+    },
+    {
+      "args": [
+        "--max-old-space-size=3072",
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/helpers/nominal-subtype-php-tests.mjs"
+      ],
+      "bytes": 6335,
+      "code": 0,
+      "finished": "2026-10-13T19:06:43.492Z",
+      "log": "build/vo1466-php-ci-registered-r1-0.log",
+      "phase": "registered",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 8073003008,
+            "freeBytes": 2319867904,
+            "load": 1.92
+          }
+        ],
+        "waits": 0
+      },
+      "sha256": "89ed1a175d338af2ec124b2d5579012cc6e58c509ed51c109d53444fb3346196",
+      "signal": null,
+      "started": "2026-10-13T19:05:53.228Z"
+    },
+    {
+      "args": [
+        "--max-old-space-size=3072",
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/helpers/native-consumer-partition-tests.mjs",
+        "tests/helpers/native-consumer-partition-history-tests.mjs",
+        "tests/helpers/native-fin-jvm-exit-history-tests.mjs",
+        "tests/helpers/nominal-subtype-php-registration-history-tests.mjs"
+      ],
+      "bytes": 2958,
+      "code": 0,
+      "finished": "2026-10-13T19:06:54.226Z",
+      "log": "build/vo1466-php-ci-histories-r1-0.log",
+      "phase": "histories",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 8023011328,
+            "freeBytes": 2318405632,
+            "load": 2.84
+          }
+        ],
+        "waits": 0
+      },
+      "sha256": "58197ec4b94f61d3f0b5310ed8be3fadf939aaead232d435f7ed27098794e6cb",
+      "signal": null,
+      "started": "2026-10-13T19:06:44.744Z"
+    },
+    {
+      "args": [
+        "--max-old-space-size=3072",
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/managed-ci-isolation-evidence.test.mjs"
+      ],
+      "bytes": 830,
+      "code": 0,
+      "finished": "2026-10-13T19:11:46.265Z",
+      "log": "build/vo1466-php-ci-archives-r1-0.log",
+      "phase": "archives",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 8024936448,
+            "freeBytes": 2316607488,
+            "load": 1.75
+          }
+        ],
+        "waits": 0
+      },
+      "sha256": "82c95eef3b512e3fe45abee2e63fb480d8bfb9610e94ac3f7a733e17039760e4",
+      "signal": null,
+      "started": "2026-10-13T19:08:10.605Z"
+    },
+    {
+      "args": [
+        "--max-old-space-size=3072",
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/native-fork-repair-evidence.test.mjs"
+      ],
+      "bytes": 857,
+      "code": 0,
+      "finished": "2026-10-13T19:15:43.481Z",
+      "log": "build/vo1466-php-ci-archives-r1-1.log",
+      "phase": "archives",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 7931142144,
+            "freeBytes": 2313265152,
+            "load": 4.18
+          }
+        ],
+        "waits": 0
+      },
+      "sha256": "10c73dfa0fb5053b94226d5dba2dea7006435a48f8d7c4cecefba4667b8031c1",
+      "signal": null,
+      "started": "2026-10-13T19:11:46.842Z"
+    },
+    {
+      "args": [
+        "--max-old-space-size=3072",
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/owned-jvm-package-evidence.test.mjs"
+      ],
+      "bytes": 1519,
+      "code": 0,
+      "finished": "2026-10-13T19:19:57.864Z",
+      "log": "build/vo1466-php-ci-archives-r1-2.log",
+      "phase": "archives",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 8714612736,
+            "freeBytes": 2310144000,
+            "load": 3.73
+          }
+        ],
+        "waits": 0
+      },
+      "sha256": "691c16790769064c1741189bf7ef5d62eccf93ad3dd99f5dded5184f10004c17",
+      "signal": null,
+      "started": "2026-10-13T19:15:44.501Z"
+    },
+    {
+      "args": [
+        "--max-old-space-size=3072",
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/type-surface.test.mjs",
+        "tests/type-surface-docs.test.mjs",
+        "tests/checked-javascript.test.mjs",
+        "tests/test-profiles.test.mjs",
+        "tests/documentation.test.mjs",
+        "tests/helpers/nominal-subtype-php-evidence-tests.mjs",
+        "tests/helpers/nominal-subtype-jvm-evidence-tests.mjs"
+      ],
+      "bytes": 36911,
+      "code": 0,
+      "finished": "2026-10-13T19:24:29.926Z",
+      "log": "build/vo1466-php-ci-regression-r1-0.log",
+      "phase": "regression",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 8687706112,
+            "freeBytes": 2306228224,
+            "load": 2.5
+          }
+        ],
+        "waits": 0
+      },
+      "sha256": "800311230eca5a8bf9b521d7e5f2847091ddcfd6f6880f4a0b9d1e0e55fcb8e0",
+      "signal": null,
+      "started": "2026-10-13T19:19:59.084Z"
+    },
+    {
+      "args": [
+        "node_modules/eslint/bin/eslint.js",
+        ".",
+        "--max-warnings",
+        "0"
+      ],
+      "bytes": 0,
+      "code": 0,
+      "finished": "2026-10-13T19:27:19.746Z",
+      "log": "build/vo1466-php-ci-static-r1-0.log",
+      "phase": "static",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 8364244992,
+            "freeBytes": 2297401344,
+            "load": 5.34
+          }
+        ],
+        "waits": 0
+      },
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "signal": null,
+      "started": "2026-10-13T19:24:31.358Z"
+    },
+    {
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "jsconfig.checked.json"
+      ],
+      "bytes": 0,
+      "code": 0,
+      "finished": "2026-10-13T19:27:22.541Z",
+      "log": "build/vo1466-php-ci-static-r1-1.log",
+      "phase": "static",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 8518930432,
+            "freeBytes": 2299305984,
+            "load": 5.65
+          }
+        ],
+        "waits": 0
+      },
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "signal": null,
+      "started": "2026-10-13T19:27:20.355Z"
+    },
+    {
+      "args": [
+        "scripts/generate-reference-docs.mjs",
+        "--check"
+      ],
+      "bytes": 44,
+      "code": 0,
+      "finished": "2026-10-13T19:27:31.118Z",
+      "log": "build/vo1466-php-ci-static-r1-2.log",
+      "phase": "static",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 8487755776,
+            "freeBytes": 2299248640,
+            "load": 5.6
+          }
+        ],
+        "waits": 0
+      },
+      "sha256": "3088ca5fefbfe779e4429456bbacd6ec035a87a5ab5b487cf500ccc111ee014b",
+      "signal": null,
+      "started": "2026-10-13T19:27:23.148Z"
+    }
+  ],
+  "workflowSha256": "23b12be4c4dc227980c6233e6eb309319b0e96d3ee70980bf8bf14991f4fc529"
+}
