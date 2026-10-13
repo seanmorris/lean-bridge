@@ -8,6 +8,7 @@ import { access, cp, mkdtemp, readFile, rename, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { assertNativeOwnedGate } from "./helpers/native-owned-gate.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../src/build/native-graph-model.mjs";
 import { generateOwnedAggregateCarriers } from "../src/build/owned-aggregate-carriers.mjs";
@@ -60,13 +61,7 @@ test("owned host native models authenticate callback signatures, recovery and ca
 test("CI builds and installs owned host callback packages on both source paths", async () => {
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	const command = "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-host-packaging.test.mjs";
-	assert.ok(workflow.includes("          " + command + "\n"));
-	assert.ok(workflow.includes('consumer_command="$consumer_command && ' + command + '"'));
-	for(const mode of ["ordinary", "reviewed"])
-	{
-		assert.ok(workflow.includes(`test -s build/owned-host-packaging/${mode}.json`));
-		assert.ok(workflow.includes(`            build/owned-host-packaging/${mode}.json\n`));
-	}
+	assertNativeOwnedGate(workflow, command, ["ordinary", "reviewed"].map(mode => `build/owned-host-packaging/${mode}.json`));
 });
 
 for(const mode of ["ordinary", "reviewed"]) test(`installed owned host callbacks from ${mode} Lean preserve ownership without producer sources`, { skip: !enabled, timeout: 1_200_000 }, async t => {

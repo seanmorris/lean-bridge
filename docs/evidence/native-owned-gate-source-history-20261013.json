@@ -1,0 +1,226 @@
+{
+  "schemaVersion": 1,
+  "milestone": "native-owned-gate-source-v1",
+  "predecessorCommit": "70285c8cfc5ae0251adec4ba55a70ea2386a9869",
+  "updates": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "69b307ba59ecfd65e5aa7fc7387ba8b822c6907299c00ba1a7bfecda2963aeee",
+      "previousSha256": "21fc43808d8df9e1991da6475493d09e0104880fa0c45a7f334e824b4010fd02",
+      "edits": [
+        {
+          "start": 5511,
+          "previous": "",
+          "current": "import { nativeOwnedGateChangedPaths } from \"./native-owned-gate-history.mjs\";\n"
+        },
+        {
+          "start": 67240,
+          "previous": "",
+          "current": "\t, ...nativeOwnedGateChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-jvm-registration-history.mjs",
+      "currentSha256": "f21c9e47bab09495546d91b48c2abfa26c42943da8c95a6c0e110049e4150c24",
+      "previousSha256": "f6ff9965e9999dd20f28eaa63c23bf2e5ef33e7e7dfa97031643d1340804a695",
+      "edits": [
+        {
+          "start": 232,
+          "previous": "",
+          "current": "import { beforeNativeOwnedGateSource } from \"./native-owned-gate-history.mjs\";\n"
+        },
+        {
+          "start": 2282,
+          "previous": "",
+          "current": "\tsource = beforeNativeOwnedGateSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-perl-ci-workflow-tests.mjs",
+      "currentSha256": "178d6ba802aaa11adeadb8f482491651e7d40d7bfaf0bbf289d2ba37cc0d702a",
+      "previousSha256": "3cb0ec753d3a8f758d18b40f11e5f0338d88f067a8dfffe24c86d02bf1301c90",
+      "edits": [
+        {
+          "start": 539,
+          "previous": "",
+          "current": "import { beforeNativeConsumerPartitionSource } from \"./native-consumer-partition-history.mjs\";\nimport { extendPerlCompilerBudget } from \"./native-consumer-partition.mjs\";\n"
+        },
+        {
+          "start": 827,
+          "previous": "",
+          "current": "const assertWorkflowHistory = (source, previous) => {\n\tconst beforeBudget = beforeNativeConsumerPartitionSource(path, source);\n\tassert.equal(extendPerlCompilerBudget(beforeBudget), source);\n\tassert.equal(disableNominalSubtypePerlWorkflow(beforeBudget), previous);\n\tassert.equal(enableNominalSubtypePerlWorkflow(previous), beforeBudget);\n};\n"
+        },
+        {
+          "start": 1471,
+          "previous": "\tassert.equal(disableNominalSubtypePerlWorkflow(source), previous);\n\tassert.equal(enableNominalSubtypePerlWorkflow(previous), source);\n",
+          "current": "\tassertWorkflowHistory(source, previous);\n"
+        },
+        {
+          "start": 1870,
+          "previous": "",
+          "current": "test(\"nominal CPAN historical comparison accepts only the recorded compiler-budget change\", async () => {\n\tconst source = await readFile(path, \"utf8\");\n\tconst previous = execFileSync(\"git\", [\"show\", `${predecessor}:${path}`], { encoding: \"utf8\" });\n\tconst changes = [source.replace(\"    timeout-minutes: 90\\n\", \"    timeout-minutes: 60\\n\")\n\t\t, source.replace(\"    timeout-minutes: 90\\n\", \"    timeout-minutes: 91\\n\")\n\t\t, source.replace(\"    timeout-minutes: 120\\n\", \"    timeout-minutes: 121\\n\")\n\t\t, source + \"# unrecorded edit\\n\"];\n\tfor(const changed of changes)\n\t{\n\t\tassert.notEqual(changed, source);\n\t\tassert.throws(() => assertWorkflowHistory(changed, previous));\n\t}\n});\n\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-cpp-transfer-evidence.mjs",
+      "currentSha256": "e32cb5bc9de9b7c6a10b54bfd9bce9dd52c08a01fde21b7bb816927c6b3b121f",
+      "previousSha256": "d012aeb5875ff004931e32f149af1d46699ac959a8b6f175a8ad9d4fc1e1d526",
+      "edits": [
+        {
+          "start": 183,
+          "previous": "",
+          "current": "import { assertNativeOwnedGate } from \"./native-owned-gate.mjs\";\n"
+        },
+        {
+          "start": 7712,
+          "previous": "\tassert.ok(workflow.includes(\"          npm run test:owned-cpp-transfers\\n\"));\n\tassert.ok(workflow.includes('consumer_command=\"$consumer_command && npm run test:owned-cpp-transfers\"'));\n\tfor(const directory of [\"owned-cpp-transfers\", \"owned-cpp-transfer-packaging\"])\n\t{\n\t\tfor(const mode of [\"ordinary\", \"reviewed\"])\n\t\t\tassert.ok(workflow.includes(`          test -s build/${directory}/${mode}.json\\n`));\n\t\tassert.ok(workflow.includes(`            build/${directory}/\\n`));\n\t}\n",
+          "current": "\tconst directories = [\"owned-cpp-transfers\", \"owned-cpp-transfer-packaging\"];\n\tassertNativeOwnedGate(workflow, \"npm run test:owned-cpp-transfers\"\n\t\t, directories.flatMap(directory => [\"ordinary\", \"reviewed\"].map(mode => `build/${directory}/${mode}.json`))\n\t\t, directories.map(directory => `build/${directory}/`));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-transfer-c-evidence.mjs",
+      "currentSha256": "e7b5c238cbc57bacab82a9066a5d0bcfc4c5e30da4f8f27a3a6618aa230c0a76",
+      "previousSha256": "fd4a1f1035672e5647ce02db4ed3700fc5cc29568d74f81a092699d39be3b57f",
+      "edits": [
+        {
+          "start": 184,
+          "previous": "",
+          "current": "import { assertNativeOwnedGate } from \"./native-owned-gate.mjs\";\n"
+        },
+        {
+          "start": 4574,
+          "previous": "\tassert.ok(source.includes(\"          npm run test:owned-transfers\\n\"));\n\tassert.ok(source.includes('consumer_command=\"$consumer_command && npm run test:owned-transfers\"'));\n\tfor(const path of [\"native\", \"ordinary-c\", \"reviewed-c\"])\n\t\tassert.ok(source.includes(`          test -s build/owned-transfers/${path}.json\\n`));\n\tassert.ok(source.includes(\"            build/owned-transfers/\\n\"));\n",
+          "current": "\tassertNativeOwnedGate(source, \"npm run test:owned-transfers\"\n\t\t, [\"native\", \"ordinary-c\", \"reviewed-c\"].map(path => `build/owned-transfers/${path}.json`)\n\t\t, [\"build/owned-transfers/\"]);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-transfer-package-evidence.mjs",
+      "currentSha256": "d63f62da10932bd4b4e7648a35cea9ab3cce6cf9fee1f04a1b723ed83ca15066",
+      "previousSha256": "974084cc11f1956fc6309bc0481cb5f230ce525f8fad0bd3757004f1efcac18a",
+      "edits": [
+        {
+          "start": 187,
+          "previous": "",
+          "current": "import { assertNativeOwnedGate } from \"./native-owned-gate.mjs\";\n"
+        },
+        {
+          "start": 6263,
+          "previous": "\tassert.ok(source.includes(\"          npm run test:owned-transfer-packages\\n\"));\n\tassert.ok(source.includes('consumer_command=\"$consumer_command && npm run test:owned-transfer-packages\"'));\n\tfor(const name of [\"analysis-ordinary\", \"analysis-reviewed\", \"ordinary\", \"reviewed\"])\n\t\tassert.ok(source.includes(`          test -s build/owned-transfer-packaging/${name}.json\\n`));\n\tassert.ok(source.includes(\"            build/owned-transfer-packaging/\\n\"));\n",
+          "current": "\tassertNativeOwnedGate(source, \"npm run test:owned-transfer-packages\"\n\t\t, [\"analysis-ordinary\", \"analysis-reviewed\", \"ordinary\", \"reviewed\"].map(name => `build/owned-transfer-packaging/${name}.json`)\n\t\t, [\"build/owned-transfer-packaging/\"]);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/owned-aggregate-native.test.mjs",
+      "currentSha256": "d73e5ea2ad0e9f3c25b0ccdfc053bb7ae72257d7983b7b580f6314413589bec2",
+      "previousSha256": "d6f8b0fbe0a525d623180c7f8919bbec85023384494937874187873bc451a1da",
+      "edits": [
+        {
+          "start": 560,
+          "previous": "",
+          "current": "import { assertNativeOwnedGate } from \"./helpers/native-owned-gate.mjs\";\nimport \"./helpers/native-owned-gate-history-tests.mjs\";\n"
+        },
+        {
+          "start": 2794,
+          "previous": "test(\"CI requires the actual owned native execution and retains its report\", async () => {\n\tconst workflow = await readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\");\n",
+          "current": "const requireOwnedNativeWorkflow = workflow => {\n"
+        },
+        {
+          "start": 2945,
+          "previous": "\tassert.equal(workflow.split(command).length - 1, 2);\n\tassert.ok(workflow.includes(\"test -s build/owned-aggregate-native/transport.json\"));\n\tassert.ok(workflow.includes(\"            build/owned-aggregate-native/transport.json\"));\n",
+          "current": "\tassertNativeOwnedGate(workflow, command, [\"build/owned-aggregate-native/transport.json\"]);\n};\n\ntest(\"CI requires the actual owned native execution and retains its report\", async () => {\n\trequireOwnedNativeWorkflow(await readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\"));\n});\n\ntest(\"owned native CI checks reject missing executions, optional gates and lost reports\", async () => {\n\tconst workflow = await readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\");\n\tconst command = \"          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-aggregate-native.test.mjs\\n\";\n\tfor(const [before, after] of [\n\t\t[command, \"\"], [command, command.replace(\"=1\", \"=0\")]\n\t\t, [command, command.replace(\"          \", \"          # \")]\n\t\t, [command, command + command]\n\t\t, [\"          test -s build/owned-aggregate-native/transport.json\\n\", \"\"]\n\t\t, [\"            build/owned-aggregate-native/transport.json\\n\", \"\"]\n\t\t, [\"        id: type_corpus_c_family_values\\n\", \"        id: type_corpus_c_family_values\\n        if: false\\n\"]\n\t\t, [\"        id: type_corpus_c_family_values\\n\", \"        id: type_corpus_c_family_values\\n        continue-on-error: true\\n\"]\n\t\t, [\"needs.native-consumers.result != 'success' || needs.native-c-family-values.result != 'success'\", \"needs.native-consumers.result != 'success' && needs.native-c-family-values.result != 'success'\"]\n\t]) {\n\t\tconst changed = workflow.replace(before, after); assert.notEqual(changed, workflow);\n\t\tassert.throws(() => requireOwnedNativeWorkflow(changed));\n\t}\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/owned-c-values.test.mjs",
+      "currentSha256": "c387e52a1de79bccd8895c95ac5955c96c26182ef62cf11b18d8e54b17322def",
+      "previousSha256": "9407fcd5bdc2a04571aa339d1acc7b8f1221e8047da2caa9d26366f5a9a2eb82",
+      "edits": [
+        {
+          "start": 253,
+          "previous": "",
+          "current": "import { assertNativeOwnedGate } from \"./helpers/native-owned-gate.mjs\";\n"
+        },
+        {
+          "start": 4982,
+          "previous": "\tassert.ok(workflow.includes(\"          \" + command + \"\\n\"));\n\tassert.ok(workflow.includes('consumer_command=\"$consumer_command && ' + command + '\"'));\n\tfor(const name of [\"public-c\", \"public-c-scalars\"])\n\t{\n\t\tassert.ok(workflow.includes(`test -s build/owned-aggregate-native/${name}.json`));\n\t\tassert.ok(workflow.includes(`            build/owned-aggregate-native/${name}.json\\n`));\n\t}\n",
+          "current": "\tassertNativeOwnedGate(workflow, command, [\"public-c\", \"public-c-scalars\"].map(name => `build/owned-aggregate-native/${name}.json`));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/owned-cpp-packaging.test.mjs",
+      "currentSha256": "6ac8b92fc03f42d8b4622b0a944d86da91c5777c7b3414a7740c60e25fabe606",
+      "previousSha256": "e00043e5f616018a54ab2bd4b935a6b0590a4defbab83ee55a2b3d2cd43bdd2a",
+      "edits": [
+        {
+          "start": 327,
+          "previous": "",
+          "current": "import { assertNativeOwnedGate } from \"./helpers/native-owned-gate.mjs\";\n"
+        },
+        {
+          "start": 3410,
+          "previous": "\t\tassert.ok(workflow.includes(\"          \" + command + \"\\n\"));\n\t\tassert.ok(workflow.includes('consumer_command=\"$consumer_command && ' + command + '\"'));\n\t}\n\tfor(const mode of [\"ordinary\", \"reviewed\"])\n\t{\n\t\tassert.ok(workflow.includes(`test -s build/owned-cpp-packaging/${mode}.json`));\n\t\tassert.ok(workflow.includes(`            build/owned-cpp-packaging/${mode}.json\\n`));\n",
+          "current": "\t\tassertNativeOwnedGate(workflow, command, [\"ordinary\", \"reviewed\"].map(mode => `build/owned-cpp-packaging/${mode}.json`));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/owned-host-callbacks.test.mjs",
+      "currentSha256": "53e70dac51c8ff6833e47e501e00ee201221e2d81864518d4d019503ab641141",
+      "previousSha256": "ec3eb6a750abc2dffe2d4126fa18baa8fd5ba33fd2328b2ccfe763283f855950",
+      "edits": [
+        {
+          "start": 173,
+          "previous": "",
+          "current": "import { assertNativeOwnedGate } from \"./helpers/native-owned-gate.mjs\";\n"
+        },
+        {
+          "start": 2014,
+          "previous": "\tassert.ok(workflow.includes(\"          \" + command + \"\\n\"));\n\tassert.ok(workflow.includes('consumer_command=\"$consumer_command && ' + command + '\"'));\n\tfor(const name of [\"ordinary\", \"reviewed\"])\n\t{\n\t\tassert.ok(workflow.includes(`test -s build/owned-host-callbacks/${name}.json`));\n\t\tassert.ok(workflow.includes(`            build/owned-host-callbacks/${name}.json\\n`));\n\t}\n",
+          "current": "\tassertNativeOwnedGate(workflow, command, [\"ordinary\", \"reviewed\"].map(name => `build/owned-host-callbacks/${name}.json`));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/owned-host-packaging.test.mjs",
+      "currentSha256": "1817c165911d7f69ff690f93c39c326fee5d64d79affae30442399d55985c518",
+      "previousSha256": "ef1d266dda72d7a0b7ed2430ce23907cd4519656cf4e1132b45741f4581328a2",
+      "edits": [
+        {
+          "start": 331,
+          "previous": "",
+          "current": "import { assertNativeOwnedGate } from \"./helpers/native-owned-gate.mjs\";\n"
+        },
+        {
+          "start": 4197,
+          "previous": "\tassert.ok(workflow.includes(\"          \" + command + \"\\n\"));\n\tassert.ok(workflow.includes('consumer_command=\"$consumer_command && ' + command + '\"'));\n\tfor(const mode of [\"ordinary\", \"reviewed\"])\n\t{\n\t\tassert.ok(workflow.includes(`test -s build/owned-host-packaging/${mode}.json`));\n\t\tassert.ok(workflow.includes(`            build/owned-host-packaging/${mode}.json\\n`));\n\t}\n",
+          "current": "\tassertNativeOwnedGate(workflow, command, [\"ordinary\", \"reviewed\"].map(mode => `build/owned-host-packaging/${mode}.json`));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/owned-native-values.test.mjs",
+      "currentSha256": "67d32a91fe348725dae4a5863fbd2c137837ec2afaaff4bd492d46a3645ff3c9",
+      "previousSha256": "b3d2229216b93f49a3e223d69bcbc66a3f3f29cff238a35527dbe88e22fb6410",
+      "edits": [
+        {
+          "start": 257,
+          "previous": "",
+          "current": "import { assertNativeOwnedGate } from \"./helpers/native-owned-gate.mjs\";\n"
+        },
+        {
+          "start": 4544,
+          "previous": "\tassert.ok(workflow.includes(\"          \" + command + \"\\n\"));\n\tassert.ok(workflow.includes('consumer_command=\"$consumer_command && ' + command + '\"'));\n\tfor(const name of [\"values\", \"scalars\"])\n\t{\n\t\tassert.ok(workflow.includes(`test -s build/owned-aggregate-native/${name}.json`));\n\t\tassert.ok(workflow.includes(`            build/owned-aggregate-native/${name}.json\\n`));\n\t}\n",
+          "current": "\tassertNativeOwnedGate(workflow, command, [\"values\", \"scalars\"].map(name => `build/owned-aggregate-native/${name}.json`));\n"
+        }
+      ]
+    }
+  ]
+}

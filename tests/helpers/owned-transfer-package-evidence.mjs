@@ -5,6 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { assertNativeOwnedGate } from "./native-owned-gate.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
@@ -98,9 +99,7 @@ export const assertOwnedTransferPackageExecution = async record => {
  * @param source - Complete downstream workflow source.
  */
 export const assertOwnedTransferPackageCi = source => {
-	assert.ok(source.includes("          npm run test:owned-transfer-packages\n"));
-	assert.ok(source.includes('consumer_command="$consumer_command && npm run test:owned-transfer-packages"'));
-	for(const name of ["analysis-ordinary", "analysis-reviewed", "ordinary", "reviewed"])
-		assert.ok(source.includes(`          test -s build/owned-transfer-packaging/${name}.json\n`));
-	assert.ok(source.includes("            build/owned-transfer-packaging/\n"));
+	assertNativeOwnedGate(source, "npm run test:owned-transfer-packages"
+		, ["analysis-ordinary", "analysis-reviewed", "ordinary", "reviewed"].map(name => `build/owned-transfer-packaging/${name}.json`)
+		, ["build/owned-transfer-packaging/"]);
 };

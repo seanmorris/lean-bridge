@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import test from "node:test";
+import { assertNativeOwnedGate } from "./helpers/native-owned-gate.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { compileOwnedNativeValueLayout } from "../src/backends/native/owned-value-layout.mjs";
 import { generateOwnedNativeValueAdapters } from "../src/backends/native/owned-value-adapters.mjs";
@@ -75,13 +76,7 @@ const nativeBindings = generated => {
 test("CI executes the owned value and scalar probes and retains both reports", async () => {
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	const command = "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-native-values.test.mjs tests/owned-native-scalars.test.mjs";
-	assert.ok(workflow.includes("          " + command + "\n"));
-	assert.ok(workflow.includes('consumer_command="$consumer_command && ' + command + '"'));
-	for(const name of ["values", "scalars"])
-	{
-		assert.ok(workflow.includes(`test -s build/owned-aggregate-native/${name}.json`));
-		assert.ok(workflow.includes(`            build/owned-aggregate-native/${name}.json\n`));
-	}
+	assertNativeOwnedGate(workflow, command, ["values", "scalars"].map(name => `build/owned-aggregate-native/${name}.json`));
 });
 
 test("owned values round-trip typed native fields with bounded atomic acquisition and cleanup", {

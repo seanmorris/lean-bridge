@@ -5,6 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { assertNativeOwnedGate } from "./native-owned-gate.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
 import { ownedAggregateTransferLeaseSource } from "../../src/backends/native/owned-aggregate-transfers.mjs";
@@ -70,11 +71,9 @@ export const assertOwnedTransferCExecution = async record => {
  * @param source - Complete downstream workflow source.
  */
 export const assertOwnedTransferCCi = source => {
-	assert.ok(source.includes("          npm run test:owned-transfers\n"));
-	assert.ok(source.includes('consumer_command="$consumer_command && npm run test:owned-transfers"'));
-	for(const path of ["native", "ordinary-c", "reviewed-c"])
-		assert.ok(source.includes(`          test -s build/owned-transfers/${path}.json\n`));
-	assert.ok(source.includes("            build/owned-transfers/\n"));
+	assertNativeOwnedGate(source, "npm run test:owned-transfers"
+		, ["native", "ordinary-c", "reviewed-c"].map(path => `build/owned-transfers/${path}.json`)
+		, ["build/owned-transfers/"]);
 	const php = source.match(/^ {2}php-consumers:\n[\s\S]*?(?=^ {2}native-consumers:)/mu)?.[0];
 	// Native PHP and PHP-Wasm run as separately bounded jobs (#1450).
 	assert.ok(php?.includes("  php-consumers:\n    name: Native PHP\n    runs-on: ubuntu-24.04\n"));

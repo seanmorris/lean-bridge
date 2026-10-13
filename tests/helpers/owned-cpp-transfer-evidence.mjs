@@ -5,6 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { assertNativeOwnedGate } from "./native-owned-gate.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
 import { historicalOwnedTransferPackage } from "./owned-transfer-generated-history.mjs";
@@ -118,12 +119,8 @@ export const assertOwnedCppTransferExecution = async record => {
  * @param workflow - Complete downstream workflow source.
  */
 export const assertOwnedCppTransferCi = workflow => {
-	assert.ok(workflow.includes("          npm run test:owned-cpp-transfers\n"));
-	assert.ok(workflow.includes('consumer_command="$consumer_command && npm run test:owned-cpp-transfers"'));
-	for(const directory of ["owned-cpp-transfers", "owned-cpp-transfer-packaging"])
-	{
-		for(const mode of ["ordinary", "reviewed"])
-			assert.ok(workflow.includes(`          test -s build/${directory}/${mode}.json\n`));
-		assert.ok(workflow.includes(`            build/${directory}/\n`));
-	}
+	const directories = ["owned-cpp-transfers", "owned-cpp-transfer-packaging"];
+	assertNativeOwnedGate(workflow, "npm run test:owned-cpp-transfers"
+		, directories.flatMap(directory => ["ordinary", "reviewed"].map(mode => `build/${directory}/${mode}.json`))
+		, directories.map(directory => `build/${directory}/`));
 };

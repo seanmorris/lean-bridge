@@ -11,6 +11,8 @@ import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { ownedAggregateLeaseSource } from "../src/backends/native/owned-aggregate-leases.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { compileOwnedAggregateFixture } from "./helpers/owned-aggregate-native.mjs";
+import { assertNativeOwnedGate } from "./helpers/native-owned-gate.mjs";
+import "./helpers/native-owned-gate-history-tests.mjs";
 
 const bindings = compiled => {
 	const { model, symbols } = compiled;
@@ -49,12 +51,31 @@ const bindings = compiled => {
 	return lines.join("\n") + "\n";
 };
 
-test("CI requires the actual owned native execution and retains its report", async () => {
-	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+const requireOwnedNativeWorkflow = workflow => {
 	const command = "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-aggregate-native.test.mjs";
-	assert.equal(workflow.split(command).length - 1, 2);
-	assert.ok(workflow.includes("test -s build/owned-aggregate-native/transport.json"));
-	assert.ok(workflow.includes("            build/owned-aggregate-native/transport.json"));
+	assertNativeOwnedGate(workflow, command, ["build/owned-aggregate-native/transport.json"]);
+};
+
+test("CI requires the actual owned native execution and retains its report", async () => {
+	requireOwnedNativeWorkflow(await readFile(".github/workflows/consumer-matrix.yml", "utf8"));
+});
+
+test("owned native CI checks reject missing executions, optional gates and lost reports", async () => {
+	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	const command = "          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-aggregate-native.test.mjs\n";
+	for(const [before, after] of [
+		[command, ""], [command, command.replace("=1", "=0")]
+		, [command, command.replace("          ", "          # ")]
+		, [command, command + command]
+		, ["          test -s build/owned-aggregate-native/transport.json\n", ""]
+		, ["            build/owned-aggregate-native/transport.json\n", ""]
+		, ["        id: type_corpus_c_family_values\n", "        id: type_corpus_c_family_values\n        if: false\n"]
+		, ["        id: type_corpus_c_family_values\n", "        id: type_corpus_c_family_values\n        continue-on-error: true\n"]
+		, ["needs.native-consumers.result != 'success' || needs.native-c-family-values.result != 'success'", "needs.native-consumers.result != 'success' && needs.native-c-family-values.result != 'success'"]
+	]) {
+		const changed = workflow.replace(before, after); assert.notEqual(changed, workflow);
+		assert.throws(() => requireOwnedNativeWorkflow(changed));
+	}
 });
 
 test("owned aggregate carriers preserve identities and release failed native acquisitions", {

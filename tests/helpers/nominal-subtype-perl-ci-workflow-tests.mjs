@@ -9,20 +9,41 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { nominalSubtypePerlCiBlock, enableNominalSubtypePerlWorkflow, disableNominalSubtypePerlWorkflow, assertNominalSubtypePerlWorkflow } from "./nominal-subtype-perl-ci-workflow.mjs";
 import { assertStructuralSubtypeWorkflow } from "./structural-subtype-ci-workflow.mjs";
+import { beforeNativeConsumerPartitionSource } from "./native-consumer-partition-history.mjs";
+import { extendPerlCompilerBudget } from "./native-consumer-partition.mjs";
 
 const path = ".github/workflows/perl-consumer.yml";
 const predecessor = "7c9fbfee9c31b60dc7433ca6945be62e39810754";
+const assertWorkflowHistory = (source, previous) => {
+	const beforeBudget = beforeNativeConsumerPartitionSource(path, source);
+	assert.equal(extendPerlCompilerBudget(beforeBudget), source);
+	assert.equal(disableNominalSubtypePerlWorkflow(beforeBudget), previous);
+	assert.equal(enableNominalSubtypePerlWorkflow(previous), beforeBudget);
+};
 
 test("nominal CPAN CI preserves all existing jobs and requires four selections with complete uploads", async () => {
 	const source = await readFile(path, "utf8");
 	assertNominalSubtypePerlWorkflow(source);
 	const previous = execFileSync("git", ["show", `${predecessor}:${path}`], { encoding: "utf8" });
-	assert.equal(disableNominalSubtypePerlWorkflow(source), previous);
-	assert.equal(enableNominalSubtypePerlWorkflow(previous), source);
+	assertWorkflowHistory(source, previous);
 	assertStructuralSubtypeWorkflow(previous, "perl-consumer.yml");
 	const parent = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	assert.match(parent, /\n {2}perl-consumer:\n {4}name: Perl\n {4}uses: \.\/\.github\/workflows\/perl-consumer\.yml\n/u);
 	assert.match(parent.split("\n  support-summary:\n")[1], /^ {6}- perl-consumer$/mu);
+});
+
+test("nominal CPAN historical comparison accepts only the recorded compiler-budget change", async () => {
+	const source = await readFile(path, "utf8");
+	const previous = execFileSync("git", ["show", `${predecessor}:${path}`], { encoding: "utf8" });
+	const changes = [source.replace("    timeout-minutes: 90\n", "    timeout-minutes: 60\n")
+		, source.replace("    timeout-minutes: 90\n", "    timeout-minutes: 91\n")
+		, source.replace("    timeout-minutes: 120\n", "    timeout-minutes: 121\n")
+		, source + "# unrecorded edit\n"];
+	for(const changed of changes)
+	{
+		assert.notEqual(changed, source);
+		assert.throws(() => assertWorkflowHistory(changed, previous));
+	}
 });
 
 test("nominal CPAN CI rejects missing gates, skipped jobs, custom ABIs and partial uploads", async t => {

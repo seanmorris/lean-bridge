@@ -8,6 +8,7 @@ import { access, cp, mkdtemp, readFile, rename, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { assertNativeOwnedGate } from "./helpers/native-owned-gate.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { generateOwnedCppPackage } from "../src/backends/cpp/owned-package.mjs";
 import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
@@ -52,13 +53,7 @@ test("CI executes installed C++ ownership packages and retains both reports", as
 	for(const suite of ["owned-cpp-runtime", "owned-cpp-callables", "owned-cpp-packaging"])
 	{
 		const command = `LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/${suite}.test.mjs`;
-		assert.ok(workflow.includes("          " + command + "\n"));
-		assert.ok(workflow.includes('consumer_command="$consumer_command && ' + command + '"'));
-	}
-	for(const mode of ["ordinary", "reviewed"])
-	{
-		assert.ok(workflow.includes(`test -s build/owned-cpp-packaging/${mode}.json`));
-		assert.ok(workflow.includes(`            build/owned-cpp-packaging/${mode}.json\n`));
+		assertNativeOwnedGate(workflow, command, ["ordinary", "reviewed"].map(mode => `build/owned-cpp-packaging/${mode}.json`));
 	}
 });
 

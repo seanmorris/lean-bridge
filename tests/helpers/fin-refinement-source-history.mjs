@@ -59,6 +59,7 @@ import { jvmContainerEntryExitChangedPaths } from "./jvm-container-entry-exit-hi
 import { nominalSubtypeDotnetPromotionChangedPaths } from "./nominal-subtype-dotnet-promotion-history.mjs";
 import { nativeConsumerPartitionChangedPaths } from "./native-consumer-partition-history.mjs";
 import { nominalSubtypeJvmRegistrationChangedPaths } from "./nominal-subtype-jvm-registration-history.mjs";
+import { nativeOwnedGateChangedPaths } from "./native-owned-gate-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeSubtypeRefinementSource, subtypeRefinementChangedPaths } from "./subtype-refinement-source-history.mjs";
 import { subtypeHeapChangedPaths } from "./subtype-heap-source-history.mjs";
@@ -983,6 +984,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nominalSubtypeDotnetPromotionChangedPaths
 	, ...nativeConsumerPartitionChangedPaths
 	, ...nominalSubtypeJvmRegistrationChangedPaths
+	, ...nativeOwnedGateChangedPaths
 ])].sort());
 
 /**
