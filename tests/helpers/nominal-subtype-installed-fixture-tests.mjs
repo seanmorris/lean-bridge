@@ -69,6 +69,12 @@ import "./nominal-subtype-dotnet-tests.mjs";
 import "./nominal-subtype-dotnet-package-tests.mjs";
 import "./nominal-subtype-dotnet-installed-tests.mjs";
 import "./nominal-subtype-dotnet-registration-history-tests.mjs";
+import "./nominal-subtype-jvm-tests.mjs";
+import "./nominal-subtype-jvm-package-tests.mjs";
+import "./nominal-subtype-jvm-probe-tests.mjs";
+import "./nominal-subtype-jvm-caller-tests.mjs";
+import "./nominal-subtype-jvm-installed-tests.mjs";
+import "./nominal-subtype-jvm-registration-history-tests.mjs";
 
 test("nominal package review independently matches ordinary choices and retains constructor-free results", () => {
 	for(const resultOnly of [false, true])

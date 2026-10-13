@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeNominalSubtypeJvmRegistrationSource } from "./nominal-subtype-jvm-registration-history.mjs";
 
 export const nativeConsumerPartitionHistoryPath = "docs/evidence/native-consumer-partition-source-history-20261013.json";
 export const nativeConsumerPartitionPredecessor = "3fc6a085155dea5266ded890d9f16a0976e33ae6";
@@ -61,6 +62,7 @@ export const reverseNativeConsumerPartitionUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeNativeConsumerPartitionSource = (path, source, expected) => {
+	source = beforeNominalSubtypeJvmRegistrationSource(path, source, expected);
 	if(typeof source !== "string" || !nativeConsumerPartitionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

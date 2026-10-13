@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nominal-subtype-jvm-registration-source-v1",
+  "predecessorCommit": "5a4386eac97306f1e4fa3b1097d9caf20ef2d608",
+  "updates": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "21fc43808d8df9e1991da6475493d09e0104880fa0c45a7f334e824b4010fd02",
+      "previousSha256": "d671179f656c0a9bbdfc63c343b8ccc6e2e7dd4e88c7b6523e4b26e93ffdb850",
+      "edits": [
+        {
+          "start": 5403,
+          "previous": "",
+          "current": "import { nominalSubtypeJvmRegistrationChangedPaths } from \"./nominal-subtype-jvm-registration-history.mjs\";\n"
+        },
+        {
+          "start": 67113,
+          "previous": "",
+          "current": "\t, ...nominalSubtypeJvmRegistrationChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-consumer-partition-history.mjs",
+      "currentSha256": "dddd41dab3f49448c985df8df952eb878eb1ca146eb56a90d36b75b130121352",
+      "previousSha256": "52b2ea1a882bf65da84e55d42bcb454c0c5ad192cc24d2dfe76b537472af2b50",
+      "edits": [
+        {
+          "start": 234,
+          "previous": "",
+          "current": "import { beforeNominalSubtypeJvmRegistrationSource } from \"./nominal-subtype-jvm-registration-history.mjs\";\n"
+        },
+        {
+          "start": 2741,
+          "previous": "",
+          "current": "\tsource = beforeNominalSubtypeJvmRegistrationSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-installed-fixture-tests.mjs",
+      "currentSha256": "24140ca2b3b9c4011c0919ca33ce9c50792c3651f87e31f28bdadf8a028d89a7",
+      "previousSha256": "40ffd47c33eaea4f1caf5dc18b12fd2f60b1fb851c6739cfe124b1bec674ee21",
+      "edits": [
+        {
+          "start": 3922,
+          "previous": "",
+          "current": "import \"./nominal-subtype-jvm-tests.mjs\";\nimport \"./nominal-subtype-jvm-package-tests.mjs\";\nimport \"./nominal-subtype-jvm-probe-tests.mjs\";\nimport \"./nominal-subtype-jvm-caller-tests.mjs\";\nimport \"./nominal-subtype-jvm-installed-tests.mjs\";\nimport \"./nominal-subtype-jvm-registration-history-tests.mjs\";\n"
+        }
+      ]
+    }
+  ]
+}
