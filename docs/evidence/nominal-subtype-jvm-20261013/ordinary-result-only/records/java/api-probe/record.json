@@ -1,0 +1,34 @@
+{
+  "archiveSha256": "16fe91f2c4bbc86793c8e4085a77804e66a158a8321802ed153aa92c10c526d7",
+  "args": [
+    "--release",
+    "22",
+    "-Werror",
+    "-proc:none",
+    "-XDrawDiagnostics",
+    "-cp",
+    "component.jar",
+    "-d",
+    "classes",
+    "probe.java"
+  ],
+  "command": "/app/.toolchains/jdk22/bin/javac",
+  "cwd": "/tmp/lean-bridge-nominal-jvm-installed-kWkkQx/probes/java",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/unavailable"
+  },
+  "mode": "result-only",
+  "outputs": {},
+  "profile": "java",
+  "run": {
+    "code": 1,
+    "stderr": "probe.java:16:12: compiler.err.cant.resolve.location: kindname.class, EnvelopePair, , , (compiler.misc.location: kindname.class, Probe, null)\nprobe.java:3:39: compiler.err.cant.resolve.location.args: kindname.method, first, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nominalsubtypes.Api, null)\nprobe.java:4:40: compiler.err.cant.resolve.location.args: kindname.method, second, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nominalsubtypes.Api, null)\nprobe.java:5:41: compiler.err.cant.resolve.location.args: kindname.method, combine, , compiler.misc.type.null,compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nominalsubtypes.Api, null)\nprobe.java:6:40: compiler.err.cant.resolve.location.args: kindname.method, nested, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nominalsubtypes.Api, null)\nprobe.java:7:38: compiler.err.cant.resolve.location.args: kindname.method, echo, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nominalsubtypes.Api, null)\nprobe.java:8:41: compiler.err.cant.resolve.location.args: kindname.method, aliases, , compiler.misc.type.null,compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nominalsubtypes.Api, null)\nprobe.java:9:44: compiler.err.cant.resolve.location.args: kindname.method, echoGroups, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nominalsubtypes.Api, null)\nprobe.java:10:42: compiler.err.cant.resolve.location.args: kindname.method, echoPair, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nominalsubtypes.Api, null)\nprobe.java:11:50: compiler.err.cant.resolve.location.args: kindname.method, inspectAliasPair, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nominalsubtypes.Api, null)\nprobe.java:12:44: compiler.err.cant.resolve.location.args: kindname.method, eventFirst, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nominalsubtypes.Api, null)\nprobe.java:13:45: compiler.err.cant.resolve.location.args: kindname.method, eventSecond, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nominalsubtypes.Api, null)\nprobe.java:14:43: compiler.err.cant.resolve.location.args: kindname.method, echoEvent, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nominalsubtypes.Api, null)\nprobe.java:15:42: compiler.err.cant.resolve.location.args: kindname.method, plainFin, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nominalsubtypes.Api, null)\n14 errors\n",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.nominalsubtypes.*;\nfinal class Probe {\n    static Object first() { return Api.first(null); }\n    static Object second() { return Api.second(null); }\n    static Object combine() { return Api.combine(null, null); }\n    static Object nested() { return Api.nested(null); }\n    static Object echo() { return Api.echo(null); }\n    static Object aliases() { return Api.aliases(null, null); }\n    static Object echoGroups() { return Api.echoGroups(null); }\n    static Object echoPair() { return Api.echoPair(null); }\n    static Object inspectAliasPair() { return Api.inspectAliasPair(null); }\n    static Object eventFirst() { return Api.eventFirst(null); }\n    static Object eventSecond() { return Api.eventSecond(null); }\n    static Object echoEvent() { return Api.echoEvent(null); }\n    static Object plainFin() { return Api.plainFin(null); }\n    static EnvelopePair inputValue;\n}\n",
+  "sourceSha256": "f799f20ac7516aab899a4dc438c840b0db2149b5f5fb812868f82f25c31dc14a"
+}

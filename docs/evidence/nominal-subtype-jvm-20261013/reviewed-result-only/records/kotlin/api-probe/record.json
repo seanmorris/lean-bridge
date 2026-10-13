@@ -1,0 +1,34 @@
+{
+  "archiveSha256": "9e18b6d9fe9e9bcc8954cb9f6fded7ca3863e1b32806fba66501eb0a49c7e9d5",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "probe.kt",
+    "-d",
+    "classes"
+  ],
+  "command": "/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlinc",
+  "cwd": "/tmp/lean-bridge-nominal-jvm-installed-6rfOB2/probes/kotlin",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/app/.toolchains/jdk22",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "mode": "result-only",
+  "outputs": {},
+  "profile": "kotlin",
+  "run": {
+    "code": 1,
+    "stderr": "probe.kt:2:34: error: [UNRESOLVED_REFERENCE] Unresolved reference 'first'.\nfun first(value: Envelope) = Api.first(value)\n                                 ^^^^^\nprobe.kt:3:35: error: [UNRESOLVED_REFERENCE] Unresolved reference 'second'.\nfun second(value: Envelope) = Api.second(value)\n                                  ^^^^^^\nprobe.kt:4:52: error: [UNRESOLVED_REFERENCE] Unresolved reference 'combine'.\nfun combine(left: Envelope, right: Envelope) = Api.combine(left, right)\n                                                   ^^^^^^^\nprobe.kt:5:19: error: [UNRESOLVED_REFERENCE] Unresolved reference 'EnvelopePair'.\nfun nested(value: EnvelopePair) = Api.nested(value)\n                  ^^^^^^^^^^^^\nprobe.kt:5:39: error: [UNRESOLVED_REFERENCE] Unresolved reference 'nested'.\nfun nested(value: EnvelopePair) = Api.nested(value)\n                                      ^^^^^^\nprobe.kt:6:33: error: [UNRESOLVED_REFERENCE] Unresolved reference 'echo'.\nfun echo(value: Envelope) = Api.echo(value)\n                                ^^^^\nprobe.kt:7:82: error: [UNRESOLVED_REFERENCE] Unresolved reference 'aliases'.\nfun aliases(left: Array<Option<Envelope>>, right: Array<Option<Envelope>>) = Api.aliases(left, right)\n                                                                                 ^^^^^^^\nprobe.kt:8:54: error: [UNRESOLVED_REFERENCE] Unresolved reference 'echoGroups'.\nfun echoGroups(value: Array<Option<Envelope>>) = Api.echoGroups(value)\n                                                     ^^^^^^^^^^\nprobe.kt:9:38: error: [UNRESOLVED_REFERENCE] Unresolved reference 'echoPair'.\nfun echoPair(value: AliasPair) = Api.echoPair(value)\n                                     ^^^^^^^^\nprobe.kt:10:46: error: [UNRESOLVED_REFERENCE] Unresolved reference 'inspectAliasPair'.\nfun inspectAliasPair(value: AliasPair) = Api.inspectAliasPair(value)\n                                             ^^^^^^^^^^^^^^^^\nprobe.kt:11:36: error: [UNRESOLVED_REFERENCE] Unresolved reference 'eventFirst'.\nfun eventFirst(value: Event) = Api.eventFirst(value)\n                                   ^^^^^^^^^^\nprobe.kt:12:37: error: [UNRESOLVED_REFERENCE] Unresolved reference 'eventSecond'.\nfun eventSecond(value: Event) = Api.eventSecond(value)\n                                    ^^^^^^^^^^^\nprobe.kt:13:35: error: [UNRESOLVED_REFERENCE] Unresolved reference 'echoEvent'.\nfun echoEvent(value: Event) = Api.echoEvent(value)\n                                  ^^^^^^^^^\nprobe.kt:14:49: error: [UNRESOLVED_REFERENCE] Unresolved reference 'plainFin'.\nfun plainFin(value: java.math.BigInteger) = Api.plainFin(value)\n                                                ^^^^^^^^\n",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.nominalsubtypes.kotlin.*\nfun first(value: Envelope) = Api.first(value)\nfun second(value: Envelope) = Api.second(value)\nfun combine(left: Envelope, right: Envelope) = Api.combine(left, right)\nfun nested(value: EnvelopePair) = Api.nested(value)\nfun echo(value: Envelope) = Api.echo(value)\nfun aliases(left: Array<Option<Envelope>>, right: Array<Option<Envelope>>) = Api.aliases(left, right)\nfun echoGroups(value: Array<Option<Envelope>>) = Api.echoGroups(value)\nfun echoPair(value: AliasPair) = Api.echoPair(value)\nfun inspectAliasPair(value: AliasPair) = Api.inspectAliasPair(value)\nfun eventFirst(value: Event) = Api.eventFirst(value)\nfun eventSecond(value: Event) = Api.eventSecond(value)\nfun echoEvent(value: Event) = Api.echoEvent(value)\nfun plainFin(value: java.math.BigInteger) = Api.plainFin(value)\n",
+  "sourceSha256": "3e18821ac8ad81ae0c1207269623dcf13cdc350398aa2303f58b724f75c5d546"
+}

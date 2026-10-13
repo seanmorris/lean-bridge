@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "generator": "jvm-copied-v1",
+  "target": "jvm",
+  "component": "nominalsubtypes@1.0.0",
+  "bindingIrSha256": "56c5f0ccf057f0e53b23b39b9dff029ff6f4aee3da1d791993e2fbd0b7db567e",
+  "namespace": "org.leanbridge.nominalsubtypes",
+  "files": [
+    "src/main/java/org/leanbridge/nominalsubtypes/Unit.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/LeanBridgeException.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/Api.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/Envelope.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/AliasPair.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/EnvelopePair.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/Event.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/EventEmpty.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/EventBox.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/EventChoices.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/Option.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/Result.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/Pair.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/Runtime.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/NativeAssets.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/Scope.java",
+    "README.md",
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/Api.kt",
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/Unit.kt",
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/LeanBridgeException.kt",
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/Envelope.kt",
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/Event.kt",
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/EventEmpty.kt",
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/EventBox.kt",
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/EventChoices.kt",
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/AliasPair.kt",
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/EnvelopePair.kt",
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/Option.kt",
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/Result.kt",
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/Pair.kt",
+    "src/main/java/org/leanbridge/nominalsubtypes/KotlinBridge.java",
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/KotlinCalls.kt",
+    "src/main/java/org/leanbridge/nominalsubtypes/KotlinRuntime.java"
+  ],
+  "publicFiles": [
+    "src/main/java/org/leanbridge/nominalsubtypes/Unit.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/LeanBridgeException.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/Api.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/Envelope.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/AliasPair.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/EnvelopePair.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/Event.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/EventEmpty.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/EventBox.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/EventChoices.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/Option.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/Result.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/Pair.java",
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/Api.kt",
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/Unit.kt",
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/LeanBridgeException.kt",
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/Envelope.kt",
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/Event.kt",
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/EventEmpty.kt",
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/EventBox.kt",
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/EventChoices.kt",
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/AliasPair.kt",
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/EnvelopePair.kt",
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/Option.kt",
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/Result.kt",
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/Pair.kt"
+  ],
+  "internalFiles": [
+    "src/main/java/org/leanbridge/nominalsubtypes/Runtime.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/NativeAssets.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/Scope.java",
+    "src/main/java/org/leanbridge/nominalsubtypes/KotlinBridge.java",
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/KotlinCalls.kt",
+    "src/main/java/org/leanbridge/nominalsubtypes/KotlinRuntime.java"
+  ],
+  "packageFiles": [],
+  "supportedFeatures": [
+    "direct-functions",
+    "copied-values",
+    "deterministic-close"
+  ],
+  "capabilityGaps": [
+    {
+      "feature": "identity-and-effects",
+      "reason": "Ordinary Maven admits copied values and synchronous primitive callables, not resources, compound callables or async delivery."
+    },
+    {
+      "feature": "additional-platforms",
+      "reason": "The compiled native profile is Linux x86-64 with glibc."
+    }
+  ],
+  "aliases": [
+    {
+      "id": "lean:NominalSubtypes.EnvelopeAlias",
+      "name": "EnvelopeAlias",
+      "target": {
+        "id": "lean:NominalSubtypes.Envelope",
+        "kind": "named"
+      },
+      "javaType": "Envelope",
+      "kotlinType": "Envelope"
+    }
+  ],
+  "kotlin": {
+    "namespace": "org.leanbridge.nominalsubtypes.kotlin",
+    "metadataVersion": "2.2.0",
+    "publicFiles": [
+      "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/Api.kt",
+      "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/Unit.kt",
+      "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/LeanBridgeException.kt",
+      "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/Envelope.kt",
+      "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/Event.kt",
+      "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/EventEmpty.kt",
+      "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/EventBox.kt",
+      "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/EventChoices.kt",
+      "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/AliasPair.kt",
+      "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/EnvelopePair.kt",
+      "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/Option.kt",
+      "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/Result.kt",
+      "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/Pair.kt"
+    ],
+    "internalFiles": [
+      "src/main/java/org/leanbridge/nominalsubtypes/KotlinBridge.java",
+      "src/main/kotlin/org/leanbridge/nominalsubtypes/KotlinCalls.kt",
+      "src/main/java/org/leanbridge/nominalsubtypes/KotlinRuntime.java"
+    ]
+  }
+}

@@ -1,0 +1,412 @@
+{
+  "bindingIrSha256": "1dc02adf179752dd14acbdee321a7170093c26b029ff018d7fb8f70d31c6e8fa",
+  "compiler": "javac 22.0.2",
+  "evidence": {
+    "componentId": "nominalsubtypes@1.0.0",
+    "componentReceiptSha256": "d780288aa36fe992131ffd143ae86331cfb9b9b428a9caf59c8051bb998c3563",
+    "libraries": {
+      "libcomponent_7f8bfe55e5831a9133c5.so": "dbd217fc76328cbe9d9bf1af9db1875dc5499e50ef8a5e531796d50449dba244",
+      "liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+      "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+      "libnominalsubtypes.so": "4de5d26b9a0e6a06a26d4dda93f512e282eb325d056f12f573059f08adec4e78"
+    },
+    "library": "libnominalsubtypes.so",
+    "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+  },
+  "files": {
+    "README.md": {
+      "bytes": 11760,
+      "sha256": "bb4204ad6ac54ee6f2df38f060a448053d5bbd6a20c3dfe87ee4f986b3445817"
+    },
+    "binding-manifest.json": {
+      "bytes": 6878,
+      "sha256": "62bd206d60225165687e49ead56ae2b963724287bf6975d2b655ee49c854a834"
+    },
+    "classes/META-INF/lean_bridge_org_leanbridge_nominalsubtypes.kotlin_module": {
+      "bytes": 96,
+      "sha256": "c62170adf6727d5ae58908f37dc00d3b8f42d9451b19d26f7f1523076545b96a"
+    },
+    "classes/org/leanbridge/nominalsubtypes/AliasPair.class": {
+      "bytes": 1888,
+      "sha256": "01a75ae72de660051b11f38da5f993bdb99ac2040b721cb4d4a7fc126ee79fab"
+    },
+    "classes/org/leanbridge/nominalsubtypes/Api.class": {
+      "bytes": 4035,
+      "sha256": "6a9872f7a7820109e73c5a1ccfc021f78346eff2d422e9e9f241967693a55fa6"
+    },
+    "classes/org/leanbridge/nominalsubtypes/Envelope.class": {
+      "bytes": 1406,
+      "sha256": "460bb46cfd9cf49b9f73014a7a12cabe70debcaf32db432bcec2c30f8684ac52"
+    },
+    "classes/org/leanbridge/nominalsubtypes/EnvelopePair.class": {
+      "bytes": 1484,
+      "sha256": "6639462c31663df0e5672247c690172372ade2dfb6d499561ab5d0d7cca0f954"
+    },
+    "classes/org/leanbridge/nominalsubtypes/Event.class": {
+      "bytes": 265,
+      "sha256": "4bee5e07e875fe5e2f5a301db6b0e02eeca53a6770ce7c20e721d6a3499ebc5c"
+    },
+    "classes/org/leanbridge/nominalsubtypes/EventBox.class": {
+      "bytes": 1368,
+      "sha256": "6350c48afbfae7aa8dc0dec25aaf62c8eb8164dd19131d52d629c785cfb24b9e"
+    },
+    "classes/org/leanbridge/nominalsubtypes/EventChoices.class": {
+      "bytes": 1813,
+      "sha256": "f81d8f97f3a3a462c2aff927e1d1ad4bd86004da9d8d5a2f0218487e506ddee2"
+    },
+    "classes/org/leanbridge/nominalsubtypes/EventEmpty.class": {
+      "bytes": 1025,
+      "sha256": "d22443a4b83399d312ab9594ed5b3616d06119ad8ef59bcb9fb9d4450d8de482"
+    },
+    "classes/org/leanbridge/nominalsubtypes/KotlinBridge.class": {
+      "bytes": 3530,
+      "sha256": "df10c515446c55ab238ccd38f349f7ea008293aff0f8e7cf32046e136b520324"
+    },
+    "classes/org/leanbridge/nominalsubtypes/KotlinCalls.class": {
+      "bytes": 3890,
+      "sha256": "d1680da4c3f8a84cfc72a3807aacf69d129700af51c37ad73b752a32e8375eb4"
+    },
+    "classes/org/leanbridge/nominalsubtypes/KotlinRuntime.class": {
+      "bytes": 32280,
+      "sha256": "d625d85062251ba628331de623cb0ae59a4d29c4d3ce31309d86d29da04b0007"
+    },
+    "classes/org/leanbridge/nominalsubtypes/LeanBridgeException.class": {
+      "bytes": 280,
+      "sha256": "b312da943bba73ff25dc56891562d3497aa26f6b213e7ca5f24ccb431d486b90"
+    },
+    "classes/org/leanbridge/nominalsubtypes/NativeAssets$_Assets.class": {
+      "bytes": 13392,
+      "sha256": "73d0fc7f3c9ab85cbedfa45fbab3896a54a3c3ae2a5a2792e58012a02fa51e3f"
+    },
+    "classes/org/leanbridge/nominalsubtypes/NativeAssets.class": {
+      "bytes": 422,
+      "sha256": "8a2902a11211c013445003c08203685d96a43296c5a42a78f8a94091f4ab3aff"
+    },
+    "classes/org/leanbridge/nominalsubtypes/Option$None.class": {
+      "bytes": 1382,
+      "sha256": "f238a8e64d0319b63b4cf35903076d39474d7a991bf977c8858e40ff68a43531"
+    },
+    "classes/org/leanbridge/nominalsubtypes/Option$Some.class": {
+      "bytes": 1618,
+      "sha256": "a518f8c813d8012408e7228f81a47c24a4a8ac02ad1971ab6a094da5f2eaf815"
+    },
+    "classes/org/leanbridge/nominalsubtypes/Option.class": {
+      "bytes": 855,
+      "sha256": "f0fbdc8f8031e1b9662307bca3d9ed859959c80a2dca4790054fc142cfa0c8ba"
+    },
+    "classes/org/leanbridge/nominalsubtypes/Pair.class": {
+      "bytes": 1637,
+      "sha256": "3d6e72232afe535a2ec235f73f056eeddb1825e37464f49471c7773c22b13347"
+    },
+    "classes/org/leanbridge/nominalsubtypes/Result$Err.class": {
+      "bytes": 1797,
+      "sha256": "df63c3fb45eaa836700dae6472466bb7d0cf70070cdd0827ffd04f083851a7e0"
+    },
+    "classes/org/leanbridge/nominalsubtypes/Result$Ok.class": {
+      "bytes": 1785,
+      "sha256": "ac8b84ed1e2a3d2429f044e3b1260cf34eef00179deef5d9833ba46b0c0a966f"
+    },
+    "classes/org/leanbridge/nominalsubtypes/Result.class": {
+      "bytes": 891,
+      "sha256": "1a16e33990fd04fca317f43f2a197207f6426b13dbddfd67a3e770828d0f716a"
+    },
+    "classes/org/leanbridge/nominalsubtypes/Runtime.class": {
+      "bytes": 31564,
+      "sha256": "e4e547a72feb4b42466e1f86d266229559e1e0258589539b34f7390516ced9ec"
+    },
+    "classes/org/leanbridge/nominalsubtypes/Scope.class": {
+      "bytes": 668,
+      "sha256": "f265bfbeec0fb26006fab40e4234851d25aa122722f5977188091da027324f36"
+    },
+    "classes/org/leanbridge/nominalsubtypes/Unit.class": {
+      "bytes": 870,
+      "sha256": "ee4d89410b62e34a84fac97d1443b5fb7fdeec197a0b9dd4b3c2db14b6cb067c"
+    },
+    "classes/org/leanbridge/nominalsubtypes/kotlin/AliasPair.class": {
+      "bytes": 2663,
+      "sha256": "568b424a90b3231c30a7f8f5c16a5775ef06aaa6878ff068a94474fcba3b15e1"
+    },
+    "classes/org/leanbridge/nominalsubtypes/kotlin/Api$Companion.class": {
+      "bytes": 10491,
+      "sha256": "06ad646b1e68a0bb3e0d873d2cee1812217fed527b36684b17d56e07078fa1e2"
+    },
+    "classes/org/leanbridge/nominalsubtypes/kotlin/Api.class": {
+      "bytes": 7008,
+      "sha256": "5a111401dae724fee19d704bdb23505e2d0bc6624b81f0b87248e307252ab5d6"
+    },
+    "classes/org/leanbridge/nominalsubtypes/kotlin/Envelope.class": {
+      "bytes": 1903,
+      "sha256": "70df64967f18e7fcb37690f918f2d7e960633c0db665e566bc74fc209878fe08"
+    },
+    "classes/org/leanbridge/nominalsubtypes/kotlin/EnvelopePair.class": {
+      "bytes": 2016,
+      "sha256": "f697468a21ca4c07a228571591f56b032bbe958947dbfd69c0e5ff6441d4d6d3"
+    },
+    "classes/org/leanbridge/nominalsubtypes/kotlin/Event.class": {
+      "bytes": 793,
+      "sha256": "df93161c42621c5ff62a529feedfbe4d54b877de216457c3aca40cb7a08a8ced"
+    },
+    "classes/org/leanbridge/nominalsubtypes/kotlin/EventBox.class": {
+      "bytes": 1852,
+      "sha256": "b50cd8ef3cf3f494a837d2ada1bf85c875781989916d421160bf91c87c06f1cd"
+    },
+    "classes/org/leanbridge/nominalsubtypes/kotlin/EventChoices.class": {
+      "bytes": 2564,
+      "sha256": "29bc33f3a2fe0419b40519a8d592b84f1511d897496aee65078066ccde8b853f"
+    },
+    "classes/org/leanbridge/nominalsubtypes/kotlin/EventEmpty.class": {
+      "bytes": 1163,
+      "sha256": "0bc04372c4a8a857722d18bbd8c7468bc55bffec8c71e6f25745fb7628738474"
+    },
+    "classes/org/leanbridge/nominalsubtypes/kotlin/LeanBridgeExceptionKt.class": {
+      "bytes": 457,
+      "sha256": "a7919429d06cd1f9f132fab27da8b4de5aacf2149474cc7cc5047b42f8079b15"
+    },
+    "classes/org/leanbridge/nominalsubtypes/kotlin/Option$Companion.class": {
+      "bytes": 1897,
+      "sha256": "f2defe7d2e9c6cb42c3f8381ee7dd062fd466596623ba8948641d2e741c1bc6a"
+    },
+    "classes/org/leanbridge/nominalsubtypes/kotlin/Option$None.class": {
+      "bytes": 1736,
+      "sha256": "f112f1dbb401a5611d83d1ac9cc77553c9cc00c78bd7425ab058b278cae56313"
+    },
+    "classes/org/leanbridge/nominalsubtypes/kotlin/Option$Some.class": {
+      "bytes": 2147,
+      "sha256": "21439cce6f9091d4fd23d875b1f938a2de4d7e60fe19689b05accebdf2876488"
+    },
+    "classes/org/leanbridge/nominalsubtypes/kotlin/Option.class": {
+      "bytes": 1918,
+      "sha256": "b6651c99bf1aff9772bc4ecd362992fcd41e269928cb06ac919740c0e2332071"
+    },
+    "classes/org/leanbridge/nominalsubtypes/kotlin/Pair.class": {
+      "bytes": 2163,
+      "sha256": "25ac6a37dbf4b0ba91afd65934f7248c5c2de80b890edea1a515e0d0d3ec6743"
+    },
+    "classes/org/leanbridge/nominalsubtypes/kotlin/Result$Companion.class": {
+      "bytes": 1983,
+      "sha256": "e3d34d80df149f8e3fc1f42816f1bfc271ead8bafaf715abdfb2caa19b61f8be"
+    },
+    "classes/org/leanbridge/nominalsubtypes/kotlin/Result$Err.class": {
+      "bytes": 2415,
+      "sha256": "169a42e0bf616bd389f40481073a39c566257e07b5f90e44ed055b843a78804d"
+    },
+    "classes/org/leanbridge/nominalsubtypes/kotlin/Result$Ok.class": {
+      "bytes": 2403,
+      "sha256": "4719739e5716138e31e70d6fbffd37a4ca05d44b87dcda2083d27ac89bdae6fd"
+    },
+    "classes/org/leanbridge/nominalsubtypes/kotlin/Result.class": {
+      "bytes": 2037,
+      "sha256": "e700dd1afeef842d04e8abdc4a0d5b627e93c971d2194aa1966fe6f4e9557d0e"
+    },
+    "classes/org/leanbridge/nominalsubtypes/kotlin/UnitKt.class": {
+      "bytes": 397,
+      "sha256": "9a5e8fe9e04c3db2005a4df644653058e3b18db7590601cf18447c36e743425d"
+    },
+    "src/main/java/org/leanbridge/nominalsubtypes/AliasPair.java": {
+      "bytes": 740,
+      "sha256": "6c4c62c4d062a43b286c3c72bdde4e14c8447017d89b84fce4315d6035926381"
+    },
+    "src/main/java/org/leanbridge/nominalsubtypes/Api.java": {
+      "bytes": 10707,
+      "sha256": "457976ea00563ea904bfabaf26e1856ee2f95706fb9fc3dae1b9ddc996cdf57d"
+    },
+    "src/main/java/org/leanbridge/nominalsubtypes/Envelope.java": {
+      "bytes": 682,
+      "sha256": "b738d58906b769e4795530607ae9e58bc2b115970c04fdcfb8c56f04e85496fe"
+    },
+    "src/main/java/org/leanbridge/nominalsubtypes/EnvelopePair.java": {
+      "bytes": 665,
+      "sha256": "c4b11d337d7509af57670c9e8eb271310d432fbd953bac3c7331c819a3501806"
+    },
+    "src/main/java/org/leanbridge/nominalsubtypes/Event.java": {
+      "bytes": 117,
+      "sha256": "c0b589c4a5c0d6d26568a374c6893319237c1531af4f2c14df0c1d93496af794"
+    },
+    "src/main/java/org/leanbridge/nominalsubtypes/EventBox.java": {
+      "bytes": 524,
+      "sha256": "b85be50672138e4afbbfa2402169703a73205f9ddfb32e4fc4354907594a1d98"
+    },
+    "src/main/java/org/leanbridge/nominalsubtypes/EventChoices.java": {
+      "bytes": 634,
+      "sha256": "98956be5d3e9f387347b87eaca7ec565398641b9f7e165205dcbb7c880284423"
+    },
+    "src/main/java/org/leanbridge/nominalsubtypes/EventEmpty.java": {
+      "bytes": 373,
+      "sha256": "84636575835c7de60ac27eb4b8253f677104e39ac7a9f9285d510df31c3a6242"
+    },
+    "src/main/java/org/leanbridge/nominalsubtypes/KotlinBridge.java": {
+      "bytes": 3584,
+      "sha256": "87c4b60b1eb5cdbbcbddaf6f615bd9e4eb9f446553ee33b873444591862ef26f"
+    },
+    "src/main/java/org/leanbridge/nominalsubtypes/KotlinRuntime.java": {
+      "bytes": 42630,
+      "sha256": "f3c79e29f1f54f2aecfb8c34d1f150b8abf71d556db34ec1767522b789e70ed7"
+    },
+    "src/main/java/org/leanbridge/nominalsubtypes/LeanBridgeException.java": {
+      "bytes": 245,
+      "sha256": "057562d01d978f2aefe486e5e58240356613adb74f983a35e1f6416628baa85d"
+    },
+    "src/main/java/org/leanbridge/nominalsubtypes/NativeAssets.java": {
+      "bytes": 13535,
+      "sha256": "69f5eeb7b0c2a4c2fba4c62ffb71844193fe5028704c6ba077a86bff046e92a5"
+    },
+    "src/main/java/org/leanbridge/nominalsubtypes/Option.java": {
+      "bytes": 1048,
+      "sha256": "2a8642943ebfb3fef563c78c34918dd48e9fb378600bac353eafecd58a78d19c"
+    },
+    "src/main/java/org/leanbridge/nominalsubtypes/Pair.java": {
+      "bytes": 712,
+      "sha256": "cfa1fa093cc2555531064195bf0e3fc5c2c59e28551dee30b62e483e76967646"
+    },
+    "src/main/java/org/leanbridge/nominalsubtypes/Result.java": {
+      "bytes": 1613,
+      "sha256": "d4bddb8da6012a2849683d7522a369f85f5fed87d1b141c25e95825d8073d6e1"
+    },
+    "src/main/java/org/leanbridge/nominalsubtypes/Runtime.java": {
+      "bytes": 39312,
+      "sha256": "64bb43ef203e557be8b80550e214a7a9afb287d693d94cb667deeb7ed6e59509"
+    },
+    "src/main/java/org/leanbridge/nominalsubtypes/Scope.java": {
+      "bytes": 548,
+      "sha256": "46a6dd3dfc0b05386bf0b8d157a229d1d24dbe794eb503e5c46619e37e0e4c27"
+    },
+    "src/main/java/org/leanbridge/nominalsubtypes/Unit.java": {
+      "bytes": 70,
+      "sha256": "b994881f37ab6e70d48497290eb0f829e84e49701f487a4f29c6a5f2f39a14e5"
+    },
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/KotlinCalls.kt": {
+      "bytes": 2707,
+      "sha256": "9b630df76f4733e235755607edfb937d49d617481e8afdb9819292bc6c867b6f"
+    },
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/AliasPair.kt": {
+      "bytes": 1151,
+      "sha256": "d6ba25304f7ae19dc0c720d72ddef9a40d05902779ad509f460cb25dc6f46774"
+    },
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/Api.kt": {
+      "bytes": 9025,
+      "sha256": "1508e7700147efbf664b2530b4dd494022723ddf5b713f01692a96e844cb28dc"
+    },
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/Envelope.kt": {
+      "bytes": 742,
+      "sha256": "9e2d6cecf9096a90dc6148aac5d5167b6ad18cb3cbd7979c12a52278e03f3ac8"
+    },
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/EnvelopePair.kt": {
+      "bytes": 880,
+      "sha256": "bee3021213ec952cae7cc8566b3ce33f90d7cb5362bc6642634a1326325a3308"
+    },
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/Event.kt": {
+      "bytes": 80,
+      "sha256": "3690982c931b34ed07404c715fdf53d2b48245f0bcb6c75012aaf97948dace12"
+    },
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/EventBox.kt": {
+      "bytes": 665,
+      "sha256": "cdcfda0640da0b5c5175fa9d1760e93c647c287c04f3e86f391c5c16e9a77f39"
+    },
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/EventChoices.kt": {
+      "bytes": 907,
+      "sha256": "82c0e1c7ad7d495b46b7a4b9b69ca229e11fc908cad427a9685c0901684cad8a"
+    },
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/EventEmpty.kt": {
+      "bytes": 409,
+      "sha256": "98b04d1ea8e4bc6d34a8a2aee0bd8fae9e7b152532c261916b18a29751859a20"
+    },
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/LeanBridgeException.kt": {
+      "bytes": 144,
+      "sha256": "dcb44ad256f707d64de8e599033e2e3b039b7a34b7a60d24fc7b8f9f8510863c"
+    },
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/Option.kt": {
+      "bytes": 1390,
+      "sha256": "94a76e136ca3a2ba57e3bf33ed1db74b4649925fc6c050e2a0a080c198e64b01"
+    },
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/Pair.kt": {
+      "bytes": 771,
+      "sha256": "f8580698fe60be67507d2c57458209b7baa36ee9a838ad6040efcba34cf30a34"
+    },
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/Result.kt": {
+      "bytes": 1818,
+      "sha256": "5e0e853e574b36215d693224c9d8f68d70046e7f72300dd95865a4170b46a707"
+    },
+    "src/main/kotlin/org/leanbridge/nominalsubtypes/kotlin/Unit.kt": {
+      "bytes": 114,
+      "sha256": "188f9eee6d6af92e9d15a8a00891024cfc690af6b8a534e02fe94d2262588c6e"
+    }
+  },
+  "kotlin": {
+    "compilerFiles": {
+      "allopen-compiler-plugin.jar": "4e71266b484ca70149379b9f65fd0fdc2014df481f30f7026fac23cc11c2b69d",
+      "android-extensions-compiler.jar": "a58b87f9104123efb9c4089830f935dd04ced75dedcce4c90122242766638cb5",
+      "android-extensions-runtime.jar": "b43fa546caf93a17c76ca22ffae8d3cbc3bd615a5daf81588d0472d7932cbed2",
+      "annotations-13.0.jar": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478",
+      "assignment-compiler-plugin.jar": "71592c36dc068b210e6ac5e8983297aac85418ccc1f2aa0cc3ce697fbd553366",
+      "compose-compiler-plugin.jar": "471e82ec9809643c41b3b849fe91ed3182d1c50e7cca6aa1943d6fd7d5427798",
+      "jvm-abi-gen.jar": "d66b8e150ab3b9934536788bf6eb3b7897db85f01e183506d9108dce38b2df37",
+      "kotlin-annotation-processing-cli.jar": "8acfb152e1fc6bf906c4fa8d0c4534d8e74036a1bc614fa3c618e590bac75570",
+      "kotlin-annotation-processing-runtime.jar": "31bd9facf35b536cf94a575c671e6d31701dcfd72b0deafa902f850294e95ee4",
+      "kotlin-annotation-processing.jar": "dbeccd9cb6c2272c4d664deb1dc6a15d4099e144333851852d5133fa9164150e",
+      "kotlin-annotations-jvm-sources.jar": "bf594d0e3a35c21b1f07097d9e10b6ab524ae5bb2ffdb92ea9b1f79f28e8ab09",
+      "kotlin-annotations-jvm.jar": "6054230599c840c69af3657c292b768f2b585c25fba91d26cd5ad8c992757b03",
+      "kotlin-ant.jar": "332c5abb8040dbb092917764c33bcf65fbd66a1a49c85bbee9c0f4059712d878",
+      "kotlin-compiler.jar": "cb2b7b0b82ad5b6ddc2e8c6c41c73e837a2b42e2abf64af64dda1b6173609790",
+      "kotlin-daemon-client.jar": "21293da016e4ba12a128ac26fd920a74e8b87f574cf9bc43c60a3d2e7645a7ae",
+      "kotlin-daemon.jar": "efd0b911bd952c91a74acdf2861b74a61516b869cc9a22aa1858197a87a66c35",
+      "kotlin-imports-dumper-compiler-plugin.jar": "1acbe1d35d5800fbf9b5c9615779cf8af5887db0d4184fac42ca70fa1782da05",
+      "kotlin-main-kts.jar": "cae50d93ce288a4a784b858eae00d0d96a52393f588921d8a0f77a5520d692dd",
+      "kotlin-metadata-jvm-sources.jar": "2ab97ab16e203e715633593c480bcf0ac1cc151e54cd2adaaa7dca1085835ede",
+      "kotlin-metadata-jvm.jar": "501222ae7d63527e55f2e5e645f18d4eff2c19074c85b9bc055866e3ed2b17bf",
+      "kotlin-preloader.jar": "9fc99ab6db8fb5ce1552d248e1f1472fdf48a287ef435770092c70f7e0903411",
+      "kotlin-reflect-sources.jar": "e9719062ea18b7c10f231ee170306f95acf78c31b4f4592d32e8376ca3779f0b",
+      "kotlin-reflect.jar": "230d91c2e410e3cfca3a4dc73d255455f62ff52aac091a33397a6e30bde91bf7",
+      "kotlin-runner.jar": "97e742218ac6888b9893c61cd67f10fe34317fcca469ed2e4afec0269c200a18",
+      "kotlin-script-runtime-sources.jar": "d9d6b416bf1267d5d9a2fffb309c8d02fa707608154d7b0d7dd318d2dd7daa96",
+      "kotlin-script-runtime.jar": "4ed97fd1e0c9bb1d0948ed5e63cc91456313a59518295b92b2c1514aef556150",
+      "kotlin-scripting-common.jar": "7c9ac8499fa91b201ea7836537c625dd52a82549e57e6b3f175cc0c79e9ab604",
+      "kotlin-scripting-compiler-impl.jar": "9a8c5eb59547320b098ebb09a6c63926cf61e091cd22043d7f447034f6cdf4dd",
+      "kotlin-scripting-compiler.jar": "e127f4bb3a7aac17e53df1b09e062e0878d8ac665335f79d002a6ac99882ca90",
+      "kotlin-scripting-jvm.jar": "60a8c742d61f44f2311fbdc8a86b767d171ba09d97be72d6ba450d37f7e3fdbf",
+      "kotlin-serialization-compiler-plugin.jar": "659dc601a79d64be368035a2936e12f327de49d0f16c42e52d2e1ec09dd27943",
+      "kotlin-stdlib-jdk7-sources.jar": "2534c8908432e06de73177509903d405b55f423dd4c2f747e16b92a2162611e6",
+      "kotlin-stdlib-jdk7.jar": "0d10bc0d42b8605f23629a3f31ea27c19cdbca9dcdf4f53f6d22cd6366836d18",
+      "kotlin-stdlib-jdk8-sources.jar": "3cb6895054a0985bba591c165503fe4dd63a215af53263b67a071ccdc242bf6e",
+      "kotlin-stdlib-jdk8.jar": "adc16648dbbcf35b0d10e7ec301c35d746d1c2fe460c606aba59f12b117cf9b0",
+      "kotlin-stdlib-js-sources.jar": "14ad20758afba0957d67c512002a763064add63053f8b6aaef145dc4c6d6c33b",
+      "kotlin-stdlib-sources.jar": "967ad9599254e3a60d96d6c789547cc35c22d770d9c8fb1e3f15fac3b4c3b65d",
+      "kotlin-stdlib.jar": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca",
+      "kotlin-test-js-sources.jar": "4a7a5f653f89107e847345688171be7b2d4172332f7f9a5771b9240bf07e8f18",
+      "kotlin-test-junit-sources.jar": "c411a0dad1218f3f652b6619f228fefee498903ee6e11c36c990fbc3fe823f18",
+      "kotlin-test-junit.jar": "f45ed32e721d901d3cbe83ece7f41c98533b34155186368a79bfdc667e433dce",
+      "kotlin-test-junit5-sources.jar": "891c56d8183d2cd3e912cf250adeca889dba51d02b07fce3015321e08f72b4a2",
+      "kotlin-test-junit5.jar": "716c89ba2e387c4422ea0e9a85c5731f9a328b669a7a0bbed3259e52291b555e",
+      "kotlin-test-sources.jar": "c8445545032c2e09195fc883b274260dd414b33f2cdc1dadd4f3441c1a4e456b",
+      "kotlin-test-testng-sources.jar": "748366365d0b3e985289aab702aecab84d0bd8ef6dd104659e86c1f31359c5aa",
+      "kotlin-test-testng.jar": "381e3c4a4aaaacf4f0a7944ec7908e914ededcd49e9794e4417d97edb63d932b",
+      "kotlin-test.jar": "8db175a3f56cf139ebdf8936f293ce5a64a16b52a0408804e0ec077e8848eb32",
+      "kotlinx-coroutines-core-jvm.jar": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5",
+      "kotlinx-serialization-compiler-plugin.jar": "659dc601a79d64be368035a2936e12f327de49d0f16c42e52d2e1ec09dd27943",
+      "lombok-compiler-plugin.jar": "970a55e6837e7cd4787157ca8f41da60825b1d29199d4a430aa628293c5a05c3",
+      "mutability-annotations-compat.jar": "8c76693fde1f34baaeaf5298e1953fca489c8e90ce6c065f96dd20d978c2003b",
+      "noarg-compiler-plugin.jar": "60f1c4d25a87bf3368b7a2512543cbc108fb27f1224ca30f86f62363efe0bd1c",
+      "parcelize-compiler.jar": "c7141f771089e7ca0bc5267f5d39c55a5f3ab27f2b36602efeb689edc5da9ed0",
+      "parcelize-runtime.jar": "ffd266a80d58ea089f8ae78cfcc81f19f276ef491fb05c0777bdc99f22ae84a1",
+      "power-assert-compiler-plugin.jar": "3d508b1c7597cf85735b561233bfdb9bc07c4445fda2982cc9842269aeff3f95",
+      "sam-with-receiver-compiler-plugin.jar": "75623f2d557812415e59ecfe67359545d8066894a53227c7e4883b318fb25239",
+      "scripting-compiler.jar": "e127f4bb3a7aac17e53df1b09e062e0878d8ac665335f79d002a6ac99882ca90"
+    },
+    "module": "lean_bridge_org_leanbridge_nominalsubtypes",
+    "namespace": "org.leanbridge.nominalsubtypes.kotlin",
+    "options": [
+      "-module-name",
+      "lean_bridge_org_leanbridge_nominalsubtypes",
+      "-jvm-target",
+      "22",
+      "-no-reflect",
+      "-no-stdlib",
+      "-Werror",
+      "-Xrender-internal-diagnostic-names"
+    ],
+    "standardLibraryVersion": "2.2.0",
+    "version": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)"
+  },
+  "namespace": "org.leanbridge.nominalsubtypes",
+  "profile": "native-library-v1",
+  "schemaVersion": 1
+}

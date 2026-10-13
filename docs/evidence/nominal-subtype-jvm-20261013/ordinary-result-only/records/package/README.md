@@ -1,0 +1,45 @@
+# org.leanbridge:nominalsubtypes:1.0.0
+
+Requires glibc 2.36 or newer.
+
+# org.leanbridge.nominalsubtypes
+
+Call org.leanbridge.nominalsubtypes.Api from Java or Kotlin. Requires Java 22 or newer with --enable-native-access=ALL-UNNAMED on Linux x86-64. Prepared Maven JARs contain their native adapter, component and shared Lean runtime. No compiler, JNI declarations or runtime-path settings are needed by the consumer.
+
+UInt8/UInt16 use checked int, UInt32 uses checked long, and UInt64/Nat/Int use java.math.BigInteger. Signed values use corresponding JVM primitives. Unit parameters use Unit.INSTANCE; Unit results return void. Arrays, byte arrays and record contents are copied on calls. Null, invalid unsigned ranges and malformed UTF-16 are rejected. Pure acyclic copied values are bounded to 32 type levels and a 16 MiB native input/output conversion budget. Native assets are verified and extracted into private process-lifetime temporary directories, removed at normal JVM shutdown.
+
+Generated records compare nested arrays and records by contents and produce matching hash codes. Nominal record and constructor identities remain distinct. Floating-point equality follows Java: NaNs compare equal and signed zeros differ. Standalone arrays retain JVM reference equality; use Arrays.deepEquals/Arrays.equals in Java or contentDeepEquals/contentEquals in Kotlin. Nested arrays remain mutable. Do not mutate their contents while a containing value is a map key or set member. Record accessors preserve distinguishing trailing underscores and escape Java keywords.
+
+Option<T> is a sealed None/Some hierarchy with none()/some(value) factories and isSome()/value(). Result<T,E> preserves Lean Except through ok(value)/err(error), isOk()/value()/error(). Inactive payload access throws; null containers and payloads reject. Nested Unit options remain distinct. Domain errors return Err; bridge failures throw exceptions. Pair<A,B> retains binary product nesting. These generic types box primitive payloads and compose with copied arrays and records. Import the generated Pair explicitly in Kotlin; it is not kotlin.Pair. Equality and hashing compare active payloads by contents, including nested arrays.
+
+## Copied Lean aliases
+
+This Maven package exports a Java API, also callable from Kotlin. Pass and receive the target values below. Alias names, original targets and chains remain in the installed binding manifest and generated Java source documentation; they do not introduce JVM classes or exported Kotlin typealias declarations. Alias parameters, results and record fields retain their target validation. Nat rejects negative BigInteger values; Int accepts them. UInt32 uses checked long/Long. Unit inputs use the generated Unit.INSTANCE; Unit outputs return void (kotlin.Unit). Import the generated Unit and Pair explicitly in Kotlin to distinguish them from kotlin.Unit and kotlin.Pair. Recursive values, identity-bearing targets and compound callable payloads remain unsupported.
+
+| Lean alias | Contract target | Java value type | Kotlin value type |
+| --- | --- | --- | --- |
+| `EnvelopeAlias` | `Envelope` | `Envelope` | `Envelope` |
+
+Lean Fin n parameters and results are java.math.BigInteger values below n. The bundled native library compares each argument with its exact bound, including bounds wider than 64 bits, before any Lean code runs. A null argument throws NullPointerException; a negative value throws IllegalArgumentException("Nat cannot be negative"), as for Nat; a value at or above its bound throws IllegalArgumentException whose message names the Lean parameter and bound. Fin 0 has no values, so every call to a method taking one is rejected. Results are BigInteger values below their declared bound. Fin inside arrays, lists, options, products, Except values, records and variants is checked before Lean runs: every array or list element, a present option value, both product components, only the active Except branch, every record field and only the fields of the active variant case. An empty array, an absent option or an inactive branch or case is valid even for Fin 0. Bounds below list every element as name[*], a present option value as name?, product components as name.0 and name.1, the active branch as name.ok or name.error, a record field as name.field and a field of the active variant case as name.Case.field. Fin inside callbacks or generic record instantiations is not supported in Maven packages.
+
+Lean Subtype parameters cross as their base value. The bundled native library runs the author's checked constructor, named below, before the export runs; a value the constructor rejects fails the call with the invalid-argument error naming the parameter and constructor, and the export receives the constructed value, which may differ from the input. Arrays, Lists, options, products and active result branches apply the same constructor checks to each Subtype leaf. Rejections identify the argument and nested element path. Subtype results are the base value. Reviewed APIs select the constructor and reconcile it with fresh Lean compilation. Copied plain records check each selected field; variants check only the active case. Repeated uses of one type retain their own constructor choices, and every Fin bound is checked before any constructor. Recursive, generic, owned and callback Subtype positions remain unsupported.
+
+- org.leanbridge.nominalsubtypes.Api.arrayValues: result[*] projects the Subtype base value
+- org.leanbridge.nominalsubtypes.Api.branch: result.ok projects the Subtype base value; result.error projects the Subtype base value
+- org.leanbridge.nominalsubtypes.Api.eventChoices: result.box.value.payload projects the Subtype base value; result.box.value.digit < 3; result.choices.values[*]?.ok projects the Subtype base value; result.choices.values[*]?.error projects the Subtype base value
+- org.leanbridge.nominalsubtypes.Api.eventEmpty: result.box.value.payload projects the Subtype base value; result.box.value.digit < 3; result.choices.values[*]?.ok projects the Subtype base value; result.choices.values[*]?.error projects the Subtype base value
+- org.leanbridge.nominalsubtypes.Api.eventValue: result.box.value.payload projects the Subtype base value; result.box.value.digit < 3; result.choices.values[*]?.ok projects the Subtype base value; result.choices.values[*]?.error projects the Subtype base value
+- org.leanbridge.nominalsubtypes.Api.groupValues: result[*]?.payload projects the Subtype base value; result[*]?.digit < 3
+- org.leanbridge.nominalsubtypes.Api.listValues: result[*] projects the Subtype base value
+- org.leanbridge.nominalsubtypes.Api.noItems: result[*] projects the Subtype base value
+- org.leanbridge.nominalsubtypes.Api.optional: result? projects the Subtype base value
+- org.leanbridge.nominalsubtypes.Api.pairValues: result.left[*]?.payload projects the Subtype base value; result.left[*]?.digit < 3; result.right[*]?.payload projects the Subtype base value; result.right[*]?.digit < 3
+- org.leanbridge.nominalsubtypes.Api.produceEnvelope: result.payload projects the Subtype base value; result.digit < 3
+- org.leanbridge.nominalsubtypes.Api.product: result.0 projects the Subtype base value; result.1 projects the Subtype base value
+- org.leanbridge.nominalsubtypes.Api.scalar: result projects the Subtype base value
+
+Concrete copied Lean variants export a sealed interface and one named record per constructor. Java switch and Kotlin when expressions can match all cases without a numeric tag or native layout. Constructor names use PascalCase; payload accessors use camelCase, preserve distinguishing trailing underscores and escape Java keywords. Name collisions reject before compilation. Only the active payload is converted. Empty cases and Unit payloads remain distinct. Null cases, active null payloads and invalid native tags reject. Record components are final, while array elements remain mutable. Returned arrays contain independent copies. Recursive, callable and identity-bearing payloads remain unsupported.
+
+Lean Lists use copied Java arrays and the corresponding Kotlin array types in inputs, results and record fields. Primitive arrays retain their primitive element type. Empty Lists, order, duplicates and nesting are preserved; returned arrays own independent storage. List and Array retain distinct IR/native identities. Native sequence lengths, missing buffers and alignment are checked before allocation or reads. List callback payloads remain unsupported.
+
+Kotlin callers can import org.leanbridge.nominalsubtypes.kotlin.Api and its generated copied value classes. These signatures carry Kotlin metadata, including deeply nested arrays. Fields expose immutable val references and named accessors; equality and hashing compare nested contents. Empty classes retain nominal identity. This API shares the Java native asset loader and callable ownership state. Maven resolves kotlin-stdlib 2.2.0 through the package POM. The original Java API remains available in org.leanbridge.nominalsubtypes.

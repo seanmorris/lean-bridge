@@ -1,0 +1,39 @@
+{
+  "archiveSha256": "dd1335efc5495918d8a1594e8c2db158599ecf2c78e04fb1cd4de77d9cdd7fc6",
+  "args": [
+    "--release",
+    "22",
+    "-Werror",
+    "-proc:none",
+    "-XDrawDiagnostics",
+    "-cp",
+    "component.jar",
+    "-d",
+    "classes",
+    "probe.java"
+  ],
+  "command": "/app/.toolchains/jdk22/bin/javac",
+  "cwd": "/tmp/lean-bridge-nominal-jvm-installed-072imN/probes/java",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/unavailable"
+  },
+  "mode": "full",
+  "outputs": {
+    "Probe.class": {
+      "bytes": 2034,
+      "sha256": "2d24e57de4bcd5b446adb37740dffda89fcd357cf4bed8b90aecb090e94cb7a9"
+    }
+  },
+  "profile": "java",
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.nominalsubtypes.*;\nfinal class Probe {\n    static Object first() { return Api.first(null); }\n    static Object second() { return Api.second(null); }\n    static Object combine() { return Api.combine(null, null); }\n    static Object nested() { return Api.nested(null); }\n    static Object echo() { return Api.echo(null); }\n    static Object aliases() { return Api.aliases(null, null); }\n    static Object echoGroups() { return Api.echoGroups(null); }\n    static Object echoPair() { return Api.echoPair(null); }\n    static Object inspectAliasPair() { return Api.inspectAliasPair(null); }\n    static Object eventFirst() { return Api.eventFirst(null); }\n    static Object eventSecond() { return Api.eventSecond(null); }\n    static Object echoEvent() { return Api.echoEvent(null); }\n    static Object plainFin() { return Api.plainFin(null); }\n    static EnvelopePair inputValue;\n}\n",
+  "sourceSha256": "f799f20ac7516aab899a4dc438c840b0db2149b5f5fb812868f82f25c31dc14a"
+}

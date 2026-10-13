@@ -12,6 +12,7 @@ import { reviewedSubtypeContracts } from "../../src/analyze/reviewed-subtypes.mj
 import { generateCopiedJvmKotlinPackage } from "../../src/backends/jvm/copied-kotlin.mjs";
 import { nominalSubtypeFixture, nominalSubtypeInstalledReview, nominalSubtypeInstalledConfiguration } from "./nominal-subtype-installed-fixture.mjs";
 import { nominalSubtypeJvmCaller, nominalSubtypeJvmConfiguration, nominalSubtypeJvmCounts, nominalSubtypeJvmLeanSource, nominalSubtypeJvmModes, nominalSubtypeJvmModel, nominalSubtypeJvmProfiles, nominalSubtypeJvmReview, nominalSubtypeJvmRoutes, nominalSubtypeJvmSelection, parseNominalSubtypeJvmResult } from "./nominal-subtype-jvm-fixture.mjs";
+import "./nominal-subtype-jvm-evidence-tests.mjs";
 
 test("nominal JVM contracts preserve the complete fixture and only rename the reserved Pair record", async () => {
 	const restore = value => JSON.parse(JSON.stringify(value).replaceAll("EnvelopePair", "Pair"));

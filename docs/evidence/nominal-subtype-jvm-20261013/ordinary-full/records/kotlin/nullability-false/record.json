@@ -1,0 +1,43 @@
+{
+  "archiveSha256": "f0b0e2a6d5fc0fd197971a760f592c98de86766df0e9889512ce2fbd3db9b44f",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "NullProbe.kt",
+    "-d",
+    "classes"
+  ],
+  "command": "/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlinc",
+  "cwd": "/tmp/lean-bridge-nominal-jvm-installed-aOOuWV/probes/nullability-false",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/app/.toolchains/jdk22",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "invalid": false,
+  "mode": "full",
+  "outputs": {
+    "META-INF/main.kotlin_module": {
+      "bytes": 41,
+      "sha256": "14d9d137a46fc5f49ea00828cb3ad2d35b84c9918bbca55a496bdbdf5366c5f9"
+    },
+    "NullProbeKt.class": {
+      "bytes": 2107,
+      "sha256": "81036d16917040935567d42f09526bc750ece14cdcf745f5d8fd2a9931357442"
+    }
+  },
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.nominalsubtypes.kotlin.*\nfun scalar() = Api.scalar(java.math.BigInteger.ONE)\nfun first() = Api.first(Envelope(java.math.BigInteger.ONE, java.math.BigInteger.TWO))\nfun echoGroups() = Api.echoGroups(emptyArray<Option<Envelope>>())\nfun eventFirst() = Api.eventFirst(EventEmpty())\n",
+  "sourceSha256": "7e540e32176f07bc883dc9517cb2bcadcfb6bcdd38be0717ca3c91784389ef91"
+}
