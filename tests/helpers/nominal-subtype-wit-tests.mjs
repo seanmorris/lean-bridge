@@ -21,6 +21,8 @@ import { nominalSubtypeWitRoutes, nominalSubtypeWitModes, nominalSubtypeWitCount
 import { nominalSubtypeWitToolSelection, assertNominalSubtypeWitCapi, inspectNominalSubtypeWitTools } from "./nominal-subtype-wit-tools.mjs";
 import { assertNominalSubtypeWitIdentity, nominalSubtypeWitNativeEvidence } from "./nominal-subtype-wit-package.mjs";
 import { verifyNominalSubtypeWitEnvironment } from "./nominal-subtype-wit-install.mjs";
+import { assertNominalSubtypeWitInterfaces } from "./nominal-subtype-wit-interface.mjs";
+import { runCopied } from "./copied-fixture-install.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 
 const capi = process.env.LEAN_BRIDGE_WASMTIME_C_API ?? resolve(".toolchains/wasmtime42");
@@ -177,6 +179,49 @@ test("nominal WIT replay closure rejects receipt, binary and file-set drift or r
 	await mkdir(join(root, "tools")); await assert.rejects(verifyNominalSubtypeWitEnvironment(context)); await rm(join(root, "tools"), { recursive: true });
 	await symlink("missing", join(root, "consumer.c")); await assert.rejects(verifyNominalSubtypeWitEnvironment(context)); await rm(join(root, "consumer.c"));
 	assert.deepEqual(await verifyNominalSubtypeWitEnvironment(context), original);
+});
+
+test("nominal WIT compiled components expose complete API interfaces instead of flat exports", { skip: !callerControls }, async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-nominal-wit-interface-")); let complete = false;
+	t.after(async () => { if(complete) await rm(root, { recursive: true }); else t.diagnostic(`Retained WIT interface controls: ${root}`); });
+	const command = process.env.LEAN_BRIDGE_WASM_TOOLS ?? resolve(".toolchains/wasm-tools/bin/wasm-tools"); assert.ok(isAbsolute(command));
+	const commands = [];
+	const run = async args => {
+		const result = await runCopied(command, args, root); commands.push({ command, args, result });
+		await saveLakeFile(root, "commands.json", canonicalJson(commands)); assert.equal(result.stderr, ""); return result.stdout;
+	};
+	for(const mode of nominalSubtypeWitModes) for(const route of nominalSubtypeWitRoutes)
+	{
+		const ir = nominalSubtypeWitReview(mode);
+		if(route === "ordinary") for(const declaration of ir.declarations)
+			for(const [index, site] of declaration.parameters.entries()) site.name = `arg${index}`;
+		const projection = compileCopiedWitModel(ir, { name: "nominalsubtypes", version: "1.0.0" }, { callables: true });
+		const name = `${route}-${mode}`;
+		await saveLakeFile(root, `${name}.wat`, projection.wat);
+		await run(["parse", `${name}.wat`, "-o", `${name}.wasm`]);
+		await run(["validate", "--features", "component-model", `${name}.wasm`]);
+		const document = JSON.parse(await run(["component", "wit", `${name}.wasm`, "--json"]));
+		assertNominalSubtypeWitInterfaces(document, projection);
+		const api = document.interfaces.findIndex(item => item.name === "api");
+		const native = document.interfaces.findIndex(item => item.name === "native");
+		const mutations = [item => { item.worlds[0].exports = {}; }
+			, item => { item.worlds[0].imports = {}; }
+			, item => { item.worlds[0].exports = { [`interface-${native}`]: { interface: { id: native } } }; }
+			, item => { item.worlds.push(structuredClone(item.worlds[0])); }
+			, item => { item.interfaces[api].name = "unexported"; }
+			, item => { item.packages[item.interfaces[api].package].name = "wrong:package"; }
+			, item => { delete item.interfaces[api].functions.scalar; }
+			, item => { item.interfaces[api].functions.extra = item.interfaces[api].functions.scalar; }
+			, item => { item.interfaces[api].functions.scalar.kind = "method"; }
+			, item => { item.interfaces[api].functions.scalar.params[0].name = "wrong"; }
+			, item => { item.interfaces[api].functions.scalar.result = "u32"; }
+			, item => { item.interfaces[native].functions.scalar.params.pop(); }];
+		for(const mutate of mutations)
+		{
+			const changed = structuredClone(document); mutate(changed); assert.throws(() => assertNominalSubtypeWitInterfaces(changed, projection));
+		}
+	}
+	t.diagnostic("Four compiled components and 48 changed-interface controls; no Lean execution claim"); complete = true;
 });
 
 test("nominal WIT value snapshots and exact diagnostic causes reject altered data and unrelated errors", { skip: !callerControls }, async t => {

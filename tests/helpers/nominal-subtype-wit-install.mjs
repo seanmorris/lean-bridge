@@ -12,6 +12,8 @@ import { copiedCleanEnvironment, runCopied } from "./copied-fixture-install.mjs"
 import { verifyFinContainerEdgeFileClosure } from "./fin-container-edge-closure.mjs";
 import { assertNominalSubtypeWitIdentity, inspectNominalSubtypeWitPackage, nominalSubtypeWitDirectory, nominalSubtypeWitReceipt } from "./nominal-subtype-wit-package.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
+import { compileCopiedWitModel } from "../../src/backends/wit/copied-model.mjs";
+import { assertNominalSubtypeWitInterfaces } from "./nominal-subtype-wit-interface.mjs";
 
 /**
  * Require the same archive-owned files and consumer executable, with no source or tools.
@@ -69,10 +71,8 @@ export const installNominalSubtypeWit = async ({ root, archive, pkg, model, floo
 	const packaged = await inspectNominalSubtypeWitPackage({ installed, receiptBytes, pkg, model, floor, tools, output });
 	const component = join(installed, "component/nominalsubtypes.wasm");
 	assert.equal((await capture("wasmTools", ["validate", "--features", "component-model", component])).stdout, "");
-	const projected = await capture("wasmTools", ["component", "wit", component]);
-	assert.match(projected.stdout, /package root:component;/u);
-	for(const name of ["scalar", "produce-envelope", "pair-values", "event-choices", "no-items"])
-		assert.match(projected.stdout, new RegExp(`export ${name}: func\\(`, "u"));
+	const projected = await capture("wasmTools", ["component", "wit", component, "--json"]);
+	assertNominalSubtypeWitInterfaces(JSON.parse(projected.stdout), compileCopiedWitModel(model.bindingIr, { name: pkg.name, version: pkg.version }, { callables: true }));
 	const buildTools = join(root, "tools"); await mkdir(buildTools);
 	for(const [name, role] of [["as", "assembler"], ["ld", "linker"]]) await symlink(tools.commands[role].command, join(buildTools, name));
 	const environment = { ...copiedCleanEnvironment, PATH: buildTools, PKG_CONFIG_LIBDIR: join(installed, "lib/pkgconfig"), PKG_CONFIG_PATH: "" };
