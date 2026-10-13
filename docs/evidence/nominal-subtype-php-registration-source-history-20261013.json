@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nominal-subtype-php-registration-source-v1",
+  "predecessorCommit": "befe459ccb133fe463367cdef48d77bd5b75acdc",
+  "updates": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "dc3c1da6a0f07358ecb2dd21ce48931c174bb2cee105cad8fb50f62ae3d4965b",
+      "previousSha256": "a81f2ea5778293eae998e4fa14e7556f8e5317dcf31abcbb2759f376441783e9",
+      "edits": [
+        {
+          "start": 5862,
+          "previous": "",
+          "current": "import { nominalSubtypePhpRegistrationChangedPaths } from \"./nominal-subtype-php-registration-history.mjs\";\n"
+        },
+        {
+          "start": 67772,
+          "previous": "",
+          "current": "\t, ...nominalSubtypePhpRegistrationChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-installed-fixture-tests.mjs",
+      "currentSha256": "e025091a7e872c3b16ced01df19b1a8f8eceee13b7eddfa7e3021a42ed40b410",
+      "previousSha256": "24140ca2b3b9c4011c0919ca33ce9c50792c3651f87e31f28bdadf8a028d89a7",
+      "edits": [
+        {
+          "start": 4226,
+          "previous": "",
+          "current": "import \"./nominal-subtype-php-tests.mjs\";\nimport \"./nominal-subtype-php-installed-tests.mjs\";\nimport \"./nominal-subtype-php-registration-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-jvm-promotion-history.mjs",
+      "currentSha256": "25df373c88098e312876abaaeec0a0f6e948603951d8c51438bb907cbf31f737",
+      "previousSha256": "40930865e4900128fbe0ee69d356b8c06a901640dc08918659235f1cd9ea6b5a",
+      "edits": [
+        {
+          "start": 241,
+          "previous": "",
+          "current": "import { beforeNominalSubtypePhpRegistrationSource } from \"./nominal-subtype-php-registration-history.mjs\";\n"
+        },
+        {
+          "start": 3552,
+          "previous": "",
+          "current": "\tsource = beforeNominalSubtypePhpRegistrationSource(path, source, expected);\n"
+        }
+      ]
+    }
+  ]
+}

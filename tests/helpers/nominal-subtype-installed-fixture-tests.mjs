@@ -75,6 +75,9 @@ import "./nominal-subtype-jvm-probe-tests.mjs";
 import "./nominal-subtype-jvm-caller-tests.mjs";
 import "./nominal-subtype-jvm-installed-tests.mjs";
 import "./nominal-subtype-jvm-registration-history-tests.mjs";
+import "./nominal-subtype-php-tests.mjs";
+import "./nominal-subtype-php-installed-tests.mjs";
+import "./nominal-subtype-php-registration-history-tests.mjs";
 
 test("nominal package review independently matches ordinary choices and retains constructor-free results", () => {
 	for(const resultOnly of [false, true])
