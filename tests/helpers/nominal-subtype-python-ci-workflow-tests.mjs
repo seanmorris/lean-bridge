@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { beforeNominalSubtypeDotnetCiSource } from "./nominal-subtype-dotnet-ci-history.mjs";
 import { nominalSubtypePythonCiBlock, enableNominalSubtypePythonWorkflow, disableNominalSubtypePythonWorkflow, assertNominalSubtypePythonWorkflow } from "./nominal-subtype-python-ci-workflow.mjs";
 import { assertStructuralSubtypeWorkflow } from "./structural-subtype-ci-workflow.mjs";
 import { withoutNominalSubtypeRubyWorkflow } from "./nominal-subtype-ruby-ci-workflow.mjs";
@@ -16,12 +17,13 @@ const path = ".github/workflows/consumer-matrix.yml";
 const predecessor = "ad3f7716d997ef8a4331ec8a3f2a6524a2ca3b30";
 
 test("nominal Python CI preserves older jobs and requires four complete two-floor selections", async () => {
-	const source = withoutNominalSubtypeRustWorkflow(await readFile(path, "utf8"));
-	assertNominalSubtypePythonWorkflow(source);
+	const current = await readFile(path, "utf8");
+	assertNominalSubtypePythonWorkflow(current);
+	const source = withoutNominalSubtypeRustWorkflow(beforeNominalSubtypeDotnetCiSource(path, current));
 	const previous = execFileSync("git", ["show", `${predecessor}:${path}`], { encoding: "utf8", maxBuffer: 4 * 1024 * 1024 });
 	assert.equal(disableNominalSubtypePythonWorkflow(withoutNominalSubtypeRubyWorkflow(source)), previous);
 	assert.equal(enableNominalSubtypePythonWorkflow(previous), withoutNominalSubtypeRubyWorkflow(source));
-	assertStructuralSubtypeWorkflow(source, "consumer-matrix.yml");
+	assertStructuralSubtypeWorkflow(current, "consumer-matrix.yml");
 });
 
 test("nominal Python CI rejects skipped gates, missing floors and narrowed original records", async t => {

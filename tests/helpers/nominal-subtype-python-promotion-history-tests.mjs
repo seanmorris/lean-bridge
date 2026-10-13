@@ -9,6 +9,7 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { nominalSubtypeDotnetPromotionHistoryPath } from "./nominal-subtype-dotnet-promotion-history.mjs";
 import { nominalSubtypePythonReferences, promoteNominalSubtypePython } from "./nominal-subtype-python-promotion.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeNominalSubtypeRubyPromotionSource, nominalSubtypeRubyPromotionHistoryPath } from "./nominal-subtype-ruby-promotion-history.mjs";
@@ -44,7 +45,7 @@ test("nominal Python promotion history authenticates exact changes and the six o
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
 	const expected = await promoteNominalSubtypePython(JSON.parse(original(inventoryPath)), await nominalSubtypePythonReferences());
-	for(const path of [nominalSubtypeRustPromotionHistoryPath, nominalSubtypeRubyPromotionHistoryPath])
+	for(const path of [nominalSubtypeDotnetPromotionHistoryPath, nominalSubtypeRustPromotionHistoryPath, nominalSubtypeRubyPromotionHistoryPath])
 	{
 		const later = JSON.parse(await readFile(path));
 		for(const entry of expected.evidence) for(const file of entry.files)

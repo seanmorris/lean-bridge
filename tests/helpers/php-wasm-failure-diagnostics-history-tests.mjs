@@ -53,7 +53,10 @@ test("PHP-Wasm failure diagnostics preserves exact original sources and support 
 	assert.equal(beforePhpWasmFailureDiagnosticsSource(path, await readFile(path, "utf8")), original(path));
 	assert.equal(inventory.evidence.length, 496);
 	assert.equal(inventory.observations.length, 583);
-	const current = JSON.parse(await readFile(path));
+	const checkpoint = record.updates.find(update => update.path === path);
+	const current = JSON.parse(beforePhpWasmFailureDiagnosticsSource(
+		path, await readFile(path, "utf8"), checkpoint.currentSha256
+	));
 	const expected = structuredClone(inventory); let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{

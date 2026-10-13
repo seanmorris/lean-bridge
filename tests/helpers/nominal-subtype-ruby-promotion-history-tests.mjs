@@ -9,6 +9,7 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { nominalSubtypeDotnetPromotionHistoryPath } from "./nominal-subtype-dotnet-promotion-history.mjs";
 import { nominalSubtypeRubyReferences, promoteNominalSubtypeRuby } from "./nominal-subtype-ruby-promotion.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeNominalSubtypeRustPromotionSource, nominalSubtypeRustPromotionHistoryPath } from "./nominal-subtype-rust-promotion-history.mjs";
@@ -43,11 +44,14 @@ test("nominal Ruby promotion history authenticates exact changes and the six obs
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
 	const expected = await promoteNominalSubtypeRuby(JSON.parse(original(inventoryPath)), await nominalSubtypeRubyReferences());
-	const later = JSON.parse(await readFile(nominalSubtypeRustPromotionHistoryPath));
-	for(const entry of expected.evidence) for(const file of entry.files)
+	for(const path of [nominalSubtypeDotnetPromotionHistoryPath, nominalSubtypeRustPromotionHistoryPath])
 	{
-		const update = later.updates.find(item => item.path === file.path);
-		if(update && file.sha256 === update.currentSha256) file.sha256 = update.previousSha256;
+		const later = JSON.parse(await readFile(path));
+		for(const entry of expected.evidence) for(const file of entry.files)
+		{
+			const update = later.updates.find(item => item.path === file.path);
+			if(update && file.sha256 === update.currentSha256) file.sha256 = update.previousSha256;
+		}
 	}
 	assert.equal(beforeNominalSubtypeRubyPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
 	let pins = 0;

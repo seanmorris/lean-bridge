@@ -15,6 +15,8 @@ import "./nominal-subtype-dotnet-ci-handoff-tests.mjs";
 import "./nominal-subtype-dotnet-ci-shell-tests.mjs";
 import "./nominal-subtype-dotnet-ci-workflow-tests.mjs";
 import "./nominal-subtype-dotnet-ci-history-tests.mjs";
+import "./nominal-subtype-dotnet-promotion-tests.mjs";
+import "./nominal-subtype-dotnet-promotion-history-tests.mjs";
 import { generateCopiedDotnetPackage } from "../../src/backends/dotnet/copied-values.mjs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import { nominalSubtypeInstalledConfiguration, nominalSubtypeInstalledReview } from "./nominal-subtype-installed-fixture.mjs";

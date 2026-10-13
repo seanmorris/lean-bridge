@@ -54,7 +54,7 @@ test("JVM container-entry exit observation preserves exact original sources and 
 	assert.equal(beforeJvmContainerEntryExitSource(path, await readFile(path, "utf8")), original(path));
 	assert.equal(inventory.evidence.length, 496);
 	assert.equal(inventory.observations.length, 583);
-	const current = JSON.parse(await readFile(path));
+	const current = JSON.parse(beforeJvmContainerEntryExitSource(path, await readFile(path, "utf8")));
 	const expected = structuredClone(inventory); let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{

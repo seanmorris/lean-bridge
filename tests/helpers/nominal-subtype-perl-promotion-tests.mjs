@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { nominalSubtypeDotnetPromotionHistoryPath } from "./nominal-subtype-dotnet-promotion-history.mjs";
 import { nominalSubtypeRubyPromotionHistoryPath } from "./nominal-subtype-ruby-promotion-history.mjs";
 import { nominalSubtypeRustPromotionHistoryPath } from "./nominal-subtype-rust-promotion-history.mjs";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
@@ -90,7 +91,7 @@ test("nominal Perl promotion adds two field cells and supplements four existing 
 	const proposed = await promoteNominalSubtypePerl(original, references), { document: current, ...contracts } = await readTypeSurface();
 	const document = JSON.parse(beforeNominalSubtypePythonPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
 	assert.ok(current.evidence.length >= document.evidence.length);
-	for(const path of [nominalSubtypeRustPromotionHistoryPath, nominalSubtypeRubyPromotionHistoryPath, nominalSubtypePythonPromotionHistoryPath])
+	for(const path of [nominalSubtypeDotnetPromotionHistoryPath, nominalSubtypeRustPromotionHistoryPath, nominalSubtypeRubyPromotionHistoryPath, nominalSubtypePythonPromotionHistoryPath])
 	{
 		const later = JSON.parse(await readFile(path));
 		for(const entry of proposed.evidence) for(const file of entry.files)
@@ -137,9 +138,9 @@ test("nominal Perl documentation distinguishes verified packages from pending ho
 		const row = author.split("\n").find(line => line.startsWith(prefix));
 		assert.ok(row.includes("Node installed; browser pending"));
 		assert.equal((row.match(/Generated; pending/gu) ?? []).length, 1);
-		assert.ok(row.includes("C/C++, Python, Ruby and Rust installed; other native hosts pending"));
+		assert.ok(row.includes("C/C++, Python, Ruby, Rust and C# installed; other native hosts pending"));
 		assert.ok(row.includes("All four ABIs installed"));
-		assert.ok(row.includes("Node, C/C++, Perl, Python, Ruby and Rust ordinary/reviewed installed"));
+		assert.ok(row.includes("Node, C/C++, Perl, Python, Ruby, Rust and C# ordinary/reviewed installed"));
 	}
 	for(const path of ["docs/lean/existing-package.md", "docs/lean/export-decisions.md", "docs/consume/perl.md", "docs/reference/types.md"])
 		assert.ok((await readFile(path, "utf8")).includes("nominal-subtype-perl-acceptance-20261012.md"), path);

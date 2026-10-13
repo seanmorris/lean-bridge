@@ -772,9 +772,48 @@ The [installed structural checks](../evidence/structural-subtype-promotion-20261
 cover primitive `Nat`, `String` and `UInt8` bases, mixed `Fin`, transparent
 aliases with distinct constructor choices, and one closed `List` specialization.
 They cover both author routes.
-Subtype fields in nominal records or variants, refined callback signatures and
-owned Subtypes remain unsupported. These local runs do not measure dispatch
-counts or establish hosted release-floor acceptance.
+Refined callback signatures and owned Subtypes remain unsupported. These local
+runs do not measure dispatch counts or establish hosted release-floor acceptance.
+
+### Subtypes in copied records
+
+Use the generated C# record or sealed case with its runtime payload fields.
+`Nat` Subtype fields use `BigInteger`; callers supply no proofs. The package runs
+the constructor selected for each input site, so two methods can accept the
+same record type while applying different checks or normalization.
+
+For the full `Nominalsubtypes.Api` fixture package, save this as `Program.cs` in
+the consuming project:
+
+```csharp
+using System;
+using System.Numerics;
+using LeanBridge.Nominalsubtypes;
+
+var item = new Envelope(new BigInteger(40), new BigInteger(2));
+Console.WriteLine(Api.First(item));                  // 41
+Console.WriteLine(Api.Second(item));                 // 42
+Console.WriteLine(Api.Nested(new Pair(item, item))); // 4142
+Console.WriteLine(Api.Echo(item).Payload);           // 41
+Console.WriteLine(item.Payload);                    // 40, unchanged
+```
+
+`First` selects `NominalSubtypes.plusOne`; `Second` selects
+`NominalSubtypes.plusTwo`. Their limits differ: a payload of 100 rejects in
+`First`, while 90 rejects in `Second`. An `ArgumentException` identifies the
+field path and selected constructor. The `Digit` field retains its `Fin 3`
+bound. Negative `Nat` values, null payloads and malformed cases also reject.
+A failed call preserves the caller's values and allows later valid calls.
+
+Copied results project the values Lean already constructed. Packages that only
+return these values need no input constructors; their generated API omits the
+checked-input methods. The [installed C# checks](../evidence/nominal-subtype-dotnet-20261012.md)
+cover ordinary-source and independently reviewed full/result-only packages,
+including aliases, nested containers and active variant cases. They ran on
+.NET SDK 8.0.424 and shared framework 8.0.30, Linux x64/glibc 2.36, after offline
+NuGet installation, installed-tree relocation and removal of consumer sources.
+Other primitive-base nominal fixtures, refined callbacks, owned, recursive,
+dependent and broader generic Subtypes still need acceptance.
 
 ### Type conversions
 
@@ -814,7 +853,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `USize` | `ulong` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, 0..18446744073709551615. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. ulong for the 64-bit compiled Lean target; all bits are preserved. Required: Bind width to the compiled Lean target, not the consumer process; reject out-of-range values. |
 | `ISize` | `long` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, -9223372036854775808..9223372036854775807. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. long for the 64-bit compiled Lean target; signed endpoints are preserved. Required: Bind signed width to the compiled Lean target and record architecture explicitly. |
 | `Fin n` | `System.Numerics.BigInteger checked against the declared bound` (input); `BigInteger below the declared bound` (result); `System.Numerics.BigInteger checked against the field's closed bound` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Use BigInteger values with exact closed bounds. Arrays and Lists use typed arrays, products use binary tuples, Option uses generated None/Some, and Except uses generated Result. Named record and active variant fields retain their bounds. Empty, absent and inactive Fin 0 payloads are valid; every present Fin 0 value is rejected. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
-| `Subtype / {x // p x}` | `BigInteger, string and byte[], checked by the exported Lean validator and constructed by the adapter before dispatch; also in generated structural containers` (input); `the base value projected from the proof-backed Lean result; also in generated structural containers` (result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Installed checks passed (input, result); Not audited (field, callback input, callback result) | Pass the primitive base value, including inside Array, List, Option, Prod and Except containers using their generated host representations. Each present Subtype leaf uses the selected checked Lean constructor; accepted normalization reaches the export. A rejected leaf fails the call without changing the input; later valid calls still work. Results expose the proof-backed base values. Transparent aliases and the tested closed List specialization keep their constructor choices. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
+| `Subtype / {x // p x}` | `BigInteger, string and byte[], checked by the exported Lean validator and constructed by the adapter before dispatch; also in generated structural containers; also in tested acyclic records and variants` (input); `the base value projected from the proof-backed Lean result; also in generated structural containers; also in tested acyclic records and variants` (result); `BigInteger payload in generated records and sealed cases for the tested acyclic records and variants; no proof field` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Pass the primitive base value, including inside Array, List, Option, Prod and Except containers using their generated host representations. Each present Subtype leaf uses the selected checked Lean constructor; accepted normalization reaches the export. A rejected leaf fails the call without changing the input; later valid calls still work. Results expose the proof-backed base values. Transparent aliases and the tested closed List specialization keep their constructor choices. In C#, the tested acyclic records and variants use generated records and sealed cases with exact BigInteger payloads for Nat Subtypes. Pass generated values without proof fields. Negative Nat values, null payloads and malformed cases reject. Each input site keeps its selected checked constructor, including distinct normalizing choices for the same record. Copied results project existing Lean values without selecting or running an input constructor. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Checked records and closed Nat indices` | `Generated record with BigInteger and BigInteger[] payload fields` (input, result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Installed checks passed (input, result); Not audited (field, callback input, callback result) | Pass the generated record's runtime payload fields, without proof values. The selected Lean constructor checks each input and may normalize it; rejection identifies the parameter and constructor and preserves caller data. Results contain copied payload fields with proofs erased. Both ordinary and independently reviewed packages, including standalone result-only packages, passed installed checks. Required: Construct inputs only through the selected safe Lean constructor over the exact payload fields. Preserve closed indices and per-site choices; project proof-backed results without fabricating proofs. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
 | `Recursive copied structures` | `Named records and sealed constructor cases; typed arrays, Option<T>, Result<T, E> and tuples` (input, result, field); `Named sealed C# records and constructors, typed arrays, synchronous Func/Action delegates and owned LeanClosure values` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Generated records and cases preserve direct and mutual recursion. Typed arrays remain mutable; calls return independent copied storage. Cycles, null payloads and malformed branches reject. Conversions enforce 128 value levels, 262,144 visited values and separate 16 MiB native-copy and scratch/output budgets. Native outputs and partial input allocations are released on failure. Recursive records, variants and aliases retain typed C# representations and independent copied storage. Callback scopes retain reply buffers until native copying finishes. Exceptions retain their identity after cleanup. Malformed native output retires the runtime. Owned closures defer disposal during active calls, and finalizers release abandoned identities. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |

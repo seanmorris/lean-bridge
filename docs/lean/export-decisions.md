@@ -60,6 +60,10 @@ and relocated replay on Linux x64/glibc 2.36.
 [Installed Rust checks](../evidence/nominal-subtype-rust-acceptance-20261012.md)
 add those Nat forms with Rust and Cargo 1.90.0, offline crate installation,
 relocated replay and execution after deleting all consumer sources.
+[Installed C# checks](../evidence/nominal-subtype-dotnet-20261012.md)
+add those Nat forms with .NET SDK 8.0.424 and shared framework 8.0.30, offline
+NuGet installation, relocated replay and source-free deployment on Linux
+x64/glibc 2.36.
 Browser, other native hosts and PHP-Wasm nominal acceptance remains pending. Refined
 callbacks, owned and recursive Subtypes, and Subtype fields in generic records
 remain unfinished.
@@ -156,6 +160,9 @@ adds MRI Ruby 3.3.12 with offline gem installation and relocated replay.
 [Installed Rust acceptance](../evidence/nominal-subtype-rust-acceptance-20261012.md)
 adds Rust and Cargo 1.90.0 with offline crate installation, relocated replay
 and execution after deleting all consumer sources.
+[Installed C# acceptance](../evidence/nominal-subtype-dotnet-20261012.md)
+adds .NET SDK 8.0.424 and shared framework 8.0.30 with offline NuGet installation,
+relocated replay and source-free deployment on Linux x64/glibc 2.36.
 Other native hosts and PHP-Wasm nominal acceptance remains pending.
 Save `NominalSubtypes.lean`:
 

@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeNominalSubtypeDotnetPromotionSource } from "./nominal-subtype-dotnet-promotion-history.mjs";
 
 export const jvmContainerEntryExitHistoryPath = "docs/evidence/jvm-container-entry-exit-source-history-20261012.json";
 export const jvmContainerEntryExitPredecessor = "42bd530c3c1edab1fe5764144f7965f845b69f81";
@@ -57,6 +58,7 @@ export const reverseJvmContainerEntryExitUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeJvmContainerEntryExitSource = (path, source, expected) => {
+	source = beforeNominalSubtypeDotnetPromotionSource(path, source, expected);
 	if(typeof source !== "string"
 		|| !jvmContainerEntryExitChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
