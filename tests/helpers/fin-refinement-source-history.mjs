@@ -69,6 +69,7 @@ import { nominalSubtypePhpCiChangedPaths } from "./nominal-subtype-php-ci-histor
 import { nominalSubtypePhpPromotionChangedPaths } from "./nominal-subtype-php-promotion-history.mjs";
 import { nominalSubtypeWitRegistrationChangedPaths } from "./nominal-subtype-wit-registration-history.mjs";
 import { nominalSubtypeWitCiChangedPaths } from "./nominal-subtype-wit-ci-history.mjs";
+import { nominalSubtypeWitPromotionChangedPaths } from "./nominal-subtype-wit-promotion-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeSubtypeRefinementSource, subtypeRefinementChangedPaths } from "./subtype-refinement-source-history.mjs";
 import { subtypeHeapChangedPaths } from "./subtype-heap-source-history.mjs";
@@ -1003,6 +1004,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nominalSubtypePhpPromotionChangedPaths
 	, ...nominalSubtypeWitRegistrationChangedPaths
 	, ...nominalSubtypeWitCiChangedPaths
+	, ...nominalSubtypeWitPromotionChangedPaths
 ])].sort());
 
 /**

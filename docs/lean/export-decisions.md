@@ -72,7 +72,12 @@ x64/glibc 2.36; separate compiled probes check invalid callers and nullability.
 adds PHP 8.2.33 and Composer 2.5.5 with offline installation and weak/strict
 replay before and after relocation on Linux x64/glibc 2.36. Author/build roots
 are removed before installation; consumer PHP source remains required at runtime.
-Browser, WIT/WASI and PHP-Wasm nominal acceptance remains pending. Refined
+[Installed WIT/WASI acceptance](../evidence/nominal-subtype-wit-promotion-20261013.md)
+adds those Nat forms through the actual Component Model adapter and its required
+packaged native Lean host. Both source routes reproduce packages from two roots,
+install offline and replay after relocation on Linux x64/glibc 2.36 with
+Wasmtime 42.0.1.
+Browser and PHP-Wasm nominal acceptance remains pending. Refined
 callbacks, owned and recursive Subtypes, and Subtype fields in generic records
 remain unfinished.
 
@@ -178,7 +183,12 @@ and source-free deployment of both consumers on Linux x64/glibc 2.36.
 adds PHP 8.2.33 and Composer 2.5.5 with offline installation and weak/strict
 replay before and after relocation on Linux x64/glibc 2.36. Author/build roots
 are removed before installation; consumer PHP source remains required at runtime.
-WIT/WASI and PHP-Wasm nominal acceptance remains pending.
+[Installed WIT/WASI acceptance](../evidence/nominal-subtype-wit-promotion-20261013.md)
+adds those Nat forms through the actual Component Model adapter and its required
+packaged native Lean host. Both source routes reproduce packages from two roots,
+install offline and replay after relocation on Linux x64/glibc 2.36 with
+Wasmtime 42.0.1.
+Browser and PHP-Wasm nominal acceptance remains pending.
 Save `NominalSubtypes.lean`:
 
 ```lean

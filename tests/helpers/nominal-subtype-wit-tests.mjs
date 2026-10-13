@@ -30,6 +30,8 @@ import "./nominal-subtype-wit-ci-shell-tests.mjs";
 import "./nominal-subtype-wit-ci-handoff-tests.mjs";
 import "./nominal-subtype-wit-ci-workflow-tests.mjs";
 import "./nominal-subtype-wit-ci-history-tests.mjs";
+import "./nominal-subtype-wit-promotion-tests.mjs";
+import "./nominal-subtype-wit-promotion-history-tests.mjs";
 
 const capi = process.env.LEAN_BRIDGE_WASMTIME_C_API ?? resolve(".toolchains/wasmtime42");
 const cc = process.env.CC ?? "/usr/bin/cc";

@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeNominalSubtypeWitPromotionSource } from "./nominal-subtype-wit-promotion-history.mjs";
 
 export const nominalSubtypeWitCiHistoryPath = "docs/evidence/nominal-subtype-wit-ci-source-history-20261013.json";
 export const nominalSubtypeWitCiPredecessor = "d200e330a3b47c4e37d874b58c37ab060bdd78e0";
@@ -54,6 +55,7 @@ export const reverseNominalSubtypeWitCiUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeNominalSubtypeWitCiSource = (path, source, expected) => {
+	source = beforeNominalSubtypeWitPromotionSource(path, source, expected);
 	if(typeof source !== "string" || !nominalSubtypeWitCiChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = history ??= JSON.parse(readFileSync(nominalSubtypeWitCiHistoryPath, "utf8"));
