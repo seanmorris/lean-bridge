@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { beforeNominalSubtypeJvmPromotionSource } from "./nominal-subtype-jvm-promotion-history.mjs";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { nominalSubtypeNpmArchive, nominalSubtypeNpmProfiles, nominalSubtypeNpmReferences, promoteNominalSubtypeNpm, nominalSubtypeNpmConversion, nominalSubtypeNpmLimit } from "./nominal-subtype-npm-promotion.mjs";
 import { beforeNominalSubtypeNativePromotionSource } from "./nominal-subtype-native-promotion-history.mjs";
@@ -107,7 +108,8 @@ test("nominal npm promotion adds four Node field cells and supplements eight exi
 });
 
 test("nominal npm docs separate Node acceptance from pending browser, native and callback contexts", async () => {
-	const author = await readFile("docs/lean/existing-package.md", "utf8");
+	const authorPath = "docs/lean/existing-package.md";
+	const author = beforeNominalSubtypeJvmPromotionSource(authorPath, await readFile(authorPath, "utf8"));
 	for(const prefix of ["| `Subtype` in acyclic", "| Lean-produced `Subtype` result without"])
 	{
 		const row = author.split("\n").find(line => line.startsWith(prefix));

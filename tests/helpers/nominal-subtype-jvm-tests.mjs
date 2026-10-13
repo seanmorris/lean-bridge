@@ -19,6 +19,8 @@ import "./nominal-subtype-jvm-ci-tools-tests.mjs";
 import "./nominal-subtype-jvm-ci-shell-tests.mjs";
 import "./nominal-subtype-jvm-ci-workflow-tests.mjs";
 import "./nominal-subtype-jvm-ci-history-tests.mjs";
+import "./nominal-subtype-jvm-promotion-tests.mjs";
+import "./nominal-subtype-jvm-promotion-history-tests.mjs";
 
 test("nominal JVM contracts preserve the complete fixture and only rename the reserved Pair record", async () => {
 	const restore = value => JSON.parse(JSON.stringify(value).replaceAll("EnvelopePair", "Pair"));

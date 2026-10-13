@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { beforeNominalSubtypeJvmPromotionSource, beforeNominalSubtypeJvmPromotionPins } from "./nominal-subtype-jvm-promotion-history.mjs";
 import { beforeNominalSubtypeDotnetPromotionSource, nominalSubtypeDotnetPromotionHistoryPath } from "./nominal-subtype-dotnet-promotion-history.mjs";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { nominalSubtypeRustArchive, nominalSubtypeRustReferences, promoteNominalSubtypeRust, nominalSubtypeRustConversion, nominalSubtypeRustLimit } from "./nominal-subtype-rust-promotion.mjs";
@@ -84,7 +85,7 @@ test("nominal Rust promotion refuses missing originals and substituted scope or 
 
 test("nominal Rust promotion adds two field cells and supplements four existing cells only", async () => {
 	const original = predecessor(), references = await nominalSubtypeRustReferences();
-	const proposed = await promoteNominalSubtypeRust(original, references), { document: current, ...contracts } = await readTypeSurface();
+	const proposed = beforeNominalSubtypeJvmPromotionPins(await promoteNominalSubtypeRust(original, references)), { document: current, ...contracts } = await readTypeSurface();
 	const document = JSON.parse(beforeNominalSubtypeDotnetPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
 	assert.ok(current.evidence.length >= document.evidence.length);
 	const later = JSON.parse(await readFile(nominalSubtypeDotnetPromotionHistoryPath));
@@ -125,7 +126,8 @@ test("nominal Rust promotion adds two field cells and supplements four existing 
 });
 
 test("nominal Rust documentation distinguishes verified packages from pending hosts and callbacks", async () => {
-	const author = await readFile("docs/lean/existing-package.md", "utf8");
+	const authorPath = "docs/lean/existing-package.md";
+	const author = beforeNominalSubtypeJvmPromotionSource(authorPath, await readFile(authorPath, "utf8"));
 	assert.doesNotMatch(author, /component builds still require that selection/u);
 	for(const prefix of ["| `Subtype` in acyclic", "| Lean-produced `Subtype` result without"])
 	{

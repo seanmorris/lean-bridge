@@ -32,6 +32,7 @@ import { assertManagedCiIsolation } from "./helpers/managed-ci-isolation.mjs";
 import { assertNativeCiIsolation } from "./helpers/native-ci-isolation.mjs";
 import { assertNativeConsumerPartition, extendPerlCompilerBudget } from "./helpers/native-consumer-partition.mjs";
 import { beforeNativeConsumerPartitionSource } from "./helpers/native-consumer-partition-history.mjs";
+import { assertNominalSubtypeJvmWorkflow, disableNominalSubtypeJvmWorkflow } from "./helpers/nominal-subtype-jvm-ci-workflow.mjs";
 import { assertWorkflowRunBudget, joinNativeObservations } from "./helpers/native-observation-split.mjs";
 import {
 	ConsumerSupportError,
@@ -632,7 +633,8 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   ]);
   const structuralWorkflow = beforeNativeConsumerPartitionSource(".github/workflows/consumer-matrix.yml", liveWorkflow);
   const structuralPerlWorkflow = beforeNativeConsumerPartitionSource(".github/workflows/perl-consumer.yml", livePerlWorkflow);
-  assertNativeConsumerPartition(structuralWorkflow, liveWorkflow);
+  assertNominalSubtypeJvmWorkflow(liveWorkflow);
+  assertNativeConsumerPartition(structuralWorkflow, disableNominalSubtypeJvmWorkflow(liveWorkflow));
   assert.equal(extendPerlCompilerBudget(structuralPerlWorkflow), livePerlWorkflow);
   assertStructuralSubtypeWorkflow(liveWorkflow, "consumer-matrix.yml");
   assertStructuralSubtypeWorkflow(livePerlWorkflow, "perl-consumer.yml");

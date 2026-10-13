@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeNominalSubtypeJvmPromotionSource } from "./nominal-subtype-jvm-promotion-history.mjs";
 
 export const nominalSubtypeJvmCiHistoryPath = "docs/evidence/nominal-subtype-jvm-ci-source-history-20261013.json";
 export const nominalSubtypeJvmCiPredecessor = "2f38c10b8f0937edeeef39b4e15515f70b66ddd3";
@@ -54,6 +55,7 @@ export const reverseNominalSubtypeJvmCiUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeNominalSubtypeJvmCiSource = (path, source, expected) => {
+	source = beforeNominalSubtypeJvmPromotionSource(path, source, expected);
 	if(typeof source !== "string" || !nominalSubtypeJvmCiChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = history ??= JSON.parse(readFileSync(nominalSubtypeJvmCiHistoryPath, "utf8"));

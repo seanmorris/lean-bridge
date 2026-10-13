@@ -15,7 +15,7 @@ import { structuralSubtypeConfiguration } from "./structural-subtype-installed-f
 const predecessor = () => JSON.parse(execFileSync("git", ["show", "e844290c9bc4eb1052dcbce6e730f96e59165990:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
 test("structural Subtype guides describe the installed scope and use the actual author fixture", async () => {
-	const nominalFieldGuides = ["c", "cpp", "perl", "python", "ruby", "rust", "dotnet"].map(name => `docs/consume/${name}.md`);
+	const nominalFieldGuides = ["c", "cpp", "perl", "python", "ruby", "rust", "dotnet", "java", "kotlin"].map(name => `docs/consume/${name}.md`);
 	for(const path of [...["c", "cpp", "python", "rust", "ruby", "dotnet", "java", "kotlin", "perl", "wit-wasi"].map(name => `docs/consume/${name}.md`), "docs/javascript-typescript.md", "docs/php.md"])
 	{
 		const source = await readFile(path, "utf8");

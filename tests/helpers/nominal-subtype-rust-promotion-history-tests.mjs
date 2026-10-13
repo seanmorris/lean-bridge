@@ -9,6 +9,7 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { beforeNominalSubtypeJvmPromotionPins } from "./nominal-subtype-jvm-promotion-history.mjs";
 import { nominalSubtypeDotnetPromotionHistoryPath } from "./nominal-subtype-dotnet-promotion-history.mjs";
 import { nominalSubtypeRustReferences, promoteNominalSubtypeRust } from "./nominal-subtype-rust-promotion.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
@@ -42,7 +43,7 @@ test("nominal Rust promotion history authenticates exact changes and the six obs
 		}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	const expected = await promoteNominalSubtypeRust(JSON.parse(original(inventoryPath)), await nominalSubtypeRustReferences());
+	const expected = beforeNominalSubtypeJvmPromotionPins(await promoteNominalSubtypeRust(JSON.parse(original(inventoryPath)), await nominalSubtypeRustReferences()));
 	const later = JSON.parse(await readFile(nominalSubtypeDotnetPromotionHistoryPath));
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{

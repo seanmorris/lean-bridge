@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { beforeNominalSubtypeJvmPromotionSource, beforeNominalSubtypeJvmPromotionPins } from "./nominal-subtype-jvm-promotion-history.mjs";
 import { nominalSubtypeDotnetPromotionHistoryPath } from "./nominal-subtype-dotnet-promotion-history.mjs";
 import { nominalSubtypeRubyPromotionHistoryPath } from "./nominal-subtype-ruby-promotion-history.mjs";
 import { nominalSubtypeRustPromotionHistoryPath } from "./nominal-subtype-rust-promotion-history.mjs";
@@ -88,7 +89,7 @@ test("nominal Perl promotion refuses missing originals and substituted scope or 
 
 test("nominal Perl promotion adds two field cells and supplements four existing cells only", async () => {
 	const original = predecessor(), references = await nominalSubtypePerlReferences();
-	const proposed = await promoteNominalSubtypePerl(original, references), { document: current, ...contracts } = await readTypeSurface();
+	const proposed = beforeNominalSubtypeJvmPromotionPins(await promoteNominalSubtypePerl(original, references)), { document: current, ...contracts } = await readTypeSurface();
 	const document = JSON.parse(beforeNominalSubtypePythonPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
 	assert.ok(current.evidence.length >= document.evidence.length);
 	for(const path of [nominalSubtypeDotnetPromotionHistoryPath, nominalSubtypeRustPromotionHistoryPath, nominalSubtypeRubyPromotionHistoryPath, nominalSubtypePythonPromotionHistoryPath])
@@ -132,7 +133,8 @@ test("nominal Perl promotion adds two field cells and supplements four existing 
 });
 
 test("nominal Perl documentation distinguishes verified packages from pending hosts and callbacks", async () => {
-	const author = await readFile("docs/lean/existing-package.md", "utf8");
+	const authorPath = "docs/lean/existing-package.md";
+	const author = beforeNominalSubtypeJvmPromotionSource(authorPath, await readFile(authorPath, "utf8"));
 	for(const prefix of ["| `Subtype` in acyclic", "| Lean-produced `Subtype` result without"])
 	{
 		const row = author.split("\n").find(line => line.startsWith(prefix));

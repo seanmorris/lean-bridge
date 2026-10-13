@@ -9,6 +9,7 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { beforeNominalSubtypeJvmPromotionPins } from "./nominal-subtype-jvm-promotion-history.mjs";
 import { nominalSubtypeDotnetReferences, promoteNominalSubtypeDotnet } from "./nominal-subtype-dotnet-promotion.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeNominalSubtypeDotnetPromotionSource, nominalSubtypeDotnetPromotionChangedPaths, nominalSubtypeDotnetPromotionHistoryPath, nominalSubtypeDotnetPromotionPredecessor, reverseNominalSubtypeDotnetPromotionUpdate } from "./nominal-subtype-dotnet-promotion-history.mjs";
@@ -41,7 +42,7 @@ test("nominal C# promotion history authenticates exact changes and the six obser
 		}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	const expected = await promoteNominalSubtypeDotnet(JSON.parse(original(inventoryPath)), await nominalSubtypeDotnetReferences());
+	const expected = beforeNominalSubtypeJvmPromotionPins(await promoteNominalSubtypeDotnet(JSON.parse(original(inventoryPath)), await nominalSubtypeDotnetReferences()));
 	assert.equal(beforeNominalSubtypeDotnetPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)

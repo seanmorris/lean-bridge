@@ -64,6 +64,10 @@ relocated replay and execution after deleting all consumer sources.
 add those Nat forms with .NET SDK 8.0.424 and shared framework 8.0.30, offline
 NuGet installation, relocated replay and source-free deployment on Linux
 x64/glibc 2.36.
+[Installed Java/Kotlin checks](../evidence/nominal-subtype-jvm-20261013.md)
+add those Nat forms with JDK 22.0.2 and Kotlin 2.2.0. Both consumers install
+offline and replay after relocation and consumer-source removal on Linux
+x64/glibc 2.36; separate compiled probes check invalid callers and nullability.
 Browser, other native hosts and PHP-Wasm nominal acceptance remains pending. Refined
 callbacks, owned and recursive Subtypes, and Subtype fields in generic records
 remain unfinished.
@@ -163,6 +167,9 @@ and execution after deleting all consumer sources.
 [Installed C# acceptance](../evidence/nominal-subtype-dotnet-20261012.md)
 adds .NET SDK 8.0.424 and shared framework 8.0.30 with offline NuGet installation,
 relocated replay and source-free deployment on Linux x64/glibc 2.36.
+[Installed Java/Kotlin acceptance](../evidence/nominal-subtype-jvm-20261013.md)
+adds JDK 22.0.2 and Kotlin 2.2.0 with offline installation, relocated replay
+and source-free deployment of both consumers on Linux x64/glibc 2.36.
 Other native hosts and PHP-Wasm nominal acceptance remains pending.
 Save `NominalSubtypes.lean`:
 
