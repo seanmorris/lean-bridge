@@ -1,0 +1,386 @@
+TAP version 13
+# Subtest: installed nominal WIT packages reproduce and relocate ordinary full
+not ok 1 - installed nominal WIT packages reproduce and relocate ordinary full
+  ---
+  duration_ms: 215402.487974
+  type: 'test'
+  location: '/app/tests/helpers/nominal-subtype-wit-installed-tests.mjs:28:53'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /export scalar: func\(/u. Input:
+    
+    'package root:component;\n' +
+      '\n' +
+      'world root {\n' +
+      '  import lean-bridge:nominalsubtypes/native@1.0.0;\n' +
+      '\n' +
+      '  export lean-bridge:nominalsubtypes/api@1.0.0;\n' +
+      '}\n' +
+      'package lean-bridge:nominalsubtypes@1.0.0 {\n' +
+      '  interface native {\n' +
+      '    type bridge-value-0 = list<u32>;\n' +
+      '\n' +
+      '    record envelope {\n' +
+      '      payload: bridge-value-0,\n' +
+      '      digit: bridge-value-0,\n' +
+      '    }\n' +
+      '\n' +
+      '    type bridge-value-2 = option<envelope>;\n' +
+      '\n' +
+      '    type bridge-value-3 = list<bridge-value-2>;\n' +
+      '\n' +
+      '    type bridge-value-4 = list<bridge-value-0>;\n' +
+      '\n' +
+      '    type bridge-value-5 = result<bridge-value-0, bridge-value-0>;\n' +
+      '\n' +
+      '    type bridge-value-6 = option<bridge-value-5>;\n' +
+      '\n' +
+      '    type bridge-value-7 = list<bridge-value-6>;\n' +
+      '\n' +
+      '    record event-box-fields {\n' +
+      '      value: envelope,\n' +
+      '    }\n' +
+      '\n' +
+      '    record event-choices-fields {\n' +
+      '      values: bridge-value-7,\n' +
+      '    }\n' +
+      '\n' +
+      '    variant event {\n' +
+      '      empty,\n' +
+      '      box(event-box-fields),\n' +
+      '      choices(event-choices-fields),\n' +
+      '    }\n' +
+      '\n' +
+      '    type envelope-alias = envelope;\n' +
+      '\n' +
+      '    type bridge-alias-value-15 = option<envelope-alias>;\n' +
+      '\n' +
+      '    type bridge-alias-value-16 = list<bridge-alias-value-15>;\n' +
+      '\n' +
+      '    record alias-pair {\n' +
+      '      left: bridge-alias-value-16,\n' +
+      '      right: bridge-alias-value-16,\n' +
+      '    }\n' +
+      '\n' +
+      '    type bridge-value-10 = list<bridge-value-0>;\n' +
+      '\n' +
+      '    record pair {\n' +
+      '      left: envelope,\n' +
+      '      right: envelope,\n' +
+      '    }\n' +
+      '\n' +
+      '    type bridge-value-12 = option<bridge-value-0>;\n' +
+      '\n' +
+      '    type bridge-value-13 = tuple<bridge-value-0, bridge-value-0>;\n' +
+      '\n' +
+      '    aliases: func(arg0: bridge-alias-value-16, arg1: bridge-alias-value-16) -> bridge-value-0;\n' +
+      '\n' +
+      '    array-values: func(arg0: bridge-value-0) -> bridge-value-4;\n' +
+      '\n' +
+      '    branch: func(arg0: bridge-value-0) -> bridge-value-5;\n' +
+      '\n' +
+      '    combine: func(arg0: envelope, arg1: envelope) -> bridge-value-0;\n' +
+      '\n' +
+      '    echo: func(arg0: envelope) -> envelope;\n' +
+      '\n' +
+      '    echo-event: func(arg0: event) -> event;\n' +
+      '\n' +
+      '    echo-groups: func(arg0: bridge-alias-value-16) -> bridge-alias-value-16;\n' +
+      '\n' +
+      '    echo-pair: func(arg0: alias-pair) -> alias-pair;\n' +
+      '\n' +
+      '    event-choices: func(arg0: bridge-value-0) -> event;\n' +
+      '\n' +
+      '    event-empty: func(arg0: bridge-value-0) -> event;\n' +
+      '\n' +
+      '    event-first: func(arg0: event) -> bridge-value-0;\n' +
+      '\n' +
+      '    event-second: func(arg0: event) -> bridge-value-0;\n' +
+      '\n' +
+      '    event-value: func(arg0: bridge-value-0) -> event;\n' +
+      '\n' +
+      '    first: func(arg0: envelope) -> bridge-value-0;\n' +
+      '\n' +
+      '    group-values: func(arg0: bridge-value-0) -> bridge-alias-value-16;\n' +
+      '\n' +
+      '    inspect-alias-pair: func(arg0: alias-pair) -> bridge-value-0;\n' +
+      '\n' +
+      '    list-values: func(arg0: bridge-value-0) -> bridge-value-10;\n' +
+      '\n' +
+      '    nested: func(arg0: pair) -> bridge-value-0;\n' +
+      '\n' +
+      '    no-items: func(arg0: bridge-value-0) -> bridge-value-4;\n' +
+      '\n' +
+      '    optional: func(arg0: bridge-value-0) -> bridge-value-12;\n' +
+      '\n' +
+      '    pair-values: func(arg0: bridge-value-0) -> alias-pair;\n' +
+      '\n' +
+      '    plain-fin: func(arg0: bridge-value-0) -> bridge-value-0;\n' +
+      '\n' +
+      '    produce-envelope: func(arg0: bridge-value-0) -> envelope;\n' +
+      '\n' +
+      '    product: func(arg0: bridge-value-0) -> bridge-value-13;\n' +
+      '\n' +
+      '    scalar: func(arg0: bridge-value-0) -> bridge-value-0;\n' +
+      '\n' +
+      '    second: func(arg0: envelope) -> bridge-value-0;\n' +
+      '  }\n' +
+      '  interface api {\n' +
+      '    use native.{bridge-value-0, envelope, bridge-value-2, bridge-value-3, bridge-value-4, bridge-value-5, bridge-value-6, bridge-value-7, event-box-fields, event-choices-fields, event, envelope-alias, bridge-alias-value-15, bridge-alias-value-16, alias-pair, bridge-value-10, pair, bridge-value-12, bridge-value-13};\n' +
+      '\n' +
+      '    aliases: func(arg0: bridge-alias-value-16, arg1: bridge-alias-value-16) -> bridge-value-0;\n' +
+      '\n' +
+      '    array-values: func(arg0: bridge-value-0) -> bridge-value-4;\n' +
+      '\n' +
+      '    branch: func(arg0: bridge-value-0) -> bridge-value-5;\n' +
+      '\n' +
+      '    combine: func(arg0: envelope, arg1: envelope) -> bridge-value-0;\n' +
+      '\n' +
+      '    echo: func(arg0: envelope) -> envelope;\n' +
+      '\n' +
+      '    echo-event: func(arg0: event) -> event;\n' +
+      '\n' +
+      '    echo-groups: func(arg0: bridge-alias-value-16) -> bridge-alias-value-16;\n' +
+      '\n' +
+      '    echo-pair: func(arg0: alias-pair) -> alias-pair;\n' +
+      '\n' +
+      '    event-choices: func(arg0: bridge-value-0) -> event;\n' +
+      '\n' +
+      '    event-empty: func(arg0: bridge-value-0) -> event;\n' +
+      '\n' +
+      '    event-first: func(arg0: event) -> bridge-value-0;\n' +
+      '\n' +
+      '    event-second: func(arg0: event) -> bridge-value-0;\n' +
+      '\n' +
+      '    event-value: func(arg0: bridge-value-0) -> event;\n' +
+      '\n' +
+      '    first: func(arg0: envelope) -> bridge-value-0;\n' +
+      '\n' +
+      '    group-values: func(arg0: bridge-value-0) -> bridge-alias-value-16;\n' +
+      '\n' +
+      '    inspect-alias-pair: func(arg0: alias-pair) -> bridge-value-0;\n' +
+      '\n' +
+      '    list-values: func(arg0: bridge-value-0) -> bridge-value-10;\n' +
+      '\n' +
+      '    nested: func(arg0: pair) -> bridge-value-0;\n' +
+      '\n' +
+      '    no-items: func(arg0: bridge-value-0) -> bridge-value-4;\n' +
+      '\n' +
+      '    optional: func(arg0: bridge-value-0) -> bridge-value-12;\n' +
+      '\n' +
+      '    pair-values: func(arg0: bridge-value-0) -> alias-pair;\n' +
+      '\n' +
+      '    plain-fin: func(arg0: bridge-value-0) -> bridge-value-0;\n' +
+      '\n' +
+      '    produce-envelope: func(arg0: bridge-value-0) -> envelope;\n' +
+      '\n' +
+      '    product: func(arg0: bridge-value-0) -> bridge-value-13;\n' +
+      '\n' +
+      '    scalar: func(arg0: bridge-value-0) -> bridge-value-0;\n' +
+      '\n' +
+      '    second: func(arg0: envelope) -> bridge-value-0;\n' +
+      '  }\n' +
+      '}\n'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    package root:component;
+    
+    world root {
+      import lean-bridge:nominalsubtypes/native@1.0.0;
+    
+      export lean-bridge:nominalsubtypes/api@1.0.0;
+    }
+    package lean-bridge:nominalsubtypes@1.0.0 {
+      interface native {
+        type bridge-value-0 = list<u32>;
+    
+        record envelope {
+          payload: bridge-value-0,
+          digit: bridge-value-0,
+        }
+    
+        type bridge-value-2 = option<envelope>;
+    
+        type bridge-value-3 = list<bridge-value-2>;
+    
+        type bridge-value-4 = list<bridge-value-0>;
+    
+        type bridge-value-5 = result<bridge-value-0, bridge-value-0>;
+    
+        type bridge-value-6 = option<bridge-value-5>;
+    
+        type bridge-value-7 = list<bridge-value-6>;
+    
+        record event-box-fields {
+          value: envelope,
+        }
+    
+        record event-choices-fields {
+          values: bridge-value-7,
+        }
+    
+        variant event {
+          empty,
+          box(event-box-fields),
+          choices(event-choices-fields),
+        }
+    
+        type envelope-alias = envelope;
+    
+        type bridge-alias-value-15 = option<envelope-alias>;
+    
+        type bridge-alias-value-16 = list<bridge-alias-value-15>;
+    
+        record alias-pair {
+          left: bridge-alias-value-16,
+          right: bridge-alias-value-16,
+        }
+    
+        type bridge-value-10 = list<bridge-value-0>;
+    
+        record pair {
+          left: envelope,
+          right: envelope,
+        }
+    
+        type bridge-value-12 = option<bridge-value-0>;
+    
+        type bridge-value-13 = tuple<bridge-value-0, bridge-value-0>;
+    
+        aliases: func(arg0: bridge-alias-value-16, arg1: bridge-alias-value-16) -> bridge-value-0;
+    
+        array-values: func(arg0: bridge-value-0) -> bridge-value-4;
+    
+        branch: func(arg0: bridge-value-0) -> bridge-value-5;
+    
+        combine: func(arg0: envelope, arg1: envelope) -> bridge-value-0;
+    
+        echo: func(arg0: envelope) -> envelope;
+    
+        echo-event: func(arg0: event) -> event;
+    
+        echo-groups: func(arg0: bridge-alias-value-16) -> bridge-alias-value-16;
+    
+        echo-pair: func(arg0: alias-pair) -> alias-pair;
+    
+        event-choices: func(arg0: bridge-value-0) -> event;
+    
+        event-empty: func(arg0: bridge-value-0) -> event;
+    
+        event-first: func(arg0: event) -> bridge-value-0;
+    
+        event-second: func(arg0: event) -> bridge-value-0;
+    
+        event-value: func(arg0: bridge-value-0) -> event;
+    
+        first: func(arg0: envelope) -> bridge-value-0;
+    
+        group-values: func(arg0: bridge-value-0) -> bridge-alias-value-16;
+    
+        inspect-alias-pair: func(arg0: alias-pair) -> bridge-value-0;
+    
+        list-values: func(arg0: bridge-value-0) -> bridge-value-10;
+    
+        nested: func(arg0: pair) -> bridge-value-0;
+    
+        no-items: func(arg0: bridge-value-0) -> bridge-value-4;
+    
+        optional: func(arg0: bridge-value-0) -> bridge-value-12;
+    
+        pair-values: func(arg0: bridge-value-0) -> alias-pair;
+    
+        plain-fin: func(arg0: bridge-value-0) -> bridge-value-0;
+    
+        produce-envelope: func(arg0: bridge-value-0) -> envelope;
+    
+        product: func(arg0: bridge-value-0) -> bridge-value-13;
+    
+        scalar: func(arg0: bridge-value-0) -> bridge-value-0;
+    
+        second: func(arg0: envelope) -> bridge-value-0;
+      }
+      interface api {
+        use native.{bridge-value-0, envelope, bridge-value-2, bridge-value-3, bridge-value-4, bridge-value-5, bridge-value-6, bridge-value-7, event-box-fields, event-choices-fields, event, envelope-alias, bridge-alias-value-15, bridge-alias-value-16, alias-pair, bridge-value-10, pair, bridge-value-12, bridge-value-13};
+    
+        aliases: func(arg0: bridge-alias-value-16, arg1: bridge-alias-value-16) -> bridge-value-0;
+    
+        array-values: func(arg0: bridge-value-0) -> bridge-value-4;
+    
+        branch: func(arg0: bridge-value-0) -> bridge-value-5;
+    
+        combine: func(arg0: envelope, arg1: envelope) -> bridge-value-0;
+    
+        echo: func(arg0: envelope) -> envelope;
+    
+        echo-event: func(arg0: event) -> event;
+    
+        echo-groups: func(arg0: bridge-alias-value-16) -> bridge-alias-value-16;
+    
+        echo-pair: func(arg0: alias-pair) -> alias-pair;
+    
+        event-choices: func(arg0: bridge-value-0) -> event;
+    
+        event-empty: func(arg0: bridge-value-0) -> event;
+    
+        event-first: func(arg0: event) -> bridge-value-0;
+    
+        event-second: func(arg0: event) -> bridge-value-0;
+    
+        event-value: func(arg0: bridge-value-0) -> event;
+    
+        first: func(arg0: envelope) -> bridge-value-0;
+    
+        group-values: func(arg0: bridge-value-0) -> bridge-alias-value-16;
+    
+        inspect-alias-pair: func(arg0: alias-pair) -> bridge-value-0;
+    
+        list-values: func(arg0: bridge-value-0) -> bridge-value-10;
+    
+        nested: func(arg0: pair) -> bridge-value-0;
+    
+        no-items: func(arg0: bridge-value-0) -> bridge-value-4;
+    
+        optional: func(arg0: bridge-value-0) -> bridge-value-12;
+    
+        pair-values: func(arg0: bridge-value-0) -> alias-pair;
+    
+        plain-fin: func(arg0: bridge-value-0) -> bridge-value-0;
+    
+        produce-envelope: func(arg0: bridge-value-0) -> envelope;
+    
+        product: func(arg0: bridge-value-0) -> bridge-value-13;
+    
+        scalar: func(arg0: bridge-value-0) -> bridge-value-0;
+    
+        second: func(arg0: envelope) -> bridge-value-0;
+      }
+    }
+    
+  operator: 'match'
+  stack: |-
+    installNominalSubtypeWit (file:///app/tests/helpers/nominal-subtype-wit-install.mjs:75:10)
+    async TestContext.<anonymous> (file:///app/tests/helpers/nominal-subtype-wit-installed-tests.mjs:108:32)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# ordinary full author 0: reproducible WIT package
+# ordinary full author 1: reproducible WIT package
+# Waiting for host load below 6 before the next C\# phase: 7.74
+# Waiting for host load below 6 before the next C\# phase: 6.7
+# Waiting for host load below 6 before the next C\# phase: 6.18
+# Waiting for host load below 6 before the next C\# phase: 7.95
+# Waiting for host load below 6 before the next C\# phase: 6.84
+# Waiting for host load below 6 before the next C\# phase: 6.06
+# Retained failed nominal WIT inputs: /tmp/lean-bridge-nominal-wit-installed-4keCr5
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 215753.278498

@@ -1,0 +1,5016 @@
+{
+  "diagnostics": [],
+  "kind": "lean-bridge-elaborated-exports",
+  "modules": [
+    {
+      "declarations": [
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.EnvelopeAlias",
+          "kind": "abbreviation",
+          "parameters": [],
+          "projection": {
+            "expression": "Type",
+            "reason": "type-declaration",
+            "status": "unsupported"
+          },
+          "resultExpression": "Type",
+          "selected": false,
+          "source": {
+            "endColumn": 32,
+            "endLine": 26,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 26
+          },
+          "theoremReferences": [
+            "NominalSubtypes.AliasPair.mk.sizeOf_spec"
+          ],
+          "typeExpression": "Type",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.Group",
+          "kind": "abbreviation",
+          "parameters": [],
+          "projection": {
+            "expression": "Type",
+            "reason": "type-declaration",
+            "status": "unsupported"
+          },
+          "resultExpression": "Type",
+          "selected": false,
+          "source": {
+            "endColumn": 44,
+            "endLine": 27,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 27
+          },
+          "theoremReferences": [
+            "NominalSubtypes.AliasPair.mk.inj",
+            "NominalSubtypes.AliasPair.mk.injEq",
+            "NominalSubtypes.AliasPair.mk.sizeOf_spec"
+          ],
+          "typeExpression": "Type",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.Positive",
+          "kind": "abbreviation",
+          "parameters": [],
+          "projection": {
+            "expression": "Type",
+            "reason": "type-declaration",
+            "status": "unsupported"
+          },
+          "resultExpression": "Type",
+          "selected": false,
+          "source": {
+            "endColumn": 47,
+            "endLine": 3,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 3
+          },
+          "theoremReferences": [
+            "NominalSubtypes.Envelope.mk.inj",
+            "NominalSubtypes.Envelope.mk.injEq",
+            "NominalSubtypes.Envelope.mk.sizeOf_spec",
+            "NominalSubtypes.Event.choices.inj",
+            "NominalSubtypes.Event.choices.injEq",
+            "NominalSubtypes.Event.choices.sizeOf_spec"
+          ],
+          "typeExpression": "Type",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.aliases",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "left",
+              "typeExpression": "NominalSubtypes.Group"
+            },
+            {
+              "binderInfo": "explicit",
+              "name": "right",
+              "typeExpression": "NominalSubtypes.Group"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "left",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "element": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "element": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "alias",
+                      "lean": "NominalSubtypes.EnvelopeAlias",
+                      "name": "NominalSubtypes.EnvelopeAlias",
+                      "target": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "constructor": "NominalSubtypes.Envelope.mk",
+                        "fields": [
+                          {
+                            "name": "payload",
+                            "projection": "NominalSubtypes.Envelope.payload",
+                            "type": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "base": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "kind": "primitive",
+                                "lean": "Nat",
+                                "name": "nat"
+                              },
+                              "kind": "refinement",
+                              "predicate": {
+                                "constructor": "NominalSubtypes.plusOne",
+                                "kind": "subtype"
+                              }
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "projection": "NominalSubtypes.Envelope.digit",
+                            "type": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "base": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "kind": "primitive",
+                                "lean": "Nat",
+                                "name": "nat"
+                              },
+                              "kind": "refinement",
+                              "predicate": {
+                                "bound": "3",
+                                "kind": "fin"
+                              }
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "lean": "NominalSubtypes.Envelope",
+                        "name": "NominalSubtypes.Envelope"
+                      }
+                    },
+                    "kind": "option"
+                  },
+                  "kind": "array"
+                }
+              },
+              {
+                "name": "right",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "element": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "element": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "alias",
+                      "lean": "NominalSubtypes.EnvelopeAlias",
+                      "name": "NominalSubtypes.EnvelopeAlias",
+                      "target": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "constructor": "NominalSubtypes.Envelope.mk",
+                        "fields": [
+                          {
+                            "name": "payload",
+                            "projection": "NominalSubtypes.Envelope.payload",
+                            "type": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "base": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "kind": "primitive",
+                                "lean": "Nat",
+                                "name": "nat"
+                              },
+                              "kind": "refinement",
+                              "predicate": {
+                                "constructor": "NominalSubtypes.plusTwo",
+                                "kind": "subtype"
+                              }
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "projection": "NominalSubtypes.Envelope.digit",
+                            "type": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "base": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "kind": "primitive",
+                                "lean": "Nat",
+                                "name": "nat"
+                              },
+                              "kind": "refinement",
+                              "predicate": {
+                                "bound": "3",
+                                "kind": "fin"
+                              }
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "lean": "NominalSubtypes.Envelope",
+                        "name": "NominalSubtypes.Envelope"
+                      }
+                    },
+                    "kind": "option"
+                  },
+                  "kind": "array"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Nat",
+          "selected": true,
+          "source": {
+            "endColumn": 40,
+            "endLine": 49,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 46
+          },
+          "theoremReferences": [],
+          "typeExpression": "NominalSubtypes.Group → NominalSubtypes.Group → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.arrayValues",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "base": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                },
+                "kind": "refinement",
+                "predicate": {
+                  "constructor": null,
+                  "kind": "subtype"
+                }
+              },
+              "kind": "array"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Array.{0} NominalSubtypes.Positive",
+          "selected": true,
+          "source": {
+            "endColumn": 85,
+            "endLine": 59,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 59
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → Array.{0} NominalSubtypes.Positive",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.branch",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "arguments": [
+                {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "base": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Nat",
+                    "name": "nat"
+                  },
+                  "kind": "refinement",
+                  "predicate": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "base": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Nat",
+                    "name": "nat"
+                  },
+                  "kind": "refinement",
+                  "predicate": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                }
+              ],
+              "kind": "result"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Except.{0, 0} NominalSubtypes.Positive NominalSubtypes.Positive",
+          "selected": true,
+          "source": {
+            "endColumn": 66,
+            "endLine": 64,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 63
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → Except.{0, 0} NominalSubtypes.Positive NominalSubtypes.Positive",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.combine",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "left",
+              "typeExpression": "NominalSubtypes.Envelope"
+            },
+            {
+              "binderInfo": "explicit",
+              "name": "right",
+              "typeExpression": "NominalSubtypes.Envelope"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "left",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "constructor": "NominalSubtypes.Envelope.mk",
+                  "fields": [
+                    {
+                      "name": "payload",
+                      "projection": "NominalSubtypes.Envelope.payload",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "base": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        },
+                        "kind": "refinement",
+                        "predicate": {
+                          "constructor": "NominalSubtypes.plusOne",
+                          "kind": "subtype"
+                        }
+                      }
+                    },
+                    {
+                      "name": "digit",
+                      "projection": "NominalSubtypes.Envelope.digit",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "base": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        },
+                        "kind": "refinement",
+                        "predicate": {
+                          "bound": "3",
+                          "kind": "fin"
+                        }
+                      }
+                    }
+                  ],
+                  "kind": "record",
+                  "lean": "NominalSubtypes.Envelope",
+                  "name": "NominalSubtypes.Envelope"
+                }
+              },
+              {
+                "name": "right",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "constructor": "NominalSubtypes.Envelope.mk",
+                  "fields": [
+                    {
+                      "name": "payload",
+                      "projection": "NominalSubtypes.Envelope.payload",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "base": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        },
+                        "kind": "refinement",
+                        "predicate": {
+                          "constructor": "NominalSubtypes.plusTwo",
+                          "kind": "subtype"
+                        }
+                      }
+                    },
+                    {
+                      "name": "digit",
+                      "projection": "NominalSubtypes.Envelope.digit",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "base": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        },
+                        "kind": "refinement",
+                        "predicate": {
+                          "bound": "3",
+                          "kind": "fin"
+                        }
+                      }
+                    }
+                  ],
+                  "kind": "record",
+                  "lean": "NominalSubtypes.Envelope",
+                  "name": "NominalSubtypes.Envelope"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Nat",
+          "selected": true,
+          "source": {
+            "endColumn": 87,
+            "endLine": 35,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 35
+          },
+          "theoremReferences": [],
+          "typeExpression": "NominalSubtypes.Envelope → NominalSubtypes.Envelope → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.echo",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "NominalSubtypes.Envelope"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "constructor": "NominalSubtypes.Envelope.mk",
+                  "fields": [
+                    {
+                      "name": "payload",
+                      "projection": "NominalSubtypes.Envelope.payload",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "base": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        },
+                        "kind": "refinement",
+                        "predicate": {
+                          "constructor": "NominalSubtypes.plusOne",
+                          "kind": "subtype"
+                        }
+                      }
+                    },
+                    {
+                      "name": "digit",
+                      "projection": "NominalSubtypes.Envelope.digit",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "base": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        },
+                        "kind": "refinement",
+                        "predicate": {
+                          "bound": "3",
+                          "kind": "fin"
+                        }
+                      }
+                    }
+                  ],
+                  "kind": "record",
+                  "lean": "NominalSubtypes.Envelope",
+                  "name": "NominalSubtypes.Envelope"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "constructor": "NominalSubtypes.Envelope.mk",
+              "fields": [
+                {
+                  "name": "payload",
+                  "projection": "NominalSubtypes.Envelope.payload",
+                  "type": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "base": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "Nat",
+                      "name": "nat"
+                    },
+                    "kind": "refinement",
+                    "predicate": {
+                      "constructor": null,
+                      "kind": "subtype"
+                    }
+                  }
+                },
+                {
+                  "name": "digit",
+                  "projection": "NominalSubtypes.Envelope.digit",
+                  "type": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "base": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "Nat",
+                      "name": "nat"
+                    },
+                    "kind": "refinement",
+                    "predicate": {
+                      "bound": "3",
+                      "kind": "fin"
+                    }
+                  }
+                }
+              ],
+              "kind": "record",
+              "lean": "NominalSubtypes.Envelope",
+              "name": "NominalSubtypes.Envelope"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "NominalSubtypes.Envelope",
+          "selected": true,
+          "source": {
+            "endColumn": 47,
+            "endLine": 45,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 45
+          },
+          "theoremReferences": [],
+          "typeExpression": "NominalSubtypes.Envelope → NominalSubtypes.Envelope",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.echoEvent",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "NominalSubtypes.Event"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "cases": [
+                    {
+                      "constructor": "NominalSubtypes.Event.empty",
+                      "fields": [],
+                      "name": "empty"
+                    },
+                    {
+                      "constructor": "NominalSubtypes.Event.box",
+                      "fields": [
+                        {
+                          "name": "value",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": true,
+                              "unbox": "lean_unbox"
+                            },
+                            "constructor": "NominalSubtypes.Envelope.mk",
+                            "fields": [
+                              {
+                                "name": "payload",
+                                "projection": "NominalSubtypes.Envelope.payload",
+                                "type": {
+                                  "abi": {
+                                    "box": "lean_box",
+                                    "cType": "lean_object*",
+                                    "heap": false,
+                                    "unbox": "lean_unbox"
+                                  },
+                                  "base": {
+                                    "abi": {
+                                      "box": "lean_box",
+                                      "cType": "lean_object*",
+                                      "heap": false,
+                                      "unbox": "lean_unbox"
+                                    },
+                                    "kind": "primitive",
+                                    "lean": "Nat",
+                                    "name": "nat"
+                                  },
+                                  "kind": "refinement",
+                                  "predicate": {
+                                    "constructor": "NominalSubtypes.plusOne",
+                                    "kind": "subtype"
+                                  }
+                                }
+                              },
+                              {
+                                "name": "digit",
+                                "projection": "NominalSubtypes.Envelope.digit",
+                                "type": {
+                                  "abi": {
+                                    "box": "lean_box",
+                                    "cType": "lean_object*",
+                                    "heap": false,
+                                    "unbox": "lean_unbox"
+                                  },
+                                  "base": {
+                                    "abi": {
+                                      "box": "lean_box",
+                                      "cType": "lean_object*",
+                                      "heap": false,
+                                      "unbox": "lean_unbox"
+                                    },
+                                    "kind": "primitive",
+                                    "lean": "Nat",
+                                    "name": "nat"
+                                  },
+                                  "kind": "refinement",
+                                  "predicate": {
+                                    "bound": "3",
+                                    "kind": "fin"
+                                  }
+                                }
+                              }
+                            ],
+                            "kind": "record",
+                            "lean": "NominalSubtypes.Envelope",
+                            "name": "NominalSubtypes.Envelope"
+                          }
+                        }
+                      ],
+                      "name": "box"
+                    },
+                    {
+                      "constructor": "NominalSubtypes.Event.choices",
+                      "fields": [
+                        {
+                          "name": "values",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": true,
+                              "unbox": "lean_unbox"
+                            },
+                            "element": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "element": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": true,
+                                  "unbox": "lean_unbox"
+                                },
+                                "arguments": [
+                                  {
+                                    "abi": {
+                                      "box": "lean_box",
+                                      "cType": "lean_object*",
+                                      "heap": false,
+                                      "unbox": "lean_unbox"
+                                    },
+                                    "base": {
+                                      "abi": {
+                                        "box": "lean_box",
+                                        "cType": "lean_object*",
+                                        "heap": false,
+                                        "unbox": "lean_unbox"
+                                      },
+                                      "kind": "primitive",
+                                      "lean": "Nat",
+                                      "name": "nat"
+                                    },
+                                    "kind": "refinement",
+                                    "predicate": {
+                                      "constructor": "NominalSubtypes.plusOne",
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "abi": {
+                                      "box": "lean_box",
+                                      "cType": "lean_object*",
+                                      "heap": false,
+                                      "unbox": "lean_unbox"
+                                    },
+                                    "base": {
+                                      "abi": {
+                                        "box": "lean_box",
+                                        "cType": "lean_object*",
+                                        "heap": false,
+                                        "unbox": "lean_unbox"
+                                      },
+                                      "kind": "primitive",
+                                      "lean": "Nat",
+                                      "name": "nat"
+                                    },
+                                    "kind": "refinement",
+                                    "predicate": {
+                                      "constructor": "NominalSubtypes.plusTwo",
+                                      "kind": "subtype"
+                                    }
+                                  }
+                                ],
+                                "kind": "result"
+                              },
+                              "kind": "option"
+                            },
+                            "kind": "array"
+                          }
+                        }
+                      ],
+                      "name": "choices"
+                    }
+                  ],
+                  "kind": "variant",
+                  "lean": "NominalSubtypes.Event",
+                  "name": "NominalSubtypes.Event"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "cases": [
+                {
+                  "constructor": "NominalSubtypes.Event.empty",
+                  "fields": [],
+                  "name": "empty"
+                },
+                {
+                  "constructor": "NominalSubtypes.Event.box",
+                  "fields": [
+                    {
+                      "name": "value",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "constructor": "NominalSubtypes.Envelope.mk",
+                        "fields": [
+                          {
+                            "name": "payload",
+                            "projection": "NominalSubtypes.Envelope.payload",
+                            "type": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "base": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "kind": "primitive",
+                                "lean": "Nat",
+                                "name": "nat"
+                              },
+                              "kind": "refinement",
+                              "predicate": {
+                                "constructor": null,
+                                "kind": "subtype"
+                              }
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "projection": "NominalSubtypes.Envelope.digit",
+                            "type": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "base": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "kind": "primitive",
+                                "lean": "Nat",
+                                "name": "nat"
+                              },
+                              "kind": "refinement",
+                              "predicate": {
+                                "bound": "3",
+                                "kind": "fin"
+                              }
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "lean": "NominalSubtypes.Envelope",
+                        "name": "NominalSubtypes.Envelope"
+                      }
+                    }
+                  ],
+                  "name": "box"
+                },
+                {
+                  "constructor": "NominalSubtypes.Event.choices",
+                  "fields": [
+                    {
+                      "name": "values",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "element": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "element": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": true,
+                              "unbox": "lean_unbox"
+                            },
+                            "arguments": [
+                              {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "base": {
+                                  "abi": {
+                                    "box": "lean_box",
+                                    "cType": "lean_object*",
+                                    "heap": false,
+                                    "unbox": "lean_unbox"
+                                  },
+                                  "kind": "primitive",
+                                  "lean": "Nat",
+                                  "name": "nat"
+                                },
+                                "kind": "refinement",
+                                "predicate": {
+                                  "constructor": null,
+                                  "kind": "subtype"
+                                }
+                              },
+                              {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "base": {
+                                  "abi": {
+                                    "box": "lean_box",
+                                    "cType": "lean_object*",
+                                    "heap": false,
+                                    "unbox": "lean_unbox"
+                                  },
+                                  "kind": "primitive",
+                                  "lean": "Nat",
+                                  "name": "nat"
+                                },
+                                "kind": "refinement",
+                                "predicate": {
+                                  "constructor": null,
+                                  "kind": "subtype"
+                                }
+                              }
+                            ],
+                            "kind": "result"
+                          },
+                          "kind": "option"
+                        },
+                        "kind": "array"
+                      }
+                    }
+                  ],
+                  "name": "choices"
+                }
+              ],
+              "kind": "variant",
+              "lean": "NominalSubtypes.Event",
+              "name": "NominalSubtypes.Event"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "NominalSubtypes.Event",
+          "selected": true,
+          "source": {
+            "endColumn": 46,
+            "endLine": 53,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 53
+          },
+          "theoremReferences": [],
+          "typeExpression": "NominalSubtypes.Event → NominalSubtypes.Event",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.echoGroups",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "NominalSubtypes.Group"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "element": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "element": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "alias",
+                      "lean": "NominalSubtypes.EnvelopeAlias",
+                      "name": "NominalSubtypes.EnvelopeAlias",
+                      "target": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "constructor": "NominalSubtypes.Envelope.mk",
+                        "fields": [
+                          {
+                            "name": "payload",
+                            "projection": "NominalSubtypes.Envelope.payload",
+                            "type": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "base": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "kind": "primitive",
+                                "lean": "Nat",
+                                "name": "nat"
+                              },
+                              "kind": "refinement",
+                              "predicate": {
+                                "constructor": "NominalSubtypes.plusOne",
+                                "kind": "subtype"
+                              }
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "projection": "NominalSubtypes.Envelope.digit",
+                            "type": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "base": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "kind": "primitive",
+                                "lean": "Nat",
+                                "name": "nat"
+                              },
+                              "kind": "refinement",
+                              "predicate": {
+                                "bound": "3",
+                                "kind": "fin"
+                              }
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "lean": "NominalSubtypes.Envelope",
+                        "name": "NominalSubtypes.Envelope"
+                      }
+                    },
+                    "kind": "option"
+                  },
+                  "kind": "array"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "element": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "alias",
+                  "lean": "NominalSubtypes.EnvelopeAlias",
+                  "name": "NominalSubtypes.EnvelopeAlias",
+                  "target": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "constructor": "NominalSubtypes.Envelope.mk",
+                    "fields": [
+                      {
+                        "name": "payload",
+                        "projection": "NominalSubtypes.Envelope.payload",
+                        "type": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "base": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "primitive",
+                            "lean": "Nat",
+                            "name": "nat"
+                          },
+                          "kind": "refinement",
+                          "predicate": {
+                            "constructor": null,
+                            "kind": "subtype"
+                          }
+                        }
+                      },
+                      {
+                        "name": "digit",
+                        "projection": "NominalSubtypes.Envelope.digit",
+                        "type": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "base": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "primitive",
+                            "lean": "Nat",
+                            "name": "nat"
+                          },
+                          "kind": "refinement",
+                          "predicate": {
+                            "bound": "3",
+                            "kind": "fin"
+                          }
+                        }
+                      }
+                    ],
+                    "kind": "record",
+                    "lean": "NominalSubtypes.Envelope",
+                    "name": "NominalSubtypes.Envelope"
+                  }
+                },
+                "kind": "option"
+              },
+              "kind": "array"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "NominalSubtypes.Group",
+          "selected": true,
+          "source": {
+            "endColumn": 47,
+            "endLine": 51,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 51
+          },
+          "theoremReferences": [],
+          "typeExpression": "NominalSubtypes.Group → NominalSubtypes.Group",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.echoPair",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "NominalSubtypes.AliasPair"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "constructor": "NominalSubtypes.AliasPair.mk",
+                  "fields": [
+                    {
+                      "name": "left",
+                      "projection": "NominalSubtypes.AliasPair.left",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "element": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "element": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": true,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "alias",
+                            "lean": "NominalSubtypes.EnvelopeAlias",
+                            "name": "NominalSubtypes.EnvelopeAlias",
+                            "target": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": true,
+                                "unbox": "lean_unbox"
+                              },
+                              "constructor": "NominalSubtypes.Envelope.mk",
+                              "fields": [
+                                {
+                                  "name": "payload",
+                                  "projection": "NominalSubtypes.Envelope.payload",
+                                  "type": {
+                                    "abi": {
+                                      "box": "lean_box",
+                                      "cType": "lean_object*",
+                                      "heap": false,
+                                      "unbox": "lean_unbox"
+                                    },
+                                    "base": {
+                                      "abi": {
+                                        "box": "lean_box",
+                                        "cType": "lean_object*",
+                                        "heap": false,
+                                        "unbox": "lean_unbox"
+                                      },
+                                      "kind": "primitive",
+                                      "lean": "Nat",
+                                      "name": "nat"
+                                    },
+                                    "kind": "refinement",
+                                    "predicate": {
+                                      "constructor": "NominalSubtypes.plusOne",
+                                      "kind": "subtype"
+                                    }
+                                  }
+                                },
+                                {
+                                  "name": "digit",
+                                  "projection": "NominalSubtypes.Envelope.digit",
+                                  "type": {
+                                    "abi": {
+                                      "box": "lean_box",
+                                      "cType": "lean_object*",
+                                      "heap": false,
+                                      "unbox": "lean_unbox"
+                                    },
+                                    "base": {
+                                      "abi": {
+                                        "box": "lean_box",
+                                        "cType": "lean_object*",
+                                        "heap": false,
+                                        "unbox": "lean_unbox"
+                                      },
+                                      "kind": "primitive",
+                                      "lean": "Nat",
+                                      "name": "nat"
+                                    },
+                                    "kind": "refinement",
+                                    "predicate": {
+                                      "bound": "3",
+                                      "kind": "fin"
+                                    }
+                                  }
+                                }
+                              ],
+                              "kind": "record",
+                              "lean": "NominalSubtypes.Envelope",
+                              "name": "NominalSubtypes.Envelope"
+                            }
+                          },
+                          "kind": "option"
+                        },
+                        "kind": "array"
+                      }
+                    },
+                    {
+                      "name": "right",
+                      "projection": "NominalSubtypes.AliasPair.right",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "element": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "element": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": true,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "alias",
+                            "lean": "NominalSubtypes.EnvelopeAlias",
+                            "name": "NominalSubtypes.EnvelopeAlias",
+                            "target": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": true,
+                                "unbox": "lean_unbox"
+                              },
+                              "constructor": "NominalSubtypes.Envelope.mk",
+                              "fields": [
+                                {
+                                  "name": "payload",
+                                  "projection": "NominalSubtypes.Envelope.payload",
+                                  "type": {
+                                    "abi": {
+                                      "box": "lean_box",
+                                      "cType": "lean_object*",
+                                      "heap": false,
+                                      "unbox": "lean_unbox"
+                                    },
+                                    "base": {
+                                      "abi": {
+                                        "box": "lean_box",
+                                        "cType": "lean_object*",
+                                        "heap": false,
+                                        "unbox": "lean_unbox"
+                                      },
+                                      "kind": "primitive",
+                                      "lean": "Nat",
+                                      "name": "nat"
+                                    },
+                                    "kind": "refinement",
+                                    "predicate": {
+                                      "constructor": "NominalSubtypes.plusTwo",
+                                      "kind": "subtype"
+                                    }
+                                  }
+                                },
+                                {
+                                  "name": "digit",
+                                  "projection": "NominalSubtypes.Envelope.digit",
+                                  "type": {
+                                    "abi": {
+                                      "box": "lean_box",
+                                      "cType": "lean_object*",
+                                      "heap": false,
+                                      "unbox": "lean_unbox"
+                                    },
+                                    "base": {
+                                      "abi": {
+                                        "box": "lean_box",
+                                        "cType": "lean_object*",
+                                        "heap": false,
+                                        "unbox": "lean_unbox"
+                                      },
+                                      "kind": "primitive",
+                                      "lean": "Nat",
+                                      "name": "nat"
+                                    },
+                                    "kind": "refinement",
+                                    "predicate": {
+                                      "bound": "3",
+                                      "kind": "fin"
+                                    }
+                                  }
+                                }
+                              ],
+                              "kind": "record",
+                              "lean": "NominalSubtypes.Envelope",
+                              "name": "NominalSubtypes.Envelope"
+                            }
+                          },
+                          "kind": "option"
+                        },
+                        "kind": "array"
+                      }
+                    }
+                  ],
+                  "kind": "record",
+                  "lean": "NominalSubtypes.AliasPair",
+                  "name": "NominalSubtypes.AliasPair"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "constructor": "NominalSubtypes.AliasPair.mk",
+              "fields": [
+                {
+                  "name": "left",
+                  "projection": "NominalSubtypes.AliasPair.left",
+                  "type": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "element": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "element": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "alias",
+                        "lean": "NominalSubtypes.EnvelopeAlias",
+                        "name": "NominalSubtypes.EnvelopeAlias",
+                        "target": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": true,
+                            "unbox": "lean_unbox"
+                          },
+                          "constructor": "NominalSubtypes.Envelope.mk",
+                          "fields": [
+                            {
+                              "name": "payload",
+                              "projection": "NominalSubtypes.Envelope.payload",
+                              "type": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "base": {
+                                  "abi": {
+                                    "box": "lean_box",
+                                    "cType": "lean_object*",
+                                    "heap": false,
+                                    "unbox": "lean_unbox"
+                                  },
+                                  "kind": "primitive",
+                                  "lean": "Nat",
+                                  "name": "nat"
+                                },
+                                "kind": "refinement",
+                                "predicate": {
+                                  "constructor": null,
+                                  "kind": "subtype"
+                                }
+                              }
+                            },
+                            {
+                              "name": "digit",
+                              "projection": "NominalSubtypes.Envelope.digit",
+                              "type": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "base": {
+                                  "abi": {
+                                    "box": "lean_box",
+                                    "cType": "lean_object*",
+                                    "heap": false,
+                                    "unbox": "lean_unbox"
+                                  },
+                                  "kind": "primitive",
+                                  "lean": "Nat",
+                                  "name": "nat"
+                                },
+                                "kind": "refinement",
+                                "predicate": {
+                                  "bound": "3",
+                                  "kind": "fin"
+                                }
+                              }
+                            }
+                          ],
+                          "kind": "record",
+                          "lean": "NominalSubtypes.Envelope",
+                          "name": "NominalSubtypes.Envelope"
+                        }
+                      },
+                      "kind": "option"
+                    },
+                    "kind": "array"
+                  }
+                },
+                {
+                  "name": "right",
+                  "projection": "NominalSubtypes.AliasPair.right",
+                  "type": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "element": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "element": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "alias",
+                        "lean": "NominalSubtypes.EnvelopeAlias",
+                        "name": "NominalSubtypes.EnvelopeAlias",
+                        "target": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": true,
+                            "unbox": "lean_unbox"
+                          },
+                          "constructor": "NominalSubtypes.Envelope.mk",
+                          "fields": [
+                            {
+                              "name": "payload",
+                              "projection": "NominalSubtypes.Envelope.payload",
+                              "type": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "base": {
+                                  "abi": {
+                                    "box": "lean_box",
+                                    "cType": "lean_object*",
+                                    "heap": false,
+                                    "unbox": "lean_unbox"
+                                  },
+                                  "kind": "primitive",
+                                  "lean": "Nat",
+                                  "name": "nat"
+                                },
+                                "kind": "refinement",
+                                "predicate": {
+                                  "constructor": null,
+                                  "kind": "subtype"
+                                }
+                              }
+                            },
+                            {
+                              "name": "digit",
+                              "projection": "NominalSubtypes.Envelope.digit",
+                              "type": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "base": {
+                                  "abi": {
+                                    "box": "lean_box",
+                                    "cType": "lean_object*",
+                                    "heap": false,
+                                    "unbox": "lean_unbox"
+                                  },
+                                  "kind": "primitive",
+                                  "lean": "Nat",
+                                  "name": "nat"
+                                },
+                                "kind": "refinement",
+                                "predicate": {
+                                  "bound": "3",
+                                  "kind": "fin"
+                                }
+                              }
+                            }
+                          ],
+                          "kind": "record",
+                          "lean": "NominalSubtypes.Envelope",
+                          "name": "NominalSubtypes.Envelope"
+                        }
+                      },
+                      "kind": "option"
+                    },
+                    "kind": "array"
+                  }
+                }
+              ],
+              "kind": "record",
+              "lean": "NominalSubtypes.AliasPair",
+              "name": "NominalSubtypes.AliasPair"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "NominalSubtypes.AliasPair",
+          "selected": true,
+          "source": {
+            "endColumn": 53,
+            "endLine": 52,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 52
+          },
+          "theoremReferences": [],
+          "typeExpression": "NominalSubtypes.AliasPair → NominalSubtypes.AliasPair",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.eventChoices",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "cases": [
+                {
+                  "constructor": "NominalSubtypes.Event.empty",
+                  "fields": [],
+                  "name": "empty"
+                },
+                {
+                  "constructor": "NominalSubtypes.Event.box",
+                  "fields": [
+                    {
+                      "name": "value",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "constructor": "NominalSubtypes.Envelope.mk",
+                        "fields": [
+                          {
+                            "name": "payload",
+                            "projection": "NominalSubtypes.Envelope.payload",
+                            "type": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "base": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "kind": "primitive",
+                                "lean": "Nat",
+                                "name": "nat"
+                              },
+                              "kind": "refinement",
+                              "predicate": {
+                                "constructor": null,
+                                "kind": "subtype"
+                              }
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "projection": "NominalSubtypes.Envelope.digit",
+                            "type": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "base": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "kind": "primitive",
+                                "lean": "Nat",
+                                "name": "nat"
+                              },
+                              "kind": "refinement",
+                              "predicate": {
+                                "bound": "3",
+                                "kind": "fin"
+                              }
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "lean": "NominalSubtypes.Envelope",
+                        "name": "NominalSubtypes.Envelope"
+                      }
+                    }
+                  ],
+                  "name": "box"
+                },
+                {
+                  "constructor": "NominalSubtypes.Event.choices",
+                  "fields": [
+                    {
+                      "name": "values",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "element": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "element": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": true,
+                              "unbox": "lean_unbox"
+                            },
+                            "arguments": [
+                              {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "base": {
+                                  "abi": {
+                                    "box": "lean_box",
+                                    "cType": "lean_object*",
+                                    "heap": false,
+                                    "unbox": "lean_unbox"
+                                  },
+                                  "kind": "primitive",
+                                  "lean": "Nat",
+                                  "name": "nat"
+                                },
+                                "kind": "refinement",
+                                "predicate": {
+                                  "constructor": null,
+                                  "kind": "subtype"
+                                }
+                              },
+                              {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "base": {
+                                  "abi": {
+                                    "box": "lean_box",
+                                    "cType": "lean_object*",
+                                    "heap": false,
+                                    "unbox": "lean_unbox"
+                                  },
+                                  "kind": "primitive",
+                                  "lean": "Nat",
+                                  "name": "nat"
+                                },
+                                "kind": "refinement",
+                                "predicate": {
+                                  "constructor": null,
+                                  "kind": "subtype"
+                                }
+                              }
+                            ],
+                            "kind": "result"
+                          },
+                          "kind": "option"
+                        },
+                        "kind": "array"
+                      }
+                    }
+                  ],
+                  "name": "choices"
+                }
+              ],
+              "kind": "variant",
+              "lean": "NominalSubtypes.Event",
+              "name": "NominalSubtypes.Event"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "NominalSubtypes.Event",
+          "selected": true,
+          "source": {
+            "endColumn": 121,
+            "endLine": 69,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 69
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → NominalSubtypes.Event",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.eventEmpty",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "x._@.NominalSubtypes.3496715793._hygCtx._hyg.2",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "x._@.NominalSubtypes.3496715793._hygCtx._hyg.2",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "cases": [
+                {
+                  "constructor": "NominalSubtypes.Event.empty",
+                  "fields": [],
+                  "name": "empty"
+                },
+                {
+                  "constructor": "NominalSubtypes.Event.box",
+                  "fields": [
+                    {
+                      "name": "value",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "constructor": "NominalSubtypes.Envelope.mk",
+                        "fields": [
+                          {
+                            "name": "payload",
+                            "projection": "NominalSubtypes.Envelope.payload",
+                            "type": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "base": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "kind": "primitive",
+                                "lean": "Nat",
+                                "name": "nat"
+                              },
+                              "kind": "refinement",
+                              "predicate": {
+                                "constructor": null,
+                                "kind": "subtype"
+                              }
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "projection": "NominalSubtypes.Envelope.digit",
+                            "type": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "base": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "kind": "primitive",
+                                "lean": "Nat",
+                                "name": "nat"
+                              },
+                              "kind": "refinement",
+                              "predicate": {
+                                "bound": "3",
+                                "kind": "fin"
+                              }
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "lean": "NominalSubtypes.Envelope",
+                        "name": "NominalSubtypes.Envelope"
+                      }
+                    }
+                  ],
+                  "name": "box"
+                },
+                {
+                  "constructor": "NominalSubtypes.Event.choices",
+                  "fields": [
+                    {
+                      "name": "values",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "element": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "element": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": true,
+                              "unbox": "lean_unbox"
+                            },
+                            "arguments": [
+                              {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "base": {
+                                  "abi": {
+                                    "box": "lean_box",
+                                    "cType": "lean_object*",
+                                    "heap": false,
+                                    "unbox": "lean_unbox"
+                                  },
+                                  "kind": "primitive",
+                                  "lean": "Nat",
+                                  "name": "nat"
+                                },
+                                "kind": "refinement",
+                                "predicate": {
+                                  "constructor": null,
+                                  "kind": "subtype"
+                                }
+                              },
+                              {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "base": {
+                                  "abi": {
+                                    "box": "lean_box",
+                                    "cType": "lean_object*",
+                                    "heap": false,
+                                    "unbox": "lean_unbox"
+                                  },
+                                  "kind": "primitive",
+                                  "lean": "Nat",
+                                  "name": "nat"
+                                },
+                                "kind": "refinement",
+                                "predicate": {
+                                  "constructor": null,
+                                  "kind": "subtype"
+                                }
+                              }
+                            ],
+                            "kind": "result"
+                          },
+                          "kind": "option"
+                        },
+                        "kind": "array"
+                      }
+                    }
+                  ],
+                  "name": "choices"
+                }
+              ],
+              "kind": "variant",
+              "lean": "NominalSubtypes.Event",
+              "name": "NominalSubtypes.Event"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "NominalSubtypes.Event",
+          "selected": true,
+          "source": {
+            "endColumn": 42,
+            "endLine": 68,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 68
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → NominalSubtypes.Event",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.eventFirst",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "a._@._internal._hyg.0",
+              "typeExpression": "NominalSubtypes.Event"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "a._@._internal._hyg.0",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "cases": [
+                    {
+                      "constructor": "NominalSubtypes.Event.empty",
+                      "fields": [],
+                      "name": "empty"
+                    },
+                    {
+                      "constructor": "NominalSubtypes.Event.box",
+                      "fields": [
+                        {
+                          "name": "value",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": true,
+                              "unbox": "lean_unbox"
+                            },
+                            "constructor": "NominalSubtypes.Envelope.mk",
+                            "fields": [
+                              {
+                                "name": "payload",
+                                "projection": "NominalSubtypes.Envelope.payload",
+                                "type": {
+                                  "abi": {
+                                    "box": "lean_box",
+                                    "cType": "lean_object*",
+                                    "heap": false,
+                                    "unbox": "lean_unbox"
+                                  },
+                                  "base": {
+                                    "abi": {
+                                      "box": "lean_box",
+                                      "cType": "lean_object*",
+                                      "heap": false,
+                                      "unbox": "lean_unbox"
+                                    },
+                                    "kind": "primitive",
+                                    "lean": "Nat",
+                                    "name": "nat"
+                                  },
+                                  "kind": "refinement",
+                                  "predicate": {
+                                    "constructor": "NominalSubtypes.plusOne",
+                                    "kind": "subtype"
+                                  }
+                                }
+                              },
+                              {
+                                "name": "digit",
+                                "projection": "NominalSubtypes.Envelope.digit",
+                                "type": {
+                                  "abi": {
+                                    "box": "lean_box",
+                                    "cType": "lean_object*",
+                                    "heap": false,
+                                    "unbox": "lean_unbox"
+                                  },
+                                  "base": {
+                                    "abi": {
+                                      "box": "lean_box",
+                                      "cType": "lean_object*",
+                                      "heap": false,
+                                      "unbox": "lean_unbox"
+                                    },
+                                    "kind": "primitive",
+                                    "lean": "Nat",
+                                    "name": "nat"
+                                  },
+                                  "kind": "refinement",
+                                  "predicate": {
+                                    "bound": "3",
+                                    "kind": "fin"
+                                  }
+                                }
+                              }
+                            ],
+                            "kind": "record",
+                            "lean": "NominalSubtypes.Envelope",
+                            "name": "NominalSubtypes.Envelope"
+                          }
+                        }
+                      ],
+                      "name": "box"
+                    },
+                    {
+                      "constructor": "NominalSubtypes.Event.choices",
+                      "fields": [
+                        {
+                          "name": "values",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": true,
+                              "unbox": "lean_unbox"
+                            },
+                            "element": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "element": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": true,
+                                  "unbox": "lean_unbox"
+                                },
+                                "arguments": [
+                                  {
+                                    "abi": {
+                                      "box": "lean_box",
+                                      "cType": "lean_object*",
+                                      "heap": false,
+                                      "unbox": "lean_unbox"
+                                    },
+                                    "base": {
+                                      "abi": {
+                                        "box": "lean_box",
+                                        "cType": "lean_object*",
+                                        "heap": false,
+                                        "unbox": "lean_unbox"
+                                      },
+                                      "kind": "primitive",
+                                      "lean": "Nat",
+                                      "name": "nat"
+                                    },
+                                    "kind": "refinement",
+                                    "predicate": {
+                                      "constructor": "NominalSubtypes.plusOne",
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "abi": {
+                                      "box": "lean_box",
+                                      "cType": "lean_object*",
+                                      "heap": false,
+                                      "unbox": "lean_unbox"
+                                    },
+                                    "base": {
+                                      "abi": {
+                                        "box": "lean_box",
+                                        "cType": "lean_object*",
+                                        "heap": false,
+                                        "unbox": "lean_unbox"
+                                      },
+                                      "kind": "primitive",
+                                      "lean": "Nat",
+                                      "name": "nat"
+                                    },
+                                    "kind": "refinement",
+                                    "predicate": {
+                                      "constructor": "NominalSubtypes.plusTwo",
+                                      "kind": "subtype"
+                                    }
+                                  }
+                                ],
+                                "kind": "result"
+                              },
+                              "kind": "option"
+                            },
+                            "kind": "array"
+                          }
+                        }
+                      ],
+                      "name": "choices"
+                    }
+                  ],
+                  "kind": "variant",
+                  "lean": "NominalSubtypes.Event",
+                  "name": "NominalSubtypes.Event"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Nat",
+          "selected": true,
+          "source": {
+            "endColumn": 43,
+            "endLine": 43,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 37
+          },
+          "theoremReferences": [],
+          "typeExpression": "NominalSubtypes.Event → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.eventSecond",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "NominalSubtypes.Event"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "cases": [
+                    {
+                      "constructor": "NominalSubtypes.Event.empty",
+                      "fields": [],
+                      "name": "empty"
+                    },
+                    {
+                      "constructor": "NominalSubtypes.Event.box",
+                      "fields": [
+                        {
+                          "name": "value",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": true,
+                              "unbox": "lean_unbox"
+                            },
+                            "constructor": "NominalSubtypes.Envelope.mk",
+                            "fields": [
+                              {
+                                "name": "payload",
+                                "projection": "NominalSubtypes.Envelope.payload",
+                                "type": {
+                                  "abi": {
+                                    "box": "lean_box",
+                                    "cType": "lean_object*",
+                                    "heap": false,
+                                    "unbox": "lean_unbox"
+                                  },
+                                  "base": {
+                                    "abi": {
+                                      "box": "lean_box",
+                                      "cType": "lean_object*",
+                                      "heap": false,
+                                      "unbox": "lean_unbox"
+                                    },
+                                    "kind": "primitive",
+                                    "lean": "Nat",
+                                    "name": "nat"
+                                  },
+                                  "kind": "refinement",
+                                  "predicate": {
+                                    "constructor": "NominalSubtypes.plusTwo",
+                                    "kind": "subtype"
+                                  }
+                                }
+                              },
+                              {
+                                "name": "digit",
+                                "projection": "NominalSubtypes.Envelope.digit",
+                                "type": {
+                                  "abi": {
+                                    "box": "lean_box",
+                                    "cType": "lean_object*",
+                                    "heap": false,
+                                    "unbox": "lean_unbox"
+                                  },
+                                  "base": {
+                                    "abi": {
+                                      "box": "lean_box",
+                                      "cType": "lean_object*",
+                                      "heap": false,
+                                      "unbox": "lean_unbox"
+                                    },
+                                    "kind": "primitive",
+                                    "lean": "Nat",
+                                    "name": "nat"
+                                  },
+                                  "kind": "refinement",
+                                  "predicate": {
+                                    "bound": "3",
+                                    "kind": "fin"
+                                  }
+                                }
+                              }
+                            ],
+                            "kind": "record",
+                            "lean": "NominalSubtypes.Envelope",
+                            "name": "NominalSubtypes.Envelope"
+                          }
+                        }
+                      ],
+                      "name": "box"
+                    },
+                    {
+                      "constructor": "NominalSubtypes.Event.choices",
+                      "fields": [
+                        {
+                          "name": "values",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": true,
+                              "unbox": "lean_unbox"
+                            },
+                            "element": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "element": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": true,
+                                  "unbox": "lean_unbox"
+                                },
+                                "arguments": [
+                                  {
+                                    "abi": {
+                                      "box": "lean_box",
+                                      "cType": "lean_object*",
+                                      "heap": false,
+                                      "unbox": "lean_unbox"
+                                    },
+                                    "base": {
+                                      "abi": {
+                                        "box": "lean_box",
+                                        "cType": "lean_object*",
+                                        "heap": false,
+                                        "unbox": "lean_unbox"
+                                      },
+                                      "kind": "primitive",
+                                      "lean": "Nat",
+                                      "name": "nat"
+                                    },
+                                    "kind": "refinement",
+                                    "predicate": {
+                                      "constructor": "NominalSubtypes.plusTwo",
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "abi": {
+                                      "box": "lean_box",
+                                      "cType": "lean_object*",
+                                      "heap": false,
+                                      "unbox": "lean_unbox"
+                                    },
+                                    "base": {
+                                      "abi": {
+                                        "box": "lean_box",
+                                        "cType": "lean_object*",
+                                        "heap": false,
+                                        "unbox": "lean_unbox"
+                                      },
+                                      "kind": "primitive",
+                                      "lean": "Nat",
+                                      "name": "nat"
+                                    },
+                                    "kind": "refinement",
+                                    "predicate": {
+                                      "constructor": "NominalSubtypes.plusOne",
+                                      "kind": "subtype"
+                                    }
+                                  }
+                                ],
+                                "kind": "result"
+                              },
+                              "kind": "option"
+                            },
+                            "kind": "array"
+                          }
+                        }
+                      ],
+                      "name": "choices"
+                    }
+                  ],
+                  "kind": "variant",
+                  "lean": "NominalSubtypes.Event",
+                  "name": "NominalSubtypes.Event"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Nat",
+          "selected": true,
+          "source": {
+            "endColumn": 57,
+            "endLine": 44,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 44
+          },
+          "theoremReferences": [],
+          "typeExpression": "NominalSubtypes.Event → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.eventValue",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "cases": [
+                {
+                  "constructor": "NominalSubtypes.Event.empty",
+                  "fields": [],
+                  "name": "empty"
+                },
+                {
+                  "constructor": "NominalSubtypes.Event.box",
+                  "fields": [
+                    {
+                      "name": "value",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "constructor": "NominalSubtypes.Envelope.mk",
+                        "fields": [
+                          {
+                            "name": "payload",
+                            "projection": "NominalSubtypes.Envelope.payload",
+                            "type": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "base": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "kind": "primitive",
+                                "lean": "Nat",
+                                "name": "nat"
+                              },
+                              "kind": "refinement",
+                              "predicate": {
+                                "constructor": null,
+                                "kind": "subtype"
+                              }
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "projection": "NominalSubtypes.Envelope.digit",
+                            "type": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "base": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "kind": "primitive",
+                                "lean": "Nat",
+                                "name": "nat"
+                              },
+                              "kind": "refinement",
+                              "predicate": {
+                                "bound": "3",
+                                "kind": "fin"
+                              }
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "lean": "NominalSubtypes.Envelope",
+                        "name": "NominalSubtypes.Envelope"
+                      }
+                    }
+                  ],
+                  "name": "box"
+                },
+                {
+                  "constructor": "NominalSubtypes.Event.choices",
+                  "fields": [
+                    {
+                      "name": "values",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "element": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "element": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": true,
+                              "unbox": "lean_unbox"
+                            },
+                            "arguments": [
+                              {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "base": {
+                                  "abi": {
+                                    "box": "lean_box",
+                                    "cType": "lean_object*",
+                                    "heap": false,
+                                    "unbox": "lean_unbox"
+                                  },
+                                  "kind": "primitive",
+                                  "lean": "Nat",
+                                  "name": "nat"
+                                },
+                                "kind": "refinement",
+                                "predicate": {
+                                  "constructor": null,
+                                  "kind": "subtype"
+                                }
+                              },
+                              {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "base": {
+                                  "abi": {
+                                    "box": "lean_box",
+                                    "cType": "lean_object*",
+                                    "heap": false,
+                                    "unbox": "lean_unbox"
+                                  },
+                                  "kind": "primitive",
+                                  "lean": "Nat",
+                                  "name": "nat"
+                                },
+                                "kind": "refinement",
+                                "predicate": {
+                                  "constructor": null,
+                                  "kind": "subtype"
+                                }
+                              }
+                            ],
+                            "kind": "result"
+                          },
+                          "kind": "option"
+                        },
+                        "kind": "array"
+                      }
+                    }
+                  ],
+                  "name": "choices"
+                }
+              ],
+              "kind": "variant",
+              "lean": "NominalSubtypes.Event",
+              "name": "NominalSubtypes.Event"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "NominalSubtypes.Event",
+          "selected": true,
+          "source": {
+            "endColumn": 68,
+            "endLine": 67,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 67
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → NominalSubtypes.Event",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.first",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "NominalSubtypes.Envelope"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "constructor": "NominalSubtypes.Envelope.mk",
+                  "fields": [
+                    {
+                      "name": "payload",
+                      "projection": "NominalSubtypes.Envelope.payload",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "base": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        },
+                        "kind": "refinement",
+                        "predicate": {
+                          "constructor": "NominalSubtypes.plusOne",
+                          "kind": "subtype"
+                        }
+                      }
+                    },
+                    {
+                      "name": "digit",
+                      "projection": "NominalSubtypes.Envelope.digit",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "base": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        },
+                        "kind": "refinement",
+                        "predicate": {
+                          "bound": "3",
+                          "kind": "fin"
+                        }
+                      }
+                    }
+                  ],
+                  "kind": "record",
+                  "lean": "NominalSubtypes.Envelope",
+                  "name": "NominalSubtypes.Envelope"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Nat",
+          "selected": true,
+          "source": {
+            "endColumn": 55,
+            "endLine": 33,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 33
+          },
+          "theoremReferences": [],
+          "typeExpression": "NominalSubtypes.Envelope → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.groupValues",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "element": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "alias",
+                  "lean": "NominalSubtypes.EnvelopeAlias",
+                  "name": "NominalSubtypes.EnvelopeAlias",
+                  "target": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "constructor": "NominalSubtypes.Envelope.mk",
+                    "fields": [
+                      {
+                        "name": "payload",
+                        "projection": "NominalSubtypes.Envelope.payload",
+                        "type": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "base": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "primitive",
+                            "lean": "Nat",
+                            "name": "nat"
+                          },
+                          "kind": "refinement",
+                          "predicate": {
+                            "constructor": null,
+                            "kind": "subtype"
+                          }
+                        }
+                      },
+                      {
+                        "name": "digit",
+                        "projection": "NominalSubtypes.Envelope.digit",
+                        "type": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "base": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "primitive",
+                            "lean": "Nat",
+                            "name": "nat"
+                          },
+                          "kind": "refinement",
+                          "predicate": {
+                            "bound": "3",
+                            "kind": "fin"
+                          }
+                        }
+                      }
+                    ],
+                    "kind": "record",
+                    "lean": "NominalSubtypes.Envelope",
+                    "name": "NominalSubtypes.Envelope"
+                  }
+                },
+                "kind": "option"
+              },
+              "kind": "array"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "NominalSubtypes.Group",
+          "selected": true,
+          "source": {
+            "endColumn": 78,
+            "endLine": 65,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 65
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → NominalSubtypes.Group",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.inspectAliasPair",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "NominalSubtypes.AliasPair"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "constructor": "NominalSubtypes.AliasPair.mk",
+                  "fields": [
+                    {
+                      "name": "left",
+                      "projection": "NominalSubtypes.AliasPair.left",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "element": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "element": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": true,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "alias",
+                            "lean": "NominalSubtypes.EnvelopeAlias",
+                            "name": "NominalSubtypes.EnvelopeAlias",
+                            "target": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": true,
+                                "unbox": "lean_unbox"
+                              },
+                              "constructor": "NominalSubtypes.Envelope.mk",
+                              "fields": [
+                                {
+                                  "name": "payload",
+                                  "projection": "NominalSubtypes.Envelope.payload",
+                                  "type": {
+                                    "abi": {
+                                      "box": "lean_box",
+                                      "cType": "lean_object*",
+                                      "heap": false,
+                                      "unbox": "lean_unbox"
+                                    },
+                                    "base": {
+                                      "abi": {
+                                        "box": "lean_box",
+                                        "cType": "lean_object*",
+                                        "heap": false,
+                                        "unbox": "lean_unbox"
+                                      },
+                                      "kind": "primitive",
+                                      "lean": "Nat",
+                                      "name": "nat"
+                                    },
+                                    "kind": "refinement",
+                                    "predicate": {
+                                      "constructor": "NominalSubtypes.plusOne",
+                                      "kind": "subtype"
+                                    }
+                                  }
+                                },
+                                {
+                                  "name": "digit",
+                                  "projection": "NominalSubtypes.Envelope.digit",
+                                  "type": {
+                                    "abi": {
+                                      "box": "lean_box",
+                                      "cType": "lean_object*",
+                                      "heap": false,
+                                      "unbox": "lean_unbox"
+                                    },
+                                    "base": {
+                                      "abi": {
+                                        "box": "lean_box",
+                                        "cType": "lean_object*",
+                                        "heap": false,
+                                        "unbox": "lean_unbox"
+                                      },
+                                      "kind": "primitive",
+                                      "lean": "Nat",
+                                      "name": "nat"
+                                    },
+                                    "kind": "refinement",
+                                    "predicate": {
+                                      "bound": "3",
+                                      "kind": "fin"
+                                    }
+                                  }
+                                }
+                              ],
+                              "kind": "record",
+                              "lean": "NominalSubtypes.Envelope",
+                              "name": "NominalSubtypes.Envelope"
+                            }
+                          },
+                          "kind": "option"
+                        },
+                        "kind": "array"
+                      }
+                    },
+                    {
+                      "name": "right",
+                      "projection": "NominalSubtypes.AliasPair.right",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "element": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "element": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": true,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "alias",
+                            "lean": "NominalSubtypes.EnvelopeAlias",
+                            "name": "NominalSubtypes.EnvelopeAlias",
+                            "target": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": true,
+                                "unbox": "lean_unbox"
+                              },
+                              "constructor": "NominalSubtypes.Envelope.mk",
+                              "fields": [
+                                {
+                                  "name": "payload",
+                                  "projection": "NominalSubtypes.Envelope.payload",
+                                  "type": {
+                                    "abi": {
+                                      "box": "lean_box",
+                                      "cType": "lean_object*",
+                                      "heap": false,
+                                      "unbox": "lean_unbox"
+                                    },
+                                    "base": {
+                                      "abi": {
+                                        "box": "lean_box",
+                                        "cType": "lean_object*",
+                                        "heap": false,
+                                        "unbox": "lean_unbox"
+                                      },
+                                      "kind": "primitive",
+                                      "lean": "Nat",
+                                      "name": "nat"
+                                    },
+                                    "kind": "refinement",
+                                    "predicate": {
+                                      "constructor": "NominalSubtypes.plusTwo",
+                                      "kind": "subtype"
+                                    }
+                                  }
+                                },
+                                {
+                                  "name": "digit",
+                                  "projection": "NominalSubtypes.Envelope.digit",
+                                  "type": {
+                                    "abi": {
+                                      "box": "lean_box",
+                                      "cType": "lean_object*",
+                                      "heap": false,
+                                      "unbox": "lean_unbox"
+                                    },
+                                    "base": {
+                                      "abi": {
+                                        "box": "lean_box",
+                                        "cType": "lean_object*",
+                                        "heap": false,
+                                        "unbox": "lean_unbox"
+                                      },
+                                      "kind": "primitive",
+                                      "lean": "Nat",
+                                      "name": "nat"
+                                    },
+                                    "kind": "refinement",
+                                    "predicate": {
+                                      "bound": "3",
+                                      "kind": "fin"
+                                    }
+                                  }
+                                }
+                              ],
+                              "kind": "record",
+                              "lean": "NominalSubtypes.Envelope",
+                              "name": "NominalSubtypes.Envelope"
+                            }
+                          },
+                          "kind": "option"
+                        },
+                        "kind": "array"
+                      }
+                    }
+                  ],
+                  "kind": "record",
+                  "lean": "NominalSubtypes.AliasPair",
+                  "name": "NominalSubtypes.AliasPair"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Nat",
+          "selected": true,
+          "source": {
+            "endColumn": 80,
+            "endLine": 50,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 50
+          },
+          "theoremReferences": [],
+          "typeExpression": "NominalSubtypes.AliasPair → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.listValues",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "base": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                },
+                "kind": "refinement",
+                "predicate": {
+                  "constructor": null,
+                  "kind": "subtype"
+                }
+              },
+              "kind": "list"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "List.{0} NominalSubtypes.Positive",
+          "selected": true,
+          "source": {
+            "endColumn": 82,
+            "endLine": 60,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 60
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → List.{0} NominalSubtypes.Positive",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.nested",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "NominalSubtypes.Pair"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "constructor": "NominalSubtypes.Pair.mk",
+                  "fields": [
+                    {
+                      "name": "left",
+                      "projection": "NominalSubtypes.Pair.left",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "constructor": "NominalSubtypes.Envelope.mk",
+                        "fields": [
+                          {
+                            "name": "payload",
+                            "projection": "NominalSubtypes.Envelope.payload",
+                            "type": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "base": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "kind": "primitive",
+                                "lean": "Nat",
+                                "name": "nat"
+                              },
+                              "kind": "refinement",
+                              "predicate": {
+                                "constructor": "NominalSubtypes.plusOne",
+                                "kind": "subtype"
+                              }
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "projection": "NominalSubtypes.Envelope.digit",
+                            "type": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "base": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "kind": "primitive",
+                                "lean": "Nat",
+                                "name": "nat"
+                              },
+                              "kind": "refinement",
+                              "predicate": {
+                                "bound": "3",
+                                "kind": "fin"
+                              }
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "lean": "NominalSubtypes.Envelope",
+                        "name": "NominalSubtypes.Envelope"
+                      }
+                    },
+                    {
+                      "name": "right",
+                      "projection": "NominalSubtypes.Pair.right",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "constructor": "NominalSubtypes.Envelope.mk",
+                        "fields": [
+                          {
+                            "name": "payload",
+                            "projection": "NominalSubtypes.Envelope.payload",
+                            "type": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "base": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "kind": "primitive",
+                                "lean": "Nat",
+                                "name": "nat"
+                              },
+                              "kind": "refinement",
+                              "predicate": {
+                                "constructor": "NominalSubtypes.plusTwo",
+                                "kind": "subtype"
+                              }
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "projection": "NominalSubtypes.Envelope.digit",
+                            "type": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "base": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "kind": "primitive",
+                                "lean": "Nat",
+                                "name": "nat"
+                              },
+                              "kind": "refinement",
+                              "predicate": {
+                                "bound": "3",
+                                "kind": "fin"
+                              }
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "lean": "NominalSubtypes.Envelope",
+                        "name": "NominalSubtypes.Envelope"
+                      }
+                    }
+                  ],
+                  "kind": "record",
+                  "lean": "NominalSubtypes.Pair",
+                  "name": "NominalSubtypes.Pair"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Nat",
+          "selected": true,
+          "source": {
+            "endColumn": 65,
+            "endLine": 36,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 36
+          },
+          "theoremReferences": [],
+          "typeExpression": "NominalSubtypes.Pair → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.noItems",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "x._@.NominalSubtypes.2940809264._hygCtx._hyg.2",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "x._@.NominalSubtypes.2940809264._hygCtx._hyg.2",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "base": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                },
+                "kind": "refinement",
+                "predicate": {
+                  "constructor": null,
+                  "kind": "subtype"
+                }
+              },
+              "kind": "array"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Array.{0} NominalSubtypes.Positive",
+          "selected": true,
+          "source": {
+            "endColumn": 45,
+            "endLine": 70,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 70
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → Array.{0} NominalSubtypes.Positive",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.optional",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "base": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                },
+                "kind": "refinement",
+                "predicate": {
+                  "constructor": null,
+                  "kind": "subtype"
+                }
+              },
+              "kind": "option"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Option.{0} NominalSubtypes.Positive",
+          "selected": true,
+          "source": {
+            "endColumn": 96,
+            "endLine": 61,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 61
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → Option.{0} NominalSubtypes.Positive",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.pairValues",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "constructor": "NominalSubtypes.AliasPair.mk",
+              "fields": [
+                {
+                  "name": "left",
+                  "projection": "NominalSubtypes.AliasPair.left",
+                  "type": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "element": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "element": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "alias",
+                        "lean": "NominalSubtypes.EnvelopeAlias",
+                        "name": "NominalSubtypes.EnvelopeAlias",
+                        "target": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": true,
+                            "unbox": "lean_unbox"
+                          },
+                          "constructor": "NominalSubtypes.Envelope.mk",
+                          "fields": [
+                            {
+                              "name": "payload",
+                              "projection": "NominalSubtypes.Envelope.payload",
+                              "type": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "base": {
+                                  "abi": {
+                                    "box": "lean_box",
+                                    "cType": "lean_object*",
+                                    "heap": false,
+                                    "unbox": "lean_unbox"
+                                  },
+                                  "kind": "primitive",
+                                  "lean": "Nat",
+                                  "name": "nat"
+                                },
+                                "kind": "refinement",
+                                "predicate": {
+                                  "constructor": null,
+                                  "kind": "subtype"
+                                }
+                              }
+                            },
+                            {
+                              "name": "digit",
+                              "projection": "NominalSubtypes.Envelope.digit",
+                              "type": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "base": {
+                                  "abi": {
+                                    "box": "lean_box",
+                                    "cType": "lean_object*",
+                                    "heap": false,
+                                    "unbox": "lean_unbox"
+                                  },
+                                  "kind": "primitive",
+                                  "lean": "Nat",
+                                  "name": "nat"
+                                },
+                                "kind": "refinement",
+                                "predicate": {
+                                  "bound": "3",
+                                  "kind": "fin"
+                                }
+                              }
+                            }
+                          ],
+                          "kind": "record",
+                          "lean": "NominalSubtypes.Envelope",
+                          "name": "NominalSubtypes.Envelope"
+                        }
+                      },
+                      "kind": "option"
+                    },
+                    "kind": "array"
+                  }
+                },
+                {
+                  "name": "right",
+                  "projection": "NominalSubtypes.AliasPair.right",
+                  "type": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "element": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "element": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "alias",
+                        "lean": "NominalSubtypes.EnvelopeAlias",
+                        "name": "NominalSubtypes.EnvelopeAlias",
+                        "target": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": true,
+                            "unbox": "lean_unbox"
+                          },
+                          "constructor": "NominalSubtypes.Envelope.mk",
+                          "fields": [
+                            {
+                              "name": "payload",
+                              "projection": "NominalSubtypes.Envelope.payload",
+                              "type": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "base": {
+                                  "abi": {
+                                    "box": "lean_box",
+                                    "cType": "lean_object*",
+                                    "heap": false,
+                                    "unbox": "lean_unbox"
+                                  },
+                                  "kind": "primitive",
+                                  "lean": "Nat",
+                                  "name": "nat"
+                                },
+                                "kind": "refinement",
+                                "predicate": {
+                                  "constructor": null,
+                                  "kind": "subtype"
+                                }
+                              }
+                            },
+                            {
+                              "name": "digit",
+                              "projection": "NominalSubtypes.Envelope.digit",
+                              "type": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": false,
+                                  "unbox": "lean_unbox"
+                                },
+                                "base": {
+                                  "abi": {
+                                    "box": "lean_box",
+                                    "cType": "lean_object*",
+                                    "heap": false,
+                                    "unbox": "lean_unbox"
+                                  },
+                                  "kind": "primitive",
+                                  "lean": "Nat",
+                                  "name": "nat"
+                                },
+                                "kind": "refinement",
+                                "predicate": {
+                                  "bound": "3",
+                                  "kind": "fin"
+                                }
+                              }
+                            }
+                          ],
+                          "kind": "record",
+                          "lean": "NominalSubtypes.Envelope",
+                          "name": "NominalSubtypes.Envelope"
+                        }
+                      },
+                      "kind": "option"
+                    },
+                    "kind": "array"
+                  }
+                }
+              ],
+              "kind": "record",
+              "lean": "NominalSubtypes.AliasPair",
+              "name": "NominalSubtypes.AliasPair"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "NominalSubtypes.AliasPair",
+          "selected": true,
+          "source": {
+            "endColumn": 88,
+            "endLine": 66,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 66
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → NominalSubtypes.AliasPair",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.plainFin",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Fin 3"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "base": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Nat",
+                    "name": "nat"
+                  },
+                  "kind": "refinement",
+                  "predicate": {
+                    "bound": "3",
+                    "kind": "fin"
+                  }
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Nat",
+          "selected": true,
+          "source": {
+            "endColumn": 47,
+            "endLine": 54,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 54
+          },
+          "theoremReferences": [],
+          "typeExpression": "Fin 3 → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.plusOne",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "base": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                },
+                "kind": "refinement",
+                "predicate": {
+                  "constructor": null,
+                  "kind": "subtype"
+                }
+              },
+              "kind": "option"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Option.{0} NominalSubtypes.Positive",
+          "selected": false,
+          "source": {
+            "endColumn": 51,
+            "endLine": 8,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 7
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → Option.{0} NominalSubtypes.Positive",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.plusTwo",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "base": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                },
+                "kind": "refinement",
+                "predicate": {
+                  "constructor": null,
+                  "kind": "subtype"
+                }
+              },
+              "kind": "option"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Option.{0} NominalSubtypes.Positive",
+          "selected": false,
+          "source": {
+            "endColumn": 56,
+            "endLine": 11,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 10
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → Option.{0} NominalSubtypes.Positive",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.produceEnvelope",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "constructor": "NominalSubtypes.Envelope.mk",
+              "fields": [
+                {
+                  "name": "payload",
+                  "projection": "NominalSubtypes.Envelope.payload",
+                  "type": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "base": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "Nat",
+                      "name": "nat"
+                    },
+                    "kind": "refinement",
+                    "predicate": {
+                      "constructor": null,
+                      "kind": "subtype"
+                    }
+                  }
+                },
+                {
+                  "name": "digit",
+                  "projection": "NominalSubtypes.Envelope.digit",
+                  "type": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "base": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "Nat",
+                      "name": "nat"
+                    },
+                    "kind": "refinement",
+                    "predicate": {
+                      "bound": "3",
+                      "kind": "fin"
+                    }
+                  }
+                }
+              ],
+              "kind": "record",
+              "lean": "NominalSubtypes.Envelope",
+              "name": "NominalSubtypes.Envelope"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "NominalSubtypes.Envelope",
+          "selected": true,
+          "source": {
+            "endColumn": 78,
+            "endLine": 58,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 58
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → NominalSubtypes.Envelope",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.product",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "arguments": [
+                {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "base": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Nat",
+                    "name": "nat"
+                  },
+                  "kind": "refinement",
+                  "predicate": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "base": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Nat",
+                    "name": "nat"
+                  },
+                  "kind": "refinement",
+                  "predicate": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                }
+              ],
+              "kind": "tuple"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Prod.{0, 0} NominalSubtypes.Positive NominalSubtypes.Positive",
+          "selected": true,
+          "source": {
+            "endColumn": 85,
+            "endLine": 62,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 62
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → Prod.{0, 0} NominalSubtypes.Positive NominalSubtypes.Positive",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.scalar",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "base": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "Nat",
+                "name": "nat"
+              },
+              "kind": "refinement",
+              "predicate": {
+                "constructor": null,
+                "kind": "subtype"
+              }
+            },
+            "status": "supported"
+          },
+          "resultExpression": "NominalSubtypes.Positive",
+          "selected": true,
+          "source": {
+            "endColumn": 74,
+            "endLine": 5,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 5
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → NominalSubtypes.Positive",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NominalSubtypes.second",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "NominalSubtypes.Envelope"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "constructor": "NominalSubtypes.Envelope.mk",
+                  "fields": [
+                    {
+                      "name": "payload",
+                      "projection": "NominalSubtypes.Envelope.payload",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "base": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        },
+                        "kind": "refinement",
+                        "predicate": {
+                          "constructor": "NominalSubtypes.plusTwo",
+                          "kind": "subtype"
+                        }
+                      }
+                    },
+                    {
+                      "name": "digit",
+                      "projection": "NominalSubtypes.Envelope.digit",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "base": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        },
+                        "kind": "refinement",
+                        "predicate": {
+                          "bound": "3",
+                          "kind": "fin"
+                        }
+                      }
+                    }
+                  ],
+                  "kind": "record",
+                  "lean": "NominalSubtypes.Envelope",
+                  "name": "NominalSubtypes.Envelope"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Nat",
+          "selected": true,
+          "source": {
+            "endColumn": 56,
+            "endLine": 34,
+            "path": "NominalSubtypes.lean",
+            "startColumn": 0,
+            "startLine": 34
+          },
+          "theoremReferences": [],
+          "typeExpression": "NominalSubtypes.Envelope → Nat",
+          "visibility": "public"
+        }
+      ],
+      "directImports": [
+        "Init"
+      ],
+      "interfaceSha256": "e4b76a4009ea84d63a6f0edee5c6cac901d2387761b42b90d9573353f08e75be",
+      "name": "NominalSubtypes",
+      "sourcePath": "NominalSubtypes.lean",
+      "sourceSha256": "a6a8860e98d12739ef16ea0b92b003a9e752326f39517dfe7eeb9d8b53ef3108"
+    }
+  ],
+  "producer": {
+    "adapter": "lean-bridge-elaborator",
+    "adapterVersion": 2,
+    "invocationIdentitySha256": "92969e7533b989af2bfcbc96d4227e9d59f3c06a0ba991fd12c3cffca13e672a",
+    "tool": "Lean",
+    "toolVersion": "4.32.2",
+    "toolchain": "leanprover/lean4:v4.32.2"
+  },
+  "profile": "native-library-v1",
+  "schemaVersion": 2
+}

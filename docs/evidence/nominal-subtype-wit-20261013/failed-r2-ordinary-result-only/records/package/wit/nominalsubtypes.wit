@@ -1,0 +1,57 @@
+package lean-bridge:nominalsubtypes@1.0.0;
+
+interface native {
+  type bridge-value-0 = list<u32>;
+  type bridge-value-1 = list<bridge-value-0>;
+  type bridge-value-2 = result<bridge-value-0, bridge-value-0>;
+  record envelope { payload: bridge-value-0, digit: bridge-value-0 }
+  type bridge-value-4 = option<bridge-value-2>;
+  type bridge-value-5 = list<bridge-value-4>;
+  record event-box-fields { value: envelope }
+  record event-choices-fields { values: bridge-value-5 }
+  variant event { empty, box(event-box-fields), choices(event-choices-fields) }
+  type bridge-value-7 = option<envelope>;
+  type bridge-value-8 = list<bridge-value-7>;
+  type bridge-value-9 = list<bridge-value-0>;
+  type bridge-value-10 = option<bridge-value-0>;
+  type envelope-alias = envelope;
+  type bridge-alias-value-14 = option<envelope-alias>;
+  type bridge-alias-value-15 = list<bridge-alias-value-14>;
+  record alias-pair { left: bridge-alias-value-15, right: bridge-alias-value-15 }
+  type bridge-value-12 = tuple<bridge-value-0, bridge-value-0>;
+  array-values: func(arg0: bridge-value-0) -> bridge-value-1;
+  branch: func(arg0: bridge-value-0) -> bridge-value-2;
+  event-choices: func(arg0: bridge-value-0) -> event;
+  event-empty: func(arg0: bridge-value-0) -> event;
+  event-value: func(arg0: bridge-value-0) -> event;
+  group-values: func(arg0: bridge-value-0) -> bridge-alias-value-15;
+  list-values: func(arg0: bridge-value-0) -> bridge-value-9;
+  no-items: func(arg0: bridge-value-0) -> bridge-value-1;
+  optional: func(arg0: bridge-value-0) -> bridge-value-10;
+  pair-values: func(arg0: bridge-value-0) -> alias-pair;
+  produce-envelope: func(arg0: bridge-value-0) -> envelope;
+  product: func(arg0: bridge-value-0) -> bridge-value-12;
+  scalar: func(arg0: bridge-value-0) -> bridge-value-0;
+}
+
+interface api {
+  use native.{bridge-value-0, bridge-value-1, bridge-value-2, envelope, bridge-value-4, bridge-value-5, event-box-fields, event-choices-fields, event, bridge-value-7, bridge-value-8, bridge-value-9, bridge-value-10, envelope-alias, bridge-alias-value-14, bridge-alias-value-15, alias-pair, bridge-value-12};
+  array-values: func(arg0: bridge-value-0) -> bridge-value-1;
+  branch: func(arg0: bridge-value-0) -> bridge-value-2;
+  event-choices: func(arg0: bridge-value-0) -> event;
+  event-empty: func(arg0: bridge-value-0) -> event;
+  event-value: func(arg0: bridge-value-0) -> event;
+  group-values: func(arg0: bridge-value-0) -> bridge-alias-value-15;
+  list-values: func(arg0: bridge-value-0) -> bridge-value-9;
+  no-items: func(arg0: bridge-value-0) -> bridge-value-1;
+  optional: func(arg0: bridge-value-0) -> bridge-value-10;
+  pair-values: func(arg0: bridge-value-0) -> alias-pair;
+  produce-envelope: func(arg0: bridge-value-0) -> envelope;
+  product: func(arg0: bridge-value-0) -> bridge-value-12;
+  scalar: func(arg0: bridge-value-0) -> bridge-value-0;
+}
+
+world nominalsubtypes {
+  import native;
+  export api;
+}

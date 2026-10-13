@@ -24,6 +24,7 @@ import { verifyNominalSubtypeWitEnvironment } from "./nominal-subtype-wit-instal
 import { assertNominalSubtypeWitInterfaces } from "./nominal-subtype-wit-interface.mjs";
 import { runCopied } from "./copied-fixture-install.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
+import "./nominal-subtype-wit-evidence-tests.mjs";
 
 const capi = process.env.LEAN_BRIDGE_WASMTIME_C_API ?? resolve(".toolchains/wasmtime42");
 const cc = process.env.CC ?? "/usr/bin/cc";

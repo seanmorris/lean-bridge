@@ -1,0 +1,9 @@
+prefix=${pcfiledir}/../..
+includedir=${prefix}/include
+libdir=${prefix}/lib
+
+Name: nominalsubtypes-wit
+Description: Compiled Lean WIT API and Wasmtime 42.0.1 host
+Version: 1.0.0
+Libs: -L${libdir} -Wl,-rpath,${libdir} -lnominalsubtypes_wasmtime -lwasmtime
+Cflags: -I${includedir}
