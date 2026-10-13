@@ -1,0 +1,340 @@
+TAP version 13
+# Subtest: managed nominal gate repair authenticates exact changes without changing support claims
+ok 1 - managed nominal gate repair authenticates exact changes without changing support claims
+  ---
+  duration_ms: 453.182108
+  type: 'test'
+  ...
+# Subtest: managed nominal gate history writer refuses an unrelated checkout before writing
+ok 2 - managed nominal gate history writer refuses an unrelated checkout before writing
+  ---
+  duration_ms: 102.123752
+  type: 'test'
+  ...
+# Subtest: nominal C\# promotion history authenticates exact changes and the six observed C\# cells
+ok 3 - nominal C\# promotion history authenticates exact changes and the six observed C\# cells
+  ---
+  duration_ms: 3447.385133
+  type: 'test'
+  ...
+# 177 current-source pins refreshed; exactly six observed C\# cells promoted or supplemented
+# Subtest: nominal C\# promotion writer refuses an unrelated checkout before writing
+ok 4 - nominal C\# promotion writer refuses an unrelated checkout before writing
+  ---
+  duration_ms: 719.421429
+  type: 'test'
+  ...
+# Subtest: nominal C\# promotion authenticates all four source/API selections and the pinned .NET SDK and shared framework
+ok 5 - nominal C\# promotion authenticates all four source/API selections and the pinned .NET SDK and shared framework
+  ---
+  duration_ms: 1206.469605
+  type: 'test'
+  ...
+# Subtest: nominal C\# promotion refuses missing originals and substituted scope or references
+ok 6 - nominal C\# promotion refuses missing originals and substituted scope or references
+  ---
+  duration_ms: 12586.145219
+  type: 'test'
+  ...
+# Subtest: nominal C\# promotion adds two field cells and supplements four existing cells only
+ok 7 - nominal C\# promotion adds two field cells and supplements four existing cells only
+  ---
+  duration_ms: 9036.032589
+  type: 'test'
+  ...
+# Subtest: nominal C\# documentation distinguishes verified packages from pending hosts and callbacks
+ok 8 - nominal C\# documentation distinguishes verified packages from pending hosts and callbacks
+  ---
+  duration_ms: 5.178185
+  type: 'test'
+  ...
+# Subtest: nominal JVM CI preserves exact historical producers and every support observation
+ok 9 - nominal JVM CI preserves exact historical producers and every support observation
+  ---
+  duration_ms: 1451.149333
+  type: 'test'
+  ...
+# Subtest: nominal JVM CI history writer refuses an unrelated checkout before writing
+ok 10 - nominal JVM CI history writer refuses an unrelated checkout before writing
+  ---
+  duration_ms: 72.178445
+  type: 'test'
+  ...
+# Subtest: Nominal native promotion authenticates exact changes and the scoped C/C++ support update
+ok 11 - Nominal native promotion authenticates exact changes and the scoped C/C++ support update
+  ---
+  duration_ms: 3821.723839
+  type: 'test'
+  ...
+# Subtest: Nominal native promotion writer refuses an unrelated checkout before writing
+ok 12 - Nominal native promotion writer refuses an unrelated checkout before writing
+  ---
+  duration_ms: 101.047006
+  type: 'test'
+  ...
+# Subtest: nominal native promotion authenticates four installed selections at the observed glibc runtime
+ok 13 - nominal native promotion authenticates four installed selections at the observed glibc runtime
+  ---
+  duration_ms: 645.47812
+  type: 'test'
+  ...
+# Subtest: nominal native promotion refuses missing originals and substituted scope or references
+ok 14 - nominal native promotion refuses missing originals and substituted scope or references
+  ---
+  duration_ms: 13867.136211
+  type: 'test'
+  ...
+# Subtest: nominal native promotion adds four C/C++ field cells and supplements eight existing cells only
+ok 15 - nominal native promotion adds four C/C++ field cells and supplements eight existing cells only
+  ---
+  duration_ms: 9209.260006
+  type: 'test'
+  ...
+# Subtest: nominal native docs distinguish verified C/C++ from other hosts and callback contexts
+ok 16 - nominal native docs distinguish verified C/C++ from other hosts and callback contexts
+  ---
+  duration_ms: 10.447514
+  type: 'test'
+  ...
+# Subtest: Nominal npm promotion authenticates exact changes and the scoped Node support update
+ok 17 - Nominal npm promotion authenticates exact changes and the scoped Node support update
+  ---
+  duration_ms: 3911.504537
+  type: 'test'
+  ...
+# Subtest: Nominal npm promotion writer refuses an unrelated checkout before writing
+ok 18 - Nominal npm promotion writer refuses an unrelated checkout before writing
+  ---
+  duration_ms: 111.709311
+  type: 'test'
+  ...
+# Subtest: nominal npm promotion authenticates four installed selections at the observed Node runtime
+ok 19 - nominal npm promotion authenticates four installed selections at the observed Node runtime
+  ---
+  duration_ms: 710.854702
+  type: 'test'
+  ...
+# Subtest: nominal npm promotion refuses missing originals and substituted scope or references
+ok 20 - nominal npm promotion refuses missing originals and substituted scope or references
+  ---
+  duration_ms: 12296.637467
+  type: 'test'
+  ...
+# Subtest: nominal npm promotion adds four Node field cells and supplements eight existing cells only
+ok 21 - nominal npm promotion adds four Node field cells and supplements eight existing cells only
+  ---
+  duration_ms: 9523.325546
+  type: 'test'
+  ...
+# Subtest: nominal npm docs separate Node acceptance from pending browser, native and callback contexts
+ok 22 - nominal npm docs separate Node acceptance from pending browser, native and callback contexts
+  ---
+  duration_ms: 7.713752
+  type: 'test'
+  ...
+# Subtest: nominal Perl promotion history authenticates exact changes and the six observed Perl cells
+ok 23 - nominal Perl promotion history authenticates exact changes and the six observed Perl cells
+  ---
+  duration_ms: 5143.352488
+  type: 'test'
+  ...
+# 121 current-source pins refreshed; exactly six observed Perl cells promoted or supplemented
+# Subtest: nominal Perl promotion writer refuses an unrelated checkout before writing
+ok 24 - nominal Perl promotion writer refuses an unrelated checkout before writing
+  ---
+  duration_ms: 655.47758
+  type: 'test'
+  ...
+# Subtest: nominal Perl promotion authenticates all four source/API selections and all four ABIs
+ok 25 - nominal Perl promotion authenticates all four source/API selections and all four ABIs
+  ---
+  duration_ms: 2525.932495
+  type: 'test'
+  ...
+# Subtest: nominal Perl promotion refuses missing originals and substituted scope or references
+ok 26 - nominal Perl promotion refuses missing originals and substituted scope or references
+  ---
+  duration_ms: 20003.965834
+  type: 'test'
+  ...
+# Subtest: nominal Perl promotion adds two field cells and supplements four existing cells only
+ok 27 - nominal Perl promotion adds two field cells and supplements four existing cells only
+  ---
+  duration_ms: 9854.17943
+  type: 'test'
+  ...
+# Subtest: nominal Perl documentation distinguishes verified packages from pending hosts and callbacks
+ok 28 - nominal Perl documentation distinguishes verified packages from pending hosts and callbacks
+  ---
+  duration_ms: 7.208382
+  type: 'test'
+  ...
+# Subtest: nominal PHP harness registration authenticates exact changes without adding support claims
+ok 29 - nominal PHP harness registration authenticates exact changes without adding support claims
+  ---
+  duration_ms: 450.283475
+  type: 'test'
+  ...
+# Subtest: nominal PHP registration writer refuses an unrelated checkout before writing
+ok 30 - nominal PHP registration writer refuses an unrelated checkout before writing
+  ---
+  duration_ms: 78.644725
+  type: 'test'
+  ...
+# Subtest: nominal Python promotion history authenticates exact changes and the six observed Python cells
+ok 31 - nominal Python promotion history authenticates exact changes and the six observed Python cells
+  ---
+  duration_ms: 4295.850451
+  type: 'test'
+  ...
+# 229 current-source pins refreshed; exactly six observed Python cells promoted or supplemented
+# Subtest: nominal Python promotion writer refuses an unrelated checkout before writing
+ok 32 - nominal Python promotion writer refuses an unrelated checkout before writing
+  ---
+  duration_ms: 623.876017
+  type: 'test'
+  ...
+# Subtest: nominal Python promotion authenticates all four source/API selections and both interpreter floors
+ok 33 - nominal Python promotion authenticates all four source/API selections and both interpreter floors
+  ---
+  duration_ms: 1515.90862
+  type: 'test'
+  ...
+# Subtest: nominal Python promotion refuses missing originals and substituted scope or references
+ok 34 - nominal Python promotion refuses missing originals and substituted scope or references
+  ---
+  duration_ms: 18294.75534
+  type: 'test'
+  ...
+# Subtest: nominal Python promotion adds two field cells and supplements four existing cells only
+ok 35 - nominal Python promotion adds two field cells and supplements four existing cells only
+  ---
+  duration_ms: 9094.253102
+  type: 'test'
+  ...
+# Subtest: nominal Python documentation distinguishes verified packages from pending hosts and callbacks
+ok 36 - nominal Python documentation distinguishes verified packages from pending hosts and callbacks
+  ---
+  duration_ms: 6.123805
+  type: 'test'
+  ...
+# Subtest: nominal Ruby promotion history authenticates exact changes and the six observed Ruby cells
+ok 37 - nominal Ruby promotion history authenticates exact changes and the six observed Ruby cells
+  ---
+  duration_ms: 4055.663714
+  type: 'test'
+  ...
+# 232 current-source pins refreshed; exactly six observed Ruby cells promoted or supplemented
+# Subtest: nominal Ruby promotion writer refuses an unrelated checkout before writing
+ok 38 - nominal Ruby promotion writer refuses an unrelated checkout before writing
+  ---
+  duration_ms: 648.281838
+  type: 'test'
+  ...
+# Subtest: nominal Ruby promotion authenticates all four source/API selections and the pinned MRI interpreter
+ok 39 - nominal Ruby promotion authenticates all four source/API selections and the pinned MRI interpreter
+  ---
+  duration_ms: 1118.142115
+  type: 'test'
+  ...
+# Subtest: nominal Ruby promotion refuses missing originals and substituted scope or references
+ok 40 - nominal Ruby promotion refuses missing originals and substituted scope or references
+  ---
+  duration_ms: 10645.431615
+  type: 'test'
+  ...
+# Subtest: nominal Ruby promotion adds two field cells and supplements four existing cells only
+ok 41 - nominal Ruby promotion adds two field cells and supplements four existing cells only
+  ---
+  duration_ms: 8571.985651
+  type: 'test'
+  ...
+# Subtest: nominal Ruby documentation distinguishes verified packages from pending hosts and callbacks
+ok 42 - nominal Ruby documentation distinguishes verified packages from pending hosts and callbacks
+  ---
+  duration_ms: 4.903257
+  type: 'test'
+  ...
+# Subtest: nominal Rust promotion history authenticates exact changes and the six observed Rust cells
+ok 43 - nominal Rust promotion history authenticates exact changes and the six observed Rust cells
+  ---
+  duration_ms: 3867.427447
+  type: 'test'
+  ...
+# 236 current-source pins refreshed; exactly six observed Rust cells promoted or supplemented
+# Subtest: nominal Rust promotion writer refuses an unrelated checkout before writing
+ok 44 - nominal Rust promotion writer refuses an unrelated checkout before writing
+  ---
+  duration_ms: 717.898428
+  type: 'test'
+  ...
+# Subtest: nominal Rust promotion authenticates all four source/API selections and the pinned Rust and Cargo toolchain
+ok 45 - nominal Rust promotion authenticates all four source/API selections and the pinned Rust and Cargo toolchain
+  ---
+  duration_ms: 1409.900924
+  type: 'test'
+  ...
+# Subtest: nominal Rust promotion refuses missing originals and substituted scope or references
+ok 46 - nominal Rust promotion refuses missing originals and substituted scope or references
+  ---
+  duration_ms: 12840.998932
+  type: 'test'
+  ...
+# Subtest: nominal Rust promotion adds two field cells and supplements four existing cells only
+ok 47 - nominal Rust promotion adds two field cells and supplements four existing cells only
+  ---
+  duration_ms: 10345.826377
+  type: 'test'
+  ...
+# Subtest: nominal Rust documentation distinguishes verified packages from pending hosts and callbacks
+ok 48 - nominal Rust documentation distinguishes verified packages from pending hosts and callbacks
+  ---
+  duration_ms: 5.088686
+  type: 'test'
+  ...
+# Subtest: structural Subtype guides describe the installed scope and use the actual author fixture
+ok 49 - structural Subtype guides describe the installed scope and use the actual author fixture
+  ---
+  duration_ms: 56.734703
+  type: 'test'
+  ...
+# Subtest: structural promotion authenticates twenty-four original selections across seventeen consumer profiles
+ok 50 - structural promotion authenticates twenty-four original selections across seventeen consumer profiles
+  ---
+  duration_ms: 7559.183164
+  type: 'test'
+  ...
+# Subtest: structural promotion refuses missing and corrupted original indexes, sources, runs and compiler records
+ok 51 - structural promotion refuses missing and corrupted original indexes, sources, runs and compiler records
+  ---
+  duration_ms: 874.605261
+  type: 'test'
+  ...
+# 306 missing/corrupt original controls rejected
+# Subtest: structural promotion checks original three-test native TAP without substituting a synthetic one-test run
+ok 52 - structural promotion checks original three-test native TAP without substituting a synthetic one-test run
+  ---
+  duration_ms: 17.087914
+  type: 'test'
+  ...
+# Subtest: structural promotion supplements exactly sixty-eight existing cells and preserves other claims
+ok 53 - structural promotion supplements exactly sixty-eight existing cells and preserves other claims
+  ---
+  duration_ms: 15562.100893
+  type: 'test'
+  ...
+# Subtest: structural promotion rejects missing selections, forged scope, reordered or repeated references and overlaps
+ok 54 - structural promotion rejects missing selections, forged scope, reordered or repeated references and overlaps
+  ---
+  duration_ms: 91304.94836
+  type: 'test'
+  ...
+1..54
+# tests 54
+# suites 0
+# pass 54
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 335792.73749

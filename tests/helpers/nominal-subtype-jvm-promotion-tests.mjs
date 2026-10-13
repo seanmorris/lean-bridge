@@ -9,6 +9,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { nominalSubtypeJvmArchive, nominalSubtypeJvmReferences, promoteNominalSubtypeJvm, nominalSubtypeJvmConversion, nominalSubtypeJvmLimit } from "./nominal-subtype-jvm-promotion.mjs";
+import { beforeNominalSubtypePhpPromotionSource, beforeNominalSubtypePhpPromotionPins } from "./nominal-subtype-php-promotion-history.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", "58777508091f0e6b9b574cbfa2561c2c019b1570:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -100,7 +101,8 @@ test("nominal JVM promotion refuses missing originals, invented claims and misma
 
 test("nominal JVM promotion adds four field cells and supplements eight existing cells only", async () => {
 	const original = predecessor(), references = await nominalSubtypeJvmReferences();
-	const proposed = await promoteNominalSubtypeJvm(original, references), { document, ...contracts } = await readTypeSurface();
+	const proposed = beforeNominalSubtypePhpPromotionPins(await promoteNominalSubtypeJvm(original, references)), { document: live, ...contracts } = await readTypeSurface();
+	const document = JSON.parse(beforeNominalSubtypePhpPromotionSource("docs/type-surface.v1.json", JSON.stringify(live, null, 2) + "\n"));
 	validateTypeSurface(proposed, contracts);
 	assert.equal(original.evidence.length, 500); assert.equal(proposed.evidence.length, 504);
 	assert.equal(original.observations.length, 585); assert.equal(proposed.observations.length, 587);
@@ -134,7 +136,8 @@ test("nominal JVM promotion adds four field cells and supplements eight existing
 });
 
 test("nominal JVM documentation distinguishes verified Nat records from pending combinations", async () => {
-	const author = await readFile("docs/lean/existing-package.md", "utf8");
+	const authorPath = "docs/lean/existing-package.md";
+	const author = beforeNominalSubtypePhpPromotionSource(authorPath, await readFile(authorPath, "utf8"));
 	for(const prefix of ["| `Subtype` in acyclic", "| Lean-produced `Subtype` result without"])
 	{
 		const row = author.split("\n").find(line => line.startsWith(prefix));

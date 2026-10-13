@@ -27,6 +27,13 @@ test("structural Subtype guides describe the installed scope and use the actual 
 			assert.ok(row.includes("Reviewed IR: Node JavaScript / TypeScript: Installed checks passed (input, result, field)"));
 			assert.ok(row.includes("Browser / React / Worker: Installed checks passed (input, result)"));
 		}
+		else if(path === "docs/php.md")
+		{
+			for(const route of ["Ordinary source", "Reviewed IR"])
+				assert.ok(row.includes(`${route}: Native PHP: Installed checks passed (input, result, field)`), path);
+			assert.ok(row.includes("PHP-Wasm: Installed checks passed (input, result)"), path);
+			assert.ok(row.includes("Not audited (callback input, callback result)"), path);
+		}
 		else if(nominalFieldGuides.includes(path))
 		{
 			assert.ok(row.includes("Ordinary source: Installed checks passed (input, result, field)"), path);

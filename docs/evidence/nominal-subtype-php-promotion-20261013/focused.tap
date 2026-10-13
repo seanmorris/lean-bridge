@@ -1,0 +1,84 @@
+TAP version 13
+# Subtest: nominal JVM promotion history authenticates exact changes and the twelve observed JVM cells
+ok 1 - nominal JVM promotion history authenticates exact changes and the twelve observed JVM cells
+  ---
+  duration_ms: 3809.295756
+  type: 'test'
+  ...
+# 187 current-source pins refreshed; exactly twelve observed JVM cells promoted or supplemented
+# Subtest: nominal JVM promotion writer refuses an unrelated checkout before writing
+ok 2 - nominal JVM promotion writer refuses an unrelated checkout before writing
+  ---
+  duration_ms: 622.811502
+  type: 'test'
+  ...
+# Subtest: nominal JVM promotion authenticates all four selections and original Java/Kotlin execution records
+ok 3 - nominal JVM promotion authenticates all four selections and original Java/Kotlin execution records
+  ---
+  duration_ms: 1520.633666
+  type: 'test'
+  ...
+# Subtest: nominal JVM promotion refuses missing originals, invented claims and mismatched shared observations
+ok 4 - nominal JVM promotion refuses missing originals, invented claims and mismatched shared observations
+  ---
+  duration_ms: 31353.708156
+  type: 'test'
+  ...
+# Subtest: nominal JVM promotion adds four field cells and supplements eight existing cells only
+ok 5 - nominal JVM promotion adds four field cells and supplements eight existing cells only
+  ---
+  duration_ms: 9257.700866
+  type: 'test'
+  ...
+# Subtest: nominal JVM documentation distinguishes verified Nat records from pending combinations
+ok 6 - nominal JVM documentation distinguishes verified Nat records from pending combinations
+  ---
+  duration_ms: 8.232237
+  type: 'test'
+  ...
+# Subtest: nominal native PHP promotion history authenticates exact changes and the six observed native PHP cells
+ok 7 - nominal native PHP promotion history authenticates exact changes and the six observed native PHP cells
+  ---
+  duration_ms: 2710.984197
+  type: 'test'
+  ...
+# 133 current-source pins refreshed; exactly six observed native PHP cells promoted or supplemented
+# Subtest: nominal native PHP promotion writer refuses an unrelated checkout before writing
+ok 8 - nominal native PHP promotion writer refuses an unrelated checkout before writing
+  ---
+  duration_ms: 592.737397
+  type: 'test'
+  ...
+# Subtest: nominal PHP promotion authenticates four Composer selections and sixteen original executions
+ok 9 - nominal PHP promotion authenticates four Composer selections and sixteen original executions
+  ---
+  duration_ms: 1328.879284
+  type: 'test'
+  ...
+# Subtest: nominal PHP promotion refuses missing originals, invented claims and overlapping observations
+ok 10 - nominal PHP promotion refuses missing originals, invented claims and overlapping observations
+  ---
+  duration_ms: 22996.265576
+  type: 'test'
+  ...
+# Subtest: nominal PHP promotion adds two field cells and supplements four existing cells only
+ok 11 - nominal PHP promotion adds two field cells and supplements four existing cells only
+  ---
+  duration_ms: 9177.090399
+  type: 'test'
+  ...
+# Subtest: nominal PHP documentation distinguishes native Nat records from pending PHP-Wasm combinations
+ok 12 - nominal PHP documentation distinguishes native Nat records from pending PHP-Wasm combinations
+  ---
+  duration_ms: 6.735134
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 86564.904188

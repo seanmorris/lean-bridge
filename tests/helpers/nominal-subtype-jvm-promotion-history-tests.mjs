@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { nominalSubtypeJvmReferences, promoteNominalSubtypeJvm } from "./nominal-subtype-jvm-promotion.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeNominalSubtypePhpPromotionPins } from "./nominal-subtype-php-promotion-history.mjs";
 import { beforeNominalSubtypeJvmPromotionSource, nominalSubtypeJvmPromotionChangedPaths, nominalSubtypeJvmPromotionHistoryPath, nominalSubtypeJvmPromotionPredecessor, reverseNominalSubtypeJvmPromotionUpdate } from "./nominal-subtype-jvm-promotion-history.mjs";
 
 test("nominal JVM promotion history authenticates exact changes and the twelve observed JVM cells", async t => {
@@ -41,7 +42,7 @@ test("nominal JVM promotion history authenticates exact changes and the twelve o
 		}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	const expected = await promoteNominalSubtypeJvm(JSON.parse(original(inventoryPath)), await nominalSubtypeJvmReferences());
+	const expected = beforeNominalSubtypePhpPromotionPins(await promoteNominalSubtypeJvm(JSON.parse(original(inventoryPath)), await nominalSubtypeJvmReferences()));
 	assert.equal(beforeNominalSubtypeJvmPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)

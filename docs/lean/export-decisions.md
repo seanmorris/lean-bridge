@@ -68,7 +68,11 @@ x64/glibc 2.36.
 add those Nat forms with JDK 22.0.2 and Kotlin 2.2.0. Both consumers install
 offline and replay after relocation and consumer-source removal on Linux
 x64/glibc 2.36; separate compiled probes check invalid callers and nullability.
-Browser, other native hosts and PHP-Wasm nominal acceptance remains pending. Refined
+[Installed native PHP acceptance](../evidence/nominal-subtype-php-20261013.md)
+adds PHP 8.2.33 and Composer 2.5.5 with offline installation and weak/strict
+replay before and after relocation on Linux x64/glibc 2.36. Author/build roots
+are removed before installation; consumer PHP source remains required at runtime.
+Browser, WIT/WASI and PHP-Wasm nominal acceptance remains pending. Refined
 callbacks, owned and recursive Subtypes, and Subtype fields in generic records
 remain unfinished.
 
@@ -170,7 +174,11 @@ relocated replay and source-free deployment on Linux x64/glibc 2.36.
 [Installed Java/Kotlin acceptance](../evidence/nominal-subtype-jvm-20261013.md)
 adds JDK 22.0.2 and Kotlin 2.2.0 with offline installation, relocated replay
 and source-free deployment of both consumers on Linux x64/glibc 2.36.
-Other native hosts and PHP-Wasm nominal acceptance remains pending.
+[Installed native PHP acceptance](../evidence/nominal-subtype-php-20261013.md)
+adds PHP 8.2.33 and Composer 2.5.5 with offline installation and weak/strict
+replay before and after relocation on Linux x64/glibc 2.36. Author/build roots
+are removed before installation; consumer PHP source remains required at runtime.
+WIT/WASI and PHP-Wasm nominal acceptance remains pending.
 Save `NominalSubtypes.lean`:
 
 ```lean

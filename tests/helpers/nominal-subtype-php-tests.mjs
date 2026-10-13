@@ -26,6 +26,8 @@ import "./nominal-subtype-php-ci-tools-tests.mjs";
 import "./nominal-subtype-php-ci-shell-tests.mjs";
 import "./nominal-subtype-php-ci-workflow-tests.mjs";
 import "./nominal-subtype-php-ci-history-tests.mjs";
+import "./nominal-subtype-php-promotion-tests.mjs";
+import "./nominal-subtype-php-promotion-history-tests.mjs";
 
 const php = process.env.LEAN_BRIDGE_PHP ?? "/usr/bin/php";
 const callerControls = process.env.LEAN_BRIDGE_PHP !== undefined || existsSync(php);

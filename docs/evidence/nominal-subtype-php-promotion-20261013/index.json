@@ -1,0 +1,401 @@
+{
+  "files": [
+    {
+      "bytes": 3355,
+      "path": "focused.tap",
+      "sha256": "4a39257decd12cd7358182e687ce255322f42226a26098b767484992f84c6210"
+    },
+    {
+      "bytes": 14128,
+      "path": "histories.tap",
+      "sha256": "b79848bc4c5aee6c4da81092b1eea9570ea372310cab337ec85bea40cd172fc7"
+    }
+  ],
+  "hostedExecutionClaim": false,
+  "kind": "nominal-subtype-php-promotion-validation-v1",
+  "predecessorCommit": "9fff7866fd3c36c75d96d9921471a4027ddbb0a5",
+  "productionAdapterChange": false,
+  "refreshedSourcePins": 133,
+  "schemaVersion": 1,
+  "sourceHistory": {
+    "path": "docs/evidence/nominal-subtype-php-promotion-source-history-20261013.json",
+    "sha256": "b3befa215f9419d7e749d6456859aaa9aa688c54619168a0208d08900f1c7418"
+  },
+  "supportDelta": {
+    "evidence": 4,
+    "fieldCells": 2,
+    "parameterResultCellsSupplemented": 4,
+    "profiles": [
+      "php-native"
+    ],
+    "routes": [
+      "ordinary-source",
+      "reviewed-ir"
+    ]
+  },
+  "validatedSourceCount": 5534,
+  "validations": [
+    {
+      "args": [
+        "--max-old-space-size=3072",
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/helpers/nominal-subtype-php-promotion-tests.mjs",
+        "tests/helpers/nominal-subtype-php-promotion-history-tests.mjs",
+        "tests/helpers/nominal-subtype-jvm-promotion-tests.mjs",
+        "tests/helpers/nominal-subtype-jvm-promotion-history-tests.mjs"
+      ],
+      "bytes": 3355,
+      "code": 0,
+      "finished": "2026-10-13T19:55:08.701Z",
+      "log": "build/vo1466-php-promotion-focused-r2-0.log",
+      "phase": "focused",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 8127606784,
+            "freeBytes": 2556125184,
+            "load": 6.56
+          },
+          {
+            "availableBytes": 8251142144,
+            "freeBytes": 2555895808,
+            "load": 5.92
+          }
+        ],
+        "waits": 1
+      },
+      "sha256": "4a39257decd12cd7358182e687ce255322f42226a26098b767484992f84c6210",
+      "signal": null,
+      "started": "2026-10-13T19:53:42.056Z"
+    },
+    {
+      "args": [
+        "--max-old-space-size=3072",
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/helpers/nominal-subtype-php-tests.mjs"
+      ],
+      "bytes": 7969,
+      "code": 0,
+      "finished": "2026-10-13T19:57:11.872Z",
+      "log": "build/vo1466-php-promotion-registered-r2-0.log",
+      "phase": "registered",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 8114278400,
+            "freeBytes": 2553724928,
+            "load": 7.62
+          },
+          {
+            "availableBytes": 8230862848,
+            "freeBytes": 2552438784,
+            "load": 6.82
+          },
+          {
+            "availableBytes": 8227721216,
+            "freeBytes": 2553507840,
+            "load": 5.91
+          }
+        ],
+        "waits": 2
+      },
+      "sha256": "ecbe4d14c26b1c7c80adff35ebc475789bfba376846f44380c6e5291d8f7ed25",
+      "signal": null,
+      "started": "2026-10-13T19:55:40.332Z"
+    },
+    {
+      "args": [
+        "--max-old-space-size=3072",
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/helpers/nominal-subtype-npm-promotion-tests.mjs",
+        "tests/helpers/nominal-subtype-npm-promotion-history-tests.mjs",
+        "tests/helpers/nominal-subtype-native-promotion-tests.mjs",
+        "tests/helpers/nominal-subtype-native-promotion-history-tests.mjs",
+        "tests/helpers/nominal-subtype-perl-promotion-tests.mjs",
+        "tests/helpers/nominal-subtype-perl-promotion-history-tests.mjs",
+        "tests/helpers/nominal-subtype-python-promotion-tests.mjs",
+        "tests/helpers/nominal-subtype-python-promotion-history-tests.mjs",
+        "tests/helpers/nominal-subtype-ruby-promotion-tests.mjs",
+        "tests/helpers/nominal-subtype-ruby-promotion-history-tests.mjs",
+        "tests/helpers/nominal-subtype-rust-promotion-tests.mjs",
+        "tests/helpers/nominal-subtype-rust-promotion-history-tests.mjs",
+        "tests/helpers/nominal-subtype-dotnet-promotion-tests.mjs",
+        "tests/helpers/nominal-subtype-dotnet-promotion-history-tests.mjs",
+        "tests/helpers/nominal-subtype-jvm-ci-history-tests.mjs",
+        "tests/helpers/nominal-subtype-php-registration-history-tests.mjs",
+        "tests/helpers/managed-nominal-gate-history-tests.mjs",
+        "tests/helpers/structural-subtype-promotion-tests.mjs"
+      ],
+      "bytes": 14128,
+      "code": 0,
+      "finished": "2026-10-13T20:03:19.304Z",
+      "log": "build/vo1466-php-promotion-histories-r2-0.log",
+      "phase": "histories",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 8261705728,
+            "freeBytes": 2545872896,
+            "load": 6.9
+          },
+          {
+            "availableBytes": 8271888384,
+            "freeBytes": 2545491968,
+            "load": 6.17
+          },
+          {
+            "availableBytes": 8077082624,
+            "freeBytes": 2544177152,
+            "load": 5.98
+          }
+        ],
+        "waits": 2
+      },
+      "sha256": "b79848bc4c5aee6c4da81092b1eea9570ea372310cab337ec85bea40cd172fc7",
+      "signal": null,
+      "started": "2026-10-13T19:57:43.436Z"
+    },
+    {
+      "args": [
+        "--max-old-space-size=3072",
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/helpers/nominal-subtype-author-tests.mjs"
+      ],
+      "bytes": 878,
+      "code": 0,
+      "finished": "2026-10-13T20:03:45.157Z",
+      "log": "build/vo1466-php-promotion-author-r2-0.log",
+      "phase": "author",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 8477306880,
+            "freeBytes": 2531307520,
+            "load": 5.76
+          }
+        ],
+        "waits": 0
+      },
+      "sha256": "9a3880b5a1b9ff52617cb1333d3e7997c2d16d0e93f80c5fb49e4372f40e9722",
+      "signal": null,
+      "started": "2026-10-13T20:03:20.648Z"
+    },
+    {
+      "args": [
+        "--max-old-space-size=3072",
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/managed-ci-isolation-evidence.test.mjs"
+      ],
+      "bytes": 828,
+      "code": 0,
+      "finished": "2026-10-13T20:08:03.670Z",
+      "log": "build/vo1466-php-promotion-archives-r2-0.log",
+      "phase": "archives",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 8344252416,
+            "freeBytes": 2522226688,
+            "load": 6.74
+          },
+          {
+            "availableBytes": 8447401984,
+            "freeBytes": 2521387008,
+            "load": 5.76
+          }
+        ],
+        "waits": 1
+      },
+      "sha256": "677e9ae6e4eec4f49a233b8e6723779d62349dcb69e48ab5fe41d64f4862e2dc",
+      "signal": null,
+      "started": "2026-10-13T20:04:01.585Z"
+    },
+    {
+      "args": [
+        "--max-old-space-size=3072",
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/native-fork-repair-evidence.test.mjs"
+      ],
+      "bytes": 857,
+      "code": 0,
+      "finished": "2026-10-13T20:13:14.624Z",
+      "log": "build/vo1466-php-promotion-archives-r2-1.log",
+      "phase": "archives",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 8705298432,
+            "freeBytes": 2510671872,
+            "load": 6.31
+          },
+          {
+            "availableBytes": 8648679424,
+            "freeBytes": 2510360576,
+            "load": 6.17
+          },
+          {
+            "availableBytes": 8571305984,
+            "freeBytes": 2510057472,
+            "load": 5.84
+          }
+        ],
+        "waits": 2
+      },
+      "sha256": "b5065add1f92e088abbec1adac6f0333621377adbf2dea320337f5637340b10c",
+      "signal": null,
+      "started": "2026-10-13T20:08:34.652Z"
+    },
+    {
+      "args": [
+        "--max-old-space-size=3072",
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/owned-jvm-package-evidence.test.mjs"
+      ],
+      "bytes": 1520,
+      "code": 0,
+      "finished": "2026-10-13T20:18:05.846Z",
+      "log": "build/vo1466-php-promotion-archives-r2-2.log",
+      "phase": "archives",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 10225819648,
+            "freeBytes": 2528952320,
+            "load": 6.5
+          },
+          {
+            "availableBytes": 10200920064,
+            "freeBytes": 2528747520,
+            "load": 5.8
+          }
+        ],
+        "waits": 1
+      },
+      "sha256": "8c68348189dc8456f9a79bab711095a3cdecdf3a1c10bd49a2fb1074acc92e61",
+      "signal": null,
+      "started": "2026-10-13T20:13:30.685Z"
+    },
+    {
+      "args": [
+        "--max-old-space-size=3072",
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/type-surface.test.mjs",
+        "tests/type-surface-docs.test.mjs",
+        "tests/checked-javascript.test.mjs",
+        "tests/test-profiles.test.mjs",
+        "tests/documentation.test.mjs",
+        "tests/helpers/nominal-subtype-php-evidence-tests.mjs",
+        "tests/helpers/nominal-subtype-jvm-evidence-tests.mjs"
+      ],
+      "bytes": 36908,
+      "code": 0,
+      "finished": "2026-10-13T20:29:01.284Z",
+      "log": "build/vo1466-php-promotion-regression-r3-0.log",
+      "phase": "regression",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 9915731968,
+            "freeBytes": 2506395648,
+            "load": 5.76
+          }
+        ],
+        "waits": 0
+      },
+      "sha256": "127ac670c72b6aded16f5fe398e4895a849e1939a76ae116a7e81f0c51b52b4e",
+      "signal": null,
+      "started": "2026-10-13T20:24:41.832Z"
+    },
+    {
+      "args": [
+        "node_modules/eslint/bin/eslint.js",
+        ".",
+        "--max-warnings",
+        "0"
+      ],
+      "bytes": 0,
+      "code": 0,
+      "finished": "2026-10-13T20:31:28.462Z",
+      "log": "build/vo1466-php-promotion-static-r3-0.log",
+      "phase": "static",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 9912492032,
+            "freeBytes": 2499944448,
+            "load": 3.98
+          }
+        ],
+        "waits": 0
+      },
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "signal": null,
+      "started": "2026-10-13T20:29:02.551Z"
+    },
+    {
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "jsconfig.checked.json"
+      ],
+      "bytes": 0,
+      "code": 0,
+      "finished": "2026-10-13T20:31:30.928Z",
+      "log": "build/vo1466-php-promotion-static-r3-1.log",
+      "phase": "static",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 9916502016,
+            "freeBytes": 2497576960,
+            "load": 3.63
+          }
+        ],
+        "waits": 0
+      },
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "signal": null,
+      "started": "2026-10-13T20:31:29.063Z"
+    },
+    {
+      "args": [
+        "scripts/generate-reference-docs.mjs",
+        "--check"
+      ],
+      "bytes": 44,
+      "code": 0,
+      "finished": "2026-10-13T20:31:38.994Z",
+      "log": "build/vo1466-php-promotion-static-r3-2.log",
+      "phase": "static",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 9870704640,
+            "freeBytes": 2497568768,
+            "load": 3.74
+          }
+        ],
+        "waits": 0
+      },
+      "sha256": "3088ca5fefbfe779e4429456bbacd6ec035a87a5ab5b487cf500ccc111ee014b",
+      "signal": null,
+      "started": "2026-10-13T20:31:31.483Z"
+    }
+  ]
+}

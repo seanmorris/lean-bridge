@@ -29,7 +29,7 @@ test("nominal Subtype author guides distinguish compilation, installed support a
 	const author = await readFile("docs/lean/existing-package.md", "utf8"), { section } = await example();
 	assert.doesNotMatch(author, /For a top-level `Subtype` parameter or result, provide|Name that constructor at every refined boundary site|Nominal-field and refined callback Subtypes remain unsupported/u);
 	for(const text of ["Copied results do not need an input constructor"
-		, "Browser, other native hosts and PHP-Wasm installed acceptance for these additions remains pending"
+		, "Browser, WIT/WASI and PHP-Wasm installed acceptance for these additions remains pending"
 		, "nominal-subtype-npm-acceptance-20261011.md"
 		, "shared component compiler no longer requires a result constructor selection"
 		, "its constructor-selection syntax does not accept a null constructor"
@@ -43,13 +43,13 @@ test("nominal Subtype author guides distinguish compilation, installed support a
 		assert.equal((row.match(/Generated; pending/gu) ?? []).length, 1);
 		assert.ok(row.includes("All four ABIs installed"));
 		assert.ok(row.includes("Node installed; browser pending"));
-		assert.ok(row.includes("Node, C/C++, Perl, Python, Ruby, Rust, C#, Java and Kotlin ordinary/reviewed installed"));
+		assert.ok(row.includes("Node, C/C++, Perl, Python, Ruby, Rust, C#, Java, Kotlin and native PHP ordinary/reviewed installed"));
 	}
 	assert.ok(section.includes("`NominalSubtypes.lean`"));
 	assert.ok(section.includes("`lean-bridge.exports.json`"));
 	assert.ok(section.includes("Only the active case runs its constructors"));
 	assert.ok(section.includes("nominal-subtype-native-acceptance-20261011.md"));
-	assert.ok(section.includes("Other native hosts and PHP-Wasm nominal acceptance remains pending"));
+	assert.ok(section.includes("WIT/WASI and PHP-Wasm nominal acceptance remains pending"));
 });
 
 test("the native nominal author configuration selects only the input and preserves its Fin sibling", async () => {
