@@ -1,0 +1,38 @@
+{
+  "bindingIrSha256": "90db2a34185fd8be894105dbd6da6015b23a7be44d952b767f68cde98730b756",
+  "componentReceiptSha256": "8ca5449e2f4a7acee23b9b9d80255d3027d1a78d0734b2faae456ce8ad954095",
+  "files": {
+    "README.md": {
+      "bytes": 929,
+      "sha256": "3ffeb1a4f62ded0d87eb1f3e5dc24e961009f8b0ba3383ee232b0cefa32a7df9"
+    },
+    "binding-manifest.json": {
+      "bytes": 998,
+      "sha256": "935b63dab010499008731e9740cda0429e6cb0140d259ce6b3b6cad57c88bf1f"
+    },
+    "include/nominalsubtypes.h": {
+      "bytes": 8703,
+      "sha256": "b80c94b983a8e9b41aed5be55195e1bdc7d159b47215aa5f33421ca27481bb90"
+    },
+    "internal/nominalsubtypes_runtime.h": {
+      "bytes": 2556,
+      "sha256": "eb7965b26e836608628d3318012a04349ed40d80f47734078dd02ea68513e52c"
+    },
+    "lib/libnominalsubtypes.so": {
+      "bytes": 53952,
+      "sha256": "ca835c86669d3cfcdb28cb28807d6e76d516c5671171729a85d17e25d0683570"
+    },
+    "src/native.c": {
+      "bytes": 41102,
+      "sha256": "1b3284cc5a688f50d79aeeaf60782c130496e32dff09b13cc436151d208b2a32"
+    },
+    "src/nominalsubtypes.c": {
+      "bytes": 17286,
+      "sha256": "f0d0592b4b90f78ee4a5ba0b745a3c4ba5d826bf6cc655b17ab264019231298c"
+    }
+  },
+  "library": "libnominalsubtypes.so",
+  "profile": "native-library-v1",
+  "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+  "schemaVersion": 1
+}

@@ -1,0 +1,63 @@
+{
+  "aliases": [
+    {
+      "id": "lean:NominalSubtypes.EnvelopeAlias",
+      "name": "EnvelopeAlias",
+      "phpType": "Envelope",
+      "target": {
+        "id": "lean:NominalSubtypes.Envelope",
+        "kind": "named"
+      }
+    }
+  ],
+  "bindingIrSha256": "e25cffd8a91d8004f64700f5bd5413ec4e90975ea59027449fef344a077fbe2e",
+  "component": "nominalsubtypes@1.0.0",
+  "exports": [
+    "LeanNominalsubtypes\\Bytes",
+    "LeanNominalsubtypes\\LeanBridgeError",
+    "LeanNominalsubtypes\\Some",
+    "LeanNominalsubtypes\\Ok",
+    "LeanNominalsubtypes\\Err",
+    "LeanNominalsubtypes\\Envelope",
+    "LeanNominalsubtypes\\AliasPair",
+    "LeanNominalsubtypes\\Event",
+    "LeanNominalsubtypes\\EventEmpty",
+    "LeanNominalsubtypes\\EventBox",
+    "LeanNominalsubtypes\\EventChoices",
+    "LeanNominalsubtypes\\array_values",
+    "LeanNominalsubtypes\\branch",
+    "LeanNominalsubtypes\\event_choices",
+    "LeanNominalsubtypes\\event_empty",
+    "LeanNominalsubtypes\\event_value",
+    "LeanNominalsubtypes\\group_values",
+    "LeanNominalsubtypes\\list_values",
+    "LeanNominalsubtypes\\no_items",
+    "LeanNominalsubtypes\\optional",
+    "LeanNominalsubtypes\\pair_values",
+    "LeanNominalsubtypes\\produce_envelope",
+    "LeanNominalsubtypes\\product",
+    "LeanNominalsubtypes\\scalar"
+  ],
+  "files": [
+    "src/Api.php",
+    "src/Internal/Native.php",
+    "src/Internal/Runtime.php",
+    "README.md",
+    "binding-manifest.json"
+  ],
+  "filesSha256": {
+    "README.md": "e021476f76580ef084b1e32607db98bb67bcbcd4748f1f377636ed67d871c4fb",
+    "src/Api.php": "8d5927420b7b70496d337a49e9606af981d714df2540de53109020755c529504",
+    "src/Internal/Native.php": "b24bf8c9e23e8895c32c321e6a6ad0b60a458e19328faae33a71feda93ee207c",
+    "src/Internal/Runtime.php": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14"
+  },
+  "generator": {
+    "id": "lean-wasm/php-copied",
+    "version": 1
+  },
+  "namespace": "LeanNominalsubtypes",
+  "publicFiles": [
+    "src/Api.php"
+  ],
+  "schemaVersion": 1
+}

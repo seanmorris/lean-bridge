@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "nominalsubtypes@1.0.0",
+    "name": "nominalsubtypes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51391452,
+          "path": "archives/example-nominalsubtypes-1.0.0-linux-x86_64.zip",
+          "sha256": "79713f81af90d0965de0acc1621e604dc2e09ca93bd3f1f86f6f526887d970d1"
+        }
+      ],
+      "ecosystem": "composer",
+      "name": "example/nominalsubtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "php-native",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "90db2a34185fd8be894105dbd6da6015b23a7be44d952b767f68cde98730b756",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "fe20c0506f590cac0aa1798b17f8d9515c7a55710ba541d460504f6cd53ee59e"
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "adaptersSha256": "90b03d3434832236548a7201bc65678a0551a3130408e541af4cec161d93d57b",
+  "allocationGuardSha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83",
+  "bindingIrSha256": "90db2a34185fd8be894105dbd6da6015b23a7be44d952b767f68cde98730b756",
+  "compiler": "cc (Debian 12.2.0-14+deb12u1) 12.2.0",
+  "exports": [
+    {
+      "declaration": "NominalSubtypes.arrayValues",
+      "symbol": "lb_e6117b4a2c058276486949a3"
+    },
+    {
+      "declaration": "NominalSubtypes.branch",
+      "symbol": "lb_c68be1e1f84c99c070a44992"
+    },
+    {
+      "declaration": "NominalSubtypes.eventChoices",
+      "symbol": "lb_d8df7ac2dfbfe3b3b1460c5f"
+    },
+    {
+      "declaration": "NominalSubtypes.eventEmpty",
+      "symbol": "lb_d4cfd58d7ddb8560ef50dc52"
+    },
+    {
+      "declaration": "NominalSubtypes.eventValue",
+      "symbol": "lb_90cdba474b79f516c0b52978"
+    },
+    {
+      "declaration": "NominalSubtypes.groupValues",
+      "symbol": "lb_fe0216c702a5ebbfe74fc560"
+    },
+    {
+      "declaration": "NominalSubtypes.listValues",
+      "symbol": "lb_30775f99f7ee1962ca940d1a"
+    },
+    {
+      "declaration": "NominalSubtypes.noItems",
+      "symbol": "lb_fb21161d65be28d916dcac41"
+    },
+    {
+      "declaration": "NominalSubtypes.optional",
+      "symbol": "lb_9686ecc5fe69d4a6438a0e6a"
+    },
+    {
+      "declaration": "NominalSubtypes.pairValues",
+      "symbol": "lb_0fffaedb5541aceb2b121d97"
+    },
+    {
+      "declaration": "NominalSubtypes.produceEnvelope",
+      "symbol": "lb_1675ed3831b1403640f61957"
+    },
+    {
+      "declaration": "NominalSubtypes.product",
+      "symbol": "lb_bb98c244bdedfd3d9997d34a"
+    },
+    {
+      "declaration": "NominalSubtypes.scalar",
+      "symbol": "lb_a90151ccf6e7f9af5767c444"
+    }
+  ],
+  "headerSha256": "f0fe98df9ed9ca90cbf44c0062b17a0c6985ca3e8fab8cef88252be17f30c0a9",
+  "initializer": "initialize_LeanBridgeNative7f8bfe55e5831a91",
+  "library": "libcomponent_7f8bfe55e5831a9133c5.so",
+  "metadataSha256": "35204dbf7c8446bdb4e64dde52f77c88562b31f751fe2877c15a2f63fae0fb3c",
+  "modelSha256": "1af89847fb4d787b93c3d5d8664fd44fa00ef79047e8cca26bdec3b3a3810b72",
+  "nativeLibrary": {
+    "bytes": 90816,
+    "sha256": "3381fe58cd14e2114bcbd3ec452f9141a65dc4873dbf7b5724ded46dc4266afd"
+  },
+  "profile": "native-library-v1",
+  "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+  "schemaVersion": 2,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "466ed3de8c7732bfab4bf103a6f02af21c0de2e7fb35e914be69d9070e55a4a7",
+    "exportConfigurationSource": "{\n  \"exports\": [\n    \"NominalSubtypes.scalar\",\n    \"NominalSubtypes.produceEnvelope\",\n    \"NominalSubtypes.arrayValues\",\n    \"NominalSubtypes.listValues\",\n    \"NominalSubtypes.optional\",\n    \"NominalSubtypes.product\",\n    \"NominalSubtypes.branch\",\n    \"NominalSubtypes.groupValues\",\n    \"NominalSubtypes.pairValues\",\n    \"NominalSubtypes.eventValue\",\n    \"NominalSubtypes.eventEmpty\",\n    \"NominalSubtypes.eventChoices\",\n    \"NominalSubtypes.noItems\"\n  ],\n  \"modules\": [\n    \"NominalSubtypes\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"php-native\": {\n      \"name\": \"example/nominalsubtypes\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+    "extractorSha256": "a6e5738d497fa57e2ff7eb98d2da7761277dc72c6584802909c3a4960c6ee6f3",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 230456,
+          "interfaceSha256": "0f3e54c01267d66ad7bb60d0f1da33395b4149d5afffe50d23ad25d4c456dc7d",
+          "sha256": "a1fb18f7a40441694ca6b1ed0364f13b4f215e74eaf4a82fb8c0404530ea8c19"
+        },
+        "module": "NominalSubtypes",
+        "source": {
+          "bytes": 3013,
+          "path": "NominalSubtypes.lean",
+          "sha256": "17ea576239ea8afe60b13741a83d18947453d1ab6401e5fcf159da9e913403d3"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "exportModules": [
+        "NominalSubtypes"
+      ],
+      "exports": [
+        "NominalSubtypes.scalar",
+        "NominalSubtypes.produceEnvelope",
+        "NominalSubtypes.arrayValues",
+        "NominalSubtypes.listValues",
+        "NominalSubtypes.optional",
+        "NominalSubtypes.product",
+        "NominalSubtypes.branch",
+        "NominalSubtypes.groupValues",
+        "NominalSubtypes.pairValues",
+        "NominalSubtypes.eventValue",
+        "NominalSubtypes.eventEmpty",
+        "NominalSubtypes.eventChoices",
+        "NominalSubtypes.noItems"
+      ],
+      "metadata": {
+        "invocationIdentitySha256": "b69314a900b54b9178e74ee1490f2fa1e7658e811f3381d004546a9ff554abf5",
+        "modules": [
+          {
+            "interfaceSha256": "0f3e54c01267d66ad7bb60d0f1da33395b4149d5afffe50d23ad25d4c456dc7d",
+            "name": "NominalSubtypes",
+            "sourcePath": "NominalSubtypes.lean",
+            "sourceSha256": "17ea576239ea8afe60b13741a83d18947453d1ab6401e5fcf159da9e913403d3"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "NominalSubtypes"
+      ],
+      "profile": "native-library-v1",
+      "resources": []
+    },
+    "sourceNoticesSha256": "e3826d8f937c4aa1f7e916cc72e1f22bbeb3c290b6d40152ac02cc291e20dae5",
+    "sourceTreeSha256": "fe20c0506f590cac0aa1798b17f8d9515c7a55710ba541d460504f6cd53ee59e"
+  }
+}

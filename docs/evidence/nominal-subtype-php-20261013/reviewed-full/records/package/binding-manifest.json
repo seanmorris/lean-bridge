@@ -1,0 +1,77 @@
+{
+  "aliases": [
+    {
+      "id": "lean:NominalSubtypes.EnvelopeAlias",
+      "name": "EnvelopeAlias",
+      "phpType": "Envelope",
+      "target": {
+        "id": "lean:NominalSubtypes.Envelope",
+        "kind": "named"
+      }
+    }
+  ],
+  "bindingIrSha256": "57a4b9173c2e372eb22b51a6bbedd028a75cd7b3b6a2c83667b39d757b2bd8a9",
+  "component": "nominalsubtypes@1.0.0",
+  "exports": [
+    "LeanNominalsubtypes\\Bytes",
+    "LeanNominalsubtypes\\LeanBridgeError",
+    "LeanNominalsubtypes\\Some",
+    "LeanNominalsubtypes\\Ok",
+    "LeanNominalsubtypes\\Err",
+    "LeanNominalsubtypes\\Envelope",
+    "LeanNominalsubtypes\\AliasPair",
+    "LeanNominalsubtypes\\Pair",
+    "LeanNominalsubtypes\\Event",
+    "LeanNominalsubtypes\\EventEmpty",
+    "LeanNominalsubtypes\\EventBox",
+    "LeanNominalsubtypes\\EventChoices",
+    "LeanNominalsubtypes\\aliases",
+    "LeanNominalsubtypes\\array_values",
+    "LeanNominalsubtypes\\branch",
+    "LeanNominalsubtypes\\combine",
+    "LeanNominalsubtypes\\echo_envelope",
+    "LeanNominalsubtypes\\echo_event",
+    "LeanNominalsubtypes\\echo_groups",
+    "LeanNominalsubtypes\\echo_pair",
+    "LeanNominalsubtypes\\event_choices",
+    "LeanNominalsubtypes\\event_empty",
+    "LeanNominalsubtypes\\event_first",
+    "LeanNominalsubtypes\\event_second",
+    "LeanNominalsubtypes\\event_value",
+    "LeanNominalsubtypes\\first",
+    "LeanNominalsubtypes\\group_values",
+    "LeanNominalsubtypes\\inspect_alias_pair",
+    "LeanNominalsubtypes\\list_values",
+    "LeanNominalsubtypes\\nested",
+    "LeanNominalsubtypes\\no_items",
+    "LeanNominalsubtypes\\optional",
+    "LeanNominalsubtypes\\pair_values",
+    "LeanNominalsubtypes\\plain_fin",
+    "LeanNominalsubtypes\\produce_envelope",
+    "LeanNominalsubtypes\\product",
+    "LeanNominalsubtypes\\scalar",
+    "LeanNominalsubtypes\\second"
+  ],
+  "files": [
+    "src/Api.php",
+    "src/Internal/Native.php",
+    "src/Internal/Runtime.php",
+    "README.md",
+    "binding-manifest.json"
+  ],
+  "filesSha256": {
+    "README.md": "8eff758559c9bc9b174a89fbdb6ca94e258cb460132888d7bef6ef2468264958",
+    "src/Api.php": "4fcb2d9665623106dd6f1759de7f0f96e760cd950a7296817f032b75e1fc4197",
+    "src/Internal/Native.php": "21bbeafb44efbf3b29d447bbd73f114892ab78a5c1df2468d0d75dec7391aebf",
+    "src/Internal/Runtime.php": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14"
+  },
+  "generator": {
+    "id": "lean-wasm/php-copied",
+    "version": 1
+  },
+  "namespace": "LeanNominalsubtypes",
+  "publicFiles": [
+    "src/Api.php"
+  ],
+  "schemaVersion": 1
+}

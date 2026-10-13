@@ -1,0 +1,523 @@
+<?php
+declare(strict_types=1);
+namespace LeanNominalsubtypes;
+
+/**
+ * Copied Lean aliases use the PHP target values, without wrapper classes.
+ * EnvelopeAlias = Envelope; PHP: Envelope
+ */
+
+final class LeanBridgeError extends \RuntimeException {}
+
+final readonly class Bytes implements \Stringable, \Countable
+{
+    private function __construct(private string $value) {}
+    public static function fromString(mixed $value): self {
+        if (!is_string($value)) throw new \TypeError('Bytes requires a string');
+        return new self($value);
+    }
+    public function toString(): string { return $this->value; }
+    public function __toString(): string { return $this->value; }
+    public function count(): int { return strlen($this->value); }
+
+    public function equals(mixed $other): bool {
+        return $other instanceof self && Internal\Values::equal($this, $other);
+    }
+    public function hashCode(): string { return Internal\Values::hash($this); }
+
+}
+
+
+/** @template T */
+final readonly class Some
+{
+    /** @var T */
+    public mixed $value;
+    /** @param T $value */
+    public function __construct(mixed $value) {
+        if (func_num_args() !== 1) throw new \ArgumentCountError('Some requires one payload');
+        $this->value = $value;
+    }
+
+    public function equals(mixed $other): bool {
+        return $other instanceof self && Internal\Values::equal($this, $other);
+    }
+    public function hashCode(): string { return Internal\Values::hash($this); }
+
+}
+
+/** @template T */
+final readonly class Ok
+{
+    /** @var T */
+    public mixed $value;
+    /** @param T $value */
+    public function __construct(mixed $value) {
+        if (func_num_args() !== 1) throw new \ArgumentCountError('Ok requires one payload');
+        $this->value = $value;
+    }
+
+    public function equals(mixed $other): bool {
+        return $other instanceof self && Internal\Values::equal($this, $other);
+    }
+    public function hashCode(): string { return Internal\Values::hash($this); }
+
+}
+
+/** @template T */
+final readonly class Err
+{
+    /** @var T */
+    public mixed $value;
+    /** @param T $value */
+    public function __construct(mixed $value) {
+        if (func_num_args() !== 1) throw new \ArgumentCountError('Err requires one payload');
+        $this->value = $value;
+    }
+
+    public function equals(mixed $other): bool {
+        return $other instanceof self && Internal\Values::equal($this, $other);
+    }
+    public function hashCode(): string { return Internal\Values::hash($this); }
+
+}
+
+abstract readonly class Event {}
+final readonly class EventEmpty extends Event
+{
+
+    public function __construct() {
+        if (func_num_args() !== 0) throw new \ArgumentCountError('EventEmpty requires exactly 0 payload fields');
+        $__lbBudget = new Internal\Budget();
+
+    }
+
+    public function equals(mixed $other): bool {
+        return $other instanceof self && Internal\Values::equal($this, $other);
+    }
+    public function hashCode(): string { return Internal\Values::hash($this); }
+
+}
+
+final readonly class EventBox extends Event
+{
+    /** @var Envelope */
+    public Envelope $value;
+    public function __construct(mixed $value) {
+        if (func_num_args() !== 1) throw new \ArgumentCountError('EventBox requires exactly 1 payload fields');
+        $__lbBudget = new Internal\Budget();
+        $this->value = Internal\Checks::check1($value, $__lbBudget);
+    }
+
+    public function equals(mixed $other): bool {
+        return $other instanceof self && Internal\Values::equal($this, $other);
+    }
+    public function hashCode(): string { return Internal\Values::hash($this); }
+
+}
+
+final readonly class EventChoices extends Event
+{
+    /** @var list<Some<Ok<\Brick\Math\BigInteger>|Err<\Brick\Math\BigInteger>>|null> */
+    public array $values;
+    public function __construct(mixed $values) {
+        if (func_num_args() !== 1) throw new \ArgumentCountError('EventChoices requires exactly 1 payload fields');
+        $__lbBudget = new Internal\Budget();
+        $this->values = Internal\Checks::check7($values, $__lbBudget);
+    }
+
+    public function equals(mixed $other): bool {
+        return $other instanceof self && Internal\Values::equal($this, $other);
+    }
+    public function hashCode(): string { return Internal\Values::hash($this); }
+
+}
+final readonly class Envelope
+{
+    /** @var \Brick\Math\BigInteger
+     * @lean-bridge-contract nat
+    */
+    public \Brick\Math\BigInteger $payload;
+    /** @var \Brick\Math\BigInteger
+     * @lean-bridge-contract nat
+    */
+    public \Brick\Math\BigInteger $digit;
+    public function __construct(mixed $payload, mixed $digit) {
+        if (func_num_args() !== 2) throw new \ArgumentCountError('Envelope requires exactly 2 fields');
+        $__lbBudget = new Internal\Budget();
+        $this->payload = Internal\Checks::check0($payload, $__lbBudget);
+        $this->digit = Internal\Checks::check0($digit, $__lbBudget);
+    }
+
+    public function equals(mixed $other): bool {
+        return $other instanceof self && Internal\Values::equal($this, $other);
+    }
+    public function hashCode(): string { return Internal\Values::hash($this); }
+
+}
+
+final readonly class AliasPair
+{
+    /** @var list<Some<Envelope>|null>
+     * @lean-bridge-contract array<option<EnvelopeAlias>>
+    */
+    public array $left;
+    /** @var list<Some<Envelope>|null>
+     * @lean-bridge-contract array<option<EnvelopeAlias>>
+    */
+    public array $right;
+    public function __construct(mixed $left, mixed $right) {
+        if (func_num_args() !== 2) throw new \ArgumentCountError('AliasPair requires exactly 2 fields');
+        $__lbBudget = new Internal\Budget();
+        $this->left = Internal\Checks::check3($left, $__lbBudget);
+        $this->right = Internal\Checks::check3($right, $__lbBudget);
+    }
+
+    public function equals(mixed $other): bool {
+        return $other instanceof self && Internal\Values::equal($this, $other);
+    }
+    public function hashCode(): string { return Internal\Values::hash($this); }
+
+}
+
+final readonly class Pair
+{
+    /** @var Envelope
+     * @lean-bridge-contract Envelope
+    */
+    public Envelope $left;
+    /** @var Envelope
+     * @lean-bridge-contract Envelope
+    */
+    public Envelope $right;
+    public function __construct(mixed $left, mixed $right) {
+        if (func_num_args() !== 2) throw new \ArgumentCountError('Pair requires exactly 2 fields');
+        $__lbBudget = new Internal\Budget();
+        $this->left = Internal\Checks::check1($left, $__lbBudget);
+        $this->right = Internal\Checks::check1($right, $__lbBudget);
+    }
+
+    public function equals(mixed $other): bool {
+        return $other instanceof self && Internal\Values::equal($this, $other);
+    }
+    public function hashCode(): string { return Internal\Values::hash($this); }
+
+}
+
+require_once __DIR__ . '/Internal/Native.php';
+
+/**
+ * Checked Lean Fin bounds: $value0[*]?.payload checked by NominalSubtypes.plusOne; $value0[*]?.digit < 3; $value1[*]?.payload checked by NominalSubtypes.plusTwo; $value1[*]?.digit < 3.
+ *
+ * @param list<Some<Envelope>|null> $value0
+ * @lean-bridge-param array<option<EnvelopeAlias>> $value0
+ * @param list<Some<Envelope>|null> $value1
+ * @lean-bridge-param array<option<EnvelopeAlias>> $value1
+ * @return \Brick\Math\BigInteger
+ * @lean-bridge-return nat
+ */
+function aliases(mixed $value0, mixed $value1): \Brick\Math\BigInteger {
+    return Internal\Native::call0($value0, $value1);
+}
+
+/**
+ * Checked Lean Fin bounds: result[*] projects the Subtype base value.
+ *
+ * @param \Brick\Math\BigInteger $value0
+ * @lean-bridge-param nat $value0
+ * @return list<\Brick\Math\BigInteger>
+ * @lean-bridge-return array<nat>
+ */
+function array_values(mixed $value0): array {
+    return Internal\Native::call1($value0);
+}
+
+/**
+ * Checked Lean Fin bounds: result.ok projects the Subtype base value; result.error projects the Subtype base value.
+ *
+ * @param \Brick\Math\BigInteger $value0
+ * @lean-bridge-param nat $value0
+ * @return Ok<\Brick\Math\BigInteger>|Err<\Brick\Math\BigInteger>
+ * @lean-bridge-return result<nat, nat>
+ */
+function branch(mixed $value0): Ok|Err {
+    return Internal\Native::call2($value0);
+}
+
+/**
+ * Checked Lean Fin bounds: $value0.payload checked by NominalSubtypes.plusOne; $value0.digit < 3; $value1.payload checked by NominalSubtypes.plusTwo; $value1.digit < 3.
+ *
+ * @param Envelope $value0
+ * @lean-bridge-param Envelope $value0
+ * @param Envelope $value1
+ * @lean-bridge-param Envelope $value1
+ * @return \Brick\Math\BigInteger
+ * @lean-bridge-return nat
+ */
+function combine(mixed $value0, mixed $value1): \Brick\Math\BigInteger {
+    return Internal\Native::call3($value0, $value1);
+}
+
+/**
+ * Checked Lean Fin bounds: $value0.payload checked by NominalSubtypes.plusOne; $value0.digit < 3; result.payload projects the Subtype base value; result.digit < 3.
+ *
+ * @param Envelope $value0
+ * @lean-bridge-param Envelope $value0
+ * @return Envelope
+ * @lean-bridge-return Envelope
+ */
+function echo_envelope(mixed $value0): Envelope {
+    return Internal\Native::call4($value0);
+}
+
+/**
+ * Checked Lean Fin bounds: $value0.box.value.payload checked by NominalSubtypes.plusOne; $value0.box.value.digit < 3; $value0.choices.values[*]?.ok checked by NominalSubtypes.plusOne; $value0.choices.values[*]?.error checked by NominalSubtypes.plusTwo; result.box.value.payload projects the Subtype base value; result.box.value.digit < 3; result.choices.values[*]?.ok projects the Subtype base value; result.choices.values[*]?.error projects the Subtype base value.
+ *
+ * @param Event $value0
+ * @lean-bridge-param Event $value0
+ * @return Event
+ * @lean-bridge-return Event
+ */
+function echo_event(mixed $value0): Event {
+    return Internal\Native::call5($value0);
+}
+
+/**
+ * Checked Lean Fin bounds: $value0[*]?.payload checked by NominalSubtypes.plusOne; $value0[*]?.digit < 3; result[*]?.payload projects the Subtype base value; result[*]?.digit < 3.
+ *
+ * @param list<Some<Envelope>|null> $value0
+ * @lean-bridge-param array<option<EnvelopeAlias>> $value0
+ * @return list<Some<Envelope>|null>
+ * @lean-bridge-return array<option<EnvelopeAlias>>
+ */
+function echo_groups(mixed $value0): array {
+    return Internal\Native::call6($value0);
+}
+
+/**
+ * Checked Lean Fin bounds: $value0.left[*]?.payload checked by NominalSubtypes.plusOne; $value0.left[*]?.digit < 3; $value0.right[*]?.payload checked by NominalSubtypes.plusTwo; $value0.right[*]?.digit < 3; result.left[*]?.payload projects the Subtype base value; result.left[*]?.digit < 3; result.right[*]?.payload projects the Subtype base value; result.right[*]?.digit < 3.
+ *
+ * @param AliasPair $value0
+ * @lean-bridge-param AliasPair $value0
+ * @return AliasPair
+ * @lean-bridge-return AliasPair
+ */
+function echo_pair(mixed $value0): AliasPair {
+    return Internal\Native::call7($value0);
+}
+
+/**
+ * Checked Lean Fin bounds: result.box.value.payload projects the Subtype base value; result.box.value.digit < 3; result.choices.values[*]?.ok projects the Subtype base value; result.choices.values[*]?.error projects the Subtype base value.
+ *
+ * @param \Brick\Math\BigInteger $value0
+ * @lean-bridge-param nat $value0
+ * @return Event
+ * @lean-bridge-return Event
+ */
+function event_choices(mixed $value0): Event {
+    return Internal\Native::call8($value0);
+}
+
+/**
+ * Checked Lean Fin bounds: result.box.value.payload projects the Subtype base value; result.box.value.digit < 3; result.choices.values[*]?.ok projects the Subtype base value; result.choices.values[*]?.error projects the Subtype base value.
+ *
+ * @param \Brick\Math\BigInteger $value0
+ * @lean-bridge-param nat $value0
+ * @return Event
+ * @lean-bridge-return Event
+ */
+function event_empty(mixed $value0): Event {
+    return Internal\Native::call9($value0);
+}
+
+/**
+ * Checked Lean Fin bounds: $value0.box.value.payload checked by NominalSubtypes.plusOne; $value0.box.value.digit < 3; $value0.choices.values[*]?.ok checked by NominalSubtypes.plusOne; $value0.choices.values[*]?.error checked by NominalSubtypes.plusTwo.
+ *
+ * @param Event $value0
+ * @lean-bridge-param Event $value0
+ * @return \Brick\Math\BigInteger
+ * @lean-bridge-return nat
+ */
+function event_first(mixed $value0): \Brick\Math\BigInteger {
+    return Internal\Native::call10($value0);
+}
+
+/**
+ * Checked Lean Fin bounds: $value0.box.value.payload checked by NominalSubtypes.plusTwo; $value0.box.value.digit < 3; $value0.choices.values[*]?.ok checked by NominalSubtypes.plusTwo; $value0.choices.values[*]?.error checked by NominalSubtypes.plusOne.
+ *
+ * @param Event $value0
+ * @lean-bridge-param Event $value0
+ * @return \Brick\Math\BigInteger
+ * @lean-bridge-return nat
+ */
+function event_second(mixed $value0): \Brick\Math\BigInteger {
+    return Internal\Native::call11($value0);
+}
+
+/**
+ * Checked Lean Fin bounds: result.box.value.payload projects the Subtype base value; result.box.value.digit < 3; result.choices.values[*]?.ok projects the Subtype base value; result.choices.values[*]?.error projects the Subtype base value.
+ *
+ * @param \Brick\Math\BigInteger $value0
+ * @lean-bridge-param nat $value0
+ * @return Event
+ * @lean-bridge-return Event
+ */
+function event_value(mixed $value0): Event {
+    return Internal\Native::call12($value0);
+}
+
+/**
+ * Checked Lean Fin bounds: $value0.payload checked by NominalSubtypes.plusOne; $value0.digit < 3.
+ *
+ * @param Envelope $value0
+ * @lean-bridge-param Envelope $value0
+ * @return \Brick\Math\BigInteger
+ * @lean-bridge-return nat
+ */
+function first(mixed $value0): \Brick\Math\BigInteger {
+    return Internal\Native::call13($value0);
+}
+
+/**
+ * Checked Lean Fin bounds: result[*]?.payload projects the Subtype base value; result[*]?.digit < 3.
+ *
+ * @param \Brick\Math\BigInteger $value0
+ * @lean-bridge-param nat $value0
+ * @return list<Some<Envelope>|null>
+ * @lean-bridge-return array<option<EnvelopeAlias>>
+ */
+function group_values(mixed $value0): array {
+    return Internal\Native::call14($value0);
+}
+
+/**
+ * Checked Lean Fin bounds: $value0.left[*]?.payload checked by NominalSubtypes.plusOne; $value0.left[*]?.digit < 3; $value0.right[*]?.payload checked by NominalSubtypes.plusTwo; $value0.right[*]?.digit < 3.
+ *
+ * @param AliasPair $value0
+ * @lean-bridge-param AliasPair $value0
+ * @return \Brick\Math\BigInteger
+ * @lean-bridge-return nat
+ */
+function inspect_alias_pair(mixed $value0): \Brick\Math\BigInteger {
+    return Internal\Native::call15($value0);
+}
+
+/**
+ * Checked Lean Fin bounds: result[*] projects the Subtype base value.
+ *
+ * @param \Brick\Math\BigInteger $value0
+ * @lean-bridge-param nat $value0
+ * @return list<\Brick\Math\BigInteger>
+ * @lean-bridge-return list<nat>
+ */
+function list_values(mixed $value0): array {
+    return Internal\Native::call16($value0);
+}
+
+/**
+ * Checked Lean Fin bounds: $value0.left.payload checked by NominalSubtypes.plusOne; $value0.left.digit < 3; $value0.right.payload checked by NominalSubtypes.plusTwo; $value0.right.digit < 3.
+ *
+ * @param Pair $value0
+ * @lean-bridge-param Pair $value0
+ * @return \Brick\Math\BigInteger
+ * @lean-bridge-return nat
+ */
+function nested(mixed $value0): \Brick\Math\BigInteger {
+    return Internal\Native::call17($value0);
+}
+
+/**
+ * Checked Lean Fin bounds: result[*] projects the Subtype base value.
+ *
+ * @param \Brick\Math\BigInteger $value0
+ * @lean-bridge-param nat $value0
+ * @return list<\Brick\Math\BigInteger>
+ * @lean-bridge-return array<nat>
+ */
+function no_items(mixed $value0): array {
+    return Internal\Native::call18($value0);
+}
+
+/**
+ * Checked Lean Fin bounds: result? projects the Subtype base value.
+ *
+ * @param \Brick\Math\BigInteger $value0
+ * @lean-bridge-param nat $value0
+ * @return Some<\Brick\Math\BigInteger>|null
+ * @lean-bridge-return option<nat>
+ */
+function optional(mixed $value0): Some|null {
+    return Internal\Native::call19($value0);
+}
+
+/**
+ * Checked Lean Fin bounds: result.left[*]?.payload projects the Subtype base value; result.left[*]?.digit < 3; result.right[*]?.payload projects the Subtype base value; result.right[*]?.digit < 3.
+ *
+ * @param \Brick\Math\BigInteger $value0
+ * @lean-bridge-param nat $value0
+ * @return AliasPair
+ * @lean-bridge-return AliasPair
+ */
+function pair_values(mixed $value0): AliasPair {
+    return Internal\Native::call20($value0);
+}
+
+/**
+ * Checked Lean Fin bounds: $value0 < 3.
+ *
+ * @param \Brick\Math\BigInteger $value0
+ * @lean-bridge-param nat $value0
+ * @return \Brick\Math\BigInteger
+ * @lean-bridge-return nat
+ */
+function plain_fin(mixed $value0): \Brick\Math\BigInteger {
+    return Internal\Native::call21($value0);
+}
+
+/**
+ * Checked Lean Fin bounds: result.payload projects the Subtype base value; result.digit < 3.
+ *
+ * @param \Brick\Math\BigInteger $value0
+ * @lean-bridge-param nat $value0
+ * @return Envelope
+ * @lean-bridge-return Envelope
+ */
+function produce_envelope(mixed $value0): Envelope {
+    return Internal\Native::call22($value0);
+}
+
+/**
+ * Checked Lean Fin bounds: result.0 projects the Subtype base value; result.1 projects the Subtype base value.
+ *
+ * @param \Brick\Math\BigInteger $value0
+ * @lean-bridge-param nat $value0
+ * @return array{\Brick\Math\BigInteger, \Brick\Math\BigInteger}
+ * @lean-bridge-return tuple<nat, nat>
+ */
+function product(mixed $value0): array {
+    return Internal\Native::call23($value0);
+}
+
+/**
+ * Checked Lean Fin bounds: result projects the Subtype base value.
+ *
+ * @param \Brick\Math\BigInteger $value0
+ * @lean-bridge-param nat $value0
+ * @return \Brick\Math\BigInteger
+ * @lean-bridge-return nat
+ */
+function scalar(mixed $value0): \Brick\Math\BigInteger {
+    return Internal\Native::call24($value0);
+}
+
+/**
+ * Checked Lean Fin bounds: $value0.payload checked by NominalSubtypes.plusTwo; $value0.digit < 3.
+ *
+ * @param Envelope $value0
+ * @lean-bridge-param Envelope $value0
+ * @return \Brick\Math\BigInteger
+ * @lean-bridge-return nat
+ */
+function second(mixed $value0): \Brick\Math\BigInteger {
+    return Internal\Native::call25($value0);
+}

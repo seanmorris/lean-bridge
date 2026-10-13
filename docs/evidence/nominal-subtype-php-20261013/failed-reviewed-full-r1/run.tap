@@ -1,0 +1,55 @@
+TAP version 13
+# Subtest: installed nominal PHP packages reproduce and relocate reviewed full
+not ok 1 - installed nominal PHP packages reproduce and relocate reviewed full
+  ---
+  duration_ms: 452632.004908
+  type: 'test'
+  location: '/app/tests/helpers/nominal-subtype-php-installed-tests.mjs:29:53'
+  failureType: 'testCodeFailure'
+  error: 'C# producer host load remained at or above 6 for five minutes'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    waitNominalSubtypeDotnetResources (file:///app/tests/helpers/nominal-subtype-dotnet-resources.mjs:37:10)
+    async resourceCheck (file:///app/tests/helpers/nominal-subtype-php-installed-tests.mjs:41:23)
+    async TestContext.<anonymous> (file:///app/tests/helpers/nominal-subtype-php-installed-tests.mjs:108:2)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# reviewed full author 0: reproducible Composer package
+# Waiting for host load below 6 before the next C\# phase: 6
+# Waiting for host load below 6 before the next C\# phase: 6.07
+# reviewed full author 1: reproducible Composer package
+# Waiting for host load below 6 before the next C\# phase: 9.14
+# Waiting for host load below 6 before the next C\# phase: 9.08
+# Waiting for host load below 6 before the next C\# phase: 8.96
+# Waiting for host load below 6 before the next C\# phase: 9.45
+# Waiting for host load below 6 before the next C\# phase: 9.1
+# Waiting for host load below 6 before the next C\# phase: 9.31
+# Waiting for host load below 6 before the next C\# phase: 10.9
+# Waiting for host load below 6 before the next C\# phase: 11.62
+# Waiting for host load below 6 before the next C\# phase: 12.01
+# Waiting for host load below 6 before the next C\# phase: 12.18
+# Waiting for host load below 6 before the next C\# phase: 13.62
+# Waiting for host load below 6 before the next C\# phase: 12.66
+# Waiting for host load below 6 before the next C\# phase: 13.91
+# Waiting for host load below 6 before the next C\# phase: 16.28
+# Waiting for host load below 6 before the next C\# phase: 14.49
+# Waiting for host load below 6 before the next C\# phase: 13.09
+# Waiting for host load below 6 before the next C\# phase: 13
+# Waiting for host load below 6 before the next C\# phase: 13.63
+# Waiting for host load below 6 before the next C\# phase: 16.06
+# Waiting for host load below 6 before the next C\# phase: 15.08
+# Retained failed nominal PHP inputs: /tmp/lean-bridge-nominal-php-installed-gy7fQZ
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 453021.2495
