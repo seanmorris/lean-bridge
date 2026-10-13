@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeNominalSubtypeJvmCiSource } from "./nominal-subtype-jvm-ci-history.mjs";
 
 export const nativeFinJvmExitHistoryPath = "docs/evidence/native-fin-jvm-exit-source-history-20261013.json";
 export const nativeFinJvmExitPredecessor = "50a5cf414a914a3906ccf7676eb4006427b8ecd8";
@@ -53,6 +54,7 @@ export const reverseNativeFinJvmExitUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeNativeFinJvmExitSource = (path, source, expected) => {
+	source = beforeNominalSubtypeJvmCiSource(path, source, expected);
 	if(typeof source !== "string" || !nativeFinJvmExitChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = history ??= JSON.parse(readFileSync(nativeFinJvmExitHistoryPath, "utf8"));

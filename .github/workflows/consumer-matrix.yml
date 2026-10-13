@@ -4008,6 +4008,22 @@ jobs:
           test -s build/collections/jvm.json
           test -s build/type-corpus/java-kotlin.json
           test -s build/type-corpus/reviewed-native-java-kotlin.json
+      - name: Require nominal Java and Kotlin packages
+        if: matrix.profile == 'jvm'
+        id: nominal_jvm
+        timeout-minutes: 45
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-nominal-subtype-jvm-ci.sh "$JAVA_HOME/bin/java" "$JAVA_HOME/bin/javac" "$PWD/build/kotlin-tools/kotlinc/bin/kotlinc"
+      - name: Preserve complete and partial nominal JVM records
+        if: always() && matrix.profile == 'jvm'
+        uses: actions/upload-artifact@v7
+        with:
+          name: nominal-subtype-jvm-${{ github.sha }}
+          path: build/nominal-subtype-jvm-ci/
+          if-no-files-found: error
+          retention-days: 30
       - name: Upload installed Java and Kotlin corpus observations
         if: always() && matrix.profile == 'jvm'
         uses: actions/upload-artifact@v7
@@ -4346,7 +4362,8 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_CONVERSIONS_TEST=1 node --test tests/jvm-collection-conversions.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_COLLECTION_PREFLIGHT=1 LEAN_BRIDGE_JVM_COLLECTION_PROFILES=java,kotlin node --test tests/jvm-collection-callers.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_COLLECTION_TEST=1 LEAN_BRIDGE_JVM_COLLECTION_PROFILES=java,kotlin node --test tests/jvm-collections.test.mjs"
-              if [ "${{ steps.ordinary_jvm.outcome }}" != success ] || [ "${{ steps.type_corpus_jvm.outcome }}" != success ]; then
+              consumer_command="$consumer_command && bash scripts/run-nominal-subtype-jvm-ci.sh \"$JAVA_HOME/bin/java\" \"$JAVA_HOME/bin/javac\" \"$PWD/build/kotlin-tools/kotlinc/bin/kotlinc\""
+              if [ "${{ steps.ordinary_jvm.outcome }}" != success ] || [ "${{ steps.type_corpus_jvm.outcome }}" != success ] || [ "${{ steps.nominal_jvm.outcome }}" != success ]; then
                 test_result=failed
                 executed=false
               fi
@@ -4393,7 +4410,7 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce managed consumer support
-        if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'dotnet' && (steps.ordinary_dotnet.outcome != 'success' || steps.type_corpus_dotnet.outcome != 'success')) || (matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success')) || (matrix.profile == 'ruby' && (steps.ordinary_ruby.outcome != 'success' || steps.type_corpus_ruby.outcome != 'success')))
+        if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'dotnet' && (steps.ordinary_dotnet.outcome != 'success' || steps.type_corpus_dotnet.outcome != 'success')) || (matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success' || steps.nominal_jvm.outcome != 'success')) || (matrix.profile == 'ruby' && (steps.ordinary_ruby.outcome != 'success' || steps.type_corpus_ruby.outcome != 'success')))
         run: exit 1
 
   owned-jvm-values:

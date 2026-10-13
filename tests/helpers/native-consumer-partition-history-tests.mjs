@@ -49,9 +49,10 @@ test("native CI partition history authenticates every exact predecessor and pres
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
 	assert.ok(pins > 0);
-	assert.deepEqual(JSON.parse(await readFile(path)), expected);
+	const checkpoint = record.updates.find(update => update.path === path).currentSha256;
+	assert.deepEqual(JSON.parse(beforeNativeConsumerPartitionSource(path, await readFile(path, "utf8"), checkpoint)), expected);
 	for(const evidence of expected.evidence) for(const file of evidence.files)
-		assert.equal(sha256(await readFile(file.path)), file.sha256, file.path);
+		assert.equal(sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)), file.sha256, file.path);
 	t.diagnostic(`${pins} source pins refreshed; every support claim and observation unchanged`);
 });
 

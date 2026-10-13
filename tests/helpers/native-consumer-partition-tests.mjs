@@ -10,13 +10,15 @@ import test from "node:test";
 import { runInNewContext } from "node:vm";
 import { assertNativeConsumerPartition, extendPerlCompilerBudget, nativeConsumerPartitionBaseline, nativeConsumerPartitionSummaryGate, nativeConsumerValueGate } from "./native-consumer-partition.mjs";
 import { assertWorkflowRunBudget, workflowRunScalars } from "./native-observation-split.mjs";
+import { beforeNominalSubtypeJvmCiSource } from "./nominal-subtype-jvm-ci-history.mjs";
 
 const path = ".github/workflows/consumer-matrix.yml";
 const original = name => execFileSync("git", ["show", `${nativeConsumerPartitionBaseline}:${name}`], { encoding: "utf8", maxBuffer: 4 * 1024 * 1024 });
 const jobAt = (source, name) => `  ${name}:\n` + source.split(`  ${name}:\n`)[1].split(/^ {2}[a-z][a-z0-9-]*:\n/mu)[0];
+const partitionCheckpoint = async () => beforeNominalSubtypeJvmCiSource(path, await readFile(path, "utf8"));
 
-test("native CI partitions all 191 command lines and 77 artifact paths without changing other jobs", async () => {
-	const source = await readFile(path, "utf8");
+test("native CI partition checkpoint preserves all 191 command lines, 77 artifact paths and other jobs", async () => {
+	const source = await partitionCheckpoint();
 	assert.deepEqual(assertNativeConsumerPartition(original(path), source), {
 		commands: 191, artifacts: 77
 		, independentJobs: ["native-consumers", "native-c-family-values"]
@@ -33,7 +35,7 @@ test("native CI partitions all 191 command lines and 77 artifact paths without c
 });
 
 test("native CI partition refuses every omitted command and original artifact path", async t => {
-	const source = await readFile(path, "utf8"), previous = original(path);
+	const source = await partitionCheckpoint(), previous = original(path);
 	let commands = 0, artifacts = 0;
 	for(const job of ["native-consumers", "native-c-family-values"])
 	{
@@ -59,7 +61,7 @@ test("native CI partition refuses every omitted command and original artifact pa
 });
 
 test("native partition rejects optional jobs, permissive shells, lost uploads and incomplete summary prerequisites", async t => {
-	const source = await readFile(path, "utf8"), previous = original(path), job = jobAt(source, "native-c-family-values");
+	const source = await partitionCheckpoint(), previous = original(path), job = jobAt(source, "native-c-family-values");
 	const mutations = [
 		...[
 			["    steps:\n", "    if: false\n    steps:\n"]
@@ -91,7 +93,7 @@ test("native partition rejects optional jobs, permissive shells, lost uploads an
 });
 
 test("combined C/C++ summary proceeds only when both actual jobs succeeded", async () => {
-	const source = await readFile(path, "utf8"), summary = jobAt(source, "support-summary");
+	const source = await partitionCheckpoint(), summary = jobAt(source, "support-summary");
 	assert.ok(summary.includes("    steps:\n" + nativeConsumerPartitionSummaryGate));
 	const expression = nativeConsumerPartitionSummaryGate.split("        if: ")[1].split("\n")[0]
 		.replaceAll("needs.native-consumers", 'needs["native-consumers"]')

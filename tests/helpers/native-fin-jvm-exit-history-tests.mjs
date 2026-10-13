@@ -43,7 +43,8 @@ test("scalar JVM exit repair preserves exact historical producers and support cl
 	const path = "docs/type-surface.v1.json", inventory = JSON.parse(original(path));
 	assert.equal(beforeFinRefinementSource(path, await readFile(path, "utf8"), sha256(original(path))), original(path));
 	assert.equal(inventory.evidence.length, 500); assert.equal(inventory.observations.length, 585);
-	const currentInventory = JSON.parse(await readFile(path));
+	const checkpoint = record.updates.find(update => update.path === path).currentSha256;
+	const currentInventory = JSON.parse(beforeNativeFinJvmExitSource(path, await readFile(path, "utf8"), checkpoint));
 	const pin = currentInventory.evidence.find(entry => entry.id === "jvm-fin-installed").files
 		.find(file => file.path === "tests/jvm-fin.test.mjs");
 	assert.equal(pin.sha256, sha256(await readFile(pin.path)));
