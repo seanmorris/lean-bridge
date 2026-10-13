@@ -34,6 +34,7 @@ import { assertNativeConsumerPartition, extendPerlCompilerBudget } from "./helpe
 import { beforeNativeConsumerPartitionSource } from "./helpers/native-consumer-partition-history.mjs";
 import { assertNominalSubtypeJvmWorkflow, disableNominalSubtypeJvmWorkflow } from "./helpers/nominal-subtype-jvm-ci-workflow.mjs";
 import { assertNominalSubtypePhpWorkflow, disableNominalSubtypePhpWorkflow } from "./helpers/nominal-subtype-php-ci-workflow.mjs";
+import { assertNominalSubtypeWitWorkflow, disableNominalSubtypeWitWorkflow } from "./helpers/nominal-subtype-wit-ci-workflow.mjs";
 import { assertWorkflowRunBudget, joinNativeObservations } from "./helpers/native-observation-split.mjs";
 import {
 	ConsumerSupportError,
@@ -636,7 +637,8 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   const structuralPerlWorkflow = beforeNativeConsumerPartitionSource(".github/workflows/perl-consumer.yml", livePerlWorkflow);
   assertNominalSubtypeJvmWorkflow(liveWorkflow);
   assertNominalSubtypePhpWorkflow(liveWorkflow);
-  assertNativeConsumerPartition(structuralWorkflow, disableNominalSubtypeJvmWorkflow(disableNominalSubtypePhpWorkflow(liveWorkflow)));
+  assertNominalSubtypeWitWorkflow(liveWorkflow);
+  assertNativeConsumerPartition(structuralWorkflow, disableNominalSubtypeJvmWorkflow(disableNominalSubtypePhpWorkflow(disableNominalSubtypeWitWorkflow(liveWorkflow))));
   assert.equal(extendPerlCompilerBudget(structuralPerlWorkflow), livePerlWorkflow);
   assertStructuralSubtypeWorkflow(liveWorkflow, "consumer-matrix.yml");
   assertStructuralSubtypeWorkflow(livePerlWorkflow, "perl-consumer.yml");

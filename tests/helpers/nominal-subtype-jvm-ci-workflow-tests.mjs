@@ -14,6 +14,7 @@ import { assertNominalSubtypeRubyWorkflow } from "./nominal-subtype-ruby-ci-work
 import { assertNominalSubtypePythonWorkflow } from "./nominal-subtype-python-ci-workflow.mjs";
 import { assertStructuralSubtypeWorkflow } from "./structural-subtype-ci-workflow.mjs";
 import { disableNominalSubtypePhpWorkflow } from "./nominal-subtype-php-ci-workflow.mjs";
+import { disableNominalSubtypeWitWorkflow } from "./nominal-subtype-wit-ci-workflow.mjs";
 
 const path = ".github/workflows/consumer-matrix.yml";
 const predecessor = "2f38c10b8f0937edeeef39b4e15515f70b66ddd3";
@@ -21,7 +22,7 @@ const predecessor = "2f38c10b8f0937edeeef39b4e15515f70b66ddd3";
 test("nominal JVM CI preserves all preceding jobs and enforces four pinned selections", async () => {
 	const source = await readFile(path, "utf8"); assertNominalSubtypeJvmWorkflow(source);
 	const previous = execFileSync("git", ["show", `${predecessor}:${path}`], { encoding: "utf8", maxBuffer: 4 * 1024 * 1024 });
-	const checkpoint = disableNominalSubtypePhpWorkflow(source);
+	const checkpoint = disableNominalSubtypePhpWorkflow(disableNominalSubtypeWitWorkflow(source));
 	assert.equal(disableNominalSubtypeJvmWorkflow(checkpoint), previous);
 	assert.equal(enableNominalSubtypeJvmWorkflow(previous), checkpoint);
 	assertNominalSubtypeDotnetWorkflow(source); assertNominalSubtypeRustWorkflow(source);
