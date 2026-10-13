@@ -10,6 +10,7 @@ import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
 import { ownedAggregateTransferRuntime } from "../../src/backends/native/owned-aggregate-transfers.mjs";
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
 import { ownedBorrowSource } from "./owned-borrow-fixture.mjs";
+import { nativeConsumerValueGate } from "./native-consumer-partition.mjs";
 
 export const ownedBorrowRuntimeScript = "LEAN_BRIDGE_OWNED_BORROW_TEST=1 node --test --test-concurrency=1 tests/owned-aggregate-borrows.test.mjs tests/owned-borrow-analysis.test.mjs tests/owned-c-borrows.test.mjs";
 export const ownedBorrowPackageScript = "LEAN_BRIDGE_OWNED_BORROW_PACKAGE_TEST=1 node --test --test-concurrency=1 tests/owned-borrow-packaging.test.mjs";
@@ -144,8 +145,7 @@ export const assertOwnedBorrowExecution = async record => {
 export const assertOwnedBorrowCi = (workflow, manifest) => {
 	assert.equal(manifest.scripts["test:owned-borrows"], ownedBorrowRuntimeScript);
 	assert.equal(manifest.scripts["test:owned-borrow-packages"], ownedBorrowPackageScript);
-	const step = workflow.split("        id: type_corpus_c_family\n")[1]?.split("      - name: ")[0];
-	assert.ok(step); assert.match(step, /^ {8}if: matrix\.profile == 'c-family'$/mu);
+	const { step, upload } = nativeConsumerValueGate(workflow);
 	for(const [gate, log, count] of [["borrows", "runtime", 8], ["borrow-packages", "installed", 2]])
 	{
 		assert.ok(step.split("\n").includes(`          npm run test:owned-${gate} > build/owned-borrows-${log}.log 2>&1`));
@@ -154,8 +154,6 @@ export const assertOwnedBorrowCi = (workflow, manifest) => {
 	}
 	for(const file of ["native", "analysis-ordinary", "analysis-reviewed", "c-ordinary", "c-reviewed", "installed-ordinary", "installed-reviewed"])
 		assert.ok(step.split("\n").includes(`          test -s build/owned-borrows/${file}.json`));
-	const upload = workflow.split("      - name: Upload installed C and C++ corpus observations\n")[1]?.split("      - name: ")[0];
-	assert.ok(upload); assert.match(upload, /^ {8}if: always\(\) && matrix\.profile == 'c-family'$/mu);
 	assert.match(upload, /^ {10}if-no-files-found: error$/mu);
 	for(const name of ["owned-borrows/", "owned-borrows-runtime.log", "owned-borrows-installed.log"])
 		assert.ok(upload.split("\n").includes("            build/" + name));

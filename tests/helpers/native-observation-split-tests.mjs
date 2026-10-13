@@ -8,6 +8,7 @@ import { spawnSync } from "node:child_process";
 import { readFile, readdir } from "node:fs/promises";
 import test from "node:test";
 import { nativeCiProfiles, nativeCiRecordScript, nativeCiSteps } from "./native-ci-isolation.mjs";
+import { beforeNativeConsumerPartitionSource } from "./native-consumer-partition-history.mjs";
 import { assertWorkflowRunBudget, joinNativeObservations, workflowExpressionLength, workflowRunScalars } from "./native-observation-split.mjs";
 import "./native-observation-split-history-tests.mjs";
 
@@ -25,7 +26,9 @@ test("all workflow run scalars fit the hosted expression budget", async () => {
 	for(const file of await readdir(".github/workflows"))
 		if(/\.ya?ml$/u.test(file)) count += assertWorkflowRunBudget(await readFile(`.github/workflows/${file}`, "utf8"));
 	assert.ok(count > 100);
-	const workflow = await readFile(path, "utf8"), previous = joinNativeObservations(workflow);
+	// The old combined recording exceeded the budget before the later job partition.
+	const workflow = beforeNativeConsumerPartitionSource(path, await readFile(path, "utf8"));
+	const previous = joinNativeObservations(workflow);
 	assert.throws(() => assertWorkflowRunBudget(previous), /CI budget/u);
 	assert.ok(workflowRunScalars(previous).some(run => workflowExpressionLength(run.source) > 21000));
 });

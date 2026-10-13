@@ -57,6 +57,7 @@ import { nominalSubtypeDotnetCiChangedPaths } from "./nominal-subtype-dotnet-ci-
 import { phpWasmFailureDiagnosticsChangedPaths } from "./php-wasm-failure-diagnostics-history.mjs";
 import { jvmContainerEntryExitChangedPaths } from "./jvm-container-entry-exit-history.mjs";
 import { nominalSubtypeDotnetPromotionChangedPaths } from "./nominal-subtype-dotnet-promotion-history.mjs";
+import { nativeConsumerPartitionChangedPaths } from "./native-consumer-partition-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeSubtypeRefinementSource, subtypeRefinementChangedPaths } from "./subtype-refinement-source-history.mjs";
 import { subtypeHeapChangedPaths } from "./subtype-heap-source-history.mjs";
@@ -979,6 +980,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...phpWasmFailureDiagnosticsChangedPaths
 	, ...jvmContainerEntryExitChangedPaths
 	, ...nominalSubtypeDotnetPromotionChangedPaths
+	, ...nativeConsumerPartitionChangedPaths
 ])].sort());
 
 /**

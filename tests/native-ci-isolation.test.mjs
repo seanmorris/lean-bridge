@@ -12,6 +12,8 @@ import { assertNativeCiIsolation, nativeCiJob, nativeCiProfiles, nativeCiRecordS
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { runCopied } from "./helpers/copied-fixture-install.mjs";
 import "./helpers/native-consumer-budget-tests.mjs";
+import "./helpers/native-consumer-partition-tests.mjs";
+import "./helpers/native-consumer-partition-history-tests.mjs";
 import "./helpers/perl-closure-native-budget-tests.mjs";
 import "./helpers/fin-core-repair-history-tests.mjs";
 

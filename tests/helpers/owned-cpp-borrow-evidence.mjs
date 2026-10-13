@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { nativeConsumerValueGate } from "./native-consumer-partition.mjs";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { ownedReceiverHistoricalBytes } from "./owned-receiver-history.mjs";
@@ -123,7 +124,7 @@ export const assertOwnedCppBorrowExecution = async record => {
  */
 export const assertOwnedCppBorrowCi = (workflow, manifest) => {
 	assert.equal(manifest.scripts["test:owned-cpp-borrows"], ownedCppBorrowScript);
-	const step = workflow.split("id: type_corpus_c_family\n")[1]?.split("      - name:")[0];
+	const { step, split } = nativeConsumerValueGate(workflow);
 	assert.ok(step?.includes("          npm run test:owned-cpp-borrows > build/owned-cpp-borrows.log 2>&1\n"));
 	for(const summary of ["pass 5", "fail 0", "skipped 0"]) assert.ok(step.includes(`          rg '^# ${summary}$' build/owned-cpp-borrows.log\n`));
 	for(const directory of ["owned-cpp-borrows", "owned-cpp-borrow-packaging"])
@@ -132,6 +133,6 @@ export const assertOwnedCppBorrowCi = (workflow, manifest) => {
 		assert.ok(workflow.includes(`            build/${directory}/\n`));
 	}
 	assert.ok(workflow.includes("            build/owned-cpp-borrows.log\n"));
-	assert.ok(workflow.includes('consumer_command="$consumer_command && npm run test:owned-cpp-borrows"'));
+	if(!split) assert.ok(workflow.includes('consumer_command="$consumer_command && npm run test:owned-cpp-borrows"'));
 	assert.ok(workflow.includes("steps.type_corpus_c_family.outcome != 'success'"));
 };

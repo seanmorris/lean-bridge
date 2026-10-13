@@ -30,6 +30,8 @@ import { assertCheckedRecordHostWorkflow, disableCheckedRecordHostWorkflow } fro
 import { assertStructuralSubtypeWorkflow, disableStructuralSubtypeWorkflow } from "./helpers/structural-subtype-ci-workflow.mjs";
 import { assertManagedCiIsolation } from "./helpers/managed-ci-isolation.mjs";
 import { assertNativeCiIsolation } from "./helpers/native-ci-isolation.mjs";
+import { assertNativeConsumerPartition, extendPerlCompilerBudget } from "./helpers/native-consumer-partition.mjs";
+import { beforeNativeConsumerPartitionSource } from "./helpers/native-consumer-partition-history.mjs";
 import { assertWorkflowRunBudget, joinNativeObservations } from "./helpers/native-observation-split.mjs";
 import {
 	ConsumerSupportError,
@@ -622,12 +624,19 @@ test("CI result contract detects support loss", async () => {
 });
 
 test("dedicated CI covers every consumer with Node 22 and pinned build paths", async () => {
-  const [structuralWorkflow, packageDocument, structuralPerlWorkflow, toolchainBootstrap] = await Promise.all([
+  const [liveWorkflow, packageDocument, livePerlWorkflow, toolchainBootstrap] = await Promise.all([
     readFile(".github/workflows/consumer-matrix.yml", "utf8")
     , readFile("package.json", "utf8").then(JSON.parse)
     , readFile(".github/workflows/perl-consumer.yml", "utf8")
     , readFile("scripts/bootstrap-toolchains.sh", "utf8")
   ]);
+  const structuralWorkflow = beforeNativeConsumerPartitionSource(".github/workflows/consumer-matrix.yml", liveWorkflow);
+  const structuralPerlWorkflow = beforeNativeConsumerPartitionSource(".github/workflows/perl-consumer.yml", livePerlWorkflow);
+  assertNativeConsumerPartition(structuralWorkflow, liveWorkflow);
+  assert.equal(extendPerlCompilerBudget(structuralPerlWorkflow), livePerlWorkflow);
+  assertStructuralSubtypeWorkflow(liveWorkflow, "consumer-matrix.yml");
+  assertStructuralSubtypeWorkflow(livePerlWorkflow, "perl-consumer.yml");
+  assertWorkflowRunBudget(liveWorkflow);
   // Validate each required structural gate before removing only its additions for older comparisons.
   assertStructuralSubtypeWorkflow(structuralWorkflow, "consumer-matrix.yml");
   assertStructuralSubtypeWorkflow(structuralPerlWorkflow, "perl-consumer.yml");

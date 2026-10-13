@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeNativeConsumerPartitionSource } from "./native-consumer-partition-history.mjs";
 
 export const nominalSubtypeDotnetPromotionHistoryPath = "docs/evidence/nominal-subtype-dotnet-promotion-source-history-20261012.json";
 export const nominalSubtypeDotnetPromotionPredecessor = "ad838834ca234ac7715462df368c28ca0d1cede1";
@@ -76,6 +77,7 @@ export const reverseNominalSubtypeDotnetPromotionUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeNominalSubtypeDotnetPromotionSource = (path, source, expected) => {
+	source = beforeNativeConsumerPartitionSource(path, source, expected);
 	if(typeof source !== "string" || !nominalSubtypeDotnetPromotionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

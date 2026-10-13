@@ -124,8 +124,10 @@ test("reviewed browser guides expose primitive inputs and retain unsupported pos
 	const row = consumer.split("\n").find(line => line.startsWith("| `Subtype /"));
 	const previous = beforeStructuralSubtypePromotionSource("docs/javascript-typescript.md", consumer);
 	assert.ok(previous.split("\n").find(line => line.startsWith("| `Subtype /")).includes(browserSubtypeConversion));
-	assert.ok(row.includes("Reviewed IR: Installed checks passed (input, result)"));
-	assert.ok(row.includes("Not audited (field, callback input, callback result)"));
+	// Node has separate nominal-field acceptance; this receipt covers browser realms.
+	const browser = row.split("Reviewed IR: ")[1]?.split("Browser / React / Worker: ")[1];
+	assert.ok(browser?.includes("Installed checks passed (input, result)"));
+	assert.ok(browser.includes("Not audited (field, callback input, callback result)"));
 	assert.ok(consumer.includes("### Checked Subtypes\n"));
 	assert.ok(consumer.includes("You pass the base value"));
 	for(const path of ["docs/javascript-typescript.md", "docs/lean/existing-package.md", "docs/lean/export-decisions.md"])

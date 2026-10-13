@@ -125,6 +125,7 @@ test("native Subtype promotion refuses altered references, overlaps and repeat p
 });
 
 test("native Subtype guides document both routes and retain the tested boundary", async () => {
+	const surface = await readTypeSurface(), cells = typeSurfaceCells(surface.document, surface);
 	for(const profile of reviewedSubtypeNativeProfiles)
 	{
 		const path = profile === "php-native" ? "docs/php.md" : `docs/consume/${profile}.md`;
@@ -133,8 +134,12 @@ test("native Subtype guides document both routes and retain the tested boundary"
 		const row = source.split("\n").find(line => line.startsWith("| `Subtype /"));
 		const previous = beforeStructuralSubtypePromotionSource(path, source);
 		assert.ok(previous.split("\n").find(line => line.startsWith("| `Subtype /")).includes(reviewedSubtypeNativeConversion), path);
-		assert.ok(row.includes("Reviewed IR: Installed checks passed (input, result)"), path);
-		assert.ok(row.includes("Not audited (field, callback input, callback result)"), path);
+		const field = cells.find(cell => cell.profile === profile && cell.shape === "subtype"
+			&& cell.path === "reviewed-ir" && cell.position === "field");
+		assert.ok(field, profile);
+		const nominal = field.stages.installedExecution.state === "passed";
+		assert.ok(row.includes(`Reviewed IR: Installed checks passed (input, result${nominal ? ", field" : ""})`), path);
+		assert.ok(row.includes(`Not audited (${nominal ? "" : "field, "}callback input, callback result)`), path);
 		assert.doesNotMatch(source, /Reviewed-IR Subtype remains separate work/u);
 	}
 	const author = await readFile("docs/lean/existing-package.md", "utf8");
