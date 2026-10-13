@@ -1,0 +1,12 @@
+start ok 0 0 0 0 0 0
+invalid-mirror-bound rejected:arg0<10 0 0 0 0 0 0
+invalid-mirror-huge rejected:arg0<10 0 0 0 0 0 0
+invalid-impossible-zero rejected:arg0<0 0 0 0 0 0 0
+invalid-label-late rejected:arg1<4 0 0 0 0 0 0
+valid-mirror ok:6 1 0 0 1 0 0
+valid-label ok:slot:8 1 0 1 1 0 1
+recovery-invalid-mirror rejected:arg0<10 1 0 1 1 0 1
+recovery-invalid-impossible rejected:arg0<0 1 0 1 1 0 1
+recovery-invalid-label rejected:arg1<4 1 0 1 1 0 1
+recovery-valid-mirror ok:0 2 0 1 2 0 1
+recovery-valid-label ok:slot:5 2 0 2 2 0 2

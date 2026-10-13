@@ -24,7 +24,7 @@ import { corpusReviewedIr } from "./helpers/type-corpus-reviewed-ir.mjs";
 import { nativeFinAdapterSymbol, nativeFinDispatchExpected, nativeFinDispatchSteps, nativeFinDispatchSymbols, readNativeFinDispatch } from "./helpers/native-fin-dispatch.mjs";
 import { nativeFinGdbExit, nativeFinGdbRecord, readNativeFinGdbRecord } from "./helpers/native-fin-dispatch-gdb.mjs";
 import { nativeFinGdbCommand } from "./helpers/native-fin-dispatch-gdb-run.mjs";
-import { assertExtractedNativeFinGdbRun, nativeFinGdbExtractedScript, observeExtractedNativeFinDispatch } from "./helpers/native-fin-dispatch-gdb-extracted.mjs";
+import { assertExtractedNativeFinGdbRun, observeExtractedNativeFinDispatch } from "./helpers/native-fin-dispatch-gdb-extracted.mjs";
 import { copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 
 const huge = "1180591620717411303424";
@@ -588,6 +588,20 @@ test("GDB entry breakpoints count a deep-bound extracting JVM stand-in from Java
 		assert.deepEqual(observed, jvmFinDispatchExpected);
 		const { root: extracted, breakpoints } = await assertExtractedNativeFinGdbRun(observer, accepted, observed);
 		assert.equal(dirname(extracted), accepted.parent); assert.equal(breakpoints.length, 6);
+		await assert.rejects(() => assertExtractedNativeFinGdbRun(observer, { ...accepted, code: 72 }, observed), /must exit successfully/u);
+		await assert.rejects(() => assertExtractedNativeFinGdbRun(observer, { ...accepted, scriptSha256: "0".repeat(64) }, observed));
+		const manifest = JSON.parse(await readFile(accepted.armed, "utf8"));
+		for(const [label, mutate] of [
+			["missing", item => { delete item.jvmExit; }]
+			, ["foreign", item => { item.jvmExit.pid++; }]
+			, ["nonzero", item => { item.jvmExit.code = 7; }]
+			, ["unknown", item => { item.jvmExit.kind = "unobserved"; }]
+		]) {
+			const changed = structuredClone(manifest); mutate(changed);
+			const armed = join(root, `${profile}-${label}-exit.json`);
+			await writeFile(armed, canonicalJson(changed), { flag: "wx" });
+			await assert.rejects(() => assertExtractedNativeFinGdbRun(observer, { ...accepted, armed }, observed));
+		}
 		if(profile === "kotlin") continue;
 		// A record carrying any other PID than the one GDB armed is refused.
 		const foreignPid = await readFile(accepted.record);
@@ -769,11 +783,24 @@ const checkInstalledJvmFin = async (t, reviewed = false) => {
 			assert.equal(missing.code, 2, missing.output); assert.equal(missing.stdout, ""); assert.equal(missing.stderr, unattached);
 			assert.equal(existsSync(missing.record), false);
 			const accepted = await observer.run();
+			if(process.env.LEAN_BRIDGE_JVM_FIN_OBSERVATIONS)
+			{
+				const retained = join(process.env.LEAN_BRIDGE_JVM_FIN_OBSERVATIONS, reviewed ? "reviewed" : "ordinary", profile);
+				await cp(join(consumer, `${profile}-dispatch`), retained, {
+					recursive: true, force: false, errorOnExist: true
+					, filter: path => !/^run-\d+\.parent$/u.test(basename(path)) });
+				await saveLakeFile(retained, "accepted.json", canonicalJson(accepted));
+				await saveLakeFile(retained, "observer.json", canonicalJson({
+					identity: observer.identity
+					, configSha256: observer.configSha256
+					, definerIndices: observer.definerIndices
+					, listings: observer.listings, hashes: observer.hashes }));
+			}
 			assert.equal(accepted.code, 0, `instrumented probe failed (2 armed before the trigger, 3 uncovered, 4 trigger failed, 70 stale record or parent, 71 ptrace, instrumentation or refused deployment, 72 signal): ${accepted.output}`);
 			assert.equal(accepted.stderr, "");
 			const observed = readNativeFinDispatch(accepted.stdout, jvmFinDispatchExpected);
 			assert.deepEqual(observed, jvmFinDispatchExpected);
-			const { breakpoints } = await assertExtractedNativeFinGdbRun(observer, accepted, observed);
+			const { breakpoints, processId, jvmExit } = await assertExtractedNativeFinGdbRun(observer, accepted, observed);
 			const dispatch = {
 				columns: observer.identity.columns
 				, observed
@@ -783,7 +810,8 @@ const checkInstalledJvmFin = async (t, reviewed = false) => {
 				, loadTrigger: jvmLoadTrigger
 				, positiveControl: `valid public ${profile === "java" ? "Java" : "Kotlin"} calls increment exactly their source and adapter columns; rejected calls, including every Fin 0 call, change no column`
 				, probeSha256: sha256(profile === "java" ? javaFinDispatchProbe() : kotlinFinDispatchProbe())
-				, scriptSha256: sha256(nativeFinGdbExtractedScript)
+				, scriptSha256: accepted.scriptSha256
+				, processId, jvmExit
 				, configSha256: observer.configSha256
 				, gdb: { version: (await runCopied(nativeFinGdbCommand, ["--version"], relocated, copiedCleanEnvironment)).stdout.split("\n")[0], sha256: sha256(await readFile(await realpath(nativeFinGdbCommand))) }
 				, definers: observer.identity.definers

@@ -1,0 +1,48 @@
+import assert from "node:assert/strict";
+import { spawn, execFileSync } from "node:child_process";
+import { cp, mkdir, open, readFile, writeFile } from "node:fs/promises";
+import { resolve } from "node:path";
+import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
+import { waitNominalSubtypeDotnetResources } from "../tests/helpers/nominal-subtype-dotnet-resources.mjs";
+const [phase, attempt] = process.argv.slice(2);
+assert.ok(["focused", "installed", "regression", "static"].includes(phase));
+assert.match(attempt, /^r[1-9][0-9]*$/);
+const head = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
+assert.equal(head, "50a5cf414a914a3906ccf7676eb4006427b8ecd8");
+const gitPaths = execFileSync("git", ["ls-files", "-z"], { encoding: "utf8", maxBuffer: 8 * 1024 ** 2 }).split("\0").filter(Boolean);
+const added = ["tests/helpers/native-fin-jvm-exit-tests.mjs", "tests/helpers/native-fin-jvm-exit-history.mjs", "tests/helpers/native-fin-jvm-exit-history-tests.mjs", "scripts/update-native-fin-jvm-exit-history.mjs", "docs/evidence/native-fin-jvm-exit-source-history-20261013.json"];
+const paths = [...new Set([...gitPaths.filter(path => /^(src|scripts|tests)\//.test(path) || ["package.json", "package-lock.json", ".github/workflows/consumer-matrix.yml", "docs/type-surface.v1.json"].includes(path)), ...added])].sort();
+const before = Object.fromEntries(await Promise.all(paths.map(async path => [path, sha256(await readFile(path))])));
+const focused = ["tests/jvm-fin-dispatch-evidence.test.mjs", "tests/helpers/fin-container-jvm-entry-wait-tests.mjs", "tests/helpers/fin-container-edge-jvm-wait-tests.mjs"];
+const regression = ["tests/fin-container-entry-dispatch.test.mjs", "tests/fin-container-entry-ci.test.mjs", "tests/fin-container-entry-evidence.test.mjs", "tests/helpers/native-owned-gate-history-tests.mjs", "tests/helpers/nominal-subtype-jvm-evidence-tests.mjs", "tests/helpers/nominal-subtype-jvm-registration-history-tests.mjs", "tests/type-surface.test.mjs", "tests/test-profiles.test.mjs", "tests/checked-javascript.test.mjs"];
+const commands = phase === "focused" ? [["--test", "--test-concurrency=1", "--test-reporter=tap", ...focused]]
+ : phase === "installed" ? [["--test", "--test-concurrency=1", "--test-reporter=tap", "tests/jvm-fin.test.mjs"]]
+ : phase === "regression" ? [["--test", "--test-concurrency=1", "--test-reporter=tap", ...regression]]
+ : [["node_modules/eslint/bin/eslint.js", ".", "--max-warnings", "0"], ["node_modules/typescript/lib/tsc.js", "-p", "jsconfig.checked.json", "--pretty", "false"], ["scripts/generate-reference-docs.mjs", "--check"]];
+const prefix = `build/vo1220-scalar-jvm-exit-${phase}-${attempt}`, records = [];
+const env = { ...process.env, NO_COLOR: "1", LEAN_NUM_THREADS: "1", OMP_NUM_THREADS: "1", MAKEFLAGS: "-j1" }; delete env.FORCE_COLOR;
+const observations = resolve(prefix + "-observations"), scratch = resolve(prefix + "-scratch");
+if (phase === "installed") {
+ await mkdir(scratch); await mkdir(observations);
+ Object.assign(env, { LEAN_BRIDGE_JVM_FIN_TEST: "1", LEAN_BRIDGE_GDB: "/usr/bin/gdb", LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR: "2.36", LEAN_BRIDGE_JVM_FIN_OBSERVATIONS: observations, TMPDIR: scratch });
+ for (const name of ["jvm.json", "jvm-reviewed.json"]) {
+  try { await cp("build/native-fin/" + name, prefix + "-prior-" + name, { errorOnExist: true, force: false }); }
+  catch(error) { if(error.code !== "ENOENT") throw error; }
+ }
+}
+await writeFile(prefix + "-start.json", canonicalJson({ head, phase, started: new Date().toISOString(), sources: before, commands, env: Object.fromEntries(Object.entries(env).filter(([key]) => /^(LEAN_|OMP_|MAKEFLAGS|TMPDIR|NO_COLOR)/.test(key))), runnerSha256: sha256(await readFile(new URL(import.meta.url))) }), { flag: "wx" });
+for(const [index, args] of commands.entries()) {
+ const resources = await waitNominalSubtypeDotnetResources("build", { notify: console.log });
+ const path = prefix + `-${index}.log`, file = await open(path, "wx");
+ const record = { path, args, resources, started: new Date().toISOString() }; console.log(JSON.stringify(record));
+ const result = await new Promise((accept, reject) => { const child = spawn(process.execPath, args, { env, stdio: ["ignore", file.fd, file.fd] }); child.once("error", reject); child.once("close", (code, signal) => accept({ code, signal })); });
+ await file.close(); const bytes = await readFile(path); Object.assign(record, result, { finished: new Date().toISOString(), bytes: bytes.length, sha256: sha256(bytes) }); records.push(record);
+ await writeFile(prefix + ".json", canonicalJson({ head, phase, records })); console.log(JSON.stringify(record));
+ const changes = []; for(const [path, digest] of Object.entries(before)) if(sha256(await readFile(path)) !== digest) changes.push(path);
+ await writeFile(prefix + "-sources-end.json", canonicalJson({ checked: paths.length, changes })); assert.deepEqual(changes, []);
+ if(result.code !== 0 || result.signal) { console.log(bytes.toString().slice(-10000)); process.exitCode = 1; break; }
+}
+if(phase === "installed") for(const name of ["jvm.json", "jvm-reviewed.json"]) {
+ try { await cp("build/native-fin/" + name, prefix + "-" + name, { errorOnExist: true, force: false }); }
+ catch(error) { if(error.code !== "ENOENT") throw error; }
+}

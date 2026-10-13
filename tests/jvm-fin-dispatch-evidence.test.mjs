@@ -11,6 +11,9 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import "./helpers/jvm-dispatch-integration-source-history-tests.mjs";
+import "./helpers/native-fin-jvm-exit-tests.mjs";
+import "./helpers/native-fin-jvm-exit-history-tests.mjs";
+import "./helpers/native-fin-jvm-exit-evidence-tests.mjs";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertJvmDispatchArchive, assertJvmDispatchDeltas, assertJvmDispatchReport, assertJvmDispatchRows, assertJvmDispatchRun, assertJvmDispatchTestSource, jvmDispatchArchiveDirectory, jvmDispatchArchivePaths, jvmDispatchRows, jvmDispatchScriptSha256, jvmDispatchSnapshot, jvmDispatchSources, jvmDispatchTests, writeJvmDispatchArtifact } from "./helpers/jvm-fin-dispatch-evidence.mjs";
 

@@ -1,0 +1,33 @@
+{
+  "head": "50a5cf414a914a3906ccf7676eb4006427b8ecd8",
+  "phase": "focused",
+  "records": [
+    {
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/jvm-fin-dispatch-evidence.test.mjs",
+        "tests/helpers/fin-container-jvm-entry-wait-tests.mjs",
+        "tests/helpers/fin-container-edge-jvm-wait-tests.mjs"
+      ],
+      "bytes": 8659,
+      "code": 0,
+      "finished": "2026-10-13T13:27:20.117Z",
+      "path": "build/vo1220-scalar-jvm-exit-focused-r2-0.log",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 7894691840,
+            "freeBytes": 4700860416,
+            "load": 1.78
+          }
+        ],
+        "waits": 0
+      },
+      "sha256": "782ee6320f7e8ea9d3cd21226e1504cd3a7496f3e11c2f36955c8ac03bbff5bf",
+      "signal": null,
+      "started": "2026-10-13T13:27:04.242Z"
+    }
+  ]
+}

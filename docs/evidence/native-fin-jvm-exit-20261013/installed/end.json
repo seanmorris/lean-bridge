@@ -1,0 +1,31 @@
+{
+  "head": "50a5cf414a914a3906ccf7676eb4006427b8ecd8",
+  "phase": "installed",
+  "records": [
+    {
+      "args": [
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tests/jvm-fin.test.mjs"
+      ],
+      "bytes": 2204,
+      "code": 0,
+      "finished": "2026-10-13T13:45:08.037Z",
+      "path": "build/vo1220-scalar-jvm-exit-installed-r1-0.log",
+      "resources": {
+        "observations": [
+          {
+            "availableBytes": 7832293376,
+            "freeBytes": 4692975616,
+            "load": 1.5
+          }
+        ],
+        "waits": 0
+      },
+      "sha256": "0a92c6b4d95e69738cd0aabe7d15a38e3987e0e440220d565b9b8b2217482859",
+      "signal": null,
+      "started": "2026-10-13T13:31:21.325Z"
+    }
+  ]
+}

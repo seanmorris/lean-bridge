@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 1,
+  "milestone": "native-fin-jvm-exit-source-v1",
+  "predecessorCommit": "50a5cf414a914a3906ccf7676eb4006427b8ecd8",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "d4199395d7a5ebb4d542c0d930cc98bd2572357152115e7a09d9ff14761e4a45",
+      "previousSha256": "6e113a0bbb4df961f41503194f154773a9e3b8b8f9abe7110e6da62ca8535090",
+      "edits": [
+        {
+          "start": 1509190,
+          "previous": "fbeb8f84f2f99308cca0a27f1b5f2d0c6a1d0ee5748a85f637831b3fb2903d72",
+          "current": "4d614aa12f6707c9c45f20857e9a134da28a1f00eb95b7743138572507c5ba87"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "19639ffcfdba72e2379c3fb0296d96dec0bf62fcebe58888756c441ca028031b",
+      "previousSha256": "69b307ba59ecfd65e5aa7fc7387ba8b822c6907299c00ba1a7bfecda2963aeee",
+      "edits": [
+        {
+          "start": 5590,
+          "previous": "",
+          "current": "import { nativeFinJvmExitChangedPaths } from \"./native-fin-jvm-exit-history.mjs\";\n"
+        },
+        {
+          "start": 67356,
+          "previous": "",
+          "current": "\t, ...nativeFinJvmExitChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/jvm-dispatch-integration-source-history-tests.mjs",
+      "currentSha256": "daacb9f62c8fc7f2b5c2a3009a3242be9a41cda83ccbb644b9e101fdcb7beffb",
+      "previousSha256": "18465c5b7b1883fcfcc1557fd940af028aafc268755676c3c23d8882b5fd4e89",
+      "edits": [
+        {
+          "start": 3989,
+          "previous": "\tfor(const [path, digest] of Object.entries(digests)) assert.equal(sha256(await readFile(path)), digest, path);\n",
+          "current": "\tfor(const [path, digest] of Object.entries(digests))\n\t{\n\t\tconst source = await readFile(path, \"utf8\");\n\t\tassert.equal(sha256(beforeFinRefinementSource(path, source, digest)), digest, path);\n\t\tassert.notEqual(sha256(beforeFinRefinementSource(path, source + \"\\n// unrecorded change\\n\", digest)), digest, path);\n\t}\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-dispatch-gdb-extracted.mjs",
+      "currentSha256": "bc1b2dd31116c43365eacc49474c835b5999e6de96b819290cbcbe08e9e60a89",
+      "previousSha256": "6647ea82c4fb21408474947032fbf77a025fa0380de0803fa05eda40df64166f",
+      "edits": [
+        {
+          "start": 1622,
+          "previous": "",
+          "current": "import { withFinContainerJvmEntryWait } from \"./fin-container-jvm-entry-wait.mjs\";\nimport { assertFinContainerEdgeJvmExit } from \"./fin-container-edge-jvm-wait.mjs\";\n"
+        },
+        {
+          "start": 14188,
+          "previous": "",
+          "current": "/** Current scalar instrumentation also observes and records the same child's normal exit. */\nexport const nativeFinGdbExtractedWaitScript = withFinContainerJvmEntryWait(nativeFinGdbExtractedScript);\n\n"
+        },
+        {
+          "start": 16134,
+          "previous": "\tawait saveLakeFile(probeRoot, \"fin-extracted.gdb.py\", nativeFinGdbExtractedScript);\n",
+          "current": "\tawait saveLakeFile(probeRoot, \"fin-extracted.gdb.py\", nativeFinGdbExtractedWaitScript);\n"
+        },
+        {
+          "start": 17757,
+          "previous": "",
+          "current": "\t\tconst scriptSha256 = sha256(await readFile(join(probeRoot, \"fin-extracted.gdb.py\")));\n"
+        },
+        {
+          "start": 18658,
+          "previous": "\t\treturn { record, nonce, armed, parent, code, output: stdout + stderr, stdout: await read(config.stdout), stderr: await read(config.stderr) };\n",
+          "current": "\t\treturn { record, nonce, armed, parent, code, scriptSha256, output: stdout + stderr, stdout: await read(config.stdout), stderr: await read(config.stderr) };\n"
+        },
+        {
+          "start": 19338,
+          "previous": "",
+          "current": " * @param root0.code - Debugger exit status, which must be successful.\n * @param root0.scriptSha256 - Exact current observer identity.\n"
+        },
+        {
+          "start": 19527,
+          "previous": "export const assertExtractedNativeFinGdbRun = async (observer, { record, nonce, armed, parent }, observed) => {\n",
+          "current": "export const assertExtractedNativeFinGdbRun = async (observer, { record, nonce, armed, parent, code, scriptSha256 }, observed) => {\n\tassert.equal(code, 0, \"the instrumented JVM must exit successfully\");\n\tassert.equal(scriptSha256, sha256(nativeFinGdbExtractedWaitScript));\n"
+        },
+        {
+          "start": 20646,
+          "previous": "",
+          "current": "\tassertFinContainerEdgeJvmExit(manifest.jvmExit, mapped.pid);\n"
+        },
+        {
+          "start": 21621,
+          "previous": "\treturn { root: manifest.root, breakpoints: breakpoints.map(({ symbol, library: owner, offset }) => ({ symbol, library: owner, offset: `0x${offset.toString(16)}` })) };\n",
+          "current": "\treturn { root: manifest.root, processId: mapped.pid, jvmExit: manifest.jvmExit\n\t\t, breakpoints: breakpoints.map(({ symbol, library: owner, offset }) => ({ symbol, library: owner, offset: `0x${offset.toString(16)}` })) };\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-owned-gate-history.mjs",
+      "currentSha256": "31425fcfaeb5cdd26079cb0d3ded88ec290e311851424e75467d09c24f6111c3",
+      "previousSha256": "887a30664af371ecccb070522cbf8c7c4d311aa8f842c6c3b8aaea41f98d86da",
+      "edits": [
+        {
+          "start": 234,
+          "previous": "",
+          "current": "import { beforeNativeFinJvmExitSource } from \"./native-fin-jvm-exit-history.mjs\";\n"
+        },
+        {
+          "start": 2602,
+          "previous": "",
+          "current": "\tsource = beforeNativeFinJvmExitSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/jvm-fin-dispatch-evidence.test.mjs",
+      "currentSha256": "2e9f6b89a0a8d3ccbc5fa8d3767134be739611cd6c336ae2ad1191dedc74d007",
+      "previousSha256": "bd2273d4491816e50914ec63593861d2cdd07aa7f2fcc45551fad515bd432757",
+      "edits": [
+        {
+          "start": 611,
+          "previous": "",
+          "current": "import \"./helpers/native-fin-jvm-exit-tests.mjs\";\nimport \"./helpers/native-fin-jvm-exit-history-tests.mjs\";\nimport \"./helpers/native-fin-jvm-exit-evidence-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/jvm-fin.test.mjs",
+      "currentSha256": "4d614aa12f6707c9c45f20857e9a134da28a1f00eb95b7743138572507c5ba87",
+      "previousSha256": "fbeb8f84f2f99308cca0a27f1b5f2d0c6a1d0ee5748a85f637831b3fb2903d72",
+      "edits": [
+        {
+          "start": 1658,
+          "previous": "import { assertExtractedNativeFinGdbRun, nativeFinGdbExtractedScript, observeExtractedNativeFinDispatch } from \"./helpers/native-fin-dispatch-gdb-extracted.mjs\";\n",
+          "current": "import { assertExtractedNativeFinGdbRun, observeExtractedNativeFinDispatch } from \"./helpers/native-fin-dispatch-gdb-extracted.mjs\";\n"
+        },
+        {
+          "start": 39340,
+          "previous": "",
+          "current": "\t\tawait assert.rejects(() => assertExtractedNativeFinGdbRun(observer, { ...accepted, code: 72 }, observed), /must exit successfully/u);\n\t\tawait assert.rejects(() => assertExtractedNativeFinGdbRun(observer, { ...accepted, scriptSha256: \"0\".repeat(64) }, observed));\n\t\tconst manifest = JSON.parse(await readFile(accepted.armed, \"utf8\"));\n\t\tfor(const [label, mutate] of [\n\t\t\t[\"missing\", item => { delete item.jvmExit; }]\n\t\t\t, [\"foreign\", item => { item.jvmExit.pid++; }]\n\t\t\t, [\"nonzero\", item => { item.jvmExit.code = 7; }]\n\t\t\t, [\"unknown\", item => { item.jvmExit.kind = \"unobserved\"; }]\n\t\t]) {\n\t\t\tconst changed = structuredClone(manifest); mutate(changed);\n\t\t\tconst armed = join(root, `${profile}-${label}-exit.json`);\n\t\t\tawait writeFile(armed, canonicalJson(changed), { flag: \"wx\" });\n\t\t\tawait assert.rejects(() => assertExtractedNativeFinGdbRun(observer, { ...accepted, armed }, observed));\n\t\t}\n"
+        },
+        {
+          "start": 55148,
+          "previous": "",
+          "current": "\t\t\tif(process.env.LEAN_BRIDGE_JVM_FIN_OBSERVATIONS)\n\t\t\t{\n\t\t\t\tconst retained = join(process.env.LEAN_BRIDGE_JVM_FIN_OBSERVATIONS, reviewed ? \"reviewed\" : \"ordinary\", profile);\n\t\t\t\tawait cp(join(consumer, `${profile}-dispatch`), retained, {\n\t\t\t\t\trecursive: true, force: false, errorOnExist: true\n\t\t\t\t\t, filter: path => !/^run-\\d+\\.parent$/u.test(basename(path)) });\n\t\t\t\tawait saveLakeFile(retained, \"accepted.json\", canonicalJson(accepted));\n\t\t\t\tawait saveLakeFile(retained, \"observer.json\", canonicalJson({\n\t\t\t\t\tidentity: observer.identity\n\t\t\t\t\t, configSha256: observer.configSha256\n\t\t\t\t\t, definerIndices: observer.definerIndices\n\t\t\t\t\t, listings: observer.listings, hashes: observer.hashes }));\n\t\t\t}\n"
+        },
+        {
+          "start": 56256,
+          "previous": "\t\t\tconst { breakpoints } = await assertExtractedNativeFinGdbRun(observer, accepted, observed);\n",
+          "current": "\t\t\tconst { breakpoints, processId, jvmExit } = await assertExtractedNativeFinGdbRun(observer, accepted, observed);\n"
+        },
+        {
+          "start": 57078,
+          "previous": "\t\t\t\t, scriptSha256: sha256(nativeFinGdbExtractedScript)\n",
+          "current": "\t\t\t\t, scriptSha256: accepted.scriptSha256\n\t\t\t\t, processId, jvmExit\n"
+        }
+      ]
+    }
+  ]
+}

@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeNativeFinJvmExitSource } from "./native-fin-jvm-exit-history.mjs";
 
 export const nativeOwnedGateHistoryPath = "docs/evidence/native-owned-gate-source-history-20261013.json";
 export const nativeOwnedGatePredecessor = "70285c8cfc5ae0251adec4ba55a70ea2386a9869";
@@ -58,6 +59,7 @@ export const reverseNativeOwnedGateUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeNativeOwnedGateSource = (path, source, expected) => {
+	source = beforeNativeFinJvmExitSource(path, source, expected);
 	if(typeof source !== "string" || !nativeOwnedGateChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = history ??= JSON.parse(readFileSync(nativeOwnedGateHistoryPath, "utf8"));

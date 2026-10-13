@@ -1,0 +1,199 @@
+TAP version 13
+# Subtest: JVM pending exit authenticates exact changes and restores the original support inventory
+ok 1 - JVM pending exit authenticates exact changes and restores the original support inventory
+  ---
+  duration_ms: 666.91813
+  type: 'test'
+  ...
+# Subtest: JVM pending exit history writer refuses an unrelated checkout before writing
+ok 2 - JVM pending exit history writer refuses an unrelated checkout before writing
+  ---
+  duration_ms: 90.654607
+  type: 'test'
+  ...
+# Subtest: the pending JVM exit archive verifies the complete Java replay and refusal control
+ok 3 - the pending JVM exit archive verifies the complete Java replay and refusal control
+  ---
+  duration_ms: 143.521428
+  type: 'test'
+  ...
+# Subtest: the pending JVM exit archive refuses every missing or changed original
+ok 4 - the pending JVM exit archive refuses every missing or changed original
+  ---
+  duration_ms: 177.983385
+  type: 'test'
+  ...
+# Subtest: JVM exit recovery observes real kernel children without consuming their exit status
+ok 5 - JVM exit recovery observes real kernel children without consuming their exit status
+  ---
+  duration_ms: 1183.650154
+  type: 'test'
+  ...
+# real kernel exit controls: kernel-exit-0, kernel-exit-7, kernel-exit-255, traced-kernel-exit-0, traced-kernel-exit-7, live-child-timeout, signal-exit, wrong-inferior, live-debugger-thread, contradictory-code, contradictory-signal, contradictory-event, sticky-failure, changed-identity, wrong-child-handle, already-reaped-child, closed-handle, missing-handle, gdb-exit-0, gdb-exit-7
+# Subtest: JVM exit receipts require exact successful process identity and CLD_EXITED
+ok 6 - JVM exit receipts require exact successful process identity and CLD_EXITED
+  ---
+  duration_ms: 3.046653
+  type: 'test'
+  ...
+# Subtest: the pending-exit observer binds its child before continuing and retains refusal paths
+ok 7 - the pending-exit observer binds its child before continuing and retains refusal paths
+  ---
+  duration_ms: 0.469219
+  type: 'test'
+  ...
+# Subtest: JVM reports bind new exit receipts to the exact new script and preserve both older versions
+ok 8 - JVM reports bind new exit receipts to the exact new script and preserve both older versions
+  ---
+  duration_ms: 1336.09155
+  type: 'test'
+  ...
+# Subtest: the JVM entry exit archive verifies original Java/Kotlin replays and both installed routes
+ok 9 - the JVM entry exit archive verifies original Java/Kotlin replays and both installed routes
+  ---
+  duration_ms: 51.96949
+  type: 'test'
+  ...
+# Subtest: the JVM entry exit archive refuses every missing or changed original
+ok 10 - the JVM entry exit archive refuses every missing or changed original
+  ---
+  duration_ms: 200.149299
+  type: 'test'
+  ...
+# Subtest: JVM container-entry exit observation preserves exact original sources and support claims
+ok 11 - JVM container-entry exit observation preserves exact original sources and support claims
+  ---
+  duration_ms: 504.804738
+  type: 'test'
+  ...
+# Subtest: JVM container-entry exit observation history writer refuses an unrelated checkout before writing
+ok 12 - JVM container-entry exit observation history writer refuses an unrelated checkout before writing
+  ---
+  duration_ms: 69.386875
+  type: 'test'
+  ...
+# Subtest: JVM container entry keeps the historical script and changes only exit observation
+ok 13 - JVM container entry keeps the historical script and changes only exit observation
+  ---
+  duration_ms: 0.537356
+  type: 'test'
+  ...
+# Subtest: JVM container entry recovers this child's kernel exit and refuses unknown or unsuccessful exits
+ok 14 - JVM container entry recovers this child's kernel exit and refuses unknown or unsuccessful exits
+  ---
+  duration_ms: 95.001384
+  type: 'test'
+  ...
+# Real child exits; simulated lost-thread GDB state: [["original", 72], ["pending", 0], ["nonzero", 7], ["signal", 72], ["reaped", 72], ["normal-gdb", 0], ["missing-manifest", 71], ["foreign-manifest", 71]]
+# Subtest: JVM dispatch integration history authenticates exact predecessors and refuses unknown edits
+ok 15 - JVM dispatch integration history authenticates exact predecessors and refuses unknown edits
+  ---
+  duration_ms: 6878.401677
+  type: 'test'
+  ...
+# Subtest: JVM dispatch integration refreshes exactly 132 source pins without promoting any support cell
+ok 16 - JVM dispatch integration refreshes exactly 132 source pins without promoting any support cell
+  ---
+  duration_ms: 2867.65332
+  type: 'test'
+  ...
+# Subtest: JVM dispatch integration retains its producer source and runs archived evidence in core contracts
+ok 17 - JVM dispatch integration retains its producer source and runs archived evidence in core contracts
+  ---
+  duration_ms: 2.571111
+  type: 'test'
+  ...
+# Subtest: the JVM dispatch integration updater refuses another HEAD before any write
+ok 18 - the JVM dispatch integration updater refuses another HEAD before any write
+  ---
+  duration_ms: 93.126958
+  type: 'test'
+  ...
+# Subtest: scalar JVM exit repair preserves exact historical producers and support claims
+ok 19 - scalar JVM exit repair preserves exact historical producers and support claims
+  ---
+  duration_ms: 265.12097
+  type: 'test'
+  ...
+# Subtest: scalar JVM exit history writer refuses an unrelated checkout before writing
+ok 20 - scalar JVM exit history writer refuses an unrelated checkout before writing
+  ---
+  duration_ms: 58.070621
+  type: 'test'
+  ...
+# Subtest: scalar JVM exit observation preserves all six original counters and deployment checks
+ok 21 - scalar JVM exit observation preserves all six original counters and deployment checks
+  ---
+  duration_ms: 0.88135
+  type: 'test'
+  ...
+# Subtest: scalar JVM observer requires this child's actual exit and refuses missing or unsuccessful exits
+ok 22 - scalar JVM observer requires this child's actual exit and refuses missing or unsuccessful exits
+  ---
+  duration_ms: 93.630062
+  type: 'test'
+  ...
+# Real child exits; simulated lost-thread GDB state: [["original", 72], ["pending", 0], ["nonzero", 7], ["signal", 72], ["reaped", 72], ["normal-gdb", 0], ["missing-manifest", 71], ["foreign-manifest", 71]]
+# Subtest: the JVM dispatch archive authenticates its run, reports and producer sources from its own paths
+ok 23 - the JVM dispatch archive authenticates its run, reports and producer sources from its own paths
+  ---
+  duration_ms: 8.271542
+  type: 'test'
+  ...
+# Subtest: the current JVM producer sources reach their exact dispatch-run digests
+ok 24 - the current JVM producer sources reach their exact dispatch-run digests
+  ---
+  duration_ms: 7.34192
+  type: 'test'
+  ...
+# Subtest: the JVM dispatch run records refuse a skipped, failed, renumbered, unplanned or nonzero run and another producer
+ok 25 - the JVM dispatch run records refuse a skipped, failed, renumbered, unplanned or nonzero run and another producer
+  ---
+  duration_ms: 6.005043
+  type: 'test'
+  ...
+# Subtest: both JVM reports keep each caller, route, isolation flags, trigger, verified offsets and exact per-step counts
+ok 26 - both JVM reports keep each caller, route, isolation flags, trigger, verified offsets and exact per-step counts
+  ---
+  duration_ms: 15.168778
+  type: 'test'
+  ...
+# Subtest: the JVM row recount refuses counts from a rejected call, a Fin 0 entry or a missed adapter
+ok 27 - the JVM row recount refuses counts from a rejected call, a Fin 0 entry or a missed adapter
+  ---
+  duration_ms: 0.679403
+  type: 'test'
+  ...
+# Subtest: the JVM producer test and extracted-root helper must keep both gates, single triggers, root binding, refusals and exact rows
+ok 28 - the JVM producer test and extracted-root helper must keep both gates, single triggers, root binding, refusals and exact rows
+  ---
+  duration_ms: 4.784651
+  type: 'test'
+  ...
+# Subtest: the archived extracted-root GDB script digest is the reports' and changes with any script byte
+ok 29 - the archived extracted-root GDB script digest is the reports' and changes with any script byte
+  ---
+  duration_ms: 1.209926
+  type: 'test'
+  ...
+# Subtest: the JVM dispatch receipt refuses overclaims, unknown paths before reading and changed source bytes
+ok 30 - the JVM dispatch receipt refuses overclaims, unknown paths before reading and changed source bytes
+  ---
+  duration_ms: 26.282652
+  type: 'test'
+  ...
+# Subtest: the JVM dispatch archive writer keeps identical bytes and refuses any differing file or receipt
+ok 31 - the JVM dispatch archive writer keeps identical bytes and refuses any differing file or receipt
+  ---
+  duration_ms: 8.872362
+  type: 'test'
+  ...
+1..31
+# tests 31
+# suites 0
+# pass 31
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 15834.284694

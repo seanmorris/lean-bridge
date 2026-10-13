@@ -61,7 +61,12 @@ test("JVM dispatch integration retains its producer source and runs archived evi
 		"tests/jvm-fin.test.mjs": "fbeb8f84f2f99308cca0a27f1b5f2d0c6a1d0ee5748a85f637831b3fb2903d72"
 		, "tests/helpers/native-fin-dispatch-gdb-extracted.mjs": "6647ea82c4fb21408474947032fbf77a025fa0380de0803fa05eda40df64166f"
 	};
-	for(const [path, digest] of Object.entries(digests)) assert.equal(sha256(await readFile(path)), digest, path);
+	for(const [path, digest] of Object.entries(digests))
+	{
+		const source = await readFile(path, "utf8");
+		assert.equal(sha256(beforeFinRefinementSource(path, source, digest)), digest, path);
+		assert.notEqual(sha256(beforeFinRefinementSource(path, source + "\n// unrecorded change\n", digest)), digest, path);
+	}
 	assert.equal(classifyRepositoryTest("tests/jvm-fin-dispatch-evidence.test.mjs"), "contract");
 });
 
