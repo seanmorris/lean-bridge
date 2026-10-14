@@ -1,0 +1,17 @@
+{
+  "args": [
+    "--max-old-space-size=512",
+    "--test",
+    "--test-concurrency=1",
+    "--test-name-pattern=^recursive PHP-Wasm CI uploads failed probe directories unconditionally$",
+    "tests/helpers/php-wasm-recursive-failure-evidence-tests.mjs"
+  ],
+  "code": 1,
+  "expectedFailure": true,
+  "head": "4a908bb209b8692e4f4b58654b2b32fd0c60bbbb",
+  "node": "v22.23.2",
+  "signal": null,
+  "sourceSha256": "8482e0e1918d62c0769b4dfd76d7f0663134a1366d453da0c6e4e7929fcc88b9",
+  "tapSha256": "30e011a6068bf18331cc9a0f849266f9507dc4b8272ead775191117c8ac5dba5",
+  "workflowSha256": "e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d"
+}

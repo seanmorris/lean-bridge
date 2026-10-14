@@ -12,6 +12,7 @@ import { gunzipSync } from "node:zlib";
 import { sha256 } from "./source-history-digest.mjs";
 import { assertPhpWasmCorpusPartition, partitionPhpWasmCorpusWorkflow, phpWasmCorpusPartitionPredecessor, phpWasmCorpusPartitionSummaryGate, phpWasmPartitionJob, phpWasmPartitionStep } from "./php-wasm-corpus-partition.mjs";
 import { assertWorkflowRunBudget, workflowRunScalars } from "./native-observation-split.mjs";
+import "./php-wasm-recursive-failure-evidence-tests.mjs";
 
 const path = ".github/workflows/consumer-matrix.yml";
 const previous = () => execFileSync("git", ["show", `${phpWasmCorpusPartitionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });

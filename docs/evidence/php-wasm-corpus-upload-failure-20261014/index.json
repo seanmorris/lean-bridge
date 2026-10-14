@@ -1,0 +1,38 @@
+{
+  "files": [
+    {
+      "bytes": 5071,
+      "path": "job.json",
+      "sha256": "1e4ac3350cede5e676f26d4c1f2456e4a7671c6a39ba0ddea06ddd2a02789b9a"
+    },
+    {
+      "bytes": 87651,
+      "path": "job.log.gz",
+      "sha256": "42ba2d52dfc7c40bbe65d32af435a2d48e1a67ff77a2e85be8fc30706ba38d09"
+    },
+    {
+      "bytes": 4576,
+      "path": "original-failure-test.mjs",
+      "sha256": "8482e0e1918d62c0769b4dfd76d7f0663134a1366d453da0c6e4e7929fcc88b9"
+    },
+    {
+      "bytes": 822,
+      "path": "reproduced.tap",
+      "sha256": "30e011a6068bf18331cc9a0f849266f9507dc4b8272ead775191117c8ac5dba5"
+    },
+    {
+      "bytes": 651,
+      "path": "reproduction.json",
+      "sha256": "4c80f8f07fb30698a44606d3d0143bae5a07cb8556b0319bd816df7c7d21747c"
+    }
+  ],
+  "installedAcceptance": false,
+  "jobId": 115775933281,
+  "kind": "php-wasm-value-upload-contract-failure-v1",
+  "logSha256": "93212e5a129e1809282eb511547171eef95715141052e921e1a8071b46976c9d",
+  "retryPerformed": false,
+  "revision": "d4dd322f1e61c52a6505fbaa9294ee3d19cc0a33",
+  "runId": 38541149971,
+  "schemaVersion": 1,
+  "url": "https://github.com/seanmorris/lean-bridge/actions/runs/38541149971/job/115775933281"
+}
