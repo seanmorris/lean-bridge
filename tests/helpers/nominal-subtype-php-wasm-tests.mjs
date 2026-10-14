@@ -17,6 +17,9 @@ import { phpWasmExecutionTuples } from "./php-wasm-fin-fixtures.mjs";
 import { runCopied } from "./copied-fixture-install.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import "./nominal-subtype-php-wasm-evidence-tests.mjs";
+import "./nominal-subtype-php-wasm-ci-tests.mjs";
+import "./nominal-subtype-php-wasm-ci-shell-tests.mjs";
+import "./nominal-subtype-php-wasm-ci-workflow-tests.mjs";
 
 test("nominal PHP-Wasm selections refuse disabled explicit work, malformed flags and duplicate selections", () => {
 	const prefix = "LEAN_BRIDGE_NOMINAL_SUBTYPE_PHP_WASM_", enabled = { [prefix + "TEST"]: "1" };
