@@ -1,0 +1,32 @@
+{
+  "arguments": [
+    "consumer.py",
+    "--reviewed"
+  ],
+  "closure": {
+    "baselineSha256": "473e0e830205c5270c3952f5b9ab3ed744f9f8d8557235c6a35a7b6f982d2df9",
+    "environmentSha256": "c85ebc5ca55cfb17b3b1827e3f4d8eb01024f0ec84f3d2724ebc26a8e2c93395",
+    "interpreterSha256": "22e747b1e8a04719d4af2094133a0479b33728d2e4d03ab01539064dc6f45cfb",
+    "python": "3.11.16"
+  },
+  "counts": {
+    "checks": 1225,
+    "rejections": 283,
+    "rounds": 256,
+    "snapshotControls": 9,
+    "wordBits": 64
+  },
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/unavailable"
+  },
+  "relocated": false,
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\": 1225, \"rejections\": 283, \"rounds\": 256, \"snapshotControls\": 9, \"wordBits\": 64}\n"
+  }
+}

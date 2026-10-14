@@ -12,6 +12,7 @@ import { nominalSubtypeDotnetPromotionHistoryPath } from "./nominal-subtype-dotn
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { beforeNominalSubtypeRubyPromotionSource, nominalSubtypeRubyPromotionHistoryPath } from "./nominal-subtype-ruby-promotion-history.mjs";
 import { nominalSubtypeRustPromotionHistoryPath } from "./nominal-subtype-rust-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypePythonPromotionSource, beforeNominalPrimitiveSubtypePythonPromotionPins } from "./nominal-primitive-subtype-python-promotion-history.mjs";
 import { nominalSubtypePythonArchive, nominalSubtypePythonReferences, promoteNominalSubtypePython, nominalSubtypePythonConversion, nominalSubtypePythonLimit } from "./nominal-subtype-python-promotion.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", "ad3f7716d997ef8a4331ec8a3f2a6524a2ca3b30:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
@@ -86,7 +87,7 @@ test("nominal Python promotion refuses missing originals and substituted scope o
 
 test("nominal Python promotion adds two field cells and supplements four existing cells only", async () => {
 	const original = predecessor(), references = await nominalSubtypePythonReferences();
-	const proposed = beforeNominalSubtypeJvmPromotionPins(await promoteNominalSubtypePython(original, references)), { document: current, ...contracts } = await readTypeSurface();
+	const proposed = beforeNominalSubtypeJvmPromotionPins(beforeNominalPrimitiveSubtypePythonPromotionPins(await promoteNominalSubtypePython(original, references))), { document: current, ...contracts } = await readTypeSurface();
 	const document = JSON.parse(beforeNominalSubtypeRubyPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
 	assert.ok(current.evidence.length >= document.evidence.length);
 	for(const path of [nominalSubtypeDotnetPromotionHistoryPath, nominalSubtypeRustPromotionHistoryPath, nominalSubtypeRubyPromotionHistoryPath])
@@ -144,7 +145,7 @@ test("nominal Python documentation distinguishes verified packages from pending 
 	}
 	for(const path of ["docs/lean/existing-package.md", "docs/lean/export-decisions.md", "docs/consume/python.md", "docs/reference/types.md"])
 		assert.ok((await readFile(path, "utf8")).includes("nominal-subtype-python-acceptance-20261012.md"), path);
-	const source = await readFile("docs/consume/python.md", "utf8");
+	const source = beforeNominalPrimitiveSubtypePythonPromotionSource("docs/consume/python.md", await readFile("docs/consume/python.md", "utf8"));
 	assert.ok(source.includes("### Subtypes in copied records\n"));
 	assert.ok(source.includes("Linux x64/glibc 2.36"));
 	assert.doesNotMatch(source, /Subtype fields in nominal records or variants, refined callback signatures and\nowned Subtypes remain unsupported/u);

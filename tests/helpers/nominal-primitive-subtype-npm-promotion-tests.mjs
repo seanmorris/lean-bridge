@@ -11,6 +11,7 @@ import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../sr
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
 import { docPages } from "../../site/registry.mjs";
 import { nominalPrimitiveSubtypeNpmProducer } from "./nominal-primitive-subtype-npm-archive.mjs";
+import { beforeNominalPrimitiveSubtypePythonPromotionSource, beforeNominalPrimitiveSubtypePythonPromotionPins } from "./nominal-primitive-subtype-python-promotion-history.mjs";
 import { nominalPrimitiveSubtypeNpmPromotionPredecessor } from "./nominal-primitive-subtype-npm-promotion-history.mjs";
 import { nominalPrimitiveSubtypeNpmReferences, promoteNominalPrimitiveSubtypeNpm, nominalPrimitiveSubtypeNpmProfiles, nominalPrimitiveSubtypeNpmConversion, nominalPrimitiveSubtypeNpmLimit, nominalPrimitiveSubtypeNpmField } from "./nominal-primitive-subtype-npm-promotion.mjs";
 
@@ -70,7 +71,10 @@ test("primitive-base npm promotion rejects narrowed references, new hosts and ov
 
 test("primitive-base npm promotion supplements twelve existing Node cells and preserves all other observations", async () => {
 	const original = predecessor(), references = await nominalPrimitiveSubtypeNpmReferences();
-	const proposed = await promoteNominalPrimitiveSubtypeNpm(original, references), { document, ...contracts } = await readTypeSurface();
+	const proposed = beforeNominalPrimitiveSubtypePythonPromotionPins(await promoteNominalPrimitiveSubtypeNpm(original, references));
+	const { document: current, ...contracts } = await readTypeSurface();
+	const document = JSON.parse(beforeNominalPrimitiveSubtypePythonPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+	assert.ok(current.evidence.length >= document.evidence.length);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(proposed.evidence.length, 524); assert.equal(proposed.observations.length, 595);
 	assert.deepEqual(proposed.evidence.slice(0, 520), original.evidence);
@@ -110,7 +114,7 @@ test("primitive-base npm docs name the nineteen Node bases without claiming the 
 		if(path === "docs/javascript-typescript.md")
 			assert.ok(compiled.links.includes("https://github.com/seanmorris/lean-bridge/actions/workflows/nominal-primitive-subtype-npm.yml"));
 	}
-	const javascript = await readFile("docs/javascript-typescript.md", "utf8");
+	const javascript = beforeNominalPrimitiveSubtypePythonPromotionSource("docs/javascript-typescript.md", await readFile("docs/javascript-typescript.md", "utf8"));
 	for(const text of ["nineteen primitive bases", "undefined", "void", "wasm32", "normalization"])
 		assert.ok(javascript.includes(text), text);
 	assert.doesNotMatch(javascript, /Other primitive-base nominal fixtures and callback/u);

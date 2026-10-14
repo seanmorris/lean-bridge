@@ -489,9 +489,15 @@ in copied record and variant fields. Ordinary and reviewed full/result-only
 packages pass offline installation and relocated JavaScript/strict-TypeScript
 replay. Fields retain their primitive's host representation; wasm32 machine
 words remain 32-bit. Input constructors retain per-site normalization, and
-copied results need no input constructor. These additional primitive-base
-nominal checks apply to Node; the other hosts retain the Nat coverage listed
-above.
+copied results need no input constructor.
+
+Python's [nineteen-base nominal checks](../evidence/nominal-primitive-subtype-python-20261014/index.json)
+cover those same record and variant forms on CPython 3.11.16 and 3.12.14. Both
+author routes and API modes reproduce complete wheels, install offline after
+author removal, and replay after physical relocation on Linux x64/glibc 2.36.
+Generated frozen dataclasses retain each primitive's Python representation,
+with 64-bit native machine words. These additional primitive-base checks apply
+to Node and Python; the other hosts retain the Nat coverage listed above.
 
 In a schema-3 reviewed API, describe a `Subtype` with its primitive transport type and name its constructor in the declaration's `source.extensions["lean-lang.org/refinements"]`. For a checked `Nat` parameter returning an ordinary `Nat`:
 

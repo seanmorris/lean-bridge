@@ -1,0 +1,175 @@
+{
+  "archive": {
+    "bytes": 51621994,
+    "path": "archives/nominalprimitivesubtypes-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+    "sha256": "3db9405f7a33f2a502d9e89cc8bb148079cbb25e96cc12b91d4c0f8a0d7f5df3"
+  },
+  "evidence": {
+    "componentId": "nominalprimitivesubtypes@1.0.0",
+    "componentReceiptSha256": "46ff3c4b67b783213d8110dfb442e5af791288e436a72f72936d7f819a7b0342",
+    "libraries": {
+      "libcomponent_19ad06f04a0c2d39db76.so": "58a916198cb50e5bb7fab57554591812a8381960749e100c43effecedd0a3672",
+      "liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+      "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+      "libnominalprimitivesubtypes.so": "a4605311dc238fe198ce7162b5379fa64b34e2e6bf98e544eb6b2c5de60bb4f0"
+    },
+    "library": "libnominalprimitivesubtypes.so",
+    "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+  },
+  "files": {
+    "lean_nominalprimitivesubtypes/__init__.py": {
+      "bytes": 54348,
+      "sha256": "f78868af3302b971ad42212eec5bf888b39d6d08fc54faff165dae9a63b7331c"
+    },
+    "lean_nominalprimitivesubtypes/__init__.pyi": {
+      "bytes": 53897,
+      "sha256": "8e9c004dfd65ce2c80c34417ab4c3f0eeb8707e65c085f8ea6fbffb3e13b6463"
+    },
+    "lean_nominalprimitivesubtypes/_native.py": {
+      "bytes": 32324,
+      "sha256": "ae29ed94bc83de5ebf43517c9fda40b510f07fd7d1c5e7831624c9f2259c0dbd"
+    },
+    "lean_nominalprimitivesubtypes/lean_bridge/README.md": {
+      "bytes": 57627,
+      "sha256": "da3be1a2a605ae57bf60c0903c05b0c87ce985fa77ecdce229f57576aec4998d"
+    },
+    "lean_nominalprimitivesubtypes/lean_bridge/binding-manifest.json": {
+      "bytes": 1552,
+      "sha256": "5f79a21d7cc61ff0b6174136f8b574e81249cce8cfb026e47d56d0aee637482e"
+    },
+    "lean_nominalprimitivesubtypes/lean_bridge/component/allocation-guard.h": {
+      "bytes": 1309,
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    "lean_nominalprimitivesubtypes/lean_bridge/component/artifacts.json": {
+      "bytes": 1541,
+      "sha256": "8f8d598d4f7ef06822f618a7f68973aa0dbaed3893f4cc7e91991befb7cef22d"
+    },
+    "lean_nominalprimitivesubtypes/lean_bridge/component/binding-ir.json": {
+      "bytes": 399112,
+      "sha256": "7ad8a7702064708e67f6c43c333675c0f52272d72fc82a84e8cce502e544319b"
+    },
+    "lean_nominalprimitivesubtypes/lean_bridge/component/component.h": {
+      "bytes": 26950,
+      "sha256": "c6a3f7d4d372878b4d3ce3423c157f54c9f6636c13c78ad6f8af46a86f40ecb2"
+    },
+    "lean_nominalprimitivesubtypes/lean_bridge/component/generated.lean": {
+      "bytes": 105819,
+      "sha256": "76374193a68c65fddef7e4481def4d661593379345fce390aa88d37bf6413653"
+    },
+    "lean_nominalprimitivesubtypes/lean_bridge/component/metadata.json": {
+      "bytes": 1295811,
+      "sha256": "e7cf5069ec41b1404281e8c10599726df9d54d5ed99899b261a4ed7b74800277"
+    },
+    "lean_nominalprimitivesubtypes/lean_bridge/component/model.json": {
+      "bytes": 1777453,
+      "sha256": "efbc7782ae7a6b77f79d8e5962811a5b99349037869286801948d6c9525efe00"
+    },
+    "lean_nominalprimitivesubtypes/lean_bridge/component/native-component.json": {
+      "bytes": 419290,
+      "sha256": "46ff3c4b67b783213d8110dfb442e5af791288e436a72f72936d7f819a7b0342"
+    },
+    "lean_nominalprimitivesubtypes/lean_bridge/include/nominalprimitivesubtypes.h": {
+      "bytes": 14106,
+      "sha256": "aad9a116d8c50bb82cfddb92d214689909da0f5ee67d425145c65d289733c7d1"
+    },
+    "lean_nominalprimitivesubtypes/lean_bridge/native-c-adapter.json": {
+      "bytes": 1432,
+      "sha256": "0371abc511854139f022b4aef0a1da92439ce75395340d5c66e132a2edee3f3f"
+    },
+    "lean_nominalprimitivesubtypes/lean_bridge/package-receipt.json": {
+      "bytes": 422618,
+      "sha256": "6840a2245f7fefd403e34afe3e54e6c0fc81bda019c9d8eebe61300cffb318a0"
+    },
+    "lean_nominalprimitivesubtypes/lean_bridge/runtime.json": {
+      "bytes": 1466,
+      "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    },
+    "lean_nominalprimitivesubtypes/native/linux-x64/libcomponent_19ad06f04a0c2d39db76.so": {
+      "bytes": 387344,
+      "sha256": "58a916198cb50e5bb7fab57554591812a8381960749e100c43effecedd0a3672"
+    },
+    "lean_nominalprimitivesubtypes/native/linux-x64/liblean_bridge_native.so": {
+      "bytes": 21464,
+      "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+    },
+    "lean_nominalprimitivesubtypes/native/linux-x64/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "lean_nominalprimitivesubtypes/native/linux-x64/libnominalprimitivesubtypes.so": {
+      "bytes": 188288,
+      "sha256": "a4605311dc238fe198ce7162b5379fa64b34e2e6bf98e544eb6b2c5de60bb4f0"
+    },
+    "lean_nominalprimitivesubtypes/py.typed": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "nominalprimitivesubtypes-1.0.0.dist-info/METADATA": {
+      "bytes": 58054,
+      "sha256": "9828c1d8b71552807e048daa074ddb216203e0a9fc67db138ff7e46357ebc9ad"
+    },
+    "nominalprimitivesubtypes-1.0.0.dist-info/RECORD": {
+      "bytes": 3686,
+      "sha256": "086bf366184a894861104a8aaad1268a66427a4375b989d9c8f29591f6b3a019"
+    },
+    "nominalprimitivesubtypes-1.0.0.dist-info/WHEEL": {
+      "bytes": 117,
+      "sha256": "e41d55df53f77c6c728e826dfa1a3da95b2c97b543ab1de222ccea3f2bb9f4f4"
+    },
+    "nominalprimitivesubtypes-1.0.0.dist-info/licenses/Lean-LICENSE": {
+      "bytes": 9160,
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    "nominalprimitivesubtypes-1.0.0.dist-info/licenses/Lean-LICENSES": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "nominalprimitivesubtypes-1.0.0.dist-info/licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "nominalprimitivesubtypes-1.0.0.dist-info/licenses/source-notices.json": {
+      "bytes": 2127,
+      "sha256": "d2f3f767fde7373831412e8b926bb6ddf5614312c2b2c897ea67a6d1e80e57fb"
+    },
+    "nominalprimitivesubtypes-1.0.0.dist-info/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "nominalprimitivesubtypes-1.0.0.dist-info/top_level.txt": {
+      "bytes": 30,
+      "sha256": "5df65ca4b23386dab94aac0e6b6af95c0709df679e2c30483eedf75eb82a3f49"
+    }
+  },
+  "receiptSha256": "6840a2245f7fefd403e34afe3e54e6c0fc81bda019c9d8eebe61300cffb318a0",
+  "retained": [
+    "lean_nominalprimitivesubtypes/__init__.py",
+    "lean_nominalprimitivesubtypes/__init__.pyi",
+    "lean_nominalprimitivesubtypes/_native.py",
+    "lean_nominalprimitivesubtypes/lean_bridge/README.md",
+    "lean_nominalprimitivesubtypes/lean_bridge/binding-manifest.json",
+    "lean_nominalprimitivesubtypes/lean_bridge/component/allocation-guard.h",
+    "lean_nominalprimitivesubtypes/lean_bridge/component/artifacts.json",
+    "lean_nominalprimitivesubtypes/lean_bridge/component/binding-ir.json",
+    "lean_nominalprimitivesubtypes/lean_bridge/component/component.h",
+    "lean_nominalprimitivesubtypes/lean_bridge/component/generated.lean",
+    "lean_nominalprimitivesubtypes/lean_bridge/component/metadata.json",
+    "lean_nominalprimitivesubtypes/lean_bridge/component/model.json",
+    "lean_nominalprimitivesubtypes/lean_bridge/component/native-component.json",
+    "lean_nominalprimitivesubtypes/lean_bridge/include/nominalprimitivesubtypes.h",
+    "lean_nominalprimitivesubtypes/lean_bridge/native-c-adapter.json",
+    "lean_nominalprimitivesubtypes/lean_bridge/package-receipt.json",
+    "lean_nominalprimitivesubtypes/lean_bridge/runtime.json",
+    "lean_nominalprimitivesubtypes/py.typed",
+    "nominalprimitivesubtypes-1.0.0.dist-info/METADATA",
+    "nominalprimitivesubtypes-1.0.0.dist-info/RECORD",
+    "nominalprimitivesubtypes-1.0.0.dist-info/WHEEL",
+    "nominalprimitivesubtypes-1.0.0.dist-info/licenses/Lean-LICENSE",
+    "nominalprimitivesubtypes-1.0.0.dist-info/licenses/Lean-LICENSES",
+    "nominalprimitivesubtypes-1.0.0.dist-info/licenses/LeanBridge-LICENSE",
+    "nominalprimitivesubtypes-1.0.0.dist-info/licenses/source-notices.json",
+    "nominalprimitivesubtypes-1.0.0.dist-info/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+    "nominalprimitivesubtypes-1.0.0.dist-info/top_level.txt"
+  ]
+}

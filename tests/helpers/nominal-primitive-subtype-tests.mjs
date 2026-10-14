@@ -23,3 +23,6 @@ import "./nominal-primitive-subtype-python-ci-shell-tests.mjs";
 import "./nominal-primitive-subtype-python-ci-workflow-tests.mjs";
 import "./nominal-primitive-subtype-python-registration-history-tests.mjs";
 import "./nominal-primitive-subtype-python-installed-tests.mjs";
+import "./nominal-primitive-subtype-python-archive-tests.mjs";
+import "./nominal-primitive-subtype-python-promotion-tests.mjs";
+import "./nominal-primitive-subtype-python-promotion-history-tests.mjs";

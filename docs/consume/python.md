@@ -755,12 +755,15 @@ release-floor acceptance.
 
 ### Subtypes in copied records
 
-Use the generated frozen dataclass for a copied record or variant and pass
-ordinary Python `int` values in its Nat Subtype fields. The package runs the
-checked Lean constructor selected for each input site. Two exports can choose
-different constructors for the same record, including different normalization.
-Only the active variant case runs its field constructors. Rejection leaves the
-caller's values unchanged; subsequent valid calls still work.
+Use the generated frozen dataclass for a copied record or variant. A checked
+field takes its primitive's Python value: `None` for `Unit`, `bool` for `Bool`,
+`int` for integer bases and machine words, `float` for `Float32` and `Float`,
+`str` for `String` and `Char`, and `bytes` for `ByteArray`. The tested Linux x64
+packages use 64-bit machine words. The package runs the checked Lean
+constructor selected for each input site. Two exports can choose different
+constructors for the same record, including different normalization. Only the
+active variant case runs its field constructors. Rejection leaves the caller's
+values unchanged; subsequent valid calls still work.
 
 Copied results contain existing Lean values projected into the generated
 dataclasses, without proof fields or an input-constructor call. A package that
@@ -768,13 +771,21 @@ only returns those values needs no input constructor selections. Arrays and
 lists in these results are tuples, with nested `Some`, `Ok` and `Err` values
 preserving their branches.
 
-The [installed nominal checks](../evidence/nominal-subtype-python-acceptance-20261012.md)
-cover the tested Nat fields, aliases, mixed Fin guards and standalone
-constructor-free result packages on CPython 3.11.16 and 3.12.14. Both author
-routes reproduce wheels, install offline without author sources, and replay
-unchanged callers after moving the installed tree. These runs use
-Linux x64/glibc 2.36. Other primitive-base nominal fixtures, refined callbacks,
-owned, recursive, dependent and broader generic Subtypes remain pending.
+The [original nominal checks](../evidence/nominal-subtype-python-acceptance-20261012.md)
+cover Nat fields, aliases, mixed Fin guards and constructor-free results.
+The [expanded installed checks](../evidence/nominal-primitive-subtype-python-20261014/index.json)
+cover all nineteen primitive bases: `Unit`, `Bool`, unsigned and signed
+fixed-width integers, `Nat`, `Int`, `Float32`, `Float`, `String`, `ByteArray`,
+`Char`, `USize` and `ISize`. Ordinary and reviewed packages reproduce the same
+complete wheel from two author roots. Full and standalone result-only APIs
+install offline after author removal and replay unchanged callers after
+physical relocation on CPython 3.11.16 and 3.12.14, using Linux x64/glibc 2.36.
+
+The [required Python workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nominal-primitive-subtype-python.yml)
+runs those four selections on both interpreter floors. The local archive does
+not establish its hosted result. Refined callbacks, owned, recursive, dependent
+and broader generic Subtypes, plus constructor/source entry counts, remain
+separate work.
 
 ### Type conversions
 
@@ -814,7 +825,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `USize` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, 0..18446744073709551615. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. int with range checks for the 64-bit compiled Lean target. Required: Bind width to the compiled Lean target, not the consumer process; reject out-of-range values. |
 | `ISize` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, -9223372036854775808..9223372036854775807. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. int with signed range checks for the 64-bit compiled Lean target. Required: Bind signed width to the compiled Lean target and record architecture explicitly. |
 | `Fin n` | `Exact int below the declared bound; declared list/tuple and Some carriers for containers` (input); `int below the bound; independent tuples and Some carriers for containers` (result); `Exact int checked against the field's closed bound` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Use exact int values, rejecting bool and numeric coercions. Arrays/Lists accept lists or tuples and return independent tuples; products use pairs, Option uses None/Some, and Except uses Err/Ok. Record and active variant fields retain their declared bounds. Empty, absent and inactive Fin 0 payloads are valid; every present Fin 0 value is rejected. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
-| `Subtype / {x // p x}` | `Declared primitive base value checked by the named Lean constructor; also in generated structural containers; also in tested acyclic records and variants` (input); `Constructed subtype projected to its primitive base value; also in generated structural containers; also in tested acyclic records and variants` (result); `int payload in generated frozen dataclasses for the tested acyclic records and variants; no proof field` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Pass the primitive base value, including inside Array, List, Option, Prod and Except containers using their generated host representations. Each present Subtype leaf uses the selected checked Lean constructor; accepted normalization reaches the export. A rejected leaf fails the call without changing the input; later valid calls still work. Results expose the proof-backed base values. Transparent aliases and the tested closed List specialization keep their constructor choices. In Python, the tested acyclic records and variants carry Nat Subtype payloads as Python int values in generated frozen dataclasses. Each input site keeps its selected checked constructor, including distinct normalizing choices for the same record. Copied results project existing Lean values without selecting or running an input constructor. Callers supply no proof fields. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
+| `Subtype / {x // p x}` | `Declared primitive base value checked by the named Lean constructor; also in generated structural containers; also in tested acyclic records and variants` (input); `Constructed subtype projected to its primitive base value; also in generated structural containers; also in tested acyclic records and variants` (result); `declared primitive's host value in generated frozen record and variant dataclasses across nineteen tested bases; no proof field` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Pass the primitive base value, including inside Array, List, Option, Prod and Except containers using their generated host representations. Each present Subtype leaf uses the selected checked Lean constructor; accepted normalization reaches the export. A rejected leaf fails the call without changing the input; later valid calls still work. Results expose the proof-backed base values. Transparent aliases and the tested closed List specialization keep their constructor choices. In Python, checked fields retain the declared primitive's host representation across all nineteen tested bases: None for Unit, bool for Bool, int for every integer and native machine word, float for Float32 and Float, str for String and Char, and bytes for ByteArray. Generated frozen dataclasses carry the record and variant fields. Each input site keeps its selected checked constructor and accepted normalization; only the active variant branch is checked. Rejection preserves caller values and later valid calls succeed. Copied results project existing Lean payloads without proof fields or input constructor selections, including standalone result-only packages. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Checked records and closed Nat indices` | `Generated record dataclass with int and tuple payload fields` (input, result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Installed checks passed (input, result); Not audited (field, callback input, callback result) | Pass the generated record's runtime payload fields, without proof values. The selected Lean constructor checks each input and may normalize it; rejection identifies the parameter and constructor and preserves caller data. Results contain copied payload fields with proofs erased. Both ordinary and independently reviewed packages, including standalone result-only packages, passed installed checks. Required: Construct inputs only through the selected safe Lean constructor over the exact payload fields. Preserve closed indices and per-site choices; project proof-backed results without fabricating proofs. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
 | `Recursive copied structures` | `Named frozen dataclasses, constructor unions, transparent aliases and owned tuple/Some/Ok/Err values` (input, result, field); `Generated recursive constructor dataclasses and TypeAliasType aliases; typed Callable parameters and owned LeanClosure results` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Use exact generated constructor classes and scalar types. Arrays and Lists accept exact lists or tuples and return independent tuples. TypeAliasType bounds runtime hints; precise stubs preserve static recursive unions. Input validation precedes native allocation or initialization. Finally blocks release native results and temporary owners; malformed output retires the shared runtime. Constructor identity and recursive aliases survive independent copied values. Arrays and Lists accept lists/tuples and return tuples. Conversion scopes retain callback replies until native copying completes. Original callback errors return after cleanup; malformed native output retires the runtime. Captured values release on close or fallback finalization. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |

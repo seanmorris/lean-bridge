@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeNominalPrimitiveSubtypePythonPromotionSource } from "./nominal-primitive-subtype-python-promotion-history.mjs";
 import { beforeNominalPrimitiveSubtypePythonRegistrationSource, nominalPrimitiveSubtypePythonRegistrationChangedPaths, nominalPrimitiveSubtypePythonRegistrationHistoryPath, nominalPrimitiveSubtypePythonRegistrationPredecessor, reverseNominalPrimitiveSubtypePythonRegistrationUpdate } from "./nominal-primitive-subtype-python-registration-history.mjs";
 
 test("primitive-base Python harness registration authenticates exact changes without adding support claims", async () => {
@@ -40,7 +41,7 @@ test("primitive-base Python harness registration authenticates exact changes wit
 		}
 	}
 	const path = "docs/type-surface.v1.json", inventory = JSON.parse(original(path));
-	assert.equal(await readFile(path, "utf8"), original(path));
+	assert.equal(beforeNominalPrimitiveSubtypePythonPromotionSource(path, await readFile(path, "utf8")), original(path));
 	assert.equal(inventory.evidence.length, 524); assert.equal(inventory.observations.length, 595);
 	for(const entry of inventory.evidence) for(const file of entry.files)
 		assert.ok(!nominalPrimitiveSubtypePythonRegistrationChangedPaths.includes(file.path));

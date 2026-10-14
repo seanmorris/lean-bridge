@@ -30,6 +30,7 @@ import { nominalSubtypeWitProfiles, nominalSubtypeWitHostSuffix } from "./helper
 import { nominalSubtypeBrowserProfiles, nominalSubtypeBrowserHostSuffix } from "./helpers/nominal-subtype-browser-promotion.mjs";
 import { nominalSubtypePhpWasmProfiles, nominalSubtypePhpWasmHostSuffix } from "./helpers/nominal-subtype-php-wasm-promotion.mjs";
 import { nominalPrimitiveSubtypeNpmProfiles, nominalPrimitiveSubtypeNpmField } from "./helpers/nominal-primitive-subtype-npm-promotion.mjs";
+import { nominalPrimitiveSubtypePythonProfiles, nominalPrimitiveSubtypePythonField } from "./helpers/nominal-primitive-subtype-python-promotion.mjs";
 
 const execute = promisify(execFile);
 const root = path.resolve(import.meta.dirname, "..");
@@ -424,6 +425,8 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	const nominalSubtype = ["python", "ruby", "rust", "dotnet", "java", "kotlin", ...nominalSubtypePhpProfiles, ...nominalSubtypeWitProfiles, ...nominalSubtypePhpWasmProfiles].includes(profile);
 	const nominalSubtypeLane = nominalSubtypeJvmProfiles.includes(profile) ? "jvm" : nominalSubtypePhpProfiles.includes(profile) ? "php" : nominalSubtypeWitProfiles.includes(profile) ? "wit" : nominalSubtypeBrowserProfiles.includes(profile) ? "browser" : nominalSubtypePhpWasmProfiles.includes(profile) ? "php-wasm" : profile;
 	const nominalSubtypeEvidence = nominalSubtype ? ["full", "result-only"].map(mode => `nominal-subtype-${nominalSubtypeLane}-ordinary-${mode}-installed`) : [];
+	const primitiveSubtypeEvidence = nominalPrimitiveSubtypePythonProfiles.includes(profile)
+		? ["full", "result-only"].map(mode => `nominal-primitive-subtype-python-ordinary-${mode}-installed`) : [];
 	const checkedRecordGroups = {
 		python: ["python-3-11", "python-3-12"], ruby: ["ruby-jvm"]
 		, java: ["ruby-jvm"], kotlin: ["ruby-jvm"], dotnet: ["remaining"]
@@ -476,7 +479,7 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 				assert.deepEqual(stage.evidence, [...(cell.position === "field" ? []
 					: [profile === "php-wasm" ? "php-wasm-subtype-ordinary-installed" : `native-subtype-${specializationEvidence}-installed`
 						, ...structuralSubtypeEvidence(profile, "ordinary")])
-					, ...nominalSubtypeEvidence]);
+					, ...nominalSubtypeEvidence, ...primitiveSubtypeEvidence]);
 				continue;
 			}
 			if(specialized.includes(cell.shape))
@@ -552,12 +555,14 @@ test("checked Subtype evidence preserves structural inputs and results and limit
 		, ...nominalSubtypeWitProfiles, ...nominalSubtypeBrowserProfiles
 		, ...nominalSubtypePhpWasmProfiles];
 	const nominalLane = profile => nominalSubtypeNpmProfiles.includes(profile) ? "npm" : nominalSubtypeJvmProfiles.includes(profile) ? "jvm" : nominalSubtypePhpProfiles.includes(profile) ? "php" : nominalSubtypeWitProfiles.includes(profile) ? "wit" : nominalSubtypeBrowserProfiles.includes(profile) ? "browser" : nominalSubtypePhpWasmProfiles.includes(profile) ? "php-wasm" : ["perl", "python", "ruby", "rust", "dotnet"].includes(profile) ? profile : "native";
-	const primitiveNominal = cell => nominalPrimitiveSubtypeNpmProfiles.includes(cell.profile)
-		? ["full", "result-only"].map(mode => `nominal-primitive-subtype-npm-${cell.path === "ordinary-source" ? "ordinary" : "reviewed"}-${mode}-installed`) : [];
+	const primitiveLane = profile => nominalPrimitiveSubtypeNpmProfiles.includes(profile) ? "npm" : nominalPrimitiveSubtypePythonProfiles.includes(profile) ? "python" : null;
+	const primitiveNominal = cell => primitiveLane(cell.profile)
+		? ["full", "result-only"].map(mode => `nominal-primitive-subtype-${primitiveLane(cell.profile)}-${cell.path === "ordinary-source" ? "ordinary" : "reviewed"}-${mode}-installed`) : [];
 	assert.deepEqual(fields.map(cell => cell.id).sort(), nominalProfiles.flatMap(profile => ["ordinary-source", "reviewed-ir"].map(path => `${profile}/subtype/${path}/field`)).sort());
 	for(const cell of fields)
 	{
 		if(nominalPrimitiveSubtypeNpmProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeNpmField);
+		if(nominalPrimitiveSubtypePythonProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypePythonField);
 		for(const stage of Object.values(cell.stages))
 			assert.deepEqual(stage.evidence, [...["full", "result-only"].map(mode => `nominal-subtype-${nominalLane(cell.profile)}-${cell.path === "ordinary-source" ? "ordinary" : "reviewed"}-${mode}-installed`), ...primitiveNominal(cell)]);
 	}
@@ -577,7 +582,7 @@ test("checked Subtype evidence preserves structural inputs and results and limit
 		assert.ok(cell.hostType.endsWith(suffix));
 		const stages = Object.fromEntries(Object.entries(cell.stages).map(([name, stage]) => {
 			assert.deepEqual(stage.evidence.filter(id => id.startsWith("nominal-subtype-")), nominal);
-			assert.deepEqual(stage.evidence.filter(id => id.startsWith("nominal-primitive-subtype-npm-")), primitiveNominal(cell));
+			assert.deepEqual(stage.evidence.filter(id => id.startsWith("nominal-primitive-subtype-")), primitiveNominal(cell));
 			assert.deepEqual(stage.evidence.filter(id => id.startsWith("structural-subtype-")), expected);
 			return [name, { ...stage, evidence: stage.evidence.filter(id => !expected.includes(id) && !nominal.includes(id) && !primitiveNominal(cell).includes(id)) }];
 		}));

@@ -13,6 +13,7 @@ import { beforeNominalSubtypeJvmPromotionPins } from "./nominal-subtype-jvm-prom
 import { nominalSubtypeDotnetPromotionHistoryPath } from "./nominal-subtype-dotnet-promotion-history.mjs";
 import { nominalSubtypePythonReferences, promoteNominalSubtypePython } from "./nominal-subtype-python-promotion.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeNominalPrimitiveSubtypePythonPromotionPins } from "./nominal-primitive-subtype-python-promotion-history.mjs";
 import { beforeNominalSubtypeRubyPromotionSource, nominalSubtypeRubyPromotionHistoryPath } from "./nominal-subtype-ruby-promotion-history.mjs";
 import { nominalSubtypeRustPromotionHistoryPath } from "./nominal-subtype-rust-promotion-history.mjs";
 import { beforeNominalSubtypePythonPromotionSource, nominalSubtypePythonPromotionChangedPaths, nominalSubtypePythonPromotionHistoryPath, nominalSubtypePythonPromotionPredecessor, reverseNominalSubtypePythonPromotionUpdate } from "./nominal-subtype-python-promotion-history.mjs";
@@ -45,7 +46,7 @@ test("nominal Python promotion history authenticates exact changes and the six o
 		}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	const expected = beforeNominalSubtypeJvmPromotionPins(await promoteNominalSubtypePython(JSON.parse(original(inventoryPath)), await nominalSubtypePythonReferences()));
+	const expected = beforeNominalSubtypeJvmPromotionPins(beforeNominalPrimitiveSubtypePythonPromotionPins(await promoteNominalSubtypePython(JSON.parse(original(inventoryPath)), await nominalSubtypePythonReferences())));
 	for(const path of [nominalSubtypeDotnetPromotionHistoryPath, nominalSubtypeRustPromotionHistoryPath, nominalSubtypeRubyPromotionHistoryPath])
 	{
 		const later = JSON.parse(await readFile(path));

@@ -511,7 +511,8 @@ choices, including in result-only packages.
 Both author routes reproduce packages from independent source trees, install
 offline and replay after relocation. The [npm CI workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nominal-primitive-subtype-npm.yml)
 runs both routes and API modes and retains the original package records.
-Primitive-base nominal acceptance in other hosts remains pending. Callback,
+Python has separate [nineteen-base nominal checks](evidence/nominal-primitive-subtype-python-20261014/index.json).
+Primitive-base nominal acceptance in the remaining hosts is pending. Callback,
 owned, recursive, dependent and broader generic Subtype combinations need
 their own checks.
 

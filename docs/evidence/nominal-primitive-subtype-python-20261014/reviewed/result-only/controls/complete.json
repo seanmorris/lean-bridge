@@ -1,0 +1,47 @@
+{
+  "checked": {
+    "counts": {
+      "checks": 587,
+      "rejections": 0,
+      "rounds": 256,
+      "snapshotControls": 9,
+      "wordBits": 64
+    },
+    "dispatchObserved": false,
+    "environmentControls": 44,
+    "executions": 4,
+    "floor": "2.36",
+    "generatorModules": 19,
+    "handoff": {
+      "archivePath": "handoff/archives/nominalprimitivesubtypes-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+      "archiveSha256": "f28a4cac5d022827b47771e6233c2f502bc4d48b63f890703a1df2ac160dd242",
+      "members": 31
+    },
+    "minors": [
+      "3.11",
+      "3.12"
+    ],
+    "mode": "result-only",
+    "modelControls": 23,
+    "packageControls": 4,
+    "producerCommit": "b1be97044c7dd9f21f58c8b63bd6a4518c145f04",
+    "recordControls": 132,
+    "records": 66,
+    "route": "reviewed",
+    "runtime": {
+      "arch": "x64",
+      "glibc": "2.36",
+      "platform": "linux"
+    }
+  },
+  "compiledAgain": false,
+  "finished": "2026-10-14T14:02:47.476Z",
+  "head": "b1be97044c7dd9f21f58c8b63bd6a4518c145f04",
+  "installedAcceptance": true,
+  "mode": "result-only",
+  "originalsUnchanged": 70,
+  "route": "reviewed",
+  "sourceRoot": "/app/build/vo1469-python-installed-reviewed-result-only-r1",
+  "sourcesUnchanged": 5786,
+  "toolFilesUnchanged": 12
+}

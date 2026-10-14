@@ -51,7 +51,8 @@ extend those Node fields to every admitted primitive base, including signed
 and heap-backed values, floats, Unicode text and bytes. Constructors still
 belong to each input site; results project existing payloads. Both author
 routes and API modes pass offline installation and relocated replay with
-wasm32 machine words. The other host checks below cover their tested Nat forms.
+wasm32 machine words. Python also has nineteen-base checks below; the remaining
+host checks cover their tested Nat forms.
 [Installed C/C++ checks](../evidence/nominal-subtype-native-acceptance-20261011.md)
 cover the same Nat forms on both source routes in Linux x64/glibc 2.36, including
 standalone result-only packages. [Installed Perl checks](../evidence/nominal-subtype-perl-acceptance-20261012.md)
@@ -60,6 +61,11 @@ all four pinned ABIs and both installation modes on Linux x64/glibc 2.36.
 [Installed Python checks](../evidence/nominal-subtype-python-acceptance-20261012.md)
 cover those Nat forms on both source routes in CPython 3.11 and 3.12, with the
 same reproduced wheel installed offline and replayed after relocation.
+[Nineteen-base Python checks](../evidence/nominal-primitive-subtype-python-20261014/index.json)
+extend the copied fields to all admitted primitive bases and test standalone
+result-only packages. Both author routes reproduce complete wheels and replay
+on CPython 3.11.16 and 3.12.14 after offline installation and relocation, using
+Linux x64/glibc 2.36 and 64-bit machine words.
 [Installed Ruby checks](../evidence/nominal-subtype-ruby-acceptance-20261012.md)
 add those Nat forms on MRI Ruby 3.3.12, with reproduced gems, offline installation
 and relocated replay on Linux x64/glibc 2.36.
