@@ -1,20 +1,17 @@
 /**
- * Bind retained Perl records to the complete original CPAN archives, member by member.
- * Archives are extracted with absolute tools into a fresh directory and removed afterwards.
+ * Bind retained Perl records to the complete original CPAN archives, member by member, in memory.
+ * Nothing is extracted: the strict ustar reader validates every header and name before any member byte
+ * is compared with the retained manifests.
  *
  * @file
  */
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
-import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { nativeArtifactPaths } from "../../src/build/native-artifacts.mjs";
 import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
+import { readClosedPackageTarGz } from "./closed-package-tar.mjs";
 
-// Cache only member identities by complete archive digest. Every caller still supplies
-// and hashes the complete archive bytes; report metadata alone cannot reuse a result.
+// Cache only member identities by complete archive digest. Every caller still supplies and
+// hashes the complete archive bytes; report metadata alone cannot reuse a result.
 const authenticated = new Map();
 
 /**
@@ -38,24 +35,17 @@ export const nominalPrimitiveSubtypePerlHandoffRecords = receipt => {
 	return ["package-set-receipt.json", "package-set-receipt.json.sha256", ...artifacts.map(artifact => artifact.path)].map(path => "handoff/" + path);
 };
 
-const members = async (bytes, label) => {
-	const digest = sha256(bytes);
-	if(authenticated.has(digest)) return authenticated.get(digest);
-	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-nominal-primitive-perl-handoff-"));
-	try
+const members = (bytes, root) => {
+	const key = `${sha256(bytes)}:${root}`;
+	if(!authenticated.has(key))
 	{
-		const archive = join(directory, "archive.tar.gz"), extracted = join(directory, "extracted");
-		await writeFile(archive, bytes); await mkdir(extracted);
-		execFileSync("/usr/bin/tar", ["--use-compress-program=/usr/bin/gzip", "-xf", archive, "-C", extracted], { env: {}, stdio: "pipe" });
-		const roots = await readdir(extracted); assert.equal(roots.length, 1, `${label}: one distribution root`);
-		const root = join(extracted, roots[0]), files = new Map();
-		for(const path of await nativeArtifactPaths(root)) files.set(path, sha256(await readFile(join(root, path))));
-		const manifest = JSON.parse(await readFile(join(root, "lean-bridge-package.json"), "utf8"));
-		authenticated.set(digest, { root: roots[0], files, manifest });
-		return authenticated.get(digest);
+		const files = new Map(), entries = readClosedPackageTarGz(bytes, { root });
+		for(const [path, member] of entries) files.set(path, sha256(member));
+		const manifestBytes = entries.get("lean-bridge-package.json");
+		assert.ok(manifestBytes, "prepared CPAN manifest member");
+		authenticated.set(key, { files, manifest: JSON.parse(manifestBytes.toString("utf8")) });
 	}
-	finally
-	{ await rm(directory, { recursive: true, force: true }); }
+	return authenticated.get(key);
 };
 
 /**
@@ -78,8 +68,7 @@ export const checkNominalPrimitiveSubtypePerlHandoff = async (read, { receipt, m
 		assert.ok(manifest && typeof manifest === "object", pkg.role);
 		const bytes = await read("handoff/" + artifact.path);
 		assert.equal(bytes.length, artifact.bytes, artifact.path); assert.equal(sha256(bytes), artifact.sha256, artifact.path);
-		const archive = await members(bytes, artifact.path);
-		assert.equal(archive.root, `${pkg.name}-${pkg.version}`);
+		const archive = members(bytes, `${pkg.name}-${pkg.version}`);
 		assert.deepEqual([...archive.files.keys()].sort(), [...Object.keys(manifest.files), "lean-bridge-package.json"].sort(), `${artifact.path} members`);
 		for(const [path, digest] of Object.entries(manifest.files)) assert.equal(archive.files.get(path), digest, `${artifact.path}: ${path}`);
 		assert.deepEqual(archive.manifest, manifest, `${artifact.path}: prepared manifest`);
