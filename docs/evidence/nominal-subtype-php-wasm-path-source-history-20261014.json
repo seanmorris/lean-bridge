@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nominal-subtype-php-wasm-path-source-v1",
+  "predecessorCommit": "d4dd322f1e61c52a6505fbaa9294ee3d19cc0a33",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "690d885d0838b47e12d512336177732d8c98ea45646b51f843bf84b7eadd6a76",
+      "previousSha256": "ee78b171347c86ae9c4c16dc74672b5154824c2ea820d9542841b314afe3465f",
+      "edits": [
+        {
+          "start": 6668519,
+          "previous": "          \"sha256\": \"a7abd32b3b7c2f34cc99c2d1f71984d5fda10c639bd644bd292672a1478a12be\"\n",
+          "current": "          \"sha256\": \"526cf04c0e759139af8bb40adb46f99a4ec791ed0f4648958c2119b64be29883\"\n"
+        },
+        {
+          "start": 6698140,
+          "previous": "          \"sha256\": \"a7abd32b3b7c2f34cc99c2d1f71984d5fda10c639bd644bd292672a1478a12be\"\n",
+          "current": "          \"sha256\": \"526cf04c0e759139af8bb40adb46f99a4ec791ed0f4648958c2119b64be29883\"\n"
+        },
+        {
+          "start": 6728178,
+          "previous": "          \"sha256\": \"a7abd32b3b7c2f34cc99c2d1f71984d5fda10c639bd644bd292672a1478a12be\"\n",
+          "current": "          \"sha256\": \"526cf04c0e759139af8bb40adb46f99a4ec791ed0f4648958c2119b64be29883\"\n"
+        },
+        {
+          "start": 6758253,
+          "previous": "          \"sha256\": \"a7abd32b3b7c2f34cc99c2d1f71984d5fda10c639bd644bd292672a1478a12be\"\n",
+          "current": "          \"sha256\": \"526cf04c0e759139af8bb40adb46f99a4ec791ed0f4648958c2119b64be29883\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "86b8c659acad62aecfd666c0644df95e6efd9b04c1f167e8aa99ebdfcf5c1e9f",
+      "previousSha256": "71806e3a9199614d1126afcfff3055c6b4e32cce96b3aa4d1d18094c0b93e14b",
+      "edits": [
+        {
+          "start": 7211,
+          "previous": "",
+          "current": "import { nominalSubtypePhpWasmPathChangedPaths } from \"./nominal-subtype-php-wasm-path-history.mjs\";\n"
+        },
+        {
+          "start": 69710,
+          "previous": "",
+          "current": "\t, ...nominalSubtypePhpWasmPathChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-wasm-corpus-partition-history.mjs",
+      "currentSha256": "7daeb84d6a0693a016375eaa5faaf969224e90b357186710eb18a67ea6b0d993",
+      "previousSha256": "07c1254570406047e7e300f3156ae05a441bfbcc5dca04305186dc1c64818f10",
+      "edits": [
+        {
+          "start": 231,
+          "previous": "",
+          "current": "import { beforeNominalSubtypePhpWasmPathSource, beforeNominalSubtypePhpWasmPathPins } from \"./nominal-subtype-php-wasm-path-history.mjs\";\n"
+        },
+        {
+          "start": 2782,
+          "previous": "",
+          "current": "\tsource = beforeNominalSubtypePhpWasmPathSource(path, source, expected);\n"
+        },
+        {
+          "start": 3537,
+          "previous": "\tconst previous = structuredClone(inventory);\n",
+          "current": "\tconst previous = beforeNominalSubtypePhpWasmPathPins(inventory);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-php-wasm-report.mjs",
+      "currentSha256": "526cf04c0e759139af8bb40adb46f99a4ec791ed0f4648958c2119b64be29883",
+      "previousSha256": "a7abd32b3b7c2f34cc99c2d1f71984d5fda10c639bd644bd292672a1478a12be",
+      "edits": [
+        {
+          "start": 1726,
+          "previous": "",
+          "current": "import { assertNominalSubtypePhpWasmDirectory } from \"./nominal-subtype-php-wasm-directory.mjs\";\n"
+        },
+        {
+          "start": 5379,
+          "previous": "\tassert.match(context.directory, /^\\/tmp\\/lean-bridge-nominal-php-wasm-installed-[A-Za-z0-9]+$/u);\n",
+          "current": "\tassertNominalSubtypePhpWasmDirectory(context.directory);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-php-wasm-tests.mjs",
+      "currentSha256": "dc1e949947c7b70fba55adda904a50c5f1cda4d2ba920c5a32742745b50bcdd7",
+      "previousSha256": "a018c084a0fefb03997581f6b153aeed4181a1ad4e1b8c1ffac3794882fc0aad",
+      "edits": [
+        {
+          "start": 1581,
+          "previous": "",
+          "current": "import \"./nominal-subtype-php-wasm-path-tests.mjs\";\nimport \"./nominal-subtype-php-wasm-path-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-jvm-ci-workflow-tests.mjs",
+      "currentSha256": "4bdbdded6a233569819ba3d3df7ae93d42f059f15adb850b5f2348cbd1a79572",
+      "previousSha256": "51b21668d560f16f4e3ba293c5545963f56726c09a853216ee89f75714f024bc",
+      "edits": [
+        {
+          "start": 1089,
+          "previous": "",
+          "current": "import { beforePhpWasmCorpusPartitionSource } from \"./php-wasm-corpus-partition-history.mjs\";\n"
+        },
+        {
+          "start": 1617,
+          "previous": "\tconst checkpoint = disableNominalSubtypePhpWorkflow(disableNominalSubtypeWitWorkflow(source));\n",
+          "current": "\tconst checkpoint = disableNominalSubtypePhpWorkflow(disableNominalSubtypeWitWorkflow(beforePhpWasmCorpusPartitionSource(path, source)));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-php-ci-workflow-tests.mjs",
+      "currentSha256": "de8c24f1f7c8f5fe09383ef70ff8ea06a66de77cbbe5371aab7f1dcc7bbed391",
+      "previousSha256": "baac07c1ca353e19a199d20dbbbffdc7804b2882cd5cf5de6296fc5d5a0cd3a5",
+      "edits": [
+        {
+          "start": 848,
+          "previous": "",
+          "current": "import { beforePhpWasmCorpusPartitionSource } from \"./php-wasm-corpus-partition-history.mjs\";\n"
+        },
+        {
+          "start": 1440,
+          "previous": "\tconst checkpoint = disableNominalSubtypeWitWorkflow(source);\n",
+          "current": "\tconst checkpoint = disableNominalSubtypeWitWorkflow(beforePhpWasmCorpusPartitionSource(path, source));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-wit-ci-workflow-tests.mjs",
+      "currentSha256": "8ee5a3704faa0683a2b86b5c18dfcb034cf53f9da65288cb9b4e226000cda75b",
+      "previousSha256": "d6ab66bd29a24372019f1b57c2cd7e74280b43664e6296ba5a25c8edcea98b5f",
+      "edits": [
+        {
+          "start": 883,
+          "previous": "",
+          "current": "import { beforePhpWasmCorpusPartitionSource } from \"./php-wasm-corpus-partition-history.mjs\";\n"
+        },
+        {
+          "start": 1475,
+          "previous": "\tassert.equal(disableNominalSubtypeWitWorkflow(source), previous);\n\tassert.equal(enableNominalSubtypeWitWorkflow(previous), source);\n\tassert.equal(source.replace(bodyOf(source), \"\"), previous.replace(bodyOf(previous), \"\"));\n",
+          "current": "\tconst checkpoint = beforePhpWasmCorpusPartitionSource(path, source);\n\tassert.equal(disableNominalSubtypeWitWorkflow(checkpoint), previous);\n\tassert.equal(enableNominalSubtypeWitWorkflow(previous), checkpoint);\n\tassert.equal(checkpoint.replace(bodyOf(checkpoint), \"\"), previous.replace(bodyOf(previous), \"\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-php-wasm-promotion-history-tests.mjs",
+      "currentSha256": "0b0ebc0968b9a73769ee3fc63e9ee1efa3ac3aaefbcccce04b4df1181dc3729b",
+      "previousSha256": "4774500f34073a0760751030c7e0159a73ff5bb7935a7f8fddf02120060ad85c",
+      "edits": [
+        {
+          "start": 601,
+          "previous": "",
+          "current": "import { beforePhpWasmCorpusPartitionPins } from \"./php-wasm-corpus-partition-history.mjs\";\n"
+        },
+        {
+          "start": 3013,
+          "previous": "\tconst expected = await promoteNominalSubtypePhpWasm(JSON.parse(original(inventoryPath)), await nominalSubtypePhpWasmReferences());\n",
+          "current": "\tconst expected = beforePhpWasmCorpusPartitionPins(await promoteNominalSubtypePhpWasm(JSON.parse(original(inventoryPath)), await nominalSubtypePhpWasmReferences()));\n"
+        },
+        {
+          "start": 5033,
+          "previous": "\n",
+          "current": ""
+        }
+      ]
+    }
+  ]
+}

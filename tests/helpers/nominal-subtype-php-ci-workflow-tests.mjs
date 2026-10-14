@@ -13,6 +13,7 @@ import { nominalSubtypePhpCiPredecessor } from "./nominal-subtype-php-ci-history
 import { assertNominalSubtypeJvmWorkflow } from "./nominal-subtype-jvm-ci-workflow.mjs";
 import { assertStructuralSubtypeWorkflow } from "./structural-subtype-ci-workflow.mjs";
 import { disableNominalSubtypeWitWorkflow } from "./nominal-subtype-wit-ci-workflow.mjs";
+import { beforePhpWasmCorpusPartitionSource } from "./php-wasm-corpus-partition-history.mjs";
 
 const path = ".github/workflows/consumer-matrix.yml";
 const bodyOf = source => /^ {2}php-consumers:\n[\s\S]*?(?=^ {2}[a-z][a-z0-9-]*:\n)/mu.exec(source)[0];
@@ -20,7 +21,7 @@ const bodyOf = source => /^ {2}php-consumers:\n[\s\S]*?(?=^ {2}[a-z][a-z0-9-]*:\
 test("nominal PHP CI preserves every previous job and enforces all four Composer selections", async () => {
 	const source = await readFile(path, "utf8"); assertNominalSubtypePhpWorkflow(source);
 	const previous = execFileSync("git", ["show", `${nominalSubtypePhpCiPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 4 * 1024 * 1024 });
-	const checkpoint = disableNominalSubtypeWitWorkflow(source);
+	const checkpoint = disableNominalSubtypeWitWorkflow(beforePhpWasmCorpusPartitionSource(path, source));
 	assert.equal(disableNominalSubtypePhpWorkflow(checkpoint), previous);
 	assert.equal(enableNominalSubtypePhpWorkflow(previous), checkpoint);
 	assert.equal(checkpoint.replace(bodyOf(checkpoint), ""), previous.replace(bodyOf(previous), ""));

@@ -22,6 +22,8 @@ import "./nominal-subtype-php-wasm-ci-shell-tests.mjs";
 import "./nominal-subtype-php-wasm-ci-workflow-tests.mjs";
 import "./nominal-subtype-php-wasm-promotion-tests.mjs";
 import "./nominal-subtype-php-wasm-promotion-history-tests.mjs";
+import "./nominal-subtype-php-wasm-path-tests.mjs";
+import "./nominal-subtype-php-wasm-path-history-tests.mjs";
 
 test("nominal PHP-Wasm selections refuse disabled explicit work, malformed flags and duplicate selections", () => {
 	const prefix = "LEAN_BRIDGE_NOMINAL_SUBTYPE_PHP_WASM_", enabled = { [prefix + "TEST"]: "1" };

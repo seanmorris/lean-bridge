@@ -21,6 +21,7 @@ import { phpWasmDriverHashes, phpWasmIsolationFlags } from "./type-corpus-php-wa
 import { nominalSubtypePhpWasmOriginal, nominalSubtypePhpWasmGenerators } from "./nominal-subtype-php-wasm-sources.mjs";
 import { readClosedPackageZip } from "./closed-package-zip.mjs";
 import { readOwnedPerlCallbackVariantTar } from "./owned-perl-callback-result-variant-archives.mjs";
+import { assertNominalSubtypePhpWasmDirectory } from "./nominal-subtype-php-wasm-directory.mjs";
 
 const identity = bytes => ({ bytes: Buffer.byteLength(bytes), sha256: sha256(bytes) });
 const exact = (object, keys) => assert.deepEqual(Object.keys(object).sort(), [...keys].sort());
@@ -67,7 +68,7 @@ export const checkNominalSubtypePhpWasmReport = async (read, { route, mode, prod
 	const context = await json("context.json");
 	exact(context, ["producerCommit", "route", "mode", "directory", "consumer", "handoff"]);
 	for(const key of ["producerCommit", "route", "mode"]) assert.equal(context[key], report[key]);
-	assert.match(context.directory, /^\/tmp\/lean-bridge-nominal-php-wasm-installed-[A-Za-z0-9]+$/u);
+	assertNominalSubtypePhpWasmDirectory(context.directory);
 	assert.equal(context.consumer, context.directory + "/consumer"); assert.equal(context.handoff, context.consumer + "/handoff");
 	const resources = await json("resources.json"); assert.equal(resources.length, 4);
 	resources.forEach(assertNominalSubtypePhpResources);

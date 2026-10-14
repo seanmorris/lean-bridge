@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { nominalSubtypePhpWasmReferences, promoteNominalSubtypePhpWasm } from "./nominal-subtype-php-wasm-promotion.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforePhpWasmCorpusPartitionPins } from "./php-wasm-corpus-partition-history.mjs";
 import { beforeNominalSubtypePhpWasmPromotionSource, nominalSubtypePhpWasmPromotionChangedPaths, nominalSubtypePhpWasmPromotionHistoryPath, nominalSubtypePhpWasmPromotionPredecessor, reverseNominalSubtypePhpWasmPromotionUpdate } from "./nominal-subtype-php-wasm-promotion-history.mjs";
 
 test("nominal PHP-Wasm promotion history authenticates exact changes and the six observed PHP-Wasm cells", async t => {
@@ -41,7 +42,7 @@ test("nominal PHP-Wasm promotion history authenticates exact changes and the six
 		}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	const expected = await promoteNominalSubtypePhpWasm(JSON.parse(original(inventoryPath)), await nominalSubtypePhpWasmReferences());
+	const expected = beforePhpWasmCorpusPartitionPins(await promoteNominalSubtypePhpWasm(JSON.parse(original(inventoryPath)), await nominalSubtypePhpWasmReferences()));
 	assert.equal(beforeNominalSubtypePhpWasmPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
@@ -68,4 +69,3 @@ test("nominal PHP-Wasm promotion writer refuses an unrelated checkout before wri
 	assert.equal(result.status, 1); assert.match(result.stderr, /draft-only/u);
 	assert.deepEqual(await readdir(root), [".git"]);
 });
-

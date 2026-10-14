@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeNominalSubtypePhpWasmPathSource, beforeNominalSubtypePhpWasmPathPins } from "./nominal-subtype-php-wasm-path-history.mjs";
 
 export const phpWasmCorpusPartitionHistoryPath = "docs/evidence/php-wasm-corpus-partition-source-history-20261014.json";
 export const phpWasmCorpusPartitionPredecessor = "844ae6889866aad54f5a30e9f7b632101af4ac56";
@@ -60,6 +61,7 @@ export const reversePhpWasmCorpusPartitionUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforePhpWasmCorpusPartitionSource = (path, source, expected) => {
+	source = beforeNominalSubtypePhpWasmPathSource(path, source, expected);
 	if(typeof source !== "string" || !phpWasmCorpusPartitionChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = history ??= JSON.parse(readFileSync(phpWasmCorpusPartitionHistoryPath, "utf8"));
@@ -73,7 +75,7 @@ export const beforePhpWasmCorpusPartitionSource = (path, source, expected) => {
  * @param inventory - Earlier inventory recomputed with current file hashes.
  */
 export const beforePhpWasmCorpusPartitionPins = inventory => {
-	const previous = structuredClone(inventory);
+	const previous = beforeNominalSubtypePhpWasmPathPins(inventory);
 	const record = history ??= JSON.parse(readFileSync(phpWasmCorpusPartitionHistoryPath, "utf8"));
 	for(const entry of previous.evidence) for(const file of entry.files)
 	{

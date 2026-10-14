@@ -13,15 +13,17 @@ import { nominalSubtypeWitCiPredecessor } from "./nominal-subtype-wit-ci-history
 import { assertNominalSubtypePhpWorkflow } from "./nominal-subtype-php-ci-workflow.mjs";
 import { assertNominalSubtypeJvmWorkflow } from "./nominal-subtype-jvm-ci-workflow.mjs";
 import { assertStructuralSubtypeWorkflow } from "./structural-subtype-ci-workflow.mjs";
+import { beforePhpWasmCorpusPartitionSource } from "./php-wasm-corpus-partition-history.mjs";
 const path = ".github/workflows/consumer-matrix.yml";
 const bodyOf = source => /^ {2}wasi-consumer:\n[\s\S]*?(?=^ {2}[a-z][a-z0-9-]*:\n)/mu.exec(source)[0];
 
 test("nominal WIT CI preserves every previous job and enforces all four component selections", async () => {
 	const source = await readFile(path, "utf8"); assertNominalSubtypeWitWorkflow(source);
 	const previous = execFileSync("git", ["show", `${nominalSubtypeWitCiPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 4 * 1024 * 1024 });
-	assert.equal(disableNominalSubtypeWitWorkflow(source), previous);
-	assert.equal(enableNominalSubtypeWitWorkflow(previous), source);
-	assert.equal(source.replace(bodyOf(source), ""), previous.replace(bodyOf(previous), ""));
+	const checkpoint = beforePhpWasmCorpusPartitionSource(path, source);
+	assert.equal(disableNominalSubtypeWitWorkflow(checkpoint), previous);
+	assert.equal(enableNominalSubtypeWitWorkflow(previous), checkpoint);
+	assert.equal(checkpoint.replace(bodyOf(checkpoint), ""), previous.replace(bodyOf(previous), ""));
 	assertNominalSubtypePhpWorkflow(source); assertNominalSubtypeJvmWorkflow(source);
 	assertStructuralSubtypeWorkflow(source, "consumer-matrix.yml");
 });
