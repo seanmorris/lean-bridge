@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nominal-primitive-subtype-python-registration-source-v1",
+  "predecessorCommit": "6172f6aeddcdb435c09ffdeae8bc69606ae2636c",
+  "updates": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "0c980fc49936763bf5ef5c4d026521ed2844b483e1f16b093e7d03e27734273c",
+      "previousSha256": "a5ff6dfd03839a2646fb25075ba5eb034927ca758075db81043ecb692e281e19",
+      "edits": [
+        {
+          "start": 7433,
+          "previous": "",
+          "current": "import { nominalPrimitiveSubtypePythonRegistrationChangedPaths } from \"./nominal-primitive-subtype-python-registration-history.mjs\";\n"
+        },
+        {
+          "start": 70062,
+          "previous": "",
+          "current": "\t, ...nominalPrimitiveSubtypePythonRegistrationChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-tests.mjs",
+      "currentSha256": "6f2cc72dacefc6bf56f2e30e827b0e561e616074a4341e4751504d5b2afb7744",
+      "previousSha256": "0b63f0fd156263b84900fa9d8c291dc4b99a85c9968209e40288db5170197da7",
+      "edits": [
+        {
+          "start": 892,
+          "previous": "",
+          "current": "import \"./nominal-primitive-subtype-python-tests.mjs\";\nimport \"./nominal-primitive-subtype-python-handoff-tests.mjs\";\nimport \"./nominal-primitive-subtype-python-ci-policy-tests.mjs\";\nimport \"./nominal-primitive-subtype-python-ci-shell-tests.mjs\";\nimport \"./nominal-primitive-subtype-python-ci-workflow-tests.mjs\";\nimport \"./nominal-primitive-subtype-python-registration-history-tests.mjs\";\nimport \"./nominal-primitive-subtype-python-installed-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-npm-promotion-history.mjs",
+      "currentSha256": "e22efd7a34c09a21aaf2ff192df5c9327f0e4a3869f30cf62cce4f5684404073",
+      "previousSha256": "faaedea9c1c4d7c2afc546335d3a305de1b3ed4f0c673e3e9700c2cd29c6672e",
+      "edits": [
+        {
+          "start": 239,
+          "previous": "",
+          "current": "import { beforeNominalPrimitiveSubtypePythonRegistrationSource } from \"./nominal-primitive-subtype-python-registration-history.mjs\";\n"
+        },
+        {
+          "start": 2673,
+          "previous": "",
+          "current": "\tsource = beforeNominalPrimitiveSubtypePythonRegistrationSource(path, source, expected);\n"
+        }
+      ]
+    }
+  ]
+}
