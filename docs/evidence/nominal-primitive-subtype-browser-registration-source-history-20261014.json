@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nominal-primitive-subtype-browser-registration-source-v1",
+  "predecessorCommit": "0db8dc17361504af17bb3b00b4121c34a9b167ab",
+  "updates": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "fbf835724152c232606b084431e75265e4a48a85910f6a280ee1a454e09353c3",
+      "previousSha256": "76667896f7ed21d87b1986437fa9e6f9c06cd8baca68fbb17e37c5f133d6ec6d",
+      "edits": [
+        {
+          "start": 7693,
+          "previous": "",
+          "current": "import { nominalPrimitiveSubtypeBrowserRegistrationChangedPaths } from \"./nominal-primitive-subtype-browser-registration-history.mjs\";\n"
+        },
+        {
+          "start": 70441,
+          "previous": "",
+          "current": "\t, ...nominalPrimitiveSubtypeBrowserRegistrationChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-tests.mjs",
+      "currentSha256": "f79ed17c853d5ac5e0ed07a92b556330f98f9de38aacefe69d3bdff2112961f1",
+      "previousSha256": "dbab9ed0694291d55738ec3301898de8e6226a45cad6a2711b57e69d5ed6a073",
+      "edits": [
+        {
+          "start": 1548,
+          "previous": "",
+          "current": "import \"./nominal-primitive-subtype-browser-tests.mjs\";\nimport \"./nominal-primitive-subtype-browser-ci-policy-tests.mjs\";\nimport \"./nominal-primitive-subtype-browser-ci-shell-tests.mjs\";\nimport \"./nominal-primitive-subtype-browser-ci-workflow-tests.mjs\";\nimport \"./nominal-primitive-subtype-browser-registration-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-npm-installed-tests.mjs",
+      "currentSha256": "55c425cca307f4241c225797a33db3e8079066be24d9571bcb7e16f33494bdc9",
+      "previousSha256": "f3c7630b9869b4e0314b62e2508348794a7bc40cc7379623bd04dbc0788d1a38",
+      "edits": [
+        {
+          "start": 1790,
+          "previous": "",
+          "current": "import { nominalPrimitiveSubtypeBrowserEnabled } from \"./nominal-primitive-subtype-browser-fixture.mjs\";\nimport { checkNominalPrimitiveSubtypeBrowsers } from \"./nominal-primitive-subtype-browser.mjs\";\nimport { checkNominalPrimitiveSubtypeBrowserReport } from \"./nominal-primitive-subtype-browser-report.mjs\";\n"
+        },
+        {
+          "start": 2312,
+          "previous": "",
+          "current": "const browserEnabled = nominalPrimitiveSubtypeBrowserEnabled(process.env);\n"
+        },
+        {
+          "start": 13430,
+          "previous": "",
+          "current": "\tif(browserEnabled)\n\t{\n\t\tawait checkNominalPrimitiveSubtypeBrowsers({ directory, handoff, receipt, records: output, route, mode, producerCommit, runtime });\n\t\tawait checkNominalPrimitiveSubtypeBrowserReport(original, { route, mode, producerCommit, runtime });\n\t}\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-python-promotion-history.mjs",
+      "currentSha256": "0720cdb8b8d5572471c2a7a7091dd60982a5ad3548de2526f2e6b5c9d5419bf6",
+      "previousSha256": "9400c2f7d3a439efa05d11c607ad7c6ef00f0add749e3daea6775fbc304a2938",
+      "edits": [
+        {
+          "start": 241,
+          "previous": "",
+          "current": "import { beforeNominalPrimitiveSubtypeBrowserRegistrationSource } from \"./nominal-primitive-subtype-browser-registration-history.mjs\";\n"
+        },
+        {
+          "start": 3043,
+          "previous": "",
+          "current": "\tsource = beforeNominalPrimitiveSubtypeBrowserRegistrationSource(path, source, expected);\n"
+        }
+      ]
+    }
+  ]
+}

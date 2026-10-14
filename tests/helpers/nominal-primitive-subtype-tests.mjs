@@ -26,3 +26,8 @@ import "./nominal-primitive-subtype-python-installed-tests.mjs";
 import "./nominal-primitive-subtype-python-archive-tests.mjs";
 import "./nominal-primitive-subtype-python-promotion-tests.mjs";
 import "./nominal-primitive-subtype-python-promotion-history-tests.mjs";
+import "./nominal-primitive-subtype-browser-tests.mjs";
+import "./nominal-primitive-subtype-browser-ci-policy-tests.mjs";
+import "./nominal-primitive-subtype-browser-ci-shell-tests.mjs";
+import "./nominal-primitive-subtype-browser-ci-workflow-tests.mjs";
+import "./nominal-primitive-subtype-browser-registration-history-tests.mjs";

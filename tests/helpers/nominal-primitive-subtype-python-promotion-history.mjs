@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeNominalPrimitiveSubtypeBrowserRegistrationSource } from "./nominal-primitive-subtype-browser-registration-history.mjs";
 
 export const nominalPrimitiveSubtypePythonPromotionHistoryPath = "docs/evidence/nominal-primitive-subtype-python-promotion-source-history-20261014.json";
 export const nominalPrimitiveSubtypePythonPromotionPredecessor = "b1be97044c7dd9f21f58c8b63bd6a4518c145f04";
@@ -59,6 +60,7 @@ export const reverseNominalPrimitiveSubtypePythonPromotionUpdate = (source, upda
  * @param expected - Optional requested stopping digest.
  */
 export const beforeNominalPrimitiveSubtypePythonPromotionSource = (path, source, expected) => {
+	source = beforeNominalPrimitiveSubtypeBrowserRegistrationSource(path, source, expected);
 	if(typeof source !== "string" || !nominalPrimitiveSubtypePythonPromotionChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = history ??= JSON.parse(readFileSync(nominalPrimitiveSubtypePythonPromotionHistoryPath, "utf8"));

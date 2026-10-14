@@ -24,10 +24,14 @@ import { structuralSubtypeNpmPackageName } from "./structural-subtype-npm-packag
 import { nominalPrimitiveSubtypeConfiguration, nominalPrimitiveSubtypeFixture, nominalPrimitiveSubtypeModule, nominalPrimitiveSubtypeName, nominalPrimitiveSubtypeReview } from "./nominal-primitive-subtype-fixture.mjs";
 import { checkNominalPrimitiveSubtypeNpmReport } from "./nominal-primitive-subtype-npm-report.mjs";
 import { waitNominalSubtypeDotnetResources as waitResources } from "./nominal-subtype-dotnet-resources.mjs";
+import { nominalPrimitiveSubtypeBrowserEnabled } from "./nominal-primitive-subtype-browser-fixture.mjs";
+import { checkNominalPrimitiveSubtypeBrowsers } from "./nominal-primitive-subtype-browser.mjs";
+import { checkNominalPrimitiveSubtypeBrowserReport } from "./nominal-primitive-subtype-browser-report.mjs";
 
 const flag = "LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_NPM_TEST";
 if(process.env[flag] !== undefined) assert.ok(["0", "1"].includes(process.env[flag]), `Invalid ${flag}`);
 const enabled = process.env[flag] === "1";
+const browserEnabled = nominalPrimitiveSubtypeBrowserEnabled(process.env);
 const select = (variable, permitted) => {
 	const selected = process.env[variable]?.split(",") ?? permitted;
 	assert.ok(selected.length && selected.every(value => permitted.includes(value)), `Invalid ${variable}`);
@@ -172,5 +176,10 @@ for(const route of routes) for(const mode of modes) test(`installed npm primitiv
 	const runtime = { node: process.version, platform: process.platform, arch: process.arch };
 	const original = path => readFile(join(output, path));
 	await checkNominalPrimitiveSubtypeNpmReport(original, { route, mode, producerCommit, runtime });
+	if(browserEnabled)
+	{
+		await checkNominalPrimitiveSubtypeBrowsers({ directory, handoff, receipt, records: output, route, mode, producerCommit, runtime });
+		await checkNominalPrimitiveSubtypeBrowserReport(original, { route, mode, producerCommit, runtime });
+	}
 	complete = true;
 });
