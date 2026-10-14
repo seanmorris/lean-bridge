@@ -1,0 +1,70 @@
+import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { resolve } from "node:path";
+import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
+import { nativeArtifactPaths } from "../src/build/native-artifacts.mjs";
+import { waitNominalSubtypeDotnetResources } from "../tests/helpers/nominal-subtype-dotnet-resources.mjs";
+import { checkNominalPrimitiveSubtypeBrowserControls } from "../tests/helpers/nominal-primitive-subtype-browser-controls.mjs";
+import { checkNominalPrimitiveSubtypeBrowserReport, nominalPrimitiveSubtypeBrowserRecords } from "../tests/helpers/nominal-primitive-subtype-browser-report.mjs";
+import { assertNominalPrimitiveSubtypeBrowserTap } from "../tests/helpers/nominal-primitive-subtype-browser-ci-report.mjs";
+
+const [route, mode, producerAttempt, attempt] = process.argv.slice(2);
+assert.ok(["ordinary", "reviewed"].includes(route)); assert.ok(["full", "result-only"].includes(mode));
+for(const name of [producerAttempt, attempt]) assert.match(name ?? "", /^r[1-9][0-9]*$/);
+const sourceRoot = resolve(`build/vo1469-browser-installed-${route}-${mode}-${producerAttempt}`);
+const recordsRoot = resolve(sourceRoot, "selections", route, mode);
+const output = `build/vo1469-browser-installed-controls-${route}-${mode}-${attempt}`; await mkdir(output);
+const json = async path => JSON.parse(await readFile(path));
+const start = await json(sourceRoot + "/start.json"), complete = await json(sourceRoot + "/complete.json");
+const git = args => execFileSync("git", args, { encoding: "utf8", maxBuffer: 32 * 1024 ** 2 });
+const head = git(["rev-parse", "HEAD"]).trim();
+assert.equal(start.head, head); assert.equal(complete.head, head);
+assert.equal(start.route, route); assert.equal(start.mode, mode);
+assert.deepEqual(complete.tests, { tests: 1, pass: 1, fail: 0, cancelled: 0, skipped: 0, todo: 0 });
+assert.equal(complete.code, 0); assert.equal(complete.signal, null);
+assert.deepEqual(complete.changed, []); assert.deepEqual(complete.runtimeChanged, []);
+assert.ok(complete.pathsUnchanged && complete.headUnchanged && complete.runnerUnchanged && complete.runtimePathsUnchanged && complete.nodeExecutableUnchanged);
+const tap = await readFile(sourceRoot + "/run.tap");
+assert.equal(sha256(tap), complete.tapSha256); assertNominalPrimitiveSubtypeBrowserTap(tap.toString(), route, mode);
+assert.equal(git(["diff", "HEAD", "--name-only"]).trim(), "");
+const sources = { ...start.sources, [import.meta.filename]: sha256(await readFile(import.meta.filename)) };
+const originalPaths = await nativeArtifactPaths(sourceRoot), originals = {};
+for(const path of originalPaths) originals[path] = sha256(await readFile(resolve(sourceRoot, path)));
+const unchanged = async () => {
+  for(const [path, hash] of Object.entries(sources)) assert.equal(sha256(await readFile(path)), hash, path);
+  for(const [path, hash] of Object.entries(start.runtime)) assert.equal(sha256(await readFile(resolve(start.runtimeRoot, path))), hash, path);
+  assert.deepEqual(await nativeArtifactPaths(sourceRoot), originalPaths);
+  for(const [path, hash] of Object.entries(originals)) assert.equal(sha256(await readFile(resolve(sourceRoot, path))), hash, path);
+  assert.equal(git(["rev-parse", "HEAD"]).trim(), head);
+  assert.equal(git(["diff", "HEAD", "--name-only"]).trim(), "");
+};
+await unchanged();
+const resources = await waitNominalSubtypeDotnetResources(output, { notify: console.log });
+await writeFile(output + "/start.json", canonicalJson({ head, route, mode, sourceRoot, sources, originals, resources,
+  started: new Date().toISOString(), installedAcceptance: true, compiledAgain: false }), { flag: "wx" });
+const read = path => {
+  assert.ok(/^[A-Za-z0-9_@.+/-]+$/u.test(path) && !path.startsWith("/") && path.split("/").every(part => part && part !== "." && part !== ".."));
+  return readFile(resolve(recordsRoot, path));
+};
+const receipt = JSON.parse(await read("report.json")).receipt;
+const paths = nominalPrimitiveSubtypeBrowserRecords(mode, receipt).sort();
+assert.deepEqual(await nativeArtifactPaths(recordsRoot), paths);
+const records = new Map();
+for(const path of paths) records.set(path, await read(path));
+const runtime = start.hostRuntime;
+assert.deepEqual(runtime, { node: process.version, platform: process.platform, arch: process.arch });
+const options = { route, mode, producerCommit: head, runtime };
+const accepted = await checkNominalPrimitiveSubtypeBrowserReport(read, options);
+assert.equal(accepted.nodeExecutions, 2); assert.equal(accepted.browserExecutions, 12);
+assert.equal(accepted.lifecycleObservations, 51); assert.equal(accepted.dispatchObserved, false);
+const checked = await checkNominalPrimitiveSubtypeBrowserControls(records, options);
+assert.equal(checked.recordControls, paths.length * 2);
+assert.equal(checked.reportControls, 23); assert.equal(checked.adapterControls, mode === "full" ? 42 : 23);
+assert.equal(checked.browserControls, 138);
+await unchanged();
+const report = { head, route, mode, sourceRoot, accepted, checked, originalsUnchanged: originalPaths.length,
+  sourcesUnchanged: Object.keys(sources).length, runtimeFilesUnchanged: Object.keys(start.runtime).length,
+  finished: new Date().toISOString(), installedAcceptance: true, compiledAgain: false };
+await writeFile(output + "/complete.json", canonicalJson(report), { flag: "wx" });
+console.log(JSON.stringify(report));

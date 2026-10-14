@@ -1,0 +1,51 @@
+{
+  "accepted": {
+    "browserExecutions": 12,
+    "browserVersions": {
+      "chromium": "151.0.7922.34",
+      "firefox": "153.0",
+      "webkit": "26.5"
+    },
+    "checks": 1213,
+    "dispatchObserved": false,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "lifecycleObservations": 51,
+    "mode": "full",
+    "nodeExecutions": 2,
+    "producerCommit": "310f653c2bbc14178809eae23c4ae0bfea70cba1",
+    "profiles": [
+      "browser-javascript",
+      "browser-react",
+      "browser-worker"
+    ],
+    "rejections": 283,
+    "rounds": 256,
+    "route": "reviewed",
+    "runtime": {
+      "arch": "x64",
+      "node": "v22.23.2",
+      "platform": "linux"
+    },
+    "wordBits": 32
+  },
+  "checked": {
+    "adapterControls": 42,
+    "browserControls": 138,
+    "recordControls": 176,
+    "reportControls": 23
+  },
+  "compiledAgain": false,
+  "finished": "2026-10-14T17:26:05.301Z",
+  "head": "310f653c2bbc14178809eae23c4ae0bfea70cba1",
+  "installedAcceptance": true,
+  "mode": "full",
+  "originalsUnchanged": 92,
+  "route": "reviewed",
+  "runtimeFilesUnchanged": 12,
+  "sourceRoot": "/app/build/vo1469-browser-installed-reviewed-full-r3",
+  "sourcesUnchanged": 5975
+}

@@ -152,7 +152,7 @@ test("nominal browser promotion changes exactly eighteen Subtype cells and adds 
 });
 
 test("nominal browser guides describe installed Nat fields without promoting Fin fields or callbacks", async () => {
-	const source = await readFile("docs/javascript-typescript.md", "utf8");
+	const source = beforeNominalSubtypePhpWasmPromotionSource("docs/javascript-typescript.md", await readFile("docs/javascript-typescript.md", "utf8"));
 	assert.ok(source.includes("### Subtypes in copied records\n"));
 	assert.match(source, /Use `bigint` for each payload/u);
 	for(const text of ["Chromium 151.0.7922.34", "153.0 and WebKit 26.5", "worker", "pending unmounts", "disposal"])

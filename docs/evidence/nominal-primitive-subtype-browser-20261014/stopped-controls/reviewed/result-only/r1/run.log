@@ -1,0 +1,36 @@
+Waiting for host load below 6 before the next C# phase: 9.95
+Waiting for host load below 6 before the next C# phase: 12.51
+Waiting for host load below 6 before the next C# phase: 13.29
+Waiting for host load below 6 before the next C# phase: 14.52
+Waiting for host load below 6 before the next C# phase: 14.79
+Waiting for host load below 6 before the next C# phase: 15
+Waiting for host load below 6 before the next C# phase: 15.45
+Waiting for host load below 6 before the next C# phase: 16.24
+Waiting for host load below 6 before the next C# phase: 14.9
+Waiting for host load below 6 before the next C# phase: 14.8
+Waiting for host load below 6 before the next C# phase: 13.11
+Waiting for host load below 6 before the next C# phase: 13.08
+Waiting for host load below 6 before the next C# phase: 11.65
+Waiting for host load below 6 before the next C# phase: 13.29
+Waiting for host load below 6 before the next C# phase: 11.64
+Waiting for host load below 6 before the next C# phase: 12.24
+Waiting for host load below 6 before the next C# phase: 11.9
+Waiting for host load below 6 before the next C# phase: 13.25
+Waiting for host load below 6 before the next C# phase: 13.92
+Waiting for host load below 6 before the next C# phase: 14.23
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: C# producer host load remained at or above 6 for five minutes
+    at waitNominalSubtypeDotnetResources (file:///app/tests/helpers/nominal-subtype-dotnet-resources.mjs:37:10)
+    at async file:///app/build/vo1469-browser-installed-controls.mjs:43:19 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v22.23.2

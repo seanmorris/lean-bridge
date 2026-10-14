@@ -1,0 +1,2370 @@
+{
+  "mode": "result-only",
+  "producerCommit": "310f653c2bbc14178809eae23c4ae0bfea70cba1",
+  "reports": [
+    {
+      "bindingIrSha256": "33636b4cd7eecec1fd9f2531fab598f860f4b225362a156d692bfe57f6cfdaa4",
+      "browser": {
+        "deployments": [
+          {
+            "files": [
+              {
+                "bytes": 285,
+                "path": "assets/__vite-browser-external-D513FCGW.js",
+                "sha256": "6be8662bb6edfac30fc9d7aab4022a2da16dc516e5443fd68f77f860337e2fff"
+              },
+              {
+                "bytes": 14280,
+                "path": "assets/index-D-Xo8bdZ.js",
+                "sha256": "943374b0e830c5c4b516d029083fbe9b13f3e054010f6111b6067c0721b51c3b"
+              },
+              {
+                "bytes": 6488025,
+                "path": "assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+              },
+              {
+                "bytes": 89660,
+                "path": "assets/nominalprimitivesubtypes-19ad06f04a0c2d39.so-CvhSgl_9.wasm",
+                "sha256": "10a5fcfb90e519551a620a74b9443adc5e6f983d4858ba7e343232bbec9577b7"
+              },
+              {
+                "bytes": 3656782,
+                "path": "assets/nominalprimitivesubtypes-JF-D70Dy.js",
+                "sha256": "17af7cd1ac2e76f27a3711518d9fb9ffac076481d88f1bd0f52def8e9e4c49b7"
+              },
+              {
+                "bytes": 2199,
+                "path": "assets/preload-helper-CZj_vqJa.js",
+                "sha256": "946b424c03f3f20989004f90ee0afc60fb0dec4071f964ff71718f4258f9a501"
+              },
+              {
+                "bytes": 1180,
+                "path": "assets/rolldown-runtime-BPOCksWG.js",
+                "sha256": "5d847676e890d2d0e8664006e0d0bdaf390ffc81b2edb71c17956c311b30c5c4"
+              },
+              {
+                "bytes": 396,
+                "path": "index.html",
+                "sha256": "d64bb5b112bcc0196036c9a7c6a239f4faa09e68207a543183cd96c0324f005f"
+              }
+            ],
+            "modulePaths": [
+              "node_modules/@lean-bridge/runtime/index.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/canonical.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/contract.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/sha256.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-callable-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-callables.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-owned-wasm.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-records.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-abi.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-ownership.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-scalar-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-scalars.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-structured-callable-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-structured-callables.mjs",
+              "node_modules/@lean-bridge/runtime/internal/main.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-bindings.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-borrow-registry.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-callbacks.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-calls.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-component-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-control.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-registry.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-scalars.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-values.mjs",
+              "node_modules/@lean-bridge/runtime/internal/refinements.mjs",
+              "node_modules/nominalprimitivesubtypes/index.mjs",
+              "node_modules/nominalprimitivesubtypes/internal/descriptor.mjs",
+              "node_modules/nominalprimitivesubtypes/internal/runtime.mjs",
+              "node_modules/nominalprimitivesubtypes/internal/validators.mjs"
+            ],
+            "sha256": "0532934bf52e01b487fa1f29aa6c49a22ceb15f2e3afff594cb3253ca324643d",
+            "variant": "production",
+            "viteVersion": "8.2.1"
+          }
+        ],
+        "executions": [
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 89660,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/nominalprimitivesubtypes-19ad06f04a0c2d39.so-CvhSgl_9.wasm",
+                "sha256": "10a5fcfb90e519551a620a74b9443adc5e6f983d4858ba7e343232bbec9577b7",
+                "status": 200
+              }
+            ],
+            "engine": "chromium",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "rerun": true
+            },
+            "observation": {
+              "hostVersion": "151.0.7922.34",
+              "module": "nominalprimitivesubtypes",
+              "profile": "browser-javascript",
+              "realm": "window",
+              "results": {
+                "checks": 578,
+                "mode": "result-only",
+                "module": "nominalprimitivesubtypes",
+                "rejections": 0,
+                "resultOnly": true,
+                "rounds": 256,
+                "route": "ordinary",
+                "wordBits": 32
+              },
+              "schemaVersion": 1
+            },
+            "variant": "production"
+          },
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 89660,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/nominalprimitivesubtypes-19ad06f04a0c2d39.so-CvhSgl_9.wasm",
+                "sha256": "10a5fcfb90e519551a620a74b9443adc5e6f983d4858ba7e343232bbec9577b7",
+                "status": 200
+              }
+            ],
+            "engine": "firefox",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "rerun": true
+            },
+            "observation": {
+              "hostVersion": "153.0",
+              "module": "nominalprimitivesubtypes",
+              "profile": "browser-javascript",
+              "realm": "window",
+              "results": {
+                "checks": 578,
+                "mode": "result-only",
+                "module": "nominalprimitivesubtypes",
+                "rejections": 0,
+                "resultOnly": true,
+                "rounds": 256,
+                "route": "ordinary",
+                "wordBits": 32
+              },
+              "schemaVersion": 1
+            },
+            "variant": "production"
+          },
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 89660,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/nominalprimitivesubtypes-19ad06f04a0c2d39.so-CvhSgl_9.wasm",
+                "sha256": "10a5fcfb90e519551a620a74b9443adc5e6f983d4858ba7e343232bbec9577b7",
+                "status": 200
+              }
+            ],
+            "engine": "webkit",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "rerun": true
+            },
+            "observation": {
+              "hostVersion": "26.5",
+              "module": "nominalprimitivesubtypes",
+              "profile": "browser-javascript",
+              "realm": "window",
+              "results": {
+                "checks": 578,
+                "mode": "result-only",
+                "module": "nominalprimitivesubtypes",
+                "rejections": 0,
+                "resultOnly": true,
+                "rounds": 256,
+                "route": "ordinary",
+                "wordBits": 32
+              },
+              "schemaVersion": 1
+            },
+            "variant": "production"
+          }
+        ],
+        "externalNetworkBlocked": true,
+        "framework": [],
+        "installedAssets": [
+          {
+            "bytes": 89660,
+            "path": "node_modules/nominalprimitivesubtypes/internal/wasm/nominalprimitivesubtypes-19ad06f04a0c2d39.so.wasm",
+            "sha256": "10a5fcfb90e519551a620a74b9443adc5e6f983d4858ba7e343232bbec9577b7"
+          },
+          {
+            "bytes": 6488025,
+            "path": "node_modules/@lean-bridge/runtime/internal/main.wasm",
+            "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+          }
+        ],
+        "installedSourcesRemoved": true,
+        "requestedEngines": [
+          "chromium",
+          "firefox",
+          "webkit"
+        ]
+      },
+      "compilerFreePath": true,
+      "corpusSha256": "4122d96c2e50858d4dd534a9465e56e6b9b7e3eb8f9c03f31c4595963a94bb4a",
+      "inputs": {
+        "fixtures/nominal-primitive-subtype-consumers/browser.mjs": {
+          "bytes": 1395,
+          "sha256": "ed958985c4cd314c9ab688a641e6c96eac88c07e4c9b8c45b9af5eb6408cac75"
+        },
+        "fixtures/nominal-primitive-subtype-consumers/javascript.mjs": {
+          "bytes": 9691,
+          "sha256": "4122d96c2e50858d4dd534a9465e56e6b9b7e3eb8f9c03f31c4595963a94bb4a"
+        },
+        "index.html": {
+          "bytes": 259,
+          "sha256": "41b59ece64724a031e286e6080e8cb1d43b45ec4f6c131f7881adb061950ef37"
+        },
+        "javascript.mjs": {
+          "bytes": 92,
+          "sha256": "9b16c27d7c14a04d5b0557edbce568721b1705ea967e9c6c82eb28c36f91631c"
+        },
+        "package-lock.json": {
+          "bytes": 1350,
+          "sha256": "c5766b7edae5f3d4df960fed13c20a9afd9cd846061e3d1b41a445df7149db9b"
+        },
+        "package.json": {
+          "bytes": 299,
+          "sha256": "f6e0a1254bccaae7ef5ac9ec0617002afc4012a98c95d5ef3c2e14a847cc6f01"
+        },
+        "package.mjs": {
+          "bytes": 123,
+          "sha256": "e830157ebf5e6f6a7db440e0f07d23f533b1db2215d1bb04ba3ce950e7c126b3"
+        },
+        "plain.mjs": {
+          "bytes": 761,
+          "sha256": "f986b2be494f621c126e4579b1006641324f36fdeaf0a57ee6ca54540ece24f8"
+        },
+        "request.json": {
+          "bytes": 148,
+          "sha256": "99bb11358a6145a038afbae498e9f1e725c629604ffa5685e542540fee206275"
+        }
+      },
+      "mode": "result-only",
+      "observation": {
+        "hostVersion": "151.0.7922.34",
+        "module": "nominalprimitivesubtypes",
+        "profile": "browser-javascript",
+        "realm": "window",
+        "results": {
+          "checks": 578,
+          "mode": "result-only",
+          "module": "nominalprimitivesubtypes",
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "ordinary",
+          "wordBits": 32
+        },
+        "schemaVersion": 1
+      },
+      "observations": [
+        {
+          "engine": "chromium",
+          "observation": {
+            "hostVersion": "151.0.7922.34",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-javascript",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "first",
+          "variant": "production"
+        },
+        {
+          "engine": "chromium",
+          "observation": {
+            "hostVersion": "151.0.7922.34",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-javascript",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "rerun",
+          "variant": "production"
+        },
+        {
+          "engine": "chromium",
+          "observation": {
+            "hostVersion": "151.0.7922.34",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-javascript",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "failure-recovery",
+          "variant": "production"
+        },
+        {
+          "engine": "firefox",
+          "observation": {
+            "hostVersion": "153.0",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-javascript",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "first",
+          "variant": "production"
+        },
+        {
+          "engine": "firefox",
+          "observation": {
+            "hostVersion": "153.0",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-javascript",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "rerun",
+          "variant": "production"
+        },
+        {
+          "engine": "firefox",
+          "observation": {
+            "hostVersion": "153.0",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-javascript",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "failure-recovery",
+          "variant": "production"
+        },
+        {
+          "engine": "webkit",
+          "observation": {
+            "hostVersion": "26.5",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-javascript",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "first",
+          "variant": "production"
+        },
+        {
+          "engine": "webkit",
+          "observation": {
+            "hostVersion": "26.5",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-javascript",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "rerun",
+          "variant": "production"
+        },
+        {
+          "engine": "webkit",
+          "observation": {
+            "hostVersion": "26.5",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-javascript",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "failure-recovery",
+          "variant": "production"
+        }
+      ],
+      "offlineInstall": true,
+      "packageSourceSha256": "e830157ebf5e6f6a7db440e0f07d23f533b1db2215d1bb04ba3ce950e7c126b3",
+      "producerCommit": "310f653c2bbc14178809eae23c4ae0bfea70cba1",
+      "profile": "browser-javascript",
+      "receiptSha256": "cca12f234c6276a67dd47ae4ea14fee41ae6720cffdd7f34292f2c0dad821954",
+      "route": "ordinary",
+      "schemaVersion": 1,
+      "sourceRemovedBeforeInstallation": true
+    },
+    {
+      "bindingIrSha256": "33636b4cd7eecec1fd9f2531fab598f860f4b225362a156d692bfe57f6cfdaa4",
+      "browser": {
+        "deployments": [
+          {
+            "files": [
+              {
+                "bytes": 285,
+                "path": "assets/__vite-browser-external-D513FCGW.js",
+                "sha256": "6be8662bb6edfac30fc9d7aab4022a2da16dc516e5443fd68f77f860337e2fff"
+              },
+              {
+                "bytes": 500598,
+                "path": "assets/index-B_CFT8Hx.js",
+                "sha256": "c7fd17da14d06ebd3fd09912fb0a732ecc5518ab412652de8e4efb5af28367f5"
+              },
+              {
+                "bytes": 6488025,
+                "path": "assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+              },
+              {
+                "bytes": 89660,
+                "path": "assets/nominalprimitivesubtypes-19ad06f04a0c2d39.so-CvhSgl_9.wasm",
+                "sha256": "10a5fcfb90e519551a620a74b9443adc5e6f983d4858ba7e343232bbec9577b7"
+              },
+              {
+                "bytes": 3656782,
+                "path": "assets/nominalprimitivesubtypes-JF-D70Dy.js",
+                "sha256": "17af7cd1ac2e76f27a3711518d9fb9ffac076481d88f1bd0f52def8e9e4c49b7"
+              },
+              {
+                "bytes": 2199,
+                "path": "assets/preload-helper-CZj_vqJa.js",
+                "sha256": "946b424c03f3f20989004f90ee0afc60fb0dec4071f964ff71718f4258f9a501"
+              },
+              {
+                "bytes": 1180,
+                "path": "assets/rolldown-runtime-BPOCksWG.js",
+                "sha256": "5d847676e890d2d0e8664006e0d0bdaf390ffc81b2edb71c17956c311b30c5c4"
+              },
+              {
+                "bytes": 493,
+                "path": "index.html",
+                "sha256": "8694512d429b150bd49dc8ecbe8da65ce1e7802d3dd8ba13e0fa3f8fc386ec3d"
+              }
+            ],
+            "modulePaths": [
+              "node_modules/@lean-bridge/runtime/index.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/canonical.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/contract.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/sha256.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-callable-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-callables.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-owned-wasm.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-records.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-abi.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-ownership.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-scalar-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-scalars.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-structured-callable-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-structured-callables.mjs",
+              "node_modules/@lean-bridge/runtime/internal/main.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-bindings.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-borrow-registry.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-callbacks.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-calls.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-component-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-control.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-registry.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-scalars.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-values.mjs",
+              "node_modules/@lean-bridge/runtime/internal/refinements.mjs",
+              "node_modules/nominalprimitivesubtypes/index.mjs",
+              "node_modules/nominalprimitivesubtypes/internal/descriptor.mjs",
+              "node_modules/nominalprimitivesubtypes/internal/runtime.mjs",
+              "node_modules/nominalprimitivesubtypes/internal/validators.mjs",
+              "node_modules/react-dom/cjs/react-dom-client.production.js",
+              "node_modules/react-dom/cjs/react-dom.production.js",
+              "node_modules/react-dom/client.js",
+              "node_modules/react-dom/index.js",
+              "node_modules/react/cjs/react.production.js",
+              "node_modules/react/index.js",
+              "node_modules/scheduler/cjs/scheduler.production.js",
+              "node_modules/scheduler/index.js"
+            ],
+            "sha256": "c34ecd4e4688e0f5e223889c4e3866d470ec40f7c0edc00b0b998d514b80b23a",
+            "variant": "production",
+            "viteVersion": "8.2.1"
+          },
+          {
+            "files": [
+              {
+                "bytes": 285,
+                "path": "assets/__vite-browser-external-D513FCGW.js",
+                "sha256": "6be8662bb6edfac30fc9d7aab4022a2da16dc516e5443fd68f77f860337e2fff"
+              },
+              {
+                "bytes": 888248,
+                "path": "assets/index-D3YxQrPz.js",
+                "sha256": "a2a2abaf3bf1acc439ce6bdf43302c02407cae2b1181b31ac6551d4a0caeee0c"
+              },
+              {
+                "bytes": 6488025,
+                "path": "assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+              },
+              {
+                "bytes": 89660,
+                "path": "assets/nominalprimitivesubtypes-19ad06f04a0c2d39.so-CvhSgl_9.wasm",
+                "sha256": "10a5fcfb90e519551a620a74b9443adc5e6f983d4858ba7e343232bbec9577b7"
+              },
+              {
+                "bytes": 3656782,
+                "path": "assets/nominalprimitivesubtypes-JF-D70Dy.js",
+                "sha256": "17af7cd1ac2e76f27a3711518d9fb9ffac076481d88f1bd0f52def8e9e4c49b7"
+              },
+              {
+                "bytes": 2199,
+                "path": "assets/preload-helper-CZj_vqJa.js",
+                "sha256": "946b424c03f3f20989004f90ee0afc60fb0dec4071f964ff71718f4258f9a501"
+              },
+              {
+                "bytes": 1180,
+                "path": "assets/rolldown-runtime-BPOCksWG.js",
+                "sha256": "5d847676e890d2d0e8664006e0d0bdaf390ffc81b2edb71c17956c311b30c5c4"
+              },
+              {
+                "bytes": 493,
+                "path": "index.html",
+                "sha256": "a18dc4005cbe0dc2b344fb52659c8d9580bc6586e234ab372c1c26593d09d031"
+              }
+            ],
+            "modulePaths": [
+              "node_modules/@lean-bridge/runtime/index.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/canonical.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/contract.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/sha256.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-callable-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-callables.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-owned-wasm.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-records.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-abi.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-ownership.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-scalar-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-scalars.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-structured-callable-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-structured-callables.mjs",
+              "node_modules/@lean-bridge/runtime/internal/main.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-bindings.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-borrow-registry.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-callbacks.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-calls.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-component-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-control.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-registry.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-scalars.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-values.mjs",
+              "node_modules/@lean-bridge/runtime/internal/refinements.mjs",
+              "node_modules/nominalprimitivesubtypes/index.mjs",
+              "node_modules/nominalprimitivesubtypes/internal/descriptor.mjs",
+              "node_modules/nominalprimitivesubtypes/internal/runtime.mjs",
+              "node_modules/nominalprimitivesubtypes/internal/validators.mjs",
+              "node_modules/react-dom/cjs/react-dom-client.development.js",
+              "node_modules/react-dom/cjs/react-dom.development.js",
+              "node_modules/react-dom/client.js",
+              "node_modules/react-dom/index.js",
+              "node_modules/react/cjs/react.development.js",
+              "node_modules/react/index.js",
+              "node_modules/scheduler/cjs/scheduler.development.js",
+              "node_modules/scheduler/index.js"
+            ],
+            "sha256": "52d27dfb21adb88ddf84a4b4b56bb9db6e50dfaf29011d5bc84564e026241430",
+            "variant": "strict",
+            "viteVersion": "8.2.1"
+          }
+        ],
+        "executions": [
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 89660,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/nominalprimitivesubtypes-19ad06f04a0c2d39.so-CvhSgl_9.wasm",
+                "sha256": "10a5fcfb90e519551a620a74b9443adc5e6f983d4858ba7e343232bbec9577b7",
+                "status": 200
+              }
+            ],
+            "engine": "chromium",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "cleanups": 2,
+              "commits": 3,
+              "effects": 3,
+              "ignored": 0
+            },
+            "observation": {
+              "hostVersion": "151.0.7922.34",
+              "module": "nominalprimitivesubtypes",
+              "profile": "browser-react",
+              "realm": "window",
+              "results": {
+                "checks": 578,
+                "mode": "result-only",
+                "module": "nominalprimitivesubtypes",
+                "rejections": 0,
+                "resultOnly": true,
+                "rounds": 256,
+                "route": "ordinary",
+                "wordBits": 32
+              },
+              "schemaVersion": 1
+            },
+            "pendingUnmount": true,
+            "variant": "production"
+          },
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 89660,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/nominalprimitivesubtypes-19ad06f04a0c2d39.so-CvhSgl_9.wasm",
+                "sha256": "10a5fcfb90e519551a620a74b9443adc5e6f983d4858ba7e343232bbec9577b7",
+                "status": 200
+              }
+            ],
+            "engine": "chromium",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "cleanups": 5,
+              "commits": 3,
+              "effects": 6,
+              "ignored": 3
+            },
+            "observation": {
+              "hostVersion": "151.0.7922.34",
+              "module": "nominalprimitivesubtypes",
+              "profile": "browser-react",
+              "realm": "window",
+              "results": {
+                "checks": 578,
+                "mode": "result-only",
+                "module": "nominalprimitivesubtypes",
+                "rejections": 0,
+                "resultOnly": true,
+                "rounds": 256,
+                "route": "ordinary",
+                "wordBits": 32
+              },
+              "schemaVersion": 1
+            },
+            "pendingUnmount": true,
+            "variant": "strict"
+          },
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 89660,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/nominalprimitivesubtypes-19ad06f04a0c2d39.so-CvhSgl_9.wasm",
+                "sha256": "10a5fcfb90e519551a620a74b9443adc5e6f983d4858ba7e343232bbec9577b7",
+                "status": 200
+              }
+            ],
+            "engine": "firefox",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "cleanups": 2,
+              "commits": 3,
+              "effects": 3,
+              "ignored": 0
+            },
+            "observation": {
+              "hostVersion": "153.0",
+              "module": "nominalprimitivesubtypes",
+              "profile": "browser-react",
+              "realm": "window",
+              "results": {
+                "checks": 578,
+                "mode": "result-only",
+                "module": "nominalprimitivesubtypes",
+                "rejections": 0,
+                "resultOnly": true,
+                "rounds": 256,
+                "route": "ordinary",
+                "wordBits": 32
+              },
+              "schemaVersion": 1
+            },
+            "pendingUnmount": true,
+            "variant": "production"
+          },
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 89660,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/nominalprimitivesubtypes-19ad06f04a0c2d39.so-CvhSgl_9.wasm",
+                "sha256": "10a5fcfb90e519551a620a74b9443adc5e6f983d4858ba7e343232bbec9577b7",
+                "status": 200
+              }
+            ],
+            "engine": "firefox",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "cleanups": 5,
+              "commits": 3,
+              "effects": 6,
+              "ignored": 3
+            },
+            "observation": {
+              "hostVersion": "153.0",
+              "module": "nominalprimitivesubtypes",
+              "profile": "browser-react",
+              "realm": "window",
+              "results": {
+                "checks": 578,
+                "mode": "result-only",
+                "module": "nominalprimitivesubtypes",
+                "rejections": 0,
+                "resultOnly": true,
+                "rounds": 256,
+                "route": "ordinary",
+                "wordBits": 32
+              },
+              "schemaVersion": 1
+            },
+            "pendingUnmount": true,
+            "variant": "strict"
+          },
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 89660,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/nominalprimitivesubtypes-19ad06f04a0c2d39.so-CvhSgl_9.wasm",
+                "sha256": "10a5fcfb90e519551a620a74b9443adc5e6f983d4858ba7e343232bbec9577b7",
+                "status": 200
+              }
+            ],
+            "engine": "webkit",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "cleanups": 2,
+              "commits": 3,
+              "effects": 3,
+              "ignored": 0
+            },
+            "observation": {
+              "hostVersion": "26.5",
+              "module": "nominalprimitivesubtypes",
+              "profile": "browser-react",
+              "realm": "window",
+              "results": {
+                "checks": 578,
+                "mode": "result-only",
+                "module": "nominalprimitivesubtypes",
+                "rejections": 0,
+                "resultOnly": true,
+                "rounds": 256,
+                "route": "ordinary",
+                "wordBits": 32
+              },
+              "schemaVersion": 1
+            },
+            "pendingUnmount": true,
+            "variant": "production"
+          },
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 89660,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/nominalprimitivesubtypes-19ad06f04a0c2d39.so-CvhSgl_9.wasm",
+                "sha256": "10a5fcfb90e519551a620a74b9443adc5e6f983d4858ba7e343232bbec9577b7",
+                "status": 200
+              }
+            ],
+            "engine": "webkit",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "cleanups": 5,
+              "commits": 3,
+              "effects": 6,
+              "ignored": 3
+            },
+            "observation": {
+              "hostVersion": "26.5",
+              "module": "nominalprimitivesubtypes",
+              "profile": "browser-react",
+              "realm": "window",
+              "results": {
+                "checks": 578,
+                "mode": "result-only",
+                "module": "nominalprimitivesubtypes",
+                "rejections": 0,
+                "resultOnly": true,
+                "rounds": 256,
+                "route": "ordinary",
+                "wordBits": 32
+              },
+              "schemaVersion": 1
+            },
+            "pendingUnmount": true,
+            "variant": "strict"
+          }
+        ],
+        "externalNetworkBlocked": true,
+        "framework": [
+          {
+            "archive": "framework/react-19.2.8.tgz",
+            "name": "react",
+            "sha256": "98194e5c2f9003355b8d0f8fbff5ab90970aeaa2fffc98ebeadcfba4ca201a73",
+            "version": "19.2.8"
+          },
+          {
+            "archive": "framework/react-dom-19.2.8.tgz",
+            "name": "react-dom",
+            "sha256": "9ed0cce3ae338576db9a90ad85eb24e5b40f6079589b10b9fce9dbaed53104c4",
+            "version": "19.2.8"
+          },
+          {
+            "archive": "framework/scheduler-0.27.0.tgz",
+            "name": "scheduler",
+            "sha256": "eee584b9bad43f93d70f3e02dd4e564237ad08230b00e4539e1833fc7f6ab0c9",
+            "version": "0.27.0"
+          }
+        ],
+        "installedAssets": [
+          {
+            "bytes": 89660,
+            "path": "node_modules/nominalprimitivesubtypes/internal/wasm/nominalprimitivesubtypes-19ad06f04a0c2d39.so.wasm",
+            "sha256": "10a5fcfb90e519551a620a74b9443adc5e6f983d4858ba7e343232bbec9577b7"
+          },
+          {
+            "bytes": 6488025,
+            "path": "node_modules/@lean-bridge/runtime/internal/main.wasm",
+            "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+          }
+        ],
+        "installedSourcesRemoved": true,
+        "requestedEngines": [
+          "chromium",
+          "firefox",
+          "webkit"
+        ]
+      },
+      "compilerFreePath": true,
+      "corpusSha256": "4122d96c2e50858d4dd534a9465e56e6b9b7e3eb8f9c03f31c4595963a94bb4a",
+      "inputs": {
+        "fixtures/nominal-primitive-subtype-consumers/browser.mjs": {
+          "bytes": 1395,
+          "sha256": "ed958985c4cd314c9ab688a641e6c96eac88c07e4c9b8c45b9af5eb6408cac75"
+        },
+        "fixtures/nominal-primitive-subtype-consumers/javascript.mjs": {
+          "bytes": 9691,
+          "sha256": "4122d96c2e50858d4dd534a9465e56e6b9b7e3eb8f9c03f31c4595963a94bb4a"
+        },
+        "index.html": {
+          "bytes": 259,
+          "sha256": "f1924291e843aff6f831a527b53a8f67aa1ac07624ee0e645736e79fe99eaa1d"
+        },
+        "javascript.mjs": {
+          "bytes": 92,
+          "sha256": "9b16c27d7c14a04d5b0557edbce568721b1705ea967e9c6c82eb28c36f91631c"
+        },
+        "package-lock.json": {
+          "bytes": 2484,
+          "sha256": "211530dd8d34fb3a55cd83f9b45416745a35371e524d61dde884ace7211b3e82"
+        },
+        "package.json": {
+          "bytes": 459,
+          "sha256": "6e39292191df0a547701d8a0953ebd936d5b0e98dcdb6f4679dedd3c477c813d"
+        },
+        "package.mjs": {
+          "bytes": 123,
+          "sha256": "e830157ebf5e6f6a7db440e0f07d23f533b1db2215d1bb04ba3ce950e7c126b3"
+        },
+        "react.mjs": {
+          "bytes": 1468,
+          "sha256": "8596690c5bdb64912efc10d7abce14f6083b7e6d855297596c3834ddd44a3b48"
+        },
+        "request.json": {
+          "bytes": 143,
+          "sha256": "73e02e24c29bf4bfe77cb36f636ae9fcc1576ff8a1b0beb728e4c6724d98d3b7"
+        }
+      },
+      "mode": "result-only",
+      "observation": {
+        "hostVersion": "151.0.7922.34",
+        "module": "nominalprimitivesubtypes",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "checks": 578,
+          "mode": "result-only",
+          "module": "nominalprimitivesubtypes",
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "ordinary",
+          "wordBits": 32
+        },
+        "schemaVersion": 1
+      },
+      "observations": [
+        {
+          "engine": "chromium",
+          "observation": {
+            "hostVersion": "151.0.7922.34",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "first",
+          "variant": "production"
+        },
+        {
+          "engine": "chromium",
+          "observation": {
+            "hostVersion": "151.0.7922.34",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "remount-1",
+          "variant": "production"
+        },
+        {
+          "engine": "chromium",
+          "observation": {
+            "hostVersion": "151.0.7922.34",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "remount-2",
+          "variant": "production"
+        },
+        {
+          "engine": "chromium",
+          "observation": {
+            "hostVersion": "151.0.7922.34",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "failure-recovery",
+          "variant": "production"
+        },
+        {
+          "engine": "chromium",
+          "observation": {
+            "hostVersion": "151.0.7922.34",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "pending-unmount",
+          "variant": "production"
+        },
+        {
+          "engine": "chromium",
+          "observation": {
+            "hostVersion": "151.0.7922.34",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "first",
+          "variant": "strict"
+        },
+        {
+          "engine": "chromium",
+          "observation": {
+            "hostVersion": "151.0.7922.34",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "remount-1",
+          "variant": "strict"
+        },
+        {
+          "engine": "chromium",
+          "observation": {
+            "hostVersion": "151.0.7922.34",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "remount-2",
+          "variant": "strict"
+        },
+        {
+          "engine": "chromium",
+          "observation": {
+            "hostVersion": "151.0.7922.34",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "failure-recovery",
+          "variant": "strict"
+        },
+        {
+          "engine": "chromium",
+          "observation": {
+            "hostVersion": "151.0.7922.34",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "pending-unmount",
+          "variant": "strict"
+        },
+        {
+          "engine": "firefox",
+          "observation": {
+            "hostVersion": "153.0",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "first",
+          "variant": "production"
+        },
+        {
+          "engine": "firefox",
+          "observation": {
+            "hostVersion": "153.0",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "remount-1",
+          "variant": "production"
+        },
+        {
+          "engine": "firefox",
+          "observation": {
+            "hostVersion": "153.0",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "remount-2",
+          "variant": "production"
+        },
+        {
+          "engine": "firefox",
+          "observation": {
+            "hostVersion": "153.0",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "failure-recovery",
+          "variant": "production"
+        },
+        {
+          "engine": "firefox",
+          "observation": {
+            "hostVersion": "153.0",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "pending-unmount",
+          "variant": "production"
+        },
+        {
+          "engine": "firefox",
+          "observation": {
+            "hostVersion": "153.0",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "first",
+          "variant": "strict"
+        },
+        {
+          "engine": "firefox",
+          "observation": {
+            "hostVersion": "153.0",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "remount-1",
+          "variant": "strict"
+        },
+        {
+          "engine": "firefox",
+          "observation": {
+            "hostVersion": "153.0",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "remount-2",
+          "variant": "strict"
+        },
+        {
+          "engine": "firefox",
+          "observation": {
+            "hostVersion": "153.0",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "failure-recovery",
+          "variant": "strict"
+        },
+        {
+          "engine": "firefox",
+          "observation": {
+            "hostVersion": "153.0",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "pending-unmount",
+          "variant": "strict"
+        },
+        {
+          "engine": "webkit",
+          "observation": {
+            "hostVersion": "26.5",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "first",
+          "variant": "production"
+        },
+        {
+          "engine": "webkit",
+          "observation": {
+            "hostVersion": "26.5",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "remount-1",
+          "variant": "production"
+        },
+        {
+          "engine": "webkit",
+          "observation": {
+            "hostVersion": "26.5",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "remount-2",
+          "variant": "production"
+        },
+        {
+          "engine": "webkit",
+          "observation": {
+            "hostVersion": "26.5",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "failure-recovery",
+          "variant": "production"
+        },
+        {
+          "engine": "webkit",
+          "observation": {
+            "hostVersion": "26.5",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "pending-unmount",
+          "variant": "production"
+        },
+        {
+          "engine": "webkit",
+          "observation": {
+            "hostVersion": "26.5",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "first",
+          "variant": "strict"
+        },
+        {
+          "engine": "webkit",
+          "observation": {
+            "hostVersion": "26.5",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "remount-1",
+          "variant": "strict"
+        },
+        {
+          "engine": "webkit",
+          "observation": {
+            "hostVersion": "26.5",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "remount-2",
+          "variant": "strict"
+        },
+        {
+          "engine": "webkit",
+          "observation": {
+            "hostVersion": "26.5",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "failure-recovery",
+          "variant": "strict"
+        },
+        {
+          "engine": "webkit",
+          "observation": {
+            "hostVersion": "26.5",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-react",
+            "realm": "window",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "pending-unmount",
+          "variant": "strict"
+        }
+      ],
+      "offlineInstall": true,
+      "packageSourceSha256": "e830157ebf5e6f6a7db440e0f07d23f533b1db2215d1bb04ba3ce950e7c126b3",
+      "producerCommit": "310f653c2bbc14178809eae23c4ae0bfea70cba1",
+      "profile": "browser-react",
+      "receiptSha256": "cca12f234c6276a67dd47ae4ea14fee41ae6720cffdd7f34292f2c0dad821954",
+      "route": "ordinary",
+      "schemaVersion": 1,
+      "sourceRemovedBeforeInstallation": true
+    },
+    {
+      "bindingIrSha256": "33636b4cd7eecec1fd9f2531fab598f860f4b225362a156d692bfe57f6cfdaa4",
+      "browser": {
+        "deployments": [
+          {
+            "files": [
+              {
+                "bytes": 285,
+                "path": "assets/__vite-browser-external-D513FCGW.js",
+                "sha256": "6be8662bb6edfac30fc9d7aab4022a2da16dc516e5443fd68f77f860337e2fff"
+              },
+              {
+                "bytes": 2562,
+                "path": "assets/index-DlWT_2ME.js",
+                "sha256": "f5437778719db6ee40a6d28960e51ea4ad81d4e379a09d728b7d0298f73b7524"
+              },
+              {
+                "bytes": 6488025,
+                "path": "assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+              },
+              {
+                "bytes": 89660,
+                "path": "assets/nominalprimitivesubtypes-19ad06f04a0c2d39.so-CvhSgl_9.wasm",
+                "sha256": "10a5fcfb90e519551a620a74b9443adc5e6f983d4858ba7e343232bbec9577b7"
+              },
+              {
+                "bytes": 3656777,
+                "path": "assets/nominalprimitivesubtypes-CcgQdlgH.js",
+                "sha256": "dc65c951479dc8890db6043fc041f59327d42d8741fd1043ea6fa3ef1bbdada7"
+              },
+              {
+                "bytes": 1180,
+                "path": "assets/rolldown-runtime-BPOCksWG.js",
+                "sha256": "5d847676e890d2d0e8664006e0d0bdaf390ffc81b2edb71c17956c311b30c5c4"
+              },
+              {
+                "bytes": 12538,
+                "path": "assets/worker-DL-Rq0ws.js",
+                "sha256": "cf227f733488751d01812489c0005023ddf9d2932d6672b68253515b58346d22"
+              },
+              {
+                "bytes": 301,
+                "path": "index.html",
+                "sha256": "db5b44a1fd9197891ec750841e506b21f72ff5792680732f063a1153b8da1b52"
+              }
+            ],
+            "modulePaths": [
+              "node_modules/@lean-bridge/runtime/index.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/canonical.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/contract.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/sha256.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-callable-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-callables.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-owned-wasm.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-records.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-abi.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-ownership.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-scalar-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-scalars.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-structured-callable-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-structured-callables.mjs",
+              "node_modules/@lean-bridge/runtime/internal/main.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-bindings.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-borrow-registry.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-callbacks.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-calls.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-component-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-control.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-registry.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-scalars.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-values.mjs",
+              "node_modules/@lean-bridge/runtime/internal/refinements.mjs",
+              "node_modules/nominalprimitivesubtypes/index.mjs",
+              "node_modules/nominalprimitivesubtypes/internal/descriptor.mjs",
+              "node_modules/nominalprimitivesubtypes/internal/runtime.mjs",
+              "node_modules/nominalprimitivesubtypes/internal/validators.mjs"
+            ],
+            "sha256": "c4fb2e0eb45726cd3ab69f40e495978942f4ec4b4767bf8337bd8252d2de77b2",
+            "variant": "production",
+            "viteVersion": "8.2.1"
+          }
+        ],
+        "executions": [
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 89660,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/nominalprimitivesubtypes-19ad06f04a0c2d39.so-CvhSgl_9.wasm",
+                "sha256": "10a5fcfb90e519551a620a74b9443adc5e6f983d4858ba7e343232bbec9577b7",
+                "status": 200
+              },
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 89660,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/nominalprimitivesubtypes-19ad06f04a0c2d39.so-CvhSgl_9.wasm",
+                "sha256": "10a5fcfb90e519551a620a74b9443adc5e6f983d4858ba7e343232bbec9577b7",
+                "status": 200
+              }
+            ],
+            "engine": "chromium",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "created": 2,
+              "live": 0,
+              "terminated": 2
+            },
+            "observation": {
+              "hostVersion": "151.0.7922.34",
+              "module": "nominalprimitivesubtypes",
+              "profile": "browser-worker",
+              "realm": "dedicated-worker",
+              "results": {
+                "checks": 578,
+                "mode": "result-only",
+                "module": "nominalprimitivesubtypes",
+                "rejections": 0,
+                "resultOnly": true,
+                "rounds": 256,
+                "route": "ordinary",
+                "wordBits": 32
+              },
+              "schemaVersion": 1
+            },
+            "variant": "production"
+          },
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 89660,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/nominalprimitivesubtypes-19ad06f04a0c2d39.so-CvhSgl_9.wasm",
+                "sha256": "10a5fcfb90e519551a620a74b9443adc5e6f983d4858ba7e343232bbec9577b7",
+                "status": 200
+              },
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 89660,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/nominalprimitivesubtypes-19ad06f04a0c2d39.so-CvhSgl_9.wasm",
+                "sha256": "10a5fcfb90e519551a620a74b9443adc5e6f983d4858ba7e343232bbec9577b7",
+                "status": 200
+              }
+            ],
+            "engine": "firefox",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "created": 2,
+              "live": 0,
+              "terminated": 2
+            },
+            "observation": {
+              "hostVersion": "153.0",
+              "module": "nominalprimitivesubtypes",
+              "profile": "browser-worker",
+              "realm": "dedicated-worker",
+              "results": {
+                "checks": 578,
+                "mode": "result-only",
+                "module": "nominalprimitivesubtypes",
+                "rejections": 0,
+                "resultOnly": true,
+                "rounds": 256,
+                "route": "ordinary",
+                "wordBits": 32
+              },
+              "schemaVersion": 1
+            },
+            "variant": "production"
+          },
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 89660,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/nominalprimitivesubtypes-19ad06f04a0c2d39.so-CvhSgl_9.wasm",
+                "sha256": "10a5fcfb90e519551a620a74b9443adc5e6f983d4858ba7e343232bbec9577b7",
+                "status": 200
+              },
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 89660,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/nominalprimitivesubtypes-19ad06f04a0c2d39.so-CvhSgl_9.wasm",
+                "sha256": "10a5fcfb90e519551a620a74b9443adc5e6f983d4858ba7e343232bbec9577b7",
+                "status": 200
+              }
+            ],
+            "engine": "webkit",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "created": 2,
+              "live": 0,
+              "terminated": 2
+            },
+            "observation": {
+              "hostVersion": "26.5",
+              "module": "nominalprimitivesubtypes",
+              "profile": "browser-worker",
+              "realm": "dedicated-worker",
+              "results": {
+                "checks": 578,
+                "mode": "result-only",
+                "module": "nominalprimitivesubtypes",
+                "rejections": 0,
+                "resultOnly": true,
+                "rounds": 256,
+                "route": "ordinary",
+                "wordBits": 32
+              },
+              "schemaVersion": 1
+            },
+            "variant": "production"
+          }
+        ],
+        "externalNetworkBlocked": true,
+        "framework": [],
+        "installedAssets": [
+          {
+            "bytes": 89660,
+            "path": "node_modules/nominalprimitivesubtypes/internal/wasm/nominalprimitivesubtypes-19ad06f04a0c2d39.so.wasm",
+            "sha256": "10a5fcfb90e519551a620a74b9443adc5e6f983d4858ba7e343232bbec9577b7"
+          },
+          {
+            "bytes": 6488025,
+            "path": "node_modules/@lean-bridge/runtime/internal/main.wasm",
+            "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+          }
+        ],
+        "installedSourcesRemoved": true,
+        "requestedEngines": [
+          "chromium",
+          "firefox",
+          "webkit"
+        ]
+      },
+      "compilerFreePath": true,
+      "corpusSha256": "4122d96c2e50858d4dd534a9465e56e6b9b7e3eb8f9c03f31c4595963a94bb4a",
+      "inputs": {
+        "fixtures/nominal-primitive-subtype-consumers/browser.mjs": {
+          "bytes": 1395,
+          "sha256": "ed958985c4cd314c9ab688a641e6c96eac88c07e4c9b8c45b9af5eb6408cac75"
+        },
+        "fixtures/nominal-primitive-subtype-consumers/javascript.mjs": {
+          "bytes": 9691,
+          "sha256": "4122d96c2e50858d4dd534a9465e56e6b9b7e3eb8f9c03f31c4595963a94bb4a"
+        },
+        "index.html": {
+          "bytes": 265,
+          "sha256": "4c13109fc6ef171276cb9646b1815079b4966acc9e6e31efab6900b6c17b7a4b"
+        },
+        "javascript.mjs": {
+          "bytes": 92,
+          "sha256": "9b16c27d7c14a04d5b0557edbce568721b1705ea967e9c6c82eb28c36f91631c"
+        },
+        "package-lock.json": {
+          "bytes": 1346,
+          "sha256": "a16c1ea03010f8020d4e03a3bcb440cbccbb6f5c85af713d553c23d809a66519"
+        },
+        "package.json": {
+          "bytes": 299,
+          "sha256": "f6e0a1254bccaae7ef5ac9ec0617002afc4012a98c95d5ef3c2e14a847cc6f01"
+        },
+        "package.mjs": {
+          "bytes": 123,
+          "sha256": "e830157ebf5e6f6a7db440e0f07d23f533b1db2215d1bb04ba3ce950e7c126b3"
+        },
+        "request.json": {
+          "bytes": 144,
+          "sha256": "d99ecee6a3f218aedabafe773c5445a8dac523e8f05ae65c77b580a4bd69e4f8"
+        },
+        "worker-main.mjs": {
+          "bytes": 1107,
+          "sha256": "d96f676358d61fd6d7bb1c8a3db68f289924e60d966014c161f3f3535415b633"
+        },
+        "worker.mjs": {
+          "bytes": 666,
+          "sha256": "41a1217c2a96a83d6c38272c0bbb3a0b02b0f6c4a09d817c0846aef0fc78d178"
+        }
+      },
+      "mode": "result-only",
+      "observation": {
+        "hostVersion": "151.0.7922.34",
+        "module": "nominalprimitivesubtypes",
+        "profile": "browser-worker",
+        "realm": "dedicated-worker",
+        "results": {
+          "checks": 578,
+          "mode": "result-only",
+          "module": "nominalprimitivesubtypes",
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "ordinary",
+          "wordBits": 32
+        },
+        "schemaVersion": 1
+      },
+      "observations": [
+        {
+          "engine": "chromium",
+          "observation": {
+            "hostVersion": "151.0.7922.34",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-worker",
+            "realm": "dedicated-worker",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "first",
+          "variant": "production"
+        },
+        {
+          "engine": "chromium",
+          "observation": {
+            "hostVersion": "151.0.7922.34",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-worker",
+            "realm": "dedicated-worker",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "rerun",
+          "variant": "production"
+        },
+        {
+          "engine": "chromium",
+          "observation": {
+            "hostVersion": "151.0.7922.34",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-worker",
+            "realm": "dedicated-worker",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "worker-restart",
+          "variant": "production"
+        },
+        {
+          "engine": "chromium",
+          "observation": {
+            "hostVersion": "151.0.7922.34",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-worker",
+            "realm": "dedicated-worker",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "failure-recovery",
+          "variant": "production"
+        },
+        {
+          "engine": "firefox",
+          "observation": {
+            "hostVersion": "153.0",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-worker",
+            "realm": "dedicated-worker",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "first",
+          "variant": "production"
+        },
+        {
+          "engine": "firefox",
+          "observation": {
+            "hostVersion": "153.0",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-worker",
+            "realm": "dedicated-worker",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "rerun",
+          "variant": "production"
+        },
+        {
+          "engine": "firefox",
+          "observation": {
+            "hostVersion": "153.0",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-worker",
+            "realm": "dedicated-worker",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "worker-restart",
+          "variant": "production"
+        },
+        {
+          "engine": "firefox",
+          "observation": {
+            "hostVersion": "153.0",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-worker",
+            "realm": "dedicated-worker",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "failure-recovery",
+          "variant": "production"
+        },
+        {
+          "engine": "webkit",
+          "observation": {
+            "hostVersion": "26.5",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-worker",
+            "realm": "dedicated-worker",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "first",
+          "variant": "production"
+        },
+        {
+          "engine": "webkit",
+          "observation": {
+            "hostVersion": "26.5",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-worker",
+            "realm": "dedicated-worker",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "rerun",
+          "variant": "production"
+        },
+        {
+          "engine": "webkit",
+          "observation": {
+            "hostVersion": "26.5",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-worker",
+            "realm": "dedicated-worker",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "worker-restart",
+          "variant": "production"
+        },
+        {
+          "engine": "webkit",
+          "observation": {
+            "hostVersion": "26.5",
+            "module": "nominalprimitivesubtypes",
+            "profile": "browser-worker",
+            "realm": "dedicated-worker",
+            "results": {
+              "checks": 578,
+              "mode": "result-only",
+              "module": "nominalprimitivesubtypes",
+              "rejections": 0,
+              "resultOnly": true,
+              "rounds": 256,
+              "route": "ordinary",
+              "wordBits": 32
+            },
+            "schemaVersion": 1
+          },
+          "phase": "failure-recovery",
+          "variant": "production"
+        }
+      ],
+      "offlineInstall": true,
+      "packageSourceSha256": "e830157ebf5e6f6a7db440e0f07d23f533b1db2215d1bb04ba3ce950e7c126b3",
+      "producerCommit": "310f653c2bbc14178809eae23c4ae0bfea70cba1",
+      "profile": "browser-worker",
+      "receiptSha256": "cca12f234c6276a67dd47ae4ea14fee41ae6720cffdd7f34292f2c0dad821954",
+      "route": "ordinary",
+      "schemaVersion": 1,
+      "sourceRemovedBeforeInstallation": true
+    }
+  ],
+  "requestedEngines": [
+    "chromium",
+    "firefox",
+    "webkit"
+  ],
+  "route": "ordinary",
+  "runtime": {
+    "arch": "x64",
+    "node": "v22.23.2",
+    "platform": "linux"
+  },
+  "schemaVersion": 1
+}

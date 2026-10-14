@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeNominalPrimitiveSubtypeBrowserPromotionPins } from "./nominal-primitive-subtype-browser-promotion-history.mjs";
 import { nominalPrimitiveSubtypePythonReferences, promoteNominalPrimitiveSubtypePython } from "./nominal-primitive-subtype-python-promotion.mjs";
 import { beforeNominalPrimitiveSubtypePythonPromotionSource, nominalPrimitiveSubtypePythonPromotionChangedPaths, nominalPrimitiveSubtypePythonPromotionHistoryPath, nominalPrimitiveSubtypePythonPromotionPredecessor, reverseNominalPrimitiveSubtypePythonPromotionUpdate } from "./nominal-primitive-subtype-python-promotion-history.mjs";
 
@@ -39,7 +40,7 @@ test("primitive-base Python promotion history authenticates the exact Python-onl
 			}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	const expected = await promoteNominalPrimitiveSubtypePython(JSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypePythonReferences());
+	const expected = beforeNominalPrimitiveSubtypeBrowserPromotionPins(await promoteNominalPrimitiveSubtypePython(JSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypePythonReferences()));
 	assert.equal(beforeNominalPrimitiveSubtypePythonPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)

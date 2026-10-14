@@ -1,0 +1,51 @@
+TAP version 13
+# Subtest: installed npm primitive-base nominal Subtypes reproduce and relocate reviewed result-only
+not ok 1 - installed npm primitive-base nominal Subtypes reproduce and relocate reviewed result-only
+  ---
+  duration_ms: 375540.064332
+  type: 'test'
+  location: '/app/tests/helpers/nominal-primitive-subtype-npm-installed-tests.mjs:46:53'
+  failureType: 'testCodeFailure'
+  error: 'C# producer host load remained at or above 6 for five minutes'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    waitNominalSubtypeDotnetResources (file:///app/tests/helpers/nominal-subtype-dotnet-resources.mjs:37:10)
+    async TestContext.<anonymous> (file:///app/tests/helpers/nominal-primitive-subtype-npm-installed-tests.mjs:68:3)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# reviewed result-only: npm author 0
+# Waiting for host load below 6 before the next primitive npm phase: 6.34
+# Waiting for host load below 6 before the next primitive npm phase: 9.05
+# Waiting for host load below 6 before the next primitive npm phase: 9.08
+# Waiting for host load below 6 before the next primitive npm phase: 9.14
+# Waiting for host load below 6 before the next primitive npm phase: 9.39
+# Waiting for host load below 6 before the next primitive npm phase: 11.67
+# Waiting for host load below 6 before the next primitive npm phase: 13.12
+# Waiting for host load below 6 before the next primitive npm phase: 12.01
+# Waiting for host load below 6 before the next primitive npm phase: 12.42
+# Waiting for host load below 6 before the next primitive npm phase: 12.9
+# Waiting for host load below 6 before the next primitive npm phase: 12.71
+# Waiting for host load below 6 before the next primitive npm phase: 12.32
+# Waiting for host load below 6 before the next primitive npm phase: 11.44
+# Waiting for host load below 6 before the next primitive npm phase: 12.4
+# Waiting for host load below 6 before the next primitive npm phase: 12.65
+# Waiting for host load below 6 before the next primitive npm phase: 11.53
+# Waiting for host load below 6 before the next primitive npm phase: 12.53
+# Waiting for host load below 6 before the next primitive npm phase: 13.33
+# Waiting for host load below 6 before the next primitive npm phase: 15.09
+# Waiting for host load below 6 before the next primitive npm phase: 14.41
+# Retained failed nominal npm inputs: /tmp/lean-bridge-nominal-primitive-subtype-npm-IbEU4Z
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 377048.243852

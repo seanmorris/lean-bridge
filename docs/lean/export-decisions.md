@@ -51,8 +51,13 @@ extend those Node fields to every admitted primitive base, including signed
 and heap-backed values, floats, Unicode text and bytes. Constructors still
 belong to each input site; results project existing payloads. Both author
 routes and API modes pass offline installation and relocated replay with
-wasm32 machine words. Python also has nineteen-base checks below; the remaining
-host checks cover their tested Nat forms.
+wasm32 machine words. [Nineteen-base browser checks](../evidence/nominal-primitive-subtype-browser-20261014/index.json)
+extend these fields and constructor-free results to pages, React
+production/Strict Mode and workers in Chromium, Firefox and WebKit. All four
+source/API selections execute source-free bundles after offline installation,
+with asset recovery, remount, pending-unmount and worker restart/disposal
+checks. Python also has nineteen-base checks below; the remaining host checks
+cover their tested Nat forms.
 [Installed C/C++ checks](../evidence/nominal-subtype-native-acceptance-20261011.md)
 cover the same Nat forms on both source routes in Linux x64/glibc 2.36, including
 standalone result-only packages. [Installed Perl checks](../evidence/nominal-subtype-perl-acceptance-20261012.md)

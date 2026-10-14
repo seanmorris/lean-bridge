@@ -31,3 +31,6 @@ import "./nominal-primitive-subtype-browser-ci-policy-tests.mjs";
 import "./nominal-primitive-subtype-browser-ci-shell-tests.mjs";
 import "./nominal-primitive-subtype-browser-ci-workflow-tests.mjs";
 import "./nominal-primitive-subtype-browser-registration-history-tests.mjs";
+import "./nominal-primitive-subtype-browser-archive-tests.mjs";
+import "./nominal-primitive-subtype-browser-promotion-tests.mjs";
+import "./nominal-primitive-subtype-browser-promotion-history-tests.mjs";

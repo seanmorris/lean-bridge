@@ -1,0 +1,2261 @@
+{
+  "component": "nominalprimitivesubtypes@1.0.0",
+  "componentPlanSha256": "2af3820430a83440c6ca933bde574be4a327ca1e42e8f49cc46c24af1c62738b",
+  "exports": [
+    {
+      "bindingId": "lean:NominalPrimitiveSubtypes.produce",
+      "leanEffect": null,
+      "leanResultType": "(_root_.Option NominalPrimitiveSubtypes.Packet)",
+      "parameters": [
+        {
+          "leanType": "NominalPrimitiveSubtypes.RawPacket",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "arguments": [
+            {
+              "fields": [
+                {
+                  "name": "unitValue",
+                  "refinement": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "name": "boolValue",
+                  "refinement": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "name": "uint8Value",
+                  "refinement": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "name": "uint16Value",
+                  "refinement": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "name": "uint32Value",
+                  "refinement": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "name": "uint64Value",
+                  "refinement": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "name": "int8Value",
+                  "refinement": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "name": "int16Value",
+                  "refinement": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "name": "int32Value",
+                  "refinement": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "name": "int64Value",
+                  "refinement": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "name": "natValue",
+                  "refinement": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "name": "intValue",
+                  "refinement": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "name": "float32Value",
+                  "refinement": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "name": "float64Value",
+                  "refinement": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "name": "textValue",
+                  "refinement": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "name": "bytesValue",
+                  "refinement": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "name": "charValue",
+                  "refinement": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "name": "usizeValue",
+                  "refinement": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "name": "isizeValue",
+                  "refinement": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "name": "digit",
+                  "refinement": {
+                    "bound": "3",
+                    "kind": "fin"
+                  }
+                }
+              ],
+              "kind": "record",
+              "name": "NominalPrimitiveSubtypes.Packet"
+            }
+          ],
+          "kind": "option"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "NominalPrimitiveSubtypes.produce",
+      "sourceModule": "NominalPrimitiveSubtypes",
+      "symbol": "lean_bridge_1ee7c853352dae30454807c3",
+      "wrapper": "export_62cff7867377642ca08d"
+    },
+    {
+      "bindingId": "lean:NominalPrimitiveSubtypes.produceChoices",
+      "leanEffect": null,
+      "leanResultType": "NominalPrimitiveSubtypes.Event",
+      "parameters": [
+        {
+          "leanType": "NominalPrimitiveSubtypes.RawPacket",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "cases": [
+            {
+              "fields": [],
+              "name": "empty"
+            },
+            {
+              "fields": [
+                {
+                  "name": "value",
+                  "refinement": {
+                    "fields": [
+                      {
+                        "name": "unitValue",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "boolValue",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "uint8Value",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "uint16Value",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "uint32Value",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "uint64Value",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "int8Value",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "int16Value",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "int32Value",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "int64Value",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "natValue",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "intValue",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "float32Value",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "float64Value",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "textValue",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "bytesValue",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "charValue",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "usizeValue",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "isizeValue",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "digit",
+                        "refinement": {
+                          "bound": "3",
+                          "kind": "fin"
+                        }
+                      }
+                    ],
+                    "kind": "record",
+                    "name": "NominalPrimitiveSubtypes.Packet"
+                  }
+                }
+              ],
+              "name": "box"
+            },
+            {
+              "fields": [
+                {
+                  "name": "values",
+                  "refinement": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "arguments": [
+                              {
+                                "fields": [
+                                  {
+                                    "name": "unitValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "boolValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "uint8Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "uint16Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "uint32Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "uint64Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "int8Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "int16Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "int32Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "int64Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "natValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "intValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "float32Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "float64Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "textValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "bytesValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "charValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "usizeValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "isizeValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "digit",
+                                    "refinement": {
+                                      "bound": "3",
+                                      "kind": "fin"
+                                    }
+                                  }
+                                ],
+                                "kind": "record",
+                                "name": "NominalPrimitiveSubtypes.Packet"
+                              },
+                              {
+                                "fields": [
+                                  {
+                                    "name": "unitValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "boolValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "uint8Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "uint16Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "uint32Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "uint64Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "int8Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "int16Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "int32Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "int64Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "natValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "intValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "float32Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "float64Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "textValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "bytesValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "charValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "usizeValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "isizeValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "digit",
+                                    "refinement": {
+                                      "bound": "3",
+                                      "kind": "fin"
+                                    }
+                                  }
+                                ],
+                                "kind": "record",
+                                "name": "NominalPrimitiveSubtypes.Packet"
+                              }
+                            ],
+                            "kind": "result"
+                          }
+                        ],
+                        "kind": "option"
+                      }
+                    ],
+                    "kind": "array"
+                  }
+                }
+              ],
+              "name": "choices"
+            }
+          ],
+          "kind": "variant",
+          "name": "NominalPrimitiveSubtypes.Event"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "NominalPrimitiveSubtypes.produceChoices",
+      "sourceModule": "NominalPrimitiveSubtypes",
+      "symbol": "lean_bridge_b1bfc285009b59e80d94aa31",
+      "wrapper": "export_afd00bf72b0e4024b177"
+    },
+    {
+      "bindingId": "lean:NominalPrimitiveSubtypes.produceEvent",
+      "leanEffect": null,
+      "leanResultType": "NominalPrimitiveSubtypes.Event",
+      "parameters": [
+        {
+          "leanType": "NominalPrimitiveSubtypes.RawPacket",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "cases": [
+            {
+              "fields": [],
+              "name": "empty"
+            },
+            {
+              "fields": [
+                {
+                  "name": "value",
+                  "refinement": {
+                    "fields": [
+                      {
+                        "name": "unitValue",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "boolValue",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "uint8Value",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "uint16Value",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "uint32Value",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "uint64Value",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "int8Value",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "int16Value",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "int32Value",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "int64Value",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "natValue",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "intValue",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "float32Value",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "float64Value",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "textValue",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "bytesValue",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "charValue",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "usizeValue",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "isizeValue",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "digit",
+                        "refinement": {
+                          "bound": "3",
+                          "kind": "fin"
+                        }
+                      }
+                    ],
+                    "kind": "record",
+                    "name": "NominalPrimitiveSubtypes.Packet"
+                  }
+                }
+              ],
+              "name": "box"
+            },
+            {
+              "fields": [
+                {
+                  "name": "values",
+                  "refinement": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "arguments": [
+                              {
+                                "fields": [
+                                  {
+                                    "name": "unitValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "boolValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "uint8Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "uint16Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "uint32Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "uint64Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "int8Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "int16Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "int32Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "int64Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "natValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "intValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "float32Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "float64Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "textValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "bytesValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "charValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "usizeValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "isizeValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "digit",
+                                    "refinement": {
+                                      "bound": "3",
+                                      "kind": "fin"
+                                    }
+                                  }
+                                ],
+                                "kind": "record",
+                                "name": "NominalPrimitiveSubtypes.Packet"
+                              },
+                              {
+                                "fields": [
+                                  {
+                                    "name": "unitValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "boolValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "uint8Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "uint16Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "uint32Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "uint64Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "int8Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "int16Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "int32Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "int64Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "natValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "intValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "float32Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "float64Value",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "textValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "bytesValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "charValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "usizeValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "isizeValue",
+                                    "refinement": {
+                                      "constructor": null,
+                                      "kind": "subtype"
+                                    }
+                                  },
+                                  {
+                                    "name": "digit",
+                                    "refinement": {
+                                      "bound": "3",
+                                      "kind": "fin"
+                                    }
+                                  }
+                                ],
+                                "kind": "record",
+                                "name": "NominalPrimitiveSubtypes.Packet"
+                              }
+                            ],
+                            "kind": "result"
+                          }
+                        ],
+                        "kind": "option"
+                      }
+                    ],
+                    "kind": "array"
+                  }
+                }
+              ],
+              "name": "choices"
+            }
+          ],
+          "kind": "variant",
+          "name": "NominalPrimitiveSubtypes.Event"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "NominalPrimitiveSubtypes.produceEvent",
+      "sourceModule": "NominalPrimitiveSubtypes",
+      "symbol": "lean_bridge_da6a316b71c564fe125cfe30",
+      "wrapper": "export_23423a4868d926ddc791"
+    },
+    {
+      "bindingId": "lean:NominalPrimitiveSubtypes.produceGroup",
+      "leanEffect": null,
+      "leanResultType": "(_root_.Array (_root_.Option NominalPrimitiveSubtypes.PacketAlias))",
+      "parameters": [
+        {
+          "leanType": "NominalPrimitiveSubtypes.RawPacket",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "fields": [
+                    {
+                      "name": "unitValue",
+                      "refinement": {
+                        "constructor": null,
+                        "kind": "subtype"
+                      }
+                    },
+                    {
+                      "name": "boolValue",
+                      "refinement": {
+                        "constructor": null,
+                        "kind": "subtype"
+                      }
+                    },
+                    {
+                      "name": "uint8Value",
+                      "refinement": {
+                        "constructor": null,
+                        "kind": "subtype"
+                      }
+                    },
+                    {
+                      "name": "uint16Value",
+                      "refinement": {
+                        "constructor": null,
+                        "kind": "subtype"
+                      }
+                    },
+                    {
+                      "name": "uint32Value",
+                      "refinement": {
+                        "constructor": null,
+                        "kind": "subtype"
+                      }
+                    },
+                    {
+                      "name": "uint64Value",
+                      "refinement": {
+                        "constructor": null,
+                        "kind": "subtype"
+                      }
+                    },
+                    {
+                      "name": "int8Value",
+                      "refinement": {
+                        "constructor": null,
+                        "kind": "subtype"
+                      }
+                    },
+                    {
+                      "name": "int16Value",
+                      "refinement": {
+                        "constructor": null,
+                        "kind": "subtype"
+                      }
+                    },
+                    {
+                      "name": "int32Value",
+                      "refinement": {
+                        "constructor": null,
+                        "kind": "subtype"
+                      }
+                    },
+                    {
+                      "name": "int64Value",
+                      "refinement": {
+                        "constructor": null,
+                        "kind": "subtype"
+                      }
+                    },
+                    {
+                      "name": "natValue",
+                      "refinement": {
+                        "constructor": null,
+                        "kind": "subtype"
+                      }
+                    },
+                    {
+                      "name": "intValue",
+                      "refinement": {
+                        "constructor": null,
+                        "kind": "subtype"
+                      }
+                    },
+                    {
+                      "name": "float32Value",
+                      "refinement": {
+                        "constructor": null,
+                        "kind": "subtype"
+                      }
+                    },
+                    {
+                      "name": "float64Value",
+                      "refinement": {
+                        "constructor": null,
+                        "kind": "subtype"
+                      }
+                    },
+                    {
+                      "name": "textValue",
+                      "refinement": {
+                        "constructor": null,
+                        "kind": "subtype"
+                      }
+                    },
+                    {
+                      "name": "bytesValue",
+                      "refinement": {
+                        "constructor": null,
+                        "kind": "subtype"
+                      }
+                    },
+                    {
+                      "name": "charValue",
+                      "refinement": {
+                        "constructor": null,
+                        "kind": "subtype"
+                      }
+                    },
+                    {
+                      "name": "usizeValue",
+                      "refinement": {
+                        "constructor": null,
+                        "kind": "subtype"
+                      }
+                    },
+                    {
+                      "name": "isizeValue",
+                      "refinement": {
+                        "constructor": null,
+                        "kind": "subtype"
+                      }
+                    },
+                    {
+                      "name": "digit",
+                      "refinement": {
+                        "bound": "3",
+                        "kind": "fin"
+                      }
+                    }
+                  ],
+                  "kind": "record",
+                  "name": "NominalPrimitiveSubtypes.Packet"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "kind": "array"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "NominalPrimitiveSubtypes.produceGroup",
+      "sourceModule": "NominalPrimitiveSubtypes",
+      "symbol": "lean_bridge_c13665812b04dcd3f0cfdf0b",
+      "wrapper": "export_9843b25307c5b9551d0f"
+    },
+    {
+      "bindingId": "lean:NominalPrimitiveSubtypes.producePair",
+      "leanEffect": null,
+      "leanResultType": "NominalPrimitiveSubtypes.Pair",
+      "parameters": [
+        {
+          "leanType": "NominalPrimitiveSubtypes.RawPacket",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "fields": [
+            {
+              "name": "left",
+              "refinement": {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "fields": [
+                          {
+                            "name": "unitValue",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "boolValue",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "uint8Value",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "uint16Value",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "uint32Value",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "uint64Value",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "int8Value",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "int16Value",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "int32Value",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "int64Value",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "natValue",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "intValue",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "float32Value",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "float64Value",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "textValue",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "bytesValue",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "charValue",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "usizeValue",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "isizeValue",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "refinement": {
+                              "bound": "3",
+                              "kind": "fin"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "NominalPrimitiveSubtypes.Packet"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              }
+            },
+            {
+              "name": "right",
+              "refinement": {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "fields": [
+                          {
+                            "name": "unitValue",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "boolValue",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "uint8Value",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "uint16Value",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "uint32Value",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "uint64Value",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "int8Value",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "int16Value",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "int32Value",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "int64Value",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "natValue",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "intValue",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "float32Value",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "float64Value",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "textValue",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "bytesValue",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "charValue",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "usizeValue",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "isizeValue",
+                            "refinement": {
+                              "constructor": null,
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "refinement": {
+                              "bound": "3",
+                              "kind": "fin"
+                            }
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "NominalPrimitiveSubtypes.Packet"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              }
+            }
+          ],
+          "kind": "record",
+          "name": "NominalPrimitiveSubtypes.Pair"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "NominalPrimitiveSubtypes.producePair",
+      "sourceModule": "NominalPrimitiveSubtypes",
+      "symbol": "lean_bridge_b503c08729e5cb6e53ff410a",
+      "wrapper": "export_73b10c936bda114ca2eb"
+    },
+    {
+      "bindingId": "lean:NominalPrimitiveSubtypes.wordBits",
+      "leanEffect": null,
+      "leanResultType": "_root_.UInt32",
+      "parameters": [],
+      "resultMode": "value",
+      "sourceDeclaration": "NominalPrimitiveSubtypes.wordBits",
+      "sourceModule": "NominalPrimitiveSubtypes",
+      "symbol": "lean_bridge_55529e193a8e4c585e7ffa0e",
+      "wrapper": "export_18b7f5cc2a191589bc31"
+    }
+  ],
+  "imports": [
+    "NominalPrimitiveSubtypes"
+  ],
+  "leanSourceSha256": "25295fdcc4307645acbd84214d452988952086128dfd9c3e1a7fedb1b46c6428",
+  "module": "LeanBridgeGenerated19ad06f04a0c2d39",
+  "nominalRefinements": [
+    {
+      "id": "lean:NominalPrimitiveSubtypes.Packet",
+      "refinement": {
+        "fields": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          {
+            "bound": "3",
+            "kind": "fin"
+          }
+        ],
+        "kind": "record"
+      }
+    }
+  ],
+  "privateAbi": {
+    "dispatch": "copied-graph-frame-v1",
+    "exports": [
+      {
+        "bindingId": "lean:NominalPrimitiveSubtypes.produce",
+        "parameters": [
+          {
+            "id": "lean:NominalPrimitiveSubtypes.RawPacket",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "id": "lean:NominalPrimitiveSubtypes.Packet",
+              "kind": "named"
+            }
+          ],
+          "constructor": "option",
+          "kind": "apply"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_1ee7c853352dae30454807c3"
+      },
+      {
+        "bindingId": "lean:NominalPrimitiveSubtypes.produceChoices",
+        "parameters": [
+          {
+            "id": "lean:NominalPrimitiveSubtypes.RawPacket",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "id": "lean:NominalPrimitiveSubtypes.Event",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_b1bfc285009b59e80d94aa31"
+      },
+      {
+        "bindingId": "lean:NominalPrimitiveSubtypes.produceEvent",
+        "parameters": [
+          {
+            "id": "lean:NominalPrimitiveSubtypes.RawPacket",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "id": "lean:NominalPrimitiveSubtypes.Event",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_da6a316b71c564fe125cfe30"
+      },
+      {
+        "bindingId": "lean:NominalPrimitiveSubtypes.produceGroup",
+        "parameters": [
+          {
+            "id": "lean:NominalPrimitiveSubtypes.RawPacket",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "id": "lean:NominalPrimitiveSubtypes.PacketAlias",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "constructor": "array",
+          "kind": "apply"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_c13665812b04dcd3f0cfdf0b"
+      },
+      {
+        "bindingId": "lean:NominalPrimitiveSubtypes.producePair",
+        "parameters": [
+          {
+            "id": "lean:NominalPrimitiveSubtypes.RawPacket",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "id": "lean:NominalPrimitiveSubtypes.Pair",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_b503c08729e5cb6e53ff410a"
+      },
+      {
+        "bindingId": "lean:NominalPrimitiveSubtypes.wordBits",
+        "parameters": [],
+        "result": {
+          "kind": "primitive",
+          "name": "uint32"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_55529e193a8e4c585e7ffa0e"
+      }
+    ],
+    "types": [
+      {
+        "cases": [
+          {
+            "fields": [],
+            "name": "empty"
+          },
+          {
+            "fields": [
+              {
+                "name": "value",
+                "type": {
+                  "id": "lean:NominalPrimitiveSubtypes.Packet",
+                  "kind": "named"
+                }
+              }
+            ],
+            "name": "box"
+          },
+          {
+            "fields": [
+              {
+                "name": "values",
+                "type": {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "arguments": [
+                            {
+                              "id": "lean:NominalPrimitiveSubtypes.Packet",
+                              "kind": "named"
+                            },
+                            {
+                              "id": "lean:NominalPrimitiveSubtypes.Packet",
+                              "kind": "named"
+                            }
+                          ],
+                          "constructor": "result",
+                          "kind": "apply"
+                        }
+                      ],
+                      "constructor": "option",
+                      "kind": "apply"
+                    }
+                  ],
+                  "constructor": "array",
+                  "kind": "apply"
+                }
+              }
+            ],
+            "name": "choices"
+          }
+        ],
+        "id": "lean:NominalPrimitiveSubtypes.Event",
+        "kind": "variant"
+      },
+      {
+        "fields": [
+          {
+            "name": "unitValue",
+            "type": {
+              "kind": "primitive",
+              "name": "unit"
+            }
+          },
+          {
+            "name": "boolValue",
+            "type": {
+              "kind": "primitive",
+              "name": "bool"
+            }
+          },
+          {
+            "name": "uint8Value",
+            "type": {
+              "kind": "primitive",
+              "name": "uint8"
+            }
+          },
+          {
+            "name": "uint16Value",
+            "type": {
+              "kind": "primitive",
+              "name": "uint16"
+            }
+          },
+          {
+            "name": "uint32Value",
+            "type": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "name": "uint64Value",
+            "type": {
+              "kind": "primitive",
+              "name": "uint64"
+            }
+          },
+          {
+            "name": "int8Value",
+            "type": {
+              "kind": "primitive",
+              "name": "int8"
+            }
+          },
+          {
+            "name": "int16Value",
+            "type": {
+              "kind": "primitive",
+              "name": "int16"
+            }
+          },
+          {
+            "name": "int32Value",
+            "type": {
+              "kind": "primitive",
+              "name": "int32"
+            }
+          },
+          {
+            "name": "int64Value",
+            "type": {
+              "kind": "primitive",
+              "name": "int64"
+            }
+          },
+          {
+            "name": "natValue",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "name": "intValue",
+            "type": {
+              "kind": "primitive",
+              "name": "int"
+            }
+          },
+          {
+            "name": "float32Value",
+            "type": {
+              "kind": "primitive",
+              "name": "float32"
+            }
+          },
+          {
+            "name": "float64Value",
+            "type": {
+              "kind": "primitive",
+              "name": "float64"
+            }
+          },
+          {
+            "name": "textValue",
+            "type": {
+              "kind": "primitive",
+              "name": "string"
+            }
+          },
+          {
+            "name": "bytesValue",
+            "type": {
+              "kind": "primitive",
+              "name": "bytes"
+            }
+          },
+          {
+            "name": "charValue",
+            "type": {
+              "kind": "primitive",
+              "name": "char"
+            }
+          },
+          {
+            "name": "usizeValue",
+            "type": {
+              "kind": "primitive",
+              "name": "usize"
+            }
+          },
+          {
+            "name": "isizeValue",
+            "type": {
+              "kind": "primitive",
+              "name": "isize"
+            }
+          },
+          {
+            "name": "digit",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "id": "lean:NominalPrimitiveSubtypes.Packet",
+        "kind": "record"
+      },
+      {
+        "id": "lean:NominalPrimitiveSubtypes.PacketAlias",
+        "kind": "alias",
+        "target": {
+          "id": "lean:NominalPrimitiveSubtypes.Packet",
+          "kind": "named"
+        }
+      },
+      {
+        "fields": [
+          {
+            "name": "left",
+            "type": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:NominalPrimitiveSubtypes.PacketAlias",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          },
+          {
+            "name": "right",
+            "type": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:NominalPrimitiveSubtypes.PacketAlias",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          }
+        ],
+        "id": "lean:NominalPrimitiveSubtypes.Pair",
+        "kind": "record"
+      },
+      {
+        "fields": [
+          {
+            "name": "unitValue",
+            "type": {
+              "kind": "primitive",
+              "name": "unit"
+            }
+          },
+          {
+            "name": "boolValue",
+            "type": {
+              "kind": "primitive",
+              "name": "bool"
+            }
+          },
+          {
+            "name": "uint8Value",
+            "type": {
+              "kind": "primitive",
+              "name": "uint8"
+            }
+          },
+          {
+            "name": "uint16Value",
+            "type": {
+              "kind": "primitive",
+              "name": "uint16"
+            }
+          },
+          {
+            "name": "uint32Value",
+            "type": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "name": "uint64Value",
+            "type": {
+              "kind": "primitive",
+              "name": "uint64"
+            }
+          },
+          {
+            "name": "int8Value",
+            "type": {
+              "kind": "primitive",
+              "name": "int8"
+            }
+          },
+          {
+            "name": "int16Value",
+            "type": {
+              "kind": "primitive",
+              "name": "int16"
+            }
+          },
+          {
+            "name": "int32Value",
+            "type": {
+              "kind": "primitive",
+              "name": "int32"
+            }
+          },
+          {
+            "name": "int64Value",
+            "type": {
+              "kind": "primitive",
+              "name": "int64"
+            }
+          },
+          {
+            "name": "natValue",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "name": "intValue",
+            "type": {
+              "kind": "primitive",
+              "name": "int"
+            }
+          },
+          {
+            "name": "float32Value",
+            "type": {
+              "kind": "primitive",
+              "name": "float32"
+            }
+          },
+          {
+            "name": "float64Value",
+            "type": {
+              "kind": "primitive",
+              "name": "float64"
+            }
+          },
+          {
+            "name": "textValue",
+            "type": {
+              "kind": "primitive",
+              "name": "string"
+            }
+          },
+          {
+            "name": "bytesValue",
+            "type": {
+              "kind": "primitive",
+              "name": "bytes"
+            }
+          },
+          {
+            "name": "charValue",
+            "type": {
+              "kind": "primitive",
+              "name": "char"
+            }
+          },
+          {
+            "name": "usizeValue",
+            "type": {
+              "kind": "primitive",
+              "name": "usize"
+            }
+          },
+          {
+            "name": "isizeValue",
+            "type": {
+              "kind": "primitive",
+              "name": "isize"
+            }
+          },
+          {
+            "name": "digit",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "id": "lean:NominalPrimitiveSubtypes.RawPacket",
+        "kind": "record"
+      }
+    ],
+    "version": 8
+  },
+  "schemaVersion": 1
+}
