@@ -81,6 +81,8 @@ import "./nominal-subtype-php-registration-history-tests.mjs";
 import "./nominal-subtype-wit-tests.mjs";
 import "./nominal-subtype-wit-installed-tests.mjs";
 import "./nominal-subtype-wit-registration-history-tests.mjs";
+import "./nominal-subtype-browser-tests.mjs";
+import "./nominal-subtype-browser-registration-history-tests.mjs";
 
 test("nominal package review independently matches ordinary choices and retains constructor-free results", () => {
 	for(const resultOnly of [false, true])

@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nominal-subtype-browser-registration-source-v1",
+  "predecessorCommit": "d7557c638b1caaae5db3159ab59b9a783e366e40",
+  "updates": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "0e72cbf9385842cd0a0a7c026138db2c79ab281dd30652e4e46f01dc3b5af4f4",
+      "previousSha256": "faacd3cc23c88ee52bcaa5bfbf943f262b121c8f5d2f0048e2eac9ca668cf5cb",
+      "edits": [
+        {
+          "start": 6543,
+          "previous": "",
+          "current": "import { nominalSubtypeBrowserRegistrationChangedPaths } from \"./nominal-subtype-browser-registration-history.mjs\";\n"
+        },
+        {
+          "start": 68760,
+          "previous": "",
+          "current": "\t, ...nominalSubtypeBrowserRegistrationChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-installed-fixture-tests.mjs",
+      "currentSha256": "57ae824f78c45a2b778cc4537ef5d6c79d330b3dc80426bb6d4891f37188225a",
+      "previousSha256": "2811b0afbab2253435fee00f015a855d7c9b71dc8fc4a3dc998521c8e7ccb385",
+      "edits": [
+        {
+          "start": 4540,
+          "previous": "",
+          "current": "import \"./nominal-subtype-browser-tests.mjs\";\nimport \"./nominal-subtype-browser-registration-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-npm-installed-tests.mjs",
+      "currentSha256": "51c832f7853d2b81e4a617c8961e487fc513ea302d7a0caaeead2afc22a299c3",
+      "previousSha256": "654d5f296d65b8c629db5ce90a2cd766ff4bcc2fffd2b2daf38cdf4f31fb07a9",
+      "edits": [
+        {
+          "start": 1540,
+          "previous": "",
+          "current": "import { checkNominalSubtypeNpmReport } from \"./nominal-subtype-npm-report.mjs\";\nimport { nominalSubtypeBrowserEnabled } from \"./nominal-subtype-browser-fixture.mjs\";\nimport { checkNominalSubtypeBrowsers } from \"./nominal-subtype-browser.mjs\";\nimport { checkNominalSubtypeBrowserReport } from \"./nominal-subtype-browser-report.mjs\";\nimport { waitNominalSubtypeDotnetResources as waitResources } from \"./nominal-subtype-dotnet-resources.mjs\";\n"
+        },
+        {
+          "start": 2185,
+          "previous": "",
+          "current": "const browsers = nominalSubtypeBrowserEnabled(process.env);\n"
+        },
+        {
+          "start": 3381,
+          "previous": "",
+          "current": "\tconst resources = () => waitResources(output, { notify: message => t.diagnostic(message.replaceAll(\"C#\", \"npm/browser\")) });\n\tawait resources();\n"
+        },
+        {
+          "start": 4542,
+          "previous": "",
+          "current": "\t\tawait resources();\n"
+        },
+        {
+          "start": 7212,
+          "previous": "",
+          "current": "\tif(browsers) await cp(handoff, join(output, \"handoff\"), { recursive: true, errorOnExist: true, force: false });\n"
+        },
+        {
+          "start": 8239,
+          "previous": "",
+          "current": "\tawait resources();\n"
+        },
+        {
+          "start": 12402,
+          "previous": "",
+          "current": "\tconst runtime = { node: process.version, platform: process.platform, arch: process.arch };\n\tconst original = path => readFile(join(output, path));\n\tawait checkNominalSubtypeNpmReport(original, { route, mode, producerCommit, runtime });\n\tif(browsers)\n\t{\n\t\tawait resources();\n\t\tawait checkNominalSubtypeBrowsers({ directory, handoff, receipt, records: output, route, mode, producerCommit, runtime });\n\t\tawait checkNominalSubtypeBrowserReport(original, { route, mode, producerCommit, runtime });\n\t}\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-wit-promotion-history.mjs",
+      "currentSha256": "1217e9da112b36caec611eef53fa013010d16b0235ae1f591abadc3aa2c6072a",
+      "previousSha256": "16e0d3e02e33fe725c6d2981b2a69eb9e104f4247e26c4d8d04160cbd1e3de4d",
+      "edits": [
+        {
+          "start": 233,
+          "previous": "",
+          "current": "import { beforeNominalSubtypeBrowserRegistrationSource } from \"./nominal-subtype-browser-registration-history.mjs\";\n"
+        },
+        {
+          "start": 2714,
+          "previous": "",
+          "current": "\tsource = beforeNominalSubtypeBrowserRegistrationSource(path, source, expected);\n"
+        }
+      ]
+    }
+  ]
+}

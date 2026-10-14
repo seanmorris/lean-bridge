@@ -22,10 +22,16 @@ import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
 import { copiedCleanEnvironment, runCopied } from "./copied-fixture-install.mjs";
 import { structuralSubtypeNpmPackageName } from "./structural-subtype-npm-package.mjs";
 import { nominalSubtypeInstalledConfiguration, nominalSubtypeFixture, nominalSubtypeModule, nominalSubtypeName, nominalSubtypeInstalledReview } from "./nominal-subtype-installed-fixture.mjs";
+import { checkNominalSubtypeNpmReport } from "./nominal-subtype-npm-report.mjs";
+import { nominalSubtypeBrowserEnabled } from "./nominal-subtype-browser-fixture.mjs";
+import { checkNominalSubtypeBrowsers } from "./nominal-subtype-browser.mjs";
+import { checkNominalSubtypeBrowserReport } from "./nominal-subtype-browser-report.mjs";
+import { waitNominalSubtypeDotnetResources as waitResources } from "./nominal-subtype-dotnet-resources.mjs";
 
 const flag = "LEAN_BRIDGE_NOMINAL_SUBTYPE_NPM_TEST";
 if(process.env[flag] !== undefined) assert.ok(["0", "1"].includes(process.env[flag]), `Invalid ${flag}`);
 const enabled = process.env[flag] === "1";
+const browsers = nominalSubtypeBrowserEnabled(process.env);
 const select = (variable, permitted) => {
 	const selected = process.env[variable]?.split(",") ?? permitted;
 	assert.ok(selected.length && selected.every(value => permitted.includes(value)), `Invalid ${variable}`);
@@ -41,6 +47,8 @@ for(const route of routes) for(const mode of modes) test(`installed npm nominal 
 	const resultOnly = mode === "result-only";
 	const output = resolve(process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_NPM_OUTPUT ?? "build/nominal-subtype-npm", route, mode);
 	await assert.rejects(access(output), { code: "ENOENT" }); await mkdir(output, { recursive: true });
+	const resources = () => waitResources(output, { notify: message => t.diagnostic(message.replaceAll("C#", "npm/browser")) });
+	await resources();
 	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-nominal-subtype-npm-"));
 	let complete = false;
 	t.after(async () => {
@@ -57,6 +65,7 @@ for(const route of routes) for(const mode of modes) test(`installed npm nominal 
 	await saveLakeFile(output, "configuration.json", canonicalJson(configuration));
 	for(const attempt of [0, 1])
 	{
+		await resources();
 		const author = join(directory, `author-${attempt}`), projectRoot = join(author, "project"), outputRoot = join(author, "release");
 		await cp(nominalSubtypeFixture, projectRoot, { recursive: true });
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson(configuration));
@@ -89,6 +98,7 @@ for(const route of routes) for(const mode of modes) test(`installed npm nominal 
 	}
 	assert.deepEqual(builds[1], builds[0]);
 	await verifyComponentPackageReceipt({ receiptPath: join(handoff, "component-package-receipt.json") });
+	if(browsers) await cp(handoff, join(output, "handoff"), { recursive: true, errorOnExist: true, force: false });
 	const receipt = JSON.parse(await readFile(join(handoff, "component-package-receipt.json"))), trees = {};
 	for(const [role, item] of [["component", receipt.package], ["runtime", receipt.runtime]])
 	{
@@ -101,6 +111,7 @@ for(const route of routes) for(const mode of modes) test(`installed npm nominal 
 		await rm(extracted, { recursive: true });
 	}
 	const consumer = join(directory, "consumer"), moved = join(directory, "relocated-consumer"), bin = join(consumer, "bin");
+	await resources();
 	await mkdir(bin, { recursive: true }); await symlink(process.execPath, join(bin, "node"));
 	await saveLakeFile(consumer, "package.json", canonicalJson({ private: true, type: "module" }));
 	for(const name of ["user.npmrc", "global.npmrc"]) await saveLakeFile(consumer, name, "");
@@ -156,5 +167,14 @@ for(const route of routes) for(const mode of modes) test(`installed npm nominal 
 		, sourceRemovedBeforeInstallation: true, offlineInstall: true
 		, compilerFreePath: true, relocatedInstallation: true
 		, dispatch: { observed: false, reason: "No Wasm constructor/source entry counters in this caller" } }));
+	const runtime = { node: process.version, platform: process.platform, arch: process.arch };
+	const original = path => readFile(join(output, path));
+	await checkNominalSubtypeNpmReport(original, { route, mode, producerCommit, runtime });
+	if(browsers)
+	{
+		await resources();
+		await checkNominalSubtypeBrowsers({ directory, handoff, receipt, records: output, route, mode, producerCommit, runtime });
+		await checkNominalSubtypeBrowserReport(original, { route, mode, producerCommit, runtime });
+	}
 	complete = true;
 });
