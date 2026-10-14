@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nominal-primitive-subtype-native-registration-source-v1",
+  "predecessorCommit": "6990c45fb225e4150b1aca8d6b19415226e8c766",
+  "updates": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "ab8d4800476cc884c7c3801d5f3095c377c908366f842c2f337cfbf1f3565fd1",
+      "previousSha256": "8987394ac1ed1f4371d8c06ccdd1f085961e0cee500e27b0f8c9c00394d78cbc",
+      "edits": [
+        {
+          "start": 7957,
+          "previous": "",
+          "current": "import { nominalPrimitiveSubtypeNativeRegistrationChangedPaths } from \"./nominal-primitive-subtype-native-registration-history.mjs\";\n"
+        },
+        {
+          "start": 70822,
+          "previous": "",
+          "current": "\t, ...nominalPrimitiveSubtypeNativeRegistrationChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-tests.mjs",
+      "currentSha256": "1a8b57328aa73b2c257dc9535efc44b713251c431222584a04995438512872a4",
+      "previousSha256": "e1cb82499b290594a0bbdf426c58cf0d19bf8184b9f52b8dbaa8eacb4ad449c1",
+      "edits": [
+        {
+          "start": 2084,
+          "previous": "",
+          "current": "import \"./nominal-primitive-subtype-native-fixture-tests.mjs\";\nimport \"./nominal-primitive-subtype-native-ci-policy-tests.mjs\";\nimport \"./nominal-primitive-subtype-native-ci-shell-tests.mjs\";\nimport \"./nominal-primitive-subtype-native-ci-workflow-tests.mjs\";\nimport \"./nominal-primitive-subtype-native-registration-history-tests.mjs\";\nimport \"./nominal-primitive-subtype-native-installed-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-browser-promotion-history.mjs",
+      "currentSha256": "18d4e7e36e37ae6d91f20f3d59f08f51abafc9d5dfdf72f98609ab87421595be",
+      "previousSha256": "dcd3504ae4409f83a2e95e678f14177731c1578ed3fe4b93c93ec6451d9ed923",
+      "edits": [
+        {
+          "start": 242,
+          "previous": "",
+          "current": "import { beforeNominalPrimitiveSubtypeNativeRegistrationSource } from \"./nominal-primitive-subtype-native-registration-history.mjs\";\n"
+        },
+        {
+          "start": 3021,
+          "previous": "",
+          "current": "\tsource = beforeNominalPrimitiveSubtypeNativeRegistrationSource(path, source, expected);\n"
+        }
+      ]
+    }
+  ]
+}
