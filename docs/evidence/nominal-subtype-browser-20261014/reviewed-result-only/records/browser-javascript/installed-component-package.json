@@ -1,0 +1,39 @@
+{
+  "version": "1.0.0",
+  "type": "module",
+  "sideEffects": false,
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.mjs",
+      "default": "./index.mjs",
+      "browser": "./index.mjs"
+    }
+  },
+  "files": [
+    "index.mjs",
+    "index.d.ts",
+    "README.md",
+    "binding-manifest.json",
+    "internal",
+    "notices",
+    "LICENSE"
+  ],
+  "name": "nominalsubtypes",
+  "license": "MIT",
+  "description": "Independent corpus contract.",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@lean-bridge/runtime": "0.0.0-abi2.1dfdae25ae6d2ccd7eac4b21f16af42f1cfa1650f98f24ee34d9bc880d180052"
+  },
+  "leanBridge": {
+    "component": "nominalsubtypes@1.0.0",
+    "componentBundleSha256": "5226d8ac83acf3695dd74768db46cc0cf0eaa87be9795b94f5a516633eb1ff46",
+    "componentIdentitySha256": "b128ebdc4c49f8fdaccb9573daedc24de081d5dbb16970df6361c34e27a57fa2",
+    "bindingIrSha256": "2f38ccd2d87c26c3372cc5b97bb33ae078c10cdcaafd2cb040fb80865cdd4e18",
+    "sharedRuntime": true
+  }
+}

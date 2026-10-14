@@ -1,0 +1,39 @@
+{
+  "version": "1.0.0",
+  "type": "module",
+  "sideEffects": false,
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.mjs",
+      "default": "./index.mjs",
+      "browser": "./index.mjs"
+    }
+  },
+  "files": [
+    "index.mjs",
+    "index.d.ts",
+    "README.md",
+    "binding-manifest.json",
+    "internal",
+    "notices",
+    "LICENSE"
+  ],
+  "name": "nominalsubtypes",
+  "license": "MIT",
+  "description": "Compiler-checked exports for nominalsubtypes.",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@lean-bridge/runtime": "0.0.0-abi2.1dfdae25ae6d2ccd7eac4b21f16af42f1cfa1650f98f24ee34d9bc880d180052"
+  },
+  "leanBridge": {
+    "component": "nominalsubtypes@1.0.0",
+    "componentBundleSha256": "3789c56fbe5abb347cfa327fa45a6758e3bf4a0bdb63837ca403cae8054c43fa",
+    "componentIdentitySha256": "2efac4386c61890cc31a534f6425ed4b836fe841a5c3aacb3e37c81f27c92660",
+    "bindingIrSha256": "876d028329e0f44b957cec223ce5895e94ca5cb3245f3b5c171f7fa81dc80306",
+    "sharedRuntime": true
+  }
+}

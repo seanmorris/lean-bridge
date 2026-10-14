@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@lean-bridge/runtime": "file:../handoff/lean-bridge-runtime-0.0.0-abi2.1dfdae25ae6d2ccd7eac4b21f16af42f1cfa1650f98f24ee34d9bc880d180052.tgz",
+    "nominalsubtypes": "file:../handoff/nominalsubtypes-1.0.0.tgz",
+    "react": "file:framework/react-19.2.8.tgz",
+    "react-dom": "file:framework/react-dom-19.2.8.tgz",
+    "scheduler": "file:framework/scheduler-0.27.0.tgz"
+  }
+}
