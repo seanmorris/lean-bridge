@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nominal-subtype-php-wasm-registration-source-v1",
+  "predecessorCommit": "29c01468f0eba939c91f2b9a2a8db3d9eaa37c9b",
+  "updates": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "92c44bd000b9f9110ecb8fe689e462df9997f372eff5b20b2415819cd5b842c7",
+      "previousSha256": "84d8cf8ca848a4a42f1f2d2f128841e4949dc6f08a1700c11b813907a304a636",
+      "edits": [
+        {
+          "start": 6769,
+          "previous": "",
+          "current": "import { nominalSubtypePhpWasmRegistrationChangedPaths } from \"./nominal-subtype-php-wasm-registration-history.mjs\";\n"
+        },
+        {
+          "start": 69088,
+          "previous": "",
+          "current": "\t, ...nominalSubtypePhpWasmRegistrationChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-browser-promotion-history.mjs",
+      "currentSha256": "dc57d89b64af26e4785559ed3bf4f61180ce5352ddc0d57a418d227663836690",
+      "previousSha256": "8ea830efe25ecc0f97009706996c90646d0260958f9268ef070fa977949c5108",
+      "edits": [
+        {
+          "start": 232,
+          "previous": "",
+          "current": "import { beforeNominalSubtypePhpWasmRegistrationSource } from \"./nominal-subtype-php-wasm-registration-history.mjs\";\n"
+        },
+        {
+          "start": 2784,
+          "previous": "",
+          "current": "\tsource = beforeNominalSubtypePhpWasmRegistrationSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-installed-fixture-tests.mjs",
+      "currentSha256": "3aba934872ed6c293177cda119ec7a69974e01ee06042e9a0e74d23673eb1191",
+      "previousSha256": "57ae824f78c45a2b778cc4537ef5d6c79d330b3dc80426bb6d4891f37188225a",
+      "edits": [
+        {
+          "start": 4653,
+          "previous": "",
+          "current": "import \"./nominal-subtype-php-wasm-tests.mjs\";\nimport \"./nominal-subtype-php-wasm-installed-tests.mjs\";\nimport \"./nominal-subtype-php-wasm-registration-history-tests.mjs\";\n"
+        }
+      ]
+    }
+  ]
+}
