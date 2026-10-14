@@ -14,3 +14,5 @@ import "./nominal-primitive-subtype-npm-archive-tests.mjs";
 import "./nominal-primitive-subtype-npm-ci-policy-tests.mjs";
 import "./nominal-primitive-subtype-npm-ci-shell-tests.mjs";
 import "./nominal-primitive-subtype-npm-ci-workflow-tests.mjs";
+import "./nominal-primitive-subtype-npm-promotion-tests.mjs";
+import "./nominal-primitive-subtype-npm-promotion-history-tests.mjs";

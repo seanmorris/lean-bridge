@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeNominalPrimitiveSubtypeNpmPromotionSource, beforeNominalPrimitiveSubtypeNpmPromotionPins } from "./nominal-primitive-subtype-npm-promotion-history.mjs";
 
 export const nominalSubtypePhpWasmPathHistoryPath = "docs/evidence/nominal-subtype-php-wasm-path-source-history-20261014.json";
 export const nominalSubtypePhpWasmPathPredecessor = "d4dd322f1e61c52a6505fbaa9294ee3d19cc0a33";
@@ -55,6 +56,7 @@ export const reverseNominalSubtypePhpWasmPathUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeNominalSubtypePhpWasmPathSource = (path, source, expected) => {
+	source = beforeNominalPrimitiveSubtypeNpmPromotionSource(path, source, expected);
 	if(typeof source !== "string" || !nominalSubtypePhpWasmPathChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = history ??= JSON.parse(readFileSync(nominalSubtypePhpWasmPathHistoryPath, "utf8"));
@@ -68,7 +70,7 @@ export const beforeNominalSubtypePhpWasmPathSource = (path, source, expected) =>
  * @param inventory - Earlier inventory recomputed with current file hashes.
  */
 export const beforeNominalSubtypePhpWasmPathPins = inventory => {
-	const previous = structuredClone(inventory);
+	const previous = beforeNominalPrimitiveSubtypeNpmPromotionPins(inventory);
 	const record = history ??= JSON.parse(readFileSync(nominalSubtypePhpWasmPathHistoryPath, "utf8"));
 	for(const entry of previous.evidence) for(const file of entry.files)
 	{

@@ -12,6 +12,7 @@ import { compileDocumentationPage } from "../../scripts/generate-site-content.mj
 import { docPages } from "../../site/registry.mjs";
 import { nominalSubtypePhpWasmArchive, nominalSubtypePhpWasmReferences, promoteNominalSubtypePhpWasm, nominalSubtypePhpWasmProfiles, nominalSubtypePhpWasmConversion, nominalSubtypePhpWasmLimit } from "./nominal-subtype-php-wasm-promotion.mjs";
 import { nominalSubtypePhpWasmPromotionPredecessor } from "./nominal-subtype-php-wasm-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypeNpmPromotionSource, beforeNominalPrimitiveSubtypeNpmPromotionPins } from "./nominal-primitive-subtype-npm-promotion-history.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalSubtypePhpWasmPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -119,7 +120,9 @@ test("nominal PHP-Wasm promotion refuses missing originals, invented scope and o
 
 test("nominal PHP-Wasm promotion changes exactly six Subtype cells and adds two field cells", async () => {
 	const original = predecessor(), references = await nominalSubtypePhpWasmReferences();
-	const proposed = await promoteNominalSubtypePhpWasm(original, references), { document, ...contracts } = await readTypeSurface();
+	const proposed = beforeNominalPrimitiveSubtypeNpmPromotionPins(await promoteNominalSubtypePhpWasm(original, references));
+	const { document: current, ...contracts } = await readTypeSurface();
+	const document = JSON.parse(beforeNominalPrimitiveSubtypeNpmPromotionSource("docs/type-surface.v1.json", JSON.stringify(current, null, 2) + "\n"));
 	validateTypeSurface(proposed, contracts);
 	assert.equal(original.evidence.length, 516); assert.equal(proposed.evidence.length, 520);
 	assert.equal(original.observations.length, 593); assert.equal(proposed.observations.length, 595);

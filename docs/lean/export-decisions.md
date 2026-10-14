@@ -46,6 +46,12 @@ Both compiler paths also project constructor-free results.
 [Installed npm checks](../evidence/nominal-subtype-npm-acceptance-20261011.md)
 cover the tested Nat fields, aliases and constructor-free outputs on both source
 routes in Node 22.23.2 with strict TypeScript, including result-only packages.
+[Nineteen-base npm checks](../evidence/nominal-primitive-subtype-npm-20261014/index.json)
+extend those Node fields to every admitted primitive base, including signed
+and heap-backed values, floats, Unicode text and bytes. Constructors still
+belong to each input site; results project existing payloads. Both author
+routes and API modes pass offline installation and relocated replay with
+wasm32 machine words. The other host checks below cover their tested Nat forms.
 [Installed C/C++ checks](../evidence/nominal-subtype-native-acceptance-20261011.md)
 cover the same Nat forms on both source routes in Linux x64/glibc 2.36, including
 standalone result-only packages. [Installed Perl checks](../evidence/nominal-subtype-perl-acceptance-20261012.md)
