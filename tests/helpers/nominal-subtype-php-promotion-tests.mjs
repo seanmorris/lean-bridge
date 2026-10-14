@@ -11,6 +11,7 @@ import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../sr
 import { nominalSubtypePhpArchive, nominalSubtypePhpReferences, promoteNominalSubtypePhp, nominalSubtypePhpConversion, nominalSubtypePhpLimit } from "./nominal-subtype-php-promotion.mjs";
 import { nominalSubtypePhpPromotionPredecessor } from "./nominal-subtype-php-promotion-history.mjs";
 import { beforeNominalSubtypeWitPromotionSource, beforeNominalSubtypeWitPromotionPins } from "./nominal-subtype-wit-promotion-history.mjs";
+import { beforeNominalSubtypePhpWasmPromotionPins } from "./nominal-subtype-php-wasm-promotion-history.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalSubtypePhpPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -103,7 +104,7 @@ test("nominal PHP promotion refuses missing originals, invented claims and overl
 
 test("nominal PHP promotion adds two field cells and supplements four existing cells only", async () => {
 	const original = predecessor(), references = await nominalSubtypePhpReferences();
-	const proposed = beforeNominalSubtypeWitPromotionPins(await promoteNominalSubtypePhp(original, references));
+	const proposed = beforeNominalSubtypeWitPromotionPins(beforeNominalSubtypePhpWasmPromotionPins(await promoteNominalSubtypePhp(original, references)));
 	const { document: current, ...contracts } = await readTypeSurface();
 	const document = JSON.parse(beforeNominalSubtypeWitPromotionSource("docs/type-surface.v1.json", JSON.stringify(current, null, 2) + "\n"));
 	validateTypeSurface(proposed, contracts);
@@ -152,7 +153,7 @@ test("nominal PHP documentation distinguishes native Nat records from pending PH
 	}
 	for(const path of ["docs/lean/existing-package.md", "docs/lean/export-decisions.md", "docs/php.md", "docs/reference/types.md"])
 		assert.ok((await readFile(path, "utf8")).includes("nominal-subtype-php-20261013.md"), path);
-	const source = await readFile("docs/php.md", "utf8");
+	const source = beforeNominalSubtypeWitPromotionSource("docs/php.md", await readFile("docs/php.md", "utf8"));
 	assert.ok(source.includes("### Subtypes in copied records\n"));
 	assert.ok(source.includes("Linux x64/glibc 2.36"));
 	assert.match(source, /PHP 8\.2\.33 and Composer 2\.5\.5/u);

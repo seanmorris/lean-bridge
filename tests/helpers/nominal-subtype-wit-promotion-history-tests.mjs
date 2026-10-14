@@ -12,6 +12,7 @@ import test from "node:test";
 import { nominalSubtypeWitReferences, promoteNominalSubtypeWit } from "./nominal-subtype-wit-promotion.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeNominalSubtypeBrowserPromotionPins } from "./nominal-subtype-browser-promotion-history.mjs";
+import { beforeNominalSubtypePhpWasmPromotionPins } from "./nominal-subtype-php-wasm-promotion-history.mjs";
 import { beforeNominalSubtypeWitPromotionSource, nominalSubtypeWitPromotionChangedPaths, nominalSubtypeWitPromotionHistoryPath, nominalSubtypeWitPromotionPredecessor, reverseNominalSubtypeWitPromotionUpdate } from "./nominal-subtype-wit-promotion-history.mjs";
 
 test("nominal WIT promotion history authenticates exact changes and the six observed WIT cells", async t => {
@@ -42,7 +43,7 @@ test("nominal WIT promotion history authenticates exact changes and the six obse
 		}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	const expected = beforeNominalSubtypeBrowserPromotionPins(await promoteNominalSubtypeWit(JSON.parse(original(inventoryPath)), await nominalSubtypeWitReferences()));
+	const expected = beforeNominalSubtypeBrowserPromotionPins(beforeNominalSubtypePhpWasmPromotionPins(await promoteNominalSubtypeWit(JSON.parse(original(inventoryPath)), await nominalSubtypeWitReferences())));
 	assert.equal(beforeNominalSubtypeWitPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)

@@ -28,6 +28,7 @@ import { nominalSubtypeJvmProfiles, nominalSubtypeJvmHostSuffix } from "./helper
 import { nominalSubtypePhpProfiles, nominalSubtypePhpHostSuffix } from "./helpers/nominal-subtype-php-promotion.mjs";
 import { nominalSubtypeWitProfiles, nominalSubtypeWitHostSuffix } from "./helpers/nominal-subtype-wit-promotion.mjs";
 import { nominalSubtypeBrowserProfiles, nominalSubtypeBrowserHostSuffix } from "./helpers/nominal-subtype-browser-promotion.mjs";
+import { nominalSubtypePhpWasmProfiles, nominalSubtypePhpWasmHostSuffix } from "./helpers/nominal-subtype-php-wasm-promotion.mjs";
 
 const execute = promisify(execFile);
 const root = path.resolve(import.meta.dirname, "..");
@@ -419,8 +420,8 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	}[profile] ?? [];
 	// Author-checked Subtype cells retain their earlier receipts; nominal fields have separate acceptance.
 	const subtypes = specializationEvidence || profile === "php-wasm" ? ["subtype"] : [];
-	const nominalSubtype = ["python", "ruby", "rust", "dotnet", "java", "kotlin", ...nominalSubtypePhpProfiles, ...nominalSubtypeWitProfiles].includes(profile);
-	const nominalSubtypeLane = nominalSubtypeJvmProfiles.includes(profile) ? "jvm" : nominalSubtypePhpProfiles.includes(profile) ? "php" : nominalSubtypeWitProfiles.includes(profile) ? "wit" : nominalSubtypeBrowserProfiles.includes(profile) ? "browser" : profile;
+	const nominalSubtype = ["python", "ruby", "rust", "dotnet", "java", "kotlin", ...nominalSubtypePhpProfiles, ...nominalSubtypeWitProfiles, ...nominalSubtypePhpWasmProfiles].includes(profile);
+	const nominalSubtypeLane = nominalSubtypeJvmProfiles.includes(profile) ? "jvm" : nominalSubtypePhpProfiles.includes(profile) ? "php" : nominalSubtypeWitProfiles.includes(profile) ? "wit" : nominalSubtypeBrowserProfiles.includes(profile) ? "browser" : nominalSubtypePhpWasmProfiles.includes(profile) ? "php-wasm" : profile;
 	const nominalSubtypeEvidence = nominalSubtype ? ["full", "result-only"].map(mode => `nominal-subtype-${nominalSubtypeLane}-ordinary-${mode}-installed`) : [];
 	const checkedRecordGroups = {
 		python: ["python-3-11", "python-3-12"], ruby: ["ruby-jvm"]
@@ -538,7 +539,7 @@ test("refinements, host null and erased proofs retain their individual value pos
 	}
 });
 
-test("checked Subtype evidence preserves structural inputs and results and limits nominal fields to installed Node, browser, native and WIT profiles", async () => {
+test("checked Subtype evidence preserves structural inputs and results and limits nominal fields to all seventeen installed profiles", async () => {
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "subtype");
 	const allInstalled = cells.filter(cell => cell.stages.installedExecution.state === "passed");
 	const fields = allInstalled.filter(cell => cell.position === "field");
@@ -547,19 +548,20 @@ test("checked Subtype evidence preserves structural inputs and results and limit
 		, ...nominalSubtypePythonProfiles, ...nominalSubtypeRubyProfiles
 		, ...nominalSubtypeRustProfiles, ...nominalSubtypeDotnetProfiles
 		, ...nominalSubtypeJvmProfiles, ...nominalSubtypePhpProfiles
-		, ...nominalSubtypeWitProfiles, ...nominalSubtypeBrowserProfiles];
-	const nominalLane = profile => nominalSubtypeNpmProfiles.includes(profile) ? "npm" : nominalSubtypeJvmProfiles.includes(profile) ? "jvm" : nominalSubtypePhpProfiles.includes(profile) ? "php" : nominalSubtypeWitProfiles.includes(profile) ? "wit" : nominalSubtypeBrowserProfiles.includes(profile) ? "browser" : ["perl", "python", "ruby", "rust", "dotnet"].includes(profile) ? profile : "native";
+		, ...nominalSubtypeWitProfiles, ...nominalSubtypeBrowserProfiles
+		, ...nominalSubtypePhpWasmProfiles];
+	const nominalLane = profile => nominalSubtypeNpmProfiles.includes(profile) ? "npm" : nominalSubtypeJvmProfiles.includes(profile) ? "jvm" : nominalSubtypePhpProfiles.includes(profile) ? "php" : nominalSubtypeWitProfiles.includes(profile) ? "wit" : nominalSubtypeBrowserProfiles.includes(profile) ? "browser" : nominalSubtypePhpWasmProfiles.includes(profile) ? "php-wasm" : ["perl", "python", "ruby", "rust", "dotnet"].includes(profile) ? profile : "native";
 	assert.deepEqual(fields.map(cell => cell.id).sort(), nominalProfiles.flatMap(profile => ["ordinary-source", "reviewed-ir"].map(path => `${profile}/subtype/${path}/field`)).sort());
 	for(const cell of fields) for(const stage of Object.values(cell.stages))
 		assert.deepEqual(stage.evidence, ["full", "result-only"].map(mode => `nominal-subtype-${nominalLane(cell.profile)}-${cell.path === "ordinary-source" ? "ordinary" : "reviewed"}-${mode}-installed`));
 	const installed = allInstalled.filter(cell => ["parameter", "result"].includes(cell.position));
-	assert.equal(allInstalled.length, installed.length + 32);
+	assert.equal(allInstalled.length, installed.length + 34);
 	const primitive = installed.map(cell => {
 		const nominal = nominalProfiles.includes(cell.profile)
 			? ["full", "result-only"].map(mode => `nominal-subtype-${nominalLane(cell.profile)}-${cell.path === "ordinary-source" ? "ordinary" : "reviewed"}-${mode}-installed`) : [];
 		if(nominal.length)
 		{
-			const hostSuffix = nominalSubtypeNpmProfiles.includes(cell.profile) ? nominalSubtypeNpmHostSuffix : nominalSubtypeJvmProfiles.includes(cell.profile) ? nominalSubtypeJvmHostSuffix : nominalSubtypePhpProfiles.includes(cell.profile) ? nominalSubtypePhpHostSuffix : nominalSubtypeWitProfiles.includes(cell.profile) ? nominalSubtypeWitHostSuffix : nominalSubtypeBrowserProfiles.includes(cell.profile) ? nominalSubtypeBrowserHostSuffix : cell.profile === "perl" ? nominalSubtypePerlHostSuffix : cell.profile === "python" ? nominalSubtypePythonHostSuffix : cell.profile === "ruby" ? nominalSubtypeRubyHostSuffix : cell.profile === "rust" ? nominalSubtypeRustHostSuffix : cell.profile === "dotnet" ? nominalSubtypeDotnetHostSuffix : nominalSubtypeNativeHostSuffix;
+			const hostSuffix = nominalSubtypeNpmProfiles.includes(cell.profile) ? nominalSubtypeNpmHostSuffix : nominalSubtypeJvmProfiles.includes(cell.profile) ? nominalSubtypeJvmHostSuffix : nominalSubtypePhpProfiles.includes(cell.profile) ? nominalSubtypePhpHostSuffix : nominalSubtypeWitProfiles.includes(cell.profile) ? nominalSubtypeWitHostSuffix : nominalSubtypeBrowserProfiles.includes(cell.profile) ? nominalSubtypeBrowserHostSuffix : nominalSubtypePhpWasmProfiles.includes(cell.profile) ? nominalSubtypePhpWasmHostSuffix : cell.profile === "perl" ? nominalSubtypePerlHostSuffix : cell.profile === "python" ? nominalSubtypePythonHostSuffix : cell.profile === "ruby" ? nominalSubtypeRubyHostSuffix : cell.profile === "rust" ? nominalSubtypeRustHostSuffix : cell.profile === "dotnet" ? nominalSubtypeDotnetHostSuffix : nominalSubtypeNativeHostSuffix;
 			assert.ok(cell.hostType.endsWith(hostSuffix));
 			cell = { ...cell, hostType: cell.hostType.slice(0, -hostSuffix.length) };
 		}

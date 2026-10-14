@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeNominalSubtypePhpWasmPromotionSource } from "./nominal-subtype-php-wasm-promotion-history.mjs";
 
 export const nominalSubtypePhpWasmRegistrationHistoryPath = "docs/evidence/nominal-subtype-php-wasm-registration-source-history-20261014.json";
 export const nominalSubtypePhpWasmRegistrationPredecessor = "29c01468f0eba939c91f2b9a2a8db3d9eaa37c9b";
@@ -49,6 +50,7 @@ export const reverseNominalSubtypePhpWasmRegistrationUpdate = (source, update) =
  * @param expected - Optional stopping digest.
  */
 export const beforeNominalSubtypePhpWasmRegistrationSource = (path, source, expected) => {
+	source = beforeNominalSubtypePhpWasmPromotionSource(path, source, expected);
 	if(typeof source !== "string" || !nominalSubtypePhpWasmRegistrationChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = history ??= JSON.parse(readFileSync(nominalSubtypePhpWasmRegistrationHistoryPath, "utf8"));

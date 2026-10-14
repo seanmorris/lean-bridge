@@ -12,6 +12,7 @@ import { compileDocumentationPage } from "../../scripts/generate-site-content.mj
 import { docPages } from "../../site/registry.mjs";
 import { nominalSubtypeBrowserArchive, nominalSubtypeBrowserReferences, promoteNominalSubtypeBrowser, nominalSubtypeBrowserProfiles, nominalSubtypeBrowserConversion, nominalSubtypeBrowserLimit } from "./nominal-subtype-browser-promotion.mjs";
 import { nominalSubtypeBrowserPromotionPredecessor } from "./nominal-subtype-browser-promotion-history.mjs";
+import { beforeNominalSubtypePhpWasmPromotionSource, beforeNominalSubtypePhpWasmPromotionPins } from "./nominal-subtype-php-wasm-promotion-history.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalSubtypeBrowserPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -115,7 +116,9 @@ test("nominal browser promotion refuses missing originals, invented scope and ov
 
 test("nominal browser promotion changes exactly eighteen Subtype cells and adds six field cells", async () => {
 	const original = predecessor(), references = await nominalSubtypeBrowserReferences();
-	const proposed = await promoteNominalSubtypeBrowser(original, references), { document, ...contracts } = await readTypeSurface();
+	const proposed = beforeNominalSubtypePhpWasmPromotionPins(await promoteNominalSubtypeBrowser(original, references));
+	const { document: current, ...contracts } = await readTypeSurface();
+	const document = JSON.parse(beforeNominalSubtypePhpWasmPromotionSource("docs/type-surface.v1.json", JSON.stringify(current, null, 2) + "\n"));
 	validateTypeSurface(proposed, contracts);
 	assert.equal(original.evidence.length, 512); assert.equal(proposed.evidence.length, 516);
 	assert.equal(original.observations.length, 591); assert.equal(proposed.observations.length, 593);
@@ -159,7 +162,7 @@ test("nominal browser guides describe installed Nat fields without promoting Fin
 		assert.ok(row.includes(`${route}: Installed checks passed (input, result, field)`));
 	assert.ok(row.includes("Not audited (callback input, callback result)"));
 	assert.ok(row.includes(nominalSubtypeBrowserConversion));
-	const author = await readFile("docs/lean/existing-package.md", "utf8");
+	const author = beforeNominalSubtypePhpWasmPromotionSource("docs/lean/existing-package.md", await readFile("docs/lean/existing-package.md", "utf8"));
 	for(const prefix of ["| `Subtype` in acyclic", "| Lean-produced `Subtype` result without"])
 	{
 		const row = author.split("\n").find(line => line.startsWith(prefix));

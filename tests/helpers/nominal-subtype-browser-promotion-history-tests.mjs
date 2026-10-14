@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { nominalSubtypeBrowserReferences, promoteNominalSubtypeBrowser } from "./nominal-subtype-browser-promotion.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeNominalSubtypePhpWasmPromotionPins } from "./nominal-subtype-php-wasm-promotion-history.mjs";
 import { beforeNominalSubtypeBrowserPromotionSource, nominalSubtypeBrowserPromotionChangedPaths, nominalSubtypeBrowserPromotionHistoryPath, nominalSubtypeBrowserPromotionPredecessor, reverseNominalSubtypeBrowserPromotionUpdate } from "./nominal-subtype-browser-promotion-history.mjs";
 
 test("nominal browser promotion history authenticates exact changes and the eighteen observed browser cells", async t => {
@@ -41,7 +42,7 @@ test("nominal browser promotion history authenticates exact changes and the eigh
 		}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	const expected = await promoteNominalSubtypeBrowser(JSON.parse(original(inventoryPath)), await nominalSubtypeBrowserReferences());
+	const expected = beforeNominalSubtypePhpWasmPromotionPins(await promoteNominalSubtypeBrowser(JSON.parse(original(inventoryPath)), await nominalSubtypeBrowserReferences()));
 	assert.equal(beforeNominalSubtypeBrowserPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)

@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeNominalSubtypeJvmPromotionPins } from "./nominal-subtype-jvm-promotion-history.mjs";
+import { beforeNominalSubtypePhpWasmPromotionPins } from "./nominal-subtype-php-wasm-promotion-history.mjs";
 import { nominalSubtypeDotnetPromotionHistoryPath } from "./nominal-subtype-dotnet-promotion-history.mjs";
 import { nominalSubtypeRubyPromotionHistoryPath } from "./nominal-subtype-ruby-promotion-history.mjs";
 import { nominalSubtypeRustPromotionHistoryPath } from "./nominal-subtype-rust-promotion-history.mjs";
@@ -47,7 +48,7 @@ test("Nominal npm promotion authenticates exact changes and the scoped Node supp
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
 	assert.equal(beforeNominalSubtypeNpmPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
-	const expected = beforeNominalSubtypeJvmPromotionPins(await promoteNominalSubtypeNpm(JSON.parse(original(inventoryPath)), await nominalSubtypeNpmReferences()));
+	const expected = beforeNominalSubtypeJvmPromotionPins(beforeNominalSubtypePhpWasmPromotionPins(await promoteNominalSubtypeNpm(JSON.parse(original(inventoryPath)), await nominalSubtypeNpmReferences())));
 	for(const path of [nominalSubtypeDotnetPromotionHistoryPath, nominalSubtypeRustPromotionHistoryPath, nominalSubtypeRubyPromotionHistoryPath, nominalSubtypePythonPromotionHistoryPath, nominalSubtypePerlPromotionHistoryPath, nominalSubtypeNativePromotionHistoryPath])
 	{
 		const later = JSON.parse(await readFile(path));

@@ -120,7 +120,8 @@ test("nominal npm docs separate Node acceptance from pending browser, native and
 	}
 	for(const path of ["docs/lean/existing-package.md", "docs/lean/export-decisions.md", "docs/javascript-typescript.md", "docs/reference/types.md"])
 		assert.ok((await readFile(path, "utf8")).includes("nominal-subtype-npm-acceptance-20261011.md"), path);
-	const javascript = await readFile("docs/javascript-typescript.md", "utf8");
+	const javascriptPath = "docs/javascript-typescript.md";
+	const javascript = beforeNominalSubtypeJvmPromotionSource(javascriptPath, await readFile(javascriptPath, "utf8"));
 	assert.ok(javascript.includes("### Subtypes in copied records\n"));
 	assert.ok(javascript.includes("Node 22.23.2"));
 	assert.doesNotMatch(javascript, /Subtype fields in nominal records or variants, refined callback signatures and\nowned Subtypes remain unsupported/u);

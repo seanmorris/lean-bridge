@@ -81,7 +81,12 @@ Wasmtime 42.0.1.
 adds both source routes and API modes in Chromium 151.0.7922.34, Firefox 153.0
 and WebKit 26.5 pages, React and workers. The reproduced npm packages pass
 missing-asset recovery, remount, pending-unmount, worker restart and disposal
-checks. PHP-Wasm nominal acceptance remains pending. Refined
+checks.
+[Installed PHP-Wasm acceptance](../evidence/nominal-subtype-php-wasm-promotion-20261014.md)
+adds both source routes and API modes on wasm32 PHP 8.4.1 in Node 22.23.2 and
+Chromium 151.0.7922.34. Embedded, Composer and bundled callers pass startup/lazy
+loading and weak/strict execution twice after relocation. The archive
+retains all three reproduced packages. Refined
 callbacks, owned and recursive Subtypes, and Subtype fields in generic records
 remain unfinished.
 
@@ -196,7 +201,12 @@ Wasmtime 42.0.1.
 adds both source routes and API modes in Chromium 151.0.7922.34, Firefox 153.0
 and WebKit 26.5 pages, React and workers. The reproduced npm packages pass
 missing-asset recovery, remount, pending-unmount, worker restart and disposal
-checks. PHP-Wasm nominal acceptance remains pending.
+checks.
+[Installed PHP-Wasm acceptance](../evidence/nominal-subtype-php-wasm-promotion-20261014.md)
+adds both source routes and API modes on wasm32 PHP 8.4.1 in Node 22.23.2 and
+Chromium 151.0.7922.34. Embedded, Composer and bundled callers pass startup/lazy
+loading and weak/strict execution twice after relocation. The archive
+retains all three reproduced packages.
 Save `NominalSubtypes.lean`:
 
 ```lean
