@@ -77,7 +77,11 @@ adds those Nat forms through the actual Component Model adapter and its required
 packaged native Lean host. Both source routes reproduce packages from two roots,
 install offline and replay after relocation on Linux x64/glibc 2.36 with
 Wasmtime 42.0.1.
-Browser and PHP-Wasm nominal acceptance remains pending. Refined
+[Installed browser acceptance](../evidence/nominal-subtype-browser-promotion-20261014.md)
+adds both source routes and API modes in Chromium 151.0.7922.34, Firefox 153.0
+and WebKit 26.5 pages, React and workers. The reproduced npm packages pass
+missing-asset recovery, remount, pending-unmount, worker restart and disposal
+checks. PHP-Wasm nominal acceptance remains pending. Refined
 callbacks, owned and recursive Subtypes, and Subtype fields in generic records
 remain unfinished.
 
@@ -188,7 +192,11 @@ adds those Nat forms through the actual Component Model adapter and its required
 packaged native Lean host. Both source routes reproduce packages from two roots,
 install offline and replay after relocation on Linux x64/glibc 2.36 with
 Wasmtime 42.0.1.
-Browser and PHP-Wasm nominal acceptance remains pending.
+[Installed browser acceptance](../evidence/nominal-subtype-browser-promotion-20261014.md)
+adds both source routes and API modes in Chromium 151.0.7922.34, Firefox 153.0
+and WebKit 26.5 pages, React and workers. The reproduced npm packages pass
+missing-asset recovery, remount, pending-unmount, worker restart and disposal
+checks. PHP-Wasm nominal acceptance remains pending.
 Save `NominalSubtypes.lean`:
 
 ```lean

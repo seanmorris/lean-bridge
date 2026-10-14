@@ -12,6 +12,7 @@ import { compileDocumentationPage } from "../../scripts/generate-site-content.mj
 import { docPages } from "../../site/registry.mjs";
 import { nominalSubtypeWitArchive, nominalSubtypeWitReferences, promoteNominalSubtypeWit, nominalSubtypeWitConversion, nominalSubtypeWitLimit } from "./nominal-subtype-wit-promotion.mjs";
 import { nominalSubtypeWitPromotionPredecessor } from "./nominal-subtype-wit-promotion-history.mjs";
+import { beforeNominalSubtypeBrowserPromotionSource, beforeNominalSubtypeBrowserPromotionPins } from "./nominal-subtype-browser-promotion-history.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalSubtypeWitPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -116,7 +117,9 @@ test("nominal WIT promotion refuses missing originals, invented claims and overl
 
 test("nominal WIT promotion adds two field cells and supplements four existing cells only", async () => {
 	const original = predecessor(), references = await nominalSubtypeWitReferences();
-	const proposed = await promoteNominalSubtypeWit(original, references), { document, ...contracts } = await readTypeSurface();
+	const proposed = beforeNominalSubtypeBrowserPromotionPins(await promoteNominalSubtypeWit(original, references));
+	const { document: current, ...contracts } = await readTypeSurface();
+	const document = JSON.parse(beforeNominalSubtypeBrowserPromotionSource("docs/type-surface.v1.json", JSON.stringify(current, null, 2) + "\n"));
 	validateTypeSurface(proposed, contracts);
 	assert.equal(original.evidence.length, 508); assert.equal(proposed.evidence.length, 512);
 	assert.equal(original.observations.length, 589); assert.equal(proposed.observations.length, 591);
@@ -154,7 +157,7 @@ test("nominal WIT documentation describes tested Nat fields and the required nat
 	for(const prefix of ["| `Subtype` in acyclic", "| Lean-produced `Subtype` result without"])
 	{
 		const row = author.split("\n").find(line => line.startsWith(prefix));
-		assert.ok(row.includes("Node installed; browser pending"));
+		assert.ok(row.includes("Node, browser, React and worker installed"));
 		assert.equal((row.match(/Generated; pending/gu) ?? []).length, 1);
 		assert.ok(row.includes("native PHP and WIT/WASI installed"));
 		assert.ok(row.includes("All four ABIs installed"));

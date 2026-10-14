@@ -15,7 +15,7 @@ import { structuralSubtypeConfiguration } from "./structural-subtype-installed-f
 const predecessor = () => JSON.parse(execFileSync("git", ["show", "e844290c9bc4eb1052dcbce6e730f96e59165990:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
 test("structural Subtype guides describe the installed scope and use the actual author fixture", async () => {
-	const nominalFieldGuides = ["c", "cpp", "perl", "python", "ruby", "rust", "dotnet", "java", "kotlin", "wit-wasi"].map(name => `docs/consume/${name}.md`);
+	const nominalFieldGuides = [...["c", "cpp", "perl", "python", "ruby", "rust", "dotnet", "java", "kotlin", "wit-wasi"].map(name => `docs/consume/${name}.md`), "docs/javascript-typescript.md"];
 	for(const path of [...["c", "cpp", "python", "rust", "ruby", "dotnet", "java", "kotlin", "perl", "wit-wasi"].map(name => `docs/consume/${name}.md`), "docs/javascript-typescript.md", "docs/php.md"])
 	{
 		const source = await readFile(path, "utf8");
@@ -23,9 +23,9 @@ test("structural Subtype guides describe the installed scope and use the actual 
 		assert.ok(row.includes(structuralSubtypeConversion), path);
 		if(path === "docs/javascript-typescript.md")
 		{
-			assert.ok(row.includes("Ordinary source: Node JavaScript / TypeScript: Installed checks passed (input, result, field)"));
-			assert.ok(row.includes("Reviewed IR: Node JavaScript / TypeScript: Installed checks passed (input, result, field)"));
-			assert.ok(row.includes("Browser / React / Worker: Installed checks passed (input, result)"));
+			assert.ok(row.includes("Ordinary source: Installed checks passed (input, result, field)"));
+			assert.ok(row.includes("Reviewed IR: Installed checks passed (input, result, field)"));
+			assert.ok(row.includes("Not audited (callback input, callback result)"));
 		}
 		else if(path === "docs/php.md")
 		{

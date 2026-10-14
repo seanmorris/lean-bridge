@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeNominalSubtypeBrowserPromotionSource } from "./nominal-subtype-browser-promotion-history.mjs";
 
 export const nominalSubtypeBrowserRegistrationHistoryPath = "docs/evidence/nominal-subtype-browser-registration-source-history-20261013.json";
 export const nominalSubtypeBrowserRegistrationPredecessor = "d7557c638b1caaae5db3159ab59b9a783e366e40";
@@ -50,6 +51,7 @@ export const reverseNominalSubtypeBrowserRegistrationUpdate = (source, update) =
  * @param expected - Optional stopping digest.
  */
 export const beforeNominalSubtypeBrowserRegistrationSource = (path, source, expected) => {
+	source = beforeNominalSubtypeBrowserPromotionSource(path, source, expected);
 	if(typeof source !== "string" || !nominalSubtypeBrowserRegistrationChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = history ??= JSON.parse(readFileSync(nominalSubtypeBrowserRegistrationHistoryPath, "utf8"));

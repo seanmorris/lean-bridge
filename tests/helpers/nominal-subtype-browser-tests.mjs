@@ -25,6 +25,8 @@ import "./nominal-subtype-browser-evidence-tests.mjs";
 import "./nominal-subtype-browser-ci-tests.mjs";
 import "./nominal-subtype-browser-ci-shell-tests.mjs";
 import "./nominal-subtype-browser-ci-workflow-tests.mjs";
+import "./nominal-subtype-browser-promotion-tests.mjs";
+import "./nominal-subtype-browser-promotion-history-tests.mjs";
 
 test("nominal browser selection requires installed npm acceptance and all three engines", () => {
 	const environment = { LEAN_BRIDGE_NOMINAL_SUBTYPE_NPM_TEST: "1"
