@@ -1,0 +1,105 @@
+{
+  "config": {
+    "allow-plugins": false,
+    "platform": {
+      "php": "8.4.1"
+    }
+  },
+  "name": "lean-bridge-corpus/php-wasm-consumer",
+  "repositories": [
+    {
+      "packagist.org": false
+    },
+    {
+      "package": {
+        "autoload": {
+          "psr-4": {
+            "Brick\\Math\\": "src/"
+          }
+        },
+        "autoload-dev": {
+          "psr-4": {
+            "Brick\\Math\\Tests\\": "tests/"
+          }
+        },
+        "description": "Arbitrary-precision arithmetic library",
+        "dist": {
+          "shasum": "e20e8331979e666b341940339c75f2fb0e9244ea",
+          "type": "zip",
+          "url": "file:///tmp/lean-bridge-nominal-php-wasm-installed-uC5kp3/consumer/project/feed/brick-math-1.0.0.zip"
+        },
+        "keywords": [
+          "Brick",
+          "Math",
+          "Mathematics",
+          "Arbitrary-precision",
+          "Arithmetic",
+          "BigInteger",
+          "BigDecimal",
+          "BigRational",
+          "BigNumber",
+          "Bignum",
+          "Decimal",
+          "Rational",
+          "Integer"
+        ],
+        "license": "MIT",
+        "name": "brick/math",
+        "require": {
+          "php": "^8.2"
+        },
+        "require-dev": {
+          "phpstan/phpstan": "2.2.13",
+          "phpstan/phpstan-phpunit": "2.0.18",
+          "phpunit/phpunit": "^11.5"
+        },
+        "type": "library",
+        "version": "1.0.0"
+      },
+      "type": "package"
+    },
+    {
+      "package": {
+        "autoload": {
+          "files": [
+            "src/Api.php"
+          ]
+        },
+        "description": "Compiled Lean copied API for PHP-Wasm: nominalsubtypes",
+        "dist": {
+          "shasum": "2a60451ed5a44a9ccc3027911c9bb9dff1f5d447",
+          "type": "zip",
+          "url": "file:///tmp/lean-bridge-nominal-php-wasm-installed-uC5kp3/consumer/project/feed/api.zip"
+        },
+        "extra": {
+          "lean-bridge": {
+            "component": {
+              "id": "nominalsubtypes@1.0.0",
+              "name": "nominalsubtypes",
+              "version": "1.0.0"
+            },
+            "componentIdentity": "970491072f6b9713c24dccfd95d9bc23217375b1f1a01eb47804103aee22fba1",
+            "namespace": "LeanNominalsubtypes",
+            "npm": {
+              "name": "lean-bridge-nominalsubtypes-wasm",
+              "version": "1.0.0"
+            },
+            "profile": "php-wasm-copied-loading-v1",
+            "runtimeIdentity": "44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966"
+          }
+        },
+        "name": "lean-bridge-nominalsubtypes/wasm",
+        "require": {
+          "brick/math": "1.0.0",
+          "php": ">=8.4 <8.5"
+        },
+        "type": "library",
+        "version": "1.0.0"
+      },
+      "type": "package"
+    }
+  ],
+  "require": {
+    "lean-bridge-nominalsubtypes/wasm": "1.0.0"
+  }
+}

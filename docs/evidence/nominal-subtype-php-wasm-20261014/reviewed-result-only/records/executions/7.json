@@ -1,0 +1,35 @@
+{
+  "arrangement": "composer",
+  "loading": "lazy",
+  "mode": "strict",
+  "observation": {
+    "checks": 2112,
+    "hostRejections": 12,
+    "php": "8.4.1",
+    "rejections": 0,
+    "snapshotControls": 8,
+    "word_bits": 32
+  },
+  "phases": [
+    {
+      "libraries": [],
+      "stage": "ready"
+    },
+    {
+      "libraries": [],
+      "stage": "autoload"
+    },
+    {
+      "libraries": [],
+      "stage": "invalid"
+    },
+    {
+      "libraries": [
+        "php8.4-lb_nominalsubtypes_9e3324309557c1fe.so",
+        "liblean_bridge_php_wasm_copied_abe4dea500dab9519b8d.so"
+      ],
+      "stage": "complete"
+    }
+  ],
+  "realm": "node"
+}

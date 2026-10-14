@@ -1,0 +1,35 @@
+{
+  "arrangement": "embedded",
+  "loading": "lazy",
+  "mode": "weak",
+  "observation": {
+    "checks": 4254,
+    "hostRejections": 20,
+    "php": "8.4.1",
+    "rejections": 1032,
+    "snapshotControls": 8,
+    "word_bits": 32
+  },
+  "phases": [
+    {
+      "libraries": [],
+      "stage": "ready"
+    },
+    {
+      "libraries": [],
+      "stage": "autoload"
+    },
+    {
+      "libraries": [],
+      "stage": "invalid"
+    },
+    {
+      "libraries": [
+        "php8.4-lb_nominalsubtypes_ab7677dddff001fc.so",
+        "liblean_bridge_php_wasm_copied_abe4dea500dab9519b8d.so"
+      ],
+      "stage": "complete"
+    }
+  ],
+  "realm": "node"
+}

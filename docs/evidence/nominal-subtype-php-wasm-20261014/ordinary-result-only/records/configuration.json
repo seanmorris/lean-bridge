@@ -1,0 +1,33 @@
+{
+  "exports": [
+    "NominalSubtypes.scalar",
+    "NominalSubtypes.produceEnvelope",
+    "NominalSubtypes.arrayValues",
+    "NominalSubtypes.listValues",
+    "NominalSubtypes.optional",
+    "NominalSubtypes.product",
+    "NominalSubtypes.branch",
+    "NominalSubtypes.groupValues",
+    "NominalSubtypes.pairValues",
+    "NominalSubtypes.eventValue",
+    "NominalSubtypes.eventEmpty",
+    "NominalSubtypes.eventChoices",
+    "NominalSubtypes.noItems"
+  ],
+  "modules": [
+    "NominalSubtypes"
+  ],
+  "schemaVersion": 1,
+  "targets": {
+    "php-wasm": {
+      "composer": {
+        "name": "lean-bridge-nominalsubtypes/wasm",
+        "version": "1.0.0"
+      },
+      "npm": {
+        "name": "lean-bridge-nominalsubtypes-wasm",
+        "version": "1.0.0"
+      }
+    }
+  }
+}
