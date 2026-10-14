@@ -17,6 +17,7 @@ import { nominalFinConversionFixture, nominalSubtypeConversionFixture } from "./
 import "./helpers/component-refinement-mirrors-source-tests.mjs";
 import "./helpers/component-nominal-subtype-tests.mjs";
 import "./helpers/component-nominal-subtype-history-tests.mjs";
+import "./helpers/nominal-primitive-subtype-tests.mjs";
 
 const render = type => {
 	assert.equal(type.kind, "primitive"); assert.equal(type.name, "nat");

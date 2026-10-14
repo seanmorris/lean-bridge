@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nominal-primitive-subtype-registration-source-v1",
+  "predecessorCommit": "27c0dbaa80da659cc96fb254219c889cfc2998e7",
+  "updates": [
+    {
+      "path": "tests/component-refinement-mirrors.test.mjs",
+      "currentSha256": "2b982f8184f72431244c98018f675ece03b96996c14c462be617223013559452",
+      "previousSha256": "2bfae8fdf5d2593c8c6814506b9954679af9690075696690edcac56fa209f35e",
+      "edits": [
+        {
+          "start": 1197,
+          "previous": "",
+          "current": "import \"./helpers/nominal-primitive-subtype-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "b9b30ddda6f181e19e19bff9e1c72dcb8be43d07a5a408822ca134289276d1fa",
+      "previousSha256": "0299381db7aeebeb3330b166a9dcbe3d69bae2202697ff928c7597eae1fdd471",
+      "edits": [
+        {
+          "start": 6997,
+          "previous": "",
+          "current": "import { nominalPrimitiveSubtypeRegistrationChangedPaths } from \"./nominal-primitive-subtype-registration-history.mjs\";\n"
+        },
+        {
+          "start": 69420,
+          "previous": "",
+          "current": "\t, ...nominalPrimitiveSubtypeRegistrationChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-php-wasm-promotion-history.mjs",
+      "currentSha256": "574da3725e8c5a91c9695ae963682bc5b8e33f21d1732be6f02780d08a06437f",
+      "previousSha256": "e85d91f8dd7c7982b04559ec0de08c2f7f4c21a19b6432c37a2b2ee232acea67",
+      "edits": [
+        {
+          "start": 233,
+          "previous": "",
+          "current": "import { beforeNominalPrimitiveSubtypeRegistrationSource } from \"./nominal-primitive-subtype-registration-history.mjs\";\n"
+        },
+        {
+          "start": 3159,
+          "previous": "",
+          "current": "\tsource = beforeNominalPrimitiveSubtypeRegistrationSource(path, source, expected);\n"
+        }
+      ]
+    }
+  ]
+}
