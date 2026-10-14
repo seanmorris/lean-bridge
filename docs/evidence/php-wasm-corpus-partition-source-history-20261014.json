@@ -1,0 +1,885 @@
+{
+  "schemaVersion": 1,
+  "milestone": "php-wasm-corpus-partition-source-v1",
+  "predecessorCommit": "844ae6889866aad54f5a30e9f7b632101af4ac56",
+  "updates": [
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "currentSha256": "e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d",
+      "previousSha256": "68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0",
+      "edits": [
+        {
+          "start": 123385,
+          "previous": "    # The shared PHP-Wasm corpus is the growing tail; 330 minutes leaves room below the hosted six-hour limit.\n    timeout-minutes: 330\n",
+          "current": "    # Transport and ownership ran in 115 minutes in run 38474413393; corpus lanes run independently.\n    timeout-minutes: 240\n"
+        },
+        {
+          "start": 130563,
+          "previous": "      - name: Compare installed PHP-Wasm packages with the shared Lean corpus\n",
+          "current": "      - name: Upload ordinary PHP-Wasm regression evidence\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: php-wasm-shared-regressions-${{ github.sha }}\n          path: |\n            build/recursive/php-wasm-shared-regressions.json\n          if-no-files-found: error\n          retention-days: 30\n      - name: Upload PHP-Wasm performance for combined observations\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: php-wasm-performance-${{ github.sha }}\n          path: build/consumer-ci/performance/php-wasm.json\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce PHP support\n        if: always() && (steps.consumer.outcome != 'success' || steps.copied_zend.outcome != 'success' || steps.ordinary_php_wasm.outcome != 'success' || steps.owned_php_wasm.outcome != 'success')\n        run: exit 1\n\n  php-wasm-corpus:\n    name: PHP-Wasm corpus (${{ matrix.profile }})\n    runs-on: ubuntu-24.04\n    # The former 330-minute job timed out while compiling its last suite, after all earlier suites passed.\n    timeout-minutes: 240\n    strategy:\n      fail-fast: false\n      matrix:\n        profile: [values, refinements]\n    steps:\n      - name: Check out the exact revision\n        uses: actions/checkout@v6\n        with:\n          fetch-depth: 0\n          persist-credentials: false\n      - name: Install Node.js\n        uses: actions/setup-node@v6\n        with:\n          node-version: ${{ env.NODE_VERSION }}\n          cache: npm\n      - name: Install Nix\n        uses: cachix/install-nix-action@v31\n      - name: Restore pinned PHP and compiler inputs\n        uses: actions/cache@v5\n        with:\n          path: |\n            .toolchains\n            build/php-wasm-sdk\n            build/php-wasm-host\n          key: consumer-php-${{ runner.os }}-${{ hashFiles('flake.lock', 'lean-toolchain', 'scripts/bootstrap-toolchains.sh', 'scripts/bootstrap-php-wasm-ci.sh', 'poc/lean-link-spike/bindings/php-wasm.package.json') }}\n      - name: Install dependencies without lifecycle scripts\n        run: npm ci --ignore-scripts\n      - name: Bound apt network waits\n        uses: ./.github/actions/bounded-apt\n        timeout-minutes: 1\n      - name: Install apt dependencies for Install native PHP and PHP-Wasm host build tools\n        timeout-minutes: 20\n        run: |\n          sudo apt-get update\n          sudo apt-get install -y build-essential autoconf automake bison flex gperf libtool re2c cmake pkg-config php-cli php-dev php-common php-zip php-mbstring composer zstd ripgrep\n      - name: Install native PHP and PHP-Wasm host build tools\n        run: |\n          bash scripts/bootstrap-php-wasm-ci.sh --check-prerequisites\n      - name: Disable host PHP debugging instrumentation\n        run: |\n          if /usr/bin/php -r 'exit(extension_loaded(\"xdebug\") ? 0 : 1);'; then\n            sudo phpdismod -s cli xdebug\n          fi\n          env -i PATH=/usr/bin:/bin /usr/bin/php -r 'if (extension_loaded(\"xdebug\")) { fwrite(STDERR, \"Consumer PHP must run without Xdebug.\\n\"); exit(1); }'\n      - name: Install Chromium for installed corpus checks\n        timeout-minutes: 20\n        run: npx playwright install --with-deps chromium\n      - name: Build the pinned PHP-Wasm runtime and host\n        timeout-minutes: 100\n        env:\n          LEAN_WASM_RUNTIME_PROFILE: browser\n          LEAN_WASM_RUNTIME_VARIANT: php-wasm-3.1.68\n          LEAN_WASM_ARTIFACT_TARGET: php-wasm-emscripten-3.1.68\n        run: |\n          set -euo pipefail\n          mkdir -p build\n          bash scripts/bootstrap-php-wasm-ci.sh 2>&1 | tee build/php-wasm-corpus-host.log\n          bash scripts/bootstrap-toolchains.sh\n          export LEAN_WASM_EMSDK=\"$GITHUB_WORKSPACE/.toolchains/emsdk-php-wasm\"\n          bash scripts/build-lean-runtime.sh 2>&1 | tee build/php-wasm-corpus-runtime.log\n      - name: Compare installed PHP-Wasm value packages with the shared Lean corpus\n"
+        },
+        {
+          "start": 134591,
+          "previous": "",
+          "current": "        if: matrix.profile == 'values'\n"
+        },
+        {
+          "start": 134677,
+          "previous": "",
+          "current": "          set -euo pipefail\n"
+        },
+        {
+          "start": 138489,
+          "previous": "",
+          "current": "          test -s build/type-corpus/php-wasm.json\n          test -s build/type-corpus/reviewed-wasm-php-wasm.json\n      - name: Compare installed PHP-Wasm refinements with the shared Lean corpus\n        id: refinements_php_wasm\n        if: matrix.profile == 'refinements'\n        continue-on-error: true\n        run: |\n          set -euo pipefail\n          source scripts/env.sh\n"
+        },
+        {
+          "start": 141080,
+          "previous": "          test -s build/type-corpus/php-wasm.json\n          test -s build/type-corpus/reviewed-wasm-php-wasm.json\n      - name: Upload PHP-Wasm corpus evidence\n        if: always()\n",
+          "current": "      - name: Upload PHP-Wasm value corpus evidence\n        if: always() && matrix.profile == 'values'\n"
+        },
+        {
+          "start": 141238,
+          "previous": "          name: type-corpus-php-wasm-${{ github.sha }}\n",
+          "current": "          name: type-corpus-php-wasm-values-${{ github.sha }}\n"
+        },
+        {
+          "start": 141690,
+          "previous": "            build/recursive/php-wasm-shared-regressions.json\n",
+          "current": ""
+        },
+        {
+          "start": 142768,
+          "previous": "",
+          "current": "          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Upload PHP-Wasm refinement corpus evidence\n        if: always() && matrix.profile == 'refinements'\n        uses: actions/upload-artifact@v7\n        with:\n          name: type-corpus-php-wasm-refinements-${{ github.sha }}\n          path: |\n"
+        },
+        {
+          "start": 143686,
+          "previous": "        if: always()\n",
+          "current": "        if: always() && matrix.profile == 'values'\n"
+        },
+        {
+          "start": 144024,
+          "previous": "",
+          "current": "      - name: Preserve corpus bootstrap diagnostics\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: php-wasm-corpus-bootstrap-${{ matrix.profile }}-${{ github.sha }}\n          path: |\n            build/php-wasm-corpus-host.log\n            build/php-wasm-corpus-runtime.log\n          if-no-files-found: error\n          retention-days: 30\n      - name: Enforce PHP-Wasm corpus\n        if: always() && ((matrix.profile == 'values' && steps.type_corpus_php_wasm.outcome != 'success') || (matrix.profile == 'refinements' && steps.refinements_php_wasm.outcome != 'success'))\n        run: exit 1\n\n  php-wasm-observations:\n    name: Combine PHP-Wasm acceptance observations\n    if: always()\n    needs: [php-wasm-consumers, php-wasm-corpus]\n    runs-on: ubuntu-24.04\n    timeout-minutes: 15\n    steps:\n      - name: Check out the support reporter\n        uses: actions/checkout@v6\n        with:\n          persist-credentials: false\n      - name: Install Node.js\n        uses: actions/setup-node@v6\n        with:\n          node-version: ${{ env.NODE_VERSION }}\n      - name: Download PHP-Wasm transport performance\n        id: performance\n        uses: actions/download-artifact@v5\n        with:\n          name: php-wasm-performance-${{ github.sha }}\n          path: build/consumer-ci/performance\n"
+        },
+        {
+          "start": 145449,
+          "previous": "          test_result=\"${{ steps.consumer.outcome == 'success' && 'passed' || 'failed' }}\"\n          executed=\"${{ steps.consumer.outcome == 'success' && 'true' || 'false' }}\"\n          wasm_result=\"$test_result\"\n          wasm_executed=\"$executed\"\n          if [ \"${{ steps.ordinary_php_wasm.outcome }}\" != success ] || [ \"${{ steps.copied_zend.outcome }}\" != success ] || [ \"${{ steps.owned_php_wasm.outcome }}\" != success ] || [ \"${{ steps.type_corpus_php_wasm.outcome }}\" != success ]; then\n            wasm_result=failed\n            wasm_executed=false\n",
+          "current": "          wasm_result=failed\n          wasm_executed=false\n          if [ \"${{ needs.php-wasm-consumers.result }}\" = success ] && [ \"${{ needs.php-wasm-corpus.result }}\" = success ] && [ \"${{ steps.performance.outcome }}\" = success ]; then\n            wasm_result=passed\n            wasm_executed=true\n"
+        },
+        {
+          "start": 150804,
+          "previous": "      - name: Enforce PHP support\n        if: steps.consumer.outcome != 'success' || steps.copied_zend.outcome != 'success' || steps.ordinary_php_wasm.outcome != 'success' || steps.type_corpus_php_wasm.outcome != 'success' || steps.owned_php_wasm.outcome != 'success'\n",
+          "current": "      - name: Enforce combined PHP-Wasm acceptance\n        if: always() && (needs.php-wasm-consumers.result != 'success' || needs.php-wasm-corpus.result != 'success' || steps.performance.outcome != 'success')\n"
+        },
+        {
+          "start": 340271,
+          "previous": "",
+          "current": "      - php-wasm-corpus\n      - php-wasm-observations\n"
+        },
+        {
+          "start": 344332,
+          "previous": "",
+          "current": "      - name: Enforce PHP-Wasm corpus and combined observations\n        if: always() && (needs.php-wasm-corpus.result != 'success' || needs.php-wasm-observations.result != 'success')\n        run: exit 1\n"
+        }
+      ]
+    },
+    {
+      "path": ".github/workflows/nominal-subtype-php-wasm.yml",
+      "currentSha256": "36feee2621acfb6f5efa1fd122d649f8f90c045149d58cf80ca04f73ce6ab9bf",
+      "previousSha256": "3e31fa60d6e6d0e1022b7f848f042bebdb211aa23ef698d9a4988c0e624d297d",
+      "edits": [
+        {
+          "start": 334,
+          "previous": "    # Keep the four routes outside the existing 330-minute PHP-Wasm corpus job.\n",
+          "current": "    # Keep the four nominal routes separate from the value and refinement corpus lanes.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "ee78b171347c86ae9c4c16dc74672b5154824c2ea820d9542841b314afe3465f",
+      "previousSha256": "804ff9bbed65f03fcac98be9f4eb6609707828ebe7fa960ba34d12c717e657e7",
+      "edits": [
+        {
+          "start": 77859,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 95054,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 111355,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 126123,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 135405,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 145030,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 168414,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 181383,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 196278,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 209062,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 222282,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 230815,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 239245,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 248262,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 256636,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 275916,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 285755,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 297890,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 316488,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 325784,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 338467,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 347722,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 357005,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 366138,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 374997,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 382384,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 390308,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 400954,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 415060,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 422158,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 432387,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 440131,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 446505,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 452668,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 458765,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 465286,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 472952,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 482246,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 493468,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 503165,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 524300,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 532865,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 543873,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 575758,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 582387,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 592646,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 613519,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 622042,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 632992,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 664510,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 673729,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 681069,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 693352,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 700212,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 709240,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 723266,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 734308,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 748356,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 759102,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 771173,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 782461,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 791044,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 797502,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 805888,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 813696,
+          "previous": "          \"sha256\": \"b6f70519bc1d4d7b5969dea43fbe1969225211c4c227e09beb6671bb477cb2a0\"\n",
+          "current": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n"
+        },
+        {
+          "start": 823478,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 832071,
+          "previous": "          \"sha256\": \"b6f70519bc1d4d7b5969dea43fbe1969225211c4c227e09beb6671bb477cb2a0\"\n",
+          "current": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n"
+        },
+        {
+          "start": 844474,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 899815,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 1011877,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 1058278,
+          "previous": "          \"sha256\": \"b6f70519bc1d4d7b5969dea43fbe1969225211c4c227e09beb6671bb477cb2a0\"\n",
+          "current": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n"
+        },
+        {
+          "start": 1072118,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 1075395,
+          "previous": "          \"sha256\": \"b6f70519bc1d4d7b5969dea43fbe1969225211c4c227e09beb6671bb477cb2a0\"\n",
+          "current": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n"
+        },
+        {
+          "start": 1079512,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 1083169,
+          "previous": "          \"sha256\": \"b6f70519bc1d4d7b5969dea43fbe1969225211c4c227e09beb6671bb477cb2a0\"\n",
+          "current": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n"
+        },
+        {
+          "start": 1086110,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 1088601,
+          "previous": "          \"sha256\": \"b6f70519bc1d4d7b5969dea43fbe1969225211c4c227e09beb6671bb477cb2a0\"\n",
+          "current": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n"
+        },
+        {
+          "start": 1093212,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 1095702,
+          "previous": "          \"sha256\": \"b6f70519bc1d4d7b5969dea43fbe1969225211c4c227e09beb6671bb477cb2a0\"\n",
+          "current": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n"
+        },
+        {
+          "start": 1100712,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 1102868,
+          "previous": "          \"sha256\": \"b6f70519bc1d4d7b5969dea43fbe1969225211c4c227e09beb6671bb477cb2a0\"\n",
+          "current": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n"
+        },
+        {
+          "start": 1107762,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 1109925,
+          "previous": "          \"sha256\": \"b6f70519bc1d4d7b5969dea43fbe1969225211c4c227e09beb6671bb477cb2a0\"\n",
+          "current": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n"
+        },
+        {
+          "start": 1115372,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 1118177,
+          "previous": "          \"sha256\": \"b6f70519bc1d4d7b5969dea43fbe1969225211c4c227e09beb6671bb477cb2a0\"\n",
+          "current": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n"
+        },
+        {
+          "start": 1127640,
+          "previous": "          \"sha256\": \"b6f70519bc1d4d7b5969dea43fbe1969225211c4c227e09beb6671bb477cb2a0\"\n",
+          "current": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n"
+        },
+        {
+          "start": 1137346,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 1144651,
+          "previous": "          \"sha256\": \"b6f70519bc1d4d7b5969dea43fbe1969225211c4c227e09beb6671bb477cb2a0\"\n",
+          "current": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n"
+        },
+        {
+          "start": 1149233,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 1151726,
+          "previous": "          \"sha256\": \"b6f70519bc1d4d7b5969dea43fbe1969225211c4c227e09beb6671bb477cb2a0\"\n",
+          "current": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n"
+        },
+        {
+          "start": 1157104,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 1159623,
+          "previous": "          \"sha256\": \"b6f70519bc1d4d7b5969dea43fbe1969225211c4c227e09beb6671bb477cb2a0\"\n",
+          "current": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n"
+        },
+        {
+          "start": 1167069,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 1170503,
+          "previous": "          \"sha256\": \"b6f70519bc1d4d7b5969dea43fbe1969225211c4c227e09beb6671bb477cb2a0\"\n",
+          "current": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n"
+        },
+        {
+          "start": 1177183,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 1182665,
+          "previous": "          \"sha256\": \"b6f70519bc1d4d7b5969dea43fbe1969225211c4c227e09beb6671bb477cb2a0\"\n",
+          "current": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n"
+        },
+        {
+          "start": 1188944,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 1206191,
+          "previous": "          \"sha256\": \"b6f70519bc1d4d7b5969dea43fbe1969225211c4c227e09beb6671bb477cb2a0\"\n",
+          "current": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n"
+        },
+        {
+          "start": 1221505,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 1237546,
+          "previous": "          \"sha256\": \"b6f70519bc1d4d7b5969dea43fbe1969225211c4c227e09beb6671bb477cb2a0\"\n",
+          "current": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n"
+        },
+        {
+          "start": 1251784,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 1270346,
+          "previous": "          \"sha256\": \"b6f70519bc1d4d7b5969dea43fbe1969225211c4c227e09beb6671bb477cb2a0\"\n",
+          "current": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n"
+        },
+        {
+          "start": 1284770,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 1305446,
+          "previous": "          \"sha256\": \"b6f70519bc1d4d7b5969dea43fbe1969225211c4c227e09beb6671bb477cb2a0\"\n",
+          "current": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n"
+        },
+        {
+          "start": 1324571,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 1336292,
+          "previous": "          \"sha256\": \"b6f70519bc1d4d7b5969dea43fbe1969225211c4c227e09beb6671bb477cb2a0\"\n",
+          "current": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n"
+        },
+        {
+          "start": 1351147,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 1359589,
+          "previous": "          \"sha256\": \"b6f70519bc1d4d7b5969dea43fbe1969225211c4c227e09beb6671bb477cb2a0\"\n",
+          "current": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n"
+        },
+        {
+          "start": 1373684,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 1381480,
+          "previous": "          \"sha256\": \"b6f70519bc1d4d7b5969dea43fbe1969225211c4c227e09beb6671bb477cb2a0\"\n",
+          "current": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n"
+        },
+        {
+          "start": 1393351,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 1401553,
+          "previous": "          \"sha256\": \"b6f70519bc1d4d7b5969dea43fbe1969225211c4c227e09beb6671bb477cb2a0\"\n",
+          "current": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n"
+        },
+        {
+          "start": 1416739,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 1421333,
+          "previous": "          \"sha256\": \"b6f70519bc1d4d7b5969dea43fbe1969225211c4c227e09beb6671bb477cb2a0\"\n",
+          "current": "          \"sha256\": \"a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5\"\n"
+        },
+        {
+          "start": 1428367,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 1451513,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        },
+        {
+          "start": 1951650,
+          "previous": "          \"sha256\": \"68a04ca7205ecd75f60a64beace9316cf721e89ef8f7e06c2db37566ae1291e0\"\n",
+          "current": "          \"sha256\": \"e4ce3dc6fb32d4f5a74add5141215f770527f1342210060b19ec6f93816ad98d\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/documentation.test.mjs",
+      "currentSha256": "a5203cebe7a6a99df06ba9e274131afd94b76d6c11af5b4467e7ca0387d58ef5",
+      "previousSha256": "b6f70519bc1d4d7b5969dea43fbe1969225211c4c227e09beb6671bb477cb2a0",
+      "edits": [
+        {
+          "start": 1544,
+          "previous": "",
+          "current": "import { beforePhpWasmCorpusPartitionSource } from \"./helpers/php-wasm-corpus-partition-history.mjs\";\nimport { assertPhpWasmCorpusPartition } from \"./helpers/php-wasm-corpus-partition.mjs\";\n"
+        },
+        {
+          "start": 35302,
+          "previous": "",
+          "current": "  const beforePhpPartition = beforePhpWasmCorpusPartitionSource(\".github/workflows/consumer-matrix.yml\", liveWorkflow);\n  assertPhpWasmCorpusPartition(beforePhpPartition, liveWorkflow);\n"
+        },
+        {
+          "start": 35883,
+          "previous": "  assertNativeConsumerPartition(structuralWorkflow, disableNominalSubtypeJvmWorkflow(disableNominalSubtypePhpWorkflow(disableNominalSubtypeWitWorkflow(liveWorkflow))));\n",
+          "current": "  assertNativeConsumerPartition(structuralWorkflow, disableNominalSubtypeJvmWorkflow(disableNominalSubtypePhpWorkflow(disableNominalSubtypeWitWorkflow(beforePhpPartition))));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/owned-php-wasm-ci.test.mjs",
+      "currentSha256": "6efb37a8fa9eaecb563bcd3c265c6cc7d3c1184c60811dbb82959541a8c7b532",
+      "previousSha256": "f6373761661db335c2d73cae5b6e3f3013b54c31b904cf51c29259d7a1409442",
+      "edits": [
+        {
+          "start": 433,
+          "previous": "",
+          "current": "import \"./helpers/php-wasm-corpus-partition-tests.mjs\";\nimport \"./helpers/php-wasm-corpus-partition-history-tests.mjs\";\nimport { beforePhpWasmCorpusPartitionSource } from \"./helpers/php-wasm-corpus-partition-history.mjs\";\n"
+        },
+        {
+          "start": 1113,
+          "previous": "\tconst source = await readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\");\n",
+          "current": "\tconst path = \".github/workflows/consumer-matrix.yml\", source = beforePhpWasmCorpusPartitionSource(path, await readFile(path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-php-wasm-ci.mjs",
+      "currentSha256": "6ed2b61ed28ddb6101d8dccf9e88bcdb449bd0038d4db30565298f3eea894f7a",
+      "previousSha256": "2ef178464ef9a4d2c98c19174453a91bf31e5abdd6a374c2da2d881c6fc9eb4e",
+      "edits": [
+        {
+          "start": 141,
+          "previous": "",
+          "current": "import { beforePhpWasmCorpusPartitionSource } from \"./php-wasm-corpus-partition-history.mjs\";\n"
+        },
+        {
+          "start": 1577,
+          "previous": "",
+          "current": "\t// The partition has independent current-source gates; retain this exact historical ownership contract.\n\tworkflow = beforePhpWasmCorpusPartitionSource(\".github/workflows/consumer-matrix.yml\", workflow);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-wasm32-evidence.mjs",
+      "currentSha256": "0ed114256870901bc4dcb51f38cd33b75c34919abd9df08ff45c4f4105d07c19",
+      "previousSha256": "9ecc826c4b9d572360fc954cfde900213fa49359d25dcd8f692fbca2535ef104",
+      "edits": [
+        {
+          "start": 141,
+          "previous": "",
+          "current": "import { beforePhpWasmCorpusPartitionSource } from \"./php-wasm-corpus-partition-history.mjs\";\n"
+        },
+        {
+          "start": 2052,
+          "previous": "",
+          "current": "\tworkflow = beforePhpWasmCorpusPartitionSource(\".github/workflows/consumer-matrix.yml\", workflow);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-transfer-c-evidence.mjs",
+      "currentSha256": "2bacfe58e4fd57f450b923309ba716c5ba9c12dc6d0f7a91833672057b4bac5a",
+      "previousSha256": "e7b5c238cbc57bacab82a9066a5d0bcfc4c5e30da4f8f27a3a6618aa230c0a76",
+      "edits": [
+        {
+          "start": 139,
+          "previous": "",
+          "current": "import { beforePhpWasmCorpusPartitionSource } from \"./php-wasm-corpus-partition-history.mjs\";\n"
+        },
+        {
+          "start": 4668,
+          "previous": "",
+          "current": "\tsource = beforePhpWasmCorpusPartitionSource(\".github/workflows/consumer-matrix.yml\", source);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/php-wasm-fin.test.mjs",
+      "currentSha256": "f92a167167a42e1062e9dd380403701e0a69e332e7e47353b7d55976aeb546a5",
+      "previousSha256": "cc85a12830c619674b269d31402dfee516756ffc6bac61242a13f1543205c07d",
+      "edits": [
+        {
+          "start": 2961,
+          "previous": "",
+          "current": "import { beforePhpWasmCorpusPartitionSource } from \"./helpers/php-wasm-corpus-partition-history.mjs\";\n"
+        },
+        {
+          "start": 19970,
+          "previous": "\tconst workflow = await readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\");\n",
+          "current": "\tconst path = \".github/workflows/consumer-matrix.yml\", workflow = beforePhpWasmCorpusPartitionSource(path, await readFile(path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-wasm-subtype-entry-ci-tests.mjs",
+      "currentSha256": "3ee8bbbf946fd58f8186f1f86a7edad5b2225ed380989c1257e9d19e0c750e8f",
+      "previousSha256": "e7f22318c027c6cd5bf232ee3152109c0f8c50e53177b03f23f0171eb36c1126",
+      "edits": [
+        {
+          "start": 1090,
+          "previous": "",
+          "current": "import { beforePhpWasmCorpusPartitionSource } from \"./php-wasm-corpus-partition-history.mjs\";\n"
+        },
+        {
+          "start": 2412,
+          "previous": "\tconst current = await readFile(workflowPath, \"utf8\");\n",
+          "current": "\tconst current = beforePhpWasmCorpusPartitionSource(workflowPath, await readFile(workflowPath, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/structural-subtype-ci-workflow.mjs",
+      "currentSha256": "040c7af63bc045546b343769bf6fb989108a0405f46f24c44407142e574e9c21",
+      "previousSha256": "7d4d54bd9da6b2c513413937dc8b1f001b494fd28dea884658ed44738be5cea3",
+      "edits": [
+        {
+          "start": 158,
+          "previous": "",
+          "current": "import { beforePhpWasmCorpusPartitionSource } from \"./php-wasm-corpus-partition-history.mjs\";\n"
+        },
+        {
+          "start": 9725,
+          "previous": "",
+          "current": "\tsource = beforePhpWasmCorpusPartitionSource(`.github/workflows/${name}`, source);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "71806e3a9199614d1126afcfff3055c6b4e32cce96b3aa4d1d18094c0b93e14b",
+      "previousSha256": "b9b30ddda6f181e19e19bff9e1c72dcb8be43d07a5a408822ca134289276d1fa",
+      "edits": [
+        {
+          "start": 7117,
+          "previous": "",
+          "current": "import { phpWasmCorpusPartitionChangedPaths } from \"./php-wasm-corpus-partition-history.mjs\";\n"
+        },
+        {
+          "start": 69568,
+          "previous": "",
+          "current": "\t, ...phpWasmCorpusPartitionChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-registration-history.mjs",
+      "currentSha256": "72f525479dad6f790648334ba06cfce6068f7b757dd795ed4ec79a9469f64a8d",
+      "previousSha256": "682cb229f5c3cc35b856cefeac54516011559b231c1f47385a2f65622910110e",
+      "edits": [
+        {
+          "start": 252,
+          "previous": "",
+          "current": "import { beforePhpWasmCorpusPartitionSource } from \"./php-wasm-corpus-partition-history.mjs\";\n"
+        },
+        {
+          "start": 2354,
+          "previous": "",
+          "current": "\tsource = beforePhpWasmCorpusPartitionSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-php-wasm-promotion-history.mjs",
+      "currentSha256": "8885c39accec54c859292d44a3e3d15185db6ca093526c0e04cba143344b880a",
+      "previousSha256": "574da3725e8c5a91c9695ae963682bc5b8e33f21d1732be6f02780d08a06437f",
+      "edits": [
+        {
+          "start": 353,
+          "previous": "",
+          "current": "import { beforePhpWasmCorpusPartitionPins } from \"./php-wasm-corpus-partition-history.mjs\";\n"
+        },
+        {
+          "start": 4050,
+          "previous": "\tconst previous = structuredClone(inventory);\n",
+          "current": "\tconst previous = beforePhpWasmCorpusPartitionPins(inventory);\n"
+        }
+      ]
+    }
+  ]
+}

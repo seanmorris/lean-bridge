@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeNominalPrimitiveSubtypeRegistrationSource } from "./nominal-primitive-subtype-registration-history.mjs";
+import { beforePhpWasmCorpusPartitionPins } from "./php-wasm-corpus-partition-history.mjs";
 
 export const nominalSubtypePhpWasmPromotionHistoryPath = "docs/evidence/nominal-subtype-php-wasm-promotion-source-history-20261014.json";
 export const nominalSubtypePhpWasmPromotionPredecessor = "08a9034d239cb9e753dde04dd53d712207811f3a";
@@ -81,7 +82,7 @@ export const beforeNominalSubtypePhpWasmPromotionSource = (path, source, expecte
  * @param inventory - Historical inventory recomputed with current validator hashes.
  */
 export const beforeNominalSubtypePhpWasmPromotionPins = inventory => {
-	const previous = structuredClone(inventory);
+	const previous = beforePhpWasmCorpusPartitionPins(inventory);
 	const record = history ??= JSON.parse(readFileSync(nominalSubtypePhpWasmPromotionHistoryPath, "utf8"));
 	for(const entry of previous.evidence) for(const file of entry.files)
 	{

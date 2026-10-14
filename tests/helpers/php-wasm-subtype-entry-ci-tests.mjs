@@ -14,6 +14,7 @@ import { assertPhpWasmSubtypeEntryTap, phpWasmSubtypeEntryTestPattern } from "./
 import { assertPhpWasmSubtypeWorkflow } from "./php-wasm-subtype-ci.mjs";
 import { beforePhpWasmEntryCiSource } from "./php-wasm-entry-ci-history.mjs";
 import { beforeReviewedSubtypeHostCiSource } from "./reviewed-subtype-host-ci-history.mjs";
+import { beforePhpWasmCorpusPartitionSource } from "./php-wasm-corpus-partition-history.mjs";
 
 const workflowPath = ".github/workflows/consumer-matrix.yml";
 const originalTap = () => readFile("docs/evidence/php-wasm-subtype-entry-installed-20261010/run/tap", "utf8");
@@ -31,7 +32,7 @@ test("installed PHP-Wasm entry CI preserves the prior workflow and enforces both
 });
 
 test("installed PHP-Wasm entry CI refuses changed gates, discarded originals and suppressed failures", async () => {
-	const current = await readFile(workflowPath, "utf8");
+	const current = beforePhpWasmCorpusPartitionSource(workflowPath, await readFile(workflowPath, "utf8"));
 	for(const changed of [
 		current.replace(phpWasmEntryCiBlock, "")
 		, current.replace(`          ${phpWasmEntryCiPrepare}\n`, "")

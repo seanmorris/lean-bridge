@@ -9,6 +9,9 @@ import test from "node:test";
 import { assertOwnedPhpWasmCi, ownedPhpWasmCiCommands, ownedPhpWasmCiReports } from "./helpers/owned-php-wasm-ci.mjs";
 import "./helpers/php-shard-ci-tests.mjs";
 import "./helpers/php-shard-source-history-tests.mjs";
+import "./helpers/php-wasm-corpus-partition-tests.mjs";
+import "./helpers/php-wasm-corpus-partition-history-tests.mjs";
+import { beforePhpWasmCorpusPartitionSource } from "./helpers/php-wasm-corpus-partition-history.mjs";
 
 test("owned PHP-Wasm CI requires all layers, installed releases and exact documentation execution", async () => {
 	assert.deepEqual(assertOwnedPhpWasmCi(await readFile(".github/workflows/consumer-matrix.yml", "utf8")), {
@@ -18,7 +21,7 @@ test("owned PHP-Wasm CI requires all layers, installed releases and exact docume
 });
 
 test("owned PHP-Wasm CI rejects skipped execution, omitted reports and swallowed failures", async () => {
-	const source = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	const path = ".github/workflows/consumer-matrix.yml", source = beforePhpWasmCorpusPartitionSource(path, await readFile(path, "utf8"));
 	const job = source.match(/^ {2}php-wasm-consumers:\n([^]*?)(?=^ {2}[a-z][a-z0-9-]*:\n)/mu)?.[0];
 	assert.ok(job);
 	const mutations = [

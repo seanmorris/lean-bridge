@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { beforePhpWasmCorpusPartitionSource } from "./php-wasm-corpus-partition-history.mjs";
 import { nominalSubtypePerlCiBlock, withoutNominalSubtypePerlWorkflow } from "./nominal-subtype-perl-ci-workflow.mjs";
 
 const runner = "bash scripts/run-structural-subtype-ci.sh";
@@ -168,6 +169,7 @@ const requireUpload = source => {
  * @param name - Consumer workflow basename.
  */
 export const assertStructuralSubtypeWorkflow = (source, name) => {
+	source = beforePhpWasmCorpusPartitionSource(`.github/workflows/${name}`, source);
 	assert.equal(enableStructuralSubtypeWorkflow(disableStructuralSubtypeWorkflow(source, name), name), source);
 	assert.doesNotMatch(source, /LEAN_BRIDGE_(?:NATIVE|PERL)_TEST_GLIBC_FLOOR|LEAN_BRIDGE_STRUCTURAL_SUBTYPE_PERLS/u);
 	if(name === "perl-consumer.yml")

@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { beforePhpWasmCorpusPartitionSource } from "./php-wasm-corpus-partition-history.mjs";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { generateOwnedNativeValueAdapters } from "../../src/backends/native/owned-value-adapters.mjs";
@@ -37,6 +38,7 @@ const passing = (run, command) => {
  * @param workflow - Complete consumer-matrix workflow text.
  */
 export const assertOwnedWasm32Ci = workflow => {
+	workflow = beforePhpWasmCorpusPartitionSource(".github/workflows/consumer-matrix.yml", workflow);
 	const step = workflow.split("        id: type_corpus_php_wasm\n")[1]?.split("      - name:")[0];
 	assert.ok(step);
 	assert.ok(step.includes("          " + ownedWasm32Commands.wasm + "\n"));

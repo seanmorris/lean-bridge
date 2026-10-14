@@ -24,6 +24,8 @@ import { assertFinRecordZeroWorkflow, disableFinRecordZeroWorkflow } from "./hel
 import { assertPhpWasmDirectFinWorkflow, disablePhpWasmDirectFinWorkflow } from "./helpers/php-wasm-fin-direct-ci.mjs";
 import { assertPhpWasmSubtypeWorkflow, disablePhpWasmSubtypeWorkflow } from "./helpers/php-wasm-subtype-ci.mjs";
 import { assertPhpWasmEntryWorkflow, disablePhpWasmEntryWorkflow } from "./helpers/php-wasm-subtype-entry-ci.mjs";
+import { beforePhpWasmCorpusPartitionSource } from "./helpers/php-wasm-corpus-partition-history.mjs";
+import { assertPhpWasmCorpusPartition } from "./helpers/php-wasm-corpus-partition.mjs";
 import { assertReviewedSubtypeHostWorkflow, disableReviewedSubtypeHostWorkflow } from "./helpers/reviewed-subtype-host-ci-workflow.mjs";
 import { assertReviewedSubtypePackageWorkflow, disableReviewedSubtypePackageWorkflow } from "./helpers/reviewed-subtype-package-ci-workflow.mjs";
 import { assertCheckedRecordHostWorkflow, disableCheckedRecordHostWorkflow } from "./helpers/checked-record-host-ci-workflow.mjs";
@@ -633,12 +635,14 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
     , readFile(".github/workflows/perl-consumer.yml", "utf8")
     , readFile("scripts/bootstrap-toolchains.sh", "utf8")
   ]);
+  const beforePhpPartition = beforePhpWasmCorpusPartitionSource(".github/workflows/consumer-matrix.yml", liveWorkflow);
+  assertPhpWasmCorpusPartition(beforePhpPartition, liveWorkflow);
   const structuralWorkflow = beforeNativeConsumerPartitionSource(".github/workflows/consumer-matrix.yml", liveWorkflow);
   const structuralPerlWorkflow = beforeNativeConsumerPartitionSource(".github/workflows/perl-consumer.yml", livePerlWorkflow);
   assertNominalSubtypeJvmWorkflow(liveWorkflow);
   assertNominalSubtypePhpWorkflow(liveWorkflow);
   assertNominalSubtypeWitWorkflow(liveWorkflow);
-  assertNativeConsumerPartition(structuralWorkflow, disableNominalSubtypeJvmWorkflow(disableNominalSubtypePhpWorkflow(disableNominalSubtypeWitWorkflow(liveWorkflow))));
+  assertNativeConsumerPartition(structuralWorkflow, disableNominalSubtypeJvmWorkflow(disableNominalSubtypePhpWorkflow(disableNominalSubtypeWitWorkflow(beforePhpPartition))));
   assert.equal(extendPerlCompilerBudget(structuralPerlWorkflow), livePerlWorkflow);
   assertStructuralSubtypeWorkflow(liveWorkflow, "consumer-matrix.yml");
   assertStructuralSubtypeWorkflow(livePerlWorkflow, "perl-consumer.yml");

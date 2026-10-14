@@ -16,7 +16,7 @@ jobs:
   nominal-subtype-php-wasm:
     name: Four nominal Subtype selections in PHP-Wasm
     runs-on: ubuntu-24.04
-    # Keep the four routes outside the existing 330-minute PHP-Wasm corpus job.
+    # Keep the four nominal routes separate from the value and refinement corpus lanes.
     timeout-minutes: 180
     env:
       EMCC_CORES: "2"

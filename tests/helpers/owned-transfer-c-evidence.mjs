@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { beforePhpWasmCorpusPartitionSource } from "./php-wasm-corpus-partition-history.mjs";
 import { readFile } from "node:fs/promises";
 import { assertNativeOwnedGate } from "./native-owned-gate.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
@@ -71,6 +72,7 @@ export const assertOwnedTransferCExecution = async record => {
  * @param source - Complete downstream workflow source.
  */
 export const assertOwnedTransferCCi = source => {
+	source = beforePhpWasmCorpusPartitionSource(".github/workflows/consumer-matrix.yml", source);
 	assertNativeOwnedGate(source, "npm run test:owned-transfers"
 		, ["native", "ordinary-c", "reviewed-c"].map(path => `build/owned-transfers/${path}.json`)
 		, ["build/owned-transfers/"]);

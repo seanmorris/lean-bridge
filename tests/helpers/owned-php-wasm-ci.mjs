@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { beforePhpWasmCorpusPartitionSource } from "./php-wasm-corpus-partition-history.mjs";
 
 export const ownedPhpWasmCiCommands = [
 	"LEAN_BRIDGE_OWNED_PHP_WASM_VALUES_TEST=1 node --test --test-name-pattern='32-bit PHP-Wasm' tests/owned-php-values.test.mjs"
@@ -29,6 +30,8 @@ export const ownedPhpWasmCiReports = [
  * @param workflow - Complete current consumer matrix workflow.
  */
 export const assertOwnedPhpWasmCi = workflow => {
+	// The partition has independent current-source gates; retain this exact historical ownership contract.
+	workflow = beforePhpWasmCorpusPartitionSource(".github/workflows/consumer-matrix.yml", workflow);
 	workflow = workflow.match(/^ {2}php-wasm-consumers:\n([^]*?)(?=^ {2}[a-z][a-z0-9-]*:\n)/mu)?.[0];
 	assert.ok(workflow, "Missing PHP-Wasm consumer job");
 	const step = workflow.match(/^ {6}- name: Execute owned PHP-Wasm values and installed CLI releases\n([^]*?)(?=^ {6}- name: )/mu)?.[0];
