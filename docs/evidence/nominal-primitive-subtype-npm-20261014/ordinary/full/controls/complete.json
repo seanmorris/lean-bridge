@@ -1,0 +1,43 @@
+{
+  "checked": {
+    "adapterControls": 42,
+    "artifacts": {
+      "@lean-bridge/runtime": {
+        "bytes": 1638247,
+        "integrity": "sha512-gtISbBRgoJjSqNlmh/sdWr+U4E8JafTJ197i6vyu6/ITDuDQWPZq5ZKAQ+IuUTTXdEpfSymfTDiqdTxlADytgw==",
+        "sha256": "7f8d008944a9a3f1b67473ac7752b0844a593f3fd5d516b3f5cf6cb5eb4d6629"
+      },
+      "nominalprimitivesubtypes": {
+        "bytes": 56763,
+        "integrity": "sha512-W2Q8ieLBU8dP4WE9L6Q4Et5REh1bYkE5Xf6JhddCDDrA0h4MpmX7K0hkUBrKZX3tcDZO4Wox925jWDmSmUk6mw==",
+        "sha256": "866051a38481bb032af907653423ddb698edfb09ffea8603585ead66254b4b8a"
+      }
+    },
+    "checks": 1213,
+    "dispatchObserved": false,
+    "executions": 2,
+    "mode": "full",
+    "producerCommit": "caff60b7f6acf60e06988f003b2823c0d2e0319e",
+    "recordControls": 64,
+    "rejections": 283,
+    "reportControls": 23,
+    "rounds": 256,
+    "route": "ordinary",
+    "runtime": {
+      "arch": "x64",
+      "node": "v22.23.2",
+      "platform": "linux"
+    },
+    "wordBits": 32
+  },
+  "compiledAgain": false,
+  "finished": "2026-10-14T11:38:49.589Z",
+  "head": "caff60b7f6acf60e06988f003b2823c0d2e0319e",
+  "installedAcceptance": true,
+  "mode": "full",
+  "originalsUnchanged": 36,
+  "route": "ordinary",
+  "runtimeFilesUnchanged": 12,
+  "sourceRoot": "/app/build/vo1469-npm-installed-ordinary-full-r1",
+  "sourcesUnchanged": 5746
+}

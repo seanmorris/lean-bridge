@@ -1,0 +1,1237 @@
+{
+  "files": [
+    {
+      "bytes": 6353,
+      "path": "controls-helper.mjs",
+      "sha256": "16fd6533789e9e0d1494e8b37329c5ff7912f4b9ab30e3f6b23aa62a940ea11a"
+    },
+    {
+      "bytes": 4960,
+      "path": "controls-runner.mjs",
+      "sha256": "3b8d831531c45d76798d5bd3941d28f05e7922c1bfb485e85b23a7b0e8d3dd0b"
+    },
+    {
+      "bytes": 1363,
+      "path": "ordinary/full/controls/complete.json",
+      "sha256": "0c3af449dea6189319bb3585dbea7978dc0423866f8665ffef8dc2901afc5b9d"
+    },
+    {
+      "bytes": 707408,
+      "path": "ordinary/full/controls/start.json",
+      "sha256": "1da77680b19423bc1dd4e0bbb92d532525258d6c1e8e36669607a9498a08eb0e"
+    },
+    {
+      "bytes": 538,
+      "path": "ordinary/full/producer/complete.json",
+      "sha256": "f8c178d61006a452b9023ba98deee18a7764979d4911762769c81795b2e4f850"
+    },
+    {
+      "bytes": 538,
+      "path": "ordinary/full/producer/outcome.json",
+      "sha256": "f8c178d61006a452b9023ba98deee18a7764979d4911762769c81795b2e4f850"
+    },
+    {
+      "bytes": 642,
+      "path": "ordinary/full/producer/run.tap",
+      "sha256": "315806752b8ea04f47390a884e61f916b5583afc075ced410f415969029efbb0"
+    },
+    {
+      "bytes": 704456,
+      "path": "ordinary/full/producer/start.json",
+      "sha256": "218570aa70e0f2825e3d52885ca7fa1f293c4e7fc20040e1bd7c1854f83d7f4e"
+    },
+    {
+      "bytes": 398655,
+      "path": "ordinary/full/records/build-0/binding/binding-ir.json",
+      "sha256": "57aa150bd613744d9dd762105ead12e9ad70b5a0425a65f9a186b281b7914908"
+    },
+    {
+      "bytes": 1677,
+      "path": "ordinary/full/records/build-0/component-package-receipt.json",
+      "sha256": "32ce12d414493a961a6a984366faa5ecf3238666f7e95729b17929a5f7744cfd"
+    },
+    {
+      "bytes": 262281,
+      "path": "ordinary/full/records/build-0/locks/compiler-adapters.json",
+      "sha256": "72f0039bee5483251045aa7311d842299a90cd687b7293cc9172cbff243c85c4"
+    },
+    {
+      "bytes": 2674,
+      "path": "ordinary/full/records/build-0/locks/component-build-plan.json",
+      "sha256": "b5e712c1d1596e8bf2433142973322283a64f8ae7f96dc161cf2b8bbc0ca7d76"
+    },
+    {
+      "bytes": 847,
+      "path": "ordinary/full/records/build-0/metadata/provenance.json",
+      "sha256": "06f174bebf1ce1b6d8d08fc2d56c8b2eaa03b393f0df44b9f818587afefce76b"
+    },
+    {
+      "bytes": 10863,
+      "path": "ordinary/full/records/build-0/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 398655,
+      "path": "ordinary/full/records/build-1/binding/binding-ir.json",
+      "sha256": "57aa150bd613744d9dd762105ead12e9ad70b5a0425a65f9a186b281b7914908"
+    },
+    {
+      "bytes": 1677,
+      "path": "ordinary/full/records/build-1/component-package-receipt.json",
+      "sha256": "32ce12d414493a961a6a984366faa5ecf3238666f7e95729b17929a5f7744cfd"
+    },
+    {
+      "bytes": 262281,
+      "path": "ordinary/full/records/build-1/locks/compiler-adapters.json",
+      "sha256": "72f0039bee5483251045aa7311d842299a90cd687b7293cc9172cbff243c85c4"
+    },
+    {
+      "bytes": 2674,
+      "path": "ordinary/full/records/build-1/locks/component-build-plan.json",
+      "sha256": "b5e712c1d1596e8bf2433142973322283a64f8ae7f96dc161cf2b8bbc0ca7d76"
+    },
+    {
+      "bytes": 847,
+      "path": "ordinary/full/records/build-1/metadata/provenance.json",
+      "sha256": "06f174bebf1ce1b6d8d08fc2d56c8b2eaa03b393f0df44b9f818587afefce76b"
+    },
+    {
+      "bytes": 10863,
+      "path": "ordinary/full/records/build-1/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 9691,
+      "path": "ordinary/full/records/callers/fixtures/nominal-primitive-subtype-consumers/javascript.mjs",
+      "sha256": "4122d96c2e50858d4dd534a9465e56e6b9b7e3eb8f9c03f31c4595963a94bb4a"
+    },
+    {
+      "bytes": 244,
+      "path": "ordinary/full/records/callers/index.mjs",
+      "sha256": "a6a031b977b266710475a79168dc9685eb713555f6e65adbee9765683d3f4f5d"
+    },
+    {
+      "bytes": 2624,
+      "path": "ordinary/full/records/callers/index.mts",
+      "sha256": "52384bcad9c0b4c06f755ef247ec2c9208ae7f64a68a7665fdde77edda6c9fd9"
+    },
+    {
+      "bytes": 1753,
+      "path": "ordinary/full/records/callers/results.mts",
+      "sha256": "28e8f58db0745ca7d5e9a9f00bfd45dc7129f5e625e1e76e34106bda8b60c0de"
+    },
+    {
+      "bytes": 2704,
+      "path": "ordinary/full/records/callers/types.mts",
+      "sha256": "a3e0a35064585795b3ede538971a8d6db2e9d4c9c6cba22d655c8874ea19c0d3"
+    },
+    {
+      "bytes": 82649,
+      "path": "ordinary/full/records/configuration.json",
+      "sha256": "d104cfe54b111c341d78e69a9d25a502095d2da91ee3d261bfbced63a6fb55f5"
+    },
+    {
+      "bytes": 301016,
+      "path": "ordinary/full/records/expected.binding-ir.json",
+      "sha256": "c681efea6ec29bdc9eaadbfe573c120560313b0fc6f5ba6a5d2e688bcadd6ece"
+    },
+    {
+      "bytes": 1677,
+      "path": "ordinary/full/records/handoff/component-package-receipt.json",
+      "sha256": "32ce12d414493a961a6a984366faa5ecf3238666f7e95729b17929a5f7744cfd"
+    },
+    {
+      "bytes": 1638247,
+      "path": "ordinary/full/records/handoff/lean-bridge-runtime-0.0.0-abi2.1dfdae25ae6d2ccd7eac4b21f16af42f1cfa1650f98f24ee34d9bc880d180052.tgz",
+      "sha256": "7f8d008944a9a3f1b67473ac7752b0844a593f3fd5d516b3f5cf6cb5eb4d6629"
+    },
+    {
+      "bytes": 56763,
+      "path": "ordinary/full/records/handoff/nominalprimitivesubtypes-1.0.0.tgz",
+      "sha256": "866051a38481bb032af907653423ddb698edfb09ffea8603585ead66254b4b8a"
+    },
+    {
+      "bytes": 8610,
+      "path": "ordinary/full/records/handoff/verify-component-package-receipt.mjs",
+      "sha256": "76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"
+    },
+    {
+      "bytes": 290,
+      "path": "ordinary/full/records/install.json",
+      "sha256": "f8c57a164834183ca7a425b2b9ea295201f3f4784e6a71d7e097749d197fac58"
+    },
+    {
+      "bytes": 371,
+      "path": "ordinary/full/records/installed.json",
+      "sha256": "29167045c9c75299b246d85411a279e69d6e823c251020bcb05da635f66f1249"
+    },
+    {
+      "bytes": 1092,
+      "path": "ordinary/full/records/installed/component-package.json",
+      "sha256": "dfda53a772625ace4751955431b5bb6a3092d146fea1e9614bcaa35c86febb47"
+    },
+    {
+      "bytes": 1340,
+      "path": "ordinary/full/records/installed/package-lock.json",
+      "sha256": "73041cae8792681404dede4026e5d448915cb1be4d78ec3bb92eb4efb98da449"
+    },
+    {
+      "bytes": 299,
+      "path": "ordinary/full/records/installed/package.json",
+      "sha256": "f6e0a1254bccaae7ef5ac9ec0617002afc4012a98c95d5ef3c2e14a847cc6f01"
+    },
+    {
+      "bytes": 7988,
+      "path": "ordinary/full/records/installed/runtime-identity.json",
+      "sha256": "1dfdae25ae6d2ccd7eac4b21f16af42f1cfa1650f98f24ee34d9bc880d180052"
+    },
+    {
+      "bytes": 1100,
+      "path": "ordinary/full/records/installed/runtime-package.json",
+      "sha256": "bf67bee53d92d9106811c287cf99c54a194760a53f1de6afe55ddef3d2486bec"
+    },
+    {
+      "bytes": 370,
+      "path": "ordinary/full/records/relocated.json",
+      "sha256": "59d5b1beb5704b03964e183c82596cf8813a4f9e48dc4e2be09486bca54741e7"
+    },
+    {
+      "bytes": 97807,
+      "path": "ordinary/full/records/report.json",
+      "sha256": "e137f26a41dc4006414420680fe865c4a98925bb85203aadf19db5c11eb861aa"
+    },
+    {
+      "bytes": 1381,
+      "path": "ordinary/result-only/controls/complete.json",
+      "sha256": "ddee4ac388ed8e390f56ed6ad9e6649d086b852c9165c74acc885f39dd3a402d"
+    },
+    {
+      "bytes": 707521,
+      "path": "ordinary/result-only/controls/start.json",
+      "sha256": "f7bb7e1cb699f4aa2eb124435df29f8af7d259907342c985be46b3c5cca7b1fa"
+    },
+    {
+      "bytes": 545,
+      "path": "ordinary/result-only/producer/complete.json",
+      "sha256": "0be331ddf8096718f207b14edb461799337869afbccbcaeb6b6bdf5b80b5cb7a"
+    },
+    {
+      "bytes": 545,
+      "path": "ordinary/result-only/producer/outcome.json",
+      "sha256": "0be331ddf8096718f207b14edb461799337869afbccbcaeb6b6bdf5b80b5cb7a"
+    },
+    {
+      "bytes": 448,
+      "path": "ordinary/result-only/producer/run.tap",
+      "sha256": "842c0422154f808ad8d8ec7eb8f044bd016d107b5ed667a46400aee6a7048949"
+    },
+    {
+      "bytes": 704477,
+      "path": "ordinary/result-only/producer/start.json",
+      "sha256": "8181ba397f102030c4db7c29c5909e37e83a0b87ed94cd83375032e733ae0e34"
+    },
+    {
+      "bytes": 98311,
+      "path": "ordinary/result-only/records/build-0/binding/binding-ir.json",
+      "sha256": "5de55b23980da4e7db03708c54b02e1d17d2cdcb4a76e67bbf24b6ed60f06253"
+    },
+    {
+      "bytes": 1677,
+      "path": "ordinary/result-only/records/build-0/component-package-receipt.json",
+      "sha256": "cca12f234c6276a67dd47ae4ea14fee41ae6720cffdd7f34292f2c0dad821954"
+    },
+    {
+      "bytes": 79563,
+      "path": "ordinary/result-only/records/build-0/locks/compiler-adapters.json",
+      "sha256": "ecb7540e186c5935e9bc02fe64fb1b1575ea95e7e94c94727101eb7051aecb66"
+    },
+    {
+      "bytes": 2290,
+      "path": "ordinary/result-only/records/build-0/locks/component-build-plan.json",
+      "sha256": "2af3820430a83440c6ca933bde574be4a327ca1e42e8f49cc46c24af1c62738b"
+    },
+    {
+      "bytes": 847,
+      "path": "ordinary/result-only/records/build-0/metadata/provenance.json",
+      "sha256": "2837d2e34495b27655701f30b8d368e8aa263cf6797da81f7b8ce87f24fc870b"
+    },
+    {
+      "bytes": 10863,
+      "path": "ordinary/result-only/records/build-0/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 98311,
+      "path": "ordinary/result-only/records/build-1/binding/binding-ir.json",
+      "sha256": "5de55b23980da4e7db03708c54b02e1d17d2cdcb4a76e67bbf24b6ed60f06253"
+    },
+    {
+      "bytes": 1677,
+      "path": "ordinary/result-only/records/build-1/component-package-receipt.json",
+      "sha256": "cca12f234c6276a67dd47ae4ea14fee41ae6720cffdd7f34292f2c0dad821954"
+    },
+    {
+      "bytes": 79563,
+      "path": "ordinary/result-only/records/build-1/locks/compiler-adapters.json",
+      "sha256": "ecb7540e186c5935e9bc02fe64fb1b1575ea95e7e94c94727101eb7051aecb66"
+    },
+    {
+      "bytes": 2290,
+      "path": "ordinary/result-only/records/build-1/locks/component-build-plan.json",
+      "sha256": "2af3820430a83440c6ca933bde574be4a327ca1e42e8f49cc46c24af1c62738b"
+    },
+    {
+      "bytes": 847,
+      "path": "ordinary/result-only/records/build-1/metadata/provenance.json",
+      "sha256": "2837d2e34495b27655701f30b8d368e8aa263cf6797da81f7b8ce87f24fc870b"
+    },
+    {
+      "bytes": 10863,
+      "path": "ordinary/result-only/records/build-1/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 9691,
+      "path": "ordinary/result-only/records/callers/fixtures/nominal-primitive-subtype-consumers/javascript.mjs",
+      "sha256": "4122d96c2e50858d4dd534a9465e56e6b9b7e3eb8f9c03f31c4595963a94bb4a"
+    },
+    {
+      "bytes": 243,
+      "path": "ordinary/result-only/records/callers/index.mjs",
+      "sha256": "01ece5e75fe24b4b15c0aaaeaedfc3f6a718ab4d337c428e7d9eb62679eee76b"
+    },
+    {
+      "bytes": 1753,
+      "path": "ordinary/result-only/records/callers/results.mts",
+      "sha256": "28e8f58db0745ca7d5e9a9f00bfd45dc7129f5e625e1e76e34106bda8b60c0de"
+    },
+    {
+      "bytes": 2704,
+      "path": "ordinary/result-only/records/callers/types.mts",
+      "sha256": "a3e0a35064585795b3ede538971a8d6db2e9d4c9c6cba22d655c8874ea19c0d3"
+    },
+    {
+      "bytes": 463,
+      "path": "ordinary/result-only/records/configuration.json",
+      "sha256": "76a64518fc96d2e8c63731cb8260bde98487534a4b44e7e29f7dc1c1bd6281a4"
+    },
+    {
+      "bytes": 97327,
+      "path": "ordinary/result-only/records/expected.binding-ir.json",
+      "sha256": "19a992cc50cb5e697d9b5fe77b334ffdee6f520000a44e4c0b5cccab4b021c59"
+    },
+    {
+      "bytes": 1677,
+      "path": "ordinary/result-only/records/handoff/component-package-receipt.json",
+      "sha256": "cca12f234c6276a67dd47ae4ea14fee41ae6720cffdd7f34292f2c0dad821954"
+    },
+    {
+      "bytes": 1638247,
+      "path": "ordinary/result-only/records/handoff/lean-bridge-runtime-0.0.0-abi2.1dfdae25ae6d2ccd7eac4b21f16af42f1cfa1650f98f24ee34d9bc880d180052.tgz",
+      "sha256": "7f8d008944a9a3f1b67473ac7752b0844a593f3fd5d516b3f5cf6cb5eb4d6629"
+    },
+    {
+      "bytes": 30062,
+      "path": "ordinary/result-only/records/handoff/nominalprimitivesubtypes-1.0.0.tgz",
+      "sha256": "8e1ea75f82e3f58f27e972f08e9f310277f574da6cd82d6c89a8a346a6a77afd"
+    },
+    {
+      "bytes": 8610,
+      "path": "ordinary/result-only/records/handoff/verify-component-package-receipt.mjs",
+      "sha256": "76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"
+    },
+    {
+      "bytes": 290,
+      "path": "ordinary/result-only/records/install.json",
+      "sha256": "e6b865a805de0786073460180a06354b2a19bd5b1669946dcf7d6b63f2395b8e"
+    },
+    {
+      "bytes": 368,
+      "path": "ordinary/result-only/records/installed.json",
+      "sha256": "96a0a35b790d2c0da92fc4195445541ec8304351e3a7dbffe44b95b00926b479"
+    },
+    {
+      "bytes": 1092,
+      "path": "ordinary/result-only/records/installed/component-package.json",
+      "sha256": "e075f5bdc1162adf122c239c3102dc3a956eb0f12caea7345dd0544ffd5011a1"
+    },
+    {
+      "bytes": 1340,
+      "path": "ordinary/result-only/records/installed/package-lock.json",
+      "sha256": "3c07072735bca2475dcf6dfc6b65aee4bc7b2fffbe29cc1c929f1254ee8c7a7f"
+    },
+    {
+      "bytes": 299,
+      "path": "ordinary/result-only/records/installed/package.json",
+      "sha256": "f6e0a1254bccaae7ef5ac9ec0617002afc4012a98c95d5ef3c2e14a847cc6f01"
+    },
+    {
+      "bytes": 7988,
+      "path": "ordinary/result-only/records/installed/runtime-identity.json",
+      "sha256": "1dfdae25ae6d2ccd7eac4b21f16af42f1cfa1650f98f24ee34d9bc880d180052"
+    },
+    {
+      "bytes": 1100,
+      "path": "ordinary/result-only/records/installed/runtime-package.json",
+      "sha256": "bf67bee53d92d9106811c287cf99c54a194760a53f1de6afe55ddef3d2486bec"
+    },
+    {
+      "bytes": 367,
+      "path": "ordinary/result-only/records/relocated.json",
+      "sha256": "29ed0570163a6e2f2701f421b0974feb380c245c19208bb24d3162599b8531b1"
+    },
+    {
+      "bytes": 11321,
+      "path": "ordinary/result-only/records/report.json",
+      "sha256": "119b5bf05e29929c41c34bd0b42a853f434f9c84bb4895e437ece6f4bba43b11"
+    },
+    {
+      "bytes": 5429,
+      "path": "producer.mjs",
+      "sha256": "a002c28905c0cf5fc724eb403ada274c181d98514a025c847a2739138bc337c7"
+    },
+    {
+      "bytes": 1363,
+      "path": "reviewed/full/controls/complete.json",
+      "sha256": "a7c016c65a90b9324e422134f33c87dda5de291b3519c7d99e874836609b2d74"
+    },
+    {
+      "bytes": 707408,
+      "path": "reviewed/full/controls/start.json",
+      "sha256": "86f4125b6f2b3cb1e4dab80bf67b32523006a5ac514992bd76a936284214d927"
+    },
+    {
+      "bytes": 538,
+      "path": "reviewed/full/producer/complete.json",
+      "sha256": "99d39fad1633a228037f8efa5a43dd423e6620f23d101162095304a4ee5dfcad"
+    },
+    {
+      "bytes": 538,
+      "path": "reviewed/full/producer/outcome.json",
+      "sha256": "99d39fad1633a228037f8efa5a43dd423e6620f23d101162095304a4ee5dfcad"
+    },
+    {
+      "bytes": 422,
+      "path": "reviewed/full/producer/run.tap",
+      "sha256": "fec12405e0a43ae6395caef6a33bc07b4dea72bfd52ac5cdd824704a98ab0775"
+    },
+    {
+      "bytes": 704456,
+      "path": "reviewed/full/producer/start.json",
+      "sha256": "a0eb6bbef75258942cb4dfe49384bc647f3aa2c8089fb74432065f36238d578e"
+    },
+    {
+      "bytes": 399182,
+      "path": "reviewed/full/records/build-0/binding/binding-ir.json",
+      "sha256": "90826f11d43609dc5477b3c95d31bbd542018e589aff68711569da370c26511e"
+    },
+    {
+      "bytes": 1677,
+      "path": "reviewed/full/records/build-0/component-package-receipt.json",
+      "sha256": "9bc68e6cd86e20562dc9f8a00629ff6950f4601e4e5af7ef1991dd8914999c4f"
+    },
+    {
+      "bytes": 262311,
+      "path": "reviewed/full/records/build-0/locks/compiler-adapters.json",
+      "sha256": "740e4c591e520d4e3b1652a0550605d83a81655daaa57aef0d4d3007f52221b3"
+    },
+    {
+      "bytes": 2838,
+      "path": "reviewed/full/records/build-0/locks/component-build-plan.json",
+      "sha256": "b72f57757add7c371dd3f3269dea9af9277682d1d5787f0d177d9428feb8724a"
+    },
+    {
+      "bytes": 847,
+      "path": "reviewed/full/records/build-0/metadata/provenance.json",
+      "sha256": "829938aef3a0447d5bee048444b2c308588c00188b31e5552445326ae39a4f1a"
+    },
+    {
+      "bytes": 10863,
+      "path": "reviewed/full/records/build-0/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 399182,
+      "path": "reviewed/full/records/build-1/binding/binding-ir.json",
+      "sha256": "90826f11d43609dc5477b3c95d31bbd542018e589aff68711569da370c26511e"
+    },
+    {
+      "bytes": 1677,
+      "path": "reviewed/full/records/build-1/component-package-receipt.json",
+      "sha256": "9bc68e6cd86e20562dc9f8a00629ff6950f4601e4e5af7ef1991dd8914999c4f"
+    },
+    {
+      "bytes": 262311,
+      "path": "reviewed/full/records/build-1/locks/compiler-adapters.json",
+      "sha256": "740e4c591e520d4e3b1652a0550605d83a81655daaa57aef0d4d3007f52221b3"
+    },
+    {
+      "bytes": 2838,
+      "path": "reviewed/full/records/build-1/locks/component-build-plan.json",
+      "sha256": "b72f57757add7c371dd3f3269dea9af9277682d1d5787f0d177d9428feb8724a"
+    },
+    {
+      "bytes": 847,
+      "path": "reviewed/full/records/build-1/metadata/provenance.json",
+      "sha256": "829938aef3a0447d5bee048444b2c308588c00188b31e5552445326ae39a4f1a"
+    },
+    {
+      "bytes": 10863,
+      "path": "reviewed/full/records/build-1/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 9691,
+      "path": "reviewed/full/records/callers/fixtures/nominal-primitive-subtype-consumers/javascript.mjs",
+      "sha256": "4122d96c2e50858d4dd534a9465e56e6b9b7e3eb8f9c03f31c4595963a94bb4a"
+    },
+    {
+      "bytes": 244,
+      "path": "reviewed/full/records/callers/index.mjs",
+      "sha256": "a6a031b977b266710475a79168dc9685eb713555f6e65adbee9765683d3f4f5d"
+    },
+    {
+      "bytes": 2624,
+      "path": "reviewed/full/records/callers/index.mts",
+      "sha256": "52384bcad9c0b4c06f755ef247ec2c9208ae7f64a68a7665fdde77edda6c9fd9"
+    },
+    {
+      "bytes": 1753,
+      "path": "reviewed/full/records/callers/results.mts",
+      "sha256": "28e8f58db0745ca7d5e9a9f00bfd45dc7129f5e625e1e76e34106bda8b60c0de"
+    },
+    {
+      "bytes": 2704,
+      "path": "reviewed/full/records/callers/types.mts",
+      "sha256": "a3e0a35064585795b3ede538971a8d6db2e9d4c9c6cba22d655c8874ea19c0d3"
+    },
+    {
+      "bytes": 182,
+      "path": "reviewed/full/records/configuration.json",
+      "sha256": "ad5fbe5185997f9eb1d9bec2a2e778c0f5e2fd3cab4a7cc455a6d650675325c8"
+    },
+    {
+      "bytes": 301016,
+      "path": "reviewed/full/records/expected.binding-ir.json",
+      "sha256": "c681efea6ec29bdc9eaadbfe573c120560313b0fc6f5ba6a5d2e688bcadd6ece"
+    },
+    {
+      "bytes": 1677,
+      "path": "reviewed/full/records/handoff/component-package-receipt.json",
+      "sha256": "9bc68e6cd86e20562dc9f8a00629ff6950f4601e4e5af7ef1991dd8914999c4f"
+    },
+    {
+      "bytes": 1638247,
+      "path": "reviewed/full/records/handoff/lean-bridge-runtime-0.0.0-abi2.1dfdae25ae6d2ccd7eac4b21f16af42f1cfa1650f98f24ee34d9bc880d180052.tgz",
+      "sha256": "7f8d008944a9a3f1b67473ac7752b0844a593f3fd5d516b3f5cf6cb5eb4d6629"
+    },
+    {
+      "bytes": 53233,
+      "path": "reviewed/full/records/handoff/nominalprimitivesubtypes-1.0.0.tgz",
+      "sha256": "93a848718b2766aaeddce83a90295411830e0cae984f06e323587ed320fa7e7d"
+    },
+    {
+      "bytes": 8610,
+      "path": "reviewed/full/records/handoff/verify-component-package-receipt.mjs",
+      "sha256": "76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"
+    },
+    {
+      "bytes": 290,
+      "path": "reviewed/full/records/install.json",
+      "sha256": "427f4921f21e816ebdffc83bf2ae48c0a64d314b816c1f2764c4a734033b0abb"
+    },
+    {
+      "bytes": 371,
+      "path": "reviewed/full/records/installed.json",
+      "sha256": "29167045c9c75299b246d85411a279e69d6e823c251020bcb05da635f66f1249"
+    },
+    {
+      "bytes": 1066,
+      "path": "reviewed/full/records/installed/component-package.json",
+      "sha256": "a23d2d94417debc8eb63b99f42f473603b3c3b96d6115e000dc431511f7ca13b"
+    },
+    {
+      "bytes": 1340,
+      "path": "reviewed/full/records/installed/package-lock.json",
+      "sha256": "ccb47bfebbe75e85d1c95a0e8ed872bcd2735d0d69fc208a839326d43c22cabc"
+    },
+    {
+      "bytes": 299,
+      "path": "reviewed/full/records/installed/package.json",
+      "sha256": "f6e0a1254bccaae7ef5ac9ec0617002afc4012a98c95d5ef3c2e14a847cc6f01"
+    },
+    {
+      "bytes": 7988,
+      "path": "reviewed/full/records/installed/runtime-identity.json",
+      "sha256": "1dfdae25ae6d2ccd7eac4b21f16af42f1cfa1650f98f24ee34d9bc880d180052"
+    },
+    {
+      "bytes": 1100,
+      "path": "reviewed/full/records/installed/runtime-package.json",
+      "sha256": "bf67bee53d92d9106811c287cf99c54a194760a53f1de6afe55ddef3d2486bec"
+    },
+    {
+      "bytes": 370,
+      "path": "reviewed/full/records/relocated.json",
+      "sha256": "59d5b1beb5704b03964e183c82596cf8813a4f9e48dc4e2be09486bca54741e7"
+    },
+    {
+      "bytes": 11108,
+      "path": "reviewed/full/records/report.json",
+      "sha256": "4b2baf9cefdb53c5a0cd12f01354ed75553f1f38f2cf8208398f905c6932b43c"
+    },
+    {
+      "bytes": 1381,
+      "path": "reviewed/result-only/controls/complete.json",
+      "sha256": "8f535a723c2dd36518d0d72d6fe6943e8f83641fe497c697da1ecff8f61f1c9e"
+    },
+    {
+      "bytes": 707521,
+      "path": "reviewed/result-only/controls/start.json",
+      "sha256": "96e1048c73355c0958a364edb32bd5f7fc0b5af3f584271565af710c57466cfa"
+    },
+    {
+      "bytes": 545,
+      "path": "reviewed/result-only/producer/complete.json",
+      "sha256": "033506c2e194fd08778fa577762190308d9a2e3a074077e1430d0455b23020d1"
+    },
+    {
+      "bytes": 545,
+      "path": "reviewed/result-only/producer/outcome.json",
+      "sha256": "033506c2e194fd08778fa577762190308d9a2e3a074077e1430d0455b23020d1"
+    },
+    {
+      "bytes": 524,
+      "path": "reviewed/result-only/producer/run.tap",
+      "sha256": "8fc665bd379730ecd057aeb0e9dbb1ab39289e770650d72f49d88ee85a7b7b40"
+    },
+    {
+      "bytes": 704477,
+      "path": "reviewed/result-only/producer/start.json",
+      "sha256": "4dbe19ece92f6e9d715229eaa43f15b6703b4ac55cd80f44ce69a14852b7a470"
+    },
+    {
+      "bytes": 98904,
+      "path": "reviewed/result-only/records/build-0/binding/binding-ir.json",
+      "sha256": "88604904946af3ab4d6e92d26b5ee9d8038b6fcc1085af5e5b0dc783755d804a"
+    },
+    {
+      "bytes": 1677,
+      "path": "reviewed/result-only/records/build-0/component-package-receipt.json",
+      "sha256": "8c4bf89345a3469dbc84084b39cbc8815092392b57a092f280d9ba1fc856c93b"
+    },
+    {
+      "bytes": 79573,
+      "path": "reviewed/result-only/records/build-0/locks/compiler-adapters.json",
+      "sha256": "82366b40e1059be3300d562e5d7fea4a984d6ef34ea83562cd8fd4b8c0fce4b5"
+    },
+    {
+      "bytes": 2455,
+      "path": "reviewed/result-only/records/build-0/locks/component-build-plan.json",
+      "sha256": "edd9d98bfab689ce26e4133398370f2a2a4ff3e1a964c3cef76368f6e9e090d6"
+    },
+    {
+      "bytes": 847,
+      "path": "reviewed/result-only/records/build-0/metadata/provenance.json",
+      "sha256": "69bb02f7d42ed247bcdce917749f4957e4060c61f2bda9c315963b0dc7b7decf"
+    },
+    {
+      "bytes": 10863,
+      "path": "reviewed/result-only/records/build-0/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 98904,
+      "path": "reviewed/result-only/records/build-1/binding/binding-ir.json",
+      "sha256": "88604904946af3ab4d6e92d26b5ee9d8038b6fcc1085af5e5b0dc783755d804a"
+    },
+    {
+      "bytes": 1677,
+      "path": "reviewed/result-only/records/build-1/component-package-receipt.json",
+      "sha256": "8c4bf89345a3469dbc84084b39cbc8815092392b57a092f280d9ba1fc856c93b"
+    },
+    {
+      "bytes": 79573,
+      "path": "reviewed/result-only/records/build-1/locks/compiler-adapters.json",
+      "sha256": "82366b40e1059be3300d562e5d7fea4a984d6ef34ea83562cd8fd4b8c0fce4b5"
+    },
+    {
+      "bytes": 2455,
+      "path": "reviewed/result-only/records/build-1/locks/component-build-plan.json",
+      "sha256": "edd9d98bfab689ce26e4133398370f2a2a4ff3e1a964c3cef76368f6e9e090d6"
+    },
+    {
+      "bytes": 847,
+      "path": "reviewed/result-only/records/build-1/metadata/provenance.json",
+      "sha256": "69bb02f7d42ed247bcdce917749f4957e4060c61f2bda9c315963b0dc7b7decf"
+    },
+    {
+      "bytes": 10863,
+      "path": "reviewed/result-only/records/build-1/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 9691,
+      "path": "reviewed/result-only/records/callers/fixtures/nominal-primitive-subtype-consumers/javascript.mjs",
+      "sha256": "4122d96c2e50858d4dd534a9465e56e6b9b7e3eb8f9c03f31c4595963a94bb4a"
+    },
+    {
+      "bytes": 243,
+      "path": "reviewed/result-only/records/callers/index.mjs",
+      "sha256": "01ece5e75fe24b4b15c0aaaeaedfc3f6a718ab4d337c428e7d9eb62679eee76b"
+    },
+    {
+      "bytes": 1753,
+      "path": "reviewed/result-only/records/callers/results.mts",
+      "sha256": "28e8f58db0745ca7d5e9a9f00bfd45dc7129f5e625e1e76e34106bda8b60c0de"
+    },
+    {
+      "bytes": 2704,
+      "path": "reviewed/result-only/records/callers/types.mts",
+      "sha256": "a3e0a35064585795b3ede538971a8d6db2e9d4c9c6cba22d655c8874ea19c0d3"
+    },
+    {
+      "bytes": 182,
+      "path": "reviewed/result-only/records/configuration.json",
+      "sha256": "ad5fbe5185997f9eb1d9bec2a2e778c0f5e2fd3cab4a7cc455a6d650675325c8"
+    },
+    {
+      "bytes": 97327,
+      "path": "reviewed/result-only/records/expected.binding-ir.json",
+      "sha256": "19a992cc50cb5e697d9b5fe77b334ffdee6f520000a44e4c0b5cccab4b021c59"
+    },
+    {
+      "bytes": 1677,
+      "path": "reviewed/result-only/records/handoff/component-package-receipt.json",
+      "sha256": "8c4bf89345a3469dbc84084b39cbc8815092392b57a092f280d9ba1fc856c93b"
+    },
+    {
+      "bytes": 1638247,
+      "path": "reviewed/result-only/records/handoff/lean-bridge-runtime-0.0.0-abi2.1dfdae25ae6d2ccd7eac4b21f16af42f1cfa1650f98f24ee34d9bc880d180052.tgz",
+      "sha256": "7f8d008944a9a3f1b67473ac7752b0844a593f3fd5d516b3f5cf6cb5eb4d6629"
+    },
+    {
+      "bytes": 29729,
+      "path": "reviewed/result-only/records/handoff/nominalprimitivesubtypes-1.0.0.tgz",
+      "sha256": "6f6eb4edcd145735150000b2685460ff1bf28d975bed665c3a66cccb1d5e4d9e"
+    },
+    {
+      "bytes": 8610,
+      "path": "reviewed/result-only/records/handoff/verify-component-package-receipt.mjs",
+      "sha256": "76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"
+    },
+    {
+      "bytes": 290,
+      "path": "reviewed/result-only/records/install.json",
+      "sha256": "9c28c08b4292cd7f2fca494f739731965b9d1d4851052f4b4ac8a29454a7a248"
+    },
+    {
+      "bytes": 368,
+      "path": "reviewed/result-only/records/installed.json",
+      "sha256": "96a0a35b790d2c0da92fc4195445541ec8304351e3a7dbffe44b95b00926b479"
+    },
+    {
+      "bytes": 1066,
+      "path": "reviewed/result-only/records/installed/component-package.json",
+      "sha256": "3c48921e2e6ba0e975e6ba568110387aa06980118b63568873c2b34b366dd0f8"
+    },
+    {
+      "bytes": 1340,
+      "path": "reviewed/result-only/records/installed/package-lock.json",
+      "sha256": "00ffe7f00cd8c8e4640fd7a482d92fd544a825c9febad316b7a1fa14ccf33a74"
+    },
+    {
+      "bytes": 299,
+      "path": "reviewed/result-only/records/installed/package.json",
+      "sha256": "f6e0a1254bccaae7ef5ac9ec0617002afc4012a98c95d5ef3c2e14a847cc6f01"
+    },
+    {
+      "bytes": 7988,
+      "path": "reviewed/result-only/records/installed/runtime-identity.json",
+      "sha256": "1dfdae25ae6d2ccd7eac4b21f16af42f1cfa1650f98f24ee34d9bc880d180052"
+    },
+    {
+      "bytes": 1100,
+      "path": "reviewed/result-only/records/installed/runtime-package.json",
+      "sha256": "bf67bee53d92d9106811c287cf99c54a194760a53f1de6afe55ddef3d2486bec"
+    },
+    {
+      "bytes": 367,
+      "path": "reviewed/result-only/records/relocated.json",
+      "sha256": "29ed0570163a6e2f2701f421b0974feb380c245c19208bb24d3162599b8531b1"
+    },
+    {
+      "bytes": 11024,
+      "path": "reviewed/result-only/records/report.json",
+      "sha256": "5bfd7b8562d2e066587bf94155cce1dc60c168a17d46f06edf90323e51b80cb6"
+    },
+    {
+      "bytes": 3778,
+      "path": "runtime/alpha.link.map",
+      "sha256": "fd7d812060bcdd0f02f1238939d3f85ad20480ce2d09182f0969e030a314a1cf"
+    },
+    {
+      "bytes": 4612,
+      "path": "runtime/alpha.so.wasm",
+      "sha256": "df3c7c6da8f919a3c0bb6748ec2a265841fa4ade4e69fdf9fed53e7f3f15beda"
+    },
+    {
+      "bytes": 1148,
+      "path": "runtime/beta.link.map",
+      "sha256": "28a4089aecdb7e5c4a9c96f408a165da30b6557c049eb882a7b466d52c203ec7"
+    },
+    {
+      "bytes": 604,
+      "path": "runtime/beta.so.wasm",
+      "sha256": "aaee59f1ec973e56275e46f7f7dab4f08642b0a4e0c088297a319c4f695071e8"
+    },
+    {
+      "bytes": 46844,
+      "path": "runtime/component_scalar.o",
+      "sha256": "6fdeaa025a290584b41959cb8392374526efb1d8b39de2ef531ea45e0fe44e78"
+    },
+    {
+      "bytes": 1157,
+      "path": "runtime/gamma.link.map",
+      "sha256": "a1013e34af2ea4bad5f5e29e7e460f3d4e7a5d3dbdea2123ac228593a8d5572a"
+    },
+    {
+      "bytes": 605,
+      "path": "runtime/gamma.so.wasm",
+      "sha256": "cff5bd84b30c64dd7ff2b199202f45f7b79c23936f51e3661bae1190eff096a5"
+    },
+    {
+      "bytes": 4046123,
+      "path": "runtime/main.mjs",
+      "sha256": "8b791a4711e58876e29b5e0a7c3fcbab500b02d7550fe6f7c3321020a736be02"
+    },
+    {
+      "bytes": 38288,
+      "path": "runtime/main.o",
+      "sha256": "4f038e1ec6bac6da5cebb88346356e891a4bd431e2137de01fe2b2bb8b75b09b"
+    },
+    {
+      "bytes": 6488025,
+      "path": "runtime/main.wasm",
+      "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+    },
+    {
+      "bytes": 17184,
+      "path": "runtime/owned-runtime.o",
+      "sha256": "75f9e51fa904520a0071b30c85598ac4b0c4a6d695e1506e3678dd4975c8cf8f"
+    },
+    {
+      "bytes": 3760,
+      "path": "runtime/runtime_lifecycle.o",
+      "sha256": "b272db1058ddc4076fb4db468721cfd45e9e6b627634276236fef1992547b784"
+    },
+    {
+      "bytes": 8556,
+      "path": "sources/src/abi/refinements.mjs",
+      "sha256": "57fcd7bfa6c2ae7b7d696c1c95a88282c725fef2c15486744e683c258fa2ce07"
+    },
+    {
+      "bytes": 7873,
+      "path": "sources/src/analyze/checked-refinement-selection.mjs",
+      "sha256": "a93acd6f91edf592286db1fd255505adddf03a76bd8d2026962c5d2e7dfca64c"
+    },
+    {
+      "bytes": 24921,
+      "path": "sources/src/analyze/elaborated-metadata.mjs",
+      "sha256": "51a7927edbd9ec0467b0b0d5772c8081a190d257de992a0f58e8522b9c673166"
+    },
+    {
+      "bytes": 26409,
+      "path": "sources/src/analyze/export-configuration.mjs",
+      "sha256": "91a3c1a9be0ff57e837edd7a10b9b1886d7eefc4e89e0b67ef61eb8487c02e8e"
+    },
+    {
+      "bytes": 15868,
+      "path": "sources/src/analyze/native-types.mjs",
+      "sha256": "df316023935340250a966b6daf9d32cacc12370f8b611d96e9770d9b28fcc9f4"
+    },
+    {
+      "bytes": 99428,
+      "path": "sources/src/analyze/NativeExports.lean",
+      "sha256": "a6e5738d497fa57e2ff7eb98d2da7761277dc72c6584802909c3a4960c6ee6f3"
+    },
+    {
+      "bytes": 3029,
+      "path": "sources/src/analyze/reviewed-subtypes.mjs",
+      "sha256": "8f0b4abd0d39f44a20ccb7b5b4a0960fb8670bc440e7e636e684e3eea2ba329f"
+    },
+    {
+      "bytes": 36872,
+      "path": "sources/src/backends/javascript/generate.mjs",
+      "sha256": "8b5fdfb1627982617392364cd7fd5441141e75dcff5f181d9dc8a84b03477075"
+    },
+    {
+      "bytes": 26678,
+      "path": "sources/src/build/compiler-adapters.mjs",
+      "sha256": "e07a504718e76fb2e220e7a10014d209cfd3964d8d4eced3d49edc7274c4b52f"
+    },
+    {
+      "bytes": 15873,
+      "path": "sources/src/build/component-callable-adapters.mjs",
+      "sha256": "9069b7342c53a943cdb9e85f3a79943a6298772fb8699c0f5f85f9580ced6cbc"
+    },
+    {
+      "bytes": 3012,
+      "path": "sources/src/build/component-fin-guards.mjs",
+      "sha256": "c8aa6218488c0d8010eed23fcf98d22efaa7007791adbfe7d8fd29669af5451c"
+    },
+    {
+      "bytes": 16689,
+      "path": "sources/src/build/component-recursive-adapters.mjs",
+      "sha256": "fe2e6b88ff16020d5526a70624d2114e734d4747fc858c21777dc0f65567af88"
+    },
+    {
+      "bytes": 13565,
+      "path": "sources/src/build/component-recursive-lean.mjs",
+      "sha256": "7338df31e23f594ba2e5a519c8989c739b6fbac0ad82c1d51892964b8ea580e6"
+    },
+    {
+      "bytes": 12855,
+      "path": "sources/src/build/component-refinement-mirrors.mjs",
+      "sha256": "d23d883ab69257ce033f0d6aa7b4ae8918da094843129329d02aba3f1943f53f"
+    },
+    {
+      "bytes": 9673,
+      "path": "sources/src/build/component-refinements.mjs",
+      "sha256": "424d53a08172711e2213e787a4caeee7db843242059c88e3b6c6ec431a5b46a4"
+    },
+    {
+      "bytes": 7467,
+      "path": "sources/src/build/refinement-mirrors.mjs",
+      "sha256": "27e7219ee097ec6b90ae8c4a270295feb55d87099815bce9bbaee97cdc9ff6cc"
+    },
+    {
+      "bytes": 25664,
+      "path": "sources/src/release/component-npm-package.mjs",
+      "sha256": "f7c4e8196814cdb6dafe16173740f762c9bf2208b6fa10650be8855f12b1b3c4"
+    },
+    {
+      "bytes": 8610,
+      "path": "sources/src/release/component-package-receipt.mjs",
+      "sha256": "76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"
+    },
+    {
+      "bytes": 2624,
+      "path": "sources/tests/fixtures/nominal-primitive-subtype-consumers/index.mts",
+      "sha256": "52384bcad9c0b4c06f755ef247ec2c9208ae7f64a68a7665fdde77edda6c9fd9"
+    },
+    {
+      "bytes": 9691,
+      "path": "sources/tests/fixtures/nominal-primitive-subtype-consumers/javascript.mjs",
+      "sha256": "4122d96c2e50858d4dd534a9465e56e6b9b7e3eb8f9c03f31c4595963a94bb4a"
+    },
+    {
+      "bytes": 1753,
+      "path": "sources/tests/fixtures/nominal-primitive-subtype-consumers/results.mts",
+      "sha256": "28e8f58db0745ca7d5e9a9f00bfd45dc7129f5e625e1e76e34106bda8b60c0de"
+    },
+    {
+      "bytes": 2704,
+      "path": "sources/tests/fixtures/nominal-primitive-subtype-consumers/types.mts",
+      "sha256": "a3e0a35064585795b3ede538971a8d6db2e9d4c9c6cba22d655c8874ea19c0d3"
+    },
+    {
+      "bytes": 99,
+      "path": "sources/tests/fixtures/onboarding/nominal-primitive-subtypes/lakefile.toml",
+      "sha256": "80a574337b857f079884d006450abd9beb03a6876e94477cc9e37dd874d60f8f"
+    },
+    {
+      "bytes": 25,
+      "path": "sources/tests/fixtures/onboarding/nominal-primitive-subtypes/lean-toolchain",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "bytes": 1093,
+      "path": "sources/tests/fixtures/onboarding/nominal-primitive-subtypes/LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 10863,
+      "path": "sources/tests/fixtures/onboarding/nominal-primitive-subtypes/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 70,
+      "path": "sources/tests/fixtures/onboarding/nominal-primitive-subtypes/package.json",
+      "sha256": "2f18e34a4ba6695d28783cae8edd55376bcc02a409b11e56933e016a6a1a5e96"
+    },
+    {
+      "bytes": 15505,
+      "path": "sources/tests/helpers/copied-fixture-install.mjs",
+      "sha256": "dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df"
+    },
+    {
+      "bytes": 9902,
+      "path": "sources/tests/helpers/lake-workspace.mjs",
+      "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082"
+    },
+    {
+      "bytes": 8265,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-caller-tests.mjs",
+      "sha256": "c89541dd70eba4b4e217024ae7ac31c1d59b6f5e6936b20ef8d88ae8165ca293"
+    },
+    {
+      "bytes": 9439,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-fixture.mjs",
+      "sha256": "5b958fdff2c04923b1780ef919ac110bd6bb44c77e4285a2b402f47bbdcc34cd"
+    },
+    {
+      "bytes": 13068,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-npm-installed-tests.mjs",
+      "sha256": "f3c7630b9869b4e0314b62e2508348794a7bc40cc7379623bd04dbc0788d1a38"
+    },
+    {
+      "bytes": 5159,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-npm-package.mjs",
+      "sha256": "eb507ea184828a7b4731f263280fe78fd44cb739c1bfc2c144b4ca7d4c35862c"
+    },
+    {
+      "bytes": 12290,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-npm-report.mjs",
+      "sha256": "10f3c1a8c134f63fe5a4835366f9b53c863fe17f64412ae48034496a20172054"
+    },
+    {
+      "bytes": 2028,
+      "path": "sources/tests/helpers/nominal-subtype-dotnet-resources.mjs",
+      "sha256": "a159173e82abae7bd48a82691f3025b329827bf03505347516a0768db140c63c"
+    },
+    {
+      "bytes": 1655,
+      "path": "sources/tests/helpers/refinement-engine.mjs",
+      "sha256": "91e69b67d355d2b436fa699a5e4a4692362bdc4f9536634877b6af41e968d3b4"
+    },
+    {
+      "bytes": 799,
+      "path": "sources/tests/helpers/structural-subtype-npm-package.mjs",
+      "sha256": "bd0416f9a053f54fda37e3dfb214cf9fa38b56ade39484e841e5fa3f627abf13"
+    }
+  ],
+  "kind": "nominal-primitive-subtype-npm-installed-v1",
+  "limitations": [
+    "Four ordinary/reviewed full/result-only npm selections, two independent authors, offline installation and physical relocation.",
+    "Observed consumers are Node 22.23.2/Linux x64 and strict TypeScript; compiled payloads use wasm32. No other host or runtime floor is inferred.",
+    "Complete component/runtime npm archives, standalone receipt verifier, original logs and tamper results are retained.",
+    "Selected producer sources and twelve runtime input files are retained; external Node/npm/TypeScript/Lean/compiler toolchains are not retained.",
+    "Constructor/source dispatch and memory usage are unmeasured. This archive does not establish browser/native/hosted acceptance, update support claims or register recurring CI."
+  ],
+  "producerCommit": "caff60b7f6acf60e06988f003b2823c0d2e0319e",
+  "runs": [
+    {
+      "counts": {
+        "artifacts": {
+          "@lean-bridge/runtime": {
+            "bytes": 1638247,
+            "integrity": "sha512-gtISbBRgoJjSqNlmh/sdWr+U4E8JafTJ197i6vyu6/ITDuDQWPZq5ZKAQ+IuUTTXdEpfSymfTDiqdTxlADytgw==",
+            "sha256": "7f8d008944a9a3f1b67473ac7752b0844a593f3fd5d516b3f5cf6cb5eb4d6629"
+          },
+          "nominalprimitivesubtypes": {
+            "bytes": 56763,
+            "integrity": "sha512-W2Q8ieLBU8dP4WE9L6Q4Et5REh1bYkE5Xf6JhddCDDrA0h4MpmX7K0hkUBrKZX3tcDZO4Wox925jWDmSmUk6mw==",
+            "sha256": "866051a38481bb032af907653423ddb698edfb09ffea8603585ead66254b4b8a"
+          }
+        },
+        "checks": 1213,
+        "dispatchObserved": false,
+        "executions": 2,
+        "mode": "full",
+        "producerCommit": "caff60b7f6acf60e06988f003b2823c0d2e0319e",
+        "rejections": 283,
+        "rounds": 256,
+        "route": "ordinary",
+        "runtime": {
+          "arch": "x64",
+          "node": "v22.23.2",
+          "platform": "linux"
+        },
+        "wordBits": 32
+      },
+      "finished": "2026-10-14T11:36:05.374Z",
+      "mode": "full",
+      "originalDirectory": "/app/build/vo1469-npm-installed-ordinary-full-r1",
+      "producerCommit": "caff60b7f6acf60e06988f003b2823c0d2e0319e",
+      "reportSha256": "e137f26a41dc4006414420680fe865c4a98925bb85203aadf19db5c11eb861aa",
+      "route": "ordinary",
+      "runtime": {
+        "arch": "x64",
+        "node": "v22.23.2",
+        "platform": "linux"
+      },
+      "started": "2026-10-14T11:33:16.875Z",
+      "tapSha256": "315806752b8ea04f47390a884e61f916b5583afc075ced410f415969029efbb0"
+    },
+    {
+      "counts": {
+        "artifacts": {
+          "@lean-bridge/runtime": {
+            "bytes": 1638247,
+            "integrity": "sha512-gtISbBRgoJjSqNlmh/sdWr+U4E8JafTJ197i6vyu6/ITDuDQWPZq5ZKAQ+IuUTTXdEpfSymfTDiqdTxlADytgw==",
+            "sha256": "7f8d008944a9a3f1b67473ac7752b0844a593f3fd5d516b3f5cf6cb5eb4d6629"
+          },
+          "nominalprimitivesubtypes": {
+            "bytes": 30062,
+            "integrity": "sha512-G4In/O+gOQNyC7MmhtApXJppd8tQ8u1cgF5rpsjmsTzfZYRp2qyDnEXBsD2rqTYsSR6UGdoE2eb2ft6uN/Uqmw==",
+            "sha256": "8e1ea75f82e3f58f27e972f08e9f310277f574da6cd82d6c89a8a346a6a77afd"
+          }
+        },
+        "checks": 578,
+        "dispatchObserved": false,
+        "executions": 2,
+        "mode": "result-only",
+        "producerCommit": "caff60b7f6acf60e06988f003b2823c0d2e0319e",
+        "rejections": 0,
+        "rounds": 256,
+        "route": "ordinary",
+        "runtime": {
+          "arch": "x64",
+          "node": "v22.23.2",
+          "platform": "linux"
+        },
+        "wordBits": 32
+      },
+      "finished": "2026-10-14T11:41:24.310Z",
+      "mode": "result-only",
+      "originalDirectory": "/app/build/vo1469-npm-installed-ordinary-result-only-r1",
+      "producerCommit": "caff60b7f6acf60e06988f003b2823c0d2e0319e",
+      "reportSha256": "119b5bf05e29929c41c34bd0b42a853f434f9c84bb4895e437ece6f4bba43b11",
+      "route": "ordinary",
+      "runtime": {
+        "arch": "x64",
+        "node": "v22.23.2",
+        "platform": "linux"
+      },
+      "started": "2026-10-14T11:39:48.001Z",
+      "tapSha256": "842c0422154f808ad8d8ec7eb8f044bd016d107b5ed667a46400aee6a7048949"
+    },
+    {
+      "counts": {
+        "artifacts": {
+          "@lean-bridge/runtime": {
+            "bytes": 1638247,
+            "integrity": "sha512-gtISbBRgoJjSqNlmh/sdWr+U4E8JafTJ197i6vyu6/ITDuDQWPZq5ZKAQ+IuUTTXdEpfSymfTDiqdTxlADytgw==",
+            "sha256": "7f8d008944a9a3f1b67473ac7752b0844a593f3fd5d516b3f5cf6cb5eb4d6629"
+          },
+          "nominalprimitivesubtypes": {
+            "bytes": 53233,
+            "integrity": "sha512-kmtmZpc4TiAXsjZBx3ooLYccbXIy+r9v22/WYHZhjxMemoKERr+t01Z6zGhEksdi0k35VJe3/f4g9JzyLMP89w==",
+            "sha256": "93a848718b2766aaeddce83a90295411830e0cae984f06e323587ed320fa7e7d"
+          }
+        },
+        "checks": 1213,
+        "dispatchObserved": false,
+        "executions": 2,
+        "mode": "full",
+        "producerCommit": "caff60b7f6acf60e06988f003b2823c0d2e0319e",
+        "rejections": 283,
+        "rounds": 256,
+        "route": "reviewed",
+        "runtime": {
+          "arch": "x64",
+          "node": "v22.23.2",
+          "platform": "linux"
+        },
+        "wordBits": 32
+      },
+      "finished": "2026-10-14T11:49:18.759Z",
+      "mode": "full",
+      "originalDirectory": "/app/build/vo1469-npm-installed-reviewed-full-r1",
+      "producerCommit": "caff60b7f6acf60e06988f003b2823c0d2e0319e",
+      "reportSha256": "4b2baf9cefdb53c5a0cd12f01354ed75553f1f38f2cf8208398f905c6932b43c",
+      "route": "reviewed",
+      "runtime": {
+        "arch": "x64",
+        "node": "v22.23.2",
+        "platform": "linux"
+      },
+      "started": "2026-10-14T11:47:20.847Z",
+      "tapSha256": "fec12405e0a43ae6395caef6a33bc07b4dea72bfd52ac5cdd824704a98ab0775"
+    },
+    {
+      "counts": {
+        "artifacts": {
+          "@lean-bridge/runtime": {
+            "bytes": 1638247,
+            "integrity": "sha512-gtISbBRgoJjSqNlmh/sdWr+U4E8JafTJ197i6vyu6/ITDuDQWPZq5ZKAQ+IuUTTXdEpfSymfTDiqdTxlADytgw==",
+            "sha256": "7f8d008944a9a3f1b67473ac7752b0844a593f3fd5d516b3f5cf6cb5eb4d6629"
+          },
+          "nominalprimitivesubtypes": {
+            "bytes": 29729,
+            "integrity": "sha512-amNN5Kb2siD62g13yn8yeai+4ifVrppUCpCd6h8biiUJVpCO40jgkG8PKAucSi65pDCPFlO8nAYXkPbAwmCxkQ==",
+            "sha256": "6f6eb4edcd145735150000b2685460ff1bf28d975bed665c3a66cccb1d5e4d9e"
+          }
+        },
+        "checks": 578,
+        "dispatchObserved": false,
+        "executions": 2,
+        "mode": "result-only",
+        "producerCommit": "caff60b7f6acf60e06988f003b2823c0d2e0319e",
+        "rejections": 0,
+        "rounds": 256,
+        "route": "reviewed",
+        "runtime": {
+          "arch": "x64",
+          "node": "v22.23.2",
+          "platform": "linux"
+        },
+        "wordBits": 32
+      },
+      "finished": "2026-10-14T11:53:53.953Z",
+      "mode": "result-only",
+      "originalDirectory": "/app/build/vo1469-npm-installed-reviewed-result-only-r1",
+      "producerCommit": "caff60b7f6acf60e06988f003b2823c0d2e0319e",
+      "reportSha256": "5bfd7b8562d2e066587bf94155cce1dc60c168a17d46f06edf90323e51b80cb6",
+      "route": "reviewed",
+      "runtime": {
+        "arch": "x64",
+        "node": "v22.23.2",
+        "platform": "linux"
+      },
+      "started": "2026-10-14T11:51:58.506Z",
+      "tapSha256": "8fc665bd379730ecd057aeb0e9dbb1ab39289e770650d72f49d88ee85a7b7b40"
+    }
+  ],
+  "schemaVersion": 1,
+  "selectedSources": [
+    "src/abi/refinements.mjs",
+    "src/analyze/NativeExports.lean",
+    "src/analyze/checked-refinement-selection.mjs",
+    "src/analyze/elaborated-metadata.mjs",
+    "src/analyze/export-configuration.mjs",
+    "src/analyze/native-types.mjs",
+    "src/analyze/reviewed-subtypes.mjs",
+    "src/backends/javascript/generate.mjs",
+    "src/build/compiler-adapters.mjs",
+    "src/build/component-callable-adapters.mjs",
+    "src/build/component-fin-guards.mjs",
+    "src/build/component-recursive-adapters.mjs",
+    "src/build/component-recursive-lean.mjs",
+    "src/build/component-refinement-mirrors.mjs",
+    "src/build/component-refinements.mjs",
+    "src/build/refinement-mirrors.mjs",
+    "src/release/component-npm-package.mjs",
+    "src/release/component-package-receipt.mjs",
+    "tests/fixtures/nominal-primitive-subtype-consumers/index.mts",
+    "tests/fixtures/nominal-primitive-subtype-consumers/javascript.mjs",
+    "tests/fixtures/nominal-primitive-subtype-consumers/results.mts",
+    "tests/fixtures/nominal-primitive-subtype-consumers/types.mts",
+    "tests/fixtures/onboarding/nominal-primitive-subtypes/LICENSE",
+    "tests/fixtures/onboarding/nominal-primitive-subtypes/NominalPrimitiveSubtypes.lean",
+    "tests/fixtures/onboarding/nominal-primitive-subtypes/lakefile.toml",
+    "tests/fixtures/onboarding/nominal-primitive-subtypes/lean-toolchain",
+    "tests/fixtures/onboarding/nominal-primitive-subtypes/package.json",
+    "tests/helpers/copied-fixture-install.mjs",
+    "tests/helpers/lake-workspace.mjs",
+    "tests/helpers/nominal-primitive-subtype-caller-tests.mjs",
+    "tests/helpers/nominal-primitive-subtype-fixture.mjs",
+    "tests/helpers/nominal-primitive-subtype-npm-installed-tests.mjs",
+    "tests/helpers/nominal-primitive-subtype-npm-package.mjs",
+    "tests/helpers/nominal-primitive-subtype-npm-report.mjs",
+    "tests/helpers/nominal-subtype-dotnet-resources.mjs",
+    "tests/helpers/refinement-engine.mjs",
+    "tests/helpers/structural-subtype-npm-package.mjs"
+  ]
+}

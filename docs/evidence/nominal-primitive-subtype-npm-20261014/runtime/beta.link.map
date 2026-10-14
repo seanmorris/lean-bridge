@@ -1,0 +1,21 @@
+    Addr      Off     Size Out     In      Symbol
+       -        8       12 CUSTOM(dylink.0)
+       -       1a       15 TYPE
+       -       2f       ae IMPORT
+       -       dd        7 FUNCTION
+       -       e4       17 EXPORT
+       -       fb        a ELEM
+       -      105      13d CODE
+       -      106        5         <internal>:(__wasm_call_ctors)
+       -      10b        5         /app/build/lean-link-spike/lazy/beta.so.wasm.lto.o:(lean_link_beta_identity)
+       -      10b        5                 lean_link_beta_identity
+       -      110      10a         /app/build/lean-link-spike/lazy/beta.so.wasm.lto.o:(lean_link_beta_read)
+       -      110      10a                 lean_link_beta_read
+       -      21a       25         /app/build/lean-link-spike/lazy/beta.so.wasm.lto.o:(lean_link_beta_register)
+       -      21a       25                 lean_link_beta_register
+       -      242       8a DATA
+       0      243       80 .rodata
+       0      249       80         <internal>:(.rodata)
+       -      2cc       e3 CUSTOM(name)
+       -      3af       7a CUSTOM(producers)
+       -      429       ab CUSTOM(target_features)

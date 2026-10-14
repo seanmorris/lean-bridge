@@ -1,0 +1,20 @@
+{
+  "exports": [
+    "NominalPrimitiveSubtypes.produce",
+    "NominalPrimitiveSubtypes.produceGroup",
+    "NominalPrimitiveSubtypes.producePair",
+    "NominalPrimitiveSubtypes.produceEvent",
+    "NominalPrimitiveSubtypes.produceChoices",
+    "NominalPrimitiveSubtypes.wordBits"
+  ],
+  "modules": [
+    "NominalPrimitiveSubtypes"
+  ],
+  "schemaVersion": 1,
+  "targets": {
+    "npm": {
+      "name": "nominalprimitivesubtypes",
+      "version": "1.0.0"
+    }
+  }
+}
