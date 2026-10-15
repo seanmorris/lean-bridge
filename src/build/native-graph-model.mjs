@@ -9,6 +9,7 @@ import { createElaboratedSemanticModel } from "../analyze/semantic-model.mjs";
 import { reconcileReviewedSource } from "../analyze/reviewed-source.mjs";
 import { hashBindingIr } from "../binding-ir/canonical.mjs";
 import { componentRecordDefinitions } from "../abi/component-records.mjs";
+import { nominalRefinementEntries } from "../abi/refinements.mjs";
 import { assertComponentRecursiveBindings, componentRecursiveAbi, componentRecursiveDispatch } from "../abi/component-recursive-abi.mjs";
 import { componentRecursiveHelper, componentRecursiveLeanSource, componentRecursiveTypes } from "./component-recursive-lean.mjs";
 import { createNativeModel, generateNativeLeanAdapters } from "./native-model.mjs";
@@ -33,8 +34,6 @@ const leanType = type => {
 };
 const containsGraph = value => value && typeof value === "object"
 	&& (value.kind === "graph" || Object.values(value).some(containsGraph));
-const containsRefinement = value => value && typeof value === "object"
-	&& (value.kind === "refinement" || Object.values(value).some(containsRefinement));
 
 const descriptor = ir => ir.types.some(type => type.kind === "callback")
 	? createNativeCallableGraphDescriptor(ir) : ({ schemaVersion: 1
@@ -93,9 +92,6 @@ export const createCompiledNativeModel = (options, { ownedGraphs = false, ownedH
 	if(typeof nativeRefinements !== "boolean" || typeof nativeCallbackRefinements !== "boolean") throw new TypeError("Native refinement capability must be explicit");
 	const elaborated = projectNativeMetadata(metadata, sourceIdentity, { copiedGraphs: true, refinements: nativeRefinements });
 	if(!elaborated.declarations.some(containsGraph)) return createNativeModel(options, { refinements: nativeRefinements, callbackRefinements: nativeCallbackRefinements });
-	// Graph carriers have no Fin guard, so refined exports cannot join that transport.
-	const refined = elaborated.declarations.find(containsRefinement);
-	if(refined) throw Object.assign(new TypeError(`${refined.name}: checked Fin refinements cannot share a component with copied graph exports`), { code: "native-refinements-unsupported", details: { declaration: refined.name } });
 	const semantic = createElaboratedSemanticModel({ metadata
 		, request: sourceIdentity.request
 		, component, elaborationSha256: elaborated.sha256 });
@@ -105,7 +101,8 @@ export const createCompiledNativeModel = (options, { ownedGraphs = false, ownedH
 	const exports = bindingIr.declarations.map(item => {
 		const source = sources.get(item.source.declaration), entry = copiedGraph.exports.find(value => value.bindingId === item.id);
 		if(!source) throw new TypeError("Native graph export lacks a compiler-selected source declaration");
-		return { ...source, bindingId: item.id, symbol: `${entry.symbol}_lean` };
+		const refinements = item.source.extensions["lean-lang.org/refinements"];
+		return { ...source, bindingId: item.id, symbol: `${entry.symbol}_lean`, ...(refinements ? { refinements } : {}) };
 	});
 	const model = { schemaVersion: sourceIdentity.reviewedBindingIr === undefined ? 4 : 5
 		, profile: "native-library-v1", pointerBits: 64, byteOrder: "little"
@@ -163,11 +160,13 @@ export const generateCompiledNativeLeanAdapters = model => {
 	const exports = model.exports.map((item, index) => ({ bindingId: item.bindingId
 		, symbol: abi.exports.find(value => value.bindingId === item.bindingId).symbol
 		, wrapper: `export${index}`, sourceDeclaration: item.name
+		, parameters: item.parameters
+		, ...(item.refinements ? { refinements: item.refinements } : {})
 		, ...(item.specialization ? { sourceApplication: item.specialization.application } : {}) }));
 	const lines = [...new Set(model.exports.map(item => `import ${item.module}`))
 		, "set_option maxRecDepth 10000", `namespace ${module}`
 		, ...(abi.callbacks ? componentStructuredCallableLeanSource(abi, exports)
-			: componentRecursiveLeanSource(abi, exports, leanType))
+			: componentRecursiveLeanSource(abi, exports, leanType, nominalRefinementEntries(model.bindingIr.types)))
 		, `end ${module}`, ""];
 	const header = abi.callbacks
 		? carrierHeader(componentStructuredCopiedView(abi), false) + nativeCallableGraphHeader(abi)

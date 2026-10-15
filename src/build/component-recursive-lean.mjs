@@ -7,7 +7,7 @@
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { assertComponentRecursiveAbi } from "../abi/component-recursive-abi.mjs";
 import { componentRecursiveLimits } from "../abi/component-recursive.mjs";
-import { checkedRecordVia, componentRefinedCall, componentRefinementGuards, componentCarrierRefinementValidators, componentRefinementConversion } from "./component-refinements.mjs";
+import { checkedRecordVia, componentRefinedCall, componentRefinementGuards, componentCarrierRefinementValidators, componentRefinementConversion, componentRecursiveRefinementLeaves } from "./component-refinements.mjs";
 import { componentRefinementMirrors, hasComponentNominalRefinements } from "./component-refinement-mirrors.mjs";
 import { componentFinGuard } from "./component-fin-guards.mjs";
 
@@ -193,15 +193,27 @@ export const componentRecursiveLeanSource = (abi, exports, leanType, nominalRefi
 			`@[export ${item.symbol}_fin_guard_${index}]`
 			, `def ${item.wrapper}_fin_guard_${index} (carrier : _root_.Array ${parameter.leanType}) : _root_.UInt8 :=`
 			, "  match carrierValue carrier with", "  | .none => 0", "  | .some _bridgeValue =>"
-			, `    if ${componentFinGuard(item.refinements.parameters[index], "_bridgeValue")} then 1 else 0`, ""
+			, `    if ${componentFinGuard(item.refinements.parameters[index], "_bridgeValue", 0, conversion.cycles)} then 1 else 0`, ""
 		));
-		lines.push(...componentCarrierRefinementValidators(item, nominalRefinements.length > 0 || Boolean(conversion), conversion ? componentFinGuard : undefined));
+		lines.push(...componentCarrierRefinementValidators(item, nominalRefinements.length > 0 || Boolean(conversion), conversion
+			? (tree, value) => componentFinGuard(tree, value, 0, conversion.cycles) : undefined));
 		const signature = abi.exports.find(value => value.bindingId === item.bindingId);
+		if(conversion) item.refinements.parameters.forEach((tree, index) => {
+			for(const leaf of componentRecursiveRefinementLeaves(tree, signature.parameters[index], definitions, conversion.cycles))
+				lines.push(`@[export ${item.symbol}_graph_refinement_${index}_${leaf.key}]`
+					, `def ${item.wrapper}_graph_refinement_${index}_${leaf.key} (carrier : ${carrier(leaf.type)}) : _root_.UInt8 :=`
+					, "  match carrierValue carrier with"
+					, "  | .none => 0"
+					, "  | .some value =>"
+					, `    match ${componentRefinementConversion(leaf.refinement, "value")} with`
+					, "    | .some _ => 1"
+					, "    | .none => 0", "");
+		});
 		const names = signature.parameters.map((_, index) => `a${index}`);
 		const parameters = signature.parameters.map((type, index) => `(${names[index]} : ${carrier(type)})`).join(" ");
 		const refined = componentRefinedCall(item, names, true);
 		const call = componentRefinementGuards(refined.guards, `pure (${refined.call})`, ".none");
-		const bounds = conversion ? item.refinements.parameters.map((tree, index) => componentFinGuard(tree, names[index])).filter(guard => guard !== "true") : [];
+		const bounds = conversion ? item.refinements.parameters.map((tree, index) => componentFinGuard(tree, names[index], 0, conversion.cycles)).filter(guard => guard !== "true") : [];
 		const body = bounds.length ? `if ${bounds.join(" && ")} then\n  ${call.replaceAll("\n", "\n  ")}\nelse\n  .none` : call;
 		lines.push(`@[export ${item.symbol}_lean]`, `def ${item.wrapper} ${parameters || "(_bridgeUnit : _root_.Unit)"} : ${carrier(signature.result)} :=`
 			, ...checked(names, body.split("\n")).map(line => `  ${line}`), "");

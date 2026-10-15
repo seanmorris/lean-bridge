@@ -165,7 +165,7 @@ export const validateElaboratedMetadata = (report, request) => {
 					if(type?.kind === "graph")
 					{
 						if(references) fail("Nested component copied graph");
-						validateCopiedMetadataGraph(type, (value, table) => copied(value, 0, table, refinements, false)); return;
+						validateCopiedMetadataGraph(type, (value, table) => copied(value, 0, table, refinements, true, produced)); return;
 					}
 					if(type?.kind === "reference")
 					{

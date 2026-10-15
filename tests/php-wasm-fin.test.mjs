@@ -11,7 +11,7 @@ import test from "node:test";
 import { canonicalJson } from "../src/capsule/node.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { checkInstalledPhpWasmFixture, phpWasmFinCaller, phpWasmFinConsumer, phpWasmFinFixtures } from "./helpers/php-wasm-fin-fixtures.mjs";
-import { createCompiledPhpWasmModel } from "../src/build/php-wasm-graph-model.mjs";
+import { createCompiledPhpWasmModel, generateCompiledPhpWasmLeanAdapters } from "../src/build/php-wasm-graph-model.mjs";
 import { createMetadataRequest } from "../src/analyze/elaborated-metadata.mjs";
 import { createNativeModel, createPhpWasmCopiedModel, generateNativeLeanAdapters } from "../src/build/native-model.mjs";
 import { generateNativePrimitiveC } from "../src/backends/c/native-primitives.mjs";
@@ -99,7 +99,7 @@ test("the PHP-Wasm side module compares caller limbs with each bound before the 
 	assert.ok(provider.includes("static const uint32_t lb_fin_tile_sum_0_0[1] = {0x5u};"));
 });
 
-test("PHP-Wasm preserves scalar and structural Subtype checks while refined callable, graph and owned packages remain refused", async () => {
+test("PHP-Wasm preserves scalar and structural checks while refined callable and owned packages remain refused", async () => {
 	const component = { id: "sample@1.0.0", name: "sample", version: "1.0.0" };
 	const input = parameter => {
 		const value = nativeMetadataFixture(), projection = value.metadata.modules[0].declarations[0].projection;
@@ -118,8 +118,8 @@ test("PHP-Wasm preserves scalar and structural Subtype checks while refined call
 	const signatures = { tileSum: finRecordCompilerInput().metadata.modules[0].declarations.find(item => item.identity === "Sample.tileSum").projection.parameters[0].type };
 	const mixed = finRecordCompilerInput({}, { callable: [{ kind: "callback", parameters: [finRecordNat], result: finRecordNat, abi: heap }, finRecordNat], tileSum: [signatures.tileSum, finRecordNat] });
 	assert.throws(() => createPhpWasmCopiedModel(mixed), refinedError(/cannot share a PHP-Wasm package with callables/u));
-	// Graph and owned packages have no Fin walk: a bound beside a recursive export, or in an owned
-	// package, is refused at the PHP-Wasm entry, naming the refined declaration.
+	// Copied graph packages share the recursive carrier's Fin walk. Owned packages still use a
+	// separate transport and remain outside this refinement route.
 	const reselect = (value, extra = {}) => {
 		const { metadata, ...selection } = value.sourceIdentity.request;
 		void metadata;
@@ -140,8 +140,15 @@ test("PHP-Wasm preserves scalar and structural Subtype checks while refined call
 	const graph = { kind: "graph", root: reference, types: [tree], abi: heap };
 	declaration.projection.parameters[0].type = graph; declaration.projection.result = graph;
 	graphed.metadata.modules[0].declarations.unshift(bounded);
-	assert.throws(() => createCompiledPhpWasmModel(reselect(graphed)), refinedError(/^Sample\.bounded: checked Fin refinements cannot share a PHP-Wasm package with copied graph exports$/u));
-	// The same recursive export alone still compiles: the refusal is about the bound, not the graph.
+	const graphModel = createCompiledPhpWasmModel(reselect(graphed));
+	assert.ok(graphModel.copiedGraph);
+	assert.deepEqual(graphModel.exports.find(item => item.name === "Sample.bounded").refinements, {
+		parameters: [{ kind: "fin", bound: "10" }]
+		, result: null
+	});
+	const graphAdapters = generateCompiledPhpWasmLeanAdapters(graphModel);
+	assert.match(graphAdapters.leanSource, /if _bridgeFin\d+ : \(a0\) < 10 then/u);
+	// The same recursive export alone also compiles without adding a refinement guard.
 	const plainGraph = nativeMetadataFixture(), alone = plainGraph.metadata.modules[0].declarations[0].projection;
 	alone.parameters[0].type = graph; alone.result = graph;
 	assert.ok(createCompiledPhpWasmModel(reselect(plainGraph)).copiedGraph);

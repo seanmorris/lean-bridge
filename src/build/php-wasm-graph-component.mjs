@@ -11,6 +11,7 @@ import { generateNativeCallableGraphCalls } from "../backends/c/native-callable-
 import { generateNativeCallableGraphTrampolines } from "./native-callable-graph.mjs";
 import { phpWasmGraphCarrierAbi } from "./php-wasm-graph-model.mjs";
 import { nativeAllocationGuardHeader } from "./native-allocation-guard.mjs";
+import { nominalRefinementEntries } from "../abi/refinements.mjs";
 
 /**
  * Bind finite wasm32 layouts and runtime lifecycle checks to compiler metadata.
@@ -21,9 +22,16 @@ import { nativeAllocationGuardHeader } from "./native-allocation-guard.mjs";
 export const generateCompiledPhpWasmGraph = (model, adapters) => {
 	const initializer = `initialize_${adapters.module}`, abi = phpWasmGraphCarrierAbi(model);
 	const callable = Boolean(abi.callbacks);
-	const zend = callable ? generateCallablePhpGraphZendAdapter(model.bindingIr) : generateCopiedPhpGraphZendAdapter(model.bindingIr);
+	const refinementExports = callable ? [] : model.exports.map((item, index) => ({
+		bindingId: item.bindingId, symbol: abi.exports[index].symbol, wrapper: `export${index}`
+		, sourceDeclaration: item.name, parameters: item.parameters.map(() => ({}))
+		, ...(item.refinements ? { refinements: item.refinements } : {})
+	}));
 	const transport = callable ? generateNativeCallableGraphCalls(model.bindingIr, model.copiedGraph, { initializer, wordBits: 32 })
-		: generateNativeCopiedGraphAdapters(model.bindingIr, abi, { initializer, wordBits: 32 });
+		: generateNativeCopiedGraphAdapters(model.bindingIr, abi, { initializer, wordBits: 32
+			, refinementExports, nominalRefinements: nominalRefinementEntries(model.bindingIr.types) });
+	const zend = callable ? generateCallablePhpGraphZendAdapter(model.bindingIr)
+		: generateCopiedPhpGraphZendAdapter(model.bindingIr, { refinementDiagnostics: transport.refinementDiagnostics });
 	const manifest = JSON.parse(zend["graph-zend-manifest.json"]), prefix = transport.layout.prefix;
 	const layout = callable ? { layout: transport.layout, descriptor: model.copiedGraph } : transport.layout;
 	if(zend[`include/${prefix}-graph-types.h`] !== transport.typesHeader

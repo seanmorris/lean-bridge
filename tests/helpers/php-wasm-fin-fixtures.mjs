@@ -90,6 +90,7 @@ export const phpWasmExecutionTuples = Object.freeze([...variants("node/embedded"
  * @param spec.verifyModel - Check the wasm32 model before installation.
  * @param spec.minimumChecks - Least number of public checks each execution must report.
  * @param spec.reviewed - Build from the fixture's independent review instead of selected exports.
+ * @param spec.retainHandoff - Optional absent directory that receives the reproduced package handoff.
  */
 export const checkInstalledPhpWasmFixture = async (t, spec) => {
 	const archives = [];
@@ -114,8 +115,10 @@ export const checkInstalledPhpWasmFixture = async (t, spec) => {
 		const built = await buildCanonicalProject({ projectRoot, outputRoot, targets: ["php-wasm"], environment }).catch(error => { error.message += `: ${JSON.stringify(error.details)}`; throw error; });
 		const model = JSON.parse(await readFile(join(outputRoot, "php-wasm/component/model.json"), "utf8"));
 		assert.equal(model.pointerBits, 32);
-		// Only a reconciled review produces the reviewed model schema.
-		assert.equal(model.schemaVersion, spec.reviewed ? 3 : 2);
+		// A recursive copied graph uses the graph model's schema pair; acyclic fixtures retain 2/3.
+		const schemas = spec.modelSchemas ?? { ordinary: 2, reviewed: 3 };
+		assert.deepEqual(Object.keys(schemas).sort(), ["ordinary", "reviewed"]);
+		assert.equal(model.schemaVersion, spec.reviewed ? schemas.reviewed : schemas.ordinary);
 		spec.verifyModel(model);
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
@@ -127,6 +130,7 @@ export const checkInstalledPhpWasmFixture = async (t, spec) => {
 	// Two unrelated author roots produce byte-identical archives.
 	assert.deepEqual(archives[1], archives[0]);
 	const { built, model, receipt, handoff, consumer, packageSet, environment } = first;
+	if(spec.retainHandoff) await cp(handoff, spec.retainHandoff, { recursive: true, errorOnExist: true, force: false });
 	const receiptSha256 = sha256(await readFile(join(handoff, "package-set-receipt.json")));
 	const caller = await phpWasmFinCaller(spec);
 	const clean = { ...copiedCleanEnvironment, LEAN_BRIDGE_PHP_SOURCE: "/unavailable/php", LEAN_BRIDGE_PHP_EMSDK: "/unavailable/compiler", LEAN_BRIDGE_PHP_COPIED_RUNTIME: "/unavailable/runtime" };

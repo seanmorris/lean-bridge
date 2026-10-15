@@ -8,7 +8,204 @@ import { sha256 } from "../../capsule/node.mjs";
 import { assertComponentRecursiveBindings } from "../../abi/component-recursive-abi.mjs";
 import { componentRecursiveLimits } from "../../abi/component-recursive.mjs";
 import { componentRecursiveHelper } from "../../build/component-recursive-lean.mjs";
+import { componentRefinementMirrors } from "../../build/component-refinement-mirrors.mjs";
+import { componentRecursiveRefinementLeafKey } from "../../build/component-refinements.mjs";
 import { generateCopiedCGraphTypes } from "./copied-graph-layout.mjs";
+
+const graphLeanTypes = {
+	unit: "Unit", bool: "Bool", uint8: "UInt8", uint16: "UInt16"
+	, uint32: "UInt32", uint64: "UInt64", int8: "Int8", int16: "Int16"
+	, int32: "Int32", int64: "Int64", nat: "Nat", int: "Int"
+	, float32: "Float32", float64: "Float", string: "String", bytes: "ByteArray"
+	, char: "Char", usize: "USize", isize: "ISize"
+};
+const graphLeanType = type => {
+	if(type.kind === "primitive") return `_root_.${graphLeanTypes[type.name]}`;
+	if(type.kind === "named") return `_root_.${type.id.slice(5)}`;
+	const arguments_ = type.arguments.map(graphLeanType);
+	if(type.constructor === "result") return `(_root_.Except ${arguments_[1]} ${arguments_[0]})`;
+	return `(_root_.${{ array: "Array", list: "List", option: "Option", tuple: "Prod" }[type.constructor]} ${arguments_.join(" ")})`;
+};
+
+const finBoundLimbs = bound => {
+	if(typeof bound !== "string" || !/^(?:0|[1-9][0-9]*)$/u.test(bound)) throw new TypeError("Invalid recursive Fin bound");
+	const limbs = [];
+	for(let value = BigInt(bound); value > 0n; value >>= 32n) limbs.push(Number(value & 0xffffffffn));
+	return limbs;
+};
+
+/** Render exact, recoverable checked-refinement diagnostics over native graph values. */
+const graphRefinementDiagnostics = ({ abi, exports, nominalRefinements, layout, table, walker }) => {
+	if(!exports.length) return null;
+	const normalized = componentRefinementMirrors(abi, exports, graphLeanType, nominalRefinements);
+	if(!normalized.sites.some(item => item.refinements.parameters.some(Boolean))) return null;
+	const cycles = normalized.cycles, validators = new Set(), bounds = new Map(), helpers = new Map();
+	const contains = (tree, mode, active = new Set()) => {
+		if(!tree) return false;
+		if(tree.kind === "fin") return mode === "fin";
+		if(["subtype", "checked-record"].includes(tree.kind)) return mode === "constructor";
+		if(tree.kind === "recursive")
+		{
+			if(active.has(tree.cycle)) return false;
+			const target = cycles.get(tree.cycle);
+			if(!target) throw new TypeError(`Missing recursive refinement target ${tree.cycle}`);
+			return contains(target, mode, new Set([...active, tree.cycle]));
+		}
+		const nested = tree.cycle ? new Set([...active, tree.cycle]) : active;
+		const children = tree.kind === "variant" ? tree.cases.flatMap(branch => branch.arguments) : tree.arguments ?? [];
+		return children.some(child => contains(child, mode, nested));
+	};
+	let local = 0;
+	const appendText = (text, indent = "  ") => `${indent}if (!ng_refinement_text(${JSON.stringify(text)}, sizeof(${JSON.stringify(text)}) - 1)) return NG_LIMIT;`;
+	const scoped = (segments, call, indent = "  ") => {
+		const suffix = local++, mark = `mark${suffix}`, status = `status${suffix}`;
+		return [`${indent}size_t ${mark} = ng_refinement_mark();`
+			, ...segments.map(segment => typeof segment === "string" ? appendText(segment, indent)
+				: `${indent}if (!ng_refinement_index(${segment.index})) return NG_LIMIT;`)
+			, `${indent}uint32_t ${status} = ${call};`
+			, `${indent}if (${status}) return ${status};`
+			, `${indent}ng_refinement_restore(${mark});`];
+	};
+	const fieldPointer = (field, expression) => field.storage === "pointer" ? expression : `&${expression}`;
+	const helper = (mode, inputTree, nodeId, symbol, parameter) => {
+		let tree = inputTree;
+		if(tree.kind === "recursive")
+		{
+			tree = cycles.get(tree.cycle);
+			if(!tree) throw new TypeError(`Missing recursive refinement target ${inputTree.cycle}`);
+		}
+		const key = sha256(JSON.stringify({ mode, tree, nodeId, symbol, parameter })).slice(0, 20);
+		const name = `ng_refinement_${key}`;
+		if(helpers.has(name)) return name;
+		const entry = { name, nodeId, lines: null }; helpers.set(name, entry);
+		const node = table.get(nodeId);
+		if(!node) throw new TypeError("Recursive refinement refers to an unknown graph node");
+		const lines = [`static uint32_t ${name}(const ${node.name} *value, uint32_t depth, uint32_t *nodes) {`
+			, `  if (depth > ${componentRecursiveLimits.valueDepth} || !*nodes) return NG_LIMIT;`
+			, "  --*nodes;"];
+		if(tree.kind === "fin")
+		{
+			if(mode === "fin")
+			{
+				if(node.kind !== "primitive" || node.ref.name !== "nat") throw new TypeError("A recursive Fin refinement must erase to Nat");
+				const limbs = finBoundLimbs(tree.bound), constant = `ng_fin_${sha256(tree.bound).slice(0, 20)}`;
+				if(limbs.length) bounds.set(constant, `static const uint32_t ${constant}[${limbs.length}] = {${limbs.map(limb => `0x${limb.toString(16)}u`).join(", ")}};`);
+				lines.push(`  if (!ng_fin_below(value->data, value->length, ${limbs.length ? constant : "NULL"}, ${limbs.length}))`
+					, `    return ng_refinement_reject(${JSON.stringify(` is not below its Fin ${tree.bound} bound`)});`);
+			}
+		}
+		else if(["subtype", "checked-record"].includes(tree.kind))
+		{
+			if(mode === "constructor")
+			{
+				const leaf = componentRecursiveRefinementLeafKey(tree, node.ref);
+				const validator = `${symbol}_graph_refinement_${parameter}_${leaf}`;
+				validators.add(`extern uint8_t ${validator}(lean_object *);`);
+				lines.push(`  if (!${validator}(${walker(node.id)}_in(value)))`
+					, `    return ng_refinement_reject(${JSON.stringify(` was rejected by ${tree.constructor}`)});`);
+			}
+		}
+		else if(tree.kind === "variant")
+		{
+			if(node.kind !== "variant" || node.cases.length !== tree.cases.length) throw new TypeError("Recursive variant refinement differs from its graph layout");
+			for(const [branchIndex, branch] of tree.cases.entries())
+			{
+				const nativeBranch = node.cases[branchIndex];
+				const children = branch.arguments.flatMap((child, fieldIndex) => {
+					if(!contains(child, mode)) return [];
+					const field = nativeBranch.fields[fieldIndex], childName = helper(mode, child, field.type, symbol, parameter);
+					const expression = fieldPointer(field, `value->cases.${nativeBranch.name}.${field.name}`);
+					return scoped([`.${branch.name}.${branch.fields[fieldIndex]}`], `${childName}(${expression}, depth + 1, nodes)`, "    ");
+				});
+				if(children.length) lines.push(`  if (value->kind == ${branchIndex}u) {`, ...children, "  }");
+			}
+		}
+		else if(["array", "list"].includes(tree.kind))
+		{
+			if(!node.element) throw new TypeError("Recursive sequence refinement differs from its graph layout");
+			const child = tree.arguments[0];
+			if(contains(child, mode))
+			{
+				const childName = helper(mode, child, node.element, symbol, parameter), index = `i${local++}`;
+				lines.push(`  for (size_t ${index} = 0; ${index} < value->length; ++${index}) {`
+					, ...scoped([{ index }], `${childName}(value->data + ${index}, depth + 1, nodes)`, "    "), "  }");
+			}
+		}
+		else
+		{
+			const expected = { record: "record", option: "option", result: "result", tuple: "tuple" }[tree.kind];
+			if(node.kind !== expected) throw new TypeError(`Recursive ${tree.kind} refinement differs from its graph layout`);
+			const children = tree.arguments;
+			for(const [index, child] of children.entries())
+			{
+				if(!contains(child, mode)) continue;
+				const field = node.fields[index], childName = helper(mode, child, field.type, symbol, parameter);
+				const expression = fieldPointer(field, `value->${field.name}`);
+				const segment = tree.kind === "record" ? `.${tree.fields[index]}` : tree.kind === "option" ? "?"
+					: tree.kind === "result" ? `.${index ? "error" : "ok"}` : `.${index}`;
+				const inner = scoped([segment], `${childName}(${expression}, depth + 1, nodes)`, ["option", "result"].includes(tree.kind) ? "    " : "  ");
+				if(tree.kind === "option") lines.push("  if (value->has_value) {", ...inner, "  }");
+				else if(tree.kind === "result") lines.push(`  if (${index ? "!" : ""}value->is_ok) {`, ...inner, "  }");
+				else lines.push(...inner);
+			}
+		}
+		lines.push("  return NG_OK;", "}"); entry.lines = lines;
+		return name;
+	};
+	const roots = new Map(layout.roots.map(root => [root.bindingId, root]));
+	const calls = new Map();
+	for(const item of normalized.sites)
+	{
+		const root = roots.get(item.bindingId);
+		if(!root) throw new TypeError("Recursive refinement export lacks a graph root");
+		const passes = [];
+		for(const mode of ["fin", "constructor"])
+		{
+			const checked = item.refinements.parameters.map((tree, index) => tree && contains(tree, mode)
+				? { index, name: helper(mode, tree, root.parameters[index], item.symbol, index) } : null).filter(Boolean);
+			if(checked.length) passes.push({ mode, checked });
+		}
+		if(passes.length) calls.set(item.bindingId, passes);
+	}
+	const support = `
+enum { NG_REFINEMENT_MESSAGE_LIMIT = 16384 };
+static _Thread_local char ng_refinement_message[NG_REFINEMENT_MESSAGE_LIMIT + 1];
+static _Thread_local size_t ng_refinement_length;
+static inline void ng_refinement_reset(void) { ng_refinement_length = 0; ng_refinement_message[0] = 0; }
+static inline size_t ng_refinement_mark(void) { return ng_refinement_length; }
+static inline void ng_refinement_restore(size_t mark) { ng_refinement_length = mark; ng_refinement_message[mark] = 0; }
+static inline void ng_refinement_overflow(void) {
+  static const char message[] = "Refinement diagnostic exceeds 16 KiB";
+  memcpy(ng_refinement_message, message, sizeof(message)); ng_refinement_length = sizeof(message) - 1;
+}
+static inline int ng_refinement_text(const char *text, size_t length) {
+  if (length > NG_REFINEMENT_MESSAGE_LIMIT - ng_refinement_length) { ng_refinement_overflow(); return 0; }
+  memcpy(ng_refinement_message + ng_refinement_length, text, length); ng_refinement_length += length;
+  ng_refinement_message[ng_refinement_length] = 0; return 1;
+}
+static inline int ng_refinement_index(size_t value) {
+  char digits[3 * sizeof(size_t) + 1]; size_t length = 0;
+  do { digits[length++] = (char)('0' + value % 10); value /= 10; } while (value);
+  if (!ng_refinement_text("[", 1)) return 0;
+  while (length) if (!ng_refinement_text(&digits[--length], 1)) return 0;
+  return ng_refinement_text("]", 1);
+}
+static inline uint32_t ng_refinement_reject(const char *suffix) {
+  return ng_refinement_text(suffix, strlen(suffix)) ? NG_INVALID : NG_LIMIT;
+}
+static inline int ng_fin_below(const uint32_t *data, size_t length, const uint32_t *bound, size_t bound_length) {
+  while (length && data[length - 1] == 0) --length;
+  if (length != bound_length) return length < bound_length;
+  while (length--) if (data[length] != bound[length]) return data[length] < bound[length];
+  return 0;
+}
+const char *${layout.prefix}_graph_error(void) { return ng_refinement_length ? ng_refinement_message : NULL; }
+`;
+	return { normalized, validators: [...validators].sort(), bounds: [...bounds.values()].sort()
+		, prototypes: [...helpers.values()].map(entry => `static uint32_t ${entry.name}(const ${table.get(entry.nodeId).name} *, uint32_t, uint32_t *);`)
+		, helpers: [...helpers.values()].map(entry => entry.lines.join("\n"))
+		, calls, support };
+};
 
 const runtime = wordBits => `
 #include <lean/lean.h>
@@ -134,15 +331,19 @@ static inline uint32_t ng_nat_out(lean_object *value, ng_arena *arena, const uin
  * @param options.initializer - Verified component initializer, absent for isolated transport tests.
  * @param options.wordBits - Lean and C pointer width, either 32 or 64.
  * @param options.exportCalls - Emit public copied calls, or only reusable payload walkers.
+ * @param options.refinementExports - Compiler-selected recursive export sites.
+ * @param options.nominalRefinements - Shared compiler-selected nominal constraints.
  */
-export const generateNativeCopiedGraphAdapters = (ir, abi, { initializer = null, wordBits = 64, exportCalls = true } = {}) => {
+export const generateNativeCopiedGraphAdapters = (ir, abi, { initializer = null, wordBits = 64, exportCalls = true, refinementExports = [], nominalRefinements = [] } = {}) => {
 	assertComponentRecursiveBindings(abi, ir);
 	if(initializer !== null && (typeof initializer !== "string" || !/^initialize_LeanBridgeNative[0-9a-f]{16}$/.test(initializer))) throw new TypeError("Invalid native graph initializer identity");
 	const { layout, header: typesHeader } = generateCopiedCGraphTypes(ir, { wordBits });
 	const table = new Map(layout.nodes.map((node, index) => [node.id, { ...node, index }]));
 	const walker = id => `ng_${sha256(id).slice(0, 20)}`;
 	const helper = node => componentRecursiveHelper(abi, node.ref);
-	const lines = [`#include "${layout.prefix}-graph.h"`, runtime(wordBits)];
+	const diagnostics = graphRefinementDiagnostics({ abi, exports: refinementExports, nominalRefinements, layout, table, walker });
+	const lines = [`#include "${layout.prefix}-graph.h"`, runtime(wordBits)
+		, ...diagnostics ? [diagnostics.support, ...diagnostics.validators, ...diagnostics.bounds, ...diagnostics.prototypes] : []];
 	if(initializer) lines.push('#include "lean_bridge_native_runtime.h"'
 		, '#if !defined(LEAN_BRIDGE_NATIVE_RUNTIME_RETIREMENT_VERSION) || LEAN_BRIDGE_NATIVE_RUNTIME_RETIREMENT_VERSION != 1'
 		, '#error "native graph calls require the retirement-aware shared runtime"', "#endif"
@@ -327,6 +528,7 @@ export const generateNativeCopiedGraphAdapters = (ir, abi, { initializer = null,
 			, `static inline lean_object *${id}_in(const ${name} *value) {`, ...input.map(line => `  ${line}`), "}"
 			, `static inline uint32_t ${id}_out(${name} *out, lean_object *value, size_t depth, ng_arena *arena) {`, ...output.map(line => `  ${line}`), "}");
 	}
+	if(diagnostics) lines.push(...diagnostics.helpers);
 	for(const root of exportCalls ? layout.roots : [])
 	{
 		const item = abi.exports.find(item => item.bindingId === root.bindingId), result = table.get(root.result);
@@ -334,12 +536,26 @@ export const generateNativeCopiedGraphAdapters = (ir, abi, { initializer = null,
 		parameters.push(`${result.name} *out`);
 		const signature = `uint32_t ${root.name}_graph(${parameters.join(", ")})`;
 		declarations.push(`${signature};`);
+		const refinementPasses = diagnostics?.calls.get(root.bindingId) ?? [];
+		const refinementCalls = refinementPasses.flatMap((pass, passIndex) => [
+			passIndex ? `  refinement_nodes = ${componentRecursiveLimits.valueNodes};` : `  uint32_t refinement_nodes = ${componentRecursiveLimits.valueNodes};`
+			, ...pass.checked.flatMap(({ index, name }, checkIndex) => {
+				const mark = `refinement_mark_${passIndex}_${checkIndex}`, label = `arg${index}`;
+				return [`  size_t ${mark} = ng_refinement_mark();`
+					, `  if (!ng_refinement_text(${JSON.stringify(label)}, sizeof(${JSON.stringify(label)}) - 1)) return NG_LIMIT;`
+					, `  if ((status = ${name}(a${index}, 0, &refinement_nodes))) return status;`
+					, `  ng_refinement_restore(${mark});`];
+			})
+		]);
+		if(refinementPasses.length) refinementCalls.push("  ng_refinement_reset();");
 		lines.push(`extern lean_object *${item.symbol}_lean(${Array(Math.max(1, root.parameters.length)).fill("lean_object *").join(", ")});`, `${signature} {`
+			, ...diagnostics ? ["  ng_refinement_reset();"] : []
 			, `  if (!ng_pointer(out, sizeof(*out), _Alignof(${result.name}))) return NG_INVALID;`
 			, ...result.aggregate ? ["  if (out->_bridge_owner || out->_bridge_release) return NG_INVALID;"] : []
 			, `  ng_budget budget = { .bytes = 16u * 1024u * 1024u, .nodes = ${componentRecursiveLimits.valueNodes}, .path = {{0}} };`
 			, "  uint32_t status;"
 			, ...root.parameters.map((type, index) => `  if ((status = ${walker(type)}_check(a${index}, 0, 1, &budget))) return status;`)
+			, ...refinementCalls
 			, "  if ((status = ng_charge(&budget, 1, sizeof(*out)))) return status;"
 			, "  if (!budget.nodes) return NG_LIMIT;"
 			, ...initializer ? [`  if (!lean_bridge_native_component_initialize(${JSON.stringify(ir.component.id)}, ng_initialize)) return NG_RUNTIME;`] : []
@@ -354,6 +570,9 @@ export const generateNativeCopiedGraphAdapters = (ir, abi, { initializer = null,
 			, ...result.aggregate ? ["  result._bridge_owner = arena.head;", "  result._bridge_release = arena.head ? ng_release : NULL;"] : []
 			, "  *out = result; return NG_OK;", "}");
 	}
-	const header = [`#include "${layout.prefix}-graph-types.h"`, "#ifdef __cplusplus", 'extern "C" {', "#endif", ...declarations, "#ifdef __cplusplus", "}", "#endif", ""].join("\n");
-	return { layout, typesHeader, header, source: lines.join("\n") };
+	const header = [`#include "${layout.prefix}-graph-types.h"`, "#ifdef __cplusplus", 'extern "C" {', "#endif", ...declarations
+		, ...diagnostics ? [`const char *${layout.prefix}_graph_error(void);`] : []
+		, "#ifdef __cplusplus", "}", "#endif", ""].join("\n");
+	return { layout, typesHeader, header, source: lines.join("\n")
+		, ...diagnostics ? { refinementDiagnostics: true } : {} };
 };

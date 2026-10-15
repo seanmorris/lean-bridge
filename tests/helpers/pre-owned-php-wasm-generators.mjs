@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeOwnedPhpWasmPackages, ownedPhpWasmHistoryPath } from "./owned-php-wasm-source-history.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 
@@ -36,7 +37,7 @@ export const preOwnedPhpWasmGenerators = () => cached ??= (async () => {
 		const replacements = new Map(paths.map(path => [resolve(path), pathToFileURL(join(directory, path)).href]));
 		for(const path of paths)
 		{
-			const current = await readFile(path, "utf8");
+			const current = beforeFinRefinementSource(path, await readFile(path, "utf8"), record.sources[path]);
 			assert.equal(sha256(current), record.sources[path], path);
 			let source = beforeOwnedPhpWasmPackages(path, current);
 			const expected = record.updates.find(update => update.path === path)?.previousSha256 ?? record.sources[path];

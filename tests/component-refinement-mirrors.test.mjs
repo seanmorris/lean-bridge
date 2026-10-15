@@ -8,11 +8,11 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { componentRefinementMirrors } from "../src/build/component-refinement-mirrors.mjs";
-import { refinementMirrorNames, renderRefinementMirrors } from "../src/build/refinement-mirrors.mjs";
+import { refinementCycleTrees, refinementMirrorNames, renderRefinementMirrors } from "../src/build/refinement-mirrors.mjs";
 import { generateNativeLeanAdapters } from "../src/build/native-model.mjs";
 import { generateComponentRecursiveAdapters } from "../src/build/component-recursive-adapters.mjs";
 import { componentRecursiveLeanSource } from "../src/build/component-recursive-lean.mjs";
-import { componentRefinementMirrorsFixture } from "./helpers/component-refinement-mirrors-fixture.mjs";
+import { componentRefinementMirrorsFixture, mutualComponentRefinementMirrorsFixture, recursiveComponentRefinementMirrorsFixture } from "./helpers/component-refinement-mirrors-fixture.mjs";
 import { nominalFinConversionFixture, nominalSubtypeConversionFixture } from "./helpers/nominal-subtype-conversion-fixture.mjs";
 import "./helpers/component-refinement-mirrors-source-tests.mjs";
 import "./helpers/component-nominal-subtype-tests.mjs";
@@ -90,6 +90,68 @@ test("reordered exports retain stable component mirror definitions and construct
 	const a = normalize(first), b = normalize(second);
 	for(const item of a.sites) assert.deepEqual(b.sites.find(other => other.bindingId === item.bindingId), item);
 	assert.deepEqual(a.lines, b.lines);
+});
+
+test("recursive component mirrors retain per-site checks through finite private backedges", () => {
+	const first = recursiveComponentRefinementMirrorsFixture(), second = recursiveComponentRefinementMirrorsFixture();
+	second.exports.reverse(); second.abi.exports.reverse();
+	const a = normalize(first), b = normalize(second), source = a.lines.join("\n");
+	const at = (model, name) => model.sites.find(item => item.sourceDeclaration === `RecursiveMirrors.${name}`).refinements;
+	const firstTree = at(a, "first").parameters[0], secondTree = at(a, "second").parameters[0];
+	assert.notEqual(firstTree.cycle, secondTree.cycle);
+	assert.deepEqual(firstTree.cases[1].arguments[2]
+		, { kind: "recursive", definition: "RecursiveMirrors.Chain", cycle: firstTree.cycle });
+	assert.deepEqual(firstTree.cases[1].arguments[1], { kind: "fin", bound: "3" });
+	assert.equal(a.cycles.size, 3);
+	assert.equal((source.match(/def LbErased\.RecursiveMirrors\.Chain\.via_/gu) ?? []).length, 2);
+	assert.equal((source.match(/def LbErased\.RecursiveMirrors\.Chain\.erase /gu) ?? []).length, 1);
+	assert.match(source, /Chain\.via_[a-f0-9]+ \(a2\)/u);
+	assert.match(source, /Chain\.erase \(a2\)/u);
+	assert.match(source, /def LbErased\.RecursiveMirrors\.Chain\.validFin/u);
+	assert.deepEqual(a.lines, b.lines);
+	for(const item of a.sites) assert.deepEqual(b.sites.find(other => other.bindingId === item.bindingId), item);
+});
+
+test("mutual component mirrors retain active cases, aliases and structural backedges", () => {
+	const first = mutualComponentRefinementMirrorsFixture(), second = mutualComponentRefinementMirrorsFixture();
+	second.exports.reverse(); second.abi.exports.reverse();
+	const a = normalize(first), b = normalize(second), source = a.lines.join("\n");
+	const at = (model, name) => model.sites.find(item => item.sourceDeclaration === `MutualMirrors.${name}`).refinements;
+	const tree = at(a, "first").parameters[0], right = tree.arguments[1].arguments[0];
+	assert.equal(tree.definition, "MutualMirrors.Left");
+	assert.equal(right.definition, "MutualMirrors.Right");
+	assert.deepEqual(right.cases[0].arguments, []);
+	assert.deepEqual(right.cases[1].arguments[1].arguments[0]
+		, { kind: "recursive", definition: "MutualMirrors.Left", cycle: tree.cycle });
+	assert.deepEqual(a.mutualGroups, [["MutualMirrors.Left", "MutualMirrors.Right"]]);
+	const groups = at(a, "groups").parameters[0];
+	assert.equal(groups.kind, "array");
+	assert.equal(groups.arguments[0].kind, "option");
+	assert.equal(groups.arguments[0].arguments[0].definition, "MutualMirrors.Left");
+	assert.equal(a.sites.find(item => item.sourceDeclaration === "MutualMirrors.groups").parameters[0].leanType
+		, "(_root_.Array (_root_.Option LbErased.MutualMirrors.Left))");
+	assert.equal((source.match(/^mutual$/gmu) ?? []).length, 2);
+	assert.match(source, /structure LbErased\.MutualMirrors\.Left where/u);
+	assert.match(source, /inductive LbErased\.MutualMirrors\.Right where/u);
+	assert.deepEqual(a.lines, b.lines);
+	for(const item of a.sites) assert.deepEqual(b.sites.find(other => other.bindingId === item.bindingId), item);
+});
+
+test("recursive component mirrors reject an explicit selection at an active backedge", () => {
+	const fixture = recursiveComponentRefinementMirrorsFixture();
+	const first = fixture.exports.find(item => item.sourceDeclaration === "RecursiveMirrors.first");
+	const second = fixture.exports.find(item => item.sourceDeclaration === "RecursiveMirrors.second");
+	first.refinements.parameters[0].cases[1].fields[2].refinement = structuredClone(second.refinements.parameters[0]);
+	assert.throws(() => normalize(fixture), /Refinement does not match its transport type/u);
+});
+
+test("recursive refinement tokens identify one complete finite target", () => {
+	const target = { kind: "record", definition: "Example.Node", fields: ["value"], arguments: [null], cycle: "cycle-token" };
+	const model = { exports: [{ refinements: { parameters: [target], result: null } }] };
+	assert.equal(refinementCycleTrees(model).get("cycle-token"), target);
+	const conflicting = structuredClone(target); conflicting.arguments[0] = { kind: "fin", bound: "3" };
+	assert.throws(() => refinementCycleTrees({ exports: [{ refinements: { parameters: [target, conflicting], result: null } }] })
+		, /Conflicting recursive refinement token/u);
 });
 
 test("component mirrors refuse malformed, missing and conflicting per-use choices", () => {

@@ -148,6 +148,10 @@ structure ParentAliasCache where
 structure ShapeState where
   types : Array Json := #[]
   nodes : Nat := 0
+  /-- Nominal definitions that participate in a selected recursive component.
+  Constructor decisions stay local to one export site, but every definition in
+  its recursive component must enter that site's finite table. -/
+  recursiveSelections : List Name := []
   parentAliases : Option (IO.Ref ParentAliasCache) := none
 
 abbrev ShapeM := StateT ShapeState MetaM
@@ -156,12 +160,25 @@ def rememberShape (e : Expr) (name : Name) (value : Json) (perSite : Bool := fal
   if (← get).types.size >= 1024 then reject e "copied graph exceeds 1024 nominal definitions"
   if (← get).nodes >= 4096 then reject e "copied type graph exceeds its node limit"
   -- Constructor choices belong to this use, not the table entry for its nominal name.
-  -- Keep the selected tree inline so two fields can use different constructors for one type.
-  if perSite then
+  -- Keep an acyclic selected tree inline so two fields can use different constructors
+  -- for one type. A selected recursive component instead gets a site-local table:
+  -- separate parameters and exports still receive independent tables.
+  if perSite && !(← get).recursiveSelections.contains name then
     modify fun state => { state with nodes := state.nodes + 1 }
     return value
+  if let some existing := (← get).types.find? fun type =>
+      (type.getObjValAs? String "name").toOption == some name.toString then
+    unless existing == value do
+      reject e s!"one recursive copied site selects conflicting refinements for {name}"
+    return ← nominalReference e name
   modify fun state => { state with types := state.types.push value, nodes := state.nodes + 1 }
   return ← nominalReference e name
+
+/-- Mark every nominal definition on the finite backedge. Parents constructed
+after the backedge see this state and enter the same site-local table. -/
+def rememberRecursiveSelection (name : Name) (seen : List Name) : ShapeM Unit := do
+  let cycle := name :: seen.takeWhile (· != name)
+  modify fun state => { state with recursiveSelections := cycle ++ state.recursiveSelections }
 
 /-- A record with proof fields crosses only at a top-level site. A parameter is built by the
 configured checked constructor alone, whose explicit binders are the payload fields by name and
@@ -470,10 +487,11 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
               if !nativeIdentifier name.toString || !levels.isEmpty || !definition.levelParams.isEmpty ||
                   info.isUnsafe || info.isPartial then reject e "unsupported copied alias definition"
               if seen.contains name then
-                if checked.isSome || subtypeStructural then reject e "recursive nominal constructor selections are not implemented"
                 let guarded ← (seen.takeWhile (· != name)).anyM fun other => do
                   return (← getConstInfo other) matches .inductInfo _
                 unless guarded do reject e "cyclic copied alias"
+                if checked.isSome || subtypeStructural then
+                  rememberRecursiveSelection name seen
                 return ← nominalReference e name
               -- Alias spelling does not change the permitted refinement position: a Fin or Subtype
               -- alias keeps its depth, so an aliased Subtype in a callback argument is not top-level.
@@ -623,7 +641,8 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
         ("module", str (← getEnv).header.moduleNames[index.toNat]!.toString), ("abi", lowered)]
     if let some info := getStructureInfo? (← getEnv) name then
       if seen.contains name then
-        if checked.isSome || subtypeStructural then reject e "recursive nominal constructor selections are not implemented"
+        if checked.isSome || subtypeStructural then
+          rememberRecursiveSelection name seen
         return ← nominalReference e name
       let .inductInfo induct ← getConstInfo name | reject e "invalid record"
       if !nativeIdentifier name.toString || !nativeIdentifier induct.ctors.head!.toString then
@@ -675,7 +694,8 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
       return ← checkedRecordSite request e reference payload depth copied structural (selectedConstructor checked) callbackSite hostReply
     if let .inductInfo induct ← getConstInfo name then
       if seen.contains name then
-        if checked.isSome || subtypeStructural then reject e "recursive nominal constructor selections are not implemented"
+        if checked.isSome || subtypeStructural then
+          rememberRecursiveSelection name seen
         return ← nominalReference e name
       if !nativeIdentifier name.toString || induct.numParams != 0 || induct.numIndices != 0 then
         reject e "generic or indexed variants require a checked specialization"
@@ -794,6 +814,97 @@ partial def copiedReferenceNames (value : Json) : List String :=
   | .arr values => values.toList.flatMap copiedReferenceNames
   | _ => []
 
+/- A selected recursive site may have an inline nominal parent or sibling that was
+   visited before the backedge proved that the site needs a finite graph. Hoist every
+   such definition into the graph table and replace it with a reference. Acyclic sites
+   still return through `inlineCopiedType` before this pass and keep their exact bytes. -/
+structure CopiedGraphClosureState where
+  sources : Array Json
+  types : Array Json := #[]
+  active : List String := []
+
+abbrev CopiedGraphClosureM := StateT CopiedGraphClosureState MetaM
+
+def copiedGraphReference (value : Json) : MetaM Json := do
+  let name ← ofExcept <| value.getObjValAs? String "name"
+  return obj [("kind", str "reference"), ("name", str name),
+    ("lean", (value.getObjVal? "lean").toOption.getD (str name)),
+    ("abi", ← ofExcept <| value.getObjVal? "abi")]
+
+mutual
+  partial def closeCopiedGraphValue (value : Json) (depth : Nat := 0) : CopiedGraphClosureM Json := do
+    if depth > 32 then throwError "copied graph closure exceeds its depth limit"
+    let kind := (value.getObjValAs? String "kind").toOption.getD ""
+    if kind == "reference" then
+      let name ← ofExcept <| value.getObjValAs? String "name"
+      closeCopiedGraphDefinition name none depth
+      return value
+    if ["alias", "record", "variant"].contains kind then
+      let name ← ofExcept <| value.getObjValAs? String "name"
+      closeCopiedGraphDefinition name (some value) depth
+      return ← copiedGraphReference value
+    if kind == "refinement" then
+      return value.setObjVal! "base"
+        (← closeCopiedGraphValue (← ofExcept <| value.getObjVal? "base") (depth + 1))
+    if kind == "array" || kind == "list" || kind == "option" then
+      return value.setObjVal! "element"
+        (← closeCopiedGraphValue (← ofExcept <| value.getObjVal? "element") (depth + 1))
+    if kind == "result" || kind == "tuple" then
+      let arguments ← ofExcept <| value.getObjValAs? (Array Json) "arguments"
+      return value.setObjVal! "arguments"
+        (toJson (← arguments.mapM fun child => closeCopiedGraphValue child (depth + 1)))
+    return value
+
+  partial def closeCopiedGraphDefinition (name : String) (inline : Option Json)
+      (depth : Nat) : CopiedGraphClosureM Unit := do
+    if (← get).active.contains name then return
+    let sources := (← get).sources
+    let source? := match inline with
+      | some value => some value
+      | none => sources.find? fun item =>
+        (item.getObjValAs? String "name").toOption == some name
+    let some source := source?
+      | throwError "missing copied type definition: {name}"
+    modify fun state => { state with active := name :: state.active }
+    let normalized ← closeCopiedGraphNominal source (depth + 1)
+    modify fun state => { state with active := state.active.erase name }
+    if let some existing := (← get).types.find? fun item =>
+        (item.getObjValAs? String "name").toOption == some name then
+      unless existing == normalized do
+        throwError "conflicting selected copied graph definition: {name}"
+    else
+      if (← get).types.size >= 1024 then
+        throwError "copied graph exceeds 1024 nominal definitions"
+      modify fun state => { state with types := state.types.push normalized }
+
+  partial def closeCopiedGraphNominal (value : Json) (depth : Nat) : CopiedGraphClosureM Json := do
+    let kind := (value.getObjValAs? String "kind").toOption.getD ""
+    if kind == "alias" then
+      return value.setObjVal! "target"
+        (← closeCopiedGraphValue (← ofExcept <| value.getObjVal? "target") (depth + 1))
+    let closeFields := fun (owner : Json) => do
+      let fields ← ofExcept <| owner.getObjValAs? (Array Json) "fields"
+      let fields ← fields.mapM fun (field : Json) => do
+        pure (field.setObjVal! "type"
+          (← closeCopiedGraphValue (← ofExcept <| field.getObjVal? "type") (depth + 1)))
+      pure (owner.setObjVal! "fields" (toJson fields))
+    if kind == "record" then
+      let value ← closeFields value
+      let some provenance := (value.getObjVal? "provenance").toOption | return value
+      let arguments ← ofExcept <| provenance.getObjValAs? (Array Json) "arguments"
+      let arguments ← arguments.mapM fun child => closeCopiedGraphValue child (depth + 1)
+      return value.setObjVal! "provenance"
+        (provenance.setObjVal! "arguments" (toJson arguments))
+    if kind == "variant" then
+      let cases ← ofExcept <| value.getObjValAs? (Array Json) "cases"
+      return value.setObjVal! "cases" (toJson (← cases.mapM closeFields))
+    throwError "invalid inline copied graph definition: {kind}"
+end
+
+def closeCopiedGraph (types : Array Json) (value : Json) : MetaM (Array Json × Json) := do
+  let (root, state) ← (closeCopiedGraphValue value).run { sources := types }
+  return (state.types, root)
+
 partial def hasResource (value : Json) : Bool :=
   match value with
   | .obj fields =>
@@ -815,6 +926,7 @@ partial def finiteCopiedGraph (types : Array Json) (value : Json)
   if policy.isNone then
     let (expanded, _) ← (inlineCopiedType types value).run.run 0
     if let some inline := expanded then return inline
+  let (types, value) ← closeCopiedGraph types value
   let mut pending := copiedReferenceNames value
   let mut names : List String := []
   let mut selected := #[]
@@ -852,10 +964,7 @@ def shape (request : Request) (e : Expr) (checked : Option Json := none)
   let subtypeResult := callbackSite == some true && request.ownedAggregates.isNone
   let (value, state) ← (shapeTree request e (checked := checked) (callbackSite := callbackSite)
     (subtypeStructural := true) (subtypeResult := subtypeResult)).run { parentAliases }
-  let result ← finiteCopiedGraph state.types value request.ownedAggregates
-  if subtypeResult && (result.getObjValAs? String "kind").toOption == some "graph" && containsKind #[] result "subtype" then
-    reject e "Subtype results require acyclic copied values"
-  return result
+  return ← finiteCopiedGraph state.types value request.ownedAggregates
 
 partial def signature (request : Request) (e : Expr) (limit : Nat)
     (checkedParameters : Array (Option Json) := #[]) (checkedResult : Option Json := none)
@@ -1020,10 +1129,23 @@ partial def containsRefinement (type : Json) : Bool :=
     ((type.getObjValAs? (Array Json) "arguments").toOption.getD #[]).any containsRefinement
   else false
 
-/-- Recover only author-constructor choices. Fin predicates remain independently compiler-owned. -/
-partial def projectionCheckedSelection (type : Json) : Json := Id.run do
+/-- Recover only author-constructor choices. Fin predicates remain independently compiler-owned.
+Recursive backedges contribute no new choice: the enclosing site-local nominal selection owns them. -/
+partial def projectionCheckedSelectionWith (type : Json) (types : Array Json := #[])
+    (seen : List String := []) : Json := Id.run do
   let kind := (type.getObjValAs? String "kind").toOption.getD ""
-  if kind == "alias" then return projectionCheckedSelection ((type.getObjVal? "target").toOption.getD Json.null)
+  if kind == "graph" then
+    let table := (type.getObjValAs? (Array Json) "types").toOption.getD #[]
+    return projectionCheckedSelectionWith ((type.getObjVal? "root").toOption.getD Json.null) table
+  if kind == "reference" then
+    let name := (type.getObjValAs? String "name").toOption.getD ""
+    if seen.contains name then return Json.null
+    let some definition := types.find? fun item =>
+        (item.getObjValAs? String "name").toOption == some name
+      | return Json.null
+    return projectionCheckedSelectionWith definition types (name :: seen)
+  if kind == "alias" then
+    return projectionCheckedSelectionWith ((type.getObjVal? "target").toOption.getD Json.null) types seen
   if kind == "refinement" then
     let predicate := (type.getObjVal? "predicate").toOption.getD Json.null
     if ["subtype", "checked-record"].contains ((predicate.getObjValAs? String "kind").toOption.getD "") then
@@ -1034,7 +1156,7 @@ partial def projectionCheckedSelection (type : Json) : Json := Id.run do
     let fieldChoices := fun (owner : Json) =>
       ((owner.getObjValAs? (Array Json) "fields").toOption.getD #[]).map fun field =>
         obj [("name", (field.getObjVal? "name").toOption.getD Json.null),
-          ("refinement", projectionCheckedSelection ((field.getObjVal? "type").toOption.getD Json.null))]
+          ("refinement", projectionCheckedSelectionWith ((field.getObjVal? "type").toOption.getD Json.null) types seen)]
     let selected := fun (fields : Array Json) => fields.any fun field =>
       (field.getObjVal? "refinement").toOption != some Json.null
     let identity := [("kind", str kind), ("name", (type.getObjVal? "name").toOption.getD Json.null)]
@@ -1050,9 +1172,12 @@ partial def projectionCheckedSelection (type : Json) : Json := Id.run do
       #[(type.getObjVal? "element").toOption.getD Json.null]
     else if ["tuple", "result"].contains kind then (type.getObjValAs? (Array Json) "arguments").toOption.getD #[]
     else #[]
-  let arguments := children.map projectionCheckedSelection
+  let arguments := children.map fun child => projectionCheckedSelectionWith child types seen
   if arguments.all (· == Json.null) then return Json.null
   return obj [("kind", str kind), ("arguments", toJson arguments)]
+
+def projectionCheckedSelection (type : Json) : Json :=
+  projectionCheckedSelectionWith type
 
 def contractSiteProblem (site type : Json) (result : Bool) (label : String)
     (owned : Bool := false) : Option String := Id.run do
@@ -1193,11 +1318,6 @@ def describeSignature (request : Request) (name : String) (type : Expr) (parentA
         if value == Json.null then throwError "invalid checked refinement selection"
         if let some problem := (checkedSelectionProblem value).run' 0 then throwError "{problem}"
     let (nativeParameters, result) ← signature request type arity checkedParameters checkedResult (parentAliases := parentAliases)
-    -- Refuse before emitting metadata: native graph carriers cannot check refinements.
-    -- The projection retains this declaration's diagnostic instead of failing schema validation.
-    let sites := (nativeParameters.map fun parameter => (parameter.getObjVal? "type").toOption.getD Json.null).push result
-    if native && sites.any (fun site => containsKind #[] site "graph") && sites.any containsRefinement then
-      throwError "checked Fin refinements cannot share a component with copied graph exports"
     if !native && nativeParameters.size > 32 then throwError "components support at most 32 arguments"
     let nativeParameters ← if native then pure nativeParameters else nativeParameters.mapM fun (parameter : Json) => do
       pure <| obj [("name", ← ofExcept <| parameter.getObjVal? "name"),

@@ -77,3 +77,93 @@ export const componentRefinementMirrorsFixture = () => {
 		]
 	};
 };
+
+/** Recursive copied carrier with independent checked constructors at three call sites. */
+export const recursiveComponentRefinementMirrorsFixture = () => {
+	const nat = { kind: "primitive", name: "nat" };
+	const chain = { kind: "named", id: "lean:RecursiveMirrors.Chain" };
+	const field = (name, type) => ({ name, type });
+	const branch = (name, ...fields) => ({ name, fields });
+	const choice = (name, refinement) => ({ name, refinement });
+	const types = [{ kind: "variant", id: chain.id
+		, cases: [branch("empty"), branch("node", field("value", nat), field("digit", nat), field("tail", chain))] }];
+	const selected = constructor => {
+		const subtype = { kind: "subtype"
+			, constructor: constructor === null ? null : `NominalConversion.${constructor}` };
+		return { kind: "variant", name: "RecursiveMirrors.Chain"
+			, cases: [
+				branch("empty")
+				, branch("node", choice("value", subtype), choice("digit", null), choice("tail", null))
+			]
+		};
+	};
+	const signatures = [], exports = [];
+	const add = (name, constructor, result = nat, resultTree = null) => {
+		const bindingId = `lean:RecursiveMirrors.${name}`, symbol = `lean_bridge_${sha256(bindingId).slice(0, 24)}`;
+		signatures.push({ bindingId, symbol, parameters: [chain], result, resultMode: "value" });
+		exports.push({ bindingId, symbol
+			, sourceDeclaration: `RecursiveMirrors.${name}`
+			, wrapper: `export_recursive${name[0].toUpperCase()}${name.slice(1)}`
+			, parameters: [{ name: "value", leanType: "unused before normalization" }]
+			, leanResultType: "unused before normalization"
+			, refinements: { parameters: [selected(constructor)], result: resultTree } });
+	};
+	add("first", "plusOne");
+	add("second", "plusTwo");
+	add("echo", "plusOne", chain, selected(null));
+	return { abi: { version: 8, dispatch: "copied-graph-frame-v1", types, exports: signatures }
+		, exports
+		, nominalRefinements: [{ id: chain.id
+			, refinement: { kind: "variant", cases: [[], [null, { kind: "fin", bound: "3" }, null]] } }] };
+};
+
+/** Mutually recursive record/variant carriers with refinements under optional edges. */
+export const mutualComponentRefinementMirrorsFixture = () => {
+	const nat = { kind: "primitive", name: "nat" };
+	const named = name => ({ kind: "named", id: `lean:MutualMirrors.${name}` });
+	const option = type => ({ kind: "apply", constructor: "option", arguments: [type] });
+	const field = (name, type) => ({ name, type });
+	const branch = (name, ...fields) => ({ name, fields });
+	const choice = (name, refinement) => ({ name, refinement });
+	const left = named("Left"), right = named("Right"), leftAlias = named("LeftAlias"), leftGroup = named("LeftGroup");
+	const types = [
+		{ kind: "record", id: left.id, fields: [field("value", nat), field("next", option(right))] }
+		, { kind: "alias", id: leftAlias.id, target: left }
+		, { kind: "alias", id: leftGroup.id, target: { kind: "apply", constructor: "array", arguments: [option(leftAlias)] } }
+		, { kind: "variant", id: right.id
+			, cases: [branch("stop"), branch("node", field("value", nat), field("next", option(left)))] }
+	];
+	const subtype = constructor => ({ kind: "subtype"
+		, constructor: constructor === null ? null : `NominalConversion.${constructor}` });
+	const selected = (leftConstructor, rightConstructor) => {
+		const rightTree = { kind: "variant", name: "MutualMirrors.Right"
+			, cases: [
+				branch("stop")
+				, branch("node", choice("value", subtype(rightConstructor)), choice("next", null))
+			]
+		};
+		return { kind: "record", name: "MutualMirrors.Left"
+			, fields: [
+				choice("value", subtype(leftConstructor))
+				, choice("next", { kind: "option", arguments: [rightTree] })
+			]
+		};
+	};
+	const signatures = [], exports = [];
+	const add = (name, selection, result = nat, resultTree = null, parameter = left) => {
+		const bindingId = `lean:MutualMirrors.${name}`, symbol = `lean_bridge_${sha256(bindingId).slice(0, 24)}`;
+		signatures.push({ bindingId, symbol, parameters: [parameter], result, resultMode: "value" });
+		exports.push({ bindingId, symbol, sourceDeclaration: `MutualMirrors.${name}`
+			, wrapper: `export_mutual${name[0].toUpperCase()}${name.slice(1)}`
+			, parameters: [{ name: "value", leanType: "unused before normalization" }]
+			, leanResultType: "unused before normalization"
+			, refinements: { parameters: [selection], result: resultTree } });
+	};
+	add("first", selected("plusOne", "plusTwo"));
+	add("second", selected("plusTwo", "plusOne"));
+	add("echo", selected("plusOne", "plusTwo"), left, selected(null, null));
+	const group = tree => ({ kind: "array", arguments: [{ kind: "option", arguments: [tree] }] });
+	add("groups", group(selected("plusOne", "plusTwo")), nat, null, leftGroup);
+	add("echoGroups", group(selected("plusOne", "plusTwo")), leftGroup, group(selected(null, null)), leftGroup);
+	return { abi: { version: 8, dispatch: "copied-graph-frame-v1", types, exports: signatures }, exports, nominalRefinements: [] };
+};

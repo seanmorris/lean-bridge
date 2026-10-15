@@ -13,6 +13,7 @@ import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mj
 import { reviewedSubtypeContracts } from "../../src/analyze/reviewed-subtypes.mjs";
 import { generateCompilerAdapters } from "../../src/build/compiler-adapters.mjs";
 import { generateComponentRecursiveAdapters } from "../../src/build/component-recursive-adapters.mjs";
+import { createCompiledPhpWasmModel, generateCompiledPhpWasmLeanAdapters } from "../../src/build/php-wasm-graph-model.mjs";
 import { assertJsonSchema } from "./json-schema.mjs";
 
 /**
@@ -80,6 +81,144 @@ export const checkComponentSubtypeSource = async options => {
 		, planSha256: sha256(canonicalJson(generated.plan))
 		, generatedCSha256: sha256(await readFile(join(directory, "ComponentSubtypeAdapters.c")))
 		, frameSha256: sha256(frame) };
+};
+
+/**
+ * Compile one compiler-selected recursive Subtype graph without a hand-authored expected IR.
+ *
+ * @param options - Fresh request/report and compiler execution context.
+ */
+export const checkRecursiveComponentSubtypeSource = async options => {
+	const { report, request, context, directory, reports, route, run } = options;
+	const component = { name: "recursive-refinements", version: "1.0.0" };
+	const configuration = { schemaVersion: 1, modules: context.modules.map(module => module.name) };
+	const inputs = [];
+	for(const module of context.modules)
+	{
+		const source = await readFile(join(directory, module.sourcePath));
+		assert.equal(sha256(source), module.sourceSha256);
+		inputs.push({ path: module.sourcePath, bytes: source.length, sha256: sha256(source) });
+	}
+	const inventory = { project: { ...component, toolchain: context.toolchain, toolVersion: "4.32.2" }
+		, configurationRecord: { configuration, sha256: sha256(canonicalJson(configuration)) }
+		, inputs, sourceTreeSha256: sha256(canonicalJson(inputs)) };
+	const elaboration = { request, metadata: report
+		, leanCompilerSha256: context.leanCompilerSha256
+		, extractorSha256: context.extractorSha256 };
+	const analysis = projectElaboratedMetadata(inventory
+		, context.modules.map(module => ({ module: module.name, path: module.sourcePath })), elaboration);
+	assert.equal(analysis.adapterHints.length, 0);
+	assert.equal(analysis.bindingIr.document.declarations.length, 1);
+	const declaration = analysis.bindingIr.document.declarations[0];
+	assert.equal(declaration.source.declaration, "NominalSelection.recursive");
+	const refinements = declaration.source.extensions["lean-lang.org/refinements"];
+	assert.equal(refinements.parameters[0].kind, "variant");
+	assert.equal(refinements.parameters[0].cases[1].fields[0].refinement.constructor, "NominalConversion.plusOne");
+	assert.equal(refinements.parameters[0].cases[1].fields[1].refinement, null);
+	const componentPlan = { sha256: sha256(canonicalJson({ bindingIr: analysis.bindingIr.semanticSha256, request }))
+		, document: { bindingIr: { semanticSha256: analysis.bindingIr.semanticSha256 } } };
+	const generated = generateCompilerAdapters({ analysis, componentPlan });
+	const item = generated.plan.exports[0], call = `${generated.plan.module}.${item.wrapper}`;
+	const checks = [
+		`example : ${call} #[.empty] = #[0] := by decide`
+		, `example : ${call} #[.node 40 (.node 80 .empty)] = #[0] := by native_decide`
+		, `example : ${call} #[.node 40 (.node 100 .empty)] = #[] := by native_decide`
+		, `example : ${call} #[.node 40 (.node 80 (.node 20 .empty))] = #[0] := by native_decide`
+		, `example : ${call}_refinement_0 #[.node 40 (.node 80 .empty)] = 1 := by native_decide`
+		, `example : ${call}_refinement_0 #[.node 40 (.node 100 .empty)] = 0 := by native_decide`
+	];
+	const source = generated.files["LeanBridgeGenerated.lean"] + "\n" + checks.join("\n") + "\n";
+	assert.doesNotMatch(source, /\b(?:sorry|axiom|unsafe|partial|unsafeCast|defaultValue)\b|_root_\.null|_root_\.undefined/u);
+	assert.equal((source.match(/def LbErased\.NominalSelection\.Chain\.via_/gu) ?? []).length, 1);
+	await writeFile(join(directory, "RecursiveComponentSubtypeAdapters.lean"), source);
+	const compiled = await run(["-c", "RecursiveComponentSubtypeAdapters.c", "RecursiveComponentSubtypeAdapters.lean"]);
+	assert.equal(compiled.stdout, ""); assert.equal(compiled.stderr, "");
+	const frame = generateComponentRecursiveAdapters(generated.plan.privateAbi, generated.plan);
+	if(reports) for(const [suffix, value] of [
+		["lean", source]
+		, ["plan.json", canonicalJson(generated.plan)]
+		, ["binding-ir.json", canonicalJson(analysis.bindingIr.document)]
+		, ["frame.c", frame]
+	]) await writeFile(join(reports, `${route}-component-adapters.${suffix}`), value, { flag: "wx" });
+	return { route
+		, kind: "recursive-component-subtype-source-check"
+		, leanAssertions: checks.length
+		, metadataAdmission: true
+		, installedAcceptance: false
+		, sourceSha256: sha256(source)
+		, planSha256: sha256(canonicalJson(generated.plan))
+		, generatedCSha256: sha256(await readFile(join(directory, "RecursiveComponentSubtypeAdapters.c")))
+		, frameSha256: sha256(frame) };
+};
+
+/**
+ * Compile the same fresh native compiler report through the fixed-width PHP-Wasm graph route.
+ * This proves source/model/adapter admission; installed Node and browser execution is separate.
+ *
+ * @param options - Fresh native request/report and compiler execution context.
+ */
+export const checkRecursivePhpWasmSubtypeSource = async options => {
+	const { report, request, context, directory, reports, route, run } = options;
+	const component = { id: "recursive-refinements@1.0.0", name: "recursive-refinements", version: "1.0.0" };
+	const version = await run(["--version"]), leanCommit = /commit ([a-f0-9]{40})/u.exec(version.stdout)?.[1];
+	assert.ok(leanCommit, version.stdout);
+	const modules = [];
+	for(const module of context.modules)
+	{
+		const source = await readFile(join(directory, module.sourcePath));
+		const olean = await readFile(join(directory, `${module.name}.olean`));
+		modules.push({
+			module: module.name
+			, source: { path: module.sourcePath, bytes: source.length, sha256: module.sourceSha256 }
+			, interface: { bytes: olean.length, sha256: sha256(olean), interfaceSha256: module.interfaceSha256 }
+		});
+	}
+	const model = createCompiledPhpWasmModel({
+		metadata: report
+		, component
+		, sourceIdentity: {
+			leanVersion: "4.32.2", leanCommit
+			, leanCompilerSha256: context.leanCompilerSha256
+			, extractorSha256: context.extractorSha256
+			, sourceTreeSha256: sha256(canonicalJson(modules))
+			, modules, request
+		}
+	});
+	assert.equal(model.profile, "php-wasm-copied-v1");
+	assert.equal(model.pointerBits, 32);
+	assert.ok(model.copiedGraph);
+	assert.equal(model.exports.length, 1);
+	const item = model.exports[0];
+	assert.equal(item.name, "NominalSelection.recursive");
+	assert.equal(item.refinements.parameters[0].kind, "variant");
+	assert.equal(item.refinements.parameters[0].cases[1].fields[0].refinement.constructor, "NominalConversion.plusOne");
+	assert.equal(item.refinements.parameters[0].cases[1].fields[1].refinement, null);
+	const generated = generateCompiledPhpWasmLeanAdapters(model), call = `${generated.module}.export0`;
+	const checks = [
+		`example : ${call} #[.empty] = #[0] := by decide`
+		, `example : ${call} #[.node 40 (.node 80 .empty)] = #[0] := by native_decide`
+		, `example : ${call} #[.node 40 (.node 100 .empty)] = #[] := by native_decide`
+		, `example : ${call} #[.node 40 (.node 80 (.node 20 .empty))] = #[0] := by native_decide`
+	];
+	const source = generated.leanSource + "\n" + checks.join("\n") + "\n";
+	assert.doesNotMatch(source, /\b(?:sorry|axiom|unsafe|partial|unsafeCast|defaultValue)\b|_root_\.null|_root_\.undefined/u);
+	assert.equal((source.match(/def LbErased\.NominalSelection\.Chain\.via_/gu) ?? []).length, 1);
+	await writeFile(join(directory, "RecursivePhpWasmSubtypeAdapters.lean"), source);
+	const compiled = await run(["-c", "RecursivePhpWasmSubtypeAdapters.c", "RecursivePhpWasmSubtypeAdapters.lean"]);
+	assert.equal(compiled.stdout, ""); assert.equal(compiled.stderr, "");
+	if(reports) for(const [suffix, value] of [
+		["lean", source]
+		, ["model.json", canonicalJson(model)]
+		, ["header.h", generated.header]
+	]) await writeFile(join(reports, `${route}-php-wasm-adapters.${suffix}`), value, { flag: "wx" });
+	return { route
+		, kind: "recursive-php-wasm-subtype-source-check"
+		, leanAssertions: checks.length
+		, metadataAdmission: true, installedAcceptance: false
+		, sourceSha256: sha256(source)
+		, modelSha256: sha256(canonicalJson(model))
+		, generatedCSha256: sha256(await readFile(join(directory, "RecursivePhpWasmSubtypeAdapters.c")))
+		, headerSha256: sha256(generated.header) };
 };
 
 /**

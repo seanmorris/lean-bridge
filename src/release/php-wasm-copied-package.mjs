@@ -33,23 +33,49 @@ import { brickMathRequirement, bundledBrickMath } from "../backends/php/brick-ma
  *
  * @param projection - Compiled copied PHP model of the package.
  */
-export const phpWasmFinReadme = projection => {
-	const types = projection.ir.types;
-	const bounds = fn => nativeFinSummary(fn.declaration, fn.parameters.map(parameter => `$${parameter.name}`), types);
-	const functions = projection.surface.functions.filter(bounds);
+const phpWasmRefinementReadme = ({ ir, namespace, functions, recursive = false }) => {
+	const types = ir.types;
+	const parameterName = parameter => typeof parameter === "string" ? parameter : parameter.name;
+	const bounds = fn => nativeFinSummary(fn.declaration, fn.parameters.map(parameter => `$${parameterName(parameter)}`), types);
+	functions = functions.filter(bounds);
 	if(!functions.length) return "";
 	const declarations = functions.map(fn => fn.declaration);
-	const description = nativeRefinementReadme(declarations, `Lean Fin n parameters and results are Brick\\Math\\BigInteger values below n. The PHP-Wasm side module compares each argument with its exact bound, including bounds wider than 64 bits, before any Lean code runs; a value at or above its bound throws LeanBridgeError with code 1 whose message names the Lean parameter and bound. Fin 0 has no values, so every call to a function taking one is rejected. Results are BigInteger values below their declared bound. ${nativeFinContainerNote(declarations, "PHP-Wasm packages", types)}`, "PHP-Wasm packages", types)
+	let description = nativeRefinementReadme(declarations, `Lean Fin n parameters and results are Brick\\Math\\BigInteger values below n. The PHP-Wasm side module compares each argument with its exact bound, including bounds wider than 64 bits, before any Lean code runs; a value at or above its bound throws LeanBridgeError with code 1 whose message names the Lean parameter and bound. Fin 0 has no values, so every call to a function taking one is rejected. Results are BigInteger values below their declared bound. ${nativeFinContainerNote(declarations, "PHP-Wasm packages", types)}`, "PHP-Wasm packages", types)
 		.replace("The bundled native library runs", "The PHP-Wasm side module runs")
 		.replace("Subtype inside containers, records, variants, callbacks or reviewed Binding IR", "Subtype inside containers, records, variants or callbacks")
 		.replace(/Fin inside (?:containers, records, variants, callbacks or reviewed Binding IR|containers, records, variants or callbacks|records, variants, callbacks or reviewed Binding IR|records, variants or callbacks) is not supported in PHP-Wasm packages\./u,
 			"Fin inside callbacks or generic record instantiations is not supported in PHP-Wasm packages.");
+	if(recursive) description = description
+		.replace("Repeated uses of one type retain their own constructor choices, and every Fin bound is checked before any constructor. Recursive, generic, owned and callback Subtype positions remain unsupported.", "Repeated uses of one type retain their own constructor choices, and every Fin bound is checked before any constructor. Recursive fields and active cases repeat those checks at every reachable occurrence; a rejection names the actual field or case path. Generic, owned and callback Subtype positions remain unsupported.");
+	const hasSubtype = refinement => refinement?.kind === "subtype"
+		|| (refinement?.arguments ?? []).some(hasSubtype)
+		|| (refinement?.cases ?? []).some(branch => branch.arguments.some(hasSubtype));
 	const subtype = declarations.some(declaration => {
 		const value = nativeFinRefinements(declaration, types);
-		return [...value.parameters, value.result].some(refinement => refinement?.kind === "subtype");
+		return [...value.parameters, value.result].some(hasSubtype);
 	});
-	return `\n## ${subtype ? "Checked refinements" : "Bounded integers"}\n\n${description}\n\n${functions.map(fn => `- ${projection.namespace}\\${fn.field}: ${bounds(fn)}`).join("\n")}\n`;
+	return `\n## ${subtype ? "Checked refinements" : "Bounded integers"}\n\n${description}\n\n${functions.map(fn => `- ${namespace}\\${fn.publicName ?? fn.field}: ${bounds(fn)}`).join("\n")}\n`;
 };
+
+/**
+ * Document checked sites of a plain copied PHP-Wasm package.
+ * Packages without a checked site retain their exact README bytes.
+ *
+ * @param projection - Compiled copied PHP model of the package.
+ */
+export const phpWasmFinReadme = projection => phpWasmRefinementReadme({
+	ir: projection.ir, namespace: projection.namespace, functions: projection.surface.functions
+});
+
+/**
+ * Document checked sites of a finite recursive copied PHP-Wasm graph.
+ *
+ * @param ir - Compiler-authenticated recursive Binding IR.
+ * @param projection - Compiled recursive PHP graph projection.
+ */
+export const phpWasmGraphRefinementReadme = (ir, projection) => phpWasmRefinementReadme({
+	ir, namespace: projection.namespace, functions: projection.functions, recursive: true
+});
 
 const profile = "php-wasm-copied-loading-v1";
 const runtimeName = "@lean-bridge/php-wasm-copied-runtime";
@@ -158,6 +184,9 @@ ${model.types.some(type => type.kind === "callback") ? "\nPrimitive callbacks ac
 		.replace("Primitive callbacks accept PHP callables with one to sixteen primitive arguments and a primitive result.", "Callbacks accept PHP callables with one to sixteen arguments and a result using primitives, arrays, Lists, options, results, products, acyclic records, variants and concrete copied aliases.")
 		.replace("Reference parameters/returns, generators, compound callables and async reject.", "Reference parameters/returns, generators, recursive or resource-containing payloads and async reject.")
 		+ "\nCallback replies own every nested string and byte buffer until Lean has copied them. Exit ends the PHP request. Before another request, await php.refresh(), require the package autoloader again and recreate PHP values and closures.\n" : readme;
+	const refinementReadme = model.ownedGraph ? "" : model.copiedGraph
+		? phpWasmGraphRefinementReadme(model.bindingIr, projection)
+		: phpWasmFinReadme(projection);
 	return {
 		npm, composer, definition, loaderIdentity, runtimeVersion
 		, files: {
@@ -167,13 +196,13 @@ ${model.types.some(type => type.kind === "callback") ? "\nPrimitive callbacks ac
 			, "runtime/package/package.json": json(runtimePackage)
 			, "component/package/index.mjs": componentIndex
 			, "component/package/package.json": json(componentPackage)
-			, "component/package/README.md": callableReadme + (model.copiedGraph || model.ownedGraph ? "" : phpAliasReadme(projection) + phpVariantReadme(projection) + phpValueReadme + phpWasmFinReadme(projection))
+			, "component/package/README.md": callableReadme + (model.copiedGraph || model.ownedGraph ? refinementReadme : phpAliasReadme(projection) + phpVariantReadme(projection) + phpValueReadme + refinementReadme)
 			, "component/package/lazy-library.txt": definition.library
 			, ...Object.fromEntries(Object.entries(phpDependencies).map(([path, bytes]) => [`component/package/php/${path}`, bytes]))
 			, "composer/composer.json": json(composerPackage)
 			, "composer/lean-bridge/compiled-package.json": json({ schemaVersion: 1, profile, ...definition, bindingIrSha256: model.bindingIrSha256, sourceIdentity: model.sourceIdentity, ...(aliases.length ? { aliases } : {}) })
 			, ...Object.fromEntries(Object.entries(aliasFiles).map(([path, bytes]) => [`composer/${path}`, bytes]))
-			, "composer/README.md": callableReadme + (model.copiedGraph || model.ownedGraph ? "" : phpAliasReadme(projection) + phpVariantReadme(projection) + phpValueReadme + phpWasmFinReadme(projection))
+			, "composer/README.md": callableReadme + (model.copiedGraph || model.ownedGraph ? refinementReadme : phpAliasReadme(projection) + phpVariantReadme(projection) + phpValueReadme + refinementReadme)
 			, ...Object.fromEntries(["runtime/package", "component/package", "composer"].flatMap(prefix => Object.entries(notices).map(([path, bytes]) => [`${prefix}/licenses/${path}`, bytes])))
 			, ...Object.fromEntries(["component/package", "composer"].flatMap(prefix => [...sourceNotices].map(([path, bytes]) => [`${prefix}/licenses/${path}`, bytes])))
 		}

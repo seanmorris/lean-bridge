@@ -19,6 +19,30 @@ const refinementChildren = tree => tree.kind === "variant" ? tree.cases.flatMap(
 	: tree.kind === "callback" ? [...tree.parameters, tree.result] : tree.arguments ?? [];
 
 /**
+ * Index finite recursive refinement nodes by their deterministic backedge token.
+ * Tokens are private generation facts; public Binding IR remains an acyclic JSON tree.
+ *
+ * @param model - Normalized mirror model.
+ */
+export const refinementCycleTrees = model => {
+	const cycles = new Map();
+	const walk = tree => {
+		if(!tree || typeof tree !== "object") return;
+		if(["record", "variant"].includes(tree.kind) && tree.cycle)
+		{
+			const existing = cycles.get(tree.cycle);
+			if(existing && canonicalJson(existing) !== canonicalJson(tree))
+				throw new TypeError(`Conflicting recursive refinement token: ${tree.cycle}`);
+			cycles.set(tree.cycle, tree);
+		}
+		for(const child of refinementChildren(tree)) walk(child);
+	};
+	for(const item of model.exports) if(item.refinements)
+		[...item.refinements.parameters, item.refinements.result].forEach(walk);
+	return cycles;
+};
+
+/**
  * Collect the Lean names of records and variants whose fields carry refinements,
  * from every export's refinement trees, including those inside callbacks.
  *
@@ -45,10 +69,24 @@ export const refinementMirrorNames = model => {
  */
 export const renderRefinementMirrors = (model, mirrors, renderType, recordValue = (type, values) => `_root_.${type.constructor} ${values.join(" ")}`) => {
 	const trees = new Map(), layouts = new Map(), checks = new Map(), constructors = new Map();
+	const cycles = refinementCycleTrees(model);
 	// Constructor choices change how a source value is built, never its payload layout or erasure.
-	const layout = tree => tree?.kind === "subtype" ? { kind: "subtype" }
-		: tree?.kind === "variant" ? { ...tree, cases: tree.cases.map(branch => ({ ...branch, arguments: branch.arguments.map(layout) })) }
-			: tree?.arguments ? { ...tree, arguments: tree.arguments.map(layout) } : tree;
+	const layout = tree => {
+		if(tree?.kind === "subtype") return { kind: "subtype" };
+		if(tree?.kind === "recursive") return { kind: "recursive", definition: tree.definition };
+		if(tree?.kind === "variant")
+		{
+			const cases = tree.cases.map(branch => ({ name: branch.name
+				, fields: branch.fields, arguments: branch.arguments.map(layout) }));
+			return { kind: tree.kind, definition: tree.definition, cases };
+		}
+		if(tree?.kind === "record")
+		{
+			const arguments_ = tree.arguments.map(layout);
+			return { kind: tree.kind, definition: tree.definition, fields: tree.fields, arguments: arguments_ };
+		}
+		return tree?.arguments ? { ...tree, arguments: tree.arguments.map(layout) } : tree;
+	};
 	const walk = (tree, checked) => {
 		if(!tree || typeof tree !== "object") return;
 		if(["record", "variant"].includes(tree.kind))
@@ -84,10 +122,67 @@ export const renderRefinementMirrors = (model, mirrors, renderType, recordValue 
 		item.refinements.parameters.forEach(tree => walk(tree, true));
 		walk(item.refinements.result, false);
 	}
+	const recursive = (refinement, value, checked) => {
+		const target = cycles.get(refinement.cycle);
+		if(!target || target.definition !== refinement.definition)
+			throw new TypeError(`Missing recursive refinement target: ${refinement.definition}`);
+		return `(LbErased.${refinement.definition}.${checked ? nominalRefinementCheck(target) : "erase"} (${value}))`;
+	};
+	const convert = (refinement, value, checked) => componentRefinementConversion(refinement, value, checked, 0, recursive);
+	const selectedChecks = type => [...checks.get(type.lean) ?? []].sort(([left], [right]) => left < right ? -1 : left > right ? 1 : 0);
+	const recursiveRecordFunctions = type => {
+		const mirror = erasedMirror(type.lean), source = `_root_.${type.lean}`;
+		const values = type.fields.map((_, index) => `a${index}`), pattern = `⟨${values.join(", ")}⟩`, result = [];
+		for(const [name, selected] of selectedChecks(type))
+			result.push(`def ${mirror}.${name} (value : ${mirror}) : _root_.Option ${source} :=`, "  match value with"
+				, `  | ${pattern} => do`
+				, ...type.fields.map((_, index) => `    let b${index} ← ${convert(selected.arguments[index], values[index], true)}`)
+				, `    pure (${recordValue(type, type.fields.map((_, index) => `b${index}`))})`, "");
+		result.push(`def ${mirror}.erase (value : ${source}) : ${mirror} :=`, "  match value with"
+			, `  | ${pattern} => ${mirror}.mk ${type.fields.map((_, index) => convert(trees.get(type.lean).arguments[index], values[index], false)).join(" ")}`, "");
+		return result;
+	};
+	const recursiveVariantFunctions = type => {
+		const mirror = erasedMirror(type.lean), source = `_root_.${type.lean}`, tree = trees.get(type.lean), result = [];
+		const pattern = branch => `.«${branch.name}» ${branch.fields.map((_, index) => `a${index}`).join(" ")}`;
+		for(const [name, selected] of selectedChecks(type))
+			result.push(`def ${mirror}.${name} (value : ${mirror}) : _root_.Option ${source} :=`, "  match value with"
+				, ...type.cases.map((branch, index) => `  | ${pattern(branch)} => do ${branch.fields.map((_, position) => `let b${position} ← ${convert(selected.cases[index].arguments[position], `a${position}`, true)}; `).join("")}pure (_root_.${branch.constructor} ${branch.fields.map((_, position) => `b${position}`).join(" ")})`), "");
+		result.push(`def ${mirror}.erase (value : ${source}) : ${mirror} :=`, "  match value with"
+			, ...type.cases.map((branch, index) => `  | ${pattern(branch)} => ${mirror}.«${branch.name}» ${branch.fields.map((_, position) => convert(tree.cases[index].arguments[position], `a${position}`, false)).join(" ")}`), "");
+		return result;
+	};
 	const lines = [], done = new Set();
+	const typeByName = new Map(model.types.map(type => [type.lean, type]));
+	const mutualByName = new Map((model.mutualGroups ?? []).flatMap(group => group.map(name => [name, group])));
+	const emittedMutual = new Set();
 	for(const type of model.types)
 	{
 		if(!["record", "variant"].includes(type.kind) || !mirrors.has(type.lean) || done.has(type.lean)) continue;
+		const group = mutualByName.get(type.lean);
+		if(group)
+		{
+			const identity = group.join("\0");
+			if(emittedMutual.has(identity)) continue;
+			emittedMutual.add(identity);
+			const members = group.map(name => typeByName.get(name));
+			if(members.some(member => !member || Object.hasOwn(member, "erased")))
+				throw new TypeError("Mutually recursive checked-record mirrors require another representation");
+			members.forEach(member => done.add(member.lean));
+			lines.push("mutual");
+			for(const member of members)
+			{
+				const mirror = erasedMirror(member.lean);
+				if(member.kind === "record") lines.push(`structure ${mirror} where`
+					, ...member.fields.map(field => `  «${field.name}» : ${renderType(field.type, mirrors)}`));
+				else lines.push(`inductive ${mirror} where`
+					, ...member.cases.map(branch => `  | «${branch.name}» ${branch.fields.map((field, index) => `(a${index} : ${renderType(field.type, mirrors)})`).join(" ")} : ${mirror}`));
+			}
+			lines.push("end", "", "mutual");
+			for(const member of members) lines.push(...(member.kind === "record" ? recursiveRecordFunctions(member) : recursiveVariantFunctions(member)));
+			lines.push("end", "");
+			continue;
+		}
 		done.add(type.lean);
 		const mirror = erasedMirror(type.lean), tree = trees.get(type.lean), source = `_root_.${type.lean}`;
 		// A checked record's mirror holds only its payload. Lean-produced values are projected to it;
@@ -102,14 +197,18 @@ export const renderRefinementMirrors = (model, mirrors, renderType, recordValue 
 					, `  _root_.${constructor} ${type.fields.map(field => `value.«${field.name}»`).join(" ")}`, "");
 			continue;
 		}
-		const convert = (refinement, value, checked) => componentRefinementConversion(refinement, value, checked);
-		const selectedChecks = [...checks.get(type.lean) ?? []].sort(([left], [right]) => left < right ? -1 : left > right ? 1 : 0);
+		const selected = selectedChecks(type);
 		if(type.kind === "record")
 		{
 			lines.push(`structure ${mirror} where`, ...type.fields.map(field => `  «${field.name}» : ${renderType(field.type, mirrors)}`), "");
-			for(const [name, selected] of selectedChecks)
+			if(tree.cycle)
+			{
+				lines.push(...recursiveRecordFunctions(type));
+				continue;
+			}
+			for(const [name, selectedTree] of selected)
 				lines.push(`def ${mirror}.${name} (value : ${mirror}) : _root_.Option ${source} := do`
-					, ...type.fields.map((field, i) => `  let a${i} ← ${convert(selected.arguments[i], `value.«${field.name}»`, true)}`)
+					, ...type.fields.map((field, i) => `  let a${i} ← ${convert(selectedTree.arguments[i], `value.«${field.name}»`, true)}`)
 					, `  pure (${recordValue(type, type.fields.map((_, i) => `a${i}`))})`, "");
 			lines.push(`def ${mirror}.erase (value : ${source}) : ${mirror} :=`
 				, `  ${mirror}.mk ${type.fields.map((field, i) => convert(tree.arguments[i], `value.«${field.name}»`, false)).join(" ")}`, "");
@@ -117,9 +216,9 @@ export const renderRefinementMirrors = (model, mirrors, renderType, recordValue 
 		}
 		lines.push(`inductive ${mirror} where`, ...type.cases.map(branch => `  | «${branch.name}» ${branch.fields.map((field, j) => `(a${j} : ${renderType(field.type, mirrors)})`).join(" ")} : ${mirror}`), "");
 		const pattern = branch => `.«${branch.name}» ${branch.fields.map((_, j) => `a${j}`).join(" ")}`;
-		for(const [name, selected] of selectedChecks)
+		for(const [name, selectedTree] of selected)
 			lines.push(`def ${mirror}.${name} (value : ${mirror}) : _root_.Option ${source} :=`, "  match value with"
-				, ...type.cases.map((branch, i) => `  | ${pattern(branch)} => do ${branch.fields.map((_, j) => `let b${j} ← ${convert(selected.cases[i].arguments[j], `a${j}`, true)}; `).join("")}pure (_root_.${branch.constructor} ${branch.fields.map((_, j) => `b${j}`).join(" ")})`), "");
+				, ...type.cases.map((branch, i) => `  | ${pattern(branch)} => do ${branch.fields.map((_, j) => `let b${j} ← ${convert(selectedTree.cases[i].arguments[j], `a${j}`, true)}; `).join("")}pure (_root_.${branch.constructor} ${branch.fields.map((_, j) => `b${j}`).join(" ")})`), "");
 		lines.push(`def ${mirror}.erase (value : ${source}) : ${mirror} :=`, "  match value with"
 			, ...type.cases.map((branch, i) => `  | ${pattern(branch)} => ${mirror}.«${branch.name}» ${branch.fields.map((_, j) => convert(tree.cases[i].arguments[j], `a${j}`, false)).join(" ")}`), "");
 	}

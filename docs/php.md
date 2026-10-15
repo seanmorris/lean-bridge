@@ -941,7 +941,25 @@ Node loading, bundled Chromium loading, startup/lazy loading, rejection recovery
 input preservation and two constructor choices for one generic function. These
 local runs use Node 22.23.2, Chromium 152.0.7977.75 and PHP 8.4.1 on wasm32.
 Constructor and dispatch counts were not measured. The later structural checks
-below add containers. Refined callback, graph and owned transports remain rejected.
+below add containers. Refined callback and owned transports remain rejected.
+
+PHP-Wasm copied-graph packages also accept selected `Subtype` constructors and
+`Fin` bounds inside finite recursive records and variants. The adapter validates
+all `Fin` leaves before running any selected constructor. It checks only the
+active variant case and every present occurrence in arrays and options. A
+rejection names the actual path, such as
+`arg0[1]?.node.tail.node.value`, preserves the caller's graph and leaves the
+runtime available for another call. Recursive results project the base values
+without asking the caller for a constructor.
+
+The [recursive installed checks](evidence/recursive-subtype-php-wasm-20261015.md)
+compile ordinary and independently reviewed Lean, reproduce the npm component,
+npm shared runtime and Composer API, remove the author roots, install offline,
+relocate the installed trees and run startup and lazy weak/strict callers in
+Node and Chromium. The fixture covers two constructor choices for one recursive
+type, normalization, a late nested rejection, a shared input subgraph, inactive
+branches, mixed `Fin 3`, caller preservation, recovery and a constructor-free
+recursive result. Refined callbacks and owned graph values remain unsupported.
 
 ### Ordinary PHP-Wasm packages
 
@@ -1548,8 +1566,19 @@ Consumer PHP source remains required at runtime. The retained archive records a
 [recurring workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nominal-primitive-subtype-php-wasm.yml)
 owns hosted current-revision acceptance.
 
+The [recursive PHP-Wasm checks](evidence/recursive-subtype-php-wasm-20261015.md)
+add checked `Nat` fields and `Fin 3` bounds to a recursive variant, its alias and
+`Array (Option ...)` carriers. Ordinary and independently reviewed packages
+retain separate constructor choices, validate every reachable occurrence and
+project proof-backed recursive results. Exact late failures name the nested
+field path; rejected calls preserve shared caller values and later calls recover.
+Both routes reproduce all three packages and run the twelve Node and Chromium
+loading, installation and strictness arrangements after offline installation
+and relocation on wasm32 PHP 8.4.1.
+
 Primitive-base nominal acceptance in the remaining hosts, refined callbacks,
-owned, recursive, dependent and broader generic Subtypes remain pending. The
+owned, dependent and broader generic Subtypes remain pending. Recursive
+checked-record combinations remain separate work. The
 local PHP-Wasm checks do not measure constructor/source entry counts or dispatch.
 
 ### Type conversions

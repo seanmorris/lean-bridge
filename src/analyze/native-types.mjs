@@ -99,7 +99,7 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 	if(type.kind === "graph")
 	{
 		if(references) fail("nested copied graph");
-		validateCopiedMetadataGraph(type, (value, table) => validate(value, 0, true, table), true);
+		validateCopiedMetadataGraph(type, (value, table) => validate(value, 0, true, table, policy, owned, true, site, true, subtypeResult), true);
 	} else if(type.kind === "reference")
 	{
 		if(typeof type.name !== "string" || !identifier.test(type.name) || type.name !== type.lean || !references?.has(type.name)) fail("reference requires a matching nominal definition in its graph");
@@ -114,7 +114,7 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 	} else if(type.kind === "refinement")
 	{
 		// Bounds stay decimal text; checked adapters exist only at top-level sites and inside structural containers.
-		if(!structural || references) fail("Fin refinements require a top-level native parameter or result, or an array, list, option, product, Except, plain record or variant of one");
+		if(!structural) fail("Fin refinements require a top-level native parameter or result, or an array, list, option, product, Except, plain record or variant of one");
 		if(type.predicate?.kind === "checked-record")
 		{
 			// Only the site's checked constructor builds a record with proof fields, at a top-level parameter.
@@ -127,7 +127,7 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 		else if(type.predicate?.kind === "subtype")
 		{
 			// Copied plain records and variants retain a constructor at each use, not on the shared type.
-			if(!subtypeStructural) fail("Subtype refinements require a top-level or structural-container native parameter or result, including copied plain records and variants but excluding callbacks, recursive graphs and generic records");
+			if(!subtypeStructural) fail("Subtype refinements require a top-level or structural-container native parameter or result, including copied plain records and variants but excluding callbacks and generic records");
 			closed(type.predicate, ["kind", "constructor"], "refinement predicate");
 			if(!(subtypeResult && type.predicate.constructor === null)
 				&& (typeof type.predicate.constructor !== "string" || !identifier.test(type.predicate.constructor))) fail("invalid Subtype refinement");

@@ -34,6 +34,81 @@ export const constructorRefinementLeaves = (refinement, type, suffix = "") => {
 	return refinement.arguments.flatMap((child, index) => constructorRefinementLeaves(child, type.arguments?.[index] ?? type.element, `${suffix}_${index}`));
 };
 
+/**
+ * Give a constructor leaf in a finite copied graph a stable private identity.
+ * The path is deliberately absent: one checked constructor can validate the
+ * same erased leaf at every runtime occurrence of a recursive value.
+ *
+ * @param refinement - A normalized Subtype or checked-record leaf.
+ * @param type - Its erased copied transport type.
+ */
+export const componentRecursiveRefinementLeafKey = (refinement, type) =>
+	sha256(canonicalJson({ refinement, type })).slice(0, 20);
+
+/**
+ * Enumerate constructor leaves in one normalized finite refinement graph.
+ * Recursive markers follow their authenticated target once; runtime walkers
+ * reuse the resulting validator at every occurrence instead of unfolding the
+ * schema forever.
+ *
+ * @param refinement - Normalized refinement tree from componentRefinementMirrors.
+ * @param type - Matching private copied-graph reference.
+ * @param definitions - Private nominal definitions, keyed by lean: identity.
+ * @param cycles - Authenticated recursive refinement targets, keyed by token.
+ */
+export const componentRecursiveRefinementLeaves = (refinement, type, definitions, cycles) => {
+	const leaves = new Map();
+	const resolve = (reference, aliases = new Set()) => {
+		if(reference.kind !== "named") return reference;
+		const definition = definitions.get(reference.id);
+		if(definition?.kind !== "alias") return reference;
+		if(aliases.has(reference.id)) throw new TypeError(`Recursive refinement alias ${reference.id}`);
+		return resolve(definition.target, new Set([...aliases, reference.id]));
+	};
+	const visit = (tree, reference, active = new Set()) => {
+		if(tree === null || tree === undefined || tree.kind === "fin") return;
+		const concrete = resolve(reference);
+		if(["subtype", "checked-record"].includes(tree.kind))
+		{
+			const key = componentRecursiveRefinementLeafKey(tree, concrete);
+			leaves.set(key, { key, refinement: tree, type: concrete });
+			return;
+		}
+		if(tree.kind === "recursive")
+		{
+			if(active.has(tree.cycle)) return;
+			const target = cycles.get(tree.cycle);
+			if(!target || target.definition !== tree.definition)
+				throw new TypeError(`Missing recursive refinement target: ${tree.definition}`);
+			visit(target, concrete, new Set([...active, tree.cycle]));
+			return;
+		}
+		const nested = tree.cycle ? new Set([...active, tree.cycle]) : active;
+		if(tree.kind === "record")
+		{
+			const definition = concrete.kind === "named" ? definitions.get(concrete.id) : null;
+			if(definition?.kind !== "record" || definition.fields.length !== tree.arguments.length)
+				throw new TypeError(`Recursive record refinement differs from ${tree.definition}`);
+			tree.arguments.forEach((child, index) => visit(child, definition.fields[index].type, nested));
+			return;
+		}
+		if(tree.kind === "variant")
+		{
+			const definition = concrete.kind === "named" ? definitions.get(concrete.id) : null;
+			if(definition?.kind !== "variant" || definition.cases.length !== tree.cases.length)
+				throw new TypeError(`Recursive variant refinement differs from ${tree.definition}`);
+			tree.cases.forEach((branch, index) => branch.arguments.forEach((child, field) =>
+				visit(child, definition.cases[index].fields[field].type, nested)));
+			return;
+		}
+		if(concrete.kind !== "apply" || concrete.constructor !== tree.kind || concrete.arguments.length !== tree.arguments.length)
+			throw new TypeError(`Recursive ${tree.kind} refinement differs from its transport`);
+		tree.arguments.forEach((child, index) => visit(child, concrete.arguments[index], nested));
+	};
+	visit(refinement, type);
+	return [...leaves.values()].sort((left, right) => left.key.localeCompare(right.key));
+};
+
 const refinements = (item, count) => item.refinements ?? {
 	parameters: Array.from({ length: count }, () => null)
 	, result: null
@@ -42,8 +117,12 @@ const refinements = (item, count) => item.refinements ?? {
 // New structural Subtype expressions may be elaborated before a monadic product's
 // expected type is known. Qualify sum patterns so Lean can infer their input shape.
 const containsSubtype = refinement => refinement?.kind === "subtype"
+	|| refinement?.kind === "recursive"
 	|| (refinement?.arguments ?? []).some(containsSubtype)
 	|| (refinement?.cases ?? []).some(branch => branch.arguments.some(containsSubtype));
+const containsRecursive = refinement => refinement?.kind === "recursive"
+	|| (refinement?.arguments ?? []).some(containsRecursive)
+	|| (refinement?.cases ?? []).some(branch => branch.arguments.some(containsRecursive));
 
 /**
  * Share Fin-only checks, but key constructor-bearing conversions by the complete site tree.
@@ -62,10 +141,16 @@ export const nominalRefinementCheck = refinement => containsSubtype(refinement)
  * @param value - Lean value expression.
  * @param checked - Construct checked input when true; erase result when false.
  * @param depth - Fresh binder suffix for nested conversions.
+ * @param recursive - Optional resolver for a normalized finite backedge.
  */
-export const componentRefinementConversion = (refinement, value, checked = true, depth = 0) => {
+export const componentRefinementConversion = (refinement, value, checked = true, depth = 0, recursive = null) => {
 	const input = `(${value})`, name = `_bridgeValue${depth}`;
 	if(refinement === null) return checked ? `(_root_.Option.some ${input})` : input;
+	if(refinement.kind === "recursive")
+	{
+		if(typeof recursive !== "function") throw new TypeError("A recursive refinement requires its finite target map");
+		return recursive(refinement, value, checked);
+	}
 	if(refinement.kind === "fin") return checked
 		? `(if proof : ${input} < ${refinement.bound} then _root_.Option.some (⟨${input}, proof⟩ : _root_.Fin ${refinement.bound}) else _root_.Option.none)`
 		: `${input}.val`;
@@ -84,12 +169,14 @@ export const componentRefinementConversion = (refinement, value, checked = true,
 	// Native packages pass records and variants with checked fields as erased mirrors whose
 	// check and erase functions the native adapter module defines.
 	if(["record", "variant"].includes(refinement.kind)) return `(LbErased.${refinement.definition}.${checked ? nominalRefinementCheck(refinement) : "erase"} ${input})`;
-	const child = (index, expression) => componentRefinementConversion(refinement.arguments[index], expression, checked, depth + 1);
+	const child = (index, expression) => componentRefinementConversion(refinement.arguments[index], expression, checked, depth + 1, recursive);
 	if(["array", "list"].includes(refinement.kind)) return `(${input}.${checked ? "mapM" : "map"} (fun ${name} => ${child(0, name)}))`;
 	const qualified = containsSubtype(refinement);
 	if(refinement.kind === "option") return checked
 		? `(match ${input} with | ${qualified ? "_root_.Option" : ""}.none => _root_.Option.some _root_.Option.none | ${qualified ? "_root_.Option" : ""}.some ${name} => (${child(0, name)}).map _root_.Option.some)`
-		: `(${input}.map (fun ${name} => ${child(0, name)}))`;
+		: containsRecursive(refinement)
+			? `(match ${input} with | _root_.Option.none => _root_.Option.none | _root_.Option.some ${name} => _root_.Option.some ${child(0, name)})`
+			: `(${input}.map (fun ${name} => ${child(0, name)}))`;
 	if(refinement.kind === "tuple") return checked
 		? `(do let ${name}a ← ${child(0, `${input}.fst`)}; let ${name}b ← ${child(1, `${input}.snd`)}; pure (${name}a, ${name}b))`
 		: `(${child(0, `${input}.fst`)}, ${child(1, `${input}.snd`)})`;

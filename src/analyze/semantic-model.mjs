@@ -177,21 +177,43 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 		}
 		return { kind: "named", id };
 	};
-	const hasSubtype = type => type.kind === "refinement" ? type.predicate.kind === "subtype"
-		: type.kind === "alias" ? hasSubtype(type.target)
-			: type.kind === "record" ? type.fields.some(field => hasSubtype(field.type))
-				: type.kind === "variant" ? type.cases.some(branch => branch.fields.some(field => hasSubtype(field.type)))
-					: ["array", "list", "option"].includes(type.kind) ? hasSubtype(type.element)
-						: ["tuple", "result"].includes(type.kind) && type.arguments.some(hasSubtype);
-	const refinement = (type, nominal = false, shared = false) => {
-		if(type.kind === "graph") return refinement(type.root, nominal, shared);
+	const hasSubtype = (type, references = new Map(), seen = new Set()) => {
+		if(type.kind === "graph") return hasSubtype(type.root, new Map(type.types.map(definition => [definition.name, definition])), new Set());
+		if(type.kind === "reference")
+		{
+			if(seen.has(type.name)) return false;
+			const target = references.get(type.name) ?? namedTypes.get(type.name);
+			if(!target) throw new TypeError(`Missing compiler type definition: ${type.name}`);
+			return hasSubtype(target, references, new Set([...seen, type.name]));
+		}
+		return type.kind === "refinement" ? type.predicate.kind === "subtype"
+			: type.kind === "alias" ? hasSubtype(type.target, references, seen)
+				: type.kind === "record" ? type.fields.some(field => hasSubtype(field.type, references, seen))
+					: type.kind === "variant" ? type.cases.some(branch => branch.fields.some(field => hasSubtype(field.type, references, seen)))
+						: ["array", "list", "option"].includes(type.kind) ? hasSubtype(type.element, references, seen)
+							: ["tuple", "result"].includes(type.kind) && type.arguments.some(child => hasSubtype(child, references, seen));
+	};
+	const refinement = (type, nominal = false, shared = false, references = new Map(), seen = new Set()) => {
+		if(type.kind === "graph") return refinement(type.root, nominal, shared,
+			new Map(type.types.map(definition => [definition.name, definition])), new Set());
+		if(type.kind === "reference")
+		{
+			// A nominal definition owns its own shared predicates. Duplicating them through
+			// another nominal edge makes recursive extensions cyclic and aliases ambiguous.
+			// Per-use constructor selections still expand the finite graph below.
+			if(shared) return null;
+			if(seen.has(type.name)) return null;
+			const target = references.get(type.name) ?? namedTypes.get(type.name);
+			if(!target) throw new TypeError(`Missing compiler type definition: ${type.name}`);
+			return refinement(target, true, shared, references, new Set([...seen, type.name]));
+		}
 		if(type.kind === "refinement") return shared && type.predicate.kind === "subtype" ? null : structuredClone(type.predicate);
-		if(nominal && type.kind === "alias") return refinement(type.target, true, shared);
+		if(nominal && type.kind === "alias") return refinement(type.target, true, shared, references, seen);
 		if(nominal && ["record", "variant"].includes(type.kind))
 		{
 			let constrained = false;
 			const fields = members => members.map(field => {
-				const value = refinement(field.type, true, shared);
+				const value = refinement(field.type, true, shared, references, seen);
 				constrained ||= value !== null;
 				return { name: field.name, refinement: value };
 			});
@@ -201,7 +223,7 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 		}
 		const children = ["array", "list", "option"].includes(type.kind) ? [type.element]
 			: ["tuple", "result"].includes(type.kind) ? type.arguments : [];
-		const arguments_ = children.map(child => refinement(child, nominal, shared));
+		const arguments_ = children.map(child => refinement(child, nominal, shared, references, seen));
 		return arguments_.some(value => value !== null) ? { kind: type.kind, arguments: arguments_ } : null;
 	};
 	const declarations = included.map(item => {

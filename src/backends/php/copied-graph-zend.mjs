@@ -82,7 +82,7 @@ ${branch.map(field => `  { ${field.type}, offsetof(${node.name}, ${field.path}),
 		, nativeOutputPreflight ? graphZendCheckedWalk : graphZendWalk].join("\n\n");
 };
 
-const zendCalls = model => {
+const zendCalls = (model, refinementDiagnostics = false) => {
 	const nodes = new Map(model.types.map(node => [node.id, node])), prefix = model.layout.prefix;
 	return model.layout.roots.map((fn, index) => {
 		const args = fn.parameters.map(id => nodes.get(id)), result = nodes.get(fn.result);
@@ -132,6 +132,7 @@ static ZEND_FUNCTION(lg_call${index}) {
   zend_end_try();
   const char *message = ctx->walk.scope.error; int type_error = ctx->walk.scope.type_error;
   uint32_t status = ctx->status;
+  ${refinementDiagnostics ? `if (!message && status == 1) message = ${prefix}_graph_error();` : ""}
   if (!message && !status) { ZVAL_COPY_VALUE(return_value, &ctx->wire); ZVAL_UNDEF(&ctx->wire); }
   lg_cleanup${index}(ctx);
   if (status) { zend_throw_exception(zend_ce_exception, message ? message : "Compiled Lean graph call failed", status); RETURN_THROWS(); }
@@ -181,8 +182,11 @@ ${model.layout.roots.map(root => `        ['parameters' => [${root.parameters.ma
  * Emit private Zend source and public PHP values. Package admission is separate.
  *
  * @param ir - Pure copied graph contract.
+ * @param options - Private compiled-transport capabilities.
+ * @param options.refinementDiagnostics - Read exact checked-refinement failures from the graph call.
  */
-export const generateCopiedPhpGraphZendAdapter = ir => {
+export const generateCopiedPhpGraphZendAdapter = (ir, { refinementDiagnostics = false } = {}) => {
+	if(typeof refinementDiagnostics !== "boolean") throw new TypeError("PHP graph refinement diagnostics must be explicit");
 	const model = compileCopiedPhpGraphZendModel(ir), prefix = model.layout.prefix;
 	const nodes = new Map(model.types.map(node => [node.id, node]));
 	const files = { ...model.files };
@@ -200,7 +204,7 @@ function ${fn.publicName}(${fn.parameters.map(name => `mixed $${name}`).join(", 
 	files["src/Internal/Wire.php"] = `<?php\ndeclare(strict_types=1);\nnamespace ${model.namespace}\\Internal;\nrequire_once __DIR__ . '/Values.php';\n${phpGraphWire.replaceAll("GRAPH_NAMESPACE", `\\${model.namespace}`)}\n`;
 	files["src/Internal/Native.php"] = nativePhp(model);
 	files[`include/${prefix}-graph-types.h`] = model.typesHeader;
-	files[`include/${prefix}-graph.h`] = `#include "${prefix}-graph-types.h"\n${model.layout.roots.map(root => `uint32_t ${root.name}_graph(${[...root.parameters.map(id => `const ${nodes.get(id).name} *`), `${nodes.get(root.result).name} *`].join(", ")});`).join("\n")}\nuint32_t ${prefix}_graph_initialize(void);\nint ${prefix}_graph_ready(void);\nvoid ${prefix}_graph_retire(void);\n`;
+	files[`include/${prefix}-graph.h`] = `#include "${prefix}-graph-types.h"\n${model.layout.roots.map(root => `uint32_t ${root.name}_graph(${[...root.parameters.map(id => `const ${nodes.get(id).name} *`), `${nodes.get(root.result).name} *`].join(", ")});`).join("\n")}\n${refinementDiagnostics ? `const char *${prefix}_graph_error(void);\n` : ""}uint32_t ${prefix}_graph_initialize(void);\nint ${prefix}_graph_ready(void);\nvoid ${prefix}_graph_retire(void);\n`;
 	files[`extension/${model.stem}.c`] = `#include <php.h>
 #include <limits.h>
 #include <Zend/zend_exceptions.h>
@@ -215,7 +219,7 @@ _Static_assert(sizeof(bool) == 1, "Bool markers require one byte");
 #endif
 ${graphZendSupport}
 ${graphZendDescriptorSource(model)}
-${zendCalls(model)}
+${zendCalls(model, refinementDiagnostics)}
 ZEND_BEGIN_ARG_INFO_EX(lg_retire_args, 0, 0, 0)
 ZEND_END_ARG_INFO()
 static ZEND_FUNCTION(lg_retire) {

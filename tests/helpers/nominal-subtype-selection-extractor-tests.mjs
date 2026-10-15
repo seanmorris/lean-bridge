@@ -19,7 +19,7 @@ import { nominalSelectionContracts, selectedCase, selectedConstructor, selectedE
 import { reviewedSourceSelection } from "../../src/analyze/reviewed-source.mjs";
 import { nominalSubtypeReviewInput, nominalSubtypeReviewedFixture } from "./nominal-subtype-reviewed-fixture.mjs";
 import { checkNominalNativeSource } from "./nominal-subtype-native-source.mjs";
-import { checkComponentSubtypeSource, nominalComponentAssertions } from "./component-nominal-subtype-source.mjs";
+import { checkComponentSubtypeSource, checkRecursiveComponentSubtypeSource, checkRecursivePhpWasmSubtypeSource, nominalComponentAssertions } from "./component-nominal-subtype-source.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_SELECTION_TEST === "1"
 	|| process.env.LEAN_BRIDGE_STRUCTURAL_SUBTYPE_EXTRACTOR_TEST === "1"
@@ -96,9 +96,9 @@ test("fresh Lean preserves nominal constructor selections and rejects false sour
 			.map(item => [item.identity, item.projection])));
 		assert.deepEqual([...projections.keys()].sort(), selection.exports.toSorted());
 		observations.push({ route, profile, requestSha256: sha256(canonicalJson(request)), metadataSha256: sha256(output.stdout), selected: projections.size });
-		if(profile === "native-library-v1" && !route.endsWith("refusals"))
+		if(profile === "native-library-v1" && !route.endsWith("refusals") && !route.endsWith("source-only"))
 			observations.push(await checkNominalNativeSource({ report, request, context, directory, reports, route, run, lean, review }));
-		if(profile === "component-scalars-v1" && !route.endsWith("refusals"))
+		if(profile === "component-scalars-v1" && !route.endsWith("refusals") && !route.endsWith("source-only"))
 			observations.push(await checkComponentSubtypeSource({ report
 				, request, context, directory, reports, route, run, review
 				, expected: nominalSubtypeReviewedFixture()
@@ -174,6 +174,8 @@ test("fresh Lean preserves nominal constructor selections and rejects false sour
 		const refused = invalidContracts();
 		// Both profiles check constructor-free results in their separate result source fixture.
 		delete refused["NominalSelection.resultOnly"];
+		const recursive = refused["NominalSelection.recursive"];
+		delete refused["NominalSelection.recursive"];
 		const invalid = await extract(profile, refused, `${profile}-refusals`);
 		for(const [name, projection] of invalid.projections)
 			assert.equal(projection.status, "unsupported", `${profile}/${name}: ${canonicalJson(projection)}`);
@@ -186,7 +188,16 @@ test("fresh Lean preserves nominal constructor selections and rejects false sour
 		assert.match(diagnostic("sorrySelection"), /depends on sorry/u);
 		assert.match(diagnostic("outsideSelection"), /selected module/u);
 		for(const name of ["tooDeep", "tooWide"]) assert.match(diagnostic(name), /depth or node limit/u);
-		assert.match(diagnostic("recursive"), /recursive nominal constructor selections/u);
+		const accepted = await extract(profile, { "NominalSelection.recursive": recursive }, `${profile}-recursive-source-only`);
+		const projection = accepted.projections.get("NominalSelection.recursive");
+		assert.equal(projection.status, "supported", projection.expression);
+		assert.equal(projection.parameters[0].type.kind, "graph");
+		assert.deepEqual(projectionCheckedSelection(projection.parameters[0].type), recursive.parameters[0].refinement);
+		validateElaboratedMetadata(accepted.report, accepted.request);
+		if(profile === "component-scalars-v1") observations.push(await checkRecursiveComponentSubtypeSource({ ...accepted
+			, context, directory, reports, route: `${profile}-recursive-source`, run }));
+		else observations.push(await checkRecursivePhpWasmSubtypeSource({ ...accepted
+			, context, directory, reports, route: "php-wasm-recursive-source", run }));
 	}
 	if(reports) await writeFile(join(reports, "report.json"), canonicalJson({ schemaVersion: 1, context, observations, commands, installedSupport: false }), { flag: "wx" });
 	complete = true;

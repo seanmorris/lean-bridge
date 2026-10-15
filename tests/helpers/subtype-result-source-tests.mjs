@@ -178,16 +178,23 @@ test("fresh Lean projects constructor-free native Subtype results and retains in
 			, context, directory, reports, route: componentRoute, run, review, expected
 			, assertions: call => resultComponentAssertions(call, mixed) }));
 	}
-	const refusedNames = ["uncheckedInput", "uncheckedEnvelope", "callbackResult", "genericResult", "recursiveResult", "checkedResult"];
+	const refusedNames = ["uncheckedInput", "uncheckedEnvelope", "callbackResult", "genericResult", "checkedResult"];
 	const refused = await extract("refusals", { exports: refusedNames.map(name => `NominalResults.${name}`), arities: [["NominalResults.callbackResult", 1]] });
 	for(const [name, projection] of refused.projections) assert.equal(projection.status, "unsupported", `${name}: ${canonicalJson(projection)}`);
-	assert.match(refused.projections.get("NominalResults.recursiveResult").expression, /acyclic copied/u);
-	const control = await extract("controls", { exports: ["NominalResults.plainRecursive", "NominalResults.finOnly"] });
+	const control = await extract("controls", { exports: ["NominalResults.plainRecursive", "NominalResults.finOnly", "NominalResults.recursiveResult"] });
 	assert.ok([...control.projections.values()].every(projection => projection.status === "supported"));
 	assert.equal(control.projections.get("NominalResults.plainRecursive").result.kind, "graph");
 	assert.deepEqual(control.projections.get("NominalResults.finOnly").result.fields[0].type.predicate, { kind: "fin", bound: "3" });
+	const recursiveResult = control.projections.get("NominalResults.recursiveResult").result;
+	assert.equal(recursiveResult.kind, "graph");
+	assert.equal(projectionCheckedSelection(recursiveResult), null);
 	const component = await extract("component-refusals", { profile: "component-scalars-v1", exports: refusedNames.map(name => `NominalResults.${name}`), arities: [["NominalResults.callbackResult", 1]] });
 	assert.ok([...component.projections.values()].every(projection => projection.status === "unsupported"));
+	const componentRecursive = await extract("component-recursive-control", { profile: "component-scalars-v1", exports: ["NominalResults.recursiveResult"] });
+	const componentResult = componentRecursive.projections.get("NominalResults.recursiveResult");
+	assert.equal(componentResult.status, "supported", componentResult.expression);
+	assert.equal(componentResult.result.kind, "graph");
+	assert.equal(projectionCheckedSelection(componentResult.result), null);
 	if(reports) await writeFile(join(reports, "report.json"), canonicalJson({ schemaVersion: 1, context, observations, commands, installedSupport: false }), { flag: "wx" });
 	complete = true;
 });

@@ -7,7 +7,8 @@
 import { assertRefinement, nominalRefinement } from "../abi/refinements.mjs";
 import { assertComponentRecursiveAbi } from "../abi/component-recursive-abi.mjs";
 import { componentRecursiveLimits } from "../abi/component-recursive.mjs";
-import { refinementMirrorNames, renderRefinementMirrors } from "./refinement-mirrors.mjs";
+import { canonicalJson, sha256 } from "../capsule/node.mjs";
+import { refinementCycleTrees, refinementMirrorNames, renderRefinementMirrors } from "./refinement-mirrors.mjs";
 import { componentNominalFinGuards } from "./component-fin-guards.mjs";
 
 const fail = message => { throw new TypeError(`Invalid component refinement mirrors: ${message}`); };
@@ -68,12 +69,13 @@ export const componentRefinementMirrors = (abi, exports, leanType, nominalRefine
 	};
 	const normalize = (root, selected, produced, projections = new Map()) => {
 		let nodes = 0;
-		const expand = (type, tree, seen, depth) => {
+		const usedCycles = new Set();
+		const expand = (type, tree, seen, depth, active = new Map()) => {
 			if(++nodes > componentRecursiveLimits.typeNodes || depth > componentRecursiveLimits.schemaDepth) fail("refinement expansion exceeds its bound");
 			if(type.kind === "primitive") return tree;
 			if(type.kind === "apply")
 			{
-				const arguments_ = type.arguments.map((child, index) => expand(child, tree?.arguments[index] ?? null, seen, depth + 1));
+				const arguments_ = type.arguments.map((child, index) => expand(child, tree?.arguments[index] ?? null, seen, depth + 1, active));
 				return arguments_.some(Boolean) ? { kind: type.constructor, arguments: arguments_ } : null;
 			}
 			const definition = definitions.get(type.id), shared = constraints.get(type.id);
@@ -81,10 +83,17 @@ export const componentRefinementMirrors = (abi, exports, leanType, nominalRefine
 			if(seen.has(type.id))
 			{
 				if(tree !== null) fail("recursive selected refinements require another representation");
-				return null;
+				const cycle = active.get(type.id);
+				if(cycle === undefined) return null;
+				usedCycles.add(cycle);
+				return { kind: "recursive", definition: type.id.slice(5), cycle };
 			}
+			const selectedHere = tree !== null || shared !== undefined;
+			const cycle = sha256(canonicalJson({ id: type.id, selection: tree, shared: shared ?? null })).slice(0, 20);
 			const inner = new Set([...seen, type.id]);
-			if(definition.kind === "alias") return expand(definition.target, merge(tree, shared?.target), inner, depth + 1);
+			const innerActive = new Map(active);
+			if(selectedHere) innerActive.set(type.id, cycle);
+			if(definition.kind === "alias") return expand(definition.target, merge(tree, shared?.target), inner, depth + 1, innerActive);
 			if(definition.erased)
 			{
 				if(depth !== 0) fail("nested checked records require another representation");
@@ -93,19 +102,22 @@ export const componentRefinementMirrors = (abi, exports, leanType, nominalRefine
 				return { kind: "checked-record", definition: type.id.slice(5), constructor: produced ? null : tree.constructor };
 			}
 			const fields = (members, choices, bounds) => members.map((field, index) =>
-				expand(field.type, merge(choices?.[index].refinement ?? null, bounds?.[index]), inner, depth + 1));
+				expand(field.type, merge(choices?.[index].refinement ?? null, bounds?.[index]), inner, depth + 1, innerActive));
 			if(definition.kind === "record")
 			{
 				const arguments_ = fields(definition.fields, tree?.fields, shared?.fields);
 				return arguments_.some(Boolean) ? { kind: "record"
 					, definition: type.id.slice(5)
 					, fields: definition.fields.map(field => field.name)
-					, arguments: arguments_ } : null;
+					, arguments: arguments_
+					, ...(usedCycles.has(cycle) ? { cycle } : {}) } : null;
 			}
 			const cases = definition.cases.map((branch, index) => ({ name: branch.name
 				, fields: branch.fields.map(field => field.name)
 				, arguments: fields(branch.fields, tree?.cases[index].fields, shared?.cases[index]) }));
-			return cases.some(branch => branch.arguments.some(Boolean)) ? { kind: "variant", definition: type.id.slice(5), cases } : null;
+			return cases.some(branch => branch.arguments.some(Boolean)) ? { kind: "variant"
+				, definition: type.id.slice(5), cases
+				, ...(usedCycles.has(cycle) ? { cycle } : {}) } : null;
 		};
 		return expand(root, selected, new Set(), 0);
 	};
@@ -184,8 +196,8 @@ export const componentRefinementMirrors = (abi, exports, leanType, nominalRefine
 		const constructor = { array: "Array", list: "List", option: "Option", tuple: "Prod" }[type.constructor];
 		return `(_root_.${constructor} ${arguments_.join(" ")})`;
 	};
-	// Mirrors are emitted after all of their mirrored dependencies. Recursive refined layouts
-	// cannot become Lean structures, even if a selected tree stopped at an unselected backedge.
+	// Mirrors are emitted after their acyclic dependencies. Strongly connected nominal groups
+	// are retained for one mutually recursive Lean declaration block.
 	const ordered = [], done = new Set(), active = new Set();
 	const visit = type => {
 		if(type.kind === "primitive") return;
@@ -193,20 +205,58 @@ export const componentRefinementMirrors = (abi, exports, leanType, nominalRefine
 		if(done.has(type.id)) return;
 		const definition = definitions.get(type.id), mirrored = names.has(type.id.slice(5));
 		if(definition.kind !== "alias" && !mirrored) return;
-		if(active.has(type.id)) fail(`recursive mirror layout ${type.id}`);
+		if(active.has(type.id)) return;
 		active.add(type.id); children(definition).forEach(visit); active.delete(type.id); done.add(type.id);
 		if(!mirrored) return;
 		ordered.push({ ...definition, lean: type.id.slice(5)
 			, ...definition.kind === "variant" ? { cases: definition.cases.map(branch => ({ ...branch, constructor: `${type.id.slice(5)}.${branch.name}` })) } : {} });
 	};
 	for(const name of [...names].sort()) visit({ kind: "named", id: `lean:${name}` });
+	const mirrored = new Map(ordered.filter(type => ["record", "variant"].includes(type.kind)).map(type => [type.lean, type]));
+	const dependencies = new Map([...mirrored.keys()].map(name => [name, new Set()]));
+	const collectDependencies = (type, found, aliases = new Set()) => {
+		if(type.kind === "primitive") return;
+		if(type.kind === "apply") return type.arguments.forEach(child => collectDependencies(child, found, aliases));
+		const definition = definitions.get(type.id), name = type.id.slice(5);
+		if(definition.kind === "alias")
+		{
+			if(aliases.has(type.id)) fail(`recursive alias layout ${type.id}`);
+			return collectDependencies(definition.target, found, new Set([...aliases, type.id]));
+		}
+		if(mirrored.has(name)) found.add(name);
+	};
+	for(const [name, type] of mirrored)
+		children(type).forEach(child => collectDependencies(child, dependencies.get(name)));
+	let sequence = 0;
+	const indexes = new Map(), lows = new Map(), stack = [], stacked = new Set(), components = [];
+	const connect = name => {
+		indexes.set(name, sequence); lows.set(name, sequence++); stack.push(name); stacked.add(name);
+		for(const dependency of [...dependencies.get(name)].sort())
+		{
+			if(!indexes.has(dependency))
+			{ connect(dependency); lows.set(name, Math.min(lows.get(name), lows.get(dependency))); }
+			else if(stacked.has(dependency)) lows.set(name, Math.min(lows.get(name), indexes.get(dependency)));
+		}
+		if(lows.get(name) !== indexes.get(name)) return;
+		const component = [];
+		while(stack.length)
+		{
+			const member = stack.pop(); stacked.delete(member); component.push(member);
+			if(member === name) break;
+		}
+		components.push(component.sort());
+	};
+	for(const name of [...mirrored.keys()].sort()) if(!indexes.has(name)) connect(name);
+	const mutualGroups = components.filter(component => component.length > 1);
 	const recordValue = (type, values) => `({ ${type.fields.map((field, index) => `«${field.name}» := ${values[index]}`).join(", ")} } : _root_.${type.lean})`;
-	const lines = renderRefinementMirrors({ exports: layoutExports, types: ordered }, names, renderType, recordValue);
-	lines.push(...componentNominalFinGuards(ordered, projections));
+	const mirrorModel = { exports: layoutExports, types: ordered, mutualGroups };
+	const cycles = refinementCycleTrees(mirrorModel);
+	const lines = renderRefinementMirrors(mirrorModel, names, renderType, recordValue);
+	lines.push(...componentNominalFinGuards(ordered, projections, cycles, mutualGroups));
 	const normalized = sites.map((item, index) => ({ ...item
 		, parameters: item.parameters.map((parameter, i) => ({ ...parameter, leanType: renderType(abi.exports[index].parameters[i]) }))
 		, leanResultType: renderType(abi.exports[index].result) }));
 	// Compare no constructor hashes here: the shared renderer authenticates the full normalized
 	// layouts and gives each input tree its own deterministic checked conversion.
-	return { names, sites: normalized, lines, renderType };
+	return { names, sites: normalized, lines, renderType, cycles, mutualGroups };
 };

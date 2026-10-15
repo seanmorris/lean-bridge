@@ -148,16 +148,33 @@ export const checkedRefinementSelection = refinement => {
  */
 export const projectionCheckedSelection = type => {
 	let nodes = 0;
-	const visit = (value, depth) => {
+	const visit = (value, depth, definitions = new Map(), seen = new Set()) => {
 		if(++nodes > 4096 || depth > 32) fail();
-		if(value.kind === "alias") return visit(value.target, depth + 1);
+		if(value.kind === "graph")
+		{
+			if(!Array.isArray(value.types) || !value.types.length || value.types.length > 1024) fail();
+			const table = new Map();
+			for(const definition of value.types)
+			{
+				if(typeof definition?.name !== "string" || table.has(definition.name)) fail();
+				table.set(definition.name, definition);
+			}
+			return visit(value.root, depth + 1, table, new Set());
+		}
+		if(value.kind === "reference")
+		{
+			if(typeof value.name !== "string" || !definitions.has(value.name)) fail();
+			if(seen.has(value.name)) return null;
+			return visit(definitions.get(value.name), depth + 1, definitions, new Set([...seen, value.name]));
+		}
+		if(value.kind === "alias") return visit(value.target, depth + 1, definitions, seen);
 		if(value.kind === "refinement") return ["subtype", "checked-record"].includes(value.predicate.kind) && value.predicate.constructor !== null
 			? { constructor: value.predicate.constructor } : null;
 		if(["record", "variant"].includes(value.kind))
 		{
 			let selected = false;
 			const fields = values => values.map(field => {
-				const refinement = visit(field.type, depth + 1);
+				const refinement = visit(field.type, depth + 1, definitions, seen);
 				selected ||= refinement !== null;
 				return { name: field.name, refinement };
 			});
@@ -167,7 +184,7 @@ export const projectionCheckedSelection = type => {
 		}
 		if(!Object.hasOwn(arities, value.kind)) return null;
 		const arguments_ = ["array", "list", "option"].includes(value.kind) ? [value.element] : value.arguments;
-		const children = arguments_.map(child => visit(child, depth + 1));
+		const children = arguments_.map(child => visit(child, depth + 1, definitions, seen));
 		return children.every(child => child === null) ? null : { kind: value.kind, arguments: children };
 	};
 	return visit(type, 0);

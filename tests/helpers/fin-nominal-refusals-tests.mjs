@@ -17,25 +17,21 @@ import { canonicalJson } from "../../src/capsule/node.mjs";
 import { nativeFixtureEnvironment } from "./copied-fixture-install.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 
-const tree = "inductive Tree where\n  | leaf (digit : Fin 5)\n  | branch (children : List Tree)\n";
-const graphProblem = "checked Fin refinements cannot share a component with copied graph exports";
 const cases = [
 	["genericSite", "structure Holder (α : Type) where\n  digit : Fin 5\n  value : α\nabbrev NatHolder := Holder Nat\ndef genericSite (value : NatHolder) : Nat := value.digit.val", "generic record instantiations"]
-	, ["recursiveSite", tree + "def recursiveSite (value : Tree) : Nat := match value with\n  | .leaf digit => digit.val\n  | .branch children => children.length", graphProblem]
-	, ["recursiveResult", tree + "def recursiveResult (value : Nat) : Tree := .leaf ⟨value % 5, Nat.mod_lt _ (by decide)⟩", graphProblem]
-	, ["wrappedSite", tree + "abbrev Forest := Array Tree\ndef wrappedSite (value : Option Forest) : Nat := value.map Array.size |>.getD 0", graphProblem]
 	, ["callbackRecordSite", "structure CallbackRecord where\n  digit : Fin 5\n  callback : Nat → Nat\ndef callbackRecordSite (value : CallbackRecord) : Nat := value.callback value.digit.val", "callback"]
 ];
 
-test("native extractor diagnoses refined graphs before reporting a supported signature", async () => {
+test("native extractor admits finite refined graphs without bypassing checked-selection diagnostics", async () => {
 	const source = await readFile("src/analyze/NativeExports.lean", "utf8");
 	const signature = source.slice(source.indexOf("def describeSignature"), source.indexOf("def diagnostic"));
-	assert.match(signature, /if native && sites\.any \(fun site => containsKind #\[\] site "graph"\) && sites\.any containsRefinement then/u);
-	assert.ok(signature.indexOf(`throwError "${graphProblem}"`) < signature.indexOf('("status", str "supported")'));
+	assert.doesNotMatch(signature, /checked Fin refinements cannot share a component with copied graph exports/u);
+	assert.match(signature, /checkedSelectionProblem value/u);
+	assert.ok(signature.indexOf("checkedSelectionProblem value") < signature.indexOf('("status", str "supported")'));
 	assert.match(signature, /catch error =>[\s\S]*unsupported reason/u);
 });
 
-test("fresh native builds retain declaration-specific generic, recursive and callback record refusals", {
+test("fresh native builds retain declaration-specific generic and callback record refusals", {
 	skip: process.env.LEAN_BRIDGE_NATIVE_FIN_TEST !== "1", timeout: 900000
 }, async t => {
 	for(const [name, body, problem] of cases) await t.test(name, async () => {

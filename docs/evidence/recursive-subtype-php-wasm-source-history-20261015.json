@@ -1,0 +1,1056 @@
+{
+  "schemaVersion": 1,
+  "milestone": "recursive-subtype-php-wasm-source-v1",
+  "predecessorCommit": "88cf60117f2ea3bcef0213755c69a2e5d025f425",
+  "draftParentCommit": "88cf60117f2ea3bcef0213755c69a2e5d025f425",
+  "updates": [
+    {
+      "path": "docs/lean/diagnostics.md",
+      "currentSha256": "67826bf38cbdde5fe097820ca578b0b234226e11d42c983d412b320d7289a368",
+      "previousSha256": "5da839a1698bec098f5d0d943791da09c6acfa4894154799b2c22fdb9e5925d0",
+      "edits": [
+        {
+          "start": 4365,
+          "previous": "| `unsupported-subtype-refinement` | A checked `Subtype` constructor reached a component ABI that cannot validate it before dispatch. | Check the [refinement support table](existing-package.md#refinement-support-by-target). Structural containers have installed acceptance; plain record and variant fields have compiler checks with installed acceptance pending. Refined callbacks, owned values, recursive Subtypes and generic-record Subtype fields require further support. |\n",
+          "current": "| `unsupported-subtype-refinement` | A checked `Subtype` constructor reached a component ABI that cannot validate it before dispatch. | Check the [refinement support table](existing-package.md#refinement-support-by-target). Structural containers, plain fields and finite recursive PHP-Wasm copied graphs have installed acceptance. Refined callbacks, owned values and generic-record Subtype fields require further support. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/existing-package.md",
+      "currentSha256": "9e67d8ba95e2f19fc91e452ee4d01243d232118e50cfde6da489b54b0f00bb99",
+      "previousSha256": "32ded9a8610c164de0124c1b01de1e8589c8508eca7f1bfa8c268070de6e1dd6",
+      "edits": [
+        {
+          "start": 59349,
+          "previous": "",
+          "current": "[Recursive PHP-Wasm checks](../evidence/recursive-subtype-php-wasm-20261015.md)\nextend constructor selection and shared nominal `Fin` bounds through recursive\nvariants, aliases and `Array (Option ...)` carriers. The generated graph adapter\nchecks every reachable occurrence under the existing depth, visit and byte\nlimits. It checks only active cases, reports the exact nested rejection path,\npreserves shared caller values and recovers on the next call. Recursive results\nproject their proof-backed base values without input constructors. Both ordinary\nand independently reviewed packages compile with fresh Lean and run the full\ntwelve-arrangement Node and Chromium installed matrix after relocation.\n\n"
+        },
+        {
+          "start": 85895,
+          "previous": "Native source rejections name the declaration in `native-elaboration-unsupported`. Readers without a checked adapter reject refined metadata with `native-refinements-unsupported`. PHP-Wasm's [installed Subtype checks](../evidence/php-wasm-subtype-installed-20261010.md) cover ordinary and reviewed top-level parameters and results: twelve exports, twelve Node/Chromium configurations per route, and 2,024 checks per execution. Constructors and adapters compile with fresh Lean; runtime entry counts remain unmeasured. PHP-Wasm accepts the listed structural Subtype containers. Packages combining refinements with graph, owned or callable transports remain rejected. A consumer that does not declare checked support cannot read a verified refined component (`native-refinements-unavailable`). Python's [installed CI reports](../evidence/python-refinements-20261007/receipt.json) cover scalar and container `Fin`, top-level checked `Subtype`, and finite function specializations. Local acceptance does not establish a hosted CI result for a later revision.\n",
+          "current": "Native source rejections name the declaration in `native-elaboration-unsupported`. Readers without a checked adapter reject refined metadata with `native-refinements-unsupported`. PHP-Wasm's [installed Subtype checks](../evidence/php-wasm-subtype-installed-20261010.md) cover ordinary and reviewed top-level parameters and results: twelve exports, twelve Node/Chromium configurations per route, and 2,024 checks per execution. Constructors and adapters compile with fresh Lean; runtime entry counts remain unmeasured. PHP-Wasm accepts the listed structural containers, acyclic nominal fields and [finite recursive copied graphs](../evidence/recursive-subtype-php-wasm-20261015.md). Refined callback and owned transports remain rejected. A consumer that does not declare checked support cannot read a verified refined component (`native-refinements-unavailable`). Python's [installed CI reports](../evidence/python-refinements-20261007/receipt.json) cover scalar and container `Fin`, top-level checked `Subtype`, and finite function specializations. Local acceptance does not establish a hosted CI result for a later revision.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/export-decisions.md",
+      "currentSha256": "7bdec83613f60d8b6e59308fc74c2b182ce58a1c902141c8d829712c5772d150",
+      "previousSha256": "8e769952aacabb7ad87e754b2f9f64dc9cfcf2e5877cc11af34359150b91cd76",
+      "edits": [
+        {
+          "start": 2885,
+          "previous": "Declare supported ownership, lifetime, refinement policy and boundary-effect requirements through [export contracts](existing-package.md#declare-export-contracts). The compiler checks them after resolving the signature; unsupported choices fail before linking. Contracts enforce copied values, native call-scoped resource/callback borrowing, explicit returned leases, and synchronous callback effects. Ordinary-source npm packages accept [bounded integers inside containers, copied fields, aliases, recursive values, callbacks, and returned closures](existing-package.md#export-bounded-integers) and [checked top-level `Subtype` constructors](existing-package.md#export-a-checked-subtype) over primitive bases. Refined callback results must have a finite recovery value; bare `Fin 0` results are rejected at build time. C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP, PHP-Wasm, JavaScript/TypeScript and WIT/WASI packages also support [explicit input transfers](../publish/c.md#transfer-input-ownership). Other checked-constructor positions, retained host callbacks and async adapters remain unfinished.\n",
+          "current": "Declare supported ownership, lifetime, refinement policy and boundary-effect requirements through [export contracts](existing-package.md#declare-export-contracts). The compiler checks them after resolving the signature; unsupported choices fail before linking. Contracts enforce copied values, native call-scoped resource/callback borrowing, explicit returned leases, and synchronous callback effects. Ordinary-source npm packages accept [bounded integers inside containers, copied fields, aliases, recursive values, callbacks, and returned closures](existing-package.md#export-bounded-integers) and [checked top-level `Subtype` constructors](existing-package.md#export-a-checked-subtype) over primitive bases. PHP-Wasm copied-graph packages also retain selected constructors and `Fin` bounds through [finite recursive copied values](../evidence/recursive-subtype-php-wasm-20261015.md). Refined callback results must have a finite recovery value; bare `Fin 0` results are rejected at build time. C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP, PHP-Wasm, JavaScript/TypeScript and WIT/WASI packages also support [explicit input transfers](../publish/c.md#transfer-input-ownership). Other checked-constructor positions, retained host callbacks and async adapters remain unfinished.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/php.md",
+      "currentSha256": "a2c21ed6a7cb7bb9ccbafc90db8604ba759c6506da6ff3a7e76df33b91d6201a",
+      "previousSha256": "72c8f7c681131ce1cfefd52a14a77f62eb33eee3909b757e26e1244600d473ed",
+      "edits": [
+        {
+          "start": 50433,
+          "previous": "below add containers. Refined callback, graph and owned transports remain rejected.\n",
+          "current": "below add containers. Refined callback and owned transports remain rejected.\n\nPHP-Wasm copied-graph packages also accept selected `Subtype` constructors and\n`Fin` bounds inside finite recursive records and variants. The adapter validates\nall `Fin` leaves before running any selected constructor. It checks only the\nactive variant case and every present occurrence in arrays and options. A\nrejection names the actual path, such as\n`arg0[1]?.node.tail.node.value`, preserves the caller's graph and leaves the\nruntime available for another call. Recursive results project the base values\nwithout asking the caller for a constructor.\n\nThe [recursive installed checks](evidence/recursive-subtype-php-wasm-20261015.md)\ncompile ordinary and independently reviewed Lean, reproduce the npm component,\nnpm shared runtime and Composer API, remove the author roots, install offline,\nrelocate the installed trees and run startup and lazy weak/strict callers in\nNode and Chromium. The fixture covers two constructor choices for one recursive\ntype, normalization, a late nested rejection, a shared input subgraph, inactive\nbranches, mixed `Fin 3`, caller preservation, recovery and a constructor-free\nrecursive result. Refined callbacks and owned graph values remain unsupported.\n"
+        },
+        {
+          "start": 82454,
+          "previous": "",
+          "current": "The [recursive PHP-Wasm checks](evidence/recursive-subtype-php-wasm-20261015.md)\nadd checked `Nat` fields and `Fin 3` bounds to a recursive variant, its alias and\n`Array (Option ...)` carriers. Ordinary and independently reviewed packages\nretain separate constructor choices, validate every reachable occurrence and\nproject proof-backed recursive results. Exact late failures name the nested\nfield path; rejected calls preserve shared caller values and later calls recover.\nBoth routes reproduce all three packages and run the twelve Node and Chromium\nloading, installation and strictness arrangements after offline installation\nand relocation on wasm32 PHP 8.4.1.\n\n"
+        },
+        {
+          "start": 83197,
+          "previous": "owned, recursive, dependent and broader generic Subtypes remain pending. The\n",
+          "current": "owned, dependent and broader generic Subtypes remain pending. Recursive\nchecked-record combinations remain separate work. The\n"
+        }
+      ]
+    },
+    {
+      "path": "scripts/generate-type-docs.mjs",
+      "currentSha256": "45d36484c73888a1647e4b3b084ba0cbe0ec73a44d47995670604ff0c191d820",
+      "previousSha256": "2721af66fdea2ca427bf3e6b6680f613697f5d6d60fdc70d4100f7143b1255dd",
+      "edits": [
+        {
+          "start": 1744,
+          "previous": "const primitiveNominalPending = \"Primitive-base nominal acceptance in the remaining hosts, refined callbacks, owned, recursive, dependent and broader generic Subtypes remain pending.\";\n",
+          "current": "const primitiveNominalPending = \"Primitive-base nominal acceptance in the remaining hosts, refined callbacks, owned, dependent and broader generic Subtypes remain pending. Recursive checked-record combinations remain separate work.\";\n"
+        },
+        {
+          "start": 3729,
+          "previous": "",
+          "current": "const recursiveSubtypePhpWasm = \"[Recursive PHP-Wasm checks](../evidence/recursive-subtype-php-wasm-20261015.md) add selected constructors and shared Fin bounds inside a recursive variant, its alias and nested array/option carriers on both source routes. All twelve installed Node and Chromium arrangements pass after offline installation and relocation; exact late failures preserve shared caller values and later calls recover.\";\n"
+        },
+        {
+          "start": 29841,
+          "previous": "\t\t\t`${primitiveNominalDotnet} ${primitiveNominalPhp} ${primitiveNominalPhpWasm} ${primitiveNominalPending}`)\n",
+          "current": "\t\t\t`${primitiveNominalDotnet} ${primitiveNominalPhp} ${primitiveNominalPhpWasm} ${recursiveSubtypePhpWasm} ${primitiveNominalPending}`)\n"
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/NativeExports.lean",
+      "currentSha256": "cf03ffc8aa8e0760ea0d9b58be3d452ee71ec3cbf683dd3f82c02dc2eb3e14a5",
+      "previousSha256": "a6e5738d497fa57e2ff7eb98d2da7761277dc72c6584802909c3a4960c6ee6f3",
+      "edits": [
+        {
+          "start": 6709,
+          "previous": "",
+          "current": "  /-- Nominal definitions that participate in a selected recursive component.\n  Constructor decisions stay local to one export site, but every definition in\n  its recursive component must enter that site's finite table. -/\n  recursiveSelections : List Name := []\n"
+        },
+        {
+          "start": 7443,
+          "previous": "  -- Keep the selected tree inline so two fields can use different constructors for one type.\n  if perSite then\n",
+          "current": "  -- Keep an acyclic selected tree inline so two fields can use different constructors\n  -- for one type. A selected recursive component instead gets a site-local table:\n  -- separate parameters and exports still receive independent tables.\n  if perSite && !(← get).recursiveSelections.contains name then\n"
+        },
+        {
+          "start": 7829,
+          "previous": "",
+          "current": "  if let some existing := (← get).types.find? fun type =>\n      (type.getObjValAs? String \"name\").toOption == some name.toString then\n    unless existing == value do\n      reject e s!\"one recursive copied site selects conflicting refinements for {name}\"\n    return ← nominalReference e name\n"
+        },
+        {
+          "start": 8251,
+          "previous": "",
+          "current": "/-- Mark every nominal definition on the finite backedge. Parents constructed\nafter the backedge see this state and enter the same site-local table. -/\ndef rememberRecursiveSelection (name : Name) (seen : List Name) : ShapeM Unit := do\n  let cycle := name :: seen.takeWhile (· != name)\n  modify fun state => { state with recursiveSelections := cycle ++ state.recursiveSelections }\n\n"
+        },
+        {
+          "start": 28460,
+          "previous": "                if checked.isSome || subtypeStructural then reject e \"recursive nominal constructor selections are not implemented\"\n",
+          "current": ""
+        },
+        {
+          "start": 28675,
+          "previous": "",
+          "current": "                if checked.isSome || subtypeStructural then\n                  rememberRecursiveSelection name seen\n"
+        },
+        {
+          "start": 41399,
+          "previous": "        if checked.isSome || subtypeStructural then reject e \"recursive nominal constructor selections are not implemented\"\n",
+          "current": "        if checked.isSome || subtypeStructural then\n          rememberRecursiveSelection name seen\n"
+        },
+        {
+          "start": 45501,
+          "previous": "        if checked.isSome || subtypeStructural then reject e \"recursive nominal constructor selections are not implemented\"\n",
+          "current": "        if checked.isSome || subtypeStructural then\n          rememberRecursiveSelection name seen\n"
+        },
+        {
+          "start": 53530,
+          "previous": "",
+          "current": "/- A selected recursive site may have an inline nominal parent or sibling that was\n   visited before the backedge proved that the site needs a finite graph. Hoist every\n   such definition into the graph table and replace it with a reference. Acyclic sites\n   still return through `inlineCopiedType` before this pass and keep their exact bytes. -/\nstructure CopiedGraphClosureState where\n  sources : Array Json\n  types : Array Json := #[]\n  active : List String := []\n\nabbrev CopiedGraphClosureM := StateT CopiedGraphClosureState MetaM\n\ndef copiedGraphReference (value : Json) : MetaM Json := do\n  let name ← ofExcept <| value.getObjValAs? String \"name\"\n  return obj [(\"kind\", str \"reference\"), (\"name\", str name),\n    (\"lean\", (value.getObjVal? \"lean\").toOption.getD (str name)),\n    (\"abi\", ← ofExcept <| value.getObjVal? \"abi\")]\n\nmutual\n  partial def closeCopiedGraphValue (value : Json) (depth : Nat := 0) : CopiedGraphClosureM Json := do\n    if depth > 32 then throwError \"copied graph closure exceeds its depth limit\"\n    let kind := (value.getObjValAs? String \"kind\").toOption.getD \"\"\n    if kind == \"reference\" then\n      let name ← ofExcept <| value.getObjValAs? String \"name\"\n      closeCopiedGraphDefinition name none depth\n      return value\n    if [\"alias\", \"record\", \"variant\"].contains kind then\n      let name ← ofExcept <| value.getObjValAs? String \"name\"\n      closeCopiedGraphDefinition name (some value) depth\n      return ← copiedGraphReference value\n    if kind == \"refinement\" then\n      return value.setObjVal! \"base\"\n        (← closeCopiedGraphValue (← ofExcept <| value.getObjVal? \"base\") (depth + 1))\n    if kind == \"array\" || kind == \"list\" || kind == \"option\" then\n      return value.setObjVal! \"element\"\n        (← closeCopiedGraphValue (← ofExcept <| value.getObjVal? \"element\") (depth + 1))\n    if kind == \"result\" || kind == \"tuple\" then\n      let arguments ← ofExcept <| value.getObjValAs? (Array Json) \"arguments\"\n      return value.setObjVal! \"arguments\"\n        (toJson (← arguments.mapM fun child => closeCopiedGraphValue child (depth + 1)))\n    return value\n\n  partial def closeCopiedGraphDefinition (name : String) (inline : Option Json)\n      (depth : Nat) : CopiedGraphClosureM Unit := do\n    if (← get).active.contains name then return\n    let sources := (← get).sources\n    let source? := match inline with\n      | some value => some value\n      | none => sources.find? fun item =>\n        (item.getObjValAs? String \"name\").toOption == some name\n    let some source := source?\n      | throwError \"missing copied type definition: {name}\"\n    modify fun state => { state with active := name :: state.active }\n    let normalized ← closeCopiedGraphNominal source (depth + 1)\n    modify fun state => { state with active := state.active.erase name }\n    if let some existing := (← get).types.find? fun item =>\n        (item.getObjValAs? String \"name\").toOption == some name then\n      unless existing == normalized do\n        throwError \"conflicting selected copied graph definition: {name}\"\n    else\n      if (← get).types.size >= 1024 then\n        throwError \"copied graph exceeds 1024 nominal definitions\"\n      modify fun state => { state with types := state.types.push normalized }\n\n  partial def closeCopiedGraphNominal (value : Json) (depth : Nat) : CopiedGraphClosureM Json := do\n    let kind := (value.getObjValAs? String \"kind\").toOption.getD \"\"\n    if kind == \"alias\" then\n      return value.setObjVal! \"target\"\n        (← closeCopiedGraphValue (← ofExcept <| value.getObjVal? \"target\") (depth + 1))\n    let closeFields := fun (owner : Json) => do\n      let fields ← ofExcept <| owner.getObjValAs? (Array Json) \"fields\"\n      let fields ← fields.mapM fun (field : Json) => do\n        pure (field.setObjVal! \"type\"\n          (← closeCopiedGraphValue (← ofExcept <| field.getObjVal? \"type\") (depth + 1)))\n      pure (owner.setObjVal! \"fields\" (toJson fields))\n    if kind == \"record\" then\n      let value ← closeFields value\n      let some provenance := (value.getObjVal? \"provenance\").toOption | return value\n      let arguments ← ofExcept <| provenance.getObjValAs? (Array Json) \"arguments\"\n      let arguments ← arguments.mapM fun child => closeCopiedGraphValue child (depth + 1)\n      return value.setObjVal! \"provenance\"\n        (provenance.setObjVal! \"arguments\" (toJson arguments))\n    if kind == \"variant\" then\n      let cases ← ofExcept <| value.getObjValAs? (Array Json) \"cases\"\n      return value.setObjVal! \"cases\" (toJson (← cases.mapM closeFields))\n    throwError \"invalid inline copied graph definition: {kind}\"\nend\n\ndef closeCopiedGraph (types : Array Json) (value : Json) : MetaM (Array Json × Json) := do\n  let (root, state) ← (closeCopiedGraphValue value).run { sources := types }\n  return (state.types, root)\n\n"
+        },
+        {
+          "start": 59424,
+          "previous": "",
+          "current": "  let (types, value) ← closeCopiedGraph types value\n"
+        },
+        {
+          "start": 61716,
+          "previous": "  let result ← finiteCopiedGraph state.types value request.ownedAggregates\n  if subtypeResult && (result.getObjValAs? String \"kind\").toOption == some \"graph\" && containsKind #[] result \"subtype\" then\n    reject e \"Subtype results require acyclic copied values\"\n  return result\n",
+          "current": "  return ← finiteCopiedGraph state.types value request.ownedAggregates\n"
+        },
+        {
+          "start": 71475,
+          "previous": "/-- Recover only author-constructor choices. Fin predicates remain independently compiler-owned. -/\npartial def projectionCheckedSelection (type : Json) : Json := Id.run do\n",
+          "current": "/-- Recover only author-constructor choices. Fin predicates remain independently compiler-owned.\nRecursive backedges contribute no new choice: the enclosing site-local nominal selection owns them. -/\npartial def projectionCheckedSelectionWith (type : Json) (types : Array Json := #[])\n    (seen : List String := []) : Json := Id.run do\n"
+        },
+        {
+          "start": 71876,
+          "previous": "  if kind == \"alias\" then return projectionCheckedSelection ((type.getObjVal? \"target\").toOption.getD Json.null)\n",
+          "current": "  if kind == \"graph\" then\n    let table := (type.getObjValAs? (Array Json) \"types\").toOption.getD #[]\n    return projectionCheckedSelectionWith ((type.getObjVal? \"root\").toOption.getD Json.null) table\n  if kind == \"reference\" then\n    let name := (type.getObjValAs? String \"name\").toOption.getD \"\"\n    if seen.contains name then return Json.null\n    let some definition := types.find? fun item =>\n        (item.getObjValAs? String \"name\").toOption == some name\n      | return Json.null\n    return projectionCheckedSelectionWith definition types (name :: seen)\n  if kind == \"alias\" then\n    return projectionCheckedSelectionWith ((type.getObjVal? \"target\").toOption.getD Json.null) types seen\n"
+        },
+        {
+          "start": 73238,
+          "previous": "          (\"refinement\", projectionCheckedSelection ((field.getObjVal? \"type\").toOption.getD Json.null))]\n",
+          "current": "          (\"refinement\", projectionCheckedSelectionWith ((field.getObjVal? \"type\").toOption.getD Json.null) types seen)]\n"
+        },
+        {
+          "start": 74419,
+          "previous": "  let arguments := children.map projectionCheckedSelection\n",
+          "current": "  let arguments := children.map fun child => projectionCheckedSelectionWith child types seen\n"
+        },
+        {
+          "start": 74638,
+          "previous": "",
+          "current": "def projectionCheckedSelection (type : Json) : Json :=\n  projectionCheckedSelectionWith type\n\n"
+        },
+        {
+          "start": 84579,
+          "previous": "    -- Refuse before emitting metadata: native graph carriers cannot check refinements.\n    -- The projection retains this declaration's diagnostic instead of failing schema validation.\n    let sites := (nativeParameters.map fun parameter => (parameter.getObjVal? \"type\").toOption.getD Json.null).push result\n    if native && sites.any (fun site => containsKind #[] site \"graph\") && sites.any containsRefinement then\n      throwError \"checked Fin refinements cannot share a component with copied graph exports\"\n",
+          "current": ""
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/checked-refinement-selection.mjs",
+      "currentSha256": "7106ddc2f6620cee4f2c8f21259187104d6a4807b853e83376d7afc48e51e61b",
+      "previousSha256": "a93acd6f91edf592286db1fd255505adddf03a76bd8d2026962c5d2e7dfca64c",
+      "edits": [
+        {
+          "start": 6604,
+          "previous": "\tconst visit = (value, depth) => {\n",
+          "current": "\tconst visit = (value, depth, definitions = new Map(), seen = new Set()) => {\n"
+        },
+        {
+          "start": 6725,
+          "previous": "\t\tif(value.kind === \"alias\") return visit(value.target, depth + 1);\n",
+          "current": "\t\tif(value.kind === \"graph\")\n\t\t{\n\t\t\tif(!Array.isArray(value.types) || !value.types.length || value.types.length > 1024) fail();\n\t\t\tconst table = new Map();\n\t\t\tfor(const definition of value.types)\n\t\t\t{\n\t\t\t\tif(typeof definition?.name !== \"string\" || table.has(definition.name)) fail();\n\t\t\t\ttable.set(definition.name, definition);\n\t\t\t}\n\t\t\treturn visit(value.root, depth + 1, table, new Set());\n\t\t}\n\t\tif(value.kind === \"reference\")\n\t\t{\n\t\t\tif(typeof value.name !== \"string\" || !definitions.has(value.name)) fail();\n\t\t\tif(seen.has(value.name)) return null;\n\t\t\treturn visit(definitions.get(value.name), depth + 1, definitions, new Set([...seen, value.name]));\n\t\t}\n\t\tif(value.kind === \"alias\") return visit(value.target, depth + 1, definitions, seen);\n"
+        },
+        {
+          "start": 7797,
+          "previous": "\t\t\t\tconst refinement = visit(field.type, depth + 1);\n",
+          "current": "\t\t\t\tconst refinement = visit(field.type, depth + 1, definitions, seen);\n"
+        },
+        {
+          "start": 8410,
+          "previous": "\t\tconst children = arguments_.map(child => visit(child, depth + 1));\n",
+          "current": "\t\tconst children = arguments_.map(child => visit(child, depth + 1, definitions, seen));\n"
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/copied-metadata-graph.mjs",
+      "currentSha256": "ae003727b5e2653e3ba711d3115df8b4b308f5d68a64f65228376c76b84b61be",
+      "previousSha256": "4020e5a4804d6f404065d42608e50f56a9235f9ac518f4532985a5cb2f9c522a",
+      "edits": [
+        {
+          "start": 2515,
+          "previous": "\t\tif(kind === \"refinement\" && !native)\n",
+          "current": "\t\tif(kind === \"refinement\")\n"
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/elaborated-metadata.mjs",
+      "currentSha256": "8f01c7bfae4768d330060b9364b0eead15dc07792ed62f27387400ae227a2d0e",
+      "previousSha256": "51a7927edbd9ec0467b0b0d5772c8081a190d257de992a0f58e8522b9c673166",
+      "edits": [
+        {
+          "start": 11817,
+          "previous": "\t\t\t\t\t\tvalidateCopiedMetadataGraph(type, (value, table) => copied(value, 0, table, refinements, false)); return;\n",
+          "current": "\t\t\t\t\t\tvalidateCopiedMetadataGraph(type, (value, table) => copied(value, 0, table, refinements, true, produced)); return;\n"
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/native-types.mjs",
+      "currentSha256": "36154b9374e740fa69117eab9c1f2144927471f7d32520ad14fb5bea8fba8304",
+      "previousSha256": "df316023935340250a966b6daf9d32cacc12370f8b611d96e9770d9b28fcc9f4",
+      "edits": [
+        {
+          "start": 5932,
+          "previous": "\t\tvalidateCopiedMetadataGraph(type, (value, table) => validate(value, 0, true, table), true);\n",
+          "current": "\t\tvalidateCopiedMetadataGraph(type, (value, table) => validate(value, 0, true, table, policy, owned, true, site, true, subtypeResult), true);\n"
+        },
+        {
+          "start": 7313,
+          "previous": "\t\tif(!structural || references) fail(\"Fin refinements require a top-level native parameter or result, or an array, list, option, product, Except, plain record or variant of one\");\n",
+          "current": "\t\tif(!structural) fail(\"Fin refinements require a top-level native parameter or result, or an array, list, option, product, Except, plain record or variant of one\");\n"
+        },
+        {
+          "start": 8375,
+          "previous": "\t\t\tif(!subtypeStructural) fail(\"Subtype refinements require a top-level or structural-container native parameter or result, including copied plain records and variants but excluding callbacks, recursive graphs and generic records\");\n",
+          "current": "\t\t\tif(!subtypeStructural) fail(\"Subtype refinements require a top-level or structural-container native parameter or result, including copied plain records and variants but excluding callbacks and generic records\");\n"
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/semantic-model.mjs",
+      "currentSha256": "1dec886e8ec6d278bd270d29e09a2f027770ce62e0cd70080d9a493a7bd26335",
+      "previousSha256": "2270a8274dca71bc193bb2dd2bac666cf92c9a5cc304acf4e38fd20bcac24e65",
+      "edits": [
+        {
+          "start": 11871,
+          "previous": "\tconst hasSubtype = type => type.kind === \"refinement\" ? type.predicate.kind === \"subtype\"\n\t\t: type.kind === \"alias\" ? hasSubtype(type.target)\n\t\t\t: type.kind === \"record\" ? type.fields.some(field => hasSubtype(field.type))\n\t\t\t\t: type.kind === \"variant\" ? type.cases.some(branch => branch.fields.some(field => hasSubtype(field.type)))\n\t\t\t\t\t: [\"array\", \"list\", \"option\"].includes(type.kind) ? hasSubtype(type.element)\n\t\t\t\t\t\t: [\"tuple\", \"result\"].includes(type.kind) && type.arguments.some(hasSubtype);\n\tconst refinement = (type, nominal = false, shared = false) => {\n\t\tif(type.kind === \"graph\") return refinement(type.root, nominal, shared);\n",
+          "current": "\tconst hasSubtype = (type, references = new Map(), seen = new Set()) => {\n\t\tif(type.kind === \"graph\") return hasSubtype(type.root, new Map(type.types.map(definition => [definition.name, definition])), new Set());\n\t\tif(type.kind === \"reference\")\n\t\t{\n\t\t\tif(seen.has(type.name)) return false;\n\t\t\tconst target = references.get(type.name) ?? namedTypes.get(type.name);\n\t\t\tif(!target) throw new TypeError(`Missing compiler type definition: ${type.name}`);\n\t\t\treturn hasSubtype(target, references, new Set([...seen, type.name]));\n\t\t}\n\t\treturn type.kind === \"refinement\" ? type.predicate.kind === \"subtype\"\n\t\t\t: type.kind === \"alias\" ? hasSubtype(type.target, references, seen)\n\t\t\t\t: type.kind === \"record\" ? type.fields.some(field => hasSubtype(field.type, references, seen))\n\t\t\t\t\t: type.kind === \"variant\" ? type.cases.some(branch => branch.fields.some(field => hasSubtype(field.type, references, seen)))\n\t\t\t\t\t\t: [\"array\", \"list\", \"option\"].includes(type.kind) ? hasSubtype(type.element, references, seen)\n\t\t\t\t\t\t\t: [\"tuple\", \"result\"].includes(type.kind) && type.arguments.some(child => hasSubtype(child, references, seen));\n\t};\n\tconst refinement = (type, nominal = false, shared = false, references = new Map(), seen = new Set()) => {\n\t\tif(type.kind === \"graph\") return refinement(type.root, nominal, shared,\n\t\t\tnew Map(type.types.map(definition => [definition.name, definition])), new Set());\n\t\tif(type.kind === \"reference\")\n\t\t{\n\t\t\t// A nominal definition owns its own shared predicates. Duplicating them through\n\t\t\t// another nominal edge makes recursive extensions cyclic and aliases ambiguous.\n\t\t\t// Per-use constructor selections still expand the finite graph below.\n\t\t\tif(shared) return null;\n\t\t\tif(seen.has(type.name)) return null;\n\t\t\tconst target = references.get(type.name) ?? namedTypes.get(type.name);\n\t\t\tif(!target) throw new TypeError(`Missing compiler type definition: ${type.name}`);\n\t\t\treturn refinement(target, true, shared, references, new Set([...seen, type.name]));\n\t\t}\n"
+        },
+        {
+          "start": 13982,
+          "previous": "\t\tif(nominal && type.kind === \"alias\") return refinement(type.target, true, shared);\n",
+          "current": "\t\tif(nominal && type.kind === \"alias\") return refinement(type.target, true, shared, references, seen);\n"
+        },
+        {
+          "start": 14228,
+          "previous": "\t\t\t\tconst value = refinement(field.type, true, shared);\n",
+          "current": "\t\t\t\tconst value = refinement(field.type, true, shared, references, seen);\n"
+        },
+        {
+          "start": 14832,
+          "previous": "\t\tconst arguments_ = children.map(child => refinement(child, nominal, shared));\n",
+          "current": "\t\tconst arguments_ = children.map(child => refinement(child, nominal, shared, references, seen));\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/c/native-graph-adapters.mjs",
+      "currentSha256": "f7ddd3742de1f99f510f3c0b843cd1d9dbc2e084ccb53618a6e815cbf93b8275",
+      "previousSha256": "827bb1e9c17b0d6b4c695274db0747de9f9059a50d36439504054e6d7bd82034",
+      "edits": [
+        {
+          "start": 472,
+          "previous": "",
+          "current": "import { componentRefinementMirrors } from \"../../build/component-refinement-mirrors.mjs\";\nimport { componentRecursiveRefinementLeafKey } from \"../../build/component-refinements.mjs\";\n"
+        },
+        {
+          "start": 728,
+          "previous": "",
+          "current": "const graphLeanTypes = {\n\tunit: \"Unit\", bool: \"Bool\", uint8: \"UInt8\", uint16: \"UInt16\"\n\t, uint32: \"UInt32\", uint64: \"UInt64\", int8: \"Int8\", int16: \"Int16\"\n\t, int32: \"Int32\", int64: \"Int64\", nat: \"Nat\", int: \"Int\"\n\t, float32: \"Float32\", float64: \"Float\", string: \"String\", bytes: \"ByteArray\"\n\t, char: \"Char\", usize: \"USize\", isize: \"ISize\"\n};\nconst graphLeanType = type => {\n\tif(type.kind === \"primitive\") return `_root_.${graphLeanTypes[type.name]}`;\n\tif(type.kind === \"named\") return `_root_.${type.id.slice(5)}`;\n\tconst arguments_ = type.arguments.map(graphLeanType);\n\tif(type.constructor === \"result\") return `(_root_.Except ${arguments_[1]} ${arguments_[0]})`;\n\treturn `(_root_.${{ array: \"Array\", list: \"List\", option: \"Option\", tuple: \"Prod\" }[type.constructor]} ${arguments_.join(\" \")})`;\n};\n\nconst finBoundLimbs = bound => {\n\tif(typeof bound !== \"string\" || !/^(?:0|[1-9][0-9]*)$/u.test(bound)) throw new TypeError(\"Invalid recursive Fin bound\");\n\tconst limbs = [];\n\tfor(let value = BigInt(bound); value > 0n; value >>= 32n) limbs.push(Number(value & 0xffffffffn));\n\treturn limbs;\n};\n\n/** Render exact, recoverable checked-refinement diagnostics over native graph values. */\nconst graphRefinementDiagnostics = ({ abi, exports, nominalRefinements, layout, table, walker }) => {\n\tif(!exports.length) return null;\n\tconst normalized = componentRefinementMirrors(abi, exports, graphLeanType, nominalRefinements);\n\tif(!normalized.sites.some(item => item.refinements.parameters.some(Boolean))) return null;\n\tconst cycles = normalized.cycles, validators = new Set(), bounds = new Map(), helpers = new Map();\n\tconst contains = (tree, mode, active = new Set()) => {\n\t\tif(!tree) return false;\n\t\tif(tree.kind === \"fin\") return mode === \"fin\";\n\t\tif([\"subtype\", \"checked-record\"].includes(tree.kind)) return mode === \"constructor\";\n\t\tif(tree.kind === \"recursive\")\n\t\t{\n\t\t\tif(active.has(tree.cycle)) return false;\n\t\t\tconst target = cycles.get(tree.cycle);\n\t\t\tif(!target) throw new TypeError(`Missing recursive refinement target ${tree.cycle}`);\n\t\t\treturn contains(target, mode, new Set([...active, tree.cycle]));\n\t\t}\n\t\tconst nested = tree.cycle ? new Set([...active, tree.cycle]) : active;\n\t\tconst children = tree.kind === \"variant\" ? tree.cases.flatMap(branch => branch.arguments) : tree.arguments ?? [];\n\t\treturn children.some(child => contains(child, mode, nested));\n\t};\n\tlet local = 0;\n\tconst appendText = (text, indent = \"  \") => `${indent}if (!ng_refinement_text(${JSON.stringify(text)}, sizeof(${JSON.stringify(text)}) - 1)) return NG_LIMIT;`;\n\tconst scoped = (segments, call, indent = \"  \") => {\n\t\tconst suffix = local++, mark = `mark${suffix}`, status = `status${suffix}`;\n\t\treturn [`${indent}size_t ${mark} = ng_refinement_mark();`\n\t\t\t, ...segments.map(segment => typeof segment === \"string\" ? appendText(segment, indent)\n\t\t\t\t: `${indent}if (!ng_refinement_index(${segment.index})) return NG_LIMIT;`)\n\t\t\t, `${indent}uint32_t ${status} = ${call};`\n\t\t\t, `${indent}if (${status}) return ${status};`\n\t\t\t, `${indent}ng_refinement_restore(${mark});`];\n\t};\n\tconst fieldPointer = (field, expression) => field.storage === \"pointer\" ? expression : `&${expression}`;\n\tconst helper = (mode, inputTree, nodeId, symbol, parameter) => {\n\t\tlet tree = inputTree;\n\t\tif(tree.kind === \"recursive\")\n\t\t{\n\t\t\ttree = cycles.get(tree.cycle);\n\t\t\tif(!tree) throw new TypeError(`Missing recursive refinement target ${inputTree.cycle}`);\n\t\t}\n\t\tconst key = sha256(JSON.stringify({ mode, tree, nodeId, symbol, parameter })).slice(0, 20);\n\t\tconst name = `ng_refinement_${key}`;\n\t\tif(helpers.has(name)) return name;\n\t\tconst entry = { name, nodeId, lines: null }; helpers.set(name, entry);\n\t\tconst node = table.get(nodeId);\n\t\tif(!node) throw new TypeError(\"Recursive refinement refers to an unknown graph node\");\n\t\tconst lines = [`static uint32_t ${name}(const ${node.name} *value, uint32_t depth, uint32_t *nodes) {`\n\t\t\t, `  if (depth > ${componentRecursiveLimits.valueDepth} || !*nodes) return NG_LIMIT;`\n\t\t\t, \"  --*nodes;\"];\n\t\tif(tree.kind === \"fin\")\n\t\t{\n\t\t\tif(mode === \"fin\")\n\t\t\t{\n\t\t\t\tif(node.kind !== \"primitive\" || node.ref.name !== \"nat\") throw new TypeError(\"A recursive Fin refinement must erase to Nat\");\n\t\t\t\tconst limbs = finBoundLimbs(tree.bound), constant = `ng_fin_${sha256(tree.bound).slice(0, 20)}`;\n\t\t\t\tif(limbs.length) bounds.set(constant, `static const uint32_t ${constant}[${limbs.length}] = {${limbs.map(limb => `0x${limb.toString(16)}u`).join(\", \")}};`);\n\t\t\t\tlines.push(`  if (!ng_fin_below(value->data, value->length, ${limbs.length ? constant : \"NULL\"}, ${limbs.length}))`\n\t\t\t\t\t, `    return ng_refinement_reject(${JSON.stringify(` is not below its Fin ${tree.bound} bound`)});`);\n\t\t\t}\n\t\t}\n\t\telse if([\"subtype\", \"checked-record\"].includes(tree.kind))\n\t\t{\n\t\t\tif(mode === \"constructor\")\n\t\t\t{\n\t\t\t\tconst leaf = componentRecursiveRefinementLeafKey(tree, node.ref);\n\t\t\t\tconst validator = `${symbol}_graph_refinement_${parameter}_${leaf}`;\n\t\t\t\tvalidators.add(`extern uint8_t ${validator}(lean_object *);`);\n\t\t\t\tlines.push(`  if (!${validator}(${walker(node.id)}_in(value)))`\n\t\t\t\t\t, `    return ng_refinement_reject(${JSON.stringify(` was rejected by ${tree.constructor}`)});`);\n\t\t\t}\n\t\t}\n\t\telse if(tree.kind === \"variant\")\n\t\t{\n\t\t\tif(node.kind !== \"variant\" || node.cases.length !== tree.cases.length) throw new TypeError(\"Recursive variant refinement differs from its graph layout\");\n\t\t\tfor(const [branchIndex, branch] of tree.cases.entries())\n\t\t\t{\n\t\t\t\tconst nativeBranch = node.cases[branchIndex];\n\t\t\t\tconst children = branch.arguments.flatMap((child, fieldIndex) => {\n\t\t\t\t\tif(!contains(child, mode)) return [];\n\t\t\t\t\tconst field = nativeBranch.fields[fieldIndex], childName = helper(mode, child, field.type, symbol, parameter);\n\t\t\t\t\tconst expression = fieldPointer(field, `value->cases.${nativeBranch.name}.${field.name}`);\n\t\t\t\t\treturn scoped([`.${branch.name}.${branch.fields[fieldIndex]}`], `${childName}(${expression}, depth + 1, nodes)`, \"    \");\n\t\t\t\t});\n\t\t\t\tif(children.length) lines.push(`  if (value->kind == ${branchIndex}u) {`, ...children, \"  }\");\n\t\t\t}\n\t\t}\n\t\telse if([\"array\", \"list\"].includes(tree.kind))\n\t\t{\n\t\t\tif(!node.element) throw new TypeError(\"Recursive sequence refinement differs from its graph layout\");\n\t\t\tconst child = tree.arguments[0];\n\t\t\tif(contains(child, mode))\n\t\t\t{\n\t\t\t\tconst childName = helper(mode, child, node.element, symbol, parameter), index = `i${local++}`;\n\t\t\t\tlines.push(`  for (size_t ${index} = 0; ${index} < value->length; ++${index}) {`\n\t\t\t\t\t, ...scoped([{ index }], `${childName}(value->data + ${index}, depth + 1, nodes)`, \"    \"), \"  }\");\n\t\t\t}\n\t\t}\n\t\telse\n\t\t{\n\t\t\tconst expected = { record: \"record\", option: \"option\", result: \"result\", tuple: \"tuple\" }[tree.kind];\n\t\t\tif(node.kind !== expected) throw new TypeError(`Recursive ${tree.kind} refinement differs from its graph layout`);\n\t\t\tconst children = tree.arguments;\n\t\t\tfor(const [index, child] of children.entries())\n\t\t\t{\n\t\t\t\tif(!contains(child, mode)) continue;\n\t\t\t\tconst field = node.fields[index], childName = helper(mode, child, field.type, symbol, parameter);\n\t\t\t\tconst expression = fieldPointer(field, `value->${field.name}`);\n\t\t\t\tconst segment = tree.kind === \"record\" ? `.${tree.fields[index]}` : tree.kind === \"option\" ? \"?\"\n\t\t\t\t\t: tree.kind === \"result\" ? `.${index ? \"error\" : \"ok\"}` : `.${index}`;\n\t\t\t\tconst inner = scoped([segment], `${childName}(${expression}, depth + 1, nodes)`, [\"option\", \"result\"].includes(tree.kind) ? \"    \" : \"  \");\n\t\t\t\tif(tree.kind === \"option\") lines.push(\"  if (value->has_value) {\", ...inner, \"  }\");\n\t\t\t\telse if(tree.kind === \"result\") lines.push(`  if (${index ? \"!\" : \"\"}value->is_ok) {`, ...inner, \"  }\");\n\t\t\t\telse lines.push(...inner);\n\t\t\t}\n\t\t}\n\t\tlines.push(\"  return NG_OK;\", \"}\"); entry.lines = lines;\n\t\treturn name;\n\t};\n\tconst roots = new Map(layout.roots.map(root => [root.bindingId, root]));\n\tconst calls = new Map();\n\tfor(const item of normalized.sites)\n\t{\n\t\tconst root = roots.get(item.bindingId);\n\t\tif(!root) throw new TypeError(\"Recursive refinement export lacks a graph root\");\n\t\tconst passes = [];\n\t\tfor(const mode of [\"fin\", \"constructor\"])\n\t\t{\n\t\t\tconst checked = item.refinements.parameters.map((tree, index) => tree && contains(tree, mode)\n\t\t\t\t? { index, name: helper(mode, tree, root.parameters[index], item.symbol, index) } : null).filter(Boolean);\n\t\t\tif(checked.length) passes.push({ mode, checked });\n\t\t}\n\t\tif(passes.length) calls.set(item.bindingId, passes);\n\t}\n\tconst support = `\nenum { NG_REFINEMENT_MESSAGE_LIMIT = 16384 };\nstatic _Thread_local char ng_refinement_message[NG_REFINEMENT_MESSAGE_LIMIT + 1];\nstatic _Thread_local size_t ng_refinement_length;\nstatic inline void ng_refinement_reset(void) { ng_refinement_length = 0; ng_refinement_message[0] = 0; }\nstatic inline size_t ng_refinement_mark(void) { return ng_refinement_length; }\nstatic inline void ng_refinement_restore(size_t mark) { ng_refinement_length = mark; ng_refinement_message[mark] = 0; }\nstatic inline void ng_refinement_overflow(void) {\n  static const char message[] = \"Refinement diagnostic exceeds 16 KiB\";\n  memcpy(ng_refinement_message, message, sizeof(message)); ng_refinement_length = sizeof(message) - 1;\n}\nstatic inline int ng_refinement_text(const char *text, size_t length) {\n  if (length > NG_REFINEMENT_MESSAGE_LIMIT - ng_refinement_length) { ng_refinement_overflow(); return 0; }\n  memcpy(ng_refinement_message + ng_refinement_length, text, length); ng_refinement_length += length;\n  ng_refinement_message[ng_refinement_length] = 0; return 1;\n}\nstatic inline int ng_refinement_index(size_t value) {\n  char digits[3 * sizeof(size_t) + 1]; size_t length = 0;\n  do { digits[length++] = (char)('0' + value % 10); value /= 10; } while (value);\n  if (!ng_refinement_text(\"[\", 1)) return 0;\n  while (length) if (!ng_refinement_text(&digits[--length], 1)) return 0;\n  return ng_refinement_text(\"]\", 1);\n}\nstatic inline uint32_t ng_refinement_reject(const char *suffix) {\n  return ng_refinement_text(suffix, strlen(suffix)) ? NG_INVALID : NG_LIMIT;\n}\nstatic inline int ng_fin_below(const uint32_t *data, size_t length, const uint32_t *bound, size_t bound_length) {\n  while (length && data[length - 1] == 0) --length;\n  if (length != bound_length) return length < bound_length;\n  while (length--) if (data[length] != bound[length]) return data[length] < bound[length];\n  return 0;\n}\nconst char *${layout.prefix}_graph_error(void) { return ng_refinement_length ? ng_refinement_message : NULL; }\n`;\n\treturn { normalized, validators: [...validators].sort(), bounds: [...bounds.values()].sort()\n\t\t, prototypes: [...helpers.values()].map(entry => `static uint32_t ${entry.name}(const ${table.get(entry.nodeId).name} *, uint32_t, uint32_t *);`)\n\t\t, helpers: [...helpers.values()].map(entry => entry.lines.join(\"\\n\"))\n\t\t, calls, support };\n};\n\n"
+        },
+        {
+          "start": 17266,
+          "previous": "",
+          "current": " * @param options.refinementExports - Compiler-selected recursive export sites.\n * @param options.nominalRefinements - Shared compiler-selected nominal constraints.\n"
+        },
+        {
+          "start": 17435,
+          "previous": "export const generateNativeCopiedGraphAdapters = (ir, abi, { initializer = null, wordBits = 64, exportCalls = true } = {}) => {\n",
+          "current": "export const generateNativeCopiedGraphAdapters = (ir, abi, { initializer = null, wordBits = 64, exportCalls = true, refinementExports = [], nominalRefinements = [] } = {}) => {\n"
+        },
+        {
+          "start": 18147,
+          "previous": "\tconst lines = [`#include \"${layout.prefix}-graph.h\"`, runtime(wordBits)];\n",
+          "current": "\tconst diagnostics = graphRefinementDiagnostics({ abi, exports: refinementExports, nominalRefinements, layout, table, walker });\n\tconst lines = [`#include \"${layout.prefix}-graph.h\"`, runtime(wordBits)\n\t\t, ...diagnostics ? [diagnostics.support, ...diagnostics.validators, ...diagnostics.bounds, ...diagnostics.prototypes] : []];\n"
+        },
+        {
+          "start": 32050,
+          "previous": "",
+          "current": "\tif(diagnostics) lines.push(...diagnostics.helpers);\n"
+        },
+        {
+          "start": 32523,
+          "previous": "",
+          "current": "\t\tconst refinementPasses = diagnostics?.calls.get(root.bindingId) ?? [];\n\t\tconst refinementCalls = refinementPasses.flatMap((pass, passIndex) => [\n\t\t\tpassIndex ? `  refinement_nodes = ${componentRecursiveLimits.valueNodes};` : `  uint32_t refinement_nodes = ${componentRecursiveLimits.valueNodes};`\n\t\t\t, ...pass.checked.flatMap(({ index, name }, checkIndex) => {\n\t\t\t\tconst mark = `refinement_mark_${passIndex}_${checkIndex}`, label = `arg${index}`;\n\t\t\t\treturn [`  size_t ${mark} = ng_refinement_mark();`\n\t\t\t\t\t, `  if (!ng_refinement_text(${JSON.stringify(label)}, sizeof(${JSON.stringify(label)}) - 1)) return NG_LIMIT;`\n\t\t\t\t\t, `  if ((status = ${name}(a${index}, 0, &refinement_nodes))) return status;`\n\t\t\t\t\t, `  ng_refinement_restore(${mark});`];\n\t\t\t})\n\t\t]);\n\t\tif(refinementPasses.length) refinementCalls.push(\"  ng_refinement_reset();\");\n"
+        },
+        {
+          "start": 33518,
+          "previous": "",
+          "current": "\t\t\t, ...diagnostics ? [\"  ng_refinement_reset();\"] : []\n"
+        },
+        {
+          "start": 34050,
+          "previous": "",
+          "current": "\t\t\t, ...refinementCalls\n"
+        },
+        {
+          "start": 35303,
+          "previous": "\tconst header = [`#include \"${layout.prefix}-graph-types.h\"`, \"#ifdef __cplusplus\", 'extern \"C\" {', \"#endif\", ...declarations, \"#ifdef __cplusplus\", \"}\", \"#endif\", \"\"].join(\"\\n\");\n\treturn { layout, typesHeader, header, source: lines.join(\"\\n\") };\n",
+          "current": "\tconst header = [`#include \"${layout.prefix}-graph-types.h\"`, \"#ifdef __cplusplus\", 'extern \"C\" {', \"#endif\", ...declarations\n\t\t, ...diagnostics ? [`const char *${layout.prefix}_graph_error(void);`] : []\n\t\t, \"#ifdef __cplusplus\", \"}\", \"#endif\", \"\"].join(\"\\n\");\n\treturn { layout, typesHeader, header, source: lines.join(\"\\n\")\n\t\t, ...diagnostics ? { refinementDiagnostics: true } : {} };\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/php/copied-graph-zend.mjs",
+      "currentSha256": "c6d838d56124cd33531ad92687e1013817cdd424547838c97dd726bc0ed2cc54",
+      "previousSha256": "c784119fa76847969d8f2a89fa451392bf2c51b792478ba8e006e41b16bde6ec",
+      "edits": [
+        {
+          "start": 5430,
+          "previous": "const zendCalls = model => {\n",
+          "current": "const zendCalls = (model, refinementDiagnostics = false) => {\n"
+        },
+        {
+          "start": 8130,
+          "previous": "",
+          "current": "  ${refinementDiagnostics ? `if (!message && status == 1) message = ${prefix}_graph_error();` : \"\"}\n"
+        },
+        {
+          "start": 10384,
+          "previous": "",
+          "current": " * @param options - Private compiled-transport capabilities.\n * @param options.refinementDiagnostics - Read exact checked-refinement failures from the graph call.\n"
+        },
+        {
+          "start": 10551,
+          "previous": "export const generateCopiedPhpGraphZendAdapter = ir => {\n",
+          "current": "export const generateCopiedPhpGraphZendAdapter = (ir, { refinementDiagnostics = false } = {}) => {\n\tif(typeof refinementDiagnostics !== \"boolean\") throw new TypeError(\"PHP graph refinement diagnostics must be explicit\");\n"
+        },
+        {
+          "start": 12029,
+          "previous": "\tfiles[`include/${prefix}-graph.h`] = `#include \"${prefix}-graph-types.h\"\\n${model.layout.roots.map(root => `uint32_t ${root.name}_graph(${[...root.parameters.map(id => `const ${nodes.get(id).name} *`), `${nodes.get(root.result).name} *`].join(\", \")});`).join(\"\\n\")}\\nuint32_t ${prefix}_graph_initialize(void);\\nint ${prefix}_graph_ready(void);\\nvoid ${prefix}_graph_retire(void);\\n`;\n",
+          "current": "\tfiles[`include/${prefix}-graph.h`] = `#include \"${prefix}-graph-types.h\"\\n${model.layout.roots.map(root => `uint32_t ${root.name}_graph(${[...root.parameters.map(id => `const ${nodes.get(id).name} *`), `${nodes.get(root.result).name} *`].join(\", \")});`).join(\"\\n\")}\\n${refinementDiagnostics ? `const char *${prefix}_graph_error(void);\\n` : \"\"}uint32_t ${prefix}_graph_initialize(void);\\nint ${prefix}_graph_ready(void);\\nvoid ${prefix}_graph_retire(void);\\n`;\n"
+        },
+        {
+          "start": 13085,
+          "previous": "${zendCalls(model)}\n",
+          "current": "${zendCalls(model, refinementDiagnostics)}\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/component-fin-guards.mjs",
+      "currentSha256": "023f466cf78606075fa0f2c772dd5b9bb0149ad40cee562e39c5f6ccf179dd6c",
+      "previousSha256": "c8aa6218488c0d8010eed23fcf98d22efaa7007791adbfe7d8fd29669af5451c",
+      "edits": [
+        {
+          "start": 251,
+          "previous": "",
+          "current": " * @param cycles - Finite recursive refinement targets.\n * @param seen - Backedge tokens already inspected.\n"
+        },
+        {
+          "start": 363,
+          "previous": "const hasFin = tree => tree?.kind === \"fin\" || (tree?.arguments ?? []).some(hasFin)\n\t|| (tree?.cases ?? []).some(branch => branch.arguments.some(hasFin));\n",
+          "current": "const hasFin = (tree, cycles = new Map(), seen = new Set()) => {\n\tif(tree?.kind === \"fin\") return true;\n\tif(tree?.kind === \"recursive\")\n\t{\n\t\tif(seen.has(tree.cycle)) return false;\n\t\tconst target = cycles.get(tree.cycle);\n\t\treturn target ? hasFin(target, cycles, new Set([...seen, tree.cycle])) : false;\n\t}\n\treturn (tree?.arguments ?? []).some(child => hasFin(child, cycles, seen))\n\t\t|| (tree?.cases ?? []).some(branch => branch.arguments.some(child => hasFin(child, cycles, seen)));\n};\n"
+        },
+        {
+          "start": 1345,
+          "previous": "",
+          "current": " * @param cycles - Finite recursive refinement targets.\n"
+        },
+        {
+          "start": 1405,
+          "previous": "export const componentFinGuard = (tree, value, depth = 0) => {\n\tif(!hasFin(tree)) return \"true\";\n",
+          "current": "export const componentFinGuard = (tree, value, depth = 0, cycles = new Map()) => {\n\tif(!hasFin(tree, cycles)) return \"true\";\n"
+        },
+        {
+          "start": 1664,
+          "previous": "",
+          "current": "\tif(tree.kind === \"recursive\") return `(LbErased.${tree.definition}.validFin ${input})`;\n"
+        },
+        {
+          "start": 1858,
+          "previous": "\tconst child = (index, expression) => componentFinGuard(tree.arguments[index], expression, depth + 1);\n",
+          "current": "\tconst child = (index, expression) => componentFinGuard(tree.arguments[index], expression, depth + 1, cycles);\n"
+        },
+        {
+          "start": 2800,
+          "previous": "",
+          "current": " * @param cycles - Finite recursive refinement targets.\n * @param mutualGroups - Mutually recursive nominal definition names.\n"
+        },
+        {
+          "start": 2930,
+          "previous": "export const componentNominalFinGuards = (types, trees) => types.flatMap(type => {\n\tconst tree = trees.get(`lean:${type.lean}`);\n\tif(!hasFin(tree)) return [];\n\tconst name = `LbErased.${type.lean}`;\n\tconst header = `def ${name}.validFin (value : ${name}) : _root_.Bool :=`;\n\tif(type.kind === \"record\") return [header\n\t\t, `  ${conjunction(type.fields.map((field, index) => componentFinGuard(tree.arguments[index], `value.«${field.name}»`)))}`\n\t\t, \"\"];\n\treturn [header, \"  match value with\"\n\t\t, ...type.cases.map((branch, index) => {\n\t\tconst names = branch.fields.map((_, position) => `_bridgeFinField${position}`);\n\t\tconst checks = tree.cases[index].arguments.map((child, position) => componentFinGuard(child, names[position]));\n\t\treturn `  | .«${branch.name}» ${names.join(\" \")} => ${conjunction(checks)}`;\n\t\t})\n\t\t, \"\"];\n});\n",
+          "current": "export const componentNominalFinGuards = (types, trees, cycles = new Map(), mutualGroups = []) => {\n\tconst typeByName = new Map(types.map(type => [type.lean, type]));\n\tconst mutualByName = new Map(mutualGroups.flatMap(group => group.map(name => [name, group])));\n\tconst emitted = new Set(), lines = [];\n\tconst render = (type, recursiveRecord = false) => {\n\t\tconst tree = trees.get(`lean:${type.lean}`);\n\t\tif(!hasFin(tree, cycles)) return [];\n\t\tconst name = `LbErased.${type.lean}`, header = `def ${name}.validFin (value : ${name}) : _root_.Bool :=`;\n\t\tif(type.kind === \"record\")\n\t\t{\n\t\t\tif(!recursiveRecord) return [header\n\t\t\t\t, `  ${conjunction(type.fields.map((field, index) => componentFinGuard(tree.arguments[index], `value.«${field.name}»`, 0, cycles)))}`\n\t\t\t\t, \"\"];\n\t\t\tconst names = type.fields.map((_, position) => `_bridgeFinField${position}`);\n\t\t\tconst checks = tree.arguments.map((child, position) => componentFinGuard(child, names[position], 0, cycles));\n\t\t\treturn [header, \"  match value with\", `  | ⟨${names.join(\", \")}⟩ => ${conjunction(checks)}`, \"\"];\n\t\t}\n\t\treturn [header, \"  match value with\"\n\t\t\t, ...type.cases.map((branch, index) => {\n\t\t\t\tconst names = branch.fields.map((_, position) => `_bridgeFinField${position}`);\n\t\t\t\tconst checks = tree.cases[index].arguments.map((child, position) => componentFinGuard(child, names[position], 0, cycles));\n\t\t\t\treturn `  | .«${branch.name}» ${names.join(\" \")} => ${conjunction(checks)}`;\n\t\t\t})\n\t\t\t, \"\"];\n\t};\n\tfor(const type of types)\n\t{\n\t\tconst group = mutualByName.get(type.lean);\n\t\tif(!group)\n\t\t{\n\t\t\tlines.push(...render(type, Boolean(trees.get(`lean:${type.lean}`)?.cycle)));\n\t\t\tcontinue;\n\t\t}\n\t\tconst identity = group.join(\"\\0\");\n\t\tif(emitted.has(identity)) continue;\n\t\temitted.add(identity);\n\t\tconst definitions = group.map(name => render(typeByName.get(name), true)).filter(body => body.length > 0);\n\t\tif(definitions.length) lines.push(\"mutual\", ...definitions.flat(), \"end\", \"\");\n\t}\n\treturn lines;\n};\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/component-recursive-lean.mjs",
+      "currentSha256": "65f04b5705e83c2f4d6cc7e22294072ce1e3bdef510edb024a9d5333f8c7ee30",
+      "previousSha256": "7338df31e23f594ba2e5a519c8989c739b6fbac0ad82c1d51892964b8ea580e6",
+      "edits": [
+        {
+          "start": 394,
+          "previous": "import { checkedRecordVia, componentRefinedCall, componentRefinementGuards, componentCarrierRefinementValidators, componentRefinementConversion } from \"./component-refinements.mjs\";\n",
+          "current": "import { checkedRecordVia, componentRefinedCall, componentRefinementGuards, componentCarrierRefinementValidators, componentRefinementConversion, componentRecursiveRefinementLeaves } from \"./component-refinements.mjs\";\n"
+        },
+        {
+          "start": 12349,
+          "previous": "\t\t\t, `    if ${componentFinGuard(item.refinements.parameters[index], \"_bridgeValue\")} then 1 else 0`, \"\"\n",
+          "current": "\t\t\t, `    if ${componentFinGuard(item.refinements.parameters[index], \"_bridgeValue\", 0, conversion.cycles)} then 1 else 0`, \"\"\n"
+        },
+        {
+          "start": 12482,
+          "previous": "\t\tlines.push(...componentCarrierRefinementValidators(item, nominalRefinements.length > 0 || Boolean(conversion), conversion ? componentFinGuard : undefined));\n",
+          "current": "\t\tlines.push(...componentCarrierRefinementValidators(item, nominalRefinements.length > 0 || Boolean(conversion), conversion\n\t\t\t? (tree, value) => componentFinGuard(tree, value, 0, conversion.cycles) : undefined));\n"
+        },
+        {
+          "start": 12779,
+          "previous": "",
+          "current": "\t\tif(conversion) item.refinements.parameters.forEach((tree, index) => {\n\t\t\tfor(const leaf of componentRecursiveRefinementLeaves(tree, signature.parameters[index], definitions, conversion.cycles))\n\t\t\t\tlines.push(`@[export ${item.symbol}_graph_refinement_${index}_${leaf.key}]`\n\t\t\t\t\t, `def ${item.wrapper}_graph_refinement_${index}_${leaf.key} (carrier : ${carrier(leaf.type)}) : _root_.UInt8 :=`\n\t\t\t\t\t, \"  match carrierValue carrier with\"\n\t\t\t\t\t, \"  | .none => 0\"\n\t\t\t\t\t, \"  | .some value =>\"\n\t\t\t\t\t, `    match ${componentRefinementConversion(leaf.refinement, \"value\")} with`\n\t\t\t\t\t, \"    | .some _ => 1\"\n\t\t\t\t\t, \"    | .none => 0\", \"\");\n\t\t});\n"
+        },
+        {
+          "start": 13753,
+          "previous": "\t\tconst bounds = conversion ? item.refinements.parameters.map((tree, index) => componentFinGuard(tree, names[index])).filter(guard => guard !== \"true\") : [];\n",
+          "current": "\t\tconst bounds = conversion ? item.refinements.parameters.map((tree, index) => componentFinGuard(tree, names[index], 0, conversion.cycles)).filter(guard => guard !== \"true\") : [];\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/component-refinement-mirrors.mjs",
+      "currentSha256": "b454eaf70252f3b615d3e9ec62357774aaf5fb7849a3edce329e4566beee7fa2",
+      "previousSha256": "d23d883ab69257ce033f0d6aa7b4ae8918da094843129329d02aba3f1943f53f",
+      "edits": [
+        {
+          "start": 447,
+          "previous": "import { refinementMirrorNames, renderRefinementMirrors } from \"./refinement-mirrors.mjs\";\n",
+          "current": "import { canonicalJson, sha256 } from \"../capsule/node.mjs\";\nimport { refinementCycleTrees, refinementMirrorNames, renderRefinementMirrors } from \"./refinement-mirrors.mjs\";\n"
+        },
+        {
+          "start": 4027,
+          "previous": "\t\tconst expand = (type, tree, seen, depth) => {\n",
+          "current": "\t\tconst usedCycles = new Set();\n\t\tconst expand = (type, tree, seen, depth, active = new Map()) => {\n"
+        },
+        {
+          "start": 4355,
+          "previous": "\t\t\t\tconst arguments_ = type.arguments.map((child, index) => expand(child, tree?.arguments[index] ?? null, seen, depth + 1));\n",
+          "current": "\t\t\t\tconst arguments_ = type.arguments.map((child, index) => expand(child, tree?.arguments[index] ?? null, seen, depth + 1, active));\n"
+        },
+        {
+          "start": 4877,
+          "previous": "\t\t\t\treturn null;\n",
+          "current": "\t\t\t\tconst cycle = active.get(type.id);\n\t\t\t\tif(cycle === undefined) return null;\n\t\t\t\tusedCycles.add(cycle);\n\t\t\t\treturn { kind: \"recursive\", definition: type.id.slice(5), cycle };\n"
+        },
+        {
+          "start": 5060,
+          "previous": "",
+          "current": "\t\t\tconst selectedHere = tree !== null || shared !== undefined;\n\t\t\tconst cycle = sha256(canonicalJson({ id: type.id, selection: tree, shared: shared ?? null })).slice(0, 20);\n"
+        },
+        {
+          "start": 5280,
+          "previous": "\t\t\tif(definition.kind === \"alias\") return expand(definition.target, merge(tree, shared?.target), inner, depth + 1);\n",
+          "current": "\t\t\tconst innerActive = new Map(active);\n\t\t\tif(selectedHere) innerActive.set(type.id, cycle);\n\t\t\tif(definition.kind === \"alias\") return expand(definition.target, merge(tree, shared?.target), inner, depth + 1, innerActive);\n"
+        },
+        {
+          "start": 6034,
+          "previous": "\t\t\t\texpand(field.type, merge(choices?.[index].refinement ?? null, bounds?.[index]), inner, depth + 1));\n",
+          "current": "\t\t\t\texpand(field.type, merge(choices?.[index].refinement ?? null, bounds?.[index]), inner, depth + 1, innerActive));\n"
+        },
+        {
+          "start": 6421,
+          "previous": "\t\t\t\t\t, arguments: arguments_ } : null;\n",
+          "current": "\t\t\t\t\t, arguments: arguments_\n\t\t\t\t\t, ...(usedCycles.has(cycle) ? { cycle } : {}) } : null;\n"
+        },
+        {
+          "start": 6740,
+          "previous": "\t\t\treturn cases.some(branch => branch.arguments.some(Boolean)) ? { kind: \"variant\", definition: type.id.slice(5), cases } : null;\n",
+          "current": "\t\t\treturn cases.some(branch => branch.arguments.some(Boolean)) ? { kind: \"variant\"\n\t\t\t\t, definition: type.id.slice(5), cases\n\t\t\t\t, ...(usedCycles.has(cycle) ? { cycle } : {}) } : null;\n"
+        },
+        {
+          "start": 11684,
+          "previous": "\t// Mirrors are emitted after all of their mirrored dependencies. Recursive refined layouts\n\t// cannot become Lean structures, even if a selected tree stopped at an unselected backedge.\n",
+          "current": "\t// Mirrors are emitted after their acyclic dependencies. Strongly connected nominal groups\n\t// are retained for one mutually recursive Lean declaration block.\n"
+        },
+        {
+          "start": 12208,
+          "previous": "\t\tif(active.has(type.id)) fail(`recursive mirror layout ${type.id}`);\n",
+          "current": "\t\tif(active.has(type.id)) return;\n"
+        },
+        {
+          "start": 12671,
+          "previous": "",
+          "current": "\tconst mirrored = new Map(ordered.filter(type => [\"record\", \"variant\"].includes(type.kind)).map(type => [type.lean, type]));\n\tconst dependencies = new Map([...mirrored.keys()].map(name => [name, new Set()]));\n\tconst collectDependencies = (type, found, aliases = new Set()) => {\n\t\tif(type.kind === \"primitive\") return;\n\t\tif(type.kind === \"apply\") return type.arguments.forEach(child => collectDependencies(child, found, aliases));\n\t\tconst definition = definitions.get(type.id), name = type.id.slice(5);\n\t\tif(definition.kind === \"alias\")\n\t\t{\n\t\t\tif(aliases.has(type.id)) fail(`recursive alias layout ${type.id}`);\n\t\t\treturn collectDependencies(definition.target, found, new Set([...aliases, type.id]));\n\t\t}\n\t\tif(mirrored.has(name)) found.add(name);\n\t};\n\tfor(const [name, type] of mirrored)\n\t\tchildren(type).forEach(child => collectDependencies(child, dependencies.get(name)));\n\tlet sequence = 0;\n\tconst indexes = new Map(), lows = new Map(), stack = [], stacked = new Set(), components = [];\n\tconst connect = name => {\n\t\tindexes.set(name, sequence); lows.set(name, sequence++); stack.push(name); stacked.add(name);\n\t\tfor(const dependency of [...dependencies.get(name)].sort())\n\t\t{\n\t\t\tif(!indexes.has(dependency))\n\t\t\t{ connect(dependency); lows.set(name, Math.min(lows.get(name), lows.get(dependency))); }\n\t\t\telse if(stacked.has(dependency)) lows.set(name, Math.min(lows.get(name), indexes.get(dependency)));\n\t\t}\n\t\tif(lows.get(name) !== indexes.get(name)) return;\n\t\tconst component = [];\n\t\twhile(stack.length)\n\t\t{\n\t\t\tconst member = stack.pop(); stacked.delete(member); component.push(member);\n\t\t\tif(member === name) break;\n\t\t}\n\t\tcomponents.push(component.sort());\n\t};\n\tfor(const name of [...mirrored.keys()].sort()) if(!indexes.has(name)) connect(name);\n\tconst mutualGroups = components.filter(component => component.length > 1);\n"
+        },
+        {
+          "start": 14654,
+          "previous": "\tconst lines = renderRefinementMirrors({ exports: layoutExports, types: ordered }, names, renderType, recordValue);\n\tlines.push(...componentNominalFinGuards(ordered, projections));\n",
+          "current": "\tconst mirrorModel = { exports: layoutExports, types: ordered, mutualGroups };\n\tconst cycles = refinementCycleTrees(mirrorModel);\n\tconst lines = renderRefinementMirrors(mirrorModel, names, renderType, recordValue);\n\tlines.push(...componentNominalFinGuards(ordered, projections, cycles, mutualGroups));\n"
+        },
+        {
+          "start": 15381,
+          "previous": "\treturn { names, sites: normalized, lines, renderType };\n",
+          "current": "\treturn { names, sites: normalized, lines, renderType, cycles, mutualGroups };\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/component-refinements.mjs",
+      "currentSha256": "7eb9057ad5ae5c6252976e0188e6e4be2a21641f7139518be42fccbcf9c5ef1c",
+      "previousSha256": "424d53a08172711e2213e787a4caeee7db843242059c88e3b6c6ec431a5b46a4",
+      "edits": [
+        {
+          "start": 1949,
+          "previous": "",
+          "current": "/**\n * Give a constructor leaf in a finite copied graph a stable private identity.\n * The path is deliberately absent: one checked constructor can validate the\n * same erased leaf at every runtime occurrence of a recursive value.\n *\n * @param refinement - A normalized Subtype or checked-record leaf.\n * @param type - Its erased copied transport type.\n */\nexport const componentRecursiveRefinementLeafKey = (refinement, type) =>\n\tsha256(canonicalJson({ refinement, type })).slice(0, 20);\n\n/**\n * Enumerate constructor leaves in one normalized finite refinement graph.\n * Recursive markers follow their authenticated target once; runtime walkers\n * reuse the resulting validator at every occurrence instead of unfolding the\n * schema forever.\n *\n * @param refinement - Normalized refinement tree from componentRefinementMirrors.\n * @param type - Matching private copied-graph reference.\n * @param definitions - Private nominal definitions, keyed by lean: identity.\n * @param cycles - Authenticated recursive refinement targets, keyed by token.\n */\nexport const componentRecursiveRefinementLeaves = (refinement, type, definitions, cycles) => {\n\tconst leaves = new Map();\n\tconst resolve = (reference, aliases = new Set()) => {\n\t\tif(reference.kind !== \"named\") return reference;\n\t\tconst definition = definitions.get(reference.id);\n\t\tif(definition?.kind !== \"alias\") return reference;\n\t\tif(aliases.has(reference.id)) throw new TypeError(`Recursive refinement alias ${reference.id}`);\n\t\treturn resolve(definition.target, new Set([...aliases, reference.id]));\n\t};\n\tconst visit = (tree, reference, active = new Set()) => {\n\t\tif(tree === null || tree === undefined || tree.kind === \"fin\") return;\n\t\tconst concrete = resolve(reference);\n\t\tif([\"subtype\", \"checked-record\"].includes(tree.kind))\n\t\t{\n\t\t\tconst key = componentRecursiveRefinementLeafKey(tree, concrete);\n\t\t\tleaves.set(key, { key, refinement: tree, type: concrete });\n\t\t\treturn;\n\t\t}\n\t\tif(tree.kind === \"recursive\")\n\t\t{\n\t\t\tif(active.has(tree.cycle)) return;\n\t\t\tconst target = cycles.get(tree.cycle);\n\t\t\tif(!target || target.definition !== tree.definition)\n\t\t\t\tthrow new TypeError(`Missing recursive refinement target: ${tree.definition}`);\n\t\t\tvisit(target, concrete, new Set([...active, tree.cycle]));\n\t\t\treturn;\n\t\t}\n\t\tconst nested = tree.cycle ? new Set([...active, tree.cycle]) : active;\n\t\tif(tree.kind === \"record\")\n\t\t{\n\t\t\tconst definition = concrete.kind === \"named\" ? definitions.get(concrete.id) : null;\n\t\t\tif(definition?.kind !== \"record\" || definition.fields.length !== tree.arguments.length)\n\t\t\t\tthrow new TypeError(`Recursive record refinement differs from ${tree.definition}`);\n\t\t\ttree.arguments.forEach((child, index) => visit(child, definition.fields[index].type, nested));\n\t\t\treturn;\n\t\t}\n\t\tif(tree.kind === \"variant\")\n\t\t{\n\t\t\tconst definition = concrete.kind === \"named\" ? definitions.get(concrete.id) : null;\n\t\t\tif(definition?.kind !== \"variant\" || definition.cases.length !== tree.cases.length)\n\t\t\t\tthrow new TypeError(`Recursive variant refinement differs from ${tree.definition}`);\n\t\t\ttree.cases.forEach((branch, index) => branch.arguments.forEach((child, field) =>\n\t\t\t\tvisit(child, definition.cases[index].fields[field].type, nested)));\n\t\t\treturn;\n\t\t}\n\t\tif(concrete.kind !== \"apply\" || concrete.constructor !== tree.kind || concrete.arguments.length !== tree.arguments.length)\n\t\t\tthrow new TypeError(`Recursive ${tree.kind} refinement differs from its transport`);\n\t\ttree.arguments.forEach((child, index) => visit(child, concrete.arguments[index], nested));\n\t};\n\tvisit(refinement, type);\n\treturn [...leaves.values()].sort((left, right) => left.key.localeCompare(right.key));\n};\n\n"
+        },
+        {
+          "start": 5966,
+          "previous": "",
+          "current": "\t|| refinement?.kind === \"recursive\"\n"
+        },
+        {
+          "start": 6145,
+          "previous": "",
+          "current": "const containsRecursive = refinement => refinement?.kind === \"recursive\"\n\t|| (refinement?.arguments ?? []).some(containsRecursive)\n\t|| (refinement?.cases ?? []).some(branch => branch.arguments.some(containsRecursive));\n"
+        },
+        {
+          "start": 7176,
+          "previous": "",
+          "current": " * @param recursive - Optional resolver for a normalized finite backedge.\n"
+        },
+        {
+          "start": 7254,
+          "previous": "export const componentRefinementConversion = (refinement, value, checked = true, depth = 0) => {\n",
+          "current": "export const componentRefinementConversion = (refinement, value, checked = true, depth = 0, recursive = null) => {\n"
+        },
+        {
+          "start": 7512,
+          "previous": "",
+          "current": "\tif(refinement.kind === \"recursive\")\n\t{\n\t\tif(typeof recursive !== \"function\") throw new TypeError(\"A recursive refinement requires its finite target map\");\n\t\treturn recursive(refinement, value, checked);\n\t}\n"
+        },
+        {
+          "start": 8989,
+          "previous": "\tconst child = (index, expression) => componentRefinementConversion(refinement.arguments[index], expression, checked, depth + 1);\n",
+          "current": "\tconst child = (index, expression) => componentRefinementConversion(refinement.arguments[index], expression, checked, depth + 1, recursive);\n"
+        },
+        {
+          "start": 9569,
+          "previous": "\t\t: `(${input}.map (fun ${name} => ${child(0, name)}))`;\n",
+          "current": "\t\t: containsRecursive(refinement)\n\t\t\t? `(match ${input} with | _root_.Option.none => _root_.Option.none | _root_.Option.some ${name} => _root_.Option.some ${child(0, name)})`\n\t\t\t: `(${input}.map (fun ${name} => ${child(0, name)}))`;\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/native-graph-model.mjs",
+      "currentSha256": "8bad57025863bb4c004b8e1f9c215a5e1de4d6166118b812b5067d7970752d45",
+      "previousSha256": "14fca0d2c8eb7bfd17dbbd1c2381d7bf0b416576e0cb69d43a2eb628d0b4ded5",
+      "edits": [
+        {
+          "start": 520,
+          "previous": "",
+          "current": "import { nominalRefinementEntries } from \"../abi/refinements.mjs\";\n"
+        },
+        {
+          "start": 2279,
+          "previous": "const containsRefinement = value => value && typeof value === \"object\"\n\t&& (value.kind === \"refinement\" || Object.values(value).some(containsRefinement));\n",
+          "current": ""
+        },
+        {
+          "start": 6762,
+          "previous": "\t// Graph carriers have no Fin guard, so refined exports cannot join that transport.\n\tconst refined = elaborated.declarations.find(containsRefinement);\n\tif(refined) throw Object.assign(new TypeError(`${refined.name}: checked Fin refinements cannot share a component with copied graph exports`), { code: \"native-refinements-unsupported\", details: { declaration: refined.name } });\n",
+          "current": ""
+        },
+        {
+          "start": 7500,
+          "previous": "\t\treturn { ...source, bindingId: item.id, symbol: `${entry.symbol}_lean` };\n",
+          "current": "\t\tconst refinements = item.source.extensions[\"lean-lang.org/refinements\"];\n\t\treturn { ...source, bindingId: item.id, symbol: `${entry.symbol}_lean`, ...(refinements ? { refinements } : {}) };\n"
+        },
+        {
+          "start": 10624,
+          "previous": "",
+          "current": "\t\t, parameters: item.parameters\n\t\t, ...(item.refinements ? { refinements: item.refinements } : {})\n"
+        },
+        {
+          "start": 11032,
+          "previous": "\t\t\t: componentRecursiveLeanSource(abi, exports, leanType))\n",
+          "current": "\t\t\t: componentRecursiveLeanSource(abi, exports, leanType, nominalRefinementEntries(model.bindingIr.types)))\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/php-wasm-graph-component.mjs",
+      "currentSha256": "0a93eb1f0fd148cd5803e9f18ae69d78e23a6fcbad3445bc65bee5cf6dbe9465",
+      "previousSha256": "07bce68fce50f40d8478e8b16ffb335f65dc225ea986cae964c7bf345dc8f3e1",
+      "edits": [
+        {
+          "start": 771,
+          "previous": "",
+          "current": "import { nominalRefinementEntries } from \"../abi/refinements.mjs\";\n"
+        },
+        {
+          "start": 1256,
+          "previous": "\tconst zend = callable ? generateCallablePhpGraphZendAdapter(model.bindingIr) : generateCopiedPhpGraphZendAdapter(model.bindingIr);\n",
+          "current": "\tconst refinementExports = callable ? [] : model.exports.map((item, index) => ({\n\t\tbindingId: item.bindingId, symbol: abi.exports[index].symbol, wrapper: `export${index}`\n\t\t, sourceDeclaration: item.name, parameters: item.parameters.map(() => ({}))\n\t\t, ...(item.refinements ? { refinements: item.refinements } : {})\n\t}));\n"
+        },
+        {
+          "start": 1708,
+          "previous": "\t\t: generateNativeCopiedGraphAdapters(model.bindingIr, abi, { initializer, wordBits: 32 });\n",
+          "current": "\t\t: generateNativeCopiedGraphAdapters(model.bindingIr, abi, { initializer, wordBits: 32\n\t\t\t, refinementExports, nominalRefinements: nominalRefinementEntries(model.bindingIr.types) });\n\tconst zend = callable ? generateCallablePhpGraphZendAdapter(model.bindingIr)\n\t\t: generateCopiedPhpGraphZendAdapter(model.bindingIr, { refinementDiagnostics: transport.refinementDiagnostics });\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/php-wasm-graph-model.mjs",
+      "currentSha256": "8dd61a57a2aee816d8a5213f74137752239e6e0064dcaea444d43345fbcd2b0b",
+      "previousSha256": "6ae564fb2e00c9bca0119adaf57f719df3f9c9d90ac675bbad451e4adb992aea",
+      "edits": [
+        {
+          "start": 525,
+          "previous": "",
+          "current": "import { nominalRefinementEntries } from \"../abi/refinements.mjs\";\n"
+        },
+        {
+          "start": 2223,
+          "previous": "const containsKind = (value, kind) => value !== null && typeof value === \"object\"\n\t&& (value.kind === kind || Object.values(value).some(child => containsKind(child, kind)));\n",
+          "current": ""
+        },
+        {
+          "start": 4310,
+          "previous": "\t// Checked Fin reaches only the plain copied side module; graph packages have no walk yet.\n",
+          "current": ""
+        },
+        {
+          "start": 4514,
+          "previous": "\tconst refined = elaborated.declarations.find(item => containsKind(item, \"refinement\"));\n\tif(refined) throw Object.assign(new TypeError(`${refined.name}: checked Fin refinements cannot share a PHP-Wasm package with copied graph exports`), { code: \"native-refinements-unsupported\", details: { declaration: refined.name } });\n",
+          "current": ""
+        },
+        {
+          "start": 5254,
+          "previous": "\t\treturn { ...source, bindingId: item.id, symbol: `${entry.symbol}_lean` };\n",
+          "current": "\t\tconst refinements = item.source.extensions[\"lean-lang.org/refinements\"];\n\t\treturn { ...source, bindingId: item.id, symbol: `${entry.symbol}_lean`, ...(refinements ? { refinements } : {}) };\n"
+        },
+        {
+          "start": 8253,
+          "previous": "",
+          "current": "\t\t, parameters: item.parameters\n\t\t, ...(item.refinements ? { refinements: item.refinements } : {})\n"
+        },
+        {
+          "start": 8661,
+          "previous": "\t\t\t: componentRecursiveLeanSource(abi, exports, leanType))\n",
+          "current": "\t\t\t: componentRecursiveLeanSource(abi, exports, leanType, nominalRefinementEntries(model.bindingIr.types)))\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/refinement-mirrors.mjs",
+      "currentSha256": "2175b0bb655b6f1b8adc083acfeed3c87a152e9c7952aef5a0f787afe7eacd74",
+      "previousSha256": "27e7219ee097ec6b90ae8c4a270295feb55d87099815bce9bbaee97cdc9ff6cc",
+      "edits": [
+        {
+          "start": 851,
+          "previous": "",
+          "current": " * Index finite recursive refinement nodes by their deterministic backedge token.\n * Tokens are private generation facts; public Binding IR remains an acyclic JSON tree.\n *\n * @param model - Normalized mirror model.\n */\nexport const refinementCycleTrees = model => {\n\tconst cycles = new Map();\n\tconst walk = tree => {\n\t\tif(!tree || typeof tree !== \"object\") return;\n\t\tif([\"record\", \"variant\"].includes(tree.kind) && tree.cycle)\n\t\t{\n\t\t\tconst existing = cycles.get(tree.cycle);\n\t\t\tif(existing && canonicalJson(existing) !== canonicalJson(tree))\n\t\t\t\tthrow new TypeError(`Conflicting recursive refinement token: ${tree.cycle}`);\n\t\t\tcycles.set(tree.cycle, tree);\n\t\t}\n\t\tfor(const child of refinementChildren(tree)) walk(child);\n\t};\n\tfor(const item of model.exports) if(item.refinements)\n\t\t[...item.refinements.parameters, item.refinements.result].forEach(walk);\n\treturn cycles;\n};\n\n/**\n"
+        },
+        {
+          "start": 3129,
+          "previous": "",
+          "current": "\tconst cycles = refinementCycleTrees(model);\n"
+        },
+        {
+          "start": 3271,
+          "previous": "\tconst layout = tree => tree?.kind === \"subtype\" ? { kind: \"subtype\" }\n\t\t: tree?.kind === \"variant\" ? { ...tree, cases: tree.cases.map(branch => ({ ...branch, arguments: branch.arguments.map(layout) })) }\n\t\t\t: tree?.arguments ? { ...tree, arguments: tree.arguments.map(layout) } : tree;\n",
+          "current": "\tconst layout = tree => {\n\t\tif(tree?.kind === \"subtype\") return { kind: \"subtype\" };\n\t\tif(tree?.kind === \"recursive\") return { kind: \"recursive\", definition: tree.definition };\n\t\tif(tree?.kind === \"variant\")\n\t\t{\n\t\t\tconst cases = tree.cases.map(branch => ({ name: branch.name\n\t\t\t\t, fields: branch.fields, arguments: branch.arguments.map(layout) }));\n\t\t\treturn { kind: tree.kind, definition: tree.definition, cases };\n\t\t}\n\t\tif(tree?.kind === \"record\")\n\t\t{\n\t\t\tconst arguments_ = tree.arguments.map(layout);\n\t\t\treturn { kind: tree.kind, definition: tree.definition, fields: tree.fields, arguments: arguments_ };\n\t\t}\n\t\treturn tree?.arguments ? { ...tree, arguments: tree.arguments.map(layout) } : tree;\n\t};\n"
+        },
+        {
+          "start": 5606,
+          "previous": "",
+          "current": "\tconst recursive = (refinement, value, checked) => {\n\t\tconst target = cycles.get(refinement.cycle);\n\t\tif(!target || target.definition !== refinement.definition)\n\t\t\tthrow new TypeError(`Missing recursive refinement target: ${refinement.definition}`);\n\t\treturn `(LbErased.${refinement.definition}.${checked ? nominalRefinementCheck(target) : \"erase\"} (${value}))`;\n\t};\n\tconst convert = (refinement, value, checked) => componentRefinementConversion(refinement, value, checked, 0, recursive);\n\tconst selectedChecks = type => [...checks.get(type.lean) ?? []].sort(([left], [right]) => left < right ? -1 : left > right ? 1 : 0);\n\tconst recursiveRecordFunctions = type => {\n\t\tconst mirror = erasedMirror(type.lean), source = `_root_.${type.lean}`;\n\t\tconst values = type.fields.map((_, index) => `a${index}`), pattern = `⟨${values.join(\", \")}⟩`, result = [];\n\t\tfor(const [name, selected] of selectedChecks(type))\n\t\t\tresult.push(`def ${mirror}.${name} (value : ${mirror}) : _root_.Option ${source} :=`, \"  match value with\"\n\t\t\t\t, `  | ${pattern} => do`\n\t\t\t\t, ...type.fields.map((_, index) => `    let b${index} ← ${convert(selected.arguments[index], values[index], true)}`)\n\t\t\t\t, `    pure (${recordValue(type, type.fields.map((_, index) => `b${index}`))})`, \"\");\n\t\tresult.push(`def ${mirror}.erase (value : ${source}) : ${mirror} :=`, \"  match value with\"\n\t\t\t, `  | ${pattern} => ${mirror}.mk ${type.fields.map((_, index) => convert(trees.get(type.lean).arguments[index], values[index], false)).join(\" \")}`, \"\");\n\t\treturn result;\n\t};\n\tconst recursiveVariantFunctions = type => {\n\t\tconst mirror = erasedMirror(type.lean), source = `_root_.${type.lean}`, tree = trees.get(type.lean), result = [];\n\t\tconst pattern = branch => `.«${branch.name}» ${branch.fields.map((_, index) => `a${index}`).join(\" \")}`;\n\t\tfor(const [name, selected] of selectedChecks(type))\n\t\t\tresult.push(`def ${mirror}.${name} (value : ${mirror}) : _root_.Option ${source} :=`, \"  match value with\"\n\t\t\t\t, ...type.cases.map((branch, index) => `  | ${pattern(branch)} => do ${branch.fields.map((_, position) => `let b${position} ← ${convert(selected.cases[index].arguments[position], `a${position}`, true)}; `).join(\"\")}pure (_root_.${branch.constructor} ${branch.fields.map((_, position) => `b${position}`).join(\" \")})`), \"\");\n\t\tresult.push(`def ${mirror}.erase (value : ${source}) : ${mirror} :=`, \"  match value with\"\n\t\t\t, ...type.cases.map((branch, index) => `  | ${pattern(branch)} => ${mirror}.«${branch.name}» ${branch.fields.map((_, position) => convert(tree.cases[index].arguments[position], `a${position}`, false)).join(\" \")}`), \"\");\n\t\treturn result;\n\t};\n"
+        },
+        {
+          "start": 8265,
+          "previous": "",
+          "current": "\tconst typeByName = new Map(model.types.map(type => [type.lean, type]));\n\tconst mutualByName = new Map((model.mutualGroups ?? []).flatMap(group => group.map(name => [name, group])));\n\tconst emittedMutual = new Set();\n"
+        },
+        {
+          "start": 8626,
+          "previous": "",
+          "current": "\t\tconst group = mutualByName.get(type.lean);\n\t\tif(group)\n\t\t{\n\t\t\tconst identity = group.join(\"\\0\");\n\t\t\tif(emittedMutual.has(identity)) continue;\n\t\t\temittedMutual.add(identity);\n\t\t\tconst members = group.map(name => typeByName.get(name));\n\t\t\tif(members.some(member => !member || Object.hasOwn(member, \"erased\")))\n\t\t\t\tthrow new TypeError(\"Mutually recursive checked-record mirrors require another representation\");\n\t\t\tmembers.forEach(member => done.add(member.lean));\n\t\t\tlines.push(\"mutual\");\n\t\t\tfor(const member of members)\n\t\t\t{\n\t\t\t\tconst mirror = erasedMirror(member.lean);\n\t\t\t\tif(member.kind === \"record\") lines.push(`structure ${mirror} where`\n\t\t\t\t\t, ...member.fields.map(field => `  «${field.name}» : ${renderType(field.type, mirrors)}`));\n\t\t\t\telse lines.push(`inductive ${mirror} where`\n\t\t\t\t\t, ...member.cases.map(branch => `  | «${branch.name}» ${branch.fields.map((field, index) => `(a${index} : ${renderType(field.type, mirrors)})`).join(\" \")} : ${mirror}`));\n\t\t\t}\n\t\t\tlines.push(\"end\", \"\", \"mutual\");\n\t\t\tfor(const member of members) lines.push(...(member.kind === \"record\" ? recursiveRecordFunctions(member) : recursiveVariantFunctions(member)));\n\t\t\tlines.push(\"end\", \"\");\n\t\t\tcontinue;\n\t\t}\n"
+        },
+        {
+          "start": 10807,
+          "previous": "\t\tconst convert = (refinement, value, checked) => componentRefinementConversion(refinement, value, checked);\n\t\tconst selectedChecks = [...checks.get(type.lean) ?? []].sort(([left], [right]) => left < right ? -1 : left > right ? 1 : 0);\n",
+          "current": "\t\tconst selected = selectedChecks(type);\n"
+        },
+        {
+          "start": 11016,
+          "previous": "\t\t\tfor(const [name, selected] of selectedChecks)\n",
+          "current": "\t\t\tif(tree.cycle)\n\t\t\t{\n\t\t\t\tlines.push(...recursiveRecordFunctions(type));\n\t\t\t\tcontinue;\n\t\t\t}\n\t\t\tfor(const [name, selectedTree] of selected)\n"
+        },
+        {
+          "start": 11247,
+          "previous": "\t\t\t\t\t, ...type.fields.map((field, i) => `  let a${i} ← ${convert(selected.arguments[i], `value.«${field.name}»`, true)}`)\n",
+          "current": "\t\t\t\t\t, ...type.fields.map((field, i) => `  let a${i} ← ${convert(selectedTree.arguments[i], `value.«${field.name}»`, true)}`)\n"
+        },
+        {
+          "start": 11978,
+          "previous": "\t\tfor(const [name, selected] of selectedChecks)\n",
+          "current": "\t\tfor(const [name, selectedTree] of selected)\n"
+        },
+        {
+          "start": 12133,
+          "previous": "\t\t\t\t, ...type.cases.map((branch, i) => `  | ${pattern(branch)} => do ${branch.fields.map((_, j) => `let b${j} ← ${convert(selected.cases[i].arguments[j], `a${j}`, true)}; `).join(\"\")}pure (_root_.${branch.constructor} ${branch.fields.map((_, j) => `b${j}`).join(\" \")})`), \"\");\n",
+          "current": "\t\t\t\t, ...type.cases.map((branch, i) => `  | ${pattern(branch)} => do ${branch.fields.map((_, j) => `let b${j} ← ${convert(selectedTree.cases[i].arguments[j], `a${j}`, true)}; `).join(\"\")}pure (_root_.${branch.constructor} ${branch.fields.map((_, j) => `b${j}`).join(\" \")})`), \"\");\n"
+        }
+      ]
+    },
+    {
+      "path": "src/release/php-wasm-copied-package.mjs",
+      "currentSha256": "fc6b8e644324196f249dc50b5c2c723c027a355eb9ed61d8d57c8286f61fbb23",
+      "previousSha256": "2cda0775c0dd22b6d27e190829f6cf9a9e07666b12af065c5ff8ac56c2c7a06b",
+      "edits": [
+        {
+          "start": 2372,
+          "previous": "export const phpWasmFinReadme = projection => {\n\tconst types = projection.ir.types;\n\tconst bounds = fn => nativeFinSummary(fn.declaration, fn.parameters.map(parameter => `$${parameter.name}`), types);\n\tconst functions = projection.surface.functions.filter(bounds);\n",
+          "current": "const phpWasmRefinementReadme = ({ ir, namespace, functions, recursive = false }) => {\n\tconst types = ir.types;\n\tconst parameterName = parameter => typeof parameter === \"string\" ? parameter : parameter.name;\n\tconst bounds = fn => nativeFinSummary(fn.declaration, fn.parameters.map(parameter => `$${parameterName(parameter)}`), types);\n\tfunctions = functions.filter(bounds);\n"
+        },
+        {
+          "start": 2839,
+          "previous": "\tconst description = nativeRefinementReadme(declarations, `Lean Fin n parameters and results are Brick\\\\Math\\\\BigInteger values below n. The PHP-Wasm side module compares each argument with its exact bound, including bounds wider than 64 bits, before any Lean code runs; a value at or above its bound throws LeanBridgeError with code 1 whose message names the Lean parameter and bound. Fin 0 has no values, so every call to a function taking one is rejected. Results are BigInteger values below their declared bound. ${nativeFinContainerNote(declarations, \"PHP-Wasm packages\", types)}`, \"PHP-Wasm packages\", types)\n",
+          "current": "\tlet description = nativeRefinementReadme(declarations, `Lean Fin n parameters and results are Brick\\\\Math\\\\BigInteger values below n. The PHP-Wasm side module compares each argument with its exact bound, including bounds wider than 64 bits, before any Lean code runs; a value at or above its bound throws LeanBridgeError with code 1 whose message names the Lean parameter and bound. Fin 0 has no values, so every call to a function taking one is rejected. Results are BigInteger values below their declared bound. ${nativeFinContainerNote(declarations, \"PHP-Wasm packages\", types)}`, \"PHP-Wasm packages\", types)\n"
+        },
+        {
+          "start": 4045,
+          "previous": "",
+          "current": "\tif(recursive) description = description\n\t\t.replace(\"Repeated uses of one type retain their own constructor choices, and every Fin bound is checked before any constructor. Recursive, generic, owned and callback Subtype positions remain unsupported.\", \"Repeated uses of one type retain their own constructor choices, and every Fin bound is checked before any constructor. Recursive fields and active cases repeat those checks at every reachable occurrence; a rejection names the actual field or case path. Generic, owned and callback Subtype positions remain unsupported.\");\n\tconst hasSubtype = refinement => refinement?.kind === \"subtype\"\n\t\t|| (refinement?.arguments ?? []).some(hasSubtype)\n\t\t|| (refinement?.cases ?? []).some(branch => branch.arguments.some(hasSubtype));\n"
+        },
+        {
+          "start": 4928,
+          "previous": "\t\treturn [...value.parameters, value.result].some(refinement => refinement?.kind === \"subtype\");\n",
+          "current": "\t\treturn [...value.parameters, value.result].some(hasSubtype);\n"
+        },
+        {
+          "start": 4996,
+          "previous": "\treturn `\\n## ${subtype ? \"Checked refinements\" : \"Bounded integers\"}\\n\\n${description}\\n\\n${functions.map(fn => `- ${projection.namespace}\\\\${fn.field}: ${bounds(fn)}`).join(\"\\n\")}\\n`;\n",
+          "current": "\treturn `\\n## ${subtype ? \"Checked refinements\" : \"Bounded integers\"}\\n\\n${description}\\n\\n${functions.map(fn => `- ${namespace}\\\\${fn.publicName ?? fn.field}: ${bounds(fn)}`).join(\"\\n\")}\\n`;\n"
+        },
+        {
+          "start": 5192,
+          "previous": "",
+          "current": "/**\n * Document checked sites of a plain copied PHP-Wasm package.\n * Packages without a checked site retain their exact README bytes.\n *\n * @param projection - Compiled copied PHP model of the package.\n */\nexport const phpWasmFinReadme = projection => phpWasmRefinementReadme({\n\tir: projection.ir, namespace: projection.namespace, functions: projection.surface.functions\n});\n\n/**\n * Document checked sites of a finite recursive copied PHP-Wasm graph.\n *\n * @param ir - Compiler-authenticated recursive Binding IR.\n * @param projection - Compiled recursive PHP graph projection.\n */\nexport const phpWasmGraphRefinementReadme = (ir, projection) => phpWasmRefinementReadme({\n\tir, namespace: projection.namespace, functions: projection.functions, recursive: true\n});\n\n"
+        },
+        {
+          "start": 21688,
+          "previous": "",
+          "current": "\tconst refinementReadme = model.ownedGraph ? \"\" : model.copiedGraph\n\t\t? phpWasmGraphRefinementReadme(model.bindingIr, projection)\n\t\t: phpWasmFinReadme(projection);\n"
+        },
+        {
+          "start": 22255,
+          "previous": "\t\t\t, \"component/package/README.md\": callableReadme + (model.copiedGraph || model.ownedGraph ? \"\" : phpAliasReadme(projection) + phpVariantReadme(projection) + phpValueReadme + phpWasmFinReadme(projection))\n",
+          "current": "\t\t\t, \"component/package/README.md\": callableReadme + (model.copiedGraph || model.ownedGraph ? refinementReadme : phpAliasReadme(projection) + phpVariantReadme(projection) + phpValueReadme + refinementReadme)\n"
+        },
+        {
+          "start": 23030,
+          "previous": "\t\t\t, \"composer/README.md\": callableReadme + (model.copiedGraph || model.ownedGraph ? \"\" : phpAliasReadme(projection) + phpVariantReadme(projection) + phpValueReadme + phpWasmFinReadme(projection))\n",
+          "current": "\t\t\t, \"composer/README.md\": callableReadme + (model.copiedGraph || model.ownedGraph ? refinementReadme : phpAliasReadme(projection) + phpVariantReadme(projection) + phpValueReadme + refinementReadme)\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-refinement-mirrors.test.mjs",
+      "currentSha256": "975918ffbb7b4312e433daeacff49cfab72d53d19665b0760ba2c136bc23f81a",
+      "previousSha256": "2b982f8184f72431244c98018f675ece03b96996c14c462be617223013559452",
+      "edits": [
+        {
+          "start": 410,
+          "previous": "import { refinementMirrorNames, renderRefinementMirrors } from \"../src/build/refinement-mirrors.mjs\";\n",
+          "current": "import { refinementCycleTrees, refinementMirrorNames, renderRefinementMirrors } from \"../src/build/refinement-mirrors.mjs\";\n"
+        },
+        {
+          "start": 800,
+          "previous": "import { componentRefinementMirrorsFixture } from \"./helpers/component-refinement-mirrors-fixture.mjs\";\n",
+          "current": "import { componentRefinementMirrorsFixture, mutualComponentRefinementMirrorsFixture, recursiveComponentRefinementMirrorsFixture } from \"./helpers/component-refinement-mirrors-fixture.mjs\";\n"
+        },
+        {
+          "start": 6244,
+          "previous": "",
+          "current": "});\n\ntest(\"recursive component mirrors retain per-site checks through finite private backedges\", () => {\n\tconst first = recursiveComponentRefinementMirrorsFixture(), second = recursiveComponentRefinementMirrorsFixture();\n\tsecond.exports.reverse(); second.abi.exports.reverse();\n\tconst a = normalize(first), b = normalize(second), source = a.lines.join(\"\\n\");\n\tconst at = (model, name) => model.sites.find(item => item.sourceDeclaration === `RecursiveMirrors.${name}`).refinements;\n\tconst firstTree = at(a, \"first\").parameters[0], secondTree = at(a, \"second\").parameters[0];\n\tassert.notEqual(firstTree.cycle, secondTree.cycle);\n\tassert.deepEqual(firstTree.cases[1].arguments[2]\n\t\t, { kind: \"recursive\", definition: \"RecursiveMirrors.Chain\", cycle: firstTree.cycle });\n\tassert.deepEqual(firstTree.cases[1].arguments[1], { kind: \"fin\", bound: \"3\" });\n\tassert.equal(a.cycles.size, 3);\n\tassert.equal((source.match(/def LbErased\\.RecursiveMirrors\\.Chain\\.via_/gu) ?? []).length, 2);\n\tassert.equal((source.match(/def LbErased\\.RecursiveMirrors\\.Chain\\.erase /gu) ?? []).length, 1);\n\tassert.match(source, /Chain\\.via_[a-f0-9]+ \\(a2\\)/u);\n\tassert.match(source, /Chain\\.erase \\(a2\\)/u);\n\tassert.match(source, /def LbErased\\.RecursiveMirrors\\.Chain\\.validFin/u);\n\tassert.deepEqual(a.lines, b.lines);\n\tfor(const item of a.sites) assert.deepEqual(b.sites.find(other => other.bindingId === item.bindingId), item);\n});\n\ntest(\"mutual component mirrors retain active cases, aliases and structural backedges\", () => {\n\tconst first = mutualComponentRefinementMirrorsFixture(), second = mutualComponentRefinementMirrorsFixture();\n\tsecond.exports.reverse(); second.abi.exports.reverse();\n\tconst a = normalize(first), b = normalize(second), source = a.lines.join(\"\\n\");\n\tconst at = (model, name) => model.sites.find(item => item.sourceDeclaration === `MutualMirrors.${name}`).refinements;\n\tconst tree = at(a, \"first\").parameters[0], right = tree.arguments[1].arguments[0];\n\tassert.equal(tree.definition, \"MutualMirrors.Left\");\n\tassert.equal(right.definition, \"MutualMirrors.Right\");\n\tassert.deepEqual(right.cases[0].arguments, []);\n\tassert.deepEqual(right.cases[1].arguments[1].arguments[0]\n\t\t, { kind: \"recursive\", definition: \"MutualMirrors.Left\", cycle: tree.cycle });\n\tassert.deepEqual(a.mutualGroups, [[\"MutualMirrors.Left\", \"MutualMirrors.Right\"]]);\n\tconst groups = at(a, \"groups\").parameters[0];\n\tassert.equal(groups.kind, \"array\");\n\tassert.equal(groups.arguments[0].kind, \"option\");\n\tassert.equal(groups.arguments[0].arguments[0].definition, \"MutualMirrors.Left\");\n\tassert.equal(a.sites.find(item => item.sourceDeclaration === \"MutualMirrors.groups\").parameters[0].leanType\n\t\t, \"(_root_.Array (_root_.Option LbErased.MutualMirrors.Left))\");\n\tassert.equal((source.match(/^mutual$/gmu) ?? []).length, 2);\n\tassert.match(source, /structure LbErased\\.MutualMirrors\\.Left where/u);\n\tassert.match(source, /inductive LbErased\\.MutualMirrors\\.Right where/u);\n\tassert.deepEqual(a.lines, b.lines);\n\tfor(const item of a.sites) assert.deepEqual(b.sites.find(other => other.bindingId === item.bindingId), item);\n});\n\ntest(\"recursive component mirrors reject an explicit selection at an active backedge\", () => {\n\tconst fixture = recursiveComponentRefinementMirrorsFixture();\n\tconst first = fixture.exports.find(item => item.sourceDeclaration === \"RecursiveMirrors.first\");\n\tconst second = fixture.exports.find(item => item.sourceDeclaration === \"RecursiveMirrors.second\");\n\tfirst.refinements.parameters[0].cases[1].fields[2].refinement = structuredClone(second.refinements.parameters[0]);\n\tassert.throws(() => normalize(fixture), /Refinement does not match its transport type/u);\n});\n\ntest(\"recursive refinement tokens identify one complete finite target\", () => {\n\tconst target = { kind: \"record\", definition: \"Example.Node\", fields: [\"value\"], arguments: [null], cycle: \"cycle-token\" };\n\tconst model = { exports: [{ refinements: { parameters: [target], result: null } }] };\n\tassert.equal(refinementCycleTrees(model).get(\"cycle-token\"), target);\n\tconst conflicting = structuredClone(target); conflicting.arguments[0] = { kind: \"fin\", bound: \"3\" };\n\tassert.throws(() => refinementCycleTrees({ exports: [{ refinements: { parameters: [target, conflicting], result: null } }] })\n\t\t, /Conflicting recursive refinement token/u);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/component-refinement-mirrors/ComponentMirrors.lean",
+      "currentSha256": "1be4763a4d3b48a224267fe66c13ae146bac1acc193bfc252e369c747b77d49f",
+      "previousSha256": "5f28023230adb171823417627620afd47fd86da3b694f5adcfa4be5c97b57668",
+      "edits": [
+        {
+          "start": 498,
+          "previous": "",
+          "current": "\nnamespace RecursiveMirrors\n\ninductive Chain where\n  | empty\n  | node (value : NominalConversion.Positive) (digit : Fin 3) (tail : Chain)\n\ndef total : Chain → Nat\n  | .empty => 0\n  | .node value _ tail => value.val + total tail\n\ndef first (value : Chain) : Nat := total value\ndef second (value : Chain) : Nat := total value\ndef echo (value : Chain) : Chain := value\n\nend RecursiveMirrors\n\nnamespace MutualMirrors\n\nmutual\nstructure Left where\n  value : NominalConversion.Positive\n  next : Option Right\ninductive Right where\n  | stop\n  | node (value : NominalConversion.Positive) (next : Option Left)\nend\n\nmutual\ndef totalLeft : Left → Nat\n  | ⟨value, none⟩ => value.val\n  | ⟨value, some next⟩ => value.val + totalRight next\ndef totalRight : Right → Nat\n  | .stop => 0\n  | .node value none => value.val\n  | .node value (some next) => value.val + totalLeft next\nend\n\ndef first (value : Left) : Nat := totalLeft value\ndef second (value : Left) : Nat := totalLeft value\ndef echo (value : Left) : Left := value\n\nabbrev LeftAlias := Left\nabbrev LeftGroup := Array (Option LeftAlias)\n\ndef groups (values : LeftGroup) : Nat :=\n  values.foldl (fun total value => total + (value.map totalLeft).getD 0) 0\n\ndef echoGroups (values : LeftGroup) : LeftGroup := values\n\nend MutualMirrors\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/component-nominal-subtype-source.mjs",
+      "currentSha256": "bae39a41e1d87c6623880a9ac5b6699329cfd0e34e49e5ce3f88380b9126c8e8",
+      "previousSha256": "544f7fafd16bb4a4834e2768cb7f030873428c86a42a655fa04018dfe84ce3d5",
+      "edits": [
+        {
+          "start": 824,
+          "previous": "",
+          "current": "import { createCompiledPhpWasmModel, generateCompiledPhpWasmLeanAdapters } from \"../../src/build/php-wasm-graph-model.mjs\";\n"
+        },
+        {
+          "start": 4978,
+          "previous": "",
+          "current": "};\n\n/**\n * Compile one compiler-selected recursive Subtype graph without a hand-authored expected IR.\n *\n * @param options - Fresh request/report and compiler execution context.\n */\nexport const checkRecursiveComponentSubtypeSource = async options => {\n\tconst { report, request, context, directory, reports, route, run } = options;\n\tconst component = { name: \"recursive-refinements\", version: \"1.0.0\" };\n\tconst configuration = { schemaVersion: 1, modules: context.modules.map(module => module.name) };\n\tconst inputs = [];\n\tfor(const module of context.modules)\n\t{\n\t\tconst source = await readFile(join(directory, module.sourcePath));\n\t\tassert.equal(sha256(source), module.sourceSha256);\n\t\tinputs.push({ path: module.sourcePath, bytes: source.length, sha256: sha256(source) });\n\t}\n\tconst inventory = { project: { ...component, toolchain: context.toolchain, toolVersion: \"4.32.2\" }\n\t\t, configurationRecord: { configuration, sha256: sha256(canonicalJson(configuration)) }\n\t\t, inputs, sourceTreeSha256: sha256(canonicalJson(inputs)) };\n\tconst elaboration = { request, metadata: report\n\t\t, leanCompilerSha256: context.leanCompilerSha256\n\t\t, extractorSha256: context.extractorSha256 };\n\tconst analysis = projectElaboratedMetadata(inventory\n\t\t, context.modules.map(module => ({ module: module.name, path: module.sourcePath })), elaboration);\n\tassert.equal(analysis.adapterHints.length, 0);\n\tassert.equal(analysis.bindingIr.document.declarations.length, 1);\n\tconst declaration = analysis.bindingIr.document.declarations[0];\n\tassert.equal(declaration.source.declaration, \"NominalSelection.recursive\");\n\tconst refinements = declaration.source.extensions[\"lean-lang.org/refinements\"];\n\tassert.equal(refinements.parameters[0].kind, \"variant\");\n\tassert.equal(refinements.parameters[0].cases[1].fields[0].refinement.constructor, \"NominalConversion.plusOne\");\n\tassert.equal(refinements.parameters[0].cases[1].fields[1].refinement, null);\n\tconst componentPlan = { sha256: sha256(canonicalJson({ bindingIr: analysis.bindingIr.semanticSha256, request }))\n\t\t, document: { bindingIr: { semanticSha256: analysis.bindingIr.semanticSha256 } } };\n\tconst generated = generateCompilerAdapters({ analysis, componentPlan });\n\tconst item = generated.plan.exports[0], call = `${generated.plan.module}.${item.wrapper}`;\n\tconst checks = [\n\t\t`example : ${call} #[.empty] = #[0] := by decide`\n\t\t, `example : ${call} #[.node 40 (.node 80 .empty)] = #[0] := by native_decide`\n\t\t, `example : ${call} #[.node 40 (.node 100 .empty)] = #[] := by native_decide`\n\t\t, `example : ${call} #[.node 40 (.node 80 (.node 20 .empty))] = #[0] := by native_decide`\n\t\t, `example : ${call}_refinement_0 #[.node 40 (.node 80 .empty)] = 1 := by native_decide`\n\t\t, `example : ${call}_refinement_0 #[.node 40 (.node 100 .empty)] = 0 := by native_decide`\n\t];\n\tconst source = generated.files[\"LeanBridgeGenerated.lean\"] + \"\\n\" + checks.join(\"\\n\") + \"\\n\";\n\tassert.doesNotMatch(source, /\\b(?:sorry|axiom|unsafe|partial|unsafeCast|defaultValue)\\b|_root_\\.null|_root_\\.undefined/u);\n\tassert.equal((source.match(/def LbErased\\.NominalSelection\\.Chain\\.via_/gu) ?? []).length, 1);\n\tawait writeFile(join(directory, \"RecursiveComponentSubtypeAdapters.lean\"), source);\n\tconst compiled = await run([\"-c\", \"RecursiveComponentSubtypeAdapters.c\", \"RecursiveComponentSubtypeAdapters.lean\"]);\n\tassert.equal(compiled.stdout, \"\"); assert.equal(compiled.stderr, \"\");\n\tconst frame = generateComponentRecursiveAdapters(generated.plan.privateAbi, generated.plan);\n\tif(reports) for(const [suffix, value] of [\n\t\t[\"lean\", source]\n\t\t, [\"plan.json\", canonicalJson(generated.plan)]\n\t\t, [\"binding-ir.json\", canonicalJson(analysis.bindingIr.document)]\n\t\t, [\"frame.c\", frame]\n\t]) await writeFile(join(reports, `${route}-component-adapters.${suffix}`), value, { flag: \"wx\" });\n\treturn { route\n\t\t, kind: \"recursive-component-subtype-source-check\"\n\t\t, leanAssertions: checks.length\n\t\t, metadataAdmission: true\n\t\t, installedAcceptance: false\n\t\t, sourceSha256: sha256(source)\n\t\t, planSha256: sha256(canonicalJson(generated.plan))\n\t\t, generatedCSha256: sha256(await readFile(join(directory, \"RecursiveComponentSubtypeAdapters.c\")))\n\t\t, frameSha256: sha256(frame) };\n};\n\n/**\n * Compile the same fresh native compiler report through the fixed-width PHP-Wasm graph route.\n * This proves source/model/adapter admission; installed Node and browser execution is separate.\n *\n * @param options - Fresh native request/report and compiler execution context.\n */\nexport const checkRecursivePhpWasmSubtypeSource = async options => {\n\tconst { report, request, context, directory, reports, route, run } = options;\n\tconst component = { id: \"recursive-refinements@1.0.0\", name: \"recursive-refinements\", version: \"1.0.0\" };\n\tconst version = await run([\"--version\"]), leanCommit = /commit ([a-f0-9]{40})/u.exec(version.stdout)?.[1];\n\tassert.ok(leanCommit, version.stdout);\n\tconst modules = [];\n\tfor(const module of context.modules)\n\t{\n\t\tconst source = await readFile(join(directory, module.sourcePath));\n\t\tconst olean = await readFile(join(directory, `${module.name}.olean`));\n\t\tmodules.push({\n\t\t\tmodule: module.name\n\t\t\t, source: { path: module.sourcePath, bytes: source.length, sha256: module.sourceSha256 }\n\t\t\t, interface: { bytes: olean.length, sha256: sha256(olean), interfaceSha256: module.interfaceSha256 }\n\t\t});\n\t}\n\tconst model = createCompiledPhpWasmModel({\n\t\tmetadata: report\n\t\t, component\n\t\t, sourceIdentity: {\n\t\t\tleanVersion: \"4.32.2\", leanCommit\n\t\t\t, leanCompilerSha256: context.leanCompilerSha256\n\t\t\t, extractorSha256: context.extractorSha256\n\t\t\t, sourceTreeSha256: sha256(canonicalJson(modules))\n\t\t\t, modules, request\n\t\t}\n\t});\n\tassert.equal(model.profile, \"php-wasm-copied-v1\");\n\tassert.equal(model.pointerBits, 32);\n\tassert.ok(model.copiedGraph);\n\tassert.equal(model.exports.length, 1);\n\tconst item = model.exports[0];\n\tassert.equal(item.name, \"NominalSelection.recursive\");\n\tassert.equal(item.refinements.parameters[0].kind, \"variant\");\n\tassert.equal(item.refinements.parameters[0].cases[1].fields[0].refinement.constructor, \"NominalConversion.plusOne\");\n\tassert.equal(item.refinements.parameters[0].cases[1].fields[1].refinement, null);\n\tconst generated = generateCompiledPhpWasmLeanAdapters(model), call = `${generated.module}.export0`;\n\tconst checks = [\n\t\t`example : ${call} #[.empty] = #[0] := by decide`\n\t\t, `example : ${call} #[.node 40 (.node 80 .empty)] = #[0] := by native_decide`\n\t\t, `example : ${call} #[.node 40 (.node 100 .empty)] = #[] := by native_decide`\n\t\t, `example : ${call} #[.node 40 (.node 80 (.node 20 .empty))] = #[0] := by native_decide`\n\t];\n\tconst source = generated.leanSource + \"\\n\" + checks.join(\"\\n\") + \"\\n\";\n\tassert.doesNotMatch(source, /\\b(?:sorry|axiom|unsafe|partial|unsafeCast|defaultValue)\\b|_root_\\.null|_root_\\.undefined/u);\n\tassert.equal((source.match(/def LbErased\\.NominalSelection\\.Chain\\.via_/gu) ?? []).length, 1);\n\tawait writeFile(join(directory, \"RecursivePhpWasmSubtypeAdapters.lean\"), source);\n\tconst compiled = await run([\"-c\", \"RecursivePhpWasmSubtypeAdapters.c\", \"RecursivePhpWasmSubtypeAdapters.lean\"]);\n\tassert.equal(compiled.stdout, \"\"); assert.equal(compiled.stderr, \"\");\n\tif(reports) for(const [suffix, value] of [\n\t\t[\"lean\", source]\n\t\t, [\"model.json\", canonicalJson(model)]\n\t\t, [\"header.h\", generated.header]\n\t]) await writeFile(join(reports, `${route}-php-wasm-adapters.${suffix}`), value, { flag: \"wx\" });\n\treturn { route\n\t\t, kind: \"recursive-php-wasm-subtype-source-check\"\n\t\t, leanAssertions: checks.length\n\t\t, metadataAdmission: true, installedAcceptance: false\n\t\t, sourceSha256: sha256(source)\n\t\t, modelSha256: sha256(canonicalJson(model))\n\t\t, generatedCSha256: sha256(await readFile(join(directory, \"RecursivePhpWasmSubtypeAdapters.c\")))\n\t\t, headerSha256: sha256(generated.header) };\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/component-refinement-mirrors-fixture.mjs",
+      "currentSha256": "e4722b033f9f6808343ac7f2ea27dc006e388a110b75ad5d81d6c6ddfef0c604",
+      "previousSha256": "f36ecf03fb86987aaeaf1e8e3ad61be77fe20bddb3021dda0b59f77230282a8b",
+      "edits": [
+        {
+          "start": 4431,
+          "previous": "",
+          "current": "\n/** Recursive copied carrier with independent checked constructors at three call sites. */\nexport const recursiveComponentRefinementMirrorsFixture = () => {\n\tconst nat = { kind: \"primitive\", name: \"nat\" };\n\tconst chain = { kind: \"named\", id: \"lean:RecursiveMirrors.Chain\" };\n\tconst field = (name, type) => ({ name, type });\n\tconst branch = (name, ...fields) => ({ name, fields });\n\tconst choice = (name, refinement) => ({ name, refinement });\n\tconst types = [{ kind: \"variant\", id: chain.id\n\t\t, cases: [branch(\"empty\"), branch(\"node\", field(\"value\", nat), field(\"digit\", nat), field(\"tail\", chain))] }];\n\tconst selected = constructor => {\n\t\tconst subtype = { kind: \"subtype\"\n\t\t\t, constructor: constructor === null ? null : `NominalConversion.${constructor}` };\n\t\treturn { kind: \"variant\", name: \"RecursiveMirrors.Chain\"\n\t\t\t, cases: [\n\t\t\t\tbranch(\"empty\")\n\t\t\t\t, branch(\"node\", choice(\"value\", subtype), choice(\"digit\", null), choice(\"tail\", null))\n\t\t\t]\n\t\t};\n\t};\n\tconst signatures = [], exports = [];\n\tconst add = (name, constructor, result = nat, resultTree = null) => {\n\t\tconst bindingId = `lean:RecursiveMirrors.${name}`, symbol = `lean_bridge_${sha256(bindingId).slice(0, 24)}`;\n\t\tsignatures.push({ bindingId, symbol, parameters: [chain], result, resultMode: \"value\" });\n\t\texports.push({ bindingId, symbol\n\t\t\t, sourceDeclaration: `RecursiveMirrors.${name}`\n\t\t\t, wrapper: `export_recursive${name[0].toUpperCase()}${name.slice(1)}`\n\t\t\t, parameters: [{ name: \"value\", leanType: \"unused before normalization\" }]\n\t\t\t, leanResultType: \"unused before normalization\"\n\t\t\t, refinements: { parameters: [selected(constructor)], result: resultTree } });\n\t};\n\tadd(\"first\", \"plusOne\");\n\tadd(\"second\", \"plusTwo\");\n\tadd(\"echo\", \"plusOne\", chain, selected(null));\n\treturn { abi: { version: 8, dispatch: \"copied-graph-frame-v1\", types, exports: signatures }\n\t\t, exports\n\t\t, nominalRefinements: [{ id: chain.id\n\t\t\t, refinement: { kind: \"variant\", cases: [[], [null, { kind: \"fin\", bound: \"3\" }, null]] } }] };\n};\n\n/** Mutually recursive record/variant carriers with refinements under optional edges. */\nexport const mutualComponentRefinementMirrorsFixture = () => {\n\tconst nat = { kind: \"primitive\", name: \"nat\" };\n\tconst named = name => ({ kind: \"named\", id: `lean:MutualMirrors.${name}` });\n\tconst option = type => ({ kind: \"apply\", constructor: \"option\", arguments: [type] });\n\tconst field = (name, type) => ({ name, type });\n\tconst branch = (name, ...fields) => ({ name, fields });\n\tconst choice = (name, refinement) => ({ name, refinement });\n\tconst left = named(\"Left\"), right = named(\"Right\"), leftAlias = named(\"LeftAlias\"), leftGroup = named(\"LeftGroup\");\n\tconst types = [\n\t\t{ kind: \"record\", id: left.id, fields: [field(\"value\", nat), field(\"next\", option(right))] }\n\t\t, { kind: \"alias\", id: leftAlias.id, target: left }\n\t\t, { kind: \"alias\", id: leftGroup.id, target: { kind: \"apply\", constructor: \"array\", arguments: [option(leftAlias)] } }\n\t\t, { kind: \"variant\", id: right.id\n\t\t\t, cases: [branch(\"stop\"), branch(\"node\", field(\"value\", nat), field(\"next\", option(left)))] }\n\t];\n\tconst subtype = constructor => ({ kind: \"subtype\"\n\t\t, constructor: constructor === null ? null : `NominalConversion.${constructor}` });\n\tconst selected = (leftConstructor, rightConstructor) => {\n\t\tconst rightTree = { kind: \"variant\", name: \"MutualMirrors.Right\"\n\t\t\t, cases: [\n\t\t\t\tbranch(\"stop\")\n\t\t\t\t, branch(\"node\", choice(\"value\", subtype(rightConstructor)), choice(\"next\", null))\n\t\t\t]\n\t\t};\n\t\treturn { kind: \"record\", name: \"MutualMirrors.Left\"\n\t\t\t, fields: [\n\t\t\t\tchoice(\"value\", subtype(leftConstructor))\n\t\t\t\t, choice(\"next\", { kind: \"option\", arguments: [rightTree] })\n\t\t\t]\n\t\t};\n\t};\n\tconst signatures = [], exports = [];\n\tconst add = (name, selection, result = nat, resultTree = null, parameter = left) => {\n\t\tconst bindingId = `lean:MutualMirrors.${name}`, symbol = `lean_bridge_${sha256(bindingId).slice(0, 24)}`;\n\t\tsignatures.push({ bindingId, symbol, parameters: [parameter], result, resultMode: \"value\" });\n\t\texports.push({ bindingId, symbol, sourceDeclaration: `MutualMirrors.${name}`\n\t\t\t, wrapper: `export_mutual${name[0].toUpperCase()}${name.slice(1)}`\n\t\t\t, parameters: [{ name: \"value\", leanType: \"unused before normalization\" }]\n\t\t\t, leanResultType: \"unused before normalization\"\n\t\t\t, refinements: { parameters: [selection], result: resultTree } });\n\t};\n\tadd(\"first\", selected(\"plusOne\", \"plusTwo\"));\n\tadd(\"second\", selected(\"plusTwo\", \"plusOne\"));\n\tadd(\"echo\", selected(\"plusOne\", \"plusTwo\"), left, selected(null, null));\n\tconst group = tree => ({ kind: \"array\", arguments: [{ kind: \"option\", arguments: [tree] }] });\n\tadd(\"groups\", group(selected(\"plusOne\", \"plusTwo\")), nat, null, leftGroup);\n\tadd(\"echoGroups\", group(selected(\"plusOne\", \"plusTwo\")), leftGroup, group(selected(null, null)), leftGroup);\n\treturn { abi: { version: 8, dispatch: \"copied-graph-frame-v1\", types, exports: signatures }, exports, nominalRefinements: [] };\n};\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/component-refinement-mirrors-source-tests.mjs",
+      "currentSha256": "60ab129f6f31191f5a4ba8e1c46342e8461bf046fab33904e2f93c685848f329",
+      "previousSha256": "7f2ef37b50e698bece9354ce3b37f33442b3f7546fa310b2669585d0f06b74cd",
+      "edits": [
+        {
+          "start": 675,
+          "previous": "import { componentRefinementMirrorsFixture } from \"./component-refinement-mirrors-fixture.mjs\";\n",
+          "current": "import { componentRefinementMirrorsFixture, mutualComponentRefinementMirrorsFixture, recursiveComponentRefinementMirrorsFixture } from \"./component-refinement-mirrors-fixture.mjs\";\n"
+        },
+        {
+          "start": 7803,
+          "previous": "",
+          "current": "\tconst recursive = recursiveComponentRefinementMirrorsFixture();\n\tconst recursiveLines = componentRecursiveLeanSource(recursive.abi, recursive.exports, type => {\n\t\tassert.equal(type.kind, \"primitive\"); assert.equal(type.name, \"nat\");\n\t\treturn \"_root_.Nat\";\n\t}, recursive.nominalRefinements);\n\tconst recursiveChecks = [\n\t\t\"def recursiveErasedTotal : Carriers.LbErased.RecursiveMirrors.Chain → Nat\"\n\t\t, \"  | .empty => 0\"\n\t\t, \"  | .node value _ tail => value + recursiveErasedTotal tail\"\n\t\t, \"example : Carriers.export_recursiveFirst #[.node 40 2 (.node 80 1 .empty)] = #[122] := by native_decide\"\n\t\t, \"example : Carriers.export_recursiveSecond #[.node 40 2 (.node 80 1 .empty)] = #[124] := by native_decide\"\n\t\t, \"example : Carriers.export_recursiveFirst #[.node 40 2 (.node 100 1 .empty)] = #[] := by native_decide\"\n\t\t, \"example : Carriers.export_recursiveSecond #[.node 40 2 (.node 90 1 .empty)] = #[] := by native_decide\"\n\t\t, \"example : Carriers.export_recursiveFirst #[.node 40 2 (.node 80 3 .empty)] = #[] := by native_decide\"\n\t\t, \"example : (Carriers.export_recursiveEcho #[.node 40 2 (.node 80 1 .empty)]).map recursiveErasedTotal = #[122] := by native_decide\"\n\t];\n\tconst recursiveSource = [\"import ComponentMirrors\", \"namespace Carriers\", ...recursiveLines, \"end Carriers\", ...recursiveChecks, \"\"].join(\"\\n\");\n\tassert.doesNotMatch(recursiveSource, /\\b(?:sorry|axiom|unsafe|partial|unsafeCast|defaultValue)\\b/u);\n\tassert.equal((recursiveSource.match(/def LbErased\\.RecursiveMirrors\\.Chain\\.via_/gu) ?? []).length, 2);\n\tassert.equal((recursiveSource.match(/def LbErased\\.RecursiveMirrors\\.Chain\\.erase /gu) ?? []).length, 1);\n\tawait writeFile(join(directory, \"GeneratedRecursive.lean\"), recursiveSource);\n\tconst recursiveResult = await run([\"-c\", \"GeneratedRecursive.c\", \"GeneratedRecursive.lean\"]);\n\tobservations.push({ route: \"recursive\", checks: 6\n\t\t, sourceSha256: sha256(recursiveSource)\n\t\t, cSha256: sha256(await readFile(join(directory, \"GeneratedRecursive.c\")))\n\t\t, stdout: recursiveResult.stdout, stderr: recursiveResult.stderr });\n\tif(reports) await writeFile(join(reports, \"recursive.lean\"), recursiveSource, { flag: \"wx\" });\n\tconst mutual = mutualComponentRefinementMirrorsFixture();\n\tconst mutualLines = componentRecursiveLeanSource(mutual.abi, mutual.exports, type => {\n\t\tassert.equal(type.kind, \"primitive\"); assert.equal(type.name, \"nat\");\n\t\treturn \"_root_.Nat\";\n\t}, mutual.nominalRefinements);\n\tconst mutualChecks = [\n\t\t\"mutual\"\n\t\t, \"def mutualLeftTotal : Carriers.LbErased.MutualMirrors.Left → Nat\"\n\t\t, \"  | ⟨value, none⟩ => value\"\n\t\t, \"  | ⟨value, some next⟩ => value + mutualRightTotal next\"\n\t\t, \"def mutualRightTotal : Carriers.LbErased.MutualMirrors.Right → Nat\"\n\t\t, \"  | .stop => 0\"\n\t\t, \"  | .node value none => value\"\n\t\t, \"  | .node value (some next) => value + mutualLeftTotal next\"\n\t\t, \"end\"\n\t\t, \"def mutualGroupTotal (values : Array (Option Carriers.LbErased.MutualMirrors.Left)) : Nat :=\"\n\t\t, \"  values.foldl (fun total value => total + (value.map mutualLeftTotal).getD 0) 0\"\n\t\t, \"example : Carriers.export_mutualFirst #[⟨40, some (.node 80 (some ⟨20, none⟩))⟩] = #[144] := by native_decide\"\n\t\t, \"example : Carriers.export_mutualSecond #[⟨40, some (.node 80 (some ⟨20, none⟩))⟩] = #[145] := by native_decide\"\n\t\t, \"example : Carriers.export_mutualFirst #[⟨40, some .stop⟩] = #[41] := by native_decide\"\n\t\t, \"example : Carriers.export_mutualFirst #[⟨40, some (.node 90 none)⟩] = #[] := by native_decide\"\n\t\t, \"example : Carriers.export_mutualFirst #[⟨40, some (.node 80 (some ⟨100, none⟩))⟩] = #[] := by native_decide\"\n\t\t, \"example : (Carriers.export_mutualEcho #[⟨40, some (.node 80 (some ⟨20, none⟩))⟩]).map mutualLeftTotal = #[144] := by native_decide\"\n\t\t, \"example : Carriers.export_mutualGroups #[#[some ⟨40, some (.node 80 none)⟩, none]] = #[123] := by native_decide\"\n\t\t, \"example : (Carriers.export_mutualEchoGroups #[#[some ⟨40, some (.node 80 none)⟩, none]]).map mutualGroupTotal = #[123] := by native_decide\"\n\t];\n\tconst mutualSource = [\"import ComponentMirrors\", \"namespace Carriers\", ...mutualLines, \"end Carriers\", ...mutualChecks, \"\"].join(\"\\n\");\n\tassert.doesNotMatch(mutualSource, /\\b(?:sorry|axiom|unsafe|partial|unsafeCast|defaultValue)\\b/u);\n\tawait writeFile(join(directory, \"GeneratedMutual.lean\"), mutualSource);\n\tconst mutualResult = await run([\"-c\", \"GeneratedMutual.c\", \"GeneratedMutual.lean\"]);\n\tobservations.push({ route: \"mutual\", checks: 8\n\t\t, sourceSha256: sha256(mutualSource)\n\t\t, cSha256: sha256(await readFile(join(directory, \"GeneratedMutual.c\")))\n\t\t, stdout: mutualResult.stdout, stderr: mutualResult.stderr });\n\tif(reports) await writeFile(join(reports, \"mutual.lean\"), mutualSource, { flag: \"wx\" });\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-nominal-refusals-tests.mjs",
+      "currentSha256": "7917d7b9fd529c8d1f6dbb3cb0f64ec437021a206954f4ee66d011fe9393d608",
+      "previousSha256": "46188fcd15e9040d36fd1c499947514f38e2ada365174e58e86ed62796be721b",
+      "edits": [
+        {
+          "start": 754,
+          "previous": "const tree = \"inductive Tree where\\n  | leaf (digit : Fin 5)\\n  | branch (children : List Tree)\\n\";\nconst graphProblem = \"checked Fin refinements cannot share a component with copied graph exports\";\n",
+          "current": ""
+        },
+        {
+          "start": 981,
+          "previous": "\t, [\"recursiveSite\", tree + \"def recursiveSite (value : Tree) : Nat := match value with\\n  | .leaf digit => digit.val\\n  | .branch children => children.length\", graphProblem]\n\t, [\"recursiveResult\", tree + \"def recursiveResult (value : Nat) : Tree := .leaf ⟨value % 5, Nat.mod_lt _ (by decide)⟩\", graphProblem]\n\t, [\"wrappedSite\", tree + \"abbrev Forest := Array Tree\\ndef wrappedSite (value : Option Forest) : Nat := value.map Array.size |>.getD 0\", graphProblem]\n",
+          "current": ""
+        },
+        {
+          "start": 1187,
+          "previous": "test(\"native extractor diagnoses refined graphs before reporting a supported signature\", async () => {\n",
+          "current": "test(\"native extractor admits finite refined graphs without bypassing checked-selection diagnostics\", async () => {\n"
+        },
+        {
+          "start": 1485,
+          "previous": "\tassert.match(signature, /if native && sites\\.any \\(fun site => containsKind #\\[\\] site \"graph\"\\) && sites\\.any containsRefinement then/u);\n\tassert.ok(signature.indexOf(`throwError \"${graphProblem}\"`) < signature.indexOf('(\"status\", str \"supported\")'));\n",
+          "current": "\tassert.doesNotMatch(signature, /checked Fin refinements cannot share a component with copied graph exports/u);\n\tassert.match(signature, /checkedSelectionProblem value/u);\n\tassert.ok(signature.indexOf(\"checkedSelectionProblem value\") < signature.indexOf('(\"status\", str \"supported\")'));\n"
+        },
+        {
+          "start": 1847,
+          "previous": "test(\"fresh native builds retain declaration-specific generic, recursive and callback record refusals\", {\n",
+          "current": "test(\"fresh native builds retain declaration-specific generic and callback record refusals\", {\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "337d61b2288de0aca1a85652d6f8c96339eebbad0e6a7efb6469995f1a457647",
+      "previousSha256": "ec901182d6371e9fcc5eb802a64dbc099bafc9839d71e0f7972ae515eedac049",
+      "edits": [
+        {
+          "start": 9844,
+          "previous": "",
+          "current": "import { beforeRecursiveSubtypePhpWasmSource, recursiveSubtypePhpWasmChangedPaths } from \"./recursive-subtype-php-wasm-source-history.mjs\";\n"
+        },
+        {
+          "start": 60632,
+          "previous": "",
+          "current": "\tsource = beforeRecursiveSubtypePhpWasmSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 74483,
+          "previous": "",
+          "current": "\t, ...recursiveSubtypePhpWasmChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-selection-extractor-tests.mjs",
+      "currentSha256": "d12d773325d5a9e47410d0f0d32ff4bf965173c7e8ee00ef4ffc9ade97c7f3aa",
+      "previousSha256": "ad67302aab3456e0886f699ac6794a098139b24053cdc4403e30159b5175c6b5",
+      "edits": [
+        {
+          "start": 1384,
+          "previous": "import { checkComponentSubtypeSource, nominalComponentAssertions } from \"./component-nominal-subtype-source.mjs\";\n",
+          "current": "import { checkComponentSubtypeSource, checkRecursiveComponentSubtypeSource, checkRecursivePhpWasmSubtypeSource, nominalComponentAssertions } from \"./component-nominal-subtype-source.mjs\";\n"
+        },
+        {
+          "start": 5710,
+          "previous": "\t\tif(profile === \"native-library-v1\" && !route.endsWith(\"refusals\"))\n",
+          "current": "\t\tif(profile === \"native-library-v1\" && !route.endsWith(\"refusals\") && !route.endsWith(\"source-only\"))\n"
+        },
+        {
+          "start": 5943,
+          "previous": "\t\tif(profile === \"component-scalars-v1\" && !route.endsWith(\"refusals\"))\n",
+          "current": "\t\tif(profile === \"component-scalars-v1\" && !route.endsWith(\"refusals\") && !route.endsWith(\"source-only\"))\n"
+        },
+        {
+          "start": 11387,
+          "previous": "",
+          "current": "\t\tconst recursive = refused[\"NominalSelection.recursive\"];\n\t\tdelete refused[\"NominalSelection.recursive\"];\n"
+        },
+        {
+          "start": 12538,
+          "previous": "\t\tassert.match(diagnostic(\"recursive\"), /recursive nominal constructor selections/u);\n",
+          "current": "\t\tconst accepted = await extract(profile, { \"NominalSelection.recursive\": recursive }, `${profile}-recursive-source-only`);\n\t\tconst projection = accepted.projections.get(\"NominalSelection.recursive\");\n\t\tassert.equal(projection.status, \"supported\", projection.expression);\n\t\tassert.equal(projection.parameters[0].type.kind, \"graph\");\n\t\tassert.deepEqual(projectionCheckedSelection(projection.parameters[0].type), recursive.parameters[0].refinement);\n\t\tvalidateElaboratedMetadata(accepted.report, accepted.request);\n\t\tif(profile === \"component-scalars-v1\") observations.push(await checkRecursiveComponentSubtypeSource({ ...accepted\n\t\t\t, context, directory, reports, route: `${profile}-recursive-source`, run }));\n\t\telse observations.push(await checkRecursivePhpWasmSubtypeSource({ ...accepted\n\t\t\t, context, directory, reports, route: \"php-wasm-recursive-source\", run }));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-wasm-fin-fixtures.mjs",
+      "currentSha256": "f471591b2559d43ac6f7d27eabec126a2c8707dddce8dca671571b2bdf1c05f9",
+      "previousSha256": "a85cb80188630dd4355f1ca97ea7c52c741f999652ca4d1e24f8e4b7972c6e16",
+      "edits": [
+        {
+          "start": 4986,
+          "previous": "",
+          "current": " * @param spec.retainHandoff - Optional absent directory that receives the reproduced package handoff.\n"
+        },
+        {
+          "start": 6955,
+          "previous": "\t\t// Only a reconciled review produces the reviewed model schema.\n\t\tassert.equal(model.schemaVersion, spec.reviewed ? 3 : 2);\n",
+          "current": "\t\t// A recursive copied graph uses the graph model's schema pair; acyclic fixtures retain 2/3.\n\t\tconst schemas = spec.modelSchemas ?? { ordinary: 2, reviewed: 3 };\n\t\tassert.deepEqual(Object.keys(schemas).sort(), [\"ordinary\", \"reviewed\"]);\n\t\tassert.equal(model.schemaVersion, spec.reviewed ? schemas.reviewed : schemas.ordinary);\n"
+        },
+        {
+          "start": 8072,
+          "previous": "",
+          "current": "\tif(spec.retainHandoff) await cp(handoff, spec.retainHandoff, { recursive: true, errorOnExist: true, force: false });\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/pre-owned-php-wasm-generators.mjs",
+      "currentSha256": "63826cad1f61cc430ea245bc8a6cc6518079c8406a7cd8b5f70670bac2d1c750",
+      "previousSha256": "518dd4624e07c0bd642ed35ea51b2e738ef3bba18b617cde4d0b79e83d75d9a5",
+      "edits": [
+        {
+          "start": 455,
+          "previous": "",
+          "current": "import { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\n"
+        },
+        {
+          "start": 1595,
+          "previous": "\t\t\tconst current = await readFile(path, \"utf8\");\n",
+          "current": "\t\t\tconst current = beforeFinRefinementSource(path, await readFile(path, \"utf8\"), record.sources[path]);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/subtype-result-source-tests.mjs",
+      "currentSha256": "dd23c3eb0eed23c30aae4269c007cb613f65561550d7ef608c635deee2318f6e",
+      "previousSha256": "b66c58a1e376768d7964ec0bd71b21dc1aec77a3f17e14bb5d52a20c2143663d",
+      "edits": [
+        {
+          "start": 13229,
+          "previous": "\tconst refusedNames = [\"uncheckedInput\", \"uncheckedEnvelope\", \"callbackResult\", \"genericResult\", \"recursiveResult\", \"checkedResult\"];\n",
+          "current": "\tconst refusedNames = [\"uncheckedInput\", \"uncheckedEnvelope\", \"callbackResult\", \"genericResult\", \"checkedResult\"];\n"
+        },
+        {
+          "start": 13645,
+          "previous": "\tassert.match(refused.projections.get(\"NominalResults.recursiveResult\").expression, /acyclic copied/u);\n\tconst control = await extract(\"controls\", { exports: [\"NominalResults.plainRecursive\", \"NominalResults.finOnly\"] });\n",
+          "current": "\tconst control = await extract(\"controls\", { exports: [\"NominalResults.plainRecursive\", \"NominalResults.finOnly\", \"NominalResults.recursiveResult\"] });\n"
+        },
+        {
+          "start": 14124,
+          "previous": "",
+          "current": "\tconst recursiveResult = control.projections.get(\"NominalResults.recursiveResult\").result;\n\tassert.equal(recursiveResult.kind, \"graph\");\n\tassert.equal(projectionCheckedSelection(recursiveResult), null);\n"
+        },
+        {
+          "start": 14636,
+          "previous": "",
+          "current": "\tconst componentRecursive = await extract(\"component-recursive-control\", { profile: \"component-scalars-v1\", exports: [\"NominalResults.recursiveResult\"] });\n\tconst componentResult = componentRecursive.projections.get(\"NominalResults.recursiveResult\");\n\tassert.equal(componentResult.status, \"supported\", componentResult.expression);\n\tassert.equal(componentResult.result.kind, \"graph\");\n\tassert.equal(projectionCheckedSelection(componentResult.result), null);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/php-wasm-fin.test.mjs",
+      "currentSha256": "782f25f83cc1d4af936875a29f77eb36bedf0ac23601ed944290ed6206c49bea",
+      "previousSha256": "f92a167167a42e1062e9dd380403701e0a69e332e7e47353b7d55976aeb546a5",
+      "edits": [
+        {
+          "start": 589,
+          "previous": "import { createCompiledPhpWasmModel } from \"../src/build/php-wasm-graph-model.mjs\";\n",
+          "current": "import { createCompiledPhpWasmModel, generateCompiledPhpWasmLeanAdapters } from \"../src/build/php-wasm-graph-model.mjs\";\n"
+        },
+        {
+          "start": 7353,
+          "previous": "test(\"PHP-Wasm preserves scalar and structural Subtype checks while refined callable, graph and owned packages remain refused\", async () => {\n",
+          "current": "test(\"PHP-Wasm preserves scalar and structural checks while refined callable and owned packages remain refused\", async () => {\n"
+        },
+        {
+          "start": 8953,
+          "previous": "\t// Graph and owned packages have no Fin walk: a bound beside a recursive export, or in an owned\n\t// package, is refused at the PHP-Wasm entry, naming the refined declaration.\n",
+          "current": "\t// Copied graph packages share the recursive carrier's Fin walk. Owned packages still use a\n\t// separate transport and remain outside this refinement route.\n"
+        },
+        {
+          "start": 11010,
+          "previous": "\tassert.throws(() => createCompiledPhpWasmModel(reselect(graphed)), refinedError(/^Sample\\.bounded: checked Fin refinements cannot share a PHP-Wasm package with copied graph exports$/u));\n\t// The same recursive export alone still compiles: the refusal is about the bound, not the graph.\n",
+          "current": "\tconst graphModel = createCompiledPhpWasmModel(reselect(graphed));\n\tassert.ok(graphModel.copiedGraph);\n\tassert.deepEqual(graphModel.exports.find(item => item.name === \"Sample.bounded\").refinements, {\n\t\tparameters: [{ kind: \"fin\", bound: \"10\" }]\n\t\t, result: null\n\t});\n\tconst graphAdapters = generateCompiledPhpWasmLeanAdapters(graphModel);\n\tassert.match(graphAdapters.leanSource, /if _bridgeFin\\d+ : \\(a0\\) < 10 then/u);\n\t// The same recursive export alone also compiles without adding a refinement guard.\n"
+        }
+      ]
+    }
+  ]
+}

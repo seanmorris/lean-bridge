@@ -9,6 +9,7 @@ import { createElaboratedSemanticModel } from "../analyze/semantic-model.mjs";
 import { reconcileReviewedSource } from "../analyze/reviewed-source.mjs";
 import { hashBindingIr } from "../binding-ir/canonical.mjs";
 import { componentRecordDefinitions } from "../abi/component-records.mjs";
+import { nominalRefinementEntries } from "../abi/refinements.mjs";
 import { assertComponentRecursiveBindings, componentRecursiveAbi, componentRecursiveDispatch } from "../abi/component-recursive-abi.mjs";
 import { componentRecursiveHelper, componentRecursiveLeanSource, componentRecursiveTypes } from "./component-recursive-lean.mjs";
 import { createPhpWasmCopiedModel, generateNativeLeanAdapters } from "./native-model.mjs";
@@ -32,8 +33,6 @@ const leanType = type => {
 };
 const containsGraph = value => value && typeof value === "object"
 	&& (value.kind === "graph" || Object.values(value).some(containsGraph));
-const containsKind = (value, kind) => value !== null && typeof value === "object"
-	&& (value.kind === kind || Object.values(value).some(child => containsKind(child, kind)));
 
 const descriptor = ir => ir.types.some(type => type.kind === "callback")
 	? createNativeCallableGraphDescriptor(ir) : ({ schemaVersion: 1
@@ -74,11 +73,8 @@ export const createCompiledPhpWasmModel = options => {
 	if(options.moduleName !== undefined) throw new TypeError("PHP-Wasm graph compilation does not accept a Perl namespace");
 	const { metadata, component, sourceIdentity } = options;
 	if(sourceIdentity.request.ownedAggregates !== undefined) return createOwnedPhpWasmModel(options);
-	// Checked Fin reaches only the plain copied side module; graph packages have no walk yet.
 	const elaborated = projectNativeMetadata(metadata, sourceIdentity, { copiedGraphs: true, refinements: true });
 	if(!elaborated.declarations.some(containsGraph)) return createPhpWasmCopiedModel(options);
-	const refined = elaborated.declarations.find(item => containsKind(item, "refinement"));
-	if(refined) throw Object.assign(new TypeError(`${refined.name}: checked Fin refinements cannot share a PHP-Wasm package with copied graph exports`), { code: "native-refinements-unsupported", details: { declaration: refined.name } });
 	const semantic = createElaboratedSemanticModel({ metadata
 		, request: sourceIdentity.request
 		, component, elaborationSha256: elaborated.sha256 });
@@ -88,7 +84,8 @@ export const createCompiledPhpWasmModel = options => {
 	const exports = bindingIr.declarations.map(item => {
 		const source = sources.get(item.source.declaration), entry = copiedGraph.exports.find(value => value.bindingId === item.id);
 		if(!source) throw new TypeError("PHP-Wasm graph export lacks a compiler-selected source declaration");
-		return { ...source, bindingId: item.id, symbol: `${entry.symbol}_lean` };
+		const refinements = item.source.extensions["lean-lang.org/refinements"];
+		return { ...source, bindingId: item.id, symbol: `${entry.symbol}_lean`, ...(refinements ? { refinements } : {}) };
 	});
 	const model = { schemaVersion: sourceIdentity.reviewedBindingIr === undefined ? 4 : 5
 		, profile: "php-wasm-copied-v1", pointerBits: 32, byteOrder: "little"
@@ -145,11 +142,13 @@ export const generateCompiledPhpWasmLeanAdapters = model => {
 	const exports = model.exports.map((item, index) => ({ bindingId: item.bindingId
 		, symbol: abi.exports.find(value => value.bindingId === item.bindingId).symbol
 		, wrapper: `export${index}`, sourceDeclaration: item.name
+		, parameters: item.parameters
+		, ...(item.refinements ? { refinements: item.refinements } : {})
 		, ...(item.specialization ? { sourceApplication: item.specialization.application } : {}) }));
 	const lines = [...new Set(model.exports.map(item => `import ${item.module}`))
 		, "set_option maxRecDepth 10000", `namespace ${module}`
 		, ...(abi.callbacks ? componentStructuredCallableLeanSource(abi, exports)
-			: componentRecursiveLeanSource(abi, exports, leanType))
+			: componentRecursiveLeanSource(abi, exports, leanType, nominalRefinementEntries(model.bindingIr.types)))
 		, `end ${module}`, ""];
 	const header = abi.callbacks
 		? carrierHeader(componentStructuredCopiedView(abi), false) + nativeCallableGraphHeader(abi)
