@@ -12,6 +12,30 @@ import { nominalPrimitiveSubtypeWitReceipt, nominalPrimitiveSubtypeWitSources } 
 
 const identity = bytes => ({ bytes: Buffer.byteLength(bytes), sha256: sha256(bytes) });
 
+// The platform word width export carries no refinement tree.
+const refined = model => model.exports.flatMap(item => item.refinements ? [item.refinements] : []);
+const replaceLeaf = (value, predicate, mutate) => {
+	if(!value || typeof value !== "object") return false;
+	if(predicate(value))
+	{ mutate(value); return true; }
+	return Object.values(value).some(child => replaceLeaf(child, predicate, mutate));
+};
+
+/**
+ * Coordinated compiler-model mutations that every retained build must refuse.
+ * Each mutation asserts that it found a leaf to change, so an unrefined model cannot pass vacuously.
+ *
+ * @param mode - Full or result-only API; only the full API carries parameter constructors.
+ */
+export const nominalPrimitiveSubtypeWitModelMutations = mode => [
+	value => { value.pointerBits = 32; }
+	, value => { value.exports.pop(); }
+	, value => { value.sourceIdentity.extractorSha256 = "0".repeat(64); }
+	, value => { assert.ok(replaceLeaf(refined(value), item => item.kind === "fin", item => { item.bound = "4"; })); }
+	, value => { assert.ok(replaceLeaf(refined(value).map(item => item.result), item => item.kind === "subtype", item => { item.constructor = "NominalPrimitiveSubtypes.natA"; })); }
+	, ...mode === "full" ? [value => { assert.ok(replaceLeaf(refined(value).map(item => item.parameters), item => item.kind === "subtype" && item.constructor !== null, item => { item.constructor = "NominalPrimitiveSubtypes.unreviewed"; })); }] : []
+];
+
 /**
  * Exercise missing originals and source, constructor, tool, closure and command drift.
  *
@@ -114,22 +138,8 @@ export const checkNominalPrimitiveSubtypeWitControls = async (originalRead, opti
 			, tools: json("tools.json"), producerCommit: options.producerCommit
 			, floor: options.floor })); packageControls++;
 	}
-	// The platform word width export carries no refinement tree.
-	const refined = model => model.exports.flatMap(item => item.refinements ? [item.refinements] : []);
-	const replaceLeaf = (value, predicate, mutate) => {
-		if(!value || typeof value !== "object") return false;
-		if(predicate(value))
-		{ mutate(value); return true; }
-		return Object.values(value).some(child => replaceLeaf(child, predicate, mutate));
-	};
-	for(const mutate of [
-		value => { value.pointerBits = 32; }
-		, value => { value.exports.pop(); }
-		, value => { value.sourceIdentity.extractorSha256 = "0".repeat(64); }
-		, value => { assert.ok(replaceLeaf(refined(value), item => item.kind === "fin", item => { item.bound = "4"; })); }
-		, value => { assert.ok(replaceLeaf(refined(value).map(item => item.result), item => item.kind === "subtype", item => { item.constructor = "NominalPrimitiveSubtypes.natA"; })); }
-		, ...options.mode === "full" ? [value => { assert.ok(replaceLeaf(refined(value).map(item => item.parameters), item => item.kind === "subtype" && item.constructor !== null, item => { item.constructor = "NominalPrimitiveSubtypes.unreviewed"; })); }] : []
-	]) {
+	for(const mutate of nominalPrimitiveSubtypeWitModelMutations(options.mode))
+	{
 		const report = json("report.json"), changes = new Map();
 		for(const attempt of [0, 1])
 		{

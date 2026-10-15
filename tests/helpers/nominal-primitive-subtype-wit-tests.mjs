@@ -23,6 +23,7 @@ import { verifyNominalPrimitiveSubtypeWitEnvironment } from "./nominal-primitive
 import { assertNominalSubtypeWitInterfaces } from "./nominal-subtype-wit-interface.mjs";
 import { runCopied } from "./copied-fixture-install.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
+import "./nominal-primitive-subtype-wit-controls-tests.mjs";
 import "./nominal-primitive-subtype-wit-ci-report-tests.mjs";
 import "./nominal-primitive-subtype-wit-ci-shell-tests.mjs";
 import "./nominal-primitive-subtype-wit-ci-handoff-tests.mjs";
