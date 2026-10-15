@@ -25,6 +25,10 @@ export const nominalPrimitiveSubtypeJvmCounts = Object.freeze({
 	})
 });
 
+/** The default producer admission ceiling and the shared local ceiling an explicit run may select. */
+export const nominalPrimitiveSubtypeJvmDefaultLoadCeiling = 6;
+export const nominalPrimitiveSubtypeJvmMaximumLoadCeiling = 8;
+
 /**
  * Refuse misspelled gates and selections instead of silently skipping packages.
  *
@@ -46,7 +50,15 @@ export const nominalPrimitiveSubtypeJvmSelection = environment => {
 		return selected;
 	};
 	if(environment[prefix + "OUTPUT"] !== undefined) assert.equal(flag, "1", `Explicit ${prefix}OUTPUT requires TEST=1`);
-	return { enabled: flag === "1", routes: select("ROUTES", nominalPrimitiveSubtypeJvmRoutes), modes: select("MODES", nominalPrimitiveSubtypeJvmModes) };
+	// The default admission ceiling is 6; an explicit local producer may raise it to the shared ceiling of 8.
+	const rawLoad = environment[prefix + "MAX_LOAD"];
+	if(rawLoad !== undefined)
+	{
+		assert.equal(flag, "1", `Explicit ${prefix}MAX_LOAD requires TEST=1`);
+		assert.ok(["6", "8"].includes(rawLoad), `Invalid ${prefix}MAX_LOAD: only the default 6 or the shared 8`);
+	}
+	const maxLoad = rawLoad === undefined ? nominalPrimitiveSubtypeJvmDefaultLoadCeiling : Number(rawLoad);
+	return { enabled: flag === "1", routes: select("ROUTES", nominalPrimitiveSubtypeJvmRoutes), modes: select("MODES", nominalPrimitiveSubtypeJvmModes), maxLoad };
 };
 
 const names = new Map([["Pair", "PacketPair"], ["NominalPrimitiveSubtypes.Pair", "NominalPrimitiveSubtypes.PacketPair"], ["lean:NominalPrimitiveSubtypes.Pair", "lean:NominalPrimitiveSubtypes.PacketPair"]]);

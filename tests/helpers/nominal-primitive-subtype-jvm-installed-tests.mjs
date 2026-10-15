@@ -28,7 +28,7 @@ import { nativeFixtureEnvironment, runCopied } from "./copied-fixture-install.mj
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
 
-const { enabled, routes, modes } = nominalPrimitiveSubtypeJvmSelection(process.env);
+const { enabled, routes, modes, maxLoad } = nominalPrimitiveSubtypeJvmSelection(process.env);
 
 for(const route of routes) for(const mode of modes) test(`installed primitive-base nominal JVM packages reproduce and relocate ${route} ${mode}`, {
 	skip: !enabled, timeout: 3_600_000
@@ -53,7 +53,7 @@ for(const route of routes) for(const mode of modes) test(`installed primitive-ba
 		await saveLakeFile(output, path, canonicalJson(value));
 	const resourceChecks = [];
 	const resourceCheck = async () => {
-		resourceChecks.push(await waitNominalSubtypeDotnetResources(output, { notify: message => t.diagnostic(message) }));
+		resourceChecks.push(await waitNominalSubtypeDotnetResources(output, { maxLoad, notify: message => t.diagnostic(message.replaceAll("C#", "primitive JVM")) }));
 		await saveLakeFile(output, "resources.json", canonicalJson(resourceChecks));
 	};
 	await resourceCheck();
@@ -166,7 +166,7 @@ for(const route of routes) for(const mode of modes) test(`installed primitive-ba
 	await verifyPackageSetReceipt({ receiptPath: join(output, "handoff/package-set-receipt.json") });
 	await saveLakeFile(output, "report.json", canonicalJson({
 		schemaVersion: 1, route, mode, producerCommit, runtime, builds, receipt
-		, installation, consumers, resourceChecks
+		, installation, consumers, resourceChecks, loadCeiling: maxLoad
 		, declaredGlibcFloor: floor, expectedBindingIrSha256: hashBindingIr(expected)
 		, reproducible: true, independentBuilds: 2, authorInputsUnchanged: true
 		, sourceRemovedBeforeInstallation: true, offlineInstall: true

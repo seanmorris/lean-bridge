@@ -90,9 +90,15 @@ export const checkNominalPrimitiveSubtypeJvmControls = async (originalRead, opti
 	const resourceChanges = [
 		value => { value[0].observations[0].freeBytes = 1024; }
 		, value => { value[0].observations[0].availableBytes = 1024; }
-		, value => { value[0].observations.at(-1).load = 6; }
+		, value => { value[0].observations.at(-1).load = json("report.json").loadCeiling; }
 		, value => { value[0].waits++; }
 	];
+	// An unrecorded ceiling is refused even when every sample would still satisfy it.
+	for(const ceiling of [7, 6.5, "8", null])
+	{
+		const report = json("report.json"); report.loadCeiling = ceiling;
+		await reject(new Map([["report.json", encode(report)]]), "load ceiling"); resourceControls++;
+	}
 	for(const mutate of resourceChanges)
 	{
 		const report = json("report.json"), record = json("resources.json");

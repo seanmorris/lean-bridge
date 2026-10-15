@@ -13,13 +13,17 @@ import { checkNominalPrimitiveSubtypeJvmProbe, checkNominalPrimitiveSubtypeKotli
 import { nominalPrimitiveSubtypeJvmMutants } from "./nominal-primitive-subtype-jvm-caller-tests.mjs";
 
 test("primitive-base JVM selection refuses misspelled gates and keeps the complete matrix by default", () => {
-	assert.deepEqual(nominalPrimitiveSubtypeJvmSelection({}), { enabled: false, routes: ["ordinary", "reviewed"], modes: ["full", "result-only"] });
+	assert.deepEqual(nominalPrimitiveSubtypeJvmSelection({}), { enabled: false, routes: ["ordinary", "reviewed"], modes: ["full", "result-only"], maxLoad: 6 });
+	for(const [raw, expected] of [["6", 6], ["8", 8]])
+		assert.equal(nominalPrimitiveSubtypeJvmSelection({ LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_JVM_TEST: "1", LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_JVM_MAX_LOAD: raw }).maxLoad, expected);
 	assert.deepEqual(nominalPrimitiveSubtypeJvmSelection({ LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_JVM_TEST: "1", LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_JVM_MODES: "full" }).modes, ["full"]);
 	for(const environment of [{ LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_JVM_TEST: "yes" }
 		, { LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_JVM_ROUTES: "ordinary" }
 		, { LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_JVM_TEST: "1", LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_JVM_MODES: "full,full" }
 		, { LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_JVM_TEST: "1", LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_JVM_ROUTES: "nix" }
-		, { LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_JVM_OUTPUT: "build/x" }])
+		, { LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_JVM_OUTPUT: "build/x" }
+		, { LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_JVM_MAX_LOAD: "8" }
+		, ...["5", "7", "7.5", "9", "", "8x", "08", "8.0", "-8", "NaN", "Infinity"].map(value => ({ LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_JVM_TEST: "1", LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_JVM_MAX_LOAD: value }))])
 		assert.throws(() => nominalPrimitiveSubtypeJvmSelection(environment), JSON.stringify(environment));
 });
 

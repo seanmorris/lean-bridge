@@ -7,7 +7,7 @@
 import assert from "node:assert/strict";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { nominalPrimitiveSubtypeModule } from "./nominal-primitive-subtype-fixture.mjs";
-import { nominalPrimitiveSubtypeJvmRoutes, nominalPrimitiveSubtypeJvmModes } from "./nominal-primitive-subtype-jvm-fixture.mjs";
+import { nominalPrimitiveSubtypeJvmDefaultLoadCeiling, nominalPrimitiveSubtypeJvmMaximumLoadCeiling, nominalPrimitiveSubtypeJvmModes, nominalPrimitiveSubtypeJvmRoutes } from "./nominal-primitive-subtype-jvm-fixture.mjs";
 import { checkNominalPrimitiveSubtypeJvmModels } from "./nominal-primitive-subtype-jvm-model-records.mjs";
 import { checkNominalPrimitiveSubtypeJvmPackageRecords, nominalPrimitiveSubtypeJvmRetainedMembers } from "./nominal-primitive-subtype-jvm-package-records.mjs";
 import { checkNominalPrimitiveSubtypeJvmConsumers } from "./nominal-primitive-subtype-jvm-consumer-records.mjs";
@@ -43,7 +43,8 @@ export const checkNominalPrimitiveSubtypeJvmReport = async (read, { route, mode,
 	assert.deepEqual(Object.keys(report).sort(), ["authorInputsUnchanged", "builds"
 		, "compilerFreeReplay", "consumers", "declaredGlibcFloor", "dispatch"
 		, "expectedBindingIrSha256", "independentBuilds", "installation"
-		, "installerCommandLogs", "mode", "offlineInstall", "producerCommit"
+		, "installerCommandLogs", "loadCeiling", "mode", "offlineInstall"
+		, "producerCommit"
 		, "receipt", "relocatedInstallation"
 		, "reproducible", "resourceChecks", "route", "runtime", "schemaVersion"
 		, "sourceFreeDeployment", "sourceRemovedBeforeInstallation"
@@ -61,6 +62,7 @@ export const checkNominalPrimitiveSubtypeJvmReport = async (read, { route, mode,
 	const runtimeRecord = { platform: runtime.platform, arch: runtime.arch
 		, glibc: { code: 0, stdout: `glibc ${runtime.glibc}\n`, stderr: "" } };
 	assert.deepEqual(report.runtime, runtimeRecord); assert.deepEqual(await json("runtime.json"), runtimeRecord);
+	assert.ok([nominalPrimitiveSubtypeJvmDefaultLoadCeiling, nominalPrimitiveSubtypeJvmMaximumLoadCeiling].includes(report.loadCeiling), "Unrecorded JVM load ceiling");
 	assert.equal(report.resourceChecks.length, 5);
 	assert.deepEqual(await json("resources.json"), report.resourceChecks);
 	for(const check of report.resourceChecks)
@@ -73,7 +75,7 @@ export const checkNominalPrimitiveSubtypeJvmReport = async (read, { route, mode,
 			assert.deepEqual(Object.keys(sample).sort(), ["availableBytes", "freeBytes", "load"]);
 			for(const key of ["availableBytes", "freeBytes"]) assert.ok(Number.isSafeInteger(sample[key]) && sample[key] >= 2 * 1024 ** 3);
 			assert.ok(Number.isFinite(sample.load) && sample.load >= 0);
-			assert.equal(sample.load < 6, index === check.waits);
+			assert.equal(sample.load < report.loadCeiling, index === check.waits);
 		}
 	}
 	const { model, receipt, compiled } = await checkNominalPrimitiveSubtypeJvmModels({ report, read, json, route, mode, producerCommit });
