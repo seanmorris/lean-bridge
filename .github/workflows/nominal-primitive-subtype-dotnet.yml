@@ -1,0 +1,76 @@
+name: Installed primitive-base nominal Subtypes in .NET
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nominal-primitive-subtype-dotnet-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  nominal-primitive-subtype-dotnet:
+    name: Four primitive-base nominal selections in .NET
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    env:
+      LEAN_NUM_THREADS: "1"
+    steps:
+      - name: Check out the exact revision and original evidence history
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install compiler and archive dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep xz-utils zstd
+      - name: Install dependencies and the pinned Lean compiler
+        timeout-minutes: 30
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund
+          mkdir -p build
+          bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/nominal-primitive-subtype-dotnet-toolchain.log
+      - name: Install the isolated pinned .NET SDK
+        timeout-minutes: 20
+        uses: actions/setup-dotnet@v6
+        env:
+          DOTNET_INSTALL_DIR: ${{ runner.temp }}/lean-bridge-nominal-primitive-dotnet-8.0.424
+        with:
+          dotnet-version: '8.0.424'
+      - name: Require both source routes and API modes in .NET
+        id: acceptance
+        timeout-minutes: 120
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-nominal-primitive-subtype-dotnet-ci.sh "$RUNNER_TEMP/lean-bridge-nominal-primitive-dotnet-8.0.424/dotnet"
+      - name: Preserve original and partial installed records
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: nominal-primitive-subtype-dotnet-${{ github.sha }}
+          path: |
+            build/nominal-primitive-subtype-dotnet-ci/
+            build/nominal-primitive-subtype-dotnet-toolchain.log
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce installed primitive-base .NET acceptance
+        if: always() && steps.acceptance.outcome != 'success'
+        run: exit 1
