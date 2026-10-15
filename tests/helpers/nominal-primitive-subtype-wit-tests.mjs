@@ -23,6 +23,10 @@ import { verifyNominalPrimitiveSubtypeWitEnvironment } from "./nominal-primitive
 import { assertNominalSubtypeWitInterfaces } from "./nominal-subtype-wit-interface.mjs";
 import { runCopied } from "./copied-fixture-install.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
+import "./nominal-primitive-subtype-wit-ci-report-tests.mjs";
+import "./nominal-primitive-subtype-wit-ci-shell-tests.mjs";
+import "./nominal-primitive-subtype-wit-ci-handoff-tests.mjs";
+import "./nominal-primitive-subtype-wit-ci-workflow-tests.mjs";
 
 const capi = process.env.LEAN_BRIDGE_WASMTIME_C_API ?? resolve(".toolchains/wasmtime42");
 const cc = process.env.CC ?? "/usr/bin/cc";
