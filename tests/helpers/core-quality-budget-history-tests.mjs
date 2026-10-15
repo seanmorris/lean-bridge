@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeNominalPrimitiveSubtypeRubyPromotionSource } from "./nominal-primitive-subtype-ruby-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypeRustPromotionSource } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
 import { beforeCoreQualityBudgetSource, coreQualityBudgetChangedPaths, coreQualityBudgetHistoryPath, coreQualityBudgetPredecessor, reverseCoreQualityBudgetUpdate } from "./core-quality-budget-history.mjs";
 
 test("Core quality budget history authenticates the exact bounded workflow transition", async () => {
@@ -22,7 +23,7 @@ test("Core quality budget history authenticates the exact bounded workflow trans
 		, { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeCoreQualityBudgetSource(update.path, beforeNominalPrimitiveSubtypeRubyPromotionSource(update.path, await readFile(update.path, "utf8")), update.currentSha256);
+		const current = beforeCoreQualityBudgetSource(update.path, beforeNominalPrimitiveSubtypeRubyPromotionSource(update.path, beforeNominalPrimitiveSubtypeRustPromotionSource(update.path, await readFile(update.path, "utf8"))), update.currentSha256);
 		const previous = reverseCoreQualityBudgetUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeCoreQualityBudgetSource(update.path, current), previous);
@@ -50,7 +51,7 @@ test("Core quality budget history authenticates the exact bounded workflow trans
 	}
 	assert.equal(pins, 4);
 	const inventoryUpdate = record.updates.find(update => update.path === inventoryPath);
-	const checkpoint = beforeCoreQualityBudgetSource(inventoryPath, beforeNominalPrimitiveSubtypeRubyPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), inventoryUpdate.currentSha256);
+	const checkpoint = beforeCoreQualityBudgetSource(inventoryPath, beforeNominalPrimitiveSubtypeRubyPromotionSource(inventoryPath, beforeNominalPrimitiveSubtypeRustPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8"))), inventoryUpdate.currentSha256);
 	assert.deepEqual(JSON.parse(checkpoint), expected);
 	assert.equal(beforeFinRefinementSource(inventoryPath, await readFile(inventoryPath, "utf8"), inventoryUpdate.previousSha256), original(inventoryPath));
 });

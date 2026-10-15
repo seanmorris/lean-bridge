@@ -530,6 +530,15 @@ MRI Ruby 3.3.12 and Linux x64/glibc 2.36. Generated frozen classes retain the
 Ruby representation of every primitive base, including binary strings for
 `ByteArray`, UTF-8 strings for text and 64-bit machine words.
 
+The [nineteen-base Rust checks](../evidence/nominal-primitive-subtype-rust-20261015/index.json)
+cover the same record and variant fields on both author routes. Full and
+standalone result-only APIs reproduce complete crates from two author roots,
+install offline with fourteen authenticated dependencies after author removal,
+replay after relocation and execute again after deleting all consumer sources.
+Generated structs and enums retain the exact Rust representation of every
+primitive base and use 64-bit machine words on Rust and Cargo 1.90.0 with Linux
+x64/glibc 2.36.
+
 In a schema-3 reviewed API, describe a `Subtype` with its primitive transport type and name its constructor in the declaration's `source.extensions["lean-lang.org/refinements"]`. For a checked `Nat` parameter returning an ordinary `Nat`:
 
 ```json

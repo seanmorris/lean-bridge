@@ -13,7 +13,8 @@ import { docPages } from "../../site/registry.mjs";
 import { nominalPrimitiveSubtypePerlProducers } from "./nominal-primitive-subtype-perl-archive.mjs";
 import { nominalPrimitiveSubtypePerlPromotionPredecessor } from "./nominal-primitive-subtype-perl-promotion-history.mjs";
 import { nominalPrimitiveSubtypePerlReferences, promoteNominalPrimitiveSubtypePerl, nominalPrimitiveSubtypePerlProfiles, nominalPrimitiveSubtypePerlConversion, nominalPrimitiveSubtypePerlLimit, nominalPrimitiveSubtypePerlField } from "./nominal-primitive-subtype-perl-promotion.mjs";
-import { beforeNominalPrimitiveSubtypeRubyPromotionSource } from "./nominal-primitive-subtype-ruby-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypeRubyPromotionPins, beforeNominalPrimitiveSubtypeRubyPromotionSource } from "./nominal-primitive-subtype-ruby-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypeRustPromotionPins, beforeNominalPrimitiveSubtypeRustPromotionSource } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalPrimitiveSubtypePerlPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 const abis = ["5.36.3-threaded", "5.36.3-unthreaded", "5.38.2-threaded", "5.38.2-unthreaded"];
@@ -96,9 +97,9 @@ test("primitive-base Perl promotion rejects narrowed references, new hosts and o
 
 test("primitive-base Perl promotion supplements six existing Perl cells and preserves all other observations", async () => {
 	const original = predecessor(), references = await nominalPrimitiveSubtypePerlReferences();
-	const proposed = await promoteNominalPrimitiveSubtypePerl(original, references);
+	const proposed = beforeNominalPrimitiveSubtypeRubyPromotionPins(beforeNominalPrimitiveSubtypeRustPromotionPins(await promoteNominalPrimitiveSubtypePerl(original, references)));
 	const { document: current, ...contracts } = await readTypeSurface();
-	const document = JSON.parse(beforeNominalPrimitiveSubtypeRubyPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+	const document = JSON.parse(beforeNominalPrimitiveSubtypeRubyPromotionSource("docs/type-surface.v1.json", beforeNominalPrimitiveSubtypeRustPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"))));
 	assert.ok(current.evidence.length >= document.evidence.length);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(proposed.evidence.length, original.evidence.length + 4); assert.equal(proposed.observations.length, original.observations.length);

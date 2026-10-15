@@ -526,6 +526,11 @@ the same fields on all four pinned CPAN ABIs in both delivery modes.
 all nineteen primitive fields on MRI Ruby 3.3.12. Both author routes and API
 modes reproduce complete gems, install offline after author removal and replay
 after physical relocation on Linux x64/glibc 2.36 with 64-bit machine words.
+[Rust checks](evidence/nominal-primitive-subtype-rust-20261015/index.json) cover
+the same fields using their exact Rust representations and 64-bit machine words.
+Both author routes and API modes reproduce complete crates, install them offline
+with fourteen authenticated dependencies, replay after relocation and execute
+again after deleting all consumer sources on Linux x64/glibc 2.36.
 Primitive-base nominal acceptance in the remaining hosts is pending. Callback,
 owned, recursive, dependent and broader generic Subtype combinations need
 their own checks.

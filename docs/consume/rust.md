@@ -738,10 +738,15 @@ runs do not measure dispatch counts or establish hosted release-floor acceptance
 
 ### Subtypes in copied records
 
-Use the generated structs and enums for acyclic records and variants. A `Nat`
-Subtype field carries a `BigUint`, with no proof field. Input functions borrow
-your values. Lean checks the constructor selected for each parameter, which can
-normalize the payload without changing your original Rust value.
+Use the generated structs and enums for acyclic records and variants. A checked
+field takes its primitive's Rust value: `()` for `Unit`, `bool`, the matching
+fixed-width integer, `BigUint` for `Nat`, `BigInt` for `Int`, `f32`, `f64`,
+`String`, `Vec<u8>`, `char`, `u64` for `USize`, or `i64` for `ISize`. The tested
+Linux x64 packages use 64-bit machine words. Input functions borrow generated
+aggregate values. Lean checks the constructor selected for each parameter,
+which can normalize the payload without changing the caller's original Rust
+value. Only the active enum variant runs its field constructors. Rejection
+leaves the caller's value unchanged, and subsequent valid calls still work.
 
 For example, the installed acceptance package selects different constructors
 for two functions accepting the same `Envelope` type:
@@ -761,18 +766,25 @@ fn main() -> Result<(), Error> {
 }
 ```
 
-Copied results contain existing Lean payloads; returning a Subtype does not need
-an input constructor. A result-only package omits the checked-input functions
-and input-only types.
+Copied results contain existing Lean payloads in owned generated structs and
+enums, without proof fields or an input-constructor call. A standalone
+result-only package omits the checked-input functions and input-only types.
 
-The [installed Rust checks](../evidence/nominal-subtype-rust-acceptance-20261012.md)
-cover both author routes with Rust and Cargo 1.90.0 on Linux x64/glibc 2.36.
-They reproduce each crate in two author directories, install offline, replay
-after relocation, and run the executable again after deleting all consumer
-sources. The fixtures cover `Nat` record and variant fields, aliases, mixed
-`Fin` guards, rejection recovery and constructor-free results wider than 64 bits.
-Other primitive-base nominal fixtures, refined callbacks, owned, recursive,
-dependent and broader generic Subtypes still need acceptance.
+The [original nominal checks](../evidence/nominal-subtype-rust-acceptance-20261012.md)
+cover Nat fields, aliases, mixed Fin guards and constructor-free results. The
+[expanded installed checks](../evidence/nominal-primitive-subtype-rust-20261015/index.json)
+cover all nineteen primitive bases: `Unit`, `Bool`, unsigned and signed
+fixed-width integers, `Nat`, `Int`, `Float32`, `Float`, `String`, `ByteArray`,
+`Char`, `USize` and `ISize`. Ordinary and reviewed packages reproduce complete
+crates from two author roots. Full and standalone result-only APIs install
+offline with fourteen authenticated dependencies after author removal, replay
+after moving the installed tree, and run again after deleting all consumer
+sources. The retained runs use Rust and Cargo 1.90.0 on Linux x64/glibc 2.36.
+
+The [required Rust workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nominal-primitive-subtype-rust.yml)
+runs those four selections. The local archive does not establish its hosted
+result. Refined callbacks, owned, recursive, dependent and broader generic
+Subtypes, plus constructor/source entry counts, remain separate work.
 
 ### Type conversions
 
@@ -812,7 +824,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `USize` | `u64` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, 0..18446744073709551615. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. Required: Bind width to the compiled Lean target, not the consumer process; reject out-of-range values. |
 | `ISize` | `i64` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, -9223372036854775808..9223372036854775807. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. Required: Bind signed width to the compiled Lean target and record architecture explicitly. |
 | `Fin n` | `&BigUint checked against the declared bound` (input); `BigUint below the declared bound` (result); `BigUint checked against the field's closed bound` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Use BigUint values with exact closed bounds. Arrays and Lists borrow slices and return owned vectors; products use binary tuples, Option uses None/Some, and Except uses Result. Named record and active variant fields retain their bounds. Empty, absent and inactive Fin 0 payloads are valid; every present Fin 0 value is rejected. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
-| `Subtype / {x // p x}` | `&BigUint, &BigInt, &str and &[u8], checked by the exported Lean validator and constructed by the adapter before dispatch; also in generated structural containers; also in tested acyclic records and variants` (input); `the base value projected from the proof-backed Lean result; also in generated structural containers; also in tested acyclic records and variants` (result); `BigUint payload in generated structs and enums for the tested acyclic records and variants; no proof field` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Pass the primitive base value, including inside Array, List, Option, Prod and Except containers using their generated host representations. Each present Subtype leaf uses the selected checked Lean constructor; accepted normalization reaches the export. A rejected leaf fails the call without changing the input; later valid calls still work. Results expose the proof-backed base values. Transparent aliases and the tested closed List specialization keep their constructor choices. In Rust, the tested acyclic records and variants use generated structs and enums with exact BigUint payloads for Nat Subtypes. Input functions borrow the generated values. Each input site keeps its selected checked constructor, including distinct normalizing choices for the same record. Copied results project existing Lean values without selecting or running an input constructor. Callers supply no proof fields. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
+| `Subtype / {x // p x}` | `&BigUint, &BigInt, &str and &[u8], checked by the exported Lean validator and constructed by the adapter before dispatch; also in generated structural containers; also in tested acyclic records and variants` (input); `the base value projected from the proof-backed Lean result; also in generated structural containers; also in tested acyclic records and variants` (result); `corresponding owned Rust base value in generated structs and active enum variants across all nineteen tested bases; no proof field` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Pass the primitive base value, including inside Array, List, Option, Prod and Except containers using their generated host representations. Each present Subtype leaf uses the selected checked Lean constructor; accepted normalization reaches the export. A rejected leaf fails the call without changing the input; later valid calls still work. Results expose the proof-backed base values. Transparent aliases and the tested closed List specialization keep their constructor choices. In Rust, checked nominal values preserve all nineteen tested primitive representations: `()`, `bool`, matching fixed-width integers, `BigUint` for `Nat`, `BigInt` for `Int`, `f32`, `f64`, `String`, `Vec<u8>`, `char`, `u64` for `USize` and `i64` for `ISize`. Generated structs and enums carry owned record and active-variant fields; input functions borrow those aggregate values. Each input site retains its selected checked constructor and accepted normalization. Rejection preserves the complete caller value and later valid calls succeed. Copied results project proof-backed payloads without proof fields or input constructor selections, including standalone result-only crates. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Checked records and closed Nat indices` | `Generated record struct with BigUint and Vec<BigUint> payload fields` (input, result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Installed checks passed (input, result); Not audited (field, callback input, callback result) | Pass the generated record's runtime payload fields, without proof values. The selected Lean constructor checks each input and may normalize it; rejection identifies the parameter and constructor and preserves caller data. Results contain copied payload fields with proofs erased. Both ordinary and independently reviewed packages, including standalone result-only packages, passed installed checks. Required: Construct inputs only through the selected safe Lean constructor over the exact payload fields. Preserve closed indices and per-site choices; project proof-backed results without fabricating proofs. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
 | `Recursive copied structures` | `Owned named structs and enums, Box children, Vec/Option/Result/tuples and transparent aliases` (input, result, field); `Owned generated enums, structs, Vec and Box fields with named aliases; FnMut callbacks returning Result and thread-confined LeanClosure results` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Borrow aggregates, text and slices; pass fixed-width scalars by value. Results own independent Rust values. Box breaks recursive or oversized fields; Vec supplies sequence indirection. RAII clears native outputs and temporaries on errors or unwinding. Malformed native output retires the shared runtime; earlier owned Rust results remain usable. Recursive values and aliases retain their public types and independent owned storage. Conversion scopes keep callback replies alive until native copying finishes. Original callback errors and panic payloads return after cleanup; malformed native output retires the runtime. Closure identities release on close or Drop, with deferred release during an active invocation. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |

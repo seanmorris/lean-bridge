@@ -12,7 +12,8 @@ import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { nominalPrimitiveSubtypePerlReferences, promoteNominalPrimitiveSubtypePerl } from "./nominal-primitive-subtype-perl-promotion.mjs";
 import { beforeNominalPrimitiveSubtypePerlPromotionSource, nominalPrimitiveSubtypePerlPromotionChangedPaths, nominalPrimitiveSubtypePerlPromotionHistoryPath, nominalPrimitiveSubtypePerlPromotionPredecessor, reverseNominalPrimitiveSubtypePerlPromotionUpdate } from "./nominal-primitive-subtype-perl-promotion-history.mjs";
-import { beforeNominalPrimitiveSubtypeRubyPromotionPins, beforeNominalPrimitiveSubtypeRubyPromotionSource } from "./nominal-primitive-subtype-ruby-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypeRubyPromotionPins } from "./nominal-primitive-subtype-ruby-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypeRustPromotionPins } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
 
 test("primitive-base Perl promotion history authenticates the exact Perl-only support and docs transition", async t => {
 	const record = JSON.parse(await readFile(nominalPrimitiveSubtypePerlPromotionHistoryPath));
@@ -22,7 +23,7 @@ test("primitive-base Perl promotion history authenticates the exact Perl-only su
 	const original = path => execFileSync("git", ["show", `${nominalPrimitiveSubtypePerlPromotionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalPrimitiveSubtypePerlPromotionSource(update.path, beforeNominalPrimitiveSubtypeRubyPromotionSource(update.path, await readFile(update.path, "utf8")), update.currentSha256);
+		const current = beforeFinRefinementSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		const previous = reverseNominalPrimitiveSubtypePerlPromotionUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNominalPrimitiveSubtypePerlPromotionSource(update.path, current), previous);
@@ -40,9 +41,10 @@ test("primitive-base Perl promotion history authenticates the exact Perl-only su
 			}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	// References name current sources; the Ruby promotion re-pinned some of them after this epoch.
-	const expected = beforeNominalPrimitiveSubtypeRubyPromotionPins(await promoteNominalPrimitiveSubtypePerl(JSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypePerlReferences()));
-	assert.equal(beforeNominalPrimitiveSubtypePerlPromotionSource(inventoryPath, beforeNominalPrimitiveSubtypeRubyPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8"))), original(inventoryPath));
+	// References name current sources; the later Rust and Ruby promotions re-pinned some of them.
+	const expected = beforeNominalPrimitiveSubtypeRubyPromotionPins(beforeNominalPrimitiveSubtypeRustPromotionPins(await promoteNominalPrimitiveSubtypePerl(JSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypePerlReferences())));
+	const inventoryUpdate = record.updates.find(item => item.path === inventoryPath);
+	assert.equal(beforeFinRefinementSource(inventoryPath, await readFile(inventoryPath, "utf8"), inventoryUpdate.previousSha256), original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{
@@ -50,8 +52,7 @@ test("primitive-base Perl promotion history authenticates the exact Perl-only su
 		if(update && file.sha256 === update.previousSha256)
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
-	const update = record.updates.find(item => item.path === inventoryPath);
-	const checkpoint = beforeNominalPrimitiveSubtypePerlPromotionSource(inventoryPath, beforeNominalPrimitiveSubtypeRubyPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), update.currentSha256);
+	const checkpoint = beforeFinRefinementSource(inventoryPath, await readFile(inventoryPath, "utf8"), inventoryUpdate.currentSha256);
 	assert.deepEqual(JSON.parse(checkpoint), expected);
 	assert.equal(expected.evidence.length, 540); assert.equal(expected.observations.length, 595);
 	t.diagnostic(`${pins} current-source pins refreshed; exactly six existing Perl cells supplemented`);

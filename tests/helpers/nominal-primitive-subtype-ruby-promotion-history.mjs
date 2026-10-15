@@ -95,4 +95,4 @@ export const beforeNominalPrimitiveSubtypeRubyPromotionPins = inventory => {
  * @param inventory - Earlier inventory recomputed with current source hashes.
  */
 export const beforePrimitiveSubtypeRubyPromotionPins = inventory =>
-	beforeNominalPrimitiveSubtypeRubyPromotionPins(beforePrimitiveSubtypeIntegrationPins(inventory));
+	beforePrimitiveSubtypeIntegrationPins(beforeNominalPrimitiveSubtypeRubyPromotionPins(inventory));

@@ -7,13 +7,21 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { beforeNominalSubtypeJvmPromotionSource, beforeNominalSubtypeJvmPromotionPins } from "./nominal-subtype-jvm-promotion-history.mjs";
+import { beforeNominalSubtypeJvmPromotionPins, nominalSubtypeJvmPromotionHistoryPath } from "./nominal-subtype-jvm-promotion-history.mjs";
 import { nominalSubtypeDotnetPromotionHistoryPath } from "./nominal-subtype-dotnet-promotion-history.mjs";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { beforeNominalSubtypeRustPromotionSource, nominalSubtypeRustPromotionHistoryPath } from "./nominal-subtype-rust-promotion-history.mjs";
 import { nominalSubtypeRubyArchive, nominalSubtypeRubyReferences, promoteNominalSubtypeRuby, nominalSubtypeRubyConversion, nominalSubtypeRubyLimit } from "./nominal-subtype-ruby-promotion.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { nominalPrimitiveSubtypeRubyPromotionHistoryPath } from "./nominal-primitive-subtype-ruby-promotion-history.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", "e5020a56b2750c42160567ca931d24772679e6e7:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
+const beforeHistoryTransition = async (historyPath, path) => {
+	const record = JSON.parse(await readFile(historyPath, "utf8"));
+	const update = record.updates.find(item => item.path === path);
+	assert.ok(update, path);
+	return beforeFinRefinementSource(path, await readFile(path, "utf8"), update.previousSha256);
+};
 
 test("nominal Ruby promotion authenticates all four source/API selections and the pinned MRI interpreter", async () => {
 	const references = await nominalSubtypeRubyReferences();
@@ -130,7 +138,7 @@ test("nominal Ruby promotion adds two field cells and supplements four existing 
 
 test("nominal Ruby documentation distinguishes verified packages from pending hosts and callbacks", async () => {
 	const authorPath = "docs/lean/existing-package.md";
-	const author = beforeNominalSubtypeJvmPromotionSource(authorPath, await readFile(authorPath, "utf8"));
+	const author = await beforeHistoryTransition(nominalSubtypeJvmPromotionHistoryPath, authorPath);
 	assert.doesNotMatch(author, /component builds still require that selection/u);
 	for(const prefix of ["| `Subtype` in acyclic", "| Lean-produced `Subtype` result without"])
 	{
@@ -143,7 +151,7 @@ test("nominal Ruby documentation distinguishes verified packages from pending ho
 	}
 	for(const path of ["docs/lean/existing-package.md", "docs/lean/export-decisions.md", "docs/consume/ruby.md", "docs/reference/types.md"])
 		assert.ok((await readFile(path, "utf8")).includes("nominal-subtype-ruby-acceptance-20261012.md"), path);
-	const source = await readFile("docs/consume/ruby.md", "utf8");
+	const source = await beforeHistoryTransition(nominalPrimitiveSubtypeRubyPromotionHistoryPath, "docs/consume/ruby.md");
 	assert.ok(source.includes("### Subtypes in copied records\n"));
 	assert.ok(source.includes("Linux x64/glibc 2.36"));
 	assert.doesNotMatch(source, /Subtype fields in nominal records or variants, refined callback signatures and\nowned Subtypes remain unsupported/u);

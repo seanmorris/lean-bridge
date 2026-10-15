@@ -56,7 +56,7 @@ extend these fields and constructor-free results to pages, React
 production/Strict Mode and workers in Chromium, Firefox and WebKit. All four
 source/API selections execute source-free bundles after offline installation,
 with asset recovery, remount, pending-unmount and worker restart/disposal
-checks. Python, C/C++, Perl and Ruby also have nineteen-base checks below; the
+checks. Python, C/C++, Perl, Ruby and Rust also have nineteen-base checks below; the
 remaining host checks cover their tested Nat forms.
 [Installed C/C++ checks](../evidence/nominal-subtype-native-acceptance-20261011.md)
 cover the same Nat forms on both source routes in Linux x64/glibc 2.36, including
@@ -95,6 +95,12 @@ MRI Ruby 3.3.12 and Linux x64/glibc 2.36 with 64-bit machine words.
 [Installed Rust checks](../evidence/nominal-subtype-rust-acceptance-20261012.md)
 add those Nat forms with Rust and Cargo 1.90.0, offline crate installation,
 relocated replay and execution after deleting all consumer sources.
+[Nineteen-base Rust checks](../evidence/nominal-primitive-subtype-rust-20261015/index.json)
+extend those fields and constructor-free results to all admitted primitive
+bases with exact Rust representations and 64-bit machine words. Both author
+routes and API modes reproduce complete crates from two roots, install offline
+with fourteen authenticated dependencies, replay after relocation and execute
+again after deleting all consumer sources on Linux x64/glibc 2.36.
 [Installed C# checks](../evidence/nominal-subtype-dotnet-20261012.md)
 add those Nat forms with .NET SDK 8.0.424 and shared framework 8.0.30, offline
 NuGet installation, relocated replay and source-free deployment on Linux
@@ -222,6 +228,9 @@ API modes.
 [Installed Rust acceptance](../evidence/nominal-subtype-rust-acceptance-20261012.md)
 adds Rust and Cargo 1.90.0 with offline crate installation, relocated replay
 and execution after deleting all consumer sources.
+[Nineteen-base Rust acceptance](../evidence/nominal-primitive-subtype-rust-20261015/index.json)
+extends that matrix to every admitted primitive base on both author routes and
+API modes.
 [Installed C# acceptance](../evidence/nominal-subtype-dotnet-20261012.md)
 adds .NET SDK 8.0.424 and shared framework 8.0.30 with offline NuGet installation,
 relocated replay and source-free deployment on Linux x64/glibc 2.36.

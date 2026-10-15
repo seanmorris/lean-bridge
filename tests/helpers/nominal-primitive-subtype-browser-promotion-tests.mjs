@@ -14,7 +14,8 @@ import { nominalPrimitiveSubtypeBrowserProducer } from "./nominal-primitive-subt
 import { beforeNominalPrimitiveSubtypeNativePromotionPins, beforeNominalPrimitiveSubtypeNativePromotionSource } from "./nominal-primitive-subtype-native-promotion-history.mjs";
 import { nominalPrimitiveSubtypeBrowserPromotionPredecessor } from "./nominal-primitive-subtype-browser-promotion-history.mjs";
 import { nominalPrimitiveSubtypeBrowserReferences, promoteNominalPrimitiveSubtypeBrowser, nominalPrimitiveSubtypeBrowserProfiles, nominalPrimitiveSubtypeBrowserConversion, nominalPrimitiveSubtypeBrowserLimit, nominalPrimitiveSubtypeBrowserField } from "./nominal-primitive-subtype-browser-promotion.mjs";
-import { beforeNominalPrimitiveSubtypeRubyPromotionSource, beforePrimitiveSubtypeRubyPromotionPins } from "./nominal-primitive-subtype-ruby-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypeRubyPromotionSource } from "./nominal-primitive-subtype-ruby-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypeRustPromotionSource, beforePrimitiveSubtypeRustPromotionPins } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalPrimitiveSubtypeBrowserPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -89,9 +90,9 @@ test("primitive-base browser promotion rejects narrowed evidence, invented host 
 
 test("primitive-base browser promotion supplements eighteen existing cells and preserves every other profile and stage", async () => {
 	const original = predecessor(), references = await nominalPrimitiveSubtypeBrowserReferences();
-	const proposed = beforeNominalPrimitiveSubtypeNativePromotionPins(beforePrimitiveSubtypeRubyPromotionPins(await promoteNominalPrimitiveSubtypeBrowser(original, references)));
+	const proposed = beforeNominalPrimitiveSubtypeNativePromotionPins(beforePrimitiveSubtypeRustPromotionPins(await promoteNominalPrimitiveSubtypeBrowser(original, references)));
 	const { document: current, ...contracts } = await readTypeSurface();
-	const document = JSON.parse(beforeNominalPrimitiveSubtypeNativePromotionSource("docs/type-surface.v1.json", beforeNominalPrimitiveSubtypeRubyPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"))));
+	const document = JSON.parse(beforeNominalPrimitiveSubtypeNativePromotionSource("docs/type-surface.v1.json", beforeNominalPrimitiveSubtypeRubyPromotionSource("docs/type-surface.v1.json", beforeNominalPrimitiveSubtypeRustPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")))));
 	assert.ok(current.evidence.length >= document.evidence.length);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(proposed.evidence.length, 532); assert.equal(proposed.observations.length, 595);
