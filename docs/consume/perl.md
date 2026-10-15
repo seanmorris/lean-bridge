@@ -743,25 +743,43 @@ release-floor acceptance.
 
 ### Subtypes in copied records
 
-Ordinary-source and reviewed CPAN packages also accept the tested Nat Subtype
-fields inside acyclic copied records and variants. Use the generated record or
-case wrapper and pass its payload as a `Math::BigInt`. Each export site selects
-its own checked Lean constructor, so two uses of the same record can normalize
-the same input differently. Rejected calls identify the field or active case,
-leave caller data unchanged, and do not prevent later valid calls.
+Ordinary-source and reviewed CPAN packages accept checked Subtype fields inside
+acyclic copied records and variants. Use the generated record or case wrapper
+and pass each checked field as its primitive's Perl value: `undef` for `Unit`,
+a native boolean from the generated `true()`/`false()` for `Bool`, IV or UV
+scalars for fixed-width integers and machine words, `Math::BigInt` for `Nat`
+and `Int`, NV scalars for `Float32` and `Float`, and strings for `String`,
+`Char` and `ByteArray`. The tested Linux x64 packages use 64-bit machine words.
+Each export site selects its own checked Lean constructor, so two uses of the
+same record can normalize the same input differently. Only the active variant
+case runs its field constructors. Rejected calls identify the field or active
+case, leave caller data unchanged, and do not prevent later valid calls.
 
 Copied results contain the values Lean produced. They do not run an input
 constructor, including in standalone result-only packages. The
-[installed nominal checks](../evidence/nominal-subtype-perl-acceptance-20261012.md)
-cover aliases, nested containers, repeated fields, mixed Fin checks and 100-bit
-results on both source routes. All four pinned Perl ABIs pass both installation
-modes and replay after moving the installed tree, on Linux x64/glibc 2.36 with
-an explicit 2.36 package floor.
+[original nominal checks](../evidence/nominal-subtype-perl-acceptance-20261012.md)
+cover Nat fields, aliases, nested containers, repeated fields, mixed Fin checks
+and 100-bit results. The
+[expanded installed checks](../evidence/nominal-primitive-subtype-perl-20261015/index.json)
+cover all nineteen primitive bases: `Unit`, `Bool`, unsigned and signed
+fixed-width integers, `Nat`, `Int`, `Float32`, `Float`, `String`, `ByteArray`,
+`Char`, `USize` and `ISize`. Ordinary and reviewed packages reproduce the same
+complete CPAN component and runtime archives from two author roots. Full and
+standalone result-only APIs install offline after author removal, as
+prebuilt-only and build-xs deliveries, and replay unchanged callers after
+physical relocation on all four pinned Perl ABIs (5.36.3 and 5.38.2, threaded
+and unthreaded), using Linux x64/glibc 2.36 with an explicit 2.36 package
+floor. The four accepted selections ran serially under two frozen producer
+revisions with recorded per-run host-load admission ceilings; four other
+launches are preserved in the archive and not counted. The Perl caller's check
+counts equal the Python caller's; that equality is a consistency check between
+callers, not evidence borrowed from Python.
 
-These nominal runs cover Nat payloads. Other primitive-base nominal fixtures,
-refined callbacks, owned values, recursive and broader generic or dependent
-Subtypes still need acceptance. Constructor/source entry counts and memory
-remain unmeasured.
+The [required Perl workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nominal-primitive-subtype-perl.yml)
+runs those four selections on the hosted glibc 2.38 floor. The local archive
+does not establish its hosted result. Refined callbacks, owned values,
+recursive and broader generic or dependent Subtypes, plus constructor/source
+entry counts and memory measurement, remain separate work.
 
 ### Type conversions
 
@@ -801,7 +819,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `USize` | `unsigned integer scalar (UV)` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, 0..18446744073709551615. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. Required: Bind width to the compiled Lean target, not the consumer process; reject out-of-range values. |
 | `ISize` | `signed integer scalar (IV)` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, -9223372036854775808..9223372036854775807. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. Required: Bind signed width to the compiled Lean target and record architecture explicitly. |
 | `Fin n` | `Math::BigInt checked against the declared bound` (input); `Math::BigInt below the bound` (result); `Math::BigInt checked against the field's closed bound` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Use Math::BigInt with the exact closed bound, including inside Array/List/Option/Prod/Except compositions, plain records and active variant fields. Empty containers, absent options and inactive Fin 0 branches are valid; present Fin 0 values are rejected. Rejections preserve caller values and name the failing path and bound. For Option, use undef for absence and the generated Some->new(value) for presence. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
-| `Subtype / {x // p x}` | `Primitive base value checked by the named Lean constructor; also in generated structural containers; also in tested acyclic records and variants` (input); `Constructed subtype projected to its primitive base value; also in generated structural containers; also in tested acyclic records and variants` (result); `Math::BigInt payload in generated blessed wrappers for the tested acyclic records and variants; no proof field` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Pass the primitive base value, including inside Array, List, Option, Prod and Except containers using their generated host representations. Each present Subtype leaf uses the selected checked Lean constructor; accepted normalization reaches the export. A rejected leaf fails the call without changing the input; later valid calls still work. Results expose the proof-backed base values. Transparent aliases and the tested closed List specialization keep their constructor choices. In Perl, the tested acyclic records and variants carry Nat Subtype payloads as Math::BigInt values in generated blessed wrappers. Each input site keeps its selected checked constructor, including distinct normalizing choices for the same record. Copied results project existing Lean values without selecting or running an input constructor. Callers supply no proof fields. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
+| `Subtype / {x // p x}` | `Primitive base value checked by the named Lean constructor; also in generated structural containers; also in tested acyclic records and variants` (input); `Constructed subtype projected to its primitive base value; also in generated structural containers; also in tested acyclic records and variants` (result); `declared primitive's host value in generated blessed record and variant wrappers across nineteen tested bases; no proof field` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Pass the primitive base value, including inside Array, List, Option, Prod and Except containers using their generated host representations. Each present Subtype leaf uses the selected checked Lean constructor; accepted normalization reaches the export. A rejected leaf fails the call without changing the input; later valid calls still work. Results expose the proof-backed base values. Transparent aliases and the tested closed List specialization keep their constructor choices. In Perl, checked fields retain the declared primitive's host representation across all nineteen tested bases: undef for Unit, the generated native boolean for Bool, IV or UV scalars for fixed-width integers and native machine words, Math::BigInt for Nat and Int, NV scalars for Float32 and Float, and strings for String, Char and ByteArray. Generated blessed wrappers carry the record and variant fields. Each input site keeps its selected checked constructor and accepted normalization; only the active variant branch is checked. Rejection preserves caller values and later valid calls succeed. Copied results project existing Lean payloads without proof fields or input constructor selections, including standalone result-only packages. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Checked records and closed Nat indices` | `Generated Perl record with Math::BigInt and plain array-reference payload fields` (input, result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Installed checks passed (input, result); Not audited (field, callback input, callback result) | Pass generated record objects containing Math::BigInt values and plain array references, without proofs. Lean runs the selected constructor for each input; it may normalize accepted data, or reject with the parameter and constructor name while preserving caller values. Results contain independent copied payload fields with proofs erased. Ordinary and reviewed packages, including standalone result-only packages, passed installed checks. Required: Construct inputs only through the selected safe Lean constructor over the exact payload fields. Preserve closed indices and per-site choices; project proof-backed results without fabricating proofs. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
 | `Recursive copied structures` | `Named Perl record/constructor classes, plain array references, explicit Some/Ok/Err` (input, result, field); `Named Perl records and constructors, array references, synchronous CODE callbacks and owned LeanClosure values` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Use exact generated classes and named fields. Arrays and Lists use plain dense array references; aliases retain their target representation. Unit uses undef, Option presence uses Some, and Nat/Int use Math::BigInt. Values own independent copied storage. Calls reject cycles, malformed branches and excessive copies before native entry. Registered destructors release scratch storage and native outputs on exceptions and delivered signals. Malformed native output retires the shared runtime; retained copied values remain usable. Process, interpreter and thread ownership remain enforced. Recursive records, variants and aliases retain their public representations and independent copied storage. Callback frames retain reply buffers until native copying finishes; callback exceptions propagate after cleanup without losing their identity. Malformed native output retires the runtime. Private closure leases release on close or finalization, with deferred release during active invocation. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |

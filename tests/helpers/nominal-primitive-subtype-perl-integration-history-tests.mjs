@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeNominalPrimitiveSubtypePerlPromotionSource } from "./nominal-primitive-subtype-perl-promotion-history.mjs";
 import { beforeNominalPrimitiveSubtypePerlIntegrationSource, nominalPrimitiveSubtypePerlIntegrationAlternate, nominalPrimitiveSubtypePerlIntegrationChangedPaths, nominalPrimitiveSubtypePerlIntegrationHistoryPath, nominalPrimitiveSubtypePerlIntegrationPredecessor, reverseNominalPrimitiveSubtypePerlIntegrationAlternateUpdate, reverseNominalPrimitiveSubtypePerlIntegrationUpdate } from "./nominal-primitive-subtype-perl-integration-history.mjs";
 import { beforeNominalPrimitiveSubtypeRubyIntegrationSource } from "./nominal-primitive-subtype-ruby-integration-history.mjs";
 
@@ -23,7 +24,7 @@ test("primitive-base Native and Perl integration authenticates both merge parent
 	const at = (commit, path) => execFileSync("git", ["show", `${commit}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const merged = await readFile(update.path, "utf8");
+		const merged = beforeNominalPrimitiveSubtypePerlPromotionSource(update.path, await readFile(update.path, "utf8"));
 		const current = beforeNominalPrimitiveSubtypeRubyIntegrationSource(update.path, merged, update.currentSha256);
 		const first = at(record.predecessorCommit, update.path);
 		assert.equal(beforeNominalPrimitiveSubtypePerlIntegrationSource(update.path, current, update.currentSha256), current);

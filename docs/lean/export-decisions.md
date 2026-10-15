@@ -56,8 +56,8 @@ extend these fields and constructor-free results to pages, React
 production/Strict Mode and workers in Chromium, Firefox and WebKit. All four
 source/API selections execute source-free bundles after offline installation,
 with asset recovery, remount, pending-unmount and worker restart/disposal
-checks. Python and C/C++ also have nineteen-base checks below; the remaining
-host checks cover their tested Nat forms.
+checks. Python, C/C++ and Perl also have nineteen-base checks below; the
+remaining host checks cover their tested Nat forms.
 [Installed C/C++ checks](../evidence/nominal-subtype-native-acceptance-20261011.md)
 cover the same Nat forms on both source routes in Linux x64/glibc 2.36, including
 standalone result-only packages. [Nineteen-base C/C++ checks](../evidence/nominal-primitive-subtype-native-20261014/index.json)
@@ -71,6 +71,11 @@ install offline after author removal and replay after relocation.
 [Installed Perl checks](../evidence/nominal-subtype-perl-acceptance-20261012.md)
 cover those Nat fields and constructor-free outputs on both source routes, with
 all four pinned ABIs and both installation modes on Linux x64/glibc 2.36.
+[Nineteen-base Perl checks](../evidence/nominal-primitive-subtype-perl-20261015/index.json)
+extend those fields to all admitted primitive bases on the same four ABIs and
+both delivery modes, with per-site normalization, active branches, caller
+snapshots and recovery after rejection in the full API and constructor-free
+standalone result-only packages.
 [Installed Python checks](../evidence/nominal-subtype-python-acceptance-20261012.md)
 cover those Nat forms on both source routes in CPython 3.11 and 3.12, with the
 same reproduced wheel installed offline and replayed after relocation.
@@ -200,6 +205,8 @@ and [installed C/C++ acceptance](../evidence/nominal-subtype-native-acceptance-2
 cover the separate Nat nominal fixture on Node and Linux x64/glibc 2.36.
 [Installed Perl acceptance](../evidence/nominal-subtype-perl-acceptance-20261012.md)
 adds all four pinned Perl ABIs and both installation modes on the same glibc floor.
+[Nineteen-base Perl acceptance](../evidence/nominal-primitive-subtype-perl-20261015/index.json)
+extends that matrix to every admitted primitive base.
 [Installed Python acceptance](../evidence/nominal-subtype-python-acceptance-20261012.md)
 adds CPython 3.11 and 3.12 with offline installation and relocated replay.
 [Installed Ruby acceptance](../evidence/nominal-subtype-ruby-acceptance-20261012.md)
