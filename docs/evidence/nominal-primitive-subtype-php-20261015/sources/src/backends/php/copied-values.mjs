@@ -1,0 +1,145 @@
+/**
+ * Render ordinary PHP functions, immutable records, and private native calls.
+ *
+ * @file
+ */
+import { hashBindingIr } from "../../binding-ir/canonical.mjs";
+import { canonicalJson, sha256 } from "../../capsule/node.mjs";
+import { compileCopiedPhpModel } from "./copied-model.mjs";
+import { phpCopiedAliases, phpAliasCatalogDocs, phpAliasContract, phpAliasReadme } from "./copied-aliases.mjs";
+import { copiedPhpAssets, copiedPhpLoader } from "./copied-assets.mjs";
+import { copiedPhpValues, copiedPhpHelpers } from "./copied-support.mjs";
+import { phpValueMethods, phpValueSemantics, phpValueReadme } from "./copied-equality.mjs";
+import { copiedPhpChecks, copiedPhpConversions, copiedPhpDefinitions } from "./copied-conversions.mjs";
+import { phpVariantClasses, phpVariantReadme } from "./copied-variants.mjs";
+import { phpValue, phpClosurePublic, phpCallableState, phpCallableRuntime, phpNativeCall } from "./callables.mjs";
+import { nativeFinSummary, nativeFinContainerNote, nativeRefinementReadme } from "../native/fin-refinements.mjs";
+
+/**
+ * Render the public value API shared by the FFI and Zend transports.
+ *
+ * @param model - Admitted copied PHP projection.
+ */
+export const copiedPhpPublicSource = model => `<?php
+declare(strict_types=1);
+namespace ${model.namespace};
+
+${phpAliasCatalogDocs(model)}${copiedPhpValues}
+${model.branches.map(name => `/** @template T */
+final readonly class ${name}
+{
+    /** @var T */
+    public mixed $value;
+    /** @param T $value */
+    public function __construct(mixed $value) {
+        if (func_num_args() !== 1) throw new \\ArgumentCountError('${name} requires one payload');
+        $this->value = $value;
+    }
+${phpValueMethods}
+}`).join("\n\n")}
+${model.surface.callbacks.size ? phpClosurePublic : ""}
+${model.surface.copies.some(copy => copy.variant) ? phpVariantClasses(model) + "\n" : ""}${model.surface.copies.filter(copy => copy.record).map(copy => `final readonly class ${copy.publicName}
+{
+${copy.fields.map((field, index) => `    /** @var ${field.type.docType}${model.surface.aliases.length ? `\n     * @lean-bridge-contract ${phpAliasContract(model, copy.record.fields[index].type)}\n    ` : " "}*/\n    public ${field.type.publicType} $${field.publicName};`).join("\n")}
+    public function __construct(${copy.fields.map(field => `mixed $${field.publicName}`).join(", ")}) {
+        if (func_num_args() !== ${copy.fields.length}) throw new \\ArgumentCountError('${copy.publicName} requires exactly ${copy.fields.length} fields');
+        $__lbBudget = new Internal\\Budget();
+${copy.fields.map(field => `        $this->${field.publicName} = Internal\\Checks::check${field.type.index}($${field.publicName}, $__lbBudget);`).join("\n")}
+    }
+${phpValueMethods}
+}`).join("\n\n")}
+
+require_once __DIR__ . '/Internal/Native.php';
+
+${model.surface.functions.map((fn, index) => `/**
+${finDoc(fn, model.ir.types)}${fn.parameters.map((parameter, i) => ` * @param ${phpValue(model, fn.declaration.parameters[i].type).docType} $${parameter.name}${model.surface.aliases.length ? `\n * @lean-bridge-param ${phpAliasContract(model, fn.declaration.parameters[i].type)} $${parameter.name}` : ""}`).join("\n")}
+ * @return ${phpValue(model, fn.declaration.result.type).type?.callable ? "LeanClosure" : phpValue(model, fn.declaration.result.type).docType}${model.surface.aliases.length ? `\n * @lean-bridge-return ${phpAliasContract(model, fn.declaration.result.type)}` : ""}
+ */
+function ${fn.field}(${fn.parameters.map(parameter => `mixed $${parameter.name}`).join(", ")}): ${phpValue(model, fn.declaration.result.type).type?.callable ? "LeanClosure" : phpValue(model, fn.declaration.result.type).publicType} {
+    return Internal\\Native::call${index}(${fn.parameters.map(parameter => `$${parameter.name}`).join(", ")});
+}`).join("\n\n")}
+`;
+
+const finBounds = (fn, types) => nativeFinSummary(fn.declaration, fn.parameters.map(parameter => `$${parameter.name}`), types);
+const finDoc = (fn, types) => {
+	const bounds = finBounds(fn, types);
+	return bounds ? ` * Checked Lean Fin bounds: ${bounds}.\n *\n` : "";
+};
+const nativeSource = (model, evidence) => `<?php
+declare(strict_types=1);
+namespace ${model.namespace}\\Internal;
+
+require_once __DIR__ . '/Runtime.php';
+
+${copiedPhpHelpers}
+${phpValueSemantics(model)}
+${model.surface.callbacks.size ? phpCallableState : ""}
+final class Checks
+{
+${copiedPhpChecks(model)}
+}
+
+final class Native
+{
+    private const DEFINITIONS = <<<'CDEFS'
+${copiedPhpDefinitions(model)}
+CDEFS;
+    private static ?\\FFI $ffi = null;
+    private static function load(): \\FFI {
+        ${copiedPhpAssets(evidence)}
+    }
+${copiedPhpConversions(model)}
+
+${phpCallableRuntime(model)}
+${model.surface.functions.map((fn, index) => phpNativeCall(model, { name: `call${index}`, symbol: fn.name, parameters: fn.declaration.parameters, result: fn.declaration.result })).join("\n\n")}
+}
+`;
+
+/**
+ * Render the complete source projection; native package assembly adds libraries.
+ *
+ * @param model - Admitted PHP copied projection.
+ * @param evidence - Optional verified compiled library identities.
+ */
+export const renderCopiedPhpPackage = (model, evidence = null) => {
+	const files = { "src/Api.php": copiedPhpPublicSource(model)
+		, "src/Internal/Native.php": nativeSource(model, evidence)
+		, "src/Internal/Runtime.php": copiedPhpLoader
+		, "README.md": `# ${model.namespace}\n\nInstall the prepared Composer archive and require vendor/autoload.php. Call the generated ${model.namespace} functions. The package includes the compiled Lean libraries and loads its runtime automatically. Consumers do not compile Lean or configure a package-specific Zend extension.\n\nRequires PHP 8.2+ (below 9), NTS CLI, Linux x86-64, the packaged glibc floor, and FFI enabled. This copied-value profile does not cover FPM, Apache, cli-server, ZTS or PHP-Wasm. Compatible packages share one process runtime; post-fork calls and an already loaded foreign Lean runtime are rejected. No per-package or shared runtime files are written during use.\n\nUnit is null. Fixed-width integers use range-checked PHP int except UInt64, which uses BigInteger. Nat and Int also use Brick\\Math\\BigInteger::of with decimal text. Composer installs brick/math 1.0.0 automatically. Lean Bridge accepts integer objects up to 16384 decimal digits. String requires UTF-8, including NUL. ByteArray uses Bytes::fromString. Floats require PHP float; Float32 rounds to binary32 and preserves NaN classification, infinities and signed zero. Arrays are consecutive-key lists; records are final readonly value classes.\n\nInput parameters deliberately use mixed with precise PHPDoc: generated checks reject coercion even if the caller omits strict_types. Records and lists have independent copied results. Copied types must be pure and acyclic, at most 32 levels deep. Validation, FFI scratch/output conversion, and native input/output copies each have a 16 MiB limit; PHP lists account for at least 32 bytes per element. These budgets do not bound the Lean algorithm's working memory. Native output owners are released in finally.\n\n${model.surface.functions.map(fn => `- ${model.namespace}\\${fn.field}: ${fn.declaration.id}`).join("\n")}\n` };
+	if(model.surface.copies.some(copy => copy.compound))
+	{
+		files["README.md"] += "\n## Options, results and products\n\nOption uses null for None or new Some($value) for Some. Unit is null, so new Some(null) preserves a present Unit or an outer Some containing None, according to the declared type. Except uses new Ok($value) or new Err($error); both expose a readonly value property. Branch classes are final readonly classes in this component's namespace and require one payload. PHPDoc records the payload type; every call checks it recursively, including weak-mode callers. Domain errors return Err; bridge failures throw. Prod uses an exact two-element list, retaining nested binary products. These types compose with arrays and records. Returned values are independently copied. PHP === compares wrapper identity, while == follows PHP's property-comparison rules. Readonly wrappers do not make arbitrary constructor payloads deeply immutable; only values accepted by the declared copied type may cross a call. Compound callbacks, identity-bearing copied values and recursive copied schemas remain unsupported.\n";
+	}
+	if(model.surface.callbacks.size)
+	{
+		files["README.md"] += "\n## Primitive callbacks and returned functions\n\nPass a PHP callable directly. Generated PHPDoc records its primitive signature. The adapter validates values in both weak and strict callers, contains Throwable failures until native cleanup, then rethrows the same object. Reference parameters, reference returns and generators reject. Callbacks borrow one synchronous call and cannot be retained by Lean. One FFI trampoline per signature is cached until request shutdown; completed calls release their callback targets and buffers.\n\nReturned LeanClosure objects are invokable with exactly the declared positional arguments. Call close in finally; close is idempotent and defers native release while active. isClosed reports explicit closure. Destruction is a fallback. Saved callable aliases retain the same lease. Cloning, serialization and direct construction reject. Callable operations require the main NTS CLI execution context, not a Fiber. Use a fresh process after fork. No async or compound callables are admitted. Each native adapter allows 64 nested invocations per thread and the shared runtime allows 4096 closure identities.\n";
+	}
+	if(model.surface.copies.some(copy => copy.ref.kind === "apply" && copy.ref.constructor === "list"))
+		files["README.md"] += "\n## Lean Lists\n\nList inputs, results and record fields use consecutive-key PHP arrays with precise list<T> PHPDoc. Empty Lists, order, duplicates and nesting are preserved. Mutable array values and Bytes results are independently copied. List and Array keep distinct IR/native identities. Weak and strict callers get the same element and copy-budget checks. Native sequence lengths, missing buffers and alignment are checked before allocation or reads. List callback payloads remain unsupported.\n";
+	files["README.md"] += phpAliasReadme(model) + phpVariantReadme(model) + phpValueReadme;
+	const finFunctions = model.surface.functions.filter(fn => finBounds(fn, model.ir.types));
+	if(finFunctions.length) files["README.md"] += `\n## Bounded integers\n\n${nativeRefinementReadme(finFunctions.map(fn => fn.declaration), `Lean Fin n parameters and results are Brick\\Math\\BigInteger values below n. The bundled native library compares each argument with its exact bound, including bounds wider than 64 bits, before any Lean code runs. A non-BigInteger argument throws TypeError and a negative value throws ValueError, as for Nat; a value at or above its bound throws LeanBridgeError with code 1 whose message names the Lean parameter and bound. Fin 0 has no values, so every call to a function taking one is rejected. Results are BigInteger values below their declared bound. ${nativeFinContainerNote(finFunctions.map(fn => fn.declaration), "native PHP packages", model.ir.types)}`, "native PHP packages", model.ir.types)}\n\n${finFunctions.map(fn => `- ${model.namespace}\\${fn.field}: ${finBounds(fn, model.ir.types)}`).join("\n")}\n`;
+	const structuredCallbacks = [...model.surface.callbacks.values()].some(({ type }) =>
+		[...type.callable.parameters, type.callable.result].some(site => site.type.kind !== "primitive"));
+	if(structuredCallbacks)
+	{
+		files["README.md"] = files["README.md"]
+			.replace("## Primitive callbacks and returned functions", "## Callbacks and returned functions")
+			.replace("Generated PHPDoc records its primitive signature.", "Generated PHPDoc records its copied-value signature.")
+			.replace("Compound callbacks, identity-bearing copied values and recursive copied schemas remain unsupported.", "Identity-bearing copied values and recursive callback payloads remain unsupported.")
+			.replace("No async or compound callables are admitted.", "Callbacks support primitives and acyclic copied payloads. Async callables are not admitted.")
+			.replace("List callback payloads remain unsupported.", "Lists can also be passed to and returned from synchronous callbacks.")
+			.replace("Recursive copied types, compound callable payloads and identity-bearing alias targets remain unsupported.", "Recursive callback payloads and identity-bearing alias targets remain unsupported.");
+		files["README.md"] += "\n## Structured callback values\n\nArrays, Lists, Option, Except, nested products, records, variants and aliases use the same public PHP values in ordinary calls and callbacks. All callback inputs and replies are independent copies. Each enclosing call retains its reply buffers until Lean finishes reading them, then releases its scratch allocations and callback references. Returned Lean functions own captured copies and keep the existing explicit close and deferred-release rules. Callback identities and resource identities cannot be copied fields or elements.\n";
+	}
+	files["binding-manifest.json"] = canonicalJson({ schemaVersion: 1, generator: { id: "lean-wasm/php-copied", version: 1 }, component: model.ir.component.id, bindingIrSha256: hashBindingIr(model.ir), namespace: model.namespace, publicFiles: ["src/Api.php"], ...(model.surface.aliases.length ? { aliases: phpCopiedAliases(model) } : {}), exports: ["Bytes", "LeanBridgeError", ...model.branches, ...model.surface.callbacks.size ? ["LeanClosure"] : [], ...model.surface.copies.filter(copy => copy.record).map(copy => copy.publicName), ...model.surface.copies.filter(copy => copy.variant).flatMap(copy => [copy.publicName, ...copy.cases.map(branch => branch.publicName)]), ...model.surface.functions.map(fn => fn.field)].map(name => `${model.namespace}\\${name}`), files: [...Object.keys(files), "binding-manifest.json"], filesSha256: Object.fromEntries(Object.entries(files).map(([path, source]) => [path, sha256(source)])) });
+	return Object.freeze(files);
+};
+
+/**
+ * Generate a closed ordinary PHP API from authoritative semantics.
+ *
+ * @param ir - Compiler-derived Binding IR.
+ * @param evidence - Optional compiled native library inventory.
+ */
+export const generateCopiedPhpPackage = (ir, evidence = null) => renderCopiedPhpPackage(compileCopiedPhpModel(ir, { structuredCallables: true, lists: true, variants: true }), evidence);

@@ -1,0 +1,35 @@
+{
+  "args": [
+    "-n",
+    "-d",
+    "extension=/usr/lib/php/20220829/ffi.so",
+    "-d",
+    "ffi.enable=1",
+    "consumer.php"
+  ],
+  "closure": {
+    "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+    "generatedFilesSha256": "9704f68fde782ee73eb297ba131f949276a333d675c6434e7514bd1830d71b05",
+    "packageFileSetSha256": "e78c42791a782e73d5e2e6cf3dbfb170698dd3393b39f3ed9ed5a228a83e3945",
+    "receiptSha256": "d949ba0e26e2b3d43393d075f23115f714ef80e7c907bc90565bb5de16813ca2",
+    "toolsSha256": "928927b055e8c58d26f331b055f2a17155d6470c3a969891b72b9714f2da1510",
+    "vendorFilesSha256": "4478e08aecf97a05c8bbf9e3dae3cdda44ef535abe06c3c05189462c60d73f8e"
+  },
+  "command": "/usr/bin/php8.2",
+  "counts": {
+    "checks": 612,
+    "hostRejections": 8,
+    "rejections": 0,
+    "rounds": 256,
+    "snapshotControls": 12,
+    "wordBits": 64
+  },
+  "cwd": "/tmp/lean-bridge-nominal-primitive-php-installed-G6ZStT/consumer-relocated",
+  "relocated": true,
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":612,\"rejections\":0,\"hostRejections\":8,\"snapshotControls\":12,\"rounds\":256,\"wordBits\":64}\n"
+  },
+  "strictness": "weak"
+}

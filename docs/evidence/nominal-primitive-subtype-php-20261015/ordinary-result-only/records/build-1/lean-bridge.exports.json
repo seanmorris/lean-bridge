@@ -1,0 +1,20 @@
+{
+  "exports": [
+    "NominalPrimitiveSubtypes.produce",
+    "NominalPrimitiveSubtypes.produceGroup",
+    "NominalPrimitiveSubtypes.producePair",
+    "NominalPrimitiveSubtypes.produceEvent",
+    "NominalPrimitiveSubtypes.produceChoices",
+    "NominalPrimitiveSubtypes.wordBits"
+  ],
+  "modules": [
+    "NominalPrimitiveSubtypes"
+  ],
+  "schemaVersion": 1,
+  "targets": {
+    "php-native": {
+      "name": "example/nominalprimitivesubtypes",
+      "version": "1.0.0"
+    }
+  }
+}

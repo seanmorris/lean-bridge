@@ -1,0 +1,57 @@
+{
+  "aliases": [
+    {
+      "id": "lean:NominalPrimitiveSubtypes.PacketAlias",
+      "name": "PacketAlias",
+      "phpType": "Packet",
+      "target": {
+        "id": "lean:NominalPrimitiveSubtypes.Packet",
+        "kind": "named"
+      }
+    }
+  ],
+  "bindingIrSha256": "466d83611c1b48b17816c0ac3755efff6dfb18151e7287d7666e5b8fab05d806",
+  "component": "nominalprimitivesubtypes@1.0.0",
+  "exports": [
+    "LeanNominalprimitivesubtypes\\Bytes",
+    "LeanNominalprimitivesubtypes\\LeanBridgeError",
+    "LeanNominalprimitivesubtypes\\Some",
+    "LeanNominalprimitivesubtypes\\Ok",
+    "LeanNominalprimitivesubtypes\\Err",
+    "LeanNominalprimitivesubtypes\\RawPacket",
+    "LeanNominalprimitivesubtypes\\Packet",
+    "LeanNominalprimitivesubtypes\\Pair",
+    "LeanNominalprimitivesubtypes\\Event",
+    "LeanNominalprimitivesubtypes\\EventEmpty",
+    "LeanNominalprimitivesubtypes\\EventBox",
+    "LeanNominalprimitivesubtypes\\EventChoices",
+    "LeanNominalprimitivesubtypes\\produce",
+    "LeanNominalprimitivesubtypes\\produce_choices",
+    "LeanNominalprimitivesubtypes\\produce_event",
+    "LeanNominalprimitivesubtypes\\produce_group",
+    "LeanNominalprimitivesubtypes\\produce_pair",
+    "LeanNominalprimitivesubtypes\\word_bits"
+  ],
+  "files": [
+    "src/Api.php",
+    "src/Internal/Native.php",
+    "src/Internal/Runtime.php",
+    "README.md",
+    "binding-manifest.json"
+  ],
+  "filesSha256": {
+    "README.md": "20e65ccf0fa13f5d19274ad7627a763078ed3c82484a8ba2dc6ca54165c66edd",
+    "src/Api.php": "73156a248f3f3af2058085ba6e2d88095dae3c65e70ade1b830049600bde401f",
+    "src/Internal/Native.php": "84ba3f3c451aed415fed27e686656d1ea2c98815158a39cffac14342daea5f21",
+    "src/Internal/Runtime.php": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14"
+  },
+  "generator": {
+    "id": "lean-wasm/php-copied",
+    "version": 1
+  },
+  "namespace": "LeanNominalprimitivesubtypes",
+  "publicFiles": [
+    "src/Api.php"
+  ],
+  "schemaVersion": 1
+}

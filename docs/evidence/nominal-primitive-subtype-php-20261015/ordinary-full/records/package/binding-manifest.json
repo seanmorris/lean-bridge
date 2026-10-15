@@ -1,0 +1,65 @@
+{
+  "aliases": [
+    {
+      "id": "lean:NominalPrimitiveSubtypes.PacketAlias",
+      "name": "PacketAlias",
+      "phpType": "Packet",
+      "target": {
+        "id": "lean:NominalPrimitiveSubtypes.Packet",
+        "kind": "named"
+      }
+    }
+  ],
+  "bindingIrSha256": "3bcf177c3cb6500352652d50a27554497ad880fdc93aa033b8e81a4dd68cbf6c",
+  "component": "nominalprimitivesubtypes@1.0.0",
+  "exports": [
+    "LeanNominalprimitivesubtypes\\Bytes",
+    "LeanNominalprimitivesubtypes\\LeanBridgeError",
+    "LeanNominalprimitivesubtypes\\Some",
+    "LeanNominalprimitivesubtypes\\Ok",
+    "LeanNominalprimitivesubtypes\\Err",
+    "LeanNominalprimitivesubtypes\\Packet",
+    "LeanNominalprimitivesubtypes\\Pair",
+    "LeanNominalprimitivesubtypes\\RawPacket",
+    "LeanNominalprimitivesubtypes\\Event",
+    "LeanNominalprimitivesubtypes\\EventEmpty",
+    "LeanNominalprimitivesubtypes\\EventBox",
+    "LeanNominalprimitivesubtypes\\EventChoices",
+    "LeanNominalprimitivesubtypes\\aliases",
+    "LeanNominalprimitivesubtypes\\combine",
+    "LeanNominalprimitivesubtypes\\echo_a",
+    "LeanNominalprimitivesubtypes\\echo_b",
+    "LeanNominalprimitivesubtypes\\echo_event_a",
+    "LeanNominalprimitivesubtypes\\echo_event_b",
+    "LeanNominalprimitivesubtypes\\echo_pair",
+    "LeanNominalprimitivesubtypes\\produce",
+    "LeanNominalprimitivesubtypes\\produce_choices",
+    "LeanNominalprimitivesubtypes\\produce_event",
+    "LeanNominalprimitivesubtypes\\produce_group",
+    "LeanNominalprimitivesubtypes\\produce_pair",
+    "LeanNominalprimitivesubtypes\\refuse_unit",
+    "LeanNominalprimitivesubtypes\\word_bits"
+  ],
+  "files": [
+    "src/Api.php",
+    "src/Internal/Native.php",
+    "src/Internal/Runtime.php",
+    "README.md",
+    "binding-manifest.json"
+  ],
+  "filesSha256": {
+    "README.md": "bd41b4703648d2970ed56557f07e6780968e2259b27a48d8ce41480a85967e57",
+    "src/Api.php": "072b1d7b9a98635c1e7dd24f3ff5cdd6a5e7f6207c6c6b28e05a317a4dab0c43",
+    "src/Internal/Native.php": "3d18b9db760f73c740494693cdfc8c1da361b808e9ab1146cb5b32988ef63456",
+    "src/Internal/Runtime.php": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14"
+  },
+  "generator": {
+    "id": "lean-wasm/php-copied",
+    "version": 1
+  },
+  "namespace": "LeanNominalprimitivesubtypes",
+  "publicFiles": [
+    "src/Api.php"
+  ],
+  "schemaVersion": 1
+}
