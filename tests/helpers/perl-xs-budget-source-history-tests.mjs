@@ -12,8 +12,11 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeArrayRolloutSource } from "./generic-record-array-rollout-source-history.mjs";
-import { beforeGenericRefusalFixSource } from "./generic-refusal-fix-source-history.mjs";
 import { beforePerlXsBudgetSource, perlXsBudgetChangedPaths, perlXsBudgetHistoryPath, perlXsBudgetPredecessor, reversePerlXsBudgetUpdate } from "./perl-xs-budget-source-history.mjs";
+
+const sourceAt = async (path, expected) => beforeFinRefinementSource(
+	path, await readFile(path, "utf8"), expected
+);
 
 test("Perl XS budget history authenticates exact predecessors and rejects unrecorded edits", async () => {
 	const record = JSON.parse(await readFile(perlXsBudgetHistoryPath, "utf8"));
@@ -22,7 +25,8 @@ test("Perl XS budget history authenticates exact predecessors and rejects unreco
 	assert.deepEqual(record.updates.map(update => update.path), perlXsBudgetChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeGenericRefusalFixSource(update.path, await readFile(update.path, "utf8")), previous = reversePerlXsBudgetUpdate(source, update);
+		const source = await sourceAt(update.path, update.currentSha256);
+		const previous = reversePerlXsBudgetUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforePerlXsBudgetSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -38,17 +42,19 @@ test("Perl XS budget history authenticates exact predecessors and rejects unreco
 });
 
 test("Perl XS budget refreshes exactly 40 source pins without changing coverage", async () => {
-	const path = "docs/type-surface.v1.json", text = beforeGenericRefusalFixSource(path, await readFile(path, "utf8"));
-	const current = JSON.parse(text), previous = JSON.parse(beforePerlXsBudgetSource(path, text));
 	const record = JSON.parse(await readFile(perlXsBudgetHistoryPath, "utf8"));
 	const updates = new Map(record.updates.map(update => [update.path, update]));
+	const path = "docs/type-surface.v1.json", inventoryUpdate = updates.get(path);
+	const text = await sourceAt(path, inventoryUpdate.currentSha256);
+	const current = JSON.parse(text), previous = JSON.parse(beforePerlXsBudgetSource(path, text));
 	let pins = 0;
 	for(const evidence of previous.evidence) for(const file of evidence.files)
 	{
 		const update = updates.get(file.path);
 		if(update && file.sha256 === update.previousSha256)
 		{
-			assert.equal(sha256(beforeGenericRefusalFixSource(file.path, await readFile(file.path, "utf8"))), update.currentSha256);
+			assert.equal(sha256(await sourceAt(file.path, update.currentSha256)),
+				update.currentSha256);
 			file.sha256 = update.currentSha256; pins++;
 		}
 	}

@@ -56,8 +56,8 @@ extend these fields and constructor-free results to pages, React
 production/Strict Mode and workers in Chromium, Firefox and WebKit. All four
 source/API selections execute source-free bundles after offline installation,
 with asset recovery, remount, pending-unmount and worker restart/disposal
-checks. Python, C/C++, Perl, Ruby and Rust also have nineteen-base checks below; the
-remaining host checks cover their tested Nat forms.
+checks. Python, C/C++, Perl, Ruby, Rust and C# also have nineteen-base checks
+below; the remaining host checks cover their tested Nat forms.
 [Installed C/C++ checks](../evidence/nominal-subtype-native-acceptance-20261011.md)
 cover the same Nat forms on both source routes in Linux x64/glibc 2.36, including
 standalone result-only packages. [Nineteen-base C/C++ checks](../evidence/nominal-primitive-subtype-native-20261014/index.json)
@@ -105,6 +105,14 @@ again after deleting all consumer sources on Linux x64/glibc 2.36.
 add those Nat forms with .NET SDK 8.0.424 and shared framework 8.0.30, offline
 NuGet installation, relocated replay and source-free deployment on Linux
 x64/glibc 2.36.
+[Nineteen-base C# checks](../evidence/nominal-primitive-subtype-dotnet-20261015/index.json)
+extend those fields and constructor-free results to all admitted primitive
+bases with their exact C# representations and 64-bit machine words. Both author
+routes and API modes reproduce complete NuGet packages from two roots, install
+offline after author removal, replay after relocation and execute again after
+deleting all consumer sources. Full APIs check per-site normalization, active
+branches, exact rejection paths, caller snapshots and recovery after rejection
+on .NET SDK 8.0.424 and shared framework 8.0.30 with Linux x64/glibc 2.36.
 [Installed Java/Kotlin checks](../evidence/nominal-subtype-jvm-20261013.md)
 add those Nat forms with JDK 22.0.2 and Kotlin 2.2.0. Both consumers install
 offline and replay after relocation and consumer-source removal on Linux
@@ -234,6 +242,9 @@ API modes.
 [Installed C# acceptance](../evidence/nominal-subtype-dotnet-20261012.md)
 adds .NET SDK 8.0.424 and shared framework 8.0.30 with offline NuGet installation,
 relocated replay and source-free deployment on Linux x64/glibc 2.36.
+[Nineteen-base C# acceptance](../evidence/nominal-primitive-subtype-dotnet-20261015/index.json)
+extends that matrix to every admitted primitive base on both author routes and
+API modes.
 [Installed Java/Kotlin acceptance](../evidence/nominal-subtype-jvm-20261013.md)
 adds JDK 22.0.2 and Kotlin 2.2.0 with offline installation, relocated replay
 and source-free deployment of both consumers on Linux x64/glibc 2.36.

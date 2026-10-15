@@ -12,8 +12,11 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeDotnetDispatchIntegrationSource } from "./dotnet-dispatch-integration-source-history.mjs";
-import { beforeGenericNpmClosureSource } from "./generic-record-npm-closure-source-history.mjs";
 import { beforeRubyGdbCiSource, rubyGdbCiChangedPaths, rubyGdbCiHistoryPath, rubyGdbCiPredecessor, reverseRubyGdbCiUpdate } from "./ruby-gdb-ci-source-history.mjs";
+
+const sourceAt = async (path, expected) => beforeFinRefinementSource(
+	path, await readFile(path, "utf8"), expected
+);
 
 test("Ruby GDB CI history authenticates exact predecessors and refuses unrecorded edits", async () => {
 	const record = JSON.parse(await readFile(rubyGdbCiHistoryPath, "utf8"));
@@ -22,7 +25,8 @@ test("Ruby GDB CI history authenticates exact predecessors and refuses unrecorde
 	assert.deepEqual(record.updates.map(update => update.path), rubyGdbCiChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeGenericNpmClosureSource(update.path, await readFile(update.path, "utf8")), previous = reverseRubyGdbCiUpdate(source, update);
+		const source = await sourceAt(update.path, update.currentSha256);
+		const previous = reverseRubyGdbCiUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeRubyGdbCiSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -38,17 +42,19 @@ test("Ruby GDB CI history authenticates exact predecessors and refuses unrecorde
 });
 
 test("Ruby GDB CI refreshes exactly 119 source pins without changing any support claim", async () => {
-	const path = "docs/type-surface.v1.json", text = beforeGenericNpmClosureSource(path, await readFile(path, "utf8"));
-	const current = JSON.parse(text), previous = JSON.parse(beforeRubyGdbCiSource(path, text));
 	const record = JSON.parse(await readFile(rubyGdbCiHistoryPath, "utf8"));
 	const updates = new Map(record.updates.map(update => [update.path, update]));
+	const path = "docs/type-surface.v1.json", inventoryUpdate = updates.get(path);
+	const text = await sourceAt(path, inventoryUpdate.currentSha256);
+	const current = JSON.parse(text), previous = JSON.parse(beforeRubyGdbCiSource(path, text));
 	let pins = 0;
 	for(const evidence of previous.evidence) for(const file of evidence.files)
 	{
 		const update = updates.get(file.path);
 		if(update && file.sha256 === update.previousSha256)
 		{
-			assert.equal(sha256(beforeDotnetDispatchIntegrationSource(file.path, await readFile(file.path, "utf8"))), update.currentSha256);
+			assert.equal(sha256(await sourceAt(file.path, update.currentSha256)),
+				update.currentSha256);
 			file.sha256 = update.currentSha256; pins++;
 		}
 	}

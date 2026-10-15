@@ -13,6 +13,10 @@ import { joinNativeObservations } from "./native-observation-split.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeNativeObservationSplitSource, nativeObservationSplitChangedPaths, nativeObservationSplitHistoryPath, nativeObservationSplitPredecessor, reverseNativeObservationSplitUpdate } from "./native-observation-split-history.mjs";
 
+const sourceAt = async (path, expected) => beforeFinRefinementSource(
+	path, await readFile(path, "utf8"), expected
+);
+
 test("native observation split source history authenticates exact changes and refuses unknown edits", async () => {
 	const record = JSON.parse(await readFile(nativeObservationSplitHistoryPath));
 	assert.equal(record.schemaVersion, 1); assert.equal(record.milestone, "native-observation-split-source-v1");
@@ -20,7 +24,7 @@ test("native observation split source history authenticates exact changes and re
 	assert.deepEqual(record.updates.map(update => update.path), nativeObservationSplitChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = beforeNativeObservationSplitSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = await sourceAt(update.path, update.currentSha256);
 		const previous = reverseNativeObservationSplitUpdate(current, update);
 		assert.equal(beforeNativeObservationSplitSource(update.path, current), previous);
 		if(update.path === ".github/workflows/consumer-matrix.yml") assert.equal(joinNativeObservations(current), previous);

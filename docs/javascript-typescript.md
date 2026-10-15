@@ -531,6 +531,12 @@ the same fields using their exact Rust representations and 64-bit machine words.
 Both author routes and API modes reproduce complete crates, install them offline
 with fourteen authenticated dependencies, replay after relocation and execute
 again after deleting all consumer sources on Linux x64/glibc 2.36.
+[C# checks](evidence/nominal-primitive-subtype-dotnet-20261015/index.json) cover
+the same fields using their exact C# representations and 64-bit machine words.
+Both author routes and API modes reproduce complete NuGet packages, install them
+offline after author removal, replay after relocation and execute again after
+deleting all consumer sources on .NET SDK 8.0.424 and shared framework 8.0.30
+with Linux x64/glibc 2.36.
 Primitive-base nominal acceptance in the remaining hosts is pending. Callback,
 owned, recursive, dependent and broader generic Subtype combinations need
 their own checks.

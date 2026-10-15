@@ -12,6 +12,10 @@ import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforePerlAuthorDocsSource, perlAuthorDocsChangedPaths, perlAuthorDocsHistoryPath, perlAuthorDocsPredecessor, reversePerlAuthorDocsUpdate } from "./checked-record-perl-author-docs-history.mjs";
 
+const sourceAt = async (path, expected) => beforeFinRefinementSource(
+	path, await readFile(path, "utf8"), expected
+);
+
 test("Perl checked-record author documentation source history authenticates exact changes and refuses unknown edits", async () => {
 	const record = JSON.parse(await readFile(perlAuthorDocsHistoryPath));
 	assert.equal(record.schemaVersion, 1); assert.equal(record.milestone, "checked-record-perl-author-docs-source-v1");
@@ -19,7 +23,7 @@ test("Perl checked-record author documentation source history authenticates exac
 	assert.deepEqual(record.updates.map(update => update.path), perlAuthorDocsChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = beforePerlAuthorDocsSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = await sourceAt(update.path, update.currentSha256);
 		const previous = reversePerlAuthorDocsUpdate(current, update);
 		assert.equal(beforePerlAuthorDocsSource(update.path, current), previous);
 		assert.equal(beforePerlAuthorDocsSource(update.path, current, update.currentSha256), current);

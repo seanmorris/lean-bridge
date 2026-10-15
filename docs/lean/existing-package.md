@@ -539,6 +539,15 @@ Generated structs and enums retain the exact Rust representation of every
 primitive base and use 64-bit machine words on Rust and Cargo 1.90.0 with Linux
 x64/glibc 2.36.
 
+The [nineteen-base C# checks](../evidence/nominal-primitive-subtype-dotnet-20261015/index.json)
+cover the same record and variant fields on both author routes. Full and
+standalone result-only APIs reproduce complete NuGet packages from two author
+roots, install offline after author removal, replay after relocation and execute
+again after deleting all consumer sources. Generated sealed records and cases
+retain each primitive's C# representation and use 64-bit machine words on .NET
+SDK 8.0.424 and shared framework 8.0.30 with Linux x64/glibc 2.36. Full APIs
+also check per-site normalization, exact rejection paths and recovery.
+
 In a schema-3 reviewed API, describe a `Subtype` with its primitive transport type and name its constructor in the declaration's `source.extensions["lean-lang.org/refinements"]`. For a checked `Nat` parameter returning an ordinary `Nat`:
 
 ```json
