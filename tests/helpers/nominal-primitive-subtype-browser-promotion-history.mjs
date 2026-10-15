@@ -5,6 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import { beforeNominalPrimitiveSubtypeRubyRegistrationSource } from "./nominal-primitive-subtype-ruby-registration-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
 export const nominalPrimitiveSubtypeBrowserPromotionHistoryPath = "docs/evidence/nominal-primitive-subtype-browser-promotion-source-history-20261014.json";
@@ -58,6 +59,7 @@ export const reverseNominalPrimitiveSubtypeBrowserPromotionUpdate = (source, upd
  * @param expected - Optional requested stopping digest.
  */
 export const beforeNominalPrimitiveSubtypeBrowserPromotionSource = (path, source, expected) => {
+	source = beforeNominalPrimitiveSubtypeRubyRegistrationSource(path, source, expected);
 	if(typeof source !== "string" || !nominalPrimitiveSubtypeBrowserPromotionChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = history ??= JSON.parse(readFileSync(nominalPrimitiveSubtypeBrowserPromotionHistoryPath, "utf8"));

@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nominal-primitive-subtype-ruby-registration-source-v1",
+  "predecessorCommit": "6990c45fb225e4150b1aca8d6b19415226e8c766",
+  "updates": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "52248e46ec866de073b9df6c8cd5a127fa5a559e418282d024d6e1805c8eabb9",
+      "previousSha256": "8987394ac1ed1f4371d8c06ccdd1f085961e0cee500e27b0f8c9c00394d78cbc",
+      "edits": [
+        {
+          "start": 7693,
+          "previous": "",
+          "current": "import { nominalPrimitiveSubtypeRubyRegistrationChangedPaths } from \"./nominal-primitive-subtype-ruby-registration-history.mjs\";\n"
+        },
+        {
+          "start": 70699,
+          "previous": "",
+          "current": "\t, ...nominalPrimitiveSubtypeRubyRegistrationChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-tests.mjs",
+      "currentSha256": "88fb445b49662c9bceeedb94e4c28e78216d4dba21e26d20da31111bf978529d",
+      "previousSha256": "e1cb82499b290594a0bbdf426c58cf0d19bf8184b9f52b8dbaa8eacb4ad449c1",
+      "edits": [
+        {
+          "start": 1548,
+          "previous": "",
+          "current": "import \"./nominal-primitive-subtype-ruby-fixture-tests.mjs\";\nimport \"./nominal-primitive-subtype-ruby-archive-tests.mjs\";\nimport \"./nominal-primitive-subtype-ruby-ci-policy-tests.mjs\";\nimport \"./nominal-primitive-subtype-ruby-ci-shell-tests.mjs\";\nimport \"./nominal-primitive-subtype-ruby-ci-workflow-tests.mjs\";\nimport \"./nominal-primitive-subtype-ruby-registration-history-tests.mjs\";\nimport \"./nominal-primitive-subtype-ruby-installed-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-browser-promotion-history.mjs",
+      "currentSha256": "faded6a153e3bf1cbad5020c3ff1d8f9a7dbbb9362925d85979f20efddec1c0e",
+      "previousSha256": "dcd3504ae4409f83a2e95e678f14177731c1578ed3fe4b93c93ec6451d9ed923",
+      "edits": [
+        {
+          "start": 188,
+          "previous": "",
+          "current": "import { beforeNominalPrimitiveSubtypeRubyRegistrationSource } from \"./nominal-primitive-subtype-ruby-registration-history.mjs\";\n"
+        },
+        {
+          "start": 3017,
+          "previous": "",
+          "current": "\tsource = beforeNominalPrimitiveSubtypeRubyRegistrationSource(path, source, expected);\n"
+        }
+      ]
+    }
+  ]
+}
