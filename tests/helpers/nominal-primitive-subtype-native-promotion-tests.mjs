@@ -13,6 +13,7 @@ import { docPages } from "../../site/registry.mjs";
 import { nominalPrimitiveSubtypeNativeProducer } from "./nominal-primitive-subtype-native-archive.mjs";
 import { nominalPrimitiveSubtypeNativePromotionPredecessor } from "./nominal-primitive-subtype-native-promotion-history.mjs";
 import { nominalPrimitiveSubtypeNativeReferences, promoteNominalPrimitiveSubtypeNative, nominalPrimitiveSubtypeNativeProfiles, nominalPrimitiveSubtypeNativeConversion, nominalPrimitiveSubtypeNativeLimit, nominalPrimitiveSubtypeNativeField } from "./nominal-primitive-subtype-native-promotion.mjs";
+import { beforeNominalPrimitiveSubtypePerlPromotionSource, beforePrimitiveSubtypeIntegrationPins } from "./nominal-primitive-subtype-perl-promotion-history.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalPrimitiveSubtypeNativePromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -78,8 +79,10 @@ test("primitive-base Native promotion rejects narrowed references, new hosts and
 
 test("primitive-base Native promotion supplements twelve existing C/C++ cells and preserves all other observations", async () => {
 	const original = predecessor(), references = await nominalPrimitiveSubtypeNativeReferences();
-	const proposed = await promoteNominalPrimitiveSubtypeNative(original, references);
-	const { document, ...contracts } = await readTypeSurface();
+	const proposed = beforePrimitiveSubtypeIntegrationPins(await promoteNominalPrimitiveSubtypeNative(original, references));
+	const { document: current, ...contracts } = await readTypeSurface();
+	const document = JSON.parse(beforeNominalPrimitiveSubtypePerlPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+	assert.ok(current.evidence.length >= document.evidence.length);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(proposed.evidence.length, 536); assert.equal(proposed.observations.length, 595);
 	assert.deepEqual(proposed.evidence.slice(0, 532), original.evidence);

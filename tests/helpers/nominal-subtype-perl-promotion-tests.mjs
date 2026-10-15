@@ -14,6 +14,7 @@ import { nominalSubtypeRustPromotionHistoryPath } from "./nominal-subtype-rust-p
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { beforeNominalSubtypePythonPromotionSource, nominalSubtypePythonPromotionHistoryPath } from "./nominal-subtype-python-promotion-history.mjs";
 import { nominalSubtypePerlArchive, nominalSubtypePerlReferences, promoteNominalSubtypePerl, nominalSubtypePerlConversion, nominalSubtypePerlLimit } from "./nominal-subtype-perl-promotion.mjs";
+import { beforeNominalPrimitiveSubtypePerlPromotionSource, beforePrimitiveSubtypeIntegrationPins } from "./nominal-primitive-subtype-perl-promotion-history.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", "7c9fbfee9c31b60dc7433ca6945be62e39810754:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -89,7 +90,8 @@ test("nominal Perl promotion refuses missing originals and substituted scope or 
 
 test("nominal Perl promotion adds two field cells and supplements four existing cells only", async () => {
 	const original = predecessor(), references = await nominalSubtypePerlReferences();
-	const proposed = beforeNominalSubtypeJvmPromotionPins(await promoteNominalSubtypePerl(original, references)), { document: current, ...contracts } = await readTypeSurface();
+	const proposed = beforeNominalSubtypeJvmPromotionPins(beforePrimitiveSubtypeIntegrationPins(await promoteNominalSubtypePerl(original, references)));
+	const { document: current, ...contracts } = await readTypeSurface();
 	const document = JSON.parse(beforeNominalSubtypePythonPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
 	assert.ok(current.evidence.length >= document.evidence.length);
 	for(const path of [nominalSubtypeDotnetPromotionHistoryPath, nominalSubtypeRustPromotionHistoryPath, nominalSubtypeRubyPromotionHistoryPath, nominalSubtypePythonPromotionHistoryPath])
@@ -146,7 +148,7 @@ test("nominal Perl documentation distinguishes verified packages from pending ho
 	}
 	for(const path of ["docs/lean/existing-package.md", "docs/lean/export-decisions.md", "docs/consume/perl.md", "docs/reference/types.md"])
 		assert.ok((await readFile(path, "utf8")).includes("nominal-subtype-perl-acceptance-20261012.md"), path);
-	const source = await readFile("docs/consume/perl.md", "utf8");
+	const source = beforeNominalPrimitiveSubtypePerlPromotionSource("docs/consume/perl.md", await readFile("docs/consume/perl.md", "utf8"));
 	assert.ok(source.includes("### Subtypes in copied records\n"));
 	assert.ok(source.includes("Linux x64/glibc 2.36"));
 	assert.doesNotMatch(source, /Subtype fields in nominal records or variants, refined callback signatures and\nowned Subtypes remain unsupported/u);

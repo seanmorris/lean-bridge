@@ -520,6 +520,8 @@ require both routes and API modes and retain the original package records.
 Python has separate [nineteen-base nominal checks](evidence/nominal-primitive-subtype-python-20261014/index.json).
 [C/C++ checks](evidence/nominal-primitive-subtype-native-20261014/index.json) cover
 their native representations and 64-bit machine words on both author routes.
+[Perl checks](evidence/nominal-primitive-subtype-perl-20261015/index.json) cover
+the same fields on all four pinned CPAN ABIs in both delivery modes.
 Primitive-base nominal acceptance in the remaining hosts is pending. Callback,
 owned, recursive, dependent and broader generic Subtype combinations need
 their own checks.

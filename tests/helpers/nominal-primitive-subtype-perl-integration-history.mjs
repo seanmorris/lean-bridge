@@ -82,3 +82,20 @@ export const beforeNominalPrimitiveSubtypePerlIntegrationSource = (path, source,
 		? reverseNominalPrimitiveSubtypePerlIntegrationAlternateUpdate(source, update)
 		: reverseNominalPrimitiveSubtypePerlIntegrationUpdate(source, update);
 };
+
+/**
+ * Restore only this milestone's exact current-source pins for earlier support checks.
+ * Only exact current-to-first-parent digests recorded by the immutable ledger are reversed.
+ *
+ * @param inventory - Earlier inventory recomputed with current source hashes.
+ */
+export const beforeNominalPrimitiveSubtypePerlIntegrationPins = inventory => {
+	const previous = structuredClone(inventory);
+	const record = history ??= JSON.parse(readFileSync(nominalPrimitiveSubtypePerlIntegrationHistoryPath, "utf8"));
+	for(const entry of previous.evidence) for(const file of entry.files)
+	{
+		const update = record.updates.find(item => item.path === file.path);
+		if(update && file.sha256 === update.currentSha256) file.sha256 = update.previousSha256;
+	}
+	return previous;
+};

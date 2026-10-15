@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { beforeNominalPrimitiveSubtypeRubyRegistrationSource } from "./nominal-primitive-subtype-ruby-registration-history.mjs";
+import { beforeNominalPrimitiveSubtypePerlPromotionSource } from "./nominal-primitive-subtype-perl-promotion-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
 export const nominalPrimitiveSubtypeRubyIntegrationHistoryPath = "docs/evidence/nominal-primitive-subtype-ruby-integration-source-history-20261015.json";
@@ -76,6 +77,7 @@ export const reverseNominalPrimitiveSubtypeRubyIntegrationAlternateUpdate = (sou
  * @param expected - Optional requested stopping digest.
  */
 export const beforeNominalPrimitiveSubtypeRubyIntegrationSource = (path, source, expected) => {
+	source = beforeNominalPrimitiveSubtypePerlPromotionSource(path, source, expected);
 	if(typeof source !== "string" || !nominalPrimitiveSubtypeRubyIntegrationChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = history ??= JSON.parse(readFileSync(nominalPrimitiveSubtypeRubyIntegrationHistoryPath, "utf8"));
@@ -91,4 +93,21 @@ export const beforeNominalPrimitiveSubtypeRubyIntegrationSource = (path, source,
 	return typeof update.previousSha256 === "string"
 		? reverseNominalPrimitiveSubtypeRubyIntegrationUpdate(source, update)
 		: source;
+};
+
+/**
+ * Restore only this milestone's exact current-source pins for earlier support checks.
+ * Only exact current-to-first-parent digests recorded by the immutable ledger are reversed.
+ *
+ * @param inventory - Earlier inventory recomputed with current source hashes.
+ */
+export const beforeNominalPrimitiveSubtypeRubyIntegrationPins = inventory => {
+	const previous = structuredClone(inventory);
+	const record = history ??= JSON.parse(readFileSync(nominalPrimitiveSubtypeRubyIntegrationHistoryPath, "utf8"));
+	for(const entry of previous.evidence) for(const file of entry.files)
+	{
+		const update = record.updates.find(item => item.path === file.path);
+		if(update && file.sha256 === update.currentSha256) file.sha256 = update.previousSha256;
+	}
+	return previous;
 };
