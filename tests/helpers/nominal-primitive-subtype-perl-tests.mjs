@@ -14,6 +14,7 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { createDeterministicTarGzFromFiles } from "../../src/release/deterministic-archive.mjs";
 import { generatePerlBindingPackage } from "../../src/backends/perl/generate.mjs";
 import { readClosedPackageTarGz } from "./closed-package-tar.mjs";
+import { nominalPrimitiveSubtypePerlArchiveMembers } from "./nominal-primitive-subtype-perl-handoff.mjs";
 import { applyNominalPrimitiveSubtypePerlModelMutation, applyNominalPrimitiveSubtypePerlPackageMutation, nominalPrimitiveSubtypePerlControlPositions, nominalPrimitiveSubtypePerlHandoffMutations, nominalPrimitiveSubtypePerlModelMutations, nominalPrimitiveSubtypePerlPackageMutations } from "./nominal-primitive-subtype-perl-controls.mjs";
 import { projectPerlNames } from "../../src/backends/perl/naming.mjs";
 import { validateExportConfiguration } from "../../src/analyze/export-configuration.mjs";
@@ -305,4 +306,35 @@ test("the closed tar reader accepts the deterministic CPAN format and refuses ev
 	];
 	for(const [label, attempt] of rejected) assert.throws(attempt, undefined, label);
 	t.diagnostic(`${rejected.length} malformed or unsafe archives refused before any member byte is returned`);
+});
+
+test("the handoff member reader refuses a semantically equal but noncanonical prepared manifest", () => {
+	const manifest = { files: { "lib/LeanBridge/Deep.pm": sha256("1;\n") }, name: "LeanBridge-Deep", version: "1.0" };
+	const archiveWith = manifestBytes => createDeterministicTarGzFromFiles({
+		sourceDateEpoch: 1
+		, files: [
+			{ path: "dist-1.0/lean-bridge-package.json", bytes: manifestBytes, mode: 0o644 }
+			, { path: "dist-1.0/lib/LeanBridge/Deep.pm", bytes: Buffer.from("1;\n"), mode: 0o644 }
+		]
+	});
+	const canonical = archiveWith(Buffer.from(canonicalJson(manifest)));
+	const accepted = nominalPrimitiveSubtypePerlArchiveMembers(canonical, "dist-1.0");
+	assert.deepEqual(accepted.manifest, manifest);
+	assert.deepEqual([...accepted.files.keys()].sort(), ["lean-bridge-package.json", "lib/LeanBridge/Deep.pm"]);
+	const noncanonical = [
+		["pretty printed", Buffer.from(JSON.stringify(manifest, null, 2))]
+		, ["reordered keys", Buffer.from(JSON.stringify({ version: manifest.version, name: manifest.name, files: manifest.files }))]
+		, ["trailing newline", Buffer.from(canonicalJson(manifest) + "\n")]
+		, ["leading space", Buffer.from(" " + canonicalJson(manifest))]
+	];
+	for(const [label, bytes] of noncanonical)
+	{
+		assert.deepEqual(JSON.parse(bytes.toString("utf8")), manifest, label);
+		assert.throws(() => nominalPrimitiveSubtypePerlArchiveMembers(archiveWith(bytes), "dist-1.0"), /canonical prepared CPAN manifest member/u, label);
+	}
+	const bom = Buffer.concat([Buffer.from([0xef, 0xbb, 0xbf]), Buffer.from(canonicalJson(manifest))]);
+	for(const [label, bytes] of [["byte order mark", bom], ["truncated manifest", Buffer.from("{")]])
+		assert.throws(() => nominalPrimitiveSubtypePerlArchiveMembers(archiveWith(bytes), "dist-1.0"), SyntaxError, label);
+	assert.throws(() => nominalPrimitiveSubtypePerlArchiveMembers(archiveWith(Buffer.from(canonicalJson(manifest))).subarray(0, -1), "dist-1.0"), undefined, "truncated archive");
+	assert.deepEqual(nominalPrimitiveSubtypePerlArchiveMembers(canonical, "dist-1.0"), accepted);
 });

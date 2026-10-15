@@ -35,7 +35,14 @@ export const nominalPrimitiveSubtypePerlHandoffRecords = receipt => {
 	return ["package-set-receipt.json", "package-set-receipt.json.sha256", ...artifacts.map(artifact => artifact.path)].map(path => "handoff/" + path);
 };
 
-const members = (bytes, root) => {
+/**
+ * Read one complete archive's member digests and its canonical prepared manifest, in memory.
+ * Semantically equal but noncanonical manifest bytes are refused before anything is cached.
+ *
+ * @param bytes - Complete original archive bytes.
+ * @param root - Required single top-level distribution directory.
+ */
+export const nominalPrimitiveSubtypePerlArchiveMembers = (bytes, root) => {
 	const key = `${sha256(bytes)}:${root}`;
 	if(!authenticated.has(key))
 	{
@@ -43,7 +50,9 @@ const members = (bytes, root) => {
 		for(const [path, member] of entries) files.set(path, sha256(member));
 		const manifestBytes = entries.get("lean-bridge-package.json");
 		assert.ok(manifestBytes, "prepared CPAN manifest member");
-		authenticated.set(key, { files, manifest: JSON.parse(manifestBytes.toString("utf8")) });
+		const manifest = JSON.parse(manifestBytes.toString("utf8"));
+		assert.equal(manifestBytes.toString("utf8"), canonicalJson(manifest), "canonical prepared CPAN manifest member");
+		authenticated.set(key, { files, manifest });
 	}
 	return authenticated.get(key);
 };
@@ -68,7 +77,7 @@ export const checkNominalPrimitiveSubtypePerlHandoff = async (read, { receipt, m
 		assert.ok(manifest && typeof manifest === "object", pkg.role);
 		const bytes = await read("handoff/" + artifact.path);
 		assert.equal(bytes.length, artifact.bytes, artifact.path); assert.equal(sha256(bytes), artifact.sha256, artifact.path);
-		const archive = members(bytes, `${pkg.name}-${pkg.version}`);
+		const archive = nominalPrimitiveSubtypePerlArchiveMembers(bytes, `${pkg.name}-${pkg.version}`);
 		assert.deepEqual([...archive.files.keys()].sort(), [...Object.keys(manifest.files), "lean-bridge-package.json"].sort(), `${artifact.path} members`);
 		for(const [path, digest] of Object.entries(manifest.files)) assert.equal(archive.files.get(path), digest, `${artifact.path}: ${path}`);
 		assert.deepEqual(archive.manifest, manifest, `${artifact.path}: prepared manifest`);
