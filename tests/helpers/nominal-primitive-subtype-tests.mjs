@@ -47,6 +47,8 @@ import "./nominal-primitive-subtype-dotnet-promotion-tests.mjs";
 import "./nominal-primitive-subtype-dotnet-promotion-history-tests.mjs";
 import "./nominal-subtype-dotnet-ceiling-history-tests.mjs";
 import "./primitive-subtype-history-repair-tests.mjs";
+import "./nominal-primitive-subtype-php-fixture-tests.mjs";
+import "./nominal-primitive-subtype-php-installed-tests.mjs";
 import "./nominal-primitive-subtype-rust-fixture-tests.mjs";
 import "./nominal-primitive-subtype-rust-package-tests.mjs";
 import "./nominal-primitive-subtype-rust-package-controls-tests.mjs";
