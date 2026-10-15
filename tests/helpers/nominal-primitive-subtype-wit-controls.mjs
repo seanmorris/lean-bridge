@@ -114,6 +114,8 @@ export const checkNominalPrimitiveSubtypeWitControls = async (originalRead, opti
 			, tools: json("tools.json"), producerCommit: options.producerCommit
 			, floor: options.floor })); packageControls++;
 	}
+	// The platform word width export carries no refinement tree.
+	const refined = model => model.exports.flatMap(item => item.refinements ? [item.refinements] : []);
 	const replaceLeaf = (value, predicate, mutate) => {
 		if(!value || typeof value !== "object") return false;
 		if(predicate(value))
@@ -124,9 +126,9 @@ export const checkNominalPrimitiveSubtypeWitControls = async (originalRead, opti
 		value => { value.pointerBits = 32; }
 		, value => { value.exports.pop(); }
 		, value => { value.sourceIdentity.extractorSha256 = "0".repeat(64); }
-		, value => { assert.ok(replaceLeaf(value.exports.map(item => item.refinements), item => item.kind === "fin", item => { item.bound = "4"; })); }
-		, value => { assert.ok(replaceLeaf(value.exports.map(item => item.refinements.result), item => item.kind === "subtype", item => { item.constructor = "NominalPrimitiveSubtypes.natA"; })); }
-		, ...options.mode === "full" ? [value => { assert.ok(replaceLeaf(value.exports.map(item => item.refinements.parameters), item => item.kind === "subtype" && item.constructor !== null, item => { item.constructor = "NominalPrimitiveSubtypes.unreviewed"; })); }] : []
+		, value => { assert.ok(replaceLeaf(refined(value), item => item.kind === "fin", item => { item.bound = "4"; })); }
+		, value => { assert.ok(replaceLeaf(refined(value).map(item => item.result), item => item.kind === "subtype", item => { item.constructor = "NominalPrimitiveSubtypes.natA"; })); }
+		, ...options.mode === "full" ? [value => { assert.ok(replaceLeaf(refined(value).map(item => item.parameters), item => item.kind === "subtype" && item.constructor !== null, item => { item.constructor = "NominalPrimitiveSubtypes.unreviewed"; })); }] : []
 	]) {
 		const report = json("report.json"), changes = new Map();
 		for(const attempt of [0, 1])
