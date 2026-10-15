@@ -118,8 +118,9 @@ export const adaptNominalPrimitiveSubtypePhpWasm = (source, strictness) => {
 	adapted = replaceExact(adapted, "$call('word_bits', [], 64);", "$call('word_bits', [], $n(32));");
 	adapted = replaceExact(adapted, "['uint32Value', 4294967294, 0]", "['uint32Value', $n('4294967294'), $n(0)]");
 	adapted = replaceExact(adapted, "['int64Value', PHP_INT_MAX - 1, PHP_INT_MIN]", "['int64Value', $n('9223372036854775806'), $n('-9223372036854775808')]");
+	adapted = replaceExact(adapted, "['int32Value', 2147483646, -2147483648]", "['int32Value', 2147483646, PHP_INT_MIN]");
 	adapted = replaceExact(adapted, "['usizeValue', $n('18446744073709551614'), $n(0)]", "['usizeValue', $n('4294967294'), $n(0)]");
-	adapted = replaceExact(adapted, "['isizeValue', PHP_INT_MAX - 1, PHP_INT_MIN]", "['isizeValue', 2147483646, -2147483648]");
+	adapted = replaceExact(adapted, "['isizeValue', PHP_INT_MAX - 1, PHP_INT_MIN]", "['isizeValue', 2147483646, PHP_INT_MIN]");
 	adapted = replaceExact(adapted, "+ ['wordBits' => 64]", "+ ['wordBits' => 32]", 2);
 	adapted = replaceExact(adapted, entry, "");
 	adapted = replaceExact(adapted, output, observed);

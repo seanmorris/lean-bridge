@@ -97,8 +97,9 @@ test("primitive-base nominal PHP-Wasm caller changes only 32-bit host representa
 		assert.ok(source.includes("$call('word_bits', [], $n(32));"));
 		assert.ok(source.includes("['uint32Value', $n('4294967294'), $n(0)]"));
 		assert.ok(source.includes("['int64Value', $n('9223372036854775806'), $n('-9223372036854775808')]"));
+		assert.ok(source.includes("['int32Value', 2147483646, PHP_INT_MIN]"));
 		assert.ok(source.includes("['usizeValue', $n('4294967294'), $n(0)]"));
-		assert.ok(source.includes("['isizeValue', 2147483646, -2147483648]"));
+		assert.ok(source.includes("['isizeValue', 2147483646, PHP_INT_MIN]"));
 		assert.ok(source.includes(`declare(strict_types=${strictness === "strict" ? 1 : 0});`));
 		assert.equal(source.includes("require 'vendor/autoload.php'"), false);
 		assert.equal(source.includes("$_SERVER['SCRIPT_FILENAME']"), false);
