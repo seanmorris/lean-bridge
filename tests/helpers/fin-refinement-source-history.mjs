@@ -84,6 +84,7 @@ import { nominalPrimitiveSubtypeBrowserRegistrationChangedPaths } from "./nomina
 import { nominalPrimitiveSubtypeBrowserPromotionChangedPaths } from "./nominal-primitive-subtype-browser-promotion-history.mjs";
 import { nominalPrimitiveSubtypeNativeRegistrationChangedPaths } from "./nominal-primitive-subtype-native-registration-history.mjs";
 import { nominalPrimitiveSubtypeNativePromotionChangedPaths } from "./nominal-primitive-subtype-native-promotion-history.mjs";
+import { coreQualityBudgetChangedPaths } from "./core-quality-budget-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeSubtypeRefinementSource, subtypeRefinementChangedPaths } from "./subtype-refinement-source-history.mjs";
 import { subtypeHeapChangedPaths } from "./subtype-heap-source-history.mjs";
@@ -1033,6 +1034,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nominalPrimitiveSubtypeBrowserPromotionChangedPaths
 	, ...nominalPrimitiveSubtypeNativeRegistrationChangedPaths
 	, ...nominalPrimitiveSubtypeNativePromotionChangedPaths
+	, ...coreQualityBudgetChangedPaths
 ])].sort());
 
 /**

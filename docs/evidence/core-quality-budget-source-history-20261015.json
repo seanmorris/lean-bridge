@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "milestone": "core-quality-budget-source-v1",
+  "predecessorCommit": "4313ba1622c92196188ebcb536d05d7317990ffe",
+  "updates": [
+    {
+      "path": ".github/workflows/quality.yml",
+      "currentSha256": "a99547a14ee98d53e5c1c8f65ed9772f14bee4b41b3b3d0d4619ad521f227242",
+      "previousSha256": "b31136b679581777a9bc93bb74ba725901517829289a94d2bd747730e1b2946b",
+      "edits": [
+        {
+          "start": 234,
+          "previous": "    # The expanded recursive-evidence contract suite took 63 minutes locally.\n    timeout-minutes: 90\n",
+          "current": "    # A required hosted run reached the former 90-minute ceiling as the evidence suite grew.\n    timeout-minutes: 180\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "439e9e80a284acbedf8f56ac4fe7cfeb410a873b6cc1dbbe580ff52f12c8041d",
+      "previousSha256": "6b5ae094774ed9ffb1a277f398cbb6066252d5d0522a96fe5a5559705ab72113",
+      "edits": [
+        {
+          "start": 685240,
+          "previous": "          \"sha256\": \"0424250e4ca1664117bbba0c2cfb648afdc97c27d2dd1f9b5acb01479b8c0383\"\n",
+          "current": "          \"sha256\": \"4b1ba4fa1d93f49ab80fd6578b5311eeb7c7e3a2a976c967c4f6bb901386fc68\"\n"
+        },
+        {
+          "start": 1351306,
+          "previous": "          \"sha256\": \"b31136b679581777a9bc93bb74ba725901517829289a94d2bd747730e1b2946b\"\n",
+          "current": "          \"sha256\": \"a99547a14ee98d53e5c1c8f65ed9772f14bee4b41b3b3d0d4619ad521f227242\"\n"
+        },
+        {
+          "start": 1440808,
+          "previous": "          \"sha256\": \"0424250e4ca1664117bbba0c2cfb648afdc97c27d2dd1f9b5acb01479b8c0383\"\n",
+          "current": "          \"sha256\": \"4b1ba4fa1d93f49ab80fd6578b5311eeb7c7e3a2a976c967c4f6bb901386fc68\"\n"
+        },
+        {
+          "start": 1447342,
+          "previous": "          \"sha256\": \"0424250e4ca1664117bbba0c2cfb648afdc97c27d2dd1f9b5acb01479b8c0383\"\n",
+          "current": "          \"sha256\": \"4b1ba4fa1d93f49ab80fd6578b5311eeb7c7e3a2a976c967c4f6bb901386fc68\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "currentSha256": "4b1ba4fa1d93f49ab80fd6578b5311eeb7c7e3a2a976c967c4f6bb901386fc68",
+      "previousSha256": "0424250e4ca1664117bbba0c2cfb648afdc97c27d2dd1f9b5acb01479b8c0383",
+      "edits": [
+        {
+          "start": 4050,
+          "previous": "",
+          "current": "import \"./helpers/core-quality-budget-tests.mjs\";\nimport \"./helpers/core-quality-budget-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "e9dd8c65e73483f3bc0905a15581d2f56844d786c9bc3d4aaa35afec0697829b",
+      "previousSha256": "8bfd60810d1606d800f3f0be5b0dd3b1381dc024858c8e49c3ef9cc7151a5c5d",
+      "edits": [
+        {
+          "start": 8217,
+          "previous": "",
+          "current": "import { coreQualityBudgetChangedPaths } from \"./core-quality-budget-history.mjs\";\n"
+        },
+        {
+          "start": 71149,
+          "previous": "",
+          "current": "\t, ...coreQualityBudgetChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-native-promotion-history.mjs",
+      "currentSha256": "26f8634d2bbadb4548d98d34fe3b827d56173e1438237c59d1f95c3414b4f2f5",
+      "previousSha256": "156da2cae0bed8dd87b2e837d6cf5de228401fd09849ac732c62b05f57bc4269",
+      "edits": [
+        {
+          "start": 187,
+          "previous": "",
+          "current": "import { beforeCoreQualityBudgetSource } from \"./core-quality-budget-history.mjs\";\n"
+        },
+        {
+          "start": 3011,
+          "previous": "",
+          "current": "\tsource = beforeCoreQualityBudgetSource(path, source, expected);\n"
+        }
+      ]
+    }
+  ]
+}

@@ -61,6 +61,8 @@ import "./helpers/python-refinement-evidence-tests.mjs";
 import "./helpers/python-refinement-evidence-source-history-tests.mjs";
 import "./helpers/structural-subtype-core-ci-tests.mjs";
 import "./helpers/structural-subtype-core-ci-history-tests.mjs";
+import "./helpers/core-quality-budget-tests.mjs";
+import "./helpers/core-quality-budget-history-tests.mjs";
 
 test("nested Fin constraints match their full erased shape and emit checked Lean construction", async () => {
 	const ir = corpusReviewedIr({ id: "refinements" }, [{ name: "Refinements.echo", parameters: [{ array: { array: "nat" } }], result: { array: { array: "nat" } } }]);

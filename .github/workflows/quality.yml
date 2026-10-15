@@ -15,8 +15,8 @@ concurrency:
 jobs:
   quality:
     runs-on: ubuntu-24.04
-    # The expanded recursive-evidence contract suite took 63 minutes locally.
-    timeout-minutes: 90
+    # A required hosted run reached the former 90-minute ceiling as the evidence suite grew.
+    timeout-minutes: 180
     steps:
       - name: Check out the exact revision
         uses: actions/checkout@v6
