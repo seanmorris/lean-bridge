@@ -12,7 +12,7 @@ import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { nominalPrimitiveSubtypePerlReferences, promoteNominalPrimitiveSubtypePerl } from "./nominal-primitive-subtype-perl-promotion.mjs";
 import { beforeNominalPrimitiveSubtypePerlPromotionSource, nominalPrimitiveSubtypePerlPromotionChangedPaths, nominalPrimitiveSubtypePerlPromotionHistoryPath, nominalPrimitiveSubtypePerlPromotionPredecessor, reverseNominalPrimitiveSubtypePerlPromotionUpdate } from "./nominal-primitive-subtype-perl-promotion-history.mjs";
-import { beforeNominalPrimitiveSubtypeRubyPromotionSource } from "./nominal-primitive-subtype-ruby-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypeRubyPromotionPins, beforeNominalPrimitiveSubtypeRubyPromotionSource } from "./nominal-primitive-subtype-ruby-promotion-history.mjs";
 
 test("primitive-base Perl promotion history authenticates the exact Perl-only support and docs transition", async t => {
 	const record = JSON.parse(await readFile(nominalPrimitiveSubtypePerlPromotionHistoryPath));
@@ -40,7 +40,8 @@ test("primitive-base Perl promotion history authenticates the exact Perl-only su
 			}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	const expected = await promoteNominalPrimitiveSubtypePerl(JSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypePerlReferences());
+	// References name current sources; the Ruby promotion re-pinned some of them after this epoch.
+	const expected = beforeNominalPrimitiveSubtypeRubyPromotionPins(await promoteNominalPrimitiveSubtypePerl(JSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypePerlReferences()));
 	assert.equal(beforeNominalPrimitiveSubtypePerlPromotionSource(inventoryPath, beforeNominalPrimitiveSubtypeRubyPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8"))), original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)

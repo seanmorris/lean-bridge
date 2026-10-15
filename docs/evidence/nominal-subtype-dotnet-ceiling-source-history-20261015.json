@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nominal-subtype-dotnet-ceiling-source-v1",
+  "predecessorCommit": "763a841395bf705c880b9e406a60220a547143e3",
+  "updates": [
+    {
+      "path": "tests/helpers/nominal-subtype-dotnet-tests.mjs",
+      "currentSha256": "d1c959561394d7da6f644754a3998c0c1e15fb9ba2433259fd21b538f681fe5c",
+      "previousSha256": "037c62a02bfdb4b4e0d193b5a9f72c38e95815cc6ed706e66e96f0d2501a0ee9",
+      "edits": [
+        {
+          "start": 3040,
+          "previous": "",
+          "current": "\tassert.deepEqual(await waitNominalSubtypeDotnetResources(\"fixture\", {\n\t\tsample: async () => ({ ...healthy, load: 7.9 })\n\t\t, pause: async () => assert.fail(\"Per-run ceiling must admit the healthy sample\")\n\t\t, maxLoad: 8\n\t}), { observations: [{ ...healthy, load: 7.9 }], waits: 0 });\n\tfor(const maxLoad of [0, -1, NaN, Infinity])\n\t\tawait assert.rejects(waitNominalSubtypeDotnetResources(\"fixture\", { maxLoad }), /positive finite/u);\n"
+        }
+      ]
+    }
+  ]
+}

@@ -8,6 +8,7 @@ import { readFileSync } from "node:fs";
 import { beforeCoreQualityBudgetPins } from "./core-quality-budget-history.mjs";
 import { beforeNominalPrimitiveSubtypePerlIntegrationPins } from "./nominal-primitive-subtype-perl-integration-history.mjs";
 import { beforeNominalPrimitiveSubtypeRubyIntegrationPins } from "./nominal-primitive-subtype-ruby-integration-history.mjs";
+import { beforeNominalPrimitiveSubtypeRubyPromotionSource } from "./nominal-primitive-subtype-ruby-promotion-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
 export const nominalPrimitiveSubtypePerlPromotionHistoryPath = "docs/evidence/nominal-primitive-subtype-perl-promotion-source-history-20261015.json";
@@ -67,6 +68,7 @@ export const reverseNominalPrimitiveSubtypePerlPromotionUpdate = (source, update
  * @param expected - Optional requested stopping digest.
  */
 export const beforeNominalPrimitiveSubtypePerlPromotionSource = (path, source, expected) => {
+	source = beforeNominalPrimitiveSubtypeRubyPromotionSource(path, source, expected);
 	if(typeof source !== "string" || !nominalPrimitiveSubtypePerlPromotionChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = history ??= JSON.parse(readFileSync(nominalPrimitiveSubtypePerlPromotionHistoryPath, "utf8"));

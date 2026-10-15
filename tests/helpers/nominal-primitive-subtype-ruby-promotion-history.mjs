@@ -5,10 +5,8 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import {
-	beforeNominalPrimitiveSubtypePerlPromotionSource
-	, beforePrimitiveSubtypeIntegrationPins
-} from "./nominal-primitive-subtype-perl-promotion-history.mjs";
+import { beforePrimitiveSubtypeIntegrationPins } from "./nominal-primitive-subtype-perl-promotion-history.mjs";
+import { beforePrimitiveSubtypeHistoryRepairSource } from "./primitive-subtype-history-repair.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
 export const nominalPrimitiveSubtypeRubyPromotionHistoryPath = "docs/evidence/nominal-primitive-subtype-ruby-promotion-source-history-20261015.json";
@@ -67,7 +65,7 @@ export const reverseNominalPrimitiveSubtypeRubyPromotionUpdate = (source, update
  * @param expected - Optional requested stopping digest.
  */
 export const beforeNominalPrimitiveSubtypeRubyPromotionSource = (path, source, expected) => {
-	source = beforeNominalPrimitiveSubtypePerlPromotionSource(path, source, expected);
+	source = beforePrimitiveSubtypeHistoryRepairSource(path, source, expected);
 	if(typeof source !== "string" || !nominalPrimitiveSubtypeRubyPromotionChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = history ??= JSON.parse(readFileSync(nominalPrimitiveSubtypeRubyPromotionHistoryPath, "utf8"));

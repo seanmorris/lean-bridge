@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "milestone": "primitive-subtype-history-repair-source-v1",
+  "predecessorCommit": "c4f5e52d1042a8a5e30224ee2b79cc5cf60e316e",
+  "updates": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "2e4a0be84e596bb2f6c402f056b06df923a8c8739efb89af42013202740e1b1c",
+      "previousSha256": "831cc057ec4f004223e5a6188cc0fefbc76fc395c355212567c5268ce3bf93e3",
+      "edits": [
+        {
+          "start": 9108,
+          "previous": "",
+          "current": "import { nominalSubtypeDotnetCeilingChangedPaths } from \"./nominal-subtype-dotnet-ceiling-history.mjs\";\nimport { primitiveSubtypeHistoryRepairChangedPaths } from \"./primitive-subtype-history-repair.mjs\";\n"
+        },
+        {
+          "start": 72669,
+          "previous": "",
+          "current": "\t, ...nominalSubtypeDotnetCeilingChangedPaths\n\t, ...primitiveSubtypeHistoryRepairChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-perl-promotion-history-tests.mjs",
+      "currentSha256": "418dedc6ba70601c2e2309b03e84c10dba6014a4eb2901da68e51d13e58439dc",
+      "previousSha256": "f75017e7b2c3e89b61d7cef1aca6a50ea6504689cbed740bb61e1616135ef0fe",
+      "edits": [
+        {
+          "start": 930,
+          "previous": "import { beforeNominalPrimitiveSubtypeRubyPromotionSource } from \"./nominal-primitive-subtype-ruby-promotion-history.mjs\";\n",
+          "current": "import { beforeNominalPrimitiveSubtypeRubyPromotionPins, beforeNominalPrimitiveSubtypeRubyPromotionSource } from \"./nominal-primitive-subtype-ruby-promotion-history.mjs\";\n"
+        },
+        {
+          "start": 3239,
+          "previous": "\tconst expected = await promoteNominalPrimitiveSubtypePerl(JSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypePerlReferences());\n",
+          "current": "\t// References name current sources; the Ruby promotion re-pinned some of them after this epoch.\n\tconst expected = beforeNominalPrimitiveSubtypeRubyPromotionPins(await promoteNominalPrimitiveSubtypePerl(JSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypePerlReferences()));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-perl-promotion-history.mjs",
+      "currentSha256": "5b5d388520fd30ebbcdbfcce55ebe09fcc86f4dc96a339e4bcf3e3573afaad9a",
+      "previousSha256": "d4afb34391a1f5c76f50c4f984b173207985c100536e5ab8d8abb1062bfe3351",
+      "edits": [
+        {
+          "start": 516,
+          "previous": "",
+          "current": "import { beforeNominalPrimitiveSubtypeRubyPromotionSource } from \"./nominal-primitive-subtype-ruby-promotion-history.mjs\";\n"
+        },
+        {
+          "start": 3688,
+          "previous": "",
+          "current": "\tsource = beforeNominalPrimitiveSubtypeRubyPromotionSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-ruby-promotion-history.mjs",
+      "currentSha256": "cebe377eedda238a81c8bc023ae5fc7c69a26280dbefa04b4751d45a1f6cbd1d",
+      "previousSha256": "0d97754e9644d8606418d471804f381a3f11421fa864c7815957aaf9a1a0cfd9",
+      "edits": [
+        {
+          "start": 185,
+          "previous": "import {\n\tbeforeNominalPrimitiveSubtypePerlPromotionSource\n\t, beforePrimitiveSubtypeIntegrationPins\n} from \"./nominal-primitive-subtype-perl-promotion-history.mjs\";\n",
+          "current": "import { beforePrimitiveSubtypeIntegrationPins } from \"./nominal-primitive-subtype-perl-promotion-history.mjs\";\nimport { beforePrimitiveSubtypeHistoryRepairSource } from \"./primitive-subtype-history-repair.mjs\";\n"
+        },
+        {
+          "start": 3395,
+          "previous": "\tsource = beforeNominalPrimitiveSubtypePerlPromotionSource(path, source, expected);\n",
+          "current": "\tsource = beforePrimitiveSubtypeHistoryRepairSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-tests.mjs",
+      "currentSha256": "c1eb8f6759e2aa24abd37e61e2413f4e347f0e082902ffaec0c0b704f2ad043d",
+      "previousSha256": "de1a3553e457c5817f786d23c66676bab3017382d5d735ed9eb231e890442c10",
+      "edits": [
+        {
+          "start": 2204,
+          "previous": "",
+          "current": "import \"./nominal-subtype-dotnet-ceiling-history-tests.mjs\";\nimport \"./primitive-subtype-history-repair-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-perl-promotion-history-tests.mjs",
+      "currentSha256": "44d4b4da503c3d230431208bfab81a99552704e8a43846d780de4c5161c9e3a6",
+      "previousSha256": "0df8bb6915625f60d84ebac481c47d547213002b04e5902c825daf04e5225928",
+      "edits": [
+        {
+          "start": 494,
+          "previous": "",
+          "current": "import { nominalPrimitiveSubtypePerlPromotionHistoryPath } from \"./nominal-primitive-subtype-perl-promotion-history.mjs\";\nimport { nominalPrimitiveSubtypeRubyPromotionHistoryPath } from \"./nominal-primitive-subtype-ruby-promotion-history.mjs\";\n"
+        },
+        {
+          "start": 3650,
+          "previous": "\tconst expected = beforeNominalSubtypeJvmPromotionPins(await promoteNominalSubtypePerl(JSON.parse(original(inventoryPath)), await nominalSubtypePerlReferences()));\n\tfor(const path of [nominalSubtypeDotnetPromotionHistoryPath, nominalSubtypeRustPromotionHistoryPath, nominalSubtypeRubyPromotionHistoryPath, nominalSubtypePythonPromotionHistoryPath])\n\t{\n\t\tconst later = JSON.parse(await readFile(path));\n\t\tfor(const entry of expected.evidence) for(const file of entry.files)\n",
+          "current": "\tconst promoted = await promoteNominalSubtypePerl(JSON.parse(original(inventoryPath)), await nominalSubtypePerlReferences());\n\tconst reversePins = async (inventory, paths) => {\n\t\tfor(const path of paths)\n"
+        },
+        {
+          "start": 3858,
+          "previous": "\t\t\tconst update = later.updates.find(item => item.path === file.path);\n\t\t\tif(update && file.sha256 === update.currentSha256) file.sha256 = update.previousSha256;\n",
+          "current": "\t\t\tconst later = JSON.parse(await readFile(path));\n\t\t\tfor(const entry of inventory.evidence) for(const file of entry.files)\n\t\t\t{\n\t\t\t\tconst update = later.updates.find(item => item.path === file.path);\n\t\t\t\tif(update && file.sha256 === update.currentSha256) file.sha256 = update.previousSha256;\n\t\t\t}\n"
+        },
+        {
+          "start": 4160,
+          "previous": "\t}\n",
+          "current": "\t};\n\t// Newest first: the primitive-base Ruby and Perl promotions re-pinned the Perl promotion tests after the JVM promotion.\n\tawait reversePins(promoted, [nominalPrimitiveSubtypeRubyPromotionHistoryPath, nominalPrimitiveSubtypePerlPromotionHistoryPath]);\n\tconst expected = beforeNominalSubtypeJvmPromotionPins(promoted);\n\tawait reversePins(expected, [nominalSubtypeDotnetPromotionHistoryPath, nominalSubtypeRustPromotionHistoryPath, nominalSubtypeRubyPromotionHistoryPath, nominalSubtypePythonPromotionHistoryPath]);\n"
+        }
+      ]
+    }
+  ]
+}

@@ -10,6 +10,8 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeNominalSubtypeJvmPromotionPins } from "./nominal-subtype-jvm-promotion-history.mjs";
+import { nominalPrimitiveSubtypePerlPromotionHistoryPath } from "./nominal-primitive-subtype-perl-promotion-history.mjs";
+import { nominalPrimitiveSubtypeRubyPromotionHistoryPath } from "./nominal-primitive-subtype-ruby-promotion-history.mjs";
 import { nominalSubtypeDotnetPromotionHistoryPath } from "./nominal-subtype-dotnet-promotion-history.mjs";
 import { nominalSubtypeRubyPromotionHistoryPath } from "./nominal-subtype-ruby-promotion-history.mjs";
 import { nominalSubtypeRustPromotionHistoryPath } from "./nominal-subtype-rust-promotion-history.mjs";
@@ -46,16 +48,22 @@ test("nominal Perl promotion history authenticates exact changes and the six obs
 		}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	const expected = beforeNominalSubtypeJvmPromotionPins(await promoteNominalSubtypePerl(JSON.parse(original(inventoryPath)), await nominalSubtypePerlReferences()));
-	for(const path of [nominalSubtypeDotnetPromotionHistoryPath, nominalSubtypeRustPromotionHistoryPath, nominalSubtypeRubyPromotionHistoryPath, nominalSubtypePythonPromotionHistoryPath])
-	{
-		const later = JSON.parse(await readFile(path));
-		for(const entry of expected.evidence) for(const file of entry.files)
+	const promoted = await promoteNominalSubtypePerl(JSON.parse(original(inventoryPath)), await nominalSubtypePerlReferences());
+	const reversePins = async (inventory, paths) => {
+		for(const path of paths)
 		{
-			const update = later.updates.find(item => item.path === file.path);
-			if(update && file.sha256 === update.currentSha256) file.sha256 = update.previousSha256;
+			const later = JSON.parse(await readFile(path));
+			for(const entry of inventory.evidence) for(const file of entry.files)
+			{
+				const update = later.updates.find(item => item.path === file.path);
+				if(update && file.sha256 === update.currentSha256) file.sha256 = update.previousSha256;
+			}
 		}
-	}
+	};
+	// Newest first: the primitive-base Ruby and Perl promotions re-pinned the Perl promotion tests after the JVM promotion.
+	await reversePins(promoted, [nominalPrimitiveSubtypeRubyPromotionHistoryPath, nominalPrimitiveSubtypePerlPromotionHistoryPath]);
+	const expected = beforeNominalSubtypeJvmPromotionPins(promoted);
+	await reversePins(expected, [nominalSubtypeDotnetPromotionHistoryPath, nominalSubtypeRustPromotionHistoryPath, nominalSubtypeRubyPromotionHistoryPath, nominalSubtypePythonPromotionHistoryPath]);
 	assert.equal(beforeNominalSubtypePerlPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)

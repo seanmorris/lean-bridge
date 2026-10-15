@@ -36,6 +36,8 @@ import "./nominal-primitive-subtype-ruby-installed-tests.mjs";
 import "./nominal-primitive-subtype-ruby-integration-history-tests.mjs";
 import "./nominal-primitive-subtype-ruby-promotion-tests.mjs";
 import "./nominal-primitive-subtype-ruby-promotion-history-tests.mjs";
+import "./nominal-subtype-dotnet-ceiling-history-tests.mjs";
+import "./primitive-subtype-history-repair-tests.mjs";
 import "./nominal-primitive-subtype-browser-tests.mjs";
 import "./nominal-primitive-subtype-browser-ci-policy-tests.mjs";
 import "./nominal-primitive-subtype-browser-ci-shell-tests.mjs";

@@ -91,6 +91,8 @@ import { nominalPrimitiveSubtypePerlIntegrationChangedPaths } from "./nominal-pr
 import { nominalPrimitiveSubtypeRubyIntegrationChangedPaths } from "./nominal-primitive-subtype-ruby-integration-history.mjs";
 import { nominalPrimitiveSubtypePerlPromotionChangedPaths } from "./nominal-primitive-subtype-perl-promotion-history.mjs";
 import { beforeNominalPrimitiveSubtypeRubyPromotionSource, nominalPrimitiveSubtypeRubyPromotionChangedPaths } from "./nominal-primitive-subtype-ruby-promotion-history.mjs";
+import { nominalSubtypeDotnetCeilingChangedPaths } from "./nominal-subtype-dotnet-ceiling-history.mjs";
+import { primitiveSubtypeHistoryRepairChangedPaths } from "./primitive-subtype-history-repair.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeSubtypeRefinementSource, subtypeRefinementChangedPaths } from "./subtype-refinement-source-history.mjs";
 import { subtypeHeapChangedPaths } from "./subtype-heap-source-history.mjs";
@@ -1049,6 +1051,8 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nominalPrimitiveSubtypeRubyIntegrationChangedPaths
 	, ...nominalPrimitiveSubtypePerlPromotionChangedPaths
 	, ...nominalPrimitiveSubtypeRubyPromotionChangedPaths
+	, ...nominalSubtypeDotnetCeilingChangedPaths
+	, ...primitiveSubtypeHistoryRepairChangedPaths
 ])].sort());
 
 /**
