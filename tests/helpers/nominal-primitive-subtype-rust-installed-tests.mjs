@@ -117,7 +117,7 @@ for(const route of routes) for(const mode of modes) test(`installed primitive-ba
 	const receipt = JSON.parse(await readFile(join(handoff, "package-set-receipt.json"))), pkg = receipt.packages[0];
 	const archive = join(handoff, pkg.artifacts[0].path), consumer = join(root, "consumer");
 	await resourceCheck(output);
-	const installation = await installNominalPrimitiveSubtypeRust({ root: consumer, handoff, dependencyHandoff, pkg, dependencies, environment, model, floor, caller, mode, route, output });
+	const installation = await installNominalPrimitiveSubtypeRust({ root: consumer, handoff, dependencyHandoff, pkg, dependencies, environment, model, floor, caller, mode, route, output, maxLoad: resourceMaxLoad });
 	const observations = [], clean = { ...copiedCleanEnvironment, CARGO_HOME: "/unavailable", RUSTC: "/unavailable" };
 	for(const [index, location] of [consumer, consumer + "-relocated"].entries())
 	{

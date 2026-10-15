@@ -34,6 +34,23 @@ fn main() {}
 `;
 
 /**
+ * Carry the producer's selected load ceiling into every offline install phase.
+ *
+ * @param root - Fresh retained-record directory on the producer filesystem.
+ * @param maxLoad - Exclusive host-load ceiling selected by the producer.
+ * @param options - Injectable policy dependencies for isolated controls.
+ * @param options.wait - Resource waiter used by the real installer unless testing policy.
+ * @param options.notify - Producer diagnostic sink.
+ */
+export const waitNominalPrimitiveSubtypeRustResources = (root, maxLoad, {
+	wait = waitNominalSubtypeDotnetResources
+	, notify = console.log
+} = {}) => {
+	assert.ok(Number.isFinite(maxLoad) && maxLoad > 0, "Rust installer requires a positive finite host-load ceiling");
+	return wait(root, { maxLoad, notify });
+};
+
+/**
  * Select both the public API and its independently named constructor diagnostics.
  *
  * @param mode - Full or result-only API.
@@ -106,10 +123,11 @@ export const verifyNominalPrimitiveSubtypeRustDependencies = async (root, depend
  * @param options.mode - Full or result-only package selection.
  * @param options.route - Ordinary or reviewed constructor labels.
  * @param options.output - Fresh retained-record directory.
+ * @param options.maxLoad - Exclusive host-load ceiling selected by the producer.
  */
-export const installNominalPrimitiveSubtypeRust = async ({ root, handoff, dependencyHandoff, pkg, dependencies, environment, model, floor, caller, mode, route, output }) => {
+export const installNominalPrimitiveSubtypeRust = async ({ root, handoff, dependencyHandoff, pkg, dependencies, environment, model, floor, caller, mode, route, output, maxLoad }) => {
 	assert.ok(nominalPrimitiveSubtypeRustModes.includes(mode)); assert.ok(nominalPrimitiveSubtypeRustRoutes.includes(route));
-	const ready = () => waitNominalSubtypeDotnetResources(output, { notify: console.log });
+	const ready = () => waitNominalPrimitiveSubtypeRustResources(output, maxLoad);
 	await ready();
 	const bin = join(root, "tools"), vendor = join(root, "vendor"), cargoHome = join(root, "cargo-home");
 	for(const directory of [bin, vendor, cargoHome]) await mkdir(directory, { recursive: true });

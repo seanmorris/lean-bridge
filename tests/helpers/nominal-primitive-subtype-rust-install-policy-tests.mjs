@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import test from "node:test";
-import { nominalPrimitiveSubtypeRustCargoArguments, nominalPrimitiveSubtypeRustApiProbe, checkNominalPrimitiveSubtypeRustApiProbe } from "./nominal-primitive-subtype-rust-install.mjs";
+import { nominalPrimitiveSubtypeRustCargoArguments, nominalPrimitiveSubtypeRustApiProbe, checkNominalPrimitiveSubtypeRustApiProbe, waitNominalPrimitiveSubtypeRustResources } from "./nominal-primitive-subtype-rust-install.mjs";
 
 const inputs = ["echo_a", "echo_b", "refuse_unit", "combine", "echo_pair", "echo_event_a", "echo_event_b", "aliases"];
 
@@ -27,6 +27,15 @@ test("primitive-base Rust Cargo features select each route and API independently
 		assert.throws(() => nominalPrimitiveSubtypeRustCargoArguments("full", bad));
 	}
 	assert.equal(nominalPrimitiveSubtypeRustApiProbe, `#[allow(unused_imports)]\nuse nominalprimitivesubtypes::{${inputs.join(", ")}};\nfn main() {}\n`);
+});
+
+test("primitive-base Rust offline installation preserves the producer load ceiling", async () => {
+	const calls = [], notify = () => {}, expected = { observations: [], waits: 0 };
+	const wait = async (root, options) => { calls.push({ root, options }); return expected; };
+	assert.equal(await waitNominalPrimitiveSubtypeRustResources("records", 8, { wait, notify }), expected);
+	assert.deepEqual(calls, [{ root: "records", options: { maxLoad: 8, notify } }]);
+	for(const maxLoad of [undefined, null, 0, -1, Number.NaN, Number.POSITIVE_INFINITY])
+		assert.throws(() => waitNominalPrimitiveSubtypeRustResources("records", maxLoad, { wait, notify }), /positive finite host-load ceiling/u);
 });
 
 test("primitive-base Rust API probe accepts only the selected eight missing input functions", () => {
