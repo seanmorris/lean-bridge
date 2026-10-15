@@ -21,8 +21,54 @@ import { copyPackageSetHandoff } from "./package-set.mjs";
 import { verifyFinContainerEdgeArchiveClosure } from "./fin-container-edge-closure.mjs";
 import { nominalSubtypeInstalledConfiguration, nominalSubtypeFixture, nominalSubtypeModule, nominalSubtypeInstalledReview } from "./nominal-subtype-installed-fixture.mjs";
 import { nominalSubtypeNativeCaller, nominalSubtypeNativeSelection } from "./nominal-subtype-native-caller.mjs";
+import { assertNominalSubtypeDispatchPositiveControls, classifyNominalSubtypeDispatchSymbols, nominalSubtypeDispatchExpected, nominalSubtypeDispatchInterposer, nominalSubtypeDispatchProbe, parseNominalSubtypeDispatchRows } from "./nominal-subtype-dispatch.mjs";
 
 const { enabled, profiles, routes, modes } = nominalSubtypeNativeSelection(process.env);
+const dispatchFlag = process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_NATIVE_DISPATCH;
+assert.ok(dispatchFlag === undefined || ["0", "1"].includes(dispatchFlag), "Invalid nominal native DISPATCH");
+const dispatchEnabled = dispatchFlag === "1";
+
+/**
+ * Count real dispatch in the relocated installed C package with a test-only LD_PRELOAD interposer:
+ * public refusals reach neither the adapter nor the Lean source, accepted calls run each selected
+ * constructor once in its exported validator and once more inside the adapter. Columns come from the
+ * installed component library's own symbol table and the package stays byte-identical.
+ *
+ * @param root0 - Installed package location and compile inputs.
+ * @param root0.consumer - Consumer root beside the relocated installation.
+ * @param root0.location - Relocated consumer directory holding the installed package and tools.
+ * @param root0.packageName - Installed package directory name.
+ * @param root0.receipt - Installed package receipt.
+ * @param root0.environment - Producer toolchain selection naming the Lean prefix.
+ */
+const observeDispatch = async ({ consumer, location, packageName, receipt, environment }) => {
+	const installed = join(location, packageName), lib = join(installed, "lib");
+	const libraries = Object.keys(receipt.files).filter(path => /^lib\/libcomponent_[0-9a-f]{20}\.so$/u.test(path));
+	assert.equal(libraries.length, 1, "one component library");
+	const library = libraries[0], librarySha256 = sha256(await readFile(join(installed, library)));
+	assert.equal(librarySha256, receipt.files[library].sha256);
+	const listing = await runCopied("/usr/bin/nm", ["-D", "--defined-only", join(installed, library)], location);
+	assert.equal(listing.stderr, "");
+	const columns = classifyNominalSubtypeDispatchSymbols(listing.stdout), expected = nominalSubtypeDispatchExpected(columns);
+	const probe = join(consumer, "c-dispatch"); await mkdir(probe);
+	const compile = { ...copiedCleanEnvironment, PATH: join(location, "tools"), PKG_CONFIG_LIBDIR: join(lib, "pkgconfig"), PKG_CONFIG_PATH: "" };
+	const strict = ["-std=c11", "-Wall", "-Wextra", "-Werror", "-isystem", join(environment.LEAN_BRIDGE_LEAN_PREFIX, "include"), "-I", join(installed, "include")];
+	await saveLakeFile(probe, "interposer.c", nominalSubtypeDispatchInterposer(columns));
+	await saveLakeFile(probe, "probe.c", nominalSubtypeDispatchProbe(columns));
+	const flags = (await runCopied("/usr/bin/pkg-config", ["--cflags", "--libs", receipt.pkgConfig], probe, compile)).stdout.trim().split(/\s+/u);
+	await runCopied("/usr/bin/cc", [...strict, "-shared", "-fPIC", "interposer.c", "-o", "libdispatch.so"], probe, compile);
+	await runCopied("/usr/bin/cc", [...strict, "probe.c", ...flags, "-lleanshared", "-o", "probe"], probe, compile);
+	const run = await runCopied(join(probe, "probe"), [], probe, { ...copiedCleanEnvironment, LD_PRELOAD: join(probe, "libdispatch.so"), LD_LIBRARY_PATH: lib });
+	assert.equal(run.stderr, "");
+	const observed = parseNominalSubtypeDispatchRows(run.stdout, columns);
+	assert.deepEqual(observed, expected);
+	assertNominalSubtypeDispatchPositiveControls(observed, columns);
+	assert.equal(sha256(await readFile(join(installed, library))), librarySha256);
+	const positiveControl = "every accepted public call increments its exported validators, their constructors twice, the adapter and the Lean source; refusals stop at the refusing validator";
+	const unmeasured = ["C++ dispatch (it calls the same C entries)", "resident memory"];
+	const symbols = listing.stdout;
+	return { interposer: "LD_PRELOAD", library, librarySha256, symbols, symbolsSha256: sha256(symbols), columns, observed, positiveControl, unmeasured };
+};
 
 for(const route of routes) for(const mode of modes) test(`installed native nominal Subtypes reproduce and relocate ${route} ${mode}`, { skip: !enabled, timeout: 3_600_000 }, async t => {
 	const resultOnly = mode === "result-only";
@@ -118,11 +164,15 @@ for(const route of routes) for(const mode of modes) test(`installed native nomin
 			await saveLakeFile(output, `${profile}/${location === relocated ? "relocated" : "installed"}.json`, canonicalJson(runs.at(-1)));
 		}
 		delete observation.command;
+		const measured = dispatchEnabled && profile === "c" && !resultOnly;
+		const dispatch = measured
+			? await observeDispatch({ consumer, location: relocated, packageName, receipt: JSON.parse(await readFile(join(relocated, packageName, "lean-bridge-package.json"), "utf8")), environment })
+			: { observed: false, reason: dispatchEnabled ? "Dispatch is measured on the C profile of constructor-bearing modes only" : "Separate constructor/source entry probe remains required (LEAN_BRIDGE_NOMINAL_SUBTYPE_NATIVE_DISPATCH=1)" };
+		if(measured) await saveLakeFile(output, `${profile}/dispatch.json`, canonicalJson(dispatch));
 		reports.push({ profile, ...observation, executableSha256, runs, packages
 			, sourceSha256: sha256(source), compiler
 			, relocatedInstallation: true, sourceRemovedBeforeInstallation: true
-			, compilerFreeReplay: true
-			, dispatch: { observed: false, reason: "Separate constructor/source entry probe remains required" } });
+			, compilerFreeReplay: true, dispatch });
 		await saveLakeFile(output, `${profile}/report.json`, canonicalJson(reports.at(-1)));
 	}
 	await saveLakeFile(output, "report.json", canonicalJson({ schemaVersion: 1

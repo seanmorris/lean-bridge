@@ -202,9 +202,9 @@ const probeCalls = {
 	, "public-early-combine": "box(&input, 100); box(&other, 40); report(\"public-early-combine\", nominalsubtypes_combine(&input, &other, result, &error));"
 	, "public-valid-nested": "box(&pair.left, 40); box(&pair.right, 40); report(\"public-valid-nested\", nominalsubtypes_nested(&pair, result, &error));"
 	, "public-late-nested": "box(&pair.right, 95); report(\"public-late-nested\", nominalsubtypes_nested(&pair, result, &error));"
-	, "public-inactive-event": "select(&event, NOMINALSUBTYPES_EVENT_KIND_EMPTY); report(\"public-inactive-event\", nominalsubtypes_event_first(&event, result, &error));"
-	, "public-active-event-box": "select(&event, NOMINALSUBTYPES_EVENT_KIND_BOX); box(&event.cases.box.value, 40); report(\"public-active-event-box\", nominalsubtypes_event_first(&event, result, &error));"
-	, "public-valid-event-choices": "select(&event, NOMINALSUBTYPES_EVENT_KIND_CHOICES); choose(&event, choices, 40); report(\"public-valid-event-choices\", nominalsubtypes_event_first(&event, result, &error));"
+	, "public-inactive-event": "select_case(&event, NOMINALSUBTYPES_EVENT_KIND_EMPTY); report(\"public-inactive-event\", nominalsubtypes_event_first(&event, result, &error));"
+	, "public-active-event-box": "select_case(&event, NOMINALSUBTYPES_EVENT_KIND_BOX); box(&event.cases.box.value, 40); report(\"public-active-event-box\", nominalsubtypes_event_first(&event, result, &error));"
+	, "public-valid-event-choices": "select_case(&event, NOMINALSUBTYPES_EVENT_KIND_CHOICES); choose(&event, choices, 40); report(\"public-valid-event-choices\", nominalsubtypes_event_first(&event, result, &error));"
 	, "public-invalid-event-choices": "choose(&event, choices, 100); report(\"public-invalid-event-choices\", nominalsubtypes_event_first(&event, result, &error));"
 	, "public-valid-echo": "box(&input, 40); report(\"public-valid-echo\", nominalsubtypes_echo(&input, &output, &error));"
 	, "public-recovery-first": "report(\"public-recovery-first\", nominalsubtypes_first(&input, result, &error));"
@@ -231,7 +231,7 @@ static void report(const char *step, nominalsubtypes_status status) {
   printf("\\n");
 }
 static void box(nominalsubtypes_envelope *value, unsigned long payload) { mpz_set_ui(value->payload, payload); mpz_set_ui(value->digit, 2); }
-static void select(nominalsubtypes_event *event, nominalsubtypes_event_kind kind) {
+static void select_case(nominalsubtypes_event *event, nominalsubtypes_event_kind kind) {
   if (nominalsubtypes_event_select(event, kind) != NOMINALSUBTYPES_STATUS_OK) { fprintf(stderr, "event case selection failed\\n"); exit(1); }
 }
 /* [none, some (ok payload), some (error 40)]: the ok leaf is walked first, so an invalid payload refuses there. */
