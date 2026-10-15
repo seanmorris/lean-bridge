@@ -42,6 +42,7 @@ import "./nominal-primitive-subtype-dotnet-installed-tests.mjs";
 import "./nominal-primitive-subtype-dotnet-ci-policy-tests.mjs";
 import "./nominal-primitive-subtype-dotnet-ci-shell-tests.mjs";
 import "./nominal-primitive-subtype-dotnet-ci-workflow-tests.mjs";
+import "./nominal-primitive-subtype-dotnet-evidence-tests.mjs";
 import "./nominal-subtype-dotnet-ceiling-history-tests.mjs";
 import "./primitive-subtype-history-repair-tests.mjs";
 import "./nominal-primitive-subtype-rust-fixture-tests.mjs";

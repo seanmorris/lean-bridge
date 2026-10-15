@@ -24,7 +24,9 @@ const entry = "src/backends/dotnet/copied-values.mjs";
  */
 export const nominalPrimitiveSubtypeDotnetOriginal = (revision, path) => {
 	assert.match(revision, /^[a-f0-9]{40}$/u);
-	assert.ok(/^(?:src|tests)\//u.test(path) && posix.normalize(path) === path);
+	assert.ok(/^[A-Za-z0-9_.+/-]+$/u.test(path)
+		&& !path.startsWith("/") && posix.normalize(path) === path
+		&& path.split("/").every(part => part && part !== "." && part !== ".."), path);
 	const key = `${revision}:${path}`;
 	if(!sources.has(key))
 		sources.set(key, execFileSync("git", ["show", key], { maxBuffer: 16 * 1024 * 1024 }));

@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "nominalprimitivesubtypes@1.0.0",
+    "name": "nominalprimitivesubtypes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51621913,
+          "path": "archives/Nominalprimitivesubtypes.Api.1.0.0.nupkg",
+          "sha256": "270e7e2036387f9c787ad48e61029076d294c9fe18ffeb794f636eaaa8ecc878"
+        }
+      ],
+      "ecosystem": "nuget",
+      "name": "Nominalprimitivesubtypes.Api",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "nuget",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "dcb6f0ecb42afd96a1607cb0faa97ce7101bc2be1bb5796ac4e948064b0c02a9",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "ec44d256eaedb7ad5747eb9ed7f63a46a2e91f03a7540c376c1a4882a1110c19"
+  }
+}

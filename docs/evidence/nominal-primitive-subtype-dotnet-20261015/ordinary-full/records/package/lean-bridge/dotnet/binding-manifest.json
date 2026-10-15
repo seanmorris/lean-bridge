@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "generator": "dotnet-copied-v1",
+  "target": "dotnet",
+  "component": "nominalprimitivesubtypes@1.0.0",
+  "bindingIrSha256": "dcb6f0ecb42afd96a1607cb0faa97ce7101bc2be1bb5796ac4e948064b0c02a9",
+  "namespace": "LeanBridge.Nominalprimitivesubtypes",
+  "assembly": "LeanBridge.Nominalprimitivesubtypes",
+  "files": [
+    "src/LeanBridge.Nominalprimitivesubtypes/Api.cs",
+    "src/LeanBridge.Nominalprimitivesubtypes/Runtime.cs",
+    "src/LeanBridge.Nominalprimitivesubtypes/LeanBridge.Nominalprimitivesubtypes.csproj",
+    "NuGet.Config",
+    "README.md"
+  ],
+  "publicFiles": [
+    "src/LeanBridge.Nominalprimitivesubtypes/Api.cs"
+  ],
+  "internalFiles": [
+    "src/LeanBridge.Nominalprimitivesubtypes/Runtime.cs"
+  ],
+  "packageFiles": [
+    "src/LeanBridge.Nominalprimitivesubtypes/LeanBridge.Nominalprimitivesubtypes.csproj",
+    "NuGet.Config"
+  ],
+  "aliases": [
+    {
+      "id": "lean:NominalPrimitiveSubtypes.PacketAlias",
+      "name": "PacketAlias",
+      "target": {
+        "id": "lean:NominalPrimitiveSubtypes.Packet",
+        "kind": "named"
+      },
+      "managedType": "Packet"
+    }
+  ],
+  "supportedFeatures": [
+    "direct-functions",
+    "copied-values",
+    "deterministic-close"
+  ],
+  "capabilityGaps": [
+    {
+      "feature": "identity-and-effects",
+      "reason": "Ordinary packages admit copied values and synchronous primitive callables, not resources, compound callables or async delivery."
+    },
+    {
+      "feature": "additional-platforms",
+      "reason": "Compiled releases target .NET 8 on Linux x86-64 with glibc."
+    }
+  ]
+}

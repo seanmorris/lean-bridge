@@ -1,0 +1,57 @@
+{
+  "closure": {
+    "buildInputsSha256": "f19e8e2c3f73d938d5260a02648c39fbbfe9932730a899925e06c74a4d9bbd22",
+    "cacheFilesSha256": "c5caf71fe0be7ecb770682751ea4d20ec3068f10d6a275a741f0ebf29c0c2e8b",
+    "deployedFilesSha256": "721c6e97b894800cede3cc01af0f511084a66f9cb69f8ed134251cea913c8906",
+    "interpreterSha256": "c61ff7f8665688b95ad0f34e780daaa67b978d26115b82797c07ea6044c566ed",
+    "packageFileSetSha256": "d8097daa2008e99218396eb9e2387896ddbf8fc8337a027ed212e86da459e5d1",
+    "receiptSha256": "8e4e783b4f3e9f502ebd91a58f63fe6fa506ab9e71b5cf9fce676f34e8cef178"
+  },
+  "counts": {
+    "checks": 603,
+    "hostRejections": 1,
+    "rejections": 0,
+    "rounds": 256,
+    "snapshotControls": 30,
+    "wordBits": 64
+  },
+  "cwd": "/tmp/lean-bridge-nominal-primitive-subtype-dotnet-pd0GRv/consumer",
+  "framework": {
+    "args": [
+      "out/Consumer.dll",
+      "--runtime"
+    ],
+    "command": "/app/.toolchains/dotnet/dotnet",
+    "cwd": "/tmp/lean-bridge-nominal-primitive-subtype-dotnet-pd0GRv/consumer",
+    "facts": {
+      "architecture": "X64",
+      "command": "/app/.toolchains/dotnet/dotnet",
+      "description": ".NET 8.0.30",
+      "directory": "/app/.toolchains/dotnet/shared/Microsoft.NETCore.App/8.0.30/",
+      "littleEndian": true,
+      "os": "Debian GNU/Linux 12 (bookworm)",
+      "version": "8.0.30"
+    },
+    "run": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "{\"version\":\"8.0.30\",\"description\":\".NET 8.0.30\",\"directory\":\"/app/.toolchains/dotnet/shared/Microsoft.NETCore.App/8.0.30/\",\"command\":\"/app/.toolchains/dotnet/dotnet\",\"architecture\":\"X64\",\"os\":\"Debian GNU/Linux 12 (bookworm)\",\"littleEndian\":true}\n"
+    },
+    "runtimeFiles": {
+      "System.Private.CoreLib.dll": {
+        "bytes": 12773888,
+        "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+      },
+      "libcoreclr.so": {
+        "bytes": 6906008,
+        "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+      }
+    }
+  },
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":603,\"rejections\":0,\"hostRejections\":1,\"snapshotControls\":30,\"rounds\":256,\"wordBits\":64}\n"
+  },
+  "stage": "installed"
+}

@@ -1,0 +1,152 @@
+{
+  "version": 3,
+  "targets": {
+    "net8.0": {
+      "Nominalprimitivesubtypes.Api/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/LeanBridge.Nominalprimitivesubtypes.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/LeanBridge.Nominalprimitivesubtypes.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/linux-x64/native/libcomponent_19ad06f04a0c2d39db76.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/linux-x64/native/liblean_bridge_native.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/linux-x64/native/libleanshared.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/linux-x64/native/libnominalprimitivesubtypes.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Nominalprimitivesubtypes.Api/1.0.0": {
+      "sha512": "trKMzDvvEs/PeUMsdpFhgm5ph+dlp5vbH58UaZ3Yed9jLW9Alqj41zWlRRzUZiUaz1nxZz688kVjaGA9uP3xiw==",
+      "type": "package",
+      "path": "nominalprimitivesubtypes.api/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        "README.md",
+        "lean-bridge/component/allocation-guard.h",
+        "lean-bridge/component/artifacts.json",
+        "lean-bridge/component/binding-ir.json",
+        "lean-bridge/component/component.h",
+        "lean-bridge/component/generated.lean",
+        "lean-bridge/component/metadata.json",
+        "lean-bridge/component/model.json",
+        "lean-bridge/component/native-component.json",
+        "lean-bridge/dotnet/binding-manifest.json",
+        "lean-bridge/dotnet/global.json",
+        "lean-bridge/dotnet/src/LeanBridge.Nominalprimitivesubtypes/Api.cs",
+        "lean-bridge/dotnet/src/LeanBridge.Nominalprimitivesubtypes/LeanBridge.Nominalprimitivesubtypes.csproj",
+        "lean-bridge/dotnet/src/LeanBridge.Nominalprimitivesubtypes/Runtime.cs",
+        "lean-bridge/licenses/Lean-LICENSE",
+        "lean-bridge/licenses/Lean-LICENSES",
+        "lean-bridge/licenses/LeanBridge-LICENSE",
+        "lean-bridge/licenses/source-notices.json",
+        "lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+        "lean-bridge/native-c-adapter.json",
+        "lean-bridge/native-dotnet.json",
+        "lean-bridge/package-receipt.json",
+        "lean-bridge/runtime.json",
+        "lib/net8.0/LeanBridge.Nominalprimitivesubtypes.dll",
+        "lib/net8.0/LeanBridge.Nominalprimitivesubtypes.xml",
+        "nominalprimitivesubtypes.api.1.0.0.nupkg.sha512",
+        "nominalprimitivesubtypes.api.nuspec",
+        "runtimes/linux-x64/native/libcomponent_19ad06f04a0c2d39db76.so",
+        "runtimes/linux-x64/native/liblean_bridge_native.so",
+        "runtimes/linux-x64/native/libleanshared.so",
+        "runtimes/linux-x64/native/libnominalprimitivesubtypes.so"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net8.0": [
+      "Nominalprimitivesubtypes.Api >= 1.0.0 <= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "/tmp/lean-bridge-nominal-primitive-subtype-dotnet-sE4ovH/consumer/packages": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "/tmp/lean-bridge-nominal-primitive-subtype-dotnet-sE4ovH/consumer/Consumer.csproj",
+      "projectName": "Consumer",
+      "projectPath": "/tmp/lean-bridge-nominal-primitive-subtype-dotnet-sE4ovH/consumer/Consumer.csproj",
+      "packagesPath": "/tmp/lean-bridge-nominal-primitive-subtype-dotnet-sE4ovH/consumer/packages",
+      "outputPath": "/tmp/lean-bridge-nominal-primitive-subtype-dotnet-sE4ovH/consumer/obj/",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "/tmp/lean-bridge-nominal-primitive-subtype-dotnet-sE4ovH/consumer/NuGet.Config"
+      ],
+      "originalTargetFrameworks": [
+        "net8.0"
+      ],
+      "sources": {
+        "/tmp/lean-bridge-nominal-primitive-subtype-dotnet-sE4ovH/consumer/feed": {}
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "allWarningsAsErrors": true,
+        "warnAsError": [
+          "NU1605"
+        ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "false",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      }
+    },
+    "frameworks": {
+      "net8.0": {
+        "targetAlias": "net8.0",
+        "dependencies": {
+          "Nominalprimitivesubtypes.Api": {
+            "target": "Package",
+            "version": "[1.0.0, 1.0.0]"
+          }
+        },
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "/app/.toolchains/dotnet/sdk/8.0.424/PortableRuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

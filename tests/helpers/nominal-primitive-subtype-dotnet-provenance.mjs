@@ -4,12 +4,94 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { extname, posix } from "node:path";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { moduleSpecifiers } from "./module-closure.mjs";
+import {
+	nominalPrimitiveSubtypeDotnetGenerator
+	, nominalPrimitiveSubtypeDotnetOriginal
+} from "./nominal-primitive-subtype-dotnet-generators.mjs";
+
+export { nominalPrimitiveSubtypeDotnetOriginal };
+
+export const nominalPrimitiveSubtypeDotnetProducer = "b79328f845381df3d29e640a786dc6ce5c655d1f";
+export const nominalPrimitiveSubtypeDotnetLoadCeiling = 8;
+export const nominalPrimitiveSubtypeDotnetEvidence = "docs/evidence/nominal-primitive-subtype-dotnet-20261015";
 
 export const nominalPrimitiveSubtypeDotnetSelections = Object.freeze([
-	["ordinary", "full"], ["reviewed", "full"]
-	, ["ordinary", "result-only"], ["reviewed", "result-only"]
+	["ordinary", "full"], ["ordinary", "result-only"]
+	, ["reviewed", "full"], ["reviewed", "result-only"]
 ]);
+export const nominalPrimitiveSubtypeDotnetAcceptedLaunches = Object.freeze([
+	{ route: "ordinary", mode: "full", attempt: "r1" }
+	, { route: "ordinary", mode: "result-only", attempt: "r1" }
+	, { route: "reviewed", mode: "full", attempt: "r1" }
+	, { route: "reviewed", mode: "result-only", attempt: "r1" }
+]);
+
+const closureEntries = Object.freeze([
+	"scripts/check-nominal-primitive-subtype-dotnet-ci.mjs"
+	, "tests/helpers/nominal-primitive-subtype-dotnet-controls.mjs"
+	, "tests/helpers/nominal-primitive-subtype-dotnet-installed-tests.mjs"
+	, "tests/helpers/nominal-primitive-subtype-dotnet-provenance.mjs"
+]);
+const extraSources = Object.freeze([
+	".github/actions/bounded-apt/action.yml"
+	, ".github/workflows/nominal-primitive-subtype-dotnet.yml"
+	, "scripts/run-nominal-primitive-subtype-dotnet-ci.sh"
+	, "scripts/run-nominal-primitive-subtype-dotnet-local.mjs"
+	, "tests/fixtures/nominal-primitive-subtype-consumers/dotnet.cs"
+	, ...["LICENSE", "NominalPrimitiveSubtypes.lean", "lakefile.toml"
+		, "lean-toolchain", "package.json"]
+		.map(path => `tests/fixtures/onboarding/nominal-primitive-subtypes/${path}`)
+]);
+
+const historicalClosure = (revision, entries) => {
+	const files = new Set();
+	const visit = path => {
+		if(files.has(path)) return;
+		const source = nominalPrimitiveSubtypeDotnetOriginal(revision, path).toString("utf8");
+		files.add(path);
+		for(const specifier of moduleSpecifiers(source, path))
+		{
+			const joined = posix.normalize(posix.join(posix.dirname(path), specifier));
+			visit(extname(joined) === "" ? `${joined}.mjs` : joined);
+		}
+	};
+	for(const entry of entries) visit(entry);
+	return [...files].sort();
+};
+
+let selectedSources;
+
+/** Reconstruct every static producer/checker module and dynamic generator input. */
+export const nominalPrimitiveSubtypeDotnetEvidenceSources = async () => selectedSources ??= Object.freeze([
+	...new Set([
+		...historicalClosure(nominalPrimitiveSubtypeDotnetProducer, closureEntries)
+		, ...(await nominalPrimitiveSubtypeDotnetGenerator(nominalPrimitiveSubtypeDotnetProducer)).paths
+		, ...extraSources
+	])
+].sort());
+
+/**
+ * Resolve one accepted launch without making its historical build path an input.
+ *
+ * @param launch - Frozen source route, API mode, and attempt.
+ */
+export const nominalPrimitiveSubtypeDotnetLaunchPaths = launch => {
+	assert.ok(nominalPrimitiveSubtypeDotnetAcceptedLaunches.some(item =>
+		item.route === launch.route && item.mode === launch.mode && item.attempt === launch.attempt));
+	const slug = `${launch.route}-${launch.mode}-${launch.attempt}-${nominalPrimitiveSubtypeDotnetProducer.slice(0, 7)}`;
+	const prefix = `build/vo1494-nominal-primitive-dotnet-${slug}`;
+	return Object.freeze({
+		prefix
+		, start: prefix + ".start.json"
+		, end: prefix + ".end.json"
+		, tap: prefix + ".tap"
+		, verification: prefix + ".verification.json"
+		, records: `${prefix}-records/${launch.route}/${launch.mode}`
+	});
+};
 
 /**
  * Require a completed, serial, low-load run from the independently selected producer.
@@ -29,7 +111,7 @@ export const nominalPrimitiveSubtypeDotnetSelections = Object.freeze([
 export const assertNominalPrimitiveSubtypeDotnetRun = ({ start, end, tap, runner, route, mode, prefix, producerCommit, floor, loadCeiling }) => {
 	assert.ok(nominalPrimitiveSubtypeDotnetSelections.some(selection => selection[0] === route && selection[1] === mode));
 	assert.match(producerCommit, /^[a-f0-9]{40}$/u); assert.match(floor, /^2\.[0-9]+$/u);
-	assert.equal(loadCeiling, 8);
+	assert.equal(loadCeiling, nominalPrimitiveSubtypeDotnetLoadCeiling);
 	assert.match(prefix, new RegExp(`^build/vo1494-nominal-primitive-dotnet-${route}-${mode}-r[0-9]+-${producerCommit.slice(0, 7)}$`, "u"));
 	assert.equal(start.revision, producerCommit); assert.equal(start.route, route); assert.equal(start.mode, mode);
 	assert.equal(start.runnerSha256, sha256(runner)); assert.equal(start.command, "/usr/bin/nice");

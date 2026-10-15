@@ -1,0 +1,314 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LeanBridge.Nominalprimitivesubtypes</name>
+    </assembly>
+    <members>
+        <member name="T:LeanBridge.Nominalprimitivesubtypes.Unit">
+            <summary>The sole runtime value of Lean Unit.</summary>
+        </member>
+        <member name="T:LeanBridge.Nominalprimitivesubtypes.Option`1">
+            <summary>A copied Lean Option. Default is None; Some retains its payload, including nested None.</summary>
+        </member>
+        <member name="T:LeanBridge.Nominalprimitivesubtypes.Result`2">
+            <summary>A copied Lean Except. Use Ok or Err; default has no branch and cannot cross the boundary.</summary>
+        </member>
+        <member name="T:LeanBridge.Nominalprimitivesubtypes.LeanBridgeException">
+            <summary>A failure reported by a compiled Lean call.</summary>
+        </member>
+        <member name="T:LeanBridge.Nominalprimitivesubtypes.RawPacket">
+            <summary>A copied Lean record.</summary>
+            <param name="UnitValue">Contract type: <c>unit</c>.</param>
+            <param name="BoolValue">Contract type: <c>bool</c>.</param>
+            <param name="Uint8Value">Contract type: <c>uint8</c>.</param>
+            <param name="Uint16Value">Contract type: <c>uint16</c>.</param>
+            <param name="Uint32Value">Contract type: <c>uint32</c>.</param>
+            <param name="Uint64Value">Contract type: <c>uint64</c>.</param>
+            <param name="Int8Value">Contract type: <c>int8</c>.</param>
+            <param name="Int16Value">Contract type: <c>int16</c>.</param>
+            <param name="Int32Value">Contract type: <c>int32</c>.</param>
+            <param name="Int64Value">Contract type: <c>int64</c>.</param>
+            <param name="NatValue">Contract type: <c>nat</c>.</param>
+            <param name="IntValue">Contract type: <c>int</c>.</param>
+            <param name="Float32Value">Contract type: <c>float32</c>.</param>
+            <param name="Float64Value">Contract type: <c>float64</c>.</param>
+            <param name="TextValue">Contract type: <c>string</c>.</param>
+            <param name="BytesValue">Contract type: <c>bytes</c>.</param>
+            <param name="CharValue">Contract type: <c>char</c>.</param>
+            <param name="UsizeValue">Contract type: <c>usize</c>.</param>
+            <param name="IsizeValue">Contract type: <c>isize</c>.</param>
+            <param name="Digit">Contract type: <c>nat</c>.</param>
+        </member>
+        <member name="M:LeanBridge.Nominalprimitivesubtypes.RawPacket.#ctor(LeanBridge.Nominalprimitivesubtypes.Unit,System.Boolean,System.Byte,System.UInt16,System.UInt32,System.UInt64,System.SByte,System.Int16,System.Int32,System.Int64,System.Numerics.BigInteger,System.Numerics.BigInteger,System.Single,System.Double,System.String,System.Byte[],System.Text.Rune,System.UInt64,System.Int64,System.Numerics.BigInteger)">
+            <summary>A copied Lean record.</summary>
+            <param name="UnitValue">Contract type: <c>unit</c>.</param>
+            <param name="BoolValue">Contract type: <c>bool</c>.</param>
+            <param name="Uint8Value">Contract type: <c>uint8</c>.</param>
+            <param name="Uint16Value">Contract type: <c>uint16</c>.</param>
+            <param name="Uint32Value">Contract type: <c>uint32</c>.</param>
+            <param name="Uint64Value">Contract type: <c>uint64</c>.</param>
+            <param name="Int8Value">Contract type: <c>int8</c>.</param>
+            <param name="Int16Value">Contract type: <c>int16</c>.</param>
+            <param name="Int32Value">Contract type: <c>int32</c>.</param>
+            <param name="Int64Value">Contract type: <c>int64</c>.</param>
+            <param name="NatValue">Contract type: <c>nat</c>.</param>
+            <param name="IntValue">Contract type: <c>int</c>.</param>
+            <param name="Float32Value">Contract type: <c>float32</c>.</param>
+            <param name="Float64Value">Contract type: <c>float64</c>.</param>
+            <param name="TextValue">Contract type: <c>string</c>.</param>
+            <param name="BytesValue">Contract type: <c>bytes</c>.</param>
+            <param name="CharValue">Contract type: <c>char</c>.</param>
+            <param name="UsizeValue">Contract type: <c>usize</c>.</param>
+            <param name="IsizeValue">Contract type: <c>isize</c>.</param>
+            <param name="Digit">Contract type: <c>nat</c>.</param>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.RawPacket.UnitValue">
+            <summary>Contract type: <c>unit</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.RawPacket.BoolValue">
+            <summary>Contract type: <c>bool</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.RawPacket.Uint8Value">
+            <summary>Contract type: <c>uint8</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.RawPacket.Uint16Value">
+            <summary>Contract type: <c>uint16</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.RawPacket.Uint32Value">
+            <summary>Contract type: <c>uint32</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.RawPacket.Uint64Value">
+            <summary>Contract type: <c>uint64</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.RawPacket.Int8Value">
+            <summary>Contract type: <c>int8</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.RawPacket.Int16Value">
+            <summary>Contract type: <c>int16</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.RawPacket.Int32Value">
+            <summary>Contract type: <c>int32</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.RawPacket.Int64Value">
+            <summary>Contract type: <c>int64</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.RawPacket.NatValue">
+            <summary>Contract type: <c>nat</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.RawPacket.IntValue">
+            <summary>Contract type: <c>int</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.RawPacket.Float32Value">
+            <summary>Contract type: <c>float32</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.RawPacket.Float64Value">
+            <summary>Contract type: <c>float64</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.RawPacket.TextValue">
+            <summary>Contract type: <c>string</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.RawPacket.BytesValue">
+            <summary>Contract type: <c>bytes</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.RawPacket.CharValue">
+            <summary>Contract type: <c>char</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.RawPacket.UsizeValue">
+            <summary>Contract type: <c>usize</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.RawPacket.IsizeValue">
+            <summary>Contract type: <c>isize</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.RawPacket.Digit">
+            <summary>Contract type: <c>nat</c>.</summary>
+        </member>
+        <member name="T:LeanBridge.Nominalprimitivesubtypes.Packet">
+            <summary>A copied Lean record.</summary>
+            <param name="UnitValue">Contract type: <c>unit</c>.</param>
+            <param name="BoolValue">Contract type: <c>bool</c>.</param>
+            <param name="Uint8Value">Contract type: <c>uint8</c>.</param>
+            <param name="Uint16Value">Contract type: <c>uint16</c>.</param>
+            <param name="Uint32Value">Contract type: <c>uint32</c>.</param>
+            <param name="Uint64Value">Contract type: <c>uint64</c>.</param>
+            <param name="Int8Value">Contract type: <c>int8</c>.</param>
+            <param name="Int16Value">Contract type: <c>int16</c>.</param>
+            <param name="Int32Value">Contract type: <c>int32</c>.</param>
+            <param name="Int64Value">Contract type: <c>int64</c>.</param>
+            <param name="NatValue">Contract type: <c>nat</c>.</param>
+            <param name="IntValue">Contract type: <c>int</c>.</param>
+            <param name="Float32Value">Contract type: <c>float32</c>.</param>
+            <param name="Float64Value">Contract type: <c>float64</c>.</param>
+            <param name="TextValue">Contract type: <c>string</c>.</param>
+            <param name="BytesValue">Contract type: <c>bytes</c>.</param>
+            <param name="CharValue">Contract type: <c>char</c>.</param>
+            <param name="UsizeValue">Contract type: <c>usize</c>.</param>
+            <param name="IsizeValue">Contract type: <c>isize</c>.</param>
+            <param name="Digit">Contract type: <c>nat</c>.</param>
+        </member>
+        <member name="M:LeanBridge.Nominalprimitivesubtypes.Packet.#ctor(LeanBridge.Nominalprimitivesubtypes.Unit,System.Boolean,System.Byte,System.UInt16,System.UInt32,System.UInt64,System.SByte,System.Int16,System.Int32,System.Int64,System.Numerics.BigInteger,System.Numerics.BigInteger,System.Single,System.Double,System.String,System.Byte[],System.Text.Rune,System.UInt64,System.Int64,System.Numerics.BigInteger)">
+            <summary>A copied Lean record.</summary>
+            <param name="UnitValue">Contract type: <c>unit</c>.</param>
+            <param name="BoolValue">Contract type: <c>bool</c>.</param>
+            <param name="Uint8Value">Contract type: <c>uint8</c>.</param>
+            <param name="Uint16Value">Contract type: <c>uint16</c>.</param>
+            <param name="Uint32Value">Contract type: <c>uint32</c>.</param>
+            <param name="Uint64Value">Contract type: <c>uint64</c>.</param>
+            <param name="Int8Value">Contract type: <c>int8</c>.</param>
+            <param name="Int16Value">Contract type: <c>int16</c>.</param>
+            <param name="Int32Value">Contract type: <c>int32</c>.</param>
+            <param name="Int64Value">Contract type: <c>int64</c>.</param>
+            <param name="NatValue">Contract type: <c>nat</c>.</param>
+            <param name="IntValue">Contract type: <c>int</c>.</param>
+            <param name="Float32Value">Contract type: <c>float32</c>.</param>
+            <param name="Float64Value">Contract type: <c>float64</c>.</param>
+            <param name="TextValue">Contract type: <c>string</c>.</param>
+            <param name="BytesValue">Contract type: <c>bytes</c>.</param>
+            <param name="CharValue">Contract type: <c>char</c>.</param>
+            <param name="UsizeValue">Contract type: <c>usize</c>.</param>
+            <param name="IsizeValue">Contract type: <c>isize</c>.</param>
+            <param name="Digit">Contract type: <c>nat</c>.</param>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.Packet.UnitValue">
+            <summary>Contract type: <c>unit</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.Packet.BoolValue">
+            <summary>Contract type: <c>bool</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.Packet.Uint8Value">
+            <summary>Contract type: <c>uint8</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.Packet.Uint16Value">
+            <summary>Contract type: <c>uint16</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.Packet.Uint32Value">
+            <summary>Contract type: <c>uint32</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.Packet.Uint64Value">
+            <summary>Contract type: <c>uint64</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.Packet.Int8Value">
+            <summary>Contract type: <c>int8</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.Packet.Int16Value">
+            <summary>Contract type: <c>int16</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.Packet.Int32Value">
+            <summary>Contract type: <c>int32</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.Packet.Int64Value">
+            <summary>Contract type: <c>int64</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.Packet.NatValue">
+            <summary>Contract type: <c>nat</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.Packet.IntValue">
+            <summary>Contract type: <c>int</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.Packet.Float32Value">
+            <summary>Contract type: <c>float32</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.Packet.Float64Value">
+            <summary>Contract type: <c>float64</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.Packet.TextValue">
+            <summary>Contract type: <c>string</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.Packet.BytesValue">
+            <summary>Contract type: <c>bytes</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.Packet.CharValue">
+            <summary>Contract type: <c>char</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.Packet.UsizeValue">
+            <summary>Contract type: <c>usize</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.Packet.IsizeValue">
+            <summary>Contract type: <c>isize</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.Packet.Digit">
+            <summary>Contract type: <c>nat</c>.</summary>
+        </member>
+        <member name="T:LeanBridge.Nominalprimitivesubtypes.Event">
+            <summary>A copied Lean variant. Construct a named case.</summary>
+        </member>
+        <member name="T:LeanBridge.Nominalprimitivesubtypes.EventEmpty">
+            <summary>A named Event constructor.</summary>
+        </member>
+        <member name="M:LeanBridge.Nominalprimitivesubtypes.EventEmpty.#ctor">
+            <summary>A named Event constructor.</summary>
+        </member>
+        <member name="T:LeanBridge.Nominalprimitivesubtypes.EventBox">
+            <summary>A named Event constructor.</summary>
+            <param name="Value">Contract type: <c>Packet</c>.</param>
+        </member>
+        <member name="M:LeanBridge.Nominalprimitivesubtypes.EventBox.#ctor(LeanBridge.Nominalprimitivesubtypes.Packet)">
+            <summary>A named Event constructor.</summary>
+            <param name="Value">Contract type: <c>Packet</c>.</param>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.EventBox.Value">
+            <summary>Contract type: <c>Packet</c>.</summary>
+        </member>
+        <member name="T:LeanBridge.Nominalprimitivesubtypes.EventChoices">
+            <summary>A named Event constructor.</summary>
+            <param name="Values">Contract type: <c>array&lt;option&lt;result&lt;Packet, Packet&gt;&gt;&gt;</c>.</param>
+        </member>
+        <member name="M:LeanBridge.Nominalprimitivesubtypes.EventChoices.#ctor(LeanBridge.Nominalprimitivesubtypes.Option{LeanBridge.Nominalprimitivesubtypes.Result{LeanBridge.Nominalprimitivesubtypes.Packet,LeanBridge.Nominalprimitivesubtypes.Packet}}[])">
+            <summary>A named Event constructor.</summary>
+            <param name="Values">Contract type: <c>array&lt;option&lt;result&lt;Packet, Packet&gt;&gt;&gt;</c>.</param>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.EventChoices.Values">
+            <summary>Contract type: <c>array&lt;option&lt;result&lt;Packet, Packet&gt;&gt;&gt;</c>.</summary>
+        </member>
+        <member name="T:LeanBridge.Nominalprimitivesubtypes.Pair">
+            <summary>A copied Lean record.</summary>
+            <param name="Left">Contract type: <c>array&lt;option&lt;PacketAlias&gt;&gt;</c>.</param>
+            <param name="Right">Contract type: <c>array&lt;option&lt;PacketAlias&gt;&gt;</c>.</param>
+        </member>
+        <member name="M:LeanBridge.Nominalprimitivesubtypes.Pair.#ctor(LeanBridge.Nominalprimitivesubtypes.Option{LeanBridge.Nominalprimitivesubtypes.Packet}[],LeanBridge.Nominalprimitivesubtypes.Option{LeanBridge.Nominalprimitivesubtypes.Packet}[])">
+            <summary>A copied Lean record.</summary>
+            <param name="Left">Contract type: <c>array&lt;option&lt;PacketAlias&gt;&gt;</c>.</param>
+            <param name="Right">Contract type: <c>array&lt;option&lt;PacketAlias&gt;&gt;</c>.</param>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.Pair.Left">
+            <summary>Contract type: <c>array&lt;option&lt;PacketAlias&gt;&gt;</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Nominalprimitivesubtypes.Pair.Right">
+            <summary>Contract type: <c>array&lt;option&lt;PacketAlias&gt;&gt;</c>.</summary>
+        </member>
+        <member name="T:LeanBridge.Nominalprimitivesubtypes.Api">
+            <summary>The functions selected by the Lean package author.</summary>
+            <remarks>Copied Lean aliases use their CLR target values. The binding manifest preserves their contract identities.
+            <list type="table">
+            <item><term><c>PacketAlias</c></term><description><c>Packet</c> projects to <c>Packet</c>.</description></item>
+            </list></remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalprimitivesubtypes.Api.Produce(LeanBridge.Nominalprimitivesubtypes.RawPacket)">
+            <param name="value0">Contract type: <c>RawPacket</c>.</param>
+            <returns>Contract type: <c>option&lt;Packet&gt;</c>.</returns>
+            <remarks>Checked Lean Fin bounds: result?.unitValue projects the Subtype base value; result?.boolValue projects the Subtype base value; result?.uint8Value projects the Subtype base value; result?.uint16Value projects the Subtype base value; result?.uint32Value projects the Subtype base value; result?.uint64Value projects the Subtype base value; result?.int8Value projects the Subtype base value; result?.int16Value projects the Subtype base value; result?.int32Value projects the Subtype base value; result?.int64Value projects the Subtype base value; result?.natValue projects the Subtype base value; result?.intValue projects the Subtype base value; result?.float32Value projects the Subtype base value; result?.float64Value projects the Subtype base value; result?.textValue projects the Subtype base value; result?.bytesValue projects the Subtype base value; result?.charValue projects the Subtype base value; result?.usizeValue projects the Subtype base value; result?.isizeValue projects the Subtype base value; result?.digit &lt; 3.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalprimitivesubtypes.Api.ProduceChoices(LeanBridge.Nominalprimitivesubtypes.RawPacket)">
+            <param name="value0">Contract type: <c>RawPacket</c>.</param>
+            <returns>Contract type: <c>Event</c>.</returns>
+            <remarks>Checked Lean Fin bounds: result.box.value.unitValue projects the Subtype base value; result.box.value.boolValue projects the Subtype base value; result.box.value.uint8Value projects the Subtype base value; result.box.value.uint16Value projects the Subtype base value; result.box.value.uint32Value projects the Subtype base value; result.box.value.uint64Value projects the Subtype base value; result.box.value.int8Value projects the Subtype base value; result.box.value.int16Value projects the Subtype base value; result.box.value.int32Value projects the Subtype base value; result.box.value.int64Value projects the Subtype base value; result.box.value.natValue projects the Subtype base value; result.box.value.intValue projects the Subtype base value; result.box.value.float32Value projects the Subtype base value; result.box.value.float64Value projects the Subtype base value; result.box.value.textValue projects the Subtype base value; result.box.value.bytesValue projects the Subtype base value; result.box.value.charValue projects the Subtype base value; result.box.value.usizeValue projects the Subtype base value; result.box.value.isizeValue projects the Subtype base value; result.box.value.digit &lt; 3; result.choices.values[*]?.ok.unitValue projects the Subtype base value; result.choices.values[*]?.ok.boolValue projects the Subtype base value; result.choices.values[*]?.ok.uint8Value projects the Subtype base value; result.choices.values[*]?.ok.uint16Value projects the Subtype base value; result.choices.values[*]?.ok.uint32Value projects the Subtype base value; result.choices.values[*]?.ok.uint64Value projects the Subtype base value; result.choices.values[*]?.ok.int8Value projects the Subtype base value; result.choices.values[*]?.ok.int16Value projects the Subtype base value; result.choices.values[*]?.ok.int32Value projects the Subtype base value; result.choices.values[*]?.ok.int64Value projects the Subtype base value; result.choices.values[*]?.ok.natValue projects the Subtype base value; result.choices.values[*]?.ok.intValue projects the Subtype base value; result.choices.values[*]?.ok.float32Value projects the Subtype base value; result.choices.values[*]?.ok.float64Value projects the Subtype base value; result.choices.values[*]?.ok.textValue projects the Subtype base value; result.choices.values[*]?.ok.bytesValue projects the Subtype base value; result.choices.values[*]?.ok.charValue projects the Subtype base value; result.choices.values[*]?.ok.usizeValue projects the Subtype base value; result.choices.values[*]?.ok.isizeValue projects the Subtype base value; result.choices.values[*]?.ok.digit &lt; 3; result.choices.values[*]?.error.unitValue projects the Subtype base value; result.choices.values[*]?.error.boolValue projects the Subtype base value; result.choices.values[*]?.error.uint8Value projects the Subtype base value; result.choices.values[*]?.error.uint16Value projects the Subtype base value; result.choices.values[*]?.error.uint32Value projects the Subtype base value; result.choices.values[*]?.error.uint64Value projects the Subtype base value; result.choices.values[*]?.error.int8Value projects the Subtype base value; result.choices.values[*]?.error.int16Value projects the Subtype base value; result.choices.values[*]?.error.int32Value projects the Subtype base value; result.choices.values[*]?.error.int64Value projects the Subtype base value; result.choices.values[*]?.error.natValue projects the Subtype base value; result.choices.values[*]?.error.intValue projects the Subtype base value; result.choices.values[*]?.error.float32Value projects the Subtype base value; result.choices.values[*]?.error.float64Value projects the Subtype base value; result.choices.values[*]?.error.textValue projects the Subtype base value; result.choices.values[*]?.error.bytesValue projects the Subtype base value; result.choices.values[*]?.error.charValue projects the Subtype base value; result.choices.values[*]?.error.usizeValue projects the Subtype base value; result.choices.values[*]?.error.isizeValue projects the Subtype base value; result.choices.values[*]?.error.digit &lt; 3.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalprimitivesubtypes.Api.ProduceEvent(LeanBridge.Nominalprimitivesubtypes.RawPacket)">
+            <param name="value0">Contract type: <c>RawPacket</c>.</param>
+            <returns>Contract type: <c>Event</c>.</returns>
+            <remarks>Checked Lean Fin bounds: result.box.value.unitValue projects the Subtype base value; result.box.value.boolValue projects the Subtype base value; result.box.value.uint8Value projects the Subtype base value; result.box.value.uint16Value projects the Subtype base value; result.box.value.uint32Value projects the Subtype base value; result.box.value.uint64Value projects the Subtype base value; result.box.value.int8Value projects the Subtype base value; result.box.value.int16Value projects the Subtype base value; result.box.value.int32Value projects the Subtype base value; result.box.value.int64Value projects the Subtype base value; result.box.value.natValue projects the Subtype base value; result.box.value.intValue projects the Subtype base value; result.box.value.float32Value projects the Subtype base value; result.box.value.float64Value projects the Subtype base value; result.box.value.textValue projects the Subtype base value; result.box.value.bytesValue projects the Subtype base value; result.box.value.charValue projects the Subtype base value; result.box.value.usizeValue projects the Subtype base value; result.box.value.isizeValue projects the Subtype base value; result.box.value.digit &lt; 3; result.choices.values[*]?.ok.unitValue projects the Subtype base value; result.choices.values[*]?.ok.boolValue projects the Subtype base value; result.choices.values[*]?.ok.uint8Value projects the Subtype base value; result.choices.values[*]?.ok.uint16Value projects the Subtype base value; result.choices.values[*]?.ok.uint32Value projects the Subtype base value; result.choices.values[*]?.ok.uint64Value projects the Subtype base value; result.choices.values[*]?.ok.int8Value projects the Subtype base value; result.choices.values[*]?.ok.int16Value projects the Subtype base value; result.choices.values[*]?.ok.int32Value projects the Subtype base value; result.choices.values[*]?.ok.int64Value projects the Subtype base value; result.choices.values[*]?.ok.natValue projects the Subtype base value; result.choices.values[*]?.ok.intValue projects the Subtype base value; result.choices.values[*]?.ok.float32Value projects the Subtype base value; result.choices.values[*]?.ok.float64Value projects the Subtype base value; result.choices.values[*]?.ok.textValue projects the Subtype base value; result.choices.values[*]?.ok.bytesValue projects the Subtype base value; result.choices.values[*]?.ok.charValue projects the Subtype base value; result.choices.values[*]?.ok.usizeValue projects the Subtype base value; result.choices.values[*]?.ok.isizeValue projects the Subtype base value; result.choices.values[*]?.ok.digit &lt; 3; result.choices.values[*]?.error.unitValue projects the Subtype base value; result.choices.values[*]?.error.boolValue projects the Subtype base value; result.choices.values[*]?.error.uint8Value projects the Subtype base value; result.choices.values[*]?.error.uint16Value projects the Subtype base value; result.choices.values[*]?.error.uint32Value projects the Subtype base value; result.choices.values[*]?.error.uint64Value projects the Subtype base value; result.choices.values[*]?.error.int8Value projects the Subtype base value; result.choices.values[*]?.error.int16Value projects the Subtype base value; result.choices.values[*]?.error.int32Value projects the Subtype base value; result.choices.values[*]?.error.int64Value projects the Subtype base value; result.choices.values[*]?.error.natValue projects the Subtype base value; result.choices.values[*]?.error.intValue projects the Subtype base value; result.choices.values[*]?.error.float32Value projects the Subtype base value; result.choices.values[*]?.error.float64Value projects the Subtype base value; result.choices.values[*]?.error.textValue projects the Subtype base value; result.choices.values[*]?.error.bytesValue projects the Subtype base value; result.choices.values[*]?.error.charValue projects the Subtype base value; result.choices.values[*]?.error.usizeValue projects the Subtype base value; result.choices.values[*]?.error.isizeValue projects the Subtype base value; result.choices.values[*]?.error.digit &lt; 3.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalprimitivesubtypes.Api.ProduceGroup(LeanBridge.Nominalprimitivesubtypes.RawPacket)">
+            <param name="value0">Contract type: <c>RawPacket</c>.</param>
+            <returns>Contract type: <c>array&lt;option&lt;PacketAlias&gt;&gt;</c>.</returns>
+            <remarks>Checked Lean Fin bounds: result[*]?.unitValue projects the Subtype base value; result[*]?.boolValue projects the Subtype base value; result[*]?.uint8Value projects the Subtype base value; result[*]?.uint16Value projects the Subtype base value; result[*]?.uint32Value projects the Subtype base value; result[*]?.uint64Value projects the Subtype base value; result[*]?.int8Value projects the Subtype base value; result[*]?.int16Value projects the Subtype base value; result[*]?.int32Value projects the Subtype base value; result[*]?.int64Value projects the Subtype base value; result[*]?.natValue projects the Subtype base value; result[*]?.intValue projects the Subtype base value; result[*]?.float32Value projects the Subtype base value; result[*]?.float64Value projects the Subtype base value; result[*]?.textValue projects the Subtype base value; result[*]?.bytesValue projects the Subtype base value; result[*]?.charValue projects the Subtype base value; result[*]?.usizeValue projects the Subtype base value; result[*]?.isizeValue projects the Subtype base value; result[*]?.digit &lt; 3.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalprimitivesubtypes.Api.ProducePair(LeanBridge.Nominalprimitivesubtypes.RawPacket)">
+            <param name="value0">Contract type: <c>RawPacket</c>.</param>
+            <returns>Contract type: <c>Pair</c>.</returns>
+            <remarks>Checked Lean Fin bounds: result.left[*]?.unitValue projects the Subtype base value; result.left[*]?.boolValue projects the Subtype base value; result.left[*]?.uint8Value projects the Subtype base value; result.left[*]?.uint16Value projects the Subtype base value; result.left[*]?.uint32Value projects the Subtype base value; result.left[*]?.uint64Value projects the Subtype base value; result.left[*]?.int8Value projects the Subtype base value; result.left[*]?.int16Value projects the Subtype base value; result.left[*]?.int32Value projects the Subtype base value; result.left[*]?.int64Value projects the Subtype base value; result.left[*]?.natValue projects the Subtype base value; result.left[*]?.intValue projects the Subtype base value; result.left[*]?.float32Value projects the Subtype base value; result.left[*]?.float64Value projects the Subtype base value; result.left[*]?.textValue projects the Subtype base value; result.left[*]?.bytesValue projects the Subtype base value; result.left[*]?.charValue projects the Subtype base value; result.left[*]?.usizeValue projects the Subtype base value; result.left[*]?.isizeValue projects the Subtype base value; result.left[*]?.digit &lt; 3; result.right[*]?.unitValue projects the Subtype base value; result.right[*]?.boolValue projects the Subtype base value; result.right[*]?.uint8Value projects the Subtype base value; result.right[*]?.uint16Value projects the Subtype base value; result.right[*]?.uint32Value projects the Subtype base value; result.right[*]?.uint64Value projects the Subtype base value; result.right[*]?.int8Value projects the Subtype base value; result.right[*]?.int16Value projects the Subtype base value; result.right[*]?.int32Value projects the Subtype base value; result.right[*]?.int64Value projects the Subtype base value; result.right[*]?.natValue projects the Subtype base value; result.right[*]?.intValue projects the Subtype base value; result.right[*]?.float32Value projects the Subtype base value; result.right[*]?.float64Value projects the Subtype base value; result.right[*]?.textValue projects the Subtype base value; result.right[*]?.bytesValue projects the Subtype base value; result.right[*]?.charValue projects the Subtype base value; result.right[*]?.usizeValue projects the Subtype base value; result.right[*]?.isizeValue projects the Subtype base value; result.right[*]?.digit &lt; 3.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nominalprimitivesubtypes.Api.WordBits">
+            <returns>Contract type: <c>uint32</c>.</returns>
+        </member>
+    </members>
+</doc>

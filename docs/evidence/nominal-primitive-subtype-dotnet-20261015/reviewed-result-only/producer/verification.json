@@ -1,0 +1,57 @@
+{
+  "archiveSha256": "f17549a350707640bb0f28e3ae636dd0ff4dd05b10166b63c9cded773058c038",
+  "archiveSha512": "EqiPdZxBoMtozWYaEVCmvJKbb1uPy1sd4gOMl57RSfVkoLHIMJVW6SFfjLGrBlyGpLGZjibkMbr2ixu0tNUt1w==",
+  "counts": {
+    "checks": 603,
+    "hostRejections": 1,
+    "rejections": 0,
+    "rounds": 256,
+    "snapshotControls": 30,
+    "wordBits": 64
+  },
+  "dispatchObserved": false,
+  "executions": 3,
+  "floor": "2.36",
+  "framework": {
+    "facts": {
+      "architecture": "X64",
+      "command": "/app/.toolchains/dotnet/dotnet",
+      "description": ".NET 8.0.30",
+      "directory": "/app/.toolchains/dotnet/shared/Microsoft.NETCore.App/8.0.30/",
+      "littleEndian": true,
+      "os": "Debian GNU/Linux 12 (bookworm)",
+      "version": "8.0.30"
+    },
+    "runtimeFiles": {
+      "System.Private.CoreLib.dll": {
+        "bytes": 12773888,
+        "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+      },
+      "libcoreclr.so": {
+        "bytes": 6906008,
+        "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+      }
+    }
+  },
+  "generatorModules": 18,
+  "mode": "result-only",
+  "producerCommit": "b79328f845381df3d29e640a786dc6ce5c655d1f",
+  "records": 75,
+  "route": "reviewed",
+  "runtime": {
+    "arch": "x64",
+    "glibc": "2.36",
+    "platform": "linux"
+  },
+  "toolchain": {
+    "command": "/app/.toolchains/dotnet/dotnet",
+    "interpreter": {
+      "bytes": 68424,
+      "sha256": "c61ff7f8665688b95ad0f34e780daaa67b978d26115b82797c07ea6044c566ed"
+    },
+    "sdk": {
+      "directory": "/app/.toolchains/dotnet/sdk",
+      "version": "8.0.424"
+    }
+  }
+}
