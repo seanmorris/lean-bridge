@@ -1,0 +1,35 @@
+{
+  "args": [],
+  "closure": {
+    "consumerFileSetSha256": "12a20507f9299f1f54ebca6e8949db09e92ff1fb2e7fca4771ad985a514f1615",
+    "executable": {
+      "bytes": 93888,
+      "sha256": "639f97e880fffbfa32aa38131e3a95614fde252f73e35ea2713aa76752bc0b1d"
+    },
+    "packageFileSetSha256": "8a2bb343c4c269d93d99cd96c6f682cc14861186f349b73e474175851f5423aa",
+    "receiptSha256": "2eda9518091283b8e8f7774582d26f496186337055b4bf1a10edf9164c0b696a"
+  },
+  "command": "/tmp/lean-bridge-nominal-primitive-wit-installed-fRuyXG/consumer-relocated/consumer",
+  "counts": {
+    "checks": 3114,
+    "hostRejections": 22,
+    "rejections": 308,
+    "rounds": 256,
+    "snapshotControls": 22,
+    "wordBits": 64
+  },
+  "cwd": "/tmp/lean-bridge-nominal-primitive-wit-installed-fRuyXG/consumer-relocated",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/unavailable"
+  },
+  "relocated": true,
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":3114,\"rejections\":308,\"hostRejections\":22,\"snapshotControls\":22,\"rounds\":256,\"wordBits\":64}\n"
+  }
+}

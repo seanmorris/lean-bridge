@@ -1,0 +1,12 @@
+file:///app/build/worktrees/nominal-primitive-wit-run-23aec60/tests/helpers/nominal-primitive-subtype-wit-controls.mjs:128
+		, value => { assert.ok(replaceLeaf(value.exports.map(item => item.refinements.result), item => item.kind === "subtype", item => { item.constructor = "NominalPrimitiveSubtypes.natA"; })); }
+		                                                                              ^
+
+TypeError: Cannot read properties of undefined (reading 'result')
+    at file:///app/build/worktrees/nominal-primitive-wit-run-23aec60/tests/helpers/nominal-primitive-subtype-wit-controls.mjs:128:81
+    at Array.map (<anonymous>)
+    at options.mode.assert.ok.item.constructor (file:///app/build/worktrees/nominal-primitive-wit-run-23aec60/tests/helpers/nominal-primitive-subtype-wit-controls.mjs:128:52)
+    at checkNominalPrimitiveSubtypeWitControls (file:///app/build/worktrees/nominal-primitive-wit-run-23aec60/tests/helpers/nominal-primitive-subtype-wit-controls.mjs:134:68)
+    at async file:///app/build/run-vo1498-nominal-primitive-wit-controls-23aec60.mjs:63:18
+
+Node.js v22.23.3
