@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { beforeNominalPrimitiveSubtypePerlIntegrationSource } from "./nominal-primitive-subtype-perl-integration-history.mjs";
+import { beforeNominalPrimitiveSubtypeRubyIntegrationSource } from "./nominal-primitive-subtype-ruby-integration-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
 export const coreQualityBudgetHistoryPath = "docs/evidence/core-quality-budget-source-history-20261015.json";
@@ -53,6 +54,7 @@ export const reverseCoreQualityBudgetUpdate = (source, update) => {
  * @param expected - Optional requested stopping digest.
  */
 export const beforeCoreQualityBudgetSource = (path, source, expected) => {
+	source = beforeNominalPrimitiveSubtypeRubyIntegrationSource(path, source, expected);
 	source = beforeNominalPrimitiveSubtypePerlIntegrationSource(path, source, expected);
 	if(typeof source !== "string" || !coreQualityBudgetChangedPaths.includes(path)) return source;
 	const digest = sha256(source);

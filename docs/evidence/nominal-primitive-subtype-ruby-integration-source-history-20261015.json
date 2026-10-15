@@ -1,0 +1,179 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nominal-primitive-subtype-ruby-integration-source-v1",
+  "predecessorCommit": "e15acb534151d359b05b68364ab35e6ab6c77073",
+  "alternateCommit": "f3a7928682cf87c59f3906796202c681f40633cd",
+  "updates": [
+    {
+      "path": "tests/helpers/core-quality-budget-history.mjs",
+      "currentSha256": "2d145198d699a6511c585746e3f14e80249d742edcfe0a1ce739dd1d497e4a68",
+      "previousSha256": "6b41798dad04bda49a219df7319dae83b1173b7d8373b2a9a25cde7ed027cd18",
+      "edits": [
+        {
+          "start": 295,
+          "previous": "",
+          "current": "import { beforeNominalPrimitiveSubtypeRubyIntegrationSource } from \"./nominal-primitive-subtype-ruby-integration-history.mjs\";\n"
+        },
+        {
+          "start": 2445,
+          "previous": "",
+          "current": "\tsource = beforeNominalPrimitiveSubtypeRubyIntegrationSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-perl-integration-history-tests.mjs",
+      "currentSha256": "699cb8fc323fa38430cb2bae27dcd76d7fafa9da135450e86f9b70fd94979024",
+      "previousSha256": "1e409cacbccad9af88a17a60fc96c504b25e6f24b1c806e61ee47986c30f6b36",
+      "edits": [
+        {
+          "start": 907,
+          "previous": "",
+          "current": "import { beforeNominalPrimitiveSubtypeRubyIntegrationSource } from \"./nominal-primitive-subtype-ruby-integration-history.mjs\";\n"
+        },
+        {
+          "start": 1824,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\"), first = at(record.predecessorCommit, update.path);\n",
+          "current": "\t\tconst merged = await readFile(update.path, \"utf8\");\n\t\tconst current = beforeNominalPrimitiveSubtypeRubyIntegrationSource(update.path, merged, update.currentSha256);\n\t\tconst first = at(record.predecessorCommit, update.path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "fb982961acb69ee9cb0e1dc016cd4fa133c3eb4b5085edc8180502aac7430162",
+      "previousSha256": "b9ce56d2886932b13637df0d549b7e01303916cb7c992f36b09b8e2280ccf02b",
+      "edits": [
+        {
+          "start": 7693,
+          "previous": "",
+          "current": "import { nominalPrimitiveSubtypeRubyRegistrationChangedPaths } from \"./nominal-primitive-subtype-ruby-registration-history.mjs\";\n"
+        },
+        {
+          "start": 8685,
+          "previous": "",
+          "current": "import { nominalPrimitiveSubtypeRubyIntegrationChangedPaths } from \"./nominal-primitive-subtype-ruby-integration-history.mjs\";\n"
+        },
+        {
+          "start": 71425,
+          "previous": "",
+          "current": "\t, ...nominalPrimitiveSubtypeRubyRegistrationChangedPaths\n"
+        },
+        {
+          "start": 71870,
+          "previous": "",
+          "current": "\t, ...nominalPrimitiveSubtypeRubyIntegrationChangedPaths\n"
+        }
+      ],
+      "alternateSha256": "52248e46ec866de073b9df6c8cd5a127fa5a559e418282d024d6e1805c8eabb9",
+      "alternateEdits": [
+        {
+          "start": 8086,
+          "previous": "",
+          "current": "import { nominalPrimitiveSubtypeNativeRegistrationChangedPaths } from \"./nominal-primitive-subtype-native-registration-history.mjs\";\nimport { nominalPrimitiveSubtypeNativePromotionChangedPaths } from \"./nominal-primitive-subtype-native-promotion-history.mjs\";\nimport { coreQualityBudgetChangedPaths } from \"./core-quality-budget-history.mjs\";\nimport { nominalPrimitiveSubtypePerlRegistrationChangedPaths } from \"./nominal-primitive-subtype-perl-registration-history.mjs\";\nimport { nominalPrimitiveSubtypePerlIntegrationChangedPaths } from \"./nominal-primitive-subtype-perl-integration-history.mjs\";\nimport { nominalPrimitiveSubtypeRubyIntegrationChangedPaths } from \"./nominal-primitive-subtype-ruby-integration-history.mjs\";\n"
+        },
+        {
+          "start": 71602,
+          "previous": "",
+          "current": "\t, ...nominalPrimitiveSubtypeNativeRegistrationChangedPaths\n\t, ...nominalPrimitiveSubtypeNativePromotionChangedPaths\n\t, ...coreQualityBudgetChangedPaths\n\t, ...nominalPrimitiveSubtypePerlRegistrationChangedPaths\n\t, ...nominalPrimitiveSubtypePerlIntegrationChangedPaths\n\t, ...nominalPrimitiveSubtypeRubyIntegrationChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-browser-promotion-history.mjs",
+      "currentSha256": "0bd6ee3cb9b33bf311d7852fc3e9797e0d0358c8948e426a8292dfe66d2de21c",
+      "previousSha256": "7f97979017d5fba6e17fd22bcef7be9a69db553100170bed5168ff08e15b7390",
+      "edits": [
+        {
+          "start": 188,
+          "previous": "",
+          "current": "import { beforeNominalPrimitiveSubtypeRubyRegistrationSource } from \"./nominal-primitive-subtype-ruby-registration-history.mjs\";\n"
+        },
+        {
+          "start": 758,
+          "previous": "",
+          "current": "import { beforeNominalPrimitiveSubtypeRubyIntegrationSource } from \"./nominal-primitive-subtype-ruby-integration-history.mjs\";\n"
+        },
+        {
+          "start": 3531,
+          "previous": "",
+          "current": "\tsource = beforeNominalPrimitiveSubtypeRubyIntegrationSource(path, source, expected);\n\tsource = beforeNominalPrimitiveSubtypeRubyRegistrationSource(path, source, expected);\n"
+        }
+      ],
+      "alternateSha256": "faded6a153e3bf1cbad5020c3ff1d8f9a7dbbb9362925d85979f20efddec1c0e",
+      "alternateEdits": [
+        {
+          "start": 371,
+          "previous": "",
+          "current": "import { beforeNominalPrimitiveSubtypeNativePromotionPins } from \"./nominal-primitive-subtype-native-promotion-history.mjs\";\nimport { beforeNominalPrimitiveSubtypeNativeRegistrationSource } from \"./nominal-primitive-subtype-native-registration-history.mjs\";\nimport { beforeNominalPrimitiveSubtypePerlRegistrationSource } from \"./nominal-primitive-subtype-perl-registration-history.mjs\";\nimport { beforeNominalPrimitiveSubtypeRubyIntegrationSource } from \"./nominal-primitive-subtype-ruby-integration-history.mjs\";\n"
+        },
+        {
+          "start": 3531,
+          "previous": "",
+          "current": "\tsource = beforeNominalPrimitiveSubtypeRubyIntegrationSource(path, source, expected);\n"
+        },
+        {
+          "start": 3704,
+          "previous": "",
+          "current": "\tsource = beforeNominalPrimitiveSubtypeNativeRegistrationSource(path, source, expected);\n\tsource = beforeNominalPrimitiveSubtypePerlRegistrationSource(path, source, expected);\n"
+        },
+        {
+          "start": 4631,
+          "previous": "\tconst previous = structuredClone(inventory);\n",
+          "current": "\tconst previous = beforeNominalPrimitiveSubtypeNativePromotionPins(inventory);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-tests.mjs",
+      "currentSha256": "75df222ac904f5942701b5a4a97572b9eadd4ad023ea0b81f7f0051091c3682f",
+      "previousSha256": "be715572de83dedf46edc8c1a307e5821f47e13d01fd2c3884b2b3ffe936147e",
+      "edits": [
+        {
+          "start": 1548,
+          "previous": "",
+          "current": "import \"./nominal-primitive-subtype-ruby-fixture-tests.mjs\";\nimport \"./nominal-primitive-subtype-ruby-archive-tests.mjs\";\nimport \"./nominal-primitive-subtype-ruby-ci-policy-tests.mjs\";\nimport \"./nominal-primitive-subtype-ruby-ci-shell-tests.mjs\";\nimport \"./nominal-primitive-subtype-ruby-ci-workflow-tests.mjs\";\nimport \"./nominal-primitive-subtype-ruby-registration-history-tests.mjs\";\nimport \"./nominal-primitive-subtype-ruby-installed-tests.mjs\";\nimport \"./nominal-primitive-subtype-ruby-integration-history-tests.mjs\";\n"
+        }
+      ],
+      "alternateSha256": "88fb445b49662c9bceeedb94e4c28e78216d4dba21e26d20da31111bf978529d",
+      "alternateEdits": [
+        {
+          "start": 1997,
+          "previous": "",
+          "current": "import \"./nominal-primitive-subtype-ruby-integration-history-tests.mjs\";\n"
+        },
+        {
+          "start": 2606,
+          "previous": "",
+          "current": "import \"./nominal-primitive-subtype-native-fixture-tests.mjs\";\nimport \"./nominal-primitive-subtype-native-ci-policy-tests.mjs\";\nimport \"./nominal-primitive-subtype-native-ci-shell-tests.mjs\";\nimport \"./nominal-primitive-subtype-native-ci-workflow-tests.mjs\";\nimport \"./nominal-primitive-subtype-native-registration-history-tests.mjs\";\nimport \"./nominal-primitive-subtype-native-installed-tests.mjs\";\nimport \"./nominal-primitive-subtype-native-archive-tests.mjs\";\nimport \"./nominal-primitive-subtype-native-promotion-tests.mjs\";\nimport \"./nominal-primitive-subtype-native-promotion-history-tests.mjs\";\nimport \"./nominal-primitive-subtype-perl-tests.mjs\";\nimport \"./nominal-primitive-subtype-perl-ci-policy-tests.mjs\";\nimport \"./nominal-primitive-subtype-perl-ci-shell-tests.mjs\";\nimport \"./nominal-primitive-subtype-perl-ci-workflow-tests.mjs\";\nimport \"./nominal-primitive-subtype-perl-registration-history-tests.mjs\";\nimport \"./nominal-primitive-subtype-perl-installed-tests.mjs\";\nimport \"./nominal-primitive-subtype-perl-integration-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-ruby-registration-history-tests.mjs",
+      "currentSha256": "0bde458df75f5c888ddf8a74e4713b62473e995d94efc791bd1080b36aff5098",
+      "alternateSha256": "9eda89e2a3d25ebfe618e2ffb6b14fa5450f29c0a4406ad54f387f43b2fd534e",
+      "alternateEdits": [
+        {
+          "start": 603,
+          "previous": "",
+          "current": "import { nominalPrimitiveSubtypeRubyIntegrationAlternate } from \"./nominal-primitive-subtype-ruby-integration-history.mjs\";\n"
+        },
+        {
+          "start": 1847,
+          "previous": "",
+          "current": "\tconst alternate = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypeRubyIntegrationAlternate}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n"
+        },
+        {
+          "start": 2188,
+          "previous": "",
+          "current": "\t\tassert.equal(alternate(update.path), current);\n"
+        },
+        {
+          "start": 3775,
+          "previous": "\tassert.equal(await readFile(path, \"utf8\"), original(path), \"registration changes no support claim\");\n",
+          "current": "\tassert.equal(alternate(path), original(path), \"registration changes no support claim\");\n"
+        }
+      ]
+    }
+  ]
+}

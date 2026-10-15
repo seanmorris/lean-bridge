@@ -80,6 +80,7 @@ import { nominalSubtypePhpWasmPathChangedPaths } from "./nominal-subtype-php-was
 import { nominalPrimitiveSubtypeNpmPromotionChangedPaths } from "./nominal-primitive-subtype-npm-promotion-history.mjs";
 import { nominalPrimitiveSubtypePythonRegistrationChangedPaths } from "./nominal-primitive-subtype-python-registration-history.mjs";
 import { nominalPrimitiveSubtypePythonPromotionChangedPaths } from "./nominal-primitive-subtype-python-promotion-history.mjs";
+import { nominalPrimitiveSubtypeRubyRegistrationChangedPaths } from "./nominal-primitive-subtype-ruby-registration-history.mjs";
 import { nominalPrimitiveSubtypeBrowserRegistrationChangedPaths } from "./nominal-primitive-subtype-browser-registration-history.mjs";
 import { nominalPrimitiveSubtypeBrowserPromotionChangedPaths } from "./nominal-primitive-subtype-browser-promotion-history.mjs";
 import { nominalPrimitiveSubtypeNativeRegistrationChangedPaths } from "./nominal-primitive-subtype-native-registration-history.mjs";
@@ -87,6 +88,7 @@ import { nominalPrimitiveSubtypeNativePromotionChangedPaths } from "./nominal-pr
 import { coreQualityBudgetChangedPaths } from "./core-quality-budget-history.mjs";
 import { nominalPrimitiveSubtypePerlRegistrationChangedPaths } from "./nominal-primitive-subtype-perl-registration-history.mjs";
 import { nominalPrimitiveSubtypePerlIntegrationChangedPaths } from "./nominal-primitive-subtype-perl-integration-history.mjs";
+import { nominalPrimitiveSubtypeRubyIntegrationChangedPaths } from "./nominal-primitive-subtype-ruby-integration-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeSubtypeRefinementSource, subtypeRefinementChangedPaths } from "./subtype-refinement-source-history.mjs";
 import { subtypeHeapChangedPaths } from "./subtype-heap-source-history.mjs";
@@ -1032,6 +1034,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nominalPrimitiveSubtypeNpmPromotionChangedPaths
 	, ...nominalPrimitiveSubtypePythonRegistrationChangedPaths
 	, ...nominalPrimitiveSubtypePythonPromotionChangedPaths
+	, ...nominalPrimitiveSubtypeRubyRegistrationChangedPaths
 	, ...nominalPrimitiveSubtypeBrowserRegistrationChangedPaths
 	, ...nominalPrimitiveSubtypeBrowserPromotionChangedPaths
 	, ...nominalPrimitiveSubtypeNativeRegistrationChangedPaths
@@ -1039,6 +1042,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...coreQualityBudgetChangedPaths
 	, ...nominalPrimitiveSubtypePerlRegistrationChangedPaths
 	, ...nominalPrimitiveSubtypePerlIntegrationChangedPaths
+	, ...nominalPrimitiveSubtypeRubyIntegrationChangedPaths
 ])].sort());
 
 /**
