@@ -10,7 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeNominalPrimitiveSubtypePerlPromotionSource, beforePrimitiveSubtypeIntegrationPins } from "./nominal-primitive-subtype-perl-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypeRubyPromotionSource, beforePrimitiveSubtypeRubyPromotionPins } from "./nominal-primitive-subtype-ruby-promotion-history.mjs";
 import { beforeNominalPrimitiveSubtypeNativePromotionPins } from "./nominal-primitive-subtype-native-promotion-history.mjs";
 import { nominalPrimitiveSubtypeBrowserReferences, promoteNominalPrimitiveSubtypeBrowser } from "./nominal-primitive-subtype-browser-promotion.mjs";
 import { beforeNominalPrimitiveSubtypeBrowserPromotionSource, nominalPrimitiveSubtypeBrowserPromotionChangedPaths, nominalPrimitiveSubtypeBrowserPromotionHistoryPath, nominalPrimitiveSubtypeBrowserPromotionPredecessor, reverseNominalPrimitiveSubtypeBrowserPromotionUpdate } from "./nominal-primitive-subtype-browser-promotion-history.mjs";
@@ -23,7 +23,7 @@ test("primitive-base browser promotion history authenticates the exact browser-o
 	const original = path => execFileSync("git", ["show", `${nominalPrimitiveSubtypeBrowserPromotionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalPrimitiveSubtypeBrowserPromotionSource(update.path, beforeNominalPrimitiveSubtypePerlPromotionSource(update.path, await readFile(update.path, "utf8")), update.currentSha256);
+		const current = beforeNominalPrimitiveSubtypeBrowserPromotionSource(update.path, beforeNominalPrimitiveSubtypeRubyPromotionSource(update.path, await readFile(update.path, "utf8")), update.currentSha256);
 		const previous = reverseNominalPrimitiveSubtypeBrowserPromotionUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNominalPrimitiveSubtypeBrowserPromotionSource(update.path, current), previous);
@@ -41,8 +41,8 @@ test("primitive-base browser promotion history authenticates the exact browser-o
 			}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	const expected = beforeNominalPrimitiveSubtypeNativePromotionPins(beforePrimitiveSubtypeIntegrationPins(await promoteNominalPrimitiveSubtypeBrowser(JSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypeBrowserReferences())));
-	assert.equal(beforeNominalPrimitiveSubtypeBrowserPromotionSource(inventoryPath, beforeNominalPrimitiveSubtypePerlPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8"))), original(inventoryPath));
+	const expected = beforeNominalPrimitiveSubtypeNativePromotionPins(beforePrimitiveSubtypeRubyPromotionPins(await promoteNominalPrimitiveSubtypeBrowser(JSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypeBrowserReferences())));
+	assert.equal(beforeNominalPrimitiveSubtypeBrowserPromotionSource(inventoryPath, beforeNominalPrimitiveSubtypeRubyPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8"))), original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{
@@ -51,7 +51,7 @@ test("primitive-base browser promotion history authenticates the exact browser-o
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
 	const update = record.updates.find(item => item.path === inventoryPath);
-	const checkpoint = beforeNominalPrimitiveSubtypeBrowserPromotionSource(inventoryPath, beforeNominalPrimitiveSubtypePerlPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), update.currentSha256);
+	const checkpoint = beforeNominalPrimitiveSubtypeBrowserPromotionSource(inventoryPath, beforeNominalPrimitiveSubtypeRubyPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), update.currentSha256);
 	assert.deepEqual(JSON.parse(checkpoint), expected);
 	assert.equal(expected.evidence.length, 532); assert.equal(expected.observations.length, 595);
 	t.diagnostic(`${pins} current-source pins refreshed; exactly eighteen existing browser cells supplemented`);

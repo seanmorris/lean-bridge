@@ -12,6 +12,7 @@ import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { nominalPrimitiveSubtypePerlReferences, promoteNominalPrimitiveSubtypePerl } from "./nominal-primitive-subtype-perl-promotion.mjs";
 import { beforeNominalPrimitiveSubtypePerlPromotionSource, nominalPrimitiveSubtypePerlPromotionChangedPaths, nominalPrimitiveSubtypePerlPromotionHistoryPath, nominalPrimitiveSubtypePerlPromotionPredecessor, reverseNominalPrimitiveSubtypePerlPromotionUpdate } from "./nominal-primitive-subtype-perl-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypeRubyPromotionSource } from "./nominal-primitive-subtype-ruby-promotion-history.mjs";
 
 test("primitive-base Perl promotion history authenticates the exact Perl-only support and docs transition", async t => {
 	const record = JSON.parse(await readFile(nominalPrimitiveSubtypePerlPromotionHistoryPath));
@@ -21,7 +22,7 @@ test("primitive-base Perl promotion history authenticates the exact Perl-only su
 	const original = path => execFileSync("git", ["show", `${nominalPrimitiveSubtypePerlPromotionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalPrimitiveSubtypePerlPromotionSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeNominalPrimitiveSubtypePerlPromotionSource(update.path, beforeNominalPrimitiveSubtypeRubyPromotionSource(update.path, await readFile(update.path, "utf8")), update.currentSha256);
 		const previous = reverseNominalPrimitiveSubtypePerlPromotionUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNominalPrimitiveSubtypePerlPromotionSource(update.path, current), previous);
@@ -40,7 +41,7 @@ test("primitive-base Perl promotion history authenticates the exact Perl-only su
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
 	const expected = await promoteNominalPrimitiveSubtypePerl(JSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypePerlReferences());
-	assert.equal(beforeNominalPrimitiveSubtypePerlPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
+	assert.equal(beforeNominalPrimitiveSubtypePerlPromotionSource(inventoryPath, beforeNominalPrimitiveSubtypeRubyPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8"))), original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{
@@ -49,7 +50,7 @@ test("primitive-base Perl promotion history authenticates the exact Perl-only su
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
 	const update = record.updates.find(item => item.path === inventoryPath);
-	const checkpoint = beforeNominalPrimitiveSubtypePerlPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8"), update.currentSha256);
+	const checkpoint = beforeNominalPrimitiveSubtypePerlPromotionSource(inventoryPath, beforeNominalPrimitiveSubtypeRubyPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), update.currentSha256);
 	assert.deepEqual(JSON.parse(checkpoint), expected);
 	assert.equal(expected.evidence.length, 540); assert.equal(expected.observations.length, 595);
 	t.diagnostic(`${pins} current-source pins refreshed; exactly six existing Perl cells supplemented`);

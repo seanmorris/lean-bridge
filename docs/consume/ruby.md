@@ -762,25 +762,35 @@ release-floor acceptance.
 ### Subtypes in copied records
 
 Use the generated frozen, keyword-initialized class for a copied record or
-variant. Pass ordinary Ruby `Integer` values in its Nat Subtype fields. The
-package runs the checked Lean constructor selected for each input site. Two
-exports can choose different constructors for the same record, including
-different normalization. Only the active variant case runs its field
-constructors. Rejection leaves the caller's values unchanged; subsequent valid
-calls still work.
+variant. A checked field takes its primitive's Ruby value: the generated `UNIT`
+singleton for `Unit`, `true` or `false` for `Bool`, `Integer` for fixed-width
+integers and machine words, `Float` for `Float32` and `Float`, a UTF-8 `String`
+for `String` and `Char`, and a binary `String` for `ByteArray`. The tested Linux
+x64 packages use 64-bit machine words. The package runs the checked Lean
+constructor selected for each input site. Two exports can choose different
+constructors for the same record, including different normalization. Only the
+active variant case runs its field constructors. Rejection leaves the caller's
+values unchanged; subsequent valid calls still work.
 
 Copied results contain existing Lean values projected into the generated
 classes, without proof fields or an input-constructor call. A package that only
 returns those values needs no input constructor selections. Arrays and lists
 use Ruby `Array` values, while `Some`, `Ok` and `Err` retain their branches.
 
-The [installed nominal checks](../evidence/nominal-subtype-ruby-acceptance-20261012.md)
-cover the tested Nat fields, aliases, mixed Fin guards and standalone
-constructor-free result packages on MRI Ruby 3.3.12. Both author routes
-reproduce gems, install offline without author sources and replay unchanged
-callers after moving the installed tree. These runs use Linux x64/glibc 2.36.
-Other primitive-base nominal fixtures, refined callbacks, owned, recursive,
-dependent and broader generic Subtypes remain pending.
+The [original nominal checks](../evidence/nominal-subtype-ruby-acceptance-20261012.md)
+cover Nat fields, aliases, mixed Fin guards and constructor-free results. The
+[expanded installed checks](../evidence/nominal-primitive-subtype-ruby-20261015/index.json)
+cover all nineteen primitive bases: `Unit`, `Bool`, unsigned and signed
+fixed-width integers, `Nat`, `Int`, `Float32`, `Float`, `String`, `ByteArray`,
+`Char`, `USize` and `ISize`. Ordinary and reviewed packages reproduce complete
+gems from two author roots. Full and standalone result-only APIs install
+offline after author removal and replay unchanged callers after physical
+relocation on MRI Ruby 3.3.12, using Linux x64/glibc 2.36.
+
+The [required Ruby workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nominal-primitive-subtype-ruby.yml)
+runs those four selections. The local archive does not establish its hosted
+result. Refined callbacks, owned, recursive, dependent and broader generic
+Subtypes, plus constructor/source entry counts, remain separate work.
 
 ### Type conversions
 
@@ -820,7 +830,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `USize` | `Integer` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, 0..18446744073709551615. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. Required: Bind width to the compiled Lean target, not the consumer process; reject out-of-range values. |
 | `ISize` | `Integer` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, -9223372036854775808..9223372036854775807. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. Required: Bind signed width to the compiled Lean target and record architecture explicitly. |
 | `Fin n` | `Integer checked against the declared bound` (input); `Integer below the declared bound` (result); `Integer checked against the field's closed bound` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Use Integer values with exact closed bounds. Arrays/Lists use Array, products use two-element Arrays, Option uses nil/Some, and Except uses Err/Ok. Record and active variant fields retain their declared bounds. Empty, absent and inactive Fin 0 payloads are valid; every present Fin 0 value is rejected. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
-| `Subtype / {x // p x}` | `Integer, String and binary String, checked by the exported Lean validator and constructed by the adapter before dispatch; also in generated structural containers; also in tested acyclic records and variants` (input); `the base value projected from the proof-backed Lean result; also in generated structural containers; also in tested acyclic records and variants` (result); `Integer payload in generated frozen keyword-initialized classes for the tested acyclic records and variants; no proof field` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Pass the primitive base value, including inside Array, List, Option, Prod and Except containers using their generated host representations. Each present Subtype leaf uses the selected checked Lean constructor; accepted normalization reaches the export. A rejected leaf fails the call without changing the input; later valid calls still work. Results expose the proof-backed base values. Transparent aliases and the tested closed List specialization keep their constructor choices. In Ruby, the tested acyclic records and variants carry Nat Subtype payloads as Integer values in generated frozen keyword-initialized classes. Each input site keeps its selected checked constructor, including distinct normalizing choices for the same record. Copied results project existing Lean values without selecting or running an input constructor. Callers supply no proof fields. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
+| `Subtype / {x // p x}` | `Integer, String and binary String, checked by the exported Lean validator and constructed by the adapter before dispatch; also in generated structural containers; also in tested acyclic records and variants` (input); `the base value projected from the proof-backed Lean result; also in generated structural containers; also in tested acyclic records and variants` (result); `generated Unit singleton, boolean, Integer, Float, UTF-8 String or binary String payload in generated frozen record and variant classes; no proof field` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Pass the primitive base value, including inside Array, List, Option, Prod and Except containers using their generated host representations. Each present Subtype leaf uses the selected checked Lean constructor; accepted normalization reaches the export. A rejected leaf fails the call without changing the input; later valid calls still work. Results expose the proof-backed base values. Transparent aliases and the tested closed List specialization keep their constructor choices. In Ruby, checked nominal fields preserve all nineteen tested primitive representations: the generated Unit singleton, true or false, Integer for every fixed-width integer and native machine word, Float for Float32 and Float, UTF-8 String for String and Char, and binary String for ByteArray. Generated frozen keyword-initialized classes carry record and active-variant fields. Each input site retains its selected checked constructor and accepted normalization. Rejection preserves the complete caller value and later valid calls succeed. Copied results project proof-backed payloads without proof fields or input constructor selections, including standalone result-only packages. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Checked records and closed Nat indices` | `Generated record value with Integer and Array payload fields` (input, result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Installed checks passed (input, result); Not audited (field, callback input, callback result) | Pass the generated record's runtime payload fields, without proof values. The selected Lean constructor checks each input and may normalize it; rejection identifies the parameter and constructor and preserves caller data. Results contain copied payload fields with proofs erased. Both ordinary and independently reviewed packages, including standalone result-only packages, passed installed checks. Required: Construct inputs only through the selected safe Lean constructor over the exact payload fields. Preserve closed indices and per-site choices; project proof-backed results without fabricating proofs. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
 | `Recursive copied structures` | `Named frozen keyword-initialized records and constructors, exact Arrays and Strings, explicit UNIT/Some/Ok/Err` (input, result, field); `Named frozen records and constructors, exact Arrays and Strings, synchronous Ruby callables and owned LeanClosure values` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Pass exact generated classes with required keywords. Arrays and Lists use exact Ruby Arrays. Returned mutable payloads own independent storage. All arguments validate before native allocation or runtime initialization; ensure blocks release temporary storage and owned native results on failures and interruptions. Malformed output retires the shared runtime. Native calls hold the GVL; post-fork reuse, Ractors and M:N threads reject. Recursive values and aliases retain their public representations and independent copied storage. Callback frames keep replies alive until native copying finishes. Original callback exceptions return after cleanup; non-local block exits raise LocalJumpError. Malformed native output retires the runtime. Closure identities release on close, scoped with cleanup or finalization, with deferred release during an active invocation. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |

@@ -56,7 +56,7 @@ extend these fields and constructor-free results to pages, React
 production/Strict Mode and workers in Chromium, Firefox and WebKit. All four
 source/API selections execute source-free bundles after offline installation,
 with asset recovery, remount, pending-unmount and worker restart/disposal
-checks. Python, C/C++ and Perl also have nineteen-base checks below; the
+checks. Python, C/C++, Perl and Ruby also have nineteen-base checks below; the
 remaining host checks cover their tested Nat forms.
 [Installed C/C++ checks](../evidence/nominal-subtype-native-acceptance-20261011.md)
 cover the same Nat forms on both source routes in Linux x64/glibc 2.36, including
@@ -87,6 +87,11 @@ Linux x64/glibc 2.36 and 64-bit machine words.
 [Installed Ruby checks](../evidence/nominal-subtype-ruby-acceptance-20261012.md)
 add those Nat forms on MRI Ruby 3.3.12, with reproduced gems, offline installation
 and relocated replay on Linux x64/glibc 2.36.
+[Nineteen-base Ruby checks](../evidence/nominal-primitive-subtype-ruby-20261015/index.json)
+extend those fields and constructor-free results to all admitted primitive
+bases. Both author routes and API modes reproduce complete gems from two roots,
+install offline after author removal and replay after physical relocation on
+MRI Ruby 3.3.12 and Linux x64/glibc 2.36 with 64-bit machine words.
 [Installed Rust checks](../evidence/nominal-subtype-rust-acceptance-20261012.md)
 add those Nat forms with Rust and Cargo 1.90.0, offline crate installation,
 relocated replay and execution after deleting all consumer sources.
@@ -211,6 +216,9 @@ extends that matrix to every admitted primitive base.
 adds CPython 3.11 and 3.12 with offline installation and relocated replay.
 [Installed Ruby acceptance](../evidence/nominal-subtype-ruby-acceptance-20261012.md)
 adds MRI Ruby 3.3.12 with offline gem installation and relocated replay.
+[Nineteen-base Ruby acceptance](../evidence/nominal-primitive-subtype-ruby-20261015/index.json)
+extends that matrix to every admitted primitive base on both author routes and
+API modes.
 [Installed Rust acceptance](../evidence/nominal-subtype-rust-acceptance-20261012.md)
 adds Rust and Cargo 1.90.0 with offline crate installation, relocated replay
 and execution after deleting all consumer sources.

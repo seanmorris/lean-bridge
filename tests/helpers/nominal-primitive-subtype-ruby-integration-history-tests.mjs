@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeNominalPrimitiveSubtypePerlPromotionSource } from "./nominal-primitive-subtype-perl-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypeRubyPromotionSource } from "./nominal-primitive-subtype-ruby-promotion-history.mjs";
 import { beforeNominalPrimitiveSubtypeRubyIntegrationSource, nominalPrimitiveSubtypeRubyIntegrationAlternate, nominalPrimitiveSubtypeRubyIntegrationChangedPaths, nominalPrimitiveSubtypeRubyIntegrationHistoryPath, nominalPrimitiveSubtypeRubyIntegrationPredecessor, reverseNominalPrimitiveSubtypeRubyIntegrationAlternateUpdate, reverseNominalPrimitiveSubtypeRubyIntegrationUpdate } from "./nominal-primitive-subtype-ruby-integration-history.mjs";
 import { nominalPrimitiveSubtypeRubyRegistrationHistoryPath } from "./nominal-primitive-subtype-ruby-registration-history.mjs";
 
@@ -25,7 +26,7 @@ test("existing primitive-base and Ruby integration authenticates both merge pare
 	const at = (commit, path) => execFileSync("git", ["show", `${commit}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalPrimitiveSubtypePerlPromotionSource(update.path, await readFile(update.path, "utf8"));
+		const current = beforeNominalPrimitiveSubtypePerlPromotionSource(update.path, beforeNominalPrimitiveSubtypeRubyPromotionSource(update.path, await readFile(update.path, "utf8")), update.currentSha256);
 		assert.equal(beforeNominalPrimitiveSubtypeRubyIntegrationSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeNominalPrimitiveSubtypeRubyIntegrationSource(update.path, current + "unknown"), current + "unknown");
 		if(update.previousSha256)

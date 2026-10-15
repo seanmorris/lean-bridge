@@ -522,6 +522,10 @@ Python has separate [nineteen-base nominal checks](evidence/nominal-primitive-su
 their native representations and 64-bit machine words on both author routes.
 [Perl checks](evidence/nominal-primitive-subtype-perl-20261015/index.json) cover
 the same fields on all four pinned CPAN ABIs in both delivery modes.
+[Ruby checks](evidence/nominal-primitive-subtype-ruby-20261015/index.json) cover
+all nineteen primitive fields on MRI Ruby 3.3.12. Both author routes and API
+modes reproduce complete gems, install offline after author removal and replay
+after physical relocation on Linux x64/glibc 2.36 with 64-bit machine words.
 Primitive-base nominal acceptance in the remaining hosts is pending. Callback,
 owned, recursive, dependent and broader generic Subtype combinations need
 their own checks.

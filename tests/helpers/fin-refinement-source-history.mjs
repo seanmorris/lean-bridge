@@ -90,6 +90,7 @@ import { nominalPrimitiveSubtypePerlRegistrationChangedPaths } from "./nominal-p
 import { nominalPrimitiveSubtypePerlIntegrationChangedPaths } from "./nominal-primitive-subtype-perl-integration-history.mjs";
 import { nominalPrimitiveSubtypeRubyIntegrationChangedPaths } from "./nominal-primitive-subtype-ruby-integration-history.mjs";
 import { nominalPrimitiveSubtypePerlPromotionChangedPaths } from "./nominal-primitive-subtype-perl-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypeRubyPromotionSource, nominalPrimitiveSubtypeRubyPromotionChangedPaths } from "./nominal-primitive-subtype-ruby-promotion-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeSubtypeRefinementSource, subtypeRefinementChangedPaths } from "./subtype-refinement-source-history.mjs";
 import { subtypeHeapChangedPaths } from "./subtype-heap-source-history.mjs";
@@ -740,6 +741,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeNominalPrimitiveSubtypeRubyPromotionSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeSubtypeRefinementSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	if(path === typeSurfacePath) return beforeFinTypeSurface(source);
@@ -1045,6 +1048,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nominalPrimitiveSubtypePerlIntegrationChangedPaths
 	, ...nominalPrimitiveSubtypeRubyIntegrationChangedPaths
 	, ...nominalPrimitiveSubtypePerlPromotionChangedPaths
+	, ...nominalPrimitiveSubtypeRubyPromotionChangedPaths
 ])].sort());
 
 /**

@@ -34,6 +34,8 @@ import { nominalPrimitiveSubtypePythonProfiles, nominalPrimitiveSubtypePythonFie
 import { nominalPrimitiveSubtypeBrowserProfiles, nominalPrimitiveSubtypeBrowserField } from "./helpers/nominal-primitive-subtype-browser-promotion.mjs";
 import { nominalPrimitiveSubtypeNativeProfiles, nominalPrimitiveSubtypeNativeField } from "./helpers/nominal-primitive-subtype-native-promotion.mjs";
 import { nominalPrimitiveSubtypePerlProfiles, nominalPrimitiveSubtypePerlField } from "./helpers/nominal-primitive-subtype-perl-promotion.mjs";
+import { nominalPrimitiveSubtypeRubyProfiles, nominalPrimitiveSubtypeRubyField } from "./helpers/nominal-primitive-subtype-ruby-promotion.mjs";
+import { beforeNominalPrimitiveSubtypeRubyPromotionSource } from "./helpers/nominal-primitive-subtype-ruby-promotion-history.mjs";
 
 const execute = promisify(execFile);
 const root = path.resolve(import.meta.dirname, "..");
@@ -75,9 +77,10 @@ const observationFixture = () => {
 
 test("historical shape comparisons preserve old cells without weakening the live classifier", async () => {
 	const file = "docs/type-surface.v1.json";
-	const previous = JSON.parse(beforeCheckedRecordPromotionSource(file, await readFile(file, "utf8")));
+	const current = beforeNominalPrimitiveSubtypeRubyPromotionSource(file, await readFile(file, "utf8"));
+	const previous = JSON.parse(beforeCheckedRecordPromotionSource(file, current));
 	// Compare shape introduction at its own inventory epoch; later callback observations are separate.
-	const withCheckedRecords = JSON.parse(beforeCallbackFinPromotionSource(file, await readFile(file, "utf8")));
+	const withCheckedRecords = JSON.parse(beforeCallbackFinPromotionSource(file, current));
 	const unchanged = clone(previous);
 	assert.equal(previous.shapes.length, 48);
 	assert.throws(() => typeSurfaceCells(previous, contracts), /IR and source shapes/u);
@@ -428,8 +431,10 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	const nominalSubtype = ["python", "ruby", "rust", "dotnet", "java", "kotlin", ...nominalSubtypePhpProfiles, ...nominalSubtypeWitProfiles, ...nominalSubtypePhpWasmProfiles].includes(profile);
 	const nominalSubtypeLane = nominalSubtypeJvmProfiles.includes(profile) ? "jvm" : nominalSubtypePhpProfiles.includes(profile) ? "php" : nominalSubtypeWitProfiles.includes(profile) ? "wit" : nominalSubtypeBrowserProfiles.includes(profile) ? "browser" : nominalSubtypePhpWasmProfiles.includes(profile) ? "php-wasm" : profile;
 	const nominalSubtypeEvidence = nominalSubtype ? ["full", "result-only"].map(mode => `nominal-subtype-${nominalSubtypeLane}-ordinary-${mode}-installed`) : [];
-	const primitiveSubtypeEvidence = nominalPrimitiveSubtypePythonProfiles.includes(profile)
-		? ["full", "result-only"].map(mode => `nominal-primitive-subtype-python-ordinary-${mode}-installed`) : [];
+	const primitiveSubtypeLane = nominalPrimitiveSubtypePythonProfiles.includes(profile) ? "python"
+		: nominalPrimitiveSubtypeRubyProfiles.includes(profile) ? "ruby" : null;
+	const primitiveSubtypeEvidence = primitiveSubtypeLane
+		? ["full", "result-only"].map(mode => `nominal-primitive-subtype-${primitiveSubtypeLane}-ordinary-${mode}-installed`) : [];
 	const checkedRecordGroups = {
 		python: ["python-3-11", "python-3-12"], ruby: ["ruby-jvm"]
 		, java: ["ruby-jvm"], kotlin: ["ruby-jvm"], dotnet: ["remaining"]
@@ -558,7 +563,7 @@ test("checked Subtype evidence preserves structural inputs and results and limit
 		, ...nominalSubtypeWitProfiles, ...nominalSubtypeBrowserProfiles
 		, ...nominalSubtypePhpWasmProfiles];
 	const nominalLane = profile => nominalSubtypeNpmProfiles.includes(profile) ? "npm" : nominalSubtypeJvmProfiles.includes(profile) ? "jvm" : nominalSubtypePhpProfiles.includes(profile) ? "php" : nominalSubtypeWitProfiles.includes(profile) ? "wit" : nominalSubtypeBrowserProfiles.includes(profile) ? "browser" : nominalSubtypePhpWasmProfiles.includes(profile) ? "php-wasm" : ["perl", "python", "ruby", "rust", "dotnet"].includes(profile) ? profile : "native";
-	const primitiveLane = profile => nominalPrimitiveSubtypeNpmProfiles.includes(profile) ? "npm" : nominalPrimitiveSubtypePythonProfiles.includes(profile) ? "python" : nominalPrimitiveSubtypeBrowserProfiles.includes(profile) ? "browser" : nominalPrimitiveSubtypeNativeProfiles.includes(profile) ? "native" : nominalPrimitiveSubtypePerlProfiles.includes(profile) ? "perl" : null;
+	const primitiveLane = profile => nominalPrimitiveSubtypeNpmProfiles.includes(profile) ? "npm" : nominalPrimitiveSubtypePythonProfiles.includes(profile) ? "python" : nominalPrimitiveSubtypeBrowserProfiles.includes(profile) ? "browser" : nominalPrimitiveSubtypeNativeProfiles.includes(profile) ? "native" : nominalPrimitiveSubtypePerlProfiles.includes(profile) ? "perl" : nominalPrimitiveSubtypeRubyProfiles.includes(profile) ? "ruby" : null;
 	const primitiveNominal = cell => primitiveLane(cell.profile)
 		? ["full", "result-only"].map(mode => `nominal-primitive-subtype-${primitiveLane(cell.profile)}-${cell.path === "ordinary-source" ? "ordinary" : "reviewed"}-${mode}-installed`) : [];
 	assert.deepEqual(fields.map(cell => cell.id).sort(), nominalProfiles.flatMap(profile => ["ordinary-source", "reviewed-ir"].map(path => `${profile}/subtype/${path}/field`)).sort());
@@ -569,6 +574,7 @@ test("checked Subtype evidence preserves structural inputs and results and limit
 		if(nominalPrimitiveSubtypeBrowserProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeBrowserField);
 		if(nominalPrimitiveSubtypeNativeProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeNativeField);
 		if(nominalPrimitiveSubtypePerlProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypePerlField);
+		if(nominalPrimitiveSubtypeRubyProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeRubyField);
 		for(const stage of Object.values(cell.stages))
 			assert.deepEqual(stage.evidence, [...["full", "result-only"].map(mode => `nominal-subtype-${nominalLane(cell.profile)}-${cell.path === "ordinary-source" ? "ordinary" : "reviewed"}-${mode}-installed`), ...primitiveNominal(cell)]);
 	}
