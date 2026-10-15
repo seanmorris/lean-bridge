@@ -142,7 +142,14 @@ checks.
 adds both source routes and API modes on wasm32 PHP 8.4.1 in Node 22.23.2 and
 Chromium 151.0.7922.34. Embedded, Composer and bundled callers pass startup/lazy
 loading and weak/strict execution twice after relocation. The archive
-retains all three reproduced packages. Refined
+retains all three reproduced packages.
+[Nineteen-base PHP-Wasm acceptance](../evidence/nominal-primitive-subtype-php-wasm-20261015/index.json)
+extends those fields and constructor-free results to every admitted primitive
+base with 32-bit machine words. Both author routes and API modes reproduce the
+complete Composer API, npm component and npm shared runtime, install offline,
+and run twelve Node and Chromium contexts twice after relocation. Full APIs
+check per-site normalization, active branches, exact rejection paths, caller
+snapshots and recovery. Refined
 callbacks, owned and recursive Subtypes, and Subtype fields in generic records
 remain unfinished.
 
@@ -277,6 +284,9 @@ adds both source routes and API modes on wasm32 PHP 8.4.1 in Node 22.23.2 and
 Chromium 151.0.7922.34. Embedded, Composer and bundled callers pass startup/lazy
 loading and weak/strict execution twice after relocation. The archive
 retains all three reproduced packages.
+[Nineteen-base PHP-Wasm acceptance](../evidence/nominal-primitive-subtype-php-wasm-20261015/index.json)
+extends that matrix to every admitted primitive base on both author routes and
+API modes, including standalone result-only packages with 32-bit machine words.
 Save `NominalSubtypes.lean`:
 
 ```lean

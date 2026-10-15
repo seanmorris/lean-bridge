@@ -42,6 +42,8 @@ import { nominalPrimitiveSubtypeDotnetProfiles, nominalPrimitiveSubtypeDotnetFie
 import { beforeNominalPrimitiveSubtypeDotnetPromotionSource } from "./helpers/nominal-primitive-subtype-dotnet-promotion-history.mjs";
 import { nominalPrimitiveSubtypePhpProfiles, nominalPrimitiveSubtypePhpField } from "./helpers/nominal-primitive-subtype-php-promotion.mjs";
 import { beforeNominalPrimitiveSubtypePhpPromotionSource } from "./helpers/nominal-primitive-subtype-php-promotion-history.mjs";
+import { nominalPrimitiveSubtypePhpWasmProfiles, nominalPrimitiveSubtypePhpWasmField, nominalPrimitiveSubtypePhpWasmParameter, nominalPrimitiveSubtypePhpWasmResult } from "./helpers/nominal-primitive-subtype-php-wasm-promotion.mjs";
+import { beforeNominalPrimitiveSubtypePhpWasmPromotionSource } from "./helpers/nominal-primitive-subtype-php-wasm-promotion-history.mjs";
 
 const execute = promisify(execFile);
 const root = path.resolve(import.meta.dirname, "..");
@@ -83,9 +85,10 @@ const observationFixture = () => {
 
 test("historical shape comparisons preserve old cells without weakening the live classifier", async () => {
 	const file = "docs/type-surface.v1.json";
-	let current = beforeNominalPrimitiveSubtypePhpPromotionSource(
+	let current = beforeNominalPrimitiveSubtypePhpWasmPromotionSource(
 		file, await readFile(file, "utf8")
 	);
+	current = beforeNominalPrimitiveSubtypePhpPromotionSource(file, current);
 	current = beforeNominalPrimitiveSubtypeDotnetPromotionSource(file, current);
 	current = beforeNominalPrimitiveSubtypeRustPromotionSource(file, current);
 	current = beforeNominalPrimitiveSubtypeRubyPromotionSource(file, current);
@@ -446,7 +449,8 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 		: nominalPrimitiveSubtypeRubyProfiles.includes(profile) ? "ruby"
 			: nominalPrimitiveSubtypeRustProfiles.includes(profile) ? "rust"
 				: nominalPrimitiveSubtypeDotnetProfiles.includes(profile) ? "dotnet"
-					: nominalPrimitiveSubtypePhpProfiles.includes(profile) ? "php" : null;
+					: nominalPrimitiveSubtypePhpProfiles.includes(profile) ? "php"
+						: nominalPrimitiveSubtypePhpWasmProfiles.includes(profile) ? "php-wasm" : null;
 	const primitiveSubtypeEvidence = primitiveSubtypeLane
 		? ["full", "result-only"].map(mode => `nominal-primitive-subtype-${primitiveSubtypeLane}-ordinary-${mode}-installed`) : [];
 	const checkedRecordGroups = {
@@ -577,7 +581,7 @@ test("checked Subtype evidence preserves structural inputs and results and limit
 		, ...nominalSubtypeWitProfiles, ...nominalSubtypeBrowserProfiles
 		, ...nominalSubtypePhpWasmProfiles];
 	const nominalLane = profile => nominalSubtypeNpmProfiles.includes(profile) ? "npm" : nominalSubtypeJvmProfiles.includes(profile) ? "jvm" : nominalSubtypePhpProfiles.includes(profile) ? "php" : nominalSubtypeWitProfiles.includes(profile) ? "wit" : nominalSubtypeBrowserProfiles.includes(profile) ? "browser" : nominalSubtypePhpWasmProfiles.includes(profile) ? "php-wasm" : ["perl", "python", "ruby", "rust", "dotnet"].includes(profile) ? profile : "native";
-	const primitiveLane = profile => nominalPrimitiveSubtypeNpmProfiles.includes(profile) ? "npm" : nominalPrimitiveSubtypePythonProfiles.includes(profile) ? "python" : nominalPrimitiveSubtypeBrowserProfiles.includes(profile) ? "browser" : nominalPrimitiveSubtypeNativeProfiles.includes(profile) ? "native" : nominalPrimitiveSubtypePerlProfiles.includes(profile) ? "perl" : nominalPrimitiveSubtypeRubyProfiles.includes(profile) ? "ruby" : nominalPrimitiveSubtypeRustProfiles.includes(profile) ? "rust" : nominalPrimitiveSubtypeDotnetProfiles.includes(profile) ? "dotnet" : nominalPrimitiveSubtypePhpProfiles.includes(profile) ? "php" : null;
+	const primitiveLane = profile => nominalPrimitiveSubtypeNpmProfiles.includes(profile) ? "npm" : nominalPrimitiveSubtypePythonProfiles.includes(profile) ? "python" : nominalPrimitiveSubtypeBrowserProfiles.includes(profile) ? "browser" : nominalPrimitiveSubtypeNativeProfiles.includes(profile) ? "native" : nominalPrimitiveSubtypePerlProfiles.includes(profile) ? "perl" : nominalPrimitiveSubtypeRubyProfiles.includes(profile) ? "ruby" : nominalPrimitiveSubtypeRustProfiles.includes(profile) ? "rust" : nominalPrimitiveSubtypeDotnetProfiles.includes(profile) ? "dotnet" : nominalPrimitiveSubtypePhpProfiles.includes(profile) ? "php" : nominalPrimitiveSubtypePhpWasmProfiles.includes(profile) ? "php-wasm" : null;
 	const primitiveNominal = cell => primitiveLane(cell.profile)
 		? ["full", "result-only"].map(mode => `nominal-primitive-subtype-${primitiveLane(cell.profile)}-${cell.path === "ordinary-source" ? "ordinary" : "reviewed"}-${mode}-installed`) : [];
 	assert.deepEqual(fields.map(cell => cell.id).sort(), nominalProfiles.flatMap(profile => ["ordinary-source", "reviewed-ir"].map(path => `${profile}/subtype/${path}/field`)).sort());
@@ -592,6 +596,7 @@ test("checked Subtype evidence preserves structural inputs and results and limit
 		if(nominalPrimitiveSubtypeRustProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeRustField);
 		if(nominalPrimitiveSubtypeDotnetProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeDotnetField);
 		if(nominalPrimitiveSubtypePhpProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypePhpField);
+		if(nominalPrimitiveSubtypePhpWasmProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypePhpWasmField);
 		for(const stage of Object.values(cell.stages))
 			assert.deepEqual(stage.evidence, [...["full", "result-only"].map(mode => `nominal-subtype-${nominalLane(cell.profile)}-${cell.path === "ordinary-source" ? "ordinary" : "reviewed"}-${mode}-installed`), ...primitiveNominal(cell)]);
 	}
@@ -600,7 +605,11 @@ test("checked Subtype evidence preserves structural inputs and results and limit
 	const primitive = installed.map(cell => {
 		const nominal = nominalProfiles.includes(cell.profile)
 			? ["full", "result-only"].map(mode => `nominal-subtype-${nominalLane(cell.profile)}-${cell.path === "ordinary-source" ? "ordinary" : "reviewed"}-${mode}-installed`) : [];
-		if(nominal.length)
+		const exactPhpWasm = nominalPrimitiveSubtypePhpWasmProfiles.includes(cell.profile);
+		if(exactPhpWasm)
+			assert.equal(cell.hostType, cell.position === "parameter"
+				? nominalPrimitiveSubtypePhpWasmParameter : nominalPrimitiveSubtypePhpWasmResult);
+		else if(nominal.length)
 		{
 			const hostSuffix = nominalSubtypeNpmProfiles.includes(cell.profile) ? nominalSubtypeNpmHostSuffix : nominalSubtypeJvmProfiles.includes(cell.profile) ? nominalSubtypeJvmHostSuffix : nominalSubtypePhpProfiles.includes(cell.profile) ? nominalSubtypePhpHostSuffix : nominalSubtypeWitProfiles.includes(cell.profile) ? nominalSubtypeWitHostSuffix : nominalSubtypeBrowserProfiles.includes(cell.profile) ? nominalSubtypeBrowserHostSuffix : nominalSubtypePhpWasmProfiles.includes(cell.profile) ? nominalSubtypePhpWasmHostSuffix : cell.profile === "perl" ? nominalSubtypePerlHostSuffix : cell.profile === "python" ? nominalSubtypePythonHostSuffix : cell.profile === "ruby" ? nominalSubtypeRubyHostSuffix : cell.profile === "rust" ? nominalSubtypeRustHostSuffix : cell.profile === "dotnet" ? nominalSubtypeDotnetHostSuffix : nominalSubtypeNativeHostSuffix;
 			assert.ok(cell.hostType.endsWith(hostSuffix));
@@ -608,7 +617,7 @@ test("checked Subtype evidence preserves structural inputs and results and limit
 		}
 		const expected = structuralSubtypeEvidence(cell.profile, cell.path === "ordinary-source" ? "ordinary" : "reviewed");
 		const suffix = "; also in generated structural containers";
-		assert.ok(cell.hostType.endsWith(suffix));
+		if(!exactPhpWasm) assert.ok(cell.hostType.endsWith(suffix));
 		const stages = Object.fromEntries(Object.entries(cell.stages).map(([name, stage]) => {
 			assert.deepEqual(stage.evidence.filter(id => id.startsWith("nominal-subtype-")), nominal);
 			assert.deepEqual(stage.evidence.filter(id => id.startsWith("nominal-primitive-subtype-")), primitiveNominal(cell));
@@ -617,7 +626,12 @@ test("checked Subtype evidence preserves structural inputs and results and limit
 		}));
 		// Require the exact nominal, primitive-base and structural supplements, then retain
 		// every earlier primitive-receipt assertion below. Callback cells stay open.
-		return { ...cell, stages, hostType: cell.hostType.slice(0, -suffix.length) };
+		return {
+			...cell
+			, stages
+			, hostType: exactPhpWasm
+				? cell.hostType : cell.hostType.slice(0, -suffix.length)
+		};
 	});
 	const ordinary = primitive.filter(cell => cell.path === "ordinary-source");
 	const reviewed = primitive.filter(cell => cell.path === "reviewed-ir");

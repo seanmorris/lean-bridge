@@ -559,6 +559,18 @@ native PHP representation and 64-bit machine words on PHP 8.2.33 and Composer
 active branches, mixed `Fin` guards, exact rejection paths, caller snapshots and
 recovery. Consumer PHP source remains required at runtime.
 
+The [nineteen-base PHP-Wasm checks](../evidence/nominal-primitive-subtype-php-wasm-20261015/index.json)
+cover the same record and variant fields, nested copied containers and
+constructor-free results on both author routes. Full and standalone result-only
+APIs reproduce the Composer API, npm component and npm shared runtime from two
+author roots, install offline after removing author and build roots, then run
+twelve startup/lazy, weak/strict Node and Chromium contexts twice after
+relocation. Generated final readonly classes retain every primitive's wasm32 PHP
+representation and 32-bit machine words on PHP 8.4.1, Node 22.23.2 and Chromium
+152.0.7977.75. The full API checks per-site normalization, active branches,
+mixed `Fin` guards, exact rejection paths, caller snapshots and recovery.
+Consumer PHP source remains required at runtime.
+
 In a schema-3 reviewed API, describe a `Subtype` with its primitive transport type and name its constructor in the declaration's `source.extensions["lean-lang.org/refinements"]`. For a checked `Nat` parameter returning an ordinary `Nat`:
 
 ```json

@@ -53,6 +53,8 @@ import "./nominal-primitive-subtype-php-wasm-evidence-tests.mjs";
 import "./nominal-primitive-subtype-php-wasm-ci-tests.mjs";
 import "./nominal-primitive-subtype-php-wasm-ci-shell-tests.mjs";
 import "./nominal-primitive-subtype-php-wasm-ci-workflow-tests.mjs";
+import "./nominal-primitive-subtype-php-wasm-promotion-tests.mjs";
+import "./nominal-primitive-subtype-php-wasm-promotion-history-tests.mjs";
 import "./nominal-primitive-subtype-php-installed-tests.mjs";
 import "./nominal-primitive-subtype-php-evidence-tests.mjs";
 import "./nominal-primitive-subtype-php-ci-workflow-tests.mjs";
