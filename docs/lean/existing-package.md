@@ -548,6 +548,17 @@ retain each primitive's C# representation and use 64-bit machine words on .NET
 SDK 8.0.424 and shared framework 8.0.30 with Linux x64/glibc 2.36. Full APIs
 also check per-site normalization, exact rejection paths and recovery.
 
+The [nineteen-base native PHP checks](../evidence/nominal-primitive-subtype-php-20261015/index.json)
+cover the same record and variant fields, nested copied containers and
+constructor-free results on both author routes. Full and standalone result-only
+APIs reproduce complete Composer ZIPs from two author roots, install offline
+after removing author and build roots, and run weak and strict callers before
+and after relocation. Generated final readonly classes retain every primitive's
+native PHP representation and 64-bit machine words on PHP 8.2.33 and Composer
+2.5.5 with Linux x64/glibc 2.36. The full API checks per-site normalization,
+active branches, mixed `Fin` guards, exact rejection paths, caller snapshots and
+recovery. Consumer PHP source remains required at runtime.
+
 In a schema-3 reviewed API, describe a `Subtype` with its primitive transport type and name its constructor in the declaration's `source.extensions["lean-lang.org/refinements"]`. For a checked `Nat` parameter returning an ordinary `Nat`:
 
 ```json

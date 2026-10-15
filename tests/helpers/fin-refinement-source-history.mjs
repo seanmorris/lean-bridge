@@ -94,6 +94,7 @@ import { beforeNominalPrimitiveSubtypeRubyPromotionSource, nominalPrimitiveSubty
 import { nominalSubtypeDotnetCeilingChangedPaths } from "./nominal-subtype-dotnet-ceiling-history.mjs";
 import { primitiveSubtypeHistoryRepairChangedPaths } from "./primitive-subtype-history-repair.mjs";
 import { beforeNominalPrimitiveSubtypeDotnetPromotionSource, nominalPrimitiveSubtypeDotnetPromotionChangedPaths } from "./nominal-primitive-subtype-dotnet-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypePhpPromotionSource, nominalPrimitiveSubtypePhpPromotionChangedPaths } from "./nominal-primitive-subtype-php-promotion-history.mjs";
 import { beforeNominalPrimitiveSubtypeRustPromotionSource, nominalPrimitiveSubtypeRustPromotionChangedPaths } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeSubtypeRefinementSource, subtypeRefinementChangedPaths } from "./subtype-refinement-source-history.mjs";
@@ -745,6 +746,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeNominalPrimitiveSubtypePhpPromotionSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeNominalPrimitiveSubtypeDotnetPromotionSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeNominalPrimitiveSubtypeRustPromotionSource(path, source, expected);
@@ -1061,6 +1064,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...primitiveSubtypeHistoryRepairChangedPaths
 	, ...nominalPrimitiveSubtypeRustPromotionChangedPaths
 	, ...nominalPrimitiveSubtypeDotnetPromotionChangedPaths
+	, ...nominalPrimitiveSubtypePhpPromotionChangedPaths
 ])].sort());
 
 /**

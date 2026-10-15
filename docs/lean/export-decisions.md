@@ -121,6 +121,13 @@ x64/glibc 2.36; separate compiled probes check invalid callers and nullability.
 adds PHP 8.2.33 and Composer 2.5.5 with offline installation and weak/strict
 replay before and after relocation on Linux x64/glibc 2.36. Author/build roots
 are removed before installation; consumer PHP source remains required at runtime.
+[Nineteen-base native PHP checks](../evidence/nominal-primitive-subtype-php-20261015/index.json)
+extend those fields and constructor-free results to all admitted primitive bases
+with 64-bit machine words. Both author routes and API modes reproduce complete
+Composer ZIPs, install offline after author and build removal, and run weak and
+strict callers before and after relocation. Full APIs check per-site
+normalization, active branches, nested copied containers, exact rejection paths,
+caller snapshots and recovery after rejection.
 [Installed WIT/WASI acceptance](../evidence/nominal-subtype-wit-promotion-20261013.md)
 adds those Nat forms through the actual Component Model adapter and its required
 packaged native Lean host. Both source routes reproduce packages from two roots,
@@ -252,6 +259,9 @@ and source-free deployment of both consumers on Linux x64/glibc 2.36.
 adds PHP 8.2.33 and Composer 2.5.5 with offline installation and weak/strict
 replay before and after relocation on Linux x64/glibc 2.36. Author/build roots
 are removed before installation; consumer PHP source remains required at runtime.
+[Nineteen-base native PHP acceptance](../evidence/nominal-primitive-subtype-php-20261015/index.json)
+extends that matrix to every admitted primitive base on both author routes and
+API modes, including standalone result-only packages.
 [Installed WIT/WASI acceptance](../evidence/nominal-subtype-wit-promotion-20261013.md)
 adds those Nat forms through the actual Component Model adapter and its required
 packaged native Lean host. Both source routes reproduce packages from two roots,

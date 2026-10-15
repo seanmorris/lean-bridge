@@ -53,6 +53,8 @@ import "./nominal-primitive-subtype-php-evidence-tests.mjs";
 import "./nominal-primitive-subtype-php-ci-workflow-tests.mjs";
 import "./nominal-primitive-subtype-php-ci-policy-tests.mjs";
 import "./nominal-primitive-subtype-php-ci-shell-tests.mjs";
+import "./nominal-primitive-subtype-php-promotion-tests.mjs";
+import "./nominal-primitive-subtype-php-promotion-history-tests.mjs";
 import "./nominal-primitive-subtype-rust-fixture-tests.mjs";
 import "./nominal-primitive-subtype-rust-package-tests.mjs";
 import "./nominal-primitive-subtype-rust-package-controls-tests.mjs";
