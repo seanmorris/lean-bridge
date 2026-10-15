@@ -1,0 +1,84 @@
+diff --git a/tests/helpers/nominal-primitive-subtype-rust-install-policy-tests.mjs b/tests/helpers/nominal-primitive-subtype-rust-install-policy-tests.mjs
+index ed00c7a..b23933c 100644
+--- a/tests/helpers/nominal-primitive-subtype-rust-install-policy-tests.mjs
++++ b/tests/helpers/nominal-primitive-subtype-rust-install-policy-tests.mjs
+@@ -5,7 +5,7 @@
+  */
+ import assert from "node:assert/strict";
+ import test from "node:test";
+-import { nominalPrimitiveSubtypeRustCargoArguments, nominalPrimitiveSubtypeRustApiProbe, checkNominalPrimitiveSubtypeRustApiProbe } from "./nominal-primitive-subtype-rust-install.mjs";
++import { nominalPrimitiveSubtypeRustCargoArguments, nominalPrimitiveSubtypeRustApiProbe, checkNominalPrimitiveSubtypeRustApiProbe, waitNominalPrimitiveSubtypeRustResources } from "./nominal-primitive-subtype-rust-install.mjs";
+ 
+ const inputs = ["echo_a", "echo_b", "refuse_unit", "combine", "echo_pair", "echo_event_a", "echo_event_b", "aliases"];
+ 
+@@ -29,6 +29,15 @@ test("primitive-base Rust Cargo features select each route and API independently
+ 	assert.equal(nominalPrimitiveSubtypeRustApiProbe, `#[allow(unused_imports)]\nuse nominalprimitivesubtypes::{${inputs.join(", ")}};\nfn main() {}\n`);
+ });
+ 
++test("primitive-base Rust offline installation preserves the producer load ceiling", async () => {
++	const calls = [], notify = () => {}, expected = { observations: [], waits: 0 };
++	const wait = async (root, options) => { calls.push({ root, options }); return expected; };
++	assert.equal(await waitNominalPrimitiveSubtypeRustResources("records", 8, { wait, notify }), expected);
++	assert.deepEqual(calls, [{ root: "records", options: { maxLoad: 8, notify } }]);
++	for(const maxLoad of [undefined, null, 0, -1, Number.NaN, Number.POSITIVE_INFINITY])
++		assert.throws(() => waitNominalPrimitiveSubtypeRustResources("records", maxLoad, { wait, notify }), /positive finite host-load ceiling/u);
++});
++
+ test("primitive-base Rust API probe accepts only the selected eight missing input functions", () => {
+ 	const finished = success => ({ reason: "build-finished", success });
+ 	const encode = (messages, code) => ({ code, stdout: messages.map(message => JSON.stringify(message)).join("\n") + "\n", stderr: "" });
+diff --git a/tests/helpers/nominal-primitive-subtype-rust-install.mjs b/tests/helpers/nominal-primitive-subtype-rust-install.mjs
+index 062c744..540d0a1 100644
+--- a/tests/helpers/nominal-primitive-subtype-rust-install.mjs
++++ b/tests/helpers/nominal-primitive-subtype-rust-install.mjs
+@@ -33,6 +33,23 @@ use nominalprimitivesubtypes::{${nominalPrimitiveSubtypeRustInputNames.join(", "
+ fn main() {}
+ `;
+ 
++/**
++ * Carry the producer's selected load ceiling into every offline install phase.
++ *
++ * @param root - Fresh retained-record directory on the producer filesystem.
++ * @param maxLoad - Exclusive host-load ceiling selected by the producer.
++ * @param options - Injectable policy dependencies for isolated controls.
++ * @param options.wait - Resource waiter used by the real installer unless testing policy.
++ * @param options.notify - Producer diagnostic sink.
++ */
++export const waitNominalPrimitiveSubtypeRustResources = (root, maxLoad, {
++	wait = waitNominalSubtypeDotnetResources
++	, notify = console.log
++} = {}) => {
++	assert.ok(Number.isFinite(maxLoad) && maxLoad > 0, "Rust installer requires a positive finite host-load ceiling");
++	return wait(root, { maxLoad, notify });
++};
++
+ /**
+  * Select both the public API and its independently named constructor diagnostics.
+  *
+@@ -106,10 +123,11 @@ export const verifyNominalPrimitiveSubtypeRustDependencies = async (root, depend
+  * @param options.mode - Full or result-only package selection.
+  * @param options.route - Ordinary or reviewed constructor labels.
+  * @param options.output - Fresh retained-record directory.
++ * @param options.maxLoad - Exclusive host-load ceiling selected by the producer.
+  */
+-export const installNominalPrimitiveSubtypeRust = async ({ root, handoff, dependencyHandoff, pkg, dependencies, environment, model, floor, caller, mode, route, output }) => {
++export const installNominalPrimitiveSubtypeRust = async ({ root, handoff, dependencyHandoff, pkg, dependencies, environment, model, floor, caller, mode, route, output, maxLoad }) => {
+ 	assert.ok(nominalPrimitiveSubtypeRustModes.includes(mode)); assert.ok(nominalPrimitiveSubtypeRustRoutes.includes(route));
+-	const ready = () => waitNominalSubtypeDotnetResources(output, { notify: console.log });
++	const ready = () => waitNominalPrimitiveSubtypeRustResources(output, maxLoad);
+ 	await ready();
+ 	const bin = join(root, "tools"), vendor = join(root, "vendor"), cargoHome = join(root, "cargo-home");
+ 	for(const directory of [bin, vendor, cargoHome]) await mkdir(directory, { recursive: true });
+diff --git a/tests/helpers/nominal-primitive-subtype-rust-installed-tests.mjs b/tests/helpers/nominal-primitive-subtype-rust-installed-tests.mjs
+index c7189dc..5cbbfca 100644
+--- a/tests/helpers/nominal-primitive-subtype-rust-installed-tests.mjs
++++ b/tests/helpers/nominal-primitive-subtype-rust-installed-tests.mjs
+@@ -117,7 +117,7 @@ for(const route of routes) for(const mode of modes) test(`installed primitive-ba
+ 	const receipt = JSON.parse(await readFile(join(handoff, "package-set-receipt.json"))), pkg = receipt.packages[0];
+ 	const archive = join(handoff, pkg.artifacts[0].path), consumer = join(root, "consumer");
+ 	await resourceCheck(output);
+-	const installation = await installNominalPrimitiveSubtypeRust({ root: consumer, handoff, dependencyHandoff, pkg, dependencies, environment, model, floor, caller, mode, route, output });
++	const installation = await installNominalPrimitiveSubtypeRust({ root: consumer, handoff, dependencyHandoff, pkg, dependencies, environment, model, floor, caller, mode, route, output, maxLoad: resourceMaxLoad });
+ 	const observations = [], clean = { ...copiedCleanEnvironment, CARGO_HOME: "/unavailable", RUSTC: "/unavailable" };
+ 	for(const [index, location] of [consumer, consumer + "-relocated"].entries())
+ 	{

@@ -1,0 +1,70 @@
+{
+  "bindingIrSha256": "61c55974f220111593027931e8ec99446672dfbf281b3d254ce2d93b025af356",
+  "evidence": {
+    "componentId": "nominalprimitivesubtypes@1.0.0",
+    "componentReceiptSha256": "12ba7b7a24f4c622a03ec96361230dfa03047bb42335e182929f77832643df4c",
+    "libraries": {
+      "libcomponent_19ad06f04a0c2d39db76.so": "58a916198cb50e5bb7fab57554591812a8381960749e100c43effecedd0a3672",
+      "liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+      "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+      "libnominalprimitivesubtypes.so": "eb46ccf3accce434eca3d3071099d945d515ec305901040e05ec3e44264dd4f0"
+    },
+    "library": "libnominalprimitivesubtypes.so",
+    "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+  },
+  "files": {
+    "Cargo.lock": {
+      "bytes": 3313,
+      "sha256": "2a0cf4901854bcee49d44422105f57cbc4a1024d385bd9fcc06d0dc2522f63cf"
+    },
+    "Cargo.toml": {
+      "bytes": 345,
+      "sha256": "de3ebb80a575d1d07339ec44d977d6c3f59634e8649614acdbe6d11eaebe8773"
+    },
+    "README.md": {
+      "bytes": 56206,
+      "sha256": "6dff350d33f1f0bcf1fd752a1386286db92821471e4cc1c2af5f777c1fdab76f"
+    },
+    "binding-manifest.json": {
+      "bytes": 1230,
+      "sha256": "ae5fbf7a9f29ddf3c583711a5048a581986bd627dca86dfbb2d3d1416a28a7c4"
+    },
+    "lean-bridge/licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "native/linux-x64/libcomponent_19ad06f04a0c2d39db76.so": {
+      "bytes": 387344,
+      "sha256": "58a916198cb50e5bb7fab57554591812a8381960749e100c43effecedd0a3672"
+    },
+    "native/linux-x64/liblean_bridge_native.so": {
+      "bytes": 21464,
+      "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+    },
+    "native/linux-x64/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "native/linux-x64/libnominalprimitivesubtypes.so": {
+      "bytes": 188288,
+      "sha256": "eb46ccf3accce434eca3d3071099d945d515ec305901040e05ec3e44264dd4f0"
+    },
+    "src/__runtime.rs": {
+      "bytes": 36808,
+      "sha256": "299b7048612dc66c5321d9a2bb5ba8e3cff5a5799a421938054a79a53c62b2aa"
+    },
+    "src/assets.rs": {
+      "bytes": 8111,
+      "sha256": "1db2334ed7f9eed635f2596f096bc0f01294df8e1e942136faa8a62f7df4eb30"
+    },
+    "src/lib.rs": {
+      "bytes": 54518,
+      "sha256": "ac9e6c03f432be9ae75584a91db9dc03628f5d181415f087cfcf05d7d095ec17"
+    }
+  },
+  "name": "nominalprimitivesubtypes",
+  "profile": "native-library-v1",
+  "rustc": "rustc 1.90.0 (1159e78c4 2025-09-14)",
+  "schemaVersion": 1,
+  "version": "1.0.0"
+}

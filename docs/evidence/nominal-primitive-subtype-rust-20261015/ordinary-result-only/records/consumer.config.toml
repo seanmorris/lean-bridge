@@ -1,0 +1,4 @@
+[source.crates-io]
+replace-with = "nominal-vendor"
+[source.nominal-vendor]
+directory = "vendor/dependencies"
