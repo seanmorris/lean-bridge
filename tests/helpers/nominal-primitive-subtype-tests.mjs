@@ -40,3 +40,6 @@ import "./nominal-primitive-subtype-native-ci-shell-tests.mjs";
 import "./nominal-primitive-subtype-native-ci-workflow-tests.mjs";
 import "./nominal-primitive-subtype-native-registration-history-tests.mjs";
 import "./nominal-primitive-subtype-native-installed-tests.mjs";
+import "./nominal-primitive-subtype-native-archive-tests.mjs";
+import "./nominal-primitive-subtype-native-promotion-tests.mjs";
+import "./nominal-primitive-subtype-native-promotion-history-tests.mjs";

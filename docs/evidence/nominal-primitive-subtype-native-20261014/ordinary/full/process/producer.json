@@ -1,0 +1,24 @@
+{
+  "args": [
+    "--max-old-space-size=3072",
+    "build/vo1469-native-produce.mjs",
+    "ordinary",
+    "full",
+    "r1",
+    "r2"
+  ],
+  "bytes": 1057,
+  "code": 0,
+  "finished": "2026-10-14T22:32:03.174Z",
+  "fourth": "r2",
+  "kind": "producer",
+  "log": "build/vo1469-native-producer-process-ordinary-full-r1.log",
+  "mode": "full",
+  "route": "ordinary",
+  "runnerSha256": "8383c76db592a211bcef4c931aedb8727d7201b241ab372eaab22df403aedbd8",
+  "sha256": "727cde0a2b6e868998b2e4ee521034657988781c2cbb79a424fb12183e82855b",
+  "signal": null,
+  "started": "2026-10-14T22:24:49.058Z",
+  "third": "r1",
+  "wrapperSha256": "8894b382abf4da51afa58deb39141b5b9e7fa285373b75781ae5d164ecc23a78"
+}

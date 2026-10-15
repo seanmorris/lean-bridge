@@ -1,0 +1,129 @@
+{
+  "checked": {
+    "counts": {
+      "c": {
+        "checks": 583,
+        "rejections": 0,
+        "rounds": 256,
+        "snapshotControls": 22,
+        "wordBits": 64
+      },
+      "cpp": {
+        "checks": 579,
+        "rejections": 0,
+        "rounds": 256,
+        "snapshotControls": 9,
+        "wordBits": 64
+      }
+    },
+    "dispatchObserved": false,
+    "executions": 4,
+    "floor": "2.36",
+    "generatorPaths": [
+      "src/abi/component-copied.mjs",
+      "src/abi/component-recursive.mjs",
+      "src/abi/component-scalars.mjs",
+      "src/abi/generic-specialization.mjs",
+      "src/abi/refinements.mjs",
+      "src/analyze/callback-signature.mjs",
+      "src/analyze/checked-refinement-selection.mjs",
+      "src/analyze/copied-metadata-graph.mjs",
+      "src/analyze/elaborated-metadata.mjs",
+      "src/analyze/export-configuration.mjs",
+      "src/analyze/generator-configuration.mjs",
+      "src/analyze/native-metadata.mjs",
+      "src/analyze/native-types.mjs",
+      "src/analyze/owned-aggregate-policy.mjs",
+      "src/analyze/owned-metadata-graph.mjs",
+      "src/analyze/package-license.mjs",
+      "src/analyze/package-metadata.mjs",
+      "src/analyze/reviewed-instantiation.mjs",
+      "src/analyze/reviewed-refinements.mjs",
+      "src/analyze/reviewed-source.mjs",
+      "src/analyze/reviewed-subtypes.mjs",
+      "src/analyze/semantic-model.mjs",
+      "src/analyze/spdx-data.json",
+      "src/backends/c/fin-diagnostic.mjs",
+      "src/backends/c/generate.mjs",
+      "src/backends/c/gmp-projection.mjs",
+      "src/backends/c/gmp-values.mjs",
+      "src/backends/c/native-callables.mjs",
+      "src/backends/c/native-copied-values.mjs",
+      "src/backends/c/package-audit.mjs",
+      "src/backends/c/primitive-surface.mjs",
+      "src/backends/cpp/boost.mjs",
+      "src/backends/cpp/boost.source.json",
+      "src/backends/cpp/callables.mjs",
+      "src/backends/cpp/copied-values.mjs",
+      "src/backends/cpp/generate.mjs",
+      "src/backends/cpp/primitives.mjs",
+      "src/backends/perl/naming.mjs",
+      "src/backends/php/callables.mjs",
+      "src/backends/php/copied-equality.mjs",
+      "src/backends/php/copied-model.mjs",
+      "src/backends/php/copied-names.mjs",
+      "src/backends/php/copied-variants.mjs",
+      "src/binding-ir/canonical.mjs",
+      "src/binding-ir/contract.mjs",
+      "src/binding-ir/sha256.mjs",
+      "src/build/component-refinements.mjs",
+      "src/build/native-model.mjs",
+      "src/build/refinement-mirrors.mjs",
+      "src/capsule/contract.mjs",
+      "src/capsule/node.mjs",
+      "src/release/component-package-receipt.mjs"
+    ],
+    "initialExecutions": 2,
+    "mode": "result-only",
+    "modelControls": 23,
+    "packageControls": 12,
+    "packages": [
+      {
+        "artifact": {
+          "bytes": 53927510,
+          "path": "archives/nominalprimitivesubtypes-1.0.0-c.tar.gz",
+          "sha256": "d0a008b357383718d99646c6d72ac835ee269ad8770f4b84440c01e815d03442"
+        },
+        "files": 36,
+        "packageFileSetSha256": "231d98f7963328cc03af88016f1c96d66307fd131c49d073b24780995e91f6cc",
+        "profile": "c",
+        "receiptSha256": "770105dfe8d7f063d0c3d78e2ba802d980d9c9ed2228b33ec1a5e04755e8ce02"
+      },
+      {
+        "artifact": {
+          "bytes": 51856608,
+          "path": "archives/nominalprimitivesubtypes-1.0.0-cpp.tar.gz",
+          "sha256": "c95c63626dcee562e42c320532e7f4c00912713896000a318a832269289cd40e"
+        },
+        "files": 226,
+        "packageFileSetSha256": "a1d206877315bd9e0921b03ad46e7baf953eb179a388b97e8c6721ca0cd1b1cb",
+        "profile": "cpp",
+        "receiptSha256": "e4f94959efa16479ec333ab00205e39c486926f0c4613a38fb7c111ec0d8aec2"
+      }
+    ],
+    "producerCommit": "e5b353c3550acdb66660e150a809ea99b6ef1374",
+    "profiles": [
+      "c",
+      "cpp"
+    ],
+    "recordControls": 64,
+    "reportControls": 41,
+    "route": "reviewed",
+    "runtime": {
+      "arch": "x64",
+      "glibc": "2.36",
+      "platform": "linux"
+    }
+  },
+  "compiledAgain": false,
+  "finished": "2026-10-14T23:16:45.541Z",
+  "head": "e5b353c3550acdb66660e150a809ea99b6ef1374",
+  "installedAcceptance": true,
+  "mode": "result-only",
+  "originalsUnchanged": 36,
+  "records": 32,
+  "route": "reviewed",
+  "sourceRoot": "/app/build/vo1469-native-installed-reviewed-result-only-r1",
+  "sourcesUnchanged": 5840,
+  "toolFilesUnchanged": 15
+}

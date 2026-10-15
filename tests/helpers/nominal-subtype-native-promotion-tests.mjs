@@ -8,6 +8,7 @@ import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { beforeNominalSubtypeJvmPromotionSource } from "./nominal-subtype-jvm-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypeNativePromotionSource } from "./nominal-primitive-subtype-native-promotion-history.mjs";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { beforeNominalSubtypePerlPromotionSource } from "./nominal-subtype-perl-promotion-history.mjs";
 import { nominalSubtypeNativeArchive, nominalSubtypeNativeProfiles, nominalSubtypeNativeReferences, promoteNominalSubtypeNative, nominalSubtypeNativeConversion, nominalSubtypeNativeLimit } from "./nominal-subtype-native-promotion.mjs";
@@ -109,7 +110,9 @@ test("nominal native promotion adds four C/C++ field cells and supplements eight
 
 test("nominal native docs distinguish verified C/C++ from other hosts and callback contexts", async () => {
 	const authorPath = "docs/lean/existing-package.md";
-	const author = beforeNominalSubtypeJvmPromotionSource(authorPath, await readFile(authorPath, "utf8"));
+	const beforePrimitiveNative = (path, source) => beforeNominalPrimitiveSubtypeNativePromotionSource(path, source);
+	const author = beforeNominalSubtypeJvmPromotionSource(authorPath
+		, beforePrimitiveNative(authorPath, await readFile(authorPath, "utf8")));
 	for(const prefix of ["| `Subtype` in acyclic", "| Lean-produced `Subtype` result without"])
 	{
 		const row = author.split("\n").find(line => line.startsWith(prefix));
@@ -123,7 +126,8 @@ test("nominal native docs distinguish verified C/C++ from other hosts and callba
 		assert.ok((await readFile(path, "utf8")).includes("nominal-subtype-native-acceptance-20261011.md"), path);
 	for(const name of ["c", "cpp"])
 	{
-		const source = await readFile(`docs/consume/${name}.md`, "utf8");
+		const path = `docs/consume/${name}.md`;
+		const source = beforePrimitiveNative(path, await readFile(path, "utf8"));
 		assert.ok(source.includes("### Subtypes in copied records\n"));
 		assert.ok(source.includes("Linux x64/glibc 2.36"));
 		assert.doesNotMatch(source, /Subtype fields in nominal records or variants, refined callback signatures and\nowned Subtypes remain unsupported/u);

@@ -56,11 +56,19 @@ extend these fields and constructor-free results to pages, React
 production/Strict Mode and workers in Chromium, Firefox and WebKit. All four
 source/API selections execute source-free bundles after offline installation,
 with asset recovery, remount, pending-unmount and worker restart/disposal
-checks. Python also has nineteen-base checks below; the remaining host checks
-cover their tested Nat forms.
+checks. Python and C/C++ also have nineteen-base checks below; the remaining
+host checks cover their tested Nat forms.
 [Installed C/C++ checks](../evidence/nominal-subtype-native-acceptance-20261011.md)
 cover the same Nat forms on both source routes in Linux x64/glibc 2.36, including
-standalone result-only packages. [Installed Perl checks](../evidence/nominal-subtype-perl-acceptance-20261012.md)
+standalone result-only packages. [Nineteen-base C/C++ checks](../evidence/nominal-primitive-subtype-native-20261014/index.json)
+extend these fields to all admitted primitive bases with independent C11/GMP
+and C++20 callers. Each field retains its public native representation and
+64-bit machine words. Both source routes check normalization, active branches,
+input snapshots, C output preservation and recovery after rejection in the full
+API. Standalone result-only packages omit input constructor selections. All
+four source/API selections reproduce complete packages from two author roots,
+install offline after author removal and replay after relocation.
+[Installed Perl checks](../evidence/nominal-subtype-perl-acceptance-20261012.md)
 cover those Nat fields and constructor-free outputs on both source routes, with
 all four pinned ABIs and both installation modes on Linux x64/glibc 2.36.
 [Installed Python checks](../evidence/nominal-subtype-python-acceptance-20261012.md)

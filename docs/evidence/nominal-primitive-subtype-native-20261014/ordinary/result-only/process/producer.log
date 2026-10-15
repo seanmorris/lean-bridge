@@ -1,0 +1,30 @@
+{"output":"/app/build/vo1469-native-installed-ordinary-result-only-r1","head":"e5b353c3550acdb66660e150a809ea99b6ef1374","route":"ordinary","mode":"result-only","sources":5839,"toolFiles":15,"started":"2026-10-14T22:37:32.968Z"}
+{"head":"e5b353c3550acdb66660e150a809ea99b6ef1374","route":"ordinary","mode":"result-only","code":0,"signal":null,"tests":{"tests":1,"pass":1,"fail":0,"cancelled":0,"skipped":0,"todo":0},"bytes":1155,"tapSha256":"d2e2961c656f7885d64cadf863981311387bb4b0dc524d725b0b5c84a2cddd17","changed":[],"toolsChanged":[],"pathsUnchanged":true,"headUnchanged":true,"runnerUnchanged":true,"finished":"2026-10-14T22:48:09.160Z"}
+TAP version 13
+# Subtest: installed primitive-base nominal native packages reproduce and relocate ordinary result-only
+ok 1 - installed primitive-base nominal native packages reproduce and relocate ordinary result-only
+  ---
+  duration_ms: 632866.704308
+  type: 'test'
+  ...
+# ordinary result-only author 0: c, cpp
+# Waiting for host load below 6 before the next primitive native phase: 8.59
+# Waiting for host load below 6 before the next primitive native phase: 8.03
+# Waiting for host load below 6 before the next primitive native phase: 7.58
+# Waiting for host load below 6 before the next primitive native phase: 6.86
+# Waiting for host load below 6 before the next primitive native phase: 6.68
+# Waiting for host load below 6 before the next primitive native phase: 6.99
+# Waiting for host load below 6 before the next primitive native phase: 6.12
+# ordinary result-only author 1: c, cpp
+# Waiting for host load below 6 before the next primitive native phase: 7.07
+# Waiting for host load below 6 before the next primitive native phase: 6.17
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 633804.337755
+

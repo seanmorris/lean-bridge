@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeNominalPrimitiveSubtypeNativePromotionPins } from "./nominal-primitive-subtype-native-promotion-history.mjs";
 import { beforeNominalPrimitiveSubtypeNativeRegistrationSource } from "./nominal-primitive-subtype-native-registration-history.mjs";
 
 export const nominalPrimitiveSubtypeBrowserPromotionHistoryPath = "docs/evidence/nominal-primitive-subtype-browser-promotion-source-history-20261014.json";
@@ -73,7 +74,7 @@ export const beforeNominalPrimitiveSubtypeBrowserPromotionSource = (path, source
  * @param inventory - Earlier inventory recomputed with current source hashes.
  */
 export const beforeNominalPrimitiveSubtypeBrowserPromotionPins = inventory => {
-	const previous = structuredClone(inventory);
+	const previous = beforeNominalPrimitiveSubtypeNativePromotionPins(inventory);
 	const record = history ??= JSON.parse(readFileSync(nominalPrimitiveSubtypeBrowserPromotionHistoryPath, "utf8"));
 	for(const entry of previous.evidence) for(const file of entry.files)
 	{

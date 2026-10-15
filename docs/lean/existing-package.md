@@ -504,9 +504,17 @@ cover those same record and variant forms on CPython 3.11.16 and 3.12.14. Both
 author routes and API modes reproduce complete wheels, install offline after
 author removal, and replay after physical relocation on Linux x64/glibc 2.36.
 Generated frozen dataclasses retain each primitive's Python representation,
-with 64-bit native machine words. These additional primitive-base checks apply
-to Node, browser pages, React, workers and Python; the other hosts retain the
-Nat coverage listed above.
+with 64-bit native machine words.
+
+The [nineteen-base C/C++ checks](../evidence/nominal-primitive-subtype-native-20261014/index.json)
+cover the same fields on both author routes with independent C11/GMP and C++20
+callers. Full and result-only packages reproduce from two author roots, install
+offline after author removal and replay after relocation on Linux x64/glibc
+2.36. Fields retain each primitive's public C or C++ type and 64-bit native
+machine words. Full APIs check per-site normalization, active variants,
+immutable inputs, C output preservation and recovery after rejection. Standalone
+result-only packages omit input constructor selections. The other hosts retain
+the Nat coverage listed above.
 
 In a schema-3 reviewed API, describe a `Subtype` with its primitive transport type and name its constructor in the declaration's `source.extensions["lean-lang.org/refinements"]`. For a checked `Nat` parameter returning an ordinary `Nat`:
 

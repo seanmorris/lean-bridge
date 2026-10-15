@@ -518,6 +518,8 @@ React remounts and pending unmounts, and worker restart and disposal. The
 [browser CI workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nominal-primitive-subtype-browser.yml)
 require both routes and API modes and retain the original package records.
 Python has separate [nineteen-base nominal checks](evidence/nominal-primitive-subtype-python-20261014/index.json).
+[C/C++ checks](evidence/nominal-primitive-subtype-native-20261014/index.json) cover
+their native representations and 64-bit machine words on both author routes.
 Primitive-base nominal acceptance in the remaining hosts is pending. Callback,
 owned, recursive, dependent and broader generic Subtype combinations need
 their own checks.

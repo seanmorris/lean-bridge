@@ -1,0 +1,29 @@
+Waiting for host load below 6 before the next C# phase: 7
+Waiting for host load below 6 before the next C# phase: 6.3
+{"output":"/app/build/vo1469-native-installed-reviewed-result-only-r1","head":"e5b353c3550acdb66660e150a809ea99b6ef1374","route":"reviewed","mode":"result-only","sources":5839,"toolFiles":15,"started":"2026-10-14T23:04:24.856Z"}
+{"head":"e5b353c3550acdb66660e150a809ea99b6ef1374","route":"reviewed","mode":"result-only","code":0,"signal":null,"tests":{"tests":1,"pass":1,"fail":0,"cancelled":0,"skipped":0,"todo":0},"bytes":923,"tapSha256":"0705dc72c9297b255b018d7711fd17e4921dfd7c4bc57cd9f1ea33200dfcf553","changed":[],"toolsChanged":[],"pathsUnchanged":true,"headUnchanged":true,"runnerUnchanged":true,"finished":"2026-10-14T23:13:28.631Z"}
+TAP version 13
+# Subtest: installed primitive-base nominal native packages reproduce and relocate reviewed result-only
+ok 1 - installed primitive-base nominal native packages reproduce and relocate reviewed result-only
+  ---
+  duration_ms: 541106.059497
+  type: 'test'
+  ...
+# reviewed result-only author 0: c, cpp
+# Waiting for host load below 6 before the next primitive native phase: 6.91
+# Waiting for host load below 6 before the next primitive native phase: 6.48
+# Waiting for host load below 6 before the next primitive native phase: 6.4
+# Waiting for host load below 6 before the next primitive native phase: 6.11
+# reviewed result-only author 1: c, cpp
+# Waiting for host load below 6 before the next primitive native phase: 6.11
+# Waiting for host load below 6 before the next primitive native phase: 6.59
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 542071.489182
+

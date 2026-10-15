@@ -1,0 +1,66 @@
+{
+  "checks": 583,
+  "compiler": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "cc (Debian 12.2.0-14+deb12u1) 12.2.0\nCopyright (C) 2022 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+  },
+  "compilerFreePath": true,
+  "compilerFreeReplay": true,
+  "consumerSha256": "c6787039dc7117d01dd4fdd2064f6b1d4523ceaa524247ef15ab650b32804733",
+  "dispatch": {
+    "observed": false,
+    "reason": "Separate constructor/source entry probe remains required"
+  },
+  "executableSha256": "20f56d19d201e1e951f5e2938f8425dbb256893969cc9c78edb3424939216fda",
+  "offlineInstall": true,
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 53927510,
+          "path": "archives/nominalprimitivesubtypes-1.0.0-c.tar.gz",
+          "sha256": "d0a008b357383718d99646c6d72ac835ee269ad8770f4b84440c01e815d03442"
+        }
+      ],
+      "ecosystem": "c",
+      "name": "nominalprimitivesubtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "c",
+      "version": "1.0.0"
+    }
+  ],
+  "profile": "c",
+  "relocatedInstallation": true,
+  "result": {
+    "checks": 583,
+    "rejections": 0,
+    "rounds": 256,
+    "snapshotControls": 22,
+    "wordBits": 64
+  },
+  "runs": [
+    {
+      "code": 0,
+      "packageFileSetSha256": "231d98f7963328cc03af88016f1c96d66307fd131c49d073b24780995e91f6cc",
+      "receiptSha256": "770105dfe8d7f063d0c3d78e2ba802d980d9c9ed2228b33ec1a5e04755e8ce02",
+      "relocated": false,
+      "stderr": "",
+      "stdout": "{\"checks\":583,\"rejections\":0,\"rounds\":256,\"snapshotControls\":22,\"wordBits\":64}\n"
+    },
+    {
+      "code": 0,
+      "packageFileSetSha256": "231d98f7963328cc03af88016f1c96d66307fd131c49d073b24780995e91f6cc",
+      "receiptSha256": "770105dfe8d7f063d0c3d78e2ba802d980d9c9ed2228b33ec1a5e04755e8ce02",
+      "relocated": true,
+      "stderr": "",
+      "stdout": "{\"checks\":583,\"rejections\":0,\"rounds\":256,\"snapshotControls\":22,\"wordBits\":64}\n"
+    }
+  ],
+  "sourceRemovedBeforeInstallation": true,
+  "sourceSha256": "c6787039dc7117d01dd4fdd2064f6b1d4523ceaa524247ef15ab650b32804733"
+}
