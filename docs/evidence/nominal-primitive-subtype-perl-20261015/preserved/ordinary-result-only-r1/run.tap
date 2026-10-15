@@ -1,0 +1,89 @@
+TAP version 13
+# Subtest: installed primitive-base nominal Perl packages reproduce and relocate ordinary result-only
+not ok 1 - installed primitive-base nominal Perl packages reproduce and relocate ordinary result-only
+  ---
+  duration_ms: 1084769.038877
+  type: 'test'
+  location: '/app/build/worktrees/nominal-subtype-perl-vo1493/tests/helpers/nominal-primitive-subtype-perl-installed-tests.mjs:29:53'
+  failureType: 'testCodeFailure'
+  error: 'C# producer host load remained at or above 6 for five minutes'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    waitNominalSubtypeDotnetResources (file:///app/build/worktrees/nominal-subtype-perl-vo1493/tests/helpers/nominal-subtype-dotnet-resources.mjs:37:10)
+    async TestContext.<anonymous> (file:///app/build/worktrees/nominal-subtype-perl-vo1493/tests/helpers/nominal-primitive-subtype-perl-installed-tests.mjs:113:3)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# ordinary result-only author 0: four Perl ABIs
+# Waiting for host load below 6 before the next primitive Perl phase: 7.96
+# Waiting for host load below 6 before the next primitive Perl phase: 7.16
+# Waiting for host load below 6 before the next primitive Perl phase: 6.45
+# Waiting for host load below 6 before the next primitive Perl phase: 6.37
+# Waiting for host load below 6 before the next primitive Perl phase: 7.87
+# Waiting for host load below 6 before the next primitive Perl phase: 7.74
+# Waiting for host load below 6 before the next primitive Perl phase: 8.09
+# Waiting for host load below 6 before the next primitive Perl phase: 9.65
+# Waiting for host load below 6 before the next primitive Perl phase: 9.1
+# Waiting for host load below 6 before the next primitive Perl phase: 9.79
+# Waiting for host load below 6 before the next primitive Perl phase: 9.41
+# Waiting for host load below 6 before the next primitive Perl phase: 9.41
+# Waiting for host load below 6 before the next primitive Perl phase: 8.71
+# Waiting for host load below 6 before the next primitive Perl phase: 8.1
+# Waiting for host load below 6 before the next primitive Perl phase: 7.7
+# Waiting for host load below 6 before the next primitive Perl phase: 7.8
+# Waiting for host load below 6 before the next primitive Perl phase: 8.31
+# Waiting for host load below 6 before the next primitive Perl phase: 7.19
+# Waiting for host load below 6 before the next primitive Perl phase: 6.53
+# Waiting for host load below 6 before the next primitive Perl phase: 6.04
+# ordinary result-only author 1: four Perl ABIs
+# Waiting for host load below 6 before the next primitive Perl phase: 6.84
+# Waiting for host load below 6 before the next primitive Perl phase: 7.31
+# Waiting for host load below 6 before the next primitive Perl phase: 8.88
+# Waiting for host load below 6 before the next primitive Perl phase: 8.09
+# Waiting for host load below 6 before the next primitive Perl phase: 8
+# Waiting for host load below 6 before the next primitive Perl phase: 8.36
+# Waiting for host load below 6 before the next primitive Perl phase: 8.96
+# Waiting for host load below 6 before the next primitive Perl phase: 8.19
+# Waiting for host load below 6 before the next primitive Perl phase: 7.84
+# Waiting for host load below 6 before the next primitive Perl phase: 7.43
+# Waiting for host load below 6 before the next primitive Perl phase: 6.31
+# Installing 5.36.3-threaded/prebuilt-only/ordinary/result-only
+# Installing 5.36.3-threaded/build-xs/ordinary/result-only
+# Waiting for host load below 6 before the next primitive Perl phase: 6.39
+# Installing 5.36.3-unthreaded/prebuilt-only/ordinary/result-only
+# Waiting for host load below 6 before the next primitive Perl phase: 6
+# Installing 5.36.3-unthreaded/build-xs/ordinary/result-only
+# Waiting for host load below 6 before the next primitive Perl phase: 7.65
+# Waiting for host load below 6 before the next primitive Perl phase: 8.64
+# Waiting for host load below 6 before the next primitive Perl phase: 9.44
+# Waiting for host load below 6 before the next primitive Perl phase: 8.87
+# Waiting for host load below 6 before the next primitive Perl phase: 10.01
+# Waiting for host load below 6 before the next primitive Perl phase: 11.51
+# Waiting for host load below 6 before the next primitive Perl phase: 12.7
+# Waiting for host load below 6 before the next primitive Perl phase: 13
+# Waiting for host load below 6 before the next primitive Perl phase: 12.97
+# Waiting for host load below 6 before the next primitive Perl phase: 13.13
+# Waiting for host load below 6 before the next primitive Perl phase: 12.41
+# Waiting for host load below 6 before the next primitive Perl phase: 11.05
+# Waiting for host load below 6 before the next primitive Perl phase: 11.11
+# Waiting for host load below 6 before the next primitive Perl phase: 11.72
+# Waiting for host load below 6 before the next primitive Perl phase: 14.33
+# Waiting for host load below 6 before the next primitive Perl phase: 13.31
+# Waiting for host load below 6 before the next primitive Perl phase: 12.4
+# Waiting for host load below 6 before the next primitive Perl phase: 12.36
+# Waiting for host load below 6 before the next primitive Perl phase: 13.02
+# Waiting for host load below 6 before the next primitive Perl phase: 13.86
+# Retained failed primitive-base nominal Perl inputs: /tmp/lean-bridge-nominal-primitive-subtype-perl-PuAN8U
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1085332.490396

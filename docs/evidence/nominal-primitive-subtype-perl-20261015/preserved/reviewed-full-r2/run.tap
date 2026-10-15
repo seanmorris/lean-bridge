@@ -1,0 +1,29 @@
+TAP version 13
+# Subtest: installed primitive-base nominal Perl packages reproduce and relocate reviewed full
+ok 1 - installed primitive-base nominal Perl packages reproduce and relocate reviewed full
+  ---
+  duration_ms: 574819.455519
+  type: 'test'
+  ...
+# reviewed full author 0: four Perl ABIs
+# Waiting for host load below 8 before the next primitive Perl phase: 10.82
+# Waiting for host load below 8 before the next primitive Perl phase: 9.7
+# Waiting for host load below 8 before the next primitive Perl phase: 8.98
+# reviewed full author 1: four Perl ABIs
+# Installing 5.36.3-threaded/prebuilt-only/reviewed/full
+# Installing 5.36.3-threaded/build-xs/reviewed/full
+# Installing 5.36.3-unthreaded/prebuilt-only/reviewed/full
+# Installing 5.36.3-unthreaded/build-xs/reviewed/full
+# Installing 5.38.2-threaded/prebuilt-only/reviewed/full
+# Installing 5.38.2-threaded/build-xs/reviewed/full
+# Installing 5.38.2-unthreaded/prebuilt-only/reviewed/full
+# Installing 5.38.2-unthreaded/build-xs/reviewed/full
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 575926.420155
