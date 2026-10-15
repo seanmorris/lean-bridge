@@ -1,0 +1,18 @@
+{
+  "modules": [
+    "NominalPrimitiveSubtypes"
+  ],
+  "schemaVersion": 1,
+  "targets": {
+    "php-wasm": {
+      "composer": {
+        "name": "lean-bridge-nominalprimitivesubtypes/wasm",
+        "version": "1.0.0"
+      },
+      "npm": {
+        "name": "lean-bridge-nominalprimitivesubtypes-wasm",
+        "version": "1.0.0"
+      }
+    }
+  }
+}

@@ -1,0 +1,4601 @@
+{
+  "checkers": [
+    "nominal-primitive-subtype-php-wasm-controls.mjs",
+    "nominal-primitive-subtype-php-wasm-directory.mjs",
+    "nominal-primitive-subtype-php-wasm-provenance.mjs",
+    "nominal-primitive-subtype-php-wasm-report.mjs",
+    "nominal-primitive-subtype-php-wasm-sources.mjs"
+  ],
+  "files": [
+    {
+      "bytes": 5976,
+      "path": "checkers/nominal-primitive-subtype-php-wasm-controls.mjs",
+      "sha256": "f9601db36d4a7896f52d47cb70d1bdf49d0286e617601318aca9d61a4c308ec9"
+    },
+    {
+      "bytes": 1084,
+      "path": "checkers/nominal-primitive-subtype-php-wasm-directory.mjs",
+      "sha256": "321adf2c744637bda51be5bce13621f85d10ddc6f0976dfc93422eec6e6cbb42"
+    },
+    {
+      "bytes": 4994,
+      "path": "checkers/nominal-primitive-subtype-php-wasm-provenance.mjs",
+      "sha256": "d833cb89ca120b7997b268c3ba500ca0771b9429cdc57ac6b14c389ca96d0cda"
+    },
+    {
+      "bytes": 18666,
+      "path": "checkers/nominal-primitive-subtype-php-wasm-report.mjs",
+      "sha256": "21f27ca0a90442f03e6c28b2faea9ba16601b5fab01ca04dd4f2855e32d71e27"
+    },
+    {
+      "bytes": 5642,
+      "path": "checkers/nominal-primitive-subtype-php-wasm-sources.mjs",
+      "sha256": "32c4412d5fedc186e767686b8b4d86842f6bbc6e24077bd49d0ae4a83acf6289"
+    },
+    {
+      "bytes": 1248,
+      "path": "ordinary-full/records/build-0/author-inputs.json",
+      "sha256": "0733c3fcd94e23bffe16a577d4f6a2648bc6e221ad185367563e5bc2471c6a92"
+    },
+    {
+      "bytes": 82815,
+      "path": "ordinary-full/records/build-0/lean-bridge.exports.json",
+      "sha256": "dcb3a22b8dbbfb8d2d3155b524bec63586a0fd73c7cb30d930a819fb04866773"
+    },
+    {
+      "bytes": 1544812,
+      "path": "ordinary-full/records/build-0/model.json",
+      "sha256": "85ef43a62b29c84b7e415765490062cfca6a19d2068ec0333d19c9d7e1b8a0a5"
+    },
+    {
+      "bytes": 10863,
+      "path": "ordinary-full/records/build-0/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 3196,
+      "path": "ordinary-full/records/build-0/package-set-receipt.json",
+      "sha256": "3c3565d27b7b2b0faa35ba26eda0aceddad12828586321c119ba2aa65c6660cb"
+    },
+    {
+      "bytes": 20175,
+      "path": "ordinary-full/records/build-0/php-wasm-package-set.json",
+      "sha256": "9a60b52c2fc6ec33352b0db7f1c877548f358276a561eb1d63719bb9ba034952"
+    },
+    {
+      "bytes": 1236,
+      "path": "ordinary-full/records/build-1/author-inputs.json",
+      "sha256": "1b6e16d0bfc26f902fefff02c891714c4e04ff2062822e9feb50e955bcdb19b7"
+    },
+    {
+      "bytes": 82815,
+      "path": "ordinary-full/records/build-1/lean-bridge.exports.json",
+      "sha256": "dcb3a22b8dbbfb8d2d3155b524bec63586a0fd73c7cb30d930a819fb04866773"
+    },
+    {
+      "bytes": 1544812,
+      "path": "ordinary-full/records/build-1/model.json",
+      "sha256": "85ef43a62b29c84b7e415765490062cfca6a19d2068ec0333d19c9d7e1b8a0a5"
+    },
+    {
+      "bytes": 10863,
+      "path": "ordinary-full/records/build-1/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 3196,
+      "path": "ordinary-full/records/build-1/package-set-receipt.json",
+      "sha256": "3c3565d27b7b2b0faa35ba26eda0aceddad12828586321c119ba2aa65c6660cb"
+    },
+    {
+      "bytes": 20175,
+      "path": "ordinary-full/records/build-1/php-wasm-package-set.json",
+      "sha256": "9a60b52c2fc6ec33352b0db7f1c877548f358276a561eb1d63719bb9ba034952"
+    },
+    {
+      "bytes": 82815,
+      "path": "ordinary-full/records/configuration.json",
+      "sha256": "dcb3a22b8dbbfb8d2d3155b524bec63586a0fd73c7cb30d930a819fb04866773"
+    },
+    {
+      "bytes": 363,
+      "path": "ordinary-full/records/context.json",
+      "sha256": "7b39e28b816caa0a1fae3bdb22db55a099f516864e3c338e8bc6e285e6233f37"
+    },
+    {
+      "bytes": 659,
+      "path": "ordinary-full/records/deployment/browser.mjs",
+      "sha256": "131bb94535ea817056a1218fd74a7a77ba21675e3e7abe4bd86ab75057cc4301"
+    },
+    {
+      "bytes": 2924,
+      "path": "ordinary-full/records/deployment/composer.json",
+      "sha256": "f9c93d68d884eba88afc5e5f2d431ac9fb6dd112ba9c8041a4645a9a45b965ba"
+    },
+    {
+      "bytes": 3665,
+      "path": "ordinary-full/records/deployment/composer.lock",
+      "sha256": "7def21899c5aa4c293625d07e74e2586994961857adfae5d2646fa6f93727d4f"
+    },
+    {
+      "bytes": 2071,
+      "path": "ordinary-full/records/deployment/driver.mjs",
+      "sha256": "e881e52e87a80cb844c6482670b36c98269d6fb79920f39b56b0ce8e2d1d7d78"
+    },
+    {
+      "bytes": 1156,
+      "path": "ordinary-full/records/deployment/node.mjs",
+      "sha256": "49fb787db69cff257d85dde2275449a0010897c73fc6e928e371859662ec960a"
+    },
+    {
+      "bytes": 1400,
+      "path": "ordinary-full/records/deployment/package-lock.json",
+      "sha256": "204e04e81a217e9bb08a2a2108e134d9dd350a393f64f4d2a6e13db83d8036c4"
+    },
+    {
+      "bytes": 255,
+      "path": "ordinary-full/records/deployment/package.json",
+      "sha256": "cb43c607fbcc430ea761a20e0d7c16a1836264963039930035ea246dea1610ff"
+    },
+    {
+      "bytes": 107,
+      "path": "ordinary-full/records/deployment/request-composer.json",
+      "sha256": "9a72bd2aaafc9a2fbc559cf7805bb2ab14ecb00512745f5fdcceeb8fe093812c"
+    },
+    {
+      "bytes": 150,
+      "path": "ordinary-full/records/deployment/request-embedded.json",
+      "sha256": "ef4fa15196a321985b91c2e225151b19c2eb15c9002a2ea4614b7477073158ce"
+    },
+    {
+      "bytes": 14047,
+      "path": "ordinary-full/records/deployment/strict.php",
+      "sha256": "07577d863b988450e7547207ab939f8d2b2e6825029ba60d6fad6b3cb0f7eccd"
+    },
+    {
+      "bytes": 3403,
+      "path": "ordinary-full/records/deployment/vendor/composer/installed.json",
+      "sha256": "873b000ec966b282491d756e0a8d3cf90c83ffee69b96423b768934bf68f6887"
+    },
+    {
+      "bytes": 14047,
+      "path": "ordinary-full/records/deployment/weak.php",
+      "sha256": "dab8aac405a0cf582291de230688f03dd6b0b26cb0ea5479693d4b889e528225"
+    },
+    {
+      "bytes": 1106,
+      "path": "ordinary-full/records/executions/0.json",
+      "sha256": "e6543e1d0bd8a7594195a98054e559d7991ffe90a81e910c14dc420d50e778f0"
+    },
+    {
+      "bytes": 1108,
+      "path": "ordinary-full/records/executions/1.json",
+      "sha256": "6f443e11e04ba9fcb74982025ed702c915c5a4035b9b4f7176491c704dc0ba64"
+    },
+    {
+      "bytes": 9083,
+      "path": "ordinary-full/records/executions/10.json",
+      "sha256": "1bd69cac9239a1d63e8bf94118f49287efb08d5835a0a8509ec4dd33c0cb5122"
+    },
+    {
+      "bytes": 9087,
+      "path": "ordinary-full/records/executions/11.json",
+      "sha256": "4b5c138ccbf75c7c476ec75846b6148c51ae5a025ec0bd06e8e3f7665abde017"
+    },
+    {
+      "bytes": 689,
+      "path": "ordinary-full/records/executions/2.json",
+      "sha256": "6314cdc85e120a6b8add9d3d7d09e6eaa4f9f534113f98474184c23b181318ed"
+    },
+    {
+      "bytes": 691,
+      "path": "ordinary-full/records/executions/3.json",
+      "sha256": "93b3d7159885ed1f61a458ff0a324d1fad309dd1f645785aeb6159619077ad02"
+    },
+    {
+      "bytes": 1106,
+      "path": "ordinary-full/records/executions/4.json",
+      "sha256": "b8fa1686c628f48e4e680eb049d06d91a81454d89f1cbda4479efc826e072c3c"
+    },
+    {
+      "bytes": 1108,
+      "path": "ordinary-full/records/executions/5.json",
+      "sha256": "248757b44d062a1f0b95fa8aa02ebde28ef81f3b3c84a8492083ca84cc692077"
+    },
+    {
+      "bytes": 689,
+      "path": "ordinary-full/records/executions/6.json",
+      "sha256": "75041ba991ee5d05f9e8c8fc09f0ea558dc5d95d361ea5fe96725885155ccc3e"
+    },
+    {
+      "bytes": 691,
+      "path": "ordinary-full/records/executions/7.json",
+      "sha256": "c4b6b1489a473f319d072ac8bfd05ca1f83ee96b890b55451b0b1846463a4b8a"
+    },
+    {
+      "bytes": 9327,
+      "path": "ordinary-full/records/executions/8.json",
+      "sha256": "fba6089786a6b60f7ee183d667e81ac09f5cf3f4116d660b2ff6f0cdea723abf"
+    },
+    {
+      "bytes": 9331,
+      "path": "ordinary-full/records/executions/9.json",
+      "sha256": "ae8aedb9896742473346757ed5618896bcba7685f4d20151f51a5c4ce408c930"
+    },
+    {
+      "bytes": 301016,
+      "path": "ordinary-full/records/expected.binding-ir.json",
+      "sha256": "c681efea6ec29bdc9eaadbfe573c120560313b0fc6f5ba6a5d2e688bcadd6ece"
+    },
+    {
+      "bytes": 3196,
+      "path": "ordinary-full/records/handoff/package-set-receipt.json",
+      "sha256": "3c3565d27b7b2b0faa35ba26eda0aceddad12828586321c119ba2aa65c6660cb"
+    },
+    {
+      "bytes": 91,
+      "path": "ordinary-full/records/handoff/package-set-receipt.json.sha256",
+      "sha256": "c1872d138cef1c5e3aedc0a6b6c8cb133805500006a2ef1f5c908497f18b68d3"
+    },
+    {
+      "bytes": 94415,
+      "path": "ordinary-full/records/handoff/packages/php-wasm/archives/lean-bridge-nominalprimitivesubtypes-wasm-1.0.0-php-wasm.zip",
+      "sha256": "d8c24f00dd75d8594833094b81249273f632ab36402ed19ee85c8eeba8ddbe5b"
+    },
+    {
+      "bytes": 278807,
+      "path": "ordinary-full/records/handoff/packages/php-wasm/archives/lean-bridge-nominalprimitivesubtypes-wasm-1.0.0.tgz",
+      "sha256": "ccd7574f96b3c1d844453aa9fa7345a91b67f9a721a88f1697159afc2805e1e7"
+    },
+    {
+      "bytes": 1660967,
+      "path": "ordinary-full/records/handoff/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.cc8708a9e9b7a4e5b9746bd5533502f15dcf1a55baaf58b5b2c0b5c2e0c7d569.tgz",
+      "sha256": "5ff83a8c77ddab62a96b8f3dd6595ac0b48a56a1737c9e19f8382d3a172c1e81"
+    },
+    {
+      "bytes": 522555,
+      "path": "ordinary-full/records/report.json",
+      "sha256": "187a25622761dddba53ff7d5f70ee77ad2803946d343d797e39a92a7bf1238cd"
+    },
+    {
+      "bytes": 107,
+      "path": "ordinary-full/records/request-composer.json",
+      "sha256": "9a72bd2aaafc9a2fbc559cf7805bb2ab14ecb00512745f5fdcceeb8fe093812c"
+    },
+    {
+      "bytes": 150,
+      "path": "ordinary-full/records/request-embedded.json",
+      "sha256": "ef4fa15196a321985b91c2e225151b19c2eb15c9002a2ea4614b7477073158ce"
+    },
+    {
+      "bytes": 641,
+      "path": "ordinary-full/records/resources.json",
+      "sha256": "a77faec7b693c2d004c9ff67bb02bd35bc6537b114e88fab7a51a18a596b5120"
+    },
+    {
+      "bytes": 14047,
+      "path": "ordinary-full/records/strict.php",
+      "sha256": "07577d863b988450e7547207ab939f8d2b2e6825029ba60d6fad6b3cb0f7eccd"
+    },
+    {
+      "bytes": 14047,
+      "path": "ordinary-full/records/weak.php",
+      "sha256": "dab8aac405a0cf582291de230688f03dd6b0b26cb0ea5479693d4b889e528225"
+    },
+    {
+      "bytes": 1408,
+      "path": "ordinary-full/run.tap",
+      "sha256": "c4ca8a99bd063074c20bb0094b8a2238fe92d3c02aafa1770e0d0b9cd76fc095"
+    },
+    {
+      "bytes": 1248,
+      "path": "ordinary-result-only/records/build-0/author-inputs.json",
+      "sha256": "e7beb1d4691297829c525f27571d493e1ff95966a9ab0b2f1496a8c15323ced1"
+    },
+    {
+      "bytes": 629,
+      "path": "ordinary-result-only/records/build-0/lean-bridge.exports.json",
+      "sha256": "1faf6a6eb6a6daf0731fd9e3d3a438fa517ce234ccc2bdff73a4746df41e7a7e"
+    },
+    {
+      "bytes": 523321,
+      "path": "ordinary-result-only/records/build-0/model.json",
+      "sha256": "95f922a4404084c4eba89d233ce2bb82a171fa5a245252c904327833e74848e0"
+    },
+    {
+      "bytes": 10863,
+      "path": "ordinary-result-only/records/build-0/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 3196,
+      "path": "ordinary-result-only/records/build-0/package-set-receipt.json",
+      "sha256": "1b642e40dc35cdc5192ed4bf0163cfa02e498cd892ba72cb6d2d5242bc66ca14"
+    },
+    {
+      "bytes": 20162,
+      "path": "ordinary-result-only/records/build-0/php-wasm-package-set.json",
+      "sha256": "34d1d5dfdd9def09f794930022982e35b95222cf0bb1ace81a9bf7266b2ce89e"
+    },
+    {
+      "bytes": 1248,
+      "path": "ordinary-result-only/records/build-1/author-inputs.json",
+      "sha256": "2512f18395ceb1f605a685d01b713bc42671d019cfe8013dd117762909342f5a"
+    },
+    {
+      "bytes": 629,
+      "path": "ordinary-result-only/records/build-1/lean-bridge.exports.json",
+      "sha256": "1faf6a6eb6a6daf0731fd9e3d3a438fa517ce234ccc2bdff73a4746df41e7a7e"
+    },
+    {
+      "bytes": 523321,
+      "path": "ordinary-result-only/records/build-1/model.json",
+      "sha256": "95f922a4404084c4eba89d233ce2bb82a171fa5a245252c904327833e74848e0"
+    },
+    {
+      "bytes": 10863,
+      "path": "ordinary-result-only/records/build-1/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 3196,
+      "path": "ordinary-result-only/records/build-1/package-set-receipt.json",
+      "sha256": "1b642e40dc35cdc5192ed4bf0163cfa02e498cd892ba72cb6d2d5242bc66ca14"
+    },
+    {
+      "bytes": 20162,
+      "path": "ordinary-result-only/records/build-1/php-wasm-package-set.json",
+      "sha256": "34d1d5dfdd9def09f794930022982e35b95222cf0bb1ace81a9bf7266b2ce89e"
+    },
+    {
+      "bytes": 629,
+      "path": "ordinary-result-only/records/configuration.json",
+      "sha256": "1faf6a6eb6a6daf0731fd9e3d3a438fa517ce234ccc2bdff73a4746df41e7a7e"
+    },
+    {
+      "bytes": 370,
+      "path": "ordinary-result-only/records/context.json",
+      "sha256": "3345aa33ed0301668beb9b3b86ad314417ed1da4b538216076a49cd4617bde41"
+    },
+    {
+      "bytes": 659,
+      "path": "ordinary-result-only/records/deployment/browser.mjs",
+      "sha256": "131bb94535ea817056a1218fd74a7a77ba21675e3e7abe4bd86ab75057cc4301"
+    },
+    {
+      "bytes": 2924,
+      "path": "ordinary-result-only/records/deployment/composer.json",
+      "sha256": "a6397000de062534290d7c52665aab00439b56b23d185ac50cd6a993641149cc"
+    },
+    {
+      "bytes": 3665,
+      "path": "ordinary-result-only/records/deployment/composer.lock",
+      "sha256": "89a49083613a9b202da4a87b523a12bc9521c486d73cac236b2025b89555fe0e"
+    },
+    {
+      "bytes": 2071,
+      "path": "ordinary-result-only/records/deployment/driver.mjs",
+      "sha256": "e881e52e87a80cb844c6482670b36c98269d6fb79920f39b56b0ce8e2d1d7d78"
+    },
+    {
+      "bytes": 1156,
+      "path": "ordinary-result-only/records/deployment/node.mjs",
+      "sha256": "49fb787db69cff257d85dde2275449a0010897c73fc6e928e371859662ec960a"
+    },
+    {
+      "bytes": 1400,
+      "path": "ordinary-result-only/records/deployment/package-lock.json",
+      "sha256": "a89f3a6a12089e180d0a99ba2d3f77ad20fe5388e3e033a2a128b1194af3151d"
+    },
+    {
+      "bytes": 255,
+      "path": "ordinary-result-only/records/deployment/package.json",
+      "sha256": "cb43c607fbcc430ea761a20e0d7c16a1836264963039930035ea246dea1610ff"
+    },
+    {
+      "bytes": 108,
+      "path": "ordinary-result-only/records/deployment/request-composer.json",
+      "sha256": "726ab1b8885fcebf5c4d31e4143f58031ea2bd9f843d2769a8b5e16f1d8024a6"
+    },
+    {
+      "bytes": 151,
+      "path": "ordinary-result-only/records/deployment/request-embedded.json",
+      "sha256": "a02c1727ab25096ee0beb06ccd350c0205bdeaf459cf7b382c02d9bb8112ae71"
+    },
+    {
+      "bytes": 14046,
+      "path": "ordinary-result-only/records/deployment/strict.php",
+      "sha256": "eba28e72bd15fcd86ae1bc3dbe887bc591d75b29ccd89379958fd5712d0455ab"
+    },
+    {
+      "bytes": 3403,
+      "path": "ordinary-result-only/records/deployment/vendor/composer/installed.json",
+      "sha256": "b8b7a0064395a54d855690b0bbdd6ae16e4f7d387dacc08a8c2151c79fcd5ace"
+    },
+    {
+      "bytes": 14046,
+      "path": "ordinary-result-only/records/deployment/weak.php",
+      "sha256": "72de44c258065c72505a98a0d3fb0a285e53a5b663ffec87c534796c23d04677"
+    },
+    {
+      "bytes": 1103,
+      "path": "ordinary-result-only/records/executions/0.json",
+      "sha256": "668c7d42c79060b8e7c179ff7de1f72ff04de49a923fe39e0e25f3fc32a8efda"
+    },
+    {
+      "bytes": 1105,
+      "path": "ordinary-result-only/records/executions/1.json",
+      "sha256": "86554f45771d385929181e3c9a2fa5df14d9b86e5b79f530ea2f8900ac32e7bf"
+    },
+    {
+      "bytes": 9079,
+      "path": "ordinary-result-only/records/executions/10.json",
+      "sha256": "35dd03e3f7f8b6beb2929fdd98f57248f6feaee0405756b515693a1abe03ef66"
+    },
+    {
+      "bytes": 9083,
+      "path": "ordinary-result-only/records/executions/11.json",
+      "sha256": "54002f8f544810ddbee57dbbf812e8a3fd3a0350618a5d3564f23463f0885aeb"
+    },
+    {
+      "bytes": 686,
+      "path": "ordinary-result-only/records/executions/2.json",
+      "sha256": "f7d3a8114123e1a61136f248d5300c371e62b2c26fa56bf4267eb16648693542"
+    },
+    {
+      "bytes": 688,
+      "path": "ordinary-result-only/records/executions/3.json",
+      "sha256": "9d4ec8ebae90f0000c3ae56513db901e30906f1d670b5ca988a192cf5fecbe82"
+    },
+    {
+      "bytes": 1103,
+      "path": "ordinary-result-only/records/executions/4.json",
+      "sha256": "9901e973648f8915dbda1d79d115fc99dff7e5bca64724f3453a508ce4da2a7c"
+    },
+    {
+      "bytes": 1105,
+      "path": "ordinary-result-only/records/executions/5.json",
+      "sha256": "f234382ba145a9d27ccdd4e6952e4e0a31c6da63bfe342b00956ebca9e3596e7"
+    },
+    {
+      "bytes": 686,
+      "path": "ordinary-result-only/records/executions/6.json",
+      "sha256": "9c7555cfbfdd1aaff1ca5e88ec29ba03a9d9bb62af1b7e1afeb6bb710237f8ed"
+    },
+    {
+      "bytes": 688,
+      "path": "ordinary-result-only/records/executions/7.json",
+      "sha256": "1ab6b3465f0290adeaffb16ce429b6cf963cbfbad272a7ec2dea6a4ce68751fb"
+    },
+    {
+      "bytes": 9323,
+      "path": "ordinary-result-only/records/executions/8.json",
+      "sha256": "468d5cfec58eb2d0b909bac4c4930159ff7187c103e74fe9ea53fd42e56ec7a6"
+    },
+    {
+      "bytes": 9327,
+      "path": "ordinary-result-only/records/executions/9.json",
+      "sha256": "27ce4b413373f61a8adbf9e01697945eff4e8532b43af2fe76169cfef704f99e"
+    },
+    {
+      "bytes": 97327,
+      "path": "ordinary-result-only/records/expected.binding-ir.json",
+      "sha256": "19a992cc50cb5e697d9b5fe77b334ffdee6f520000a44e4c0b5cccab4b021c59"
+    },
+    {
+      "bytes": 3196,
+      "path": "ordinary-result-only/records/handoff/package-set-receipt.json",
+      "sha256": "1b642e40dc35cdc5192ed4bf0163cfa02e498cd892ba72cb6d2d5242bc66ca14"
+    },
+    {
+      "bytes": 91,
+      "path": "ordinary-result-only/records/handoff/package-set-receipt.json.sha256",
+      "sha256": "f7495ff4b2357503d42a09f63c0a082687dcacb2481303fe4557e5c21f840462"
+    },
+    {
+      "bytes": 82433,
+      "path": "ordinary-result-only/records/handoff/packages/php-wasm/archives/lean-bridge-nominalprimitivesubtypes-wasm-1.0.0-php-wasm.zip",
+      "sha256": "57dd4fda10f8e4fa042beffbba8be51c69d98270f5be3861e47d5646b7e27996"
+    },
+    {
+      "bytes": 176996,
+      "path": "ordinary-result-only/records/handoff/packages/php-wasm/archives/lean-bridge-nominalprimitivesubtypes-wasm-1.0.0.tgz",
+      "sha256": "1aeb1ac2f85e0671d343dc27b8e5ff2c174a4191ebcafabdfc8f473f472be0f0"
+    },
+    {
+      "bytes": 1660967,
+      "path": "ordinary-result-only/records/handoff/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.cc8708a9e9b7a4e5b9746bd5533502f15dcf1a55baaf58b5b2c0b5c2e0c7d569.tgz",
+      "sha256": "5ff83a8c77ddab62a96b8f3dd6595ac0b48a56a1737c9e19f8382d3a172c1e81"
+    },
+    {
+      "bytes": 246835,
+      "path": "ordinary-result-only/records/report.json",
+      "sha256": "22f63dd726f27998844d2fa72c4defd1dbb9058d9da782450f0bfc0a773cdc63"
+    },
+    {
+      "bytes": 108,
+      "path": "ordinary-result-only/records/request-composer.json",
+      "sha256": "726ab1b8885fcebf5c4d31e4143f58031ea2bd9f843d2769a8b5e16f1d8024a6"
+    },
+    {
+      "bytes": 151,
+      "path": "ordinary-result-only/records/request-embedded.json",
+      "sha256": "a02c1727ab25096ee0beb06ccd350c0205bdeaf459cf7b382c02d9bb8112ae71"
+    },
+    {
+      "bytes": 647,
+      "path": "ordinary-result-only/records/resources.json",
+      "sha256": "116bd36da53f3a97e0aed99020ab0af6a5dce13a56215d2c508db20be44e1496"
+    },
+    {
+      "bytes": 14046,
+      "path": "ordinary-result-only/records/strict.php",
+      "sha256": "eba28e72bd15fcd86ae1bc3dbe887bc591d75b29ccd89379958fd5712d0455ab"
+    },
+    {
+      "bytes": 14046,
+      "path": "ordinary-result-only/records/weak.php",
+      "sha256": "72de44c258065c72505a98a0d3fb0a285e53a5b663ffec87c534796c23d04677"
+    },
+    {
+      "bytes": 1517,
+      "path": "ordinary-result-only/run.tap",
+      "sha256": "dc77a7c5c6f4b963e16e4089131492e8dc6babfb869e4e914a9e665fb37f282a"
+    },
+    {
+      "bytes": 1248,
+      "path": "rejected-ordinary-full-r1/records/build-0/author-inputs.json",
+      "sha256": "cfdd195442d4e7aeec2a31825415a1583dbfc4dd0e0f1cc015b678c88621afb2"
+    },
+    {
+      "bytes": 82815,
+      "path": "rejected-ordinary-full-r1/records/build-0/lean-bridge.exports.json",
+      "sha256": "dcb3a22b8dbbfb8d2d3155b524bec63586a0fd73c7cb30d930a819fb04866773"
+    },
+    {
+      "bytes": 1544812,
+      "path": "rejected-ordinary-full-r1/records/build-0/model.json",
+      "sha256": "85ef43a62b29c84b7e415765490062cfca6a19d2068ec0333d19c9d7e1b8a0a5"
+    },
+    {
+      "bytes": 10863,
+      "path": "rejected-ordinary-full-r1/records/build-0/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 3196,
+      "path": "rejected-ordinary-full-r1/records/build-0/package-set-receipt.json",
+      "sha256": "3c3565d27b7b2b0faa35ba26eda0aceddad12828586321c119ba2aa65c6660cb"
+    },
+    {
+      "bytes": 20175,
+      "path": "rejected-ordinary-full-r1/records/build-0/php-wasm-package-set.json",
+      "sha256": "9a60b52c2fc6ec33352b0db7f1c877548f358276a561eb1d63719bb9ba034952"
+    },
+    {
+      "bytes": 1236,
+      "path": "rejected-ordinary-full-r1/records/build-1/author-inputs.json",
+      "sha256": "37bc6f8604ca7fedcdb601c5cf9b9e5e049a74bed1af573cc2dd6e7d9d4b6d4d"
+    },
+    {
+      "bytes": 82815,
+      "path": "rejected-ordinary-full-r1/records/build-1/lean-bridge.exports.json",
+      "sha256": "dcb3a22b8dbbfb8d2d3155b524bec63586a0fd73c7cb30d930a819fb04866773"
+    },
+    {
+      "bytes": 1544812,
+      "path": "rejected-ordinary-full-r1/records/build-1/model.json",
+      "sha256": "85ef43a62b29c84b7e415765490062cfca6a19d2068ec0333d19c9d7e1b8a0a5"
+    },
+    {
+      "bytes": 10863,
+      "path": "rejected-ordinary-full-r1/records/build-1/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 3196,
+      "path": "rejected-ordinary-full-r1/records/build-1/package-set-receipt.json",
+      "sha256": "3c3565d27b7b2b0faa35ba26eda0aceddad12828586321c119ba2aa65c6660cb"
+    },
+    {
+      "bytes": 20175,
+      "path": "rejected-ordinary-full-r1/records/build-1/php-wasm-package-set.json",
+      "sha256": "9a60b52c2fc6ec33352b0db7f1c877548f358276a561eb1d63719bb9ba034952"
+    },
+    {
+      "bytes": 82815,
+      "path": "rejected-ordinary-full-r1/records/configuration.json",
+      "sha256": "dcb3a22b8dbbfb8d2d3155b524bec63586a0fd73c7cb30d930a819fb04866773"
+    },
+    {
+      "bytes": 363,
+      "path": "rejected-ordinary-full-r1/records/context.json",
+      "sha256": "45d5b93509ea86ffb808013286652aec761bb3e1eb03a48a2fd6b3d937d7cdff"
+    },
+    {
+      "bytes": 301016,
+      "path": "rejected-ordinary-full-r1/records/expected.binding-ir.json",
+      "sha256": "c681efea6ec29bdc9eaadbfe573c120560313b0fc6f5ba6a5d2e688bcadd6ece"
+    },
+    {
+      "bytes": 3196,
+      "path": "rejected-ordinary-full-r1/records/handoff/package-set-receipt.json",
+      "sha256": "3c3565d27b7b2b0faa35ba26eda0aceddad12828586321c119ba2aa65c6660cb"
+    },
+    {
+      "bytes": 91,
+      "path": "rejected-ordinary-full-r1/records/handoff/package-set-receipt.json.sha256",
+      "sha256": "c1872d138cef1c5e3aedc0a6b6c8cb133805500006a2ef1f5c908497f18b68d3"
+    },
+    {
+      "bytes": 94415,
+      "path": "rejected-ordinary-full-r1/records/handoff/packages/php-wasm/archives/lean-bridge-nominalprimitivesubtypes-wasm-1.0.0-php-wasm.zip",
+      "sha256": "d8c24f00dd75d8594833094b81249273f632ab36402ed19ee85c8eeba8ddbe5b"
+    },
+    {
+      "bytes": 278807,
+      "path": "rejected-ordinary-full-r1/records/handoff/packages/php-wasm/archives/lean-bridge-nominalprimitivesubtypes-wasm-1.0.0.tgz",
+      "sha256": "ccd7574f96b3c1d844453aa9fa7345a91b67f9a721a88f1697159afc2805e1e7"
+    },
+    {
+      "bytes": 1660967,
+      "path": "rejected-ordinary-full-r1/records/handoff/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.cc8708a9e9b7a4e5b9746bd5533502f15dcf1a55baaf58b5b2c0b5c2e0c7d569.tgz",
+      "sha256": "5ff83a8c77ddab62a96b8f3dd6595ac0b48a56a1737c9e19f8382d3a172c1e81"
+    },
+    {
+      "bytes": 107,
+      "path": "rejected-ordinary-full-r1/records/request-composer.json",
+      "sha256": "9a72bd2aaafc9a2fbc559cf7805bb2ab14ecb00512745f5fdcceeb8fe093812c"
+    },
+    {
+      "bytes": 150,
+      "path": "rejected-ordinary-full-r1/records/request-embedded.json",
+      "sha256": "ef4fa15196a321985b91c2e225151b19c2eb15c9002a2ea4614b7477073158ce"
+    },
+    {
+      "bytes": 647,
+      "path": "rejected-ordinary-full-r1/records/resources.json",
+      "sha256": "0c3a32c725f2b65278aca7b9b24581407c3743b801e7da863cfabd5e4ceb8b2e"
+    },
+    {
+      "bytes": 14047,
+      "path": "rejected-ordinary-full-r1/records/strict.php",
+      "sha256": "1990e0ac1f620e087367c1229e8d66bb994509c3451c3975f7e5523f346db475"
+    },
+    {
+      "bytes": 14047,
+      "path": "rejected-ordinary-full-r1/records/weak.php",
+      "sha256": "a2a606a53b0fc2ddbdec060811bdb4a265f340747860e431b5fd1bafa9253051"
+    },
+    {
+      "bytes": 3386,
+      "path": "rejected-ordinary-full-r1/run.tap",
+      "sha256": "f3c1ac1c3e2aacd255891bccb06f852d5405e86bc301e2919d3a17d7d472f436"
+    },
+    {
+      "bytes": 10593,
+      "path": "rejected-ordinary-full-r1/sources/tests/helpers/nominal-primitive-subtype-php-wasm-fixture.mjs",
+      "sha256": "36f1723d142f02c190cda280f94735b987434206e7b1f6fd5c7587dacbf4b390"
+    },
+    {
+      "bytes": 11669,
+      "path": "rejected-ordinary-full-r1/sources/tests/helpers/nominal-primitive-subtype-php-wasm-tests.mjs",
+      "sha256": "8f75393ca204f53ed08b3db646f7ab7a810058cc9f6a871c881b3c1e575e7ba8"
+    },
+    {
+      "bytes": 301016,
+      "path": "reviewed-full/records/build-0/api.binding-ir.json",
+      "sha256": "c681efea6ec29bdc9eaadbfe573c120560313b0fc6f5ba6a5d2e688bcadd6ece"
+    },
+    {
+      "bytes": 1456,
+      "path": "reviewed-full/records/build-0/author-inputs.json",
+      "sha256": "3f72230579cc12c585abb34078ea8a2d900fa97128032f3ffeb0fc848da381e3"
+    },
+    {
+      "bytes": 348,
+      "path": "reviewed-full/records/build-0/lean-bridge.exports.json",
+      "sha256": "36764a5dad92ab1f17a2ddbb944823d621416228dfc1a238a2628b5dcd8aa1dc"
+    },
+    {
+      "bytes": 1781051,
+      "path": "reviewed-full/records/build-0/model.json",
+      "sha256": "d56cb6d811e18e4e184ecca4fa0f9fab030149bc06fd30db5242614634f2627b"
+    },
+    {
+      "bytes": 10863,
+      "path": "reviewed-full/records/build-0/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 3196,
+      "path": "reviewed-full/records/build-0/package-set-receipt.json",
+      "sha256": "82013067661032a7105f1a633ad82c4dd8f1af1cf1dfa1ae4c171e8ce6cd6a0a"
+    },
+    {
+      "bytes": 20172,
+      "path": "reviewed-full/records/build-0/php-wasm-package-set.json",
+      "sha256": "7da59a6cb7b7d06d07ccd2a4a766a04c62af1f487134f227dbb5f638744281a7"
+    },
+    {
+      "bytes": 301016,
+      "path": "reviewed-full/records/build-1/api.binding-ir.json",
+      "sha256": "c681efea6ec29bdc9eaadbfe573c120560313b0fc6f5ba6a5d2e688bcadd6ece"
+    },
+    {
+      "bytes": 1458,
+      "path": "reviewed-full/records/build-1/author-inputs.json",
+      "sha256": "cb67656077baaa13816a7570a3e99281d2aa9b0c965c2936cb7bff782302a5bd"
+    },
+    {
+      "bytes": 348,
+      "path": "reviewed-full/records/build-1/lean-bridge.exports.json",
+      "sha256": "36764a5dad92ab1f17a2ddbb944823d621416228dfc1a238a2628b5dcd8aa1dc"
+    },
+    {
+      "bytes": 1781051,
+      "path": "reviewed-full/records/build-1/model.json",
+      "sha256": "d56cb6d811e18e4e184ecca4fa0f9fab030149bc06fd30db5242614634f2627b"
+    },
+    {
+      "bytes": 10863,
+      "path": "reviewed-full/records/build-1/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 3196,
+      "path": "reviewed-full/records/build-1/package-set-receipt.json",
+      "sha256": "82013067661032a7105f1a633ad82c4dd8f1af1cf1dfa1ae4c171e8ce6cd6a0a"
+    },
+    {
+      "bytes": 20172,
+      "path": "reviewed-full/records/build-1/php-wasm-package-set.json",
+      "sha256": "7da59a6cb7b7d06d07ccd2a4a766a04c62af1f487134f227dbb5f638744281a7"
+    },
+    {
+      "bytes": 348,
+      "path": "reviewed-full/records/configuration.json",
+      "sha256": "36764a5dad92ab1f17a2ddbb944823d621416228dfc1a238a2628b5dcd8aa1dc"
+    },
+    {
+      "bytes": 363,
+      "path": "reviewed-full/records/context.json",
+      "sha256": "a961de37c43ddf57c34d31aaf82759826f1259d4ede1270032cd8cf8634ed012"
+    },
+    {
+      "bytes": 659,
+      "path": "reviewed-full/records/deployment/browser.mjs",
+      "sha256": "131bb94535ea817056a1218fd74a7a77ba21675e3e7abe4bd86ab75057cc4301"
+    },
+    {
+      "bytes": 2924,
+      "path": "reviewed-full/records/deployment/composer.json",
+      "sha256": "cffafecb377a8a15a9ad6dcc3dfe0a60f801562a4c0cd4521e856d2a5caf3e23"
+    },
+    {
+      "bytes": 3665,
+      "path": "reviewed-full/records/deployment/composer.lock",
+      "sha256": "f4fa94d884072ac2d3f7b913f5dd25347aafa697f5ed5a162ffdddb458492566"
+    },
+    {
+      "bytes": 2071,
+      "path": "reviewed-full/records/deployment/driver.mjs",
+      "sha256": "e881e52e87a80cb844c6482670b36c98269d6fb79920f39b56b0ce8e2d1d7d78"
+    },
+    {
+      "bytes": 1156,
+      "path": "reviewed-full/records/deployment/node.mjs",
+      "sha256": "49fb787db69cff257d85dde2275449a0010897c73fc6e928e371859662ec960a"
+    },
+    {
+      "bytes": 1400,
+      "path": "reviewed-full/records/deployment/package-lock.json",
+      "sha256": "d67322cc40cf8c7da76f8d4ffab2ea86e1d30e6eda6c1372562e40eda8476769"
+    },
+    {
+      "bytes": 255,
+      "path": "reviewed-full/records/deployment/package.json",
+      "sha256": "cb43c607fbcc430ea761a20e0d7c16a1836264963039930035ea246dea1610ff"
+    },
+    {
+      "bytes": 107,
+      "path": "reviewed-full/records/deployment/request-composer.json",
+      "sha256": "9a72bd2aaafc9a2fbc559cf7805bb2ab14ecb00512745f5fdcceeb8fe093812c"
+    },
+    {
+      "bytes": 150,
+      "path": "reviewed-full/records/deployment/request-embedded.json",
+      "sha256": "ef4fa15196a321985b91c2e225151b19c2eb15c9002a2ea4614b7477073158ce"
+    },
+    {
+      "bytes": 14057,
+      "path": "reviewed-full/records/deployment/strict.php",
+      "sha256": "f85fbd29544a7dd3b7bc5676de2910858db0b2f69f5bbaa997f18e2ced1ff33d"
+    },
+    {
+      "bytes": 3403,
+      "path": "reviewed-full/records/deployment/vendor/composer/installed.json",
+      "sha256": "01d2a65ffc12068e14d0f812248cd9c8b64a74a1de935f1d7c5864c62ac2566c"
+    },
+    {
+      "bytes": 14057,
+      "path": "reviewed-full/records/deployment/weak.php",
+      "sha256": "b2655a074e7bd6dafda554b5d87428399768d897a620a64cbb7557e71cefd446"
+    },
+    {
+      "bytes": 1106,
+      "path": "reviewed-full/records/executions/0.json",
+      "sha256": "007a1d9122ce6f1a79398b10c7a26566a22c38f839ce32d0e6bd9d22c3c4479c"
+    },
+    {
+      "bytes": 1108,
+      "path": "reviewed-full/records/executions/1.json",
+      "sha256": "f7b96514b81bcabd369e59660e31bd1051d16caa17174e8e399bb0ad26e01a2b"
+    },
+    {
+      "bytes": 9083,
+      "path": "reviewed-full/records/executions/10.json",
+      "sha256": "e81c50ee265cc15aa64b15c5afac3c0428e491fd7f349e283c881f35db6a8885"
+    },
+    {
+      "bytes": 9087,
+      "path": "reviewed-full/records/executions/11.json",
+      "sha256": "af390499c4d188e5f7063a16feceef06e2dd27d1d8a8ba4b6f3e91769999294e"
+    },
+    {
+      "bytes": 689,
+      "path": "reviewed-full/records/executions/2.json",
+      "sha256": "3f4449bbff679224ca41b90840bc2053afe4f787c37c7b8e3a394d9a1ec16cbe"
+    },
+    {
+      "bytes": 691,
+      "path": "reviewed-full/records/executions/3.json",
+      "sha256": "465268b4e7c556cc056ee7def6b262e5d5abc389a70f399dd0ee504be8c71de3"
+    },
+    {
+      "bytes": 1106,
+      "path": "reviewed-full/records/executions/4.json",
+      "sha256": "3b7a353b5a15390906d9edb37f398b8613df352147b3d7abfb27344ee8cffa56"
+    },
+    {
+      "bytes": 1108,
+      "path": "reviewed-full/records/executions/5.json",
+      "sha256": "c74c946d6adebe6a06d015649fffdc1b7aefcfdaf55327c25acc4625284fdbf9"
+    },
+    {
+      "bytes": 689,
+      "path": "reviewed-full/records/executions/6.json",
+      "sha256": "f540ff6c957de9c12d6f36a6c5a354469deeaea76a1b25caab129776b2160803"
+    },
+    {
+      "bytes": 691,
+      "path": "reviewed-full/records/executions/7.json",
+      "sha256": "683164304266d6203521928e6a3ea9925891169ca896c33e1d9c1f0ce27db4b5"
+    },
+    {
+      "bytes": 9327,
+      "path": "reviewed-full/records/executions/8.json",
+      "sha256": "69feaf721921a8153ef392e40c0bb4cf78f58cb8cfda59cc632e7e579fcdca11"
+    },
+    {
+      "bytes": 9331,
+      "path": "reviewed-full/records/executions/9.json",
+      "sha256": "cea05092884f2c4a67880996407be8797b0b364265eb6c6550ea9f319d3ff5ce"
+    },
+    {
+      "bytes": 301016,
+      "path": "reviewed-full/records/expected.binding-ir.json",
+      "sha256": "c681efea6ec29bdc9eaadbfe573c120560313b0fc6f5ba6a5d2e688bcadd6ece"
+    },
+    {
+      "bytes": 3196,
+      "path": "reviewed-full/records/handoff/package-set-receipt.json",
+      "sha256": "82013067661032a7105f1a633ad82c4dd8f1af1cf1dfa1ae4c171e8ce6cd6a0a"
+    },
+    {
+      "bytes": 91,
+      "path": "reviewed-full/records/handoff/package-set-receipt.json.sha256",
+      "sha256": "4e4be3a35867177e47c1c1309713fe2440529c439df7517143939d92be327449"
+    },
+    {
+      "bytes": 98388,
+      "path": "reviewed-full/records/handoff/packages/php-wasm/archives/lean-bridge-nominalprimitivesubtypes-wasm-1.0.0-php-wasm.zip",
+      "sha256": "02c454aea85e3ad23dfc5e0bab8b8081b1253928ffb29f4aea83ee3c0e3b06c8"
+    },
+    {
+      "bytes": 285128,
+      "path": "reviewed-full/records/handoff/packages/php-wasm/archives/lean-bridge-nominalprimitivesubtypes-wasm-1.0.0.tgz",
+      "sha256": "7a100b301ba1b39018b1a0f6e46f4fc793ccadb0876781b6503526afc24abec5"
+    },
+    {
+      "bytes": 1660967,
+      "path": "reviewed-full/records/handoff/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.cc8708a9e9b7a4e5b9746bd5533502f15dcf1a55baaf58b5b2c0b5c2e0c7d569.tgz",
+      "sha256": "5ff83a8c77ddab62a96b8f3dd6595ac0b48a56a1737c9e19f8382d3a172c1e81"
+    },
+    {
+      "bytes": 671614,
+      "path": "reviewed-full/records/report.json",
+      "sha256": "2b427cda7192c3c0472b9e4317a248e6fd0c31dc98461a161837147ee140fb00"
+    },
+    {
+      "bytes": 107,
+      "path": "reviewed-full/records/request-composer.json",
+      "sha256": "9a72bd2aaafc9a2fbc559cf7805bb2ab14ecb00512745f5fdcceeb8fe093812c"
+    },
+    {
+      "bytes": 150,
+      "path": "reviewed-full/records/request-embedded.json",
+      "sha256": "ef4fa15196a321985b91c2e225151b19c2eb15c9002a2ea4614b7477073158ce"
+    },
+    {
+      "bytes": 756,
+      "path": "reviewed-full/records/resources.json",
+      "sha256": "f31f7824ee1bedd8f48dd2b92f132182291a9dd349cb02a0c9213fe0a652fc0f"
+    },
+    {
+      "bytes": 14057,
+      "path": "reviewed-full/records/strict.php",
+      "sha256": "f85fbd29544a7dd3b7bc5676de2910858db0b2f69f5bbaa997f18e2ced1ff33d"
+    },
+    {
+      "bytes": 14057,
+      "path": "reviewed-full/records/weak.php",
+      "sha256": "b2655a074e7bd6dafda554b5d87428399768d897a620a64cbb7557e71cefd446"
+    },
+    {
+      "bytes": 1487,
+      "path": "reviewed-full/run.tap",
+      "sha256": "b51bf3f6686584cea9537729787bf505def94f7d4a723eb1a1fbc280e16813c6"
+    },
+    {
+      "bytes": 97327,
+      "path": "reviewed-result-only/records/build-0/api.binding-ir.json",
+      "sha256": "19a992cc50cb5e697d9b5fe77b334ffdee6f520000a44e4c0b5cccab4b021c59"
+    },
+    {
+      "bytes": 1458,
+      "path": "reviewed-result-only/records/build-0/author-inputs.json",
+      "sha256": "ed6ea5e0998d21cb39b22865f2c2bcb9dfe7af6a26e710d8e48f8693c792f07b"
+    },
+    {
+      "bytes": 348,
+      "path": "reviewed-result-only/records/build-0/lean-bridge.exports.json",
+      "sha256": "36764a5dad92ab1f17a2ddbb944823d621416228dfc1a238a2628b5dcd8aa1dc"
+    },
+    {
+      "bytes": 629325,
+      "path": "reviewed-result-only/records/build-0/model.json",
+      "sha256": "d618f36c2ae6e95f4fad1d194ee244a9bacbd0e24f48007fc1061582ceebe13b"
+    },
+    {
+      "bytes": 10863,
+      "path": "reviewed-result-only/records/build-0/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 3196,
+      "path": "reviewed-result-only/records/build-0/package-set-receipt.json",
+      "sha256": "b50e24237e7b2fa312fd34ab8da8488ed452cbe8037dc22af02dc63dc010697f"
+    },
+    {
+      "bytes": 20166,
+      "path": "reviewed-result-only/records/build-0/php-wasm-package-set.json",
+      "sha256": "e175f8b7c4125fa85ba1e8ca22d9b8019e511c3fefa3d9a7a60225f2fb6f1724"
+    },
+    {
+      "bytes": 97327,
+      "path": "reviewed-result-only/records/build-1/api.binding-ir.json",
+      "sha256": "19a992cc50cb5e697d9b5fe77b334ffdee6f520000a44e4c0b5cccab4b021c59"
+    },
+    {
+      "bytes": 1458,
+      "path": "reviewed-result-only/records/build-1/author-inputs.json",
+      "sha256": "c261dfe2200cf633bf5bfd83ce9e029dcc8118ae1db12d585fdc59f13460a1cb"
+    },
+    {
+      "bytes": 348,
+      "path": "reviewed-result-only/records/build-1/lean-bridge.exports.json",
+      "sha256": "36764a5dad92ab1f17a2ddbb944823d621416228dfc1a238a2628b5dcd8aa1dc"
+    },
+    {
+      "bytes": 629325,
+      "path": "reviewed-result-only/records/build-1/model.json",
+      "sha256": "d618f36c2ae6e95f4fad1d194ee244a9bacbd0e24f48007fc1061582ceebe13b"
+    },
+    {
+      "bytes": 10863,
+      "path": "reviewed-result-only/records/build-1/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 3196,
+      "path": "reviewed-result-only/records/build-1/package-set-receipt.json",
+      "sha256": "b50e24237e7b2fa312fd34ab8da8488ed452cbe8037dc22af02dc63dc010697f"
+    },
+    {
+      "bytes": 20166,
+      "path": "reviewed-result-only/records/build-1/php-wasm-package-set.json",
+      "sha256": "e175f8b7c4125fa85ba1e8ca22d9b8019e511c3fefa3d9a7a60225f2fb6f1724"
+    },
+    {
+      "bytes": 348,
+      "path": "reviewed-result-only/records/configuration.json",
+      "sha256": "36764a5dad92ab1f17a2ddbb944823d621416228dfc1a238a2628b5dcd8aa1dc"
+    },
+    {
+      "bytes": 370,
+      "path": "reviewed-result-only/records/context.json",
+      "sha256": "a6e2ae747b071995fb915c83d105b74a9c20fc88e2078b6e86c935816a6631cb"
+    },
+    {
+      "bytes": 659,
+      "path": "reviewed-result-only/records/deployment/browser.mjs",
+      "sha256": "131bb94535ea817056a1218fd74a7a77ba21675e3e7abe4bd86ab75057cc4301"
+    },
+    {
+      "bytes": 2924,
+      "path": "reviewed-result-only/records/deployment/composer.json",
+      "sha256": "87e640cc87c235b5b550acabaf6383c4d53af3305da5054e3c12382af7d24167"
+    },
+    {
+      "bytes": 3665,
+      "path": "reviewed-result-only/records/deployment/composer.lock",
+      "sha256": "17ae36bf28b31b283cef8068d6c25f6cc6cbd1c97b83dce4d418569b3bf95e55"
+    },
+    {
+      "bytes": 2071,
+      "path": "reviewed-result-only/records/deployment/driver.mjs",
+      "sha256": "e881e52e87a80cb844c6482670b36c98269d6fb79920f39b56b0ce8e2d1d7d78"
+    },
+    {
+      "bytes": 1156,
+      "path": "reviewed-result-only/records/deployment/node.mjs",
+      "sha256": "49fb787db69cff257d85dde2275449a0010897c73fc6e928e371859662ec960a"
+    },
+    {
+      "bytes": 1400,
+      "path": "reviewed-result-only/records/deployment/package-lock.json",
+      "sha256": "837898c91521055bcf96985f73c2a5c7a61e55e3ea6edd2dd56abdc8d4210545"
+    },
+    {
+      "bytes": 255,
+      "path": "reviewed-result-only/records/deployment/package.json",
+      "sha256": "cb43c607fbcc430ea761a20e0d7c16a1836264963039930035ea246dea1610ff"
+    },
+    {
+      "bytes": 108,
+      "path": "reviewed-result-only/records/deployment/request-composer.json",
+      "sha256": "726ab1b8885fcebf5c4d31e4143f58031ea2bd9f843d2769a8b5e16f1d8024a6"
+    },
+    {
+      "bytes": 151,
+      "path": "reviewed-result-only/records/deployment/request-embedded.json",
+      "sha256": "a02c1727ab25096ee0beb06ccd350c0205bdeaf459cf7b382c02d9bb8112ae71"
+    },
+    {
+      "bytes": 14056,
+      "path": "reviewed-result-only/records/deployment/strict.php",
+      "sha256": "3a91ec0246d6803cf30c67fca9c3d652aea73caa5f9cea23d66465d54d556431"
+    },
+    {
+      "bytes": 3403,
+      "path": "reviewed-result-only/records/deployment/vendor/composer/installed.json",
+      "sha256": "591f552d27a61d72b368499c4f03d3a34c876ec1422f9f638d2e968f053e1213"
+    },
+    {
+      "bytes": 14056,
+      "path": "reviewed-result-only/records/deployment/weak.php",
+      "sha256": "8e0b92da779320a8a961eacbee9b7c6bdfa7929df233f4a230fc3ec4ffc55a93"
+    },
+    {
+      "bytes": 1103,
+      "path": "reviewed-result-only/records/executions/0.json",
+      "sha256": "355ce47625a475e5b555fd8b75f5ef7049a11d29544037702f456bfa6239203d"
+    },
+    {
+      "bytes": 1105,
+      "path": "reviewed-result-only/records/executions/1.json",
+      "sha256": "dadd82c8890a3eebc1534902fd73db920a947c1eff0e74e0dcfed1643732e775"
+    },
+    {
+      "bytes": 9079,
+      "path": "reviewed-result-only/records/executions/10.json",
+      "sha256": "7ec2d1bc9391ac28364cb7ef95a149438e4812f69b1cc03f2f74490a48b52d38"
+    },
+    {
+      "bytes": 9083,
+      "path": "reviewed-result-only/records/executions/11.json",
+      "sha256": "7db9a43a940571bbd707733ff883007c689ea4fdd6961374d8801d7130caf025"
+    },
+    {
+      "bytes": 686,
+      "path": "reviewed-result-only/records/executions/2.json",
+      "sha256": "f6fc29b64485a74dc5f3165bc768790d5b8be6bb765cdfa2ae2e45236f59fac0"
+    },
+    {
+      "bytes": 688,
+      "path": "reviewed-result-only/records/executions/3.json",
+      "sha256": "5d240fd5c2e2024e8e617492678ca1ac86211d342f06ea4fd20d060ef82881f9"
+    },
+    {
+      "bytes": 1103,
+      "path": "reviewed-result-only/records/executions/4.json",
+      "sha256": "a5a26de771835dc5cfa6e3cd55e84bf8aab9d7c8177d77ce1e60fd48ae032cf5"
+    },
+    {
+      "bytes": 1105,
+      "path": "reviewed-result-only/records/executions/5.json",
+      "sha256": "ef4ca7707ad2079fbca27ef99d7c668551936be8911e795fee309471f97fbcab"
+    },
+    {
+      "bytes": 686,
+      "path": "reviewed-result-only/records/executions/6.json",
+      "sha256": "7753b31c270751b9abfb6727f1f3f73843da5d5e7a00ede670877c158632535d"
+    },
+    {
+      "bytes": 688,
+      "path": "reviewed-result-only/records/executions/7.json",
+      "sha256": "fbff6900f4a9ccb7019c6bb11f1f94b2034f6b10f2a1acf332286dec7be87b6c"
+    },
+    {
+      "bytes": 9323,
+      "path": "reviewed-result-only/records/executions/8.json",
+      "sha256": "87a2282afbbf6130bf2908f93e426d32f8706a9360252b23fdbb8e8ad6aba133"
+    },
+    {
+      "bytes": 9327,
+      "path": "reviewed-result-only/records/executions/9.json",
+      "sha256": "81937f2aab24d89c9b0cbe7a3860f79b3e9bf28cf11c941554ed8f56956e824a"
+    },
+    {
+      "bytes": 97327,
+      "path": "reviewed-result-only/records/expected.binding-ir.json",
+      "sha256": "19a992cc50cb5e697d9b5fe77b334ffdee6f520000a44e4c0b5cccab4b021c59"
+    },
+    {
+      "bytes": 3196,
+      "path": "reviewed-result-only/records/handoff/package-set-receipt.json",
+      "sha256": "b50e24237e7b2fa312fd34ab8da8488ed452cbe8037dc22af02dc63dc010697f"
+    },
+    {
+      "bytes": 91,
+      "path": "reviewed-result-only/records/handoff/package-set-receipt.json.sha256",
+      "sha256": "98fbb98cfd7389b2f65d79799f989eaaed77b68aa73369848832d42ad459e8e4"
+    },
+    {
+      "bytes": 85859,
+      "path": "reviewed-result-only/records/handoff/packages/php-wasm/archives/lean-bridge-nominalprimitivesubtypes-wasm-1.0.0-php-wasm.zip",
+      "sha256": "4e36c2d5c8742f16a1d520b33f75303a10dc894e85aa177a45a136e7ca3129bc"
+    },
+    {
+      "bytes": 183836,
+      "path": "reviewed-result-only/records/handoff/packages/php-wasm/archives/lean-bridge-nominalprimitivesubtypes-wasm-1.0.0.tgz",
+      "sha256": "7e9d83f4569e86bbfa465e82d0fa3a3e0bad80c5eb338c9244766f58483082f1"
+    },
+    {
+      "bytes": 1660967,
+      "path": "reviewed-result-only/records/handoff/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.cc8708a9e9b7a4e5b9746bd5533502f15dcf1a55baaf58b5b2c0b5c2e0c7d569.tgz",
+      "sha256": "5ff83a8c77ddab62a96b8f3dd6595ac0b48a56a1737c9e19f8382d3a172c1e81"
+    },
+    {
+      "bytes": 352009,
+      "path": "reviewed-result-only/records/report.json",
+      "sha256": "8745050eed1573f12d675e655226c027bccf48234d925eebef9c03e4ee463e04"
+    },
+    {
+      "bytes": 108,
+      "path": "reviewed-result-only/records/request-composer.json",
+      "sha256": "726ab1b8885fcebf5c4d31e4143f58031ea2bd9f843d2769a8b5e16f1d8024a6"
+    },
+    {
+      "bytes": 151,
+      "path": "reviewed-result-only/records/request-embedded.json",
+      "sha256": "a02c1727ab25096ee0beb06ccd350c0205bdeaf459cf7b382c02d9bb8112ae71"
+    },
+    {
+      "bytes": 865,
+      "path": "reviewed-result-only/records/resources.json",
+      "sha256": "2db64166723bbd578884590701ccdf8d49985674e4c13d37c92c04e42dc5888e"
+    },
+    {
+      "bytes": 14056,
+      "path": "reviewed-result-only/records/strict.php",
+      "sha256": "3a91ec0246d6803cf30c67fca9c3d652aea73caa5f9cea23d66465d54d556431"
+    },
+    {
+      "bytes": 14056,
+      "path": "reviewed-result-only/records/weak.php",
+      "sha256": "8e0b92da779320a8a961eacbee9b7c6bdfa7929df233f4a230fc3ec4ffc55a93"
+    },
+    {
+      "bytes": 1678,
+      "path": "reviewed-result-only/run.tap",
+      "sha256": "4682187819825e3c3ea2f97f033db2b24c20e14d62b84d5da76385606e286d5b"
+    },
+    {
+      "bytes": 4414,
+      "path": "sources/.github/workflows/checked-record-php-wasm.yml",
+      "sha256": "f29d4636fbeda327e2cb67dca4573eb9699cbd5c44bc8c8b1c6ec6ae5e8e5cf2"
+    },
+    {
+      "bytes": 14184030,
+      "path": "sources/docs/type-surface.v1.json",
+      "sha256": "24cf7eca6b163084a73a90a4fc345709bb2fa82150bf87c4bdbc1ce31733b4e2"
+    },
+    {
+      "bytes": 251351,
+      "path": "sources/package-lock.json",
+      "sha256": "e34bcc0814ddf2923e977b290795f9f2dbf677dbc53d04b762bb6e89b0272138"
+    },
+    {
+      "bytes": 71434,
+      "path": "sources/package.json",
+      "sha256": "773c0acdd79cb28c6fdce63f2072cd0c1ce8c664cf1bd24bbd6ec06cf62c24a7"
+    },
+    {
+      "bytes": 772,
+      "path": "sources/site/paths.mjs",
+      "sha256": "88cf8a31f3d3cfb88e12f42aec75055a798da735148bdf029d83803be71d7e15"
+    },
+    {
+      "bytes": 1994,
+      "path": "sources/site/serve.mjs",
+      "sha256": "4b1d8c7687ee6b3d376ba188538fcbb1a12ee35c1f768330f5c05ed4b5788454"
+    },
+    {
+      "bytes": 8017,
+      "path": "sources/src/abi/callback-signature.mjs",
+      "sha256": "9e904b1e8ac71d4fa0cea4bb8effa8c590b7e1c81caa2e22454e81498f6cc3fc"
+    },
+    {
+      "bytes": 7386,
+      "path": "sources/src/abi/component-callables.mjs",
+      "sha256": "abb7093a48c6bfaf7cf3f5510d0e26816af5639718659a3d87397f96a5e7bafe"
+    },
+    {
+      "bytes": 10970,
+      "path": "sources/src/abi/component-copied.mjs",
+      "sha256": "c06dc4bf621d1a0d255478b62d4d03cd77fed580cd37ff058bbe061c6145d599"
+    },
+    {
+      "bytes": 5491,
+      "path": "sources/src/abi/component-owned-wasm.mjs",
+      "sha256": "c861c6bc4c219a13aca990234a08dd001a004fad86f9c15b350b1bb02faf6741"
+    },
+    {
+      "bytes": 10397,
+      "path": "sources/src/abi/component-records.mjs",
+      "sha256": "c24c4216667ce99e0a1e5b0e56fa02ab266114128e92760bd2aa1d65a6c99ff2"
+    },
+    {
+      "bytes": 3332,
+      "path": "sources/src/abi/component-recursive-abi.mjs",
+      "sha256": "2c6313445c66f51c504044f948139f7e576db534cffcbaf507f2c300ec57eee4"
+    },
+    {
+      "bytes": 9974,
+      "path": "sources/src/abi/component-recursive.mjs",
+      "sha256": "4002752b124460c95cd9461e7c9a77173f211507f8a3f4d38b08c1293e006e5e"
+    },
+    {
+      "bytes": 4437,
+      "path": "sources/src/abi/component-scalars.mjs",
+      "sha256": "745058db0327c9060222ff58d45c272595e23125c2169d80287ff9035cf3608e"
+    },
+    {
+      "bytes": 10651,
+      "path": "sources/src/abi/component-structured-callables.mjs",
+      "sha256": "ca1ba92c7d00f168d26b007b21c4add381b760f76685b0a55dfffca2d40b97e2"
+    },
+    {
+      "bytes": 6537,
+      "path": "sources/src/abi/error-envelope.mjs",
+      "sha256": "4982de45b10f1b0cf838ef9e32a7cd1812f077ac8f52b4340e4897fc2cc1e17a"
+    },
+    {
+      "bytes": 5961,
+      "path": "sources/src/abi/generic-specialization.mjs",
+      "sha256": "5c7472382e4426adf5f280037965d39d7eb16949414db80226ee5962dca05df9"
+    },
+    {
+      "bytes": 2154,
+      "path": "sources/src/abi/initialization.mjs",
+      "sha256": "ff6b759bfec3933d5d29dd14377a32d2aff3334aa6d03896c36a273b24e0520b"
+    },
+    {
+      "bytes": 8960,
+      "path": "sources/src/abi/iterator.mjs",
+      "sha256": "1ccc9348a50e3f371d031625790f2e1f679b8dc4aa3fa64feca7ad119c7dbd96"
+    },
+    {
+      "bytes": 3072,
+      "path": "sources/src/abi/overload.mjs",
+      "sha256": "a76a5063187810c497edd142423d720965e81848bf8a61450406f2b91c12bf5f"
+    },
+    {
+      "bytes": 5313,
+      "path": "sources/src/abi/owned-aggregate-model.mjs",
+      "sha256": "f6c049ce1261af434c99aa8ac0a58acb86307430adf5b79dc0ea9e2396971a95"
+    },
+    {
+      "bytes": 633,
+      "path": "sources/src/abi/owned-wasm-control.mjs",
+      "sha256": "9e05a5b7653dd1409220a233d26492adf916789169896b59940b8c60c87fbb6f"
+    },
+    {
+      "bytes": 5186,
+      "path": "sources/src/abi/pending-operation.mjs",
+      "sha256": "7238bf7a1e23c01565b43f97a2ad4b9f8b6fef618bb8e8b5b18393fcaaa39f8b"
+    },
+    {
+      "bytes": 8556,
+      "path": "sources/src/abi/refinements.mjs",
+      "sha256": "57fcd7bfa6c2ae7b7d696c1c95a88282c725fef2c15486744e683c258fa2ce07"
+    },
+    {
+      "bytes": 9917,
+      "path": "sources/src/abi/resource-lifecycle.mjs",
+      "sha256": "24173dfc3b06df1b2604c5aedeb71dafdde5e63a10cbc1f4884b7af7dec09fa0"
+    },
+    {
+      "bytes": 8614,
+      "path": "sources/src/abi/value-frame.mjs",
+      "sha256": "5774e9efa9eacb5cb26fbc841adced8080e53526154ab711d7e9c2a00ef94e3b"
+    },
+    {
+      "bytes": 988,
+      "path": "sources/src/analyze/callback-signature.mjs",
+      "sha256": "8fa38ae4186f67fd8cca4c4545cbc4872b569ddd178d704a943074d7896419dd"
+    },
+    {
+      "bytes": 7873,
+      "path": "sources/src/analyze/checked-refinement-selection.mjs",
+      "sha256": "a93acd6f91edf592286db1fd255505adddf03a76bd8d2026962c5d2e7dfca64c"
+    },
+    {
+      "bytes": 5208,
+      "path": "sources/src/analyze/copied-metadata-graph.mjs",
+      "sha256": "4020e5a4804d6f404065d42608e50f56a9235f9ac518f4532985a5cb2f9c522a"
+    },
+    {
+      "bytes": 24921,
+      "path": "sources/src/analyze/elaborated-metadata.mjs",
+      "sha256": "51a7927edbd9ec0467b0b0d5772c8081a190d257de992a0f58e8522b9c673166"
+    },
+    {
+      "bytes": 26409,
+      "path": "sources/src/analyze/export-configuration.mjs",
+      "sha256": "91a3c1a9be0ff57e837edd7a10b9b1886d7eefc4e89e0b67ef61eb8487c02e8e"
+    },
+    {
+      "bytes": 3714,
+      "path": "sources/src/analyze/generator-configuration.mjs",
+      "sha256": "c3fe383a04ae977a6144f80507967ffe3077b450ec7dedce03bb7c8c12123c38"
+    },
+    {
+      "bytes": 29931,
+      "path": "sources/src/analyze/lean-project.mjs",
+      "sha256": "810ba5b9adf3b9af61763b8ed9fdc8eb0b4fa491bd53f287439536be63df3695"
+    },
+    {
+      "bytes": 6736,
+      "path": "sources/src/analyze/native-metadata.mjs",
+      "sha256": "dae540c8c48bd6146e2dbeb28a62399faaa87dfbd67111a6c0947107976f314d"
+    },
+    {
+      "bytes": 15868,
+      "path": "sources/src/analyze/native-types.mjs",
+      "sha256": "df316023935340250a966b6daf9d32cacc12370f8b611d96e9770d9b28fcc9f4"
+    },
+    {
+      "bytes": 1011,
+      "path": "sources/src/analyze/owned-aggregate-policy.mjs",
+      "sha256": "e0061654f70ee68ccf706e8f8e90d892a9aa9e920dacc5b5e2c95742513a1f4d"
+    },
+    {
+      "bytes": 7175,
+      "path": "sources/src/analyze/owned-metadata-graph.mjs",
+      "sha256": "61db690927b14a98904f5d38430be04095ad1ffe572608a587ce35b7a34fc959"
+    },
+    {
+      "bytes": 4317,
+      "path": "sources/src/analyze/package-license.mjs",
+      "sha256": "c74fe23a652541ff210dcf4d402b9e0bb383fe9755b6087d12847ea6c85fbb70"
+    },
+    {
+      "bytes": 10419,
+      "path": "sources/src/analyze/package-metadata.mjs",
+      "sha256": "9299d99704984b17dbf840c366c92260f3eedeeca0506020c06ee5257f2ee850"
+    },
+    {
+      "bytes": 12457,
+      "path": "sources/src/analyze/project-analysis.mjs",
+      "sha256": "3afd22c3699b2cd4efaf16c2596ff7d6a863c44e5765a18adde0f3580da46d6e"
+    },
+    {
+      "bytes": 7517,
+      "path": "sources/src/analyze/project-elaborated.mjs",
+      "sha256": "0923d55b6090a866ea393aa2db54470c71dc128da05a5b05857b1940a93e46f2"
+    },
+    {
+      "bytes": 5581,
+      "path": "sources/src/analyze/reviewed-instantiation.mjs",
+      "sha256": "2f1b3c64f6056771bfe2a58fa448c1302cd45e4f2d1bafe203e7c23b13bf6747"
+    },
+    {
+      "bytes": 20431,
+      "path": "sources/src/analyze/reviewed-owned-source.mjs",
+      "sha256": "cb25d914ebcc8d30707789c1f39941dc6965fe2b4d5a728f76b7e94f8586c528"
+    },
+    {
+      "bytes": 3916,
+      "path": "sources/src/analyze/reviewed-refinements.mjs",
+      "sha256": "e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd"
+    },
+    {
+      "bytes": 24352,
+      "path": "sources/src/analyze/reviewed-source.mjs",
+      "sha256": "7a560e55ea1c5888a8192c40fbb381dc5f40760488d25f73689ce6a0277ed703"
+    },
+    {
+      "bytes": 3029,
+      "path": "sources/src/analyze/reviewed-subtypes.mjs",
+      "sha256": "8f0b4abd0d39f44a20ccb7b5b4a0960fb8670bc440e7e636e684e3eea2ba329f"
+    },
+    {
+      "bytes": 18634,
+      "path": "sources/src/analyze/semantic-model.mjs",
+      "sha256": "2270a8274dca71bc193bb2dd2bac666cf92c9a5cc304acf4e38fd20bcac24e65"
+    },
+    {
+      "bytes": 16123,
+      "path": "sources/src/analyze/spdx-data.json",
+      "sha256": "20dda7478849c88845a6e15ee9998b1ccdba84687e86473353a13142c07634d5"
+    },
+    {
+      "bytes": 5471,
+      "path": "sources/src/backends/c/callable-graph-model.mjs",
+      "sha256": "98ed5eadddfa6cc2cf336928110b8da069531a8918ca9eb14f0341d5819900a8"
+    },
+    {
+      "bytes": 15827,
+      "path": "sources/src/backends/c/callable-graph-package.mjs",
+      "sha256": "df2974caff9612d7a9c8e0b4b10f0a4ddc6deff1c0a2e6f0e14bc44f105e419f"
+    },
+    {
+      "bytes": 15789,
+      "path": "sources/src/backends/c/copied-graph-layout.mjs",
+      "sha256": "bf3e31b5ba6c37446b34db7fe830259c9108df3508de0a76ba8009bb9267737d"
+    },
+    {
+      "bytes": 2273,
+      "path": "sources/src/backends/c/fin-diagnostic.mjs",
+      "sha256": "228b87f266e10736b3a10e0470a5a63e954117bb95ef16dcb82ea776467c0686"
+    },
+    {
+      "bytes": 45870,
+      "path": "sources/src/backends/c/generate.mjs",
+      "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
+    },
+    {
+      "bytes": 18927,
+      "path": "sources/src/backends/c/gmp-graph-conversions.mjs",
+      "sha256": "72dd1e39000293315efb21b1b8efb118c8dc34e45f5d6f83ed84a37504cafcc0"
+    },
+    {
+      "bytes": 8032,
+      "path": "sources/src/backends/c/gmp-graph-values.mjs",
+      "sha256": "4be2d24defb93830b66d8643221946fa1bc6c694239d625844b8faac4bd81208"
+    },
+    {
+      "bytes": 16403,
+      "path": "sources/src/backends/c/gmp-projection.mjs",
+      "sha256": "1669f605cfc646ac96e0c2258de26bb10630f9621cfd582cbfe986663a3b6e82"
+    },
+    {
+      "bytes": 12058,
+      "path": "sources/src/backends/c/gmp-values.mjs",
+      "sha256": "aa7bc5a2819b2eeb37741ae22f3beafb0e3c5404277cdadcb9081441d46830b6"
+    },
+    {
+      "bytes": 844,
+      "path": "sources/src/backends/c/gmp.mjs",
+      "sha256": "f1e593796a33ccfa804a93e6ded229a55c43e5a6e7670be5a2d429bba19224e0"
+    },
+    {
+      "bytes": 13216,
+      "path": "sources/src/backends/c/graph-package.mjs",
+      "sha256": "ecc374ad27d7ca70a2286a7abf7350b630eff4797afd9b9674c85035d5f21bb9"
+    },
+    {
+      "bytes": 4393,
+      "path": "sources/src/backends/c/native-callable-graph-borrows.mjs",
+      "sha256": "f391330bf46a4ef89cde083249159e80e6f93ae9524757ac1a89662cda02b5b7"
+    },
+    {
+      "bytes": 11039,
+      "path": "sources/src/backends/c/native-callable-graph-calls.mjs",
+      "sha256": "752ac5531be705aa5287b8a55e07124cf1e41f413ef6ef2a5dea15fd43410e6e"
+    },
+    {
+      "bytes": 2700,
+      "path": "sources/src/backends/c/native-callable-graph-payloads.mjs",
+      "sha256": "6d74a564de2323b9b32cbad70799fd1c7e8cab966de17668e2f351fcd96748e9"
+    },
+    {
+      "bytes": 22820,
+      "path": "sources/src/backends/c/native-callables.mjs",
+      "sha256": "a047dde6a545ff1c73688742901998efeb371b6535ea3e48fa071ed735fdea75"
+    },
+    {
+      "bytes": 24337,
+      "path": "sources/src/backends/c/native-copied-values.mjs",
+      "sha256": "8d9243c9880b4d557f475e4f6a0aa8d9e43eb96ee75a257b20e0aa1556dabcf4"
+    },
+    {
+      "bytes": 23164,
+      "path": "sources/src/backends/c/native-graph-adapters.mjs",
+      "sha256": "827bb1e9c17b0d6b4c695274db0747de9f9059a50d36439504054e6d7bd82034"
+    },
+    {
+      "bytes": 5697,
+      "path": "sources/src/backends/c/native-primitives.mjs",
+      "sha256": "d6d56711086edeb5c07a47873bec53a4cb263a741dd742d88473487c24a5c340"
+    },
+    {
+      "bytes": 6351,
+      "path": "sources/src/backends/c/owned-callbacks.mjs",
+      "sha256": "bc1a7839c4e52c2ab61558080edbc62b506b3ab0dec038f908e3c7a66953c11b"
+    },
+    {
+      "bytes": 16142,
+      "path": "sources/src/backends/c/owned-package.mjs",
+      "sha256": "533692ac61f799493843b353b1afba22921f036fb111245ea6656c24e7588c3c"
+    },
+    {
+      "bytes": 14129,
+      "path": "sources/src/backends/c/owned-runtime.mjs",
+      "sha256": "526cac9dbc5ded0095b4d3a750d755995f90ada544e52bacfde43d46362377ac"
+    },
+    {
+      "bytes": 2762,
+      "path": "sources/src/backends/c/owned-transfers.mjs",
+      "sha256": "b4be48cbe435fca5525d5f3ed02eaa157578ce428006506a3c6d9b928f1601eb"
+    },
+    {
+      "bytes": 15613,
+      "path": "sources/src/backends/c/owned-values.mjs",
+      "sha256": "3798132db63f50302474af8d04e2ecc3c3462f7c33a6b5aa555d94feafa2ccb7"
+    },
+    {
+      "bytes": 3006,
+      "path": "sources/src/backends/c/package-audit.mjs",
+      "sha256": "bbcc42ebdc6c7d69e46860e48bbc1573e70af04ca8cb85ce4123496788b5395c"
+    },
+    {
+      "bytes": 11921,
+      "path": "sources/src/backends/c/primitive-surface.mjs",
+      "sha256": "893d7f649bf489c766e5d38f04ce4e1b7cb7967acc8f63bf6f82b9b6f5cd64df"
+    },
+    {
+      "bytes": 1661,
+      "path": "sources/src/backends/cpp/boost.mjs",
+      "sha256": "3743a22d0186963a2100f404b14a19b8fda2554ae497eb83a35f3081f4da914d"
+    },
+    {
+      "bytes": 515219,
+      "path": "sources/src/backends/cpp/boost.source.json",
+      "sha256": "2e5ded51d6fa32f4d06d22eaf0bb10f54bdbfcf17731bea4f1554923a09ce10c"
+    },
+    {
+      "bytes": 10307,
+      "path": "sources/src/backends/cpp/callable-graph-package.mjs",
+      "sha256": "63987f848d9118ad09d6a3b2688766256786562a408c9e06d8785f3730529801"
+    },
+    {
+      "bytes": 8131,
+      "path": "sources/src/backends/cpp/callables.mjs",
+      "sha256": "65bfad6fb37bc24d699f205ac1d4164d0300ffaedf4210644d6454796ae9c61d"
+    },
+    {
+      "bytes": 16512,
+      "path": "sources/src/backends/cpp/copied-graph-conversions.mjs",
+      "sha256": "2d4c25f0d98c672ee97fea136500dd25aa02885f0868d70ff71f674bddc4e0b1"
+    },
+    {
+      "bytes": 8153,
+      "path": "sources/src/backends/cpp/copied-graph-values.mjs",
+      "sha256": "50c4bf05b6f3b431a0f30e1da33773f1abc379aac1fe32bf3a76b22ee5fe1ed2"
+    },
+    {
+      "bytes": 9558,
+      "path": "sources/src/backends/cpp/copied-values.mjs",
+      "sha256": "ca8300d00227c4789b34ffbad22b33c64769a31856bc86b64e9d5d56c6ea331c"
+    },
+    {
+      "bytes": 8403,
+      "path": "sources/src/backends/cpp/generate.mjs",
+      "sha256": "8f285b799ef19a4002f69f7f5f01bde30e1778f058ed6f55b4cc530db527ca68"
+    },
+    {
+      "bytes": 7597,
+      "path": "sources/src/backends/cpp/owned-borrows.mjs",
+      "sha256": "f2f8169de01801ab73d831bcd2605b35578cacaa0257ddcbc567fda3c2758195"
+    },
+    {
+      "bytes": 16410,
+      "path": "sources/src/backends/cpp/owned-callables.mjs",
+      "sha256": "a757d5d81ca335bab16116c81b2f53731807600fd99b9ed99ac083a164cdc68f"
+    },
+    {
+      "bytes": 16401,
+      "path": "sources/src/backends/cpp/owned-conversions.mjs",
+      "sha256": "fcca0e269a82be4f07d1ce450ba96a849e0a76923fc6a2ef56c68a8a094b4b11"
+    },
+    {
+      "bytes": 4160,
+      "path": "sources/src/backends/cpp/owned-package.mjs",
+      "sha256": "acd820b2bbe57a7acba0f28e68bb2ca1845157aa34ae7870de49765b82b2b23b"
+    },
+    {
+      "bytes": 11992,
+      "path": "sources/src/backends/cpp/owned-runtime.mjs",
+      "sha256": "58ca04574b2a116ea6479139f4d7b5cebf52e0a0d614393ca4371a9f970c2d09"
+    },
+    {
+      "bytes": 5890,
+      "path": "sources/src/backends/cpp/owned-transfers.mjs",
+      "sha256": "03052d7df983d16411622a13dac45119b64e679ae29f3010265569b75c8af94b"
+    },
+    {
+      "bytes": 9554,
+      "path": "sources/src/backends/cpp/owned-values.mjs",
+      "sha256": "621a2c428cf79dcc471802fd2f22770a170d613f2e0f076bdafa645992c388ce"
+    },
+    {
+      "bytes": 8384,
+      "path": "sources/src/backends/cpp/primitives.mjs",
+      "sha256": "6aaf142530630bc7a21bdea06b5072d18b190381becadd80933b191d84d61ec9"
+    },
+    {
+      "bytes": 7008,
+      "path": "sources/src/backends/dotnet/callable-graph-calls.mjs",
+      "sha256": "fd7788b9e24a1b200b7ed29a4528cad26c76319580ce356fb0d8161926d33bb0"
+    },
+    {
+      "bytes": 3606,
+      "path": "sources/src/backends/dotnet/callable-graph-model.mjs",
+      "sha256": "ca1bcee4e4dc10b01cfdb27a1c97a7ed886b912d947ffa7cb77f56fd2b54ae09"
+    },
+    {
+      "bytes": 4941,
+      "path": "sources/src/backends/dotnet/callable-graph-package.mjs",
+      "sha256": "f9d3ba3195cc59a0c1dca0d9046d41996a5a1ad3cf41db5d6842c0bf5be7c921"
+    },
+    {
+      "bytes": 4961,
+      "path": "sources/src/backends/dotnet/callable-graph-runtime.mjs",
+      "sha256": "18b6a6601e177bcd1d30ce3f3820b3f4017ea019b2080ee564015f846c00236c"
+    },
+    {
+      "bytes": 11143,
+      "path": "sources/src/backends/dotnet/callables.mjs",
+      "sha256": "5f667b3c8738b53c9a1c5bc6c8212eab01a4ba055e7e390d6334d8e05885bac0"
+    },
+    {
+      "bytes": 3582,
+      "path": "sources/src/backends/dotnet/copied-aliases.mjs",
+      "sha256": "c39fd9bcc52691dd0c024e5c1e6686fba2cfdb1d966337029b97857ebcd70c9e"
+    },
+    {
+      "bytes": 14044,
+      "path": "sources/src/backends/dotnet/copied-conversions.mjs",
+      "sha256": "c61e403a86d9dfbd76f6e28a96eb3006c5ea360192e92928b7d05d26ae3b5e77"
+    },
+    {
+      "bytes": 1937,
+      "path": "sources/src/backends/dotnet/copied-graph-assets.mjs",
+      "sha256": "1adc777bd954fe25cec4fc0b211ceab33fec709eba3af8d03f7e33f85b8b0a04"
+    },
+    {
+      "bytes": 11146,
+      "path": "sources/src/backends/dotnet/copied-graph-conversions.mjs",
+      "sha256": "60c347cbc9fe6fb4767cdb826e9bc6b0108f5eeb56ac7177505bad226387ced8"
+    },
+    {
+      "bytes": 9631,
+      "path": "sources/src/backends/dotnet/copied-graph-equality.mjs",
+      "sha256": "dc4f4f92b2c85210c28b013eac84390cd864f64cc4c7aa77ca00cfb32d7b0c97"
+    },
+    {
+      "bytes": 4489,
+      "path": "sources/src/backends/dotnet/copied-graph-layout.mjs",
+      "sha256": "26f6157e35607a20d3dfe6b1a7b4945611c1cd14ccff77b121bea1589eb675ec"
+    },
+    {
+      "bytes": 8209,
+      "path": "sources/src/backends/dotnet/copied-graph-package.mjs",
+      "sha256": "5d2e680291568264f6b50494cdadd5af034f18786add7a706d58611182c2c5c4"
+    },
+    {
+      "bytes": 6741,
+      "path": "sources/src/backends/dotnet/copied-graph-runtime.mjs",
+      "sha256": "c0456ef395dbea8f5fcc7a5a6f06e9050a741a2916e2cc2cda3b429e91bd8ce2"
+    },
+    {
+      "bytes": 4089,
+      "path": "sources/src/backends/dotnet/copied-graph-scalars.mjs",
+      "sha256": "c8639f5554f64b28b20aa5a071b07be973878dadb193a84936e211df6e8e1e26"
+    },
+    {
+      "bytes": 9503,
+      "path": "sources/src/backends/dotnet/copied-graph-values.mjs",
+      "sha256": "95124708cea0855cbbaf4f998d370154c499d2955bbb3b30e11f01793ccb248c"
+    },
+    {
+      "bytes": 6501,
+      "path": "sources/src/backends/dotnet/copied-model.mjs",
+      "sha256": "ae2c93521614952d4c96748e8d5bdabb803f1a4663299cf3542ddd0add073d4b"
+    },
+    {
+      "bytes": 16397,
+      "path": "sources/src/backends/dotnet/copied-values.mjs",
+      "sha256": "b4ec94f1da85ad3cab476520ca0ce19d1e4807c54dab25fef7370c46295fc82c"
+    },
+    {
+      "bytes": 11035,
+      "path": "sources/src/backends/dotnet/owned-borrows.mjs",
+      "sha256": "d871d2cb7299388fbf521c0160b5f349c4d0a20406296ef195e67af9dca05c5b"
+    },
+    {
+      "bytes": 9205,
+      "path": "sources/src/backends/dotnet/owned-callables.mjs",
+      "sha256": "e7c0b6542d7f7414962f70cdd86a4af558418bc444a0809abdd1e57cfdd3045c"
+    },
+    {
+      "bytes": 2432,
+      "path": "sources/src/backends/dotnet/owned-callback-arguments.mjs",
+      "sha256": "49787e273c21086e4a5c825b75a09836cb1b277fccac3f0604b928f13182b98c"
+    },
+    {
+      "bytes": 13592,
+      "path": "sources/src/backends/dotnet/owned-calls.mjs",
+      "sha256": "ce8c0ece4937825b72b7e223ddf1e3e01b24e5cac4be81d6ea5d2ec24745e74f"
+    },
+    {
+      "bytes": 6336,
+      "path": "sources/src/backends/dotnet/owned-conversion-runtime.mjs",
+      "sha256": "f4b1b15c7d0bf202f08ca15f3b3298314623abc99fd2648602e3a7337e2e0d4d"
+    },
+    {
+      "bytes": 10187,
+      "path": "sources/src/backends/dotnet/owned-conversions.mjs",
+      "sha256": "918e20a3ea9f209ba786878e048259bff29d61c9084812521650d8f33902b910"
+    },
+    {
+      "bytes": 6220,
+      "path": "sources/src/backends/dotnet/owned-layout.mjs",
+      "sha256": "1051ba3c8178e1ec15dec2f516d2a08607086c6a6b28a74e5860098de18f81df"
+    },
+    {
+      "bytes": 16018,
+      "path": "sources/src/backends/dotnet/owned-package.mjs",
+      "sha256": "24b4c2258766a28a4d9a852337daddc8a5202926080e7f6d6846f5775a6a0c19"
+    },
+    {
+      "bytes": 4048,
+      "path": "sources/src/backends/dotnet/owned-receivers.mjs",
+      "sha256": "336e843281fc27f29be583eed6a5b6f3d35a21c810727276d9c92cff7550a0b2"
+    },
+    {
+      "bytes": 13051,
+      "path": "sources/src/backends/dotnet/owned-runtime.mjs",
+      "sha256": "2e981e60cc83ed31f4078e463c69a3ca3fa3c6c125f2383877909e3909a98c36"
+    },
+    {
+      "bytes": 4288,
+      "path": "sources/src/backends/dotnet/owned-scalars.mjs",
+      "sha256": "7d054940be36575281bd5caee0c933d45120238adcdb43042a6186d5b093ea15"
+    },
+    {
+      "bytes": 2791,
+      "path": "sources/src/backends/dotnet/owned-thread-exit.mjs",
+      "sha256": "c7a5696e116f30724d9f852e10da4bd318fc8919424b1b813088022daaa0b2f3"
+    },
+    {
+      "bytes": 3140,
+      "path": "sources/src/backends/dotnet/owned-transfers.mjs",
+      "sha256": "80e7799b93bcccb545f130aacbb1c6606d4220e007db3d73b7aa61703b6cb044"
+    },
+    {
+      "bytes": 14592,
+      "path": "sources/src/backends/dotnet/owned-values.mjs",
+      "sha256": "e7439da80f715f0fc711e06e45d59c3e039bd4e881c231c8d6da614ba003e6fa"
+    },
+    {
+      "bytes": 11610,
+      "path": "sources/src/backends/dotnet/verified-assets.mjs",
+      "sha256": "972aa8ddd973f71fa7e8177fcada0eceaf567c1d3b4519da0591157f646332ff"
+    },
+    {
+      "bytes": 8571,
+      "path": "sources/src/backends/javascript/copied-validators.mjs",
+      "sha256": "1044c7d768d34a6f98b474983c94e4528572c2837824374ed03383081e77843e"
+    },
+    {
+      "bytes": 11132,
+      "path": "sources/src/backends/javascript/coverage.mjs",
+      "sha256": "ea2a17c84162c5bc4a70b83b3175b75c2f54f295c4bba3848538fd0f19a58b0b"
+    },
+    {
+      "bytes": 36872,
+      "path": "sources/src/backends/javascript/generate.mjs",
+      "sha256": "8b5fdfb1627982617392364cd7fd5441141e75dcff5f181d9dc8a84b03477075"
+    },
+    {
+      "bytes": 22321,
+      "path": "sources/src/backends/javascript/owned-package.mjs",
+      "sha256": "ee69d294a96a4ff23d6c17bfde15604c0a744cde3c1fa3e4cf8f7479b302c437"
+    },
+    {
+      "bytes": 6827,
+      "path": "sources/src/backends/javascript/owned-wasm-borrows.mjs",
+      "sha256": "22486154745a2f91db60c87435472522806d65e2b2cde7184e4ecc1611b37515"
+    },
+    {
+      "bytes": 5558,
+      "path": "sources/src/backends/javascript/owned-wasm-broker.mjs",
+      "sha256": "53f3f9f8bad988f423fe71f32026fe4b14167916659a024568bd5ef897624bbf"
+    },
+    {
+      "bytes": 8551,
+      "path": "sources/src/backends/javascript/owned-wasm-callbacks.mjs",
+      "sha256": "b3ae4ee8b83baef2868632cca7a28fdc365b59728b2d65ffaf9c0a8bbec101d2"
+    },
+    {
+      "bytes": 15840,
+      "path": "sources/src/backends/javascript/owned-wasm-component.mjs",
+      "sha256": "30a593548308481ec5ed1e1eb660e2f1763a6ab071a74d4252d960177b3cb5c4"
+    },
+    {
+      "bytes": 4606,
+      "path": "sources/src/backends/javascript/owned-wasm-input-transfers.mjs",
+      "sha256": "fecacca0c2bfb19023ae2ee9ec945171362a6fa2e6f93977f088b9eaead116e4"
+    },
+    {
+      "bytes": 6303,
+      "path": "sources/src/backends/javascript/owned-wasm-layout.mjs",
+      "sha256": "972cd62984f32816ab9025e482d1ffb222a9844d844624df52ed93881611f166"
+    },
+    {
+      "bytes": 7997,
+      "path": "sources/src/backends/javascript/package-audit.mjs",
+      "sha256": "353a28d018db6e606e867cc2c1bebe2096c5cdbf60d2849ccc6fce5a97ed2631"
+    },
+    {
+      "bytes": 24029,
+      "path": "sources/src/backends/javascript/projection.mjs",
+      "sha256": "d21dc89d5fbb1242c54bc8090a8042b6fb97e00d959aade009d8997cc6867fc7"
+    },
+    {
+      "bytes": 13300,
+      "path": "sources/src/backends/jvm/callable-graph-calls.mjs",
+      "sha256": "c72ded49b5b838473b84ab9564311297617eb01ec15169f7d70f996a4aa69a68"
+    },
+    {
+      "bytes": 5326,
+      "path": "sources/src/backends/jvm/callable-graph-model.mjs",
+      "sha256": "a5087c6e871712e5500fad05fc5582d9d400cbeb5eb0396ad2eb00808e612309"
+    },
+    {
+      "bytes": 4414,
+      "path": "sources/src/backends/jvm/callable-graph-package.mjs",
+      "sha256": "557ba88332311903263145d24a40863b33ec69d15d730265371483c7b37d1589"
+    },
+    {
+      "bytes": 5279,
+      "path": "sources/src/backends/jvm/callable-graph-runtime.mjs",
+      "sha256": "cfb31f2f4c7fe674d79a679e334ca19ef676ec6c04db3694771e77b871a89554"
+    },
+    {
+      "bytes": 11963,
+      "path": "sources/src/backends/jvm/callables.mjs",
+      "sha256": "6c9345f2a05213c8c6bb1dccbbbb6e9ea8c175e2e7d0bb08a7945169e2837b7d"
+    },
+    {
+      "bytes": 4808,
+      "path": "sources/src/backends/jvm/copied-aliases.mjs",
+      "sha256": "1428ce4c2a583668b0d2a835bcf9179082b7b396b065952d0649b157055c637e"
+    },
+    {
+      "bytes": 716,
+      "path": "sources/src/backends/jvm/copied-assets.mjs",
+      "sha256": "93e97eb16ae6970e51ef78d3fd16b6db408b90e9c3affdd06121d8e97faf7750"
+    },
+    {
+      "bytes": 13442,
+      "path": "sources/src/backends/jvm/copied-conversions.mjs",
+      "sha256": "d41050ddcad1ebbbe19c74d681f311903764128ebed212616b0f6098b4fbefbe"
+    },
+    {
+      "bytes": 5988,
+      "path": "sources/src/backends/jvm/copied-graph-assets.mjs",
+      "sha256": "51c4e2ab523e5677a1114316eccc0d6ea035329bcb3c9da98556f45d88141c7a"
+    },
+    {
+      "bytes": 11523,
+      "path": "sources/src/backends/jvm/copied-graph-conversions.mjs",
+      "sha256": "aec0485334249592e544ca05209c3976443b2fc519578bc9583cf8dbc3f71e7e"
+    },
+    {
+      "bytes": 10283,
+      "path": "sources/src/backends/jvm/copied-graph-equality.mjs",
+      "sha256": "5b9e42ae0d520eaddd1ab71edb90ccdea44663013b8b8c9ce95f189fef809938"
+    },
+    {
+      "bytes": 8097,
+      "path": "sources/src/backends/jvm/copied-graph-kotlin.mjs",
+      "sha256": "20f64e9cc266fe11490e943671b6aa08f53f26fbc6cce0a5e0c82abd82a3de8a"
+    },
+    {
+      "bytes": 5135,
+      "path": "sources/src/backends/jvm/copied-graph-layout.mjs",
+      "sha256": "f36228c523b3af56d44df36c8577a6b828598c91fc734609f5bfea6f793c630a"
+    },
+    {
+      "bytes": 9135,
+      "path": "sources/src/backends/jvm/copied-graph-package.mjs",
+      "sha256": "6a4b76db2102b0a7c916e7e1c12419cb9672539dd6a4460b2ba90b16800d00af"
+    },
+    {
+      "bytes": 15907,
+      "path": "sources/src/backends/jvm/copied-graph-runtime.mjs",
+      "sha256": "552bd7bf0952fd6f652a23d424c58fe21be6276982c1ea0ac3a7db91a2bc30cc"
+    },
+    {
+      "bytes": 12438,
+      "path": "sources/src/backends/jvm/copied-graph-scalars.mjs",
+      "sha256": "8eb5076640d7f1bad96511ef45c37315082ff6526c88c9adac4a02ff056cd0c1"
+    },
+    {
+      "bytes": 10309,
+      "path": "sources/src/backends/jvm/copied-graph-values.mjs",
+      "sha256": "ac275aa17b794affe54796ef12aa513c17c121842dc59b6da7710ef453fee71c"
+    },
+    {
+      "bytes": 13123,
+      "path": "sources/src/backends/jvm/copied-kotlin.mjs",
+      "sha256": "bca0eaf8fd637c524cc4e7d0756dc683037cb8e426cbfad02d7cfc733bac8d17"
+    },
+    {
+      "bytes": 9054,
+      "path": "sources/src/backends/jvm/copied-model.mjs",
+      "sha256": "d586a7a26f856377bcdb68cded3b64793ebb3c628112c6a693bd8c863515c246"
+    },
+    {
+      "bytes": 2389,
+      "path": "sources/src/backends/jvm/copied-runtime.mjs",
+      "sha256": "21aa41d1087ea4fe83e2b7a620f58eb893add37cce7fe11f6fa04d500cd047c9"
+    },
+    {
+      "bytes": 15051,
+      "path": "sources/src/backends/jvm/copied-values.mjs",
+      "sha256": "b4ab3f1bc62f8d1a16abc768e7abcc3c9e2ae6dd768904891f658128f0318fab"
+    },
+    {
+      "bytes": 11502,
+      "path": "sources/src/backends/jvm/owned-borrows.mjs",
+      "sha256": "99d5d28f24e5c13a1042e75ae6ba15994fb176442d8b9e9629d9d675fcc94fbc"
+    },
+    {
+      "bytes": 12238,
+      "path": "sources/src/backends/jvm/owned-callables.mjs",
+      "sha256": "256c23521755fa3a278b34a68285e8a39381e5f0e7bd0da594d712f2c47e90a7"
+    },
+    {
+      "bytes": 1872,
+      "path": "sources/src/backends/jvm/owned-callback-arguments.mjs",
+      "sha256": "ad9dfccf8baa037b1a448900c8e4e7b1ff14e7683e448ce424b5a1c07983f727"
+    },
+    {
+      "bytes": 19604,
+      "path": "sources/src/backends/jvm/owned-calls.mjs",
+      "sha256": "36ba6b1b76f79185e85f9c6f683c5b21ddc350343ef11c70e3f6e285f8d95cbd"
+    },
+    {
+      "bytes": 17291,
+      "path": "sources/src/backends/jvm/owned-conversion-runtime.mjs",
+      "sha256": "5959f48a59545c0d6cbd4adb04ace3e94db4cd16bffb44fd42765a6208cfef5a"
+    },
+    {
+      "bytes": 11468,
+      "path": "sources/src/backends/jvm/owned-conversions.mjs",
+      "sha256": "30722f3e5f30549ee4e92b384da80c93245a7170c5583f592a5ebd2084a13f0e"
+    },
+    {
+      "bytes": 16224,
+      "path": "sources/src/backends/jvm/owned-kotlin.mjs",
+      "sha256": "30d4c183ab4fbca9da264ff6f8c20d5c7e1f428f66cda36fd86c153874bd492e"
+    },
+    {
+      "bytes": 7110,
+      "path": "sources/src/backends/jvm/owned-layout.mjs",
+      "sha256": "165253e1bec52a32be6a546ed5e80e8dd1bbb3729c77feefb07e1e032a788c89"
+    },
+    {
+      "bytes": 20896,
+      "path": "sources/src/backends/jvm/owned-package.mjs",
+      "sha256": "0fd5e15336d47c3b6a877ac5e60714168312243cd591c69182cc8e5f74858933"
+    },
+    {
+      "bytes": 6977,
+      "path": "sources/src/backends/jvm/owned-receivers.mjs",
+      "sha256": "e68fd70f6faa73189fd04ce72601cab44b33dd27cd69c5109c6bda186f300adc"
+    },
+    {
+      "bytes": 14736,
+      "path": "sources/src/backends/jvm/owned-runtime.mjs",
+      "sha256": "13625a6cfa7092c8ba8dfdad1b409b8fc608b16d5c1d8167e84fac6d93b83e52"
+    },
+    {
+      "bytes": 13109,
+      "path": "sources/src/backends/jvm/owned-scalars.mjs",
+      "sha256": "3b39fae33ee2da2411941258f731d7403a21e6d010248a07296fefcaee1ef9f0"
+    },
+    {
+      "bytes": 2293,
+      "path": "sources/src/backends/jvm/owned-thread-exit.mjs",
+      "sha256": "f2717a37032ca0d2f9abfe0374c58b473a5f6d8e28c118761661313ac81d68c7"
+    },
+    {
+      "bytes": 4484,
+      "path": "sources/src/backends/jvm/owned-transfers.mjs",
+      "sha256": "6c24bfd200c6f7453b3dac7b5ff30a8b17a64dc37017637efec401014bfc93d4"
+    },
+    {
+      "bytes": 17838,
+      "path": "sources/src/backends/jvm/owned-values.mjs",
+      "sha256": "1943f1d0264b79133f6f0870797be92e06ec93429b1e69c1bcb7a4c7c37109d7"
+    },
+    {
+      "bytes": 15229,
+      "path": "sources/src/backends/jvm/verified-assets.mjs",
+      "sha256": "ed24535082694443ccbfeca08a5bb82fe7125a1b15ec1f0e2eacb8acd24d5eae"
+    },
+    {
+      "bytes": 5246,
+      "path": "sources/src/backends/managed/package-audit.mjs",
+      "sha256": "2f03943278cac12354317e1d041fc0f5e9c6f7fe24b86d8c0e3446e38c51c09f"
+    },
+    {
+      "bytes": 2929,
+      "path": "sources/src/backends/native/callback-broker.mjs",
+      "sha256": "2bcefcbafbc22e305351ebebb642be1a878d2431212aeec908adc2e2b40855e1"
+    },
+    {
+      "bytes": 16607,
+      "path": "sources/src/backends/native/fin-refinements.mjs",
+      "sha256": "ed719cbb1d4de13a9bbd110703eb0fffb4d2cea356fdc91bcdfbbed0b89039c3"
+    },
+    {
+      "bytes": 18788,
+      "path": "sources/src/backends/native/owned-aggregate-leases.mjs",
+      "sha256": "f13148cef15496c088da53156b77f7ecef106d30d4e8208cb7363327d833b2b5"
+    },
+    {
+      "bytes": 4368,
+      "path": "sources/src/backends/native/owned-aggregate-transfers.mjs",
+      "sha256": "3d85638528bc671dff9164d653cb21b2cb4f5da667b661249e67594c738a03b1"
+    },
+    {
+      "bytes": 19721,
+      "path": "sources/src/backends/native/owned-value-adapters.mjs",
+      "sha256": "5582c63a7a26cdc5c11096c534ebd79e054c8bbf4cf9343aa205a0b5946d3aa9"
+    },
+    {
+      "bytes": 8891,
+      "path": "sources/src/backends/native/owned-value-layout.mjs",
+      "sha256": "cb428c90f352222f93d922338d02cac24111e20a3bdcdc086384b184ccb6c140"
+    },
+    {
+      "bytes": 10622,
+      "path": "sources/src/backends/native/owned-value-runtime.mjs",
+      "sha256": "f982c0649dd9ba7cd95e4481a10258d5f1ef710bafb403e192f90fd95d0001af"
+    },
+    {
+      "bytes": 1917,
+      "path": "sources/src/backends/native/owned-value-transfers.mjs",
+      "sha256": "7571473b1428237e4ebaa5ea9c8e5ddbf4a033e5141335e999477eb89631029d"
+    },
+    {
+      "bytes": 13335,
+      "path": "sources/src/backends/native/runtime-broker.mjs",
+      "sha256": "1c9f030f998af5fb4d4641efad9ccb51822443fed7ad5b37635b98aac89287ed"
+    },
+    {
+      "bytes": 3007,
+      "path": "sources/src/backends/perl/callable-graph-model.mjs",
+      "sha256": "06f47c2a91f42f76683db460456f87b22298f3205fd854ea74ded46bd702c71d"
+    },
+    {
+      "bytes": 4786,
+      "path": "sources/src/backends/perl/callable-graph-package.mjs",
+      "sha256": "e12454dba97eb2c3c1fcf69985f81ab01a16dec2a685661bdfa47e6bf8cc77e0"
+    },
+    {
+      "bytes": 6517,
+      "path": "sources/src/backends/perl/callable-graph-runtime.mjs",
+      "sha256": "05fc0e3decaf5ce8145e723d211ac984493ef3105c5adb80fe0b227cad8d0140"
+    },
+    {
+      "bytes": 6537,
+      "path": "sources/src/backends/perl/callable-graph-xs.mjs",
+      "sha256": "9d8e0cf5cc582886e78d6a7791e5d6505e2e86a1ebba76d519b5818a9d14582a"
+    },
+    {
+      "bytes": 5034,
+      "path": "sources/src/backends/perl/copied-aliases.mjs",
+      "sha256": "3e77c70117d27939a323383a9ef772a6d713d4ed23483445a777d8e277bd0956"
+    },
+    {
+      "bytes": 12363,
+      "path": "sources/src/backends/perl/copied-graph-conversions.mjs",
+      "sha256": "eac9937c2361496fd38011e812b3a0c1f37cbbb386e3ea46b666f75e65391c42"
+    },
+    {
+      "bytes": 6226,
+      "path": "sources/src/backends/perl/copied-graph-package.mjs",
+      "sha256": "9cc3467d0ce3549b8d8b10c785bdd0b2b43698dacfc94b4333221248c503b852"
+    },
+    {
+      "bytes": 12260,
+      "path": "sources/src/backends/perl/copied-graph-runtime.mjs",
+      "sha256": "cd2f2b345c66a7f5f1a82f4e75a47985ce5b5dd8dd464f05bc24982e4f2e325f"
+    },
+    {
+      "bytes": 6475,
+      "path": "sources/src/backends/perl/copied-graph-values.mjs",
+      "sha256": "01990917bc261d4875f96fad26918563617f0ce3c8e462b8340efbb9f0eef734"
+    },
+    {
+      "bytes": 3293,
+      "path": "sources/src/backends/perl/copied-graph-xs.mjs",
+      "sha256": "a493440cd6a34d11860ab8c98e06abd8715866e4e2077b2fc3bf1472a84a8610"
+    },
+    {
+      "bytes": 6631,
+      "path": "sources/src/backends/perl/copied-variants.mjs",
+      "sha256": "9331f4b7cbd781d633a2e04987c80cdd0f35507fd28ee828fc8f21725e2e5b32"
+    },
+    {
+      "bytes": 47014,
+      "path": "sources/src/backends/perl/generate.mjs",
+      "sha256": "8a2de5e0052bfc7e4ac625db367bd43a085cc27c0894ba4c75852664dc6bd054"
+    },
+    {
+      "bytes": 1478,
+      "path": "sources/src/backends/perl/naming.mjs",
+      "sha256": "052c47c48e5528fab5de26790dbf96d71be72516487d9e977700754ed5f6ae0d"
+    },
+    {
+      "bytes": 13978,
+      "path": "sources/src/backends/perl/owned-borrows.mjs",
+      "sha256": "24e23a69b9fe6926a488cd61ea7f580111b36dfcd678298c47eb82b670f7bb79"
+    },
+    {
+      "bytes": 969,
+      "path": "sources/src/backends/perl/owned-callback-arguments.mjs",
+      "sha256": "fd1c607ae8029129ca09afd8422a2e266e6d43ef0e0d1d866128679fc0f4f91a"
+    },
+    {
+      "bytes": 2295,
+      "path": "sources/src/backends/perl/owned-callback-build.mjs",
+      "sha256": "1066f82ecf15f9e721ae1e9d529a41eeff7bf0043dee183a667da080ec0e3b2d"
+    },
+    {
+      "bytes": 13806,
+      "path": "sources/src/backends/perl/owned-conversions.mjs",
+      "sha256": "0afb3ee6ac47b65e6c012c138a034df4f00dd16bb5bc0386069547d019213e49"
+    },
+    {
+      "bytes": 12369,
+      "path": "sources/src/backends/perl/owned-package.mjs",
+      "sha256": "ffa23868f0090eee7a9f520b3ebbf0fbeb0e0603b21465bff57b288c4468ed41"
+    },
+    {
+      "bytes": 2002,
+      "path": "sources/src/backends/perl/owned-receivers.mjs",
+      "sha256": "b54ab4b08503f09a6d924fa77de66f593f9a5d4928700c5fae79e3afcef6bb0c"
+    },
+    {
+      "bytes": 11480,
+      "path": "sources/src/backends/perl/owned-runtime.mjs",
+      "sha256": "4eb19ea77206076d39d4aaab033864376a5451a76f9c4e12d43bc4bda07597f3"
+    },
+    {
+      "bytes": 4620,
+      "path": "sources/src/backends/perl/owned-transfers.mjs",
+      "sha256": "a42e98c3cb04ceba53f5ffde36c9e4cfda9607b8b6f9edc72667b319d98799ae"
+    },
+    {
+      "bytes": 8871,
+      "path": "sources/src/backends/perl/owned-values.mjs",
+      "sha256": "363a4c86bcb5d349b95a4e3c0d3b59692a09e13488b8a803de1b5889432b65e2"
+    },
+    {
+      "bytes": 12219,
+      "path": "sources/src/backends/perl/owned-xs.mjs",
+      "sha256": "db5e0e2dc8673a69ae98e22687dcb3c0f0ac8e3f9bfceeba3196e495d7850433"
+    },
+    {
+      "bytes": 1778,
+      "path": "sources/src/backends/php/brick-math.mjs",
+      "sha256": "a1712d1ed8d43dc86a0d4f99a325efdfbb4cc3d238b8025592452d578a7179cc"
+    },
+    {
+      "bytes": 223039,
+      "path": "sources/src/backends/php/brick-math.source.json",
+      "sha256": "d6e99c476f8d959a70f4548ff4a7d2a2500402a0046213a9836564a301d09b2e"
+    },
+    {
+      "bytes": 4408,
+      "path": "sources/src/backends/php/callable-graph-calls.mjs",
+      "sha256": "7f7fe9ef903a61f06528587268d4e258b97d6e4665b672b1c39f9aefb9d36572"
+    },
+    {
+      "bytes": 3345,
+      "path": "sources/src/backends/php/callable-graph-model.mjs",
+      "sha256": "999a05d18a53685508b9c3efe56e586855e9afc3456d38cda437495e27d04883"
+    },
+    {
+      "bytes": 5368,
+      "path": "sources/src/backends/php/callable-graph-package.mjs",
+      "sha256": "03a2f8c87bb7bd860eb0ff354c3d11bd5ec69ce5d61b6906f2e482c418949aac"
+    },
+    {
+      "bytes": 14126,
+      "path": "sources/src/backends/php/callable-graph-runtime.mjs",
+      "sha256": "e85bcb136c2d610b94ae467a36d7bd0a63872eb061a4517e34e343fe91c4cb1b"
+    },
+    {
+      "bytes": 5315,
+      "path": "sources/src/backends/php/callable-graph-zend-calls.mjs",
+      "sha256": "4a9b1214aa405a1d38d88d6137af488f91a5cfd3b621b3910c79a7a23d83d71b"
+    },
+    {
+      "bytes": 3775,
+      "path": "sources/src/backends/php/callable-graph-zend-model.mjs",
+      "sha256": "0015aa0a1a9fbb6141ba8e0fc9d7bf2efdea3178456beaec1bc4231510563315"
+    },
+    {
+      "bytes": 12137,
+      "path": "sources/src/backends/php/callable-graph-zend-php.mjs",
+      "sha256": "2c20411b2509675ad1256c394d3b93489b6afd951bbbc467d2bcab1434e3fa18"
+    },
+    {
+      "bytes": 6029,
+      "path": "sources/src/backends/php/callable-graph-zend-runtime.mjs",
+      "sha256": "8a92fcc6101b4d145623915955cabd44b5b8a0ae4ce64b694ebc87efd5eaeb36"
+    },
+    {
+      "bytes": 4529,
+      "path": "sources/src/backends/php/callable-graph-zend.mjs",
+      "sha256": "93169abfe3845db7b983ae49fc81cdedbcd9337e07caea42530e74b9600661ae"
+    },
+    {
+      "bytes": 10979,
+      "path": "sources/src/backends/php/callables.mjs",
+      "sha256": "5552cfc08b928676b183173ca656e4c05a9a0275880645db191b4ab0ab64d0ab"
+    },
+    {
+      "bytes": 2990,
+      "path": "sources/src/backends/php/copied-aliases.mjs",
+      "sha256": "129d0fbf719149849ff70970934207cc0c639bb9ced1ffc18e65e83b2b7587e0"
+    },
+    {
+      "bytes": 5416,
+      "path": "sources/src/backends/php/copied-assets.mjs",
+      "sha256": "7c17badd4f5232adc70fb13dea0a06d9bdcf929cd20fe10d7f63762f3afc1de1"
+    },
+    {
+      "bytes": 13542,
+      "path": "sources/src/backends/php/copied-conversions.mjs",
+      "sha256": "025ecb45d698eb18520392a304d5771792c2df2c616e45dc591ee3a0938637c1"
+    },
+    {
+      "bytes": 6282,
+      "path": "sources/src/backends/php/copied-equality.mjs",
+      "sha256": "9eec1bcc845f5494897b631f5d8829bf7cf52c3ef4dd440eb970a1ff07f078a7"
+    },
+    {
+      "bytes": 3201,
+      "path": "sources/src/backends/php/copied-graph-assets.mjs",
+      "sha256": "136ae8baed8a8775a5f1e6935216abf02bd50470555faffb01e1dd3b55691d9c"
+    },
+    {
+      "bytes": 5331,
+      "path": "sources/src/backends/php/copied-graph-conversions.mjs",
+      "sha256": "923eeb4cb161c992327080cd88f4cc6e6a4fb041492e1945fa11a6c7029b094c"
+    },
+    {
+      "bytes": 7644,
+      "path": "sources/src/backends/php/copied-graph-native.mjs",
+      "sha256": "dc086f11565e832ca8bf4b791b8bd3608fcc32404a30c2a5e1a42bdf16097c5e"
+    },
+    {
+      "bytes": 6193,
+      "path": "sources/src/backends/php/copied-graph-package.mjs",
+      "sha256": "b16cbf73540331c7b5e1e1cc1b3eb3dc0cb650d3c647852b5bb3c587dbdc4651"
+    },
+    {
+      "bytes": 3880,
+      "path": "sources/src/backends/php/copied-graph-scalars.mjs",
+      "sha256": "4d039fada86b470eb4be8f10ac24a658bdac07f749c46256ec84c4a72b4dd959"
+    },
+    {
+      "bytes": 11511,
+      "path": "sources/src/backends/php/copied-graph-transfer.mjs",
+      "sha256": "1c7cfa5fbb1fc204e7116f435336d5b5dc6c4388c020f80cc41243efa5e9b299"
+    },
+    {
+      "bytes": 10234,
+      "path": "sources/src/backends/php/copied-graph-values.mjs",
+      "sha256": "ee217e566cda2c62e1beb3abd296e1cca6497484dabe09e7e5b2b0a9b40aefe4"
+    },
+    {
+      "bytes": 7216,
+      "path": "sources/src/backends/php/copied-graph-walk.mjs",
+      "sha256": "9c6642a6a02eb8c25e129df361c5d3c6b83a342aee46324f66db3e809f5a9e2b"
+    },
+    {
+      "bytes": 9235,
+      "path": "sources/src/backends/php/copied-graph-wire.mjs",
+      "sha256": "28123a31110c458ff555e46025f17450ce3de814fe691bc815f12ab5bd39f323"
+    },
+    {
+      "bytes": 13316,
+      "path": "sources/src/backends/php/copied-graph-zend-runtime.mjs",
+      "sha256": "45d17acd5d6fec8177e7e4ee0b0a06599fb74c5a7911fe19e835b561a471d150"
+    },
+    {
+      "bytes": 14125,
+      "path": "sources/src/backends/php/copied-graph-zend.mjs",
+      "sha256": "c784119fa76847969d8f2a89fa451392bf2c51b792478ba8e006e41b16bde6ec"
+    },
+    {
+      "bytes": 5629,
+      "path": "sources/src/backends/php/copied-model.mjs",
+      "sha256": "92250b77404eb0ae0c620bbc11a5d8ce7cbbf3df313d7fdccad8d93a2edffdf6"
+    },
+    {
+      "bytes": 1647,
+      "path": "sources/src/backends/php/copied-names.mjs",
+      "sha256": "8c0a0bd0cbbb8d785daa12986f345141ee763769f0a70cd6b812e4e1542a5f16"
+    },
+    {
+      "bytes": 5250,
+      "path": "sources/src/backends/php/copied-support.mjs",
+      "sha256": "11e71b391dd00a4e4acdd85239eed44bf46870973bcbb295573ab3bac193fc74"
+    },
+    {
+      "bytes": 14384,
+      "path": "sources/src/backends/php/copied-values.mjs",
+      "sha256": "eb62ac337326372d41b184c1628d3a1bc63d3f968bc429a5e6142d74f1b9bb7d"
+    },
+    {
+      "bytes": 6439,
+      "path": "sources/src/backends/php/copied-variants.mjs",
+      "sha256": "e02c4841e6780a17a37c2c32520243ef56e6535daf3ac6ddda6b7f3b36923e27"
+    },
+    {
+      "bytes": 10391,
+      "path": "sources/src/backends/php/copied-zend-conversions.mjs",
+      "sha256": "eafc016a4ee7b872037203844a0df178a8922ecd3019b91ecc5228f6baa77a4f"
+    },
+    {
+      "bytes": 7812,
+      "path": "sources/src/backends/php/copied-zend-support.mjs",
+      "sha256": "525ed00996352757c1bd1abcb68c7c50d6ca5a34c8aa4c56a752eecc753c39a7"
+    },
+    {
+      "bytes": 3553,
+      "path": "sources/src/backends/php/copied-zend-variants.mjs",
+      "sha256": "34df07af4409335c1aa249f96bcd084592cb5589882bee8ce66025296ecf30f2"
+    },
+    {
+      "bytes": 11921,
+      "path": "sources/src/backends/php/copied-zend.mjs",
+      "sha256": "3a4919ac406a0365868a90f6c44ad16460a79666995e507e76d00d68861d4599"
+    },
+    {
+      "bytes": 3892,
+      "path": "sources/src/backends/php/owned-assets.mjs",
+      "sha256": "1006a6901ce07c8e6896e03eb5af97ae92f6baf9f794d1843a02f566c7598285"
+    },
+    {
+      "bytes": 8305,
+      "path": "sources/src/backends/php/owned-borrows.mjs",
+      "sha256": "f46b85420277b31948c7c75c05f0757d57cb0f073c79a5e729e91d925b6f86e6"
+    },
+    {
+      "bytes": 22136,
+      "path": "sources/src/backends/php/owned-call-runtime.mjs",
+      "sha256": "e3d9bf2baaacfc04bacd777420c27b9da0321193c742372f436545c742d8d679"
+    },
+    {
+      "bytes": 12402,
+      "path": "sources/src/backends/php/owned-calls.mjs",
+      "sha256": "925e9afa5c8b1a7fe2c53f28c3e4aa8867442ee9dcabe52a10f9e2557604929a"
+    },
+    {
+      "bytes": 10089,
+      "path": "sources/src/backends/php/owned-conversion-support.mjs",
+      "sha256": "b9dadaa04300f9faa8e8ca220a7fd1597dd0d2473914ddd439d39ce1024b84d8"
+    },
+    {
+      "bytes": 8922,
+      "path": "sources/src/backends/php/owned-conversion-transfer.mjs",
+      "sha256": "51d7c5d7638f124c947e28dec6ada487a810715d6913c0cbed984a4498d83af8"
+    },
+    {
+      "bytes": 5236,
+      "path": "sources/src/backends/php/owned-conversions.mjs",
+      "sha256": "abf8baa87934915e3bbfca31028d44e9b91415edc599aa0203427ba532d2c66f"
+    },
+    {
+      "bytes": 3717,
+      "path": "sources/src/backends/php/owned-input-transfers.mjs",
+      "sha256": "06ee3130d45454bb3db62459c37170c3d076d4148a79197692e4147564d1d348"
+    },
+    {
+      "bytes": 2700,
+      "path": "sources/src/backends/php/owned-integers.mjs",
+      "sha256": "f894bf929f0289e8eaa8e7108950e839d1e3871b47519cf4a4260454cd3564b6"
+    },
+    {
+      "bytes": 16865,
+      "path": "sources/src/backends/php/owned-package.mjs",
+      "sha256": "6f8d73f9b00ac2fb91bf84e71c6cc6733a01c4793e4122306819829379d71867"
+    },
+    {
+      "bytes": 5564,
+      "path": "sources/src/backends/php/owned-receivers.mjs",
+      "sha256": "b156880328a47e87584224d01465687cf70415723c0a0fefed4089eb5e6169bd"
+    },
+    {
+      "bytes": 12431,
+      "path": "sources/src/backends/php/owned-runtime.mjs",
+      "sha256": "ccc786b63636c94f4fe30c417dfa20ee6b4737dc4f2367a56fcfac8e8090fd96"
+    },
+    {
+      "bytes": 2367,
+      "path": "sources/src/backends/php/owned-value-resources.mjs",
+      "sha256": "b1e655b3885c6cbf2250ee5e16bdd6820bd1e89b81fc97a1f5e50a7b603f90f9"
+    },
+    {
+      "bytes": 8511,
+      "path": "sources/src/backends/php/owned-value-walk.mjs",
+      "sha256": "0d0f325447a68e90110fe3c3915e313b7d5ef16ce23ad44d06ac22db6c65c64f"
+    },
+    {
+      "bytes": 15455,
+      "path": "sources/src/backends/php/owned-values.mjs",
+      "sha256": "1d4f1cb2e0ed34c6fb9590f8d74ce2c45eaa630afc104f7cfc45be90b25db4f3"
+    },
+    {
+      "bytes": 11604,
+      "path": "sources/src/backends/php/owned-zend-borrow-calls.mjs",
+      "sha256": "19db09c11e0d7f44e0aad1b4d49a12f9f0b1a7cf3ed26ccc21b4ecc87710708b"
+    },
+    {
+      "bytes": 25315,
+      "path": "sources/src/backends/php/owned-zend-borrows.mjs",
+      "sha256": "162c8e7f220e21cadffe13984d03dcda2830ef073a7a944ffb935a7ac6db7c9a"
+    },
+    {
+      "bytes": 8974,
+      "path": "sources/src/backends/php/owned-zend-callbacks.mjs",
+      "sha256": "ad82e4bc45b31f5f597f4b10c851fb1e63b586a25c46edd04d96d691614f1364"
+    },
+    {
+      "bytes": 3069,
+      "path": "sources/src/backends/php/owned-zend-descriptors.mjs",
+      "sha256": "97143ec747d16a3e2ecd8937ed0f8f4017dca63a63f85356ad4acb289406aa8d"
+    },
+    {
+      "bytes": 10871,
+      "path": "sources/src/backends/php/owned-zend-extension.mjs",
+      "sha256": "665b2cf84a319b5ad4e0631dffed52f6a17cf92b0f464d60bbab64d860a67b75"
+    },
+    {
+      "bytes": 3939,
+      "path": "sources/src/backends/php/owned-zend-input-transfers.mjs",
+      "sha256": "a54bbe5d0645eef281350c240d0e844902b2738ec2bdf0b4fc037051f0414ec2"
+    },
+    {
+      "bytes": 7204,
+      "path": "sources/src/backends/php/owned-zend-model.mjs",
+      "sha256": "1562c9083c1b4091be14c3b2de31e1c44784272b448d52ac1f9d2301bbed245f"
+    },
+    {
+      "bytes": 14416,
+      "path": "sources/src/backends/php/owned-zend-ownership.mjs",
+      "sha256": "e67f88aeda315b05116ca3248185c4bcfa50da415ed12242450231d959a6747f"
+    },
+    {
+      "bytes": 14647,
+      "path": "sources/src/backends/php/owned-zend-php.mjs",
+      "sha256": "d000fadf3cea7a2e1300c62e8eca38a4671a017fe26c3e7d65be704bac3b7473"
+    },
+    {
+      "bytes": 11465,
+      "path": "sources/src/backends/php/owned-zend-readme.mjs",
+      "sha256": "faa496d17a8ddbb204953c9225646c7ee1bdd776cc3ab11d145c6a2896c3d4b0"
+    },
+    {
+      "bytes": 6168,
+      "path": "sources/src/backends/php/owned-zend-walk.mjs",
+      "sha256": "31f613007c2e17bb3dbe8c523fc2abb9176a670e780a7753b7ae9dbf1b975742"
+    },
+    {
+      "bytes": 2542,
+      "path": "sources/src/backends/php/owned-zend-wire.mjs",
+      "sha256": "65ca2b4a9e68950720bf8a79d36b61a295f6eb6576c93319a90e2fbbfe12ceb3"
+    },
+    {
+      "bytes": 12452,
+      "path": "sources/src/backends/php/package-audit.mjs",
+      "sha256": "0bbe293a5080cda59886baab73f908635c6a303d29a56bed7e74ff9796d6ade2"
+    },
+    {
+      "bytes": 2710,
+      "path": "sources/src/backends/php/php-wasm-copied-loader.mjs",
+      "sha256": "15ba6f0e76a10eeaec9113b9e5645a2f0d38f6d9eac4a265e85e30e9cb970ae5"
+    },
+    {
+      "bytes": 2233,
+      "path": "sources/src/backends/php/php-wasm-libuv.mjs",
+      "sha256": "573fecc70afaab8ecf6d359fe373c54a8a70ca85a2f1df2c7540a3ad68099faa"
+    },
+    {
+      "bytes": 22929,
+      "path": "sources/src/backends/php/projection.mjs",
+      "sha256": "d8ab19e9cb453d679aa49902781ebaf71f9922ef72ce7b9d876df0e5de1aab81"
+    },
+    {
+      "bytes": 15578,
+      "path": "sources/src/backends/php/zend-callables.mjs",
+      "sha256": "d4dfbb6eb445b2e704699010db297b9c90c1d9cd369dfa4ac79e835cb09bbba7"
+    },
+    {
+      "bytes": 9639,
+      "path": "sources/src/backends/python/callable-graph-conversions.mjs",
+      "sha256": "ac76f6acb11db8b0f3aeb4b48d6f94232d8f458b74f0a8fcb44b861f97bad016"
+    },
+    {
+      "bytes": 4677,
+      "path": "sources/src/backends/python/callable-graph-model.mjs",
+      "sha256": "8c07aed433cfb341ecbef2dc9ec1b3f8332ca59f2422dd802b27d3b2bc829867"
+    },
+    {
+      "bytes": 6031,
+      "path": "sources/src/backends/python/callable-graph-package.mjs",
+      "sha256": "a7e626a61ade486ccbe7885520571818a27a5bff77677733445f06af94fe58ea"
+    },
+    {
+      "bytes": 9356,
+      "path": "sources/src/backends/python/callables.mjs",
+      "sha256": "3ee191c8489b51d8ddba6fb14930d774e0ad181c7bc68f33452da7c161a093d0"
+    },
+    {
+      "bytes": 1211,
+      "path": "sources/src/backends/python/compounds.mjs",
+      "sha256": "56d7dccee4c415e121f6f811c8e95a4fd72b038c0336def4ff54217e8d7b0f64"
+    },
+    {
+      "bytes": 4054,
+      "path": "sources/src/backends/python/copied-assets.mjs",
+      "sha256": "01be4dbe0c3e92f8791b888ff58c07bc64408166f7551645372e7a5d388fdb33"
+    },
+    {
+      "bytes": 10261,
+      "path": "sources/src/backends/python/copied-conversions.mjs",
+      "sha256": "658271a8cfad111215b7072f8df29189f71f56dc15e3f7104e82bd8b50f2f936"
+    },
+    {
+      "bytes": 19322,
+      "path": "sources/src/backends/python/copied-graph-conversions.mjs",
+      "sha256": "855e15d2d56cc4a54e66abbc2db6d45ddd7290d50cd3eb2a74d21bf30fb328cd"
+    },
+    {
+      "bytes": 8487,
+      "path": "sources/src/backends/python/copied-graph-package.mjs",
+      "sha256": "9f82bb2f7f20437671263b3e84da390841dcfda2baa89808de4709ed33dda428"
+    },
+    {
+      "bytes": 8875,
+      "path": "sources/src/backends/python/copied-graph-values.mjs",
+      "sha256": "7e3070d8a43e01fea41ce423557f0d7233fd656a476fe32335018d9b2a24e868"
+    },
+    {
+      "bytes": 7378,
+      "path": "sources/src/backends/python/copied-model.mjs",
+      "sha256": "4557b83311c0ece7cbcca6da0d9bd69fdd4e1544076975a265f838566dbe299b"
+    },
+    {
+      "bytes": 14861,
+      "path": "sources/src/backends/python/copied-values.mjs",
+      "sha256": "8c0c6432d1bbccca1d6608757d56345ae5f50fa7746ee8e615c212cbf0799cc7"
+    },
+    {
+      "bytes": 4985,
+      "path": "sources/src/backends/python/owned-assets.mjs",
+      "sha256": "2d462923095ff38b46dbfb1f10de76d70a9ed43e7edc3f6cd233d147a3e0f999"
+    },
+    {
+      "bytes": 11073,
+      "path": "sources/src/backends/python/owned-borrows.mjs",
+      "sha256": "21ea4c7cb904f8bfffc14c16f8509a5dedb649517529d4b74ad50072e7762ba2"
+    },
+    {
+      "bytes": 6805,
+      "path": "sources/src/backends/python/owned-callables.mjs",
+      "sha256": "636c963211910bece0b419d8d2928488420d5ba5ff1a7015f691b82e2f4b016c"
+    },
+    {
+      "bytes": 25858,
+      "path": "sources/src/backends/python/owned-conversions.mjs",
+      "sha256": "b38ee2d094a312e9f85a763ab3bf254ddb9d7baca09a304d50fe352dad116b4d"
+    },
+    {
+      "bytes": 13163,
+      "path": "sources/src/backends/python/owned-package.mjs",
+      "sha256": "34bf51955a99c9584fefc074554485cfbc880bed07e0f43570e4d7d14078bf09"
+    },
+    {
+      "bytes": 2686,
+      "path": "sources/src/backends/python/owned-receivers.mjs",
+      "sha256": "7483404c8dfe344fc4db978a54f1df810faaa2f7f1316be90b4a4a3158f45a92"
+    },
+    {
+      "bytes": 13455,
+      "path": "sources/src/backends/python/owned-runtime.mjs",
+      "sha256": "06e6cc76ea6c109b3d21591a161f50e691aabca19e90a6eb892979a9c7de0c55"
+    },
+    {
+      "bytes": 3221,
+      "path": "sources/src/backends/python/owned-transfers.mjs",
+      "sha256": "eab596ee5f36ba4e4442d739abd12aed423562da7fc3bf8c60e0970b5a49dc59"
+    },
+    {
+      "bytes": 16613,
+      "path": "sources/src/backends/python/owned-values.mjs",
+      "sha256": "e0422b76ab5d80aa28dfb5dadb21c1bdaec7e336be05531bf15c25748f1ce202"
+    },
+    {
+      "bytes": 3291,
+      "path": "sources/src/backends/python/package-audit.mjs",
+      "sha256": "99d4d9344c2b248e98d1f5be26348456a3c94c0c021177e622c3f3e29695b2d9"
+    },
+    {
+      "bytes": 1316,
+      "path": "sources/src/backends/python/refinements.mjs",
+      "sha256": "09af6ea16c013a7191d165c2939d0ce7f2b11d24b15e843e292be93859f4b0be"
+    },
+    {
+      "bytes": 10683,
+      "path": "sources/src/backends/ruby/callable-graph-conversions.mjs",
+      "sha256": "518ba57706b4f9c65c52ef4522d8e727f54f49be9c34f98a6cd3d339fec272f8"
+    },
+    {
+      "bytes": 2958,
+      "path": "sources/src/backends/ruby/callable-graph-model.mjs",
+      "sha256": "8ae65fcbd9e78382fb9285617063d9be7ead9ea3d0ffada100dfe56978a738ac"
+    },
+    {
+      "bytes": 6581,
+      "path": "sources/src/backends/ruby/callable-graph-package.mjs",
+      "sha256": "35a63d953a4363f0831b6472e4c11426edf5d8acaa7c4cef1b271f730ee66060"
+    },
+    {
+      "bytes": 9829,
+      "path": "sources/src/backends/ruby/callables.mjs",
+      "sha256": "21e585671c360c41317569c05c602d3286d9585731b87416a0591e57e732da49"
+    },
+    {
+      "bytes": 3808,
+      "path": "sources/src/backends/ruby/copied-aliases.mjs",
+      "sha256": "4cca75ca4d6a9a6e89b9c9a740ee4de8c66faee99f1a211dd142287c4894e3ef"
+    },
+    {
+      "bytes": 1165,
+      "path": "sources/src/backends/ruby/copied-assets.mjs",
+      "sha256": "501e2ad9936e09d58131f9995164ec27fa28d222bfeeded3ed64ae2b5bda0c4f"
+    },
+    {
+      "bytes": 12944,
+      "path": "sources/src/backends/ruby/copied-conversions.mjs",
+      "sha256": "ce15adec396be01282ccb353fc486359693d032ccc46442dbe897d80e45fb52a"
+    },
+    {
+      "bytes": 13605,
+      "path": "sources/src/backends/ruby/copied-graph-conversions.mjs",
+      "sha256": "1aab7ed78d91035febe851e157b78f3d9e58cb06f3b2b156f8caa37774b155f9"
+    },
+    {
+      "bytes": 2902,
+      "path": "sources/src/backends/ruby/copied-graph-layout.mjs",
+      "sha256": "bedda7fded4be4f5d8fec667e2a49abb2009266cf050694a85bee1c783579e9e"
+    },
+    {
+      "bytes": 8188,
+      "path": "sources/src/backends/ruby/copied-graph-package.mjs",
+      "sha256": "37e4c6f2a0d9480b5667b5a67e456e2766956f87f8e40ee8373ed12af7042507"
+    },
+    {
+      "bytes": 5980,
+      "path": "sources/src/backends/ruby/copied-graph-runtime.mjs",
+      "sha256": "ab8879ea2e281cd77231c1f7a693f19da28bbe59a1e703b95d1410744e842635"
+    },
+    {
+      "bytes": 8341,
+      "path": "sources/src/backends/ruby/copied-graph-values.mjs",
+      "sha256": "1bf99fe069be4a45ce7c8da1a0ec3d6fbfb7ee7803ac4bf57bd92c0433060067"
+    },
+    {
+      "bytes": 6931,
+      "path": "sources/src/backends/ruby/copied-model.mjs",
+      "sha256": "76b2b404b57a16604bb396997ba371f67c9dac3b6b37caf4bae017d1e597734d"
+    },
+    {
+      "bytes": 16925,
+      "path": "sources/src/backends/ruby/copied-values.mjs",
+      "sha256": "44580dc2129a996655284ea7df86250cf3a671a0930259c05b58fd6e1d1c51c7"
+    },
+    {
+      "bytes": 2212,
+      "path": "sources/src/backends/ruby/owned-abi.mjs",
+      "sha256": "83279c3cb91e19c0036c5ca0206a7480a3296f5a87835436dee0049bb0f3eacd"
+    },
+    {
+      "bytes": 10432,
+      "path": "sources/src/backends/ruby/owned-borrows.mjs",
+      "sha256": "007215505d99b093975472bb8d3ce44b028af7ed554576b40bb1300998d8b7b1"
+    },
+    {
+      "bytes": 4088,
+      "path": "sources/src/backends/ruby/owned-call-boundary.mjs",
+      "sha256": "d8cf2a3d32278f7d69b004ea0626d2f3186975a4a11953f37034e759d2b6b2e0"
+    },
+    {
+      "bytes": 6936,
+      "path": "sources/src/backends/ruby/owned-callables.mjs",
+      "sha256": "1a20f6565b4526773e280abcf1c93659a184012ee9719b50ac8fcbec8649fad2"
+    },
+    {
+      "bytes": 7466,
+      "path": "sources/src/backends/ruby/owned-conversion-runtime.mjs",
+      "sha256": "e1b8e78b487e8998cd71866648bb45499708b4154924bb624d2056e27e8d00b8"
+    },
+    {
+      "bytes": 18738,
+      "path": "sources/src/backends/ruby/owned-conversions.mjs",
+      "sha256": "adf6b0e2d60df7ea37d934bcbaf1a3f569a57686b0c8980ae7fe86826e548f01"
+    },
+    {
+      "bytes": 3373,
+      "path": "sources/src/backends/ruby/owned-layout.mjs",
+      "sha256": "4d3f1cb322e068017d43d23a7ad939dfa9620c61baa63bb4b2e6f0989a4e5f8e"
+    },
+    {
+      "bytes": 12267,
+      "path": "sources/src/backends/ruby/owned-package.mjs",
+      "sha256": "22700e547830733da4b543469d696fecf7cf35c71629426c57481bc9ca65ef09"
+    },
+    {
+      "bytes": 15488,
+      "path": "sources/src/backends/ruby/owned-runtime.mjs",
+      "sha256": "b2fe0d66d5d9911b19bb023f4e0dbc358c5b02d06cae2c381aa041ea013636e9"
+    },
+    {
+      "bytes": 2992,
+      "path": "sources/src/backends/ruby/owned-transfers.mjs",
+      "sha256": "64a7391ea784e956da4c65f1ae333d15b8765314ad988593cfbaee2c118a6f6f"
+    },
+    {
+      "bytes": 12335,
+      "path": "sources/src/backends/ruby/owned-values.mjs",
+      "sha256": "74733aa68286ebf837147b89706922be5db4bd6b3f1bba2c584b9cfe731762d3"
+    },
+    {
+      "bytes": 5552,
+      "path": "sources/src/backends/ruby/verified-assets.mjs",
+      "sha256": "801be5e0c60f3ab8d86e9fc5286657c556a7c2315b557e3dfa62c02ef4ec6b49"
+    },
+    {
+      "bytes": 8536,
+      "path": "sources/src/backends/rust/callable-graph-conversions.mjs",
+      "sha256": "f5f904e7d8f1a16267a0a24179f0c549b2d6fbf246fed369c603029cd54621fc"
+    },
+    {
+      "bytes": 5261,
+      "path": "sources/src/backends/rust/callable-graph-model.mjs",
+      "sha256": "830908a0cdf67043c5c43572cadae43961af6bf9ce04a309501444ada48c0be6"
+    },
+    {
+      "bytes": 10208,
+      "path": "sources/src/backends/rust/callable-graph-package.mjs",
+      "sha256": "93bfad153cf1e7e7d80db752fb58e952318586f790deee1f57c465059ad83ee7"
+    },
+    {
+      "bytes": 13079,
+      "path": "sources/src/backends/rust/callables.mjs",
+      "sha256": "a5ade1f4a0a053ae4e8887fcc5ef36e2e81a20131ed0a72e9475682a41d7f0c2"
+    },
+    {
+      "bytes": 8255,
+      "path": "sources/src/backends/rust/copied-assets.mjs",
+      "sha256": "03d4d432a1d4e0bfdd444908d527ea9095a6791ef32a10974c35e16a8859be9f"
+    },
+    {
+      "bytes": 10993,
+      "path": "sources/src/backends/rust/copied-conversions.mjs",
+      "sha256": "e57c24479cdda0a53486494d54498d6aa4a75ba73605113be67e082df6413d0f"
+    },
+    {
+      "bytes": 19502,
+      "path": "sources/src/backends/rust/copied-graph-conversions.mjs",
+      "sha256": "0ea5214b5d099a3c99361c8d8a3adeb60731c3a418a0de43fc2b4140fa10947e"
+    },
+    {
+      "bytes": 12074,
+      "path": "sources/src/backends/rust/copied-graph-package.mjs",
+      "sha256": "28ca469064d697f80a5032a4349b636bc3dcf1c8901a64efb180d6002907037b"
+    },
+    {
+      "bytes": 5744,
+      "path": "sources/src/backends/rust/copied-graph-values.mjs",
+      "sha256": "38339e1f0af95c27853dc0da4a9e8c37820f08c32eaaa940b91967d8a2115c3b"
+    },
+    {
+      "bytes": 6399,
+      "path": "sources/src/backends/rust/copied-model.mjs",
+      "sha256": "9133f206341c29bd0b796cf6d9e7f11797a2b624ba6410b0ba2918141fd676c7"
+    },
+    {
+      "bytes": 17147,
+      "path": "sources/src/backends/rust/copied-values.mjs",
+      "sha256": "e3c604b3c9a70cbfa664053dc4b6aa4bcee6c6aa80d1738929af8639cb0fbac1"
+    },
+    {
+      "bytes": 7506,
+      "path": "sources/src/backends/rust/owned-borrows.mjs",
+      "sha256": "e2f1ec0c9422cbc50161310780795b3c9d90983818ec293820f7a885efb92a63"
+    },
+    {
+      "bytes": 22806,
+      "path": "sources/src/backends/rust/owned-callables.mjs",
+      "sha256": "97c0f33fd5492e8a2652a094793428acfffd4618977df1806f07ad59bfaf587b"
+    },
+    {
+      "bytes": 19908,
+      "path": "sources/src/backends/rust/owned-conversions.mjs",
+      "sha256": "5f26d7adac5e8da9072b93ffe9bf3a68b083c4178f4d752e5b381e7ae42c432d"
+    },
+    {
+      "bytes": 14740,
+      "path": "sources/src/backends/rust/owned-package.mjs",
+      "sha256": "c163b488e9e6af2cbb3da1cb62f4fe3863ae081837bbeb3b7ba5b9e43de456bc"
+    },
+    {
+      "bytes": 13084,
+      "path": "sources/src/backends/rust/owned-runtime.mjs",
+      "sha256": "d2dffdecc7ec7910ec01e9b0cffdfbe662ad34008c4882ca47b55524e7ad28de"
+    },
+    {
+      "bytes": 7470,
+      "path": "sources/src/backends/rust/owned-transfers.mjs",
+      "sha256": "066d037f54401e6e9a8c19cb4e24f034582e8e35d9b8d1a0878b7ff75f5db870"
+    },
+    {
+      "bytes": 8167,
+      "path": "sources/src/backends/rust/owned-values.mjs",
+      "sha256": "02f9e8292656e740cfbf8600b77b50361797eaf3787f92c653fbb4cfb81ec6e6"
+    },
+    {
+      "bytes": 2802,
+      "path": "sources/src/backends/rust/package-audit.mjs",
+      "sha256": "3894184d830b9cdc4c3f9f4f89eb910db6d0cce3021ce99848ff31f950295950"
+    },
+    {
+      "bytes": 9194,
+      "path": "sources/src/backends/wit/callable-graph-host.mjs",
+      "sha256": "9042da78089a3f19697873fb5d74314958719d26eccca62f9bb8ebc22d1407c4"
+    },
+    {
+      "bytes": 4941,
+      "path": "sources/src/backends/wit/callable-graph-model.mjs",
+      "sha256": "1048707183f89e7ecdbccda97d3ea2e5ada5eeff00cfaaf6aeacc9d2c74789c1"
+    },
+    {
+      "bytes": 10768,
+      "path": "sources/src/backends/wit/callable-graph-package.mjs",
+      "sha256": "0c3b42f95bf59f86cdacf5d32bc38fe95d8ea1a1f25d6a4434c20d4504509a76"
+    },
+    {
+      "bytes": 7109,
+      "path": "sources/src/backends/wit/callable-graph-session.mjs",
+      "sha256": "02c692f697493f3b1a8700f0a0a15bfbf73f42d2b201c1aec9b7b0271443d3c5"
+    },
+    {
+      "bytes": 9634,
+      "path": "sources/src/backends/wit/callable-graph-typed.mjs",
+      "sha256": "2202e97af44054883534800366210376632d6613deafe0ae6984c71f8982b948"
+    },
+    {
+      "bytes": 17095,
+      "path": "sources/src/backends/wit/callable-host-runtime.mjs",
+      "sha256": "850d18a375ec14fb64fe74e882b63bd25aed2af24d09144443651b8bc1542d97"
+    },
+    {
+      "bytes": 11509,
+      "path": "sources/src/backends/wit/callable-host.mjs",
+      "sha256": "14f2d11e90c495006bbd17ca4efd27306369b6d3893e990b90aae67d5d78ab54"
+    },
+    {
+      "bytes": 2317,
+      "path": "sources/src/backends/wit/callable-result-owners.mjs",
+      "sha256": "928649d840b3a58e665090767546436f87586c93d78afd4f81145309e7fe72bd"
+    },
+    {
+      "bytes": 6195,
+      "path": "sources/src/backends/wit/canonical-borrow-drops.mjs",
+      "sha256": "26efea8b738b2114734671689c0f11b02a091689a21a23211424cd60ffab61e2"
+    },
+    {
+      "bytes": 5091,
+      "path": "sources/src/backends/wit/copied-aliases.mjs",
+      "sha256": "bee5b067c84547858cc60186443d5ce6302684a72919f0ed82111d47831068f9"
+    },
+    {
+      "bytes": 13254,
+      "path": "sources/src/backends/wit/copied-component.mjs",
+      "sha256": "91aabbb9a0bb18a0c64854873b6f7651a24ea48dc714d59e8cb4988b7214b701"
+    },
+    {
+      "bytes": 14699,
+      "path": "sources/src/backends/wit/copied-conversions.mjs",
+      "sha256": "c9e56185eba0a61d8d5c4da006d2ce6a95fae28e932063dbfcb1b279b710f59d"
+    },
+    {
+      "bytes": 15584,
+      "path": "sources/src/backends/wit/copied-graph-conversions.mjs",
+      "sha256": "d286a618e0d6b3bade74971193e14e8931b4212e4b2a85d6824f6a0e5d25ec7d"
+    },
+    {
+      "bytes": 7646,
+      "path": "sources/src/backends/wit/copied-graph-host.mjs",
+      "sha256": "93793adf3ad900a6884b6a81c0f4cb080c6164691fc9601a4ce81f7973dee14f"
+    },
+    {
+      "bytes": 8114,
+      "path": "sources/src/backends/wit/copied-graph-model.mjs",
+      "sha256": "bdcbb56b3da131a6ec0fe8695187d75232c3ec832a43e5908d3757b8713cadcf"
+    },
+    {
+      "bytes": 8021,
+      "path": "sources/src/backends/wit/copied-graph-package.mjs",
+      "sha256": "6b1a5055f89bbaf9bea60a7fbda42202033659b23aa50405690bfa7702a6e083"
+    },
+    {
+      "bytes": 7928,
+      "path": "sources/src/backends/wit/copied-graph-runtime.mjs",
+      "sha256": "46f1ed791b12c94e1806f10b70107756494d39c69ff807d362908e38f77f5398"
+    },
+    {
+      "bytes": 9091,
+      "path": "sources/src/backends/wit/copied-host.mjs",
+      "sha256": "d93a198b62f7b70f3756abe6d305902abfb02087faca2b56fb063ef553c7bfdf"
+    },
+    {
+      "bytes": 14222,
+      "path": "sources/src/backends/wit/copied-model.mjs",
+      "sha256": "eee9f9a456a92bc4d9680e92afead3b27fe42e239d586cadc3af9c84926e85d0"
+    },
+    {
+      "bytes": 6423,
+      "path": "sources/src/backends/wit/copied-variants.mjs",
+      "sha256": "f8b69391bdd8c69ee5ea89d12e99432ad5a0eea145f637b4b15eefd7c6324239"
+    },
+    {
+      "bytes": 1557,
+      "path": "sources/src/backends/wit/fin-refinements.mjs",
+      "sha256": "8ddc9f4ce9d4bcf98d1abc269c93f11fb1366b92ae00de48547e9f255f9125f3"
+    },
+    {
+      "bytes": 7082,
+      "path": "sources/src/backends/wit/host-evidence.mjs",
+      "sha256": "c9fda8065d0797d7760a7c964719208c7f4261e8043c341c39206732242ca996"
+    },
+    {
+      "bytes": 4997,
+      "path": "sources/src/backends/wit/host-library-hash.mjs",
+      "sha256": "d6de6146e6ed9a94558930259f125d7bdee8cf72f3ec59fa411b1f26dded4e9a"
+    },
+    {
+      "bytes": 14520,
+      "path": "sources/src/backends/wit/owned-graph-conversions.mjs",
+      "sha256": "c6a9887cacbace9cc5046ede2ef18941051b78e078d3236e9cb35e263e2a49a7"
+    },
+    {
+      "bytes": 9427,
+      "path": "sources/src/backends/wit/owned-graph-model.mjs",
+      "sha256": "4ee7237206fa48af6ffb59c737250d96d8071e291b9dd526eb72afefd43ef729"
+    },
+    {
+      "bytes": 10988,
+      "path": "sources/src/backends/wit/owned-graph-runtime.mjs",
+      "sha256": "3ff6e6caea209aae3e2ee689696efd8ff14418074f3b169bb170450a4b008d85"
+    },
+    {
+      "bytes": 7195,
+      "path": "sources/src/backends/wit/owned-graph-types.mjs",
+      "sha256": "359b67b97d07a9676d79feb1c4b6d39b5c659094a616b02bc7ae420b274a2ae6"
+    },
+    {
+      "bytes": 3578,
+      "path": "sources/src/backends/wit/owned-host-evidence.mjs",
+      "sha256": "288118077199b286e47eeb4859dcd75860a500cf29e36ca79cf56174219fae7d"
+    },
+    {
+      "bytes": 5515,
+      "path": "sources/src/backends/wit/owned-native-host.mjs",
+      "sha256": "d0acefa958555953ad90543d78a5205bda6f7faea133c8de3e18bc312a8af35f"
+    },
+    {
+      "bytes": 13276,
+      "path": "sources/src/backends/wit/owned-native-resources.mjs",
+      "sha256": "d3619db471e21acf60b56d65d73db060e8e627882391e384c6ffd6a933d3adc5"
+    },
+    {
+      "bytes": 2794,
+      "path": "sources/src/backends/wit/owned-package.mjs",
+      "sha256": "84531aba24093681dbd9adce13e17a9b8b13683ac0ccfc7b5b8662f043a85cd0"
+    },
+    {
+      "bytes": 11970,
+      "path": "sources/src/backends/wit/owned-session.mjs",
+      "sha256": "6a5a2316c6b09da8e6f942c62e60f1ef71366eff84ad0692fc23b1c055c1968f"
+    },
+    {
+      "bytes": 9938,
+      "path": "sources/src/binding-ir/canonical.mjs",
+      "sha256": "28e22e614fc532a99baeeb34ee9d054f3bc6db82239fa89059a9518cb06d3d20"
+    },
+    {
+      "bytes": 46487,
+      "path": "sources/src/binding-ir/contract.mjs",
+      "sha256": "51f39115f198cadb22edcee1bc09d9205024c1ba622f86588056bca7aac6faf6"
+    },
+    {
+      "bytes": 3297,
+      "path": "sources/src/binding-ir/sha256.mjs",
+      "sha256": "f9bcbce580e88f31c3a63e8aa0d1d834228afa796a74a4c2f708da68e99a15ac"
+    },
+    {
+      "bytes": 1673,
+      "path": "sources/src/build/build-error.mjs",
+      "sha256": "a4a34b25823d89e2cf6a5b53c60e0c161cae125b5b5b6e87f965fab7de616d41"
+    },
+    {
+      "bytes": 44779,
+      "path": "sources/src/build/canonical-build.mjs",
+      "sha256": "b138fc2f2bd26ed473cf98bb54ba81a14f47a7aa919209e48f9c81314f6d6c06"
+    },
+    {
+      "bytes": 6632,
+      "path": "sources/src/build/compile-jvm-sources.mjs",
+      "sha256": "3006f6fd85211daf7c21e5e79b6373d46b2952f1b7d9d0fea04e98e533da6402"
+    },
+    {
+      "bytes": 26678,
+      "path": "sources/src/build/compiler-adapters.mjs",
+      "sha256": "e07a504718e76fb2e220e7a10014d209cfd3964d8d4eced3d49edc7274c4b52f"
+    },
+    {
+      "bytes": 15873,
+      "path": "sources/src/build/component-callable-adapters.mjs",
+      "sha256": "9069b7342c53a943cdb9e85f3a79943a6298772fb8699c0f5f85f9580ced6cbc"
+    },
+    {
+      "bytes": 23426,
+      "path": "sources/src/build/component-compilation-plan.mjs",
+      "sha256": "9b170734a4d90b64a786da204d778928338347ff4492b4a72dc23273ac8de4fa"
+    },
+    {
+      "bytes": 11375,
+      "path": "sources/src/build/component-engine-failure.mjs",
+      "sha256": "85789b70f96e0b319c409c86e0bb2897efe7f2f1512c5398fe9153d88dd14ea9"
+    },
+    {
+      "bytes": 3012,
+      "path": "sources/src/build/component-fin-guards.mjs",
+      "sha256": "c8aa6218488c0d8010eed23fcf98d22efaa7007791adbfe7d8fd29669af5451c"
+    },
+    {
+      "bytes": 11175,
+      "path": "sources/src/build/component-plan.mjs",
+      "sha256": "7d27f975569489891832df0e6ed85208077d3403fa91ab40ee7ca500c0726bc1"
+    },
+    {
+      "bytes": 24832,
+      "path": "sources/src/build/component-record-adapters.mjs",
+      "sha256": "3fd03b301b7038ec1101a33ea8626e2aad61446a09385df90ff4493ed3c882ef"
+    },
+    {
+      "bytes": 13565,
+      "path": "sources/src/build/component-recursive-lean.mjs",
+      "sha256": "7338df31e23f594ba2e5a519c8989c739b6fbac0ad82c1d51892964b8ea580e6"
+    },
+    {
+      "bytes": 12855,
+      "path": "sources/src/build/component-refinement-mirrors.mjs",
+      "sha256": "d23d883ab69257ce033f0d6aa7b4ae8918da094843129329d02aba3f1943f53f"
+    },
+    {
+      "bytes": 9673,
+      "path": "sources/src/build/component-refinements.mjs",
+      "sha256": "424d53a08172711e2213e787a4caeee7db843242059c88e3b6c6ec431a5b46a4"
+    },
+    {
+      "bytes": 4168,
+      "path": "sources/src/build/component-scalar-adapters.mjs",
+      "sha256": "483cbbb18a5eabc03d5a03df03f2a3634ab337aa0d35aa40e3db2520157862e6"
+    },
+    {
+      "bytes": 4392,
+      "path": "sources/src/build/component-structured-callable-defaults.mjs",
+      "sha256": "fd71f5eaf447ba1c2ce685c25c15bd1a8007b87ccaf191861a06d17cda54ff69"
+    },
+    {
+      "bytes": 9166,
+      "path": "sources/src/build/component-structured-callable-lean.mjs",
+      "sha256": "c9203867763fdb97339cb69b6f38f914d3b9845c031399f16963ee519201287d"
+    },
+    {
+      "bytes": 3419,
+      "path": "sources/src/build/cpan-projection.mjs",
+      "sha256": "04ea1433b30fbe02618bef171ecf0e2a63ab7422a194bcb1c8ce467a001aeb7e"
+    },
+    {
+      "bytes": 20295,
+      "path": "sources/src/build/elaborated-component.mjs",
+      "sha256": "531dd6b840e32fadad8e7e3f380143c05f07211c02fb30ff43fb05990aa37025"
+    },
+    {
+      "bytes": 21220,
+      "path": "sources/src/build/engine-execution-request.mjs",
+      "sha256": "361a725715e6f949f600f2f504a5ee538b87302e19a942f3bd2ba4e7558e4e5e"
+    },
+    {
+      "bytes": 9918,
+      "path": "sources/src/build/javascript-wasm-owned-artifacts.mjs",
+      "sha256": "52bd8ea7b88b12d4c61005a0d9dbf2af17181a62e0db38936ac613d8ef3c851b"
+    },
+    {
+      "bytes": 8744,
+      "path": "sources/src/build/javascript-wasm-owned-component.mjs",
+      "sha256": "c5b7532c7d693bc2a652295764e0a0fc06ff60e89c290503ad74400edbc3a7d4"
+    },
+    {
+      "bytes": 12358,
+      "path": "sources/src/build/javascript-wasm-owned-engine.mjs",
+      "sha256": "5b8c78f64bc61c8e7751848c3f47b32b3476097c557e95ee4ecac8562646767a"
+    },
+    {
+      "bytes": 4893,
+      "path": "sources/src/build/javascript-wasm-owned-isolated.mjs",
+      "sha256": "ce02f84890b2e75fb86d0835af4b478d7410c4d8fcc481cf3d53eac7255250dc"
+    },
+    {
+      "bytes": 3868,
+      "path": "sources/src/build/javascript-wasm-owned-model.mjs",
+      "sha256": "6fa843ff2f3477c136f4a61fb934e16d8eada580e46c565eb543f2fb5586cc6a"
+    },
+    {
+      "bytes": 2048,
+      "path": "sources/src/build/javascript-wasm-owned-output.mjs",
+      "sha256": "3bb67f8d53eae016b20151bb15ccfdb67ab82ff3d9d10cd60a144ea8b94c54bf"
+    },
+    {
+      "bytes": 11814,
+      "path": "sources/src/build/javascript-wasm-owned-project.mjs",
+      "sha256": "3bce675213d4137baac365ebab4462c030c58887dd7cdb9c911f47ec82473fb8"
+    },
+    {
+      "bytes": 4098,
+      "path": "sources/src/build/javascript-wasm-owned-sources.mjs",
+      "sha256": "9d56cabcec252c734b0bcf4eb2e82d4041bc6d4d78b726783b3eb62e08e110aa"
+    },
+    {
+      "bytes": 6279,
+      "path": "sources/src/build/javascript-wasm-toolchain.mjs",
+      "sha256": "770551843327b18b17ca72ab9daed511f9460425e2f016013e130905fc1edf1b"
+    },
+    {
+      "bytes": 3089,
+      "path": "sources/src/build/lake-build-workspace.mjs",
+      "sha256": "fabd63e61a3804e973372454554ae869f22631cd4e3265f924ce70a38a18c5f8"
+    },
+    {
+      "bytes": 34186,
+      "path": "sources/src/build/lake-dependency-snapshot.mjs",
+      "sha256": "edf7e2d7aa98ed6e16c86e137ad760da0a08824db058d1d90a809cb270bdd5d9"
+    },
+    {
+      "bytes": 9637,
+      "path": "sources/src/build/lake-entry-intent.mjs",
+      "sha256": "1f51fea3efb9c0bdc4212570c37f3e8f829517bcb20f459281857f5f7f0d8b81"
+    },
+    {
+      "bytes": 3337,
+      "path": "sources/src/build/lake-entry-modules.mjs",
+      "sha256": "5dfe232855bccf9875e82b0a2ce4ed264b0f39d1b8c5b1a65db82d8e5d0d95fb"
+    },
+    {
+      "bytes": 26661,
+      "path": "sources/src/build/lake-generated-workspace.mjs",
+      "sha256": "5485851ff9a54a7d5a98ea9201829786b54484ba57f3f39a0142ea445b0c1908"
+    },
+    {
+      "bytes": 17097,
+      "path": "sources/src/build/lake-generator-prerequisites.mjs",
+      "sha256": "b38ac2c92fd6f7fa4d9d3a21a4781958fb78d4bd181afcaf451e1163f5e21820"
+    },
+    {
+      "bytes": 22877,
+      "path": "sources/src/build/lake-generators.mjs",
+      "sha256": "7e14cd0fea2f6c717f195c765cbc55a4a3458658f4035f091e7725f950f7284f"
+    },
+    {
+      "bytes": 13879,
+      "path": "sources/src/build/lake-native-inputs.mjs",
+      "sha256": "fd2fc0a5e736dbd750776889afc08d01d039a4608c51f1b49f778e0bdb0cc81f"
+    },
+    {
+      "bytes": 15078,
+      "path": "sources/src/build/lake-workspace.mjs",
+      "sha256": "74d9fb9fe0a66fabdf0fcfc51aff42df61d73b0747657e341bc140b0fa0a23f5"
+    },
+    {
+      "bytes": 18010,
+      "path": "sources/src/build/multi-profile-project.mjs",
+      "sha256": "237a5f22906a58731e49959c94fdbed546351a788ce2f14c3cd2733685b360df"
+    },
+    {
+      "bytes": 1786,
+      "path": "sources/src/build/native-allocation-guard.mjs",
+      "sha256": "8afef64367c009b05953a08b4a92d97c0a2f5fc7b47443ff2051784394f2c174"
+    },
+    {
+      "bytes": 12774,
+      "path": "sources/src/build/native-artifacts.mjs",
+      "sha256": "71c358f5fbc4326537384b31a6d424cdedc4bf2455525d25f348c71af9299613"
+    },
+    {
+      "bytes": 15034,
+      "path": "sources/src/build/native-c-projection.mjs",
+      "sha256": "2e9b44c74bc79ea53bc4d93bac0721371576c627f62b12623044f21c317e9c67"
+    },
+    {
+      "bytes": 4561,
+      "path": "sources/src/build/native-callable-graph.mjs",
+      "sha256": "579ae663754e27b166500b6701bfefab2ad0ba16c69fb7e4cb24d34b904624e8"
+    },
+    {
+      "bytes": 12579,
+      "path": "sources/src/build/native-component.mjs",
+      "sha256": "2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867"
+    },
+    {
+      "bytes": 3384,
+      "path": "sources/src/build/native-dotnet-artifacts.mjs",
+      "sha256": "6f99f52f9216cf4bd040aee0f5b82f60d88755da6261a48604ffc69220ddf1b3"
+    },
+    {
+      "bytes": 4505,
+      "path": "sources/src/build/native-dotnet-projection.mjs",
+      "sha256": "b193f3b7fa86bcf8c7ad976922fcdac84528b30872a8c0ba827d1c60d88f1597"
+    },
+    {
+      "bytes": 3697,
+      "path": "sources/src/build/native-gmp.mjs",
+      "sha256": "77a8530b302a202dbcfd050666de3699307704f3ae7011c1410be2c6faafce1c"
+    },
+    {
+      "bytes": 11579,
+      "path": "sources/src/build/native-graph-model.mjs",
+      "sha256": "14fca0d2c8eb7bfd17dbbd1c2381d7bf0b416576e0cb69d43a2eb628d0b4ded5"
+    },
+    {
+      "bytes": 5807,
+      "path": "sources/src/build/native-graph-projection.mjs",
+      "sha256": "3ae14d2743f83b3102384697b6733b17ed117f3325354a94008ea8ff13c0fe2b"
+    },
+    {
+      "bytes": 1821,
+      "path": "sources/src/build/native-graph-sources.mjs",
+      "sha256": "958c9e237e362243936c030bdb3fda500ad6e85428ef14f022d697f81e75d5da"
+    },
+    {
+      "bytes": 3440,
+      "path": "sources/src/build/native-jvm-artifacts.mjs",
+      "sha256": "e60076860021983a46fefe2fb2cb22c218b915bf8b13753c083db3ef0150ee81"
+    },
+    {
+      "bytes": 3075,
+      "path": "sources/src/build/native-jvm-projection.mjs",
+      "sha256": "49187b08795c0a7e1c05179d8a6651b7308498685c035290def5699ee300ae86"
+    },
+    {
+      "bytes": 37483,
+      "path": "sources/src/build/native-model.mjs",
+      "sha256": "9ef30755679a2dd205a5eeeb2dade17259c7ed67c605208458792eb3ca83da7c"
+    },
+    {
+      "bytes": 3473,
+      "path": "sources/src/build/native-php-artifacts.mjs",
+      "sha256": "f918a4a6031de9a419062dfe4276181c98bd8f7ea7ff3d4c2ae29f8749983a24"
+    },
+    {
+      "bytes": 17169,
+      "path": "sources/src/build/native-project.mjs",
+      "sha256": "b941e848c291a05a4fab3e93f2d9f5d3a5c9380f9a290c5668378c05ae5b5cf7"
+    },
+    {
+      "bytes": 3402,
+      "path": "sources/src/build/native-python-artifacts.mjs",
+      "sha256": "63c1ca8f03b289ca8064710d9ccd6a0c6c0a311d57b577333b8372ca51e23561"
+    },
+    {
+      "bytes": 3459,
+      "path": "sources/src/build/native-ruby-artifacts.mjs",
+      "sha256": "296ccf9cbafd02ff8a0c0f8e4608c40e5379a681a2682ea795af818af65e4145"
+    },
+    {
+      "bytes": 3376,
+      "path": "sources/src/build/native-rust-artifacts.mjs",
+      "sha256": "85ca9fe5176ee629cb77455672da02da25b07f5751a9ea52d84ba6e1a4f5c04d"
+    },
+    {
+      "bytes": 4361,
+      "path": "sources/src/build/native-rust-projection.mjs",
+      "sha256": "1ecd4297d3c0eff24a6e7a832da09c4b141906b686a03338058d8e49d72efefb"
+    },
+    {
+      "bytes": 3298,
+      "path": "sources/src/build/native-wit-artifacts.mjs",
+      "sha256": "6ba23b3b290a571e903db62dcfb22a2ead78c237fb06b9f71e155f7f50816d8a"
+    },
+    {
+      "bytes": 6543,
+      "path": "sources/src/build/native-wit-projection.mjs",
+      "sha256": "2154c3c3752f39547d1cdeeee4ebed6cb3579513ecbf7d293eee26ed46877397"
+    },
+    {
+      "bytes": 12680,
+      "path": "sources/src/build/owned-aggregate-carriers.mjs",
+      "sha256": "3b240658392b8614acc73d8f7b217fd4c3a2685fdbc3904fc9afaff5aa17e7b7"
+    },
+    {
+      "bytes": 9300,
+      "path": "sources/src/build/owned-c-projection.mjs",
+      "sha256": "e62cfa5d080085ab513ac7350f5aec4bb458656c97c446e6fb361446eab4f42f"
+    },
+    {
+      "bytes": 6500,
+      "path": "sources/src/build/owned-callback-carriers.mjs",
+      "sha256": "a2bb7ddcb79b242ba7330541d9df52a706afbfeca2d8be31935de6fcaee0abe3"
+    },
+    {
+      "bytes": 7540,
+      "path": "sources/src/build/owned-dotnet-artifacts.mjs",
+      "sha256": "5439794c1cae9f57911e1163bec949dca48e0a4773f957fb7225f333fb0cff42"
+    },
+    {
+      "bytes": 9258,
+      "path": "sources/src/build/owned-dotnet-projection.mjs",
+      "sha256": "72bf9421dd11c3df7576cd1f631b563d78f43c83a56273613ea9e79634197fe9"
+    },
+    {
+      "bytes": 7495,
+      "path": "sources/src/build/owned-jvm-artifacts.mjs",
+      "sha256": "a565cc9b2d2c42a73f940aaea3f3a306c92c239533394d6c0973fc8e3d5fc23e"
+    },
+    {
+      "bytes": 7796,
+      "path": "sources/src/build/owned-jvm-projection.mjs",
+      "sha256": "e9e1b07dec2e40d88ed36eafb03b999470b8ab9f6a7d0f15db1be31d91e8a055"
+    },
+    {
+      "bytes": 11804,
+      "path": "sources/src/build/owned-native-model.mjs",
+      "sha256": "658b370775befe1f17e6b76450978fab5d43591932311f62bb8cc99abb556034"
+    },
+    {
+      "bytes": 2017,
+      "path": "sources/src/build/owned-perl-artifacts.mjs",
+      "sha256": "3d52c0dfcd8954d4e74b1b763fe808af889a58e322274f5325e11f49de4b840a"
+    },
+    {
+      "bytes": 2393,
+      "path": "sources/src/build/owned-perl-projection.mjs",
+      "sha256": "2950f93c4b34f643e74f5125fb05d45ee97e091ebcecdf0f136fd02a43cd25e1"
+    },
+    {
+      "bytes": 8155,
+      "path": "sources/src/build/owned-php-artifacts.mjs",
+      "sha256": "4a355fed42a9280a452dd993b68c034d7ab6b084705b93f329774c47190259b7"
+    },
+    {
+      "bytes": 5976,
+      "path": "sources/src/build/owned-php-projection.mjs",
+      "sha256": "ffd32e0fae87bf832c52ad5e405ef6d089e0be606b383273c3bc3113b84669fc"
+    },
+    {
+      "bytes": 5983,
+      "path": "sources/src/build/owned-python-artifacts.mjs",
+      "sha256": "3870d4325b33abca2f9fa938f625454e983407bc4128439e7d5e7a0699bab861"
+    },
+    {
+      "bytes": 7337,
+      "path": "sources/src/build/owned-ruby-artifacts.mjs",
+      "sha256": "f33b7afa279370e05c4a89f5718b77db3e9f44feee82b1492b5915a176e869f1"
+    },
+    {
+      "bytes": 6177,
+      "path": "sources/src/build/owned-ruby-projection.mjs",
+      "sha256": "fc2ea34c5a2a051a25462e304b254fab028b648929f04d6ce36406878dd0400b"
+    },
+    {
+      "bytes": 6180,
+      "path": "sources/src/build/owned-rust-artifacts.mjs",
+      "sha256": "f8c9e99a50179a27a2272c97bb1b6b68e095d4b2a84a0fd64e70f28a7957f383"
+    },
+    {
+      "bytes": 3866,
+      "path": "sources/src/build/owned-rust-projection.mjs",
+      "sha256": "b4364d3cdab4b3cfb1f4a6619fbbaa4b1df61fae2ae81397650d1b650c61a489"
+    },
+    {
+      "bytes": 9681,
+      "path": "sources/src/build/owned-wit-artifacts.mjs",
+      "sha256": "8d9fea68a5be17a3719167e0ad513db9458fc22db2be159009e28279bba42a22"
+    },
+    {
+      "bytes": 5617,
+      "path": "sources/src/build/owned-wit-projection.mjs",
+      "sha256": "d5b43577c4f54676099a78f990da73f1f261979991853d133d0dc31b1687bfa3"
+    },
+    {
+      "bytes": 2121,
+      "path": "sources/src/build/perl-xs.mjs",
+      "sha256": "3ee79018362d3b99ae5fa351351f3d2160dc12ff35edb82707e5092be6cb8836"
+    },
+    {
+      "bytes": 11312,
+      "path": "sources/src/build/php-wasm-copied-artifacts.mjs",
+      "sha256": "c6d31833738b791ac43e9ec970cbbd75830658b040cd8ef2cd3467c4a04ba3fe"
+    },
+    {
+      "bytes": 16599,
+      "path": "sources/src/build/php-wasm-copied-component.mjs",
+      "sha256": "1820fa19a86f827e378334e847cebe9511863401b08a5e9c2e60c72bf09cc7ae"
+    },
+    {
+      "bytes": 3537,
+      "path": "sources/src/build/php-wasm-graph-component.mjs",
+      "sha256": "07bce68fce50f40d8478e8b16ffb335f65dc225ea986cae964c7bf345dc8f3e1"
+    },
+    {
+      "bytes": 9263,
+      "path": "sources/src/build/php-wasm-graph-model.mjs",
+      "sha256": "6ae564fb2e00c9bca0119adaf57f719df3f9c9d90ac675bbad451e4adb992aea"
+    },
+    {
+      "bytes": 4863,
+      "path": "sources/src/build/php-wasm-owned-component.mjs",
+      "sha256": "621ebdc84690649b581d4726c004a4a758533e3636de0f5ff032da4b9b768189"
+    },
+    {
+      "bytes": 4360,
+      "path": "sources/src/build/php-wasm-owned-model.mjs",
+      "sha256": "01d42781c1c1ebbc989e9846de8636d04e43b88dab2aecbb91e9faa9285c6b55"
+    },
+    {
+      "bytes": 9331,
+      "path": "sources/src/build/php-wasm-project.mjs",
+      "sha256": "e6f2427cfd3bba1de6a07a8baad8df687b006e9a6fea2bdc819a2ff6e214cdea"
+    },
+    {
+      "bytes": 2849,
+      "path": "sources/src/build/process-runner.mjs",
+      "sha256": "173a41bf2009d62c2040cb05d5720bf909907ab0e9a6f56167af751cb51e5b94"
+    },
+    {
+      "bytes": 7467,
+      "path": "sources/src/build/refinement-mirrors.mjs",
+      "sha256": "27e7219ee097ec6b90ae8c4a270295feb55d87099815bce9bbaee97cdc9ff6cc"
+    },
+    {
+      "bytes": 19177,
+      "path": "sources/src/capsule/contract.mjs",
+      "sha256": "590f6758e4b25f7a73e04333276facec891fd26debd2fa5621e183b27ca6082f"
+    },
+    {
+      "bytes": 3332,
+      "path": "sources/src/capsule/node.mjs",
+      "sha256": "2ffbff5c27dbdd89fac9dd6ce5a1a3082430c9bdfbdcc3908941eaf1d009fb1b"
+    },
+    {
+      "bytes": 5360,
+      "path": "sources/src/release/backend-policy.mjs",
+      "sha256": "749dcb16c137486bc302e17eea677221fb05ece13a782587ee01d47bd96cb4ec"
+    },
+    {
+      "bytes": 13287,
+      "path": "sources/src/release/c-family-package.mjs",
+      "sha256": "80888fb6f0c6e15425e7c05d626344dd805f2f9dbd9ac099215c63b85d4a09f6"
+    },
+    {
+      "bytes": 2354,
+      "path": "sources/src/release/canonical-bundle-input.mjs",
+      "sha256": "32c5449edcc07616d4701e566b9771514e56594e402551e6720f6f90f9627267"
+    },
+    {
+      "bytes": 20377,
+      "path": "sources/src/release/canonical-package-manifest.mjs",
+      "sha256": "66fad7ad5722cfea609d54dd3147a9359c5a0d724ee58c49cb33826df2d6d3cf"
+    },
+    {
+      "bytes": 7023,
+      "path": "sources/src/release/cargo-package.mjs",
+      "sha256": "31c7f4b102d5b112692cabded1d5b9313b0bd9149b7371d503495ce688edc8e2"
+    },
+    {
+      "bytes": 25664,
+      "path": "sources/src/release/component-npm-package.mjs",
+      "sha256": "f7c4e8196814cdb6dafe16173740f762c9bf2208b6fa10650be8855f12b1b3c4"
+    },
+    {
+      "bytes": 8610,
+      "path": "sources/src/release/component-package-receipt.mjs",
+      "sha256": "76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"
+    },
+    {
+      "bytes": 17790,
+      "path": "sources/src/release/component-release-bundle.mjs",
+      "sha256": "9d409d0c9582ada3d7e64f0f17ac53311c9967e10c66ae53371947768e50a439"
+    },
+    {
+      "bytes": 1190,
+      "path": "sources/src/release/component-runtime-root.mjs",
+      "sha256": "8efd9788fd7ab1136bda9f5101139ed8423d826e2f88d5c63eee7c0faac92440"
+    },
+    {
+      "bytes": 1923,
+      "path": "sources/src/release/cpan-install.mjs",
+      "sha256": "1b19d72d6926f9b23ff7d5b6f325bc21c60934214d28cdd3f53e2c1fd819a10f"
+    },
+    {
+      "bytes": 20490,
+      "path": "sources/src/release/cpan-package.mjs",
+      "sha256": "b0fffc682d28c55dd38ad36cc507a8c719d3223a0a510e1f19573b4d477e1636"
+    },
+    {
+      "bytes": 5400,
+      "path": "sources/src/release/deterministic-archive.mjs",
+      "sha256": "cb8a2db8a3679fa14405ebfd8e374932321c8053060359828f2be870a04b8235"
+    },
+    {
+      "bytes": 4346,
+      "path": "sources/src/release/deterministic-zip.mjs",
+      "sha256": "d4ad36273ade6791a45c2952fe6b0e55fc048851e6913cd8e842313838798244"
+    },
+    {
+      "bytes": 7984,
+      "path": "sources/src/release/javascript-wasm-compiler-inputs.mjs",
+      "sha256": "0bfc0a0546581e5fbab33afc6c614dbb2e16154cd7a271a6df850bed28733718"
+    },
+    {
+      "bytes": 7658,
+      "path": "sources/src/release/managed-registry-package.mjs",
+      "sha256": "9a96883f9b7f6bcb949ea63a75456178fea114cce5a24ee9501d260f6f185d92"
+    },
+    {
+      "bytes": 4454,
+      "path": "sources/src/release/maven-package.mjs",
+      "sha256": "d19aca27b2d634dbb96b7e7deaa5860b5ffff61ba8d66d4d3ec2689e6587712e"
+    },
+    {
+      "bytes": 24893,
+      "path": "sources/src/release/native-c-family.mjs",
+      "sha256": "5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a"
+    },
+    {
+      "bytes": 6117,
+      "path": "sources/src/release/native-cargo.mjs",
+      "sha256": "518df05ec278196f508cd77eaf616db764c60dbc4269fa9c9d5d29a7c59d2818"
+    },
+    {
+      "bytes": 6373,
+      "path": "sources/src/release/native-composer.mjs",
+      "sha256": "40f64a230fafb4ddb477d99df2ce357532ff4448511ddd68276a83e16a0a8816"
+    },
+    {
+      "bytes": 8767,
+      "path": "sources/src/release/native-maven.mjs",
+      "sha256": "ca4ac5403b4ba8a6ef237f74ef84f573a13661d414c3129bc06c8ffc0fd60f3a"
+    },
+    {
+      "bytes": 8479,
+      "path": "sources/src/release/native-nuget.mjs",
+      "sha256": "da154e0b96bcbff3d813a58b722c1f92019082a224ff8ba96a1ddd5fdd5fd861"
+    },
+    {
+      "bytes": 7584,
+      "path": "sources/src/release/native-pypi.mjs",
+      "sha256": "b23497950d6dda57ac82fb81fdaaa8a8736327da06b3d614c137fe686dbf48ba"
+    },
+    {
+      "bytes": 8171,
+      "path": "sources/src/release/native-rubygems.mjs",
+      "sha256": "5f4451473d73e8b5224e23c0e1107436dbfe117fa2261292426a80ce6b7b44bb"
+    },
+    {
+      "bytes": 18403,
+      "path": "sources/src/release/native-wasi.mjs",
+      "sha256": "e92de6958b36809dd7a406a8c36e2da5d0324cf5186475fcec6ea2a545bf8610"
+    },
+    {
+      "bytes": 10658,
+      "path": "sources/src/release/npm-package.mjs",
+      "sha256": "45ff55e97b91c03d7af35370b87796fa22317db5bd3350807987ef93160b7190"
+    },
+    {
+      "bytes": 4597,
+      "path": "sources/src/release/nuget-package.mjs",
+      "sha256": "c74225c0448507b5c606f3bbc6010b23148343b32fe86e01b4276fdf33253a37"
+    },
+    {
+      "bytes": 25529,
+      "path": "sources/src/release/owned-c-package.mjs",
+      "sha256": "1ee621075db2d4e2713f26bc4001b4c9c77bf95ffb4416aed33e1b1cfcedf9ba"
+    },
+    {
+      "bytes": 6791,
+      "path": "sources/src/release/owned-cargo.mjs",
+      "sha256": "7376102a20bc392d0341ee79ccb4e67838d180d62cfa55b329ad19884081ff1f"
+    },
+    {
+      "bytes": 6317,
+      "path": "sources/src/release/owned-composer.mjs",
+      "sha256": "2ab5483a2a952e7846422e2fd7f6bda9c1606294182a5d51c73fc797c188e963"
+    },
+    {
+      "bytes": 6702,
+      "path": "sources/src/release/owned-cpan-contract.mjs",
+      "sha256": "60c265e865021e425f5846d04d889be108cd711fd35f06dc40f6da233052c49a"
+    },
+    {
+      "bytes": 11166,
+      "path": "sources/src/release/owned-javascript-npm-package.mjs",
+      "sha256": "b0626b3297b641c8db08666e6a5a5227fbb610aca06a07aedbf2f502f2b60689"
+    },
+    {
+      "bytes": 3198,
+      "path": "sources/src/release/owned-javascript-release-evidence.mjs",
+      "sha256": "6d9d795e02bfe04cbb6ae240b20cd0d17fcc578b25d032cc4a1157deb4651cdf"
+    },
+    {
+      "bytes": 9766,
+      "path": "sources/src/release/owned-maven.mjs",
+      "sha256": "5796e3f1283f6c4318a98a50d41f71e1d85f07e79fc892806690440835cee809"
+    },
+    {
+      "bytes": 8856,
+      "path": "sources/src/release/owned-nuget.mjs",
+      "sha256": "4a59ba566d760d2d8d9f7b48e29825aaa8d3764830e197980073fd9f9e6bd058"
+    },
+    {
+      "bytes": 7977,
+      "path": "sources/src/release/owned-pypi.mjs",
+      "sha256": "57d1bc025d7d556d560a1f15949dea9ce032013eb44f0ee48e9302b7191a0f32"
+    },
+    {
+      "bytes": 7884,
+      "path": "sources/src/release/owned-rubygems.mjs",
+      "sha256": "3201dc9fde051691ff32aeddfda2f8b5a1c366d9487aae2a8342aa157520cde4"
+    },
+    {
+      "bytes": 17026,
+      "path": "sources/src/release/owned-wasi.mjs",
+      "sha256": "84c27f568142791171dfcbbde7d2083d92a24add04be0ca7e9f440ead6dfe139"
+    },
+    {
+      "bytes": 6020,
+      "path": "sources/src/release/package-set-assembly.mjs",
+      "sha256": "a4b6c8375b0962c2c4e071c0d38ef30348ad672e1256feeb47b2c16829f71b9c"
+    },
+    {
+      "bytes": 14878,
+      "path": "sources/src/release/package-set-receipt.mjs",
+      "sha256": "d0b945554b03e9d0f93149b12ddf808c33243cbb0ff5495a7a8a68e683fc71ed"
+    },
+    {
+      "bytes": 14883,
+      "path": "sources/src/release/php-wasm-compiler-inputs.mjs",
+      "sha256": "c5dc903e9fb0ef137880a747ff7d0988601d870bdc3a7b19f59d251520d1a660"
+    },
+    {
+      "bytes": 30894,
+      "path": "sources/src/release/php-wasm-copied-package.mjs",
+      "sha256": "2cda0775c0dd22b6d27e190829f6cf9a9e07666b12af065c5ff8ac56c2c7a06b"
+    },
+    {
+      "bytes": 10456,
+      "path": "sources/src/release/pypi-package.mjs",
+      "sha256": "fb82696c87f44f3a8bb3b0ae6bad068297b8a9b4db325c0f277190878e51baed"
+    },
+    {
+      "bytes": 17152,
+      "path": "sources/src/release/release-rehearsal.mjs",
+      "sha256": "533f6650466bbe751fb374b144909bb886f181500be3e6c9a69a8edc7f0bb63e"
+    },
+    {
+      "bytes": 4396,
+      "path": "sources/src/release/rubygems-package.mjs",
+      "sha256": "2b5ce444b519905004610baf65a7214e27a89e87dc75f421db408f7c6041053c"
+    },
+    {
+      "bytes": 9764,
+      "path": "sources/src/release/source-notices.mjs",
+      "sha256": "a9a185b8bbe109d7dfe9d8b10e408f661434c75df3fef2f0689d2fc34b21dee9"
+    },
+    {
+      "bytes": 4403,
+      "path": "sources/src/release/wasi-package.mjs",
+      "sha256": "bed6e7da12d2c77a3ee559f4f66633c79ee98382414847e21e3ee2abfd364144"
+    },
+    {
+      "bytes": 13995,
+      "path": "sources/tests/fixtures/nominal-primitive-subtype-consumers/php-native.php",
+      "sha256": "ffed5238c391f5e41f99d844e690ec968d9cca3dcc1394107f922792cbb60cc7"
+    },
+    {
+      "bytes": 99,
+      "path": "sources/tests/fixtures/onboarding/nominal-primitive-subtypes/lakefile.toml",
+      "sha256": "80a574337b857f079884d006450abd9beb03a6876e94477cc9e37dd874d60f8f"
+    },
+    {
+      "bytes": 25,
+      "path": "sources/tests/fixtures/onboarding/nominal-primitive-subtypes/lean-toolchain",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "bytes": 1093,
+      "path": "sources/tests/fixtures/onboarding/nominal-primitive-subtypes/LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 10863,
+      "path": "sources/tests/fixtures/onboarding/nominal-primitive-subtypes/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 70,
+      "path": "sources/tests/fixtures/onboarding/nominal-primitive-subtypes/package.json",
+      "sha256": "2f18e34a4ba6695d28783cae8edd55376bcc02a409b11e56933e016a6a1a5e96"
+    },
+    {
+      "bytes": 15132,
+      "path": "sources/tests/fixtures/type-corpus/cases.mjs",
+      "sha256": "30615735b9fa8af40a2d40cf645fb22ad3679b57abc3951e18395eaa5f2b5d10"
+    },
+    {
+      "bytes": 3926,
+      "path": "sources/tests/helpers/brick-math.mjs",
+      "sha256": "ca360a3ecce5717a4d495459cfb09d6dba0f075393a28c91d2f725a2c8691eb6"
+    },
+    {
+      "bytes": 15505,
+      "path": "sources/tests/helpers/copied-fixture-install.mjs",
+      "sha256": "dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df"
+    },
+    {
+      "bytes": 12816,
+      "path": "sources/tests/helpers/copied-fixture-php-wasm.mjs",
+      "sha256": "eb2a38bc4ed3acab22277d871d036fa25a8e32986f29f87b2ad4f6c13cd1e579"
+    },
+    {
+      "bytes": 3737,
+      "path": "sources/tests/helpers/fin-product-install.mjs",
+      "sha256": "74f6f2b12fb89ab0e1b7cf26d985a57b63fa6249298aba48e22175389e90b640"
+    },
+    {
+      "bytes": 4128,
+      "path": "sources/tests/helpers/fin-record-install.mjs",
+      "sha256": "f47a2cf7290887d2ac09a37e873d89fa575687ec5d9228c05ce904de35259227"
+    },
+    {
+      "bytes": 9902,
+      "path": "sources/tests/helpers/lake-workspace.mjs",
+      "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082"
+    },
+    {
+      "bytes": 9439,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-fixture.mjs",
+      "sha256": "5b958fdff2c04923b1780ef919ac110bd6bb44c77e4285a2b402f47bbdcc34cd"
+    },
+    {
+      "bytes": 4408,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-php-fixture.mjs",
+      "sha256": "4afd5d0b8f5d58f13753a8fc2a7cc9bbc650d33cec7993507101ecd1ae6dff34"
+    },
+    {
+      "bytes": 10713,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-php-wasm-fixture.mjs",
+      "sha256": "04d18f94f4fec0117d952e1a30e15c02d982208606cc612305738ed13ba5a27e"
+    },
+    {
+      "bytes": 10423,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-php-wasm-installed-tests.mjs",
+      "sha256": "e1eeeac1273be322f81061e1009d7d52ed23c14f14f1c49a31d3522bc972f6a5"
+    },
+    {
+      "bytes": 2296,
+      "path": "sources/tests/helpers/nominal-subtype-dotnet-resources.mjs",
+      "sha256": "59281a69346944a7e6a7d19a444cd596f39d15a00185f00fafd0cb5f44fd2a15"
+    },
+    {
+      "bytes": 5283,
+      "path": "sources/tests/helpers/package-set.mjs",
+      "sha256": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c"
+    },
+    {
+      "bytes": 9651,
+      "path": "sources/tests/helpers/php-wasm-fin-fixtures.mjs",
+      "sha256": "a85cb80188630dd4355f1ca97ea7c52c741f999652ca4d1e24f8e4b7972c6e16"
+    },
+    {
+      "bytes": 3077,
+      "path": "sources/tests/helpers/reviewed-fin-product-fixture.mjs",
+      "sha256": "ad29b17c2ef7ce9734b944ae414d616d96a006ace417e4d2c91ca63f17ec9368"
+    },
+    {
+      "bytes": 3333,
+      "path": "sources/tests/helpers/reviewed-fin-record-fixture.mjs",
+      "sha256": "757d1a1a2d672d3ec66de20688860182f982a0fcd0e731051a58109a671b06a4"
+    },
+    {
+      "bytes": 3808,
+      "path": "sources/tests/helpers/type-corpus-php-source.mjs",
+      "sha256": "a378ba488b8578bf60330667f077f5e386f8e7d171b17d8b72f68544c5690d7a"
+    },
+    {
+      "bytes": 3987,
+      "path": "sources/tests/helpers/type-corpus-php-wasm-browser.mjs",
+      "sha256": "2a561bf2aefc1820954ed2ed14c80ba774d253b461d1b59809c1b494fb1e3e8a"
+    },
+    {
+      "bytes": 15343,
+      "path": "sources/tests/helpers/type-corpus-php-wasm-install.mjs",
+      "sha256": "09e04f1fb6b914a58a529382ac1d888b6559c63406e4d546cd578a806b8de8b7"
+    },
+    {
+      "bytes": 19240,
+      "path": "sources/tests/helpers/type-corpus-php.mjs",
+      "sha256": "46f9428900f9a81c536f3d46accb633838d2778e43e62b5f78f84dafeeecc502"
+    },
+    {
+      "bytes": 3557,
+      "path": "sources/tests/helpers/type-corpus-reviewed-ir.mjs",
+      "sha256": "621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7"
+    }
+  ],
+  "kind": "nominal-primitive-subtype-php-wasm-installed-v1",
+  "limitations": [
+    "Local Linux x64 acceptance in wasm32 PHP 8.4.1 under Node 22.23.2 and Chromium 152.0.7977.75, not final current-revision hosted acceptance.",
+    "Four ordinary/reviewed full/result-only selections reproduce complete Composer API, npm runtime, and npm component packages from two author roots, install offline after author removal, and replay after relocation.",
+    "Each selection covers Node embedded and Composer arrangements plus Chromium bundled execution, startup and lazy loading, weak and strict PHP, twelve execution tuples, and two unchanged-deployment passes per tuple.",
+    "The full caller performs 1,821 checks with 283 expected Lean refusals per execution. The result-only caller performs 612 checks without input constructors. Both modes include eight host-side refusals and twelve immutable-input controls per execution.",
+    "Accepted selections ran serially with a local load ceiling of 8. Disk and memory floors remained 2 GiB. A higher ceiling was neither needed nor used.",
+    "Complete original package archives, receipts, installed-file hashes, execution records, TAP, the first rejected 32-bit caller, and the exact producer source closure are retained. External toolchain binaries are represented by identities rather than copied.",
+    "The fixture covers all nineteen admitted primitive bases in acyclic records, variants, aliases, mixed Fin guards, and constructor-free results. Consumer PHP source remains required at runtime. Refined callbacks, owned, recursive, dependent, dispatch, and broader generic Subtypes remain separate work."
+  ],
+  "loadCeiling": 8,
+  "producerCommit": "2e0536ea827698f413a16a984a4554589d721369",
+  "rejected": {
+    "changedSources": [
+      "tests/helpers/nominal-primitive-subtype-php-wasm-fixture.mjs",
+      "tests/helpers/nominal-primitive-subtype-php-wasm-tests.mjs"
+    ],
+    "classification": "rejected before Lean dispatch because the decimal -2147483648 literal became a float in 32-bit PHP; the accepted caller uses PHP_INT_MIN",
+    "label": "ordinary-full-r1",
+    "loadCeiling": 8,
+    "producerCommit": "d1974b22c9ea4bb19da90817d9a08d6a6d880a28",
+    "records": 25,
+    "tapSha256": "f3c1ac1c3e2aacd255891bccb06f852d5405e86bc301e2919d3a17d7d472f436"
+  },
+  "runs": [
+    {
+      "attempt": "vo1497-php-wasm-installed-ordinary-full-r2",
+      "controls": {
+        "recordControls": 100,
+        "semanticControls": 55
+      },
+      "counts": {
+        "checks": 1821,
+        "hostRejections": 8,
+        "php": "8.4.1",
+        "rejections": 283,
+        "rounds": 256,
+        "snapshotControls": 12,
+        "wordBits": 32,
+        "word_bits": 32
+      },
+      "dispatchObserved": false,
+      "executions": 12,
+      "label": "ordinary-full",
+      "loadCeiling": 8,
+      "mode": "full",
+      "packageFiles": {
+        "api": 18,
+        "component": 59,
+        "runtime": 22
+      },
+      "producerCommit": "2e0536ea827698f413a16a984a4554589d721369",
+      "records": 50,
+      "reportSha256": "187a25622761dddba53ff7d5f70ee77ad2803946d343d797e39a92a7bf1238cd",
+      "route": "ordinary",
+      "tapSha256": "c4ca8a99bd063074c20bb0094b8a2238fe92d3c02aafa1770e0d0b9cd76fc095"
+    },
+    {
+      "attempt": "vo1497-php-wasm-installed-ordinary-result-only-r1",
+      "controls": {
+        "recordControls": 100,
+        "semanticControls": 53
+      },
+      "counts": {
+        "checks": 612,
+        "hostRejections": 8,
+        "php": "8.4.1",
+        "rejections": 0,
+        "rounds": 256,
+        "snapshotControls": 12,
+        "wordBits": 32,
+        "word_bits": 32
+      },
+      "dispatchObserved": false,
+      "executions": 12,
+      "label": "ordinary-result-only",
+      "loadCeiling": 8,
+      "mode": "result-only",
+      "packageFiles": {
+        "api": 18,
+        "component": 59,
+        "runtime": 22
+      },
+      "producerCommit": "2e0536ea827698f413a16a984a4554589d721369",
+      "records": 50,
+      "reportSha256": "22f63dd726f27998844d2fa72c4defd1dbb9058d9da782450f0bfc0a773cdc63",
+      "route": "ordinary",
+      "tapSha256": "dc77a7c5c6f4b963e16e4089131492e8dc6babfb869e4e914a9e665fb37f282a"
+    },
+    {
+      "attempt": "vo1497-php-wasm-installed-reviewed-full-r1",
+      "controls": {
+        "recordControls": 104,
+        "semanticControls": 55
+      },
+      "counts": {
+        "checks": 1821,
+        "hostRejections": 8,
+        "php": "8.4.1",
+        "rejections": 283,
+        "rounds": 256,
+        "snapshotControls": 12,
+        "wordBits": 32,
+        "word_bits": 32
+      },
+      "dispatchObserved": false,
+      "executions": 12,
+      "label": "reviewed-full",
+      "loadCeiling": 8,
+      "mode": "full",
+      "packageFiles": {
+        "api": 18,
+        "component": 59,
+        "runtime": 22
+      },
+      "producerCommit": "2e0536ea827698f413a16a984a4554589d721369",
+      "records": 52,
+      "reportSha256": "2b427cda7192c3c0472b9e4317a248e6fd0c31dc98461a161837147ee140fb00",
+      "route": "reviewed",
+      "tapSha256": "b51bf3f6686584cea9537729787bf505def94f7d4a723eb1a1fbc280e16813c6"
+    },
+    {
+      "attempt": "vo1497-php-wasm-installed-reviewed-result-only-r1",
+      "controls": {
+        "recordControls": 104,
+        "semanticControls": 53
+      },
+      "counts": {
+        "checks": 612,
+        "hostRejections": 8,
+        "php": "8.4.1",
+        "rejections": 0,
+        "rounds": 256,
+        "snapshotControls": 12,
+        "wordBits": 32,
+        "word_bits": 32
+      },
+      "dispatchObserved": false,
+      "executions": 12,
+      "label": "reviewed-result-only",
+      "loadCeiling": 8,
+      "mode": "result-only",
+      "packageFiles": {
+        "api": 18,
+        "component": 59,
+        "runtime": 22
+      },
+      "producerCommit": "2e0536ea827698f413a16a984a4554589d721369",
+      "records": 52,
+      "reportSha256": "8745050eed1573f12d675e655226c027bccf48234d925eebef9c03e4ee463e04",
+      "route": "reviewed",
+      "tapSha256": "4682187819825e3c3ea2f97f033db2b24c20e14d62b84d5da76385606e286d5b"
+    }
+  ],
+  "schemaVersion": 1,
+  "selectedSources": [
+    ".github/workflows/checked-record-php-wasm.yml",
+    "docs/type-surface.v1.json",
+    "package-lock.json",
+    "package.json",
+    "site/paths.mjs",
+    "site/serve.mjs",
+    "src/abi/callback-signature.mjs",
+    "src/abi/component-callables.mjs",
+    "src/abi/component-copied.mjs",
+    "src/abi/component-owned-wasm.mjs",
+    "src/abi/component-records.mjs",
+    "src/abi/component-recursive-abi.mjs",
+    "src/abi/component-recursive.mjs",
+    "src/abi/component-scalars.mjs",
+    "src/abi/component-structured-callables.mjs",
+    "src/abi/error-envelope.mjs",
+    "src/abi/generic-specialization.mjs",
+    "src/abi/initialization.mjs",
+    "src/abi/iterator.mjs",
+    "src/abi/overload.mjs",
+    "src/abi/owned-aggregate-model.mjs",
+    "src/abi/owned-wasm-control.mjs",
+    "src/abi/pending-operation.mjs",
+    "src/abi/refinements.mjs",
+    "src/abi/resource-lifecycle.mjs",
+    "src/abi/value-frame.mjs",
+    "src/analyze/callback-signature.mjs",
+    "src/analyze/checked-refinement-selection.mjs",
+    "src/analyze/copied-metadata-graph.mjs",
+    "src/analyze/elaborated-metadata.mjs",
+    "src/analyze/export-configuration.mjs",
+    "src/analyze/generator-configuration.mjs",
+    "src/analyze/lean-project.mjs",
+    "src/analyze/native-metadata.mjs",
+    "src/analyze/native-types.mjs",
+    "src/analyze/owned-aggregate-policy.mjs",
+    "src/analyze/owned-metadata-graph.mjs",
+    "src/analyze/package-license.mjs",
+    "src/analyze/package-metadata.mjs",
+    "src/analyze/project-analysis.mjs",
+    "src/analyze/project-elaborated.mjs",
+    "src/analyze/reviewed-instantiation.mjs",
+    "src/analyze/reviewed-owned-source.mjs",
+    "src/analyze/reviewed-refinements.mjs",
+    "src/analyze/reviewed-source.mjs",
+    "src/analyze/reviewed-subtypes.mjs",
+    "src/analyze/semantic-model.mjs",
+    "src/analyze/spdx-data.json",
+    "src/backends/c/callable-graph-model.mjs",
+    "src/backends/c/callable-graph-package.mjs",
+    "src/backends/c/copied-graph-layout.mjs",
+    "src/backends/c/fin-diagnostic.mjs",
+    "src/backends/c/generate.mjs",
+    "src/backends/c/gmp-graph-conversions.mjs",
+    "src/backends/c/gmp-graph-values.mjs",
+    "src/backends/c/gmp-projection.mjs",
+    "src/backends/c/gmp-values.mjs",
+    "src/backends/c/gmp.mjs",
+    "src/backends/c/graph-package.mjs",
+    "src/backends/c/native-callable-graph-borrows.mjs",
+    "src/backends/c/native-callable-graph-calls.mjs",
+    "src/backends/c/native-callable-graph-payloads.mjs",
+    "src/backends/c/native-callables.mjs",
+    "src/backends/c/native-copied-values.mjs",
+    "src/backends/c/native-graph-adapters.mjs",
+    "src/backends/c/native-primitives.mjs",
+    "src/backends/c/owned-callbacks.mjs",
+    "src/backends/c/owned-package.mjs",
+    "src/backends/c/owned-runtime.mjs",
+    "src/backends/c/owned-transfers.mjs",
+    "src/backends/c/owned-values.mjs",
+    "src/backends/c/package-audit.mjs",
+    "src/backends/c/primitive-surface.mjs",
+    "src/backends/cpp/boost.mjs",
+    "src/backends/cpp/boost.source.json",
+    "src/backends/cpp/callable-graph-package.mjs",
+    "src/backends/cpp/callables.mjs",
+    "src/backends/cpp/copied-graph-conversions.mjs",
+    "src/backends/cpp/copied-graph-values.mjs",
+    "src/backends/cpp/copied-values.mjs",
+    "src/backends/cpp/generate.mjs",
+    "src/backends/cpp/owned-borrows.mjs",
+    "src/backends/cpp/owned-callables.mjs",
+    "src/backends/cpp/owned-conversions.mjs",
+    "src/backends/cpp/owned-package.mjs",
+    "src/backends/cpp/owned-runtime.mjs",
+    "src/backends/cpp/owned-transfers.mjs",
+    "src/backends/cpp/owned-values.mjs",
+    "src/backends/cpp/primitives.mjs",
+    "src/backends/dotnet/callable-graph-calls.mjs",
+    "src/backends/dotnet/callable-graph-model.mjs",
+    "src/backends/dotnet/callable-graph-package.mjs",
+    "src/backends/dotnet/callable-graph-runtime.mjs",
+    "src/backends/dotnet/callables.mjs",
+    "src/backends/dotnet/copied-aliases.mjs",
+    "src/backends/dotnet/copied-conversions.mjs",
+    "src/backends/dotnet/copied-graph-assets.mjs",
+    "src/backends/dotnet/copied-graph-conversions.mjs",
+    "src/backends/dotnet/copied-graph-equality.mjs",
+    "src/backends/dotnet/copied-graph-layout.mjs",
+    "src/backends/dotnet/copied-graph-package.mjs",
+    "src/backends/dotnet/copied-graph-runtime.mjs",
+    "src/backends/dotnet/copied-graph-scalars.mjs",
+    "src/backends/dotnet/copied-graph-values.mjs",
+    "src/backends/dotnet/copied-model.mjs",
+    "src/backends/dotnet/copied-values.mjs",
+    "src/backends/dotnet/owned-borrows.mjs",
+    "src/backends/dotnet/owned-callables.mjs",
+    "src/backends/dotnet/owned-callback-arguments.mjs",
+    "src/backends/dotnet/owned-calls.mjs",
+    "src/backends/dotnet/owned-conversion-runtime.mjs",
+    "src/backends/dotnet/owned-conversions.mjs",
+    "src/backends/dotnet/owned-layout.mjs",
+    "src/backends/dotnet/owned-package.mjs",
+    "src/backends/dotnet/owned-receivers.mjs",
+    "src/backends/dotnet/owned-runtime.mjs",
+    "src/backends/dotnet/owned-scalars.mjs",
+    "src/backends/dotnet/owned-thread-exit.mjs",
+    "src/backends/dotnet/owned-transfers.mjs",
+    "src/backends/dotnet/owned-values.mjs",
+    "src/backends/dotnet/verified-assets.mjs",
+    "src/backends/javascript/copied-validators.mjs",
+    "src/backends/javascript/coverage.mjs",
+    "src/backends/javascript/generate.mjs",
+    "src/backends/javascript/owned-package.mjs",
+    "src/backends/javascript/owned-wasm-borrows.mjs",
+    "src/backends/javascript/owned-wasm-broker.mjs",
+    "src/backends/javascript/owned-wasm-callbacks.mjs",
+    "src/backends/javascript/owned-wasm-component.mjs",
+    "src/backends/javascript/owned-wasm-input-transfers.mjs",
+    "src/backends/javascript/owned-wasm-layout.mjs",
+    "src/backends/javascript/package-audit.mjs",
+    "src/backends/javascript/projection.mjs",
+    "src/backends/jvm/callable-graph-calls.mjs",
+    "src/backends/jvm/callable-graph-model.mjs",
+    "src/backends/jvm/callable-graph-package.mjs",
+    "src/backends/jvm/callable-graph-runtime.mjs",
+    "src/backends/jvm/callables.mjs",
+    "src/backends/jvm/copied-aliases.mjs",
+    "src/backends/jvm/copied-assets.mjs",
+    "src/backends/jvm/copied-conversions.mjs",
+    "src/backends/jvm/copied-graph-assets.mjs",
+    "src/backends/jvm/copied-graph-conversions.mjs",
+    "src/backends/jvm/copied-graph-equality.mjs",
+    "src/backends/jvm/copied-graph-kotlin.mjs",
+    "src/backends/jvm/copied-graph-layout.mjs",
+    "src/backends/jvm/copied-graph-package.mjs",
+    "src/backends/jvm/copied-graph-runtime.mjs",
+    "src/backends/jvm/copied-graph-scalars.mjs",
+    "src/backends/jvm/copied-graph-values.mjs",
+    "src/backends/jvm/copied-kotlin.mjs",
+    "src/backends/jvm/copied-model.mjs",
+    "src/backends/jvm/copied-runtime.mjs",
+    "src/backends/jvm/copied-values.mjs",
+    "src/backends/jvm/owned-borrows.mjs",
+    "src/backends/jvm/owned-callables.mjs",
+    "src/backends/jvm/owned-callback-arguments.mjs",
+    "src/backends/jvm/owned-calls.mjs",
+    "src/backends/jvm/owned-conversion-runtime.mjs",
+    "src/backends/jvm/owned-conversions.mjs",
+    "src/backends/jvm/owned-kotlin.mjs",
+    "src/backends/jvm/owned-layout.mjs",
+    "src/backends/jvm/owned-package.mjs",
+    "src/backends/jvm/owned-receivers.mjs",
+    "src/backends/jvm/owned-runtime.mjs",
+    "src/backends/jvm/owned-scalars.mjs",
+    "src/backends/jvm/owned-thread-exit.mjs",
+    "src/backends/jvm/owned-transfers.mjs",
+    "src/backends/jvm/owned-values.mjs",
+    "src/backends/jvm/verified-assets.mjs",
+    "src/backends/managed/package-audit.mjs",
+    "src/backends/native/callback-broker.mjs",
+    "src/backends/native/fin-refinements.mjs",
+    "src/backends/native/owned-aggregate-leases.mjs",
+    "src/backends/native/owned-aggregate-transfers.mjs",
+    "src/backends/native/owned-value-adapters.mjs",
+    "src/backends/native/owned-value-layout.mjs",
+    "src/backends/native/owned-value-runtime.mjs",
+    "src/backends/native/owned-value-transfers.mjs",
+    "src/backends/native/runtime-broker.mjs",
+    "src/backends/perl/callable-graph-model.mjs",
+    "src/backends/perl/callable-graph-package.mjs",
+    "src/backends/perl/callable-graph-runtime.mjs",
+    "src/backends/perl/callable-graph-xs.mjs",
+    "src/backends/perl/copied-aliases.mjs",
+    "src/backends/perl/copied-graph-conversions.mjs",
+    "src/backends/perl/copied-graph-package.mjs",
+    "src/backends/perl/copied-graph-runtime.mjs",
+    "src/backends/perl/copied-graph-values.mjs",
+    "src/backends/perl/copied-graph-xs.mjs",
+    "src/backends/perl/copied-variants.mjs",
+    "src/backends/perl/generate.mjs",
+    "src/backends/perl/naming.mjs",
+    "src/backends/perl/owned-borrows.mjs",
+    "src/backends/perl/owned-callback-arguments.mjs",
+    "src/backends/perl/owned-callback-build.mjs",
+    "src/backends/perl/owned-conversions.mjs",
+    "src/backends/perl/owned-package.mjs",
+    "src/backends/perl/owned-receivers.mjs",
+    "src/backends/perl/owned-runtime.mjs",
+    "src/backends/perl/owned-transfers.mjs",
+    "src/backends/perl/owned-values.mjs",
+    "src/backends/perl/owned-xs.mjs",
+    "src/backends/php/brick-math.mjs",
+    "src/backends/php/brick-math.source.json",
+    "src/backends/php/callable-graph-calls.mjs",
+    "src/backends/php/callable-graph-model.mjs",
+    "src/backends/php/callable-graph-package.mjs",
+    "src/backends/php/callable-graph-runtime.mjs",
+    "src/backends/php/callable-graph-zend-calls.mjs",
+    "src/backends/php/callable-graph-zend-model.mjs",
+    "src/backends/php/callable-graph-zend-php.mjs",
+    "src/backends/php/callable-graph-zend-runtime.mjs",
+    "src/backends/php/callable-graph-zend.mjs",
+    "src/backends/php/callables.mjs",
+    "src/backends/php/copied-aliases.mjs",
+    "src/backends/php/copied-assets.mjs",
+    "src/backends/php/copied-conversions.mjs",
+    "src/backends/php/copied-equality.mjs",
+    "src/backends/php/copied-graph-assets.mjs",
+    "src/backends/php/copied-graph-conversions.mjs",
+    "src/backends/php/copied-graph-native.mjs",
+    "src/backends/php/copied-graph-package.mjs",
+    "src/backends/php/copied-graph-scalars.mjs",
+    "src/backends/php/copied-graph-transfer.mjs",
+    "src/backends/php/copied-graph-values.mjs",
+    "src/backends/php/copied-graph-walk.mjs",
+    "src/backends/php/copied-graph-wire.mjs",
+    "src/backends/php/copied-graph-zend-runtime.mjs",
+    "src/backends/php/copied-graph-zend.mjs",
+    "src/backends/php/copied-model.mjs",
+    "src/backends/php/copied-names.mjs",
+    "src/backends/php/copied-support.mjs",
+    "src/backends/php/copied-values.mjs",
+    "src/backends/php/copied-variants.mjs",
+    "src/backends/php/copied-zend-conversions.mjs",
+    "src/backends/php/copied-zend-support.mjs",
+    "src/backends/php/copied-zend-variants.mjs",
+    "src/backends/php/copied-zend.mjs",
+    "src/backends/php/owned-assets.mjs",
+    "src/backends/php/owned-borrows.mjs",
+    "src/backends/php/owned-call-runtime.mjs",
+    "src/backends/php/owned-calls.mjs",
+    "src/backends/php/owned-conversion-support.mjs",
+    "src/backends/php/owned-conversion-transfer.mjs",
+    "src/backends/php/owned-conversions.mjs",
+    "src/backends/php/owned-input-transfers.mjs",
+    "src/backends/php/owned-integers.mjs",
+    "src/backends/php/owned-package.mjs",
+    "src/backends/php/owned-receivers.mjs",
+    "src/backends/php/owned-runtime.mjs",
+    "src/backends/php/owned-value-resources.mjs",
+    "src/backends/php/owned-value-walk.mjs",
+    "src/backends/php/owned-values.mjs",
+    "src/backends/php/owned-zend-borrow-calls.mjs",
+    "src/backends/php/owned-zend-borrows.mjs",
+    "src/backends/php/owned-zend-callbacks.mjs",
+    "src/backends/php/owned-zend-descriptors.mjs",
+    "src/backends/php/owned-zend-extension.mjs",
+    "src/backends/php/owned-zend-input-transfers.mjs",
+    "src/backends/php/owned-zend-model.mjs",
+    "src/backends/php/owned-zend-ownership.mjs",
+    "src/backends/php/owned-zend-php.mjs",
+    "src/backends/php/owned-zend-readme.mjs",
+    "src/backends/php/owned-zend-walk.mjs",
+    "src/backends/php/owned-zend-wire.mjs",
+    "src/backends/php/package-audit.mjs",
+    "src/backends/php/php-wasm-copied-loader.mjs",
+    "src/backends/php/php-wasm-libuv.mjs",
+    "src/backends/php/projection.mjs",
+    "src/backends/php/zend-callables.mjs",
+    "src/backends/python/callable-graph-conversions.mjs",
+    "src/backends/python/callable-graph-model.mjs",
+    "src/backends/python/callable-graph-package.mjs",
+    "src/backends/python/callables.mjs",
+    "src/backends/python/compounds.mjs",
+    "src/backends/python/copied-assets.mjs",
+    "src/backends/python/copied-conversions.mjs",
+    "src/backends/python/copied-graph-conversions.mjs",
+    "src/backends/python/copied-graph-package.mjs",
+    "src/backends/python/copied-graph-values.mjs",
+    "src/backends/python/copied-model.mjs",
+    "src/backends/python/copied-values.mjs",
+    "src/backends/python/owned-assets.mjs",
+    "src/backends/python/owned-borrows.mjs",
+    "src/backends/python/owned-callables.mjs",
+    "src/backends/python/owned-conversions.mjs",
+    "src/backends/python/owned-package.mjs",
+    "src/backends/python/owned-receivers.mjs",
+    "src/backends/python/owned-runtime.mjs",
+    "src/backends/python/owned-transfers.mjs",
+    "src/backends/python/owned-values.mjs",
+    "src/backends/python/package-audit.mjs",
+    "src/backends/python/refinements.mjs",
+    "src/backends/ruby/callable-graph-conversions.mjs",
+    "src/backends/ruby/callable-graph-model.mjs",
+    "src/backends/ruby/callable-graph-package.mjs",
+    "src/backends/ruby/callables.mjs",
+    "src/backends/ruby/copied-aliases.mjs",
+    "src/backends/ruby/copied-assets.mjs",
+    "src/backends/ruby/copied-conversions.mjs",
+    "src/backends/ruby/copied-graph-conversions.mjs",
+    "src/backends/ruby/copied-graph-layout.mjs",
+    "src/backends/ruby/copied-graph-package.mjs",
+    "src/backends/ruby/copied-graph-runtime.mjs",
+    "src/backends/ruby/copied-graph-values.mjs",
+    "src/backends/ruby/copied-model.mjs",
+    "src/backends/ruby/copied-values.mjs",
+    "src/backends/ruby/owned-abi.mjs",
+    "src/backends/ruby/owned-borrows.mjs",
+    "src/backends/ruby/owned-call-boundary.mjs",
+    "src/backends/ruby/owned-callables.mjs",
+    "src/backends/ruby/owned-conversion-runtime.mjs",
+    "src/backends/ruby/owned-conversions.mjs",
+    "src/backends/ruby/owned-layout.mjs",
+    "src/backends/ruby/owned-package.mjs",
+    "src/backends/ruby/owned-runtime.mjs",
+    "src/backends/ruby/owned-transfers.mjs",
+    "src/backends/ruby/owned-values.mjs",
+    "src/backends/ruby/verified-assets.mjs",
+    "src/backends/rust/callable-graph-conversions.mjs",
+    "src/backends/rust/callable-graph-model.mjs",
+    "src/backends/rust/callable-graph-package.mjs",
+    "src/backends/rust/callables.mjs",
+    "src/backends/rust/copied-assets.mjs",
+    "src/backends/rust/copied-conversions.mjs",
+    "src/backends/rust/copied-graph-conversions.mjs",
+    "src/backends/rust/copied-graph-package.mjs",
+    "src/backends/rust/copied-graph-values.mjs",
+    "src/backends/rust/copied-model.mjs",
+    "src/backends/rust/copied-values.mjs",
+    "src/backends/rust/owned-borrows.mjs",
+    "src/backends/rust/owned-callables.mjs",
+    "src/backends/rust/owned-conversions.mjs",
+    "src/backends/rust/owned-package.mjs",
+    "src/backends/rust/owned-runtime.mjs",
+    "src/backends/rust/owned-transfers.mjs",
+    "src/backends/rust/owned-values.mjs",
+    "src/backends/rust/package-audit.mjs",
+    "src/backends/wit/callable-graph-host.mjs",
+    "src/backends/wit/callable-graph-model.mjs",
+    "src/backends/wit/callable-graph-package.mjs",
+    "src/backends/wit/callable-graph-session.mjs",
+    "src/backends/wit/callable-graph-typed.mjs",
+    "src/backends/wit/callable-host-runtime.mjs",
+    "src/backends/wit/callable-host.mjs",
+    "src/backends/wit/callable-result-owners.mjs",
+    "src/backends/wit/canonical-borrow-drops.mjs",
+    "src/backends/wit/copied-aliases.mjs",
+    "src/backends/wit/copied-component.mjs",
+    "src/backends/wit/copied-conversions.mjs",
+    "src/backends/wit/copied-graph-conversions.mjs",
+    "src/backends/wit/copied-graph-host.mjs",
+    "src/backends/wit/copied-graph-model.mjs",
+    "src/backends/wit/copied-graph-package.mjs",
+    "src/backends/wit/copied-graph-runtime.mjs",
+    "src/backends/wit/copied-host.mjs",
+    "src/backends/wit/copied-model.mjs",
+    "src/backends/wit/copied-variants.mjs",
+    "src/backends/wit/fin-refinements.mjs",
+    "src/backends/wit/host-evidence.mjs",
+    "src/backends/wit/host-library-hash.mjs",
+    "src/backends/wit/owned-graph-conversions.mjs",
+    "src/backends/wit/owned-graph-model.mjs",
+    "src/backends/wit/owned-graph-runtime.mjs",
+    "src/backends/wit/owned-graph-types.mjs",
+    "src/backends/wit/owned-host-evidence.mjs",
+    "src/backends/wit/owned-native-host.mjs",
+    "src/backends/wit/owned-native-resources.mjs",
+    "src/backends/wit/owned-package.mjs",
+    "src/backends/wit/owned-session.mjs",
+    "src/binding-ir/canonical.mjs",
+    "src/binding-ir/contract.mjs",
+    "src/binding-ir/sha256.mjs",
+    "src/build/build-error.mjs",
+    "src/build/canonical-build.mjs",
+    "src/build/compile-jvm-sources.mjs",
+    "src/build/compiler-adapters.mjs",
+    "src/build/component-callable-adapters.mjs",
+    "src/build/component-compilation-plan.mjs",
+    "src/build/component-engine-failure.mjs",
+    "src/build/component-fin-guards.mjs",
+    "src/build/component-plan.mjs",
+    "src/build/component-record-adapters.mjs",
+    "src/build/component-recursive-lean.mjs",
+    "src/build/component-refinement-mirrors.mjs",
+    "src/build/component-refinements.mjs",
+    "src/build/component-scalar-adapters.mjs",
+    "src/build/component-structured-callable-defaults.mjs",
+    "src/build/component-structured-callable-lean.mjs",
+    "src/build/cpan-projection.mjs",
+    "src/build/elaborated-component.mjs",
+    "src/build/engine-execution-request.mjs",
+    "src/build/javascript-wasm-owned-artifacts.mjs",
+    "src/build/javascript-wasm-owned-component.mjs",
+    "src/build/javascript-wasm-owned-engine.mjs",
+    "src/build/javascript-wasm-owned-isolated.mjs",
+    "src/build/javascript-wasm-owned-model.mjs",
+    "src/build/javascript-wasm-owned-output.mjs",
+    "src/build/javascript-wasm-owned-project.mjs",
+    "src/build/javascript-wasm-owned-sources.mjs",
+    "src/build/javascript-wasm-toolchain.mjs",
+    "src/build/lake-build-workspace.mjs",
+    "src/build/lake-dependency-snapshot.mjs",
+    "src/build/lake-entry-intent.mjs",
+    "src/build/lake-entry-modules.mjs",
+    "src/build/lake-generated-workspace.mjs",
+    "src/build/lake-generator-prerequisites.mjs",
+    "src/build/lake-generators.mjs",
+    "src/build/lake-native-inputs.mjs",
+    "src/build/lake-workspace.mjs",
+    "src/build/multi-profile-project.mjs",
+    "src/build/native-allocation-guard.mjs",
+    "src/build/native-artifacts.mjs",
+    "src/build/native-c-projection.mjs",
+    "src/build/native-callable-graph.mjs",
+    "src/build/native-component.mjs",
+    "src/build/native-dotnet-artifacts.mjs",
+    "src/build/native-dotnet-projection.mjs",
+    "src/build/native-gmp.mjs",
+    "src/build/native-graph-model.mjs",
+    "src/build/native-graph-projection.mjs",
+    "src/build/native-graph-sources.mjs",
+    "src/build/native-jvm-artifacts.mjs",
+    "src/build/native-jvm-projection.mjs",
+    "src/build/native-model.mjs",
+    "src/build/native-php-artifacts.mjs",
+    "src/build/native-project.mjs",
+    "src/build/native-python-artifacts.mjs",
+    "src/build/native-ruby-artifacts.mjs",
+    "src/build/native-rust-artifacts.mjs",
+    "src/build/native-rust-projection.mjs",
+    "src/build/native-wit-artifacts.mjs",
+    "src/build/native-wit-projection.mjs",
+    "src/build/owned-aggregate-carriers.mjs",
+    "src/build/owned-c-projection.mjs",
+    "src/build/owned-callback-carriers.mjs",
+    "src/build/owned-dotnet-artifacts.mjs",
+    "src/build/owned-dotnet-projection.mjs",
+    "src/build/owned-jvm-artifacts.mjs",
+    "src/build/owned-jvm-projection.mjs",
+    "src/build/owned-native-model.mjs",
+    "src/build/owned-perl-artifacts.mjs",
+    "src/build/owned-perl-projection.mjs",
+    "src/build/owned-php-artifacts.mjs",
+    "src/build/owned-php-projection.mjs",
+    "src/build/owned-python-artifacts.mjs",
+    "src/build/owned-ruby-artifacts.mjs",
+    "src/build/owned-ruby-projection.mjs",
+    "src/build/owned-rust-artifacts.mjs",
+    "src/build/owned-rust-projection.mjs",
+    "src/build/owned-wit-artifacts.mjs",
+    "src/build/owned-wit-projection.mjs",
+    "src/build/perl-xs.mjs",
+    "src/build/php-wasm-copied-artifacts.mjs",
+    "src/build/php-wasm-copied-component.mjs",
+    "src/build/php-wasm-graph-component.mjs",
+    "src/build/php-wasm-graph-model.mjs",
+    "src/build/php-wasm-owned-component.mjs",
+    "src/build/php-wasm-owned-model.mjs",
+    "src/build/php-wasm-project.mjs",
+    "src/build/process-runner.mjs",
+    "src/build/refinement-mirrors.mjs",
+    "src/capsule/contract.mjs",
+    "src/capsule/node.mjs",
+    "src/release/backend-policy.mjs",
+    "src/release/c-family-package.mjs",
+    "src/release/canonical-bundle-input.mjs",
+    "src/release/canonical-package-manifest.mjs",
+    "src/release/cargo-package.mjs",
+    "src/release/component-npm-package.mjs",
+    "src/release/component-package-receipt.mjs",
+    "src/release/component-release-bundle.mjs",
+    "src/release/component-runtime-root.mjs",
+    "src/release/cpan-install.mjs",
+    "src/release/cpan-package.mjs",
+    "src/release/deterministic-archive.mjs",
+    "src/release/deterministic-zip.mjs",
+    "src/release/javascript-wasm-compiler-inputs.mjs",
+    "src/release/managed-registry-package.mjs",
+    "src/release/maven-package.mjs",
+    "src/release/native-c-family.mjs",
+    "src/release/native-cargo.mjs",
+    "src/release/native-composer.mjs",
+    "src/release/native-maven.mjs",
+    "src/release/native-nuget.mjs",
+    "src/release/native-pypi.mjs",
+    "src/release/native-rubygems.mjs",
+    "src/release/native-wasi.mjs",
+    "src/release/npm-package.mjs",
+    "src/release/nuget-package.mjs",
+    "src/release/owned-c-package.mjs",
+    "src/release/owned-cargo.mjs",
+    "src/release/owned-composer.mjs",
+    "src/release/owned-cpan-contract.mjs",
+    "src/release/owned-javascript-npm-package.mjs",
+    "src/release/owned-javascript-release-evidence.mjs",
+    "src/release/owned-maven.mjs",
+    "src/release/owned-nuget.mjs",
+    "src/release/owned-pypi.mjs",
+    "src/release/owned-rubygems.mjs",
+    "src/release/owned-wasi.mjs",
+    "src/release/package-set-assembly.mjs",
+    "src/release/package-set-receipt.mjs",
+    "src/release/php-wasm-compiler-inputs.mjs",
+    "src/release/php-wasm-copied-package.mjs",
+    "src/release/pypi-package.mjs",
+    "src/release/release-rehearsal.mjs",
+    "src/release/rubygems-package.mjs",
+    "src/release/source-notices.mjs",
+    "src/release/wasi-package.mjs",
+    "tests/fixtures/nominal-primitive-subtype-consumers/php-native.php",
+    "tests/fixtures/onboarding/nominal-primitive-subtypes/LICENSE",
+    "tests/fixtures/onboarding/nominal-primitive-subtypes/NominalPrimitiveSubtypes.lean",
+    "tests/fixtures/onboarding/nominal-primitive-subtypes/lakefile.toml",
+    "tests/fixtures/onboarding/nominal-primitive-subtypes/lean-toolchain",
+    "tests/fixtures/onboarding/nominal-primitive-subtypes/package.json",
+    "tests/fixtures/type-corpus/cases.mjs",
+    "tests/helpers/brick-math.mjs",
+    "tests/helpers/copied-fixture-install.mjs",
+    "tests/helpers/copied-fixture-php-wasm.mjs",
+    "tests/helpers/fin-product-install.mjs",
+    "tests/helpers/fin-record-install.mjs",
+    "tests/helpers/lake-workspace.mjs",
+    "tests/helpers/nominal-primitive-subtype-fixture.mjs",
+    "tests/helpers/nominal-primitive-subtype-php-fixture.mjs",
+    "tests/helpers/nominal-primitive-subtype-php-wasm-fixture.mjs",
+    "tests/helpers/nominal-primitive-subtype-php-wasm-installed-tests.mjs",
+    "tests/helpers/nominal-subtype-dotnet-resources.mjs",
+    "tests/helpers/package-set.mjs",
+    "tests/helpers/php-wasm-fin-fixtures.mjs",
+    "tests/helpers/reviewed-fin-product-fixture.mjs",
+    "tests/helpers/reviewed-fin-record-fixture.mjs",
+    "tests/helpers/type-corpus-php-source.mjs",
+    "tests/helpers/type-corpus-php-wasm-browser.mjs",
+    "tests/helpers/type-corpus-php-wasm-install.mjs",
+    "tests/helpers/type-corpus-php.mjs",
+    "tests/helpers/type-corpus-reviewed-ir.mjs"
+  ]
+}
