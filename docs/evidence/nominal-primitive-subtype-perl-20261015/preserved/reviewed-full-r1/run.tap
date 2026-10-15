@@ -1,0 +1,42 @@
+TAP version 13
+# Subtest: installed primitive-base nominal Perl packages reproduce and relocate reviewed full
+not ok 1 - installed primitive-base nominal Perl packages reproduce and relocate reviewed full
+  ---
+  duration_ms: 555621.40603
+  type: 'test'
+  location: '/app/build/worktrees/nominal-subtype-perl-vo1493-load8/tests/helpers/nominal-primitive-subtype-perl-installed-tests.mjs:32:53'
+  failureType: 'testCodeFailure'
+  error: 'C# producer requires 2 GiB free disk'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    waitNominalSubtypeDotnetResources (file:///app/build/worktrees/nominal-subtype-perl-vo1493-load8/tests/helpers/nominal-subtype-dotnet-resources.mjs:36:10)
+    async TestContext.<anonymous> (file:///app/build/worktrees/nominal-subtype-perl-vo1493-load8/tests/helpers/nominal-primitive-subtype-perl-installed-tests.mjs:119:3)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# reviewed full author 0: four Perl ABIs
+# reviewed full author 1: four Perl ABIs
+# Waiting for host load below 8 before the next primitive Perl phase: 11.08
+# Waiting for host load below 8 before the next primitive Perl phase: 10.75
+# Waiting for host load below 8 before the next primitive Perl phase: 10.36
+# Waiting for host load below 8 before the next primitive Perl phase: 9.32
+# Waiting for host load below 8 before the next primitive Perl phase: 8.42
+# Installing 5.36.3-threaded/prebuilt-only/reviewed/full
+# Installing 5.36.3-threaded/build-xs/reviewed/full
+# Installing 5.36.3-unthreaded/prebuilt-only/reviewed/full
+# Installing 5.36.3-unthreaded/build-xs/reviewed/full
+# Installing 5.38.2-threaded/prebuilt-only/reviewed/full
+# Retained failed primitive-base nominal Perl inputs: /tmp/lean-bridge-nominal-primitive-subtype-perl-931vgU
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 556099.735609

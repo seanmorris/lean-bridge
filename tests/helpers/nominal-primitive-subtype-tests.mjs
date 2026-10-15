@@ -58,3 +58,4 @@ import "./nominal-primitive-subtype-perl-ci-workflow-tests.mjs";
 import "./nominal-primitive-subtype-perl-registration-history-tests.mjs";
 import "./nominal-primitive-subtype-perl-installed-tests.mjs";
 import "./nominal-primitive-subtype-perl-integration-history-tests.mjs";
+import "./nominal-primitive-subtype-perl-archive-tests.mjs";

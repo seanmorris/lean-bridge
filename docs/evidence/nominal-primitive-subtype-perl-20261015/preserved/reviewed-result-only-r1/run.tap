@@ -1,0 +1,51 @@
+TAP version 13
+# Subtest: installed primitive-base nominal Perl packages reproduce and relocate reviewed result-only
+not ok 1 - installed primitive-base nominal Perl packages reproduce and relocate reviewed result-only
+  ---
+  duration_ms: 422397.238608
+  type: 'test'
+  location: '/app/build/worktrees/nominal-subtype-perl-vo1493-load8/tests/helpers/nominal-primitive-subtype-perl-installed-tests.mjs:32:53'
+  failureType: 'testCodeFailure'
+  error: 'C# producer host load remained at or above 8 for five minutes'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    waitNominalSubtypeDotnetResources (file:///app/build/worktrees/nominal-subtype-perl-vo1493-load8/tests/helpers/nominal-subtype-dotnet-resources.mjs:40:10)
+    async TestContext.<anonymous> (file:///app/build/worktrees/nominal-subtype-perl-vo1493-load8/tests/helpers/nominal-primitive-subtype-perl-installed-tests.mjs:76:3)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# reviewed result-only author 0: four Perl ABIs
+# Waiting for host load below 8 before the next primitive Perl phase: 11.19
+# Waiting for host load below 8 before the next primitive Perl phase: 10.18
+# Waiting for host load below 8 before the next primitive Perl phase: 11.41
+# Waiting for host load below 8 before the next primitive Perl phase: 12.55
+# Waiting for host load below 8 before the next primitive Perl phase: 12.01
+# Waiting for host load below 8 before the next primitive Perl phase: 11.8
+# Waiting for host load below 8 before the next primitive Perl phase: 11.56
+# Waiting for host load below 8 before the next primitive Perl phase: 10.33
+# Waiting for host load below 8 before the next primitive Perl phase: 9.44
+# Waiting for host load below 8 before the next primitive Perl phase: 10.68
+# Waiting for host load below 8 before the next primitive Perl phase: 11.04
+# Waiting for host load below 8 before the next primitive Perl phase: 11.38
+# Waiting for host load below 8 before the next primitive Perl phase: 10.88
+# Waiting for host load below 8 before the next primitive Perl phase: 11.61
+# Waiting for host load below 8 before the next primitive Perl phase: 13.34
+# Waiting for host load below 8 before the next primitive Perl phase: 13.12
+# Waiting for host load below 8 before the next primitive Perl phase: 13.01
+# Waiting for host load below 8 before the next primitive Perl phase: 13.12
+# Waiting for host load below 8 before the next primitive Perl phase: 14
+# Waiting for host load below 8 before the next primitive Perl phase: 15.32
+# Retained failed primitive-base nominal Perl inputs: /tmp/lean-bridge-nominal-primitive-subtype-perl-xnouu6
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 423057.370998

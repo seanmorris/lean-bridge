@@ -1,0 +1,70 @@
+{
+  "checked": {
+    "configurations": [
+      "5.36.3-threaded",
+      "5.36.3-unthreaded",
+      "5.38.2-threaded",
+      "5.38.2-unthreaded"
+    ],
+    "counts": {
+      "checks": 1225,
+      "rejections": 283,
+      "rounds": 256,
+      "snapshotControls": 9,
+      "wordBits": 64
+    },
+    "deliveryModes": [
+      "prebuilt-only",
+      "build-xs"
+    ],
+    "dispatchObserved": false,
+    "executions": 16,
+    "floor": "2.36",
+    "handoff": {
+      "archives": {
+        "archives/LeanBridge-NominalPrimitiveSubtypes-1.000.tar.gz": {
+          "members": 32,
+          "role": "component",
+          "sha256": "11ad87f03e03944f1035af4d743f701b7c03af2889618c46847bcf06ac60dd9b"
+        },
+        "archives/LeanBridge-Runtime-0.0020592716822581412637753637152461205682916576183240901183894178635322362377514011.tar.gz": {
+          "members": 35,
+          "role": "runtime",
+          "sha256": "3bb112e3e6904d1ad757f78b5aa3957f1c8068db472dc508c418663ec1439e76"
+        }
+      },
+      "records": 4
+    },
+    "handoffControls": 4,
+    "mode": "full",
+    "modelControls": 43,
+    "packageControls": 48,
+    "producerCommit": "e15acb534151d359b05b68364ab35e6ab6c77073",
+    "recordControls": 266,
+    "records": 133,
+    "route": "reviewed",
+    "runtime": {
+      "arch": "x64",
+      "glibc": "2.36",
+      "platform": "linux"
+    }
+  },
+  "compiledAgain": false,
+  "finished": "2026-10-15T06:48:38.553Z",
+  "head": "e15acb534151d359b05b68364ab35e6ab6c77073",
+  "installedAcceptance": true,
+  "links": {
+    ".toolchains": "/app/.toolchains",
+    "node_modules": "/app/node_modules"
+  },
+  "mode": "full",
+  "originalsUnchanged": 133,
+  "prefix": "/app/build/vo1493-nominal-primitive-perl-reviewed-full-r2-e15acb5",
+  "route": "reviewed",
+  "runners": {
+    "/app/build/run-vo1493-nominal-primitive-perl-controls-e15acb5.mjs": "a11720956fcc1cabf3b29e50e38653231657a0b12ab58edc4e83f2fbbd67915d",
+    "/app/build/run-vo1493-nominal-primitive-perl-e15acb5.mjs": "b71439c9538ed6b41bdfc7ad0242d190ce222ad6a728eafe58c7b6441eda4465"
+  },
+  "sourceRoot": "/app/build/vo1493-nominal-primitive-perl-reviewed-full-r2-e15acb5-records",
+  "sourcesUnchanged": 15
+}

@@ -1,0 +1,59 @@
+{
+  "revision": "acc614cd17981972b3f12307a94b0eef4a957fc5",
+  "route": "ordinary",
+  "mode": "result-only",
+  "started": "2026-10-15T04:16:06.308Z",
+  "runnerSha256": "13c99beee756b686a5d1cbf0d05152cd0f219434b064a42b7a501902a89d69f0",
+  "controlsRunnerSha256": "edffc222ca05d2b7de64289dfb32275eec7e6120d19feed962d83b6892982399",
+  "links": {
+    ".toolchains": "/app/.toolchains",
+    "node_modules": "/app/node_modules"
+  },
+  "command": "/usr/bin/nice",
+  "args": [
+    "-n",
+    "19",
+    "/usr/bin/ionice",
+    "-c",
+    "3",
+    "/usr/bin/taskset",
+    "-c",
+    "3",
+    "/usr/bin/node",
+    "--test",
+    "--test-concurrency=1",
+    "tests/helpers/nominal-primitive-subtype-perl-installed-tests.mjs"
+  ],
+  "controlsArgs": [
+    "-n",
+    "19",
+    "/usr/bin/ionice",
+    "-c",
+    "3",
+    "/usr/bin/taskset",
+    "-c",
+    "3",
+    "/usr/bin/node",
+    "/app/build/run-vo1493-nominal-primitive-perl-controls-acc614c.mjs",
+    "ordinary",
+    "result-only",
+    "/app/build/vo1493-nominal-primitive-perl-ordinary-result-only-r1-acc614c"
+  ],
+  "environment": {
+    "NO_COLOR": "1",
+    "LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_PERL_TEST": "1",
+    "LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_PERL_ROUTES": "ordinary",
+    "LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_PERL_MODES": "result-only",
+    "LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_PERL_OUTPUT": "/app/build/vo1493-nominal-primitive-perl-ordinary-result-only-r1-acc614c-records",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+    "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR": "2.36",
+    "LEAN_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MAKEFLAGS": "-j1"
+  },
+  "initial": {
+    "freeMiB": 3603,
+    "availableMiB": 7603,
+    "load": 4.11
+  }
+}
