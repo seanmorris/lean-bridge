@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "generator": "ruby-copied-v1",
+  "target": "ruby",
+  "component": "nominalprimitivesubtypes@1.0.0",
+  "bindingIrSha256": "26299da84d5f7e0ed07a5638e367c487385abf923f3b0f72393f61b9a62ed460",
+  "namespace": "LeanBridge::Nominalprimitivesubtypes",
+  "files": [
+    "lib/lean_bridge/nominalprimitivesubtypes.rb",
+    "lib/lean_bridge/nominalprimitivesubtypes/native.rb",
+    "lib/lean_bridge/native_copied_runtime_v1.rb",
+    "README.md"
+  ],
+  "publicFiles": [
+    "lib/lean_bridge/nominalprimitivesubtypes.rb"
+  ],
+  "internalFiles": [
+    "lib/lean_bridge/nominalprimitivesubtypes/native.rb",
+    "lib/lean_bridge/native_copied_runtime_v1.rb"
+  ],
+  "packageFiles": [],
+  "supportedFeatures": [
+    "direct-functions",
+    "copied-values",
+    "deterministic-close"
+  ],
+  "capabilityGaps": [
+    {
+      "feature": "identity-and-effects",
+      "reason": "Ordinary RubyGems admits copied values and synchronous primitive callables; resource identities, compound callables and async effects remain unsupported."
+    },
+    {
+      "feature": "additional-platforms",
+      "reason": "The compiled profile is MRI Ruby 3.3 on Linux x86-64."
+    }
+  ],
+  "aliases": [
+    {
+      "id": "lean:NominalPrimitiveSubtypes.PacketAlias",
+      "name": "PacketAlias",
+      "target": {
+        "id": "lean:NominalPrimitiveSubtypes.Packet",
+        "kind": "named"
+      },
+      "rubyType": "LeanBridge::Nominalprimitivesubtypes::Packet"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "args": [
+    "consumer.rb",
+    "--reviewed"
+  ],
+  "closure": {
+    "environmentSha256": "805224ac6b0adec01d38286ac4fe97e39b2acca16bf33637238c34d37633a7c0",
+    "gemspecSha256": "c7eda0ee4cd0496d7f5c7dd7e17cd81187ac1b3b6c7786ae093e9ac88efbdc22",
+    "interpreterSha256": "28eea9e1f4c7eef2f6812b0535409dce29f71ca86bbbddeccb6df6d3279bf6bb",
+    "packageFileSetSha256": "cee652ba8fb0f5e491cc9a23b7d45f8220e022f3f9359a7f8ecefd67dfdc40d1",
+    "receiptSha256": "ee46ddb07b9d7392bb4355ce4a336d3b732e580e351a1c4ccd2417271585f94c"
+  },
+  "command": "/app/.toolchains/ruby33/bin/ruby",
+  "counts": {
+    "checks": 1664,
+    "rejections": 306,
+    "rounds": 256,
+    "snapshotControls": 12,
+    "wordBits": 64
+  },
+  "cwd": "/tmp/lean-bridge-nominal-primitive-subtype-ruby-vXDGrh/consumer",
+  "gems": "/tmp/lean-bridge-nominal-primitive-subtype-ruby-vXDGrh/consumer/gems",
+  "relocated": false,
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":1664,\"rejections\":306,\"snapshotControls\":12,\"rounds\":256,\"wordBits\":64}\n"
+  }
+}

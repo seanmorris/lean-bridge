@@ -1,0 +1,1741 @@
+{
+  "checkers": [
+    "archive",
+    "ci-report",
+    "controls",
+    "environment-records",
+    "model-records",
+    "package",
+    "package-records",
+    "provenance",
+    "report",
+    "generators"
+  ],
+  "files": [
+    {
+      "bytes": 4456,
+      "path": "checkers/archive.mjs",
+      "sha256": "a82271b642a71a88cf00705fdb1a4d90910f7a04c3285d34427e83bb622999c1"
+    },
+    {
+      "bytes": 5471,
+      "path": "checkers/ci-report.mjs",
+      "sha256": "7ea92895176398831a6efb01adab9215fc04612288fe29a903835b210456cca4"
+    },
+    {
+      "bytes": 9570,
+      "path": "checkers/controls.mjs",
+      "sha256": "f06bf55838acbb6abb656abcd9c7ed9cd3748afa5428c0f3052f50f76db45d71"
+    },
+    {
+      "bytes": 4014,
+      "path": "checkers/environment-records.mjs",
+      "sha256": "f8208e2f5c2213ec8b916763da2511e0d103f47d60d697421d10055a66b3f596"
+    },
+    {
+      "bytes": 2913,
+      "path": "checkers/generators.mjs",
+      "sha256": "5b0c51c1747339ce1795735a66f2c7cf6d1231ee692948236d1d261643b2721b"
+    },
+    {
+      "bytes": 9139,
+      "path": "checkers/model-records.mjs",
+      "sha256": "c255f7265a61e5ca027c8abbfdf7f478c96a49820179090d54c8ed7d9f2663a1"
+    },
+    {
+      "bytes": 5655,
+      "path": "checkers/package-records.mjs",
+      "sha256": "8b1c3e6021d4d50f103fdfe1413b499b58a0069fe3660638f9d7d0cdb166e866"
+    },
+    {
+      "bytes": 6874,
+      "path": "checkers/package.mjs",
+      "sha256": "9b8bc62e297964f7f745a5c5674d2ac7f184960a31823db6a05e2a35b93f462a"
+    },
+    {
+      "bytes": 9926,
+      "path": "checkers/provenance.mjs",
+      "sha256": "9db7bb89eb61b7a2ef4d02bfdfd01dc15562b3e022444ebbfe3b787fde374023"
+    },
+    {
+      "bytes": 7360,
+      "path": "checkers/report.mjs",
+      "sha256": "9afdfdb75161ee8a68c4cbac4d1da1ed94b1608712daea510722e895d4f20229"
+    },
+    {
+      "bytes": 329,
+      "path": "ordinary-full/controls/controls.end.json",
+      "sha256": "372224f0217dbf428ce1e0be46957c929f479017dc45a7eac7154dda7412786c"
+    },
+    {
+      "bytes": 1466,
+      "path": "ordinary-full/controls/controls.json",
+      "sha256": "96f548b7d5ad4f8644a944d70596851a8db64d5e5d4d8bf8f11f5a09262b5462"
+    },
+    {
+      "bytes": 1210,
+      "path": "ordinary-full/controls/controls.log",
+      "sha256": "5909f6c46c012ef7b36ed4b239ca63ad6e4d972cc8506c0afe6da215ed80932d"
+    },
+    {
+      "bytes": 8808,
+      "path": "ordinary-full/controls/controls.start.json",
+      "sha256": "285b50f0a913579846280821b605767f87ea18ed422e6062cceacf879d8af729"
+    },
+    {
+      "bytes": 329,
+      "path": "ordinary-full/producer/end.json",
+      "sha256": "c45ef9177f3854fb324c22faff519feb0eec4b7da9006fcbb014b75b516e0d6c"
+    },
+    {
+      "bytes": 460,
+      "path": "ordinary-full/producer/run.tap",
+      "sha256": "0d78fc89703c6c93ef5408bd00dfda0d0a58113eb634fc745b12800fc3a6b1bd"
+    },
+    {
+      "bytes": 2111,
+      "path": "ordinary-full/producer/start.json",
+      "sha256": "6a59aa32eb5de38be5cccc02a2c0c3615b9451206af8fb2244d10644e844c241"
+    },
+    {
+      "bytes": 1248,
+      "path": "ordinary-full/records/build-0/author-inputs.json",
+      "sha256": "f3812a598d6ff6a73477b77c981ad40c7abe73409e63f8727490a70208e64c15"
+    },
+    {
+      "bytes": 82654,
+      "path": "ordinary-full/records/build-0/lean-bridge.exports.json",
+      "sha256": "b87bf27c00e1e34b4294b283b446db560a50456a9be0385fbf71ea83910ca537"
+    },
+    {
+      "bytes": 1541427,
+      "path": "ordinary-full/records/build-0/model.json",
+      "sha256": "6ac48848e197d551f858174353fd9a4034573d619c10d306ce66d4fb101e21d8"
+    },
+    {
+      "bytes": 10863,
+      "path": "ordinary-full/records/build-0/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 1174,
+      "path": "ordinary-full/records/build-0/package-set-receipt.json",
+      "sha256": "faee7d6c5023dc6645573da5d7f46f573c281e14e95c9c7b2a61c41fa32254bc"
+    },
+    {
+      "bytes": 1247,
+      "path": "ordinary-full/records/build-1/author-inputs.json",
+      "sha256": "c32e72308c361d01434f9c236f448e154dc544e08d544c427b433e9064fdb98a"
+    },
+    {
+      "bytes": 82654,
+      "path": "ordinary-full/records/build-1/lean-bridge.exports.json",
+      "sha256": "b87bf27c00e1e34b4294b283b446db560a50456a9be0385fbf71ea83910ca537"
+    },
+    {
+      "bytes": 1541427,
+      "path": "ordinary-full/records/build-1/model.json",
+      "sha256": "6ac48848e197d551f858174353fd9a4034573d619c10d306ce66d4fb101e21d8"
+    },
+    {
+      "bytes": 10863,
+      "path": "ordinary-full/records/build-1/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 1174,
+      "path": "ordinary-full/records/build-1/package-set-receipt.json",
+      "sha256": "faee7d6c5023dc6645573da5d7f46f573c281e14e95c9c7b2a61c41fa32254bc"
+    },
+    {
+      "bytes": 82654,
+      "path": "ordinary-full/records/configuration.json",
+      "sha256": "b87bf27c00e1e34b4294b283b446db560a50456a9be0385fbf71ea83910ca537"
+    },
+    {
+      "bytes": 13933,
+      "path": "ordinary-full/records/consumer.rb",
+      "sha256": "18d539bf7aecd21185b324e619fcaeea9c79ac8407550034c78a89788bbf50df"
+    },
+    {
+      "bytes": 207638,
+      "path": "ordinary-full/records/environment.json",
+      "sha256": "a9d3e1f48fc83ea2e9d1cc731d426a0903dabae42e9b5bccd200934352370646"
+    },
+    {
+      "bytes": 301016,
+      "path": "ordinary-full/records/expected.binding-ir.json",
+      "sha256": "c681efea6ec29bdc9eaadbfe573c120560313b0fc6f5ba6a5d2e688bcadd6ece"
+    },
+    {
+      "bytes": 6888,
+      "path": "ordinary-full/records/gem.json",
+      "sha256": "46413ce88ffc8b4dc2e638f786b5a391ba91bfdf697a6b260a5e413bffcf3b2f"
+    },
+    {
+      "bytes": 50333696,
+      "path": "ordinary-full/records/handoff/archives/nominalprimitivesubtypes-1.0.0-x86_64-linux.gem",
+      "sha256": "e1e6971b5b7c1bde3ad6d3c66748660b7522ec24a3a153ebc3e029bd896b8b7e"
+    },
+    {
+      "bytes": 1174,
+      "path": "ordinary-full/records/handoff/package-set-receipt.json",
+      "sha256": "faee7d6c5023dc6645573da5d7f46f573c281e14e95c9c7b2a61c41fa32254bc"
+    },
+    {
+      "bytes": 91,
+      "path": "ordinary-full/records/handoff/package-set-receipt.json.sha256",
+      "sha256": "cbe00996a5a5cb1b9bb0cbea6f2c704dd9b784caf6cf6248e55a195cd13b514b"
+    },
+    {
+      "bytes": 946,
+      "path": "ordinary-full/records/installed.gemspec",
+      "sha256": "2459f1517a9652628bd4c2d6a5abe8e4c306a07578742af01351d66306c39cfa"
+    },
+    {
+      "bytes": 1033,
+      "path": "ordinary-full/records/installed.json",
+      "sha256": "3eb15813e1b905772313282c5de96cbb9ae0c43632be9b58a1f3936ce0b71a08"
+    },
+    {
+      "bytes": 317,
+      "path": "ordinary-full/records/interpreter.json",
+      "sha256": "81c88827a80270920e761e05899b65644e4ffc8051a2a05bb4ddb512d0de37c4"
+    },
+    {
+      "bytes": 1462,
+      "path": "ordinary-full/records/package/binding-manifest.json",
+      "sha256": "63556348ccf72e37084e0e2d6027070011a0a3e88fc3ebf59161509ca676d0ce"
+    },
+    {
+      "bytes": 1309,
+      "path": "ordinary-full/records/package/lean-bridge/component/allocation-guard.h",
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    {
+      "bytes": 1542,
+      "path": "ordinary-full/records/package/lean-bridge/component/artifacts.json",
+      "sha256": "543385d5f68e07b0273375a3d3f93ad452972c1b3b561989ef22c8d4a9daf228"
+    },
+    {
+      "bytes": 398585,
+      "path": "ordinary-full/records/package/lean-bridge/component/binding-ir.json",
+      "sha256": "5939b2219267a1959adf856268e0de49cabbaa34a717c3f85e574a12d1db0818"
+    },
+    {
+      "bytes": 26950,
+      "path": "ordinary-full/records/package/lean-bridge/component/component.h",
+      "sha256": "c6a3f7d4d372878b4d3ce3423c157f54c9f6636c13c78ad6f8af46a86f40ecb2"
+    },
+    {
+      "bytes": 105819,
+      "path": "ordinary-full/records/package/lean-bridge/component/generated.lean",
+      "sha256": "76374193a68c65fddef7e4481def4d661593379345fce390aa88d37bf6413653"
+    },
+    {
+      "bytes": 1295811,
+      "path": "ordinary-full/records/package/lean-bridge/component/metadata.json",
+      "sha256": "2ca26897540f35a5e740df6ccafe47c616ecec1d3d31c65fe48f67ab43f1293b"
+    },
+    {
+      "bytes": 1541427,
+      "path": "ordinary-full/records/package/lean-bridge/component/model.json",
+      "sha256": "6ac48848e197d551f858174353fd9a4034573d619c10d306ce66d4fb101e21d8"
+    },
+    {
+      "bytes": 183791,
+      "path": "ordinary-full/records/package/lean-bridge/component/native-component.json",
+      "sha256": "e86abc48cb38c48c67892a47a75b90af0cee7d9cf2b45535f5eba6be6cd0334f"
+    },
+    {
+      "bytes": 9160,
+      "path": "ordinary-full/records/package/lean-bridge/licenses/Lean-LICENSE",
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    {
+      "bytes": 81854,
+      "path": "ordinary-full/records/package/lean-bridge/licenses/Lean-LICENSES",
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    {
+      "bytes": 1093,
+      "path": "ordinary-full/records/package/lean-bridge/licenses/LeanBridge-LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 90014,
+      "path": "ordinary-full/records/package/lean-bridge/licenses/source-notices.json",
+      "sha256": "89e6b4080e821747d84104f1754e1c1acde1f88e40b6abc5f9a25c6e750fd4a4"
+    },
+    {
+      "bytes": 1093,
+      "path": "ordinary-full/records/package/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 1432,
+      "path": "ordinary-full/records/package/lean-bridge/native-c-adapter.json",
+      "sha256": "06b119c9ea46070a1e600a18ea3b2e5f687a41820ef3df5c940bad16284e60da"
+    },
+    {
+      "bytes": 185953,
+      "path": "ordinary-full/records/package/lean-bridge/package-receipt.json",
+      "sha256": "4a2d6383918741e61c082b019ac8d1befdafabb6e204c1716405d142c1d59d1d"
+    },
+    {
+      "bytes": 117,
+      "path": "ordinary-full/records/package/lean-bridge/platform.json",
+      "sha256": "16530dd58887bd79e4993fc88abe2d967ee38bec55efd2c4991c71a995802e72"
+    },
+    {
+      "bytes": 1466,
+      "path": "ordinary-full/records/package/lean-bridge/runtime.json",
+      "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    },
+    {
+      "bytes": 483,
+      "path": "ordinary-full/records/package/lib/lean_bridge/native_copied_runtime_v1.rb",
+      "sha256": "7575ac13e27ba18a8d67228f16bf66fb0c7218763025ee1772bce5ee00c0ceac"
+    },
+    {
+      "bytes": 65916,
+      "path": "ordinary-full/records/package/lib/lean_bridge/nominalprimitivesubtypes.rb",
+      "sha256": "c510605098b806a2230aaadc0be1216acc8ca80cae5288a0717cf20f33a094f1"
+    },
+    {
+      "bytes": 40011,
+      "path": "ordinary-full/records/package/lib/lean_bridge/nominalprimitivesubtypes/native.rb",
+      "sha256": "831859b4a06e20caca6d6fbdbfb328f9e525ca7212d2dcb94d7ce4baf8e582e6"
+    },
+    {
+      "bytes": 57454,
+      "path": "ordinary-full/records/package/README.md",
+      "sha256": "42272be1ddf82b58c723c375a2f8c7fd0950342667e6398d6db9747fb51c59a1"
+    },
+    {
+      "bytes": 1052,
+      "path": "ordinary-full/records/relocated.json",
+      "sha256": "b501d1b6dff2a88d48bd382f458b27fce0e5e7dddfca91642d39c1d6bb6fa71e"
+    },
+    {
+      "bytes": 5720,
+      "path": "ordinary-full/records/report.json",
+      "sha256": "a2eda9b1e7d9ff0ee670fed0d67bc002f97e2970943806b44bcdcfa9b6c72792"
+    },
+    {
+      "bytes": 123,
+      "path": "ordinary-full/records/runtime.json",
+      "sha256": "c2f1b9d72bf412b57880eaf2e5f14f071577bea6210298d5c0d82c529f20d81e"
+    },
+    {
+      "bytes": 329,
+      "path": "ordinary-result-only/controls/controls.end.json",
+      "sha256": "889cad5be434036aaae789396aee83b7b30287546073ba99f7df7d35f35200a9"
+    },
+    {
+      "bytes": 1491,
+      "path": "ordinary-result-only/controls/controls.json",
+      "sha256": "8e6f7e84a7716d9c0d2558c2192eee9cf7f8fb5b1b51fcc91cda44ccedba5c7b"
+    },
+    {
+      "bytes": 1235,
+      "path": "ordinary-result-only/controls/controls.log",
+      "sha256": "74111c4d8861a0faf2c943159e78a633844c91d2c9c6a1fea984565d90b27e95"
+    },
+    {
+      "bytes": 9151,
+      "path": "ordinary-result-only/controls/controls.start.json",
+      "sha256": "19bf80e3538411ad8aa9a80ee2926e7d5f9e6b43148f671748160fa6f4cf66c7"
+    },
+    {
+      "bytes": 329,
+      "path": "ordinary-result-only/producer/end.json",
+      "sha256": "86bafb83e23a95f078918f22c781640ed83ed00de771751b43c835327054728e"
+    },
+    {
+      "bytes": 563,
+      "path": "ordinary-result-only/producer/run.tap",
+      "sha256": "f67a046f982ecbba5b2bf36d3724da4706494a123b8c607ec9831e9eff2223b9"
+    },
+    {
+      "bytes": 2146,
+      "path": "ordinary-result-only/producer/start.json",
+      "sha256": "46bd682652c78c4f2dfcd20e5009573aedc8e7119210bb6c2ebd92e9ebcea83f"
+    },
+    {
+      "bytes": 1248,
+      "path": "ordinary-result-only/records/build-0/author-inputs.json",
+      "sha256": "8196ae9f7be2f08ffa8b6d4dc24bbf9dc6372e01b9d104de0dc22b20bfbf4047"
+    },
+    {
+      "bytes": 468,
+      "path": "ordinary-result-only/records/build-0/lean-bridge.exports.json",
+      "sha256": "66807a5097d0c990b4e0eed6d7eff94b757075b2c1fd8455768c04b09e6035a3"
+    },
+    {
+      "bytes": 520018,
+      "path": "ordinary-result-only/records/build-0/model.json",
+      "sha256": "cbadd1354127bc5413a1009ce3ef3facbd0a565466256b3d0845e96fc0dcd669"
+    },
+    {
+      "bytes": 10863,
+      "path": "ordinary-result-only/records/build-0/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 1174,
+      "path": "ordinary-result-only/records/build-0/package-set-receipt.json",
+      "sha256": "7ada74dba692d63e6702f3526f1eb89eee7f3adfa4cfd58875b5008a9aa367eb"
+    },
+    {
+      "bytes": 1248,
+      "path": "ordinary-result-only/records/build-1/author-inputs.json",
+      "sha256": "090f68425409daf664b90962bb1a9d855c95d67e65c6b04fe55014c6c0cb07ea"
+    },
+    {
+      "bytes": 468,
+      "path": "ordinary-result-only/records/build-1/lean-bridge.exports.json",
+      "sha256": "66807a5097d0c990b4e0eed6d7eff94b757075b2c1fd8455768c04b09e6035a3"
+    },
+    {
+      "bytes": 520018,
+      "path": "ordinary-result-only/records/build-1/model.json",
+      "sha256": "cbadd1354127bc5413a1009ce3ef3facbd0a565466256b3d0845e96fc0dcd669"
+    },
+    {
+      "bytes": 10863,
+      "path": "ordinary-result-only/records/build-1/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 1174,
+      "path": "ordinary-result-only/records/build-1/package-set-receipt.json",
+      "sha256": "7ada74dba692d63e6702f3526f1eb89eee7f3adfa4cfd58875b5008a9aa367eb"
+    },
+    {
+      "bytes": 468,
+      "path": "ordinary-result-only/records/configuration.json",
+      "sha256": "66807a5097d0c990b4e0eed6d7eff94b757075b2c1fd8455768c04b09e6035a3"
+    },
+    {
+      "bytes": 13933,
+      "path": "ordinary-result-only/records/consumer.rb",
+      "sha256": "18d539bf7aecd21185b324e619fcaeea9c79ac8407550034c78a89788bbf50df"
+    },
+    {
+      "bytes": 14610,
+      "path": "ordinary-result-only/records/environment.json",
+      "sha256": "1f94866fd13744ebe89c6eba1085b8541826922e97b1c3359c76c15ec5c4318a"
+    },
+    {
+      "bytes": 97327,
+      "path": "ordinary-result-only/records/expected.binding-ir.json",
+      "sha256": "19a992cc50cb5e697d9b5fe77b334ffdee6f520000a44e4c0b5cccab4b021c59"
+    },
+    {
+      "bytes": 6877,
+      "path": "ordinary-result-only/records/gem.json",
+      "sha256": "705c040ee7fd8fd114a78c17ca1d3a4e33a95f0f9050a6192bf1fdc34803c2ee"
+    },
+    {
+      "bytes": 50179072,
+      "path": "ordinary-result-only/records/handoff/archives/nominalprimitivesubtypes-1.0.0-x86_64-linux.gem",
+      "sha256": "dc1454fd61e836df43eae626f89a006ea060e7aed2c3805aee890662334dad72"
+    },
+    {
+      "bytes": 1174,
+      "path": "ordinary-result-only/records/handoff/package-set-receipt.json",
+      "sha256": "7ada74dba692d63e6702f3526f1eb89eee7f3adfa4cfd58875b5008a9aa367eb"
+    },
+    {
+      "bytes": 91,
+      "path": "ordinary-result-only/records/handoff/package-set-receipt.json.sha256",
+      "sha256": "5d8692f85f570e124e3331c5cefa92d003e41f166fedd10f5939a8a6e14ef413"
+    },
+    {
+      "bytes": 946,
+      "path": "ordinary-result-only/records/installed.gemspec",
+      "sha256": "ee6bb242d0c5b7d8a35875f98f94722a87e2f23df2f4326b3c99305add399ce2"
+    },
+    {
+      "bytes": 1048,
+      "path": "ordinary-result-only/records/installed.json",
+      "sha256": "c88eda7f139e3c26e30a9d56ca6a885e13cb61e91bd291af47f4dbf922e981c6"
+    },
+    {
+      "bytes": 317,
+      "path": "ordinary-result-only/records/interpreter.json",
+      "sha256": "81c88827a80270920e761e05899b65644e4ffc8051a2a05bb4ddb512d0de37c4"
+    },
+    {
+      "bytes": 1462,
+      "path": "ordinary-result-only/records/package/binding-manifest.json",
+      "sha256": "8958b5e7fa60daabd92fab33509aa8f30ee6a3733d449112d25e972eff337232"
+    },
+    {
+      "bytes": 1309,
+      "path": "ordinary-result-only/records/package/lean-bridge/component/allocation-guard.h",
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    {
+      "bytes": 1534,
+      "path": "ordinary-result-only/records/package/lean-bridge/component/artifacts.json",
+      "sha256": "adb595b5703686360d70de8b345577a7f5696af63607c11f25e050f6b24635a7"
+    },
+    {
+      "bytes": 98281,
+      "path": "ordinary-result-only/records/package/lean-bridge/component/binding-ir.json",
+      "sha256": "2f08fd0ac5c914425ac7e7fd3fdd3a0e9cb561b2f3ec1a0e111390387964d334"
+    },
+    {
+      "bytes": 5211,
+      "path": "ordinary-result-only/records/package/lean-bridge/component/component.h",
+      "sha256": "093d3726d3a4b6bfb8a3cc26ca6ef6ff95f66e9d88c196c08bcd9c14fed530c3"
+    },
+    {
+      "bytes": 20826,
+      "path": "ordinary-result-only/records/package/lean-bridge/component/generated.lean",
+      "sha256": "a6b350eea7560c91945b75d7b163711fdeb07109e6bc0a82f706eeaaa2482093"
+    },
+    {
+      "bytes": 482882,
+      "path": "ordinary-result-only/records/package/lean-bridge/component/metadata.json",
+      "sha256": "e105b18aec32cd0c505c2df7e67d3f6d4feb70078fa1765eea006488eb9d63d1"
+    },
+    {
+      "bytes": 520018,
+      "path": "ordinary-result-only/records/package/lean-bridge/component/model.json",
+      "sha256": "cbadd1354127bc5413a1009ce3ef3facbd0a565466256b3d0845e96fc0dcd669"
+    },
+    {
+      "bytes": 4475,
+      "path": "ordinary-result-only/records/package/lean-bridge/component/native-component.json",
+      "sha256": "2a4f2a01bbb4d7b56d1974c20f3f4361b4a3051035d1ef4e2ba9103903e663b1"
+    },
+    {
+      "bytes": 9160,
+      "path": "ordinary-result-only/records/package/lean-bridge/licenses/Lean-LICENSE",
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    {
+      "bytes": 81854,
+      "path": "ordinary-result-only/records/package/lean-bridge/licenses/Lean-LICENSES",
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    {
+      "bytes": 1093,
+      "path": "ordinary-result-only/records/package/lean-bridge/licenses/LeanBridge-LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 2248,
+      "path": "ordinary-result-only/records/package/lean-bridge/licenses/source-notices.json",
+      "sha256": "bc0e57bb24f5937224e846bfdb83cdd16ff8c785a94493d4f02ffe08319b9ae7"
+    },
+    {
+      "bytes": 1093,
+      "path": "ordinary-result-only/records/package/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 1429,
+      "path": "ordinary-result-only/records/package/lean-bridge/native-c-adapter.json",
+      "sha256": "16b42422b7dd82f8741c7eb21c53e3638b1510b72f5354e322e5f0c221be8f3b"
+    },
+    {
+      "bytes": 7562,
+      "path": "ordinary-result-only/records/package/lean-bridge/package-receipt.json",
+      "sha256": "fe25cefab2c6b283c8ae00fdb5144b3967d0dd1cf1c77ecbee94444fc1a089db"
+    },
+    {
+      "bytes": 117,
+      "path": "ordinary-result-only/records/package/lean-bridge/platform.json",
+      "sha256": "16530dd58887bd79e4993fc88abe2d967ee38bec55efd2c4991c71a995802e72"
+    },
+    {
+      "bytes": 1466,
+      "path": "ordinary-result-only/records/package/lean-bridge/runtime.json",
+      "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    },
+    {
+      "bytes": 483,
+      "path": "ordinary-result-only/records/package/lib/lean_bridge/native_copied_runtime_v1.rb",
+      "sha256": "7575ac13e27ba18a8d67228f16bf66fb0c7218763025ee1772bce5ee00c0ceac"
+    },
+    {
+      "bytes": 27982,
+      "path": "ordinary-result-only/records/package/lib/lean_bridge/nominalprimitivesubtypes.rb",
+      "sha256": "255299aebd3fa063a3a4cd6fb61bfdb8efb142712fa1cc8da187786f65550436"
+    },
+    {
+      "bytes": 32630,
+      "path": "ordinary-result-only/records/package/lib/lean_bridge/nominalprimitivesubtypes/native.rb",
+      "sha256": "70c233896c6aa5a51bd4cfbf562c64f98fc643827d33d51f8a874a43dc8ebb2b"
+    },
+    {
+      "bytes": 19578,
+      "path": "ordinary-result-only/records/package/README.md",
+      "sha256": "d025d74dfaf77d27314a434251059fd78eb967a144486cf8344a7ac7c22e8481"
+    },
+    {
+      "bytes": 1067,
+      "path": "ordinary-result-only/records/relocated.json",
+      "sha256": "98938933ffb1c6a01c73c21b5d36960df20bbbc87040ba0cee4c9b3d41c021e2"
+    },
+    {
+      "bytes": 5765,
+      "path": "ordinary-result-only/records/report.json",
+      "sha256": "6dff778b28de9257173bc4db46f03c3071decab99a34ccb4b98a5019244030eb"
+    },
+    {
+      "bytes": 123,
+      "path": "ordinary-result-only/records/runtime.json",
+      "sha256": "c2f1b9d72bf412b57880eaf2e5f14f071577bea6210298d5c0d82c529f20d81e"
+    },
+    {
+      "bytes": 335,
+      "path": "preserved/ordinary-full-r1/end.json",
+      "sha256": "de1f8681114b1728d2324ad1aa9417043f05ae06b781ec180c8e4d5c07a0b602"
+    },
+    {
+      "bytes": 2628,
+      "path": "preserved/ordinary-full-r1/failed-inputs.list",
+      "sha256": "bd26c0092ee3562904678714ac9f9ffffeaf5c6107b9f1cbd765ca528077ce2c"
+    },
+    {
+      "bytes": 4679,
+      "path": "preserved/ordinary-full-r1/failed-inputs.sha256",
+      "sha256": "92f374c5cc7096b9d45c5d734668b9829a26281ab6350963be35580f7ae6ad85"
+    },
+    {
+      "bytes": 100654620,
+      "path": "preserved/ordinary-full-r1/failed-inputs.tar.gz",
+      "sha256": "1fc4267ac4e3a73ab7c0bd4d0f0cb37e6d9042ba15ee757d1c9236dadd6bcde5"
+    },
+    {
+      "bytes": 15,
+      "path": "preserved/ordinary-full-r1/run.tap",
+      "sha256": "7cb03ab03edf5190a8aa546c78285344395fad3d42d4011cd224f934aef96b3f"
+    },
+    {
+      "bytes": 2111,
+      "path": "preserved/ordinary-full-r1/start.json",
+      "sha256": "71a262a8b22eeef868bc471b2b144c21e3d20abffa7c38dad56c76c53adba6d9"
+    },
+    {
+      "bytes": 329,
+      "path": "reviewed-full/controls/controls.end.json",
+      "sha256": "44fadea4143a27372c41b39d22057c4a6b7d926ebd91137710da38162aeb9230"
+    },
+    {
+      "bytes": 1466,
+      "path": "reviewed-full/controls/controls.json",
+      "sha256": "8a83fa5f9ac9ca75755eaad89e35bee5ce4676d0683d079ec735651b575cee83"
+    },
+    {
+      "bytes": 1210,
+      "path": "reviewed-full/controls/controls.log",
+      "sha256": "e3531c01fb410e394b2ca8dd1ce8feebb8e56a59db351d0a62bca170e78a360a"
+    },
+    {
+      "bytes": 9042,
+      "path": "reviewed-full/controls/controls.start.json",
+      "sha256": "6da366ec5fa2c90fc1327e10b2245590180cde034077fbfeff125e3d9783b8db"
+    },
+    {
+      "bytes": 329,
+      "path": "reviewed-full/producer/end.json",
+      "sha256": "e0e2e45d97f706aa7ed4ec62992a09251826217924e7bed19abdda973ad8f3cd"
+    },
+    {
+      "bytes": 460,
+      "path": "reviewed-full/producer/run.tap",
+      "sha256": "61ed5d6fadcad05b26678807d218227842ab9247e8f8c396a4050bd76647b251"
+    },
+    {
+      "bytes": 2111,
+      "path": "reviewed-full/producer/start.json",
+      "sha256": "1e044502ee29e207d4a4c3ec7045ea9c3b83607f64f9451c3ab6616958ac7175"
+    },
+    {
+      "bytes": 301016,
+      "path": "reviewed-full/records/build-0/api.binding-ir.json",
+      "sha256": "c681efea6ec29bdc9eaadbfe573c120560313b0fc6f5ba6a5d2e688bcadd6ece"
+    },
+    {
+      "bytes": 1434,
+      "path": "reviewed-full/records/build-0/author-inputs.json",
+      "sha256": "95a0db755954352eda2a5d0cbd0953eb237f7a90c80db3cc57617ae45563cb23"
+    },
+    {
+      "bytes": 187,
+      "path": "reviewed-full/records/build-0/lean-bridge.exports.json",
+      "sha256": "153271f1344cb6ecdde1bff31beb6792e6893a6985d34d04ae906e9c6fe36106"
+    },
+    {
+      "bytes": 1777457,
+      "path": "reviewed-full/records/build-0/model.json",
+      "sha256": "deea58e850fbc84fb0042255c6e9e55bf2ed5169dd00ddfce787de99e7212759"
+    },
+    {
+      "bytes": 10863,
+      "path": "reviewed-full/records/build-0/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 1174,
+      "path": "reviewed-full/records/build-0/package-set-receipt.json",
+      "sha256": "aa9a8010afeabe8cfba3811ea9bad761689a54ea8ab82f88c4995d4078a0a930"
+    },
+    {
+      "bytes": 301016,
+      "path": "reviewed-full/records/build-1/api.binding-ir.json",
+      "sha256": "c681efea6ec29bdc9eaadbfe573c120560313b0fc6f5ba6a5d2e688bcadd6ece"
+    },
+    {
+      "bytes": 1458,
+      "path": "reviewed-full/records/build-1/author-inputs.json",
+      "sha256": "9f3e8101182a518bc5affd5369a6242a08a94d1a3edbeeecdd08e958fb483f07"
+    },
+    {
+      "bytes": 187,
+      "path": "reviewed-full/records/build-1/lean-bridge.exports.json",
+      "sha256": "153271f1344cb6ecdde1bff31beb6792e6893a6985d34d04ae906e9c6fe36106"
+    },
+    {
+      "bytes": 1777457,
+      "path": "reviewed-full/records/build-1/model.json",
+      "sha256": "deea58e850fbc84fb0042255c6e9e55bf2ed5169dd00ddfce787de99e7212759"
+    },
+    {
+      "bytes": 10863,
+      "path": "reviewed-full/records/build-1/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 1174,
+      "path": "reviewed-full/records/build-1/package-set-receipt.json",
+      "sha256": "aa9a8010afeabe8cfba3811ea9bad761689a54ea8ab82f88c4995d4078a0a930"
+    },
+    {
+      "bytes": 187,
+      "path": "reviewed-full/records/configuration.json",
+      "sha256": "153271f1344cb6ecdde1bff31beb6792e6893a6985d34d04ae906e9c6fe36106"
+    },
+    {
+      "bytes": 13933,
+      "path": "reviewed-full/records/consumer.rb",
+      "sha256": "18d539bf7aecd21185b324e619fcaeea9c79ac8407550034c78a89788bbf50df"
+    },
+    {
+      "bytes": 470878,
+      "path": "reviewed-full/records/environment.json",
+      "sha256": "e4716493cd3bf40849dcd32a1965285962dbf4c66d66c7de610eed40e895d747"
+    },
+    {
+      "bytes": 301016,
+      "path": "reviewed-full/records/expected.binding-ir.json",
+      "sha256": "c681efea6ec29bdc9eaadbfe573c120560313b0fc6f5ba6a5d2e688bcadd6ece"
+    },
+    {
+      "bytes": 6887,
+      "path": "reviewed-full/records/gem.json",
+      "sha256": "ec011c46afd8efeb281ffb2616b5f3c33a42cdb2484a0cc6d675794b8fac492e"
+    },
+    {
+      "bytes": 50350080,
+      "path": "reviewed-full/records/handoff/archives/nominalprimitivesubtypes-1.0.0-x86_64-linux.gem",
+      "sha256": "d1a445dcdc8d3d1d61ccd6a50b662f3958e1a19abdb4e3ed34482edec4059ad7"
+    },
+    {
+      "bytes": 1174,
+      "path": "reviewed-full/records/handoff/package-set-receipt.json",
+      "sha256": "aa9a8010afeabe8cfba3811ea9bad761689a54ea8ab82f88c4995d4078a0a930"
+    },
+    {
+      "bytes": 91,
+      "path": "reviewed-full/records/handoff/package-set-receipt.json.sha256",
+      "sha256": "cc77cfdfe1f71b9c845cfcf8138b2084da4255078914de985b3f1e92eee4988d"
+    },
+    {
+      "bytes": 946,
+      "path": "reviewed-full/records/installed.gemspec",
+      "sha256": "c7eda0ee4cd0496d7f5c7dd7e17cd81187ac1b3b6c7786ae093e9ac88efbdc22"
+    },
+    {
+      "bytes": 1051,
+      "path": "reviewed-full/records/installed.json",
+      "sha256": "8409ab842e21b9a3d113c55769caa0c13ce774e2e57b517af2e81e1e6a6ae420"
+    },
+    {
+      "bytes": 317,
+      "path": "reviewed-full/records/interpreter.json",
+      "sha256": "81c88827a80270920e761e05899b65644e4ffc8051a2a05bb4ddb512d0de37c4"
+    },
+    {
+      "bytes": 1462,
+      "path": "reviewed-full/records/package/binding-manifest.json",
+      "sha256": "35c2ec7e56b2653371127ed45cbe065b65626c63d80157d3512608b6e7c02128"
+    },
+    {
+      "bytes": 1309,
+      "path": "reviewed-full/records/package/lean-bridge/component/allocation-guard.h",
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    {
+      "bytes": 1541,
+      "path": "reviewed-full/records/package/lean-bridge/component/artifacts.json",
+      "sha256": "a5a2e4f8c6a2d7980d421bfdd98f4b95d56c3df4bff45a7dc22d9b3dc6c3b384"
+    },
+    {
+      "bytes": 399112,
+      "path": "reviewed-full/records/package/lean-bridge/component/binding-ir.json",
+      "sha256": "18d0d07d13e85ead33995a8cb20e3ef3e815790583859b38c579ce168a419e8e"
+    },
+    {
+      "bytes": 26950,
+      "path": "reviewed-full/records/package/lean-bridge/component/component.h",
+      "sha256": "c6a3f7d4d372878b4d3ce3423c157f54c9f6636c13c78ad6f8af46a86f40ecb2"
+    },
+    {
+      "bytes": 105819,
+      "path": "reviewed-full/records/package/lean-bridge/component/generated.lean",
+      "sha256": "76374193a68c65fddef7e4481def4d661593379345fce390aa88d37bf6413653"
+    },
+    {
+      "bytes": 1295811,
+      "path": "reviewed-full/records/package/lean-bridge/component/metadata.json",
+      "sha256": "e7cf5069ec41b1404281e8c10599726df9d54d5ed99899b261a4ed7b74800277"
+    },
+    {
+      "bytes": 1777457,
+      "path": "reviewed-full/records/package/lean-bridge/component/model.json",
+      "sha256": "deea58e850fbc84fb0042255c6e9e55bf2ed5169dd00ddfce787de99e7212759"
+    },
+    {
+      "bytes": 419294,
+      "path": "reviewed-full/records/package/lean-bridge/component/native-component.json",
+      "sha256": "9f08c00115909b790e0609643ac56953be29e43628056994496893dacde832d2"
+    },
+    {
+      "bytes": 9160,
+      "path": "reviewed-full/records/package/lean-bridge/licenses/Lean-LICENSE",
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    {
+      "bytes": 81854,
+      "path": "reviewed-full/records/package/lean-bridge/licenses/Lean-LICENSES",
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    {
+      "bytes": 1093,
+      "path": "reviewed-full/records/package/lean-bridge/licenses/LeanBridge-LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 2131,
+      "path": "reviewed-full/records/package/lean-bridge/licenses/source-notices.json",
+      "sha256": "bf18a65f70901ce559a42172c7a1575dea8766efe20d38f420b5bc6add22acf2"
+    },
+    {
+      "bytes": 1093,
+      "path": "reviewed-full/records/package/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 1432,
+      "path": "reviewed-full/records/package/lean-bridge/native-c-adapter.json",
+      "sha256": "0b7a7624dfb8dae862d380eca3e4a0843f0e6df13c270a1a4aad0b65ab020461"
+    },
+    {
+      "bytes": 421455,
+      "path": "reviewed-full/records/package/lean-bridge/package-receipt.json",
+      "sha256": "ee46ddb07b9d7392bb4355ce4a336d3b732e580e351a1c4ccd2417271585f94c"
+    },
+    {
+      "bytes": 117,
+      "path": "reviewed-full/records/package/lean-bridge/platform.json",
+      "sha256": "16530dd58887bd79e4993fc88abe2d967ee38bec55efd2c4991c71a995802e72"
+    },
+    {
+      "bytes": 1466,
+      "path": "reviewed-full/records/package/lean-bridge/runtime.json",
+      "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    },
+    {
+      "bytes": 483,
+      "path": "reviewed-full/records/package/lib/lean_bridge/native_copied_runtime_v1.rb",
+      "sha256": "7575ac13e27ba18a8d67228f16bf66fb0c7218763025ee1772bce5ee00c0ceac"
+    },
+    {
+      "bytes": 65916,
+      "path": "reviewed-full/records/package/lib/lean_bridge/nominalprimitivesubtypes.rb",
+      "sha256": "c510605098b806a2230aaadc0be1216acc8ca80cae5288a0717cf20f33a094f1"
+    },
+    {
+      "bytes": 40011,
+      "path": "reviewed-full/records/package/lib/lean_bridge/nominalprimitivesubtypes/native.rb",
+      "sha256": "844795f1fd1afd15f26362a4ea1ae6def7a7a458fe800bd6e28fb708c976f140"
+    },
+    {
+      "bytes": 57454,
+      "path": "reviewed-full/records/package/README.md",
+      "sha256": "42272be1ddf82b58c723c375a2f8c7fd0950342667e6398d6db9747fb51c59a1"
+    },
+    {
+      "bytes": 1070,
+      "path": "reviewed-full/records/relocated.json",
+      "sha256": "a15f84f04b1f136f2d6d717c6ca059e49c7710a82addefd81beb712c9f1ea3d0"
+    },
+    {
+      "bytes": 5764,
+      "path": "reviewed-full/records/report.json",
+      "sha256": "1cab5419f257d51598e918a43ae903186443ee0843fffb3e1234e8a0fd8f4e24"
+    },
+    {
+      "bytes": 123,
+      "path": "reviewed-full/records/runtime.json",
+      "sha256": "c2f1b9d72bf412b57880eaf2e5f14f071577bea6210298d5c0d82c529f20d81e"
+    },
+    {
+      "bytes": 329,
+      "path": "reviewed-result-only/controls/controls.end.json",
+      "sha256": "5f6e0a2d630d9ef92fbb5056737cd3163658e72d17c2d997ceab2bff3d286ccb"
+    },
+    {
+      "bytes": 1491,
+      "path": "reviewed-result-only/controls/controls.json",
+      "sha256": "14e73b9365c49d6d6260d71d987b1e1561ff5237c3d3fe9a3114c4f95db26aec"
+    },
+    {
+      "bytes": 1235,
+      "path": "reviewed-result-only/controls/controls.log",
+      "sha256": "96c962fda3e91f2ed61922db7b288c6e79318f9c36b8f04ce401dbfac2eeddfc"
+    },
+    {
+      "bytes": 9399,
+      "path": "reviewed-result-only/controls/controls.start.json",
+      "sha256": "3d29ff0c6bb2b259f2993d9064a703bf942b09001b70a2a5e91e9fb9e36f3662"
+    },
+    {
+      "bytes": 329,
+      "path": "reviewed-result-only/producer/end.json",
+      "sha256": "88979bbd07f02c5353fb0824147a7a1b88d0fe27ed52fe535e14988c4d22e733"
+    },
+    {
+      "bytes": 488,
+      "path": "reviewed-result-only/producer/run.tap",
+      "sha256": "d6dfaa526d6e926958c36ea355e5ab35fc67c24225e694cdb81adcd34407d0b1"
+    },
+    {
+      "bytes": 2146,
+      "path": "reviewed-result-only/producer/start.json",
+      "sha256": "690ea3573c0fa43000f4a27e002dc25625dcfc1a6811a987f4a7fd206ad0169b"
+    },
+    {
+      "bytes": 97327,
+      "path": "reviewed-result-only/records/build-0/api.binding-ir.json",
+      "sha256": "19a992cc50cb5e697d9b5fe77b334ffdee6f520000a44e4c0b5cccab4b021c59"
+    },
+    {
+      "bytes": 1456,
+      "path": "reviewed-result-only/records/build-0/author-inputs.json",
+      "sha256": "00cf0342783dcac45587fc2e0911ba23eec6d7c097b8e519c85f45f19599a970"
+    },
+    {
+      "bytes": 187,
+      "path": "reviewed-result-only/records/build-0/lean-bridge.exports.json",
+      "sha256": "153271f1344cb6ecdde1bff31beb6792e6893a6985d34d04ae906e9c6fe36106"
+    },
+    {
+      "bytes": 625812,
+      "path": "reviewed-result-only/records/build-0/model.json",
+      "sha256": "477f5e5f8711e0c01930a3571dec44632244a8d05e3ceb9ff453e5108bf693e7"
+    },
+    {
+      "bytes": 10863,
+      "path": "reviewed-result-only/records/build-0/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 1174,
+      "path": "reviewed-result-only/records/build-0/package-set-receipt.json",
+      "sha256": "53536eefc02084bb05f8ecc5e223d6e1669c4a268dc55d60ac8674e5ab165eb0"
+    },
+    {
+      "bytes": 97327,
+      "path": "reviewed-result-only/records/build-1/api.binding-ir.json",
+      "sha256": "19a992cc50cb5e697d9b5fe77b334ffdee6f520000a44e4c0b5cccab4b021c59"
+    },
+    {
+      "bytes": 1458,
+      "path": "reviewed-result-only/records/build-1/author-inputs.json",
+      "sha256": "0e3ecb95cf4869d96ed6aa354262ff9c43c4c8ebcdb7f78b2538428c62c18121"
+    },
+    {
+      "bytes": 187,
+      "path": "reviewed-result-only/records/build-1/lean-bridge.exports.json",
+      "sha256": "153271f1344cb6ecdde1bff31beb6792e6893a6985d34d04ae906e9c6fe36106"
+    },
+    {
+      "bytes": 625812,
+      "path": "reviewed-result-only/records/build-1/model.json",
+      "sha256": "477f5e5f8711e0c01930a3571dec44632244a8d05e3ceb9ff453e5108bf693e7"
+    },
+    {
+      "bytes": 10863,
+      "path": "reviewed-result-only/records/build-1/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 1174,
+      "path": "reviewed-result-only/records/build-1/package-set-receipt.json",
+      "sha256": "53536eefc02084bb05f8ecc5e223d6e1669c4a268dc55d60ac8674e5ab165eb0"
+    },
+    {
+      "bytes": 187,
+      "path": "reviewed-result-only/records/configuration.json",
+      "sha256": "153271f1344cb6ecdde1bff31beb6792e6893a6985d34d04ae906e9c6fe36106"
+    },
+    {
+      "bytes": 13933,
+      "path": "reviewed-result-only/records/consumer.rb",
+      "sha256": "18d539bf7aecd21185b324e619fcaeea9c79ac8407550034c78a89788bbf50df"
+    },
+    {
+      "bytes": 132857,
+      "path": "reviewed-result-only/records/environment.json",
+      "sha256": "9e92decc97f63c50d1bf55d6f6008b9964ea5e9c359f521440cef0639273ff7d"
+    },
+    {
+      "bytes": 97327,
+      "path": "reviewed-result-only/records/expected.binding-ir.json",
+      "sha256": "19a992cc50cb5e697d9b5fe77b334ffdee6f520000a44e4c0b5cccab4b021c59"
+    },
+    {
+      "bytes": 6881,
+      "path": "reviewed-result-only/records/gem.json",
+      "sha256": "2f1ec38bfd10a92b7a99370e761a080d392e2daf9b5e5dc207e3b39e6effcace"
+    },
+    {
+      "bytes": 50187264,
+      "path": "reviewed-result-only/records/handoff/archives/nominalprimitivesubtypes-1.0.0-x86_64-linux.gem",
+      "sha256": "b619fc4c248412a67d35de2d881227175622dd2711240f98ed66f0632e451ffa"
+    },
+    {
+      "bytes": 1174,
+      "path": "reviewed-result-only/records/handoff/package-set-receipt.json",
+      "sha256": "53536eefc02084bb05f8ecc5e223d6e1669c4a268dc55d60ac8674e5ab165eb0"
+    },
+    {
+      "bytes": 91,
+      "path": "reviewed-result-only/records/handoff/package-set-receipt.json.sha256",
+      "sha256": "e85aa0262204d897ac6233452e394cd72c45e5313625dc8181e0635c74b495d9"
+    },
+    {
+      "bytes": 946,
+      "path": "reviewed-result-only/records/installed.gemspec",
+      "sha256": "125923fd187fe76e68de5127b88ada5cd7c6efc7ae40f7e2ebc5ccbe8e2d0d37"
+    },
+    {
+      "bytes": 1066,
+      "path": "reviewed-result-only/records/installed.json",
+      "sha256": "701c7965a1ebc189e2b47ed72dbd6b16cfb643e238b21c35f35fe85359e0496e"
+    },
+    {
+      "bytes": 317,
+      "path": "reviewed-result-only/records/interpreter.json",
+      "sha256": "81c88827a80270920e761e05899b65644e4ffc8051a2a05bb4ddb512d0de37c4"
+    },
+    {
+      "bytes": 1462,
+      "path": "reviewed-result-only/records/package/binding-manifest.json",
+      "sha256": "f6f04dcedd6726d971fe37f0dafadf384560415d15ec927fc4e3ea8d5567f24d"
+    },
+    {
+      "bytes": 1309,
+      "path": "reviewed-result-only/records/package/lean-bridge/component/allocation-guard.h",
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    {
+      "bytes": 1536,
+      "path": "reviewed-result-only/records/package/lean-bridge/component/artifacts.json",
+      "sha256": "0363f717e4315cdcd1b0e44adbfb2785d09081cfec0498fc2befd94a5ab29826"
+    },
+    {
+      "bytes": 98874,
+      "path": "reviewed-result-only/records/package/lean-bridge/component/binding-ir.json",
+      "sha256": "306a77efda0761aceb47fdd67412abe02740f44b5e2b6bb85f4cac21bb1da180"
+    },
+    {
+      "bytes": 5211,
+      "path": "reviewed-result-only/records/package/lean-bridge/component/component.h",
+      "sha256": "093d3726d3a4b6bfb8a3cc26ca6ef6ff95f66e9d88c196c08bcd9c14fed530c3"
+    },
+    {
+      "bytes": 20826,
+      "path": "reviewed-result-only/records/package/lean-bridge/component/generated.lean",
+      "sha256": "a6b350eea7560c91945b75d7b163711fdeb07109e6bc0a82f706eeaaa2482093"
+    },
+    {
+      "bytes": 482882,
+      "path": "reviewed-result-only/records/package/lean-bridge/component/metadata.json",
+      "sha256": "d775f0292cf624964b4e5c9faecfbe380dc6d9ccc7ac30f113071e825601f7b3"
+    },
+    {
+      "bytes": 625812,
+      "path": "reviewed-result-only/records/package/lean-bridge/component/model.json",
+      "sha256": "477f5e5f8711e0c01930a3571dec44632244a8d05e3ceb9ff453e5108bf693e7"
+    },
+    {
+      "bytes": 109676,
+      "path": "reviewed-result-only/records/package/lean-bridge/component/native-component.json",
+      "sha256": "fb0255f78ccf21d24530d568d872e53151c951069ae8320a833c76fa0683e578"
+    },
+    {
+      "bytes": 9160,
+      "path": "reviewed-result-only/records/package/lean-bridge/licenses/Lean-LICENSE",
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    {
+      "bytes": 81854,
+      "path": "reviewed-result-only/records/package/lean-bridge/licenses/Lean-LICENSES",
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    {
+      "bytes": 1093,
+      "path": "reviewed-result-only/records/package/lean-bridge/licenses/LeanBridge-LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 2130,
+      "path": "reviewed-result-only/records/package/lean-bridge/licenses/source-notices.json",
+      "sha256": "a4494c900b9e04ace2fc69f1e60d596cefa79b253f2922ed510fdabb88b82071"
+    },
+    {
+      "bytes": 1093,
+      "path": "reviewed-result-only/records/package/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 1429,
+      "path": "reviewed-result-only/records/package/lean-bridge/native-c-adapter.json",
+      "sha256": "f6ce120c2fd64504c4781828a151105cb896851e47db830aebadfd7d8350f995"
+    },
+    {
+      "bytes": 112765,
+      "path": "reviewed-result-only/records/package/lean-bridge/package-receipt.json",
+      "sha256": "c042fc2db16bfbfc35c195e6fc33bef6209390c4803a97c74ae5ded341fc1ce5"
+    },
+    {
+      "bytes": 117,
+      "path": "reviewed-result-only/records/package/lean-bridge/platform.json",
+      "sha256": "16530dd58887bd79e4993fc88abe2d967ee38bec55efd2c4991c71a995802e72"
+    },
+    {
+      "bytes": 1466,
+      "path": "reviewed-result-only/records/package/lean-bridge/runtime.json",
+      "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    },
+    {
+      "bytes": 483,
+      "path": "reviewed-result-only/records/package/lib/lean_bridge/native_copied_runtime_v1.rb",
+      "sha256": "7575ac13e27ba18a8d67228f16bf66fb0c7218763025ee1772bce5ee00c0ceac"
+    },
+    {
+      "bytes": 27982,
+      "path": "reviewed-result-only/records/package/lib/lean_bridge/nominalprimitivesubtypes.rb",
+      "sha256": "255299aebd3fa063a3a4cd6fb61bfdb8efb142712fa1cc8da187786f65550436"
+    },
+    {
+      "bytes": 32630,
+      "path": "reviewed-result-only/records/package/lib/lean_bridge/nominalprimitivesubtypes/native.rb",
+      "sha256": "a6c3c9b58722ba39cbb9bfa78e2b0aa46d4eb799a5ace88cc0611987ec798005"
+    },
+    {
+      "bytes": 19578,
+      "path": "reviewed-result-only/records/package/README.md",
+      "sha256": "d025d74dfaf77d27314a434251059fd78eb967a144486cf8344a7ac7c22e8481"
+    },
+    {
+      "bytes": 1085,
+      "path": "reviewed-result-only/records/relocated.json",
+      "sha256": "930b3bf7fe49f745b65d02cd1fa8edce699a768381fb20b395e36cbad7f8f9f6"
+    },
+    {
+      "bytes": 5809,
+      "path": "reviewed-result-only/records/report.json",
+      "sha256": "1370c1f8fe9aff6e2f4abfa840846f53f5f069e5146f7a86c982ddcc0e1138fa"
+    },
+    {
+      "bytes": 123,
+      "path": "reviewed-result-only/records/runtime.json",
+      "sha256": "c2f1b9d72bf412b57880eaf2e5f14f071577bea6210298d5c0d82c529f20d81e"
+    },
+    {
+      "bytes": 8289,
+      "path": "runners/run-vo1492-nominal-primitive-ruby-aaadc4f.mjs",
+      "sha256": "01c15eabbb02432e0763ea604711ccf99e142025e8355b2565eca7f1bc4d0c5b"
+    },
+    {
+      "bytes": 7484,
+      "path": "runners/run-vo1492-nominal-primitive-ruby-controls-aaadc4f.mjs",
+      "sha256": "c9b6595a3fe419e619e8da99e7711bfea01a188b64c4ab5a5ed3ff3ae25945bf"
+    },
+    {
+      "bytes": 4437,
+      "path": "sources/src/abi/component-scalars.mjs",
+      "sha256": "745058db0327c9060222ff58d45c272595e23125c2169d80287ff9035cf3608e"
+    },
+    {
+      "bytes": 5961,
+      "path": "sources/src/abi/generic-specialization.mjs",
+      "sha256": "5c7472382e4426adf5f280037965d39d7eb16949414db80226ee5962dca05df9"
+    },
+    {
+      "bytes": 8556,
+      "path": "sources/src/abi/refinements.mjs",
+      "sha256": "57fcd7bfa6c2ae7b7d696c1c95a88282c725fef2c15486744e683c258fa2ce07"
+    },
+    {
+      "bytes": 99428,
+      "path": "sources/src/analyze/NativeExports.lean",
+      "sha256": "a6e5738d497fa57e2ff7eb98d2da7761277dc72c6584802909c3a4960c6ee6f3"
+    },
+    {
+      "bytes": 45870,
+      "path": "sources/src/backends/c/generate.mjs",
+      "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
+    },
+    {
+      "bytes": 3006,
+      "path": "sources/src/backends/c/package-audit.mjs",
+      "sha256": "bbcc42ebdc6c7d69e46860e48bbc1573e70af04ca8cb85ce4123496788b5395c"
+    },
+    {
+      "bytes": 11921,
+      "path": "sources/src/backends/c/primitive-surface.mjs",
+      "sha256": "893d7f649bf489c766e5d38f04ce4e1b7cb7967acc8f63bf6f82b9b6f5cd64df"
+    },
+    {
+      "bytes": 16607,
+      "path": "sources/src/backends/native/fin-refinements.mjs",
+      "sha256": "ed719cbb1d4de13a9bbd110703eb0fffb4d2cea356fdc91bcdfbbed0b89039c3"
+    },
+    {
+      "bytes": 9829,
+      "path": "sources/src/backends/ruby/callables.mjs",
+      "sha256": "21e585671c360c41317569c05c602d3286d9585731b87416a0591e57e732da49"
+    },
+    {
+      "bytes": 3808,
+      "path": "sources/src/backends/ruby/copied-aliases.mjs",
+      "sha256": "4cca75ca4d6a9a6e89b9c9a740ee4de8c66faee99f1a211dd142287c4894e3ef"
+    },
+    {
+      "bytes": 1165,
+      "path": "sources/src/backends/ruby/copied-assets.mjs",
+      "sha256": "501e2ad9936e09d58131f9995164ec27fa28d222bfeeded3ed64ae2b5bda0c4f"
+    },
+    {
+      "bytes": 12944,
+      "path": "sources/src/backends/ruby/copied-conversions.mjs",
+      "sha256": "ce15adec396be01282ccb353fc486359693d032ccc46442dbe897d80e45fb52a"
+    },
+    {
+      "bytes": 6931,
+      "path": "sources/src/backends/ruby/copied-model.mjs",
+      "sha256": "76b2b404b57a16604bb396997ba371f67c9dac3b6b37caf4bae017d1e597734d"
+    },
+    {
+      "bytes": 16925,
+      "path": "sources/src/backends/ruby/copied-values.mjs",
+      "sha256": "44580dc2129a996655284ea7df86250cf3a671a0930259c05b58fd6e1d1c51c7"
+    },
+    {
+      "bytes": 5552,
+      "path": "sources/src/backends/ruby/verified-assets.mjs",
+      "sha256": "801be5e0c60f3ab8d86e9fc5286657c556a7c2315b557e3dfa62c02ef4ec6b49"
+    },
+    {
+      "bytes": 9938,
+      "path": "sources/src/binding-ir/canonical.mjs",
+      "sha256": "28e22e614fc532a99baeeb34ee9d054f3bc6db82239fa89059a9518cb06d3d20"
+    },
+    {
+      "bytes": 46487,
+      "path": "sources/src/binding-ir/contract.mjs",
+      "sha256": "51f39115f198cadb22edcee1bc09d9205024c1ba622f86588056bca7aac6faf6"
+    },
+    {
+      "bytes": 3297,
+      "path": "sources/src/binding-ir/sha256.mjs",
+      "sha256": "f9bcbce580e88f31c3a63e8aa0d1d834228afa796a74a4c2f708da68e99a15ac"
+    },
+    {
+      "bytes": 12579,
+      "path": "sources/src/build/native-component.mjs",
+      "sha256": "2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867"
+    },
+    {
+      "bytes": 3459,
+      "path": "sources/src/build/native-ruby-artifacts.mjs",
+      "sha256": "296ccf9cbafd02ff8a0c0f8e4608c40e5379a681a2682ea795af818af65e4145"
+    },
+    {
+      "bytes": 19177,
+      "path": "sources/src/capsule/contract.mjs",
+      "sha256": "590f6758e4b25f7a73e04333276facec891fd26debd2fa5621e183b27ca6082f"
+    },
+    {
+      "bytes": 3332,
+      "path": "sources/src/capsule/node.mjs",
+      "sha256": "2ffbff5c27dbdd89fac9dd6ce5a1a3082430c9bdfbdcc3908941eaf1d009fb1b"
+    },
+    {
+      "bytes": 8171,
+      "path": "sources/src/release/native-rubygems.mjs",
+      "sha256": "5f4451473d73e8b5224e23c0e1107436dbfe117fa2261292426a80ce6b7b44bb"
+    },
+    {
+      "bytes": 14878,
+      "path": "sources/src/release/package-set-receipt.mjs",
+      "sha256": "d0b945554b03e9d0f93149b12ddf808c33243cbb0ff5495a7a8a68e683fc71ed"
+    },
+    {
+      "bytes": 13933,
+      "path": "sources/tests/fixtures/nominal-primitive-subtype-consumers/ruby.rb",
+      "sha256": "18d539bf7aecd21185b324e619fcaeea9c79ac8407550034c78a89788bbf50df"
+    },
+    {
+      "bytes": 99,
+      "path": "sources/tests/fixtures/onboarding/nominal-primitive-subtypes/lakefile.toml",
+      "sha256": "80a574337b857f079884d006450abd9beb03a6876e94477cc9e37dd874d60f8f"
+    },
+    {
+      "bytes": 25,
+      "path": "sources/tests/fixtures/onboarding/nominal-primitive-subtypes/lean-toolchain",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "bytes": 1093,
+      "path": "sources/tests/fixtures/onboarding/nominal-primitive-subtypes/LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 10863,
+      "path": "sources/tests/fixtures/onboarding/nominal-primitive-subtypes/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 70,
+      "path": "sources/tests/fixtures/onboarding/nominal-primitive-subtypes/package.json",
+      "sha256": "2f18e34a4ba6695d28783cae8edd55376bcc02a409b11e56933e016a6a1a5e96"
+    },
+    {
+      "bytes": 15505,
+      "path": "sources/tests/helpers/copied-fixture-install.mjs",
+      "sha256": "dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df"
+    },
+    {
+      "bytes": 8330,
+      "path": "sources/tests/helpers/fin-container-edge-ruby-closure.mjs",
+      "sha256": "76556c24a4d540695aed2fd5dcb20cb25d98a7da0ceabff99ad291a92c444a5c"
+    },
+    {
+      "bytes": 9902,
+      "path": "sources/tests/helpers/lake-workspace.mjs",
+      "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082"
+    },
+    {
+      "bytes": 9439,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-fixture.mjs",
+      "sha256": "5b958fdff2c04923b1780ef919ac110bd6bb44c77e4285a2b402f47bbdcc34cd"
+    },
+    {
+      "bytes": 4456,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-ruby-archive.mjs",
+      "sha256": "a82271b642a71a88cf00705fdb1a4d90910f7a04c3285d34427e83bb622999c1"
+    },
+    {
+      "bytes": 5471,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-ruby-ci-report.mjs",
+      "sha256": "7ea92895176398831a6efb01adab9215fc04612288fe29a903835b210456cca4"
+    },
+    {
+      "bytes": 9570,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-ruby-controls.mjs",
+      "sha256": "f06bf55838acbb6abb656abcd9c7ed9cd3748afa5428c0f3052f50f76db45d71"
+    },
+    {
+      "bytes": 4014,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-ruby-environment-records.mjs",
+      "sha256": "f8208e2f5c2213ec8b916763da2511e0d103f47d60d697421d10055a66b3f596"
+    },
+    {
+      "bytes": 3412,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-ruby-fixture.mjs",
+      "sha256": "9373ed1ebd9e9eec2d41c60a20dbdb795d8cd5aa7a27e2ed3ff6c0d07383801a"
+    },
+    {
+      "bytes": 11670,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-ruby-installed-tests.mjs",
+      "sha256": "2a28c26329589ccb996661e5ca92f264322ba1d51be2b0e8488d37626f0a5f3d"
+    },
+    {
+      "bytes": 9139,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-ruby-model-records.mjs",
+      "sha256": "c255f7265a61e5ca027c8abbfdf7f478c96a49820179090d54c8ed7d9f2663a1"
+    },
+    {
+      "bytes": 14283,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-ruby-model.rb",
+      "sha256": "dadaa7f1e68169fe3382fb50258934f27483cdc553974a44c65c32b737f679ed"
+    },
+    {
+      "bytes": 5655,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-ruby-package-records.mjs",
+      "sha256": "8b1c3e6021d4d50f103fdfe1413b499b58a0069fe3660638f9d7d0cdb166e866"
+    },
+    {
+      "bytes": 6874,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-ruby-package.mjs",
+      "sha256": "9b8bc62e297964f7f745a5c5674d2ac7f184960a31823db6a05e2a35b93f462a"
+    },
+    {
+      "bytes": 7360,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-ruby-report.mjs",
+      "sha256": "9afdfdb75161ee8a68c4cbac4d1da1ed94b1608712daea510722e895d4f20229"
+    },
+    {
+      "bytes": 2913,
+      "path": "sources/tests/helpers/nominal-subtype-ruby-generators.mjs",
+      "sha256": "5b0c51c1747339ce1795735a66f2c7cf6d1231ee692948236d1d261643b2721b"
+    },
+    {
+      "bytes": 5283,
+      "path": "sources/tests/helpers/package-set.mjs",
+      "sha256": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c"
+    }
+  ],
+  "generatorClosure": [
+    "src/abi/component-scalars.mjs",
+    "src/abi/generic-specialization.mjs",
+    "src/abi/refinements.mjs",
+    "src/backends/c/generate.mjs",
+    "src/backends/c/package-audit.mjs",
+    "src/backends/c/primitive-surface.mjs",
+    "src/backends/native/fin-refinements.mjs",
+    "src/backends/ruby/callables.mjs",
+    "src/backends/ruby/copied-aliases.mjs",
+    "src/backends/ruby/copied-assets.mjs",
+    "src/backends/ruby/copied-conversions.mjs",
+    "src/backends/ruby/copied-model.mjs",
+    "src/backends/ruby/copied-values.mjs",
+    "src/backends/ruby/verified-assets.mjs",
+    "src/binding-ir/canonical.mjs",
+    "src/binding-ir/contract.mjs",
+    "src/binding-ir/sha256.mjs",
+    "src/capsule/contract.mjs",
+    "src/capsule/node.mjs"
+  ],
+  "kind": "nominal-primitive-subtype-ruby-installed-v1",
+  "limitations": [
+    "Local Linux x64/glibc 2.36 acceptance with an explicit 2.36 package floor, not hosted release-floor acceptance.",
+    "Four ordinary/reviewed full/result-only selections reproduce complete RubyGems from two author roots, install offline after author removal and replay after moving the installed tree on MRI Ruby 3.3.12.",
+    "All accepted launches ran serially on one CPU with a per-run admission ceiling of 8; hosted and default acceptance remains at 6, and the disk and memory floors remain unchanged.",
+    "The earlier ordinary/full launch that hit the live disk floor is retained, classified and never counted as acceptance.",
+    "Complete original gems, package receipts, payload identities, execution and control records, the failed input archive and selected frozen producer sources are retained; external toolchain binaries are not.",
+    "The shared fixture covers all nineteen admitted primitive bases in acyclic records, variants, aliases, mixed Fin guards and constructor-free results; it does not generalize to every nominal type.",
+    "Constructor/source entry counts and memory are unmeasured. Refined callbacks, owned, recursive, dependent and broader generic Subtypes remain separate work.",
+    "Archived absolute paths record the original host and are not CI prerequisites. This archive does not itself promote support or establish the hosted result."
+  ],
+  "loadCeiling": 8,
+  "preserved": [
+    {
+      "attempt": "r1",
+      "classification": "resource-policy disk-floor failure: concurrent archive work drove free disk through the unchanged 768 MiB live floor",
+      "code": 1,
+      "counted": false,
+      "endSha256": "de1f8681114b1728d2324ad1aa9417043f05ae06b781ec180c8e4d5c07a0b602",
+      "finished": "2026-10-15T07:25:49.935Z",
+      "label": "ordinary-full-r1",
+      "mode": "full",
+      "prefix": "/app/build/vo1492-nominal-primitive-ruby-ordinary-full-r1-aaadc4f",
+      "retained": [
+        "start.json",
+        "end.json",
+        "run.tap",
+        "failed-inputs.tar.gz",
+        "failed-inputs.sha256",
+        "failed-inputs.list"
+      ],
+      "route": "ordinary",
+      "startSha256": "71a262a8b22eeef868bc471b2b144c21e3d20abffa7c38dad56c76c53adba6d9",
+      "started": "2026-10-15T07:23:59.693Z",
+      "stopReason": "disk-floor",
+      "tapSha256": "7cb03ab03edf5190a8aa546c78285344395fad3d42d4011cd224f934aef96b3f"
+    }
+  ],
+  "producerCommit": "aaadc4fc84dc7d31ff134013b61bf1c789bfb5bb",
+  "runner": {
+    "controls": "run-vo1492-nominal-primitive-ruby-controls-aaadc4f.mjs",
+    "producer": "run-vo1492-nominal-primitive-ruby-aaadc4f.mjs"
+  },
+  "runs": [
+    {
+      "attempt": "r2",
+      "controls": {
+        "environmentControls": 12,
+        "executionControls": 20,
+        "modelControls": 42,
+        "packageControls": 4,
+        "recordControls": 92
+      },
+      "controlsFinished": "2026-10-15T07:34:39.633Z",
+      "counts": {
+        "counts": {
+          "checks": 1664,
+          "rejections": 306,
+          "rounds": 256,
+          "snapshotControls": 12,
+          "wordBits": 64
+        },
+        "dispatchObserved": false,
+        "executions": 2,
+        "floor": "2.36",
+        "generatorModules": 19,
+        "mode": "full",
+        "producerCommit": "aaadc4fc84dc7d31ff134013b61bf1c789bfb5bb",
+        "records": 46,
+        "route": "ordinary",
+        "rubyVersion": "3.3.12",
+        "runtime": {
+          "arch": "x64",
+          "glibc": "2.36",
+          "platform": "linux"
+        }
+      },
+      "finished": "2026-10-15T07:32:30.316Z",
+      "floor": "2.36",
+      "label": "ordinary-full",
+      "loadCeiling": 8,
+      "mode": "full",
+      "prefix": "/app/build/vo1492-nominal-primitive-ruby-ordinary-full-r2-aaadc4f",
+      "reportSha256": "a2eda9b1e7d9ff0ee670fed0d67bc002f97e2970943806b44bcdcfa9b6c72792",
+      "route": "ordinary",
+      "rubyVersion": "3.3.12",
+      "runtime": {
+        "arch": "x64",
+        "glibc": "2.36",
+        "platform": "linux"
+      },
+      "started": "2026-10-15T07:29:28.655Z",
+      "tapSha256": "0d78fc89703c6c93ef5408bd00dfda0d0a58113eb634fc745b12800fc3a6b1bd",
+      "worktree": "/app/build/worktrees/nominal-subtype-ruby-vo1492-load8"
+    },
+    {
+      "attempt": "r1",
+      "controls": {
+        "environmentControls": 12,
+        "executionControls": 20,
+        "modelControls": 23,
+        "packageControls": 4,
+        "recordControls": 92
+      },
+      "controlsFinished": "2026-10-15T07:39:48.113Z",
+      "counts": {
+        "counts": {
+          "checks": 875,
+          "rejections": 0,
+          "rounds": 256,
+          "snapshotControls": 12,
+          "wordBits": 64
+        },
+        "dispatchObserved": false,
+        "executions": 2,
+        "floor": "2.36",
+        "generatorModules": 19,
+        "mode": "result-only",
+        "producerCommit": "aaadc4fc84dc7d31ff134013b61bf1c789bfb5bb",
+        "records": 46,
+        "route": "ordinary",
+        "rubyVersion": "3.3.12",
+        "runtime": {
+          "arch": "x64",
+          "glibc": "2.36",
+          "platform": "linux"
+        }
+      },
+      "finished": "2026-10-15T07:38:00.146Z",
+      "floor": "2.36",
+      "label": "ordinary-result-only",
+      "loadCeiling": 8,
+      "mode": "result-only",
+      "prefix": "/app/build/vo1492-nominal-primitive-ruby-ordinary-result-only-r1-aaadc4f",
+      "reportSha256": "6dff778b28de9257173bc4db46f03c3071decab99a34ccb4b98a5019244030eb",
+      "route": "ordinary",
+      "rubyVersion": "3.3.12",
+      "runtime": {
+        "arch": "x64",
+        "glibc": "2.36",
+        "platform": "linux"
+      },
+      "started": "2026-10-15T07:35:16.840Z",
+      "tapSha256": "f67a046f982ecbba5b2bf36d3724da4706494a123b8c607ec9831e9eff2223b9",
+      "worktree": "/app/build/worktrees/nominal-subtype-ruby-vo1492-load8"
+    },
+    {
+      "attempt": "r1",
+      "controls": {
+        "environmentControls": 12,
+        "executionControls": 20,
+        "modelControls": 42,
+        "packageControls": 4,
+        "recordControls": 96
+      },
+      "controlsFinished": "2026-10-15T07:45:31.161Z",
+      "counts": {
+        "counts": {
+          "checks": 1664,
+          "rejections": 306,
+          "rounds": 256,
+          "snapshotControls": 12,
+          "wordBits": 64
+        },
+        "dispatchObserved": false,
+        "executions": 2,
+        "floor": "2.36",
+        "generatorModules": 19,
+        "mode": "full",
+        "producerCommit": "aaadc4fc84dc7d31ff134013b61bf1c789bfb5bb",
+        "records": 48,
+        "route": "reviewed",
+        "rubyVersion": "3.3.12",
+        "runtime": {
+          "arch": "x64",
+          "glibc": "2.36",
+          "platform": "linux"
+        }
+      },
+      "finished": "2026-10-15T07:43:11.373Z",
+      "floor": "2.36",
+      "label": "reviewed-full",
+      "loadCeiling": 8,
+      "mode": "full",
+      "prefix": "/app/build/vo1492-nominal-primitive-ruby-reviewed-full-r1-aaadc4f",
+      "reportSha256": "1cab5419f257d51598e918a43ae903186443ee0843fffb3e1234e8a0fd8f4e24",
+      "route": "reviewed",
+      "rubyVersion": "3.3.12",
+      "runtime": {
+        "arch": "x64",
+        "glibc": "2.36",
+        "platform": "linux"
+      },
+      "started": "2026-10-15T07:40:19.303Z",
+      "tapSha256": "61ed5d6fadcad05b26678807d218227842ab9247e8f8c396a4050bd76647b251",
+      "worktree": "/app/build/worktrees/nominal-subtype-ruby-vo1492-load8"
+    },
+    {
+      "attempt": "r1",
+      "controls": {
+        "environmentControls": 12,
+        "executionControls": 20,
+        "modelControls": 23,
+        "packageControls": 4,
+        "recordControls": 96
+      },
+      "controlsFinished": "2026-10-15T07:52:11.118Z",
+      "counts": {
+        "counts": {
+          "checks": 875,
+          "rejections": 0,
+          "rounds": 256,
+          "snapshotControls": 12,
+          "wordBits": 64
+        },
+        "dispatchObserved": false,
+        "executions": 2,
+        "floor": "2.36",
+        "generatorModules": 19,
+        "mode": "result-only",
+        "producerCommit": "aaadc4fc84dc7d31ff134013b61bf1c789bfb5bb",
+        "records": 48,
+        "route": "reviewed",
+        "rubyVersion": "3.3.12",
+        "runtime": {
+          "arch": "x64",
+          "glibc": "2.36",
+          "platform": "linux"
+        }
+      },
+      "finished": "2026-10-15T07:50:15.675Z",
+      "floor": "2.36",
+      "label": "reviewed-result-only",
+      "loadCeiling": 8,
+      "mode": "result-only",
+      "prefix": "/app/build/vo1492-nominal-primitive-ruby-reviewed-result-only-r1-aaadc4f",
+      "reportSha256": "1370c1f8fe9aff6e2f4abfa840846f53f5f069e5146f7a86c982ddcc0e1138fa",
+      "route": "reviewed",
+      "rubyVersion": "3.3.12",
+      "runtime": {
+        "arch": "x64",
+        "glibc": "2.36",
+        "platform": "linux"
+      },
+      "started": "2026-10-15T07:47:51.302Z",
+      "tapSha256": "d6dfaa526d6e926958c36ea355e5ab35fc67c24225e694cdb81adcd34407d0b1",
+      "worktree": "/app/build/worktrees/nominal-subtype-ruby-vo1492-load8"
+    }
+  ],
+  "schemaVersion": 1,
+  "selectedSources": [
+    "src/abi/component-scalars.mjs",
+    "src/abi/generic-specialization.mjs",
+    "src/abi/refinements.mjs",
+    "src/analyze/NativeExports.lean",
+    "src/backends/c/generate.mjs",
+    "src/backends/c/package-audit.mjs",
+    "src/backends/c/primitive-surface.mjs",
+    "src/backends/native/fin-refinements.mjs",
+    "src/backends/ruby/callables.mjs",
+    "src/backends/ruby/copied-aliases.mjs",
+    "src/backends/ruby/copied-assets.mjs",
+    "src/backends/ruby/copied-conversions.mjs",
+    "src/backends/ruby/copied-model.mjs",
+    "src/backends/ruby/copied-values.mjs",
+    "src/backends/ruby/verified-assets.mjs",
+    "src/binding-ir/canonical.mjs",
+    "src/binding-ir/contract.mjs",
+    "src/binding-ir/sha256.mjs",
+    "src/build/native-component.mjs",
+    "src/build/native-ruby-artifacts.mjs",
+    "src/capsule/contract.mjs",
+    "src/capsule/node.mjs",
+    "src/release/native-rubygems.mjs",
+    "src/release/package-set-receipt.mjs",
+    "tests/fixtures/nominal-primitive-subtype-consumers/ruby.rb",
+    "tests/fixtures/onboarding/nominal-primitive-subtypes/LICENSE",
+    "tests/fixtures/onboarding/nominal-primitive-subtypes/NominalPrimitiveSubtypes.lean",
+    "tests/fixtures/onboarding/nominal-primitive-subtypes/lakefile.toml",
+    "tests/fixtures/onboarding/nominal-primitive-subtypes/lean-toolchain",
+    "tests/fixtures/onboarding/nominal-primitive-subtypes/package.json",
+    "tests/helpers/copied-fixture-install.mjs",
+    "tests/helpers/fin-container-edge-ruby-closure.mjs",
+    "tests/helpers/lake-workspace.mjs",
+    "tests/helpers/nominal-primitive-subtype-fixture.mjs",
+    "tests/helpers/nominal-primitive-subtype-ruby-archive.mjs",
+    "tests/helpers/nominal-primitive-subtype-ruby-ci-report.mjs",
+    "tests/helpers/nominal-primitive-subtype-ruby-controls.mjs",
+    "tests/helpers/nominal-primitive-subtype-ruby-environment-records.mjs",
+    "tests/helpers/nominal-primitive-subtype-ruby-fixture.mjs",
+    "tests/helpers/nominal-primitive-subtype-ruby-installed-tests.mjs",
+    "tests/helpers/nominal-primitive-subtype-ruby-model-records.mjs",
+    "tests/helpers/nominal-primitive-subtype-ruby-model.rb",
+    "tests/helpers/nominal-primitive-subtype-ruby-package-records.mjs",
+    "tests/helpers/nominal-primitive-subtype-ruby-package.mjs",
+    "tests/helpers/nominal-primitive-subtype-ruby-report.mjs",
+    "tests/helpers/nominal-subtype-ruby-generators.mjs",
+    "tests/helpers/package-set.mjs"
+  ]
+}

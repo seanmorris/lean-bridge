@@ -1,0 +1,93 @@
+{
+  "compiledAgain": false,
+  "head": "aaadc4fc84dc7d31ff134013b61bf1c789bfb5bb",
+  "links": {
+    ".toolchains": "/app/.toolchains",
+    "node_modules": "/app/node_modules"
+  },
+  "mode": "full",
+  "originals": {
+    "ordinary/full/build-0/NominalPrimitiveSubtypes.lean": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9",
+    "ordinary/full/build-0/author-inputs.json": "f3812a598d6ff6a73477b77c981ad40c7abe73409e63f8727490a70208e64c15",
+    "ordinary/full/build-0/lean-bridge.exports.json": "b87bf27c00e1e34b4294b283b446db560a50456a9be0385fbf71ea83910ca537",
+    "ordinary/full/build-0/model.json": "6ac48848e197d551f858174353fd9a4034573d619c10d306ce66d4fb101e21d8",
+    "ordinary/full/build-0/package-set-receipt.json": "faee7d6c5023dc6645573da5d7f46f573c281e14e95c9c7b2a61c41fa32254bc",
+    "ordinary/full/build-1/NominalPrimitiveSubtypes.lean": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9",
+    "ordinary/full/build-1/author-inputs.json": "c32e72308c361d01434f9c236f448e154dc544e08d544c427b433e9064fdb98a",
+    "ordinary/full/build-1/lean-bridge.exports.json": "b87bf27c00e1e34b4294b283b446db560a50456a9be0385fbf71ea83910ca537",
+    "ordinary/full/build-1/model.json": "6ac48848e197d551f858174353fd9a4034573d619c10d306ce66d4fb101e21d8",
+    "ordinary/full/build-1/package-set-receipt.json": "faee7d6c5023dc6645573da5d7f46f573c281e14e95c9c7b2a61c41fa32254bc",
+    "ordinary/full/configuration.json": "b87bf27c00e1e34b4294b283b446db560a50456a9be0385fbf71ea83910ca537",
+    "ordinary/full/consumer.rb": "18d539bf7aecd21185b324e619fcaeea9c79ac8407550034c78a89788bbf50df",
+    "ordinary/full/environment.json": "a9d3e1f48fc83ea2e9d1cc731d426a0903dabae42e9b5bccd200934352370646",
+    "ordinary/full/expected.binding-ir.json": "c681efea6ec29bdc9eaadbfe573c120560313b0fc6f5ba6a5d2e688bcadd6ece",
+    "ordinary/full/gem.json": "46413ce88ffc8b4dc2e638f786b5a391ba91bfdf697a6b260a5e413bffcf3b2f",
+    "ordinary/full/handoff/archives/nominalprimitivesubtypes-1.0.0-x86_64-linux.gem": "e1e6971b5b7c1bde3ad6d3c66748660b7522ec24a3a153ebc3e029bd896b8b7e",
+    "ordinary/full/handoff/package-set-receipt.json": "faee7d6c5023dc6645573da5d7f46f573c281e14e95c9c7b2a61c41fa32254bc",
+    "ordinary/full/handoff/package-set-receipt.json.sha256": "cbe00996a5a5cb1b9bb0cbea6f2c704dd9b784caf6cf6248e55a195cd13b514b",
+    "ordinary/full/installed.gemspec": "2459f1517a9652628bd4c2d6a5abe8e4c306a07578742af01351d66306c39cfa",
+    "ordinary/full/installed.json": "3eb15813e1b905772313282c5de96cbb9ae0c43632be9b58a1f3936ce0b71a08",
+    "ordinary/full/interpreter.json": "81c88827a80270920e761e05899b65644e4ffc8051a2a05bb4ddb512d0de37c4",
+    "ordinary/full/package/README.md": "42272be1ddf82b58c723c375a2f8c7fd0950342667e6398d6db9747fb51c59a1",
+    "ordinary/full/package/binding-manifest.json": "63556348ccf72e37084e0e2d6027070011a0a3e88fc3ebf59161509ca676d0ce",
+    "ordinary/full/package/lean-bridge/component/allocation-guard.h": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83",
+    "ordinary/full/package/lean-bridge/component/artifacts.json": "543385d5f68e07b0273375a3d3f93ad452972c1b3b561989ef22c8d4a9daf228",
+    "ordinary/full/package/lean-bridge/component/binding-ir.json": "5939b2219267a1959adf856268e0de49cabbaa34a717c3f85e574a12d1db0818",
+    "ordinary/full/package/lean-bridge/component/component.h": "c6a3f7d4d372878b4d3ce3423c157f54c9f6636c13c78ad6f8af46a86f40ecb2",
+    "ordinary/full/package/lean-bridge/component/generated.lean": "76374193a68c65fddef7e4481def4d661593379345fce390aa88d37bf6413653",
+    "ordinary/full/package/lean-bridge/component/metadata.json": "2ca26897540f35a5e740df6ccafe47c616ecec1d3d31c65fe48f67ab43f1293b",
+    "ordinary/full/package/lean-bridge/component/model.json": "6ac48848e197d551f858174353fd9a4034573d619c10d306ce66d4fb101e21d8",
+    "ordinary/full/package/lean-bridge/component/native-component.json": "e86abc48cb38c48c67892a47a75b90af0cee7d9cf2b45535f5eba6be6cd0334f",
+    "ordinary/full/package/lean-bridge/licenses/Lean-LICENSE": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e",
+    "ordinary/full/package/lean-bridge/licenses/Lean-LICENSES": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce",
+    "ordinary/full/package/lean-bridge/licenses/LeanBridge-LICENSE": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996",
+    "ordinary/full/package/lean-bridge/licenses/source-notices.json": "89e6b4080e821747d84104f1754e1c1acde1f88e40b6abc5f9a25c6e750fd4a4",
+    "ordinary/full/package/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996",
+    "ordinary/full/package/lean-bridge/native-c-adapter.json": "06b119c9ea46070a1e600a18ea3b2e5f687a41820ef3df5c940bad16284e60da",
+    "ordinary/full/package/lean-bridge/package-receipt.json": "4a2d6383918741e61c082b019ac8d1befdafabb6e204c1716405d142c1d59d1d",
+    "ordinary/full/package/lean-bridge/platform.json": "16530dd58887bd79e4993fc88abe2d967ee38bec55efd2c4991c71a995802e72",
+    "ordinary/full/package/lean-bridge/runtime.json": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+    "ordinary/full/package/lib/lean_bridge/native_copied_runtime_v1.rb": "7575ac13e27ba18a8d67228f16bf66fb0c7218763025ee1772bce5ee00c0ceac",
+    "ordinary/full/package/lib/lean_bridge/nominalprimitivesubtypes.rb": "c510605098b806a2230aaadc0be1216acc8ca80cae5288a0717cf20f33a094f1",
+    "ordinary/full/package/lib/lean_bridge/nominalprimitivesubtypes/native.rb": "831859b4a06e20caca6d6fbdbfb328f9e525ca7212d2dcb94d7ce4baf8e582e6",
+    "ordinary/full/relocated.json": "b501d1b6dff2a88d48bd382f458b27fce0e5e7dddfca91642d39c1d6bb6fa71e",
+    "ordinary/full/report.json": "a2eda9b1e7d9ff0ee670fed0d67bc002f97e2970943806b44bcdcfa9b6c72792",
+    "ordinary/full/runtime.json": "c2f1b9d72bf412b57880eaf2e5f14f071577bea6210298d5c0d82c529f20d81e"
+  },
+  "prefix": "/app/build/vo1492-nominal-primitive-ruby-ordinary-full-r2-aaadc4f",
+  "resources": {
+    "observations": [
+      {
+        "availableBytes": 8325943296,
+        "freeBytes": 5561262080,
+        "load": 6.81
+      }
+    ],
+    "waits": 0
+  },
+  "route": "ordinary",
+  "runners": {
+    "/app/build/run-vo1492-nominal-primitive-ruby-aaadc4f.mjs": "01c15eabbb02432e0763ea604711ccf99e142025e8355b2565eca7f1bc4d0c5b",
+    "/app/build/run-vo1492-nominal-primitive-ruby-controls-aaadc4f.mjs": "c9b6595a3fe419e619e8da99e7711bfea01a188b64c4ab5a5ed3ff3ae25945bf"
+  },
+  "sourceRoot": "/app/build/vo1492-nominal-primitive-ruby-ordinary-full-r2-aaadc4f-records",
+  "sources": {
+    "/app/build/run-vo1492-nominal-primitive-ruby-aaadc4f.mjs": "01c15eabbb02432e0763ea604711ccf99e142025e8355b2565eca7f1bc4d0c5b",
+    "/app/build/run-vo1492-nominal-primitive-ruby-controls-aaadc4f.mjs": "c9b6595a3fe419e619e8da99e7711bfea01a188b64c4ab5a5ed3ff3ae25945bf",
+    "tests/fixtures/nominal-primitive-subtype-consumers/ruby.rb": "18d539bf7aecd21185b324e619fcaeea9c79ac8407550034c78a89788bbf50df",
+    "tests/helpers/fin-container-edge-ruby-closure.mjs": "76556c24a4d540695aed2fd5dcb20cb25d98a7da0ceabff99ad291a92c444a5c",
+    "tests/helpers/nominal-primitive-subtype-ruby-archive.mjs": "a82271b642a71a88cf00705fdb1a4d90910f7a04c3285d34427e83bb622999c1",
+    "tests/helpers/nominal-primitive-subtype-ruby-ci-report.mjs": "7ea92895176398831a6efb01adab9215fc04612288fe29a903835b210456cca4",
+    "tests/helpers/nominal-primitive-subtype-ruby-controls.mjs": "f06bf55838acbb6abb656abcd9c7ed9cd3748afa5428c0f3052f50f76db45d71",
+    "tests/helpers/nominal-primitive-subtype-ruby-environment-records.mjs": "f8208e2f5c2213ec8b916763da2511e0d103f47d60d697421d10055a66b3f596",
+    "tests/helpers/nominal-primitive-subtype-ruby-fixture.mjs": "9373ed1ebd9e9eec2d41c60a20dbdb795d8cd5aa7a27e2ed3ff6c0d07383801a",
+    "tests/helpers/nominal-primitive-subtype-ruby-installed-tests.mjs": "2a28c26329589ccb996661e5ca92f264322ba1d51be2b0e8488d37626f0a5f3d",
+    "tests/helpers/nominal-primitive-subtype-ruby-model-records.mjs": "c255f7265a61e5ca027c8abbfdf7f478c96a49820179090d54c8ed7d9f2663a1",
+    "tests/helpers/nominal-primitive-subtype-ruby-model.rb": "dadaa7f1e68169fe3382fb50258934f27483cdc553974a44c65c32b737f679ed",
+    "tests/helpers/nominal-primitive-subtype-ruby-package-records.mjs": "8b1c3e6021d4d50f103fdfe1413b499b58a0069fe3660638f9d7d0cdb166e866",
+    "tests/helpers/nominal-primitive-subtype-ruby-package.mjs": "9b8bc62e297964f7f745a5c5674d2ac7f184960a31823db6a05e2a35b93f462a",
+    "tests/helpers/nominal-primitive-subtype-ruby-report.mjs": "9afdfdb75161ee8a68c4cbac4d1da1ed94b1608712daea510722e895d4f20229",
+    "tests/helpers/nominal-subtype-ruby-generators.mjs": "5b0c51c1747339ce1795735a66f2c7cf6d1231ee692948236d1d261643b2721b"
+  },
+  "started": "2026-10-15T07:32:31.262Z"
+}

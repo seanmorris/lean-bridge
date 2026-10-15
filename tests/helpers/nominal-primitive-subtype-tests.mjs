@@ -28,6 +28,7 @@ import "./nominal-primitive-subtype-python-promotion-tests.mjs";
 import "./nominal-primitive-subtype-python-promotion-history-tests.mjs";
 import "./nominal-primitive-subtype-ruby-fixture-tests.mjs";
 import "./nominal-primitive-subtype-ruby-archive-tests.mjs";
+import "./nominal-primitive-subtype-ruby-evidence-tests.mjs";
 import "./nominal-primitive-subtype-ruby-ci-policy-tests.mjs";
 import "./nominal-primitive-subtype-ruby-ci-shell-tests.mjs";
 import "./nominal-primitive-subtype-ruby-ci-workflow-tests.mjs";
