@@ -1,0 +1,104 @@
+name: Recursive checked Subtypes in PHP-Wasm
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: recursive-subtype-php-wasm-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  recursive-subtype-php-wasm:
+    name: Ordinary and reviewed recursive Subtypes in PHP-Wasm
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    env:
+      EMCC_CORES: "2"
+      LEAN_WASM_RUNTIME_PROFILE: browser
+      LEAN_WASM_RUNTIME_VARIANT: php-wasm-3.1.68
+      LEAN_WASM_ARTIFACT_TARGET: php-wasm-emscripten-3.1.68
+    steps:
+      - name: Check out the exact revision and evidence history
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+      - name: Restore pinned PHP and compiler inputs
+        uses: actions/cache@v5
+        with:
+          path: |
+            .toolchains
+            build/php-wasm-sdk
+            build/php-wasm-host
+          key: recursive-subtype-php-wasm-${{ runner.os }}-${{ hashFiles('flake.lock', 'lean-toolchain', 'scripts/bootstrap-toolchains.sh', 'scripts/bootstrap-php-wasm-ci.sh', 'poc/lean-link-spike/bindings/php-wasm.package.json') }}
+      - name: Install dependencies without lifecycle scripts
+        timeout-minutes: 20
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install PHP and compiler dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential autoconf automake bison flex gperf libtool re2c cmake pkg-config php-cli php-dev php-common php-zip php-mbstring composer zstd ripgrep
+          bash scripts/bootstrap-php-wasm-ci.sh --check-prerequisites
+      - name: Disable host PHP debugging instrumentation
+        run: |
+          if /usr/bin/php -r 'exit(extension_loaded("xdebug") ? 0 : 1);'; then
+            sudo phpdismod -s cli xdebug
+          fi
+          env -i PATH=/usr/bin:/bin /usr/bin/php -r 'if (extension_loaded("xdebug")) { fwrite(STDERR, "Consumer PHP must run without Xdebug.\n"); exit(1); }'
+      - name: Install Chromium
+        timeout-minutes: 20
+        run: bash scripts/install-playwright-browsers.sh chromium
+      - name: Build the pinned PHP-Wasm runtime and host
+        timeout-minutes: 100
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          bash scripts/bootstrap-php-wasm-ci.sh 2>&1 | tee build/recursive-subtype-php-wasm-host.log
+          bash scripts/bootstrap-toolchains.sh
+          export LEAN_WASM_EMSDK="$GITHUB_WORKSPACE/.toolchains/emsdk-php-wasm"
+          bash scripts/build-lean-runtime.sh 2>&1 | tee build/recursive-subtype-php-wasm-runtime.log
+          source scripts/env.sh
+          node --input-type=module -e 'import {prepareOwnedPhpWasmRuntime} from "./tests/helpers/owned-php-wasm-runtime.mjs"; await prepareOwnedPhpWasmRuntime("build/recursive-subtype-php-wasm-input");'
+          test -s build/recursive-subtype-php-wasm-input/php-wasm-runtime/runtime.json
+      - name: Require ordinary and reviewed recursive checked packages
+        id: acceptance
+        timeout-minutes: 45
+        env:
+          LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME: build/recursive-subtype-php-wasm-input/php-wasm-runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-recursive-subtype-php-wasm-ci.sh
+      - name: Preserve original and partial installed records
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: recursive-subtype-php-wasm-${{ github.sha }}
+          path: |
+            build/recursive-subtype-php-wasm-ci/
+            build/recursive-subtype-php-wasm-host.log
+            build/recursive-subtype-php-wasm-runtime.log
+            build/recursive-subtype-php-wasm-input/php-wasm-runtime/runtime.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce recursive checked PHP-Wasm acceptance
+        if: always() && steps.acceptance.outcome != 'success'
+        run: exit 1

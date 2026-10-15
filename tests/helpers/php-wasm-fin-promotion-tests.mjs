@@ -12,12 +12,11 @@ import { beforePhpWasmFinPromotionSource } from "./php-wasm-fin-promotion-source
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { phpWasmFinPromotionConversion, phpWasmFinPromotionEnvironment, phpWasmFinPromotionLimit, phpWasmFinPromotionNestedOnly, phpWasmFinPromotionNotes, phpWasmFinPromotionReceipts, phpWasmFinPromotionReferences, phpWasmFinPromotionScope, phpWasmFinPromotionValidators } from "./php-wasm-fin-promotion-references.mjs";
 
-import { beforeNativeFinReplyPromotionSource } from "./native-fin-reply-promotion-source-history.mjs";
-
 // Check this milestone at its authenticated identity; later host-reply support is separate.
+const promotedSurfaceSha256 = "c013a93c4736b746b89bb5b003fdbb61087479a93d40e0ce5656ebd707c7c5dc";
 const parsePromotedSurface = source => {
-	const previous = beforeNativeFinReplyPromotionSource("docs/type-surface.v1.json", source);
-	assert.equal(sha256(previous), "c013a93c4736b746b89bb5b003fdbb61087479a93d40e0ce5656ebd707c7c5dc", "authenticate the exact historical PHP promotion inventory");
+	const previous = beforeFinRefinementSource("docs/type-surface.v1.json", source, promotedSurfaceSha256);
+	assert.equal(sha256(previous), promotedSurfaceSha256, "authenticate the exact historical PHP promotion inventory");
 	return JSON.parse(previous);
 };
 const readPromotedSurface = async () => {
@@ -36,7 +35,11 @@ test("PHP promotion normalization refuses unauthenticated round-trip inventory b
 		assert.throws(() => parsePromotedSurface(candidate), /authenticate the exact historical PHP promotion inventory/u);
 });
 
-const predecessor = async () => JSON.parse(beforePhpWasmFinPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+const predecessor = async () => {
+	const path = "docs/type-surface.v1.json";
+	const promoted = beforeFinRefinementSource(path, await readFile(path, "utf8"), promotedSurfaceSha256);
+	return JSON.parse(beforePhpWasmFinPromotionSource(path, promoted));
+};
 
 const validate = (document, previous, references, contracts) => {
 	const added = document.observations.slice(previous.observations.length);

@@ -19,7 +19,7 @@ test("hosted PHP-Wasm source history authenticates exact changes and refuses unk
 	assert.deepEqual(record.updates.map(update => update.path), phpWasmHostedChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = beforePhpWasmHostedSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		const previous = reversePhpWasmHostedUpdate(current, update);
 		assert.equal(beforePhpWasmHostedSource(update.path, current), previous);
 		assert.equal(beforePhpWasmHostedSource(update.path, current, update.currentSha256), current);

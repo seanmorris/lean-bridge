@@ -1,0 +1,222 @@
+{
+  "diskFloorBytes": 2147483648,
+  "files": [
+    {
+      "bytes": 3152,
+      "path": "ordinary/package-set-receipt.json",
+      "sha256": "8a97650b352e0797dcdcadb9e7e3afea76691232ecb236fc9e83f0fa38e491db"
+    },
+    {
+      "bytes": 91,
+      "path": "ordinary/package-set-receipt.json.sha256",
+      "sha256": "61c5b518bc830d32d6bdfff6b00edc9f42d63c52d987bddc8544d510e1c23c66"
+    },
+    {
+      "bytes": 1660962,
+      "path": "ordinary/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.4ee1bddd55b230a6e5c8aa2ea4339e146546f332ff9e3760614c8efeba289cd9.tgz",
+      "sha256": "41fefdd15b9175b1dd499b9125f4cc3c208466484894d72653341161565c4903"
+    },
+    {
+      "bytes": 83778,
+      "path": "ordinary/packages/php-wasm/archives/lean-bridge-recursive-subtypes-wasm-1.0.0-php-wasm.zip",
+      "sha256": "9d81f780d44022e3e62b882a8285ce38064f6d6ccbc084085cc42e87eb25d766"
+    },
+    {
+      "bytes": 147749,
+      "path": "ordinary/packages/php-wasm/archives/lean-bridge-recursive-subtypes-wasm-1.0.0.tgz",
+      "sha256": "8d69d353de1ebbe380827e4717571dd0377e9e9f0b9358b09c61d54d3a0c8c07"
+    },
+    {
+      "bytes": 270630,
+      "path": "ordinary/report.json",
+      "sha256": "7748eeec82e484aedbd14dc7c052ada1dc4807b080cb3ce7af652d5ecc6609a7"
+    },
+    {
+      "bytes": 3152,
+      "path": "reviewed/package-set-receipt.json",
+      "sha256": "55afadcdfcf9e2235fab0b83869f62105509ba13c6b80aabad3845d5b376d498"
+    },
+    {
+      "bytes": 91,
+      "path": "reviewed/package-set-receipt.json.sha256",
+      "sha256": "cd69419ed5c4d911a4e6d853acba4d65ab3648c8c61cd828b375f0c6bbb5b7c8"
+    },
+    {
+      "bytes": 1660962,
+      "path": "reviewed/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.4ee1bddd55b230a6e5c8aa2ea4339e146546f332ff9e3760614c8efeba289cd9.tgz",
+      "sha256": "41fefdd15b9175b1dd499b9125f4cc3c208466484894d72653341161565c4903"
+    },
+    {
+      "bytes": 84771,
+      "path": "reviewed/packages/php-wasm/archives/lean-bridge-recursive-subtypes-wasm-1.0.0-php-wasm.zip",
+      "sha256": "24d6496f7bda6a4a8915a9013388a80211d3fd8567142f5108eb07c7692ff08d"
+    },
+    {
+      "bytes": 152200,
+      "path": "reviewed/packages/php-wasm/archives/lean-bridge-recursive-subtypes-wasm-1.0.0.tgz",
+      "sha256": "9d74f3d85c8bd68c42805195a2695cafd7d34e4081f90418d292e05aff75fba7"
+    },
+    {
+      "bytes": 289319,
+      "path": "reviewed/report.json",
+      "sha256": "e744ca9b3ef9045a1c7848a2245b5f0fcc3d61ddb39191816c0d750a3291be99"
+    },
+    {
+      "bytes": 4380,
+      "path": "sources/.github/workflows/recursive-subtype-php-wasm.yml",
+      "sha256": "7977eb4ea2245ba91f212982bfabfafd1751d588582994fb1b2cd19d2f994555"
+    },
+    {
+      "bytes": 2043,
+      "path": "sources/scripts/run-recursive-subtype-php-wasm-ci.sh",
+      "sha256": "3bacd017fdd18f706c84e0e82a19dbc32ffeb7634a38bb4056edc464729daa71"
+    },
+    {
+      "bytes": 8630,
+      "path": "sources/src/analyze/checked-refinement-selection.mjs",
+      "sha256": "7106ddc2f6620cee4f2c8f21259187104d6a4807b853e83376d7afc48e51e61b"
+    },
+    {
+      "bytes": 105552,
+      "path": "sources/src/analyze/NativeExports.lean",
+      "sha256": "cf03ffc8aa8e0760ea0d9b58be3d452ee71ec3cbf683dd3f82c02dc2eb3e14a5"
+    },
+    {
+      "bytes": 35692,
+      "path": "sources/src/backends/c/native-graph-adapters.mjs",
+      "sha256": "f7ddd3742de1f99f510f3c0b843cd1d9dbc2e084ccb53618a6e815cbf93b8275"
+    },
+    {
+      "bytes": 14684,
+      "path": "sources/src/backends/php/copied-graph-zend.mjs",
+      "sha256": "c6d838d56124cd33531ad92687e1013817cdd424547838c97dd726bc0ed2cc54"
+    },
+    {
+      "bytes": 14339,
+      "path": "sources/src/build/component-recursive-lean.mjs",
+      "sha256": "65f04b5705e83c2f4d6cc7e22294072ce1e3bdef510edb024a9d5333f8c7ee30"
+    },
+    {
+      "bytes": 15465,
+      "path": "sources/src/build/component-refinement-mirrors.mjs",
+      "sha256": "b454eaf70252f3b615d3e9ec62357774aaf5fb7849a3edce329e4566beee7fa2"
+    },
+    {
+      "bytes": 32678,
+      "path": "sources/src/release/php-wasm-copied-package.mjs",
+      "sha256": "fc6b8e644324196f249dc50b5c2c723c027a355eb9ed61d8d57c8286f61fbb23"
+    },
+    {
+      "bytes": 995,
+      "path": "sources/tests/fixtures/onboarding/recursive-subtypes/RecursiveSubtypes.lean",
+      "sha256": "dc22479de2528065dcfc21f21d889f66f428aa76f7622a3ccd15b422fe65449b"
+    },
+    {
+      "bytes": 4900,
+      "path": "sources/tests/fixtures/recursive-subtype-consumers/php-wasm.php",
+      "sha256": "2e75f242f71d458c89780948e07105d66253c826cf00a3324849da72c56d6bd1"
+    },
+    {
+      "bytes": 6523,
+      "path": "sources/tests/helpers/recursive-subtype-fixture.mjs",
+      "sha256": "a8b0a8676ba94d16e841e0d8c5479d95b0283bb01fba0072d1d69e56ef31a646"
+    },
+    {
+      "bytes": 11564,
+      "path": "sources/tests/helpers/recursive-subtype-php-wasm-tests.mjs",
+      "sha256": "98030ee3044c4ba3ccbeb6080ce89377f9c20e85f898655e397c4516f58b23b9"
+    },
+    {
+      "bytes": 151,
+      "path": "sources/tests/recursive-subtype-php-wasm.test.mjs",
+      "sha256": "93d0a259ba5f793af6bdaeb74580e0546762066597f1cfd26de571230dcbb986"
+    }
+  ],
+  "kind": "recursive-subtype-php-wasm-installed-v1",
+  "limitations": [
+    "The fixture covers selected checked Subtype constructors and Fin bounds in a recursive variant, its alias, and nested Array and Option carriers.",
+    "Recursive checked records, generic record instantiations, owned values, callbacks, and dependent types remain separate work.",
+    "The runs reject cycles and values deeper than 128 copied levels. They do not claim support for cyclic Lean values.",
+    "The evidence records twelve Node and Chromium execution arrangements for each author route on wasm32 PHP 8.4.1.",
+    "Dispatch counts and peak memory were not measured.",
+    "External compiler, browser, Node, PHP, and Composer binaries are represented by recorded identities rather than copied.",
+    "Absolute temporary paths inside the reports describe the original runs and are not CI prerequisites."
+  ],
+  "loadCeiling": 8,
+  "producerCommit": "a54f8c653af24440754ff274df9095b54680f547",
+  "runs": [
+    {
+      "archives": [
+        {
+          "bytes": 83778,
+          "path": "ordinary/packages/php-wasm/archives/lean-bridge-recursive-subtypes-wasm-1.0.0-php-wasm.zip",
+          "sha256": "9d81f780d44022e3e62b882a8285ce38064f6d6ccbc084085cc42e87eb25d766"
+        },
+        {
+          "bytes": 1660962,
+          "path": "ordinary/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.4ee1bddd55b230a6e5c8aa2ea4339e146546f332ff9e3760614c8efeba289cd9.tgz",
+          "sha256": "41fefdd15b9175b1dd499b9125f4cc3c208466484894d72653341161565c4903"
+        },
+        {
+          "bytes": 147749,
+          "path": "ordinary/packages/php-wasm/archives/lean-bridge-recursive-subtypes-wasm-1.0.0.tgz",
+          "sha256": "8d69d353de1ebbe380827e4717571dd0377e9e9f0b9358b09c61d54d3a0c8c07"
+        }
+      ],
+      "checks": 24,
+      "checksumPath": "ordinary/package-set-receipt.json.sha256",
+      "executions": 12,
+      "receiptPath": "ordinary/package-set-receipt.json",
+      "receiptSha256": "8a97650b352e0797dcdcadb9e7e3afea76691232ecb236fc9e83f0fa38e491db",
+      "reportPath": "ordinary/report.json",
+      "reportSha256": "7748eeec82e484aedbd14dc7c052ada1dc4807b080cb3ce7af652d5ecc6609a7",
+      "route": "ordinary",
+      "sourcePath": "ordinary-source"
+    },
+    {
+      "archives": [
+        {
+          "bytes": 84771,
+          "path": "reviewed/packages/php-wasm/archives/lean-bridge-recursive-subtypes-wasm-1.0.0-php-wasm.zip",
+          "sha256": "24d6496f7bda6a4a8915a9013388a80211d3fd8567142f5108eb07c7692ff08d"
+        },
+        {
+          "bytes": 1660962,
+          "path": "reviewed/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.4ee1bddd55b230a6e5c8aa2ea4339e146546f332ff9e3760614c8efeba289cd9.tgz",
+          "sha256": "41fefdd15b9175b1dd499b9125f4cc3c208466484894d72653341161565c4903"
+        },
+        {
+          "bytes": 152200,
+          "path": "reviewed/packages/php-wasm/archives/lean-bridge-recursive-subtypes-wasm-1.0.0.tgz",
+          "sha256": "9d74f3d85c8bd68c42805195a2695cafd7d34e4081f90418d292e05aff75fba7"
+        }
+      ],
+      "checks": 24,
+      "checksumPath": "reviewed/package-set-receipt.json.sha256",
+      "executions": 12,
+      "receiptPath": "reviewed/package-set-receipt.json",
+      "receiptSha256": "55afadcdfcf9e2235fab0b83869f62105509ba13c6b80aabad3845d5b376d498",
+      "reportPath": "reviewed/report.json",
+      "reportSha256": "e744ca9b3ef9045a1c7848a2245b5f0fcc3d61ddb39191816c0d750a3291be99",
+      "route": "reviewed",
+      "sourcePath": "reviewed-ir"
+    }
+  ],
+  "schemaVersion": 1,
+  "selectedSources": [
+    ".github/workflows/recursive-subtype-php-wasm.yml",
+    "scripts/run-recursive-subtype-php-wasm-ci.sh",
+    "src/analyze/NativeExports.lean",
+    "src/analyze/checked-refinement-selection.mjs",
+    "src/build/component-refinement-mirrors.mjs",
+    "src/build/component-recursive-lean.mjs",
+    "src/backends/c/native-graph-adapters.mjs",
+    "src/backends/php/copied-graph-zend.mjs",
+    "src/release/php-wasm-copied-package.mjs",
+    "tests/fixtures/onboarding/recursive-subtypes/RecursiveSubtypes.lean",
+    "tests/fixtures/recursive-subtype-consumers/php-wasm.php",
+    "tests/helpers/recursive-subtype-fixture.mjs",
+    "tests/helpers/recursive-subtype-php-wasm-tests.mjs",
+    "tests/recursive-subtype-php-wasm.test.mjs"
+  ]
+}

@@ -4,23 +4,35 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { beforeStructuralSubtypePromotionSource, structuralSubtypePromotionHistoryPath } from "./structural-subtype-promotion-history.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeFinDotnetSdkSource, finDotnetSdkHistoryPath } from "./fin-dotnet-sdk-history.mjs";
-import { finJvmDiagnosticsHistoryPath } from "./fin-jvm-diagnostics-history.mjs";
-import { phpWasmSubtypeEntryHistoryPath } from "./php-wasm-subtype-entry-history.mjs";
-import { phpWasmEntryHarnessHistoryPath } from "./php-wasm-entry-harness-history.mjs";
-import { phpWasmEntryCiHistoryPath } from "./php-wasm-entry-ci-history.mjs";
-import { reviewedSubtypeHostHistoryPath } from "./reviewed-subtype-host-history.mjs";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { phpWasmSubtypeArchiveRoot, phpWasmSubtypeProducer } from "./php-wasm-subtype-archive.mjs";
 import { beforePhpWasmSubtypePromotionSource, phpWasmSubtypePromotionHistoryPath } from "./php-wasm-subtype-promotion-history.mjs";
 import { phpWasmSubtypePromotionConversion, phpWasmSubtypePromotionEnvironment, phpWasmSubtypePromotionLimit, phpWasmSubtypePromotionReferences, promotePhpWasmSubtype } from "./php-wasm-subtype-promotion.mjs";
 
-const predecessor = async () => JSON.parse(beforePhpWasmSubtypePromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+const promotionSource = async path => {
+	const history = JSON.parse(await readFile(phpWasmSubtypePromotionHistoryPath));
+	const update = history.updates.find(item => item.path === path);
+	assert.ok(update, path);
+	return beforeFinRefinementSource(path, await readFile(path, "utf8"), update.currentSha256);
+};
+const predecessor = async () => {
+	const path = "docs/type-surface.v1.json";
+	return JSON.parse(beforePhpWasmSubtypePromotionSource(path, await promotionSource(path)));
+};
+const restoreHistoricalPins = (candidate, historical) => {
+	assert.equal(candidate.evidence.length, historical.evidence.length);
+	for(const [index, entry] of candidate.evidence.entries())
+	{
+		const expected = historical.evidence[index];
+		assert.equal(entry.id, expected.id);
+		assert.deepEqual(entry.files.map(file => file.path), expected.files.map(file => file.path));
+		for(const [position, file] of entry.files.entries()) file.sha256 = expected.files[position].sha256;
+	}
+};
 
 test("PHP-Wasm Subtype promotion authenticates both source routes without inventing dispatch or browser coverage", async () => {
 	const references = await phpWasmSubtypePromotionReferences();
@@ -45,17 +57,8 @@ test("PHP-Wasm Subtype promotion authenticates both source routes without invent
 
 test("PHP-Wasm Subtype promotion changes only four cells and preserves every older observation", async () => {
 	const current = await readTypeSurface(), previous = await predecessor();
-	current.document = JSON.parse(beforeFinDotnetSdkSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+	current.document = JSON.parse(await promotionSource("docs/type-surface.v1.json"));
 	const references = await phpWasmSubtypePromotionReferences(), proposed = await promotePhpWasmSubtype(previous, references);
-	for(const path of [structuralSubtypePromotionHistoryPath, reviewedSubtypeHostHistoryPath, phpWasmEntryCiHistoryPath, phpWasmEntryHarnessHistoryPath, phpWasmSubtypeEntryHistoryPath, finJvmDiagnosticsHistoryPath, finDotnetSdkHistoryPath])
-	{
-		const later = JSON.parse(await readFile(path));
-		for(const entry of proposed.evidence) for(const file of entry.files)
-		{
-			const update = later.updates.find(item => item.path === file.path && item.currentSha256 === file.sha256);
-			if(update) file.sha256 = update.previousSha256;
-		}
-	}
 	validateTypeSurface(proposed, current);
 	assert.equal(previous.evidence.length, 405); assert.equal(previous.observations.length, 507);
 	assert.equal(proposed.evidence.length, 407); assert.equal(proposed.observations.length, 509);
@@ -79,12 +82,8 @@ test("PHP-Wasm Subtype promotion changes only four cells and preserves every old
 		assert.deepEqual(observation.limitations, [phpWasmSubtypePromotionLimit, phpWasmSubtypePromotionEnvironment]);
 		assert.deepEqual(observation.conversionNotes, { subtype: phpWasmSubtypePromotionConversion });
 	}
-	const expected = structuredClone(proposed), history = JSON.parse(await readFile(phpWasmSubtypePromotionHistoryPath));
-	for(const entry of expected.evidence) for(const file of entry.files)
-	{
-		const update = history.updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);
-		if(update) file.sha256 = update.currentSha256;
-	}
+	const expected = structuredClone(proposed);
+	restoreHistoricalPins(expected, current.document);
 	assert.deepEqual(current.document, expected);
 	for(const entry of current.document.evidence) for(const file of entry.files)
 		assert.equal(sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)), file.sha256, file.path);
@@ -111,8 +110,8 @@ test("PHP-Wasm Subtype promotion refuses missing, duplicate, weakened or repeate
 test("PHP-Wasm consumer and author guides describe installed Subtypes and retain unmeasured entry counts", async () => {
 	const consumer = await readFile("docs/php.md", "utf8"), author = await readFile("docs/lean/existing-package.md", "utf8");
 	const row = consumer.split("\n").find(line => line.startsWith("| `Subtype /"));
-	const previous = beforeStructuralSubtypePromotionSource("docs/php.md", consumer);
-	assert.ok(previous.split("\n").find(line => line.startsWith("| `Subtype /")).includes(phpWasmSubtypePromotionConversion));
+	const promoted = await promotionSource("docs/php.md");
+	assert.ok(promoted.split("\n").find(line => line.startsWith("| `Subtype /")).includes(phpWasmSubtypePromotionConversion));
 	assert.ok(row.includes("PHP-Wasm:")); assert.ok(!row.includes("No host mapping recorded"));
 	for(const source of [consumer, author])
 	{
@@ -122,5 +121,5 @@ test("PHP-Wasm consumer and author guides describe installed Subtypes and retain
 	}
 	assert.ok(consumer.includes("Constructor and dispatch counts were not measured."));
 	assert.ok(author.includes("runtime entry counts remain unmeasured"));
-	assert.ok(beforeStructuralSubtypePromotionSource("docs/lean/existing-package.md", author).includes("PHP-Wasm keeps nested Subtype and packages combining refinements with graph, owned or callable transports rejected."));
+	assert.ok(author.includes("PHP-Wasm accepts the listed structural containers, acyclic nominal fields and [finite recursive copied graphs](../evidence/recursive-subtype-php-wasm-20261015.md). Refined callback and owned transports remain rejected."));
 });

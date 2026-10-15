@@ -11,7 +11,6 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforePhpWasmEntryCiSource } from "./php-wasm-entry-ci-history.mjs";
 import { beforePhpWasmEntryHarnessSource, phpWasmEntryHarnessChangedPaths, phpWasmEntryHarnessHistoryPath, phpWasmEntryHarnessPredecessor, reversePhpWasmEntryHarnessUpdate } from "./php-wasm-entry-harness-history.mjs";
 
 test("PHP-Wasm Subtype installed probe harness integration authenticates every transition and refuses unrecorded edits", async () => {
@@ -22,7 +21,7 @@ test("PHP-Wasm Subtype installed probe harness integration authenticates every t
 	assert.deepEqual(history.updates.map(update => update.path), phpWasmEntryHarnessChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforePhpWasmEntryCiSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		const previous = reversePhpWasmEntryHarnessUpdate(current, update);
 		assert.equal(beforePhpWasmEntryHarnessSource(update.path, current), previous);
 		assert.equal(beforePhpWasmEntryHarnessSource(update.path, current, update.currentSha256), current);
@@ -72,7 +71,10 @@ test("PHP-Wasm Subtype installed probe harness integration preserves the earlier
 
 test("PHP-Wasm Subtype installed probe harness changes source pins without changing any support claim", async () => {
 	const history = JSON.parse(await readFile(phpWasmEntryHarnessHistoryPath, "utf8"));
-	const path = "docs/type-surface.v1.json", text = beforePhpWasmEntryCiSource(path, await readFile(path, "utf8"));
+	const surfaceUpdate = history.updates.find(item => item.path === "docs/type-surface.v1.json");
+	assert.ok(surfaceUpdate);
+	const path = surfaceUpdate.path;
+	const text = beforeFinRefinementSource(path, await readFile(path, "utf8"), surfaceUpdate.currentSha256);
 	const current = JSON.parse(text), previous = JSON.parse(beforePhpWasmEntryHarnessSource(path, text));
 	const expected = structuredClone(previous); let refreshed = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)

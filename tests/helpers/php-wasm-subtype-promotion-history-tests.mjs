@@ -11,7 +11,6 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeFinDotnetSdkSource } from "./fin-dotnet-sdk-history.mjs";
 import { beforePhpWasmSubtypePromotionSource, phpWasmSubtypePromotionChangedPaths, phpWasmSubtypePromotionHistoryPath, phpWasmSubtypePromotionPredecessor, reversePhpWasmSubtypePromotionUpdate } from "./php-wasm-subtype-promotion-history.mjs";
 
 test("PHP-Wasm Subtype promotion integration authenticates every transition and refuses unrecorded edits", async () => {
@@ -22,7 +21,8 @@ test("PHP-Wasm Subtype promotion integration authenticates every transition and 
 	assert.deepEqual(history.updates.map(update => update.path), phpWasmSubtypePromotionChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeFinDotnetSdkSource(update.path, await readFile(update.path, "utf8")), previous = reversePhpWasmSubtypePromotionUpdate(current, update);
+		const current = beforeFinRefinementSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const previous = reversePhpWasmSubtypePromotionUpdate(current, update);
 		assert.equal(beforePhpWasmSubtypePromotionSource(update.path, current), previous);
 		assert.equal(beforePhpWasmSubtypePromotionSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforePhpWasmSubtypePromotionSource(update.path, previous), previous);

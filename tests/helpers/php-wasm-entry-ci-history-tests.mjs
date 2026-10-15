@@ -10,7 +10,6 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeReviewedSubtypeHostSource } from "./reviewed-subtype-host-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforePhpWasmEntryCiSource, phpWasmEntryCiChangedPaths, phpWasmEntryCiHistoryPath, phpWasmEntryCiPredecessor, reversePhpWasmEntryCiUpdate } from "./php-wasm-entry-ci-history.mjs";
 
@@ -22,7 +21,8 @@ test("PHP-Wasm Subtype installed entry CI integration authenticates every transi
 	assert.deepEqual(history.updates.map(update => update.path), phpWasmEntryCiChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeReviewedSubtypeHostSource(update.path, await readFile(update.path, "utf8")), previous = reversePhpWasmEntryCiUpdate(current, update);
+		const current = beforeFinRefinementSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const previous = reversePhpWasmEntryCiUpdate(current, update);
 		assert.equal(beforePhpWasmEntryCiSource(update.path, current), previous);
 		assert.equal(beforePhpWasmEntryCiSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforePhpWasmEntryCiSource(update.path, previous), previous);
@@ -72,7 +72,10 @@ test("PHP-Wasm Subtype installed entry CI integration preserves the earlier sour
 
 test("PHP-Wasm Subtype installed entry CI changes source pins without changing any support claim", async () => {
 	const history = JSON.parse(await readFile(phpWasmEntryCiHistoryPath, "utf8"));
-	const path = "docs/type-surface.v1.json", text = beforeReviewedSubtypeHostSource(path, await readFile(path, "utf8"));
+	const surfaceUpdate = history.updates.find(item => item.path === "docs/type-surface.v1.json");
+	assert.ok(surfaceUpdate);
+	const path = surfaceUpdate.path;
+	const text = beforeFinRefinementSource(path, await readFile(path, "utf8"), surfaceUpdate.currentSha256);
 	const current = JSON.parse(text), previous = JSON.parse(beforePhpWasmEntryCiSource(path, text));
 	const expected = structuredClone(previous); let refreshed = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)

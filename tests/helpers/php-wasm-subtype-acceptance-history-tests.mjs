@@ -11,7 +11,6 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforePhpWasmSubtypePromotionSource } from "./php-wasm-subtype-promotion-history.mjs";
 import { beforePhpWasmSubtypeAcceptanceSource, phpWasmSubtypeAcceptanceChangedPaths, phpWasmSubtypeAcceptanceHistoryPath, phpWasmSubtypeAcceptancePredecessor, reversePhpWasmSubtypeAcceptanceUpdate } from "./php-wasm-subtype-acceptance-history.mjs";
 
 test("PHP-Wasm Subtype acceptance integration authenticates every transition and refuses unrecorded edits", async () => {
@@ -22,7 +21,7 @@ test("PHP-Wasm Subtype acceptance integration authenticates every transition and
 	assert.deepEqual(history.updates.map(update => update.path), phpWasmSubtypeAcceptanceChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforePhpWasmSubtypePromotionSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		const previous = reversePhpWasmSubtypeAcceptanceUpdate(current, update);
 		assert.equal(beforePhpWasmSubtypeAcceptanceSource(update.path, current), previous);
 		assert.equal(beforePhpWasmSubtypeAcceptanceSource(update.path, current, update.currentSha256), current);
@@ -79,9 +78,13 @@ test("PHP-Wasm Subtype acceptance integration history writer refuses an unrelate
 });
 
 test("PHP-Wasm Subtype acceptance archive and CI refresh source pins without changing support observations", async () => {
-	const path = "docs/type-surface.v1.json", source = beforePhpWasmSubtypePromotionSource(path, await readFile(path, "utf8"));
+	const history = JSON.parse(await readFile(phpWasmSubtypeAcceptanceHistoryPath, "utf8"));
+	const surfaceUpdate = history.updates.find(item => item.path === "docs/type-surface.v1.json");
+	assert.ok(surfaceUpdate);
+	const path = surfaceUpdate.path;
+	const source = beforeFinRefinementSource(path, await readFile(path, "utf8"), surfaceUpdate.currentSha256);
 	const current = JSON.parse(source), previous = JSON.parse(beforePhpWasmSubtypeAcceptanceSource(path, source));
-	const expected = structuredClone(previous), history = JSON.parse(await readFile(phpWasmSubtypeAcceptanceHistoryPath, "utf8"));
+	const expected = structuredClone(previous);
 	let refreshed = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{

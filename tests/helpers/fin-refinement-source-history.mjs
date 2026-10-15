@@ -97,6 +97,7 @@ import { beforeNominalPrimitiveSubtypeDotnetPromotionSource, nominalPrimitiveSub
 import { beforeNominalPrimitiveSubtypePhpPromotionSource, nominalPrimitiveSubtypePhpPromotionChangedPaths } from "./nominal-primitive-subtype-php-promotion-history.mjs";
 import { beforeNominalPrimitiveSubtypePhpWasmPromotionSource, nominalPrimitiveSubtypePhpWasmPromotionChangedPaths } from "./nominal-primitive-subtype-php-wasm-promotion-history.mjs";
 import { beforeRecursiveSubtypePhpWasmSource, recursiveSubtypePhpWasmChangedPaths } from "./recursive-subtype-php-wasm-source-history.mjs";
+import { beforeRecursiveSubtypePhpWasmPromotionSource, recursiveSubtypePhpWasmPromotionChangedPaths } from "./recursive-subtype-php-wasm-promotion-history.mjs";
 import { beforeNominalPrimitiveSubtypeRustPromotionSource, nominalPrimitiveSubtypeRustPromotionChangedPaths } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeSubtypeRefinementSource, subtypeRefinementChangedPaths } from "./subtype-refinement-source-history.mjs";
@@ -748,6 +749,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeRecursiveSubtypePhpWasmPromotionSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeRecursiveSubtypePhpWasmSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeNominalPrimitiveSubtypePhpWasmPromotionSource(path, source, expected);
@@ -1073,6 +1076,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nominalPrimitiveSubtypePhpPromotionChangedPaths
 	, ...nominalPrimitiveSubtypePhpWasmPromotionChangedPaths
 	, ...recursiveSubtypePhpWasmChangedPaths
+	, ...recursiveSubtypePhpWasmPromotionChangedPaths
 ])].sort());
 
 /**

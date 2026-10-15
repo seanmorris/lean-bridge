@@ -1,0 +1,92 @@
+{
+  "component": {
+    "id": "recursivesubtypes@1.0.0",
+    "name": "recursivesubtypes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 83778,
+          "path": "packages/php-wasm/archives/lean-bridge-recursive-subtypes-wasm-1.0.0-php-wasm.zip",
+          "sha256": "9d81f780d44022e3e62b882a8285ce38064f6d6ccbc084085cc42e87eb25d766"
+        }
+      ],
+      "ecosystem": "composer",
+      "name": "lean-bridge-recursive-subtypes/wasm",
+      "profile": "php-wasm-copied-v1",
+      "requires": [
+        {
+          "ecosystem": "npm",
+          "name": "@lean-bridge/php-wasm-copied-runtime",
+          "version": "0.0.0-copied1.4ee1bddd55b230a6e5c8aa2ea4339e146546f332ff9e3760614c8efeba289cd9"
+        },
+        {
+          "ecosystem": "npm",
+          "name": "lean-bridge-recursive-subtypes-wasm",
+          "version": "1.0.0"
+        }
+      ],
+      "role": "api",
+      "runtimeDelivery": "dependency",
+      "runtimeIdentity": "44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966",
+      "target": "php-wasm",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 1660962,
+          "path": "packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.4ee1bddd55b230a6e5c8aa2ea4339e146546f332ff9e3760614c8efeba289cd9.tgz",
+          "sha256": "41fefdd15b9175b1dd499b9125f4cc3c208466484894d72653341161565c4903"
+        }
+      ],
+      "ecosystem": "npm",
+      "name": "@lean-bridge/php-wasm-copied-runtime",
+      "profile": "php-wasm-copied-v1",
+      "requires": [],
+      "role": "runtime",
+      "runtimeDelivery": "provided",
+      "runtimeIdentity": "44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966",
+      "target": "php-wasm",
+      "version": "0.0.0-copied1.4ee1bddd55b230a6e5c8aa2ea4339e146546f332ff9e3760614c8efeba289cd9"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 147749,
+          "path": "packages/php-wasm/archives/lean-bridge-recursive-subtypes-wasm-1.0.0.tgz",
+          "sha256": "8d69d353de1ebbe380827e4717571dd0377e9e9f0b9358b09c61d54d3a0c8c07"
+        }
+      ],
+      "ecosystem": "npm",
+      "name": "lean-bridge-recursive-subtypes-wasm",
+      "profile": "php-wasm-copied-v1",
+      "requires": [
+        {
+          "ecosystem": "npm",
+          "name": "@lean-bridge/php-wasm-copied-runtime",
+          "version": "0.0.0-copied1.4ee1bddd55b230a6e5c8aa2ea4339e146546f332ff9e3760614c8efeba289cd9"
+        }
+      ],
+      "role": "component",
+      "runtimeDelivery": "dependency",
+      "runtimeIdentity": "44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966",
+      "target": "php-wasm",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "28fbb529943fb5fb0a9c26de78f9888a5baccabb2ee48433d34087b24086e617",
+      "id": "php-wasm-copied-v1",
+      "runtimeIdentity": "44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "2817c6c442957cef630cc55d8130ff74c6f5ef5737aa8502123b93c2676d9c7a"
+  }
+}

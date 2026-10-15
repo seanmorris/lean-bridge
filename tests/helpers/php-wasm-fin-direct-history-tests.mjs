@@ -11,7 +11,6 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeFinCoreRepairSource } from "./fin-core-repair-history.mjs";
 import { beforePhpWasmDirectFinSource, phpWasmDirectFinChangedPaths, phpWasmDirectFinHistoryPath, phpWasmDirectFinPredecessor, reversePhpWasmDirectFinUpdate } from "./php-wasm-fin-direct-history.mjs";
 
 test("Direct PHP-Wasm Fin integration authenticates every transition and refuses unrecorded edits", async () => {
@@ -22,7 +21,7 @@ test("Direct PHP-Wasm Fin integration authenticates every transition and refuses
 	assert.deepEqual(history.updates.map(update => update.path), phpWasmDirectFinChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeFinCoreRepairSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		const previous = reversePhpWasmDirectFinUpdate(current, update);
 		assert.equal(beforePhpWasmDirectFinSource(update.path, current), previous);
 		assert.equal(beforePhpWasmDirectFinSource(update.path, current, update.currentSha256), current);
@@ -75,9 +74,13 @@ test("Direct PHP-Wasm Fin integration history writer refuses an unrelated HEAD b
 });
 
 test("Direct PHP-Wasm Fin integration changes current source pins only and adds no installed support claims", async () => {
-	const path = "docs/type-surface.v1.json", source = beforeFinCoreRepairSource(path, await readFile(path, "utf8"));
+	const history = JSON.parse(await readFile(phpWasmDirectFinHistoryPath, "utf8"));
+	const surfaceUpdate = history.updates.find(item => item.path === "docs/type-surface.v1.json");
+	assert.ok(surfaceUpdate);
+	const path = surfaceUpdate.path;
+	const source = beforeFinRefinementSource(path, await readFile(path, "utf8"), surfaceUpdate.currentSha256);
 	const current = JSON.parse(source), previous = JSON.parse(beforePhpWasmDirectFinSource(path, source));
-	const expected = structuredClone(previous), history = JSON.parse(await readFile(phpWasmDirectFinHistoryPath, "utf8"));
+	const expected = structuredClone(previous);
 	let refreshed = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{

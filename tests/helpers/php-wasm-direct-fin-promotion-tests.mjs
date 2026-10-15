@@ -8,22 +8,32 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { finDotnetSdkHistoryPath } from "./fin-dotnet-sdk-history.mjs";
-import { finJvmDiagnosticsHistoryPath } from "./fin-jvm-diagnostics-history.mjs";
-import { phpWasmSubtypeEntryHistoryPath } from "./php-wasm-subtype-entry-history.mjs";
-import { phpWasmEntryHarnessHistoryPath } from "./php-wasm-entry-harness-history.mjs";
-import { phpWasmEntryCiHistoryPath } from "./php-wasm-entry-ci-history.mjs";
-import { reviewedSubtypeHostHistoryPath } from "./reviewed-subtype-host-history.mjs";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { phpWasmDirectArchiveRoot, phpWasmDirectProducer } from "./php-wasm-fin-direct-archive.mjs";
 import { beforePhpWasmDirectPromotionSource, phpWasmDirectPromotionHistoryPath } from "./php-wasm-direct-fin-promotion-history.mjs";
-import { beforePhpWasmSubtypeSource, phpWasmSubtypeHistoryPath } from "./php-wasm-subtype-history.mjs";
-import { phpWasmSubtypeAcceptanceHistoryPath } from "./php-wasm-subtype-acceptance-history.mjs";
-import { beforePhpWasmSubtypePromotionSource, phpWasmSubtypePromotionHistoryPath } from "./php-wasm-subtype-promotion-history.mjs";
 import { phpWasmDirectPromotionConversion, phpWasmDirectPromotionEnvironment, phpWasmDirectPromotionLimit, phpWasmDirectPromotionReferences, promotePhpWasmDirectFin } from "./php-wasm-direct-fin-promotion.mjs";
 import "./php-wasm-direct-fin-promotion-history-tests.mjs";
 
-const predecessor = async () => JSON.parse(beforePhpWasmDirectPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+const promotionSource = async path => {
+	const history = JSON.parse(await readFile(phpWasmDirectPromotionHistoryPath));
+	const update = history.updates.find(item => item.path === path);
+	assert.ok(update, path);
+	return beforeFinRefinementSource(path, await readFile(path, "utf8"), update.currentSha256);
+};
+const predecessor = async () => {
+	const path = "docs/type-surface.v1.json";
+	return JSON.parse(beforePhpWasmDirectPromotionSource(path, await promotionSource(path)));
+};
+const restoreHistoricalPins = (candidate, historical) => {
+	assert.equal(candidate.evidence.length, historical.evidence.length);
+	for(const [index, entry] of candidate.evidence.entries())
+	{
+		const expected = historical.evidence[index];
+		assert.equal(entry.id, expected.id);
+		assert.deepEqual(entry.files.map(file => file.path), expected.files.map(file => file.path));
+		for(const [position, file] of entry.files.entries()) file.sha256 = expected.files[position].sha256;
+	}
+};
 
 test("direct PHP-Wasm promotion authenticates four selections without borrowing runtime or dispatch coverage", async () => {
 	const references = await phpWasmDirectPromotionReferences();
@@ -48,18 +58,9 @@ test("direct PHP-Wasm promotion authenticates four selections without borrowing 
 
 test("direct PHP-Wasm promotion supplements only its existing six Fin cells and preserves earlier evidence", async () => {
 	const current = await readTypeSurface(), previous = await predecessor();
-	current.document = JSON.parse(beforePhpWasmSubtypePromotionSource("docs/type-surface.v1.json", JSON.stringify(current.document, null, 2) + "\n"));
+	current.document = JSON.parse(await promotionSource("docs/type-surface.v1.json"));
 	const references = await phpWasmDirectPromotionReferences();
 	const proposed = await promotePhpWasmDirectFin(previous, references);
-	for(const path of [reviewedSubtypeHostHistoryPath, phpWasmEntryCiHistoryPath, phpWasmEntryHarnessHistoryPath, phpWasmSubtypeEntryHistoryPath, finJvmDiagnosticsHistoryPath, finDotnetSdkHistoryPath, phpWasmSubtypePromotionHistoryPath])
-	{
-		const later = JSON.parse(await readFile(path));
-		for(const entry of proposed.evidence) for(const file of entry.files)
-		{
-			const update = later.updates.find(item => item.path === file.path && item.currentSha256 === file.sha256);
-			if(update) file.sha256 = update.previousSha256;
-		}
-	}
 	validateTypeSurface(proposed, current);
 	assert.equal(proposed.observations.length, previous.observations.length);
 	assert.equal(proposed.evidence.length, previous.evidence.length + 4);
@@ -96,21 +97,8 @@ test("direct PHP-Wasm promotion supplements only its existing six Fin cells and 
 		for(const name of previous.stages) assert.equal(cell.stages[name].state, before[index].stages[name].state);
 	}
 	assert.equal(updated, 6);
-	const expected = structuredClone(proposed), history = JSON.parse(await readFile(phpWasmDirectPromotionHistoryPath));
-	for(const entry of expected.evidence.slice(0, previous.evidence.length)) for(const file of entry.files)
-	{
-		const update = history.updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);
-		if(update) file.sha256 = update.currentSha256;
-	}
-	for(const path of [phpWasmSubtypeHistoryPath, phpWasmSubtypeAcceptanceHistoryPath])
-	{
-		const subtypeHistory = JSON.parse(await readFile(path));
-		for(const entry of expected.evidence) for(const file of entry.files)
-		{
-			const update = subtypeHistory.updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);
-			if(update) file.sha256 = update.currentSha256;
-		}
-	}
+	const expected = structuredClone(proposed);
+	restoreHistoricalPins(expected, current.document);
 	assert.deepEqual(current.document, expected);
 	for(const entry of current.document.evidence) for(const file of entry.files)
 		assert.equal(sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)), file.sha256, file.path);
@@ -131,7 +119,7 @@ test("direct PHP-Wasm promotion refuses incomplete, duplicated or repeated suppl
 
 test("PHP consumer and author guides distinguish direct acceptance from the earlier nested fixtures", async () => {
 	const consumer = await readFile("docs/php.md", "utf8");
-	const author = beforePhpWasmSubtypeSource("docs/lean/existing-package.md", await readFile("docs/lean/existing-package.md", "utf8"));
+	const author = await readFile("docs/lean/existing-package.md", "utf8");
 	const row = consumer.split("\n").find(line => line.startsWith("| `Fin n` |"));
 	assert.ok(row.includes(phpWasmDirectPromotionConversion));
 	assert.ok(!row.includes("no bare top-level Fin or direct Array/List/Option"));
@@ -145,5 +133,5 @@ test("PHP consumer and author guides distinguish direct acceptance from the earl
 	assert.ok(!author.includes("bare scalar pending"));
 	assert.ok(!author.includes("direct containers pending"));
 	assert.ok(consumer.includes("Source-dispatch counters were not measured."));
-	assert.ok(author.includes("PHP-Wasm keeps checked Subtype and packages combining Fin with graph, owned or callable transports rejected."));
+	assert.ok(author.includes("Source dispatch is unmeasured; checked Subtype, refined callbacks and graph/owned refinement transports remain separate work."));
 });

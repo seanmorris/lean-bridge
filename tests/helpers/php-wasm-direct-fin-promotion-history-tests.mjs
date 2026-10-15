@@ -11,7 +11,6 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforePhpWasmSubtypeSource } from "./php-wasm-subtype-history.mjs";
 import { beforePhpWasmDirectPromotionSource, phpWasmDirectPromotionChangedPaths, phpWasmDirectPromotionHistoryPath, phpWasmDirectPromotionPredecessor, reversePhpWasmDirectPromotionUpdate } from "./php-wasm-direct-fin-promotion-history.mjs";
 
 test("Direct PHP-Wasm Fin promotion integration authenticates every transition and refuses unrecorded edits", async () => {
@@ -22,7 +21,7 @@ test("Direct PHP-Wasm Fin promotion integration authenticates every transition a
 	assert.deepEqual(history.updates.map(update => update.path), phpWasmDirectPromotionChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforePhpWasmSubtypeSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		const previous = reversePhpWasmDirectPromotionUpdate(current, update);
 		assert.equal(beforePhpWasmDirectPromotionSource(update.path, current), previous);
 		assert.equal(beforePhpWasmDirectPromotionSource(update.path, current, update.currentSha256), current);
