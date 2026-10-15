@@ -11,7 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeNominalPrimitiveSubtypeBrowserPromotionSource } from "./nominal-primitive-subtype-browser-promotion-history.mjs";
-import { beforeNominalPrimitiveSubtypeRubyRegistrationSource, nominalPrimitiveSubtypeRubyRegistrationChangedPaths, nominalPrimitiveSubtypeRubyRegistrationHistoryPath, nominalPrimitiveSubtypeRubyRegistrationPredecessor, reverseNominalPrimitiveSubtypeRubyRegistrationUpdate } from "./nominal-primitive-subtype-ruby-registration-history.mjs";
+import { applyNominalPrimitiveSubtypeRubyRegistrationUpdate, beforeNominalPrimitiveSubtypeRubyRegistrationSource, nominalPrimitiveSubtypeRubyRegistrationChangedPaths, nominalPrimitiveSubtypeRubyRegistrationHistoryPath, nominalPrimitiveSubtypeRubyRegistrationPredecessor, reverseNominalPrimitiveSubtypeRubyRegistrationUpdate } from "./nominal-primitive-subtype-ruby-registration-history.mjs";
 
 test("primitive-base Ruby harness registration authenticates exact changes without adding support claims", async () => {
 	const record = JSON.parse(await readFile(nominalPrimitiveSubtypeRubyRegistrationHistoryPath));
@@ -21,10 +21,10 @@ test("primitive-base Ruby harness registration authenticates exact changes witho
 	const original = path => execFileSync("git", ["show", `${nominalPrimitiveSubtypeRubyRegistrationPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const previous = original(update.path);
+		const current = applyNominalPrimitiveSubtypeRubyRegistrationUpdate(previous, update);
 		assert.equal(beforeNominalPrimitiveSubtypeRubyRegistrationSource(update.path, current, update.currentSha256), current);
-		const previous = reverseNominalPrimitiveSubtypeRubyRegistrationUpdate(current, update);
-		assert.equal(previous, original(update.path));
+		assert.equal(reverseNominalPrimitiveSubtypeRubyRegistrationUpdate(current, update), previous);
 		assert.equal(beforeNominalPrimitiveSubtypeRubyRegistrationSource(update.path, current), previous);
 		assert.equal(beforeNominalPrimitiveSubtypeRubyRegistrationSource(update.path, previous), previous);
 		assert.equal(beforeNominalPrimitiveSubtypeRubyRegistrationSource(update.path, current + "unknown"), current + "unknown");
@@ -40,6 +40,7 @@ test("primitive-base Ruby harness registration authenticates exact changes witho
 		{
 			const changed = structuredClone(update); mutate(changed);
 			assert.throws(() => reverseNominalPrimitiveSubtypeRubyRegistrationUpdate(current, changed));
+			assert.throws(() => applyNominalPrimitiveSubtypeRubyRegistrationUpdate(previous, changed));
 		}
 	}
 	const path = "docs/type-surface.v1.json", inventory = JSON.parse(original(path));
