@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nominal-primitive-subtype-perl-integration-source-v1",
+  "predecessorCommit": "98c93399ac35fc69e9ee7a19e5b767625d4d5d21",
+  "alternateCommit": "acc614cd17981972b3f12307a94b0eef4a957fc5",
+  "updates": [
+    {
+      "path": "tests/helpers/core-quality-budget-history.mjs",
+      "currentSha256": "6b41798dad04bda49a219df7319dae83b1173b7d8373b2a9a25cde7ed027cd18",
+      "previousSha256": "52dc4d6431e188812d50e36f86d688baadab75e1d0f51512ae8bc5bf5cf9f478",
+      "edits": [
+        {
+          "start": 168,
+          "previous": "",
+          "current": "import { beforeNominalPrimitiveSubtypePerlIntegrationSource } from \"./nominal-primitive-subtype-perl-integration-history.mjs\";\n"
+        },
+        {
+          "start": 2318,
+          "previous": "",
+          "current": "\tsource = beforeNominalPrimitiveSubtypePerlIntegrationSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "b9ce56d2886932b13637df0d549b7e01303916cb7c992f36b09b8e2280ccf02b",
+      "previousSha256": "e9dd8c65e73483f3bc0905a15581d2f56844d786c9bc3d4aaa35afec0697829b",
+      "edits": [
+        {
+          "start": 8300,
+          "previous": "",
+          "current": "import { nominalPrimitiveSubtypePerlRegistrationChangedPaths } from \"./nominal-primitive-subtype-perl-registration-history.mjs\";\nimport { nominalPrimitiveSubtypePerlIntegrationChangedPaths } from \"./nominal-primitive-subtype-perl-integration-history.mjs\";\n"
+        },
+        {
+          "start": 71441,
+          "previous": "",
+          "current": "\t, ...nominalPrimitiveSubtypePerlRegistrationChangedPaths\n\t, ...nominalPrimitiveSubtypePerlIntegrationChangedPaths\n"
+        }
+      ],
+      "alternateSha256": "74010abdb394868497232060d5e85ea9525d32d4c3bbcddd1321c7ebc4fb176f",
+      "alternateEdits": [
+        {
+          "start": 7957,
+          "previous": "",
+          "current": "import { nominalPrimitiveSubtypeNativeRegistrationChangedPaths } from \"./nominal-primitive-subtype-native-registration-history.mjs\";\nimport { nominalPrimitiveSubtypeNativePromotionChangedPaths } from \"./nominal-primitive-subtype-native-promotion-history.mjs\";\nimport { coreQualityBudgetChangedPaths } from \"./core-quality-budget-history.mjs\";\n"
+        },
+        {
+          "start": 8429,
+          "previous": "",
+          "current": "import { nominalPrimitiveSubtypePerlIntegrationChangedPaths } from \"./nominal-primitive-subtype-perl-integration-history.mjs\";\n"
+        },
+        {
+          "start": 71288,
+          "previous": "",
+          "current": "\t, ...nominalPrimitiveSubtypeNativeRegistrationChangedPaths\n\t, ...nominalPrimitiveSubtypeNativePromotionChangedPaths\n\t, ...coreQualityBudgetChangedPaths\n"
+        },
+        {
+          "start": 71499,
+          "previous": "",
+          "current": "\t, ...nominalPrimitiveSubtypePerlIntegrationChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-browser-promotion-history.mjs",
+      "currentSha256": "7f97979017d5fba6e17fd22bcef7be9a69db553100170bed5168ff08e15b7390",
+      "previousSha256": "d7c476110fa57d5c0a8a7e830dc852197edf8a1c1b5b1b8075cb37ca9bce691b",
+      "edits": [
+        {
+          "start": 500,
+          "previous": "",
+          "current": "import { beforeNominalPrimitiveSubtypePerlRegistrationSource } from \"./nominal-primitive-subtype-perl-registration-history.mjs\";\n"
+        },
+        {
+          "start": 3364,
+          "previous": "",
+          "current": "\tsource = beforeNominalPrimitiveSubtypePerlRegistrationSource(path, source, expected);\n"
+        }
+      ],
+      "alternateSha256": "75dccf5c71c8870831dac50659597994993befa12877f4f555be2f7384d94231",
+      "alternateEdits": [
+        {
+          "start": 242,
+          "previous": "",
+          "current": "import { beforeNominalPrimitiveSubtypeNativePromotionPins } from \"./nominal-primitive-subtype-native-promotion-history.mjs\";\nimport { beforeNominalPrimitiveSubtypeNativeRegistrationSource } from \"./nominal-primitive-subtype-native-registration-history.mjs\";\n"
+        },
+        {
+          "start": 3275,
+          "previous": "",
+          "current": "\tsource = beforeNominalPrimitiveSubtypeNativeRegistrationSource(path, source, expected);\n"
+        },
+        {
+          "start": 4202,
+          "previous": "\tconst previous = structuredClone(inventory);\n",
+          "current": "\tconst previous = beforeNominalPrimitiveSubtypeNativePromotionPins(inventory);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-tests.mjs",
+      "currentSha256": "be715572de83dedf46edc8c1a307e5821f47e13d01fd2c3884b2b3ffe936147e",
+      "previousSha256": "aae5553b13123bf23aa8743c82a897a30a2b3a66e0bcf8fd0f0090e8373c0dec",
+      "edits": [
+        {
+          "start": 2685,
+          "previous": "",
+          "current": "import \"./nominal-primitive-subtype-perl-tests.mjs\";\nimport \"./nominal-primitive-subtype-perl-ci-policy-tests.mjs\";\nimport \"./nominal-primitive-subtype-perl-ci-shell-tests.mjs\";\nimport \"./nominal-primitive-subtype-perl-ci-workflow-tests.mjs\";\nimport \"./nominal-primitive-subtype-perl-registration-history-tests.mjs\";\nimport \"./nominal-primitive-subtype-perl-installed-tests.mjs\";\nimport \"./nominal-primitive-subtype-perl-integration-history-tests.mjs\";\n"
+        }
+      ],
+      "alternateSha256": "e4278859c8bdb8423b600db9ac20bc28ab63b383271ecec00d414092a3d92785",
+      "alternateEdits": [
+        {
+          "start": 2084,
+          "previous": "",
+          "current": "import \"./nominal-primitive-subtype-native-fixture-tests.mjs\";\nimport \"./nominal-primitive-subtype-native-ci-policy-tests.mjs\";\nimport \"./nominal-primitive-subtype-native-ci-shell-tests.mjs\";\nimport \"./nominal-primitive-subtype-native-ci-workflow-tests.mjs\";\nimport \"./nominal-primitive-subtype-native-registration-history-tests.mjs\";\nimport \"./nominal-primitive-subtype-native-installed-tests.mjs\";\nimport \"./nominal-primitive-subtype-native-archive-tests.mjs\";\nimport \"./nominal-primitive-subtype-native-promotion-tests.mjs\";\nimport \"./nominal-primitive-subtype-native-promotion-history-tests.mjs\";\n"
+        },
+        {
+          "start": 3065,
+          "previous": "",
+          "current": "import \"./nominal-primitive-subtype-perl-integration-history-tests.mjs\";\n"
+        }
+      ]
+    }
+  ]
+}

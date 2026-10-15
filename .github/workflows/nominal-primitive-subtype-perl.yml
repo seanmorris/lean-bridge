@@ -1,0 +1,72 @@
+name: Installed primitive-base nominal Subtypes in Perl
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nominal-primitive-subtype-perl-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  nominal-primitive-subtype-perl:
+    name: Four primitive-base nominal selections on all four Perl ABIs
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    env:
+      LEAN_NUM_THREADS: "1"
+    steps:
+      - name: Check out the exact revision and original evidence history
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install the checkout dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install the native build tools
+        timeout-minutes: 20
+        run: sudo apt-get update && sudo apt-get install -y build-essential curl zstd
+      - name: Install only the pinned Lean compiler
+        run: bash scripts/bootstrap-toolchains.sh --lean-only
+      - name: Restore the complete checksummed Perl toolchain matrix
+        uses: actions/cache@v4
+        with:
+          path: .toolchains/perl
+          key: perl-checked-record-abi-v1-${{ runner.os }}-${{ hashFiles('scripts/build-perl-toolchains.mjs') }}
+      - name: Build or verify every pinned Perl interpreter
+        run: |
+          node scripts/build-perl-toolchains.mjs 5.36.3 threaded
+          node scripts/build-perl-toolchains.mjs 5.36.3 unthreaded
+          node scripts/build-perl-toolchains.mjs 5.38.2 threaded
+          node scripts/build-perl-toolchains.mjs 5.38.2 unthreaded
+      - name: Require both source routes and API modes on all four Perl ABIs
+        id: acceptance
+        timeout-minutes: 150
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-nominal-primitive-subtype-perl-ci.sh
+      - name: Preserve original and partial installed records
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: nominal-primitive-subtype-perl-${{ github.sha }}
+          path: build/nominal-primitive-subtype-perl-ci/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce installed primitive-base Perl acceptance
+        if: always() && steps.acceptance.outcome != 'success'
+        run: exit 1

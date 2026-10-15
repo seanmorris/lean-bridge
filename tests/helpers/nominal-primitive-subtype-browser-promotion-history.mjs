@@ -8,6 +8,7 @@ import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeNominalPrimitiveSubtypeNativePromotionPins } from "./nominal-primitive-subtype-native-promotion-history.mjs";
 import { beforeNominalPrimitiveSubtypeNativeRegistrationSource } from "./nominal-primitive-subtype-native-registration-history.mjs";
+import { beforeNominalPrimitiveSubtypePerlRegistrationSource } from "./nominal-primitive-subtype-perl-registration-history.mjs";
 
 export const nominalPrimitiveSubtypeBrowserPromotionHistoryPath = "docs/evidence/nominal-primitive-subtype-browser-promotion-source-history-20261014.json";
 export const nominalPrimitiveSubtypeBrowserPromotionPredecessor = "310f653c2bbc14178809eae23c4ae0bfea70cba1";
@@ -61,6 +62,7 @@ export const reverseNominalPrimitiveSubtypeBrowserPromotionUpdate = (source, upd
  */
 export const beforeNominalPrimitiveSubtypeBrowserPromotionSource = (path, source, expected) => {
 	source = beforeNominalPrimitiveSubtypeNativeRegistrationSource(path, source, expected);
+	source = beforeNominalPrimitiveSubtypePerlRegistrationSource(path, source, expected);
 	if(typeof source !== "string" || !nominalPrimitiveSubtypeBrowserPromotionChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = history ??= JSON.parse(readFileSync(nominalPrimitiveSubtypeBrowserPromotionHistoryPath, "utf8"));

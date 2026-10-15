@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nominal-primitive-subtype-perl-registration-source-v1",
+  "predecessorCommit": "6990c45fb225e4150b1aca8d6b19415226e8c766",
+  "updates": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "74010abdb394868497232060d5e85ea9525d32d4c3bbcddd1321c7ebc4fb176f",
+      "previousSha256": "8987394ac1ed1f4371d8c06ccdd1f085961e0cee500e27b0f8c9c00394d78cbc",
+      "edits": [
+        {
+          "start": 7957,
+          "previous": "",
+          "current": "import { nominalPrimitiveSubtypePerlRegistrationChangedPaths } from \"./nominal-primitive-subtype-perl-registration-history.mjs\";\n"
+        },
+        {
+          "start": 70818,
+          "previous": "",
+          "current": "\t, ...nominalPrimitiveSubtypePerlRegistrationChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-tests.mjs",
+      "currentSha256": "e4278859c8bdb8423b600db9ac20bc28ab63b383271ecec00d414092a3d92785",
+      "previousSha256": "e1cb82499b290594a0bbdf426c58cf0d19bf8184b9f52b8dbaa8eacb4ad449c1",
+      "edits": [
+        {
+          "start": 2084,
+          "previous": "",
+          "current": "import \"./nominal-primitive-subtype-perl-tests.mjs\";\nimport \"./nominal-primitive-subtype-perl-ci-policy-tests.mjs\";\nimport \"./nominal-primitive-subtype-perl-ci-shell-tests.mjs\";\nimport \"./nominal-primitive-subtype-perl-ci-workflow-tests.mjs\";\nimport \"./nominal-primitive-subtype-perl-registration-history-tests.mjs\";\nimport \"./nominal-primitive-subtype-perl-installed-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-browser-promotion-history.mjs",
+      "currentSha256": "75dccf5c71c8870831dac50659597994993befa12877f4f555be2f7384d94231",
+      "previousSha256": "dcd3504ae4409f83a2e95e678f14177731c1578ed3fe4b93c93ec6451d9ed923",
+      "edits": [
+        {
+          "start": 242,
+          "previous": "",
+          "current": "import { beforeNominalPrimitiveSubtypePerlRegistrationSource } from \"./nominal-primitive-subtype-perl-registration-history.mjs\";\n"
+        },
+        {
+          "start": 3017,
+          "previous": "",
+          "current": "\tsource = beforeNominalPrimitiveSubtypePerlRegistrationSource(path, source, expected);\n"
+        }
+      ]
+    }
+  ]
+}
