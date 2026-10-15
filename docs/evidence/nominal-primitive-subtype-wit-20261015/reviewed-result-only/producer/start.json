@@ -1,0 +1,97 @@
+{
+  "revision": "88cf60117f2ea3bcef0213755c69a2e5d025f425",
+  "route": "reviewed",
+  "mode": "result-only",
+  "started": "2026-10-15T20:57:54.274Z",
+  "runnerSha256": "94c56b0f97bd46afcbf87c3c3fcc93ae7935b847332c58e60c4af07d2ce6a0e6",
+  "controlsRunnerSha256": "2676eda619204a88e2f9d27df4bb932a5b601fffbee5d79bf74bc1116bda0d73",
+  "links": {
+    "node_modules": "/app/node_modules"
+  },
+  "command": "/usr/bin/nice",
+  "args": [
+    "-n",
+    "19",
+    "/usr/bin/ionice",
+    "-c",
+    "3",
+    "/usr/bin/taskset",
+    "-c",
+    "3",
+    "/usr/bin/node",
+    "--max-old-space-size=3072",
+    "--test",
+    "--test-concurrency=1",
+    "tests/helpers/nominal-primitive-subtype-wit-installed-tests.mjs"
+  ],
+  "controlsArgs": [
+    "-n",
+    "19",
+    "/usr/bin/ionice",
+    "-c",
+    "3",
+    "/usr/bin/taskset",
+    "-c",
+    "3",
+    "/usr/bin/node",
+    "/app/build/run-vo1498-nominal-primitive-wit-controls-88cf601.mjs",
+    "reviewed",
+    "result-only",
+    "/app/build/vo1498-nominal-primitive-wit-reviewed-result-only-r1-88cf601"
+  ],
+  "environment": {
+    "NO_COLOR": "1",
+    "LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_WIT_TEST": "1",
+    "LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_WIT_ROUTES": "reviewed",
+    "LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_WIT_MODES": "result-only",
+    "LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_WIT_OUTPUT": "/app/build/vo1498-nominal-primitive-wit-reviewed-result-only-r1-88cf601-records",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+    "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+    "CC": "/usr/bin/cc",
+    "LEAN_BRIDGE_WASM_TOOLS": "/app/.toolchains/wasm-tools/bin/wasm-tools",
+    "LEAN_BRIDGE_WASMTIME_C_API": "/app/.toolchains/wasmtime42",
+    "LEAN_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MAKEFLAGS": "-j1",
+    "CMAKE_BUILD_PARALLEL_LEVEL": "1"
+  },
+  "initial": {
+    "freeMiB": 2661,
+    "availableMiB": 9190,
+    "load": 3.91
+  },
+  "loadCeiling": 8,
+  "transition": {
+    "predecessorRevision": "23aec60f65c37995b43e963e22ef8f7a5ee00722",
+    "predecessorRunners": {
+      "runner": {
+        "path": "/app/build/run-vo1498-nominal-primitive-wit-23aec60.mjs",
+        "sha256": "015e0dc4dec1e31bbf5d4bc0de1efa58aa5476af7d886523177953fa84be6687"
+      },
+      "controlsRunner": {
+        "path": "/app/build/run-vo1498-nominal-primitive-wit-controls-23aec60.mjs",
+        "sha256": "cc28f5e1dc3568364dc102058d75f01f6a6eb936edb1575106d83475cfd0a754"
+      }
+    },
+    "changes": [
+      "producer revision 23aec60 -> 88cf601 (controls checker hotfix)",
+      "initial load ceiling 6 -> 8"
+    ],
+    "unchanged": [
+      "initial 2048 MiB disk and memory floors",
+      "live 768 MiB disk and memory floors",
+      "wrapper, environment, worktree policy"
+    ]
+  },
+  "guards": {
+    "initial": {
+      "freeMiB": 2048,
+      "availableMiB": 2048,
+      "load": 8
+    },
+    "live": {
+      "freeMiB": 768,
+      "availableMiB": 768
+    }
+  }
+}

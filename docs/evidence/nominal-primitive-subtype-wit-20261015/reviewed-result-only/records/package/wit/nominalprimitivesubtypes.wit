@@ -1,0 +1,43 @@
+package lean-bridge:nominalprimitivesubtypes@1.0.0;
+
+interface native {
+  enum bridge-value-0 { unit }
+  type bridge-value-10 = list<u32>;
+  record bridge-value-11 { negative: bool, limbs: list<u32> }
+  type bridge-value-15 = list<u8>;
+  record raw-packet { unit-value: bridge-value-0, bool-value: bool, uint8-value: u8, uint16-value: u16, uint32-value: u32, uint64-value: u64, int8-value: s8, int16-value: s16, int32-value: s32, int64-value: s64, nat-value: bridge-value-10, int-value: bridge-value-11, float32-value: f32, float64-value: f64, text-value: string, bytes-value: bridge-value-15, char-value: char, usize-value: u64, isize-value: s64, digit: bridge-value-10 }
+  record packet { unit-value: bridge-value-0, bool-value: bool, uint8-value: u8, uint16-value: u16, uint32-value: u32, uint64-value: u64, int8-value: s8, int16-value: s16, int32-value: s32, int64-value: s64, nat-value: bridge-value-10, int-value: bridge-value-11, float32-value: f32, float64-value: f64, text-value: string, bytes-value: bridge-value-15, char-value: char, usize-value: u64, isize-value: s64, digit: bridge-value-10 }
+  type bridge-value-21 = option<packet>;
+  type bridge-value-22 = result<packet, packet>;
+  type bridge-value-23 = option<bridge-value-22>;
+  type bridge-value-24 = list<bridge-value-23>;
+  record event-box-fields { value: packet }
+  record event-choices-fields { values: bridge-value-24 }
+  variant event { empty, box(event-box-fields), choices(event-choices-fields) }
+  type bridge-value-26 = list<bridge-value-21>;
+  type packet-alias = packet;
+  type bridge-alias-value-29 = option<packet-alias>;
+  type bridge-alias-value-30 = list<bridge-alias-value-29>;
+  record pair { left: bridge-alias-value-30, right: bridge-alias-value-30 }
+  produce: func(value0: raw-packet) -> bridge-value-21;
+  produce-choices: func(value0: raw-packet) -> event;
+  produce-event: func(value0: raw-packet) -> event;
+  produce-group: func(value0: raw-packet) -> bridge-alias-value-30;
+  produce-pair: func(value0: raw-packet) -> pair;
+  word-bits: func() -> u32;
+}
+
+interface api {
+  use native.{bridge-value-0, bridge-value-10, bridge-value-11, bridge-value-15, raw-packet, packet, bridge-value-21, bridge-value-22, bridge-value-23, bridge-value-24, event-box-fields, event-choices-fields, event, bridge-value-26, packet-alias, bridge-alias-value-29, bridge-alias-value-30, pair};
+  produce: func(value0: raw-packet) -> bridge-value-21;
+  produce-choices: func(value0: raw-packet) -> event;
+  produce-event: func(value0: raw-packet) -> event;
+  produce-group: func(value0: raw-packet) -> bridge-alias-value-30;
+  produce-pair: func(value0: raw-packet) -> pair;
+  word-bits: func() -> u32;
+}
+
+world nominalprimitivesubtypes {
+  import native;
+  export api;
+}

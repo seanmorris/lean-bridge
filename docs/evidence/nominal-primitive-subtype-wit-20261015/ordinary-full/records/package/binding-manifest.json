@@ -1,0 +1,892 @@
+{
+  "aliases": [
+    {
+      "id": "lean:NominalPrimitiveSubtypes.PacketAlias",
+      "name": "PacketAlias",
+      "target": {
+        "id": "lean:NominalPrimitiveSubtypes.Packet",
+        "kind": "named"
+      },
+      "witName": "packet-alias",
+      "witTarget": "packet"
+    }
+  ],
+  "assurance": [],
+  "backend": "ordinary-wit-native-v1",
+  "bindingIrSha256": "56cf360b700a9b01a70471e3aebcb1564e542a245157a314f21a779456478c1f",
+  "component": {
+    "id": "nominalprimitivesubtypes@1.0.0",
+    "name": "nominalprimitivesubtypes",
+    "version": "1.0.0"
+  },
+  "contracts": {
+    "declarations": [
+      {
+        "id": "lean:NominalPrimitiveSubtypes.aliases",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:NominalPrimitiveSubtypes.PacketAlias",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            },
+            "witType": "bridge-alias-value-31"
+          },
+          {
+            "name": "arg1",
+            "type": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:NominalPrimitiveSubtypes.PacketAlias",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            },
+            "witType": "bridge-alias-value-31"
+          }
+        ],
+        "result": {
+          "type": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "id": "lean:NominalPrimitiveSubtypes.PacketAlias",
+                    "kind": "named"
+                  }
+                ],
+                "constructor": "option",
+                "kind": "apply"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          },
+          "witType": "bridge-alias-value-31"
+        }
+      },
+      {
+        "id": "lean:NominalPrimitiveSubtypes.combine",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "id": "lean:NominalPrimitiveSubtypes.Packet",
+              "kind": "named"
+            },
+            "witType": "packet"
+          },
+          {
+            "name": "arg1",
+            "type": {
+              "id": "lean:NominalPrimitiveSubtypes.Packet",
+              "kind": "named"
+            },
+            "witType": "packet"
+          }
+        ],
+        "result": {
+          "type": {
+            "arguments": [
+              {
+                "id": "lean:NominalPrimitiveSubtypes.Packet",
+                "kind": "named"
+              },
+              {
+                "id": "lean:NominalPrimitiveSubtypes.Packet",
+                "kind": "named"
+              }
+            ],
+            "constructor": "tuple",
+            "kind": "apply"
+          },
+          "witType": "bridge-value-22"
+        }
+      },
+      {
+        "id": "lean:NominalPrimitiveSubtypes.echoA",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "id": "lean:NominalPrimitiveSubtypes.Packet",
+              "kind": "named"
+            },
+            "witType": "packet"
+          }
+        ],
+        "result": {
+          "type": {
+            "id": "lean:NominalPrimitiveSubtypes.Packet",
+            "kind": "named"
+          },
+          "witType": "packet"
+        }
+      },
+      {
+        "id": "lean:NominalPrimitiveSubtypes.echoB",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "id": "lean:NominalPrimitiveSubtypes.Packet",
+              "kind": "named"
+            },
+            "witType": "packet"
+          }
+        ],
+        "result": {
+          "type": {
+            "id": "lean:NominalPrimitiveSubtypes.Packet",
+            "kind": "named"
+          },
+          "witType": "packet"
+        }
+      },
+      {
+        "id": "lean:NominalPrimitiveSubtypes.echoEventA",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "id": "lean:NominalPrimitiveSubtypes.Event",
+              "kind": "named"
+            },
+            "witType": "event"
+          }
+        ],
+        "result": {
+          "type": {
+            "id": "lean:NominalPrimitiveSubtypes.Event",
+            "kind": "named"
+          },
+          "witType": "event"
+        }
+      },
+      {
+        "id": "lean:NominalPrimitiveSubtypes.echoEventB",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "id": "lean:NominalPrimitiveSubtypes.Event",
+              "kind": "named"
+            },
+            "witType": "event"
+          }
+        ],
+        "result": {
+          "type": {
+            "id": "lean:NominalPrimitiveSubtypes.Event",
+            "kind": "named"
+          },
+          "witType": "event"
+        }
+      },
+      {
+        "id": "lean:NominalPrimitiveSubtypes.echoPair",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "id": "lean:NominalPrimitiveSubtypes.Pair",
+              "kind": "named"
+            },
+            "witType": "pair"
+          }
+        ],
+        "result": {
+          "type": {
+            "id": "lean:NominalPrimitiveSubtypes.Pair",
+            "kind": "named"
+          },
+          "witType": "pair"
+        }
+      },
+      {
+        "id": "lean:NominalPrimitiveSubtypes.produce",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "id": "lean:NominalPrimitiveSubtypes.RawPacket",
+              "kind": "named"
+            },
+            "witType": "raw-packet"
+          }
+        ],
+        "result": {
+          "type": {
+            "arguments": [
+              {
+                "id": "lean:NominalPrimitiveSubtypes.Packet",
+                "kind": "named"
+              }
+            ],
+            "constructor": "option",
+            "kind": "apply"
+          },
+          "witType": "bridge-value-20"
+        }
+      },
+      {
+        "id": "lean:NominalPrimitiveSubtypes.produceChoices",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "id": "lean:NominalPrimitiveSubtypes.RawPacket",
+              "kind": "named"
+            },
+            "witType": "raw-packet"
+          }
+        ],
+        "result": {
+          "type": {
+            "id": "lean:NominalPrimitiveSubtypes.Event",
+            "kind": "named"
+          },
+          "witType": "event"
+        }
+      },
+      {
+        "id": "lean:NominalPrimitiveSubtypes.produceEvent",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "id": "lean:NominalPrimitiveSubtypes.RawPacket",
+              "kind": "named"
+            },
+            "witType": "raw-packet"
+          }
+        ],
+        "result": {
+          "type": {
+            "id": "lean:NominalPrimitiveSubtypes.Event",
+            "kind": "named"
+          },
+          "witType": "event"
+        }
+      },
+      {
+        "id": "lean:NominalPrimitiveSubtypes.produceGroup",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "id": "lean:NominalPrimitiveSubtypes.RawPacket",
+              "kind": "named"
+            },
+            "witType": "raw-packet"
+          }
+        ],
+        "result": {
+          "type": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "id": "lean:NominalPrimitiveSubtypes.PacketAlias",
+                    "kind": "named"
+                  }
+                ],
+                "constructor": "option",
+                "kind": "apply"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          },
+          "witType": "bridge-alias-value-31"
+        }
+      },
+      {
+        "id": "lean:NominalPrimitiveSubtypes.producePair",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "id": "lean:NominalPrimitiveSubtypes.RawPacket",
+              "kind": "named"
+            },
+            "witType": "raw-packet"
+          }
+        ],
+        "result": {
+          "type": {
+            "id": "lean:NominalPrimitiveSubtypes.Pair",
+            "kind": "named"
+          },
+          "witType": "pair"
+        }
+      },
+      {
+        "id": "lean:NominalPrimitiveSubtypes.refuseUnit",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "id": "lean:NominalPrimitiveSubtypes.Packet",
+              "kind": "named"
+            },
+            "witType": "packet"
+          }
+        ],
+        "result": {
+          "type": {
+            "id": "lean:NominalPrimitiveSubtypes.Packet",
+            "kind": "named"
+          },
+          "witType": "packet"
+        }
+      },
+      {
+        "id": "lean:NominalPrimitiveSubtypes.wordBits",
+        "parameters": [],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "uint32"
+          },
+          "witType": "u32"
+        }
+      }
+    ],
+    "records": [
+      {
+        "fields": [
+          {
+            "name": "unitValue",
+            "type": {
+              "kind": "primitive",
+              "name": "unit"
+            },
+            "witType": "bridge-value-0"
+          },
+          {
+            "name": "boolValue",
+            "type": {
+              "kind": "primitive",
+              "name": "bool"
+            },
+            "witType": "bool"
+          },
+          {
+            "name": "uint8Value",
+            "type": {
+              "kind": "primitive",
+              "name": "uint8"
+            },
+            "witType": "u8"
+          },
+          {
+            "name": "uint16Value",
+            "type": {
+              "kind": "primitive",
+              "name": "uint16"
+            },
+            "witType": "u16"
+          },
+          {
+            "name": "uint32Value",
+            "type": {
+              "kind": "primitive",
+              "name": "uint32"
+            },
+            "witType": "u32"
+          },
+          {
+            "name": "uint64Value",
+            "type": {
+              "kind": "primitive",
+              "name": "uint64"
+            },
+            "witType": "u64"
+          },
+          {
+            "name": "int8Value",
+            "type": {
+              "kind": "primitive",
+              "name": "int8"
+            },
+            "witType": "s8"
+          },
+          {
+            "name": "int16Value",
+            "type": {
+              "kind": "primitive",
+              "name": "int16"
+            },
+            "witType": "s16"
+          },
+          {
+            "name": "int32Value",
+            "type": {
+              "kind": "primitive",
+              "name": "int32"
+            },
+            "witType": "s32"
+          },
+          {
+            "name": "int64Value",
+            "type": {
+              "kind": "primitive",
+              "name": "int64"
+            },
+            "witType": "s64"
+          },
+          {
+            "name": "natValue",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            "witType": "bridge-value-10"
+          },
+          {
+            "name": "intValue",
+            "type": {
+              "kind": "primitive",
+              "name": "int"
+            },
+            "witType": "bridge-value-11"
+          },
+          {
+            "name": "float32Value",
+            "type": {
+              "kind": "primitive",
+              "name": "float32"
+            },
+            "witType": "f32"
+          },
+          {
+            "name": "float64Value",
+            "type": {
+              "kind": "primitive",
+              "name": "float64"
+            },
+            "witType": "f64"
+          },
+          {
+            "name": "textValue",
+            "type": {
+              "kind": "primitive",
+              "name": "string"
+            },
+            "witType": "string"
+          },
+          {
+            "name": "bytesValue",
+            "type": {
+              "kind": "primitive",
+              "name": "bytes"
+            },
+            "witType": "bridge-value-15"
+          },
+          {
+            "name": "charValue",
+            "type": {
+              "kind": "primitive",
+              "name": "char"
+            },
+            "witType": "char"
+          },
+          {
+            "name": "usizeValue",
+            "type": {
+              "kind": "primitive",
+              "name": "usize"
+            },
+            "witType": "u64"
+          },
+          {
+            "name": "isizeValue",
+            "type": {
+              "kind": "primitive",
+              "name": "isize"
+            },
+            "witType": "s64"
+          },
+          {
+            "name": "digit",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            "witType": "bridge-value-10"
+          }
+        ],
+        "id": "lean:NominalPrimitiveSubtypes.Packet",
+        "witName": "packet"
+      },
+      {
+        "fields": [
+          {
+            "name": "left",
+            "type": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:NominalPrimitiveSubtypes.PacketAlias",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            },
+            "witType": "bridge-alias-value-31"
+          },
+          {
+            "name": "right",
+            "type": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:NominalPrimitiveSubtypes.PacketAlias",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            },
+            "witType": "bridge-alias-value-31"
+          }
+        ],
+        "id": "lean:NominalPrimitiveSubtypes.Pair",
+        "witName": "pair"
+      },
+      {
+        "fields": [
+          {
+            "name": "unitValue",
+            "type": {
+              "kind": "primitive",
+              "name": "unit"
+            },
+            "witType": "bridge-value-0"
+          },
+          {
+            "name": "boolValue",
+            "type": {
+              "kind": "primitive",
+              "name": "bool"
+            },
+            "witType": "bool"
+          },
+          {
+            "name": "uint8Value",
+            "type": {
+              "kind": "primitive",
+              "name": "uint8"
+            },
+            "witType": "u8"
+          },
+          {
+            "name": "uint16Value",
+            "type": {
+              "kind": "primitive",
+              "name": "uint16"
+            },
+            "witType": "u16"
+          },
+          {
+            "name": "uint32Value",
+            "type": {
+              "kind": "primitive",
+              "name": "uint32"
+            },
+            "witType": "u32"
+          },
+          {
+            "name": "uint64Value",
+            "type": {
+              "kind": "primitive",
+              "name": "uint64"
+            },
+            "witType": "u64"
+          },
+          {
+            "name": "int8Value",
+            "type": {
+              "kind": "primitive",
+              "name": "int8"
+            },
+            "witType": "s8"
+          },
+          {
+            "name": "int16Value",
+            "type": {
+              "kind": "primitive",
+              "name": "int16"
+            },
+            "witType": "s16"
+          },
+          {
+            "name": "int32Value",
+            "type": {
+              "kind": "primitive",
+              "name": "int32"
+            },
+            "witType": "s32"
+          },
+          {
+            "name": "int64Value",
+            "type": {
+              "kind": "primitive",
+              "name": "int64"
+            },
+            "witType": "s64"
+          },
+          {
+            "name": "natValue",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            "witType": "bridge-value-10"
+          },
+          {
+            "name": "intValue",
+            "type": {
+              "kind": "primitive",
+              "name": "int"
+            },
+            "witType": "bridge-value-11"
+          },
+          {
+            "name": "float32Value",
+            "type": {
+              "kind": "primitive",
+              "name": "float32"
+            },
+            "witType": "f32"
+          },
+          {
+            "name": "float64Value",
+            "type": {
+              "kind": "primitive",
+              "name": "float64"
+            },
+            "witType": "f64"
+          },
+          {
+            "name": "textValue",
+            "type": {
+              "kind": "primitive",
+              "name": "string"
+            },
+            "witType": "string"
+          },
+          {
+            "name": "bytesValue",
+            "type": {
+              "kind": "primitive",
+              "name": "bytes"
+            },
+            "witType": "bridge-value-15"
+          },
+          {
+            "name": "charValue",
+            "type": {
+              "kind": "primitive",
+              "name": "char"
+            },
+            "witType": "char"
+          },
+          {
+            "name": "usizeValue",
+            "type": {
+              "kind": "primitive",
+              "name": "usize"
+            },
+            "witType": "u64"
+          },
+          {
+            "name": "isizeValue",
+            "type": {
+              "kind": "primitive",
+              "name": "isize"
+            },
+            "witType": "s64"
+          },
+          {
+            "name": "digit",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            "witType": "bridge-value-10"
+          }
+        ],
+        "id": "lean:NominalPrimitiveSubtypes.RawPacket",
+        "witName": "raw-packet"
+      }
+    ],
+    "variants": [
+      {
+        "cases": [
+          {
+            "fields": [],
+            "name": "empty",
+            "payloadType": null,
+            "witName": "empty"
+          },
+          {
+            "fields": [
+              {
+                "name": "value",
+                "type": {
+                  "id": "lean:NominalPrimitiveSubtypes.Packet",
+                  "kind": "named"
+                },
+                "witName": "value",
+                "witType": "packet"
+              }
+            ],
+            "name": "box",
+            "payloadType": "event-box-fields",
+            "witName": "box"
+          },
+          {
+            "fields": [
+              {
+                "name": "values",
+                "type": {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "arguments": [
+                            {
+                              "id": "lean:NominalPrimitiveSubtypes.Packet",
+                              "kind": "named"
+                            },
+                            {
+                              "id": "lean:NominalPrimitiveSubtypes.Packet",
+                              "kind": "named"
+                            }
+                          ],
+                          "constructor": "result",
+                          "kind": "apply"
+                        }
+                      ],
+                      "constructor": "option",
+                      "kind": "apply"
+                    }
+                  ],
+                  "constructor": "array",
+                  "kind": "apply"
+                },
+                "witName": "values",
+                "witType": "bridge-value-25"
+              }
+            ],
+            "name": "choices",
+            "payloadType": "event-choices-fields",
+            "witName": "choices"
+          }
+        ],
+        "id": "lean:NominalPrimitiveSubtypes.Event",
+        "name": "Event",
+        "witName": "event"
+      }
+    ]
+  },
+  "declarations": [
+    {
+      "id": "lean:NominalPrimitiveSubtypes.aliases",
+      "witName": "aliases"
+    },
+    {
+      "id": "lean:NominalPrimitiveSubtypes.combine",
+      "witName": "combine"
+    },
+    {
+      "id": "lean:NominalPrimitiveSubtypes.echoA",
+      "witName": "echo-a"
+    },
+    {
+      "id": "lean:NominalPrimitiveSubtypes.echoB",
+      "witName": "echo-b"
+    },
+    {
+      "id": "lean:NominalPrimitiveSubtypes.echoEventA",
+      "witName": "echo-event-a"
+    },
+    {
+      "id": "lean:NominalPrimitiveSubtypes.echoEventB",
+      "witName": "echo-event-b"
+    },
+    {
+      "id": "lean:NominalPrimitiveSubtypes.echoPair",
+      "witName": "echo-pair"
+    },
+    {
+      "id": "lean:NominalPrimitiveSubtypes.produce",
+      "witName": "produce"
+    },
+    {
+      "id": "lean:NominalPrimitiveSubtypes.produceChoices",
+      "witName": "produce-choices"
+    },
+    {
+      "id": "lean:NominalPrimitiveSubtypes.produceEvent",
+      "witName": "produce-event"
+    },
+    {
+      "id": "lean:NominalPrimitiveSubtypes.produceGroup",
+      "witName": "produce-group"
+    },
+    {
+      "id": "lean:NominalPrimitiveSubtypes.producePair",
+      "witName": "produce-pair"
+    },
+    {
+      "id": "lean:NominalPrimitiveSubtypes.refuseUnit",
+      "witName": "refuse-unit"
+    },
+    {
+      "id": "lean:NominalPrimitiveSubtypes.wordBits",
+      "witName": "word-bits"
+    }
+  ],
+  "deferred": [],
+  "schemaVersion": 1,
+  "wit": {
+    "apiInterface": "lean-bridge:nominalprimitivesubtypes/api@1.0.0",
+    "nativeImport": "lean-bridge:nominalprimitivesubtypes/native@1.0.0",
+    "package": "lean-bridge:nominalprimitivesubtypes@1.0.0",
+    "world": "nominalprimitivesubtypes"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "nominalprimitivesubtypes@1.0.0",
+    "name": "nominalprimitivesubtypes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 59325147,
+          "path": "archives/nominalprimitivesubtypes-1.0.0-wit-wasi.tar.gz",
+          "sha256": "339863392e7315413115a7a9f5a1685c6af63d6d0a64015eef9a38eb61d1b590"
+        }
+      ],
+      "ecosystem": "wit-wasi",
+      "name": "nominalprimitivesubtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "wit-wasi",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "e637cd09fb5a5e09d4e6a362e8599febea6db02431932da48e5da618afd49bb7",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "e0287da41f8baaf6cd6912d2aeb6d65ce100e80c027c8d4d2426cc9408303c65"
+  }
+}
