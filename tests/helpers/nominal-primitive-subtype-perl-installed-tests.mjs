@@ -25,6 +25,9 @@ import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
 import { waitNominalSubtypeDotnetResources as waitResources } from "./nominal-subtype-dotnet-resources.mjs";
 
 const { enabled, routes, modes } = nominalPrimitiveSubtypePerlSelection(process.env);
+const resourceMaxLoad = process.env.LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_PERL_MAX_LOAD === undefined
+	? 6
+	: Number(process.env.LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_PERL_MAX_LOAD);
 
 for(const route of routes) for(const mode of modes) test(`installed primitive-base nominal Perl packages reproduce and relocate ${route} ${mode}`, {
 	skip: !enabled, timeout: 3_600_000
@@ -39,7 +42,10 @@ for(const route of routes) for(const mode of modes) test(`installed primitive-ba
 	const executables = nominalPrimitiveSubtypePerlExecutables(process.env.LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_PERLS);
 	const output = resolve(process.env.LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_PERL_OUTPUT ?? "build/nominal-primitive-subtype-perl", route, mode);
 	await assert.rejects(access(output), { code: "ENOENT" }); await mkdir(output, { recursive: true });
-	const resources = () => waitResources(output, { notify: message => t.diagnostic(message.replaceAll("C#", "primitive Perl")) });
+	const resources = () => waitResources(output, {
+		maxLoad: resourceMaxLoad
+		, notify: message => t.diagnostic(message.replaceAll("C#", "primitive Perl"))
+	});
 	await resources();
 	const interpreters = [];
 	for(const name of checkedRecordPerlConfigurations)

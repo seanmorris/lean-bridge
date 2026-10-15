@@ -45,6 +45,13 @@ test("C# producer waits for load without relaxing memory or disk floors", async 
 	});
 	assert.deepEqual(result, { waits: 2, observations: [6, 9, 5.9].map(load => ({ ...healthy, load })) });
 	assert.deepEqual(delays, [15_000, 15_000]); assert.equal(notifications.length, 2);
+	assert.deepEqual(await waitNominalSubtypeDotnetResources("fixture", {
+		sample: async () => ({ ...healthy, load: 7.9 })
+		, pause: async () => assert.fail("Per-run ceiling must admit the healthy sample")
+		, maxLoad: 8
+	}), { observations: [{ ...healthy, load: 7.9 }], waits: 0 });
+	for(const maxLoad of [0, -1, NaN, Infinity])
+		await assert.rejects(waitNominalSubtypeDotnetResources("fixture", { maxLoad }), /positive finite/u);
 	for(const values of [{ ...healthy, freeBytes: 2 * 1024 ** 3 - 1 }
 		, { ...healthy, availableBytes: 2 * 1024 ** 3 - 1 }
 		, { ...healthy, load: NaN }, { ...healthy, load: -1 }])
