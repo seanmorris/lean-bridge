@@ -78,7 +78,7 @@ export const nominalPrimitiveSubtypePhpCaller = async (route, mode) => {
 	let source = await readFile("tests/fixtures/nominal-primitive-subtype-consumers/php-native.php", "utf8");
 	assert.equal((source.match(/const NOMINAL_PRIMITIVE_RESULT_ONLY = false;/gu) ?? []).length, 1);
 	if(mode === "result-only") source = source.replace("const NOMINAL_PRIMITIVE_RESULT_ONLY = false;", "const NOMINAL_PRIMITIVE_RESULT_ONLY = true;");
-	return source;
+	return route === "ordinary" ? source : source.replaceAll(/arg([01])/gu, "value$1");
 };
 
 /**

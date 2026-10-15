@@ -9,7 +9,7 @@ use Brick\Math\BigInteger;
 use LeanNominalprimitivesubtypes\{Bytes, Some, Ok, Err, Packet, Pair, EventEmpty, EventBox, EventChoices, LeanBridgeError};
 use LeanNominalprimitivesubtypes\Internal\{Budget, Checks};
 
-function nominal_primitive_php_model(bool $resultOnly, array $checks): array {
+function nominal_primitive_php_model(string $prefix, bool $resultOnly, array $checks): array {
     $n = fn($value) => BigInteger::of($value);
     $names = ['unitValue', 'boolValue', 'uint8Value', 'uint16Value', 'uint32Value', 'uint64Value',
         'int8Value', 'int16Value', 'int32Value', 'int64Value', 'natValue', 'intValue',
@@ -106,26 +106,26 @@ function nominal_primitive_php_model(bool $resultOnly, array $checks): array {
         'produce_choices' => fn($item) => new EventChoices($valid($item) ? [null, new Some(new Ok($packet($item))), new Some(new Err($packet($item)))] : [null])
     ];
     if (!$resultOnly) $api += [
-        'echo_a' => fn($item) => $convert($item, 'A', 'arg0'),
-        'echo_b' => fn($item) => $convert($item, 'B', 'arg0'),
-        'refuse_unit' => fn($_item) => throw new LeanBridgeError('arg0.unitValue was rejected by NominalPrimitiveSubtypes.unitReject', 1),
-        'combine' => fn($left, $right) => [$convert($left, 'A', 'arg0'), $convert($right, 'B', 'arg1')],
-        'echo_pair' => fn($item) => new Pair($group($item->left, 'A', 'arg0.left'), $group($item->right, 'B', 'arg0.right')),
-        'aliases' => fn($left, $right) => array_merge($group($left, 'A', 'arg0'), $group($right, 'B', 'arg1')),
-        'echo_event_a' => fn($item) => $event($item, 'A', 'B', 'arg0'),
-        'echo_event_b' => fn($item) => $event($item, 'B', 'A', 'arg0')
+		'echo_a' => fn($item) => $convert($item, 'A', $prefix . '0'),
+		'echo_b' => fn($item) => $convert($item, 'B', $prefix . '0'),
+		'refuse_unit' => fn($_item) => throw new LeanBridgeError($prefix . '0.unitValue was rejected by NominalPrimitiveSubtypes.unitReject', 1),
+		'combine' => fn($left, $right) => [$convert($left, 'A', $prefix . '0'), $convert($right, 'B', $prefix . '1')],
+		'echo_pair' => fn($item) => new Pair($group($item->left, 'A', $prefix . '0.left'), $group($item->right, 'B', $prefix . '0.right')),
+		'aliases' => fn($left, $right) => array_merge($group($left, 'A', $prefix . '0'), $group($right, 'B', $prefix . '1')),
+		'echo_event_a' => fn($item) => $event($item, 'A', 'B', $prefix . '0'),
+		'echo_event_b' => fn($item) => $event($item, 'B', 'A', $prefix . '0')
     ];
-    foreach ($api as $name => $call) $api[$name] = function (...$args) use ($call, $name, $checks, $fin): mixed {
+    foreach ($api as $name => $call) $api[$name] = function (...$args) use ($call, $name, $checks, $fin, $prefix): mixed {
         $budget = new Budget();
         foreach ($args as $index => $value) (Checks::class . '::check' . $checks[$name][$index])($value, $budget);
-        foreach ($args as $index => $value) $fin($value, 'arg' . $index);
+		foreach ($args as $index => $value) $fin($value, $prefix . $index);
         return $call(...$args);
     };
     return $api;
 }
 
-$mode = $argv[4];
+$prefix = $argv[4]; $mode = $argv[5];
 $resultOnly = $mode === 'result-only';
-$checks = json_decode(file_get_contents($argv[5]), true, flags: JSON_THROW_ON_ERROR);
-$counts = check_nominal_primitive_subtypes_php(nominal_primitive_php_model($resultOnly, $checks), $resultOnly);
+$checks = json_decode(file_get_contents($argv[6]), true, flags: JSON_THROW_ON_ERROR);
+$counts = check_nominal_primitive_subtypes_php(nominal_primitive_php_model($prefix, $resultOnly, $checks), $resultOnly);
 echo json_encode($counts, JSON_THROW_ON_ERROR) . "\n";

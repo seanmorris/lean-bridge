@@ -30,7 +30,8 @@ test("primitive-base nominal PHP configurations preserve both source routes and 
 			, targets: { "php-native": { name: "example/nominalprimitivesubtypes", version: "1.0.0" } } });
 		assert.deepEqual(nominalPrimitiveSubtypePhpReview(mode), structuredClone(nominalPrimitiveSubtypePhpReview(mode)));
 		if(mode === "result-only") assert.equal(configuration.contracts, undefined);
-		assert.equal(await nominalPrimitiveSubtypePhpCaller(route, mode), await nominalPrimitiveSubtypePhpCaller(route === "ordinary" ? "reviewed" : "ordinary", mode));
+		const ordinary = await nominalPrimitiveSubtypePhpCaller("ordinary", mode);
+		assert.equal(await nominalPrimitiveSubtypePhpCaller("reviewed", mode), ordinary.replaceAll(/arg([01])/gu, "value$1"));
 		const counts = nominalPrimitiveSubtypePhpCounts[mode];
 		assert.deepEqual(parseNominalPrimitiveSubtypePhpResult(JSON.stringify(counts), mode), counts);
 		for(const key of Object.keys(counts))
@@ -105,6 +106,7 @@ test("independent primitive-base nominal PHP caller passes in weak and strict mo
 				, resolve("tests/helpers/nominal-primitive-subtype-php-model.php")
 				, join(directory, "dependencies/brick-math/autoload.php")
 				, join(directory, "src/Api.php"), join(directory, caller)
+				, route === "ordinary" ? "arg" : "value"
 				, mode, join(directory, "checks.json")], directory);
 			assert.equal(run.stderr, "");
 			assert.deepEqual(parseNominalPrimitiveSubtypePhpResult(run.stdout, mode), nominalPrimitiveSubtypePhpCounts[mode]);
