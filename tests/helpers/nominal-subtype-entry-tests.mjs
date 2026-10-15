@@ -59,6 +59,12 @@ test("nominal entry consumer brackets every step on stderr through the public AP
 	assert.ok(!consumer.includes("runtime") && !consumer.includes("lb_"), "the consumer reaches Lean only through public exports");
 	assert.ok(consumer.includes(`console.error("${nominalSubtypeEntryBegin} " + name)`) && consumer.includes(`console.error("${nominalSubtypeEntryEnd} " + name)`));
 	assert.throws(() => nominalSubtypeEntryConsumer("Bad Name"));
+	const page = nominalSubtypeEntryConsumer("nominalsubtypes", "page");
+	assert.ok(page.startsWith('const api = await import("nominalsubtypes");\n'));
+	assert.ok(page.includes("globalThis.nominalEntryRows = rows;") && page.includes('output.dataset.status = "ready"'));
+	assert.ok(!page.includes("console.log(") && !page.includes("process."), "the page reports through the DOM and globalThis only");
+	assert.equal(page.match(/^step\(/gmu).length, nominalSubtypeDispatchSteps.length - 1);
+	assert.throws(() => nominalSubtypeEntryConsumer("nominalsubtypes", "worker"));
 });
 
 test("nominal entry accounting requires exactly the expected entries inside each bracket", () => {
@@ -101,4 +107,11 @@ test("nominal entry report checker requires distinct probe identities, exact row
 	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry, unmodifiedReleasePackages: false }));
 	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry, validatorExportsReferenced: true }));
 	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry, sideModuleExports: { validators: { exported: [], referencedByPackageJavaScript: [] } } }), /listed/u);
+	const engine = { engine: "chromium", hostVersion: "1.0", rows: rows(expected), observed: expected, counts, errors: [], consoleLines: 1 };
+	const browser = { deployment: { sha256: digest, viteVersion: "1" }, pageSha256: digest, engines: [engine], externalNetworkBlocked: true };
+	assert.deepEqual(assertNominalSubtypeEntryReport({ ...entry, browser }), counts);
+	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry, browser: { ...browser, engines: [] } }), /at least one engine/u);
+	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry, browser: { ...browser, engines: [{ ...engine, rows: rows(expected).slice(1) }] } }));
+	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry, browser: { ...browser, engines: [{ ...engine, errors: ["boom"] }] } }));
+	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry, browser: { ...browser, engines: [{ ...engine, engine: "node" }] } }));
 });

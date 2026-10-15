@@ -24,6 +24,7 @@ import { structuralSubtypeNpmPackageName } from "./structural-subtype-npm-packag
 import { nominalSubtypeInstalledConfiguration, nominalSubtypeFixture, nominalSubtypeModule, nominalSubtypeName, nominalSubtypeInstalledReview } from "./nominal-subtype-installed-fixture.mjs";
 import { checkNominalSubtypeNpmReport } from "./nominal-subtype-npm-report.mjs";
 import { observeNominalSubtypeEntryNpm } from "./nominal-subtype-entry-npm.mjs";
+import { observeNominalSubtypeEntryBrowser } from "./nominal-subtype-entry-browser.mjs";
 import { nominalSubtypeBrowserEnabled } from "./nominal-subtype-browser-fixture.mjs";
 import { checkNominalSubtypeBrowsers } from "./nominal-subtype-browser.mjs";
 import { checkNominalSubtypeBrowserReport } from "./nominal-subtype-browser-report.mjs";
@@ -162,9 +163,15 @@ for(const route of routes) for(const mode of modes) test(`installed npm nominal 
 		await saveLakeFile(output, root === moved ? "relocated.json" : "installed.json", canonicalJson(observations.at(-1)));
 	}
 	// The entry probe is a separate instrumented build of the full mode; the release packages above stay untouched.
-	const entry = entryEnabled && !resultOnly
+	const probe = entryEnabled && !resultOnly
 		? await observeNominalSubtypeEntryNpm({ directory, output, route, configuration, expected, engineRoot, environment, runtimeRoot, npmCli, clean })
 		: undefined;
+	const entry = probe?.entry;
+	if(probe && browsers)
+	{
+		entry.browser = await observeNominalSubtypeEntryBrowser({ consumer: probe.consumer, output, environment: clean(probe.consumer) });
+		await saveLakeFile(output, "entry/entry.json", canonicalJson(entry));
+	}
 	await saveLakeFile(output, "report.json", canonicalJson({ schemaVersion: 1
 		, route, mode, producerCommit, configuration, builds, receipt, trees
 		, observations

@@ -82,12 +82,17 @@ const consumerCalls = {
  * only, 100 by neither; the choices array walks its ok leaf before its error leaf.
  *
  * @param packageName - Installed npm package name exporting the public API.
+ * @param target - "node" prints the rows to stdout; "page" publishes them on globalThis and the #result element.
  */
-export const nominalSubtypeEntryConsumer = packageName => {
+export const nominalSubtypeEntryConsumer = (packageName, target = "node") => {
 	const steps = nominalSubtypeDispatchSteps.filter(item => item.step !== "start").map(item => item.step);
 	assert.deepEqual(Object.keys(consumerCalls), steps, "consumer calls must cover the step list exactly once, in order");
-	assert.match(packageName, /^[a-z][a-z0-9-]*$/u);
-	return `import * as api from ${JSON.stringify(packageName)};
+	assert.match(packageName, /^[a-z][a-z0-9-]*$/u); assert.ok(["node", "page"].includes(target), target);
+	const prologue = target === "node" ? `import * as api from ${JSON.stringify(packageName)};` : `const api = await import(${JSON.stringify(packageName)});
+const output = document.querySelector("#result");`;
+	const epilogue = target === "node" ? "console.log(JSON.stringify(rows));" : `globalThis.nominalEntryRows = rows;
+output.textContent = String(rows.length); output.dataset.status = "ready";`;
+	return `${prologue}
 const box = payload => ({ payload, digit: 2n });
 const some = value => ({ tag: "some", value }), none = { tag: "none" };
 const choices = payload => ({ kind: "choices", values: [none, some({ ok: payload }), some({ error: 40n })] });
@@ -101,7 +106,7 @@ const step = (name, call) => {
   rows.push([name, status]);
 };
 ${steps.map(name => `step(${JSON.stringify(name)}, () => ${consumerCalls[name]});`).join("\n")}
-console.log(JSON.stringify(rows));
+${epilogue}
 `;
 };
 
@@ -174,5 +179,17 @@ export const assertNominalSubtypeEntryReport = entry => {
 	assert.deepEqual(entry.counts, accountNominalSubtypeEntry(entry.observed.map(item => [`${nominalSubtypeEntryBegin} ${item.step}`, ...item.entries.map(value => `${nominalSubtypeEntryMarker} ${value}`), `${nominalSubtypeEntryEnd} ${item.step}`].join("\n")).join("\n") + "\n", entry.rows, expected).counts);
 	assert.ok(Array.isArray(entry.sideModuleExports.validators.exported) && entry.sideModuleExports.validators.exported.length > 0, "validator exports are listed");
 	assert.equal(entry.validatorExportsReferenced, entry.sideModuleExports.validators.referencedByPackageJavaScript.length > 0);
+	// A browser section repeats the same rows and entries per engine through the page console stream.
+	if(entry.browser !== undefined)
+	{
+		assert.match(entry.browser.deployment.sha256, /^[0-9a-f]{64}$/u); assert.match(entry.browser.pageSha256, /^[0-9a-f]{64}$/u);
+		assert.ok(Array.isArray(entry.browser.engines) && entry.browser.engines.length > 0, "at least one engine");
+		for(const engine of entry.browser.engines)
+		{
+			assert.match(engine.engine, /^(chromium|firefox|webkit)$/u); assert.ok(typeof engine.hostVersion === "string" && engine.hostVersion.length > 0);
+			assert.deepEqual(engine.rows, entry.rows, engine.engine); assert.deepEqual(engine.observed, expected, engine.engine);
+			assert.deepEqual(engine.counts, entry.counts, engine.engine); assert.deepEqual(engine.errors, [], engine.engine);
+		}
+	}
 	return entry.counts;
 };

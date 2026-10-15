@@ -39,7 +39,8 @@ export const classifyNominalSubtypeEntryExports = (exportNames, javascript) => {
 
 /**
  * Build the probe package set from the instrumented fixture, install it into its own consumer and
- * account every public call of the bracketing consumer.
+ * account every public call of the bracketing consumer. Returns the entry record and the consumer root
+ * so the browser lane can bundle the same probe installation.
  *
  * @param options - Probe roots, the selection under test and the installed-run conventions.
  * @param options.directory - Disposable root; the probe author, handoff and consumer live beside the release ones.
@@ -115,5 +116,5 @@ export const observeNominalSubtypeEntryNpm = async ({ directory, output, route, 
 	await saveLakeFile(output, "entry/stdout.json", run.stdout);
 	await saveLakeFile(output, "entry/component-package-receipt.json", canonicalJson(receipt));
 	await saveLakeFile(output, "entry/entry.json", canonicalJson(entry));
-	return entry;
+	return { entry, consumer };
 };
