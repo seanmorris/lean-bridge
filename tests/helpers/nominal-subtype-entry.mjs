@@ -154,3 +154,25 @@ export const accountNominalSubtypeEntry = (stderr, rows, expected = nominalSubty
 	for(const name of measuredSources) assert.ok(counts[`source ${name}`] > 0, `${name} never entered`);
 	return { observed, counts };
 };
+
+/**
+ * Check a recorded npm or browser entry probe: its stated instrumentation, distinct fixture identities,
+ * the exact expected rows and entries, and an explicit statement about the exported validators.
+ *
+ * @param entry - The entry section of an installed report.
+ */
+export const assertNominalSubtypeEntryReport = entry => {
+	assert.equal(entry.instrumentation, nominalSubtypeEntryInstrumentation);
+	assert.match(entry.fixture.originalSha256, /^[0-9a-f]{64}$/u); assert.match(entry.fixture.probeSha256, /^[0-9a-f]{64}$/u);
+	assert.notEqual(entry.fixture.originalSha256, entry.fixture.probeSha256, "the probe fixture is a distinct identity");
+	for(const key of ["receiptSha256", "packageSha256", "runtimeSha256", "bindingIrSha256"]) assert.match(entry.probe[key], /^[0-9a-f]{64}$/u, key);
+	assert.match(entry.probe.sideModule.sha256, /^[0-9a-f]{64}$/u); assert.equal(typeof entry.probe.linkManifest, "object");
+	assert.equal(entry.unmodifiedReleasePackages, true);
+	const expected = nominalSubtypeEntryExpected();
+	assert.deepEqual(entry.rows, expected.map(item => [item.step, item.status]));
+	assert.deepEqual(entry.observed, expected);
+	assert.deepEqual(entry.counts, accountNominalSubtypeEntry(entry.observed.map(item => [`${nominalSubtypeEntryBegin} ${item.step}`, ...item.entries.map(value => `${nominalSubtypeEntryMarker} ${value}`), `${nominalSubtypeEntryEnd} ${item.step}`].join("\n")).join("\n") + "\n", entry.rows, expected).counts);
+	assert.ok(Array.isArray(entry.sideModuleExports.validators.exported) && entry.sideModuleExports.validators.exported.length > 0, "validator exports are listed");
+	assert.equal(entry.validatorExportsReferenced, entry.sideModuleExports.validators.referencedByPackageJavaScript.length > 0);
+	return entry.counts;
+};

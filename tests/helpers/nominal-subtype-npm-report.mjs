@@ -14,6 +14,7 @@ import { validateComponentBuildPlan } from "../../src/build/component-plan.mjs";
 import { createComponentPrivateAbi } from "../../src/build/component-callable-adapters.mjs";
 import { validateComponentPackageReceipt } from "../../src/release/component-package-receipt.mjs";
 import { nominalSubtypeInstalledConfiguration, nominalSubtypeInstalledReview, nominalSubtypeModule, nominalSubtypeName, nominalSubtypeFixture } from "./nominal-subtype-installed-fixture.mjs";
+import { assertNominalSubtypeEntryReport } from "./nominal-subtype-entry.mjs";
 
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
 const buildPaths = ["binding/binding-ir.json", "locks/compiler-adapters.json", "locks/component-build-plan.json", "metadata/provenance.json", "component-package-receipt.json", `${nominalSubtypeModule}.lean`];
@@ -70,6 +71,12 @@ export const checkNominalSubtypeNpmReport = async (read, { route, mode, producer
 	for(const key of ["reproducible", "authorInputsUnchanged", "sourceRemovedBeforeInstallation", "offlineInstall", "compilerFreePath", "relocatedInstallation"])
 		assert.equal(report[key], true, key);
 	assert.deepEqual(report.dispatch, { observed: false, reason: "No Wasm constructor/source entry counters in this caller" });
+	// The separately identified entry probe, when it ran, never stands in for the unmodified packages above.
+	if(report.entry !== undefined)
+	{
+		assert.deepEqual(await json("entry/entry.json"), report.entry);
+		assertNominalSubtypeEntryReport(report.entry);
+	}
 	assert.deepEqual(report.builds[1], report.builds[0]);
 	const inputs = { "lean-bridge.exports.json": Buffer.from(canonicalJson(configuration)) };
 	for(const path of [`${nominalSubtypeModule}.lean`, "lakefile.toml", "lean-toolchain", "LICENSE", "package.json"])
@@ -158,5 +165,5 @@ export const checkNominalSubtypeNpmReport = async (read, { route, mode, producer
 		assert.deepEqual(observation.typescript, { code: 0, stdout: "", stderr: "" });
 		assert.deepEqual(observation.runtime, { code: 0, stdout: JSON.stringify({ node: runtime.node, platform: runtime.platform, arch: runtime.arch }) + "\n", stderr: "" });
 	}
-	return { route, mode, producerCommit, ...counts, executions: 2, runtime, dispatchObserved: false };
+	return { route, mode, producerCommit, ...counts, executions: 2, runtime, dispatchObserved: false, entryObserved: report.entry !== undefined };
 };

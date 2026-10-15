@@ -9,7 +9,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import { nominalSubtypeFixture, nominalSubtypeModule } from "./nominal-subtype-installed-fixture.mjs";
 import { nominalSubtypeDispatchSteps } from "./nominal-subtype-dispatch.mjs";
-import { accountNominalSubtypeEntry, instrumentNominalSubtypeLean, nominalSubtypeEntryBegin, nominalSubtypeEntryConsumer, nominalSubtypeEntryEnd, nominalSubtypeEntryExpected, nominalSubtypeEntryMarker } from "./nominal-subtype-entry.mjs";
+import { accountNominalSubtypeEntry, assertNominalSubtypeEntryReport, instrumentNominalSubtypeLean, nominalSubtypeEntryBegin, nominalSubtypeEntryConsumer, nominalSubtypeEntryEnd, nominalSubtypeEntryExpected, nominalSubtypeEntryInstrumentation, nominalSubtypeEntryMarker } from "./nominal-subtype-entry.mjs";
 
 const fixture = () => readFileSync(`${nominalSubtypeFixture}/${nominalSubtypeModule}.lean`, "utf8");
 const trace = expected => expected.map(item => [`${nominalSubtypeEntryBegin} ${item.step}`, ...item.entries.map(entry => `${nominalSubtypeEntryMarker} ${entry}`), `${nominalSubtypeEntryEnd} ${item.step}`].join("\n")).join("\n") + "\n";
@@ -82,4 +82,23 @@ test("nominal entry accounting requires exactly the expected entries inside each
 	// A trace without any constructor entry cannot pass, even when expectations are weakened to match.
 	const silent = expected.map(item => ({ ...item, entries: item.entries.filter(entry => !entry.startsWith("constructor ")) }));
 	assert.throws(() => accountNominalSubtypeEntry(trace(silent), rows(silent), silent), /never entered/u);
+});
+
+test("nominal entry report checker requires distinct probe identities, exact rows and an explicit validator statement", () => {
+	const expected = nominalSubtypeEntryExpected(), { counts } = accountNominalSubtypeEntry(trace(expected), rows(expected));
+	const digest = "a".repeat(64), sideModule = { name: "x.wasm", sha256: digest };
+	const entry = { instrumentation: nominalSubtypeEntryInstrumentation, consumerSha256: digest, install: { status: 0 } };
+	entry.fixture = { originalSha256: digest, probeSha256: "b".repeat(64) };
+	entry.probe = { receiptSha256: digest, packageSha256: digest, runtimeSha256: digest, bindingIrSha256: digest, linkManifest: {}, sideModule };
+	entry.rows = rows(expected); entry.observed = expected; entry.counts = counts;
+	entry.sideModuleExports = { exports: 3, adapters: 1, validators: { exported: ["lb_a_refinement_0"], referencedByPackageJavaScript: [] } };
+	entry.unmodifiedReleasePackages = true; entry.validatorExportsReferenced = false;
+	assert.deepEqual(assertNominalSubtypeEntryReport(entry), counts);
+	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry, fixture: { originalSha256: digest, probeSha256: digest } }), /distinct/u);
+	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry, instrumentation: "release packages" }));
+	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry, rows: rows(expected).slice(1) }));
+	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry, observed: expected.map(item => ({ ...item, entries: [] })) }));
+	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry, unmodifiedReleasePackages: false }));
+	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry, validatorExportsReferenced: true }));
+	assert.throws(() => assertNominalSubtypeEntryReport({ ...entry, sideModuleExports: { validators: { exported: [], referencedByPackageJavaScript: [] } } }), /listed/u);
 });

@@ -23,6 +23,7 @@ import { copiedCleanEnvironment, runCopied } from "./copied-fixture-install.mjs"
 import { structuralSubtypeNpmPackageName } from "./structural-subtype-npm-package.mjs";
 import { nominalSubtypeInstalledConfiguration, nominalSubtypeFixture, nominalSubtypeModule, nominalSubtypeName, nominalSubtypeInstalledReview } from "./nominal-subtype-installed-fixture.mjs";
 import { checkNominalSubtypeNpmReport } from "./nominal-subtype-npm-report.mjs";
+import { observeNominalSubtypeEntryNpm } from "./nominal-subtype-entry-npm.mjs";
 import { nominalSubtypeBrowserEnabled } from "./nominal-subtype-browser-fixture.mjs";
 import { checkNominalSubtypeBrowsers } from "./nominal-subtype-browser.mjs";
 import { checkNominalSubtypeBrowserReport } from "./nominal-subtype-browser-report.mjs";
@@ -32,6 +33,9 @@ const flag = "LEAN_BRIDGE_NOMINAL_SUBTYPE_NPM_TEST";
 if(process.env[flag] !== undefined) assert.ok(["0", "1"].includes(process.env[flag]), `Invalid ${flag}`);
 const enabled = process.env[flag] === "1";
 const browsers = nominalSubtypeBrowserEnabled(process.env);
+const entryFlag = process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_NPM_ENTRY;
+assert.ok(entryFlag === undefined || ["0", "1"].includes(entryFlag), "Invalid nominal npm ENTRY");
+const entryEnabled = entryFlag === "1";
 const select = (variable, permitted) => {
 	const selected = process.env[variable]?.split(",") ?? permitted;
 	assert.ok(selected.length && selected.every(value => permitted.includes(value)), `Invalid ${variable}`);
@@ -157,9 +161,14 @@ for(const route of routes) for(const mode of modes) test(`installed npm nominal 
 		observations.push({ result, typescript: typed, runtime, relocated: root === moved });
 		await saveLakeFile(output, root === moved ? "relocated.json" : "installed.json", canonicalJson(observations.at(-1)));
 	}
+	// The entry probe is a separate instrumented build of the full mode; the release packages above stay untouched.
+	const entry = entryEnabled && !resultOnly
+		? await observeNominalSubtypeEntryNpm({ directory, output, route, configuration, expected, engineRoot, environment, runtimeRoot, npmCli, clean })
+		: undefined;
 	await saveLakeFile(output, "report.json", canonicalJson({ schemaVersion: 1
 		, route, mode, producerCommit, configuration, builds, receipt, trees
 		, observations
+		, ...entry ? { entry } : {}
 		, expectedBindingIrSha256: hashBindingIr(expected)
 		, callers: Object.fromEntries(Object.entries(callers).map(([path, source]) => [path, sha256(source)]))
 		, typescript: { strict: true, skipLibCheck: false }
