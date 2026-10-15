@@ -26,6 +26,9 @@ import { checkNominalPrimitiveSubtypeRubyReport, nominalPrimitiveSubtypeRubyReco
 import { waitNominalSubtypeDotnetResources } from "./nominal-subtype-dotnet-resources.mjs";
 
 const { enabled, routes, modes } = nominalPrimitiveSubtypeRubySelection(process.env);
+const resourceMaxLoad = process.env.LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_RUBY_MAX_LOAD === undefined
+	? 6
+	: Number(process.env.LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_RUBY_MAX_LOAD);
 
 for(const route of routes) for(const mode of modes) test(`installed primitive-base nominal Ruby packages reproduce and relocate ${route} ${mode}`, {
 	skip: !enabled, timeout: 3_600_000
@@ -38,7 +41,10 @@ for(const route of routes) for(const mode of modes) test(`installed primitive-ba
 	const expected = nominalPrimitiveSubtypeReview(mode === "result-only"), configuration = nominalPrimitiveSubtypeRubyConfiguration(route, mode);
 	const output = resolve(process.env.LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_RUBY_OUTPUT ?? "build/nominal-primitive-subtype-ruby", route, mode);
 	await assert.rejects(access(output), { code: "ENOENT" }); await mkdir(output, { recursive: true });
-	const resources = () => waitNominalSubtypeDotnetResources(output, { notify: message => t.diagnostic(message.replaceAll("C#", "primitive Ruby")) });
+	const resources = () => waitNominalSubtypeDotnetResources(output, {
+		maxLoad: resourceMaxLoad
+		, notify: message => t.diagnostic(message.replaceAll("C#", "primitive Ruby"))
+	});
 	await resources();
 	const environment = nativeFixtureEnvironment(["ruby"]);
 	assert.ok(typeof environment.LEAN_BRIDGE_RUBY === "string" && isAbsolute(environment.LEAN_BRIDGE_RUBY), "Select an absolute Ruby 3.3 interpreter explicitly");

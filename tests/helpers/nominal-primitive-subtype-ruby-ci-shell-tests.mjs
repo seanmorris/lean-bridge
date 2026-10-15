@@ -84,7 +84,7 @@ if (process.env.FAKE_FAIL === call) process.exit(17);
 	}
 	for(const name of ["LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR"
 		, "LEAN_BRIDGE_RUBY", "LEAN_BRIDGE_GEM"
-		, ...["TEST", "ROUTES", "MODES", "OUTPUT"].map(name => "LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_RUBY_" + name)])
+		, ...["TEST", "ROUTES", "MODES", "OUTPUT", "MAX_LOAD"].map(name => "LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_RUBY_" + name)])
 		for(const value of ["", "override"])
 		{
 			const directory = join(root, String(sequence++)); await mkdir(directory);
@@ -97,5 +97,5 @@ if (process.env.FAKE_FAIL === call) process.exit(17);
 		const result = spawnSync("/bin/bash", [script, ...args], { cwd: directory, env: { ...base, PATH: bin }, encoding: "utf8" });
 		assert.equal(result.status, 2); assert.deepEqual(await readdir(directory), []);
 	}
-	t.diagnostic("Nine complete/failing real-shell scenarios, nine stale-output refusals and twenty invalid argument/override controls; no compiled acceptance claimed by stand-ins.");
+	t.diagnostic("Nine complete/failing real-shell scenarios, nine stale-output refusals and twenty-two invalid argument/override controls; no compiled acceptance claimed by stand-ins.");
 });
