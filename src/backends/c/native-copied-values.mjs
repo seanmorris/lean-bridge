@@ -57,8 +57,16 @@ const finBelow = `static inline int lb_fin_below(const uint32_t *data, size_t le
 export const finRefinementWalk = ({ refinement, type: root, value: argument, constant, label, copy, bounds, reject }) => {
 	let sites = 0;
 	const check = (site, type, value, indent, path) => {
-		if(site === null || ["subtype", "checked-record"].includes(site.kind)) return [];
+		if(site === null || site.kind === "subtype") return [];
 		if(type.kind === "alias") return check(site, type.target, value, indent, path);
+		if(site.kind === "checked-record")
+		{
+			if(!Object.hasOwn(site, "arguments")) return [];
+			const fields = copy(type).fields;
+			return site.arguments.flatMap((child, index) => child === null ? [] : check(
+				child, type.fields[index].type, `(&${value}->${fields[index].name})`
+				, indent, [...path, `.${site.fields[index]}`]));
+		}
 		if(site.kind === "fin")
 		{
 			// A top-level scalar keeps its historical constant name; nested sites are numbered.
@@ -113,11 +121,21 @@ export const constructorRefinementWalk = ({ refinement, type: root, value: argum
 	const check = (site, type, value, indent, path, suffix) => {
 		if(site === null || site.kind === "fin") return [];
 		if(type.kind === "alias") return check(site, type.target, value, indent, path, suffix);
-		if(["subtype", "checked-record"].includes(site.kind))
+		if(site.kind === "subtype")
 		{
 			const name = `${symbol}${suffix}`;
 			const rejected = refinementDiagnosticRejection({ path, suffix: ` was rejected by ${site.constructor}`, name, indent, reject });
 			return [`${indent}if (!${name}(${input(type, value)})) ${rejected}`];
+		}
+		if(site.kind === "checked-record")
+		{
+			const fields = copy(type).fields;
+			const nested = Object.hasOwn(site, "arguments") ? site.arguments.flatMap((child, index) => check(
+				child, type.fields[index].type, `(&${value}->${fields[index].name})`, indent
+				, [...path, `.${site.fields[index]}`], `${suffix}_${index}`)) : [];
+			const name = `${symbol}${suffix}`;
+			const rejected = refinementDiagnosticRejection({ path, suffix: ` was rejected by ${site.constructor}`, name, indent, reject });
+			return [...nested, `${indent}if (!${name}(${input(type, value)})) ${rejected}`];
 		}
 		if(site.kind === "record")
 		{
@@ -317,7 +335,7 @@ export const generateCopiedNativeCalls = (model, surface) => {
 		// record fields and the active variant case.
 		const constructed = refinement => ["subtype", "checked-record"].includes(refinement?.kind);
 		refinements.forEach((refinement, i) => {
-			if(!refinement || constructed(refinement)) return;
+			if(!refinement) return;
 			const value = copy(native.parameters[i].type).aggregate ? fn.parameters[i].name : `(&${fn.parameters[i].name})`;
 			const reject = message => `return lb_invalid(error, ${message});`;
 			lines.push(...finRefinementWalk({ refinement, type: native.parameters[i].type, value, constant: `lb_fin_${fn.field}_${i}`, label: fn.parameters[i].name, copy, bounds, reject }));

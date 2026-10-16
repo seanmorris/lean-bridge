@@ -330,6 +330,15 @@ test("native models retain rich checked-record checks and projections at nested 
 	assert.match(source, /Packet\.mk \(value\.«digit»\)\.val \(value\.«word»\)\.val/u);
 	const calls = generateCopiedNativeCalls(model, compilePrimitiveCSurface(model.bindingIr, { compounds: true }));
 	assert.match(calls, new RegExp(`${model.exports[0].symbol}_refinement_0_0\\(`, "u"));
+	assert.match(calls, new RegExp(`${model.exports[0].symbol}_refinement_0_0_1\\(`, "u"));
+	assert.match(calls, /arg0\[%zu\]\.digit is not below its Fin 10 bound/u);
+	assert.match(calls, /arg0\[%zu\]\.word was rejected by NestedChecked\.mkWord/u);
+	assert.match(calls, /arg0\[%zu\] was rejected by NestedChecked\.mkPacket/u);
+	const finCheck = calls.indexOf("arg0[%zu].digit is not below its Fin 10 bound");
+	const fieldCheck = calls.indexOf("arg0[%zu].word was rejected by NestedChecked.mkWord");
+	const recordCheck = calls.indexOf("arg0[%zu] was rejected by NestedChecked.mkPacket");
+	const dispatch = calls.indexOf(`lean_object *checked = ${model.exports[0].symbol}(`);
+	assert.ok(finCheck < fieldCheck && fieldCheck < recordCheck && recordCheck < dispatch);
 	assert.doesNotMatch(calls, /undefined/u);
 });
 

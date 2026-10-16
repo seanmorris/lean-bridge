@@ -27,7 +27,14 @@ export const checkedRecordVia = (constructor, refinement = null) =>
 export const constructorRefinementLeaves = (refinement, type, suffix = "") => {
 	if(refinement === null || refinement.kind === "fin") return [];
 	if(type.kind === "alias") return constructorRefinementLeaves(refinement, type.target, suffix);
-	if(["subtype", "checked-record"].includes(refinement.kind)) return [{ refinement, type, suffix }];
+	if(refinement.kind === "subtype") return [{ refinement, type, suffix }];
+	if(refinement.kind === "checked-record")
+	{
+		const nested = Object.hasOwn(refinement, "arguments")
+			? refinement.arguments.flatMap((child, index) =>
+				constructorRefinementLeaves(child, type.fields[index].type, `${suffix}_${index}`)) : [];
+		return [...nested, { refinement, type, suffix }];
+	}
 	if(refinement.kind === "record") return refinement.arguments.flatMap((child, index) =>
 		constructorRefinementLeaves(child, type.fields[index].type, `${suffix}_${index}`));
 	if(refinement.kind === "variant") return refinement.cases.flatMap((branch, index) => branch.arguments.flatMap((child, field) =>
