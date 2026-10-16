@@ -211,9 +211,14 @@ test("the shared mirror emitter retains the native generator's exact source pref
 	}
 });
 
-test("both shared mirror modules ship in the published CLI package", async () => {
+test("shared mirror and diagnostic modules ship in the published CLI package", async () => {
 	const manifest = JSON.parse(await readFile("package.json", "utf8"));
-	for(const path of ["src/build/refinement-mirrors.mjs", "src/build/component-refinement-mirrors.mjs", "src/build/component-fin-guards.mjs"])
+	for(const path of [
+		"src/build/refinement-mirrors.mjs"
+		, "src/build/component-refinement-mirrors.mjs"
+		, "src/build/component-recursive-diagnostics.mjs"
+		, "src/build/component-fin-guards.mjs"
+	])
 		assert.ok(manifest.files.includes(path), path);
 });
 

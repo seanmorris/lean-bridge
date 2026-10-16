@@ -108,14 +108,24 @@ export const checkMutualCheckedRecords = api => {
 	const produced = invoke("produce", [5n], nested(6n, 1n, 7n, 2n));
 	check(!Reflect.ownKeys(produced).includes("linked"), "proof field absent from result");
 
-	const constructorFailure = error => error instanceof Error
-		&& !(error instanceof TypeError) && /failed \(5\)$/u.test(error.message);
+	const constructorFailure = (name, path, constructor) => error => error instanceof Error
+		&& !(error instanceof TypeError) && ["arg0", "value0"].some(parameter =>
+		error.message === `${name}.${parameter}${path} was rejected by ${constructor}`);
 	rejectAndRecover("first", [nested(100n, 2n, 80n, 1n)]
-		, constructorFailure, "outer-subtype");
+		, constructorFailure("first", ".value", "MutualCheckedRecords.plusOne")
+		, "outer-subtype");
 	rejectAndRecover("first", [nested(40n, 2n, 100n, 1n)]
-		, constructorFailure, "late-subtype");
+		, constructorFailure("first", ".next.value.packet.value"
+			, "MutualCheckedRecords.plusOne"), "late-subtype");
 	rejectAndRecover("first", [nested(0n, 2n, 80n, 1n)]
-		, constructorFailure, "outer-record");
+		, constructorFailure("first", "", "MutualCheckedRecords.mkEnvelope")
+		, "outer-record");
+	rejectAndRecover("groups", [[some(nested(40n, 2n, 100n, 1n))]]
+		, constructorFailure("groups", "[0].value.next.value.packet.value"
+			, "MutualCheckedRecords.plusOne"), "group-late-subtype");
+	rejectAndRecover("echoGroups", [[some(nested(40n, 2n, 95n, 1n))]]
+		, constructorFailure("echoGroups", "[0].value.next.value.packet.value"
+			, "MutualCheckedRecords.plusTwo"), "echo-group-late-subtype");
 	rejectAndRecover("first", [nested(40n, 3n, 80n, 1n)]
 		, error => error instanceof TypeError
 			&& /^first\.(?:arg0|value0)\.mode must be bigint below 3$/u.test(error.message)
@@ -171,7 +181,9 @@ export const checkMutualCheckedRecords = api => {
 	{
 		const valid = nested(round % 90n, round % 3n, (round + 11n) % 90n, round % 3n);
 		invoke("first", [valid], valid.value + 1n, "round accepted");
-		refused("first", [nested(40n, 2n, 100n, 1n)], constructorFailure);
+		refused("first", [nested(40n, 2n, 100n, 1n)]
+			, constructorFailure("first", ".next.value.packet.value"
+				, "MutualCheckedRecords.plusOne"));
 		invoke("second", [valid], valid.value + 2n, "round alternate constructor");
 		refused("first", [envelope(40n, 2n, some({ kind: "more" }))]
 			, /does not match the declared copied fields$/u);

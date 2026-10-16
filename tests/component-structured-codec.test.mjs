@@ -740,6 +740,17 @@ const arenaFixture = (failAt = Infinity) => {
 const strings = apply("tuple", primitive("string"), primitive("string"));
 const arenaCall = (f, action, parameters = []) => compileComponentCopiedCall(f.module, action
 	, { parameters, result: strings }, f.poison, 8, []);
+const diagnosticFailure = (f, frame, message, mutate = () => {}) => {
+	const bytes = new TextEncoder().encode(message), pointer = 4096;
+	f.module.HEAP8.set(bytes, pointer);
+	f.view().setUint32(frame + 8, 5, true);
+	f.view().setUint32(frame + 16, 0xffffffff, true);
+	f.view().setUint32(frame + 20, 0, true);
+	f.view().setUint32(frame + 24, pointer, true);
+	f.view().setUint32(frame + 28, bytes.length, true);
+	mutate({ bytes, pointer });
+	return 5;
+};
 
 test("recursive call receipts own every result allocation, including empty scalar buffers", () => {
 	const f = arenaFixture();
@@ -799,6 +810,48 @@ test("recursive input allocation failures and reported conversion failures recov
 		assert.throws(() => call([]), /budget|failed/);
 		assert.equal(f.live.size, 0); assert.equal(f.state().poisoned, false);
 		assert.deepEqual(arenaCall(f, frame => { f.output(frame); return 0; })([]), ["A", ""]);
+	}
+});
+
+test("recursive checked failures expose only bounded authenticated diagnostics", () => {
+	const message = "first.arg0.next.value.packet.value was rejected by Checked.plusOne";
+	const f = arenaFixture();
+	const call = arenaCall(f, frame => diagnosticFailure(f, frame, message));
+	assert.throws(() => call([]), error => error instanceof Error
+		&& !(error instanceof TypeError) && error.message === message);
+	assert.deepEqual(f.state(), { clears: 1, frees: 1, poisoned: false });
+	assert.deepEqual(arenaCall(f, frame => { f.output(frame); return 0; })([]), ["A", ""]);
+
+	const malformed = [
+		(f, frame) => diagnosticFailure(f, frame, message
+			, () => f.view().setUint32(frame + 16, 37, true))
+		, (f, frame) => diagnosticFailure(f, frame, message
+			, () => f.view().setUint32(frame + 20, 1, true))
+		, (f, frame) => diagnosticFailure(f, frame, message
+			, () => f.view().setUint32(frame + 24, 0, true))
+		, (f, frame) => diagnosticFailure(f, frame, message
+			, () => f.view().setUint32(frame + 28, 0, true))
+		, (f, frame) => diagnosticFailure(f, frame, message
+			, () => f.view().setUint32(frame + 28, 16 * 1024 + 1, true))
+		, (f, frame) => diagnosticFailure(f, frame, message, () => {
+			f.view().setUint32(frame + 24, f.module.HEAP8.length - 1, true);
+			f.view().setUint32(frame + 28, 2, true);
+		})
+		, (f, frame) => diagnosticFailure(f, frame, message, ({ pointer }) => {
+			f.module.HEAP8.set([0xc3, 0x28], pointer);
+			f.view().setUint32(frame + 28, 2, true);
+		})
+		, (f, frame) => diagnosticFailure(f, frame, "bad\0message")
+		, (f, frame) => {
+			diagnosticFailure(f, frame, message); f.view().setUint32(frame + 8, 4, true); return 4;
+		}
+	];
+	for(const operation of malformed)
+	{
+		const bad = arenaFixture();
+		assert.throws(() => arenaCall(bad, frame => operation(bad, frame))([])
+			, /Invalid component copied/);
+		assert.deepEqual(bad.state(), { clears: 0, frees: 0, poisoned: true });
 	}
 });
 

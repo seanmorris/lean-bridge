@@ -17,6 +17,7 @@ import { reviewedContractDifference } from "../src/analyze/reviewed-source.mjs";
 import { generateNativeCopiedGraphAdapters } from "../src/backends/c/native-graph-adapters.mjs";
 import { validateBindingIr } from "../src/binding-ir/contract.mjs";
 import { buildElaboratedComponent } from "../src/build/elaborated-component.mjs";
+import { generateComponentRecursiveAdapters } from "../src/build/component-recursive-adapters.mjs";
 import { componentRefinementMirrors } from "../src/build/component-refinement-mirrors.mjs";
 import { createCompiledPhpWasmModel, generateCompiledPhpWasmLeanAdapters } from "../src/build/php-wasm-graph-model.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
@@ -110,6 +111,30 @@ test("mutual checked-record diagnostics traverse active cases before each outer 
 	const outer = checkedRecord.body.indexOf("_graph_refinement_");
 	assert.ok(checkedRecord.body.indexOf("value->value") < outer);
 	assert.ok(checkedRecord.body.indexOf("value->next") < outer);
+});
+
+test("recursive Wasm diagnostics stay off the success path and name the rejected leaf", () => {
+	const { ir, abi, exports } = contract();
+	const source = generateComponentRecursiveAdapters(abi, {
+		exports, nominalRefinements: nominalRefinementEntries(ir.types)
+	});
+	assert.match(source, /enum \{ CRD_MESSAGE_LIMIT = 16384, CRD_KIND = UINT32_MAX \}/u);
+	assert.match(source, /return crd_reject\(" must be bigint below 3"\)/u);
+	assert.match(source
+		, /return crd_reject\(" was rejected by MutualCheckedRecords\.plusOne"\)/u);
+	assert.match(source
+		, /return crd_reject\(" was rejected by MutualCheckedRecords\.mkEnvelope"\)/u);
+	assert.match(source, /crd_text\("\.next"/u);
+	assert.match(source, /crd_text\("\.value"/u);
+	assert.match(source, /crd_text\("\.packet"/u);
+	const first = exports.find(item => item.sourceDeclaration.endsWith(".first"));
+	const body = source.slice(source.indexOf(`LEAN_EXPORT uint32_t ${first.symbol}(`));
+	const refinement = body.indexOf(`${first.symbol}_refinement_0(a0)`);
+	const diagnostic = body.indexOf("crd_reset();", refinement);
+	assert.ok(refinement >= 0 && diagnostic > refinement);
+	assert.ok(body.indexOf(`${first.symbol}_lean(a0)`) > diagnostic);
+	assert.match(body, /crd_text\("first\.arg0", sizeof\("first\.arg0"\) - 1\)/u);
+	assert.match(body, /if \(status == 5\) return crd_frame_failure\(frame\)/u);
 });
 
 test("mutual checked-record controls refuse missing definitions, proof drift and repeated backedge choices", () => {

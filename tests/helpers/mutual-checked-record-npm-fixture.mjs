@@ -38,15 +38,22 @@ export const mutualCheckedRecordNpmSelection = route => {
  */
 export const mutualCheckedRecordNpmExpected = route => {
 	assert.ok(mutualCheckedRecordNpmRoutes.includes(route));
-	const argument = route === "reviewed" ? "first.value0" : "first.arg0";
+	const parameter = name => `${name}.${route === "reviewed" ? "value0" : "arg0"}`;
+	const argument = parameter("first");
 	const error = (name, message) => ({ name, message });
-	const component = error("Error", "Component copied call failed (5)");
 	return {
-		checks: 1350, rejections: 269, calls: 674, snapshots: 674, recoveries: 141
+		checks: 1358, rejections: 271, calls: 678, snapshots: 678, recoveries: 143
 		, failures: {
-			"outer-subtype": component
-			, "late-subtype": component
-			, "outer-record": component
+			"outer-subtype": error("Error"
+				, `${argument}.value was rejected by MutualCheckedRecords.plusOne`)
+			, "late-subtype": error("Error"
+				, `${argument}.next.value.packet.value was rejected by MutualCheckedRecords.plusOne`)
+			, "outer-record": error("Error"
+				, `${argument} was rejected by MutualCheckedRecords.mkEnvelope`)
+			, "group-late-subtype": error("Error"
+				, `${parameter("groups")}[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusOne`)
+			, "echo-group-late-subtype": error("Error"
+				, `${parameter("echoGroups")}[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusTwo`)
 			, "outer-fin": error("TypeError", `${argument}.mode must be bigint below 3`)
 			, "nested-fin": error("TypeError"
 				, `${argument}.next.value.packet.mode must be bigint below 3`)

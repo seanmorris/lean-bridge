@@ -12,6 +12,29 @@ import { createComponentRecursiveBudget } from "../abi/component-recursive.mjs";
 import { compileComponentRecursiveCodec } from "./component-recursive-codec.mjs";
 import { recursiveOutputReceipt } from "./component-recursive-ownership.mjs";
 
+const diagnosticKind = 0xffffffff;
+const diagnosticLimit = 16 * 1024;
+const diagnosticDecoder = new TextDecoder("utf-8", { fatal: true, ignoreBOM: true });
+
+const failureDiagnostic = (module, frame) => {
+	const data = new DataView(module.HEAP8.buffer);
+	const kind = data.getUint32(frame + 16, true);
+	const flags = data.getUint32(frame + 20, true);
+	const bits = data.getBigUint64(frame + 24, true);
+	if(!kind && !flags && bits === 0n) return null;
+	const pointer = Number(bits & 0xffffffffn), length = Number(bits >> 32n);
+	if(kind !== diagnosticKind || flags || !pointer || !length || length > diagnosticLimit
+		|| pointer + length > module.HEAP8.length)
+		throw new TypeError("Invalid component copied failure diagnostic");
+	let message;
+	try
+	{ message = diagnosticDecoder.decode(module.HEAP8.subarray(pointer, pointer + length)); }
+	catch
+	{ throw new TypeError("Invalid component copied failure diagnostic"); }
+	if(message.includes("\0")) throw new TypeError("Invalid component copied failure diagnostic");
+	return message;
+};
+
 /**
  * Compile a call's codecs once, sharing input/result limits and runtime poison.
  *
@@ -74,11 +97,21 @@ export const compileComponentCopiedCall = (module, operation, signature, poison,
 				|| view().getUint32(frame + 12, true) !== args.length || view().getUint32(frame + 8, true) !== status){ unsafe = true; poison(); throw new Error("Invalid component copied frame result"); }
 			if(status)
 			{
-				// These failures leave no native result. All other statuses indicate a
-				// broken adapter, invalid output, or runtime state and retire the heap.
-				if(![4, 5].includes(status) || view().getUint32(frame + 16, true) || view().getUint32(frame + 20, true) || view().getBigUint64(frame + 24, true))
-				{ unsafe = true; poison(); }
-				throw status === 4 ? new RangeError("Component copy budget exceeded") : new Error(`Component copied call failed (${status})`);
+				let diagnostic;
+				try
+				{ diagnostic = failureDiagnostic(module, frame); }
+				catch(error)
+				{ unsafe = true; poison(); throw error; }
+				// Budget failures and legacy conversion failures leave no result.
+				// Recursive checked adapters may instead return one borrowed, bounded
+				// UTF-8 diagnostic. Every other status/result combination retires the heap.
+				if(![4, 5].includes(status) || diagnostic !== null && (status !== 5 || !recursive))
+				{
+					unsafe = true; poison();
+					throw new Error("Invalid component copied frame result");
+				}
+				throw status === 4 ? new RangeError("Component copy budget exceeded")
+					: new Error(diagnostic ?? `Component copied call failed (${status})`);
 			}
 			try
 			{

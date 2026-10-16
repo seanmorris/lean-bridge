@@ -9,6 +9,7 @@ import { componentScalarTypes } from "../abi/component-scalars.mjs";
 import { compileComponentCopiedGraph, componentRecursiveLimits } from "../abi/component-recursive.mjs";
 import { componentRecursiveHelper, componentRecursiveTypes } from "./component-recursive-lean.mjs";
 import { hasComponentNominalRefinements } from "./component-refinement-mirrors.mjs";
+import { componentRecursiveDiagnostics } from "./component-recursive-diagnostics.mjs";
 
 /**
  * Identify a shared copied-value walker after resolving transparent aliases.
@@ -50,8 +51,15 @@ export const generateComponentRecursiveAdapters = (abi, { exportFrames = true, e
 	const identity = type => sha256(canonicalJson(reference(type))).slice(0, 20);
 	const walker = type => `recursive_${identity(type)}`;
 	const types = new Map(refs.map(type => [walker(type), reference(type)]));
+	const diagnostics = nominal ? componentRecursiveDiagnostics({
+		abi, exports, nominalRefinements, walker
+	}) : null;
 	const lines = [
 		'#include "component_scalar.h"'
+		, ...diagnostics ? [
+			'#include <string.h>', diagnostics.support
+			, ...diagnostics.validators, ...diagnostics.bounds, ...diagnostics.prototypes
+		] : []
 		, '_Static_assert(sizeof(size_t) == 4, "recursive frames require wasm32 Lean");'
 		, "typedef struct {"
 		, "  uint32_t bytes, nodes;"
@@ -213,6 +221,7 @@ export const generateComponentRecursiveAdapters = (abi, { exportFrames = true, e
 		}
 		lines.push("  lean_dec(value);", "  return status;", "}");
 	}
+	if(diagnostics) lines.push(...diagnostics.helpers, "");
 	for(const item of exportFrames ? abi.exports : [])
 	{
 		const refinements = exports.find(value => value.bindingId === item.bindingId)?.refinements?.parameters ?? [];
@@ -220,6 +229,24 @@ export const generateComponentRecursiveAdapters = (abi, { exportFrames = true, e
 		const cleanup = item.parameters.map((_, index) => `lean_dec(a${index});`).join(" ");
 		for(const [index, refinement] of refinements.entries()) if(refinement && (nominalRefinements.length || refinement.kind !== "fin"))
 			lines.push(`extern uint8_t ${item.symbol}_refinement_${index}(lean_object *);`);
+		const diagnosticPasses = diagnostics?.calls.get(item.bindingId) ?? [];
+		const diagnostic = (mode, index) => {
+			const check = diagnosticPasses.find(pass => pass.mode === mode)
+				?.checked.find(candidate => candidate.index === index);
+			if(!check) return null;
+			const root = JSON.stringify(check.root);
+			return [
+				`    ${cleanup} bridge_recursive_frame_clear(frame);`
+				, "    crd_reset();"
+				, `    if (!crd_text(${root}, sizeof(${root}) - 1)) {`
+				, "      crd_overflow(); return crd_frame_failure(frame);"
+				, "    }"
+				, `    uint32_t diagnostic_nodes = ${componentRecursiveLimits.valueNodes};`
+				, `    status = ${check.name}(&frame->args[${index}], 0, &diagnostic_nodes);`
+				, "    if (status == 5) return crd_frame_failure(frame);"
+				, "    frame->status = status ? status : 6; return frame->status;"
+			];
+		};
 		lines.push(`extern lean_object *${item.symbol}_lean(${Array(Math.max(1, item.parameters.length)).fill("lean_object *").join(", ")});`
 			, `LEAN_EXPORT uint32_t ${item.symbol}(bridge_scalar_frame *frame) {`
 			, `  uint32_t status = bridge_recursive_frame_validate(frame, ${item.parameters.length});`
@@ -232,11 +259,21 @@ export const generateComponentRecursiveAdapters = (abi, { exportFrames = true, e
 		if(nominalRefinements.length) item.parameters.forEach((_, index) => lines.push(
 			`  if (!lean_is_array(a${index}) || lean_array_size(a${index}) != 1) { ${cleanup} bridge_recursive_frame_clear(frame); frame->status = 5; return 5; }`));
 		// Validate bounds across every argument before any parameter's constructor validator.
-		if(nominal) item.parameters.forEach((_, index) => lines.push(`  lean_inc(a${index});`
-			, `  if (!${item.symbol}_fin_guard_${index}(a${index})) { ${cleanup} bridge_recursive_frame_clear(frame); frame->status = 5; return 5; }`));
+		if(nominal) item.parameters.forEach((_, index) => {
+			const details = diagnostic("fin", index);
+			lines.push(`  lean_inc(a${index});`, details
+				? [`  if (!${item.symbol}_fin_guard_${index}(a${index})) {`
+					, ...details, "  }"].join("\n")
+				: `  if (!${item.symbol}_fin_guard_${index}(a${index})) { ${cleanup} bridge_recursive_frame_clear(frame); frame->status = 5; return 5; }`);
+		});
 		for(const [index, refinement] of refinements.entries()) if(refinement && (nominalRefinements.length || refinement.kind !== "fin"))
-			lines.push(`  lean_inc(a${index});`
-				, `  if (!${item.symbol}_refinement_${index}(a${index})) { ${cleanup} bridge_recursive_frame_clear(frame); frame->status = 5; return 5; }`);
+		{
+			const details = diagnostic("constructor", index);
+			lines.push(`  lean_inc(a${index});`, details
+				? [`  if (!${item.symbol}_refinement_${index}(a${index})) {`
+					, ...details, "  }"].join("\n")
+				: `  if (!${item.symbol}_refinement_${index}(a${index})) { ${cleanup} bridge_recursive_frame_clear(frame); frame->status = 5; return 5; }`);
+		}
 		lines.push(`  lean_object *result = ${item.symbol}_lean(${item.parameters.length ? item.parameters.map((_, index) => `a${index}`).join(", ") : "lean_box(0)"});`
 			, `  status = ${walker(item.result)}_encode(&frame->result, result, 0, &budget);`
 			, "  if (status) bridge_recursive_frame_clear(frame);", "  return status;", "}", "");
