@@ -101,6 +101,7 @@ import { beforeRecursiveSubtypePhpWasmPromotionSource, recursiveSubtypePhpWasmPr
 import { beforeNominalPrimitiveSubtypeWitPromotionSource, nominalPrimitiveSubtypeWitPromotionChangedPaths } from "./nominal-primitive-subtype-wit-promotion-history.mjs";
 import { beforeNominalPrimitiveSubtypeJvmPromotionSource, nominalPrimitiveSubtypeJvmPromotionChangedPaths } from "./nominal-primitive-subtype-jvm-promotion-history.mjs";
 import { beforeNestedCheckedRecordNativeCorrectionSource, nestedCheckedRecordNativeCorrectionChangedPaths } from "./nested-checked-record-native-correction-source-history.mjs";
+import { beforeNestedCheckedRecordNativePromotionSource, nestedCheckedRecordNativePromotionChangedPaths } from "./nested-checked-record-native-promotion-history.mjs";
 import { beforeNominalPrimitiveSubtypeRustPromotionSource, nominalPrimitiveSubtypeRustPromotionChangedPaths } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
 import { beforeNestedCheckedRecordSource, nestedCheckedRecordChangedPaths } from "./nested-checked-record-source-history.mjs";
 import { beforeNestedCheckedRecordBrowserPromotionSource, nestedCheckedRecordBrowserPromotionChangedPaths } from "./nested-checked-record-browser-promotion-history.mjs";
@@ -754,6 +755,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeNestedCheckedRecordNativePromotionSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeNestedCheckedRecordNativeCorrectionSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeNominalPrimitiveSubtypeJvmPromotionSource(path, source, expected);
@@ -1097,6 +1100,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nominalPrimitiveSubtypeWitPromotionChangedPaths
 	, ...nominalPrimitiveSubtypeJvmPromotionChangedPaths
 	, ...nestedCheckedRecordNativeCorrectionChangedPaths
+	, ...nestedCheckedRecordNativePromotionChangedPaths
 ])].sort());
 
 /**

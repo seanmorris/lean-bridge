@@ -167,6 +167,9 @@ test("checked-record guidance uses the tested payload and per-site constructor c
 	assert.match(section, /checked-record-browser-promotion-20261011\.md/);
 	assert.match(section, /all four ordinary\/reviewed full and result-only routes/);
 	assert.match(section, /Chromium, Firefox and WebKit pages, React production\/Strict Mode and workers/);
+	assert.match(section, /nested-checked-record-native-20261016\/index\.json/);
+	assert.match(section, /independent C11\/GMP and C\+\+20 packages/);
+	assert.match(section, /actions\/workflows\/nested-checked-record-native\.yml/);
 	assert.match(section, /checked-record-php-wasm-promotion-20261011\.md/);
 	assert.match(section, /twelve Node\/Chromium configurations on wasm32 PHP 8\.4\.1/);
 	assert.doesNotMatch(section, /PHP-Wasm checked-record execution remains pending/);
@@ -181,7 +184,7 @@ test("checked-record guidance uses the tested payload and per-site constructor c
 test("the checked-record author table agrees with all seventeen installed consumer profiles", async () => {
 	const document = await readFile("docs/lean/existing-package.md", "utf8");
 	const row = document.split("\n").find(line => line.startsWith("| Record with erased proof fields"));
-	assert.equal(row, "| Record with erased proof fields and a checked input constructor | Node, browser, React and worker installed, both source routes | C/C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI installed | Installed, both source routes on four ABIs | Installed, both source routes in Node/Chromium | All seventeen profiles have installed top-level input/result checks; nested and other dependent combinations remain unfinished |");
+	assert.equal(row, "| Record with erased proof fields and a checked input constructor | Node, browser, React and worker installed for top-level and the archived nested fields/containers, both source routes | C/C++ installed for top-level and the archived nested fields/containers; Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI installed at top level | Installed at top level, both source routes on four ABIs | Installed at top level, both source routes in Node/Chromium | All seventeen profiles have installed top-level input/result checks; npm and C/C++ additionally have nested parameter/result/field checks; other nested hosts and callback/owned positions remain unfinished |");
 	const python = await readCheckedRecordPythonArchive();
 	assert.equal(python.reports.length, 8);
 	assert.deepEqual([...new Set(python.index.runs.map(run => run.floor))], ["3.11", "3.12"]);
