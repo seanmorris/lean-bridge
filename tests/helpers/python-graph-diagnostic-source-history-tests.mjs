@@ -67,10 +67,13 @@ test("Python graph diagnostic history reconstructs every exact predecessor sourc
 
 test("Python graph diagnostic history refreshes only predecessor source pins", async () => {
 	const path = "docs/type-surface.v1.json";
-	const currentText = await readFile(path, "utf8");
-	const current = JSON.parse(currentText);
 	const record = JSON.parse(await readFile(pythonGraphDiagnosticHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
+	// Later layers stack on this inventory; rewind them through the shared hub.
+	const currentText = beforeFinRefinementSource(
+		path, await readFile(path, "utf8"), update.currentSha256
+	);
+	const current = JSON.parse(currentText);
 	const previous = JSON.parse(reversePythonGraphDiagnosticUpdate(currentText, update));
 	assert.deepEqual(beforePythonGraphDiagnosticPins(current)
 		, beforeRecursiveCheckedRecordPerlDiagnosticPins(previous));

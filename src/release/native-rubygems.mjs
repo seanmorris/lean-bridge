@@ -15,6 +15,7 @@ import { ordinaryRubyEvidence } from "../build/native-ruby-artifacts.mjs";
 import { processBuildRunner } from "../build/process-runner.mjs";
 import { generateCopiedRubyPackage } from "../backends/ruby/copied-values.mjs";
 import { generateCopiedRubyGraphPackage } from "../backends/ruby/copied-graph-package.mjs";
+import { nativeGraphRefinementDiagnostics } from "../build/native-graph-sources.mjs";
 import { generateCallableRubyGraphPackage } from "../backends/ruby/callable-graph-package.mjs";
 import { rubyLiteral } from "../backends/ruby/copied-assets.mjs";
 import { validateOrdinaryRubySettings } from "../backends/ruby/copied-model.mjs";
@@ -42,7 +43,9 @@ export const packageOrdinaryRuby = async ({ working, nativeRoot, runtimeRoot, ad
 	const generate = model.copiedGraph
 		? model.copiedGraph.callbacks ? generateCallableRubyGraphPackage : generateCopiedRubyGraphPackage
 		: generateCopiedRubyPackage;
-	const root = join(working, "packages/rubygems/package"), files = generate(model.bindingIr, evidence);
+	const root = join(working, "packages/rubygems/package"), files = generate(model.bindingIr, evidence
+		, ...generate === generateCopiedRubyGraphPackage
+			? [{ refinementDiagnostics: nativeGraphRefinementDiagnostics(model) }] : []);
 	auditManagedBindingPackage(model.bindingIr, files, "ruby");
 	const save = async (path, bytes) => { await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), bytes, { flag: "wx" }); };
 	const copy = async (source, path) => save(path, await readFile(source));
