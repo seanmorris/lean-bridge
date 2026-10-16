@@ -1,0 +1,33 @@
+{
+  "closure": {
+    "classpathFilesSha256": "15f96956076c582cffa066d5a5a02cf72b922d354bd07db38ecd6ba8154d127f",
+    "files": {
+      "classes/Consumer.class": {
+        "bytes": 21318,
+        "sha256": "229a3a41c6e2195b79f747d430069f42f2902cf9f5bebb947d3a569884e56300"
+      },
+      "component.jar": {
+        "bytes": 51492647,
+        "sha256": "73983f3d0d965521bd27908e46c402882691c45c8675257d86ba1db194eac520"
+      }
+    },
+    "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e"
+  },
+  "counts": {
+    "checks": 3924,
+    "hostRejections": 7,
+    "recoveries": 528,
+    "rejections": 524,
+    "rounds": 256,
+    "snapshots": 1054,
+    "wordBits": 64
+  },
+  "cwd": "/tmp/lean-bridge-nested-record-jvm-installed-yeDYUv/java-source-free",
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":3924,\"rejections\":524,\"hostRejections\":7,\"recoveries\":528,\"snapshots\":1054,\"rounds\":256,\"wordBits\":64}\n"
+  },
+  "sourcesRemoved": true,
+  "stage": "source-free"
+}

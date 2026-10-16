@@ -1,0 +1,44 @@
+{
+  "component": {
+    "id": "nestedcheckedrecords@1.0.0",
+    "name": "nestedcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51416709,
+          "path": "archives/nestedcheckedrecords-1.0.0.jar",
+          "sha256": "ab6d3bcc8048362796ff321f6fb88e712c710942d194031fec0f4d2abf61bcab"
+        },
+        {
+          "bytes": 630,
+          "path": "archives/nestedcheckedrecords-1.0.0.pom",
+          "sha256": "ebe7c3a2fe1d4228a68bf6f2344e87961c874331f8b9d86ad5afb61f70fc1f18"
+        }
+      ],
+      "ecosystem": "maven",
+      "name": "org.leanbridge:nestedcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "maven",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "39ed16743e5ebe397a0e08c4804e552d47f92aee57a12a1b2700e8f1c23c90e7",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "65e183a621aea210236de1ffff210ed80f2d58c4c6499a9869304bc653e76b5e"
+  }
+}

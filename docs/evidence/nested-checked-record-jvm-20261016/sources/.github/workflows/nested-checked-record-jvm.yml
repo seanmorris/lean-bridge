@@ -1,0 +1,83 @@
+name: Installed nested checked records in Java and Kotlin
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nested-checked-record-jvm-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  nested-checked-record-jvm:
+    name: Four nested checked-record selections in Java and Kotlin
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    env:
+      LEAN_NUM_THREADS: "1"
+    steps:
+      - name: Check out the exact revision and original evidence history
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install compiler and archive dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep unzip xz-utils zstd
+      - name: Install dependencies and the pinned Lean compiler
+        timeout-minutes: 30
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund
+          mkdir -p build
+          bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/nested-checked-record-jvm-toolchain.log
+      - name: Select Java 22
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '22.0.2'
+      - name: Install the checksummed Kotlin 2.2.0 compiler
+        timeout-minutes: 10
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip
+          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check
+          unzip -q build/kotlin-compiler.zip -d build/kotlin-tools
+      - name: Require both source routes and API modes in Java and Kotlin
+        id: acceptance
+        timeout-minutes: 120
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-nested-checked-record-jvm-ci.sh "$JAVA_HOME/bin/java" "$JAVA_HOME/bin/javac" "$PWD/build/kotlin-tools/kotlinc/bin/kotlinc"
+      - name: Preserve original and partial installed records
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: nested-checked-record-jvm-${{ github.sha }}
+          path: |
+            build/nested-checked-record-jvm-ci/
+            build/nested-checked-record-jvm-toolchain.log
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce installed nested checked-record Java and Kotlin acceptance
+        if: always() && steps.acceptance.outcome != 'success'
+        run: exit 1

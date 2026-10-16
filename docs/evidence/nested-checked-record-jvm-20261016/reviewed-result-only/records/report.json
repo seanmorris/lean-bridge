@@ -1,0 +1,927 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/nestedcheckedrecords-1.0.0.jar": "4805a55edb18cd1cf7cee12b0c7ead1cbc2c2bbc36443b116b814cf407f19a8c",
+        "archives/nestedcheckedrecords-1.0.0.pom": "ebe7c3a2fe1d4228a68bf6f2344e87961c874331f8b9d86ad5afb61f70fc1f18"
+      },
+      "bindingIrSha256": "7db38e3884f7a966c61793125968e51f5c6b08b37377a38f01e383ceb89412fc",
+      "compiledSha256": "684c8038e44cd478a51b6ed03ec4009e1ecd1d887597aa417ac52ace88282bcf",
+      "modelSha256": "990b606f9379a4b6f7a56b45208ec1772b9b4236b08f238228a3bf35738776bc",
+      "receiptSha256": "59c56d6fde6793bd12dc7b7a64d1bc21b2baf3e47d0c9eb2d8e66a434fc6e81d"
+    },
+    {
+      "archives": {
+        "archives/nestedcheckedrecords-1.0.0.jar": "4805a55edb18cd1cf7cee12b0c7ead1cbc2c2bbc36443b116b814cf407f19a8c",
+        "archives/nestedcheckedrecords-1.0.0.pom": "ebe7c3a2fe1d4228a68bf6f2344e87961c874331f8b9d86ad5afb61f70fc1f18"
+      },
+      "bindingIrSha256": "7db38e3884f7a966c61793125968e51f5c6b08b37377a38f01e383ceb89412fc",
+      "compiledSha256": "684c8038e44cd478a51b6ed03ec4009e1ecd1d887597aa417ac52ace88282bcf",
+      "modelSha256": "990b606f9379a4b6f7a56b45208ec1772b9b4236b08f238228a3bf35738776bc",
+      "receiptSha256": "59c56d6fde6793bd12dc7b7a64d1bc21b2baf3e47d0c9eb2d8e66a434fc6e81d"
+    }
+  ],
+  "compilerFreeReplay": true,
+  "consumers": [
+    {
+      "apiProbe": {
+        "archiveSha256": "4805a55edb18cd1cf7cee12b0c7ead1cbc2c2bbc36443b116b814cf407f19a8c",
+        "args": [
+          "--release",
+          "22",
+          "-Werror",
+          "-proc:none",
+          "-XDrawDiagnostics",
+          "-cp",
+          "component.jar",
+          "-d",
+          "classes",
+          "probe.java"
+        ],
+        "command": "/app/.toolchains/jdk22/bin/javac",
+        "cwd": "/tmp/lean-bridge-nested-record-jvm-installed-t5HgrU/probes/java",
+        "environment": {
+          "CC": "/unavailable/compiler",
+          "CXX": "/unavailable/compiler",
+          "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+          "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+          "PATH": "/unavailable"
+        },
+        "mode": "result-only",
+        "outputs": {},
+        "profile": "java",
+        "run": {
+          "code": 1,
+          "stderr": "probe.java:3:43: compiler.err.cant.resolve.location.args: kindname.method, echoArray, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nestedcheckedrecords.Api, null)\nprobe.java:4:39: compiler.err.cant.resolve.location.args: kindname.method, first, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nestedcheckedrecords.Api, null)\nprobe.java:5:41: compiler.err.cant.resolve.location.args: kindname.method, inArray, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nestedcheckedrecords.Api, null)\nprobe.java:6:42: compiler.err.cant.resolve.location.args: kindname.method, inChoice, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nestedcheckedrecords.Api, null)\nprobe.java:7:42: compiler.err.cant.resolve.location.args: kindname.method, inExcept, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nestedcheckedrecords.Api, null)\nprobe.java:8:42: compiler.err.cant.resolve.location.args: kindname.method, inHolder, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nestedcheckedrecords.Api, null)\nprobe.java:9:40: compiler.err.cant.resolve.location.args: kindname.method, inList, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nestedcheckedrecords.Api, null)\nprobe.java:10:42: compiler.err.cant.resolve.location.args: kindname.method, inOption, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nestedcheckedrecords.Api, null)\nprobe.java:11:43: compiler.err.cant.resolve.location.args: kindname.method, inProduct, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nestedcheckedrecords.Api, null)\nprobe.java:12:38: compiler.err.cant.resolve.location.args: kindname.method, pair, , compiler.misc.type.null,compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nestedcheckedrecords.Api, null)\nprobe.java:13:40: compiler.err.cant.resolve.location.args: kindname.method, second, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nestedcheckedrecords.Api, null)\n11 errors\n",
+          "stdout": ""
+        },
+        "source": "import org.leanbridge.nestedcheckedrecords.*;\nfinal class Probe {\n    static Object echoArray() { return Api.echoArray(null); }\n    static Object first() { return Api.first(null); }\n    static Object inArray() { return Api.inArray(null); }\n    static Object inChoice() { return Api.inChoice(null); }\n    static Object inExcept() { return Api.inExcept(null); }\n    static Object inHolder() { return Api.inHolder(null); }\n    static Object inList() { return Api.inList(null); }\n    static Object inOption() { return Api.inOption(null); }\n    static Object inProduct() { return Api.inProduct(null); }\n    static Object pair() { return Api.pair(null, null); }\n    static Object second() { return Api.second(null); }\n}\n",
+        "sourceSha256": "8ddc9c86164667572f5982623629f76978f9ccec12d3009781f4a45db2acd7af"
+      },
+      "context": {
+        "archiveSha256": "4805a55edb18cd1cf7cee12b0c7ead1cbc2c2bbc36443b116b814cf407f19a8c",
+        "command": "/app/.toolchains/jdk22/bin/java",
+        "files": {
+          "classes/Consumer.class": {
+            "bytes": 8555,
+            "sha256": "01a80ac4838cc94c0571e08237a16b09a21149fd8b67da084939ca7a8acea459"
+          },
+          "component.jar": {
+            "bytes": 51419140,
+            "sha256": "4805a55edb18cd1cf7cee12b0c7ead1cbc2c2bbc36443b116b814cf407f19a8c"
+          },
+          "consumer.java": {
+            "bytes": 5306,
+            "sha256": "4f8c4d4757360862acda8febf97fda81cd495a06aa9b242bfb07f5ce726ae78e"
+          }
+        },
+        "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+        "packageFileSetSha256": "efcfa15c9ff4c4f90c89f20f850e8d72ec5c793493833b992a051b7956cf3aed",
+        "profile": "java",
+        "receiptBytes": "{\n  \"bindingIrSha256\": \"7db38e3884f7a966c61793125968e51f5c6b08b37377a38f01e383ceb89412fc\",\n  \"compiledProjectionSha256\": \"684c8038e44cd478a51b6ed03ec4009e1ecd1d887597aa417ac52ace88282bcf\",\n  \"component\": {\n    \"id\": \"nestedcheckedrecords@1.0.0\",\n    \"name\": \"nestedcheckedrecords\",\n    \"version\": \"1.0.0\"\n  },\n  \"ecosystem\": \"maven\",\n  \"files\": {\n    \"META-INF/MANIFEST.MF\": {\n      \"bytes\": 23,\n      \"sha256\": \"172b7aa6ab69ed805e5a9b5bbdbc6e770091086734509d44117852fc10592f6b\"\n    },\n    \"META-INF/lean-bridge/component/allocation-guard.h\": {\n      \"bytes\": 1309,\n      \"sha256\": \"f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83\"\n    },\n    \"META-INF/lean-bridge/component/artifacts.json\": {\n      \"bytes\": 1529,\n      \"sha256\": \"5ccd3c661364404ea4e14375472da0c2084f0aed924fd47bf19464fe05f8b269\"\n    },\n    \"META-INF/lean-bridge/component/binding-ir.json\": {\n      \"bytes\": 7445,\n      \"sha256\": \"5e57b48c8909a0101cf42fffea2559e96eb5b6f21b7c15c9d9f3d28452974f81\"\n    },\n    \"META-INF/lean-bridge/component/component.h\": {\n      \"bytes\": 841,\n      \"sha256\": \"d2ff4235b2668c14a66415506abf085e0d493503a9299fd2a5d2e6dd8b8f91d4\"\n    },\n    \"META-INF/lean-bridge/component/generated.lean\": {\n      \"bytes\": 2840,\n      \"sha256\": \"222c420c7d792a231918d075c184de5e05ee9a0c045ebdb961834183d8837cfb\"\n    },\n    \"META-INF/lean-bridge/component/metadata.json\": {\n      \"bytes\": 33753,\n      \"sha256\": \"129fcbd89a7ade9a91a736e99168d6654c1984a6cf88f47ff1d43d955a224be6\"\n    },\n    \"META-INF/lean-bridge/component/model.json\": {\n      \"bytes\": 29107,\n      \"sha256\": \"990b606f9379a4b6f7a56b45208ec1772b9b4236b08f238228a3bf35738776bc\"\n    },\n    \"META-INF/lean-bridge/component/native-component.json\": {\n      \"bytes\": 11362,\n      \"sha256\": \"515cc5be3c9d39dd877b58fe005a499caa9524f111cfb2149a50e3cd69db1279\"\n    },\n    \"META-INF/lean-bridge/jvm/binding-manifest.json\": {\n      \"bytes\": 4703,\n      \"sha256\": \"99e7d705d48171835bded88801d39456765cc493f1e900eed2d9b706f3eaf6b7\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Api.java\": {\n      \"bytes\": 621,\n      \"sha256\": \"af64bfa68e2a09bce604c948da08bf08c23c5c5e5c8a90d94c605ba4b52dfeb7\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/KotlinBridge.java\": {\n      \"bytes\": 354,\n      \"sha256\": \"53c36a36b1c5fc3c3bd4e8c1d3fc887ad3e614dd83c737afc17b78d19b9e061e\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/KotlinRuntime.java\": {\n      \"bytes\": 9608,\n      \"sha256\": \"bc23e0c576d5ebe69dc60857cd6d3f7ac1ddee1f61a593597baef303c625ba80\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/LeanBridgeException.java\": {\n      \"bytes\": 250,\n      \"sha256\": \"1b6ee47060df35244b121c94d12aa42e26d961c5259162f5dc0f1ca3ec9e215c\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/NativeAssets.java\": {\n      \"bytes\": 13575,\n      \"sha256\": \"d2bb6e39c40237665bdf299664536907ad3baf84b01b684f4ba718501926d886\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Option.java\": {\n      \"bytes\": 1053,\n      \"sha256\": \"eeb66bc0e2981fc9aa31ad41ed05d26059515c6bfc6a9b36a084bfc540651218\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Packet.java\": {\n      \"bytes\": 561,\n      \"sha256\": \"feec3a08e0b9659f11728551eb718ed42dd59bd24ad450f4314b7232d2f04ab5\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Pair.java\": {\n      \"bytes\": 717,\n      \"sha256\": \"0b8188a321e64599f069ef33fb731197360075f7793d4e3b814409156ebf99a1\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Result.java\": {\n      \"bytes\": 1618,\n      \"sha256\": \"35520c92594f0aadbe7ffdda64e3782418a473c88de7a23060c5289570d77b3e\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Runtime.java\": {\n      \"bytes\": 8908,\n      \"sha256\": \"61131f42b31b497845db848f764fa9921e25d5c2ce4f851264cca21cccd8bd8d\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Scope.java\": {\n      \"bytes\": 553,\n      \"sha256\": \"2348d4533e7f3cdc42321b2bd0fcfd1dd4c6370a8daa6f29705da7a4b7ff25bf\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Unit.java\": {\n      \"bytes\": 75,\n      \"sha256\": \"19615970dad99e70fbd83b6e101fb8f025d1eb1e48046de5627e4e9b1249e911\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/KotlinCalls.kt\": {\n      \"bytes\": 278,\n      \"sha256\": \"2c5531f80bb67b5d00b0d6a846e000449a9006ae544e798ba76bd3e60b321447\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Api.kt\": {\n      \"bytes\": 958,\n      \"sha256\": \"cd1c99781f7257092241c4475c8b9e86aabb4d8bc61d0d4832beb6d7920fa579\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/LeanBridgeException.kt\": {\n      \"bytes\": 154,\n      \"sha256\": \"ec93b2954873ede9141b7d5db7dfa26654e430ce895e338f52f9694e0c62fa82\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Option.kt\": {\n      \"bytes\": 1395,\n      \"sha256\": \"24f47a45df84609a9ec0c075a383716946d4a01c9ab5f96f26db79a05dadfb8c\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Packet.kt\": {\n      \"bytes\": 723,\n      \"sha256\": \"7177d828776c5b4bdc178204c168244c63bc077218f16340d6bf5e553883bb2f\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Pair.kt\": {\n      \"bytes\": 776,\n      \"sha256\": \"11c0ec7aac4057a68481969cceca5562faaf90733983dec4a07b09aa07300427\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Result.kt\": {\n      \"bytes\": 1823,\n      \"sha256\": \"27b48197f2afeb9ad74aa3cb1c73a95728829a026454678a4b7c12c905e85364\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Unit.kt\": {\n      \"bytes\": 124,\n      \"sha256\": \"ca5c129896f62c97961f674c9cf7677ab8961529c8a95dce5bd6edb4c950421c\"\n    },\n    \"META-INF/lean-bridge/licenses/Lean-LICENSE\": {\n      \"bytes\": 9160,\n      \"sha256\": \"8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e\"\n    },\n    \"META-INF/lean-bridge/licenses/Lean-LICENSES\": {\n      \"bytes\": 81854,\n      \"sha256\": \"00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce\"\n    },\n    \"META-INF/lean-bridge/licenses/LeanBridge-LICENSE\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"META-INF/lean-bridge/licenses/source-notices.json\": {\n      \"bytes\": 2124,\n      \"sha256\": \"98d1f33ddec033aac426f3d75c62b44f05a80faa7255c07ad9be2851d5d32dbe\"\n    },\n    \"META-INF/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"META-INF/lean-bridge/native-c-adapter.json\": {\n      \"bytes\": 1407,\n      \"sha256\": \"d12bace4e660be6c60eef3317de857e764f98a3b89fd3b4305caa2b06b59832c\"\n    },\n    \"META-INF/lean-bridge/native-jvm.json\": {\n      \"bytes\": 17508,\n      \"sha256\": \"684c8038e44cd478a51b6ed03ec4009e1ecd1d887597aa417ac52ace88282bcf\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libcomponent_a63244d529ededa079e7.so\": {\n      \"bytes\": 45960,\n      \"sha256\": \"960bf714f5e9633c5e75df7692c33af63e6d467f8e1f9d63d0d1fef300596de8\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/liblean_bridge_native.so\": {\n      \"bytes\": 21464,\n      \"sha256\": \"25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libleanshared.so\": {\n      \"bytes\": 158401256,\n      \"sha256\": \"d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libnestedcheckedrecords.so\": {\n      \"bytes\": 21776,\n      \"sha256\": \"b47fe7b884ba06a3dbe90916139625b89bb3edda9389205d080e92e7de06d903\"\n    },\n    \"META-INF/lean-bridge/runtime.json\": {\n      \"bytes\": 1466,\n      \"sha256\": \"137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf\"\n    },\n    \"META-INF/lean_bridge_org_leanbridge_nestedcheckedrecords.kotlin_module\": {\n      \"bytes\": 101,\n      \"sha256\": \"33b5a35b50905405bd38806ad7b0d729badffd524e6bb4cd1aa8a4b949b20b29\"\n    },\n    \"META-INF/maven/org.leanbridge/nestedcheckedrecords/pom.xml\": {\n      \"bytes\": 630,\n      \"sha256\": \"ebe7c3a2fe1d4228a68bf6f2344e87961c874331f8b9d86ad5afb61f70fc1f18\"\n    },\n    \"README.md\": {\n      \"bytes\": 5924,\n      \"sha256\": \"b02cef1515130db83efa3eb1840e98015eaf8c7004bd7b26cbd430d8fd7ce125\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Api.class\": {\n      \"bytes\": 612,\n      \"sha256\": \"fa627ec0d73957aad79a388d1e7e6cee1622beb3524c8b198667ed9551d70f9e\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/KotlinBridge.class\": {\n      \"bytes\": 546,\n      \"sha256\": \"0f5495a938910c491737a5ad0eee41aefcf5d4387e134352455c3efd9d8cba7b\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/KotlinCalls.class\": {\n      \"bytes\": 1095,\n      \"sha256\": \"bc533c5f153499c6d7d883e778965e290a103fa054f0e0c30eb88c037db394a2\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/KotlinRuntime.class\": {\n      \"bytes\": 10517,\n      \"sha256\": \"7e84f7ee77d6aeffd3e6c2475672986b5ceba2eba2764ff598a95febf96b25f9\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/LeanBridgeException.class\": {\n      \"bytes\": 285,\n      \"sha256\": \"b717ed7079a2ad412f8e974266565407941b98b596d0c7945c6f9f4272701aae\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/NativeAssets$_Assets.class\": {\n      \"bytes\": 13412,\n      \"sha256\": \"f18f4048a96055515c474520bf202399400aca573c7537b375b9792601534343\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/NativeAssets.class\": {\n      \"bytes\": 432,\n      \"sha256\": \"c592a59e97601fd56ad38818d29b3f586b0aac5add95bdc1a8c5613bbb099a10\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Option$None.class\": {\n      \"bytes\": 1412,\n      \"sha256\": \"2a1eee262e80d929339a4b482eead4f4555744959ccd8988903944ba1a7e8ae7\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Option$Some.class\": {\n      \"bytes\": 1638,\n      \"sha256\": \"0f972b90ae2b62d03da8e327e68a3deb7dc9a23fe1d06efb675bfce667ab6350\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Option.class\": {\n      \"bytes\": 890,\n      \"sha256\": \"cf54f8eb54b23a3870f8581e130955c80cc945607cf1aaf37fbfbab545216cbb\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Packet.class\": {\n      \"bytes\": 1406,\n      \"sha256\": \"a4497b7253c01e496eee1697919b959f77dd5912b9161a390bad1160a1fb0766\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Pair.class\": {\n      \"bytes\": 1647,\n      \"sha256\": \"7cdaf75c2b000bb0e9543f59e4ef22502a149b9c0a078cd4e15da56d9c51340a\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Result$Err.class\": {\n      \"bytes\": 1817,\n      \"sha256\": \"baa231a2571b0885271a6aef8e06a7f2c6367d1a3a925be9c6001e05827f3ded\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Result$Ok.class\": {\n      \"bytes\": 1805,\n      \"sha256\": \"515710c51f72fa6daa44e30afc54cf2dd24a78c752bc4383e34b1376b70db97b\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Result.class\": {\n      \"bytes\": 921,\n      \"sha256\": \"fd90f9e89822ded169d8603fd2f19fb6044bb53977907381e2efa874d9993922\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Runtime.class\": {\n      \"bytes\": 10378,\n      \"sha256\": \"0591d4a1e616a23ed385f5f64167e27f262c0c45657d53b1a7e21d576f271f82\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Scope.class\": {\n      \"bytes\": 673,\n      \"sha256\": \"31617ad2afce0fe013ff14246f1c927c7af074d20cf4b81d3b8da342f3e33f40\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Unit.class\": {\n      \"bytes\": 900,\n      \"sha256\": \"58e3b005493cec685dac36c6d8aba35f7117925b9759817d1b93157e9486e22d\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Api$Companion.class\": {\n      \"bytes\": 2547,\n      \"sha256\": \"14ed523deae17a9d1dbf0ef91bbb9ff6ccd66d12cf017ff1d1877d4ed9959a6c\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Api.class\": {\n      \"bytes\": 1609,\n      \"sha256\": \"f7d21e978a707cd66008f8b1c1b8d941c9c3b08021156b853f35ade92cb202da\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/LeanBridgeExceptionKt.class\": {\n      \"bytes\": 472,\n      \"sha256\": \"bc9137db74483735f1446945f3e90fd094d56f2f6d356ab9cc9870296c442b7e\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Option$Companion.class\": {\n      \"bytes\": 1952,\n      \"sha256\": \"4a98771667e6b1f6c5dca4c51a429e14b78a8e781c929549968a0e058d218d37\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Option$None.class\": {\n      \"bytes\": 1766,\n      \"sha256\": \"dade5a90ec62966757d695b1c4e2f165b526a9d81e393e747a67c36abb259021\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Option$Some.class\": {\n      \"bytes\": 2177,\n      \"sha256\": \"8804dca9f2e179f28ff22dab08461998942577c9c9f69b4bc9b3e9661cad669b\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Option.class\": {\n      \"bytes\": 1983,\n      \"sha256\": \"3a265362092e425583b70fb16ea7c86cfd18a85b9362478d6ea5d111724d945f\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Packet.class\": {\n      \"bytes\": 1909,\n      \"sha256\": \"2768fb5a182f9f78ceb9d9f2c40095fac88892ca50084c6aec57e86797f31127\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Pair.class\": {\n      \"bytes\": 2178,\n      \"sha256\": \"c1af52633a6292208a05116cc63a43d38eb237edc3ac7b807ad063d498339954\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Result$Companion.class\": {\n      \"bytes\": 2033,\n      \"sha256\": \"60aac6e4b49c37d8df0de520cd8fe3f014b34e5f61310027e83a1548225a546a\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Result$Err.class\": {\n      \"bytes\": 2445,\n      \"sha256\": \"669848b75439dda90d5e1fe1689f675deff837d6d91eff6c72e7328fdd6b8933\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Result$Ok.class\": {\n      \"bytes\": 2433,\n      \"sha256\": \"b718120b14a47c0bd58db75fd33a288b9c3f51a1a42801f58084ec0eac24862b\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Result.class\": {\n      \"bytes\": 2097,\n      \"sha256\": \"1f6851891bc513316682e11cab68c24201e891bf3a7d8938a1548fc1a505515a\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/UnitKt.class\": {\n      \"bytes\": 412,\n      \"sha256\": \"5106cc0f33a20d0749de2e50381df3d48f71f5e7288b208c25fad8c545d89987\"\n    }\n  },\n  \"glibcMinimumVersion\": \"2.36\",\n  \"kind\": \"lean-bridge-ordinary-maven-package\",\n  \"kotlin\": {\n    \"namespace\": \"org.leanbridge.nestedcheckedrecords.kotlin\",\n    \"standardLibraryVersion\": \"2.2.0\"\n  },\n  \"name\": \"org.leanbridge:nestedcheckedrecords\",\n  \"namespace\": \"org.leanbridge.nestedcheckedrecords\",\n  \"runtimeIdentity\": \"137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf\",\n  \"schemaVersion\": 1,\n  \"sourceIdentity\": {\n    \"exportConfigurationSha256\": \"7b6f353bfff53ca5dab90c6725e5e8848cb1f6b8add6e68be4744afc6d1aca03\",\n    \"exportConfigurationSource\": \"{\\n  \\\"modules\\\": [\\n    \\\"NestedCheckedRecords\\\"\\n  ],\\n  \\\"schemaVersion\\\": 1,\\n  \\\"targets\\\": {\\n    \\\"maven\\\": {\\n      \\\"name\\\": \\\"org.leanbridge:nestedcheckedrecords\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    }\\n  }\\n}\\n\",\n    \"extractorSha256\": \"88bc071a3fb4adb1dee0a0c3262c4227cadcf5928dd32a79844bb5be69093cf5\",\n    \"leanCommit\": \"f3b06c705e6c85f5314019d5d3baab0fec5b580c\",\n    \"leanCompilerSha256\": \"e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550\",\n    \"leanVersion\": \"4.32.2\",\n    \"modules\": [\n      {\n        \"interface\": {\n          \"bytes\": 167608,\n          \"interfaceSha256\": \"e20264af883ce83ec3baf120ceca94359e9c9cbdd0b5750fc7f1226fe93a49f3\",\n          \"sha256\": \"f40a37b04d8a4dbac01065764da85bace19eb1c9803183039e9fbed4780ec570\"\n        },\n        \"module\": \"NestedCheckedRecords\",\n        \"source\": {\n          \"bytes\": 2886,\n          \"path\": \"NestedCheckedRecords.lean\",\n          \"sha256\": \"31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8\"\n        }\n      }\n    ],\n    \"request\": {\n      \"arities\": [],\n      \"exportModules\": [\n        \"NestedCheckedRecords\"\n      ],\n      \"exports\": [\n        \"NestedCheckedRecords.produceArray\",\n        \"NestedCheckedRecords.produceOption\"\n      ],\n      \"metadata\": {\n        \"invocationIdentitySha256\": \"17d6d5138b9da76f7cd6d4efcb9e8b46991a8988cbb1822eab262437a6c0692a\",\n        \"modules\": [\n          {\n            \"interfaceSha256\": \"e20264af883ce83ec3baf120ceca94359e9c9cbdd0b5750fc7f1226fe93a49f3\",\n            \"name\": \"NestedCheckedRecords\",\n            \"sourcePath\": \"NestedCheckedRecords.lean\",\n            \"sourceSha256\": \"31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8\"\n          }\n        ],\n        \"toolchain\": \"leanprover/lean4:v4.32.2\"\n      },\n      \"modules\": [\n        \"NestedCheckedRecords\"\n      ],\n      \"profile\": \"native-library-v1\",\n      \"resources\": []\n    },\n    \"reviewedBindingIr\": {\n      \"path\": \"api.binding-ir.json\",\n      \"schemaVersion\": 1,\n      \"semanticSha256\": \"cab9b521a3c107820800b8afb7e224cb0c6c77135c60305c4cca5fe8774c6eae\",\n      \"source\": \"{\\n  \\\"assurance\\\": [],\\n  \\\"capabilities\\\": [],\\n  \\\"component\\\": {\\n    \\\"id\\\": \\\"nestedcheckedrecords@1.0.0\\\",\\n    \\\"name\\\": \\\"nestedcheckedrecords\\\",\\n    \\\"version\\\": \\\"1.0.0\\\"\\n  },\\n  \\\"declarations\\\": [\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:NestedCheckedRecords.produceOption\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"produceOption\\\",\\n      \\\"overloadKey\\\": \\\"NestedCheckedRecords.produceOption\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"kind\\\": \\\"primitive\\\",\\n            \\\"name\\\": \\\"nat\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"arguments\\\": [\\n            {\\n              \\\"id\\\": \\\"lean:NestedCheckedRecords.Packet\\\",\\n              \\\"kind\\\": \\\"named\\\"\\n            }\\n          ],\\n          \\\"constructor\\\": \\\"option\\\",\\n          \\\"kind\\\": \\\"apply\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"NestedCheckedRecords.produceOption\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [\\n              null\\n            ],\\n            \\\"result\\\": {\\n              \\\"arguments\\\": [\\n                {\\n                  \\\"constructor\\\": null,\\n                  \\\"fields\\\": [\\n                    {\\n                      \\\"name\\\": \\\"digit\\\",\\n                      \\\"refinement\\\": {\\n                        \\\"bound\\\": \\\"10\\\",\\n                        \\\"kind\\\": \\\"fin\\\"\\n                      }\\n                    },\\n                    {\\n                      \\\"name\\\": \\\"word\\\",\\n                      \\\"refinement\\\": {\\n                        \\\"constructor\\\": null,\\n                        \\\"kind\\\": \\\"subtype\\\"\\n                      }\\n                    }\\n                  ],\\n                  \\\"kind\\\": \\\"checked-record\\\",\\n                  \\\"name\\\": \\\"NestedCheckedRecords.Packet\\\"\\n                }\\n              ],\\n              \\\"kind\\\": \\\"option\\\"\\n            }\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    },\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:NestedCheckedRecords.produceArray\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"produceArray\\\",\\n      \\\"overloadKey\\\": \\\"NestedCheckedRecords.produceArray\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"kind\\\": \\\"primitive\\\",\\n            \\\"name\\\": \\\"nat\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"arguments\\\": [\\n            {\\n              \\\"id\\\": \\\"lean:NestedCheckedRecords.Packet\\\",\\n              \\\"kind\\\": \\\"named\\\"\\n            }\\n          ],\\n          \\\"constructor\\\": \\\"array\\\",\\n          \\\"kind\\\": \\\"apply\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"NestedCheckedRecords.produceArray\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [\\n              null\\n            ],\\n            \\\"result\\\": {\\n              \\\"arguments\\\": [\\n                {\\n                  \\\"constructor\\\": null,\\n                  \\\"fields\\\": [\\n                    {\\n                      \\\"name\\\": \\\"digit\\\",\\n                      \\\"refinement\\\": {\\n                        \\\"bound\\\": \\\"10\\\",\\n                        \\\"kind\\\": \\\"fin\\\"\\n                      }\\n                    },\\n                    {\\n                      \\\"name\\\": \\\"word\\\",\\n                      \\\"refinement\\\": {\\n                        \\\"constructor\\\": null,\\n                        \\\"kind\\\": \\\"subtype\\\"\\n                      }\\n                    }\\n                  ],\\n                  \\\"kind\\\": \\\"checked-record\\\",\\n                  \\\"name\\\": \\\"NestedCheckedRecords.Packet\\\"\\n                }\\n              ],\\n              \\\"kind\\\": \\\"array\\\"\\n            }\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    }\\n  ],\\n  \\\"documentation\\\": {\\n    \\\"details\\\": \\\"\\\",\\n    \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n  },\\n  \\\"errors\\\": [],\\n  \\\"producers\\\": [\\n    {\\n      \\\"adapter\\\": \\\"independent-corpus-contract\\\",\\n      \\\"adapterVersion\\\": 1,\\n      \\\"extensions\\\": {},\\n      \\\"id\\\": \\\"corpusReview\\\",\\n      \\\"tool\\\": \\\"Corpus contract review\\\",\\n      \\\"toolVersion\\\": \\\"1\\\"\\n    }\\n  ],\\n  \\\"schemaVersion\\\": 3,\\n  \\\"types\\\": [\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"callable\\\": null,\\n      \\\"cases\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"fields\\\": [\\n        {\\n          \\\"documentation\\\": {\\n            \\\"details\\\": \\\"\\\",\\n            \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n          },\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"digit\\\",\\n          \\\"type\\\": {\\n            \\\"kind\\\": \\\"primitive\\\",\\n            \\\"name\\\": \\\"nat\\\"\\n          }\\n        },\\n        {\\n          \\\"documentation\\\": {\\n            \\\"details\\\": \\\"\\\",\\n            \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n          },\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"word\\\",\\n          \\\"type\\\": {\\n            \\\"kind\\\": \\\"primitive\\\",\\n            \\\"name\\\": \\\"nat\\\"\\n          }\\n        }\\n      ],\\n      \\\"host\\\": null,\\n      \\\"id\\\": \\\"lean:NestedCheckedRecords.Packet\\\",\\n      \\\"kind\\\": \\\"record\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"Packet\\\",\\n      \\\"representation\\\": \\\"copied\\\",\\n      \\\"resource\\\": null,\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"NestedCheckedRecords.Packet\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/erased-proofs\\\": {\\n            \\\"fields\\\": [\\n              \\\"linked\\\"\\n            ]\\n          },\\n          \\\"lean-lang.org/nominal-refinements\\\": {\\n            \\\"fields\\\": [\\n              {\\n                \\\"bound\\\": \\\"10\\\",\\n                \\\"kind\\\": \\\"fin\\\"\\n              },\\n              null\\n            ],\\n            \\\"kind\\\": \\\"record\\\"\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"target\\\": null,\\n      \\\"typeParameters\\\": []\\n    }\\n  ]\\n}\\n\",\n      \"sourceSha256\": \"ed9473d92c605f378c8b1af7bb07a6b450d824aadfcf67935f4d65fbf956c9a0\"\n    },\n    \"sourceNoticesSha256\": \"98d1f33ddec033aac426f3d75c62b44f05a80faa7255c07ad9be2851d5d32dbe\",\n    \"sourceTreeSha256\": \"13a9b892e801e93edb6c4f3ec22def6fae6ee04f6d1d03bc24275f318562f0bb\"\n  },\n  \"version\": \"1.0.0\"\n}\n",
+        "root": "/tmp/lean-bridge-nested-record-jvm-installed-t5HgrU/java"
+      },
+      "javaVersion": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "openjdk 22.0.2 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)\n"
+      },
+      "nullability": [],
+      "observations": [
+        {
+          "closure": {
+            "classpathFilesSha256": "67782c7f03c511eeaaab23ec98e8431eddf3d524c953ed9bcdfd71108428159d",
+            "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+            "packageFileSetSha256": "efcfa15c9ff4c4f90c89f20f850e8d72ec5c793493833b992a051b7956cf3aed",
+            "receiptSha256": "195aa5f67c0e25ca5a5f4131d02e76cd71cdd562d1005544b907b3e652feb9ce"
+          },
+          "counts": {
+            "checks": 1290,
+            "hostRejections": 4,
+            "recoveries": 1,
+            "rejections": 0,
+            "rounds": 256,
+            "snapshots": 1,
+            "wordBits": 64
+          },
+          "cwd": "/tmp/lean-bridge-nested-record-jvm-installed-t5HgrU/java",
+          "run": {
+            "code": 0,
+            "stderr": "",
+            "stdout": "{\"checks\":1290,\"rejections\":0,\"hostRejections\":4,\"recoveries\":1,\"snapshots\":1,\"rounds\":256,\"wordBits\":64}\n"
+          },
+          "stage": "installed"
+        },
+        {
+          "closure": {
+            "classpathFilesSha256": "67782c7f03c511eeaaab23ec98e8431eddf3d524c953ed9bcdfd71108428159d",
+            "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+            "packageFileSetSha256": "efcfa15c9ff4c4f90c89f20f850e8d72ec5c793493833b992a051b7956cf3aed",
+            "receiptSha256": "195aa5f67c0e25ca5a5f4131d02e76cd71cdd562d1005544b907b3e652feb9ce"
+          },
+          "counts": {
+            "checks": 1290,
+            "hostRejections": 4,
+            "recoveries": 1,
+            "rejections": 0,
+            "rounds": 256,
+            "snapshots": 1,
+            "wordBits": 64
+          },
+          "cwd": "/tmp/lean-bridge-nested-record-jvm-installed-t5HgrU/java-relocated",
+          "run": {
+            "code": 0,
+            "stderr": "",
+            "stdout": "{\"checks\":1290,\"rejections\":0,\"hostRejections\":4,\"recoveries\":1,\"snapshots\":1,\"rounds\":256,\"wordBits\":64}\n"
+          },
+          "stage": "relocated"
+        },
+        {
+          "closure": {
+            "classpathFilesSha256": "9d695dfe518369b40895a999eaf82a9cf6a540aefee7ca7c0a71c0013fc5815d",
+            "files": {
+              "classes/Consumer.class": {
+                "bytes": 8555,
+                "sha256": "01a80ac4838cc94c0571e08237a16b09a21149fd8b67da084939ca7a8acea459"
+              },
+              "component.jar": {
+                "bytes": 51419140,
+                "sha256": "4805a55edb18cd1cf7cee12b0c7ead1cbc2c2bbc36443b116b814cf407f19a8c"
+              }
+            },
+            "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e"
+          },
+          "counts": {
+            "checks": 1290,
+            "hostRejections": 4,
+            "recoveries": 1,
+            "rejections": 0,
+            "rounds": 256,
+            "snapshots": 1,
+            "wordBits": 64
+          },
+          "cwd": "/tmp/lean-bridge-nested-record-jvm-installed-t5HgrU/java-source-free",
+          "run": {
+            "code": 0,
+            "stderr": "",
+            "stdout": "{\"checks\":1290,\"rejections\":0,\"hostRejections\":4,\"recoveries\":1,\"snapshots\":1,\"rounds\":256,\"wordBits\":64}\n"
+          },
+          "sourcesRemoved": true,
+          "stage": "source-free"
+        }
+      ],
+      "profile": "java"
+    },
+    {
+      "apiProbe": {
+        "archiveSha256": "4805a55edb18cd1cf7cee12b0c7ead1cbc2c2bbc36443b116b814cf407f19a8c",
+        "args": [
+          "-Werror",
+          "-jvm-target",
+          "22",
+          "-Xrender-internal-diagnostic-names",
+          "-cp",
+          "component.jar",
+          "probe.kt",
+          "-d",
+          "classes"
+        ],
+        "command": "/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlinc",
+        "cwd": "/tmp/lean-bridge-nested-record-jvm-installed-t5HgrU/probes/kotlin",
+        "environment": {
+          "CC": "/unavailable/compiler",
+          "CXX": "/unavailable/compiler",
+          "JAVA_HOME": "/app/.toolchains/jdk22",
+          "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+          "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+          "PATH": "/usr/bin:/bin"
+        },
+        "mode": "result-only",
+        "outputs": {},
+        "profile": "kotlin",
+        "run": {
+          "code": 1,
+          "stderr": "probe.kt:2:27: error: [UNRESOLVED_REFERENCE] Unresolved reference 'echoArray'.\nval probeEchoArray = Api::echoArray\n                          ^^^^^^^^^\nprobe.kt:3:23: error: [UNRESOLVED_REFERENCE] Unresolved reference 'first'.\nval probeFirst = Api::first\n                      ^^^^^\nprobe.kt:4:25: error: [UNRESOLVED_REFERENCE] Unresolved reference 'inArray'.\nval probeInArray = Api::inArray\n                        ^^^^^^^\nprobe.kt:5:26: error: [UNRESOLVED_REFERENCE] Unresolved reference 'inChoice'.\nval probeInChoice = Api::inChoice\n                         ^^^^^^^^\nprobe.kt:6:26: error: [UNRESOLVED_REFERENCE] Unresolved reference 'inExcept'.\nval probeInExcept = Api::inExcept\n                         ^^^^^^^^\nprobe.kt:7:26: error: [UNRESOLVED_REFERENCE] Unresolved reference 'inHolder'.\nval probeInHolder = Api::inHolder\n                         ^^^^^^^^\nprobe.kt:8:24: error: [UNRESOLVED_REFERENCE] Unresolved reference 'inList'.\nval probeInList = Api::inList\n                       ^^^^^^\nprobe.kt:9:26: error: [UNRESOLVED_REFERENCE] Unresolved reference 'inOption'.\nval probeInOption = Api::inOption\n                         ^^^^^^^^\nprobe.kt:10:27: error: [UNRESOLVED_REFERENCE] Unresolved reference 'inProduct'.\nval probeInProduct = Api::inProduct\n                          ^^^^^^^^^\nprobe.kt:11:22: error: [UNRESOLVED_REFERENCE] Unresolved reference 'pair'.\nval probePair = Api::pair\n                     ^^^^\nprobe.kt:12:24: error: [UNRESOLVED_REFERENCE] Unresolved reference 'second'.\nval probeSecond = Api::second\n                       ^^^^^^\n",
+          "stdout": ""
+        },
+        "source": "import org.leanbridge.nestedcheckedrecords.kotlin.*\nval probeEchoArray = Api::echoArray\nval probeFirst = Api::first\nval probeInArray = Api::inArray\nval probeInChoice = Api::inChoice\nval probeInExcept = Api::inExcept\nval probeInHolder = Api::inHolder\nval probeInList = Api::inList\nval probeInOption = Api::inOption\nval probeInProduct = Api::inProduct\nval probePair = Api::pair\nval probeSecond = Api::second\n",
+        "sourceSha256": "88c95928102c5ae47ea5dee47f3ebb88332b07e21885f97429caea8d8f1aa506"
+      },
+      "context": {
+        "archiveSha256": "4805a55edb18cd1cf7cee12b0c7ead1cbc2c2bbc36443b116b814cf407f19a8c",
+        "command": "/app/.toolchains/jdk22/bin/java",
+        "files": {
+          "component.jar": {
+            "bytes": 51419140,
+            "sha256": "4805a55edb18cd1cf7cee12b0c7ead1cbc2c2bbc36443b116b814cf407f19a8c"
+          },
+          "consumer.jar": {
+            "bytes": 5067677,
+            "sha256": "62add48205b65fa1d0ce6d3107118628c417b6557aca31953827ba0fc5355997"
+          },
+          "consumer.kt": {
+            "bytes": 4425,
+            "sha256": "bde9cf1990198d1b9d2ef6518c712cc29a733cb1c199402c2d7fa21f0b758311"
+          }
+        },
+        "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+        "packageFileSetSha256": "efcfa15c9ff4c4f90c89f20f850e8d72ec5c793493833b992a051b7956cf3aed",
+        "profile": "kotlin",
+        "receiptBytes": "{\n  \"bindingIrSha256\": \"7db38e3884f7a966c61793125968e51f5c6b08b37377a38f01e383ceb89412fc\",\n  \"compiledProjectionSha256\": \"684c8038e44cd478a51b6ed03ec4009e1ecd1d887597aa417ac52ace88282bcf\",\n  \"component\": {\n    \"id\": \"nestedcheckedrecords@1.0.0\",\n    \"name\": \"nestedcheckedrecords\",\n    \"version\": \"1.0.0\"\n  },\n  \"ecosystem\": \"maven\",\n  \"files\": {\n    \"META-INF/MANIFEST.MF\": {\n      \"bytes\": 23,\n      \"sha256\": \"172b7aa6ab69ed805e5a9b5bbdbc6e770091086734509d44117852fc10592f6b\"\n    },\n    \"META-INF/lean-bridge/component/allocation-guard.h\": {\n      \"bytes\": 1309,\n      \"sha256\": \"f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83\"\n    },\n    \"META-INF/lean-bridge/component/artifacts.json\": {\n      \"bytes\": 1529,\n      \"sha256\": \"5ccd3c661364404ea4e14375472da0c2084f0aed924fd47bf19464fe05f8b269\"\n    },\n    \"META-INF/lean-bridge/component/binding-ir.json\": {\n      \"bytes\": 7445,\n      \"sha256\": \"5e57b48c8909a0101cf42fffea2559e96eb5b6f21b7c15c9d9f3d28452974f81\"\n    },\n    \"META-INF/lean-bridge/component/component.h\": {\n      \"bytes\": 841,\n      \"sha256\": \"d2ff4235b2668c14a66415506abf085e0d493503a9299fd2a5d2e6dd8b8f91d4\"\n    },\n    \"META-INF/lean-bridge/component/generated.lean\": {\n      \"bytes\": 2840,\n      \"sha256\": \"222c420c7d792a231918d075c184de5e05ee9a0c045ebdb961834183d8837cfb\"\n    },\n    \"META-INF/lean-bridge/component/metadata.json\": {\n      \"bytes\": 33753,\n      \"sha256\": \"129fcbd89a7ade9a91a736e99168d6654c1984a6cf88f47ff1d43d955a224be6\"\n    },\n    \"META-INF/lean-bridge/component/model.json\": {\n      \"bytes\": 29107,\n      \"sha256\": \"990b606f9379a4b6f7a56b45208ec1772b9b4236b08f238228a3bf35738776bc\"\n    },\n    \"META-INF/lean-bridge/component/native-component.json\": {\n      \"bytes\": 11362,\n      \"sha256\": \"515cc5be3c9d39dd877b58fe005a499caa9524f111cfb2149a50e3cd69db1279\"\n    },\n    \"META-INF/lean-bridge/jvm/binding-manifest.json\": {\n      \"bytes\": 4703,\n      \"sha256\": \"99e7d705d48171835bded88801d39456765cc493f1e900eed2d9b706f3eaf6b7\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Api.java\": {\n      \"bytes\": 621,\n      \"sha256\": \"af64bfa68e2a09bce604c948da08bf08c23c5c5e5c8a90d94c605ba4b52dfeb7\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/KotlinBridge.java\": {\n      \"bytes\": 354,\n      \"sha256\": \"53c36a36b1c5fc3c3bd4e8c1d3fc887ad3e614dd83c737afc17b78d19b9e061e\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/KotlinRuntime.java\": {\n      \"bytes\": 9608,\n      \"sha256\": \"bc23e0c576d5ebe69dc60857cd6d3f7ac1ddee1f61a593597baef303c625ba80\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/LeanBridgeException.java\": {\n      \"bytes\": 250,\n      \"sha256\": \"1b6ee47060df35244b121c94d12aa42e26d961c5259162f5dc0f1ca3ec9e215c\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/NativeAssets.java\": {\n      \"bytes\": 13575,\n      \"sha256\": \"d2bb6e39c40237665bdf299664536907ad3baf84b01b684f4ba718501926d886\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Option.java\": {\n      \"bytes\": 1053,\n      \"sha256\": \"eeb66bc0e2981fc9aa31ad41ed05d26059515c6bfc6a9b36a084bfc540651218\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Packet.java\": {\n      \"bytes\": 561,\n      \"sha256\": \"feec3a08e0b9659f11728551eb718ed42dd59bd24ad450f4314b7232d2f04ab5\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Pair.java\": {\n      \"bytes\": 717,\n      \"sha256\": \"0b8188a321e64599f069ef33fb731197360075f7793d4e3b814409156ebf99a1\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Result.java\": {\n      \"bytes\": 1618,\n      \"sha256\": \"35520c92594f0aadbe7ffdda64e3782418a473c88de7a23060c5289570d77b3e\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Runtime.java\": {\n      \"bytes\": 8908,\n      \"sha256\": \"61131f42b31b497845db848f764fa9921e25d5c2ce4f851264cca21cccd8bd8d\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Scope.java\": {\n      \"bytes\": 553,\n      \"sha256\": \"2348d4533e7f3cdc42321b2bd0fcfd1dd4c6370a8daa6f29705da7a4b7ff25bf\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Unit.java\": {\n      \"bytes\": 75,\n      \"sha256\": \"19615970dad99e70fbd83b6e101fb8f025d1eb1e48046de5627e4e9b1249e911\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/KotlinCalls.kt\": {\n      \"bytes\": 278,\n      \"sha256\": \"2c5531f80bb67b5d00b0d6a846e000449a9006ae544e798ba76bd3e60b321447\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Api.kt\": {\n      \"bytes\": 958,\n      \"sha256\": \"cd1c99781f7257092241c4475c8b9e86aabb4d8bc61d0d4832beb6d7920fa579\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/LeanBridgeException.kt\": {\n      \"bytes\": 154,\n      \"sha256\": \"ec93b2954873ede9141b7d5db7dfa26654e430ce895e338f52f9694e0c62fa82\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Option.kt\": {\n      \"bytes\": 1395,\n      \"sha256\": \"24f47a45df84609a9ec0c075a383716946d4a01c9ab5f96f26db79a05dadfb8c\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Packet.kt\": {\n      \"bytes\": 723,\n      \"sha256\": \"7177d828776c5b4bdc178204c168244c63bc077218f16340d6bf5e553883bb2f\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Pair.kt\": {\n      \"bytes\": 776,\n      \"sha256\": \"11c0ec7aac4057a68481969cceca5562faaf90733983dec4a07b09aa07300427\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Result.kt\": {\n      \"bytes\": 1823,\n      \"sha256\": \"27b48197f2afeb9ad74aa3cb1c73a95728829a026454678a4b7c12c905e85364\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Unit.kt\": {\n      \"bytes\": 124,\n      \"sha256\": \"ca5c129896f62c97961f674c9cf7677ab8961529c8a95dce5bd6edb4c950421c\"\n    },\n    \"META-INF/lean-bridge/licenses/Lean-LICENSE\": {\n      \"bytes\": 9160,\n      \"sha256\": \"8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e\"\n    },\n    \"META-INF/lean-bridge/licenses/Lean-LICENSES\": {\n      \"bytes\": 81854,\n      \"sha256\": \"00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce\"\n    },\n    \"META-INF/lean-bridge/licenses/LeanBridge-LICENSE\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"META-INF/lean-bridge/licenses/source-notices.json\": {\n      \"bytes\": 2124,\n      \"sha256\": \"98d1f33ddec033aac426f3d75c62b44f05a80faa7255c07ad9be2851d5d32dbe\"\n    },\n    \"META-INF/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"META-INF/lean-bridge/native-c-adapter.json\": {\n      \"bytes\": 1407,\n      \"sha256\": \"d12bace4e660be6c60eef3317de857e764f98a3b89fd3b4305caa2b06b59832c\"\n    },\n    \"META-INF/lean-bridge/native-jvm.json\": {\n      \"bytes\": 17508,\n      \"sha256\": \"684c8038e44cd478a51b6ed03ec4009e1ecd1d887597aa417ac52ace88282bcf\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libcomponent_a63244d529ededa079e7.so\": {\n      \"bytes\": 45960,\n      \"sha256\": \"960bf714f5e9633c5e75df7692c33af63e6d467f8e1f9d63d0d1fef300596de8\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/liblean_bridge_native.so\": {\n      \"bytes\": 21464,\n      \"sha256\": \"25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libleanshared.so\": {\n      \"bytes\": 158401256,\n      \"sha256\": \"d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libnestedcheckedrecords.so\": {\n      \"bytes\": 21776,\n      \"sha256\": \"b47fe7b884ba06a3dbe90916139625b89bb3edda9389205d080e92e7de06d903\"\n    },\n    \"META-INF/lean-bridge/runtime.json\": {\n      \"bytes\": 1466,\n      \"sha256\": \"137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf\"\n    },\n    \"META-INF/lean_bridge_org_leanbridge_nestedcheckedrecords.kotlin_module\": {\n      \"bytes\": 101,\n      \"sha256\": \"33b5a35b50905405bd38806ad7b0d729badffd524e6bb4cd1aa8a4b949b20b29\"\n    },\n    \"META-INF/maven/org.leanbridge/nestedcheckedrecords/pom.xml\": {\n      \"bytes\": 630,\n      \"sha256\": \"ebe7c3a2fe1d4228a68bf6f2344e87961c874331f8b9d86ad5afb61f70fc1f18\"\n    },\n    \"README.md\": {\n      \"bytes\": 5924,\n      \"sha256\": \"b02cef1515130db83efa3eb1840e98015eaf8c7004bd7b26cbd430d8fd7ce125\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Api.class\": {\n      \"bytes\": 612,\n      \"sha256\": \"fa627ec0d73957aad79a388d1e7e6cee1622beb3524c8b198667ed9551d70f9e\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/KotlinBridge.class\": {\n      \"bytes\": 546,\n      \"sha256\": \"0f5495a938910c491737a5ad0eee41aefcf5d4387e134352455c3efd9d8cba7b\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/KotlinCalls.class\": {\n      \"bytes\": 1095,\n      \"sha256\": \"bc533c5f153499c6d7d883e778965e290a103fa054f0e0c30eb88c037db394a2\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/KotlinRuntime.class\": {\n      \"bytes\": 10517,\n      \"sha256\": \"7e84f7ee77d6aeffd3e6c2475672986b5ceba2eba2764ff598a95febf96b25f9\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/LeanBridgeException.class\": {\n      \"bytes\": 285,\n      \"sha256\": \"b717ed7079a2ad412f8e974266565407941b98b596d0c7945c6f9f4272701aae\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/NativeAssets$_Assets.class\": {\n      \"bytes\": 13412,\n      \"sha256\": \"f18f4048a96055515c474520bf202399400aca573c7537b375b9792601534343\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/NativeAssets.class\": {\n      \"bytes\": 432,\n      \"sha256\": \"c592a59e97601fd56ad38818d29b3f586b0aac5add95bdc1a8c5613bbb099a10\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Option$None.class\": {\n      \"bytes\": 1412,\n      \"sha256\": \"2a1eee262e80d929339a4b482eead4f4555744959ccd8988903944ba1a7e8ae7\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Option$Some.class\": {\n      \"bytes\": 1638,\n      \"sha256\": \"0f972b90ae2b62d03da8e327e68a3deb7dc9a23fe1d06efb675bfce667ab6350\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Option.class\": {\n      \"bytes\": 890,\n      \"sha256\": \"cf54f8eb54b23a3870f8581e130955c80cc945607cf1aaf37fbfbab545216cbb\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Packet.class\": {\n      \"bytes\": 1406,\n      \"sha256\": \"a4497b7253c01e496eee1697919b959f77dd5912b9161a390bad1160a1fb0766\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Pair.class\": {\n      \"bytes\": 1647,\n      \"sha256\": \"7cdaf75c2b000bb0e9543f59e4ef22502a149b9c0a078cd4e15da56d9c51340a\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Result$Err.class\": {\n      \"bytes\": 1817,\n      \"sha256\": \"baa231a2571b0885271a6aef8e06a7f2c6367d1a3a925be9c6001e05827f3ded\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Result$Ok.class\": {\n      \"bytes\": 1805,\n      \"sha256\": \"515710c51f72fa6daa44e30afc54cf2dd24a78c752bc4383e34b1376b70db97b\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Result.class\": {\n      \"bytes\": 921,\n      \"sha256\": \"fd90f9e89822ded169d8603fd2f19fb6044bb53977907381e2efa874d9993922\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Runtime.class\": {\n      \"bytes\": 10378,\n      \"sha256\": \"0591d4a1e616a23ed385f5f64167e27f262c0c45657d53b1a7e21d576f271f82\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Scope.class\": {\n      \"bytes\": 673,\n      \"sha256\": \"31617ad2afce0fe013ff14246f1c927c7af074d20cf4b81d3b8da342f3e33f40\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Unit.class\": {\n      \"bytes\": 900,\n      \"sha256\": \"58e3b005493cec685dac36c6d8aba35f7117925b9759817d1b93157e9486e22d\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Api$Companion.class\": {\n      \"bytes\": 2547,\n      \"sha256\": \"14ed523deae17a9d1dbf0ef91bbb9ff6ccd66d12cf017ff1d1877d4ed9959a6c\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Api.class\": {\n      \"bytes\": 1609,\n      \"sha256\": \"f7d21e978a707cd66008f8b1c1b8d941c9c3b08021156b853f35ade92cb202da\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/LeanBridgeExceptionKt.class\": {\n      \"bytes\": 472,\n      \"sha256\": \"bc9137db74483735f1446945f3e90fd094d56f2f6d356ab9cc9870296c442b7e\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Option$Companion.class\": {\n      \"bytes\": 1952,\n      \"sha256\": \"4a98771667e6b1f6c5dca4c51a429e14b78a8e781c929549968a0e058d218d37\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Option$None.class\": {\n      \"bytes\": 1766,\n      \"sha256\": \"dade5a90ec62966757d695b1c4e2f165b526a9d81e393e747a67c36abb259021\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Option$Some.class\": {\n      \"bytes\": 2177,\n      \"sha256\": \"8804dca9f2e179f28ff22dab08461998942577c9c9f69b4bc9b3e9661cad669b\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Option.class\": {\n      \"bytes\": 1983,\n      \"sha256\": \"3a265362092e425583b70fb16ea7c86cfd18a85b9362478d6ea5d111724d945f\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Packet.class\": {\n      \"bytes\": 1909,\n      \"sha256\": \"2768fb5a182f9f78ceb9d9f2c40095fac88892ca50084c6aec57e86797f31127\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Pair.class\": {\n      \"bytes\": 2178,\n      \"sha256\": \"c1af52633a6292208a05116cc63a43d38eb237edc3ac7b807ad063d498339954\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Result$Companion.class\": {\n      \"bytes\": 2033,\n      \"sha256\": \"60aac6e4b49c37d8df0de520cd8fe3f014b34e5f61310027e83a1548225a546a\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Result$Err.class\": {\n      \"bytes\": 2445,\n      \"sha256\": \"669848b75439dda90d5e1fe1689f675deff837d6d91eff6c72e7328fdd6b8933\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Result$Ok.class\": {\n      \"bytes\": 2433,\n      \"sha256\": \"b718120b14a47c0bd58db75fd33a288b9c3f51a1a42801f58084ec0eac24862b\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Result.class\": {\n      \"bytes\": 2097,\n      \"sha256\": \"1f6851891bc513316682e11cab68c24201e891bf3a7d8938a1548fc1a505515a\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/UnitKt.class\": {\n      \"bytes\": 412,\n      \"sha256\": \"5106cc0f33a20d0749de2e50381df3d48f71f5e7288b208c25fad8c545d89987\"\n    }\n  },\n  \"glibcMinimumVersion\": \"2.36\",\n  \"kind\": \"lean-bridge-ordinary-maven-package\",\n  \"kotlin\": {\n    \"namespace\": \"org.leanbridge.nestedcheckedrecords.kotlin\",\n    \"standardLibraryVersion\": \"2.2.0\"\n  },\n  \"name\": \"org.leanbridge:nestedcheckedrecords\",\n  \"namespace\": \"org.leanbridge.nestedcheckedrecords\",\n  \"runtimeIdentity\": \"137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf\",\n  \"schemaVersion\": 1,\n  \"sourceIdentity\": {\n    \"exportConfigurationSha256\": \"7b6f353bfff53ca5dab90c6725e5e8848cb1f6b8add6e68be4744afc6d1aca03\",\n    \"exportConfigurationSource\": \"{\\n  \\\"modules\\\": [\\n    \\\"NestedCheckedRecords\\\"\\n  ],\\n  \\\"schemaVersion\\\": 1,\\n  \\\"targets\\\": {\\n    \\\"maven\\\": {\\n      \\\"name\\\": \\\"org.leanbridge:nestedcheckedrecords\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    }\\n  }\\n}\\n\",\n    \"extractorSha256\": \"88bc071a3fb4adb1dee0a0c3262c4227cadcf5928dd32a79844bb5be69093cf5\",\n    \"leanCommit\": \"f3b06c705e6c85f5314019d5d3baab0fec5b580c\",\n    \"leanCompilerSha256\": \"e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550\",\n    \"leanVersion\": \"4.32.2\",\n    \"modules\": [\n      {\n        \"interface\": {\n          \"bytes\": 167608,\n          \"interfaceSha256\": \"e20264af883ce83ec3baf120ceca94359e9c9cbdd0b5750fc7f1226fe93a49f3\",\n          \"sha256\": \"f40a37b04d8a4dbac01065764da85bace19eb1c9803183039e9fbed4780ec570\"\n        },\n        \"module\": \"NestedCheckedRecords\",\n        \"source\": {\n          \"bytes\": 2886,\n          \"path\": \"NestedCheckedRecords.lean\",\n          \"sha256\": \"31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8\"\n        }\n      }\n    ],\n    \"request\": {\n      \"arities\": [],\n      \"exportModules\": [\n        \"NestedCheckedRecords\"\n      ],\n      \"exports\": [\n        \"NestedCheckedRecords.produceArray\",\n        \"NestedCheckedRecords.produceOption\"\n      ],\n      \"metadata\": {\n        \"invocationIdentitySha256\": \"17d6d5138b9da76f7cd6d4efcb9e8b46991a8988cbb1822eab262437a6c0692a\",\n        \"modules\": [\n          {\n            \"interfaceSha256\": \"e20264af883ce83ec3baf120ceca94359e9c9cbdd0b5750fc7f1226fe93a49f3\",\n            \"name\": \"NestedCheckedRecords\",\n            \"sourcePath\": \"NestedCheckedRecords.lean\",\n            \"sourceSha256\": \"31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8\"\n          }\n        ],\n        \"toolchain\": \"leanprover/lean4:v4.32.2\"\n      },\n      \"modules\": [\n        \"NestedCheckedRecords\"\n      ],\n      \"profile\": \"native-library-v1\",\n      \"resources\": []\n    },\n    \"reviewedBindingIr\": {\n      \"path\": \"api.binding-ir.json\",\n      \"schemaVersion\": 1,\n      \"semanticSha256\": \"cab9b521a3c107820800b8afb7e224cb0c6c77135c60305c4cca5fe8774c6eae\",\n      \"source\": \"{\\n  \\\"assurance\\\": [],\\n  \\\"capabilities\\\": [],\\n  \\\"component\\\": {\\n    \\\"id\\\": \\\"nestedcheckedrecords@1.0.0\\\",\\n    \\\"name\\\": \\\"nestedcheckedrecords\\\",\\n    \\\"version\\\": \\\"1.0.0\\\"\\n  },\\n  \\\"declarations\\\": [\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:NestedCheckedRecords.produceOption\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"produceOption\\\",\\n      \\\"overloadKey\\\": \\\"NestedCheckedRecords.produceOption\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"kind\\\": \\\"primitive\\\",\\n            \\\"name\\\": \\\"nat\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"arguments\\\": [\\n            {\\n              \\\"id\\\": \\\"lean:NestedCheckedRecords.Packet\\\",\\n              \\\"kind\\\": \\\"named\\\"\\n            }\\n          ],\\n          \\\"constructor\\\": \\\"option\\\",\\n          \\\"kind\\\": \\\"apply\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"NestedCheckedRecords.produceOption\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [\\n              null\\n            ],\\n            \\\"result\\\": {\\n              \\\"arguments\\\": [\\n                {\\n                  \\\"constructor\\\": null,\\n                  \\\"fields\\\": [\\n                    {\\n                      \\\"name\\\": \\\"digit\\\",\\n                      \\\"refinement\\\": {\\n                        \\\"bound\\\": \\\"10\\\",\\n                        \\\"kind\\\": \\\"fin\\\"\\n                      }\\n                    },\\n                    {\\n                      \\\"name\\\": \\\"word\\\",\\n                      \\\"refinement\\\": {\\n                        \\\"constructor\\\": null,\\n                        \\\"kind\\\": \\\"subtype\\\"\\n                      }\\n                    }\\n                  ],\\n                  \\\"kind\\\": \\\"checked-record\\\",\\n                  \\\"name\\\": \\\"NestedCheckedRecords.Packet\\\"\\n                }\\n              ],\\n              \\\"kind\\\": \\\"option\\\"\\n            }\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    },\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:NestedCheckedRecords.produceArray\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"produceArray\\\",\\n      \\\"overloadKey\\\": \\\"NestedCheckedRecords.produceArray\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"kind\\\": \\\"primitive\\\",\\n            \\\"name\\\": \\\"nat\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"arguments\\\": [\\n            {\\n              \\\"id\\\": \\\"lean:NestedCheckedRecords.Packet\\\",\\n              \\\"kind\\\": \\\"named\\\"\\n            }\\n          ],\\n          \\\"constructor\\\": \\\"array\\\",\\n          \\\"kind\\\": \\\"apply\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"NestedCheckedRecords.produceArray\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [\\n              null\\n            ],\\n            \\\"result\\\": {\\n              \\\"arguments\\\": [\\n                {\\n                  \\\"constructor\\\": null,\\n                  \\\"fields\\\": [\\n                    {\\n                      \\\"name\\\": \\\"digit\\\",\\n                      \\\"refinement\\\": {\\n                        \\\"bound\\\": \\\"10\\\",\\n                        \\\"kind\\\": \\\"fin\\\"\\n                      }\\n                    },\\n                    {\\n                      \\\"name\\\": \\\"word\\\",\\n                      \\\"refinement\\\": {\\n                        \\\"constructor\\\": null,\\n                        \\\"kind\\\": \\\"subtype\\\"\\n                      }\\n                    }\\n                  ],\\n                  \\\"kind\\\": \\\"checked-record\\\",\\n                  \\\"name\\\": \\\"NestedCheckedRecords.Packet\\\"\\n                }\\n              ],\\n              \\\"kind\\\": \\\"array\\\"\\n            }\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    }\\n  ],\\n  \\\"documentation\\\": {\\n    \\\"details\\\": \\\"\\\",\\n    \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n  },\\n  \\\"errors\\\": [],\\n  \\\"producers\\\": [\\n    {\\n      \\\"adapter\\\": \\\"independent-corpus-contract\\\",\\n      \\\"adapterVersion\\\": 1,\\n      \\\"extensions\\\": {},\\n      \\\"id\\\": \\\"corpusReview\\\",\\n      \\\"tool\\\": \\\"Corpus contract review\\\",\\n      \\\"toolVersion\\\": \\\"1\\\"\\n    }\\n  ],\\n  \\\"schemaVersion\\\": 3,\\n  \\\"types\\\": [\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"callable\\\": null,\\n      \\\"cases\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"fields\\\": [\\n        {\\n          \\\"documentation\\\": {\\n            \\\"details\\\": \\\"\\\",\\n            \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n          },\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"digit\\\",\\n          \\\"type\\\": {\\n            \\\"kind\\\": \\\"primitive\\\",\\n            \\\"name\\\": \\\"nat\\\"\\n          }\\n        },\\n        {\\n          \\\"documentation\\\": {\\n            \\\"details\\\": \\\"\\\",\\n            \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n          },\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"word\\\",\\n          \\\"type\\\": {\\n            \\\"kind\\\": \\\"primitive\\\",\\n            \\\"name\\\": \\\"nat\\\"\\n          }\\n        }\\n      ],\\n      \\\"host\\\": null,\\n      \\\"id\\\": \\\"lean:NestedCheckedRecords.Packet\\\",\\n      \\\"kind\\\": \\\"record\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"Packet\\\",\\n      \\\"representation\\\": \\\"copied\\\",\\n      \\\"resource\\\": null,\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"NestedCheckedRecords.Packet\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/erased-proofs\\\": {\\n            \\\"fields\\\": [\\n              \\\"linked\\\"\\n            ]\\n          },\\n          \\\"lean-lang.org/nominal-refinements\\\": {\\n            \\\"fields\\\": [\\n              {\\n                \\\"bound\\\": \\\"10\\\",\\n                \\\"kind\\\": \\\"fin\\\"\\n              },\\n              null\\n            ],\\n            \\\"kind\\\": \\\"record\\\"\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"target\\\": null,\\n      \\\"typeParameters\\\": []\\n    }\\n  ]\\n}\\n\",\n      \"sourceSha256\": \"ed9473d92c605f378c8b1af7bb07a6b450d824aadfcf67935f4d65fbf956c9a0\"\n    },\n    \"sourceNoticesSha256\": \"98d1f33ddec033aac426f3d75c62b44f05a80faa7255c07ad9be2851d5d32dbe\",\n    \"sourceTreeSha256\": \"13a9b892e801e93edb6c4f3ec22def6fae6ee04f6d1d03bc24275f318562f0bb\"\n  },\n  \"version\": \"1.0.0\"\n}\n",
+        "root": "/tmp/lean-bridge-nested-record-jvm-installed-t5HgrU/kotlin"
+      },
+      "javaVersion": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "openjdk 22.0.2 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)\n"
+      },
+      "nullability": [
+        {
+          "archiveSha256": "4805a55edb18cd1cf7cee12b0c7ead1cbc2c2bbc36443b116b814cf407f19a8c",
+          "args": [
+            "-Werror",
+            "-jvm-target",
+            "22",
+            "-Xrender-internal-diagnostic-names",
+            "-cp",
+            "component.jar",
+            "NullProbe.kt",
+            "-d",
+            "classes"
+          ],
+          "command": "/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlinc",
+          "cwd": "/tmp/lean-bridge-nested-record-jvm-installed-t5HgrU/probes/nullability-false",
+          "environment": {
+            "CC": "/unavailable/compiler",
+            "CXX": "/unavailable/compiler",
+            "JAVA_HOME": "/app/.toolchains/jdk22",
+            "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+            "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+            "PATH": "/usr/bin:/bin"
+          },
+          "invalid": false,
+          "mode": "result-only",
+          "outputs": {
+            "META-INF/main.kotlin_module": {
+              "bytes": 41,
+              "sha256": "14d9d137a46fc5f49ea00828cb3ad2d35b84c9918bbca55a496bdbdf5366c5f9"
+            },
+            "NullProbeKt.class": {
+              "bytes": 1556,
+              "sha256": "6148ea00f3f29ef495642ca1a01ec8219a08528d16eeafa031d794ed12788e15"
+            }
+          },
+          "run": {
+            "code": 0,
+            "stderr": "",
+            "stdout": ""
+          },
+          "source": "import org.leanbridge.nestedcheckedrecords.kotlin.*\nfun produceOptionNull() = Api.produceOption(java.math.BigInteger.ONE)\nfun produceArrayNull() = Api.produceArray(java.math.BigInteger.ONE)\n",
+          "sourceSha256": "8a9883034e51d3d452f121b0d77d521a56b1f9759163a11e7cbfdeb2d3b1c5e4"
+        },
+        {
+          "archiveSha256": "4805a55edb18cd1cf7cee12b0c7ead1cbc2c2bbc36443b116b814cf407f19a8c",
+          "args": [
+            "-Werror",
+            "-jvm-target",
+            "22",
+            "-Xrender-internal-diagnostic-names",
+            "-cp",
+            "component.jar",
+            "NullProbe.kt",
+            "-d",
+            "classes"
+          ],
+          "command": "/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlinc",
+          "cwd": "/tmp/lean-bridge-nested-record-jvm-installed-t5HgrU/probes/nullability-true",
+          "environment": {
+            "CC": "/unavailable/compiler",
+            "CXX": "/unavailable/compiler",
+            "JAVA_HOME": "/app/.toolchains/jdk22",
+            "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+            "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+            "PATH": "/usr/bin:/bin"
+          },
+          "invalid": true,
+          "mode": "result-only",
+          "outputs": {},
+          "run": {
+            "code": 1,
+            "stderr": "NullProbe.kt:2:45: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'BigInteger'.\nfun produceOptionNull() = Api.produceOption(null)\n                                            ^^^^\nNullProbe.kt:3:43: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'BigInteger'.\nfun produceArrayNull() = Api.produceArray(null)\n                                          ^^^^\n",
+            "stdout": ""
+          },
+          "source": "import org.leanbridge.nestedcheckedrecords.kotlin.*\nfun produceOptionNull() = Api.produceOption(null)\nfun produceArrayNull() = Api.produceArray(null)\n",
+          "sourceSha256": "ef21dc2775eb72b75f8bea03237a2d318a63593cd88fd07616a1182bf36c3059"
+        }
+      ],
+      "observations": [
+        {
+          "closure": {
+            "classpathFilesSha256": "e4729e04dbeed957e954a34d155c57a1ed230fba6c88f61933f9836b70ce70c7",
+            "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+            "packageFileSetSha256": "efcfa15c9ff4c4f90c89f20f850e8d72ec5c793493833b992a051b7956cf3aed",
+            "receiptSha256": "195aa5f67c0e25ca5a5f4131d02e76cd71cdd562d1005544b907b3e652feb9ce"
+          },
+          "counts": {
+            "checks": 1290,
+            "hostRejections": 4,
+            "recoveries": 1,
+            "rejections": 0,
+            "rounds": 256,
+            "snapshots": 1,
+            "wordBits": 64
+          },
+          "cwd": "/tmp/lean-bridge-nested-record-jvm-installed-t5HgrU/kotlin",
+          "run": {
+            "code": 0,
+            "stderr": "",
+            "stdout": "{\"checks\":1290,\"rejections\":0,\"hostRejections\":4,\"recoveries\":1,\"snapshots\":1,\"rounds\":256,\"wordBits\":64}\n"
+          },
+          "stage": "installed"
+        },
+        {
+          "closure": {
+            "classpathFilesSha256": "e4729e04dbeed957e954a34d155c57a1ed230fba6c88f61933f9836b70ce70c7",
+            "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+            "packageFileSetSha256": "efcfa15c9ff4c4f90c89f20f850e8d72ec5c793493833b992a051b7956cf3aed",
+            "receiptSha256": "195aa5f67c0e25ca5a5f4131d02e76cd71cdd562d1005544b907b3e652feb9ce"
+          },
+          "counts": {
+            "checks": 1290,
+            "hostRejections": 4,
+            "recoveries": 1,
+            "rejections": 0,
+            "rounds": 256,
+            "snapshots": 1,
+            "wordBits": 64
+          },
+          "cwd": "/tmp/lean-bridge-nested-record-jvm-installed-t5HgrU/kotlin-relocated",
+          "run": {
+            "code": 0,
+            "stderr": "",
+            "stdout": "{\"checks\":1290,\"rejections\":0,\"hostRejections\":4,\"recoveries\":1,\"snapshots\":1,\"rounds\":256,\"wordBits\":64}\n"
+          },
+          "stage": "relocated"
+        },
+        {
+          "closure": {
+            "classpathFilesSha256": "33bda3456bd10c82190bd00f0c14adb956ee43a048052de70c55b31c23f7f332",
+            "files": {
+              "component.jar": {
+                "bytes": 51419140,
+                "sha256": "4805a55edb18cd1cf7cee12b0c7ead1cbc2c2bbc36443b116b814cf407f19a8c"
+              },
+              "consumer.jar": {
+                "bytes": 5067677,
+                "sha256": "62add48205b65fa1d0ce6d3107118628c417b6557aca31953827ba0fc5355997"
+              }
+            },
+            "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e"
+          },
+          "counts": {
+            "checks": 1290,
+            "hostRejections": 4,
+            "recoveries": 1,
+            "rejections": 0,
+            "rounds": 256,
+            "snapshots": 1,
+            "wordBits": 64
+          },
+          "cwd": "/tmp/lean-bridge-nested-record-jvm-installed-t5HgrU/kotlin-source-free",
+          "run": {
+            "code": 0,
+            "stderr": "",
+            "stdout": "{\"checks\":1290,\"rejections\":0,\"hostRejections\":4,\"recoveries\":1,\"snapshots\":1,\"rounds\":256,\"wordBits\":64}\n"
+          },
+          "sourcesRemoved": true,
+          "stage": "source-free"
+        }
+      ],
+      "profile": "kotlin"
+    }
+  ],
+  "declaredGlibcFloor": "2.36",
+  "dispatch": {
+    "observed": false,
+    "reason": "No JVM constructor/source entry counters in this installed acceptance"
+  },
+  "expectedBindingIrSha256": "cab9b521a3c107820800b8afb7e224cb0c6c77135c60305c4cca5fe8774c6eae",
+  "independentBuilds": 2,
+  "installation": {
+    "artifact": {
+      "bytes": 51419140,
+      "path": "archives/nestedcheckedrecords-1.0.0.jar",
+      "sha256": "4805a55edb18cd1cf7cee12b0c7ead1cbc2c2bbc36443b116b814cf407f19a8c"
+    },
+    "packageFileSetSha256": "efcfa15c9ff4c4f90c89f20f850e8d72ec5c793493833b992a051b7956cf3aed",
+    "receipt": {
+      "bindingIrSha256": "7db38e3884f7a966c61793125968e51f5c6b08b37377a38f01e383ceb89412fc",
+      "compiledProjectionSha256": "684c8038e44cd478a51b6ed03ec4009e1ecd1d887597aa417ac52ace88282bcf",
+      "component": {
+        "id": "nestedcheckedrecords@1.0.0",
+        "name": "nestedcheckedrecords",
+        "version": "1.0.0"
+      },
+      "ecosystem": "maven",
+      "files": {
+        "META-INF/MANIFEST.MF": {
+          "bytes": 23,
+          "sha256": "172b7aa6ab69ed805e5a9b5bbdbc6e770091086734509d44117852fc10592f6b"
+        },
+        "META-INF/lean-bridge/component/allocation-guard.h": {
+          "bytes": 1309,
+          "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+        },
+        "META-INF/lean-bridge/component/artifacts.json": {
+          "bytes": 1529,
+          "sha256": "5ccd3c661364404ea4e14375472da0c2084f0aed924fd47bf19464fe05f8b269"
+        },
+        "META-INF/lean-bridge/component/binding-ir.json": {
+          "bytes": 7445,
+          "sha256": "5e57b48c8909a0101cf42fffea2559e96eb5b6f21b7c15c9d9f3d28452974f81"
+        },
+        "META-INF/lean-bridge/component/component.h": {
+          "bytes": 841,
+          "sha256": "d2ff4235b2668c14a66415506abf085e0d493503a9299fd2a5d2e6dd8b8f91d4"
+        },
+        "META-INF/lean-bridge/component/generated.lean": {
+          "bytes": 2840,
+          "sha256": "222c420c7d792a231918d075c184de5e05ee9a0c045ebdb961834183d8837cfb"
+        },
+        "META-INF/lean-bridge/component/metadata.json": {
+          "bytes": 33753,
+          "sha256": "129fcbd89a7ade9a91a736e99168d6654c1984a6cf88f47ff1d43d955a224be6"
+        },
+        "META-INF/lean-bridge/component/model.json": {
+          "bytes": 29107,
+          "sha256": "990b606f9379a4b6f7a56b45208ec1772b9b4236b08f238228a3bf35738776bc"
+        },
+        "META-INF/lean-bridge/component/native-component.json": {
+          "bytes": 11362,
+          "sha256": "515cc5be3c9d39dd877b58fe005a499caa9524f111cfb2149a50e3cd69db1279"
+        },
+        "META-INF/lean-bridge/jvm/binding-manifest.json": {
+          "bytes": 4703,
+          "sha256": "99e7d705d48171835bded88801d39456765cc493f1e900eed2d9b706f3eaf6b7"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Api.java": {
+          "bytes": 621,
+          "sha256": "af64bfa68e2a09bce604c948da08bf08c23c5c5e5c8a90d94c605ba4b52dfeb7"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/KotlinBridge.java": {
+          "bytes": 354,
+          "sha256": "53c36a36b1c5fc3c3bd4e8c1d3fc887ad3e614dd83c737afc17b78d19b9e061e"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/KotlinRuntime.java": {
+          "bytes": 9608,
+          "sha256": "bc23e0c576d5ebe69dc60857cd6d3f7ac1ddee1f61a593597baef303c625ba80"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/LeanBridgeException.java": {
+          "bytes": 250,
+          "sha256": "1b6ee47060df35244b121c94d12aa42e26d961c5259162f5dc0f1ca3ec9e215c"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/NativeAssets.java": {
+          "bytes": 13575,
+          "sha256": "d2bb6e39c40237665bdf299664536907ad3baf84b01b684f4ba718501926d886"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Option.java": {
+          "bytes": 1053,
+          "sha256": "eeb66bc0e2981fc9aa31ad41ed05d26059515c6bfc6a9b36a084bfc540651218"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Packet.java": {
+          "bytes": 561,
+          "sha256": "feec3a08e0b9659f11728551eb718ed42dd59bd24ad450f4314b7232d2f04ab5"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Pair.java": {
+          "bytes": 717,
+          "sha256": "0b8188a321e64599f069ef33fb731197360075f7793d4e3b814409156ebf99a1"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Result.java": {
+          "bytes": 1618,
+          "sha256": "35520c92594f0aadbe7ffdda64e3782418a473c88de7a23060c5289570d77b3e"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Runtime.java": {
+          "bytes": 8908,
+          "sha256": "61131f42b31b497845db848f764fa9921e25d5c2ce4f851264cca21cccd8bd8d"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Scope.java": {
+          "bytes": 553,
+          "sha256": "2348d4533e7f3cdc42321b2bd0fcfd1dd4c6370a8daa6f29705da7a4b7ff25bf"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Unit.java": {
+          "bytes": 75,
+          "sha256": "19615970dad99e70fbd83b6e101fb8f025d1eb1e48046de5627e4e9b1249e911"
+        },
+        "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/KotlinCalls.kt": {
+          "bytes": 278,
+          "sha256": "2c5531f80bb67b5d00b0d6a846e000449a9006ae544e798ba76bd3e60b321447"
+        },
+        "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Api.kt": {
+          "bytes": 958,
+          "sha256": "cd1c99781f7257092241c4475c8b9e86aabb4d8bc61d0d4832beb6d7920fa579"
+        },
+        "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/LeanBridgeException.kt": {
+          "bytes": 154,
+          "sha256": "ec93b2954873ede9141b7d5db7dfa26654e430ce895e338f52f9694e0c62fa82"
+        },
+        "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Option.kt": {
+          "bytes": 1395,
+          "sha256": "24f47a45df84609a9ec0c075a383716946d4a01c9ab5f96f26db79a05dadfb8c"
+        },
+        "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Packet.kt": {
+          "bytes": 723,
+          "sha256": "7177d828776c5b4bdc178204c168244c63bc077218f16340d6bf5e553883bb2f"
+        },
+        "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Pair.kt": {
+          "bytes": 776,
+          "sha256": "11c0ec7aac4057a68481969cceca5562faaf90733983dec4a07b09aa07300427"
+        },
+        "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Result.kt": {
+          "bytes": 1823,
+          "sha256": "27b48197f2afeb9ad74aa3cb1c73a95728829a026454678a4b7c12c905e85364"
+        },
+        "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Unit.kt": {
+          "bytes": 124,
+          "sha256": "ca5c129896f62c97961f674c9cf7677ab8961529c8a95dce5bd6edb4c950421c"
+        },
+        "META-INF/lean-bridge/licenses/Lean-LICENSE": {
+          "bytes": 9160,
+          "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+        },
+        "META-INF/lean-bridge/licenses/Lean-LICENSES": {
+          "bytes": 81854,
+          "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+        },
+        "META-INF/lean-bridge/licenses/LeanBridge-LICENSE": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "META-INF/lean-bridge/licenses/source-notices.json": {
+          "bytes": 2124,
+          "sha256": "98d1f33ddec033aac426f3d75c62b44f05a80faa7255c07ad9be2851d5d32dbe"
+        },
+        "META-INF/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "META-INF/lean-bridge/native-c-adapter.json": {
+          "bytes": 1407,
+          "sha256": "d12bace4e660be6c60eef3317de857e764f98a3b89fd3b4305caa2b06b59832c"
+        },
+        "META-INF/lean-bridge/native-jvm.json": {
+          "bytes": 17508,
+          "sha256": "684c8038e44cd478a51b6ed03ec4009e1ecd1d887597aa417ac52ace88282bcf"
+        },
+        "META-INF/lean-bridge/native/linux-x64/libcomponent_a63244d529ededa079e7.so": {
+          "bytes": 45960,
+          "sha256": "960bf714f5e9633c5e75df7692c33af63e6d467f8e1f9d63d0d1fef300596de8"
+        },
+        "META-INF/lean-bridge/native/linux-x64/liblean_bridge_native.so": {
+          "bytes": 21464,
+          "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+        },
+        "META-INF/lean-bridge/native/linux-x64/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "META-INF/lean-bridge/native/linux-x64/libnestedcheckedrecords.so": {
+          "bytes": 21776,
+          "sha256": "b47fe7b884ba06a3dbe90916139625b89bb3edda9389205d080e92e7de06d903"
+        },
+        "META-INF/lean-bridge/runtime.json": {
+          "bytes": 1466,
+          "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+        },
+        "META-INF/lean_bridge_org_leanbridge_nestedcheckedrecords.kotlin_module": {
+          "bytes": 101,
+          "sha256": "33b5a35b50905405bd38806ad7b0d729badffd524e6bb4cd1aa8a4b949b20b29"
+        },
+        "META-INF/maven/org.leanbridge/nestedcheckedrecords/pom.xml": {
+          "bytes": 630,
+          "sha256": "ebe7c3a2fe1d4228a68bf6f2344e87961c874331f8b9d86ad5afb61f70fc1f18"
+        },
+        "README.md": {
+          "bytes": 5924,
+          "sha256": "b02cef1515130db83efa3eb1840e98015eaf8c7004bd7b26cbd430d8fd7ce125"
+        },
+        "org/leanbridge/nestedcheckedrecords/Api.class": {
+          "bytes": 612,
+          "sha256": "fa627ec0d73957aad79a388d1e7e6cee1622beb3524c8b198667ed9551d70f9e"
+        },
+        "org/leanbridge/nestedcheckedrecords/KotlinBridge.class": {
+          "bytes": 546,
+          "sha256": "0f5495a938910c491737a5ad0eee41aefcf5d4387e134352455c3efd9d8cba7b"
+        },
+        "org/leanbridge/nestedcheckedrecords/KotlinCalls.class": {
+          "bytes": 1095,
+          "sha256": "bc533c5f153499c6d7d883e778965e290a103fa054f0e0c30eb88c037db394a2"
+        },
+        "org/leanbridge/nestedcheckedrecords/KotlinRuntime.class": {
+          "bytes": 10517,
+          "sha256": "7e84f7ee77d6aeffd3e6c2475672986b5ceba2eba2764ff598a95febf96b25f9"
+        },
+        "org/leanbridge/nestedcheckedrecords/LeanBridgeException.class": {
+          "bytes": 285,
+          "sha256": "b717ed7079a2ad412f8e974266565407941b98b596d0c7945c6f9f4272701aae"
+        },
+        "org/leanbridge/nestedcheckedrecords/NativeAssets$_Assets.class": {
+          "bytes": 13412,
+          "sha256": "f18f4048a96055515c474520bf202399400aca573c7537b375b9792601534343"
+        },
+        "org/leanbridge/nestedcheckedrecords/NativeAssets.class": {
+          "bytes": 432,
+          "sha256": "c592a59e97601fd56ad38818d29b3f586b0aac5add95bdc1a8c5613bbb099a10"
+        },
+        "org/leanbridge/nestedcheckedrecords/Option$None.class": {
+          "bytes": 1412,
+          "sha256": "2a1eee262e80d929339a4b482eead4f4555744959ccd8988903944ba1a7e8ae7"
+        },
+        "org/leanbridge/nestedcheckedrecords/Option$Some.class": {
+          "bytes": 1638,
+          "sha256": "0f972b90ae2b62d03da8e327e68a3deb7dc9a23fe1d06efb675bfce667ab6350"
+        },
+        "org/leanbridge/nestedcheckedrecords/Option.class": {
+          "bytes": 890,
+          "sha256": "cf54f8eb54b23a3870f8581e130955c80cc945607cf1aaf37fbfbab545216cbb"
+        },
+        "org/leanbridge/nestedcheckedrecords/Packet.class": {
+          "bytes": 1406,
+          "sha256": "a4497b7253c01e496eee1697919b959f77dd5912b9161a390bad1160a1fb0766"
+        },
+        "org/leanbridge/nestedcheckedrecords/Pair.class": {
+          "bytes": 1647,
+          "sha256": "7cdaf75c2b000bb0e9543f59e4ef22502a149b9c0a078cd4e15da56d9c51340a"
+        },
+        "org/leanbridge/nestedcheckedrecords/Result$Err.class": {
+          "bytes": 1817,
+          "sha256": "baa231a2571b0885271a6aef8e06a7f2c6367d1a3a925be9c6001e05827f3ded"
+        },
+        "org/leanbridge/nestedcheckedrecords/Result$Ok.class": {
+          "bytes": 1805,
+          "sha256": "515710c51f72fa6daa44e30afc54cf2dd24a78c752bc4383e34b1376b70db97b"
+        },
+        "org/leanbridge/nestedcheckedrecords/Result.class": {
+          "bytes": 921,
+          "sha256": "fd90f9e89822ded169d8603fd2f19fb6044bb53977907381e2efa874d9993922"
+        },
+        "org/leanbridge/nestedcheckedrecords/Runtime.class": {
+          "bytes": 10378,
+          "sha256": "0591d4a1e616a23ed385f5f64167e27f262c0c45657d53b1a7e21d576f271f82"
+        },
+        "org/leanbridge/nestedcheckedrecords/Scope.class": {
+          "bytes": 673,
+          "sha256": "31617ad2afce0fe013ff14246f1c927c7af074d20cf4b81d3b8da342f3e33f40"
+        },
+        "org/leanbridge/nestedcheckedrecords/Unit.class": {
+          "bytes": 900,
+          "sha256": "58e3b005493cec685dac36c6d8aba35f7117925b9759817d1b93157e9486e22d"
+        },
+        "org/leanbridge/nestedcheckedrecords/kotlin/Api$Companion.class": {
+          "bytes": 2547,
+          "sha256": "14ed523deae17a9d1dbf0ef91bbb9ff6ccd66d12cf017ff1d1877d4ed9959a6c"
+        },
+        "org/leanbridge/nestedcheckedrecords/kotlin/Api.class": {
+          "bytes": 1609,
+          "sha256": "f7d21e978a707cd66008f8b1c1b8d941c9c3b08021156b853f35ade92cb202da"
+        },
+        "org/leanbridge/nestedcheckedrecords/kotlin/LeanBridgeExceptionKt.class": {
+          "bytes": 472,
+          "sha256": "bc9137db74483735f1446945f3e90fd094d56f2f6d356ab9cc9870296c442b7e"
+        },
+        "org/leanbridge/nestedcheckedrecords/kotlin/Option$Companion.class": {
+          "bytes": 1952,
+          "sha256": "4a98771667e6b1f6c5dca4c51a429e14b78a8e781c929549968a0e058d218d37"
+        },
+        "org/leanbridge/nestedcheckedrecords/kotlin/Option$None.class": {
+          "bytes": 1766,
+          "sha256": "dade5a90ec62966757d695b1c4e2f165b526a9d81e393e747a67c36abb259021"
+        },
+        "org/leanbridge/nestedcheckedrecords/kotlin/Option$Some.class": {
+          "bytes": 2177,
+          "sha256": "8804dca9f2e179f28ff22dab08461998942577c9c9f69b4bc9b3e9661cad669b"
+        },
+        "org/leanbridge/nestedcheckedrecords/kotlin/Option.class": {
+          "bytes": 1983,
+          "sha256": "3a265362092e425583b70fb16ea7c86cfd18a85b9362478d6ea5d111724d945f"
+        },
+        "org/leanbridge/nestedcheckedrecords/kotlin/Packet.class": {
+          "bytes": 1909,
+          "sha256": "2768fb5a182f9f78ceb9d9f2c40095fac88892ca50084c6aec57e86797f31127"
+        },
+        "org/leanbridge/nestedcheckedrecords/kotlin/Pair.class": {
+          "bytes": 2178,
+          "sha256": "c1af52633a6292208a05116cc63a43d38eb237edc3ac7b807ad063d498339954"
+        },
+        "org/leanbridge/nestedcheckedrecords/kotlin/Result$Companion.class": {
+          "bytes": 2033,
+          "sha256": "60aac6e4b49c37d8df0de520cd8fe3f014b34e5f61310027e83a1548225a546a"
+        },
+        "org/leanbridge/nestedcheckedrecords/kotlin/Result$Err.class": {
+          "bytes": 2445,
+          "sha256": "669848b75439dda90d5e1fe1689f675deff837d6d91eff6c72e7328fdd6b8933"
+        },
+        "org/leanbridge/nestedcheckedrecords/kotlin/Result$Ok.class": {
+          "bytes": 2433,
+          "sha256": "b718120b14a47c0bd58db75fd33a288b9c3f51a1a42801f58084ec0eac24862b"
+        },
+        "org/leanbridge/nestedcheckedrecords/kotlin/Result.class": {
+          "bytes": 2097,
+          "sha256": "1f6851891bc513316682e11cab68c24201e891bf3a7d8938a1548fc1a505515a"
+        },
+        "org/leanbridge/nestedcheckedrecords/kotlin/UnitKt.class": {
+          "bytes": 412,
+          "sha256": "5106cc0f33a20d0749de2e50381df3d48f71f5e7288b208c25fad8c545d89987"
+        }
+      },
+      "glibcMinimumVersion": "2.36",
+      "kind": "lean-bridge-ordinary-maven-package",
+      "kotlin": {
+        "namespace": "org.leanbridge.nestedcheckedrecords.kotlin",
+        "standardLibraryVersion": "2.2.0"
+      },
+      "name": "org.leanbridge:nestedcheckedrecords",
+      "namespace": "org.leanbridge.nestedcheckedrecords",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "schemaVersion": 1,
+      "sourceIdentity": {
+        "exportConfigurationSha256": "7b6f353bfff53ca5dab90c6725e5e8848cb1f6b8add6e68be4744afc6d1aca03",
+        "exportConfigurationSource": "{\n  \"modules\": [\n    \"NestedCheckedRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"maven\": {\n      \"name\": \"org.leanbridge:nestedcheckedrecords\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+        "extractorSha256": "88bc071a3fb4adb1dee0a0c3262c4227cadcf5928dd32a79844bb5be69093cf5",
+        "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+        "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+        "leanVersion": "4.32.2",
+        "modules": [
+          {
+            "interface": {
+              "bytes": 167608,
+              "interfaceSha256": "e20264af883ce83ec3baf120ceca94359e9c9cbdd0b5750fc7f1226fe93a49f3",
+              "sha256": "f40a37b04d8a4dbac01065764da85bace19eb1c9803183039e9fbed4780ec570"
+            },
+            "module": "NestedCheckedRecords",
+            "source": {
+              "bytes": 2886,
+              "path": "NestedCheckedRecords.lean",
+              "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+            }
+          }
+        ],
+        "request": {
+          "arities": [],
+          "exportModules": [
+            "NestedCheckedRecords"
+          ],
+          "exports": [
+            "NestedCheckedRecords.produceArray",
+            "NestedCheckedRecords.produceOption"
+          ],
+          "metadata": {
+            "invocationIdentitySha256": "17d6d5138b9da76f7cd6d4efcb9e8b46991a8988cbb1822eab262437a6c0692a",
+            "modules": [
+              {
+                "interfaceSha256": "e20264af883ce83ec3baf120ceca94359e9c9cbdd0b5750fc7f1226fe93a49f3",
+                "name": "NestedCheckedRecords",
+                "sourcePath": "NestedCheckedRecords.lean",
+                "sourceSha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+              }
+            ],
+            "toolchain": "leanprover/lean4:v4.32.2"
+          },
+          "modules": [
+            "NestedCheckedRecords"
+          ],
+          "profile": "native-library-v1",
+          "resources": []
+        },
+        "reviewedBindingIr": {
+          "path": "api.binding-ir.json",
+          "schemaVersion": 1,
+          "semanticSha256": "cab9b521a3c107820800b8afb7e224cb0c6c77135c60305c4cca5fe8774c6eae",
+          "source": "{\n  \"assurance\": [],\n  \"capabilities\": [],\n  \"component\": {\n    \"id\": \"nestedcheckedrecords@1.0.0\",\n    \"name\": \"nestedcheckedrecords\",\n    \"version\": \"1.0.0\"\n  },\n  \"declarations\": [\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:NestedCheckedRecords.produceOption\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"produceOption\",\n      \"overloadKey\": \"NestedCheckedRecords.produceOption\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"arguments\": [\n            {\n              \"id\": \"lean:NestedCheckedRecords.Packet\",\n              \"kind\": \"named\"\n            }\n          ],\n          \"constructor\": \"option\",\n          \"kind\": \"apply\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"NestedCheckedRecords.produceOption\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              null\n            ],\n            \"result\": {\n              \"arguments\": [\n                {\n                  \"constructor\": null,\n                  \"fields\": [\n                    {\n                      \"name\": \"digit\",\n                      \"refinement\": {\n                        \"bound\": \"10\",\n                        \"kind\": \"fin\"\n                      }\n                    },\n                    {\n                      \"name\": \"word\",\n                      \"refinement\": {\n                        \"constructor\": null,\n                        \"kind\": \"subtype\"\n                      }\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"NestedCheckedRecords.Packet\"\n                }\n              ],\n              \"kind\": \"option\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:NestedCheckedRecords.produceArray\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"produceArray\",\n      \"overloadKey\": \"NestedCheckedRecords.produceArray\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"arguments\": [\n            {\n              \"id\": \"lean:NestedCheckedRecords.Packet\",\n              \"kind\": \"named\"\n            }\n          ],\n          \"constructor\": \"array\",\n          \"kind\": \"apply\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"NestedCheckedRecords.produceArray\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              null\n            ],\n            \"result\": {\n              \"arguments\": [\n                {\n                  \"constructor\": null,\n                  \"fields\": [\n                    {\n                      \"name\": \"digit\",\n                      \"refinement\": {\n                        \"bound\": \"10\",\n                        \"kind\": \"fin\"\n                      }\n                    },\n                    {\n                      \"name\": \"word\",\n                      \"refinement\": {\n                        \"constructor\": null,\n                        \"kind\": \"subtype\"\n                      }\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"NestedCheckedRecords.Packet\"\n                }\n              ],\n              \"kind\": \"array\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    }\n  ],\n  \"documentation\": {\n    \"details\": \"\",\n    \"summary\": \"Independent corpus contract.\"\n  },\n  \"errors\": [],\n  \"producers\": [\n    {\n      \"adapter\": \"independent-corpus-contract\",\n      \"adapterVersion\": 1,\n      \"extensions\": {},\n      \"id\": \"corpusReview\",\n      \"tool\": \"Corpus contract review\",\n      \"toolVersion\": \"1\"\n    }\n  ],\n  \"schemaVersion\": 3,\n  \"types\": [\n    {\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent corpus contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"digit\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent corpus contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"word\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:NestedCheckedRecords.Packet\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Packet\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"NestedCheckedRecords.Packet\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"linked\"\n            ]\n          },\n          \"lean-lang.org/nominal-refinements\": {\n            \"fields\": [\n              {\n                \"bound\": \"10\",\n                \"kind\": \"fin\"\n              },\n              null\n            ],\n            \"kind\": \"record\"\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    }\n  ]\n}\n",
+          "sourceSha256": "ed9473d92c605f378c8b1af7bb07a6b450d824aadfcf67935f4d65fbf956c9a0"
+        },
+        "sourceNoticesSha256": "98d1f33ddec033aac426f3d75c62b44f05a80faa7255c07ad9be2851d5d32dbe",
+        "sourceTreeSha256": "13a9b892e801e93edb6c4f3ec22def6fae6ee04f6d1d03bc24275f318562f0bb"
+      },
+      "version": "1.0.0"
+    },
+    "receiptBytes": "{\n  \"bindingIrSha256\": \"7db38e3884f7a966c61793125968e51f5c6b08b37377a38f01e383ceb89412fc\",\n  \"compiledProjectionSha256\": \"684c8038e44cd478a51b6ed03ec4009e1ecd1d887597aa417ac52ace88282bcf\",\n  \"component\": {\n    \"id\": \"nestedcheckedrecords@1.0.0\",\n    \"name\": \"nestedcheckedrecords\",\n    \"version\": \"1.0.0\"\n  },\n  \"ecosystem\": \"maven\",\n  \"files\": {\n    \"META-INF/MANIFEST.MF\": {\n      \"bytes\": 23,\n      \"sha256\": \"172b7aa6ab69ed805e5a9b5bbdbc6e770091086734509d44117852fc10592f6b\"\n    },\n    \"META-INF/lean-bridge/component/allocation-guard.h\": {\n      \"bytes\": 1309,\n      \"sha256\": \"f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83\"\n    },\n    \"META-INF/lean-bridge/component/artifacts.json\": {\n      \"bytes\": 1529,\n      \"sha256\": \"5ccd3c661364404ea4e14375472da0c2084f0aed924fd47bf19464fe05f8b269\"\n    },\n    \"META-INF/lean-bridge/component/binding-ir.json\": {\n      \"bytes\": 7445,\n      \"sha256\": \"5e57b48c8909a0101cf42fffea2559e96eb5b6f21b7c15c9d9f3d28452974f81\"\n    },\n    \"META-INF/lean-bridge/component/component.h\": {\n      \"bytes\": 841,\n      \"sha256\": \"d2ff4235b2668c14a66415506abf085e0d493503a9299fd2a5d2e6dd8b8f91d4\"\n    },\n    \"META-INF/lean-bridge/component/generated.lean\": {\n      \"bytes\": 2840,\n      \"sha256\": \"222c420c7d792a231918d075c184de5e05ee9a0c045ebdb961834183d8837cfb\"\n    },\n    \"META-INF/lean-bridge/component/metadata.json\": {\n      \"bytes\": 33753,\n      \"sha256\": \"129fcbd89a7ade9a91a736e99168d6654c1984a6cf88f47ff1d43d955a224be6\"\n    },\n    \"META-INF/lean-bridge/component/model.json\": {\n      \"bytes\": 29107,\n      \"sha256\": \"990b606f9379a4b6f7a56b45208ec1772b9b4236b08f238228a3bf35738776bc\"\n    },\n    \"META-INF/lean-bridge/component/native-component.json\": {\n      \"bytes\": 11362,\n      \"sha256\": \"515cc5be3c9d39dd877b58fe005a499caa9524f111cfb2149a50e3cd69db1279\"\n    },\n    \"META-INF/lean-bridge/jvm/binding-manifest.json\": {\n      \"bytes\": 4703,\n      \"sha256\": \"99e7d705d48171835bded88801d39456765cc493f1e900eed2d9b706f3eaf6b7\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Api.java\": {\n      \"bytes\": 621,\n      \"sha256\": \"af64bfa68e2a09bce604c948da08bf08c23c5c5e5c8a90d94c605ba4b52dfeb7\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/KotlinBridge.java\": {\n      \"bytes\": 354,\n      \"sha256\": \"53c36a36b1c5fc3c3bd4e8c1d3fc887ad3e614dd83c737afc17b78d19b9e061e\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/KotlinRuntime.java\": {\n      \"bytes\": 9608,\n      \"sha256\": \"bc23e0c576d5ebe69dc60857cd6d3f7ac1ddee1f61a593597baef303c625ba80\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/LeanBridgeException.java\": {\n      \"bytes\": 250,\n      \"sha256\": \"1b6ee47060df35244b121c94d12aa42e26d961c5259162f5dc0f1ca3ec9e215c\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/NativeAssets.java\": {\n      \"bytes\": 13575,\n      \"sha256\": \"d2bb6e39c40237665bdf299664536907ad3baf84b01b684f4ba718501926d886\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Option.java\": {\n      \"bytes\": 1053,\n      \"sha256\": \"eeb66bc0e2981fc9aa31ad41ed05d26059515c6bfc6a9b36a084bfc540651218\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Packet.java\": {\n      \"bytes\": 561,\n      \"sha256\": \"feec3a08e0b9659f11728551eb718ed42dd59bd24ad450f4314b7232d2f04ab5\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Pair.java\": {\n      \"bytes\": 717,\n      \"sha256\": \"0b8188a321e64599f069ef33fb731197360075f7793d4e3b814409156ebf99a1\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Result.java\": {\n      \"bytes\": 1618,\n      \"sha256\": \"35520c92594f0aadbe7ffdda64e3782418a473c88de7a23060c5289570d77b3e\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Runtime.java\": {\n      \"bytes\": 8908,\n      \"sha256\": \"61131f42b31b497845db848f764fa9921e25d5c2ce4f851264cca21cccd8bd8d\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Scope.java\": {\n      \"bytes\": 553,\n      \"sha256\": \"2348d4533e7f3cdc42321b2bd0fcfd1dd4c6370a8daa6f29705da7a4b7ff25bf\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nestedcheckedrecords/Unit.java\": {\n      \"bytes\": 75,\n      \"sha256\": \"19615970dad99e70fbd83b6e101fb8f025d1eb1e48046de5627e4e9b1249e911\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/KotlinCalls.kt\": {\n      \"bytes\": 278,\n      \"sha256\": \"2c5531f80bb67b5d00b0d6a846e000449a9006ae544e798ba76bd3e60b321447\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Api.kt\": {\n      \"bytes\": 958,\n      \"sha256\": \"cd1c99781f7257092241c4475c8b9e86aabb4d8bc61d0d4832beb6d7920fa579\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/LeanBridgeException.kt\": {\n      \"bytes\": 154,\n      \"sha256\": \"ec93b2954873ede9141b7d5db7dfa26654e430ce895e338f52f9694e0c62fa82\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Option.kt\": {\n      \"bytes\": 1395,\n      \"sha256\": \"24f47a45df84609a9ec0c075a383716946d4a01c9ab5f96f26db79a05dadfb8c\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Packet.kt\": {\n      \"bytes\": 723,\n      \"sha256\": \"7177d828776c5b4bdc178204c168244c63bc077218f16340d6bf5e553883bb2f\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Pair.kt\": {\n      \"bytes\": 776,\n      \"sha256\": \"11c0ec7aac4057a68481969cceca5562faaf90733983dec4a07b09aa07300427\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Result.kt\": {\n      \"bytes\": 1823,\n      \"sha256\": \"27b48197f2afeb9ad74aa3cb1c73a95728829a026454678a4b7c12c905e85364\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Unit.kt\": {\n      \"bytes\": 124,\n      \"sha256\": \"ca5c129896f62c97961f674c9cf7677ab8961529c8a95dce5bd6edb4c950421c\"\n    },\n    \"META-INF/lean-bridge/licenses/Lean-LICENSE\": {\n      \"bytes\": 9160,\n      \"sha256\": \"8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e\"\n    },\n    \"META-INF/lean-bridge/licenses/Lean-LICENSES\": {\n      \"bytes\": 81854,\n      \"sha256\": \"00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce\"\n    },\n    \"META-INF/lean-bridge/licenses/LeanBridge-LICENSE\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"META-INF/lean-bridge/licenses/source-notices.json\": {\n      \"bytes\": 2124,\n      \"sha256\": \"98d1f33ddec033aac426f3d75c62b44f05a80faa7255c07ad9be2851d5d32dbe\"\n    },\n    \"META-INF/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"META-INF/lean-bridge/native-c-adapter.json\": {\n      \"bytes\": 1407,\n      \"sha256\": \"d12bace4e660be6c60eef3317de857e764f98a3b89fd3b4305caa2b06b59832c\"\n    },\n    \"META-INF/lean-bridge/native-jvm.json\": {\n      \"bytes\": 17508,\n      \"sha256\": \"684c8038e44cd478a51b6ed03ec4009e1ecd1d887597aa417ac52ace88282bcf\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libcomponent_a63244d529ededa079e7.so\": {\n      \"bytes\": 45960,\n      \"sha256\": \"960bf714f5e9633c5e75df7692c33af63e6d467f8e1f9d63d0d1fef300596de8\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/liblean_bridge_native.so\": {\n      \"bytes\": 21464,\n      \"sha256\": \"25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libleanshared.so\": {\n      \"bytes\": 158401256,\n      \"sha256\": \"d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libnestedcheckedrecords.so\": {\n      \"bytes\": 21776,\n      \"sha256\": \"b47fe7b884ba06a3dbe90916139625b89bb3edda9389205d080e92e7de06d903\"\n    },\n    \"META-INF/lean-bridge/runtime.json\": {\n      \"bytes\": 1466,\n      \"sha256\": \"137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf\"\n    },\n    \"META-INF/lean_bridge_org_leanbridge_nestedcheckedrecords.kotlin_module\": {\n      \"bytes\": 101,\n      \"sha256\": \"33b5a35b50905405bd38806ad7b0d729badffd524e6bb4cd1aa8a4b949b20b29\"\n    },\n    \"META-INF/maven/org.leanbridge/nestedcheckedrecords/pom.xml\": {\n      \"bytes\": 630,\n      \"sha256\": \"ebe7c3a2fe1d4228a68bf6f2344e87961c874331f8b9d86ad5afb61f70fc1f18\"\n    },\n    \"README.md\": {\n      \"bytes\": 5924,\n      \"sha256\": \"b02cef1515130db83efa3eb1840e98015eaf8c7004bd7b26cbd430d8fd7ce125\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Api.class\": {\n      \"bytes\": 612,\n      \"sha256\": \"fa627ec0d73957aad79a388d1e7e6cee1622beb3524c8b198667ed9551d70f9e\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/KotlinBridge.class\": {\n      \"bytes\": 546,\n      \"sha256\": \"0f5495a938910c491737a5ad0eee41aefcf5d4387e134352455c3efd9d8cba7b\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/KotlinCalls.class\": {\n      \"bytes\": 1095,\n      \"sha256\": \"bc533c5f153499c6d7d883e778965e290a103fa054f0e0c30eb88c037db394a2\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/KotlinRuntime.class\": {\n      \"bytes\": 10517,\n      \"sha256\": \"7e84f7ee77d6aeffd3e6c2475672986b5ceba2eba2764ff598a95febf96b25f9\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/LeanBridgeException.class\": {\n      \"bytes\": 285,\n      \"sha256\": \"b717ed7079a2ad412f8e974266565407941b98b596d0c7945c6f9f4272701aae\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/NativeAssets$_Assets.class\": {\n      \"bytes\": 13412,\n      \"sha256\": \"f18f4048a96055515c474520bf202399400aca573c7537b375b9792601534343\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/NativeAssets.class\": {\n      \"bytes\": 432,\n      \"sha256\": \"c592a59e97601fd56ad38818d29b3f586b0aac5add95bdc1a8c5613bbb099a10\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Option$None.class\": {\n      \"bytes\": 1412,\n      \"sha256\": \"2a1eee262e80d929339a4b482eead4f4555744959ccd8988903944ba1a7e8ae7\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Option$Some.class\": {\n      \"bytes\": 1638,\n      \"sha256\": \"0f972b90ae2b62d03da8e327e68a3deb7dc9a23fe1d06efb675bfce667ab6350\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Option.class\": {\n      \"bytes\": 890,\n      \"sha256\": \"cf54f8eb54b23a3870f8581e130955c80cc945607cf1aaf37fbfbab545216cbb\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Packet.class\": {\n      \"bytes\": 1406,\n      \"sha256\": \"a4497b7253c01e496eee1697919b959f77dd5912b9161a390bad1160a1fb0766\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Pair.class\": {\n      \"bytes\": 1647,\n      \"sha256\": \"7cdaf75c2b000bb0e9543f59e4ef22502a149b9c0a078cd4e15da56d9c51340a\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Result$Err.class\": {\n      \"bytes\": 1817,\n      \"sha256\": \"baa231a2571b0885271a6aef8e06a7f2c6367d1a3a925be9c6001e05827f3ded\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Result$Ok.class\": {\n      \"bytes\": 1805,\n      \"sha256\": \"515710c51f72fa6daa44e30afc54cf2dd24a78c752bc4383e34b1376b70db97b\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Result.class\": {\n      \"bytes\": 921,\n      \"sha256\": \"fd90f9e89822ded169d8603fd2f19fb6044bb53977907381e2efa874d9993922\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Runtime.class\": {\n      \"bytes\": 10378,\n      \"sha256\": \"0591d4a1e616a23ed385f5f64167e27f262c0c45657d53b1a7e21d576f271f82\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Scope.class\": {\n      \"bytes\": 673,\n      \"sha256\": \"31617ad2afce0fe013ff14246f1c927c7af074d20cf4b81d3b8da342f3e33f40\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/Unit.class\": {\n      \"bytes\": 900,\n      \"sha256\": \"58e3b005493cec685dac36c6d8aba35f7117925b9759817d1b93157e9486e22d\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Api$Companion.class\": {\n      \"bytes\": 2547,\n      \"sha256\": \"14ed523deae17a9d1dbf0ef91bbb9ff6ccd66d12cf017ff1d1877d4ed9959a6c\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Api.class\": {\n      \"bytes\": 1609,\n      \"sha256\": \"f7d21e978a707cd66008f8b1c1b8d941c9c3b08021156b853f35ade92cb202da\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/LeanBridgeExceptionKt.class\": {\n      \"bytes\": 472,\n      \"sha256\": \"bc9137db74483735f1446945f3e90fd094d56f2f6d356ab9cc9870296c442b7e\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Option$Companion.class\": {\n      \"bytes\": 1952,\n      \"sha256\": \"4a98771667e6b1f6c5dca4c51a429e14b78a8e781c929549968a0e058d218d37\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Option$None.class\": {\n      \"bytes\": 1766,\n      \"sha256\": \"dade5a90ec62966757d695b1c4e2f165b526a9d81e393e747a67c36abb259021\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Option$Some.class\": {\n      \"bytes\": 2177,\n      \"sha256\": \"8804dca9f2e179f28ff22dab08461998942577c9c9f69b4bc9b3e9661cad669b\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Option.class\": {\n      \"bytes\": 1983,\n      \"sha256\": \"3a265362092e425583b70fb16ea7c86cfd18a85b9362478d6ea5d111724d945f\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Packet.class\": {\n      \"bytes\": 1909,\n      \"sha256\": \"2768fb5a182f9f78ceb9d9f2c40095fac88892ca50084c6aec57e86797f31127\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Pair.class\": {\n      \"bytes\": 2178,\n      \"sha256\": \"c1af52633a6292208a05116cc63a43d38eb237edc3ac7b807ad063d498339954\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Result$Companion.class\": {\n      \"bytes\": 2033,\n      \"sha256\": \"60aac6e4b49c37d8df0de520cd8fe3f014b34e5f61310027e83a1548225a546a\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Result$Err.class\": {\n      \"bytes\": 2445,\n      \"sha256\": \"669848b75439dda90d5e1fe1689f675deff837d6d91eff6c72e7328fdd6b8933\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Result$Ok.class\": {\n      \"bytes\": 2433,\n      \"sha256\": \"b718120b14a47c0bd58db75fd33a288b9c3f51a1a42801f58084ec0eac24862b\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/Result.class\": {\n      \"bytes\": 2097,\n      \"sha256\": \"1f6851891bc513316682e11cab68c24201e891bf3a7d8938a1548fc1a505515a\"\n    },\n    \"org/leanbridge/nestedcheckedrecords/kotlin/UnitKt.class\": {\n      \"bytes\": 412,\n      \"sha256\": \"5106cc0f33a20d0749de2e50381df3d48f71f5e7288b208c25fad8c545d89987\"\n    }\n  },\n  \"glibcMinimumVersion\": \"2.36\",\n  \"kind\": \"lean-bridge-ordinary-maven-package\",\n  \"kotlin\": {\n    \"namespace\": \"org.leanbridge.nestedcheckedrecords.kotlin\",\n    \"standardLibraryVersion\": \"2.2.0\"\n  },\n  \"name\": \"org.leanbridge:nestedcheckedrecords\",\n  \"namespace\": \"org.leanbridge.nestedcheckedrecords\",\n  \"runtimeIdentity\": \"137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf\",\n  \"schemaVersion\": 1,\n  \"sourceIdentity\": {\n    \"exportConfigurationSha256\": \"7b6f353bfff53ca5dab90c6725e5e8848cb1f6b8add6e68be4744afc6d1aca03\",\n    \"exportConfigurationSource\": \"{\\n  \\\"modules\\\": [\\n    \\\"NestedCheckedRecords\\\"\\n  ],\\n  \\\"schemaVersion\\\": 1,\\n  \\\"targets\\\": {\\n    \\\"maven\\\": {\\n      \\\"name\\\": \\\"org.leanbridge:nestedcheckedrecords\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    }\\n  }\\n}\\n\",\n    \"extractorSha256\": \"88bc071a3fb4adb1dee0a0c3262c4227cadcf5928dd32a79844bb5be69093cf5\",\n    \"leanCommit\": \"f3b06c705e6c85f5314019d5d3baab0fec5b580c\",\n    \"leanCompilerSha256\": \"e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550\",\n    \"leanVersion\": \"4.32.2\",\n    \"modules\": [\n      {\n        \"interface\": {\n          \"bytes\": 167608,\n          \"interfaceSha256\": \"e20264af883ce83ec3baf120ceca94359e9c9cbdd0b5750fc7f1226fe93a49f3\",\n          \"sha256\": \"f40a37b04d8a4dbac01065764da85bace19eb1c9803183039e9fbed4780ec570\"\n        },\n        \"module\": \"NestedCheckedRecords\",\n        \"source\": {\n          \"bytes\": 2886,\n          \"path\": \"NestedCheckedRecords.lean\",\n          \"sha256\": \"31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8\"\n        }\n      }\n    ],\n    \"request\": {\n      \"arities\": [],\n      \"exportModules\": [\n        \"NestedCheckedRecords\"\n      ],\n      \"exports\": [\n        \"NestedCheckedRecords.produceArray\",\n        \"NestedCheckedRecords.produceOption\"\n      ],\n      \"metadata\": {\n        \"invocationIdentitySha256\": \"17d6d5138b9da76f7cd6d4efcb9e8b46991a8988cbb1822eab262437a6c0692a\",\n        \"modules\": [\n          {\n            \"interfaceSha256\": \"e20264af883ce83ec3baf120ceca94359e9c9cbdd0b5750fc7f1226fe93a49f3\",\n            \"name\": \"NestedCheckedRecords\",\n            \"sourcePath\": \"NestedCheckedRecords.lean\",\n            \"sourceSha256\": \"31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8\"\n          }\n        ],\n        \"toolchain\": \"leanprover/lean4:v4.32.2\"\n      },\n      \"modules\": [\n        \"NestedCheckedRecords\"\n      ],\n      \"profile\": \"native-library-v1\",\n      \"resources\": []\n    },\n    \"reviewedBindingIr\": {\n      \"path\": \"api.binding-ir.json\",\n      \"schemaVersion\": 1,\n      \"semanticSha256\": \"cab9b521a3c107820800b8afb7e224cb0c6c77135c60305c4cca5fe8774c6eae\",\n      \"source\": \"{\\n  \\\"assurance\\\": [],\\n  \\\"capabilities\\\": [],\\n  \\\"component\\\": {\\n    \\\"id\\\": \\\"nestedcheckedrecords@1.0.0\\\",\\n    \\\"name\\\": \\\"nestedcheckedrecords\\\",\\n    \\\"version\\\": \\\"1.0.0\\\"\\n  },\\n  \\\"declarations\\\": [\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:NestedCheckedRecords.produceOption\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"produceOption\\\",\\n      \\\"overloadKey\\\": \\\"NestedCheckedRecords.produceOption\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"kind\\\": \\\"primitive\\\",\\n            \\\"name\\\": \\\"nat\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"arguments\\\": [\\n            {\\n              \\\"id\\\": \\\"lean:NestedCheckedRecords.Packet\\\",\\n              \\\"kind\\\": \\\"named\\\"\\n            }\\n          ],\\n          \\\"constructor\\\": \\\"option\\\",\\n          \\\"kind\\\": \\\"apply\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"NestedCheckedRecords.produceOption\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [\\n              null\\n            ],\\n            \\\"result\\\": {\\n              \\\"arguments\\\": [\\n                {\\n                  \\\"constructor\\\": null,\\n                  \\\"fields\\\": [\\n                    {\\n                      \\\"name\\\": \\\"digit\\\",\\n                      \\\"refinement\\\": {\\n                        \\\"bound\\\": \\\"10\\\",\\n                        \\\"kind\\\": \\\"fin\\\"\\n                      }\\n                    },\\n                    {\\n                      \\\"name\\\": \\\"word\\\",\\n                      \\\"refinement\\\": {\\n                        \\\"constructor\\\": null,\\n                        \\\"kind\\\": \\\"subtype\\\"\\n                      }\\n                    }\\n                  ],\\n                  \\\"kind\\\": \\\"checked-record\\\",\\n                  \\\"name\\\": \\\"NestedCheckedRecords.Packet\\\"\\n                }\\n              ],\\n              \\\"kind\\\": \\\"option\\\"\\n            }\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    },\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"capabilities\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"effects\\\": [],\\n      \\\"failure\\\": {\\n        \\\"errors\\\": [],\\n        \\\"mode\\\": \\\"none\\\",\\n        \\\"unexpected\\\": \\\"poison-runtime\\\"\\n      },\\n      \\\"id\\\": \\\"lean:NestedCheckedRecords.produceArray\\\",\\n      \\\"kind\\\": \\\"function\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"produceArray\\\",\\n      \\\"overloadKey\\\": \\\"NestedCheckedRecords.produceArray\\\",\\n      \\\"owner\\\": null,\\n      \\\"parameters\\\": [\\n        {\\n          \\\"default\\\": null,\\n          \\\"lifetime\\\": null,\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"value0\\\",\\n          \\\"optional\\\": false,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"type\\\": {\\n            \\\"kind\\\": \\\"primitive\\\",\\n            \\\"name\\\": \\\"nat\\\"\\n          }\\n        }\\n      ],\\n      \\\"receiver\\\": null,\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\",\\n        \\\"type\\\": {\\n          \\\"arguments\\\": [\\n            {\\n              \\\"id\\\": \\\"lean:NestedCheckedRecords.Packet\\\",\\n              \\\"kind\\\": \\\"named\\\"\\n            }\\n          ],\\n          \\\"constructor\\\": \\\"array\\\",\\n          \\\"kind\\\": \\\"apply\\\"\\n        }\\n      },\\n      \\\"resultMode\\\": \\\"value\\\",\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"NestedCheckedRecords.produceArray\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/refinements\\\": {\\n            \\\"parameters\\\": [\\n              null\\n            ],\\n            \\\"result\\\": {\\n              \\\"arguments\\\": [\\n                {\\n                  \\\"constructor\\\": null,\\n                  \\\"fields\\\": [\\n                    {\\n                      \\\"name\\\": \\\"digit\\\",\\n                      \\\"refinement\\\": {\\n                        \\\"bound\\\": \\\"10\\\",\\n                        \\\"kind\\\": \\\"fin\\\"\\n                      }\\n                    },\\n                    {\\n                      \\\"name\\\": \\\"word\\\",\\n                      \\\"refinement\\\": {\\n                        \\\"constructor\\\": null,\\n                        \\\"kind\\\": \\\"subtype\\\"\\n                      }\\n                    }\\n                  ],\\n                  \\\"kind\\\": \\\"checked-record\\\",\\n                  \\\"name\\\": \\\"NestedCheckedRecords.Packet\\\"\\n                }\\n              ],\\n              \\\"kind\\\": \\\"array\\\"\\n            }\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"typeParameters\\\": []\\n    }\\n  ],\\n  \\\"documentation\\\": {\\n    \\\"details\\\": \\\"\\\",\\n    \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n  },\\n  \\\"errors\\\": [],\\n  \\\"producers\\\": [\\n    {\\n      \\\"adapter\\\": \\\"independent-corpus-contract\\\",\\n      \\\"adapterVersion\\\": 1,\\n      \\\"extensions\\\": {},\\n      \\\"id\\\": \\\"corpusReview\\\",\\n      \\\"tool\\\": \\\"Corpus contract review\\\",\\n      \\\"toolVersion\\\": \\\"1\\\"\\n    }\\n  ],\\n  \\\"schemaVersion\\\": 3,\\n  \\\"types\\\": [\\n    {\\n      \\\"assurance\\\": [],\\n      \\\"callable\\\": null,\\n      \\\"cases\\\": [],\\n      \\\"documentation\\\": {\\n        \\\"details\\\": \\\"\\\",\\n        \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n      },\\n      \\\"fields\\\": [\\n        {\\n          \\\"documentation\\\": {\\n            \\\"details\\\": \\\"\\\",\\n            \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n          },\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"digit\\\",\\n          \\\"type\\\": {\\n            \\\"kind\\\": \\\"primitive\\\",\\n            \\\"name\\\": \\\"nat\\\"\\n          }\\n        },\\n        {\\n          \\\"documentation\\\": {\\n            \\\"details\\\": \\\"\\\",\\n            \\\"summary\\\": \\\"Independent corpus contract.\\\"\\n          },\\n          \\\"mutability\\\": \\\"immutable\\\",\\n          \\\"name\\\": \\\"word\\\",\\n          \\\"type\\\": {\\n            \\\"kind\\\": \\\"primitive\\\",\\n            \\\"name\\\": \\\"nat\\\"\\n          }\\n        }\\n      ],\\n      \\\"host\\\": null,\\n      \\\"id\\\": \\\"lean:NestedCheckedRecords.Packet\\\",\\n      \\\"kind\\\": \\\"record\\\",\\n      \\\"mutability\\\": \\\"immutable\\\",\\n      \\\"name\\\": \\\"Packet\\\",\\n      \\\"representation\\\": \\\"copied\\\",\\n      \\\"resource\\\": null,\\n      \\\"source\\\": {\\n        \\\"declaration\\\": \\\"NestedCheckedRecords.Packet\\\",\\n        \\\"extensions\\\": {\\n          \\\"lean-lang.org/erased-proofs\\\": {\\n            \\\"fields\\\": [\\n              \\\"linked\\\"\\n            ]\\n          },\\n          \\\"lean-lang.org/nominal-refinements\\\": {\\n            \\\"fields\\\": [\\n              {\\n                \\\"bound\\\": \\\"10\\\",\\n                \\\"kind\\\": \\\"fin\\\"\\n              },\\n              null\\n            ],\\n            \\\"kind\\\": \\\"record\\\"\\n          }\\n        },\\n        \\\"producer\\\": \\\"corpusReview\\\"\\n      },\\n      \\\"target\\\": null,\\n      \\\"typeParameters\\\": []\\n    }\\n  ]\\n}\\n\",\n      \"sourceSha256\": \"ed9473d92c605f378c8b1af7bb07a6b450d824aadfcf67935f4d65fbf956c9a0\"\n    },\n    \"sourceNoticesSha256\": \"98d1f33ddec033aac426f3d75c62b44f05a80faa7255c07ad9be2851d5d32dbe\",\n    \"sourceTreeSha256\": \"13a9b892e801e93edb6c4f3ec22def6fae6ee04f6d1d03bc24275f318562f0bb\"\n  },\n  \"version\": \"1.0.0\"\n}\n"
+  },
+  "installerCommandLogs": "Closed installer retains package/source/output identities, not compiler stdout",
+  "loadCeiling": 12,
+  "mode": "result-only",
+  "offlineInstall": true,
+  "producerCommit": "ef8876ba067e29197b32a21eb708b394f4df3568",
+  "receipt": {
+    "component": {
+      "id": "nestedcheckedrecords@1.0.0",
+      "name": "nestedcheckedrecords",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 51419140,
+            "path": "archives/nestedcheckedrecords-1.0.0.jar",
+            "sha256": "4805a55edb18cd1cf7cee12b0c7ead1cbc2c2bbc36443b116b814cf407f19a8c"
+          },
+          {
+            "bytes": 630,
+            "path": "archives/nestedcheckedrecords-1.0.0.pom",
+            "sha256": "ebe7c3a2fe1d4228a68bf6f2344e87961c874331f8b9d86ad5afb61f70fc1f18"
+          }
+        ],
+        "ecosystem": "maven",
+        "name": "org.leanbridge:nestedcheckedrecords",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+        "target": "maven",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "7db38e3884f7a966c61793125968e51f5c6b08b37377a38f01e383ceb89412fc",
+        "id": "native-library-v1",
+        "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "13a9b892e801e93edb6c4f3ec22def6fae6ee04f6d1d03bc24275f318562f0bb"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "resourceChecks": [
+    {
+      "observations": [
+        {
+          "availableBytes": 9738747904,
+          "freeBytes": 3075125248,
+          "load": 5.65
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 9739272192,
+          "freeBytes": 3075117056,
+          "load": 5.65
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 9553481728,
+          "freeBytes": 2971222016,
+          "load": 5.6
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 9396035584,
+          "freeBytes": 2965778432,
+          "load": 5.7
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 9590239232,
+          "freeBytes": 2862542848,
+          "load": 5.68
+        }
+      ],
+      "waits": 0
+    }
+  ],
+  "route": "reviewed",
+  "runtime": {
+    "arch": "x64",
+    "glibc": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "glibc 2.36\n"
+    },
+    "platform": "linux"
+  },
+  "schemaVersion": 1,
+  "sourceFreeDeployment": true,
+  "sourceRemovedBeforeInstallation": true,
+  "trustedToolchains": "Explicit JDK and Kotlin distributions; their complete contents are not authenticated"
+}

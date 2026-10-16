@@ -1,0 +1,34 @@
+{
+  "archiveSha256": "73983f3d0d965521bd27908e46c402882691c45c8675257d86ba1db194eac520",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "NullProbe.kt",
+    "-d",
+    "classes"
+  ],
+  "command": "/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlinc",
+  "cwd": "/tmp/lean-bridge-nested-record-jvm-installed-yeDYUv/probes/nullability-true",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/app/.toolchains/jdk22",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "invalid": true,
+  "mode": "full",
+  "outputs": {},
+  "run": {
+    "code": 1,
+    "stderr": "NullProbe.kt:2:45: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'BigInteger'.\nfun produceOptionNull() = Api.produceOption(null)\n                                            ^^^^\nNullProbe.kt:3:43: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'BigInteger'.\nfun produceArrayNull() = Api.produceArray(null)\n                                          ^^^^\nNullProbe.kt:4:37: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Array<Packet>'.\nfun echoArrayNull() = Api.echoArray(null)\n                                    ^^^^\nNullProbe.kt:5:29: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Packet'.\nfun firstNull() = Api.first(null)\n                            ^^^^\nNullProbe.kt:6:33: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Array<Packet>'.\nfun inArrayNull() = Api.inArray(null)\n                                ^^^^\nNullProbe.kt:7:35: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Choice'.\nfun inChoiceNull() = Api.inChoice(null)\n                                  ^^^^\nNullProbe.kt:8:35: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Result<Packet, Packet>'.\nfun inExceptNull() = Api.inExcept(null)\n                                  ^^^^\nNullProbe.kt:9:35: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Holder'.\nfun inHolderNull() = Api.inHolder(null)\n                                  ^^^^\nNullProbe.kt:10:31: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Array<Packet>'.\nfun inListNull() = Api.inList(null)\n                              ^^^^\nNullProbe.kt:11:35: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Option<Packet>'.\nfun inOptionNull() = Api.inOption(null)\n                                  ^^^^\nNullProbe.kt:12:37: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Pair<Packet, Packet>'.\nfun inProductNull() = Api.inProduct(null)\n                                    ^^^^\nNullProbe.kt:13:27: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Packet'.\nfun pairNull() = Api.pair(null, null)\n                          ^^^^\nNullProbe.kt:13:33: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Packet'.\nfun pairNull() = Api.pair(null, null)\n                                ^^^^\nNullProbe.kt:14:31: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Packet'.\nfun secondNull() = Api.second(null)\n                              ^^^^\n",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.nestedcheckedrecords.kotlin.*\nfun produceOptionNull() = Api.produceOption(null)\nfun produceArrayNull() = Api.produceArray(null)\nfun echoArrayNull() = Api.echoArray(null)\nfun firstNull() = Api.first(null)\nfun inArrayNull() = Api.inArray(null)\nfun inChoiceNull() = Api.inChoice(null)\nfun inExceptNull() = Api.inExcept(null)\nfun inHolderNull() = Api.inHolder(null)\nfun inListNull() = Api.inList(null)\nfun inOptionNull() = Api.inOption(null)\nfun inProductNull() = Api.inProduct(null)\nfun pairNull() = Api.pair(null, null)\nfun secondNull() = Api.second(null)\n",
+  "sourceSha256": "6b710eba0555dfcbaac2fe1431ccdf7a8d19906514e135f813f30f5106caf607"
+}

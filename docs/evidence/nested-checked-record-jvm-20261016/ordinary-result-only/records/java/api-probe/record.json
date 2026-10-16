@@ -1,0 +1,34 @@
+{
+  "archiveSha256": "ab6d3bcc8048362796ff321f6fb88e712c710942d194031fec0f4d2abf61bcab",
+  "args": [
+    "--release",
+    "22",
+    "-Werror",
+    "-proc:none",
+    "-XDrawDiagnostics",
+    "-cp",
+    "component.jar",
+    "-d",
+    "classes",
+    "probe.java"
+  ],
+  "command": "/app/.toolchains/jdk22/bin/javac",
+  "cwd": "/tmp/lean-bridge-nested-record-jvm-installed-36lfNs/probes/java",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/unavailable"
+  },
+  "mode": "result-only",
+  "outputs": {},
+  "profile": "java",
+  "run": {
+    "code": 1,
+    "stderr": "probe.java:3:43: compiler.err.cant.resolve.location.args: kindname.method, echoArray, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nestedcheckedrecords.Api, null)\nprobe.java:4:39: compiler.err.cant.resolve.location.args: kindname.method, first, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nestedcheckedrecords.Api, null)\nprobe.java:5:41: compiler.err.cant.resolve.location.args: kindname.method, inArray, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nestedcheckedrecords.Api, null)\nprobe.java:6:42: compiler.err.cant.resolve.location.args: kindname.method, inChoice, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nestedcheckedrecords.Api, null)\nprobe.java:7:42: compiler.err.cant.resolve.location.args: kindname.method, inExcept, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nestedcheckedrecords.Api, null)\nprobe.java:8:42: compiler.err.cant.resolve.location.args: kindname.method, inHolder, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nestedcheckedrecords.Api, null)\nprobe.java:9:40: compiler.err.cant.resolve.location.args: kindname.method, inList, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nestedcheckedrecords.Api, null)\nprobe.java:10:42: compiler.err.cant.resolve.location.args: kindname.method, inOption, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nestedcheckedrecords.Api, null)\nprobe.java:11:43: compiler.err.cant.resolve.location.args: kindname.method, inProduct, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nestedcheckedrecords.Api, null)\nprobe.java:12:38: compiler.err.cant.resolve.location.args: kindname.method, pair, , compiler.misc.type.null,compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nestedcheckedrecords.Api, null)\nprobe.java:13:40: compiler.err.cant.resolve.location.args: kindname.method, second, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.nestedcheckedrecords.Api, null)\n11 errors\n",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.nestedcheckedrecords.*;\nfinal class Probe {\n    static Object echoArray() { return Api.echoArray(null); }\n    static Object first() { return Api.first(null); }\n    static Object inArray() { return Api.inArray(null); }\n    static Object inChoice() { return Api.inChoice(null); }\n    static Object inExcept() { return Api.inExcept(null); }\n    static Object inHolder() { return Api.inHolder(null); }\n    static Object inList() { return Api.inList(null); }\n    static Object inOption() { return Api.inOption(null); }\n    static Object inProduct() { return Api.inProduct(null); }\n    static Object pair() { return Api.pair(null, null); }\n    static Object second() { return Api.second(null); }\n}\n",
+  "sourceSha256": "8ddc9c86164667572f5982623629f76978f9ccec12d3009781f4a45db2acd7af"
+}

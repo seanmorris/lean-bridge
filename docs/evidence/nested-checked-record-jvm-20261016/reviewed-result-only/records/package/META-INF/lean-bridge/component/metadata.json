@@ -1,0 +1,988 @@
+{
+  "diagnostics": [],
+  "kind": "lean-bridge-elaborated-exports",
+  "modules": [
+    {
+      "declarations": [
+        {
+          "documentation": "A positive word represented on the wire by its natural-number payload. ",
+          "effects": [],
+          "identity": "NestedCheckedRecords.Word",
+          "kind": "abbreviation",
+          "parameters": [],
+          "projection": {
+            "expression": "Type",
+            "reason": "type-declaration",
+            "status": "unsupported"
+          },
+          "resultExpression": "Type",
+          "selected": false,
+          "source": {
+            "endColumn": 43,
+            "endLine": 4,
+            "path": "NestedCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 3
+          },
+          "theoremReferences": [
+            "NestedCheckedRecords.Packet.mk.inj",
+            "NestedCheckedRecords.Packet.mk.injEq",
+            "NestedCheckedRecords.Packet.mk.sizeOf_spec"
+          ],
+          "typeExpression": "Type",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NestedCheckedRecords.echoArray",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "values",
+              "typeExpression": "Array.{0} NestedCheckedRecords.Packet"
+            }
+          ],
+          "projection": {
+            "expression": "Subtype refinements require a top-level or structural-container parameter or result: Subtype fun value =>\n  instLTNat.lt 0 value",
+            "reason": "unsupported-native-type",
+            "status": "unsupported"
+          },
+          "resultExpression": "Array.{0} NestedCheckedRecords.Packet",
+          "selected": false,
+          "source": {
+            "endColumn": 74,
+            "endLine": 59,
+            "path": "NestedCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 59
+          },
+          "theoremReferences": [],
+          "typeExpression": "Array.{0} NestedCheckedRecords.Packet → Array.{0} NestedCheckedRecords.Packet",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NestedCheckedRecords.first",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "NestedCheckedRecords.Packet"
+            }
+          ],
+          "projection": {
+            "expression": "Subtype refinements require a top-level or structural-container parameter or result: Subtype fun value =>\n  instLTNat.lt 0 value",
+            "reason": "unsupported-native-type",
+            "status": "unsupported"
+          },
+          "resultExpression": "Nat",
+          "selected": false,
+          "source": {
+            "endColumn": 62,
+            "endLine": 43,
+            "path": "NestedCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 43
+          },
+          "theoremReferences": [],
+          "typeExpression": "NestedCheckedRecords.Packet → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NestedCheckedRecords.inArray",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "values",
+              "typeExpression": "Array.{0} NestedCheckedRecords.Packet"
+            }
+          ],
+          "projection": {
+            "expression": "Subtype refinements require a top-level or structural-container parameter or result: Subtype fun value =>\n  instLTNat.lt 0 value",
+            "reason": "unsupported-native-type",
+            "status": "unsupported"
+          },
+          "resultExpression": "Nat",
+          "selected": false,
+          "source": {
+            "endColumn": 115,
+            "endLine": 46,
+            "path": "NestedCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 46
+          },
+          "theoremReferences": [],
+          "typeExpression": "Array.{0} NestedCheckedRecords.Packet → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NestedCheckedRecords.inChoice",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "NestedCheckedRecords.Choice"
+            }
+          ],
+          "projection": {
+            "expression": "Subtype refinements require a top-level or structural-container parameter or result: Subtype fun value =>\n  instLTNat.lt 0 value",
+            "reason": "unsupported-native-type",
+            "status": "unsupported"
+          },
+          "resultExpression": "Nat",
+          "selected": false,
+          "source": {
+            "endColumn": 37,
+            "endLine": 58,
+            "path": "NestedCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 55
+          },
+          "theoremReferences": [],
+          "typeExpression": "NestedCheckedRecords.Choice → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NestedCheckedRecords.inExcept",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Except.{0, 0} NestedCheckedRecords.Packet NestedCheckedRecords.Packet"
+            }
+          ],
+          "projection": {
+            "expression": "Subtype refinements require a top-level or structural-container parameter or result: Subtype fun value =>\n  instLTNat.lt 0 value",
+            "reason": "unsupported-native-type",
+            "status": "unsupported"
+          },
+          "resultExpression": "Nat",
+          "selected": false,
+          "source": {
+            "endColumn": 36,
+            "endLine": 53,
+            "path": "NestedCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 50
+          },
+          "theoremReferences": [],
+          "typeExpression": "Except.{0, 0} NestedCheckedRecords.Packet NestedCheckedRecords.Packet → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NestedCheckedRecords.inHolder",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "NestedCheckedRecords.Holder"
+            }
+          ],
+          "projection": {
+            "expression": "Subtype refinements require a top-level or structural-container parameter or result: Subtype fun value =>\n  instLTNat.lt 0 value",
+            "reason": "unsupported-native-type",
+            "status": "unsupported"
+          },
+          "resultExpression": "Nat",
+          "selected": false,
+          "source": {
+            "endColumn": 84,
+            "endLine": 54,
+            "path": "NestedCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 54
+          },
+          "theoremReferences": [],
+          "typeExpression": "NestedCheckedRecords.Holder → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NestedCheckedRecords.inList",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "values",
+              "typeExpression": "List.{0} NestedCheckedRecords.Packet"
+            }
+          ],
+          "projection": {
+            "expression": "Subtype refinements require a top-level or structural-container parameter or result: Subtype fun value =>\n  instLTNat.lt 0 value",
+            "reason": "unsupported-native-type",
+            "status": "unsupported"
+          },
+          "resultExpression": "Nat",
+          "selected": false,
+          "source": {
+            "endColumn": 113,
+            "endLine": 47,
+            "path": "NestedCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 47
+          },
+          "theoremReferences": [],
+          "typeExpression": "List.{0} NestedCheckedRecords.Packet → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NestedCheckedRecords.inOption",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Option.{0} NestedCheckedRecords.Packet"
+            }
+          ],
+          "projection": {
+            "expression": "Subtype refinements require a top-level or structural-container parameter or result: Subtype fun value =>\n  instLTNat.lt 0 value",
+            "reason": "unsupported-native-type",
+            "status": "unsupported"
+          },
+          "resultExpression": "Nat",
+          "selected": false,
+          "source": {
+            "endColumn": 90,
+            "endLine": 48,
+            "path": "NestedCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 48
+          },
+          "theoremReferences": [],
+          "typeExpression": "Option.{0} NestedCheckedRecords.Packet → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NestedCheckedRecords.inProduct",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Prod.{0, 0} NestedCheckedRecords.Packet NestedCheckedRecords.Packet"
+            }
+          ],
+          "projection": {
+            "expression": "Subtype refinements require a top-level or structural-container parameter or result: Subtype fun value =>\n  instLTNat.lt 0 value",
+            "reason": "unsupported-native-type",
+            "status": "unsupported"
+          },
+          "resultExpression": "Nat",
+          "selected": false,
+          "source": {
+            "endColumn": 96,
+            "endLine": 49,
+            "path": "NestedCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 49
+          },
+          "theoremReferences": [],
+          "typeExpression": "Prod.{0, 0} NestedCheckedRecords.Packet NestedCheckedRecords.Packet → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": "Preserve a packet whose checked payload fields satisfy the outer relation. ",
+          "effects": [],
+          "identity": "NestedCheckedRecords.mkPacket",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "digit",
+              "typeExpression": "Fin 10"
+            },
+            {
+              "binderInfo": "explicit",
+              "name": "word",
+              "typeExpression": "NestedCheckedRecords.Word"
+            }
+          ],
+          "projection": {
+            "expression": "Subtype refinements require a configured checked constructor: Subtype fun value => instLTNat.lt 0 value",
+            "reason": "unsupported-native-type",
+            "status": "unsupported"
+          },
+          "resultExpression": "Option.{0} NestedCheckedRecords.Packet",
+          "selected": false,
+          "source": {
+            "endColumn": 76,
+            "endLine": 22,
+            "path": "NestedCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 20
+          },
+          "theoremReferences": [],
+          "typeExpression": "Fin 10 → NestedCheckedRecords.Word → Option.{0} NestedCheckedRecords.Packet",
+          "visibility": "public"
+        },
+        {
+          "documentation": "Reject zero without changing accepted words. ",
+          "effects": [],
+          "identity": "NestedCheckedRecords.mkWord",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "base": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                },
+                "kind": "refinement",
+                "predicate": {
+                  "constructor": null,
+                  "kind": "subtype"
+                }
+              },
+              "kind": "option"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Option.{0} NestedCheckedRecords.Word",
+          "selected": false,
+          "source": {
+            "endColumn": 63,
+            "endLine": 8,
+            "path": "NestedCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 6
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → Option.{0} NestedCheckedRecords.Word",
+          "visibility": "public"
+        },
+        {
+          "documentation": "Preserve the digit and normalize the word so the outer relation always holds. ",
+          "effects": [],
+          "identity": "NestedCheckedRecords.normalizePacket",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "digit",
+              "typeExpression": "Fin 10"
+            },
+            {
+              "binderInfo": "explicit",
+              "name": "word",
+              "typeExpression": "NestedCheckedRecords.Word"
+            }
+          ],
+          "projection": {
+            "expression": "Subtype refinements require a configured checked constructor: Subtype fun value => instLTNat.lt 0 value",
+            "reason": "unsupported-native-type",
+            "status": "unsupported"
+          },
+          "resultExpression": "Option.{0} NestedCheckedRecords.Packet",
+          "selected": false,
+          "source": {
+            "endColumn": 53,
+            "endLine": 28,
+            "path": "NestedCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 24
+          },
+          "theoremReferences": [],
+          "typeExpression": "Fin 10 → NestedCheckedRecords.Word → Option.{0} NestedCheckedRecords.Packet",
+          "visibility": "public"
+        },
+        {
+          "documentation": "Normalize every word to the positive successor of its input. ",
+          "effects": [],
+          "identity": "NestedCheckedRecords.normalizeWord",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "base": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                },
+                "kind": "refinement",
+                "predicate": {
+                  "constructor": null,
+                  "kind": "subtype"
+                }
+              },
+              "kind": "option"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Option.{0} NestedCheckedRecords.Word",
+          "selected": false,
+          "source": {
+            "endColumn": 43,
+            "endLine": 12,
+            "path": "NestedCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 10
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → Option.{0} NestedCheckedRecords.Word",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NestedCheckedRecords.packetFrom",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "constructor": "NestedCheckedRecords.Packet.mk",
+              "erased": [
+                "linked"
+              ],
+              "fields": [
+                {
+                  "name": "digit",
+                  "projection": "NestedCheckedRecords.Packet.digit",
+                  "type": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "base": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "Nat",
+                      "name": "nat"
+                    },
+                    "kind": "refinement",
+                    "predicate": {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  }
+                },
+                {
+                  "name": "word",
+                  "projection": "NestedCheckedRecords.Packet.word",
+                  "type": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "base": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "Nat",
+                      "name": "nat"
+                    },
+                    "kind": "refinement",
+                    "predicate": {
+                      "constructor": null,
+                      "kind": "subtype"
+                    }
+                  }
+                }
+              ],
+              "kind": "record",
+              "lean": "NestedCheckedRecords.Packet",
+              "name": "NestedCheckedRecords.Packet"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "NestedCheckedRecords.Packet",
+          "selected": false,
+          "source": {
+            "endColumn": 71,
+            "endLine": 41,
+            "path": "NestedCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 40
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → NestedCheckedRecords.Packet",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NestedCheckedRecords.pair",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "left",
+              "typeExpression": "NestedCheckedRecords.Packet"
+            },
+            {
+              "binderInfo": "explicit",
+              "name": "right",
+              "typeExpression": "NestedCheckedRecords.Packet"
+            }
+          ],
+          "projection": {
+            "expression": "Subtype refinements require a top-level or structural-container parameter or result: Subtype fun value =>\n  instLTNat.lt 0 value",
+            "reason": "unsupported-native-type",
+            "status": "unsupported"
+          },
+          "resultExpression": "Nat",
+          "selected": false,
+          "source": {
+            "endColumn": 82,
+            "endLine": 45,
+            "path": "NestedCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 45
+          },
+          "theoremReferences": [],
+          "typeExpression": "NestedCheckedRecords.Packet → NestedCheckedRecords.Packet → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NestedCheckedRecords.produceArray",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "constructor": "NestedCheckedRecords.Packet.mk",
+                "erased": [
+                  "linked"
+                ],
+                "fields": [
+                  {
+                    "name": "digit",
+                    "projection": "NestedCheckedRecords.Packet.digit",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "base": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "primitive",
+                        "lean": "Nat",
+                        "name": "nat"
+                      },
+                      "kind": "refinement",
+                      "predicate": {
+                        "bound": "10",
+                        "kind": "fin"
+                      }
+                    }
+                  },
+                  {
+                    "name": "word",
+                    "projection": "NestedCheckedRecords.Packet.word",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "base": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "primitive",
+                        "lean": "Nat",
+                        "name": "nat"
+                      },
+                      "kind": "refinement",
+                      "predicate": {
+                        "constructor": null,
+                        "kind": "subtype"
+                      }
+                    }
+                  }
+                ],
+                "kind": "record",
+                "lean": "NestedCheckedRecords.Packet",
+                "name": "NestedCheckedRecords.Packet"
+              },
+              "kind": "array"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Array.{0} NestedCheckedRecords.Packet",
+          "selected": true,
+          "source": {
+            "endColumn": 92,
+            "endLine": 63,
+            "path": "NestedCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 63
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → Array.{0} NestedCheckedRecords.Packet",
+          "visibility": "public"
+        },
+        {
+          "documentation": "Lean-produced checked records need no input constructor. ",
+          "effects": [],
+          "identity": "NestedCheckedRecords.produceOption",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "constructor": "NestedCheckedRecords.Packet.mk",
+                "erased": [
+                  "linked"
+                ],
+                "fields": [
+                  {
+                    "name": "digit",
+                    "projection": "NestedCheckedRecords.Packet.digit",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "base": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "primitive",
+                        "lean": "Nat",
+                        "name": "nat"
+                      },
+                      "kind": "refinement",
+                      "predicate": {
+                        "bound": "10",
+                        "kind": "fin"
+                      }
+                    }
+                  },
+                  {
+                    "name": "word",
+                    "projection": "NestedCheckedRecords.Packet.word",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "base": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "primitive",
+                        "lean": "Nat",
+                        "name": "nat"
+                      },
+                      "kind": "refinement",
+                      "predicate": {
+                        "constructor": null,
+                        "kind": "subtype"
+                      }
+                    }
+                  }
+                ],
+                "kind": "record",
+                "lean": "NestedCheckedRecords.Packet",
+                "name": "NestedCheckedRecords.Packet"
+              },
+              "kind": "option"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Option.{0} NestedCheckedRecords.Packet",
+          "selected": true,
+          "source": {
+            "endColumn": 74,
+            "endLine": 62,
+            "path": "NestedCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 61
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → Option.{0} NestedCheckedRecords.Packet",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "NestedCheckedRecords.second",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "NestedCheckedRecords.Packet"
+            }
+          ],
+          "projection": {
+            "expression": "Subtype refinements require a top-level or structural-container parameter or result: Subtype fun value =>\n  instLTNat.lt 0 value",
+            "reason": "unsupported-native-type",
+            "status": "unsupported"
+          },
+          "resultExpression": "Nat",
+          "selected": false,
+          "source": {
+            "endColumn": 63,
+            "endLine": 44,
+            "path": "NestedCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 44
+          },
+          "theoremReferences": [],
+          "typeExpression": "NestedCheckedRecords.Packet → Nat",
+          "visibility": "public"
+        }
+      ],
+      "directImports": [
+        "Init"
+      ],
+      "interfaceSha256": "e20264af883ce83ec3baf120ceca94359e9c9cbdd0b5750fc7f1226fe93a49f3",
+      "name": "NestedCheckedRecords",
+      "sourcePath": "NestedCheckedRecords.lean",
+      "sourceSha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+    }
+  ],
+  "producer": {
+    "adapter": "lean-bridge-elaborator",
+    "adapterVersion": 2,
+    "invocationIdentitySha256": "17d6d5138b9da76f7cd6d4efcb9e8b46991a8988cbb1822eab262437a6c0692a",
+    "tool": "Lean",
+    "toolVersion": "4.32.2",
+    "toolchain": "leanprover/lean4:v4.32.2"
+  },
+  "profile": "native-library-v1",
+  "schemaVersion": 2
+}

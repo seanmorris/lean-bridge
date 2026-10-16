@@ -1,0 +1,39 @@
+{
+  "archiveSha256": "8ccae1513ef3339c5f614d3dd13019ee15ffdf2c432b2f0f80fe6c43e2351293",
+  "args": [
+    "--release",
+    "22",
+    "-Werror",
+    "-proc:none",
+    "-XDrawDiagnostics",
+    "-cp",
+    "component.jar",
+    "-d",
+    "classes",
+    "probe.java"
+  ],
+  "command": "/app/.toolchains/jdk22/bin/javac",
+  "cwd": "/tmp/lean-bridge-nested-record-jvm-installed-LXMmN4/probes/java",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/unavailable"
+  },
+  "mode": "full",
+  "outputs": {
+    "Probe.class": {
+      "bytes": 1653,
+      "sha256": "7424aedf11bdd4766ae8778ee393a9531b783aec7d2e23805a7774d032c8daf6"
+    }
+  },
+  "profile": "java",
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.nestedcheckedrecords.*;\nfinal class Probe {\n    static Object echoArray() { return Api.echoArray(null); }\n    static Object first() { return Api.first(null); }\n    static Object inArray() { return Api.inArray(null); }\n    static Object inChoice() { return Api.inChoice(null); }\n    static Object inExcept() { return Api.inExcept(null); }\n    static Object inHolder() { return Api.inHolder(null); }\n    static Object inList() { return Api.inList(null); }\n    static Object inOption() { return Api.inOption(null); }\n    static Object inProduct() { return Api.inProduct(null); }\n    static Object pair() { return Api.pair(null, null); }\n    static Object second() { return Api.second(null); }\n}\n",
+  "sourceSha256": "8ddc9c86164667572f5982623629f76978f9ccec12d3009781f4a45db2acd7af"
+}

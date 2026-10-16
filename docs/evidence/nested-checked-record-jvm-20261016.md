@@ -1,0 +1,13 @@
+# Nested checked records in Java and Kotlin, 16 October 2026
+
+The [authenticated archive](nested-checked-record-jvm-20261016/index.json) records four installed Maven selections: ordinary Lean source and independently reviewed Binding IR, each as a full API and a standalone result-only API. Two independent author roots produced the same package. Each selection was installed offline after removing the author sources, then exercised by Java and Kotlin callers after relocation and again after deleting the consumer sources.
+
+The full APIs pass a proof-free generated `Packet` record through direct and repeated parameters, arrays, lists, options, tuples, both result branches, an enclosing record field, and an active variant field. `Packet` contains a `Fin 10` digit and a checked `Nat` subtype word. Generated adapters invoke the selected constructors at every present input site. Rejected graphs preserve the caller's complete input, and later valid calls demonstrate recovery. Lean-produced arrays and optional results expose payloads without proof fields or input-constructor metadata.
+
+The Java and Kotlin callers compiled against every generated route and mode. Separate compiler probes check the retained input API, Kotlin function references, exact Java and Kotlin unit classes, and nullable versus non-nullable Kotlin results. Across the two languages and three deployment stages, each full selection completed 23,544 checks, including 3,144 Lean-side rejections, 42 host-side rejections, 3,168 recovery calls, and 6,324 snapshots. Each result-only selection completed 7,740 checks, 24 host-side rejections, six recoveries, and six snapshots.
+
+The local runs used JDK 22.0.2, Kotlin 2.2.0, Lean 4.32.2, and Maven 3.9.11 on Linux x64/glibc 2.36 with a 64-bit machine-word contract. The [recurring workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nested-checked-record-jvm.yml) rebuilds all four selections on Ubuntu 24.04 and enforces the glibc 2.38 hosted floor.
+
+The archive retains every non-native package member, all caller and compiler-probe records, both runner sources, and the exact producer/checker source closure. It records the original JAR and native-library identities without copying those binaries. Independent controls reject missing or changed records and coordinated changes to the execution, compiler probes, package receipt, native model, or resource guard.
+
+This evidence covers the exact acyclic `Packet`, `Holder`, `ChoicePacket`, and copied-container forms in the archive. Generic, recursive and inherited records, other indices, open dependent and zero-payload records, callbacks, owned positions, and other platforms require separate acceptance.

@@ -1,0 +1,87 @@
+{
+  "archiveSha256": "8ccae1513ef3339c5f614d3dd13019ee15ffdf2c432b2f0f80fe6c43e2351293",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "probe.kt",
+    "-d",
+    "classes"
+  ],
+  "command": "/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlinc",
+  "cwd": "/tmp/lean-bridge-nested-record-jvm-installed-LXMmN4/probes/kotlin",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/app/.toolchains/jdk22",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "mode": "full",
+  "outputs": {
+    "META-INF/main.kotlin_module": {
+      "bytes": 37,
+      "sha256": "f6124cd5950d9dc426ecc61468e4fb6dc19bd3124c62578d1bf30be6af612bc4"
+    },
+    "ProbeKt$probeEchoArray$1.class": {
+      "bytes": 1670,
+      "sha256": "2b826fe4a6993d2a476b13bd078e6cc29016b8c4f6f0fc8055baf7fd861a8ad2"
+    },
+    "ProbeKt$probeFirst$1.class": {
+      "bytes": 1612,
+      "sha256": "840308843a9a9759ba21f82d4196da86bfca31d576facf4c2be07b6312ce83a9"
+    },
+    "ProbeKt$probeInArray$1.class": {
+      "bytes": 1572,
+      "sha256": "3091233bb3c6dcc20833a27c8a09dbf205140d80c5b259dfc04096189f42e208"
+    },
+    "ProbeKt$probeInChoice$1.class": {
+      "bytes": 1624,
+      "sha256": "dc1848fe91ea4987542a77f321e9c4ad8dcc7e10b182f03b71a9ce5036dcddc3"
+    },
+    "ProbeKt$probeInExcept$1.class": {
+      "bytes": 1920,
+      "sha256": "c2eb74d9763a3e2ab53e164701ac99e29a739a8d4e22b508786e8862d70b7928"
+    },
+    "ProbeKt$probeInHolder$1.class": {
+      "bytes": 1624,
+      "sha256": "af5128aa083416fdfd5da86e025de8684d63135fcec20a06e8757af2a1d576df"
+    },
+    "ProbeKt$probeInList$1.class": {
+      "bytes": 1568,
+      "sha256": "49a1341d478c5fb83c149f742ed692444a1c06a849275c724af24292ec6c8261"
+    },
+    "ProbeKt$probeInOption$1.class": {
+      "bytes": 1817,
+      "sha256": "2e6289e2493999c4c8b87f5989478f4beefa55de3ce14692246359e1f1e5da2c"
+    },
+    "ProbeKt$probeInProduct$1.class": {
+      "bytes": 1912,
+      "sha256": "4fbefeaaeeed3c5bd999d23e7fd069bc1bcbcae6be81b8ef088ce277f500e904"
+    },
+    "ProbeKt$probePair$1.class": {
+      "bytes": 1818,
+      "sha256": "d35266d6b28442b9d195bed36a9872b066aa631a89ec463d181823f940aaf7d4"
+    },
+    "ProbeKt$probeSecond$1.class": {
+      "bytes": 1616,
+      "sha256": "ec9f5fe9f9d81cd16f83afec2bfc82d381c09803a47575bb0745698655168db8"
+    },
+    "ProbeKt.class": {
+      "bytes": 4167,
+      "sha256": "a47c44dd8bcecafedb84211ffd0e1d81ecded04a849e67eab03f2d684723f842"
+    }
+  },
+  "profile": "kotlin",
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.nestedcheckedrecords.kotlin.*\nval probeEchoArray = Api::echoArray\nval probeFirst = Api::first\nval probeInArray = Api::inArray\nval probeInChoice = Api::inChoice\nval probeInExcept = Api::inExcept\nval probeInHolder = Api::inHolder\nval probeInList = Api::inList\nval probeInOption = Api::inOption\nval probeInProduct = Api::inProduct\nval probePair = Api::pair\nval probeSecond = Api::second\n",
+  "sourceSha256": "88c95928102c5ae47ea5dee47f3ebb88332b07e21885f97429caea8d8f1aa506"
+}

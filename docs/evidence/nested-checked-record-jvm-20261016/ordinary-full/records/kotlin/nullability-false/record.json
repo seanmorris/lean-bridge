@@ -1,0 +1,43 @@
+{
+  "archiveSha256": "8ccae1513ef3339c5f614d3dd13019ee15ffdf2c432b2f0f80fe6c43e2351293",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "NullProbe.kt",
+    "-d",
+    "classes"
+  ],
+  "command": "/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlinc",
+  "cwd": "/tmp/lean-bridge-nested-record-jvm-installed-LXMmN4/probes/nullability-false",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/app/.toolchains/jdk22",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "invalid": false,
+  "mode": "full",
+  "outputs": {
+    "META-INF/main.kotlin_module": {
+      "bytes": 41,
+      "sha256": "14d9d137a46fc5f49ea00828cb3ad2d35b84c9918bbca55a496bdbdf5366c5f9"
+    },
+    "NullProbeKt.class": {
+      "bytes": 4974,
+      "sha256": "9071af370b93d5d64d7a808230e77bb3890c795c3461a594687fa0db0875e044"
+    }
+  },
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.nestedcheckedrecords.kotlin.*\nfun produceOptionNull() = Api.produceOption(java.math.BigInteger.ONE)\nfun produceArrayNull() = Api.produceArray(java.math.BigInteger.ONE)\nfun echoArrayNull() = Api.echoArray(arrayOf(Packet(java.math.BigInteger.ONE, java.math.BigInteger.ONE)))\nfun firstNull() = Api.first(Packet(java.math.BigInteger.ONE, java.math.BigInteger.ONE))\nfun inArrayNull() = Api.inArray(arrayOf(Packet(java.math.BigInteger.ONE, java.math.BigInteger.ONE)))\nfun inChoiceNull() = Api.inChoice(ChoiceEmpty())\nfun inExceptNull() = Api.inExcept(Result.ok<Packet, Packet>(Packet(java.math.BigInteger.ONE, java.math.BigInteger.ONE)))\nfun inHolderNull() = Api.inHolder(Holder(Packet(java.math.BigInteger.ONE, java.math.BigInteger.ONE), java.math.BigInteger.ONE))\nfun inListNull() = Api.inList(arrayOf(Packet(java.math.BigInteger.ONE, java.math.BigInteger.ONE)))\nfun inOptionNull() = Api.inOption(Option.some(Packet(java.math.BigInteger.ONE, java.math.BigInteger.ONE)))\nfun inProductNull() = Api.inProduct(Pair(Packet(java.math.BigInteger.ONE, java.math.BigInteger.ONE), Packet(java.math.BigInteger.ONE, java.math.BigInteger.ONE)))\nfun pairNull() = Api.pair(Packet(java.math.BigInteger.ONE, java.math.BigInteger.ONE), Packet(java.math.BigInteger.ONE, java.math.BigInteger.ONE))\nfun secondNull() = Api.second(Packet(java.math.BigInteger.ONE, java.math.BigInteger.ONE))\n",
+  "sourceSha256": "b452c268b2e2ee38daf29cfeffdaccd8b284b8eda1fb08f9890367f0334220f1"
+}

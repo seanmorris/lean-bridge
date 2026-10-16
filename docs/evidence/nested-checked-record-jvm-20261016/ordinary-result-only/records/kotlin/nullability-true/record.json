@@ -1,0 +1,34 @@
+{
+  "archiveSha256": "ab6d3bcc8048362796ff321f6fb88e712c710942d194031fec0f4d2abf61bcab",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "NullProbe.kt",
+    "-d",
+    "classes"
+  ],
+  "command": "/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlinc",
+  "cwd": "/tmp/lean-bridge-nested-record-jvm-installed-36lfNs/probes/nullability-true",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/app/.toolchains/jdk22",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "invalid": true,
+  "mode": "result-only",
+  "outputs": {},
+  "run": {
+    "code": 1,
+    "stderr": "NullProbe.kt:2:45: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'BigInteger'.\nfun produceOptionNull() = Api.produceOption(null)\n                                            ^^^^\nNullProbe.kt:3:43: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'BigInteger'.\nfun produceArrayNull() = Api.produceArray(null)\n                                          ^^^^\n",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.nestedcheckedrecords.kotlin.*\nfun produceOptionNull() = Api.produceOption(null)\nfun produceArrayNull() = Api.produceArray(null)\n",
+  "sourceSha256": "ef21dc2775eb72b75f8bea03237a2d318a63593cd88fd07616a1182bf36c3059"
+}

@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "generator": "jvm-copied-v1",
+  "target": "jvm",
+  "component": "nestedcheckedrecords@1.0.0",
+  "bindingIrSha256": "c0b94dd7cddc6b694dc4c328faed34ca317f13a104d0d9d1904d05c60d2d0ed9",
+  "namespace": "org.leanbridge.nestedcheckedrecords",
+  "files": [
+    "src/main/java/org/leanbridge/nestedcheckedrecords/Unit.java",
+    "src/main/java/org/leanbridge/nestedcheckedrecords/LeanBridgeException.java",
+    "src/main/java/org/leanbridge/nestedcheckedrecords/Api.java",
+    "src/main/java/org/leanbridge/nestedcheckedrecords/Packet.java",
+    "src/main/java/org/leanbridge/nestedcheckedrecords/Holder.java",
+    "src/main/java/org/leanbridge/nestedcheckedrecords/Choice.java",
+    "src/main/java/org/leanbridge/nestedcheckedrecords/ChoiceEmpty.java",
+    "src/main/java/org/leanbridge/nestedcheckedrecords/ChoicePacket.java",
+    "src/main/java/org/leanbridge/nestedcheckedrecords/Option.java",
+    "src/main/java/org/leanbridge/nestedcheckedrecords/Result.java",
+    "src/main/java/org/leanbridge/nestedcheckedrecords/Pair.java",
+    "src/main/java/org/leanbridge/nestedcheckedrecords/Runtime.java",
+    "src/main/java/org/leanbridge/nestedcheckedrecords/NativeAssets.java",
+    "src/main/java/org/leanbridge/nestedcheckedrecords/Scope.java",
+    "README.md",
+    "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Api.kt",
+    "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Unit.kt",
+    "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/LeanBridgeException.kt",
+    "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Packet.kt",
+    "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Choice.kt",
+    "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/ChoiceEmpty.kt",
+    "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/ChoicePacket.kt",
+    "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Holder.kt",
+    "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Option.kt",
+    "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Result.kt",
+    "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Pair.kt",
+    "src/main/java/org/leanbridge/nestedcheckedrecords/KotlinBridge.java",
+    "src/main/kotlin/org/leanbridge/nestedcheckedrecords/KotlinCalls.kt",
+    "src/main/java/org/leanbridge/nestedcheckedrecords/KotlinRuntime.java"
+  ],
+  "publicFiles": [
+    "src/main/java/org/leanbridge/nestedcheckedrecords/Unit.java",
+    "src/main/java/org/leanbridge/nestedcheckedrecords/LeanBridgeException.java",
+    "src/main/java/org/leanbridge/nestedcheckedrecords/Api.java",
+    "src/main/java/org/leanbridge/nestedcheckedrecords/Packet.java",
+    "src/main/java/org/leanbridge/nestedcheckedrecords/Holder.java",
+    "src/main/java/org/leanbridge/nestedcheckedrecords/Choice.java",
+    "src/main/java/org/leanbridge/nestedcheckedrecords/ChoiceEmpty.java",
+    "src/main/java/org/leanbridge/nestedcheckedrecords/ChoicePacket.java",
+    "src/main/java/org/leanbridge/nestedcheckedrecords/Option.java",
+    "src/main/java/org/leanbridge/nestedcheckedrecords/Result.java",
+    "src/main/java/org/leanbridge/nestedcheckedrecords/Pair.java",
+    "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Api.kt",
+    "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Unit.kt",
+    "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/LeanBridgeException.kt",
+    "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Packet.kt",
+    "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Choice.kt",
+    "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/ChoiceEmpty.kt",
+    "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/ChoicePacket.kt",
+    "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Holder.kt",
+    "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Option.kt",
+    "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Result.kt",
+    "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Pair.kt"
+  ],
+  "internalFiles": [
+    "src/main/java/org/leanbridge/nestedcheckedrecords/Runtime.java",
+    "src/main/java/org/leanbridge/nestedcheckedrecords/NativeAssets.java",
+    "src/main/java/org/leanbridge/nestedcheckedrecords/Scope.java",
+    "src/main/java/org/leanbridge/nestedcheckedrecords/KotlinBridge.java",
+    "src/main/kotlin/org/leanbridge/nestedcheckedrecords/KotlinCalls.kt",
+    "src/main/java/org/leanbridge/nestedcheckedrecords/KotlinRuntime.java"
+  ],
+  "packageFiles": [],
+  "supportedFeatures": [
+    "direct-functions",
+    "copied-values",
+    "deterministic-close"
+  ],
+  "capabilityGaps": [
+    {
+      "feature": "identity-and-effects",
+      "reason": "Ordinary Maven admits copied values and synchronous primitive callables, not resources, compound callables or async delivery."
+    },
+    {
+      "feature": "additional-platforms",
+      "reason": "The compiled native profile is Linux x86-64 with glibc."
+    }
+  ],
+  "kotlin": {
+    "namespace": "org.leanbridge.nestedcheckedrecords.kotlin",
+    "metadataVersion": "2.2.0",
+    "publicFiles": [
+      "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Api.kt",
+      "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Unit.kt",
+      "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/LeanBridgeException.kt",
+      "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Packet.kt",
+      "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Choice.kt",
+      "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/ChoiceEmpty.kt",
+      "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/ChoicePacket.kt",
+      "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Holder.kt",
+      "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Option.kt",
+      "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Result.kt",
+      "src/main/kotlin/org/leanbridge/nestedcheckedrecords/kotlin/Pair.kt"
+    ],
+    "internalFiles": [
+      "src/main/java/org/leanbridge/nestedcheckedrecords/KotlinBridge.java",
+      "src/main/kotlin/org/leanbridge/nestedcheckedrecords/KotlinCalls.kt",
+      "src/main/java/org/leanbridge/nestedcheckedrecords/KotlinRuntime.java"
+    ]
+  }
+}

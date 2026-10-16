@@ -1,0 +1,34 @@
+{
+  "finished": "2026-10-16T09:17:37.833Z",
+  "producer": "ef8876ba067e29197b32a21eb708b394f4df3568",
+  "runtime": {
+    "arch": "x64",
+    "glibc": "2.36",
+    "platform": "linux"
+  },
+  "schemaVersion": 1,
+  "selections": [
+    [
+      "ordinary",
+      "full"
+    ],
+    [
+      "ordinary",
+      "result-only"
+    ],
+    [
+      "reviewed",
+      "full"
+    ],
+    [
+      "reviewed",
+      "result-only"
+    ]
+  ],
+  "tools": {
+    "java": "/app/.toolchains/jdk22/bin/java",
+    "javac": "/app/.toolchains/jdk22/bin/javac",
+    "kotlinc": "/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlinc",
+    "maven": "/app/.toolchains/apache-maven-3.9.11/bin/mvn"
+  }
+}
