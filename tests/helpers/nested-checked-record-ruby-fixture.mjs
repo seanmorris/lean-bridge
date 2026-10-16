@@ -6,13 +6,14 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { nestedCheckedRecordConfiguration, nestedCheckedRecordName, nestedCheckedRecordReview } from "./nested-checked-record-fixture.mjs";
+import { nestedCheckedRecordRubyLoadCeiling, nestedCheckedRecordRubyLoadCeilings } from "./nested-checked-record-ruby-resources.mjs";
 
 export const nestedCheckedRecordRubyRoutes = Object.freeze(["ordinary", "reviewed"]);
 export const nestedCheckedRecordRubyModes = Object.freeze(["full", "result-only"]);
 export const nestedCheckedRecordRubyTarget = Object.freeze({ name: nestedCheckedRecordName, version: "1.0.0" });
 /** Independent caller totals; result-only replays only the constructor-free producers. */
 export const nestedCheckedRecordRubyCounts = Object.freeze({
-	full: Object.freeze({ checks: 5001, rejections: 525, hostRejections: 15, recoveries: 256, snapshots: 1839, snapshotControls: 11, rounds: 256 })
+	full: Object.freeze({ checks: 5002, rejections: 525, hostRejections: 15, recoveries: 256, snapshots: 1839, snapshotControls: 12, rounds: 256 })
 	, "result-only": Object.freeze({ checks: 1571, rejections: 0, hostRejections: 4, recoveries: 0, snapshots: 518, snapshotControls: 8, rounds: 256 })
 });
 
@@ -36,8 +37,19 @@ export const nestedCheckedRecordRubySelection = environment => {
 		assert.equal(new Set(selected).size, selected.length, `Duplicate nested checked-record Ruby ${name}`);
 		return selected;
 	};
-	if(environment[prefix + "OUTPUT"] !== undefined) assert.equal(flag, "1", `Explicit ${prefix}OUTPUT requires TEST=1`);
-	return { enabled: flag === "1", routes: select("ROUTES", nestedCheckedRecordRubyRoutes), modes: select("MODES", nestedCheckedRecordRubyModes) };
+	for(const name of [prefix + "OUTPUT", prefix + "MAX_LOAD"])
+		if(environment[name] !== undefined) assert.equal(flag, "1", `Explicit ${name} requires TEST=1`);
+	const rawLoad = environment[prefix + "MAX_LOAD"];
+	if(rawLoad !== undefined) assert.equal(typeof rawLoad, "string", "Invalid nested checked-record Ruby MAX_LOAD");
+	const maxLoad = rawLoad === undefined ? nestedCheckedRecordRubyLoadCeiling : Number(rawLoad);
+	assert.ok(nestedCheckedRecordRubyLoadCeilings.includes(maxLoad)
+		, `Nested checked-record Ruby max load must be one of ${nestedCheckedRecordRubyLoadCeilings.join(", ")}`);
+	return {
+		enabled: flag === "1"
+		, routes: select("ROUTES", nestedCheckedRecordRubyRoutes)
+		, modes: select("MODES", nestedCheckedRecordRubyModes)
+		, maxLoad
+	};
 };
 
 /**

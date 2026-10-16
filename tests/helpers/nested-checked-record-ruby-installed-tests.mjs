@@ -25,26 +25,27 @@ import { nativeArtifactPaths } from "../../src/build/native-artifacts.mjs";
 import { checkNestedCheckedRecordRubyReport, nestedCheckedRecordRubyRecords } from "./nested-checked-record-ruby-report.mjs";
 import { waitNominalSubtypeDotnetResources } from "./nominal-subtype-dotnet-resources.mjs";
 
-const { enabled, routes, modes } = nestedCheckedRecordRubySelection(process.env);
-const resourceMaxLoad = process.env.LEAN_BRIDGE_NESTED_CHECKED_RECORD_RUBY_MAX_LOAD === undefined
-	? 6
-	: Number(process.env.LEAN_BRIDGE_NESTED_CHECKED_RECORD_RUBY_MAX_LOAD);
+const { enabled, routes, modes, maxLoad } = nestedCheckedRecordRubySelection(process.env);
 
 for(const route of routes) for(const mode of modes) test(`installed nested checked-record Ruby packages reproduce and relocate ${route} ${mode}`, {
 	skip: !enabled, timeout: 3_600_000
 }, async t => {
 	const producerCommit = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
-	for(const path of ["fixture.mjs", "package.mjs", "installed-tests.mjs"])
+	for(const path of ["fixture.mjs", "resources.mjs", "package.mjs", "installed-tests.mjs"])
 		execFileSync("git", ["ls-files", "--error-unmatch", `tests/helpers/nested-checked-record-ruby-${path}`]);
 	execFileSync("git", ["ls-files", "--error-unmatch", "tests/fixtures/nested-checked-record-consumers/ruby.rb"]);
 	execFileSync("git", ["diff", "--quiet", "HEAD", "--", "src", "tests", "scripts"]);
 	const expected = nestedCheckedRecordRubyReview(mode), configuration = nestedCheckedRecordRubyConfiguration(route, mode);
 	const output = resolve(process.env.LEAN_BRIDGE_NESTED_CHECKED_RECORD_RUBY_OUTPUT ?? "build/nested-checked-record-ruby", route, mode);
 	await assert.rejects(access(output), { code: "ENOENT" }); await mkdir(output, { recursive: true });
-	const resources = () => waitNominalSubtypeDotnetResources(output, {
-		maxLoad: resourceMaxLoad
-		, notify: message => t.diagnostic(message.replaceAll("C#", "nested Ruby"))
-	});
+	const resourceChecks = [];
+	const resources = async () => {
+		resourceChecks.push(await waitNominalSubtypeDotnetResources(output, {
+			maxLoad
+			, notify: message => t.diagnostic(message.replaceAll("C#", "nested Ruby"))
+		}));
+		await saveLakeFile(output, "resources.json", canonicalJson(resourceChecks));
+	};
 	await resources();
 	const environment = nativeFixtureEnvironment(["ruby"]);
 	assert.ok(typeof environment.LEAN_BRIDGE_RUBY === "string" && isAbsolute(environment.LEAN_BRIDGE_RUBY), "Select an absolute Ruby 3.3 interpreter explicitly");
@@ -142,6 +143,7 @@ for(const route of routes) for(const mode of modes) test(`installed nested check
 		, declaredGlibcFloor: floor
 		, expectedBindingIrSha256: hashBindingIr(expected)
 		, gemReceiptSha256: gem.receiptSha256
+		, resourceChecks, loadCeiling: maxLoad
 		, reproducible: true, independentBuilds: 2, authorInputsUnchanged: true
 		, sourceRemovedBeforeInstallation: true, offlineInstall: true
 		, compilerFreeReplay: true

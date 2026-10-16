@@ -27,6 +27,7 @@ import {
 } from "./nested-checked-record-ruby-fixture.mjs";
 import { runCopied } from "./copied-fixture-install.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
+import { assertNestedCheckedRecordRubyResources } from "./nested-checked-record-ruby-resources.mjs";
 
 const ruby = process.env.LEAN_BRIDGE_RUBY ?? resolve(".toolchains/ruby33/bin/ruby");
 const modulePath = "lib/lean_bridge/nestedcheckedrecords.rb";
@@ -88,7 +89,7 @@ test("nested checked-record Ruby keeps both author contracts and constructor-fre
 
 test("nested checked-record Ruby gates reject disabled, misspelled or repeated selections", () => {
 	const prefix = "LEAN_BRIDGE_NESTED_CHECKED_RECORD_RUBY_", enabled = { [prefix + "TEST"]: "1" };
-	assert.deepEqual(nestedCheckedRecordRubySelection({}), { enabled: false, routes: ["ordinary", "reviewed"], modes: ["full", "result-only"] });
+	assert.deepEqual(nestedCheckedRecordRubySelection({}), { enabled: false, routes: ["ordinary", "reviewed"], modes: ["full", "result-only"], maxLoad: 8 });
 	assert.equal(nestedCheckedRecordRubySelection(enabled).enabled, true);
 	for(const flag of ["", "true", "yes", "2", true, null])
 		assert.throws(() => nestedCheckedRecordRubySelection({ [prefix + "TEST"]: flag }));
@@ -100,8 +101,27 @@ test("nested checked-record Ruby gates reject disabled, misspelled or repeated s
 			assert.throws(() => nestedCheckedRecordRubySelection({ [prefix + "TEST"]: flag, [prefix + name]: valid }));
 		assert.deepEqual(nestedCheckedRecordRubySelection({ ...enabled, [prefix + name]: valid })[name.toLowerCase()], [valid]);
 	}
-	for(const flag of [undefined, "0"])
-		assert.throws(() => nestedCheckedRecordRubySelection({ [prefix + "TEST"]: flag, [prefix + "OUTPUT"]: "explicit" }));
+	for(const name of ["OUTPUT", "MAX_LOAD"]) for(const flag of [undefined, "0"])
+		assert.throws(() => nestedCheckedRecordRubySelection({ [prefix + "TEST"]: flag, [prefix + name]: "explicit" }));
+	for(const maxLoad of [8, 12, 16, 20])
+		assert.equal(nestedCheckedRecordRubySelection({ ...enabled, [prefix + "MAX_LOAD"]: String(maxLoad) }).maxLoad, maxLoad);
+	for(const maxLoad of ["", "6", "10", "24", "Infinity", "NaN", 8, null])
+		assert.throws(() => nestedCheckedRecordRubySelection({ ...enabled, [prefix + "MAX_LOAD"]: maxLoad }));
+});
+
+test("nested checked-record Ruby resource records preserve the selected load ceiling", () => {
+	const GiB = 1024 ** 3, admitted = { freeBytes: 3 * GiB, availableBytes: 4 * GiB, load: 7.5 };
+	assertNestedCheckedRecordRubyResources({ observations: [admitted], waits: 0 }, 8);
+	assertNestedCheckedRecordRubyResources({ observations: [{ ...admitted, load: 20.5 }, admitted], waits: 1 }, 20);
+	for(const changed of [
+		{ observations: [{ ...admitted, freeBytes: GiB }], waits: 0 }
+		, { observations: [{ ...admitted, availableBytes: GiB }], waits: 0 }
+		, { observations: [{ ...admitted, load: 8 }], waits: 0 }
+		, { observations: [admitted], waits: 1 }
+		, { observations: [admitted], waits: 0, extra: true }
+	]) assert.throws(() => assertNestedCheckedRecordRubyResources(changed, 8));
+	for(const maxLoad of [6, 10, 24, Infinity])
+		assert.throws(() => assertNestedCheckedRecordRubyResources({ observations: [admitted], waits: 0 }, maxLoad));
 });
 
 test("nested checked-record Ruby caller detects every result, input and selection fault in an oracle", { skip: !existsSync(ruby) }, async t => {

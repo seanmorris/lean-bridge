@@ -11,9 +11,13 @@ def check_nested_checked_records(api, result_only = false, rounds = 256, paramet
   raise "invalid parameter prefix" unless ["arg", "value"].include?(parameter_prefix)
   checks = rejections = host_rejections = recoveries = snapshots = snapshot_controls = 0
   packet_class = api.const_get(:Packet)
-  some, ok, err = [:Some, :Ok, :Err].map { |name| api.const_get(name) }
+  some = api.const_get(:Some)
+  ok = err = nil
+  wrappers = [some]
   fields = {packet_class => [:digit, :word]}
   unless result_only
+    ok, err = [:Ok, :Err].map { |name| api.const_get(name) }
+    wrappers += [ok, err]
     fields[api.const_get(:Holder)] = [:packet, :tag]
     fields[api.const_get(:Choice).const_get(:Empty)] = []
     fields[api.const_get(:Choice).const_get(:Packet)] = [:value]
@@ -24,7 +28,7 @@ def check_nested_checked_records(api, result_only = false, rounds = 256, paramet
       [kind, value]
     elsif kind == Array
       [Array, value.frozen?, value.map { |item| snapshot.call(item) }]
-    elsif [some, ok, err].include?(kind)
+    elsif wrappers.include?(kind)
       raise "unexpected wrapper members" unless value.members == [:value]
       [kind, value.frozen?, snapshot.call(value.value)]
     elsif fields.key?(kind)
@@ -47,7 +51,7 @@ def check_nested_checked_records(api, result_only = false, rounds = 256, paramet
     kind = value.class
     if kind == Array
       [value.object_id] + value.flat_map { |item| array_ids.call(item) }
-    elsif [some, ok, err].include?(kind)
+    elsif wrappers.include?(kind)
       array_ids.call(value.value)
     elsif fields.key?(kind)
       fields.fetch(kind).flat_map { |name| array_ids.call(value.instance_variable_get(:"@#{name}")) }
@@ -99,10 +103,11 @@ def check_nested_checked_records(api, result_only = false, rounds = 256, paramet
   NESTED_INPUTS.each { |name| check.call(api.respond_to?(name) != result_only, "input export selection: #{name}") }
   NESTED_RESULTS.each { |name| check.call(api.respond_to?(name), "result export selection: #{name}") }
   pairs = [[0, false], [1, 1.0], [[p.call(0, 1)], [p.call(0, 1)].freeze], [p.call(0, 1), p.call(0, 2)],
-           [p.call(0, 1), p.call(1, 1)], [some.new(p.call(0, 1)), ok.new(p.call(0, 1))],
-           [ok.new(p.call(0, 1)), err.new(p.call(0, 1))], [nil, some.new(nil)]]
+           [p.call(0, 1), p.call(1, 1)], [some.new(p.call(0, 1)), some.new(p.call(0, 2))],
+           [some.new(p.call(0, 1)), nil], [nil, some.new(nil)]]
   unless result_only
-    pairs += [[api.const_get(:Holder).new(packet: p.call(0, 1), tag: 1), [p.call(0, 1), 1]],
+    pairs += [[ok.new(p.call(0, 1)), err.new(p.call(0, 1))],
+              [api.const_get(:Holder).new(packet: p.call(0, 1), tag: 1), [p.call(0, 1), 1]],
               [api.const_get(:Choice).const_get(:Empty).new, nil],
               [api.const_get(:Choice).const_get(:Packet).new(value: p.call(0, 1)), some.new(p.call(0, 1))]]
   end

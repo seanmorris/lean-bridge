@@ -57,11 +57,31 @@ export const checkNestedCheckedRecordRubyControls = async (originalRead, options
 		assert.ok(Buffer.isBuffer(value), `Missing original record: ${path}`); return Buffer.from(value);
 	};
 	const json = path => JSON.parse(originals.get(path));
-	let recordControls = 0, environmentControls = 0, packageControls = 0, modelControls = 0, executionControls = 0;
+	let recordControls = 0, resourceControls = 0, environmentControls = 0, packageControls = 0, modelControls = 0, executionControls = 0;
 	for(const path of paths) for(const replacement of [null, Buffer.concat([originals.get(path), Buffer.from("corrupted")])])
 	{
 		const changes = new Map([[path, replacement]]);
 		await assert.rejects(checkNestedCheckedRecordRubyReport(path => read(path, changes), options)); recordControls++;
+	}
+	for(const mutate of [
+		value => { value[0].observations[0].freeBytes = 1024; }
+		, value => { value[0].observations[0].availableBytes = 1024; }
+		, value => { value[0].observations.at(-1).load = json("report.json").loadCeiling; }
+		, value => { value[0].waits++; }
+	]) {
+		const report = json("report.json"), resources = json("resources.json"); mutate(resources);
+		report.resourceChecks = resources;
+		const changes = new Map([
+			["resources.json", Buffer.from(canonicalJson(resources))]
+			, ["report.json", Buffer.from(canonicalJson(report))]
+		]);
+		await assert.rejects(checkNestedCheckedRecordRubyReport(path => read(path, changes), options)); resourceControls++;
+	}
+	for(const loadCeiling of [6, 10, 24])
+	{
+		const report = json("report.json"); report.loadCeiling = loadCeiling;
+		const changes = new Map([["report.json", Buffer.from(canonicalJson(report))]]);
+		await assert.rejects(checkNestedCheckedRecordRubyReport(path => read(path, changes), options)); resourceControls++;
 	}
 	const baseline = { environment: json("environment.json"), interpreter: json("interpreter.json"), gem };
 	const prefix = `gems/${baseline.environment.fullName}/`;
@@ -140,5 +160,5 @@ export const checkNestedCheckedRecordRubyControls = async (originalRead, options
 		}
 	}
 	for(const [path, hash] of identities) assert.equal(sha256(await originalRead(path)), hash, path);
-	return { ...accepted, recordControls, environmentControls, packageControls, modelControls, executionControls };
+	return { ...accepted, recordControls, resourceControls, environmentControls, packageControls, modelControls, executionControls };
 };

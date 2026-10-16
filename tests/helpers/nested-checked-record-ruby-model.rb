@@ -33,19 +33,23 @@ end
 
 def nested_model(result_only = false, prefix = "arg", fault = nil)
   api = Module.new
+  full_surface = !result_only || fault == "inputs-exported"
   if defined?(GENERATED_NESTED_VALUES)
-    [:Packet, :Holder, :Choice, :Some, :Ok, :Err].each { |name| api.const_set(name, GENERATED_NESTED_VALUES.const_get(name)) }
+    names = full_surface ? [:Packet, :Holder, :Choice, :Some, :Ok, :Err] : [:Packet, :Some]
+    names.each { |name| api.const_set(name, GENERATED_NESTED_VALUES.const_get(name)) }
   else
     nested_record(api, :Packet, [:digit, :word])
-    nested_record(api, :Holder, [:packet, :tag])
-    choice = api.const_set(:Choice, Class.new)
-    nested_record(choice, :Empty, [], choice)
-    nested_record(choice, :Packet, [:value], choice)
-    [:Some, :Ok, :Err].each { |name| api.const_set(name, Data.define(:value)) }
+    api.const_set(:Some, Data.define(:value))
+    if full_surface
+      nested_record(api, :Holder, [:packet, :tag])
+      choice = api.const_set(:Choice, Class.new)
+      nested_record(choice, :Empty, [], choice)
+      nested_record(choice, :Packet, [:value], choice)
+      [:Ok, :Err].each { |name| api.const_set(name, Data.define(:value)) }
+    end
   end
-  packet, holder = api.const_get(:Packet), api.const_get(:Holder)
-  choice_empty, choice_packet = [:Empty, :Packet].map { |name| api.const_get(:Choice).const_get(name) }
-  some, ok, err = [:Some, :Ok, :Err].map { |name| api.const_get(name) }
+  packet = api.const_get(:Packet)
+  some = api.const_get(:Some)
   host = lambda do |kind, message|
     raise(fault == "wrong-host-exception" ? StandardError : kind, fault == "lean-host-message" ? "#{prefix}0 was rejected by NestedCheckedRecords.mkPacket" : message)
   end
@@ -94,7 +98,11 @@ def nested_model(result_only = false, prefix = "arg", fault = nil)
     items.pop if fault == "produce-array-length"
     fault == "produce-frozen-array" ? items.freeze : items
   end
-  return api if result_only && fault != "inputs-exported"
+  return api unless full_surface
+
+  holder = api.const_get(:Holder)
+  choice_empty, choice_packet = [:Empty, :Packet].map { |name| api.const_get(:Choice).const_get(name) }
+  ok, err = [:Ok, :Err].map { |name| api.const_get(name) }
 
   api.define_singleton_method(:first) { |value| accept.call(shaped.call(value), "#{prefix}0", [:mk, :mk]) }
   api.define_singleton_method(:second) { |value| accept.call(shaped.call(value), "#{prefix}0", [:normalize, :normalize]) }

@@ -12,6 +12,7 @@ import { nestedCheckedRecordRubyReceipt } from "./nested-checked-record-ruby-pac
 import { checkNestedCheckedRecordRubyModels } from "./nested-checked-record-ruby-model-records.mjs";
 import { checkNestedCheckedRecordRubyPackage } from "./nested-checked-record-ruby-package-records.mjs";
 import { assertNestedCheckedRecordRubyInterpreter, checkNestedCheckedRecordRubyEnvironment } from "./nested-checked-record-ruby-environment-records.mjs";
+import { assertNestedCheckedRecordRubyResources, nestedCheckedRecordRubyLoadCeilings } from "./nested-checked-record-ruby-resources.mjs";
 
 /**
  * Enumerate retained text records after authenticating the original gem inventory.
@@ -21,7 +22,7 @@ import { assertNestedCheckedRecordRubyInterpreter, checkNestedCheckedRecordRubyE
  */
 export const nestedCheckedRecordRubyRecords = (route, gem) => {
 	assert.ok(nestedCheckedRecordRubyRoutes.includes(route));
-	return ["report.json", "runtime.json", "interpreter.json"
+	return ["report.json", "runtime.json", "interpreter.json", "resources.json"
 		, "expected.binding-ir.json", "configuration.json", "consumer.rb"
 		, "gem.json", "environment.json", "installed.gemspec"
 		, "installed.json", "relocated.json"
@@ -64,8 +65,9 @@ export const checkNestedCheckedRecordRubyReport = async (read, { route, mode, pr
 		"authorInputsUnchanged", "builds", "compilerFreeReplay", "declaredGlibcFloor"
 		, "dispatch", "expectedBindingIrSha256", "gemReceiptSha256"
 		, "independentBuilds"
-		, "interpreter", "mode", "observations", "offlineInstall", "producerCommit"
-		, "receipt", "relocatedInstallation", "reproducible", "route", "runtime"
+		, "interpreter", "loadCeiling", "mode", "observations", "offlineInstall"
+		, "producerCommit", "receipt", "relocatedInstallation", "reproducible"
+		, "resourceChecks", "route", "runtime"
 		, "schemaVersion"
 		, "sourceRemovedBeforeInstallation"]);
 	assert.equal(report.schemaVersion, 1); assert.equal(report.producerCommit, producerCommit);
@@ -76,6 +78,10 @@ export const checkNestedCheckedRecordRubyReport = async (read, { route, mode, pr
 	assert.deepEqual(report.dispatch, { observed: false, reason: "No Ruby constructor/source entry counters in this installed acceptance" });
 	const runtimeRecord = { platform: runtime.platform, arch: runtime.arch, glibc: { code: 0, stdout: `glibc ${runtime.glibc}\n`, stderr: "" } };
 	assert.deepEqual(report.runtime, runtimeRecord); assert.deepEqual(await json("runtime.json"), runtimeRecord);
+	assert.ok(nestedCheckedRecordRubyLoadCeilings.includes(report.loadCeiling), "Unrecorded nested Ruby load ceiling");
+	const resources = await json("resources.json"); assert.equal(resources.length, 6);
+	assert.deepEqual(report.resourceChecks, resources);
+	for(const resource of resources) assertNestedCheckedRecordRubyResources(resource, report.loadCeiling);
 	const interpreter = await json("interpreter.json"); assert.deepEqual(report.interpreter, interpreter);
 	assertNestedCheckedRecordRubyInterpreter(interpreter, rubyVersion);
 	const { model, receipt } = await checkNestedCheckedRecordRubyModels({ report, read, json, route, mode, producerCommit });
@@ -104,6 +110,7 @@ export const checkNestedCheckedRecordRubyReport = async (read, { route, mode, pr
 	}
 	return { route, mode, producerCommit, runtime, floor, rubyVersion
 		, counts: nestedCheckedRecordRubyCounts[mode], executions: 2
+		, loadCeiling: report.loadCeiling
 		, dispatchObserved: false, generatorModules: generatorPaths.length
 		, records: nestedCheckedRecordRubyRecords(route, gem).length };
 };
