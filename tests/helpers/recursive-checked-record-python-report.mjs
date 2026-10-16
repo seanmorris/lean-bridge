@@ -5,24 +5,63 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { copiedCleanEnvironment } from "./copied-fixture-install.mjs";
 import { pythonTypingWheels } from "./python-wheel-install.mjs";
+import { checkRecursiveCheckedRecordPythonEnvironment } from "./recursive-checked-record-python-environment-records.mjs";
+import { checkRecursiveCheckedRecordPythonModels } from "./recursive-checked-record-python-model-records.mjs";
 import {
 	parseRecursiveCheckedRecordPythonResult, recursiveCheckedRecordPythonCaller
-	, recursiveCheckedRecordPythonCallerArgs, recursiveCheckedRecordPythonConfiguration
+	, recursiveCheckedRecordPythonCallerArgs
 	, recursiveCheckedRecordPythonCounts, recursiveCheckedRecordPythonFixtures
 	, recursiveCheckedRecordPythonMinors, recursiveCheckedRecordPythonPackage
-	, recursiveCheckedRecordPythonReview, recursiveCheckedRecordPythonRoutes
+	, recursiveCheckedRecordPythonRoutes
 } from "./recursive-checked-record-python-fixture.mjs";
 import { recursiveCheckedRecordPythonInstalls } from "./recursive-checked-record-python-install.mjs";
 import {
 	assertRecursiveCheckedRecordPythonResources, recursiveCheckedRecordPythonLoadCeilings
 } from "./recursive-checked-record-python-resources.mjs";
 
-const original = (commit, path) => execFileSync("git", ["show", `${commit}:${path}`]
-	, { maxBuffer: 64 * 1024 * 1024 });
+/**
+ * Read every member of an original wheel without trusting recorded member identities.
+ *
+ * @param bytes - Original archive bytes.
+ */
+const unpacked = new Map();
+const archiveMembers = async bytes => {
+	const key = sha256(bytes);
+	if(!unpacked.has(key)) unpacked.set(key, unpack(bytes));
+	return new Map(await unpacked.get(key));
+};
+const unpack = async bytes => {
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-recursive-python-wheel-"));
+	try
+	{
+		const path = join(root, "original.whl");
+		await writeFile(path, bytes);
+		const listing = execFileSync("/usr/bin/unzip", ["-Z1", path], { encoding: "utf8" })
+			.trimEnd().split("\n").filter(name => !name.endsWith("/"));
+		assert.equal(new Set(listing).size, listing.length, "Duplicate wheel members");
+		const member = name => execFileSync("/usr/bin/unzip", ["-p", path, name], {
+			maxBuffer: 256 * 1024 * 1024
+		});
+		return new Map(listing.map(name => [name, member(name)]));
+	}
+	finally
+	{
+		await rm(root, { recursive: true, force: true });
+	}
+};
+const originals = new Map();
+const original = (commit, path) => {
+	const key = `${commit}:${path}`;
+	if(!originals.has(key))
+		originals.set(key, execFileSync("git", ["show", key], { maxBuffer: 64 * 1024 * 1024 }));
+	return Buffer.from(originals.get(key));
+};
 const keys = (value, expected, label) =>
 	assert.deepEqual(Object.keys(value).sort(), [...expected].sort(), label);
 const reportKeys = [
@@ -96,7 +135,7 @@ export const checkRecursiveCheckedRecordPythonReport = async (read, { route, fix
 	assert.equal(runtime.platform, "linux"); assert.equal(runtime.arch, "x64");
 	assert.match(runtime.glibc, /^2\.[0-9]+$/u); assert.match(floor, /^2\.[0-9]+$/u);
 	assert.ok(Number(runtime.glibc.split(".")[1]) >= Number(floor.split(".")[1]));
-	const { name, version, leanModule, root } = recursiveCheckedRecordPythonPackage(fixture);
+	const { name, version } = recursiveCheckedRecordPythonPackage(fixture);
 	const json = async path => {
 		const bytes = Buffer.from(await read(path)), value = JSON.parse(bytes);
 		assert.equal(bytes.toString(), canonicalJson(value), `Noncanonical record: ${path}`);
@@ -131,56 +170,36 @@ export const checkRecursiveCheckedRecordPythonReport = async (read, { route, fix
 	}
 
 	// Author inputs come from the producer commit, never from the checker's checkout.
-	const expected = recursiveCheckedRecordPythonReview(fixture);
-	const configuration = recursiveCheckedRecordPythonConfiguration(route, fixture);
-	assert.deepEqual(await json("expected.binding-ir.json"), expected);
-	assert.equal(report.expectedBindingIrSha256, hashBindingIr(expected));
-	assert.deepEqual(await json("configuration.json"), configuration);
+	const { model, receipt } = await checkRecursiveCheckedRecordPythonModels({
+		report, read, json, route, fixture, producerCommit
+	});
+	assert.deepEqual(receipt.packages.map(pkg => [pkg.target, pkg.role, pkg.name, pkg.version])
+		, [["pypi", "component", name, version]]);
 	const caller = original(producerCommit, recursiveCheckedRecordPythonCaller);
 	assert.equal(Buffer.compare(Buffer.from(await read("consumer.py")), caller), 0);
-	const source = original(producerCommit, `${root}/${leanModule}.lean`);
-	assert.equal(report.builds.length, 2);
-	assert.deepEqual(report.builds[1], report.builds[0], "Both author roots reproduce the wheel");
-	let model, receipt;
-	for(const index of [0, 1])
-	{
-		const prefix = `build-${index}/`, build = report.builds[index];
-		keys(build, ["archives", "bindingIrSha256", "modelSha256", "receiptSha256"], "build");
-		const modelBytes = Buffer.from(await read(prefix + "model.json"));
-		const receiptBytes = Buffer.from(await read(prefix + "package-set-receipt.json"));
-		assert.equal(sha256(modelBytes), build.modelSha256); assert.equal(sha256(receiptBytes), build.receiptSha256);
-		model = JSON.parse(modelBytes); receipt = JSON.parse(receiptBytes);
-		assert.equal(model.bindingIrSha256, build.bindingIrSha256);
-		assert.equal(Buffer.compare(Buffer.from(await read(prefix + `${leanModule}.lean`)), source), 0);
-		assert.deepEqual(await json(prefix + "lean-bridge.exports.json"), configuration);
-		if(route === "reviewed")
-		{
-			assert.deepEqual(await json(prefix + "api.binding-ir.json"), expected);
-			assert.equal(model.sourceIdentity.reviewedBindingIr.source, canonicalJson(expected));
-		}
-		else assert.equal(model.sourceIdentity.reviewedBindingIr, undefined);
-		assert.deepEqual(receipt.packages.map(pkg => [pkg.target, pkg.role, pkg.name, pkg.version])
-			, [["pypi", "component", name, version]]);
-		assert.deepEqual(build.archives, Object.fromEntries(receipt.packages[0].artifacts
-			.map(artifact => [artifact.path, artifact.sha256])));
-	}
 	const pkg = receipt.packages[0], artifact = pkg.artifacts[0];
 	assert.equal(artifact.path, `archives/${name}-${version}-py3-none-manylinux_${floor.replace(".", "_")}_x86_64.whl`);
 	const archive = Buffer.from(await read(`handoff/${artifact.path}`));
 	assert.deepEqual({ bytes: archive.length, sha256: sha256(archive) }, { bytes: artifact.bytes, sha256: artifact.sha256 });
 	const handoffReceipt = Buffer.from(await read("handoff/package-set-receipt.json"));
 	assert.equal(sha256(handoffReceipt), report.builds[0].receiptSha256);
-	assert.equal((await read("handoff/package-set-receipt.json.sha256")).toString().split(/\s/u)[0], sha256(handoffReceipt));
+	assert.equal((await read("handoff/package-set-receipt.json.sha256")).toString()
+		, `${sha256(handoffReceipt)}  package-set-receipt.json\n`);
 
 	const wheel = await json("wheel.json");
 	keys(wheel, ["archive", "evidence", "files", "receiptSha256", "retained"], "wheel");
 	assert.deepEqual(wheel.archive, artifact); assert.equal(report.wheelReceiptSha256, wheel.receiptSha256);
 	assert.deepEqual(wheel.evidence.copiedGraph?.schemaVersion, 1);
+	// Every recorded member identity and retained text comes from the original archive itself.
+	const members = await archiveMembers(archive);
+	assert.deepEqual(Object.keys(wheel.files).sort(), [...members.keys()].sort());
+	for(const [path, bytes] of members)
+		assert.deepEqual(wheel.files[path], { bytes: bytes.length, sha256: sha256(bytes) }, path);
 	for(const path of wheel.retained)
-	{
-		const bytes = Buffer.from(await read(`package/${path}`));
-		assert.deepEqual({ bytes: bytes.length, sha256: sha256(bytes) }, wheel.files[path], path);
-	}
+		assert.equal(Buffer.compare(Buffer.from(await read(`package/${path}`)), members.get(path)), 0, path);
+	assert.deepEqual(wheel.retained, Object.keys(wheel.files).filter(path =>
+		!path.startsWith(`lean_${name}/native/`)).sort());
+	assert.equal(model.bindingIrSha256, JSON.parse(members.get(`lean_${name}/lean_bridge/package-receipt.json`)).bindingIrSha256);
 	const receiptPath = `lean_${name}/lean_bridge/package-receipt.json`;
 	assert.equal(sha256(Buffer.from(await read(`package/${receiptPath}`))), wheel.receiptSha256);
 
@@ -222,7 +241,10 @@ export const checkRecursiveCheckedRecordPythonReport = async (read, { route, fix
 			pinned.push(["typing_extensions", typing, false, pythonTypingWheels[typing]]);
 		}
 		assert.deepEqual(resolved.sort(), pinned.sort());
+		const inventory = await json(prefix + "environment.json");
 		assert.equal(sha256(Buffer.from(await read(prefix + "environment.json"))), item.inventorySha256);
+		checkRecursiveCheckedRecordPythonEnvironment({ inventory, wheel, selection
+			, interpreter: item.interpreter, name, version });
 		assert.equal(item.observations.length, 2);
 		for(const [index, position] of ["installed", "relocated"].entries())
 		{
