@@ -26,7 +26,8 @@ import {
 const evidence = "docs/evidence/mutual-checked-record-npm-browser-20261016";
 const recordsRoot = "build/mutual-checked-record-npm";
 const producerSources = [...new Set([
-	...mutualCheckedRecordChangedPaths
+	...mutualCheckedRecordChangedPaths.filter(path =>
+		path !== "docs/type-surface.v1.json")
 	, ...mutualCheckedRecordNpmChangedPaths.filter(path =>
 		path !== "docs/type-surface.v1.json")
 	, ...mutualCheckedRecordNpmAddedPaths
