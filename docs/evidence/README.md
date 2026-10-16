@@ -68,6 +68,7 @@ The [production-hardening review from 14 August 2026](production-hardening-revie
 - [Recursive checked Subtypes in PHP-Wasm, 15 October 2026](recursive-subtype-php-wasm-20261015.md)
 - [Nested checked records in npm and browsers, 16 October 2026](nested-checked-record-browser-20261016/index.json)
 - [Nested checked records in C and C++, 16 October 2026](nested-checked-record-native-20261016.md)
+- [Nested checked records in .NET, 16 October 2026](nested-checked-record-dotnet-20261016.md)
 
 ## Performance
 

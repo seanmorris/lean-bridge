@@ -11,3 +11,5 @@ import "./helpers/nested-checked-record-dotnet-ci-shell-tests.mjs";
 import "./helpers/nested-checked-record-dotnet-ci-workflow-tests.mjs";
 import "./helpers/nested-checked-record-dotnet-evidence-tests.mjs";
 import "./helpers/nested-checked-record-dotnet-installed-tests.mjs";
+import "./helpers/nested-checked-record-dotnet-promotion-tests.mjs";
+import "./helpers/nested-checked-record-dotnet-promotion-history-tests.mjs";
