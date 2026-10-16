@@ -26,6 +26,11 @@ export const generateCopiedPerlGraphXs = (ir, moduleName) => {
 		, `static void lpg_status(pTHX_ lpg_scope *scope, uint32_t status) {
   if (!status) return;
   if (status == 4) lpg_invalid(aTHX_ scope, "carrier or result");
+${model.refinementDiagnostics ? `  if (status == 1) {
+    const char *specific = ${model.layout.prefix}_graph_error();
+    if (specific) croak("%s\\n", specific);
+  }
+` : ""}
   const char *message = status == 1 ? "invalid argument" : status == 2 ? "conversion limit exceeded" :
     status == 3 ? "native allocation failed" : status == 5 ? "shared runtime unavailable" : "unknown status";
   croak("Lean Bridge graph call failed (status=%u): %s", (unsigned)status, message);

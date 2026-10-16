@@ -49,6 +49,9 @@ ${fields.map(field => `# ${field.publicName}: ${field.contractType}\nsub ${field
  */
 export const generateCopiedPerlGraphValues = (ir, moduleName) => {
 	const layout = compileCopiedCGraphLayout(ir);
+	const refinementDiagnostics = ir.declarations.some(declaration =>
+		declaration.source?.extensions?.["lean-lang.org/refinements"]
+			?.parameters?.some(Boolean));
 	const definitions = new Map([...ir.types].sort((a, b) => a.id.localeCompare(b.id)).map(type => [type.id, type]));
 	const functions = projectPerlNames(moduleName, ir.declarations.map(declaration => ({ ...declaration, name: declaration.source.declaration })));
 	for(const fn of functions) if(!/^[a-z][a-z0-9_]*$/.test(fn.publicName) || reserved.has(fn.publicName))
@@ -109,5 +112,6 @@ sub new { CORE::die "select a named variant constructor\\n" }
 ${type.cases.map(branch => record(branch.publicName, branch.fields, type.publicType)).join("\n")}`).join("\n")}
 1;
 `;
-	return { layout, types, functions, aliases, source, moduleName };
+	return { layout, types, functions, aliases, source, moduleName
+		, refinementDiagnostics };
 };

@@ -5,6 +5,7 @@
  */
 import { canonicalJson, sha256 } from "../../capsule/node.mjs";
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
+import { nominalRefinementEntries } from "../../abi/refinements.mjs";
 import { nativeGraphCarrierAbi } from "../../build/native-graph-model.mjs";
 import { generateNativeCopiedGraphAdapters } from "../c/native-graph-adapters.mjs";
 import { generateCopiedPerlGraphValues } from "./copied-graph-values.mjs";
@@ -34,9 +35,22 @@ export const generateCopiedPerlGraphPackage = (model, receipt) => {
 	const ir = model.bindingIr, moduleName = model.moduleName;
 	const publicModel = compileCopiedPerlGraphPackageModel(ir, moduleName);
 	const generated = generateCopiedPerlGraphXs(ir, moduleName);
-	const native = generateNativeCopiedGraphAdapters(ir, nativeGraphCarrierAbi(model), { initializer: receipt.initializer });
+	const abi = nativeGraphCarrierAbi(model);
+	const refinementExports = model.exports.map((item, index) => ({
+		bindingId: item.bindingId
+		, symbol: abi.exports.find(value => value.bindingId === item.bindingId).symbol
+		, wrapper: `export${index}`, sourceDeclaration: item.name
+		, parameters: item.parameters
+		, ...(item.refinements ? { refinements: item.refinements } : {})
+	}));
+	const native = generateNativeCopiedGraphAdapters(ir, abi, {
+		initializer: receipt.initializer, refinementExports
+		, nominalRefinements: nominalRefinementEntries(ir.types)
+	});
 	const prefix = native.layout.prefix, publicModule = `lib/${moduleName.replaceAll("::", "/")}.pm`;
 	if(canonicalJson(generated.layout) !== canonicalJson(native.layout)) throw new TypeError("Perl and native graph layouts differ");
+	if(Boolean(generated.refinementDiagnostics) !== Boolean(native.refinementDiagnostics))
+		throw new TypeError("Perl and native graph refinement diagnostics differ");
 	// Annotate only defined graph roots, never the external Lean helper symbols.
 	let header = native.header;
 	for(const root of native.layout.roots)
@@ -113,6 +127,9 @@ of this recursive copied profile.
 			, bindingIrSha256: hashBindingIr(ir), publicModule
 			, runtimeIdentity: receipt.runtimeIdentity, aliases: publicModel.aliases
 			, copiedGraph: { schemaVersion: 1, layoutSha256: publicModel.layoutSha256 }
+			, ...publicModel.refinementDiagnostics ? {
+				supportedFeatures: ["checked-refinement-diagnostics"]
+			} : {}
 		}, null, 2)}\n`
 	};
 };
