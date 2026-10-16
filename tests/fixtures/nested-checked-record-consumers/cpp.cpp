@@ -26,6 +26,7 @@ static constexpr unsigned rounds = 256;
 } while (0)
 #define KEPT(test) do { ++snapshots; CHECK(test); } while (0)
 
+#ifndef NESTED_CHECKED_RECORD_RESULT_ONLY
 template<class F> static bool rejected(F&& call, const std::string& expected) {
   try { call(); }
   catch (const api::Error& error) {
@@ -42,6 +43,7 @@ template<class F> static bool rejected(F&& call, const std::string& expected) {
 static std::string path(const std::string& suffix) {
   return std::string(NESTED_PARAMETER_PREFIX) + suffix;
 }
+#endif
 
 int main() {
   const Nat huge = Nat(1) << 100;

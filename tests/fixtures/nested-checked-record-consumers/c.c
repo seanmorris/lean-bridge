@@ -28,6 +28,7 @@ static const unsigned rounds = 256;
 #define SNAPSHOT(test) do { ++snapshots; CHECK(test); } while (0)
 #define OK(call) ((call) == NESTEDCHECKEDRECORDS_STATUS_OK)
 
+#ifndef NESTED_CHECKED_RECORD_RESULT_ONLY
 static int rejected(nestedcheckedrecords_status status, const nestedcheckedrecords_error *error,
                     const char *expected) {
   const int accepted = status == NESTEDCHECKEDRECORDS_STATUS_INVALID_ARGUMENT
@@ -53,14 +54,17 @@ static void packet_set_ui(Packet *value, unsigned long digit, unsigned long word
   mpz_set_ui(value->digit, digit);
   mpz_set_ui(value->word, word);
 }
+#endif
 
 static int packet_is(const Packet *value, unsigned long digit, mpz_srcptr word) {
   return mpz_cmp_ui(value->digit, digit) == 0 && mpz_cmp(value->word, word) == 0;
 }
 
+#ifndef NESTED_CHECKED_RECORD_RESULT_ONLY
 static int packet_is_ui(const Packet *value, unsigned long digit, unsigned long word) {
   return mpz_cmp_ui(value->digit, digit) == 0 && mpz_cmp_ui(value->word, word) == 0;
 }
+#endif
 
 int main(void) {
   nestedcheckedrecords_error error = {0};
