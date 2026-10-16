@@ -11,3 +11,5 @@ import "./nested-checked-record-ruby-ci-policy-tests.mjs";
 import "./nested-checked-record-ruby-ci-shell-tests.mjs";
 import "./nested-checked-record-ruby-ci-workflow-tests.mjs";
 import "./nested-checked-record-ruby-evidence-tests.mjs";
+import "./nested-checked-record-ruby-promotion-tests.mjs";
+import "./nested-checked-record-ruby-promotion-history-tests.mjs";

@@ -108,6 +108,7 @@ import { beforeNestedCheckedRecordJvmPromotionSource, nestedCheckedRecordJvmProm
 import { beforeNestedCheckedRecordPerlPromotionSource, nestedCheckedRecordPerlPromotionChangedPaths } from "./nested-checked-record-perl-promotion-history.mjs";
 import { beforeNestedCheckedRecordPhpPromotionSource, nestedCheckedRecordPhpPromotionChangedPaths } from "./nested-checked-record-php-promotion-history.mjs";
 import { beforeNestedCheckedRecordPythonPromotionSource, nestedCheckedRecordPythonPromotionChangedPaths } from "./nested-checked-record-python-promotion-history.mjs";
+import { beforeNestedCheckedRecordRubyPromotionSource, nestedCheckedRecordRubyPromotionChangedPaths } from "./nested-checked-record-ruby-promotion-history.mjs";
 import { beforeNominalPrimitiveSubtypeRustPromotionSource, nominalPrimitiveSubtypeRustPromotionChangedPaths } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
 import { beforeNestedCheckedRecordSource, nestedCheckedRecordChangedPaths } from "./nested-checked-record-source-history.mjs";
 import { beforeNestedCheckedRecordBrowserPromotionSource, nestedCheckedRecordBrowserPromotionChangedPaths } from "./nested-checked-record-browser-promotion-history.mjs";
@@ -761,6 +762,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeNestedCheckedRecordRubyPromotionSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeNestedCheckedRecordPythonPromotionSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeNestedCheckedRecordPhpPromotionSource(path, source, expected);
@@ -1125,6 +1128,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nestedCheckedRecordPerlPromotionChangedPaths
 	, ...nestedCheckedRecordPhpPromotionChangedPaths
 	, ...nestedCheckedRecordPythonPromotionChangedPaths
+	, ...nestedCheckedRecordRubyPromotionChangedPaths
 ])].sort());
 
 /**

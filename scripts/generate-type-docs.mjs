@@ -59,6 +59,9 @@ const nestedCheckedRecordPhp = "[Nested checked-record native PHP packages](../e
 const nestedCheckedRecordPythonMarker = "[PHP-Wasm checked-record packages]";
 const nestedCheckedRecordPythonPending = "targets other than npm, C, C++, .NET, Java, Kotlin, Perl and native PHP need separate nested acceptance";
 const nestedCheckedRecordPython = "[Nested checked-record Python wheels](../evidence/nested-checked-record-python-20261016/index.json) establish the same copied positions through generated frozen Packet, Holder and ChoicePacket dataclasses on both author routes and API modes. Two author roots reproduce one complete wheel for both CPython floors before author removal and offline installation; the unchanged caller runs on CPython 3.11.16 and 3.12.14 before and after moving each installation on Linux x64/glibc 2.36. Exact constructor failures preserve caller graphs and later calls recover.";
+const nestedCheckedRecordRubyMarker = "[PHP-Wasm checked-record packages]";
+const nestedCheckedRecordRubyPending = "targets other than npm, C, C++, .NET, Java, Kotlin, Perl, native PHP and Python need separate nested acceptance";
+const nestedCheckedRecordRuby = "[Nested checked-record Ruby gems](../evidence/nested-checked-record-ruby-20261016/index.json) establish the same copied positions through generated frozen Packet, Holder and Choice::Packet classes on both author routes and API modes. Two author roots reproduce complete native gems before author removal and offline installation; the unchanged caller runs before and after moving each installation on MRI 3.3.12 with Linux x64/glibc 2.36. Exact constructor failures preserve caller graphs and later calls recover.";
 
 /**
  * Classify a single cell without borrowing evidence from another stage or position.
@@ -235,6 +238,10 @@ export async function renderTypeDocuments({ root })
 				, `${nestedCheckedRecordPython} ${nestedCheckedRecordPythonMarker}`)
 			.replace(nestedCheckedRecordPythonPending
 				, "targets other than npm, C, C++, .NET, Java, Kotlin, Perl, native PHP and Python need separate nested acceptance")
+			.replace(nestedCheckedRecordRubyMarker
+				, `${nestedCheckedRecordRuby} ${nestedCheckedRecordRubyMarker}`)
+			.replace(nestedCheckedRecordRubyPending
+				, "targets other than npm, C, C++, .NET, Java, Kotlin, Perl, native PHP, Python and Ruby need separate nested acceptance")
 			.replace(primitiveNominalMarker,
 				`${primitiveNominalDotnet} ${primitiveNominalPhp} ${primitiveNominalPhpWasm} ${recursiveSubtypePhpWasm} ${primitiveNominalWit} ${primitiveNominalJvm} ${primitiveNominalPending}`)
 	};
