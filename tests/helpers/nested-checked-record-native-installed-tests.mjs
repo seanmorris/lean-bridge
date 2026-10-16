@@ -230,7 +230,8 @@ for(const route of routes) for(const mode of modes) test(
 			}
 		}));
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
-		await rename(handoff, join(output, "handoff"));
+		await copyPackageSetHandoff(handoff, join(output, "handoff"));
+		await rm(handoff, { recursive: true });
 		await assert.rejects(access(handoff), { code: "ENOENT" });
 		const paths = await nativeArtifactPaths(output);
 		assert.ok(paths.includes("report.json") && paths.includes("resources.json"));
