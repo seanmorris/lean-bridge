@@ -28,7 +28,9 @@ export const compileCopiedJvmGraphPackageModel = ir => {
 			throw new TypeError("JVM graph parameter names must be distinct ASCII identifiers after keyword escaping");
 		return { ...fn, declaration, parameterNames };
 	});
-	return { ...model, ir, prefix, functions, kotlin, layoutSha256: sha256(canonicalJson(model.layout)) };
+	return { ...model, ir, prefix, functions, kotlin
+		, refinementDiagnostics: model.refinementDiagnostics
+		, layoutSha256: sha256(canonicalJson(model.layout)) };
 };
 
 /**
@@ -109,7 +111,9 @@ Native libraries remain loaded for the process lifetime. Extracted private files
 		, kotlin: { namespace: model.kotlin.namespace, metadataVersion: "2.2.0"
 			, publicFiles: [...model.kotlin.publicFiles, kotlinApi]
 			, internalFiles: [...model.kotlin.internalFiles, `${kotlin}/_KotlinGraphApiCalls.kt`] }
-		, supportedFeatures: ["direct-functions", "copied-values", "recursive-values", "deterministic-close"]
+		, supportedFeatures: ["direct-functions", "copied-values", "recursive-values"
+			, "deterministic-close"
+			, ...model.refinementDiagnostics ? ["checked-refinement-diagnostics"] : []]
 		, capabilityGaps: [{ feature: "identity-and-effects", reason: "Recursive JVM packages support finite copied values, not callable, resource or asynchronous payloads." }
 			, { feature: "additional-platforms", reason: "Compiled releases target Java 22 on Linux x86-64 with glibc." }] }, null, 2)}\n`;
 	return Object.freeze(files);

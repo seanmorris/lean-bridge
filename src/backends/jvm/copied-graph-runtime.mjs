@@ -6,7 +6,7 @@
 import { componentRecursiveLimits } from "../../abi/component-recursive.mjs";
 
 /** Native lifecycle remains supplied by the authenticated package loader. */
-export const jvmGraphRuntime = `final class _GraphRuntime {
+export const jvmGraphRuntimeWithoutDiagnostics = `final class _GraphRuntime {
     private _GraphRuntime() { }
     static void checkpoint() { }
     static final class InvalidNative extends RuntimeException {
@@ -255,3 +255,52 @@ export const jvmGraphRuntime = `final class _GraphRuntime {
     }
 }
 `;
+
+/**
+ * Read the exact checked-refinement diagnostic only for contracts that expose
+ * the authenticated graph-error symbol. Keep the legacy runtime above byte
+ * identical for every package without refinements.
+ */
+export const jvmGraphRuntime = jvmGraphRuntimeWithoutDiagnostics
+	.replace(
+		"record Target(java.lang.invoke.MethodHandle invoke, java.lang.invoke.MethodHandle clear, Lifecycle lifecycle) { }"
+		, "record Target(java.lang.invoke.MethodHandle invoke, java.lang.invoke.MethodHandle diagnostic, java.lang.invoke.MethodHandle clear, Lifecycle lifecycle) { }"
+	)
+	.replace(`    static void status(int status) {
+        switch (status) {
+            case 0: return;
+            case 1: throw new IllegalArgumentException("Invalid native copied input");`, `    static void status(int status) { status(status, null); }
+    static void status(int status, java.lang.invoke.MethodHandle diagnostic) {
+        switch (status) {
+            case 0: return;
+            case 1:
+                if (diagnostic != null) {
+                    try {
+                        var pointer = (java.lang.foreign.MemorySegment)diagnostic.invokeExact();
+                        if (pointer.address() != 0) {
+                            var bytes = pointer.reinterpret(16 * 1024 + 1L);
+                            int length = 0;
+                            while (length <= 16 * 1024
+                                && bytes.get(java.lang.foreign.ValueLayout.JAVA_BYTE, length) != 0) length++;
+                            if (length > 16 * 1024)
+                                throw new InvalidNative("Native refinement diagnostic exceeds 16 KiB");
+                            var data = bytes.asSlice(0, length).toArray(java.lang.foreign.ValueLayout.JAVA_BYTE);
+                            String text;
+                            try {
+                                text = java.nio.charset.StandardCharsets.UTF_8.newDecoder()
+                                    .onMalformedInput(java.nio.charset.CodingErrorAction.REPORT)
+                                    .onUnmappableCharacter(java.nio.charset.CodingErrorAction.REPORT)
+                                    .decode(java.nio.ByteBuffer.wrap(data)).toString();
+                            } catch (java.nio.charset.CharacterCodingException error) {
+                                throw new InvalidNative("Native refinement diagnostic is not UTF-8");
+                            }
+                            throw new IllegalArgumentException(text);
+                        }
+                    } catch (InvalidNative | IllegalArgumentException error) { throw error; }
+                    catch (Throwable error) { throw propagate(error); }
+                }
+                throw new IllegalArgumentException("Invalid native copied input");`)
+	.replace(
+		"target.lifecycle().before(); status((int)target.invoke().invokeWithArguments(nativeArguments));"
+		, "target.lifecycle().before(); status((int)target.invoke().invokeWithArguments(nativeArguments), target.diagnostic());"
+	);

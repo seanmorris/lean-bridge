@@ -4,7 +4,9 @@
  * @file
  */
 import { compileCopiedJvmGraphLayout } from "./copied-graph-layout.mjs";
-import { jvmGraphRuntime } from "./copied-graph-runtime.mjs";
+import {
+	jvmGraphRuntime, jvmGraphRuntimeWithoutDiagnostics
+} from "./copied-graph-runtime.mjs";
 import { jvmGraphScalars, jvmGraphScalarNames } from "./copied-graph-scalars.mjs";
 
 const boxes = { boolean: "Boolean", byte: "Byte", short: "Short", int: "Integer", long: "Long", float: "Float", double: "Double" };
@@ -32,7 +34,9 @@ export const jvmGraphDescriptorSource = (model, { kotlin = false } = {}) => {
 					: nominal({ option: "Option", result: "Result", tuple: "Pair" }[node.kind]) + (erased ? "" : `<${node.fields.map(field => boxes[type(field.type)] ?? type(field.type)).join(", ")}>`);
 		cache.set(id, name); return name;
 	};
-	let budget = 16 * 1024 * 1024 - jvmGraphRuntime.length - jvmGraphScalars.length - model.layoutSource.length;
+	let budget = 16 * 1024 * 1024
+		- Math.max(jvmGraphRuntime.length, jvmGraphRuntimeWithoutDiagnostics.length)
+		- jvmGraphScalars.length - model.layoutSource.length;
 	for(const node of model.types)
 	{
 		budget -= 4096 + type(node.id).length * 8;
@@ -150,11 +154,16 @@ ${descriptors.join(",\n")}
  */
 export const generateCopiedJvmGraphConversions = ir => {
 	const model = compileCopiedJvmGraphLayout(ir), typesSource = jvmGraphDescriptorSource(model);
+	const refinementDiagnostics = ir.declarations.some(declaration =>
+		declaration.source?.extensions?.["lean-lang.org/refinements"]
+			?.parameters?.some(Boolean));
+	const runtime = refinementDiagnostics
+		? jvmGraphRuntime : jvmGraphRuntimeWithoutDiagnostics;
 	const prefix = `src/main/java/${model.namespace.replaceAll(".", "/")}`;
 	const files = { ...model.files
 		, [`${prefix}/_GraphLayouts.java`]: model.layoutSource
 		, [`${prefix}/_GraphTypes.java`]: typesSource
-		, [`${prefix}/_GraphRuntime.java`]: `package ${model.namespace};\n\n${jvmGraphRuntime}`
+		, [`${prefix}/_GraphRuntime.java`]: `package ${model.namespace};\n\n${runtime}`
 		, [`${prefix}/_GraphScalars.java`]: `package ${model.namespace};\n\n${jvmGraphScalars}`
 		, [`${prefix}/LeanBridgeException.java`]: `package ${model.namespace};
 
@@ -181,7 +190,7 @@ void ${model.layout.prefix}_jvm_graph_clear(void *value) {
   if (owner && release) release(owner);
 }
 `;
-	return { ...model
+	return { ...model, refinementDiagnostics
 		, files, typesSource, nativeReleaseSource
 		, nativeReleaseSymbol: `${model.layout.prefix}_jvm_graph_clear`
 		, publicFiles: [...model.publicFiles, `${prefix}/LeanBridgeException.java`]

@@ -1,0 +1,37 @@
+/**
+ * Generated and installed Java/Kotlin acceptance for recursive checked records.
+ *
+ * @file
+ */
+import assert from "node:assert/strict";
+import test from "node:test";
+import {
+	compileCopiedJvmGraphPackageModel, generateCopiedJvmGraphPackage
+} from "../src/backends/jvm/copied-graph-package.mjs";
+import { mutualCheckedRecordJvmReview }
+	from "./helpers/mutual-checked-record-jvm-fixture.mjs";
+import "./helpers/mutual-checked-record-jvm-installed-tests.mjs";
+
+test("recursive checked-record JVM packages bind exact native diagnostics", () => {
+	const ir = mutualCheckedRecordJvmReview();
+	const model = compileCopiedJvmGraphPackageModel(ir);
+	assert.equal(model.refinementDiagnostics, true);
+	const hash = "a".repeat(64);
+	const files = generateCopiedJvmGraphPackage(ir, {
+		componentId: ir.component.id, library: "libmutualcheckedrecords.so"
+		, runtimeIdentity: hash, componentReceiptSha256: hash
+		, libraries: Object.fromEntries([
+			"libmutualcheckedrecords.so", "libmutualcheckedrecords_component.so"
+			, "libleanshared.so", "liblean_bridge_native.so"
+		].map(name => [name, hash]))
+	});
+	const java = "src/main/java/org/leanbridge/mutualcheckedrecords/";
+	assert.match(files[java + "_GraphNative.java"]
+		, /mutualcheckedrecords_graph_error/u);
+	assert.match(files[java + "_GraphRuntime.java"]
+		, /CodingErrorAction\.REPORT/u);
+	const manifest = JSON.parse(files["binding-manifest.json"]);
+	assert.ok(manifest.supportedFeatures.includes(
+		"checked-refinement-diagnostics"
+	));
+});
