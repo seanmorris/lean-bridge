@@ -992,6 +992,8 @@ requires its packaged native Lean host; it is not a standalone WASI command.
 Generic, recursive or inherited checked records, other index kinds, open
 dependent or zero-payload records, callbacks and owned positions remain
 separate work.
+The [recurring workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nested-checked-record-wit.yml)
+rebuilds all four selections through the pinned Wasmtime host on Ubuntu 24.04.
 
 ### Checked values
 

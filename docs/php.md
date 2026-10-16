@@ -905,6 +905,8 @@ and a later valid call succeeds. Generic, recursive or inherited checked
 records, other index kinds, open dependent or zero-payload records, callbacks
 and owned positions remain separate work. Consumer PHP source remains required
 at runtime. These results apply to native PHP, not PHP-Wasm.
+The [native PHP recurring workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nested-checked-record-php.yml)
+rebuilds all four selections on Ubuntu 24.04.
 
 ### Checked records in PHP-Wasm
 
@@ -947,6 +949,8 @@ Consumer PHP source remains required at runtime. Generic, recursive or inherited
 checked records, other index kinds, open dependent or zero-payload records,
 callbacks and owned positions remain separate work. These runs do not establish
 other PHP or browser versions.
+The [PHP-Wasm recurring workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nested-checked-record-php-wasm.yml)
+rebuilds all four Node/Chromium selections on Ubuntu 24.04.
 
 ### Checked values
 

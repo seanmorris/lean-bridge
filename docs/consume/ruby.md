@@ -742,6 +742,8 @@ preserve the complete Ruby object graph, and a later valid call succeeds.
 Generic, recursive or inherited checked records, other index kinds, open
 dependent or zero-payload records, callbacks and owned positions remain
 separate work.
+The [recurring workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nested-checked-record-ruby.yml)
+rebuilds all four selections on Ubuntu 24.04.
 
 ### Checked values
 

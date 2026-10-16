@@ -24,6 +24,33 @@ const { document, ...contracts } = inventory;
 const cells = typeSurfaceCells(document, contracts);
 const section = source => source.split("### Type conversions\n")[1]?.split(/^#{1,3} /mu)[0];
 const row = (source, lean) => section(source).split("\n").find(line => line.startsWith(`| \`${lean}\` |`));
+const nestedCheckedRecordLanes = Object.freeze({
+	browser: ["node-javascript", "node-typescript", "browser-javascript"
+		, "browser-react", "browser-worker"]
+	, native: ["c", "cpp"]
+	, dotnet: ["dotnet"]
+	, jvm: ["java", "kotlin"]
+	, perl: ["perl"]
+	, php: ["php-native"]
+	, "php-wasm": ["php-wasm"]
+	, python: ["python"]
+	, ruby: ["ruby"]
+	, rust: ["rust"]
+	, wit: ["wit-wasi"]
+});
+const nestedCheckedRecordGuides = Object.freeze({
+	browser: ["docs/javascript-typescript.md"]
+	, native: ["docs/consume/c.md", "docs/consume/cpp.md"]
+	, dotnet: ["docs/consume/dotnet.md"]
+	, jvm: ["docs/consume/java.md", "docs/consume/kotlin.md"]
+	, perl: ["docs/consume/perl.md"]
+	, php: ["docs/php.md"]
+	, "php-wasm": ["docs/php.md"]
+	, python: ["docs/consume/python.md"]
+	, ruby: ["docs/consume/ruby.md"]
+	, rust: ["docs/consume/rust.md"]
+	, wit: ["docs/consume/wit-wasi.md"]
+});
 
 test("every consumer table is generated and includes all 48 source forms exactly once", async () => {
 	const rendered = await renderTypeDocuments({ root });
@@ -47,6 +74,83 @@ test("every consumer table is generated and includes all 48 source forms exactly
 		assert.ok(source.indexOf("### Type conversions") < source.indexOf("## Start from a raw Lean package"));
 		assert.match(source, /### (?:Alpha example API|Scalar package example|Workshop example API)/u);
 		assert.equal(replaceTypeSection(source, renderTypeTable(inventory, profiles, path.posix.relative(path.posix.dirname(filename), "docs/reference/types.md"))), source);
+	}
+});
+
+test("nested checked records close the exact copied matrix and retain callback gaps", async () => {
+	const laneEntries = Object.entries(nestedCheckedRecordLanes);
+	const profiles = laneEntries.flatMap(([, values]) => values);
+	assert.equal(new Set(profiles).size, 17);
+	assert.deepEqual([...profiles].sort()
+		, document.profiles.map(profile => profile.id).sort());
+	const expectedEvidence = laneEntries.flatMap(([lane]) =>
+		["ordinary", "reviewed"].flatMap(route => ["full", "result-only"]
+			.map(mode => `nested-checked-record-${lane}-${route}-${mode}-installed`)));
+	const evidence = document.evidence.filter(item =>
+		item.id.startsWith("nested-checked-record-"));
+	assert.deepEqual(evidence.map(item => item.id).sort(), expectedEvidence.sort());
+	for(const item of evidence)
+	{
+		assert.equal(item.kind, "installed");
+		assert.match(item.revision, /^[a-f0-9]{40}$/u);
+		assert.ok(item.command.length > 0 && item.scope.length > 0);
+		assert.ok(item.files.length > 0 && item.artifacts.length > 0);
+	}
+	const laneByProfile = new Map(laneEntries.flatMap(([lane, values]) =>
+		values.map(profile => [profile, lane])));
+	const copied = cells.filter(cell => cell.shape === "checked-record"
+		&& ["parameter", "result", "field"].includes(cell.position));
+	assert.equal(copied.length, 17 * 2 * 3);
+	for(const cell of copied)
+	{
+		const lane = laneByProfile.get(cell.profile);
+		assert.ok(lane, cell.id);
+		const route = cell.path === "ordinary-source" ? "ordinary" : "reviewed";
+		const modes = cell.position === "result"
+			? ["full", "result-only"] : ["full"];
+		const expected = modes.map(mode =>
+			`nested-checked-record-${lane}-${route}-${mode}-installed`).sort();
+		for(const stage of Object.values(cell.stages))
+		{
+			assert.equal(stage.state, "passed", `${cell.id} ${stage.note}`);
+			assert.deepEqual(stage.evidence.filter(id =>
+				id.startsWith("nested-checked-record-")).sort(), expected, cell.id);
+		}
+	}
+	const callbacks = cells.filter(cell => cell.shape === "checked-record"
+		&& ["callback-parameter", "callback-result"].includes(cell.position));
+	assert.equal(callbacks.length, 17 * 2 * 2);
+	for(const cell of callbacks) for(const stage of Object.values(cell.stages))
+	{
+		assert.equal(stage.state, "unreviewed", cell.id);
+		assert.deepEqual(stage.evidence, [], cell.id);
+	}
+	for(const [lane, guides] of Object.entries(nestedCheckedRecordGuides))
+	{
+		const workflowPath = `.github/workflows/nested-checked-record-${lane}.yml`;
+		const workflow = await readFile(workflowPath, "utf8");
+		assert.ok(workflow.includes("on:\n  push:\n  pull_request:\n  workflow_dispatch:\n")
+			, workflowPath);
+		assert.ok(workflow.includes("runs-on: ubuntu-24.04"), workflowPath);
+		assert.ok(workflow.includes("fetch-depth: 0"), workflowPath);
+		assert.ok(workflow.includes("persist-credentials: false"), workflowPath);
+		assert.ok(workflow.includes("if-no-files-found: error"), workflowPath);
+		assert.ok(workflow.includes(
+			"if: always() && steps.acceptance.outcome != 'success'"), workflowPath);
+		assert.doesNotMatch(workflow, /continue-on-error:/u, workflowPath);
+		for(const guidePath of guides)
+		{
+			const guide = await readFile(guidePath, "utf8");
+			assert.ok(guide.includes(
+				`nested-checked-record-${lane}-20261016/index.json`), guidePath);
+			assert.ok(guide.includes(
+				`actions/workflows/nested-checked-record-${lane}.yml`), guidePath);
+			const mapping = row(guide, "Checked records and closed Nat indices");
+			assert.ok(mapping.includes(
+				"Installed checks passed (input, result, field)"), guidePath);
+			assert.ok(mapping.includes(
+				"Not audited (callback input, callback result)"), guidePath);
+		}
 	}
 });
 

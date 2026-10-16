@@ -724,6 +724,8 @@ retained local runs use Linux x64/glibc 2.36. Invalid nested fields preserve the
 complete Python object graph, and a later valid call succeeds. Generic,
 recursive or inherited checked records, other index kinds, open dependent or
 zero-payload records, callbacks and owned positions remain separate work.
+The [recurring workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nested-checked-record-python.yml)
+rebuilds all four selections on both supported Python floors.
 
 ### Checked Lean values
 
