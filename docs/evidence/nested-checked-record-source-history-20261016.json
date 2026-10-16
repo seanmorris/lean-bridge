@@ -1,0 +1,698 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nested-checked-record-source-v1",
+  "predecessorCommit": "e0fed7f5f86d8c254a1064fc9eb1ad2e1b39ea0e",
+  "draftParentCommit": "e8e5d81de28592f08ad58a8bbdfba1e97b73fecc",
+  "updates": [
+    {
+      "path": "schema/compiler-adapter-plan.schema.json",
+      "currentSha256": "19d637f6ad1031d8ca0ddb596a7fbb9d63c9e917932a672f884e4681dde63781",
+      "previousSha256": "e1a28b61e5d0f3375fe0ba20d9e732025230f7938279b03bc181987e1e50516c",
+      "edits": [
+        {
+          "start": 4632,
+          "previous": "",
+          "current": "        { \"type\": \"object\", \"additionalProperties\": false, \"required\": [\"kind\", \"name\", \"constructor\", \"fields\"], \"properties\": { \"kind\": { \"const\": \"checked-record\" }, \"name\": { \"type\": \"string\", \"pattern\": \"^[A-Za-z][A-Za-z0-9_]*(\\\\.[A-Za-z][A-Za-z0-9_]*)*$\" }, \"constructor\": { \"type\": \"string\", \"pattern\": \"^[A-Za-z][A-Za-z0-9_]*(\\\\.[A-Za-z][A-Za-z0-9_]*)*$\" }, \"fields\": { \"type\": \"array\", \"minItems\": 1, \"maxItems\": 1024, \"items\": { \"$ref\": \"#/$defs/refinementField\" } } } },\n"
+        },
+        {
+          "start": 7457,
+          "previous": "",
+          "current": "        { \"type\": \"object\", \"additionalProperties\": false, \"required\": [\"kind\", \"name\", \"constructor\", \"fields\"], \"properties\": { \"kind\": { \"const\": \"checked-record\" }, \"name\": { \"type\": \"string\", \"pattern\": \"^[A-Za-z][A-Za-z0-9_]*(\\\\.[A-Za-z][A-Za-z0-9_]*)*$\" }, \"constructor\": { \"type\": \"null\" }, \"fields\": { \"type\": \"array\", \"minItems\": 1, \"maxItems\": 1024, \"items\": { \"$ref\": \"#/$defs/resultRefinementField\" } } } },\n"
+        }
+      ]
+    },
+    {
+      "path": "schema/lean-export-configuration.schema.json",
+      "currentSha256": "54b4eaf51873a785ad6837e5ca69f69c387905cc89682ed75501b7634b006511",
+      "previousSha256": "0090cc91c3478c7d164d61ee7206f07d7d2cf5493b689eed70a42058a7812fed",
+      "edits": [
+        {
+          "start": 8092,
+          "previous": "",
+          "current": "          \"type\": \"object\", \"additionalProperties\": false, \"required\": [\"kind\", \"name\", \"constructor\", \"fields\"],\n          \"properties\": {\n            \"kind\": {\"const\": \"checked-record\"},\n            \"name\": {\"$ref\": \"#/$defs/specializationName\"},\n            \"constructor\": {\"$ref\": \"#/$defs/specializationName\"},\n            \"fields\": {\"allOf\": [{\"$ref\": \"#/$defs/checkedNominalFields\"}, {\"minItems\": 1}]}\n          }\n        },\n        {\n"
+        }
+      ]
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "currentSha256": "625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384",
+      "previousSha256": "57fcd7bfa6c2ae7b7d696c1c95a88282c725fef2c15486744e683c258fa2ce07",
+      "edits": [
+        {
+          "start": 2446,
+          "previous": "\t\tif([\"subtype\", \"checked-record\"].includes(value.kind))\n",
+          "current": "\t\tif(value.kind === \"subtype\")\n"
+        },
+        {
+          "start": 2524,
+          "previous": "\t\t\tconst projected = value.kind === \"subtype\" && subtypeResult === true && value.constructor === null;\n",
+          "current": "\t\t\tconst projected = subtypeResult === true && value.constructor === null;\n"
+        },
+        {
+          "start": 2758,
+          "previous": "\t\t\tif(value.kind === \"subtype\" ? !subtypeStructural || transport?.kind !== \"primitive\"\n\t\t\t\t: level !== 0 || transport?.kind !== \"named\") fail();\n",
+          "current": "\t\t\tif(!subtypeStructural || transport?.kind !== \"primitive\") fail();\n\t\t\treturn true;\n\t\t}\n\t\tif(value.kind === \"checked-record\")\n\t\t{\n\t\t\tconst erased = definition?.source?.extensions?.[\"lean-lang.org/erased-proofs\"];\n\t\t\tconst erasedFields = Array.isArray(erased) ? erased : erased?.fields;\n\t\t\tconst generic = definition?.source?.extensions?.[\"lean-lang.org/instantiation\"] !== undefined;\n\t\t\tif(!subtypeStructural || transport?.kind !== \"named\" || definition?.kind !== \"record\"\n\t\t\t\t|| definition.representation !== \"copied\" || !Array.isArray(erasedFields) || !erasedFields.length) fail();\n\t\t\tconst rich = Object.hasOwn(value, \"fields\") || Object.hasOwn(value, \"name\");\n\t\t\tif(!rich)\n\t\t\t{\n\t\t\t\tclosed(value, [\"kind\", \"constructor\"]);\n\t\t\t\tif(level !== 0 || subtypeResult || typeof value.constructor !== \"string\"\n\t\t\t\t\t|| !/^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)*$(?![\\s\\S])/.test(value.constructor)) fail();\n\t\t\t\treturn true;\n\t\t\t}\n\t\t\tclosed(value, [\"kind\", \"name\", \"constructor\", \"fields\"]);\n\t\t\tif(generic || value.name !== definition.source?.declaration || !Array.isArray(value.fields)\n\t\t\t\t|| value.fields.length !== definition.fields.length) fail();\n\t\t\tif(subtypeResult ? value.constructor !== null\n\t\t\t\t: typeof value.constructor !== \"string\"\n\t\t\t\t\t|| !/^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)*$(?![\\s\\S])/.test(value.constructor)) fail();\n\t\t\tfor(const [index, field] of value.fields.entries())\n\t\t\t{\n\t\t\t\tclosed(field, [\"name\", \"refinement\"]);\n\t\t\t\tif(field.name !== definition.fields[index].name) fail();\n\t\t\t\tvisit(field.refinement, definition.fields[index].type, level + 1, seen);\n\t\t\t}\n"
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/NativeExports.lean",
+      "currentSha256": "88bc071a3fb4adb1dee0a0c3262c4227cadcf5928dd32a79844bb5be69093cf5",
+      "previousSha256": "cf03ffc8aa8e0760ea0d9b58be3d452ee71ec3cbf683dd3f82c02dc2eb3e14a5",
+      "edits": [
+        {
+          "start": 9135,
+          "previous": "    (checked : Option String) (callbackSite : Option Bool) (hostReply : Bool) : MetaM Json := do\n",
+          "current": "    (checked : Option String) (rich : Bool) (callbackSite : Option Bool) (hostReply : Bool) : MetaM Json := do\n"
+        },
+        {
+          "start": 9331,
+          "previous": "  unless depth == 0 && !copied && structural && callbackSite.isSome && !hostReply do\n",
+          "current": "  unless structural && callbackSite.isSome && !hostReply do\n"
+        },
+        {
+          "start": 9472,
+          "previous": "",
+          "current": "  if callbackSite == some false && (depth != 0 || copied) && !rich then\n    reject e \"nested checked records require an exact checked-record selection\"\n"
+        },
+        {
+          "start": 17946,
+          "previous": "  checked.any fun value => (value.getObjValAs? String \"kind\").toOption == some kind &&\n    (value.getObjValAs? String \"name\").toOption == some name.toString\n",
+          "current": "  checked.any fun value =>\n    let selectedKind := (value.getObjValAs? String \"kind\").toOption\n    (selectedKind == some kind || (kind == \"record\" && selectedKind == some \"checked-record\")) &&\n      (value.getObjValAs? String \"name\").toOption == some name.toString\n\ndef richCheckedRecordSelection (checked : Option Json) : Bool :=\n  checked.any fun value =>\n    (value.getObjValAs? String \"kind\").toOption == some \"checked-record\" &&\n      (value.getObjValAs? (Array Json) \"fields\").toOption.isSome\n"
+        },
+        {
+          "start": 19941,
+          "previous": "",
+          "current": "  let kind := (value.getObjValAs? String \"kind\").toOption.getD \"\"\n  if kind == \"checked-record\" then\n    let name := (value.getObjValAs? String \"name\").toOption.getD \"\"\n    let constructor := (value.getObjValAs? String \"constructor\").toOption.getD \"\"\n    let some members := (value.getObjValAs? (Array Json) \"fields\").toOption\n      | return some \"checked record selection requires ordered fields\"\n    if fields.size != 4 || !nativeIdentifier name || !nativeIdentifier constructor ||\n        members.isEmpty || members.size > 1024 then return some \"invalid checked record selection\"\n    let mut names : List String := []\n    for member in members do\n      modify (· + 1)\n      if (← get) > 4096 then return some \"checked refinement selection exceeds its depth or node limit\"\n      let some memberFields := member.getObj?.toOption | return some \"invalid checked record field\"\n      let fieldName := (member.getObjValAs? String \"name\").toOption.getD \"\"\n      if memberFields.size != 2 || !nativeIdentifier fieldName || (fieldName.splitOn \".\").length != 1 ||\n          names.contains fieldName then return some \"invalid checked record field\"\n      names := fieldName :: names\n      let some child := (member.getObjVal? \"refinement\").toOption\n        | return some \"missing checked record field decision\"\n      if let some problem ← checkedSelectionProblem child (depth + 1) then return some problem\n    return none\n"
+        },
+        {
+          "start": 21551,
+          "previous": "  let kind := (value.getObjValAs? String \"kind\").toOption.getD \"\"\n",
+          "current": ""
+        },
+        {
+          "start": 32836,
+          "previous": "    return obj [(\"kind\", str \"array\"), (\"element\", ← shapeTree request e.appArg! seen (depth + 1) true (selectedChild checked \"array\" 0) containerFin structural (hostReply := hostReply) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)), (\"abi\", ← abi e)]\n",
+          "current": "    return obj [(\"kind\", str \"array\"), (\"element\", ← shapeTree request e.appArg! seen (depth + 1) true (selectedChild checked \"array\" 0) containerFin structural (callbackSite := callbackSite) (hostReply := hostReply) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)), (\"abi\", ← abi e)]\n"
+        },
+        {
+          "start": 33181,
+          "previous": "    return obj [(\"kind\", str \"list\"), (\"element\", ← shapeTree request e.appArg! seen (depth + 1) true (selectedChild checked \"list\" 0) containerFin structural (hostReply := hostReply) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)), (\"abi\", ← abi e)]\n",
+          "current": "    return obj [(\"kind\", str \"list\"), (\"element\", ← shapeTree request e.appArg! seen (depth + 1) true (selectedChild checked \"list\" 0) containerFin structural (callbackSite := callbackSite) (hostReply := hostReply) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)), (\"abi\", ← abi e)]\n"
+        },
+        {
+          "start": 33526,
+          "previous": "    return obj [(\"kind\", str \"option\"), (\"element\", ← shapeTree request e.appArg! seen (depth + 1) true (selectedChild checked \"option\" 0) containerFin structural (hostReply := hostReply) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)), (\"abi\", ← abi e)]\n",
+          "current": "    return obj [(\"kind\", str \"option\"), (\"element\", ← shapeTree request e.appArg! seen (depth + 1) true (selectedChild checked \"option\" 0) containerFin structural (callbackSite := callbackSite) (hostReply := hostReply) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)), (\"abi\", ← abi e)]\n"
+        },
+        {
+          "start": 34161,
+          "previous": "    let first ← shapeTree request args[0]! seen (depth + 1) true (selectedChild checked kind (if result then 1 else 0)) containerFin structural (hostReply := hostReply) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)\n    let second ← shapeTree request args[1]! seen (depth + 1) true (selectedChild checked kind (if result then 0 else 1)) containerFin structural (hostReply := hostReply) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)\n",
+          "current": "    let first ← shapeTree request args[0]! seen (depth + 1) true (selectedChild checked kind (if result then 1 else 0)) containerFin structural (callbackSite := callbackSite) (hostReply := hostReply) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)\n    let second ← shapeTree request args[1]! seen (depth + 1) true (selectedChild checked kind (if result then 0 else 1)) containerFin structural (callbackSite := callbackSite) (hostReply := hostReply) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)\n"
+        },
+        {
+          "start": 41929,
+          "previous": "        return ← checkedRecordSite request e reference payload depth copied structural (selectedConstructor checked) callbackSite hostReply\n",
+          "current": "        if copied || richCheckedRecordSelection checked then\n          reject e \"nested and field-refined generic checked records require a reviewed projection\"\n        return ← checkedRecordSite request e reference payload depth copied structural\n          (selectedConstructor checked) (richCheckedRecordSelection checked) callbackSite hostReply\n"
+        },
+        {
+          "start": 46681,
+          "previous": "",
+          "current": "            (callbackSite := callbackSite) (hostReply := hostReply)\n"
+        },
+        {
+          "start": 46925,
+          "previous": "      if !erased.isEmpty && fields.any (fun field => containsKind types ((field.getObjVal? \"type\").toOption.getD Json.null) \"refinement\") then\n",
+          "current": "      if !erased.isEmpty && (← get).recursiveSelections.contains name then\n        reject e \"recursive checked records require another representation\"\n      if !erased.isEmpty && fields.any (fun field => containsKind types ((field.getObjVal? \"type\").toOption.getD Json.null) \"refinement\") &&\n          !richCheckedRecordSelection checked && !subtypeResult then\n"
+        },
+        {
+          "start": 47753,
+          "previous": "      return ← checkedRecordSite request e reference payload depth copied structural (selectedConstructor checked) callbackSite hostReply\n",
+          "current": "      return ← checkedRecordSite request e reference payload depth copied structural\n        (selectedConstructor checked) (richCheckedRecordSelection checked) callbackSite hostReply\n"
+        },
+        {
+          "start": 50826,
+          "previous": "",
+          "current": "              (callbackSite := callbackSite) (hostReply := hostReply)\n"
+        },
+        {
+          "start": 74353,
+          "previous": "    (seen : List String := []) : Json := Id.run do\n",
+          "current": "    (seen : List String := []) (depth : Nat := 0) : Json := Id.run do\n"
+        },
+        {
+          "start": 74590,
+          "previous": "    return projectionCheckedSelectionWith ((type.getObjVal? \"root\").toOption.getD Json.null) table\n",
+          "current": "    return projectionCheckedSelectionWith ((type.getObjVal? \"root\").toOption.getD Json.null) table [] depth\n"
+        },
+        {
+          "start": 74983,
+          "previous": "    return projectionCheckedSelectionWith definition types (name :: seen)\n",
+          "current": "    return projectionCheckedSelectionWith definition types (name :: seen) depth\n"
+        },
+        {
+          "start": 75089,
+          "previous": "    return projectionCheckedSelectionWith ((type.getObjVal? \"target\").toOption.getD Json.null) types seen\n",
+          "current": "    return projectionCheckedSelectionWith ((type.getObjVal? \"target\").toOption.getD Json.null) types seen depth\n"
+        },
+        {
+          "start": 75307,
+          "previous": "    if [\"subtype\", \"checked-record\"].contains ((predicate.getObjValAs? String \"kind\").toOption.getD \"\") then\n",
+          "current": "    let predicateKind := (predicate.getObjValAs? String \"kind\").toOption.getD \"\"\n    if predicateKind == \"checked-record\" then\n      let constructor := (predicate.getObjVal? \"constructor\").toOption.getD Json.null\n      if constructor == Json.null then return Json.null\n      let base := (type.getObjVal? \"base\").toOption.getD Json.null\n      let baseKind := (base.getObjValAs? String \"kind\").toOption.getD \"\"\n      let definition := if baseKind == \"reference\" then\n          let name := (base.getObjValAs? String \"name\").toOption.getD \"\"\n          types.find? (fun item => (item.getObjValAs? String \"name\").toOption == some name) |>.getD base\n        else base\n      let fields := ((definition.getObjValAs? (Array Json) \"fields\").toOption.getD #[]).map fun field =>\n        obj [(\"name\", (field.getObjVal? \"name\").toOption.getD Json.null),\n          (\"refinement\", projectionCheckedSelectionWith\n            ((field.getObjVal? \"type\").toOption.getD Json.null) types seen (depth + 1))]\n      let selected := fields.any fun field => (field.getObjVal? \"refinement\").toOption != some Json.null\n      if depth > 0 || selected then\n        return obj [(\"kind\", str \"checked-record\"),\n          (\"name\", (definition.getObjVal? \"name\").toOption.getD Json.null),\n          (\"constructor\", constructor), (\"fields\", toJson fields)]\n      return obj [(\"constructor\", constructor)]\n    if predicateKind == \"subtype\" then\n"
+        },
+        {
+          "start": 77170,
+          "previous": "          (\"refinement\", projectionCheckedSelectionWith ((field.getObjVal? \"type\").toOption.getD Json.null) types seen)]\n",
+          "current": "          (\"refinement\", projectionCheckedSelectionWith ((field.getObjVal? \"type\").toOption.getD Json.null) types seen (depth + 1))]\n"
+        },
+        {
+          "start": 78363,
+          "previous": "  let arguments := children.map fun child => projectionCheckedSelectionWith child types seen\n",
+          "current": "  let arguments := children.map fun child => projectionCheckedSelectionWith child types seen (depth + 1)\n"
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/checked-refinement-selection.mjs",
+      "currentSha256": "125dc7821d4e60a30f793d8f088c9136f05f38947817b0b45b97316865787959",
+      "previousSha256": "7106ddc2f6620cee4f2c8f21259187104d6a4807b853e83376d7afc48e51e61b",
+      "edits": [
+        {
+          "start": 1228,
+          "previous": "",
+          "current": "\t\t\tif(value.kind === \"checked-record\")\n\t\t\t{\n\t\t\t\tclosed(value, [\"kind\", \"name\", \"constructor\", \"fields\"]);\n\t\t\t\tif(typeof value.name !== \"string\" || !leanName.test(value.name)\n\t\t\t\t\t|| typeof value.constructor !== \"string\" || !leanName.test(value.constructor)\n\t\t\t\t\t|| !Array.isArray(value.fields) || !value.fields.length || value.fields.length > 1024) fail();\n\t\t\t\tconst names = new Set();\n\t\t\t\tfor(const field of value.fields)\n\t\t\t\t{\n\t\t\t\t\tclosed(field, [\"name\", \"refinement\"]);\n\t\t\t\t\tif(typeof field.name !== \"string\" || !memberName.test(field.name) || names.has(field.name)) fail();\n\t\t\t\t\tnames.add(field.name); visit(field.refinement, depth + 1);\n\t\t\t\t}\n\t\t\t\treturn true;\n\t\t\t}\n"
+        },
+        {
+          "start": 4621,
+          "previous": "",
+          "current": "\t\tif(value?.kind === \"checked-record\" && Object.hasOwn(value, \"fields\"))\n\t\t{\n\t\t\tclosed(value, [\"kind\", \"name\", \"constructor\", \"fields\"]);\n\t\t\tif(typeof value.name !== \"string\" || !leanName.test(value.name) || !Array.isArray(value.fields)\n\t\t\t\t|| value.constructor !== null && (typeof value.constructor !== \"string\" || !leanName.test(value.constructor))) fail();\n\t\t\tif(value.constructor === null) return null;\n\t\t\tconst fields = value.fields.map(field => {\n\t\t\t\tclosed(field, [\"name\", \"refinement\"]);\n\t\t\t\tif(typeof field.name !== \"string\" || !memberName.test(field.name)) fail();\n\t\t\t\treturn { name: field.name, refinement: visit(field.refinement, depth + 1) };\n\t\t\t});\n\t\t\treturn validateCheckedRefinementSelection({\n\t\t\t\tkind: \"checked-record\", name: value.name\n\t\t\t\t, constructor: value.constructor, fields\n\t\t\t});\n\t\t}\n"
+        },
+        {
+          "start": 8539,
+          "previous": "\t\t\treturn visit(value.root, depth + 1, table, new Set());\n",
+          "current": "\t\t\treturn visit(value.root, depth, table, new Set());\n"
+        },
+        {
+          "start": 8753,
+          "previous": "\t\t\treturn visit(definitions.get(value.name), depth + 1, definitions, new Set([...seen, value.name]));\n",
+          "current": "\t\t\treturn visit(definitions.get(value.name), depth, definitions, new Set([...seen, value.name]));\n\t\t}\n\t\tif(value.kind === \"alias\") return visit(value.target, depth, definitions, seen);\n\t\tif(value.kind === \"refinement\")\n\t\t{\n\t\t\tif(![\"subtype\", \"checked-record\"].includes(value.predicate.kind) || value.predicate.constructor === null) return null;\n\t\t\tif(value.predicate.kind !== \"checked-record\" || value.base?.kind !== \"record\") return { constructor: value.predicate.constructor };\n\t\t\tlet selected = false;\n\t\t\tconst fields = value.base.fields.map(field => {\n\t\t\t\tconst refinement = visit(field.type, depth + 1, definitions, seen);\n\t\t\t\tselected ||= refinement !== null;\n\t\t\t\treturn { name: field.name, refinement };\n\t\t\t});\n\t\t\tif(depth > 0 || selected)\n\t\t\t{\n\t\t\t\treturn {\n\t\t\t\t\tkind: \"checked-record\", name: value.base.name\n\t\t\t\t\t, constructor: value.predicate.constructor, fields\n\t\t\t\t};\n\t\t\t}\n\t\t\treturn { constructor: value.predicate.constructor };\n"
+        },
+        {
+          "start": 9697,
+          "previous": "\t\tif(value.kind === \"alias\") return visit(value.target, depth + 1, definitions, seen);\n\t\tif(value.kind === \"refinement\") return [\"subtype\", \"checked-record\"].includes(value.predicate.kind) && value.predicate.constructor !== null\n\t\t\t? { constructor: value.predicate.constructor } : null;\n",
+          "current": ""
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/elaborated-metadata.mjs",
+      "currentSha256": "5529a00587a555f518682e4957f099629c128bb66b4f1aed54909c9814c60579",
+      "previousSha256": "8f01c7bfae4768d330060b9364b0eead15dc07792ed62f27387400ae227a2d0e",
+      "edits": [
+        {
+          "start": 11374,
+          "previous": "\t\t\t\tconst copied = (type, depth = 0, references, refinements = true, subtypeStructural = depth === 0 && !references && refinements === true, produced = false) => {\n",
+          "current": "\t\t\t\tconst copied = (type, depth = 0, references, refinements = true, subtypeStructural = depth === 0 && !references && refinements === true, produced = false, checkedRecord = false) => {\n"
+        },
+        {
+          "start": 12592,
+          "previous": "\t\t\t\t\t\t\t|| (type.predicate?.kind === \"checked-record\" && (depth !== 0 || refinements === \"fin-only\" || !subtypeStructural))) fail(\"Unsupported nested refinement position\");\n",
+          "current": "\t\t\t\t\t\t\t|| (type.predicate?.kind === \"checked-record\" && (refinements === \"fin-only\" || !subtypeStructural || produced))) fail(\"Unsupported nested refinement position\");\n"
+        },
+        {
+          "start": 13295,
+          "previous": "\t\t\t\t\t\t\tcopied(type.base, depth, references, refinements);\n",
+          "current": "\t\t\t\t\t\t\tcopied(type.base, depth, references, refinements, true, false, true);\n"
+        },
+        {
+          "start": 15765,
+          "previous": "\t\t\t\t\t\t// Erased proof fields are named once, never cross, and appear only at a top-level site.\n\t\t\t\t\t\tif(Object.hasOwn(type, \"erased\") && (depth !== 0 || !Array.isArray(type.erased) || !type.erased.length || type.erased.length > 1024\n\t\t\t\t\t\t\t|| new Set(type.erased).size !== type.erased.length || type.erased.some(name => !text(name) || !/^[A-Za-z_][A-Za-z0-9_']*$/.test(name))\n",
+          "current": "\t\t\t\t\t\t// Erased proof fields are named once and never cross. Inputs need the enclosing\n\t\t\t\t\t\t// checked-record constructor; result paths are already proof-backed by Lean.\n\t\t\t\t\t\tif(Object.hasOwn(type, \"erased\") && ((!checkedRecord && !produced)\n\t\t\t\t\t\t\t\t|| (Object.hasOwn(type, \"provenance\") && depth !== 0)\n\t\t\t\t\t\t\t\t|| !Array.isArray(type.erased) || !type.erased.length || type.erased.length > 1024\n\t\t\t\t\t\t\t\t|| new Set(type.erased).size !== type.erased.length || type.erased.some(name => !text(name) || !/^[A-Za-z_][A-Za-z0-9_']*$/.test(name))\n"
+        },
+        {
+          "start": 18544,
+          "previous": "\t\t\t\t\t\t\t\tsubtypeStructural && !Object.hasOwn(type, \"provenance\") && !Object.hasOwn(type, \"erased\"), produced);\n",
+          "current": "\t\t\t\t\t\t\t\tsubtypeStructural && !Object.hasOwn(type, \"provenance\")\n\t\t\t\t\t\t\t\t\t\t&& (!Object.hasOwn(type, \"erased\") || checkedRecord || produced), produced);\n"
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/native-types.mjs",
+      "currentSha256": "85793218b8205ae95dc45c1344aa0b71591f6a0eb7e9c624c04ea53065525545",
+      "previousSha256": "36154b9374e740fa69117eab9c1f2144927471f7d32520ad14fb5bea8fba8304",
+      "edits": [
+        {
+          "start": 2917,
+          "previous": "// A caller-supplied depth or copied position is never a top-level site, so a refinement there is rejected.\n",
+          "current": ""
+        },
+        {
+          "start": 3499,
+          "previous": "",
+          "current": " * Validate a proof-erased carrier after its source refinement tree passed site checks.\n *\n * @param type - Compiler-owned native representation.\n */\nexport const validateNativeRepresentation = type =>\n\tvalidate(type, 0, false, undefined, undefined, false, true, undefined, true, false, true);\n\n/**\n"
+        },
+        {
+          "start": 4295,
+          "previous": "const validate = (type, depth, copied, references, policy, owned = false, structural = true, site = undefined, subtypeStructural = false, subtypeResult = false) => {\n",
+          "current": "const validate = (type, depth, copied, references, policy, owned = false, structural = true, site = undefined, subtypeStructural = false, subtypeResult = false, erasedTransport = false) => {\n"
+        },
+        {
+          "start": 5856,
+          "previous": "\tconst recurse = (child, copy = copied, inner = structural, subtype = subtypeStructural, produced = subtypeResult) => validate(child, depth + 1, copy, references, policy, owned, inner, undefined, subtype, produced);\n",
+          "current": "\tconst recurse = (child, copy = copied, inner = structural, subtype = subtypeStructural, produced = subtypeResult) =>\n\t\tvalidate(child, depth + 1, copy, references, policy, owned, inner, undefined, subtype, produced, erasedTransport);\n"
+        },
+        {
+          "start": 6167,
+          "previous": "\t\tvalidateCopiedMetadataGraph(type, (value, table) => validate(value, 0, true, table, policy, owned, true, site, true, subtypeResult), true);\n",
+          "current": "\t\tvalidateCopiedMetadataGraph(type, (value, table) => validate(value, 0, true, table, policy, owned, true, site, true, subtypeResult, erasedTransport), true);\n"
+        },
+        {
+          "start": 7783,
+          "previous": "\t\t\t// Only the site's checked constructor builds a record with proof fields, at a top-level parameter.\n\t\t\tif(depth !== 0 || copied || site === \"result\") fail(\"checked records require a top-level native parameter constructor\");\n",
+          "current": "\t\t\t// Only a structural input path may invoke the selected constructor. Produced records cross\n\t\t\t// bare below because Lean already owns their proof fields.\n\t\t\tif(!subtypeStructural || subtypeResult) fail(\"checked records require a structural native parameter constructor\");\n"
+        },
+        {
+          "start": 8428,
+          "previous": "\t\t\tvalidate(type.base, depth, copied, references, policy, owned, structural, \"checked-record\");\n",
+          "current": "\t\t\tvalidate(type.base, depth, copied, references, policy, owned, structural, \"checked-record\", true, false, erasedTransport);\n"
+        },
+        {
+          "start": 12751,
+          "previous": "\t\t// top-level result or as the base of a parameter's checked-record refinement.\n",
+          "current": "\t\t// result or as the base of a parameter's checked-record refinement.\n"
+        },
+        {
+          "start": 12960,
+          "previous": "\t\t\tif(depth !== 0 || copied || references || site === \"parameter\") fail(\"checked records cross only through a parameter constructor or as a result\");\n",
+          "current": "\t\t\tif(site !== \"checked-record\" && !subtypeResult && !erasedTransport) fail(\"checked records cross only through a parameter constructor or as a result\");\n\t\t\tif(Object.hasOwn(type, \"provenance\") && (depth !== 0 || copied))\n\t\t\t\tfail(\"nested generic checked records require another representation\");\n"
+        },
+        {
+          "start": 14030,
+          "previous": "\t\t\tconst plain = !Object.hasOwn(type, \"provenance\") && !Object.hasOwn(type, \"erased\");\n",
+          "current": "\t\t\tconst plain = !Object.hasOwn(type, \"provenance\")\n\t\t\t\t&& (!Object.hasOwn(type, \"erased\") || site === \"checked-record\" || subtypeResult || erasedTransport);\n"
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/reviewed-source.mjs",
+      "currentSha256": "d54b80fe4ffa088683d18ab30636334c0f21b5fd8353c91d4f910d0b9e10b670",
+      "previousSha256": "7a560e55ea1c5888a8192c40fbb381dc5f40760488d25f73689ce6a0277ed703",
+      "edits": [
+        {
+          "start": 12093,
+          "previous": "\t// A checked record crosses only at a top-level site: a parameter through its checked constructor,\n\t// or a Lean-produced result with no constructor.\n\tconst checkedRecord = type => type?.kind === \"named\" && Object.hasOwn(definitions.get(type.id)?.source.extensions ?? {}, erasedProofsKey);\n",
+          "current": "\t// Every checked-record input occurrence names its constructor. Results name no constructor,\n\t// but a nested or field-refined result retains its payload tree so generated mirrors can erase it.\n\tconst checkedRecordCoverage = (type, tree, produced, depth = 0, seen = new Set()) => {\n\t\tif(type?.kind === \"apply\")\n\t\t{\n\t\t\tconst children = tree?.arguments ?? type.arguments.map(() => null);\n\t\t\tif(tree !== null && tree !== undefined && (!Array.isArray(children) || children.length !== type.arguments.length)) return false;\n\t\t\treturn type.arguments.every((child, index) => checkedRecordCoverage(child, children[index], produced, depth + 1, seen));\n\t\t}\n\t\tif(type?.kind !== \"named\") return true;\n\t\tif(seen.has(type.id))\n\t\t\treturn !Object.hasOwn(definitions.get(type.id)?.source.extensions ?? {}, erasedProofsKey);\n\t\tconst definition = definitions.get(type.id);\n\t\tif(!definition) return false;\n\t\tconst inner = new Set([...seen, type.id]);\n\t\tif(definition.kind === \"alias\") return checkedRecordCoverage(definition.target, tree, produced, depth, inner);\n\t\tconst erased = Object.hasOwn(definition.source.extensions, erasedProofsKey);\n\t\tif(erased)\n\t\t{\n\t\t\tconst generic = Object.hasOwn(definition.source.extensions, instantiationKey);\n\t\t\tif(generic && (depth !== 0 || Object.hasOwn(tree ?? {}, \"fields\"))) return false;\n\t\t\tif(tree === null || tree === undefined) return produced && depth === 0;\n\t\t\tif(tree.kind !== \"checked-record\" || (produced ? tree.constructor !== null : typeof tree.constructor !== \"string\")) return false;\n\t\t\tif(!Object.hasOwn(tree, \"fields\")) return !produced && depth === 0\n\t\t\t\t&& definition.source.extensions[\"lean-lang.org/nominal-refinements\"] === undefined;\n\t\t\tif(tree.name !== definition.source.declaration || !Array.isArray(tree.fields) || tree.fields.length !== definition.fields.length) return false;\n\t\t\treturn definition.fields.every((field, index) => tree.fields[index]?.name === field.name\n\t\t\t\t&& checkedRecordCoverage(field.type, tree.fields[index].refinement, produced, depth + 1, inner));\n\t\t}\n\t\tif(definition.kind === \"record\")\n\t\t{\n\t\t\tconst fields = tree?.kind === \"record\" ? tree.fields : definition.fields.map(() => null);\n\t\t\treturn definition.fields.every((field, index) => checkedRecordCoverage(field.type, fields[index]?.refinement ?? null, produced, depth + 1, inner));\n\t\t}\n\t\tif(definition.kind === \"variant\")\n\t\t{\n\t\t\tconst cases = tree?.kind === \"variant\" ? tree.cases : definition.cases.map(branch => ({ fields: branch.fields.map(() => null) }));\n\t\t\treturn definition.cases.every((branch, index) => branch.fields.every((field, position) =>\n\t\t\t\tcheckedRecordCoverage(field.type, cases[index]?.fields[position]?.refinement ?? null, produced, depth + 1, inner)));\n\t\t}\n\t\treturn true;\n\t};\n"
+        },
+        {
+          "start": 15007,
+          "previous": "\t\t\treject(checkedRecord(value.type) !== (refinements?.parameters?.[index]?.kind === \"checked-record\"), `${declaration.id}.parameters[${index}]`);\n\t\treject(refinements?.result?.kind === \"checked-record\", `${declaration.id}.result`);\n",
+          "current": "\t\t\treject(!checkedRecordCoverage(value.type, refinements?.parameters?.[index] ?? null, false), `${declaration.id}.parameters[${index}]`);\n\t\treject(!checkedRecordCoverage(declaration.result.type, refinements?.result ?? null, true), `${declaration.id}.result`);\n"
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/semantic-model.mjs",
+      "currentSha256": "ab308111de70b4c500de9518ce85db7d9f44a42e6c5449243af3b5f30af04bb2",
+      "previousSha256": "1dec886e8ec6d278bd270d29e09a2f027770ce62e0cd70080d9a493a7bd26335",
+      "edits": [
+        {
+          "start": 12398,
+          "previous": "\t\treturn type.kind === \"refinement\" ? type.predicate.kind === \"subtype\"\n",
+          "current": "\t\treturn type.kind === \"refinement\" ? [\"subtype\", \"checked-record\"].includes(type.predicate.kind) || hasSubtype(type.base, references, seen)\n"
+        },
+        {
+          "start": 13063,
+          "previous": "\tconst refinement = (type, nominal = false, shared = false, references = new Map(), seen = new Set()) => {\n",
+          "current": "\tconst refinement = (type, nominal = false, shared = false, references = new Map(), seen = new Set(), depth = 0, produced = false) => {\n"
+        },
+        {
+          "start": 13273,
+          "previous": "\t\t\tnew Map(type.types.map(definition => [definition.name, definition])), new Set());\n",
+          "current": "\t\t\tnew Map(type.types.map(definition => [definition.name, definition])), new Set(), depth, produced);\n"
+        },
+        {
+          "start": 13880,
+          "previous": "\t\t\treturn refinement(target, true, shared, references, new Set([...seen, type.name]));\n",
+          "current": "\t\t\treturn refinement(target, true, shared, references, new Set([...seen, type.name]), depth, produced);\n"
+        },
+        {
+          "start": 13988,
+          "previous": "\t\tif(type.kind === \"refinement\") return shared && type.predicate.kind === \"subtype\" ? null : structuredClone(type.predicate);\n\t\tif(nominal && type.kind === \"alias\") return refinement(type.target, true, shared, references, seen);\n",
+          "current": "\t\tif(type.kind === \"refinement\")\n\t\t{\n\t\t\tif(shared && [\"subtype\", \"checked-record\"].includes(type.predicate.kind)) return null;\n\t\t\tif(type.predicate.kind !== \"checked-record\") return structuredClone(type.predicate);\n\t\t\tconst fields = type.base.fields.map(field => ({ name: field.name\n\t\t\t\t, refinement: refinement(field.type, true, shared, references, seen, depth + 1, produced) }));\n\t\t\treturn depth > 0 || fields.some(field => field.refinement !== null)\n\t\t\t\t? { kind: \"checked-record\", name: type.base.name, constructor: type.predicate.constructor, fields }\n\t\t\t\t: structuredClone(type.predicate);\n\t\t}\n\t\tif(type.kind === \"record\" && type.erased)\n\t\t{\n\t\t\tconst fields = type.fields.map(field => ({ name: field.name\n\t\t\t\t, refinement: refinement(field.type, true, shared, references, seen, depth + 1, produced) }));\n\t\t\treturn produced && (depth > 0 || fields.some(field => field.refinement !== null))\n\t\t\t\t? { kind: \"checked-record\", name: type.name, constructor: null, fields } : null;\n\t\t}\n\t\tif(nominal && type.kind === \"alias\") return refinement(type.target, true, shared, references, seen, depth, produced);\n"
+        },
+        {
+          "start": 15235,
+          "previous": "\t\t\t\tconst value = refinement(field.type, true, shared, references, seen);\n",
+          "current": "\t\t\t\tconst value = refinement(field.type, true, shared, references, seen, depth + 1, produced);\n"
+        },
+        {
+          "start": 15860,
+          "previous": "\t\tconst arguments_ = children.map(child => refinement(child, nominal, shared, references, seen));\n",
+          "current": "\t\tconst arguments_ = children.map(child => refinement(child, nominal, shared, references, seen, depth + 1, produced));\n"
+        },
+        {
+          "start": 16365,
+          "previous": "\t\t\t, result: refinement(projection.result, hasSubtype(projection.result)) };\n",
+          "current": "\t\t\t, result: refinement(projection.result, hasSubtype(projection.result), false, new Map(), new Set(), 0, true) };\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/javascript/generate.mjs",
+      "currentSha256": "f057d161f40d20e2afaca794fdcb485d507b819f3210b00484835d65dc675bb0",
+      "previousSha256": "8b5fdfb1627982617392364cd7fd5441141e75dcff5f181d9dc8a84b03477075",
+      "edits": [
+        {
+          "start": 24346,
+          "previous": "\tconst nominal = tree => [\"record\", \"variant\"].includes(tree?.kind) || (tree?.arguments ?? []).some(nominal);\n",
+          "current": "\tconst nominal = tree => [\"record\", \"variant\", \"checked-record\"].includes(tree?.kind)\n\t\t|| (tree?.arguments ?? []).some(nominal);\n"
+        },
+        {
+          "start": 27929,
+          "previous": "\t\t\t\t\t\"  if (refinement.kind === 'record' || refinement.kind === 'variant') {\"\n\t\t\t\t\t, \"    const fields = refinement.kind === 'record' ? refinement.fields : refinement.cases.find(branch => branch.name === value.kind).fields;\"\n",
+          "current": "\t\t\t\t\t\"  if (refinement.kind === 'record' || refinement.kind === 'checked-record' || refinement.kind === 'variant') {\"\n\t\t\t\t\t, \"    const fields = refinement.kind === 'variant' ? refinement.cases.find(branch => branch.name === value.kind).fields : refinement.fields;\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/native/fin-refinements.mjs",
+      "currentSha256": "61ad0c2864bf6b5f92fe099b98c205f2be23f77667a742b436cae8df48912e17",
+      "previousSha256": "ed719cbb1d4de13a9bbd110703eb0fffb4d2cea356fdc91bcdfbbed0b89039c3",
+      "edits": [
+        {
+          "start": 642,
+          "previous": "\tconst checkedRecord = site => site.type.kind === \"named\" && types.some(type => type.id === site.type.id\n\t\t&& type.kind === \"record\" && type.source?.extensions?.[\"lean-lang.org/erased-proofs\"] !== undefined);\n\t// Lean-produced records carry no input constructor, including result-only packages.\n\tconst withResult = value => checkedRecord(declaration.result)\n\t\t? { parameters: value?.parameters ?? declaration.parameters.map(() => null)\n\t\t\t, result: { kind: \"checked-record\", constructor: null } } : value;\n\tif(declared === undefined)\n\t{\n\t\tif(declaration.parameters.some(checkedRecord))\n\t\t\tthrow new TypeError(`${declaration.id}: a checked record parameter needs its selected constructor`);\n\t\treturn withResult(nativeFinExpansion(declaration, types));\n\t}\n",
+          "current": "\tif(declared === undefined) return nativeFinExpansion(declaration, types);\n"
+        },
+        {
+          "start": 1296,
+          "previous": "\tif(value.parameters.some((refinement, index) => (refinement?.kind === \"checked-record\") !== checkedRecord(declaration.parameters[index]))\n\t\t|| value.result?.kind === \"checked-record\")\n\t\tthrow new TypeError(`${declaration.id}: checked records need an input constructor and proof-backed result projection`);\n\t// Checked records remain top-level sites. Nominal Subtypes keep their selected\n\t// field/case decisions separate from the shared Fin bounds.\n\tconst supported = (refinement, top) => refinement === null || [\"fin\", \"subtype\"].includes(refinement.kind) || (top && refinement.kind === \"checked-record\")\n",
+          "current": "\t// Nominal Subtypes and checked records keep their per-use constructor decisions\n\t// separate from shared Fin bounds.\n\tconst supported = refinement => refinement === null || [\"fin\", \"subtype\"].includes(refinement.kind)\n\t\t|| (refinement.kind === \"checked-record\" && (!Object.hasOwn(refinement, \"fields\")\n\t\t\t|| refinement.fields.every(field => supported(field.refinement))))\n"
+        },
+        {
+          "start": 2215,
+          "previous": "\tif(![...value.parameters, value.result].every(refinement => supported(refinement, true)))\n\t\tthrow new TypeError(`${declaration.id}: native packages document top-level checked records and Fin/Subtype refinements at top level or inside arrays, lists, options, products and results`);\n\treturn withResult(nativeFinExpansion(declaration, types) ?? value);\n",
+          "current": "\tif(![...value.parameters, value.result].every(supported))\n\t\tthrow new TypeError(`${declaration.id}: native packages document checked records and Fin/Subtype refinements only along structural copied paths`);\n\treturn nativeFinExpansion(declaration, types) ?? value;\n"
+        },
+        {
+          "start": 3158,
+          "previous": "\t\t&& definitions.get(type.id).source?.extensions?.[\"lean-lang.org/nominal-refinements\"] !== undefined;\n",
+          "current": "\t\t&& (definitions.get(type.id).source?.extensions?.[\"lean-lang.org/nominal-refinements\"] !== undefined\n\t\t\t|| definitions.get(type.id).source?.extensions?.[\"lean-lang.org/erased-proofs\"] !== undefined);\n"
+        },
+        {
+          "start": 4189,
+          "previous": "\tconst nominalSite = tree => tree !== null && ([\"record\", \"variant\"].includes(tree.kind) || (tree.arguments ?? []).some(nominalSite));\n",
+          "current": "\tconst nominalSite = tree => tree !== null && ([\"record\", \"variant\", \"checked-record\"].includes(tree.kind)\n\t\t|| (tree.arguments ?? []).some(nominalSite));\n"
+        },
+        {
+          "start": 4920,
+          "previous": "\tconst expand = (type, tree, seen = new Set()) => {\n\t\tif(tree?.kind === \"checked-record\") return tree;\n",
+          "current": "\tconst expand = (type, tree, seen = new Set(), produced = false, depth = 0) => {\n"
+        },
+        {
+          "start": 5082,
+          "previous": "\t\t\tif(definition?.kind === \"alias\" && !seen.has(type.id)) return expand(definition.target, tree, new Set([...seen, type.id]));\n",
+          "current": "\t\t\tif(definition?.kind === \"alias\" && !seen.has(type.id)) return expand(definition.target, tree, new Set([...seen, type.id]), produced, depth);\n"
+        },
+        {
+          "start": 5544,
+          "previous": "\t\t\t\tconst children = definition.fields.map((field, index) => expand(field.type, merge(tree?.fields[index].refinement ?? null, nominal?.fields[index]), inner));\n",
+          "current": "\t\t\t\tconst checked = definition.source?.extensions?.[\"lean-lang.org/erased-proofs\"] !== undefined;\n\t\t\t\tif(checked)\n\t\t\t\t{\n\t\t\t\t\tconst selected = tree?.kind === \"checked-record\", rich = selected && Object.hasOwn(tree, \"fields\");\n\t\t\t\t\tconst generic = definition.source?.extensions?.[\"lean-lang.org/instantiation\"] !== undefined;\n\t\t\t\t\tif(generic && (depth !== 0 || rich))\n\t\t\t\t\t\tthrow new TypeError(`${declaration.id}: nested and field-refined generic checked records require another representation`);\n\t\t\t\t\tif(!produced && !selected) throw new TypeError(`${declaration.id}: a checked record parameter needs its selected constructor`);\n\t\t\t\t\tif(produced && selected && (!rich || tree.constructor !== null))\n\t\t\t\t\t\tthrow new TypeError(`${declaration.id}: checked record results retain only projected field refinements`);\n\t\t\t\t\tconst children = definition.fields.map((field, index) => expand(field.type,\n\t\t\t\t\t\tmerge(rich ? tree.fields[index].refinement : null, nominal?.fields?.[index]), inner, produced, depth + 1));\n\t\t\t\t\tif(!produced && !rich && (depth !== 0 || children.some(Boolean)))\n\t\t\t\t\t\tthrow new TypeError(`${declaration.id}: nested or field-refined checked records need an exact field selection`);\n\t\t\t\t\tif(!rich && depth === 0 && !children.some(Boolean))\n\t\t\t\t\t\treturn { kind: \"checked-record\", constructor: produced ? null : tree.constructor };\n\t\t\t\t\treturn {\n\t\t\t\t\t\tkind: \"checked-record\", definition: definition.source.declaration\n\t\t\t\t\t\t, constructor: produced ? null : tree.constructor\n\t\t\t\t\t\t, fields: names(definition.fields), arguments: children\n\t\t\t\t\t};\n\t\t\t\t}\n\t\t\t\tconst children = definition.fields.map((field, index) => expand(field.type,\n\t\t\t\t\tmerge(tree?.fields[index].refinement ?? null, nominal?.fields?.[index]), inner, produced, depth + 1));\n"
+        },
+        {
+          "start": 7490,
+          "previous": "\t\t\t\tconst children = item.fields.map((field, position) => expand(field.type, merge(tree?.cases[index].fields[position].refinement ?? null, nominal?.cases[index][position]), inner));\n",
+          "current": "\t\t\t\tconst children = item.fields.map((field, position) => expand(field.type,\n\t\t\t\t\tmerge(tree?.cases[index].fields[position].refinement ?? null, nominal?.cases?.[index]?.[position]), inner, produced, depth + 1));\n"
+        },
+        {
+          "start": 8099,
+          "previous": "\t\tconst children = type.arguments.map((child, index) => expand(child, tree?.arguments?.[index] ?? null, seen));\n",
+          "current": "\t\tconst children = type.arguments.map((child, index) => expand(child, tree?.arguments?.[index] ?? null, seen, produced, depth + 1));\n"
+        },
+        {
+          "start": 8475,
+          "previous": "\t\t, result: expand(declaration.result.type, declared?.result ?? null) };\n",
+          "current": "\t\t, result: expand(declaration.result.type, declared?.result ?? null, new Set(), true) };\n"
+        },
+        {
+          "start": 9221,
+          "previous": "\tif(refinement.kind === \"checked-record\") return [refinement.constructor === null\n\t\t? `${path} projects proof-backed record payload fields` : `${path} checked by ${refinement.constructor}`];\n",
+          "current": "\tif(refinement.kind === \"checked-record\") return [\n\t\trefinement.constructor === null\n\t\t\t? `${path} projects proof-backed record payload fields`\n\t\t\t: `${path} checked by ${refinement.constructor}`\n\t\t, ...(refinement.arguments ?? []).flatMap((child, index) =>\n\t\t\tnativeFinBoundPaths(child, `${path}.${refinement.fields[index]}`, produced))\n\t];\n"
+        },
+        {
+          "start": 15121,
+          "previous": "\t\tif([\"record\", \"variant\"].includes(refinement.kind) && hasSubtype(refinement)) nominalSubtype = true;\n",
+          "current": "\t\tif([\"record\", \"variant\", \"checked-record\"].includes(refinement.kind) && hasSubtype(refinement)) nominalSubtype = true;\n"
+        },
+        {
+          "start": 15339,
+          "previous": "\t\telse (refinement.kind === \"variant\" ? refinement.cases.flatMap(branch => branch.arguments) : refinement.arguments).forEach(walk);\n",
+          "current": "\t\tconst children = refinement.kind === \"variant\" ? refinement.cases.flatMap(branch => branch.arguments)\n\t\t\t: refinement.arguments ?? [];\n\t\tchildren.forEach(walk);\n"
+        },
+        {
+          "start": 16811,
+          "previous": "\tif(kinds.has(\"checked-record\")) parts.push(\"Checked records cross as generated record values containing only their payload fields. The bundled native library validates each input through the selected Lean constructor before calling the export. A rejected record reports the parameter and constructor; a normalizing constructor changes the value received by Lean without changing the caller's record. Results project the payload fields of a record whose proofs Lean has already constructed. No proof object or input constructor is needed for a result-only export. Ordinary and reviewed APIs retain each parameter's constructor choice. Nested checked records, other dependent payloads and checked-record callbacks remain unsupported.\");\n",
+          "current": "\tif(kinds.has(\"checked-record\")) parts.push(\"Checked records cross as generated record values containing only their payload fields. The bundled native library validates each input through the constructor selected for that exact occurrence before calling the export. Nested arrays, Lists, options, products, Except values, plain records and active variant cases retain their own checked-record constructors. Fin and Subtype payload fields run their checks before the outer record constructor. A rejection names the argument, nested path and failing constructor or bound. A normalizing constructor changes the copied value received by Lean without changing the caller's record. Results recursively project the payload fields and refined base values of records whose proofs Lean has already constructed. No proof object or input constructor is needed for a result-only export. Ordinary and reviewed APIs retain every per-occurrence constructor choice. Recursive, generic, owned and callback checked-record positions remain unsupported.\");\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/compiler-adapters.mjs",
+      "currentSha256": "a7a6a1dbb6b207dcf03b29cc74ef47d4acf19b0d1db4d42f85131ff707fe652d",
+      "previousSha256": "e07a504718e76fb2e220e7a10014d209cfd3964d8d4eced3d49edc7274c4b52f",
+      "edits": [
+        {
+          "start": 7996,
+          "previous": "",
+          "current": "\tif(value.kind === \"checked-record\" && Object.hasOwn(value, \"fields\"))\n\t{\n\t\texactKeys(value, [\"kind\", \"name\", \"constructor\", \"fields\"], path);\n\t\tconst invalidConstructor = produced ? value.constructor !== null\n\t\t\t: typeof value.constructor !== \"string\"\n\t\t\t\t|| !/^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)*$/.test(value.constructor);\n\t\tif(typeof value.name !== \"string\" || !/^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)*$/.test(value.name)\n\t\t\t|| !Array.isArray(value.fields) || !value.fields.length || value.fields.length > 1024\n\t\t\t|| invalidConstructor)\n\t\t\tfail(\"invalid-compiler-adapter-plan\", `${path} has an invalid checked-record refinement`);\n\t\tconst names = new Set();\n\t\tfor(const field of value.fields)\n\t\t{\n\t\t\texactKeys(field, [\"name\", \"refinement\"], path);\n\t\t\tif(typeof field.name !== \"string\" || !/^[A-Za-z_][A-Za-z0-9_']*$/.test(field.name) || names.has(field.name))\n\t\t\t\tfail(\"invalid-compiler-adapter-plan\", `${path} has an invalid checked-record field`);\n\t\t\tnames.add(field.name);\n\t\t\tvalidateRefinement(field.refinement, `${path}.${field.name}`, undefined, depth + 1, produced, budget);\n\t\t}\n\t\treturn;\n\t}\n"
+        },
+        {
+          "start": 9257,
+          "previous": "\tif(![\"subtype\", \"checked-record\"].includes(value.kind) || (value.kind === \"checked-record\" && depth !== 0) || (!projected && (typeof value.constructor !== \"string\"\n",
+          "current": "\tif(![\"subtype\", \"checked-record\"].includes(value.kind) || (value.kind === \"checked-record\" && produced) || (!projected && (typeof value.constructor !== \"string\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/component-fin-guards.mjs",
+      "currentSha256": "69a1bf34a928021cfa575673f78e01e0d53c08c25593dc897f9d831dd3cc9825",
+      "previousSha256": "023f466cf78606075fa0f2c772dd5b9bb0149ad40cee562e39c5f6ccf179dd6c",
+      "edits": [
+        {
+          "start": 1753,
+          "previous": "\tif([\"record\", \"variant\"].includes(tree.kind)) return `(LbErased.${tree.definition}.validFin ${input})`;\n",
+          "current": "\tif([\"record\", \"variant\", \"checked-record\"].includes(tree.kind)) return `(LbErased.${tree.definition}.validFin ${input})`;\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/component-refinement-mirrors.mjs",
+      "currentSha256": "0e878e6734e185b38dc66a1b4fb4cd4c9b4356f1f15726c537d00197f8f89321",
+      "previousSha256": "b454eaf70252f3b615d3e9ec62357774aaf5fb7849a3edce329e4566beee7fa2",
+      "edits": [
+        {
+          "start": 1494,
+          "previous": "",
+          "current": "\t\t|| (tree.kind === \"checked-record\" && Object.hasOwn(tree, \"fields\"))\n"
+        },
+        {
+          "start": 5028,
+          "previous": "",
+          "current": "\t\t\t\tif(definition?.erased) fail(\"recursive checked records require another representation\");\n"
+        },
+        {
+          "start": 5696,
+          "previous": "\t\t\t\tif(depth !== 0) fail(\"nested checked records require another representation\");\n",
+          "current": ""
+        },
+        {
+          "start": 5813,
+          "previous": "\t\t\t\tif(produced && tree !== null) fail(\"checked record results project without an input selection\");\n\t\t\t\treturn { kind: \"checked-record\", definition: type.id.slice(5), constructor: produced ? null : tree.constructor };\n",
+          "current": "\t\t\t\tconst rich = tree?.kind === \"checked-record\" && Object.hasOwn(tree, \"fields\");\n\t\t\t\tif(produced && tree !== null && (!rich || tree.constructor !== null))\n\t\t\t\t\tfail(\"checked record results retain only their projected field refinements\");\n\t\t\t\tconst arguments_ = definition.fields.map((field, index) => expand(field.type,\n\t\t\t\t\tmerge(rich ? tree.fields[index].refinement : null, shared?.fields?.[index]), inner, depth + 1, innerActive));\n\t\t\t\tif(!produced && !rich && (depth !== 0 || arguments_.some(Boolean)))\n\t\t\t\t\tfail(\"nested or field-refined checked records require an exact field selection\");\n\t\t\t\tif(!rich && depth === 0 && !arguments_.some(Boolean))\n\t\t\t\t\treturn { kind: \"checked-record\", definition: type.id.slice(5), constructor: produced ? null : tree.constructor };\n\t\t\t\treturn {\n\t\t\t\t\tkind: \"checked-record\", definition: type.id.slice(5)\n\t\t\t\t\t, constructor: produced ? null : tree.constructor\n\t\t\t\t\t, fields: definition.fields.map(field => field.name), arguments: arguments_\n\t\t\t\t};\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/component-refinements.mjs",
+      "currentSha256": "43426f7799a7b537d24432db791533e3d11980e9a42427d9da68a01db80c8ef9",
+      "previousSha256": "7eb9057ad5ae5c6252976e0188e6e4be2a21641f7139518be42fccbcf9c5ef1c",
+      "edits": [
+        {
+          "start": 507,
+          "previous": "",
+          "current": " * @param refinement - Optional complete rich checked-record tree. Legacy leaves retain their old identity.\n"
+        },
+        {
+          "start": 619,
+          "previous": "export const checkedRecordVia = constructor => `via_${sha256(constructor).slice(0, 16)}`;\n",
+          "current": "export const checkedRecordVia = (constructor, refinement = null) =>\n\t`via_${sha256(refinement === null ? constructor : canonicalJson(refinement)).slice(0, 16)}`;\n"
+        },
+        {
+          "start": 8724,
+          "previous": "\t\treturn `(LbErased.${refinement.definition}.${checked ? checkedRecordVia(refinement.constructor) : \"erase\"} ${input})`;\n",
+          "current": "\t\tconst rich = Object.hasOwn(refinement, \"arguments\");\n\t\treturn `(LbErased.${refinement.definition}.${checked ? checkedRecordVia(refinement.constructor, rich ? refinement : null) : \"erase\"} ${input})`;\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/native-model.mjs",
+      "currentSha256": "235735f0f1aeafde788d150f96d4a698c51c8b4d61a1f9ef6777000b795c6937",
+      "previousSha256": "9ef30755679a2dd205a5eeeb2dade17259c7ed67c605208458792eb3ca83da7c",
+      "edits": [
+        {
+          "start": 162,
+          "previous": "import { validateNativeType } from \"../analyze/native-types.mjs\";\n",
+          "current": "import { validateNativeRepresentation, validateNativeType } from \"../analyze/native-types.mjs\";\n"
+        },
+        {
+          "start": 1314,
+          "previous": "",
+          "current": "\tif(type.kind === \"refinement\") return nativeLeanType(type.base);\n"
+        },
+        {
+          "start": 2174,
+          "previous": "",
+          "current": "\tif(type.kind === \"refinement\") return inner(type.base);\n"
+        },
+        {
+          "start": 4488,
+          "previous": "",
+          "current": "\tif(type.kind === \"refinement\") return nativeCallbackDefault(type.base);\n\tif(type.kind === \"alias\") return nativeCallbackDefault(type.target);\n"
+        },
+        {
+          "start": 7199,
+          "previous": "",
+          "current": "\tif(type.kind === \"refinement\") return callbackLeanDefault(type.base, mirrors);\n\tif(type.kind === \"alias\") return callbackLeanDefault(type.target, mirrors);\n"
+        },
+        {
+          "start": 11347,
+          "previous": "\tconst tree = (type, top = true, site = undefined, subtypeStructural = top) => {\n",
+          "current": "\tconst tree = (type, top = true, site = undefined, subtypeStructural = top, produced = site === \"result\") => {\n"
+        },
+        {
+          "start": 12469,
+          "previous": "\t\t\t\tif(!top || site !== \"parameter\") throw unsupported(\"checked records cross only at a top-level parameter or result\");\n\t\t\t\treturn { kind: \"checked-record\", definition: type.base.lean, constructor: type.predicate.constructor, fields: type.base.fields.map(field => field.name) };\n",
+          "current": "\t\t\t\tif(!subtypeStructural || produced) throw unsupported(\"checked records require a structural parameter constructor\");\n\t\t\t\tconst arguments_ = type.base.fields.map(field => tree(field.type, false, undefined, true, false));\n\t\t\t\tif(Object.hasOwn(type.base, \"provenance\") && (!top || arguments_.some(Boolean)))\n\t\t\t\t\tthrow unsupported(\"nested and field-refined generic checked records require another representation\");\n\t\t\t\tconst value = {\n\t\t\t\t\tkind: \"checked-record\", definition: type.base.lean\n\t\t\t\t\t, constructor: type.predicate.constructor\n\t\t\t\t\t, fields: type.base.fields.map(field => field.name)\n\t\t\t\t};\n\t\t\t\treturn !top || arguments_.some(Boolean) ? { ...value, arguments: arguments_ } : value;\n"
+        },
+        {
+          "start": 13613,
+          "previous": "\t\tif(type.kind === \"alias\") return tree(type.target, top, site, subtypeStructural);\n",
+          "current": "\t\tif(type.kind === \"alias\") return tree(type.target, top, site, subtypeStructural, produced);\n"
+        },
+        {
+          "start": 13765,
+          "previous": "\t\t\tconst element = tree(type.element, false, undefined, subtypeStructural);\n",
+          "current": "\t\t\tconst element = tree(type.element, false, undefined, subtypeStructural, produced);\n"
+        },
+        {
+          "start": 14069,
+          "previous": "\t\t\tconst children = type.arguments.map(child => tree(child, false, undefined, subtypeStructural));\n",
+          "current": "\t\t\tconst children = type.arguments.map(child => tree(child, false, undefined, subtypeStructural, produced));\n"
+        },
+        {
+          "start": 14453,
+          "previous": "\t\t\tif(!top || site !== \"result\") throw unsupported(\"checked records cross only at a top-level parameter or result\");\n\t\t\treturn { kind: \"checked-record\", definition: type.lean, constructor: null, fields: type.fields.map(field => field.name) };\n",
+          "current": "\t\t\tif(!produced) throw unsupported(\"checked record inputs require their selected constructor\");\n\t\t\tconst arguments_ = type.fields.map(field => tree(field.type, false, undefined, true, true));\n\t\t\tif(Object.hasOwn(type, \"provenance\") && (!top || arguments_.some(Boolean)))\n\t\t\t\tthrow unsupported(\"nested and field-refined generic checked records require another representation\");\n\t\t\tconst value = {\n\t\t\t\tkind: \"checked-record\", definition: type.lean, constructor: null\n\t\t\t\t, fields: type.fields.map(field => field.name)\n\t\t\t};\n\t\t\treturn !top || arguments_.some(Boolean) ? { ...value, arguments: arguments_ } : value;\n"
+        },
+        {
+          "start": 15355,
+          "previous": "\t\t\tconst fields = type.fields.map(field => tree(field.type, false, undefined, subtypeStructural));\n",
+          "current": "\t\t\tconst fields = type.fields.map(field => tree(field.type, false, undefined, subtypeStructural, produced));\n"
+        },
+        {
+          "start": 15707,
+          "previous": "\t\t\tconst cases = type.cases.map(branch => ({ name: branch.name, fields: branch.fields.map(field => field.name), arguments: branch.fields.map(field => tree(field.type, false, undefined, subtypeStructural)) }));\n",
+          "current": "\t\t\tconst cases = type.cases.map(branch => ({ name: branch.name, fields: branch.fields.map(field => field.name), arguments: branch.fields.map(field => tree(field.type, false, undefined, subtypeStructural, produced)) }));\n"
+        },
+        {
+          "start": 18721,
+          "previous": "\t\tvalidateNativeType(shape);\n",
+          "current": "\t\tvalidateNativeRepresentation(shape);\n"
+        },
+        {
+          "start": 30480,
+          "previous": "\t\tconst ps = parameters.length ? parameters : [{ name: \"unit\", type: { kind: \"primitive\", name: \"unit\", lean: \"Unit\" } }];\n",
+          "current": "\t\tconst ps = parameters.length ? parameters : [{ name: \"_unit\", type: { kind: \"primitive\", name: \"unit\", lean: \"Unit\" } }];\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/refinement-mirrors.mjs",
+      "currentSha256": "66ead2673c2db3fef4a8267d8d4656f0f9766635517d757a77fa84ac2e3b6525",
+      "previousSha256": "2175b0bb655b6f1b8adc083acfeed3c87a152e9c7952aef5a0f787afe7eacd74",
+      "edits": [
+        {
+          "start": 3356,
+          "previous": "",
+          "current": "\t\tif(tree?.kind === \"checked-record\")\n\t\t{\n\t\t\tif(!Object.hasOwn(tree, \"arguments\") || tree.arguments.every(child => child === null))\n\t\t\t\treturn { kind: \"checked-record\", definition: tree.definition };\n\t\t\treturn {\n\t\t\t\tkind: \"checked-record\", definition: tree.definition, fields: tree.fields\n\t\t\t\t, arguments: tree.arguments.map(layout)\n\t\t\t};\n\t\t}\n"
+        },
+        {
+          "start": 5296,
+          "previous": "\t\tif(tree.kind === \"checked-record\" && checked && tree.constructor !== null)\n\t\t\tconstructors.set(tree.definition, new Set([...constructors.get(tree.definition) ?? [], tree.constructor]));\n",
+          "current": "\t\tif(tree.kind === \"checked-record\")\n\t\t{\n\t\t\tconst key = canonicalJson(layout(tree));\n\t\t\tif(layouts.has(tree.definition) && layouts.get(tree.definition) !== key)\n\t\t\t\tthrow new TypeError(`Conflicting checked-record refinement layouts: ${tree.definition}`);\n\t\t\tlayouts.set(tree.definition, key);\n\t\t\tif(!trees.has(tree.definition) || Object.hasOwn(tree, \"arguments\")) trees.set(tree.definition, tree);\n\t\t\tif(checked && tree.constructor !== null)\n\t\t\t{\n\t\t\t\tif(!constructors.has(tree.definition)) constructors.set(tree.definition, new Map());\n\t\t\t\tconst selected = constructors.get(tree.definition);\n\t\t\t\tconst name = checkedRecordVia(tree.constructor, Object.hasOwn(tree, \"arguments\") ? tree : null);\n\t\t\t\tif(selected.has(name) && canonicalJson(selected.get(name)) !== canonicalJson(tree))\n\t\t\t\t\tthrow new TypeError(`Conflicting checked-record conversion: ${tree.definition}.${name}`);\n\t\t\t\tselected.set(name, tree);\n\t\t\t}\n\t\t}\n"
+        },
+        {
+          "start": 11272,
+          "previous": "",
+          "current": "\t\t\tconst selected = trees.get(type.lean), rich = Object.hasOwn(selected ?? {}, \"arguments\");\n"
+        },
+        {
+          "start": 11571,
+          "previous": "\t\t\t\t, `  ${mirror}.mk ${type.fields.map(field => `value.«${field.name}»`).join(\" \")}`, \"\");\n\t\t\tfor(const constructor of [...constructors.get(type.lean) ?? []].sort())\n\t\t\t\tlines.push(`def ${mirror}.${checkedRecordVia(constructor)} (value : ${mirror}) : _root_.Option ${source} :=`\n\t\t\t\t\t, `  _root_.${constructor} ${type.fields.map(field => `value.«${field.name}»`).join(\" \")}`, \"\");\n",
+          "current": "\t\t\t\t, `  ${mirror}.mk ${type.fields.map((field, index) => rich\n\t\t\t\t\t? convert(selected.arguments[index], `value.«${field.name}»`, false) : `value.«${field.name}»`).join(\" \")}`, \"\");\n\t\t\tfor(const [name, conversion] of [...constructors.get(type.lean) ?? []].sort(([left], [right]) => left.localeCompare(right)))\n\t\t\t{\n\t\t\t\tif(!Object.hasOwn(conversion, \"arguments\"))\n\t\t\t\t{\n\t\t\t\t\tlines.push(`def ${mirror}.${name} (value : ${mirror}) : _root_.Option ${source} :=`\n\t\t\t\t\t\t, `  _root_.${conversion.constructor} ${type.fields.map(field => `value.«${field.name}»`).join(\" \")}`, \"\");\n\t\t\t\t\tcontinue;\n\t\t\t\t}\n\t\t\t\tlines.push(`def ${mirror}.${name} (value : ${mirror}) : _root_.Option ${source} := do`\n\t\t\t\t\t, ...type.fields.map((field, index) => `  let a${index} ← ${convert(conversion.arguments[index], `value.«${field.name}»`, true)}`)\n\t\t\t\t\t, `  _root_.${conversion.constructor} ${type.fields.map((_, index) => `a${index}`).join(\" \")}`, \"\");\n\t\t\t}\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/c-structured-callable-contract.test.mjs",
+      "currentSha256": "5458be8991c5bae9170a112aab98eb3b4442030cea99189b50e0d99cb560f067",
+      "previousSha256": "44b843a29da6ee9e1e2fc03eb61e0cec547c7d0e0f0fa80416ab19da828d6029",
+      "edits": [
+        {
+          "start": 2724,
+          "previous": "",
+          "current": "\tconst checkedString = { kind: \"refinement\", base: string, predicate: { kind: \"subtype\", constructor: \"Checked.string\" } };\n"
+        },
+        {
+          "start": 2951,
+          "previous": "",
+          "current": "\tassert.match(nativeCallbackDefault({ kind: \"option\", element: checkedString }), /_none\\(lean_box\\(0\\)\\)$/u);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-fixture.mjs",
+      "currentSha256": "d1e64d1093c4299586b9923ee08eec7eeef40c954da2c82649fce76dddf4815c",
+      "previousSha256": "29a2a8a7a269b68aa19e8967ecf5950481b792106878991d3b7b8f515e74ced0",
+      "edits": [
+        {
+          "start": 8856,
+          "previous": "\t, inArray: [[null], /checked records currently require a top-level parameter or result/u]\n\t, inOption: [[null], /checked records currently require a top-level parameter or result/u]\n\t, held: [[null], /checked records currently require a top-level parameter or result/u]\n\t, chosen: [[null], /checked records currently require a top-level parameter or result/u]\n",
+          "current": "\t, inArray: [[null], /nested checked records require an exact checked-record selection/u]\n\t, inOption: [[null], /nested checked records require an exact checked-record selection/u]\n\t, held: [[null], /nested checked records require an exact checked-record selection/u]\n\t, chosen: [[null], /nested checked records require an exact checked-record selection/u]\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "8c96b3622728621cfb37b7d6d543869dd403e30996e99a0ad39e439959515016",
+      "previousSha256": "38260fa02d55d36d85e484b058b284bf87add6ea5cd716cf94fd2d2c19c5f4c9",
+      "edits": [
+        {
+          "start": 10318,
+          "previous": "",
+          "current": "import { beforeNestedCheckedRecordSource, nestedCheckedRecordChangedPaths } from \"./nested-checked-record-source-history.mjs\";\n"
+        },
+        {
+          "start": 60920,
+          "previous": "",
+          "current": "\tsource = beforeNestedCheckedRecordSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 75107,
+          "previous": "",
+          "current": "\t, ...nestedCheckedRecordChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}
