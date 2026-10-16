@@ -94,7 +94,8 @@ sub snapshot_value {
     }
     die "unsupported snapshot reference: $reference\n";
 }
-sub snapshot { JSON::PP->new->canonical->encode(snapshot_value($_[0], {})) }
+my $snapshot_json = JSON::PP->new->canonical->max_depth(4096);
+sub snapshot { $snapshot_json->encode(snapshot_value($_[0], {})) }
 sub same { snapshot($_[0]) eq snapshot($_[1]) }
 sub invoke {
     my ($name, @arguments) = @_;
