@@ -26,6 +26,7 @@ import {
 	, nestedCheckedRecordPythonSelection
 	, parseNestedCheckedRecordPythonResult
 } from "./nested-checked-record-python-fixture.mjs";
+import { assertNestedCheckedRecordPythonIdentity } from "./nested-checked-record-python-wheel.mjs";
 import { runCopied } from "./copied-fixture-install.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 
@@ -141,4 +142,29 @@ test("nested checked-record Python caller detects every result, input and select
 	}
 	assert.equal(await readFile(path, "utf8"), caller);
 	t.diagnostic("Explicit runtime doubles exercise the caller with independent and generated value classes; no installed Lean library executes.");
+});
+
+test("nested checked-record Python wheel identity rejects changed coordinates, compiler authority and runtime", () => {
+	const model = { bindingIrSha256: "a".repeat(64), component: { id: "synthetic" }, sourceIdentity: { fixture: true } };
+	const pkg = { target: "pypi", ecosystem: "pypi", role: "component"
+		, profile: "native-library-v1", runtimeDelivery: "embedded", requires: []
+		, name: "nestedcheckedrecords", version: "1.0.0"
+		, runtimeIdentity: "b".repeat(64)
+		, artifacts: [{ path: "archives/nestedcheckedrecords-1.0.0-py3-none-manylinux_2_36_x86_64.whl" }] };
+	const receipt = { schemaVersion: 1, kind: "lean-bridge-ordinary-python-package"
+		, ecosystem: "pypi", moduleName: nestedCheckedRecordPythonPackage
+		, name: pkg.name, version: pkg.version, runtimeIdentity: pkg.runtimeIdentity
+		, ...model
+		, glibcMinimumVersion: "2.36", tag: "py3-none-manylinux_2_36_x86_64" };
+	assertNestedCheckedRecordPythonIdentity(receipt, pkg, model, "2.36");
+	for(const key of Object.keys(receipt))
+	{
+		assert.throws(() => assertNestedCheckedRecordPythonIdentity({ ...receipt, [key]: "changed" }, pkg, model, "2.36"));
+		const missing = { ...receipt }; delete missing[key];
+		assert.throws(() => assertNestedCheckedRecordPythonIdentity(missing, pkg, model, "2.36"));
+	}
+	for(const key of Object.keys(pkg))
+		assert.throws(() => assertNestedCheckedRecordPythonIdentity(receipt, { ...pkg, [key]: "changed" }, model, "2.36"));
+	assert.throws(() => assertNestedCheckedRecordPythonIdentity(receipt, { ...pkg, artifacts: [] }, model, "2.36"));
+	assert.throws(() => assertNestedCheckedRecordPythonIdentity(receipt, pkg, model, "2.38"));
 });
