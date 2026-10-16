@@ -1,0 +1,49 @@
+package lean-bridge:nestedcheckedrecords@1.0.0;
+
+interface native {
+  type bridge-value-0 = list<u32>;
+  record packet { digit: bridge-value-0, word: bridge-value-0 }
+  type bridge-value-2 = list<packet>;
+  record choice-packet-fields { value: packet }
+  variant choice { empty, packet(choice-packet-fields) }
+  type bridge-value-4 = result<packet, packet>;
+  record holder { packet: packet, tag: bridge-value-0 }
+  type bridge-value-6 = list<packet>;
+  type bridge-value-7 = option<packet>;
+  type bridge-value-8 = tuple<packet, packet>;
+  echo-array: func(arg0: bridge-value-2) -> bridge-value-2;
+  first: func(arg0: packet) -> bridge-value-0;
+  in-array: func(arg0: bridge-value-2) -> bridge-value-0;
+  in-choice: func(arg0: choice) -> bridge-value-0;
+  in-except: func(arg0: bridge-value-4) -> bridge-value-0;
+  in-holder: func(arg0: holder) -> bridge-value-0;
+  in-list: func(arg0: bridge-value-6) -> bridge-value-0;
+  in-option: func(arg0: bridge-value-7) -> bridge-value-0;
+  in-product: func(arg0: bridge-value-8) -> bridge-value-0;
+  pair: func(arg0: packet, arg1: packet) -> bridge-value-0;
+  produce-array: func(arg0: bridge-value-0) -> bridge-value-2;
+  produce-option: func(arg0: bridge-value-0) -> bridge-value-7;
+  second: func(arg0: packet) -> bridge-value-0;
+}
+
+interface api {
+  use native.{bridge-value-0, packet, bridge-value-2, choice-packet-fields, choice, bridge-value-4, holder, bridge-value-6, bridge-value-7, bridge-value-8};
+  echo-array: func(arg0: bridge-value-2) -> bridge-value-2;
+  first: func(arg0: packet) -> bridge-value-0;
+  in-array: func(arg0: bridge-value-2) -> bridge-value-0;
+  in-choice: func(arg0: choice) -> bridge-value-0;
+  in-except: func(arg0: bridge-value-4) -> bridge-value-0;
+  in-holder: func(arg0: holder) -> bridge-value-0;
+  in-list: func(arg0: bridge-value-6) -> bridge-value-0;
+  in-option: func(arg0: bridge-value-7) -> bridge-value-0;
+  in-product: func(arg0: bridge-value-8) -> bridge-value-0;
+  pair: func(arg0: packet, arg1: packet) -> bridge-value-0;
+  produce-array: func(arg0: bridge-value-0) -> bridge-value-2;
+  produce-option: func(arg0: bridge-value-0) -> bridge-value-7;
+  second: func(arg0: packet) -> bridge-value-0;
+}
+
+world nestedcheckedrecords {
+  import native;
+  export api;
+}

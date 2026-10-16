@@ -1,0 +1,145 @@
+#ifndef NESTEDCHECKEDRECORDS_H
+#define NESTEDCHECKEDRECORDS_H
+
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#define NESTEDCHECKEDRECORDS_BINDING_ABI_VERSION 1u
+#define NESTEDCHECKEDRECORDS_BINDING_IR_SHA256 "e1aba8779d54d3c43ddcb560425a77864a8aab635ebaf8003e44d5bfebcb5117"
+
+typedef enum nestedcheckedrecords_status {
+  NESTEDCHECKEDRECORDS_STATUS_OK = 0,
+  NESTEDCHECKEDRECORDS_STATUS_INVALID_ARGUMENT = 1,
+  NESTEDCHECKEDRECORDS_STATUS_RUNTIME_UNAVAILABLE = 2,
+  NESTEDCHECKEDRECORDS_STATUS_RUNTIME_REJECTED = 3,
+  NESTEDCHECKEDRECORDS_STATUS_DECLARED_ERROR = 4,
+  NESTEDCHECKEDRECORDS_STATUS_UNEXPECTED_ERROR = 5
+} nestedcheckedrecords_status;
+
+typedef enum nestedcheckedrecords_error_code {
+  NESTEDCHECKEDRECORDS_ERROR_NONE = 0,
+  NESTEDCHECKEDRECORDS_ERROR_INVALID_ARGUMENT = 1,
+  NESTEDCHECKEDRECORDS_ERROR_RUNTIME_UNAVAILABLE = 2,
+  NESTEDCHECKEDRECORDS_ERROR_UNEXPECTED = 65535
+} nestedcheckedrecords_error_code;
+
+typedef struct nestedcheckedrecords_error {
+  nestedcheckedrecords_error_code code;
+  const char *message;
+  size_t message_length;
+} nestedcheckedrecords_error;
+
+typedef struct nestedcheckedrecords_nat nestedcheckedrecords_nat;
+typedef struct nestedcheckedrecords_array_lean_nested_checked_records_packet_span nestedcheckedrecords_array_lean_nested_checked_records_packet_span;
+typedef struct nestedcheckedrecords_list_lean_nested_checked_records_packet_span nestedcheckedrecords_list_lean_nested_checked_records_packet_span;
+typedef struct nestedcheckedrecords_packet nestedcheckedrecords_packet;
+typedef struct nestedcheckedrecords_choice nestedcheckedrecords_choice;
+typedef struct nestedcheckedrecords_holder nestedcheckedrecords_holder;
+typedef struct nestedcheckedrecords_result_lean_nested_checked_records_packet_lean_nested_checked_records_packet_value nestedcheckedrecords_result_lean_nested_checked_records_packet_lean_nested_checked_records_packet_value;
+typedef struct nestedcheckedrecords_option_lean_nested_checked_records_packet_value nestedcheckedrecords_option_lean_nested_checked_records_packet_value;
+typedef struct nestedcheckedrecords_tuple_lean_nested_checked_records_packet_lean_nested_checked_records_packet_value nestedcheckedrecords_tuple_lean_nested_checked_records_packet_lean_nested_checked_records_packet_value;
+
+typedef struct nestedcheckedrecords_nat {
+  const uint32_t *data;
+  size_t length;
+  void *owner;
+  void (*release)(void *owner);
+} nestedcheckedrecords_nat;
+
+void nestedcheckedrecords_nat_clear(nestedcheckedrecords_nat *value);
+
+typedef struct nestedcheckedrecords_array_lean_nested_checked_records_packet_span {
+  const nestedcheckedrecords_packet *data;
+  size_t length;
+  void *owner;
+  void (*release)(void *owner);
+} nestedcheckedrecords_array_lean_nested_checked_records_packet_span;
+
+void nestedcheckedrecords_array_lean_nested_checked_records_packet_span_clear(nestedcheckedrecords_array_lean_nested_checked_records_packet_span *value);
+
+typedef struct nestedcheckedrecords_list_lean_nested_checked_records_packet_span {
+  const nestedcheckedrecords_packet *data;
+  size_t length;
+  void *owner;
+  void (*release)(void *owner);
+} nestedcheckedrecords_list_lean_nested_checked_records_packet_span;
+
+void nestedcheckedrecords_list_lean_nested_checked_records_packet_span_clear(nestedcheckedrecords_list_lean_nested_checked_records_packet_span *value);
+
+typedef struct nestedcheckedrecords_packet {
+  nestedcheckedrecords_nat digit;
+  nestedcheckedrecords_nat word;
+} nestedcheckedrecords_packet;
+
+void nestedcheckedrecords_packet_clear(nestedcheckedrecords_packet *value);
+
+typedef enum nestedcheckedrecords_choice_tag { NESTEDCHECKEDRECORDS_CHOICE_KIND_EMPTY = 0, NESTEDCHECKEDRECORDS_CHOICE_KIND_PACKET = 1 } nestedcheckedrecords_choice_tag;
+typedef struct nestedcheckedrecords_choice {
+  uint32_t kind;
+  union {
+    struct {
+      uint8_t empty;
+    } empty;
+    struct {
+      nestedcheckedrecords_packet value;
+    } packet;
+  } cases;
+} nestedcheckedrecords_choice;
+
+void nestedcheckedrecords_choice_init(nestedcheckedrecords_choice *value);
+void nestedcheckedrecords_choice_clear(nestedcheckedrecords_choice *value);
+nestedcheckedrecords_status nestedcheckedrecords_choice_select(nestedcheckedrecords_choice *value, uint32_t kind);
+
+typedef struct nestedcheckedrecords_holder {
+  nestedcheckedrecords_packet packet;
+  nestedcheckedrecords_nat tag;
+} nestedcheckedrecords_holder;
+
+void nestedcheckedrecords_holder_clear(nestedcheckedrecords_holder *value);
+
+typedef struct nestedcheckedrecords_result_lean_nested_checked_records_packet_lean_nested_checked_records_packet_value {
+  uint8_t is_ok;
+  nestedcheckedrecords_packet ok;
+  nestedcheckedrecords_packet error;
+} nestedcheckedrecords_result_lean_nested_checked_records_packet_lean_nested_checked_records_packet_value;
+
+void nestedcheckedrecords_result_lean_nested_checked_records_packet_lean_nested_checked_records_packet_value_clear(nestedcheckedrecords_result_lean_nested_checked_records_packet_lean_nested_checked_records_packet_value *value);
+
+typedef struct nestedcheckedrecords_option_lean_nested_checked_records_packet_value {
+  uint8_t has_value;
+  nestedcheckedrecords_packet value;
+} nestedcheckedrecords_option_lean_nested_checked_records_packet_value;
+
+void nestedcheckedrecords_option_lean_nested_checked_records_packet_value_clear(nestedcheckedrecords_option_lean_nested_checked_records_packet_value *value);
+
+typedef struct nestedcheckedrecords_tuple_lean_nested_checked_records_packet_lean_nested_checked_records_packet_value {
+  nestedcheckedrecords_packet fst;
+  nestedcheckedrecords_packet snd;
+} nestedcheckedrecords_tuple_lean_nested_checked_records_packet_lean_nested_checked_records_packet_value;
+
+void nestedcheckedrecords_tuple_lean_nested_checked_records_packet_lean_nested_checked_records_packet_value_clear(nestedcheckedrecords_tuple_lean_nested_checked_records_packet_lean_nested_checked_records_packet_value *value);
+
+nestedcheckedrecords_status nestedcheckedrecords_echo_array(const nestedcheckedrecords_array_lean_nested_checked_records_packet_span *arg0, nestedcheckedrecords_array_lean_nested_checked_records_packet_span *out, nestedcheckedrecords_error *error);
+nestedcheckedrecords_status nestedcheckedrecords_first(const nestedcheckedrecords_packet *arg0, nestedcheckedrecords_nat *out, nestedcheckedrecords_error *error);
+nestedcheckedrecords_status nestedcheckedrecords_in_array(const nestedcheckedrecords_array_lean_nested_checked_records_packet_span *arg0, nestedcheckedrecords_nat *out, nestedcheckedrecords_error *error);
+nestedcheckedrecords_status nestedcheckedrecords_in_choice(const nestedcheckedrecords_choice *arg0, nestedcheckedrecords_nat *out, nestedcheckedrecords_error *error);
+nestedcheckedrecords_status nestedcheckedrecords_in_except(const nestedcheckedrecords_result_lean_nested_checked_records_packet_lean_nested_checked_records_packet_value *arg0, nestedcheckedrecords_nat *out, nestedcheckedrecords_error *error);
+nestedcheckedrecords_status nestedcheckedrecords_in_holder(const nestedcheckedrecords_holder *arg0, nestedcheckedrecords_nat *out, nestedcheckedrecords_error *error);
+nestedcheckedrecords_status nestedcheckedrecords_in_list(const nestedcheckedrecords_list_lean_nested_checked_records_packet_span *arg0, nestedcheckedrecords_nat *out, nestedcheckedrecords_error *error);
+nestedcheckedrecords_status nestedcheckedrecords_in_option(const nestedcheckedrecords_option_lean_nested_checked_records_packet_value *arg0, nestedcheckedrecords_nat *out, nestedcheckedrecords_error *error);
+nestedcheckedrecords_status nestedcheckedrecords_in_product(const nestedcheckedrecords_tuple_lean_nested_checked_records_packet_lean_nested_checked_records_packet_value *arg0, nestedcheckedrecords_nat *out, nestedcheckedrecords_error *error);
+nestedcheckedrecords_status nestedcheckedrecords_pair(const nestedcheckedrecords_packet *arg0, const nestedcheckedrecords_packet *arg1, nestedcheckedrecords_nat *out, nestedcheckedrecords_error *error);
+nestedcheckedrecords_status nestedcheckedrecords_produce_array(const nestedcheckedrecords_nat *arg0, nestedcheckedrecords_array_lean_nested_checked_records_packet_span *out, nestedcheckedrecords_error *error);
+nestedcheckedrecords_status nestedcheckedrecords_produce_option(const nestedcheckedrecords_nat *arg0, nestedcheckedrecords_option_lean_nested_checked_records_packet_value *out, nestedcheckedrecords_error *error);
+nestedcheckedrecords_status nestedcheckedrecords_second(const nestedcheckedrecords_packet *arg0, nestedcheckedrecords_nat *out, nestedcheckedrecords_error *error);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* NESTEDCHECKEDRECORDS_H */

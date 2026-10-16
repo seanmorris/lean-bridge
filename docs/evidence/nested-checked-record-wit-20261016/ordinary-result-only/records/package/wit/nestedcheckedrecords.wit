@@ -1,0 +1,21 @@
+package lean-bridge:nestedcheckedrecords@1.0.0;
+
+interface native {
+  type bridge-value-0 = list<u32>;
+  record packet { digit: bridge-value-0, word: bridge-value-0 }
+  type bridge-value-2 = list<packet>;
+  type bridge-value-3 = option<packet>;
+  produce-array: func(arg0: bridge-value-0) -> bridge-value-2;
+  produce-option: func(arg0: bridge-value-0) -> bridge-value-3;
+}
+
+interface api {
+  use native.{bridge-value-0, packet, bridge-value-2, bridge-value-3};
+  produce-array: func(arg0: bridge-value-0) -> bridge-value-2;
+  produce-option: func(arg0: bridge-value-0) -> bridge-value-3;
+}
+
+world nestedcheckedrecords {
+  import native;
+  export api;
+}

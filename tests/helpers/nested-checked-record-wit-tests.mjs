@@ -12,3 +12,4 @@ import "./nested-checked-record-wit-ci-shell-tests.mjs";
 import "./nested-checked-record-wit-ci-handoff-tests.mjs";
 import "./nested-checked-record-wit-ci-workflow-tests.mjs";
 import "./nested-checked-record-wit-installed-tests.mjs";
+import "./nested-checked-record-wit-evidence-tests.mjs";

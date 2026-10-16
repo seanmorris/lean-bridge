@@ -1,0 +1,35 @@
+{
+  "args": [],
+  "closure": {
+    "consumerFileSetSha256": "fe919009adc6d867830f4adf81d06bb657832cefe8426b2a7296a14af04bf9ea",
+    "executable": {
+      "bytes": 22528,
+      "sha256": "d002f584a1c1b2985dee7303af9888c0669f9230fdf6723674e98c0c4b772178"
+    },
+    "packageFileSetSha256": "564f00187d7dd4df2fd3af5b7a3395ddb538a42adc54654518c9222c7bda1236",
+    "receiptSha256": "c9fe148ad4b184f65a6840685644bf955b6bd01d3405d5f36baded14e6a2c80e"
+  },
+  "command": "/tmp/lean-bridge-nested-wit-installed-ysWuPf/consumer/consumer",
+  "counts": {
+    "checks": 1553,
+    "hostRejections": 4,
+    "recoveries": 0,
+    "rejections": 0,
+    "rounds": 256,
+    "snapshots": 516
+  },
+  "cwd": "/tmp/lean-bridge-nested-wit-installed-ysWuPf/consumer",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/unavailable"
+  },
+  "relocated": false,
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":1553,\"rejections\":0,\"hostRejections\":4,\"recoveries\":0,\"snapshots\":516,\"rounds\":256}\n"
+  }
+}

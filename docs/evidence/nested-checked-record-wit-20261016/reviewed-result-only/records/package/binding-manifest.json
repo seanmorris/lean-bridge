@@ -1,0 +1,28 @@
+{
+  "assurance": [],
+  "backend": "ordinary-wit-native-v1",
+  "bindingIrSha256": "a2950b9d8a22f4d2c2b31204722ad0636c88edabcf85f08b78f53f7f74503d31",
+  "component": {
+    "id": "nestedcheckedrecords@1.0.0",
+    "name": "nestedcheckedrecords",
+    "version": "1.0.0"
+  },
+  "declarations": [
+    {
+      "id": "lean:NestedCheckedRecords.produceArray",
+      "witName": "produce-array"
+    },
+    {
+      "id": "lean:NestedCheckedRecords.produceOption",
+      "witName": "produce-option"
+    }
+  ],
+  "deferred": [],
+  "schemaVersion": 1,
+  "wit": {
+    "apiInterface": "lean-bridge:nestedcheckedrecords/api@1.0.0",
+    "nativeImport": "lean-bridge:nestedcheckedrecords/native@1.0.0",
+    "package": "lean-bridge:nestedcheckedrecords@1.0.0",
+    "world": "nestedcheckedrecords"
+  }
+}

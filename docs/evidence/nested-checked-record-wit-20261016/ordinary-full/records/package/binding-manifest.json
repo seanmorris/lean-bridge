@@ -1,0 +1,483 @@
+{
+  "assurance": [],
+  "backend": "ordinary-wit-native-v1",
+  "bindingIrSha256": "e1aba8779d54d3c43ddcb560425a77864a8aab635ebaf8003e44d5bfebcb5117",
+  "component": {
+    "id": "nestedcheckedrecords@1.0.0",
+    "name": "nestedcheckedrecords",
+    "version": "1.0.0"
+  },
+  "contracts": {
+    "declarations": [
+      {
+        "id": "lean:NestedCheckedRecords.echoArray",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "arguments": [
+                {
+                  "id": "lean:NestedCheckedRecords.Packet",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            },
+            "witType": "bridge-value-2"
+          }
+        ],
+        "result": {
+          "type": {
+            "arguments": [
+              {
+                "id": "lean:NestedCheckedRecords.Packet",
+                "kind": "named"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          },
+          "witType": "bridge-value-2"
+        }
+      },
+      {
+        "id": "lean:NestedCheckedRecords.first",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "id": "lean:NestedCheckedRecords.Packet",
+              "kind": "named"
+            },
+            "witType": "packet"
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "witType": "bridge-value-0"
+        }
+      },
+      {
+        "id": "lean:NestedCheckedRecords.inArray",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "arguments": [
+                {
+                  "id": "lean:NestedCheckedRecords.Packet",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            },
+            "witType": "bridge-value-2"
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "witType": "bridge-value-0"
+        }
+      },
+      {
+        "id": "lean:NestedCheckedRecords.inChoice",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "id": "lean:NestedCheckedRecords.Choice",
+              "kind": "named"
+            },
+            "witType": "choice"
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "witType": "bridge-value-0"
+        }
+      },
+      {
+        "id": "lean:NestedCheckedRecords.inExcept",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "arguments": [
+                {
+                  "id": "lean:NestedCheckedRecords.Packet",
+                  "kind": "named"
+                },
+                {
+                  "id": "lean:NestedCheckedRecords.Packet",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "result",
+              "kind": "apply"
+            },
+            "witType": "bridge-value-4"
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "witType": "bridge-value-0"
+        }
+      },
+      {
+        "id": "lean:NestedCheckedRecords.inHolder",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "id": "lean:NestedCheckedRecords.Holder",
+              "kind": "named"
+            },
+            "witType": "holder"
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "witType": "bridge-value-0"
+        }
+      },
+      {
+        "id": "lean:NestedCheckedRecords.inList",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "arguments": [
+                {
+                  "id": "lean:NestedCheckedRecords.Packet",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "list",
+              "kind": "apply"
+            },
+            "witType": "bridge-value-6"
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "witType": "bridge-value-0"
+        }
+      },
+      {
+        "id": "lean:NestedCheckedRecords.inOption",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "arguments": [
+                {
+                  "id": "lean:NestedCheckedRecords.Packet",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            },
+            "witType": "bridge-value-7"
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "witType": "bridge-value-0"
+        }
+      },
+      {
+        "id": "lean:NestedCheckedRecords.inProduct",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "arguments": [
+                {
+                  "id": "lean:NestedCheckedRecords.Packet",
+                  "kind": "named"
+                },
+                {
+                  "id": "lean:NestedCheckedRecords.Packet",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "tuple",
+              "kind": "apply"
+            },
+            "witType": "bridge-value-8"
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "witType": "bridge-value-0"
+        }
+      },
+      {
+        "id": "lean:NestedCheckedRecords.pair",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "id": "lean:NestedCheckedRecords.Packet",
+              "kind": "named"
+            },
+            "witType": "packet"
+          },
+          {
+            "name": "arg1",
+            "type": {
+              "id": "lean:NestedCheckedRecords.Packet",
+              "kind": "named"
+            },
+            "witType": "packet"
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "witType": "bridge-value-0"
+        }
+      },
+      {
+        "id": "lean:NestedCheckedRecords.produceArray",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            "witType": "bridge-value-0"
+          }
+        ],
+        "result": {
+          "type": {
+            "arguments": [
+              {
+                "id": "lean:NestedCheckedRecords.Packet",
+                "kind": "named"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          },
+          "witType": "bridge-value-2"
+        }
+      },
+      {
+        "id": "lean:NestedCheckedRecords.produceOption",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            "witType": "bridge-value-0"
+          }
+        ],
+        "result": {
+          "type": {
+            "arguments": [
+              {
+                "id": "lean:NestedCheckedRecords.Packet",
+                "kind": "named"
+              }
+            ],
+            "constructor": "option",
+            "kind": "apply"
+          },
+          "witType": "bridge-value-7"
+        }
+      },
+      {
+        "id": "lean:NestedCheckedRecords.second",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "id": "lean:NestedCheckedRecords.Packet",
+              "kind": "named"
+            },
+            "witType": "packet"
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "witType": "bridge-value-0"
+        }
+      }
+    ],
+    "records": [
+      {
+        "fields": [
+          {
+            "name": "digit",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            "witType": "bridge-value-0"
+          },
+          {
+            "name": "word",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            "witType": "bridge-value-0"
+          }
+        ],
+        "id": "lean:NestedCheckedRecords.Packet",
+        "witName": "packet"
+      },
+      {
+        "fields": [
+          {
+            "name": "packet",
+            "type": {
+              "id": "lean:NestedCheckedRecords.Packet",
+              "kind": "named"
+            },
+            "witType": "packet"
+          },
+          {
+            "name": "tag",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            "witType": "bridge-value-0"
+          }
+        ],
+        "id": "lean:NestedCheckedRecords.Holder",
+        "witName": "holder"
+      }
+    ],
+    "variants": [
+      {
+        "cases": [
+          {
+            "fields": [],
+            "name": "empty",
+            "payloadType": null,
+            "witName": "empty"
+          },
+          {
+            "fields": [
+              {
+                "name": "value",
+                "type": {
+                  "id": "lean:NestedCheckedRecords.Packet",
+                  "kind": "named"
+                },
+                "witName": "value",
+                "witType": "packet"
+              }
+            ],
+            "name": "packet",
+            "payloadType": "choice-packet-fields",
+            "witName": "packet"
+          }
+        ],
+        "id": "lean:NestedCheckedRecords.Choice",
+        "name": "Choice",
+        "witName": "choice"
+      }
+    ]
+  },
+  "declarations": [
+    {
+      "id": "lean:NestedCheckedRecords.echoArray",
+      "witName": "echo-array"
+    },
+    {
+      "id": "lean:NestedCheckedRecords.first",
+      "witName": "first"
+    },
+    {
+      "id": "lean:NestedCheckedRecords.inArray",
+      "witName": "in-array"
+    },
+    {
+      "id": "lean:NestedCheckedRecords.inChoice",
+      "witName": "in-choice"
+    },
+    {
+      "id": "lean:NestedCheckedRecords.inExcept",
+      "witName": "in-except"
+    },
+    {
+      "id": "lean:NestedCheckedRecords.inHolder",
+      "witName": "in-holder"
+    },
+    {
+      "id": "lean:NestedCheckedRecords.inList",
+      "witName": "in-list"
+    },
+    {
+      "id": "lean:NestedCheckedRecords.inOption",
+      "witName": "in-option"
+    },
+    {
+      "id": "lean:NestedCheckedRecords.inProduct",
+      "witName": "in-product"
+    },
+    {
+      "id": "lean:NestedCheckedRecords.pair",
+      "witName": "pair"
+    },
+    {
+      "id": "lean:NestedCheckedRecords.produceArray",
+      "witName": "produce-array"
+    },
+    {
+      "id": "lean:NestedCheckedRecords.produceOption",
+      "witName": "produce-option"
+    },
+    {
+      "id": "lean:NestedCheckedRecords.second",
+      "witName": "second"
+    }
+  ],
+  "deferred": [],
+  "schemaVersion": 1,
+  "wit": {
+    "apiInterface": "lean-bridge:nestedcheckedrecords/api@1.0.0",
+    "nativeImport": "lean-bridge:nestedcheckedrecords/native@1.0.0",
+    "package": "lean-bridge:nestedcheckedrecords@1.0.0",
+    "world": "nestedcheckedrecords"
+  }
+}

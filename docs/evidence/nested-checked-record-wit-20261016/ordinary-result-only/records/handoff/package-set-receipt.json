@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "nestedcheckedrecords@1.0.0",
+    "name": "nestedcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 59213854,
+          "path": "archives/nestedcheckedrecords-1.0.0-wit-wasi.tar.gz",
+          "sha256": "ebea033b08ba7e1d2bb70ddd2f6a1de5a2a548978a31bb0f2a89f7f251a30b36"
+        }
+      ],
+      "ecosystem": "wit-wasi",
+      "name": "nestedcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "wit-wasi",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "7ca8aab4386d2f8eb4dcf9324e004fc613bf8f3b8f2fcce408337426f22fe411",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "7b23cf0e3a5d128975bf991fc5f02ea0a44db6c205db11ecb080f6365811c4c4"
+  }
+}
