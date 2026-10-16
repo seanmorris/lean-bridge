@@ -1,0 +1,60 @@
+{
+  "apiMode": "full",
+  "authorRoute": "reviewed",
+  "callerInputsUnchanged": true,
+  "compilerFreeExecution": true,
+  "compilerFreeReplay": true,
+  "configuration": "5.36.3-unthreaded",
+  "consumerSha256": "34c00807cfcd38714de51469c71b00084f3b062cdf2573fe369cb9f7f8088457",
+  "counts": {
+    "checks": 4762,
+    "hostRejections": 4,
+    "recoveries": 528,
+    "rejections": 524,
+    "snapshots": 1060
+  },
+  "executableSha256": "5526d24ded88c1c02c6166a45fe34b064c2f9f6d3e3cfae82525049572d77a3d",
+  "extractedDistributionsRemoved": true,
+  "identity": {
+    "archname": "x86_64-linux",
+    "ivsize": "8",
+    "ptrsize": "8",
+    "useithreads": null,
+    "usemultiplicity": null,
+    "version": "5.36.3"
+  },
+  "installMode": "build-xs",
+  "installationCCompilerAvailable": true,
+  "installedBytesUnchanged": true,
+  "installedFilesSha256": "0795fe255df2364a0b66263c0ba3378eed12521fa45bb0896e1b255f8420d80a",
+  "leanCompilerUnavailable": true,
+  "nativeLibraries": {
+    "x86_64-linux/LeanBridge/NestedCheckedRecords/native/libcomponent_a63244d529ededa079e7.so": "7a51096a6523a1acdba21e0b16615f76a47e84003762cc1c967948248cbd09f4",
+    "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+    "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+    "x86_64-linux/auto/LeanBridge/NestedCheckedRecords/NestedCheckedRecords.so": "c6977eecedbf4ae5a73132e850857cc4c0c56fae495f908ed49484a8c5d0f7d3",
+    "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": "a04e3a5a47e87cfed39816c51e7c9397b84af4e5ff290780a69b85666d9b9e19"
+  },
+  "nativePayloadUnchanged": true,
+  "offlineInstall": true,
+  "proofFieldsAbsent": true,
+  "relocatedApiPath": true,
+  "relocatedInstallation": true,
+  "repeatedRuns": 2,
+  "resultSha256": "850f000f352483b8da5caedcc6b10e04395f0c933466752c3d5927f322b0028e",
+  "sourceUnchangedAfterReplay": true,
+  "traces": [
+    {
+      "manifestSha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124",
+      "receiptSha256": "ee31f04bc47713ee1e7af7eec4c79757f5da95358146b058fa875ab63bf3d535",
+      "role": "runtime",
+      "traceSha256": "06a13638c2adf6f6864e131f79eedbcb7a305e7305427648b75470c2a28b83b3"
+    },
+    {
+      "manifestSha256": "4d28251708cf4e0082e6f34596b606dfe890ccfe407be6c428826653ed9e521d",
+      "receiptSha256": "a9ed76a4fcd7010dff4cea19f0fe11d6075782300b62b3737b88470aac33999d",
+      "role": "component",
+      "traceSha256": "9f31b9dea5abd9f46a3b36602dca6009a47aab2a34f0467d7a8146f378d53924"
+    }
+  ]
+}

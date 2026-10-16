@@ -9,3 +9,4 @@ import "./helpers/nested-checked-record-perl-installed-tests.mjs";
 import "./helpers/nested-checked-record-perl-ci-report-tests.mjs";
 import "./helpers/nested-checked-record-perl-ci-workflow-tests.mjs";
 import "./helpers/nested-checked-record-perl-ci-shell-tests.mjs";
+import "./helpers/nested-checked-record-perl-evidence-tests.mjs";

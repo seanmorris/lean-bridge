@@ -1,0 +1,42 @@
+{
+  "contracts": {
+    "NestedCheckedRecords.produceArray": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "NestedCheckedRecords.produceOption": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    }
+  },
+  "exports": [
+    "NestedCheckedRecords.produceOption",
+    "NestedCheckedRecords.produceArray"
+  ],
+  "modules": [
+    "NestedCheckedRecords"
+  ],
+  "schemaVersion": 1,
+  "targets": {
+    "cpan": {
+      "module": "LeanBridge::NestedCheckedRecords",
+      "version": "1.000"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "ecosystem": "cpan",
+  "files": [
+    {
+      "origin": "prepared-payload",
+      "path": "LeanBridge/NestedCheckedRecords.pm",
+      "sha256": "dbe5cd072591e2d7f2cf46e2ee7046111e0ddc953a79b7c1f7e5d68145b7fabc"
+    },
+    {
+      "origin": "prepared-payload",
+      "path": "LeanBridge/NestedCheckedRecords/native/libcomponent_a63244d529ededa079e7.so",
+      "sha256": "960bf714f5e9633c5e75df7692c33af63e6d467f8e1f9d63d0d1fef300596de8"
+    },
+    {
+      "origin": "generated-xs-only",
+      "path": "auto/LeanBridge/NestedCheckedRecords/NestedCheckedRecords.so",
+      "sha256": "9b38b8d0426a4f0e2f887b22df8df4fd735ace6f604419d270ef07ed8b0731b7"
+    }
+  ],
+  "nativePayloadUnchanged": true,
+  "operation": "generated-xs-only",
+  "runtimeIdentity": "12ae9a901392dc563536477c96fa46c1f72387387097b7c4d3e2c22d01815302",
+  "schemaVersion": 1
+}

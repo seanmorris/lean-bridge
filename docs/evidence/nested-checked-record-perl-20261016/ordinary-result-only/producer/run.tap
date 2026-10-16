@@ -1,0 +1,26 @@
+TAP version 13
+# Subtest: installed nested checked-record Perl packages reproduce and relocate for ordinary-result-only
+ok 1 - installed nested checked-record Perl packages reproduce and relocate for ordinary-result-only
+  ---
+  duration_ms: 326936.040147
+  type: 'test'
+  ...
+# ordinary-result-only author 0: four Perl ABIs
+# ordinary-result-only author 1: four Perl ABIs
+# Installing ordinary-result-only/5.36.3-threaded/prebuilt-only
+# Installing ordinary-result-only/5.36.3-threaded/build-xs
+# Installing ordinary-result-only/5.36.3-unthreaded/prebuilt-only
+# Installing ordinary-result-only/5.36.3-unthreaded/build-xs
+# Installing ordinary-result-only/5.38.2-threaded/prebuilt-only
+# Installing ordinary-result-only/5.38.2-threaded/build-xs
+# Installing ordinary-result-only/5.38.2-unthreaded/prebuilt-only
+# Installing ordinary-result-only/5.38.2-unthreaded/build-xs
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 327293.12104
