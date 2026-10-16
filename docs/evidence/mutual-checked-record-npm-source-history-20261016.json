@@ -1,0 +1,434 @@
+{
+  "schemaVersion": 1,
+  "milestone": "mutual-checked-record-npm-source-v1",
+  "predecessorCommit": "bd5749bda5de2729c14b446090d46ec5e4172bf6",
+  "draftParentCommit": "c3e8099992d277bdb68e8696de31f4ae8e070ee7",
+  "pinCount": 34,
+  "additions": [
+    {
+      "path": "src/build/component-recursive-diagnostics.mjs",
+      "currentSha256": "d7159c7643fab1c591695cdadbda31b3636dee3edbfda2b7a250805f924e9ad3"
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "78e043d8c9b1a089980c7b5f1991f6daa155b890e223781e3896ca037aa68b94",
+      "currentSha256": "51f4a7498397c0c6d1b489ec52268fa097462dc43c3bf90249620de85b94f145",
+      "edits": [
+        {
+          "start": 56653,
+          "previous": "          \"sha256\": \"773c0acdd79cb28c6fdce63f2072cd0c1ce8c664cf1bd24bbd6ec06cf62c24a7\"\n",
+          "current": "          \"sha256\": \"a05525cf96682980a989ff89e8d18c98b757704c41827350d790a7133da55ac5\"\n"
+        },
+        {
+          "start": 79211,
+          "previous": "          \"sha256\": \"773c0acdd79cb28c6fdce63f2072cd0c1ce8c664cf1bd24bbd6ec06cf62c24a7\"\n",
+          "current": "          \"sha256\": \"a05525cf96682980a989ff89e8d18c98b757704c41827350d790a7133da55ac5\"\n"
+        },
+        {
+          "start": 96414,
+          "previous": "          \"sha256\": \"773c0acdd79cb28c6fdce63f2072cd0c1ce8c664cf1bd24bbd6ec06cf62c24a7\"\n",
+          "current": "          \"sha256\": \"a05525cf96682980a989ff89e8d18c98b757704c41827350d790a7133da55ac5\"\n"
+        },
+        {
+          "start": 112707,
+          "previous": "          \"sha256\": \"773c0acdd79cb28c6fdce63f2072cd0c1ce8c664cf1bd24bbd6ec06cf62c24a7\"\n",
+          "current": "          \"sha256\": \"a05525cf96682980a989ff89e8d18c98b757704c41827350d790a7133da55ac5\"\n"
+        },
+        {
+          "start": 138610,
+          "previous": "          \"sha256\": \"fe2e6b88ff16020d5526a70624d2114e734d4747fc858c21777dc0f65567af88\"\n",
+          "current": "          \"sha256\": \"548e9e549c4fae3ca97624822ccafd36e1ee30389f1fcc1ffc3b4ae2ea4bb0a2\"\n"
+        },
+        {
+          "start": 139276,
+          "previous": "          \"sha256\": \"fd2900bab92704b9d877efbc66567fc71037a3c183cd9dfe4a08678e5c3d8e97\"\n",
+          "current": "          \"sha256\": \"8f2038ea549d064a02806a1142f8fd1c41f7ef52e112375fcfb39fcb7733d69a\"\n"
+        },
+        {
+          "start": 140287,
+          "previous": "          \"sha256\": \"e8f2b0c355ff6d5bb7aa965d2610be528e6429c31aef08026873c06141fe1969\"\n",
+          "current": "          \"sha256\": \"467f3868a7849ef0691ce316850c6f362e0160a19564904749aadee6d6c6f76f\"\n"
+        },
+        {
+          "start": 433353,
+          "previous": "          \"sha256\": \"773c0acdd79cb28c6fdce63f2072cd0c1ce8c664cf1bd24bbd6ec06cf62c24a7\"\n",
+          "current": "          \"sha256\": \"a05525cf96682980a989ff89e8d18c98b757704c41827350d790a7133da55ac5\"\n"
+        },
+        {
+          "start": 468426,
+          "previous": "          \"sha256\": \"fd2900bab92704b9d877efbc66567fc71037a3c183cd9dfe4a08678e5c3d8e97\"\n",
+          "current": "          \"sha256\": \"8f2038ea549d064a02806a1142f8fd1c41f7ef52e112375fcfb39fcb7733d69a\"\n"
+        },
+        {
+          "start": 668815,
+          "previous": "          \"sha256\": \"fd2900bab92704b9d877efbc66567fc71037a3c183cd9dfe4a08678e5c3d8e97\"\n",
+          "current": "          \"sha256\": \"8f2038ea549d064a02806a1142f8fd1c41f7ef52e112375fcfb39fcb7733d69a\"\n"
+        },
+        {
+          "start": 677056,
+          "previous": "          \"sha256\": \"fd2900bab92704b9d877efbc66567fc71037a3c183cd9dfe4a08678e5c3d8e97\"\n",
+          "current": "          \"sha256\": \"8f2038ea549d064a02806a1142f8fd1c41f7ef52e112375fcfb39fcb7733d69a\"\n"
+        },
+        {
+          "start": 684741,
+          "previous": "          \"sha256\": \"fd2900bab92704b9d877efbc66567fc71037a3c183cd9dfe4a08678e5c3d8e97\"\n",
+          "current": "          \"sha256\": \"8f2038ea549d064a02806a1142f8fd1c41f7ef52e112375fcfb39fcb7733d69a\"\n"
+        },
+        {
+          "start": 1013240,
+          "previous": "          \"sha256\": \"773c0acdd79cb28c6fdce63f2072cd0c1ce8c664cf1bd24bbd6ec06cf62c24a7\"\n",
+          "current": "          \"sha256\": \"a05525cf96682980a989ff89e8d18c98b757704c41827350d790a7133da55ac5\"\n"
+        },
+        {
+          "start": 1044573,
+          "previous": "          \"sha256\": \"fe2e6b88ff16020d5526a70624d2114e734d4747fc858c21777dc0f65567af88\"\n",
+          "current": "          \"sha256\": \"548e9e549c4fae3ca97624822ccafd36e1ee30389f1fcc1ffc3b4ae2ea4bb0a2\"\n"
+        },
+        {
+          "start": 1064910,
+          "previous": "          \"sha256\": \"c7500f73d54cace30c2b35e9fdd7287eda4573d4ab1a5627676dc45eaae46545\"\n",
+          "current": "          \"sha256\": \"7e17e6656c08dd6fac657293362cfdde8322b10ad525a07a9ca051fa8a53a072\"\n"
+        },
+        {
+          "start": 1139319,
+          "previous": "          \"sha256\": \"773c0acdd79cb28c6fdce63f2072cd0c1ce8c664cf1bd24bbd6ec06cf62c24a7\"\n",
+          "current": "          \"sha256\": \"a05525cf96682980a989ff89e8d18c98b757704c41827350d790a7133da55ac5\"\n"
+        },
+        {
+          "start": 1140985,
+          "previous": "          \"sha256\": \"fe2e6b88ff16020d5526a70624d2114e734d4747fc858c21777dc0f65567af88\"\n",
+          "current": "          \"sha256\": \"548e9e549c4fae3ca97624822ccafd36e1ee30389f1fcc1ffc3b4ae2ea4bb0a2\"\n"
+        },
+        {
+          "start": 1168717,
+          "previous": "          \"sha256\": \"773c0acdd79cb28c6fdce63f2072cd0c1ce8c664cf1bd24bbd6ec06cf62c24a7\"\n",
+          "current": "          \"sha256\": \"a05525cf96682980a989ff89e8d18c98b757704c41827350d790a7133da55ac5\"\n"
+        },
+        {
+          "start": 1178977,
+          "previous": "          \"sha256\": \"773c0acdd79cb28c6fdce63f2072cd0c1ce8c664cf1bd24bbd6ec06cf62c24a7\"\n",
+          "current": "          \"sha256\": \"a05525cf96682980a989ff89e8d18c98b757704c41827350d790a7133da55ac5\"\n"
+        },
+        {
+          "start": 1193070,
+          "previous": "          \"sha256\": \"773c0acdd79cb28c6fdce63f2072cd0c1ce8c664cf1bd24bbd6ec06cf62c24a7\"\n",
+          "current": "          \"sha256\": \"a05525cf96682980a989ff89e8d18c98b757704c41827350d790a7133da55ac5\"\n"
+        },
+        {
+          "start": 1225614,
+          "previous": "          \"sha256\": \"773c0acdd79cb28c6fdce63f2072cd0c1ce8c664cf1bd24bbd6ec06cf62c24a7\"\n",
+          "current": "          \"sha256\": \"a05525cf96682980a989ff89e8d18c98b757704c41827350d790a7133da55ac5\"\n"
+        },
+        {
+          "start": 1255896,
+          "previous": "          \"sha256\": \"773c0acdd79cb28c6fdce63f2072cd0c1ce8c664cf1bd24bbd6ec06cf62c24a7\"\n",
+          "current": "          \"sha256\": \"a05525cf96682980a989ff89e8d18c98b757704c41827350d790a7133da55ac5\"\n"
+        },
+        {
+          "start": 1288859,
+          "previous": "          \"sha256\": \"773c0acdd79cb28c6fdce63f2072cd0c1ce8c664cf1bd24bbd6ec06cf62c24a7\"\n",
+          "current": "          \"sha256\": \"a05525cf96682980a989ff89e8d18c98b757704c41827350d790a7133da55ac5\"\n"
+        },
+        {
+          "start": 1330411,
+          "previous": "          \"sha256\": \"773c0acdd79cb28c6fdce63f2072cd0c1ce8c664cf1bd24bbd6ec06cf62c24a7\"\n",
+          "current": "          \"sha256\": \"a05525cf96682980a989ff89e8d18c98b757704c41827350d790a7133da55ac5\"\n"
+        },
+        {
+          "start": 1355963,
+          "previous": "          \"sha256\": \"773c0acdd79cb28c6fdce63f2072cd0c1ce8c664cf1bd24bbd6ec06cf62c24a7\"\n",
+          "current": "          \"sha256\": \"a05525cf96682980a989ff89e8d18c98b757704c41827350d790a7133da55ac5\"\n"
+        },
+        {
+          "start": 1378500,
+          "previous": "          \"sha256\": \"773c0acdd79cb28c6fdce63f2072cd0c1ce8c664cf1bd24bbd6ec06cf62c24a7\"\n",
+          "current": "          \"sha256\": \"a05525cf96682980a989ff89e8d18c98b757704c41827350d790a7133da55ac5\"\n"
+        },
+        {
+          "start": 1398192,
+          "previous": "          \"sha256\": \"773c0acdd79cb28c6fdce63f2072cd0c1ce8c664cf1bd24bbd6ec06cf62c24a7\"\n",
+          "current": "          \"sha256\": \"a05525cf96682980a989ff89e8d18c98b757704c41827350d790a7133da55ac5\"\n"
+        },
+        {
+          "start": 1418682,
+          "previous": "          \"sha256\": \"773c0acdd79cb28c6fdce63f2072cd0c1ce8c664cf1bd24bbd6ec06cf62c24a7\"\n",
+          "current": "          \"sha256\": \"a05525cf96682980a989ff89e8d18c98b757704c41827350d790a7133da55ac5\"\n"
+        },
+        {
+          "start": 1429175,
+          "previous": "          \"sha256\": \"773c0acdd79cb28c6fdce63f2072cd0c1ce8c664cf1bd24bbd6ec06cf62c24a7\"\n",
+          "current": "          \"sha256\": \"a05525cf96682980a989ff89e8d18c98b757704c41827350d790a7133da55ac5\"\n"
+        },
+        {
+          "start": 1435403,
+          "previous": "          \"sha256\": \"fe2e6b88ff16020d5526a70624d2114e734d4747fc858c21777dc0f65567af88\"\n",
+          "current": "          \"sha256\": \"548e9e549c4fae3ca97624822ccafd36e1ee30389f1fcc1ffc3b4ae2ea4bb0a2\"\n"
+        },
+        {
+          "start": 1440290,
+          "previous": "          \"sha256\": \"fe2e6b88ff16020d5526a70624d2114e734d4747fc858c21777dc0f65567af88\"\n",
+          "current": "          \"sha256\": \"548e9e549c4fae3ca97624822ccafd36e1ee30389f1fcc1ffc3b4ae2ea4bb0a2\"\n"
+        },
+        {
+          "start": 1446478,
+          "previous": "          \"sha256\": \"fe2e6b88ff16020d5526a70624d2114e734d4747fc858c21777dc0f65567af88\"\n",
+          "current": "          \"sha256\": \"548e9e549c4fae3ca97624822ccafd36e1ee30389f1fcc1ffc3b4ae2ea4bb0a2\"\n"
+        },
+        {
+          "start": 1457530,
+          "previous": "          \"sha256\": \"fd2900bab92704b9d877efbc66567fc71037a3c183cd9dfe4a08678e5c3d8e97\"\n",
+          "current": "          \"sha256\": \"8f2038ea549d064a02806a1142f8fd1c41f7ef52e112375fcfb39fcb7733d69a\"\n"
+        },
+        {
+          "start": 1491227,
+          "previous": "          \"sha256\": \"fe2e6b88ff16020d5526a70624d2114e734d4747fc858c21777dc0f65567af88\"\n",
+          "current": "          \"sha256\": \"548e9e549c4fae3ca97624822ccafd36e1ee30389f1fcc1ffc3b4ae2ea4bb0a2\"\n"
+        }
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "773c0acdd79cb28c6fdce63f2072cd0c1ce8c664cf1bd24bbd6ec06cf62c24a7",
+      "currentSha256": "a05525cf96682980a989ff89e8d18c98b757704c41827350d790a7133da55ac5",
+      "edits": [
+        {
+          "start": 24050,
+          "previous": "",
+          "current": "    \"src/build/component-recursive-diagnostics.mjs\",\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/component-recursive-adapters.mjs",
+      "previousSha256": "fe2e6b88ff16020d5526a70624d2114e734d4747fc858c21777dc0f65567af88",
+      "currentSha256": "548e9e549c4fae3ca97624822ccafd36e1ee30389f1fcc1ffc3b4ae2ea4bb0a2",
+      "edits": [
+        {
+          "start": 597,
+          "previous": "",
+          "current": "import { componentRecursiveDiagnostics } from \"./component-recursive-diagnostics.mjs\";\n"
+        },
+        {
+          "start": 3300,
+          "previous": "",
+          "current": "\tconst diagnostics = nominal ? componentRecursiveDiagnostics({\n\t\tabi, exports, nominalRefinements, walker\n\t}) : null;\n"
+        },
+        {
+          "start": 3469,
+          "previous": "",
+          "current": "\t\t, ...diagnostics ? [\n\t\t\tdiagnostics.support\n\t\t\t, ...diagnostics.validators, ...diagnostics.bounds, ...diagnostics.prototypes\n\t\t] : []\n"
+        },
+        {
+          "start": 14164,
+          "previous": "",
+          "current": "\tif(diagnostics) lines.push(...diagnostics.helpers, \"\");\n"
+        },
+        {
+          "start": 14825,
+          "previous": "",
+          "current": "\t\tconst diagnosticPasses = diagnostics?.calls.get(item.bindingId) ?? [];\n\t\tconst diagnostic = (mode, index) => {\n\t\t\tconst check = diagnosticPasses.find(pass => pass.mode === mode)\n\t\t\t\t?.checked.find(candidate => candidate.index === index);\n\t\t\tif(!check) return null;\n\t\t\tconst root = JSON.stringify(check.root);\n\t\t\treturn [\n\t\t\t\t`    ${cleanup} bridge_recursive_frame_clear(frame);`\n\t\t\t\t, \"    crd_reset();\"\n\t\t\t\t, `    if (!crd_text(${root}, sizeof(${root}) - 1)) {`\n\t\t\t\t, \"      crd_overflow(); return crd_frame_failure(frame);\"\n\t\t\t\t, \"    }\"\n\t\t\t\t, `    uint32_t diagnostic_nodes = ${componentRecursiveLimits.valueNodes};`\n\t\t\t\t, `    status = ${check.name}(&frame->args[${index}], 0, &diagnostic_nodes);`\n\t\t\t\t, \"    if (status == 5) return crd_frame_failure(frame);\"\n\t\t\t\t, \"    frame->status = status ? status : 6; return frame->status;\"\n\t\t\t];\n\t\t};\n"
+        },
+        {
+          "start": 17017,
+          "previous": "\t\tif(nominal) item.parameters.forEach((_, index) => lines.push(`  lean_inc(a${index});`\n\t\t\t, `  if (!${item.symbol}_fin_guard_${index}(a${index})) { ${cleanup} bridge_recursive_frame_clear(frame); frame->status = 5; return 5; }`));\n",
+          "current": "\t\tif(nominal) item.parameters.forEach((_, index) => {\n\t\t\tconst details = diagnostic(\"fin\", index);\n\t\t\tlines.push(`  lean_inc(a${index});`, details\n\t\t\t\t? [`  if (!${item.symbol}_fin_guard_${index}(a${index})) {`\n\t\t\t\t\t, ...details, \"  }\"].join(\"\\n\")\n\t\t\t\t: `  if (!${item.symbol}_fin_guard_${index}(a${index})) { ${cleanup} bridge_recursive_frame_clear(frame); frame->status = 5; return 5; }`);\n\t\t});\n"
+        },
+        {
+          "start": 17548,
+          "previous": "\t\t\tlines.push(`  lean_inc(a${index});`\n\t\t\t\t, `  if (!${item.symbol}_refinement_${index}(a${index})) { ${cleanup} bridge_recursive_frame_clear(frame); frame->status = 5; return 5; }`);\n",
+          "current": "\t\t{\n\t\t\tconst details = diagnostic(\"constructor\", index);\n\t\t\tlines.push(`  lean_inc(a${index});`, details\n\t\t\t\t? [`  if (!${item.symbol}_refinement_${index}(a${index})) {`\n\t\t\t\t\t, ...details, \"  }\"].join(\"\\n\")\n\t\t\t\t: `  if (!${item.symbol}_refinement_${index}(a${index})) { ${cleanup} bridge_recursive_frame_clear(frame); frame->status = 5; return 5; }`);\n\t\t}\n"
+        }
+      ]
+    },
+    {
+      "path": "src/release/component-copied-runtime.mjs",
+      "previousSha256": "fd2900bab92704b9d877efbc66567fc71037a3c183cd9dfe4a08678e5c3d8e97",
+      "currentSha256": "8f2038ea549d064a02806a1142f8fd1c41f7ef52e112375fcfb39fcb7733d69a",
+      "edits": [
+        {
+          "start": 847,
+          "previous": "",
+          "current": "const diagnosticKind = 0xffffffff;\nconst diagnosticLimit = 16 * 1024;\nconst diagnosticDecoder = new TextDecoder(\"utf-8\", { fatal: true, ignoreBOM: true });\n\nconst failureDiagnostic = (module, frame) => {\n\tconst data = new DataView(module.HEAP8.buffer);\n\tconst kind = data.getUint32(frame + 16, true);\n\tconst flags = data.getUint32(frame + 20, true);\n\tconst bits = data.getBigUint64(frame + 24, true);\n\tif(!kind && !flags && bits === 0n) return null;\n\tconst pointer = Number(bits & 0xffffffffn), length = Number(bits >> 32n);\n\tif(kind !== diagnosticKind || flags || !pointer || !length || length > diagnosticLimit\n\t\t|| pointer + length > module.HEAP8.length)\n\t\tthrow new TypeError(\"Invalid component copied failure diagnostic\");\n\tlet message;\n\ttry\n\t{ message = diagnosticDecoder.decode(module.HEAP8.subarray(pointer, pointer + length)); }\n\tcatch\n\t{ throw new TypeError(\"Invalid component copied failure diagnostic\"); }\n\tif(message.includes(\"\\0\")) throw new TypeError(\"Invalid component copied failure diagnostic\");\n\treturn message;\n};\n\n"
+        },
+        {
+          "start": 5317,
+          "previous": "\t\t\t\t// These failures leave no native result. All other statuses indicate a\n\t\t\t\t// broken adapter, invalid output, or runtime state and retire the heap.\n\t\t\t\tif(![4, 5].includes(status) || view().getUint32(frame + 16, true) || view().getUint32(frame + 20, true) || view().getBigUint64(frame + 24, true))\n\t\t\t\t{ unsafe = true; poison(); }\n\t\t\t\tthrow status === 4 ? new RangeError(\"Component copy budget exceeded\") : new Error(`Component copied call failed (${status})`);\n",
+          "current": "\t\t\t\tlet diagnostic;\n\t\t\t\ttry\n\t\t\t\t{ diagnostic = failureDiagnostic(module, frame); }\n\t\t\t\tcatch(error)\n\t\t\t\t{ unsafe = true; poison(); throw error; }\n\t\t\t\t// Budget failures and legacy conversion failures leave no result.\n\t\t\t\t// Recursive checked adapters may instead return one borrowed, bounded\n\t\t\t\t// UTF-8 diagnostic. Every other status/result combination retires the heap.\n\t\t\t\tif(![4, 5].includes(status) || diagnostic !== null && (status !== 5 || !recursive))\n\t\t\t\t{\n\t\t\t\t\tunsafe = true; poison();\n\t\t\t\t\tthrow new Error(\"Invalid component copied frame result\");\n\t\t\t\t}\n\t\t\t\tthrow status === 4 ? new RangeError(\"Component copy budget exceeded\")\n\t\t\t\t\t: new Error(diagnostic ?? `Component copied call failed (${status})`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-refinement-mirrors.test.mjs",
+      "previousSha256": "2f57404f92171cb003dff9a73a35806e3d1cc8a439c4402ec5ff2e9d301bea49",
+      "currentSha256": "0e83efc8f555ec1cdd7a69003f828a96a37057f83a73949973e186f5fc216086",
+      "edits": [
+        {
+          "start": 13953,
+          "previous": "test(\"both shared mirror modules ship in the published CLI package\", async () => {\n",
+          "current": "test(\"shared mirror and diagnostic modules ship in the published CLI package\", async () => {\n"
+        },
+        {
+          "start": 14116,
+          "previous": "\tfor(const path of [\"src/build/refinement-mirrors.mjs\", \"src/build/component-refinement-mirrors.mjs\", \"src/build/component-fin-guards.mjs\"])\n",
+          "current": "\tfor(const path of [\n\t\t\"src/build/refinement-mirrors.mjs\"\n\t\t, \"src/build/component-refinement-mirrors.mjs\"\n\t\t, \"src/build/component-recursive-diagnostics.mjs\"\n\t\t, \"src/build/component-fin-guards.mjs\"\n\t])\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-structured-codec.test.mjs",
+      "previousSha256": "e8f2b0c355ff6d5bb7aa965d2610be528e6429c31aef08026873c06141fe1969",
+      "currentSha256": "467f3868a7849ef0691ce316850c6f362e0160a19564904749aadee6d6c6f76f",
+      "edits": [
+        {
+          "start": 43412,
+          "previous": "",
+          "current": "const diagnosticFailure = (f, frame, message, mutate = () => {}) => {\n\tconst bytes = new TextEncoder().encode(message), pointer = 4096;\n\tf.module.HEAP8.set(bytes, pointer);\n\tf.view().setUint32(frame + 8, 5, true);\n\tf.view().setUint32(frame + 16, 0xffffffff, true);\n\tf.view().setUint32(frame + 20, 0, true);\n\tf.view().setUint32(frame + 24, pointer, true);\n\tf.view().setUint32(frame + 28, bytes.length, true);\n\tmutate({ bytes, pointer });\n\treturn 5;\n};\n"
+        },
+        {
+          "start": 46869,
+          "previous": "",
+          "current": "\t}\n});\n\ntest(\"recursive checked failures expose only bounded authenticated diagnostics\", () => {\n\tconst message = \"first.arg0.next.value.packet.value was rejected by Checked.plusOne\";\n\tconst f = arenaFixture();\n\tconst call = arenaCall(f, frame => diagnosticFailure(f, frame, message));\n\tassert.throws(() => call([]), error => error instanceof Error\n\t\t&& !(error instanceof TypeError) && error.message === message);\n\tassert.deepEqual(f.state(), { clears: 1, frees: 1, poisoned: false });\n\tassert.deepEqual(arenaCall(f, frame => { f.output(frame); return 0; })([]), [\"A\", \"\"]);\n\n\tconst malformed = [\n\t\t(f, frame) => diagnosticFailure(f, frame, message\n\t\t\t, () => f.view().setUint32(frame + 16, 37, true))\n\t\t, (f, frame) => diagnosticFailure(f, frame, message\n\t\t\t, () => f.view().setUint32(frame + 20, 1, true))\n\t\t, (f, frame) => diagnosticFailure(f, frame, message\n\t\t\t, () => f.view().setUint32(frame + 24, 0, true))\n\t\t, (f, frame) => diagnosticFailure(f, frame, message\n\t\t\t, () => f.view().setUint32(frame + 28, 0, true))\n\t\t, (f, frame) => diagnosticFailure(f, frame, message\n\t\t\t, () => f.view().setUint32(frame + 28, 16 * 1024 + 1, true))\n\t\t, (f, frame) => diagnosticFailure(f, frame, message, () => {\n\t\t\tf.view().setUint32(frame + 24, f.module.HEAP8.length - 1, true);\n\t\t\tf.view().setUint32(frame + 28, 2, true);\n\t\t})\n\t\t, (f, frame) => diagnosticFailure(f, frame, message, ({ pointer }) => {\n\t\t\tf.module.HEAP8.set([0xc3, 0x28], pointer);\n\t\t\tf.view().setUint32(frame + 28, 2, true);\n\t\t})\n\t\t, (f, frame) => diagnosticFailure(f, frame, \"bad\\0message\")\n\t\t, (f, frame) => {\n\t\t\tdiagnosticFailure(f, frame, message); f.view().setUint32(frame + 8, 4, true); return 4;\n\t\t}\n\t];\n\tfor(const operation of malformed)\n\t{\n\t\tconst bad = arenaFixture();\n\t\tassert.throws(() => arenaCall(bad, frame => operation(bad, frame))([])\n\t\t\t, /Invalid component copied/);\n\t\tassert.deepEqual(bad.state(), { clears: 0, frees: 0, poisoned: true });\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/mutual-checked-record-consumers/javascript.mjs",
+      "previousSha256": "1b10cd103f8781033f116af9976b3a4401767ece989182ad98360f098be0e1f8",
+      "currentSha256": "8390e405ab7eb6ffee07b57e9818e6996860d48094cb9003641baf53fb0233fd",
+      "edits": [
+        {
+          "start": 4463,
+          "previous": "\tconst constructorFailure = error => error instanceof Error\n\t\t&& !(error instanceof TypeError) && /failed \\(5\\)$/u.test(error.message);\n",
+          "current": "\tconst constructorFailure = (name, path, constructor) => error => error instanceof Error\n\t\t&& !(error instanceof TypeError) && [\"arg0\", \"value0\"].some(parameter =>\n\t\terror.message === `${name}.${parameter}${path} was rejected by ${constructor}`);\n"
+        },
+        {
+          "start": 4765,
+          "previous": "\t\t, constructorFailure, \"outer-subtype\");\n",
+          "current": "\t\t, constructorFailure(\"first\", \".value\", \"MutualCheckedRecords.plusOne\")\n\t\t, \"outer-subtype\");\n"
+        },
+        {
+          "start": 4916,
+          "previous": "\t\t, constructorFailure, \"late-subtype\");\n",
+          "current": "\t\t, constructorFailure(\"first\", \".next.value.packet.value\"\n\t\t\t, \"MutualCheckedRecords.plusOne\"), \"late-subtype\");\n"
+        },
+        {
+          "start": 5083,
+          "previous": "\t\t, constructorFailure, \"outer-record\");\n",
+          "current": "\t\t, constructorFailure(\"first\", \"\", \"MutualCheckedRecords.mkEnvelope\")\n\t\t, \"outer-record\");\n\trejectAndRecover(\"groups\", [[some(nested(40n, 2n, 100n, 1n))]]\n\t\t, constructorFailure(\"groups\", \"[0].value.next.value.packet.value\"\n\t\t\t, \"MutualCheckedRecords.plusOne\"), \"group-late-subtype\");\n\trejectAndRecover(\"echoGroups\", [[some(nested(40n, 2n, 95n, 1n))]]\n\t\t, constructorFailure(\"echoGroups\", \"[0].value.next.value.packet.value\"\n\t\t\t, \"MutualCheckedRecords.plusTwo\"), \"echo-group-late-subtype\");\n"
+        },
+        {
+          "start": 8164,
+          "previous": "\t\trefused(\"first\", [nested(40n, 2n, 100n, 1n)], constructorFailure);\n",
+          "current": "\t\trefused(\"first\", [nested(40n, 2n, 100n, 1n)]\n\t\t\t, constructorFailure(\"first\", \".next.value.packet.value\"\n\t\t\t\t, \"MutualCheckedRecords.plusOne\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "59e9a8e0dc42cd4d33b8e49da43e0fd36383bce6364381b47e71339f18d49e98",
+      "currentSha256": "3f31a907e81fc80d53ff48485f71ce07424894890bfd195e53f4f86fd90a8356",
+      "edits": [
+        {
+          "start": 12735,
+          "previous": "",
+          "current": "import { beforeMutualCheckedRecordNpmSource, mutualCheckedRecordNpmChangedPaths } from \"./mutual-checked-record-npm-source-history.mjs\";\n"
+        },
+        {
+          "start": 63817,
+          "previous": "",
+          "current": "\tsource = beforeMutualCheckedRecordNpmSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 81201,
+          "previous": "",
+          "current": "\t, ...mutualCheckedRecordNpmChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/mutual-checked-record-source-history-tests.mjs",
+      "previousSha256": "75be8459daa7f6e05c54bb8a73c1ab53c0ea86f2828793292e45ef767203f304",
+      "currentSha256": "26f2a8662066a32b3ca1446228fae457f533f49198f34a714408de1d53926539",
+      "edits": [
+        {
+          "start": 512,
+          "previous": "",
+          "current": "import {\n\tbeforeMutualCheckedRecordNpmSource\n} from \"./mutual-checked-record-npm-source-history.mjs\";\n"
+        },
+        {
+          "start": 3065,
+          "previous": "\tconst currentText = await readFile(path, \"utf8\");\n\tconst current = JSON.parse(currentText);\n",
+          "current": ""
+        },
+        {
+          "start": 3214,
+          "previous": "",
+          "current": "\tconst currentText = beforeMutualCheckedRecordNpmSource(\n\t\tpath, await readFile(path, \"utf8\"), update.currentSha256\n\t);\n\tconst current = JSON.parse(currentText);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/mutual-checked-record-npm-fixture.mjs",
+      "previousSha256": "a8a1d006c50e983dec2aa622eb8a0a6a5a76b3151018df0d825f7dce2a5fdcb6",
+      "currentSha256": "a631e0b6f4ea00e3f44a035b9037476898b3bde1a131e225a91e8890e5d0accd",
+      "edits": [
+        {
+          "start": 1285,
+          "previous": "\tconst argument = route === \"reviewed\" ? \"first.value0\" : \"first.arg0\";\n",
+          "current": "\tconst parameter = name => `${name}.${route === \"reviewed\" ? \"value0\" : \"arg0\"}`;\n\tconst argument = parameter(\"first\");\n"
+        },
+        {
+          "start": 1460,
+          "previous": "\tconst component = error(\"Error\", \"Component copied call failed (5)\");\n",
+          "current": ""
+        },
+        {
+          "start": 1470,
+          "previous": "\t\tchecks: 1350, rejections: 269, calls: 674, snapshots: 674, recoveries: 141\n",
+          "current": "\t\tchecks: 1358, rejections: 271, calls: 678, snapshots: 678, recoveries: 143\n"
+        },
+        {
+          "start": 1563,
+          "previous": "\t\t\t\"outer-subtype\": component\n\t\t\t, \"late-subtype\": component\n\t\t\t, \"outer-record\": component\n",
+          "current": "\t\t\t\"outer-subtype\": error(\"Error\"\n\t\t\t\t, `${argument}.value was rejected by MutualCheckedRecords.plusOne`)\n\t\t\t, \"late-subtype\": error(\"Error\"\n\t\t\t\t, `${argument}.next.value.packet.value was rejected by MutualCheckedRecords.plusOne`)\n\t\t\t, \"outer-record\": error(\"Error\"\n\t\t\t\t, `${argument} was rejected by MutualCheckedRecords.mkEnvelope`)\n\t\t\t, \"group-late-subtype\": error(\"Error\"\n\t\t\t\t, `${parameter(\"groups\")}[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusOne`)\n\t\t\t, \"echo-group-late-subtype\": error(\"Error\"\n\t\t\t\t, `${parameter(\"echoGroups\")}[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusTwo`)\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/recursive-source-history.mjs",
+      "previousSha256": "c7500f73d54cace30c2b35e9fdd7287eda4573d4ab1a5627676dc45eaae46545",
+      "currentSha256": "7e17e6656c08dd6fac657293362cfdde8322b10ad525a07a9ca051fa8a53a072",
+      "edits": [
+        {
+          "start": 2059,
+          "previous": "\t\tlet original = await readFile(path, \"utf8\");\n",
+          "current": "\t\tlet original = source;\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/mutual-checked-records.test.mjs",
+      "previousSha256": "2da24749106692449929ddce6e1d35886add7a31271ed51b61efcd10371b02c7",
+      "currentSha256": "0d121e434e5e345e983754dc4141fed783166ab0a6aeaa017a197e220848f7c7",
+      "edits": [
+        {
+          "start": 1066,
+          "previous": "",
+          "current": "import { generateComponentRecursiveAdapters } from \"../src/build/component-recursive-adapters.mjs\";\n"
+        },
+        {
+          "start": 1834,
+          "previous": "",
+          "current": "import \"./helpers/mutual-checked-record-npm-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 6079,
+          "previous": "",
+          "current": "});\n\ntest(\"recursive Wasm diagnostics stay off the success path and name the rejected leaf\", () => {\n\tconst { ir, abi, exports } = contract();\n\tconst source = generateComponentRecursiveAdapters(abi, {\n\t\texports, nominalRefinements: nominalRefinementEntries(ir.types)\n\t});\n\tassert.match(source, /enum \\{ CRD_MESSAGE_LIMIT = 16384, CRD_KIND = UINT32_MAX \\}/u);\n\tassert.match(source, /return crd_reject\\(\" must be bigint below 3\", sizeof/u);\n\tassert.match(source\n\t\t, /return crd_reject\\(\" was rejected by MutualCheckedRecords\\.plusOne\", sizeof/u);\n\tassert.match(source\n\t\t, /return crd_reject\\(\" was rejected by MutualCheckedRecords\\.mkEnvelope\", sizeof/u);\n\tassert.match(source, /crd_text\\(\"\\.next\"/u);\n\tassert.match(source, /crd_text\\(\"\\.value\"/u);\n\tassert.match(source, /crd_text\\(\"\\.packet\"/u);\n\tconst first = exports.find(item => item.sourceDeclaration.endsWith(\".first\"));\n\tconst body = source.slice(source.indexOf(`LEAN_EXPORT uint32_t ${first.symbol}(`));\n\tconst refinement = body.indexOf(`${first.symbol}_refinement_0(a0)`);\n\tconst diagnostic = body.indexOf(\"crd_reset();\", refinement);\n\tassert.ok(refinement >= 0 && diagnostic > refinement);\n\tassert.ok(body.indexOf(`${first.symbol}_lean(a0)`) > diagnostic);\n\tassert.match(body, /crd_text\\(\"first\\.arg0\", sizeof\\(\"first\\.arg0\"\\) - 1\\)/u);\n\tassert.match(body, /if \\(status == 5\\) return crd_frame_failure\\(frame\\)/u);\n"
+        }
+      ]
+    }
+  ]
+}

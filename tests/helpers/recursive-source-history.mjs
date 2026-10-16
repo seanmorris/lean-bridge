@@ -37,7 +37,7 @@ export const assertRecursiveSourceHistory = async (name, path, previousSha256) =
 		assert.equal(sha256(source.replace('"allocation-guard.h", ', "")), previousSha256, "Only the extra provenance header may differ from this historical packager");
 	if(path === "tests/component-structured-codec.test.mjs")
 	{
-		let original = await readFile(path, "utf8");
+		let original = source;
 		for(const [current, previous] of [
 			['import { assertRecursiveSourceHistory } from "./helpers/recursive-source-history.mjs";\n', ""]
 			, ['for(const [path, hash] of Object.entries(record.sourceHashes)) await assertRecursiveSourceHistory("npm-recursive-callable-repair-20260922", path, hash);', 'for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);']

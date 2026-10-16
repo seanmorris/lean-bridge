@@ -11,6 +11,9 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import {
+	beforeMutualCheckedRecordNpmSource
+} from "./mutual-checked-record-npm-source-history.mjs";
 import { beforeNestedCheckedRecordMatrixClosurePins } from "./nested-checked-record-matrix-closure-source-history.mjs";
 import {
 	beforeMutualCheckedRecordPins
@@ -65,10 +68,12 @@ test("mutual checked-record history reconstructs every exact predecessor source"
 
 test("mutual checked-record history refreshes only immediately preceding source pins", async () => {
 	const path = "docs/type-surface.v1.json";
-	const currentText = await readFile(path, "utf8");
-	const current = JSON.parse(currentText);
 	const record = JSON.parse(await readFile(mutualCheckedRecordHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
+	const currentText = beforeMutualCheckedRecordNpmSource(
+		path, await readFile(path, "utf8"), update.currentSha256
+	);
+	const current = JSON.parse(currentText);
 	const previous = JSON.parse(reverseMutualCheckedRecordUpdate(currentText, update));
 	assert.deepEqual(beforeMutualCheckedRecordPins(current)
 		, beforeNestedCheckedRecordMatrixClosurePins(previous));

@@ -30,6 +30,7 @@ import {
 } from "./helpers/mutual-checked-record-fixture.mjs";
 import "./helpers/mutual-checked-record-native-installed-tests.mjs";
 import "./helpers/mutual-checked-record-npm-installed-tests.mjs";
+import "./helpers/mutual-checked-record-npm-source-history-tests.mjs";
 import "./helpers/mutual-checked-record-source-history-tests.mjs";
 
 const contract = () => {
