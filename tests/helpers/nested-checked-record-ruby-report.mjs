@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { posix } from "node:path";
-import { canonicalJson } from "../../src/capsule/node.mjs";
+import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { nestedCheckedRecordRubyRoutes, nestedCheckedRecordRubyModes, nestedCheckedRecordRubyCounts, nestedCheckedRecordRubyCallerArgs, parseNestedCheckedRecordRubyResult } from "./nested-checked-record-ruby-fixture.mjs";
 import { nominalSubtypeRubyOriginal as nestedCheckedRecordRubyOriginal } from "./nominal-subtype-ruby-generators.mjs";
 import { nestedCheckedRecordRubyReceipt } from "./nested-checked-record-ruby-package.mjs";
@@ -108,9 +108,12 @@ export const checkNestedCheckedRecordRubyReport = async (read, { route, mode, pr
 		assert.deepEqual(Object.keys(observation.run).sort(), ["code", "stderr", "stdout"]);
 		assert.equal(observation.run.code, 0); assert.equal(observation.run.stderr, ""); parseNestedCheckedRecordRubyResult(observation.run.stdout, mode);
 	}
+	const recordPaths = nestedCheckedRecordRubyRecords(route, gem).sort();
 	return { route, mode, producerCommit, runtime, floor, rubyVersion
 		, counts: nestedCheckedRecordRubyCounts[mode], executions: 2
 		, loadCeiling: report.loadCeiling
 		, dispatchObserved: false, generatorModules: generatorPaths.length
-		, records: nestedCheckedRecordRubyRecords(route, gem).length };
+		, records: recordPaths.length, recordPaths
+		, archiveSha256: gem.archive.sha256
+		, reportSha256: sha256(await read("report.json")) };
 };
