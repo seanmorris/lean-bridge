@@ -47,6 +47,7 @@ import { beforeNominalPrimitiveSubtypePhpWasmPromotionSource } from "./helpers/n
 import { beforeRecursiveSubtypePhpWasmSource } from "./helpers/recursive-subtype-php-wasm-source-history.mjs";
 import { recursiveSubtypePhpWasmField, recursiveSubtypePhpWasmParameter, recursiveSubtypePhpWasmResult } from "./helpers/recursive-subtype-php-wasm-promotion.mjs";
 import { beforeRecursiveSubtypePhpWasmPromotionSource } from "./helpers/recursive-subtype-php-wasm-promotion-history.mjs";
+import { beforeNestedCheckedRecordBrowserPromotionSource } from "./helpers/nested-checked-record-browser-promotion-history.mjs";
 
 const execute = promisify(execFile);
 const root = path.resolve(import.meta.dirname, "..");
@@ -88,9 +89,10 @@ const observationFixture = () => {
 
 test("historical shape comparisons preserve old cells without weakening the live classifier", async () => {
 	const file = "docs/type-surface.v1.json";
-	let current = beforeRecursiveSubtypePhpWasmPromotionSource(
+	let current = beforeNestedCheckedRecordBrowserPromotionSource(
 		file, await readFile(file, "utf8")
 	);
+	current = beforeRecursiveSubtypePhpWasmPromotionSource(file, current);
 	current = beforeRecursiveSubtypePhpWasmSource(file, current);
 	current = beforeNominalPrimitiveSubtypePhpWasmPromotionSource(file, current);
 	current = beforeNominalPrimitiveSubtypePhpPromotionSource(file, current);

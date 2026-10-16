@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
@@ -23,8 +24,13 @@ import {
 import {
 	nestedCheckedRecordHistoryPath
 } from "./nested-checked-record-source-history.mjs";
+import {
+	nestedCheckedRecordBrowserPromotionPredecessor
+} from "./nested-checked-record-browser-promotion-history.mjs";
 
-const inventory = async () => JSON.parse(await readFile("docs/type-surface.v1.json"));
+const inventory = async () => JSON.parse(execFileSync("git", ["show"
+	, `${nestedCheckedRecordBrowserPromotionPredecessor}:docs/type-surface.v1.json`]
+, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 }));
 const contracts = async () => ({
 	irSchema: JSON.parse(await readFile("schema/binding-ir.schema.json"))
 	, consumers: JSON.parse(await readFile("docs/consumer-support.v1.json"))
@@ -93,6 +99,7 @@ test("nested checked-record promotion changes thirty exact cells and leaves call
 	const references = await nestedCheckedRecordBrowserReferences();
 	const proposed = await promoteNestedCheckedRecordBrowsers(original, references);
 	const contract = await contracts(); validateTypeSurface(proposed, contract);
+	assert.deepEqual(proposed, JSON.parse(await readFile("docs/type-surface.v1.json")));
 	assert.deepEqual(original, unchanged);
 	assert.equal(proposed.evidence.length, original.evidence.length + 4);
 	assert.equal(proposed.observations.length, original.observations.length + 10);
@@ -151,4 +158,31 @@ test("nested checked-record promotion changes thirty exact cells and leaves call
 		assert.ok(pins.length > 0, path);
 		assert.ok(pins.every(file => file.sha256 === expected), path);
 	}
+});
+
+test("nested checked-record documentation names exact shapes, engines and remaining work", async () => {
+	const paths = [
+		"docs/javascript-typescript.md"
+		, "docs/lean/existing-package.md"
+		, "docs/lean/export-decisions.md"
+		, "docs/reference/types.md"
+	];
+	for(const path of paths)
+	{
+		const source = await readFile(path, "utf8");
+		assert.ok(source.includes("nested-checked-record-browser-20261016/index.json")
+			, path);
+	}
+	const javascript = await readFile("docs/javascript-typescript.md", "utf8");
+	for(const text of ["Fin 10", "checked `Nat` subtype", "Array", "List"
+		, "Option", "products", "Except", "enclosing record field"
+		, "active variant field", "Chromium", "Firefox", "WebKit"])
+		assert.ok(javascript.includes(text), text);
+	assert.ok(javascript.includes("actions/workflows/nested-checked-record-browser.yml"));
+	const row = javascript.split("\n").find(line =>
+		line.startsWith("| `Checked records and closed Nat indices`"));
+	assert.ok(row.includes("Installed checks passed (input, result, field)"));
+	assert.ok(row.includes("Not audited (callback input, callback result)"));
+	assert.equal(row.split(nestedCheckedRecordBrowserConversion).length, 3
+		, "Render the shared explanation once for Node/TypeScript and once for browsers");
 });

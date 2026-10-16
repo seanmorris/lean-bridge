@@ -100,6 +100,7 @@ import { beforeRecursiveSubtypePhpWasmSource, recursiveSubtypePhpWasmChangedPath
 import { beforeRecursiveSubtypePhpWasmPromotionSource, recursiveSubtypePhpWasmPromotionChangedPaths } from "./recursive-subtype-php-wasm-promotion-history.mjs";
 import { beforeNominalPrimitiveSubtypeRustPromotionSource, nominalPrimitiveSubtypeRustPromotionChangedPaths } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
 import { beforeNestedCheckedRecordSource, nestedCheckedRecordChangedPaths } from "./nested-checked-record-source-history.mjs";
+import { beforeNestedCheckedRecordBrowserPromotionSource, nestedCheckedRecordBrowserPromotionChangedPaths } from "./nested-checked-record-browser-promotion-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeSubtypeRefinementSource, subtypeRefinementChangedPaths } from "./subtype-refinement-source-history.mjs";
 import { subtypeHeapChangedPaths } from "./subtype-heap-source-history.mjs";
@@ -750,6 +751,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeNestedCheckedRecordBrowserPromotionSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeNestedCheckedRecordSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeRecursiveSubtypePhpWasmPromotionSource(path, source, expected);
@@ -1081,6 +1084,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...recursiveSubtypePhpWasmChangedPaths
 	, ...recursiveSubtypePhpWasmPromotionChangedPaths
 	, ...nestedCheckedRecordChangedPaths
+	, ...nestedCheckedRecordBrowserPromotionChangedPaths
 ])].sort());
 
 /**

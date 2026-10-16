@@ -41,9 +41,16 @@ const validators = Object.freeze([
 	, ".github/workflows/nested-checked-record-browser.yml"
 ]);
 const promotionPins = Object.freeze([
-	"docs/lean/existing-package.md"
+	"docs/evidence/README.md"
+	, "docs/javascript-typescript.md"
+	, "docs/lean/existing-package.md"
 	, "docs/lean/export-decisions.md"
+	, "docs/reference/types.md"
 	, "scripts/generate-type-docs.mjs"
+	, "tests/helpers/fin-refinement-source-history.mjs"
+	, "tests/helpers/nested-checked-record-browser-promotion-tests.mjs"
+	, "tests/nested-checked-records.test.mjs"
+	, "tests/type-surface.test.mjs"
 ]);
 const quote = value => "'" + String(value).replaceAll("'", "'\\''") + "'";
 const without = (source, text) => source.split(text).join("").replaceAll(/\s{2,}/gu, " ").trim();
