@@ -1,0 +1,313 @@
+{
+  "assurance": [],
+  "capabilities": [],
+  "component": {
+    "id": "nestedcheckedrecords@1.0.0",
+    "name": "nestedcheckedrecords",
+    "version": "1.0.0"
+  },
+  "declarations": [
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Call NestedCheckedRecords.produceArray."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:NestedCheckedRecords.produceArray",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "produceArray",
+      "overloadKey": "NestedCheckedRecords.produceArray",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "arg0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "arguments": [
+            {
+              "id": "lean:NestedCheckedRecords.Packet",
+              "kind": "named"
+            }
+          ],
+          "constructor": "array",
+          "kind": "apply"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "NestedCheckedRecords.produceArray",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              null
+            ],
+            "result": {
+              "arguments": [
+                {
+                  "constructor": null,
+                  "fields": [
+                    {
+                      "name": "digit",
+                      "refinement": {
+                        "bound": "10",
+                        "kind": "fin"
+                      }
+                    },
+                    {
+                      "name": "word",
+                      "refinement": {
+                        "constructor": null,
+                        "kind": "subtype"
+                      }
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "NestedCheckedRecords.Packet"
+                }
+              ],
+              "kind": "array"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 92,
+            "endLine": 63,
+            "path": "NestedCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 63
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Lean-produced checked records need no input constructor. "
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:NestedCheckedRecords.produceOption",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "produceOption",
+      "overloadKey": "NestedCheckedRecords.produceOption",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "arg0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "arguments": [
+            {
+              "id": "lean:NestedCheckedRecords.Packet",
+              "kind": "named"
+            }
+          ],
+          "constructor": "option",
+          "kind": "apply"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "NestedCheckedRecords.produceOption",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              null
+            ],
+            "result": {
+              "arguments": [
+                {
+                  "constructor": null,
+                  "fields": [
+                    {
+                      "name": "digit",
+                      "refinement": {
+                        "bound": "10",
+                        "kind": "fin"
+                      }
+                    },
+                    {
+                      "name": "word",
+                      "refinement": {
+                        "constructor": null,
+                        "kind": "subtype"
+                      }
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "NestedCheckedRecords.Packet"
+                }
+              ],
+              "kind": "option"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 74,
+            "endLine": 62,
+            "path": "NestedCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 61
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    }
+  ],
+  "documentation": {
+    "details": "",
+    "summary": "Compiler-checked exports for nestedcheckedrecords."
+  },
+  "errors": [],
+  "producers": [
+    {
+      "adapter": "lean-bridge-elaborator",
+      "adapterVersion": 2,
+      "extensions": {
+        "lean-lang.org/elaboration-sha256": "d607cc1af4ce89b3a8880569d80a6e189127ff1118844dffcf7459b005c8e05c",
+        "lean-lang.org/toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "id": "lean",
+      "tool": "Lean",
+      "toolVersion": "4.32.2"
+    }
+  ],
+  "schemaVersion": 3,
+  "types": [
+    {
+      "assurance": [],
+      "callable": null,
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Checked Lean NestedCheckedRecords.Packet."
+      },
+      "fields": [
+        {
+          "documentation": {
+            "details": "",
+            "summary": "digit"
+          },
+          "mutability": "immutable",
+          "name": "digit",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        {
+          "documentation": {
+            "details": "",
+            "summary": "word"
+          },
+          "mutability": "immutable",
+          "name": "word",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "host": null,
+      "id": "lean:NestedCheckedRecords.Packet",
+      "kind": "record",
+      "mutability": "immutable",
+      "name": "Packet",
+      "representation": "copied",
+      "resource": null,
+      "source": {
+        "declaration": "NestedCheckedRecords.Packet",
+        "extensions": {
+          "lean-lang.org/erased-proofs": {
+            "fields": [
+              "linked"
+            ]
+          },
+          "lean-lang.org/nominal-refinements": {
+            "fields": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              },
+              null
+            ],
+            "kind": "record"
+          }
+        },
+        "producer": "lean"
+      },
+      "target": null,
+      "typeParameters": []
+    }
+  ]
+}

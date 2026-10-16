@@ -1,0 +1,70 @@
+{
+  "bindingIrSha256": "b91fda544f32e7158e50f065db26773f6d49a4a5aeb7801da94534a1defd4ed7",
+  "evidence": {
+    "componentId": "nestedcheckedrecords@1.0.0",
+    "componentReceiptSha256": "39fee0bdbad2874b29bc43ec71a882c57761e8bf936714b026fc0dc0f8f97f86",
+    "libraries": {
+      "libcomponent_a63244d529ededa079e7.so": "960bf714f5e9633c5e75df7692c33af63e6d467f8e1f9d63d0d1fef300596de8",
+      "liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+      "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+      "libnestedcheckedrecords.so": "b47fe7b884ba06a3dbe90916139625b89bb3edda9389205d080e92e7de06d903"
+    },
+    "library": "libnestedcheckedrecords.so",
+    "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+  },
+  "files": {
+    "Cargo.lock": {
+      "bytes": 3309,
+      "sha256": "e75c107cdeaaa81d3476a51a3fc0ccb7aee448754bdc4acdb1690dc980ababd4"
+    },
+    "Cargo.toml": {
+      "bytes": 341,
+      "sha256": "7e78e0fa8ddcc9692b07b8b0a065db5c55c716d54cee9d72e883935e336cf36c"
+    },
+    "README.md": {
+      "bytes": 5453,
+      "sha256": "74bfbc01ff3ea87119d551c66f7efffca45d358d082293c7f9a97f6698467a6b"
+    },
+    "binding-manifest.json": {
+      "bytes": 957,
+      "sha256": "0c092609d6c6e4eeb23e4527db54cf154eeee50e00e1c95b8768cd5cb58a73c2"
+    },
+    "lean-bridge/licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "native/linux-x64/libcomponent_a63244d529ededa079e7.so": {
+      "bytes": 45960,
+      "sha256": "960bf714f5e9633c5e75df7692c33af63e6d467f8e1f9d63d0d1fef300596de8"
+    },
+    "native/linux-x64/liblean_bridge_native.so": {
+      "bytes": 21464,
+      "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+    },
+    "native/linux-x64/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "native/linux-x64/libnestedcheckedrecords.so": {
+      "bytes": 21776,
+      "sha256": "b47fe7b884ba06a3dbe90916139625b89bb3edda9389205d080e92e7de06d903"
+    },
+    "src/__runtime.rs": {
+      "bytes": 9362,
+      "sha256": "d117faf651c78ac419cf66d80f530ad086b139d7dddd51536137655531dc180b"
+    },
+    "src/assets.rs": {
+      "bytes": 8103,
+      "sha256": "4ba3304e9949ba84f0ea330faa31d3eee6df7a2cea5e8db21979f652022ea089"
+    },
+    "src/lib.rs": {
+      "bytes": 1816,
+      "sha256": "9b65034b7d863c5a5ca971cc70d9f4f42a58767d3cff50c81ee37c2c7fd190e8"
+    }
+  },
+  "name": "nestedcheckedrecords",
+  "profile": "native-library-v1",
+  "rustc": "rustc 1.90.0 (1159e78c4 2025-09-14)",
+  "schemaVersion": 1,
+  "version": "1.0.0"
+}

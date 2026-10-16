@@ -1,0 +1,12 @@
+[package]
+name = "nested-consumer"
+version = "0.0.0"
+edition = "2021"
+[features]
+result-only = []
+reviewed = []
+[dependencies]
+nestedcheckedrecords = { path = "vendor/nestedcheckedrecords-1.0.0" }
+[profile.dev]
+debug = 0
+incremental = false

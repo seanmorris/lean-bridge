@@ -1,0 +1,4 @@
+[source.crates-io]
+replace-with = "nested-vendor"
+[source.nested-vendor]
+directory = "vendor/dependencies"

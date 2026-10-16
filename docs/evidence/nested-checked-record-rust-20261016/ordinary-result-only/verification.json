@@ -1,0 +1,46 @@
+{
+  "counts": {
+    "checks": 1291,
+    "recoveries": 0,
+    "rejections": 0,
+    "rounds": 256,
+    "snapshotControls": 7,
+    "snapshots": 514
+  },
+  "dispatchObserved": false,
+  "executions": 3,
+  "floor": "2.36",
+  "generatorModules": 21,
+  "loadCeiling": 20,
+  "mode": "result-only",
+  "producerCommit": "da01260bc9655c7016bc8f0f7211a448136ab2cf",
+  "records": 74,
+  "route": "ordinary",
+  "runtime": {
+    "arch": "x64",
+    "glibc": "2.36",
+    "platform": "linux"
+  },
+  "toolchain": {
+    "cargo": {
+      "bytes": 41437528,
+      "command": "/app/.toolchains/rust-1.90.0/bin/cargo",
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "cargo 1.90.0 (840b83a10 2025-07-30)\n"
+      },
+      "sha256": "51de284e8bb0d03dcee595a0fb1cb3a952fe9e7e4b953a8b1467b7f71725b561"
+    },
+    "rustc": {
+      "bytes": 656496,
+      "command": "/app/.toolchains/rust-1.90.0/bin/rustc",
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "rustc 1.90.0 (1159e78c4 2025-09-14)\n"
+      },
+      "sha256": "e6abf55ab1859e7c990be77fd593f51661ea99fb2fde626ae9f4108aaa34e7fa"
+    }
+  }
+}

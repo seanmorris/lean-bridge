@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "nestedcheckedrecords@1.0.0",
+    "name": "nestedcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51345964,
+          "path": "archives/nestedcheckedrecords-1.0.0.crate",
+          "sha256": "3d7ca874f94623108aee751836528f57fa51cbcfde1f686e4f01fdc55fe46c92"
+        }
+      ],
+      "ecosystem": "cargo",
+      "name": "nestedcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "cargo",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "751e8b6ea71ffaa14ebecf487e5ff5a33253785b3edcec7f678d7480a6adef78",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "bf0643b1c6efcacc617d922e29c7e83277b5570a82482acf6b0423cffb6e2ea8"
+  }
+}
