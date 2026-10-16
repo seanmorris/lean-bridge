@@ -1,0 +1,43 @@
+{
+  "archiveSha256": "db873608af806494a1e1ff9887aa9f3770424e4738fbf22e30ee647936438c4c",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "probe.kt",
+    "-d",
+    "classes"
+  ],
+  "command": "/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlinc",
+  "cwd": "/tmp/lean-bridge-nominal-primitive-jvm-installed-h3k1yi/probes/kotlin",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/app/.toolchains/jdk22",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "mode": "full",
+  "outputs": {
+    "META-INF/main.kotlin_module": {
+      "bytes": 37,
+      "sha256": "f6124cd5950d9dc426ecc61468e4fb6dc19bd3124c62578d1bf30be6af612bc4"
+    },
+    "ProbeKt.class": {
+      "bytes": 3737,
+      "sha256": "c514a647ff46cb32d0640b183fa1d60603b1c16fb72e2a1ff4fbf816d08796ba"
+    }
+  },
+  "profile": "kotlin",
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.nominalprimitivesubtypes.kotlin.*\nfun echoA(value: Packet) = Api.echoA(value)\nfun echoB(value: Packet) = Api.echoB(value)\nfun refuseUnit(value: Packet) = Api.refuseUnit(value)\nfun combine(left: Packet, right: Packet) = Api.combine(left, right)\nfun echoPair(value: PacketPair) = Api.echoPair(value)\nfun echoEventA(value: Event) = Api.echoEventA(value)\nfun echoEventB(value: Event) = Api.echoEventB(value)\nfun aliases(left: Array<Option<Packet>>, right: Array<Option<Packet>>) = Api.aliases(left, right)\n",
+  "sourceSha256": "63812c128564d3895ebab5ad23492f455f385d7302b4551f307d964487edc3f8"
+}

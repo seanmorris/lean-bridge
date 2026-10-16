@@ -1,0 +1,50 @@
+TAP version 13
+# Subtest: installed primitive-base nominal JVM packages reproduce and relocate ordinary full
+not ok 1 - installed primitive-base nominal JVM packages reproduce and relocate ordinary full
+  ---
+  duration_ms: 301709.19666
+  type: 'test'
+  location: '/app/build/worktrees/nominal-primitive-jvm-run-88cf601/tests/helpers/nominal-primitive-subtype-jvm-installed-tests.mjs:33:53'
+  failureType: 'testCodeFailure'
+  error: 'C# producer host load remained at or above 6 for five minutes'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    waitNominalSubtypeDotnetResources (file:///app/build/worktrees/nominal-primitive-jvm-run-88cf601/tests/helpers/nominal-subtype-dotnet-resources.mjs:40:10)
+    async resourceCheck (file:///app/build/worktrees/nominal-primitive-jvm-run-88cf601/tests/helpers/nominal-primitive-subtype-jvm-installed-tests.mjs:56:23)
+    async TestContext.<anonymous> (file:///app/build/worktrees/nominal-primitive-jvm-run-88cf601/tests/helpers/nominal-primitive-subtype-jvm-installed-tests.mjs:59:2)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Waiting for host load below 6 before the next C\# phase: 6.93
+# Waiting for host load below 6 before the next C\# phase: 6.42
+# Waiting for host load below 6 before the next C\# phase: 6.1
+# Waiting for host load below 6 before the next C\# phase: 6.7
+# Waiting for host load below 6 before the next C\# phase: 6.46
+# Waiting for host load below 6 before the next C\# phase: 8.24
+# Waiting for host load below 6 before the next C\# phase: 7.43
+# Waiting for host load below 6 before the next C\# phase: 6.91
+# Waiting for host load below 6 before the next C\# phase: 7.05
+# Waiting for host load below 6 before the next C\# phase: 6.94
+# Waiting for host load below 6 before the next C\# phase: 8.46
+# Waiting for host load below 6 before the next C\# phase: 7.69
+# Waiting for host load below 6 before the next C\# phase: 7.41
+# Waiting for host load below 6 before the next C\# phase: 7.41
+# Waiting for host load below 6 before the next C\# phase: 6.79
+# Waiting for host load below 6 before the next C\# phase: 6.57
+# Waiting for host load below 6 before the next C\# phase: 7.37
+# Waiting for host load below 6 before the next C\# phase: 7.17
+# Waiting for host load below 6 before the next C\# phase: 7.14
+# Waiting for host load below 6 before the next C\# phase: 7.36
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 302347.940263

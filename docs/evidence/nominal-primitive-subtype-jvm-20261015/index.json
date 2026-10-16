@@ -1,0 +1,3605 @@
+{
+  "acceptedRunnerRevision": "e0fed7f-v2",
+  "checkers": [
+    "ci-handoff",
+    "ci-report",
+    "consumer-records",
+    "controls",
+    "model-records",
+    "package",
+    "package-records",
+    "provenance",
+    "report",
+    "generators",
+    "ci-tools"
+  ],
+  "files": [
+    {
+      "bytes": 2247,
+      "path": "checkers/ci-handoff.mjs",
+      "sha256": "4e410705ab14b29f1846c5a9c9db803b34a119bdc0a49560a1de06c60acf68b9"
+    },
+    {
+      "bytes": 6166,
+      "path": "checkers/ci-report.mjs",
+      "sha256": "ca3d2f10b5b1749e676fededdc7c7f3d84b568d79a10541893e9463905f5870a"
+    },
+    {
+      "bytes": 2843,
+      "path": "checkers/ci-tools.mjs",
+      "sha256": "678c7bd830e7819e64ec3f9a8009b1f40caf0aedb192998fdbe1cc0f4cf6e2ec"
+    },
+    {
+      "bytes": 10028,
+      "path": "checkers/consumer-records.mjs",
+      "sha256": "013fb298dd920df21d07db31f2aa492efb61f19035099fd5cc1b39637755617c"
+    },
+    {
+      "bytes": 7749,
+      "path": "checkers/controls.mjs",
+      "sha256": "6569af0c8c0a157178523a1e49c7b79712dc0be58905459fbe1ad7f21c3c7c7e"
+    },
+    {
+      "bytes": 2949,
+      "path": "checkers/generators.mjs",
+      "sha256": "25c4bd4e6bfa4b2de80a895f3f0b65154128b57a20664200ed31c3a0dfa8c3ac"
+    },
+    {
+      "bytes": 8565,
+      "path": "checkers/model-records.mjs",
+      "sha256": "9bfad74fc51c85b95ef94274053b6c6b5e0c4db9df97c1c5d14b5ba1469029b1"
+    },
+    {
+      "bytes": 10549,
+      "path": "checkers/package-records.mjs",
+      "sha256": "601300f8b98e2432c6efc4fc4eea6fb1879e34cf8b464002223d9cf135fea213"
+    },
+    {
+      "bytes": 4809,
+      "path": "checkers/package.mjs",
+      "sha256": "f5e6cc3cd8769b0e54aaee5cf62698ffb1aa4d9ca9aebb5bbcc6eba9418fa440"
+    },
+    {
+      "bytes": 14146,
+      "path": "checkers/provenance.mjs",
+      "sha256": "e8ffd4fe6d1321889eadbd334e6ec71d0f2c7839e6dea04c550847b894966dfc"
+    },
+    {
+      "bytes": 7071,
+      "path": "checkers/report.mjs",
+      "sha256": "2dab489d75fb3c2e2122c8f857a7c5ca6f8079ff440ae7685ea2a82c78d7a634"
+    },
+    {
+      "bytes": 330,
+      "path": "ordinary-full/controls/controls.end.json",
+      "sha256": "c3db96aeb62df06c96c853ef39801e5710a250d75f412c5c8600c5585310c539"
+    },
+    {
+      "bytes": 19709,
+      "path": "ordinary-full/controls/controls.json",
+      "sha256": "f89b6922ef331dcf338d5cdbf98c2e46c6beec6095a88ec8219e45f8bffaf12f"
+    },
+    {
+      "bytes": 865,
+      "path": "ordinary-full/controls/controls.log",
+      "sha256": "3ad175338bce8cd7db5ec437d5c92e38f3e3e8312b3653327fe40a9a50d57563"
+    },
+    {
+      "bytes": 8417,
+      "path": "ordinary-full/controls/controls.start.json",
+      "sha256": "fa36b928071c94e32fd5e5715893a87870cd4deedcdf25b2f6c0cf1dcee211b4"
+    },
+    {
+      "bytes": 329,
+      "path": "ordinary-full/producer/end.json",
+      "sha256": "3d0d8b1e531831d18d4c675f103b3d35b812bc39aa08d593ff33922a419f7d2e"
+    },
+    {
+      "bytes": 468,
+      "path": "ordinary-full/producer/run.tap",
+      "sha256": "a27c0e744cadd247033cbddb5cb99c95c2b2ffdfb75d55c68f00acc4ee7c9751"
+    },
+    {
+      "bytes": 3146,
+      "path": "ordinary-full/producer/start.json",
+      "sha256": "ed482901a769def5322da30bd3913a7cb2e37e7bd027425ccba320f4a93e0cd3"
+    },
+    {
+      "bytes": 1224,
+      "path": "ordinary-full/records/build-0/author-inputs.json",
+      "sha256": "466168cd1b5a3d361664986e5c977647f6ec250a8d76a93d11779701914a1d1f"
+    },
+    {
+      "bytes": 82672,
+      "path": "ordinary-full/records/build-0/lean-bridge.exports.json",
+      "sha256": "f933b6fcacf6e677ac4fd51229af44cf51df7d35c34a4d36e5a46e9cb5311050"
+    },
+    {
+      "bytes": 1541655,
+      "path": "ordinary-full/records/build-0/model.json",
+      "sha256": "38a25fd352426181fd07d2566b07a3986aac0766ed04f2af24e926b15d9ed11a"
+    },
+    {
+      "bytes": 22309,
+      "path": "ordinary-full/records/build-0/native-jvm.json",
+      "sha256": "480353860c0c7bb53380cbb1a414b36f62a89e644cb9dd23467bcdfd57507671"
+    },
+    {
+      "bytes": 10887,
+      "path": "ordinary-full/records/build-0/NominalPrimitiveSubtypes.lean",
+      "sha256": "bbb14128583c0daa879ad28fc794a227a8511439daec27a749cc1946f7a4d3ac"
+    },
+    {
+      "bytes": 1367,
+      "path": "ordinary-full/records/build-0/package-set-receipt.json",
+      "sha256": "4f7c89e9c054e4f13b0916dd1c0a955a9e487a2cfddb210c74eb17cff53348a7"
+    },
+    {
+      "bytes": 1240,
+      "path": "ordinary-full/records/build-1/author-inputs.json",
+      "sha256": "25f9e7cd8be84b1a40547518b288145c8dd4b143efba3f1dbf7f9ea47cde188d"
+    },
+    {
+      "bytes": 82672,
+      "path": "ordinary-full/records/build-1/lean-bridge.exports.json",
+      "sha256": "f933b6fcacf6e677ac4fd51229af44cf51df7d35c34a4d36e5a46e9cb5311050"
+    },
+    {
+      "bytes": 1541655,
+      "path": "ordinary-full/records/build-1/model.json",
+      "sha256": "38a25fd352426181fd07d2566b07a3986aac0766ed04f2af24e926b15d9ed11a"
+    },
+    {
+      "bytes": 22309,
+      "path": "ordinary-full/records/build-1/native-jvm.json",
+      "sha256": "480353860c0c7bb53380cbb1a414b36f62a89e644cb9dd23467bcdfd57507671"
+    },
+    {
+      "bytes": 10887,
+      "path": "ordinary-full/records/build-1/NominalPrimitiveSubtypes.lean",
+      "sha256": "bbb14128583c0daa879ad28fc794a227a8511439daec27a749cc1946f7a4d3ac"
+    },
+    {
+      "bytes": 1367,
+      "path": "ordinary-full/records/build-1/package-set-receipt.json",
+      "sha256": "4f7c89e9c054e4f13b0916dd1c0a955a9e487a2cfddb210c74eb17cff53348a7"
+    },
+    {
+      "bytes": 82672,
+      "path": "ordinary-full/records/configuration.json",
+      "sha256": "f933b6fcacf6e677ac4fd51229af44cf51df7d35c34a4d36e5a46e9cb5311050"
+    },
+    {
+      "bytes": 21069,
+      "path": "ordinary-full/records/consumer.java",
+      "sha256": "f8ad155d51dd309f98cc4fe4166b6448a6894f15977906d167b956a76850228d"
+    },
+    {
+      "bytes": 17242,
+      "path": "ordinary-full/records/consumer.kt",
+      "sha256": "ca45b7d0592d76608e76ade43c00a38dde8fe9ffa9013b92980fd770e1bae6eb"
+    },
+    {
+      "bytes": 301070,
+      "path": "ordinary-full/records/expected.binding-ir.json",
+      "sha256": "741d5ceec67f40b702e3063159003a3c8f66d5a4dd6e8d56b5757848c2f96c6e"
+    },
+    {
+      "bytes": 634,
+      "path": "ordinary-full/records/handoff/archives/nominalprimitivesubtypes-1.0.0.pom",
+      "sha256": "86991a6b0a27181ce94646c805ede8d1b73df712a1a5b3ea148aa765ff5b3d90"
+    },
+    {
+      "bytes": 1367,
+      "path": "ordinary-full/records/handoff/package-set-receipt.json",
+      "sha256": "4f7c89e9c054e4f13b0916dd1c0a955a9e487a2cfddb210c74eb17cff53348a7"
+    },
+    {
+      "bytes": 91,
+      "path": "ordinary-full/records/handoff/package-set-receipt.json.sha256",
+      "sha256": "5c950b8067e508865626158d59eeda34b8827d76bd565a461ec635d10a774037"
+    },
+    {
+      "bytes": 423806,
+      "path": "ordinary-full/records/installation.json",
+      "sha256": "7bdb96b65fe696a994d1560fb717e4896c51a9280fc28ad6569deb507b7149b7"
+    },
+    {
+      "bytes": 1452,
+      "path": "ordinary-full/records/java/api-probe/classes/Probe.class",
+      "sha256": "c934146265e74b015dc20e604d4f69736729b816e6c0bdd2b523f0072843b05b"
+    },
+    {
+      "bytes": 594,
+      "path": "ordinary-full/records/java/api-probe/probe.java",
+      "sha256": "5ce57bb31cdecb1dae993205b81457d324d3a98a92aeebabca1fb013b6e11959"
+    },
+    {
+      "bytes": 1588,
+      "path": "ordinary-full/records/java/api-probe/record.json",
+      "sha256": "3d4eaa613b6f34c6daff90e62f691df4a68ad993f99d214b6f06e15d829e2fec"
+    },
+    {
+      "bytes": 824,
+      "path": "ordinary-full/records/java/installed.json",
+      "sha256": "2a4128359a2f39c9c630d39de87b0462f67a4bc27dcd9366796f5e39cb8c0d9b"
+    },
+    {
+      "bytes": 834,
+      "path": "ordinary-full/records/java/relocated.json",
+      "sha256": "b56b8130f922e0d162609214994e5e066cee7645f937523144f512c5cd14bc41"
+    },
+    {
+      "bytes": 1474,
+      "path": "ordinary-full/records/java/source-free.json",
+      "sha256": "bb1f473adb47a344d4e0233a26071649c544fdbf0caebf81de91f726d0a878be"
+    },
+    {
+      "bytes": 37,
+      "path": "ordinary-full/records/kotlin/api-probe/classes/META-INF/main.kotlin_module",
+      "sha256": "f6124cd5950d9dc426ecc61468e4fb6dc19bd3124c62578d1bf30be6af612bc4"
+    },
+    {
+      "bytes": 3737,
+      "path": "ordinary-full/records/kotlin/api-probe/classes/ProbeKt.class",
+      "sha256": "c514a647ff46cb32d0640b183fa1d60603b1c16fb72e2a1ff4fbf816d08796ba"
+    },
+    {
+      "bytes": 524,
+      "path": "ordinary-full/records/kotlin/api-probe/probe.kt",
+      "sha256": "63812c128564d3895ebab5ad23492f455f385d7302b4551f307d964487edc3f8"
+    },
+    {
+      "bytes": 1727,
+      "path": "ordinary-full/records/kotlin/api-probe/record.json",
+      "sha256": "d1e3d8b69c023c0ae4e132a5ba4acd8e1c058b43eb222fbb9861b0eacec6d4f1"
+    },
+    {
+      "bytes": 826,
+      "path": "ordinary-full/records/kotlin/installed.json",
+      "sha256": "e2a44f8164f7a766ece01c538ec0eecc7ba59bd2b91e9285557ce332b43ad490"
+    },
+    {
+      "bytes": 41,
+      "path": "ordinary-full/records/kotlin/nullability-false/classes/META-INF/main.kotlin_module",
+      "sha256": "14d9d137a46fc5f49ea00828cb3ad2d35b84c9918bbca55a496bdbdf5366c5f9"
+    },
+    {
+      "bytes": 3278,
+      "path": "ordinary-full/records/kotlin/nullability-false/classes/NullProbeKt.class",
+      "sha256": "db2b7ba5942c697c696d3a15efa3a7f11f36b2a9b94af5674014a6e004063602"
+    },
+    {
+      "bytes": 797,
+      "path": "ordinary-full/records/kotlin/nullability-false/NullProbe.kt",
+      "sha256": "6ad7fe8489ec314162d67eb132d61ee768dae4763aa0282d112fd39f40bd8a30"
+    },
+    {
+      "bytes": 2016,
+      "path": "ordinary-full/records/kotlin/nullability-false/record.json",
+      "sha256": "1db756df146fa1b0ad358bc0e5d867c1e579831b1435ba932b27448856336641"
+    },
+    {
+      "bytes": 200,
+      "path": "ordinary-full/records/kotlin/nullability-true/NullProbe.kt",
+      "sha256": "c250ec5e49fae155a5ffff0b79f413761d996d9c941b63d3046da7ad8c037924"
+    },
+    {
+      "bytes": 2041,
+      "path": "ordinary-full/records/kotlin/nullability-true/record.json",
+      "sha256": "d0588c3aedb6f2bda06952a99d427c18c1c738a9f9a9addff5516e3600f5a9a0"
+    },
+    {
+      "bytes": 836,
+      "path": "ordinary-full/records/kotlin/relocated.json",
+      "sha256": "503782667065ddd564069a4045e5287e568ae440c6d54d11dccaf58f1fdaa82e"
+    },
+    {
+      "bytes": 992,
+      "path": "ordinary-full/records/kotlin/source-free.json",
+      "sha256": "7cb37cfdc6b58c045c628b8da0420405292bdfc624c5dac12b2705c807933cf6"
+    },
+    {
+      "bytes": 105,
+      "path": "ordinary-full/records/package/META-INF/lean_bridge_org_leanbridge_nominalprimitivesubtypes.kotlin_module",
+      "sha256": "0fa99e39a9af65c82aa030e9b81d8579c4f23079ef0a116dd76bdb660066cd91"
+    },
+    {
+      "bytes": 1309,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/component/allocation-guard.h",
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    {
+      "bytes": 1542,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/component/artifacts.json",
+      "sha256": "f3476e593fa56bf294ca4f17312614fa2536d55f07e76118657b5db82ffb7470"
+    },
+    {
+      "bytes": 398651,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/component/binding-ir.json",
+      "sha256": "5bac94a18e8ed5f2de72106d99cea72c59854effdb985051736fdb478e6867a8"
+    },
+    {
+      "bytes": 26950,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/component/component.h",
+      "sha256": "435b1a99f9106ea310e546b1c0c6944694df29b90ea65b7d83a8dcce6d06769d"
+    },
+    {
+      "bytes": 105933,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/component/generated.lean",
+      "sha256": "1dfdd086b793dc2fa30143ffe2d0a3742b89ce3a56500452ddc9dc69b3482b90"
+    },
+    {
+      "bytes": 1295961,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/component/metadata.json",
+      "sha256": "d419551e6481cf072c3e0b090c4aa97c80b7f9b71a22f05bedc5b7ea4c9c9cc0"
+    },
+    {
+      "bytes": 1541655,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/component/model.json",
+      "sha256": "38a25fd352426181fd07d2566b07a3986aac0766ed04f2af24e926b15d9ed11a"
+    },
+    {
+      "bytes": 183815,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/component/native-component.json",
+      "sha256": "5b1384da4ca684f5a81cf76ef7888020236212862c0971e6507a253911fb3e6e"
+    },
+    {
+      "bytes": 7613,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/binding-manifest.json",
+      "sha256": "97ac27665e9697c5d2811921b887d88f07a10225e431c733e2392785b6a3af9e"
+    },
+    {
+      "bytes": 53306,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Api.java",
+      "sha256": "2eeeefb4359219a19ddd4c74a98b8aa3c1b55690317c1fcd85dbe299553e2efe"
+    },
+    {
+      "bytes": 126,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Event.java",
+      "sha256": "ff15365e6ad56e5048f5e58cdcbf51000566f656f3fc2bab2a0945fe1e272005"
+    },
+    {
+      "bytes": 529,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/EventBox.java",
+      "sha256": "bbf81153a7182e09b5f617db599795bb24b56fb3177ceaf16580273cdaa5da47"
+    },
+    {
+      "bytes": 621,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/EventChoices.java",
+      "sha256": "6d6c250364c1c848b3afabc95abaf62bbbd4487b0f9f23deaba5a6150e91c19d"
+    },
+    {
+      "bytes": 382,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/EventEmpty.java",
+      "sha256": "4e39582f332085808a4c4245f71147a3067afdb7fbeb344f8bab39298351ee2a"
+    },
+    {
+      "bytes": 2345,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/KotlinBridge.java",
+      "sha256": "8dd361e961a057e7e28144696cf750128e3a66dbba11328693af17cd7604b23c"
+    },
+    {
+      "bytes": 40965,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/KotlinRuntime.java",
+      "sha256": "1b10d66dc098c42b9ee77468dc971f8939459a10f42d4296530f3b4945a941c3"
+    },
+    {
+      "bytes": 254,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/LeanBridgeException.java",
+      "sha256": "23c881baf9ad2cf96114691a987976498db36bf78379cc3788877b96614ce4f0"
+    },
+    {
+      "bytes": 13607,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/NativeAssets.java",
+      "sha256": "d2aa7d16689d4bc554d274d0fdf65f33d8ac7907fa20e5e6bc0f3ebe6b8df892"
+    },
+    {
+      "bytes": 1057,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Option.java",
+      "sha256": "b072fbb0a662083cef9c0debd7e07f24051641f033684055a8cf2b05ae99ce85"
+    },
+    {
+      "bytes": 3789,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Packet.java",
+      "sha256": "48b2b022df2ec66f21ff54ae8db41be7338ee57088847b793b632a745250b670"
+    },
+    {
+      "bytes": 744,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/PacketPair.java",
+      "sha256": "59c75be58d9fa8bd72d22bc3db0f3fb7d905c36fb3e4f2d886504858392a8e5c"
+    },
+    {
+      "bytes": 721,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Pair.java",
+      "sha256": "47fcc48445e715de5eed47dbdc0ec89b7d8546910bbf62f14000f5d4c38f7db9"
+    },
+    {
+      "bytes": 3798,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/RawPacket.java",
+      "sha256": "6c782c1f7eec9b0b20b62fbc4ecde35e7a0bf157ce1906f599bd75a2c6a242b5"
+    },
+    {
+      "bytes": 1622,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Result.java",
+      "sha256": "0e435048daa7ab9fbf743ae4e7a3d0b05e9972c520c77bc4c525df691f0a1cd6"
+    },
+    {
+      "bytes": 36065,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Runtime.java",
+      "sha256": "b7ba692e6720be8d3cac7dec72475581949c561f3a106cea94d56b9117402eb1"
+    },
+    {
+      "bytes": 557,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Scope.java",
+      "sha256": "587a91c024beeedc6e4c012813e28da0ebeaa5a6b02e031f2af1f016f892d871"
+    },
+    {
+      "bytes": 79,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Unit.java",
+      "sha256": "fbfcbe47b820899d3f4296438b4b5af230516de1f34bea10c9cb72edfe807a42"
+    },
+    {
+      "bytes": 6497,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Api.kt",
+      "sha256": "2f8948534494b1c008f61c7b8cafbaf5637e39553a11c9b0a9b01a207b2b5239"
+    },
+    {
+      "bytes": 89,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Event.kt",
+      "sha256": "64171ff32cdd90e0162f42df46c1332c416fe0e34fd430ac5fe76e3081e13222"
+    },
+    {
+      "bytes": 697,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/EventBox.kt",
+      "sha256": "2c734abc7fac9eb2611b853627d3ff235561ed7f4ef2e72fd1d6ff40a24889e6"
+    },
+    {
+      "bytes": 1133,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/EventChoices.kt",
+      "sha256": "0ec66ee427dfa16352b312b67fe6e535cafe94ea756317d52e60032d5736004f"
+    },
+    {
+      "bytes": 427,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/EventEmpty.kt",
+      "sha256": "4928e6f764da8dfe4c5f0929e369d32c632d6a06e0be96efd4509e50c543c6fe"
+    },
+    {
+      "bytes": 162,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/LeanBridgeException.kt",
+      "sha256": "b924d6e6bb69acabd39189ff264120678af40bf4afc1d63e7bda6cb7fc0ce019"
+    },
+    {
+      "bytes": 1399,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Option.kt",
+      "sha256": "064574213f89ad0ea3215d95bb1eefbc7510533c2ea84388d375398afb41f2cf"
+    },
+    {
+      "bytes": 4593,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Packet.kt",
+      "sha256": "028c1c9a2bd8369b5ef059729649e6e7d63b36f5e9e716179194879d0073a1e4"
+    },
+    {
+      "bytes": 1227,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/PacketPair.kt",
+      "sha256": "dda1aae3ab4409aeeab20c4a01f3891c4f9c9d91929248c96306e34d41046409"
+    },
+    {
+      "bytes": 780,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Pair.kt",
+      "sha256": "cd28de307dbb5d8146ea717e0027b2fa7a2cbeb010d1ab1e9fb7f1a55efc4762"
+    },
+    {
+      "bytes": 4602,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/RawPacket.kt",
+      "sha256": "9da604cf82ae550397ce1ff515e83ba6fef217ec65cd80fc3ec6833245daf717"
+    },
+    {
+      "bytes": 1827,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Result.kt",
+      "sha256": "93b28b92f24716f5720fcb03bab783475ff98e0284e00892be119a734bd31ab8"
+    },
+    {
+      "bytes": 132,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Unit.kt",
+      "sha256": "496f247eb8f87640961142c97790a69ac43dc10bdff4e22da2c7336cc030536e"
+    },
+    {
+      "bytes": 1495,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/KotlinCalls.kt",
+      "sha256": "0ade139757953200a36dae9c146a110a1c7c127ca23498a1f8a6e974daa367c4"
+    },
+    {
+      "bytes": 9160,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/licenses/Lean-LICENSE",
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    {
+      "bytes": 81854,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/licenses/Lean-LICENSES",
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    {
+      "bytes": 1093,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/licenses/LeanBridge-LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 90032,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/licenses/source-notices.json",
+      "sha256": "c0a47dbdcfba465fa5b04aefaf5f7797f506b99c24a53689cb67479a15b899b1"
+    },
+    {
+      "bytes": 1093,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 1432,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/native-c-adapter.json",
+      "sha256": "502d0f979e729753ca8ed17530c89a0ea20ed23b17aca511543ac15f461e3293"
+    },
+    {
+      "bytes": 22309,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/native-jvm.json",
+      "sha256": "480353860c0c7bb53380cbb1a414b36f62a89e644cb9dd23467bcdfd57507671"
+    },
+    {
+      "bytes": 201060,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/package-receipt.json",
+      "sha256": "87b741fca0cbdd8c92db1a00e7715fd94c4981abccab35edbf13c9d1d72b63bf"
+    },
+    {
+      "bytes": 1466,
+      "path": "ordinary-full/records/package/META-INF/lean-bridge/runtime.json",
+      "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    },
+    {
+      "bytes": 23,
+      "path": "ordinary-full/records/package/META-INF/MANIFEST.MF",
+      "sha256": "172b7aa6ab69ed805e5a9b5bbdbc6e770091086734509d44117852fc10592f6b"
+    },
+    {
+      "bytes": 634,
+      "path": "ordinary-full/records/package/META-INF/maven/org.leanbridge/nominalprimitivesubtypes/pom.xml",
+      "sha256": "86991a6b0a27181ce94646c805ede8d1b73df712a1a5b3ea148aa765ff5b3d90"
+    },
+    {
+      "bytes": 3004,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/Api.class",
+      "sha256": "9065a4a9a06491e8f85e2a7239cbcf38baa5d7699e5d843f36af5b187f4a5086"
+    },
+    {
+      "bytes": 301,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/Event.class",
+      "sha256": "a74db6632a00ef0c10aaa9b521f9625fb2b5c09dd36f696f7f322f4fe0daedfb"
+    },
+    {
+      "bytes": 1416,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/EventBox.class",
+      "sha256": "ff04f6bb50fcd389fe05dadd1895082fd4646ebacf54dbd8caa675889084e077"
+    },
+    {
+      "bytes": 2077,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/EventChoices.class",
+      "sha256": "90c6d66581c47aae8ab21adab0fc618803030b2aedde430cd7842f83e5aa7ae5"
+    },
+    {
+      "bytes": 1052,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/EventEmpty.class",
+      "sha256": "52a3fdb4937bd8dc321721087d97d42d84095ed75a282396ba605bbae491424b"
+    },
+    {
+      "bytes": 5252,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Api.class",
+      "sha256": "9dfc786de0c62e25462e6f244f28895894c60ee0a9fb449d92c196e0c29e4192"
+    },
+    {
+      "bytes": 7912,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Api$Companion.class",
+      "sha256": "7964281b294d4f22a81b9ffd57888bd1c8cd4df320a6913eed566c7dc7ebf2c5"
+    },
+    {
+      "bytes": 874,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Event.class",
+      "sha256": "5b5bc8318a81f654c9d435df2714d1e57e63bad85fd679b542cb70c973dca543"
+    },
+    {
+      "bytes": 1918,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/EventBox.class",
+      "sha256": "0600ef3518a69f19d3c16d7c2a0844c9c070090aee70105132ac2954626e1c04"
+    },
+    {
+      "bytes": 2939,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/EventChoices.class",
+      "sha256": "160548e5351167a84e4b7b28033344c99e33ccd064d73ec13c3e1d8abd725bc3"
+    },
+    {
+      "bytes": 1208,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/EventEmpty.class",
+      "sha256": "ee953391e7ec1f2f4f235d3c78dbc764302ea183edb63e507053844d4c3e83d9"
+    },
+    {
+      "bytes": 484,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/LeanBridgeExceptionKt.class",
+      "sha256": "c217bc4947ce6d3a9a3c2a390da094878b364878733070db25906e5586e3fb1c"
+    },
+    {
+      "bytes": 2035,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Option.class",
+      "sha256": "d23e6f9a3141bd8c7bce4f52d06f6f6afb5bfbe7ae5ebb724756938387f54338"
+    },
+    {
+      "bytes": 1996,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Option$Companion.class",
+      "sha256": "320294a4c2505a06cbbf9fe11180ff19c468c4cb216e6ab8b216eebc658a6518"
+    },
+    {
+      "bytes": 1790,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Option$None.class",
+      "sha256": "dd51f251bb85d794c21e24ef9f40d20fb4eb96f37739e83a98713bd1c74b8333"
+    },
+    {
+      "bytes": 2201,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Option$Some.class",
+      "sha256": "a7c4de4bd047c24579dc83706a0ce6006d3b85e71f5ec5a37fe8343971bb1577"
+    },
+    {
+      "bytes": 6492,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Packet.class",
+      "sha256": "0105f13bad226d24cccd16755bf3242cce684329c42c48202a1bcab4ae38b912"
+    },
+    {
+      "bytes": 2809,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/PacketPair.class",
+      "sha256": "844266f68cb577956534e939bf26be322daf9a5bd0d706fea498f6962bd22cab"
+    },
+    {
+      "bytes": 2190,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Pair.class",
+      "sha256": "2448e659b9a65bf9f40bd8a846b9ae15f5c4158d5eb1af1210e2b016b87ca17a"
+    },
+    {
+      "bytes": 6501,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/RawPacket.class",
+      "sha256": "8109fb37161b4faa591e6656f2ac6a16466acb544dab99eac3cef9f54b022462"
+    },
+    {
+      "bytes": 2145,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Result.class",
+      "sha256": "a5c9e7d81dd3225ecfbdcbda6aebb554c5e8859ee9c86c2cafd69e39ba2eac44"
+    },
+    {
+      "bytes": 2073,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Result$Companion.class",
+      "sha256": "d7d1f401c2252fe75e365ec6b102c02beb4e143655be3005e5ffad10a5e66d10"
+    },
+    {
+      "bytes": 2469,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Result$Err.class",
+      "sha256": "e0d7206b77fc6312f45de568ba15111c01eee86430fc12c93e057cdeb027fc63"
+    },
+    {
+      "bytes": 2457,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Result$Ok.class",
+      "sha256": "b85887197dc43ea14413af594e4bf3c9280737d5833213cf905a791ce547254e"
+    },
+    {
+      "bytes": 424,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/UnitKt.class",
+      "sha256": "a2ad1e444a8a3ac7de852d6a59eaadecd2c9cdbe72a0d1f156513809cf8d55df"
+    },
+    {
+      "bytes": 2628,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/KotlinBridge.class",
+      "sha256": "24de1df6d2aa4ba2e50aa31d2a66df414f9274a404d914ae0ab08cc89414d93b"
+    },
+    {
+      "bytes": 2572,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/KotlinCalls.class",
+      "sha256": "615104b4e726713467189c6c6d052abac8a565ec3fdfd088d52b48e6418d13f5"
+    },
+    {
+      "bytes": 34843,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/KotlinRuntime.class",
+      "sha256": "31da4bd74c2ccea5dd055d6d3fda9b8a3edfdf06c8a826be90ffa2b510c547ea"
+    },
+    {
+      "bytes": 289,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/LeanBridgeException.class",
+      "sha256": "e160c434bb8a3695e175d0e118b6201b8ccd6ab7f595e4bc00eefbf66713ff5a"
+    },
+    {
+      "bytes": 440,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/NativeAssets.class",
+      "sha256": "167f789939d6c391f2270f1abddb185e0fe8bcaa0eb9e292adaec764ef8d15e9"
+    },
+    {
+      "bytes": 13428,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/NativeAssets$_Assets.class",
+      "sha256": "b926f270bb077e4d01fee607c59aa190814dd80485926639d0a824593aa51f61"
+    },
+    {
+      "bytes": 918,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/Option.class",
+      "sha256": "0e8908aa87b6857e75260e76277d32d0006956301ef5c64ff9774c4433fe3a70"
+    },
+    {
+      "bytes": 1436,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/Option$None.class",
+      "sha256": "293cc5611d42c07e89b4eb4861296b09cef43589e5274f37640ab5de2f585b49"
+    },
+    {
+      "bytes": 1654,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/Option$Some.class",
+      "sha256": "f120a863424b5f529bfdaf683ab721c95ab3763fe1f21ed50b2a251db5b4d434"
+    },
+    {
+      "bytes": 4370,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/Packet.class",
+      "sha256": "08114404db611f78d38b424ba9d35304aef2da9ad5fdb6ee64514bd6ea9e2db5"
+    },
+    {
+      "bytes": 2008,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/PacketPair.class",
+      "sha256": "19a6b0e967e456f592f004b3825615ec6009f8e9b1ff380505d5c06fcb53c185"
+    },
+    {
+      "bytes": 1655,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/Pair.class",
+      "sha256": "d1e6330c8950f24ff2c890e46c98569dce2187f6268bbd7eafb3b7f98fc087ff"
+    },
+    {
+      "bytes": 4376,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/RawPacket.class",
+      "sha256": "5f530683097cd8491435b4131d6da2b7b0315a5567f58a7d1e6524856419efba"
+    },
+    {
+      "bytes": 945,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/Result.class",
+      "sha256": "47ecc96eae40a636858d275e1402f6f7e58aecdfb30ebedc0acfe71f5791106c"
+    },
+    {
+      "bytes": 1833,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/Result$Err.class",
+      "sha256": "bde2b94a843f1017a90f4732322dd57f02bd6f1efb517cfb91b2ea66d1e7f4e9"
+    },
+    {
+      "bytes": 1821,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/Result$Ok.class",
+      "sha256": "8ca69c9114eae41be1aafcdd4c3e51d3af49d265119f00b7591416156eef497e"
+    },
+    {
+      "bytes": 34027,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/Runtime.class",
+      "sha256": "db2f3d241b07a66b1b700988e4efbdf116c0394d5f495199f5294ea8408446b6"
+    },
+    {
+      "bytes": 677,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/Scope.class",
+      "sha256": "ee8d23b43cf77e06fb42526a68501979d900a33538103ac2f9e4ce55f51628a9"
+    },
+    {
+      "bytes": 924,
+      "path": "ordinary-full/records/package/org/leanbridge/nominalprimitivesubtypes/Unit.class",
+      "sha256": "bbe10b1b784cfaad2969c79b1882920883ff6079b123fa3d75df2087fd6626ea"
+    },
+    {
+      "bytes": 56707,
+      "path": "ordinary-full/records/package/README.md",
+      "sha256": "dac70676af83e71e157399e9df4db50c93fdf9d284ef26479f6f6e965108d8e6"
+    },
+    {
+      "bytes": 887228,
+      "path": "ordinary-full/records/report.json",
+      "sha256": "b5952d7eccbb1ac8b51cdca499806487ffee5f165eb64d90d046adf5edebf96e"
+    },
+    {
+      "bytes": 812,
+      "path": "ordinary-full/records/resources.json",
+      "sha256": "27c590476e9111cf939d0c48a138887ddd36f975ead8001be4881d2f6a4b7563"
+    },
+    {
+      "bytes": 123,
+      "path": "ordinary-full/records/runtime.json",
+      "sha256": "c2f1b9d72bf412b57880eaf2e5f14f071577bea6210298d5c0d82c529f20d81e"
+    },
+    {
+      "bytes": 331,
+      "path": "ordinary-result-only/controls/controls.end.json",
+      "sha256": "13afdbe23c18aff796d055af4a7d56e1ae8c69144cfbdc2ae71b5fb457061efa"
+    },
+    {
+      "bytes": 19580,
+      "path": "ordinary-result-only/controls/controls.json",
+      "sha256": "3f1a7cf9fcc9ea527590a61659b7b0d1306e1609fd84d645a3f3441718ea346c"
+    },
+    {
+      "bytes": 886,
+      "path": "ordinary-result-only/controls/controls.log",
+      "sha256": "279753b686c708f53fb1f5ba0ae1e81cc44234c79ec3a01787cded4ddd417abd"
+    },
+    {
+      "bytes": 8325,
+      "path": "ordinary-result-only/controls/controls.start.json",
+      "sha256": "0b5e2a1904a9d926669984006ebe0b288df7b0f3bac4cbf28ded404bee64a782"
+    },
+    {
+      "bytes": 330,
+      "path": "ordinary-result-only/producer/end.json",
+      "sha256": "9ae5bccc356284aaf7c544f8fe2d2511ed467820312505e32818e5ad3c836c2a"
+    },
+    {
+      "bytes": 496,
+      "path": "ordinary-result-only/producer/run.tap",
+      "sha256": "da875f8f831bf534bdbce66409f9dda9bbe72c0581b3412bca61bf56daaa5c7e"
+    },
+    {
+      "bytes": 3181,
+      "path": "ordinary-result-only/producer/start.json",
+      "sha256": "1c58efa5bf73faf2537488df2c28e153cf348a458abf0757b3cd0bdd67f7bbeb"
+    },
+    {
+      "bytes": 1248,
+      "path": "ordinary-result-only/records/build-0/author-inputs.json",
+      "sha256": "eb235971531792eda4024aa8ff8f5e63d726bf225a794ac93e71c64a91b8f248"
+    },
+    {
+      "bytes": 480,
+      "path": "ordinary-result-only/records/build-0/lean-bridge.exports.json",
+      "sha256": "451de7bf55fc4d818cfd3aa188d695c192cd3ca4be3ace9bec6a25d7a6f03b83"
+    },
+    {
+      "bytes": 520132,
+      "path": "ordinary-result-only/records/build-0/model.json",
+      "sha256": "97bcc01ed2f9528e2d528202f7124963b28f023b4f6bc6116e7218cb0cc5aded"
+    },
+    {
+      "bytes": 22307,
+      "path": "ordinary-result-only/records/build-0/native-jvm.json",
+      "sha256": "ae4f7a54b4e4fa67e815bbd95d0a3c54e5aed090c060b6a6efe5bd2d31af2971"
+    },
+    {
+      "bytes": 10887,
+      "path": "ordinary-result-only/records/build-0/NominalPrimitiveSubtypes.lean",
+      "sha256": "bbb14128583c0daa879ad28fc794a227a8511439daec27a749cc1946f7a4d3ac"
+    },
+    {
+      "bytes": 1367,
+      "path": "ordinary-result-only/records/build-0/package-set-receipt.json",
+      "sha256": "9d360a214fe257087b4103f2c79f28d44769dda6237ed9527c67d87dcdf07e7e"
+    },
+    {
+      "bytes": 1248,
+      "path": "ordinary-result-only/records/build-1/author-inputs.json",
+      "sha256": "9dde2875832037e41a36601866b59e3b48a32b08cc7d39c4c5837f738b578576"
+    },
+    {
+      "bytes": 480,
+      "path": "ordinary-result-only/records/build-1/lean-bridge.exports.json",
+      "sha256": "451de7bf55fc4d818cfd3aa188d695c192cd3ca4be3ace9bec6a25d7a6f03b83"
+    },
+    {
+      "bytes": 520132,
+      "path": "ordinary-result-only/records/build-1/model.json",
+      "sha256": "97bcc01ed2f9528e2d528202f7124963b28f023b4f6bc6116e7218cb0cc5aded"
+    },
+    {
+      "bytes": 22307,
+      "path": "ordinary-result-only/records/build-1/native-jvm.json",
+      "sha256": "ae4f7a54b4e4fa67e815bbd95d0a3c54e5aed090c060b6a6efe5bd2d31af2971"
+    },
+    {
+      "bytes": 10887,
+      "path": "ordinary-result-only/records/build-1/NominalPrimitiveSubtypes.lean",
+      "sha256": "bbb14128583c0daa879ad28fc794a227a8511439daec27a749cc1946f7a4d3ac"
+    },
+    {
+      "bytes": 1367,
+      "path": "ordinary-result-only/records/build-1/package-set-receipt.json",
+      "sha256": "9d360a214fe257087b4103f2c79f28d44769dda6237ed9527c67d87dcdf07e7e"
+    },
+    {
+      "bytes": 480,
+      "path": "ordinary-result-only/records/configuration.json",
+      "sha256": "451de7bf55fc4d818cfd3aa188d695c192cd3ca4be3ace9bec6a25d7a6f03b83"
+    },
+    {
+      "bytes": 15954,
+      "path": "ordinary-result-only/records/consumer.java",
+      "sha256": "3d2a8b7afcc5aba76612e7a24d5374818542c02550734da2ca5a96878ff573d9"
+    },
+    {
+      "bytes": 12601,
+      "path": "ordinary-result-only/records/consumer.kt",
+      "sha256": "989a6460d915fd7857bcb37e666637bb1115a13e43beb84a507df1e6af0e3d2d"
+    },
+    {
+      "bytes": 97357,
+      "path": "ordinary-result-only/records/expected.binding-ir.json",
+      "sha256": "64033224412a89cce86ef07c54e8949664fd1d93f0bd4c6cfafe35d2440bc6f0"
+    },
+    {
+      "bytes": 634,
+      "path": "ordinary-result-only/records/handoff/archives/nominalprimitivesubtypes-1.0.0.pom",
+      "sha256": "86991a6b0a27181ce94646c805ede8d1b73df712a1a5b3ea148aa765ff5b3d90"
+    },
+    {
+      "bytes": 1367,
+      "path": "ordinary-result-only/records/handoff/package-set-receipt.json",
+      "sha256": "9d360a214fe257087b4103f2c79f28d44769dda6237ed9527c67d87dcdf07e7e"
+    },
+    {
+      "bytes": 91,
+      "path": "ordinary-result-only/records/handoff/package-set-receipt.json.sha256",
+      "sha256": "9cc5a10e0a7ce50df9600599c809af179f1eef3dedb905cdb0d80bb4508b4df0"
+    },
+    {
+      "bytes": 48154,
+      "path": "ordinary-result-only/records/installation.json",
+      "sha256": "d542d7d2bbc54fd282453c62ff570a5d61910ff97b9a9987c313da8452436da0"
+    },
+    {
+      "bytes": 594,
+      "path": "ordinary-result-only/records/java/api-probe/probe.java",
+      "sha256": "5ce57bb31cdecb1dae993205b81457d324d3a98a92aeebabca1fb013b6e11959"
+    },
+    {
+      "bytes": 3158,
+      "path": "ordinary-result-only/records/java/api-probe/record.json",
+      "sha256": "850a9ce6428db07f2b83673d99d13cbd1eec5df77a94f45ddec11bec54411dcb"
+    },
+    {
+      "bytes": 818,
+      "path": "ordinary-result-only/records/java/installed.json",
+      "sha256": "16a2b85c6f8abca721bae2eea81a802def0311910bf07dad56d4bf541d61cdc3"
+    },
+    {
+      "bytes": 828,
+      "path": "ordinary-result-only/records/java/relocated.json",
+      "sha256": "d3706bb4f459d91d6ab317b0a9d73d830946bc519000aa04b1dec9428753a0cb"
+    },
+    {
+      "bytes": 1309,
+      "path": "ordinary-result-only/records/java/source-free.json",
+      "sha256": "ab526f7138a4ca9fcddf12549ad18642e7fdd4c993e2c482cad9a018a158e542"
+    },
+    {
+      "bytes": 524,
+      "path": "ordinary-result-only/records/kotlin/api-probe/probe.kt",
+      "sha256": "63812c128564d3895ebab5ad23492f455f385d7302b4551f307d964487edc3f8"
+    },
+    {
+      "bytes": 2966,
+      "path": "ordinary-result-only/records/kotlin/api-probe/record.json",
+      "sha256": "8edd0d3d7be35e2160c439446458ee158548b7e8f9a2a4b189d7bf6b87356f48"
+    },
+    {
+      "bytes": 820,
+      "path": "ordinary-result-only/records/kotlin/installed.json",
+      "sha256": "03ad0f5d6e3f72df2221abd696ae5b10ffdc580fc17f9f93701733ec7f48bcf9"
+    },
+    {
+      "bytes": 41,
+      "path": "ordinary-result-only/records/kotlin/nullability-false/classes/META-INF/main.kotlin_module",
+      "sha256": "14d9d137a46fc5f49ea00828cb3ad2d35b84c9918bbca55a496bdbdf5366c5f9"
+    },
+    {
+      "bytes": 1832,
+      "path": "ordinary-result-only/records/kotlin/nullability-false/classes/NullProbeKt.class",
+      "sha256": "76436154ee41e8a4cef01b12bc42ed695e3a00eba692dc83b4bac61715c941ae"
+    },
+    {
+      "bytes": 362,
+      "path": "ordinary-result-only/records/kotlin/nullability-false/NullProbe.kt",
+      "sha256": "348bc238d55d001ba0e92c70528a5abd57d5e26a174ce0e61e1ce2195219ea64"
+    },
+    {
+      "bytes": 1583,
+      "path": "ordinary-result-only/records/kotlin/nullability-false/record.json",
+      "sha256": "470eddcb674bff97af14b1696286ebeeb0e4adf300a3762d6f9b3b5330140244"
+    },
+    {
+      "bytes": 90,
+      "path": "ordinary-result-only/records/kotlin/nullability-true/NullProbe.kt",
+      "sha256": "982315da2a53f858f268142e476abeb30a96f95382fe896bcd152c44c7614296"
+    },
+    {
+      "bytes": 1196,
+      "path": "ordinary-result-only/records/kotlin/nullability-true/record.json",
+      "sha256": "eaf1be97c94e64a2cf2dbe3c98470fa77901d3fbda1e472d92e8c443ad5f0c76"
+    },
+    {
+      "bytes": 830,
+      "path": "ordinary-result-only/records/kotlin/relocated.json",
+      "sha256": "374cb6df04485b014c081a4e2052146f690f612fa2d5d76c55a11dc646b467f4"
+    },
+    {
+      "bytes": 986,
+      "path": "ordinary-result-only/records/kotlin/source-free.json",
+      "sha256": "b747a8122a892e52aa86ecd14fe3947973d3e67524394052aabc970c1bdc5460"
+    },
+    {
+      "bytes": 105,
+      "path": "ordinary-result-only/records/package/META-INF/lean_bridge_org_leanbridge_nominalprimitivesubtypes.kotlin_module",
+      "sha256": "0fa99e39a9af65c82aa030e9b81d8579c4f23079ef0a116dd76bdb660066cd91"
+    },
+    {
+      "bytes": 1309,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/component/allocation-guard.h",
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    {
+      "bytes": 1534,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/component/artifacts.json",
+      "sha256": "3d9ca9a6a99204d5a7ec15a59494f01872b7b74a2d7e5b517c33849a127eb982"
+    },
+    {
+      "bytes": 98317,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/component/binding-ir.json",
+      "sha256": "02c715e1a2d10ab480d9997e4a537a45e9c1fbe82ad48faf08c42ddb5ddf25b0"
+    },
+    {
+      "bytes": 5211,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/component/component.h",
+      "sha256": "af11959758b975651339fbbb5f7791c595d72f52ef7ee520c0113559f75dd69a"
+    },
+    {
+      "bytes": 20892,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/component/generated.lean",
+      "sha256": "0d92182755ea825dff37f1d129963fb9c82a550ade38e4bfb523152111108908"
+    },
+    {
+      "bytes": 482972,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/component/metadata.json",
+      "sha256": "2f741554fd5f2cef171bdc07a437fb2d30b46a2d6ccb98bae34eef14465f15ce"
+    },
+    {
+      "bytes": 520132,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/component/model.json",
+      "sha256": "97bcc01ed2f9528e2d528202f7124963b28f023b4f6bc6116e7218cb0cc5aded"
+    },
+    {
+      "bytes": 4487,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/component/native-component.json",
+      "sha256": "40ce32e642aba88cfa8770317521dedb8a208a202e9f207d3ad74b6637fbe469"
+    },
+    {
+      "bytes": 7613,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/binding-manifest.json",
+      "sha256": "6635a214210cc9171e3aad78b5a958c9490366d65a8c3707ae5a8f4b2f0562e5"
+    },
+    {
+      "bytes": 14465,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Api.java",
+      "sha256": "0eea24ea58a498f7860b46c6e0a3c6e19604541222fa76b2f09552094ee1d51c"
+    },
+    {
+      "bytes": 126,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Event.java",
+      "sha256": "ff15365e6ad56e5048f5e58cdcbf51000566f656f3fc2bab2a0945fe1e272005"
+    },
+    {
+      "bytes": 529,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/EventBox.java",
+      "sha256": "bbf81153a7182e09b5f617db599795bb24b56fb3177ceaf16580273cdaa5da47"
+    },
+    {
+      "bytes": 621,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/EventChoices.java",
+      "sha256": "6d6c250364c1c848b3afabc95abaf62bbbd4487b0f9f23deaba5a6150e91c19d"
+    },
+    {
+      "bytes": 382,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/EventEmpty.java",
+      "sha256": "4e39582f332085808a4c4245f71147a3067afdb7fbeb344f8bab39298351ee2a"
+    },
+    {
+      "bytes": 937,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/KotlinBridge.java",
+      "sha256": "e9773657970fb8fbd85a3942bf8c0adcac2bfc782f5da40814df1a58decfb173"
+    },
+    {
+      "bytes": 32015,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/KotlinRuntime.java",
+      "sha256": "0d4bccf0ac87ebe0fecff947184ad5ea2048b31c6290712bb620121332256bff"
+    },
+    {
+      "bytes": 254,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/LeanBridgeException.java",
+      "sha256": "23c881baf9ad2cf96114691a987976498db36bf78379cc3788877b96614ce4f0"
+    },
+    {
+      "bytes": 13607,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/NativeAssets.java",
+      "sha256": "c5faa71d58cb6be279ddba9233cb45b05915d38b88fc011ffa486bb28cae5fec"
+    },
+    {
+      "bytes": 1057,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Option.java",
+      "sha256": "b072fbb0a662083cef9c0debd7e07f24051641f033684055a8cf2b05ae99ce85"
+    },
+    {
+      "bytes": 3789,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Packet.java",
+      "sha256": "48b2b022df2ec66f21ff54ae8db41be7338ee57088847b793b632a745250b670"
+    },
+    {
+      "bytes": 744,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/PacketPair.java",
+      "sha256": "59c75be58d9fa8bd72d22bc3db0f3fb7d905c36fb3e4f2d886504858392a8e5c"
+    },
+    {
+      "bytes": 721,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Pair.java",
+      "sha256": "47fcc48445e715de5eed47dbdc0ec89b7d8546910bbf62f14000f5d4c38f7db9"
+    },
+    {
+      "bytes": 3798,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/RawPacket.java",
+      "sha256": "6c782c1f7eec9b0b20b62fbc4ecde35e7a0bf157ce1906f599bd75a2c6a242b5"
+    },
+    {
+      "bytes": 1622,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Result.java",
+      "sha256": "0e435048daa7ab9fbf743ae4e7a3d0b05e9972c520c77bc4c525df691f0a1cd6"
+    },
+    {
+      "bytes": 28525,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Runtime.java",
+      "sha256": "1b786a35c3d8734e5cb21dc7f3907eb67ac12073c86c638c467f54e07d54748c"
+    },
+    {
+      "bytes": 557,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Scope.java",
+      "sha256": "587a91c024beeedc6e4c012813e28da0ebeaa5a6b02e031f2af1f016f892d871"
+    },
+    {
+      "bytes": 79,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Unit.java",
+      "sha256": "fbfcbe47b820899d3f4296438b4b5af230516de1f34bea10c9cb72edfe807a42"
+    },
+    {
+      "bytes": 2627,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Api.kt",
+      "sha256": "cd0e6d4b318084df5d0262ab0a96fb10f66eb549339c038d8f3e7daa143c3d24"
+    },
+    {
+      "bytes": 89,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Event.kt",
+      "sha256": "64171ff32cdd90e0162f42df46c1332c416fe0e34fd430ac5fe76e3081e13222"
+    },
+    {
+      "bytes": 697,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/EventBox.kt",
+      "sha256": "2c734abc7fac9eb2611b853627d3ff235561ed7f4ef2e72fd1d6ff40a24889e6"
+    },
+    {
+      "bytes": 1133,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/EventChoices.kt",
+      "sha256": "0ec66ee427dfa16352b312b67fe6e535cafe94ea756317d52e60032d5736004f"
+    },
+    {
+      "bytes": 427,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/EventEmpty.kt",
+      "sha256": "4928e6f764da8dfe4c5f0929e369d32c632d6a06e0be96efd4509e50c543c6fe"
+    },
+    {
+      "bytes": 162,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/LeanBridgeException.kt",
+      "sha256": "b924d6e6bb69acabd39189ff264120678af40bf4afc1d63e7bda6cb7fc0ce019"
+    },
+    {
+      "bytes": 1399,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Option.kt",
+      "sha256": "064574213f89ad0ea3215d95bb1eefbc7510533c2ea84388d375398afb41f2cf"
+    },
+    {
+      "bytes": 4593,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Packet.kt",
+      "sha256": "028c1c9a2bd8369b5ef059729649e6e7d63b36f5e9e716179194879d0073a1e4"
+    },
+    {
+      "bytes": 1227,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/PacketPair.kt",
+      "sha256": "dda1aae3ab4409aeeab20c4a01f3891c4f9c9d91929248c96306e34d41046409"
+    },
+    {
+      "bytes": 780,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Pair.kt",
+      "sha256": "cd28de307dbb5d8146ea717e0027b2fa7a2cbeb010d1ab1e9fb7f1a55efc4762"
+    },
+    {
+      "bytes": 4602,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/RawPacket.kt",
+      "sha256": "9da604cf82ae550397ce1ff515e83ba6fef217ec65cd80fc3ec6833245daf717"
+    },
+    {
+      "bytes": 1827,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Result.kt",
+      "sha256": "93b28b92f24716f5720fcb03bab783475ff98e0284e00892be119a734bd31ab8"
+    },
+    {
+      "bytes": 132,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Unit.kt",
+      "sha256": "496f247eb8f87640961142c97790a69ac43dc10bdff4e22da2c7336cc030536e"
+    },
+    {
+      "bytes": 653,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/KotlinCalls.kt",
+      "sha256": "33ce79e9c5411de073015009422e9acc042585ca758d0b70de0ee15c379076a6"
+    },
+    {
+      "bytes": 9160,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/licenses/Lean-LICENSE",
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    {
+      "bytes": 81854,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/licenses/Lean-LICENSES",
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    {
+      "bytes": 1093,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/licenses/LeanBridge-LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 2260,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/licenses/source-notices.json",
+      "sha256": "89dfe1416ae1d122f33a7d976f3f3d23bf17daf79dd156c8d5a5ee4653d49ff6"
+    },
+    {
+      "bytes": 1093,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 1429,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/native-c-adapter.json",
+      "sha256": "22a4f69e4c68c31ed97bba986415c49e55809c6b7ed7ee165883cebde9f72c49"
+    },
+    {
+      "bytes": 22307,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/native-jvm.json",
+      "sha256": "ae4f7a54b4e4fa67e815bbd95d0a3c54e5aed090c060b6a6efe5bd2d31af2971"
+    },
+    {
+      "bytes": 22655,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/package-receipt.json",
+      "sha256": "ffadaaca670fc424544e7d6156c0185908f5abafc68c830a89481ab78c5d9e60"
+    },
+    {
+      "bytes": 1466,
+      "path": "ordinary-result-only/records/package/META-INF/lean-bridge/runtime.json",
+      "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    },
+    {
+      "bytes": 23,
+      "path": "ordinary-result-only/records/package/META-INF/MANIFEST.MF",
+      "sha256": "172b7aa6ab69ed805e5a9b5bbdbc6e770091086734509d44117852fc10592f6b"
+    },
+    {
+      "bytes": 634,
+      "path": "ordinary-result-only/records/package/META-INF/maven/org.leanbridge/nominalprimitivesubtypes/pom.xml",
+      "sha256": "86991a6b0a27181ce94646c805ede8d1b73df712a1a5b3ea148aa765ff5b3d90"
+    },
+    {
+      "bytes": 1349,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/Api.class",
+      "sha256": "43c4af1fbc52022c94a8697ee00550642e6532a45982278e7e07417f0bd0c5d4"
+    },
+    {
+      "bytes": 301,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/Event.class",
+      "sha256": "a74db6632a00ef0c10aaa9b521f9625fb2b5c09dd36f696f7f322f4fe0daedfb"
+    },
+    {
+      "bytes": 1416,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/EventBox.class",
+      "sha256": "ff04f6bb50fcd389fe05dadd1895082fd4646ebacf54dbd8caa675889084e077"
+    },
+    {
+      "bytes": 2077,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/EventChoices.class",
+      "sha256": "90c6d66581c47aae8ab21adab0fc618803030b2aedde430cd7842f83e5aa7ae5"
+    },
+    {
+      "bytes": 1052,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/EventEmpty.class",
+      "sha256": "52a3fdb4937bd8dc321721087d97d42d84095ed75a282396ba605bbae491424b"
+    },
+    {
+      "bytes": 2669,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Api.class",
+      "sha256": "a54f759843c86d9a6354fed6536a87589d71e2f320c8a68cb7483257776bd8df"
+    },
+    {
+      "bytes": 4498,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Api$Companion.class",
+      "sha256": "bbc5a33a8a96c22372dd90f0a8c5ebe78f31cb29de14a6bc3820734e453e4e2d"
+    },
+    {
+      "bytes": 874,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Event.class",
+      "sha256": "5b5bc8318a81f654c9d435df2714d1e57e63bad85fd679b542cb70c973dca543"
+    },
+    {
+      "bytes": 1918,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/EventBox.class",
+      "sha256": "0600ef3518a69f19d3c16d7c2a0844c9c070090aee70105132ac2954626e1c04"
+    },
+    {
+      "bytes": 2939,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/EventChoices.class",
+      "sha256": "160548e5351167a84e4b7b28033344c99e33ccd064d73ec13c3e1d8abd725bc3"
+    },
+    {
+      "bytes": 1208,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/EventEmpty.class",
+      "sha256": "ee953391e7ec1f2f4f235d3c78dbc764302ea183edb63e507053844d4c3e83d9"
+    },
+    {
+      "bytes": 484,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/LeanBridgeExceptionKt.class",
+      "sha256": "c217bc4947ce6d3a9a3c2a390da094878b364878733070db25906e5586e3fb1c"
+    },
+    {
+      "bytes": 2035,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Option.class",
+      "sha256": "d23e6f9a3141bd8c7bce4f52d06f6f6afb5bfbe7ae5ebb724756938387f54338"
+    },
+    {
+      "bytes": 1996,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Option$Companion.class",
+      "sha256": "320294a4c2505a06cbbf9fe11180ff19c468c4cb216e6ab8b216eebc658a6518"
+    },
+    {
+      "bytes": 1790,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Option$None.class",
+      "sha256": "dd51f251bb85d794c21e24ef9f40d20fb4eb96f37739e83a98713bd1c74b8333"
+    },
+    {
+      "bytes": 2201,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Option$Some.class",
+      "sha256": "a7c4de4bd047c24579dc83706a0ce6006d3b85e71f5ec5a37fe8343971bb1577"
+    },
+    {
+      "bytes": 6492,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Packet.class",
+      "sha256": "0105f13bad226d24cccd16755bf3242cce684329c42c48202a1bcab4ae38b912"
+    },
+    {
+      "bytes": 2809,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/PacketPair.class",
+      "sha256": "844266f68cb577956534e939bf26be322daf9a5bd0d706fea498f6962bd22cab"
+    },
+    {
+      "bytes": 2190,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Pair.class",
+      "sha256": "2448e659b9a65bf9f40bd8a846b9ae15f5c4158d5eb1af1210e2b016b87ca17a"
+    },
+    {
+      "bytes": 6501,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/RawPacket.class",
+      "sha256": "8109fb37161b4faa591e6656f2ac6a16466acb544dab99eac3cef9f54b022462"
+    },
+    {
+      "bytes": 2145,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Result.class",
+      "sha256": "a5c9e7d81dd3225ecfbdcbda6aebb554c5e8859ee9c86c2cafd69e39ba2eac44"
+    },
+    {
+      "bytes": 2073,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Result$Companion.class",
+      "sha256": "d7d1f401c2252fe75e365ec6b102c02beb4e143655be3005e5ffad10a5e66d10"
+    },
+    {
+      "bytes": 2469,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Result$Err.class",
+      "sha256": "e0d7206b77fc6312f45de568ba15111c01eee86430fc12c93e057cdeb027fc63"
+    },
+    {
+      "bytes": 2457,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Result$Ok.class",
+      "sha256": "b85887197dc43ea14413af594e4bf3c9280737d5833213cf905a791ce547254e"
+    },
+    {
+      "bytes": 424,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/UnitKt.class",
+      "sha256": "a2ad1e444a8a3ac7de852d6a59eaadecd2c9cdbe72a0d1f156513809cf8d55df"
+    },
+    {
+      "bytes": 1207,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/KotlinBridge.class",
+      "sha256": "82911a322ad9ec3f96b53b60df81e5e4882f71305537538e21d4a32d4fc298d5"
+    },
+    {
+      "bytes": 1561,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/KotlinCalls.class",
+      "sha256": "5000a2b35bb16003b69e36503b5f0d7cd83fffddefa1ebdbd630efca0392fb93"
+    },
+    {
+      "bytes": 28486,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/KotlinRuntime.class",
+      "sha256": "f2e1cd3ddb2556e50f68e280b9261aa5fee64cc99691fe6d64e0e9b4767beb52"
+    },
+    {
+      "bytes": 289,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/LeanBridgeException.class",
+      "sha256": "e160c434bb8a3695e175d0e118b6201b8ccd6ab7f595e4bc00eefbf66713ff5a"
+    },
+    {
+      "bytes": 440,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/NativeAssets.class",
+      "sha256": "167f789939d6c391f2270f1abddb185e0fe8bcaa0eb9e292adaec764ef8d15e9"
+    },
+    {
+      "bytes": 13428,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/NativeAssets$_Assets.class",
+      "sha256": "2e8f44c67d14293ef83a02c424012d0272fef19b05d5c4057890ddd753849cd2"
+    },
+    {
+      "bytes": 918,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/Option.class",
+      "sha256": "0e8908aa87b6857e75260e76277d32d0006956301ef5c64ff9774c4433fe3a70"
+    },
+    {
+      "bytes": 1436,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/Option$None.class",
+      "sha256": "293cc5611d42c07e89b4eb4861296b09cef43589e5274f37640ab5de2f585b49"
+    },
+    {
+      "bytes": 1654,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/Option$Some.class",
+      "sha256": "f120a863424b5f529bfdaf683ab721c95ab3763fe1f21ed50b2a251db5b4d434"
+    },
+    {
+      "bytes": 4370,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/Packet.class",
+      "sha256": "08114404db611f78d38b424ba9d35304aef2da9ad5fdb6ee64514bd6ea9e2db5"
+    },
+    {
+      "bytes": 2008,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/PacketPair.class",
+      "sha256": "19a6b0e967e456f592f004b3825615ec6009f8e9b1ff380505d5c06fcb53c185"
+    },
+    {
+      "bytes": 1655,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/Pair.class",
+      "sha256": "d1e6330c8950f24ff2c890e46c98569dce2187f6268bbd7eafb3b7f98fc087ff"
+    },
+    {
+      "bytes": 4376,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/RawPacket.class",
+      "sha256": "5f530683097cd8491435b4131d6da2b7b0315a5567f58a7d1e6524856419efba"
+    },
+    {
+      "bytes": 945,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/Result.class",
+      "sha256": "47ecc96eae40a636858d275e1402f6f7e58aecdfb30ebedc0acfe71f5791106c"
+    },
+    {
+      "bytes": 1833,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/Result$Err.class",
+      "sha256": "bde2b94a843f1017a90f4732322dd57f02bd6f1efb517cfb91b2ea66d1e7f4e9"
+    },
+    {
+      "bytes": 1821,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/Result$Ok.class",
+      "sha256": "8ca69c9114eae41be1aafcdd4c3e51d3af49d265119f00b7591416156eef497e"
+    },
+    {
+      "bytes": 27894,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/Runtime.class",
+      "sha256": "4b5aa60506d86671c6047b3aea63a4d4af30414247b8c764a53edf8e9809e8c7"
+    },
+    {
+      "bytes": 677,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/Scope.class",
+      "sha256": "ee8d23b43cf77e06fb42526a68501979d900a33538103ac2f9e4ce55f51628a9"
+    },
+    {
+      "bytes": 924,
+      "path": "ordinary-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/Unit.class",
+      "sha256": "bbe10b1b784cfaad2969c79b1882920883ff6079b123fa3d75df2087fd6626ea"
+    },
+    {
+      "bytes": 19554,
+      "path": "ordinary-result-only/records/package/README.md",
+      "sha256": "80fc86ec22cc6fbcbbc33cadcfde28f76b91e3be0c337da0bc2413bde32b7421"
+    },
+    {
+      "bytes": 122350,
+      "path": "ordinary-result-only/records/report.json",
+      "sha256": "8f2d13cfef238f2eb97ce465395b4c53e79b99b6de47f8ba362a1e17d7daec87"
+    },
+    {
+      "bytes": 812,
+      "path": "ordinary-result-only/records/resources.json",
+      "sha256": "966134e9f0f77210b1ff4f4b8f9000af9b40d9c1142e5fffedc38a8475bfbc35"
+    },
+    {
+      "bytes": 123,
+      "path": "ordinary-result-only/records/runtime.json",
+      "sha256": "c2f1b9d72bf412b57880eaf2e5f14f071577bea6210298d5c0d82c529f20d81e"
+    },
+    {
+      "bytes": 328,
+      "path": "preserved/ordinary-full-r1-88cf601/end.json",
+      "sha256": "599120da3a9f309127536c033aea3c3dbdc2f7a57450d040a5cf109b4dee24de"
+    },
+    {
+      "bytes": 2621,
+      "path": "preserved/ordinary-full-r1-88cf601/run.tap",
+      "sha256": "c5ac5a82ed8e68d96805e18866d235c0384adc9817088833e2e74bac9ebb43f7"
+    },
+    {
+      "bytes": 2726,
+      "path": "preserved/ordinary-full-r1-88cf601/start.json",
+      "sha256": "481041caee8c36b46fc6d96bfc6ecdc24dd86ce32ac109367878ed164213af35"
+    },
+    {
+      "bytes": 330,
+      "path": "preserved/ordinary-full-r1-e0fed7f-v1/controls.end.json",
+      "sha256": "04ab0573fa1bbd48f36188faf7fb63506a142ff918381703a526c1ca6e815d27"
+    },
+    {
+      "bytes": 425,
+      "path": "preserved/ordinary-full-r1-e0fed7f-v1/controls.log",
+      "sha256": "8b2be3fdd0e7a9ba8263bc802f49e735e7d133308e92ead09f6a234f48c621c5"
+    },
+    {
+      "bytes": 8406,
+      "path": "preserved/ordinary-full-r1-e0fed7f-v1/controls.start.json",
+      "sha256": "e8dc89ab62e8d77163f3741e5abc9c400e08a981d0f836a81dee80477811ad8b"
+    },
+    {
+      "bytes": 330,
+      "path": "preserved/ordinary-full-r1-e0fed7f-v1/end.json",
+      "sha256": "9f7fd5712ba8b62fbc4725640c3687f1c05e3649d2c21edd78d733417de05440"
+    },
+    {
+      "bytes": 468,
+      "path": "preserved/ordinary-full-r1-e0fed7f-v1/run.tap",
+      "sha256": "4103ed4b9fe90eaad573dda95dd525a76ed73bff3cbbdc88040899f02fbefb08"
+    },
+    {
+      "bytes": 3142,
+      "path": "preserved/ordinary-full-r1-e0fed7f-v1/start.json",
+      "sha256": "4ca7c5039951d933688464c00edd782d60c685a956ddc101e26021bb7777ae54"
+    },
+    {
+      "bytes": 327,
+      "path": "reviewed-full/controls/controls.end.json",
+      "sha256": "eae8f9f3fd4541ef34de2fdc0a49e7717a706eb6caf351e61aad82bb223527d2"
+    },
+    {
+      "bytes": 19783,
+      "path": "reviewed-full/controls/controls.json",
+      "sha256": "7cc9030f917c1670a1f899e3d37106ce22a405f66e68c0e69f97a63c45573373"
+    },
+    {
+      "bytes": 865,
+      "path": "reviewed-full/controls/controls.log",
+      "sha256": "0ca3605b15b2287b236c5f53d7b20a57d44a63f04cf7c60010d90a4816e19ff1"
+    },
+    {
+      "bytes": 8652,
+      "path": "reviewed-full/controls/controls.start.json",
+      "sha256": "d62a9daa2da1af1909f23686823e5c54e9dbcbd2fb3b03cb3f776ec2253238ef"
+    },
+    {
+      "bytes": 330,
+      "path": "reviewed-full/producer/end.json",
+      "sha256": "58405b8794f1d99880af3b2f061adb846169e3121688802301fb5d63e76da1fa"
+    },
+    {
+      "bytes": 468,
+      "path": "reviewed-full/producer/run.tap",
+      "sha256": "cdb42e0e6a5728634188ae30f562e57943478824000dc2fd2a050ff08b3e2ddc"
+    },
+    {
+      "bytes": 3146,
+      "path": "reviewed-full/producer/start.json",
+      "sha256": "6d7d4e13a722c7edc583650a7b3b4c580a7a05ea5d9dcf0592c92e44ebdbf573"
+    },
+    {
+      "bytes": 301070,
+      "path": "reviewed-full/records/build-0/api.binding-ir.json",
+      "sha256": "741d5ceec67f40b702e3063159003a3c8f66d5a4dd6e8d56b5757848c2f96c6e"
+    },
+    {
+      "bytes": 1456,
+      "path": "reviewed-full/records/build-0/author-inputs.json",
+      "sha256": "7041aa2f3ca4b6dc659eade43bc5d50b92dfb6ef561f8f23d64f8b8195b18582"
+    },
+    {
+      "bytes": 199,
+      "path": "reviewed-full/records/build-0/lean-bridge.exports.json",
+      "sha256": "9c0aa6bfef1f20a44cd0ae7c61b4a6012ca78b79b01987623e78d0bb4a35476f"
+    },
+    {
+      "bytes": 1777727,
+      "path": "reviewed-full/records/build-0/model.json",
+      "sha256": "2a7dc2bb26061d69a4a87cf6c9ad100ab7bfc3cdcf3d02c24abf4034075a7a20"
+    },
+    {
+      "bytes": 22309,
+      "path": "reviewed-full/records/build-0/native-jvm.json",
+      "sha256": "85547394be6af032748839274a161509dd5c8c0658ef3bbad3f8775ab12483ee"
+    },
+    {
+      "bytes": 10887,
+      "path": "reviewed-full/records/build-0/NominalPrimitiveSubtypes.lean",
+      "sha256": "bbb14128583c0daa879ad28fc794a227a8511439daec27a749cc1946f7a4d3ac"
+    },
+    {
+      "bytes": 1367,
+      "path": "reviewed-full/records/build-0/package-set-receipt.json",
+      "sha256": "174bf418f176abda10f8534538d0d6ee9ae8403128fc3176b6af1ae7042f5215"
+    },
+    {
+      "bytes": 301070,
+      "path": "reviewed-full/records/build-1/api.binding-ir.json",
+      "sha256": "741d5ceec67f40b702e3063159003a3c8f66d5a4dd6e8d56b5757848c2f96c6e"
+    },
+    {
+      "bytes": 1434,
+      "path": "reviewed-full/records/build-1/author-inputs.json",
+      "sha256": "4e6fcb144423cc3b566762126e518f6f4889ae48f8f0d146ecfc1c63c201fc3a"
+    },
+    {
+      "bytes": 199,
+      "path": "reviewed-full/records/build-1/lean-bridge.exports.json",
+      "sha256": "9c0aa6bfef1f20a44cd0ae7c61b4a6012ca78b79b01987623e78d0bb4a35476f"
+    },
+    {
+      "bytes": 1777727,
+      "path": "reviewed-full/records/build-1/model.json",
+      "sha256": "2a7dc2bb26061d69a4a87cf6c9ad100ab7bfc3cdcf3d02c24abf4034075a7a20"
+    },
+    {
+      "bytes": 22309,
+      "path": "reviewed-full/records/build-1/native-jvm.json",
+      "sha256": "85547394be6af032748839274a161509dd5c8c0658ef3bbad3f8775ab12483ee"
+    },
+    {
+      "bytes": 10887,
+      "path": "reviewed-full/records/build-1/NominalPrimitiveSubtypes.lean",
+      "sha256": "bbb14128583c0daa879ad28fc794a227a8511439daec27a749cc1946f7a4d3ac"
+    },
+    {
+      "bytes": 1367,
+      "path": "reviewed-full/records/build-1/package-set-receipt.json",
+      "sha256": "174bf418f176abda10f8534538d0d6ee9ae8403128fc3176b6af1ae7042f5215"
+    },
+    {
+      "bytes": 199,
+      "path": "reviewed-full/records/configuration.json",
+      "sha256": "9c0aa6bfef1f20a44cd0ae7c61b4a6012ca78b79b01987623e78d0bb4a35476f"
+    },
+    {
+      "bytes": 21083,
+      "path": "reviewed-full/records/consumer.java",
+      "sha256": "d39f15b5f1b2e2bca94fa88f29debe15ceb61d9b9b053ce606066e18e03f0b29"
+    },
+    {
+      "bytes": 17256,
+      "path": "reviewed-full/records/consumer.kt",
+      "sha256": "13c87584a9d6c01c2f4ce6029c37cc7e53e189d0d7bad4531286c7ecb213b0a6"
+    },
+    {
+      "bytes": 301070,
+      "path": "reviewed-full/records/expected.binding-ir.json",
+      "sha256": "741d5ceec67f40b702e3063159003a3c8f66d5a4dd6e8d56b5757848c2f96c6e"
+    },
+    {
+      "bytes": 634,
+      "path": "reviewed-full/records/handoff/archives/nominalprimitivesubtypes-1.0.0.pom",
+      "sha256": "86991a6b0a27181ce94646c805ede8d1b73df712a1a5b3ea148aa765ff5b3d90"
+    },
+    {
+      "bytes": 1367,
+      "path": "reviewed-full/records/handoff/package-set-receipt.json",
+      "sha256": "174bf418f176abda10f8534538d0d6ee9ae8403128fc3176b6af1ae7042f5215"
+    },
+    {
+      "bytes": 91,
+      "path": "reviewed-full/records/handoff/package-set-receipt.json.sha256",
+      "sha256": "f5a9c346030033d4b5dd8f737d591112aad078d47785de5edf4f0d9128f94d89"
+    },
+    {
+      "bytes": 922659,
+      "path": "reviewed-full/records/installation.json",
+      "sha256": "5e4319880bd29a9b26d304d02e2405134ce96b0deb10e9042dd28c159fce4b2f"
+    },
+    {
+      "bytes": 1452,
+      "path": "reviewed-full/records/java/api-probe/classes/Probe.class",
+      "sha256": "c934146265e74b015dc20e604d4f69736729b816e6c0bdd2b523f0072843b05b"
+    },
+    {
+      "bytes": 594,
+      "path": "reviewed-full/records/java/api-probe/probe.java",
+      "sha256": "5ce57bb31cdecb1dae993205b81457d324d3a98a92aeebabca1fb013b6e11959"
+    },
+    {
+      "bytes": 1588,
+      "path": "reviewed-full/records/java/api-probe/record.json",
+      "sha256": "3ffffa9f3cfddc3fb9814c0630ec8620d1de097c3a5345df84c0e7dd0d9ddafe"
+    },
+    {
+      "bytes": 824,
+      "path": "reviewed-full/records/java/installed.json",
+      "sha256": "d4f1356adb1b48d5d1a01c777b7336dea1012c43742205662cffe58b169b81a1"
+    },
+    {
+      "bytes": 834,
+      "path": "reviewed-full/records/java/relocated.json",
+      "sha256": "2e37329e34b9fd91dd672666e42fcc213aa400e32c36fc55a4f8ef8d643d65b1"
+    },
+    {
+      "bytes": 1474,
+      "path": "reviewed-full/records/java/source-free.json",
+      "sha256": "1ea58b9798c170fd3c25f339293e00f3c5d22a0c1db6c225b9e043284cab2b9f"
+    },
+    {
+      "bytes": 37,
+      "path": "reviewed-full/records/kotlin/api-probe/classes/META-INF/main.kotlin_module",
+      "sha256": "f6124cd5950d9dc426ecc61468e4fb6dc19bd3124c62578d1bf30be6af612bc4"
+    },
+    {
+      "bytes": 3737,
+      "path": "reviewed-full/records/kotlin/api-probe/classes/ProbeKt.class",
+      "sha256": "c514a647ff46cb32d0640b183fa1d60603b1c16fb72e2a1ff4fbf816d08796ba"
+    },
+    {
+      "bytes": 524,
+      "path": "reviewed-full/records/kotlin/api-probe/probe.kt",
+      "sha256": "63812c128564d3895ebab5ad23492f455f385d7302b4551f307d964487edc3f8"
+    },
+    {
+      "bytes": 1727,
+      "path": "reviewed-full/records/kotlin/api-probe/record.json",
+      "sha256": "98f1d1f08cb4d1c4fbac9ddd36af6452e641b77028e883bfd50c23621093b5b3"
+    },
+    {
+      "bytes": 826,
+      "path": "reviewed-full/records/kotlin/installed.json",
+      "sha256": "1cc7f3b71262caaf49a87c758b50f99eb67cc62f4076c4ac91efe1e1d8cfe634"
+    },
+    {
+      "bytes": 41,
+      "path": "reviewed-full/records/kotlin/nullability-false/classes/META-INF/main.kotlin_module",
+      "sha256": "14d9d137a46fc5f49ea00828cb3ad2d35b84c9918bbca55a496bdbdf5366c5f9"
+    },
+    {
+      "bytes": 3278,
+      "path": "reviewed-full/records/kotlin/nullability-false/classes/NullProbeKt.class",
+      "sha256": "db2b7ba5942c697c696d3a15efa3a7f11f36b2a9b94af5674014a6e004063602"
+    },
+    {
+      "bytes": 797,
+      "path": "reviewed-full/records/kotlin/nullability-false/NullProbe.kt",
+      "sha256": "6ad7fe8489ec314162d67eb132d61ee768dae4763aa0282d112fd39f40bd8a30"
+    },
+    {
+      "bytes": 2016,
+      "path": "reviewed-full/records/kotlin/nullability-false/record.json",
+      "sha256": "77930d0d0771b4f17582e6ba9676f0f5eb4edcc041cab24a59b4de314a6fbf91"
+    },
+    {
+      "bytes": 200,
+      "path": "reviewed-full/records/kotlin/nullability-true/NullProbe.kt",
+      "sha256": "c250ec5e49fae155a5ffff0b79f413761d996d9c941b63d3046da7ad8c037924"
+    },
+    {
+      "bytes": 2041,
+      "path": "reviewed-full/records/kotlin/nullability-true/record.json",
+      "sha256": "dab4030e44947b21a0f3d8758cb566d31ec6be7a564eaee46f782216a7a66a01"
+    },
+    {
+      "bytes": 836,
+      "path": "reviewed-full/records/kotlin/relocated.json",
+      "sha256": "2328c867cad80ea2c35b51da206835e306f00ab478d1cae5797581477dc0a1d9"
+    },
+    {
+      "bytes": 992,
+      "path": "reviewed-full/records/kotlin/source-free.json",
+      "sha256": "e094144b2cf01d9efbaa09079e9cbd9347375cc8f1c0ef4b87c4314f6837aa80"
+    },
+    {
+      "bytes": 105,
+      "path": "reviewed-full/records/package/META-INF/lean_bridge_org_leanbridge_nominalprimitivesubtypes.kotlin_module",
+      "sha256": "0fa99e39a9af65c82aa030e9b81d8579c4f23079ef0a116dd76bdb660066cd91"
+    },
+    {
+      "bytes": 1309,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/component/allocation-guard.h",
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    {
+      "bytes": 1541,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/component/artifacts.json",
+      "sha256": "342606cdb615ee434fb638647a760ea2aa6901825f52a1fb1c844ffe44f11c2b"
+    },
+    {
+      "bytes": 399172,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/component/binding-ir.json",
+      "sha256": "1567b1a1dba36632900db7658df3b5a8d790981b7ba3623e6829a2beb6c6cbfd"
+    },
+    {
+      "bytes": 26950,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/component/component.h",
+      "sha256": "435b1a99f9106ea310e546b1c0c6944694df29b90ea65b7d83a8dcce6d06769d"
+    },
+    {
+      "bytes": 105933,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/component/generated.lean",
+      "sha256": "1dfdd086b793dc2fa30143ffe2d0a3742b89ce3a56500452ddc9dc69b3482b90"
+    },
+    {
+      "bytes": 1295961,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/component/metadata.json",
+      "sha256": "027b8ba331fc318794f3020f45f84fbd76bbc50d1451e694199156de86d4b153"
+    },
+    {
+      "bytes": 1777727,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/component/model.json",
+      "sha256": "2a7dc2bb26061d69a4a87cf6c9ad100ab7bfc3cdcf3d02c24abf4034075a7a20"
+    },
+    {
+      "bytes": 419366,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/component/native-component.json",
+      "sha256": "2198829bf7edd18434db2ebf43a1c1d8fc416e95aa185bdedfb4d32006ae781d"
+    },
+    {
+      "bytes": 7613,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/binding-manifest.json",
+      "sha256": "2de05ac0f31b74464ff79a4ca350245f25127a85cb0e0b260b9846feff4071f1"
+    },
+    {
+      "bytes": 53306,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Api.java",
+      "sha256": "2eeeefb4359219a19ddd4c74a98b8aa3c1b55690317c1fcd85dbe299553e2efe"
+    },
+    {
+      "bytes": 126,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Event.java",
+      "sha256": "ff15365e6ad56e5048f5e58cdcbf51000566f656f3fc2bab2a0945fe1e272005"
+    },
+    {
+      "bytes": 529,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/EventBox.java",
+      "sha256": "bbf81153a7182e09b5f617db599795bb24b56fb3177ceaf16580273cdaa5da47"
+    },
+    {
+      "bytes": 621,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/EventChoices.java",
+      "sha256": "6d6c250364c1c848b3afabc95abaf62bbbd4487b0f9f23deaba5a6150e91c19d"
+    },
+    {
+      "bytes": 382,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/EventEmpty.java",
+      "sha256": "4e39582f332085808a4c4245f71147a3067afdb7fbeb344f8bab39298351ee2a"
+    },
+    {
+      "bytes": 2345,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/KotlinBridge.java",
+      "sha256": "8dd361e961a057e7e28144696cf750128e3a66dbba11328693af17cd7604b23c"
+    },
+    {
+      "bytes": 40965,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/KotlinRuntime.java",
+      "sha256": "1b10d66dc098c42b9ee77468dc971f8939459a10f42d4296530f3b4945a941c3"
+    },
+    {
+      "bytes": 254,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/LeanBridgeException.java",
+      "sha256": "23c881baf9ad2cf96114691a987976498db36bf78379cc3788877b96614ce4f0"
+    },
+    {
+      "bytes": 13607,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/NativeAssets.java",
+      "sha256": "536cb7f4b9787d84c3c6b669e7be3e1a712ab247a9933e15bfa59a412121f98e"
+    },
+    {
+      "bytes": 1057,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Option.java",
+      "sha256": "b072fbb0a662083cef9c0debd7e07f24051641f033684055a8cf2b05ae99ce85"
+    },
+    {
+      "bytes": 3789,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Packet.java",
+      "sha256": "48b2b022df2ec66f21ff54ae8db41be7338ee57088847b793b632a745250b670"
+    },
+    {
+      "bytes": 744,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/PacketPair.java",
+      "sha256": "59c75be58d9fa8bd72d22bc3db0f3fb7d905c36fb3e4f2d886504858392a8e5c"
+    },
+    {
+      "bytes": 721,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Pair.java",
+      "sha256": "47fcc48445e715de5eed47dbdc0ec89b7d8546910bbf62f14000f5d4c38f7db9"
+    },
+    {
+      "bytes": 3798,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/RawPacket.java",
+      "sha256": "6c782c1f7eec9b0b20b62fbc4ecde35e7a0bf157ce1906f599bd75a2c6a242b5"
+    },
+    {
+      "bytes": 1622,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Result.java",
+      "sha256": "0e435048daa7ab9fbf743ae4e7a3d0b05e9972c520c77bc4c525df691f0a1cd6"
+    },
+    {
+      "bytes": 36065,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Runtime.java",
+      "sha256": "b7ba692e6720be8d3cac7dec72475581949c561f3a106cea94d56b9117402eb1"
+    },
+    {
+      "bytes": 557,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Scope.java",
+      "sha256": "587a91c024beeedc6e4c012813e28da0ebeaa5a6b02e031f2af1f016f892d871"
+    },
+    {
+      "bytes": 79,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Unit.java",
+      "sha256": "fbfcbe47b820899d3f4296438b4b5af230516de1f34bea10c9cb72edfe807a42"
+    },
+    {
+      "bytes": 6497,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Api.kt",
+      "sha256": "2f8948534494b1c008f61c7b8cafbaf5637e39553a11c9b0a9b01a207b2b5239"
+    },
+    {
+      "bytes": 89,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Event.kt",
+      "sha256": "64171ff32cdd90e0162f42df46c1332c416fe0e34fd430ac5fe76e3081e13222"
+    },
+    {
+      "bytes": 697,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/EventBox.kt",
+      "sha256": "2c734abc7fac9eb2611b853627d3ff235561ed7f4ef2e72fd1d6ff40a24889e6"
+    },
+    {
+      "bytes": 1133,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/EventChoices.kt",
+      "sha256": "0ec66ee427dfa16352b312b67fe6e535cafe94ea756317d52e60032d5736004f"
+    },
+    {
+      "bytes": 427,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/EventEmpty.kt",
+      "sha256": "4928e6f764da8dfe4c5f0929e369d32c632d6a06e0be96efd4509e50c543c6fe"
+    },
+    {
+      "bytes": 162,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/LeanBridgeException.kt",
+      "sha256": "b924d6e6bb69acabd39189ff264120678af40bf4afc1d63e7bda6cb7fc0ce019"
+    },
+    {
+      "bytes": 1399,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Option.kt",
+      "sha256": "064574213f89ad0ea3215d95bb1eefbc7510533c2ea84388d375398afb41f2cf"
+    },
+    {
+      "bytes": 4593,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Packet.kt",
+      "sha256": "028c1c9a2bd8369b5ef059729649e6e7d63b36f5e9e716179194879d0073a1e4"
+    },
+    {
+      "bytes": 1227,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/PacketPair.kt",
+      "sha256": "dda1aae3ab4409aeeab20c4a01f3891c4f9c9d91929248c96306e34d41046409"
+    },
+    {
+      "bytes": 780,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Pair.kt",
+      "sha256": "cd28de307dbb5d8146ea717e0027b2fa7a2cbeb010d1ab1e9fb7f1a55efc4762"
+    },
+    {
+      "bytes": 4602,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/RawPacket.kt",
+      "sha256": "9da604cf82ae550397ce1ff515e83ba6fef217ec65cd80fc3ec6833245daf717"
+    },
+    {
+      "bytes": 1827,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Result.kt",
+      "sha256": "93b28b92f24716f5720fcb03bab783475ff98e0284e00892be119a734bd31ab8"
+    },
+    {
+      "bytes": 132,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Unit.kt",
+      "sha256": "496f247eb8f87640961142c97790a69ac43dc10bdff4e22da2c7336cc030536e"
+    },
+    {
+      "bytes": 1495,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/KotlinCalls.kt",
+      "sha256": "0ade139757953200a36dae9c146a110a1c7c127ca23498a1f8a6e974daa367c4"
+    },
+    {
+      "bytes": 9160,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/licenses/Lean-LICENSE",
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    {
+      "bytes": 81854,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/licenses/Lean-LICENSES",
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    {
+      "bytes": 1093,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/licenses/LeanBridge-LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 2143,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/licenses/source-notices.json",
+      "sha256": "54b30d797246785d58a1671e02a3a619708812d7f606732b2b620af56b218f73"
+    },
+    {
+      "bytes": 1093,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 1432,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/native-c-adapter.json",
+      "sha256": "74e259dfbd19f62767033b3131eee530a9167b6fb75ee1155593481274181162"
+    },
+    {
+      "bytes": 22309,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/native-jvm.json",
+      "sha256": "85547394be6af032748839274a161509dd5c8c0658ef3bbad3f8775ab12483ee"
+    },
+    {
+      "bytes": 436610,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/package-receipt.json",
+      "sha256": "11b7b8762ba6008a60fa0443ef28342b0c0a1ff375678f36bde46135c36cfc84"
+    },
+    {
+      "bytes": 1466,
+      "path": "reviewed-full/records/package/META-INF/lean-bridge/runtime.json",
+      "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    },
+    {
+      "bytes": 23,
+      "path": "reviewed-full/records/package/META-INF/MANIFEST.MF",
+      "sha256": "172b7aa6ab69ed805e5a9b5bbdbc6e770091086734509d44117852fc10592f6b"
+    },
+    {
+      "bytes": 634,
+      "path": "reviewed-full/records/package/META-INF/maven/org.leanbridge/nominalprimitivesubtypes/pom.xml",
+      "sha256": "86991a6b0a27181ce94646c805ede8d1b73df712a1a5b3ea148aa765ff5b3d90"
+    },
+    {
+      "bytes": 3004,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/Api.class",
+      "sha256": "9065a4a9a06491e8f85e2a7239cbcf38baa5d7699e5d843f36af5b187f4a5086"
+    },
+    {
+      "bytes": 301,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/Event.class",
+      "sha256": "a74db6632a00ef0c10aaa9b521f9625fb2b5c09dd36f696f7f322f4fe0daedfb"
+    },
+    {
+      "bytes": 1416,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/EventBox.class",
+      "sha256": "ff04f6bb50fcd389fe05dadd1895082fd4646ebacf54dbd8caa675889084e077"
+    },
+    {
+      "bytes": 2077,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/EventChoices.class",
+      "sha256": "90c6d66581c47aae8ab21adab0fc618803030b2aedde430cd7842f83e5aa7ae5"
+    },
+    {
+      "bytes": 1052,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/EventEmpty.class",
+      "sha256": "52a3fdb4937bd8dc321721087d97d42d84095ed75a282396ba605bbae491424b"
+    },
+    {
+      "bytes": 5252,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Api.class",
+      "sha256": "9dfc786de0c62e25462e6f244f28895894c60ee0a9fb449d92c196e0c29e4192"
+    },
+    {
+      "bytes": 7912,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Api$Companion.class",
+      "sha256": "7964281b294d4f22a81b9ffd57888bd1c8cd4df320a6913eed566c7dc7ebf2c5"
+    },
+    {
+      "bytes": 874,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Event.class",
+      "sha256": "5b5bc8318a81f654c9d435df2714d1e57e63bad85fd679b542cb70c973dca543"
+    },
+    {
+      "bytes": 1918,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/EventBox.class",
+      "sha256": "0600ef3518a69f19d3c16d7c2a0844c9c070090aee70105132ac2954626e1c04"
+    },
+    {
+      "bytes": 2939,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/EventChoices.class",
+      "sha256": "160548e5351167a84e4b7b28033344c99e33ccd064d73ec13c3e1d8abd725bc3"
+    },
+    {
+      "bytes": 1208,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/EventEmpty.class",
+      "sha256": "ee953391e7ec1f2f4f235d3c78dbc764302ea183edb63e507053844d4c3e83d9"
+    },
+    {
+      "bytes": 484,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/LeanBridgeExceptionKt.class",
+      "sha256": "c217bc4947ce6d3a9a3c2a390da094878b364878733070db25906e5586e3fb1c"
+    },
+    {
+      "bytes": 2035,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Option.class",
+      "sha256": "d23e6f9a3141bd8c7bce4f52d06f6f6afb5bfbe7ae5ebb724756938387f54338"
+    },
+    {
+      "bytes": 1996,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Option$Companion.class",
+      "sha256": "320294a4c2505a06cbbf9fe11180ff19c468c4cb216e6ab8b216eebc658a6518"
+    },
+    {
+      "bytes": 1790,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Option$None.class",
+      "sha256": "dd51f251bb85d794c21e24ef9f40d20fb4eb96f37739e83a98713bd1c74b8333"
+    },
+    {
+      "bytes": 2201,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Option$Some.class",
+      "sha256": "a7c4de4bd047c24579dc83706a0ce6006d3b85e71f5ec5a37fe8343971bb1577"
+    },
+    {
+      "bytes": 6492,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Packet.class",
+      "sha256": "0105f13bad226d24cccd16755bf3242cce684329c42c48202a1bcab4ae38b912"
+    },
+    {
+      "bytes": 2809,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/PacketPair.class",
+      "sha256": "844266f68cb577956534e939bf26be322daf9a5bd0d706fea498f6962bd22cab"
+    },
+    {
+      "bytes": 2190,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Pair.class",
+      "sha256": "2448e659b9a65bf9f40bd8a846b9ae15f5c4158d5eb1af1210e2b016b87ca17a"
+    },
+    {
+      "bytes": 6501,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/RawPacket.class",
+      "sha256": "8109fb37161b4faa591e6656f2ac6a16466acb544dab99eac3cef9f54b022462"
+    },
+    {
+      "bytes": 2145,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Result.class",
+      "sha256": "a5c9e7d81dd3225ecfbdcbda6aebb554c5e8859ee9c86c2cafd69e39ba2eac44"
+    },
+    {
+      "bytes": 2073,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Result$Companion.class",
+      "sha256": "d7d1f401c2252fe75e365ec6b102c02beb4e143655be3005e5ffad10a5e66d10"
+    },
+    {
+      "bytes": 2469,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Result$Err.class",
+      "sha256": "e0d7206b77fc6312f45de568ba15111c01eee86430fc12c93e057cdeb027fc63"
+    },
+    {
+      "bytes": 2457,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Result$Ok.class",
+      "sha256": "b85887197dc43ea14413af594e4bf3c9280737d5833213cf905a791ce547254e"
+    },
+    {
+      "bytes": 424,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/UnitKt.class",
+      "sha256": "a2ad1e444a8a3ac7de852d6a59eaadecd2c9cdbe72a0d1f156513809cf8d55df"
+    },
+    {
+      "bytes": 2628,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/KotlinBridge.class",
+      "sha256": "24de1df6d2aa4ba2e50aa31d2a66df414f9274a404d914ae0ab08cc89414d93b"
+    },
+    {
+      "bytes": 2572,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/KotlinCalls.class",
+      "sha256": "615104b4e726713467189c6c6d052abac8a565ec3fdfd088d52b48e6418d13f5"
+    },
+    {
+      "bytes": 34843,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/KotlinRuntime.class",
+      "sha256": "31da4bd74c2ccea5dd055d6d3fda9b8a3edfdf06c8a826be90ffa2b510c547ea"
+    },
+    {
+      "bytes": 289,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/LeanBridgeException.class",
+      "sha256": "e160c434bb8a3695e175d0e118b6201b8ccd6ab7f595e4bc00eefbf66713ff5a"
+    },
+    {
+      "bytes": 440,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/NativeAssets.class",
+      "sha256": "167f789939d6c391f2270f1abddb185e0fe8bcaa0eb9e292adaec764ef8d15e9"
+    },
+    {
+      "bytes": 13428,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/NativeAssets$_Assets.class",
+      "sha256": "0b5f5991d6593b7f35adc4b528b58edfde60c6b7e544edbc43979ec35399ff56"
+    },
+    {
+      "bytes": 918,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/Option.class",
+      "sha256": "0e8908aa87b6857e75260e76277d32d0006956301ef5c64ff9774c4433fe3a70"
+    },
+    {
+      "bytes": 1436,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/Option$None.class",
+      "sha256": "293cc5611d42c07e89b4eb4861296b09cef43589e5274f37640ab5de2f585b49"
+    },
+    {
+      "bytes": 1654,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/Option$Some.class",
+      "sha256": "f120a863424b5f529bfdaf683ab721c95ab3763fe1f21ed50b2a251db5b4d434"
+    },
+    {
+      "bytes": 4370,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/Packet.class",
+      "sha256": "08114404db611f78d38b424ba9d35304aef2da9ad5fdb6ee64514bd6ea9e2db5"
+    },
+    {
+      "bytes": 2008,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/PacketPair.class",
+      "sha256": "19a6b0e967e456f592f004b3825615ec6009f8e9b1ff380505d5c06fcb53c185"
+    },
+    {
+      "bytes": 1655,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/Pair.class",
+      "sha256": "d1e6330c8950f24ff2c890e46c98569dce2187f6268bbd7eafb3b7f98fc087ff"
+    },
+    {
+      "bytes": 4376,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/RawPacket.class",
+      "sha256": "5f530683097cd8491435b4131d6da2b7b0315a5567f58a7d1e6524856419efba"
+    },
+    {
+      "bytes": 945,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/Result.class",
+      "sha256": "47ecc96eae40a636858d275e1402f6f7e58aecdfb30ebedc0acfe71f5791106c"
+    },
+    {
+      "bytes": 1833,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/Result$Err.class",
+      "sha256": "bde2b94a843f1017a90f4732322dd57f02bd6f1efb517cfb91b2ea66d1e7f4e9"
+    },
+    {
+      "bytes": 1821,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/Result$Ok.class",
+      "sha256": "8ca69c9114eae41be1aafcdd4c3e51d3af49d265119f00b7591416156eef497e"
+    },
+    {
+      "bytes": 34027,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/Runtime.class",
+      "sha256": "db2f3d241b07a66b1b700988e4efbdf116c0394d5f495199f5294ea8408446b6"
+    },
+    {
+      "bytes": 677,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/Scope.class",
+      "sha256": "ee8d23b43cf77e06fb42526a68501979d900a33538103ac2f9e4ce55f51628a9"
+    },
+    {
+      "bytes": 924,
+      "path": "reviewed-full/records/package/org/leanbridge/nominalprimitivesubtypes/Unit.class",
+      "sha256": "bbe10b1b784cfaad2969c79b1882920883ff6079b123fa3d75df2087fd6626ea"
+    },
+    {
+      "bytes": 56707,
+      "path": "reviewed-full/records/package/README.md",
+      "sha256": "dac70676af83e71e157399e9df4db50c93fdf9d284ef26479f6f6e965108d8e6"
+    },
+    {
+      "bytes": 1912673,
+      "path": "reviewed-full/records/report.json",
+      "sha256": "2ef575b97f864c989bc4ac904ceb7041bdca20bcaffc41db4dbfd876072d38d0"
+    },
+    {
+      "bytes": 812,
+      "path": "reviewed-full/records/resources.json",
+      "sha256": "419ee948c72d6610fed4f5cecffba1a856e4ea832994c0fb863cf4cc8709e35a"
+    },
+    {
+      "bytes": 123,
+      "path": "reviewed-full/records/runtime.json",
+      "sha256": "c2f1b9d72bf412b57880eaf2e5f14f071577bea6210298d5c0d82c529f20d81e"
+    },
+    {
+      "bytes": 331,
+      "path": "reviewed-result-only/controls/controls.end.json",
+      "sha256": "5c5e6e0387104118654582886a12fe145685d7e43133ce64df0d72b37c6674e3"
+    },
+    {
+      "bytes": 19654,
+      "path": "reviewed-result-only/controls/controls.json",
+      "sha256": "fb70623c2dbd3660b88a01ee6cb80bf5b03968fbf5c1cffab29e19d6bbfa6de7"
+    },
+    {
+      "bytes": 886,
+      "path": "reviewed-result-only/controls/controls.log",
+      "sha256": "ee12a16ac048471031505030db182a8aef39655407474247ff693ec0f2168c6b"
+    },
+    {
+      "bytes": 8573,
+      "path": "reviewed-result-only/controls/controls.start.json",
+      "sha256": "ab791c3fafd458d2df54c8fe8e39c9b0b517446f7202d2e07e836d806b1770f3"
+    },
+    {
+      "bytes": 331,
+      "path": "reviewed-result-only/producer/end.json",
+      "sha256": "4995ff6f593aa7d16f5cbd63cac3f39da1af7e337d5964fc030bcd7b3eaf59cb"
+    },
+    {
+      "bytes": 496,
+      "path": "reviewed-result-only/producer/run.tap",
+      "sha256": "427e87c12ffaa5b16fe091d5e0c84f7d3ae8f4addd78efc88a22b8d295827db2"
+    },
+    {
+      "bytes": 3178,
+      "path": "reviewed-result-only/producer/start.json",
+      "sha256": "c5f3c68bf56127db5104d5b1c1eff169e7c04a3f4793386ff31c166508694e7a"
+    },
+    {
+      "bytes": 97357,
+      "path": "reviewed-result-only/records/build-0/api.binding-ir.json",
+      "sha256": "64033224412a89cce86ef07c54e8949664fd1d93f0bd4c6cfafe35d2440bc6f0"
+    },
+    {
+      "bytes": 1445,
+      "path": "reviewed-result-only/records/build-0/author-inputs.json",
+      "sha256": "acedfe564dfb8cd6050995e345c96fbf5bafd7eede0083c3d5f210f916735b9f"
+    },
+    {
+      "bytes": 199,
+      "path": "reviewed-result-only/records/build-0/lean-bridge.exports.json",
+      "sha256": "9c0aa6bfef1f20a44cd0ae7c61b4a6012ca78b79b01987623e78d0bb4a35476f"
+    },
+    {
+      "bytes": 625950,
+      "path": "reviewed-result-only/records/build-0/model.json",
+      "sha256": "d5f388caf49452b987f947bc0bb924203dad4343ef8415699ecd4fa49dd1022e"
+    },
+    {
+      "bytes": 22307,
+      "path": "reviewed-result-only/records/build-0/native-jvm.json",
+      "sha256": "28dbfff69b3b9871632e27bc5056cbaa18a7fe1f541ad554e92acc284f807fdc"
+    },
+    {
+      "bytes": 10887,
+      "path": "reviewed-result-only/records/build-0/NominalPrimitiveSubtypes.lean",
+      "sha256": "bbb14128583c0daa879ad28fc794a227a8511439daec27a749cc1946f7a4d3ac"
+    },
+    {
+      "bytes": 1367,
+      "path": "reviewed-result-only/records/build-0/package-set-receipt.json",
+      "sha256": "4cc3ef842fbe7f8aeda02daabebfa792518fb51d9c84a62aa04be87cfa20804d"
+    },
+    {
+      "bytes": 97357,
+      "path": "reviewed-result-only/records/build-1/api.binding-ir.json",
+      "sha256": "64033224412a89cce86ef07c54e8949664fd1d93f0bd4c6cfafe35d2440bc6f0"
+    },
+    {
+      "bytes": 1452,
+      "path": "reviewed-result-only/records/build-1/author-inputs.json",
+      "sha256": "a85b90dd77d5d457bbd8250abf7108c088e973df75af5253b2a85f97948f4013"
+    },
+    {
+      "bytes": 199,
+      "path": "reviewed-result-only/records/build-1/lean-bridge.exports.json",
+      "sha256": "9c0aa6bfef1f20a44cd0ae7c61b4a6012ca78b79b01987623e78d0bb4a35476f"
+    },
+    {
+      "bytes": 625950,
+      "path": "reviewed-result-only/records/build-1/model.json",
+      "sha256": "d5f388caf49452b987f947bc0bb924203dad4343ef8415699ecd4fa49dd1022e"
+    },
+    {
+      "bytes": 22307,
+      "path": "reviewed-result-only/records/build-1/native-jvm.json",
+      "sha256": "28dbfff69b3b9871632e27bc5056cbaa18a7fe1f541ad554e92acc284f807fdc"
+    },
+    {
+      "bytes": 10887,
+      "path": "reviewed-result-only/records/build-1/NominalPrimitiveSubtypes.lean",
+      "sha256": "bbb14128583c0daa879ad28fc794a227a8511439daec27a749cc1946f7a4d3ac"
+    },
+    {
+      "bytes": 1367,
+      "path": "reviewed-result-only/records/build-1/package-set-receipt.json",
+      "sha256": "4cc3ef842fbe7f8aeda02daabebfa792518fb51d9c84a62aa04be87cfa20804d"
+    },
+    {
+      "bytes": 199,
+      "path": "reviewed-result-only/records/configuration.json",
+      "sha256": "9c0aa6bfef1f20a44cd0ae7c61b4a6012ca78b79b01987623e78d0bb4a35476f"
+    },
+    {
+      "bytes": 15954,
+      "path": "reviewed-result-only/records/consumer.java",
+      "sha256": "3d2a8b7afcc5aba76612e7a24d5374818542c02550734da2ca5a96878ff573d9"
+    },
+    {
+      "bytes": 12601,
+      "path": "reviewed-result-only/records/consumer.kt",
+      "sha256": "989a6460d915fd7857bcb37e666637bb1115a13e43beb84a507df1e6af0e3d2d"
+    },
+    {
+      "bytes": 97357,
+      "path": "reviewed-result-only/records/expected.binding-ir.json",
+      "sha256": "64033224412a89cce86ef07c54e8949664fd1d93f0bd4c6cfafe35d2440bc6f0"
+    },
+    {
+      "bytes": 634,
+      "path": "reviewed-result-only/records/handoff/archives/nominalprimitivesubtypes-1.0.0.pom",
+      "sha256": "86991a6b0a27181ce94646c805ede8d1b73df712a1a5b3ea148aa765ff5b3d90"
+    },
+    {
+      "bytes": 1367,
+      "path": "reviewed-result-only/records/handoff/package-set-receipt.json",
+      "sha256": "4cc3ef842fbe7f8aeda02daabebfa792518fb51d9c84a62aa04be87cfa20804d"
+    },
+    {
+      "bytes": 91,
+      "path": "reviewed-result-only/records/handoff/package-set-receipt.json.sha256",
+      "sha256": "2de20562abd3d442ca2ab50e75eb3f44c6b4320ea193d7db0663650d696517ab"
+    },
+    {
+      "bytes": 271674,
+      "path": "reviewed-result-only/records/installation.json",
+      "sha256": "0cd07aa449906dc3b305ac00dafcb209f9e67dfe6e5d43dbc641c6892616ff71"
+    },
+    {
+      "bytes": 594,
+      "path": "reviewed-result-only/records/java/api-probe/probe.java",
+      "sha256": "5ce57bb31cdecb1dae993205b81457d324d3a98a92aeebabca1fb013b6e11959"
+    },
+    {
+      "bytes": 3158,
+      "path": "reviewed-result-only/records/java/api-probe/record.json",
+      "sha256": "0bb5ad1f7b11a5529929fbc09ca56867f9111cfeb483d69524177852707d8b5f"
+    },
+    {
+      "bytes": 818,
+      "path": "reviewed-result-only/records/java/installed.json",
+      "sha256": "c4e89425a8b308a461f672242d722d1e419594228f984d945c4f798e0896164b"
+    },
+    {
+      "bytes": 828,
+      "path": "reviewed-result-only/records/java/relocated.json",
+      "sha256": "403ea264506310773f42534c7564d565056b520abc13997cae3454bfe331c465"
+    },
+    {
+      "bytes": 1309,
+      "path": "reviewed-result-only/records/java/source-free.json",
+      "sha256": "7e436401372418fb5ef3fb054700e54dd68957c5446b56d5337f3d6875c2d6da"
+    },
+    {
+      "bytes": 524,
+      "path": "reviewed-result-only/records/kotlin/api-probe/probe.kt",
+      "sha256": "63812c128564d3895ebab5ad23492f455f385d7302b4551f307d964487edc3f8"
+    },
+    {
+      "bytes": 2966,
+      "path": "reviewed-result-only/records/kotlin/api-probe/record.json",
+      "sha256": "18d86c581aaa266d7787f73b7e057fbef3ed230e212ec084b32caf739fb9b4f7"
+    },
+    {
+      "bytes": 820,
+      "path": "reviewed-result-only/records/kotlin/installed.json",
+      "sha256": "8c18bedeba4cb9c234a3edd4e19edd2c17df2b7b407f4548d6baab3ce212d816"
+    },
+    {
+      "bytes": 41,
+      "path": "reviewed-result-only/records/kotlin/nullability-false/classes/META-INF/main.kotlin_module",
+      "sha256": "14d9d137a46fc5f49ea00828cb3ad2d35b84c9918bbca55a496bdbdf5366c5f9"
+    },
+    {
+      "bytes": 1832,
+      "path": "reviewed-result-only/records/kotlin/nullability-false/classes/NullProbeKt.class",
+      "sha256": "76436154ee41e8a4cef01b12bc42ed695e3a00eba692dc83b4bac61715c941ae"
+    },
+    {
+      "bytes": 362,
+      "path": "reviewed-result-only/records/kotlin/nullability-false/NullProbe.kt",
+      "sha256": "348bc238d55d001ba0e92c70528a5abd57d5e26a174ce0e61e1ce2195219ea64"
+    },
+    {
+      "bytes": 1583,
+      "path": "reviewed-result-only/records/kotlin/nullability-false/record.json",
+      "sha256": "725d5a37f63f9f298bfd9816b45563a4b636c6d3e22984943999a022978748a9"
+    },
+    {
+      "bytes": 90,
+      "path": "reviewed-result-only/records/kotlin/nullability-true/NullProbe.kt",
+      "sha256": "982315da2a53f858f268142e476abeb30a96f95382fe896bcd152c44c7614296"
+    },
+    {
+      "bytes": 1196,
+      "path": "reviewed-result-only/records/kotlin/nullability-true/record.json",
+      "sha256": "b87d5663dde81a89ede1e527b013ba0058136bb362e9c83930ace58f8eb1b228"
+    },
+    {
+      "bytes": 830,
+      "path": "reviewed-result-only/records/kotlin/relocated.json",
+      "sha256": "0e451457fc7160c9ee01d65371fbff5f49a92fa7f740f4541511072ff2bfe26d"
+    },
+    {
+      "bytes": 986,
+      "path": "reviewed-result-only/records/kotlin/source-free.json",
+      "sha256": "e58b224d54ff74169484b3c35fa30d2b293ad1b576dae003e726023c0e74e597"
+    },
+    {
+      "bytes": 105,
+      "path": "reviewed-result-only/records/package/META-INF/lean_bridge_org_leanbridge_nominalprimitivesubtypes.kotlin_module",
+      "sha256": "0fa99e39a9af65c82aa030e9b81d8579c4f23079ef0a116dd76bdb660066cd91"
+    },
+    {
+      "bytes": 1309,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/component/allocation-guard.h",
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    {
+      "bytes": 1536,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/component/artifacts.json",
+      "sha256": "2d021c2edd2a7f347412dd857a44479687cbb5a3a41be79c565e658977788ff2"
+    },
+    {
+      "bytes": 98904,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/component/binding-ir.json",
+      "sha256": "509e562e359fa2dbedc4dd6ef0fc94f575a155c29ab67b50ac7b9719aa10f983"
+    },
+    {
+      "bytes": 5211,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/component/component.h",
+      "sha256": "af11959758b975651339fbbb5f7791c595d72f52ef7ee520c0113559f75dd69a"
+    },
+    {
+      "bytes": 20892,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/component/generated.lean",
+      "sha256": "0d92182755ea825dff37f1d129963fb9c82a550ade38e4bfb523152111108908"
+    },
+    {
+      "bytes": 482972,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/component/metadata.json",
+      "sha256": "e30d93069817e6a3f7f9a2f78e9efeaa85ba5736be16e8554b7b977eb55ad03b"
+    },
+    {
+      "bytes": 625950,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/component/model.json",
+      "sha256": "d5f388caf49452b987f947bc0bb924203dad4343ef8415699ecd4fa49dd1022e"
+    },
+    {
+      "bytes": 109718,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/component/native-component.json",
+      "sha256": "9666e4fd51c80d5a83a0ba0a05f2da165cb423033db2b6ef1415aa86ff70663a"
+    },
+    {
+      "bytes": 7613,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/binding-manifest.json",
+      "sha256": "d0188afb4592d821051db05dd22042ab21cd1c9ec6b64efcea96f755d075562c"
+    },
+    {
+      "bytes": 14465,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Api.java",
+      "sha256": "0eea24ea58a498f7860b46c6e0a3c6e19604541222fa76b2f09552094ee1d51c"
+    },
+    {
+      "bytes": 126,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Event.java",
+      "sha256": "ff15365e6ad56e5048f5e58cdcbf51000566f656f3fc2bab2a0945fe1e272005"
+    },
+    {
+      "bytes": 529,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/EventBox.java",
+      "sha256": "bbf81153a7182e09b5f617db599795bb24b56fb3177ceaf16580273cdaa5da47"
+    },
+    {
+      "bytes": 621,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/EventChoices.java",
+      "sha256": "6d6c250364c1c848b3afabc95abaf62bbbd4487b0f9f23deaba5a6150e91c19d"
+    },
+    {
+      "bytes": 382,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/EventEmpty.java",
+      "sha256": "4e39582f332085808a4c4245f71147a3067afdb7fbeb344f8bab39298351ee2a"
+    },
+    {
+      "bytes": 937,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/KotlinBridge.java",
+      "sha256": "e9773657970fb8fbd85a3942bf8c0adcac2bfc782f5da40814df1a58decfb173"
+    },
+    {
+      "bytes": 32015,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/KotlinRuntime.java",
+      "sha256": "0d4bccf0ac87ebe0fecff947184ad5ea2048b31c6290712bb620121332256bff"
+    },
+    {
+      "bytes": 254,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/LeanBridgeException.java",
+      "sha256": "23c881baf9ad2cf96114691a987976498db36bf78379cc3788877b96614ce4f0"
+    },
+    {
+      "bytes": 13607,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/NativeAssets.java",
+      "sha256": "7b52ea19aee76a955c3e15840997acf7301026d446f9892b296a304d62bfa135"
+    },
+    {
+      "bytes": 1057,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Option.java",
+      "sha256": "b072fbb0a662083cef9c0debd7e07f24051641f033684055a8cf2b05ae99ce85"
+    },
+    {
+      "bytes": 3789,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Packet.java",
+      "sha256": "48b2b022df2ec66f21ff54ae8db41be7338ee57088847b793b632a745250b670"
+    },
+    {
+      "bytes": 744,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/PacketPair.java",
+      "sha256": "59c75be58d9fa8bd72d22bc3db0f3fb7d905c36fb3e4f2d886504858392a8e5c"
+    },
+    {
+      "bytes": 721,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Pair.java",
+      "sha256": "47fcc48445e715de5eed47dbdc0ec89b7d8546910bbf62f14000f5d4c38f7db9"
+    },
+    {
+      "bytes": 3798,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/RawPacket.java",
+      "sha256": "6c782c1f7eec9b0b20b62fbc4ecde35e7a0bf157ce1906f599bd75a2c6a242b5"
+    },
+    {
+      "bytes": 1622,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Result.java",
+      "sha256": "0e435048daa7ab9fbf743ae4e7a3d0b05e9972c520c77bc4c525df691f0a1cd6"
+    },
+    {
+      "bytes": 28525,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Runtime.java",
+      "sha256": "1b786a35c3d8734e5cb21dc7f3907eb67ac12073c86c638c467f54e07d54748c"
+    },
+    {
+      "bytes": 557,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Scope.java",
+      "sha256": "587a91c024beeedc6e4c012813e28da0ebeaa5a6b02e031f2af1f016f892d871"
+    },
+    {
+      "bytes": 79,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/nominalprimitivesubtypes/Unit.java",
+      "sha256": "fbfcbe47b820899d3f4296438b4b5af230516de1f34bea10c9cb72edfe807a42"
+    },
+    {
+      "bytes": 2627,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Api.kt",
+      "sha256": "cd0e6d4b318084df5d0262ab0a96fb10f66eb549339c038d8f3e7daa143c3d24"
+    },
+    {
+      "bytes": 89,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Event.kt",
+      "sha256": "64171ff32cdd90e0162f42df46c1332c416fe0e34fd430ac5fe76e3081e13222"
+    },
+    {
+      "bytes": 697,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/EventBox.kt",
+      "sha256": "2c734abc7fac9eb2611b853627d3ff235561ed7f4ef2e72fd1d6ff40a24889e6"
+    },
+    {
+      "bytes": 1133,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/EventChoices.kt",
+      "sha256": "0ec66ee427dfa16352b312b67fe6e535cafe94ea756317d52e60032d5736004f"
+    },
+    {
+      "bytes": 427,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/EventEmpty.kt",
+      "sha256": "4928e6f764da8dfe4c5f0929e369d32c632d6a06e0be96efd4509e50c543c6fe"
+    },
+    {
+      "bytes": 162,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/LeanBridgeException.kt",
+      "sha256": "b924d6e6bb69acabd39189ff264120678af40bf4afc1d63e7bda6cb7fc0ce019"
+    },
+    {
+      "bytes": 1399,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Option.kt",
+      "sha256": "064574213f89ad0ea3215d95bb1eefbc7510533c2ea84388d375398afb41f2cf"
+    },
+    {
+      "bytes": 4593,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Packet.kt",
+      "sha256": "028c1c9a2bd8369b5ef059729649e6e7d63b36f5e9e716179194879d0073a1e4"
+    },
+    {
+      "bytes": 1227,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/PacketPair.kt",
+      "sha256": "dda1aae3ab4409aeeab20c4a01f3891c4f9c9d91929248c96306e34d41046409"
+    },
+    {
+      "bytes": 780,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Pair.kt",
+      "sha256": "cd28de307dbb5d8146ea717e0027b2fa7a2cbeb010d1ab1e9fb7f1a55efc4762"
+    },
+    {
+      "bytes": 4602,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/RawPacket.kt",
+      "sha256": "9da604cf82ae550397ce1ff515e83ba6fef217ec65cd80fc3ec6833245daf717"
+    },
+    {
+      "bytes": 1827,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Result.kt",
+      "sha256": "93b28b92f24716f5720fcb03bab783475ff98e0284e00892be119a734bd31ab8"
+    },
+    {
+      "bytes": 132,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Unit.kt",
+      "sha256": "496f247eb8f87640961142c97790a69ac43dc10bdff4e22da2c7336cc030536e"
+    },
+    {
+      "bytes": 653,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/KotlinCalls.kt",
+      "sha256": "33ce79e9c5411de073015009422e9acc042585ca758d0b70de0ee15c379076a6"
+    },
+    {
+      "bytes": 9160,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/licenses/Lean-LICENSE",
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    {
+      "bytes": 81854,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/licenses/Lean-LICENSES",
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    {
+      "bytes": 1093,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/licenses/LeanBridge-LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 2142,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/licenses/source-notices.json",
+      "sha256": "08cfd52a56caaa882a992ea83e7184092e133347590aaa59566ac3cc4c175d25"
+    },
+    {
+      "bytes": 1093,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 1429,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/native-c-adapter.json",
+      "sha256": "f53ab4cd7386a85f69ba6a898c7ddd8a1d34e2ba07d751a8fc59c5f08f1aa180"
+    },
+    {
+      "bytes": 22307,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/native-jvm.json",
+      "sha256": "28dbfff69b3b9871632e27bc5056cbaa18a7fe1f541ad554e92acc284f807fdc"
+    },
+    {
+      "bytes": 127888,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/package-receipt.json",
+      "sha256": "b6e63935223140037343e2ab5f0759e0b3ac703d3bad735a2e957a768f3ab991"
+    },
+    {
+      "bytes": 1466,
+      "path": "reviewed-result-only/records/package/META-INF/lean-bridge/runtime.json",
+      "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    },
+    {
+      "bytes": 23,
+      "path": "reviewed-result-only/records/package/META-INF/MANIFEST.MF",
+      "sha256": "172b7aa6ab69ed805e5a9b5bbdbc6e770091086734509d44117852fc10592f6b"
+    },
+    {
+      "bytes": 634,
+      "path": "reviewed-result-only/records/package/META-INF/maven/org.leanbridge/nominalprimitivesubtypes/pom.xml",
+      "sha256": "86991a6b0a27181ce94646c805ede8d1b73df712a1a5b3ea148aa765ff5b3d90"
+    },
+    {
+      "bytes": 1349,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/Api.class",
+      "sha256": "43c4af1fbc52022c94a8697ee00550642e6532a45982278e7e07417f0bd0c5d4"
+    },
+    {
+      "bytes": 301,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/Event.class",
+      "sha256": "a74db6632a00ef0c10aaa9b521f9625fb2b5c09dd36f696f7f322f4fe0daedfb"
+    },
+    {
+      "bytes": 1416,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/EventBox.class",
+      "sha256": "ff04f6bb50fcd389fe05dadd1895082fd4646ebacf54dbd8caa675889084e077"
+    },
+    {
+      "bytes": 2077,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/EventChoices.class",
+      "sha256": "90c6d66581c47aae8ab21adab0fc618803030b2aedde430cd7842f83e5aa7ae5"
+    },
+    {
+      "bytes": 1052,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/EventEmpty.class",
+      "sha256": "52a3fdb4937bd8dc321721087d97d42d84095ed75a282396ba605bbae491424b"
+    },
+    {
+      "bytes": 2669,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Api.class",
+      "sha256": "a54f759843c86d9a6354fed6536a87589d71e2f320c8a68cb7483257776bd8df"
+    },
+    {
+      "bytes": 4498,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Api$Companion.class",
+      "sha256": "bbc5a33a8a96c22372dd90f0a8c5ebe78f31cb29de14a6bc3820734e453e4e2d"
+    },
+    {
+      "bytes": 874,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Event.class",
+      "sha256": "5b5bc8318a81f654c9d435df2714d1e57e63bad85fd679b542cb70c973dca543"
+    },
+    {
+      "bytes": 1918,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/EventBox.class",
+      "sha256": "0600ef3518a69f19d3c16d7c2a0844c9c070090aee70105132ac2954626e1c04"
+    },
+    {
+      "bytes": 2939,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/EventChoices.class",
+      "sha256": "160548e5351167a84e4b7b28033344c99e33ccd064d73ec13c3e1d8abd725bc3"
+    },
+    {
+      "bytes": 1208,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/EventEmpty.class",
+      "sha256": "ee953391e7ec1f2f4f235d3c78dbc764302ea183edb63e507053844d4c3e83d9"
+    },
+    {
+      "bytes": 484,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/LeanBridgeExceptionKt.class",
+      "sha256": "c217bc4947ce6d3a9a3c2a390da094878b364878733070db25906e5586e3fb1c"
+    },
+    {
+      "bytes": 2035,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Option.class",
+      "sha256": "d23e6f9a3141bd8c7bce4f52d06f6f6afb5bfbe7ae5ebb724756938387f54338"
+    },
+    {
+      "bytes": 1996,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Option$Companion.class",
+      "sha256": "320294a4c2505a06cbbf9fe11180ff19c468c4cb216e6ab8b216eebc658a6518"
+    },
+    {
+      "bytes": 1790,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Option$None.class",
+      "sha256": "dd51f251bb85d794c21e24ef9f40d20fb4eb96f37739e83a98713bd1c74b8333"
+    },
+    {
+      "bytes": 2201,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Option$Some.class",
+      "sha256": "a7c4de4bd047c24579dc83706a0ce6006d3b85e71f5ec5a37fe8343971bb1577"
+    },
+    {
+      "bytes": 6492,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Packet.class",
+      "sha256": "0105f13bad226d24cccd16755bf3242cce684329c42c48202a1bcab4ae38b912"
+    },
+    {
+      "bytes": 2809,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/PacketPair.class",
+      "sha256": "844266f68cb577956534e939bf26be322daf9a5bd0d706fea498f6962bd22cab"
+    },
+    {
+      "bytes": 2190,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Pair.class",
+      "sha256": "2448e659b9a65bf9f40bd8a846b9ae15f5c4158d5eb1af1210e2b016b87ca17a"
+    },
+    {
+      "bytes": 6501,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/RawPacket.class",
+      "sha256": "8109fb37161b4faa591e6656f2ac6a16466acb544dab99eac3cef9f54b022462"
+    },
+    {
+      "bytes": 2145,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Result.class",
+      "sha256": "a5c9e7d81dd3225ecfbdcbda6aebb554c5e8859ee9c86c2cafd69e39ba2eac44"
+    },
+    {
+      "bytes": 2073,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Result$Companion.class",
+      "sha256": "d7d1f401c2252fe75e365ec6b102c02beb4e143655be3005e5ffad10a5e66d10"
+    },
+    {
+      "bytes": 2469,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Result$Err.class",
+      "sha256": "e0d7206b77fc6312f45de568ba15111c01eee86430fc12c93e057cdeb027fc63"
+    },
+    {
+      "bytes": 2457,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/Result$Ok.class",
+      "sha256": "b85887197dc43ea14413af594e4bf3c9280737d5833213cf905a791ce547254e"
+    },
+    {
+      "bytes": 424,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/kotlin/UnitKt.class",
+      "sha256": "a2ad1e444a8a3ac7de852d6a59eaadecd2c9cdbe72a0d1f156513809cf8d55df"
+    },
+    {
+      "bytes": 1207,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/KotlinBridge.class",
+      "sha256": "82911a322ad9ec3f96b53b60df81e5e4882f71305537538e21d4a32d4fc298d5"
+    },
+    {
+      "bytes": 1561,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/KotlinCalls.class",
+      "sha256": "5000a2b35bb16003b69e36503b5f0d7cd83fffddefa1ebdbd630efca0392fb93"
+    },
+    {
+      "bytes": 28486,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/KotlinRuntime.class",
+      "sha256": "f2e1cd3ddb2556e50f68e280b9261aa5fee64cc99691fe6d64e0e9b4767beb52"
+    },
+    {
+      "bytes": 289,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/LeanBridgeException.class",
+      "sha256": "e160c434bb8a3695e175d0e118b6201b8ccd6ab7f595e4bc00eefbf66713ff5a"
+    },
+    {
+      "bytes": 440,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/NativeAssets.class",
+      "sha256": "167f789939d6c391f2270f1abddb185e0fe8bcaa0eb9e292adaec764ef8d15e9"
+    },
+    {
+      "bytes": 13428,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/NativeAssets$_Assets.class",
+      "sha256": "778cd7c0977217e45ce1598ebfde5ac39b1521c866700f2eb27da59fd8bab9da"
+    },
+    {
+      "bytes": 918,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/Option.class",
+      "sha256": "0e8908aa87b6857e75260e76277d32d0006956301ef5c64ff9774c4433fe3a70"
+    },
+    {
+      "bytes": 1436,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/Option$None.class",
+      "sha256": "293cc5611d42c07e89b4eb4861296b09cef43589e5274f37640ab5de2f585b49"
+    },
+    {
+      "bytes": 1654,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/Option$Some.class",
+      "sha256": "f120a863424b5f529bfdaf683ab721c95ab3763fe1f21ed50b2a251db5b4d434"
+    },
+    {
+      "bytes": 4370,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/Packet.class",
+      "sha256": "08114404db611f78d38b424ba9d35304aef2da9ad5fdb6ee64514bd6ea9e2db5"
+    },
+    {
+      "bytes": 2008,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/PacketPair.class",
+      "sha256": "19a6b0e967e456f592f004b3825615ec6009f8e9b1ff380505d5c06fcb53c185"
+    },
+    {
+      "bytes": 1655,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/Pair.class",
+      "sha256": "d1e6330c8950f24ff2c890e46c98569dce2187f6268bbd7eafb3b7f98fc087ff"
+    },
+    {
+      "bytes": 4376,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/RawPacket.class",
+      "sha256": "5f530683097cd8491435b4131d6da2b7b0315a5567f58a7d1e6524856419efba"
+    },
+    {
+      "bytes": 945,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/Result.class",
+      "sha256": "47ecc96eae40a636858d275e1402f6f7e58aecdfb30ebedc0acfe71f5791106c"
+    },
+    {
+      "bytes": 1833,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/Result$Err.class",
+      "sha256": "bde2b94a843f1017a90f4732322dd57f02bd6f1efb517cfb91b2ea66d1e7f4e9"
+    },
+    {
+      "bytes": 1821,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/Result$Ok.class",
+      "sha256": "8ca69c9114eae41be1aafcdd4c3e51d3af49d265119f00b7591416156eef497e"
+    },
+    {
+      "bytes": 27894,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/Runtime.class",
+      "sha256": "4b5aa60506d86671c6047b3aea63a4d4af30414247b8c764a53edf8e9809e8c7"
+    },
+    {
+      "bytes": 677,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/Scope.class",
+      "sha256": "ee8d23b43cf77e06fb42526a68501979d900a33538103ac2f9e4ce55f51628a9"
+    },
+    {
+      "bytes": 924,
+      "path": "reviewed-result-only/records/package/org/leanbridge/nominalprimitivesubtypes/Unit.class",
+      "sha256": "bbe10b1b784cfaad2969c79b1882920883ff6079b123fa3d75df2087fd6626ea"
+    },
+    {
+      "bytes": 19554,
+      "path": "reviewed-result-only/records/package/README.md",
+      "sha256": "80fc86ec22cc6fbcbbc33cadcfde28f76b91e3be0c337da0bc2413bde32b7421"
+    },
+    {
+      "bytes": 582424,
+      "path": "reviewed-result-only/records/report.json",
+      "sha256": "1322bf57f5d065426a88b78400f3b252c8dab5804b49e4992210d260ae349692"
+    },
+    {
+      "bytes": 806,
+      "path": "reviewed-result-only/records/resources.json",
+      "sha256": "b3a84acd0f5fbe0c89f4eaaad539aff3e7f28b792100ba8831e755f2a08264b6"
+    },
+    {
+      "bytes": 123,
+      "path": "reviewed-result-only/records/runtime.json",
+      "sha256": "c2f1b9d72bf412b57880eaf2e5f14f071577bea6210298d5c0d82c529f20d81e"
+    },
+    {
+      "bytes": 9128,
+      "path": "runners/run-vo1495-nominal-primitive-jvm-88cf601.mjs",
+      "sha256": "334c918d6082cf5f3ca2638bc7c6bfd3eb4608e7c7bd1cf9afcaa8bc15be7dd1"
+    },
+    {
+      "bytes": 7334,
+      "path": "runners/run-vo1495-nominal-primitive-jvm-controls-88cf601.mjs",
+      "sha256": "cd7dbd381a16ca8d9f01ebafdc1f37a49e9583a8070830ee833c10b9e52fc325"
+    },
+    {
+      "bytes": 7403,
+      "path": "runners/run-vo1495-nominal-primitive-jvm-controls-e0fed7f-v2.mjs",
+      "sha256": "e4f90182651f05d935a6c9d11596e8a9cab4ff67b8ed24048307d70e8ecf5715"
+    },
+    {
+      "bytes": 7334,
+      "path": "runners/run-vo1495-nominal-primitive-jvm-controls-e0fed7f.mjs",
+      "sha256": "a5449aa6069b64db78debd3d934f5e15f525ad00637e9ee99596be785f15e698"
+    },
+    {
+      "bytes": 9610,
+      "path": "runners/run-vo1495-nominal-primitive-jvm-e0fed7f-v2.mjs",
+      "sha256": "aa85e9bdb8a5d743de726c20e723c23d437a937c91fa2712c059c132ba5f2c94"
+    },
+    {
+      "bytes": 9525,
+      "path": "runners/run-vo1495-nominal-primitive-jvm-e0fed7f.mjs",
+      "sha256": "30cf2eabf672e5cdb0409c4d6c069cb8e0ffa6b8b0f15a5ca6bac40545aca53a"
+    },
+    {
+      "bytes": 4437,
+      "path": "sources/src/abi/component-scalars.mjs",
+      "sha256": "745058db0327c9060222ff58d45c272595e23125c2169d80287ff9035cf3608e"
+    },
+    {
+      "bytes": 5961,
+      "path": "sources/src/abi/generic-specialization.mjs",
+      "sha256": "5c7472382e4426adf5f280037965d39d7eb16949414db80226ee5962dca05df9"
+    },
+    {
+      "bytes": 8556,
+      "path": "sources/src/abi/refinements.mjs",
+      "sha256": "57fcd7bfa6c2ae7b7d696c1c95a88282c725fef2c15486744e683c258fa2ce07"
+    },
+    {
+      "bytes": 105552,
+      "path": "sources/src/analyze/NativeExports.lean",
+      "sha256": "cf03ffc8aa8e0760ea0d9b58be3d452ee71ec3cbf683dd3f82c02dc2eb3e14a5"
+    },
+    {
+      "bytes": 45870,
+      "path": "sources/src/backends/c/generate.mjs",
+      "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
+    },
+    {
+      "bytes": 3006,
+      "path": "sources/src/backends/c/package-audit.mjs",
+      "sha256": "bbcc42ebdc6c7d69e46860e48bbc1573e70af04ca8cb85ce4123496788b5395c"
+    },
+    {
+      "bytes": 11921,
+      "path": "sources/src/backends/c/primitive-surface.mjs",
+      "sha256": "893d7f649bf489c766e5d38f04ce4e1b7cb7967acc8f63bf6f82b9b6f5cd64df"
+    },
+    {
+      "bytes": 11963,
+      "path": "sources/src/backends/jvm/callables.mjs",
+      "sha256": "6c9345f2a05213c8c6bb1dccbbbb6e9ea8c175e2e7d0bb08a7945169e2837b7d"
+    },
+    {
+      "bytes": 4808,
+      "path": "sources/src/backends/jvm/copied-aliases.mjs",
+      "sha256": "1428ce4c2a583668b0d2a835bcf9179082b7b396b065952d0649b157055c637e"
+    },
+    {
+      "bytes": 716,
+      "path": "sources/src/backends/jvm/copied-assets.mjs",
+      "sha256": "93e97eb16ae6970e51ef78d3fd16b6db408b90e9c3affdd06121d8e97faf7750"
+    },
+    {
+      "bytes": 13442,
+      "path": "sources/src/backends/jvm/copied-conversions.mjs",
+      "sha256": "d41050ddcad1ebbbe19c74d681f311903764128ebed212616b0f6098b4fbefbe"
+    },
+    {
+      "bytes": 13123,
+      "path": "sources/src/backends/jvm/copied-kotlin.mjs",
+      "sha256": "bca0eaf8fd637c524cc4e7d0756dc683037cb8e426cbfad02d7cfc733bac8d17"
+    },
+    {
+      "bytes": 9054,
+      "path": "sources/src/backends/jvm/copied-model.mjs",
+      "sha256": "d586a7a26f856377bcdb68cded3b64793ebb3c628112c6a693bd8c863515c246"
+    },
+    {
+      "bytes": 2389,
+      "path": "sources/src/backends/jvm/copied-runtime.mjs",
+      "sha256": "21aa41d1087ea4fe83e2b7a620f58eb893add37cce7fe11f6fa04d500cd047c9"
+    },
+    {
+      "bytes": 15051,
+      "path": "sources/src/backends/jvm/copied-values.mjs",
+      "sha256": "b4ab3f1bc62f8d1a16abc768e7abcc3c9e2ae6dd768904891f658128f0318fab"
+    },
+    {
+      "bytes": 15229,
+      "path": "sources/src/backends/jvm/verified-assets.mjs",
+      "sha256": "ed24535082694443ccbfeca08a5bb82fe7125a1b15ec1f0e2eacb8acd24d5eae"
+    },
+    {
+      "bytes": 16607,
+      "path": "sources/src/backends/native/fin-refinements.mjs",
+      "sha256": "ed719cbb1d4de13a9bbd110703eb0fffb4d2cea356fdc91bcdfbbed0b89039c3"
+    },
+    {
+      "bytes": 9938,
+      "path": "sources/src/binding-ir/canonical.mjs",
+      "sha256": "28e22e614fc532a99baeeb34ee9d054f3bc6db82239fa89059a9518cb06d3d20"
+    },
+    {
+      "bytes": 46487,
+      "path": "sources/src/binding-ir/contract.mjs",
+      "sha256": "51f39115f198cadb22edcee1bc09d9205024c1ba622f86588056bca7aac6faf6"
+    },
+    {
+      "bytes": 3297,
+      "path": "sources/src/binding-ir/sha256.mjs",
+      "sha256": "f9bcbce580e88f31c3a63e8aa0d1d834228afa796a74a4c2f708da68e99a15ac"
+    },
+    {
+      "bytes": 12579,
+      "path": "sources/src/build/native-component.mjs",
+      "sha256": "2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867"
+    },
+    {
+      "bytes": 19177,
+      "path": "sources/src/capsule/contract.mjs",
+      "sha256": "590f6758e4b25f7a73e04333276facec891fd26debd2fa5621e183b27ca6082f"
+    },
+    {
+      "bytes": 3332,
+      "path": "sources/src/capsule/node.mjs",
+      "sha256": "2ffbff5c27dbdd89fac9dd6ce5a1a3082430c9bdfbdcc3908941eaf1d009fb1b"
+    },
+    {
+      "bytes": 14878,
+      "path": "sources/src/release/package-set-receipt.mjs",
+      "sha256": "d0b945554b03e9d0f93149b12ddf808c33243cbb0ff5495a7a8a68e683fc71ed"
+    },
+    {
+      "bytes": 21508,
+      "path": "sources/tests/fixtures/nominal-primitive-subtype-consumers/java.java",
+      "sha256": "95a50705e1fdeb29e3bf7370e1e21bf50ccefc1e3bd1fc122a44fe55e4d06a1d"
+    },
+    {
+      "bytes": 17600,
+      "path": "sources/tests/fixtures/nominal-primitive-subtype-consumers/kotlin.kt",
+      "sha256": "bd6255b02966256340922c4df562fe58424b1ce40ce3a9b453c5e3a5cc1f4709"
+    },
+    {
+      "bytes": 17194,
+      "path": "sources/tests/fixtures/nominal-primitive-subtype-consumers/model.java",
+      "sha256": "a93c3ed786171b80498c33b393a3b1d8a840d1e3cbed54564ce1b0d96cbef56a"
+    },
+    {
+      "bytes": 99,
+      "path": "sources/tests/fixtures/onboarding/nominal-primitive-subtypes/lakefile.toml",
+      "sha256": "80a574337b857f079884d006450abd9beb03a6876e94477cc9e37dd874d60f8f"
+    },
+    {
+      "bytes": 25,
+      "path": "sources/tests/fixtures/onboarding/nominal-primitive-subtypes/lean-toolchain",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "bytes": 1093,
+      "path": "sources/tests/fixtures/onboarding/nominal-primitive-subtypes/LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 10863,
+      "path": "sources/tests/fixtures/onboarding/nominal-primitive-subtypes/NominalPrimitiveSubtypes.lean",
+      "sha256": "1b82df85335f49de3dbfbef1d0070f42ecf83cd1896936a28b71de47af1994a9"
+    },
+    {
+      "bytes": 70,
+      "path": "sources/tests/fixtures/onboarding/nominal-primitive-subtypes/package.json",
+      "sha256": "2f18e34a4ba6695d28783cae8edd55376bcc02a409b11e56933e016a6a1a5e96"
+    },
+    {
+      "bytes": 15505,
+      "path": "sources/tests/helpers/copied-fixture-install.mjs",
+      "sha256": "dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df"
+    },
+    {
+      "bytes": 7620,
+      "path": "sources/tests/helpers/fin-container-edge-jvm-closure.mjs",
+      "sha256": "e8a90d5af4b86588f82c044992c2eec50fe09f1e139aefba0799767a8813a98c"
+    },
+    {
+      "bytes": 9902,
+      "path": "sources/tests/helpers/lake-workspace.mjs",
+      "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082"
+    },
+    {
+      "bytes": 9439,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-fixture.mjs",
+      "sha256": "5b958fdff2c04923b1780ef919ac110bd6bb44c77e4285a2b402f47bbdcc34cd"
+    },
+    {
+      "bytes": 2247,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-jvm-ci-handoff.mjs",
+      "sha256": "4e410705ab14b29f1846c5a9c9db803b34a119bdc0a49560a1de06c60acf68b9"
+    },
+    {
+      "bytes": 6166,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-jvm-ci-report.mjs",
+      "sha256": "ca3d2f10b5b1749e676fededdc7c7f3d84b568d79a10541893e9463905f5870a"
+    },
+    {
+      "bytes": 10028,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-jvm-consumer-records.mjs",
+      "sha256": "013fb298dd920df21d07db31f2aa492efb61f19035099fd5cc1b39637755617c"
+    },
+    {
+      "bytes": 7749,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-jvm-controls.mjs",
+      "sha256": "6569af0c8c0a157178523a1e49c7b79712dc0be58905459fbe1ad7f21c3c7c7e"
+    },
+    {
+      "bytes": 8577,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-jvm-fixture.mjs",
+      "sha256": "dc7437df169bd92539a67d736a58f5e80a2a4b7025427f140cba545084464271"
+    },
+    {
+      "bytes": 13307,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-jvm-installed-tests.mjs",
+      "sha256": "591c8c4bf47ea5dfbdba8b03bc3bc42db20fe7261da8dad9f28c76f247e5110d"
+    },
+    {
+      "bytes": 8565,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-jvm-model-records.mjs",
+      "sha256": "9bfad74fc51c85b95ef94274053b6c6b5e0c4db9df97c1c5d14b5ba1469029b1"
+    },
+    {
+      "bytes": 10549,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-jvm-package-records.mjs",
+      "sha256": "601300f8b98e2432c6efc4fc4eea6fb1879e34cf8b464002223d9cf135fea213"
+    },
+    {
+      "bytes": 4809,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-jvm-package.mjs",
+      "sha256": "f5e6cc3cd8769b0e54aaee5cf62698ffb1aa4d9ca9aebb5bbcc6eba9418fa440"
+    },
+    {
+      "bytes": 13248,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-jvm-probe.mjs",
+      "sha256": "23c97be4799edf465b1bc56b2d225e4c6d268961577639f59cbc12ad9a7eb471"
+    },
+    {
+      "bytes": 7071,
+      "path": "sources/tests/helpers/nominal-primitive-subtype-jvm-report.mjs",
+      "sha256": "2dab489d75fb3c2e2122c8f857a7c5ca6f8079ff440ae7685ea2a82c78d7a634"
+    },
+    {
+      "bytes": 2296,
+      "path": "sources/tests/helpers/nominal-subtype-dotnet-resources.mjs",
+      "sha256": "59281a69346944a7e6a7d19a444cd596f39d15a00185f00fafd0cb5f44fd2a15"
+    },
+    {
+      "bytes": 2843,
+      "path": "sources/tests/helpers/nominal-subtype-jvm-ci-tools.mjs",
+      "sha256": "678c7bd830e7819e64ec3f9a8009b1f40caf0aedb192998fdbe1cc0f4cf6e2ec"
+    },
+    {
+      "bytes": 5283,
+      "path": "sources/tests/helpers/package-set.mjs",
+      "sha256": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c"
+    },
+    {
+      "bytes": 3557,
+      "path": "sources/tests/helpers/type-corpus-reviewed-ir.mjs",
+      "sha256": "621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7"
+    }
+  ],
+  "generatorClosure": [
+    "src/abi/component-scalars.mjs",
+    "src/abi/generic-specialization.mjs",
+    "src/abi/refinements.mjs",
+    "src/backends/c/generate.mjs",
+    "src/backends/c/package-audit.mjs",
+    "src/backends/c/primitive-surface.mjs",
+    "src/backends/jvm/callables.mjs",
+    "src/backends/jvm/copied-aliases.mjs",
+    "src/backends/jvm/copied-assets.mjs",
+    "src/backends/jvm/copied-conversions.mjs",
+    "src/backends/jvm/copied-kotlin.mjs",
+    "src/backends/jvm/copied-model.mjs",
+    "src/backends/jvm/copied-runtime.mjs",
+    "src/backends/jvm/copied-values.mjs",
+    "src/backends/jvm/verified-assets.mjs",
+    "src/backends/native/fin-refinements.mjs",
+    "src/binding-ir/canonical.mjs",
+    "src/binding-ir/contract.mjs",
+    "src/binding-ir/sha256.mjs",
+    "src/capsule/contract.mjs",
+    "src/capsule/node.mjs"
+  ],
+  "kind": "nominal-primitive-subtype-jvm-installed-v1",
+  "limitations": [
+    "Local Linux x64/glibc 2.36 acceptance with an explicit 2.36 package floor, JDK 22.0.2 and Kotlin 2.2.0, not hosted release-floor acceptance.",
+    "Four ordinary/reviewed full/result-only selections reproduce complete Maven packages from two author roots, install offline after author removal, and run Java and Kotlin callers after relocation and again from a source-free deployment.",
+    "Compile-time API and Kotlin nullability probes check the generated public surface; their records are retained, not their compiler distributions.",
+    "All accepted launches ran serially on one CPU with an explicit harness load ceiling of 8 and unchanged disk and memory floors; hosted CI keeps the default ceiling of 6.",
+    "Two earlier ordinary/full launches are retained, classified and never counted: a default load-guard refusal before any build, and a passing producer whose first controls runner stopped on a runner defect.",
+    "Complete original JARs remain in the build handoffs. This archive retains their identities, the retained package members, execution, probe and control records and selected frozen producer sources.",
+    "The shared fixture covers all nineteen admitted primitive bases in acyclic records, variants, aliases, mixed Fin guards and constructor-free results; it does not generalize to every nominal type.",
+    "Constructor/source entry counts and memory are unmeasured. Refined callbacks, owned, recursive, dependent and broader generic Subtypes remain separate work.",
+    "Archived absolute paths record the original host and are not CI prerequisites. This archive does not itself promote support or establish the hosted result."
+  ],
+  "loadCeiling": 8,
+  "preserved": [
+    {
+      "attempt": "r1",
+      "classification": "harness load guard: the installed harness waited five minutes for host load below its default 6 and refused before any author build",
+      "controlsCode": null,
+      "counted": false,
+      "finished": "2026-10-15T21:29:33.091Z",
+      "label": "ordinary-full-r1-88cf601",
+      "mode": "full",
+      "prefix": "/app/build/vo1495-nominal-primitive-jvm-ordinary-full-r1-88cf601",
+      "producerCode": 1,
+      "retained": [
+        "start.json",
+        "end.json",
+        "run.tap"
+      ],
+      "revision": "88cf60117f2ea3bcef0213755c69a2e5d025f425",
+      "route": "ordinary",
+      "runnerRevision": "88cf601",
+      "started": "2026-10-15T21:24:30.626Z",
+      "tapSha256": "c5ac5a82ed8e68d96805e18866d235c0384adc9817088833e2e74bac9ebb43f7",
+      "worktree": "/app/build/worktrees/nominal-primitive-jvm-run-88cf601"
+    },
+    {
+      "attempt": "r1",
+      "classification": "controls runner defect: the producer passed, then the first e0fed7f controls runner asserted a dispatchObserved field that the JVM report result does not carry",
+      "controlsCode": 1,
+      "counted": false,
+      "finished": "2026-10-15T23:44:28.794Z",
+      "label": "ordinary-full-r1-e0fed7f-v1",
+      "mode": "full",
+      "prefix": "/app/build/vo1495-nominal-primitive-jvm-ordinary-full-r1-e0fed7f",
+      "producerCode": 0,
+      "retained": [
+        "start.json",
+        "end.json",
+        "run.tap",
+        "controls.start.json",
+        "controls.log",
+        "controls.end.json"
+      ],
+      "revision": "e0fed7f5f86d8c254a1064fc9eb1ad2e1b39ea0e",
+      "route": "ordinary",
+      "runnerRevision": "e0fed7f-v1",
+      "started": "2026-10-15T23:40:22.119Z",
+      "tapSha256": "4103ed4b9fe90eaad573dda95dd525a76ed73bff3cbbdc88040899f02fbefb08",
+      "worktree": "/app/build/worktrees/nominal-primitive-jvm-run-e0fed7f"
+    }
+  ],
+  "producerCommit": "e0fed7f5f86d8c254a1064fc9eb1ad2e1b39ea0e",
+  "runners": [
+    "run-vo1495-nominal-primitive-jvm-88cf601.mjs",
+    "run-vo1495-nominal-primitive-jvm-controls-88cf601.mjs",
+    "run-vo1495-nominal-primitive-jvm-e0fed7f.mjs",
+    "run-vo1495-nominal-primitive-jvm-controls-e0fed7f.mjs",
+    "run-vo1495-nominal-primitive-jvm-e0fed7f-v2.mjs",
+    "run-vo1495-nominal-primitive-jvm-controls-e0fed7f-v2.mjs"
+  ],
+  "runs": [
+    {
+      "archiveSha256": "ca889d699ace84e7395d8586efb53752fd82d98c94b57ddf17b3689492a94b18",
+      "attempt": "r2",
+      "controls": {
+        "executionControls": 48,
+        "modelControls": 6,
+        "packageControls": 4,
+        "probeControls": 22,
+        "recordControls": 280,
+        "resourceControls": 8
+      },
+      "controlsFinished": "2026-10-15T23:52:27.181Z",
+      "finished": "2026-10-15T23:51:27.342Z",
+      "floor": "2.36",
+      "label": "ordinary-full",
+      "loadCeiling": 8,
+      "mode": "full",
+      "prefix": "/app/build/vo1495-nominal-primitive-jvm-ordinary-full-r2-e0fed7f",
+      "reportSha256": "b5952d7eccbb1ac8b51cdca499806487ffee5f165eb64d90d046adf5edebf96e",
+      "route": "ordinary",
+      "runtime": {
+        "arch": "x64",
+        "glibc": "2.36",
+        "platform": "linux"
+      },
+      "started": "2026-10-15T23:47:43.996Z",
+      "tapSha256": "a27c0e744cadd247033cbddb5cb99c95c2b2ffdfb75d55c68f00acc4ee7c9751",
+      "worktree": "/app/build/worktrees/nominal-primitive-jvm-run-e0fed7f"
+    },
+    {
+      "archiveSha256": "5f39e2844a1753c214920d20be879d32f65a326507323e314fac2fc98eec50b8",
+      "attempt": "r1",
+      "controls": {
+        "executionControls": 48,
+        "modelControls": 4,
+        "packageControls": 4,
+        "probeControls": 22,
+        "recordControls": 274,
+        "resourceControls": 8
+      },
+      "controlsFinished": "2026-10-15T23:56:08.995Z",
+      "finished": "2026-10-15T23:55:44.321Z",
+      "floor": "2.36",
+      "label": "ordinary-result-only",
+      "loadCeiling": 8,
+      "mode": "result-only",
+      "prefix": "/app/build/vo1495-nominal-primitive-jvm-ordinary-result-only-r1-e0fed7f",
+      "reportSha256": "8f2d13cfef238f2eb97ce465395b4c53e79b99b6de47f8ba362a1e17d7daec87",
+      "route": "ordinary",
+      "runtime": {
+        "arch": "x64",
+        "glibc": "2.36",
+        "platform": "linux"
+      },
+      "started": "2026-10-15T23:52:27.329Z",
+      "tapSha256": "da875f8f831bf534bdbce66409f9dda9bbe72c0581b3412bca61bf56daaa5c7e",
+      "worktree": "/app/build/worktrees/nominal-primitive-jvm-run-e0fed7f"
+    },
+    {
+      "archiveSha256": "db873608af806494a1e1ff9887aa9f3770424e4738fbf22e30ee647936438c4c",
+      "attempt": "r1",
+      "controls": {
+        "executionControls": 48,
+        "modelControls": 6,
+        "packageControls": 4,
+        "probeControls": 22,
+        "recordControls": 284,
+        "resourceControls": 8
+      },
+      "controlsFinished": "2026-10-16T00:01:47.150Z",
+      "finished": "2026-10-16T00:00:06.720Z",
+      "floor": "2.36",
+      "label": "reviewed-full",
+      "loadCeiling": 8,
+      "mode": "full",
+      "prefix": "/app/build/vo1495-nominal-primitive-jvm-reviewed-full-r1-e0fed7f",
+      "reportSha256": "2ef575b97f864c989bc4ac904ceb7041bdca20bcaffc41db4dbfd876072d38d0",
+      "route": "reviewed",
+      "runtime": {
+        "arch": "x64",
+        "glibc": "2.36",
+        "platform": "linux"
+      },
+      "started": "2026-10-15T23:56:09.153Z",
+      "tapSha256": "cdb42e0e6a5728634188ae30f562e57943478824000dc2fd2a050ff08b3e2ddc",
+      "worktree": "/app/build/worktrees/nominal-primitive-jvm-run-e0fed7f"
+    },
+    {
+      "archiveSha256": "d78f2a26826ae4750f210ccd55ed73d52940a93b9793eb209d9d230d293e9045",
+      "attempt": "r1",
+      "controls": {
+        "executionControls": 48,
+        "modelControls": 4,
+        "packageControls": 4,
+        "probeControls": 22,
+        "recordControls": 278,
+        "resourceControls": 8
+      },
+      "controlsFinished": "2026-10-16T00:05:41.907Z",
+      "finished": "2026-10-16T00:05:08.204Z",
+      "floor": "2.36",
+      "label": "reviewed-result-only",
+      "loadCeiling": 8,
+      "mode": "result-only",
+      "prefix": "/app/build/vo1495-nominal-primitive-jvm-reviewed-result-only-r1-e0fed7f",
+      "reportSha256": "1322bf57f5d065426a88b78400f3b252c8dab5804b49e4992210d260ae349692",
+      "route": "reviewed",
+      "runtime": {
+        "arch": "x64",
+        "glibc": "2.36",
+        "platform": "linux"
+      },
+      "started": "2026-10-16T00:01:47.341Z",
+      "tapSha256": "427e87c12ffaa5b16fe091d5e0c84f7d3ae8f4addd78efc88a22b8d295827db2",
+      "worktree": "/app/build/worktrees/nominal-primitive-jvm-run-e0fed7f"
+    }
+  ],
+  "schemaVersion": 1,
+  "selectedSources": [
+    "src/abi/component-scalars.mjs",
+    "src/abi/generic-specialization.mjs",
+    "src/abi/refinements.mjs",
+    "src/analyze/NativeExports.lean",
+    "src/backends/c/generate.mjs",
+    "src/backends/c/package-audit.mjs",
+    "src/backends/c/primitive-surface.mjs",
+    "src/backends/jvm/callables.mjs",
+    "src/backends/jvm/copied-aliases.mjs",
+    "src/backends/jvm/copied-assets.mjs",
+    "src/backends/jvm/copied-conversions.mjs",
+    "src/backends/jvm/copied-kotlin.mjs",
+    "src/backends/jvm/copied-model.mjs",
+    "src/backends/jvm/copied-runtime.mjs",
+    "src/backends/jvm/copied-values.mjs",
+    "src/backends/jvm/verified-assets.mjs",
+    "src/backends/native/fin-refinements.mjs",
+    "src/binding-ir/canonical.mjs",
+    "src/binding-ir/contract.mjs",
+    "src/binding-ir/sha256.mjs",
+    "src/build/native-component.mjs",
+    "src/capsule/contract.mjs",
+    "src/capsule/node.mjs",
+    "src/release/package-set-receipt.mjs",
+    "tests/fixtures/nominal-primitive-subtype-consumers/java.java",
+    "tests/fixtures/nominal-primitive-subtype-consumers/kotlin.kt",
+    "tests/fixtures/nominal-primitive-subtype-consumers/model.java",
+    "tests/fixtures/onboarding/nominal-primitive-subtypes/LICENSE",
+    "tests/fixtures/onboarding/nominal-primitive-subtypes/NominalPrimitiveSubtypes.lean",
+    "tests/fixtures/onboarding/nominal-primitive-subtypes/lakefile.toml",
+    "tests/fixtures/onboarding/nominal-primitive-subtypes/lean-toolchain",
+    "tests/fixtures/onboarding/nominal-primitive-subtypes/package.json",
+    "tests/helpers/copied-fixture-install.mjs",
+    "tests/helpers/fin-container-edge-jvm-closure.mjs",
+    "tests/helpers/lake-workspace.mjs",
+    "tests/helpers/nominal-primitive-subtype-fixture.mjs",
+    "tests/helpers/nominal-primitive-subtype-jvm-ci-handoff.mjs",
+    "tests/helpers/nominal-primitive-subtype-jvm-ci-report.mjs",
+    "tests/helpers/nominal-primitive-subtype-jvm-consumer-records.mjs",
+    "tests/helpers/nominal-primitive-subtype-jvm-controls.mjs",
+    "tests/helpers/nominal-primitive-subtype-jvm-fixture.mjs",
+    "tests/helpers/nominal-primitive-subtype-jvm-installed-tests.mjs",
+    "tests/helpers/nominal-primitive-subtype-jvm-model-records.mjs",
+    "tests/helpers/nominal-primitive-subtype-jvm-package-records.mjs",
+    "tests/helpers/nominal-primitive-subtype-jvm-package.mjs",
+    "tests/helpers/nominal-primitive-subtype-jvm-probe.mjs",
+    "tests/helpers/nominal-primitive-subtype-jvm-report.mjs",
+    "tests/helpers/nominal-subtype-dotnet-resources.mjs",
+    "tests/helpers/nominal-subtype-jvm-ci-tools.mjs",
+    "tests/helpers/package-set.mjs",
+    "tests/helpers/type-corpus-reviewed-ir.mjs"
+  ],
+  "tools": {
+    "java": "/app/.toolchains/jdk22/bin/java",
+    "javac": "/app/.toolchains/jdk22/bin/javac",
+    "kotlinc": "/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlinc",
+    "maven": "/app/.toolchains/apache-maven-3.9.11/bin/mvn"
+  }
+}

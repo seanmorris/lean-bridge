@@ -1,0 +1,34 @@
+{
+  "archiveSha256": "db873608af806494a1e1ff9887aa9f3770424e4738fbf22e30ee647936438c4c",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "NullProbe.kt",
+    "-d",
+    "classes"
+  ],
+  "command": "/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlinc",
+  "cwd": "/tmp/lean-bridge-nominal-primitive-jvm-installed-h3k1yi/probes/nullability-true",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/app/.toolchains/jdk22",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "invalid": true,
+  "mode": "full",
+  "outputs": {},
+  "run": {
+    "code": 1,
+    "stderr": "NullProbe.kt:2:29: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'RawPacket'.\nfun produce() = Api.produce(null)\n                            ^^^^\nNullProbe.kt:3:25: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Packet'.\nfun echoA() = Api.echoA(null)\n                        ^^^^\nNullProbe.kt:4:29: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Array<Option<Packet>>'.\nfun aliases() = Api.aliases(null, null)\n                            ^^^^\nNullProbe.kt:4:35: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Array<Option<Packet>>'.\nfun aliases() = Api.aliases(null, null)\n                                  ^^^^\nNullProbe.kt:5:35: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Event'.\nfun echoEventA() = Api.echoEventA(null)\n                                  ^^^^\n",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.nominalprimitivesubtypes.kotlin.*\nfun produce() = Api.produce(null)\nfun echoA() = Api.echoA(null)\nfun aliases() = Api.aliases(null, null)\nfun echoEventA() = Api.echoEventA(null)\n",
+  "sourceSha256": "c250ec5e49fae155a5ffff0b79f413761d996d9c941b63d3046da7ad8c037924"
+}

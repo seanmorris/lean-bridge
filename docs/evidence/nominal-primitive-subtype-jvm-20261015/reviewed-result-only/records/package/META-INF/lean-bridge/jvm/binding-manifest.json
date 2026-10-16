@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "generator": "jvm-copied-v1",
+  "target": "jvm",
+  "component": "nominalprimitivesubtypes@1.0.0",
+  "bindingIrSha256": "5b61da69e0167c4419583ef99da2626f9e44d6d0b7eee9845ed0a6c38acd592c",
+  "namespace": "org.leanbridge.nominalprimitivesubtypes",
+  "files": [
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/Unit.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/LeanBridgeException.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/Api.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/RawPacket.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/Packet.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/PacketPair.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/Event.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/EventEmpty.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/EventBox.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/EventChoices.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/Option.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/Result.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/Pair.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/Runtime.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/NativeAssets.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/Scope.java",
+    "README.md",
+    "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Api.kt",
+    "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Unit.kt",
+    "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/LeanBridgeException.kt",
+    "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/RawPacket.kt",
+    "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Packet.kt",
+    "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Event.kt",
+    "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/EventEmpty.kt",
+    "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/EventBox.kt",
+    "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/EventChoices.kt",
+    "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/PacketPair.kt",
+    "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Option.kt",
+    "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Result.kt",
+    "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Pair.kt",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/KotlinBridge.java",
+    "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/KotlinCalls.kt",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/KotlinRuntime.java"
+  ],
+  "publicFiles": [
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/Unit.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/LeanBridgeException.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/Api.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/RawPacket.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/Packet.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/PacketPair.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/Event.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/EventEmpty.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/EventBox.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/EventChoices.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/Option.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/Result.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/Pair.java",
+    "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Api.kt",
+    "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Unit.kt",
+    "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/LeanBridgeException.kt",
+    "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/RawPacket.kt",
+    "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Packet.kt",
+    "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Event.kt",
+    "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/EventEmpty.kt",
+    "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/EventBox.kt",
+    "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/EventChoices.kt",
+    "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/PacketPair.kt",
+    "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Option.kt",
+    "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Result.kt",
+    "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Pair.kt"
+  ],
+  "internalFiles": [
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/Runtime.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/NativeAssets.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/Scope.java",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/KotlinBridge.java",
+    "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/KotlinCalls.kt",
+    "src/main/java/org/leanbridge/nominalprimitivesubtypes/KotlinRuntime.java"
+  ],
+  "packageFiles": [],
+  "supportedFeatures": [
+    "direct-functions",
+    "copied-values",
+    "deterministic-close"
+  ],
+  "capabilityGaps": [
+    {
+      "feature": "identity-and-effects",
+      "reason": "Ordinary Maven admits copied values and synchronous primitive callables, not resources, compound callables or async delivery."
+    },
+    {
+      "feature": "additional-platforms",
+      "reason": "The compiled native profile is Linux x86-64 with glibc."
+    }
+  ],
+  "aliases": [
+    {
+      "id": "lean:NominalPrimitiveSubtypes.PacketAlias",
+      "name": "PacketAlias",
+      "target": {
+        "id": "lean:NominalPrimitiveSubtypes.Packet",
+        "kind": "named"
+      },
+      "javaType": "Packet",
+      "kotlinType": "Packet"
+    }
+  ],
+  "kotlin": {
+    "namespace": "org.leanbridge.nominalprimitivesubtypes.kotlin",
+    "metadataVersion": "2.2.0",
+    "publicFiles": [
+      "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Api.kt",
+      "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Unit.kt",
+      "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/LeanBridgeException.kt",
+      "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/RawPacket.kt",
+      "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Packet.kt",
+      "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Event.kt",
+      "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/EventEmpty.kt",
+      "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/EventBox.kt",
+      "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/EventChoices.kt",
+      "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/PacketPair.kt",
+      "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Option.kt",
+      "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Result.kt",
+      "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/kotlin/Pair.kt"
+    ],
+    "internalFiles": [
+      "src/main/java/org/leanbridge/nominalprimitivesubtypes/KotlinBridge.java",
+      "src/main/kotlin/org/leanbridge/nominalprimitivesubtypes/KotlinCalls.kt",
+      "src/main/java/org/leanbridge/nominalprimitivesubtypes/KotlinRuntime.java"
+    ]
+  }
+}

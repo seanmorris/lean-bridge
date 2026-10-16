@@ -1,0 +1,32 @@
+{
+  "closure": {
+    "classpathFilesSha256": "e30c6973a2ae4c35ad4907ecac46dab06b5de7f5b0f6b201095f19ec4caa8f8f",
+    "files": {
+      "component.jar": {
+        "bytes": 51719312,
+        "sha256": "db873608af806494a1e1ff9887aa9f3770424e4738fbf22e30ee647936438c4c"
+      },
+      "consumer.jar": {
+        "bytes": 5110227,
+        "sha256": "a421911139b0202d8a88054a1dce5099da6292e01b036f35f1a5436fd753f579"
+      }
+    },
+    "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e"
+  },
+  "counts": {
+    "checks": 1229,
+    "hostRejections": 6,
+    "rejections": 283,
+    "rounds": 256,
+    "snapshotControls": 9,
+    "wordBits": 64
+  },
+  "cwd": "/tmp/lean-bridge-nominal-primitive-jvm-installed-h3k1yi/kotlin-source-free",
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":1229,\"rejections\":283,\"hostRejections\":6,\"snapshotControls\":9,\"rounds\":256,\"wordBits\":64}\n"
+  },
+  "sourcesRemoved": true,
+  "stage": "source-free"
+}

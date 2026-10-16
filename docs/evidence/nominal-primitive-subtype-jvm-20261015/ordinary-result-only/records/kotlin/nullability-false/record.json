@@ -1,0 +1,43 @@
+{
+  "archiveSha256": "5f39e2844a1753c214920d20be879d32f65a326507323e314fac2fc98eec50b8",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "NullProbe.kt",
+    "-d",
+    "classes"
+  ],
+  "command": "/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlinc",
+  "cwd": "/tmp/lean-bridge-nominal-primitive-jvm-installed-tetAuE/probes/nullability-false",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/app/.toolchains/jdk22",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "invalid": false,
+  "mode": "result-only",
+  "outputs": {
+    "META-INF/main.kotlin_module": {
+      "bytes": 41,
+      "sha256": "14d9d137a46fc5f49ea00828cb3ad2d35b84c9918bbca55a496bdbdf5366c5f9"
+    },
+    "NullProbeKt.class": {
+      "bytes": 1832,
+      "sha256": "76436154ee41e8a4cef01b12bc42ed695e3a00eba692dc83b4bac61715c941ae"
+    }
+  },
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.nominalprimitivesubtypes.kotlin.*\nfun produce() = Api.produce(RawPacket(org.leanbridge.nominalprimitivesubtypes.Unit.INSTANCE, true, 42, 42, 42L, java.math.BigInteger.TWO, -42, -42, -42, -42L, java.math.BigInteger.TWO, java.math.BigInteger.TWO, 1.5f, 1.5, \"a\", byteArrayOf(1), 97, java.math.BigInteger.TWO, -42L, java.math.BigInteger.TWO))\n",
+  "sourceSha256": "348bc238d55d001ba0e92c70528a5abd57d5e26a174ce0e61e1ce2195219ea64"
+}

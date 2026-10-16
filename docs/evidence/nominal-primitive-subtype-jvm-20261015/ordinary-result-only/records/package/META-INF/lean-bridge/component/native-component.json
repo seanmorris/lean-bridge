@@ -1,0 +1,100 @@
+{
+  "adaptersSha256": "0d92182755ea825dff37f1d129963fb9c82a550ade38e4bfb523152111108908",
+  "allocationGuardSha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83",
+  "bindingIrSha256": "87b3dd669d2e699729b2c4ac3a8d631644b464b373d034fd13675dfc027257c3",
+  "compiler": "cc (Debian 12.2.0-14+deb12u1) 12.2.0",
+  "exports": [
+    {
+      "declaration": "NominalPrimitiveSubtypes.produce",
+      "symbol": "lb_4d420414dfdb252510c59482"
+    },
+    {
+      "declaration": "NominalPrimitiveSubtypes.produceChoices",
+      "symbol": "lb_e791062d392a94a18563a45f"
+    },
+    {
+      "declaration": "NominalPrimitiveSubtypes.produceEvent",
+      "symbol": "lb_e721c226f4fcff66a4ffea0f"
+    },
+    {
+      "declaration": "NominalPrimitiveSubtypes.produceGroup",
+      "symbol": "lb_2c1c751c1667dd64cd4c3fe3"
+    },
+    {
+      "declaration": "NominalPrimitiveSubtypes.producePair",
+      "symbol": "lb_a54b47645ca8b931f9ef293a"
+    },
+    {
+      "declaration": "NominalPrimitiveSubtypes.wordBits",
+      "symbol": "lb_2df79ff835926bf7b8864ec6"
+    }
+  ],
+  "headerSha256": "af11959758b975651339fbbb5f7791c595d72f52ef7ee520c0113559f75dd69a",
+  "initializer": "initialize_LeanBridgeNative19ad06f04a0c2d39",
+  "library": "libcomponent_19ad06f04a0c2d39db76.so",
+  "metadataSha256": "2f741554fd5f2cef171bdc07a437fb2d30b46a2d6ccb98bae34eef14465f15ce",
+  "modelSha256": "97bcc01ed2f9528e2d528202f7124963b28f023b4f6bc6116e7218cb0cc5aded",
+  "nativeLibrary": {
+    "bytes": 181160,
+    "sha256": "47067e8cf30f9a760605839d635f957b0e6de816fd4e8d18803ee2a89e58cde3"
+  },
+  "profile": "native-library-v1",
+  "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+  "schemaVersion": 2,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "451de7bf55fc4d818cfd3aa188d695c192cd3ca4be3ace9bec6a25d7a6f03b83",
+    "exportConfigurationSource": "{\n  \"exports\": [\n    \"NominalPrimitiveSubtypes.produce\",\n    \"NominalPrimitiveSubtypes.produceGroup\",\n    \"NominalPrimitiveSubtypes.producePair\",\n    \"NominalPrimitiveSubtypes.produceEvent\",\n    \"NominalPrimitiveSubtypes.produceChoices\",\n    \"NominalPrimitiveSubtypes.wordBits\"\n  ],\n  \"modules\": [\n    \"NominalPrimitiveSubtypes\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"maven\": {\n      \"name\": \"org.leanbridge:nominalprimitivesubtypes\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+    "extractorSha256": "cf03ffc8aa8e0760ea0d9b58be3d452ee71ec3cbf683dd3f82c02dc2eb3e14a5",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 613256,
+          "interfaceSha256": "cd5a832576500c39d37188dd454c20a616a2a89ff7381a350c735a3cd7d6d3b0",
+          "sha256": "4f45cec5398f18e3d42f3001e8a8042eaef6906768c589f894082c1fadb82e43"
+        },
+        "module": "NominalPrimitiveSubtypes",
+        "source": {
+          "bytes": 10887,
+          "path": "NominalPrimitiveSubtypes.lean",
+          "sha256": "bbb14128583c0daa879ad28fc794a227a8511439daec27a749cc1946f7a4d3ac"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "exportModules": [
+        "NominalPrimitiveSubtypes"
+      ],
+      "exports": [
+        "NominalPrimitiveSubtypes.produce",
+        "NominalPrimitiveSubtypes.produceGroup",
+        "NominalPrimitiveSubtypes.producePair",
+        "NominalPrimitiveSubtypes.produceEvent",
+        "NominalPrimitiveSubtypes.produceChoices",
+        "NominalPrimitiveSubtypes.wordBits"
+      ],
+      "metadata": {
+        "invocationIdentitySha256": "bc0aa09c75dd3abcc50c05d5331bcb34473606be668e2070fdcaa03d6cc779c9",
+        "modules": [
+          {
+            "interfaceSha256": "cd5a832576500c39d37188dd454c20a616a2a89ff7381a350c735a3cd7d6d3b0",
+            "name": "NominalPrimitiveSubtypes",
+            "sourcePath": "NominalPrimitiveSubtypes.lean",
+            "sourceSha256": "bbb14128583c0daa879ad28fc794a227a8511439daec27a749cc1946f7a4d3ac"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "NominalPrimitiveSubtypes"
+      ],
+      "profile": "native-library-v1",
+      "resources": []
+    },
+    "sourceNoticesSha256": "89dfe1416ae1d122f33a7d976f3f3d23bf17daf79dd156c8d5a5ee4653d49ff6",
+    "sourceTreeSha256": "1b0f7dd8fde58b70bb2ff9e159d837cecb1db14717c822fd169b97cbff8dbe91"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "archiveSha256": "5f39e2844a1753c214920d20be879d32f65a326507323e314fac2fc98eec50b8",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "probe.kt",
+    "-d",
+    "classes"
+  ],
+  "command": "/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlinc",
+  "cwd": "/tmp/lean-bridge-nominal-primitive-jvm-installed-tetAuE/probes/kotlin",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/app/.toolchains/jdk22",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "mode": "result-only",
+  "outputs": {},
+  "profile": "kotlin",
+  "run": {
+    "code": 1,
+    "stderr": "probe.kt:2:32: error: [UNRESOLVED_REFERENCE] Unresolved reference 'echoA'.\nfun echoA(value: Packet) = Api.echoA(value)\n                               ^^^^^\nprobe.kt:3:32: error: [UNRESOLVED_REFERENCE] Unresolved reference 'echoB'.\nfun echoB(value: Packet) = Api.echoB(value)\n                               ^^^^^\nprobe.kt:4:37: error: [UNRESOLVED_REFERENCE] Unresolved reference 'refuseUnit'.\nfun refuseUnit(value: Packet) = Api.refuseUnit(value)\n                                    ^^^^^^^^^^\nprobe.kt:5:48: error: [UNRESOLVED_REFERENCE] Unresolved reference 'combine'.\nfun combine(left: Packet, right: Packet) = Api.combine(left, right)\n                                               ^^^^^^^\nprobe.kt:6:39: error: [UNRESOLVED_REFERENCE] Unresolved reference 'echoPair'.\nfun echoPair(value: PacketPair) = Api.echoPair(value)\n                                      ^^^^^^^^\nprobe.kt:7:36: error: [UNRESOLVED_REFERENCE] Unresolved reference 'echoEventA'.\nfun echoEventA(value: Event) = Api.echoEventA(value)\n                                   ^^^^^^^^^^\nprobe.kt:8:36: error: [UNRESOLVED_REFERENCE] Unresolved reference 'echoEventB'.\nfun echoEventB(value: Event) = Api.echoEventB(value)\n                                   ^^^^^^^^^^\nprobe.kt:9:78: error: [UNRESOLVED_REFERENCE] Unresolved reference 'aliases'.\nfun aliases(left: Array<Option<Packet>>, right: Array<Option<Packet>>) = Api.aliases(left, right)\n                                                                             ^^^^^^^\n",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.nominalprimitivesubtypes.kotlin.*\nfun echoA(value: Packet) = Api.echoA(value)\nfun echoB(value: Packet) = Api.echoB(value)\nfun refuseUnit(value: Packet) = Api.refuseUnit(value)\nfun combine(left: Packet, right: Packet) = Api.combine(left, right)\nfun echoPair(value: PacketPair) = Api.echoPair(value)\nfun echoEventA(value: Event) = Api.echoEventA(value)\nfun echoEventB(value: Event) = Api.echoEventB(value)\nfun aliases(left: Array<Option<Packet>>, right: Array<Option<Packet>>) = Api.aliases(left, right)\n",
+  "sourceSha256": "63812c128564d3895ebab5ad23492f455f385d7302b4551f307d964487edc3f8"
+}

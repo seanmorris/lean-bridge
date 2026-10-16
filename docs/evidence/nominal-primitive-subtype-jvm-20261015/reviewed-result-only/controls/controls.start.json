@@ -1,0 +1,90 @@
+{
+  "compiledAgain": false,
+  "head": "e0fed7f5f86d8c254a1064fc9eb1ad2e1b39ea0e",
+  "links": {
+    "node_modules": "/app/node_modules"
+  },
+  "mode": "result-only",
+  "originals": {
+    "reviewed/result-only/build-0/NominalPrimitiveSubtypes.lean": "bbb14128583c0daa879ad28fc794a227a8511439daec27a749cc1946f7a4d3ac",
+    "reviewed/result-only/build-0/api.binding-ir.json": "64033224412a89cce86ef07c54e8949664fd1d93f0bd4c6cfafe35d2440bc6f0",
+    "reviewed/result-only/build-0/author-inputs.json": "acedfe564dfb8cd6050995e345c96fbf5bafd7eede0083c3d5f210f916735b9f",
+    "reviewed/result-only/build-0/lean-bridge.exports.json": "9c0aa6bfef1f20a44cd0ae7c61b4a6012ca78b79b01987623e78d0bb4a35476f",
+    "reviewed/result-only/build-0/model.json": "d5f388caf49452b987f947bc0bb924203dad4343ef8415699ecd4fa49dd1022e",
+    "reviewed/result-only/build-0/native-jvm.json": "28dbfff69b3b9871632e27bc5056cbaa18a7fe1f541ad554e92acc284f807fdc",
+    "reviewed/result-only/build-0/package-set-receipt.json": "4cc3ef842fbe7f8aeda02daabebfa792518fb51d9c84a62aa04be87cfa20804d",
+    "reviewed/result-only/build-1/NominalPrimitiveSubtypes.lean": "bbb14128583c0daa879ad28fc794a227a8511439daec27a749cc1946f7a4d3ac",
+    "reviewed/result-only/build-1/api.binding-ir.json": "64033224412a89cce86ef07c54e8949664fd1d93f0bd4c6cfafe35d2440bc6f0",
+    "reviewed/result-only/build-1/author-inputs.json": "a85b90dd77d5d457bbd8250abf7108c088e973df75af5253b2a85f97948f4013",
+    "reviewed/result-only/build-1/lean-bridge.exports.json": "9c0aa6bfef1f20a44cd0ae7c61b4a6012ca78b79b01987623e78d0bb4a35476f",
+    "reviewed/result-only/build-1/model.json": "d5f388caf49452b987f947bc0bb924203dad4343ef8415699ecd4fa49dd1022e",
+    "reviewed/result-only/build-1/native-jvm.json": "28dbfff69b3b9871632e27bc5056cbaa18a7fe1f541ad554e92acc284f807fdc",
+    "reviewed/result-only/build-1/package-set-receipt.json": "4cc3ef842fbe7f8aeda02daabebfa792518fb51d9c84a62aa04be87cfa20804d",
+    "reviewed/result-only/configuration.json": "9c0aa6bfef1f20a44cd0ae7c61b4a6012ca78b79b01987623e78d0bb4a35476f",
+    "reviewed/result-only/consumer.java": "3d2a8b7afcc5aba76612e7a24d5374818542c02550734da2ca5a96878ff573d9",
+    "reviewed/result-only/consumer.kt": "989a6460d915fd7857bcb37e666637bb1115a13e43beb84a507df1e6af0e3d2d",
+    "reviewed/result-only/expected.binding-ir.json": "64033224412a89cce86ef07c54e8949664fd1d93f0bd4c6cfafe35d2440bc6f0",
+    "reviewed/result-only/handoff/archives/nominalprimitivesubtypes-1.0.0.jar": "d78f2a26826ae4750f210ccd55ed73d52940a93b9793eb209d9d230d293e9045",
+    "reviewed/result-only/handoff/archives/nominalprimitivesubtypes-1.0.0.pom": "86991a6b0a27181ce94646c805ede8d1b73df712a1a5b3ea148aa765ff5b3d90",
+    "reviewed/result-only/handoff/package-set-receipt.json": "4cc3ef842fbe7f8aeda02daabebfa792518fb51d9c84a62aa04be87cfa20804d",
+    "reviewed/result-only/handoff/package-set-receipt.json.sha256": "2de20562abd3d442ca2ab50e75eb3f44c6b4320ea193d7db0663650d696517ab",
+    "reviewed/result-only/installation.json": "0cd07aa449906dc3b305ac00dafcb209f9e67dfe6e5d43dbc641c6892616ff71",
+    "reviewed/result-only/java/api-probe/probe.java": "5ce57bb31cdecb1dae993205b81457d324d3a98a92aeebabca1fb013b6e11959",
+    "reviewed/result-only/java/api-probe/record.json": "0bb5ad1f7b11a5529929fbc09ca56867f9111cfeb483d69524177852707d8b5f",
+    "reviewed/result-only/java/installed.json": "c4e89425a8b308a461f672242d722d1e419594228f984d945c4f798e0896164b",
+    "reviewed/result-only/java/relocated.json": "403ea264506310773f42534c7564d565056b520abc13997cae3454bfe331c465",
+    "reviewed/result-only/java/source-free.json": "7e436401372418fb5ef3fb054700e54dd68957c5446b56d5337f3d6875c2d6da",
+    "reviewed/result-only/kotlin/api-probe/probe.kt": "63812c128564d3895ebab5ad23492f455f385d7302b4551f307d964487edc3f8",
+    "reviewed/result-only/kotlin/api-probe/record.json": "18d86c581aaa266d7787f73b7e057fbef3ed230e212ec084b32caf739fb9b4f7",
+    "reviewed/result-only/kotlin/installed.json": "8c18bedeba4cb9c234a3edd4e19edd2c17df2b7b407f4548d6baab3ce212d816",
+    "reviewed/result-only/kotlin/nullability-false/NullProbe.kt": "348bc238d55d001ba0e92c70528a5abd57d5e26a174ce0e61e1ce2195219ea64",
+    "reviewed/result-only/kotlin/nullability-false/classes/META-INF/main.kotlin_module": "14d9d137a46fc5f49ea00828cb3ad2d35b84c9918bbca55a496bdbdf5366c5f9",
+    "reviewed/result-only/kotlin/nullability-false/classes/NullProbeKt.class": "76436154ee41e8a4cef01b12bc42ed695e3a00eba692dc83b4bac61715c941ae",
+    "reviewed/result-only/kotlin/nullability-false/record.json": "725d5a37f63f9f298bfd9816b45563a4b636c6d3e22984943999a022978748a9",
+    "reviewed/result-only/kotlin/nullability-true/NullProbe.kt": "982315da2a53f858f268142e476abeb30a96f95382fe896bcd152c44c7614296",
+    "reviewed/result-only/kotlin/nullability-true/record.json": "b87d5663dde81a89ede1e527b013ba0058136bb362e9c83930ace58f8eb1b228",
+    "reviewed/result-only/kotlin/relocated.json": "0e451457fc7160c9ee01d65371fbff5f49a92fa7f740f4541511072ff2bfe26d",
+    "reviewed/result-only/kotlin/source-free.json": "e58b224d54ff74169484b3c35fa30d2b293ad1b576dae003e726023c0e74e597",
+    "reviewed/result-only/report.json": "1322bf57f5d065426a88b78400f3b252c8dab5804b49e4992210d260ae349692",
+    "reviewed/result-only/resources.json": "b3a84acd0f5fbe0c89f4eaaad539aff3e7f28b792100ba8831e755f2a08264b6",
+    "reviewed/result-only/runtime.json": "c2f1b9d72bf412b57880eaf2e5f14f071577bea6210298d5c0d82c529f20d81e"
+  },
+  "prefix": "/app/build/vo1495-nominal-primitive-jvm-reviewed-result-only-r1-e0fed7f",
+  "resources": {
+    "observations": [
+      {
+        "availableBytes": 11399118848,
+        "freeBytes": 2547777536,
+        "load": 5.51
+      }
+    ],
+    "waits": 0
+  },
+  "route": "reviewed",
+  "runners": {
+    "/app/build/run-vo1495-nominal-primitive-jvm-controls-e0fed7f-v2.mjs": "e4f90182651f05d935a6c9d11596e8a9cab4ff67b8ed24048307d70e8ecf5715",
+    "/app/build/run-vo1495-nominal-primitive-jvm-e0fed7f-v2.mjs": "aa85e9bdb8a5d743de726c20e723c23d437a937c91fa2712c059c132ba5f2c94"
+  },
+  "sourceRoot": "/app/build/vo1495-nominal-primitive-jvm-reviewed-result-only-r1-e0fed7f-records",
+  "sources": {
+    "/app/build/run-vo1495-nominal-primitive-jvm-controls-e0fed7f-v2.mjs": "e4f90182651f05d935a6c9d11596e8a9cab4ff67b8ed24048307d70e8ecf5715",
+    "/app/build/run-vo1495-nominal-primitive-jvm-e0fed7f-v2.mjs": "aa85e9bdb8a5d743de726c20e723c23d437a937c91fa2712c059c132ba5f2c94",
+    "tests/fixtures/nominal-primitive-subtype-consumers/java.java": "95a50705e1fdeb29e3bf7370e1e21bf50ccefc1e3bd1fc122a44fe55e4d06a1d",
+    "tests/fixtures/nominal-primitive-subtype-consumers/kotlin.kt": "bd6255b02966256340922c4df562fe58424b1ce40ce3a9b453c5e3a5cc1f4709",
+    "tests/fixtures/nominal-primitive-subtype-consumers/model.java": "a93c3ed786171b80498c33b393a3b1d8a840d1e3cbed54564ce1b0d96cbef56a",
+    "tests/helpers/fin-container-edge-jvm-closure.mjs": "e8a90d5af4b86588f82c044992c2eec50fe09f1e139aefba0799767a8813a98c",
+    "tests/helpers/nominal-primitive-subtype-jvm-ci-handoff.mjs": "4e410705ab14b29f1846c5a9c9db803b34a119bdc0a49560a1de06c60acf68b9",
+    "tests/helpers/nominal-primitive-subtype-jvm-ci-report.mjs": "ca3d2f10b5b1749e676fededdc7c7f3d84b568d79a10541893e9463905f5870a",
+    "tests/helpers/nominal-primitive-subtype-jvm-consumer-records.mjs": "013fb298dd920df21d07db31f2aa492efb61f19035099fd5cc1b39637755617c",
+    "tests/helpers/nominal-primitive-subtype-jvm-controls.mjs": "6569af0c8c0a157178523a1e49c7b79712dc0be58905459fbe1ad7f21c3c7c7e",
+    "tests/helpers/nominal-primitive-subtype-jvm-fixture.mjs": "dc7437df169bd92539a67d736a58f5e80a2a4b7025427f140cba545084464271",
+    "tests/helpers/nominal-primitive-subtype-jvm-installed-tests.mjs": "591c8c4bf47ea5dfbdba8b03bc3bc42db20fe7261da8dad9f28c76f247e5110d",
+    "tests/helpers/nominal-primitive-subtype-jvm-model-records.mjs": "9bfad74fc51c85b95ef94274053b6c6b5e0c4db9df97c1c5d14b5ba1469029b1",
+    "tests/helpers/nominal-primitive-subtype-jvm-package-records.mjs": "601300f8b98e2432c6efc4fc4eea6fb1879e34cf8b464002223d9cf135fea213",
+    "tests/helpers/nominal-primitive-subtype-jvm-package.mjs": "f5e6cc3cd8769b0e54aaee5cf62698ffb1aa4d9ca9aebb5bbcc6eba9418fa440",
+    "tests/helpers/nominal-primitive-subtype-jvm-probe.mjs": "23c97be4799edf465b1bc56b2d225e4c6d268961577639f59cbc12ad9a7eb471",
+    "tests/helpers/nominal-primitive-subtype-jvm-report.mjs": "2dab489d75fb3c2e2122c8f857a7c5ca6f8079ff440ae7685ea2a82c78d7a634",
+    "tests/helpers/nominal-subtype-jvm-ci-tools.mjs": "678c7bd830e7819e64ec3f9a8009b1f40caf0aedb192998fdbe1cc0f4cf6e2ec"
+  },
+  "started": "2026-10-16T00:05:08.970Z"
+}
