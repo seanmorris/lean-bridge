@@ -123,7 +123,7 @@ refused('first', [packet(4, 2)], 'ROUTE_PREFIX0 was rejected by NestedCheckedRec
 refused('first', [packet(10, 12)], 'ROUTE_PREFIX0.digit is not below its Fin 10 bound'); recovered();
 refused('pair', [$first, packet(10, 0)], 'ROUTE_PREFIX1.digit is not below its Fin 10 bound'); recovered();
 refused('in_array', [[$first, packet(1, 0)]], 'ROUTE_PREFIX0[1].word was rejected by NestedCheckedRecords.mkWord'); recovered();
-refused('in_list', [[$first, packet(5, 2)]], 'ROUTE_PREFIX0[1] was rejected by NestedCheckedRecords.normalizePacket'); recovered();
+refused('in_list', [[$first, packet(10, 2)]], 'ROUTE_PREFIX0[1].digit is not below its Fin 10 bound'); recovered();
 refused('in_option', [some(packet(5, 2))], 'ROUTE_PREFIX0? was rejected by NestedCheckedRecords.mkPacket'); recovered();
 refused('in_product', [[$first, packet(10, 0)]], 'ROUTE_PREFIX0.1.digit is not below its Fin 10 bound'); recovered();
 refused('in_except', [ok(packet(10, 0))], 'ROUTE_PREFIX0.ok.digit is not below its Fin 10 bound'); recovered();

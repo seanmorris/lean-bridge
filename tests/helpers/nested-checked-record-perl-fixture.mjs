@@ -13,6 +13,16 @@ import {
 export const nestedCheckedRecordPerlRoutes = Object.freeze(["ordinary", "reviewed"]);
 export const nestedCheckedRecordPerlModes = Object.freeze(["full", "result-only"]);
 export const nestedCheckedRecordPerlModule = "LeanBridge::NestedCheckedRecords";
+export const nestedCheckedRecordPerlExpected = Object.freeze({
+	full: Object.freeze({
+		checks: 4762, rejections: 524, hostRejections: 4
+		, recoveries: 528, snapshots: 1060
+	})
+	, "result-only": Object.freeze({
+		checks: 1571, rejections: 0, hostRejections: 1
+		, recoveries: 1, snapshots: 520
+	})
+});
 
 /**
  * Select one ordinary or reviewed full/result-only CPAN package.
@@ -82,6 +92,22 @@ export const parseNestedCheckedRecordPerlResult = source => {
 		assert.match(path, /^(?:[A-Za-z0-9_.+-]+\/)*[A-Za-z0-9_.+-]+$/u);
 		assert.match(digest, /^[a-f0-9]{64}$/u);
 	}
+	return value;
+};
+
+/**
+ * Require exact workload counts and one installed API for the selected package.
+ *
+ * @param value - Parsed installed caller result.
+ * @param mode - Full input/output API or result-only API.
+ */
+export const assertNestedCheckedRecordPerlResult = (value, mode) => {
+	assert.ok(nestedCheckedRecordPerlModes.includes(mode));
+	const expected = nestedCheckedRecordPerlExpected[mode];
+	for(const [name, count] of Object.entries(expected)) assert.equal(value[name], count, name);
+	assert.equal(value.rounds, 256); assert.equal(value.wordBits, 64);
+	assert.ok(Object.keys(value.nativeLibraries).some(path => /Runtime/u.test(path)));
+	assert.ok(Object.keys(value.nativeLibraries).some(path => /NestedCheckedRecords/u.test(path)));
 	return value;
 };
 
