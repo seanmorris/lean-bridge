@@ -73,6 +73,7 @@ sub stopped {
 }
 
 sub snapshot_value {
+	no warnings 'recursion';
     my ($value, $active) = @_;
     return ['undef'] unless defined $value;
     if (blessed($value) && $value->isa('Math::BigInt')) {

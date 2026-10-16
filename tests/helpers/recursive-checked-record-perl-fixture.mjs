@@ -34,11 +34,54 @@ const fixtures = Object.freeze({
 	})
 });
 
-/** Exact totals are pinned after the independent caller and native packages execute. */
+/** Exact totals for the immutable caller on every Perl ABI and install mode. */
 export const recursiveCheckedRecordPerlExpected = Object.freeze({
-	recursive: null
-	, mutual: null
+	recursive: Object.freeze({
+		calls: 527, checks: 1709, hostRejections: 79, recoveries: 95
+		, rejections: 144, rounds: 64, snapshotControls: 8, snapshots: 496
+	})
+	, mutual: Object.freeze({
+		calls: 535, checks: 1734, hostRejections: 81, recoveries: 97
+		, rejections: 144, rounds: 64, snapshotControls: 11, snapshots: 502
+	})
 });
+
+const nativeFailures = (fixture, route) => {
+	const parameter = route === "ordinary" ? "arg0" : "value0";
+	const lean = fixture === "recursive"
+		? "RecursiveCheckedRecords" : "MutualCheckedRecords";
+	const link = fixture === "recursive" ? ".tail?" : ".next?.more.packet";
+	const bound = fixture === "recursive" ? ".digit" : ".mode";
+	const make = fixture === "recursive" ? "mkPacket" : "mkEnvelope";
+	const reject = ` was rejected by ${lean}.`;
+	return {
+		"outer-subtype": `${parameter}.value${reject}plusOne\n`
+		, "huge-subtype": `${parameter}.value${reject}plusOne\n`
+		, "late-subtype": `${parameter}${link}.value${reject}plusOne\n`
+		, "deep-subtype": `${parameter}${link}${link}.value${reject}plusOne\n`
+		, "outer-fin": `${parameter}${bound} is not below its Fin 3 bound\n`
+		, "late-fin": `${parameter}${link}${bound} is not below its Fin 3 bound\n`
+		, "outer-record": `${parameter}${reject}${make}\n`
+		, "late-record": `${parameter}${link}${reject}${make}\n`
+		, "echo-record": `${parameter}${link}${reject}${make}\n`
+		, "second-subtype": `${parameter}.value${reject}plusTwo\n`
+		, "second-late-subtype": `${parameter}${link}.value${reject}plusTwo\n`
+		, "group-subtype": `${parameter}[1]?.value${reject}plusOne\n`
+		, "group-record": `${parameter}[1]?${reject}${make}\n`
+		, "group-fin": `${parameter}[0]?${bound} is not below its Fin 3 bound\n`
+		, "echo-group-subtype": `${parameter}[0]?.value${reject}plusTwo\n`
+		, "echo-group-late-subtype": `${parameter}[1]?${link}.value${reject}plusTwo\n`
+		, "round late subtype": `${parameter}${link}.value${reject}plusOne\n`
+		, "round group record": `${parameter}[1]?${reject}${make}\n`
+	};
+};
+
+const commonHostFailures = Object.freeze([
+	"absent-record", "bare-child", "bare-record-as-option", "cycle", "depth"
+	, "group-cycle", "missing-field", "negative-bound", "negative-nat"
+	, "negative-value", "option-as-record", "proof-field", "record-as-array"
+	, "round cycle", "scalar-nat", "wrong-record-class"
+]);
 
 /**
  * Return immutable CPAN coordinates and source identity for one fixture.
@@ -121,6 +164,16 @@ export const parseRecursiveCheckedRecordPerlResult = (source, fixture, route) =>
 		assert.match(name, /^[a-z][a-z0-9 -]*$/u);
 		assert.ok(typeof message === "string" && message.length > 0);
 	}
+	const native = nativeFailures(fixture, route);
+	const host = [...commonHostFailures
+		, ...fixture === "mutual" ? ["bare-step", "record-as-step"] : []];
+	assert.deepEqual(Object.keys(value.failures).sort()
+		, [...Object.keys(native), ...host].sort());
+	for(const [name, message] of Object.entries(native))
+		assert.equal(value.failures[name], message, name);
+	assert.match(value.failures.cycle, /^Cyclic Perl copied value at consumer\.pl line \d+\.\n$/u);
+	assert.match(value.failures.depth
+		, /^Perl copied graph depth or node limit exceeded at consumer\.pl line \d+\.\n$/u);
 	assert.ok(value.nativeLibraries
 		&& Object.getPrototypeOf(value.nativeLibraries) === Object.prototype);
 	assert.ok(Object.keys(value.nativeLibraries).length >= 2);
@@ -129,8 +182,7 @@ export const parseRecursiveCheckedRecordPerlResult = (source, fixture, route) =>
 		assert.match(path, /^(?:[A-Za-z0-9_.+-]+\/)*[A-Za-z0-9_.+-]+$/u);
 		assert.match(digest, /^[a-f0-9]{64}$/u);
 	}
-	const expected = recursiveCheckedRecordPerlExpected[fixture];
-	if(expected !== null)
-		for(const [name, count] of Object.entries(expected)) assert.equal(value[name], count, name);
+	for(const [name, count] of Object.entries(recursiveCheckedRecordPerlExpected[fixture]))
+		assert.equal(value[name], count, name);
 	return value;
 };
