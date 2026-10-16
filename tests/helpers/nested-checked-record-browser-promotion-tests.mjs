@@ -25,8 +25,13 @@ import {
 	nestedCheckedRecordHistoryPath
 } from "./nested-checked-record-source-history.mjs";
 import {
+	nestedCheckedRecordBrowserPromotionHistoryPath,
 	nestedCheckedRecordBrowserPromotionPredecessor
 } from "./nested-checked-record-browser-promotion-history.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import {
+	beforeNominalPrimitiveSubtypeWitPromotionPins
+} from "./nominal-primitive-subtype-wit-promotion-history.mjs";
 
 const inventory = async () => JSON.parse(execFileSync("git", ["show"
 	, `${nestedCheckedRecordBrowserPromotionPredecessor}:docs/type-surface.v1.json`]
@@ -97,9 +102,16 @@ test("nested checked-record promotion refuses narrowed, forged or repeated evide
 test("nested checked-record promotion changes thirty exact cells and leaves callbacks open", async () => {
 	const original = await inventory(), unchanged = structuredClone(original);
 	const references = await nestedCheckedRecordBrowserReferences();
-	const proposed = await promoteNestedCheckedRecordBrowsers(original, references);
+	const proposed = beforeNominalPrimitiveSubtypeWitPromotionPins(
+		await promoteNestedCheckedRecordBrowsers(original, references));
 	const contract = await contracts(); validateTypeSurface(proposed, contract);
-	assert.deepEqual(proposed, JSON.parse(await readFile("docs/type-surface.v1.json")));
+	// Newer layers append receipts, supplement cells and refresh pins; read this
+	// layer's exact output through them.
+	const ledger = JSON.parse(await readFile(nestedCheckedRecordBrowserPromotionHistoryPath));
+	const current = async path => beforeFinRefinementSource(path
+		, await readFile(path, "utf8")
+		, ledger.updates.find(update => update.path === path).currentSha256);
+	assert.deepEqual(proposed, JSON.parse(await current("docs/type-surface.v1.json")));
 	assert.deepEqual(original, unchanged);
 	assert.equal(proposed.evidence.length, original.evidence.length + 4);
 	assert.equal(proposed.observations.length, original.observations.length + 10);
@@ -152,7 +164,7 @@ test("nested checked-record promotion changes thirty exact cells and leaves call
 		, "docs/lean/export-decisions.md", "scripts/generate-type-docs.mjs"];
 	for(const path of promotedPins)
 	{
-		const expected = sha256(await readFile(path));
+		const expected = sha256(await current(path));
 		const pins = proposed.evidence.flatMap(item => item.files)
 			.filter(file => file.path === path);
 		assert.ok(pins.length > 0, path);
