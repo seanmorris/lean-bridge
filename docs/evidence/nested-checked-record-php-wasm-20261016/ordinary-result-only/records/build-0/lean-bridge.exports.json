@@ -1,0 +1,48 @@
+{
+  "contracts": {
+    "NestedCheckedRecords.produceArray": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "NestedCheckedRecords.produceOption": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    }
+  },
+  "exports": [
+    "NestedCheckedRecords.produceOption",
+    "NestedCheckedRecords.produceArray"
+  ],
+  "modules": [
+    "NestedCheckedRecords"
+  ],
+  "schemaVersion": 1,
+  "targets": {
+    "php-wasm": {
+      "composer": {
+        "name": "lean-bridge-nestedcheckedrecords/wasm",
+        "version": "1.0.0"
+      },
+      "npm": {
+        "name": "lean-bridge-nestedcheckedrecords-wasm",
+        "version": "1.0.0"
+      }
+    }
+  }
+}

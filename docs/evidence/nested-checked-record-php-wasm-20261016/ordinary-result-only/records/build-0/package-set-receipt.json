@@ -1,0 +1,92 @@
+{
+  "component": {
+    "id": "nestedcheckedrecords@1.0.0",
+    "name": "nestedcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 77737,
+          "path": "packages/php-wasm/archives/lean-bridge-nestedcheckedrecords-wasm-1.0.0-php-wasm.zip",
+          "sha256": "a6d7da005532bfe4ac3c2e640b9a56558615137d298338040d5a74973e46f070"
+        }
+      ],
+      "ecosystem": "composer",
+      "name": "lean-bridge-nestedcheckedrecords/wasm",
+      "profile": "php-wasm-copied-v1",
+      "requires": [
+        {
+          "ecosystem": "npm",
+          "name": "@lean-bridge/php-wasm-copied-runtime",
+          "version": "0.0.0-copied1.4c88837c0f4e612c0a1c8b345239db679c7bfc7a5e071ee99fc1b059959babba"
+        },
+        {
+          "ecosystem": "npm",
+          "name": "lean-bridge-nestedcheckedrecords-wasm",
+          "version": "1.0.0"
+        }
+      ],
+      "role": "api",
+      "runtimeDelivery": "dependency",
+      "runtimeIdentity": "44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966",
+      "target": "php-wasm",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 1660962,
+          "path": "packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.4c88837c0f4e612c0a1c8b345239db679c7bfc7a5e071ee99fc1b059959babba.tgz",
+          "sha256": "1d08d798d60402880a707a6af2a2becad4edbbcac98ce5c4c9d032c6a1b70927"
+        }
+      ],
+      "ecosystem": "npm",
+      "name": "@lean-bridge/php-wasm-copied-runtime",
+      "profile": "php-wasm-copied-v1",
+      "requires": [],
+      "role": "runtime",
+      "runtimeDelivery": "provided",
+      "runtimeIdentity": "44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966",
+      "target": "php-wasm",
+      "version": "0.0.0-copied1.4c88837c0f4e612c0a1c8b345239db679c7bfc7a5e071ee99fc1b059959babba"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 117652,
+          "path": "packages/php-wasm/archives/lean-bridge-nestedcheckedrecords-wasm-1.0.0.tgz",
+          "sha256": "250e684ad97c6acf5df64288589124e9a81640f024eb986b620adecfa61a08aa"
+        }
+      ],
+      "ecosystem": "npm",
+      "name": "lean-bridge-nestedcheckedrecords-wasm",
+      "profile": "php-wasm-copied-v1",
+      "requires": [
+        {
+          "ecosystem": "npm",
+          "name": "@lean-bridge/php-wasm-copied-runtime",
+          "version": "0.0.0-copied1.4c88837c0f4e612c0a1c8b345239db679c7bfc7a5e071ee99fc1b059959babba"
+        }
+      ],
+      "role": "component",
+      "runtimeDelivery": "dependency",
+      "runtimeIdentity": "44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966",
+      "target": "php-wasm",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "7d2d0edbafbadf11812fedf72bf3c929dff75a8ac0284b4761df9ca5d29185f1",
+      "id": "php-wasm-copied-v1",
+      "runtimeIdentity": "44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "822e940a79c0499e17280d1aeac17119ae8624b1b5e906d60423f6137790e447"
+  }
+}

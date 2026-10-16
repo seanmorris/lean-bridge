@@ -1,0 +1,47 @@
+{
+  "arrangement": "embedded",
+  "loading": "startup",
+  "mode": "strict",
+  "observation": {
+    "checks": 3705,
+    "hostRejections": 16,
+    "php": "8.4.1",
+    "recoveries": 256,
+    "rejections": 525,
+    "rounds": 256,
+    "snapshotControls": 12,
+    "snapshots": 1840,
+    "word_bits": 32
+  },
+  "phases": [
+    {
+      "libraries": [
+        "php8.4-lb_nestedcheckedrecords_d09bd70d4746fa06.so",
+        "liblean_bridge_php_wasm_copied_abe4dea500dab9519b8d.so"
+      ],
+      "stage": "ready"
+    },
+    {
+      "libraries": [
+        "php8.4-lb_nestedcheckedrecords_d09bd70d4746fa06.so",
+        "liblean_bridge_php_wasm_copied_abe4dea500dab9519b8d.so"
+      ],
+      "stage": "autoload"
+    },
+    {
+      "libraries": [
+        "php8.4-lb_nestedcheckedrecords_d09bd70d4746fa06.so",
+        "liblean_bridge_php_wasm_copied_abe4dea500dab9519b8d.so"
+      ],
+      "stage": "invalid"
+    },
+    {
+      "libraries": [
+        "php8.4-lb_nestedcheckedrecords_d09bd70d4746fa06.so",
+        "liblean_bridge_php_wasm_copied_abe4dea500dab9519b8d.so"
+      ],
+      "stage": "complete"
+    }
+  ],
+  "realm": "node"
+}

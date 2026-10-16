@@ -1,0 +1,30 @@
+TAP version 13
+# Subtest: installed nested checked-record PHP-Wasm packages reproduce and relocate ordinary result-only
+ok 1 - installed nested checked-record PHP-Wasm packages reproduce and relocate ordinary result-only
+  ---
+  duration_ms: 184502.063124
+  type: 'test'
+  ...
+# PHP-Wasm ordinary result-only: author 0
+# PHP-Wasm ordinary result-only: author 1
+# nested-checked-records-ordinary-result-only: PHP-Wasm Node embedded/startup/weak
+# nested-checked-records-ordinary-result-only: PHP-Wasm Node embedded/startup/strict
+# nested-checked-records-ordinary-result-only: PHP-Wasm Node embedded/lazy/weak
+# nested-checked-records-ordinary-result-only: PHP-Wasm Node embedded/lazy/strict
+# nested-checked-records-ordinary-result-only: PHP-Wasm Node composer/startup/weak
+# nested-checked-records-ordinary-result-only: PHP-Wasm Node composer/startup/strict
+# nested-checked-records-ordinary-result-only: PHP-Wasm Node composer/lazy/weak
+# nested-checked-records-ordinary-result-only: PHP-Wasm Node composer/lazy/strict
+# nested-checked-records-ordinary-result-only: PHP-Wasm Chromium bundled/startup/weak
+# nested-checked-records-ordinary-result-only: PHP-Wasm Chromium bundled/startup/strict
+# nested-checked-records-ordinary-result-only: PHP-Wasm Chromium bundled/lazy/weak
+# nested-checked-records-ordinary-result-only: PHP-Wasm Chromium bundled/lazy/strict
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 185541.669311

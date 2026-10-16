@@ -1,0 +1,860 @@
+{
+  "bindingIr": {
+    "assurance": [],
+    "capabilities": [],
+    "component": {
+      "id": "nestedcheckedrecords@1.0.0",
+      "name": "nestedcheckedrecords",
+      "version": "1.0.0"
+    },
+    "declarations": [
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:NestedCheckedRecords.produceArray",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "produceArray",
+        "overloadKey": "NestedCheckedRecords.produceArray",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "arguments": [
+              {
+                "id": "lean:NestedCheckedRecords.Packet",
+                "kind": "named"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "NestedCheckedRecords.produceArray",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                null
+              ],
+              "result": {
+                "arguments": [
+                  {
+                    "constructor": null,
+                    "fields": [
+                      {
+                        "name": "digit",
+                        "refinement": {
+                          "bound": "10",
+                          "kind": "fin"
+                        }
+                      },
+                      {
+                        "name": "word",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      }
+                    ],
+                    "kind": "checked-record",
+                    "name": "NestedCheckedRecords.Packet"
+                  }
+                ],
+                "kind": "array"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 92,
+              "endLine": 63,
+              "path": "root/NestedCheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 63
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:NestedCheckedRecords.produceOption",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "produceOption",
+        "overloadKey": "NestedCheckedRecords.produceOption",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "value0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "arguments": [
+              {
+                "id": "lean:NestedCheckedRecords.Packet",
+                "kind": "named"
+              }
+            ],
+            "constructor": "option",
+            "kind": "apply"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "NestedCheckedRecords.produceOption",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                null
+              ],
+              "result": {
+                "arguments": [
+                  {
+                    "constructor": null,
+                    "fields": [
+                      {
+                        "name": "digit",
+                        "refinement": {
+                          "bound": "10",
+                          "kind": "fin"
+                        }
+                      },
+                      {
+                        "name": "word",
+                        "refinement": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      }
+                    ],
+                    "kind": "checked-record",
+                    "name": "NestedCheckedRecords.Packet"
+                  }
+                ],
+                "kind": "option"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 74,
+              "endLine": 62,
+              "path": "root/NestedCheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 61
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      }
+    ],
+    "documentation": {
+      "details": "",
+      "summary": "Independent corpus contract."
+    },
+    "errors": [],
+    "producers": [
+      {
+        "adapter": "lean-bridge-elaborator",
+        "adapterVersion": 2,
+        "extensions": {
+          "lean-lang.org/elaboration-sha256": "bdde13edfa4cb8dbf7c418015e4416cea32ecdca869d4e1ef6b5b1a2209db406",
+          "lean-lang.org/toolchain": "leanprover/lean4:v4.32.2"
+        },
+        "id": "lean",
+        "tool": "Lean",
+        "toolVersion": "4.32.2"
+      }
+    ],
+    "schemaVersion": 3,
+    "types": [
+      {
+        "assurance": [],
+        "callable": null,
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Independent corpus contract."
+        },
+        "fields": [
+          {
+            "documentation": {
+              "details": "",
+              "summary": "Independent corpus contract."
+            },
+            "mutability": "immutable",
+            "name": "digit",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "documentation": {
+              "details": "",
+              "summary": "Independent corpus contract."
+            },
+            "mutability": "immutable",
+            "name": "word",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "host": null,
+        "id": "lean:NestedCheckedRecords.Packet",
+        "kind": "record",
+        "mutability": "immutable",
+        "name": "Packet",
+        "representation": "copied",
+        "resource": null,
+        "source": {
+          "declaration": "NestedCheckedRecords.Packet",
+          "extensions": {
+            "lean-lang.org/erased-proofs": {
+              "fields": [
+                "linked"
+              ]
+            },
+            "lean-lang.org/nominal-refinements": {
+              "fields": [
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                },
+                null
+              ],
+              "kind": "record"
+            }
+          },
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      }
+    ]
+  },
+  "bindingIrSha256": "f56d840133a10b35795855fd17a9c354eb9c71a83e8d1c0b521361e827a1ab2a",
+  "byteOrder": "little",
+  "component": {
+    "id": "nestedcheckedrecords@1.0.0",
+    "name": "nestedcheckedrecords",
+    "version": "1.0.0"
+  },
+  "exports": [
+    {
+      "documentation": null,
+      "module": "NestedCheckedRecords",
+      "name": "NestedCheckedRecords.produceArray",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                },
+                {
+                  "constructor": null,
+                  "kind": "subtype"
+                }
+              ],
+              "constructor": null,
+              "definition": "NestedCheckedRecords.Packet",
+              "fields": [
+                "digit",
+                "word"
+              ],
+              "kind": "checked-record"
+            }
+          ],
+          "kind": "array"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "element": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": true,
+            "unbox": "lean_unbox"
+          },
+          "constructor": "NestedCheckedRecords.Packet.mk",
+          "erased": [
+            "linked"
+          ],
+          "fields": [
+            {
+              "name": "digit",
+              "projection": "NestedCheckedRecords.Packet.digit",
+              "type": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "Nat",
+                "name": "nat"
+              }
+            },
+            {
+              "name": "word",
+              "projection": "NestedCheckedRecords.Packet.word",
+              "type": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "Nat",
+                "name": "nat"
+              }
+            }
+          ],
+          "kind": "record",
+          "lean": "NestedCheckedRecords.Packet",
+          "name": "NestedCheckedRecords.Packet"
+        },
+        "kind": "array"
+      },
+      "sourcePosition": {
+        "endColumn": 92,
+        "endLine": 63,
+        "path": "root/NestedCheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 63
+      },
+      "symbol": "lb_a27e360b7c6440a8dc40dc87",
+      "theoremReferences": []
+    },
+    {
+      "documentation": "Lean-produced checked records need no input constructor. ",
+      "module": "NestedCheckedRecords",
+      "name": "NestedCheckedRecords.produceOption",
+      "parameters": [
+        {
+          "name": "value",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          }
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                },
+                {
+                  "constructor": null,
+                  "kind": "subtype"
+                }
+              ],
+              "constructor": null,
+              "definition": "NestedCheckedRecords.Packet",
+              "fields": [
+                "digit",
+                "word"
+              ],
+              "kind": "checked-record"
+            }
+          ],
+          "kind": "option"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "element": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": true,
+            "unbox": "lean_unbox"
+          },
+          "constructor": "NestedCheckedRecords.Packet.mk",
+          "erased": [
+            "linked"
+          ],
+          "fields": [
+            {
+              "name": "digit",
+              "projection": "NestedCheckedRecords.Packet.digit",
+              "type": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "Nat",
+                "name": "nat"
+              }
+            },
+            {
+              "name": "word",
+              "projection": "NestedCheckedRecords.Packet.word",
+              "type": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "Nat",
+                "name": "nat"
+              }
+            }
+          ],
+          "kind": "record",
+          "lean": "NestedCheckedRecords.Packet",
+          "name": "NestedCheckedRecords.Packet"
+        },
+        "kind": "option"
+      },
+      "sourcePosition": {
+        "endColumn": 74,
+        "endLine": 62,
+        "path": "root/NestedCheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 61
+      },
+      "symbol": "lb_85f9f487f03e070ff66bb271",
+      "theoremReferences": []
+    }
+  ],
+  "pointerBits": 32,
+  "profile": "php-wasm-copied-v1",
+  "schemaVersion": 3,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "e15919b9ef8415cd333af5b389a2046d2f628c73c1137ddd1c842a2c61dd8aea",
+    "exportConfigurationSource": "{\n  \"modules\": [\n    \"NestedCheckedRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"php-wasm\": {\n      \"composer\": {\n        \"name\": \"lean-bridge-nestedcheckedrecords/wasm\",\n        \"version\": \"1.0.0\"\n      },\n      \"npm\": {\n        \"name\": \"lean-bridge-nestedcheckedrecords-wasm\",\n        \"version\": \"1.0.0\"\n      }\n    }\n  }\n}\n",
+    "extractorSha256": "88bc071a3fb4adb1dee0a0c3262c4227cadcf5928dd32a79844bb5be69093cf5",
+    "lakeDependencies": {
+      "resolution": {
+        "externalImports": [
+          "Init"
+        ],
+        "lakeLibrarySha256": "e29bbb0c9e1b46fcff3a507bed00e44dec287dd510ee6586c4b61e3e40547579",
+        "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+        "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+        "leanVersion": "4.32.2",
+        "modules": [
+          {
+            "imports": [
+              "Init",
+              "Init"
+            ],
+            "module": "NestedCheckedRecords",
+            "package": "nestedcheckedrecords",
+            "path": "root/NestedCheckedRecords.lean",
+            "source": {
+              "bytes": 2886,
+              "mode": 420,
+              "path": "NestedCheckedRecords.lean",
+              "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+            }
+          }
+        ],
+        "packages": [
+          {
+            "configFile": "root/lakefile.toml",
+            "dependencies": [],
+            "name": "nestedcheckedrecords"
+          }
+        ],
+        "resolver": "lean-lake-locked",
+        "resolverSha256": "52e9367229eeabb2625d1e573f051eecd8d15dd250bd2fc50ba30255cfe9b306",
+        "schemaVersion": 1,
+        "snapshotSha256": "3b0ddbbde8940a3416c5e3dca13a6724acf5a5a2dae22b1e3c65fcef72a46a25"
+      },
+      "resolutionSha256": "30506e729cb4e423067715d3351473ae0fab9414a5ffe3d0ca572847ed0bfcc0",
+      "snapshot": {
+        "kind": "lean-bridge-lake-dependency-snapshot",
+        "packages": [],
+        "rootInputs": [
+          {
+            "bytes": 1093,
+            "mode": 420,
+            "path": "LICENSE",
+            "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+          },
+          {
+            "bytes": 2886,
+            "mode": 420,
+            "path": "NestedCheckedRecords.lean",
+            "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+          },
+          {
+            "bytes": 6772,
+            "mode": 420,
+            "path": "api.binding-ir.json",
+            "sha256": "ed9473d92c605f378c8b1af7bb07a6b450d824aadfcf67935f4d65fbf956c9a0"
+          },
+          {
+            "bytes": 91,
+            "mode": 420,
+            "path": "lakefile.toml",
+            "sha256": "771252d53394844802f94651c16ab7260ffe201fbd50916421965691ed2a4178"
+          },
+          {
+            "bytes": 336,
+            "mode": 420,
+            "path": "lean-bridge.exports.json",
+            "sha256": "e15919b9ef8415cd333af5b389a2046d2f628c73c1137ddd1c842a2c61dd8aea"
+          },
+          {
+            "bytes": 25,
+            "mode": 420,
+            "path": "lean-toolchain",
+            "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+          },
+          {
+            "bytes": 66,
+            "mode": 420,
+            "path": "package.json",
+            "sha256": "82ee0944b3e498537167b868b16573fb6fb005d6f77018d3f2d352e605461f07"
+          }
+        ],
+        "schemaVersion": 3,
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "snapshotSha256": "3b0ddbbde8940a3416c5e3dca13a6724acf5a5a2dae22b1e3c65fcef72a46a25"
+    },
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 167608,
+          "interfaceSha256": "e20264af883ce83ec3baf120ceca94359e9c9cbdd0b5750fc7f1226fe93a49f3",
+          "sha256": "f40a37b04d8a4dbac01065764da85bace19eb1c9803183039e9fbed4780ec570"
+        },
+        "module": "NestedCheckedRecords",
+        "source": {
+          "bytes": 2886,
+          "mode": 420,
+          "path": "root/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "exportModules": [
+        "NestedCheckedRecords"
+      ],
+      "exports": [
+        "NestedCheckedRecords.produceArray",
+        "NestedCheckedRecords.produceOption"
+      ],
+      "metadata": {
+        "invocationIdentitySha256": "8d468ec6d4dc183796801ea6b8ff8b7c644f89e9bbbb17528fc1e16afc4279cd",
+        "modules": [
+          {
+            "interfaceSha256": "e20264af883ce83ec3baf120ceca94359e9c9cbdd0b5750fc7f1226fe93a49f3",
+            "name": "NestedCheckedRecords",
+            "sourcePath": "root/NestedCheckedRecords.lean",
+            "sourceSha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "NestedCheckedRecords"
+      ],
+      "profile": "native-library-v1",
+      "resources": []
+    },
+    "reviewedBindingIr": {
+      "path": "api.binding-ir.json",
+      "schemaVersion": 1,
+      "semanticSha256": "cab9b521a3c107820800b8afb7e224cb0c6c77135c60305c4cca5fe8774c6eae",
+      "source": "{\n  \"assurance\": [],\n  \"capabilities\": [],\n  \"component\": {\n    \"id\": \"nestedcheckedrecords@1.0.0\",\n    \"name\": \"nestedcheckedrecords\",\n    \"version\": \"1.0.0\"\n  },\n  \"declarations\": [\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:NestedCheckedRecords.produceOption\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"produceOption\",\n      \"overloadKey\": \"NestedCheckedRecords.produceOption\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"arguments\": [\n            {\n              \"id\": \"lean:NestedCheckedRecords.Packet\",\n              \"kind\": \"named\"\n            }\n          ],\n          \"constructor\": \"option\",\n          \"kind\": \"apply\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"NestedCheckedRecords.produceOption\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              null\n            ],\n            \"result\": {\n              \"arguments\": [\n                {\n                  \"constructor\": null,\n                  \"fields\": [\n                    {\n                      \"name\": \"digit\",\n                      \"refinement\": {\n                        \"bound\": \"10\",\n                        \"kind\": \"fin\"\n                      }\n                    },\n                    {\n                      \"name\": \"word\",\n                      \"refinement\": {\n                        \"constructor\": null,\n                        \"kind\": \"subtype\"\n                      }\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"NestedCheckedRecords.Packet\"\n                }\n              ],\n              \"kind\": \"option\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:NestedCheckedRecords.produceArray\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"produceArray\",\n      \"overloadKey\": \"NestedCheckedRecords.produceArray\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"arguments\": [\n            {\n              \"id\": \"lean:NestedCheckedRecords.Packet\",\n              \"kind\": \"named\"\n            }\n          ],\n          \"constructor\": \"array\",\n          \"kind\": \"apply\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"NestedCheckedRecords.produceArray\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              null\n            ],\n            \"result\": {\n              \"arguments\": [\n                {\n                  \"constructor\": null,\n                  \"fields\": [\n                    {\n                      \"name\": \"digit\",\n                      \"refinement\": {\n                        \"bound\": \"10\",\n                        \"kind\": \"fin\"\n                      }\n                    },\n                    {\n                      \"name\": \"word\",\n                      \"refinement\": {\n                        \"constructor\": null,\n                        \"kind\": \"subtype\"\n                      }\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"NestedCheckedRecords.Packet\"\n                }\n              ],\n              \"kind\": \"array\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    }\n  ],\n  \"documentation\": {\n    \"details\": \"\",\n    \"summary\": \"Independent corpus contract.\"\n  },\n  \"errors\": [],\n  \"producers\": [\n    {\n      \"adapter\": \"independent-corpus-contract\",\n      \"adapterVersion\": 1,\n      \"extensions\": {},\n      \"id\": \"corpusReview\",\n      \"tool\": \"Corpus contract review\",\n      \"toolVersion\": \"1\"\n    }\n  ],\n  \"schemaVersion\": 3,\n  \"types\": [\n    {\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent corpus contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"digit\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent corpus contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"word\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:NestedCheckedRecords.Packet\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Packet\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"NestedCheckedRecords.Packet\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"linked\"\n            ]\n          },\n          \"lean-lang.org/nominal-refinements\": {\n            \"fields\": [\n              {\n                \"bound\": \"10\",\n                \"kind\": \"fin\"\n              },\n              null\n            ],\n            \"kind\": \"record\"\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    }\n  ]\n}\n",
+      "sourceSha256": "ed9473d92c605f378c8b1af7bb07a6b450d824aadfcf67935f4d65fbf956c9a0"
+    },
+    "sourceNoticesSha256": "d2ab2f70ee16adcfc743a3cb211da2229031034877f95669f0fe6438ea18c8e1",
+    "sourceTreeSha256": "4643250283616b0bbd447010c89af07c759e421b9bbf72c3e0f4926ecabd917b"
+  },
+  "types": [
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "key": "bcb803bc837008bec599",
+      "kind": "primitive",
+      "lean": "Nat",
+      "name": "nat"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": true,
+        "unbox": "lean_unbox"
+      },
+      "constructor": "NestedCheckedRecords.Packet.mk",
+      "erased": [
+        "linked"
+      ],
+      "fields": [
+        {
+          "name": "digit",
+          "projection": "NestedCheckedRecords.Packet.digit",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          }
+        },
+        {
+          "name": "word",
+          "projection": "NestedCheckedRecords.Packet.word",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          }
+        }
+      ],
+      "key": "f35e9094c144406778d4",
+      "kind": "record",
+      "lean": "NestedCheckedRecords.Packet",
+      "name": "NestedCheckedRecords.Packet"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": true,
+        "unbox": "lean_unbox"
+      },
+      "element": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "constructor": "NestedCheckedRecords.Packet.mk",
+        "erased": [
+          "linked"
+        ],
+        "fields": [
+          {
+            "name": "digit",
+            "projection": "NestedCheckedRecords.Packet.digit",
+            "type": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            }
+          },
+          {
+            "name": "word",
+            "projection": "NestedCheckedRecords.Packet.word",
+            "type": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            }
+          }
+        ],
+        "kind": "record",
+        "lean": "NestedCheckedRecords.Packet",
+        "name": "NestedCheckedRecords.Packet"
+      },
+      "key": "f9fa36ebcbdcb704f2ee",
+      "kind": "array"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "element": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "constructor": "NestedCheckedRecords.Packet.mk",
+        "erased": [
+          "linked"
+        ],
+        "fields": [
+          {
+            "name": "digit",
+            "projection": "NestedCheckedRecords.Packet.digit",
+            "type": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            }
+          },
+          {
+            "name": "word",
+            "projection": "NestedCheckedRecords.Packet.word",
+            "type": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            }
+          }
+        ],
+        "kind": "record",
+        "lean": "NestedCheckedRecords.Packet",
+        "name": "NestedCheckedRecords.Packet"
+      },
+      "key": "fbdb0eed1b69f3acda27",
+      "kind": "option"
+    }
+  ]
+}

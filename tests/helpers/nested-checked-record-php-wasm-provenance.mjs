@@ -3,6 +3,7 @@
  *
  * @file
  */
+import assert from "node:assert/strict";
 import { extname, posix } from "node:path";
 import { moduleSpecifiers } from "./module-closure.mjs";
 import {
@@ -16,7 +17,7 @@ export { assertNestedCheckedRecordPhpWasmTap, nestedCheckedRecordPhpWasmOriginal
 export const nestedCheckedRecordPhpWasmProducer
 	= "db479d8c8276952acb21bfa80486333799682b51";
 export const nestedCheckedRecordPhpWasmVerifier
-	= nestedCheckedRecordPhpWasmProducer;
+	= "4278b72043642f66901292da95052f4bef7b1705";
 export const nestedCheckedRecordPhpWasmEvidence
 	= "docs/evidence/nested-checked-record-php-wasm-20261016";
 export const nestedCheckedRecordPhpWasmLoadCeiling = 20;
@@ -72,13 +73,19 @@ export const nestedCheckedRecordPhpWasmEvidenceSources = () => {
 		, "tests/helpers/nested-checked-record-php-wasm-ci-report.mjs"
 	]);
 	const producerPaths = new Set(producer), verifierPaths = new Set(verifier);
+	const sharedPaths = [...producerPaths].filter(path => verifierPaths.has(path));
+	for(const path of sharedPaths) assert.deepEqual(
+		nestedCheckedRecordPhpWasmOriginal(nestedCheckedRecordPhpWasmProducer, path)
+		, nestedCheckedRecordPhpWasmOriginal(nestedCheckedRecordPhpWasmVerifier, path)
+		, path
+	);
 	const source = (role, revision, path) => Object.freeze({ role, revision, path });
 	selectedSources = Object.freeze([
 		...[...producerPaths].filter(path => !verifierPaths.has(path)).sort()
 			.map(path => source("producer", nestedCheckedRecordPhpWasmProducer, path))
 		, ...[...verifierPaths].filter(path => !producerPaths.has(path)).sort()
 			.map(path => source("verifier", nestedCheckedRecordPhpWasmVerifier, path))
-		, ...[...producerPaths].filter(path => verifierPaths.has(path)).sort()
+		, ...sharedPaths.sort()
 			.map(path => source("shared", nestedCheckedRecordPhpWasmProducer, path))
 	]);
 	return selectedSources;
