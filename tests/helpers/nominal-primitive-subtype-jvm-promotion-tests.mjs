@@ -10,7 +10,14 @@ import test from "node:test";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
 import { docPages } from "../../site/registry.mjs";
-import { nominalPrimitiveSubtypeJvmPromotionPredecessor } from "./nominal-primitive-subtype-jvm-promotion-history.mjs";
+import { nominalPrimitiveSubtypeJvmPromotionHistoryPath, nominalPrimitiveSubtypeJvmPromotionPredecessor } from "./nominal-primitive-subtype-jvm-promotion-history.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeNestedCheckedRecordArchiveAndRegistrationPins } from "./nested-checked-record-archive-gap-history.mjs";
+import { beforeNestedCheckedRecordNativeCorrectionPins } from "./nested-checked-record-native-correction-source-history.mjs";
+import { beforeNestedCheckedRecordNativePromotionPins } from "./nested-checked-record-native-promotion-history.mjs";
+import { beforeNestedCheckedRecordQualityPins } from "./nested-checked-record-quality-source-history.mjs";
+import { beforeNestedCheckedRecordDotnetPromotionPins } from "./nested-checked-record-dotnet-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypeAuditCorrectionPins } from "./nominal-primitive-subtype-audit-correction-history.mjs";
 import { nominalPrimitiveSubtypeJvmProducer } from "./nominal-primitive-subtype-jvm-provenance.mjs";
 import {
 	nominalPrimitiveSubtypeJvmConversion
@@ -107,8 +114,22 @@ test("primitive-base JVM promotion rejects narrowed references and overlaps", as
 
 test("primitive-base JVM promotion supplements twelve cells only", async () => {
 	const original = predecessor(), references = await nominalPrimitiveSubtypeJvmReferences();
-	const proposed = await promoteNominalPrimitiveSubtypeJvm(original, references);
-	const { document, ...contracts } = await readTypeSurface();
+	// Newer layers, newest first: each restores only its own refreshed source pins.
+	const proposed = [
+		beforeNestedCheckedRecordArchiveAndRegistrationPins
+		, beforeNominalPrimitiveSubtypeAuditCorrectionPins
+		, beforeNestedCheckedRecordDotnetPromotionPins
+		, beforeNestedCheckedRecordQualityPins
+		, beforeNestedCheckedRecordNativePromotionPins
+		, beforeNestedCheckedRecordNativeCorrectionPins
+	].reduce((inventory, before) => before(inventory), await promoteNominalPrimitiveSubtypeJvm(original, references));
+	const { document: live, ...contracts } = await readTypeSurface();
+	// Newer layers append receipts and supplement cells; compare this layer's exact output.
+	const history = JSON.parse(await readFile(nominalPrimitiveSubtypeJvmPromotionHistoryPath, "utf8"));
+	const expected = history.updates.find(item => item.path === "docs/type-surface.v1.json").currentSha256;
+	const document = JSON.parse(beforeFinRefinementSource("docs/type-surface.v1.json"
+		, await readFile("docs/type-surface.v1.json", "utf8"), expected));
+	assert.ok(live.evidence.length >= document.evidence.length);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(proposed.evidence.length, original.evidence.length + 4);
 	assert.equal(proposed.observations.length, original.observations.length);

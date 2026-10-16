@@ -106,6 +106,7 @@ import { beforeNestedCheckedRecordQualitySource, nestedCheckedRecordQualityChang
 import { beforeNestedCheckedRecordDotnetPromotionSource, nestedCheckedRecordDotnetPromotionChangedPaths } from "./nested-checked-record-dotnet-promotion-history.mjs";
 import { beforeNominalPrimitiveSubtypeAuditCorrectionSource, nominalPrimitiveSubtypeAuditCorrectionChangedPaths } from "./nominal-primitive-subtype-audit-correction-history.mjs";
 import { beforeNominalPrimitiveSubtypeRegistrationGapSource, beforeNominalPrimitiveSubtypeRegistrationRepairSource, nominalPrimitiveSubtypeRegistrationGapChangedPaths, nominalPrimitiveSubtypeRegistrationGapPath } from "./nominal-primitive-subtype-registration-gap-history.mjs";
+import { beforeNestedCheckedRecordArchiveGapSource, beforeNestedCheckedRecordArchiveRepairSource, nestedCheckedRecordArchiveGapChangedPaths, nestedCheckedRecordArchiveGapPath } from "./nested-checked-record-archive-gap-history.mjs";
 import { beforeNominalPrimitiveSubtypeRustPromotionSource, nominalPrimitiveSubtypeRustPromotionChangedPaths } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
 import { beforeNestedCheckedRecordSource, nestedCheckedRecordChangedPaths } from "./nested-checked-record-source-history.mjs";
 import { beforeNestedCheckedRecordBrowserPromotionSource, nestedCheckedRecordBrowserPromotionChangedPaths } from "./nested-checked-record-browser-promotion-history.mjs";
@@ -759,6 +760,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeNestedCheckedRecordArchiveRepairSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeNominalPrimitiveSubtypeRegistrationRepairSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeNominalPrimitiveSubtypeAuditCorrectionSource(path, source, expected);
@@ -768,6 +771,9 @@ const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expecte
 	source = beforeNestedCheckedRecordQualitySource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeNestedCheckedRecordNativePromotionSource(path, source, expected);
+	if(sha256(source) === expected) return source;
+	// The nested native archive edit predates the nested native promotion ledger.
+	source = beforeNestedCheckedRecordArchiveGapSource("archive", path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeNestedCheckedRecordNativeCorrectionSource(path, source, expected);
 	if(sha256(source) === expected) return source;
@@ -1124,6 +1130,8 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nominalPrimitiveSubtypeAuditCorrectionChangedPaths
 	, nominalPrimitiveSubtypeRegistrationGapPath
 	, ...nominalPrimitiveSubtypeRegistrationGapChangedPaths
+	, nestedCheckedRecordArchiveGapPath
+	, ...nestedCheckedRecordArchiveGapChangedPaths
 ])].sort());
 
 /**

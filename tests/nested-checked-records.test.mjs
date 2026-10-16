@@ -14,6 +14,7 @@ import "./helpers/nested-checked-record-browser-ci-tests.mjs";
 import "./helpers/nested-checked-record-browser-ci-workflow-tests.mjs";
 import "./helpers/nested-checked-record-browser-promotion-tests.mjs";
 import "./helpers/nested-checked-record-browser-promotion-history-tests.mjs";
+import "./helpers/nested-checked-record-archive-gap-history-tests.mjs";
 import "./helpers/nested-checked-record-native-correction-source-history-tests.mjs";
 import "./helpers/nested-checked-record-native-archive-tests.mjs";
 import "./helpers/nested-checked-record-native-ci-policy-tests.mjs";

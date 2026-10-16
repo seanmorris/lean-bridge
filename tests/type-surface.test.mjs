@@ -57,6 +57,7 @@ import { withoutNestedCheckedRecordNativePromotion } from "./helpers/nested-chec
 import { withoutNestedCheckedRecordQuality } from "./helpers/nested-checked-record-quality-source-history.mjs";
 import { withoutNestedCheckedRecordDotnetPromotion } from "./helpers/nested-checked-record-dotnet-promotion-history.mjs";
 import { withoutNominalPrimitiveSubtypeAuditCorrection } from "./helpers/nominal-primitive-subtype-audit-correction-history.mjs";
+import { withoutNestedCheckedRecordArchiveRepair } from "./helpers/nested-checked-record-archive-gap-history.mjs";
 
 const execute = promisify(execFile);
 const root = path.resolve(import.meta.dirname, "..");
@@ -98,7 +99,8 @@ const observationFixture = () => {
 
 test("historical shape comparisons preserve old cells without weakening the live classifier", async () => {
 	const file = "docs/type-surface.v1.json";
-	let current = withoutNominalPrimitiveSubtypeAuditCorrection(file, await readFile(file, "utf8"));
+	let current = withoutNestedCheckedRecordArchiveRepair(file, await readFile(file, "utf8"));
+	current = withoutNominalPrimitiveSubtypeAuditCorrection(file, current);
 	current = withoutNestedCheckedRecordDotnetPromotion(file, current);
 	current = withoutNestedCheckedRecordQuality(file, current);
 	current = withoutNestedCheckedRecordNativePromotion(file, current);

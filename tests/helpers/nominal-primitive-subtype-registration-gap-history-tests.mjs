@@ -55,7 +55,8 @@ test("primitive-base registration repair records its own exact source transition
 	assert.deepEqual(record.updates.map(update => update.path), nominalPrimitiveSubtypeRegistrationGapChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		// Newer layers may edit the same sources; stop at this repair's recorded output.
+		const current = beforeFinRefinementSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = show(nominalPrimitiveSubtypeRegistrationGapPredecessor, update.path);
 		assert.equal(reverseNominalPrimitiveSubtypeRegistrationGapUpdate(current, update), previous);

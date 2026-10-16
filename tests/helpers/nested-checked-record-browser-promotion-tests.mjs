@@ -30,6 +30,18 @@ import {
 } from "./nested-checked-record-browser-promotion-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import {
+	beforeNestedCheckedRecordArchiveAndRegistrationPins
+} from "./nested-checked-record-archive-gap-history.mjs";
+import {
+	beforeNestedCheckedRecordNativePromotionPins
+} from "./nested-checked-record-native-promotion-history.mjs";
+import {
+	beforeNestedCheckedRecordQualityPins
+} from "./nested-checked-record-quality-source-history.mjs";
+import {
+	beforeNestedCheckedRecordDotnetPromotionPins
+} from "./nested-checked-record-dotnet-promotion-history.mjs";
+import {
 	beforeNominalPrimitiveSubtypeAuditCorrectionPins
 } from "./nominal-primitive-subtype-audit-correction-history.mjs";
 import {
@@ -111,9 +123,18 @@ test("nested checked-record promotion refuses narrowed, forged or repeated evide
 test("nested checked-record promotion changes thirty exact cells and leaves callbacks open", async () => {
 	const original = await inventory(), unchanged = structuredClone(original);
 	const references = await nestedCheckedRecordBrowserReferences();
-	const proposed = beforeNominalPrimitiveSubtypeWitPromotionPins(beforeNominalPrimitiveSubtypeJvmPromotionPins(
-		beforeNestedCheckedRecordNativeCorrectionPins(beforeNominalPrimitiveSubtypeAuditCorrectionPins(
-			await promoteNestedCheckedRecordBrowsers(original, references)))));
+	// Newer layers, newest first: each restores only its own refreshed source pins.
+	const proposed = [
+		beforeNestedCheckedRecordArchiveAndRegistrationPins
+		, beforeNominalPrimitiveSubtypeAuditCorrectionPins
+		, beforeNestedCheckedRecordDotnetPromotionPins
+		, beforeNestedCheckedRecordQualityPins
+		, beforeNestedCheckedRecordNativePromotionPins
+		, beforeNestedCheckedRecordNativeCorrectionPins
+		, beforeNominalPrimitiveSubtypeJvmPromotionPins
+		, beforeNominalPrimitiveSubtypeWitPromotionPins
+	].reduce((inventory, before) => before(inventory)
+		, await promoteNestedCheckedRecordBrowsers(original, references));
 	const contract = await contracts(); validateTypeSurface(proposed, contract);
 	// Newer layers append receipts, supplement cells and refresh pins; read this
 	// layer's exact output through them.

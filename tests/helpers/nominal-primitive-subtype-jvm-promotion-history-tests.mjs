@@ -10,6 +10,12 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeNestedCheckedRecordArchiveAndRegistrationPins } from "./nested-checked-record-archive-gap-history.mjs";
+import { beforeNestedCheckedRecordNativeCorrectionPins } from "./nested-checked-record-native-correction-source-history.mjs";
+import { beforeNestedCheckedRecordNativePromotionPins } from "./nested-checked-record-native-promotion-history.mjs";
+import { beforeNestedCheckedRecordQualityPins } from "./nested-checked-record-quality-source-history.mjs";
+import { beforeNestedCheckedRecordDotnetPromotionPins } from "./nested-checked-record-dotnet-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypeAuditCorrectionPins } from "./nominal-primitive-subtype-audit-correction-history.mjs";
 import { nominalPrimitiveSubtypeJvmReferences, promoteNominalPrimitiveSubtypeJvm } from "./nominal-primitive-subtype-jvm-promotion.mjs";
 import {
 	beforeNominalPrimitiveSubtypeJvmPromotionSource
@@ -50,7 +56,16 @@ test("primitive-base JVM history authenticates the support transition", async t 
 		}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	const expected = await promoteNominalPrimitiveSubtypeJvm(JSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypeJvmReferences());
+	// Newer layers, newest first: each restores only its own refreshed source pins.
+	const expected = [
+		beforeNestedCheckedRecordArchiveAndRegistrationPins
+		, beforeNominalPrimitiveSubtypeAuditCorrectionPins
+		, beforeNestedCheckedRecordDotnetPromotionPins
+		, beforeNestedCheckedRecordQualityPins
+		, beforeNestedCheckedRecordNativePromotionPins
+		, beforeNestedCheckedRecordNativeCorrectionPins
+	].reduce((inventory, before) => before(inventory)
+		, await promoteNominalPrimitiveSubtypeJvm(JSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypeJvmReferences()));
 	const inventoryUpdate = record.updates.find(item => item.path === inventoryPath);
 	const checkpoint = beforeFinRefinementSource(inventoryPath,
 		await readFile(inventoryPath, "utf8"), inventoryUpdate.currentSha256);
