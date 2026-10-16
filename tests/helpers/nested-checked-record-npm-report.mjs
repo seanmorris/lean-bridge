@@ -55,7 +55,7 @@ export const nestedCheckedRecordNpmRecordPaths = (mode, receipt) => {
 	assert.ok(["full", "result-only"].includes(mode));
 	validateComponentPackageReceipt(receipt);
 	return [
-		"report.json", "controls.json", "configuration.json"
+		"report.json", "configuration.json"
 		, "expected.binding-ir.json"
 		, "install.json", "installed.json", "relocated.json"
 		, ...installedPaths.map(path => `installed/${path}`)
@@ -351,10 +351,34 @@ export const checkNestedCheckedRecordNpmReport = async (read, {
  *
  * @param read - Reader of one accepted original record.
  * @param options - The same independent identity passed to the report checker.
+ * @param options.checkerCommit - Frozen revision containing these controls.
  */
 export const controlNestedCheckedRecordNpmReport = async (read, options) => {
+	assert.match(options.checkerCommit, /^[a-f0-9]{40}$/u);
+	const accepted = await checkNestedCheckedRecordNpmReport(read, options);
 	const bytes = await read("report.json"), base = JSON.parse(bytes);
-	const controls = [
+	const paths = nestedCheckedRecordNpmRecordPaths(base.apiMode, base.receipt);
+	assert.equal(new Set(paths).size, paths.length);
+	const originals = new Map();
+	for(const path of paths) originals.set(path, Buffer.from(await read(path)));
+	const identities = new Map([...originals].map(([path, value]) => [path, sha256(value)]));
+	const selected = async (path, changes = new Map()) => {
+		const value = changes.has(path) ? changes.get(path) : originals.get(path);
+		assert.ok(Buffer.isBuffer(value), `Missing original record: ${path}`);
+		return Buffer.from(value);
+	};
+	let recordControls = 0;
+	for(const [path, value] of originals)
+	{
+		for(const replacement of [null, Buffer.concat([value, Buffer.from("corrupted")])])
+		{
+			const changes = new Map([[path, replacement]]);
+			await assert.rejects(checkNestedCheckedRecordNpmReport(
+				path_ => selected(path_, changes), options));
+			recordControls++;
+		}
+	}
+	const reportMutations = [
 		["route", value => { value.route = value.route === "ordinary-full"
 			? "reviewed-full" : "ordinary-full"; }]
 		, ["producer commit", value => { value.producerCommit = "0".repeat(40); }]
@@ -367,12 +391,55 @@ export const controlNestedCheckedRecordNpmReport = async (read, options) => {
 		, ["installed result", value => { value.observations[0].result.stdout = "{}\n"; }]
 		, ["missing field", value => { delete value.authorInputsUnchanged; }]
 	];
-	for(const [name, mutate] of controls)
+	for(const [name, mutate] of reportMutations)
 	{
 		const changed = structuredClone(base); mutate(changed);
-		const selected = path => path === "report.json"
-			? Promise.resolve(Buffer.from(canonicalJson(changed))) : read(path);
-		await assert.rejects(checkNestedCheckedRecordNpmReport(selected, options), name);
+		const changes = new Map([["report.json", Buffer.from(canonicalJson(changed))]]);
+		await assert.rejects(checkNestedCheckedRecordNpmReport(
+			path => selected(path, changes), options), name);
 	}
-	return { schemaVersion: 1, controls: controls.map(([name]) => name), rejected: controls.length };
+	const adapterMutations = [
+		["omitted export", plan => { plan.exports.pop(); }]
+		, ["wrong private ABI", plan => { plan.privateAbi.version = 7; }]
+		, ["changed output Fin bound", plan => {
+			const item = plan.exports.find(value => value.sourceDeclaration.endsWith("produceOption"));
+			item.refinements.result.arguments[0].fields[0].refinement.bound = "9";
+		}]
+		, ["invented output constructor", plan => {
+			const item = plan.exports.find(value => value.sourceDeclaration.endsWith("produceOption"));
+			item.refinements.result.arguments[0].constructor = "NestedCheckedRecords.mkPacket";
+		}]
+		, ...base.apiMode === "full" ? [
+			["changed outer constructor", plan => {
+				const item = plan.exports.find(value => value.sourceDeclaration.endsWith("first"));
+				item.refinements.parameters[0].constructor = "NestedCheckedRecords.normalizePacket";
+			}]
+			, ["changed field constructor", plan => {
+				const item = plan.exports.find(value => value.sourceDeclaration.endsWith("first"));
+				item.refinements.parameters[0].fields[1].refinement.constructor
+					= "NestedCheckedRecords.normalizeWord";
+			}]
+			, ["changed active case", plan => {
+				const item = plan.exports.find(value => value.sourceDeclaration.endsWith("inChoice"));
+				item.refinements.parameters[0].cases[1].name = "other";
+			}]
+		] : []
+	];
+	for(const [name, mutate] of adapterMutations)
+	{
+		const plan = JSON.parse(originals.get("build-0/locks/compiler-adapters.json"));
+		mutate(plan); const value = Buffer.from(canonicalJson(plan));
+		const changes = new Map([0, 1].map(attempt => [
+			`build-${attempt}/locks/compiler-adapters.json`, value
+		]));
+		await assert.rejects(checkNestedCheckedRecordNpmReport(
+			path => selected(path, changes), options), name);
+	}
+	for(const [path, value] of originals)
+		assert.equal(sha256(value), identities.get(path), path);
+	return {
+		schemaVersion: 1, checkerCommit: options.checkerCommit, accepted
+		, recordControls, reportControls: reportMutations.length
+		, adapterControls: adapterMutations.length
+	};
 };

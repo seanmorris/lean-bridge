@@ -236,7 +236,9 @@ for(const route of routes) test(`installed nested checked-record npm package rep
 		, offlineInstall: true, compilerFreePath: true, relocatedInstallation: true
 		, dispatch: { observed: false, reason: "No constructor/source entry counters in this npm caller" } }));
 	const original = path => readFile(join(output, path));
-	const identity = { route, producerCommit, runtime: runtimeIdentity };
+	const identity = {
+		route, producerCommit, runtime: runtimeIdentity, checkerCommit: producerCommit
+	};
 	await checkNestedCheckedRecordNpmReport(original, identity);
 	await saveLakeFile(output, "controls.json", canonicalJson(
 		await controlNestedCheckedRecordNpmReport(original, identity)));
