@@ -131,6 +131,7 @@ export const checkNestedCheckedRecordPythonReport = async (read, { route, mode, 
 			assert.equal(run.code, 0); assert.equal(run.stderr, ""); parseNestedCheckedRecordPythonResult(run.stdout, mode);
 		}
 	}
+	const recordPaths = nestedCheckedRecordPythonRecords(route, wheel).sort();
 	return { route, mode, producerCommit, runtime, floor
 		, minors: nestedCheckedRecordPythonMinors
 		, counts: nestedCheckedRecordPythonCounts[mode]
@@ -138,5 +139,7 @@ export const checkNestedCheckedRecordPythonReport = async (read, { route, mode, 
 		, executions: 4, dispatchObserved: false
 		, handoff
 		, generatorModules: generatorPaths.length
-		, records: nestedCheckedRecordPythonRecords(route, wheel).length };
+		, records: recordPaths.length, recordPaths
+		, archiveSha256: handoff.archiveSha256
+		, reportSha256: sha256(await read("report.json")) };
 };
