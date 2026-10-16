@@ -12,7 +12,9 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mjs";
-import { generateCopiedDotnetGraphPackage } from "../../src/backends/dotnet/copied-graph-package.mjs";
+import {
+	compileCopiedDotnetGraphPackageModel, generateCopiedDotnetGraphPackage
+} from "../../src/backends/dotnet/copied-graph-package.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { buildCanonicalProject } from "../../src/build/canonical-build.mjs";
 import { nativeArtifactPaths } from "../../src/build/native-artifacts.mjs";
@@ -81,7 +83,11 @@ const inspectPackage = async ({ context, pkg, model, tools, floor, output }) => 
 	assert.equal(component.bindingIrSha256, receipt.bindingIrSha256);
 	assert.equal(adapter.bindingIrSha256, receipt.bindingIrSha256);
 	assert.equal(adapter.componentReceiptSha256, sha256(canonicalJson(component)));
-	assert.deepEqual(adapter.copiedGraph, model.copiedGraph);
+	const projection = compileCopiedDotnetGraphPackageModel(model.bindingIr);
+	const copiedGraph = {
+		schemaVersion: 1, layoutSha256: projection.layoutSha256
+	};
+	assert.deepEqual(adapter.copiedGraph, copiedGraph);
 	const libraries = {
 		[adapter.library]: adapter.files[`lib/${adapter.library}`].sha256
 		, [component.library]: component.nativeLibrary.sha256
@@ -92,7 +98,7 @@ const inspectPackage = async ({ context, pkg, model, tools, floor, output }) => 
 	const evidence = {
 		runtimeIdentity: receipt.runtimeIdentity, componentId: receipt.component.id
 		, componentReceiptSha256: sha256(canonicalJson(component))
-		, copiedGraph: structuredClone(adapter.copiedGraph)
+		, copiedGraph
 		, library: adapter.library, libraries
 	};
 	const compiled = await json(join(root, "lean-bridge/native-dotnet.json"));
@@ -122,7 +128,7 @@ const inspectPackage = async ({ context, pkg, model, tools, floor, output }) => 
 		archive: pkg.artifacts[0], receiptSha256: sha256(context.receiptBytes)
 		, packageFileSetSha256: closure.packageFileSetSha256
 		, bindingIrSha256: model.bindingIrSha256
-		, layoutSha256: model.copiedGraph.layoutSha256
+		, layoutSha256: copiedGraph.layoutSha256
 		, generatedFiles: Object.fromEntries(Object.entries(generated)
 			.map(([path, source]) => [path, identity(source)]))
 		, compiledProjectionSha256: receipt.compiledProjectionSha256

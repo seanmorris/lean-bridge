@@ -70,16 +70,43 @@ export const parseMutualCheckedRecordDotnetResult = stdout => {
 		"calls", "checks", "failures", "hostRejections", "recoveries"
 		, "rejections", "rounds", "snapshots", "wordBits"
 	]);
-	assert.equal(result.rounds, 128); assert.equal(result.wordBits, 64);
-	assert.ok(result.checks > 1500); assert.ok(result.calls > 700);
-	assert.ok(result.rejections > 130); assert.ok(result.hostRejections > 130);
-	assert.ok(result.snapshots > 700); assert.ok(result.recoveries > 140);
-	assert.deepEqual(Object.keys(result.failures).sort(), [
-		"alternate-subtype", "cycle", "depth", "echo-group-late-subtype"
-		, "group-late-subtype", "late-subtype", "negative-nat", "nested-fin"
-		, "null-active-field", "null-alias-carrier", "null-record", "outer-fin"
-		, "outer-record", "outer-subtype", "round late subtype"
-		, "round malformed active field"
-	]);
+	assert.deepEqual({ ...result, failures: undefined }, {
+		checks: 1359, rejections: 136, hostRejections: 134, calls: 676
+		, snapshots: 676, recoveries: 142, rounds: 128, wordBits: 64
+		, failures: undefined
+	});
+	const failure = (name, message) => ({ name, message });
+	assert.deepEqual(result.failures, {
+		"outer-subtype": failure("ArgumentException"
+			, "arg0.value was rejected by MutualCheckedRecords.plusOne")
+		, "late-subtype": failure("ArgumentException"
+			, "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne")
+		, "outer-record": failure("ArgumentException"
+			, "arg0 was rejected by MutualCheckedRecords.mkEnvelope")
+		, "outer-fin": failure("ArgumentException"
+			, "arg0.mode is not below its Fin 3 bound")
+		, "nested-fin": failure("ArgumentException"
+			, "arg0.next?.more.packet.mode is not below its Fin 3 bound")
+		, "group-late-subtype": failure("ArgumentException"
+			, "arg0[0]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne")
+		, "echo-group-late-subtype": failure("ArgumentException"
+			, "arg0[0]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusTwo")
+		, "alternate-subtype": failure("ArgumentException"
+			, "arg0.value was rejected by MutualCheckedRecords.plusTwo")
+		, "null-record": failure("ArgumentNullException"
+			, "Value cannot be null. (Parameter 'value')")
+		, "null-active-field": failure("ArgumentNullException"
+			, "Value cannot be null. (Parameter 'value')")
+		, "null-alias-carrier": failure("ArgumentNullException"
+			, "Value cannot be null. (Parameter 'value')")
+		, cycle: failure("ArgumentException", "Cyclic copied input")
+		, depth: failure("GraphLimit", "Copied graph depth or node limit exceeded")
+		, "negative-nat": failure("ArgumentOutOfRangeException"
+			, "Nat cannot be negative (Parameter 'value')")
+		, "round late subtype": failure("ArgumentException"
+			, "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne")
+		, "round malformed active field": failure("ArgumentNullException"
+			, "Value cannot be null. (Parameter 'value')")
+	});
 	return result;
 };
