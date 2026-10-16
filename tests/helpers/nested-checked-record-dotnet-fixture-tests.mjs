@@ -85,6 +85,7 @@ test("nested checked-record C# caller is one immutable source with fixed totals"
 	const source = await readFile(
 		"tests/fixtures/nested-checked-record-consumers/dotnet.cs", "utf8"
 	);
+	assert.match(source, /#if !RESULT_ONLY\n\x20{4}static string Snap\(Holder[\s\S]*?static string Snap\(Choice[\s\S]*?#endif/u);
 	for(const route of nestedCheckedRecordDotnetRoutes)
 		for(const mode of nestedCheckedRecordDotnetModes)
 		{

@@ -26,6 +26,7 @@ static class Consumer
         : value.IsError ? "error:" + Snap(value.Error) : "uninitialized";
     static string Snap((Packet, Packet) value) =>
         $"({Snap(value.Item1)},{Snap(value.Item2)})";
+#if !RESULT_ONLY
     static string Snap(Holder value) => $"{Snap(value.Packet)}:{value.Tag}";
     static string Snap(Choice value) => value switch
     {
@@ -34,6 +35,7 @@ static class Consumer
         null => "null",
         _ => throw new InvalidOperationException("unknown choice")
     };
+#endif
 
     static void Check(bool condition, string label)
     {
