@@ -93,7 +93,13 @@ test("nested checked-record Rust keeps both author contracts and constructor-fre
 
 test("nested checked-record Rust gates reject disabled, misspelled or repeated selections", () => {
 	const prefix = "LEAN_BRIDGE_NESTED_CHECKED_RECORD_RUST_", enabled = { [prefix + "TEST"]: "1" };
-	assert.deepEqual(nestedCheckedRecordRustSelection({}), { enabled: false, routes: ["ordinary", "reviewed"], modes: ["full", "result-only"] });
+	assert.deepEqual(nestedCheckedRecordRustSelection({}), { enabled: false, routes: ["ordinary", "reviewed"], modes: ["full", "result-only"], maxLoad: 8 });
+	for(const maxLoad of [8, 12, 16, 20])
+		assert.equal(nestedCheckedRecordRustSelection({ ...enabled, [prefix + "MAX_LOAD"]: String(maxLoad) }).maxLoad, maxLoad);
+	for(const raw of ["6", "24", "eight", ""])
+		assert.throws(() => nestedCheckedRecordRustSelection({ ...enabled, [prefix + "MAX_LOAD"]: raw }));
+	for(const flag of [undefined, "0"])
+		assert.throws(() => nestedCheckedRecordRustSelection({ [prefix + "TEST"]: flag, [prefix + "MAX_LOAD"]: "20" }));
 	assert.equal(nestedCheckedRecordRustSelection(enabled).enabled, true);
 	for(const flag of ["", "true", "yes", "2", true, null])
 		assert.throws(() => nestedCheckedRecordRustSelection({ [prefix + "TEST"]: flag }));

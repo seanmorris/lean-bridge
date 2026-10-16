@@ -35,9 +35,24 @@ export const checkNestedCheckedRecordRustControls = async (originalRead, options
 		assert.ok([...changes].some(([path, bytes]) => bytes === null || !bytes.equals(originals.get(path))), `No-op control: ${label}`);
 		await assert.rejects(checkNestedCheckedRecordRustReport(path => read(path, changes), options), undefined, label);
 	};
-	let recordControls = 0, environmentControls = 0, modelControls = 0, executionControls = 0;
+	let recordControls = 0, resourceControls = 0, environmentControls = 0, modelControls = 0, executionControls = 0;
 	for(const path of paths) for(const replacement of [null, Buffer.concat([originals.get(path), Buffer.from("corrupted")])])
 	{ await reject(new Map([[path, replacement]]), path); recordControls++; }
+	for(const mutate of [
+		value => { value[0].observations[0].freeBytes = 1024; }
+		, value => { value[0].observations[0].availableBytes = 1024; }
+		, value => { value[0].observations.at(-1).load = json("report.json").loadCeiling; }
+		, value => { value[0].waits++; }
+		, value => { value.pop(); }
+	]) {
+		const resources = json("resources.json"), report = json("report.json"); mutate(resources); report.resourceChecks = resources;
+		await reject(new Map([["resources.json", encoded(resources)], ["report.json", encoded(report)]]), "resource admission"); resourceControls++;
+	}
+	for(const loadCeiling of [6, 10, 24])
+	{
+		const report = json("report.json"); report.loadCeiling = loadCeiling;
+		await reject(new Map([["report.json", encoded(report)]]), "unrecorded load ceiling"); resourceControls++;
+	}
 	// Change the authoritative installation and its duplicate in the report together.
 	const installationChanges = [
 		value => { value.emptyCargoHome = false; }
@@ -171,5 +186,5 @@ export const checkNestedCheckedRecordRustControls = async (originalRead, options
 		}
 	}
 	for(const [path, hash] of identities) assert.equal(sha256(await originalRead(path)), hash, path);
-	return { ...accepted, recordControls, environmentControls, packageControls, modelControls, executionControls };
+	return { ...accepted, recordControls, resourceControls, environmentControls, packageControls, modelControls, executionControls };
 };

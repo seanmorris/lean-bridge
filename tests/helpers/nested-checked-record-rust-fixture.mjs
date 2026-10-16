@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { nestedCheckedRecordConfiguration, nestedCheckedRecordName, nestedCheckedRecordReview } from "./nested-checked-record-fixture.mjs";
+import { nestedCheckedRecordRustLoadCeiling, nestedCheckedRecordRustLoadCeilings } from "./nested-checked-record-rust-resources.mjs";
 
 export const nestedCheckedRecordRustRoutes = Object.freeze(["ordinary", "reviewed"]);
 export const nestedCheckedRecordRustModes = Object.freeze(["full", "result-only"]);
@@ -37,7 +38,17 @@ export const nestedCheckedRecordRustSelection = environment => {
 		return selected;
 	};
 	if(environment[prefix + "OUTPUT"] !== undefined) assert.equal(flag, "1", "Explicit nested checked-record Rust OUTPUT requires TEST=1");
-	return { enabled: flag === "1", routes: select("ROUTES", nestedCheckedRecordRustRoutes), modes: select("MODES", nestedCheckedRecordRustModes) };
+	if(environment[prefix + "MAX_LOAD"] !== undefined) assert.equal(flag, "1", "Explicit nested checked-record Rust MAX_LOAD requires TEST=1");
+	const rawLoad = environment[prefix + "MAX_LOAD"];
+	const maxLoad = rawLoad === undefined ? nestedCheckedRecordRustLoadCeiling : Number(rawLoad);
+	assert.ok(nestedCheckedRecordRustLoadCeilings.includes(maxLoad)
+		, `Nested checked-record Rust max load must be one of ${nestedCheckedRecordRustLoadCeilings.join(", ")}`);
+	return {
+		enabled: flag === "1"
+		, routes: select("ROUTES", nestedCheckedRecordRustRoutes)
+		, modes: select("MODES", nestedCheckedRecordRustModes)
+		, maxLoad
+	};
 };
 
 /**

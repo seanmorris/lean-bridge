@@ -26,14 +26,13 @@ import { nestedCheckedRecordRustDependencyManifests } from "./nested-checked-rec
 import { checkNestedCheckedRecordRustReport } from "./nested-checked-record-rust-report.mjs";
 import { waitNominalSubtypeDotnetResources } from "./nominal-subtype-dotnet-resources.mjs";
 
-const { enabled, routes, modes } = nestedCheckedRecordRustSelection(process.env);
-const resourceMaxLoad = process.env.LEAN_BRIDGE_NESTED_CHECKED_RECORD_RUST_MAX_LOAD === undefined
-	? 6
-	: Number(process.env.LEAN_BRIDGE_NESTED_CHECKED_RECORD_RUST_MAX_LOAD);
-const resourceCheck = root => waitNominalSubtypeDotnetResources(root, {
-	maxLoad: resourceMaxLoad
-	, notify: console.log
-});
+const { enabled, routes, modes, maxLoad: resourceMaxLoad } = nestedCheckedRecordRustSelection(process.env);
+// Every admission sample is retained and authenticated against the recorded ceiling.
+let resourceChecks = [];
+const resourceCheck = async root => {
+	resourceChecks.push(await waitNominalSubtypeDotnetResources(root, { maxLoad: resourceMaxLoad, notify: console.log }));
+	await saveLakeFile(root, "resources.json", canonicalJson(resourceChecks));
+};
 const registryFiles = async () => (await readdir("/tmp")).filter(name => /^lean-bridge-rust-(?:v1|assets)-/u.test(name)).sort();
 
 for(const route of routes) for(const mode of modes) test(`installed nested checked-record Rust packages reproduce and relocate ${route} ${mode}`, {
@@ -59,7 +58,7 @@ for(const route of routes) for(const mode of modes) test(`installed nested check
 	for(const [path, value] of Object.entries({ "runtime.json": runtime, "expected.binding-ir.json": expected, "configuration.json": configuration }))
 		await saveLakeFile(output, path, canonicalJson(value));
 	const caller = await nestedCheckedRecordRustCaller(route); await saveLakeFile(output, "consumer.rs", caller);
-	await resourceCheck(output);
+	resourceChecks = []; await resourceCheck(output);
 	const root = await mkdtemp(join(tmpdir(), "lean-bridge-nested-checked-record-rust-"));
 	let complete = false;
 	t.after(async () => {
@@ -172,7 +171,8 @@ for(const route of routes) for(const mode of modes) test(`installed nested check
 		, offlineInstall: true
 		, compilerFreeReplay: true
 		, relocatedInstallation: true, sourceFreeExecutable: true
-		, dispatch: { observed: false, reason: "No Rust constructor/source entry counters in this installed acceptance" } }));
+		, dispatch: { observed: false, reason: "No Rust constructor/source entry counters in this installed acceptance" }
+		, resourceChecks, loadCeiling: resourceMaxLoad }));
 	await checkNestedCheckedRecordRustReport(path => readFile(join(output, path)), { route
 		, mode, producerCommit, floor
 		, runtime: { platform: runtime.platform, arch: runtime.arch, glibc: runtime.glibc.stdout.trim().slice(6) }

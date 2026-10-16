@@ -11,6 +11,7 @@ import { nestedCheckedRecordRustOriginal } from "./nested-checked-record-rust-ge
 import { checkNestedCheckedRecordRustModels } from "./nested-checked-record-rust-model-records.mjs";
 import { checkNestedCheckedRecordRustPackage } from "./nested-checked-record-rust-package-records.mjs";
 import { checkNestedCheckedRecordRustEnvironment } from "./nested-checked-record-rust-environment-records.mjs";
+import { assertNestedCheckedRecordRustResources, nestedCheckedRecordRustLoadCeilings } from "./nested-checked-record-rust-resources.mjs";
 
 /**
  * Enumerate all producer records and the original archive checksum supplements.
@@ -21,7 +22,7 @@ import { checkNestedCheckedRecordRustEnvironment } from "./nested-checked-record
  */
 export const nestedCheckedRecordRustRecords = (route, crate, dependencies) => {
 	assert.ok(nestedCheckedRecordRustRoutes.includes(route));
-	return ["report.json", "runtime.json", "toolchain.json"
+	return ["report.json", "runtime.json", "resources.json", "toolchain.json"
 		, "expected.binding-ir.json", "configuration.json", "consumer.rs"
 		, "crate.json", "dependencies.json", "installation.json"
 		, "consumer-environment.json", "consumer-metadata.json", "consumer-build.json"
@@ -67,8 +68,9 @@ export const checkNestedCheckedRecordRustReport = async (read, { route, mode, pr
 	assert.deepEqual(Object.keys(report).sort(), [
 		"authorInputsUnchanged", "builds", "compilerFreeReplay", "declaredGlibcFloor"
 		, "dependencies", "dispatch", "expectedBindingIrSha256", "independentBuilds"
-		, "installation", "mode", "observations", "offlineInstall", "producerCommit"
-		, "receipt", "relocatedInstallation", "reproducible", "route", "runtime"
+		, "installation", "loadCeiling", "mode", "observations", "offlineInstall"
+		, "producerCommit", "receipt", "relocatedInstallation", "reproducible"
+		, "resourceChecks", "route", "runtime"
 		, "schemaVersion", "sourceFreeExecutable"
 		, "sourceRemovedBeforeInstallation"]);
 	assert.equal(report.schemaVersion, 1); assert.equal(report.producerCommit, producerCommit);
@@ -79,6 +81,10 @@ export const checkNestedCheckedRecordRustReport = async (read, { route, mode, pr
 	assert.deepEqual(report.dispatch, { observed: false, reason: "No Rust constructor/source entry counters in this installed acceptance" });
 	const runtimeRecord = { platform: runtime.platform, arch: runtime.arch, glibc: { code: 0, stdout: `glibc ${runtime.glibc}\n`, stderr: "" } };
 	assert.deepEqual(report.runtime, runtimeRecord); assert.deepEqual(await json("runtime.json"), runtimeRecord);
+	assert.ok(nestedCheckedRecordRustLoadCeilings.includes(report.loadCeiling), "Unrecorded nested Rust load ceiling");
+	const resources = await json("resources.json"); assert.equal(resources.length, 8);
+	assert.deepEqual(report.resourceChecks, resources);
+	for(const resource of resources) assertNestedCheckedRecordRustResources(resource, report.loadCeiling);
 	const { model, receipt } = await checkNestedCheckedRecordRustModels({ report, read, json, route, mode, producerCommit });
 	const { crate, generatorPaths } = await checkNestedCheckedRecordRustPackage({ read, json, model, receipt, floor, producerCommit });
 	const source = nestedCheckedRecordRustOriginal(producerCommit, "tests/fixtures/nested-checked-record-consumers/rust.rs").toString();
@@ -100,6 +106,7 @@ export const checkNestedCheckedRecordRustReport = async (read, { route, mode, pr
 	}
 	return { route, mode, producerCommit, runtime, floor, toolchain
 		, counts: nestedCheckedRecordRustCounts[mode], executions: 3
+		, loadCeiling: report.loadCeiling
 		, dispatchObserved: false, generatorModules: generatorPaths.length
 		, records: nestedCheckedRecordRustRecords(route, crate, dependencies).length };
 };
