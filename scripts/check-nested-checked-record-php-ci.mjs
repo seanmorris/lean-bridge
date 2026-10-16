@@ -18,6 +18,7 @@ import {
 	parseNestedCheckedRecordPhpCiArgs
 	, assertNestedCheckedRecordPhpCiTap
 	, checkNestedCheckedRecordPhpCiRecords
+	, nestedCheckedRecordPhpCiArtifactPaths
 } from "../tests/helpers/nested-checked-record-php-ci-report.mjs";
 
 const selected = parseNestedCheckedRecordPhpCiArgs(process.argv.slice(2));
@@ -43,5 +44,6 @@ const result = await checkNestedCheckedRecordPhpCiRecords(selected, {
 	, runtime: { platform: process.platform, arch: process.arch, glibc: version.trim().slice(6) }
 	, archiveSha256: original.archiveSha256
 });
-assert.deepEqual(await nativeArtifactPaths(directory), [...result.records, original.archivePath].sort());
+assert.deepEqual(await nativeArtifactPaths(directory)
+	, nestedCheckedRecordPhpCiArtifactPaths(result.records, original.archivePath));
 process.stdout.write(canonicalJson(result));

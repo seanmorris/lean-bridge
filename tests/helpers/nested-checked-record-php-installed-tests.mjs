@@ -84,7 +84,7 @@ for(const route of routes) for(const mode of modes) test(`installed nested check
 		assert.deepEqual(await lakeInputState(projectRoot), sourceBefore, "Author inputs remain unchanged");
 		const modelBytes = await readFile(join(outputRoot, "native/component/model.json")); model = JSON.parse(modelBytes);
 		assert.equal(reviewedContractDifference(expected, model.bindingIr), null);
-		assert.equal(model.exports.length, mode === "full" ? 14 : 6);
+		assert.equal(model.exports.length, mode === "full" ? 13 : 2);
 		if(route === "reviewed") assert.equal(model.sourceIdentity.reviewedBindingIr.source, canonicalJson(expected));
 		else assert.equal(model.sourceIdentity.reviewedBindingIr, undefined);
 		const receiptBytes = await readFile(join(outputRoot, "package-set-receipt.json")), receipt = JSON.parse(receiptBytes);

@@ -55,6 +55,20 @@ export const parseNestedCheckedRecordPhpCiArgs = args => {
 };
 
 /**
+ * Require the retained record list to contain the Composer ZIP exactly once.
+ *
+ * @param records - Complete selection-relative paths returned by the report checker.
+ * @param archivePath - Independently authenticated Composer ZIP path.
+ */
+export const nestedCheckedRecordPhpCiArtifactPaths = (records, archivePath) => {
+	assert.ok(Array.isArray(records));
+	assert.equal(typeof archivePath, "string");
+	assert.equal(records.filter(path => path === archivePath).length, 1);
+	assert.equal(new Set(records).size, records.length);
+	return [...records].sort();
+};
+
+/**
  * Require one successful installed selection with complete zero-skip TAP totals.
  *
  * @param source - Original combined producer output.

@@ -11,6 +11,7 @@ import {
 	, parseNestedCheckedRecordPhpCiArgs
 	, assertNestedCheckedRecordPhpCiTap
 	, checkNestedCheckedRecordPhpCiRecords
+	, nestedCheckedRecordPhpCiArtifactPaths
 } from "./nested-checked-record-php-ci-report.mjs";
 
 const argsOf = options => Object.entries(options).flatMap(([key, value]) => ["--" + key, value]);
@@ -24,6 +25,19 @@ const syntheticTap = (route, mode) => {
 	const name = nestedCheckedRecordPhpCiTestName(route, mode);
 	return `TAP version 13\n# Subtest: ${name}\nok 1 - ${name}\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 1\n`;
 };
+
+test("nested checked-record native PHP CI counts the Composer ZIP once", () => {
+	const archive = "handoff/archives/example-nestedcheckedrecords-1.0.0-linux-x86_64.zip";
+	const records = ["report.json", archive, "package/src/Api.php"];
+	assert.deepEqual(nestedCheckedRecordPhpCiArtifactPaths(records, archive)
+		, [...records].sort());
+	assert.throws(() => nestedCheckedRecordPhpCiArtifactPaths(
+		["report.json", "package/src/Api.php"], archive));
+	assert.throws(() => nestedCheckedRecordPhpCiArtifactPaths(
+		[...records, archive], archive));
+	assert.throws(() => nestedCheckedRecordPhpCiArtifactPaths(
+		[...records, "report.json"], archive));
+});
 
 test("nested checked-record native PHP CI refuses unknown, duplicate and incomplete selections", () => {
 	const args = argsOf(options); assert.deepEqual(parseNestedCheckedRecordPhpCiArgs(args), options);
