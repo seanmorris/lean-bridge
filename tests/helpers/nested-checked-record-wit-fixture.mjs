@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { nestedCheckedRecordConfiguration, nestedCheckedRecordName, nestedCheckedRecordReview } from "./nested-checked-record-fixture.mjs";
+import { nestedCheckedRecordWitLoadCeiling, nestedCheckedRecordWitLoadCeilings } from "./nested-checked-record-wit-resources.mjs";
 
 export const nestedCheckedRecordWitRoutes = Object.freeze(["ordinary", "reviewed"]);
 export const nestedCheckedRecordWitModes = Object.freeze(["full", "result-only"]);
@@ -43,7 +44,17 @@ export const nestedCheckedRecordWitSelection = environment => {
 		assert.equal(flag, "1", `Explicit ${prefix}OUTPUT requires TEST=1`);
 		assert.ok(typeof environment[prefix + "OUTPUT"] === "string" && environment[prefix + "OUTPUT"].length > 0);
 	}
-	return { enabled: flag === "1", routes: select("ROUTES", nestedCheckedRecordWitRoutes), modes: select("MODES", nestedCheckedRecordWitModes) };
+	if(environment[prefix + "MAX_LOAD"] !== undefined) assert.equal(flag, "1", `Explicit ${prefix}MAX_LOAD requires TEST=1`);
+	const rawLoad = environment[prefix + "MAX_LOAD"];
+	const maxLoad = rawLoad === undefined ? nestedCheckedRecordWitLoadCeiling : Number(rawLoad);
+	assert.ok(nestedCheckedRecordWitLoadCeilings.includes(maxLoad)
+		, `Nested checked-record WIT max load must be one of ${nestedCheckedRecordWitLoadCeilings.join(", ")}`);
+	return {
+		enabled: flag === "1"
+		, routes: select("ROUTES", nestedCheckedRecordWitRoutes)
+		, modes: select("MODES", nestedCheckedRecordWitModes)
+		, maxLoad
+	};
 };
 
 /**

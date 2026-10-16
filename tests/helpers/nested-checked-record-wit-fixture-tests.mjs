@@ -71,13 +71,15 @@ test("nested checked-record WIT keeps both author contracts and constructor-free
 test("nested checked-record WIT selections refuse disabled explicit work and unknown or duplicate selections", () => {
 	const prefix = "LEAN_BRIDGE_NESTED_CHECKED_RECORD_WIT_";
 	assert.deepEqual(nestedCheckedRecordWitSelection({})
-		, { enabled: false, routes: [...nestedCheckedRecordWitRoutes], modes: [...nestedCheckedRecordWitModes] });
+		, { enabled: false, routes: [...nestedCheckedRecordWitRoutes], modes: [...nestedCheckedRecordWitModes], maxLoad: 8 });
 	const enabled = {
 		[prefix + "TEST"]: "1", [prefix + "ROUTES"]: "reviewed"
 		, [prefix + "MODES"]: "result-only", [prefix + "OUTPUT"]: "build/x"
 	};
 	assert.deepEqual(nestedCheckedRecordWitSelection(enabled)
-		, { enabled: true, routes: ["reviewed"], modes: ["result-only"] });
+		, { enabled: true, routes: ["reviewed"], modes: ["result-only"], maxLoad: 8 });
+	for(const maxLoad of [8, 12, 16, 20])
+		assert.equal(nestedCheckedRecordWitSelection({ [prefix + "TEST"]: "1", [prefix + "MAX_LOAD"]: String(maxLoad) }).maxLoad, maxLoad);
 	for(const selection of [
 		{ [prefix + "TEST"]: "yes" }, { [prefix + "ROUTES"]: "reviewed" }
 		, { [prefix + "OUTPUT"]: "build/x" }
@@ -85,6 +87,11 @@ test("nested checked-record WIT selections refuse disabled explicit work and unk
 		, { [prefix + "TEST"]: "1", [prefix + "MODES"]: "full,full" }
 		, { [prefix + "TEST"]: "1", [prefix + "MODES"]: "" }
 		, { [prefix + "TEST"]: "1", [prefix + "OUTPUT"]: "" }
+		, { [prefix + "MAX_LOAD"]: "20" }
+		, { [prefix + "TEST"]: "0", [prefix + "MAX_LOAD"]: "20" }
+		, { [prefix + "TEST"]: "1", [prefix + "MAX_LOAD"]: "6" }
+		, { [prefix + "TEST"]: "1", [prefix + "MAX_LOAD"]: "24" }
+		, { [prefix + "TEST"]: "1", [prefix + "MAX_LOAD"]: "eight" }
 	]) assert.throws(() => nestedCheckedRecordWitSelection(selection), JSON.stringify(selection));
 	for(const mode of nestedCheckedRecordWitModes)
 	{

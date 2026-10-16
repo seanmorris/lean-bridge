@@ -101,7 +101,7 @@ if (process.env.FAKE_FAIL === call) process.exit(17);
 	const preselected = [
 		[floor, ""], [floor, "2.36"], [floor, "2.38"], [prefix + "TEST", "1"]
 		, [prefix + "ROUTES", "ordinary"], [prefix + "MODES", "full"]
-		, [prefix + "OUTPUT", "build/elsewhere"]
+		, [prefix + "OUTPUT", "build/elsewhere"], [prefix + "MAX_LOAD", "20"]
 	];
 	for(const [key, value] of preselected)
 	{
@@ -115,5 +115,5 @@ if (process.env.FAKE_FAIL === call) process.exit(17);
 		const result = spawnSync("/bin/bash", [script, ...args], { cwd: directory, env: { ...base, PATH: bin }, encoding: "utf8" });
 		assert.equal(result.status, 2); assert.deepEqual(await readdir(directory), []);
 	}
-	t.diagnostic("Ten complete/failing shell scenarios, ten stale-output refusals, seven preselected-environment and six argument controls; stand-ins do not claim compiled acceptance");
+	t.diagnostic("Ten complete/failing shell scenarios, ten stale-output refusals, eight preselected-environment and six argument controls; stand-ins do not claim compiled acceptance");
 });

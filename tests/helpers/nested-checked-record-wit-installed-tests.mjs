@@ -25,13 +25,13 @@ import { copiedCleanEnvironment, nativeFixtureEnvironment, runCopied } from "./c
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
 
-const { enabled, routes, modes } = nestedCheckedRecordWitSelection(process.env);
+const { enabled, routes, modes, maxLoad } = nestedCheckedRecordWitSelection(process.env);
 
 for(const route of routes) for(const mode of modes) test(`installed nested checked-record WIT packages reproduce and relocate ${route} ${mode}`, {
 	skip: !enabled, timeout: 3_600_000
 }, async t => {
 	const producerCommit = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
-	for(const name of ["fixture", "package", "install", "installed-tests"])
+	for(const name of ["fixture", "resources", "package", "install", "installed-tests"])
 		execFileSync("git", ["ls-files", "--error-unmatch", `tests/helpers/nested-checked-record-wit-${name}.mjs`]);
 	for(const name of ["wit-wasi.c", "wit-values.h"])
 		execFileSync("git", ["ls-files", "--error-unmatch", `tests/fixtures/nested-checked-record-consumers/${name}`]);
@@ -40,7 +40,7 @@ for(const route of routes) for(const mode of modes) test(`installed nested check
 	await assert.rejects(access(output), { code: "ENOENT" }); await mkdir(output, { recursive: true });
 	const resourceChecks = [];
 	const resourceCheck = async () => {
-		resourceChecks.push(await waitNominalSubtypeDotnetResources(output, { notify: message => t.diagnostic(message) }));
+		resourceChecks.push(await waitNominalSubtypeDotnetResources(output, { maxLoad, notify: message => t.diagnostic(message) }));
 		await saveLakeFile(output, "resources.json", canonicalJson(resourceChecks));
 	};
 	await resourceCheck();
@@ -135,6 +135,7 @@ for(const route of routes) for(const mode of modes) test(`installed nested check
 		, callerCompiledOnce: true, callerSourceRemovedBeforeExecution: true
 		, compilerFreeReplay: true, relocatedInstallation: true
 		, componentModel: { nativeHostRequired: true, standaloneWasi: false }
-		, dispatch: { observed: false, reason: "No constructor/source entry counters in this installed acceptance" } }));
+		, dispatch: { observed: false, reason: "No constructor/source entry counters in this installed acceptance" }
+		, resourceChecks, loadCeiling: maxLoad }));
 	complete = true;
 });

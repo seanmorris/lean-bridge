@@ -15,7 +15,7 @@ import { checkNestedCheckedRecordWitPackageRecords } from "./nested-checked-reco
 import { nestedCheckedRecordWitComponentRecord } from "./nested-checked-record-wit-handoff.mjs";
 import { assertNominalSubtypeWitToolRecords, nominalSubtypeWitSuccessful } from "./nominal-subtype-wit-tool-records.mjs";
 import { checkNestedCheckedRecordWitEnvironmentRecords } from "./nested-checked-record-wit-environment-records.mjs";
-import { assertNominalSubtypePhpResources } from "./nominal-subtype-php-provenance.mjs";
+import { assertNestedCheckedRecordWitResources, nestedCheckedRecordWitLoadCeilings } from "./nested-checked-record-wit-resources.mjs";
 
 /**
  * Reconstruct the complete caller from the immutable producer revision, never from records.
@@ -61,9 +61,10 @@ export const checkNestedCheckedRecordWitReport = async (read, { route, mode, pro
 		, "builds", "callerCompiledOnce", "callerSourceRemovedBeforeExecution"
 		, "compilerFreeReplay", "componentModel", "configuration"
 		, "declaredGlibcFloor", "dispatch", "expectedBindingIrSha256"
-		, "independentBuilds", "mode", "observations", "offlineInstall"
-		, "packageReceiptSha256", "producerCommit", "receipt"
-		, "relocatedInstallation", "reproducible", "route", "runtime"
+		, "independentBuilds", "loadCeiling", "mode", "observations"
+		, "offlineInstall", "packageReceiptSha256", "producerCommit", "receipt"
+		, "relocatedInstallation", "reproducible", "resourceChecks", "route"
+		, "runtime"
 		, "schemaVersion", "sourceRemovedBeforeInstallation", "tools"]);
 	assert.equal(report.schemaVersion, 1); assert.equal(report.producerCommit, producerCommit);
 	assert.equal(report.route, route); assert.equal(report.mode, mode); assert.equal(report.independentBuilds, 2);
@@ -77,8 +78,10 @@ export const checkNestedCheckedRecordWitReport = async (read, { route, mode, pro
 	assert.deepEqual(report.dispatch, { observed: false, reason: "No constructor/source entry counters in this installed acceptance" });
 	const runtimeRecord = { platform: runtime.platform, arch: runtime.arch, glibc: { code: 0, stdout: `glibc ${runtime.glibc}\n`, stderr: "" } };
 	assert.deepEqual(report.runtime, runtimeRecord); assert.deepEqual(await json("runtime.json"), runtimeRecord);
+	assert.ok(nestedCheckedRecordWitLoadCeilings.includes(report.loadCeiling), "Unrecorded nested WIT load ceiling");
 	const resources = await json("resources.json"); assert.equal(resources.length, 6);
-	for(const resource of resources) assertNominalSubtypePhpResources(resource);
+	assert.deepEqual(report.resourceChecks, resources);
+	for(const resource of resources) assertNestedCheckedRecordWitResources(resource, report.loadCeiling);
 	const tools = await json("tools.json"); assert.deepEqual(report.tools, tools);
 	assert.deepEqual(await json("tools-after.json"), tools); assertNominalSubtypeWitToolRecords(tools);
 	const { model, receipt } = await checkNestedCheckedRecordWitModels({ report, read, json, route, mode, producerCommit });
@@ -116,6 +119,7 @@ export const checkNestedCheckedRecordWitReport = async (read, { route, mode, pro
 		, nestedCheckedRecordWitComponentRecord];
 	assert.equal(new Set(records).size, records.length);
 	return { route, mode, producerCommit, runtime, floor, counts, executions: 2
+		, loadCeiling: report.loadCeiling
 		, ...Object.fromEntries(Object.entries(counts).map(([key, count]) => [key, 2 * count]))
 		, dispatchObserved: false, nativeHostRequired: true, standaloneWasi: false
 		, wasmtime: tools.wasmtime.version, generatorPaths, records: records.sort()
