@@ -167,3 +167,52 @@ export const mutualComponentRefinementMirrorsFixture = () => {
 	add("echoGroups", group(selected("plusOne", "plusTwo")), leftGroup, group(selected(null, null)), leftGroup);
 	return { abi: { version: 8, dispatch: "copied-graph-frame-v1", types, exports: signatures }, exports, nominalRefinements: [] };
 };
+
+/** A checked record mutually recursive with a plain variant and shared Fin bounds. */
+export const mutualCheckedComponentRefinementMirrorsFixture = () => {
+	const nat = { kind: "primitive", name: "nat" };
+	const named = name => ({ kind: "named", id: `lean:MutualChecked.${name}` });
+	const option = type => ({ kind: "apply", constructor: "option", arguments: [type] });
+	const field = (name, type) => ({ name, type });
+	const branch = (name, ...fields) => ({ name, fields });
+	const choice = (name, refinement) => ({ name, refinement });
+	const envelope = named("Envelope"), step = named("Step"), alias = named("EnvelopeAlias");
+	const types = [
+		{ kind: "record", id: envelope.id, erased: ["linked"]
+			, fields: [field("value", nat), field("mode", nat), field("next", option(step))] }
+		, { kind: "alias", id: alias.id, target: envelope }
+		, { kind: "variant", id: step.id
+			, cases: [branch("stop"), branch("more", field("packet", envelope))] }
+	];
+	const subtype = constructor => ({ kind: "subtype"
+		, constructor: constructor === null ? null : `MutualChecked.${constructor}` });
+	const selected = (constructor, valueConstructor) => ({
+		kind: "checked-record", name: "MutualChecked.Envelope"
+		, constructor: constructor === null ? null : `MutualChecked.${constructor}`
+		, fields: [choice("value", subtype(valueConstructor)), choice("mode", null), choice("next", null)]
+	});
+	const signatures = [], exports = [];
+	const add = (name, selection, result = nat, resultTree = null, parameter = envelope) => {
+		const bindingId = `lean:MutualChecked.${name}`, symbol = `lean_bridge_${sha256(bindingId).slice(0, 24)}`;
+		signatures.push({ bindingId, symbol, parameters: [parameter], result, resultMode: "value" });
+		exports.push({ bindingId, symbol, sourceDeclaration: `MutualChecked.${name}`
+			, wrapper: `export_mutualChecked${name[0].toUpperCase()}${name.slice(1)}`
+			, parameters: [{ name: "value", leanType: "unused before normalization" }]
+			, leanResultType: "unused before normalization"
+			, refinements: { parameters: [selection], result: resultTree } });
+	};
+	add("first", selected("mkEnvelope", "plusOne"));
+	add("second", selected("normalizeEnvelope", "plusTwo"));
+	add("echo", selected("mkEnvelope", "plusOne"), envelope, selected(null, null));
+	add("alias", selected("mkEnvelope", "plusOne"), nat, null, alias);
+	return {
+		abi: { version: 8, dispatch: "copied-graph-frame-v1", types, exports: signatures }
+		, exports
+		, nominalRefinements: [{
+			id: envelope.id
+			, refinement: {
+				kind: "record", fields: [null, { kind: "fin", bound: "3" }, null]
+			}
+		}]
+	};
+};

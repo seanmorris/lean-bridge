@@ -76,8 +76,12 @@ export const projectNativeCFamily = async ({ working, nativeRoot, runtimeRoot, l
 		...targets.includes("c") ? generateCallableCGraphPackage(model.bindingIr).files : {}
 		, ...targets.includes("cpp") ? generateCallableCppGraphPackage(model.bindingIr).files : {}
 	} : null;
+	const refinementDiagnostics = !graph?.callableGraph && model.exports.some(
+		item => item.refinements?.parameters?.some(Boolean)
+	);
 	const files = graph ? { ...graph.callableGraph ? callableFiles
-		: cGraphTargets.length ? generateCopiedGraphPackage(model.bindingIr, cGraphTargets).files : {} }
+		: cGraphTargets.length ? generateCopiedGraphPackage(model.bindingIr, cGraphTargets
+			, { refinementDiagnostics }).files : {} }
 		: { ...generateCBindingPackage(model.bindingIr), "src/native.c": generateNativePrimitiveC(model, receipt) };
 	if(graph)
 	{

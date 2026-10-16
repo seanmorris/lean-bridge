@@ -6,6 +6,7 @@
 import { generateNativeCopiedGraphAdapters } from "../backends/c/native-graph-adapters.mjs";
 import { nativeGraphCarrierAbi } from "./native-graph-model.mjs";
 import { generateNativeCallableGraphCalls } from "../backends/c/native-callable-graph-calls.mjs";
+import { nominalRefinementEntries } from "../abi/refinements.mjs";
 
 /**
  * Return exact private headers and implementation for a checked graph component.
@@ -15,9 +16,19 @@ import { generateNativeCallableGraphCalls } from "../backends/c/native-callable-
  */
 export const nativeGraphProjectionSources = (model, receipt) => {
 	const abi = nativeGraphCarrierAbi(model);
+	const refinementExports = abi.callbacks ? [] : model.exports.map((item, index) => ({
+		bindingId: item.bindingId
+		, symbol: abi.exports.find(value => value.bindingId === item.bindingId).symbol
+		, wrapper: `export${index}`, sourceDeclaration: item.name
+		, parameters: item.parameters
+		, ...(item.refinements ? { refinements: item.refinements } : {})
+	}));
 	const native = abi.callbacks
 		? generateNativeCallableGraphCalls(model.bindingIr, model.copiedGraph, { initializer: receipt.initializer })
-		: generateNativeCopiedGraphAdapters(model.bindingIr, abi, { initializer: receipt.initializer });
+		: generateNativeCopiedGraphAdapters(model.bindingIr, abi, {
+			initializer: receipt.initializer, refinementExports
+			, nominalRefinements: nominalRefinementEntries(model.bindingIr.types)
+		});
 	const p = native.layout.prefix;
 	return {
 		[`include/detail/${p}-graph-types.h`]: native.typesHeader

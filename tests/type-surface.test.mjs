@@ -67,6 +67,7 @@ import { withoutNestedCheckedRecordWitPromotion } from "./helpers/nested-checked
 import { withoutNestedCheckedRecordPhpWasmPromotion } from "./helpers/nested-checked-record-php-wasm-promotion-history.mjs";
 import { withoutNestedCheckedRecordRustPromotion } from "./helpers/nested-checked-record-rust-promotion-history.mjs";
 import { withoutNestedCheckedRecordMatrixClosure } from "./helpers/nested-checked-record-matrix-closure-source-history.mjs";
+import { withoutMutualCheckedRecord } from "./helpers/mutual-checked-record-source-history.mjs";
 
 const execute = promisify(execFile);
 const root = path.resolve(import.meta.dirname, "..");
@@ -108,8 +109,9 @@ const observationFixture = () => {
 
 test("historical shape comparisons preserve old cells without weakening the live classifier", async () => {
 	const file = "docs/type-surface.v1.json";
-	let current = withoutNestedCheckedRecordMatrixClosure(file
-		, await readFile(file, "utf8"));
+	let current = withoutMutualCheckedRecord(file, await readFile(file, "utf8"));
+	current = withoutNestedCheckedRecordMatrixClosure(file
+		, current);
 	current = withoutNestedCheckedRecordRustPromotion(file, current);
 	current = withoutNestedCheckedRecordPhpWasmPromotion(file
 		, current);

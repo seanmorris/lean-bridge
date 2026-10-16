@@ -70,3 +70,44 @@ def groups (values : LeftGroup) : Nat :=
 def echoGroups (values : LeftGroup) : LeftGroup := values
 
 end MutualMirrors
+
+namespace MutualChecked
+
+abbrev Positive := NominalConversion.Positive
+
+def plusOne := NominalConversion.plusOne
+def plusTwo := NominalConversion.plusTwo
+
+mutual
+structure Envelope where
+  value : Positive
+  mode : Fin 3
+  next : Option Step
+  linked : mode.val ≤ value.val
+inductive Step where
+  | stop
+  | more (packet : Envelope)
+end
+
+def mkEnvelope (value : Positive) (mode : Fin 3) (next : Option Step) : Option Envelope :=
+  if linked : mode.val ≤ value.val then some ⟨value, mode, next, linked⟩ else none
+
+def normalizeEnvelope (value : Positive) (mode : Fin 3) (next : Option Step) : Option Envelope :=
+  if linked : mode.val ≤ value.val then some ⟨value, mode, next, linked⟩ else none
+
+mutual
+def totalEnvelope : Envelope → Nat
+  | ⟨value, _, none, _⟩ => value.val
+  | ⟨value, _, some next, _⟩ => value.val + totalStep next
+def totalStep : Step → Nat
+  | .stop => 0
+  | .more packet => totalEnvelope packet
+end
+
+def first (value : Envelope) : Nat := totalEnvelope value
+def second (value : Envelope) : Nat := totalEnvelope value
+def echo (value : Envelope) : Envelope := value
+abbrev EnvelopeAlias := Envelope
+def alias (value : EnvelopeAlias) : Nat := totalEnvelope value
+
+end MutualChecked

@@ -820,6 +820,10 @@ partial def inlineCopiedType (types : Array Json) (value : Json)
   if depth > 32 || (← get) >= 4096 then return ← OptionT.fail
   modify (· + 1)
   let kind := (value.getObjValAs? String "kind").toOption.getD ""
+  let seen := if ["alias", "record", "variant"].contains kind then
+      let name := (value.getObjValAs? String "name").toOption.getD ""
+      if name.isEmpty || seen.contains name then seen else name :: seen
+    else seen
   if kind == "reference" then
     let name ← ofExcept <| value.getObjValAs? String "name"
     if seen.contains name then return ← OptionT.fail
@@ -832,8 +836,10 @@ partial def inlineCopiedType (types : Array Json) (value : Json)
   if kind == "result" || kind == "tuple" then
     let args ← ofExcept <| value.getObjValAs? (Array Json) "arguments"
     return value.setObjVal! "arguments" (toJson (← args.mapM fun child => inlineCopiedType types child seen (depth + 1)))
-  -- A checked record's site keeps its predicate around the inlined record.
-  if kind == "refinement" && (value.getObjVal? "base" |>.toOption |>.bind fun base => base.getObjValAs? String "kind" |>.toOption) == some "reference" then
+  -- A checked site keeps its predicate while its complete base is expanded. In
+  -- particular, an inline checked record can contain a reference through a
+  -- mutually recursive sibling even when its own base is not yet a reference.
+  if kind == "refinement" then
     return value.setObjVal! "base" (← inlineCopiedType types (← ofExcept <| value.getObjVal? "base") seen (depth + 1))
   let expandFields := fun (owner : Json) => do
     let fields ← ofExcept <| owner.getObjValAs? (Array Json) "fields"

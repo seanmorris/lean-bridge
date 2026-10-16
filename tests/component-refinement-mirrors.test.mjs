@@ -12,7 +12,12 @@ import { refinementCycleTrees, refinementMirrorNames, renderRefinementMirrors } 
 import { generateNativeLeanAdapters } from "../src/build/native-model.mjs";
 import { generateComponentRecursiveAdapters } from "../src/build/component-recursive-adapters.mjs";
 import { componentRecursiveLeanSource } from "../src/build/component-recursive-lean.mjs";
-import { componentRefinementMirrorsFixture, mutualComponentRefinementMirrorsFixture, recursiveComponentRefinementMirrorsFixture } from "./helpers/component-refinement-mirrors-fixture.mjs";
+import {
+	componentRefinementMirrorsFixture
+	, mutualCheckedComponentRefinementMirrorsFixture
+	, mutualComponentRefinementMirrorsFixture
+	, recursiveComponentRefinementMirrorsFixture
+} from "./helpers/component-refinement-mirrors-fixture.mjs";
 import { nominalFinConversionFixture, nominalSubtypeConversionFixture } from "./helpers/nominal-subtype-conversion-fixture.mjs";
 import "./helpers/component-refinement-mirrors-source-tests.mjs";
 import "./helpers/component-nominal-subtype-tests.mjs";
@@ -135,6 +140,21 @@ test("mutual component mirrors retain active cases, aliases and structural backe
 	assert.match(source, /inductive LbErased\.MutualMirrors\.Right where/u);
 	assert.deepEqual(a.lines, b.lines);
 	for(const item of a.sites) assert.deepEqual(b.sites.find(other => other.bindingId === item.bindingId), item);
+});
+
+test("mutual component mirrors retain checked-record constructors and proof-free backedges", () => {
+	const fixture = mutualCheckedComponentRefinementMirrorsFixture();
+	const model = normalize(fixture), source = model.lines.join("\n");
+	assert.deepEqual(model.mutualGroups, [["MutualChecked.Envelope", "MutualChecked.Step"]]);
+	assert.match(source, /structure LbErased\.MutualChecked\.Envelope where/u);
+	assert.match(source, /inductive LbErased\.MutualChecked\.Step where/u);
+	assert.match(source, /def LbErased\.MutualChecked\.Envelope\.via_[a-f0-9]+/u);
+	assert.match(source, /def LbErased\.MutualChecked\.Step\.via_[a-f0-9]+/u);
+	assert.match(source, /def LbErased\.MutualChecked\.Envelope\.erase/u);
+	assert.match(source, /def LbErased\.MutualChecked\.Step\.erase/u);
+	assert.match(source, /def LbErased\.MutualChecked\.Envelope\.validFin/u);
+	assert.match(source, /def LbErased\.MutualChecked\.Step\.validFin/u);
+	assert.doesNotMatch(source, /\b(?:partial|unsafe|axiom|sorry)\b/u);
 });
 
 test("recursive component mirrors reject an explicit selection at an active backedge", () => {

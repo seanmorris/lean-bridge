@@ -13,7 +13,12 @@ import { promisify } from "node:util";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { componentRecursiveLeanSource } from "../../src/build/component-recursive-lean.mjs";
-import { componentRefinementMirrorsFixture, mutualComponentRefinementMirrorsFixture, recursiveComponentRefinementMirrorsFixture } from "./component-refinement-mirrors-fixture.mjs";
+import {
+	componentRefinementMirrorsFixture
+	, mutualCheckedComponentRefinementMirrorsFixture
+	, mutualComponentRefinementMirrorsFixture
+	, recursiveComponentRefinementMirrorsFixture
+} from "./component-refinement-mirrors-fixture.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_COMPONENT_REFINEMENT_MIRRORS_TEST === "1";
 test("fresh Lean checks nominal component carriers, per-use normalization and result-only projection", { skip: !enabled, timeout: 240_000 }, async t => {
@@ -182,6 +187,39 @@ test("fresh Lean checks nominal component carriers, per-use normalization and re
 		, cSha256: sha256(await readFile(join(directory, "GeneratedMutual.c")))
 		, stdout: mutualResult.stdout, stderr: mutualResult.stderr });
 	if(reports) await writeFile(join(reports, "mutual.lean"), mutualSource, { flag: "wx" });
+	const mutualChecked = mutualCheckedComponentRefinementMirrorsFixture();
+	const mutualCheckedLines = componentRecursiveLeanSource(mutualChecked.abi, mutualChecked.exports, type => {
+		assert.equal(type.kind, "primitive"); assert.equal(type.name, "nat");
+		return "_root_.Nat";
+	}, mutualChecked.nominalRefinements);
+	const mutualCheckedChecks = [
+		"mutual"
+		, "def mutualCheckedEnvelopeTotal : Carriers.LbErased.MutualChecked.Envelope → Nat"
+		, "  | ⟨value, _, none⟩ => value"
+		, "  | ⟨value, _, some next⟩ => value + mutualCheckedStepTotal next"
+		, "def mutualCheckedStepTotal : Carriers.LbErased.MutualChecked.Step → Nat"
+		, "  | .stop => 0"
+		, "  | .more packet => mutualCheckedEnvelopeTotal packet"
+		, "end"
+		, "example : Carriers.export_mutualCheckedFirst #[⟨40, 2, some (.more ⟨80, 1, none⟩)⟩] = #[122] := by native_decide"
+		, "example : Carriers.export_mutualCheckedSecond #[⟨40, 2, some (.more ⟨80, 1, none⟩)⟩] = #[124] := by native_decide"
+		, "example : Carriers.export_mutualCheckedFirst #[⟨0, 2, none⟩] = #[] := by native_decide"
+		, "example : Carriers.export_mutualCheckedFirst #[⟨40, 2, some (.more ⟨0, 2, none⟩)⟩] = #[] := by native_decide"
+		, "example : Carriers.export_mutualCheckedFirst #[⟨40, 3, none⟩] = #[] := by native_decide"
+		, "example : (Carriers.export_mutualCheckedEcho #[⟨40, 2, some (.more ⟨80, 1, none⟩)⟩]).map mutualCheckedEnvelopeTotal = #[122] := by native_decide"
+		, "example : Carriers.export_mutualCheckedAlias #[⟨40, 2, none⟩] = #[41] := by native_decide"
+	];
+	const mutualCheckedSource = ["import ComponentMirrors"
+		, "namespace Carriers", ...mutualCheckedLines
+		, "end Carriers", ...mutualCheckedChecks, ""].join("\n");
+	assert.doesNotMatch(mutualCheckedSource, /\b(?:sorry|axiom|unsafe|partial|unsafeCast|defaultValue)\b/u);
+	await writeFile(join(directory, "GeneratedMutualChecked.lean"), mutualCheckedSource);
+	const mutualCheckedResult = await run(["-c", "GeneratedMutualChecked.c", "GeneratedMutualChecked.lean"]);
+	observations.push({ route: "mutual-checked", checks: 7
+		, sourceSha256: sha256(mutualCheckedSource)
+		, cSha256: sha256(await readFile(join(directory, "GeneratedMutualChecked.c")))
+		, stdout: mutualCheckedResult.stdout, stderr: mutualCheckedResult.stderr });
+	if(reports) await writeFile(join(reports, "mutual-checked.lean"), mutualCheckedSource, { flag: "wx" });
 	if(reports) await writeFile(join(reports, "report.json"), JSON.stringify({ schemaVersion: 1
 		, kind: "component-refinement-mirror-source-check"
 		, metadataAdmission: false, installedAcceptance: false

@@ -11,9 +11,13 @@ const support = `static_assert(sizeof(size_t) == 8 && sizeof(void*) == 8 && size
 class GraphConversionError : public std::runtime_error {
 public:
   uint32_t status;
-  GraphConversionError(uint32_t code, const char* message) : std::runtime_error(message), status(code) {}
+  bool native_status;
+  GraphConversionError(uint32_t code, const char* message, bool native = false)
+    : std::runtime_error(message), status(code), native_status(native) {}
 };
-[[noreturn]] inline void graph_fail(uint32_t status, const char* text) { throw GraphConversionError(status, text); }
+[[noreturn]] inline void graph_fail(uint32_t status, const char* text, bool native = false) {
+  throw GraphConversionError(status, text, native);
+}
 struct GraphBudget {
   size_t nodes = ${componentRecursiveLimits.valueNodes};
   size_t native_bytes = 16u * 1024u * 1024u;
@@ -253,7 +257,7 @@ export const generateCopiedCppGraphConversions = ir => {
 			, `  ${result.name} result{};`
 			, ...result.aggregate ? [`  GraphOwned<${result.name}, ${result.name}_clear> owner(&result);`] : []
 			, `  const uint32_t status = std::forward<Invoke>(invoke)(${[...params.map((_, index) => `&view${index}.value`), "&result"].join(", ")});`
-			, '  if (status) graph_fail(status, "Native copied graph call failed");'
+			, '  if (status) graph_fail(status, "Native copied graph call failed", true);'
 			, `  return graph_from${result.index}(result, 0, true, true, budget);`, "}");
 	}
 	const header = ["#pragma once", `#include "${layout.prefix}-values.hpp"`

@@ -235,7 +235,11 @@ static inline int ng_fin_below(const uint32_t *data, size_t length, const uint32
   while (length--) if (data[length] != bound[length]) return data[length] < bound[length];
   return 0;
 }
-const char *${layout.prefix}_graph_error(void) { return ng_refinement_length ? ng_refinement_message : NULL; }
+const char *${layout.prefix}_graph_error(void) {
+  const char *result = ng_refinement_length ? ng_refinement_message : NULL;
+  ng_refinement_length = 0;
+  return result;
+}
 `;
 	return {
 		normalized, validators: [...validators].sort()

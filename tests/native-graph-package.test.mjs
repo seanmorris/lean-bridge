@@ -44,6 +44,12 @@ test("recursive public C/C++ packages preserve named values and ordinary error s
 		const invalid = structuredClone(ir); invalid.declarations.at(-1).name = name;
 		assert.throws(() => compileCopiedGraphPackageModel(invalid, ["c", "cpp"]), /collision|collides/);
 	}
+	for(const name of ["graphError", "graphFinishWithMessage"])
+	{
+		const invalid = structuredClone(ir); invalid.declarations.at(-1).name = name;
+		assert.throws(() => compileCopiedGraphPackageModel(invalid, ["c", "cpp"]
+			, { refinementDiagnostics: true }), /collision|collides/);
+	}
 });
 
 test("public graph headers compile and C++ maps bridge failures without losing retirement", { timeout: 120_000 }, async t => {
@@ -58,11 +64,12 @@ test("public graph headers compile and C++ maps bridge failures without losing r
 			, parameters: [{ ...template.parameters[0], type }]
 			, result: { ...template.result, type } });
 	}
-	const output = generateCopiedGraphPackage(ir, ["c", "cpp"]);
+	const output = generateCopiedGraphPackage(ir, ["c", "cpp"]
+		, { refinementDiagnostics: true });
 	const native = generateNativeCopiedGraphAdapters(ir, recursiveCarrierAbi(ir));
 	const files = { ...output.files, ...boostSources()
 		, "include/detail/recursive-graph-types.h": native.typesHeader
-		, "include/detail/recursive-graph.h": `${native.header}\nextern "C" { int recursive_graph_ready(void); void recursive_graph_retire(void); }\n` };
+		, "include/detail/recursive-graph.h": `${native.header}\nextern "C" { const char *recursive_graph_error(void); int recursive_graph_ready(void); void recursive_graph_retire(void); }\n` };
 	for(const [path, content] of Object.entries(files)) await saveLakeFile(directory, path, content);
 	await saveLakeFile(directory, "consumer.c", await readFile("tests/fixtures/structured-types/recursive-installed.c", "utf8"));
 	const compile = (command, args) => processBuildRunner.capture({ command, args, cwd: directory }).catch(error => { error.message += `: ${JSON.stringify(error.details)}`; throw error; });
@@ -80,6 +87,7 @@ static uint32_t mode;
 static int ready = 1, retired;
 extern "C" int recursive_graph_ready(void) { return ready; }
 extern "C" void recursive_graph_retire(void) { ready = 0; ++retired; }
+extern "C" const char *recursive_graph_error(void) { return mode == 1 ? "specific invalid input" : nullptr; }
 extern "C" uint32_t recursive_empty_graph(native::recursive_tree_t *out) {
   out->kind = mode == 6 ? UINT32_MAX : static_cast<uint32_t>(native::RECURSIVE_TREE_T_KIND_BRANCH);
   return mode < 6 ? mode : 0;
@@ -93,7 +101,7 @@ int main() {
     catch (const api::Error& error) {
       assert(error.status == (mode <= 2 ? RECURSIVE_STATUS_INVALID_ARGUMENT : RECURSIVE_STATUS_UNEXPECTED_ERROR));
       assert(error.code == (mode <= 2 ? RECURSIVE_ERROR_INVALID_ARGUMENT : RECURSIVE_ERROR_UNEXPECTED));
-      assert(*error.what());
+      assert(mode == 1 ? std::string(error.what()) == "specific invalid input" : *error.what());
     }
     assert(retired == (mode == 4 || mode == 6));
   }

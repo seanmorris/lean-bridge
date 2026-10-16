@@ -209,8 +209,8 @@ export const renderRefinementMirrors = (model, mirrors, renderType, recordValue 
 			if(emittedMutual.has(identity)) continue;
 			emittedMutual.add(identity);
 			const members = group.map(name => typeByName.get(name));
-			if(members.some(member => !member || Object.hasOwn(member, "erased")))
-				throw new TypeError("Mutually recursive checked-record mirrors require another representation");
+			if(members.some(member => !member))
+				throw new TypeError("Mutually recursive mirrors require every nominal definition");
 			members.forEach(member => done.add(member.lean));
 			lines.push("mutual");
 			for(const member of members)
@@ -222,7 +222,9 @@ export const renderRefinementMirrors = (model, mirrors, renderType, recordValue 
 					, ...member.cases.map(branch => `  | «${branch.name}» ${branch.fields.map((field, index) => `(a${index} : ${renderType(field.type, mirrors)})`).join(" ")} : ${mirror}`));
 			}
 			lines.push("end", "", "mutual");
-			for(const member of members) lines.push(...(member.kind === "record" ? recursiveRecordFunctions(member) : recursiveVariantFunctions(member)));
+			for(const member of members) lines.push(...(member.kind === "record"
+				? Object.hasOwn(member, "erased") ? recursiveCheckedRecordFunctions(member) : recursiveRecordFunctions(member)
+				: recursiveVariantFunctions(member)));
 			lines.push("end", "");
 			continue;
 		}
