@@ -1,0 +1,34 @@
+{
+  "bindingIrSha256": "f5a2c45a05058c850faae20c7074e770fae4939d7523d46368bc313755259153",
+  "component": "nestedcheckedrecords@1.0.0",
+  "exports": [
+    "LeanNestedcheckedrecords\\Bytes",
+    "LeanNestedcheckedrecords\\LeanBridgeError",
+    "LeanNestedcheckedrecords\\Some",
+    "LeanNestedcheckedrecords\\Packet",
+    "LeanNestedcheckedrecords\\produce_array",
+    "LeanNestedcheckedrecords\\produce_option"
+  ],
+  "files": [
+    "src/Api.php",
+    "src/Internal/Native.php",
+    "src/Internal/Runtime.php",
+    "README.md",
+    "binding-manifest.json"
+  ],
+  "filesSha256": {
+    "README.md": "148abf0e5b47161c1c15b4732c54614bf932f76bf790b0f4c2efb16f92f726e8",
+    "src/Api.php": "0de72badb2769dab8e39f646270eb35c35e4e28e0e2931bda4a920e2fc25bfef",
+    "src/Internal/Native.php": "f6e77ec68183dcdf9267745d40c71c4fee4813f89f4d8b83f2edee24ff990bc6",
+    "src/Internal/Runtime.php": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14"
+  },
+  "generator": {
+    "id": "lean-wasm/php-copied",
+    "version": 1
+  },
+  "namespace": "LeanNestedcheckedrecords",
+  "publicFiles": [
+    "src/Api.php"
+  ],
+  "schemaVersion": 1
+}

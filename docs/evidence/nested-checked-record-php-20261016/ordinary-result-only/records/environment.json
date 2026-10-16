@@ -1,0 +1,595 @@
+{
+  "command": "/usr/bin/php8.2",
+  "composer": "/usr/bin/composer",
+  "dependencyFiles": {
+    "LICENSE": {
+      "bytes": 1089,
+      "sha256": "d2625cc652e6ffa9f16827f1dba2d83ac12b050dc8150a38720420dbb810cae3"
+    },
+    "composer.json": {
+      "bytes": 816,
+      "sha256": "fe93d538393d24617d615b373389d8a8970d8be18a8928d17c5a5cd9381a6522"
+    },
+    "src/BigDecimal.php": {
+      "bytes": 38820,
+      "sha256": "ccf44c9e463182dd158190fd3b27b631ea7a58968505157e2bc715b61604515c"
+    },
+    "src/BigInteger.php": {
+      "bytes": 47781,
+      "sha256": "a6d7b7824a8399ece864332672800f13be4ef57609f868dd577de2cf586bc3a1"
+    },
+    "src/BigNumber.php": {
+      "bytes": 31254,
+      "sha256": "5a2a5ad1e73835fb200bbf1f959dbd36b8785b5e4a1c7c9ef505992130c08049"
+    },
+    "src/BigRational.php": {
+      "bytes": 18121,
+      "sha256": "99d999ae1d4ccb9bbe231a2e5242f315b9483f317b8b5bd226277ced1a4ba2ab"
+    },
+    "src/Exception/DivisionByZeroException.php": {
+      "bytes": 1296,
+      "sha256": "6dad71505461e21c56db4222659891b1a4efa8bf7737290418668aa881f6c3d3"
+    },
+    "src/Exception/IntegerOverflowException.php": {
+      "bytes": 1174,
+      "sha256": "d4264eb4bc039baa7cb8a4aa62c8928c85ff947e9823532095e156d87392455b"
+    },
+    "src/Exception/InvalidArgumentException.php": {
+      "bytes": 2957,
+      "sha256": "c25c58c48379436ce704ea28cc3c5cff5f853ed5e2b439e639d198ed7bdfddf9"
+    },
+    "src/Exception/MathException.php": {
+      "bytes": 179,
+      "sha256": "34033cc2b90fa897e9e79d05a589c8e6411b9a117a80765b58013eacad0b255e"
+    },
+    "src/Exception/NegativeNumberException.php": {
+      "bytes": 1316,
+      "sha256": "2c6a1c878e96bbb06d07fcd64ce06b66e5ac56f5ba51a2ba69cdd62b1f5dfd6d"
+    },
+    "src/Exception/NoInverseException.php": {
+      "bytes": 658,
+      "sha256": "1e072b6b8802ef678cd8aed6aab4f5534e83e514c67c10cfbd457aa9e67d77d2"
+    },
+    "src/Exception/NumberFormatException.php": {
+      "bytes": 3718,
+      "sha256": "9513693ceea593b6686ca7ef9253c595c6502145382f9da9872c791b37b5a258"
+    },
+    "src/Exception/PlatformException.php": {
+      "bytes": 1283,
+      "sha256": "b2bc33189336bf6c8b3b145bd8c8397218e90588cca9ead140ef4a66d1c6be51"
+    },
+    "src/Exception/RandomSourceException.php": {
+      "bytes": 1343,
+      "sha256": "462eb152713684b4d5ac0efe2fa27f8b2fd0d877ceb3e7315516757c5640e67c"
+    },
+    "src/Exception/RoundingNecessaryException.php": {
+      "bytes": 3878,
+      "sha256": "3f9e061a0eeda28fc35d6f70cd1625c74d3002891c2d063ed2bede16155c8549"
+    },
+    "src/Internal/Calculator.php": {
+      "bytes": 20316,
+      "sha256": "a92ba12d6e6487ef8ee6cf435ede5b2d4f4d4684b7bca14aa9c133b842724655"
+    },
+    "src/Internal/Calculator/BcMathCalculator.php": {
+      "bytes": 2078,
+      "sha256": "aaf790516424d97f2257bf6fdc7eee9a95fc5440abd11d2fbc4f09ba73549b6a"
+    },
+    "src/Internal/Calculator/GmpCalculator.php": {
+      "bytes": 3668,
+      "sha256": "0351a740b49e88cf379319af9fccab8c8f437cd5d54b2d57b79c1ea72fcc0420"
+    },
+    "src/Internal/Calculator/NativeCalculator.php": {
+      "bytes": 14245,
+      "sha256": "4980f1a9b620a8de0588a018276044ed20c01293c2a0254613094e81e1cb6c1a"
+    },
+    "src/Internal/CalculatorRegistry.php": {
+      "bytes": 1887,
+      "sha256": "7047026d82935de4736cb9f2f73915a75c2e9a776c68476b72bd430cab115088"
+    },
+    "src/Internal/DecimalHelper.php": {
+      "bytes": 4779,
+      "sha256": "6884286a2dd2ebbba5d373140e2cca58d6efb8dd63b0868e517fb39eff4ad016"
+    },
+    "src/Internal/Safe.php": {
+      "bytes": 1645,
+      "sha256": "26100429b186305ee9143f0b45c36168c1a7d039099dff13f5ab1a9ca2e32ccf"
+    },
+    "src/NumberSyntax.php": {
+      "bytes": 1705,
+      "sha256": "f5ad04274721dd3bbc4572b90eb8e71fb47d052fd1ab6974e08aa013fef94b9e"
+    },
+    "src/RoundingMode.php": {
+      "bytes": 5370,
+      "sha256": "1b7e6399d071d1ee922ec6ee928ae06bfa092b6d932af5faac8fbe65ef9b258d"
+    }
+  },
+  "feedFiles": {
+    "brick-math-1.0.0.zip": {
+      "bytes": 48201,
+      "sha256": "4563893ce709e3be081c369fd9799289c2a97791b5df2113524bc85696ffefd2"
+    },
+    "brick-math/LICENSE": {
+      "bytes": 1089,
+      "sha256": "d2625cc652e6ffa9f16827f1dba2d83ac12b050dc8150a38720420dbb810cae3"
+    },
+    "brick-math/composer.json": {
+      "bytes": 816,
+      "sha256": "fe93d538393d24617d615b373389d8a8970d8be18a8928d17c5a5cd9381a6522"
+    },
+    "brick-math/src/BigDecimal.php": {
+      "bytes": 38820,
+      "sha256": "ccf44c9e463182dd158190fd3b27b631ea7a58968505157e2bc715b61604515c"
+    },
+    "brick-math/src/BigInteger.php": {
+      "bytes": 47781,
+      "sha256": "a6d7b7824a8399ece864332672800f13be4ef57609f868dd577de2cf586bc3a1"
+    },
+    "brick-math/src/BigNumber.php": {
+      "bytes": 31254,
+      "sha256": "5a2a5ad1e73835fb200bbf1f959dbd36b8785b5e4a1c7c9ef505992130c08049"
+    },
+    "brick-math/src/BigRational.php": {
+      "bytes": 18121,
+      "sha256": "99d999ae1d4ccb9bbe231a2e5242f315b9483f317b8b5bd226277ced1a4ba2ab"
+    },
+    "brick-math/src/Exception/DivisionByZeroException.php": {
+      "bytes": 1296,
+      "sha256": "6dad71505461e21c56db4222659891b1a4efa8bf7737290418668aa881f6c3d3"
+    },
+    "brick-math/src/Exception/IntegerOverflowException.php": {
+      "bytes": 1174,
+      "sha256": "d4264eb4bc039baa7cb8a4aa62c8928c85ff947e9823532095e156d87392455b"
+    },
+    "brick-math/src/Exception/InvalidArgumentException.php": {
+      "bytes": 2957,
+      "sha256": "c25c58c48379436ce704ea28cc3c5cff5f853ed5e2b439e639d198ed7bdfddf9"
+    },
+    "brick-math/src/Exception/MathException.php": {
+      "bytes": 179,
+      "sha256": "34033cc2b90fa897e9e79d05a589c8e6411b9a117a80765b58013eacad0b255e"
+    },
+    "brick-math/src/Exception/NegativeNumberException.php": {
+      "bytes": 1316,
+      "sha256": "2c6a1c878e96bbb06d07fcd64ce06b66e5ac56f5ba51a2ba69cdd62b1f5dfd6d"
+    },
+    "brick-math/src/Exception/NoInverseException.php": {
+      "bytes": 658,
+      "sha256": "1e072b6b8802ef678cd8aed6aab4f5534e83e514c67c10cfbd457aa9e67d77d2"
+    },
+    "brick-math/src/Exception/NumberFormatException.php": {
+      "bytes": 3718,
+      "sha256": "9513693ceea593b6686ca7ef9253c595c6502145382f9da9872c791b37b5a258"
+    },
+    "brick-math/src/Exception/PlatformException.php": {
+      "bytes": 1283,
+      "sha256": "b2bc33189336bf6c8b3b145bd8c8397218e90588cca9ead140ef4a66d1c6be51"
+    },
+    "brick-math/src/Exception/RandomSourceException.php": {
+      "bytes": 1343,
+      "sha256": "462eb152713684b4d5ac0efe2fa27f8b2fd0d877ceb3e7315516757c5640e67c"
+    },
+    "brick-math/src/Exception/RoundingNecessaryException.php": {
+      "bytes": 3878,
+      "sha256": "3f9e061a0eeda28fc35d6f70cd1625c74d3002891c2d063ed2bede16155c8549"
+    },
+    "brick-math/src/Internal/Calculator.php": {
+      "bytes": 20316,
+      "sha256": "a92ba12d6e6487ef8ee6cf435ede5b2d4f4d4684b7bca14aa9c133b842724655"
+    },
+    "brick-math/src/Internal/Calculator/BcMathCalculator.php": {
+      "bytes": 2078,
+      "sha256": "aaf790516424d97f2257bf6fdc7eee9a95fc5440abd11d2fbc4f09ba73549b6a"
+    },
+    "brick-math/src/Internal/Calculator/GmpCalculator.php": {
+      "bytes": 3668,
+      "sha256": "0351a740b49e88cf379319af9fccab8c8f437cd5d54b2d57b79c1ea72fcc0420"
+    },
+    "brick-math/src/Internal/Calculator/NativeCalculator.php": {
+      "bytes": 14245,
+      "sha256": "4980f1a9b620a8de0588a018276044ed20c01293c2a0254613094e81e1cb6c1a"
+    },
+    "brick-math/src/Internal/CalculatorRegistry.php": {
+      "bytes": 1887,
+      "sha256": "7047026d82935de4736cb9f2f73915a75c2e9a776c68476b72bd430cab115088"
+    },
+    "brick-math/src/Internal/DecimalHelper.php": {
+      "bytes": 4779,
+      "sha256": "6884286a2dd2ebbba5d373140e2cca58d6efb8dd63b0868e517fb39eff4ad016"
+    },
+    "brick-math/src/Internal/Safe.php": {
+      "bytes": 1645,
+      "sha256": "26100429b186305ee9143f0b45c36168c1a7d039099dff13f5ab1a9ca2e32ccf"
+    },
+    "brick-math/src/NumberSyntax.php": {
+      "bytes": 1705,
+      "sha256": "f5ad04274721dd3bbc4572b90eb8e71fb47d052fd1ab6974e08aa013fef94b9e"
+    },
+    "brick-math/src/RoundingMode.php": {
+      "bytes": 5370,
+      "sha256": "1b7e6399d071d1ee922ec6ee928ae06bfa092b6d932af5faac8fbe65ef9b258d"
+    },
+    "component.zip": {
+      "bytes": 51355945,
+      "sha256": "5a13588a443ed617403458265910b50fece73f619054cbe08e3a0322c54c77d0"
+    }
+  },
+  "generatedFiles": {
+    "composer.lock": {
+      "bytes": 3034,
+      "sha256": "ae20a4eae329fafd541b04cd1b3bdf05da96e1977aefc1ac1c35cc2513d98e0d"
+    },
+    "vendor/autoload.php": {
+      "bytes": 771,
+      "sha256": "be28909a7fb8d9c9a2ad5e06800db4747af6e98bdec8c1f294794b50f52d2843"
+    },
+    "vendor/composer/ClassLoader.php": {
+      "bytes": 16528,
+      "sha256": "42b8c5525dbc133045f47f4275f017071c82144a34acb9396d955ca10729cb2e"
+    },
+    "vendor/composer/InstalledVersions.php": {
+      "bytes": 16143,
+      "sha256": "21f4ba19e7859cb3f85b8b1680c970ee25d972546c1606dcae0e7e5f43f626f0"
+    },
+    "vendor/composer/LICENSE": {
+      "bytes": 1068,
+      "sha256": "7855ac293067aebe7e51afdd23b9dea54b8be24187dbecc9b9142581c37f596c"
+    },
+    "vendor/composer/autoload_classmap.php": {
+      "bytes": 222,
+      "sha256": "375085d0d6690301081436cd75755cb2c882f8a7f6fc385c8814a11734fc413a"
+    },
+    "vendor/composer/autoload_files.php": {
+      "bytes": 234,
+      "sha256": "de9c22324802ff87d8bf058779b3b3c96c687a2eb8bf68c46cec70ba275a9657"
+    },
+    "vendor/composer/autoload_namespaces.php": {
+      "bytes": 139,
+      "sha256": "ede505407590638a435137f4e060136f1008de79fc169b3de9793423b0cea38c"
+    },
+    "vendor/composer/autoload_psr4.php": {
+      "bytes": 195,
+      "sha256": "d84c58712d49fd62ea528610fc277a36664abd37e1087cec8c1efb0af6918590"
+    },
+    "vendor/composer/autoload_real.php": {
+      "bytes": 1672,
+      "sha256": "28d2671a6554d959e7957c1b1bda105439d367f4d6bd48e79db451d45ea4113e"
+    },
+    "vendor/composer/autoload_static.php": {
+      "bytes": 1218,
+      "sha256": "6230d7caf3c6640e42d1d2006be2ba49458dceabdb002192f2d6ffeac6cff4ca"
+    },
+    "vendor/composer/installed.json": {
+      "bytes": 2817,
+      "sha256": "fdd58dea38362b000ddf96d19d9019a8bb5e35756911c91fcdbb19a18dd131e7"
+    },
+    "vendor/composer/installed.php": {
+      "bytes": 1375,
+      "sha256": "40deee46984c85ee6ea5e7cbd220dd4c15c72a7b5a48ea1b7a5db6950b06ca70"
+    },
+    "vendor/composer/platform_check.php": {
+      "bytes": 925,
+      "sha256": "230c364d17607b4f0500630f1c1bcca4e08e1486748340d2ec85024f3a0b73b4"
+    }
+  },
+  "inputs": {
+    "composer.json": {
+      "bytes": 2351,
+      "sha256": "b480eb8b3f0beb82cac01119766c8e7dae80efbc9f50a25f00e1e905307f4ee5"
+    },
+    "consumer.php": {
+      "bytes": 11380,
+      "sha256": "0ed8340269e2071726e14e8a94a1ba7da264a6f7bf31f8b091a6dba15d651459"
+    },
+    "strict.php": {
+      "bytes": 11380,
+      "sha256": "0299b64c01f1c4d34244b87965e73c95bfa61b7696018b84ac6321d42e095aa8"
+    }
+  },
+  "name": "example/nestedcheckedrecords",
+  "packageFileSetSha256": "c44eb972926889d2f4f3f01292904db889ddba66e98bf5e750715dcfdf822177",
+  "receiptBytes": "{\n  \"bindingIrSha256\": \"f5a2c45a05058c850faae20c7074e770fae4939d7523d46368bc313755259153\",\n  \"component\": {\n    \"id\": \"nestedcheckedrecords@1.0.0\",\n    \"name\": \"nestedcheckedrecords\",\n    \"version\": \"1.0.0\"\n  },\n  \"ecosystem\": \"composer\",\n  \"files\": {\n    \"README.md\": {\n      \"bytes\": 6798,\n      \"sha256\": \"148abf0e5b47161c1c15b4732c54614bf932f76bf790b0f4c2efb16f92f726e8\"\n    },\n    \"binding-manifest.json\": {\n      \"bytes\": 1136,\n      \"sha256\": \"ae0b08254e4e6a248892761d863f35c7be66bf6518eabadd5c3996adc8f51e3f\"\n    },\n    \"composer.json\": {\n      \"bytes\": 558,\n      \"sha256\": \"dc511632a20d91f46d46a1fc942c525042fffa513f7580da470fab2c1f999164\"\n    },\n    \"lean-bridge/component/allocation-guard.h\": {\n      \"bytes\": 1309,\n      \"sha256\": \"f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83\"\n    },\n    \"lean-bridge/component/artifacts.json\": {\n      \"bytes\": 1528,\n      \"sha256\": \"c962f687d45844e8ca72a43a1bf975aafec0d824d0b6c82561c5592088c8180c\"\n    },\n    \"lean-bridge/component/binding-ir.json\": {\n      \"bytes\": 8083,\n      \"sha256\": \"1f5d855768b76051fe8b8791a0fbfaa44d40c2c01c9dd4f5e0e147f1083da29d\"\n    },\n    \"lean-bridge/component/component.h\": {\n      \"bytes\": 841,\n      \"sha256\": \"d2ff4235b2668c14a66415506abf085e0d493503a9299fd2a5d2e6dd8b8f91d4\"\n    },\n    \"lean-bridge/component/generated.lean\": {\n      \"bytes\": 2840,\n      \"sha256\": \"222c420c7d792a231918d075c184de5e05ee9a0c045ebdb961834183d8837cfb\"\n    },\n    \"lean-bridge/component/metadata.json\": {\n      \"bytes\": 33753,\n      \"sha256\": \"e219864d86fbe4384663cab8b45a98b7f9eb3116d4b5b7eb5992bc797f2a1ba5\"\n    },\n    \"lean-bridge/component/model.json\": {\n      \"bytes\": 23181,\n      \"sha256\": \"dc3e2ae581899b5b4255aa64ad0c5d0770319e3590a0c738fee5f4e6df441c33\"\n    },\n    \"lean-bridge/component/native-component.json\": {\n      \"bytes\": 4750,\n      \"sha256\": \"c5172d05a03cd9d9880a585902af10addc46ffd082535c1797534e58cddf2b15\"\n    },\n    \"lean-bridge/include/nestedcheckedrecords.h\": {\n      \"bytes\": 3319,\n      \"sha256\": \"be98fc80d658107acee3005fb5693dfe6b64107dfdea23184cbbeac89a72bb0e\"\n    },\n    \"lean-bridge/native-c-adapter.json\": {\n      \"bytes\": 1407,\n      \"sha256\": \"bf6e9b76166487d8964fcc11da96a532a85d61908ab60b3724153a90e188b40c\"\n    },\n    \"lean-bridge/runtime.json\": {\n      \"bytes\": 1466,\n      \"sha256\": \"137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf\"\n    },\n    \"licenses/Lean-LICENSE\": {\n      \"bytes\": 9160,\n      \"sha256\": \"8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e\"\n    },\n    \"licenses/Lean-LICENSES\": {\n      \"bytes\": 81854,\n      \"sha256\": \"00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce\"\n    },\n    \"licenses/LeanBridge-LICENSE\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"licenses/source-notices.json\": {\n      \"bytes\": 2614,\n      \"sha256\": \"ef2744f1f736fb291cfe4ec75b4cb6776045485eccb51f6474b6d363eae57589\"\n    },\n    \"licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"native/linux-x64/libcomponent_a63244d529ededa079e7.so\": {\n      \"bytes\": 45960,\n      \"sha256\": \"960bf714f5e9633c5e75df7692c33af63e6d467f8e1f9d63d0d1fef300596de8\"\n    },\n    \"native/linux-x64/liblean_bridge_native.so\": {\n      \"bytes\": 21464,\n      \"sha256\": \"25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7\"\n    },\n    \"native/linux-x64/libleanshared.so\": {\n      \"bytes\": 158401256,\n      \"sha256\": \"d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4\"\n    },\n    \"native/linux-x64/libnestedcheckedrecords.so\": {\n      \"bytes\": 21776,\n      \"sha256\": \"b47fe7b884ba06a3dbe90916139625b89bb3edda9389205d080e92e7de06d903\"\n    },\n    \"src/Api.php\": {\n      \"bytes\": 2810,\n      \"sha256\": \"0de72badb2769dab8e39f646270eb35c35e4e28e0e2931bda4a920e2fc25bfef\"\n    },\n    \"src/Internal/Native.php\": {\n      \"bytes\": 19680,\n      \"sha256\": \"f6e77ec68183dcdf9267745d40c71c4fee4813f89f4d8b83f2edee24ff990bc6\"\n    },\n    \"src/Internal/Runtime.php\": {\n      \"bytes\": 4336,\n      \"sha256\": \"057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14\"\n    }\n  },\n  \"glibcMinimumVersion\": \"2.36\",\n  \"kind\": \"lean-bridge-ordinary-php-package\",\n  \"name\": \"example/nestedcheckedrecords\",\n  \"namespace\": \"LeanNestedcheckedrecords\",\n  \"runtimeIdentity\": \"137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf\",\n  \"schemaVersion\": 1,\n  \"sourceIdentity\": {\n    \"exportConfigurationSha256\": \"6d6d03831a3a6ea0ba9783c2d6e85b5839e70b2acfc497fc86f9f195697660ce\",\n    \"exportConfigurationSource\": \"{\\n  \\\"contracts\\\": {\\n    \\\"NestedCheckedRecords.produceArray\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\"\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"NestedCheckedRecords.produceOption\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\"\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    }\\n  },\\n  \\\"exports\\\": [\\n    \\\"NestedCheckedRecords.produceOption\\\",\\n    \\\"NestedCheckedRecords.produceArray\\\"\\n  ],\\n  \\\"modules\\\": [\\n    \\\"NestedCheckedRecords\\\"\\n  ],\\n  \\\"schemaVersion\\\": 1,\\n  \\\"targets\\\": {\\n    \\\"php-native\\\": {\\n      \\\"name\\\": \\\"example/nestedcheckedrecords\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    }\\n  }\\n}\\n\",\n    \"extractorSha256\": \"88bc071a3fb4adb1dee0a0c3262c4227cadcf5928dd32a79844bb5be69093cf5\",\n    \"leanCommit\": \"f3b06c705e6c85f5314019d5d3baab0fec5b580c\",\n    \"leanCompilerSha256\": \"e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550\",\n    \"leanVersion\": \"4.32.2\",\n    \"modules\": [\n      {\n        \"interface\": {\n          \"bytes\": 167608,\n          \"interfaceSha256\": \"e20264af883ce83ec3baf120ceca94359e9c9cbdd0b5750fc7f1226fe93a49f3\",\n          \"sha256\": \"f40a37b04d8a4dbac01065764da85bace19eb1c9803183039e9fbed4780ec570\"\n        },\n        \"module\": \"NestedCheckedRecords\",\n        \"source\": {\n          \"bytes\": 2886,\n          \"path\": \"NestedCheckedRecords.lean\",\n          \"sha256\": \"31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8\"\n        }\n      }\n    ],\n    \"request\": {\n      \"arities\": [],\n      \"contracts\": {\n        \"NestedCheckedRecords.produceArray\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\"\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"NestedCheckedRecords.produceOption\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\"\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        }\n      },\n      \"exportModules\": [\n        \"NestedCheckedRecords\"\n      ],\n      \"exports\": [\n        \"NestedCheckedRecords.produceOption\",\n        \"NestedCheckedRecords.produceArray\"\n      ],\n      \"metadata\": {\n        \"invocationIdentitySha256\": \"2149c6ad70acbdf0358632967e58ad39764bf53951f3023ee436d4b6d6646465\",\n        \"modules\": [\n          {\n            \"interfaceSha256\": \"e20264af883ce83ec3baf120ceca94359e9c9cbdd0b5750fc7f1226fe93a49f3\",\n            \"name\": \"NestedCheckedRecords\",\n            \"sourcePath\": \"NestedCheckedRecords.lean\",\n            \"sourceSha256\": \"31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8\"\n          }\n        ],\n        \"toolchain\": \"leanprover/lean4:v4.32.2\"\n      },\n      \"modules\": [\n        \"NestedCheckedRecords\"\n      ],\n      \"profile\": \"native-library-v1\",\n      \"resources\": []\n    },\n    \"sourceNoticesSha256\": \"ef2744f1f736fb291cfe4ec75b4cb6776045485eccb51f6474b6d363eae57589\",\n    \"sourceTreeSha256\": \"d5e469bae948dc4dc5d20fe96c69db03544e17a7838bc29bd77b7ede8bbdf21b\"\n  },\n  \"version\": \"1.0.0\"\n}\n",
+  "root": "/tmp/lean-bridge-nested-php-installed-KFMpbU/consumer",
+  "runtimeFlags": [
+    "-n",
+    "-d",
+    "extension=/usr/lib/php/20220829/ffi.so",
+    "-d",
+    "ffi.enable=1"
+  ],
+  "tools": {
+    "/usr/bin/composer": {
+      "bytes": 3156,
+      "sha256": "5cf51f9912671912136317d889df7a5b8219f2a77f2b311b9a100989106847e2"
+    },
+    "/usr/bin/php8.2": {
+      "bytes": 5662424,
+      "sha256": "f44be0fe6c6c19b4a296f5b051bbe7d7924dc2d63ad4711ef666c4626e4a0e7a"
+    },
+    "/usr/lib/php/20220829/ctype.so": {
+      "bytes": 14440,
+      "sha256": "36647c21faefa76190aa32b33dc6e6ccf2b15f4a0d87184cfc213c327e3e9e0a"
+    },
+    "/usr/lib/php/20220829/ffi.so": {
+      "bytes": 174184,
+      "sha256": "a3c29e39e21f98d4f9178482445eae0bd69e818e067b21e7dbd3a63e54100dc8"
+    },
+    "/usr/lib/php/20220829/iconv.so": {
+      "bytes": 51304,
+      "sha256": "1d136532a8fe77caec4bd265e0539cce37248b6ef5b8e2ed07e1d0de171e90cd"
+    },
+    "/usr/lib/php/20220829/mbstring.so": {
+      "bytes": 1192704,
+      "sha256": "b42880230e64842003486160651ae42b7d2f44b657861f41dd01faccae0db11c"
+    },
+    "/usr/lib/php/20220829/phar.so": {
+      "bytes": 284776,
+      "sha256": "33a5b0822126d5233ab4853d597419c988b7b3f3edbbd492604070e4737d6bd3"
+    },
+    "/usr/lib/php/20220829/tokenizer.so": {
+      "bytes": 34920,
+      "sha256": "c7bc1d8ea1e79010c2cfde2ee898421aa99b6c70a203e2f266c469f42e16d001"
+    }
+  },
+  "vendorFiles": {
+    "autoload.php": {
+      "bytes": 771,
+      "sha256": "be28909a7fb8d9c9a2ad5e06800db4747af6e98bdec8c1f294794b50f52d2843"
+    },
+    "brick/math/LICENSE": {
+      "bytes": 1089,
+      "sha256": "d2625cc652e6ffa9f16827f1dba2d83ac12b050dc8150a38720420dbb810cae3"
+    },
+    "brick/math/composer.json": {
+      "bytes": 816,
+      "sha256": "fe93d538393d24617d615b373389d8a8970d8be18a8928d17c5a5cd9381a6522"
+    },
+    "brick/math/src/BigDecimal.php": {
+      "bytes": 38820,
+      "sha256": "ccf44c9e463182dd158190fd3b27b631ea7a58968505157e2bc715b61604515c"
+    },
+    "brick/math/src/BigInteger.php": {
+      "bytes": 47781,
+      "sha256": "a6d7b7824a8399ece864332672800f13be4ef57609f868dd577de2cf586bc3a1"
+    },
+    "brick/math/src/BigNumber.php": {
+      "bytes": 31254,
+      "sha256": "5a2a5ad1e73835fb200bbf1f959dbd36b8785b5e4a1c7c9ef505992130c08049"
+    },
+    "brick/math/src/BigRational.php": {
+      "bytes": 18121,
+      "sha256": "99d999ae1d4ccb9bbe231a2e5242f315b9483f317b8b5bd226277ced1a4ba2ab"
+    },
+    "brick/math/src/Exception/DivisionByZeroException.php": {
+      "bytes": 1296,
+      "sha256": "6dad71505461e21c56db4222659891b1a4efa8bf7737290418668aa881f6c3d3"
+    },
+    "brick/math/src/Exception/IntegerOverflowException.php": {
+      "bytes": 1174,
+      "sha256": "d4264eb4bc039baa7cb8a4aa62c8928c85ff947e9823532095e156d87392455b"
+    },
+    "brick/math/src/Exception/InvalidArgumentException.php": {
+      "bytes": 2957,
+      "sha256": "c25c58c48379436ce704ea28cc3c5cff5f853ed5e2b439e639d198ed7bdfddf9"
+    },
+    "brick/math/src/Exception/MathException.php": {
+      "bytes": 179,
+      "sha256": "34033cc2b90fa897e9e79d05a589c8e6411b9a117a80765b58013eacad0b255e"
+    },
+    "brick/math/src/Exception/NegativeNumberException.php": {
+      "bytes": 1316,
+      "sha256": "2c6a1c878e96bbb06d07fcd64ce06b66e5ac56f5ba51a2ba69cdd62b1f5dfd6d"
+    },
+    "brick/math/src/Exception/NoInverseException.php": {
+      "bytes": 658,
+      "sha256": "1e072b6b8802ef678cd8aed6aab4f5534e83e514c67c10cfbd457aa9e67d77d2"
+    },
+    "brick/math/src/Exception/NumberFormatException.php": {
+      "bytes": 3718,
+      "sha256": "9513693ceea593b6686ca7ef9253c595c6502145382f9da9872c791b37b5a258"
+    },
+    "brick/math/src/Exception/PlatformException.php": {
+      "bytes": 1283,
+      "sha256": "b2bc33189336bf6c8b3b145bd8c8397218e90588cca9ead140ef4a66d1c6be51"
+    },
+    "brick/math/src/Exception/RandomSourceException.php": {
+      "bytes": 1343,
+      "sha256": "462eb152713684b4d5ac0efe2fa27f8b2fd0d877ceb3e7315516757c5640e67c"
+    },
+    "brick/math/src/Exception/RoundingNecessaryException.php": {
+      "bytes": 3878,
+      "sha256": "3f9e061a0eeda28fc35d6f70cd1625c74d3002891c2d063ed2bede16155c8549"
+    },
+    "brick/math/src/Internal/Calculator.php": {
+      "bytes": 20316,
+      "sha256": "a92ba12d6e6487ef8ee6cf435ede5b2d4f4d4684b7bca14aa9c133b842724655"
+    },
+    "brick/math/src/Internal/Calculator/BcMathCalculator.php": {
+      "bytes": 2078,
+      "sha256": "aaf790516424d97f2257bf6fdc7eee9a95fc5440abd11d2fbc4f09ba73549b6a"
+    },
+    "brick/math/src/Internal/Calculator/GmpCalculator.php": {
+      "bytes": 3668,
+      "sha256": "0351a740b49e88cf379319af9fccab8c8f437cd5d54b2d57b79c1ea72fcc0420"
+    },
+    "brick/math/src/Internal/Calculator/NativeCalculator.php": {
+      "bytes": 14245,
+      "sha256": "4980f1a9b620a8de0588a018276044ed20c01293c2a0254613094e81e1cb6c1a"
+    },
+    "brick/math/src/Internal/CalculatorRegistry.php": {
+      "bytes": 1887,
+      "sha256": "7047026d82935de4736cb9f2f73915a75c2e9a776c68476b72bd430cab115088"
+    },
+    "brick/math/src/Internal/DecimalHelper.php": {
+      "bytes": 4779,
+      "sha256": "6884286a2dd2ebbba5d373140e2cca58d6efb8dd63b0868e517fb39eff4ad016"
+    },
+    "brick/math/src/Internal/Safe.php": {
+      "bytes": 1645,
+      "sha256": "26100429b186305ee9143f0b45c36168c1a7d039099dff13f5ab1a9ca2e32ccf"
+    },
+    "brick/math/src/NumberSyntax.php": {
+      "bytes": 1705,
+      "sha256": "f5ad04274721dd3bbc4572b90eb8e71fb47d052fd1ab6974e08aa013fef94b9e"
+    },
+    "brick/math/src/RoundingMode.php": {
+      "bytes": 5370,
+      "sha256": "1b7e6399d071d1ee922ec6ee928ae06bfa092b6d932af5faac8fbe65ef9b258d"
+    },
+    "composer/ClassLoader.php": {
+      "bytes": 16528,
+      "sha256": "42b8c5525dbc133045f47f4275f017071c82144a34acb9396d955ca10729cb2e"
+    },
+    "composer/InstalledVersions.php": {
+      "bytes": 16143,
+      "sha256": "21f4ba19e7859cb3f85b8b1680c970ee25d972546c1606dcae0e7e5f43f626f0"
+    },
+    "composer/LICENSE": {
+      "bytes": 1068,
+      "sha256": "7855ac293067aebe7e51afdd23b9dea54b8be24187dbecc9b9142581c37f596c"
+    },
+    "composer/autoload_classmap.php": {
+      "bytes": 222,
+      "sha256": "375085d0d6690301081436cd75755cb2c882f8a7f6fc385c8814a11734fc413a"
+    },
+    "composer/autoload_files.php": {
+      "bytes": 234,
+      "sha256": "de9c22324802ff87d8bf058779b3b3c96c687a2eb8bf68c46cec70ba275a9657"
+    },
+    "composer/autoload_namespaces.php": {
+      "bytes": 139,
+      "sha256": "ede505407590638a435137f4e060136f1008de79fc169b3de9793423b0cea38c"
+    },
+    "composer/autoload_psr4.php": {
+      "bytes": 195,
+      "sha256": "d84c58712d49fd62ea528610fc277a36664abd37e1087cec8c1efb0af6918590"
+    },
+    "composer/autoload_real.php": {
+      "bytes": 1672,
+      "sha256": "28d2671a6554d959e7957c1b1bda105439d367f4d6bd48e79db451d45ea4113e"
+    },
+    "composer/autoload_static.php": {
+      "bytes": 1218,
+      "sha256": "6230d7caf3c6640e42d1d2006be2ba49458dceabdb002192f2d6ffeac6cff4ca"
+    },
+    "composer/installed.json": {
+      "bytes": 2817,
+      "sha256": "fdd58dea38362b000ddf96d19d9019a8bb5e35756911c91fcdbb19a18dd131e7"
+    },
+    "composer/installed.php": {
+      "bytes": 1375,
+      "sha256": "40deee46984c85ee6ea5e7cbd220dd4c15c72a7b5a48ea1b7a5db6950b06ca70"
+    },
+    "composer/platform_check.php": {
+      "bytes": 925,
+      "sha256": "230c364d17607b4f0500630f1c1bcca4e08e1486748340d2ec85024f3a0b73b4"
+    },
+    "example/nestedcheckedrecords/README.md": {
+      "bytes": 6798,
+      "sha256": "148abf0e5b47161c1c15b4732c54614bf932f76bf790b0f4c2efb16f92f726e8"
+    },
+    "example/nestedcheckedrecords/binding-manifest.json": {
+      "bytes": 1136,
+      "sha256": "ae0b08254e4e6a248892761d863f35c7be66bf6518eabadd5c3996adc8f51e3f"
+    },
+    "example/nestedcheckedrecords/composer.json": {
+      "bytes": 558,
+      "sha256": "dc511632a20d91f46d46a1fc942c525042fffa513f7580da470fab2c1f999164"
+    },
+    "example/nestedcheckedrecords/lean-bridge/component/allocation-guard.h": {
+      "bytes": 1309,
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    "example/nestedcheckedrecords/lean-bridge/component/artifacts.json": {
+      "bytes": 1528,
+      "sha256": "c962f687d45844e8ca72a43a1bf975aafec0d824d0b6c82561c5592088c8180c"
+    },
+    "example/nestedcheckedrecords/lean-bridge/component/binding-ir.json": {
+      "bytes": 8083,
+      "sha256": "1f5d855768b76051fe8b8791a0fbfaa44d40c2c01c9dd4f5e0e147f1083da29d"
+    },
+    "example/nestedcheckedrecords/lean-bridge/component/component.h": {
+      "bytes": 841,
+      "sha256": "d2ff4235b2668c14a66415506abf085e0d493503a9299fd2a5d2e6dd8b8f91d4"
+    },
+    "example/nestedcheckedrecords/lean-bridge/component/generated.lean": {
+      "bytes": 2840,
+      "sha256": "222c420c7d792a231918d075c184de5e05ee9a0c045ebdb961834183d8837cfb"
+    },
+    "example/nestedcheckedrecords/lean-bridge/component/metadata.json": {
+      "bytes": 33753,
+      "sha256": "e219864d86fbe4384663cab8b45a98b7f9eb3116d4b5b7eb5992bc797f2a1ba5"
+    },
+    "example/nestedcheckedrecords/lean-bridge/component/model.json": {
+      "bytes": 23181,
+      "sha256": "dc3e2ae581899b5b4255aa64ad0c5d0770319e3590a0c738fee5f4e6df441c33"
+    },
+    "example/nestedcheckedrecords/lean-bridge/component/native-component.json": {
+      "bytes": 4750,
+      "sha256": "c5172d05a03cd9d9880a585902af10addc46ffd082535c1797534e58cddf2b15"
+    },
+    "example/nestedcheckedrecords/lean-bridge/include/nestedcheckedrecords.h": {
+      "bytes": 3319,
+      "sha256": "be98fc80d658107acee3005fb5693dfe6b64107dfdea23184cbbeac89a72bb0e"
+    },
+    "example/nestedcheckedrecords/lean-bridge/native-c-adapter.json": {
+      "bytes": 1407,
+      "sha256": "bf6e9b76166487d8964fcc11da96a532a85d61908ab60b3724153a90e188b40c"
+    },
+    "example/nestedcheckedrecords/lean-bridge/package-receipt.json": {
+      "bytes": 8081,
+      "sha256": "e19b95dfe40f890efee3798ad702c4c5805fdc26e42be8b12fcae466dfb730e3"
+    },
+    "example/nestedcheckedrecords/lean-bridge/runtime.json": {
+      "bytes": 1466,
+      "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    },
+    "example/nestedcheckedrecords/licenses/Lean-LICENSE": {
+      "bytes": 9160,
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    "example/nestedcheckedrecords/licenses/Lean-LICENSES": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "example/nestedcheckedrecords/licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "example/nestedcheckedrecords/licenses/source-notices.json": {
+      "bytes": 2614,
+      "sha256": "ef2744f1f736fb291cfe4ec75b4cb6776045485eccb51f6474b6d363eae57589"
+    },
+    "example/nestedcheckedrecords/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "example/nestedcheckedrecords/native/linux-x64/libcomponent_a63244d529ededa079e7.so": {
+      "bytes": 45960,
+      "sha256": "960bf714f5e9633c5e75df7692c33af63e6d467f8e1f9d63d0d1fef300596de8"
+    },
+    "example/nestedcheckedrecords/native/linux-x64/liblean_bridge_native.so": {
+      "bytes": 21464,
+      "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+    },
+    "example/nestedcheckedrecords/native/linux-x64/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "example/nestedcheckedrecords/native/linux-x64/libnestedcheckedrecords.so": {
+      "bytes": 21776,
+      "sha256": "b47fe7b884ba06a3dbe90916139625b89bb3edda9389205d080e92e7de06d903"
+    },
+    "example/nestedcheckedrecords/src/Api.php": {
+      "bytes": 2810,
+      "sha256": "0de72badb2769dab8e39f646270eb35c35e4e28e0e2931bda4a920e2fc25bfef"
+    },
+    "example/nestedcheckedrecords/src/Internal/Native.php": {
+      "bytes": 19680,
+      "sha256": "f6e77ec68183dcdf9267745d40c71c4fee4813f89f4d8b83f2edee24ff990bc6"
+    },
+    "example/nestedcheckedrecords/src/Internal/Runtime.php": {
+      "bytes": 4336,
+      "sha256": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14"
+    }
+  }
+}

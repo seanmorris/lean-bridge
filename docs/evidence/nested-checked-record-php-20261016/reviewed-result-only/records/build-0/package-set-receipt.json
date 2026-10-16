@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "nestedcheckedrecords@1.0.0",
+    "name": "nestedcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51358340,
+          "path": "archives/example-nestedcheckedrecords-1.0.0-linux-x86_64.zip",
+          "sha256": "724e599cb645065c1e24345f702fd12ac0887470b3cf332c3c1ba7bdb4c022b0"
+        }
+      ],
+      "ecosystem": "composer",
+      "name": "example/nestedcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "php-native",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "969d2cd13d4d13cbe413c0f73a739fef878d087a13ea3e104e2372a90d875264",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "f1f5ac67247ddcef192edce418a4ca086e035512326c66cab2a3a7e644b06c8c"
+  }
+}

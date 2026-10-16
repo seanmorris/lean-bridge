@@ -22,7 +22,8 @@ import {
 } from "./nested-checked-record-php-provenance.mjs";
 
 export { nestedCheckedRecordPhpEvidence } from "./nested-checked-record-php-provenance.mjs";
-export const nestedCheckedRecordPhpEvidenceSha256 = "PENDING";
+export const nestedCheckedRecordPhpEvidenceSha256
+	= "434a4010a9e692055287e505e472f2a912313ae200dfa42aa39eefb405e6455b";
 
 const safePath = path => typeof path === "string"
 	&& /^[A-Za-z0-9_.+$/[\]-]+$/u.test(path) && !path.startsWith("/")

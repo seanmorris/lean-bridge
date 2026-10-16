@@ -1,0 +1,51 @@
+{
+  "bindingIrSha256": "4b8ccdb75aaf5d0b00dff23c3c283dd8905575c244ebf040f1ba8dfb97c5028c",
+  "component": "nestedcheckedrecords@1.0.0",
+  "exports": [
+    "LeanNestedcheckedrecords\\Bytes",
+    "LeanNestedcheckedrecords\\LeanBridgeError",
+    "LeanNestedcheckedrecords\\Some",
+    "LeanNestedcheckedrecords\\Ok",
+    "LeanNestedcheckedrecords\\Err",
+    "LeanNestedcheckedrecords\\Packet",
+    "LeanNestedcheckedrecords\\Holder",
+    "LeanNestedcheckedrecords\\Choice",
+    "LeanNestedcheckedrecords\\ChoiceEmpty",
+    "LeanNestedcheckedrecords\\ChoicePacket",
+    "LeanNestedcheckedrecords\\echo_array",
+    "LeanNestedcheckedrecords\\first",
+    "LeanNestedcheckedrecords\\in_array",
+    "LeanNestedcheckedrecords\\in_choice",
+    "LeanNestedcheckedrecords\\in_except",
+    "LeanNestedcheckedrecords\\in_holder",
+    "LeanNestedcheckedrecords\\in_list",
+    "LeanNestedcheckedrecords\\in_option",
+    "LeanNestedcheckedrecords\\in_product",
+    "LeanNestedcheckedrecords\\pair",
+    "LeanNestedcheckedrecords\\produce_array",
+    "LeanNestedcheckedrecords\\produce_option",
+    "LeanNestedcheckedrecords\\second"
+  ],
+  "files": [
+    "src/Api.php",
+    "src/Internal/Native.php",
+    "src/Internal/Runtime.php",
+    "README.md",
+    "binding-manifest.json"
+  ],
+  "filesSha256": {
+    "README.md": "3f03ff1d3ea216188824b15b5d5ae0ff20302ff7cc645b5bcb48b320d4a394c5",
+    "src/Api.php": "96a31ea4a6bc76e5bad4ed0a8b78f4ddb48e59307602a4f1d13b0934118f2785",
+    "src/Internal/Native.php": "a19f69de065df7830cf37740c8b55a2c78a79f585d56b3813fdf96ab36fe87f2",
+    "src/Internal/Runtime.php": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14"
+  },
+  "generator": {
+    "id": "lean-wasm/php-copied",
+    "version": 1
+  },
+  "namespace": "LeanNestedcheckedrecords",
+  "publicFiles": [
+    "src/Api.php"
+  ],
+  "schemaVersion": 1
+}

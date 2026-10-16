@@ -1,0 +1,36 @@
+{
+  "args": [
+    "-n",
+    "-d",
+    "extension=/usr/lib/php/20220829/ffi.so",
+    "-d",
+    "ffi.enable=1",
+    "strict.php"
+  ],
+  "closure": {
+    "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+    "generatedFilesSha256": "c9b91ac7b801bebcacdc2c4cadf2009f86f07ad3c4843e989c5794f49daadf72",
+    "packageFileSetSha256": "c44eb972926889d2f4f3f01292904db889ddba66e98bf5e750715dcfdf822177",
+    "receiptSha256": "4d20425bb7c91eb911fdf421cf564f616624e8089c1278332c1113ee785e310e",
+    "toolsSha256": "928927b055e8c58d26f331b055f2a17155d6470c3a969891b72b9714f2da1510",
+    "vendorFilesSha256": "6f7835489a689b17e60a151281c833939ccac281d5b4ecf0fcb2cda4e1e4087c"
+  },
+  "command": "/usr/bin/php8.2",
+  "counts": {
+    "checks": 3705,
+    "hostRejections": 16,
+    "recoveries": 256,
+    "rejections": 525,
+    "rounds": 256,
+    "snapshotControls": 12,
+    "snapshots": 1840
+  },
+  "cwd": "/tmp/lean-bridge-nested-php-installed-ipnfMY/consumer",
+  "relocated": false,
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":3705,\"rejections\":525,\"hostRejections\":16,\"recoveries\":256,\"snapshots\":1840,\"snapshotControls\":12,\"rounds\":256}\n"
+  },
+  "strictness": "strict"
+}

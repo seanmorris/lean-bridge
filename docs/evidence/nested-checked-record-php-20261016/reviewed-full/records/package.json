@@ -1,0 +1,163 @@
+{
+  "archive": {
+    "bytes": 51413984,
+    "path": "archives/example-nestedcheckedrecords-1.0.0-linux-x86_64.zip",
+    "sha256": "6cbee04cc566a349eb38128173249df8ea7fcb8b1833ff1396b9ad4e69d03031"
+  },
+  "closure": {
+    "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+    "generatedFilesSha256": "65aa3a38d2ff11a52ecce3e9559c4a20dc8d02e547c9c3110705ac89dcbebcfe",
+    "packageFileSetSha256": "c44eb972926889d2f4f3f01292904db889ddba66e98bf5e750715dcfdf822177",
+    "receiptSha256": "abf53e740703b26241a625cc49788a0ecf116157a98b55cb6bf8a4dd4a0f3cc7",
+    "toolsSha256": "928927b055e8c58d26f331b055f2a17155d6470c3a969891b72b9714f2da1510",
+    "vendorFilesSha256": "4566f0beff6ee4393b953b6b335601b62a918b595ba14e22e92350bf07455ef9"
+  },
+  "evidence": {
+    "componentId": "nestedcheckedrecords@1.0.0",
+    "componentReceiptSha256": "80d6e5e0773a2927ed09d3f35cdec7e931e68c1b5d90d44c77d68bb1b0a78b38",
+    "libraries": {
+      "libcomponent_a63244d529ededa079e7.so": "7a51096a6523a1acdba21e0b16615f76a47e84003762cc1c967948248cbd09f4",
+      "liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+      "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+      "libnestedcheckedrecords.so": "a6758b756f978f2d6be542510f9a5a24d592f6d04300e420a605e7a7a7fe813b"
+    },
+    "library": "libnestedcheckedrecords.so",
+    "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+  },
+  "files": {
+    "README.md": {
+      "bytes": 12218,
+      "sha256": "17f313c206655eea186ae936a88f26266c96a7c27b652be396014b28d088a6b5"
+    },
+    "binding-manifest.json": {
+      "bytes": 1840,
+      "sha256": "b18c2139ccc91df18a1e179e8bfcbfbd1e339f95136c0ee63f328f5a244836ea"
+    },
+    "composer.json": {
+      "bytes": 558,
+      "sha256": "dc511632a20d91f46d46a1fc942c525042fffa513f7580da470fab2c1f999164"
+    },
+    "lean-bridge/component/allocation-guard.h": {
+      "bytes": 1309,
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    "lean-bridge/component/artifacts.json": {
+      "bytes": 1534,
+      "sha256": "435836601897049c25160d0673e1c9385f087326abcf3467b72c56133fb9de74"
+    },
+    "lean-bridge/component/binding-ir.json": {
+      "bytes": 57228,
+      "sha256": "4ceccf7203adb7c67972859cd85a66f6bc3cd389315c344680c88316576cd020"
+    },
+    "lean-bridge/component/component.h": {
+      "bytes": 4739,
+      "sha256": "78c024d270cf9ebd62f1580eff7aba633e3ab41968f44c98d9b5620a96ed8438"
+    },
+    "lean-bridge/component/generated.lean": {
+      "bytes": 23243,
+      "sha256": "71dba5ad99bbb5e1af0074bda3926a586eaf1a99b5faa92bbe287c62fcd4d0bb"
+    },
+    "lean-bridge/component/metadata.json": {
+      "bytes": 94821,
+      "sha256": "8e05490f3336444c07846343b9a2f981f4875345d0d3bfd3a1520d124ca13d6e"
+    },
+    "lean-bridge/component/model.json": {
+      "bytes": 190780,
+      "sha256": "0f2f93ad4b5dc6a405a7af7cff6dc3a7dac390c8b90625e8f5dde6e756b17703"
+    },
+    "lean-bridge/component/native-component.json": {
+      "bytes": 62790,
+      "sha256": "80d6e5e0773a2927ed09d3f35cdec7e931e68c1b5d90d44c77d68bb1b0a78b38"
+    },
+    "lean-bridge/include/nestedcheckedrecords.h": {
+      "bytes": 8674,
+      "sha256": "0810a3833a4d21fd05405114441b966cb47d936d4a7193451c978b838e2b1d45"
+    },
+    "lean-bridge/native-c-adapter.json": {
+      "bytes": 1409,
+      "sha256": "996e626c5f45878441a5d03de592806db1043650c6544c098af5ab5ca9560e27"
+    },
+    "lean-bridge/package-receipt.json": {
+      "bytes": 64895,
+      "sha256": "abf53e740703b26241a625cc49788a0ecf116157a98b55cb6bf8a4dd4a0f3cc7"
+    },
+    "lean-bridge/runtime.json": {
+      "bytes": 1466,
+      "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    },
+    "licenses/Lean-LICENSE": {
+      "bytes": 9160,
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    "licenses/Lean-LICENSES": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "licenses/source-notices.json": {
+      "bytes": 2123,
+      "sha256": "a562314d0bae3102b1ed1f7d4782d6fee7d647b6b540a13c3935b0843aa63b26"
+    },
+    "licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "native/linux-x64/libcomponent_a63244d529ededa079e7.so": {
+      "bytes": 113624,
+      "sha256": "7a51096a6523a1acdba21e0b16615f76a47e84003762cc1c967948248cbd09f4"
+    },
+    "native/linux-x64/liblean_bridge_native.so": {
+      "bytes": 21464,
+      "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+    },
+    "native/linux-x64/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "native/linux-x64/libnestedcheckedrecords.so": {
+      "bytes": 68872,
+      "sha256": "a6758b756f978f2d6be542510f9a5a24d592f6d04300e420a605e7a7a7fe813b"
+    },
+    "src/Api.php": {
+      "bytes": 10084,
+      "sha256": "4afb1231076f6e24850d67a97a3c55a8de7f0233acb97c13ad05fc90e27da275"
+    },
+    "src/Internal/Native.php": {
+      "bytes": 43095,
+      "sha256": "d06715341a4dfed1dfdfe9e8cbfbac95ed5a70dee1eb01fc638b8a8ef33bd37d"
+    },
+    "src/Internal/Runtime.php": {
+      "bytes": 4336,
+      "sha256": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14"
+    }
+  },
+  "receiptSha256": "abf53e740703b26241a625cc49788a0ecf116157a98b55cb6bf8a4dd4a0f3cc7",
+  "retained": [
+    "README.md",
+    "binding-manifest.json",
+    "composer.json",
+    "lean-bridge/component/allocation-guard.h",
+    "lean-bridge/component/artifacts.json",
+    "lean-bridge/component/binding-ir.json",
+    "lean-bridge/component/component.h",
+    "lean-bridge/component/generated.lean",
+    "lean-bridge/component/metadata.json",
+    "lean-bridge/component/model.json",
+    "lean-bridge/component/native-component.json",
+    "lean-bridge/include/nestedcheckedrecords.h",
+    "lean-bridge/native-c-adapter.json",
+    "lean-bridge/package-receipt.json",
+    "lean-bridge/runtime.json",
+    "licenses/Lean-LICENSE",
+    "licenses/Lean-LICENSES",
+    "licenses/LeanBridge-LICENSE",
+    "licenses/source-notices.json",
+    "licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+    "src/Api.php",
+    "src/Internal/Native.php",
+    "src/Internal/Runtime.php"
+  ]
+}

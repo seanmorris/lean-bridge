@@ -1,0 +1,38 @@
+{
+  "bindingIrSha256": "969d2cd13d4d13cbe413c0f73a739fef878d087a13ea3e104e2372a90d875264",
+  "componentReceiptSha256": "a0530e4889f88f64d2bb798cdd1ffb7108b610879a54109c90233b3f82d78e02",
+  "files": {
+    "README.md": {
+      "bytes": 922,
+      "sha256": "0c05c0140d6d9613e413f1b4805ed941b206d88260111e0c662a29555ebaa8d0"
+    },
+    "binding-manifest.json": {
+      "bytes": 674,
+      "sha256": "12d5cf6f6760006da5e0f1df35379848d192d665eb293fb0c92497a2dc1be31a"
+    },
+    "include/nestedcheckedrecords.h": {
+      "bytes": 3323,
+      "sha256": "c929916b1b707d8270a11708124d2b08ac1a1c5761de241e50a0cfe6d2fb5f3d"
+    },
+    "internal/nestedcheckedrecords_runtime.h": {
+      "bytes": 1026,
+      "sha256": "e1fbe19cd51de62810e2debc40507830e7d98bfcc7735eea7f6c53ee0842a484"
+    },
+    "lib/libnestedcheckedrecords.so": {
+      "bytes": 21776,
+      "sha256": "b47fe7b884ba06a3dbe90916139625b89bb3edda9389205d080e92e7de06d903"
+    },
+    "src/native.c": {
+      "bytes": 12919,
+      "sha256": "4439f220a62d4a55acd2a449c7cf9574a9a27078378b7e88682259ea1fe549ba"
+    },
+    "src/nestedcheckedrecords.c": {
+      "bytes": 5825,
+      "sha256": "3e4ef47e28b39204aebd8fed33b8a306f283ebb480b294b6e8e2d00e2f88e737"
+    }
+  },
+  "library": "libnestedcheckedrecords.so",
+  "profile": "native-library-v1",
+  "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+  "schemaVersion": 1
+}

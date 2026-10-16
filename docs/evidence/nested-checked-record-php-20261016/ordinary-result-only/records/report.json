@@ -1,0 +1,492 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/example-nestedcheckedrecords-1.0.0-linux-x86_64.zip": "5a13588a443ed617403458265910b50fece73f619054cbe08e3a0322c54c77d0"
+      },
+      "bindingIrSha256": "f5a2c45a05058c850faae20c7074e770fae4939d7523d46368bc313755259153",
+      "modelSha256": "dc3e2ae581899b5b4255aa64ad0c5d0770319e3590a0c738fee5f4e6df441c33",
+      "receiptSha256": "b505301dd427ce3824d6915965ac4ff3776609ce55a0a6c96510691b155eb1b6"
+    },
+    {
+      "archives": {
+        "archives/example-nestedcheckedrecords-1.0.0-linux-x86_64.zip": "5a13588a443ed617403458265910b50fece73f619054cbe08e3a0322c54c77d0"
+      },
+      "bindingIrSha256": "f5a2c45a05058c850faae20c7074e770fae4939d7523d46368bc313755259153",
+      "modelSha256": "dc3e2ae581899b5b4255aa64ad0c5d0770319e3590a0c738fee5f4e6df441c33",
+      "receiptSha256": "b505301dd427ce3824d6915965ac4ff3776609ce55a0a6c96510691b155eb1b6"
+    }
+  ],
+  "compilerFreeReplay": true,
+  "configuration": {
+    "contracts": {
+      "NestedCheckedRecords.produceArray": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "NestedCheckedRecords.produceOption": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      }
+    },
+    "exports": [
+      "NestedCheckedRecords.produceOption",
+      "NestedCheckedRecords.produceArray"
+    ],
+    "modules": [
+      "NestedCheckedRecords"
+    ],
+    "schemaVersion": 1,
+    "targets": {
+      "php-native": {
+        "name": "example/nestedcheckedrecords",
+        "version": "1.0.0"
+      }
+    }
+  },
+  "consumerSourceRequired": true,
+  "declaredGlibcFloor": "2.36",
+  "dispatch": {
+    "observed": false,
+    "reason": "No PHP constructor/source entry counters in this installed acceptance"
+  },
+  "expectedBindingIrSha256": "cab9b521a3c107820800b8afb7e224cb0c6c77135c60305c4cca5fe8774c6eae",
+  "independentBuilds": 2,
+  "loadCeiling": 20,
+  "mode": "result-only",
+  "observations": [
+    {
+      "args": [
+        "-n",
+        "-d",
+        "extension=/usr/lib/php/20220829/ffi.so",
+        "-d",
+        "ffi.enable=1",
+        "consumer.php"
+      ],
+      "closure": {
+        "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+        "generatedFilesSha256": "1e41b729554b64fa2e6171ccf0d8cf1408aa71c7fc334b2b03a9869adee95558",
+        "packageFileSetSha256": "c44eb972926889d2f4f3f01292904db889ddba66e98bf5e750715dcfdf822177",
+        "receiptSha256": "e19b95dfe40f890efee3798ad702c4c5805fdc26e42be8b12fcae466dfb730e3",
+        "toolsSha256": "928927b055e8c58d26f331b055f2a17155d6470c3a969891b72b9714f2da1510",
+        "vendorFilesSha256": "cada264818e6f6093209ddebcc36363e4e86e527f56cc4c5936ff6d0058ff18c"
+      },
+      "command": "/usr/bin/php8.2",
+      "counts": {
+        "checks": 1060,
+        "hostRejections": 6,
+        "recoveries": 0,
+        "rejections": 0,
+        "rounds": 256,
+        "snapshotControls": 7,
+        "snapshots": 520
+      },
+      "cwd": "/tmp/lean-bridge-nested-php-installed-KFMpbU/consumer",
+      "relocated": false,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":1060,\"rejections\":0,\"hostRejections\":6,\"recoveries\":0,\"snapshots\":520,\"snapshotControls\":7,\"rounds\":256}\n"
+      },
+      "strictness": "weak"
+    },
+    {
+      "args": [
+        "-n",
+        "-d",
+        "extension=/usr/lib/php/20220829/ffi.so",
+        "-d",
+        "ffi.enable=1",
+        "strict.php"
+      ],
+      "closure": {
+        "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+        "generatedFilesSha256": "1e41b729554b64fa2e6171ccf0d8cf1408aa71c7fc334b2b03a9869adee95558",
+        "packageFileSetSha256": "c44eb972926889d2f4f3f01292904db889ddba66e98bf5e750715dcfdf822177",
+        "receiptSha256": "e19b95dfe40f890efee3798ad702c4c5805fdc26e42be8b12fcae466dfb730e3",
+        "toolsSha256": "928927b055e8c58d26f331b055f2a17155d6470c3a969891b72b9714f2da1510",
+        "vendorFilesSha256": "cada264818e6f6093209ddebcc36363e4e86e527f56cc4c5936ff6d0058ff18c"
+      },
+      "command": "/usr/bin/php8.2",
+      "counts": {
+        "checks": 1060,
+        "hostRejections": 6,
+        "recoveries": 0,
+        "rejections": 0,
+        "rounds": 256,
+        "snapshotControls": 7,
+        "snapshots": 520
+      },
+      "cwd": "/tmp/lean-bridge-nested-php-installed-KFMpbU/consumer",
+      "relocated": false,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":1060,\"rejections\":0,\"hostRejections\":6,\"recoveries\":0,\"snapshots\":520,\"snapshotControls\":7,\"rounds\":256}\n"
+      },
+      "strictness": "strict"
+    },
+    {
+      "args": [
+        "-n",
+        "-d",
+        "extension=/usr/lib/php/20220829/ffi.so",
+        "-d",
+        "ffi.enable=1",
+        "consumer.php"
+      ],
+      "closure": {
+        "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+        "generatedFilesSha256": "1e41b729554b64fa2e6171ccf0d8cf1408aa71c7fc334b2b03a9869adee95558",
+        "packageFileSetSha256": "c44eb972926889d2f4f3f01292904db889ddba66e98bf5e750715dcfdf822177",
+        "receiptSha256": "e19b95dfe40f890efee3798ad702c4c5805fdc26e42be8b12fcae466dfb730e3",
+        "toolsSha256": "928927b055e8c58d26f331b055f2a17155d6470c3a969891b72b9714f2da1510",
+        "vendorFilesSha256": "cada264818e6f6093209ddebcc36363e4e86e527f56cc4c5936ff6d0058ff18c"
+      },
+      "command": "/usr/bin/php8.2",
+      "counts": {
+        "checks": 1060,
+        "hostRejections": 6,
+        "recoveries": 0,
+        "rejections": 0,
+        "rounds": 256,
+        "snapshotControls": 7,
+        "snapshots": 520
+      },
+      "cwd": "/tmp/lean-bridge-nested-php-installed-KFMpbU/consumer-relocated",
+      "relocated": true,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":1060,\"rejections\":0,\"hostRejections\":6,\"recoveries\":0,\"snapshots\":520,\"snapshotControls\":7,\"rounds\":256}\n"
+      },
+      "strictness": "weak"
+    },
+    {
+      "args": [
+        "-n",
+        "-d",
+        "extension=/usr/lib/php/20220829/ffi.so",
+        "-d",
+        "ffi.enable=1",
+        "strict.php"
+      ],
+      "closure": {
+        "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+        "generatedFilesSha256": "1e41b729554b64fa2e6171ccf0d8cf1408aa71c7fc334b2b03a9869adee95558",
+        "packageFileSetSha256": "c44eb972926889d2f4f3f01292904db889ddba66e98bf5e750715dcfdf822177",
+        "receiptSha256": "e19b95dfe40f890efee3798ad702c4c5805fdc26e42be8b12fcae466dfb730e3",
+        "toolsSha256": "928927b055e8c58d26f331b055f2a17155d6470c3a969891b72b9714f2da1510",
+        "vendorFilesSha256": "cada264818e6f6093209ddebcc36363e4e86e527f56cc4c5936ff6d0058ff18c"
+      },
+      "command": "/usr/bin/php8.2",
+      "counts": {
+        "checks": 1060,
+        "hostRejections": 6,
+        "recoveries": 0,
+        "rejections": 0,
+        "rounds": 256,
+        "snapshotControls": 7,
+        "snapshots": 520
+      },
+      "cwd": "/tmp/lean-bridge-nested-php-installed-KFMpbU/consumer-relocated",
+      "relocated": true,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":1060,\"rejections\":0,\"hostRejections\":6,\"recoveries\":0,\"snapshots\":520,\"snapshotControls\":7,\"rounds\":256}\n"
+      },
+      "strictness": "strict"
+    }
+  ],
+  "offlineInstall": true,
+  "packageReceiptSha256": "e19b95dfe40f890efee3798ad702c4c5805fdc26e42be8b12fcae466dfb730e3",
+  "producerCommit": "933371c567f3296de2dac1dd2c9e77547708c7a2",
+  "receipt": {
+    "component": {
+      "id": "nestedcheckedrecords@1.0.0",
+      "name": "nestedcheckedrecords",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 51355945,
+            "path": "archives/example-nestedcheckedrecords-1.0.0-linux-x86_64.zip",
+            "sha256": "5a13588a443ed617403458265910b50fece73f619054cbe08e3a0322c54c77d0"
+          }
+        ],
+        "ecosystem": "composer",
+        "name": "example/nestedcheckedrecords",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+        "target": "php-native",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "f5a2c45a05058c850faae20c7074e770fae4939d7523d46368bc313755259153",
+        "id": "native-library-v1",
+        "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "d5e469bae948dc4dc5d20fe96c69db03544e17a7838bc29bd77b7ede8bbdf21b"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "resourceChecks": [
+    {
+      "observations": [
+        {
+          "availableBytes": 11027329024,
+          "freeBytes": 4888854528,
+          "load": 5.83
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 11198783488,
+          "freeBytes": 4888809472,
+          "load": 5.83
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 11222904832,
+          "freeBytes": 4836016128,
+          "load": 5.88
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 11270078464,
+          "freeBytes": 4779048960,
+          "load": 6.9
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 10971144192,
+          "freeBytes": 4514652160,
+          "load": 6.76
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 11606990848,
+          "freeBytes": 4535484416,
+          "load": 7.26
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 11632001024,
+          "freeBytes": 4535418880,
+          "load": 7.32
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 11748155392,
+          "freeBytes": 4534358016,
+          "load": 7.37
+        }
+      ],
+      "waits": 0
+    }
+  ],
+  "route": "ordinary",
+  "runtime": {
+    "arch": "x64",
+    "glibc": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "glibc 2.36\n"
+    },
+    "platform": "linux"
+  },
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true,
+  "tools": {
+    "command": "/usr/bin/php8.2",
+    "composer": "/usr/bin/composer",
+    "composerFlags": [
+      "-n",
+      "-d",
+      "extension=/usr/lib/php/20220829/ctype.so",
+      "-d",
+      "extension=/usr/lib/php/20220829/ffi.so",
+      "-d",
+      "extension=/usr/lib/php/20220829/iconv.so",
+      "-d",
+      "extension=/usr/lib/php/20220829/mbstring.so",
+      "-d",
+      "extension=/usr/lib/php/20220829/phar.so",
+      "-d",
+      "extension=/usr/lib/php/20220829/tokenizer.so"
+    ],
+    "composerVersion": {
+      "args": [
+        "-n",
+        "-d",
+        "extension=/usr/lib/php/20220829/ctype.so",
+        "-d",
+        "extension=/usr/lib/php/20220829/ffi.so",
+        "-d",
+        "extension=/usr/lib/php/20220829/iconv.so",
+        "-d",
+        "extension=/usr/lib/php/20220829/mbstring.so",
+        "-d",
+        "extension=/usr/lib/php/20220829/phar.so",
+        "-d",
+        "extension=/usr/lib/php/20220829/tokenizer.so",
+        "/usr/bin/composer",
+        "--no-plugins",
+        "--no-scripts",
+        "--no-interaction",
+        "--version"
+      ],
+      "command": "/usr/bin/php8.2",
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "Composer version 2.5.5 2023-03-21 11:50:05\n"
+      }
+    },
+    "interpreter": {
+      "args": [
+        "-n",
+        "-r",
+        "echo json_encode([\"version\"=>PHP_VERSION,\"sapi\"=>PHP_SAPI,\"zts\"=>PHP_ZTS,\"integerBytes\"=>PHP_INT_SIZE,\"os\"=>PHP_OS_FAMILY,\"arch\"=>php_uname(\"m\"),\"directory\"=>ini_get(\"extension_dir\"),\"modules\"=>get_loaded_extensions()], JSON_THROW_ON_ERROR);"
+      ],
+      "command": "/usr/bin/php8.2",
+      "php": {
+        "arch": "x86_64",
+        "directory": "/usr/lib/php/20220829",
+        "integerBytes": 8,
+        "modules": [
+          "Core",
+          "date",
+          "libxml",
+          "openssl",
+          "pcre",
+          "zlib",
+          "filter",
+          "hash",
+          "json",
+          "pcntl",
+          "random",
+          "Reflection",
+          "SPL",
+          "session",
+          "standard",
+          "sodium"
+        ],
+        "os": "Linux",
+        "sapi": "cli",
+        "version": "8.2.33",
+        "zts": 0
+      },
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"version\":\"8.2.33\",\"sapi\":\"cli\",\"zts\":0,\"integerBytes\":8,\"os\":\"Linux\",\"arch\":\"x86_64\",\"directory\":\"\\/usr\\/lib\\/php\\/20220829\",\"modules\":[\"Core\",\"date\",\"libxml\",\"openssl\",\"pcre\",\"zlib\",\"filter\",\"hash\",\"json\",\"pcntl\",\"random\",\"Reflection\",\"SPL\",\"session\",\"standard\",\"sodium\"]}"
+      }
+    },
+    "runtimeFlags": [
+      "-n",
+      "-d",
+      "extension=/usr/lib/php/20220829/ffi.so",
+      "-d",
+      "ffi.enable=1"
+    ],
+    "selected": {
+      "composer": "/usr/bin/composer",
+      "composerVersion": "2.5.5",
+      "php": "/usr/bin/php",
+      "phpVersion": "8.2.33"
+    },
+    "tools": {
+      "/usr/bin/composer": {
+        "bytes": 3156,
+        "sha256": "5cf51f9912671912136317d889df7a5b8219f2a77f2b311b9a100989106847e2"
+      },
+      "/usr/bin/php8.2": {
+        "bytes": 5662424,
+        "sha256": "f44be0fe6c6c19b4a296f5b051bbe7d7924dc2d63ad4711ef666c4626e4a0e7a"
+      },
+      "/usr/lib/php/20220829/ctype.so": {
+        "bytes": 14440,
+        "sha256": "36647c21faefa76190aa32b33dc6e6ccf2b15f4a0d87184cfc213c327e3e9e0a"
+      },
+      "/usr/lib/php/20220829/ffi.so": {
+        "bytes": 174184,
+        "sha256": "a3c29e39e21f98d4f9178482445eae0bd69e818e067b21e7dbd3a63e54100dc8"
+      },
+      "/usr/lib/php/20220829/iconv.so": {
+        "bytes": 51304,
+        "sha256": "1d136532a8fe77caec4bd265e0539cce37248b6ef5b8e2ed07e1d0de171e90cd"
+      },
+      "/usr/lib/php/20220829/mbstring.so": {
+        "bytes": 1192704,
+        "sha256": "b42880230e64842003486160651ae42b7d2f44b657861f41dd01faccae0db11c"
+      },
+      "/usr/lib/php/20220829/phar.so": {
+        "bytes": 284776,
+        "sha256": "33a5b0822126d5233ab4853d597419c988b7b3f3edbbd492604070e4737d6bd3"
+      },
+      "/usr/lib/php/20220829/tokenizer.so": {
+        "bytes": 34920,
+        "sha256": "c7bc1d8ea1e79010c2cfde2ee898421aa99b6c70a203e2f266c469f42e16d001"
+      }
+    }
+  }
+}
