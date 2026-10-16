@@ -1,0 +1,39 @@
+{
+  "version": "1.0.0",
+  "type": "module",
+  "sideEffects": false,
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.mjs",
+      "default": "./index.mjs",
+      "browser": "./index.mjs"
+    }
+  },
+  "files": [
+    "index.mjs",
+    "index.d.ts",
+    "README.md",
+    "binding-manifest.json",
+    "internal",
+    "notices",
+    "LICENSE"
+  ],
+  "name": "mutualcheckedrecords",
+  "license": "MIT",
+  "description": "Compiler-checked exports for mutualcheckedrecords.",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@lean-bridge/runtime": "0.0.0-abi2.a20906521518451c305cddf7575d9d1edba613a0ccfa1014da0b04128e20187b"
+  },
+  "leanBridge": {
+    "component": "mutualcheckedrecords@1.0.0",
+    "componentBundleSha256": "15b4674fbb192691650fb1397deb7be265cc61f9b1ed8fb66e32fdb3d24d86c0",
+    "componentIdentitySha256": "7455be8008d64c34fff94c43311f7619abc2a3427f2e475517d80d3b03e44f6f",
+    "bindingIrSha256": "5a794d0c15d10efc26ed3f5ef79f701356523cb78ebaaf9bc9d5bbdf32cc095a",
+    "sharedRuntime": true
+  }
+}

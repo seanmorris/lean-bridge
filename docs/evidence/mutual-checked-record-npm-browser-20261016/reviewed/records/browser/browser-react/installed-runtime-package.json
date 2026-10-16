@@ -1,0 +1,41 @@
+{
+  "description": "Shared Lean WebAssembly runtime for generated Lean Bridge packages.",
+  "engines": {
+    "node": ">=22"
+  },
+  "exports": {
+    ".": {
+      "browser": "./index.mjs",
+      "default": "./index.mjs",
+      "import": "./index.mjs"
+    }
+  },
+  "files": [
+    "index.mjs",
+    "internal",
+    "LICENSE",
+    "notices",
+    "runtime-identity.json"
+  ],
+  "leanBridge": {
+    "abiVersion": 1,
+    "artifactIncluded": false,
+    "componentScalarAbi": 2,
+    "kind": "content-addressed-peer",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "patchSetSha256": "743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3",
+    "profile": "side-lazy",
+    "requiredImports": [
+      "memory",
+      "__indirect_function_table"
+    ],
+    "runtimeIdentity": "a20906521518451c305cddf7575d9d1edba613a0ccfa1014da0b04128e20187b",
+    "shared": true,
+    "sharedRuntime": true
+  },
+  "license": "MIT",
+  "name": "@lean-bridge/runtime",
+  "sideEffects": true,
+  "type": "module",
+  "version": "0.0.0-abi2.a20906521518451c305cddf7575d9d1edba613a0ccfa1014da0b04128e20187b"
+}

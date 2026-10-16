@@ -1,0 +1,960 @@
+/**
+ * Keep the type baseline complete and prevent evidence from crossing profiles or stages.
+ *
+ * @file
+ */
+
+import assert from "node:assert/strict";
+import { execFile } from "node:child_process";
+import {
+	copyFile, link, mkdir, mkdtemp, readFile, rm, writeFile
+} from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
+import { promisify } from "node:util";
+import test from "node:test";
+import { assertJsonSchema } from "./helpers/json-schema.mjs";
+import { readTypeSurface, typeSurfaceCells, typeSurfaceGapReport, validateTypeSurface } from "../src/adoption/type-surface.mjs";
+import { historicalTypeSurfaceCells } from "./helpers/historical-type-surface-cells.mjs";
+import { beforeCheckedRecordPromotionSource } from "./helpers/checked-record-promotion-source-history.mjs";
+import { beforeCallbackFinPromotionSource } from "./helpers/callback-fin-promotion-source-history.mjs";
+import { reviewedSubtypeNativeProfiles, reviewedSubtypeNativeReferences } from "./helpers/reviewed-subtype-native-promotion.mjs";
+import { nominalSubtypeNpmProfiles, nominalSubtypeNpmHostSuffix } from "./helpers/nominal-subtype-npm-promotion.mjs";
+import { nominalSubtypeNativeProfiles, nominalSubtypeNativeHostSuffix } from "./helpers/nominal-subtype-native-promotion.mjs";
+import { nominalSubtypePerlProfiles, nominalSubtypePerlHostSuffix } from "./helpers/nominal-subtype-perl-promotion.mjs";
+import { nominalSubtypePythonProfiles, nominalSubtypePythonHostSuffix } from "./helpers/nominal-subtype-python-promotion.mjs";
+import { nominalSubtypeRubyProfiles, nominalSubtypeRubyHostSuffix } from "./helpers/nominal-subtype-ruby-promotion.mjs";
+import { nominalSubtypeRustProfiles, nominalSubtypeRustHostSuffix } from "./helpers/nominal-subtype-rust-promotion.mjs";
+import { nominalSubtypeDotnetProfiles, nominalSubtypeDotnetHostSuffix } from "./helpers/nominal-subtype-dotnet-promotion.mjs";
+import { nominalSubtypeJvmProfiles, nominalSubtypeJvmHostSuffix } from "./helpers/nominal-subtype-jvm-promotion.mjs";
+import { nominalSubtypePhpProfiles, nominalSubtypePhpHostSuffix } from "./helpers/nominal-subtype-php-promotion.mjs";
+import { nominalSubtypeWitProfiles, nominalSubtypeWitHostSuffix } from "./helpers/nominal-subtype-wit-promotion.mjs";
+import { nominalSubtypeBrowserProfiles, nominalSubtypeBrowserHostSuffix } from "./helpers/nominal-subtype-browser-promotion.mjs";
+import { nominalSubtypePhpWasmProfiles, nominalSubtypePhpWasmHostSuffix } from "./helpers/nominal-subtype-php-wasm-promotion.mjs";
+import { nominalPrimitiveSubtypeNpmProfiles, nominalPrimitiveSubtypeNpmField } from "./helpers/nominal-primitive-subtype-npm-promotion.mjs";
+import { nominalPrimitiveSubtypePythonProfiles, nominalPrimitiveSubtypePythonField } from "./helpers/nominal-primitive-subtype-python-promotion.mjs";
+import { nominalPrimitiveSubtypeBrowserProfiles, nominalPrimitiveSubtypeBrowserField } from "./helpers/nominal-primitive-subtype-browser-promotion.mjs";
+import { nominalPrimitiveSubtypeNativeProfiles, nominalPrimitiveSubtypeNativeField } from "./helpers/nominal-primitive-subtype-native-promotion.mjs";
+import { nominalPrimitiveSubtypePerlProfiles, nominalPrimitiveSubtypePerlField } from "./helpers/nominal-primitive-subtype-perl-promotion.mjs";
+import { nominalPrimitiveSubtypeRubyProfiles, nominalPrimitiveSubtypeRubyField } from "./helpers/nominal-primitive-subtype-ruby-promotion.mjs";
+import { beforeNominalPrimitiveSubtypeRubyPromotionSource } from "./helpers/nominal-primitive-subtype-ruby-promotion-history.mjs";
+import { nominalPrimitiveSubtypeRustProfiles, nominalPrimitiveSubtypeRustField } from "./helpers/nominal-primitive-subtype-rust-promotion.mjs";
+import { beforeNominalPrimitiveSubtypeRustPromotionSource } from "./helpers/nominal-primitive-subtype-rust-promotion-history.mjs";
+import { nominalPrimitiveSubtypeDotnetProfiles, nominalPrimitiveSubtypeDotnetField } from "./helpers/nominal-primitive-subtype-dotnet-promotion.mjs";
+import { beforeNominalPrimitiveSubtypeDotnetPromotionSource } from "./helpers/nominal-primitive-subtype-dotnet-promotion-history.mjs";
+import { nominalPrimitiveSubtypePhpProfiles, nominalPrimitiveSubtypePhpField } from "./helpers/nominal-primitive-subtype-php-promotion.mjs";
+import { beforeNominalPrimitiveSubtypePhpPromotionSource } from "./helpers/nominal-primitive-subtype-php-promotion-history.mjs";
+import { nominalPrimitiveSubtypePhpWasmProfiles } from "./helpers/nominal-primitive-subtype-php-wasm-promotion.mjs";
+import { beforeNominalPrimitiveSubtypePhpWasmPromotionSource } from "./helpers/nominal-primitive-subtype-php-wasm-promotion-history.mjs";
+import { beforeRecursiveSubtypePhpWasmSource } from "./helpers/recursive-subtype-php-wasm-source-history.mjs";
+import { recursiveSubtypePhpWasmField, recursiveSubtypePhpWasmParameter, recursiveSubtypePhpWasmResult } from "./helpers/recursive-subtype-php-wasm-promotion.mjs";
+import { beforeRecursiveSubtypePhpWasmPromotionSource } from "./helpers/recursive-subtype-php-wasm-promotion-history.mjs";
+import { beforeNestedCheckedRecordBrowserPromotionSource } from "./helpers/nested-checked-record-browser-promotion-history.mjs";
+import { nominalPrimitiveSubtypeWitProfiles, nominalPrimitiveSubtypeWitField, nominalPrimitiveSubtypeWitParameter, nominalPrimitiveSubtypeWitResult } from "./helpers/nominal-primitive-subtype-wit-promotion.mjs";
+import { beforeNominalPrimitiveSubtypeWitPromotionSource } from "./helpers/nominal-primitive-subtype-wit-promotion-history.mjs";
+import { nominalPrimitiveSubtypeJvmProfiles, nominalPrimitiveSubtypeJvmField } from "./helpers/nominal-primitive-subtype-jvm-promotion.mjs";
+import { beforeNominalPrimitiveSubtypeJvmPromotionSource } from "./helpers/nominal-primitive-subtype-jvm-promotion-history.mjs";
+import { withoutNestedCheckedRecordNativeCorrection } from "./helpers/nested-checked-record-native-correction-source-history.mjs";
+import { withoutNestedCheckedRecordNativePromotion } from "./helpers/nested-checked-record-native-promotion-history.mjs";
+import { withoutNestedCheckedRecordQuality } from "./helpers/nested-checked-record-quality-source-history.mjs";
+import { withoutNestedCheckedRecordDotnetPromotion } from "./helpers/nested-checked-record-dotnet-promotion-history.mjs";
+import { withoutNestedCheckedRecordJvmPromotion } from "./helpers/nested-checked-record-jvm-promotion-history.mjs";
+import { withoutNestedCheckedRecordPerlPromotion } from "./helpers/nested-checked-record-perl-promotion-history.mjs";
+import { withoutNestedCheckedRecordPhpPromotion } from "./helpers/nested-checked-record-php-promotion-history.mjs";
+import { withoutNestedCheckedRecordPythonPromotion } from "./helpers/nested-checked-record-python-promotion-history.mjs";
+import { withoutNestedCheckedRecordRubyPromotion } from "./helpers/nested-checked-record-ruby-promotion-history.mjs";
+import { withoutNestedCheckedRecordWitPromotion } from "./helpers/nested-checked-record-wit-promotion-history.mjs";
+import { withoutNestedCheckedRecordPhpWasmPromotion } from "./helpers/nested-checked-record-php-wasm-promotion-history.mjs";
+import { withoutNestedCheckedRecordRustPromotion } from "./helpers/nested-checked-record-rust-promotion-history.mjs";
+import { withoutNestedCheckedRecordMatrixClosure } from "./helpers/nested-checked-record-matrix-closure-source-history.mjs";
+import { withoutMutualCheckedRecord } from "./helpers/mutual-checked-record-source-history.mjs";
+
+const execute = promisify(execFile);
+const root = path.resolve(import.meta.dirname, "..");
+const { document, ...contracts } = await readTypeSurface();
+const clone = value => structuredClone(value);
+const structuralSubtypeEvidence = (profile, route) => {
+	const lanes = profile === "python" ? ["python311", "python312"]
+		: [["c", "cpp"].includes(profile) ? "c-cpp"
+			: ["java", "kotlin"].includes(profile) ? "jvm"
+				: profile.startsWith("node-") || profile.startsWith("browser-") ? "node-browser" : profile];
+	return lanes.map(lane => `structural-subtype-${lane}-${route}-installed`);
+};
+const stage = (state = "unreviewed") => ({ state, evidence: state === "unreviewed" ? [] : ["test-evidence"], note: "Scope of this test observation." });
+const observationFixture = () => {
+	const candidate = clone(document);
+	candidate.observations = [];
+	candidate.evidence = [{
+		id: "test-evidence"
+		, kind: "inspection"
+		, revision: "0".repeat(40)
+		, command: "Inspect the fixture generator."
+		, scope: "Test-only evidence."
+		, files: [{ path: "src/abi/component-scalars.mjs", sha256: "0".repeat(64) }]
+		, artifacts: []
+	}];
+	candidate.observations.push({
+		id: "test-nat"
+		, profiles: ["node-javascript"]
+		, shapes: ["nat"]
+		, positions: ["parameter", "result"]
+		, path: "ordinary-source"
+		, scope: "One exact-integer fixture; no field or callback coverage."
+		, hostTypes: { nat: { parameter: "bigint", result: "bigint" } }
+		, stages: Object.fromEntries(candidate.stages.map(name => [name, stage(name === "generation" ? "inspected" : "unreviewed")]))
+		, limitations: []
+	});
+	return candidate;
+};
+
+test("historical shape comparisons preserve old cells without weakening the live classifier", async () => {
+	const file = "docs/type-surface.v1.json";
+	let current = withoutMutualCheckedRecord(file, await readFile(file, "utf8"));
+	current = withoutNestedCheckedRecordMatrixClosure(file
+		, current);
+	current = withoutNestedCheckedRecordRustPromotion(file, current);
+	current = withoutNestedCheckedRecordPhpWasmPromotion(file
+		, current);
+	current = withoutNestedCheckedRecordWitPromotion(file, current);
+	current = withoutNestedCheckedRecordRubyPromotion(file, current);
+	current = withoutNestedCheckedRecordPythonPromotion(file, current);
+	current = withoutNestedCheckedRecordPhpPromotion(file, current);
+	current = withoutNestedCheckedRecordPerlPromotion(file, current);
+	current = withoutNestedCheckedRecordJvmPromotion(file, current);
+	current = withoutNestedCheckedRecordDotnetPromotion(file, current);
+	current = withoutNestedCheckedRecordQuality(file
+		, current);
+	current = withoutNestedCheckedRecordNativePromotion(file, current);
+	current = withoutNestedCheckedRecordNativeCorrection(file, current);
+	current = beforeNominalPrimitiveSubtypeJvmPromotionSource(file, current);
+	current = beforeNominalPrimitiveSubtypeWitPromotionSource(file, current);
+	current = beforeNestedCheckedRecordBrowserPromotionSource(file, current);
+	current = beforeRecursiveSubtypePhpWasmPromotionSource(file, current);
+	current = beforeRecursiveSubtypePhpWasmSource(file, current);
+	current = beforeNominalPrimitiveSubtypePhpWasmPromotionSource(file, current);
+	current = beforeNominalPrimitiveSubtypePhpPromotionSource(file, current);
+	current = beforeNominalPrimitiveSubtypeDotnetPromotionSource(file, current);
+	current = beforeNominalPrimitiveSubtypeRustPromotionSource(file, current);
+	current = beforeNominalPrimitiveSubtypeRubyPromotionSource(file, current);
+	const previous = JSON.parse(beforeCheckedRecordPromotionSource(file, current));
+	// Compare shape introduction at its own inventory epoch; later callback observations are separate.
+	const withCheckedRecords = JSON.parse(beforeCallbackFinPromotionSource(file, current));
+	const unchanged = clone(previous);
+	assert.equal(previous.shapes.length, 48);
+	assert.throws(() => typeSurfaceCells(previous, contracts), /IR and source shapes/u);
+	const historical = historicalTypeSurfaceCells(previous, contracts);
+	assert.deepEqual(previous, unchanged);
+	assert.deepEqual(historical, typeSurfaceCells(withCheckedRecords, contracts).filter(cell => cell.shape !== "checked-record"));
+	assert.deepEqual(historicalTypeSurfaceCells(document, contracts), typeSurfaceCells(document, contracts));
+	const missing = clone(previous);
+	missing.shapes = missing.shapes.filter(shape => shape.id !== "fin");
+	assert.throws(() => historicalTypeSurfaceCells(missing, contracts), /IR and source shapes/u);
+	const invented = clone(previous);
+	invented.observations[0].shapes = ["checked-record"];
+	assert.throws(() => historicalTypeSurfaceCells(invented, contracts));
+});
+
+test("the versioned inventory classifies every profile, IR alternative and required source shape", async () => {
+	await assertJsonSchema("type-surface", document);
+	assert.equal(validateTypeSurface(document, contracts), true);
+	assert.equal(document.profiles.length, 17);
+	assert.equal(document.shapes.length, 49);
+	assert.deepEqual(document.profiles.filter(profile => profile.consumer === "jvm").map(profile => profile.id), ["java", "kotlin"]);
+	assert.deepEqual(document.profiles.filter(profile => profile.consumer === "browser-javascript").map(profile => profile.id),
+		["browser-javascript", "browser-react", "browser-worker"]);
+	const cells = typeSurfaceCells(document, contracts);
+	const expected = document.profiles.length * document.paths.length * document.shapes.reduce((count, shape) => count + document.families[shape.family].positions.length, 0);
+	assert.equal(cells.length, expected);
+	assert.equal(new Set(cells.map(cell => cell.id)).size, expected);
+	for(const cell of cells)
+	{
+		assert.ok(cell.owner > 0 && cell.bounds && cell.ownership && cell.absence && cell.failure && cell.platform);
+		assert.deepEqual(Object.keys(cell.stages), document.stages);
+	}
+});
+
+test("recursive copied values and callback payloads have installed checks in all seventeen profiles", () => {
+	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "recursive");
+	const installed = cells.filter(cell => cell.stages.installedExecution.state === "passed");
+	assert.equal(installed.length, 170);
+	assert.equal(new Set(installed.map(cell => cell.profile)).size, 17);
+	const promoted = installed.filter(cell => ["dotnet", "java", "kotlin", "php-native", "php-wasm"].includes(cell.profile) && !cell.position.startsWith("callback-"));
+	assert.equal(promoted.length, 30);
+	for(const cell of promoted)
+	{
+		assert.ok(["parameter", "result", "field"].includes(cell.position));
+		assert.ok(cell.hostType && cell.conversionNote);
+		for(const stage of Object.values(cell.stages))
+		{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, ["managed-recursive-installed"]); }
+	}
+	const wit = installed.filter(cell => cell.profile === "wit-wasi");
+	assert.equal(wit.length, 10);
+	for(const cell of wit) for(const stage of Object.values(cell.stages))
+	{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, [cell.position.startsWith("callback-") ? "wit-wasi-recursive-callables-installed" : "wit-wasi-recursive-installed"]); }
+	for(const cell of cells.filter(cell => cell.position.startsWith("callback-")))
+	{
+		if(["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"].includes(cell.profile))
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["npm-structured-callables-installed"]);
+		else if(["c", "cpp"].includes(cell.profile))
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["native-recursive-callables-installed"]);
+		else if(cell.profile === "python")
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["python-recursive-callables-installed"]);
+		else if(cell.profile === "rust")
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["rust-recursive-callables-installed"]);
+		else if(cell.profile === "ruby")
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["ruby-recursive-callables-installed"]);
+		else if(cell.profile === "perl")
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["perl-recursive-callables-installed"]);
+		else if(cell.profile === "dotnet")
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["dotnet-recursive-callables-installed"]);
+		else if(["java", "kotlin"].includes(cell.profile))
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["jvm-recursive-callables-installed"]);
+		else if(cell.profile === "php-native")
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["php-native-recursive-callables-installed"]);
+		else if(cell.profile === "php-wasm")
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["php-wasm-recursive-callables-installed"]);
+		else if(cell.profile === "wit-wasi")
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["wit-wasi-recursive-callables-installed"]);
+		else assert.notEqual(cell.stages.installedExecution.state, "passed", cell.id);
+	}
+});
+
+test("Char installed evidence distinguishes npm record fields from scalar and callable evidence", () => {
+	const profiles = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"];
+	const hosts = { c: "uint32_t", cpp: "char32_t", python: "str", rust: "char", dotnet: "System.Text.Rune", java: "int", kotlin: "Int", ruby: "String", perl: "text scalar", "php-native": "string", "php-wasm": "string", "wit-wasi": "char" };
+	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "char");
+	const observed = cells.filter(cell => cell.stages.installedExecution.state === "passed");
+	assert.equal(observed.length, 170);
+	for(const cell of cells)
+	{
+		const npm = profiles.includes(cell.profile);
+		const callable = cell.position.startsWith("callback-");
+		const callableEvidence = npm ? "npm-callables-installed" : ["java", "kotlin"].includes(cell.profile) ? "jvm-callables-installed" : `${cell.profile}-callables-installed`;
+		const covered = callable || ["parameter", "result", "field"].includes(cell.position);
+		assert.equal(cell.stages.installedExecution.state, covered ? "passed" : "unreviewed", cell.id);
+		if(!covered) continue;
+		assert.equal(cell.hostType, npm ? "string" : hosts[cell.profile]);
+		for(const stage of Object.values(cell.stages))
+		{
+			assert.equal(stage.state, "passed");
+			assert.deepEqual(stage.evidence, [callable ? callableEvidence : npm ? cell.position === "field" ? "npm-records-installed" : "npm-installed-char" : "native-installed-char"]);
+		}
+	}
+});
+
+test("platform-word evidence binds all seventeen profiles to compiled widths and audited positions", () => {
+	const cells = typeSurfaceCells(document, contracts).filter(cell => ["usize", "isize"].includes(cell.shape));
+	const wasm = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker", "php-wasm"];
+	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 340);
+	for(const cell of cells)
+	{
+		assert.equal(cell.wordBits, wasm.includes(cell.profile) ? 32 : 64);
+		const npm = wasm.includes(cell.profile) && cell.profile !== "php-wasm";
+		const callable = cell.position.startsWith("callback-");
+		const callableEvidence = npm ? "npm-callables-installed" : ["java", "kotlin"].includes(cell.profile) ? "jvm-callables-installed" : `${cell.profile}-callables-installed`;
+		const audited = callable || ["parameter", "result", "field"].includes(cell.position);
+		assert.equal(cell.stages.installedExecution.state, audited ? "passed" : "unreviewed");
+		if(audited)
+		{
+			assert.deepEqual(cell.stages.installedExecution.evidence, [callable ? callableEvidence : npm && cell.position === "field" ? "npm-records-installed" : "platform-words-installed"]);
+			assert.ok(cell.conversionNote.includes(`${cell.wordBits}-bit compiled Lean target`));
+		}
+	}
+});
+
+test("List evidence covers all copied profiles and accepted npm/native callbacks", () => {
+	const profiles = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"];
+	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "list");
+	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 170);
+	assert.equal(document.shapes.find(shape => shape.id === "list").ir, "constructor:list");
+	for(const cell of cells)
+	{
+		const copied = ["parameter", "result", "field"].includes(cell.position), npm = profiles.includes(cell.profile), native = ["c", "cpp"].includes(cell.profile), python = cell.profile === "python", rust = cell.profile === "rust", dotnet = cell.profile === "dotnet";
+		const jvm = ["java", "kotlin"].includes(cell.profile), wit = cell.profile === "wit-wasi";
+		const ruby = cell.profile === "ruby", perl = cell.profile === "perl", php = ["php-native", "php-wasm"].includes(cell.profile);
+		if((npm || native || python || rust || dotnet || jvm || ruby || perl || php || wit) && copied)
+		{
+			const pythonType = { parameter: "tuple[T, ...] | list[T]", result: "tuple[T, ...]", field: "tuple[T, ...] | list[T] (input); tuple[T, ...] (output)" };
+			assert.equal(cell.hostType, wit ? "list<T> (owned Wasmtime component values)" : php ? "list<T> (consecutive-key PHP array)" : perl ? "Plain array reference" : ruby ? "Array" : jvm ? cell.profile === "java" ? "T[] (primitive arrays for primitive elements)" : "primitive arrays or Array<T>" : dotnet ? "T[]" : rust ? cell.position === "parameter" ? "&[T]" : "Vec<T>" : python ? pythonType[cell.position] : npm ? "ReadonlyArray<T> (ordinary dense Array)" : cell.profile === "c" ? "<prefix>_list_<element>_span" : "std::vector<T>");
+			for(const stage of Object.values(cell.stages))
+			{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, [wit ? "wit-wasi-lists-installed" : php ? cell.profile === "php-native" ? "php-native-lists-ffi-installed" : "php-wasm-lists-installed" : perl ? "perl-lists-installed" : ruby ? "ruby-lists-installed" : jvm ? "jvm-lists-installed" : dotnet ? "dotnet-lists-installed" : rust ? "rust-lists-installed" : python ? "python-lists-installed" : npm ? "npm-lists-installed" : "native-lists-installed"]); }
+		} else if((npm || native || rust || python || ruby || dotnet || jvm || perl || php || wit) && cell.position.startsWith("callback-"))
+		{
+			assert.equal(cell.stages.installedExecution.state, "passed");
+			assert.deepEqual(cell.stages.installedExecution.evidence, [`${npm ? "npm" : jvm ? "jvm" : cell.profile}-structured-callables-installed`]);
+		} else
+		{
+			assert.equal(cell.stages.installedExecution.state, "unreviewed");
+		}
+	}
+});
+
+test("collection evidence covers all seventeen profiles, both source paths and nineteen primitive fields", () => {
+	const cells = typeSurfaceCells(document, contracts).filter(cell =>
+		["array", "record"].includes(cell.shape) && ["parameter", "result", "field"].includes(cell.position)
+		|| document.irFacets.primitive.includes(cell.shape) && cell.position === "field");
+	assert.equal(document.profiles.length, 17); assert.equal(document.irFacets.primitive.length, 19);
+	assert.equal(cells.length, 850);
+	for(const profile of document.profiles) assert.equal(cells.filter(cell => cell.profile === profile.id).length, 50);
+	for(const cell of cells)
+	{
+		assert.equal(cell.stages.installedExecution.state, "passed", cell.id);
+		assert.ok(cell.stages.installedExecution.evidence.length > 0, cell.id);
+		assert.ok(cell.hostType, cell.id);
+	}
+});
+
+test("npm record evidence covers only copied positions and all nineteen primitive fields", () => {
+	const cells = typeSurfaceCells(document, contracts);
+	const observed = cells.filter(cell => cell.stages.installedExecution.evidence.includes("npm-records-installed"));
+	const profiles = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"];
+	assert.equal(observed.length, 250);
+	for(const cell of observed)
+	{
+		assert.ok(profiles.includes(cell.profile));
+		assert.equal(cell.stages.installedExecution.state, "passed");
+		assert.ok(["parameter", "result", "field"].includes(cell.position));
+		assert.ok(["array", "record"].includes(cell.shape) || cell.position === "field" && document.irFacets.primitive.includes(cell.shape));
+	}
+	for(const profile of profiles) for(const path of document.paths)
+	{
+		for(const shape of document.irFacets.primitive)
+			assert.ok(observed.some(cell => cell.profile === profile && cell.path === path && cell.shape === shape && cell.position === "field"));
+		for(const shape of ["record", "array"]) for(const position of ["parameter", "result", "field"])
+			assert.ok(observed.some(cell => cell.profile === profile && cell.path === path && cell.shape === shape && cell.position === position));
+	}
+});
+
+test("native compound evidence promotes exactly C/C++ copied positions on both paths", () => {
+	const cells = typeSurfaceCells(document, contracts);
+	const observed = cells.filter(cell => cell.stages.installedExecution.evidence.includes("native-compounds-installed"));
+	assert.equal(observed.length, 36);
+	for(const cell of observed)
+	{
+		assert.ok(["c", "cpp"].includes(cell.profile));
+		assert.ok(["parameter", "result", "field"].includes(cell.position));
+		assert.ok(["option", "result", "tuple"].includes(cell.shape));
+		assert.equal(cell.stages.installedExecution.state, "passed");
+	}
+});
+
+for(const profile of ["python", "rust", "dotnet", "java", "kotlin", "ruby", "perl", "php-native", "php-wasm", "wit-wasi"]) test(`${profile} compound evidence promotes exactly eighteen copied positions on both paths`, () => {
+	const cells = typeSurfaceCells(document, contracts);
+	const evidence = ["java", "kotlin"].includes(profile) ? "jvm-compounds-installed" : `${profile}-compounds-installed`;
+	const observed = cells.filter(cell => cell.profile === profile && cell.stages.installedExecution.evidence.includes(evidence));
+	assert.equal(observed.length, 18);
+	for(const cell of observed)
+	{
+		assert.equal(cell.profile, profile);
+		assert.ok(["parameter", "result", "field"].includes(cell.position));
+		assert.ok(["option", "result", "tuple"].includes(cell.shape));
+		assert.equal(cell.stages.installedExecution.state, "passed");
+	}
+});
+
+test("npm callable evidence covers five installed profiles without claiming fields or compound values", () => {
+	const cells = typeSurfaceCells(document, contracts);
+	const observed = cells.filter(cell => cell.stages.installedExecution.evidence.includes("npm-callables-installed"));
+	assert.equal(observed.length, 720);
+	assert.equal(observed.filter(cell => cell.position.startsWith("callback-") || ["callback", "closure"].includes(cell.shape)).length, 400);
+	assert.deepEqual([...new Set(observed.map(cell => cell.profile))].sort(), ["browser-javascript", "browser-react", "browser-worker", "node-javascript", "node-typescript"]);
+	for(const cell of observed)
+	{
+		assert.equal(cell.stages.installedExecution.state, "passed");
+		assert.notEqual(cell.position, "field");
+		assert.ok([...document.irFacets.primitive, "callback", "closure"].includes(cell.shape));
+		assert.ok(cell.conversionNote !== null || cell.hostType === "number" || cell.hostType === "bigint" || cell.hostType === "boolean");
+	}
+});
+
+test("historical C callable evidence excludes GMP integers, other hosts and copied fields", () => {
+	const cells = typeSurfaceCells(document, contracts);
+	const observed = cells.filter(cell => cell.stages.installedExecution.evidence.includes("c-callables-installed"));
+	assert.equal(observed.length, 100);
+	assert.ok(observed.every(cell => cell.profile === "c" && cell.position !== "field" && cell.stages.installedExecution.state === "passed"));
+	assert.ok(observed.every(cell => !["nat", "int"].includes(cell.shape)));
+	for(const path of document.paths)
+	{
+		for(const primitive of document.irFacets.primitive.filter(shape => !["nat", "int"].includes(shape))) for(const position of ["callback-parameter", "callback-result"])
+			assert.ok(observed.some(cell => cell.path === path && cell.shape === primitive && cell.position === position));
+		for(const [shape, position] of [["callback", "parameter"], ["closure", "result"]])
+			assert.ok(observed.some(cell => cell.path === path && cell.shape === shape && cell.position === position));
+	}
+});
+
+for(const profile of ["python", "ruby", "rust", "cpp", "dotnet", "java", "kotlin", "php-native", "php-wasm", "wit-wasi"]) test(`${profile} callable evidence promotes only its installed primitive and callable positions`, () => {
+	const cells = typeSurfaceCells(document, contracts);
+	const evidence = ["java", "kotlin"].includes(profile) ? "jvm-callables-installed" : `${profile}-callables-installed`;
+	const observed = cells.filter(cell => cell.profile === profile && cell.stages.installedExecution.evidence.includes(evidence));
+	assert.equal(observed.length, profile === "cpp" ? 120 : 112);
+	assert.ok(observed.every(cell => cell.profile === profile && (cell.position !== "field" || profile === "cpp" && ["nat", "int"].includes(cell.shape)) && cell.stages.installedExecution.state === "passed"));
+	if(profile === "cpp") assert.ok(observed.filter(cell => ["nat", "int"].includes(cell.shape)).every(cell => cell.hostType === "boost::multiprecision::cpp_int"));
+	for(const path of document.paths)
+	{
+		for(const primitive of document.irFacets.primitive) for(const position of ["callback-parameter", "callback-result"])
+			assert.ok(observed.some(cell => cell.path === path && cell.shape === primitive && cell.position === position));
+		for(const [shape, position] of [["callback", "parameter"], ["closure", "result"]])
+			assert.ok(observed.some(cell => cell.path === path && cell.shape === shape && cell.position === position));
+	}
+});
+
+test("C exact integers use installed GMP values in every copied and primitive callable position", () => {
+	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.profile === "c" && ["nat", "int"].includes(cell.shape));
+	assert.equal(cells.length, 20);
+	for(const cell of cells)
+	{
+		assert.equal(cell.hostType, "mpz_t");
+		for(const stage of Object.values(cell.stages))
+		{
+			assert.equal(stage.state, "passed");
+			assert.deepEqual(stage.evidence, ["c-gmp-installed"]);
+		}
+	}
+});
+
+test("Perl installed evidence stays scoped to audited source paths and positions", () => {
+	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.profile === "perl");
+	const state = (shape, position, sourcePath = "ordinary-source") => cells.find(cell => cell.shape === shape
+		&& cell.position === position && cell.path === sourcePath).stages.installedExecution.state;
+	for(const scalar of document.irFacets.primitive.filter(name => !["char", "usize", "isize"].includes(name)))
+		for(const position of document.families.primitive.positions)
+			assert.equal(state(scalar, position), "passed", `${scalar}/${position}`);
+	for(const path of document.paths) for(const shape of ["array", "record"])
+		for(const position of ["parameter", "result", "field"])
+			assert.equal(state(shape, position, path), "passed", `${shape}/${path}/${position}`);
+	for(const path of document.paths)
+		for(const shape of ["array", "record", "list", "option", "result", "tuple", "variant", "alias", "recursive"])
+			for(const position of ["callback-parameter", "callback-result"])
+				assert.equal(state(shape, position, path), "passed", `${shape}/${path}/${position}`);
+	assert.equal(state("resource", "result"), "passed");
+	assert.equal(state("resource", "field"), "unreviewed");
+	assert.equal(state("callback", "parameter"), "passed");
+	assert.equal(state("closure", "result"), "passed");
+	assert.equal(state("nat", "parameter", "reviewed-ir"), "passed");
+	assert.equal(state("nat", "field", "reviewed-ir"), "passed");
+	assert.equal(state("task", "signature"), "unreviewed");
+});
+
+test("Perl primitive callable evidence promotes no other profile or copied fields", () => {
+	const cells = typeSurfaceCells(document, contracts);
+	const covered = cells.filter(cell => cell.stages.installedExecution.evidence.includes("perl-callables-installed"));
+	assert.equal(covered.length, 110);
+	for(const cell of covered)
+	{
+		assert.equal(cell.profile, "perl");
+		assert.notEqual(cell.position, "field");
+		assert.equal(cell.stages.installedExecution.state, "passed");
+	}
+	for(const path of document.paths) for(const primitive of document.irFacets.primitive)
+		for(const position of ["callback-parameter", "callback-result"])
+			assert.ok(covered.some(cell => cell.path === path && cell.shape === primitive && cell.position === position));
+});
+
+for(const [profile, evidence] of [["php-native", "native-php-installed-copied"], ["php-wasm", "php-wasm-installed-copied"], ["rust", "native-rust-installed-copied"], ["dotnet", "native-dotnet-installed-copied"], ["java", "native-jvm-installed-copied"], ["kotlin", "native-jvm-installed-copied"], ["ruby", "native-ruby-installed-copied"], ["wit-wasi", "native-wit-installed-copied"], ["python", "native-python-installed-copied"]]) test(`ordinary ${profile} installed evidence stays within copied-value positions`, () => {
+	const cells = typeSurfaceCells(document, contracts);
+	const observed = cells.filter(cell => cell.profile === profile && cell.path === "ordinary-source"
+		&& cell.stages.installedExecution.state === "passed"
+		&& !cell.position.startsWith("callback-") && !["callback", "closure"].includes(cell.shape));
+	const compounds = ["python", "rust", "dotnet", "java", "kotlin", "ruby", "php-native", "php-wasm", "wit-wasi"].includes(profile) ? ["option", "result", "tuple"] : [];
+	const lists = ["python", "rust", "dotnet", "java", "kotlin", "ruby", "php-native", "php-wasm", "wit-wasi"].includes(profile) ? ["list"] : [];
+	const aliases = ["python", "rust", "dotnet", "java", "kotlin", "ruby", "php-native", "php-wasm", "wit-wasi"].includes(profile) ? ["alias"] : [];
+	const variants = ["python", "rust", "dotnet", "java", "kotlin", "ruby", "php-native", "php-wasm", "wit-wasi"].includes(profile) ? ["variant"] : [];
+	const recursive = ["rust", "python", "ruby", "dotnet", "java", "kotlin", "php-native", "php-wasm", "wit-wasi"].includes(profile) ? ["recursive"] : [];
+	const recursiveEvidence = ["dotnet", "java", "kotlin", "php-native", "php-wasm"].includes(profile) ? "managed-recursive-installed" : `${profile}-recursive-installed`;
+	const variantEvidence = ["java", "kotlin"].includes(profile) ? "jvm-variants-installed" : `${profile}-variants-installed`;
+	const aliasEvidence = ["java", "kotlin"].includes(profile) ? "jvm-aliases-installed" : `${profile}-aliases-installed`;
+	const compoundEvidence = ["java", "kotlin"].includes(profile) ? "jvm-compounds-installed" : `${profile}-compounds-installed`;
+	// Scalar/container and nominal Fin positions cite separate host/runtime receipts.
+	const finEvidence = { python: "python-fin-installed", rust: "rust-fin-installed", ruby: "ruby-fin-installed", dotnet: "dotnet-fin-installed", java: "jvm-fin-installed", kotlin: "jvm-fin-installed", "php-native": "php-fin-installed", "wit-wasi": "wit-fin-installed" }[profile];
+	const phpWasmFin = profile === "php-wasm";
+	const fins = finEvidence || phpWasmFin ? ["fin"] : [];
+	const finRuntimes = { python: ["python311", "python312"], ruby: ["ruby33"] }[profile] ?? [];
+	const finBatch = ["rust", "dotnet", "wit-wasi"].includes(profile);
+	const nominalFin = finRuntimes.length > 0 || finBatch || phpWasmFin || ["java", "kotlin", "php-native"].includes(profile);
+	const finHostedGroup = ["java", "kotlin"].includes(profile) ? "jvm" : profile;
+	const finHostedSuffixes = profile === "python" ? ["python", "python312"] : [["java", "kotlin"].includes(profile) ? "java-kotlin" : profile];
+	const hostedFinEvidence = family => finHostedSuffixes.map(suffix => `fin-hosted-${finHostedGroup}-${suffix}-${family}-ordinary-installed`);
+	// Finite specializations are signature-only cells, one receipt per build group.
+	const specializationEvidence = { python: "python", rust: "rust", ruby: "ruby", dotnet: "dotnet", java: "java-kotlin", kotlin: "java-kotlin", "php-native": "php-native", "wit-wasi": "wit-wasi" }[profile];
+	const specialized = specializationEvidence ? ["generic", "implicit", "instance"] : [];
+	const genericRecordReports = {
+		python: ["c-cpp-python", "python312-rust"], rust: ["python312-rust"]
+		, dotnet: ["dotnet-java-kotlin"], java: ["dotnet-java-kotlin"]
+		, kotlin: ["dotnet-java-kotlin"], ruby: ["php-native-ruby-wit-wasi"]
+		, "php-native": ["php-native-ruby-wit-wasi"]
+		, "wit-wasi": ["php-native-ruby-wit-wasi"]
+	}[profile] ?? [];
+	// Author-checked Subtype cells retain their earlier receipts; nominal fields have separate acceptance.
+	const subtypes = specializationEvidence || profile === "php-wasm" ? ["subtype"] : [];
+	const nominalSubtype = ["python", "ruby", "rust", "dotnet", "java", "kotlin", ...nominalSubtypePhpProfiles, ...nominalSubtypeWitProfiles, ...nominalSubtypePhpWasmProfiles].includes(profile);
+	const nominalSubtypeLane = nominalSubtypeJvmProfiles.includes(profile) ? "jvm" : nominalSubtypePhpProfiles.includes(profile) ? "php" : nominalSubtypeWitProfiles.includes(profile) ? "wit" : nominalSubtypeBrowserProfiles.includes(profile) ? "browser" : nominalSubtypePhpWasmProfiles.includes(profile) ? "php-wasm" : profile;
+	const nominalSubtypeEvidence = nominalSubtype ? ["full", "result-only"].map(mode => `nominal-subtype-${nominalSubtypeLane}-ordinary-${mode}-installed`) : [];
+	const primitiveSubtypeLane = nominalPrimitiveSubtypePythonProfiles.includes(profile) ? "python"
+		: nominalPrimitiveSubtypeRubyProfiles.includes(profile) ? "ruby"
+			: nominalPrimitiveSubtypeRustProfiles.includes(profile) ? "rust"
+				: nominalPrimitiveSubtypeDotnetProfiles.includes(profile) ? "dotnet"
+					: nominalPrimitiveSubtypePhpProfiles.includes(profile) ? "php"
+						: nominalPrimitiveSubtypePhpWasmProfiles.includes(profile) ? "php-wasm"
+							: nominalPrimitiveSubtypeWitProfiles.includes(profile) ? "wit"
+								: nominalPrimitiveSubtypeJvmProfiles.includes(profile) ? "jvm" : null;
+	const primitiveSubtypeEvidence = primitiveSubtypeLane
+		? ["full", "result-only"].map(mode => `nominal-primitive-subtype-${primitiveSubtypeLane}-ordinary-${mode}-installed`) : [];
+	const checkedRecordGroups = {
+		python: ["python-3-11", "python-3-12"], ruby: ["ruby-jvm"]
+		, java: ["ruby-jvm"], kotlin: ["ruby-jvm"], dotnet: ["remaining"]
+		, rust: ["remaining"], "php-native": ["remaining"], "wit-wasi": ["remaining"]
+		, "php-wasm": ["php-wasm"]
+	}[profile] ?? [];
+	const checkedRecords = checkedRecordGroups.length ? ["checked-record"] : [];
+	const nestedCheckedRecordFields = ["dotnet", "java", "kotlin", "php-native", "php-wasm", "python", "ruby", "rust", "wit-wasi"]
+		.includes(profile) ? 1 : 0;
+	assert.equal(observed.length, 63 + 3 * (compounds.length + lists.length + aliases.length + variants.length + recursive.length) + 2 * fins.length + 2 * subtypes.length + 2 * checkedRecords.length + nestedCheckedRecordFields + specialized.length + (nominalFin ? 1 : 0) + (nominalSubtype ? 1 : 0));
+	assert.deepEqual([...new Set(observed.map(cell => cell.shape))].sort(), [...document.irFacets.primitive, "array", "record", ...compounds, ...lists, ...aliases, ...variants, ...recursive, ...fins, ...subtypes, ...checkedRecords, ...specialized].sort());
+	for(const cell of observed)
+	{
+		assert.ok([...(specialized.includes(cell.shape) ? ["signature"] : []), "parameter", "result", "field"].includes(cell.position));
+		if((cell.shape === "checked-record"
+			&& !["dotnet", "java", "kotlin", "php-native", "php-wasm", "python", "ruby", "rust", "wit-wasi"].includes(profile))
+			|| cell.shape === "subtype" && !nominalSubtype
+			|| cell.shape === "fin" && !nominalFin)
+			assert.notEqual(cell.position, "field");
+		for(const [stageName, stage] of Object.entries(cell.stages))
+		{
+			assert.equal(stage.state, "passed");
+			if(cell.shape === "checked-record")
+			{
+				const baseline = cell.position === "field" ? []
+					: checkedRecordGroups.flatMap(group =>
+						(cell.position === "result" ? ["ordinary-source", "result-only-ordinary-source"] : ["ordinary-source"])
+							.map(route => `${profile === "php-wasm" ? "checked-record" : "checked-record-native"}-${group}-${route}-installed`));
+				const modes = cell.position === "result"
+					? ["full", "result-only"] : ["full"];
+				const nested = profile === "dotnet"
+					? modes.map(mode => `nested-checked-record-dotnet-ordinary-${mode}-installed`)
+					: ["java", "kotlin"].includes(profile)
+						? modes.map(mode => `nested-checked-record-jvm-ordinary-${mode}-installed`)
+						: profile === "php-native"
+							? modes.map(mode => `nested-checked-record-php-ordinary-${mode}-installed`)
+							: profile === "python"
+								? modes.map(mode => `nested-checked-record-python-ordinary-${mode}-installed`)
+							: profile === "ruby"
+								? modes.map(mode => `nested-checked-record-ruby-ordinary-${mode}-installed`)
+								: profile === "rust"
+									? modes.map(mode => `nested-checked-record-rust-ordinary-${mode}-installed`)
+								: profile === "wit-wasi"
+									? modes.map(mode => `nested-checked-record-wit-ordinary-${mode}-installed`)
+									: profile === "php-wasm"
+										? modes.map(mode => `nested-checked-record-php-wasm-ordinary-${mode}-installed`)
+										: [];
+				assert.deepEqual(stage.evidence, [...baseline, ...nested]);
+				continue;
+			}
+			// Structural Fin keeps existing scalar/container evidence; fields cite only the new record runs.
+			if(cell.shape === "fin")
+			{
+				const scalarCounters = stageName !== "installedExecution" ? []
+					: ["java", "kotlin"].includes(profile) ? ["java", "kotlin"]
+						: ["php-native", "wit-wasi", "ruby", "dotnet"].includes(profile) ? [profile] : [];
+				if(phpWasmFin)
+				{
+					const evidence = cell.position === "field" ? ["php-wasm-fin-records-ordinary-installed"]
+						: ["php-wasm-fin-products-ordinary-installed", "php-wasm-direct-fin-scalar-ordinary-installed", "php-wasm-direct-fin-containers-ordinary-installed"];
+					assert.deepEqual(stage.evidence, evidence);
+					continue;
+				}
+				const earlierFinEvidence = cell.position === "field"
+					? (finBatch ? [`fin-batch-${profile}-record-ordinary-installed`] : finRuntimes.map(runtime => `fin-${runtime}-record-ordinary-installed`))
+					: [finEvidence, `native-fin-containers-${specializationEvidence}-installed`
+						, ...finRuntimes.flatMap(runtime => ["product", "product-array"].map(family => `fin-${runtime}-${family}-ordinary-installed`))
+						, ...(["rust", "dotnet"].includes(profile) ? ["product", "product-array"].map(family => `fin-batch-${profile}-${family}-ordinary-installed`) : [])
+						, ...scalarCounters.map(caller => `fin-dispatch-${caller}-ordinary-installed`)
+						, ...(stageName === "installedExecution" && ["python", "rust"].includes(profile) ? [`hosted-container-${profile}-ordinary-source-dispatch`] : [])];
+				assert.deepEqual(stage.evidence, [...earlierFinEvidence
+					, ...(cell.position === "field" ? ["record"] : ["product", "product-array"]).flatMap(hostedFinEvidence)]);
+				continue;
+			}
+				if(cell.shape === "subtype")
+				{
+					assert.deepEqual(stage.evidence, [...(cell.position === "field" ? []
+						: [profile === "php-wasm" ? "php-wasm-subtype-ordinary-installed" : `native-subtype-${specializationEvidence}-installed`
+							, ...structuralSubtypeEvidence(profile, "ordinary")])
+						, ...nominalSubtypeEvidence, ...primitiveSubtypeEvidence
+						, ...(profile === "php-wasm" ? ["recursive-subtype-php-wasm-ordinary-installed"] : [])]);
+				continue;
+				}
+			if(specialized.includes(cell.shape))
+			{
+				assert.deepEqual(stage.evidence, [`native-specializations-${specializationEvidence}-installed`
+					, ...genericRecordReports.map(group => `generic-record-specialized-${group}-installed`)
+					, ...(stageName === "installedExecution" ? (profile === "python" ? ["python311", "python312"] : [["java", "kotlin"].includes(profile) ? "java-kotlin" : profile]).map(group => `generic-record-array-${group}-local`) : [])]);
+				continue;
+			}
+			assert.deepEqual(stage.evidence, [specialized.includes(cell.shape) ? `native-specializations-${specializationEvidence}-installed` : recursive.includes(cell.shape) ? recursiveEvidence : variants.includes(cell.shape) ? variantEvidence : aliases.includes(cell.shape) ? aliasEvidence : lists.includes(cell.shape) ? ["java", "kotlin"].includes(profile) ? "jvm-lists-installed" : profile === "php-native" ? "php-native-lists-ffi-installed" : `${profile}-lists-installed` : compounds.includes(cell.shape) ? compoundEvidence : cell.shape === "char" ? "native-installed-char" : ["usize", "isize"].includes(cell.shape) ? "platform-words-installed" : evidence]);
+		}
+	}
+	for(const cell of cells.filter(cell => cell.profile === profile
+		&& cell.path === "ordinary-source" && !observed.includes(cell)
+		&& !cell.stages.installedExecution.evidence.some(id => ["python-callables-installed", "python-structured-callables-installed", "python-recursive-callables-installed", "ruby-callables-installed", "ruby-structured-callables-installed", "ruby-recursive-callables-installed", "rust-callables-installed", "rust-structured-callables-installed", "rust-recursive-callables-installed", "cpp-callables-installed", "dotnet-callables-installed", "dotnet-structured-callables-installed", "dotnet-recursive-callables-installed", "jvm-callables-installed", "jvm-structured-callables-installed", "jvm-recursive-callables-installed", "php-native-callables-installed", "php-native-structured-callables-installed", "php-native-recursive-callables-installed", "php-wasm-callables-installed", "php-wasm-structured-callables-installed", "php-wasm-recursive-callables-installed", "php-wasm-owned-callback-results-installed", "wit-wasi-callables-installed", "wit-wasi-structured-callables-installed", "wit-wasi-recursive-callables-installed"].includes(id))))
+		assert.equal(cell.stages.installedExecution.state, "unreviewed", cell.id);
+});
+
+for(const [name, change] of [
+	["primitive", schema => schema.$defs.typeRef.oneOf[0].properties.name.enum.push("decimal")]
+	, ["constructor", schema => schema.$defs.typeRef.oneOf[3].properties.constructor.enum.push("map")]
+	, ["named kind", schema => schema.$defs.typeDefinition.properties.kind.enum.push("union")]
+	, ["type reference", schema => schema.$defs.typeRef.oneOf.push({ properties: { kind: { const: "dependent" } } })]
+	, ["declaration", schema => schema.$defs.declaration.properties.kind.enum.push("event")]
+	, ["delivery", schema => schema.$defs.declaration.properties.resultMode.enum.push("stream")]
+	, ["ownership", schema => schema.$defs.ownershipSite.properties.ownership.enum.push("shared")]
+	, ["callback ownership", schema => schema.$defs.parameter.properties.ownership.enum.push("shared")]
+	, ["callback effect", schema => schema.$defs.callable.properties.effects.items.enum.push("transaction")]
+]) test(`a new ${name} fails until its type-surface classification is reviewed`, () => {
+	const irSchema = clone(contracts.irSchema);
+	change(irSchema);
+	assert.throws(() => validateTypeSurface(document, { ...contracts, irSchema }), /unclassified or missing/);
+});
+
+test("missing, duplicate, foreign and unclassified source/profile entries cannot disappear", () => {
+	for(const change of [
+		value => value.shapes.splice(value.shapes.findIndex(shape => shape.id === "proof"), 1)
+		, value => value.shapes.push({ ...value.shapes[0], id: "unclassified" })
+		, value => value.profiles.splice(0, 1)
+		, value => value.profiles.push(clone(value.profiles[0]))
+		, value => { value.profiles[0].consumer = "php-native"; }
+		, value => { value.profiles[0].language = "php"; }
+		, value => { value.shapes.find(shape => shape.id === "nat").ir = "primitive:int"; }
+	]){
+		const candidate = clone(document);
+		change(candidate);
+		assert.throws(() => validateTypeSurface(candidate, contracts));
+	}
+	const consumers = clone(contracts.consumers);
+	consumers.consumers.push({ ...consumers.consumers[0], id: "new-language" });
+	assert.throws(() => validateTypeSurface(document, { ...contracts, consumers }), /consumer profiles/);
+});
+
+test("refinements, host null and erased proofs retain their individual value positions", () => {
+	const cells = typeSurfaceCells(document, contracts);
+	for(const shape of ["fin", "subtype", "host-null", "proof"])
+	{
+		const selected = cells.filter(cell => cell.profile === "python" && cell.path === "ordinary-source" && cell.shape === shape);
+		assert.deepEqual(selected.map(cell => cell.position), document.positions.filter(position => shape === "proof" || position !== "signature"));
+		assert.ok(selected.every(cell => cell.requirement === (shape === "proof" ? "required-erasure" : "required")));
+	}
+});
+
+test("checked Subtype evidence preserves structural inputs and results and limits nominal fields to all seventeen installed profiles", async () => {
+	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "subtype");
+	const allInstalled = cells.filter(cell => cell.stages.installedExecution.state === "passed");
+	const fields = allInstalled.filter(cell => cell.position === "field");
+	const nominalProfiles = [...nominalSubtypeNpmProfiles
+		, ...nominalSubtypeNativeProfiles, ...nominalSubtypePerlProfiles
+		, ...nominalSubtypePythonProfiles, ...nominalSubtypeRubyProfiles
+		, ...nominalSubtypeRustProfiles, ...nominalSubtypeDotnetProfiles
+		, ...nominalSubtypeJvmProfiles, ...nominalSubtypePhpProfiles
+		, ...nominalSubtypeWitProfiles, ...nominalSubtypeBrowserProfiles
+		, ...nominalSubtypePhpWasmProfiles];
+	const nominalLane = profile => nominalSubtypeNpmProfiles.includes(profile) ? "npm" : nominalSubtypeJvmProfiles.includes(profile) ? "jvm" : nominalSubtypePhpProfiles.includes(profile) ? "php" : nominalSubtypeWitProfiles.includes(profile) ? "wit" : nominalSubtypeBrowserProfiles.includes(profile) ? "browser" : nominalSubtypePhpWasmProfiles.includes(profile) ? "php-wasm" : ["perl", "python", "ruby", "rust", "dotnet"].includes(profile) ? profile : "native";
+	const primitiveLane = profile => nominalPrimitiveSubtypeNpmProfiles.includes(profile) ? "npm" : nominalPrimitiveSubtypePythonProfiles.includes(profile) ? "python" : nominalPrimitiveSubtypeBrowserProfiles.includes(profile) ? "browser" : nominalPrimitiveSubtypeNativeProfiles.includes(profile) ? "native" : nominalPrimitiveSubtypePerlProfiles.includes(profile) ? "perl" : nominalPrimitiveSubtypeRubyProfiles.includes(profile) ? "ruby" : nominalPrimitiveSubtypeRustProfiles.includes(profile) ? "rust" : nominalPrimitiveSubtypeDotnetProfiles.includes(profile) ? "dotnet" : nominalPrimitiveSubtypePhpProfiles.includes(profile) ? "php" : nominalPrimitiveSubtypePhpWasmProfiles.includes(profile) ? "php-wasm" : nominalPrimitiveSubtypeWitProfiles.includes(profile) ? "wit" : nominalPrimitiveSubtypeJvmProfiles.includes(profile) ? "jvm" : null;
+	const primitiveNominal = cell => primitiveLane(cell.profile)
+		? ["full", "result-only"].map(mode => `nominal-primitive-subtype-${primitiveLane(cell.profile)}-${cell.path === "ordinary-source" ? "ordinary" : "reviewed"}-${mode}-installed`) : [];
+	assert.deepEqual(fields.map(cell => cell.id).sort(), nominalProfiles.flatMap(profile => ["ordinary-source", "reviewed-ir"].map(path => `${profile}/subtype/${path}/field`)).sort());
+	for(const cell of fields)
+	{
+		if(nominalPrimitiveSubtypeNpmProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeNpmField);
+		if(nominalPrimitiveSubtypePythonProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypePythonField);
+		if(nominalPrimitiveSubtypeBrowserProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeBrowserField);
+		if(nominalPrimitiveSubtypeNativeProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeNativeField);
+		if(nominalPrimitiveSubtypePerlProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypePerlField);
+		if(nominalPrimitiveSubtypeRubyProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeRubyField);
+		if(nominalPrimitiveSubtypeRustProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeRustField);
+		if(nominalPrimitiveSubtypeDotnetProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeDotnetField);
+		if(nominalPrimitiveSubtypePhpProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypePhpField);
+		if(nominalPrimitiveSubtypePhpWasmProfiles.includes(cell.profile)) assert.equal(cell.hostType, recursiveSubtypePhpWasmField);
+		if(nominalPrimitiveSubtypeWitProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeWitField);
+		if(nominalPrimitiveSubtypeJvmProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeJvmField);
+		for(const stage of Object.values(cell.stages))
+			assert.deepEqual(stage.evidence, [
+				...["full", "result-only"].map(mode => `nominal-subtype-${nominalLane(cell.profile)}-${cell.path === "ordinary-source" ? "ordinary" : "reviewed"}-${mode}-installed`)
+				, ...primitiveNominal(cell)
+				, ...(cell.profile === "php-wasm" ? [`recursive-subtype-php-wasm-${cell.path === "ordinary-source" ? "ordinary" : "reviewed"}-installed`] : [])]);
+	}
+	const installed = allInstalled.filter(cell => ["parameter", "result"].includes(cell.position));
+	assert.equal(allInstalled.length, installed.length + 34);
+	const primitive = installed.map(cell => {
+		const nominal = nominalProfiles.includes(cell.profile)
+			? ["full", "result-only"].map(mode => `nominal-subtype-${nominalLane(cell.profile)}-${cell.path === "ordinary-source" ? "ordinary" : "reviewed"}-${mode}-installed`) : [];
+		const exactWit = nominalPrimitiveSubtypeWitProfiles.includes(cell.profile);
+		const exactPhpWasm = nominalPrimitiveSubtypePhpWasmProfiles.includes(cell.profile);
+		// Both hosts replace the whole host type rather than appending the generic suffixes.
+		const exactHost = exactPhpWasm || exactWit;
+		if(exactWit)
+			assert.equal(cell.hostType, cell.position === "parameter"
+				? nominalPrimitiveSubtypeWitParameter : nominalPrimitiveSubtypeWitResult);
+		else if(exactPhpWasm)
+			assert.equal(cell.hostType, cell.position === "parameter"
+				? recursiveSubtypePhpWasmParameter : recursiveSubtypePhpWasmResult);
+		else if(nominal.length)
+		{
+			const hostSuffix = nominalSubtypeNpmProfiles.includes(cell.profile) ? nominalSubtypeNpmHostSuffix : nominalSubtypeJvmProfiles.includes(cell.profile) ? nominalSubtypeJvmHostSuffix : nominalSubtypePhpProfiles.includes(cell.profile) ? nominalSubtypePhpHostSuffix : nominalSubtypeWitProfiles.includes(cell.profile) ? nominalSubtypeWitHostSuffix : nominalSubtypeBrowserProfiles.includes(cell.profile) ? nominalSubtypeBrowserHostSuffix : nominalSubtypePhpWasmProfiles.includes(cell.profile) ? nominalSubtypePhpWasmHostSuffix : cell.profile === "perl" ? nominalSubtypePerlHostSuffix : cell.profile === "python" ? nominalSubtypePythonHostSuffix : cell.profile === "ruby" ? nominalSubtypeRubyHostSuffix : cell.profile === "rust" ? nominalSubtypeRustHostSuffix : cell.profile === "dotnet" ? nominalSubtypeDotnetHostSuffix : nominalSubtypeNativeHostSuffix;
+			assert.ok(cell.hostType.endsWith(hostSuffix));
+			cell = { ...cell, hostType: cell.hostType.slice(0, -hostSuffix.length) };
+		}
+		const expected = structuralSubtypeEvidence(cell.profile, cell.path === "ordinary-source" ? "ordinary" : "reviewed");
+		const recursivePhpWasm = exactPhpWasm
+			? [`recursive-subtype-php-wasm-${cell.path === "ordinary-source" ? "ordinary" : "reviewed"}-installed`] : [];
+		const suffix = "; also in generated structural containers";
+		if(!exactHost) assert.ok(cell.hostType.endsWith(suffix));
+		const stages = Object.fromEntries(Object.entries(cell.stages).map(([name, stage]) => {
+			assert.deepEqual(stage.evidence.filter(id => id.startsWith("nominal-subtype-")), nominal);
+			assert.deepEqual(stage.evidence.filter(id => id.startsWith("nominal-primitive-subtype-")), primitiveNominal(cell));
+			assert.deepEqual(stage.evidence.filter(id => id.startsWith("recursive-subtype-")), recursivePhpWasm);
+			assert.deepEqual(stage.evidence.filter(id => id.startsWith("structural-subtype-")), expected);
+			return [name, { ...stage, evidence: stage.evidence.filter(id => !expected.includes(id) && !nominal.includes(id) && !primitiveNominal(cell).includes(id) && !recursivePhpWasm.includes(id)) }];
+		}));
+		// Require the exact nominal, primitive-base and structural supplements, then retain
+		// every earlier primitive-receipt assertion below. Callback cells stay open.
+		return {
+			...cell
+			, stages
+			, hostType: exactHost
+				? cell.hostType : cell.hostType.slice(0, -suffix.length)
+		};
+	});
+	const ordinary = primitive.filter(cell => cell.path === "ordinary-source");
+	const reviewed = primitive.filter(cell => cell.path === "reviewed-ir");
+	// Both source routes cover top-level parameters/results in all seventeen profiles.
+	const native = ["c", "cpp", "python", "rust", "ruby", "dotnet", "java", "kotlin", "php-native", "wit-wasi"];
+	const browser = ["browser-javascript", "browser-react", "browser-worker"];
+	assert.equal(ordinary.length, 2 * (2 + native.length + 1 + browser.length + 1));
+	assert.equal(reviewed.length, 34);
+	assert.equal(installed.length, ordinary.length + reviewed.length);
+	assert.deepEqual([...new Set(installed.map(cell => cell.profile))].sort(), ["node-javascript", "node-typescript", ...native, "perl", ...browser, "php-wasm"].sort());
+	assert.deepEqual([...new Set(installed.map(cell => cell.position))], ["parameter", "result"]);
+	for(const cell of ordinary)
+	{
+		assert.equal(cell.path, "ordinary-source");
+		if(cell.profile === "php-wasm")
+		{
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["php-wasm-subtype-ordinary-installed"]);
+			assert.match(cell.hostType, /selected Lean constructor|proof-backed Lean result/u);
+			continue;
+		}
+		if(cell.profile === "perl")
+		{
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["perl-relocated-subtype-hosted-installed", "perl-relocated-supplemental-hosted-installed"]);
+			assert.equal(cell.hostType, cell.position === "parameter" ? "Primitive base value checked by the named Lean constructor" : "Constructed subtype projected to its primitive base value");
+			continue;
+		}
+		if(native.includes(cell.profile))
+		{
+			assert.match(cell.stages.installedExecution.evidence[0], /^native-subtype-[a-z-]+-installed$/u);
+			if(cell.profile === "python")
+				assert.equal(cell.hostType, cell.position === "parameter" ? "Declared primitive base value checked by the named Lean constructor" : "Constructed subtype projected to its primitive base value");
+			else if(cell.profile === "wit-wasi") assert.match(cell.hostType, /selected Lean constructor|proof-backed Lean result/u);
+			else assert.match(cell.hostType, /checked by the exported Lean validator|proof-backed Lean result/u);
+			continue;
+		}
+		assert.deepEqual(cell.stages.installedExecution.evidence, [browser.includes(cell.profile) ? "npm-browser-refinements-installed" : "npm-subtype-refinements-installed"]);
+		assert.match(cell.hostType, /declared primitive/u);
+	}
+	assert.deepEqual([...new Set(reviewed.map(cell => cell.profile))].sort(), ["c", "cpp", "node-javascript", "node-typescript", "php-wasm", ...reviewedSubtypeNativeProfiles, ...browser].sort());
+	const references = await reviewedSubtypeNativeReferences();
+	for(const cell of reviewed)
+	{
+		if(browser.includes(cell.profile))
+		{
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["reviewed-browser-subtype-installed"]);
+			for(const stage of Object.values(cell.stages)) assert.equal(stage.state, "passed");
+			assert.match(cell.hostType, /declared primitive/u);
+			continue;
+		}
+		if(reviewedSubtypeNativeProfiles.includes(cell.profile))
+		{
+			assert.deepEqual(cell.stages.installedExecution.evidence, references.filter(item => item.profiles.includes(cell.profile)).map(item => item.id));
+			for(const stage of Object.values(cell.stages)) assert.equal(stage.state, "passed");
+			continue;
+		}
+		if(cell.profile === "php-wasm")
+		{
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["php-wasm-subtype-reviewed-installed"]);
+			for(const stage of Object.values(cell.stages)) assert.equal(stage.state, "passed");
+			assert.match(cell.hostType, /selected Lean constructor|proof-backed Lean result/u);
+			continue;
+		}
+		const native = ["c", "cpp"].includes(cell.profile);
+		assert.deepEqual(cell.stages.installedExecution.evidence, [`reviewed-subtype-${native ? "c-cpp" : "npm"}-installed`]);
+		for(const stage of Object.values(cell.stages)) assert.equal(stage.state, "passed");
+		assert.match(cell.hostType, native ? /checked by the exported Lean validator|proof-backed Lean result/u : /declared primitive/u);
+	}
+});
+
+test("browser Fin evidence promotes only top-level parameters and results from the shared npm archive", () => {
+	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "fin" && cell.stages.installedExecution.evidence.includes("npm-browser-refinements-installed"));
+	assert.equal(cells.length, 6);
+	assert.deepEqual([...new Set(cells.map(cell => cell.profile))].sort(), ["browser-javascript", "browser-react", "browser-worker"]);
+	assert.deepEqual([...new Set(cells.map(cell => cell.position))], ["parameter", "result"]);
+	for(const cell of cells)
+	{
+		assert.equal(cell.path, "ordinary-source");
+		assert.match(cell.hostType, /bigint checked as 0 <= value < n/u);
+		for(const stage of Object.values(cell.stages)) assert.equal(stage.state, "passed");
+	}
+	const evidence = document.evidence.find(entry => entry.id === "npm-browser-refinements-installed");
+	assert.match(evidence.command, /LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit/u);
+	assert.match(evidence.scope, /Chromium [\d.]+, Firefox [\d.]+, WebKit [\d.]+ pages, React effects/u);
+});
+
+test("scalar Fin rejection evidence backs every npm Fin cell's generation and compilation claims", () => {
+	const evidence = document.evidence.find(entry => entry.id === "npm-scalar-fin-rejection-installed");
+	assert.equal(evidence.kind, "installed");
+	assert.match(evidence.scope, /scalar 2, callable 3, copied 4, record 5, compound 6, nominal 7/u);
+	assert.match(evidence.scope, /without the panic diagnostic the pre-repair wrapper printed to stderr/u);
+	assert.equal(evidence.artifacts.length, 7);
+	assert.ok(evidence.files.some(file => file.path === "src/build/component-scalar-adapters.mjs"));
+	// The browser receipt cites the same repaired revision, so no Fin claim points at the pre-repair artifacts.
+	assert.equal(document.evidence.find(entry => entry.id === "npm-browser-refinements-installed").revision, evidence.revision);
+	for(const id of ["npm-fin-refinements-ordinary-source", "npm-browser-fin-ordinary-source"])
+	{
+		const cell = document.observations.find(entry => entry.id === id);
+		for(const stage of ["generation", "compilation", "installedExecution"]) assert.ok(cell.stages[stage].evidence.includes(evidence.id), `${id} ${stage}`);
+		assert.match(cell.stages.compilation.note, /fails the call before the typed Lean wrapper or the source runs/u);
+		assert.doesNotMatch(cell.limitations.join("\n"), /panic/u);
+	}
+});
+
+test("unknown fields, versions, evidence states and unsafe paths fail closed", () => {
+	for(const change of [
+		value => { value.schemaVersion = 2; }
+		, value => { value.hiddenSupport = true; }
+		, value => { value.shapes[0].supported = true; }
+		, value => { value.observations[0].stages.generation.state = "probably-supported"; }
+		, value => { value.evidence[0].files[0].path = "../outside"; }
+		, value => { value.evidence[0].files[0].path = "/etc/passwd"; }
+		, value => { value.evidence[0].files[0].path = "C:/outside"; }
+		, value => { value.evidence[0].files[0].sha256 = "not-a-hash"; }
+	]){
+		const candidate = observationFixture();
+		change(candidate);
+		assert.throws(() => validateTypeSurface(candidate, contracts));
+	}
+});
+
+test("inspection, generation, installation and execution are distinct evidence stages", () => {
+	const candidate = observationFixture();
+	assert.equal(validateTypeSurface(candidate, contracts), true);
+	candidate.observations[0].stages.generation.state = "passed";
+	assert.throws(() => validateTypeSurface(candidate, contracts), /inspection cannot establish a passing test/);
+	candidate.evidence[0].kind = "test";
+	assert.equal(validateTypeSurface(candidate, contracts), true);
+	candidate.observations[0].stages.installedExecution = stage("passed");
+	assert.throws(() => validateTypeSurface(candidate, contracts), /installed execution needs archive evidence/);
+	candidate.evidence[0].kind = "installed";
+	assert.throws(() => validateTypeSurface(candidate, contracts), /installed evidence needs exact archives/);
+	candidate.evidence[0].artifacts = [{ path: "example-1.0.0.tgz", sha256: "f".repeat(64) }];
+	assert.throws(() => validateTypeSurface(candidate, contracts), /installed execution lacks analysis/);
+	for(const name of candidate.stages) candidate.observations[0].stages[name] = stage("passed");
+	assert.equal(validateTypeSurface(candidate, contracts), true);
+	assert.equal(typeSurfaceGapReport(candidate, contracts).installedTestedCells, 2);
+	candidate.observations[0].hostTypes.nat.result = null;
+	assert.throws(() => validateTypeSurface(candidate, contracts), /installed execution needs host types/);
+});
+
+test("missing evidence and ambiguous overlapping observations are rejected", () => {
+	const candidate = observationFixture();
+	candidate.observations[0].stages.generation.evidence = ["missing"];
+	assert.throws(() => validateTypeSurface(candidate, contracts), /unknown evidence/);
+	candidate.observations[0].stages.generation.evidence = [];
+	assert.throws(() => validateTypeSurface(candidate, contracts), /missing or unexplained evidence/);
+	candidate.observations[0].stages.generation = stage("inspected");
+	candidate.observations.push({ ...clone(candidate.observations[0]), id: "conflicting-audit" });
+	assert.throws(() => validateTypeSurface(candidate, contracts), /Overlapping observations/);
+});
+
+test("partial evidence cannot leak across a position, source path or language profile", () => {
+	const candidate = observationFixture();
+	const cells = typeSurfaceCells(candidate, contracts);
+	assert.equal(cells.filter(cell => cell.observation !== null).length, 2);
+	for(const id of [
+		"node-javascript/nat/ordinary-source/field"
+		, "node-javascript/nat/ordinary-source/callback-parameter"
+		, "node-javascript/nat/reviewed-ir/parameter"
+		, "node-typescript/nat/ordinary-source/parameter"
+		, "browser-worker/nat/ordinary-source/parameter"
+	]){
+		const cell = cells.find(entry => entry.id === id);
+		assert.equal(cell.hostType, null, id);
+		assert.equal(cell.stages.generation.state, "unreviewed", id);
+	}
+	cells.find(cell => cell.observation !== null).stages.generation.state = "passed";
+	assert.equal(candidate.observations[0].stages.generation.state, "inspected", "Returned evidence cannot mutate the inventory");
+});
+
+test("rejections and partial ranges remain required work, and exclusions need review evidence", () => {
+	const candidate = observationFixture();
+	candidate.observations[0].stages.generation = stage("rejected");
+	const report = typeSurfaceGapReport(candidate, contracts);
+	assert.equal(report.complete, false);
+	assert.ok(report.gaps.some(gap => gap.state === "rejected" && gap.implementationOwner === 1218 && gap.requirement === "required"));
+	candidate.observations[0].stages.generation = stage("limited");
+	candidate.evidence[0].kind = "test";
+	assert.throws(() => validateTypeSurface(candidate, contracts), /limited result needs its boundary/);
+	candidate.observations[0].limitations = ["Only small integers were tested."];
+	assert.equal(validateTypeSurface(candidate, contracts), true);
+	candidate.baseline.exclusions.push({ profile: "node-javascript", shape: "nat", reason: "Test exclusion", decisionEvidence: "test-evidence", followUp: 1218 });
+	assert.throws(() => validateTypeSurface(candidate, contracts), /recorded review decision/);
+});
+
+test("the inventory command keeps unknown filters closed and emits unreviewed cells as JSON", async () => {
+	const result = await execute(process.execPath, ["scripts/type-surface.mjs", "--json", "--profile", "wit-wasi", "--shape", "resource"], { cwd: root });
+	const report = JSON.parse(result.stdout);
+	assert.equal(report.complete, false);
+	assert.equal(report.selectedCells.length, 10);
+	assert.equal(report.cells, 10);
+	assert.equal(report.profiles, 1);
+	assert.equal(report.shapes, 1);
+	assert.equal(report.requiredGaps, report.gaps.length);
+	assert.ok(report.selectedCells.every(cell => cell.profile === "wit-wasi" && cell.shape === "resource"));
+	assert.ok(report.gaps.every(gap => gap.cell.startsWith("wit-wasi/resource/") && gap.state === "unreviewed"));
+	const recursive = JSON.parse((await execute(process.execPath, ["scripts/type-surface.mjs", "--json", "--profile", "wit-wasi", "--shape", "recursive"], { cwd: root })).stdout);
+	assert.equal(recursive.complete, true); assert.equal(recursive.requiredGaps, 0); assert.equal(recursive.selectedCells.length, 10);
+	const complete = JSON.parse((await execute(process.execPath, ["scripts/type-surface.mjs", "--json", "--profile", "php-wasm", "--shape", "char"], { cwd: root })).stdout);
+	assert.equal(complete.complete, true); assert.equal(complete.requiredGaps, 0);
+	await assert.rejects(execute(process.execPath, ["scripts/type-surface.mjs", "--json", "--profile", "unknown"], { cwd: root }), /Unknown profile/);
+	await assert.rejects(execute(process.execPath, ["scripts/type-surface.mjs", "--unknown"], { cwd: root }), /Use --json/);
+});
+
+test("changing an audited source fails before the inventory can feed a report", async () => {
+	assert.ok(document.evidence.length > 0, "The initial audit must record evidence, not only empty cells");
+	const temporary = await mkdtemp(path.join(tmpdir(), "lean-type-surface-"));
+	try
+	{
+		const files = [...new Set([
+			"docs/type-surface.v1.json"
+			, "schema/binding-ir.schema.json"
+			, "docs/consumer-support.v1.json"
+			, ...document.evidence.flatMap(entry => entry.files.map(file => file.path))
+		])];
+		for(const file of files)
+		{
+			const source = path.join(root, file), destination = path.join(temporary, file);
+			await mkdir(path.dirname(destination), { recursive: true });
+			try
+			{ await link(source, destination); }
+			catch(error)
+			{
+				if(error.code !== "EXDEV") throw error;
+				await copyFile(source, destination);
+			}
+		}
+		assert.ok((await readTypeSurface({ repository: temporary })).document);
+		const file = document.evidence[0].files[0].path;
+		const target = path.join(temporary, file);
+		const changed = `${await readFile(target, "utf8")}\n// changed\n`;
+		await rm(target);
+		await writeFile(target, changed);
+		await assert.rejects(readTypeSurface({ repository: temporary }), /stale source evidence/);
+	}
+	finally
+{ await rm(temporary, { recursive: true, force: true }); }
+});

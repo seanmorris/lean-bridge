@@ -1,0 +1,1291 @@
+{
+  "bindingIrSha256": "0b023197b9eda95e08827f1f8487879ce65ed2dc74218fadbcaa0aa1d4427d4a",
+  "browser": {
+    "deployments": [
+      {
+        "files": [
+          {
+            "bytes": 285,
+            "path": "assets/__vite-browser-external-D513FCGW.js",
+            "sha256": "6be8662bb6edfac30fc9d7aab4022a2da16dc516e5443fd68f77f860337e2fff"
+          },
+          {
+            "bytes": 11991,
+            "path": "assets/index-CL8Aaqa5.js",
+            "sha256": "c1d9d2ab4141522b74fa4a89054ac2f0cb252e6675907c9e20a5219e1435b04a"
+          },
+          {
+            "bytes": 6488025,
+            "path": "assets/main-DEI6BCfG.wasm",
+            "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+          },
+          {
+            "bytes": 56798,
+            "path": "assets/mutualcheckedrecords-4ca822048b145659.so-unklpjy5.wasm",
+            "sha256": "ef7f35c2a442b72a7896ed084ce2636c3b33dc6cfd03490d4613a69558d14ff7"
+          },
+          {
+            "bytes": 3578503,
+            "path": "assets/mutualcheckedrecords-DhlwehG5.js",
+            "sha256": "1d5c5abc4e6654f14cbd1a27ea84f4e34182ddaaf79d91cad4b5d832cf2529f4"
+          },
+          {
+            "bytes": 2199,
+            "path": "assets/preload-helper-CZj_vqJa.js",
+            "sha256": "946b424c03f3f20989004f90ee0afc60fb0dec4071f964ff71718f4258f9a501"
+          },
+          {
+            "bytes": 1180,
+            "path": "assets/rolldown-runtime-BPOCksWG.js",
+            "sha256": "5d847676e890d2d0e8664006e0d0bdaf390ffc81b2edb71c17956c311b30c5c4"
+          },
+          {
+            "bytes": 396,
+            "path": "index.html",
+            "sha256": "e0dc22e457aa269cdb9096d17cd1c114b8981430aec995297df15954ea415d9a"
+          }
+        ],
+        "modulePaths": [
+          "node_modules/@lean-bridge/runtime/index.mjs",
+          "node_modules/@lean-bridge/runtime/internal/binding-ir/canonical.mjs",
+          "node_modules/@lean-bridge/runtime/internal/binding-ir/contract.mjs",
+          "node_modules/@lean-bridge/runtime/internal/binding-ir/sha256.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-callable-runtime.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-callables.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-copied-codec.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-copied-runtime.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-copied.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-owned-wasm.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-records.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-recursive-abi.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-recursive-codec.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-recursive-ownership.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-recursive.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-runtime.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-scalar-codec.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-scalars.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-structured-callable-runtime.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-structured-callables.mjs",
+          "node_modules/@lean-bridge/runtime/internal/main.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-bindings.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-borrow-registry.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-callbacks.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-calls.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-component-runtime.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-control.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-registry.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-scalars.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-values.mjs",
+          "node_modules/@lean-bridge/runtime/internal/refinements.mjs",
+          "node_modules/mutualcheckedrecords/index.mjs",
+          "node_modules/mutualcheckedrecords/internal/descriptor.mjs",
+          "node_modules/mutualcheckedrecords/internal/runtime.mjs",
+          "node_modules/mutualcheckedrecords/internal/validators.mjs"
+        ],
+        "sha256": "e5486cc3195979d59871f77fcf89a05bb13b28f24e8a115d4bc297e8922118e3",
+        "variant": "production",
+        "viteVersion": "8.2.1"
+      }
+    ],
+    "executions": [
+      {
+        "assets": [
+          {
+            "bytes": 6488025,
+            "mime": "application/wasm",
+            "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+            "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+            "status": 200
+          },
+          {
+            "bytes": 56798,
+            "mime": "application/wasm",
+            "path": "/corpus/nested/assets/mutualcheckedrecords-4ca822048b145659.so-unklpjy5.wasm",
+            "sha256": "ef7f35c2a442b72a7896ed084ce2636c3b33dc6cfd03490d4613a69558d14ff7",
+            "status": 200
+          }
+        ],
+        "engine": "chromium",
+        "failedAssetRecovery": true,
+        "lifecycle": {
+          "rerun": true
+        },
+        "observation": {
+          "hostVersion": "151.0.7922.34",
+          "module": "mutualcheckedrecords",
+          "profile": "browser-javascript",
+          "realm": "window",
+          "results": {
+            "calls": 678,
+            "checks": 1358,
+            "failures": {
+              "cycle": {
+                "message": "Cyclic copied value",
+                "name": "TypeError"
+              },
+              "depth": {
+                "message": "Component recursive value depth exceeded",
+                "name": "RangeError"
+              },
+              "echo-group-late-subtype": {
+                "message": "echoGroups.value0[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusTwo",
+                "name": "Error"
+              },
+              "erased-proof": {
+                "message": "first.value0 does not match the declared copied fields",
+                "name": "TypeError"
+              },
+              "group-late-subtype": {
+                "message": "groups.value0[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusOne",
+                "name": "Error"
+              },
+              "inactive-field": {
+                "message": "first.value0.next.value does not match the declared copied fields",
+                "name": "TypeError"
+              },
+              "late-subtype": {
+                "message": "first.value0.next.value.packet.value was rejected by MutualCheckedRecords.plusOne",
+                "name": "Error"
+              },
+              "missing-active-field": {
+                "message": "first.value0.next.value does not match the declared copied fields",
+                "name": "TypeError"
+              },
+              "missing-field": {
+                "message": "first.value0 does not match the declared copied fields",
+                "name": "TypeError"
+              },
+              "nested-fin": {
+                "message": "first.value0.next.value.packet.mode must be bigint below 3",
+                "name": "TypeError"
+              },
+              "option-tag": {
+                "message": "first.value0.next must be Option tag",
+                "name": "TypeError"
+              },
+              "outer-fin": {
+                "message": "first.value0.mode must be bigint below 3",
+                "name": "TypeError"
+              },
+              "outer-record": {
+                "message": "first.value0 was rejected by MutualCheckedRecords.mkEnvelope",
+                "name": "Error"
+              },
+              "outer-subtype": {
+                "message": "first.value0.value was rejected by MutualCheckedRecords.plusOne",
+                "name": "Error"
+              },
+              "variant-tag": {
+                "message": "first.value0.next.value must be declared variant constructor",
+                "name": "TypeError"
+              }
+            },
+            "module": "mutualcheckedrecords",
+            "recoveries": 143,
+            "rejections": 271,
+            "route": "reviewed",
+            "snapshots": 678
+          },
+          "schemaVersion": 1
+        },
+        "variant": "production"
+      },
+      {
+        "assets": [
+          {
+            "bytes": 6488025,
+            "mime": "application/wasm",
+            "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+            "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+            "status": 200
+          },
+          {
+            "bytes": 56798,
+            "mime": "application/wasm",
+            "path": "/corpus/nested/assets/mutualcheckedrecords-4ca822048b145659.so-unklpjy5.wasm",
+            "sha256": "ef7f35c2a442b72a7896ed084ce2636c3b33dc6cfd03490d4613a69558d14ff7",
+            "status": 200
+          }
+        ],
+        "engine": "firefox",
+        "failedAssetRecovery": true,
+        "lifecycle": {
+          "rerun": true
+        },
+        "observation": {
+          "hostVersion": "153.0",
+          "module": "mutualcheckedrecords",
+          "profile": "browser-javascript",
+          "realm": "window",
+          "results": {
+            "calls": 678,
+            "checks": 1358,
+            "failures": {
+              "cycle": {
+                "message": "Cyclic copied value",
+                "name": "TypeError"
+              },
+              "depth": {
+                "message": "Component recursive value depth exceeded",
+                "name": "RangeError"
+              },
+              "echo-group-late-subtype": {
+                "message": "echoGroups.value0[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusTwo",
+                "name": "Error"
+              },
+              "erased-proof": {
+                "message": "first.value0 does not match the declared copied fields",
+                "name": "TypeError"
+              },
+              "group-late-subtype": {
+                "message": "groups.value0[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusOne",
+                "name": "Error"
+              },
+              "inactive-field": {
+                "message": "first.value0.next.value does not match the declared copied fields",
+                "name": "TypeError"
+              },
+              "late-subtype": {
+                "message": "first.value0.next.value.packet.value was rejected by MutualCheckedRecords.plusOne",
+                "name": "Error"
+              },
+              "missing-active-field": {
+                "message": "first.value0.next.value does not match the declared copied fields",
+                "name": "TypeError"
+              },
+              "missing-field": {
+                "message": "first.value0 does not match the declared copied fields",
+                "name": "TypeError"
+              },
+              "nested-fin": {
+                "message": "first.value0.next.value.packet.mode must be bigint below 3",
+                "name": "TypeError"
+              },
+              "option-tag": {
+                "message": "first.value0.next must be Option tag",
+                "name": "TypeError"
+              },
+              "outer-fin": {
+                "message": "first.value0.mode must be bigint below 3",
+                "name": "TypeError"
+              },
+              "outer-record": {
+                "message": "first.value0 was rejected by MutualCheckedRecords.mkEnvelope",
+                "name": "Error"
+              },
+              "outer-subtype": {
+                "message": "first.value0.value was rejected by MutualCheckedRecords.plusOne",
+                "name": "Error"
+              },
+              "variant-tag": {
+                "message": "first.value0.next.value must be declared variant constructor",
+                "name": "TypeError"
+              }
+            },
+            "module": "mutualcheckedrecords",
+            "recoveries": 143,
+            "rejections": 271,
+            "route": "reviewed",
+            "snapshots": 678
+          },
+          "schemaVersion": 1
+        },
+        "variant": "production"
+      },
+      {
+        "assets": [
+          {
+            "bytes": 6488025,
+            "mime": "application/wasm",
+            "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+            "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+            "status": 200
+          },
+          {
+            "bytes": 56798,
+            "mime": "application/wasm",
+            "path": "/corpus/nested/assets/mutualcheckedrecords-4ca822048b145659.so-unklpjy5.wasm",
+            "sha256": "ef7f35c2a442b72a7896ed084ce2636c3b33dc6cfd03490d4613a69558d14ff7",
+            "status": 200
+          }
+        ],
+        "engine": "webkit",
+        "failedAssetRecovery": true,
+        "lifecycle": {
+          "rerun": true
+        },
+        "observation": {
+          "hostVersion": "26.5",
+          "module": "mutualcheckedrecords",
+          "profile": "browser-javascript",
+          "realm": "window",
+          "results": {
+            "calls": 678,
+            "checks": 1358,
+            "failures": {
+              "cycle": {
+                "message": "Cyclic copied value",
+                "name": "TypeError"
+              },
+              "depth": {
+                "message": "Component recursive value depth exceeded",
+                "name": "RangeError"
+              },
+              "echo-group-late-subtype": {
+                "message": "echoGroups.value0[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusTwo",
+                "name": "Error"
+              },
+              "erased-proof": {
+                "message": "first.value0 does not match the declared copied fields",
+                "name": "TypeError"
+              },
+              "group-late-subtype": {
+                "message": "groups.value0[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusOne",
+                "name": "Error"
+              },
+              "inactive-field": {
+                "message": "first.value0.next.value does not match the declared copied fields",
+                "name": "TypeError"
+              },
+              "late-subtype": {
+                "message": "first.value0.next.value.packet.value was rejected by MutualCheckedRecords.plusOne",
+                "name": "Error"
+              },
+              "missing-active-field": {
+                "message": "first.value0.next.value does not match the declared copied fields",
+                "name": "TypeError"
+              },
+              "missing-field": {
+                "message": "first.value0 does not match the declared copied fields",
+                "name": "TypeError"
+              },
+              "nested-fin": {
+                "message": "first.value0.next.value.packet.mode must be bigint below 3",
+                "name": "TypeError"
+              },
+              "option-tag": {
+                "message": "first.value0.next must be Option tag",
+                "name": "TypeError"
+              },
+              "outer-fin": {
+                "message": "first.value0.mode must be bigint below 3",
+                "name": "TypeError"
+              },
+              "outer-record": {
+                "message": "first.value0 was rejected by MutualCheckedRecords.mkEnvelope",
+                "name": "Error"
+              },
+              "outer-subtype": {
+                "message": "first.value0.value was rejected by MutualCheckedRecords.plusOne",
+                "name": "Error"
+              },
+              "variant-tag": {
+                "message": "first.value0.next.value must be declared variant constructor",
+                "name": "TypeError"
+              }
+            },
+            "module": "mutualcheckedrecords",
+            "recoveries": 143,
+            "rejections": 271,
+            "route": "reviewed",
+            "snapshots": 678
+          },
+          "schemaVersion": 1
+        },
+        "variant": "production"
+      }
+    ],
+    "externalNetworkBlocked": true,
+    "framework": [],
+    "installedAssets": [
+      {
+        "bytes": 56798,
+        "path": "node_modules/mutualcheckedrecords/internal/wasm/mutualcheckedrecords-4ca822048b145659.so.wasm",
+        "sha256": "ef7f35c2a442b72a7896ed084ce2636c3b33dc6cfd03490d4613a69558d14ff7"
+      },
+      {
+        "bytes": 6488025,
+        "path": "node_modules/@lean-bridge/runtime/internal/main.wasm",
+        "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+      }
+    ],
+    "installedSourcesRemoved": true,
+    "requestedEngines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ]
+  },
+  "compilerFreePath": true,
+  "consumerCommit": "c3e8099992d277bdb68e8696de31f4ae8e070ee7",
+  "corpusSha256": "8390e405ab7eb6ffee07b57e9818e6996860d48094cb9003641baf53fb0233fd",
+  "inputs": {
+    "check.mjs": {
+      "bytes": 8751,
+      "sha256": "8390e405ab7eb6ffee07b57e9818e6996860d48094cb9003641baf53fb0233fd"
+    },
+    "index.html": {
+      "bytes": 259,
+      "sha256": "41b59ece64724a031e286e6080e8cb1d43b45ec4f6c131f7881adb061950ef37"
+    },
+    "javascript.mjs": {
+      "bytes": 887,
+      "sha256": "0c9e1032862a4dc0d1286212718b9336868e1e1a55ffacdc32ca850baf273818"
+    },
+    "package-lock.json": {
+      "bytes": 1334,
+      "sha256": "21b150630303f790fccbd4e60864afe03fa9a3787901ce11234321995b4fac94"
+    },
+    "package.json": {
+      "bytes": 291,
+      "sha256": "8421cf1960726fac46dbc5c0418b38aec9de285d66440e71174cdaaaab16a3ba"
+    },
+    "package.mjs": {
+      "bytes": 119,
+      "sha256": "9edcb78e1507d203ae2de7695e05b47cf14c619da1ac59a33278483929b02d13"
+    },
+    "plain.mjs": {
+      "bytes": 761,
+      "sha256": "f986b2be494f621c126e4579b1006641324f36fdeaf0a57ee6ca54540ece24f8"
+    },
+    "request.json": {
+      "bytes": 97,
+      "sha256": "30d529ac3e7c85ba958c8649322935b6f1bbe5193708025162020ee7a1f7a499"
+    }
+  },
+  "observation": {
+    "hostVersion": "151.0.7922.34",
+    "module": "mutualcheckedrecords",
+    "profile": "browser-javascript",
+    "realm": "window",
+    "results": {
+      "calls": 678,
+      "checks": 1358,
+      "failures": {
+        "cycle": {
+          "message": "Cyclic copied value",
+          "name": "TypeError"
+        },
+        "depth": {
+          "message": "Component recursive value depth exceeded",
+          "name": "RangeError"
+        },
+        "echo-group-late-subtype": {
+          "message": "echoGroups.value0[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusTwo",
+          "name": "Error"
+        },
+        "erased-proof": {
+          "message": "first.value0 does not match the declared copied fields",
+          "name": "TypeError"
+        },
+        "group-late-subtype": {
+          "message": "groups.value0[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusOne",
+          "name": "Error"
+        },
+        "inactive-field": {
+          "message": "first.value0.next.value does not match the declared copied fields",
+          "name": "TypeError"
+        },
+        "late-subtype": {
+          "message": "first.value0.next.value.packet.value was rejected by MutualCheckedRecords.plusOne",
+          "name": "Error"
+        },
+        "missing-active-field": {
+          "message": "first.value0.next.value does not match the declared copied fields",
+          "name": "TypeError"
+        },
+        "missing-field": {
+          "message": "first.value0 does not match the declared copied fields",
+          "name": "TypeError"
+        },
+        "nested-fin": {
+          "message": "first.value0.next.value.packet.mode must be bigint below 3",
+          "name": "TypeError"
+        },
+        "option-tag": {
+          "message": "first.value0.next must be Option tag",
+          "name": "TypeError"
+        },
+        "outer-fin": {
+          "message": "first.value0.mode must be bigint below 3",
+          "name": "TypeError"
+        },
+        "outer-record": {
+          "message": "first.value0 was rejected by MutualCheckedRecords.mkEnvelope",
+          "name": "Error"
+        },
+        "outer-subtype": {
+          "message": "first.value0.value was rejected by MutualCheckedRecords.plusOne",
+          "name": "Error"
+        },
+        "variant-tag": {
+          "message": "first.value0.next.value must be declared variant constructor",
+          "name": "TypeError"
+        }
+      },
+      "module": "mutualcheckedrecords",
+      "recoveries": 143,
+      "rejections": 271,
+      "route": "reviewed",
+      "snapshots": 678
+    },
+    "schemaVersion": 1
+  },
+  "observations": [
+    {
+      "engine": "chromium",
+      "observation": {
+        "hostVersion": "151.0.7922.34",
+        "module": "mutualcheckedrecords",
+        "profile": "browser-javascript",
+        "realm": "window",
+        "results": {
+          "calls": 678,
+          "checks": 1358,
+          "failures": {
+            "cycle": {
+              "message": "Cyclic copied value",
+              "name": "TypeError"
+            },
+            "depth": {
+              "message": "Component recursive value depth exceeded",
+              "name": "RangeError"
+            },
+            "echo-group-late-subtype": {
+              "message": "echoGroups.value0[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusTwo",
+              "name": "Error"
+            },
+            "erased-proof": {
+              "message": "first.value0 does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "group-late-subtype": {
+              "message": "groups.value0[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusOne",
+              "name": "Error"
+            },
+            "inactive-field": {
+              "message": "first.value0.next.value does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "late-subtype": {
+              "message": "first.value0.next.value.packet.value was rejected by MutualCheckedRecords.plusOne",
+              "name": "Error"
+            },
+            "missing-active-field": {
+              "message": "first.value0.next.value does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "missing-field": {
+              "message": "first.value0 does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "nested-fin": {
+              "message": "first.value0.next.value.packet.mode must be bigint below 3",
+              "name": "TypeError"
+            },
+            "option-tag": {
+              "message": "first.value0.next must be Option tag",
+              "name": "TypeError"
+            },
+            "outer-fin": {
+              "message": "first.value0.mode must be bigint below 3",
+              "name": "TypeError"
+            },
+            "outer-record": {
+              "message": "first.value0 was rejected by MutualCheckedRecords.mkEnvelope",
+              "name": "Error"
+            },
+            "outer-subtype": {
+              "message": "first.value0.value was rejected by MutualCheckedRecords.plusOne",
+              "name": "Error"
+            },
+            "variant-tag": {
+              "message": "first.value0.next.value must be declared variant constructor",
+              "name": "TypeError"
+            }
+          },
+          "module": "mutualcheckedrecords",
+          "recoveries": 143,
+          "rejections": 271,
+          "route": "reviewed",
+          "snapshots": 678
+        },
+        "schemaVersion": 1
+      },
+      "phase": "first",
+      "variant": "production"
+    },
+    {
+      "engine": "chromium",
+      "observation": {
+        "hostVersion": "151.0.7922.34",
+        "module": "mutualcheckedrecords",
+        "profile": "browser-javascript",
+        "realm": "window",
+        "results": {
+          "calls": 678,
+          "checks": 1358,
+          "failures": {
+            "cycle": {
+              "message": "Cyclic copied value",
+              "name": "TypeError"
+            },
+            "depth": {
+              "message": "Component recursive value depth exceeded",
+              "name": "RangeError"
+            },
+            "echo-group-late-subtype": {
+              "message": "echoGroups.value0[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusTwo",
+              "name": "Error"
+            },
+            "erased-proof": {
+              "message": "first.value0 does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "group-late-subtype": {
+              "message": "groups.value0[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusOne",
+              "name": "Error"
+            },
+            "inactive-field": {
+              "message": "first.value0.next.value does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "late-subtype": {
+              "message": "first.value0.next.value.packet.value was rejected by MutualCheckedRecords.plusOne",
+              "name": "Error"
+            },
+            "missing-active-field": {
+              "message": "first.value0.next.value does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "missing-field": {
+              "message": "first.value0 does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "nested-fin": {
+              "message": "first.value0.next.value.packet.mode must be bigint below 3",
+              "name": "TypeError"
+            },
+            "option-tag": {
+              "message": "first.value0.next must be Option tag",
+              "name": "TypeError"
+            },
+            "outer-fin": {
+              "message": "first.value0.mode must be bigint below 3",
+              "name": "TypeError"
+            },
+            "outer-record": {
+              "message": "first.value0 was rejected by MutualCheckedRecords.mkEnvelope",
+              "name": "Error"
+            },
+            "outer-subtype": {
+              "message": "first.value0.value was rejected by MutualCheckedRecords.plusOne",
+              "name": "Error"
+            },
+            "variant-tag": {
+              "message": "first.value0.next.value must be declared variant constructor",
+              "name": "TypeError"
+            }
+          },
+          "module": "mutualcheckedrecords",
+          "recoveries": 143,
+          "rejections": 271,
+          "route": "reviewed",
+          "snapshots": 678
+        },
+        "schemaVersion": 1
+      },
+      "phase": "rerun",
+      "variant": "production"
+    },
+    {
+      "engine": "chromium",
+      "observation": {
+        "hostVersion": "151.0.7922.34",
+        "module": "mutualcheckedrecords",
+        "profile": "browser-javascript",
+        "realm": "window",
+        "results": {
+          "calls": 678,
+          "checks": 1358,
+          "failures": {
+            "cycle": {
+              "message": "Cyclic copied value",
+              "name": "TypeError"
+            },
+            "depth": {
+              "message": "Component recursive value depth exceeded",
+              "name": "RangeError"
+            },
+            "echo-group-late-subtype": {
+              "message": "echoGroups.value0[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusTwo",
+              "name": "Error"
+            },
+            "erased-proof": {
+              "message": "first.value0 does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "group-late-subtype": {
+              "message": "groups.value0[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusOne",
+              "name": "Error"
+            },
+            "inactive-field": {
+              "message": "first.value0.next.value does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "late-subtype": {
+              "message": "first.value0.next.value.packet.value was rejected by MutualCheckedRecords.plusOne",
+              "name": "Error"
+            },
+            "missing-active-field": {
+              "message": "first.value0.next.value does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "missing-field": {
+              "message": "first.value0 does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "nested-fin": {
+              "message": "first.value0.next.value.packet.mode must be bigint below 3",
+              "name": "TypeError"
+            },
+            "option-tag": {
+              "message": "first.value0.next must be Option tag",
+              "name": "TypeError"
+            },
+            "outer-fin": {
+              "message": "first.value0.mode must be bigint below 3",
+              "name": "TypeError"
+            },
+            "outer-record": {
+              "message": "first.value0 was rejected by MutualCheckedRecords.mkEnvelope",
+              "name": "Error"
+            },
+            "outer-subtype": {
+              "message": "first.value0.value was rejected by MutualCheckedRecords.plusOne",
+              "name": "Error"
+            },
+            "variant-tag": {
+              "message": "first.value0.next.value must be declared variant constructor",
+              "name": "TypeError"
+            }
+          },
+          "module": "mutualcheckedrecords",
+          "recoveries": 143,
+          "rejections": 271,
+          "route": "reviewed",
+          "snapshots": 678
+        },
+        "schemaVersion": 1
+      },
+      "phase": "failure-recovery",
+      "variant": "production"
+    },
+    {
+      "engine": "firefox",
+      "observation": {
+        "hostVersion": "153.0",
+        "module": "mutualcheckedrecords",
+        "profile": "browser-javascript",
+        "realm": "window",
+        "results": {
+          "calls": 678,
+          "checks": 1358,
+          "failures": {
+            "cycle": {
+              "message": "Cyclic copied value",
+              "name": "TypeError"
+            },
+            "depth": {
+              "message": "Component recursive value depth exceeded",
+              "name": "RangeError"
+            },
+            "echo-group-late-subtype": {
+              "message": "echoGroups.value0[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusTwo",
+              "name": "Error"
+            },
+            "erased-proof": {
+              "message": "first.value0 does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "group-late-subtype": {
+              "message": "groups.value0[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusOne",
+              "name": "Error"
+            },
+            "inactive-field": {
+              "message": "first.value0.next.value does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "late-subtype": {
+              "message": "first.value0.next.value.packet.value was rejected by MutualCheckedRecords.plusOne",
+              "name": "Error"
+            },
+            "missing-active-field": {
+              "message": "first.value0.next.value does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "missing-field": {
+              "message": "first.value0 does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "nested-fin": {
+              "message": "first.value0.next.value.packet.mode must be bigint below 3",
+              "name": "TypeError"
+            },
+            "option-tag": {
+              "message": "first.value0.next must be Option tag",
+              "name": "TypeError"
+            },
+            "outer-fin": {
+              "message": "first.value0.mode must be bigint below 3",
+              "name": "TypeError"
+            },
+            "outer-record": {
+              "message": "first.value0 was rejected by MutualCheckedRecords.mkEnvelope",
+              "name": "Error"
+            },
+            "outer-subtype": {
+              "message": "first.value0.value was rejected by MutualCheckedRecords.plusOne",
+              "name": "Error"
+            },
+            "variant-tag": {
+              "message": "first.value0.next.value must be declared variant constructor",
+              "name": "TypeError"
+            }
+          },
+          "module": "mutualcheckedrecords",
+          "recoveries": 143,
+          "rejections": 271,
+          "route": "reviewed",
+          "snapshots": 678
+        },
+        "schemaVersion": 1
+      },
+      "phase": "first",
+      "variant": "production"
+    },
+    {
+      "engine": "firefox",
+      "observation": {
+        "hostVersion": "153.0",
+        "module": "mutualcheckedrecords",
+        "profile": "browser-javascript",
+        "realm": "window",
+        "results": {
+          "calls": 678,
+          "checks": 1358,
+          "failures": {
+            "cycle": {
+              "message": "Cyclic copied value",
+              "name": "TypeError"
+            },
+            "depth": {
+              "message": "Component recursive value depth exceeded",
+              "name": "RangeError"
+            },
+            "echo-group-late-subtype": {
+              "message": "echoGroups.value0[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusTwo",
+              "name": "Error"
+            },
+            "erased-proof": {
+              "message": "first.value0 does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "group-late-subtype": {
+              "message": "groups.value0[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusOne",
+              "name": "Error"
+            },
+            "inactive-field": {
+              "message": "first.value0.next.value does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "late-subtype": {
+              "message": "first.value0.next.value.packet.value was rejected by MutualCheckedRecords.plusOne",
+              "name": "Error"
+            },
+            "missing-active-field": {
+              "message": "first.value0.next.value does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "missing-field": {
+              "message": "first.value0 does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "nested-fin": {
+              "message": "first.value0.next.value.packet.mode must be bigint below 3",
+              "name": "TypeError"
+            },
+            "option-tag": {
+              "message": "first.value0.next must be Option tag",
+              "name": "TypeError"
+            },
+            "outer-fin": {
+              "message": "first.value0.mode must be bigint below 3",
+              "name": "TypeError"
+            },
+            "outer-record": {
+              "message": "first.value0 was rejected by MutualCheckedRecords.mkEnvelope",
+              "name": "Error"
+            },
+            "outer-subtype": {
+              "message": "first.value0.value was rejected by MutualCheckedRecords.plusOne",
+              "name": "Error"
+            },
+            "variant-tag": {
+              "message": "first.value0.next.value must be declared variant constructor",
+              "name": "TypeError"
+            }
+          },
+          "module": "mutualcheckedrecords",
+          "recoveries": 143,
+          "rejections": 271,
+          "route": "reviewed",
+          "snapshots": 678
+        },
+        "schemaVersion": 1
+      },
+      "phase": "rerun",
+      "variant": "production"
+    },
+    {
+      "engine": "firefox",
+      "observation": {
+        "hostVersion": "153.0",
+        "module": "mutualcheckedrecords",
+        "profile": "browser-javascript",
+        "realm": "window",
+        "results": {
+          "calls": 678,
+          "checks": 1358,
+          "failures": {
+            "cycle": {
+              "message": "Cyclic copied value",
+              "name": "TypeError"
+            },
+            "depth": {
+              "message": "Component recursive value depth exceeded",
+              "name": "RangeError"
+            },
+            "echo-group-late-subtype": {
+              "message": "echoGroups.value0[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusTwo",
+              "name": "Error"
+            },
+            "erased-proof": {
+              "message": "first.value0 does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "group-late-subtype": {
+              "message": "groups.value0[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusOne",
+              "name": "Error"
+            },
+            "inactive-field": {
+              "message": "first.value0.next.value does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "late-subtype": {
+              "message": "first.value0.next.value.packet.value was rejected by MutualCheckedRecords.plusOne",
+              "name": "Error"
+            },
+            "missing-active-field": {
+              "message": "first.value0.next.value does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "missing-field": {
+              "message": "first.value0 does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "nested-fin": {
+              "message": "first.value0.next.value.packet.mode must be bigint below 3",
+              "name": "TypeError"
+            },
+            "option-tag": {
+              "message": "first.value0.next must be Option tag",
+              "name": "TypeError"
+            },
+            "outer-fin": {
+              "message": "first.value0.mode must be bigint below 3",
+              "name": "TypeError"
+            },
+            "outer-record": {
+              "message": "first.value0 was rejected by MutualCheckedRecords.mkEnvelope",
+              "name": "Error"
+            },
+            "outer-subtype": {
+              "message": "first.value0.value was rejected by MutualCheckedRecords.plusOne",
+              "name": "Error"
+            },
+            "variant-tag": {
+              "message": "first.value0.next.value must be declared variant constructor",
+              "name": "TypeError"
+            }
+          },
+          "module": "mutualcheckedrecords",
+          "recoveries": 143,
+          "rejections": 271,
+          "route": "reviewed",
+          "snapshots": 678
+        },
+        "schemaVersion": 1
+      },
+      "phase": "failure-recovery",
+      "variant": "production"
+    },
+    {
+      "engine": "webkit",
+      "observation": {
+        "hostVersion": "26.5",
+        "module": "mutualcheckedrecords",
+        "profile": "browser-javascript",
+        "realm": "window",
+        "results": {
+          "calls": 678,
+          "checks": 1358,
+          "failures": {
+            "cycle": {
+              "message": "Cyclic copied value",
+              "name": "TypeError"
+            },
+            "depth": {
+              "message": "Component recursive value depth exceeded",
+              "name": "RangeError"
+            },
+            "echo-group-late-subtype": {
+              "message": "echoGroups.value0[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusTwo",
+              "name": "Error"
+            },
+            "erased-proof": {
+              "message": "first.value0 does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "group-late-subtype": {
+              "message": "groups.value0[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusOne",
+              "name": "Error"
+            },
+            "inactive-field": {
+              "message": "first.value0.next.value does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "late-subtype": {
+              "message": "first.value0.next.value.packet.value was rejected by MutualCheckedRecords.plusOne",
+              "name": "Error"
+            },
+            "missing-active-field": {
+              "message": "first.value0.next.value does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "missing-field": {
+              "message": "first.value0 does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "nested-fin": {
+              "message": "first.value0.next.value.packet.mode must be bigint below 3",
+              "name": "TypeError"
+            },
+            "option-tag": {
+              "message": "first.value0.next must be Option tag",
+              "name": "TypeError"
+            },
+            "outer-fin": {
+              "message": "first.value0.mode must be bigint below 3",
+              "name": "TypeError"
+            },
+            "outer-record": {
+              "message": "first.value0 was rejected by MutualCheckedRecords.mkEnvelope",
+              "name": "Error"
+            },
+            "outer-subtype": {
+              "message": "first.value0.value was rejected by MutualCheckedRecords.plusOne",
+              "name": "Error"
+            },
+            "variant-tag": {
+              "message": "first.value0.next.value must be declared variant constructor",
+              "name": "TypeError"
+            }
+          },
+          "module": "mutualcheckedrecords",
+          "recoveries": 143,
+          "rejections": 271,
+          "route": "reviewed",
+          "snapshots": 678
+        },
+        "schemaVersion": 1
+      },
+      "phase": "first",
+      "variant": "production"
+    },
+    {
+      "engine": "webkit",
+      "observation": {
+        "hostVersion": "26.5",
+        "module": "mutualcheckedrecords",
+        "profile": "browser-javascript",
+        "realm": "window",
+        "results": {
+          "calls": 678,
+          "checks": 1358,
+          "failures": {
+            "cycle": {
+              "message": "Cyclic copied value",
+              "name": "TypeError"
+            },
+            "depth": {
+              "message": "Component recursive value depth exceeded",
+              "name": "RangeError"
+            },
+            "echo-group-late-subtype": {
+              "message": "echoGroups.value0[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusTwo",
+              "name": "Error"
+            },
+            "erased-proof": {
+              "message": "first.value0 does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "group-late-subtype": {
+              "message": "groups.value0[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusOne",
+              "name": "Error"
+            },
+            "inactive-field": {
+              "message": "first.value0.next.value does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "late-subtype": {
+              "message": "first.value0.next.value.packet.value was rejected by MutualCheckedRecords.plusOne",
+              "name": "Error"
+            },
+            "missing-active-field": {
+              "message": "first.value0.next.value does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "missing-field": {
+              "message": "first.value0 does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "nested-fin": {
+              "message": "first.value0.next.value.packet.mode must be bigint below 3",
+              "name": "TypeError"
+            },
+            "option-tag": {
+              "message": "first.value0.next must be Option tag",
+              "name": "TypeError"
+            },
+            "outer-fin": {
+              "message": "first.value0.mode must be bigint below 3",
+              "name": "TypeError"
+            },
+            "outer-record": {
+              "message": "first.value0 was rejected by MutualCheckedRecords.mkEnvelope",
+              "name": "Error"
+            },
+            "outer-subtype": {
+              "message": "first.value0.value was rejected by MutualCheckedRecords.plusOne",
+              "name": "Error"
+            },
+            "variant-tag": {
+              "message": "first.value0.next.value must be declared variant constructor",
+              "name": "TypeError"
+            }
+          },
+          "module": "mutualcheckedrecords",
+          "recoveries": 143,
+          "rejections": 271,
+          "route": "reviewed",
+          "snapshots": 678
+        },
+        "schemaVersion": 1
+      },
+      "phase": "rerun",
+      "variant": "production"
+    },
+    {
+      "engine": "webkit",
+      "observation": {
+        "hostVersion": "26.5",
+        "module": "mutualcheckedrecords",
+        "profile": "browser-javascript",
+        "realm": "window",
+        "results": {
+          "calls": 678,
+          "checks": 1358,
+          "failures": {
+            "cycle": {
+              "message": "Cyclic copied value",
+              "name": "TypeError"
+            },
+            "depth": {
+              "message": "Component recursive value depth exceeded",
+              "name": "RangeError"
+            },
+            "echo-group-late-subtype": {
+              "message": "echoGroups.value0[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusTwo",
+              "name": "Error"
+            },
+            "erased-proof": {
+              "message": "first.value0 does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "group-late-subtype": {
+              "message": "groups.value0[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusOne",
+              "name": "Error"
+            },
+            "inactive-field": {
+              "message": "first.value0.next.value does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "late-subtype": {
+              "message": "first.value0.next.value.packet.value was rejected by MutualCheckedRecords.plusOne",
+              "name": "Error"
+            },
+            "missing-active-field": {
+              "message": "first.value0.next.value does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "missing-field": {
+              "message": "first.value0 does not match the declared copied fields",
+              "name": "TypeError"
+            },
+            "nested-fin": {
+              "message": "first.value0.next.value.packet.mode must be bigint below 3",
+              "name": "TypeError"
+            },
+            "option-tag": {
+              "message": "first.value0.next must be Option tag",
+              "name": "TypeError"
+            },
+            "outer-fin": {
+              "message": "first.value0.mode must be bigint below 3",
+              "name": "TypeError"
+            },
+            "outer-record": {
+              "message": "first.value0 was rejected by MutualCheckedRecords.mkEnvelope",
+              "name": "Error"
+            },
+            "outer-subtype": {
+              "message": "first.value0.value was rejected by MutualCheckedRecords.plusOne",
+              "name": "Error"
+            },
+            "variant-tag": {
+              "message": "first.value0.next.value must be declared variant constructor",
+              "name": "TypeError"
+            }
+          },
+          "module": "mutualcheckedrecords",
+          "recoveries": 143,
+          "rejections": 271,
+          "route": "reviewed",
+          "snapshots": 678
+        },
+        "schemaVersion": 1
+      },
+      "phase": "failure-recovery",
+      "variant": "production"
+    }
+  ],
+  "offlineInstall": true,
+  "packageSourceSha256": "9edcb78e1507d203ae2de7695e05b47cf14c619da1ac59a33278483929b02d13",
+  "producerCommit": "c3e8099992d277bdb68e8696de31f4ae8e070ee7",
+  "profile": "browser-javascript",
+  "receiptSha256": "b23da46df57c02170eddfe29ece0b81f24dd28398a0d0980fc50bf8deb348161",
+  "route": "reviewed",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}

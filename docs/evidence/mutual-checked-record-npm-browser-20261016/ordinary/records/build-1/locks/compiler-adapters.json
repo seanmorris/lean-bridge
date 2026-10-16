@@ -1,0 +1,582 @@
+{
+  "component": "mutualcheckedrecords@1.0.0",
+  "componentPlanSha256": "66aaf1e438d0d85e0ed5cb2e3e6e64160c3e688b57209f5481031c632ea08191",
+  "exports": [
+    {
+      "bindingId": "lean:MutualCheckedRecords.echo",
+      "leanEffect": null,
+      "leanResultType": "MutualCheckedRecords.Envelope",
+      "parameters": [
+        {
+          "leanType": "MutualCheckedRecords.Envelope",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "MutualCheckedRecords.mkEnvelope",
+            "fields": [
+              {
+                "name": "value",
+                "refinement": {
+                  "constructor": "MutualCheckedRecords.plusOne",
+                  "kind": "subtype"
+                }
+              },
+              {
+                "name": "mode",
+                "refinement": {
+                  "bound": "3",
+                  "kind": "fin"
+                }
+              },
+              {
+                "name": "next",
+                "refinement": null
+              }
+            ],
+            "kind": "checked-record",
+            "name": "MutualCheckedRecords.Envelope"
+          }
+        ],
+        "result": {
+          "constructor": null,
+          "fields": [
+            {
+              "name": "value",
+              "refinement": {
+                "constructor": null,
+                "kind": "subtype"
+              }
+            },
+            {
+              "name": "mode",
+              "refinement": {
+                "bound": "3",
+                "kind": "fin"
+              }
+            },
+            {
+              "name": "next",
+              "refinement": null
+            }
+          ],
+          "kind": "checked-record",
+          "name": "MutualCheckedRecords.Envelope"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "MutualCheckedRecords.echo",
+      "sourceModule": "MutualCheckedRecords",
+      "symbol": "lean_bridge_b93734338d8f12ed96612e52",
+      "wrapper": "export_89074b663b649f449c7b"
+    },
+    {
+      "bindingId": "lean:MutualCheckedRecords.echoGroups",
+      "leanEffect": null,
+      "leanResultType": "(_root_.Array (_root_.Option MutualCheckedRecords.EnvelopeAlias))",
+      "parameters": [
+        {
+          "leanType": "(_root_.Array (_root_.Option MutualCheckedRecords.EnvelopeAlias))",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "constructor": "MutualCheckedRecords.normalizeEnvelope",
+                    "fields": [
+                      {
+                        "name": "value",
+                        "refinement": {
+                          "constructor": "MutualCheckedRecords.plusTwo",
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "mode",
+                        "refinement": {
+                          "bound": "3",
+                          "kind": "fin"
+                        }
+                      },
+                      {
+                        "name": "next",
+                        "refinement": null
+                      }
+                    ],
+                    "kind": "checked-record",
+                    "name": "MutualCheckedRecords.Envelope"
+                  }
+                ],
+                "kind": "option"
+              }
+            ],
+            "kind": "array"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "constructor": null,
+                  "fields": [
+                    {
+                      "name": "value",
+                      "refinement": {
+                        "constructor": null,
+                        "kind": "subtype"
+                      }
+                    },
+                    {
+                      "name": "mode",
+                      "refinement": {
+                        "bound": "3",
+                        "kind": "fin"
+                      }
+                    },
+                    {
+                      "name": "next",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "MutualCheckedRecords.Envelope"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "kind": "array"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "MutualCheckedRecords.echoGroups",
+      "sourceModule": "MutualCheckedRecords",
+      "symbol": "lean_bridge_c2c1eed7ec1642970f377b9b",
+      "wrapper": "export_7953e9379fb3f1308133"
+    },
+    {
+      "bindingId": "lean:MutualCheckedRecords.first",
+      "leanEffect": null,
+      "leanResultType": "_root_.Nat",
+      "parameters": [
+        {
+          "leanType": "MutualCheckedRecords.Envelope",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "MutualCheckedRecords.mkEnvelope",
+            "fields": [
+              {
+                "name": "value",
+                "refinement": {
+                  "constructor": "MutualCheckedRecords.plusOne",
+                  "kind": "subtype"
+                }
+              },
+              {
+                "name": "mode",
+                "refinement": {
+                  "bound": "3",
+                  "kind": "fin"
+                }
+              },
+              {
+                "name": "next",
+                "refinement": null
+              }
+            ],
+            "kind": "checked-record",
+            "name": "MutualCheckedRecords.Envelope"
+          }
+        ],
+        "result": null
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "MutualCheckedRecords.first",
+      "sourceModule": "MutualCheckedRecords",
+      "symbol": "lean_bridge_d471b4117ccac362de6872c5",
+      "wrapper": "export_a35a41e190453d620187"
+    },
+    {
+      "bindingId": "lean:MutualCheckedRecords.groups",
+      "leanEffect": null,
+      "leanResultType": "_root_.Nat",
+      "parameters": [
+        {
+          "leanType": "(_root_.Array (_root_.Option MutualCheckedRecords.EnvelopeAlias))",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "constructor": "MutualCheckedRecords.mkEnvelope",
+                    "fields": [
+                      {
+                        "name": "value",
+                        "refinement": {
+                          "constructor": "MutualCheckedRecords.plusOne",
+                          "kind": "subtype"
+                        }
+                      },
+                      {
+                        "name": "mode",
+                        "refinement": {
+                          "bound": "3",
+                          "kind": "fin"
+                        }
+                      },
+                      {
+                        "name": "next",
+                        "refinement": null
+                      }
+                    ],
+                    "kind": "checked-record",
+                    "name": "MutualCheckedRecords.Envelope"
+                  }
+                ],
+                "kind": "option"
+              }
+            ],
+            "kind": "array"
+          }
+        ],
+        "result": null
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "MutualCheckedRecords.groups",
+      "sourceModule": "MutualCheckedRecords",
+      "symbol": "lean_bridge_80dc06e94320d76de7e8afc6",
+      "wrapper": "export_46082bee9a89badc9423"
+    },
+    {
+      "bindingId": "lean:MutualCheckedRecords.produce",
+      "leanEffect": null,
+      "leanResultType": "MutualCheckedRecords.Envelope",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "constructor": null,
+          "fields": [
+            {
+              "name": "value",
+              "refinement": {
+                "constructor": null,
+                "kind": "subtype"
+              }
+            },
+            {
+              "name": "mode",
+              "refinement": {
+                "bound": "3",
+                "kind": "fin"
+              }
+            },
+            {
+              "name": "next",
+              "refinement": null
+            }
+          ],
+          "kind": "checked-record",
+          "name": "MutualCheckedRecords.Envelope"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "MutualCheckedRecords.produce",
+      "sourceModule": "MutualCheckedRecords",
+      "symbol": "lean_bridge_f1dd7ff5b67060930f091dae",
+      "wrapper": "export_fa525561cd8c5d94ae9e"
+    },
+    {
+      "bindingId": "lean:MutualCheckedRecords.second",
+      "leanEffect": null,
+      "leanResultType": "_root_.Nat",
+      "parameters": [
+        {
+          "leanType": "MutualCheckedRecords.Envelope",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "MutualCheckedRecords.normalizeEnvelope",
+            "fields": [
+              {
+                "name": "value",
+                "refinement": {
+                  "constructor": "MutualCheckedRecords.plusTwo",
+                  "kind": "subtype"
+                }
+              },
+              {
+                "name": "mode",
+                "refinement": {
+                  "bound": "3",
+                  "kind": "fin"
+                }
+              },
+              {
+                "name": "next",
+                "refinement": null
+              }
+            ],
+            "kind": "checked-record",
+            "name": "MutualCheckedRecords.Envelope"
+          }
+        ],
+        "result": null
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "MutualCheckedRecords.second",
+      "sourceModule": "MutualCheckedRecords",
+      "symbol": "lean_bridge_84236b8271f83e0e4db02cf4",
+      "wrapper": "export_b84d189a73089fe72dfc"
+    }
+  ],
+  "imports": [
+    "MutualCheckedRecords"
+  ],
+  "leanSourceSha256": "a3e9e0fa0732ab571fb5b135e90a77bced94e13ed74461b9cb64b945a40a7321",
+  "module": "LeanBridgeGenerated4ca822048b145659",
+  "nominalRefinements": [
+    {
+      "id": "lean:MutualCheckedRecords.Envelope",
+      "refinement": {
+        "fields": [
+          null,
+          {
+            "bound": "3",
+            "kind": "fin"
+          },
+          null
+        ],
+        "kind": "record"
+      }
+    }
+  ],
+  "privateAbi": {
+    "dispatch": "copied-graph-frame-v1",
+    "exports": [
+      {
+        "bindingId": "lean:MutualCheckedRecords.echo",
+        "parameters": [
+          {
+            "id": "lean:MutualCheckedRecords.Envelope",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "id": "lean:MutualCheckedRecords.Envelope",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_b93734338d8f12ed96612e52"
+      },
+      {
+        "bindingId": "lean:MutualCheckedRecords.echoGroups",
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "id": "lean:MutualCheckedRecords.EnvelopeAlias",
+                    "kind": "named"
+                  }
+                ],
+                "constructor": "option",
+                "kind": "apply"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "id": "lean:MutualCheckedRecords.EnvelopeAlias",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "constructor": "array",
+          "kind": "apply"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_c2c1eed7ec1642970f377b9b"
+      },
+      {
+        "bindingId": "lean:MutualCheckedRecords.first",
+        "parameters": [
+          {
+            "id": "lean:MutualCheckedRecords.Envelope",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_d471b4117ccac362de6872c5"
+      },
+      {
+        "bindingId": "lean:MutualCheckedRecords.groups",
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "id": "lean:MutualCheckedRecords.EnvelopeAlias",
+                    "kind": "named"
+                  }
+                ],
+                "constructor": "option",
+                "kind": "apply"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_80dc06e94320d76de7e8afc6"
+      },
+      {
+        "bindingId": "lean:MutualCheckedRecords.produce",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "id": "lean:MutualCheckedRecords.Envelope",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_f1dd7ff5b67060930f091dae"
+      },
+      {
+        "bindingId": "lean:MutualCheckedRecords.second",
+        "parameters": [
+          {
+            "id": "lean:MutualCheckedRecords.Envelope",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_84236b8271f83e0e4db02cf4"
+      }
+    ],
+    "types": [
+      {
+        "erased": [
+          "linked"
+        ],
+        "fields": [
+          {
+            "name": "value",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "name": "mode",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "name": "next",
+            "type": {
+              "arguments": [
+                {
+                  "id": "lean:MutualCheckedRecords.Step",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          }
+        ],
+        "id": "lean:MutualCheckedRecords.Envelope",
+        "kind": "record"
+      },
+      {
+        "id": "lean:MutualCheckedRecords.EnvelopeAlias",
+        "kind": "alias",
+        "target": {
+          "id": "lean:MutualCheckedRecords.Envelope",
+          "kind": "named"
+        }
+      },
+      {
+        "cases": [
+          {
+            "fields": [],
+            "name": "stop"
+          },
+          {
+            "fields": [
+              {
+                "name": "packet",
+                "type": {
+                  "id": "lean:MutualCheckedRecords.Envelope",
+                  "kind": "named"
+                }
+              }
+            ],
+            "name": "more"
+          }
+        ],
+        "id": "lean:MutualCheckedRecords.Step",
+        "kind": "variant"
+      }
+    ],
+    "version": 8
+  },
+  "schemaVersion": 1
+}

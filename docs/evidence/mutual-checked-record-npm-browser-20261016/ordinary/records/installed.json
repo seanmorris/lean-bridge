@@ -1,0 +1,18 @@
+{
+  "relocated": false,
+  "result": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":1358,\"rejections\":271,\"calls\":678,\"snapshots\":678,\"recoveries\":143,\"failures\":{\"outer-subtype\":{\"name\":\"Error\",\"message\":\"first.arg0.value was rejected by MutualCheckedRecords.plusOne\"},\"late-subtype\":{\"name\":\"Error\",\"message\":\"first.arg0.next.value.packet.value was rejected by MutualCheckedRecords.plusOne\"},\"outer-record\":{\"name\":\"Error\",\"message\":\"first.arg0 was rejected by MutualCheckedRecords.mkEnvelope\"},\"group-late-subtype\":{\"name\":\"Error\",\"message\":\"groups.arg0[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusOne\"},\"echo-group-late-subtype\":{\"name\":\"Error\",\"message\":\"echoGroups.arg0[0].value.next.value.packet.value was rejected by MutualCheckedRecords.plusTwo\"},\"outer-fin\":{\"name\":\"TypeError\",\"message\":\"first.arg0.mode must be bigint below 3\"},\"nested-fin\":{\"name\":\"TypeError\",\"message\":\"first.arg0.next.value.packet.mode must be bigint below 3\"},\"erased-proof\":{\"name\":\"TypeError\",\"message\":\"first.arg0 does not match the declared copied fields\"},\"missing-field\":{\"name\":\"TypeError\",\"message\":\"first.arg0 does not match the declared copied fields\"},\"option-tag\":{\"name\":\"TypeError\",\"message\":\"first.arg0.next must be Option tag\"},\"variant-tag\":{\"name\":\"TypeError\",\"message\":\"first.arg0.next.value must be declared variant constructor\"},\"missing-active-field\":{\"name\":\"TypeError\",\"message\":\"first.arg0.next.value does not match the declared copied fields\"},\"inactive-field\":{\"name\":\"TypeError\",\"message\":\"first.arg0.next.value does not match the declared copied fields\"},\"cycle\":{\"name\":\"TypeError\",\"message\":\"Cyclic copied value\"},\"depth\":{\"name\":\"RangeError\",\"message\":\"Component recursive value depth exceeded\"}}}\n"
+  },
+  "runtime": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"node\":\"v22.23.2\",\"platform\":\"linux\",\"arch\":\"x64\"}\n"
+  },
+  "typescript": {
+    "code": 0,
+    "stderr": "",
+    "stdout": ""
+  }
+}
