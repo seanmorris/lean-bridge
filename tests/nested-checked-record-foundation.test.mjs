@@ -221,7 +221,7 @@ test("rich checked records refuse incomplete fields, input projection and legacy
 	assert.throws(() => normalize(inputResultConstructor), /Refinement does not match its transport type/u);
 });
 
-test("recursive checked records remain reserved for their separate representation", () => {
+test("recursive checked records use one finite constructor cycle", () => {
 	const nat = { kind: "primitive", name: "nat" };
 	const packet = { kind: "named", id: "lean:NestedChecked.Packet" };
 	const bindingId = "lean:NestedChecked.recursive";
@@ -255,8 +255,26 @@ test("recursive checked records remain reserved for their separate representatio
 		, leanResultType: "not normalized"
 		, refinements: { parameters: [selected], result: null }
 	}];
-	assert.throws(() => componentRefinementMirrors(abi, exports, render)
-		, /recursive checked records require another representation/u);
+	const model = componentRefinementMirrors(abi, exports, render);
+	const tree = model.sites[0].refinements.parameters[0];
+	assert.equal(tree.kind, "checked-record");
+	assert.equal(tree.definition, "NestedChecked.Packet");
+	assert.match(tree.cycle, /^[a-f0-9]{20}$/u);
+	assert.deepEqual(tree.arguments, [{
+		kind: "option"
+		, arguments: [{
+			kind: "recursive", definition: "NestedChecked.Packet", cycle: tree.cycle
+		}]
+	}
+	, null]);
+	assert.equal(model.cycles.get(tree.cycle), tree);
+	const source = model.lines.join("\n");
+	const conversion = `via_${sha256(canonicalJson(tree)).slice(0, 16)}`;
+	assert.match(source, /structure LbErased\.NestedChecked\.Packet where[\s\S]*«next» : \(_root_\.Option LbErased\.NestedChecked\.Packet\)/u);
+	assert.match(source, new RegExp(`def LbErased\\.NestedChecked\\.Packet\\.${conversion}`, "u"));
+	assert.match(source, new RegExp(`Option\\.some _bridgeValue[0-9]+ => \\(+LbErased\\.NestedChecked\\.Packet\\.${conversion}`, "u"));
+	assert.match(source, /def LbErased\.NestedChecked\.Packet\.erase[\s\S]*Packet\.erase/u);
+	assert.match(source, /_root_\.NestedChecked\.mkPacket b0 b1/u);
 });
 
 test("legacy generic checked records stay top-level while rich and nested generic forms remain separate work", () => {

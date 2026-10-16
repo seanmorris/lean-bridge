@@ -534,6 +534,17 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
               -- Expand its structural transport, just as a direct Subtype alias expands below.
               if (checked.isSome || (subtypeResult && containsKind (← get).types target "subtype")) && ["array", "list", "option", "tuple", "result"].contains
                   ((target.getObjValAs? String "kind").toOption.getD "") then return target
+              -- A checked-record alias keeps its nominal identity without caching the
+              -- site-local constructor. Store only the alias-to-record edge, then put
+              -- the selected constructor around that alias reference at this use.
+              if (target.getObjValAs? String "kind").toOption == some "refinement" &&
+                  ((target.getObjVal? "predicate").toOption.bind fun predicate =>
+                    (predicate.getObjValAs? String "kind").toOption) == some "checked-record" then
+                let base ← ofExcept <| target.getObjVal? "base"
+                let reference ← rememberShape e name <| obj [
+                  ("kind", str "alias"), ("name", str name.toString),
+                  ("lean", str name.toString), ("target", base), ("abi", ← abi e)]
+                return target.setObjVal! "base" reference
               if ["resource", "callback", "refinement"].contains ((target.getObjValAs? String "kind").toOption.getD "") then
                 return target
               if (target.getObjValAs? String "kind").toOption == some "reference" &&
@@ -718,8 +729,6 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
             (subtypeStructural := subtypeStructural && nominalSelection checked "record" name)
             (subtypeResult := subtypeResult))])
       let types := (← get).types
-      if !erased.isEmpty && (← get).recursiveSelections.contains name then
-        reject e "recursive checked records require another representation"
       if !erased.isEmpty && fields.any (fun field => containsKind types ((field.getObjVal? "type").toOption.getD Json.null) "refinement") &&
           !richCheckedRecordSelection checked && !subtypeResult then
         reject e "checked record payload fields cannot carry refinements yet"
@@ -1169,6 +1178,22 @@ partial def containsRefinement (type : Json) : Bool :=
 
 /-- Recover only author-constructor choices. Fin predicates remain independently compiler-owned.
 Recursive backedges contribute no new choice: the enclosing site-local nominal selection owns them. -/
+partial def projectionCheckedRecordDefinition (type : Json) (types : Array Json)
+    (seen : List String := []) : Json :=
+  if seen.length > 1024 then Json.null
+  else
+    let kind := (type.getObjValAs? String "kind").toOption.getD ""
+    if kind == "reference" then
+      let name := (type.getObjValAs? String "name").toOption.getD ""
+      if seen.contains name then Json.null
+      else match types.find? fun item =>
+          (item.getObjValAs? String "name").toOption == some name with
+        | some definition => projectionCheckedRecordDefinition definition types (name :: seen)
+        | none => Json.null
+    else if kind == "alias" then
+      projectionCheckedRecordDefinition ((type.getObjVal? "target").toOption.getD Json.null) types seen
+    else type
+
 partial def projectionCheckedSelectionWith (type : Json) (types : Array Json := #[])
     (seen : List String := []) (depth : Nat := 0) : Json := Id.run do
   let kind := (type.getObjValAs? String "kind").toOption.getD ""
@@ -1192,16 +1217,23 @@ partial def projectionCheckedSelectionWith (type : Json) (types : Array Json := 
       if constructor == Json.null then return Json.null
       let base := (type.getObjVal? "base").toOption.getD Json.null
       let baseKind := (base.getObjValAs? String "kind").toOption.getD ""
-      let definition := if baseKind == "reference" then
-          let name := (base.getObjValAs? String "name").toOption.getD ""
-          types.find? (fun item => (item.getObjValAs? String "name").toOption == some name) |>.getD base
-        else base
+      let referenceName := if baseKind == "reference" then
+          (base.getObjValAs? String "name").toOption
+        else none
+      let definition := projectionCheckedRecordDefinition base types
+      let innerSeen := referenceName.map (fun name => name :: seen) |>.getD seen
+      let definitionName := (definition.getObjValAs? String "name").toOption
+      let innerSeen := definitionName.map (fun name =>
+        if innerSeen.contains name then innerSeen else name :: innerSeen) |>.getD innerSeen
       let fields := ((definition.getObjValAs? (Array Json) "fields").toOption.getD #[]).map fun field =>
         obj [("name", (field.getObjVal? "name").toOption.getD Json.null),
           ("refinement", projectionCheckedSelectionWith
-            ((field.getObjVal? "type").toOption.getD Json.null) types seen (depth + 1))]
+            ((field.getObjVal? "type").toOption.getD Json.null) types innerSeen (depth + 1))]
       let selected := fields.any fun field => (field.getObjVal? "refinement").toOption != some Json.null
-      if depth > 0 || selected then
+      -- A graph reference forces the exact field form even when this node has no
+      -- nested constructor choice. The finite nominal cycle means the same site
+      -- constructor owns every reachable occurrence of the checked record.
+      if depth > 0 || referenceName.isSome || selected then
         return obj [("kind", str "checked-record"),
           ("name", (definition.getObjVal? "name").toOption.getD Json.null),
           ("constructor", constructor), ("fields", toJson fields)]

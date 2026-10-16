@@ -179,6 +179,25 @@ export const checkedRefinementSelection = refinement => {
  */
 export const projectionCheckedSelection = type => {
 	let nodes = 0;
+	const resolveCheckedRecord = (value, definitions) => {
+		const names = new Set();
+		for(let depth = 0; depth <= 1024; depth++)
+		{
+			if(++nodes > 4096) fail();
+			if(value?.kind === "reference")
+			{
+				if(typeof value.name !== "string" || names.has(value.name) || !definitions.has(value.name)) fail();
+				names.add(value.name); value = definitions.get(value.name); continue;
+			}
+			if(value?.kind === "alias")
+			{
+				if(typeof value.name !== "string") fail();
+				names.add(value.name); value = value.target; continue;
+			}
+			return { definition: value, names };
+		}
+		fail();
+	};
 	const visit = (value, depth, definitions = new Map(), seen = new Set()) => {
 		if(++nodes > 4096 || depth > 32) fail();
 		if(value.kind === "graph")
@@ -202,17 +221,21 @@ export const projectionCheckedSelection = type => {
 		if(value.kind === "refinement")
 		{
 			if(!["subtype", "checked-record"].includes(value.predicate.kind) || value.predicate.constructor === null) return null;
-			if(value.predicate.kind !== "checked-record" || value.base?.kind !== "record") return { constructor: value.predicate.constructor };
+			if(value.predicate.kind !== "checked-record") return { constructor: value.predicate.constructor };
+			const reference = value.base?.kind === "reference" ? value.base.name : null;
+			const resolved = resolveCheckedRecord(value.base, definitions), base = resolved.definition;
+			if(base?.kind !== "record" || !Object.hasOwn(base, "erased")) fail();
+			const inner = new Set([...seen, ...resolved.names, base.name]);
 			let selected = false;
-			const fields = value.base.fields.map(field => {
-				const refinement = visit(field.type, depth + 1, definitions, seen);
+			const fields = base.fields.map(field => {
+				const refinement = visit(field.type, depth + 1, definitions, inner);
 				selected ||= refinement !== null;
 				return { name: field.name, refinement };
 			});
-			if(depth > 0 || selected)
+			if(depth > 0 || reference !== null || selected)
 			{
 				return {
-					kind: "checked-record", name: value.base.name
+					kind: "checked-record", name: base.name
 					, constructor: value.predicate.constructor, fields
 				};
 			}

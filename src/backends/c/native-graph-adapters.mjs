@@ -53,7 +53,9 @@ const graphRefinementDiagnostics = ({ abi, exports, nominalRefinements, layout, 
 	const contains = (tree, mode, active = new Set()) => {
 		if(!tree) return false;
 		if(tree.kind === "fin") return mode === "fin";
-		if(["subtype", "checked-record"].includes(tree.kind)) return mode === "constructor";
+		if(tree.kind === "subtype") return mode === "constructor";
+		if(tree.kind === "checked-record") return mode === "constructor"
+			|| (tree.arguments ?? []).some(child => contains(child, mode, active));
 		if(tree.kind === "recursive")
 		{
 			if(active.has(tree.cycle)) return false;
@@ -104,8 +106,32 @@ const graphRefinementDiagnostics = ({ abi, exports, nominalRefinements, layout, 
 					, `    return ng_refinement_reject(${JSON.stringify(` is not below its Fin ${tree.bound} bound`)});`);
 			}
 		}
-		else if(["subtype", "checked-record"].includes(tree.kind))
+		else if(tree.kind === "subtype")
 		{
+			if(mode === "constructor")
+			{
+				const leaf = componentRecursiveRefinementLeafKey(tree, node.ref);
+				const validator = `${symbol}_graph_refinement_${parameter}_${leaf}`;
+				validators.add(`extern uint8_t ${validator}(lean_object *);`);
+				lines.push(`  if (!${validator}(${walker(node.id)}_in(value)))`
+					, `    return ng_refinement_reject(${JSON.stringify(` was rejected by ${tree.constructor}`)});`);
+			}
+		}
+		else if(tree.kind === "checked-record")
+		{
+			if(Object.hasOwn(tree, "arguments"))
+			{
+				if(node.kind !== "record" || node.fields.length !== tree.arguments.length)
+					throw new TypeError(`Recursive checked-record refinement differs from ${tree.definition}`);
+				for(const [index, child] of tree.arguments.entries())
+				{
+					if(!contains(child, mode)) continue;
+					const field = node.fields[index], childName = helper(mode, child, field.type, symbol, parameter);
+					const expression = fieldPointer(field, `value->${field.name}`);
+					lines.push(...scoped([`.${tree.fields[index]}`]
+						, `${childName}(${expression}, depth + 1, nodes)`));
+				}
+			}
 			if(mode === "constructor")
 			{
 				const leaf = componentRecursiveRefinementLeafKey(tree, node.ref);

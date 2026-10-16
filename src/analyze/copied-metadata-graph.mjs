@@ -77,11 +77,12 @@ export const validateCopiedMetadataGraph = (graph, validate, native = false) => 
 		const kind = kindOf(type);
 		if(!["alias", "record", "variant"].includes(kind)) fail("nominal table only admits aliases, records and variants");
 		// An instantiated generic record keeps its provenance in the table; the profile validator checks it.
-		keys(type, ["kind", "name", kind === "alias" ? "target" : kind === "record" ? "fields" : "cases", ...(native && kind === "record" ? ["constructor"] : []), ...(kind === "record" && Object.hasOwn(type, "provenance") ? ["provenance"] : [])], true);
+		keys(type, ["kind", "name", kind === "alias" ? "target" : kind === "record" ? "fields" : "cases", ...(native && kind === "record" ? ["constructor"] : []), ...(kind === "record" && Object.hasOwn(type, "provenance") ? ["provenance"] : []), ...(kind === "record" && Object.hasOwn(type, "erased") ? ["erased"] : [])], true);
 		if(typeof type.name !== "string") fail("expected a nominal identity");
 		const id = `lean:${type.name}`;
 		if(kind === "alias") return { kind, id, target: reference(type.target) };
-		if(kind === "record") return { kind, id, fields: fields(type.fields, true) };
+		if(kind === "record") return { kind, id, fields: fields(type.fields, true)
+			, ...(Object.hasOwn(type, "erased") ? { erased: [...type.erased] } : {}) };
 		dense(type.cases, 1024);
 		const cases = type.cases.map(branch => {
 			charge(0); closed(branch, ["name", "fields", ...(native ? ["constructor"] : [])]);
@@ -91,8 +92,8 @@ export const validateCopiedMetadataGraph = (graph, validate, native = false) => 
 	});
 	const snapshot = snapshotComponentCopiedGraph({ schemaVersion: 1, root, types });
 	const table = new Map(graph.types.map(type => [type.name, type]));
-	validate(graph.root, table);
-	for(const type of graph.types) validate(type, table);
+	validate(graph.root, table, { root: true, definition: false });
+	for(const type of graph.types) validate(type, table, { root: false, definition: true });
 	if(native && ["cType", "box", "unbox", "heap"].some(field => graph.abi[field] !== graph.root.abi[field])) fail("graph representation differs from its root");
 	return snapshot;
 };

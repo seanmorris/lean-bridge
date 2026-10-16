@@ -198,7 +198,14 @@ const checkReview = document => {
 		}
 		if(type?.kind !== "named") return true;
 		if(seen.has(type.id))
-			return !Object.hasOwn(definitions.get(type.id)?.source.extensions ?? {}, erasedProofsKey);
+		{
+			const recursive = definitions.get(type.id);
+			const checked = Object.hasOwn(recursive?.source.extensions ?? {}, erasedProofsKey);
+			// A null recursive back-edge inherits the already reviewed checked-record
+			// selection. Repeating a second selection at the back-edge would make the
+			// finite review ambiguous and is deliberately rejected.
+			return !checked || tree === null || tree === undefined;
+		}
 		const definition = definitions.get(type.id);
 		if(!definition) return false;
 		const inner = new Set([...seen, type.id]);

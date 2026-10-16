@@ -77,8 +77,21 @@ export const componentRecursiveRefinementLeaves = (refinement, type, definitions
 	const visit = (tree, reference, active = new Set()) => {
 		if(tree === null || tree === undefined || tree.kind === "fin") return;
 		const concrete = resolve(reference);
-		if(["subtype", "checked-record"].includes(tree.kind))
+		if(tree.kind === "subtype")
 		{
+			const key = componentRecursiveRefinementLeafKey(tree, concrete);
+			leaves.set(key, { key, refinement: tree, type: concrete });
+			return;
+		}
+		if(tree.kind === "checked-record")
+		{
+			if(Object.hasOwn(tree, "arguments"))
+			{
+				const definition = concrete.kind === "named" ? definitions.get(concrete.id) : null;
+				if(definition?.kind !== "record" || definition.fields.length !== tree.arguments.length)
+					throw new TypeError(`Recursive checked-record refinement differs from ${tree.definition}`);
+				tree.arguments.forEach((child, index) => visit(child, definition.fields[index].type, active));
+			}
 			const key = componentRecursiveRefinementLeafKey(tree, concrete);
 			leaves.set(key, { key, refinement: tree, type: concrete });
 			return;

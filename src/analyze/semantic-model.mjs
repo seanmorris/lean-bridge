@@ -193,6 +193,26 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 						: ["array", "list", "option"].includes(type.kind) ? hasSubtype(type.element, references, seen)
 							: ["tuple", "result"].includes(type.kind) && type.arguments.some(child => hasSubtype(child, references, seen));
 	};
+	const checkedRecordDefinition = (value, references) => {
+		const names = new Set();
+		for(let depth = 0; depth <= 1024; depth++)
+		{
+			if(value?.kind === "reference")
+			{
+				if(names.has(value.name)) throw new TypeError("Recursive checked record alias chain");
+				const target = references.get(value.name) ?? namedTypes.get(value.name);
+				if(!target) throw new TypeError(`Missing compiler type definition: ${value.name}`);
+				names.add(value.name); value = target; continue;
+			}
+			if(value?.kind === "alias")
+			{
+				if(typeof value.name !== "string") throw new TypeError("Invalid checked record alias identity");
+				names.add(value.name); value = value.target; continue;
+			}
+			return { definition: value, names };
+		}
+		throw new TypeError("Checked record alias chain exceeds its bound");
+	};
 	const refinement = (type, nominal = false, shared = false, references = new Map(), seen = new Set(), depth = 0, produced = false) => {
 		if(type.kind === "graph") return refinement(type.root, nominal, shared,
 			new Map(type.types.map(definition => [definition.name, definition])), new Set(), depth, produced);
@@ -211,10 +231,14 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 		{
 			if(shared && ["subtype", "checked-record"].includes(type.predicate.kind)) return null;
 			if(type.predicate.kind !== "checked-record") return structuredClone(type.predicate);
-			const fields = type.base.fields.map(field => ({ name: field.name
-				, refinement: refinement(field.type, true, shared, references, seen, depth + 1, produced) }));
-			return depth > 0 || fields.some(field => field.refinement !== null)
-				? { kind: "checked-record", name: type.base.name, constructor: type.predicate.constructor, fields }
+			const reference = type.base?.kind === "reference" ? type.base.name : null;
+			const resolved = checkedRecordDefinition(type.base, references), base = resolved.definition;
+			if(base?.kind !== "record" || !Object.hasOwn(base, "erased")) throw new TypeError("Checked record refinement lacks its erased record definition");
+			const inner = new Set([...seen, ...resolved.names, base.name]);
+			const fields = base.fields.map(field => ({ name: field.name
+				, refinement: refinement(field.type, true, shared, references, inner, depth + 1, produced) }));
+			return depth > 0 || reference !== null || fields.some(field => field.refinement !== null)
+				? { kind: "checked-record", name: base.name, constructor: type.predicate.constructor, fields }
 				: structuredClone(type.predicate);
 		}
 		if(type.kind === "record" && type.erased)

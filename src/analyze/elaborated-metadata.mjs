@@ -11,6 +11,24 @@ import { validateCopiedMetadataGraph } from "./copied-metadata-graph.mjs";
 import { exportContractFor, exportContractProblem, validateExportConfiguration } from "./export-configuration.mjs";
 
 const fail = message => { throw Object.assign(new Error(message), { code: "invalid-elaborated-metadata" }); };
+const checkedRecordDefinition = (value, references) => {
+	const seen = new Set();
+	for(let depth = 0; depth <= 1024; depth++)
+	{
+		if(value?.kind === "reference")
+		{
+			if(typeof value.name !== "string" || seen.has(value.name) || !references?.has(value.name)) fail("Invalid checked record alias");
+			seen.add(value.name); value = references.get(value.name); continue;
+		}
+		if(value?.kind === "alias")
+		{
+			if(typeof value.name !== "string") fail("Invalid checked record alias");
+			seen.add(value.name); value = value.target; continue;
+		}
+		return value;
+	}
+	fail("Checked record alias chain exceeds its bound");
+};
 const closed = (value, keys) => {
 	if(!value || typeof value !== "object" || Array.isArray(value)
 		|| canonicalJson(Object.keys(value).sort()) !== canonicalJson([...keys].sort())) fail("Elaborated metadata fields must be closed");
@@ -165,7 +183,8 @@ export const validateElaboratedMetadata = (report, request) => {
 					if(type?.kind === "graph")
 					{
 						if(references) fail("Nested component copied graph");
-						validateCopiedMetadataGraph(type, (value, table) => copied(value, 0, table, refinements, true, produced)); return;
+						validateCopiedMetadataGraph(type, (value, table, context) => copied(value, 0, table
+							, refinements, true, produced, context.definition && value.kind === "record" && Object.hasOwn(value, "erased"))); return;
 					}
 					if(type?.kind === "reference")
 					{
@@ -188,8 +207,9 @@ export const validateElaboratedMetadata = (report, request) => {
 						if(type.predicate?.kind === "checked-record")
 						{
 							closed(type.predicate, ["kind", "constructor"]);
+							const base = checkedRecordDefinition(type.base, references);
 							if(typeof type.predicate.constructor !== "string" || !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$/.test(type.predicate.constructor)
-								|| type.base?.kind !== "record" || !Object.hasOwn(type.base, "erased")) fail("Invalid checked record refinement");
+								|| base?.kind !== "record" || !Object.hasOwn(base, "erased")) fail("Invalid checked record refinement");
 							copied(type.base, depth, references, refinements, true, false, true);
 							return;
 						}
@@ -243,6 +263,9 @@ export const validateElaboratedMetadata = (report, request) => {
 					if(type?.kind === "record")
 					{
 						closed(type, ["kind", "name", "fields", ...["provenance", "erased"].filter(key => Object.hasOwn(type, key))]);
+						if(Object.hasOwn(type, "erased") && !checkedRecord
+							&& type.fields.some(field => containsKind(field?.type, ["refinement"], references)))
+							fail("Unsupported nested refinement position");
 						// Erased proof fields are named once and never cross. Inputs need the enclosing
 						// checked-record constructor; result paths are already proof-backed by Lean.
 						if(Object.hasOwn(type, "erased") && ((!checkedRecord && !produced)

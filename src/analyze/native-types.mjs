@@ -10,6 +10,26 @@ import { validateOwnedAggregatePolicy } from "./owned-aggregate-policy.mjs";
 
 const identifier = /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$/;
 const fail = message => { throw new TypeError(`native-library-v1: ${message}`); };
+
+const checkedRecordDefinition = (value, references) => {
+	const seen = new Set();
+	for(let depth = 0; depth <= 1024; depth++)
+	{
+		if(value?.kind === "reference")
+		{
+			if(typeof value.name !== "string" || seen.has(value.name) || !references?.has(value.name))
+				fail("checked record refinements require a closed nominal base");
+			seen.add(value.name); value = references.get(value.name); continue;
+		}
+		if(value?.kind === "alias")
+		{
+			if(typeof value.name !== "string") fail("checked record refinements require a named alias base");
+			seen.add(value.name); value = value.target; continue;
+		}
+		return value;
+	}
+	fail("checked record alias chain exceeds the nominal type limit");
+};
 const closed = (value, fields, label) => {
 	if(!value || ![Object.prototype, null].includes(Object.getPrototypeOf(value))
 		|| Reflect.ownKeys(value).length !== fields.length || Reflect.ownKeys(value).some(key => !fields.includes(key))
@@ -107,7 +127,8 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 	if(type.kind === "graph")
 	{
 		if(references) fail("nested copied graph");
-		validateCopiedMetadataGraph(type, (value, table) => validate(value, 0, true, table, policy, owned, true, site, true, subtypeResult, erasedTransport), true);
+		validateCopiedMetadataGraph(type, (value, table, context) => validate(value, 0, true, table, policy, owned, true, site, true, subtypeResult
+			, erasedTransport || context.definition), true);
 	} else if(type.kind === "reference")
 	{
 		if(typeof type.name !== "string" || !identifier.test(type.name) || type.name !== type.lean || !references?.has(type.name)) fail("reference requires a matching nominal definition in its graph");
@@ -130,7 +151,8 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 			if(!subtypeStructural || subtypeResult) fail("checked records require a structural native parameter constructor");
 			closed(type.predicate, ["kind", "constructor"], "refinement predicate");
 			if(typeof type.predicate.constructor !== "string" || !identifier.test(type.predicate.constructor)) fail("invalid checked record constructor");
-			if(type.base?.kind !== "record" || !Object.hasOwn(type.base, "erased")) fail("checked record refinements require a record with erased proofs");
+			const base = checkedRecordDefinition(type.base, references);
+			if(base?.kind !== "record" || !Object.hasOwn(base, "erased")) fail("checked record refinements require a record with erased proofs");
 			validate(type.base, depth, copied, references, policy, owned, structural, "checked-record", true, false, erasedTransport);
 		}
 		else if(type.predicate?.kind === "subtype")

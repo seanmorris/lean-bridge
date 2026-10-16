@@ -86,7 +86,6 @@ export const componentRefinementMirrors = (abi, exports, leanType, nominalRefine
 				if(tree !== null) fail("recursive selected refinements require another representation");
 				const cycle = active.get(type.id);
 				if(cycle === undefined) return null;
-				if(definition?.erased) fail("recursive checked records require another representation");
 				usedCycles.add(cycle);
 				return { kind: "recursive", definition: type.id.slice(5), cycle };
 			}
@@ -112,6 +111,7 @@ export const componentRefinementMirrors = (abi, exports, leanType, nominalRefine
 					kind: "checked-record", definition: type.id.slice(5)
 					, constructor: produced ? null : tree.constructor
 					, fields: definition.fields.map(field => field.name), arguments: arguments_
+					, ...(usedCycles.has(cycle) ? { cycle } : {})
 				};
 			}
 			const fields = (members, choices, bounds) => members.map((field, index) =>
