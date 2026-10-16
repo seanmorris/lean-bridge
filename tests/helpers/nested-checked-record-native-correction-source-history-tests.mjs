@@ -77,12 +77,14 @@ test("nested native correction history reconstructs every exact source predecess
 
 test("nested native corrections refresh only source pins", async () => {
 	const path = "docs/type-surface.v1.json";
-	const currentText = await readFile(path, "utf8");
-	const current = JSON.parse(currentText);
 	const record = JSON.parse(await readFile(
 		nestedCheckedRecordNativeCorrectionHistoryPath, "utf8"
 	));
 	const inventoryUpdate = record.updates.find(update => update.path === path);
+	const currentText = beforeFinRefinementSource(
+		path, await readFile(path, "utf8"), inventoryUpdate.currentSha256
+	);
+	const current = JSON.parse(currentText);
 	const previous = JSON.parse(beforeNestedCheckedRecordNativeCorrectionSource(
 		path, currentText, inventoryUpdate.previousSha256
 	));

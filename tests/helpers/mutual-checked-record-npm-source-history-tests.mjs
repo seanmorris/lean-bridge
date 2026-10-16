@@ -74,10 +74,12 @@ test("mutual checked-record npm history reconstructs every predecessor source", 
 
 test("mutual checked-record npm history refreshes only predecessor pins", async () => {
 	const path = "docs/type-surface.v1.json";
-	const currentText = await readFile(path, "utf8");
-	const current = JSON.parse(currentText);
 	const record = JSON.parse(await readFile(mutualCheckedRecordNpmHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
+	const currentText = beforeFinRefinementSource(
+		path, await readFile(path, "utf8"), update.currentSha256
+	);
+	const current = JSON.parse(currentText);
 	const previous = JSON.parse(reverseMutualCheckedRecordNpmUpdate(currentText, update));
 	assert.deepEqual(beforeMutualCheckedRecordNpmPins(current)
 		, beforeMutualCheckedRecordPins(previous));

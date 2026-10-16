@@ -69,12 +69,14 @@ test("the npm archive history reconstructs every exact predecessor source", asyn
 
 test("the npm archive history refreshes only predecessor source pins", async () => {
 	const path = "docs/type-surface.v1.json";
-	const currentText = await readFile(path, "utf8");
-	const current = JSON.parse(currentText);
 	const record = JSON.parse(await readFile(
 		mutualCheckedRecordNpmArchiveHistoryPath, "utf8"
 	));
 	const update = record.updates.find(item => item.path === path);
+	const currentText = beforeFinRefinementSource(
+		path, await readFile(path, "utf8"), update.currentSha256
+	);
+	const current = JSON.parse(currentText);
 	const previous = JSON.parse(reverseMutualCheckedRecordNpmArchiveUpdate(
 		currentText, update
 	));

@@ -67,12 +67,14 @@ test("the recursive .NET history reconstructs every exact predecessor source", a
 
 test("the recursive .NET history refreshes only predecessor source pins", async () => {
 	const path = "docs/type-surface.v1.json";
-	const currentText = await readFile(path, "utf8");
-	const current = JSON.parse(currentText);
 	const record = JSON.parse(await readFile(
 		mutualCheckedRecordDotnetHistoryPath, "utf8"
 	));
 	const update = record.updates.find(item => item.path === path);
+	const currentText = beforeFinRefinementSource(
+		path, await readFile(path, "utf8"), update.currentSha256
+	);
+	const current = JSON.parse(currentText);
 	const previous = JSON.parse(reverseMutualCheckedRecordDotnetUpdate(
 		currentText, update
 	));

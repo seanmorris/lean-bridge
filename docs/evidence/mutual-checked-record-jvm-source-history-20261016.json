@@ -1,0 +1,467 @@
+{
+  "schemaVersion": 1,
+  "milestone": "mutual-checked-record-jvm-source-v1",
+  "predecessorCommit": "703c69d98df381ec776d59b4aa927ca2e20c1d66",
+  "draftParentCommit": "a96cfe9e06628dc0db73c658b8e660bd5cd423f0",
+  "pinCount": 40,
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "0f39e50e589bab643bf4f74ae0b35331842959a5660aa812b14f0648683d0ae6",
+      "currentSha256": "cae309b1cf1e2cdd39468e33f00b92c26ff44971e365fc7807ecb68139957ff2",
+      "edits": [
+        {
+          "start": 50871,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 707695,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 721726,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 733101,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 747321,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 758775,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 770846,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 782134,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 790717,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 797175,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 805561,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 813538,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 836468,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 1025676,
+          "previous": "          \"sha256\": \"51c4e2ab523e5677a1114316eccc0d6ea035329bcb3c9da98556f45d88141c7a\"\n",
+          "current": "          \"sha256\": \"5031da0a0c42623bfc57fc4eacb40dda10cb4ec69afa0caf9ca98ac6f596fccd\"\n"
+        },
+        {
+          "start": 1025851,
+          "previous": "          \"sha256\": \"aec0485334249592e544ca05209c3976443b2fc519578bc9583cf8dbc3f71e7e\"\n",
+          "current": "          \"sha256\": \"1bd39ed111fbad197b4f47f88f903f73cb5029e3c4cbaf02c829514b221f3c36\"\n"
+        },
+        {
+          "start": 1026534,
+          "previous": "          \"sha256\": \"6a4b76db2102b0a7c916e7e1c12419cb9672539dd6a4460b2ba90b16800d00af\"\n",
+          "current": "          \"sha256\": \"9f85d21dea3fb9be2eb23780af59f386e8bf5e05ec3c1de9bb57dcda6be1f9d9\"\n"
+        },
+        {
+          "start": 1026705,
+          "previous": "          \"sha256\": \"552bd7bf0952fd6f652a23d424c58fe21be6276982c1ea0ac3a7db91a2bc30cc\"\n",
+          "current": "          \"sha256\": \"c20c68be68f801ee9cdc8b4ed498ae16811f82af6f2fcad0902751f7155ae2e3\"\n"
+        },
+        {
+          "start": 1078061,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 1084759,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 1091762,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 1099268,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 1106222,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 1113856,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 1123094,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 1132221,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 1147156,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 1155203,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 1164175,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 1173566,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 1186589,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 1219701,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 1249945,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 1282881,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 1322184,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 1348725,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 1357301,
+          "previous": "          \"sha256\": \"51c4e2ab523e5677a1114316eccc0d6ea035329bcb3c9da98556f45d88141c7a\"\n",
+          "current": "          \"sha256\": \"5031da0a0c42623bfc57fc4eacb40dda10cb4ec69afa0caf9ca98ac6f596fccd\"\n"
+        },
+        {
+          "start": 1371105,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 1390997,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 1412450,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        },
+        {
+          "start": 1425469,
+          "previous": "          \"sha256\": \"aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387\"\n",
+          "current": "          \"sha256\": \"87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/jvm/copied-graph-assets.mjs",
+      "previousSha256": "51c4e2ab523e5677a1114316eccc0d6ea035329bcb3c9da98556f45d88141c7a",
+      "currentSha256": "5031da0a0c42623bfc57fc4eacb40dda10cb4ec69afa0caf9ca98ac6f596fccd",
+      "edits": [
+        {
+          "start": 527,
+          "previous": "",
+          "current": "\tconst diagnostics = !callable && Boolean(model.refinementDiagnostics);\n"
+        },
+        {
+          "start": 2036,
+          "previous": "${model.functions.map((fn, index) => `                resolved[${index}] = new _GraphRuntime.Target(downcall(lookup, \"${fn.name}_graph\", java.lang.foreign.FunctionDescriptor.of(java.lang.foreign.ValueLayout.JAVA_INT, ${Array.from({ length: fn.parameters.length + 1 }, () => \"java.lang.foreign.ValueLayout.ADDRESS\").join(\", \")})), clear, lifecycle);`).join(\"\\n\")}`;\n",
+          "current": "${model.functions.map((fn, index) => `                resolved[${index}] = new _GraphRuntime.Target(downcall(lookup, \"${fn.name}_graph\", java.lang.foreign.FunctionDescriptor.of(java.lang.foreign.ValueLayout.JAVA_INT, ${Array.from({ length: fn.parameters.length + 1 }, () => \"java.lang.foreign.ValueLayout.ADDRESS\").join(\", \")})), ${diagnostics ? \"diagnostic, \" : \"\"}clear, lifecycle);`).join(\"\\n\")}`;\n"
+        },
+        {
+          "start": 3900,
+          "previous": "                var initialize = downcall(lookup, \"${model.prefix}_graph_initialize\", java.lang.foreign.FunctionDescriptor.of(java.lang.foreign.ValueLayout.JAVA_INT));\n",
+          "current": "${diagnostics ? `                var diagnostic = downcall(lookup, \"${model.prefix}_graph_error\", java.lang.foreign.FunctionDescriptor.of(java.lang.foreign.ValueLayout.ADDRESS));\n` : \"\"}                var initialize = downcall(lookup, \"${model.prefix}_graph_initialize\", java.lang.foreign.FunctionDescriptor.of(java.lang.foreign.ValueLayout.JAVA_INT));\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/jvm/copied-graph-conversions.mjs",
+      "previousSha256": "aec0485334249592e544ca05209c3976443b2fc519578bc9583cf8dbc3f71e7e",
+      "currentSha256": "1bd39ed111fbad197b4f47f88f903f73cb5029e3c4cbaf02c829514b221f3c36",
+      "edits": [
+        {
+          "start": 167,
+          "previous": "import { jvmGraphRuntime } from \"./copied-graph-runtime.mjs\";\n",
+          "current": "import {\n\tjvmGraphRuntime, jvmGraphRuntimeWithoutDiagnostics\n} from \"./copied-graph-runtime.mjs\";\n"
+        },
+        {
+          "start": 1855,
+          "previous": "\tlet budget = 16 * 1024 * 1024 - jvmGraphRuntime.length - jvmGraphScalars.length - model.layoutSource.length;\n",
+          "current": "\tlet budget = 16 * 1024 * 1024\n\t\t- Math.max(jvmGraphRuntime.length, jvmGraphRuntimeWithoutDiagnostics.length)\n\t\t- jvmGraphScalars.length - model.layoutSource.length;\n"
+        },
+        {
+          "start": 9747,
+          "previous": "",
+          "current": "\tconst refinementDiagnostics = ir.declarations.some(declaration =>\n\t\tdeclaration.source?.extensions?.[\"lean-lang.org/refinements\"]\n\t\t\t?.parameters?.some(Boolean));\n\tconst runtime = refinementDiagnostics\n\t\t? jvmGraphRuntime : jvmGraphRuntimeWithoutDiagnostics;\n"
+        },
+        {
+          "start": 10217,
+          "previous": "\t\t, [`${prefix}/_GraphRuntime.java`]: `package ${model.namespace};\\n\\n${jvmGraphRuntime}`\n",
+          "current": "\t\t, [`${prefix}/_GraphRuntime.java`]: `package ${model.namespace};\\n\\n${runtime}`\n"
+        },
+        {
+          "start": 11501,
+          "previous": "\treturn { ...model\n",
+          "current": "\treturn { ...model, refinementDiagnostics\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/jvm/copied-graph-package.mjs",
+      "previousSha256": "6a4b76db2102b0a7c916e7e1c12419cb9672539dd6a4460b2ba90b16800d00af",
+      "currentSha256": "9f85d21dea3fb9be2eb23780af59f386e8bf5e05ec3c1de9bb57dcda6be1f9d9",
+      "edits": [
+        {
+          "start": 2009,
+          "previous": "\treturn { ...model, ir, prefix, functions, kotlin, layoutSha256: sha256(canonicalJson(model.layout)) };\n",
+          "current": "\treturn { ...model, ir, prefix, functions, kotlin\n\t\t, refinementDiagnostics: model.refinementDiagnostics\n\t\t, layoutSha256: sha256(canonicalJson(model.layout)) };\n"
+        },
+        {
+          "start": 8755,
+          "previous": "\t\t, supportedFeatures: [\"direct-functions\", \"copied-values\", \"recursive-values\", \"deterministic-close\"]\n",
+          "current": "\t\t, supportedFeatures: [\"direct-functions\", \"copied-values\", \"recursive-values\"\n\t\t\t, \"deterministic-close\"\n\t\t\t, ...model.refinementDiagnostics ? [\"checked-refinement-diagnostics\"] : []]\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/jvm/copied-graph-runtime.mjs",
+      "previousSha256": "552bd7bf0952fd6f652a23d424c58fe21be6276982c1ea0ac3a7db91a2bc30cc",
+      "currentSha256": "c20c68be68f801ee9cdc8b4ed498ae16811f82af6f2fcad0902751f7155ae2e3",
+      "edits": [
+        {
+          "start": 254,
+          "previous": "export const jvmGraphRuntime = `final class _GraphRuntime {\n",
+          "current": "export const jvmGraphRuntimeWithoutDiagnostics = `final class _GraphRuntime {\n"
+        },
+        {
+          "start": 15925,
+          "previous": "",
+          "current": "\n/**\n * Read the exact checked-refinement diagnostic only for contracts that expose\n * the authenticated graph-error symbol. Keep the legacy runtime above byte\n * identical for every package without refinements.\n */\nexport const jvmGraphRuntime = jvmGraphRuntimeWithoutDiagnostics\n\t.replace(\n\t\t\"record Target(java.lang.invoke.MethodHandle invoke, java.lang.invoke.MethodHandle clear, Lifecycle lifecycle) { }\"\n\t\t, \"record Target(java.lang.invoke.MethodHandle invoke, java.lang.invoke.MethodHandle diagnostic, java.lang.invoke.MethodHandle clear, Lifecycle lifecycle) { }\"\n\t)\n\t.replace(`    static void status(int status) {\n        switch (status) {\n            case 0: return;\n            case 1: throw new IllegalArgumentException(\"Invalid native copied input\");`, `    static void status(int status) { status(status, null); }\n    static void status(int status, java.lang.invoke.MethodHandle diagnostic) {\n        switch (status) {\n            case 0: return;\n            case 1:\n                if (diagnostic != null) {\n                    try {\n                        var pointer = (java.lang.foreign.MemorySegment)diagnostic.invokeExact();\n                        if (pointer.address() != 0) {\n                            var bytes = pointer.reinterpret(16 * 1024 + 1L);\n                            int length = 0;\n                            while (length <= 16 * 1024\n                                && bytes.get(java.lang.foreign.ValueLayout.JAVA_BYTE, length) != 0) length++;\n                            if (length > 16 * 1024)\n                                throw new InvalidNative(\"Native refinement diagnostic exceeds 16 KiB\");\n                            var data = bytes.asSlice(0, length).toArray(java.lang.foreign.ValueLayout.JAVA_BYTE);\n                            String text;\n                            try {\n                                text = java.nio.charset.StandardCharsets.UTF_8.newDecoder()\n                                    .onMalformedInput(java.nio.charset.CodingErrorAction.REPORT)\n                                    .onUnmappableCharacter(java.nio.charset.CodingErrorAction.REPORT)\n                                    .decode(java.nio.ByteBuffer.wrap(data)).toString();\n                            } catch (java.nio.charset.CharacterCodingException error) {\n                                throw new InvalidNative(\"Native refinement diagnostic is not UTF-8\");\n                            }\n                            throw new IllegalArgumentException(text);\n                        }\n                    } catch (InvalidNative | IllegalArgumentException error) { throw error; }\n                    catch (Throwable error) { throw propagate(error); }\n                }\n                throw new IllegalArgumentException(\"Invalid native copied input\");`)\n\t.replace(\n\t\t\"target.lifecycle().before(); status((int)target.invoke().invokeWithArguments(nativeArguments));\"\n\t\t, \"target.lifecycle().before(); status((int)target.invoke().invokeWithArguments(nativeArguments), target.diagnostic());\"\n\t);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "6d9dca848b9427209c391c2d518e34b32611805e96c2d01ca090cc28507492d4",
+      "currentSha256": "e6b72889d0c703276b442d8ab00234d5ad3a4b63041ed4e645ce463606d32917",
+      "edits": [
+        {
+          "start": 13177,
+          "previous": "",
+          "current": "import { beforeMutualCheckedRecordJvmSource, mutualCheckedRecordJvmChangedPaths } from \"./mutual-checked-record-jvm-source-history.mjs\";\n"
+        },
+        {
+          "start": 64259,
+          "previous": "",
+          "current": "\tsource = beforeMutualCheckedRecordJvmSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 82140,
+          "previous": "",
+          "current": "\t, ...mutualCheckedRecordJvmChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/mutual-checked-record-npm-source-history-tests.mjs",
+      "previousSha256": "197bb533d48dd56443a1dbadfb7451803916c25d5bd35568e6c6fd07658611ab",
+      "currentSha256": "af852194dda2e15eb1174aefe6ca54564b418371bcaeeffa6b8236b8ef588c94",
+      "edits": [
+        {
+          "start": 3363,
+          "previous": "\tconst currentText = await readFile(path, \"utf8\");\n\tconst current = JSON.parse(currentText);\n",
+          "current": ""
+        },
+        {
+          "start": 3515,
+          "previous": "",
+          "current": "\tconst currentText = beforeFinRefinementSource(\n\t\tpath, await readFile(path, \"utf8\"), update.currentSha256\n\t);\n\tconst current = JSON.parse(currentText);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/mutual-checked-record-source-history-tests.mjs",
+      "previousSha256": "26f2a8662066a32b3ca1446228fae457f533f49198f34a714408de1d53926539",
+      "currentSha256": "8cfc46c808148c19b4f88b6979a77770c7326f9cc708e7d26364b86604302b86",
+      "edits": [
+        {
+          "start": 512,
+          "previous": "import {\n\tbeforeMutualCheckedRecordNpmSource\n} from \"./mutual-checked-record-npm-source-history.mjs\";\n",
+          "current": ""
+        },
+        {
+          "start": 3112,
+          "previous": "\tconst currentText = beforeMutualCheckedRecordNpmSource(\n",
+          "current": "\tconst currentText = beforeFinRefinementSource(\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-matrix-closure-source-history-tests.mjs",
+      "previousSha256": "9eece029143e1032f68fc4e951599244916d64b0521a2984ed8195387fb9824a",
+      "currentSha256": "3d51d8c8e5f825ce7dc1059ff8c1fda300a306c66bb2f93f07dc8f2482a2ea05",
+      "edits": [
+        {
+          "start": 3193,
+          "previous": "\tconst currentText = await readFile(path, \"utf8\");\n\tconst current = JSON.parse(currentText);\n",
+          "current": ""
+        },
+        {
+          "start": 3360,
+          "previous": "",
+          "current": "\tconst currentText = beforeFinRefinementSource(\n\t\tpath, await readFile(path, \"utf8\"), update.currentSha256\n\t);\n\tconst current = JSON.parse(currentText);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-native-correction-source-history-tests.mjs",
+      "previousSha256": "2feb3c31c649fd88e398f7616c623e840c25160c7f6f96207fe7f7610ba3d8a1",
+      "currentSha256": "f627cf46d79be97a49598bb8338968411cfdae3bd26381d81ad876612ca6fe3a",
+      "edits": [
+        {
+          "start": 3561,
+          "previous": "\tconst currentText = await readFile(path, \"utf8\");\n\tconst current = JSON.parse(currentText);\n",
+          "current": ""
+        },
+        {
+          "start": 3744,
+          "previous": "",
+          "current": "\tconst currentText = beforeFinRefinementSource(\n\t\tpath, await readFile(path, \"utf8\"), inventoryUpdate.currentSha256\n\t);\n\tconst current = JSON.parse(currentText);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-quality-source-history-tests.mjs",
+      "previousSha256": "291e51ccdd7d3c1a770027cec5b838cbdd2b4ce0806b010c6e5b30c98fc5e067",
+      "currentSha256": "8098f0c9cb7c890f22459354ffb7e7e9e74103ca2ec17805849a45f6cd59da2d",
+      "edits": [
+        {
+          "start": 3076,
+          "previous": "\tconst currentText = await readFile(path, \"utf8\");\n\tconst current = JSON.parse(currentText);\n",
+          "current": ""
+        },
+        {
+          "start": 3237,
+          "previous": "",
+          "current": "\tconst currentText = beforeFinRefinementSource(\n\t\tpath, await readFile(path, \"utf8\"), update.currentSha256\n\t);\n\tconst current = JSON.parse(currentText);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/mutual-checked-record-dotnet-source-history.test.mjs",
+      "previousSha256": "fa1d4df448405a7933c03a57fbff914acbf0acd0ba2c5ee88a8dc75d22198dfe",
+      "currentSha256": "9c2d3ebfa600ca9e25bba77d5fc29d25030428346a9877478f4e1f3e74003f82",
+      "edits": [
+        {
+          "start": 3069,
+          "previous": "\tconst currentText = await readFile(path, \"utf8\");\n\tconst current = JSON.parse(currentText);\n",
+          "current": ""
+        },
+        {
+          "start": 3229,
+          "previous": "",
+          "current": "\tconst currentText = beforeFinRefinementSource(\n\t\tpath, await readFile(path, \"utf8\"), update.currentSha256\n\t);\n\tconst current = JSON.parse(currentText);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/mutual-checked-record-npm-archive-source-history.test.mjs",
+      "previousSha256": "073746a14b8a0cf23c715dd906d4db9a61ab45c83914e9aca89a8277ced9a363",
+      "currentSha256": "9174574a26bd0a220dab7e9ec5675eb2e5d8e5930e3e4c5ed86aba49773ae785",
+      "edits": [
+        {
+          "start": 3143,
+          "previous": "\tconst currentText = await readFile(path, \"utf8\");\n\tconst current = JSON.parse(currentText);\n",
+          "current": ""
+        },
+        {
+          "start": 3307,
+          "previous": "",
+          "current": "\tconst currentText = beforeFinRefinementSource(\n\t\tpath, await readFile(path, \"utf8\"), update.currentSha256\n\t);\n\tconst current = JSON.parse(currentText);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/type-surface.test.mjs",
+      "previousSha256": "aac37c9aef18a7c0df823c87d29a6bd548343c6393332bd9364849b4f04d2387",
+      "currentSha256": "87ffcb74426405b80a1c05b80edfa96405eda8eda16ce7983e5ca0aa1e6ae324",
+      "edits": [
+        {
+          "start": 7752,
+          "previous": "",
+          "current": "import { withoutMutualCheckedRecordJvm } from \"./helpers/mutual-checked-record-jvm-source-history.mjs\";\n"
+        },
+        {
+          "start": 9615,
+          "previous": "\tlet current = withoutMutualCheckedRecordDotnet(\n",
+          "current": "\tlet current = withoutMutualCheckedRecordJvm(\n"
+        },
+        {
+          "start": 9702,
+          "previous": "",
+          "current": "\tcurrent = withoutMutualCheckedRecordDotnet(file, current);\n"
+        }
+      ]
+    }
+  ]
+}
