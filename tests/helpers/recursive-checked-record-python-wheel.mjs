@@ -9,7 +9,7 @@ import { access, mkdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { nativeArtifactPaths, verifyNativeFiles } from "../../src/build/native-artifacts.mjs";
-import { generateCopiedPythonGraphPackage } from "../../src/backends/python/copied-graph-package.mjs";
+import { compileCopiedPythonGraphPackageModel, generateCopiedPythonGraphPackage } from "../../src/backends/python/copied-graph-package.mjs";
 import { runCopied } from "./copied-fixture-install.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { recursiveCheckedRecordPythonPackage } from "./recursive-checked-record-python-fixture.mjs";
@@ -30,9 +30,14 @@ export const recursiveCheckedRecordPythonReceipt = fixture =>
  * @param adapter - Native C adapter receipt.
  * @param runtime - Shared runtime manifest.
  * @param fixture - Recursive or mutual module.
+ * @param bindingIr - Compiler model contract, which fixes the copied-graph layout.
  */
-export const recursiveCheckedRecordPythonNativeEvidence = (receipt, component, adapter, runtime, fixture) => {
+export const recursiveCheckedRecordPythonNativeEvidence = (receipt, component, adapter, runtime, fixture, bindingIr) => {
 	const { moduleName } = recursiveCheckedRecordPythonPackage(fixture);
+	// Graph wheels bind their loader identity to the independently derived layout.
+	const copiedGraph = { schemaVersion: 1
+		, layoutSha256: compileCopiedPythonGraphPackageModel(bindingIr).layoutSha256 };
+	assert.deepEqual(adapter.copiedGraph, copiedGraph);
 	assert.equal(sha256(canonicalJson(runtime)), receipt.runtimeIdentity);
 	assert.equal(component.runtimeIdentity, receipt.runtimeIdentity); assert.equal(adapter.runtimeIdentity, receipt.runtimeIdentity);
 	assert.equal(component.bindingIrSha256, receipt.bindingIrSha256); assert.equal(adapter.bindingIrSha256, receipt.bindingIrSha256);
@@ -47,7 +52,7 @@ export const recursiveCheckedRecordPythonNativeEvidence = (receipt, component, a
 	return { runtimeIdentity: receipt.runtimeIdentity
 		, componentId: receipt.component.id
 		, componentReceiptSha256: sha256(canonicalJson(component))
-		, library: adapter.library, libraries };
+		, copiedGraph, library: adapter.library, libraries };
 };
 
 /**
@@ -111,14 +116,17 @@ export const inspectRecursiveCheckedRecordPythonWheel = async ({ root, archive, 
 	const json = async path => JSON.parse(await readFile(join(root, `${moduleName}/lean_bridge/${path}`)));
 	assert.deepEqual(await json("component/model.json"), model);
 	const component = await json("component/native-component.json"), adapter = await json("native-c-adapter.json"), runtime = await json("runtime.json");
-	const evidence = recursiveCheckedRecordPythonNativeEvidence(receipt, component, adapter, runtime, fixture);
+	const evidence = recursiveCheckedRecordPythonNativeEvidence(receipt, component, adapter, runtime, fixture, model.bindingIr);
 	// Every selected export has parameter refinements, so exact diagnostics are mandatory.
 	const generated = generateCopiedPythonGraphPackage(model.bindingIr, evidence, { refinementDiagnostics: true });
 	assert.match(generated[`${moduleName}/_native.py`], new RegExp(`_LIBRARY\\["${name}_graph_error"\\]`, "u"));
 	for(const [path, source] of Object.entries(generated))
 		assert.equal(await readFile(join(root, path.startsWith(`${moduleName}/`) ? path : `${moduleName}/lean_bridge/${path}`), "utf8"), source);
 	const metadata = await readFile(join(root, `${name}-${version}.dist-info/METADATA`), "utf8");
-	assert.match(metadata, /^Requires-Python: >=3\.11$/mu); assert.doesNotMatch(metadata, /^Requires-Dist:/mu);
+	assert.match(metadata, /^Requires-Python: >=3\.11$/mu);
+	// Container aliases need TypeAliasType, which Python 3.11 takes from typing_extensions.
+	assert.deepEqual(metadata.match(/^Requires-Dist: .*$/gmu)
+		, ['Requires-Dist: typing_extensions (<5,>=4.6); python_version < "3.12"']);
 	const files = {}, retained = [];
 	for(const path of paths)
 	{
