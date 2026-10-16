@@ -70,8 +70,15 @@ export const checkNestedCheckedRecordPhpWasmControls = async (originals, options
 		, model => { model.exports.pop(); }
 		, model => { model.sourceIdentity.request.exports.pop(); }
 		, model => { model.sourceIdentity.exportConfigurationSha256 = "0".repeat(64); }
-		, model => { model.exports.find(item => item.name.endsWith(".produce")).refinements.result.arguments[0].arguments[19].bound = "4"; }
-		, ...options.mode === "full" ? [model => { model.exports.find(item => item.name.endsWith(".echoA")).refinements.parameters[0].arguments[0].constructor = "NestedCheckedRecords.unitB"; }] : []
+		, model => {
+			const packet = model.exports.find(item => item.name.endsWith(".produceOption")).refinements.result.arguments[0];
+			assert.equal(packet.kind, "checked-record"); assert.equal(packet.fields[0], "digit"); packet.arguments[0].bound = "9";
+		}
+		, ...options.mode === "full" ? [model => {
+			const packet = model.exports.find(item => item.name.endsWith(".first")).refinements.parameters[0];
+			assert.equal(packet.arguments[1].constructor, "NestedCheckedRecords.mkWord");
+			packet.arguments[1].constructor = "NestedCheckedRecords.normalizeWord";
+		}] : []
 	]) await refuse((records, report) => {
 		const path = `build-${index}/model.json`, model = load(records, path); mutate(model); save(records, path, model);
 		report.builds[index].modelSha256 = sha256(records.get(path));
