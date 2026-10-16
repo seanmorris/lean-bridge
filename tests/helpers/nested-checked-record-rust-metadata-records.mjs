@@ -8,8 +8,10 @@ import { posix } from "node:path";
 import { nestedCheckedRecordRustLockedPackages } from "./nested-checked-record-rust-dependency-records.mjs";
 
 const registry = "registry+https://github.com/rust-lang/crates.io-index";
-const inputNames = ["echo_a", "echo_b", "refuse_unit", "combine"
-	, "echo_pair", "echo_event_a", "echo_event_b", "aliases"];
+const inputNames = [
+	"first", "second", "pair", "in_array", "in_list", "in_option"
+	, "in_product", "in_except", "in_holder", "in_choice", "echo_array"
+];
 const features = {
 	"crypto-common": ["std"]
 	, digest: ["alloc", "block-buffer", "core-api", "default", "std"]

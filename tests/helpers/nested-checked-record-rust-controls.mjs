@@ -118,7 +118,7 @@ export const checkNestedCheckedRecordRustControls = async (originalRead, options
 		, ["consumer.Cargo.toml", value => value + '\n[build-dependencies]\ncc = "1"\n']
 		, ["consumer.config.toml", value => value.replace("vendor/dependencies", "/tmp/cache")]
 		, ["link-only", value => value.replace("exit 65", "true")]
-		, ["api-probe.rs", value => value.replace("echo_a", "forged_input")]
+		, ["api-probe.rs", value => value.replace("in_holder", "forged_input")]
 	];
 	for(const [path, transform] of sourceChanges)
 	{ await reject(new Map([[path, Buffer.from(transform(originals.get(path).toString()))]]), path); environmentControls++; }

@@ -11,8 +11,10 @@ import { checkNestedCheckedRecordRustMetadata, checkNestedCheckedRecordRustCompi
 
 const absolute = path => assert.ok(typeof path === "string" && path.startsWith("/") && posix.normalize(path) === path && !/[\0\r\n]/u.test(path));
 const runKeys = run => assert.deepEqual(Object.keys(run).sort(), ["code", "stderr", "stdout"]);
-const inputNames = ["echo_a", "echo_b", "refuse_unit", "combine"
-	, "echo_pair", "echo_event_a", "echo_event_b", "aliases"];
+const inputNames = [
+	"first", "second", "pair", "in_array", "in_list", "in_option"
+	, "in_product", "in_except", "in_holder", "in_choice", "echo_array"
+];
 
 /**
  * Bind tools, Cargo inputs and the complete dependency closure to original records.
