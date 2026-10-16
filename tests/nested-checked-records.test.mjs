@@ -14,6 +14,7 @@ import "./helpers/nested-checked-record-browser-ci-tests.mjs";
 import "./helpers/nested-checked-record-browser-ci-workflow-tests.mjs";
 import "./helpers/nested-checked-record-browser-promotion-tests.mjs";
 import "./helpers/nested-checked-record-browser-promotion-history-tests.mjs";
+import "./helpers/nested-checked-record-native-correction-source-history-tests.mjs";
 import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { inspectLeanProject } from "../src/analyze/lean-project.mjs";

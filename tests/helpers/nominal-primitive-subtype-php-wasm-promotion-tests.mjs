@@ -13,8 +13,25 @@ import {
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
 import { docPages } from "../../site/registry.mjs";
 import {
-	nominalPrimitiveSubtypePhpWasmPromotionPredecessor
+	nominalPrimitiveSubtypePhpWasmPromotionHistoryPath
+	, nominalPrimitiveSubtypePhpWasmPromotionPredecessor
 } from "./nominal-primitive-subtype-php-wasm-promotion-history.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import {
+	beforeNestedCheckedRecordNativeCorrectionPins
+} from "./nested-checked-record-native-correction-source-history.mjs";
+import {
+	beforeNominalPrimitiveSubtypeJvmPromotionPins
+} from "./nominal-primitive-subtype-jvm-promotion-history.mjs";
+import {
+	beforeNominalPrimitiveSubtypeWitPromotionPins
+} from "./nominal-primitive-subtype-wit-promotion-history.mjs";
+import {
+	beforeNestedCheckedRecordBrowserPromotionPins
+} from "./nested-checked-record-browser-promotion-history.mjs";
+import {
+	beforeRecursiveSubtypePhpWasmPromotionPins
+} from "./recursive-subtype-php-wasm-promotion-history.mjs";
 import {
 	nominalPrimitiveSubtypePhpWasmProducer
 } from "./nominal-primitive-subtype-php-wasm-provenance.mjs";
@@ -134,8 +151,20 @@ test("primitive-base PHP-Wasm promotion rejects narrowed references and overlaps
 test("primitive-base PHP-Wasm promotion supplements six cells only", async () => {
 	const original = predecessor();
 	const references = await nominalPrimitiveSubtypePhpWasmReferences();
-	const proposed = await promoteNominalPrimitiveSubtypePhpWasm(original, references);
-	const { document, ...contracts } = await readTypeSurface();
+	const proposed = beforeRecursiveSubtypePhpWasmPromotionPins(
+		beforeNestedCheckedRecordBrowserPromotionPins(
+			beforeNominalPrimitiveSubtypeWitPromotionPins(
+				beforeNominalPrimitiveSubtypeJvmPromotionPins(
+					beforeNestedCheckedRecordNativeCorrectionPins(
+						await promoteNominalPrimitiveSubtypePhpWasm(original, references))))));
+	const { document: live, ...contracts } = await readTypeSurface();
+	const history = JSON.parse(await readFile(
+		nominalPrimitiveSubtypePhpWasmPromotionHistoryPath, "utf8"));
+	const expected = history.updates.find(item =>
+		item.path === "docs/type-surface.v1.json").currentSha256;
+	const document = JSON.parse(beforeFinRefinementSource("docs/type-surface.v1.json"
+		, await readFile("docs/type-surface.v1.json", "utf8"), expected));
+	assert.ok(live.evidence.length >= document.evidence.length);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(proposed.evidence.length, original.evidence.length + 4);
 	assert.equal(proposed.observations.length, original.observations.length);

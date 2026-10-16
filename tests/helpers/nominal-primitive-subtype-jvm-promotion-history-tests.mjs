@@ -30,7 +30,7 @@ test("primitive-base JVM history authenticates the support transition", async t 
 	const original = path => execFileSync("git", ["show", `${nominalPrimitiveSubtypeJvmPromotionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalPrimitiveSubtypeJvmPromotionSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		const previous = reverseNominalPrimitiveSubtypeJvmPromotionUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNominalPrimitiveSubtypeJvmPromotionSource(update.path, current), previous);
@@ -51,7 +51,11 @@ test("primitive-base JVM history authenticates the support transition", async t 
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
 	const expected = await promoteNominalPrimitiveSubtypeJvm(JSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypeJvmReferences());
-	assert.equal(beforeNominalPrimitiveSubtypeJvmPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
+	const inventoryUpdate = record.updates.find(item => item.path === inventoryPath);
+	const checkpoint = beforeFinRefinementSource(inventoryPath,
+		await readFile(inventoryPath, "utf8"), inventoryUpdate.currentSha256);
+	assert.equal(beforeNominalPrimitiveSubtypeJvmPromotionSource(
+		inventoryPath, checkpoint), original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{
@@ -59,8 +63,6 @@ test("primitive-base JVM history authenticates the support transition", async t 
 		if(update && file.sha256 === update.previousSha256)
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
-	const update = record.updates.find(item => item.path === inventoryPath);
-	const checkpoint = beforeNominalPrimitiveSubtypeJvmPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8"), update.currentSha256);
 	assert.equal(JSON.stringify(JSON.parse(checkpoint)), JSON.stringify(expected));
 	assert.equal(expected.evidence.length, 574); assert.equal(expected.observations.length, 605);
 	t.diagnostic(`${pins} current-source pins refreshed; exactly twelve Java and Kotlin cells supplemented`);

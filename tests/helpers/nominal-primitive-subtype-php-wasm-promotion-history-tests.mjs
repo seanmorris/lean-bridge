@@ -11,6 +11,21 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import {
+	beforeNestedCheckedRecordNativeCorrectionPins
+} from "./nested-checked-record-native-correction-source-history.mjs";
+import {
+	beforeNominalPrimitiveSubtypeJvmPromotionPins
+} from "./nominal-primitive-subtype-jvm-promotion-history.mjs";
+import {
+	beforeNominalPrimitiveSubtypeWitPromotionPins
+} from "./nominal-primitive-subtype-wit-promotion-history.mjs";
+import {
+	beforeNestedCheckedRecordBrowserPromotionPins
+} from "./nested-checked-record-browser-promotion-history.mjs";
+import {
+	beforeRecursiveSubtypePhpWasmPromotionPins
+} from "./recursive-subtype-php-wasm-promotion-history.mjs";
+import {
 	nominalPrimitiveSubtypePhpWasmReferences
 	, promoteNominalPrimitiveSubtypePhpWasm
 } from "./nominal-primitive-subtype-php-wasm-promotion.mjs";
@@ -69,9 +84,14 @@ test("primitive-base PHP-Wasm history authenticates the support transition", asy
 		}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	const expected = await promoteNominalPrimitiveSubtypePhpWasm(
-		JSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypePhpWasmReferences()
-	);
+	const expected = beforeRecursiveSubtypePhpWasmPromotionPins(
+		beforeNestedCheckedRecordBrowserPromotionPins(
+			beforeNominalPrimitiveSubtypeWitPromotionPins(
+				beforeNominalPrimitiveSubtypeJvmPromotionPins(
+					beforeNestedCheckedRecordNativeCorrectionPins(
+						await promoteNominalPrimitiveSubtypePhpWasm(
+							JSON.parse(original(inventoryPath))
+							, await nominalPrimitiveSubtypePhpWasmReferences()))))));
 	assert.equal(beforeNominalPrimitiveSubtypePhpWasmPromotionSource(
 		inventoryPath, beforeFinRefinementSource(
 			inventoryPath, await readFile(inventoryPath, "utf8")
