@@ -142,7 +142,7 @@ const assertHandoff = async (read, report, original) => {
 	}
 	assert.deepEqual(packages.component.dependencies
 		, { "@lean-bridge/runtime": packages.runtime.version });
-	const manifest = await canonical(read, "installed/package.json");
+	const manifest = JSON.parse(await read("installed/package.json"));
 	const lock = JSON.parse(await read("installed/package-lock.json"));
 	assert.deepEqual(manifest, { private: true, type: "module", dependencies: manifest.dependencies });
 	assert.equal(lock.lockfileVersion, 3);
@@ -322,6 +322,10 @@ export const checkNestedCheckedRecordNpmReport = async (read, {
 	assert.match(install.stderr, /^(?:npm notice[^\n]*\n)*$/u);
 	assert.match(install.stdout, /^\nadded 2 packages in [0-9]+(?:ms|s)\n$/u);
 	assert.equal(report.observations.length, 2);
+	const expectedCounts = nestedCheckedRecordNpmExpected(route);
+	const expectedRuntime = {
+		node: runtime.node, platform: runtime.platform, arch: runtime.arch
+	};
 	for(const [index, name] of ["installed", "relocated"].entries())
 	{
 		const observation = await canonical(read, `${name}.json`);
@@ -330,11 +334,11 @@ export const checkNestedCheckedRecordNpmReport = async (read, {
 			, ["relocated", "result", "runtime", "typescript"]);
 		assert.equal(observation.relocated, index === 1);
 		assert.deepEqual(observation.result, {
-			code: 0, stdout: JSON.stringify(report.expected) + "\n", stderr: ""
+			code: 0, stdout: JSON.stringify(expectedCounts) + "\n", stderr: ""
 		});
 		assert.deepEqual(observation.typescript, { code: 0, stdout: "", stderr: "" });
 		assert.deepEqual(observation.runtime, {
-			code: 0, stdout: JSON.stringify(runtime) + "\n", stderr: ""
+			code: 0, stdout: JSON.stringify(expectedRuntime) + "\n", stderr: ""
 		});
 	}
 	const artifacts = await assertHandoff(read, report, original);
