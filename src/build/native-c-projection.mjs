@@ -14,7 +14,7 @@ import { generateGmpProjection } from "../backends/c/gmp-projection.mjs";
 import { generateCallableCGraphPackage } from "../backends/c/callable-graph-package.mjs";
 import { generateCopiedGraphPackage } from "../backends/c/graph-package.mjs";
 import { generateCallableCppGraphPackage } from "../backends/cpp/callable-graph-package.mjs";
-import { nativeGraphProjectionSources } from "./native-graph-sources.mjs";
+import { nativeGraphProjectionSources, nativeGraphRefinementDiagnostics } from "./native-graph-sources.mjs";
 import { rubyGraphClearSource } from "../backends/ruby/copied-graph-package.mjs";
 import { generateCopiedJvmGraphConversions } from "../backends/jvm/copied-graph-conversions.mjs";
 import { generateCopiedPhpGraphConversions } from "../backends/php/copied-graph-conversions.mjs";
@@ -76,9 +76,7 @@ export const projectNativeCFamily = async ({ working, nativeRoot, runtimeRoot, l
 		...targets.includes("c") ? generateCallableCGraphPackage(model.bindingIr).files : {}
 		, ...targets.includes("cpp") ? generateCallableCppGraphPackage(model.bindingIr).files : {}
 	} : null;
-	const refinementDiagnostics = !graph?.callableGraph && model.exports.some(
-		item => item.refinements?.parameters?.some(Boolean)
-	);
+	const refinementDiagnostics = !graph?.callableGraph && nativeGraphRefinementDiagnostics(model);
 	const files = graph ? { ...graph.callableGraph ? callableFiles
 		: cGraphTargets.length ? generateCopiedGraphPackage(model.bindingIr, cGraphTargets
 			, { refinementDiagnostics }).files : {} }

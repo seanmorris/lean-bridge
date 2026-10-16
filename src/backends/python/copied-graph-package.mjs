@@ -71,7 +71,10 @@ _graph_retire = _GraphAssets._LIBRARY["${model.prefix}_graph_retire"]
 _graph_retire.argtypes = []
 _graph_retire.restype = None
 _graph_lifecycle = (_graph_initialize, _graph_ready, _graph_retire)
-
+${generated.refinementDiagnostics ? `_graph_diagnostic = _GraphAssets._LIBRARY["${model.prefix}_graph_error"]
+_graph_diagnostic.argtypes = []
+_graph_diagnostic.restype = _c.c_char_p
+` : ""}
 ${calls.map(fn => `_fn${fn.index} = _GraphAssets._LIBRARY["${fn.name}_graph"]
 _fn${fn.index}.argtypes = [${[...fn.root.parameters, fn.root.result].map(id => `_c.POINTER(${raw.get(id)})`).join(", ")}]
 _fn${fn.index}.restype = _c.c_uint32
@@ -87,9 +90,13 @@ def _call${fn.index}(${fn.parameters.map((_, i) => `arg${i}`).join(", ")}):
  *
  * @param ir - Compiler-checked finite copied graph contract.
  * @param evidence - Closed native artifact identities, or null for inspection.
+ * @param options - Generated call features.
+ * @param options.refinementDiagnostics - Read exact checked-refinement failures from the adapter.
  */
-export const generateCopiedPythonGraphPackage = (ir, evidence = null) => {
-	const model = compileCopiedPythonGraphPackageModel(ir), generated = generateCopiedPythonGraphConversions(ir);
+export const generateCopiedPythonGraphPackage = (ir, evidence = null, { refinementDiagnostics = false } = {}) => {
+	const model = compileCopiedPythonGraphPackageModel(ir);
+	const generated = { ...generateCopiedPythonGraphConversions(ir, { refinementDiagnostics })
+		, refinementDiagnostics };
 	const calls = functions(model), exports = ["LeanBridgeError", ...model.exports, ...calls.map(fn => fn.publicName)];
 	const { packageDir } = model, publicModule = `${packageDir}/__init__.py`, typeStub = `${packageDir}/__init__.pyi`;
 	const files = {

@@ -68,6 +68,8 @@ import { withoutNestedCheckedRecordPhpWasmPromotion } from "./helpers/nested-che
 import { withoutNestedCheckedRecordRustPromotion } from "./helpers/nested-checked-record-rust-promotion-history.mjs";
 import { withoutNestedCheckedRecordMatrixClosure } from "./helpers/nested-checked-record-matrix-closure-source-history.mjs";
 import { withoutMutualCheckedRecord } from "./helpers/mutual-checked-record-source-history.mjs";
+import { withoutMutualCheckedRecordNpm } from "./helpers/mutual-checked-record-npm-source-history.mjs";
+import { withoutPythonGraphDiagnostic } from "./helpers/python-graph-diagnostic-source-history.mjs";
 
 const execute = promisify(execFile);
 const root = path.resolve(import.meta.dirname, "..");
@@ -109,7 +111,9 @@ const observationFixture = () => {
 
 test("historical shape comparisons preserve old cells without weakening the live classifier", async () => {
 	const file = "docs/type-surface.v1.json";
-	let current = withoutMutualCheckedRecord(file, await readFile(file, "utf8"));
+	let current = withoutPythonGraphDiagnostic(file, await readFile(file, "utf8"));
+	current = withoutMutualCheckedRecordNpm(file, current);
+	current = withoutMutualCheckedRecord(file, current);
 	current = withoutNestedCheckedRecordMatrixClosure(file
 		, current);
 	current = withoutNestedCheckedRecordRustPromotion(file, current);

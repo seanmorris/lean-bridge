@@ -11,6 +11,7 @@ import { readVerifiedSourceNotices } from "./source-notices.mjs";
 import { compiledPackageMetadata, pythonPackageMetadata } from "../analyze/package-metadata.mjs";
 import { nativeArtifactPaths } from "../build/native-artifacts.mjs";
 import { ordinaryPythonEvidence } from "../build/native-python-artifacts.mjs";
+import { nativeGraphRefinementDiagnostics } from "../build/native-graph-sources.mjs";
 import { processBuildRunner } from "../build/process-runner.mjs";
 import { generateCopiedPythonPackage } from "../backends/python/copied-values.mjs";
 import { generateCopiedPythonGraphPackage } from "../backends/python/copied-graph-package.mjs";
@@ -35,7 +36,9 @@ export const packageOrdinaryPython = async options => {
 	const generate = model.copiedGraph
 		? model.copiedGraph.callbacks ? generateCallablePythonGraphPackage : generateCopiedPythonGraphPackage
 		: generateCopiedPythonPackage;
-	const root = join(working, "packages/pypi/wheel"), files = generate(model.bindingIr, evidence);
+	const root = join(working, "packages/pypi/wheel"), files = generate(model.bindingIr, evidence
+		, ...generate === generateCopiedPythonGraphPackage
+			? [{ refinementDiagnostics: nativeGraphRefinementDiagnostics(model) }] : []);
 	auditPythonPackage(model.bindingIr, files);
 	const moduleName = projection.packageDir, metadataRoot = `${moduleName}/lean_bridge`;
 	const save = async (path, bytes) => { await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), bytes, { flag: "wx" }); };

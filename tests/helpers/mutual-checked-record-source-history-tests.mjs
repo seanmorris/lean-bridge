@@ -11,9 +11,6 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import {
-	beforeMutualCheckedRecordNpmSource
-} from "./mutual-checked-record-npm-source-history.mjs";
 import { beforeNestedCheckedRecordMatrixClosurePins } from "./nested-checked-record-matrix-closure-source-history.mjs";
 import {
 	beforeMutualCheckedRecordPins
@@ -70,7 +67,8 @@ test("mutual checked-record history refreshes only immediately preceding source 
 	const path = "docs/type-surface.v1.json";
 	const record = JSON.parse(await readFile(mutualCheckedRecordHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	const currentText = beforeMutualCheckedRecordNpmSource(
+	// Later layers stack on this inventory; rewind them through the shared hub.
+	const currentText = beforeFinRefinementSource(
 		path, await readFile(path, "utf8"), update.currentSha256
 	);
 	const current = JSON.parse(currentText);

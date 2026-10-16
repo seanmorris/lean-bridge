@@ -9,6 +9,16 @@ import { generateNativeCallableGraphCalls } from "../backends/c/native-callable-
 import { nominalRefinementEntries } from "../abi/refinements.mjs";
 
 /**
+ * Whether the copied graph adapters export exact checked-refinement diagnostics.
+ * Host wrappers must read them exactly when the adapter provides them.
+ *
+ * @param model - Verified native component model.
+ */
+export const nativeGraphRefinementDiagnostics = model => Boolean(model.copiedGraph)
+	&& !model.copiedGraph.callbacks
+	&& model.exports.some(item => item.refinements?.parameters?.some(Boolean));
+
+/**
  * Return exact private headers and implementation for a checked graph component.
  *
  * @param model - Verified native component model.
