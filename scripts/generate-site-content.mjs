@@ -5,7 +5,7 @@
  */
 
 import { createHash } from 'node:crypto';
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawn } from 'node:child_process';
 import { mkdir, readFile, realpath, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -44,6 +44,46 @@ const syntaxClasses = new Map([
 	, ['#ffa198', 'syntax-coral']
 	, ['#ffa657', 'syntax-orange']
 ]);
+
+/**
+ * Reads every tracked path without imposing child_process.execFile's fixed
+ * stdout buffer on repositories with large evidence archives.
+ *
+ * @param root - Repository root.
+ */
+async function listTrackedFiles(root)
+{
+	const child = spawn('git', ['ls-files', '-z'], {
+		cwd: root, stdio: ['ignore', 'pipe', 'pipe']
+	});
+	let pending = '';
+	let stderr = '';
+	const trackedFiles = new Set();
+	child.stdout.setEncoding('utf8');
+	child.stderr.setEncoding('utf8');
+	child.stderr.on('data', chunk => { stderr += chunk; });
+	const completed = new Promise((resolve, reject) => {
+		child.once('error', reject);
+		child.once('close', (code, signal) => resolve({ code, signal }));
+	});
+	for await(const chunk of child.stdout)
+	{
+		const paths = `${pending}${chunk}`.split('\0');
+		pending = paths.pop();
+		for(const trackedPath of paths)
+		{
+			if(trackedPath) trackedFiles.add(trackedPath);
+		}
+	}
+	const { code, signal } = await completed;
+	if(code !== 0)
+	{
+		const outcome = signal ? `signal ${signal}` : `exit code ${code}`;
+		throw new Error(`git ls-files failed with ${outcome}: ${stderr.trim()}`);
+	}
+	if(pending) trackedFiles.add(pending);
+	return trackedFiles;
+}
 
 /**
  * Visits Markdown or HTML syntax nodes without loading a browser dependency.
@@ -351,9 +391,7 @@ export async function generateSiteContent(options = {})
 	const revision = execFileSync('git', ['rev-parse', 'HEAD'], {
 		cwd: root, encoding: 'utf8'
 	}).trim();
-	const trackedFiles = new Set(execFileSync('git', ['ls-files', '-z'], {
-		cwd: root, encoding: 'utf8'
-	}).split('\0').filter(Boolean));
+	const trackedFiles = await listTrackedFiles(root);
 	const highlighter = await createHighlighter({
 		themes: ['github-dark-default'], langs: languages
 	});
