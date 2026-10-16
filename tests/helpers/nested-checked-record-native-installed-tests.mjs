@@ -40,9 +40,8 @@ import {
 } from "./nominal-subtype-dotnet-resources.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 
-const { enabled, profiles, routes, modes }
+const { enabled, profiles, routes, modes, maxLoad }
 	= nestedCheckedRecordNativeSelection(process.env);
-const maxLoad = 10;
 
 for(const route of routes) for(const mode of modes) test(
 	`installed nested checked-record native packages reproduce and relocate ${route} ${mode}`,

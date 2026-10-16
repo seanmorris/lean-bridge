@@ -57,10 +57,18 @@ export const nestedCheckedRecordNativeSelection = environment => {
 	};
 	if(environment[prefix + "OUTPUT"] !== undefined)
 		assert.equal(flag, "1", "Explicit nested checked-record native OUTPUT requires TEST=1");
+	const configuredMaxLoad = environment[prefix + "MAX_LOAD"];
+	if(configuredMaxLoad !== undefined)
+		assert.equal(flag, "1"
+			, "Explicit nested checked-record native MAX_LOAD requires TEST=1");
+	const maxLoad = configuredMaxLoad === undefined
+		? environment.CI === "true" ? 6 : 10 : Number(configuredMaxLoad);
+	assert.ok([6, 8, 10, 12].includes(maxLoad)
+		, "Nested checked-record native max load must be 6, 8, 10, or 12");
 	return {
 		enabled: flag === "1", profiles: nestedCheckedRecordNativeProfiles
 		, routes: select("ROUTES", nestedCheckedRecordNativeRoutes)
-		, modes: select("MODES", nestedCheckedRecordNativeModes)
+		, modes: select("MODES", nestedCheckedRecordNativeModes), maxLoad
 	};
 };
 

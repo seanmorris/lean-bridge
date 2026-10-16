@@ -27,19 +27,25 @@ test("nested checked-record native selection is closed over both public projecti
 	assert.deepEqual(nestedCheckedRecordNativeSelection({}), {
 		enabled: false, profiles: ["c", "cpp"]
 		, routes: ["ordinary", "reviewed"], modes: ["full", "result-only"]
+		, maxLoad: 10
 	});
 	assert.deepEqual(nestedCheckedRecordNativeSelection({
 		LEAN_BRIDGE_NESTED_CHECKED_RECORD_NATIVE_TEST: "1"
 		, LEAN_BRIDGE_NESTED_CHECKED_RECORD_NATIVE_ROUTES: "reviewed"
 		, LEAN_BRIDGE_NESTED_CHECKED_RECORD_NATIVE_MODES: "result-only"
+		, LEAN_BRIDGE_NESTED_CHECKED_RECORD_NATIVE_MAX_LOAD: "12"
 	}), {
 		enabled: true, profiles: ["c", "cpp"]
-		, routes: ["reviewed"], modes: ["result-only"]
+		, routes: ["reviewed"], modes: ["result-only"], maxLoad: 12
 	});
+	assert.equal(nestedCheckedRecordNativeSelection({ CI: "true" }).maxLoad, 6);
 	for(const environment of [
 		{ LEAN_BRIDGE_NESTED_CHECKED_RECORD_NATIVE_TEST: "yes" }
 		, { LEAN_BRIDGE_NESTED_CHECKED_RECORD_NATIVE_PROFILES: "c" }
 		, { LEAN_BRIDGE_NESTED_CHECKED_RECORD_NATIVE_ROUTES: "ordinary" }
+		, { LEAN_BRIDGE_NESTED_CHECKED_RECORD_NATIVE_MAX_LOAD: "12" }
+		, { LEAN_BRIDGE_NESTED_CHECKED_RECORD_NATIVE_TEST: "1"
+			, LEAN_BRIDGE_NESTED_CHECKED_RECORD_NATIVE_MAX_LOAD: "13" }
 		, { LEAN_BRIDGE_NESTED_CHECKED_RECORD_NATIVE_TEST: "1"
 			, LEAN_BRIDGE_NESTED_CHECKED_RECORD_NATIVE_ROUTES: "ordinary,ordinary" }
 	]) assert.throws(() => nestedCheckedRecordNativeSelection(environment));
