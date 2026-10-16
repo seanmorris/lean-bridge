@@ -18,7 +18,7 @@ import {
 export { mutualCheckedRecordJvmEvidence };
 // Filled with the immutable index identity after the one-shot archive is committed.
 export const mutualCheckedRecordJvmEvidenceSha256
-	= "0000000000000000000000000000000000000000000000000000000000000000";
+	= "a8e00568597d7fbf4e9e917881863c2d25c9058b401dd4d7c697ddd39f3b854b";
 
 const safePath = path => typeof path === "string"
 	&& /^[A-Za-z0-9_.+/@-]+(?:\/[A-Za-z0-9_.+@-]+)*$/u.test(path)

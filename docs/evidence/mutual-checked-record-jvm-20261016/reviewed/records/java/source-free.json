@@ -1,0 +1,101 @@
+{
+  "closure": {
+    "classpathFilesSha256": "58139a60bb6b3c5ad1e768f57bd992e95916aa4a2682fe71cd9620c4a3f02ebb",
+    "files": {
+      "classes/Consumer$CarrierMutation.class": {
+        "bytes": 485,
+        "sha256": "f0d198d683496e959b3127f63c8524a4456565957e49fb159f9c1e8a672219e5"
+      },
+      "classes/Consumer$Failure.class": {
+        "bytes": 1308,
+        "sha256": "1e84e6716e61cc633a8410d5f3a607e95c42961af7b8f575d01f98b7ffde2f09"
+      },
+      "classes/Consumer.class": {
+        "bytes": 23270,
+        "sha256": "39bc807cdcbe18ee6e4068aa68ed892a9ef0ae6c517cb729aaa5c72c45a3d6b5"
+      },
+      "component.jar": {
+        "bytes": 51524065,
+        "sha256": "45b421f3ddc03b515c5104b7a1a13a5b248ea9ed2566adcdd9418376d3610e3d"
+      }
+    },
+    "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e"
+  },
+  "compilerFree": true,
+  "cwd": "/tmp/lean-bridge-mutual-checked-record-jvm-UNaaFX/java-source-free",
+  "result": {
+    "calls": 290,
+    "checks": 590,
+    "failures": {
+      "alternate-subtype": {
+        "message": "arg0.value was rejected by MutualCheckedRecords.plusTwo",
+        "name": "IllegalArgumentException"
+      },
+      "cycle-construction": {
+        "message": "Java record fields refuse cycle construction",
+        "name": "CarrierMutation"
+      },
+      "depth": {
+        "message": "Copied graph depth or node limit exceeded",
+        "name": "Limit"
+      },
+      "echo-group-late-subtype": {
+        "message": "arg0[0]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusTwo",
+        "name": "IllegalArgumentException"
+      },
+      "group-late-subtype": {
+        "message": "arg0[0]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne",
+        "name": "IllegalArgumentException"
+      },
+      "late-subtype": {
+        "message": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne",
+        "name": "IllegalArgumentException"
+      },
+      "negative-nat": {
+        "message": "Nat cannot be negative",
+        "name": "IllegalArgumentException"
+      },
+      "nested-fin": {
+        "message": "arg0.next?.more.packet.mode is not below its Fin 3 bound",
+        "name": "IllegalArgumentException"
+      },
+      "null-alias-carrier": {
+        "message": "Expected copied value of type org.leanbridge.mutualcheckedrecords.Option[]",
+        "name": "IllegalArgumentException"
+      },
+      "null-record": {
+        "message": "Expected copied value of type org.leanbridge.mutualcheckedrecords.Envelope",
+        "name": "IllegalArgumentException"
+      },
+      "outer-fin": {
+        "message": "arg0.mode is not below its Fin 3 bound",
+        "name": "IllegalArgumentException"
+      },
+      "outer-record": {
+        "message": "arg0 was rejected by MutualCheckedRecords.mkEnvelope",
+        "name": "IllegalArgumentException"
+      },
+      "outer-subtype": {
+        "message": "arg0.value was rejected by MutualCheckedRecords.plusOne",
+        "name": "IllegalArgumentException"
+      },
+      "round late subtype": {
+        "message": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne",
+        "name": "IllegalArgumentException"
+      }
+    },
+    "hostRejections": 5,
+    "recoveries": 77,
+    "rejections": 72,
+    "rounds": 64,
+    "snapshots": 290,
+    "wordBits": 64
+  },
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":590,\"rejections\":72,\"hostRejections\":5,\"calls\":290,\"snapshots\":290,\"recoveries\":77,\"rounds\":64,\"wordBits\":64,\"failures\":{\"outer-subtype\":{\"name\":\"IllegalArgumentException\",\"message\":\"arg0.value was rejected by MutualCheckedRecords.plusOne\"},\"late-subtype\":{\"name\":\"IllegalArgumentException\",\"message\":\"arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\"},\"outer-record\":{\"name\":\"IllegalArgumentException\",\"message\":\"arg0 was rejected by MutualCheckedRecords.mkEnvelope\"},\"outer-fin\":{\"name\":\"IllegalArgumentException\",\"message\":\"arg0.mode is not below its Fin 3 bound\"},\"nested-fin\":{\"name\":\"IllegalArgumentException\",\"message\":\"arg0.next?.more.packet.mode is not below its Fin 3 bound\"},\"group-late-subtype\":{\"name\":\"IllegalArgumentException\",\"message\":\"arg0[0]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\"},\"echo-group-late-subtype\":{\"name\":\"IllegalArgumentException\",\"message\":\"arg0[0]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusTwo\"},\"alternate-subtype\":{\"name\":\"IllegalArgumentException\",\"message\":\"arg0.value was rejected by MutualCheckedRecords.plusTwo\"},\"null-record\":{\"name\":\"IllegalArgumentException\",\"message\":\"Expected copied value of type org.leanbridge.mutualcheckedrecords.Envelope\"},\"null-alias-carrier\":{\"name\":\"IllegalArgumentException\",\"message\":\"Expected copied value of type org.leanbridge.mutualcheckedrecords.Option[]\"},\"cycle-construction\":{\"name\":\"CarrierMutation\",\"message\":\"Java record fields refuse cycle construction\"},\"depth\":{\"name\":\"Limit\",\"message\":\"Copied graph depth or node limit exceeded\"},\"negative-nat\":{\"name\":\"IllegalArgumentException\",\"message\":\"Nat cannot be negative\"},\"round late subtype\":{\"name\":\"IllegalArgumentException\",\"message\":\"arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\"}}}\n"
+  },
+  "sourcesRemoved": true,
+  "stage": "source-free"
+}

@@ -1,0 +1,40 @@
+{
+  "archiveSha256": "45b421f3ddc03b515c5104b7a1a13a5b248ea9ed2566adcdd9418376d3610e3d",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "NullProbe.kt",
+    "-d",
+    "classes"
+  ],
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/app/.toolchains/jdk22",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "invalid": false,
+  "outputs": {
+    "META-INF/main.kotlin_module": {
+      "bytes": 41,
+      "sha256": "14d9d137a46fc5f49ea00828cb3ad2d35b84c9918bbca55a496bdbdf5366c5f9"
+    },
+    "NullProbeKt.class": {
+      "bytes": 1995,
+      "sha256": "b4f6a536de67e67d81eca784a176ba8b4386493663fb0557b669225af95fb1b8"
+    }
+  },
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.mutualcheckedrecords.kotlin.*\nfun root() = Api.first(Envelope(java.math.BigInteger.ONE, java.math.BigInteger.ONE, Option.none()))\nfun aliases() = Api.groups(arrayOf(Option.none<Envelope>()))\nfun active() = StepMore(Envelope(java.math.BigInteger.ONE, java.math.BigInteger.ONE, Option.none()))\n",
+  "sourceSha256": "5579e343384540264794c82f5ea889a19f44e02fcc1a30c16db8f900c450121e"
+}

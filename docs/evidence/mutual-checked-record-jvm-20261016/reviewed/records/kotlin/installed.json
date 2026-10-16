@@ -1,0 +1,87 @@
+{
+  "closure": {
+    "classpathFilesSha256": "605eaa275d23b9a4039a02af920d7604ed5356b952ac5bd7b5f4c2d8f60d7734",
+    "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+    "packageFileSetSha256": "a80917a78853f6c2617b259c9c6b4b37b9875a0ccc1112f4dc1b87996f201c65",
+    "receiptSha256": "ab39eea2ef8405dafda7865ab345d59ddba6dedbc822e856ca68dbf39fc92ec5"
+  },
+  "cwd": "/tmp/lean-bridge-mutual-checked-record-jvm-UNaaFX/kotlin",
+  "result": {
+    "calls": 292,
+    "checks": 593,
+    "failures": {
+      "alternate-subtype": {
+        "message": "arg0.value was rejected by MutualCheckedRecords.plusTwo",
+        "name": "IllegalArgumentException"
+      },
+      "cycle": {
+        "message": "Cyclic copied input",
+        "name": "IllegalArgumentException"
+      },
+      "depth": {
+        "message": "Copied graph depth or node limit exceeded",
+        "name": "Limit"
+      },
+      "echo-group-late-subtype": {
+        "message": "arg0[0]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusTwo",
+        "name": "IllegalArgumentException"
+      },
+      "group-late-subtype": {
+        "message": "arg0[0]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne",
+        "name": "IllegalArgumentException"
+      },
+      "late-subtype": {
+        "message": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne",
+        "name": "IllegalArgumentException"
+      },
+      "negative-nat": {
+        "message": "Nat cannot be negative",
+        "name": "IllegalArgumentException"
+      },
+      "nested-fin": {
+        "message": "arg0.next?.more.packet.mode is not below its Fin 3 bound",
+        "name": "IllegalArgumentException"
+      },
+      "null-active-field": {
+        "message": "Expected copied value of type org.leanbridge.mutualcheckedrecords.kotlin.Envelope",
+        "name": "IllegalArgumentException"
+      },
+      "null-alias-carrier": {
+        "message": "Parameter specified as non-null is null: method org.leanbridge.mutualcheckedrecords.kotlin.Api$Companion.groups, parameter value0",
+        "name": "NullPointerException"
+      },
+      "null-record": {
+        "message": "Parameter specified as non-null is null: method org.leanbridge.mutualcheckedrecords.kotlin.Api$Companion.first, parameter value0",
+        "name": "NullPointerException"
+      },
+      "outer-fin": {
+        "message": "arg0.mode is not below its Fin 3 bound",
+        "name": "IllegalArgumentException"
+      },
+      "outer-record": {
+        "message": "arg0 was rejected by MutualCheckedRecords.mkEnvelope",
+        "name": "IllegalArgumentException"
+      },
+      "outer-subtype": {
+        "message": "arg0.value was rejected by MutualCheckedRecords.plusOne",
+        "name": "IllegalArgumentException"
+      },
+      "round late subtype": {
+        "message": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne",
+        "name": "IllegalArgumentException"
+      }
+    },
+    "hostRejections": 6,
+    "recoveries": 78,
+    "rejections": 72,
+    "rounds": 64,
+    "snapshots": 292,
+    "wordBits": 64
+  },
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":593,\"rejections\":72,\"hostRejections\":6,\"calls\":292,\"snapshots\":292,\"recoveries\":78,\"rounds\":64,\"wordBits\":64,\"failures\":{\"outer-subtype\":{\"name\":\"IllegalArgumentException\",\"message\":\"arg0.value was rejected by MutualCheckedRecords.plusOne\"}, \"late-subtype\":{\"name\":\"IllegalArgumentException\",\"message\":\"arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\"}, \"outer-record\":{\"name\":\"IllegalArgumentException\",\"message\":\"arg0 was rejected by MutualCheckedRecords.mkEnvelope\"}, \"outer-fin\":{\"name\":\"IllegalArgumentException\",\"message\":\"arg0.mode is not below its Fin 3 bound\"}, \"nested-fin\":{\"name\":\"IllegalArgumentException\",\"message\":\"arg0.next?.more.packet.mode is not below its Fin 3 bound\"}, \"group-late-subtype\":{\"name\":\"IllegalArgumentException\",\"message\":\"arg0[0]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\"}, \"echo-group-late-subtype\":{\"name\":\"IllegalArgumentException\",\"message\":\"arg0[0]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusTwo\"}, \"alternate-subtype\":{\"name\":\"IllegalArgumentException\",\"message\":\"arg0.value was rejected by MutualCheckedRecords.plusTwo\"}, \"null-record\":{\"name\":\"NullPointerException\",\"message\":\"Parameter specified as non-null is null: method org.leanbridge.mutualcheckedrecords.kotlin.Api$Companion.first, parameter value0\"}, \"null-alias-carrier\":{\"name\":\"NullPointerException\",\"message\":\"Parameter specified as non-null is null: method org.leanbridge.mutualcheckedrecords.kotlin.Api$Companion.groups, parameter value0\"}, \"null-active-field\":{\"name\":\"IllegalArgumentException\",\"message\":\"Expected copied value of type org.leanbridge.mutualcheckedrecords.kotlin.Envelope\"}, \"cycle\":{\"name\":\"IllegalArgumentException\",\"message\":\"Cyclic copied input\"}, \"depth\":{\"name\":\"Limit\",\"message\":\"Copied graph depth or node limit exceeded\"}, \"negative-nat\":{\"name\":\"IllegalArgumentException\",\"message\":\"Nat cannot be negative\"}, \"round late subtype\":{\"name\":\"IllegalArgumentException\",\"message\":\"arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\"}}}\n"
+  },
+  "stage": "installed"
+}

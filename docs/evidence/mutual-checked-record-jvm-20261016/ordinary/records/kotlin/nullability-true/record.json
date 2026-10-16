@@ -1,0 +1,31 @@
+{
+  "archiveSha256": "95cf1fe1700c009042b0b2925c75403f302527c1423e2c18e8628b93590fe426",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "NullProbe.kt",
+    "-d",
+    "classes"
+  ],
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/app/.toolchains/jdk22",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "invalid": true,
+  "outputs": {},
+  "run": {
+    "code": 1,
+    "stderr": "NullProbe.kt:2:24: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Envelope'.\nfun root() = Api.first(null)\n                       ^^^^\nNullProbe.kt:3:28: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Array<Option<Envelope>>'.\nfun aliases() = Api.groups(null)\n                           ^^^^\nNullProbe.kt:4:25: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Envelope'.\nfun active() = StepMore(null)\n                        ^^^^\n",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.mutualcheckedrecords.kotlin.*\nfun root() = Api.first(null)\nfun aliases() = Api.groups(null)\nfun active() = StepMore(null)\n",
+  "sourceSha256": "15599f83315c561c74bb948779efd3d4a3d9e90a16952b97019cd785b27ea212"
+}
