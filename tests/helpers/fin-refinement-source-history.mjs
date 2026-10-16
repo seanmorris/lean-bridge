@@ -104,6 +104,7 @@ import { beforeNestedCheckedRecordNativeCorrectionSource, nestedCheckedRecordNat
 import { beforeNestedCheckedRecordNativePromotionSource, nestedCheckedRecordNativePromotionChangedPaths } from "./nested-checked-record-native-promotion-history.mjs";
 import { beforeNestedCheckedRecordQualitySource, nestedCheckedRecordQualityChangedPaths } from "./nested-checked-record-quality-source-history.mjs";
 import { beforeNestedCheckedRecordDotnetPromotionSource, nestedCheckedRecordDotnetPromotionChangedPaths } from "./nested-checked-record-dotnet-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypeAuditCorrectionSource, nominalPrimitiveSubtypeAuditCorrectionChangedPaths } from "./nominal-primitive-subtype-audit-correction-history.mjs";
 import { beforeNominalPrimitiveSubtypeRustPromotionSource, nominalPrimitiveSubtypeRustPromotionChangedPaths } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
 import { beforeNestedCheckedRecordSource, nestedCheckedRecordChangedPaths } from "./nested-checked-record-source-history.mjs";
 import { beforeNestedCheckedRecordBrowserPromotionSource, nestedCheckedRecordBrowserPromotionChangedPaths } from "./nested-checked-record-browser-promotion-history.mjs";
@@ -757,6 +758,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeNominalPrimitiveSubtypeAuditCorrectionSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeNestedCheckedRecordDotnetPromotionSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeNestedCheckedRecordQualitySource(path, source, expected);
@@ -1109,6 +1112,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nestedCheckedRecordNativePromotionChangedPaths
 	, ...nestedCheckedRecordQualityChangedPaths
 	, ...nestedCheckedRecordDotnetPromotionChangedPaths
+	, ...nominalPrimitiveSubtypeAuditCorrectionChangedPaths
 ])].sort());
 
 /**

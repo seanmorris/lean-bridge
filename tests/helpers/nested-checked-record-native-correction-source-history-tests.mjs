@@ -9,6 +9,7 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { withoutNominalPrimitiveSubtypeAuditCorrection } from "./nominal-primitive-subtype-audit-correction-history.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import {
@@ -77,7 +78,8 @@ test("nested native correction history reconstructs every exact source predecess
 
 test("nested native corrections refresh only source pins", async () => {
 	const path = "docs/type-surface.v1.json";
-	const currentText = await readFile(path, "utf8");
+	// The newer #1499 audit correction only refreshes pins; read this layer's output through it.
+	const currentText = withoutNominalPrimitiveSubtypeAuditCorrection(path, await readFile(path, "utf8"));
 	const current = JSON.parse(currentText);
 	const record = JSON.parse(await readFile(
 		nestedCheckedRecordNativeCorrectionHistoryPath, "utf8"

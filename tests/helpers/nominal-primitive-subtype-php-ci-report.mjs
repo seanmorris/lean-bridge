@@ -107,3 +107,16 @@ export const checkNominalPrimitiveSubtypePhpCiRecords = async (options, { tap, r
 	assert.equal(result.archiveSha256, archiveSha256);
 	return { ...result, tools };
 };
+
+/**
+ * Expected retained paths for one checked selection. The report records already list the
+ * original handoff ZIP, so the archive path must be present once and is never appended.
+ *
+ * @param records - Retained record paths returned by the record check.
+ * @param archivePath - Authenticated original ZIP path below the record directory.
+ */
+export const nominalPrimitiveSubtypePhpCiPaths = (records, archivePath) => {
+	assert.equal(new Set(records).size, records.length, "Duplicate retained PHP record path");
+	assert.ok(records.includes(archivePath), "Retained PHP records omit the original ZIP");
+	return [...records].sort();
+};

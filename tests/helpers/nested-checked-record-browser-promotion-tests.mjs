@@ -30,6 +30,9 @@ import {
 } from "./nested-checked-record-browser-promotion-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import {
+	beforeNominalPrimitiveSubtypeAuditCorrectionPins
+} from "./nominal-primitive-subtype-audit-correction-history.mjs";
+import {
 	beforeNominalPrimitiveSubtypeWitPromotionPins
 } from "./nominal-primitive-subtype-wit-promotion-history.mjs";
 import {
@@ -109,8 +112,8 @@ test("nested checked-record promotion changes thirty exact cells and leaves call
 	const original = await inventory(), unchanged = structuredClone(original);
 	const references = await nestedCheckedRecordBrowserReferences();
 	const proposed = beforeNominalPrimitiveSubtypeWitPromotionPins(beforeNominalPrimitiveSubtypeJvmPromotionPins(
-		beforeNestedCheckedRecordNativeCorrectionPins(
-			await promoteNestedCheckedRecordBrowsers(original, references))));
+		beforeNestedCheckedRecordNativeCorrectionPins(beforeNominalPrimitiveSubtypeAuditCorrectionPins(
+			await promoteNestedCheckedRecordBrowsers(original, references)))));
 	const contract = await contracts(); validateTypeSurface(proposed, contract);
 	// Newer layers append receipts, supplement cells and refresh pins; read this
 	// layer's exact output through them.

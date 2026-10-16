@@ -11,6 +11,7 @@ import {
 	, parseNominalPrimitiveSubtypePhpCiArgs
 	, assertNominalPrimitiveSubtypePhpCiTap
 	, checkNominalPrimitiveSubtypePhpCiRecords
+	, nominalPrimitiveSubtypePhpCiPaths
 } from "./nominal-primitive-subtype-php-ci-report.mjs";
 
 const argsOf = options => Object.entries(options).flatMap(([key, value]) => ["--" + key, value]);
@@ -102,4 +103,14 @@ test("primitive-base native PHP CI rejects bad scope before opening retained rec
 	assert.deepEqual(reads, []);
 	await assert.rejects(checkNominalPrimitiveSubtypePhpCiRecords(options, original), error => error === sentinel);
 	assert.deepEqual(reads, ["tools.json"]);
+});
+
+test("primitive-base native PHP CI expects the original ZIP exactly once", () => {
+	// Hosted run 38824636357 appended the ZIP to records that already listed it.
+	const archive = "handoff/archives/example-nominalprimitivesubtypes-1.0.0-linux-x86_64.zip";
+	const records = ["report.json", archive, "handoff/package-set-receipt.json", "consumer.php"];
+	assert.deepEqual(nominalPrimitiveSubtypePhpCiPaths(records, archive), [...records].sort());
+	assert.equal(nominalPrimitiveSubtypePhpCiPaths(records, archive).filter(path => path === archive).length, 1);
+	assert.throws(() => nominalPrimitiveSubtypePhpCiPaths(records.filter(path => path !== archive), archive), /omit the original ZIP/u);
+	assert.throws(() => nominalPrimitiveSubtypePhpCiPaths([...records, archive], archive), /Duplicate retained/u);
 });

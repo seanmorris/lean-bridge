@@ -7,15 +7,22 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { withoutNominalPrimitiveSubtypeAuditCorrection } from "./nominal-primitive-subtype-audit-correction-history.mjs";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
 import { docPages } from "../../site/registry.mjs";
 import { nominalPrimitiveSubtypeBrowserProducer } from "./nominal-primitive-subtype-browser-archive.mjs";
-import { beforeNominalPrimitiveSubtypeNativePromotionPins, beforeNominalPrimitiveSubtypeNativePromotionSource } from "./nominal-primitive-subtype-native-promotion-history.mjs";
-import { nominalPrimitiveSubtypeBrowserPromotionPredecessor } from "./nominal-primitive-subtype-browser-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypeNativePromotionPins } from "./nominal-primitive-subtype-native-promotion-history.mjs";
+import { nominalPrimitiveSubtypeBrowserPromotionHistoryPath, nominalPrimitiveSubtypeBrowserPromotionPredecessor } from "./nominal-primitive-subtype-browser-promotion-history.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeNestedCheckedRecordBrowserPromotionPins } from "./nested-checked-record-browser-promotion-history.mjs";
+import { beforeNestedCheckedRecordNativeCorrectionPins } from "./nested-checked-record-native-correction-source-history.mjs";
+import { beforeNominalPrimitiveSubtypeAuditCorrectionPins } from "./nominal-primitive-subtype-audit-correction-history.mjs";
+import { beforeNominalPrimitiveSubtypeJvmPromotionPins } from "./nominal-primitive-subtype-jvm-promotion-history.mjs";
+import { beforePrimitiveSubtypePhpWasmPromotionPins } from "./nominal-primitive-subtype-php-wasm-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypeWitPromotionPins } from "./nominal-primitive-subtype-wit-promotion-history.mjs";
+import { beforeRecursiveSubtypePhpWasmPromotionPins } from "./recursive-subtype-php-wasm-promotion-history.mjs";
 import { nominalPrimitiveSubtypeBrowserReferences, promoteNominalPrimitiveSubtypeBrowser, nominalPrimitiveSubtypeBrowserProfiles, nominalPrimitiveSubtypeBrowserConversion, nominalPrimitiveSubtypeBrowserLimit, nominalPrimitiveSubtypeBrowserField } from "./nominal-primitive-subtype-browser-promotion.mjs";
-import { beforeNominalPrimitiveSubtypeRubyPromotionSource } from "./nominal-primitive-subtype-ruby-promotion-history.mjs";
-import { beforeNominalPrimitiveSubtypeRustPromotionSource, beforePrimitiveSubtypeRustPromotionPins } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalPrimitiveSubtypeBrowserPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -88,11 +95,28 @@ test("primitive-base browser promotion rejects narrowed evidence, invented host 
 	assert.deepEqual(original, predecessor());
 });
 
+// Newer layers, newest first: each restores only its own refreshed source pins.
+const newerPins = [
+	beforeNominalPrimitiveSubtypeAuditCorrectionPins
+	, beforeNestedCheckedRecordNativeCorrectionPins
+	, beforeNominalPrimitiveSubtypeJvmPromotionPins
+	, beforeNominalPrimitiveSubtypeWitPromotionPins
+	, beforeNestedCheckedRecordBrowserPromotionPins
+	, beforeRecursiveSubtypePhpWasmPromotionPins
+	, beforePrimitiveSubtypePhpWasmPromotionPins
+	, beforeNominalPrimitiveSubtypeNativePromotionPins
+];
+const withoutNewerPins = inventory => newerPins.reduce((current, before) => before(current), inventory);
+
 test("primitive-base browser promotion supplements eighteen existing cells and preserves every other profile and stage", async () => {
 	const original = predecessor(), references = await nominalPrimitiveSubtypeBrowserReferences();
-	const proposed = beforeNominalPrimitiveSubtypeNativePromotionPins(beforePrimitiveSubtypeRustPromotionPins(await promoteNominalPrimitiveSubtypeBrowser(original, references)));
+	const proposed = withoutNewerPins(await promoteNominalPrimitiveSubtypeBrowser(original, references));
 	const { document: current, ...contracts } = await readTypeSurface();
-	const document = JSON.parse(beforeNominalPrimitiveSubtypeNativePromotionSource("docs/type-surface.v1.json", beforeNominalPrimitiveSubtypeRubyPromotionSource("docs/type-surface.v1.json", beforeNominalPrimitiveSubtypeRustPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")))));
+	// Read this milestone's exact inventory output through every newer layer.
+	const ledger = JSON.parse(await readFile(nominalPrimitiveSubtypeBrowserPromotionHistoryPath, "utf8"));
+	const document = JSON.parse(beforeFinRefinementSource("docs/type-surface.v1.json"
+		, await readFile("docs/type-surface.v1.json", "utf8")
+		, ledger.updates.find(item => item.path === "docs/type-surface.v1.json").currentSha256));
 	assert.ok(current.evidence.length >= document.evidence.length);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(proposed.evidence.length, 532); assert.equal(proposed.observations.length, 595);
@@ -133,7 +157,9 @@ test("primitive-base browser documentation names the installed engines, host con
 		if(path === "docs/javascript-typescript.md")
 			assert.ok(compiled.links.includes("https://github.com/seanmorris/lean-bridge/actions/workflows/nominal-primitive-subtype-browser.yml"));
 	}
-	const javascript = await readFile("docs/javascript-typescript.md", "utf8");
+	// The #1499 audit correction later retires the remaining-hosts sentence; read this milestone's guide.
+	const javascript = withoutNominalPrimitiveSubtypeAuditCorrection("docs/javascript-typescript.md"
+		, await readFile("docs/javascript-typescript.md", "utf8"));
 	for(const text of ["nineteen primitive bases", "undefined", "void"
 		, "bigint", "Uint8Array", "wasm32", "normalization"
 		, "Chromium", "Firefox", "WebKit", "React", "workers"

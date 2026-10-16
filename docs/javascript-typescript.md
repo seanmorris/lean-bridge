@@ -537,9 +537,18 @@ Both author routes and API modes reproduce complete NuGet packages, install them
 offline after author removal, replay after relocation and execute again after
 deleting all consumer sources on .NET SDK 8.0.424 and shared framework 8.0.30
 with Linux x64/glibc 2.36.
-Primitive-base nominal acceptance in the remaining hosts is pending. Callback,
-owned, recursive, dependent and broader generic Subtype combinations need
-their own checks.
+[Java and Kotlin checks](evidence/nominal-primitive-subtype-jvm-20261015/index.json)
+cover the same fields in Maven packages on JDK 22.0.2 and Kotlin 2.2.0 with
+64-bit machine words.
+[Native PHP checks](evidence/nominal-primitive-subtype-php-20261015/index.json)
+cover them in Composer packages on PHP 8.2.33 with 64-bit machine words, and
+[PHP-Wasm checks](evidence/nominal-primitive-subtype-php-wasm-20261015/index.json)
+cover them on wasm32 PHP 8.4.1 with 32-bit machine words.
+[WIT checks](evidence/nominal-primitive-subtype-wit-20261015/index.json) cover
+them through the Component Model adapter on Wasmtime 42.0.1 with the 64-bit
+native Lean host. All seventeen consumer profiles now have primitive-base
+nominal acceptance. Callback, owned, recursive, dependent and broader generic
+Subtype combinations need their own checks.
 
 ### Type conversions
 

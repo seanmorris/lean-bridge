@@ -1576,9 +1576,8 @@ Both routes reproduce all three packages and run the twelve Node and Chromium
 loading, installation and strictness arrangements after offline installation
 and relocation on wasm32 PHP 8.4.1.
 
-Primitive-base nominal acceptance in the remaining hosts, refined callbacks,
-owned, dependent and broader generic Subtypes remain pending. Recursive
-checked-record combinations remain separate work. The
+Refined callbacks, owned, dependent and broader generic Subtypes remain
+pending. Recursive checked-record combinations remain separate work. The
 local PHP-Wasm checks do not measure constructor/source entry counts or dispatch.
 
 ### Type conversions

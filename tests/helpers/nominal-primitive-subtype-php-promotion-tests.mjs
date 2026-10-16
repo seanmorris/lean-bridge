@@ -10,7 +10,18 @@ import test from "node:test";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
 import { docPages } from "../../site/registry.mjs";
-import { nominalPrimitiveSubtypePhpPromotionPredecessor } from "./nominal-primitive-subtype-php-promotion-history.mjs";
+import {
+	nominalPrimitiveSubtypePhpPromotionHistoryPath
+	, nominalPrimitiveSubtypePhpPromotionPredecessor
+} from "./nominal-primitive-subtype-php-promotion-history.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeNestedCheckedRecordBrowserPromotionPins } from "./nested-checked-record-browser-promotion-history.mjs";
+import { beforeNestedCheckedRecordNativeCorrectionPins } from "./nested-checked-record-native-correction-source-history.mjs";
+import { beforeNominalPrimitiveSubtypeAuditCorrectionPins } from "./nominal-primitive-subtype-audit-correction-history.mjs";
+import { beforeNominalPrimitiveSubtypeJvmPromotionPins } from "./nominal-primitive-subtype-jvm-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypePhpWasmPromotionPins } from "./nominal-primitive-subtype-php-wasm-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypeWitPromotionPins } from "./nominal-primitive-subtype-wit-promotion-history.mjs";
+import { beforeRecursiveSubtypePhpWasmPromotionPins } from "./recursive-subtype-php-wasm-promotion-history.mjs";
 import { nominalPrimitiveSubtypePhpProducer } from "./nominal-primitive-subtype-php-provenance.mjs";
 import {
 	nominalPrimitiveSubtypePhpConversion
@@ -123,10 +134,25 @@ test("primitive-base native PHP promotion rejects narrowed references and overla
 	assert.deepEqual(original, predecessor());
 });
 
+// Newer layers, newest first: each restores only its own refreshed source pins.
+const newerPins = [
+	beforeNominalPrimitiveSubtypeAuditCorrectionPins, beforeNestedCheckedRecordNativeCorrectionPins
+	, beforeNominalPrimitiveSubtypeJvmPromotionPins, beforeNominalPrimitiveSubtypeWitPromotionPins
+	, beforeNestedCheckedRecordBrowserPromotionPins, beforeRecursiveSubtypePhpWasmPromotionPins
+	, beforeNominalPrimitiveSubtypePhpWasmPromotionPins
+];
+
 test("primitive-base native PHP promotion supplements six cells only", async () => {
 	const original = predecessor(), references = await nominalPrimitiveSubtypePhpReferences();
-	const proposed = await promoteNominalPrimitiveSubtypePhp(original, references);
-	const { document, ...contracts } = await readTypeSurface();
+	const proposed = newerPins.reduce((inventory, before) => before(inventory)
+		, await promoteNominalPrimitiveSubtypePhp(original, references));
+	const { document: live, ...contracts } = await readTypeSurface();
+	// Newer layers append receipts and supplement cells; compare this layer's exact output.
+	const history = JSON.parse(await readFile(nominalPrimitiveSubtypePhpPromotionHistoryPath, "utf8"));
+	const expected = history.updates.find(item => item.path === "docs/type-surface.v1.json").currentSha256;
+	const document = JSON.parse(beforeFinRefinementSource("docs/type-surface.v1.json"
+		, await readFile("docs/type-surface.v1.json", "utf8"), expected));
+	assert.ok(live.evidence.length >= document.evidence.length);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(proposed.evidence.length, original.evidence.length + 4);
 	assert.equal(proposed.observations.length, original.observations.length);

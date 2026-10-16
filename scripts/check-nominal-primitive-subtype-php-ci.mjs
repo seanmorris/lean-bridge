@@ -18,6 +18,7 @@ import {
 	parseNominalPrimitiveSubtypePhpCiArgs
 	, assertNominalPrimitiveSubtypePhpCiTap
 	, checkNominalPrimitiveSubtypePhpCiRecords
+	, nominalPrimitiveSubtypePhpCiPaths
 } from "../tests/helpers/nominal-primitive-subtype-php-ci-report.mjs";
 
 const selected = parseNominalPrimitiveSubtypePhpCiArgs(process.argv.slice(2));
@@ -43,5 +44,5 @@ const result = await checkNominalPrimitiveSubtypePhpCiRecords(selected, {
 	, runtime: { platform: process.platform, arch: process.arch, glibc: version.trim().slice(6) }
 	, archiveSha256: original.archiveSha256
 });
-assert.deepEqual(await nativeArtifactPaths(directory), [...result.records, original.archivePath].sort());
+assert.deepEqual(await nativeArtifactPaths(directory), nominalPrimitiveSubtypePhpCiPaths(result.records, original.archivePath));
 process.stdout.write(canonicalJson(result));
