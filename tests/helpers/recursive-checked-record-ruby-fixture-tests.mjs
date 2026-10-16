@@ -12,15 +12,20 @@ import test from "node:test";
 import { generateCopiedRubyGraphPackage } from "../../src/backends/ruby/copied-graph-package.mjs";
 import { runCopied } from "./copied-fixture-install.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
-import { recursiveCheckedRecordConfiguration, recursiveCheckedRecordReview } from "./recursive-checked-record-fixture.mjs";
+import { mutualCheckedRecordConfiguration } from "./mutual-checked-record-fixture.mjs";
+import { recursiveCheckedRecordConfiguration } from "./recursive-checked-record-fixture.mjs";
 import {
 	parseRecursiveCheckedRecordRubyResult, recursiveCheckedRecordRubyCaller
 	, recursiveCheckedRecordRubyCallerArgs, recursiveCheckedRecordRubyConfiguration
 	, recursiveCheckedRecordRubyCounts, recursiveCheckedRecordRubyPackage
-	, recursiveCheckedRecordRubySelection
+	, recursiveCheckedRecordRubyReview, recursiveCheckedRecordRubySelection
 } from "./recursive-checked-record-ruby-fixture.mjs";
 import { assertRecursiveCheckedRecordRubyResources } from "./recursive-checked-record-ruby-resources.mjs";
 
+export const recursiveCheckedRecordRubyModuleFaults = Object.freeze({
+	recursive: Object.freeze(["second-normalizes-root-only"])
+	, mutual: Object.freeze(["stop-as-none"])
+});
 export const recursiveCheckedRecordRubyFaults = Object.freeze([
 	"produce-offset", "produce-single", "produce-digits", "accept-bool"
 	, "wrong-host-exception", "alias-constant", "missing-fin"
@@ -28,7 +33,6 @@ export const recursiveCheckedRecordRubyFaults = Object.freeze([
 	, "wrong-status", "wrong-path", "root-only", "echo-unnormalized"
 	, "echo-drops-tail", "cycle-as-lean", "depth-unbounded", "shared-as-cycle"
 	, "groups-drop-none", "echo-groups-drops-none", "poison-after-reject"
-	, "second-normalizes-root-only"
 ]);
 const ruby = resolve(process.env.LEAN_BRIDGE_RUBY ?? ".toolchains/ruby33/bin/ruby");
 
@@ -42,51 +46,57 @@ test("recursive checked-record Ruby caller detects every result, input and cycle
 	t.after(() => rm(root, { recursive: true }));
 	const caller = await readFile(recursiveCheckedRecordRubyCaller, "utf8");
 	await saveLakeFile(root, "consumer.rb", caller);
-	const files = generateCopiedRubyGraphPackage(recursiveCheckedRecordReview(), null
-		, { refinementDiagnostics: true });
-	await saveLakeFile(root, "public.rb", files["lib/lean_bridge/recursivecheckedrecords.rb"]);
+	const publics = [];
+	for(const fixture of ["recursive", "mutual"])
+	{
+		const { requirePath } = recursiveCheckedRecordRubyPackage(fixture);
+		const files = generateCopiedRubyGraphPackage(recursiveCheckedRecordRubyReview(fixture), null
+			, { refinementDiagnostics: true });
+		publics.push(join(root, `${fixture}.rb`));
+		await saveLakeFile(root, `${fixture}.rb`, files[`lib/${requirePath}.rb`]);
+	}
 	const model = resolve("tests/helpers/recursive-checked-record-ruby-model.rb");
-	const run = await runCopied(ruby, [model, join(root, "consumer.rb"), join(root, "public.rb")], root);
+	const run = await runCopied(ruby, [model, join(root, "consumer.rb"), ...publics], root);
 	assert.equal(run.stderr, "");
 	const result = JSON.parse(run.stdout);
 	assert.equal(result.installedAcceptance, false);
-	assert.deepEqual(result.result, recursiveCheckedRecordRubyCounts.recursive);
-	assert.deepEqual(result.rejectedFaults, recursiveCheckedRecordRubyFaults);
+	assert.deepEqual(result.results, [recursiveCheckedRecordRubyCounts.recursive
+		, recursiveCheckedRecordRubyCounts.mutual]);
+	assert.deepEqual(result.rejectedFaults, Object.fromEntries(["recursive", "mutual"].map(fixture =>
+		[fixture, [...recursiveCheckedRecordRubyFaults, ...recursiveCheckedRecordRubyModuleFaults[fixture]]])));
 	assert.equal(await readFile(join(root, "consumer.rb"), "utf8"), caller);
 	t.diagnostic("A Ruby runtime double exercises the caller with generated value classes; no installed Lean library executes.");
 });
 
 test("recursive checked-record Ruby keeps both author contracts and gem coordinates", () => {
-	for(const route of ["ordinary", "reviewed"])
+	const base = { recursive: recursiveCheckedRecordConfiguration, mutual: mutualCheckedRecordConfiguration };
+	for(const route of ["ordinary", "reviewed"]) for(const fixture of ["recursive", "mutual"])
 	{
-		const expected = recursiveCheckedRecordConfiguration(route);
-		const actual = recursiveCheckedRecordRubyConfiguration(route, "recursive");
+		const expected = base[fixture](route);
+		const actual = recursiveCheckedRecordRubyConfiguration(route, fixture);
 		assert.deepEqual({ ...actual, targets: expected.targets }, expected);
-		assert.deepEqual(actual.targets, { rubygems: { name: "recursivecheckedrecords", version: "1.0.0" } });
+		assert.deepEqual(actual.targets, { rubygems: { name: `${fixture}checkedrecords`, version: "1.0.0" } });
+		const pkg = recursiveCheckedRecordRubyPackage(fixture);
+		assert.equal(pkg.requirePath, `lean_bridge/${fixture}checkedrecords`);
+		assert.equal(pkg.namespace, `LeanBridge::${fixture[0].toUpperCase()}${fixture.slice(1)}checkedrecords`);
+		assert.deepEqual(recursiveCheckedRecordRubyCallerArgs(fixture), [fixture]);
+		const counts = recursiveCheckedRecordRubyCounts[fixture];
+		const stdout = `${JSON.stringify(Object.fromEntries(Object.entries(counts).sort()))}\n`;
+		assert.deepEqual(parseRecursiveCheckedRecordRubyResult(stdout, fixture), counts);
+		for(const key of Object.keys(counts).filter(key => key !== "module"))
+			assert.throws(() => parseRecursiveCheckedRecordRubyResult(stdout.replace(`"${key}":${counts[key]}`
+				, `"${key}":${counts[key] + 1}`), fixture));
+		assert.throws(() => parseRecursiveCheckedRecordRubyResult(stdout.replace("{", "{\"extra\":1,"), fixture));
 	}
-	const pkg = recursiveCheckedRecordRubyPackage("recursive");
-	assert.equal(pkg.requirePath, "lean_bridge/recursivecheckedrecords");
-	assert.equal(pkg.namespace, "LeanBridge::Recursivecheckedrecords");
-	assert.deepEqual(recursiveCheckedRecordRubyCallerArgs("recursive"), ["recursive"]);
-	for(const value of ["mutual", "unknown"])
-	{
-		assert.throws(() => recursiveCheckedRecordRubyPackage(value));
-		assert.throws(() => recursiveCheckedRecordRubyCallerArgs(value));
-	}
-	const counts = recursiveCheckedRecordRubyCounts.recursive;
-	const stdout = `${JSON.stringify(Object.fromEntries(Object.entries(counts).sort()))}\n`;
-	assert.deepEqual(parseRecursiveCheckedRecordRubyResult(stdout, "recursive"), counts);
-	for(const key of Object.keys(counts).filter(key => key !== "module"))
-		assert.throws(() => parseRecursiveCheckedRecordRubyResult(stdout.replace(`"${key}":${counts[key]}`
-			, `"${key}":${counts[key] + 1}`), "recursive"));
-	assert.throws(() => parseRecursiveCheckedRecordRubyResult(stdout.replace("{", "{\"extra\":1,"), "recursive"));
+	assert.throws(() => recursiveCheckedRecordRubyPackage("unknown"));
+	assert.throws(() => recursiveCheckedRecordRubyCallerArgs("unknown"));
 });
 
 test("recursive checked-record Ruby gates reject disabled selections and unsupported modules", () => {
 	const prefix = "LEAN_BRIDGE_RECURSIVE_CHECKED_RECORD_RUBY_", enabled = { [prefix + "TEST"]: "1" };
 	assert.deepEqual(recursiveCheckedRecordRubySelection({}), {
 		enabled: false, routes: ["ordinary", "reviewed"]
-		, fixtures: ["recursive"], maxLoad: 8
+		, fixtures: ["recursive", "mutual"], maxLoad: 8
 	});
 	for(const flag of ["", "true", "2", true, null])
 		assert.throws(() => recursiveCheckedRecordRubySelection({ [prefix + "TEST"]: flag }));
@@ -97,7 +107,8 @@ test("recursive checked-record Ruby gates reject disabled selections and unsuppo
 		for(const flag of [undefined, "0"])
 			assert.throws(() => recursiveCheckedRecordRubySelection({ [prefix + "TEST"]: flag, [prefix + name]: valid }));
 	}
-	assert.throws(() => recursiveCheckedRecordRubySelection({ ...enabled, [prefix + "FIXTURES"]: "mutual" }));
+	assert.deepEqual(recursiveCheckedRecordRubySelection({ ...enabled, [prefix + "FIXTURES"]: "mutual" }).fixtures
+		, ["mutual"]);
 	for(const maxLoad of [8, 12, 16, 20])
 		assert.equal(recursiveCheckedRecordRubySelection({ ...enabled, [prefix + "MAX_LOAD"]: String(maxLoad) }).maxLoad
 			, maxLoad);

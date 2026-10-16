@@ -6,6 +6,10 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import {
+	mutualCheckedRecordConfiguration, mutualCheckedRecordFixtureRoot
+	, mutualCheckedRecordModule, mutualCheckedRecordReview
+} from "./mutual-checked-record-fixture.mjs";
+import {
 	recursiveCheckedRecordConfiguration, recursiveCheckedRecordFixtureRoot
 	, recursiveCheckedRecordModule, recursiveCheckedRecordReview
 } from "./recursive-checked-record-fixture.mjs";
@@ -14,8 +18,21 @@ import {
 } from "./recursive-checked-record-ruby-resources.mjs";
 
 export const recursiveCheckedRecordRubyRoutes = Object.freeze(["ordinary", "reviewed"]);
-// MutualCheckedRecords joins once Ruby can represent its Envelope.next field.
-export const recursiveCheckedRecordRubyFixtures = Object.freeze(["recursive"]);
+export const recursiveCheckedRecordRubyFixtures = Object.freeze(["recursive", "mutual"]);
+const fixtures = {
+	recursive: {
+		root: recursiveCheckedRecordFixtureRoot
+		, module: recursiveCheckedRecordModule
+		, review: recursiveCheckedRecordReview
+		, configuration: recursiveCheckedRecordConfiguration
+	}
+	, mutual: {
+		root: mutualCheckedRecordFixtureRoot
+		, module: mutualCheckedRecordModule
+		, review: mutualCheckedRecordReview
+		, configuration: mutualCheckedRecordConfiguration
+	}
+};
 export const recursiveCheckedRecordRubyCaller
 	= "tests/fixtures/recursive-checked-record-consumers/ruby.rb";
 /** Independent caller totals; both routes run the same caller. */
@@ -23,6 +40,10 @@ export const recursiveCheckedRecordRubyCounts = Object.freeze({
 	recursive: Object.freeze({
 		checks: 1083, hostRejections: 78, module: "recursive", recoveries: 64
 		, rejections: 144, rounds: 64, snapshotControls: 8, snapshots: 495
+	})
+	, mutual: Object.freeze({
+		checks: 1100, hostRejections: 80, module: "mutual", recoveries: 64
+		, rejections: 144, rounds: 64, snapshotControls: 11, snapshots: 501
 	})
 });
 
@@ -37,8 +58,7 @@ export const recursiveCheckedRecordRubyPackage = fixture => {
 	return Object.freeze({
 		name, version: "1.0.0", requirePath: `lean_bridge/${name}`
 		, namespace: `LeanBridge::${name[0].toUpperCase()}${name.slice(1)}`
-		, root: recursiveCheckedRecordFixtureRoot
-		, leanModule: recursiveCheckedRecordModule
+		, root: fixtures[fixture].root, leanModule: fixtures[fixture].module
 	});
 };
 
@@ -85,7 +105,7 @@ export const recursiveCheckedRecordRubySelection = environment => {
  */
 export const recursiveCheckedRecordRubyReview = fixture => {
 	assert.ok(recursiveCheckedRecordRubyFixtures.includes(fixture));
-	return recursiveCheckedRecordReview();
+	return fixtures[fixture].review();
 };
 
 /**
@@ -97,7 +117,7 @@ export const recursiveCheckedRecordRubyReview = fixture => {
 export const recursiveCheckedRecordRubyConfiguration = (route, fixture) => {
 	assert.ok(recursiveCheckedRecordRubyRoutes.includes(route));
 	const { name, version } = recursiveCheckedRecordRubyPackage(fixture);
-	return { ...recursiveCheckedRecordConfiguration(route), targets: { rubygems: { name, version } } };
+	return { ...fixtures[fixture].configuration(route), targets: { rubygems: { name, version } } };
 };
 
 /** Load the unchanged caller; the runner passes only the selected module. */
