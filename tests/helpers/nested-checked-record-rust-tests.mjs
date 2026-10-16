@@ -1,0 +1,11 @@
+/**
+ * Nested checked-record Rust acceptance: source-only caller controls, policies and the gated installed harness.
+ *
+ * @file
+ */
+import "./nested-checked-record-rust-fixture-tests.mjs";
+import "./nested-checked-record-rust-model-controls-tests.mjs";
+import "./nested-checked-record-rust-install-policy-tests.mjs";
+import "./nested-checked-record-rust-package-tests.mjs";
+import "./nested-checked-record-rust-package-controls-tests.mjs";
+import "./nested-checked-record-rust-installed-tests.mjs";
