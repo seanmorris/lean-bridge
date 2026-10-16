@@ -6,3 +6,6 @@
 import "./helpers/nested-checked-record-perl-fixture-tests.mjs";
 import "./helpers/nested-checked-record-perl-source-tests.mjs";
 import "./helpers/nested-checked-record-perl-installed-tests.mjs";
+import "./helpers/nested-checked-record-perl-ci-report-tests.mjs";
+import "./helpers/nested-checked-record-perl-ci-workflow-tests.mjs";
+import "./helpers/nested-checked-record-perl-ci-shell-tests.mjs";
