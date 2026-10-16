@@ -1,0 +1,175 @@
+{
+  "archive": {
+    "bytes": 51414414,
+    "path": "archives/nestedcheckedrecords-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+    "sha256": "a7c1714d772bb619083f01bd45c7b2b3933119e4cd5a04c7a64aeea9ed6ddef6"
+  },
+  "evidence": {
+    "componentId": "nestedcheckedrecords@1.0.0",
+    "componentReceiptSha256": "d20417f349f5f8bdcdfcbd7b440c5dc81991f00ad5dfbc7c8a9644da97c1ad8b",
+    "libraries": {
+      "libcomponent_a63244d529ededa079e7.so": "7a51096a6523a1acdba21e0b16615f76a47e84003762cc1c967948248cbd09f4",
+      "liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+      "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+      "libnestedcheckedrecords.so": "6f9eaa272b05eac0847b153e9834f4b44766eb58eaf51770dd34804a1e3f3b2b"
+    },
+    "library": "libnestedcheckedrecords.so",
+    "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+  },
+  "files": {
+    "lean_nestedcheckedrecords/__init__.py": {
+      "bytes": 5215,
+      "sha256": "262bdd4b9843e8b051a6a1d96a9c3671207b60168e0dc29be1dc19156c2f1b9e"
+    },
+    "lean_nestedcheckedrecords/__init__.pyi": {
+      "bytes": 4821,
+      "sha256": "59579596df49a91a5c6ee6e77330b6c8d36ec47825c4fc5576c54bbd7732ae56"
+    },
+    "lean_nestedcheckedrecords/_native.py": {
+      "bytes": 20224,
+      "sha256": "4f4cca5424f26e4826d15d565f92416ac365bc7ba9011813858affc5740b3ff3"
+    },
+    "lean_nestedcheckedrecords/lean_bridge/README.md": {
+      "bytes": 10379,
+      "sha256": "379f1f39de5c13e5cf610c03fa0ab2faffba43c4d1a418e2e5518775244a26ba"
+    },
+    "lean_nestedcheckedrecords/lean_bridge/binding-manifest.json": {
+      "bytes": 1438,
+      "sha256": "6cf9dac8abd1f4aa29ae88ba21890cf04042f5df6caf9b6471b33915af683b7b"
+    },
+    "lean_nestedcheckedrecords/lean_bridge/component/allocation-guard.h": {
+      "bytes": 1309,
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    "lean_nestedcheckedrecords/lean_bridge/component/artifacts.json": {
+      "bytes": 1535,
+      "sha256": "f2b27e7c5f7f549c2557b2d617c4e0bd8a8ea61b0e3247c01359e9c3e473ffcf"
+    },
+    "lean_nestedcheckedrecords/lean_bridge/component/binding-ir.json": {
+      "bytes": 57888,
+      "sha256": "23fd97f4068b8cbabfe4dab44d790a2eb952fe135b4d843b699f15215b278c5d"
+    },
+    "lean_nestedcheckedrecords/lean_bridge/component/component.h": {
+      "bytes": 4739,
+      "sha256": "78c024d270cf9ebd62f1580eff7aba633e3ab41968f44c98d9b5620a96ed8438"
+    },
+    "lean_nestedcheckedrecords/lean_bridge/component/generated.lean": {
+      "bytes": 23243,
+      "sha256": "71dba5ad99bbb5e1af0074bda3926a586eaf1a99b5faa92bbe287c62fcd4d0bb"
+    },
+    "lean_nestedcheckedrecords/lean_bridge/component/metadata.json": {
+      "bytes": 94821,
+      "sha256": "9caa1085aa72d68a842ce5c4ce28ce0b387e211a297a85d6d399e9c51991c76a"
+    },
+    "lean_nestedcheckedrecords/lean_bridge/component/model.json": {
+      "bytes": 162282,
+      "sha256": "e83d03d46d28fa3074da8f2ad57afa5b502125ae07c931c146adf95a84ebe1ac"
+    },
+    "lean_nestedcheckedrecords/lean_bridge/component/native-component.json": {
+      "bytes": 33584,
+      "sha256": "d20417f349f5f8bdcdfcbd7b440c5dc81991f00ad5dfbc7c8a9644da97c1ad8b"
+    },
+    "lean_nestedcheckedrecords/lean_bridge/include/nestedcheckedrecords.h": {
+      "bytes": 8646,
+      "sha256": "c67fd4d06f5fc556a8474de2b2f5052571612ab9df6f7300a9688d4c39638d08"
+    },
+    "lean_nestedcheckedrecords/lean_bridge/native-c-adapter.json": {
+      "bytes": 1409,
+      "sha256": "e93d27ee29ab7326874031a4fd5686f02cd53b083a9a5cffc855b429971f968b"
+    },
+    "lean_nestedcheckedrecords/lean_bridge/package-receipt.json": {
+      "bytes": 36946,
+      "sha256": "f2ce2db16eeeb514c9ee0ee780f1182d9be7f47a238efc2de20ac6b16363c851"
+    },
+    "lean_nestedcheckedrecords/lean_bridge/runtime.json": {
+      "bytes": 1466,
+      "sha256": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    },
+    "lean_nestedcheckedrecords/native/linux-x64/libcomponent_a63244d529ededa079e7.so": {
+      "bytes": 113624,
+      "sha256": "7a51096a6523a1acdba21e0b16615f76a47e84003762cc1c967948248cbd09f4"
+    },
+    "lean_nestedcheckedrecords/native/linux-x64/liblean_bridge_native.so": {
+      "bytes": 21464,
+      "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+    },
+    "lean_nestedcheckedrecords/native/linux-x64/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "lean_nestedcheckedrecords/native/linux-x64/libnestedcheckedrecords.so": {
+      "bytes": 68872,
+      "sha256": "6f9eaa272b05eac0847b153e9834f4b44766eb58eaf51770dd34804a1e3f3b2b"
+    },
+    "lean_nestedcheckedrecords/py.typed": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "nestedcheckedrecords-1.0.0.dist-info/METADATA": {
+      "bytes": 10802,
+      "sha256": "32628a8feb107905ca6637d0b7566b41f1994f85736f2e649595b617e88e15e7"
+    },
+    "nestedcheckedrecords-1.0.0.dist-info/RECORD": {
+      "bytes": 3543,
+      "sha256": "2dff59f67f7f74f9101caed99a2aadcdf66d67301bdae0d05443e9ad917770a2"
+    },
+    "nestedcheckedrecords-1.0.0.dist-info/WHEEL": {
+      "bytes": 117,
+      "sha256": "e41d55df53f77c6c728e826dfa1a3da95b2c97b543ab1de222ccea3f2bb9f4f4"
+    },
+    "nestedcheckedrecords-1.0.0.dist-info/licenses/Lean-LICENSE": {
+      "bytes": 9160,
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    "nestedcheckedrecords-1.0.0.dist-info/licenses/Lean-LICENSES": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "nestedcheckedrecords-1.0.0.dist-info/licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "nestedcheckedrecords-1.0.0.dist-info/licenses/source-notices.json": {
+      "bytes": 16118,
+      "sha256": "10b2bc393a078138ea1543da225c103b516f54efa4008c3d5d001573cf13c22f"
+    },
+    "nestedcheckedrecords-1.0.0.dist-info/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "nestedcheckedrecords-1.0.0.dist-info/top_level.txt": {
+      "bytes": 26,
+      "sha256": "3927d9ebfb29d56f69834c3997c425e2a87a861e315f8d9e2fe51a2d9467b122"
+    }
+  },
+  "receiptSha256": "f2ce2db16eeeb514c9ee0ee780f1182d9be7f47a238efc2de20ac6b16363c851",
+  "retained": [
+    "lean_nestedcheckedrecords/__init__.py",
+    "lean_nestedcheckedrecords/__init__.pyi",
+    "lean_nestedcheckedrecords/_native.py",
+    "lean_nestedcheckedrecords/lean_bridge/README.md",
+    "lean_nestedcheckedrecords/lean_bridge/binding-manifest.json",
+    "lean_nestedcheckedrecords/lean_bridge/component/allocation-guard.h",
+    "lean_nestedcheckedrecords/lean_bridge/component/artifacts.json",
+    "lean_nestedcheckedrecords/lean_bridge/component/binding-ir.json",
+    "lean_nestedcheckedrecords/lean_bridge/component/component.h",
+    "lean_nestedcheckedrecords/lean_bridge/component/generated.lean",
+    "lean_nestedcheckedrecords/lean_bridge/component/metadata.json",
+    "lean_nestedcheckedrecords/lean_bridge/component/model.json",
+    "lean_nestedcheckedrecords/lean_bridge/component/native-component.json",
+    "lean_nestedcheckedrecords/lean_bridge/include/nestedcheckedrecords.h",
+    "lean_nestedcheckedrecords/lean_bridge/native-c-adapter.json",
+    "lean_nestedcheckedrecords/lean_bridge/package-receipt.json",
+    "lean_nestedcheckedrecords/lean_bridge/runtime.json",
+    "lean_nestedcheckedrecords/py.typed",
+    "nestedcheckedrecords-1.0.0.dist-info/METADATA",
+    "nestedcheckedrecords-1.0.0.dist-info/RECORD",
+    "nestedcheckedrecords-1.0.0.dist-info/WHEEL",
+    "nestedcheckedrecords-1.0.0.dist-info/licenses/Lean-LICENSE",
+    "nestedcheckedrecords-1.0.0.dist-info/licenses/Lean-LICENSES",
+    "nestedcheckedrecords-1.0.0.dist-info/licenses/LeanBridge-LICENSE",
+    "nestedcheckedrecords-1.0.0.dist-info/licenses/source-notices.json",
+    "nestedcheckedrecords-1.0.0.dist-info/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+    "nestedcheckedrecords-1.0.0.dist-info/top_level.txt"
+  ]
+}

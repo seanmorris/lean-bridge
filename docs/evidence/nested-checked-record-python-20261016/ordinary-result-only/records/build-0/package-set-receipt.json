@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "nestedcheckedrecords@1.0.0",
+    "name": "nestedcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51359049,
+          "path": "archives/nestedcheckedrecords-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+          "sha256": "7e494bdef32a67fba53f47f1ab1b05b45589a8da9be7258198373ac67ba93734"
+        }
+      ],
+      "ecosystem": "pypi",
+      "name": "nestedcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "pypi",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "f936dc81478311e88a3942988c2bf28200c803cf0cdd44a8001198cd2459c239",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "b0acf3f35f0a1b0d5f32c9a89451757b13f460185242b6a6b936e55d388c9445"
+  }
+}

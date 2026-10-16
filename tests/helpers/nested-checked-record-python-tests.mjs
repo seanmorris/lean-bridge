@@ -10,3 +10,4 @@ import "./nested-checked-record-python-installed-tests.mjs";
 import "./nested-checked-record-python-ci-policy-tests.mjs";
 import "./nested-checked-record-python-ci-shell-tests.mjs";
 import "./nested-checked-record-python-ci-workflow-tests.mjs";
+import "./nested-checked-record-python-evidence-tests.mjs";

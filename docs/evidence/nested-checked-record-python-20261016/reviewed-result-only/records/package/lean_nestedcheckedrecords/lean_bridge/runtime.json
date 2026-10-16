@@ -1,0 +1,44 @@
+{
+  "files": {
+    "include/lean/config.h": {
+      "bytes": 253,
+      "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+    },
+    "include/lean/lean.h": {
+      "bytes": 131189,
+      "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+    },
+    "include/lean/lean_gmp.h": {
+      "bytes": 578,
+      "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+    },
+    "include/lean/lean_libuv.h": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "include/lean/mimalloc.h": {
+      "bytes": 39953,
+      "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+    },
+    "include/lean/version.h": {
+      "bytes": 400,
+      "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+    },
+    "include/lean_bridge_native_runtime.h": {
+      "bytes": 2331,
+      "sha256": "8e2b345b6ba174e8c2e7273df267bfa15fd8f7a2a828a1e0aae704cb3511718b"
+    },
+    "lib/liblean_bridge_native.so": {
+      "bytes": 21464,
+      "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+    },
+    "lib/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    }
+  },
+  "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+  "pointerBits": 64,
+  "profile": "native-library-v1",
+  "schemaVersion": 1
+}
