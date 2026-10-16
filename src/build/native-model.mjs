@@ -153,7 +153,7 @@ const closed = (value, fields, label) => {
 // Alias names remain in compiler metadata and Binding IR. Native conversion
 // helpers use the compiler-checked target representation without a new wrapper.
 const nativeRepresentation = type => {
-	if(type.kind === "refinement") return type.base;
+	if(type.kind === "refinement") return nativeRepresentation(type.base);
 	if(type.kind === "alias") return nativeRepresentation(type.target);
 	if(["array", "list", "option"].includes(type.kind)) return { ...type, element: nativeRepresentation(type.element) };
 	if(["result", "tuple"].includes(type.kind)) return { ...type, arguments: type.arguments.map(nativeRepresentation) };

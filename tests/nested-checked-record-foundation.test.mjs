@@ -10,6 +10,8 @@ import { assertRefinement } from "../src/abi/refinements.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { componentRefinementMirrors } from "../src/build/component-refinement-mirrors.mjs";
 import { createNativeModel, generateNativeLeanAdapters } from "../src/build/native-model.mjs";
+import { generateCopiedNativeCalls } from "../src/backends/c/native-copied-values.mjs";
+import { compilePrimitiveCSurface } from "../src/backends/c/primitive-surface.mjs";
 import { nativeFinRefinements, nativeFinSummary, nativeRefinementReadme } from "../src/backends/native/fin-refinements.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { checkedRefinementSelection, projectionCheckedSelection, validateCheckedRefinementSelection } from "../src/analyze/checked-refinement-selection.mjs";
@@ -312,6 +314,9 @@ test("native models retain rich checked-record checks and projections at nested 
 		id: "nestedchecked@1.0.0", name: "nestedchecked", version: "1.0.0"
 	} }, { refinements: true });
 	const trees = model.exports[0].refinements;
+	const transported = model.exports[0].parameters[0].type.element;
+	assert.deepEqual(transported.fields.map(field => field.type.kind), ["primitive", "primitive"]);
+	assert.equal(model.types.some(type => type.kind === "refinement"), false);
 	assert.equal(trees.parameters[0].arguments[0].constructor, "NestedChecked.mkPacket");
 	assert.deepEqual(trees.parameters[0].arguments[0].arguments, [
 		{ kind: "fin", bound: "10" }
@@ -323,6 +328,9 @@ test("native models retain rich checked-record checks and projections at nested 
 	assert.match(source, /NestedChecked\.mkPacket a0 a1/u);
 	assert.match(source, /NestedChecked\.mkWord value\.«word»/u);
 	assert.match(source, /Packet\.mk \(value\.«digit»\)\.val \(value\.«word»\)\.val/u);
+	const calls = generateCopiedNativeCalls(model, compilePrimitiveCSurface(model.bindingIr, { compounds: true }));
+	assert.match(calls, new RegExp(`${model.exports[0].symbol}_refinement_0_0\\(`, "u"));
+	assert.doesNotMatch(calls, /undefined/u);
 });
 
 test("native package summaries name outer and field checks at exact nested paths", () => {
