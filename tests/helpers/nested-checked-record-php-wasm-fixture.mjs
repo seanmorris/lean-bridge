@@ -15,6 +15,8 @@ import { phpWasmExecutionTuples } from "./php-wasm-fin-fixtures.mjs";
 
 export const nestedCheckedRecordPhpWasmRoutes = Object.freeze(["ordinary", "reviewed"]);
 export const nestedCheckedRecordPhpWasmModes = Object.freeze(["full", "result-only"]);
+/** Exclusive producer host-load ceilings a run may record; the default stays 8. */
+export const nestedCheckedRecordPhpWasmLoadCeilings = Object.freeze([8, 12, 16, 20]);
 export const nestedCheckedRecordPhpWasmSettings = Object.freeze({
 	npm: Object.freeze({ name: "lean-bridge-nestedcheckedrecords-wasm", version: "1.0.0" })
 	, composer: Object.freeze({ name: "lean-bridge-nestedcheckedrecords/wasm", version: "1.0.0" })

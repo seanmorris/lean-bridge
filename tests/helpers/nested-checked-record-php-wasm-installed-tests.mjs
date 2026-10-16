@@ -22,6 +22,7 @@ import {
 	, checkNestedCheckedRecordPhpWasmModel
 	, nestedCheckedRecordPhpWasmCaller
 	, nestedCheckedRecordPhpWasmConfiguration
+	, nestedCheckedRecordPhpWasmLoadCeilings
 	, nestedCheckedRecordPhpWasmRequest
 	, nestedCheckedRecordPhpWasmReview
 	, nestedCheckedRecordPhpWasmSelection
@@ -37,6 +38,8 @@ const { enabled, routes, modes } = nestedCheckedRecordPhpWasmSelection(process.e
 const resourceMaxLoad = process.env.LEAN_BRIDGE_NESTED_CHECKED_RECORD_PHP_WASM_MAX_LOAD === undefined
 	? 8
 	: Number(process.env.LEAN_BRIDGE_NESTED_CHECKED_RECORD_PHP_WASM_MAX_LOAD);
+assert.ok(nestedCheckedRecordPhpWasmLoadCeilings.includes(resourceMaxLoad)
+	, `Nested checked-record PHP-Wasm max load must be one of ${nestedCheckedRecordPhpWasmLoadCeilings.join(", ")}`);
 
 for(const route of routes) for(const mode of modes) test(`installed nested checked-record PHP-Wasm packages reproduce and relocate ${route} ${mode}`, {
 	skip: !enabled, timeout: 3_600_000

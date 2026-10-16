@@ -46,6 +46,8 @@ export const checkNestedCheckedRecordPhpWasmControls = async (originals, options
 		, report => { report.producerCommit = "0".repeat(40); }
 		, report => { report.consumerSourceRequired = false; }
 		, report => { report.loadCeiling = 6; }
+		, report => { report.loadCeiling = 10; }
+		, report => { report.loadCeiling = 24; }
 		, report => { report.independentBuilds = 1; }
 		, report => { report.builds.pop(); }
 		, report => { report.phpWasm.executions.push(report.phpWasm.executions[0]); }

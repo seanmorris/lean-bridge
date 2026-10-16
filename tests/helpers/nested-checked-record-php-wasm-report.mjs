@@ -13,7 +13,7 @@ import { reviewedSourceSelection } from "../../src/analyze/reviewed-source.mjs";
 import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { validateBrickMathInstall } from "./brick-math.mjs";
 import { nestedCheckedRecordFixture, nestedCheckedRecordModule } from "./nested-checked-record-fixture.mjs";
-import { nestedCheckedRecordPhpWasmConfiguration, nestedCheckedRecordPhpWasmSettings, nestedCheckedRecordPhpWasmExpected, nestedCheckedRecordPhpWasmReview, adaptNestedCheckedRecordPhpWasm, nestedCheckedRecordPhpWasmRequest, checkNestedCheckedRecordPhpWasmExecutions, checkNestedCheckedRecordPhpWasmModel } from "./nested-checked-record-php-wasm-fixture.mjs";
+import { nestedCheckedRecordPhpWasmConfiguration, nestedCheckedRecordPhpWasmLoadCeilings, nestedCheckedRecordPhpWasmSettings, nestedCheckedRecordPhpWasmExpected, nestedCheckedRecordPhpWasmReview, adaptNestedCheckedRecordPhpWasm, nestedCheckedRecordPhpWasmRequest, checkNestedCheckedRecordPhpWasmExecutions, checkNestedCheckedRecordPhpWasmModel } from "./nested-checked-record-php-wasm-fixture.mjs";
 import { assertNestedCheckedRecordPhpResources as assertNestedCheckedRecordPhpWasmResources } from "./nested-checked-record-php-resources.mjs";
 import { assertPhpWasmRefinementPackage } from "./php-wasm-fin-direct-report.mjs";
 import { phpWasmDriverHashes, phpWasmIsolationFlags } from "./type-corpus-php-wasm-evidence.mjs";
@@ -62,7 +62,8 @@ export const checkNestedCheckedRecordPhpWasmReport = async (read, { route, mode,
 	assert.deepEqual(await json("configuration.json"), configuration); assert.deepEqual(report.configuration, configuration);
 	assert.deepEqual(await json("expected.binding-ir.json"), expected); assert.equal(report.expectedBindingIrSha256, hashBindingIr(expected));
 	for(const key of ["reproducible", "authorInputsUnchanged", "sourceRemovedBeforeInstallation", "offlineInstall", "compilerFreeReplay", "relocatedInstallation"]) assert.equal(report[key], true, key);
-	assert.equal(report.consumerSourceRequired, true); assert.equal(report.loadCeiling, 8);
+	assert.equal(report.consumerSourceRequired, true);
+	assert.ok(nestedCheckedRecordPhpWasmLoadCeilings.includes(report.loadCeiling), "Unrecorded nested PHP-Wasm load ceiling");
 	assert.equal(report.independentBuilds, 2);
 	assert.deepEqual(report.dispatch, { observed: false, reason: "No constructor/source entry counters in this unmodified PHP-Wasm package" });
 	const context = await json("context.json");
