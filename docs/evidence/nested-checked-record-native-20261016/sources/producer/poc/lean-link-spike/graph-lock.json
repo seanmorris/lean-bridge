@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 2,
+  "graphId": "poc/lean-link-spike@1",
+  "runtime": {
+    "abiVersion": 1,
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "patchSetSha256": "743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3"
+  },
+  "roots": [
+    {
+      "id": "poc/lean-gamma@0.0.0",
+      "sha256": "4f31cc3c9dbaca201959bcde80ca74cef3266e71df3159db28a803f35450528d"
+    }
+  ],
+  "libraries": [
+    {
+      "id": "poc/lean-alpha@0.0.0",
+      "module": "Alpha",
+      "capsule": {
+        "path": "capsules/alpha.json",
+        "sha256": "d290f5500df5736de58a470452e9a840a8f6ebe7cc85fc4d13465af4b3c1728e"
+      },
+      "dependencies": [],
+      "source": {
+        "path": "Alpha.lean",
+        "sha256": "f8ca4fd3fb45e50c36365c11d02720616f073611325cb079f7d5e02b0a45e169"
+      },
+      "shim": {
+        "path": "alpha_shim.c",
+        "sha256": "0e2a6e2b0ace2a2e0cce9afa32c1bd424a3cbaa4ca45f932a80da7fa28eed7f2"
+      },
+      "bindingIr": {
+        "path": "bindings/alpha.binding-ir.json",
+        "sha256": "c4eb8f6c2ae538f58dd634914e6b9b0f527bad9a84d79276e91d39adc74877cb",
+        "semanticSha256": "154b11f957639e1180ec0a59d20a85bdea7af2ddfab50d670f06c5bea1d6198b"
+      }
+    },
+    {
+      "id": "poc/lean-beta@0.0.0",
+      "module": "Beta",
+      "capsule": {
+        "path": "capsules/beta.json",
+        "sha256": "f4f7b6465c95805499830f16c7c871a0ff5028ae6e17417be7d36182affcfb40"
+      },
+      "dependencies": [
+        {
+          "id": "poc/lean-alpha@0.0.0",
+          "sha256": "d290f5500df5736de58a470452e9a840a8f6ebe7cc85fc4d13465af4b3c1728e"
+        }
+      ],
+      "source": {
+        "path": "Beta.lean",
+        "sha256": "7ff9bf428f9ab744f5a4c3027b9d50435660a145b6ba0d0eb785edc1be7cb916"
+      },
+      "shim": {
+        "path": "beta_shim.c",
+        "sha256": "ae9f0cc9652216a0573f491a86d25abd352c45aa98ef5d37db04879160d9ffab"
+      },
+      "bindingIr": null
+    },
+    {
+      "id": "poc/lean-gamma@0.0.0",
+      "module": "Gamma",
+      "capsule": {
+        "path": "capsules/gamma.json",
+        "sha256": "4f31cc3c9dbaca201959bcde80ca74cef3266e71df3159db28a803f35450528d"
+      },
+      "dependencies": [
+        {
+          "id": "poc/lean-beta@0.0.0",
+            "sha256": "f4f7b6465c95805499830f16c7c871a0ff5028ae6e17417be7d36182affcfb40"
+        }
+      ],
+      "source": {
+        "path": "Gamma.lean",
+        "sha256": "4428dc43e41cd8de4ace63e48170ba48553d4ba913d2e092a10fff48e8f76d56"
+      },
+      "shim": {
+        "path": "gamma_shim.c",
+        "sha256": "88167f1c9dfc0e9328575177674214a470171edb6d731b3f68c90fca8d80fecf"
+      },
+      "bindingIr": null
+    }
+  ]
+}

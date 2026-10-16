@@ -1,0 +1,57 @@
+{
+  "component": {
+    "id": "nestedcheckedrecords@1.0.0",
+    "name": "nestedcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 53887904,
+          "path": "archives/nestedcheckedrecords-1.0.0-c.tar.gz",
+          "sha256": "35732ad357e2b5737c17831fa8f55f396020226c20dbc934b813f49c86b1f99d"
+        }
+      ],
+      "ecosystem": "c",
+      "name": "nestedcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "c",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 51815320,
+          "path": "archives/nestedcheckedrecords-1.0.0-cpp.tar.gz",
+          "sha256": "882b3434459195c2a3df7825f613603468cbcd613dff562a781d049d7a58f2e5"
+        }
+      ],
+      "ecosystem": "cpp",
+      "name": "nestedcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "cpp",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "4d37db9e98b9cb4c54664e5d33cbb0e0435aa5deb5f43043a89ba34f2d69b7a2",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "acd81004f1c10efa01e06a66c555f8951e9d50c81b5d8f5ad9a0b62872345327"
+  }
+}

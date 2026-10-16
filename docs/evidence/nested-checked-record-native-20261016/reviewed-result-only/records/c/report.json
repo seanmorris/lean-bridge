@@ -1,0 +1,62 @@
+{
+  "checks": 768,
+  "compiler": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "cc (Debian 12.2.0-14+deb12u1) 12.2.0\nCopyright (C) 2022 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+  },
+  "compilerFreePath": true,
+  "compilerFreeReplay": true,
+  "consumerSha256": "2afbd0272da3e2ce73b40394d56cfc40e579d3aedc11642556490df3521e55f2",
+  "executableSha256": "f86a73c68473bffcdd5cfaaf49e968a85f52e0d585ee240dfa66e20cfb5b0178",
+  "offlineInstall": true,
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 53828225,
+          "path": "archives/nestedcheckedrecords-1.0.0-c.tar.gz",
+          "sha256": "7d86f86012498434fb6975395a0032dc401c1b269be86f46bd2161d54395474f"
+        }
+      ],
+      "ecosystem": "c",
+      "name": "nestedcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "c",
+      "version": "1.0.0"
+    }
+  ],
+  "profile": "c",
+  "relocatedInstallation": true,
+  "result": {
+    "checks": 768,
+    "recoveries": 0,
+    "rejections": 0,
+    "rounds": 256,
+    "snapshots": 0
+  },
+  "runs": [
+    {
+      "code": 0,
+      "packageFileSetSha256": "9dc6e7ce8765de951e48d563b396aa8ae8ffb1863e69b095b3d03f97caeaa801",
+      "receiptSha256": "ef45dcdbdf4098babc2bdfbc16f4dd433f42e2bf895aa38069dae3b865f292a8",
+      "relocated": false,
+      "stderr": "",
+      "stdout": "{\"checks\":768,\"rejections\":0,\"recoveries\":0,\"snapshots\":0,\"rounds\":256}\n"
+    },
+    {
+      "code": 0,
+      "packageFileSetSha256": "9dc6e7ce8765de951e48d563b396aa8ae8ffb1863e69b095b3d03f97caeaa801",
+      "receiptSha256": "ef45dcdbdf4098babc2bdfbc16f4dd433f42e2bf895aa38069dae3b865f292a8",
+      "relocated": true,
+      "stderr": "",
+      "stdout": "{\"checks\":768,\"rejections\":0,\"recoveries\":0,\"snapshots\":0,\"rounds\":256}\n"
+    }
+  ],
+  "sourceRemovedBeforeInstallation": true,
+  "sourceSha256": "2afbd0272da3e2ce73b40394d56cfc40e579d3aedc11642556490df3521e55f2"
+}

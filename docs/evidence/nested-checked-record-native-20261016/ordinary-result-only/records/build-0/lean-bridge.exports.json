@@ -1,0 +1,46 @@
+{
+  "contracts": {
+    "NestedCheckedRecords.produceArray": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "NestedCheckedRecords.produceOption": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    }
+  },
+  "exports": [
+    "NestedCheckedRecords.produceOption",
+    "NestedCheckedRecords.produceArray"
+  ],
+  "modules": [
+    "NestedCheckedRecords"
+  ],
+  "schemaVersion": 1,
+  "targets": {
+    "c": {
+      "name": "nestedcheckedrecords",
+      "version": "1.0.0"
+    },
+    "cpp": {
+      "name": "nestedcheckedrecords",
+      "version": "1.0.0"
+    }
+  }
+}

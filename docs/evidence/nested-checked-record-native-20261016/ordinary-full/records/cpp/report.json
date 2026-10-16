@@ -1,0 +1,62 @@
+{
+  "checks": 3884,
+  "compiler": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "c++ (Debian 12.2.0-14+deb12u1) 12.2.0\nCopyright (C) 2022 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+  },
+  "compilerFreePath": true,
+  "compilerFreeReplay": true,
+  "consumerSha256": "37ed66667ab476b39218163f2654884cc2ccc53ba940b04fa5117ee227c5ef98",
+  "executableSha256": "eaf0ebb5577477d929079a3e3e0086e8b576427f6418fca925adc2a60e1455b2",
+  "offlineInstall": true,
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51815320,
+          "path": "archives/nestedcheckedrecords-1.0.0-cpp.tar.gz",
+          "sha256": "882b3434459195c2a3df7825f613603468cbcd613dff562a781d049d7a58f2e5"
+        }
+      ],
+      "ecosystem": "cpp",
+      "name": "nestedcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "cpp",
+      "version": "1.0.0"
+    }
+  ],
+  "profile": "cpp",
+  "relocatedInstallation": true,
+  "result": {
+    "checks": 3884,
+    "recoveries": 256,
+    "rejections": 526,
+    "rounds": 256,
+    "snapshots": 1296
+  },
+  "runs": [
+    {
+      "code": 0,
+      "packageFileSetSha256": "fb2b67fd19289e990763555b30e43ab23e5478a7e90cdc8df5720afde8ed4de1",
+      "receiptSha256": "64da99ba92f1701c229992d890adee32a10ae989cf9834a30c631428c42c6fee",
+      "relocated": false,
+      "stderr": "",
+      "stdout": "{\"checks\":3884,\"rejections\":526,\"recoveries\":256,\"snapshots\":1296,\"rounds\":256}\n"
+    },
+    {
+      "code": 0,
+      "packageFileSetSha256": "fb2b67fd19289e990763555b30e43ab23e5478a7e90cdc8df5720afde8ed4de1",
+      "receiptSha256": "64da99ba92f1701c229992d890adee32a10ae989cf9834a30c631428c42c6fee",
+      "relocated": true,
+      "stderr": "",
+      "stdout": "{\"checks\":3884,\"rejections\":526,\"recoveries\":256,\"snapshots\":1296,\"rounds\":256}\n"
+    }
+  ],
+  "sourceRemovedBeforeInstallation": true,
+  "sourceSha256": "37ed66667ab476b39218163f2654884cc2ccc53ba940b04fa5117ee227c5ef98"
+}

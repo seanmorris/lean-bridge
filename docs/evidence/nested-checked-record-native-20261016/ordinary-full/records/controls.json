@@ -1,0 +1,63 @@
+{
+  "counts": {
+    "c": {
+      "checks": 3369,
+      "recoveries": 256,
+      "rejections": 524,
+      "rounds": 256,
+      "snapshots": 1294
+    },
+    "cpp": {
+      "checks": 3884,
+      "recoveries": 256,
+      "rejections": 526,
+      "rounds": 256,
+      "snapshots": 1296
+    }
+  },
+  "executions": 4,
+  "floor": "2.36",
+  "initialExecutions": 2,
+  "maxLoad": 12,
+  "mode": "full",
+  "modelControls": 4,
+  "packageControls": 2,
+  "packages": [
+    {
+      "artifact": {
+        "bytes": 53887904,
+        "path": "archives/nestedcheckedrecords-1.0.0-c.tar.gz",
+        "sha256": "35732ad357e2b5737c17831fa8f55f396020226c20dbc934b813f49c86b1f99d"
+      },
+      "files": 36,
+      "packageFileSetSha256": "9dc6e7ce8765de951e48d563b396aa8ae8ffb1863e69b095b3d03f97caeaa801",
+      "profile": "c",
+      "receiptSha256": "77515c3f8728f55f229b3f08ffd77038c391980fab9285dfd76b667fdf2ee1d3"
+    },
+    {
+      "artifact": {
+        "bytes": 51815320,
+        "path": "archives/nestedcheckedrecords-1.0.0-cpp.tar.gz",
+        "sha256": "882b3434459195c2a3df7825f613603468cbcd613dff562a781d049d7a58f2e5"
+      },
+      "files": 226,
+      "packageFileSetSha256": "fb2b67fd19289e990763555b30e43ab23e5478a7e90cdc8df5720afde8ed4de1",
+      "profile": "cpp",
+      "receiptSha256": "64da99ba92f1701c229992d890adee32a10ae989cf9834a30c631428c42c6fee"
+    }
+  ],
+  "producerCommit": "170199a8212af2d3107cf0769902a8e374ff89c5",
+  "profiles": [
+    "c",
+    "cpp"
+  ],
+  "recordControls": 31,
+  "reportControls": 34,
+  "resourceControls": 5,
+  "route": "ordinary",
+  "runtime": {
+    "arch": "x64",
+    "glibc": "2.36",
+    "platform": "linux"
+  }
+}

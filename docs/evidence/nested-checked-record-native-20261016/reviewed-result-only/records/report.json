@@ -1,0 +1,190 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/nestedcheckedrecords-1.0.0-c.tar.gz": "7d86f86012498434fb6975395a0032dc401c1b269be86f46bd2161d54395474f",
+        "archives/nestedcheckedrecords-1.0.0-cpp.tar.gz": "f481ee1bac013fc5b8e5a94265a9a73203852fb8a9997815d076059c2a27b4ae"
+      },
+      "bindingIrSha256": "79c3d5a202171baadaf1a36733fb0749e8fc402967c3a36410d19d1962bd7140",
+      "modelSha256": "718d2fa6a9c00a787cfb13055f3e37b78a9711ed96e358e66f2df1e9d11664db",
+      "receiptSha256": "0f27ff9083a0a57f5d413607cd161f8639f0be740e1f748d90d792c02b01763a"
+    },
+    {
+      "archives": {
+        "archives/nestedcheckedrecords-1.0.0-c.tar.gz": "7d86f86012498434fb6975395a0032dc401c1b269be86f46bd2161d54395474f",
+        "archives/nestedcheckedrecords-1.0.0-cpp.tar.gz": "f481ee1bac013fc5b8e5a94265a9a73203852fb8a9997815d076059c2a27b4ae"
+      },
+      "bindingIrSha256": "79c3d5a202171baadaf1a36733fb0749e8fc402967c3a36410d19d1962bd7140",
+      "modelSha256": "718d2fa6a9c00a787cfb13055f3e37b78a9711ed96e358e66f2df1e9d11664db",
+      "receiptSha256": "0f27ff9083a0a57f5d413607cd161f8639f0be740e1f748d90d792c02b01763a"
+    }
+  ],
+  "configuration": {
+    "modules": [
+      "NestedCheckedRecords"
+    ],
+    "schemaVersion": 1,
+    "targets": {
+      "c": {
+        "name": "nestedcheckedrecords",
+        "version": "1.0.0"
+      },
+      "cpp": {
+        "name": "nestedcheckedrecords",
+        "version": "1.0.0"
+      }
+    }
+  },
+  "declaredGlibcFloor": "2.36",
+  "expectedBindingIrSha256": "cab9b521a3c107820800b8afb7e224cb0c6c77135c60305c4cca5fe8774c6eae",
+  "independentBuilds": 2,
+  "mode": "result-only",
+  "producerCommit": "170199a8212af2d3107cf0769902a8e374ff89c5",
+  "profiles": [
+    "c",
+    "cpp"
+  ],
+  "reports": [
+    {
+      "checks": 768,
+      "compiler": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "cc (Debian 12.2.0-14+deb12u1) 12.2.0\nCopyright (C) 2022 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+      },
+      "compilerFreePath": true,
+      "compilerFreeReplay": true,
+      "consumerSha256": "2afbd0272da3e2ce73b40394d56cfc40e579d3aedc11642556490df3521e55f2",
+      "executableSha256": "f86a73c68473bffcdd5cfaaf49e968a85f52e0d585ee240dfa66e20cfb5b0178",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 53828225,
+              "path": "archives/nestedcheckedrecords-1.0.0-c.tar.gz",
+              "sha256": "7d86f86012498434fb6975395a0032dc401c1b269be86f46bd2161d54395474f"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "nestedcheckedrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "c",
+          "version": "1.0.0"
+        }
+      ],
+      "profile": "c",
+      "relocatedInstallation": true,
+      "result": {
+        "checks": 768,
+        "recoveries": 0,
+        "rejections": 0,
+        "rounds": 256,
+        "snapshots": 0
+      },
+      "runs": [
+        {
+          "code": 0,
+          "packageFileSetSha256": "9dc6e7ce8765de951e48d563b396aa8ae8ffb1863e69b095b3d03f97caeaa801",
+          "receiptSha256": "ef45dcdbdf4098babc2bdfbc16f4dd433f42e2bf895aa38069dae3b865f292a8",
+          "relocated": false,
+          "stderr": "",
+          "stdout": "{\"checks\":768,\"rejections\":0,\"recoveries\":0,\"snapshots\":0,\"rounds\":256}\n"
+        },
+        {
+          "code": 0,
+          "packageFileSetSha256": "9dc6e7ce8765de951e48d563b396aa8ae8ffb1863e69b095b3d03f97caeaa801",
+          "receiptSha256": "ef45dcdbdf4098babc2bdfbc16f4dd433f42e2bf895aa38069dae3b865f292a8",
+          "relocated": true,
+          "stderr": "",
+          "stdout": "{\"checks\":768,\"rejections\":0,\"recoveries\":0,\"snapshots\":0,\"rounds\":256}\n"
+        }
+      ],
+      "sourceRemovedBeforeInstallation": true,
+      "sourceSha256": "2afbd0272da3e2ce73b40394d56cfc40e579d3aedc11642556490df3521e55f2"
+    },
+    {
+      "checks": 1280,
+      "compiler": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "c++ (Debian 12.2.0-14+deb12u1) 12.2.0\nCopyright (C) 2022 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+      },
+      "compilerFreePath": true,
+      "compilerFreeReplay": true,
+      "consumerSha256": "523cb41b8a08ba9c25068025635ce552e13e9768e35cd50f1c3ae12c3a234be5",
+      "executableSha256": "488e21035ac86fb423925e130527b04718ef48b88eeeaa8756fcdb59c3edc41e",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51762932,
+              "path": "archives/nestedcheckedrecords-1.0.0-cpp.tar.gz",
+              "sha256": "f481ee1bac013fc5b8e5a94265a9a73203852fb8a9997815d076059c2a27b4ae"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "nestedcheckedrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "profile": "cpp",
+      "relocatedInstallation": true,
+      "result": {
+        "checks": 1280,
+        "recoveries": 0,
+        "rejections": 0,
+        "rounds": 256,
+        "snapshots": 0
+      },
+      "runs": [
+        {
+          "code": 0,
+          "packageFileSetSha256": "fb2b67fd19289e990763555b30e43ab23e5478a7e90cdc8df5720afde8ed4de1",
+          "receiptSha256": "d27cdaf35df46a1e8bd873d275b63ea449270f2c4ccf06e204e61b252ff6c9e7",
+          "relocated": false,
+          "stderr": "",
+          "stdout": "{\"checks\":1280,\"rejections\":0,\"recoveries\":0,\"snapshots\":0,\"rounds\":256}\n"
+        },
+        {
+          "code": 0,
+          "packageFileSetSha256": "fb2b67fd19289e990763555b30e43ab23e5478a7e90cdc8df5720afde8ed4de1",
+          "receiptSha256": "d27cdaf35df46a1e8bd873d275b63ea449270f2c4ccf06e204e61b252ff6c9e7",
+          "relocated": true,
+          "stderr": "",
+          "stdout": "{\"checks\":1280,\"rejections\":0,\"recoveries\":0,\"snapshots\":0,\"rounds\":256}\n"
+        }
+      ],
+      "sourceRemovedBeforeInstallation": true,
+      "sourceSha256": "523cb41b8a08ba9c25068025635ce552e13e9768e35cd50f1c3ae12c3a234be5"
+    }
+  ],
+  "reproducible": true,
+  "resourceAdmission": {
+    "maxLoad": 12,
+    "samples": 5
+  },
+  "route": "reviewed",
+  "runtime": {
+    "arch": "x64",
+    "glibc": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "glibc 2.36\n"
+    },
+    "platform": "linux"
+  },
+  "schemaVersion": 1
+}

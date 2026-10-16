@@ -1,0 +1,666 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/nestedcheckedrecords-1.0.0-c.tar.gz": "35732ad357e2b5737c17831fa8f55f396020226c20dbc934b813f49c86b1f99d",
+        "archives/nestedcheckedrecords-1.0.0-cpp.tar.gz": "882b3434459195c2a3df7825f613603468cbcd613dff562a781d049d7a58f2e5"
+      },
+      "bindingIrSha256": "4d37db9e98b9cb4c54664e5d33cbb0e0435aa5deb5f43043a89ba34f2d69b7a2",
+      "modelSha256": "83d1bf14e8300baadffed4618917e38872829ff3a7c5d302324135b5b9aa05c8",
+      "receiptSha256": "a33b3e7ecbc504f064979d04534cc09352ca6cdba2f1fb189b5f6878ff98bdff"
+    },
+    {
+      "archives": {
+        "archives/nestedcheckedrecords-1.0.0-c.tar.gz": "35732ad357e2b5737c17831fa8f55f396020226c20dbc934b813f49c86b1f99d",
+        "archives/nestedcheckedrecords-1.0.0-cpp.tar.gz": "882b3434459195c2a3df7825f613603468cbcd613dff562a781d049d7a58f2e5"
+      },
+      "bindingIrSha256": "4d37db9e98b9cb4c54664e5d33cbb0e0435aa5deb5f43043a89ba34f2d69b7a2",
+      "modelSha256": "83d1bf14e8300baadffed4618917e38872829ff3a7c5d302324135b5b9aa05c8",
+      "receiptSha256": "a33b3e7ecbc504f064979d04534cc09352ca6cdba2f1fb189b5f6878ff98bdff"
+    }
+  ],
+  "configuration": {
+    "contracts": {
+      "NestedCheckedRecords.echoArray": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "constructor": "NestedCheckedRecords.mkPacket",
+                  "fields": [
+                    {
+                      "name": "digit",
+                      "refinement": null
+                    },
+                    {
+                      "name": "word",
+                      "refinement": {
+                        "constructor": "NestedCheckedRecords.mkWord"
+                      }
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "NestedCheckedRecords.Packet"
+                }
+              ],
+              "kind": "array"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "NestedCheckedRecords.first": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "NestedCheckedRecords.mkPacket",
+              "fields": [
+                {
+                  "name": "digit",
+                  "refinement": null
+                },
+                {
+                  "name": "word",
+                  "refinement": {
+                    "constructor": "NestedCheckedRecords.mkWord"
+                  }
+                }
+              ],
+              "kind": "checked-record",
+              "name": "NestedCheckedRecords.Packet"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "NestedCheckedRecords.inArray": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "constructor": "NestedCheckedRecords.mkPacket",
+                  "fields": [
+                    {
+                      "name": "digit",
+                      "refinement": null
+                    },
+                    {
+                      "name": "word",
+                      "refinement": {
+                        "constructor": "NestedCheckedRecords.mkWord"
+                      }
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "NestedCheckedRecords.Packet"
+                }
+              ],
+              "kind": "array"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "NestedCheckedRecords.inChoice": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "cases": [
+                {
+                  "fields": [],
+                  "name": "empty"
+                },
+                {
+                  "fields": [
+                    {
+                      "name": "value",
+                      "refinement": {
+                        "constructor": "NestedCheckedRecords.mkPacket",
+                        "fields": [
+                          {
+                            "name": "digit",
+                            "refinement": null
+                          },
+                          {
+                            "name": "word",
+                            "refinement": {
+                              "constructor": "NestedCheckedRecords.normalizeWord"
+                            }
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "NestedCheckedRecords.Packet"
+                      }
+                    }
+                  ],
+                  "name": "packet"
+                }
+              ],
+              "kind": "variant",
+              "name": "NestedCheckedRecords.Choice"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "NestedCheckedRecords.inExcept": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "constructor": "NestedCheckedRecords.normalizePacket",
+                  "fields": [
+                    {
+                      "name": "digit",
+                      "refinement": null
+                    },
+                    {
+                      "name": "word",
+                      "refinement": {
+                        "constructor": "NestedCheckedRecords.mkWord"
+                      }
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "NestedCheckedRecords.Packet"
+                },
+                {
+                  "constructor": "NestedCheckedRecords.mkPacket",
+                  "fields": [
+                    {
+                      "name": "digit",
+                      "refinement": null
+                    },
+                    {
+                      "name": "word",
+                      "refinement": {
+                        "constructor": "NestedCheckedRecords.normalizeWord"
+                      }
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "NestedCheckedRecords.Packet"
+                }
+              ],
+              "kind": "result"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "NestedCheckedRecords.inHolder": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "fields": [
+                {
+                  "name": "packet",
+                  "refinement": {
+                    "constructor": "NestedCheckedRecords.normalizePacket",
+                    "fields": [
+                      {
+                        "name": "digit",
+                        "refinement": null
+                      },
+                      {
+                        "name": "word",
+                        "refinement": {
+                          "constructor": "NestedCheckedRecords.mkWord"
+                        }
+                      }
+                    ],
+                    "kind": "checked-record",
+                    "name": "NestedCheckedRecords.Packet"
+                  }
+                },
+                {
+                  "name": "tag",
+                  "refinement": null
+                }
+              ],
+              "kind": "record",
+              "name": "NestedCheckedRecords.Holder"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "NestedCheckedRecords.inList": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "constructor": "NestedCheckedRecords.normalizePacket",
+                  "fields": [
+                    {
+                      "name": "digit",
+                      "refinement": null
+                    },
+                    {
+                      "name": "word",
+                      "refinement": {
+                        "constructor": "NestedCheckedRecords.normalizeWord"
+                      }
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "NestedCheckedRecords.Packet"
+                }
+              ],
+              "kind": "list"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "NestedCheckedRecords.inOption": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "constructor": "NestedCheckedRecords.mkPacket",
+                  "fields": [
+                    {
+                      "name": "digit",
+                      "refinement": null
+                    },
+                    {
+                      "name": "word",
+                      "refinement": {
+                        "constructor": "NestedCheckedRecords.normalizeWord"
+                      }
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "NestedCheckedRecords.Packet"
+                }
+              ],
+              "kind": "option"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "NestedCheckedRecords.inProduct": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "constructor": "NestedCheckedRecords.mkPacket",
+                  "fields": [
+                    {
+                      "name": "digit",
+                      "refinement": null
+                    },
+                    {
+                      "name": "word",
+                      "refinement": {
+                        "constructor": "NestedCheckedRecords.mkWord"
+                      }
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "NestedCheckedRecords.Packet"
+                },
+                {
+                  "constructor": "NestedCheckedRecords.normalizePacket",
+                  "fields": [
+                    {
+                      "name": "digit",
+                      "refinement": null
+                    },
+                    {
+                      "name": "word",
+                      "refinement": {
+                        "constructor": "NestedCheckedRecords.normalizeWord"
+                      }
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "NestedCheckedRecords.Packet"
+                }
+              ],
+              "kind": "tuple"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "NestedCheckedRecords.pair": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "NestedCheckedRecords.mkPacket",
+              "fields": [
+                {
+                  "name": "digit",
+                  "refinement": null
+                },
+                {
+                  "name": "word",
+                  "refinement": {
+                    "constructor": "NestedCheckedRecords.mkWord"
+                  }
+                }
+              ],
+              "kind": "checked-record",
+              "name": "NestedCheckedRecords.Packet"
+            }
+          },
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "NestedCheckedRecords.normalizePacket",
+              "fields": [
+                {
+                  "name": "digit",
+                  "refinement": null
+                },
+                {
+                  "name": "word",
+                  "refinement": {
+                    "constructor": "NestedCheckedRecords.normalizeWord"
+                  }
+                }
+              ],
+              "kind": "checked-record",
+              "name": "NestedCheckedRecords.Packet"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "NestedCheckedRecords.produceArray": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "NestedCheckedRecords.produceOption": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "NestedCheckedRecords.second": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "NestedCheckedRecords.normalizePacket",
+              "fields": [
+                {
+                  "name": "digit",
+                  "refinement": null
+                },
+                {
+                  "name": "word",
+                  "refinement": {
+                    "constructor": "NestedCheckedRecords.normalizeWord"
+                  }
+                }
+              ],
+              "kind": "checked-record",
+              "name": "NestedCheckedRecords.Packet"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      }
+    },
+    "exports": [
+      "NestedCheckedRecords.first",
+      "NestedCheckedRecords.second",
+      "NestedCheckedRecords.pair",
+      "NestedCheckedRecords.inArray",
+      "NestedCheckedRecords.inList",
+      "NestedCheckedRecords.inOption",
+      "NestedCheckedRecords.inProduct",
+      "NestedCheckedRecords.inExcept",
+      "NestedCheckedRecords.inHolder",
+      "NestedCheckedRecords.inChoice",
+      "NestedCheckedRecords.echoArray",
+      "NestedCheckedRecords.produceOption",
+      "NestedCheckedRecords.produceArray"
+    ],
+    "modules": [
+      "NestedCheckedRecords"
+    ],
+    "schemaVersion": 1,
+    "targets": {
+      "c": {
+        "name": "nestedcheckedrecords",
+        "version": "1.0.0"
+      },
+      "cpp": {
+        "name": "nestedcheckedrecords",
+        "version": "1.0.0"
+      }
+    }
+  },
+  "declaredGlibcFloor": "2.36",
+  "expectedBindingIrSha256": "10690e769959c9ec5e559894e707db8f79ec7b351e45e5773c75a87810e9ae0b",
+  "independentBuilds": 2,
+  "mode": "full",
+  "producerCommit": "170199a8212af2d3107cf0769902a8e374ff89c5",
+  "profiles": [
+    "c",
+    "cpp"
+  ],
+  "reports": [
+    {
+      "checks": 3369,
+      "compiler": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "cc (Debian 12.2.0-14+deb12u1) 12.2.0\nCopyright (C) 2022 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+      },
+      "compilerFreePath": true,
+      "compilerFreeReplay": true,
+      "consumerSha256": "cb618d465d9d672cad962c23363cd3fe2de16d0a5917d1ade09cdfdb9add2519",
+      "executableSha256": "2f8aa3338ef34a8b39971a43c788c54ebd273fbf13f289e389e669a644b07463",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 53887904,
+              "path": "archives/nestedcheckedrecords-1.0.0-c.tar.gz",
+              "sha256": "35732ad357e2b5737c17831fa8f55f396020226c20dbc934b813f49c86b1f99d"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "nestedcheckedrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "c",
+          "version": "1.0.0"
+        }
+      ],
+      "profile": "c",
+      "relocatedInstallation": true,
+      "result": {
+        "checks": 3369,
+        "recoveries": 256,
+        "rejections": 524,
+        "rounds": 256,
+        "snapshots": 1294
+      },
+      "runs": [
+        {
+          "code": 0,
+          "packageFileSetSha256": "9dc6e7ce8765de951e48d563b396aa8ae8ffb1863e69b095b3d03f97caeaa801",
+          "receiptSha256": "77515c3f8728f55f229b3f08ffd77038c391980fab9285dfd76b667fdf2ee1d3",
+          "relocated": false,
+          "stderr": "",
+          "stdout": "{\"checks\":3369,\"rejections\":524,\"recoveries\":256,\"snapshots\":1294,\"rounds\":256}\n"
+        },
+        {
+          "code": 0,
+          "packageFileSetSha256": "9dc6e7ce8765de951e48d563b396aa8ae8ffb1863e69b095b3d03f97caeaa801",
+          "receiptSha256": "77515c3f8728f55f229b3f08ffd77038c391980fab9285dfd76b667fdf2ee1d3",
+          "relocated": true,
+          "stderr": "",
+          "stdout": "{\"checks\":3369,\"rejections\":524,\"recoveries\":256,\"snapshots\":1294,\"rounds\":256}\n"
+        }
+      ],
+      "sourceRemovedBeforeInstallation": true,
+      "sourceSha256": "cb618d465d9d672cad962c23363cd3fe2de16d0a5917d1ade09cdfdb9add2519"
+    },
+    {
+      "checks": 3884,
+      "compiler": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "c++ (Debian 12.2.0-14+deb12u1) 12.2.0\nCopyright (C) 2022 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+      },
+      "compilerFreePath": true,
+      "compilerFreeReplay": true,
+      "consumerSha256": "37ed66667ab476b39218163f2654884cc2ccc53ba940b04fa5117ee227c5ef98",
+      "executableSha256": "eaf0ebb5577477d929079a3e3e0086e8b576427f6418fca925adc2a60e1455b2",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51815320,
+              "path": "archives/nestedcheckedrecords-1.0.0-cpp.tar.gz",
+              "sha256": "882b3434459195c2a3df7825f613603468cbcd613dff562a781d049d7a58f2e5"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "nestedcheckedrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "profile": "cpp",
+      "relocatedInstallation": true,
+      "result": {
+        "checks": 3884,
+        "recoveries": 256,
+        "rejections": 526,
+        "rounds": 256,
+        "snapshots": 1296
+      },
+      "runs": [
+        {
+          "code": 0,
+          "packageFileSetSha256": "fb2b67fd19289e990763555b30e43ab23e5478a7e90cdc8df5720afde8ed4de1",
+          "receiptSha256": "64da99ba92f1701c229992d890adee32a10ae989cf9834a30c631428c42c6fee",
+          "relocated": false,
+          "stderr": "",
+          "stdout": "{\"checks\":3884,\"rejections\":526,\"recoveries\":256,\"snapshots\":1296,\"rounds\":256}\n"
+        },
+        {
+          "code": 0,
+          "packageFileSetSha256": "fb2b67fd19289e990763555b30e43ab23e5478a7e90cdc8df5720afde8ed4de1",
+          "receiptSha256": "64da99ba92f1701c229992d890adee32a10ae989cf9834a30c631428c42c6fee",
+          "relocated": true,
+          "stderr": "",
+          "stdout": "{\"checks\":3884,\"rejections\":526,\"recoveries\":256,\"snapshots\":1296,\"rounds\":256}\n"
+        }
+      ],
+      "sourceRemovedBeforeInstallation": true,
+      "sourceSha256": "37ed66667ab476b39218163f2654884cc2ccc53ba940b04fa5117ee227c5ef98"
+    }
+  ],
+  "reproducible": true,
+  "resourceAdmission": {
+    "maxLoad": 12,
+    "samples": 5
+  },
+  "route": "ordinary",
+  "runtime": {
+    "arch": "x64",
+    "glibc": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "glibc 2.36\n"
+    },
+    "platform": "linux"
+  },
+  "schemaVersion": 1
+}

@@ -1,0 +1,62 @@
+{
+  "checks": 1280,
+  "compiler": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "c++ (Debian 12.2.0-14+deb12u1) 12.2.0\nCopyright (C) 2022 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+  },
+  "compilerFreePath": true,
+  "compilerFreeReplay": true,
+  "consumerSha256": "75a150cf3ec1c805b05594e9b80c327a4ef90c5b85358ae8d993f425f209b910",
+  "executableSha256": "6827837a9a31ef77b4225d6ea3af3bea1247b6fb21e1a8165ede01c32b0005ec",
+  "offlineInstall": true,
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51762210,
+          "path": "archives/nestedcheckedrecords-1.0.0-cpp.tar.gz",
+          "sha256": "7f0c32b8f6834c3914c72c8c9b232e289a2bdf906ba0724e9dbe9df3a8901c58"
+        }
+      ],
+      "ecosystem": "cpp",
+      "name": "nestedcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "cpp",
+      "version": "1.0.0"
+    }
+  ],
+  "profile": "cpp",
+  "relocatedInstallation": true,
+  "result": {
+    "checks": 1280,
+    "recoveries": 0,
+    "rejections": 0,
+    "rounds": 256,
+    "snapshots": 0
+  },
+  "runs": [
+    {
+      "code": 0,
+      "packageFileSetSha256": "fb2b67fd19289e990763555b30e43ab23e5478a7e90cdc8df5720afde8ed4de1",
+      "receiptSha256": "b750e386b4ba8e8bd2f5acf8814066a924cbbf5fbf8bd626550f2f1091b183db",
+      "relocated": false,
+      "stderr": "",
+      "stdout": "{\"checks\":1280,\"rejections\":0,\"recoveries\":0,\"snapshots\":0,\"rounds\":256}\n"
+    },
+    {
+      "code": 0,
+      "packageFileSetSha256": "fb2b67fd19289e990763555b30e43ab23e5478a7e90cdc8df5720afde8ed4de1",
+      "receiptSha256": "b750e386b4ba8e8bd2f5acf8814066a924cbbf5fbf8bd626550f2f1091b183db",
+      "relocated": true,
+      "stderr": "",
+      "stdout": "{\"checks\":1280,\"rejections\":0,\"recoveries\":0,\"snapshots\":0,\"rounds\":256}\n"
+    }
+  ],
+  "sourceRemovedBeforeInstallation": true,
+  "sourceSha256": "75a150cf3ec1c805b05594e9b80c327a4ef90c5b85358ae8d993f425f209b910"
+}
