@@ -57,11 +57,15 @@ export const checkNestedCheckedRecordJvmProbe = (record, profile, mode) => {
 	{
 		assert.equal(record.run.code, 0, record.run.stderr);
 		assert.equal(record.run.stderr, "");
-		assert.ok(record.outputs[profile === "java" ? "Probe.class" : "ProbeKt.class"]?.bytes > 0);
-		for(const [path, entry] of Object.entries(record.outputs))
+		const expectedOutputs = profile === "java" ? ["Probe.class"] : [
+			"META-INF/main.kotlin_module", "ProbeKt.class"
+			, ...nestedCheckedRecordJvmInputNames.map(name =>
+				`ProbeKt$probe${name[0].toUpperCase()}${name.slice(1)}$1.class`
+			)
+		];
+		assert.deepEqual(Object.keys(record.outputs).sort(), expectedOutputs.sort());
+		for(const entry of Object.values(record.outputs))
 		{
-			assert.ok(profile === "java" ? path === "Probe.class"
-				: path === "ProbeKt.class" || path === "META-INF/main.kotlin_module");
 			assert.deepEqual(Object.keys(entry).sort(), ["bytes", "sha256"]);
 			assert.ok(Number.isSafeInteger(entry.bytes) && entry.bytes > 0);
 			assert.match(entry.sha256, /^[a-f0-9]{64}$/u);
