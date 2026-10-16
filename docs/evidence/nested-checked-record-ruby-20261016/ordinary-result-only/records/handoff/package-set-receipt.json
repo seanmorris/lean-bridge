@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "nestedcheckedrecords@1.0.0",
+    "name": "nestedcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 50088448,
+          "path": "archives/nestedcheckedrecords-1.0.0-x86_64-linux.gem",
+          "sha256": "a996c8a3c390b23cf22085f36a35e36fd547b086a496fc14b52f574cd1a42730"
+        }
+      ],
+      "ecosystem": "rubygems",
+      "name": "nestedcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "rubygems",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "44144240bd3291483597003e2d536fc4344fe640981dd2cdf2007be5dbc794c9",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "ae52f99cea8c6a07d30dfecde44eb8846578521e751bff0ef4e30b24493eb5ba"
+  }
+}

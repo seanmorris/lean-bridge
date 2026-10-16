@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "generator": "ruby-copied-v1",
+  "target": "ruby",
+  "component": "nestedcheckedrecords@1.0.0",
+  "bindingIrSha256": "8b02d87708a960d881cd64e826c1cff00022b30f92d1a8f7f77ef27b5cdbcdb4",
+  "namespace": "LeanBridge::Nestedcheckedrecords",
+  "files": [
+    "lib/lean_bridge/nestedcheckedrecords.rb",
+    "lib/lean_bridge/nestedcheckedrecords/native.rb",
+    "lib/lean_bridge/native_copied_runtime_v1.rb",
+    "README.md"
+  ],
+  "publicFiles": [
+    "lib/lean_bridge/nestedcheckedrecords.rb"
+  ],
+  "internalFiles": [
+    "lib/lean_bridge/nestedcheckedrecords/native.rb",
+    "lib/lean_bridge/native_copied_runtime_v1.rb"
+  ],
+  "packageFiles": [],
+  "supportedFeatures": [
+    "direct-functions",
+    "copied-values",
+    "deterministic-close"
+  ],
+  "capabilityGaps": [
+    {
+      "feature": "identity-and-effects",
+      "reason": "Ordinary RubyGems admits copied values and synchronous primitive callables; resource identities, compound callables and async effects remain unsupported."
+    },
+    {
+      "feature": "additional-platforms",
+      "reason": "The compiled profile is MRI Ruby 3.3 on Linux x86-64."
+    }
+  ]
+}

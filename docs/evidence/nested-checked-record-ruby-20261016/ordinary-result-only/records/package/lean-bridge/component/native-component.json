@@ -1,0 +1,106 @@
+{
+  "adaptersSha256": "222c420c7d792a231918d075c184de5e05ee9a0c045ebdb961834183d8837cfb",
+  "allocationGuardSha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83",
+  "bindingIrSha256": "44144240bd3291483597003e2d536fc4344fe640981dd2cdf2007be5dbc794c9",
+  "compiler": "cc (Debian 12.2.0-14+deb12u1) 12.2.0",
+  "exports": [
+    {
+      "declaration": "NestedCheckedRecords.produceArray",
+      "symbol": "lb_a27e360b7c6440a8dc40dc87"
+    },
+    {
+      "declaration": "NestedCheckedRecords.produceOption",
+      "symbol": "lb_85f9f487f03e070ff66bb271"
+    }
+  ],
+  "headerSha256": "d2ff4235b2668c14a66415506abf085e0d493503a9299fd2a5d2e6dd8b8f91d4",
+  "initializer": "initialize_LeanBridgeNativea63244d529ededa0",
+  "library": "libcomponent_a63244d529ededa079e7.so",
+  "metadataSha256": "e219864d86fbe4384663cab8b45a98b7f9eb3116d4b5b7eb5992bc797f2a1ba5",
+  "modelSha256": "79f8c2fe097b00408e72591eaaedd57b7a7fe7ae8a578d705bf2e69d40aaaab5",
+  "nativeLibrary": {
+    "bytes": 45960,
+    "sha256": "960bf714f5e9633c5e75df7692c33af63e6d467f8e1f9d63d0d1fef300596de8"
+  },
+  "profile": "native-library-v1",
+  "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+  "schemaVersion": 2,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "f26dbc82e5662a9b5ec7bfc6f9d2fd2491df6a00db7da21bcd8fc857c7f2368d",
+    "exportConfigurationSource": "{\n  \"contracts\": {\n    \"NestedCheckedRecords.produceArray\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"NestedCheckedRecords.produceOption\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    }\n  },\n  \"exports\": [\n    \"NestedCheckedRecords.produceOption\",\n    \"NestedCheckedRecords.produceArray\"\n  ],\n  \"modules\": [\n    \"NestedCheckedRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"rubygems\": {\n      \"name\": \"nestedcheckedrecords\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+    "extractorSha256": "88bc071a3fb4adb1dee0a0c3262c4227cadcf5928dd32a79844bb5be69093cf5",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 167608,
+          "interfaceSha256": "e20264af883ce83ec3baf120ceca94359e9c9cbdd0b5750fc7f1226fe93a49f3",
+          "sha256": "f40a37b04d8a4dbac01065764da85bace19eb1c9803183039e9fbed4780ec570"
+        },
+        "module": "NestedCheckedRecords",
+        "source": {
+          "bytes": 2886,
+          "path": "NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "contracts": {
+        "NestedCheckedRecords.produceArray": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "NestedCheckedRecords.produceOption": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        }
+      },
+      "exportModules": [
+        "NestedCheckedRecords"
+      ],
+      "exports": [
+        "NestedCheckedRecords.produceOption",
+        "NestedCheckedRecords.produceArray"
+      ],
+      "metadata": {
+        "invocationIdentitySha256": "2149c6ad70acbdf0358632967e58ad39764bf53951f3023ee436d4b6d6646465",
+        "modules": [
+          {
+            "interfaceSha256": "e20264af883ce83ec3baf120ceca94359e9c9cbdd0b5750fc7f1226fe93a49f3",
+            "name": "NestedCheckedRecords",
+            "sourcePath": "NestedCheckedRecords.lean",
+            "sourceSha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "NestedCheckedRecords"
+      ],
+      "profile": "native-library-v1",
+      "resources": []
+    },
+    "sourceNoticesSha256": "3d862df020df26a52a00349cffaa091a73ca011df69b91fcb5876cd602ee213c",
+    "sourceTreeSha256": "ae52f99cea8c6a07d30dfecde44eb8846578521e751bff0ef4e30b24493eb5ba"
+  }
+}

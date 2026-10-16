@@ -1,0 +1,488 @@
+{
+  "contracts": {
+    "NestedCheckedRecords.echoArray": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "arguments": [
+              {
+                "constructor": "NestedCheckedRecords.mkPacket",
+                "fields": [
+                  {
+                    "name": "digit",
+                    "refinement": null
+                  },
+                  {
+                    "name": "word",
+                    "refinement": {
+                      "constructor": "NestedCheckedRecords.mkWord"
+                    }
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "NestedCheckedRecords.Packet"
+              }
+            ],
+            "kind": "array"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "NestedCheckedRecords.first": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "NestedCheckedRecords.mkPacket",
+            "fields": [
+              {
+                "name": "digit",
+                "refinement": null
+              },
+              {
+                "name": "word",
+                "refinement": {
+                  "constructor": "NestedCheckedRecords.mkWord"
+                }
+              }
+            ],
+            "kind": "checked-record",
+            "name": "NestedCheckedRecords.Packet"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "NestedCheckedRecords.inArray": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "arguments": [
+              {
+                "constructor": "NestedCheckedRecords.mkPacket",
+                "fields": [
+                  {
+                    "name": "digit",
+                    "refinement": null
+                  },
+                  {
+                    "name": "word",
+                    "refinement": {
+                      "constructor": "NestedCheckedRecords.mkWord"
+                    }
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "NestedCheckedRecords.Packet"
+              }
+            ],
+            "kind": "array"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "NestedCheckedRecords.inChoice": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "cases": [
+              {
+                "fields": [],
+                "name": "empty"
+              },
+              {
+                "fields": [
+                  {
+                    "name": "value",
+                    "refinement": {
+                      "constructor": "NestedCheckedRecords.mkPacket",
+                      "fields": [
+                        {
+                          "name": "digit",
+                          "refinement": null
+                        },
+                        {
+                          "name": "word",
+                          "refinement": {
+                            "constructor": "NestedCheckedRecords.normalizeWord"
+                          }
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "NestedCheckedRecords.Packet"
+                    }
+                  }
+                ],
+                "name": "packet"
+              }
+            ],
+            "kind": "variant",
+            "name": "NestedCheckedRecords.Choice"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "NestedCheckedRecords.inExcept": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "arguments": [
+              {
+                "constructor": "NestedCheckedRecords.normalizePacket",
+                "fields": [
+                  {
+                    "name": "digit",
+                    "refinement": null
+                  },
+                  {
+                    "name": "word",
+                    "refinement": {
+                      "constructor": "NestedCheckedRecords.mkWord"
+                    }
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "NestedCheckedRecords.Packet"
+              },
+              {
+                "constructor": "NestedCheckedRecords.mkPacket",
+                "fields": [
+                  {
+                    "name": "digit",
+                    "refinement": null
+                  },
+                  {
+                    "name": "word",
+                    "refinement": {
+                      "constructor": "NestedCheckedRecords.normalizeWord"
+                    }
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "NestedCheckedRecords.Packet"
+              }
+            ],
+            "kind": "result"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "NestedCheckedRecords.inHolder": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "fields": [
+              {
+                "name": "packet",
+                "refinement": {
+                  "constructor": "NestedCheckedRecords.normalizePacket",
+                  "fields": [
+                    {
+                      "name": "digit",
+                      "refinement": null
+                    },
+                    {
+                      "name": "word",
+                      "refinement": {
+                        "constructor": "NestedCheckedRecords.mkWord"
+                      }
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "NestedCheckedRecords.Packet"
+                }
+              },
+              {
+                "name": "tag",
+                "refinement": null
+              }
+            ],
+            "kind": "record",
+            "name": "NestedCheckedRecords.Holder"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "NestedCheckedRecords.inList": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "arguments": [
+              {
+                "constructor": "NestedCheckedRecords.normalizePacket",
+                "fields": [
+                  {
+                    "name": "digit",
+                    "refinement": null
+                  },
+                  {
+                    "name": "word",
+                    "refinement": {
+                      "constructor": "NestedCheckedRecords.normalizeWord"
+                    }
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "NestedCheckedRecords.Packet"
+              }
+            ],
+            "kind": "list"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "NestedCheckedRecords.inOption": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "arguments": [
+              {
+                "constructor": "NestedCheckedRecords.mkPacket",
+                "fields": [
+                  {
+                    "name": "digit",
+                    "refinement": null
+                  },
+                  {
+                    "name": "word",
+                    "refinement": {
+                      "constructor": "NestedCheckedRecords.normalizeWord"
+                    }
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "NestedCheckedRecords.Packet"
+              }
+            ],
+            "kind": "option"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "NestedCheckedRecords.inProduct": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "arguments": [
+              {
+                "constructor": "NestedCheckedRecords.mkPacket",
+                "fields": [
+                  {
+                    "name": "digit",
+                    "refinement": null
+                  },
+                  {
+                    "name": "word",
+                    "refinement": {
+                      "constructor": "NestedCheckedRecords.mkWord"
+                    }
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "NestedCheckedRecords.Packet"
+              },
+              {
+                "constructor": "NestedCheckedRecords.normalizePacket",
+                "fields": [
+                  {
+                    "name": "digit",
+                    "refinement": null
+                  },
+                  {
+                    "name": "word",
+                    "refinement": {
+                      "constructor": "NestedCheckedRecords.normalizeWord"
+                    }
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "NestedCheckedRecords.Packet"
+              }
+            ],
+            "kind": "tuple"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "NestedCheckedRecords.pair": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "NestedCheckedRecords.mkPacket",
+            "fields": [
+              {
+                "name": "digit",
+                "refinement": null
+              },
+              {
+                "name": "word",
+                "refinement": {
+                  "constructor": "NestedCheckedRecords.mkWord"
+                }
+              }
+            ],
+            "kind": "checked-record",
+            "name": "NestedCheckedRecords.Packet"
+          }
+        },
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "NestedCheckedRecords.normalizePacket",
+            "fields": [
+              {
+                "name": "digit",
+                "refinement": null
+              },
+              {
+                "name": "word",
+                "refinement": {
+                  "constructor": "NestedCheckedRecords.normalizeWord"
+                }
+              }
+            ],
+            "kind": "checked-record",
+            "name": "NestedCheckedRecords.Packet"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "NestedCheckedRecords.produceArray": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "NestedCheckedRecords.produceOption": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "NestedCheckedRecords.second": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "NestedCheckedRecords.normalizePacket",
+            "fields": [
+              {
+                "name": "digit",
+                "refinement": null
+              },
+              {
+                "name": "word",
+                "refinement": {
+                  "constructor": "NestedCheckedRecords.normalizeWord"
+                }
+              }
+            ],
+            "kind": "checked-record",
+            "name": "NestedCheckedRecords.Packet"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    }
+  },
+  "exports": [
+    "NestedCheckedRecords.first",
+    "NestedCheckedRecords.second",
+    "NestedCheckedRecords.pair",
+    "NestedCheckedRecords.inArray",
+    "NestedCheckedRecords.inList",
+    "NestedCheckedRecords.inOption",
+    "NestedCheckedRecords.inProduct",
+    "NestedCheckedRecords.inExcept",
+    "NestedCheckedRecords.inHolder",
+    "NestedCheckedRecords.inChoice",
+    "NestedCheckedRecords.echoArray",
+    "NestedCheckedRecords.produceOption",
+    "NestedCheckedRecords.produceArray"
+  ],
+  "modules": [
+    "NestedCheckedRecords"
+  ],
+  "schemaVersion": 1,
+  "targets": {
+    "rubygems": {
+      "name": "nestedcheckedrecords",
+      "version": "1.0.0"
+    }
+  }
+}

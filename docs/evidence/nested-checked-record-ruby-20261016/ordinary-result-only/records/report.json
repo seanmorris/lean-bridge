@@ -1,0 +1,225 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/nestedcheckedrecords-1.0.0-x86_64-linux.gem": "a996c8a3c390b23cf22085f36a35e36fd547b086a496fc14b52f574cd1a42730"
+      },
+      "bindingIrSha256": "44144240bd3291483597003e2d536fc4344fe640981dd2cdf2007be5dbc794c9",
+      "modelSha256": "79f8c2fe097b00408e72591eaaedd57b7a7fe7ae8a578d705bf2e69d40aaaab5",
+      "receiptSha256": "96ec7b8834cc6f1e4c2a420d7e6a9f3d5d64553f342b4ba3a04ca977480ea2af"
+    },
+    {
+      "archives": {
+        "archives/nestedcheckedrecords-1.0.0-x86_64-linux.gem": "a996c8a3c390b23cf22085f36a35e36fd547b086a496fc14b52f574cd1a42730"
+      },
+      "bindingIrSha256": "44144240bd3291483597003e2d536fc4344fe640981dd2cdf2007be5dbc794c9",
+      "modelSha256": "79f8c2fe097b00408e72591eaaedd57b7a7fe7ae8a578d705bf2e69d40aaaab5",
+      "receiptSha256": "96ec7b8834cc6f1e4c2a420d7e6a9f3d5d64553f342b4ba3a04ca977480ea2af"
+    }
+  ],
+  "compilerFreeReplay": true,
+  "declaredGlibcFloor": "2.36",
+  "dispatch": {
+    "observed": false,
+    "reason": "No Ruby constructor/source entry counters in this installed acceptance"
+  },
+  "expectedBindingIrSha256": "cab9b521a3c107820800b8afb7e224cb0c6c77135c60305c4cca5fe8774c6eae",
+  "gemReceiptSha256": "424b69b77d73c527192fd4de01c54db8edf89ce33021e2fb5f5e7bc207b857da",
+  "independentBuilds": 2,
+  "interpreter": {
+    "command": "/app/.toolchains/ruby33/bin/ruby",
+    "identity": {
+      "bytes": 31101696,
+      "sha256": "28eea9e1f4c7eef2f6812b0535409dce29f71ca86bbbddeccb6df6d3279bf6bb"
+    },
+    "run": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "{\"engine\":\"ruby\",\"version\":\"3.3.12\",\"platform\":\"x86_64-linux\"}"
+    }
+  },
+  "loadCeiling": 20,
+  "mode": "result-only",
+  "observations": [
+    {
+      "args": [
+        "consumer.rb",
+        "--result-only"
+      ],
+      "closure": {
+        "environmentSha256": "e913ec098550e2973a8f703a098b9b3c8ac5043eb356ec7b6e2f4d1c71d6bb99",
+        "gemspecSha256": "74e270dcb784b8cd3d044e232be8fe07d482d6e23855bfe0272091903494ebb0",
+        "interpreterSha256": "28eea9e1f4c7eef2f6812b0535409dce29f71ca86bbbddeccb6df6d3279bf6bb",
+        "packageFileSetSha256": "42616b349bfb3f2f8041f45c865821e3fabe66666c653ab83f627eca98030973",
+        "receiptSha256": "424b69b77d73c527192fd4de01c54db8edf89ce33021e2fb5f5e7bc207b857da"
+      },
+      "command": "/app/.toolchains/ruby33/bin/ruby",
+      "counts": {
+        "checks": 1571,
+        "hostRejections": 4,
+        "recoveries": 0,
+        "rejections": 0,
+        "rounds": 256,
+        "snapshotControls": 8,
+        "snapshots": 518
+      },
+      "cwd": "/tmp/lean-bridge-nested-checked-record-ruby-GDRR0f/consumer",
+      "gems": "/tmp/lean-bridge-nested-checked-record-ruby-GDRR0f/consumer/gems",
+      "relocated": false,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":1571,\"rejections\":0,\"hostRejections\":4,\"recoveries\":0,\"snapshots\":518,\"snapshotControls\":8,\"rounds\":256}\n"
+      }
+    },
+    {
+      "args": [
+        "consumer.rb",
+        "--result-only"
+      ],
+      "closure": {
+        "environmentSha256": "e913ec098550e2973a8f703a098b9b3c8ac5043eb356ec7b6e2f4d1c71d6bb99",
+        "gemspecSha256": "74e270dcb784b8cd3d044e232be8fe07d482d6e23855bfe0272091903494ebb0",
+        "interpreterSha256": "28eea9e1f4c7eef2f6812b0535409dce29f71ca86bbbddeccb6df6d3279bf6bb",
+        "packageFileSetSha256": "42616b349bfb3f2f8041f45c865821e3fabe66666c653ab83f627eca98030973",
+        "receiptSha256": "424b69b77d73c527192fd4de01c54db8edf89ce33021e2fb5f5e7bc207b857da"
+      },
+      "command": "/app/.toolchains/ruby33/bin/ruby",
+      "counts": {
+        "checks": 1571,
+        "hostRejections": 4,
+        "recoveries": 0,
+        "rejections": 0,
+        "rounds": 256,
+        "snapshotControls": 8,
+        "snapshots": 518
+      },
+      "cwd": "/tmp/lean-bridge-nested-checked-record-ruby-GDRR0f/consumer-relocated",
+      "gems": "/tmp/lean-bridge-nested-checked-record-ruby-GDRR0f/consumer-relocated/gems",
+      "relocated": true,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":1571,\"rejections\":0,\"hostRejections\":4,\"recoveries\":0,\"snapshots\":518,\"snapshotControls\":8,\"rounds\":256}\n"
+      }
+    }
+  ],
+  "offlineInstall": true,
+  "producerCommit": "6d0c683e2da19cd6216384ff588294951af216db",
+  "receipt": {
+    "component": {
+      "id": "nestedcheckedrecords@1.0.0",
+      "name": "nestedcheckedrecords",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 50088448,
+            "path": "archives/nestedcheckedrecords-1.0.0-x86_64-linux.gem",
+            "sha256": "a996c8a3c390b23cf22085f36a35e36fd547b086a496fc14b52f574cd1a42730"
+          }
+        ],
+        "ecosystem": "rubygems",
+        "name": "nestedcheckedrecords",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+        "target": "rubygems",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "44144240bd3291483597003e2d536fc4344fe640981dd2cdf2007be5dbc794c9",
+        "id": "native-library-v1",
+        "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "ae52f99cea8c6a07d30dfecde44eb8846578521e751bff0ef4e30b24493eb5ba"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "resourceChecks": [
+    {
+      "observations": [
+        {
+          "availableBytes": 10004717568,
+          "freeBytes": 3235811328,
+          "load": 5.26
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 10303438848,
+          "freeBytes": 3235770368,
+          "load": 5.26
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 10468892672,
+          "freeBytes": 3184541696,
+          "load": 4.71
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 10347884544,
+          "freeBytes": 3133444096,
+          "load": 4.93
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 10192187392,
+          "freeBytes": 2924081152,
+          "load": 4.78
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 10090131456,
+          "freeBytes": 2923966464,
+          "load": 4.8
+        }
+      ],
+      "waits": 0
+    }
+  ],
+  "route": "ordinary",
+  "runtime": {
+    "arch": "x64",
+    "glibc": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "glibc 2.36\n"
+    },
+    "platform": "linux"
+  },
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}
