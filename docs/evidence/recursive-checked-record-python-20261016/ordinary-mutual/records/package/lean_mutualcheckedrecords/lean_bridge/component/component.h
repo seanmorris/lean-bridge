@@ -1,0 +1,29 @@
+#include <lean/lean.h>
+#include <stdint.h>
+LEAN_CASSERT(sizeof(size_t) * 8 == 64);
+lean_object * lean_bridge_b93734338d8f12ed96612e52_recursive_d0c2f97dc81cba81a9e3_make(lean_object *, lean_object *, lean_object *);
+lean_object * lean_bridge_b93734338d8f12ed96612e52_recursive_d0c2f97dc81cba81a9e3_field0(lean_object *);
+lean_object * lean_bridge_b93734338d8f12ed96612e52_recursive_d0c2f97dc81cba81a9e3_field1(lean_object *);
+lean_object * lean_bridge_b93734338d8f12ed96612e52_recursive_d0c2f97dc81cba81a9e3_field2(lean_object *);
+uint32_t lean_bridge_b93734338d8f12ed96612e52_recursive_eb736b1bf29637ae6a7a_branch(lean_object *);
+lean_object * lean_bridge_b93734338d8f12ed96612e52_recursive_eb736b1bf29637ae6a7a_none(lean_object *);
+lean_object * lean_bridge_b93734338d8f12ed96612e52_recursive_eb736b1bf29637ae6a7a_make0(lean_object *);
+lean_object * lean_bridge_b93734338d8f12ed96612e52_recursive_eb736b1bf29637ae6a7a_field0(lean_object *);
+uint32_t lean_bridge_b93734338d8f12ed96612e52_recursive_fd8b5e5cd01b3f098ee1_branch(lean_object *);
+lean_object * lean_bridge_b93734338d8f12ed96612e52_recursive_fd8b5e5cd01b3f098ee1_make0(lean_object *);
+lean_object * lean_bridge_b93734338d8f12ed96612e52_recursive_fd8b5e5cd01b3f098ee1_make1(lean_object *);
+lean_object * lean_bridge_b93734338d8f12ed96612e52_recursive_fd8b5e5cd01b3f098ee1_case1_field0(lean_object *);
+lean_object * lean_bridge_b93734338d8f12ed96612e52_recursive_65957f8f9adac4e8a249_make(lean_object *);
+lean_object * lean_bridge_b93734338d8f12ed96612e52_recursive_65957f8f9adac4e8a249_items(lean_object *);
+uint32_t lean_bridge_b93734338d8f12ed96612e52_recursive_e9dbc7e3c3b419d0a087_branch(lean_object *);
+lean_object * lean_bridge_b93734338d8f12ed96612e52_recursive_e9dbc7e3c3b419d0a087_none(lean_object *);
+lean_object * lean_bridge_b93734338d8f12ed96612e52_recursive_e9dbc7e3c3b419d0a087_make0(lean_object *);
+lean_object * lean_bridge_b93734338d8f12ed96612e52_recursive_e9dbc7e3c3b419d0a087_field0(lean_object *);
+lean_object * lean_bridge_b93734338d8f12ed96612e52_recursive_97ce35f0dd7bd593a821_make(lean_object *);
+lean_object * lean_bridge_b93734338d8f12ed96612e52_recursive_97ce35f0dd7bd593a821_field0(lean_object *);
+lean_object * lean_bridge_b93734338d8f12ed96612e52_lean(lean_object *);
+lean_object * lean_bridge_c2c1eed7ec1642970f377b9b_lean(lean_object *);
+lean_object * lean_bridge_d471b4117ccac362de6872c5_lean(lean_object *);
+lean_object * lean_bridge_80dc06e94320d76de7e8afc6_lean(lean_object *);
+lean_object * lean_bridge_f1dd7ff5b67060930f091dae_lean(lean_object *);
+lean_object * lean_bridge_84236b8271f83e0e4db02cf4_lean(lean_object *);

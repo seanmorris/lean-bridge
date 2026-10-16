@@ -1,0 +1,32 @@
+{
+  "arguments": [
+    "-I",
+    "-B",
+    "consumer.py",
+    "recursive"
+  ],
+  "counts": {
+    "checks": 1083,
+    "hostRejections": 78,
+    "module": "recursive",
+    "recoveries": 64,
+    "rejections": 144,
+    "rounds": 64,
+    "snapshotControls": 8,
+    "snapshots": 495
+  },
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/unavailable"
+  },
+  "inventorySha256": "eeee5b18a91206c6be21b8ca08387e31c5fff33db3fb62725e702961d5ab7005",
+  "relocated": true,
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\": 1083, \"hostRejections\": 78, \"module\": \"recursive\", \"recoveries\": 64, \"rejections\": 144, \"rounds\": 64, \"snapshotControls\": 8, \"snapshots\": 495}\n"
+  }
+}

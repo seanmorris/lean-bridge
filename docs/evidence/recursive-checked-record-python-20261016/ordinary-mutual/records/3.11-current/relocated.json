@@ -1,0 +1,32 @@
+{
+  "arguments": [
+    "-I",
+    "-B",
+    "consumer.py",
+    "mutual"
+  ],
+  "counts": {
+    "checks": 1100,
+    "hostRejections": 80,
+    "module": "mutual",
+    "recoveries": 64,
+    "rejections": 144,
+    "rounds": 64,
+    "snapshotControls": 11,
+    "snapshots": 501
+  },
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/unavailable"
+  },
+  "inventorySha256": "41b3ac13ea7a79dd826a8261c4bc7f658eb01a54b36aa1fb895f69b909a64f17",
+  "relocated": true,
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\": 1100, \"hostRejections\": 80, \"module\": \"mutual\", \"recoveries\": 64, \"rejections\": 144, \"rounds\": 64, \"snapshotControls\": 11, \"snapshots\": 501}\n"
+  }
+}

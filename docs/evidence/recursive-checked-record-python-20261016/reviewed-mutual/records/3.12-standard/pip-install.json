@@ -1,0 +1,52 @@
+{
+  "version": "1",
+  "pip_version": "25.0.1",
+  "install": [
+    {
+      "download_info": {
+        "url": "file:///tmp/lean-bridge-recursive-checked-record-python-NmzxB9/handoff/archives/mutualcheckedrecords-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+        "archive_info": {
+          "hash": "sha256=34e550d12485816a749fb86fc13d39c81d797675c2c66b0248163b769fb47183",
+          "hashes": {
+            "sha256": "34e550d12485816a749fb86fc13d39c81d797675c2c66b0248163b769fb47183"
+          }
+        }
+      },
+      "is_direct": true,
+      "is_yanked": false,
+      "requested": true,
+      "metadata": {
+        "metadata_version": "2.4",
+        "name": "mutualcheckedrecords",
+        "version": "1.0.0",
+        "summary": "Compiled Lean API with generated Python copied-value conversions",
+        "description": "# lean_mutualcheckedrecords\n\nInstall the prepared platform wheel and import lean_mutualcheckedrecords. It contains the native Lean libraries and loads a compatible shared runtime automatically. Consumers need no Lean compiler or C build tools. Requires GIL-enabled Python 3.11+ on Linux x86-64 with glibc matching the wheel tag. Free-threading, post-fork calls and incompatible runtime identities are rejected. Subinterpreters and other Python implementations have not been accepted.\n\nRecords and variant constructors are frozen dataclasses. Construct and match named cases without raw pointers or numeric constructor tags. Arrays and Lists accept lists or tuples and return independently copied tuples. Concrete aliases retain their names. Option[T] is None or Some(value); Some(None) preserves a present Unit or absent inner Option. Result[T,E] is Ok(value) or Err(value), including equal payload types. Domain errors return Err. Binary products keep their nested two-element tuples.\n\nUnit is None. Bool requires bool. Fixed-width integers reject out-of-range values and Boolean/numeric coercion; Nat and Int use exact Python integers. Native words are 64-bit. Float32 rounds a Python float to binary32 and preserves NaN classification, infinities and signed zero. String requires Unicode scalar text and preserves NUL; ByteArray is bytes. Constructors must use the exact generated classes.\n\nFinite copied values may be at most 128 levels deep and visit 262,144 nodes. Arguments and the result share a 16 MiB native-copy budget and a separate 16 MiB accounted conversion-storage budget. These limits do not bound Lean working memory or every Python allocator overhead. Cycles and uninhabited copied values are rejected. Inputs validate before native allocation or runtime initialization; do not mutate them during conversion. Temporary buffers and native results clear in finally, including conversion exceptions. Malformed native output retires the runtime. Input, limit and recoverable allocation failures preserve usability. Independent calls can use separate threads; each call owns its scratch storage.\n\nDeep runtime annotations use TypeAliasType boundaries to keep shared types finite; __value__ exposes their exact targets. Public stubs retain precise recursive types. When container aliases require it, pip automatically installs typing_extensions (>=4.6,<5) on Python 3.11; Python 3.12+ uses the standard library. Callback, closure, resource and asynchronous payloads remain outside this recursive profile.\n\n- lean_mutualcheckedrecords.echo: lean:MutualCheckedRecords.echo\n- lean_mutualcheckedrecords.echo_groups: lean:MutualCheckedRecords.echoGroups\n- lean_mutualcheckedrecords.first: lean:MutualCheckedRecords.first\n- lean_mutualcheckedrecords.groups: lean:MutualCheckedRecords.groups\n- lean_mutualcheckedrecords.produce: lean:MutualCheckedRecords.produce\n- lean_mutualcheckedrecords.second: lean:MutualCheckedRecords.second\n",
+        "description_content_type": "text/markdown",
+        "license_file": [
+          "Lean-LICENSE",
+          "Lean-LICENSES",
+          "LeanBridge-LICENSE",
+          "source-notices.json",
+          "source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt"
+        ],
+        "requires_dist": [
+          "typing_extensions (<5,>=4.6); python_version < \"3.12\""
+        ],
+        "requires_python": ">=3.11"
+      }
+    }
+  ],
+  "environment": {
+    "implementation_name": "cpython",
+    "implementation_version": "3.12.14",
+    "os_name": "posix",
+    "platform_machine": "x86_64",
+    "platform_release": "6.1.0-31-amd64",
+    "platform_system": "Linux",
+    "platform_version": "#1 SMP PREEMPT_DYNAMIC Debian 6.1.128-1 (2025-02-07)",
+    "python_full_version": "3.12.14",
+    "platform_python_implementation": "CPython",
+    "python_version": "3.12",
+    "sys_platform": "linux"
+  }
+}

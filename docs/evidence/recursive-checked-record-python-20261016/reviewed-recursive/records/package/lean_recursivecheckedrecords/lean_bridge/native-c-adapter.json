@@ -1,0 +1,30 @@
+{
+  "bindingIrSha256": "0bebd4a8023fdddfaf8b1d9e7ab2fdd9ec5450c9c62314c49c80cfe2c310a4b2",
+  "componentReceiptSha256": "df1e87796a0ef9c6a036e3edbff3ab835cf2f4db37951e59cdefc45b8571d2fb",
+  "copiedGraph": {
+    "layoutSha256": "b564479bbec603724b6ab1629e1962aac552aa5775c5a65fdf7a1e063b7c5c94",
+    "schemaVersion": 1
+  },
+  "files": {
+    "include/detail/recursivecheckedrecords-graph-types.h": {
+      "bytes": 3956,
+      "sha256": "43259a459e122abb99ae6646560f75c74ce8c3fc43f5d42b8ee30329715f9236"
+    },
+    "include/detail/recursivecheckedrecords-graph.h": {
+      "bytes": 1251,
+      "sha256": "c77d8b9bb8501ef638e2ea37f5f5d2f8df07add4650a3d4084923625f6880251"
+    },
+    "lib/librecursivecheckedrecords.so": {
+      "bytes": 41472,
+      "sha256": "f40a13990c3da41f7963e04a7b229f763eab944b2d917e59ea141e2c7ce1d3d0"
+    },
+    "src/native.c": {
+      "bytes": 59705,
+      "sha256": "67ba7f70a734c5f9b90962591fdf36e3a43042a4d8a9c463ffa2a2c3c54a7956"
+    }
+  },
+  "library": "librecursivecheckedrecords.so",
+  "profile": "native-library-v1",
+  "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+  "schemaVersion": 1
+}

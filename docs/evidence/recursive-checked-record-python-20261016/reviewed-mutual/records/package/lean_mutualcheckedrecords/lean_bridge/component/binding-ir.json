@@ -1,0 +1,1030 @@
+{
+  "assurance": [],
+  "capabilities": [],
+  "component": {
+    "id": "mutualcheckedrecords@1.0.0",
+    "name": "mutualcheckedrecords",
+    "version": "1.0.0"
+  },
+  "declarations": [
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:MutualCheckedRecords.echo",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "echo",
+      "overloadKey": "MutualCheckedRecords.echo",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:MutualCheckedRecords.Envelope",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "id": "lean:MutualCheckedRecords.Envelope",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "MutualCheckedRecords.echo",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "MutualCheckedRecords.mkEnvelope",
+                  "fields": [
+                    {
+                      "name": "value",
+                      "refinement": {
+                        "constructor": "MutualCheckedRecords.plusOne"
+                      }
+                    },
+                    {
+                      "name": "mode",
+                      "refinement": null
+                    },
+                    {
+                      "name": "next",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "MutualCheckedRecords.Envelope"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "constructor": "MutualCheckedRecords.mkEnvelope",
+                "fields": [
+                  {
+                    "name": "value",
+                    "refinement": {
+                      "constructor": "MutualCheckedRecords.plusOne",
+                      "kind": "subtype"
+                    }
+                  },
+                  {
+                    "name": "mode",
+                    "refinement": {
+                      "bound": "3",
+                      "kind": "fin"
+                    }
+                  },
+                  {
+                    "name": "next",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "MutualCheckedRecords.Envelope"
+              }
+            ],
+            "result": {
+              "constructor": null,
+              "fields": [
+                {
+                  "name": "value",
+                  "refinement": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "name": "mode",
+                  "refinement": {
+                    "bound": "3",
+                    "kind": "fin"
+                  }
+                },
+                {
+                  "name": "next",
+                  "refinement": null
+                }
+              ],
+              "kind": "checked-record",
+              "name": "MutualCheckedRecords.Envelope"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 59,
+            "endLine": 48,
+            "path": "MutualCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 48
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:MutualCheckedRecords.echoGroups",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "echoGroups",
+      "overloadKey": "MutualCheckedRecords.echoGroups",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "id": "lean:MutualCheckedRecords.EnvelopeAlias",
+                    "kind": "named"
+                  }
+                ],
+                "constructor": "option",
+                "kind": "apply"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "id": "lean:MutualCheckedRecords.EnvelopeAlias",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "constructor": "array",
+          "kind": "apply"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "MutualCheckedRecords.echoGroups",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "constructor": "MutualCheckedRecords.normalizeEnvelope",
+                          "fields": [
+                            {
+                              "name": "value",
+                              "refinement": {
+                                "constructor": "MutualCheckedRecords.plusTwo"
+                              }
+                            },
+                            {
+                              "name": "mode",
+                              "refinement": null
+                            },
+                            {
+                              "name": "next",
+                              "refinement": null
+                            }
+                          ],
+                          "kind": "checked-record",
+                          "name": "MutualCheckedRecords.Envelope"
+                        }
+                      ],
+                      "kind": "option"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "constructor": "MutualCheckedRecords.normalizeEnvelope",
+                        "fields": [
+                          {
+                            "name": "value",
+                            "refinement": {
+                              "constructor": "MutualCheckedRecords.plusTwo",
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "mode",
+                            "refinement": {
+                              "bound": "3",
+                              "kind": "fin"
+                            }
+                          },
+                          {
+                            "name": "next",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "MutualCheckedRecords.Envelope"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              }
+            ],
+            "result": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "constructor": null,
+                      "fields": [
+                        {
+                          "name": "value",
+                          "refinement": {
+                            "constructor": null,
+                            "kind": "subtype"
+                          }
+                        },
+                        {
+                          "name": "mode",
+                          "refinement": {
+                            "bound": "3",
+                            "kind": "fin"
+                          }
+                        },
+                        {
+                          "name": "next",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "MutualCheckedRecords.Envelope"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 63,
+            "endLine": 50,
+            "path": "MutualCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 50
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:MutualCheckedRecords.first",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "first",
+      "overloadKey": "MutualCheckedRecords.first",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:MutualCheckedRecords.Envelope",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "MutualCheckedRecords.first",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "MutualCheckedRecords.mkEnvelope",
+                  "fields": [
+                    {
+                      "name": "value",
+                      "refinement": {
+                        "constructor": "MutualCheckedRecords.plusOne"
+                      }
+                    },
+                    {
+                      "name": "mode",
+                      "refinement": null
+                    },
+                    {
+                      "name": "next",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "MutualCheckedRecords.Envelope"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "constructor": "MutualCheckedRecords.mkEnvelope",
+                "fields": [
+                  {
+                    "name": "value",
+                    "refinement": {
+                      "constructor": "MutualCheckedRecords.plusOne",
+                      "kind": "subtype"
+                    }
+                  },
+                  {
+                    "name": "mode",
+                    "refinement": {
+                      "bound": "3",
+                      "kind": "fin"
+                    }
+                  },
+                  {
+                    "name": "next",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "MutualCheckedRecords.Envelope"
+              }
+            ],
+            "result": null
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 65,
+            "endLine": 46,
+            "path": "MutualCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 46
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:MutualCheckedRecords.groups",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "groups",
+      "overloadKey": "MutualCheckedRecords.groups",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "id": "lean:MutualCheckedRecords.EnvelopeAlias",
+                    "kind": "named"
+                  }
+                ],
+                "constructor": "option",
+                "kind": "apply"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "MutualCheckedRecords.groups",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "constructor": "MutualCheckedRecords.mkEnvelope",
+                          "fields": [
+                            {
+                              "name": "value",
+                              "refinement": {
+                                "constructor": "MutualCheckedRecords.plusOne"
+                              }
+                            },
+                            {
+                              "name": "mode",
+                              "refinement": null
+                            },
+                            {
+                              "name": "next",
+                              "refinement": null
+                            }
+                          ],
+                          "kind": "checked-record",
+                          "name": "MutualCheckedRecords.Envelope"
+                        }
+                      ],
+                      "kind": "option"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "constructor": "MutualCheckedRecords.mkEnvelope",
+                        "fields": [
+                          {
+                            "name": "value",
+                            "refinement": {
+                              "constructor": "MutualCheckedRecords.plusOne",
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "mode",
+                            "refinement": {
+                              "bound": "3",
+                              "kind": "fin"
+                            }
+                          },
+                          {
+                            "name": "next",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "MutualCheckedRecords.Envelope"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              }
+            ],
+            "result": null
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 61,
+            "endLine": 49,
+            "path": "MutualCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 49
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:MutualCheckedRecords.produce",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "produce",
+      "overloadKey": "MutualCheckedRecords.produce",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "id": "lean:MutualCheckedRecords.Envelope",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "MutualCheckedRecords.produce",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              null
+            ],
+            "result": {
+              "constructor": null,
+              "fields": [
+                {
+                  "name": "value",
+                  "refinement": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "name": "mode",
+                  "refinement": {
+                    "bound": "3",
+                    "kind": "fin"
+                  }
+                },
+                {
+                  "name": "next",
+                  "refinement": null
+                }
+              ],
+              "kind": "checked-record",
+              "name": "MutualCheckedRecords.Envelope"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 23,
+            "endLine": 58,
+            "path": "MutualCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 55
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:MutualCheckedRecords.second",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "second",
+      "overloadKey": "MutualCheckedRecords.second",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:MutualCheckedRecords.Envelope",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "MutualCheckedRecords.second",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "MutualCheckedRecords.normalizeEnvelope",
+                  "fields": [
+                    {
+                      "name": "value",
+                      "refinement": {
+                        "constructor": "MutualCheckedRecords.plusTwo"
+                      }
+                    },
+                    {
+                      "name": "mode",
+                      "refinement": null
+                    },
+                    {
+                      "name": "next",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "MutualCheckedRecords.Envelope"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "constructor": "MutualCheckedRecords.normalizeEnvelope",
+                "fields": [
+                  {
+                    "name": "value",
+                    "refinement": {
+                      "constructor": "MutualCheckedRecords.plusTwo",
+                      "kind": "subtype"
+                    }
+                  },
+                  {
+                    "name": "mode",
+                    "refinement": {
+                      "bound": "3",
+                      "kind": "fin"
+                    }
+                  },
+                  {
+                    "name": "next",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "MutualCheckedRecords.Envelope"
+              }
+            ],
+            "result": null
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 66,
+            "endLine": 47,
+            "path": "MutualCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 47
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    }
+  ],
+  "documentation": {
+    "details": "",
+    "summary": "Independent corpus contract."
+  },
+  "errors": [],
+  "producers": [
+    {
+      "adapter": "lean-bridge-elaborator",
+      "adapterVersion": 2,
+      "extensions": {
+        "lean-lang.org/elaboration-sha256": "7ecb73b73c6b64878bb4756e0c90dba9ecd9b4f9813163fc3ca6c18a4712af75",
+        "lean-lang.org/toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "id": "lean",
+      "tool": "Lean",
+      "toolVersion": "4.32.2"
+    }
+  ],
+  "schemaVersion": 3,
+  "types": [
+    {
+      "assurance": [],
+      "callable": null,
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent mutual checked-record contract."
+      },
+      "fields": [
+        {
+          "documentation": {
+            "details": "",
+            "summary": "Independent mutual checked-record contract."
+          },
+          "mutability": "immutable",
+          "name": "value",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        {
+          "documentation": {
+            "details": "",
+            "summary": "Independent mutual checked-record contract."
+          },
+          "mutability": "immutable",
+          "name": "mode",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        {
+          "documentation": {
+            "details": "",
+            "summary": "Independent mutual checked-record contract."
+          },
+          "mutability": "immutable",
+          "name": "next",
+          "type": {
+            "arguments": [
+              {
+                "id": "lean:MutualCheckedRecords.Step",
+                "kind": "named"
+              }
+            ],
+            "constructor": "option",
+            "kind": "apply"
+          }
+        }
+      ],
+      "host": null,
+      "id": "lean:MutualCheckedRecords.Envelope",
+      "kind": "record",
+      "mutability": "immutable",
+      "name": "Envelope",
+      "representation": "copied",
+      "resource": null,
+      "source": {
+        "declaration": "MutualCheckedRecords.Envelope",
+        "extensions": {
+          "lean-lang.org/erased-proofs": {
+            "fields": [
+              "linked"
+            ]
+          },
+          "lean-lang.org/nominal-refinements": {
+            "fields": [
+              null,
+              {
+                "bound": "3",
+                "kind": "fin"
+              },
+              null
+            ],
+            "kind": "record"
+          }
+        },
+        "producer": "lean"
+      },
+      "target": null,
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": null,
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent mutual checked-record contract."
+      },
+      "fields": [],
+      "host": null,
+      "id": "lean:MutualCheckedRecords.EnvelopeAlias",
+      "kind": "alias",
+      "mutability": "immutable",
+      "name": "EnvelopeAlias",
+      "representation": "copied",
+      "resource": null,
+      "source": {
+        "declaration": "MutualCheckedRecords.EnvelopeAlias",
+        "extensions": {},
+        "producer": "lean"
+      },
+      "target": {
+        "id": "lean:MutualCheckedRecords.Envelope",
+        "kind": "named"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": null,
+      "cases": [
+        {
+          "documentation": {
+            "details": "",
+            "summary": "stop"
+          },
+          "fields": [],
+          "name": "stop"
+        },
+        {
+          "documentation": {
+            "details": "",
+            "summary": "more"
+          },
+          "fields": [
+            {
+              "documentation": {
+                "details": "",
+                "summary": "packet"
+              },
+              "mutability": "immutable",
+              "name": "packet",
+              "type": {
+                "id": "lean:MutualCheckedRecords.Envelope",
+                "kind": "named"
+              }
+            }
+          ],
+          "name": "more"
+        }
+      ],
+      "documentation": {
+        "details": "",
+        "summary": "Independent mutual checked-record contract."
+      },
+      "fields": [],
+      "host": null,
+      "id": "lean:MutualCheckedRecords.Step",
+      "kind": "variant",
+      "mutability": "immutable",
+      "name": "Step",
+      "representation": "copied",
+      "resource": null,
+      "source": {
+        "declaration": "MutualCheckedRecords.Step",
+        "extensions": {},
+        "producer": "lean"
+      },
+      "target": null,
+      "typeParameters": []
+    }
+  ]
+}

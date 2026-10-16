@@ -1,0 +1,500 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/mutualcheckedrecords-1.0.0-py3-none-manylinux_2_36_x86_64.whl": "34e550d12485816a749fb86fc13d39c81d797675c2c66b0248163b769fb47183"
+      },
+      "bindingIrSha256": "5238fea20925a438bcf3e48ae21085626506549287335eb617c18153db6a2302",
+      "modelSha256": "09173398445bf010e28b84b88074535e75a214c97e419ccfadb8a0da45434821",
+      "receiptSha256": "3ac76b9e62fa3b4879e16e58bfa539739032e45dcd8a75218746e305b98a9a51"
+    },
+    {
+      "archives": {
+        "archives/mutualcheckedrecords-1.0.0-py3-none-manylinux_2_36_x86_64.whl": "34e550d12485816a749fb86fc13d39c81d797675c2c66b0248163b769fb47183"
+      },
+      "bindingIrSha256": "5238fea20925a438bcf3e48ae21085626506549287335eb617c18153db6a2302",
+      "modelSha256": "09173398445bf010e28b84b88074535e75a214c97e419ccfadb8a0da45434821",
+      "receiptSha256": "3ac76b9e62fa3b4879e16e58bfa539739032e45dcd8a75218746e305b98a9a51"
+    }
+  ],
+  "declaredGlibcFloor": "2.36",
+  "expectedBindingIrSha256": "b33ae74d019038b304c6cf30c977b39f031301d92ac26e088d24cf7f4f60c94a",
+  "fixture": "mutual",
+  "independentBuilds": 2,
+  "installs": [
+    "3.11-minimum",
+    "3.11-current",
+    "3.12-standard"
+  ],
+  "interpreters": [
+    {
+      "binary": "/app/.toolchains/python311/bin/python3.11",
+      "identity": {
+        "implementation": "cpython",
+        "pointerBits": 64,
+        "python": "3.11.16"
+      },
+      "interpreter": {
+        "bytes": 14480,
+        "kind": "file",
+        "sha256": "22e747b1e8a04719d4af2094133a0479b33728d2e4d03ab01539064dc6f45cfb"
+      },
+      "minor": "3.11",
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"implementation\": \"cpython\", \"pointerBits\": 64, \"python\": \"3.11.16\"}\n"
+      }
+    },
+    {
+      "binary": "/app/.toolchains/python312/bin/python3.12",
+      "identity": {
+        "implementation": "cpython",
+        "pointerBits": 64,
+        "python": "3.12.14"
+      },
+      "interpreter": {
+        "bytes": 14480,
+        "kind": "file",
+        "sha256": "4dbf3143240288fb2170257ffaa7bd030cdda5d2703d1f5f30b627042267e2e3"
+      },
+      "minor": "3.12",
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"implementation\": \"cpython\", \"pointerBits\": 64, \"python\": \"3.12.14\"}\n"
+      }
+    }
+  ],
+  "loadCeiling": 8,
+  "minors": [
+    "3.11",
+    "3.12"
+  ],
+  "producerCommit": "236a3c94060c8db72e38a8059ecaf02e1e4c6357",
+  "reports": [
+    {
+      "archiveSha256": "34e550d12485816a749fb86fc13d39c81d797675c2c66b0248163b769fb47183",
+      "arguments": [
+        "-I",
+        "-B",
+        "consumer.py",
+        "mutual"
+      ],
+      "compilerFreeExecution": true,
+      "consumerSha256": "aa7987fc6be8d889d3fb695f9c503226a5017c96959e91399b2a204e5e6a015c",
+      "dependency": {
+        "archive": "typing_extensions-4.6.0-py3-none-any.whl",
+        "bytes": 30680,
+        "name": "typing_extensions",
+        "sha256": "6ad00b63f849b7dcc313b70b6b304ed67b2b2963b3098a33efe18056b1a9a223",
+        "version": "4.6.0"
+      },
+      "fixture": "mutual",
+      "installedBytesUnchanged": true,
+      "interpreter": {
+        "binary": "/app/.toolchains/python311/bin/python3.11",
+        "identity": {
+          "implementation": "cpython",
+          "pointerBits": 64,
+          "python": "3.11.16"
+        },
+        "interpreter": {
+          "bytes": 14480,
+          "kind": "file",
+          "sha256": "22e747b1e8a04719d4af2094133a0479b33728d2e4d03ab01539064dc6f45cfb"
+        },
+        "minor": "3.11",
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "{\"implementation\": \"cpython\", \"pointerBits\": 64, \"python\": \"3.11.16\"}\n"
+        }
+      },
+      "inventorySha256": "2980d95fa01b50e159e8714a5f2e5aa78cfaf554e97ecdbf704b6b8b84193de0",
+      "minor": "3.11",
+      "observations": [
+        {
+          "arguments": [
+            "-I",
+            "-B",
+            "consumer.py",
+            "mutual"
+          ],
+          "counts": {
+            "checks": 1100,
+            "hostRejections": 80,
+            "module": "mutual",
+            "recoveries": 64,
+            "rejections": 144,
+            "rounds": 64,
+            "snapshotControls": 11,
+            "snapshots": 501
+          },
+          "environment": {
+            "CC": "/unavailable/compiler",
+            "CXX": "/unavailable/compiler",
+            "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+            "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+            "PATH": "/unavailable"
+          },
+          "inventorySha256": "2980d95fa01b50e159e8714a5f2e5aa78cfaf554e97ecdbf704b6b8b84193de0",
+          "relocated": false,
+          "run": {
+            "code": 0,
+            "stderr": "",
+            "stdout": "{\"checks\": 1100, \"hostRejections\": 80, \"module\": \"mutual\", \"recoveries\": 64, \"rejections\": 144, \"rounds\": 64, \"snapshotControls\": 11, \"snapshots\": 501}\n"
+          }
+        },
+        {
+          "arguments": [
+            "-I",
+            "-B",
+            "consumer.py",
+            "mutual"
+          ],
+          "counts": {
+            "checks": 1100,
+            "hostRejections": 80,
+            "module": "mutual",
+            "recoveries": 64,
+            "rejections": 144,
+            "rounds": 64,
+            "snapshotControls": 11,
+            "snapshots": 501
+          },
+          "environment": {
+            "CC": "/unavailable/compiler",
+            "CXX": "/unavailable/compiler",
+            "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+            "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+            "PATH": "/unavailable"
+          },
+          "inventorySha256": "2980d95fa01b50e159e8714a5f2e5aa78cfaf554e97ecdbf704b6b8b84193de0",
+          "relocated": true,
+          "run": {
+            "code": 0,
+            "stderr": "",
+            "stdout": "{\"checks\": 1100, \"hostRejections\": 80, \"module\": \"mutual\", \"recoveries\": 64, \"rejections\": 144, \"rounds\": 64, \"snapshotControls\": 11, \"snapshots\": 501}\n"
+          }
+        }
+      ],
+      "offlineInstall": true,
+      "receiptSha256": "3148be54e4daccc7843c2b854dac77b4cec637b5ccaa8978aa88573eee0dd1e0",
+      "relocatedInstallation": true,
+      "route": "reviewed",
+      "selection": "3.11-minimum",
+      "sourceUnchangedAfterReplay": true,
+      "typingVersion": "4.6.0"
+    },
+    {
+      "archiveSha256": "34e550d12485816a749fb86fc13d39c81d797675c2c66b0248163b769fb47183",
+      "arguments": [
+        "-I",
+        "-B",
+        "consumer.py",
+        "mutual"
+      ],
+      "compilerFreeExecution": true,
+      "consumerSha256": "aa7987fc6be8d889d3fb695f9c503226a5017c96959e91399b2a204e5e6a015c",
+      "dependency": {
+        "archive": "typing_extensions-4.16.0-py3-none-any.whl",
+        "bytes": 45571,
+        "name": "typing_extensions",
+        "sha256": "481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8",
+        "version": "4.16.0"
+      },
+      "fixture": "mutual",
+      "installedBytesUnchanged": true,
+      "interpreter": {
+        "binary": "/app/.toolchains/python311/bin/python3.11",
+        "identity": {
+          "implementation": "cpython",
+          "pointerBits": 64,
+          "python": "3.11.16"
+        },
+        "interpreter": {
+          "bytes": 14480,
+          "kind": "file",
+          "sha256": "22e747b1e8a04719d4af2094133a0479b33728d2e4d03ab01539064dc6f45cfb"
+        },
+        "minor": "3.11",
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "{\"implementation\": \"cpython\", \"pointerBits\": 64, \"python\": \"3.11.16\"}\n"
+        }
+      },
+      "inventorySha256": "2d9ee191182eb708cdfd2da3457fe3ce41150d7921ffe8b9b439479417398f55",
+      "minor": "3.11",
+      "observations": [
+        {
+          "arguments": [
+            "-I",
+            "-B",
+            "consumer.py",
+            "mutual"
+          ],
+          "counts": {
+            "checks": 1100,
+            "hostRejections": 80,
+            "module": "mutual",
+            "recoveries": 64,
+            "rejections": 144,
+            "rounds": 64,
+            "snapshotControls": 11,
+            "snapshots": 501
+          },
+          "environment": {
+            "CC": "/unavailable/compiler",
+            "CXX": "/unavailable/compiler",
+            "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+            "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+            "PATH": "/unavailable"
+          },
+          "inventorySha256": "2d9ee191182eb708cdfd2da3457fe3ce41150d7921ffe8b9b439479417398f55",
+          "relocated": false,
+          "run": {
+            "code": 0,
+            "stderr": "",
+            "stdout": "{\"checks\": 1100, \"hostRejections\": 80, \"module\": \"mutual\", \"recoveries\": 64, \"rejections\": 144, \"rounds\": 64, \"snapshotControls\": 11, \"snapshots\": 501}\n"
+          }
+        },
+        {
+          "arguments": [
+            "-I",
+            "-B",
+            "consumer.py",
+            "mutual"
+          ],
+          "counts": {
+            "checks": 1100,
+            "hostRejections": 80,
+            "module": "mutual",
+            "recoveries": 64,
+            "rejections": 144,
+            "rounds": 64,
+            "snapshotControls": 11,
+            "snapshots": 501
+          },
+          "environment": {
+            "CC": "/unavailable/compiler",
+            "CXX": "/unavailable/compiler",
+            "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+            "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+            "PATH": "/unavailable"
+          },
+          "inventorySha256": "2d9ee191182eb708cdfd2da3457fe3ce41150d7921ffe8b9b439479417398f55",
+          "relocated": true,
+          "run": {
+            "code": 0,
+            "stderr": "",
+            "stdout": "{\"checks\": 1100, \"hostRejections\": 80, \"module\": \"mutual\", \"recoveries\": 64, \"rejections\": 144, \"rounds\": 64, \"snapshotControls\": 11, \"snapshots\": 501}\n"
+          }
+        }
+      ],
+      "offlineInstall": true,
+      "receiptSha256": "3148be54e4daccc7843c2b854dac77b4cec637b5ccaa8978aa88573eee0dd1e0",
+      "relocatedInstallation": true,
+      "route": "reviewed",
+      "selection": "3.11-current",
+      "sourceUnchangedAfterReplay": true,
+      "typingVersion": "4.16.0"
+    },
+    {
+      "archiveSha256": "34e550d12485816a749fb86fc13d39c81d797675c2c66b0248163b769fb47183",
+      "arguments": [
+        "-I",
+        "-B",
+        "consumer.py",
+        "mutual"
+      ],
+      "compilerFreeExecution": true,
+      "consumerSha256": "aa7987fc6be8d889d3fb695f9c503226a5017c96959e91399b2a204e5e6a015c",
+      "dependency": null,
+      "fixture": "mutual",
+      "installedBytesUnchanged": true,
+      "interpreter": {
+        "binary": "/app/.toolchains/python312/bin/python3.12",
+        "identity": {
+          "implementation": "cpython",
+          "pointerBits": 64,
+          "python": "3.12.14"
+        },
+        "interpreter": {
+          "bytes": 14480,
+          "kind": "file",
+          "sha256": "4dbf3143240288fb2170257ffaa7bd030cdda5d2703d1f5f30b627042267e2e3"
+        },
+        "minor": "3.12",
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "{\"implementation\": \"cpython\", \"pointerBits\": 64, \"python\": \"3.12.14\"}\n"
+        }
+      },
+      "inventorySha256": "ba0bef1d976245c8ce5e554d686965eb3588573741147714a436e97f049fb30e",
+      "minor": "3.12",
+      "observations": [
+        {
+          "arguments": [
+            "-I",
+            "-B",
+            "consumer.py",
+            "mutual"
+          ],
+          "counts": {
+            "checks": 1100,
+            "hostRejections": 80,
+            "module": "mutual",
+            "recoveries": 64,
+            "rejections": 144,
+            "rounds": 64,
+            "snapshotControls": 11,
+            "snapshots": 501
+          },
+          "environment": {
+            "CC": "/unavailable/compiler",
+            "CXX": "/unavailable/compiler",
+            "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+            "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+            "PATH": "/unavailable"
+          },
+          "inventorySha256": "ba0bef1d976245c8ce5e554d686965eb3588573741147714a436e97f049fb30e",
+          "relocated": false,
+          "run": {
+            "code": 0,
+            "stderr": "",
+            "stdout": "{\"checks\": 1100, \"hostRejections\": 80, \"module\": \"mutual\", \"recoveries\": 64, \"rejections\": 144, \"rounds\": 64, \"snapshotControls\": 11, \"snapshots\": 501}\n"
+          }
+        },
+        {
+          "arguments": [
+            "-I",
+            "-B",
+            "consumer.py",
+            "mutual"
+          ],
+          "counts": {
+            "checks": 1100,
+            "hostRejections": 80,
+            "module": "mutual",
+            "recoveries": 64,
+            "rejections": 144,
+            "rounds": 64,
+            "snapshotControls": 11,
+            "snapshots": 501
+          },
+          "environment": {
+            "CC": "/unavailable/compiler",
+            "CXX": "/unavailable/compiler",
+            "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+            "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+            "PATH": "/unavailable"
+          },
+          "inventorySha256": "ba0bef1d976245c8ce5e554d686965eb3588573741147714a436e97f049fb30e",
+          "relocated": true,
+          "run": {
+            "code": 0,
+            "stderr": "",
+            "stdout": "{\"checks\": 1100, \"hostRejections\": 80, \"module\": \"mutual\", \"recoveries\": 64, \"rejections\": 144, \"rounds\": 64, \"snapshotControls\": 11, \"snapshots\": 501}\n"
+          }
+        }
+      ],
+      "offlineInstall": true,
+      "receiptSha256": "3148be54e4daccc7843c2b854dac77b4cec637b5ccaa8978aa88573eee0dd1e0",
+      "relocatedInstallation": true,
+      "route": "reviewed",
+      "selection": "3.12-standard",
+      "sourceUnchangedAfterReplay": true,
+      "typingVersion": null
+    }
+  ],
+  "reproducible": true,
+  "resourceChecks": [
+    {
+      "observations": [
+        {
+          "availableBytes": 14234247168,
+          "freeBytes": 4741582848,
+          "load": 2.89
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 14233997312,
+          "freeBytes": 4741529600,
+          "load": 2.89
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 14119096320,
+          "freeBytes": 4689276928,
+          "load": 2.97
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 14217347072,
+          "freeBytes": 4688560128,
+          "load": 3.35
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 14367617024,
+          "freeBytes": 4636471296,
+          "load": 3.16
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 14530875392,
+          "freeBytes": 4635906048,
+          "load": 2.99
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 14474141696,
+          "freeBytes": 4635234304,
+          "load": 2.77
+        }
+      ],
+      "waits": 0
+    }
+  ],
+  "route": "reviewed",
+  "runtime": {
+    "arch": "x64",
+    "glibc": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "glibc 2.36\n"
+    },
+    "platform": "linux"
+  },
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true,
+  "wheelReceiptSha256": "3148be54e4daccc7843c2b854dac77b4cec637b5ccaa8978aa88573eee0dd1e0"
+}

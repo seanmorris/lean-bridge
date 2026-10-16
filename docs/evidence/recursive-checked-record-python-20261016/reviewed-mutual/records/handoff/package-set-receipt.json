@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "mutualcheckedrecords@1.0.0",
+    "name": "mutualcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51407643,
+          "path": "archives/mutualcheckedrecords-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+          "sha256": "34e550d12485816a749fb86fc13d39c81d797675c2c66b0248163b769fb47183"
+        }
+      ],
+      "ecosystem": "pypi",
+      "name": "mutualcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "pypi",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "5238fea20925a438bcf3e48ae21085626506549287335eb617c18153db6a2302",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "f7bf9ad36fae9b199b74d67721fa741a54cc42f53ccfa3657ac2532cca630e6c"
+  }
+}

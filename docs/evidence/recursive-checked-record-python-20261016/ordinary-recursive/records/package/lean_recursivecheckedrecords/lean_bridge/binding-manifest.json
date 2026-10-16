@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "generator": {
+    "id": "lean-wasm/python-copied-graph",
+    "version": 1
+  },
+  "component": "recursivecheckedrecords@1.0.0",
+  "bindingIrSha256": "de8372a500e8ef9f75ba304adf322fb15473d21c9369c5af1c52ef2ee30736c4",
+  "publicModule": "lean_recursivecheckedrecords/__init__.py",
+  "typeStub": "lean_recursivecheckedrecords/__init__.pyi",
+  "internalModule": "lean_recursivecheckedrecords/_native.py",
+  "exports": [
+    "LeanBridgeError",
+    "Some",
+    "Option",
+    "Packet",
+    "PacketAlias",
+    "echo",
+    "echo_groups",
+    "first",
+    "groups",
+    "produce",
+    "second"
+  ],
+  "files": [
+    "lean_recursivecheckedrecords/__init__.py",
+    "lean_recursivecheckedrecords/__init__.pyi",
+    "lean_recursivecheckedrecords/_native.py",
+    "lean_recursivecheckedrecords/_assets.py",
+    "lean_recursivecheckedrecords/py.typed",
+    "README.md",
+    "binding-manifest.json"
+  ],
+  "copiedGraph": {
+    "schemaVersion": 1,
+    "layoutSha256": "b564479bbec603724b6ab1629e1962aac552aa5775c5a65fdf7a1e063b7c5c94"
+  },
+  "capabilityGaps": [
+    {
+      "feature": "identity-and-effects",
+      "reason": "Recursive Python packages support finite copied values; callables, resources and asynchronous operations remain outside this profile."
+    },
+    {
+      "feature": "additional-platforms",
+      "reason": "The accepted native profile is GIL-enabled Python 3.11+ on Linux x86-64."
+    }
+  ]
+}

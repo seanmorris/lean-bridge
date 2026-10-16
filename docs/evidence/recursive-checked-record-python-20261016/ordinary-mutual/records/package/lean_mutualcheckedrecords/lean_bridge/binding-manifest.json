@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "generator": {
+    "id": "lean-wasm/python-copied-graph",
+    "version": 1
+  },
+  "component": "mutualcheckedrecords@1.0.0",
+  "bindingIrSha256": "9ae4cbcca701c6a3d30754aea60ec7b5125b32d18c1f1d80b5ec7379a382feda",
+  "publicModule": "lean_mutualcheckedrecords/__init__.py",
+  "typeStub": "lean_mutualcheckedrecords/__init__.pyi",
+  "internalModule": "lean_mutualcheckedrecords/_native.py",
+  "exports": [
+    "LeanBridgeError",
+    "Some",
+    "Option",
+    "Envelope",
+    "EnvelopeAlias",
+    "Step",
+    "StepStop",
+    "StepMore",
+    "echo",
+    "echo_groups",
+    "first",
+    "groups",
+    "produce",
+    "second"
+  ],
+  "files": [
+    "lean_mutualcheckedrecords/__init__.py",
+    "lean_mutualcheckedrecords/__init__.pyi",
+    "lean_mutualcheckedrecords/_native.py",
+    "lean_mutualcheckedrecords/_assets.py",
+    "lean_mutualcheckedrecords/py.typed",
+    "README.md",
+    "binding-manifest.json"
+  ],
+  "copiedGraph": {
+    "schemaVersion": 1,
+    "layoutSha256": "d1e59688830ad32403bddb9f4ef537b219d81c50a52e0f06ab850a26e0c67ca2"
+  },
+  "capabilityGaps": [
+    {
+      "feature": "identity-and-effects",
+      "reason": "Recursive Python packages support finite copied values; callables, resources and asynchronous operations remain outside this profile."
+    },
+    {
+      "feature": "additional-platforms",
+      "reason": "The accepted native profile is GIL-enabled Python 3.11+ on Linux x86-64."
+    }
+  ]
+}

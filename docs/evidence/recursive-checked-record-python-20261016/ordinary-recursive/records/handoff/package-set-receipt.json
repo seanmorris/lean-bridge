@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "recursivecheckedrecords@1.0.0",
+    "name": "recursivecheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51395144,
+          "path": "archives/recursivecheckedrecords-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+          "sha256": "50d0c0ea004e2aafefe9d779d8e8e5c8daa427935f7d3f20bcc35446be933a98"
+        }
+      ],
+      "ecosystem": "pypi",
+      "name": "recursivecheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "pypi",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "de8372a500e8ef9f75ba304adf322fb15473d21c9369c5af1c52ef2ee30736c4",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "709c667807f269fabe640280c756ad20eeb38723e130ae2005a35918aaac5e4f"
+  }
+}
