@@ -123,6 +123,7 @@ export const mutualCheckedRecordConfiguration = route => {
 	const targets = {
 		c: { name: "mutualcheckedrecords", version: "1.0.0" }
 		, cpp: { name: "mutualcheckedrecords", version: "1.0.0" }
+		, npm: { name: "mutualcheckedrecords", version: "1.0.0" }
 		, "php-wasm": {
 			npm: { name: "lean-bridge-mutual-checked-records-wasm", version: "1.0.0" }
 			, composer: { name: "lean-bridge-mutual-checked-records/wasm", version: "1.0.0" }
