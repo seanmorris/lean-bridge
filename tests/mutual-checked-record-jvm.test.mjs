@@ -8,9 +8,29 @@ import test from "node:test";
 import {
 	compileCopiedJvmGraphPackageModel, generateCopiedJvmGraphPackage
 } from "../src/backends/jvm/copied-graph-package.mjs";
-import { mutualCheckedRecordJvmReview }
+import {
+	mutualCheckedRecordJvmCaller, mutualCheckedRecordJvmExpected
+	, mutualCheckedRecordJvmReview
+}
 	from "./helpers/mutual-checked-record-jvm-fixture.mjs";
 import "./helpers/mutual-checked-record-jvm-installed-tests.mjs";
+
+test("recursive Kotlin callers preserve exact route metadata names", async () => {
+	const [ordinary, reviewed] = await Promise.all([
+		mutualCheckedRecordJvmCaller("kotlin", "ordinary")
+		, mutualCheckedRecordJvmCaller("kotlin", "reviewed")
+	]);
+	assert.equal((ordinary.match(/parameter arg0/gu) ?? []).length, 2);
+	assert.equal((reviewed.match(/parameter value0/gu) ?? []).length, 2);
+	assert.doesNotMatch(ordinary + reviewed, /__ROUTE_PARAMETER__/u);
+	for(const [route, parameter] of [["ordinary", "arg0"], ["reviewed", "value0"]])
+	{
+		const expected = mutualCheckedRecordJvmExpected("kotlin", route);
+		assert.ok(expected.failures["null-record"].message.endsWith(
+			`parameter ${parameter}`
+		));
+	}
+});
 
 test("recursive checked-record JVM packages bind exact native diagnostics", () => {
 	const ir = mutualCheckedRecordJvmReview();

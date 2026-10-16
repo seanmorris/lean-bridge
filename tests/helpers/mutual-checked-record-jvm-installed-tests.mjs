@@ -22,7 +22,8 @@ import {
 } from "./fin-container-edge-jvm-closure.mjs";
 import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
 import {
-	mutualCheckedRecordJvmConfiguration, mutualCheckedRecordJvmProfiles
+	mutualCheckedRecordJvmCaller, mutualCheckedRecordJvmConfiguration
+	, mutualCheckedRecordJvmProfiles
 	, mutualCheckedRecordJvmReview, mutualCheckedRecordJvmSelection
 	, parseMutualCheckedRecordJvmResult
 } from "./mutual-checked-record-jvm-fixture.mjs";
@@ -196,9 +197,7 @@ for(const route of selection.routes) test(
 		{
 			await resourceCheck();
 			const extension = profile === "java" ? "java" : "kt";
-			const caller = await readFile(
-				`tests/fixtures/mutual-checked-record-consumers/${profile}.${extension}`
-			);
+			const caller = await mutualCheckedRecordJvmCaller(profile, route);
 			const consumer = join(root, profile);
 			await saveLakeFile(output, `consumer.${extension}`, caller);
 			await saveLakeFile(consumer, `consumer.${extension}`, caller);
@@ -233,7 +232,9 @@ for(const route of selection.routes) test(
 				const closure = await verifyFinContainerEdgeJvmEnvironment(current);
 				const run = await runFinContainerEdgeJvm(current);
 				assert.equal(run.stderr, "");
-				const result = parseMutualCheckedRecordJvmResult(run.stdout, profile);
+				const result = parseMutualCheckedRecordJvmResult(
+					run.stdout, profile, route
+				);
 				assert.deepEqual(
 					await verifyFinContainerEdgeJvmEnvironment(current), closure
 				);
@@ -273,7 +274,9 @@ for(const route of selection.routes) test(
 				sourceFree, context
 			);
 			assert.equal(run.stderr, "");
-			const result = parseMutualCheckedRecordJvmResult(run.stdout, profile);
+			const result = parseMutualCheckedRecordJvmResult(
+				run.stdout, profile, route
+			);
 			assert.deepEqual(result, observations[0].result);
 			assert.deepEqual(await verifyMutualCheckedRecordJvmDeployment(
 				sourceFree, context

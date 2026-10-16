@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import {
 	mutualCheckedRecordConfiguration, mutualCheckedRecordReview
 } from "./mutual-checked-record-fixture.mjs";
@@ -39,7 +40,7 @@ const sharedFailures = {
 		, "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne")
 };
 
-export const mutualCheckedRecordJvmExpected = Object.freeze({
+const expectedByProfile = Object.freeze({
 	java: Object.freeze({
 		checks: 590, rejections: 72, hostRejections: 5, calls: 290
 		, snapshots: 290, recoveries: 77, rounds: 64, wordBits: 64
@@ -56,16 +57,35 @@ export const mutualCheckedRecordJvmExpected = Object.freeze({
 		checks: 593, rejections: 72, hostRejections: 6, calls: 292
 		, snapshots: 292, recoveries: 78, rounds: 64, wordBits: 64
 		, failures: Object.freeze({ ...sharedFailures
-			, "null-record": failure("NullPointerException"
-				, "Parameter specified as non-null is null: method org.leanbridge.mutualcheckedrecords.kotlin.Api$Companion.first, parameter arg0")
-			, "null-alias-carrier": failure("NullPointerException"
-				, "Parameter specified as non-null is null: method org.leanbridge.mutualcheckedrecords.kotlin.Api$Companion.groups, parameter arg0")
+			, "null-record": failure("NullPointerException", "ROUTE_NULL_FIRST")
+			, "null-alias-carrier": failure("NullPointerException", "ROUTE_NULL_GROUPS")
 			, "null-active-field": failure("IllegalArgumentException"
 				, "Expected copied value of type org.leanbridge.mutualcheckedrecords.kotlin.Envelope")
 			, cycle: failure("IllegalArgumentException", "Cyclic copied input")
 		})
 	})
 });
+
+/**
+ * Produce the exact route-specific result, including Kotlin metadata names.
+ *
+ * @param profile - Java or Kotlin public API.
+ * @param route - Ordinary analysis or independently reviewed Binding IR.
+ */
+export const mutualCheckedRecordJvmExpected = (profile, route) => {
+	assert.ok(mutualCheckedRecordJvmProfiles.includes(profile));
+	assert.ok(mutualCheckedRecordJvmRoutes.includes(route));
+	const expected = structuredClone(expectedByProfile[profile]);
+	if(profile === "kotlin")
+	{
+		const parameter = route === "ordinary" ? "arg0" : "value0";
+		expected.failures["null-record"].message
+			= "Parameter specified as non-null is null: method org.leanbridge.mutualcheckedrecords.kotlin.Api$Companion.first, parameter " + parameter;
+		expected.failures["null-alias-carrier"].message
+			= "Parameter specified as non-null is null: method org.leanbridge.mutualcheckedrecords.kotlin.Api$Companion.groups, parameter " + parameter;
+	}
+	return expected;
+};
 
 /**
  * Reject disabled explicit selections, unknown routes and unsafe load settings.
@@ -111,15 +131,38 @@ export const mutualCheckedRecordJvmConfiguration = route => {
 };
 
 /**
+ * Materialize the immutable caller template with the authenticated route name.
+ *
+ * @param profile - Java or Kotlin public API.
+ * @param route - Ordinary analysis or independently reviewed Binding IR.
+ */
+export const mutualCheckedRecordJvmCaller = async (profile, route) => {
+	assert.ok(mutualCheckedRecordJvmProfiles.includes(profile));
+	assert.ok(mutualCheckedRecordJvmRoutes.includes(route));
+	const extension = profile === "java" ? "java" : "kt";
+	let source = await readFile(
+		`tests/fixtures/mutual-checked-record-consumers/${profile}.${extension}`
+		, "utf8"
+	);
+	const count = (source.match(/__ROUTE_PARAMETER__/gu) ?? []).length;
+	assert.equal(count, profile === "kotlin" ? 2 : 0);
+	if(profile === "kotlin") source = source.replaceAll(
+		"__ROUTE_PARAMETER__", route === "ordinary" ? "arg0" : "value0"
+	);
+	return source;
+};
+
+/**
  * Require the complete independent profile result and all exact failures.
  *
  * @param stdout - Complete original public caller output.
  * @param profile - Java or Kotlin public API.
+ * @param route - Ordinary analysis or independently reviewed Binding IR.
  */
-export const parseMutualCheckedRecordJvmResult = (stdout, profile) => {
+export const parseMutualCheckedRecordJvmResult = (stdout, profile, route) => {
 	assert.ok(mutualCheckedRecordJvmProfiles.includes(profile));
 	const value = JSON.parse(stdout);
-	assert.deepEqual(value, mutualCheckedRecordJvmExpected[profile]);
+	assert.deepEqual(value, mutualCheckedRecordJvmExpected(profile, route));
 	return value;
 };
 

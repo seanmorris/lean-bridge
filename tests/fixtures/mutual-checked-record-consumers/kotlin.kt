@@ -177,13 +177,13 @@ private fun runChecks() {
     val firstMethod = Api::class.java.getMethod("first", Envelope::class.java)
     rejectAndRecover({ firstMethod.invoke(null, null) }, { "null" }, {
         it::class.java == NullPointerException::class.java && it.message ==
-            "Parameter specified as non-null is null: method org.leanbridge.mutualcheckedrecords.kotlin.Api\$Companion.first, parameter arg0"
+            "Parameter specified as non-null is null: method org.leanbridge.mutualcheckedrecords.kotlin.Api\$Companion.first, parameter __ROUTE_PARAMETER__"
     },
         "null-record", true)
     val groupsMethod = Api::class.java.methods.single { it.name == "groups" }
     rejectAndRecover({ groupsMethod.invoke(null, null) }, { "null-array" }, {
         it::class.java == NullPointerException::class.java && it.message ==
-            "Parameter specified as non-null is null: method org.leanbridge.mutualcheckedrecords.kotlin.Api\$Companion.groups, parameter arg0"
+            "Parameter specified as non-null is null: method org.leanbridge.mutualcheckedrecords.kotlin.Api\$Companion.groups, parameter __ROUTE_PARAMETER__"
     },
         "null-alias-carrier", true)
     val badActive = malformed()
