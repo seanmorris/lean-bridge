@@ -38,7 +38,7 @@ test("recursive checked PHP-Wasm promotion history reconstructs every predecesso
 	], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = beforeFinRefinementSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = original(update.path);
 		assert.equal(reverseRecursiveSubtypePhpWasmPromotionUpdate(current, update), previous);
@@ -74,7 +74,8 @@ test("recursive checked PHP-Wasm promotion history reconstructs every predecesso
 			file.sha256 = update.currentSha256; pins++;
 		}
 	}
-	const actual = JSON.parse(await readFile(inventoryPath, "utf8"));
+	const actual = JSON.parse(beforeFinRefinementSource(inventoryPath, await readFile(inventoryPath, "utf8")
+		, record.updates.find(item => item.path === inventoryPath).currentSha256));
 	assert.deepEqual(actual, expected);
 	const beforePins = beforeRecursiveSubtypePhpWasmPromotionPins(actual);
 	assert.ok(beforePins.evidence.some((entry, index) =>

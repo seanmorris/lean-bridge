@@ -149,7 +149,12 @@ base with 32-bit machine words. Both author routes and API modes reproduce the
 complete Composer API, npm component and npm shared runtime, install offline,
 and run twelve Node and Chromium contexts twice after relocation. Full APIs
 check per-site normalization, active branches, exact rejection paths, caller
-snapshots and recovery. Refined
+snapshots and recovery.
+[Nineteen-base WIT acceptance](../evidence/nominal-primitive-subtype-wit-20261015/index.json)
+extends the same fields and constructor-free results to every admitted primitive
+base through the Component Model adapter and its 64-bit native Lean host. Both
+author routes and API modes reproduce the complete WIT archive, install offline
+and execute one compiled public C caller before and after relocation. Refined
 callbacks, owned and recursive Subtypes, and Subtype fields in generic records
 remain unfinished.
 
@@ -287,6 +292,9 @@ retains all three reproduced packages.
 [Nineteen-base PHP-Wasm acceptance](../evidence/nominal-primitive-subtype-php-wasm-20261015/index.json)
 extends that matrix to every admitted primitive base on both author routes and
 API modes, including standalone result-only packages with 32-bit machine words.
+[Nineteen-base WIT acceptance](../evidence/nominal-primitive-subtype-wit-20261015/index.json)
+extends that matrix to every admitted primitive base on both author routes and
+API modes through Wasmtime 42.0.1, with 64-bit native machine words.
 Save `NominalSubtypes.lean`:
 
 ```lean

@@ -583,6 +583,20 @@ representation and 32-bit machine words on PHP 8.4.1, Node 22.23.2 and Chromium
 mixed `Fin` guards, exact rejection paths, caller snapshots and recovery.
 Consumer PHP source remains required at runtime.
 
+The [nineteen-base WIT checks](../evidence/nominal-primitive-subtype-wit-20261015/index.json)
+cover the same record and variant fields, nested copied containers and
+constructor-free results on both author routes. Full and standalone result-only
+APIs reproduce the complete WIT archive from two author roots, install offline
+after removing author and build roots, compile one public C caller once, remove
+its source and tools, then execute it before and after relocation through
+Wasmtime 42.0.1 and the packaged 64-bit native Lean host. Generated WIT records
+and variants carry every primitive's wire representation: the `unit` enum,
+`bool`, fixed-width integers, `list<u32>` Nat limbs, the signed Int limb record,
+`f32`/`f64`, `string`, `list<u8>` bytes, `char` and `u64`/`s64` machine words.
+The full API checks per-site normalization, active branches, mixed `Fin` guards,
+host-level shape and encoding refusals, exact rejection paths, caller snapshots
+and recovery on Linux x64/glibc 2.36 with wasm-tools 1.245.1.
+
 In a schema-3 reviewed API, describe a `Subtype` with its primitive transport type and name its constructor in the declaration's `source.extensions["lean-lang.org/refinements"]`. For a checked `Nat` parameter returning an ordinary `Nat`:
 
 ```json

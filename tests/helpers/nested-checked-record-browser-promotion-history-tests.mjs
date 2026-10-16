@@ -33,7 +33,8 @@ test("nested checked-record browser promotion history reconstructs every predece
 		, nestedCheckedRecordBrowserPromotionChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = beforeFinRefinementSource(update.path
+			, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = execFileSync("git", ["show"
 			, `${nestedCheckedRecordBrowserPromotionPredecessor}:${update.path}`]

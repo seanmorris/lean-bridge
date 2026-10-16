@@ -37,7 +37,9 @@ test("primitive-base PHP-Wasm history authenticates the support transition", asy
 	for(const update of record.updates)
 	{
 		const current = beforeNominalPrimitiveSubtypePhpWasmPromotionSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+			update.path, beforeFinRefinementSource(
+				update.path, await readFile(update.path, "utf8"), update.currentSha256
+			), update.currentSha256
 		);
 		const previous = reverseNominalPrimitiveSubtypePhpWasmPromotionUpdate(current, update);
 		assert.equal(previous, original(update.path));
@@ -71,7 +73,10 @@ test("primitive-base PHP-Wasm history authenticates the support transition", asy
 		JSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypePhpWasmReferences()
 	);
 	assert.equal(beforeNominalPrimitiveSubtypePhpWasmPromotionSource(
-		inventoryPath, await readFile(inventoryPath, "utf8")
+		inventoryPath, beforeFinRefinementSource(
+			inventoryPath, await readFile(inventoryPath, "utf8")
+			, record.updates.find(item => item.path === inventoryPath).currentSha256
+		)
 	), original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
@@ -84,7 +89,9 @@ test("primitive-base PHP-Wasm history authenticates the support transition", asy
 	}
 	const update = record.updates.find(item => item.path === inventoryPath);
 	const checkpoint = beforeNominalPrimitiveSubtypePhpWasmPromotionSource(
-		inventoryPath, await readFile(inventoryPath, "utf8"), update.currentSha256
+		inventoryPath, beforeFinRefinementSource(
+			inventoryPath, await readFile(inventoryPath, "utf8"), update.currentSha256
+		), update.currentSha256
 	);
 	assert.equal(JSON.stringify(JSON.parse(checkpoint)), JSON.stringify(expected));
 	assert.equal(expected.evidence.length, 560); assert.equal(expected.observations.length, 595);
