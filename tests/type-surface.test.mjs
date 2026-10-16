@@ -6,7 +6,9 @@
 
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import {
+	copyFile, link, mkdir, mkdtemp, readFile, rm, writeFile
+} from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
@@ -57,6 +59,7 @@ import { withoutNestedCheckedRecordNativePromotion } from "./helpers/nested-chec
 import { withoutNestedCheckedRecordQuality } from "./helpers/nested-checked-record-quality-source-history.mjs";
 import { withoutNestedCheckedRecordDotnetPromotion } from "./helpers/nested-checked-record-dotnet-promotion-history.mjs";
 import { withoutNestedCheckedRecordJvmPromotion } from "./helpers/nested-checked-record-jvm-promotion-history.mjs";
+import { withoutNestedCheckedRecordPerlPromotion } from "./helpers/nested-checked-record-perl-promotion-history.mjs";
 
 const execute = promisify(execFile);
 const root = path.resolve(import.meta.dirname, "..");
@@ -98,8 +101,9 @@ const observationFixture = () => {
 
 test("historical shape comparisons preserve old cells without weakening the live classifier", async () => {
 	const file = "docs/type-surface.v1.json";
-	let current = withoutNestedCheckedRecordJvmPromotion(file
+	let current = withoutNestedCheckedRecordPerlPromotion(file
 		, await readFile(file, "utf8"));
+	current = withoutNestedCheckedRecordJvmPromotion(file, current);
 	current = withoutNestedCheckedRecordDotnetPromotion(file, current);
 	current = withoutNestedCheckedRecordQuality(file
 		, current);
@@ -891,20 +895,30 @@ test("changing an audited source fails before the inventory can feed a report", 
 	const temporary = await mkdtemp(path.join(tmpdir(), "lean-type-surface-"));
 	try
 	{
-		const files = [
+		const files = [...new Set([
 			"docs/type-surface.v1.json"
 			, "schema/binding-ir.schema.json"
 			, "docs/consumer-support.v1.json"
 			, ...document.evidence.flatMap(entry => entry.files.map(file => file.path))
-		];
+		])];
 		for(const file of files)
 		{
-			await mkdir(path.dirname(path.join(temporary, file)), { recursive: true });
-			await cp(path.join(root, file), path.join(temporary, file));
+			const source = path.join(root, file), destination = path.join(temporary, file);
+			await mkdir(path.dirname(destination), { recursive: true });
+			try
+			{ await link(source, destination); }
+			catch(error)
+			{
+				if(error.code !== "EXDEV") throw error;
+				await copyFile(source, destination);
+			}
 		}
 		assert.ok((await readTypeSurface({ repository: temporary })).document);
 		const file = document.evidence[0].files[0].path;
-		await writeFile(path.join(temporary, file), `${await readFile(path.join(temporary, file), "utf8")}\n// changed\n`);
+		const target = path.join(temporary, file);
+		const changed = `${await readFile(target, "utf8")}\n// changed\n`;
+		await rm(target);
+		await writeFile(target, changed);
 		await assert.rejects(readTypeSurface({ repository: temporary }), /stale source evidence/);
 	}
 	finally
