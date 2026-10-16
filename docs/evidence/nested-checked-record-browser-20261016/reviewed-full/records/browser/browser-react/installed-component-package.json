@@ -1,0 +1,39 @@
+{
+  "version": "1.0.0",
+  "type": "module",
+  "sideEffects": false,
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.mjs",
+      "default": "./index.mjs",
+      "browser": "./index.mjs"
+    }
+  },
+  "files": [
+    "index.mjs",
+    "index.d.ts",
+    "README.md",
+    "binding-manifest.json",
+    "internal",
+    "notices",
+    "LICENSE"
+  ],
+  "name": "nestedcheckedrecords",
+  "license": "MIT",
+  "description": "Independent corpus contract.",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@lean-bridge/runtime": "0.0.0-abi2.72d6ec64ed637d72ca3a92e87af594716042a2d908b931ef888a638f7e4a0e8c"
+  },
+  "leanBridge": {
+    "component": "nestedcheckedrecords@1.0.0",
+    "componentBundleSha256": "3b2ab568109b755c9ed14856a53d097af6e139b47d47bab0b35d2d5d52f71811",
+    "componentIdentitySha256": "6a7be8f6d4c2521e9db8f1284b40edbf584d8b50e480bdb6de16c3afb6967e02",
+    "bindingIrSha256": "403aa9c7bfb95f74c6fb6a3043492a30864a18666674b5677701ae1d53a1b985",
+    "sharedRuntime": true
+  }
+}

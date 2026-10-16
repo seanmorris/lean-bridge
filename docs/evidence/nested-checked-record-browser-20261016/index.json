@@ -1,0 +1,2372 @@
+{
+  "archiveCommit": "85bdb8290a13ff544b142297452b981495a91187",
+  "browserVersions": {
+    "chromium": "151.0.7922.34",
+    "firefox": "153.0",
+    "webkit": "26.5"
+  },
+  "checkerCommit": "d184cee67224beebf5d82ef036310b82ebaca863",
+  "consumerCommit": "d402c7a12eb7d9b69a74c9931415082ce3dd7059",
+  "files": [
+    {
+      "bytes": 857,
+      "path": "ordinary-full/records/browser-controls.json",
+      "sha256": "9af3f9712d0b5130a79c7fc5e5fda8dcbe1628d06aaa1e596e50852c0a211bb3"
+    },
+    {
+      "bytes": 86275,
+      "path": "ordinary-full/records/browser.json",
+      "sha256": "2cb9b3026b8cbaeda5a508903c2858c7bce4b527bb0874b5c9c4c42a92d10e4c"
+    },
+    {
+      "bytes": 6838,
+      "path": "ordinary-full/records/browser/browser-javascript/check.mjs",
+      "sha256": "9f493c77d4187d02e6c280de584f7d21ba7c371af77fcdb343771123e9c67697"
+    },
+    {
+      "bytes": 259,
+      "path": "ordinary-full/records/browser/browser-javascript/index.html",
+      "sha256": "41b59ece64724a031e286e6080e8cb1d43b45ec4f6c131f7881adb061950ef37"
+    },
+    {
+      "bytes": 996,
+      "path": "ordinary-full/records/browser/browser-javascript/inputs.json",
+      "sha256": "ab401005ba8e8d06bf609f2c55d5b13858d091d03500e24dae27fa3e085bc103"
+    },
+    {
+      "bytes": 290,
+      "path": "ordinary-full/records/browser/browser-javascript/install.json",
+      "sha256": "9a6d600809096c3f5b86f1e721c30d5cf1e873f308f2f4189e617907ac45e1f3"
+    },
+    {
+      "bytes": 57953,
+      "path": "ordinary-full/records/browser/browser-javascript/installed-binding-ir.json",
+      "sha256": "dbc3f4165b660d13357267b7b13cfbb6130009229dafdb60b8395dca38340f38"
+    },
+    {
+      "bytes": 1080,
+      "path": "ordinary-full/records/browser/browser-javascript/installed-component-package.json",
+      "sha256": "1fb814e374b612b80fe13f62feb72309f06277558508749e6967bb8c05e1e909"
+    },
+    {
+      "bytes": 2749,
+      "path": "ordinary-full/records/browser/browser-javascript/installed-index.d.ts",
+      "sha256": "bd32fb5d5cff00252eb8e4a7baa9b9fd31905f60ba8c1029aee567f41bbdf348"
+    },
+    {
+      "bytes": 7988,
+      "path": "ordinary-full/records/browser/browser-javascript/installed-runtime-identity.json",
+      "sha256": "72d6ec64ed637d72ca3a92e87af594716042a2d908b931ef888a638f7e4a0e8c"
+    },
+    {
+      "bytes": 1100,
+      "path": "ordinary-full/records/browser/browser-javascript/installed-runtime-package.json",
+      "sha256": "6bc3dcbbbc5da2c76edf8039d6824e89838aff9567a5b4979417a616afd432f5"
+    },
+    {
+      "bytes": 1214,
+      "path": "ordinary-full/records/browser/browser-javascript/javascript.mjs",
+      "sha256": "df75cf6958faa1e8cd4cf2ce8d4e01dc22678c44627c86ad06c4d7b34b233615"
+    },
+    {
+      "bytes": 4863,
+      "path": "ordinary-full/records/browser/browser-javascript/observations.json",
+      "sha256": "9210882bc066ce3ddb3ad0e3279a710f3b09f7fdad48ce98f2d4caa93ad4d2fe"
+    },
+    {
+      "bytes": 1334,
+      "path": "ordinary-full/records/browser/browser-javascript/package-lock.json",
+      "sha256": "09e74f5dabe92dddf22d1bdb309722b8c5dd879938a640ebc3bbad53bb73dfb3"
+    },
+    {
+      "bytes": 291,
+      "path": "ordinary-full/records/browser/browser-javascript/package.json",
+      "sha256": "f7d2448cdc488cb6e4c4c0bd8936ec75fcad540fd05a2ff75e5be6abc7122a95"
+    },
+    {
+      "bytes": 119,
+      "path": "ordinary-full/records/browser/browser-javascript/package.mjs",
+      "sha256": "3c03452dd29dbf4cd5024213456df84e658091803478faf89db00f549e089e0f"
+    },
+    {
+      "bytes": 761,
+      "path": "ordinary-full/records/browser/browser-javascript/plain.mjs",
+      "sha256": "f986b2be494f621c126e4579b1006641324f36fdeaf0a57ee6ca54540ece24f8"
+    },
+    {
+      "bytes": 16683,
+      "path": "ordinary-full/records/browser/browser-javascript/report.json",
+      "sha256": "c8607e6430240c254ea373391ef8af817e1ff9e8e4275be4b5710f418147c9d5"
+    },
+    {
+      "bytes": 125,
+      "path": "ordinary-full/records/browser/browser-javascript/request.json",
+      "sha256": "b19663e7cf338b136173870d33237f3d435efcb594b4d2dcecffb419ad1f3bf5"
+    },
+    {
+      "bytes": 6838,
+      "path": "ordinary-full/records/browser/browser-react/check.mjs",
+      "sha256": "9f493c77d4187d02e6c280de584f7d21ba7c371af77fcdb343771123e9c67697"
+    },
+    {
+      "bytes": 259,
+      "path": "ordinary-full/records/browser/browser-react/index.html",
+      "sha256": "f1924291e843aff6f831a527b53a8f67aa1ac07624ee0e645736e79fe99eaa1d"
+    },
+    {
+      "bytes": 997,
+      "path": "ordinary-full/records/browser/browser-react/inputs.json",
+      "sha256": "7b2e58e4fc94cd5ec6878e2b26c1e13f5ba6d7636989410057fe6b5699053b48"
+    },
+    {
+      "bytes": 290,
+      "path": "ordinary-full/records/browser/browser-react/install.json",
+      "sha256": "33305f32fe83b1c3772ca6ed93255ec2fc41c096124199fc1a946baa65da47df"
+    },
+    {
+      "bytes": 57953,
+      "path": "ordinary-full/records/browser/browser-react/installed-binding-ir.json",
+      "sha256": "dbc3f4165b660d13357267b7b13cfbb6130009229dafdb60b8395dca38340f38"
+    },
+    {
+      "bytes": 1080,
+      "path": "ordinary-full/records/browser/browser-react/installed-component-package.json",
+      "sha256": "1fb814e374b612b80fe13f62feb72309f06277558508749e6967bb8c05e1e909"
+    },
+    {
+      "bytes": 2749,
+      "path": "ordinary-full/records/browser/browser-react/installed-index.d.ts",
+      "sha256": "bd32fb5d5cff00252eb8e4a7baa9b9fd31905f60ba8c1029aee567f41bbdf348"
+    },
+    {
+      "bytes": 7988,
+      "path": "ordinary-full/records/browser/browser-react/installed-runtime-identity.json",
+      "sha256": "72d6ec64ed637d72ca3a92e87af594716042a2d908b931ef888a638f7e4a0e8c"
+    },
+    {
+      "bytes": 1100,
+      "path": "ordinary-full/records/browser/browser-react/installed-runtime-package.json",
+      "sha256": "6bc3dcbbbc5da2c76edf8039d6824e89838aff9567a5b4979417a616afd432f5"
+    },
+    {
+      "bytes": 1214,
+      "path": "ordinary-full/records/browser/browser-react/javascript.mjs",
+      "sha256": "df75cf6958faa1e8cd4cf2ce8d4e01dc22678c44627c86ad06c4d7b34b233615"
+    },
+    {
+      "bytes": 16057,
+      "path": "ordinary-full/records/browser/browser-react/observations.json",
+      "sha256": "52cae52a3570d42ccaad6ea6d644ed8d15f1beccecee2f348cca480c08d55720"
+    },
+    {
+      "bytes": 2468,
+      "path": "ordinary-full/records/browser/browser-react/package-lock.json",
+      "sha256": "2c2e47d012f2524e1af5f696e43b405025244da944e2d0e30229175b17ab0f90"
+    },
+    {
+      "bytes": 451,
+      "path": "ordinary-full/records/browser/browser-react/package.json",
+      "sha256": "c3b38b8bb556d44e2fc57f83966c2238f122394138b5c07a36911deaaf36898a"
+    },
+    {
+      "bytes": 119,
+      "path": "ordinary-full/records/browser/browser-react/package.mjs",
+      "sha256": "3c03452dd29dbf4cd5024213456df84e658091803478faf89db00f549e089e0f"
+    },
+    {
+      "bytes": 1468,
+      "path": "ordinary-full/records/browser/browser-react/react.mjs",
+      "sha256": "8596690c5bdb64912efc10d7abce14f6083b7e6d855297596c3834ddd44a3b48"
+    },
+    {
+      "bytes": 39392,
+      "path": "ordinary-full/records/browser/browser-react/report.json",
+      "sha256": "d1fb282705282ec1e09dd76309d7fba55eee0d83042af19bc16629b0cf5879a9"
+    },
+    {
+      "bytes": 120,
+      "path": "ordinary-full/records/browser/browser-react/request.json",
+      "sha256": "cdce005218c4261d4decef61df6313ac4757ca77adff1c8cac25204e2c2955e3"
+    },
+    {
+      "bytes": 6838,
+      "path": "ordinary-full/records/browser/browser-worker/check.mjs",
+      "sha256": "9f493c77d4187d02e6c280de584f7d21ba7c371af77fcdb343771123e9c67697"
+    },
+    {
+      "bytes": 265,
+      "path": "ordinary-full/records/browser/browser-worker/index.html",
+      "sha256": "4c13109fc6ef171276cb9646b1815079b4966acc9e6e31efab6900b6c17b7a4b"
+    },
+    {
+      "bytes": 1125,
+      "path": "ordinary-full/records/browser/browser-worker/inputs.json",
+      "sha256": "d15028db35748999a2eb11cfcabbe9e41f27380a20099934b3905307a3264b59"
+    },
+    {
+      "bytes": 290,
+      "path": "ordinary-full/records/browser/browser-worker/install.json",
+      "sha256": "43cd1833b4709580ad64ae226eace253925f997c504591f8ac1da0eb66b2e04b"
+    },
+    {
+      "bytes": 57953,
+      "path": "ordinary-full/records/browser/browser-worker/installed-binding-ir.json",
+      "sha256": "dbc3f4165b660d13357267b7b13cfbb6130009229dafdb60b8395dca38340f38"
+    },
+    {
+      "bytes": 1080,
+      "path": "ordinary-full/records/browser/browser-worker/installed-component-package.json",
+      "sha256": "1fb814e374b612b80fe13f62feb72309f06277558508749e6967bb8c05e1e909"
+    },
+    {
+      "bytes": 2749,
+      "path": "ordinary-full/records/browser/browser-worker/installed-index.d.ts",
+      "sha256": "bd32fb5d5cff00252eb8e4a7baa9b9fd31905f60ba8c1029aee567f41bbdf348"
+    },
+    {
+      "bytes": 7988,
+      "path": "ordinary-full/records/browser/browser-worker/installed-runtime-identity.json",
+      "sha256": "72d6ec64ed637d72ca3a92e87af594716042a2d908b931ef888a638f7e4a0e8c"
+    },
+    {
+      "bytes": 1100,
+      "path": "ordinary-full/records/browser/browser-worker/installed-runtime-package.json",
+      "sha256": "6bc3dcbbbc5da2c76edf8039d6824e89838aff9567a5b4979417a616afd432f5"
+    },
+    {
+      "bytes": 1214,
+      "path": "ordinary-full/records/browser/browser-worker/javascript.mjs",
+      "sha256": "df75cf6958faa1e8cd4cf2ce8d4e01dc22678c44627c86ad06c4d7b34b233615"
+    },
+    {
+      "bytes": 6571,
+      "path": "ordinary-full/records/browser/browser-worker/observations.json",
+      "sha256": "d071bba704d8380abfb69fdb5180e01652e5c3d636414036248ef46abcfd2456"
+    },
+    {
+      "bytes": 1330,
+      "path": "ordinary-full/records/browser/browser-worker/package-lock.json",
+      "sha256": "9f3c5420e9cc310847d1adf0d67661c6023503f3c0be4364b3017ca6ea3d0f2c"
+    },
+    {
+      "bytes": 291,
+      "path": "ordinary-full/records/browser/browser-worker/package.json",
+      "sha256": "f7d2448cdc488cb6e4c4c0bd8936ec75fcad540fd05a2ff75e5be6abc7122a95"
+    },
+    {
+      "bytes": 119,
+      "path": "ordinary-full/records/browser/browser-worker/package.mjs",
+      "sha256": "3c03452dd29dbf4cd5024213456df84e658091803478faf89db00f549e089e0f"
+    },
+    {
+      "bytes": 20564,
+      "path": "ordinary-full/records/browser/browser-worker/report.json",
+      "sha256": "5290812324d7c9159d739ea33085f63033b960e945e11e6a18c173c780d82949"
+    },
+    {
+      "bytes": 121,
+      "path": "ordinary-full/records/browser/browser-worker/request.json",
+      "sha256": "758bcb707b6839433752ae215b082583b058488451fcdb2bf5888b5d576a24a9"
+    },
+    {
+      "bytes": 1107,
+      "path": "ordinary-full/records/browser/browser-worker/worker-main.mjs",
+      "sha256": "d96f676358d61fd6d7bb1c8a3db68f289924e60d966014c161f3f3535415b633"
+    },
+    {
+      "bytes": 666,
+      "path": "ordinary-full/records/browser/browser-worker/worker.mjs",
+      "sha256": "41a1217c2a96a83d6c38272c0bbb3a0b02b0f6c4a09d817c0846aef0fc78d178"
+    },
+    {
+      "bytes": 1244,
+      "path": "ordinary-full/records/build-0/author-inputs.json",
+      "sha256": "53696baa2c8f5c4b3ac224106eb00f0fd4caf9c64484de28e716f785b8f5ac2a"
+    },
+    {
+      "bytes": 57953,
+      "path": "ordinary-full/records/build-0/binding/binding-ir.json",
+      "sha256": "dbc3f4165b660d13357267b7b13cfbb6130009229dafdb60b8395dca38340f38"
+    },
+    {
+      "bytes": 1661,
+      "path": "ordinary-full/records/build-0/component-package-receipt.json",
+      "sha256": "a82421087eee9f1c776eba9b4861deca015de2a99bd2e0f1d0e5c1d841e3b42d"
+    },
+    {
+      "bytes": 29853,
+      "path": "ordinary-full/records/build-0/locks/compiler-adapters.json",
+      "sha256": "f236c5372e13183f072298d9c486146f25eb15bbca2aed46f7f198703e8bbcca"
+    },
+    {
+      "bytes": 2546,
+      "path": "ordinary-full/records/build-0/locks/component-build-plan.json",
+      "sha256": "88388416388edc71bdbbe4cda7bd89c2d9b1bb787d0bf10cb78f92c7816ccf7f"
+    },
+    {
+      "bytes": 843,
+      "path": "ordinary-full/records/build-0/metadata/provenance.json",
+      "sha256": "5063986bb291eaaddb3bef6257dd9802afa6cabd5ee77a7c316fe16a2a2bd87d"
+    },
+    {
+      "bytes": 2886,
+      "path": "ordinary-full/records/build-0/NestedCheckedRecords.lean",
+      "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+    },
+    {
+      "bytes": 1244,
+      "path": "ordinary-full/records/build-1/author-inputs.json",
+      "sha256": "ca23e1cab65d25a30368bec4e4bc15df54de909f8bedd4adad140ee5e20d3d4e"
+    },
+    {
+      "bytes": 57953,
+      "path": "ordinary-full/records/build-1/binding/binding-ir.json",
+      "sha256": "dbc3f4165b660d13357267b7b13cfbb6130009229dafdb60b8395dca38340f38"
+    },
+    {
+      "bytes": 1661,
+      "path": "ordinary-full/records/build-1/component-package-receipt.json",
+      "sha256": "a82421087eee9f1c776eba9b4861deca015de2a99bd2e0f1d0e5c1d841e3b42d"
+    },
+    {
+      "bytes": 29853,
+      "path": "ordinary-full/records/build-1/locks/compiler-adapters.json",
+      "sha256": "f236c5372e13183f072298d9c486146f25eb15bbca2aed46f7f198703e8bbcca"
+    },
+    {
+      "bytes": 2546,
+      "path": "ordinary-full/records/build-1/locks/component-build-plan.json",
+      "sha256": "88388416388edc71bdbbe4cda7bd89c2d9b1bb787d0bf10cb78f92c7816ccf7f"
+    },
+    {
+      "bytes": 843,
+      "path": "ordinary-full/records/build-1/metadata/provenance.json",
+      "sha256": "5063986bb291eaaddb3bef6257dd9802afa6cabd5ee77a7c316fe16a2a2bd87d"
+    },
+    {
+      "bytes": 2886,
+      "path": "ordinary-full/records/build-1/NestedCheckedRecords.lean",
+      "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+    },
+    {
+      "bytes": 6838,
+      "path": "ordinary-full/records/callers/check.mjs",
+      "sha256": "9f493c77d4187d02e6c280de584f7d21ba7c371af77fcdb343771123e9c67697"
+    },
+    {
+      "bytes": 182,
+      "path": "ordinary-full/records/callers/index.mjs",
+      "sha256": "fc05a5211fb69868634772c03d35b5c207033492a2abec5955d2317e659cdfab"
+    },
+    {
+      "bytes": 1314,
+      "path": "ordinary-full/records/callers/index.mts",
+      "sha256": "47317b8bdadf3bebd2c58fe5a0ac0c698b07faac96a706fc9843e546b1fa6942"
+    },
+    {
+      "bytes": 13090,
+      "path": "ordinary-full/records/configuration.json",
+      "sha256": "88da57b72ba7223dc37dc140c9a02f276f3c3007a8f3d47b602b6f3baa088afd"
+    },
+    {
+      "bytes": 1092,
+      "path": "ordinary-full/records/controls.json",
+      "sha256": "67b5cda7c328b18bb813b4bfaa98eacff1f924c25c77c9f6f045969d328a8f40"
+    },
+    {
+      "bytes": 39252,
+      "path": "ordinary-full/records/expected.binding-ir.json",
+      "sha256": "b0248d93b1a3285cade075a4abaae2ad94f6b10e4c7a88bfc68f812de13cc3c0"
+    },
+    {
+      "bytes": 1661,
+      "path": "ordinary-full/records/handoff/component-package-receipt.json",
+      "sha256": "a82421087eee9f1c776eba9b4861deca015de2a99bd2e0f1d0e5c1d841e3b42d"
+    },
+    {
+      "bytes": 1638462,
+      "path": "ordinary-full/records/handoff/lean-bridge-runtime-0.0.0-abi2.72d6ec64ed637d72ca3a92e87af594716042a2d908b931ef888a638f7e4a0e8c.tgz",
+      "sha256": "6b456fbf445c16e30cc4fcc70b3ac9bb331b5a358dbf5d00275d5ea8a063b658"
+    },
+    {
+      "bytes": 25090,
+      "path": "ordinary-full/records/handoff/nestedcheckedrecords-1.0.0.tgz",
+      "sha256": "db27ad2f990b2ad6f11046476975e6ee04561635da10c87706bb5327b7456d1f"
+    },
+    {
+      "bytes": 8610,
+      "path": "ordinary-full/records/handoff/verify-component-package-receipt.mjs",
+      "sha256": "76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"
+    },
+    {
+      "bytes": 290,
+      "path": "ordinary-full/records/install.json",
+      "sha256": "7188884791e0e6ac8a856e1e851907ac8a24404cdbb9c41bf79024b6cd806177"
+    },
+    {
+      "bytes": 396,
+      "path": "ordinary-full/records/installed.json",
+      "sha256": "90b954ca9e86fb31ac87e49f777de38a2950e65db77a1b09b0f7e3479994567d"
+    },
+    {
+      "bytes": 1080,
+      "path": "ordinary-full/records/installed/component-package.json",
+      "sha256": "1fb814e374b612b80fe13f62feb72309f06277558508749e6967bb8c05e1e909"
+    },
+    {
+      "bytes": 1324,
+      "path": "ordinary-full/records/installed/package-lock.json",
+      "sha256": "365ff00f64e240b7d7975a3c479a9891412676b68e4e30f1e4e4daa7f53e4e2b"
+    },
+    {
+      "bytes": 291,
+      "path": "ordinary-full/records/installed/package.json",
+      "sha256": "f7d2448cdc488cb6e4c4c0bd8936ec75fcad540fd05a2ff75e5be6abc7122a95"
+    },
+    {
+      "bytes": 7988,
+      "path": "ordinary-full/records/installed/runtime-identity.json",
+      "sha256": "72d6ec64ed637d72ca3a92e87af594716042a2d908b931ef888a638f7e4a0e8c"
+    },
+    {
+      "bytes": 1100,
+      "path": "ordinary-full/records/installed/runtime-package.json",
+      "sha256": "6bc3dcbbbc5da2c76edf8039d6824e89838aff9567a5b4979417a616afd432f5"
+    },
+    {
+      "bytes": 395,
+      "path": "ordinary-full/records/relocated.json",
+      "sha256": "3ab332e5f8954e93a1851f9428343283f33d43bea34ec31a6c33b3efe9189a1a"
+    },
+    {
+      "bytes": 26128,
+      "path": "ordinary-full/records/report.json",
+      "sha256": "4dc7508102c35c5d3d71dc5fac8d6db3a4706b5eae3c8f3f759cfcd0cee64bae"
+    },
+    {
+      "bytes": 864,
+      "path": "ordinary-result-only/records/browser-controls.json",
+      "sha256": "95e44021a6425e14554316701dfaf40f01b83d64af8e76bf191b113dc7c5a073"
+    },
+    {
+      "bytes": 86237,
+      "path": "ordinary-result-only/records/browser.json",
+      "sha256": "c8916715d25d66d3c6ee0fc0440daafc18782c44cfe709ed9aa80ed4de3047ad"
+    },
+    {
+      "bytes": 6838,
+      "path": "ordinary-result-only/records/browser/browser-javascript/check.mjs",
+      "sha256": "9f493c77d4187d02e6c280de584f7d21ba7c371af77fcdb343771123e9c67697"
+    },
+    {
+      "bytes": 259,
+      "path": "ordinary-result-only/records/browser/browser-javascript/index.html",
+      "sha256": "41b59ece64724a031e286e6080e8cb1d43b45ec4f6c131f7881adb061950ef37"
+    },
+    {
+      "bytes": 996,
+      "path": "ordinary-result-only/records/browser/browser-javascript/inputs.json",
+      "sha256": "5d276d1766bc44a18ecf74f9f06c9c613563475e4f64d2697a027c6da64bf98f"
+    },
+    {
+      "bytes": 290,
+      "path": "ordinary-result-only/records/browser/browser-javascript/install.json",
+      "sha256": "2402ac823583369658bc86e375940fa790273b957e59a35bf9faa63e979ee3df"
+    },
+    {
+      "bytes": 8093,
+      "path": "ordinary-result-only/records/browser/browser-javascript/installed-binding-ir.json",
+      "sha256": "982d6f192bb77adbdfaffd43a8e2e04e0cbae68c43d4fcb8083ac2f8f81c122a"
+    },
+    {
+      "bytes": 1080,
+      "path": "ordinary-result-only/records/browser/browser-javascript/installed-component-package.json",
+      "sha256": "0729ac03c3535491bc9ac219ed4c8f233c77be826448cedd0b57c44535942cc1"
+    },
+    {
+      "bytes": 714,
+      "path": "ordinary-result-only/records/browser/browser-javascript/installed-index.d.ts",
+      "sha256": "806a11eea87fd4faaf90ead0e1907b69b3f1524b9c1eaf5d89107cff405d0755"
+    },
+    {
+      "bytes": 7988,
+      "path": "ordinary-result-only/records/browser/browser-javascript/installed-runtime-identity.json",
+      "sha256": "72d6ec64ed637d72ca3a92e87af594716042a2d908b931ef888a638f7e4a0e8c"
+    },
+    {
+      "bytes": 1100,
+      "path": "ordinary-result-only/records/browser/browser-javascript/installed-runtime-package.json",
+      "sha256": "6bc3dcbbbc5da2c76edf8039d6824e89838aff9567a5b4979417a616afd432f5"
+    },
+    {
+      "bytes": 1214,
+      "path": "ordinary-result-only/records/browser/browser-javascript/javascript.mjs",
+      "sha256": "df75cf6958faa1e8cd4cf2ce8d4e01dc22678c44627c86ad06c4d7b34b233615"
+    },
+    {
+      "bytes": 4854,
+      "path": "ordinary-result-only/records/browser/browser-javascript/observations.json",
+      "sha256": "9158585702922559a52736f5ae258fdb3ccafeb0fd4302d76626b88ee81d99f5"
+    },
+    {
+      "bytes": 1334,
+      "path": "ordinary-result-only/records/browser/browser-javascript/package-lock.json",
+      "sha256": "51ec08df5cc758b2a0cad9847503324496a5ed54e4b7b651a34b4b5ea46c6d7f"
+    },
+    {
+      "bytes": 291,
+      "path": "ordinary-result-only/records/browser/browser-javascript/package.json",
+      "sha256": "f7d2448cdc488cb6e4c4c0bd8936ec75fcad540fd05a2ff75e5be6abc7122a95"
+    },
+    {
+      "bytes": 119,
+      "path": "ordinary-result-only/records/browser/browser-javascript/package.mjs",
+      "sha256": "3c03452dd29dbf4cd5024213456df84e658091803478faf89db00f549e089e0f"
+    },
+    {
+      "bytes": 761,
+      "path": "ordinary-result-only/records/browser/browser-javascript/plain.mjs",
+      "sha256": "f986b2be494f621c126e4579b1006641324f36fdeaf0a57ee6ca54540ece24f8"
+    },
+    {
+      "bytes": 16677,
+      "path": "ordinary-result-only/records/browser/browser-javascript/report.json",
+      "sha256": "504c7029a2082b6e410bbd7f1d5525144891ba13d90529b845fca1b5e7fdef15"
+    },
+    {
+      "bytes": 131,
+      "path": "ordinary-result-only/records/browser/browser-javascript/request.json",
+      "sha256": "e9b154f0f6a7ecb922f7fc88e96f522aaf7d979919fcde2a13806fdd360fce47"
+    },
+    {
+      "bytes": 6838,
+      "path": "ordinary-result-only/records/browser/browser-react/check.mjs",
+      "sha256": "9f493c77d4187d02e6c280de584f7d21ba7c371af77fcdb343771123e9c67697"
+    },
+    {
+      "bytes": 259,
+      "path": "ordinary-result-only/records/browser/browser-react/index.html",
+      "sha256": "f1924291e843aff6f831a527b53a8f67aa1ac07624ee0e645736e79fe99eaa1d"
+    },
+    {
+      "bytes": 997,
+      "path": "ordinary-result-only/records/browser/browser-react/inputs.json",
+      "sha256": "29157bd12a30387a55022883aa1ddac55d4e88159e1b0f778048c60dae9ae57e"
+    },
+    {
+      "bytes": 290,
+      "path": "ordinary-result-only/records/browser/browser-react/install.json",
+      "sha256": "9b0e18f73e5d0a6f4ad2660e51dbdd0c9d45b55c11bca1c35c61ae122280cf0f"
+    },
+    {
+      "bytes": 8093,
+      "path": "ordinary-result-only/records/browser/browser-react/installed-binding-ir.json",
+      "sha256": "982d6f192bb77adbdfaffd43a8e2e04e0cbae68c43d4fcb8083ac2f8f81c122a"
+    },
+    {
+      "bytes": 1080,
+      "path": "ordinary-result-only/records/browser/browser-react/installed-component-package.json",
+      "sha256": "0729ac03c3535491bc9ac219ed4c8f233c77be826448cedd0b57c44535942cc1"
+    },
+    {
+      "bytes": 714,
+      "path": "ordinary-result-only/records/browser/browser-react/installed-index.d.ts",
+      "sha256": "806a11eea87fd4faaf90ead0e1907b69b3f1524b9c1eaf5d89107cff405d0755"
+    },
+    {
+      "bytes": 7988,
+      "path": "ordinary-result-only/records/browser/browser-react/installed-runtime-identity.json",
+      "sha256": "72d6ec64ed637d72ca3a92e87af594716042a2d908b931ef888a638f7e4a0e8c"
+    },
+    {
+      "bytes": 1100,
+      "path": "ordinary-result-only/records/browser/browser-react/installed-runtime-package.json",
+      "sha256": "6bc3dcbbbc5da2c76edf8039d6824e89838aff9567a5b4979417a616afd432f5"
+    },
+    {
+      "bytes": 1214,
+      "path": "ordinary-result-only/records/browser/browser-react/javascript.mjs",
+      "sha256": "df75cf6958faa1e8cd4cf2ce8d4e01dc22678c44627c86ad06c4d7b34b233615"
+    },
+    {
+      "bytes": 16027,
+      "path": "ordinary-result-only/records/browser/browser-react/observations.json",
+      "sha256": "386b8334f5341d13388997c90de110f213685f3f586743e05f7c503ab97b73d7"
+    },
+    {
+      "bytes": 2468,
+      "path": "ordinary-result-only/records/browser/browser-react/package-lock.json",
+      "sha256": "2210ab91cb56bfc11b50db0e9f94ae7c68b3d5bd09574ebd6d57433aa4d0350a"
+    },
+    {
+      "bytes": 451,
+      "path": "ordinary-result-only/records/browser/browser-react/package.json",
+      "sha256": "c3b38b8bb556d44e2fc57f83966c2238f122394138b5c07a36911deaaf36898a"
+    },
+    {
+      "bytes": 119,
+      "path": "ordinary-result-only/records/browser/browser-react/package.mjs",
+      "sha256": "3c03452dd29dbf4cd5024213456df84e658091803478faf89db00f549e089e0f"
+    },
+    {
+      "bytes": 1468,
+      "path": "ordinary-result-only/records/browser/browser-react/react.mjs",
+      "sha256": "8596690c5bdb64912efc10d7abce14f6083b7e6d855297596c3834ddd44a3b48"
+    },
+    {
+      "bytes": 39362,
+      "path": "ordinary-result-only/records/browser/browser-react/report.json",
+      "sha256": "c3ddc146b19bc279a816146977e281f3c862358b085bf74849ccf3aa706ea025"
+    },
+    {
+      "bytes": 126,
+      "path": "ordinary-result-only/records/browser/browser-react/request.json",
+      "sha256": "59e0cbacfd195c2249cc3d2c97b8fd88591fcb054120238bfe13833b4ce27d97"
+    },
+    {
+      "bytes": 6838,
+      "path": "ordinary-result-only/records/browser/browser-worker/check.mjs",
+      "sha256": "9f493c77d4187d02e6c280de584f7d21ba7c371af77fcdb343771123e9c67697"
+    },
+    {
+      "bytes": 265,
+      "path": "ordinary-result-only/records/browser/browser-worker/index.html",
+      "sha256": "4c13109fc6ef171276cb9646b1815079b4966acc9e6e31efab6900b6c17b7a4b"
+    },
+    {
+      "bytes": 1125,
+      "path": "ordinary-result-only/records/browser/browser-worker/inputs.json",
+      "sha256": "d93ddf5c6537967cffeb65ae128c7a9fb4cd2b098e1dcd0d7c7ce46c0207b8b9"
+    },
+    {
+      "bytes": 290,
+      "path": "ordinary-result-only/records/browser/browser-worker/install.json",
+      "sha256": "1af55fd97df8eea52e38b1dc2cc808d9b4fc6e9061702405687866b0f94bb3e1"
+    },
+    {
+      "bytes": 8093,
+      "path": "ordinary-result-only/records/browser/browser-worker/installed-binding-ir.json",
+      "sha256": "982d6f192bb77adbdfaffd43a8e2e04e0cbae68c43d4fcb8083ac2f8f81c122a"
+    },
+    {
+      "bytes": 1080,
+      "path": "ordinary-result-only/records/browser/browser-worker/installed-component-package.json",
+      "sha256": "0729ac03c3535491bc9ac219ed4c8f233c77be826448cedd0b57c44535942cc1"
+    },
+    {
+      "bytes": 714,
+      "path": "ordinary-result-only/records/browser/browser-worker/installed-index.d.ts",
+      "sha256": "806a11eea87fd4faaf90ead0e1907b69b3f1524b9c1eaf5d89107cff405d0755"
+    },
+    {
+      "bytes": 7988,
+      "path": "ordinary-result-only/records/browser/browser-worker/installed-runtime-identity.json",
+      "sha256": "72d6ec64ed637d72ca3a92e87af594716042a2d908b931ef888a638f7e4a0e8c"
+    },
+    {
+      "bytes": 1100,
+      "path": "ordinary-result-only/records/browser/browser-worker/installed-runtime-package.json",
+      "sha256": "6bc3dcbbbc5da2c76edf8039d6824e89838aff9567a5b4979417a616afd432f5"
+    },
+    {
+      "bytes": 1214,
+      "path": "ordinary-result-only/records/browser/browser-worker/javascript.mjs",
+      "sha256": "df75cf6958faa1e8cd4cf2ce8d4e01dc22678c44627c86ad06c4d7b34b233615"
+    },
+    {
+      "bytes": 6559,
+      "path": "ordinary-result-only/records/browser/browser-worker/observations.json",
+      "sha256": "c97c5b4eac7b149e4b2f103893bec2364abc7f51e546c737d76deed6983d7596"
+    },
+    {
+      "bytes": 1330,
+      "path": "ordinary-result-only/records/browser/browser-worker/package-lock.json",
+      "sha256": "cfe9c42d85fc0dc3b9a319c556977263d82afedef9aee1ab329f5c44d4bd4990"
+    },
+    {
+      "bytes": 291,
+      "path": "ordinary-result-only/records/browser/browser-worker/package.json",
+      "sha256": "f7d2448cdc488cb6e4c4c0bd8936ec75fcad540fd05a2ff75e5be6abc7122a95"
+    },
+    {
+      "bytes": 119,
+      "path": "ordinary-result-only/records/browser/browser-worker/package.mjs",
+      "sha256": "3c03452dd29dbf4cd5024213456df84e658091803478faf89db00f549e089e0f"
+    },
+    {
+      "bytes": 20555,
+      "path": "ordinary-result-only/records/browser/browser-worker/report.json",
+      "sha256": "38aa7748abb8a4268254e05f946aa9e5f009ca1e8a134e2487a3297bb3b203fc"
+    },
+    {
+      "bytes": 127,
+      "path": "ordinary-result-only/records/browser/browser-worker/request.json",
+      "sha256": "e2530a8e98c3d28d0d1ed5d23a09d8130198dce9add66b7a463c283007f1fdef"
+    },
+    {
+      "bytes": 1107,
+      "path": "ordinary-result-only/records/browser/browser-worker/worker-main.mjs",
+      "sha256": "d96f676358d61fd6d7bb1c8a3db68f289924e60d966014c161f3f3535415b633"
+    },
+    {
+      "bytes": 666,
+      "path": "ordinary-result-only/records/browser/browser-worker/worker.mjs",
+      "sha256": "41a1217c2a96a83d6c38272c0bbb3a0b02b0f6c4a09d817c0846aef0fc78d178"
+    },
+    {
+      "bytes": 1244,
+      "path": "ordinary-result-only/records/build-0/author-inputs.json",
+      "sha256": "5cf7a238f80afb45a56011d4d7dbb406e76a9075819f7b6cbf73cb588d6d362b"
+    },
+    {
+      "bytes": 8093,
+      "path": "ordinary-result-only/records/build-0/binding/binding-ir.json",
+      "sha256": "982d6f192bb77adbdfaffd43a8e2e04e0cbae68c43d4fcb8083ac2f8f81c122a"
+    },
+    {
+      "bytes": 1661,
+      "path": "ordinary-result-only/records/build-0/component-package-receipt.json",
+      "sha256": "c3fe26379e431241df3495f429e692db7ee2a6316050351770d824bb5661aa46"
+    },
+    {
+      "bytes": 4898,
+      "path": "ordinary-result-only/records/build-0/locks/compiler-adapters.json",
+      "sha256": "0064bc004039bf5e2e9d1eff7c8237c731b410e639bc75dcdd005bb3aed20759"
+    },
+    {
+      "bytes": 2070,
+      "path": "ordinary-result-only/records/build-0/locks/component-build-plan.json",
+      "sha256": "c59a4b4c99a5799a18118e4ee5cb577123b69ff82ab8a25e0dc1979df47d8c63"
+    },
+    {
+      "bytes": 843,
+      "path": "ordinary-result-only/records/build-0/metadata/provenance.json",
+      "sha256": "4ea96e1b502ba46b42ba02074e815206c2e3b1fca2b5ca9b632ff59df3c0c496"
+    },
+    {
+      "bytes": 2886,
+      "path": "ordinary-result-only/records/build-0/NestedCheckedRecords.lean",
+      "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+    },
+    {
+      "bytes": 1244,
+      "path": "ordinary-result-only/records/build-1/author-inputs.json",
+      "sha256": "f8f2ea4e67e01afb386b2e5a2486a8a66bdb13c28c7ac0716d2475743b21ddcc"
+    },
+    {
+      "bytes": 8093,
+      "path": "ordinary-result-only/records/build-1/binding/binding-ir.json",
+      "sha256": "982d6f192bb77adbdfaffd43a8e2e04e0cbae68c43d4fcb8083ac2f8f81c122a"
+    },
+    {
+      "bytes": 1661,
+      "path": "ordinary-result-only/records/build-1/component-package-receipt.json",
+      "sha256": "c3fe26379e431241df3495f429e692db7ee2a6316050351770d824bb5661aa46"
+    },
+    {
+      "bytes": 4898,
+      "path": "ordinary-result-only/records/build-1/locks/compiler-adapters.json",
+      "sha256": "0064bc004039bf5e2e9d1eff7c8237c731b410e639bc75dcdd005bb3aed20759"
+    },
+    {
+      "bytes": 2070,
+      "path": "ordinary-result-only/records/build-1/locks/component-build-plan.json",
+      "sha256": "c59a4b4c99a5799a18118e4ee5cb577123b69ff82ab8a25e0dc1979df47d8c63"
+    },
+    {
+      "bytes": 843,
+      "path": "ordinary-result-only/records/build-1/metadata/provenance.json",
+      "sha256": "4ea96e1b502ba46b42ba02074e815206c2e3b1fca2b5ca9b632ff59df3c0c496"
+    },
+    {
+      "bytes": 2886,
+      "path": "ordinary-result-only/records/build-1/NestedCheckedRecords.lean",
+      "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+    },
+    {
+      "bytes": 6838,
+      "path": "ordinary-result-only/records/callers/check.mjs",
+      "sha256": "9f493c77d4187d02e6c280de584f7d21ba7c371af77fcdb343771123e9c67697"
+    },
+    {
+      "bytes": 181,
+      "path": "ordinary-result-only/records/callers/index.mjs",
+      "sha256": "0309e1c98f8f420ddf039f5cd2599b475c7bdedb4094a183e55abfcbd7225a54"
+    },
+    {
+      "bytes": 710,
+      "path": "ordinary-result-only/records/callers/index.mts",
+      "sha256": "162f3b71bd3d99885ea16a763cb6daf25e09acc03ee8c18f86e2e7e362fa29f3"
+    },
+    {
+      "bytes": 776,
+      "path": "ordinary-result-only/records/configuration.json",
+      "sha256": "ef2ffa65bf11178fe7c4136f1b29f9b44b5b822fb7e21f73c8025344a9c9e34e"
+    },
+    {
+      "bytes": 1099,
+      "path": "ordinary-result-only/records/controls.json",
+      "sha256": "6ae2f3d0bb09ac660f01be7b11aacb271fba65a9f76fae26913500708b5816bf"
+    },
+    {
+      "bytes": 6772,
+      "path": "ordinary-result-only/records/expected.binding-ir.json",
+      "sha256": "ed9473d92c605f378c8b1af7bb07a6b450d824aadfcf67935f4d65fbf956c9a0"
+    },
+    {
+      "bytes": 1661,
+      "path": "ordinary-result-only/records/handoff/component-package-receipt.json",
+      "sha256": "c3fe26379e431241df3495f429e692db7ee2a6316050351770d824bb5661aa46"
+    },
+    {
+      "bytes": 1638462,
+      "path": "ordinary-result-only/records/handoff/lean-bridge-runtime-0.0.0-abi2.72d6ec64ed637d72ca3a92e87af594716042a2d908b931ef888a638f7e4a0e8c.tgz",
+      "sha256": "6b456fbf445c16e30cc4fcc70b3ac9bb331b5a358dbf5d00275d5ea8a063b658"
+    },
+    {
+      "bytes": 13473,
+      "path": "ordinary-result-only/records/handoff/nestedcheckedrecords-1.0.0.tgz",
+      "sha256": "6732576887e85c472ac95dcc4938b98d9a0dd6a36d72728734f74c1b1071fe17"
+    },
+    {
+      "bytes": 8610,
+      "path": "ordinary-result-only/records/handoff/verify-component-package-receipt.mjs",
+      "sha256": "76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"
+    },
+    {
+      "bytes": 290,
+      "path": "ordinary-result-only/records/install.json",
+      "sha256": "414f3bee9d5a9e2c353d4e5358feb96db72d041ce5d0c43a90408127e479a915"
+    },
+    {
+      "bytes": 389,
+      "path": "ordinary-result-only/records/installed.json",
+      "sha256": "c22369ec7c7abc9e20fcb429924eb6f0179d9d098a466ec6b9d99a1615622fed"
+    },
+    {
+      "bytes": 1080,
+      "path": "ordinary-result-only/records/installed/component-package.json",
+      "sha256": "0729ac03c3535491bc9ac219ed4c8f233c77be826448cedd0b57c44535942cc1"
+    },
+    {
+      "bytes": 1324,
+      "path": "ordinary-result-only/records/installed/package-lock.json",
+      "sha256": "0606eb28311d5de0acbceee471b8ceee655ddb730ce5e72199f950626d5bdd86"
+    },
+    {
+      "bytes": 291,
+      "path": "ordinary-result-only/records/installed/package.json",
+      "sha256": "f7d2448cdc488cb6e4c4c0bd8936ec75fcad540fd05a2ff75e5be6abc7122a95"
+    },
+    {
+      "bytes": 7988,
+      "path": "ordinary-result-only/records/installed/runtime-identity.json",
+      "sha256": "72d6ec64ed637d72ca3a92e87af594716042a2d908b931ef888a638f7e4a0e8c"
+    },
+    {
+      "bytes": 1100,
+      "path": "ordinary-result-only/records/installed/runtime-package.json",
+      "sha256": "6bc3dcbbbc5da2c76edf8039d6824e89838aff9567a5b4979417a616afd432f5"
+    },
+    {
+      "bytes": 388,
+      "path": "ordinary-result-only/records/relocated.json",
+      "sha256": "6fcf09c546d217371fe1fa509d128bd4c24ac8a97ce95726ed1e250fa66fd3db"
+    },
+    {
+      "bytes": 12564,
+      "path": "ordinary-result-only/records/report.json",
+      "sha256": "4cafd1747c8d3bb1ac51e8b8c689e96dd2839cf85fa77b8758136dac9cf3a773"
+    },
+    {
+      "bytes": 857,
+      "path": "reviewed-full/records/browser-controls.json",
+      "sha256": "5134c547b9718246ae7436cd03cec6c6582fc56bbeb325d31b2caa22c1cab383"
+    },
+    {
+      "bytes": 86275,
+      "path": "reviewed-full/records/browser.json",
+      "sha256": "47b5519039b6f01c4299fea08f0435b02ae47f318ea515cfd13d4a67e3032f1f"
+    },
+    {
+      "bytes": 6838,
+      "path": "reviewed-full/records/browser/browser-javascript/check.mjs",
+      "sha256": "9f493c77d4187d02e6c280de584f7d21ba7c371af77fcdb343771123e9c67697"
+    },
+    {
+      "bytes": 259,
+      "path": "reviewed-full/records/browser/browser-javascript/index.html",
+      "sha256": "41b59ece64724a031e286e6080e8cb1d43b45ec4f6c131f7881adb061950ef37"
+    },
+    {
+      "bytes": 996,
+      "path": "reviewed-full/records/browser/browser-javascript/inputs.json",
+      "sha256": "1377070a2d62d403cbcff0616912bf723eb731a1e830b280ae5bf6faad685ed5"
+    },
+    {
+      "bytes": 290,
+      "path": "reviewed-full/records/browser/browser-javascript/install.json",
+      "sha256": "c342cda4be0619849f5e196e11a36f6d079abba62d6b0f9fbc6afbef36e23920"
+    },
+    {
+      "bytes": 57293,
+      "path": "reviewed-full/records/browser/browser-javascript/installed-binding-ir.json",
+      "sha256": "39a2468d45e4f16b8ece74525316755457858f9bde8ecc92679a80ac430f2299"
+    },
+    {
+      "bytes": 1058,
+      "path": "reviewed-full/records/browser/browser-javascript/installed-component-package.json",
+      "sha256": "f7a64326895a2690b71a4846d40f751430e142218aca066c74d0476132618f45"
+    },
+    {
+      "bytes": 2631,
+      "path": "reviewed-full/records/browser/browser-javascript/installed-index.d.ts",
+      "sha256": "41ed6396e7d56aadf6f2a702ae47110682a6aaf49225506e0d08dca405e26ac1"
+    },
+    {
+      "bytes": 7988,
+      "path": "reviewed-full/records/browser/browser-javascript/installed-runtime-identity.json",
+      "sha256": "72d6ec64ed637d72ca3a92e87af594716042a2d908b931ef888a638f7e4a0e8c"
+    },
+    {
+      "bytes": 1100,
+      "path": "reviewed-full/records/browser/browser-javascript/installed-runtime-package.json",
+      "sha256": "6bc3dcbbbc5da2c76edf8039d6824e89838aff9567a5b4979417a616afd432f5"
+    },
+    {
+      "bytes": 1214,
+      "path": "reviewed-full/records/browser/browser-javascript/javascript.mjs",
+      "sha256": "df75cf6958faa1e8cd4cf2ce8d4e01dc22678c44627c86ad06c4d7b34b233615"
+    },
+    {
+      "bytes": 4863,
+      "path": "reviewed-full/records/browser/browser-javascript/observations.json",
+      "sha256": "9b0c7398567913b0d28c13601a66992deddebf17c2dc3e8f09c411e006fdf338"
+    },
+    {
+      "bytes": 1334,
+      "path": "reviewed-full/records/browser/browser-javascript/package-lock.json",
+      "sha256": "5d9a41a644490f50f4722a90042b232e987d2a8df89510ffa3a633f1fbe38803"
+    },
+    {
+      "bytes": 291,
+      "path": "reviewed-full/records/browser/browser-javascript/package.json",
+      "sha256": "f7d2448cdc488cb6e4c4c0bd8936ec75fcad540fd05a2ff75e5be6abc7122a95"
+    },
+    {
+      "bytes": 119,
+      "path": "reviewed-full/records/browser/browser-javascript/package.mjs",
+      "sha256": "3c03452dd29dbf4cd5024213456df84e658091803478faf89db00f549e089e0f"
+    },
+    {
+      "bytes": 761,
+      "path": "reviewed-full/records/browser/browser-javascript/plain.mjs",
+      "sha256": "f986b2be494f621c126e4579b1006641324f36fdeaf0a57ee6ca54540ece24f8"
+    },
+    {
+      "bytes": 16683,
+      "path": "reviewed-full/records/browser/browser-javascript/report.json",
+      "sha256": "488f597b47afb718fd0bea65a4fe675a849afdb2b63b7adb266d55d54686f8a3"
+    },
+    {
+      "bytes": 125,
+      "path": "reviewed-full/records/browser/browser-javascript/request.json",
+      "sha256": "3d8d596b2be0d376aad17119f8931d8ad921fd67632c1655bb98d2c7c306afc0"
+    },
+    {
+      "bytes": 6838,
+      "path": "reviewed-full/records/browser/browser-react/check.mjs",
+      "sha256": "9f493c77d4187d02e6c280de584f7d21ba7c371af77fcdb343771123e9c67697"
+    },
+    {
+      "bytes": 259,
+      "path": "reviewed-full/records/browser/browser-react/index.html",
+      "sha256": "f1924291e843aff6f831a527b53a8f67aa1ac07624ee0e645736e79fe99eaa1d"
+    },
+    {
+      "bytes": 997,
+      "path": "reviewed-full/records/browser/browser-react/inputs.json",
+      "sha256": "28274f338aa267152aecd08b42552ba114540ff8127b5aede8231cd9ad09ef9b"
+    },
+    {
+      "bytes": 290,
+      "path": "reviewed-full/records/browser/browser-react/install.json",
+      "sha256": "2d7024c91c8a49576147a65e2cea995cb6e925c66488afcb1a2d02f099f46dcb"
+    },
+    {
+      "bytes": 57293,
+      "path": "reviewed-full/records/browser/browser-react/installed-binding-ir.json",
+      "sha256": "39a2468d45e4f16b8ece74525316755457858f9bde8ecc92679a80ac430f2299"
+    },
+    {
+      "bytes": 1058,
+      "path": "reviewed-full/records/browser/browser-react/installed-component-package.json",
+      "sha256": "f7a64326895a2690b71a4846d40f751430e142218aca066c74d0476132618f45"
+    },
+    {
+      "bytes": 2631,
+      "path": "reviewed-full/records/browser/browser-react/installed-index.d.ts",
+      "sha256": "41ed6396e7d56aadf6f2a702ae47110682a6aaf49225506e0d08dca405e26ac1"
+    },
+    {
+      "bytes": 7988,
+      "path": "reviewed-full/records/browser/browser-react/installed-runtime-identity.json",
+      "sha256": "72d6ec64ed637d72ca3a92e87af594716042a2d908b931ef888a638f7e4a0e8c"
+    },
+    {
+      "bytes": 1100,
+      "path": "reviewed-full/records/browser/browser-react/installed-runtime-package.json",
+      "sha256": "6bc3dcbbbc5da2c76edf8039d6824e89838aff9567a5b4979417a616afd432f5"
+    },
+    {
+      "bytes": 1214,
+      "path": "reviewed-full/records/browser/browser-react/javascript.mjs",
+      "sha256": "df75cf6958faa1e8cd4cf2ce8d4e01dc22678c44627c86ad06c4d7b34b233615"
+    },
+    {
+      "bytes": 16057,
+      "path": "reviewed-full/records/browser/browser-react/observations.json",
+      "sha256": "52fea18f7fe61f75220d0be685e36aca28fc0b2a1658f40ad065fa5048e0dc6d"
+    },
+    {
+      "bytes": 2468,
+      "path": "reviewed-full/records/browser/browser-react/package-lock.json",
+      "sha256": "4f990f1cee46b4dd0b733a052034d21f73087aa937fcbd89f6c920e183700aa9"
+    },
+    {
+      "bytes": 451,
+      "path": "reviewed-full/records/browser/browser-react/package.json",
+      "sha256": "c3b38b8bb556d44e2fc57f83966c2238f122394138b5c07a36911deaaf36898a"
+    },
+    {
+      "bytes": 119,
+      "path": "reviewed-full/records/browser/browser-react/package.mjs",
+      "sha256": "3c03452dd29dbf4cd5024213456df84e658091803478faf89db00f549e089e0f"
+    },
+    {
+      "bytes": 1468,
+      "path": "reviewed-full/records/browser/browser-react/react.mjs",
+      "sha256": "8596690c5bdb64912efc10d7abce14f6083b7e6d855297596c3834ddd44a3b48"
+    },
+    {
+      "bytes": 39392,
+      "path": "reviewed-full/records/browser/browser-react/report.json",
+      "sha256": "7d3aa25000fe279e7680691e9e9f68553dd37cda1fb2aa24a217b68b74af93dd"
+    },
+    {
+      "bytes": 120,
+      "path": "reviewed-full/records/browser/browser-react/request.json",
+      "sha256": "25df81e92e8333c7fa4fedc240eeb967192af7addb21811316bb67ae7ceaf02c"
+    },
+    {
+      "bytes": 6838,
+      "path": "reviewed-full/records/browser/browser-worker/check.mjs",
+      "sha256": "9f493c77d4187d02e6c280de584f7d21ba7c371af77fcdb343771123e9c67697"
+    },
+    {
+      "bytes": 265,
+      "path": "reviewed-full/records/browser/browser-worker/index.html",
+      "sha256": "4c13109fc6ef171276cb9646b1815079b4966acc9e6e31efab6900b6c17b7a4b"
+    },
+    {
+      "bytes": 1125,
+      "path": "reviewed-full/records/browser/browser-worker/inputs.json",
+      "sha256": "c8b9706e9856e2efba291ba8ca0faad54be165aca63b596937d2b7523056be89"
+    },
+    {
+      "bytes": 290,
+      "path": "reviewed-full/records/browser/browser-worker/install.json",
+      "sha256": "0781c963a106ee7dfe51efd08e4106f5f7648a17bae88fc2ae6540071e7abb4d"
+    },
+    {
+      "bytes": 57293,
+      "path": "reviewed-full/records/browser/browser-worker/installed-binding-ir.json",
+      "sha256": "39a2468d45e4f16b8ece74525316755457858f9bde8ecc92679a80ac430f2299"
+    },
+    {
+      "bytes": 1058,
+      "path": "reviewed-full/records/browser/browser-worker/installed-component-package.json",
+      "sha256": "f7a64326895a2690b71a4846d40f751430e142218aca066c74d0476132618f45"
+    },
+    {
+      "bytes": 2631,
+      "path": "reviewed-full/records/browser/browser-worker/installed-index.d.ts",
+      "sha256": "41ed6396e7d56aadf6f2a702ae47110682a6aaf49225506e0d08dca405e26ac1"
+    },
+    {
+      "bytes": 7988,
+      "path": "reviewed-full/records/browser/browser-worker/installed-runtime-identity.json",
+      "sha256": "72d6ec64ed637d72ca3a92e87af594716042a2d908b931ef888a638f7e4a0e8c"
+    },
+    {
+      "bytes": 1100,
+      "path": "reviewed-full/records/browser/browser-worker/installed-runtime-package.json",
+      "sha256": "6bc3dcbbbc5da2c76edf8039d6824e89838aff9567a5b4979417a616afd432f5"
+    },
+    {
+      "bytes": 1214,
+      "path": "reviewed-full/records/browser/browser-worker/javascript.mjs",
+      "sha256": "df75cf6958faa1e8cd4cf2ce8d4e01dc22678c44627c86ad06c4d7b34b233615"
+    },
+    {
+      "bytes": 6571,
+      "path": "reviewed-full/records/browser/browser-worker/observations.json",
+      "sha256": "d153958b11daa94280efb6dd8df7ea1028679063128095c8c7d7a4a88d6c111d"
+    },
+    {
+      "bytes": 1330,
+      "path": "reviewed-full/records/browser/browser-worker/package-lock.json",
+      "sha256": "ca90788bcc7421e57b512ac873709a34d5378f1ce2c344e39eca679f9a3d0ab5"
+    },
+    {
+      "bytes": 291,
+      "path": "reviewed-full/records/browser/browser-worker/package.json",
+      "sha256": "f7d2448cdc488cb6e4c4c0bd8936ec75fcad540fd05a2ff75e5be6abc7122a95"
+    },
+    {
+      "bytes": 119,
+      "path": "reviewed-full/records/browser/browser-worker/package.mjs",
+      "sha256": "3c03452dd29dbf4cd5024213456df84e658091803478faf89db00f549e089e0f"
+    },
+    {
+      "bytes": 20564,
+      "path": "reviewed-full/records/browser/browser-worker/report.json",
+      "sha256": "6163d67e692cdc33b3c30bfb86d54c9f8267d4b24a5b33aa586beca3f2f77358"
+    },
+    {
+      "bytes": 121,
+      "path": "reviewed-full/records/browser/browser-worker/request.json",
+      "sha256": "390f5cb4efb40f46190228e98ff91a1ff42c56ae769791b99a04e90b8ec1418e"
+    },
+    {
+      "bytes": 1107,
+      "path": "reviewed-full/records/browser/browser-worker/worker-main.mjs",
+      "sha256": "d96f676358d61fd6d7bb1c8a3db68f289924e60d966014c161f3f3535415b633"
+    },
+    {
+      "bytes": 666,
+      "path": "reviewed-full/records/browser/browser-worker/worker.mjs",
+      "sha256": "41a1217c2a96a83d6c38272c0bbb3a0b02b0f6c4a09d817c0846aef0fc78d178"
+    },
+    {
+      "bytes": 1454,
+      "path": "reviewed-full/records/build-0/author-inputs.json",
+      "sha256": "c689437da39eb175fd0f628508cc8a273ea3b20af9f970951ea893b28b4a36b8"
+    },
+    {
+      "bytes": 57293,
+      "path": "reviewed-full/records/build-0/binding/binding-ir.json",
+      "sha256": "39a2468d45e4f16b8ece74525316755457858f9bde8ecc92679a80ac430f2299"
+    },
+    {
+      "bytes": 1661,
+      "path": "reviewed-full/records/build-0/component-package-receipt.json",
+      "sha256": "ee3fa2b7e54b5475fd4c7414e3d20d7a99e2c992ff4dd75b53ff0d56cb730041"
+    },
+    {
+      "bytes": 29881,
+      "path": "reviewed-full/records/build-0/locks/compiler-adapters.json",
+      "sha256": "52eeec25e26179349d6d69df835d9f47c408a5d134167648ed8739a77ebf725a"
+    },
+    {
+      "bytes": 2709,
+      "path": "reviewed-full/records/build-0/locks/component-build-plan.json",
+      "sha256": "fb34864aaf8e0276ca281d16206f3d6ce0c4487755f9caec6640321b1fa209a1"
+    },
+    {
+      "bytes": 843,
+      "path": "reviewed-full/records/build-0/metadata/provenance.json",
+      "sha256": "598db6041281775af22b2428aa43b2909e80f0345f8fc25164fd7d2e82b7dff9"
+    },
+    {
+      "bytes": 2886,
+      "path": "reviewed-full/records/build-0/NestedCheckedRecords.lean",
+      "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+    },
+    {
+      "bytes": 1454,
+      "path": "reviewed-full/records/build-1/author-inputs.json",
+      "sha256": "df0768504a57a5a9ce0680afeeb56f727f3f19a94981cefd916fee2758ef07a9"
+    },
+    {
+      "bytes": 57293,
+      "path": "reviewed-full/records/build-1/binding/binding-ir.json",
+      "sha256": "39a2468d45e4f16b8ece74525316755457858f9bde8ecc92679a80ac430f2299"
+    },
+    {
+      "bytes": 1661,
+      "path": "reviewed-full/records/build-1/component-package-receipt.json",
+      "sha256": "ee3fa2b7e54b5475fd4c7414e3d20d7a99e2c992ff4dd75b53ff0d56cb730041"
+    },
+    {
+      "bytes": 29881,
+      "path": "reviewed-full/records/build-1/locks/compiler-adapters.json",
+      "sha256": "52eeec25e26179349d6d69df835d9f47c408a5d134167648ed8739a77ebf725a"
+    },
+    {
+      "bytes": 2709,
+      "path": "reviewed-full/records/build-1/locks/component-build-plan.json",
+      "sha256": "fb34864aaf8e0276ca281d16206f3d6ce0c4487755f9caec6640321b1fa209a1"
+    },
+    {
+      "bytes": 843,
+      "path": "reviewed-full/records/build-1/metadata/provenance.json",
+      "sha256": "598db6041281775af22b2428aa43b2909e80f0345f8fc25164fd7d2e82b7dff9"
+    },
+    {
+      "bytes": 2886,
+      "path": "reviewed-full/records/build-1/NestedCheckedRecords.lean",
+      "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+    },
+    {
+      "bytes": 6838,
+      "path": "reviewed-full/records/callers/check.mjs",
+      "sha256": "9f493c77d4187d02e6c280de584f7d21ba7c371af77fcdb343771123e9c67697"
+    },
+    {
+      "bytes": 182,
+      "path": "reviewed-full/records/callers/index.mjs",
+      "sha256": "fc05a5211fb69868634772c03d35b5c207033492a2abec5955d2317e659cdfab"
+    },
+    {
+      "bytes": 1314,
+      "path": "reviewed-full/records/callers/index.mts",
+      "sha256": "47317b8bdadf3bebd2c58fe5a0ac0c698b07faac96a706fc9843e546b1fa6942"
+    },
+    {
+      "bytes": 174,
+      "path": "reviewed-full/records/configuration.json",
+      "sha256": "7f742df60d31a2c64771e45b7d1433d644f998c426bc05f2b9b5b39a8540466a"
+    },
+    {
+      "bytes": 1092,
+      "path": "reviewed-full/records/controls.json",
+      "sha256": "f37127778ae8f5e99f9ccb826fe3606052a4957376ad23389b3f363aa23e3cda"
+    },
+    {
+      "bytes": 39252,
+      "path": "reviewed-full/records/expected.binding-ir.json",
+      "sha256": "b0248d93b1a3285cade075a4abaae2ad94f6b10e4c7a88bfc68f812de13cc3c0"
+    },
+    {
+      "bytes": 1661,
+      "path": "reviewed-full/records/handoff/component-package-receipt.json",
+      "sha256": "ee3fa2b7e54b5475fd4c7414e3d20d7a99e2c992ff4dd75b53ff0d56cb730041"
+    },
+    {
+      "bytes": 1638462,
+      "path": "reviewed-full/records/handoff/lean-bridge-runtime-0.0.0-abi2.72d6ec64ed637d72ca3a92e87af594716042a2d908b931ef888a638f7e4a0e8c.tgz",
+      "sha256": "6b456fbf445c16e30cc4fcc70b3ac9bb331b5a358dbf5d00275d5ea8a063b658"
+    },
+    {
+      "bytes": 24258,
+      "path": "reviewed-full/records/handoff/nestedcheckedrecords-1.0.0.tgz",
+      "sha256": "037db28fe1d5e94c7624268c7bd4aa8d80e2571b1c8c99324491da0806a3824d"
+    },
+    {
+      "bytes": 8610,
+      "path": "reviewed-full/records/handoff/verify-component-package-receipt.mjs",
+      "sha256": "76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"
+    },
+    {
+      "bytes": 290,
+      "path": "reviewed-full/records/install.json",
+      "sha256": "148b43dfd560900aab1dc4e7e0ec343958315b5fe99eb6fee6cb20b431393a30"
+    },
+    {
+      "bytes": 396,
+      "path": "reviewed-full/records/installed.json",
+      "sha256": "90b954ca9e86fb31ac87e49f777de38a2950e65db77a1b09b0f7e3479994567d"
+    },
+    {
+      "bytes": 1058,
+      "path": "reviewed-full/records/installed/component-package.json",
+      "sha256": "f7a64326895a2690b71a4846d40f751430e142218aca066c74d0476132618f45"
+    },
+    {
+      "bytes": 1324,
+      "path": "reviewed-full/records/installed/package-lock.json",
+      "sha256": "e01011a1f86fa7aba7a03b966c1bf46a2b8e5fcacb6d5a7958392e072f7691af"
+    },
+    {
+      "bytes": 291,
+      "path": "reviewed-full/records/installed/package.json",
+      "sha256": "f7d2448cdc488cb6e4c4c0bd8936ec75fcad540fd05a2ff75e5be6abc7122a95"
+    },
+    {
+      "bytes": 7988,
+      "path": "reviewed-full/records/installed/runtime-identity.json",
+      "sha256": "72d6ec64ed637d72ca3a92e87af594716042a2d908b931ef888a638f7e4a0e8c"
+    },
+    {
+      "bytes": 1100,
+      "path": "reviewed-full/records/installed/runtime-package.json",
+      "sha256": "6bc3dcbbbc5da2c76edf8039d6824e89838aff9567a5b4979417a616afd432f5"
+    },
+    {
+      "bytes": 395,
+      "path": "reviewed-full/records/relocated.json",
+      "sha256": "3ab332e5f8954e93a1851f9428343283f33d43bea34ec31a6c33b3efe9189a1a"
+    },
+    {
+      "bytes": 12260,
+      "path": "reviewed-full/records/report.json",
+      "sha256": "53962232baba1630da3869ce125a04f01a5446bada3bd47ea434c98432c428a8"
+    },
+    {
+      "bytes": 864,
+      "path": "reviewed-result-only/records/browser-controls.json",
+      "sha256": "2f1821605faadadba995f5075243e4ce6f0ea5d1c925b218376cd1d36fd47d57"
+    },
+    {
+      "bytes": 86237,
+      "path": "reviewed-result-only/records/browser.json",
+      "sha256": "22460bc9f92ae4fb06e4816e9af26b045c0cb315fcc6912efe5e13abfdda7c0b"
+    },
+    {
+      "bytes": 6838,
+      "path": "reviewed-result-only/records/browser/browser-javascript/check.mjs",
+      "sha256": "9f493c77d4187d02e6c280de584f7d21ba7c371af77fcdb343771123e9c67697"
+    },
+    {
+      "bytes": 259,
+      "path": "reviewed-result-only/records/browser/browser-javascript/index.html",
+      "sha256": "41b59ece64724a031e286e6080e8cb1d43b45ec4f6c131f7881adb061950ef37"
+    },
+    {
+      "bytes": 996,
+      "path": "reviewed-result-only/records/browser/browser-javascript/inputs.json",
+      "sha256": "8ded7331cb40bca0c2a2467358c2066fcfb4a4045266faccaa5a25071cb8ef3d"
+    },
+    {
+      "bytes": 290,
+      "path": "reviewed-result-only/records/browser/browser-javascript/install.json",
+      "sha256": "c342cda4be0619849f5e196e11a36f6d079abba62d6b0f9fbc6afbef36e23920"
+    },
+    {
+      "bytes": 7455,
+      "path": "reviewed-result-only/records/browser/browser-javascript/installed-binding-ir.json",
+      "sha256": "0f38802faa54623745e253eba5d3d19378f119131ef5065dcd6ac4d257eaf4cd"
+    },
+    {
+      "bytes": 1058,
+      "path": "reviewed-result-only/records/browser/browser-javascript/installed-component-package.json",
+      "sha256": "bdf86996ac424acb4c84bfa4c0a9e29e6623bb2b27fb55468e924da60fecedc2"
+    },
+    {
+      "bytes": 665,
+      "path": "reviewed-result-only/records/browser/browser-javascript/installed-index.d.ts",
+      "sha256": "74421b5534d411448c1ed10b88c05c78db7e6ac2fb6063bc4c9125adddbf20c5"
+    },
+    {
+      "bytes": 7988,
+      "path": "reviewed-result-only/records/browser/browser-javascript/installed-runtime-identity.json",
+      "sha256": "72d6ec64ed637d72ca3a92e87af594716042a2d908b931ef888a638f7e4a0e8c"
+    },
+    {
+      "bytes": 1100,
+      "path": "reviewed-result-only/records/browser/browser-javascript/installed-runtime-package.json",
+      "sha256": "6bc3dcbbbc5da2c76edf8039d6824e89838aff9567a5b4979417a616afd432f5"
+    },
+    {
+      "bytes": 1214,
+      "path": "reviewed-result-only/records/browser/browser-javascript/javascript.mjs",
+      "sha256": "df75cf6958faa1e8cd4cf2ce8d4e01dc22678c44627c86ad06c4d7b34b233615"
+    },
+    {
+      "bytes": 4854,
+      "path": "reviewed-result-only/records/browser/browser-javascript/observations.json",
+      "sha256": "8acf20a1662d220c509fbee657c3b82b2d5daf27d538a70c3e93b8077ed7f315"
+    },
+    {
+      "bytes": 1334,
+      "path": "reviewed-result-only/records/browser/browser-javascript/package-lock.json",
+      "sha256": "347a42170887820bd840407e8c391efd595f11b343f36b33f849d799f9aa1541"
+    },
+    {
+      "bytes": 291,
+      "path": "reviewed-result-only/records/browser/browser-javascript/package.json",
+      "sha256": "f7d2448cdc488cb6e4c4c0bd8936ec75fcad540fd05a2ff75e5be6abc7122a95"
+    },
+    {
+      "bytes": 119,
+      "path": "reviewed-result-only/records/browser/browser-javascript/package.mjs",
+      "sha256": "3c03452dd29dbf4cd5024213456df84e658091803478faf89db00f549e089e0f"
+    },
+    {
+      "bytes": 761,
+      "path": "reviewed-result-only/records/browser/browser-javascript/plain.mjs",
+      "sha256": "f986b2be494f621c126e4579b1006641324f36fdeaf0a57ee6ca54540ece24f8"
+    },
+    {
+      "bytes": 16677,
+      "path": "reviewed-result-only/records/browser/browser-javascript/report.json",
+      "sha256": "8b7d9700fccc30f3b60e77775fe0b05c78947427e7277a69a0afffb58a0bc790"
+    },
+    {
+      "bytes": 131,
+      "path": "reviewed-result-only/records/browser/browser-javascript/request.json",
+      "sha256": "a295ea67789a568d13cc82683cb10d9ea9f446cfd46e2a7d0912537a53b71a4c"
+    },
+    {
+      "bytes": 6838,
+      "path": "reviewed-result-only/records/browser/browser-react/check.mjs",
+      "sha256": "9f493c77d4187d02e6c280de584f7d21ba7c371af77fcdb343771123e9c67697"
+    },
+    {
+      "bytes": 259,
+      "path": "reviewed-result-only/records/browser/browser-react/index.html",
+      "sha256": "f1924291e843aff6f831a527b53a8f67aa1ac07624ee0e645736e79fe99eaa1d"
+    },
+    {
+      "bytes": 997,
+      "path": "reviewed-result-only/records/browser/browser-react/inputs.json",
+      "sha256": "ee28a71a9440039717fbb864cba707d50b0a80a0b5e1bca4581c3e6b8e712995"
+    },
+    {
+      "bytes": 290,
+      "path": "reviewed-result-only/records/browser/browser-react/install.json",
+      "sha256": "62a7e07254c74a9648bf8da52bee8bdccb5960816f72c05a0b19abf3ef4728b6"
+    },
+    {
+      "bytes": 7455,
+      "path": "reviewed-result-only/records/browser/browser-react/installed-binding-ir.json",
+      "sha256": "0f38802faa54623745e253eba5d3d19378f119131ef5065dcd6ac4d257eaf4cd"
+    },
+    {
+      "bytes": 1058,
+      "path": "reviewed-result-only/records/browser/browser-react/installed-component-package.json",
+      "sha256": "bdf86996ac424acb4c84bfa4c0a9e29e6623bb2b27fb55468e924da60fecedc2"
+    },
+    {
+      "bytes": 665,
+      "path": "reviewed-result-only/records/browser/browser-react/installed-index.d.ts",
+      "sha256": "74421b5534d411448c1ed10b88c05c78db7e6ac2fb6063bc4c9125adddbf20c5"
+    },
+    {
+      "bytes": 7988,
+      "path": "reviewed-result-only/records/browser/browser-react/installed-runtime-identity.json",
+      "sha256": "72d6ec64ed637d72ca3a92e87af594716042a2d908b931ef888a638f7e4a0e8c"
+    },
+    {
+      "bytes": 1100,
+      "path": "reviewed-result-only/records/browser/browser-react/installed-runtime-package.json",
+      "sha256": "6bc3dcbbbc5da2c76edf8039d6824e89838aff9567a5b4979417a616afd432f5"
+    },
+    {
+      "bytes": 1214,
+      "path": "reviewed-result-only/records/browser/browser-react/javascript.mjs",
+      "sha256": "df75cf6958faa1e8cd4cf2ce8d4e01dc22678c44627c86ad06c4d7b34b233615"
+    },
+    {
+      "bytes": 16027,
+      "path": "reviewed-result-only/records/browser/browser-react/observations.json",
+      "sha256": "eecb250b755325e539479a6245582aa0f0d1056482fed1de28aaa52580b206b7"
+    },
+    {
+      "bytes": 2468,
+      "path": "reviewed-result-only/records/browser/browser-react/package-lock.json",
+      "sha256": "ce6684f511362c6c8a58fa79635d9d829ea4ff4bfe7f5948312999ebd33788f9"
+    },
+    {
+      "bytes": 451,
+      "path": "reviewed-result-only/records/browser/browser-react/package.json",
+      "sha256": "c3b38b8bb556d44e2fc57f83966c2238f122394138b5c07a36911deaaf36898a"
+    },
+    {
+      "bytes": 119,
+      "path": "reviewed-result-only/records/browser/browser-react/package.mjs",
+      "sha256": "3c03452dd29dbf4cd5024213456df84e658091803478faf89db00f549e089e0f"
+    },
+    {
+      "bytes": 1468,
+      "path": "reviewed-result-only/records/browser/browser-react/react.mjs",
+      "sha256": "8596690c5bdb64912efc10d7abce14f6083b7e6d855297596c3834ddd44a3b48"
+    },
+    {
+      "bytes": 39362,
+      "path": "reviewed-result-only/records/browser/browser-react/report.json",
+      "sha256": "9c2d339e4ef8d40399edd9e41eb760b0f85649f7299fa291f26990616b63f08b"
+    },
+    {
+      "bytes": 126,
+      "path": "reviewed-result-only/records/browser/browser-react/request.json",
+      "sha256": "7eb4c598aea04a1cfdeee2c8b82c4359c9c5e6abcf137ebbb2a84cbbbea2985f"
+    },
+    {
+      "bytes": 6838,
+      "path": "reviewed-result-only/records/browser/browser-worker/check.mjs",
+      "sha256": "9f493c77d4187d02e6c280de584f7d21ba7c371af77fcdb343771123e9c67697"
+    },
+    {
+      "bytes": 265,
+      "path": "reviewed-result-only/records/browser/browser-worker/index.html",
+      "sha256": "4c13109fc6ef171276cb9646b1815079b4966acc9e6e31efab6900b6c17b7a4b"
+    },
+    {
+      "bytes": 1125,
+      "path": "reviewed-result-only/records/browser/browser-worker/inputs.json",
+      "sha256": "33ce883a43f73e79db04b3ae85c2f15b2d09addbb0f296f3ce82c47f3656090f"
+    },
+    {
+      "bytes": 290,
+      "path": "reviewed-result-only/records/browser/browser-worker/install.json",
+      "sha256": "69289bf00a3b7ba535f0873dda3d4c161147cf05302be98ec7269b39a70305ac"
+    },
+    {
+      "bytes": 7455,
+      "path": "reviewed-result-only/records/browser/browser-worker/installed-binding-ir.json",
+      "sha256": "0f38802faa54623745e253eba5d3d19378f119131ef5065dcd6ac4d257eaf4cd"
+    },
+    {
+      "bytes": 1058,
+      "path": "reviewed-result-only/records/browser/browser-worker/installed-component-package.json",
+      "sha256": "bdf86996ac424acb4c84bfa4c0a9e29e6623bb2b27fb55468e924da60fecedc2"
+    },
+    {
+      "bytes": 665,
+      "path": "reviewed-result-only/records/browser/browser-worker/installed-index.d.ts",
+      "sha256": "74421b5534d411448c1ed10b88c05c78db7e6ac2fb6063bc4c9125adddbf20c5"
+    },
+    {
+      "bytes": 7988,
+      "path": "reviewed-result-only/records/browser/browser-worker/installed-runtime-identity.json",
+      "sha256": "72d6ec64ed637d72ca3a92e87af594716042a2d908b931ef888a638f7e4a0e8c"
+    },
+    {
+      "bytes": 1100,
+      "path": "reviewed-result-only/records/browser/browser-worker/installed-runtime-package.json",
+      "sha256": "6bc3dcbbbc5da2c76edf8039d6824e89838aff9567a5b4979417a616afd432f5"
+    },
+    {
+      "bytes": 1214,
+      "path": "reviewed-result-only/records/browser/browser-worker/javascript.mjs",
+      "sha256": "df75cf6958faa1e8cd4cf2ce8d4e01dc22678c44627c86ad06c4d7b34b233615"
+    },
+    {
+      "bytes": 6559,
+      "path": "reviewed-result-only/records/browser/browser-worker/observations.json",
+      "sha256": "76ee8dff07aae8edc81aa5149bf0de303825ca0cc7d8962f3187a5a3dfbde632"
+    },
+    {
+      "bytes": 1330,
+      "path": "reviewed-result-only/records/browser/browser-worker/package-lock.json",
+      "sha256": "c8210e0d6ca73a92a093c41223c0241edfccb0a6a4bafd1c5ba4a54186e4b70c"
+    },
+    {
+      "bytes": 291,
+      "path": "reviewed-result-only/records/browser/browser-worker/package.json",
+      "sha256": "f7d2448cdc488cb6e4c4c0bd8936ec75fcad540fd05a2ff75e5be6abc7122a95"
+    },
+    {
+      "bytes": 119,
+      "path": "reviewed-result-only/records/browser/browser-worker/package.mjs",
+      "sha256": "3c03452dd29dbf4cd5024213456df84e658091803478faf89db00f549e089e0f"
+    },
+    {
+      "bytes": 20555,
+      "path": "reviewed-result-only/records/browser/browser-worker/report.json",
+      "sha256": "acc44a42e6a0ec32d0e2d5332aac328465548af5f172e17f543b5e92e4a7bd02"
+    },
+    {
+      "bytes": 127,
+      "path": "reviewed-result-only/records/browser/browser-worker/request.json",
+      "sha256": "b81a45c5a29d391d58c31a62daaa3d4fb00c4a564fc14c945e0a3d43b5292992"
+    },
+    {
+      "bytes": 1107,
+      "path": "reviewed-result-only/records/browser/browser-worker/worker-main.mjs",
+      "sha256": "d96f676358d61fd6d7bb1c8a3db68f289924e60d966014c161f3f3535415b633"
+    },
+    {
+      "bytes": 666,
+      "path": "reviewed-result-only/records/browser/browser-worker/worker.mjs",
+      "sha256": "41a1217c2a96a83d6c38272c0bbb3a0b02b0f6c4a09d817c0846aef0fc78d178"
+    },
+    {
+      "bytes": 1453,
+      "path": "reviewed-result-only/records/build-0/author-inputs.json",
+      "sha256": "2873f6813bbc99fd1d7ba809954cd0da40c8928a43b803a863ce3d652342b8ca"
+    },
+    {
+      "bytes": 7455,
+      "path": "reviewed-result-only/records/build-0/binding/binding-ir.json",
+      "sha256": "0f38802faa54623745e253eba5d3d19378f119131ef5065dcd6ac4d257eaf4cd"
+    },
+    {
+      "bytes": 1661,
+      "path": "reviewed-result-only/records/build-0/component-package-receipt.json",
+      "sha256": "0e21dfb746daa6ecf89e5cad46fa43dcaa0c8eb29a7ea96cb25c1ac724f10d9c"
+    },
+    {
+      "bytes": 4902,
+      "path": "reviewed-result-only/records/build-0/locks/compiler-adapters.json",
+      "sha256": "b6d2bae0072622893039b5026cf7ca796c32561a9c1ca5f9684f53c4c58444ea"
+    },
+    {
+      "bytes": 2234,
+      "path": "reviewed-result-only/records/build-0/locks/component-build-plan.json",
+      "sha256": "bd0167aba344f732ffaa1b19c5cbfb33907836e6eb903f13200b23ac71778d9c"
+    },
+    {
+      "bytes": 843,
+      "path": "reviewed-result-only/records/build-0/metadata/provenance.json",
+      "sha256": "facfec46d486101cb10e53b1472c8a798781d455b3b3d7f8bc339c1400879a99"
+    },
+    {
+      "bytes": 2886,
+      "path": "reviewed-result-only/records/build-0/NestedCheckedRecords.lean",
+      "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+    },
+    {
+      "bytes": 1454,
+      "path": "reviewed-result-only/records/build-1/author-inputs.json",
+      "sha256": "39ec59e79917816a90690034b4bb52eab7da214a3373385995246b733f6796d6"
+    },
+    {
+      "bytes": 7455,
+      "path": "reviewed-result-only/records/build-1/binding/binding-ir.json",
+      "sha256": "0f38802faa54623745e253eba5d3d19378f119131ef5065dcd6ac4d257eaf4cd"
+    },
+    {
+      "bytes": 1661,
+      "path": "reviewed-result-only/records/build-1/component-package-receipt.json",
+      "sha256": "0e21dfb746daa6ecf89e5cad46fa43dcaa0c8eb29a7ea96cb25c1ac724f10d9c"
+    },
+    {
+      "bytes": 4902,
+      "path": "reviewed-result-only/records/build-1/locks/compiler-adapters.json",
+      "sha256": "b6d2bae0072622893039b5026cf7ca796c32561a9c1ca5f9684f53c4c58444ea"
+    },
+    {
+      "bytes": 2234,
+      "path": "reviewed-result-only/records/build-1/locks/component-build-plan.json",
+      "sha256": "bd0167aba344f732ffaa1b19c5cbfb33907836e6eb903f13200b23ac71778d9c"
+    },
+    {
+      "bytes": 843,
+      "path": "reviewed-result-only/records/build-1/metadata/provenance.json",
+      "sha256": "facfec46d486101cb10e53b1472c8a798781d455b3b3d7f8bc339c1400879a99"
+    },
+    {
+      "bytes": 2886,
+      "path": "reviewed-result-only/records/build-1/NestedCheckedRecords.lean",
+      "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+    },
+    {
+      "bytes": 6838,
+      "path": "reviewed-result-only/records/callers/check.mjs",
+      "sha256": "9f493c77d4187d02e6c280de584f7d21ba7c371af77fcdb343771123e9c67697"
+    },
+    {
+      "bytes": 181,
+      "path": "reviewed-result-only/records/callers/index.mjs",
+      "sha256": "0309e1c98f8f420ddf039f5cd2599b475c7bdedb4094a183e55abfcbd7225a54"
+    },
+    {
+      "bytes": 710,
+      "path": "reviewed-result-only/records/callers/index.mts",
+      "sha256": "162f3b71bd3d99885ea16a763cb6daf25e09acc03ee8c18f86e2e7e362fa29f3"
+    },
+    {
+      "bytes": 174,
+      "path": "reviewed-result-only/records/configuration.json",
+      "sha256": "7f742df60d31a2c64771e45b7d1433d644f998c426bc05f2b9b5b39a8540466a"
+    },
+    {
+      "bytes": 1099,
+      "path": "reviewed-result-only/records/controls.json",
+      "sha256": "ccc72400b234f6c5cba3d93721fe7466ba75f70f012749941bbd180b3c33015f"
+    },
+    {
+      "bytes": 6772,
+      "path": "reviewed-result-only/records/expected.binding-ir.json",
+      "sha256": "ed9473d92c605f378c8b1af7bb07a6b450d824aadfcf67935f4d65fbf956c9a0"
+    },
+    {
+      "bytes": 1661,
+      "path": "reviewed-result-only/records/handoff/component-package-receipt.json",
+      "sha256": "0e21dfb746daa6ecf89e5cad46fa43dcaa0c8eb29a7ea96cb25c1ac724f10d9c"
+    },
+    {
+      "bytes": 1638462,
+      "path": "reviewed-result-only/records/handoff/lean-bridge-runtime-0.0.0-abi2.72d6ec64ed637d72ca3a92e87af594716042a2d908b931ef888a638f7e4a0e8c.tgz",
+      "sha256": "6b456fbf445c16e30cc4fcc70b3ac9bb331b5a358dbf5d00275d5ea8a063b658"
+    },
+    {
+      "bytes": 13293,
+      "path": "reviewed-result-only/records/handoff/nestedcheckedrecords-1.0.0.tgz",
+      "sha256": "4a1d0e1fc108e0101fbb499bc63e1c9b875ec2a607db44a1e99ac9dd5465ec98"
+    },
+    {
+      "bytes": 8610,
+      "path": "reviewed-result-only/records/handoff/verify-component-package-receipt.mjs",
+      "sha256": "76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"
+    },
+    {
+      "bytes": 290,
+      "path": "reviewed-result-only/records/install.json",
+      "sha256": "3394d1294878e6420302f284f02a1d1e031503221ab6f71acc0241afc24d8399"
+    },
+    {
+      "bytes": 389,
+      "path": "reviewed-result-only/records/installed.json",
+      "sha256": "c22369ec7c7abc9e20fcb429924eb6f0179d9d098a466ec6b9d99a1615622fed"
+    },
+    {
+      "bytes": 1058,
+      "path": "reviewed-result-only/records/installed/component-package.json",
+      "sha256": "bdf86996ac424acb4c84bfa4c0a9e29e6623bb2b27fb55468e924da60fecedc2"
+    },
+    {
+      "bytes": 1324,
+      "path": "reviewed-result-only/records/installed/package-lock.json",
+      "sha256": "d74530d7ec33fcb1511134329adaca6afcdb644b8cab75c706f1781444162922"
+    },
+    {
+      "bytes": 291,
+      "path": "reviewed-result-only/records/installed/package.json",
+      "sha256": "f7d2448cdc488cb6e4c4c0bd8936ec75fcad540fd05a2ff75e5be6abc7122a95"
+    },
+    {
+      "bytes": 7988,
+      "path": "reviewed-result-only/records/installed/runtime-identity.json",
+      "sha256": "72d6ec64ed637d72ca3a92e87af594716042a2d908b931ef888a638f7e4a0e8c"
+    },
+    {
+      "bytes": 1100,
+      "path": "reviewed-result-only/records/installed/runtime-package.json",
+      "sha256": "6bc3dcbbbc5da2c76edf8039d6824e89838aff9567a5b4979417a616afd432f5"
+    },
+    {
+      "bytes": 388,
+      "path": "reviewed-result-only/records/relocated.json",
+      "sha256": "6fcf09c546d217371fe1fa509d128bd4c24ac8a97ce95726ed1e250fa66fd3db"
+    },
+    {
+      "bytes": 11902,
+      "path": "reviewed-result-only/records/report.json",
+      "sha256": "48e312634b5fc72ccbf95726158b61701ab5f4ccf1c8a911f61645c796edb35f"
+    },
+    {
+      "bytes": 8872,
+      "path": "sources/archive/scripts/archive-nested-checked-record-browser.mjs",
+      "sha256": "9d7009fa06f7a791803fbffdbfd52ea9fac72d707dbef4f8518ffda0d33999c0"
+    },
+    {
+      "bytes": 9938,
+      "path": "sources/checker/src/binding-ir/canonical.mjs",
+      "sha256": "28e22e614fc532a99baeeb34ee9d054f3bc6db82239fa89059a9518cb06d3d20"
+    },
+    {
+      "bytes": 3332,
+      "path": "sources/checker/src/capsule/node.mjs",
+      "sha256": "2ffbff5c27dbdd89fac9dd6ce5a1a3082430c9bdfbdcc3908941eaf1d009fb1b"
+    },
+    {
+      "bytes": 9241,
+      "path": "sources/checker/tests/helpers/nested-checked-record-browser-controls.mjs",
+      "sha256": "ad89dd67bca82dbf36c15572bc0d7f35562b71e795c5d8d10ad4a6c7d90bd4cd"
+    },
+    {
+      "bytes": 3210,
+      "path": "sources/checker/tests/helpers/nested-checked-record-browser-fixture.mjs",
+      "sha256": "20b37dcab1845a03a8ff9079a0eada1fe99e67f7abbb5f1b6fc098cefac558e2"
+    },
+    {
+      "bytes": 15317,
+      "path": "sources/checker/tests/helpers/nested-checked-record-browser-report.mjs",
+      "sha256": "a20de04415ac87b3ff5cce7177f7088200531a3a65d321525682073da01fdba0"
+    },
+    {
+      "bytes": 2142,
+      "path": "sources/checker/tests/helpers/nested-checked-record-npm-fixture.mjs",
+      "sha256": "13806bee1b6c6791f553a0d09dc0ad9ed7b653b372c71a213be0a699a68b2b17"
+    },
+    {
+      "bytes": 22123,
+      "path": "sources/checker/tests/helpers/nested-checked-record-npm-report.mjs",
+      "sha256": "024ca955c0ab1be34538d219832259e23d8bd45d54c951d68bb243031497df07"
+    },
+    {
+      "bytes": 3529,
+      "path": "sources/checker/tests/nested-checked-record-browser-controls.test.mjs",
+      "sha256": "abf0aec77ac7f20b9b184b1009c592e486076a4057d6f530823d0ad196578653"
+    },
+    {
+      "bytes": 251351,
+      "path": "sources/consumer/package-lock.json",
+      "sha256": "e34bcc0814ddf2923e977b290795f9f2dbf677dbc53d04b762bb6e89b0272138"
+    },
+    {
+      "bytes": 71434,
+      "path": "sources/consumer/package.json",
+      "sha256": "773c0acdd79cb28c6fdce63f2072cd0c1ce8c664cf1bd24bbd6ec06cf62c24a7"
+    },
+    {
+      "bytes": 1994,
+      "path": "sources/consumer/site/serve.mjs",
+      "sha256": "4b1d8c7687ee6b3d376ba188538fcbb1a12ee35c1f768330f5c05ed4b5788454"
+    },
+    {
+      "bytes": 1214,
+      "path": "sources/consumer/tests/fixtures/nested-checked-record-consumers/browser.mjs",
+      "sha256": "df75cf6958faa1e8cd4cf2ce8d4e01dc22678c44627c86ad06c4d7b34b233615"
+    },
+    {
+      "bytes": 761,
+      "path": "sources/consumer/tests/fixtures/type-corpus/consumers/browser/plain.mjs",
+      "sha256": "f986b2be494f621c126e4579b1006641324f36fdeaf0a57ee6ca54540ece24f8"
+    },
+    {
+      "bytes": 1468,
+      "path": "sources/consumer/tests/fixtures/type-corpus/consumers/browser/react.mjs",
+      "sha256": "8596690c5bdb64912efc10d7abce14f6083b7e6d855297596c3834ddd44a3b48"
+    },
+    {
+      "bytes": 1107,
+      "path": "sources/consumer/tests/fixtures/type-corpus/consumers/browser/worker-main.mjs",
+      "sha256": "d96f676358d61fd6d7bb1c8a3db68f289924e60d966014c161f3f3535415b633"
+    },
+    {
+      "bytes": 666,
+      "path": "sources/consumer/tests/fixtures/type-corpus/consumers/browser/worker.mjs",
+      "sha256": "41a1217c2a96a83d6c38272c0bbb3a0b02b0f6c4a09d817c0846aef0fc78d178"
+    },
+    {
+      "bytes": 3210,
+      "path": "sources/consumer/tests/helpers/nested-checked-record-browser-fixture.mjs",
+      "sha256": "20b37dcab1845a03a8ff9079a0eada1fe99e67f7abbb5f1b6fc098cefac558e2"
+    },
+    {
+      "bytes": 14770,
+      "path": "sources/consumer/tests/helpers/nested-checked-record-browser-report.mjs",
+      "sha256": "83f1ce977e730b540e5ef5e4bf53c0a03157fe63daf993797e0becec9dd24448"
+    },
+    {
+      "bytes": 8590,
+      "path": "sources/consumer/tests/helpers/nested-checked-record-browser.mjs",
+      "sha256": "5b500d4d7300582a96fad8e7d232dc41287c7bb97638be618d10a3bf3663e660"
+    },
+    {
+      "bytes": 2256,
+      "path": "sources/consumer/tests/helpers/type-corpus-browser-build.mjs",
+      "sha256": "9e6618c2653b6700a61a3591db9f2fc3b5718f8362aa1e64dca923c82665f852"
+    },
+    {
+      "bytes": 13812,
+      "path": "sources/consumer/tests/helpers/type-corpus-browser.mjs",
+      "sha256": "ca503281cfeed8d7968cc866fdb5ee8b0728a6efbc5f79acef4fcf992bf6f932"
+    },
+    {
+      "bytes": 42388,
+      "path": "sources/consumer/tests/helpers/type-corpus.mjs",
+      "sha256": "d76e871b4f76c524d44a2be6fda23d73a9b3162d9bca9eafe113f1a38f9f4f43"
+    },
+    {
+      "bytes": 5632,
+      "path": "sources/consumer/tests/nested-checked-record-browser.test.mjs",
+      "sha256": "e8fa6996c3a6edc8ac7f3c1a63ce7b0ab9ab9c6c095273dbfed4468d2affcf2a"
+    },
+    {
+      "bytes": 17328,
+      "path": "sources/producer/schema/compiler-adapter-plan.schema.json",
+      "sha256": "19d637f6ad1031d8ca0ddb596a7fbb9d63c9e917932a672f884e4681dde63781"
+    },
+    {
+      "bytes": 13303,
+      "path": "sources/producer/schema/lean-export-configuration.schema.json",
+      "sha256": "54b4eaf51873a785ad6837e5ca69f69c387905cc89682ed75501b7634b006511"
+    },
+    {
+      "bytes": 9951,
+      "path": "sources/producer/src/abi/refinements.mjs",
+      "sha256": "625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384"
+    },
+    {
+      "bytes": 10658,
+      "path": "sources/producer/src/analyze/checked-refinement-selection.mjs",
+      "sha256": "125dc7821d4e60a30f793d8f088c9136f05f38947817b0b45b97316865787959"
+    },
+    {
+      "bytes": 25175,
+      "path": "sources/producer/src/analyze/elaborated-metadata.mjs",
+      "sha256": "5529a00587a555f518682e4957f099629c128bb66b4f1aed54909c9814c60579"
+    },
+    {
+      "bytes": 16423,
+      "path": "sources/producer/src/analyze/native-types.mjs",
+      "sha256": "85793218b8205ae95dc45c1344aa0b71591f6a0eb7e9c624c04ea53065525545"
+    },
+    {
+      "bytes": 109515,
+      "path": "sources/producer/src/analyze/NativeExports.lean",
+      "sha256": "88bc071a3fb4adb1dee0a0c3262c4227cadcf5928dd32a79844bb5be69093cf5"
+    },
+    {
+      "bytes": 26805,
+      "path": "sources/producer/src/analyze/reviewed-source.mjs",
+      "sha256": "d54b80fe4ffa088683d18ab30636334c0f21b5fd8353c91d4f910d0b9e10b670"
+    },
+    {
+      "bytes": 21120,
+      "path": "sources/producer/src/analyze/semantic-model.mjs",
+      "sha256": "ab308111de70b4c500de9518ce85db7d9f44a42e6c5449243af3b5f30af04bb2"
+    },
+    {
+      "bytes": 36933,
+      "path": "sources/producer/src/backends/javascript/generate.mjs",
+      "sha256": "f057d161f40d20e2afaca794fdcb485d507b819f3210b00484835d65dc675bb0"
+    },
+    {
+      "bytes": 17878,
+      "path": "sources/producer/src/backends/native/fin-refinements.mjs",
+      "sha256": "61ad0c2864bf6b5f92fe099b98c205f2be23f77667a742b436cae8df48912e17"
+    },
+    {
+      "bytes": 44779,
+      "path": "sources/producer/src/build/canonical-build.mjs",
+      "sha256": "b138fc2f2bd26ed473cf98bb54ba81a14f47a7aa919209e48f9c81314f6d6c06"
+    },
+    {
+      "bytes": 27799,
+      "path": "sources/producer/src/build/compiler-adapters.mjs",
+      "sha256": "a7a6a1dbb6b207dcf03b29cc74ef47d4acf19b0d1db4d42f85131ff707fe652d"
+    },
+    {
+      "bytes": 4920,
+      "path": "sources/producer/src/build/component-fin-guards.mjs",
+      "sha256": "69a1bf34a928021cfa575673f78e01e0d53c08c25593dc897f9d831dd3cc9825"
+    },
+    {
+      "bytes": 16314,
+      "path": "sources/producer/src/build/component-refinement-mirrors.mjs",
+      "sha256": "0e878e6734e185b38dc66a1b4fb4cd4c9b4356f1f15726c537d00197f8f89321"
+    },
+    {
+      "bytes": 14322,
+      "path": "sources/producer/src/build/component-refinements.mjs",
+      "sha256": "43426f7799a7b537d24432db791533e3d11980e9a42427d9da68a01db80c8ef9"
+    },
+    {
+      "bytes": 38809,
+      "path": "sources/producer/src/build/native-model.mjs",
+      "sha256": "235735f0f1aeafde788d150f96d4a698c51c8b4d61a1f9ef6777000b795c6937"
+    },
+    {
+      "bytes": 14477,
+      "path": "sources/producer/src/build/refinement-mirrors.mjs",
+      "sha256": "66ead2673c2db3fef4a8267d8d4656f0f9766635517d757a77fa84ac2e3b6525"
+    },
+    {
+      "bytes": 25664,
+      "path": "sources/producer/src/release/component-npm-package.mjs",
+      "sha256": "f7c4e8196814cdb6dafe16173740f762c9bf2208b6fa10650be8855f12b1b3c4"
+    },
+    {
+      "bytes": 8610,
+      "path": "sources/producer/src/release/component-package-receipt.mjs",
+      "sha256": "76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"
+    },
+    {
+      "bytes": 8423,
+      "path": "sources/producer/tests/c-structured-callable-contract.test.mjs",
+      "sha256": "5458be8991c5bae9170a112aab98eb3b4442030cea99189b50e0d99cb560f067"
+    },
+    {
+      "bytes": 1314,
+      "path": "sources/producer/tests/fixtures/nested-checked-record-consumers/full.mts",
+      "sha256": "47317b8bdadf3bebd2c58fe5a0ac0c698b07faac96a706fc9843e546b1fa6942"
+    },
+    {
+      "bytes": 6838,
+      "path": "sources/producer/tests/fixtures/nested-checked-record-consumers/javascript.mjs",
+      "sha256": "9f493c77d4187d02e6c280de584f7d21ba7c371af77fcdb343771123e9c67697"
+    },
+    {
+      "bytes": 710,
+      "path": "sources/producer/tests/fixtures/nested-checked-record-consumers/result-only.mts",
+      "sha256": "162f3b71bd3d99885ea16a763cb6daf25e09acc03ee8c18f86e2e7e362fa29f3"
+    },
+    {
+      "bytes": 91,
+      "path": "sources/producer/tests/fixtures/onboarding/nested-checked-records/lakefile.toml",
+      "sha256": "771252d53394844802f94651c16ab7260ffe201fbd50916421965691ed2a4178"
+    },
+    {
+      "bytes": 25,
+      "path": "sources/producer/tests/fixtures/onboarding/nested-checked-records/lean-toolchain",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "bytes": 1093,
+      "path": "sources/producer/tests/fixtures/onboarding/nested-checked-records/LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "bytes": 2886,
+      "path": "sources/producer/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+      "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+    },
+    {
+      "bytes": 66,
+      "path": "sources/producer/tests/fixtures/onboarding/nested-checked-records/package.json",
+      "sha256": "82ee0944b3e498537167b868b16573fb6fb005d6f77018d3f2d352e605461f07"
+    },
+    {
+      "bytes": 11406,
+      "path": "sources/producer/tests/helpers/checked-record-fixture.mjs",
+      "sha256": "d1e64d1093c4299586b9923ee08eec7eeef40c954da2c82649fce76dddf4815c"
+    },
+    {
+      "bytes": 15505,
+      "path": "sources/producer/tests/helpers/copied-fixture-install.mjs",
+      "sha256": "dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df"
+    },
+    {
+      "bytes": 75449,
+      "path": "sources/producer/tests/helpers/fin-refinement-source-history.mjs",
+      "sha256": "38260fa02d55d36d85e484b058b284bf87add6ea5cd716cf94fd2d2c19c5f4c9"
+    },
+    {
+      "bytes": 9902,
+      "path": "sources/producer/tests/helpers/lake-workspace.mjs",
+      "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082"
+    },
+    {
+      "bytes": 7837,
+      "path": "sources/producer/tests/helpers/nested-checked-record-fixture.mjs",
+      "sha256": "71afc078ee20fdaa3558c15fab800003a04761a7bac2e41b48895b07fe40ae34"
+    },
+    {
+      "bytes": 2142,
+      "path": "sources/producer/tests/helpers/nested-checked-record-npm-fixture.mjs",
+      "sha256": "13806bee1b6c6791f553a0d09dc0ad9ed7b653b372c71a213be0a699a68b2b17"
+    },
+    {
+      "bytes": 13940,
+      "path": "sources/producer/tests/helpers/nested-checked-record-npm-installed-tests.mjs",
+      "sha256": "52f69c98b9c545d0ed537b8e6efe12806142bc601dfa541268ebe3f54585636a"
+    },
+    {
+      "bytes": 19088,
+      "path": "sources/producer/tests/helpers/nested-checked-record-npm-report.mjs",
+      "sha256": "537ec781d77b13b118c0ca9ca4a3d0653b78858a5d8b1c0fe3fbada7c0b877d3"
+    },
+    {
+      "bytes": 1655,
+      "path": "sources/producer/tests/helpers/refinement-engine.mjs",
+      "sha256": "91e69b67d355d2b436fa699a5e4a4692362bdc4f9536634877b6af41e968d3b4"
+    }
+  ],
+  "kind": "nested-checked-record-browser-installed-v1",
+  "limitations": [
+    "The fixture covers checked records whose fields contain Fin and checked Subtype values, including arrays, lists, options, products, Except branches, enclosing records and variants, repeated parameters and constructor-free results.",
+    "Generic records, recursive records, callbacks, owned values and dependent refinements require their own acceptance evidence.",
+    "Complete reproduced npm component/runtime archives and every npm/browser report input are retained. React framework archives, browser binaries and generated deployment directories are represented by recorded identities and execution observations rather than copied.",
+    "The producer, browser consumer and destructive checker are separate frozen revisions. Absolute build paths describe the original local Linux x64 run and are not CI prerequisites.",
+    "The local runs do not establish hosted acceptance. Constructor dispatch counts and peak memory were not measured."
+  ],
+  "loadCeiling": 8,
+  "producerCommit": "340f6c1dabd1cad6fa313c41682c9b2c3fd08d24",
+  "runs": [
+    {
+      "browserControlsSha256": "9af3f9712d0b5130a79c7fc5e5fda8dcbe1628d06aaa1e596e50852c0a211bb3",
+      "browserReportSha256": "2cb9b3026b8cbaeda5a508903c2858c7bce4b527bb0874b5c9c4c42a92d10e4c",
+      "checkerCommit": "d184cee67224beebf5d82ef036310b82ebaca863",
+      "consumerCommit": "d402c7a12eb7d9b69a74c9931415082ce3dd7059",
+      "controls": {
+        "browser": 162,
+        "npmAdapter": 7,
+        "npmReport": 10,
+        "record": 170
+      },
+      "counts": {
+        "browserExecutions": 12,
+        "browserVersions": {
+          "chromium": "151.0.7922.34",
+          "firefox": "153.0",
+          "webkit": "26.5"
+        },
+        "calls": 5037,
+        "checks": 10077,
+        "consumerCommit": "d402c7a12eb7d9b69a74c9931415082ce3dd7059",
+        "engines": [
+          "chromium",
+          "firefox",
+          "webkit"
+        ],
+        "lifecycleObservations": 51,
+        "mode": "full",
+        "producerCommit": "340f6c1dabd1cad6fa313c41682c9b2c3fd08d24",
+        "profiles": [
+          "browser-javascript",
+          "browser-react",
+          "browser-worker"
+        ],
+        "recoveries": 1000,
+        "rejections": 2017,
+        "route": "ordinary-full",
+        "snapshots": 5037
+      },
+      "mode": "full",
+      "npmControlsSha256": "67b5cda7c328b18bb813b4bfaa98eacff1f924c25c77c9f6f045969d328a8f40",
+      "producerCommit": "340f6c1dabd1cad6fa313c41682c9b2c3fd08d24",
+      "recordCount": 87,
+      "reportSha256": "4dc7508102c35c5d3d71dc5fac8d6db3a4706b5eae3c8f3f759cfcd0cee64bae",
+      "route": "ordinary-full",
+      "runtime": {
+        "arch": "x64",
+        "node": "v22.23.2",
+        "platform": "linux"
+      }
+    },
+    {
+      "browserControlsSha256": "95e44021a6425e14554316701dfaf40f01b83d64af8e76bf191b113dc7c5a073",
+      "browserReportSha256": "c8916715d25d66d3c6ee0fc0440daafc18782c44cfe709ed9aa80ed4de3047ad",
+      "checkerCommit": "d184cee67224beebf5d82ef036310b82ebaca863",
+      "consumerCommit": "d402c7a12eb7d9b69a74c9931415082ce3dd7059",
+      "controls": {
+        "browser": 162,
+        "npmAdapter": 4,
+        "npmReport": 10,
+        "record": 170
+      },
+      "counts": {
+        "browserExecutions": 12,
+        "browserVersions": {
+          "chromium": "151.0.7922.34",
+          "firefox": "153.0",
+          "webkit": "26.5"
+        },
+        "calls": 2006,
+        "checks": 4023,
+        "consumerCommit": "d402c7a12eb7d9b69a74c9931415082ce3dd7059",
+        "engines": [
+          "chromium",
+          "firefox",
+          "webkit"
+        ],
+        "lifecycleObservations": 51,
+        "mode": "result-only",
+        "producerCommit": "340f6c1dabd1cad6fa313c41682c9b2c3fd08d24",
+        "profiles": [
+          "browser-javascript",
+          "browser-react",
+          "browser-worker"
+        ],
+        "recoveries": 0,
+        "rejections": 0,
+        "route": "ordinary-result-only",
+        "snapshots": 2006
+      },
+      "mode": "result-only",
+      "npmControlsSha256": "6ae2f3d0bb09ac660f01be7b11aacb271fba65a9f76fae26913500708b5816bf",
+      "producerCommit": "340f6c1dabd1cad6fa313c41682c9b2c3fd08d24",
+      "recordCount": 87,
+      "reportSha256": "4cafd1747c8d3bb1ac51e8b8c689e96dd2839cf85fa77b8758136dac9cf3a773",
+      "route": "ordinary-result-only",
+      "runtime": {
+        "arch": "x64",
+        "node": "v22.23.2",
+        "platform": "linux"
+      }
+    },
+    {
+      "browserControlsSha256": "5134c547b9718246ae7436cd03cec6c6582fc56bbeb325d31b2caa22c1cab383",
+      "browserReportSha256": "47b5519039b6f01c4299fea08f0435b02ae47f318ea515cfd13d4a67e3032f1f",
+      "checkerCommit": "d184cee67224beebf5d82ef036310b82ebaca863",
+      "consumerCommit": "d402c7a12eb7d9b69a74c9931415082ce3dd7059",
+      "controls": {
+        "browser": 162,
+        "npmAdapter": 7,
+        "npmReport": 10,
+        "record": 170
+      },
+      "counts": {
+        "browserExecutions": 12,
+        "browserVersions": {
+          "chromium": "151.0.7922.34",
+          "firefox": "153.0",
+          "webkit": "26.5"
+        },
+        "calls": 5037,
+        "checks": 10077,
+        "consumerCommit": "d402c7a12eb7d9b69a74c9931415082ce3dd7059",
+        "engines": [
+          "chromium",
+          "firefox",
+          "webkit"
+        ],
+        "lifecycleObservations": 51,
+        "mode": "full",
+        "producerCommit": "340f6c1dabd1cad6fa313c41682c9b2c3fd08d24",
+        "profiles": [
+          "browser-javascript",
+          "browser-react",
+          "browser-worker"
+        ],
+        "recoveries": 1000,
+        "rejections": 2017,
+        "route": "reviewed-full",
+        "snapshots": 5037
+      },
+      "mode": "full",
+      "npmControlsSha256": "f37127778ae8f5e99f9ccb826fe3606052a4957376ad23389b3f363aa23e3cda",
+      "producerCommit": "340f6c1dabd1cad6fa313c41682c9b2c3fd08d24",
+      "recordCount": 87,
+      "reportSha256": "53962232baba1630da3869ce125a04f01a5446bada3bd47ea434c98432c428a8",
+      "route": "reviewed-full",
+      "runtime": {
+        "arch": "x64",
+        "node": "v22.23.2",
+        "platform": "linux"
+      }
+    },
+    {
+      "browserControlsSha256": "2f1821605faadadba995f5075243e4ce6f0ea5d1c925b218376cd1d36fd47d57",
+      "browserReportSha256": "22460bc9f92ae4fb06e4816e9af26b045c0cb315fcc6912efe5e13abfdda7c0b",
+      "checkerCommit": "d184cee67224beebf5d82ef036310b82ebaca863",
+      "consumerCommit": "d402c7a12eb7d9b69a74c9931415082ce3dd7059",
+      "controls": {
+        "browser": 162,
+        "npmAdapter": 4,
+        "npmReport": 10,
+        "record": 170
+      },
+      "counts": {
+        "browserExecutions": 12,
+        "browserVersions": {
+          "chromium": "151.0.7922.34",
+          "firefox": "153.0",
+          "webkit": "26.5"
+        },
+        "calls": 2006,
+        "checks": 4023,
+        "consumerCommit": "d402c7a12eb7d9b69a74c9931415082ce3dd7059",
+        "engines": [
+          "chromium",
+          "firefox",
+          "webkit"
+        ],
+        "lifecycleObservations": 51,
+        "mode": "result-only",
+        "producerCommit": "340f6c1dabd1cad6fa313c41682c9b2c3fd08d24",
+        "profiles": [
+          "browser-javascript",
+          "browser-react",
+          "browser-worker"
+        ],
+        "recoveries": 0,
+        "rejections": 0,
+        "route": "reviewed-result-only",
+        "snapshots": 2006
+      },
+      "mode": "result-only",
+      "npmControlsSha256": "ccc72400b234f6c5cba3d93721fe7466ba75f70f012749941bbd180b3c33015f",
+      "producerCommit": "340f6c1dabd1cad6fa313c41682c9b2c3fd08d24",
+      "recordCount": 87,
+      "reportSha256": "48e312634b5fc72ccbf95726158b61701ab5f4ccf1c8a911f61645c796edb35f",
+      "route": "reviewed-result-only",
+      "runtime": {
+        "arch": "x64",
+        "node": "v22.23.2",
+        "platform": "linux"
+      }
+    }
+  ],
+  "runtime": {
+    "arch": "x64",
+    "node": "v22.23.2",
+    "platform": "linux"
+  },
+  "schemaVersion": 1,
+  "sourceSnapshots": [
+    {
+      "commit": "340f6c1dabd1cad6fa313c41682c9b2c3fd08d24",
+      "paths": [
+        "schema/compiler-adapter-plan.schema.json",
+        "schema/lean-export-configuration.schema.json",
+        "src/abi/refinements.mjs",
+        "src/analyze/NativeExports.lean",
+        "src/analyze/checked-refinement-selection.mjs",
+        "src/analyze/elaborated-metadata.mjs",
+        "src/analyze/native-types.mjs",
+        "src/analyze/reviewed-source.mjs",
+        "src/analyze/semantic-model.mjs",
+        "src/backends/javascript/generate.mjs",
+        "src/backends/native/fin-refinements.mjs",
+        "src/build/canonical-build.mjs",
+        "src/build/compiler-adapters.mjs",
+        "src/build/component-fin-guards.mjs",
+        "src/build/component-refinement-mirrors.mjs",
+        "src/build/component-refinements.mjs",
+        "src/build/native-model.mjs",
+        "src/build/refinement-mirrors.mjs",
+        "src/release/component-npm-package.mjs",
+        "src/release/component-package-receipt.mjs",
+        "tests/c-structured-callable-contract.test.mjs",
+        "tests/fixtures/nested-checked-record-consumers/full.mts",
+        "tests/fixtures/nested-checked-record-consumers/javascript.mjs",
+        "tests/fixtures/nested-checked-record-consumers/result-only.mts",
+        "tests/fixtures/onboarding/nested-checked-records/LICENSE",
+        "tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+        "tests/fixtures/onboarding/nested-checked-records/lakefile.toml",
+        "tests/fixtures/onboarding/nested-checked-records/lean-toolchain",
+        "tests/fixtures/onboarding/nested-checked-records/package.json",
+        "tests/helpers/checked-record-fixture.mjs",
+        "tests/helpers/copied-fixture-install.mjs",
+        "tests/helpers/fin-refinement-source-history.mjs",
+        "tests/helpers/lake-workspace.mjs",
+        "tests/helpers/nested-checked-record-fixture.mjs",
+        "tests/helpers/nested-checked-record-npm-fixture.mjs",
+        "tests/helpers/nested-checked-record-npm-installed-tests.mjs",
+        "tests/helpers/nested-checked-record-npm-report.mjs",
+        "tests/helpers/refinement-engine.mjs"
+      ],
+      "role": "producer"
+    },
+    {
+      "commit": "d402c7a12eb7d9b69a74c9931415082ce3dd7059",
+      "paths": [
+        "package-lock.json",
+        "package.json",
+        "site/serve.mjs",
+        "tests/fixtures/nested-checked-record-consumers/browser.mjs",
+        "tests/fixtures/type-corpus/consumers/browser/plain.mjs",
+        "tests/fixtures/type-corpus/consumers/browser/react.mjs",
+        "tests/fixtures/type-corpus/consumers/browser/worker-main.mjs",
+        "tests/fixtures/type-corpus/consumers/browser/worker.mjs",
+        "tests/helpers/nested-checked-record-browser-fixture.mjs",
+        "tests/helpers/nested-checked-record-browser-report.mjs",
+        "tests/helpers/nested-checked-record-browser.mjs",
+        "tests/helpers/type-corpus-browser-build.mjs",
+        "tests/helpers/type-corpus-browser.mjs",
+        "tests/helpers/type-corpus.mjs",
+        "tests/nested-checked-record-browser.test.mjs"
+      ],
+      "role": "consumer"
+    },
+    {
+      "commit": "d184cee67224beebf5d82ef036310b82ebaca863",
+      "paths": [
+        "src/binding-ir/canonical.mjs",
+        "src/capsule/node.mjs",
+        "tests/helpers/nested-checked-record-browser-controls.mjs",
+        "tests/helpers/nested-checked-record-browser-fixture.mjs",
+        "tests/helpers/nested-checked-record-browser-report.mjs",
+        "tests/helpers/nested-checked-record-npm-fixture.mjs",
+        "tests/helpers/nested-checked-record-npm-report.mjs",
+        "tests/nested-checked-record-browser-controls.test.mjs"
+      ],
+      "role": "checker"
+    },
+    {
+      "commit": "85bdb8290a13ff544b142297452b981495a91187",
+      "paths": [
+        "scripts/archive-nested-checked-record-browser.mjs"
+      ],
+      "role": "archive"
+    }
+  ]
+}

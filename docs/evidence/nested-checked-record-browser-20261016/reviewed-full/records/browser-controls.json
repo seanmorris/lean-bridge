@@ -1,0 +1,36 @@
+{
+  "accepted": {
+    "browserExecutions": 12,
+    "browserVersions": {
+      "chromium": "151.0.7922.34",
+      "firefox": "153.0",
+      "webkit": "26.5"
+    },
+    "calls": 5037,
+    "checks": 10077,
+    "consumerCommit": "d402c7a12eb7d9b69a74c9931415082ce3dd7059",
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "lifecycleObservations": 51,
+    "mode": "full",
+    "producerCommit": "340f6c1dabd1cad6fa313c41682c9b2c3fd08d24",
+    "profiles": [
+      "browser-javascript",
+      "browser-react",
+      "browser-worker"
+    ],
+    "recoveries": 1000,
+    "rejections": 2017,
+    "route": "reviewed-full",
+    "snapshots": 5037
+  },
+  "browserControls": 162,
+  "checkerCommit": "d184cee67224beebf5d82ef036310b82ebaca863",
+  "npmAdapterControls": 7,
+  "npmReportControls": 10,
+  "recordControls": 170,
+  "schemaVersion": 1
+}

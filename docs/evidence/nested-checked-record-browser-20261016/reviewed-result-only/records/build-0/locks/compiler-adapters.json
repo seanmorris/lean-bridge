@@ -1,0 +1,194 @@
+{
+  "component": "nestedcheckedrecords@1.0.0",
+  "componentPlanSha256": "bd0167aba344f732ffaa1b19c5cbfb33907836e6eb903f13200b23ac71778d9c",
+  "exports": [
+    {
+      "bindingId": "lean:NestedCheckedRecords.produceArray",
+      "leanEffect": null,
+      "leanResultType": "(_root_.Array NestedCheckedRecords.Packet)",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "arguments": [
+            {
+              "constructor": null,
+              "fields": [
+                {
+                  "name": "digit",
+                  "refinement": {
+                    "bound": "10",
+                    "kind": "fin"
+                  }
+                },
+                {
+                  "name": "word",
+                  "refinement": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                }
+              ],
+              "kind": "checked-record",
+              "name": "NestedCheckedRecords.Packet"
+            }
+          ],
+          "kind": "array"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "NestedCheckedRecords.produceArray",
+      "sourceModule": "NestedCheckedRecords",
+      "symbol": "lean_bridge_0a4264962721dd79325867f2",
+      "wrapper": "export_5b706976f0b373c19153"
+    },
+    {
+      "bindingId": "lean:NestedCheckedRecords.produceOption",
+      "leanEffect": null,
+      "leanResultType": "(_root_.Option NestedCheckedRecords.Packet)",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "arguments": [
+            {
+              "constructor": null,
+              "fields": [
+                {
+                  "name": "digit",
+                  "refinement": {
+                    "bound": "10",
+                    "kind": "fin"
+                  }
+                },
+                {
+                  "name": "word",
+                  "refinement": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                }
+              ],
+              "kind": "checked-record",
+              "name": "NestedCheckedRecords.Packet"
+            }
+          ],
+          "kind": "option"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "NestedCheckedRecords.produceOption",
+      "sourceModule": "NestedCheckedRecords",
+      "symbol": "lean_bridge_412123d91b71761168e13da9",
+      "wrapper": "export_4760f08d8812cedcf456"
+    }
+  ],
+  "imports": [
+    "NestedCheckedRecords"
+  ],
+  "leanSourceSha256": "6236475c3539e9000347aea961dc787553b682921c2f73b720083e0a09fd4813",
+  "module": "LeanBridgeGenerateda63244d529ededa0",
+  "nominalRefinements": [
+    {
+      "id": "lean:NestedCheckedRecords.Packet",
+      "refinement": {
+        "fields": [
+          {
+            "bound": "10",
+            "kind": "fin"
+          },
+          null
+        ],
+        "kind": "record"
+      }
+    }
+  ],
+  "privateAbi": {
+    "dispatch": "copied-graph-frame-v1",
+    "exports": [
+      {
+        "bindingId": "lean:NestedCheckedRecords.produceArray",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "id": "lean:NestedCheckedRecords.Packet",
+              "kind": "named"
+            }
+          ],
+          "constructor": "array",
+          "kind": "apply"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_0a4264962721dd79325867f2"
+      },
+      {
+        "bindingId": "lean:NestedCheckedRecords.produceOption",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "id": "lean:NestedCheckedRecords.Packet",
+              "kind": "named"
+            }
+          ],
+          "constructor": "option",
+          "kind": "apply"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_412123d91b71761168e13da9"
+      }
+    ],
+    "types": [
+      {
+        "erased": [
+          "linked"
+        ],
+        "fields": [
+          {
+            "name": "digit",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "name": "word",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "id": "lean:NestedCheckedRecords.Packet",
+        "kind": "record"
+      }
+    ],
+    "version": 8
+  },
+  "schemaVersion": 1
+}

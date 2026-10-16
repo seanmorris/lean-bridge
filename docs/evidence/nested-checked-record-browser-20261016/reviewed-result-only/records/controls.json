@@ -1,0 +1,35 @@
+{
+  "accepted": {
+    "artifacts": {
+      "@lean-bridge/runtime": {
+        "bytes": 1638462,
+        "integrity": "sha512-hdbzocB7nhBl28kI66WIdHXVrF93TWfH+if9kr6Q58pnswXcKffi1lf9UjO9cYH8+ClZ09X6tNx7XLAXiY/t1w==",
+        "sha256": "6b456fbf445c16e30cc4fcc70b3ac9bb331b5a358dbf5d00275d5ea8a063b658"
+      },
+      "nestedcheckedrecords": {
+        "bytes": 13293,
+        "integrity": "sha512-uy+CHVZKrXO2nFNK2+GTVDJNuI5Bw6FqpDvUmOE49IOpgVogprUpBsTDbVENUdymw57yQrtFcztrUYZmRJnRfA==",
+        "sha256": "4a1d0e1fc108e0101fbb499bc63e1c9b875ec2a607db44a1e99ac9dd5465ec98"
+      }
+    },
+    "calls": 2006,
+    "checks": 4023,
+    "executions": 2,
+    "mode": "result-only",
+    "producerCommit": "340f6c1dabd1cad6fa313c41682c9b2c3fd08d24",
+    "recoveries": 0,
+    "rejections": 0,
+    "route": "reviewed-result-only",
+    "runtime": {
+      "arch": "x64",
+      "node": "v22.23.2",
+      "platform": "linux"
+    },
+    "snapshots": 2006
+  },
+  "adapterControls": 4,
+  "checkerCommit": "e8e5d81de28592f08ad58a8bbdfba1e97b73fecc",
+  "recordControls": 64,
+  "reportControls": 10,
+  "schemaVersion": 1
+}

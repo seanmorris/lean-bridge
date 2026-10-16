@@ -1,0 +1,234 @@
+{
+  "apiMode": "full",
+  "authorInputsUnchanged": true,
+  "authorRoute": "reviewed",
+  "builds": [
+    {
+      "authorInputsSha256": "1bfd6b7f5e2505d3e4e4f79c3aa5aad539fef588ec97cf63f8b22221fb236dab",
+      "bindingIrFileSha256": "39a2468d45e4f16b8ece74525316755457858f9bde8ecc92679a80ac430f2299",
+      "bindingIrSha256": "403aa9c7bfb95f74c6fb6a3043492a30864a18666674b5677701ae1d53a1b985",
+      "componentArchiveSha256": "037db28fe1d5e94c7624268c7bd4aa8d80e2571b1c8c99324491da0806a3824d",
+      "receiptSha256": "ee3fa2b7e54b5475fd4c7414e3d20d7a99e2c992ff4dd75b53ff0d56cb730041",
+      "runtimeArchiveSha256": "6b456fbf445c16e30cc4fcc70b3ac9bb331b5a358dbf5d00275d5ea8a063b658"
+    },
+    {
+      "authorInputsSha256": "1bfd6b7f5e2505d3e4e4f79c3aa5aad539fef588ec97cf63f8b22221fb236dab",
+      "bindingIrFileSha256": "39a2468d45e4f16b8ece74525316755457858f9bde8ecc92679a80ac430f2299",
+      "bindingIrSha256": "403aa9c7bfb95f74c6fb6a3043492a30864a18666674b5677701ae1d53a1b985",
+      "componentArchiveSha256": "037db28fe1d5e94c7624268c7bd4aa8d80e2571b1c8c99324491da0806a3824d",
+      "receiptSha256": "ee3fa2b7e54b5475fd4c7414e3d20d7a99e2c992ff4dd75b53ff0d56cb730041",
+      "runtimeArchiveSha256": "6b456fbf445c16e30cc4fcc70b3ac9bb331b5a358dbf5d00275d5ea8a063b658"
+    }
+  ],
+  "callers": {
+    "check.mjs": "9f493c77d4187d02e6c280de584f7d21ba7c371af77fcdb343771123e9c67697",
+    "index.mjs": "fc05a5211fb69868634772c03d35b5c207033492a2abec5955d2317e659cdfab",
+    "index.mts": "47317b8bdadf3bebd2c58fe5a0ac0c698b07faac96a706fc9843e546b1fa6942"
+  },
+  "compilerFreePath": true,
+  "configuration": {
+    "modules": [
+      "NestedCheckedRecords"
+    ],
+    "schemaVersion": 1,
+    "targets": {
+      "npm": {
+        "name": "nestedcheckedrecords",
+        "version": "1.0.0"
+      }
+    }
+  },
+  "consumerProfiles": [
+    "node-javascript",
+    "node-typescript"
+  ],
+  "dispatch": {
+    "observed": false,
+    "reason": "No constructor/source entry counters in this npm caller"
+  },
+  "expected": {
+    "calls": 5037,
+    "checks": 10077,
+    "recoveries": 1000,
+    "rejections": 2017,
+    "snapshots": 5037
+  },
+  "expectedBindingIrSha256": "10690e769959c9ec5e559894e707db8f79ec7b351e45e5773c75a87810e9ae0b",
+  "independentBuilds": 2,
+  "observations": [
+    {
+      "relocated": false,
+      "result": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":10077,\"rejections\":2017,\"calls\":5037,\"snapshots\":5037,\"recoveries\":1000}\n"
+      },
+      "runtime": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"node\":\"v22.23.2\",\"platform\":\"linux\",\"arch\":\"x64\"}\n"
+      },
+      "typescript": {
+        "code": 0,
+        "stderr": "",
+        "stdout": ""
+      }
+    },
+    {
+      "relocated": true,
+      "result": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":10077,\"rejections\":2017,\"calls\":5037,\"snapshots\":5037,\"recoveries\":1000}\n"
+      },
+      "runtime": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"node\":\"v22.23.2\",\"platform\":\"linux\",\"arch\":\"x64\"}\n"
+      },
+      "typescript": {
+        "code": 0,
+        "stderr": "",
+        "stdout": ""
+      }
+    }
+  ],
+  "offlineInstall": true,
+  "positions": [
+    "first.arg0",
+    "second.arg0",
+    "pair.arg0",
+    "pair.arg1",
+    "inArray.arg0[*]",
+    "inList.arg0[*]",
+    "inOption.arg0?",
+    "inProduct.arg0.0",
+    "inProduct.arg0.1",
+    "inExcept.arg0.ok",
+    "inExcept.arg0.error",
+    "inHolder.arg0.packet",
+    "inChoice.arg0.packet.value",
+    "echoArray.arg0[*]",
+    "echoArray.result[*]",
+    "produceOption.result?",
+    "produceArray.result[*]"
+  ],
+  "producerCommit": "340f6c1dabd1cad6fa313c41682c9b2c3fd08d24",
+  "receipt": {
+    "bindingIrSha256": "403aa9c7bfb95f74c6fb6a3043492a30864a18666674b5677701ae1d53a1b985",
+    "component": {
+      "id": "nestedcheckedrecords@1.0.0",
+      "name": "nestedcheckedrecords",
+      "version": "1.0.0"
+    },
+    "componentArtifactSha256": "732e210006c535aafedb91a5353672f032fb405357cf9d94b277ad38f8a7af74",
+    "componentBundleSha256": "3b2ab568109b755c9ed14856a53d097af6e139b47d47bab0b35d2d5d52f71811",
+    "componentIdentitySha256": "6a7be8f6d4c2521e9db8f1284b40edbf584d8b50e480bdb6de16c3afb6967e02",
+    "kind": "lean-bridge-component-package-receipt",
+    "package": {
+      "archive": "nestedcheckedrecords-1.0.0.tgz",
+      "package": "nestedcheckedrecords@1.0.0",
+      "sha256": "037db28fe1d5e94c7624268c7bd4aa8d80e2571b1c8c99324491da0806a3824d"
+    },
+    "policies": {
+      "componentCompiledOnce": true,
+      "nativeCallablesOnly": true,
+      "runtimeBinaryInComponent": false,
+      "runtimeShared": true
+    },
+    "provenanceSha256": "598db6041281775af22b2428aa43b2909e80f0345f8fc25164fd7d2e82b7dff9",
+    "runtime": {
+      "archive": "lean-bridge-runtime-0.0.0-abi2.72d6ec64ed637d72ca3a92e87af594716042a2d908b931ef888a638f7e4a0e8c.tgz",
+      "package": "@lean-bridge/runtime@0.0.0-abi2.72d6ec64ed637d72ca3a92e87af594716042a2d908b931ef888a638f7e4a0e8c",
+      "sha256": "6b456fbf445c16e30cc4fcc70b3ac9bb331b5a358dbf5d00275d5ea8a063b658"
+    },
+    "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "586c666ca0283ebf86d720e1937c10d27d48539eb48c14127fcfccb5329ecd63"
+    },
+    "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "route": "reviewed-full",
+  "runtime": {
+    "arch": "x64",
+    "node": "v22.23.2",
+    "platform": "linux"
+  },
+  "schemaVersion": 1,
+  "sourceCommitClean": true,
+  "sourceRemovedBeforeInstallation": true,
+  "trees": {
+    "@lean-bridge/runtime": {
+      "LICENSE": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996",
+      "index.mjs": "6efcbfb1a03a8844ce69fa2694501761375219b965234776f9498f8d5e5a9d4e",
+      "internal/binding-ir/canonical.mjs": "28e22e614fc532a99baeeb34ee9d054f3bc6db82239fa89059a9518cb06d3d20",
+      "internal/binding-ir/contract.mjs": "51f39115f198cadb22edcee1bc09d9205024c1ba622f86588056bca7aac6faf6",
+      "internal/binding-ir/sha256.mjs": "f9bcbce580e88f31c3a63e8aa0d1d834228afa796a74a4c2f708da68e99a15ac",
+      "internal/component-callable-runtime.mjs": "7d4e6ea8065ff239e4538333c6449e4a6dfcaf8d5982da96c38f119b9e591885",
+      "internal/component-callables.mjs": "abb7093a48c6bfaf7cf3f5510d0e26816af5639718659a3d87397f96a5e7bafe",
+      "internal/component-copied-codec.mjs": "06385bc88bc1359fb8bcbfbdb0bf01d79b372a2a6cbfd8f539f6d05c04b5f1a4",
+      "internal/component-copied-runtime.mjs": "87fe66a826b6f1399908d7f04fd2616d30c73408a8b9ccfc860f3a18c1ced79a",
+      "internal/component-copied.mjs": "c06dc4bf621d1a0d255478b62d4d03cd77fed580cd37ff058bbe061c6145d599",
+      "internal/component-owned-wasm.mjs": "d010d30b13af35cc1a5409c65cffe7dd2f3fdbd23e8627e70089b51b6bbac211",
+      "internal/component-records.mjs": "c24c4216667ce99e0a1e5b0e56fa02ab266114128e92760bd2aa1d65a6c99ff2",
+      "internal/component-recursive-abi.mjs": "2c6313445c66f51c504044f948139f7e576db534cffcbaf507f2c300ec57eee4",
+      "internal/component-recursive-codec.mjs": "ee698c1f12c5da59aa51ed907656d72f84a687c1ee0ef80001c4f541833e0b8c",
+      "internal/component-recursive-ownership.mjs": "7c363357647ea821e6d977ad524d5473ecfa2951e6759d03fcb46e5a19012e7a",
+      "internal/component-recursive.mjs": "4002752b124460c95cd9461e7c9a77173f211507f8a3f4d38b08c1293e006e5e",
+      "internal/component-runtime.mjs": "3c525383e5cde9342882f47b143362bfb5a17e7b37c5cb810d14b4b1eb4ab9fd",
+      "internal/component-scalar-codec.mjs": "24c8d8430545ec0ab4b767b7cbe70a411e55ce3b39cd9ecef76975e39b1e3416",
+      "internal/component-scalars.mjs": "745058db0327c9060222ff58d45c272595e23125c2169d80287ff9035cf3608e",
+      "internal/component-structured-callable-runtime.mjs": "bdeb55ce78ddfb7fcd76537904fb1b813d78fd12a98899564305dc24cab077f0",
+      "internal/component-structured-callables.mjs": "ca1ba92c7d00f168d26b007b21c4add381b760f76685b0a55dfffca2d40b97e2",
+      "internal/main.mjs": "8b791a4711e58876e29b5e0a7c3fcbab500b02d7550fe6f7c3321020a736be02",
+      "internal/main.wasm": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+      "internal/owned-wasm-bindings.mjs": "cd74f944785fae8d45b64ab1c18e714acdfd4c0a328e64021794d8c816827e1b",
+      "internal/owned-wasm-borrow-registry.mjs": "3d2b6c3b1956ebd66c813359a8bb18a54f162f4316bdb83d26fec226915a05fd",
+      "internal/owned-wasm-callbacks.mjs": "14d28bc1b0d92191bb7567f7fb3a6eca35c57e9fdf824666b39318ef51ddc7ab",
+      "internal/owned-wasm-calls.mjs": "af3671bee249f9a49f50160e4cf3f24e217e6727b1af1849fde39065dd94814c",
+      "internal/owned-wasm-component-runtime.mjs": "c0153f72184053c526168b87236a74a8f12251d05d0b0be28deadb1b2ba08531",
+      "internal/owned-wasm-control.mjs": "9e05a5b7653dd1409220a233d26492adf916789169896b59940b8c60c87fbb6f",
+      "internal/owned-wasm-registry.mjs": "ea549d40212cf3e423c03763e09af19e41614662df74cf604a070b9c0ab34717",
+      "internal/owned-wasm-scalars.mjs": "f187769507e97821b931a1a61321a9fc9bca085a56404481d025d4541e051aab",
+      "internal/owned-wasm-values.mjs": "12e10dbd344900de88beb96af2ab1c72a9be433e296b85fd6974f26a5397aebe",
+      "internal/refinements.mjs": "625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384",
+      "notices/NOTICE.txt": "2b3402d0d98f7ad752153038319af37135f57552b434b286f9b0633403490117",
+      "notices/emscripten.txt": "51aea7641f81d560eb039bc97ce35e2517e2656fe8731eb49ce6a18498eb22fe",
+      "notices/lean-bundled.txt": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce",
+      "notices/lean.txt": "7ef159fd8db5a7a9e8051aac48997353f26d744e25f730a0594a806c126d2114",
+      "notices/libuv.txt": "16de0c32b265cb7d46a6d3bd614f259dd4d693a5e26b3407b04aae8d73041f0c",
+      "notices/llvm.txt": "539dd7aed86e8a4f12cbdd0e6c50c189c7d74847e4fecc64ce2c6ee3a01da38b",
+      "notices/musl.txt": "b870108ec5e7790e9f9919064f1b9421d62d5f9b0e6c230c6adf7ea2da62e97b",
+      "package.json": "6bc3dcbbbc5da2c76edf8039d6824e89838aff9567a5b4979417a616afd432f5",
+      "runtime-identity.json": "72d6ec64ed637d72ca3a92e87af594716042a2d908b931ef888a638f7e4a0e8c"
+    },
+    "nestedcheckedrecords": {
+      "LICENSE": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996",
+      "README.md": "139c36952c1abe4fd3dbd0158ef481d6af106e449ceacc52e1c180465d23238c",
+      "binding-manifest.json": "2e671b9382ab5e0f62ab0f8ef7abff9c4422a738744b5137f05c4b56339448b2",
+      "index.d.ts": "41ed6396e7d56aadf6f2a702ae47110682a6aaf49225506e0d08dca405e26ac1",
+      "index.mjs": "de8071b5817c3ed94a9ee771796a3006aaae0dff21b37645915523f7c7e7b732",
+      "internal/descriptor.mjs": "45f534a6d42f72e9d4a7f7183f78f97dc46cacb61aa043ff4a4e45e8c8c2909b",
+      "internal/runtime.mjs": "796a86405ac3d463f1af06a4c056b2ee440a36934f9957cff2058402fac39358",
+      "internal/validators.mjs": "6502b9ea5adcc22b4930a854c50854b690e867e35823e4417c94f73f96484d25",
+      "internal/wasm/nestedcheckedrecords-a63244d529ededa0.so.wasm": "732e210006c535aafedb91a5353672f032fb405357cf9d94b277ad38f8a7af74",
+      "metadata/assurance.json": "70c6b9027243adbf33303838c0620d315210919997ee8881c8a781bbc88652e7",
+      "metadata/binding-ir.json": "39a2468d45e4f16b8ece74525316755457858f9bde8ecc92679a80ac430f2299",
+      "metadata/component-release-bundle.json": "3b2ab568109b755c9ed14856a53d097af6e139b47d47bab0b35d2d5d52f71811",
+      "metadata/lean-bridge.exports.json": "7f742df60d31a2c64771e45b7d1433d644f998c426bc05f2b9b5b39a8540466a",
+      "metadata/provenance.json": "598db6041281775af22b2428aa43b2909e80f0345f8fc25164fd7d2e82b7dff9",
+      "metadata/runtime-requirement.json": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+      "metadata/sbom.json": "bf03444f4aca5c9ae7c716fc639d820c84bc3fb278545047aad503fddf78dbd0",
+      "package.json": "f7a64326895a2690b71a4846d40f751430e142218aca066c74d0476132618f45"
+    }
+  },
+  "typescript": {
+    "declarationsSha256": "41ed6396e7d56aadf6f2a702ae47110682a6aaf49225506e0d08dca405e26ac1",
+    "skipLibCheck": false,
+    "sourceSha256": "47317b8bdadf3bebd2c58fe5a0ac0c698b07faac96a706fc9843e546b1fa6942",
+    "strict": true
+  }
+}

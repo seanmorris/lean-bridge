@@ -1,0 +1,81 @@
+{
+  "bindingIr": {
+    "declarations": [
+      "lean:NestedCheckedRecords.echoArray",
+      "lean:NestedCheckedRecords.first",
+      "lean:NestedCheckedRecords.inArray",
+      "lean:NestedCheckedRecords.inChoice",
+      "lean:NestedCheckedRecords.inExcept",
+      "lean:NestedCheckedRecords.inHolder",
+      "lean:NestedCheckedRecords.inList",
+      "lean:NestedCheckedRecords.inOption",
+      "lean:NestedCheckedRecords.inProduct",
+      "lean:NestedCheckedRecords.pair",
+      "lean:NestedCheckedRecords.produceArray",
+      "lean:NestedCheckedRecords.produceOption",
+      "lean:NestedCheckedRecords.second"
+    ],
+    "origin": "lean-elaborated",
+    "schemaVersion": 3,
+    "semanticSha256": "4674b92e2e4e6598389449b2160426cc19400876f4f0aa8aff7ddf2cb3c0b05f"
+  },
+  "component": {
+    "id": "nestedcheckedrecords@1.0.0",
+    "name": "nestedcheckedrecords",
+    "version": "1.0.0"
+  },
+  "policies": {
+    "compileOnce": true,
+    "privateRuntime": false,
+    "sourceReadOnly": true,
+    "targetSpecificRebuild": false
+  },
+  "runtime": {
+    "abiVersion": 1,
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "patchSetSha256": "743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3",
+    "profile": "side-lazy",
+    "shared": true
+  },
+  "schemaVersion": 2,
+  "source": {
+    "inputs": [
+      {
+        "bytes": 91,
+        "path": "lakefile.toml",
+        "sha256": "771252d53394844802f94651c16ab7260ffe201fbd50916421965691ed2a4178"
+      },
+      {
+        "bytes": 13090,
+        "path": "lean-bridge.exports.json",
+        "sha256": "88da57b72ba7223dc37dc140c9a02f276f3c3007a8f3d47b602b6f3baa088afd"
+      },
+      {
+        "bytes": 25,
+        "path": "lean-toolchain",
+        "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+      },
+      {
+        "bytes": 1093,
+        "path": "LICENSE",
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      {
+        "bytes": 2886,
+        "path": "NestedCheckedRecords.lean",
+        "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+      },
+      {
+        "bytes": 66,
+        "path": "package.json",
+        "sha256": "82ee0944b3e498537167b868b16573fb6fb005d6f77018d3f2d352e605461f07"
+      }
+    ],
+    "lakeSnapshotSha256": "ef43e20195cb5dbb4c7b9845ab6d2b038097cee34ec7c79d8a66eec2e8c77f72",
+    "toolchain": "leanprover/lean4:v4.32.2",
+    "treeSha256": "3b40020d980b31921a462b7000530aef0751542d3a3f5fea31465e6a2687914f"
+  },
+  "targets": [
+    "npm"
+  ]
+}

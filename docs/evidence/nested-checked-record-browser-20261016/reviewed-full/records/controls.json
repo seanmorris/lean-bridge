@@ -1,0 +1,35 @@
+{
+  "accepted": {
+    "artifacts": {
+      "@lean-bridge/runtime": {
+        "bytes": 1638462,
+        "integrity": "sha512-hdbzocB7nhBl28kI66WIdHXVrF93TWfH+if9kr6Q58pnswXcKffi1lf9UjO9cYH8+ClZ09X6tNx7XLAXiY/t1w==",
+        "sha256": "6b456fbf445c16e30cc4fcc70b3ac9bb331b5a358dbf5d00275d5ea8a063b658"
+      },
+      "nestedcheckedrecords": {
+        "bytes": 24258,
+        "integrity": "sha512-z0JABIw1LtB+rQzWFhXXjAwV6r9hYXValzwqQPVJVa59uy+a2+VV4dIlj5J9/t7i7UhImcf8KOaWQTkQX6q0CA==",
+        "sha256": "037db28fe1d5e94c7624268c7bd4aa8d80e2571b1c8c99324491da0806a3824d"
+      }
+    },
+    "calls": 5037,
+    "checks": 10077,
+    "executions": 2,
+    "mode": "full",
+    "producerCommit": "340f6c1dabd1cad6fa313c41682c9b2c3fd08d24",
+    "recoveries": 1000,
+    "rejections": 2017,
+    "route": "reviewed-full",
+    "runtime": {
+      "arch": "x64",
+      "node": "v22.23.2",
+      "platform": "linux"
+    },
+    "snapshots": 5037
+  },
+  "adapterControls": 7,
+  "checkerCommit": "e8e5d81de28592f08ad58a8bbdfba1e97b73fecc",
+  "recordControls": 64,
+  "reportControls": 10,
+  "schemaVersion": 1
+}

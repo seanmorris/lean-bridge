@@ -1,0 +1,35 @@
+{
+  "bindingIrSha256": "65fe883f76fbd604d547d00b4fa1a86fbe04a7d3e1a320b7f0a4253bf1ab30f8",
+  "component": {
+    "id": "nestedcheckedrecords@1.0.0",
+    "name": "nestedcheckedrecords",
+    "version": "1.0.0"
+  },
+  "componentArtifactSha256": "7ee9057b7e43a16e84a3145268a256c54d34abef4cc241f6c8654788dff16f12",
+  "componentBundleSha256": "c41b7d1132ab831eafeca21aa106fd9346f22655c4a54fadfdc69c4cdcf332e9",
+  "componentIdentitySha256": "3a5a712257ba2d3fcc44758832549d5b0238214f41d76f0d705006deca6ca04c",
+  "kind": "lean-bridge-component-package-receipt",
+  "package": {
+    "archive": "nestedcheckedrecords-1.0.0.tgz",
+    "package": "nestedcheckedrecords@1.0.0",
+    "sha256": "6732576887e85c472ac95dcc4938b98d9a0dd6a36d72728734f74c1b1071fe17"
+  },
+  "policies": {
+    "componentCompiledOnce": true,
+    "nativeCallablesOnly": true,
+    "runtimeBinaryInComponent": false,
+    "runtimeShared": true
+  },
+  "provenanceSha256": "4ea96e1b502ba46b42ba02074e815206c2e3b1fca2b5ca9b632ff59df3c0c496",
+  "runtime": {
+    "archive": "lean-bridge-runtime-0.0.0-abi2.72d6ec64ed637d72ca3a92e87af594716042a2d908b931ef888a638f7e4a0e8c.tgz",
+    "package": "@lean-bridge/runtime@0.0.0-abi2.72d6ec64ed637d72ca3a92e87af594716042a2d908b931ef888a638f7e4a0e8c",
+    "sha256": "6b456fbf445c16e30cc4fcc70b3ac9bb331b5a358dbf5d00275d5ea8a063b658"
+  },
+  "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "5b2bc872c7a2fffa678f57c13a31c8353aa3f2d48a1c2fa360fd146abf932fdc"
+  },
+  "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+}

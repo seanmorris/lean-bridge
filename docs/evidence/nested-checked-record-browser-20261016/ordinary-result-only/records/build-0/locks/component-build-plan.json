@@ -1,0 +1,70 @@
+{
+  "bindingIr": {
+    "declarations": [
+      "lean:NestedCheckedRecords.produceArray",
+      "lean:NestedCheckedRecords.produceOption"
+    ],
+    "origin": "lean-elaborated",
+    "schemaVersion": 3,
+    "semanticSha256": "65fe883f76fbd604d547d00b4fa1a86fbe04a7d3e1a320b7f0a4253bf1ab30f8"
+  },
+  "component": {
+    "id": "nestedcheckedrecords@1.0.0",
+    "name": "nestedcheckedrecords",
+    "version": "1.0.0"
+  },
+  "policies": {
+    "compileOnce": true,
+    "privateRuntime": false,
+    "sourceReadOnly": true,
+    "targetSpecificRebuild": false
+  },
+  "runtime": {
+    "abiVersion": 1,
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "patchSetSha256": "743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3",
+    "profile": "side-lazy",
+    "shared": true
+  },
+  "schemaVersion": 2,
+  "source": {
+    "inputs": [
+      {
+        "bytes": 91,
+        "path": "lakefile.toml",
+        "sha256": "771252d53394844802f94651c16ab7260ffe201fbd50916421965691ed2a4178"
+      },
+      {
+        "bytes": 776,
+        "path": "lean-bridge.exports.json",
+        "sha256": "ef2ffa65bf11178fe7c4136f1b29f9b44b5b822fb7e21f73c8025344a9c9e34e"
+      },
+      {
+        "bytes": 25,
+        "path": "lean-toolchain",
+        "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+      },
+      {
+        "bytes": 1093,
+        "path": "LICENSE",
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      {
+        "bytes": 2886,
+        "path": "NestedCheckedRecords.lean",
+        "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+      },
+      {
+        "bytes": 66,
+        "path": "package.json",
+        "sha256": "82ee0944b3e498537167b868b16573fb6fb005d6f77018d3f2d352e605461f07"
+      }
+    ],
+    "lakeSnapshotSha256": "c783361958266d5f496dad8dc20d18758b682ada9235db0c7ece7475a6af44d6",
+    "toolchain": "leanprover/lean4:v4.32.2",
+    "treeSha256": "5b2bc872c7a2fffa678f57c13a31c8353aa3f2d48a1c2fa360fd146abf932fdc"
+  },
+  "targets": [
+    "npm"
+  ]
+}

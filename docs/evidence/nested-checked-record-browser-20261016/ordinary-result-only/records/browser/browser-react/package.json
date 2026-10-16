@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@lean-bridge/runtime": "file:../handoff/lean-bridge-runtime-0.0.0-abi2.72d6ec64ed637d72ca3a92e87af594716042a2d908b931ef888a638f7e4a0e8c.tgz",
+    "nestedcheckedrecords": "file:../handoff/nestedcheckedrecords-1.0.0.tgz",
+    "react": "file:framework/react-19.2.8.tgz",
+    "react-dom": "file:framework/react-dom-19.2.8.tgz",
+    "scheduler": "file:framework/scheduler-0.27.0.tgz"
+  }
+}

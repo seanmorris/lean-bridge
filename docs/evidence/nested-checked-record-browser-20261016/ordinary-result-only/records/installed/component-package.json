@@ -1,0 +1,39 @@
+{
+  "version": "1.0.0",
+  "type": "module",
+  "sideEffects": false,
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.mjs",
+      "default": "./index.mjs",
+      "browser": "./index.mjs"
+    }
+  },
+  "files": [
+    "index.mjs",
+    "index.d.ts",
+    "README.md",
+    "binding-manifest.json",
+    "internal",
+    "notices",
+    "LICENSE"
+  ],
+  "name": "nestedcheckedrecords",
+  "license": "MIT",
+  "description": "Compiler-checked exports for nestedcheckedrecords.",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@lean-bridge/runtime": "0.0.0-abi2.72d6ec64ed637d72ca3a92e87af594716042a2d908b931ef888a638f7e4a0e8c"
+  },
+  "leanBridge": {
+    "component": "nestedcheckedrecords@1.0.0",
+    "componentBundleSha256": "c41b7d1132ab831eafeca21aa106fd9346f22655c4a54fadfdc69c4cdcf332e9",
+    "componentIdentitySha256": "3a5a712257ba2d3fcc44758832549d5b0238214f41d76f0d705006deca6ca04c",
+    "bindingIrSha256": "65fe883f76fbd604d547d00b4fa1a86fbe04a7d3e1a320b7f0a4253bf1ab30f8",
+    "sharedRuntime": true
+  }
+}
