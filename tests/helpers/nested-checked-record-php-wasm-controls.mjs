@@ -95,8 +95,10 @@ export const checkNestedCheckedRecordPhpWasmControls = async (originals, options
 		const path = `build-${index}/author-inputs.json`, inputs = load(records, path);
 		inputs[0].sha256 = "0".repeat(64); save(records, path, inputs);
 	});
-	for(const [key, value] of [["freeBytes", 1], ["availableBytes", 1], ["load", 8]]) await refuse(records => {
-		const resources = load(records, "resources.json"); resources[0].observations.at(-1)[key] = value; save(records, "resources.json", resources);
+	for(const key of ["freeBytes", "availableBytes", "load"]) await refuse((records, report) => {
+		const resources = load(records, "resources.json");
+		resources[0].observations.at(-1)[key] = key === "load" ? report.loadCeiling : 1;
+		save(records, "resources.json", resources);
 	});
 	await verify(originals);
 	assert.deepEqual(new Map([...originals].map(([path, bytes]) => [path, sha256(bytes)])), hashes);
