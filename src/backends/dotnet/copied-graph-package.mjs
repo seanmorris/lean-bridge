@@ -24,9 +24,7 @@ export const compileCopiedDotnetGraphPackageModel = ir => {
 			throw new TypeError("C# graph parameter names must be distinct ASCII identifiers");
 		return { ...fn, declaration, parameterNames: parameters };
 	});
-	const refinementDiagnostics = ir.declarations.some(declaration =>
-		declaration.source?.extensions?.["lean-lang.org/refinements"]
-			?.parameters?.some(Boolean));
+	const { refinementDiagnostics } = generated;
 	return { ...generated, ir, prefix, functions, refinementDiagnostics
 		, layoutSha256: sha256(canonicalJson(generated.layout)) };
 };
@@ -66,7 +64,7 @@ ${params.map((node, i) => `            GraphRuntime.Write${node.index}(arg${i}, 
         }
         var symbols = GraphNative.Resolve();
         var lifecycle = new GraphLifecycle((delegate* unmanaged[Cdecl]<uint>)symbols[${lifecycleOffset}], (delegate* unmanaged[Cdecl]<int>)symbols[${lifecycleOffset + 1}], (delegate* unmanaged[Cdecl]<void>)symbols[${lifecycleOffset + 2}]);
-        return GraphRuntime.Call${fn.publicName}((delegate* unmanaged[Cdecl]<${[...params.map(node => `${node.raw}*`), `${result.raw}*`, "uint"].join(", ")}>)symbols[${index}], ${model.refinementDiagnostics ? `(delegate* unmanaged[Cdecl]<byte*>)symbols[${diagnosticOffset}]` : "null"}, lifecycle${params.map((_, i) => `, arg${i}`).join("")});
+		return GraphRuntime.Call${fn.publicName}((delegate* unmanaged[Cdecl]<${[...params.map(node => `${node.raw}*`), `${result.raw}*`, "uint"].join(", ")}>)symbols[${index}], ${model.refinementDiagnostics ? `(delegate* unmanaged[Cdecl]<byte*>)symbols[${diagnosticOffset}], ` : ""}lifecycle${params.map((_, i) => `, arg${i}`).join("")});
     }` };
 	});
 	const files = {

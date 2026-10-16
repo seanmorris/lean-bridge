@@ -4,7 +4,10 @@
  * @file
  */
 import { compileCopiedDotnetGraphLayout } from "./copied-graph-layout.mjs";
-import { dotnetGraphRuntime, dotnetGraphException } from "./copied-graph-runtime.mjs";
+import {
+	dotnetGraphException, dotnetGraphRuntime
+	, dotnetGraphRuntimeWithoutDiagnostics
+} from "./copied-graph-runtime.mjs";
 import { dotnetGraphScalar } from "./copied-graph-scalars.mjs";
 
 /**
@@ -15,6 +18,11 @@ import { dotnetGraphScalar } from "./copied-graph-scalars.mjs";
  */
 export const generateCopiedDotnetGraphConversions = ir => {
 	const model = compileCopiedDotnetGraphLayout(ir), nodes = new Map(model.types.map(node => [node.id, node]));
+	const refinementDiagnostics = ir.declarations.some(declaration =>
+		declaration.source?.extensions?.["lean-lang.org/refinements"]
+			?.parameters?.some(Boolean));
+	const runtime = refinementDiagnostics
+		? dotnetGraphRuntime : dotnetGraphRuntimeWithoutDiagnostics;
 	const publicTypes = new Map();
 	const publicType = id => {
 		if(publicTypes.has(id)) return publicTypes.get(id);
@@ -33,7 +41,7 @@ export const generateCopiedDotnetGraphConversions = ir => {
 		sourceBudget -= bytes;
 		if(sourceBudget < 0) throw new TypeError("Invalid C# copied graph: generated converters exceed 16 MiB");
 	};
-	reserve(model.valuesSource.length + model.rawSource.length + dotnetGraphRuntime.length);
+	reserve(model.valuesSource.length + model.rawSource.length + runtime.length);
 	for(const node of nodes.values())
 	{
 		reserve(4096 + publicType(node.id).length * 12);
@@ -160,7 +168,7 @@ ${output.map(line => `            ${line}`).join("\n")}
 	const calls = model.functions.map(fn => {
 		const parameters = fn.parameters.map(id => nodes.get(id)), result = nodes.get(fn.result);
 		const pointer = `delegate* unmanaged[Cdecl]<${[...parameters.map(node => `${node.raw}*`), `${result.raw}*`, "uint"].join(", ")}>`;
-		return `    internal static ${publicType(result.id)} Call${fn.publicName}(${pointer} invoke, delegate* unmanaged[Cdecl]<byte*> diagnostic, GraphLifecycle lifecycle${parameters.map((node, i) => `, ${publicType(node.id)} arg${i}`).join("")})
+		return `    internal static ${publicType(result.id)} Call${fn.publicName}(${pointer} invoke${refinementDiagnostics ? ", delegate* unmanaged[Cdecl]<byte*> diagnostic" : ""}, GraphLifecycle lifecycle${parameters.map((node, i) => `, ${publicType(node.id)} arg${i}`).join("")})
     {
         using (var check = new GraphScope(true))
         {
@@ -173,7 +181,7 @@ ${result.kind === "variant" ? "        output.Kind = uint.MaxValue;\n" : ""}    
 ${parameters.map((node, i) => `            var input${i} = Write${node.index}(arg${i}, scope);`).join("\n")}
             if (invoke == null) throw new global::System.ArgumentNullException(nameof(invoke));
             lifecycle.Before();
-            Status(invoke(${[...parameters.map((_, i) => `&input${i}`), "&output"].join(", ")}), diagnostic);
+            Status(invoke(${[...parameters.map((_, i) => `&input${i}`), "&output"].join(", ")})${refinementDiagnostics ? ", diagnostic" : ""});
             var result = Read${result.index}(&output, scope);
             Checkpoint(); lifecycle.After();
             return result;
@@ -189,7 +197,8 @@ ${result.aggregate ? "            Clear(ref output.Owner, ref output.Release);" 
         }
     }`;
 	});
-	return { ...model, valuesSource: model.valuesSource + "\n" + dotnetGraphException
-		, source: `using _V = global::${model.namespace};\nnamespace ${model.namespace}.Interop;\n\n${model.rawSource}\n${dotnetGraphRuntime}\ninternal static unsafe partial class GraphRuntime\n{\n${methods.join("\n")}\n${calls.join("\n")}\n}\n`
+	return { ...model, refinementDiagnostics
+		, valuesSource: model.valuesSource + "\n" + dotnetGraphException
+		, source: `using _V = global::${model.namespace};\nnamespace ${model.namespace}.Interop;\n\n${model.rawSource}\n${runtime}\ninternal static unsafe partial class GraphRuntime\n{\n${methods.join("\n")}\n${calls.join("\n")}\n}\n`
 		, nativeTypes: model.types.map(node => ({ id: node.id, index: node.index, raw: node.raw, publicType: publicType(node.id) })) };
 };

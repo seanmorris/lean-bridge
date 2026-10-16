@@ -151,6 +151,42 @@ internal static unsafe partial class GraphRuntime
 }
 `;
 
+/** Preserve byte-identical generated C# for contracts without refinements. */
+export const dotnetGraphRuntimeWithoutDiagnostics = dotnetGraphRuntime
+	.replace(`    internal GraphInvalidNative(string message, global::System.Exception? inner = null)
+        : base(message, inner) { }`, `    internal GraphInvalidNative(string message) : base(message) { }`)
+	.replace(`    internal static void Status(uint status) => Status(status, null);
+    internal static void Status(uint status, delegate* unmanaged[Cdecl]<byte*> diagnostic)
+    {
+        switch (status)
+        {
+            case 0: return;
+            case 1:
+                if (diagnostic != null)
+                {
+                    var message = diagnostic();
+                    if (message != null)
+                    {
+                        var length = 0;
+                        while (length <= 16 * 1024 && message[length] != 0) length++;
+                        if (length > 16 * 1024)
+                            throw new GraphInvalidNative("Native refinement diagnostic exceeds 16 KiB");
+                        string text;
+                        try { text = Utf8.GetString(new global::System.ReadOnlySpan<byte>(message, length)); }
+                        catch (global::System.Text.DecoderFallbackException error)
+                        {
+                            throw new GraphInvalidNative("Native refinement diagnostic is not UTF-8", error);
+                        }
+                        throw new global::System.ArgumentException(text);
+                    }
+                }
+                throw new global::System.ArgumentException("Invalid native copied input");`, `    internal static void Status(uint status)
+    {
+        switch (status)
+        {
+            case 0: return;
+            case 1: throw new global::System.ArgumentException("Invalid native copied input");`);
+
 /** Compiled calls use the same public failure type as other NuGet projections. */
 export const dotnetGraphException = `/// <summary>A failure reported by a compiled Lean call.</summary>
 public sealed class LeanBridgeException : global::System.Exception
