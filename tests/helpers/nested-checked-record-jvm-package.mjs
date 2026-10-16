@@ -20,7 +20,7 @@ export {
 const identity = bytes => ({ bytes: bytes.length, sha256: sha256(bytes) });
 export const nestedCheckedRecordJvmNamespace
 	= "org.leanbridge.nestedcheckedrecords";
-const commonClasses = ["Api", "Option", "Packet", "Pair", "Result", "Unit"];
+const commonClasses = ["Api", "Option", "Packet", "Pair", "Result"];
 const fullClasses = ["Choice", "ChoiceEmpty", "ChoicePacket", "Holder"];
 
 /**
@@ -81,11 +81,11 @@ export const inspectNestedCheckedRecordJvmPackage = (
 		if(path.startsWith("src/") || path === "binding-manifest.json")
 			assert.deepEqual(receipt.files["META-INF/lean-bridge/jvm/" + path], entry);
 	}
-	for(const prefix of [
-		`${nestedCheckedRecordJvmNamespace.replaceAll(".", "/")}/`
-		, `${nestedCheckedRecordJvmNamespace.replaceAll(".", "/")}/kotlin/`
+	for(const [prefix, unit] of [
+		[`${nestedCheckedRecordJvmNamespace.replaceAll(".", "/")}/`, "Unit"]
+		, [`${nestedCheckedRecordJvmNamespace.replaceAll(".", "/")}/kotlin/`, "UnitKt"]
 	]) {
-		for(const name of commonClasses)
+		for(const name of [...commonClasses, unit])
 			assert.ok(receipt.files[prefix + name + ".class"]?.bytes > 0, prefix + name);
 		for(const name of fullClasses)
 			assert.equal(Boolean(receipt.files[prefix + name + ".class"])
