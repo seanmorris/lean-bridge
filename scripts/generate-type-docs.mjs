@@ -62,6 +62,9 @@ const nestedCheckedRecordPython = "[Nested checked-record Python wheels](../evid
 const nestedCheckedRecordRubyMarker = "[PHP-Wasm checked-record packages]";
 const nestedCheckedRecordRubyPending = "targets other than npm, C, C++, .NET, Java, Kotlin, Perl, native PHP and Python need separate nested acceptance";
 const nestedCheckedRecordRuby = "[Nested checked-record Ruby gems](../evidence/nested-checked-record-ruby-20261016/index.json) establish the same copied positions through generated frozen Packet, Holder and Choice::Packet classes on both author routes and API modes. Two author roots reproduce complete native gems before author removal and offline installation; the unchanged caller runs before and after moving each installation on MRI 3.3.12 with Linux x64/glibc 2.36. Exact constructor failures preserve caller graphs and later calls recover.";
+const nestedCheckedRecordWitMarker = "[PHP-Wasm checked-record packages]";
+const nestedCheckedRecordWitPending = "targets other than npm, C, C++, .NET, Java, Kotlin, Perl, native PHP, Python and Ruby need separate nested acceptance";
+const nestedCheckedRecordWit = "[Nested checked-record WIT/WASI components](../evidence/nested-checked-record-wit-20261016/index.json) establish the same copied positions through Component Model Packet and Holder records and the packet case of a Choice variant on both author routes and API modes. Two author roots reproduce complete component archives before author removal and offline installation; one public C caller is compiled, its source is removed, and the executable runs before and after moving each installation through Wasmtime 42.0.1 on Linux x64/glibc 2.36. Exact constructor failures preserve caller value trees and output sentinels, and later calls recover. The component requires its packaged native Lean host rather than running as a standalone WASI command.";
 
 /**
  * Classify a single cell without borrowing evidence from another stage or position.
@@ -242,6 +245,10 @@ export async function renderTypeDocuments({ root })
 				, `${nestedCheckedRecordRuby} ${nestedCheckedRecordRubyMarker}`)
 			.replace(nestedCheckedRecordRubyPending
 				, "targets other than npm, C, C++, .NET, Java, Kotlin, Perl, native PHP, Python and Ruby need separate nested acceptance")
+			.replace(nestedCheckedRecordWitMarker
+				, `${nestedCheckedRecordWit} ${nestedCheckedRecordWitMarker}`)
+			.replace(nestedCheckedRecordWitPending
+				, "targets other than npm, C, C++, .NET, Java, Kotlin, Perl, native PHP, Python, Ruby and WIT/WASI need separate nested acceptance")
 			.replace(primitiveNominalMarker,
 				`${primitiveNominalDotnet} ${primitiveNominalPhp} ${primitiveNominalPhpWasm} ${recursiveSubtypePhpWasm} ${primitiveNominalWit} ${primitiveNominalJvm} ${primitiveNominalPending}`)
 	};
