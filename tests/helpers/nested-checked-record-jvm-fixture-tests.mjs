@@ -16,6 +16,11 @@ import {
 	, nestedCheckedRecordJvmRoutes
 	, nestedCheckedRecordJvmSelection
 } from "./nested-checked-record-jvm-fixture.mjs";
+import {
+	nestedCheckedRecordJvmInputNames
+	, nestedCheckedRecordJvmProbeSource
+	, nestedCheckedRecordKotlinNullSource
+} from "./nested-checked-record-jvm-probe.mjs";
 
 test("nested checked-record JVM selection is closed and explicit", () => {
 	assert.deepEqual(nestedCheckedRecordJvmRoutes, ["ordinary", "reviewed"]);
@@ -114,4 +119,29 @@ test("nested checked-record JVM callers select only route labels and API section
 			}
 	assert.deepEqual(nestedCheckedRecordJvmCounts.java
 		, nestedCheckedRecordJvmCounts.kotlin);
+});
+
+test("nested checked-record JVM compile probes distinguish API mode and nullability", () => {
+	assert.deepEqual(nestedCheckedRecordJvmInputNames, [
+		"echoArray", "first", "inArray", "inChoice", "inExcept", "inHolder"
+		, "inList", "inOption", "inProduct", "pair", "second"
+	]);
+	for(const profile of nestedCheckedRecordJvmProfiles)
+	{
+		const source = nestedCheckedRecordJvmProbeSource(profile);
+		for(const name of nestedCheckedRecordJvmInputNames)
+			assert.equal(source.match(new RegExp(`Api\\.${name}\\(`, "gu"))?.length, 1);
+		assert.doesNotMatch(source, /produceOption|produceArray/u);
+	}
+	for(const mode of nestedCheckedRecordJvmModes)
+	{
+		const valid = nestedCheckedRecordKotlinNullSource(mode, false);
+		const invalid = nestedCheckedRecordKotlinNullSource(mode, true);
+		assert.equal(valid.replaceAll(/Api\.\w+\([^\n]+\)/gu, "CALL")
+			, invalid.replaceAll(/Api\.\w+\([^\n]+\)/gu, "CALL"));
+		assert.equal(valid.includes("Api.first"), mode === "full");
+		assert.equal(invalid.includes("Api.first"), mode === "full");
+		assert.ok(valid.includes("Api.produceOption"));
+		assert.ok(invalid.includes("Api.produceOption(null)"));
+	}
 });

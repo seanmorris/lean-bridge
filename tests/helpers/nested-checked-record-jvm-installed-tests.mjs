@@ -34,6 +34,9 @@ import {
 	, runNestedCheckedRecordJvmDeployment
 	, verifyNestedCheckedRecordJvmDeployment
 } from "./nested-checked-record-jvm-package.mjs";
+import {
+	runNestedCheckedRecordJvmProbe, runNestedCheckedRecordKotlinNullProbe
+} from "./nested-checked-record-jvm-probe.mjs";
 import { waitNominalSubtypeDotnetResources } from "./nominal-subtype-dotnet-resources.mjs";
 import {
 	installFinContainerEdgeJvm
@@ -52,7 +55,7 @@ for(const route of routes) for(const mode of modes) test(
 	, { skip: !enabled, timeout: 3_600_000 }, async t => {
 		const producerCommit = execFileSync("git", ["rev-parse", "HEAD"])
 			.toString().trim();
-		for(const name of ["fixture", "package", "installed-tests"])
+		for(const name of ["fixture", "package", "probe", "installed-tests"])
 			execFileSync("git", ["ls-files", "--error-unmatch"
 				, `tests/helpers/nested-checked-record-jvm-${name}.mjs`]);
 		for(const path of ["java.java", "kotlin.kt"])
@@ -192,8 +195,9 @@ for(const route of routes) for(const mode of modes) test(
 		const pkg = receipt.packages[0];
 		const artifact = pkg.artifacts.find(item => item.path.endsWith(".jar"));
 		const archive = join(handoff, artifact.path);
+		const archiveBytes = await readFile(archive);
 		const installation = inspectNestedCheckedRecordJvmPackage(
-			await readFile(archive), { pkg, model, compiled, floor, mode }
+			archiveBytes, { pkg, model, compiled, floor, mode }
 		);
 		await saveLakeFile(output, "installation.json", canonicalJson(installation));
 		const consumers = [];
@@ -209,6 +213,20 @@ for(const route of routes) for(const mode of modes) test(
 				profile, root: consumer, archive
 				, archiveSha256: artifact.sha256, environment
 			});
+			const apiProbe = await runNestedCheckedRecordJvmProbe({
+				root: join(root, "probes", profile)
+				, archive: archiveBytes, archiveSha256: artifact.sha256
+				, environment, profile, mode
+				, output: join(output, profile, "api-probe")
+			});
+			const nullability = [];
+			if(profile === "kotlin") for(const invalid of [false, true])
+				nullability.push(await runNestedCheckedRecordKotlinNullProbe({
+					root: join(root, "probes", `nullability-${invalid}`)
+					, archive: archiveBytes, archiveSha256: artifact.sha256
+					, environment, mode, invalid
+					, output: join(output, profile, `nullability-${invalid}`)
+				}));
 			await verifyFinContainerEdgeJvmEnvironment(context);
 			const javaVersion = await runCopied(
 				context.command, ["--version"], consumer
@@ -242,7 +260,9 @@ for(const route of routes) for(const mode of modes) test(
 				await saveLakeFile(output, `${profile}/${observation.stage}.json`
 					, canonicalJson(observation));
 			}
-			consumers.push({ profile, context, javaVersion, observations });
+			consumers.push({
+				profile, context, apiProbe, nullability, javaVersion, observations
+			});
 		}
 		await rm(handoff, { recursive: true });
 		await assert.rejects(access(handoff), { code: "ENOENT" });
