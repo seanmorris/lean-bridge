@@ -14,7 +14,15 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { moduleSpecifiers } from "./module-closure.mjs";
 
 const sources = new Map(), snapshots = new Map();
-const roots = ["src", "scripts", "tests", "package.json", "package-lock.json", ".github/workflows/consumer-matrix.yml", ".github/workflows/checked-record-php-wasm.yml", "docs/type-surface.v1.json"];
+const roots = [
+	"src", "scripts", "tests", "package.json", "package-lock.json"
+	, "lean-toolchain"
+	, ".github/actions/bounded-apt/action.yml"
+	, ".github/workflows/consumer-matrix.yml"
+	, ".github/workflows/checked-record-php-wasm.yml"
+	, ".github/workflows/nested-checked-record-php-wasm.yml"
+	, "docs/type-surface.v1.json"
+];
 const entries = ["src/backends/php/copied-values.mjs", "src/backends/php/copied-model.mjs", "src/backends/php/brick-math.mjs"];
 const sourceKey = (revision, path) => {
 	assert.match(revision, /^[a-f0-9]{40}$/u);
