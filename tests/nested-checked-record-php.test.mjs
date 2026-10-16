@@ -5,3 +5,5 @@
  */
 import "./helpers/nested-checked-record-php-tests.mjs";
 import "./helpers/nested-checked-record-php-evidence-tests.mjs";
+import "./helpers/nested-checked-record-php-promotion-tests.mjs";
+import "./helpers/nested-checked-record-php-promotion-history-tests.mjs";

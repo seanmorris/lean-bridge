@@ -53,6 +53,9 @@ const recursiveSubtypePhpWasm = "[Recursive PHP-Wasm checks](../evidence/recursi
 const nestedCheckedRecordPerlMarker = "[PHP-Wasm checked-record packages]";
 const nestedCheckedRecordPerlPending = "targets other than npm, C, C++, .NET, Java and Kotlin need separate nested acceptance";
 const nestedCheckedRecordPerl = "[Nested checked-record Perl packages](../evidence/nested-checked-record-perl-20261016/index.json) establish the same copied positions through generated blessed Packet, Holder and Choice::Packet classes on both author routes and API modes. Two author roots reproduce complete CPAN component and runtime archives before source-free offline installation on threaded and unthreaded Perl 5.36.3 and 5.38.2 in prebuilt-only and build-XS modes. Unchanged callers run before and after moving each installation on Linux x64/glibc 2.36; exact constructor failures preserve caller graphs and later calls recover.";
+const nestedCheckedRecordPhpMarker = "[PHP-Wasm checked-record packages]";
+const nestedCheckedRecordPhpPending = "targets other than npm, C, C++, .NET, Java, Kotlin and Perl need separate nested acceptance";
+const nestedCheckedRecordPhp = "[Nested checked-record native PHP packages](../evidence/nested-checked-record-php-20261016/index.json) establish the same copied positions through generated final readonly Packet, Holder and ChoicePacket classes on both author routes and API modes. Two author roots reproduce complete Composer ZIPs before author and build removal and offline installation; unchanged weak and strict callers run before and after moving each installation on PHP 8.2.33 and Composer 2.5.5 with Linux x64/glibc 2.36. Exact constructor failures preserve caller graphs and later calls recover; consumer PHP source remains required at runtime.";
 
 /**
  * Classify a single cell without borrowing evidence from another stage or position.
@@ -221,6 +224,10 @@ export async function renderTypeDocuments({ root })
 				, `${nestedCheckedRecordPerl} ${nestedCheckedRecordPerlMarker}`)
 			.replace(nestedCheckedRecordPerlPending
 				, "targets other than npm, C, C++, .NET, Java, Kotlin and Perl need separate nested acceptance")
+			.replace(nestedCheckedRecordPhpMarker
+				, `${nestedCheckedRecordPhp} ${nestedCheckedRecordPhpMarker}`)
+			.replace(nestedCheckedRecordPhpPending
+				, "targets other than npm, C, C++, .NET, Java, Kotlin, Perl and native PHP need separate nested acceptance")
 			.replace(primitiveNominalMarker,
 				`${primitiveNominalDotnet} ${primitiveNominalPhp} ${primitiveNominalPhpWasm} ${recursiveSubtypePhpWasm} ${primitiveNominalWit} ${primitiveNominalJvm} ${primitiveNominalPending}`)
 	};
