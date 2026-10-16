@@ -150,7 +150,6 @@ for(const route of routes) for(const mode of modes) test(
 		assert.deepEqual(builds[1], builds[0]
 			, "Both author roots must reproduce models, receipts and archives");
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
-		await copyPackageSetHandoff(handoff, join(output, "handoff"));
 		const receipt = JSON.parse(await readFile(join(handoff, "package-set-receipt.json")));
 		const reports = [];
 		for(const profile of profiles)
@@ -231,6 +230,8 @@ for(const route of routes) for(const mode of modes) test(
 			}
 		}));
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
+		await rename(handoff, join(output, "handoff"));
+		await assert.rejects(access(handoff), { code: "ENOENT" });
 		const paths = await nativeArtifactPaths(output);
 		assert.ok(paths.includes("report.json") && paths.includes("resources.json"));
 		complete = true;
