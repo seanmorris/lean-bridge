@@ -35,8 +35,7 @@ export const nestedCheckedRecordJvmProbeSource = profile => {
 		+ nestedCheckedRecordJvmInputNames.map(name => `    static Object ${name}() { return Api.${name}(${binary.has(name) ? "null, null" : "null"}); }\n`).join("")
 		+ "}\n";
 	return "import org.leanbridge.nestedcheckedrecords.kotlin.*\n"
-		+ "private fun <T> value(): T = throw UnsupportedOperationException()\n"
-		+ nestedCheckedRecordJvmInputNames.map(name => `fun ${name}() = Api.${name}(${binary.has(name) ? "value(), value()" : "value()"})\n`).join("");
+		+ nestedCheckedRecordJvmInputNames.map(name => `val probe${name[0].toUpperCase()}${name.slice(1)} = Api::${name}\n`).join("");
 };
 
 /**
@@ -87,7 +86,9 @@ export const checkNestedCheckedRecordJvmProbe = (record, profile, mode) => {
 		else assert.match(code, /^compiler\.err\.cant\.resolve\.location(?:\.args)?:/u);
 		const name = expected.find(item => new RegExp(`\\b${item}\\b`, "u").test(text));
 		assert.ok(name, text); found.push(name);
-		assert.equal(line, source.split("\n").findIndex(value => value.includes(`Api.${name}(`)) + 1);
+		assert.equal(line, source.split("\n").findIndex(value => value.includes(
+			profile === "java" ? `Api.${name}(` : `Api::${name}`
+		)) + 1);
 	}
 	assert.deepEqual(found.sort(), expected.sort());
 };

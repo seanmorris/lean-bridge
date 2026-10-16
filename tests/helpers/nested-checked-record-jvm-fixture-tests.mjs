@@ -130,7 +130,9 @@ test("nested checked-record JVM compile probes distinguish API mode and nullabil
 	{
 		const source = nestedCheckedRecordJvmProbeSource(profile);
 		for(const name of nestedCheckedRecordJvmInputNames)
-			assert.equal(source.match(new RegExp(`Api\\.${name}\\(`, "gu"))?.length, 1);
+			assert.equal(source.match(new RegExp(
+				profile === "java" ? `Api\\.${name}\\(` : `Api::${name}\\b`, "gu"
+			))?.length, 1);
 		assert.doesNotMatch(source, /produceOption|produceArray/u);
 	}
 	for(const mode of nestedCheckedRecordJvmModes)
