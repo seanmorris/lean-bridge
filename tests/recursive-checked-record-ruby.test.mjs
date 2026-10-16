@@ -4,3 +4,4 @@
  * @file
  */
 import "./helpers/recursive-checked-record-ruby-fixture-tests.mjs";
+import "./helpers/recursive-checked-record-ruby-installed-tests.mjs";
