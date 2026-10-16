@@ -68,6 +68,10 @@ test("nested checked-record Python keeps both author contracts and constructor-f
 			assert.match(source, /class Holder:\n {4}packet: Packet\n {4}tag: int\n/u);
 			assert.ok(source.includes("Choice: _TypeAlias = ChoiceEmpty | ChoicePacket"));
 		}
+		else
+		{
+			assert.doesNotMatch(source, /^class (?:Holder|ChoiceEmpty|ChoicePacket|Ok|Err):/gmu);
+		}
 		assert.doesNotMatch(source, /typing_extensions/u);
 		assert.deepEqual(nestedCheckedRecordPythonCallerArgs(route, mode)
 			, [...mode === "result-only" ? ["--result-only"] : [], ...route === "reviewed" ? ["--reviewed"] : []]);

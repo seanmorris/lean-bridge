@@ -188,7 +188,10 @@ def oracle(result_only=False, prefix='arg', fault=None):
             in_list=lambda values: total(sequence(values), list_site),
             in_option=in_option, in_product=in_product, in_except=in_except,
             in_holder=in_holder, in_choice=in_choice, echo_array=echo_array)
-    return SimpleNamespace(**classes, **functions)
+    surface = {name: classes[name] for name in ('Packet', 'Some', 'LeanBridgeError')}
+    if not result_only:
+        surface.update({name: classes[name] for name in ('Holder', 'ChoiceEmpty', 'ChoicePacket', 'Ok', 'Err')})
+    return SimpleNamespace(**surface, **functions)
 
 
 results = []

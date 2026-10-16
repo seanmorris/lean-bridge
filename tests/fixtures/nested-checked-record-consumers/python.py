@@ -16,10 +16,12 @@ def check_nested_checked_records(api, result_only=False, rounds=256, parameter_p
     if parameter_prefix not in ('arg', 'value'):
         raise ValueError('Invalid parameter prefix')
     checks = rejections = host_rejections = recoveries = snapshots = snapshot_controls = 0
-    Packet, Some, Ok, Err = api.Packet, api.Some, api.Ok, api.Err
-    fields = {Packet: ('digit', 'word'), Some: ('value',), Ok: ('value',), Err: ('value',)}
+    Packet, Some = api.Packet, api.Some
+    fields = {Packet: ('digit', 'word'), Some: ('value',)}
     if not result_only:
-        fields.update({api.Holder: ('packet', 'tag'), api.ChoiceEmpty: (), api.ChoicePacket: ('value',)})
+        Ok, Err = api.Ok, api.Err
+        fields.update({Ok: ('value',), Err: ('value',), api.Holder: ('packet', 'tag'),
+                       api.ChoiceEmpty: (), api.ChoicePacket: ('value',)})
 
     def snapshot(value):
         kind = type(value)
@@ -83,9 +85,10 @@ def check_nested_checked_records(api, result_only=False, rounds=256, parameter_p
         check(hasattr(api, name) != result_only, 'input export selection: ' + name)
     for name in RESULTS:
         check(hasattr(api, name), 'result export selection: ' + name)
-    pairs = [(0, False), (1, 1.0), ([Packet(0, 1)], (Packet(0, 1),)), (Packet(0, 1), Packet(0, 2)),
-             (Packet(0, 1), Packet(1, 1)), (Some(Packet(0, 1)), Ok(Packet(0, 1))),
-             (Ok(Packet(0, 1)), Err(Packet(0, 1))), (None, Some(None))]
+    pairs = [(0, False), (1, 1.0), ([Packet(0, 1)], (Packet(0, 1),)),
+             (Packet(0, 1), Packet(0, 2)), (Packet(0, 1), Packet(1, 1)),
+             (Some(Packet(0, 1)), Some(Packet(0, 2))), (Some(Packet(0, 1)), None),
+             (None, Some(None))]
     if not result_only:
         pairs += [(api.Holder(Packet(0, 1), 1), (Packet(0, 1), 1)),
                   (api.ChoiceEmpty(), None), (api.ChoicePacket(Packet(0, 1)), Some(Packet(0, 1)))]
