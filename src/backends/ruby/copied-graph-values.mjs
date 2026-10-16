@@ -8,9 +8,12 @@ import { compileCopiedCGraphLayout } from "../c/copied-graph-layout.mjs";
 
 const constant = name => name.split("_").filter(Boolean).map(part => part[0].toUpperCase() + part.slice(1)).join("") + (name.match(/_+$/)?.[0] ?? "");
 const reservedConstants = new Set("Native GraphValues Unit UNIT LeanBridgeError LeanClosure Some Ok Err Object BasicObject String Array Integer Float Fiddle Gem File Digest Thread Mutex Ractor Encoding RangeError TypeError StandardError Exception Kernel Struct Module Class Scope Lease Monitor Process ObjectSpace ArgumentError LocalJumpError EncodingError NoMemoryError LoadError NativeCopiedRuntimeV1 RUBY_ENGINE RUBY_VERSION RUBY_PLATFORM".split(" "));
-// Ruby keywords that are not Object methods remain valid readers, keyword arguments,
-// hash keys and pattern keys; only their initializer locals need a binding read.
-const keywordFields = new Set("begin end rescue ensure alias and or not if unless while until case when then else elsif for in do break next redo retry undef".split(" "));
+/**
+ * Public Ruby member for a Lean field: reserved Ruby names gain one trailing underscore.
+ *
+ * @param name - Lean field name.
+ */
+export const rubyMemberName = name => reservedMembers.has(name) ? `${name}_` : name;
 const reservedMembers = new Set("nil true false self super class module def end begin rescue ensure return yield alias and or not if unless while until case when then else elsif for in do break next redo retry undef defined initialize initialize_copy new send public_send method_missing object_id freeze frozen hash eql equal dup clone tap inspect to_s respond_to const_get const_set module_function private_constant deconstruct deconstruct_keys raise".split(" "));
 const primitive = {
 	unit: "UNIT"
@@ -33,7 +36,7 @@ ${parent ? "      public_class_method :new\n" : ""}\
 ${fields.map(field => `      # ${field.publicName}: ${field.contractType}`).join("\n")}
 ${fields.length ? `      attr_reader ${fields.map(field => `:${field.publicName}`).join(", ")}\n` : ""}\
       def initialize(${fields.map(field => `${field.publicName}:`).join(", ")})
-${fields.map(field => `        @${field.publicName} = ${keywordFields.has(field.publicName) ? `binding.local_variable_get(:${field.publicName})` : field.publicName}`).join("\n")}
+${fields.map(field => `        @${field.publicName} = ${field.publicName}`).join("\n")}
         GraphValues::FREEZE.bind_call(self)
       end
       def ==(other)
@@ -74,11 +77,12 @@ export const generateCopiedRubyGraphValues = ir => {
 	const members = (fields, sourceFields) => {
 		const seen = new Set();
 		return fields.map((field, index) => {
-			const publicName = field.name;
-			if(!/^[a-z][a-z0-9_]*$/.test(publicName) || (reservedMembers.has(publicName) && !keywordFields.has(publicName))
-				|| seen.has(publicName))
+			// Reserved Ruby members escape deterministically; the Lean name stays in metadata.
+			const publicName = rubyMemberName(field.name);
+			if(!/^[a-z][a-z0-9_]*$/.test(field.name) || reservedMembers.has(publicName) || seen.has(publicName))
 				throw new TypeError(`Ruby graph field name is reserved or duplicated: ${publicName}`);
-			seen.add(publicName); return { ...field, publicName, contractType: contract(sourceFields[index].type) };
+			seen.add(publicName);
+			return { ...field, publicName, leanName: field.name, contractType: contract(sourceFields[index].type) };
 		});
 	};
 	const types = layout.nodes.map((node, index) => {

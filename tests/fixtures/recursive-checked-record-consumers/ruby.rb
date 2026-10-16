@@ -7,7 +7,7 @@ module RecursiveCheckedRecordCaller
   MODULES = {
     "recursive" => { lean: "RecursiveCheckedRecords", record: :Packet, fields: %i[value digit tail],
                      make: "mkPacket", link: ".tail?" },
-    "mutual" => { lean: "MutualCheckedRecords", record: :Envelope, fields: %i[value mode next],
+    "mutual" => { lean: "MutualCheckedRecords", record: :Envelope, fields: %i[value mode next_],
                   make: "mkEnvelope", link: ".next?.more.packet" }
   }.freeze
   LIMIT = "Copied graph depth or node limit exceeded"

@@ -118,6 +118,7 @@ import { beforeMutualCheckedRecordNpmSource, mutualCheckedRecordNpmChangedPaths 
 import { beforePythonGraphDiagnosticSource, pythonGraphDiagnosticChangedPaths } from "./python-graph-diagnostic-source-history.mjs";
 import { beforeRubyGraphDiagnosticSource, rubyGraphDiagnosticChangedPaths } from "./ruby-graph-diagnostic-source-history.mjs";
 import { beforeRubyGraphKeywordFieldSource, rubyGraphKeywordFieldChangedPaths } from "./ruby-graph-keyword-field-source-history.mjs";
+import { beforeRubyMemberEscapeSource, rubyMemberEscapeChangedPaths } from "./ruby-member-escape-source-history.mjs";
 import { beforeNominalPrimitiveSubtypeRustPromotionSource, nominalPrimitiveSubtypeRustPromotionChangedPaths } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
 import { beforeNestedCheckedRecordSource, nestedCheckedRecordChangedPaths } from "./nested-checked-record-source-history.mjs";
 import { beforeNestedCheckedRecordBrowserPromotionSource, nestedCheckedRecordBrowserPromotionChangedPaths } from "./nested-checked-record-browser-promotion-history.mjs";
@@ -771,6 +772,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeRubyMemberEscapeSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeRubyGraphKeywordFieldSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeRubyGraphDiagnosticSource(path, source, expected);
@@ -1165,6 +1168,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...pythonGraphDiagnosticChangedPaths
 	, ...rubyGraphDiagnosticChangedPaths
 	, ...rubyGraphKeywordFieldChangedPaths
+	, ...rubyMemberEscapeChangedPaths
 ])].sort());
 
 /**

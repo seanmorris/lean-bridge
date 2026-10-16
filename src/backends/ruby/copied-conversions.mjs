@@ -25,7 +25,7 @@ export const copiedRubyConversions = model => model.surface.copies.map(copy => {
 	if(copy.variant)
 	{
 		input = `${copy.cases.map((branch, index) => `${index ? "        elsif" : "if"} exact?(value, ${branch.publicName})
-${branch.fields.map((field, fieldIndex) => `          field${fieldIndex} = STORED_FIELD.bind_call(value, :@${field.name})`).join("\n")}
+${branch.fields.map((field, fieldIndex) => `          field${fieldIndex} = STORED_FIELD.bind_call(value, :@${field.rubyName})`).join("\n")}
           result = scope.allocate(${copy.size})
           result[0, 4] = [${index}].pack("L<")
 ${branch.fields.map((field, fieldIndex) => `          ${write(field.type, "result", copy.payloadOffset + field.offset, `to${field.type.index}(field${fieldIndex}${field.type.aggregate ? ", scope" : ""})`)}`).join("\n")}`).join("\n")}
@@ -34,7 +34,7 @@ ${branch.fields.map((field, fieldIndex) => `          ${write(field.type, "resul
         end
         result`;
 		output = `case value[0, 4].unpack1("L<")
-${copy.cases.map((branch, index) => `        when ${index} then ${branch.publicName}.new(${branch.fields.map(field => `${field.name}: from${field.type.index}(${read(field.type, "value", copy.payloadOffset + field.offset)})`).join(", ")})`).join("\n")}
+${copy.cases.map((branch, index) => `        when ${index} then ${branch.publicName}.new(${branch.fields.map(field => `${field.rubyName}: from${field.type.index}(${read(field.type, "value", copy.payloadOffset + field.offset)})`).join(", ")})`).join("\n")}
         else raise RangeError, "Invalid native ${copy.publicName} constructor"
         end`;
 	} else if(copy.compound)
@@ -89,11 +89,11 @@ ${copy.fields.map((field, index) => `        ${to(field, `ARRAY_GET.bind_call(va
 	} else if(copy.record)
 	{
 		input = `raise TypeError, "Expected ${copy.publicName}" unless exact?(value, ${copy.publicName})
-${copy.fields.map((field, index) => `        field${index} = STORED_FIELD.bind_call(value, :@${field.name})`).join("\n")}
+${copy.fields.map((field, index) => `        field${index} = STORED_FIELD.bind_call(value, :@${field.rubyName})`).join("\n")}
         result = scope.allocate(${copy.size})
 ${copy.fields.map((field, index) => `        ${write(field.type, "result", field.offset, `to${field.type.index}(field${index}${field.type.aggregate ? ", scope" : ""})`)}`).join("\n")}
         result`;
-		output = `${copy.publicName}.new(${copy.fields.map(field => `${field.name}: from${field.type.index}(${read(field.type, "value", field.offset)})`).join(", ")})`;
+		output = `${copy.publicName}.new(${copy.fields.map(field => `${field.rubyName}: from${field.type.index}(${read(field.type, "value", field.offset)})`).join(", ")})`;
 	} else if(copy.element)
 	{
 		const e = copy.element;
