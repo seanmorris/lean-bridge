@@ -77,17 +77,18 @@ int main() {
   CHECK(api::echo_array(echoed) == echoed);
   KEPT(echoed == std::vector<Packet>({first, Packet{1, huge}}));
 
-  const auto refuses = [&](auto&& call, const std::string& message, auto& input, const auto& before) {
+  const auto refuses = [&](auto&& call, const std::string& message, auto& input, const auto& before) -> int {
     CHECK(rejected(std::forward<decltype(call)>(call), message));
     KEPT(input == before);
+    return 0;
   };
   Packet invalid{0, 0};
   Packet before = invalid;
-  refuses([&] { api::first(invalid); }, path("0.word was rejected by NestedCheckedRecords.mkWord"), invalid, before);
+  if (refuses([&] { api::first(invalid); }, path("0.word was rejected by NestedCheckedRecords.mkWord"), invalid, before)) return 1;
   invalid = {4, 2}; before = invalid;
-  refuses([&] { api::first(invalid); }, path("0 was rejected by NestedCheckedRecords.mkPacket"), invalid, before);
+  if (refuses([&] { api::first(invalid); }, path("0 was rejected by NestedCheckedRecords.mkPacket"), invalid, before)) return 1;
   invalid = {10, 12}; before = invalid;
-  refuses([&] { api::first(invalid); }, path("0.digit is not below its Fin 10 bound"), invalid, before);
+  if (refuses([&] { api::first(invalid); }, path("0.digit is not below its Fin 10 bound"), invalid, before)) return 1;
 
   Packet left{4, 2}; const Packet leftBefore = left;
   CHECK(rejected([&] { api::pair(left, second); }, path("0 was rejected by NestedCheckedRecords.mkPacket")));
@@ -98,27 +99,27 @@ int main() {
 
   std::vector<Packet> array = {first, Packet{1, 0}};
   auto arrayBefore = array;
-  refuses([&] { api::in_array(array); }, path("0[1].word was rejected by NestedCheckedRecords.mkWord"), array, arrayBefore);
+  if (refuses([&] { api::in_array(array); }, path("0[1].word was rejected by NestedCheckedRecords.mkWord"), array, arrayBefore)) return 1;
   array = {first, Packet{5, 2}}; arrayBefore = array;
-  refuses([&] { api::in_array(array); }, path("0[1] was rejected by NestedCheckedRecords.mkPacket"), array, arrayBefore);
+  if (refuses([&] { api::in_array(array); }, path("0[1] was rejected by NestedCheckedRecords.mkPacket"), array, arrayBefore)) return 1;
   array = {first, Packet{10, 12}}; arrayBefore = array;
-  refuses([&] { api::in_array(array); }, path("0[1].digit is not below its Fin 10 bound"), array, arrayBefore);
+  if (refuses([&] { api::in_array(array); }, path("0[1].digit is not below its Fin 10 bound"), array, arrayBefore)) return 1;
 
   std::optional<Packet> option = Packet{5, 2}; const auto optionBefore = option;
-  refuses([&] { api::in_option(option); }, path("0? was rejected by NestedCheckedRecords.mkPacket"), option, optionBefore);
+  if (refuses([&] { api::in_option(option); }, path("0? was rejected by NestedCheckedRecords.mkPacket"), option, optionBefore)) return 1;
   std::pair<Packet, Packet> product{first, Packet{10, 0}}; const auto productBefore = product;
-  refuses([&] { api::in_product(product); }, path("0.1.digit is not below its Fin 10 bound"), product, productBefore);
+  if (refuses([&] { api::in_product(product); }, path("0.1.digit is not below its Fin 10 bound"), product, productBefore)) return 1;
 
   api::Result<Packet, Packet> branch = api::Ok<Packet>{Packet{10, 0}};
   const auto okBefore = branch;
-  refuses([&] { api::in_except(branch); }, path("0.ok.digit is not below its Fin 10 bound"), branch, okBefore);
+  if (refuses([&] { api::in_except(branch); }, path("0.ok.digit is not below its Fin 10 bound"), branch, okBefore)) return 1;
   branch = api::Err<Packet>{Packet{3, 1}}; const auto errorBefore = branch;
-  refuses([&] { api::in_except(branch); }, path("0.error was rejected by NestedCheckedRecords.mkPacket"), branch, errorBefore);
+  if (refuses([&] { api::in_except(branch); }, path("0.error was rejected by NestedCheckedRecords.mkPacket"), branch, errorBefore)) return 1;
 
   api::Holder holder{Packet{10, 0}, 9}; const auto holderBefore = holder;
-  refuses([&] { api::in_holder(holder); }, path("0.packet.digit is not below its Fin 10 bound"), holder, holderBefore);
+  if (refuses([&] { api::in_holder(holder); }, path("0.packet.digit is not below its Fin 10 bound"), holder, holderBefore)) return 1;
   api::Choice choice = api::ChoicePacket{Packet{3, 1}}; const auto choiceBefore = choice;
-  refuses([&] { api::in_choice(choice); }, path("0.packet.value was rejected by NestedCheckedRecords.mkPacket"), choice, choiceBefore);
+  if (refuses([&] { api::in_choice(choice); }, path("0.packet.value was rejected by NestedCheckedRecords.mkPacket"), choice, choiceBefore)) return 1;
 
   for (unsigned round = 0; round < rounds; ++round) {
     Packet valid{round % 10, Nat(round) + 10}; const Packet validBefore = valid;

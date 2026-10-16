@@ -21,7 +21,7 @@ export const nestedCheckedRecordNativeCounts = Object.freeze({
 			, snapshots: 0, rounds: 256 })
 	})
 	, cpp: Object.freeze({
-		full: Object.freeze({ checks: 3869, rejections: 526, recoveries: 256
+		full: Object.freeze({ checks: 3884, rejections: 526, recoveries: 256
 			, snapshots: 1296, rounds: 256 })
 		, "result-only": Object.freeze({ checks: 1280, rejections: 0, recoveries: 0
 			, snapshots: 0, rounds: 256 })

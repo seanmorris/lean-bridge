@@ -82,8 +82,8 @@ test("independent nested checked-record C and C++ callers compile against both A
 			await saveLakeFile(directory, `consumer.${profile}`, source);
 			await runCopied(profile === "c" ? "/usr/bin/cc" : "/usr/bin/c++", [
 				`-std=${profile === "c" ? "c11" : "c++20"}`
-				, "-Wall", "-Wextra", "-Werror", "-fsyntax-only", "-Iinclude"
-				, `consumer.${profile}`
+				, "-Wall", "-Wextra", "-Werror", "-Iinclude", "-S"
+				, `consumer.${profile}`, "-o", "consumer.s"
 			], directory);
 		}
 });
