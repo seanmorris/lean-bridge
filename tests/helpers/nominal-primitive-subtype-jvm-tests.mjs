@@ -9,3 +9,4 @@ import "./nominal-primitive-subtype-jvm-fixture-tests.mjs";
 import "./nominal-primitive-subtype-jvm-caller-tests.mjs";
 import "./nominal-primitive-subtype-jvm-ci-workflow-tests.mjs";
 import "./nominal-primitive-subtype-jvm-installed-tests.mjs";
+import "./nominal-primitive-subtype-jvm-evidence-tests.mjs";

@@ -1,0 +1,44 @@
+{
+  "component": {
+    "id": "nominalprimitivesubtypes@1.0.0",
+    "name": "nominalprimitivesubtypes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51701315,
+          "path": "archives/nominalprimitivesubtypes-1.0.0.jar",
+          "sha256": "ca889d699ace84e7395d8586efb53752fd82d98c94b57ddf17b3689492a94b18"
+        },
+        {
+          "bytes": 634,
+          "path": "archives/nominalprimitivesubtypes-1.0.0.pom",
+          "sha256": "86991a6b0a27181ce94646c805ede8d1b73df712a1a5b3ea148aa765ff5b3d90"
+        }
+      ],
+      "ecosystem": "maven",
+      "name": "org.leanbridge:nominalprimitivesubtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "maven",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "063e07b7bcb22e836524af1423686cc938423e03966e68a5cf96bdb16b038e58",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "b8f87b9fe973cd80645043ef65ffc9eb1b505a2fa43f8b8255af9a219e03d039"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "closure": {
+    "classpathFilesSha256": "46ba5932904ebc9b9a99fd097fc56483093eab7c946229b912545daef439a5e2",
+    "files": {
+      "classes/Consumer$Extreme.class": {
+        "bytes": 1371,
+        "sha256": "5d729cca58c8be72bc59a01656273b0fa3b3466ce67ded3c7173ea244ef32e9c"
+      },
+      "classes/Consumer$Fields.class": {
+        "bytes": 3307,
+        "sha256": "6c27c5b9ac8d3457c48da33f9a9c2b3e951197dd03bb6a0c496bcfba4ac9df9e"
+      },
+      "classes/Consumer$Invalid.class": {
+        "bytes": 1513,
+        "sha256": "146fb868dced290a581e40059288f712d63b764d8f214d26566fd8da030dff41"
+      },
+      "classes/Consumer.class": {
+        "bytes": 19606,
+        "sha256": "dcf851a529060184046a90d235fe7693918d66b736b57f795262ab8165484d40"
+      },
+      "component.jar": {
+        "bytes": 51701315,
+        "sha256": "ca889d699ace84e7395d8586efb53752fd82d98c94b57ddf17b3689492a94b18"
+      }
+    },
+    "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e"
+  },
+  "counts": {
+    "checks": 1231,
+    "hostRejections": 7,
+    "rejections": 283,
+    "rounds": 256,
+    "snapshotControls": 9,
+    "wordBits": 64
+  },
+  "cwd": "/tmp/lean-bridge-nominal-primitive-jvm-installed-CVrlCC/java-source-free",
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":1231,\"rejections\":283,\"hostRejections\":7,\"snapshotControls\":9,\"rounds\":256,\"wordBits\":64}\n"
+  },
+  "sourcesRemoved": true,
+  "stage": "source-free"
+}

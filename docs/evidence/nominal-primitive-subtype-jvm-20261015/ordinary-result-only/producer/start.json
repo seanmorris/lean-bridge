@@ -1,0 +1,101 @@
+{
+  "revision": "e0fed7f5f86d8c254a1064fc9eb1ad2e1b39ea0e",
+  "route": "ordinary",
+  "mode": "result-only",
+  "started": "2026-10-15T23:52:27.329Z",
+  "runnerSha256": "aa85e9bdb8a5d743de726c20e723c23d437a937c91fa2712c059c132ba5f2c94",
+  "controlsRunnerSha256": "e4f90182651f05d935a6c9d11596e8a9cab4ff67b8ed24048307d70e8ecf5715",
+  "links": {
+    "node_modules": "/app/node_modules"
+  },
+  "command": "/usr/bin/nice",
+  "args": [
+    "-n",
+    "19",
+    "/usr/bin/ionice",
+    "-c",
+    "3",
+    "/usr/bin/taskset",
+    "-c",
+    "3",
+    "/usr/bin/node",
+    "--max-old-space-size=3072",
+    "--test",
+    "--test-concurrency=1",
+    "tests/helpers/nominal-primitive-subtype-jvm-installed-tests.mjs"
+  ],
+  "controlsArgs": [
+    "-n",
+    "19",
+    "/usr/bin/ionice",
+    "-c",
+    "3",
+    "/usr/bin/taskset",
+    "-c",
+    "3",
+    "/usr/bin/node",
+    "/app/build/run-vo1495-nominal-primitive-jvm-controls-e0fed7f-v2.mjs",
+    "ordinary",
+    "result-only",
+    "/app/build/vo1495-nominal-primitive-jvm-ordinary-result-only-r1-e0fed7f"
+  ],
+  "environment": {
+    "NO_COLOR": "1",
+    "LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_JVM_TEST": "1",
+    "LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_JVM_ROUTES": "ordinary",
+    "LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_JVM_MODES": "result-only",
+    "LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_JVM_OUTPUT": "/app/build/vo1495-nominal-primitive-jvm-ordinary-result-only-r1-e0fed7f-records",
+    "LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_JVM_MAX_LOAD": "8",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+    "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+    "LEAN_BRIDGE_JAVA": "/app/.toolchains/jdk22/bin/java",
+    "LEAN_BRIDGE_JAVAC": "/app/.toolchains/jdk22/bin/javac",
+    "LEAN_BRIDGE_KOTLINC": "/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlinc",
+    "LEAN_BRIDGE_MAVEN": "/app/.toolchains/apache-maven-3.9.11/bin/mvn",
+    "LEAN_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MAKEFLAGS": "-j1",
+    "CMAKE_BUILD_PARALLEL_LEVEL": "1"
+  },
+  "initial": {
+    "freeMiB": 2798,
+    "availableMiB": 10778,
+    "load": 6.31
+  },
+  "loadCeiling": 8,
+  "transition": {
+    "predecessorRevision": "e0fed7f5f86d8c254a1064fc9eb1ad2e1b39ea0e",
+    "predecessorRunners": {
+      "runner": {
+        "path": "/app/build/run-vo1495-nominal-primitive-jvm-e0fed7f.mjs",
+        "sha256": "30cf2eabf672e5cdb0409c4d6c069cb8e0ffa6b8b0f15a5ca6bac40545aca53a"
+      },
+      "controlsRunner": {
+        "path": "/app/build/run-vo1495-nominal-primitive-jvm-controls-e0fed7f.mjs",
+        "sha256": "a5449aa6069b64db78debd3d934f5e15f525ad00637e9ee99596be785f15e698"
+      }
+    },
+    "changes": [
+      "controls runner v2: drop the absent dispatchObserved assertion"
+    ],
+    "unchanged": [
+      "producer revision e0fed7f",
+      "harness load selection 8",
+      "initial 2048 MiB disk and memory floors",
+      "live 768 MiB disk and memory floors",
+      "runner admission ceiling 8",
+      "wrapper, worktree policy"
+    ]
+  },
+  "guards": {
+    "initial": {
+      "freeMiB": 2048,
+      "availableMiB": 2048,
+      "load": 8
+    },
+    "live": {
+      "freeMiB": 768,
+      "availableMiB": 768
+    }
+  }
+}

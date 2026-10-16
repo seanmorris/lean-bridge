@@ -1,0 +1,39 @@
+{
+  "archiveSha256": "ca889d699ace84e7395d8586efb53752fd82d98c94b57ddf17b3689492a94b18",
+  "args": [
+    "--release",
+    "22",
+    "-Werror",
+    "-proc:none",
+    "-XDrawDiagnostics",
+    "-cp",
+    "component.jar",
+    "-d",
+    "classes",
+    "probe.java"
+  ],
+  "command": "/app/.toolchains/jdk22/bin/javac",
+  "cwd": "/tmp/lean-bridge-nominal-primitive-jvm-installed-CVrlCC/probes/java",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/unavailable"
+  },
+  "mode": "full",
+  "outputs": {
+    "Probe.class": {
+      "bytes": 1452,
+      "sha256": "c934146265e74b015dc20e604d4f69736729b816e6c0bdd2b523f0072843b05b"
+    }
+  },
+  "profile": "java",
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.nominalprimitivesubtypes.*;\nfinal class Probe {\n    static Object echoA() { return Api.echoA(null); }\n    static Object echoB() { return Api.echoB(null); }\n    static Object refuseUnit() { return Api.refuseUnit(null); }\n    static Object combine() { return Api.combine(null, null); }\n    static Object echoPair() { return Api.echoPair(null); }\n    static Object echoEventA() { return Api.echoEventA(null); }\n    static Object echoEventB() { return Api.echoEventB(null); }\n    static Object aliases() { return Api.aliases(null, null); }\n    static PacketPair inputValue;\n}\n",
+  "sourceSha256": "5ce57bb31cdecb1dae993205b81457d324d3a98a92aeebabca1fb013b6e11959"
+}

@@ -1,0 +1,34 @@
+{
+  "archiveSha256": "d78f2a26826ae4750f210ccd55ed73d52940a93b9793eb209d9d230d293e9045",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "NullProbe.kt",
+    "-d",
+    "classes"
+  ],
+  "command": "/app/.toolchains/kotlin-2.2.0/kotlinc/bin/kotlinc",
+  "cwd": "/tmp/lean-bridge-nominal-primitive-jvm-installed-dbn5hF/probes/nullability-true",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/app/.toolchains/jdk22",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "invalid": true,
+  "mode": "result-only",
+  "outputs": {},
+  "run": {
+    "code": 1,
+    "stderr": "NullProbe.kt:2:29: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'RawPacket'.\nfun produce() = Api.produce(null)\n                            ^^^^\n",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.nominalprimitivesubtypes.kotlin.*\nfun produce() = Api.produce(null)\n",
+  "sourceSha256": "982315da2a53f858f268142e476abeb30a96f95382fe896bcd152c44c7614296"
+}
