@@ -1,0 +1,58 @@
+{
+  "closure": {
+    "buildInputsSha256": "f2c39ec4c5e9460f223076ee88cbcf8c5169f77e17961e6d04521e9a1952912f",
+    "cacheFilesSha256": "2d91cec7cca6192a3a6bc5d36d8bbb19d4222dddf292444a696642501cd68fc4",
+    "deployedFilesSha256": "98627fc87864df2af04dc32aef3d4467f2f0bccf868bc59e62c3af7c88796554",
+    "interpreterSha256": "c61ff7f8665688b95ad0f34e780daaa67b978d26115b82797c07ea6044c566ed",
+    "packageFileSetSha256": "bbbd6529c61fdce39403416a4291f72fd366716b91c668750f9a96a8291063ce",
+    "receiptSha256": "efd4ab3dbb65d9d9342afed5af66571a0cf516741510d2e883d2162f618a6b13"
+  },
+  "counts": {
+    "checks": 1290,
+    "hostRejections": 4,
+    "recoveries": 1,
+    "rejections": 0,
+    "rounds": 256,
+    "snapshots": 1,
+    "wordBits": 64
+  },
+  "cwd": "/tmp/lean-bridge-nested-checked-record-dotnet-VZHvWQ/consumer",
+  "framework": {
+    "args": [
+      "out/Consumer.dll",
+      "--runtime"
+    ],
+    "command": "/app/.toolchains/dotnet/dotnet",
+    "cwd": "/tmp/lean-bridge-nested-checked-record-dotnet-VZHvWQ/consumer",
+    "facts": {
+      "architecture": "X64",
+      "command": "/app/.toolchains/dotnet/dotnet",
+      "description": ".NET 8.0.30",
+      "directory": "/app/.toolchains/dotnet/shared/Microsoft.NETCore.App/8.0.30/",
+      "littleEndian": true,
+      "os": "Debian GNU/Linux 12 (bookworm)",
+      "version": "8.0.30"
+    },
+    "run": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "{\"version\":\"8.0.30\",\"description\":\".NET 8.0.30\",\"directory\":\"/app/.toolchains/dotnet/shared/Microsoft.NETCore.App/8.0.30/\",\"command\":\"/app/.toolchains/dotnet/dotnet\",\"architecture\":\"X64\",\"os\":\"Debian GNU/Linux 12 (bookworm)\",\"littleEndian\":true}\n"
+    },
+    "runtimeFiles": {
+      "System.Private.CoreLib.dll": {
+        "bytes": 12773888,
+        "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+      },
+      "libcoreclr.so": {
+        "bytes": 6906008,
+        "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+      }
+    }
+  },
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":1290,\"rejections\":0,\"hostRejections\":4,\"recoveries\":1,\"snapshots\":1,\"rounds\":256,\"wordBits\":64}\n"
+  },
+  "stage": "installed"
+}

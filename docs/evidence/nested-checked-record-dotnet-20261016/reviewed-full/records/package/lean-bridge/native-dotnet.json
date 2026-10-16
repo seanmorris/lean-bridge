@@ -1,0 +1,61 @@
+{
+  "assembly": "LeanBridge.Nestedcheckedrecords",
+  "bindingIrSha256": "b69bc38123800e7775466943ebd17f1c924adac7ed6727c3d351fa4a12feebfd",
+  "evidence": {
+    "componentId": "nestedcheckedrecords@1.0.0",
+    "componentReceiptSha256": "66a3b5270592d62db1641c6ca48b3afdd0c7c654669007b127280f1e3141b030",
+    "libraries": {
+      "libcomponent_a63244d529ededa079e7.so": "7a51096a6523a1acdba21e0b16615f76a47e84003762cc1c967948248cbd09f4",
+      "liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+      "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+      "libnestedcheckedrecords.so": "a6758b756f978f2d6be542510f9a5a24d592f6d04300e420a605e7a7a7fe813b"
+    },
+    "library": "libnestedcheckedrecords.so",
+    "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+  },
+  "files": {
+    "NuGet.Config": {
+      "bytes": 74,
+      "sha256": "9508cae5f76364f56e80eb97cb16493977243cf38e5cca6284e3d74f83b20a2c"
+    },
+    "README.md": {
+      "bytes": 9482,
+      "sha256": "5e9744df387669e38e452e871b23480acd0235ec8439927a37f95d83fc781215"
+    },
+    "binding-manifest.json": {
+      "bytes": 1292,
+      "sha256": "689a42e9e579651fc5060124d0016b12ed09789772223f67727d9573d44045f6"
+    },
+    "global.json": {
+      "bytes": 104,
+      "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+    },
+    "lib/net8.0/LeanBridge.Nestedcheckedrecords.deps.json": {
+      "bytes": 463,
+      "sha256": "8306af05b23f67285934da518ac550707c1bf38d3e16ef113ad65c94e9c2d49e"
+    },
+    "lib/net8.0/LeanBridge.Nestedcheckedrecords.dll": {
+      "bytes": 32768,
+      "sha256": "2297629091ebedd708d95e0466ec6159b2c8ee1f219e48f7413904bbd2ff788d"
+    },
+    "lib/net8.0/LeanBridge.Nestedcheckedrecords.xml": {
+      "bytes": 7443,
+      "sha256": "42beb5c673cf300e9fe81552cba4209ae9e25434680f8126a8dbfe1bdd9cf873"
+    },
+    "src/LeanBridge.Nestedcheckedrecords/Api.cs": {
+      "bytes": 10430,
+      "sha256": "f884ee25d7f5c4a872fd0c4daf96a4b33a74ca0ef818b19c5e3acccf29a83b22"
+    },
+    "src/LeanBridge.Nestedcheckedrecords/LeanBridge.Nestedcheckedrecords.csproj": {
+      "bytes": 616,
+      "sha256": "ff26ff3f96a5bbf8b1ece527a157b3b4e44bd4fffc9d666e1b8d51def9c7b21f"
+    },
+    "src/LeanBridge.Nestedcheckedrecords/Runtime.cs": {
+      "bytes": 31725,
+      "sha256": "62dddcd713e65258f29148b2d60a44aff2ca6de8a5ebbc2302c2479d653fa190"
+    }
+  },
+  "profile": "native-library-v1",
+  "schemaVersion": 1,
+  "sdk": "8.0.424"
+}

@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "nestedcheckedrecords@1.0.0",
+    "name": "nestedcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51368507,
+          "path": "archives/Nestedcheckedrecords.Api.1.0.0.nupkg",
+          "sha256": "44b9e4409f65a0efb9c584d528e3f7667bc6a4a88f4a5d092c6e3c9518c23296"
+        }
+      ],
+      "ecosystem": "nuget",
+      "name": "Nestedcheckedrecords.Api",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "nuget",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "11431662399faee266cb7cba46b40780a20a6c55f63c9d0908d94727cc29b0df",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "6259731b33bb5dbe5f57a10ad1bb4d3f2d9a034ae7cdbbb3e29bb399000e346a"
+  }
+}

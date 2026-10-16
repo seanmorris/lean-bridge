@@ -14,8 +14,7 @@ import {
 
 export { nestedCheckedRecordDotnetOriginal };
 
-// Replaced with the producer-infrastructure commit before evidence is archived.
-export const nestedCheckedRecordDotnetProducer = "fa2a7082516dcaba66a5ebdff622852dd058107e";
+export const nestedCheckedRecordDotnetProducer = "d9b80d124b6e626d9b31cbf7539335f41dbcd333";
 export const nestedCheckedRecordDotnetLoadCeiling = 10;
 export const nestedCheckedRecordDotnetEvidence = "docs/evidence/nested-checked-record-dotnet-20261016";
 

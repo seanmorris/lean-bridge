@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LeanBridge.Nestedcheckedrecords</name>
+    </assembly>
+    <members>
+        <member name="T:LeanBridge.Nestedcheckedrecords.Unit">
+            <summary>The sole runtime value of Lean Unit.</summary>
+        </member>
+        <member name="T:LeanBridge.Nestedcheckedrecords.Option`1">
+            <summary>A copied Lean Option. Default is None; Some retains its payload, including nested None.</summary>
+        </member>
+        <member name="T:LeanBridge.Nestedcheckedrecords.Result`2">
+            <summary>A copied Lean Except. Use Ok or Err; default has no branch and cannot cross the boundary.</summary>
+        </member>
+        <member name="T:LeanBridge.Nestedcheckedrecords.LeanBridgeException">
+            <summary>A failure reported by a compiled Lean call.</summary>
+        </member>
+        <member name="T:LeanBridge.Nestedcheckedrecords.Packet">
+            <summary>A copied Lean record.</summary>
+        </member>
+        <member name="M:LeanBridge.Nestedcheckedrecords.Packet.#ctor(System.Numerics.BigInteger,System.Numerics.BigInteger)">
+            <summary>A copied Lean record.</summary>
+        </member>
+        <member name="T:LeanBridge.Nestedcheckedrecords.Choice">
+            <summary>A copied Lean variant. Construct a named case.</summary>
+        </member>
+        <member name="T:LeanBridge.Nestedcheckedrecords.ChoiceEmpty">
+            <summary>A named Choice constructor.</summary>
+        </member>
+        <member name="M:LeanBridge.Nestedcheckedrecords.ChoiceEmpty.#ctor">
+            <summary>A named Choice constructor.</summary>
+        </member>
+        <member name="T:LeanBridge.Nestedcheckedrecords.ChoicePacket">
+            <summary>A named Choice constructor.</summary>
+        </member>
+        <member name="M:LeanBridge.Nestedcheckedrecords.ChoicePacket.#ctor(LeanBridge.Nestedcheckedrecords.Packet)">
+            <summary>A named Choice constructor.</summary>
+        </member>
+        <member name="T:LeanBridge.Nestedcheckedrecords.Holder">
+            <summary>A copied Lean record.</summary>
+        </member>
+        <member name="M:LeanBridge.Nestedcheckedrecords.Holder.#ctor(LeanBridge.Nestedcheckedrecords.Packet,System.Numerics.BigInteger)">
+            <summary>A copied Lean record.</summary>
+        </member>
+        <member name="T:LeanBridge.Nestedcheckedrecords.Api">
+            <summary>The functions selected by the Lean package author.</summary>
+        </member>
+        <member name="M:LeanBridge.Nestedcheckedrecords.Api.EchoArray(LeanBridge.Nestedcheckedrecords.Packet[])">
+            <remarks>Checked Lean Fin bounds: arg0[*] checked by NestedCheckedRecords.mkPacket; arg0[*].digit &lt; 10; arg0[*].word checked by NestedCheckedRecords.mkWord; result[*] projects proof-backed record payload fields; result[*].digit &lt; 10; result[*].word projects the Subtype base value.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nestedcheckedrecords.Api.First(LeanBridge.Nestedcheckedrecords.Packet)">
+            <remarks>Checked Lean Fin bounds: arg0 checked by NestedCheckedRecords.mkPacket; arg0.digit &lt; 10; arg0.word checked by NestedCheckedRecords.mkWord.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nestedcheckedrecords.Api.InArray(LeanBridge.Nestedcheckedrecords.Packet[])">
+            <remarks>Checked Lean Fin bounds: arg0[*] checked by NestedCheckedRecords.mkPacket; arg0[*].digit &lt; 10; arg0[*].word checked by NestedCheckedRecords.mkWord.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nestedcheckedrecords.Api.InChoice(LeanBridge.Nestedcheckedrecords.Choice)">
+            <remarks>Checked Lean Fin bounds: arg0.packet.value checked by NestedCheckedRecords.mkPacket; arg0.packet.value.digit &lt; 10; arg0.packet.value.word checked by NestedCheckedRecords.normalizeWord.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nestedcheckedrecords.Api.InExcept(LeanBridge.Nestedcheckedrecords.Result{LeanBridge.Nestedcheckedrecords.Packet,LeanBridge.Nestedcheckedrecords.Packet})">
+            <remarks>Checked Lean Fin bounds: arg0.ok checked by NestedCheckedRecords.normalizePacket; arg0.ok.digit &lt; 10; arg0.ok.word checked by NestedCheckedRecords.mkWord; arg0.error checked by NestedCheckedRecords.mkPacket; arg0.error.digit &lt; 10; arg0.error.word checked by NestedCheckedRecords.normalizeWord.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nestedcheckedrecords.Api.InHolder(LeanBridge.Nestedcheckedrecords.Holder)">
+            <remarks>Checked Lean Fin bounds: arg0.packet checked by NestedCheckedRecords.normalizePacket; arg0.packet.digit &lt; 10; arg0.packet.word checked by NestedCheckedRecords.mkWord.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nestedcheckedrecords.Api.InList(LeanBridge.Nestedcheckedrecords.Packet[])">
+            <remarks>Checked Lean Fin bounds: arg0[*] checked by NestedCheckedRecords.normalizePacket; arg0[*].digit &lt; 10; arg0[*].word checked by NestedCheckedRecords.normalizeWord.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nestedcheckedrecords.Api.InOption(LeanBridge.Nestedcheckedrecords.Option{LeanBridge.Nestedcheckedrecords.Packet})">
+            <remarks>Checked Lean Fin bounds: arg0? checked by NestedCheckedRecords.mkPacket; arg0?.digit &lt; 10; arg0?.word checked by NestedCheckedRecords.normalizeWord.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nestedcheckedrecords.Api.InProduct(System.ValueTuple{LeanBridge.Nestedcheckedrecords.Packet,LeanBridge.Nestedcheckedrecords.Packet})">
+            <remarks>Checked Lean Fin bounds: arg0.0 checked by NestedCheckedRecords.mkPacket; arg0.0.digit &lt; 10; arg0.0.word checked by NestedCheckedRecords.mkWord; arg0.1 checked by NestedCheckedRecords.normalizePacket; arg0.1.digit &lt; 10; arg0.1.word checked by NestedCheckedRecords.normalizeWord.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nestedcheckedrecords.Api.Pair(LeanBridge.Nestedcheckedrecords.Packet,LeanBridge.Nestedcheckedrecords.Packet)">
+            <remarks>Checked Lean Fin bounds: arg0 checked by NestedCheckedRecords.mkPacket; arg0.digit &lt; 10; arg0.word checked by NestedCheckedRecords.mkWord; arg1 checked by NestedCheckedRecords.normalizePacket; arg1.digit &lt; 10; arg1.word checked by NestedCheckedRecords.normalizeWord.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nestedcheckedrecords.Api.ProduceArray(System.Numerics.BigInteger)">
+            <remarks>Checked Lean Fin bounds: result[*] projects proof-backed record payload fields; result[*].digit &lt; 10; result[*].word projects the Subtype base value.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nestedcheckedrecords.Api.ProduceOption(System.Numerics.BigInteger)">
+            <remarks>Checked Lean Fin bounds: result? projects proof-backed record payload fields; result?.digit &lt; 10; result?.word projects the Subtype base value.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nestedcheckedrecords.Api.Second(LeanBridge.Nestedcheckedrecords.Packet)">
+            <remarks>Checked Lean Fin bounds: arg0 checked by NestedCheckedRecords.normalizePacket; arg0.digit &lt; 10; arg0.word checked by NestedCheckedRecords.normalizeWord.</remarks>
+        </member>
+    </members>
+</doc>

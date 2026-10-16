@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "generator": "dotnet-copied-v1",
+  "target": "dotnet",
+  "component": "nestedcheckedrecords@1.0.0",
+  "bindingIrSha256": "11431662399faee266cb7cba46b40780a20a6c55f63c9d0908d94727cc29b0df",
+  "namespace": "LeanBridge.Nestedcheckedrecords",
+  "assembly": "LeanBridge.Nestedcheckedrecords",
+  "files": [
+    "src/LeanBridge.Nestedcheckedrecords/Api.cs",
+    "src/LeanBridge.Nestedcheckedrecords/Runtime.cs",
+    "src/LeanBridge.Nestedcheckedrecords/LeanBridge.Nestedcheckedrecords.csproj",
+    "NuGet.Config",
+    "README.md"
+  ],
+  "publicFiles": [
+    "src/LeanBridge.Nestedcheckedrecords/Api.cs"
+  ],
+  "internalFiles": [
+    "src/LeanBridge.Nestedcheckedrecords/Runtime.cs"
+  ],
+  "packageFiles": [
+    "src/LeanBridge.Nestedcheckedrecords/LeanBridge.Nestedcheckedrecords.csproj",
+    "NuGet.Config"
+  ],
+  "supportedFeatures": [
+    "direct-functions",
+    "copied-values",
+    "deterministic-close"
+  ],
+  "capabilityGaps": [
+    {
+      "feature": "identity-and-effects",
+      "reason": "Ordinary packages admit copied values and synchronous primitive callables, not resources, compound callables or async delivery."
+    },
+    {
+      "feature": "additional-platforms",
+      "reason": "Compiled releases target .NET 8 on Linux x86-64 with glibc."
+    }
+  ]
+}

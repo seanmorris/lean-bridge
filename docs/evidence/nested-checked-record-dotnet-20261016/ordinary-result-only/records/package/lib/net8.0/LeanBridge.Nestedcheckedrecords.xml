@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LeanBridge.Nestedcheckedrecords</name>
+    </assembly>
+    <members>
+        <member name="T:LeanBridge.Nestedcheckedrecords.Unit">
+            <summary>The sole runtime value of Lean Unit.</summary>
+        </member>
+        <member name="T:LeanBridge.Nestedcheckedrecords.Option`1">
+            <summary>A copied Lean Option. Default is None; Some retains its payload, including nested None.</summary>
+        </member>
+        <member name="T:LeanBridge.Nestedcheckedrecords.Result`2">
+            <summary>A copied Lean Except. Use Ok or Err; default has no branch and cannot cross the boundary.</summary>
+        </member>
+        <member name="T:LeanBridge.Nestedcheckedrecords.LeanBridgeException">
+            <summary>A failure reported by a compiled Lean call.</summary>
+        </member>
+        <member name="T:LeanBridge.Nestedcheckedrecords.Packet">
+            <summary>A copied Lean record.</summary>
+        </member>
+        <member name="M:LeanBridge.Nestedcheckedrecords.Packet.#ctor(System.Numerics.BigInteger,System.Numerics.BigInteger)">
+            <summary>A copied Lean record.</summary>
+        </member>
+        <member name="T:LeanBridge.Nestedcheckedrecords.Api">
+            <summary>The functions selected by the Lean package author.</summary>
+        </member>
+        <member name="M:LeanBridge.Nestedcheckedrecords.Api.ProduceArray(System.Numerics.BigInteger)">
+            <remarks>Checked Lean Fin bounds: result[*] projects proof-backed record payload fields; result[*].digit &lt; 10; result[*].word projects the Subtype base value.</remarks>
+        </member>
+        <member name="M:LeanBridge.Nestedcheckedrecords.Api.ProduceOption(System.Numerics.BigInteger)">
+            <remarks>Checked Lean Fin bounds: result? projects proof-backed record payload fields; result?.digit &lt; 10; result?.word projects the Subtype base value.</remarks>
+        </member>
+    </members>
+</doc>

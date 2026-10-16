@@ -1,0 +1,152 @@
+{
+  "version": 3,
+  "targets": {
+    "net8.0": {
+      "Nestedcheckedrecords.Api/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/LeanBridge.Nestedcheckedrecords.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/LeanBridge.Nestedcheckedrecords.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/linux-x64/native/libcomponent_a63244d529ededa079e7.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/linux-x64/native/liblean_bridge_native.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/linux-x64/native/libleanshared.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/linux-x64/native/libnestedcheckedrecords.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Nestedcheckedrecords.Api/1.0.0": {
+      "sha512": "Opvg3dqo/MkpEVvD2z6f9s3Z8z4hNUKjMIVsK8RDY13pGicnKWzrzFxtimFU6kr5pOq6e+4FMWXHTf34gAaWIw==",
+      "type": "package",
+      "path": "nestedcheckedrecords.api/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        "README.md",
+        "lean-bridge/component/allocation-guard.h",
+        "lean-bridge/component/artifacts.json",
+        "lean-bridge/component/binding-ir.json",
+        "lean-bridge/component/component.h",
+        "lean-bridge/component/generated.lean",
+        "lean-bridge/component/metadata.json",
+        "lean-bridge/component/model.json",
+        "lean-bridge/component/native-component.json",
+        "lean-bridge/dotnet/binding-manifest.json",
+        "lean-bridge/dotnet/global.json",
+        "lean-bridge/dotnet/src/LeanBridge.Nestedcheckedrecords/Api.cs",
+        "lean-bridge/dotnet/src/LeanBridge.Nestedcheckedrecords/LeanBridge.Nestedcheckedrecords.csproj",
+        "lean-bridge/dotnet/src/LeanBridge.Nestedcheckedrecords/Runtime.cs",
+        "lean-bridge/licenses/Lean-LICENSE",
+        "lean-bridge/licenses/Lean-LICENSES",
+        "lean-bridge/licenses/LeanBridge-LICENSE",
+        "lean-bridge/licenses/source-notices.json",
+        "lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+        "lean-bridge/native-c-adapter.json",
+        "lean-bridge/native-dotnet.json",
+        "lean-bridge/package-receipt.json",
+        "lean-bridge/runtime.json",
+        "lib/net8.0/LeanBridge.Nestedcheckedrecords.dll",
+        "lib/net8.0/LeanBridge.Nestedcheckedrecords.xml",
+        "nestedcheckedrecords.api.1.0.0.nupkg.sha512",
+        "nestedcheckedrecords.api.nuspec",
+        "runtimes/linux-x64/native/libcomponent_a63244d529ededa079e7.so",
+        "runtimes/linux-x64/native/liblean_bridge_native.so",
+        "runtimes/linux-x64/native/libleanshared.so",
+        "runtimes/linux-x64/native/libnestedcheckedrecords.so"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net8.0": [
+      "Nestedcheckedrecords.Api >= 1.0.0 <= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "/tmp/lean-bridge-nested-checked-record-dotnet-MM8NAe/consumer/packages": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "/tmp/lean-bridge-nested-checked-record-dotnet-MM8NAe/consumer/Consumer.csproj",
+      "projectName": "Consumer",
+      "projectPath": "/tmp/lean-bridge-nested-checked-record-dotnet-MM8NAe/consumer/Consumer.csproj",
+      "packagesPath": "/tmp/lean-bridge-nested-checked-record-dotnet-MM8NAe/consumer/packages",
+      "outputPath": "/tmp/lean-bridge-nested-checked-record-dotnet-MM8NAe/consumer/obj/",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "/tmp/lean-bridge-nested-checked-record-dotnet-MM8NAe/consumer/NuGet.Config"
+      ],
+      "originalTargetFrameworks": [
+        "net8.0"
+      ],
+      "sources": {
+        "/tmp/lean-bridge-nested-checked-record-dotnet-MM8NAe/consumer/feed": {}
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "allWarningsAsErrors": true,
+        "warnAsError": [
+          "NU1605"
+        ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "false",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      }
+    },
+    "frameworks": {
+      "net8.0": {
+        "targetAlias": "net8.0",
+        "dependencies": {
+          "Nestedcheckedrecords.Api": {
+            "target": "Package",
+            "version": "[1.0.0, 1.0.0]"
+          }
+        },
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "/app/.toolchains/dotnet/sdk/8.0.424/PortableRuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

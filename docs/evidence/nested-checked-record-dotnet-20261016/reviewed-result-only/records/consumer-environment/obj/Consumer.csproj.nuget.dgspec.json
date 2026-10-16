@@ -1,0 +1,73 @@
+{
+  "format": 1,
+  "restore": {
+    "/tmp/lean-bridge-nested-checked-record-dotnet-efjR8O/consumer/Consumer.csproj": {}
+  },
+  "projects": {
+    "/tmp/lean-bridge-nested-checked-record-dotnet-efjR8O/consumer/Consumer.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/tmp/lean-bridge-nested-checked-record-dotnet-efjR8O/consumer/Consumer.csproj",
+        "projectName": "Consumer",
+        "projectPath": "/tmp/lean-bridge-nested-checked-record-dotnet-efjR8O/consumer/Consumer.csproj",
+        "packagesPath": "/tmp/lean-bridge-nested-checked-record-dotnet-efjR8O/consumer/packages",
+        "outputPath": "/tmp/lean-bridge-nested-checked-record-dotnet-efjR8O/consumer/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/tmp/lean-bridge-nested-checked-record-dotnet-efjR8O/consumer/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "/tmp/lean-bridge-nested-checked-record-dotnet-efjR8O/consumer/feed": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true,
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "false",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Nestedcheckedrecords.Api": {
+              "target": "Package",
+              "version": "[1.0.0, 1.0.0]"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/app/.toolchains/dotnet/sdk/8.0.424/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

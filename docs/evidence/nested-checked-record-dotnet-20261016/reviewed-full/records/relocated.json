@@ -1,0 +1,58 @@
+{
+  "closure": {
+    "buildInputsSha256": "08634533b599cf18e37008cd1a07f85cae411b6e7c646ad682f3b8b5b2747a0c",
+    "cacheFilesSha256": "ed614702a66e41b6befe29f25c31ab66a08ec04697c8d642c76ad3816052fcd0",
+    "deployedFilesSha256": "de521b8a7c65e930fe40fe4edef4088c2218fcd32901ad166badb919f331cb18",
+    "interpreterSha256": "c61ff7f8665688b95ad0f34e780daaa67b978d26115b82797c07ea6044c566ed",
+    "packageFileSetSha256": "bbbd6529c61fdce39403416a4291f72fd366716b91c668750f9a96a8291063ce",
+    "receiptSha256": "2a58a6c4f39e7cc48b02615dc665307c4bd2cfc3e58795f7c2add2bae0215c5e"
+  },
+  "counts": {
+    "checks": 3924,
+    "hostRejections": 7,
+    "recoveries": 528,
+    "rejections": 524,
+    "rounds": 256,
+    "snapshots": 1054,
+    "wordBits": 64
+  },
+  "cwd": "/tmp/lean-bridge-nested-checked-record-dotnet-MM8NAe/consumer-relocated",
+  "framework": {
+    "args": [
+      "out/Consumer.dll",
+      "--runtime"
+    ],
+    "command": "/app/.toolchains/dotnet/dotnet",
+    "cwd": "/tmp/lean-bridge-nested-checked-record-dotnet-MM8NAe/consumer-relocated",
+    "facts": {
+      "architecture": "X64",
+      "command": "/app/.toolchains/dotnet/dotnet",
+      "description": ".NET 8.0.30",
+      "directory": "/app/.toolchains/dotnet/shared/Microsoft.NETCore.App/8.0.30/",
+      "littleEndian": true,
+      "os": "Debian GNU/Linux 12 (bookworm)",
+      "version": "8.0.30"
+    },
+    "run": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "{\"version\":\"8.0.30\",\"description\":\".NET 8.0.30\",\"directory\":\"/app/.toolchains/dotnet/shared/Microsoft.NETCore.App/8.0.30/\",\"command\":\"/app/.toolchains/dotnet/dotnet\",\"architecture\":\"X64\",\"os\":\"Debian GNU/Linux 12 (bookworm)\",\"littleEndian\":true}\n"
+    },
+    "runtimeFiles": {
+      "System.Private.CoreLib.dll": {
+        "bytes": 12773888,
+        "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+      },
+      "libcoreclr.so": {
+        "bytes": 6906008,
+        "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+      }
+    }
+  },
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":3924,\"rejections\":524,\"hostRejections\":7,\"recoveries\":528,\"snapshots\":1054,\"rounds\":256,\"wordBits\":64}\n"
+  },
+  "stage": "relocated"
+}

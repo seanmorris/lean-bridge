@@ -1,0 +1,396 @@
+{
+  "$schema": "http://json.schemastore.org/sarif-2.1.0",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "results": [
+        {
+          "ruleId": "CS0246",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "The type or namespace name 'Holder' could not be found (are you missing a using directive or an assembly reference?)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///tmp/lean-bridge-nested-checked-record-dotnet-efjR8O/api-probe/probe.cs"
+                },
+                "region": {
+                  "startLine": 19,
+                  "startColumn": 19,
+                  "endLine": 19,
+                  "endColumn": 25
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0246",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "The type or namespace name 'Choice' could not be found (are you missing a using directive or an assembly reference?)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///tmp/lean-bridge-nested-checked-record-dotnet-efjR8O/api-probe/probe.cs"
+                },
+                "region": {
+                  "startLine": 20,
+                  "startColumn": 19,
+                  "endLine": 20,
+                  "endColumn": 25
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0246",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "The type or namespace name 'ChoiceEmpty' could not be found (are you missing a using directive or an assembly reference?)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///tmp/lean-bridge-nested-checked-record-dotnet-efjR8O/api-probe/probe.cs"
+                },
+                "region": {
+                  "startLine": 21,
+                  "startColumn": 19,
+                  "endLine": 21,
+                  "endColumn": 30
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0246",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "The type or namespace name 'ChoicePacket' could not be found (are you missing a using directive or an assembly reference?)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///tmp/lean-bridge-nested-checked-record-dotnet-efjR8O/api-probe/probe.cs"
+                },
+                "region": {
+                  "startLine": 22,
+                  "startColumn": 19,
+                  "endLine": 22,
+                  "endColumn": 31
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0117",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "'Api' does not contain a definition for 'First'"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///tmp/lean-bridge-nested-checked-record-dotnet-efjR8O/api-probe/probe.cs"
+                },
+                "region": {
+                  "startLine": 5,
+                  "startColumn": 46,
+                  "endLine": 5,
+                  "endColumn": 51
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0117",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "'Api' does not contain a definition for 'Second'"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///tmp/lean-bridge-nested-checked-record-dotnet-efjR8O/api-probe/probe.cs"
+                },
+                "region": {
+                  "startLine": 6,
+                  "startColumn": 46,
+                  "endLine": 6,
+                  "endColumn": 52
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0117",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "'Api' does not contain a definition for 'Pair'"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///tmp/lean-bridge-nested-checked-record-dotnet-efjR8O/api-probe/probe.cs"
+                },
+                "region": {
+                  "startLine": 7,
+                  "startColumn": 46,
+                  "endLine": 7,
+                  "endColumn": 50
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0117",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "'Api' does not contain a definition for 'InArray'"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///tmp/lean-bridge-nested-checked-record-dotnet-efjR8O/api-probe/probe.cs"
+                },
+                "region": {
+                  "startLine": 8,
+                  "startColumn": 46,
+                  "endLine": 8,
+                  "endColumn": 53
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0117",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "'Api' does not contain a definition for 'InList'"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///tmp/lean-bridge-nested-checked-record-dotnet-efjR8O/api-probe/probe.cs"
+                },
+                "region": {
+                  "startLine": 9,
+                  "startColumn": 46,
+                  "endLine": 9,
+                  "endColumn": 52
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0117",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "'Api' does not contain a definition for 'InOption'"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///tmp/lean-bridge-nested-checked-record-dotnet-efjR8O/api-probe/probe.cs"
+                },
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 46,
+                  "endLine": 10,
+                  "endColumn": 54
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0117",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "'Api' does not contain a definition for 'InProduct'"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///tmp/lean-bridge-nested-checked-record-dotnet-efjR8O/api-probe/probe.cs"
+                },
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 46,
+                  "endLine": 11,
+                  "endColumn": 55
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0117",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "'Api' does not contain a definition for 'InExcept'"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///tmp/lean-bridge-nested-checked-record-dotnet-efjR8O/api-probe/probe.cs"
+                },
+                "region": {
+                  "startLine": 12,
+                  "startColumn": 46,
+                  "endLine": 12,
+                  "endColumn": 54
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0117",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "'Api' does not contain a definition for 'InHolder'"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///tmp/lean-bridge-nested-checked-record-dotnet-efjR8O/api-probe/probe.cs"
+                },
+                "region": {
+                  "startLine": 13,
+                  "startColumn": 46,
+                  "endLine": 13,
+                  "endColumn": 54
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0117",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "'Api' does not contain a definition for 'InChoice'"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///tmp/lean-bridge-nested-checked-record-dotnet-efjR8O/api-probe/probe.cs"
+                },
+                "region": {
+                  "startLine": 14,
+                  "startColumn": 46,
+                  "endLine": 14,
+                  "endColumn": 54
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0117",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "'Api' does not contain a definition for 'EchoArray'"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///tmp/lean-bridge-nested-checked-record-dotnet-efjR8O/api-probe/probe.cs"
+                },
+                "region": {
+                  "startLine": 15,
+                  "startColumn": 47,
+                  "endLine": 15,
+                  "endColumn": 56
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "tool": {
+        "driver": {
+          "name": "Microsoft (R) Visual C# Compiler",
+          "version": "4.11.0-3.25569.22 (3fb752d4)",
+          "dottedQuadFileVersion": "4.11.0.0",
+          "semanticVersion": "4.11.0",
+          "rules": [
+            {
+              "id": "CS0246",
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS0246)",
+              "properties": {
+                "category": "Compiler",
+                "tags": [
+                  "Compiler",
+                  "Telemetry",
+                  "NotConfigurable"
+                ]
+              }
+            },
+            {
+              "id": "CS0117",
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS0117)",
+              "properties": {
+                "category": "Compiler",
+                "tags": [
+                  "Compiler",
+                  "Telemetry",
+                  "NotConfigurable"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "columnKind": "utf16CodeUnits"
+    }
+  ]
+}
