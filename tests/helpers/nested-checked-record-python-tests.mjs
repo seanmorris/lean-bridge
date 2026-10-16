@@ -11,3 +11,5 @@ import "./nested-checked-record-python-ci-policy-tests.mjs";
 import "./nested-checked-record-python-ci-shell-tests.mjs";
 import "./nested-checked-record-python-ci-workflow-tests.mjs";
 import "./nested-checked-record-python-evidence-tests.mjs";
+import "./nested-checked-record-python-promotion-tests.mjs";
+import "./nested-checked-record-python-promotion-history-tests.mjs";

@@ -38,7 +38,7 @@ const expectedControls = (records, mode) => ({
 	recordControls: records * 2, resourceControls: 7, environmentControls: 44
 	, packageControls: 4, modelControls: mode === "full" ? 6 : 5
 });
-let cachedRepresentative;
+const cachedChecks = new Map();
 
 /**
  * Reconcile every retained wheel, record, source, execution, and control.
@@ -51,8 +51,8 @@ export const checkNestedCheckedRecordPythonEvidence = async (
 	read = readFile, { controls = "representative" } = {}
 ) => {
 	assert.ok(["all", "none", "representative"].includes(controls), controls);
-	if(read === readFile && controls === "representative" && cachedRepresentative)
-		return cachedRepresentative;
+	if(read === readFile && cachedChecks.has(controls))
+		return cachedChecks.get(controls);
 	const checking = (async () => {
 		const bytes = Buffer.from(await read(nestedCheckedRecordPythonEvidence + "/index.json"));
 		assert.equal(sha256(bytes), nestedCheckedRecordPythonEvidenceSha256);
@@ -138,6 +138,6 @@ export const checkNestedCheckedRecordPythonEvidence = async (
 			, hostedAcceptance: false
 		};
 	})();
-	if(read === readFile && controls === "representative") cachedRepresentative = checking;
+	if(read === readFile) cachedChecks.set(controls, checking);
 	return checking;
 };

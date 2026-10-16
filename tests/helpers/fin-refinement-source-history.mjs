@@ -107,6 +107,7 @@ import { beforeNestedCheckedRecordDotnetPromotionSource, nestedCheckedRecordDotn
 import { beforeNestedCheckedRecordJvmPromotionSource, nestedCheckedRecordJvmPromotionChangedPaths } from "./nested-checked-record-jvm-promotion-history.mjs";
 import { beforeNestedCheckedRecordPerlPromotionSource, nestedCheckedRecordPerlPromotionChangedPaths } from "./nested-checked-record-perl-promotion-history.mjs";
 import { beforeNestedCheckedRecordPhpPromotionSource, nestedCheckedRecordPhpPromotionChangedPaths } from "./nested-checked-record-php-promotion-history.mjs";
+import { beforeNestedCheckedRecordPythonPromotionSource, nestedCheckedRecordPythonPromotionChangedPaths } from "./nested-checked-record-python-promotion-history.mjs";
 import { beforeNominalPrimitiveSubtypeRustPromotionSource, nominalPrimitiveSubtypeRustPromotionChangedPaths } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
 import { beforeNestedCheckedRecordSource, nestedCheckedRecordChangedPaths } from "./nested-checked-record-source-history.mjs";
 import { beforeNestedCheckedRecordBrowserPromotionSource, nestedCheckedRecordBrowserPromotionChangedPaths } from "./nested-checked-record-browser-promotion-history.mjs";
@@ -760,6 +761,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeNestedCheckedRecordPythonPromotionSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeNestedCheckedRecordPhpPromotionSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeNestedCheckedRecordPerlPromotionSource(path, source, expected);
@@ -1121,6 +1124,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nestedCheckedRecordJvmPromotionChangedPaths
 	, ...nestedCheckedRecordPerlPromotionChangedPaths
 	, ...nestedCheckedRecordPhpPromotionChangedPaths
+	, ...nestedCheckedRecordPythonPromotionChangedPaths
 ])].sort());
 
 /**
