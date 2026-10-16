@@ -23,13 +23,19 @@ export const generateCompiledPhpWasmGraph = (model, adapters) => {
 	const initializer = `initialize_${adapters.module}`, abi = phpWasmGraphCarrierAbi(model);
 	const callable = Boolean(abi.callbacks);
 	const refinementExports = callable ? [] : model.exports.map((item, index) => ({
-		bindingId: item.bindingId, symbol: abi.exports[index].symbol, wrapper: `export${index}`
+		bindingId: item.bindingId, symbol: abi.exports[index].symbol
+		, wrapper: `export${index}`
 		, sourceDeclaration: item.name, parameters: item.parameters.map(() => ({}))
 		, ...(item.refinements ? { refinements: item.refinements } : {})
 	}));
-	const transport = callable ? generateNativeCallableGraphCalls(model.bindingIr, model.copiedGraph, { initializer, wordBits: 32 })
-		: generateNativeCopiedGraphAdapters(model.bindingIr, abi, { initializer, wordBits: 32
-			, refinementExports, nominalRefinements: nominalRefinementEntries(model.bindingIr.types) });
+	const transport = callable ? generateNativeCallableGraphCalls(
+		model.bindingIr, model.copiedGraph, { initializer, wordBits: 32 }
+	) : generateNativeCopiedGraphAdapters(
+		model.bindingIr, abi, {
+			initializer, wordBits: 32, refinementExports
+			, nominalRefinements: nominalRefinementEntries(model.bindingIr.types)
+		}
+	);
 	const zend = callable ? generateCallablePhpGraphZendAdapter(model.bindingIr)
 		: generateCopiedPhpGraphZendAdapter(model.bindingIr, { refinementDiagnostics: transport.refinementDiagnostics });
 	const manifest = JSON.parse(zend["graph-zend-manifest.json"]), prefix = transport.layout.prefix;

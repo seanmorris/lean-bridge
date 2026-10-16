@@ -1,0 +1,563 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nested-checked-record-quality-source-v1",
+  "predecessorCommit": "d52eeecb776abfae00e41792b7ae0e98d272f12d",
+  "draftParentCommit": "d52eeecb776abfae00e41792b7ae0e98d272f12d",
+  "pinCount": 62,
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "ae4edcee7454f59dc8adcde5969e70ba272362e61a9f13d663f008efc13a86ad",
+      "currentSha256": "47783b495041c8b5b2ce50eba30d3515ea60e89410f9a6e8e8a8b2c98dc4823d",
+      "edits": [
+        {
+          "start": 50871,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 58938,
+          "previous": "          \"sha256\": \"f7ddd3742de1f99f510f3c0b843cd1d9dbc2e084ccb53618a6e815cbf93b8275\"\n",
+          "current": "          \"sha256\": \"0acd4415f062f2aab94e6d6d74ed929ae0b72e1c041609190605714576de0a1a\"\n"
+        },
+        {
+          "start": 81338,
+          "previous": "          \"sha256\": \"f7ddd3742de1f99f510f3c0b843cd1d9dbc2e084ccb53618a6e815cbf93b8275\"\n",
+          "current": "          \"sha256\": \"0acd4415f062f2aab94e6d6d74ed929ae0b72e1c041609190605714576de0a1a\"\n"
+        },
+        {
+          "start": 98541,
+          "previous": "          \"sha256\": \"f7ddd3742de1f99f510f3c0b843cd1d9dbc2e084ccb53618a6e815cbf93b8275\"\n",
+          "current": "          \"sha256\": \"0acd4415f062f2aab94e6d6d74ed929ae0b72e1c041609190605714576de0a1a\"\n"
+        },
+        {
+          "start": 114834,
+          "previous": "          \"sha256\": \"f7ddd3742de1f99f510f3c0b843cd1d9dbc2e084ccb53618a6e815cbf93b8275\"\n",
+          "current": "          \"sha256\": \"0acd4415f062f2aab94e6d6d74ed929ae0b72e1c041609190605714576de0a1a\"\n"
+        },
+        {
+          "start": 128285,
+          "previous": "          \"sha256\": \"f7ddd3742de1f99f510f3c0b843cd1d9dbc2e084ccb53618a6e815cbf93b8275\"\n",
+          "current": "          \"sha256\": \"0acd4415f062f2aab94e6d6d74ed929ae0b72e1c041609190605714576de0a1a\"\n"
+        },
+        {
+          "start": 185686,
+          "previous": "          \"sha256\": \"fc6b8e644324196f249dc50b5c2c723c027a355eb9ed61d8d57c8286f61fbb23\"\n",
+          "current": "          \"sha256\": \"8adcb1162fdd26962ae4041e7c737acd47eda3f3ec82dbe36afb2a5d42e0fc4c\"\n"
+        },
+        {
+          "start": 289583,
+          "previous": "          \"sha256\": \"fc6b8e644324196f249dc50b5c2c723c027a355eb9ed61d8d57c8286f61fbb23\"\n",
+          "current": "          \"sha256\": \"8adcb1162fdd26962ae4041e7c737acd47eda3f3ec82dbe36afb2a5d42e0fc4c\"\n"
+        },
+        {
+          "start": 393793,
+          "previous": "          \"sha256\": \"fc6b8e644324196f249dc50b5c2c723c027a355eb9ed61d8d57c8286f61fbb23\"\n",
+          "current": "          \"sha256\": \"8adcb1162fdd26962ae4041e7c737acd47eda3f3ec82dbe36afb2a5d42e0fc4c\"\n"
+        },
+        {
+          "start": 486709,
+          "previous": "          \"sha256\": \"fc6b8e644324196f249dc50b5c2c723c027a355eb9ed61d8d57c8286f61fbb23\"\n",
+          "current": "          \"sha256\": \"8adcb1162fdd26962ae4041e7c737acd47eda3f3ec82dbe36afb2a5d42e0fc4c\"\n"
+        },
+        {
+          "start": 498380,
+          "previous": "          \"sha256\": \"fc6b8e644324196f249dc50b5c2c723c027a355eb9ed61d8d57c8286f61fbb23\"\n",
+          "current": "          \"sha256\": \"8adcb1162fdd26962ae4041e7c737acd47eda3f3ec82dbe36afb2a5d42e0fc4c\"\n"
+        },
+        {
+          "start": 508069,
+          "previous": "          \"sha256\": \"fc6b8e644324196f249dc50b5c2c723c027a355eb9ed61d8d57c8286f61fbb23\"\n",
+          "current": "          \"sha256\": \"8adcb1162fdd26962ae4041e7c737acd47eda3f3ec82dbe36afb2a5d42e0fc4c\"\n"
+        },
+        {
+          "start": 586858,
+          "previous": "          \"sha256\": \"fc6b8e644324196f249dc50b5c2c723c027a355eb9ed61d8d57c8286f61fbb23\"\n",
+          "current": "          \"sha256\": \"8adcb1162fdd26962ae4041e7c737acd47eda3f3ec82dbe36afb2a5d42e0fc4c\"\n"
+        },
+        {
+          "start": 597235,
+          "previous": "          \"sha256\": \"fc6b8e644324196f249dc50b5c2c723c027a355eb9ed61d8d57c8286f61fbb23\"\n",
+          "current": "          \"sha256\": \"8adcb1162fdd26962ae4041e7c737acd47eda3f3ec82dbe36afb2a5d42e0fc4c\"\n"
+        },
+        {
+          "start": 706033,
+          "previous": "          \"sha256\": \"fc6b8e644324196f249dc50b5c2c723c027a355eb9ed61d8d57c8286f61fbb23\"\n",
+          "current": "          \"sha256\": \"8adcb1162fdd26962ae4041e7c737acd47eda3f3ec82dbe36afb2a5d42e0fc4c\"\n"
+        },
+        {
+          "start": 707695,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 721726,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 733101,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 747321,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 758775,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 770846,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 782134,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 790717,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 797175,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 805561,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 813538,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 836468,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 867557,
+          "previous": "          \"sha256\": \"fc6b8e644324196f249dc50b5c2c723c027a355eb9ed61d8d57c8286f61fbb23\"\n",
+          "current": "          \"sha256\": \"8adcb1162fdd26962ae4041e7c737acd47eda3f3ec82dbe36afb2a5d42e0fc4c\"\n"
+        },
+        {
+          "start": 1020133,
+          "previous": "          \"sha256\": \"f7ddd3742de1f99f510f3c0b843cd1d9dbc2e084ccb53618a6e815cbf93b8275\"\n",
+          "current": "          \"sha256\": \"0acd4415f062f2aab94e6d6d74ed929ae0b72e1c041609190605714576de0a1a\"\n"
+        },
+        {
+          "start": 1051128,
+          "previous": "          \"sha256\": \"0a93eb1f0fd148cd5803e9f18ae69d78e23a6fcbad3445bc65bee5cf6dbe9465\"\n",
+          "current": "          \"sha256\": \"24712d3b46662a9598962a0abc981a5e0d72a75a9b2e5bc4e1218197926034e9\"\n"
+        },
+        {
+          "start": 1057157,
+          "previous": "          \"sha256\": \"fc6b8e644324196f249dc50b5c2c723c027a355eb9ed61d8d57c8286f61fbb23\"\n",
+          "current": "          \"sha256\": \"8adcb1162fdd26962ae4041e7c737acd47eda3f3ec82dbe36afb2a5d42e0fc4c\"\n"
+        },
+        {
+          "start": 1078061,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 1084759,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 1091762,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 1099268,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 1106222,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 1113856,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 1123094,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 1132221,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 1147156,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 1155203,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 1159465,
+          "previous": "          \"sha256\": \"fc6b8e644324196f249dc50b5c2c723c027a355eb9ed61d8d57c8286f61fbb23\"\n",
+          "current": "          \"sha256\": \"8adcb1162fdd26962ae4041e7c737acd47eda3f3ec82dbe36afb2a5d42e0fc4c\"\n"
+        },
+        {
+          "start": 1164175,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 1173566,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 1180502,
+          "previous": "          \"sha256\": \"f7ddd3742de1f99f510f3c0b843cd1d9dbc2e084ccb53618a6e815cbf93b8275\"\n",
+          "current": "          \"sha256\": \"0acd4415f062f2aab94e6d6d74ed929ae0b72e1c041609190605714576de0a1a\"\n"
+        },
+        {
+          "start": 1186589,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 1196230,
+          "previous": "          \"sha256\": \"f7ddd3742de1f99f510f3c0b843cd1d9dbc2e084ccb53618a6e815cbf93b8275\"\n",
+          "current": "          \"sha256\": \"0acd4415f062f2aab94e6d6d74ed929ae0b72e1c041609190605714576de0a1a\"\n"
+        },
+        {
+          "start": 1219701,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 1228774,
+          "previous": "          \"sha256\": \"f7ddd3742de1f99f510f3c0b843cd1d9dbc2e084ccb53618a6e815cbf93b8275\"\n",
+          "current": "          \"sha256\": \"0acd4415f062f2aab94e6d6d74ed929ae0b72e1c041609190605714576de0a1a\"\n"
+        },
+        {
+          "start": 1249945,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 1259056,
+          "previous": "          \"sha256\": \"f7ddd3742de1f99f510f3c0b843cd1d9dbc2e084ccb53618a6e815cbf93b8275\"\n",
+          "current": "          \"sha256\": \"0acd4415f062f2aab94e6d6d74ed929ae0b72e1c041609190605714576de0a1a\"\n"
+        },
+        {
+          "start": 1282881,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 1292177,
+          "previous": "          \"sha256\": \"f7ddd3742de1f99f510f3c0b843cd1d9dbc2e084ccb53618a6e815cbf93b8275\"\n",
+          "current": "          \"sha256\": \"0acd4415f062f2aab94e6d6d74ed929ae0b72e1c041609190605714576de0a1a\"\n"
+        },
+        {
+          "start": 1322184,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 1331936,
+          "previous": "          \"sha256\": \"f7ddd3742de1f99f510f3c0b843cd1d9dbc2e084ccb53618a6e815cbf93b8275\"\n",
+          "current": "          \"sha256\": \"0acd4415f062f2aab94e6d6d74ed929ae0b72e1c041609190605714576de0a1a\"\n"
+        },
+        {
+          "start": 1348725,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 1371105,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 1390997,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 1400894,
+          "previous": "          \"sha256\": \"0a93eb1f0fd148cd5803e9f18ae69d78e23a6fcbad3445bc65bee5cf6dbe9465\"\n",
+          "current": "          \"sha256\": \"24712d3b46662a9598962a0abc981a5e0d72a75a9b2e5bc4e1218197926034e9\"\n"
+        },
+        {
+          "start": 1401227,
+          "previous": "          \"sha256\": \"fc6b8e644324196f249dc50b5c2c723c027a355eb9ed61d8d57c8286f61fbb23\"\n",
+          "current": "          \"sha256\": \"8adcb1162fdd26962ae4041e7c737acd47eda3f3ec82dbe36afb2a5d42e0fc4c\"\n"
+        },
+        {
+          "start": 1412450,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        },
+        {
+          "start": 1425469,
+          "previous": "          \"sha256\": \"e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5\"\n",
+          "current": "          \"sha256\": \"df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6\"\n"
+        }
+      ]
+    },
+    {
+      "path": "scripts/update-recursive-subtype-php-wasm-history.mjs",
+      "previousSha256": "f897d37150c610d1e787f6cad4ee0eddbb346256d0d03c4e0ee3df3d5d1d2cff",
+      "currentSha256": "ccdc85fa77b2c88d55a040e6e2f0da8259950d66cf49ec48d45ca3bab865f1f3",
+      "edits": [
+        {
+          "start": 20,
+          "previous": "/** Record the exact recursive checked-Subtype PHP-Wasm transition once. */\n",
+          "current": "/**\n * Record the exact recursive checked-Subtype PHP-Wasm transition once.\n *\n * @file\n */\n"
+        },
+        {
+          "start": 1584,
+          "previous": "\t\ttry { diff = execFileSync(\"diff\", [\"--speed-large-files\", \"--unified=0\", previousPath, currentPath], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 }); }\n\t\tcatch(error) { if(error.status !== 1 || typeof error.stdout !== \"string\") throw error; diff = error.stdout; }\n",
+          "current": "\t\ttry\n\t\t{\n\t\t\tdiff = execFileSync(\"diff\", [\"--speed-large-files\", \"--unified=0\"\n\t\t\t\t, previousPath, currentPath]\n\t\t\t, { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n\t\t}\n\t\tcatch(error)\n\t\t{\n\t\t\tif(error.status !== 1 || typeof error.stdout !== \"string\") throw error;\n\t\t\tdiff = error.stdout;\n\t\t}\n"
+        },
+        {
+          "start": 1972,
+          "previous": "\t\tconst edits = [...diff.matchAll(/^@@ -(\\d+)(?:,(\\d+))? \\+(\\d+)(?:,(\\d+))? @@/gmu)].map(match => {\n",
+          "current": "\t\tconst edits = [...diff.matchAll(\n\t\t\t/^@@ -(\\d+)(?:,(\\d+))? \\+(\\d+)(?:,(\\d+))? @@/gmu\n\t\t)].map(match => {\n"
+        },
+        {
+          "start": 3274,
+          "previous": "finally { await rm(directory, { recursive: true }); }\n",
+          "current": "finally\n{\n\tawait rm(directory, { recursive: true });\n}\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/c/native-graph-adapters.mjs",
+      "previousSha256": "f7ddd3742de1f99f510f3c0b843cd1d9dbc2e084ccb53618a6e815cbf93b8275",
+      "currentSha256": "0acd4415f062f2aab94e6d6d74ed929ae0b72e1c041609190605714576de0a1a",
+      "edits": [
+        {
+          "start": 1821,
+          "previous": "/** Render exact, recoverable checked-refinement diagnostics over native graph values. */\n",
+          "current": "/**\n * Render exact, recoverable checked-refinement diagnostics over native graph values.\n *\n * @param root0 - Native graph layout and checked-refinement inputs.\n * @param root0.abi - Fixed-width component ABI.\n * @param root0.exports - Selected exported declarations.\n * @param root0.nominalRefinements - Constructor choices by nominal type.\n * @param root0.layout - Generated graph layout.\n * @param root0.table - Graph nodes keyed by node identifier.\n * @param root0.walker - Resolve a graph node to its generated walker name.\n */\n"
+        },
+        {
+          "start": 11595,
+          "previous": "\treturn { normalized, validators: [...validators].sort(), bounds: [...bounds.values()].sort()\n\t\t, prototypes: [...helpers.values()].map(entry => `static uint32_t ${entry.name}(const ${table.get(entry.nodeId).name} *, uint32_t, uint32_t *);`)\n",
+          "current": "\treturn {\n\t\tnormalized, validators: [...validators].sort()\n\t\t, bounds: [...bounds.values()].sort()\n\t\t, prototypes: [...helpers.values()].map(entry =>\n\t\t\t`static uint32_t ${entry.name}(const ${table.get(entry.nodeId).name} *, uint32_t, uint32_t *);`)\n"
+        },
+        {
+          "start": 35755,
+          "previous": "\tconst header = [`#include \"${layout.prefix}-graph-types.h\"`, \"#ifdef __cplusplus\", 'extern \"C\" {', \"#endif\", ...declarations\n",
+          "current": "\tconst header = [\n\t\t`#include \"${layout.prefix}-graph-types.h\"`, \"#ifdef __cplusplus\"\n\t\t, 'extern \"C\" {', \"#endif\", ...declarations\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/php-wasm-graph-component.mjs",
+      "previousSha256": "0a93eb1f0fd148cd5803e9f18ae69d78e23a6fcbad3445bc65bee5cf6dbe9465",
+      "currentSha256": "24712d3b46662a9598962a0abc981a5e0d72a75a9b2e5bc4e1218197926034e9",
+      "edits": [
+        {
+          "start": 1337,
+          "previous": "\t\tbindingId: item.bindingId, symbol: abi.exports[index].symbol, wrapper: `export${index}`\n",
+          "current": "\t\tbindingId: item.bindingId, symbol: abi.exports[index].symbol\n\t\t, wrapper: `export${index}`\n"
+        },
+        {
+          "start": 1581,
+          "previous": "\tconst transport = callable ? generateNativeCallableGraphCalls(model.bindingIr, model.copiedGraph, { initializer, wordBits: 32 })\n\t\t: generateNativeCopiedGraphAdapters(model.bindingIr, abi, { initializer, wordBits: 32\n\t\t\t, refinementExports, nominalRefinements: nominalRefinementEntries(model.bindingIr.types) });\n",
+          "current": "\tconst transport = callable ? generateNativeCallableGraphCalls(\n\t\tmodel.bindingIr, model.copiedGraph, { initializer, wordBits: 32 }\n\t) : generateNativeCopiedGraphAdapters(\n\t\tmodel.bindingIr, abi, {\n\t\t\tinitializer, wordBits: 32, refinementExports\n\t\t\t, nominalRefinements: nominalRefinementEntries(model.bindingIr.types)\n\t\t}\n\t);\n"
+        }
+      ]
+    },
+    {
+      "path": "src/release/php-wasm-copied-package.mjs",
+      "previousSha256": "fc6b8e644324196f249dc50b5c2c723c027a355eb9ed61d8d57c8286f61fbb23",
+      "currentSha256": "8adcb1162fdd26962ae4041e7c737acd47eda3f3ec82dbe36afb2a5d42e0fc4c",
+      "edits": [
+        {
+          "start": 2368,
+          "previous": "",
+          "current": " * @param projection.ir - Compiler-authenticated Binding IR.\n * @param projection.namespace - Public PHP namespace.\n * @param projection.functions - Public functions to document.\n * @param projection.recursive - Whether recursive paths are supported.\n"
+        },
+        {
+          "start": 5721,
+          "previous": "\tir: projection.ir, namespace: projection.namespace, functions: projection.surface.functions\n",
+          "current": "\tir: projection.ir, namespace: projection.namespace\n\t, functions: projection.surface.functions\n"
+        },
+        {
+          "start": 6117,
+          "previous": "\tir, namespace: projection.namespace, functions: projection.functions, recursive: true\n",
+          "current": "\tir, namespace: projection.namespace, functions: projection.functions\n\t, recursive: true\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/nested-checked-record-consumers/full.mts",
+      "previousSha256": "47317b8bdadf3bebd2c58fe5a0ac0c698b07faac96a706fc9843e546b1fa6942",
+      "currentSha256": "c0e741f7a879670104e93e622035944c4fcf90df4383e7d61b66ea003630261e",
+      "edits": [
+        {
+          "start": 0,
+          "previous": "/** Strict public types for every nested checked-record export. */\n",
+          "current": "/**\n * Strict public types for every nested checked-record export.\n *\n * @file\n */\n"
+        },
+        {
+          "start": 129,
+          "previous": "type Some<T> = Readonly<{ tag: \"some\"; value: T }>;\ntype None = Readonly<{ tag: \"none\" }>;\n",
+          "current": "/** An inhabited optional carrier preserves its exact checked payload. */\ntype Some<T> = Readonly<{\n\t/** Public present-value discriminator. */\n\ttag: \"some\";\n\t/** Proof-free checked payload. */\n\tvalue: T;\n}>;\n/** An absent optional carrier has no payload. */\ntype None = Readonly<{\n\t/** Public absent-value discriminator. */\n\ttag: \"none\";\n}>;\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/nested-checked-record-consumers/result-only.mts",
+      "previousSha256": "162f3b71bd3d99885ea16a763cb6daf25e09acc03ee8c18f86e2e7e362fa29f3",
+      "currentSha256": "6dfc53e1b682a9048addd22464ff685f1f16119b182d011e728cd5bea040473f",
+      "edits": [
+        {
+          "start": 0,
+          "previous": "/** Strict public types for the independently selected result-only package. */\n",
+          "current": "/**\n * Strict public types for the independently selected result-only package.\n *\n * @file\n */\n"
+        },
+        {
+          "start": 141,
+          "previous": "type Some<T> = Readonly<{ tag: \"some\"; value: T }>;\ntype None = Readonly<{ tag: \"none\" }>;\n",
+          "current": "/** An inhabited optional carrier preserves its exact checked payload. */\ntype Some<T> = Readonly<{\n\t/** Public present-value discriminator. */\n\ttag: \"some\";\n\t/** Proof-free checked payload. */\n\tvalue: T;\n}>;\n/** An absent optional carrier has no payload. */\ntype None = Readonly<{\n\t/** Public absent-value discriminator. */\n\ttag: \"none\";\n}>;\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "0c985c222c7d57563cdea67e8af41c0a51cd93fd8db930dcbab94efd1e53b3e7",
+      "currentSha256": "0be9c239ed31b19bd8650beb268fa6687e5f8cf0442dc2cca153a58491016d9e",
+      "edits": [
+        {
+          "start": 10829,
+          "previous": "",
+          "current": "import { beforeNestedCheckedRecordQualitySource, nestedCheckedRecordQualityChangedPaths } from \"./nested-checked-record-quality-source-history.mjs\";\n"
+        },
+        {
+          "start": 61923,
+          "previous": "",
+          "current": "\tsource = beforeNestedCheckedRecordQualitySource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 77193,
+          "previous": "",
+          "current": "\t, ...nestedCheckedRecordQualityChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/recursive-subtype-php-wasm-source-history-tests.mjs",
+      "previousSha256": "517ea33e6a809751c9d6649aeeb65d4a82523d9492ce723b03ee34234ff6e6b6",
+      "currentSha256": "738b901a320d1a95b1b7791e63ad117d9dc980b62f5a12bd6d6907fcff8c408f",
+      "edits": [
+        {
+          "start": 0,
+          "previous": "/** Exact source-history controls for recursive checked PHP-Wasm graphs. */\n",
+          "current": "/**\n * Exact source-history controls for recursive checked PHP-Wasm graphs.\n *\n * @file\n */\n"
+        },
+        {
+          "start": 1391,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst current = beforeFinRefinementSource(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\"), update.currentSha256\n\t\t);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/recursive-subtype-php-wasm-source-history.mjs",
+      "previousSha256": "d3a16e8fcf2e3f29f58724ce8e8a1a90acd2d58553c523d915000775ae5f0c9d",
+      "currentSha256": "249644b95daa897e19882c883bc21a0bac85c9c994273f2ced1d8ebcdccabdd8",
+      "edits": [
+        {
+          "start": 2265,
+          "previous": "/** Reverse one authenticated complete-source transition. */\n",
+          "current": "/**\n * Reverse one authenticated complete-source transition.\n *\n * @param source - Complete current source text.\n * @param update - Exact immutable transition.\n */\n"
+        },
+        {
+          "start": 3382,
+          "previous": "/** Remove only this transition when its complete current identity matches. */\n",
+          "current": "/**\n * Remove only this transition when its complete current identity matches.\n *\n * @param path - Repository-relative source path.\n * @param source - Complete current source text.\n */\n"
+        },
+        {
+          "start": 4018,
+          "previous": "/** Preserve unknown edits and stop at an explicitly requested digest. */\n",
+          "current": "/**\n * Preserve unknown edits and stop at an explicitly requested digest.\n *\n * @param path - Repository-relative source path.\n * @param source - Complete current or historical source text.\n * @param expected - Optional exact stopping digest.\n */\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/recursive-subtype-php-wasm-tests.mjs",
+      "previousSha256": "98030ee3044c4ba3ccbeb6080ce89377f9c20e85f898655e397c4516f58b23b9",
+      "currentSha256": "10ab544e71172f4dc341aeaf4b363213f807ce96f230f4843552aaea7997980f",
+      "edits": [
+        {
+          "start": 3600,
+          "previous": "\tconst abi = { version: componentRecursiveAbi, dispatch: componentRecursiveDispatch\n",
+          "current": "\tconst abi = {\n\t\tversion: componentRecursiveAbi, dispatch: componentRecursiveDispatch\n"
+        },
+        {
+          "start": 3734,
+          "previous": "\t\t, exports: ir.declarations.map(item => ({ bindingId: item.id\n",
+          "current": "\t\t, exports: ir.declarations.map(item => ({\n\t\t\tbindingId: item.id\n"
+        },
+        {
+          "start": 4016,
+          "previous": "\tconst refinementExports = ir.declarations.map((item, index) => ({ bindingId: item.id\n",
+          "current": "\tconst refinementExports = ir.declarations.map((item, index) => ({\n\t\tbindingId: item.id\n"
+        },
+        {
+          "start": 4169,
+          "previous": "\t\t, sourceDeclaration: item.source.declaration, parameters: item.parameters.map(() => ({}))\n",
+          "current": "\t\t, sourceDeclaration: item.source.declaration\n\t\t, parameters: item.parameters.map(() => ({}))\n"
+        },
+        {
+          "start": 4475,
+          "previous": "\t\t, refinementExports, nominalRefinements: nominalRefinementEntries(ir.types) });\n",
+          "current": "\t\t, refinementExports\n\t\t, nominalRefinements: nominalRefinementEntries(ir.types) });\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/type-surface.test.mjs",
+      "previousSha256": "e5ed4a43e9a6e6b6651235efe2566f105f264f775ace73bd0b8be19ce3b6e1c5",
+      "currentSha256": "df123b1184f08b25c8b9ecbcd18fc882e67e91dc41a9ba9ac5376cfd40f1fcb6",
+      "edits": [
+        {
+          "start": 6001,
+          "previous": "",
+          "current": "import { withoutNestedCheckedRecordQuality } from \"./helpers/nested-checked-record-quality-source-history.mjs\";\n"
+        },
+        {
+          "start": 7872,
+          "previous": "\tlet current = withoutNestedCheckedRecordNativePromotion(file\n",
+          "current": "\tlet current = withoutNestedCheckedRecordQuality(file\n"
+        },
+        {
+          "start": 7961,
+          "previous": "",
+          "current": "\tcurrent = withoutNestedCheckedRecordNativePromotion(file, current);\n"
+        }
+      ]
+    }
+  ]
+}

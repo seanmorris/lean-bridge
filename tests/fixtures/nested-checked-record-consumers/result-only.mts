@@ -1,8 +1,22 @@
-/** Strict public types for the independently selected result-only package. */
+/**
+ * Strict public types for the independently selected result-only package.
+ *
+ * @file
+ */
 import * as api from "nestedcheckedrecords";
 
-type Some<T> = Readonly<{ tag: "some"; value: T }>;
-type None = Readonly<{ tag: "none" }>;
+/** An inhabited optional carrier preserves its exact checked payload. */
+type Some<T> = Readonly<{
+	/** Public present-value discriminator. */
+	tag: "some";
+	/** Proof-free checked payload. */
+	value: T;
+}>;
+/** An absent optional carrier has no payload. */
+type None = Readonly<{
+	/** Public absent-value discriminator. */
+	tag: "none";
+}>;
 const option: None | Some<api.Packet> = api.produceOption(4n);
 const produced: ReadonlyArray<api.Packet> = api.produceArray(4n);
 const packet: api.Packet = produced[0];

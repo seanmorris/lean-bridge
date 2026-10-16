@@ -34,7 +34,17 @@ const finBoundLimbs = bound => {
 	return limbs;
 };
 
-/** Render exact, recoverable checked-refinement diagnostics over native graph values. */
+/**
+ * Render exact, recoverable checked-refinement diagnostics over native graph values.
+ *
+ * @param root0 - Native graph layout and checked-refinement inputs.
+ * @param root0.abi - Fixed-width component ABI.
+ * @param root0.exports - Selected exported declarations.
+ * @param root0.nominalRefinements - Constructor choices by nominal type.
+ * @param root0.layout - Generated graph layout.
+ * @param root0.table - Graph nodes keyed by node identifier.
+ * @param root0.walker - Resolve a graph node to its generated walker name.
+ */
 const graphRefinementDiagnostics = ({ abi, exports, nominalRefinements, layout, table, walker }) => {
 	if(!exports.length) return null;
 	const normalized = componentRefinementMirrors(abi, exports, graphLeanType, nominalRefinements);
@@ -201,8 +211,11 @@ static inline int ng_fin_below(const uint32_t *data, size_t length, const uint32
 }
 const char *${layout.prefix}_graph_error(void) { return ng_refinement_length ? ng_refinement_message : NULL; }
 `;
-	return { normalized, validators: [...validators].sort(), bounds: [...bounds.values()].sort()
-		, prototypes: [...helpers.values()].map(entry => `static uint32_t ${entry.name}(const ${table.get(entry.nodeId).name} *, uint32_t, uint32_t *);`)
+	return {
+		normalized, validators: [...validators].sort()
+		, bounds: [...bounds.values()].sort()
+		, prototypes: [...helpers.values()].map(entry =>
+			`static uint32_t ${entry.name}(const ${table.get(entry.nodeId).name} *, uint32_t, uint32_t *);`)
 		, helpers: [...helpers.values()].map(entry => entry.lines.join("\n"))
 		, calls, support };
 };
@@ -570,7 +583,9 @@ export const generateNativeCopiedGraphAdapters = (ir, abi, { initializer = null,
 			, ...result.aggregate ? ["  result._bridge_owner = arena.head;", "  result._bridge_release = arena.head ? ng_release : NULL;"] : []
 			, "  *out = result; return NG_OK;", "}");
 	}
-	const header = [`#include "${layout.prefix}-graph-types.h"`, "#ifdef __cplusplus", 'extern "C" {', "#endif", ...declarations
+	const header = [
+		`#include "${layout.prefix}-graph-types.h"`, "#ifdef __cplusplus"
+		, 'extern "C" {', "#endif", ...declarations
 		, ...diagnostics ? [`const char *${layout.prefix}_graph_error(void);`] : []
 		, "#ifdef __cplusplus", "}", "#endif", ""].join("\n");
 	return { layout, typesHeader, header, source: lines.join("\n")

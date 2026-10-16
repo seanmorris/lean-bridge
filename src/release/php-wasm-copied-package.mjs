@@ -32,6 +32,10 @@ import { brickMathRequirement, bundledBrickMath } from "../backends/php/brick-ma
  * a bound document nothing, so their README bytes are unchanged.
  *
  * @param projection - Compiled copied PHP model of the package.
+ * @param projection.ir - Compiler-authenticated Binding IR.
+ * @param projection.namespace - Public PHP namespace.
+ * @param projection.functions - Public functions to document.
+ * @param projection.recursive - Whether recursive paths are supported.
  */
 const phpWasmRefinementReadme = ({ ir, namespace, functions, recursive = false }) => {
 	const types = ir.types;
@@ -64,7 +68,8 @@ const phpWasmRefinementReadme = ({ ir, namespace, functions, recursive = false }
  * @param projection - Compiled copied PHP model of the package.
  */
 export const phpWasmFinReadme = projection => phpWasmRefinementReadme({
-	ir: projection.ir, namespace: projection.namespace, functions: projection.surface.functions
+	ir: projection.ir, namespace: projection.namespace
+	, functions: projection.surface.functions
 });
 
 /**
@@ -74,7 +79,8 @@ export const phpWasmFinReadme = projection => phpWasmRefinementReadme({
  * @param projection - Compiled recursive PHP graph projection.
  */
 export const phpWasmGraphRefinementReadme = (ir, projection) => phpWasmRefinementReadme({
-	ir, namespace: projection.namespace, functions: projection.functions, recursive: true
+	ir, namespace: projection.namespace, functions: projection.functions
+	, recursive: true
 });
 
 const profile = "php-wasm-copied-loading-v1";

@@ -62,19 +62,24 @@ test("recursive Subtype fixture retains independent per-use checks and finite re
 
 test("recursive PHP-Wasm graph refinements report exact paths without retiring the runtime", () => {
 	const ir = recursiveSubtypeReview();
-	const abi = { version: componentRecursiveAbi, dispatch: componentRecursiveDispatch
+	const abi = {
+		version: componentRecursiveAbi, dispatch: componentRecursiveDispatch
 		, types: componentRecordDefinitions(ir, true)
-		, exports: ir.declarations.map(item => ({ bindingId: item.id
+		, exports: ir.declarations.map(item => ({
+			bindingId: item.id
 			, symbol: `lean_bridge_${sha256(`${ir.component.id}\0${item.id}`).slice(0, 24)}`
 			, parameters: item.parameters.map(parameter => parameter.type)
 			, result: item.result.type, resultMode: item.resultMode })) };
-	const refinementExports = ir.declarations.map((item, index) => ({ bindingId: item.id
+	const refinementExports = ir.declarations.map((item, index) => ({
+		bindingId: item.id
 		, symbol: abi.exports[index].symbol, wrapper: `export${index}`
-		, sourceDeclaration: item.source.declaration, parameters: item.parameters.map(() => ({}))
+		, sourceDeclaration: item.source.declaration
+		, parameters: item.parameters.map(() => ({}))
 		, refinements: item.source.extensions["lean-lang.org/refinements"] }));
 	const native = generateNativeCopiedGraphAdapters(ir, abi, { wordBits: 32
 		, initializer: "initialize_LeanBridgeNative0123456789abcdef"
-		, refinementExports, nominalRefinements: nominalRefinementEntries(ir.types) });
+		, refinementExports
+		, nominalRefinements: nominalRefinementEntries(ir.types) });
 	assert.equal(native.refinementDiagnostics, true);
 	assert.match(native.header, /const char \*recursivesubtypes_graph_error\(void\);/u);
 	assert.match(native.source, /static _Thread_local char ng_refinement_message/u);

@@ -1,4 +1,8 @@
-/** Exact source-history controls for recursive checked PHP-Wasm graphs. */
+/**
+ * Exact source-history controls for recursive checked PHP-Wasm graphs.
+ *
+ * @file
+ */
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
@@ -25,7 +29,9 @@ test("recursive checked PHP-Wasm history reconstructs every predecessor source",
 	assert.deepEqual(record.updates.map(update => update.path), recursiveSubtypePhpWasmChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = execFileSync("git", ["show", `${recursiveSubtypePhpWasmPredecessor}:${update.path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 		assert.equal(reverseRecursiveSubtypePhpWasmUpdate(current, update), previous);

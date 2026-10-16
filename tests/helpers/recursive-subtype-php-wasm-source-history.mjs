@@ -49,7 +49,12 @@ export const recursiveSubtypePhpWasmChangedPaths = Object.freeze([
 ]);
 let history;
 
-/** Reverse one authenticated complete-source transition. */
+/**
+ * Reverse one authenticated complete-source transition.
+ *
+ * @param source - Complete current source text.
+ * @param update - Exact immutable transition.
+ */
 export const reverseRecursiveSubtypePhpWasmUpdate = (source, update) => {
 	assert.ok(recursiveSubtypePhpWasmChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
@@ -69,7 +74,12 @@ export const reverseRecursiveSubtypePhpWasmUpdate = (source, update) => {
 	return previous;
 };
 
-/** Remove only this transition when its complete current identity matches. */
+/**
+ * Remove only this transition when its complete current identity matches.
+ *
+ * @param path - Repository-relative source path.
+ * @param source - Complete current source text.
+ */
 export const withoutRecursiveSubtypePhpWasm = (path, source) => {
 	if(typeof source !== "string" || !recursiveSubtypePhpWasmChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(recursiveSubtypePhpWasmHistoryPath, "utf8"));
@@ -78,7 +88,13 @@ export const withoutRecursiveSubtypePhpWasm = (path, source) => {
 		? reverseRecursiveSubtypePhpWasmUpdate(source, update) : source;
 };
 
-/** Preserve unknown edits and stop at an explicitly requested digest. */
+/**
+ * Preserve unknown edits and stop at an explicitly requested digest.
+ *
+ * @param path - Repository-relative source path.
+ * @param source - Complete current or historical source text.
+ * @param expected - Optional exact stopping digest.
+ */
 export const beforeRecursiveSubtypePhpWasmSource = (path, source, expected) => {
 	source = beforeNominalPrimitiveSubtypePhpWasmPromotionSource(path, source, expected);
 	if(typeof source !== "string" || !recursiveSubtypePhpWasmChangedPaths.includes(path)

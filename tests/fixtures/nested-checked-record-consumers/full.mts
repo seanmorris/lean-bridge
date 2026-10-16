@@ -1,8 +1,22 @@
-/** Strict public types for every nested checked-record export. */
+/**
+ * Strict public types for every nested checked-record export.
+ *
+ * @file
+ */
 import * as api from "nestedcheckedrecords";
 
-type Some<T> = Readonly<{ tag: "some"; value: T }>;
-type None = Readonly<{ tag: "none" }>;
+/** An inhabited optional carrier preserves its exact checked payload. */
+type Some<T> = Readonly<{
+	/** Public present-value discriminator. */
+	tag: "some";
+	/** Proof-free checked payload. */
+	value: T;
+}>;
+/** An absent optional carrier has no payload. */
+type None = Readonly<{
+	/** Public absent-value discriminator. */
+	tag: "none";
+}>;
 const packet: api.Packet = { digit: 2n, word: 3n };
 const holder: api.Holder = { packet, tag: 4n };
 const choice: api.Choice = { kind: "packet", value: packet };

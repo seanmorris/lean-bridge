@@ -54,6 +54,7 @@ import { nominalPrimitiveSubtypeJvmProfiles, nominalPrimitiveSubtypeJvmField } f
 import { beforeNominalPrimitiveSubtypeJvmPromotionSource } from "./helpers/nominal-primitive-subtype-jvm-promotion-history.mjs";
 import { withoutNestedCheckedRecordNativeCorrection } from "./helpers/nested-checked-record-native-correction-source-history.mjs";
 import { withoutNestedCheckedRecordNativePromotion } from "./helpers/nested-checked-record-native-promotion-history.mjs";
+import { withoutNestedCheckedRecordQuality } from "./helpers/nested-checked-record-quality-source-history.mjs";
 
 const execute = promisify(execFile);
 const root = path.resolve(import.meta.dirname, "..");
@@ -95,8 +96,9 @@ const observationFixture = () => {
 
 test("historical shape comparisons preserve old cells without weakening the live classifier", async () => {
 	const file = "docs/type-surface.v1.json";
-	let current = withoutNestedCheckedRecordNativePromotion(file
+	let current = withoutNestedCheckedRecordQuality(file
 		, await readFile(file, "utf8"));
+	current = withoutNestedCheckedRecordNativePromotion(file, current);
 	current = withoutNestedCheckedRecordNativeCorrection(file, current);
 	current = beforeNominalPrimitiveSubtypeJvmPromotionSource(file, current);
 	current = beforeNominalPrimitiveSubtypeWitPromotionSource(file, current);
