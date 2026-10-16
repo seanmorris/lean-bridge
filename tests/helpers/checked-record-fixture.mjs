@@ -159,10 +159,10 @@ const refusals = {
 	, dependent: [[null], /dependent or unresolved native type/u]
 	, witnessed: [[null], /checked records need at least one payload field/u]
 	, digitOf: [["mkDigit"], /checked record payload fields cannot carry refinements yet/u]
-	, inArray: [[null], /checked records currently require a top-level parameter or result/u]
-	, inOption: [[null], /checked records currently require a top-level parameter or result/u]
-	, held: [[null], /checked records currently require a top-level parameter or result/u]
-	, chosen: [[null], /checked records currently require a top-level parameter or result/u]
+	, inArray: [[null], /nested checked records require an exact checked-record selection/u]
+	, inOption: [[null], /nested checked records require an exact checked-record selection/u]
+	, held: [[null], /nested checked records require an exact checked-record selection/u]
+	, chosen: [[null], /nested checked records require an exact checked-record selection/u]
 	, called: [[null], /checked records currently require a top-level parameter or result/u] };
 
 /**

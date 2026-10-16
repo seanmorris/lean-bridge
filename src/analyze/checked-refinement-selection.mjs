@@ -26,6 +26,21 @@ export const validateCheckedRefinementSelection = selection => {
 		if(value === null) return false;
 		if(Object.hasOwn(value ?? {}, "constructor"))
 		{
+			if(value.kind === "checked-record")
+			{
+				closed(value, ["kind", "name", "constructor", "fields"]);
+				if(typeof value.name !== "string" || !leanName.test(value.name)
+					|| typeof value.constructor !== "string" || !leanName.test(value.constructor)
+					|| !Array.isArray(value.fields) || !value.fields.length || value.fields.length > 1024) fail();
+				const names = new Set();
+				for(const field of value.fields)
+				{
+					closed(field, ["name", "refinement"]);
+					if(typeof field.name !== "string" || !memberName.test(field.name) || names.has(field.name)) fail();
+					names.add(field.name); visit(field.refinement, depth + 1);
+				}
+				return true;
+			}
 			closed(value, ["constructor"]);
 			if(typeof value.constructor !== "string" || !leanName.test(value.constructor)) fail();
 			return true;
@@ -89,6 +104,22 @@ export const checkedRefinementSelection = refinement => {
 			closed(value, ["kind", "bound"]);
 			if(typeof value.bound !== "string" || !/^(?:0|[1-9][0-9]*)$(?![\s\S])/.test(value.bound)) fail();
 			return null;
+		}
+		if(value?.kind === "checked-record" && Object.hasOwn(value, "fields"))
+		{
+			closed(value, ["kind", "name", "constructor", "fields"]);
+			if(typeof value.name !== "string" || !leanName.test(value.name) || !Array.isArray(value.fields)
+				|| value.constructor !== null && (typeof value.constructor !== "string" || !leanName.test(value.constructor))) fail();
+			if(value.constructor === null) return null;
+			const fields = value.fields.map(field => {
+				closed(field, ["name", "refinement"]);
+				if(typeof field.name !== "string" || !memberName.test(field.name)) fail();
+				return { name: field.name, refinement: visit(field.refinement, depth + 1) };
+			});
+			return validateCheckedRefinementSelection({
+				kind: "checked-record", name: value.name
+				, constructor: value.constructor, fields
+			});
 		}
 		if(["subtype", "checked-record"].includes(value?.kind))
 		{
@@ -159,17 +190,34 @@ export const projectionCheckedSelection = type => {
 				if(typeof definition?.name !== "string" || table.has(definition.name)) fail();
 				table.set(definition.name, definition);
 			}
-			return visit(value.root, depth + 1, table, new Set());
+			return visit(value.root, depth, table, new Set());
 		}
 		if(value.kind === "reference")
 		{
 			if(typeof value.name !== "string" || !definitions.has(value.name)) fail();
 			if(seen.has(value.name)) return null;
-			return visit(definitions.get(value.name), depth + 1, definitions, new Set([...seen, value.name]));
+			return visit(definitions.get(value.name), depth, definitions, new Set([...seen, value.name]));
 		}
-		if(value.kind === "alias") return visit(value.target, depth + 1, definitions, seen);
-		if(value.kind === "refinement") return ["subtype", "checked-record"].includes(value.predicate.kind) && value.predicate.constructor !== null
-			? { constructor: value.predicate.constructor } : null;
+		if(value.kind === "alias") return visit(value.target, depth, definitions, seen);
+		if(value.kind === "refinement")
+		{
+			if(!["subtype", "checked-record"].includes(value.predicate.kind) || value.predicate.constructor === null) return null;
+			if(value.predicate.kind !== "checked-record" || value.base?.kind !== "record") return { constructor: value.predicate.constructor };
+			let selected = false;
+			const fields = value.base.fields.map(field => {
+				const refinement = visit(field.type, depth + 1, definitions, seen);
+				selected ||= refinement !== null;
+				return { name: field.name, refinement };
+			});
+			if(depth > 0 || selected)
+			{
+				return {
+					kind: "checked-record", name: value.base.name
+					, constructor: value.predicate.constructor, fields
+				};
+			}
+			return { constructor: value.predicate.constructor };
+		}
 		if(["record", "variant"].includes(value.kind))
 		{
 			let selected = false;

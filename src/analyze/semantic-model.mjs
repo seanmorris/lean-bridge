@@ -186,16 +186,16 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 			if(!target) throw new TypeError(`Missing compiler type definition: ${type.name}`);
 			return hasSubtype(target, references, new Set([...seen, type.name]));
 		}
-		return type.kind === "refinement" ? type.predicate.kind === "subtype"
+		return type.kind === "refinement" ? ["subtype", "checked-record"].includes(type.predicate.kind) || hasSubtype(type.base, references, seen)
 			: type.kind === "alias" ? hasSubtype(type.target, references, seen)
 				: type.kind === "record" ? type.fields.some(field => hasSubtype(field.type, references, seen))
 					: type.kind === "variant" ? type.cases.some(branch => branch.fields.some(field => hasSubtype(field.type, references, seen)))
 						: ["array", "list", "option"].includes(type.kind) ? hasSubtype(type.element, references, seen)
 							: ["tuple", "result"].includes(type.kind) && type.arguments.some(child => hasSubtype(child, references, seen));
 	};
-	const refinement = (type, nominal = false, shared = false, references = new Map(), seen = new Set()) => {
+	const refinement = (type, nominal = false, shared = false, references = new Map(), seen = new Set(), depth = 0, produced = false) => {
 		if(type.kind === "graph") return refinement(type.root, nominal, shared,
-			new Map(type.types.map(definition => [definition.name, definition])), new Set());
+			new Map(type.types.map(definition => [definition.name, definition])), new Set(), depth, produced);
 		if(type.kind === "reference")
 		{
 			// A nominal definition owns its own shared predicates. Duplicating them through
@@ -205,15 +205,31 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 			if(seen.has(type.name)) return null;
 			const target = references.get(type.name) ?? namedTypes.get(type.name);
 			if(!target) throw new TypeError(`Missing compiler type definition: ${type.name}`);
-			return refinement(target, true, shared, references, new Set([...seen, type.name]));
+			return refinement(target, true, shared, references, new Set([...seen, type.name]), depth, produced);
 		}
-		if(type.kind === "refinement") return shared && type.predicate.kind === "subtype" ? null : structuredClone(type.predicate);
-		if(nominal && type.kind === "alias") return refinement(type.target, true, shared, references, seen);
+		if(type.kind === "refinement")
+		{
+			if(shared && ["subtype", "checked-record"].includes(type.predicate.kind)) return null;
+			if(type.predicate.kind !== "checked-record") return structuredClone(type.predicate);
+			const fields = type.base.fields.map(field => ({ name: field.name
+				, refinement: refinement(field.type, true, shared, references, seen, depth + 1, produced) }));
+			return depth > 0 || fields.some(field => field.refinement !== null)
+				? { kind: "checked-record", name: type.base.name, constructor: type.predicate.constructor, fields }
+				: structuredClone(type.predicate);
+		}
+		if(type.kind === "record" && type.erased)
+		{
+			const fields = type.fields.map(field => ({ name: field.name
+				, refinement: refinement(field.type, true, shared, references, seen, depth + 1, produced) }));
+			return produced && (depth > 0 || fields.some(field => field.refinement !== null))
+				? { kind: "checked-record", name: type.name, constructor: null, fields } : null;
+		}
+		if(nominal && type.kind === "alias") return refinement(type.target, true, shared, references, seen, depth, produced);
 		if(nominal && ["record", "variant"].includes(type.kind))
 		{
 			let constrained = false;
 			const fields = members => members.map(field => {
-				const value = refinement(field.type, true, shared, references, seen);
+				const value = refinement(field.type, true, shared, references, seen, depth + 1, produced);
 				constrained ||= value !== null;
 				return { name: field.name, refinement: value };
 			});
@@ -223,14 +239,14 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 		}
 		const children = ["array", "list", "option"].includes(type.kind) ? [type.element]
 			: ["tuple", "result"].includes(type.kind) ? type.arguments : [];
-		const arguments_ = children.map(child => refinement(child, nominal, shared, references, seen));
+		const arguments_ = children.map(child => refinement(child, nominal, shared, references, seen, depth + 1, produced));
 		return arguments_.some(value => value !== null) ? { kind: type.kind, arguments: arguments_ } : null;
 	};
 	const declarations = included.map(item => {
 		const { projection } = item;
 		const contract = exportContractFor(request.contracts, item.identity);
 		const refinements = { parameters: projection.parameters.map(parameter => refinement(parameter.type, hasSubtype(parameter.type)))
-			, result: refinement(projection.result, hasSubtype(projection.result)) };
+			, result: refinement(projection.result, hasSubtype(projection.result), false, new Map(), new Set(), 0, true) };
 		const hasRefinements = refinements.result !== null || refinements.parameters.some(value => value !== null);
 		const hasCallback = projection.parameters.some(parameter => parameter.type.kind === "callback");
 		const parameters = projection.parameters.map((p, i) => parameter(p.type, i, contract?.parameters?.[i]));

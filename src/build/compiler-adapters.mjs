@@ -154,9 +154,30 @@ const validateRefinement = (value, path, leanType, depth = 0, produced = false, 
 			fail("invalid-compiler-adapter-plan", `${path} must be a canonical Fin bound over Nat`);
 		return;
 	}
+	if(value.kind === "checked-record" && Object.hasOwn(value, "fields"))
+	{
+		exactKeys(value, ["kind", "name", "constructor", "fields"], path);
+		const invalidConstructor = produced ? value.constructor !== null
+			: typeof value.constructor !== "string"
+				|| !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$/.test(value.constructor);
+		if(typeof value.name !== "string" || !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$/.test(value.name)
+			|| !Array.isArray(value.fields) || !value.fields.length || value.fields.length > 1024
+			|| invalidConstructor)
+			fail("invalid-compiler-adapter-plan", `${path} has an invalid checked-record refinement`);
+		const names = new Set();
+		for(const field of value.fields)
+		{
+			exactKeys(field, ["name", "refinement"], path);
+			if(typeof field.name !== "string" || !/^[A-Za-z_][A-Za-z0-9_']*$/.test(field.name) || names.has(field.name))
+				fail("invalid-compiler-adapter-plan", `${path} has an invalid checked-record field`);
+			names.add(field.name);
+			validateRefinement(field.refinement, `${path}.${field.name}`, undefined, depth + 1, produced, budget);
+		}
+		return;
+	}
 	exactKeys(value, ["kind", "constructor"], path);
 	const projected = value.kind === "subtype" && produced && value.constructor === null;
-	if(!["subtype", "checked-record"].includes(value.kind) || (value.kind === "checked-record" && depth !== 0) || (!projected && (typeof value.constructor !== "string"
+	if(!["subtype", "checked-record"].includes(value.kind) || (value.kind === "checked-record" && produced) || (!projected && (typeof value.constructor !== "string"
 		|| !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$/.test(value.constructor))))
 		fail("invalid-compiler-adapter-plan", `${path} must name a checked Subtype constructor`);
 };

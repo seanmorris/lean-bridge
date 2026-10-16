@@ -49,13 +49,20 @@ const representation = type => {
  * @param copied - Whether this position forbids retained identity.
  * @param site - Top-level export site, "parameter" or "result", that fixes a callback's checked directions.
  */
-// A caller-supplied depth or copied position is never a top-level site, so a refinement there is rejected.
 // A top-level site names its role: a parameter's callback is the host's, whose arguments Lean produces;
 // a result's callback is a Lean closure leased to the host, whose arguments are checked before it runs.
 export const validateNativeType = (type, depth = 0, copied = false, site = undefined) => {
 	if(site !== undefined && (!["parameter", "result"].includes(site) || depth !== 0 || copied)) fail("invalid native callback site");
 	return validate(type, depth, copied, undefined, undefined, false, depth === 0 && !copied, site, depth === 0 && !copied, site === "result");
 };
+
+/**
+ * Validate a proof-erased carrier after its source refinement tree passed site checks.
+ *
+ * @param type - Compiler-owned native representation.
+ */
+export const validateNativeRepresentation = type =>
+	validate(type, 0, false, undefined, undefined, false, true, undefined, true, false, true);
 
 /**
  * Admit ownership-aware metadata only with an independently authorized policy.
@@ -70,7 +77,7 @@ export const validateOwnedNativeType = (type, policy) => {
 
 // `structural` stays true while only arrays, lists, options, products, results and aliases separate a
 // position from its top-level parameter or result.
-const validate = (type, depth, copied, references, policy, owned = false, structural = true, site = undefined, subtypeStructural = false, subtypeResult = false) => {
+const validate = (type, depth, copied, references, policy, owned = false, structural = true, site = undefined, subtypeStructural = false, subtypeResult = false, erasedTransport = false) => {
 	if(!type || depth > 32) fail("type nesting exceeds 32");
 	if(!Object.hasOwn(Object.getOwnPropertyDescriptor(type, "kind") ?? {}, "value")) fail("type kind must be a data field");
 	if(type.kind === "owned-graph")
@@ -95,11 +102,12 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 	if(!fields) fail("unknown native type");
 	closed(type, fields, "native type");
 	representation(type);
-	const recurse = (child, copy = copied, inner = structural, subtype = subtypeStructural, produced = subtypeResult) => validate(child, depth + 1, copy, references, policy, owned, inner, undefined, subtype, produced);
+	const recurse = (child, copy = copied, inner = structural, subtype = subtypeStructural, produced = subtypeResult) =>
+		validate(child, depth + 1, copy, references, policy, owned, inner, undefined, subtype, produced, erasedTransport);
 	if(type.kind === "graph")
 	{
 		if(references) fail("nested copied graph");
-		validateCopiedMetadataGraph(type, (value, table) => validate(value, 0, true, table, policy, owned, true, site, true, subtypeResult), true);
+		validateCopiedMetadataGraph(type, (value, table) => validate(value, 0, true, table, policy, owned, true, site, true, subtypeResult, erasedTransport), true);
 	} else if(type.kind === "reference")
 	{
 		if(typeof type.name !== "string" || !identifier.test(type.name) || type.name !== type.lean || !references?.has(type.name)) fail("reference requires a matching nominal definition in its graph");
@@ -117,12 +125,13 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 		if(!structural) fail("Fin refinements require a top-level native parameter or result, or an array, list, option, product, Except, plain record or variant of one");
 		if(type.predicate?.kind === "checked-record")
 		{
-			// Only the site's checked constructor builds a record with proof fields, at a top-level parameter.
-			if(depth !== 0 || copied || site === "result") fail("checked records require a top-level native parameter constructor");
+			// Only a structural input path may invoke the selected constructor. Produced records cross
+			// bare below because Lean already owns their proof fields.
+			if(!subtypeStructural || subtypeResult) fail("checked records require a structural native parameter constructor");
 			closed(type.predicate, ["kind", "constructor"], "refinement predicate");
 			if(typeof type.predicate.constructor !== "string" || !identifier.test(type.predicate.constructor)) fail("invalid checked record constructor");
 			if(type.base?.kind !== "record" || !Object.hasOwn(type.base, "erased")) fail("checked record refinements require a record with erased proofs");
-			validate(type.base, depth, copied, references, policy, owned, structural, "checked-record");
+			validate(type.base, depth, copied, references, policy, owned, structural, "checked-record", true, false, erasedTransport);
 		}
 		else if(type.predicate?.kind === "subtype")
 		{
@@ -183,11 +192,13 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 			}
 		}
 		// Erased proof fields never cross. A record carrying them crosses only as a Lean-produced
-		// top-level result or as the base of a parameter's checked-record refinement.
+		// result or as the base of a parameter's checked-record refinement.
 		if(Object.hasOwn(type, "erased"))
 		{
 			// A bare one at a parameter would bypass the constructor; representation checks pass no site.
-			if(depth !== 0 || copied || references || site === "parameter") fail("checked records cross only through a parameter constructor or as a result");
+			if(site !== "checked-record" && !subtypeResult && !erasedTransport) fail("checked records cross only through a parameter constructor or as a result");
+			if(Object.hasOwn(type, "provenance") && (depth !== 0 || copied))
+				fail("nested generic checked records require another representation");
 			if(!Array.isArray(type.erased) || !type.erased.length || type.erased.length > 1024 || new Set(type.erased).size !== type.erased.length
 				|| type.erased.some(name => typeof name !== "string" || !/^[A-Za-z_][A-Za-z0-9_']*$/.test(name))
 				|| !type.fields.length || type.fields.some(field => type.erased.includes(field.name))) fail("invalid erased proof fields");
@@ -198,7 +209,8 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 			if(!/^[A-Za-z][A-Za-z0-9_]*$/.test(field.name) || !identifier.test(field.projection)
 	      || ["new", "DESTROY", "CLONE", "CLONE_SKIP"].includes(field.name)) fail("invalid or reserved record field");
 			// Plain record fields are structural; an instantiated generic structure's fields are not.
-			const plain = !Object.hasOwn(type, "provenance") && !Object.hasOwn(type, "erased");
+			const plain = !Object.hasOwn(type, "provenance")
+				&& (!Object.hasOwn(type, "erased") || site === "checked-record" || subtypeResult || erasedTransport);
 			recurse(field.type, true, !Object.hasOwn(type, "provenance"), subtypeStructural && plain, subtypeResult && plain);
 		}
 	} else if(type.kind === "variant")

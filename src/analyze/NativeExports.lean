@@ -186,10 +186,12 @@ type, in Lean order, and whose result is `Option` of the exact record. A result 
 which already holds the proofs, so it takes no constructor. -/
 def checkedRecordSite (request : Request) (e : Expr) (reference : Json)
     (payload : Array (Name × Expr)) (depth : Nat) (copied structural : Bool)
-    (checked : Option String) (callbackSite : Option Bool) (hostReply : Bool) : MetaM Json := do
+    (checked : Option String) (rich : Bool) (callbackSite : Option Bool) (hostReply : Bool) : MetaM Json := do
   if payload.isEmpty then reject e "checked records need at least one payload field"
-  unless depth == 0 && !copied && structural && callbackSite.isSome && !hostReply do
+  unless structural && callbackSite.isSome && !hostReply do
     reject e "checked records currently require a top-level parameter or result"
+  if callbackSite == some false && (depth != 0 || copied) && !rich then
+    reject e "nested checked records require an exact checked-record selection"
   if callbackSite == some true then
     if checked.isSome then reject e "Lean-produced checked records take no constructor"
     return reference
@@ -329,8 +331,15 @@ def selectedChild (checked : Option Json) (kind : String) (index : Nat) : Option
   if child == Json.null then none else some child
 
 def nominalSelection (checked : Option Json) (kind : String) (name : Name) : Bool :=
-  checked.any fun value => (value.getObjValAs? String "kind").toOption == some kind &&
-    (value.getObjValAs? String "name").toOption == some name.toString
+  checked.any fun value =>
+    let selectedKind := (value.getObjValAs? String "kind").toOption
+    (selectedKind == some kind || (kind == "record" && selectedKind == some "checked-record")) &&
+      (value.getObjValAs? String "name").toOption == some name.toString
+
+def richCheckedRecordSelection (checked : Option Json) : Bool :=
+  checked.any fun value =>
+    (value.getObjValAs? String "kind").toOption == some "checked-record" &&
+      (value.getObjValAs? (Array Json) "fields").toOption.isSome
 
 /-- Look up one named decision; final projection reconciliation also checks every member's order
 and refuses missing or surplus fields/cases. A null field never supplies a constructor. -/
@@ -355,10 +364,30 @@ partial def checkedSelectionProblem (value : Json) (depth : Nat := 0) : StateM N
   if depth > 32 || (← get) > 4096 then return some "checked refinement selection exceeds its depth or node limit"
   if value == Json.null then return none
   let some fields := value.getObj?.toOption | return some "invalid checked refinement selection"
+  let kind := (value.getObjValAs? String "kind").toOption.getD ""
+  if kind == "checked-record" then
+    let name := (value.getObjValAs? String "name").toOption.getD ""
+    let constructor := (value.getObjValAs? String "constructor").toOption.getD ""
+    let some members := (value.getObjValAs? (Array Json) "fields").toOption
+      | return some "checked record selection requires ordered fields"
+    if fields.size != 4 || !nativeIdentifier name || !nativeIdentifier constructor ||
+        members.isEmpty || members.size > 1024 then return some "invalid checked record selection"
+    let mut names : List String := []
+    for member in members do
+      modify (· + 1)
+      if (← get) > 4096 then return some "checked refinement selection exceeds its depth or node limit"
+      let some memberFields := member.getObj?.toOption | return some "invalid checked record field"
+      let fieldName := (member.getObjValAs? String "name").toOption.getD ""
+      if memberFields.size != 2 || !nativeIdentifier fieldName || (fieldName.splitOn ".").length != 1 ||
+          names.contains fieldName then return some "invalid checked record field"
+      names := fieldName :: names
+      let some child := (member.getObjVal? "refinement").toOption
+        | return some "missing checked record field decision"
+      if let some problem ← checkedSelectionProblem child (depth + 1) then return some problem
+    return none
   if let .ok constructor := value.getObjValAs? String "constructor" then
     if fields.size != 1 || !nativeIdentifier constructor then return some "invalid checked constructor name"
     return none
-  let kind := (value.getObjValAs? String "kind").toOption.getD ""
   if ["record", "variant"].contains kind then
     let name := (value.getObjValAs? String "name").toOption.getD ""
     if fields.size != 3 || !nativeIdentifier name then return some "invalid checked nominal selection"
@@ -516,19 +545,19 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
     return obj [("kind", str "primitive"), ("name", str "unit"), ("lean", str "Unit"), ("abi", ← abi e)]
   -- Established structural constructors keep their mappings ahead of generic-record admission.
   if e.isAppOfArity ``Array 1 then
-    return obj [("kind", str "array"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true (selectedChild checked "array" 0) containerFin structural (hostReply := hostReply) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)), ("abi", ← abi e)]
+    return obj [("kind", str "array"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true (selectedChild checked "array" 0) containerFin structural (callbackSite := callbackSite) (hostReply := hostReply) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)), ("abi", ← abi e)]
   if e.isAppOfArity ``List 1 then
-    return obj [("kind", str "list"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true (selectedChild checked "list" 0) containerFin structural (hostReply := hostReply) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)), ("abi", ← abi e)]
+    return obj [("kind", str "list"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true (selectedChild checked "list" 0) containerFin structural (callbackSite := callbackSite) (hostReply := hostReply) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)), ("abi", ← abi e)]
   if e.isAppOfArity ``Option 1 then
-    return obj [("kind", str "option"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true (selectedChild checked "option" 0) containerFin structural (hostReply := hostReply) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)), ("abi", ← abi e)]
+    return obj [("kind", str "option"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true (selectedChild checked "option" 0) containerFin structural (callbackSite := callbackSite) (hostReply := hostReply) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)), ("abi", ← abi e)]
   if e.isAppOfArity ``Except 2 || e.isAppOfArity ``Prod 2 then
     let args := e.getAppArgs
     -- Products and results are structural containers: native packages check Fin in both
     -- components and in the active branch.
     let result := e.isAppOfArity ``Except 2
     let kind := if result then "result" else "tuple"
-    let first ← shapeTree request args[0]! seen (depth + 1) true (selectedChild checked kind (if result then 1 else 0)) containerFin structural (hostReply := hostReply) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)
-    let second ← shapeTree request args[1]! seen (depth + 1) true (selectedChild checked kind (if result then 0 else 1)) containerFin structural (hostReply := hostReply) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)
+    let first ← shapeTree request args[0]! seen (depth + 1) true (selectedChild checked kind (if result then 1 else 0)) containerFin structural (callbackSite := callbackSite) (hostReply := hostReply) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)
+    let second ← shapeTree request args[1]! seen (depth + 1) true (selectedChild checked kind (if result then 0 else 1)) containerFin structural (callbackSite := callbackSite) (hostReply := hostReply) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)
     -- IR result arguments are [success, error]; Lean's Except is [error, success].
     return obj [("kind", str (if result then "result" else "tuple")),
       ("arguments", toJson (if result then #[second, first] else #[first, second])), ("abi", ← abi e)]
@@ -622,7 +651,10 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
           ("fields", toJson fields)] ++ (if erased.isEmpty then [] else [("erased", toJson (erased.map toString))]) ++
           [("abi", ← abi e)])
         if erased.isEmpty then return reference
-        return ← checkedRecordSite request e reference payload depth copied structural (selectedConstructor checked) callbackSite hostReply
+        if copied || richCheckedRecordSelection checked then
+          reject e "nested and field-refined generic checked records require a reviewed projection"
+        return ← checkedRecordSite request e reference payload depth copied structural
+          (selectedConstructor checked) (richCheckedRecordSelection checked) callbackSite hostReply
   if let .const name _ := e then
     if let some (_, primitive) := primitives.find? (·.1 == name) then
       return obj [("kind", str "primitive"), ("name", str primitive), ("lean", str name.toString), ("abi", ← abi e)]
@@ -682,16 +714,21 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
           ("projection", str projection.toString),
           ("type", ← shapeTree request fieldType (name :: seen) 0 true
             (selectedField checked "record" name field.toString) containerFin true
+            (callbackSite := callbackSite) (hostReply := hostReply)
             (subtypeStructural := subtypeStructural && nominalSelection checked "record" name)
             (subtypeResult := subtypeResult))])
       let types := (← get).types
-      if !erased.isEmpty && fields.any (fun field => containsKind types ((field.getObjVal? "type").toOption.getD Json.null) "refinement") then
+      if !erased.isEmpty && (← get).recursiveSelections.contains name then
+        reject e "recursive checked records require another representation"
+      if !erased.isEmpty && fields.any (fun field => containsKind types ((field.getObjVal? "type").toOption.getD Json.null) "refinement") &&
+          !richCheckedRecordSelection checked && !subtypeResult then
         reject e "checked record payload fields cannot carry refinements yet"
       let reference ← rememberShape e name (obj ([("kind", str "record"), ("name", str name.toString),
         ("lean", str name.toString), ("constructor", str induct.ctors.head!.toString), ("fields", toJson fields)] ++
         (if erased.isEmpty then [] else [("erased", toJson (erased.map toString))]) ++ [("abi", ← abi e)])) checked.isSome
       if erased.isEmpty then return reference
-      return ← checkedRecordSite request e reference payload depth copied structural (selectedConstructor checked) callbackSite hostReply
+      return ← checkedRecordSite request e reference payload depth copied structural
+        (selectedConstructor checked) (richCheckedRecordSelection checked) callbackSite hostReply
     if let .inductInfo induct ← getConstInfo name then
       if seen.contains name then
         if checked.isSome || subtypeStructural then
@@ -735,6 +772,7 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
           fields := fields.push (obj [("name", str fieldName),
             ("type", ← shapeTree request fieldType (name :: seen) 0 true
               (selectedField checked "variant" name fieldName (some caseName)) containerFin true
+              (callbackSite := callbackSite) (hostReply := hostReply)
               (subtypeStructural := subtypeStructural && nominalSelection checked "variant" name)
               (subtypeResult := subtypeResult))])
           names := fieldName :: names
@@ -1132,23 +1170,43 @@ partial def containsRefinement (type : Json) : Bool :=
 /-- Recover only author-constructor choices. Fin predicates remain independently compiler-owned.
 Recursive backedges contribute no new choice: the enclosing site-local nominal selection owns them. -/
 partial def projectionCheckedSelectionWith (type : Json) (types : Array Json := #[])
-    (seen : List String := []) : Json := Id.run do
+    (seen : List String := []) (depth : Nat := 0) : Json := Id.run do
   let kind := (type.getObjValAs? String "kind").toOption.getD ""
   if kind == "graph" then
     let table := (type.getObjValAs? (Array Json) "types").toOption.getD #[]
-    return projectionCheckedSelectionWith ((type.getObjVal? "root").toOption.getD Json.null) table
+    return projectionCheckedSelectionWith ((type.getObjVal? "root").toOption.getD Json.null) table [] depth
   if kind == "reference" then
     let name := (type.getObjValAs? String "name").toOption.getD ""
     if seen.contains name then return Json.null
     let some definition := types.find? fun item =>
         (item.getObjValAs? String "name").toOption == some name
       | return Json.null
-    return projectionCheckedSelectionWith definition types (name :: seen)
+    return projectionCheckedSelectionWith definition types (name :: seen) depth
   if kind == "alias" then
-    return projectionCheckedSelectionWith ((type.getObjVal? "target").toOption.getD Json.null) types seen
+    return projectionCheckedSelectionWith ((type.getObjVal? "target").toOption.getD Json.null) types seen depth
   if kind == "refinement" then
     let predicate := (type.getObjVal? "predicate").toOption.getD Json.null
-    if ["subtype", "checked-record"].contains ((predicate.getObjValAs? String "kind").toOption.getD "") then
+    let predicateKind := (predicate.getObjValAs? String "kind").toOption.getD ""
+    if predicateKind == "checked-record" then
+      let constructor := (predicate.getObjVal? "constructor").toOption.getD Json.null
+      if constructor == Json.null then return Json.null
+      let base := (type.getObjVal? "base").toOption.getD Json.null
+      let baseKind := (base.getObjValAs? String "kind").toOption.getD ""
+      let definition := if baseKind == "reference" then
+          let name := (base.getObjValAs? String "name").toOption.getD ""
+          types.find? (fun item => (item.getObjValAs? String "name").toOption == some name) |>.getD base
+        else base
+      let fields := ((definition.getObjValAs? (Array Json) "fields").toOption.getD #[]).map fun field =>
+        obj [("name", (field.getObjVal? "name").toOption.getD Json.null),
+          ("refinement", projectionCheckedSelectionWith
+            ((field.getObjVal? "type").toOption.getD Json.null) types seen (depth + 1))]
+      let selected := fields.any fun field => (field.getObjVal? "refinement").toOption != some Json.null
+      if depth > 0 || selected then
+        return obj [("kind", str "checked-record"),
+          ("name", (definition.getObjVal? "name").toOption.getD Json.null),
+          ("constructor", constructor), ("fields", toJson fields)]
+      return obj [("constructor", constructor)]
+    if predicateKind == "subtype" then
       let constructor := (predicate.getObjVal? "constructor").toOption.getD Json.null
       return if constructor == Json.null then Json.null else obj [("constructor", constructor)]
     return Json.null
@@ -1156,7 +1214,7 @@ partial def projectionCheckedSelectionWith (type : Json) (types : Array Json := 
     let fieldChoices := fun (owner : Json) =>
       ((owner.getObjValAs? (Array Json) "fields").toOption.getD #[]).map fun field =>
         obj [("name", (field.getObjVal? "name").toOption.getD Json.null),
-          ("refinement", projectionCheckedSelectionWith ((field.getObjVal? "type").toOption.getD Json.null) types seen)]
+          ("refinement", projectionCheckedSelectionWith ((field.getObjVal? "type").toOption.getD Json.null) types seen (depth + 1))]
     let selected := fun (fields : Array Json) => fields.any fun field =>
       (field.getObjVal? "refinement").toOption != some Json.null
     let identity := [("kind", str kind), ("name", (type.getObjVal? "name").toOption.getD Json.null)]
@@ -1172,7 +1230,7 @@ partial def projectionCheckedSelectionWith (type : Json) (types : Array Json := 
       #[(type.getObjVal? "element").toOption.getD Json.null]
     else if ["tuple", "result"].contains kind then (type.getObjValAs? (Array Json) "arguments").toOption.getD #[]
     else #[]
-  let arguments := children.map fun child => projectionCheckedSelectionWith child types seen
+  let arguments := children.map fun child => projectionCheckedSelectionWith child types seen (depth + 1)
   if arguments.all (· == Json.null) then return Json.null
   return obj [("kind", str kind), ("arguments", toJson arguments)]
 

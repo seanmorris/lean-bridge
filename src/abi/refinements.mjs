@@ -47,13 +47,41 @@ export const assertRefinement = (refinement, type, depth = 0, subtypeStructural 
 				|| !/^(?:0|[1-9][0-9]*)$(?![\s\S])/.test(value.bound)) fail();
 			return true;
 		}
-		if(["subtype", "checked-record"].includes(value.kind))
+		if(value.kind === "subtype")
 		{
 			closed(value, ["kind", "constructor"]);
-			const projected = value.kind === "subtype" && subtypeResult === true && value.constructor === null;
+			const projected = subtypeResult === true && value.constructor === null;
 			if(!projected && (typeof value.constructor !== "string" || !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$(?![\s\S])/.test(value.constructor))) fail();
-			if(value.kind === "subtype" ? !subtypeStructural || transport?.kind !== "primitive"
-				: level !== 0 || transport?.kind !== "named") fail();
+			if(!subtypeStructural || transport?.kind !== "primitive") fail();
+			return true;
+		}
+		if(value.kind === "checked-record")
+		{
+			const erased = definition?.source?.extensions?.["lean-lang.org/erased-proofs"];
+			const erasedFields = Array.isArray(erased) ? erased : erased?.fields;
+			const generic = definition?.source?.extensions?.["lean-lang.org/instantiation"] !== undefined;
+			if(!subtypeStructural || transport?.kind !== "named" || definition?.kind !== "record"
+				|| definition.representation !== "copied" || !Array.isArray(erasedFields) || !erasedFields.length) fail();
+			const rich = Object.hasOwn(value, "fields") || Object.hasOwn(value, "name");
+			if(!rich)
+			{
+				closed(value, ["kind", "constructor"]);
+				if(level !== 0 || subtypeResult || typeof value.constructor !== "string"
+					|| !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$(?![\s\S])/.test(value.constructor)) fail();
+				return true;
+			}
+			closed(value, ["kind", "name", "constructor", "fields"]);
+			if(generic || value.name !== definition.source?.declaration || !Array.isArray(value.fields)
+				|| value.fields.length !== definition.fields.length) fail();
+			if(subtypeResult ? value.constructor !== null
+				: typeof value.constructor !== "string"
+					|| !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$(?![\s\S])/.test(value.constructor)) fail();
+			for(const [index, field] of value.fields.entries())
+			{
+				closed(field, ["name", "refinement"]);
+				if(field.name !== definition.fields[index].name) fail();
+				visit(field.refinement, definition.fields[index].type, level + 1, seen);
+			}
 			return true;
 		}
 		if(["record", "variant"].includes(value.kind))

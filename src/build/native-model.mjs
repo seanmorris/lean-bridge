@@ -4,7 +4,7 @@
  * @file
  */
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
-import { validateNativeType } from "../analyze/native-types.mjs";
+import { validateNativeRepresentation, validateNativeType } from "../analyze/native-types.mjs";
 import { projectNativeMetadata, containsGraph } from "../analyze/native-metadata.mjs";
 import { createElaboratedSemanticModel } from "../analyze/semantic-model.mjs";
 import { reconcileReviewedSource } from "../analyze/reviewed-source.mjs";
@@ -26,6 +26,7 @@ const fail = message => { throw new TypeError(`native-library-v1: ${message}`); 
  * @param type - Checked native type and compiler representation.
  */
 export const nativeLeanType = type => {
+	if(type.kind === "refinement") return nativeLeanType(type.base);
 	if(type.kind === "array") return `(Array ${nativeLeanType(type.element)})`;
 	if(type.kind === "list") return `(List ${nativeLeanType(type.element)})`;
 	if(type.kind === "option") return `(Option ${nativeLeanType(type.element)})`;
@@ -37,6 +38,7 @@ export const nativeLeanType = type => {
 // A record or variant with checked fields crosses as its erased mirror (see refinementMirrorNames).
 const absoluteLeanType = (type, mirrors = new Set()) => {
 	const inner = child => absoluteLeanType(child, mirrors);
+	if(type.kind === "refinement") return inner(type.base);
 	if(type.kind === "array") return `(_root_.Array ${inner(type.element)})`;
 	if(type.kind === "list") return `(_root_.List ${inner(type.element)})`;
 	if(type.kind === "option") return `(_root_.Option ${inner(type.element)})`;
@@ -87,6 +89,8 @@ export const nativeObjectType = type => nativeCType(type) === "lean_object *";
  * @param type - Checked native type and compiler representation.
  */
 export const nativeCallbackDefault = type => {
+	if(type.kind === "refinement") return nativeCallbackDefault(type.base);
+	if(type.kind === "alias") return nativeCallbackDefault(type.target);
 	if(type.kind === "array") return "lean_mk_empty_array()";
 	if(type.kind === "list") return `lb_t${nativeTypeKey(type)}_from_array(lean_mk_empty_array())`;
 	if(type.kind === "option") return `lb_t${nativeTypeKey(type)}_none(lean_box(0))`;
@@ -127,6 +131,8 @@ const replyLeanType = (type, tree, mirrors) => {
 };
 
 const callbackLeanDefault = (type, mirrors = new Set()) => {
+	if(type.kind === "refinement") return callbackLeanDefault(type.base, mirrors);
+	if(type.kind === "alias") return callbackLeanDefault(type.target, mirrors);
 	const inner = child => callbackLeanDefault(child, mirrors);
 	if(type.kind === "array") return "#[]";
 	if(type.kind === "list") return "[]";
@@ -186,7 +192,7 @@ const containmentSafe = tree => {
 
 const nativeRefinements = (declaration, callbacks = false) => {
 	const unsupported = message => Object.assign(new TypeError(`${declaration.name}: ${message}`), { code: "native-refinements-unsupported", details: { declaration: declaration.name } });
-	const tree = (type, top = true, site = undefined, subtypeStructural = top) => {
+	const tree = (type, top = true, site = undefined, subtypeStructural = top, produced = site === "result") => {
 		if(type.kind === "callback")
 		{
 			if(site === undefined)
@@ -205,8 +211,16 @@ const nativeRefinements = (declaration, callbacks = false) => {
 			// Only the site's checked constructor builds a record with erased proofs, from its payload mirror.
 			if(type.predicate.kind === "checked-record")
 			{
-				if(!top || site !== "parameter") throw unsupported("checked records cross only at a top-level parameter or result");
-				return { kind: "checked-record", definition: type.base.lean, constructor: type.predicate.constructor, fields: type.base.fields.map(field => field.name) };
+				if(!subtypeStructural || produced) throw unsupported("checked records require a structural parameter constructor");
+				const arguments_ = type.base.fields.map(field => tree(field.type, false, undefined, true, false));
+				if(Object.hasOwn(type.base, "provenance") && (!top || arguments_.some(Boolean)))
+					throw unsupported("nested and field-refined generic checked records require another representation");
+				const value = {
+					kind: "checked-record", definition: type.base.lean
+					, constructor: type.predicate.constructor
+					, fields: type.base.fields.map(field => field.name)
+				};
+				return !top || arguments_.some(Boolean) ? { ...value, arguments: arguments_ } : value;
 			}
 			if(type.predicate.kind === "subtype")
 			{
@@ -215,35 +229,42 @@ const nativeRefinements = (declaration, callbacks = false) => {
 			}
 			return { kind: type.predicate.kind, bound: type.predicate.bound };
 		}
-		if(type.kind === "alias") return tree(type.target, top, site, subtypeStructural);
+		if(type.kind === "alias") return tree(type.target, top, site, subtypeStructural, produced);
 		if(["array", "list", "option"].includes(type.kind))
 		{
-			const element = tree(type.element, false, undefined, subtypeStructural);
+			const element = tree(type.element, false, undefined, subtypeStructural, produced);
 			return element === null ? null : { kind: type.kind, arguments: [element] };
 		}
 		// Products keep [first, second]; results keep [ok, error], as the transport does.
 		if(["tuple", "result"].includes(type.kind))
 		{
-			const children = type.arguments.map(child => tree(child, false, undefined, subtypeStructural));
+			const children = type.arguments.map(child => tree(child, false, undefined, subtypeStructural, produced));
 			return children.every(child => child === null) ? null : { kind: type.kind, arguments: children };
 		}
 		// A Lean-produced record with erased proofs is projected to its payload mirror; no constructor runs.
 		if(type.kind === "record" && Object.hasOwn(type, "erased"))
 		{
-			if(!top || site !== "result") throw unsupported("checked records cross only at a top-level parameter or result");
-			return { kind: "checked-record", definition: type.lean, constructor: null, fields: type.fields.map(field => field.name) };
+			if(!produced) throw unsupported("checked record inputs require their selected constructor");
+			const arguments_ = type.fields.map(field => tree(field.type, false, undefined, true, true));
+			if(Object.hasOwn(type, "provenance") && (!top || arguments_.some(Boolean)))
+				throw unsupported("nested and field-refined generic checked records require another representation");
+			const value = {
+				kind: "checked-record", definition: type.lean, constructor: null
+				, fields: type.fields.map(field => field.name)
+			};
+			return !top || arguments_.some(Boolean) ? { ...value, arguments: arguments_ } : value;
 		}
 		// A plain record or variant names its definition and carries every field's tree in
 		// declaration order; a variant checks only its active case. Definitions are acyclic here.
 		if(type.kind === "record" && !Object.hasOwn(type, "provenance") && !containsGraph(type, "callback"))
 		{
-			const fields = type.fields.map(field => tree(field.type, false, undefined, subtypeStructural));
+			const fields = type.fields.map(field => tree(field.type, false, undefined, subtypeStructural, produced));
 			return fields.every(child => child === null) ? null
 				: { kind: "record", definition: type.lean, fields: type.fields.map(field => field.name), arguments: fields };
 		}
 		if(type.kind === "variant" && !containsGraph(type, "callback"))
 		{
-			const cases = type.cases.map(branch => ({ name: branch.name, fields: branch.fields.map(field => field.name), arguments: branch.fields.map(field => tree(field.type, false, undefined, subtypeStructural)) }));
+			const cases = type.cases.map(branch => ({ name: branch.name, fields: branch.fields.map(field => field.name), arguments: branch.fields.map(field => tree(field.type, false, undefined, subtypeStructural, produced)) }));
 			return cases.flatMap(branch => branch.arguments).every(child => child === null) ? null : { kind: "variant", definition: type.lean, cases };
 		}
 		// Any other container would erase a bound the extractor admitted; refuse rather than drop it.
@@ -285,7 +306,7 @@ const createCompiledModel = ({ metadata, component, moduleName, sourceIdentity }
 		// A leased closure's checked trees and a host callback's reply tree distinguish its key; the representation itself is validated.
 		const { checked, reply, ...shape } = type;
 		void checked; void reply;
-		validateNativeType(shape);
+		validateNativeRepresentation(shape);
 		const key = nativeTypeKey(type);
 		if(allTypes.has(key)) return;
 		if(["array", "list", "option"].includes(type.kind)) visit(type.element);
@@ -463,7 +484,7 @@ export const generateNativeLeanAdapters = model => {
 	const prototypes = ["#include <lean/lean.h>", "#include <stdint.h>", `LEAN_CASSERT(sizeof(size_t) * 8 == ${model.pointerBits});`];
 	prototypes.push(...replyPrototypes);
 	const emit = (symbol, parameters, result, body) => {
-		const ps = parameters.length ? parameters : [{ name: "unit", type: { kind: "primitive", name: "unit", lean: "Unit" } }];
+		const ps = parameters.length ? parameters : [{ name: "_unit", type: { kind: "primitive", name: "unit", lean: "Unit" } }];
 		const callback = result.kind === "callback";
 		lines.push(`@[export ${symbol}]`, `def f_${symbol} ${ps.map(p => `(${p.name} : ${absoluteLeanType(p.type, mirrors)})`).join(" ")} : ${callback ? `ClosureCarry${nativeTypeKey(result)}` : absoluteLeanType(result, mirrors)} :=`, `  ${callback ? `⟨${body}⟩` : body}`, "");
 		prototypes.push(`${nativeCType(result)} ${symbol}(${ps.map(p => `${nativeCType(p.type)} ${p.name}`).join(", ")});`);

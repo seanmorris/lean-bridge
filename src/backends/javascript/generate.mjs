@@ -619,7 +619,8 @@ const emitValidators = (ir, typeMap) => {
 	const subtype = tree => tree?.kind === "subtype" || (tree?.arguments ?? []).some(subtype)
 		|| (tree?.fields ?? []).some(field => subtype(field.refinement))
 		|| (tree?.cases ?? []).some(branch => branch.fields.some(field => subtype(field.refinement)));
-	const nominal = tree => ["record", "variant"].includes(tree?.kind) || (tree?.arguments ?? []).some(nominal);
+	const nominal = tree => ["record", "variant", "checked-record"].includes(tree?.kind)
+		|| (tree?.arguments ?? []).some(nominal);
 	const nominalSites = ir.declarations.some(item => {
 		const value = declarationRefinements(item, ir.types);
 		return [...value.parameters, value.result].some(nominal);
@@ -655,8 +656,8 @@ const emitValidators = (ir, typeMap) => {
 				, structuralSubtype ? "  if (refinement === null || refinement.kind === 'subtype') return;" : "  if (refinement === null) return;"
 				, "  if (refinement.kind === 'fin') { assertFin(value, refinement.bound, path); return; }"
 				, ...nominalSites ? [
-					"  if (refinement.kind === 'record' || refinement.kind === 'variant') {"
-					, "    const fields = refinement.kind === 'record' ? refinement.fields : refinement.cases.find(branch => branch.name === value.kind).fields;"
+					"  if (refinement.kind === 'record' || refinement.kind === 'checked-record' || refinement.kind === 'variant') {"
+					, "    const fields = refinement.kind === 'variant' ? refinement.cases.find(branch => branch.name === value.kind).fields : refinement.fields;"
 					, "    for (const field of fields) assertNestedFin(value[field.name], field.refinement, path + '.' + field.name);"
 					, "    return;"
 					, "  }"

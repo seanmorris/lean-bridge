@@ -149,6 +149,15 @@
       "oneOf": [
         {"type": "object", "additionalProperties": false, "required": ["constructor"], "properties": {"constructor": {"$ref": "#/$defs/specializationName"}}},
         {
+          "type": "object", "additionalProperties": false, "required": ["kind", "name", "constructor", "fields"],
+          "properties": {
+            "kind": {"const": "checked-record"},
+            "name": {"$ref": "#/$defs/specializationName"},
+            "constructor": {"$ref": "#/$defs/specializationName"},
+            "fields": {"allOf": [{"$ref": "#/$defs/checkedNominalFields"}, {"minItems": 1}]}
+          }
+        },
+        {
           "type": "object", "additionalProperties": false, "required": ["kind", "arguments"],
           "properties": {
             "kind": {"enum": ["array", "list", "option", "tuple", "result"]},

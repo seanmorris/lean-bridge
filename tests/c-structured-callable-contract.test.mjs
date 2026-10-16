@@ -48,7 +48,9 @@ test("structured C callables retain copy ownership, lifetime and recursion gates
 
 test("native callback failure values construct valid copied branches", () => {
 	const string = { kind: "primitive", name: "string" };
+	const checkedString = { kind: "refinement", base: string, predicate: { kind: "subtype", constructor: "Checked.string" } };
 	assert.match(nativeCallbackDefault({ kind: "option", element: string }), /_none\(lean_box\(0\)\)$/u);
+	assert.match(nativeCallbackDefault({ kind: "option", element: checkedString }), /_none\(lean_box\(0\)\)$/u);
 	assert.match(nativeCallbackDefault({ kind: "result", arguments: [string, string] }), /_ok\(lean_mk_string\(""\)\)$/u);
 	assert.match(nativeCallbackDefault({ kind: "tuple", arguments: [string, string] }), /_make\(lean_mk_string\(""\), lean_mk_string\(""\)\)$/u);
 	assert.match(nativeCallbackDefault({ kind: "variant", name: "One", cases: [{ name: "value", fields: [{ name: "text", type: string }] }] }), /_make0\(lean_mk_string\(""\)\)$/u);

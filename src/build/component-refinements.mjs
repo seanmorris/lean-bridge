@@ -11,8 +11,10 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
  * Each site chooses its constructor, so a mirror carries one conversion per constructor in use.
  *
  * @param constructor - Fully qualified Lean checked constructor.
+ * @param refinement - Optional complete rich checked-record tree. Legacy leaves retain their old identity.
  */
-export const checkedRecordVia = constructor => `via_${sha256(constructor).slice(0, 16)}`;
+export const checkedRecordVia = (constructor, refinement = null) =>
+	`via_${sha256(refinement === null ? constructor : canonicalJson(refinement)).slice(0, 16)}`;
 
 /**
  * Enumerate constructor leaves and their erased native inputs in transport order.
@@ -164,7 +166,8 @@ export const componentRefinementConversion = (refinement, value, checked = true,
 	if(refinement.kind === "checked-record")
 	{
 		if(checked && typeof refinement.constructor !== "string") throw new TypeError("A checked record input requires its site's constructor");
-		return `(LbErased.${refinement.definition}.${checked ? checkedRecordVia(refinement.constructor) : "erase"} ${input})`;
+		const rich = Object.hasOwn(refinement, "arguments");
+		return `(LbErased.${refinement.definition}.${checked ? checkedRecordVia(refinement.constructor, rich ? refinement : null) : "erase"} ${input})`;
 	}
 	// Native packages pass records and variants with checked fields as erased mirrors whose
 	// check and erase functions the native adapter module defines.

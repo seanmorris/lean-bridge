@@ -73,6 +73,15 @@ export const renderRefinementMirrors = (model, mirrors, renderType, recordValue 
 	// Constructor choices change how a source value is built, never its payload layout or erasure.
 	const layout = tree => {
 		if(tree?.kind === "subtype") return { kind: "subtype" };
+		if(tree?.kind === "checked-record")
+		{
+			if(!Object.hasOwn(tree, "arguments") || tree.arguments.every(child => child === null))
+				return { kind: "checked-record", definition: tree.definition };
+			return {
+				kind: "checked-record", definition: tree.definition, fields: tree.fields
+				, arguments: tree.arguments.map(layout)
+			};
+		}
 		if(tree?.kind === "recursive") return { kind: "recursive", definition: tree.definition };
 		if(tree?.kind === "variant")
 		{
@@ -107,8 +116,23 @@ export const renderRefinementMirrors = (model, mirrors, renderType, recordValue 
 				selected.set(name, tree);
 			}
 		}
-		if(tree.kind === "checked-record" && checked && tree.constructor !== null)
-			constructors.set(tree.definition, new Set([...constructors.get(tree.definition) ?? [], tree.constructor]));
+		if(tree.kind === "checked-record")
+		{
+			const key = canonicalJson(layout(tree));
+			if(layouts.has(tree.definition) && layouts.get(tree.definition) !== key)
+				throw new TypeError(`Conflicting checked-record refinement layouts: ${tree.definition}`);
+			layouts.set(tree.definition, key);
+			if(!trees.has(tree.definition) || Object.hasOwn(tree, "arguments")) trees.set(tree.definition, tree);
+			if(checked && tree.constructor !== null)
+			{
+				if(!constructors.has(tree.definition)) constructors.set(tree.definition, new Map());
+				const selected = constructors.get(tree.definition);
+				const name = checkedRecordVia(tree.constructor, Object.hasOwn(tree, "arguments") ? tree : null);
+				if(selected.has(name) && canonicalJson(selected.get(name)) !== canonicalJson(tree))
+					throw new TypeError(`Conflicting checked-record conversion: ${tree.definition}.${name}`);
+				selected.set(name, tree);
+			}
+		}
 		// Callback arguments cross in the opposite direction; the callback result crosses back.
 		if(tree.kind === "callback")
 		{
@@ -189,12 +213,23 @@ export const renderRefinementMirrors = (model, mirrors, renderType, recordValue 
 		// each site's constructor alone builds the source value back from it, so no carrier can.
 		if(type.kind === "record" && Object.hasOwn(type, "erased"))
 		{
+			const selected = trees.get(type.lean), rich = Object.hasOwn(selected ?? {}, "arguments");
 			lines.push(`structure ${mirror} where`, ...type.fields.map(field => `  «${field.name}» : ${renderType(field.type, mirrors)}`), "");
 			lines.push(`def ${mirror}.erase (value : ${source}) : ${mirror} :=`
-				, `  ${mirror}.mk ${type.fields.map(field => `value.«${field.name}»`).join(" ")}`, "");
-			for(const constructor of [...constructors.get(type.lean) ?? []].sort())
-				lines.push(`def ${mirror}.${checkedRecordVia(constructor)} (value : ${mirror}) : _root_.Option ${source} :=`
-					, `  _root_.${constructor} ${type.fields.map(field => `value.«${field.name}»`).join(" ")}`, "");
+				, `  ${mirror}.mk ${type.fields.map((field, index) => rich
+					? convert(selected.arguments[index], `value.«${field.name}»`, false) : `value.«${field.name}»`).join(" ")}`, "");
+			for(const [name, conversion] of [...constructors.get(type.lean) ?? []].sort(([left], [right]) => left.localeCompare(right)))
+			{
+				if(!Object.hasOwn(conversion, "arguments"))
+				{
+					lines.push(`def ${mirror}.${name} (value : ${mirror}) : _root_.Option ${source} :=`
+						, `  _root_.${conversion.constructor} ${type.fields.map(field => `value.«${field.name}»`).join(" ")}`, "");
+					continue;
+				}
+				lines.push(`def ${mirror}.${name} (value : ${mirror}) : _root_.Option ${source} := do`
+					, ...type.fields.map((field, index) => `  let a${index} ← ${convert(conversion.arguments[index], `value.«${field.name}»`, true)}`)
+					, `  _root_.${conversion.constructor} ${type.fields.map((_, index) => `a${index}`).join(" ")}`, "");
+			}
 			continue;
 		}
 		const selected = selectedChecks(type);

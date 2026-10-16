@@ -187,15 +187,54 @@ const checkReview = document => {
 				|| !definition.fields.length, `${definition.id}.source.extensions.${erasedProofsKey}`);
 		}
 	}
-	// A checked record crosses only at a top-level site: a parameter through its checked constructor,
-	// or a Lean-produced result with no constructor.
-	const checkedRecord = type => type?.kind === "named" && Object.hasOwn(definitions.get(type.id)?.source.extensions ?? {}, erasedProofsKey);
+	// Every checked-record input occurrence names its constructor. Results name no constructor,
+	// but a nested or field-refined result retains its payload tree so generated mirrors can erase it.
+	const checkedRecordCoverage = (type, tree, produced, depth = 0, seen = new Set()) => {
+		if(type?.kind === "apply")
+		{
+			const children = tree?.arguments ?? type.arguments.map(() => null);
+			if(tree !== null && tree !== undefined && (!Array.isArray(children) || children.length !== type.arguments.length)) return false;
+			return type.arguments.every((child, index) => checkedRecordCoverage(child, children[index], produced, depth + 1, seen));
+		}
+		if(type?.kind !== "named") return true;
+		if(seen.has(type.id))
+			return !Object.hasOwn(definitions.get(type.id)?.source.extensions ?? {}, erasedProofsKey);
+		const definition = definitions.get(type.id);
+		if(!definition) return false;
+		const inner = new Set([...seen, type.id]);
+		if(definition.kind === "alias") return checkedRecordCoverage(definition.target, tree, produced, depth, inner);
+		const erased = Object.hasOwn(definition.source.extensions, erasedProofsKey);
+		if(erased)
+		{
+			const generic = Object.hasOwn(definition.source.extensions, instantiationKey);
+			if(generic && (depth !== 0 || Object.hasOwn(tree ?? {}, "fields"))) return false;
+			if(tree === null || tree === undefined) return produced && depth === 0;
+			if(tree.kind !== "checked-record" || (produced ? tree.constructor !== null : typeof tree.constructor !== "string")) return false;
+			if(!Object.hasOwn(tree, "fields")) return !produced && depth === 0
+				&& definition.source.extensions["lean-lang.org/nominal-refinements"] === undefined;
+			if(tree.name !== definition.source.declaration || !Array.isArray(tree.fields) || tree.fields.length !== definition.fields.length) return false;
+			return definition.fields.every((field, index) => tree.fields[index]?.name === field.name
+				&& checkedRecordCoverage(field.type, tree.fields[index].refinement, produced, depth + 1, inner));
+		}
+		if(definition.kind === "record")
+		{
+			const fields = tree?.kind === "record" ? tree.fields : definition.fields.map(() => null);
+			return definition.fields.every((field, index) => checkedRecordCoverage(field.type, fields[index]?.refinement ?? null, produced, depth + 1, inner));
+		}
+		if(definition.kind === "variant")
+		{
+			const cases = tree?.kind === "variant" ? tree.cases : definition.cases.map(branch => ({ fields: branch.fields.map(() => null) }));
+			return definition.cases.every((branch, index) => branch.fields.every((field, position) =>
+				checkedRecordCoverage(field.type, cases[index]?.fields[position]?.refinement ?? null, produced, depth + 1, inner)));
+		}
+		return true;
+	};
 	for(const declaration of document.declarations)
 	{
 		const refinements = declaration.source.extensions["lean-lang.org/refinements"];
 		for(const [index, value] of declaration.parameters.entries())
-			reject(checkedRecord(value.type) !== (refinements?.parameters?.[index]?.kind === "checked-record"), `${declaration.id}.parameters[${index}]`);
-		reject(refinements?.result?.kind === "checked-record", `${declaration.id}.result`);
+			reject(!checkedRecordCoverage(value.type, refinements?.parameters?.[index] ?? null, false), `${declaration.id}.parameters[${index}]`);
+		reject(!checkedRecordCoverage(declaration.result.type, refinements?.result ?? null, true), `${declaration.id}.result`);
 	}
 	for(const declaration of document.declarations)
 	{

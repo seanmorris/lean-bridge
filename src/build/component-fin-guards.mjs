@@ -37,7 +37,7 @@ export const componentFinGuard = (tree, value, depth = 0, cycles = new Map()) =>
 	const input = `(${value})`, name = `_bridgeFinValue${depth}`;
 	if(tree.kind === "fin") return `(decide (${input} < ${tree.bound}))`;
 	if(tree.kind === "recursive") return `(LbErased.${tree.definition}.validFin ${input})`;
-	if(["record", "variant"].includes(tree.kind)) return `(LbErased.${tree.definition}.validFin ${input})`;
+	if(["record", "variant", "checked-record"].includes(tree.kind)) return `(LbErased.${tree.definition}.validFin ${input})`;
 	const child = (index, expression) => componentFinGuard(tree.arguments[index], expression, depth + 1, cycles);
 	if(["array", "list"].includes(tree.kind)) return `(${input}.all (fun ${name} => ${child(0, name)}))`;
 	if(tree.kind === "option") return `(match ${input} with | _root_.Option.none => true | _root_.Option.some ${name} => ${child(0, name)})`;

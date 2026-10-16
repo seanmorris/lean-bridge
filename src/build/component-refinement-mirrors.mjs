@@ -25,6 +25,7 @@ const children = definition => definition.kind === "alias" ? [definition.target]
 export const hasComponentNominalRefinements = (tree, depth = 0) => {
 	if(depth > componentRecursiveLimits.schemaDepth) fail("refinement nesting exceeds its bound");
 	return tree !== null && tree !== undefined && (["record", "variant"].includes(tree.kind)
+		|| (tree.kind === "checked-record" && Object.hasOwn(tree, "fields"))
 		|| (tree.arguments ?? []).some(child => hasComponentNominalRefinements(child, depth + 1)));
 };
 
@@ -85,6 +86,7 @@ export const componentRefinementMirrors = (abi, exports, leanType, nominalRefine
 				if(tree !== null) fail("recursive selected refinements require another representation");
 				const cycle = active.get(type.id);
 				if(cycle === undefined) return null;
+				if(definition?.erased) fail("recursive checked records require another representation");
 				usedCycles.add(cycle);
 				return { kind: "recursive", definition: type.id.slice(5), cycle };
 			}
@@ -96,10 +98,21 @@ export const componentRefinementMirrors = (abi, exports, leanType, nominalRefine
 			if(definition.kind === "alias") return expand(definition.target, merge(tree, shared?.target), inner, depth + 1, innerActive);
 			if(definition.erased)
 			{
-				if(depth !== 0) fail("nested checked records require another representation");
 				if(!produced && tree?.kind !== "checked-record") fail("a checked record input requires its site's constructor");
-				if(produced && tree !== null) fail("checked record results project without an input selection");
-				return { kind: "checked-record", definition: type.id.slice(5), constructor: produced ? null : tree.constructor };
+				const rich = tree?.kind === "checked-record" && Object.hasOwn(tree, "fields");
+				if(produced && tree !== null && (!rich || tree.constructor !== null))
+					fail("checked record results retain only their projected field refinements");
+				const arguments_ = definition.fields.map((field, index) => expand(field.type,
+					merge(rich ? tree.fields[index].refinement : null, shared?.fields?.[index]), inner, depth + 1, innerActive));
+				if(!produced && !rich && (depth !== 0 || arguments_.some(Boolean)))
+					fail("nested or field-refined checked records require an exact field selection");
+				if(!rich && depth === 0 && !arguments_.some(Boolean))
+					return { kind: "checked-record", definition: type.id.slice(5), constructor: produced ? null : tree.constructor };
+				return {
+					kind: "checked-record", definition: type.id.slice(5)
+					, constructor: produced ? null : tree.constructor
+					, fields: definition.fields.map(field => field.name), arguments: arguments_
+				};
 			}
 			const fields = (members, choices, bounds) => members.map((field, index) =>
 				expand(field.type, merge(choices?.[index].refinement ?? null, bounds?.[index]), inner, depth + 1, innerActive));

@@ -159,7 +159,7 @@ export const validateElaboratedMetadata = (report, request) => {
 					|| projection.parameters.length > (native ? 1024 : 32) || projection.parameters.length !== Math.min(arity, declaration.parameters.length)
 					|| declaration.parameters.some(parameter => parameter.binderInfo !== "explicit") || declaration.effects.length) fail("Invalid supported projection");
 				const scalar = type => { closed(type, ["kind", "name"]); if(type.kind !== "primitive" || !componentScalarTypes.includes(type.name)) fail("Unsupported runtime projection type"); };
-				const copied = (type, depth = 0, references, refinements = true, subtypeStructural = depth === 0 && !references && refinements === true, produced = false) => {
+				const copied = (type, depth = 0, references, refinements = true, subtypeStructural = depth === 0 && !references && refinements === true, produced = false, checkedRecord = false) => {
 					if(depth > 32) fail("Component copied type nesting exceeds 32");
 					const recurse = child => copied(child, depth + 1, references, refinements, subtypeStructural, produced);
 					if(type?.kind === "graph")
@@ -182,7 +182,7 @@ export const validateElaboratedMetadata = (report, request) => {
 					if(type?.kind === "refinement")
 					{
 						if(!refinements || (type.predicate?.kind === "subtype" && !subtypeStructural)
-							|| (type.predicate?.kind === "checked-record" && (depth !== 0 || refinements === "fin-only" || !subtypeStructural))) fail("Unsupported nested refinement position");
+							|| (type.predicate?.kind === "checked-record" && (refinements === "fin-only" || !subtypeStructural || produced))) fail("Unsupported nested refinement position");
 						closed(type, ["kind", "base", "predicate"]);
 						// A checked record is built only by its site's constructor; its base is the record itself.
 						if(type.predicate?.kind === "checked-record")
@@ -190,7 +190,7 @@ export const validateElaboratedMetadata = (report, request) => {
 							closed(type.predicate, ["kind", "constructor"]);
 							if(typeof type.predicate.constructor !== "string" || !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$/.test(type.predicate.constructor)
 								|| type.base?.kind !== "record" || !Object.hasOwn(type.base, "erased")) fail("Invalid checked record refinement");
-							copied(type.base, depth, references, refinements);
+							copied(type.base, depth, references, refinements, true, false, true);
 							return;
 						}
 						scalar(type.base);
@@ -243,9 +243,12 @@ export const validateElaboratedMetadata = (report, request) => {
 					if(type?.kind === "record")
 					{
 						closed(type, ["kind", "name", "fields", ...["provenance", "erased"].filter(key => Object.hasOwn(type, key))]);
-						// Erased proof fields are named once, never cross, and appear only at a top-level site.
-						if(Object.hasOwn(type, "erased") && (depth !== 0 || !Array.isArray(type.erased) || !type.erased.length || type.erased.length > 1024
-							|| new Set(type.erased).size !== type.erased.length || type.erased.some(name => !text(name) || !/^[A-Za-z_][A-Za-z0-9_']*$/.test(name))
+						// Erased proof fields are named once and never cross. Inputs need the enclosing
+						// checked-record constructor; result paths are already proof-backed by Lean.
+						if(Object.hasOwn(type, "erased") && ((!checkedRecord && !produced)
+								|| (Object.hasOwn(type, "provenance") && depth !== 0)
+								|| !Array.isArray(type.erased) || !type.erased.length || type.erased.length > 1024
+								|| new Set(type.erased).size !== type.erased.length || type.erased.some(name => !text(name) || !/^[A-Za-z_][A-Za-z0-9_']*$/.test(name))
 							|| !Array.isArray(type.fields) || !type.fields.length || type.fields.some(field => type.erased.includes(field?.name)))) fail("Invalid checked record");
 						if(!text(type.name) || !/^[A-Za-z_][A-Za-z0-9_']*(\.[A-Za-z_][A-Za-z0-9_']*)*$/.test(type.name)
 							|| !Array.isArray(type.fields) || type.fields.length > 1024) fail("Invalid component record");
@@ -280,7 +283,8 @@ export const validateElaboratedMetadata = (report, request) => {
 							if(!text(field.name) || names.has(field.name)) fail("Invalid record field");
 							names.add(field.name);
 							copied(field.type, depth + 1, references, refinements,
-								subtypeStructural && !Object.hasOwn(type, "provenance") && !Object.hasOwn(type, "erased"), produced);
+								subtypeStructural && !Object.hasOwn(type, "provenance")
+										&& (!Object.hasOwn(type, "erased") || checkedRecord || produced), produced);
 						}
 						return;
 					}
