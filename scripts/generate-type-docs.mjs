@@ -68,6 +68,9 @@ const nestedCheckedRecordWit = "[Nested checked-record WIT/WASI components](../e
 const nestedCheckedRecordPhpWasmMarker = "Generic, recursive and inherited checked records, other indices, open dependent records, callbacks and owned positions remain unverified;";
 const nestedCheckedRecordPhpWasmPending = "targets other than npm, C, C++, .NET, Java, Kotlin, Perl, native PHP, Python, Ruby and WIT/WASI need separate nested acceptance";
 const nestedCheckedRecordPhpWasm = "[Nested checked-record PHP-Wasm packages](../evidence/nested-checked-record-php-wasm-20261016/index.json) establish the same copied positions through generated Packet, Holder and ChoicePacket classes on both author routes and API modes. Two author roots reproduce complete Composer API, npm component and npm shared-runtime archives before author and build removal, offline installation and physical relocation. Unchanged weak and strict callers run in eight Node embedded/Composer and four Chromium bundled startup/lazy contexts on wasm32 PHP 8.4.1, Node 22.23.2 and Chromium 152.0.7977.75. Exact constructor failures preserve caller graphs and later calls recover; consumer PHP source remains required at runtime.";
+const nestedCheckedRecordRustMarker = "Generic, recursive and inherited checked records, other indices, open dependent records, callbacks and owned positions remain unverified;";
+const nestedCheckedRecordRustPending = "the Rust target still needs separate nested acceptance";
+const nestedCheckedRecordRust = "[Nested checked-record Rust crates](../evidence/nested-checked-record-rust-20261016/index.json) establish the same copied positions through generated Packet and Holder structs and the Packet case of a Choice enum on both author routes and API modes. Two author roots reproduce complete Cargo crates before author removal, offline installation from an authenticated vendored dependency closure and physical relocation. The unchanged compiled caller runs from the installed tree, after relocation and again with only its executable retained on Rust and Cargo 1.90.0 with Linux x64/glibc 2.36 and a 2.36 package floor. Exact constructor failures preserve caller graphs and later calls recover.";
 
 /**
  * Classify a single cell without borrowing evidence from another stage or position.
@@ -256,6 +259,10 @@ export async function renderTypeDocuments({ root })
 				, `${nestedCheckedRecordPhpWasm} ${nestedCheckedRecordPhpWasmMarker}`)
 			.replace(nestedCheckedRecordPhpWasmPending
 				, "the Rust target still needs separate nested acceptance")
+			.replace(nestedCheckedRecordRustMarker
+				, `${nestedCheckedRecordRust} ${nestedCheckedRecordRustMarker}`)
+			.replace(nestedCheckedRecordRustPending
+				, "all seventeen profiles have separate installed acceptance for this tested nested copied boundary")
 			.replace(primitiveNominalMarker,
 				`${primitiveNominalDotnet} ${primitiveNominalPhp} ${primitiveNominalPhpWasm} ${recursiveSubtypePhpWasm} ${primitiveNominalWit} ${primitiveNominalJvm} ${primitiveNominalPending}`)
 	};

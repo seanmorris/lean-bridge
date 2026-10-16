@@ -71,6 +71,12 @@ The [production-hardening review from 14 August 2026](production-hardening-revie
 - [Nested checked records in .NET, 16 October 2026](nested-checked-record-dotnet-20261016.md)
 - [Nested checked records in Java and Kotlin, 16 October 2026](nested-checked-record-jvm-20261016.md)
 - [Nested checked records in Perl, 16 October 2026](nested-checked-record-perl-20261016.md)
+- [Nested checked records in native PHP, 16 October 2026](nested-checked-record-php-20261016/index.json)
+- [Nested checked records in Python, 16 October 2026](nested-checked-record-python-20261016/index.json)
+- [Nested checked records in Ruby, 16 October 2026](nested-checked-record-ruby-20261016/index.json)
+- [Nested checked records in WIT/WASI, 16 October 2026](nested-checked-record-wit-20261016/index.json)
+- [Nested checked records in PHP-Wasm, 16 October 2026](nested-checked-record-php-wasm-20261016/index.json)
+- [Nested checked records in Rust, 16 October 2026](nested-checked-record-rust-20261016/index.json)
 
 ## Performance
 

@@ -12,3 +12,6 @@ import "./nested-checked-record-rust-installed-tests.mjs";
 import "./nested-checked-record-rust-ci-policy-tests.mjs";
 import "./nested-checked-record-rust-ci-shell-tests.mjs";
 import "./nested-checked-record-rust-ci-workflow-tests.mjs";
+import "./nested-checked-record-rust-evidence-tests.mjs";
+import "./nested-checked-record-rust-promotion-tests.mjs";
+import "./nested-checked-record-rust-promotion-history-tests.mjs";
