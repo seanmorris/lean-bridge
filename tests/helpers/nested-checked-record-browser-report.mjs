@@ -5,6 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import {
@@ -106,7 +107,7 @@ const checkInputs = async ({ item, npm, read, json, producer, consumer }) => {
 	]) assert.equal(sha256(await read(prefix + name)), npm.trees[module][path]);
 };
 
-const checkPackages = async ({ item, npm, json, consumer }) => {
+const checkPackages = async ({ item, npm, read, json, consumer }) => {
 	const { profile, browser } = item, prefix = `browser/${profile}/`;
 	const install = await json(prefix + "install.json"); assert.equal(install.code, 0);
 	assert.match(install.stderr, /^(?:npm notice[^\n]*\n)*$/u);
@@ -141,7 +142,8 @@ const checkPackages = async ({ item, npm, json, consumer }) => {
 		assert.equal(dependency.version, metadata.version);
 		assert.equal(dependency.resolved, `file:../handoff/${archive}`);
 		assert.equal(manifest.dependencies[metadata.name], dependency.resolved);
-		assert.match(dependency.integrity, /^sha512-[A-Za-z0-9+/]+={0,2}$/u);
+		assert.equal(dependency.integrity, "sha512-" + createHash("sha512")
+			.update(await read(`handoff/${archive}`)).digest("base64"));
 		assert.equal(metadata.exports["."].browser, "./index.mjs");
 	}
 	assert.deepEqual(browser.framework.map(item => item.name), frameworkNames);
@@ -169,7 +171,7 @@ const checkPackages = async ({ item, npm, json, consumer }) => {
 	assert.equal(wasm.sha256, npm.receipt.componentArtifactSha256);
 };
 
-const checkExecutions = item => {
+const checkExecutions = (item, browserVersions) => {
 	const { profile, browser } = item, variants = variantsFor(profile);
 	assert.deepEqual(browser.deployments.map(value => value.variant), variants);
 	for(const deployment of browser.deployments)
@@ -181,6 +183,8 @@ const checkExecutions = item => {
 			, byHash(browser.installedAssets));
 		for(const name of ["nestedcheckedrecords", "@lean-bridge/runtime"])
 			assert.ok(deployment.modulePaths.includes(`node_modules/${name}/index.mjs`));
+		for(const path of deployment.modulePaths)
+			assert.ok(path.startsWith("node_modules/") && !path.split("/").includes(".."));
 	}
 	assert.deepEqual(browser.executions.map(({ engine, variant }) => ({ engine, variant }))
 		, nestedCheckedRecordBrowserEngines.flatMap(engine =>
@@ -188,6 +192,8 @@ const checkExecutions = item => {
 	assert.deepEqual(item.observation, browser.executions[0].observation);
 	for(const execution of browser.executions)
 	{
+		browserVersions[execution.engine] ??= execution.observation.hostVersion;
+		assert.equal(execution.observation.hostVersion, browserVersions[execution.engine]);
 		const observed = item.observations.filter(row =>
 			row.engine === execution.engine && row.variant === execution.variant);
 		for(const row of observed) assert.deepEqual(row.observation, execution.observation);
@@ -246,6 +252,7 @@ export const checkNestedCheckedRecordBrowserReport = async (read, options) => {
 	assert.deepEqual(report.reports.map(item => item.profile)
 		, nestedCheckedRecordBrowserProfiles);
 	let commonAssets;
+	const browserVersions = {};
 	for(const item of report.reports)
 	{
 		const { profile, browser } = item;
@@ -280,14 +287,16 @@ export const checkNestedCheckedRecordBrowserReport = async (read, options) => {
 		assert.equal(browser.externalNetworkBlocked, true);
 		await checkInputs({ item, npm, read, json, producer, consumer });
 		await checkPackages({ item, npm, read, json, consumer });
-		checkExecutions(item);
+		checkExecutions(item, browserVersions);
 		commonAssets ??= browser.installedAssets;
 		assert.deepEqual(browser.installedAssets, commonAssets);
 	}
+	exactKeys(browserVersions, nestedCheckedRecordBrowserEngines);
 	return {
 		route, mode: selection.mode, producerCommit, consumerCommit
 		, engines: report.requestedEngines
 		, profiles: report.reports.map(item => item.profile)
+		, browserVersions
 		, browserExecutions: 12, lifecycleObservations: 51
 		, ...nestedCheckedRecordNpmExpected(route)
 	};

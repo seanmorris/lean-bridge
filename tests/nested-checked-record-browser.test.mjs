@@ -108,6 +108,9 @@ test("retained nested checked-record npm packages pass source-free browser accep
 				directory, records, route, producerCommit: npm.producerCommit
 				, consumerCommit, runtime
 			});
+			const browser = JSON.parse(await readFile(join(records, "browser.json")));
+			const browserVersions = Object.fromEntries(browser.reports[0].browser.executions
+				.map(execution => [execution.engine, execution.observation.hostVersion]));
 			const checked = await checkNestedCheckedRecordBrowserReport(
 				path => readFile(join(records, path)), {
 					route, producerCommit: npm.producerCommit, consumerCommit, runtime
@@ -118,6 +121,7 @@ test("retained nested checked-record npm packages pass source-free browser accep
 				, producerCommit: npm.producerCommit, consumerCommit
 				, engines: nestedCheckedRecordBrowserEngines
 				, profiles: nestedCheckedRecordBrowserProfiles
+				, browserVersions
 				, browserExecutions: 12, lifecycleObservations: 51
 				, ...nestedCheckedRecordNpmExpected(route)
 			});
