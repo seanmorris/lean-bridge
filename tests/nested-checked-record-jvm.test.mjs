@@ -8,3 +8,5 @@ import "./helpers/nested-checked-record-jvm-caller-tests.mjs";
 import "./helpers/nested-checked-record-jvm-ci-workflow-tests.mjs";
 import "./helpers/nested-checked-record-jvm-evidence-tests.mjs";
 import "./helpers/nested-checked-record-jvm-installed-tests.mjs";
+import "./helpers/nested-checked-record-jvm-promotion-tests.mjs";
+import "./helpers/nested-checked-record-jvm-promotion-history-tests.mjs";

@@ -56,6 +56,7 @@ import { withoutNestedCheckedRecordNativeCorrection } from "./helpers/nested-che
 import { withoutNestedCheckedRecordNativePromotion } from "./helpers/nested-checked-record-native-promotion-history.mjs";
 import { withoutNestedCheckedRecordQuality } from "./helpers/nested-checked-record-quality-source-history.mjs";
 import { withoutNestedCheckedRecordDotnetPromotion } from "./helpers/nested-checked-record-dotnet-promotion-history.mjs";
+import { withoutNestedCheckedRecordJvmPromotion } from "./helpers/nested-checked-record-jvm-promotion-history.mjs";
 
 const execute = promisify(execFile);
 const root = path.resolve(import.meta.dirname, "..");
@@ -97,8 +98,9 @@ const observationFixture = () => {
 
 test("historical shape comparisons preserve old cells without weakening the live classifier", async () => {
 	const file = "docs/type-surface.v1.json";
-	let current = withoutNestedCheckedRecordDotnetPromotion(file
+	let current = withoutNestedCheckedRecordJvmPromotion(file
 		, await readFile(file, "utf8"));
+	current = withoutNestedCheckedRecordDotnetPromotion(file, current);
 	current = withoutNestedCheckedRecordQuality(file
 		, current);
 	current = withoutNestedCheckedRecordNativePromotion(file, current);
@@ -483,13 +485,13 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 		, "php-wasm": ["php-wasm"]
 	}[profile] ?? [];
 	const checkedRecords = checkedRecordGroups.length ? ["checked-record"] : [];
-	const nestedCheckedRecordFields = profile === "dotnet" ? 1 : 0;
+	const nestedCheckedRecordFields = ["dotnet", "java", "kotlin"].includes(profile) ? 1 : 0;
 	assert.equal(observed.length, 63 + 3 * (compounds.length + lists.length + aliases.length + variants.length + recursive.length) + 2 * fins.length + 2 * subtypes.length + 2 * checkedRecords.length + nestedCheckedRecordFields + specialized.length + (nominalFin ? 1 : 0) + (nominalSubtype ? 1 : 0));
 	assert.deepEqual([...new Set(observed.map(cell => cell.shape))].sort(), [...document.irFacets.primitive, "array", "record", ...compounds, ...lists, ...aliases, ...variants, ...recursive, ...fins, ...subtypes, ...checkedRecords, ...specialized].sort());
 	for(const cell of observed)
 	{
 		assert.ok([...(specialized.includes(cell.shape) ? ["signature"] : []), "parameter", "result", "field"].includes(cell.position));
-		if((cell.shape === "checked-record" && profile !== "dotnet") || (cell.shape === "subtype" && !nominalSubtype) || (cell.shape === "fin" && !nominalFin)) assert.notEqual(cell.position, "field");
+		if((cell.shape === "checked-record" && !["dotnet", "java", "kotlin"].includes(profile)) || (cell.shape === "subtype" && !nominalSubtype) || (cell.shape === "fin" && !nominalFin)) assert.notEqual(cell.position, "field");
 		for(const [stageName, stage] of Object.entries(cell.stages))
 		{
 			assert.equal(stage.state, "passed");
@@ -499,10 +501,13 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 					: checkedRecordGroups.flatMap(group =>
 						(cell.position === "result" ? ["ordinary-source", "result-only-ordinary-source"] : ["ordinary-source"])
 							.map(route => `${profile === "php-wasm" ? "checked-record" : "checked-record-native"}-${group}-${route}-installed`));
+				const modes = cell.position === "result"
+					? ["full", "result-only"] : ["full"];
 				const nested = profile === "dotnet"
-					? (cell.position === "result" ? ["full", "result-only"] : ["full"])
-						.map(mode => `nested-checked-record-dotnet-ordinary-${mode}-installed`)
-					: [];
+					? modes.map(mode => `nested-checked-record-dotnet-ordinary-${mode}-installed`)
+					: ["java", "kotlin"].includes(profile)
+						? modes.map(mode => `nested-checked-record-jvm-ordinary-${mode}-installed`)
+						: [];
 				assert.deepEqual(stage.evidence, [...baseline, ...nested]);
 				continue;
 			}
