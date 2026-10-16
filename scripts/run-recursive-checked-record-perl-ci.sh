@@ -43,6 +43,6 @@ for case_name in ordinary-recursive ordinary-mutual reviewed-recursive reviewed-
     2>&1 | tee "$output/run.tap"
   node scripts/check-recursive-checked-record-perl-ci.mjs \
     --name "$case_name" --producer "$revision" \
-    --directory "$output/records" --tap "$output/run.tap" \
+    --directory "$output/records/$route/$fixture" --tap "$output/run.tap" \
     --glibc 2.38 --max-load 8 | tee "$output/verification.json"
 done

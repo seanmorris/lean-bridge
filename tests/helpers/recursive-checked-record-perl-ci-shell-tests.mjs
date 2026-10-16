@@ -41,14 +41,14 @@ if(producer) {
   const title = "installed recursive checked-record Perl packages reproduce and relocate " + route + " " + fixture;
   assert.deepEqual(args, ["--test", "--test-concurrency=1", "--test-reporter=tap",
     "--test-name-pattern=^" + title + "$", "tests/helpers/recursive-checked-record-perl-installed-tests.mjs"]);
-  fs.mkdirSync(output + "/records", {recursive:true});
-  fs.writeFileSync(output + "/records/partial.json", "original partial record");
+  fs.mkdirSync(output + "/records/" + route + "/" + fixture, {recursive:true});
+  fs.writeFileSync(output + "/records/" + route + "/" + fixture + "/partial.json", "original partial record");
   process.stdout.write("original producer stdout\\n"); process.stderr.write("original producer stderr\\n");
   process.exit(selected === process.env.FAKE_FAIL_CASE ? Number(process.env.FAKE_PRODUCER_EXIT) : 0);
 }
 assert.deepEqual(args, ["scripts/check-recursive-checked-record-perl-ci.mjs",
   "--name", selected, "--producer", "${"a".repeat(40)}",
-  "--directory", output + "/records", "--tap", output + "/run.tap",
+  "--directory", output + "/records/" + route + "/" + fixture, "--tap", output + "/run.tap",
   "--glibc", "2.38", "--max-load", "8"]);
 process.stdout.write("{\\"accepted\\":true}\\n");
 process.exit(selected === process.env.FAKE_FAIL_CASE ? Number(process.env.FAKE_CHECKER_EXIT) : 0);
@@ -88,7 +88,10 @@ process.exit(selected === process.env.FAKE_FAIL_CASE ? Number(process.env.FAKE_C
 				const tap = await readFile(join(output, "run.tap"), "utf8");
 				assert.ok(tap.includes("original producer stdout\n"));
 				assert.ok(tap.includes("original producer stderr\n"));
-				assert.equal(await readFile(join(output, "records/partial.json"), "utf8"), "original partial record");
+				const [route, fixture] = name.split("-");
+				assert.equal(await readFile(join(output
+					, `records/${route}/${fixture}/partial.json`), "utf8")
+					, "original partial record");
 			}
 			const again = spawnSync("/bin/bash", [script], { cwd: directory, env, encoding: "utf8" });
 			assert.notEqual(again.status, 0); assert.equal(await readFile(join(directory, "calls.log"), "utf8"), calls);
