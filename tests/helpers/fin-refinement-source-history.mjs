@@ -110,6 +110,7 @@ import { beforeNestedCheckedRecordPhpPromotionSource, nestedCheckedRecordPhpProm
 import { beforeNestedCheckedRecordPythonPromotionSource, nestedCheckedRecordPythonPromotionChangedPaths } from "./nested-checked-record-python-promotion-history.mjs";
 import { beforeNestedCheckedRecordRubyPromotionSource, nestedCheckedRecordRubyPromotionChangedPaths } from "./nested-checked-record-ruby-promotion-history.mjs";
 import { beforeNestedCheckedRecordWitPromotionSource, nestedCheckedRecordWitPromotionChangedPaths } from "./nested-checked-record-wit-promotion-history.mjs";
+import { beforeNestedCheckedRecordPhpWasmPromotionSource, nestedCheckedRecordPhpWasmPromotionChangedPaths } from "./nested-checked-record-php-wasm-promotion-history.mjs";
 import { beforeNominalPrimitiveSubtypeRustPromotionSource, nominalPrimitiveSubtypeRustPromotionChangedPaths } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
 import { beforeNestedCheckedRecordSource, nestedCheckedRecordChangedPaths } from "./nested-checked-record-source-history.mjs";
 import { beforeNestedCheckedRecordBrowserPromotionSource, nestedCheckedRecordBrowserPromotionChangedPaths } from "./nested-checked-record-browser-promotion-history.mjs";
@@ -763,6 +764,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeNestedCheckedRecordPhpWasmPromotionSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeNestedCheckedRecordWitPromotionSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeNestedCheckedRecordRubyPromotionSource(path, source, expected);
@@ -1133,6 +1136,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nestedCheckedRecordPythonPromotionChangedPaths
 	, ...nestedCheckedRecordRubyPromotionChangedPaths
 	, ...nestedCheckedRecordWitPromotionChangedPaths
+	, ...nestedCheckedRecordPhpWasmPromotionChangedPaths
 ])].sort());
 
 /**

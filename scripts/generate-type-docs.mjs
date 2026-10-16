@@ -65,6 +65,9 @@ const nestedCheckedRecordRuby = "[Nested checked-record Ruby gems](../evidence/n
 const nestedCheckedRecordWitMarker = "[PHP-Wasm checked-record packages]";
 const nestedCheckedRecordWitPending = "targets other than npm, C, C++, .NET, Java, Kotlin, Perl, native PHP, Python and Ruby need separate nested acceptance";
 const nestedCheckedRecordWit = "[Nested checked-record WIT/WASI components](../evidence/nested-checked-record-wit-20261016/index.json) establish the same copied positions through Component Model Packet and Holder records and the packet case of a Choice variant on both author routes and API modes. Two author roots reproduce complete component archives before author removal and offline installation; one public C caller is compiled, its source is removed, and the executable runs before and after moving each installation through Wasmtime 42.0.1 on Linux x64/glibc 2.36. Exact constructor failures preserve caller value trees and output sentinels, and later calls recover. The component requires its packaged native Lean host rather than running as a standalone WASI command.";
+const nestedCheckedRecordPhpWasmMarker = "Generic, recursive and inherited checked records, other indices, open dependent records, callbacks and owned positions remain unverified;";
+const nestedCheckedRecordPhpWasmPending = "targets other than npm, C, C++, .NET, Java, Kotlin, Perl, native PHP, Python, Ruby and WIT/WASI need separate nested acceptance";
+const nestedCheckedRecordPhpWasm = "[Nested checked-record PHP-Wasm packages](../evidence/nested-checked-record-php-wasm-20261016/index.json) establish the same copied positions through generated Packet, Holder and ChoicePacket classes on both author routes and API modes. Two author roots reproduce complete Composer API, npm component and npm shared-runtime archives before author and build removal, offline installation and physical relocation. Unchanged weak and strict callers run in eight Node embedded/Composer and four Chromium bundled startup/lazy contexts on wasm32 PHP 8.4.1, Node 22.23.2 and Chromium 152.0.7977.75. Exact constructor failures preserve caller graphs and later calls recover; consumer PHP source remains required at runtime.";
 
 /**
  * Classify a single cell without borrowing evidence from another stage or position.
@@ -249,6 +252,10 @@ export async function renderTypeDocuments({ root })
 				, `${nestedCheckedRecordWit} ${nestedCheckedRecordWitMarker}`)
 			.replace(nestedCheckedRecordWitPending
 				, "targets other than npm, C, C++, .NET, Java, Kotlin, Perl, native PHP, Python, Ruby and WIT/WASI need separate nested acceptance")
+			.replace(nestedCheckedRecordPhpWasmMarker
+				, `${nestedCheckedRecordPhpWasm} ${nestedCheckedRecordPhpWasmMarker}`)
+			.replace(nestedCheckedRecordPhpWasmPending
+				, "the Rust target still needs separate nested acceptance")
 			.replace(primitiveNominalMarker,
 				`${primitiveNominalDotnet} ${primitiveNominalPhp} ${primitiveNominalPhpWasm} ${recursiveSubtypePhpWasm} ${primitiveNominalWit} ${primitiveNominalJvm} ${primitiveNominalPending}`)
 	};
