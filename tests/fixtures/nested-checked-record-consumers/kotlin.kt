@@ -15,7 +15,7 @@ private fun n(value: Long) = BigInteger.valueOf(value)
 private fun huge() = BigInteger.ONE.shiftLeft(100)
 private fun packet(digit: Long, word: Long) = Packet(n(digit), n(word))
 private fun snap(value: Packet?): String = if (value == null) "null" else "${value.digit}:${value.word}"
-private fun snap(values: Array<Packet>?): String = values?.joinToString("|") { snap(it) } ?: "null"
+private fun snap(values: Array<out Packet?>?): String = values?.joinToString("|") { snap(it) } ?: "null"
 private fun snap(value: Option<Packet>): String = if (value.isSome()) "some:${snap(value.value())}" else "none"
 private fun snap(value: Result<Packet, Packet>): String = if (value.isOk()) "ok:${snap(value.value())}" else "error:${snap(value.error())}"
 private fun snap(value: Pair<Packet, Packet>): String = "(${snap(value.first)},${snap(value.second)})"
