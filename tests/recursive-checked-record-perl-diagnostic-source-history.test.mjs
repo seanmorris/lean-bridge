@@ -47,8 +47,13 @@ test("the recursive Perl diagnostic history reconstructs every exact predecessor
 	assert.deepEqual(record.pinSources.map(source => source.path)
 		, recursiveCheckedRecordPerlDiagnosticEvidenceSourcePaths);
 	for(const source of record.pinSources)
-		assert.equal(sha256(await readFile(source.path, "utf8"))
-			, source.currentSha256, source.path);
+	{
+		const current = beforeFinRefinementSource(
+			source.path, await readFile(source.path, "utf8")
+			, source.currentSha256
+		);
+		assert.equal(sha256(current), source.currentSha256, source.path);
+	}
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousCommit, previousCommit(update.path));

@@ -139,13 +139,32 @@ def _graph_clear(value):
         _GraphRelease(release)(owner)
 `;
 
+// Read the adapter's one-shot checked-refinement text for an invalid input.
+// The adapter resets it at every call, so a missing text keeps the fixed one.
+const diagnosticSupport = `
+def _graph_checked_status(status, diagnostic):
+    if status != 1:
+        return _graph_status(status)
+    message = diagnostic()
+    if message is None:
+        return _graph_status(status)
+    try:
+        text = message.decode("utf-8")
+    except UnicodeDecodeError:
+        raise _GraphInvalidNative("Malformed native refinement diagnostic") from None
+    raise LeanBridgeError(status, text)
+`;
+
 /**
  * Emit typed C layout views and checked conversion/call functions. Public values
  * are supplied by the companion declarations, plus the public LeanBridgeError.
  *
  * @param ir - Concrete compiler-checked copied graph contract.
+ * @param options - Generated call features.
+ * @param options.refinementDiagnostics - Report exact checked-refinement failures.
  */
-export const generateCopiedPythonGraphConversions = ir => {
+export const generateCopiedPythonGraphConversions = (ir, { refinementDiagnostics = false } = {}) => {
+	if(typeof refinementDiagnostics !== "boolean") throw new TypeError("Python graph refinement diagnostics must be explicit");
 	const values = generateCopiedPythonGraphValues(ir), { layout } = values;
 	const nodes = new Map(values.types.map(node => [node.id, { ...node, raw: node.aggregate ? `_Raw${node.index}` : `_c.${primitives[node.ref.name]}` }]));
 	const publicNames = new Set([...nodes.values()].flatMap(node => node.kind === "record" ? [node.publicType]
@@ -325,7 +344,7 @@ export const generateCopiedPythonGraphConversions = ir => {
 			, ...parameters.map((node, j) => `        input${j} = ${node.aggregate ? `_graph_input${node.index}(arg${j}, scope)` : `scope.value(${node.raw}, _graph_input${node.index}(arg${j}, scope))`}`)
 			, `        output = scope.value(${result.raw})`, ...result.kind === "variant" ? ["        output.kind = (1 << 32) - 1"] : []
 			, "        if lifecycle is not None: _graph_status(lifecycle[0]())"
-			, `        _graph_status(invoke(${[...parameters.map((_, j) => `_c.byref(input${j})`), "_c.byref(output)"].join(", ")}))`
+			, `        ${refinementDiagnostics ? "_graph_checked_status" : "_graph_status"}(invoke(${[...parameters.map((_, j) => `_c.byref(input${j})`), "_c.byref(output)"].join(", ")})${refinementDiagnostics ? ", _graph_diagnostic" : ""})`
 			, `        result = _graph_output${result.index}(${result.aggregate ? "output" : "output.value"}, scope)`
 			, '        if lifecycle is not None and not lifecycle[1](): raise LeanBridgeError(5, "Lean runtime is unavailable")'
 			, "        return result", "    except _GraphInvalidNative:", "        if lifecycle is not None: lifecycle[2]()", "        raise"
@@ -334,5 +353,6 @@ export const generateCopiedPythonGraphConversions = ir => {
 	return { ...values, valuesSource: values.source
 		, rawTypes: [...nodes.values()].map(node => ({ id: node.id, name: node.raw, index: node.index }))
 		, rawSource: raw.join("\n")
-		, source: [support, publicSource, ...raw, ...conversions, ...calls, ""].join("\n") };
+		, source: [support, ...refinementDiagnostics ? [diagnosticSupport] : []
+			, publicSource, ...raw, ...conversions, ...calls, ""].join("\n") };
 };
