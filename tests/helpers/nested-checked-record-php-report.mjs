@@ -47,9 +47,9 @@ export const checkNestedCheckedRecordPhpReport = async (read, { route, mode, pro
 	assert.deepEqual(Object.keys(report).sort(), ["authorInputsUnchanged", "builds"
 		, "compilerFreeReplay", "configuration", "consumerSourceRequired"
 		, "declaredGlibcFloor", "dispatch", "expectedBindingIrSha256"
-		, "independentBuilds", "mode", "observations", "offlineInstall"
+		, "independentBuilds", "loadCeiling", "mode", "observations", "offlineInstall"
 		, "packageReceiptSha256", "producerCommit", "receipt"
-		, "loadCeiling", "relocatedInstallation", "reproducible"
+		, "relocatedInstallation", "reproducible"
 		, "resourceChecks", "route", "runtime"
 		, "schemaVersion", "sourceRemovedBeforeInstallation", "tools"]);
 	assert.equal(report.schemaVersion, 1); assert.equal(report.producerCommit, producerCommit);
