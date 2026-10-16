@@ -20,8 +20,12 @@ export {
 const identity = bytes => ({ bytes: bytes.length, sha256: sha256(bytes) });
 export const nestedCheckedRecordJvmNamespace
 	= "org.leanbridge.nestedcheckedrecords";
-const commonClasses = ["Api", "Option", "Packet", "Pair", "Result"];
-const fullClasses = ["Choice", "ChoiceEmpty", "ChoicePacket", "Holder"];
+export const nestedCheckedRecordJvmCommonClasses = Object.freeze([
+	"Api", "Option", "Packet", "Pair", "Result"
+]);
+export const nestedCheckedRecordJvmFullClasses = Object.freeze([
+	"Choice", "ChoiceEmpty", "ChoicePacket", "Holder"
+]);
 
 /**
  * Bind the original closed JAR to both build records and the platform floor.
@@ -85,9 +89,9 @@ export const inspectNestedCheckedRecordJvmPackage = (
 		[`${nestedCheckedRecordJvmNamespace.replaceAll(".", "/")}/`, "Unit"]
 		, [`${nestedCheckedRecordJvmNamespace.replaceAll(".", "/")}/kotlin/`, "UnitKt"]
 	]) {
-		for(const name of [...commonClasses, unit])
+		for(const name of [...nestedCheckedRecordJvmCommonClasses, unit])
 			assert.ok(receipt.files[prefix + name + ".class"]?.bytes > 0, prefix + name);
-		for(const name of fullClasses)
+		for(const name of nestedCheckedRecordJvmFullClasses)
 			assert.equal(Boolean(receipt.files[prefix + name + ".class"])
 				, mode === "full", prefix + name);
 	}
