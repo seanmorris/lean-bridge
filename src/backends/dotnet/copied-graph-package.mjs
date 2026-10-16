@@ -24,7 +24,11 @@ export const compileCopiedDotnetGraphPackageModel = ir => {
 			throw new TypeError("C# graph parameter names must be distinct ASCII identifiers");
 		return { ...fn, declaration, parameterNames: parameters };
 	});
-	return { ...generated, ir, prefix, functions, layoutSha256: sha256(canonicalJson(generated.layout)) };
+	const refinementDiagnostics = ir.declarations.some(declaration =>
+		declaration.source?.extensions?.["lean-lang.org/refinements"]
+			?.parameters?.some(Boolean));
+	return { ...generated, ir, prefix, functions, refinementDiagnostics
+		, layoutSha256: sha256(canonicalJson(generated.layout)) };
 };
 
 /**
@@ -36,6 +40,13 @@ export const compileCopiedDotnetGraphPackageModel = ir => {
  */
 export const generateCopiedDotnetGraphPackage = (ir, evidence = null) => {
 	const model = compileCopiedDotnetGraphPackageModel(ir), path = `src/${model.assembly}`;
+	const diagnosticOffset = model.functions.length;
+	const lifecycleOffset = diagnosticOffset + (model.refinementDiagnostics ? 1 : 0);
+	const supportedFeatures = [
+		"direct-functions", "copied-values", "recursive-values", "deterministic-close"
+	];
+	if(model.refinementDiagnostics)
+		supportedFeatures.push("checked-refinement-diagnostics");
 	const types = new Map(model.nativeTypes.map(node => [node.id, node]));
 	const unit = id => model.types.find(node => node.id === id).ref.name === "unit";
 	const publicFiles = [`${path}/Api.cs`], internalFiles = [`${path}/Runtime.cs`, `${path}/Calls.cs`];
@@ -54,8 +65,8 @@ export const generateCopiedDotnetGraphPackage = (ir, evidence = null) => {
 ${params.map((node, i) => `            GraphRuntime.Write${node.index}(arg${i}, check);`).join("\n")}
         }
         var symbols = GraphNative.Resolve();
-        var lifecycle = new GraphLifecycle((delegate* unmanaged[Cdecl]<uint>)symbols[${model.functions.length}], (delegate* unmanaged[Cdecl]<int>)symbols[${model.functions.length + 1}], (delegate* unmanaged[Cdecl]<void>)symbols[${model.functions.length + 2}]);
-        return GraphRuntime.Call${fn.publicName}((delegate* unmanaged[Cdecl]<${[...params.map(node => `${node.raw}*`), `${result.raw}*`, "uint"].join(", ")}>)symbols[${index}], lifecycle${params.map((_, i) => `, arg${i}`).join("")});
+        var lifecycle = new GraphLifecycle((delegate* unmanaged[Cdecl]<uint>)symbols[${lifecycleOffset}], (delegate* unmanaged[Cdecl]<int>)symbols[${lifecycleOffset + 1}], (delegate* unmanaged[Cdecl]<void>)symbols[${lifecycleOffset + 2}]);
+        return GraphRuntime.Call${fn.publicName}((delegate* unmanaged[Cdecl]<${[...params.map(node => `${node.raw}*`), `${result.raw}*`, "uint"].join(", ")}>)symbols[${index}], ${model.refinementDiagnostics ? `(delegate* unmanaged[Cdecl]<byte*>)symbols[${diagnosticOffset}]` : "null"}, lifecycle${params.map((_, i) => `, arg${i}`).join("")});
     }` };
 	});
 	const files = {
@@ -99,7 +110,7 @@ Structured callbacks, closures, resources and asynchronous values remain outside
 		, files: Object.keys(files), publicFiles, internalFiles, packageFiles
 		, aliases: model.aliases
 		, copiedGraph: { schemaVersion: 1, layoutSha256: model.layoutSha256 }
-		, supportedFeatures: ["direct-functions", "copied-values", "recursive-values", "deterministic-close"]
+		, supportedFeatures
 		, capabilityGaps: [{ feature: "identity-and-effects", reason: "Recursive C# packages support finite copied values, not callable, resource or asynchronous payloads." }
 			, { feature: "additional-platforms", reason: "Compiled releases target .NET 8 on Linux x86-64 with glibc." }] }, null, 2)}\n`;
 	return Object.freeze(files);

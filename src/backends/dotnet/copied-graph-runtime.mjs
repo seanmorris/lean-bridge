@@ -8,7 +8,8 @@ import { componentRecursiveLimits } from "../../abi/component-recursive.mjs";
 /** Private support. All managed names are qualified to avoid public-name capture. */
 export const dotnetGraphRuntime = `internal sealed class GraphInvalidNative : global::System.Exception
 {
-    internal GraphInvalidNative(string message) : base(message) { }
+    internal GraphInvalidNative(string message, global::System.Exception? inner = null)
+        : base(message, inner) { }
 }
 internal sealed class GraphLimit : global::System.ArgumentException
 {
@@ -98,12 +99,32 @@ internal static unsafe partial class GraphRuntime
 {
     private static readonly global::System.Text.UTF8Encoding Utf8 = new(false, true);
     internal static void Checkpoint() { }
-    internal static void Status(uint status)
+    internal static void Status(uint status) => Status(status, null);
+    internal static void Status(uint status, delegate* unmanaged[Cdecl]<byte*> diagnostic)
     {
         switch (status)
         {
             case 0: return;
-            case 1: throw new global::System.ArgumentException("Invalid native copied input");
+            case 1:
+                if (diagnostic != null)
+                {
+                    var message = diagnostic();
+                    if (message != null)
+                    {
+                        var length = 0;
+                        while (length <= 16 * 1024 && message[length] != 0) length++;
+                        if (length > 16 * 1024)
+                            throw new GraphInvalidNative("Native refinement diagnostic exceeds 16 KiB");
+                        string text;
+                        try { text = Utf8.GetString(new global::System.ReadOnlySpan<byte>(message, length)); }
+                        catch (global::System.Text.DecoderFallbackException error)
+                        {
+                            throw new GraphInvalidNative("Native refinement diagnostic is not UTF-8", error);
+                        }
+                        throw new global::System.ArgumentException(text);
+                    }
+                }
+                throw new global::System.ArgumentException("Invalid native copied input");
             case 2: throw new GraphLimit("Native copied graph limit exceeded");
             case 3: throw new global::System.OutOfMemoryException("Native copied graph allocation failed");
             case 5: throw new LeanBridgeException(5, "Lean runtime is unavailable");

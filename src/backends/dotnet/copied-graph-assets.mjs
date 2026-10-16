@@ -15,7 +15,9 @@ import { verifiedDotnetAssets } from "./verified-assets.mjs";
 export const dotnetGraphAssets = (model, evidence, selectedSymbols = null) => {
 	if(evidence !== null && (evidence.componentId !== model.ir.component.id || evidence.library !== `lib${model.prefix}.so`))
 		throw new TypeError("C# graph loading evidence differs from the component");
-	const symbols = selectedSymbols ?? [...model.functions.map(fn => `${fn.name}_graph`), ...["initialize", "ready", "retire"].map(name => `${model.prefix}_graph_${name}`)];
+	const symbols = selectedSymbols ?? [...model.functions.map(fn => `${fn.name}_graph`)
+		, ...model.refinementDiagnostics ? [`${model.prefix}_graph_error`] : []
+		, ...["initialize", "ready", "retire"].map(name => `${model.prefix}_graph_${name}`)];
 	if(!Array.isArray(symbols) || symbols.length === 0 || symbols.length !== new Set(symbols).size || symbols.some(name => !/^[A-Za-z_][A-Za-z0-9_]*$/u.test(name)))
 		throw new TypeError("C# graph loading requires distinct checked symbol names");
 	return `internal static class GraphNative

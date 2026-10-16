@@ -160,7 +160,7 @@ ${output.map(line => `            ${line}`).join("\n")}
 	const calls = model.functions.map(fn => {
 		const parameters = fn.parameters.map(id => nodes.get(id)), result = nodes.get(fn.result);
 		const pointer = `delegate* unmanaged[Cdecl]<${[...parameters.map(node => `${node.raw}*`), `${result.raw}*`, "uint"].join(", ")}>`;
-		return `    internal static ${publicType(result.id)} Call${fn.publicName}(${pointer} invoke, GraphLifecycle lifecycle${parameters.map((node, i) => `, ${publicType(node.id)} arg${i}`).join("")})
+		return `    internal static ${publicType(result.id)} Call${fn.publicName}(${pointer} invoke, delegate* unmanaged[Cdecl]<byte*> diagnostic, GraphLifecycle lifecycle${parameters.map((node, i) => `, ${publicType(node.id)} arg${i}`).join("")})
     {
         using (var check = new GraphScope(true))
         {
@@ -173,7 +173,7 @@ ${result.kind === "variant" ? "        output.Kind = uint.MaxValue;\n" : ""}    
 ${parameters.map((node, i) => `            var input${i} = Write${node.index}(arg${i}, scope);`).join("\n")}
             if (invoke == null) throw new global::System.ArgumentNullException(nameof(invoke));
             lifecycle.Before();
-            Status(invoke(${[...parameters.map((_, i) => `&input${i}`), "&output"].join(", ")}));
+            Status(invoke(${[...parameters.map((_, i) => `&input${i}`), "&output"].join(", ")}), diagnostic);
             var result = Read${result.index}(&output, scope);
             Checkpoint(); lifecycle.After();
             return result;
