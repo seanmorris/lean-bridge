@@ -105,6 +105,7 @@ import { beforeNestedCheckedRecordNativePromotionSource, nestedCheckedRecordNati
 import { beforeNestedCheckedRecordQualitySource, nestedCheckedRecordQualityChangedPaths } from "./nested-checked-record-quality-source-history.mjs";
 import { beforeNestedCheckedRecordDotnetPromotionSource, nestedCheckedRecordDotnetPromotionChangedPaths } from "./nested-checked-record-dotnet-promotion-history.mjs";
 import { beforeNominalPrimitiveSubtypeAuditCorrectionSource, nominalPrimitiveSubtypeAuditCorrectionChangedPaths } from "./nominal-primitive-subtype-audit-correction-history.mjs";
+import { beforeNominalPrimitiveSubtypeRegistrationGapSource, beforeNominalPrimitiveSubtypeRegistrationRepairSource, nominalPrimitiveSubtypeRegistrationGapChangedPaths, nominalPrimitiveSubtypeRegistrationGapPath } from "./nominal-primitive-subtype-registration-gap-history.mjs";
 import { beforeNominalPrimitiveSubtypeRustPromotionSource, nominalPrimitiveSubtypeRustPromotionChangedPaths } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
 import { beforeNestedCheckedRecordSource, nestedCheckedRecordChangedPaths } from "./nested-checked-record-source-history.mjs";
 import { beforeNestedCheckedRecordBrowserPromotionSource, nestedCheckedRecordBrowserPromotionChangedPaths } from "./nested-checked-record-browser-promotion-history.mjs";
@@ -758,6 +759,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeNominalPrimitiveSubtypeRegistrationRepairSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeNominalPrimitiveSubtypeAuditCorrectionSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeNestedCheckedRecordDotnetPromotionSource(path, source, expected);
@@ -784,7 +787,13 @@ const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expecte
 	if(sha256(source) === expected) return source;
 	source = beforeNominalPrimitiveSubtypePhpPromotionSource(path, source, expected);
 	if(sha256(source) === expected) return source;
+	// The native PHP harness, archive and CI registrations predate the native PHP promotion ledger.
+	source = beforeNominalPrimitiveSubtypeRegistrationGapSource("php", path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeNominalPrimitiveSubtypeDotnetPromotionSource(path, source, expected);
+	if(sha256(source) === expected) return source;
+	// The .NET evidence gate and archive registrations predate the .NET promotion ledger.
+	source = beforeNominalPrimitiveSubtypeRegistrationGapSource("dotnet", path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeNominalPrimitiveSubtypeRustPromotionSource(path, source, expected);
 	if(sha256(source) === expected) return source;
@@ -1113,6 +1122,8 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nestedCheckedRecordQualityChangedPaths
 	, ...nestedCheckedRecordDotnetPromotionChangedPaths
 	, ...nominalPrimitiveSubtypeAuditCorrectionChangedPaths
+	, nominalPrimitiveSubtypeRegistrationGapPath
+	, ...nominalPrimitiveSubtypeRegistrationGapChangedPaths
 ])].sort());
 
 /**

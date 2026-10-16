@@ -10,11 +10,37 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeNominalPrimitiveSubtypeRubyPromotionSource } from "./nominal-primitive-subtype-ruby-promotion-history.mjs";
-import { beforeNominalPrimitiveSubtypeRustPromotionSource, beforePrimitiveSubtypeRustPromotionPins } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
+import { beforeNestedCheckedRecordBrowserPromotionPins } from "./nested-checked-record-browser-promotion-history.mjs";
+import { beforeNestedCheckedRecordNativeCorrectionPins } from "./nested-checked-record-native-correction-source-history.mjs";
+import { beforeNestedCheckedRecordDotnetPromotionPins } from "./nested-checked-record-dotnet-promotion-history.mjs";
+import { beforeNestedCheckedRecordNativePromotionPins } from "./nested-checked-record-native-promotion-history.mjs";
+import { beforeNestedCheckedRecordQualityPins } from "./nested-checked-record-quality-source-history.mjs";
+import { beforeNominalPrimitiveSubtypeAuditCorrectionPins } from "./nominal-primitive-subtype-audit-correction-history.mjs";
+import { beforeNominalPrimitiveSubtypeJvmPromotionPins } from "./nominal-primitive-subtype-jvm-promotion-history.mjs";
+import { beforePrimitiveSubtypePhpWasmPromotionPins } from "./nominal-primitive-subtype-php-wasm-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypeRegistrationRepairPins } from "./nominal-primitive-subtype-registration-gap-history.mjs";
+import { beforeNominalPrimitiveSubtypeWitPromotionPins } from "./nominal-primitive-subtype-wit-promotion-history.mjs";
+import { beforeRecursiveSubtypePhpWasmPromotionPins } from "./recursive-subtype-php-wasm-promotion-history.mjs";
 import { beforeNominalPrimitiveSubtypeNativePromotionPins } from "./nominal-primitive-subtype-native-promotion-history.mjs";
 import { nominalPrimitiveSubtypeBrowserReferences, promoteNominalPrimitiveSubtypeBrowser } from "./nominal-primitive-subtype-browser-promotion.mjs";
 import { beforeNominalPrimitiveSubtypeBrowserPromotionSource, nominalPrimitiveSubtypeBrowserPromotionChangedPaths, nominalPrimitiveSubtypeBrowserPromotionHistoryPath, nominalPrimitiveSubtypeBrowserPromotionPredecessor, reverseNominalPrimitiveSubtypeBrowserPromotionUpdate } from "./nominal-primitive-subtype-browser-promotion-history.mjs";
+
+// Newer layers, newest first: each restores only its own refreshed source pins.
+const newerPins = [
+	beforeNominalPrimitiveSubtypeRegistrationRepairPins
+	, beforeNominalPrimitiveSubtypeAuditCorrectionPins
+	, beforeNestedCheckedRecordDotnetPromotionPins
+	, beforeNestedCheckedRecordQualityPins
+	, beforeNestedCheckedRecordNativePromotionPins
+	, beforeNestedCheckedRecordNativeCorrectionPins
+	, beforeNominalPrimitiveSubtypeJvmPromotionPins
+	, beforeNominalPrimitiveSubtypeWitPromotionPins
+	, beforeNestedCheckedRecordBrowserPromotionPins
+	, beforeRecursiveSubtypePhpWasmPromotionPins
+	, beforePrimitiveSubtypePhpWasmPromotionPins
+	, beforeNominalPrimitiveSubtypeNativePromotionPins
+];
+const withoutNewerPins = inventory => newerPins.reduce((current, before) => before(current), inventory);
 
 test("primitive-base browser promotion history authenticates the exact browser-only support and docs transition", async t => {
 	const record = JSON.parse(await readFile(nominalPrimitiveSubtypeBrowserPromotionHistoryPath));
@@ -24,7 +50,7 @@ test("primitive-base browser promotion history authenticates the exact browser-o
 	const original = path => execFileSync("git", ["show", `${nominalPrimitiveSubtypeBrowserPromotionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalPrimitiveSubtypeBrowserPromotionSource(update.path, beforeNominalPrimitiveSubtypeRubyPromotionSource(update.path, beforeNominalPrimitiveSubtypeRustPromotionSource(update.path, await readFile(update.path, "utf8"))), update.currentSha256);
+		const current = beforeFinRefinementSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		const previous = reverseNominalPrimitiveSubtypeBrowserPromotionUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNominalPrimitiveSubtypeBrowserPromotionSource(update.path, current), previous);
@@ -42,8 +68,11 @@ test("primitive-base browser promotion history authenticates the exact browser-o
 			}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	const expected = beforeNominalPrimitiveSubtypeNativePromotionPins(beforePrimitiveSubtypeRustPromotionPins(await promoteNominalPrimitiveSubtypeBrowser(JSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypeBrowserReferences())));
-	assert.equal(beforeNominalPrimitiveSubtypeBrowserPromotionSource(inventoryPath, beforeNominalPrimitiveSubtypeRubyPromotionSource(inventoryPath, beforeNominalPrimitiveSubtypeRustPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")))), original(inventoryPath));
+	const expected = withoutNewerPins(await promoteNominalPrimitiveSubtypeBrowser(JSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypeBrowserReferences()));
+	const update = record.updates.find(item => item.path === inventoryPath);
+	// Newer layers stop at this layer's output before its own reversal is checked.
+	const checkpoint = beforeFinRefinementSource(inventoryPath, await readFile(inventoryPath, "utf8"), update.currentSha256);
+	assert.equal(beforeNominalPrimitiveSubtypeBrowserPromotionSource(inventoryPath, checkpoint), original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{
@@ -51,8 +80,6 @@ test("primitive-base browser promotion history authenticates the exact browser-o
 		if(update && file.sha256 === update.previousSha256)
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
-	const update = record.updates.find(item => item.path === inventoryPath);
-	const checkpoint = beforeNominalPrimitiveSubtypeBrowserPromotionSource(inventoryPath, beforeNominalPrimitiveSubtypeRubyPromotionSource(inventoryPath, beforeNominalPrimitiveSubtypeRustPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8"))), update.currentSha256);
 	assert.deepEqual(JSON.parse(checkpoint), expected);
 	assert.equal(expected.evidence.length, 532); assert.equal(expected.observations.length, 595);
 	t.diagnostic(`${pins} current-source pins refreshed; exactly eighteen existing browser cells supplemented`);

@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nominal-primitive-subtype-registration-gap-source-v1",
+  "predecessorCommit": "94a68ffd201c8565d41139cf99c54d0c71004068",
+  "draftParentCommit": "94a68ffd201c8565d41139cf99c54d0c71004068",
+  "gaps": {
+    "dotnet": {
+      "path": "tests/helpers/nominal-primitive-subtype-tests.mjs",
+      "currentSha256": "5d4108ebdb2897bfe9c8d82f73884ec3740d9d82d9da5512e6646ec304f76b42",
+      "previousSha256": "751d1d0463aabdf641e7d6e725df733dea40ef219f20db4657ebc59dd09efa8f",
+      "edits": [
+        {
+          "start": 2204,
+          "previous": "",
+          "current": "import \"./nominal-primitive-subtype-dotnet-fixture-tests.mjs\";\nimport \"./nominal-primitive-subtype-dotnet-package-tests.mjs\";\nimport \"./nominal-primitive-subtype-dotnet-installed-tests.mjs\";\nimport \"./nominal-primitive-subtype-dotnet-ci-policy-tests.mjs\";\nimport \"./nominal-primitive-subtype-dotnet-ci-shell-tests.mjs\";\nimport \"./nominal-primitive-subtype-dotnet-ci-workflow-tests.mjs\";\nimport \"./nominal-primitive-subtype-dotnet-evidence-tests.mjs\";\n"
+        }
+      ],
+      "fromCommit": "4e0aabf4c12446ce6203e1ea56bb42b5c5fda876",
+      "toCommit": "18bcdff78d98a15d1b5fbacac7654b305a8d5f9c"
+    },
+    "php": {
+      "path": "tests/helpers/nominal-primitive-subtype-tests.mjs",
+      "currentSha256": "32278509aae07329c159150eb5f5ca663711ff8f2e3f140d1a85b8f68e7a2d14",
+      "previousSha256": "fddeac9e18f14ef483d4cf9807e0dbaa183a8acf79c9a18b51ec0136064fbddb",
+      "edits": [
+        {
+          "start": 2909,
+          "previous": "",
+          "current": "import \"./nominal-primitive-subtype-php-fixture-tests.mjs\";\nimport \"./nominal-primitive-subtype-php-installed-tests.mjs\";\nimport \"./nominal-primitive-subtype-php-evidence-tests.mjs\";\nimport \"./nominal-primitive-subtype-php-ci-workflow-tests.mjs\";\nimport \"./nominal-primitive-subtype-php-ci-policy-tests.mjs\";\nimport \"./nominal-primitive-subtype-php-ci-shell-tests.mjs\";\n"
+        }
+      ],
+      "fromCommit": "ecb7e22ed0e106bad8184d9a058e3511e2545420",
+      "toCommit": "b24dcd2606e959caebd7d152c2554b6d7a46e157"
+    }
+  },
+  "updates": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "bf23b7dfc1b7534e8a64ea87ae4050413c3dd430f88e8ace688d8f622d659207",
+      "previousSha256": "138765e307113fcad9d46aa9629a1795ba781c1ad46d55c31205dd13144ba018",
+      "edits": [
+        {
+          "start": 11324,
+          "previous": "",
+          "current": "import { beforeNominalPrimitiveSubtypeRegistrationGapSource, beforeNominalPrimitiveSubtypeRegistrationRepairSource, nominalPrimitiveSubtypeRegistrationGapChangedPaths, nominalPrimitiveSubtypeRegistrationGapPath } from \"./nominal-primitive-subtype-registration-gap-history.mjs\";\n"
+        },
+        {
+          "start": 62547,
+          "previous": "",
+          "current": "\tsource = beforeNominalPrimitiveSubtypeRegistrationRepairSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 64352,
+          "previous": "",
+          "current": "\t// The native PHP harness, archive and CI registrations predate the native PHP promotion ledger.\n\tsource = beforeNominalPrimitiveSubtypeRegistrationGapSource(\"php\", path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 64725,
+          "previous": "",
+          "current": "\t// The .NET evidence gate and archive registrations predate the .NET promotion ledger.\n\tsource = beforeNominalPrimitiveSubtypeRegistrationGapSource(\"dotnet\", path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 78844,
+          "previous": "",
+          "current": "\t, nominalPrimitiveSubtypeRegistrationGapPath\n\t, ...nominalPrimitiveSubtypeRegistrationGapChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-browser-promotion-history-tests.mjs",
+      "currentSha256": "03d03e31dbd1eeb883d9ff991bdbca5866d792b22317c46356fe6bb106b1cf41",
+      "previousSha256": "58ac002338107cc55921e7cd91c16725cd99ddce8c4c333b1a2020d7c9ba17b1",
+      "edits": [
+        {
+          "start": 471,
+          "previous": "import { beforeNominalPrimitiveSubtypeRubyPromotionSource } from \"./nominal-primitive-subtype-ruby-promotion-history.mjs\";\nimport { beforeNominalPrimitiveSubtypeRustPromotionSource, beforePrimitiveSubtypeRustPromotionPins } from \"./nominal-primitive-subtype-rust-promotion-history.mjs\";\n",
+          "current": "import { beforeNestedCheckedRecordBrowserPromotionPins } from \"./nested-checked-record-browser-promotion-history.mjs\";\nimport { beforeNestedCheckedRecordNativeCorrectionPins } from \"./nested-checked-record-native-correction-source-history.mjs\";\nimport { beforeNestedCheckedRecordDotnetPromotionPins } from \"./nested-checked-record-dotnet-promotion-history.mjs\";\nimport { beforeNestedCheckedRecordNativePromotionPins } from \"./nested-checked-record-native-promotion-history.mjs\";\nimport { beforeNestedCheckedRecordQualityPins } from \"./nested-checked-record-quality-source-history.mjs\";\nimport { beforeNominalPrimitiveSubtypeAuditCorrectionPins } from \"./nominal-primitive-subtype-audit-correction-history.mjs\";\nimport { beforeNominalPrimitiveSubtypeJvmPromotionPins } from \"./nominal-primitive-subtype-jvm-promotion-history.mjs\";\nimport { beforePrimitiveSubtypePhpWasmPromotionPins } from \"./nominal-primitive-subtype-php-wasm-promotion-history.mjs\";\nimport { beforeNominalPrimitiveSubtypeRegistrationRepairPins } from \"./nominal-primitive-subtype-registration-gap-history.mjs\";\nimport { beforeNominalPrimitiveSubtypeWitPromotionPins } from \"./nominal-primitive-subtype-wit-promotion-history.mjs\";\nimport { beforeRecursiveSubtypePhpWasmPromotionPins } from \"./recursive-subtype-php-wasm-promotion-history.mjs\";\n"
+        },
+        {
+          "start": 2397,
+          "previous": "",
+          "current": "// Newer layers, newest first: each restores only its own refreshed source pins.\nconst newerPins = [\n\tbeforeNominalPrimitiveSubtypeRegistrationRepairPins\n\t, beforeNominalPrimitiveSubtypeAuditCorrectionPins\n\t, beforeNestedCheckedRecordDotnetPromotionPins\n\t, beforeNestedCheckedRecordQualityPins\n\t, beforeNestedCheckedRecordNativePromotionPins\n\t, beforeNestedCheckedRecordNativeCorrectionPins\n\t, beforeNominalPrimitiveSubtypeJvmPromotionPins\n\t, beforeNominalPrimitiveSubtypeWitPromotionPins\n\t, beforeNestedCheckedRecordBrowserPromotionPins\n\t, beforeRecursiveSubtypePhpWasmPromotionPins\n\t, beforePrimitiveSubtypePhpWasmPromotionPins\n\t, beforeNominalPrimitiveSubtypeNativePromotionPins\n];\nconst withoutNewerPins = inventory => newerPins.reduce((current, before) => before(current), inventory);\n\n"
+        },
+        {
+          "start": 3961,
+          "previous": "\t\tconst current = beforeNominalPrimitiveSubtypeBrowserPromotionSource(update.path, beforeNominalPrimitiveSubtypeRubyPromotionSource(update.path, beforeNominalPrimitiveSubtypeRustPromotionSource(update.path, await readFile(update.path, \"utf8\"))), update.currentSha256);\n",
+          "current": "\t\tconst current = beforeFinRefinementSource(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n"
+        },
+        {
+          "start": 5278,
+          "previous": "\tconst expected = beforeNominalPrimitiveSubtypeNativePromotionPins(beforePrimitiveSubtypeRustPromotionPins(await promoteNominalPrimitiveSubtypeBrowser(JSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypeBrowserReferences())));\n\tassert.equal(beforeNominalPrimitiveSubtypeBrowserPromotionSource(inventoryPath, beforeNominalPrimitiveSubtypeRubyPromotionSource(inventoryPath, beforeNominalPrimitiveSubtypeRustPromotionSource(inventoryPath, await readFile(inventoryPath, \"utf8\")))), original(inventoryPath));\n",
+          "current": "\tconst expected = withoutNewerPins(await promoteNominalPrimitiveSubtypeBrowser(JSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypeBrowserReferences()));\n\tconst update = record.updates.find(item => item.path === inventoryPath);\n\t// Newer layers stop at this layer's output before its own reversal is checked.\n\tconst checkpoint = beforeFinRefinementSource(inventoryPath, await readFile(inventoryPath, \"utf8\"), update.currentSha256);\n\tassert.equal(beforeNominalPrimitiveSubtypeBrowserPromotionSource(inventoryPath, checkpoint), original(inventoryPath));\n"
+        },
+        {
+          "start": 6110,
+          "previous": "\tconst update = record.updates.find(item => item.path === inventoryPath);\n\tconst checkpoint = beforeNominalPrimitiveSubtypeBrowserPromotionSource(inventoryPath, beforeNominalPrimitiveSubtypeRubyPromotionSource(inventoryPath, beforeNominalPrimitiveSubtypeRustPromotionSource(inventoryPath, await readFile(inventoryPath, \"utf8\"))), update.currentSha256);\n",
+          "current": ""
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-tests.mjs",
+      "currentSha256": "a8c27a425358d2c7833fbd20cb0a9be1b1de2b8e1dae1e485a681ecd5afe20b3",
+      "previousSha256": "170efb1d30dfa8d7c155001e3e7e638338f57b8a2a48b81d66e8371af369ae9a",
+      "edits": [
+        {
+          "start": 4183,
+          "previous": "",
+          "current": "import \"./nominal-primitive-subtype-registration-gap-history-tests.mjs\";\n"
+        }
+      ]
+    }
+  ]
+}
