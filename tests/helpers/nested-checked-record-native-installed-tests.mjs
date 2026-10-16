@@ -36,6 +36,12 @@ import {
 	parseNestedCheckedRecordNativeResult
 } from "./nested-checked-record-native-fixture.mjs";
 import {
+	checkNestedCheckedRecordNativeControls
+} from "./nested-checked-record-native-controls.mjs";
+import {
+	checkNestedCheckedRecordNativeReport
+} from "./nested-checked-record-native-report.mjs";
+import {
 	waitNominalSubtypeDotnetResources as waitResources
 } from "./nominal-subtype-dotnet-resources.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
@@ -55,6 +61,8 @@ for(const route of routes) for(const mode of modes) test(
 		for(const path of [
 			"tests/helpers/nested-checked-record-native-fixture.mjs"
 			, "tests/helpers/nested-checked-record-native-installed-tests.mjs"
+			, "tests/helpers/nested-checked-record-native-report.mjs"
+			, "tests/helpers/nested-checked-record-native-controls.mjs"
 			, ...profiles.map(profile =>
 				`tests/fixtures/nested-checked-record-consumers/${profile}.${profile}`)
 		]) execFileSync("git", ["ls-files", "--error-unmatch", path]);
@@ -86,7 +94,8 @@ for(const route of routes) for(const mode of modes) test(
 		};
 		assert.equal(runtime.glibc.stderr, "");
 		assert.match(runtime.glibc.stdout, /^glibc 2\.[0-9]+\n$/u);
-		assert.ok(Number(runtime.glibc.stdout.match(/2\.([0-9]+)/u)[1])
+		const glibc = runtime.glibc.stdout.trim().split(" ")[1];
+		assert.ok(Number(glibc.split(".")[1])
 			>= Number(floor.split(".")[1]));
 		await saveLakeFile(output, "runtime.json", canonicalJson(runtime));
 		await saveLakeFile(output, "configuration.json", canonicalJson(configuration));
@@ -233,8 +242,17 @@ for(const route of routes) for(const mode of modes) test(
 		await copyPackageSetHandoff(handoff, join(output, "handoff"));
 		await rm(handoff, { recursive: true });
 		await assert.rejects(access(handoff), { code: "ENOENT" });
+		const checkerOptions = {
+			route, mode, producerCommit, floor, maxLoad
+			, runtime: { platform: process.platform, arch: process.arch, glibc }
+		};
+		const read = path => readFile(join(output, path));
+		await checkNestedCheckedRecordNativeReport(read, checkerOptions);
+		const controls = await checkNestedCheckedRecordNativeControls(read, checkerOptions);
+		await saveLakeFile(output, "controls.json", canonicalJson(controls));
 		const paths = await nativeArtifactPaths(output);
-		assert.ok(paths.includes("report.json") && paths.includes("resources.json"));
+		assert.ok(paths.includes("report.json") && paths.includes("resources.json")
+			&& paths.includes("controls.json"));
 		complete = true;
 	}
 );
