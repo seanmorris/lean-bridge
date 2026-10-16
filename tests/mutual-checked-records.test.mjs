@@ -119,11 +119,11 @@ test("recursive Wasm diagnostics stay off the success path and name the rejected
 		exports, nominalRefinements: nominalRefinementEntries(ir.types)
 	});
 	assert.match(source, /enum \{ CRD_MESSAGE_LIMIT = 16384, CRD_KIND = UINT32_MAX \}/u);
-	assert.match(source, /return crd_reject\(" must be bigint below 3"\)/u);
+	assert.match(source, /return crd_reject\(" must be bigint below 3", sizeof/u);
 	assert.match(source
-		, /return crd_reject\(" was rejected by MutualCheckedRecords\.plusOne"\)/u);
+		, /return crd_reject\(" was rejected by MutualCheckedRecords\.plusOne", sizeof/u);
 	assert.match(source
-		, /return crd_reject\(" was rejected by MutualCheckedRecords\.mkEnvelope"\)/u);
+		, /return crd_reject\(" was rejected by MutualCheckedRecords\.mkEnvelope", sizeof/u);
 	assert.match(source, /crd_text\("\.next"/u);
 	assert.match(source, /crd_text\("\.value"/u);
 	assert.match(source, /crd_text\("\.packet"/u);

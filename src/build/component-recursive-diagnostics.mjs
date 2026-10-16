@@ -77,6 +77,10 @@ export const componentRecursiveDiagnostics = ({
 	};
 	const appendText = (value, indent = "  ") =>
 		`${indent}if (!crd_text(${JSON.stringify(value)}, sizeof(${JSON.stringify(value)}) - 1)) return 5;`;
+	const reject = value => {
+		const literal = JSON.stringify(value);
+		return `crd_reject(${literal}, sizeof(${literal}) - 1)`;
+	};
 	const scoped = (segments, call, indent = "  ") => {
 		const suffix = local++, mark = `mark${suffix}`, status = `status${suffix}`;
 		return [
@@ -132,7 +136,7 @@ export const componentRecursiveDiagnostics = ({
 					, `static const uint32_t ${constant}[${limbs.length}] = {${limbs.map(
 						limb => `0x${limb.toString(16)}u`).join(", ")}};`);
 				lines.push(`  if (!crd_fin_below(slot, ${limbs.length ? constant : "NULL"}, ${limbs.length}))`
-					, `    return crd_reject(${JSON.stringify(` must be bigint below ${tree.bound}`)});`);
+					, `    return ${reject(` must be bigint below ${tree.bound}`)};`);
 			}
 		}
 		else if(tree.kind === "subtype")
@@ -143,7 +147,7 @@ export const componentRecursiveDiagnostics = ({
 				const validator = `${symbol}_graph_refinement_${parameter}_${leaf}`;
 				validators.add(`extern uint8_t ${validator}(lean_object *);`);
 				lines.push(`  if (!${validator}(${walker(type)}_decode(slot)))`
-					, `    return crd_reject(${JSON.stringify(` was rejected by ${tree.constructor}`)});`);
+					, `    return ${reject(` was rejected by ${tree.constructor}`)};`);
 			}
 		}
 		else if(tree.kind === "checked-record")
@@ -163,7 +167,7 @@ export const componentRecursiveDiagnostics = ({
 				const validator = `${symbol}_graph_refinement_${parameter}_${leaf}`;
 				validators.add(`extern uint8_t ${validator}(lean_object *);`);
 				lines.push(`  if (!${validator}(${walker(type)}_decode(slot)))`
-					, `    return crd_reject(${JSON.stringify(` was rejected by ${tree.constructor}`)});`);
+					, `    return ${reject(` was rejected by ${tree.constructor}`)};`);
 			}
 		}
 		else if(tree.kind === "record")
@@ -258,7 +262,8 @@ static inline void crd_reset(void) { crd_length = 0; crd_message[0] = 0; }
 static inline void crd_restore(uint32_t mark) { crd_length = mark; crd_message[mark] = 0; }
 static inline int crd_text(const char *text, uint32_t length) {
   if (length > CRD_MESSAGE_LIMIT - crd_length) return 0;
-  memcpy(crd_message + crd_length, text, length); crd_length += length;
+  for (uint32_t i = 0; i < length; ++i) crd_message[crd_length + i] = text[i];
+  crd_length += length;
   crd_message[crd_length] = 0; return 1;
 }
 static inline int crd_index(uint32_t value) {
@@ -272,8 +277,8 @@ static inline uint32_t crd_overflow(void) {
   static const char overflow[] = "Refinement diagnostic exceeds 16 KiB";
   crd_reset(); (void)crd_text(overflow, sizeof(overflow) - 1); return 5;
 }
-static inline uint32_t crd_reject(const char *suffix) {
-  if (!crd_text(suffix, (uint32_t)strlen(suffix))) return crd_overflow();
+static inline uint32_t crd_reject(const char *suffix, uint32_t length) {
+  if (!crd_text(suffix, length)) return crd_overflow();
   return 5;
 }
 static inline int crd_fin_below(bridge_scalar_slot const *slot, const uint32_t *bound, uint32_t bound_length) {

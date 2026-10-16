@@ -57,7 +57,7 @@ export const generateComponentRecursiveAdapters = (abi, { exportFrames = true, e
 	const lines = [
 		'#include "component_scalar.h"'
 		, ...diagnostics ? [
-			'#include <string.h>', diagnostics.support
+			diagnostics.support
 			, ...diagnostics.validators, ...diagnostics.bounds, ...diagnostics.prototypes
 		] : []
 		, '_Static_assert(sizeof(size_t) == 4, "recursive frames require wasm32 Lean");'
