@@ -3,7 +3,8 @@
  *
  * @file
  */
-import { nativeCType, nativeObjectType, nativeTypeKey, validateNativeType, nativeCallbackDefault } from "../../build/native-model.mjs";
+import { nativeCType, nativeObjectType, nativeTypeKey, nativeCallbackDefault } from "../../build/native-model.mjs";
+import { validateNativeRepresentation } from "../../analyze/native-types.mjs";
 import { fixedPlatformInteger } from "../../abi/component-scalars.mjs";
 import { perlCopiedAliases, perlAliasApiDocs, perlAliasPod } from "./copied-aliases.mjs";
 import { validatePerlVariants, perlVariantConversions, perlVariantClasses, perlVariantPod } from "./copied-variants.mjs";
@@ -312,15 +313,15 @@ const finGuard = (type, refinement, value, name, depth = 0, path = { format: "",
 	}
 	throw new TypeError(`${name}: checked ${refinement.kind} refinements are not implemented for cpan packages`);
 };
-// Run the author's checked constructor through the exported validator after every bound passed,
-// in parameter order. An object argument lends the validator one retained reference, which it
-// consumes; an unboxed base passes by value. The scope still owns every argument on croak.
-const constructorGuard = (type, symbol, index, constructor, name) => `${retain(type, `a${index}`)} if (!${symbol}_refinement_${index}(a${index})) croak("%s", ${q(`${name} was rejected by ${constructor}`)});`;
-const constructorRefinement = refinement => ["subtype", "checked-record"].includes(refinement.kind);
 // Prune only constructor leaves, retaining every Fin in mixed structural/nominal trees.
 const finOnly = refinement => {
-	if(refinement === null || constructorRefinement(refinement)) return null;
+	if(refinement === null || refinement.kind === "subtype") return null;
 	if(refinement.kind === "fin") return refinement;
+	if(refinement.kind === "checked-record")
+	{
+		const arguments_ = (refinement.arguments ?? []).map(finOnly);
+		return arguments_.some(Boolean) ? { kind: "record", arguments: arguments_ } : null;
+	}
 	if(refinement.kind === "variant")
 	{
 		const cases = refinement.cases.map(branch => ({ ...branch, arguments: branch.arguments.map(finOnly) }));
@@ -334,11 +335,23 @@ const finOnly = refinement => {
 const structuralConstructorGuard = (type, refinement, value, symbol, name, depth = 0, path = { format: "", indices: [] }) => {
 	if(!constructorRefinementLeaves(refinement, type).length) return "";
 	if(type.kind === "alias") return structuralConstructorGuard(type.target, refinement, value, symbol, name, depth, path);
-	if(constructorRefinement(refinement))
+	const leaf = (tree, current, validator, currentPath = path) => {
+		const suffix = ` was rejected by ${tree.constructor}`;
+		const message = currentPath.format ? [q(`%s${currentPath.format}${suffix}`), q(name), ...currentPath.indices.map(index => `(size_t)${index}`)].join(", ") : `"%s", ${q(name + suffix)}`;
+		return `${retain(type, current)} if (!${validator}(${current})) croak(${message});`;
+	};
+	if(refinement.kind === "subtype") return leaf(refinement, value, symbol);
+	if(refinement.kind === "checked-record")
 	{
-		const suffix = ` was rejected by ${refinement.constructor}`;
-		const message = path.format ? [q(`%s${path.format}${suffix}`), q(name), ...path.indices.map(index => `(size_t)${index}`)].join(", ") : `"%s", ${q(name + suffix)}`;
-		return `${retain(type, value)} if (!${symbol}(${value})) croak(${message});`;
+		if(type.kind !== "record") throw new TypeError(`${name}: checked-record refinement requires a record transport`);
+		const nested = (refinement.arguments ?? []).map((tree, index) => {
+			if(!constructorRefinementLeaves(tree, type.fields[index].type).length) return "";
+			const field = type.fields[index], local = `v${depth}_${index}`;
+			const call = `lb_t${nativeTypeKey(type)}_get${index}(${value})`;
+			return `lean_inc(${value}); ${nativeCType(field.type)} ${local} = ${nativeObjectType(field.type) ? keep(call) : call};
+      ${structuralConstructorGuard(field.type, tree, local, symbol + `_${index}`, name, depth + 1, { format: path.format + `.${field.name}`, indices: path.indices })}`;
+		}).filter(Boolean);
+		return `{ ${[...nested, leaf(refinement, value, symbol)].join("\n      ")} }`;
 	}
 	if(type.kind === "record" || type.kind === "variant")
 	{
@@ -380,9 +393,9 @@ const publicXsub = (name, symbol, parameters, result, refinements = null, names 
 	const refined = (refinements?.parameters ?? []).map((refinement, index) => [refinement, index]).filter(([refinement]) => refinement);
 	const guards = [
 		...refined.map(([refinement, index]) => [finOnly(refinement), index]).filter(([refinement]) => refinement).map(([refinement, index]) => finGuard(parameters[index], refinement, `a${index}`, names[index]))
-		, ...refined.filter(([refinement, index]) => constructorRefinementLeaves(refinement, parameters[index]).length).map(([refinement, index]) => constructorRefinement(refinement)
-			? constructorGuard(parameters[index], symbol, index, refinement.constructor, names[index])
-			: structuralConstructorGuard(parameters[index], refinement, `a${index}`, `${symbol}_refinement_${index}`, names[index]))];
+		, ...refined.filter(([refinement, index]) => constructorRefinementLeaves(refinement, parameters[index]).length)
+			.map(([refinement, index]) => structuralConstructorGuard(parameters[index], refinement
+				, `a${index}`, `${symbol}_refinement_${index}`, names[index]))];
 	const rejection = refined.some(([refinement, index]) => constructorRefinementLeaves(refinement, parameters[index]).length) ? "Lean rejected an argument outside its checked refinement" : "Lean rejected an argument outside its Fin bound";
 	const invoke = `${symbol}(${parameters.map((_, i) => `a${i}`).join(", ") || "lean_box(0)"})`;
 	// A guarded adapter returns Option: none is a rejected refinement, some holds the boxed result.
@@ -442,7 +455,7 @@ export const validatePerlModel = model => {
 			, ...types.some(type => type.kind === "result") ? ["Ok", "Err"] : []];
 	}
 	model.types.forEach(({ key, ...type }) => {
-		validateNativeType(type);
+		validateNativeRepresentation(type);
 		if(key !== nativeTypeKey(type)) throw new TypeError("native type identity changed");
 	});
 	const branches = [...(model.types.some(type => type.kind === "option") ? ["Some"] : [])
@@ -599,9 +612,14 @@ _callback_${type.key}(...)
 	if(model.exports.some(item => item.refinements && [...item.refinements.parameters, item.refinements.result].some(subtype)))
 		pm.push("=head1 CHECKED VALUES", ""
 			, "A Lean C<Subtype> parameter over a primitive base takes the plain base value: L<Math::BigInt> for C<Nat> and C<Int>, an ordinary integer for machine words, a text scalar for C<String> and an octet string for C<ByteArray>. The exported checked constructor named at each function runs on the argument after every Fin bound passed and before the guarded adapter or the exported function; a rejected value dies with a message naming the parameter and the constructor, and the function receives the constructed value. Results are projected to their base value after Lean returns. Each checked site is listed as C<arg0 checked by Module.constructor> at its function.", "");
-	const checkedRecords = model.exports.some(item => item.refinements && [...item.refinements.parameters, item.refinements.result].some(tree => tree?.kind === "checked-record"));
+	const hasRefinement = (tree, kind) => tree !== null && (tree.kind === kind
+		|| (tree.arguments ?? []).some(child => hasRefinement(child, kind))
+		|| (tree.cases ?? []).some(branch => branch.arguments.some(child => hasRefinement(child, kind))));
+	const checkedRecords = model.exports.some(item => item.refinements
+		&& [...item.refinements.parameters, item.refinements.result]
+			.some(tree => hasRefinement(tree, "checked-record")));
 	if(checkedRecords) pm.push("=head1 CHECKED RECORDS", ""
-		, "Checked records use generated classes containing only payload fields. Pass L<Math::BigInt> for C<Nat> fields and plain array references for copied arrays. The selected Lean constructor validates each input before source dispatch. A rejected record dies with a message naming the parameter and constructor. A normalizing constructor changes the record received by Lean without changing the caller's record. Results project the payload fields after Lean constructs the proofs. No proof object or input constructor is needed for a result-only export. Ordinary and independently reviewed APIs preserve each parameter's constructor choice. Nested checked records, other dependent payloads and checked-record callbacks remain unsupported.", "");
+		, "Checked records use generated classes containing only payload fields. Pass L<Math::BigInt> for C<Nat> fields and plain array references for copied arrays. Checked records may occur directly or through arrays, Lists, options, products, Except branches, plain record fields and active variant fields. Every nested Fin bound and Subtype constructor runs before the record constructor at that exact path. A rejection names the failing path and check. A normalizing constructor changes the record received by Lean without changing the caller's record. Results project payload fields after Lean constructs the proofs. No proof object or input constructor is needed for a result-only export. Ordinary and independently reviewed APIs preserve each site's constructor choices. Recursive and generic checked records, dependent forms beyond the recorded closed fields, callbacks and identity-bearing payloads remain unsupported.", "");
 	if(model.exports.some(item => {
 		const bounds = perlFinBounds(model, item);
 		return bounds && bounds.includes(" < ");
