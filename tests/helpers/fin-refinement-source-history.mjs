@@ -115,6 +115,7 @@ import { beforeNestedCheckedRecordRustPromotionSource, nestedCheckedRecordRustPr
 import { beforeNestedCheckedRecordMatrixClosureSource, nestedCheckedRecordMatrixClosureChangedPaths } from "./nested-checked-record-matrix-closure-source-history.mjs";
 import { beforeMutualCheckedRecordSource, mutualCheckedRecordChangedPaths } from "./mutual-checked-record-source-history.mjs";
 import { beforeMutualCheckedRecordNpmSource, mutualCheckedRecordNpmChangedPaths } from "./mutual-checked-record-npm-source-history.mjs";
+import { beforeMutualCheckedRecordNpmArchiveSource, mutualCheckedRecordNpmArchiveChangedPaths } from "./mutual-checked-record-npm-archive-source-history.mjs";
 import { beforeNominalPrimitiveSubtypeRustPromotionSource, nominalPrimitiveSubtypeRustPromotionChangedPaths } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
 import { beforeNestedCheckedRecordSource, nestedCheckedRecordChangedPaths } from "./nested-checked-record-source-history.mjs";
 import { beforeNestedCheckedRecordBrowserPromotionSource, nestedCheckedRecordBrowserPromotionChangedPaths } from "./nested-checked-record-browser-promotion-history.mjs";
@@ -768,6 +769,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeMutualCheckedRecordNpmArchiveSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeMutualCheckedRecordNpmSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeMutualCheckedRecordSource(path, source, expected);
@@ -1153,6 +1156,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nestedCheckedRecordMatrixClosureChangedPaths
 	, ...mutualCheckedRecordChangedPaths
 	, ...mutualCheckedRecordNpmChangedPaths
+	, ...mutualCheckedRecordNpmArchiveChangedPaths
 ])].sort());
 
 /**
