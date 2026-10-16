@@ -17,7 +17,7 @@ export const assertNestedCheckedRecordPythonWorkflow = source => {
 	assert.ok(source.includes("permissions:\n  contents: read\n"));
 	assert.ok(source.includes("concurrency:\n  group: nested-checked-record-python-${{ github.ref }}\n  cancel-in-progress: true\n"));
 	assert.deepEqual([...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\n/gmu)].map(match => match[1]), ["push", "pull_request", "workflow_dispatch", "nested-checked-record-python"]);
-	assert.doesNotMatch(source, /continue-on-error:|needs:|strategy:|defaults:|LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR:|LEAN_BRIDGE_NESTED_CHECKED_RECORD_PYTHONS:/u);
+	assert.doesNotMatch(source, /continue-on-error:|needs:|strategy:|defaults:|LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR:|LEAN_BRIDGE_NESTED_CHECKED_RECORD_PYTHONS:|LEAN_BRIDGE_NESTED_CHECKED_RECORD_PYTHON_MAX_LOAD:/u);
 	assert.deepEqual(source.match(/^\s+if:.*$/gmu), ["        if: always()", "        if: always() && steps.acceptance.outcome != 'success'"]);
 	assert.equal((source.match(/^\s+env:/gmu) ?? []).length, 2);
 	assert.ok(source.includes('    env:\n      LEAN_NUM_THREADS: "1"\n      LEAN_BRIDGE_LAKE_ENGINE: build/locked-lake-engine/bin/lean-bridge-component-engine\n    steps:\n'));

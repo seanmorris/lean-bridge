@@ -13,6 +13,7 @@ import { checkNestedCheckedRecordPythonPackage } from "./nested-checked-record-p
 import { assertNestedCheckedRecordPythonInterpreter, checkNestedCheckedRecordPythonEnvironment } from "./nested-checked-record-python-environment-records.mjs";
 import { nestedCheckedRecordPythonReceipt } from "./nested-checked-record-python-wheel.mjs";
 import { checkNestedCheckedRecordPythonHandoff, nestedCheckedRecordPythonHandoffRecords } from "./nested-checked-record-python-handoff.mjs";
+import { assertNestedCheckedRecordPythonResources, nestedCheckedRecordPythonLoadCeilings } from "./nested-checked-record-python-resources.mjs";
 
 /**
  * Enumerate retained text records after authenticating the wheel inventory.
@@ -22,7 +23,10 @@ import { checkNestedCheckedRecordPythonHandoff, nestedCheckedRecordPythonHandoff
  */
 export const nestedCheckedRecordPythonRecords = (route, wheel) => {
 	assert.ok(nestedCheckedRecordPythonRoutes.includes(route));
-	return ["report.json", "runtime.json", "expected.binding-ir.json"
+	return ["report.json"
+		, "runtime.json"
+		, "resources.json"
+		, "expected.binding-ir.json"
 		, "configuration.json", "consumer.py", "wheel.json"
 		, ...nestedCheckedRecordPythonHandoffRecords(wheel)
 		, ...[0, 1].flatMap(index => ["model.json", "package-set-receipt.json"
@@ -62,9 +66,12 @@ export const checkNestedCheckedRecordPythonReport = async (read, { route, mode, 
 	const report = await json("report.json");
 	assert.deepEqual(Object.keys(report).sort(), [
 		"authorInputsUnchanged", "builds", "declaredGlibcFloor"
-		, "expectedBindingIrSha256", "independentBuilds", "interpreters"
+		, "expectedBindingIrSha256"
+		, "independentBuilds"
+		, "interpreters"
+		, "loadCeiling"
 		, "minors", "mode", "producerCommit", "reports", "reproducible"
-		, "route", "runtime", "schemaVersion"
+		, "resourceChecks", "route", "runtime", "schemaVersion"
 		, "sourceRemovedBeforeInstallation", "wheelReceiptSha256"]);
 	assert.equal(report.schemaVersion, 1); assert.equal(report.producerCommit, producerCommit);
 	assert.equal(report.route, route); assert.equal(report.mode, mode); assert.equal(report.declaredGlibcFloor, floor);
@@ -73,6 +80,10 @@ export const checkNestedCheckedRecordPythonReport = async (read, { route, mode, 
 	assert.deepEqual(report.minors, nestedCheckedRecordPythonMinors);
 	const runtimeRecord = { platform: runtime.platform, arch: runtime.arch, glibc: { code: 0, stdout: `glibc ${runtime.glibc}\n`, stderr: "" } };
 	assert.deepEqual(report.runtime, runtimeRecord); assert.deepEqual(await json("runtime.json"), runtimeRecord);
+	assert.ok(nestedCheckedRecordPythonLoadCeilings.includes(report.loadCeiling), "Unrecorded nested Python load ceiling");
+	const resources = await json("resources.json"); assert.equal(resources.length, 6);
+	assert.deepEqual(report.resourceChecks, resources);
+	for(const resource of resources) assertNestedCheckedRecordPythonResources(resource, report.loadCeiling);
 	assert.deepEqual(report.interpreters.map(item => item.minor), nestedCheckedRecordPythonMinors);
 	assert.equal(new Set(report.interpreters.map(item => item.interpreter.sha256)).size, 2);
 	for(const item of report.interpreters) assertNestedCheckedRecordPythonInterpreter(item, item.minor);
@@ -123,6 +134,7 @@ export const checkNestedCheckedRecordPythonReport = async (read, { route, mode, 
 	return { route, mode, producerCommit, runtime, floor
 		, minors: nestedCheckedRecordPythonMinors
 		, counts: nestedCheckedRecordPythonCounts[mode]
+		, loadCeiling: report.loadCeiling
 		, executions: 4, dispatchObserved: false
 		, handoff
 		, generatorModules: generatorPaths.length

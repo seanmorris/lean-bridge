@@ -24,7 +24,7 @@ import { copyPackageSetHandoff } from "./package-set.mjs";
 import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
 import { waitNominalSubtypeDotnetResources as waitResources } from "./nominal-subtype-dotnet-resources.mjs";
 
-const { enabled, routes, modes } = nestedCheckedRecordPythonSelection(process.env);
+const { enabled, routes, modes, maxLoad } = nestedCheckedRecordPythonSelection(process.env);
 const executables = enabled ? nestedCheckedRecordPythonExecutables(process.env.LEAN_BRIDGE_NESTED_CHECKED_RECORD_PYTHONS) : null;
 
 for(const route of routes) for(const mode of modes) test(`installed nested checked-record Python packages reproduce and relocate ${route} ${mode}`, {
@@ -32,14 +32,21 @@ for(const route of routes) for(const mode of modes) test(`installed nested check
 }, async t => {
 	const producerCommit = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
 	// A source-only dry run must never become installed evidence for another revision.
-	for(const path of ["fixture.mjs", "wheel.mjs", "install.mjs", "installed-tests.mjs"])
+	for(const path of ["fixture.mjs", "resources.mjs", "wheel.mjs", "install.mjs", "installed-tests.mjs"])
 		execFileSync("git", ["ls-files", "--error-unmatch", `tests/helpers/nested-checked-record-python-${path}`]);
 	execFileSync("git", ["ls-files", "--error-unmatch", "tests/fixtures/nested-checked-record-consumers/python.py"]);
 	execFileSync("git", ["diff", "--quiet", "HEAD", "--", "src", "tests", "scripts"]);
 	const expected = nestedCheckedRecordPythonReview(mode), configuration = nestedCheckedRecordPythonConfiguration(route, mode);
 	const output = resolve(process.env.LEAN_BRIDGE_NESTED_CHECKED_RECORD_PYTHON_OUTPUT ?? "build/nested-checked-record-python", route, mode);
 	await assert.rejects(access(output), { code: "ENOENT" }); await mkdir(output, { recursive: true });
-	const resources = () => waitResources(output, { notify: message => t.diagnostic(message.replaceAll("C#", "nested Python")) });
+	const resourceChecks = [];
+	const resources = async () => {
+		resourceChecks.push(await waitResources(output, {
+			maxLoad
+			, notify: message => t.diagnostic(message.replaceAll("C#", "nested Python"))
+		}));
+		await saveLakeFile(output, "resources.json", canonicalJson(resourceChecks));
+	};
 	await resources();
 	const interpreters = [];
 	for(const minor of nestedCheckedRecordPythonMinors)
@@ -124,6 +131,7 @@ for(const route of routes) for(const mode of modes) test(`installed nested check
 		, declaredGlibcFloor: floor, expectedBindingIrSha256: hashBindingIr(expected)
 		, wheelReceiptSha256: wheel.record.receiptSha256
 		, reproducible: true, independentBuilds: 2, authorInputsUnchanged: true
-		, sourceRemovedBeforeInstallation: true }));
+		, sourceRemovedBeforeInstallation: true
+		, resourceChecks, loadCeiling: maxLoad }));
 	complete = true;
 });

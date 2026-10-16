@@ -6,7 +6,7 @@ if [[ $# != 2 || $1 != /* || $2 != /* || $1 == "$2" ]]; then
   printf '%s\n' 'Usage: run-nested-checked-record-python-ci.sh /absolute/python3.11 /absolute/python3.12' >&2
   exit 2
 fi
-if [[ -v LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR || -v LEAN_BRIDGE_NESTED_CHECKED_RECORD_PYTHONS ]]; then
+if [[ -v LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR || -v LEAN_BRIDGE_NESTED_CHECKED_RECORD_PYTHONS || -v LEAN_BRIDGE_NESTED_CHECKED_RECORD_PYTHON_MAX_LOAD ]]; then
   printf '%s\n' 'Hosted nested checked-record Python acceptance requires the glibc 2.38 floor and both explicit interpreter paths.' >&2
   exit 2
 fi

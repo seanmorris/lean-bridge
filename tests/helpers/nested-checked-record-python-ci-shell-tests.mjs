@@ -88,7 +88,7 @@ if (process.env.FAKE_FAIL === call) process.exit(17);
 		const again = spawnSync("/bin/bash", [script, ...interpreters], { cwd: directory, env, encoding: "utf8" });
 		assert.notEqual(again.status, 0); assert.equal(await readFile(join(directory, "calls.log"), "utf8"), calls);
 	}
-	for(const name of ["LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR", "LEAN_BRIDGE_NESTED_CHECKED_RECORD_PYTHONS"])
+	for(const name of ["LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR", "LEAN_BRIDGE_NESTED_CHECKED_RECORD_PYTHONS", "LEAN_BRIDGE_NESTED_CHECKED_RECORD_PYTHON_MAX_LOAD"])
 		for(const value of ["", "override"])
 		{
 			const directory = join(root, String(sequence++)); await mkdir(directory);
@@ -101,5 +101,5 @@ if (process.env.FAKE_FAIL === call) process.exit(17);
 		const result = spawnSync("/bin/bash", [script, ...args], { cwd: directory, env: { ...base, PATH: bin }, encoding: "utf8" });
 		assert.equal(result.status, 2); assert.deepEqual(await readdir(directory), []);
 	}
-	t.diagnostic("Nine complete/failing real-shell scenarios, nine stale-output refusals and ten invalid argument/override controls; no compiled acceptance claimed by stand-ins.");
+	t.diagnostic("Nine complete/failing real-shell scenarios, nine stale-output refusals and twelve invalid argument/override controls; no compiled acceptance claimed by stand-ins.");
 });

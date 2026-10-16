@@ -26,6 +26,7 @@ import {
 	, nestedCheckedRecordPythonSelection
 	, parseNestedCheckedRecordPythonResult
 } from "./nested-checked-record-python-fixture.mjs";
+import { assertNestedCheckedRecordPythonResources } from "./nested-checked-record-python-resources.mjs";
 import { assertNestedCheckedRecordPythonIdentity } from "./nested-checked-record-python-wheel.mjs";
 import { runCopied } from "./copied-fixture-install.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
@@ -89,7 +90,12 @@ test("nested checked-record Python keeps both author contracts and constructor-f
 
 test("nested checked-record Python gates reject disabled selections, non-string values and incomplete interpreter floors", () => {
 	const prefix = "LEAN_BRIDGE_NESTED_CHECKED_RECORD_PYTHON_", enabled = { [prefix + "TEST"]: "1" };
-	assert.deepEqual(nestedCheckedRecordPythonSelection({}), { enabled: false, routes: ["ordinary", "reviewed"], modes: ["full", "result-only"] });
+	assert.deepEqual(nestedCheckedRecordPythonSelection({}), {
+		enabled: false
+		, routes: ["ordinary", "reviewed"]
+		, modes: ["full", "result-only"]
+		, maxLoad: 8
+	});
 	assert.equal(nestedCheckedRecordPythonSelection(enabled).enabled, true);
 	for(const flag of ["", "true", "yes", "2", true, null])
 		assert.throws(() => nestedCheckedRecordPythonSelection({ [prefix + "TEST"]: flag }));
@@ -101,7 +107,7 @@ test("nested checked-record Python gates reject disabled selections, non-string 
 			assert.throws(() => nestedCheckedRecordPythonSelection({ [prefix + "TEST"]: flag, [prefix + name]: valid }));
 		assert.deepEqual(nestedCheckedRecordPythonSelection({ ...enabled, [prefix + name]: valid })[name.toLowerCase()], [valid]);
 	}
-	for(const name of [prefix + "OUTPUT", "LEAN_BRIDGE_NESTED_CHECKED_RECORD_PYTHONS"])
+	for(const name of [prefix + "OUTPUT", prefix + "MAX_LOAD", "LEAN_BRIDGE_NESTED_CHECKED_RECORD_PYTHONS"])
 		for(const flag of [undefined, "0"])
 			assert.throws(() => nestedCheckedRecordPythonSelection({ [prefix + "TEST"]: flag, [name]: "explicit" }));
 	const commands = { "3.11": "/toolchains/python311", "3.12": "/toolchains/python312" };
@@ -113,6 +119,25 @@ test("nested checked-record Python gates reject disabled selections, non-string 
 		assert.throws(() => nestedCheckedRecordPythonExecutables(raw));
 	for(const command of ["python3", "", null, 0, "/bin/python\0", "/bin/python\n"])
 		assert.throws(() => nestedCheckedRecordPythonExecutables(JSON.stringify({ ...commands, "3.11": command })));
+	for(const maxLoad of [8, 12, 16, 20])
+		assert.equal(nestedCheckedRecordPythonSelection({ ...enabled, [prefix + "MAX_LOAD"]: String(maxLoad) }).maxLoad, maxLoad);
+	for(const maxLoad of ["", "6", "10", "24", "Infinity", "eight", null])
+		assert.throws(() => nestedCheckedRecordPythonSelection({ ...enabled, [prefix + "MAX_LOAD"]: maxLoad }));
+});
+
+test("nested checked-record Python resource records preserve the selected load ceiling", () => {
+	const GiB = 1024 ** 3, admitted = { freeBytes: 3 * GiB, availableBytes: 4 * GiB, load: 7.5 };
+	assertNestedCheckedRecordPythonResources({ observations: [admitted], waits: 0 }, 8);
+	assertNestedCheckedRecordPythonResources({ observations: [{ ...admitted, load: 20.5 }, admitted], waits: 1 }, 20);
+	for(const changed of [
+		{ observations: [{ ...admitted, freeBytes: GiB }], waits: 0 }
+		, { observations: [{ ...admitted, availableBytes: GiB }], waits: 0 }
+		, { observations: [{ ...admitted, load: 8 }], waits: 0 }
+		, { observations: [admitted], waits: 1 }
+		, { observations: [admitted], waits: 0, extra: true }
+	]) assert.throws(() => assertNestedCheckedRecordPythonResources(changed, 8));
+	for(const maxLoad of [6, 10, 24, Infinity])
+		assert.throws(() => assertNestedCheckedRecordPythonResources({ observations: [admitted], waits: 0 }, maxLoad));
 });
 
 test("nested checked-record Python caller detects every result, input and selection fault in an oracle", async t => {

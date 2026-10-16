@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { isAbsolute } from "node:path";
 import { nestedCheckedRecordConfiguration, nestedCheckedRecordName, nestedCheckedRecordReview } from "./nested-checked-record-fixture.mjs";
+import { nestedCheckedRecordPythonLoadCeiling, nestedCheckedRecordPythonLoadCeilings } from "./nested-checked-record-python-resources.mjs";
 
 export const nestedCheckedRecordPythonRoutes = Object.freeze(["ordinary", "reviewed"]);
 export const nestedCheckedRecordPythonModes = Object.freeze(["full", "result-only"]);
@@ -39,9 +40,18 @@ export const nestedCheckedRecordPythonSelection = environment => {
 		assert.equal(new Set(selected).size, selected.length, `Duplicate nested checked-record Python ${name}`);
 		return selected;
 	};
-	for(const name of [prefix + "OUTPUT", "LEAN_BRIDGE_NESTED_CHECKED_RECORD_PYTHONS"])
+	for(const name of [prefix + "OUTPUT", prefix + "MAX_LOAD", "LEAN_BRIDGE_NESTED_CHECKED_RECORD_PYTHONS"])
 		if(environment[name] !== undefined) assert.equal(flag, "1", `Explicit ${name} requires TEST=1`);
-	return { enabled: flag === "1", routes: select("ROUTES", nestedCheckedRecordPythonRoutes), modes: select("MODES", nestedCheckedRecordPythonModes) };
+	const rawLoad = environment[prefix + "MAX_LOAD"];
+	const maxLoad = rawLoad === undefined ? nestedCheckedRecordPythonLoadCeiling : Number(rawLoad);
+	assert.ok(nestedCheckedRecordPythonLoadCeilings.includes(maxLoad)
+		, `Nested checked-record Python max load must be one of ${nestedCheckedRecordPythonLoadCeilings.join(", ")}`);
+	return {
+		enabled: flag === "1"
+		, routes: select("ROUTES", nestedCheckedRecordPythonRoutes)
+		, modes: select("MODES", nestedCheckedRecordPythonModes)
+		, maxLoad
+	};
 };
 
 /**
