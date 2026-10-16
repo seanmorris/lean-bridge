@@ -42,6 +42,7 @@ import { copyPackageSetHandoff } from "./package-set.mjs";
 
 const { enabled, profiles, routes, modes }
 	= nestedCheckedRecordNativeSelection(process.env);
+const maxLoad = 10;
 
 for(const route of routes) for(const mode of modes) test(
 	`installed nested checked-record native packages reproduce and relocate ${route} ${mode}`,
@@ -62,7 +63,7 @@ for(const route of routes) for(const mode of modes) test(
 
 		const admissions = [];
 		const resources = async () => admissions.push(await waitResources(output, {
-			maxLoad: 8
+			maxLoad
 			, notify: message => t.diagnostic(message.replaceAll("C#", "nested native"))
 		}));
 		await resources();
@@ -218,7 +219,7 @@ for(const route of routes) for(const mode of modes) test(
 				, canonicalJson(reports.at(-1)));
 		}
 		await saveLakeFile(output, "resources.json", canonicalJson({
-			maxLoad: 8, samples: admissions
+			maxLoad, samples: admissions
 		}));
 		await saveLakeFile(output, "report.json", canonicalJson({
 			schemaVersion: 1, route, mode, profiles, producerCommit
@@ -227,7 +228,7 @@ for(const route of routes) for(const mode of modes) test(
 			, reproducible: true, independentBuilds: 2, authorInputsUnchanged: true
 			, declaredGlibcFloor: floor
 			, resourceAdmission: {
-				maxLoad: 8, samples: admissions.length
+				maxLoad, samples: admissions.length
 			}
 		}));
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
