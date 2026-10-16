@@ -49,7 +49,8 @@ export const checkNestedCheckedRecordPhpReport = async (read, { route, mode, pro
 		, "declaredGlibcFloor", "dispatch", "expectedBindingIrSha256"
 		, "independentBuilds", "mode", "observations", "offlineInstall"
 		, "packageReceiptSha256", "producerCommit", "receipt"
-		, "relocatedInstallation", "reproducible", "route", "runtime"
+		, "loadCeiling", "relocatedInstallation", "reproducible"
+		, "resourceChecks", "route", "runtime"
 		, "schemaVersion", "sourceRemovedBeforeInstallation", "tools"]);
 	assert.equal(report.schemaVersion, 1); assert.equal(report.producerCommit, producerCommit);
 	assert.equal(report.route, route); assert.equal(report.mode, mode);
@@ -67,8 +68,12 @@ export const checkNestedCheckedRecordPhpReport = async (read, { route, mode, pro
 	const runtimeRecord = { platform: runtime.platform, arch: runtime.arch
 		, glibc: { code: 0, stdout: `glibc ${runtime.glibc}\n`, stderr: "" } };
 	assert.deepEqual(report.runtime, runtimeRecord); assert.deepEqual(await json("runtime.json"), runtimeRecord);
+	assert.ok([8, 12, 16, 20].includes(report.loadCeiling)
+		, "Unrecorded nested PHP load ceiling");
 	const resources = await json("resources.json"); assert.equal(resources.length, 8);
-	for(const resource of resources) assertNestedCheckedRecordPhpResources(resource);
+	assert.deepEqual(report.resourceChecks, resources);
+	for(const resource of resources)
+		assertNestedCheckedRecordPhpResources(resource, report.loadCeiling);
 	const tools = await json("tools.json"); assert.deepEqual(report.tools, tools);
 	assertNominalSubtypePhpToolRecords(tools, { phpVersion, composerVersion });
 	const { model, receipt } = await checkNestedCheckedRecordPhpModels({ report, read, json, route, mode, producerCommit });
@@ -138,7 +143,7 @@ export const checkNestedCheckedRecordPhpReport = async (read, { route, mode, pro
 		, floor
 		, phpVersion
 		, composerVersion
-		, counts, executions: 4
+		, counts, executions: 4, loadCeiling: report.loadCeiling
 		, ...Object.fromEntries(Object.entries(counts).map(([key, count]) => [key, 4 * count]))
 		, dispatchObserved: false, generatorPaths, records: records.sort()
 		, archiveSha256: packaged.archive.sha256

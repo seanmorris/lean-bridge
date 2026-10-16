@@ -78,11 +78,19 @@ export const checkNestedCheckedRecordPhpControls = async (originalRead, options)
 	for(const mutate of [
 		value => { value[0].observations[0].freeBytes = 1024; }
 		, value => { value[0].observations[0].availableBytes = 1024; }
-		, value => { value[0].observations.at(-1).load = 8; }
+		, value => { value[0].observations.at(-1).load = json("report.json").loadCeiling; }
 		, value => { value[0].waits++; }
 	]) {
-		const resources = json("resources.json"); mutate(resources);
-		await reject(new Map([["resources.json", encode(resources)]]), "resource guard"); resourceControls++;
+		const report = json("report.json"), resources = json("resources.json"); mutate(resources);
+		report.resourceChecks = resources;
+		await reject(new Map([["resources.json", encode(resources)]
+			, ["report.json", encode(report)]]), "resource guard"); resourceControls++;
+	}
+	for(const loadCeiling of [6, 10, 24])
+	{
+		const report = json("report.json"); report.loadCeiling = loadCeiling;
+		await reject(new Map([["report.json", encode(report)]])
+			, "unrecorded load ceiling"); resourceControls++;
 	}
 	const environmentChanges = [
 		value => { value.vendorFiles["unrecorded/plugin.php"] = identity("extra"); }

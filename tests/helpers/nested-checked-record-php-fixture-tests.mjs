@@ -86,8 +86,16 @@ test("nested checked-record native PHP keeps both author contracts and construct
 
 test("nested checked-record native PHP gates reject disabled, misspelled or repeated selections", () => {
 	const prefix = "LEAN_BRIDGE_NESTED_CHECKED_RECORD_PHP_", enabled = { [prefix + "TEST"]: "1" };
-	assert.deepEqual(nestedCheckedRecordPhpSelection({}), { enabled: false, routes: ["ordinary", "reviewed"], modes: ["full", "result-only"] });
+	assert.deepEqual(nestedCheckedRecordPhpSelection({}), { enabled: false
+		, routes: ["ordinary", "reviewed"], modes: ["full", "result-only"]
+		, maxLoad: 8 });
 	assert.equal(nestedCheckedRecordPhpSelection(enabled).enabled, true);
+	for(const maxLoad of [8, 12, 16, 20])
+		assert.equal(nestedCheckedRecordPhpSelection({ ...enabled
+			, [prefix + "MAX_LOAD"]: String(maxLoad) }).maxLoad, maxLoad);
+	for(const maxLoad of ["", "6", "10", "24", "not-a-number"])
+		assert.throws(() => nestedCheckedRecordPhpSelection({ ...enabled
+			, [prefix + "MAX_LOAD"]: maxLoad }));
 	for(const flag of ["", "true", "yes", "2", true, null])
 		assert.throws(() => nestedCheckedRecordPhpSelection({ [prefix + "TEST"]: flag }));
 	for(const [name, valid] of [["ROUTES", "ordinary"], ["MODES", "full"]])

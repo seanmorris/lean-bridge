@@ -24,10 +24,7 @@ import { nativeFixtureEnvironment, runCopied } from "./copied-fixture-install.mj
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
 
-const { enabled, routes, modes } = nestedCheckedRecordPhpSelection(process.env);
-const resourceMaxLoad = process.env.LEAN_BRIDGE_NESTED_CHECKED_RECORD_PHP_MAX_LOAD === undefined
-	? 8
-	: Number(process.env.LEAN_BRIDGE_NESTED_CHECKED_RECORD_PHP_MAX_LOAD);
+const { enabled, routes, modes, maxLoad } = nestedCheckedRecordPhpSelection(process.env);
 
 for(const route of routes) for(const mode of modes) test(`installed nested checked-record PHP packages reproduce and relocate ${route} ${mode}`, {
 	skip: !enabled, timeout: 3_600_000
@@ -43,7 +40,7 @@ for(const route of routes) for(const mode of modes) test(`installed nested check
 	const resourceChecks = [];
 	const resources = async () => {
 		resourceChecks.push(await waitNominalSubtypeDotnetResources(output, {
-			maxLoad: resourceMaxLoad
+			maxLoad
 			, notify: message => t.diagnostic(message.replaceAll("C#", "nested PHP"))
 		}));
 		await saveLakeFile(output, "resources.json", canonicalJson(resourceChecks));
@@ -145,6 +142,7 @@ for(const route of routes) for(const mode of modes) test(`installed nested check
 		, sourceRemovedBeforeInstallation: true, offlineInstall: true
 		, compilerFreeReplay: true, relocatedInstallation: true
 		, consumerSourceRequired: true
+		, resourceChecks, loadCeiling: maxLoad
 		, dispatch: { observed: false, reason: "No PHP constructor/source entry counters in this installed acceptance" } }));
 	complete = true;
 });

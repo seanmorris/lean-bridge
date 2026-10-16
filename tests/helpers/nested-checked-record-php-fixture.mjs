@@ -38,7 +38,16 @@ export const nestedCheckedRecordPhpSelection = environment => {
 	};
 	for(const name of ["OUTPUT", "MAX_LOAD"])
 		if(environment[prefix + name] !== undefined) assert.equal(flag, "1", `Explicit ${prefix}${name} requires TEST=1`);
-	return { enabled: flag === "1", routes: select("ROUTES", nestedCheckedRecordPhpRoutes), modes: select("MODES", nestedCheckedRecordPhpModes) };
+	const rawLoad = environment[prefix + "MAX_LOAD"];
+	const maxLoad = rawLoad === undefined ? 8 : Number(rawLoad);
+	assert.ok([8, 12, 16, 20].includes(maxLoad)
+		, "Nested checked-record PHP max load must be 8, 12, 16, or 20");
+	return {
+		enabled: flag === "1"
+		, routes: select("ROUTES", nestedCheckedRecordPhpRoutes)
+		, modes: select("MODES", nestedCheckedRecordPhpModes)
+		, maxLoad
+	};
 };
 
 /**
