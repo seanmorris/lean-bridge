@@ -58,6 +58,7 @@ import "./nominal-primitive-subtype-php-wasm-promotion-history-tests.mjs";
 import "./nominal-primitive-subtype-wit-tests.mjs";
 import "./nominal-primitive-subtype-wit-promotion-tests.mjs";
 import "./nominal-primitive-subtype-wit-promotion-history-tests.mjs";
+import "./nominal-primitive-subtype-jvm-tests.mjs";
 import "./nominal-primitive-subtype-php-installed-tests.mjs";
 import "./nominal-primitive-subtype-php-evidence-tests.mjs";
 import "./nominal-primitive-subtype-php-ci-workflow-tests.mjs";

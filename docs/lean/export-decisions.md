@@ -154,7 +154,12 @@ snapshots and recovery.
 extends the same fields and constructor-free results to every admitted primitive
 base through the Component Model adapter and its 64-bit native Lean host. Both
 author routes and API modes reproduce the complete WIT archive, install offline
-and execute one compiled public C caller before and after relocation. Refined
+and execute one compiled public C caller before and after relocation.
+[Nineteen-base Java and Kotlin acceptance](../evidence/nominal-primitive-subtype-jvm-20261015/index.json)
+extends the same fields and constructor-free results to Java and Kotlin
+packages with 64-bit machine words. Both author routes and API modes reproduce
+the complete Maven package, install offline, and run Java and Kotlin callers
+after relocation and from a source-free deployment. Refined
 callbacks, owned and recursive Subtypes, and Subtype fields in generic records
 remain unfinished.
 
@@ -295,6 +300,9 @@ API modes, including standalone result-only packages with 32-bit machine words.
 [Nineteen-base WIT acceptance](../evidence/nominal-primitive-subtype-wit-20261015/index.json)
 extends that matrix to every admitted primitive base on both author routes and
 API modes through Wasmtime 42.0.1, with 64-bit native machine words.
+[Nineteen-base Java and Kotlin acceptance](../evidence/nominal-primitive-subtype-jvm-20261015/index.json)
+extends that matrix to every admitted primitive base on both author routes and
+API modes through Maven packages on JDK 22.0.2 and Kotlin 2.2.0.
 Save `NominalSubtypes.lean`:
 
 ```lean

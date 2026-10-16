@@ -597,6 +597,19 @@ The full API checks per-site normalization, active branches, mixed `Fin` guards,
 host-level shape and encoding refusals, exact rejection paths, caller snapshots
 and recovery on Linux x64/glibc 2.36 with wasm-tools 1.245.1.
 
+The [nineteen-base Java and Kotlin checks](../evidence/nominal-primitive-subtype-jvm-20261015/index.json)
+cover the same fields and constructor-free results on both author routes. Full
+and standalone result-only APIs reproduce the complete Maven package from two
+author roots, install offline after author removal, and run Java and Kotlin
+callers after relocation and again from a source-free deployment with JDK 22.0.2
+and Kotlin 2.2.0. Generated records and sealed variant cases carry each
+primitive's JVM value without proof fields: the generated `Unit` singleton,
+booleans, fixed-width integers, `BigInteger` for `UInt64`, `Nat`, `Int` and
+`USize`, floats, strings, bytes and `Char` Unicode scalars with 64-bit machine
+words. The full API checks per-site normalization, active branches, mixed `Fin`
+guards, host conversion refusals, exact rejection paths, caller snapshots and
+recovery on Linux x64/glibc 2.36.
+
 In a schema-3 reviewed API, describe a `Subtype` with its primitive transport type and name its constructor in the declaration's `source.extensions["lean-lang.org/refinements"]`. For a checked `Nat` parameter returning an ordinary `Nat`:
 
 ```json

@@ -10,7 +10,9 @@ import test from "node:test";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
 import { docPages } from "../../site/registry.mjs";
-import { nominalPrimitiveSubtypeWitPromotionPredecessor } from "./nominal-primitive-subtype-wit-promotion-history.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeNominalPrimitiveSubtypeJvmPromotionPins } from "./nominal-primitive-subtype-jvm-promotion-history.mjs";
+import { nominalPrimitiveSubtypeWitPromotionHistoryPath, nominalPrimitiveSubtypeWitPromotionPredecessor } from "./nominal-primitive-subtype-wit-promotion-history.mjs";
 import { nominalPrimitiveSubtypeWitProducer } from "./nominal-primitive-subtype-wit-provenance.mjs";
 import {
 	nominalPrimitiveSubtypeWitConversion
@@ -111,9 +113,16 @@ test("primitive-base WIT promotion rejects narrowed references and overlaps", as
 
 test("primitive-base WIT promotion supplements six cells only", async () => {
 	const original = predecessor(), references = await nominalPrimitiveSubtypeWitReferences();
-	const proposed = await promoteNominalPrimitiveSubtypeWit(original, references);
-	const { document, ...contracts } = await readTypeSurface();
+	const proposed = beforeNominalPrimitiveSubtypeJvmPromotionPins(await promoteNominalPrimitiveSubtypeWit(original, references));
+	const { document: published, ...contracts } = await readTypeSurface();
 	validateTypeSurface(proposed, contracts);
+	const inventoryPath = "docs/type-surface.v1.json";
+	const ledger = JSON.parse(await readFile(nominalPrimitiveSubtypeWitPromotionHistoryPath, "utf8"));
+	// Newer layers append receipts and supplement cells; strip them before comparing this layer's exact output.
+	const document = JSON.parse(beforeFinRefinementSource(inventoryPath, await readFile(inventoryPath, "utf8")
+		, ledger.updates.find(item => item.path === inventoryPath).currentSha256));
+	assert.deepEqual(published.evidence.slice(0, document.evidence.length).map(entry => entry.id)
+		, document.evidence.map(entry => entry.id));
 	assert.equal(proposed.evidence.length, original.evidence.length + 4);
 	assert.equal(proposed.observations.length, original.observations.length);
 	assert.deepEqual(proposed.evidence.slice(0, original.evidence.length), original.evidence);

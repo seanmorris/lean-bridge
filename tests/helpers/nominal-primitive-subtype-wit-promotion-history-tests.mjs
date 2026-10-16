@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeNominalPrimitiveSubtypeJvmPromotionPins } from "./nominal-primitive-subtype-jvm-promotion-history.mjs";
 import { nominalPrimitiveSubtypeWitReferences, promoteNominalPrimitiveSubtypeWit } from "./nominal-primitive-subtype-wit-promotion.mjs";
 import {
 	beforeNominalPrimitiveSubtypeWitPromotionSource
@@ -30,7 +31,7 @@ test("primitive-base WIT history authenticates the support transition", async t 
 	const original = path => execFileSync("git", ["show", `${nominalPrimitiveSubtypeWitPromotionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalPrimitiveSubtypeWitPromotionSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		const previous = reverseNominalPrimitiveSubtypeWitPromotionUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNominalPrimitiveSubtypeWitPromotionSource(update.path, current), previous);
@@ -50,8 +51,11 @@ test("primitive-base WIT history authenticates the support transition", async t 
 		}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	const expected = await promoteNominalPrimitiveSubtypeWit(JSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypeWitReferences());
-	assert.equal(beforeNominalPrimitiveSubtypeWitPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
+	const expected = beforeNominalPrimitiveSubtypeJvmPromotionPins(await promoteNominalPrimitiveSubtypeWit(JSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypeWitReferences()));
+	const update = record.updates.find(item => item.path === inventoryPath);
+	// Newer layers stop at this layer's output before its own reversal is checked.
+	const checkpoint = beforeFinRefinementSource(inventoryPath, await readFile(inventoryPath, "utf8"), update.currentSha256);
+	assert.equal(beforeNominalPrimitiveSubtypeWitPromotionSource(inventoryPath, checkpoint), original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{
@@ -59,8 +63,6 @@ test("primitive-base WIT history authenticates the support transition", async t 
 		if(update && file.sha256 === update.previousSha256)
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
-	const update = record.updates.find(item => item.path === inventoryPath);
-	const checkpoint = beforeNominalPrimitiveSubtypeWitPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8"), update.currentSha256);
 	assert.equal(JSON.stringify(JSON.parse(checkpoint)), JSON.stringify(expected));
 	assert.equal(expected.evidence.length, 570); assert.equal(expected.observations.length, 605);
 	t.diagnostic(`${pins} current-source pins refreshed; exactly six WIT cells supplemented`);
