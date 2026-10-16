@@ -236,7 +236,8 @@ for(const route of routes) test(
 		}
 		const declarations = await readFile(
 			join(moved, "node_modules/mutualcheckedrecords/index.d.ts"), "utf8");
-		assert.match(declarations, /export interface Envelope \{[\s\S]*readonly next: [^;]*Step/u);
+		assert.match(declarations
+			, /export interface Envelope \{[\s\S]*?readonly next: [^\n]*\bStep\b[^\n]*;\n\}/u);
 		assert.match(declarations, /export type EnvelopeAlias = Envelope;/u);
 		assert.match(declarations, /export type Step = [^\n]*kind: "stop"[^\n]*kind: "more"/u);
 		assert.doesNotMatch(declarations, /readonly linked:/u);
