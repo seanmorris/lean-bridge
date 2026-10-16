@@ -56,10 +56,10 @@ export const mutualCheckedRecordJvmExpected = Object.freeze({
 		checks: 593, rejections: 72, hostRejections: 6, calls: 292
 		, snapshots: 292, recoveries: 78, rounds: 64, wordBits: 64
 		, failures: Object.freeze({ ...sharedFailures
-			, "null-record": failure("IllegalArgumentException"
-				, "Expected copied value of type org.leanbridge.mutualcheckedrecords.kotlin.Envelope")
-			, "null-alias-carrier": failure("IllegalArgumentException"
-				, "Expected copied value of type org.leanbridge.mutualcheckedrecords.kotlin.Option[]")
+			, "null-record": failure("NullPointerException"
+				, "Parameter specified as non-null is null: method org.leanbridge.mutualcheckedrecords.kotlin.Api$Companion.first, parameter arg0")
+			, "null-alias-carrier": failure("NullPointerException"
+				, "Parameter specified as non-null is null: method org.leanbridge.mutualcheckedrecords.kotlin.Api$Companion.groups, parameter arg0")
 			, "null-active-field": failure("IllegalArgumentException"
 				, "Expected copied value of type org.leanbridge.mutualcheckedrecords.kotlin.Envelope")
 			, cycle: failure("IllegalArgumentException", "Cyclic copied input")
