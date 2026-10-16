@@ -33,6 +33,9 @@ import {
 	, nestedCheckedRecordPerlConfigurations
 	, nestedCheckedRecordPerlInstallModes
 } from "./nested-checked-record-perl-install.mjs";
+import {
+	assertNestedCheckedRecordPerlRecords
+} from "./nested-checked-record-perl-records.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_NESTED_CHECKED_RECORD_PERL_TEST === "1";
@@ -171,5 +174,8 @@ for(const name of cases) test(`installed nested checked-record Perl packages rep
 		, expectedBindingIrSha256: hashBindingIr(expected)
 	};
 	await saveLakeFile(output, "report.json", canonicalJson(report));
+	await assertNestedCheckedRecordPerlRecords({
+		name, read: path => readFile(join(output, path))
+	});
 	complete = true;
 });
