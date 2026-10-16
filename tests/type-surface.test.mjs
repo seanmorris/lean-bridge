@@ -76,6 +76,7 @@ import { withoutRecursiveCheckedRecordPerlDiagnostic } from "./helpers/recursive
 import { withoutPythonGraphDiagnostic } from "./helpers/python-graph-diagnostic-source-history.mjs";
 import { withoutRubyGraphDiagnostic } from "./helpers/ruby-graph-diagnostic-source-history.mjs";
 import { withoutRubyGraphKeywordField } from "./helpers/ruby-graph-keyword-field-source-history.mjs";
+import { withoutRubyMemberEscape } from "./helpers/ruby-member-escape-source-history.mjs";
 
 const execute = promisify(execFile);
 const root = path.resolve(import.meta.dirname, "..");
@@ -117,9 +118,10 @@ const observationFixture = () => {
 
 test("historical shape comparisons preserve old cells without weakening the live classifier", async () => {
 	const file = "docs/type-surface.v1.json";
-	let current = withoutRubyGraphKeywordField(
+	let current = withoutRubyMemberEscape(
 		file, await readFile(file, "utf8")
 	);
+	current = withoutRubyGraphKeywordField(file, current);
 	current = withoutRubyGraphDiagnostic(file, current);
 	current = withoutPythonGraphDiagnostic(file, current);
 	current = withoutRecursiveCheckedRecordPerlDiagnostic(file, current);

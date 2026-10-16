@@ -18,16 +18,16 @@ const finComment = (fn, types) => {
 	return bounds ? `    # Checked Lean Fin bounds: ${bounds}.\n` : "";
 };
 const valueMethods = fields => `      def ==(other)
-        Native.exact?(other, self.class)${fields.map(field => ` && @${field.name} == Native::STORED_FIELD.bind_call(other, :@${field.name})`).join("")}
+        Native.exact?(other, self.class)${fields.map(field => ` && @${field.rubyName} == Native::STORED_FIELD.bind_call(other, :@${field.rubyName})`).join("")}
       end
       def eql?(other)
-        Native.exact?(other, self.class)${fields.map(field => ` && @${field.name}.eql?(Native::STORED_FIELD.bind_call(other, :@${field.name}))`).join("")}
+        Native.exact?(other, self.class)${fields.map(field => ` && @${field.rubyName}.eql?(Native::STORED_FIELD.bind_call(other, :@${field.rubyName}))`).join("")}
       end
       def hash
-        [self.class${fields.map(field => `, @${field.name}`).join("")}].hash
+        [self.class${fields.map(field => `, @${field.rubyName}`).join("")}].hash
       end
       def deconstruct_keys(_keys)
-        { ${fields.map(field => `${field.name}: @${field.name}`).join(", ")} }
+        { ${fields.map(field => `${field.rubyName}: @${field.rubyName}`).join(", ")} }
       end`;
 const variants = model => model.surface.copies.filter(copy => copy.variant).map(copy => `
     class ${copy.publicName}
@@ -36,9 +36,9 @@ const variants = model => model.surface.copies.filter(copy => copy.variant).map(
 ${copy.cases.map((branch, index) => `    class ${branch.publicName} < ${copy.publicName}
       public_class_method :new
 ${rubyAliasSiteDocs(model, copy.variant.cases[index].fields.map((field, i) => ({ name: branch.fields[i].name, type: field.type })), null, "      ")}\
-      ${branch.fields.length ? `attr_reader ${branch.fields.map(field => `:${field.name}`).join(", ")}` : ""}
-      def initialize(${branch.fields.map(field => `${field.name}:`).join(", ")})
-${branch.fields.map(field => `        @${field.name} = ${field.name}`).join("\n")}
+      ${branch.fields.length ? `attr_reader ${branch.fields.map(field => `:${field.rubyName}`).join(", ")}` : ""}
+      def initialize(${branch.fields.map(field => `${field.rubyName}:`).join(", ")})
+${branch.fields.map(field => `        @${field.rubyName} = ${field.rubyName}`).join("\n")}
         freeze
       end
 ${valueMethods(branch.fields)}
@@ -54,9 +54,9 @@ ${model.surface.copies.some(copy => copy.compound === "result") ? "    Ok = ::Da
 ${model.surface.callbacks.size ? rubyClosurePublic : ""}\
 ${model.surface.copies.filter(copy => copy.record).map(copy => `    class ${copy.publicName}
 ${rubyAliasSiteDocs(model, copy.record.fields, null, "      ")}\
-      ${copy.fields.length ? `attr_reader ${copy.fields.map(field => `:${field.name}`).join(", ")}` : ""}
-      def initialize(${copy.fields.map(field => `${field.name}:`).join(", ")})
-${copy.fields.map(field => `        @${field.name} = ${field.name}`).join("\n")}
+      ${copy.fields.length ? `attr_reader ${copy.fields.map(field => `:${field.rubyName}`).join(", ")}` : ""}
+      def initialize(${copy.fields.map(field => `${field.rubyName}:`).join(", ")})
+${copy.fields.map(field => `        @${field.rubyName} = ${field.rubyName}`).join("\n")}
         freeze
       end
 ${valueMethods(copy.fields)}
@@ -163,6 +163,17 @@ export const renderCopiedRubyPackage = (model, evidence = null) => {
 			.replace("recursive, proof-bearing, callable and identity-bearing payloads remain unsupported.", "proof-bearing payloads, callback identities and resources cannot be copied fields; recursive callable payloads remain unsupported.");
 		files["README.md"] += "\nCallback arguments and results own independent copied values, including nested arrays, Lists, options, results, products, records, variants and aliases. Returned closures copy their arguments, results and captured values. UNIT retains presence inside Some. Callback exceptions propagate after native cleanup. Scoped owners retain nested callback result buffers until native copying finishes. Recursive callback payloads and resource-containing aggregates remain unsupported.\n";
 		files["binding-manifest.json"] = files["binding-manifest.json"].replace("Ordinary RubyGems admits copied values and synchronous primitive callables; resource identities, compound callables and async effects remain unsupported.", "Ordinary RubyGems admits copied values and synchronous primitive or acyclic structured callables; recursive callable payloads, resource-containing aggregates and asynchronous operations remain unsupported.");
+	}
+	// Escaped reserved members keep their exact Lean field identity in the manifest.
+	const memberNames = model.surface.copies.flatMap(copy => [
+		...copy.record ? copy.fields.map(field => [copy.publicName, field]) : []
+		, ...copy.variant ? copy.cases.flatMap(branch => branch.fields.map(field => [branch.publicName, field])) : []
+	]).filter(([, field]) => field.rubyName !== field.name)
+		.map(([type, field]) => ({ type, field: field.name, ruby: field.rubyName }));
+	if(memberNames.length)
+	{
+		files["README.md"] += `\nLean fields named like reserved Ruby members gain one trailing underscore: ${memberNames.map(item => `${item.type}#${item.ruby} is Lean field ${item.field}`).join(", ")}. Diagnostics name the Lean field.\n`;
+		files["binding-manifest.json"] = `${JSON.stringify({ ...JSON.parse(files["binding-manifest.json"]), memberNames }, null, 2)}\n`;
 	}
 	return Object.freeze(files);
 };

@@ -28,6 +28,14 @@ export const compileCopiedRubyModel = ir => {
 		, ...surface.copies.some(copy => copy.compound === "result") ? ["Ok", "Err"] : []];
 	if(compounds.includes(componentName)) fail(ir.declarations[0], "Ruby component name collides with a compound constructor");
 	const names = new Set([...reserved, componentName, ...compounds]);
+	// Reserved Ruby members escape deterministically to name_; a post-escape collision fails.
+	const memberName = (name, siblings, kind) => {
+		const escaped = reserved.has(name) || ["deconstruct", "deconstruct_keys"].includes(name) ? `${name}_` : name;
+		if(reserved.has(escaped) || siblings.filter(item => (reserved.has(item.name)
+			|| ["deconstruct", "deconstruct_keys"].includes(item.name) ? `${item.name}_` : item.name) === escaped).length !== 1)
+			fail(ir.declarations[0], `Ruby ${kind} field name collides: ${name}`);
+		return escaped;
+	};
 	for(const copy of surface.copies)
 	{
 		copy.ffi = copy.aggregate ? "VOIDP" : types[copy.scalarName][0];
@@ -46,7 +54,7 @@ export const compileCopiedRubyModel = ir => {
 				let size = 0, alignment = 1;
 				for(const field of branch.fields)
 				{
-					if(reserved.has(field.name) || ["deconstruct", "deconstruct_keys"].includes(field.name)) fail(ir.declarations[0], `Ruby variant field name collides: ${field.name}`);
+					field.rubyName = memberName(field.name, branch.fields, "variant");
 					field.offset = align(size, field.type.alignment);
 					size = field.offset + field.type.size; alignment = Math.max(alignment, field.type.alignment);
 				}
@@ -67,7 +75,7 @@ export const compileCopiedRubyModel = ir => {
 			let size = copy.compound && copy.compound !== "tuple" ? 1 : 0, alignment = 1;
 			for(const field of copy.fields)
 			{
-				if(reserved.has(field.name) || ["deconstruct", "deconstruct_keys"].includes(field.name)) fail(ir.declarations[0], `Ruby record field name collides: ${field.name}`);
+				field.rubyName = memberName(field.name, copy.fields, "record");
 				field.offset = align(size, field.type.alignment);
 				size = field.offset + field.type.size; alignment = Math.max(alignment, field.type.alignment);
 			}

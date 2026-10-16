@@ -102,6 +102,12 @@ end
 export const generateCopiedRubyGraphPackage = (ir, evidence = null, { refinementDiagnostics = false } = {}) => {
 	if(typeof refinementDiagnostics !== "boolean") throw new TypeError("Ruby graph refinement diagnostics must be explicit");
 	const model = compileCopiedRubyGraphPackageModel(ir), entry = `lib/${model.requirePath}.rb`;
+	// Escaped reserved members keep their exact Lean field identity in the manifest.
+	const memberNames = model.types.flatMap(node => [
+		...(node.fields ?? []).map(field => [node.publicType, field])
+		, ...(node.cases ?? []).flatMap(branch => branch.fields.map(field => [branch.publicName, field]))
+	]).filter(([, field]) => field.leanName !== undefined && field.publicName !== field.leanName)
+		.map(([type, field]) => ({ type, field: field.leanName, ruby: field.publicName }));
 	const internal = `lib/${model.requirePath}/native.rb`, shared = "lib/lean_bridge/native_copied_runtime_v1.rb";
 	const files = {
 		[entry]: publicSource(model)
@@ -118,7 +124,9 @@ Integers remain exact. Nat rejects negatives, fixed-width integers reject out-of
 Input and output conversion share a maximum depth of 128, 262,144 nodes, a 16 MiB native-copy budget and a separate 16 MiB accounted conversion-storage budget. These limits do not bound Lean working memory or every Ruby allocator overhead. Cycles and uninhabited copied values reject. All inputs validate before native allocation or runtime initialization. An ensure block clears native outputs and temporary storage, including allocation failures and interruptions. Malformed native results retire the runtime; recoverable input, limit and allocation errors preserve usability. Independent calls may use Ruby threads; native calls retain the GVL. Domain errors return Err; bridge failures raise LeanBridgeError with a numeric status.
 
 Callback, closure, resource and asynchronous payloads remain outside this recursive profile.
-
+${memberNames.length ? `
+Lean fields named like reserved Ruby members gain one trailing underscore: ${memberNames.map(item => `${item.type}#${item.ruby} is Lean field ${item.field}`).join(", ")}. Diagnostics name the Lean field.
+` : ""}
 ${model.functions.map(fn => `- ${model.namespace}.${fn.publicName}: ${fn.bindingId}`).join("\n")}
 ` };
 	files["binding-manifest.json"] = `${JSON.stringify({ schemaVersion: 1
@@ -132,6 +140,7 @@ ${model.functions.map(fn => `- ${model.namespace}.${fn.publicName}: ${fn.binding
 		, packageFiles: []
 		, exports: ["LeanBridgeError", ...model.exports, ...model.functions.map(fn => fn.publicName)]
 		, aliases: model.aliases
+		, ...memberNames.length ? { memberNames } : {}
 		, copiedGraph: { schemaVersion: 1, layoutSha256: model.layoutSha256 }
 		, supportedFeatures: ["direct-functions", "copied-values", "recursive-values", "deterministic-close"]
 		, capabilityGaps: [{ feature: "identity-and-effects", reason: "Recursive Ruby packages support finite copied values; callables, resources and asynchronous operations remain outside this profile." }

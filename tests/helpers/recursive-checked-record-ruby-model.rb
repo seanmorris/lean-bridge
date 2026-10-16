@@ -13,7 +13,7 @@ VALUES = %w[recursive mutual].zip(ARGV[1, 2]).to_h do |mod, path|
 end.freeze
 SPECS = {
   "recursive" => { lean: "RecursiveCheckedRecords", record: :Packet, fields: %i[value digit tail], make: "mkPacket", normalize: "normalizePacket" },
-  "mutual" => { lean: "MutualCheckedRecords", record: :Envelope, fields: %i[value mode next], make: "mkEnvelope", normalize: "normalizeEnvelope" }
+  "mutual" => { lean: "MutualCheckedRecords", record: :Envelope, fields: %i[value mode next_], make: "mkEnvelope", normalize: "normalizeEnvelope" }
 }.freeze
 
 FAULTS = %w[

@@ -1,0 +1,605 @@
+{
+  "schemaVersion": 1,
+  "milestone": "ruby-member-escape-source-v1",
+  "predecessorCommit": "efb8a0c8ed4448080eda17eb4c588106c2cd5db1",
+  "draftParentCommit": "efb8a0c8ed4448080eda17eb4c588106c2cd5db1",
+  "pinCount": 81,
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "ed6360bb967c999ed7822a308cfdb74c1550f60e0b9c46af64950df2b554293a",
+      "currentSha256": "5bc93d14b337ca733c4de72e1ab53ee8574310b6dc3d0dcd9de01cde06005b6f",
+      "edits": [
+        {
+          "start": 50871,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 64275,
+          "previous": "          \"sha256\": \"9ed35cbcb0d6c0ed81f3a7206439954bf9f4133f40cad6278cd7ed63f6417348\"\n",
+          "current": "          \"sha256\": \"46be4d7c05a73a6fa7f6f8e0d24844a0fa3252d4803422006993965207584f62\"\n"
+        },
+        {
+          "start": 64618,
+          "previous": "          \"sha256\": \"603873e4e85ef9ea8d328c8637ab77152ef278e571924f0b1b7f13b22692b5e8\"\n",
+          "current": "          \"sha256\": \"67cbbffdc6c8f91ea6dba158e3871add0947d5f6acfda065f2786ffd4b8ef86b\"\n"
+        },
+        {
+          "start": 64783,
+          "previous": "          \"sha256\": \"44580dc2129a996655284ea7df86250cf3a671a0930259c05b58fd6e1d1c51c7\"\n",
+          "current": "          \"sha256\": \"23e6693ec0d13cb8f493f8de5c040152b9e9d7e555d0cc2acc3df06b661a60f1\"\n"
+        },
+        {
+          "start": 85183,
+          "previous": "          \"sha256\": \"9ed35cbcb0d6c0ed81f3a7206439954bf9f4133f40cad6278cd7ed63f6417348\"\n",
+          "current": "          \"sha256\": \"46be4d7c05a73a6fa7f6f8e0d24844a0fa3252d4803422006993965207584f62\"\n"
+        },
+        {
+          "start": 85526,
+          "previous": "          \"sha256\": \"603873e4e85ef9ea8d328c8637ab77152ef278e571924f0b1b7f13b22692b5e8\"\n",
+          "current": "          \"sha256\": \"67cbbffdc6c8f91ea6dba158e3871add0947d5f6acfda065f2786ffd4b8ef86b\"\n"
+        },
+        {
+          "start": 85691,
+          "previous": "          \"sha256\": \"44580dc2129a996655284ea7df86250cf3a671a0930259c05b58fd6e1d1c51c7\"\n",
+          "current": "          \"sha256\": \"23e6693ec0d13cb8f493f8de5c040152b9e9d7e555d0cc2acc3df06b661a60f1\"\n"
+        },
+        {
+          "start": 249886,
+          "previous": "          \"sha256\": \"ce15adec396be01282ccb353fc486359693d032ccc46442dbe897d80e45fb52a\"\n",
+          "current": "          \"sha256\": \"01389e93915e1ba43a75d26573f6965e677d6ff6eb50e5c2cec8b7401c7ec390\"\n"
+        },
+        {
+          "start": 250050,
+          "previous": "          \"sha256\": \"76b2b404b57a16604bb396997ba371f67c9dac3b6b37caf4bae017d1e597734d\"\n",
+          "current": "          \"sha256\": \"c89d89e8fd156589984115ecb46100fbfe24f3bea19738b08c05210bf4eccfb5\"\n"
+        },
+        {
+          "start": 250215,
+          "previous": "          \"sha256\": \"44580dc2129a996655284ea7df86250cf3a671a0930259c05b58fd6e1d1c51c7\"\n",
+          "current": "          \"sha256\": \"23e6693ec0d13cb8f493f8de5c040152b9e9d7e555d0cc2acc3df06b661a60f1\"\n"
+        },
+        {
+          "start": 318622,
+          "previous": "          \"sha256\": \"ce15adec396be01282ccb353fc486359693d032ccc46442dbe897d80e45fb52a\"\n",
+          "current": "          \"sha256\": \"01389e93915e1ba43a75d26573f6965e677d6ff6eb50e5c2cec8b7401c7ec390\"\n"
+        },
+        {
+          "start": 318786,
+          "previous": "          \"sha256\": \"76b2b404b57a16604bb396997ba371f67c9dac3b6b37caf4bae017d1e597734d\"\n",
+          "current": "          \"sha256\": \"c89d89e8fd156589984115ecb46100fbfe24f3bea19738b08c05210bf4eccfb5\"\n"
+        },
+        {
+          "start": 318951,
+          "previous": "          \"sha256\": \"44580dc2129a996655284ea7df86250cf3a671a0930259c05b58fd6e1d1c51c7\"\n",
+          "current": "          \"sha256\": \"23e6693ec0d13cb8f493f8de5c040152b9e9d7e555d0cc2acc3df06b661a60f1\"\n"
+        },
+        {
+          "start": 416876,
+          "previous": "          \"sha256\": \"ce15adec396be01282ccb353fc486359693d032ccc46442dbe897d80e45fb52a\"\n",
+          "current": "          \"sha256\": \"01389e93915e1ba43a75d26573f6965e677d6ff6eb50e5c2cec8b7401c7ec390\"\n"
+        },
+        {
+          "start": 417040,
+          "previous": "          \"sha256\": \"76b2b404b57a16604bb396997ba371f67c9dac3b6b37caf4bae017d1e597734d\"\n",
+          "current": "          \"sha256\": \"c89d89e8fd156589984115ecb46100fbfe24f3bea19738b08c05210bf4eccfb5\"\n"
+        },
+        {
+          "start": 417205,
+          "previous": "          \"sha256\": \"44580dc2129a996655284ea7df86250cf3a671a0930259c05b58fd6e1d1c51c7\"\n",
+          "current": "          \"sha256\": \"23e6693ec0d13cb8f493f8de5c040152b9e9d7e555d0cc2acc3df06b661a60f1\"\n"
+        },
+        {
+          "start": 527250,
+          "previous": "          \"sha256\": \"ce15adec396be01282ccb353fc486359693d032ccc46442dbe897d80e45fb52a\"\n",
+          "current": "          \"sha256\": \"01389e93915e1ba43a75d26573f6965e677d6ff6eb50e5c2cec8b7401c7ec390\"\n"
+        },
+        {
+          "start": 527414,
+          "previous": "          \"sha256\": \"76b2b404b57a16604bb396997ba371f67c9dac3b6b37caf4bae017d1e597734d\"\n",
+          "current": "          \"sha256\": \"c89d89e8fd156589984115ecb46100fbfe24f3bea19738b08c05210bf4eccfb5\"\n"
+        },
+        {
+          "start": 527579,
+          "previous": "          \"sha256\": \"44580dc2129a996655284ea7df86250cf3a671a0930259c05b58fd6e1d1c51c7\"\n",
+          "current": "          \"sha256\": \"23e6693ec0d13cb8f493f8de5c040152b9e9d7e555d0cc2acc3df06b661a60f1\"\n"
+        },
+        {
+          "start": 616477,
+          "previous": "          \"sha256\": \"ce15adec396be01282ccb353fc486359693d032ccc46442dbe897d80e45fb52a\"\n",
+          "current": "          \"sha256\": \"01389e93915e1ba43a75d26573f6965e677d6ff6eb50e5c2cec8b7401c7ec390\"\n"
+        },
+        {
+          "start": 616641,
+          "previous": "          \"sha256\": \"76b2b404b57a16604bb396997ba371f67c9dac3b6b37caf4bae017d1e597734d\"\n",
+          "current": "          \"sha256\": \"c89d89e8fd156589984115ecb46100fbfe24f3bea19738b08c05210bf4eccfb5\"\n"
+        },
+        {
+          "start": 616806,
+          "previous": "          \"sha256\": \"44580dc2129a996655284ea7df86250cf3a671a0930259c05b58fd6e1d1c51c7\"\n",
+          "current": "          \"sha256\": \"23e6693ec0d13cb8f493f8de5c040152b9e9d7e555d0cc2acc3df06b661a60f1\"\n"
+        },
+        {
+          "start": 707695,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 721726,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 733101,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 747321,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 758775,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 770846,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 782134,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 787063,
+          "previous": "          \"sha256\": \"76b2b404b57a16604bb396997ba371f67c9dac3b6b37caf4bae017d1e597734d\"\n",
+          "current": "          \"sha256\": \"c89d89e8fd156589984115ecb46100fbfe24f3bea19738b08c05210bf4eccfb5\"\n"
+        },
+        {
+          "start": 787228,
+          "previous": "          \"sha256\": \"44580dc2129a996655284ea7df86250cf3a671a0930259c05b58fd6e1d1c51c7\"\n",
+          "current": "          \"sha256\": \"23e6693ec0d13cb8f493f8de5c040152b9e9d7e555d0cc2acc3df06b661a60f1\"\n"
+        },
+        {
+          "start": 787398,
+          "previous": "          \"sha256\": \"ce15adec396be01282ccb353fc486359693d032ccc46442dbe897d80e45fb52a\"\n",
+          "current": "          \"sha256\": \"01389e93915e1ba43a75d26573f6965e677d6ff6eb50e5c2cec8b7401c7ec390\"\n"
+        },
+        {
+          "start": 790717,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 797175,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 805561,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 813538,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 829457,
+          "previous": "          \"sha256\": \"ce15adec396be01282ccb353fc486359693d032ccc46442dbe897d80e45fb52a\"\n",
+          "current": "          \"sha256\": \"01389e93915e1ba43a75d26573f6965e677d6ff6eb50e5c2cec8b7401c7ec390\"\n"
+        },
+        {
+          "start": 829621,
+          "previous": "          \"sha256\": \"76b2b404b57a16604bb396997ba371f67c9dac3b6b37caf4bae017d1e597734d\"\n",
+          "current": "          \"sha256\": \"c89d89e8fd156589984115ecb46100fbfe24f3bea19738b08c05210bf4eccfb5\"\n"
+        },
+        {
+          "start": 836468,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 847801,
+          "previous": "          \"sha256\": \"ce15adec396be01282ccb353fc486359693d032ccc46442dbe897d80e45fb52a\"\n",
+          "current": "          \"sha256\": \"01389e93915e1ba43a75d26573f6965e677d6ff6eb50e5c2cec8b7401c7ec390\"\n"
+        },
+        {
+          "start": 847965,
+          "previous": "          \"sha256\": \"76b2b404b57a16604bb396997ba371f67c9dac3b6b37caf4bae017d1e597734d\"\n",
+          "current": "          \"sha256\": \"c89d89e8fd156589984115ecb46100fbfe24f3bea19738b08c05210bf4eccfb5\"\n"
+        },
+        {
+          "start": 921602,
+          "previous": "          \"sha256\": \"76b2b404b57a16604bb396997ba371f67c9dac3b6b37caf4bae017d1e597734d\"\n",
+          "current": "          \"sha256\": \"c89d89e8fd156589984115ecb46100fbfe24f3bea19738b08c05210bf4eccfb5\"\n"
+        },
+        {
+          "start": 921772,
+          "previous": "          \"sha256\": \"ce15adec396be01282ccb353fc486359693d032ccc46442dbe897d80e45fb52a\"\n",
+          "current": "          \"sha256\": \"01389e93915e1ba43a75d26573f6965e677d6ff6eb50e5c2cec8b7401c7ec390\"\n"
+        },
+        {
+          "start": 922102,
+          "previous": "          \"sha256\": \"44580dc2129a996655284ea7df86250cf3a671a0930259c05b58fd6e1d1c51c7\"\n",
+          "current": "          \"sha256\": \"23e6693ec0d13cb8f493f8de5c040152b9e9d7e555d0cc2acc3df06b661a60f1\"\n"
+        },
+        {
+          "start": 1037246,
+          "previous": "          \"sha256\": \"ce15adec396be01282ccb353fc486359693d032ccc46442dbe897d80e45fb52a\"\n",
+          "current": "          \"sha256\": \"01389e93915e1ba43a75d26573f6965e677d6ff6eb50e5c2cec8b7401c7ec390\"\n"
+        },
+        {
+          "start": 1037765,
+          "previous": "          \"sha256\": \"9ed35cbcb0d6c0ed81f3a7206439954bf9f4133f40cad6278cd7ed63f6417348\"\n",
+          "current": "          \"sha256\": \"46be4d7c05a73a6fa7f6f8e0d24844a0fa3252d4803422006993965207584f62\"\n"
+        },
+        {
+          "start": 1038108,
+          "previous": "          \"sha256\": \"603873e4e85ef9ea8d328c8637ab77152ef278e571924f0b1b7f13b22692b5e8\"\n",
+          "current": "          \"sha256\": \"67cbbffdc6c8f91ea6dba158e3871add0947d5f6acfda065f2786ffd4b8ef86b\"\n"
+        },
+        {
+          "start": 1038272,
+          "previous": "          \"sha256\": \"76b2b404b57a16604bb396997ba371f67c9dac3b6b37caf4bae017d1e597734d\"\n",
+          "current": "          \"sha256\": \"c89d89e8fd156589984115ecb46100fbfe24f3bea19738b08c05210bf4eccfb5\"\n"
+        },
+        {
+          "start": 1038437,
+          "previous": "          \"sha256\": \"44580dc2129a996655284ea7df86250cf3a671a0930259c05b58fd6e1d1c51c7\"\n",
+          "current": "          \"sha256\": \"23e6693ec0d13cb8f493f8de5c040152b9e9d7e555d0cc2acc3df06b661a60f1\"\n"
+        },
+        {
+          "start": 1078061,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 1084759,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 1091762,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 1099268,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 1102224,
+          "previous": "          \"sha256\": \"76b2b404b57a16604bb396997ba371f67c9dac3b6b37caf4bae017d1e597734d\"\n",
+          "current": "          \"sha256\": \"c89d89e8fd156589984115ecb46100fbfe24f3bea19738b08c05210bf4eccfb5\"\n"
+        },
+        {
+          "start": 1102389,
+          "previous": "          \"sha256\": \"44580dc2129a996655284ea7df86250cf3a671a0930259c05b58fd6e1d1c51c7\"\n",
+          "current": "          \"sha256\": \"23e6693ec0d13cb8f493f8de5c040152b9e9d7e555d0cc2acc3df06b661a60f1\"\n"
+        },
+        {
+          "start": 1106222,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 1113856,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 1123094,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 1132221,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 1147156,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 1155203,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 1164175,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 1173566,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 1186589,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 1219701,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 1249945,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 1263598,
+          "previous": "          \"sha256\": \"9ed35cbcb0d6c0ed81f3a7206439954bf9f4133f40cad6278cd7ed63f6417348\"\n",
+          "current": "          \"sha256\": \"46be4d7c05a73a6fa7f6f8e0d24844a0fa3252d4803422006993965207584f62\"\n"
+        },
+        {
+          "start": 1263941,
+          "previous": "          \"sha256\": \"603873e4e85ef9ea8d328c8637ab77152ef278e571924f0b1b7f13b22692b5e8\"\n",
+          "current": "          \"sha256\": \"67cbbffdc6c8f91ea6dba158e3871add0947d5f6acfda065f2786ffd4b8ef86b\"\n"
+        },
+        {
+          "start": 1264105,
+          "previous": "          \"sha256\": \"76b2b404b57a16604bb396997ba371f67c9dac3b6b37caf4bae017d1e597734d\"\n",
+          "current": "          \"sha256\": \"c89d89e8fd156589984115ecb46100fbfe24f3bea19738b08c05210bf4eccfb5\"\n"
+        },
+        {
+          "start": 1264270,
+          "previous": "          \"sha256\": \"44580dc2129a996655284ea7df86250cf3a671a0930259c05b58fd6e1d1c51c7\"\n",
+          "current": "          \"sha256\": \"23e6693ec0d13cb8f493f8de5c040152b9e9d7e555d0cc2acc3df06b661a60f1\"\n"
+        },
+        {
+          "start": 1282881,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 1298542,
+          "previous": "          \"sha256\": \"9ed35cbcb0d6c0ed81f3a7206439954bf9f4133f40cad6278cd7ed63f6417348\"\n",
+          "current": "          \"sha256\": \"46be4d7c05a73a6fa7f6f8e0d24844a0fa3252d4803422006993965207584f62\"\n"
+        },
+        {
+          "start": 1298885,
+          "previous": "          \"sha256\": \"603873e4e85ef9ea8d328c8637ab77152ef278e571924f0b1b7f13b22692b5e8\"\n",
+          "current": "          \"sha256\": \"67cbbffdc6c8f91ea6dba158e3871add0947d5f6acfda065f2786ffd4b8ef86b\"\n"
+        },
+        {
+          "start": 1299050,
+          "previous": "          \"sha256\": \"44580dc2129a996655284ea7df86250cf3a671a0930259c05b58fd6e1d1c51c7\"\n",
+          "current": "          \"sha256\": \"23e6693ec0d13cb8f493f8de5c040152b9e9d7e555d0cc2acc3df06b661a60f1\"\n"
+        },
+        {
+          "start": 1322184,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 1348725,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 1371105,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 1390997,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 1412450,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 1425469,
+          "previous": "          \"sha256\": \"c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf\"\n",
+          "current": "          \"sha256\": \"ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f\"\n"
+        },
+        {
+          "start": 1502969,
+          "previous": "          \"sha256\": \"44580dc2129a996655284ea7df86250cf3a671a0930259c05b58fd6e1d1c51c7\"\n",
+          "current": "          \"sha256\": \"23e6693ec0d13cb8f493f8de5c040152b9e9d7e555d0cc2acc3df06b661a60f1\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/ruby/copied-conversions.mjs",
+      "previousSha256": "ce15adec396be01282ccb353fc486359693d032ccc46442dbe897d80e45fb52a",
+      "currentSha256": "01389e93915e1ba43a75d26573f6965e677d6ff6eb50e5c2cec8b7401c7ec390",
+      "edits": [
+        {
+          "start": 964,
+          "previous": "${branch.fields.map((field, fieldIndex) => `          field${fieldIndex} = STORED_FIELD.bind_call(value, :@${field.name})`).join(\"\\n\")}\n",
+          "current": "${branch.fields.map((field, fieldIndex) => `          field${fieldIndex} = STORED_FIELD.bind_call(value, :@${field.rubyName})`).join(\"\\n\")}\n"
+        },
+        {
+          "start": 1595,
+          "previous": "${copy.cases.map((branch, index) => `        when ${index} then ${branch.publicName}.new(${branch.fields.map(field => `${field.name}: from${field.type.index}(${read(field.type, \"value\", copy.payloadOffset + field.offset)})`).join(\", \")})`).join(\"\\n\")}\n",
+          "current": "${copy.cases.map((branch, index) => `        when ${index} then ${branch.publicName}.new(${branch.fields.map(field => `${field.rubyName}: from${field.type.index}(${read(field.type, \"value\", copy.payloadOffset + field.offset)})`).join(\", \")})`).join(\"\\n\")}\n"
+        },
+        {
+          "start": 4277,
+          "previous": "${copy.fields.map((field, index) => `        field${index} = STORED_FIELD.bind_call(value, :@${field.name})`).join(\"\\n\")}\n",
+          "current": "${copy.fields.map((field, index) => `        field${index} = STORED_FIELD.bind_call(value, :@${field.rubyName})`).join(\"\\n\")}\n"
+        },
+        {
+          "start": 4650,
+          "previous": "\t\toutput = `${copy.publicName}.new(${copy.fields.map(field => `${field.name}: from${field.type.index}(${read(field.type, \"value\", field.offset)})`).join(\", \")})`;\n",
+          "current": "\t\toutput = `${copy.publicName}.new(${copy.fields.map(field => `${field.rubyName}: from${field.type.index}(${read(field.type, \"value\", field.offset)})`).join(\", \")})`;\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/ruby/copied-graph-package.mjs",
+      "previousSha256": "9ed35cbcb0d6c0ed81f3a7206439954bf9f4133f40cad6278cd7ed63f6417348",
+      "currentSha256": "46be4d7c05a73a6fa7f6f8e0d24844a0fa3252d4803422006993965207584f62",
+      "edits": [
+        {
+          "start": 4975,
+          "previous": "",
+          "current": "\t// Escaped reserved members keep their exact Lean field identity in the manifest.\n\tconst memberNames = model.types.flatMap(node => [\n\t\t...(node.fields ?? []).map(field => [node.publicType, field])\n\t\t, ...(node.cases ?? []).flatMap(branch => branch.fields.map(field => [branch.publicName, field]))\n\t]).filter(([, field]) => field.leanName !== undefined && field.publicName !== field.leanName)\n\t\t.map(([type, field]) => ({ type, field: field.leanName, ruby: field.publicName }));\n"
+        },
+        {
+          "start": 8081,
+          "previous": "\n",
+          "current": "${memberNames.length ? `\nLean fields named like reserved Ruby members gain one trailing underscore: ${memberNames.map(item => `${item.type}#${item.ruby} is Lean field ${item.field}`).join(\", \")}. Diagnostics name the Lean field.\n` : \"\"}\n"
+        },
+        {
+          "start": 8884,
+          "previous": "",
+          "current": "\t\t, ...memberNames.length ? { memberNames } : {}\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/ruby/copied-graph-values.mjs",
+      "previousSha256": "603873e4e85ef9ea8d328c8637ab77152ef278e571924f0b1b7f13b22692b5e8",
+      "currentSha256": "67cbbffdc6c8f91ea6dba158e3871add0947d5f6acfda065f2786ffd4b8ef86b",
+      "edits": [
+        {
+          "start": 843,
+          "previous": "// Ruby keywords that are not Object methods remain valid readers, keyword arguments,\n// hash keys and pattern keys; only their initializer locals need a binding read.\nconst keywordFields = new Set(\"begin end rescue ensure alias and or not if unless while until case when then else elsif for in do break next redo retry undef\".split(\" \"));\n",
+          "current": "/**\n * Public Ruby member for a Lean field: reserved Ruby names gain one trailing underscore.\n *\n * @param name - Lean field name.\n */\nexport const rubyMemberName = name => reservedMembers.has(name) ? `${name}_` : name;\n"
+        },
+        {
+          "start": 2369,
+          "previous": "${fields.map(field => `        @${field.publicName} = ${keywordFields.has(field.publicName) ? `binding.local_variable_get(:${field.publicName})` : field.publicName}`).join(\"\\n\")}\n",
+          "current": "${fields.map(field => `        @${field.publicName} = ${field.publicName}`).join(\"\\n\")}\n"
+        },
+        {
+          "start": 4520,
+          "previous": "\t\t\tconst publicName = field.name;\n\t\t\tif(!/^[a-z][a-z0-9_]*$/.test(publicName) || (reservedMembers.has(publicName) && !keywordFields.has(publicName))\n\t\t\t\t|| seen.has(publicName))\n",
+          "current": "\t\t\t// Reserved Ruby members escape deterministically; the Lean name stays in metadata.\n\t\t\tconst publicName = rubyMemberName(field.name);\n\t\t\tif(!/^[a-z][a-z0-9_]*$/.test(field.name) || reservedMembers.has(publicName) || seen.has(publicName))\n"
+        },
+        {
+          "start": 4852,
+          "previous": "\t\t\tseen.add(publicName); return { ...field, publicName, contractType: contract(sourceFields[index].type) };\n",
+          "current": "\t\t\tseen.add(publicName);\n\t\t\treturn { ...field, publicName, leanName: field.name, contractType: contract(sourceFields[index].type) };\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/ruby/copied-model.mjs",
+      "previousSha256": "76b2b404b57a16604bb396997ba371f67c9dac3b6b37caf4bae017d1e597734d",
+      "currentSha256": "c89d89e8fd156589984115ecb46100fbfe24f3bea19738b08c05210bf4eccfb5",
+      "edits": [
+        {
+          "start": 3005,
+          "previous": "",
+          "current": "\t// Reserved Ruby members escape deterministically to name_; a post-escape collision fails.\n\tconst memberName = (name, siblings, kind) => {\n\t\tconst escaped = reserved.has(name) || [\"deconstruct\", \"deconstruct_keys\"].includes(name) ? `${name}_` : name;\n\t\tif(reserved.has(escaped) || siblings.filter(item => (reserved.has(item.name)\n\t\t\t|| [\"deconstruct\", \"deconstruct_keys\"].includes(item.name) ? `${item.name}_` : item.name) === escaped).length !== 1)\n\t\t\tfail(ir.declarations[0], `Ruby ${kind} field name collides: ${name}`);\n\t\treturn escaped;\n\t};\n"
+        },
+        {
+          "start": 4509,
+          "previous": "\t\t\t\t\tif(reserved.has(field.name) || [\"deconstruct\", \"deconstruct_keys\"].includes(field.name)) fail(ir.declarations[0], `Ruby variant field name collides: ${field.name}`);\n",
+          "current": "\t\t\t\t\tfield.rubyName = memberName(field.name, branch.fields, \"variant\");\n"
+        },
+        {
+          "start": 5529,
+          "previous": "\t\t\t\tif(reserved.has(field.name) || [\"deconstruct\", \"deconstruct_keys\"].includes(field.name)) fail(ir.declarations[0], `Ruby record field name collides: ${field.name}`);\n",
+          "current": "\t\t\t\tfield.rubyName = memberName(field.name, copy.fields, \"record\");\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/ruby/copied-values.mjs",
+      "previousSha256": "44580dc2129a996655284ea7df86250cf3a671a0930259c05b58fd6e1d1c51c7",
+      "currentSha256": "23e6693ec0d13cb8f493f8de5c040152b9e9d7e555d0cc2acc3df06b661a60f1",
+      "edits": [
+        {
+          "start": 1107,
+          "previous": "        Native.exact?(other, self.class)${fields.map(field => ` && @${field.name} == Native::STORED_FIELD.bind_call(other, :@${field.name})`).join(\"\")}\n",
+          "current": "        Native.exact?(other, self.class)${fields.map(field => ` && @${field.rubyName} == Native::STORED_FIELD.bind_call(other, :@${field.rubyName})`).join(\"\")}\n"
+        },
+        {
+          "start": 1299,
+          "previous": "        Native.exact?(other, self.class)${fields.map(field => ` && @${field.name}.eql?(Native::STORED_FIELD.bind_call(other, :@${field.name}))`).join(\"\")}\n",
+          "current": "        Native.exact?(other, self.class)${fields.map(field => ` && @${field.rubyName}.eql?(Native::STORED_FIELD.bind_call(other, :@${field.rubyName}))`).join(\"\")}\n"
+        },
+        {
+          "start": 1487,
+          "previous": "        [self.class${fields.map(field => `, @${field.name}`).join(\"\")}].hash\n",
+          "current": "        [self.class${fields.map(field => `, @${field.rubyName}`).join(\"\")}].hash\n"
+        },
+        {
+          "start": 1612,
+          "previous": "        { ${fields.map(field => `${field.name}: @${field.name}`).join(\", \")} }\n",
+          "current": "        { ${fields.map(field => `${field.rubyName}: @${field.rubyName}`).join(\", \")} }\n"
+        },
+        {
+          "start": 2140,
+          "previous": "      ${branch.fields.length ? `attr_reader ${branch.fields.map(field => `:${field.name}`).join(\", \")}` : \"\"}\n      def initialize(${branch.fields.map(field => `${field.name}:`).join(\", \")})\n${branch.fields.map(field => `        @${field.name} = ${field.name}`).join(\"\\n\")}\n",
+          "current": "      ${branch.fields.length ? `attr_reader ${branch.fields.map(field => `:${field.rubyName}`).join(\", \")}` : \"\"}\n      def initialize(${branch.fields.map(field => `${field.rubyName}:`).join(\", \")})\n${branch.fields.map(field => `        @${field.rubyName} = ${field.rubyName}`).join(\"\\n\")}\n"
+        },
+        {
+          "start": 3210,
+          "previous": "      ${copy.fields.length ? `attr_reader ${copy.fields.map(field => `:${field.name}`).join(\", \")}` : \"\"}\n      def initialize(${copy.fields.map(field => `${field.name}:`).join(\", \")})\n${copy.fields.map(field => `        @${field.name} = ${field.name}`).join(\"\\n\")}\n",
+          "current": "      ${copy.fields.length ? `attr_reader ${copy.fields.map(field => `:${field.rubyName}`).join(\", \")}` : \"\"}\n      def initialize(${copy.fields.map(field => `${field.rubyName}:`).join(\", \")})\n${copy.fields.map(field => `        @${field.rubyName} = ${field.rubyName}`).join(\"\\n\")}\n"
+        },
+        {
+          "start": 16641,
+          "previous": "",
+          "current": "\t}\n\t// Escaped reserved members keep their exact Lean field identity in the manifest.\n\tconst memberNames = model.surface.copies.flatMap(copy => [\n\t\t...copy.record ? copy.fields.map(field => [copy.publicName, field]) : []\n\t\t, ...copy.variant ? copy.cases.flatMap(branch => branch.fields.map(field => [branch.publicName, field])) : []\n\t]).filter(([, field]) => field.rubyName !== field.name)\n\t\t.map(([type, field]) => ({ type, field: field.name, ruby: field.rubyName }));\n\tif(memberNames.length)\n\t{\n\t\tfiles[\"README.md\"] += `\\nLean fields named like reserved Ruby members gain one trailing underscore: ${memberNames.map(item => `${item.type}#${item.ruby} is Lean field ${item.field}`).join(\", \")}. Diagnostics name the Lean field.\\n`;\n\t\tfiles[\"binding-manifest.json\"] = `${JSON.stringify({ ...JSON.parse(files[\"binding-manifest.json\"]), memberNames }, null, 2)}\\n`;\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "979617d323517a584b6320a1389c7ed35f8231fabb0709a3b3903ad47d1ad67b",
+      "currentSha256": "92fd505379896a3407e414782c204885bb8f6eabe63a1e19be9dc2c167d414fc",
+      "edits": [
+        {
+          "start": 13888,
+          "previous": "",
+          "current": "import { beforeRubyMemberEscapeSource, rubyMemberEscapeChangedPaths } from \"./ruby-member-escape-source-history.mjs\";\n"
+        },
+        {
+          "start": 64951,
+          "previous": "",
+          "current": "\tsource = beforeRubyMemberEscapeSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 83644,
+          "previous": "",
+          "current": "\t, ...rubyMemberEscapeChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/type-surface.test.mjs",
+      "previousSha256": "c6da3725ac08be67cee956312602b282d5bbdd820a33873057ca3b3358915caf",
+      "currentSha256": "ff620f6e3a0d96ca92ad097d0d6b83e159c9e20e54c9fdfcbd95247f6079d87f",
+      "edits": [
+        {
+          "start": 8289,
+          "previous": "",
+          "current": "import { withoutRubyMemberEscape } from \"./helpers/ruby-member-escape-source-history.mjs\";\n"
+        },
+        {
+          "start": 10139,
+          "previous": "\tlet current = withoutRubyGraphKeywordField(\n",
+          "current": "\tlet current = withoutRubyMemberEscape(\n"
+        },
+        {
+          "start": 10220,
+          "previous": "",
+          "current": "\tcurrent = withoutRubyGraphKeywordField(file, current);\n"
+        }
+      ]
+    }
+  ]
+}
