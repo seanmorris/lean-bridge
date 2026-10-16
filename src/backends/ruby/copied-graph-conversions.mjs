@@ -6,14 +6,28 @@
 import { compileCopiedRubyGraphLayout } from "./copied-graph-layout.mjs";
 import { rubyCopiedGraphSupport } from "./copied-graph-runtime.mjs";
 
+// Read the adapter's one-shot checked-refinement text for an invalid input.
+// The adapter resets it at every call, so a missing text keeps the fixed one.
+const diagnosticSupport = `      def graph_checked_status(status, diagnostic)
+        return graph_status(status) unless status == 1
+        message = diagnostic.call
+        return graph_status(status) if message.null?
+        text = message.to_s.force_encoding(::Encoding::UTF_8)
+        raise GraphInvalidNative, "Malformed native refinement diagnostic" unless text.valid_encoding?
+        raise LeanBridgeError.new(status, text)
+      end`;
+
 /**
  * Generate scoped typed graph calls. The authenticated adapter supplies a
  * pre-bound C cleanup function, so Ruby need not allocate a release wrapper
  * after receiving an owned native output.
  *
  * @param ir - Compiler-checked, concrete copied Binding IR.
+ * @param options - Generated call features.
+ * @param options.refinementDiagnostics - Report exact checked-refinement failures.
  */
-export const generateCopiedRubyGraphConversions = ir => {
+export const generateCopiedRubyGraphConversions = (ir, { refinementDiagnostics = false } = {}) => {
+	if(typeof refinementDiagnostics !== "boolean") throw new TypeError("Ruby graph refinement diagnostics must be explicit");
 	const model = compileCopiedRubyGraphLayout(ir), nodes = new Map(model.types.map(node => [node.id, node]));
 	const publicName = name => `::${model.namespace}::${name}`;
 	const read = (node, value, offset = 0) => node.aggregate ? `(${value} + ${offset})` : `${value}[${offset}, ${node.size}].unpack1("${node.pack}")`;
@@ -195,7 +209,7 @@ ${inputs.map((node, i) => {
             output = scope.allocate(${result.size})
             ${result.kind === "variant" ? 'output[16, 4] = [(1 << 32) - 1].pack("L<")' : ""}
             graph_status(lifecycle[0].call) if lifecycle
-            graph_status(invoke.call(${parameters.map((_, i) => `input${i}`).concat("output").join(", ")}))
+            ${refinementDiagnostics ? "graph_checked_status" : "graph_status"}(invoke.call(${parameters.map((_, i) => `input${i}`).concat("output").join(", ")})${refinementDiagnostics ? ", DIAGNOSTIC" : ""})
             result = graph_output${result.index}(${read(result, "output")}, scope)
             raise LeanBridgeError.new(5, "Lean runtime is unavailable") if lifecycle && lifecycle[1].call == 0
             result
@@ -212,5 +226,6 @@ ${inputs.map((node, i) => {
         end
       end`);
 	}
+	if(refinementDiagnostics) methods.unshift(diagnosticSupport);
 	return { ...model, source: `require "fiddle"\nmodule LeanBridge\n  module ${model.componentName}\n    module Native\n      extend self\n${rubyCopiedGraphSupport}\n${methods.join("\n")}\n    end\n    private_constant :Native\n  end\nend\n` };
 };

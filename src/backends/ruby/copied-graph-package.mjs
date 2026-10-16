@@ -65,7 +65,7 @@ require_relative "${model.prefix}/native"
 `;
 };
 
-const nativeSource = (model, evidence) => `${generateCopiedRubyGraphConversions(model.ir).source}
+const nativeSource = (model, evidence, refinementDiagnostics) => `${generateCopiedRubyGraphConversions(model.ir, { refinementDiagnostics }).source}
 require "digest"
 require "digest/sha2"
 raise LoadError, "Lean graphs require Ruby 1:1 threads; unset RUBY_MN_THREADS" unless ENV.fetch("RUBY_MN_THREADS", "0").to_i.zero?
@@ -78,7 +78,8 @@ ${copiedRubyAssets(model, evidence)}
       READY = ::Fiddle::Function.new(LIBRARY["${model.prefix}_graph_ready"], [], ::Fiddle::TYPE_INT, need_gvl: true)
       RETIRE = ::Fiddle::Function.new(LIBRARY["${model.prefix}_graph_retire"], [], ::Fiddle::TYPE_VOID, need_gvl: true)
       LIFECYCLE = [INITIALIZE, READY, RETIRE].freeze
-${model.functions.map((fn, index) => `      CALL${index} = ::Fiddle::Function.new(LIBRARY["${fn.name}_graph"], [${Array(fn.parameters.length + 1).fill("::Fiddle::TYPE_VOIDP").join(", ")}], ::Fiddle::TYPE_INT, need_gvl: true)
+${refinementDiagnostics ? `      DIAGNOSTIC = ::Fiddle::Function.new(LIBRARY["${model.prefix}_graph_error"], [], ::Fiddle::TYPE_VOIDP, need_gvl: true)
+` : ""}${model.functions.map((fn, index) => `      CALL${index} = ::Fiddle::Function.new(LIBRARY["${fn.name}_graph"], [${Array(fn.parameters.length + 1).fill("::Fiddle::TYPE_VOIDP").join(", ")}], ::Fiddle::TYPE_INT, need_gvl: true)
       def call${index}(${fn.parameters.join(", ")})
         if (reason = NativeCopiedRuntimeV1.context_error)
           raise LeanBridgeError.new(5, reason)
@@ -95,13 +96,16 @@ end
  *
  * @param ir - Compiler-checked finite copied graph contract.
  * @param evidence - Verified native identities, or null for source inspection.
+ * @param options - Generated call features.
+ * @param options.refinementDiagnostics - Read exact checked-refinement failures from the adapter.
  */
-export const generateCopiedRubyGraphPackage = (ir, evidence = null) => {
+export const generateCopiedRubyGraphPackage = (ir, evidence = null, { refinementDiagnostics = false } = {}) => {
+	if(typeof refinementDiagnostics !== "boolean") throw new TypeError("Ruby graph refinement diagnostics must be explicit");
 	const model = compileCopiedRubyGraphPackageModel(ir), entry = `lib/${model.requirePath}.rb`;
 	const internal = `lib/${model.requirePath}/native.rb`, shared = "lib/lean_bridge/native_copied_runtime_v1.rb";
 	const files = {
 		[entry]: publicSource(model)
-		, [internal]: nativeSource(model, evidence)
+		, [internal]: nativeSource(model, evidence, refinementDiagnostics)
 		, [shared]: copiedRubyRuntime
 		, "README.md": `# ${model.namespace}
 
