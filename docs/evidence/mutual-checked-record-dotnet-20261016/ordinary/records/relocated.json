@@ -1,0 +1,125 @@
+{
+  "closure": {
+    "buildInputsSha256": "af482eb9a8a7620c016c1e96c2cf6f446a4fed38bcb3793dac2b5be7165a9feb",
+    "cacheFilesSha256": "07f827397b8013a2356d2590bcc144680520b7a6ff077945f07468395fdf932e",
+    "deployedFilesSha256": "80e7f4b5c77841e60dee533e3f184193c81f40b11538f844d2f610031c3a58e9",
+    "interpreterSha256": "c61ff7f8665688b95ad0f34e780daaa67b978d26115b82797c07ea6044c566ed",
+    "packageFileSetSha256": "e75169a50d62334acbb3b22f66733891262af05c52dd56b8b78618ded51a6adf",
+    "receiptSha256": "18692d5dff149b2232c0776cd6e4b8db6953a2bed40c761adb36b4c4b06ee22b"
+  },
+  "cwd": "/tmp/lean-bridge-mutual-checked-record-dotnet-hiWlWd/consumer-relocated",
+  "framework": {
+    "args": [
+      "out/Consumer.dll",
+      "--runtime"
+    ],
+    "command": "/app/.toolchains/dotnet/dotnet",
+    "cwd": "/tmp/lean-bridge-mutual-checked-record-dotnet-hiWlWd/consumer-relocated",
+    "facts": {
+      "architecture": "X64",
+      "command": "/app/.toolchains/dotnet/dotnet",
+      "description": ".NET 8.0.30",
+      "directory": "/app/.toolchains/dotnet/shared/Microsoft.NETCore.App/8.0.30/",
+      "littleEndian": true,
+      "os": "Debian GNU/Linux 12 (bookworm)",
+      "version": "8.0.30"
+    },
+    "run": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "{\"version\":\"8.0.30\",\"description\":\".NET 8.0.30\",\"directory\":\"/app/.toolchains/dotnet/shared/Microsoft.NETCore.App/8.0.30/\",\"command\":\"/app/.toolchains/dotnet/dotnet\",\"architecture\":\"X64\",\"os\":\"Debian GNU/Linux 12 (bookworm)\",\"littleEndian\":true}\n"
+    },
+    "runtimeFiles": {
+      "System.Private.CoreLib.dll": {
+        "bytes": 12773888,
+        "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+      },
+      "libcoreclr.so": {
+        "bytes": 6906008,
+        "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+      }
+    }
+  },
+  "result": {
+    "calls": 676,
+    "checks": 1359,
+    "failures": {
+      "alternate-subtype": {
+        "message": "arg0.value was rejected by MutualCheckedRecords.plusTwo",
+        "name": "ArgumentException"
+      },
+      "cycle": {
+        "message": "Cyclic copied input",
+        "name": "ArgumentException"
+      },
+      "depth": {
+        "message": "Copied graph depth or node limit exceeded",
+        "name": "GraphLimit"
+      },
+      "echo-group-late-subtype": {
+        "message": "arg0[0]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusTwo",
+        "name": "ArgumentException"
+      },
+      "group-late-subtype": {
+        "message": "arg0[0]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne",
+        "name": "ArgumentException"
+      },
+      "late-subtype": {
+        "message": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne",
+        "name": "ArgumentException"
+      },
+      "negative-nat": {
+        "message": "Nat cannot be negative (Parameter 'value')",
+        "name": "ArgumentOutOfRangeException"
+      },
+      "nested-fin": {
+        "message": "arg0.next?.more.packet.mode is not below its Fin 3 bound",
+        "name": "ArgumentException"
+      },
+      "null-active-field": {
+        "message": "Value cannot be null. (Parameter 'value')",
+        "name": "ArgumentNullException"
+      },
+      "null-alias-carrier": {
+        "message": "Value cannot be null. (Parameter 'value')",
+        "name": "ArgumentNullException"
+      },
+      "null-record": {
+        "message": "Value cannot be null. (Parameter 'value')",
+        "name": "ArgumentNullException"
+      },
+      "outer-fin": {
+        "message": "arg0.mode is not below its Fin 3 bound",
+        "name": "ArgumentException"
+      },
+      "outer-record": {
+        "message": "arg0 was rejected by MutualCheckedRecords.mkEnvelope",
+        "name": "ArgumentException"
+      },
+      "outer-subtype": {
+        "message": "arg0.value was rejected by MutualCheckedRecords.plusOne",
+        "name": "ArgumentException"
+      },
+      "round late subtype": {
+        "message": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne",
+        "name": "ArgumentException"
+      },
+      "round malformed active field": {
+        "message": "Value cannot be null. (Parameter 'value')",
+        "name": "ArgumentNullException"
+      }
+    },
+    "hostRejections": 134,
+    "recoveries": 142,
+    "rejections": 136,
+    "rounds": 128,
+    "snapshots": 676,
+    "wordBits": 64
+  },
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":1359,\"rejections\":136,\"hostRejections\":134,\"calls\":676,\"snapshots\":676,\"recoveries\":142,\"rounds\":128,\"wordBits\":64,\"failures\":{\"outer-subtype\":{\"name\":\"ArgumentException\",\"message\":\"arg0.value was rejected by MutualCheckedRecords.plusOne\"},\"late-subtype\":{\"name\":\"ArgumentException\",\"message\":\"arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\"},\"outer-record\":{\"name\":\"ArgumentException\",\"message\":\"arg0 was rejected by MutualCheckedRecords.mkEnvelope\"},\"outer-fin\":{\"name\":\"ArgumentException\",\"message\":\"arg0.mode is not below its Fin 3 bound\"},\"nested-fin\":{\"name\":\"ArgumentException\",\"message\":\"arg0.next?.more.packet.mode is not below its Fin 3 bound\"},\"group-late-subtype\":{\"name\":\"ArgumentException\",\"message\":\"arg0[0]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\"},\"echo-group-late-subtype\":{\"name\":\"ArgumentException\",\"message\":\"arg0[0]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusTwo\"},\"alternate-subtype\":{\"name\":\"ArgumentException\",\"message\":\"arg0.value was rejected by MutualCheckedRecords.plusTwo\"},\"null-record\":{\"name\":\"ArgumentNullException\",\"message\":\"Value cannot be null. (Parameter \\u0027value\\u0027)\"},\"null-active-field\":{\"name\":\"ArgumentNullException\",\"message\":\"Value cannot be null. (Parameter \\u0027value\\u0027)\"},\"null-alias-carrier\":{\"name\":\"ArgumentNullException\",\"message\":\"Value cannot be null. (Parameter \\u0027value\\u0027)\"},\"cycle\":{\"name\":\"ArgumentException\",\"message\":\"Cyclic copied input\"},\"depth\":{\"name\":\"GraphLimit\",\"message\":\"Copied graph depth or node limit exceeded\"},\"negative-nat\":{\"name\":\"ArgumentOutOfRangeException\",\"message\":\"Nat cannot be negative (Parameter \\u0027value\\u0027)\"},\"round late subtype\":{\"name\":\"ArgumentException\",\"message\":\"arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\"},\"round malformed active field\":{\"name\":\"ArgumentNullException\",\"message\":\"Value cannot be null. (Parameter \\u0027value\\u0027)\"}}}\n"
+  },
+  "stage": "relocated"
+}

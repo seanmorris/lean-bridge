@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "generator": "dotnet-copied-graph-v1",
+  "target": "dotnet",
+  "component": "mutualcheckedrecords@1.0.0",
+  "bindingIrSha256": "ff0dbff5f188822e55d7869e6e0aeae7b9f19f3dcc5849f17176d632b6df736c",
+  "namespace": "LeanBridge.Mutualcheckedrecords",
+  "assembly": "LeanBridge.Mutualcheckedrecords",
+  "files": [
+    "src/LeanBridge.Mutualcheckedrecords/Api.cs",
+    "src/LeanBridge.Mutualcheckedrecords/Runtime.cs",
+    "src/LeanBridge.Mutualcheckedrecords/Calls.cs",
+    "src/LeanBridge.Mutualcheckedrecords/LeanBridge.Mutualcheckedrecords.csproj",
+    "NuGet.Config",
+    "README.md"
+  ],
+  "publicFiles": [
+    "src/LeanBridge.Mutualcheckedrecords/Api.cs"
+  ],
+  "internalFiles": [
+    "src/LeanBridge.Mutualcheckedrecords/Runtime.cs",
+    "src/LeanBridge.Mutualcheckedrecords/Calls.cs"
+  ],
+  "packageFiles": [
+    "src/LeanBridge.Mutualcheckedrecords/LeanBridge.Mutualcheckedrecords.csproj",
+    "NuGet.Config"
+  ],
+  "aliases": [
+    {
+      "id": "lean:MutualCheckedRecords.EnvelopeAlias",
+      "name": "EnvelopeAlias",
+      "target": {
+        "id": "lean:MutualCheckedRecords.Envelope",
+        "kind": "named"
+      },
+      "contractType": "Envelope",
+      "managedType": "Envelope"
+    }
+  ],
+  "copiedGraph": {
+    "schemaVersion": 1,
+    "layoutSha256": "d1e59688830ad32403bddb9f4ef537b219d81c50a52e0f06ab850a26e0c67ca2"
+  },
+  "supportedFeatures": [
+    "direct-functions",
+    "copied-values",
+    "recursive-values",
+    "deterministic-close",
+    "checked-refinement-diagnostics"
+  ],
+  "capabilityGaps": [
+    {
+      "feature": "identity-and-effects",
+      "reason": "Recursive C# packages support finite copied values, not callable, resource or asynchronous payloads."
+    },
+    {
+      "feature": "additional-platforms",
+      "reason": "Compiled releases target .NET 8 on Linux x86-64 with glibc."
+    }
+  ]
+}

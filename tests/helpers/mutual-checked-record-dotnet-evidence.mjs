@@ -18,7 +18,7 @@ import {
 export { mutualCheckedRecordDotnetEvidence };
 // Filled with the immutable index identity after the one-shot archive is committed.
 export const mutualCheckedRecordDotnetEvidenceSha256
-	= "0000000000000000000000000000000000000000000000000000000000000000";
+	= "6614595658b38c4d7de1ff865666d7f9c28dd31f84a4aeaddef156ca25e8397c";
 
 const safePath = path => typeof path === "string"
 	&& /^[A-Za-z0-9_.+/@-]+(?:\/[A-Za-z0-9_.+@-]+)*$/u.test(path)

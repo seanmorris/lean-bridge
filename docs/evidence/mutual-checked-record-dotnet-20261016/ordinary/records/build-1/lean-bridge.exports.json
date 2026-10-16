@@ -1,0 +1,229 @@
+{
+  "contracts": {
+    "MutualCheckedRecords.echo": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "MutualCheckedRecords.mkEnvelope",
+            "fields": [
+              {
+                "name": "value",
+                "refinement": {
+                  "constructor": "MutualCheckedRecords.plusOne"
+                }
+              },
+              {
+                "name": "mode",
+                "refinement": null
+              },
+              {
+                "name": "next",
+                "refinement": null
+              }
+            ],
+            "kind": "checked-record",
+            "name": "MutualCheckedRecords.Envelope"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "MutualCheckedRecords.echoGroups": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "constructor": "MutualCheckedRecords.normalizeEnvelope",
+                    "fields": [
+                      {
+                        "name": "value",
+                        "refinement": {
+                          "constructor": "MutualCheckedRecords.plusTwo"
+                        }
+                      },
+                      {
+                        "name": "mode",
+                        "refinement": null
+                      },
+                      {
+                        "name": "next",
+                        "refinement": null
+                      }
+                    ],
+                    "kind": "checked-record",
+                    "name": "MutualCheckedRecords.Envelope"
+                  }
+                ],
+                "kind": "option"
+              }
+            ],
+            "kind": "array"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "MutualCheckedRecords.first": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "MutualCheckedRecords.mkEnvelope",
+            "fields": [
+              {
+                "name": "value",
+                "refinement": {
+                  "constructor": "MutualCheckedRecords.plusOne"
+                }
+              },
+              {
+                "name": "mode",
+                "refinement": null
+              },
+              {
+                "name": "next",
+                "refinement": null
+              }
+            ],
+            "kind": "checked-record",
+            "name": "MutualCheckedRecords.Envelope"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "MutualCheckedRecords.groups": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "constructor": "MutualCheckedRecords.mkEnvelope",
+                    "fields": [
+                      {
+                        "name": "value",
+                        "refinement": {
+                          "constructor": "MutualCheckedRecords.plusOne"
+                        }
+                      },
+                      {
+                        "name": "mode",
+                        "refinement": null
+                      },
+                      {
+                        "name": "next",
+                        "refinement": null
+                      }
+                    ],
+                    "kind": "checked-record",
+                    "name": "MutualCheckedRecords.Envelope"
+                  }
+                ],
+                "kind": "option"
+              }
+            ],
+            "kind": "array"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "MutualCheckedRecords.second": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "MutualCheckedRecords.normalizeEnvelope",
+            "fields": [
+              {
+                "name": "value",
+                "refinement": {
+                  "constructor": "MutualCheckedRecords.plusTwo"
+                }
+              },
+              {
+                "name": "mode",
+                "refinement": null
+              },
+              {
+                "name": "next",
+                "refinement": null
+              }
+            ],
+            "kind": "checked-record",
+            "name": "MutualCheckedRecords.Envelope"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    }
+  },
+  "exports": [
+    "MutualCheckedRecords.first",
+    "MutualCheckedRecords.second",
+    "MutualCheckedRecords.echo",
+    "MutualCheckedRecords.groups",
+    "MutualCheckedRecords.echoGroups",
+    "MutualCheckedRecords.produce"
+  ],
+  "modules": [
+    "MutualCheckedRecords"
+  ],
+  "schemaVersion": 1,
+  "targets": {
+    "c": {
+      "name": "mutualcheckedrecords",
+      "version": "1.0.0"
+    },
+    "cpp": {
+      "name": "mutualcheckedrecords",
+      "version": "1.0.0"
+    },
+    "npm": {
+      "name": "mutualcheckedrecords",
+      "version": "1.0.0"
+    },
+    "nuget": {
+      "name": "Mutualcheckedrecords.Api",
+      "version": "1.0.0"
+    },
+    "php-wasm": {
+      "composer": {
+        "name": "lean-bridge-mutual-checked-records/wasm",
+        "version": "1.0.0"
+      },
+      "npm": {
+        "name": "lean-bridge-mutual-checked-records-wasm",
+        "version": "1.0.0"
+      }
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "aliases": [
+    {
+      "contractType": "Envelope",
+      "id": "lean:MutualCheckedRecords.EnvelopeAlias",
+      "managedType": "Envelope",
+      "name": "EnvelopeAlias",
+      "target": {
+        "id": "lean:MutualCheckedRecords.Envelope",
+        "kind": "named"
+      }
+    }
+  ],
+  "archive": {
+    "bytes": 51423458,
+    "path": "archives/Mutualcheckedrecords.Api.1.0.0.nupkg",
+    "sha256": "d2645ff38731f6c414aa4b9ecaedaf4691f3b10559571ba5de21b0b868f73b8c"
+  },
+  "bindingIrSha256": "ff0dbff5f188822e55d7869e6e0aeae7b9f19f3dcc5849f17176d632b6df736c",
+  "compiledProjectionSha256": "3eace866cc6536f89523f44d55e00becd368b44cd424845304e1c3bf985efedd",
+  "diagnosticSymbolAuthenticated": true,
+  "generatedFiles": {
+    "NuGet.Config": {
+      "bytes": 74,
+      "sha256": "9508cae5f76364f56e80eb97cb16493977243cf38e5cca6284e3d74f83b20a2c"
+    },
+    "README.md": {
+      "bytes": 2106,
+      "sha256": "0c4ec13dba4b3b2d9359d8245d140160b85e36d4a6512816b4e85f119a6ab11c"
+    },
+    "binding-manifest.json": {
+      "bytes": 1859,
+      "sha256": "61fd17fbb4007d3a83ffa8f289b6da866f00ff6ae50942d86c088b466a56ec12"
+    },
+    "src/LeanBridge.Mutualcheckedrecords/Api.cs": {
+      "bytes": 13821,
+      "sha256": "d2296ae288e0811c318cd9be0f3608444ca0459b38368b24ab8f6720aa12b09a"
+    },
+    "src/LeanBridge.Mutualcheckedrecords/Calls.cs": {
+      "bytes": 16871,
+      "sha256": "6099e4fc2416e33937fb4dde7862719fb7c8292cb59465b36da8b09a762ca417"
+    },
+    "src/LeanBridge.Mutualcheckedrecords/LeanBridge.Mutualcheckedrecords.csproj": {
+      "bytes": 616,
+      "sha256": "c3787588ada5a6234df63cf8c18cd44b97f4b7da62db6c1dc603977262c824d3"
+    },
+    "src/LeanBridge.Mutualcheckedrecords/Runtime.cs": {
+      "bytes": 25434,
+      "sha256": "246d5e867adf98f6766a8a41431a3a9b9cef5324de47c762158683991df52d29"
+    }
+  },
+  "layoutSha256": "d1e59688830ad32403bddb9f4ef537b219d81c50a52e0f06ab850a26e0c67ca2",
+  "packageFileSetSha256": "e75169a50d62334acbb3b22f66733891262af05c52dd56b8b78618ded51a6adf",
+  "receiptSha256": "18692d5dff149b2232c0776cd6e4b8db6953a2bed40c761adb36b4c4b06ee22b"
+}

@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "mutualcheckedrecords@1.0.0",
+    "name": "mutualcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51423458,
+          "path": "archives/Mutualcheckedrecords.Api.1.0.0.nupkg",
+          "sha256": "d2645ff38731f6c414aa4b9ecaedaf4691f3b10559571ba5de21b0b868f73b8c"
+        }
+      ],
+      "ecosystem": "nuget",
+      "name": "Mutualcheckedrecords.Api",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "nuget",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "ff0dbff5f188822e55d7869e6e0aeae7b9f19f3dcc5849f17176d632b6df736c",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "8ea6c520500314b2ff426ebe3edacd5afa42ba2d097d45972fa02bf3ba00cb92"
+  }
+}

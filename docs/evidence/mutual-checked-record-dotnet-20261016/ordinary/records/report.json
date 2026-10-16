@@ -1,0 +1,604 @@
+{
+  "activeBranchesCovered": true,
+  "aliasesPreserved": true,
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/Mutualcheckedrecords.Api.1.0.0.nupkg": "d2645ff38731f6c414aa4b9ecaedaf4691f3b10559571ba5de21b0b868f73b8c"
+      },
+      "bindingIrSha256": "ff0dbff5f188822e55d7869e6e0aeae7b9f19f3dcc5849f17176d632b6df736c",
+      "modelSha256": "2932f183fffcb43178d0a95bc2de26b7bc2af23e53fab1943a652eb022e482d7",
+      "receiptSha256": "a43959a9cad4ee2185d72618b9750ca313f24b1ec1cd672e01ffbeb01836396c"
+    },
+    {
+      "archives": {
+        "archives/Mutualcheckedrecords.Api.1.0.0.nupkg": "d2645ff38731f6c414aa4b9ecaedaf4691f3b10559571ba5de21b0b868f73b8c"
+      },
+      "bindingIrSha256": "ff0dbff5f188822e55d7869e6e0aeae7b9f19f3dcc5849f17176d632b6df736c",
+      "modelSha256": "2932f183fffcb43178d0a95bc2de26b7bc2af23e53fab1943a652eb022e482d7",
+      "receiptSha256": "a43959a9cad4ee2185d72618b9750ca313f24b1ec1cd672e01ffbeb01836396c"
+    }
+  ],
+  "compilerFreeReplay": true,
+  "constructorFreeResultsCovered": true,
+  "declaredGlibcFloor": "2.38",
+  "exactExceptionArtifacts": true,
+  "expectedBindingIrSha256": "b33ae74d019038b304c6cf30c977b39f031301d92ac26e088d24cf7f4f60c94a",
+  "immutableCallerAssertions": true,
+  "independentBuilds": 2,
+  "installation": {
+    "aliases": [
+      {
+        "contractType": "Envelope",
+        "id": "lean:MutualCheckedRecords.EnvelopeAlias",
+        "managedType": "Envelope",
+        "name": "EnvelopeAlias",
+        "target": {
+          "id": "lean:MutualCheckedRecords.Envelope",
+          "kind": "named"
+        }
+      }
+    ],
+    "archive": {
+      "bytes": 51423458,
+      "path": "archives/Mutualcheckedrecords.Api.1.0.0.nupkg",
+      "sha256": "d2645ff38731f6c414aa4b9ecaedaf4691f3b10559571ba5de21b0b868f73b8c"
+    },
+    "bindingIrSha256": "ff0dbff5f188822e55d7869e6e0aeae7b9f19f3dcc5849f17176d632b6df736c",
+    "compiledProjectionSha256": "3eace866cc6536f89523f44d55e00becd368b44cd424845304e1c3bf985efedd",
+    "diagnosticSymbolAuthenticated": true,
+    "generatedFiles": {
+      "NuGet.Config": {
+        "bytes": 74,
+        "sha256": "9508cae5f76364f56e80eb97cb16493977243cf38e5cca6284e3d74f83b20a2c"
+      },
+      "README.md": {
+        "bytes": 2106,
+        "sha256": "0c4ec13dba4b3b2d9359d8245d140160b85e36d4a6512816b4e85f119a6ab11c"
+      },
+      "binding-manifest.json": {
+        "bytes": 1859,
+        "sha256": "61fd17fbb4007d3a83ffa8f289b6da866f00ff6ae50942d86c088b466a56ec12"
+      },
+      "src/LeanBridge.Mutualcheckedrecords/Api.cs": {
+        "bytes": 13821,
+        "sha256": "d2296ae288e0811c318cd9be0f3608444ca0459b38368b24ab8f6720aa12b09a"
+      },
+      "src/LeanBridge.Mutualcheckedrecords/Calls.cs": {
+        "bytes": 16871,
+        "sha256": "6099e4fc2416e33937fb4dde7862719fb7c8292cb59465b36da8b09a762ca417"
+      },
+      "src/LeanBridge.Mutualcheckedrecords/LeanBridge.Mutualcheckedrecords.csproj": {
+        "bytes": 616,
+        "sha256": "c3787588ada5a6234df63cf8c18cd44b97f4b7da62db6c1dc603977262c824d3"
+      },
+      "src/LeanBridge.Mutualcheckedrecords/Runtime.cs": {
+        "bytes": 25434,
+        "sha256": "246d5e867adf98f6766a8a41431a3a9b9cef5324de47c762158683991df52d29"
+      }
+    },
+    "layoutSha256": "d1e59688830ad32403bddb9f4ef537b219d81c50a52e0f06ab850a26e0c67ca2",
+    "packageFileSetSha256": "e75169a50d62334acbb3b22f66733891262af05c52dd56b8b78618ded51a6adf",
+    "receiptSha256": "18692d5dff149b2232c0776cd6e4b8db6953a2bed40c761adb36b4c4b06ee22b"
+  },
+  "malformedDepthCycleRecovery": true,
+  "observations": [
+    {
+      "closure": {
+        "buildInputsSha256": "af482eb9a8a7620c016c1e96c2cf6f446a4fed38bcb3793dac2b5be7165a9feb",
+        "cacheFilesSha256": "07f827397b8013a2356d2590bcc144680520b7a6ff077945f07468395fdf932e",
+        "deployedFilesSha256": "80e7f4b5c77841e60dee533e3f184193c81f40b11538f844d2f610031c3a58e9",
+        "interpreterSha256": "c61ff7f8665688b95ad0f34e780daaa67b978d26115b82797c07ea6044c566ed",
+        "packageFileSetSha256": "e75169a50d62334acbb3b22f66733891262af05c52dd56b8b78618ded51a6adf",
+        "receiptSha256": "18692d5dff149b2232c0776cd6e4b8db6953a2bed40c761adb36b4c4b06ee22b"
+      },
+      "cwd": "/tmp/lean-bridge-mutual-checked-record-dotnet-hiWlWd/consumer",
+      "framework": {
+        "args": [
+          "out/Consumer.dll",
+          "--runtime"
+        ],
+        "command": "/app/.toolchains/dotnet/dotnet",
+        "cwd": "/tmp/lean-bridge-mutual-checked-record-dotnet-hiWlWd/consumer",
+        "facts": {
+          "architecture": "X64",
+          "command": "/app/.toolchains/dotnet/dotnet",
+          "description": ".NET 8.0.30",
+          "directory": "/app/.toolchains/dotnet/shared/Microsoft.NETCore.App/8.0.30/",
+          "littleEndian": true,
+          "os": "Debian GNU/Linux 12 (bookworm)",
+          "version": "8.0.30"
+        },
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "{\"version\":\"8.0.30\",\"description\":\".NET 8.0.30\",\"directory\":\"/app/.toolchains/dotnet/shared/Microsoft.NETCore.App/8.0.30/\",\"command\":\"/app/.toolchains/dotnet/dotnet\",\"architecture\":\"X64\",\"os\":\"Debian GNU/Linux 12 (bookworm)\",\"littleEndian\":true}\n"
+        },
+        "runtimeFiles": {
+          "System.Private.CoreLib.dll": {
+            "bytes": 12773888,
+            "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+          },
+          "libcoreclr.so": {
+            "bytes": 6906008,
+            "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+          }
+        }
+      },
+      "result": {
+        "calls": 676,
+        "checks": 1359,
+        "failures": {
+          "alternate-subtype": {
+            "message": "arg0.value was rejected by MutualCheckedRecords.plusTwo",
+            "name": "ArgumentException"
+          },
+          "cycle": {
+            "message": "Cyclic copied input",
+            "name": "ArgumentException"
+          },
+          "depth": {
+            "message": "Copied graph depth or node limit exceeded",
+            "name": "GraphLimit"
+          },
+          "echo-group-late-subtype": {
+            "message": "arg0[0]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusTwo",
+            "name": "ArgumentException"
+          },
+          "group-late-subtype": {
+            "message": "arg0[0]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne",
+            "name": "ArgumentException"
+          },
+          "late-subtype": {
+            "message": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne",
+            "name": "ArgumentException"
+          },
+          "negative-nat": {
+            "message": "Nat cannot be negative (Parameter 'value')",
+            "name": "ArgumentOutOfRangeException"
+          },
+          "nested-fin": {
+            "message": "arg0.next?.more.packet.mode is not below its Fin 3 bound",
+            "name": "ArgumentException"
+          },
+          "null-active-field": {
+            "message": "Value cannot be null. (Parameter 'value')",
+            "name": "ArgumentNullException"
+          },
+          "null-alias-carrier": {
+            "message": "Value cannot be null. (Parameter 'value')",
+            "name": "ArgumentNullException"
+          },
+          "null-record": {
+            "message": "Value cannot be null. (Parameter 'value')",
+            "name": "ArgumentNullException"
+          },
+          "outer-fin": {
+            "message": "arg0.mode is not below its Fin 3 bound",
+            "name": "ArgumentException"
+          },
+          "outer-record": {
+            "message": "arg0 was rejected by MutualCheckedRecords.mkEnvelope",
+            "name": "ArgumentException"
+          },
+          "outer-subtype": {
+            "message": "arg0.value was rejected by MutualCheckedRecords.plusOne",
+            "name": "ArgumentException"
+          },
+          "round late subtype": {
+            "message": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne",
+            "name": "ArgumentException"
+          },
+          "round malformed active field": {
+            "message": "Value cannot be null. (Parameter 'value')",
+            "name": "ArgumentNullException"
+          }
+        },
+        "hostRejections": 134,
+        "recoveries": 142,
+        "rejections": 136,
+        "rounds": 128,
+        "snapshots": 676,
+        "wordBits": 64
+      },
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":1359,\"rejections\":136,\"hostRejections\":134,\"calls\":676,\"snapshots\":676,\"recoveries\":142,\"rounds\":128,\"wordBits\":64,\"failures\":{\"outer-subtype\":{\"name\":\"ArgumentException\",\"message\":\"arg0.value was rejected by MutualCheckedRecords.plusOne\"},\"late-subtype\":{\"name\":\"ArgumentException\",\"message\":\"arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\"},\"outer-record\":{\"name\":\"ArgumentException\",\"message\":\"arg0 was rejected by MutualCheckedRecords.mkEnvelope\"},\"outer-fin\":{\"name\":\"ArgumentException\",\"message\":\"arg0.mode is not below its Fin 3 bound\"},\"nested-fin\":{\"name\":\"ArgumentException\",\"message\":\"arg0.next?.more.packet.mode is not below its Fin 3 bound\"},\"group-late-subtype\":{\"name\":\"ArgumentException\",\"message\":\"arg0[0]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\"},\"echo-group-late-subtype\":{\"name\":\"ArgumentException\",\"message\":\"arg0[0]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusTwo\"},\"alternate-subtype\":{\"name\":\"ArgumentException\",\"message\":\"arg0.value was rejected by MutualCheckedRecords.plusTwo\"},\"null-record\":{\"name\":\"ArgumentNullException\",\"message\":\"Value cannot be null. (Parameter \\u0027value\\u0027)\"},\"null-active-field\":{\"name\":\"ArgumentNullException\",\"message\":\"Value cannot be null. (Parameter \\u0027value\\u0027)\"},\"null-alias-carrier\":{\"name\":\"ArgumentNullException\",\"message\":\"Value cannot be null. (Parameter \\u0027value\\u0027)\"},\"cycle\":{\"name\":\"ArgumentException\",\"message\":\"Cyclic copied input\"},\"depth\":{\"name\":\"GraphLimit\",\"message\":\"Copied graph depth or node limit exceeded\"},\"negative-nat\":{\"name\":\"ArgumentOutOfRangeException\",\"message\":\"Nat cannot be negative (Parameter \\u0027value\\u0027)\"},\"round late subtype\":{\"name\":\"ArgumentException\",\"message\":\"arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\"},\"round malformed active field\":{\"name\":\"ArgumentNullException\",\"message\":\"Value cannot be null. (Parameter \\u0027value\\u0027)\"}}}\n"
+      },
+      "stage": "installed"
+    },
+    {
+      "closure": {
+        "buildInputsSha256": "af482eb9a8a7620c016c1e96c2cf6f446a4fed38bcb3793dac2b5be7165a9feb",
+        "cacheFilesSha256": "07f827397b8013a2356d2590bcc144680520b7a6ff077945f07468395fdf932e",
+        "deployedFilesSha256": "80e7f4b5c77841e60dee533e3f184193c81f40b11538f844d2f610031c3a58e9",
+        "interpreterSha256": "c61ff7f8665688b95ad0f34e780daaa67b978d26115b82797c07ea6044c566ed",
+        "packageFileSetSha256": "e75169a50d62334acbb3b22f66733891262af05c52dd56b8b78618ded51a6adf",
+        "receiptSha256": "18692d5dff149b2232c0776cd6e4b8db6953a2bed40c761adb36b4c4b06ee22b"
+      },
+      "cwd": "/tmp/lean-bridge-mutual-checked-record-dotnet-hiWlWd/consumer-relocated",
+      "framework": {
+        "args": [
+          "out/Consumer.dll",
+          "--runtime"
+        ],
+        "command": "/app/.toolchains/dotnet/dotnet",
+        "cwd": "/tmp/lean-bridge-mutual-checked-record-dotnet-hiWlWd/consumer-relocated",
+        "facts": {
+          "architecture": "X64",
+          "command": "/app/.toolchains/dotnet/dotnet",
+          "description": ".NET 8.0.30",
+          "directory": "/app/.toolchains/dotnet/shared/Microsoft.NETCore.App/8.0.30/",
+          "littleEndian": true,
+          "os": "Debian GNU/Linux 12 (bookworm)",
+          "version": "8.0.30"
+        },
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "{\"version\":\"8.0.30\",\"description\":\".NET 8.0.30\",\"directory\":\"/app/.toolchains/dotnet/shared/Microsoft.NETCore.App/8.0.30/\",\"command\":\"/app/.toolchains/dotnet/dotnet\",\"architecture\":\"X64\",\"os\":\"Debian GNU/Linux 12 (bookworm)\",\"littleEndian\":true}\n"
+        },
+        "runtimeFiles": {
+          "System.Private.CoreLib.dll": {
+            "bytes": 12773888,
+            "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+          },
+          "libcoreclr.so": {
+            "bytes": 6906008,
+            "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+          }
+        }
+      },
+      "result": {
+        "calls": 676,
+        "checks": 1359,
+        "failures": {
+          "alternate-subtype": {
+            "message": "arg0.value was rejected by MutualCheckedRecords.plusTwo",
+            "name": "ArgumentException"
+          },
+          "cycle": {
+            "message": "Cyclic copied input",
+            "name": "ArgumentException"
+          },
+          "depth": {
+            "message": "Copied graph depth or node limit exceeded",
+            "name": "GraphLimit"
+          },
+          "echo-group-late-subtype": {
+            "message": "arg0[0]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusTwo",
+            "name": "ArgumentException"
+          },
+          "group-late-subtype": {
+            "message": "arg0[0]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne",
+            "name": "ArgumentException"
+          },
+          "late-subtype": {
+            "message": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne",
+            "name": "ArgumentException"
+          },
+          "negative-nat": {
+            "message": "Nat cannot be negative (Parameter 'value')",
+            "name": "ArgumentOutOfRangeException"
+          },
+          "nested-fin": {
+            "message": "arg0.next?.more.packet.mode is not below its Fin 3 bound",
+            "name": "ArgumentException"
+          },
+          "null-active-field": {
+            "message": "Value cannot be null. (Parameter 'value')",
+            "name": "ArgumentNullException"
+          },
+          "null-alias-carrier": {
+            "message": "Value cannot be null. (Parameter 'value')",
+            "name": "ArgumentNullException"
+          },
+          "null-record": {
+            "message": "Value cannot be null. (Parameter 'value')",
+            "name": "ArgumentNullException"
+          },
+          "outer-fin": {
+            "message": "arg0.mode is not below its Fin 3 bound",
+            "name": "ArgumentException"
+          },
+          "outer-record": {
+            "message": "arg0 was rejected by MutualCheckedRecords.mkEnvelope",
+            "name": "ArgumentException"
+          },
+          "outer-subtype": {
+            "message": "arg0.value was rejected by MutualCheckedRecords.plusOne",
+            "name": "ArgumentException"
+          },
+          "round late subtype": {
+            "message": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne",
+            "name": "ArgumentException"
+          },
+          "round malformed active field": {
+            "message": "Value cannot be null. (Parameter 'value')",
+            "name": "ArgumentNullException"
+          }
+        },
+        "hostRejections": 134,
+        "recoveries": 142,
+        "rejections": 136,
+        "rounds": 128,
+        "snapshots": 676,
+        "wordBits": 64
+      },
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":1359,\"rejections\":136,\"hostRejections\":134,\"calls\":676,\"snapshots\":676,\"recoveries\":142,\"rounds\":128,\"wordBits\":64,\"failures\":{\"outer-subtype\":{\"name\":\"ArgumentException\",\"message\":\"arg0.value was rejected by MutualCheckedRecords.plusOne\"},\"late-subtype\":{\"name\":\"ArgumentException\",\"message\":\"arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\"},\"outer-record\":{\"name\":\"ArgumentException\",\"message\":\"arg0 was rejected by MutualCheckedRecords.mkEnvelope\"},\"outer-fin\":{\"name\":\"ArgumentException\",\"message\":\"arg0.mode is not below its Fin 3 bound\"},\"nested-fin\":{\"name\":\"ArgumentException\",\"message\":\"arg0.next?.more.packet.mode is not below its Fin 3 bound\"},\"group-late-subtype\":{\"name\":\"ArgumentException\",\"message\":\"arg0[0]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\"},\"echo-group-late-subtype\":{\"name\":\"ArgumentException\",\"message\":\"arg0[0]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusTwo\"},\"alternate-subtype\":{\"name\":\"ArgumentException\",\"message\":\"arg0.value was rejected by MutualCheckedRecords.plusTwo\"},\"null-record\":{\"name\":\"ArgumentNullException\",\"message\":\"Value cannot be null. (Parameter \\u0027value\\u0027)\"},\"null-active-field\":{\"name\":\"ArgumentNullException\",\"message\":\"Value cannot be null. (Parameter \\u0027value\\u0027)\"},\"null-alias-carrier\":{\"name\":\"ArgumentNullException\",\"message\":\"Value cannot be null. (Parameter \\u0027value\\u0027)\"},\"cycle\":{\"name\":\"ArgumentException\",\"message\":\"Cyclic copied input\"},\"depth\":{\"name\":\"GraphLimit\",\"message\":\"Copied graph depth or node limit exceeded\"},\"negative-nat\":{\"name\":\"ArgumentOutOfRangeException\",\"message\":\"Nat cannot be negative (Parameter \\u0027value\\u0027)\"},\"round late subtype\":{\"name\":\"ArgumentException\",\"message\":\"arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\"},\"round malformed active field\":{\"name\":\"ArgumentNullException\",\"message\":\"Value cannot be null. (Parameter \\u0027value\\u0027)\"}}}\n"
+      },
+      "stage": "relocated"
+    },
+    {
+      "closure": {
+        "deployedFilesSha256": "80e7f4b5c77841e60dee533e3f184193c81f40b11538f844d2f610031c3a58e9"
+      },
+      "cwd": "/tmp/lean-bridge-mutual-checked-record-dotnet-hiWlWd/source-free",
+      "framework": {
+        "args": [
+          "Consumer.dll",
+          "--runtime"
+        ],
+        "command": "/app/.toolchains/dotnet/dotnet",
+        "cwd": "/tmp/lean-bridge-mutual-checked-record-dotnet-hiWlWd/source-free",
+        "facts": {
+          "architecture": "X64",
+          "command": "/app/.toolchains/dotnet/dotnet",
+          "description": ".NET 8.0.30",
+          "directory": "/app/.toolchains/dotnet/shared/Microsoft.NETCore.App/8.0.30/",
+          "littleEndian": true,
+          "os": "Debian GNU/Linux 12 (bookworm)",
+          "version": "8.0.30"
+        },
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "{\"version\":\"8.0.30\",\"description\":\".NET 8.0.30\",\"directory\":\"/app/.toolchains/dotnet/shared/Microsoft.NETCore.App/8.0.30/\",\"command\":\"/app/.toolchains/dotnet/dotnet\",\"architecture\":\"X64\",\"os\":\"Debian GNU/Linux 12 (bookworm)\",\"littleEndian\":true}\n"
+        },
+        "runtimeFiles": {
+          "System.Private.CoreLib.dll": {
+            "bytes": 12773888,
+            "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+          },
+          "libcoreclr.so": {
+            "bytes": 6906008,
+            "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+          }
+        }
+      },
+      "result": {
+        "calls": 676,
+        "checks": 1359,
+        "failures": {
+          "alternate-subtype": {
+            "message": "arg0.value was rejected by MutualCheckedRecords.plusTwo",
+            "name": "ArgumentException"
+          },
+          "cycle": {
+            "message": "Cyclic copied input",
+            "name": "ArgumentException"
+          },
+          "depth": {
+            "message": "Copied graph depth or node limit exceeded",
+            "name": "GraphLimit"
+          },
+          "echo-group-late-subtype": {
+            "message": "arg0[0]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusTwo",
+            "name": "ArgumentException"
+          },
+          "group-late-subtype": {
+            "message": "arg0[0]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne",
+            "name": "ArgumentException"
+          },
+          "late-subtype": {
+            "message": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne",
+            "name": "ArgumentException"
+          },
+          "negative-nat": {
+            "message": "Nat cannot be negative (Parameter 'value')",
+            "name": "ArgumentOutOfRangeException"
+          },
+          "nested-fin": {
+            "message": "arg0.next?.more.packet.mode is not below its Fin 3 bound",
+            "name": "ArgumentException"
+          },
+          "null-active-field": {
+            "message": "Value cannot be null. (Parameter 'value')",
+            "name": "ArgumentNullException"
+          },
+          "null-alias-carrier": {
+            "message": "Value cannot be null. (Parameter 'value')",
+            "name": "ArgumentNullException"
+          },
+          "null-record": {
+            "message": "Value cannot be null. (Parameter 'value')",
+            "name": "ArgumentNullException"
+          },
+          "outer-fin": {
+            "message": "arg0.mode is not below its Fin 3 bound",
+            "name": "ArgumentException"
+          },
+          "outer-record": {
+            "message": "arg0 was rejected by MutualCheckedRecords.mkEnvelope",
+            "name": "ArgumentException"
+          },
+          "outer-subtype": {
+            "message": "arg0.value was rejected by MutualCheckedRecords.plusOne",
+            "name": "ArgumentException"
+          },
+          "round late subtype": {
+            "message": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne",
+            "name": "ArgumentException"
+          },
+          "round malformed active field": {
+            "message": "Value cannot be null. (Parameter 'value')",
+            "name": "ArgumentNullException"
+          }
+        },
+        "hostRejections": 134,
+        "recoveries": 142,
+        "rejections": 136,
+        "rounds": 128,
+        "snapshots": 676,
+        "wordBits": 64
+      },
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":1359,\"rejections\":136,\"hostRejections\":134,\"calls\":676,\"snapshots\":676,\"recoveries\":142,\"rounds\":128,\"wordBits\":64,\"failures\":{\"outer-subtype\":{\"name\":\"ArgumentException\",\"message\":\"arg0.value was rejected by MutualCheckedRecords.plusOne\"},\"late-subtype\":{\"name\":\"ArgumentException\",\"message\":\"arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\"},\"outer-record\":{\"name\":\"ArgumentException\",\"message\":\"arg0 was rejected by MutualCheckedRecords.mkEnvelope\"},\"outer-fin\":{\"name\":\"ArgumentException\",\"message\":\"arg0.mode is not below its Fin 3 bound\"},\"nested-fin\":{\"name\":\"ArgumentException\",\"message\":\"arg0.next?.more.packet.mode is not below its Fin 3 bound\"},\"group-late-subtype\":{\"name\":\"ArgumentException\",\"message\":\"arg0[0]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\"},\"echo-group-late-subtype\":{\"name\":\"ArgumentException\",\"message\":\"arg0[0]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusTwo\"},\"alternate-subtype\":{\"name\":\"ArgumentException\",\"message\":\"arg0.value was rejected by MutualCheckedRecords.plusTwo\"},\"null-record\":{\"name\":\"ArgumentNullException\",\"message\":\"Value cannot be null. (Parameter \\u0027value\\u0027)\"},\"null-active-field\":{\"name\":\"ArgumentNullException\",\"message\":\"Value cannot be null. (Parameter \\u0027value\\u0027)\"},\"null-alias-carrier\":{\"name\":\"ArgumentNullException\",\"message\":\"Value cannot be null. (Parameter \\u0027value\\u0027)\"},\"cycle\":{\"name\":\"ArgumentException\",\"message\":\"Cyclic copied input\"},\"depth\":{\"name\":\"GraphLimit\",\"message\":\"Copied graph depth or node limit exceeded\"},\"negative-nat\":{\"name\":\"ArgumentOutOfRangeException\",\"message\":\"Nat cannot be negative (Parameter \\u0027value\\u0027)\"},\"round late subtype\":{\"name\":\"ArgumentException\",\"message\":\"arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\"},\"round malformed active field\":{\"name\":\"ArgumentNullException\",\"message\":\"Value cannot be null. (Parameter \\u0027value\\u0027)\"}}}\n"
+      },
+      "sdkNotPresentInDeployment": true,
+      "sourcesRemoved": true,
+      "stage": "source-free"
+    }
+  ],
+  "offlineInstall": true,
+  "producerCommit": "814d8d13b1c3ec4a5bdfea5d8bfafd6b5f48bf1c",
+  "receipt": {
+    "component": {
+      "id": "mutualcheckedrecords@1.0.0",
+      "name": "mutualcheckedrecords",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 51423458,
+            "path": "archives/Mutualcheckedrecords.Api.1.0.0.nupkg",
+            "sha256": "d2645ff38731f6c414aa4b9ecaedaf4691f3b10559571ba5de21b0b868f73b8c"
+          }
+        ],
+        "ecosystem": "nuget",
+        "name": "Mutualcheckedrecords.Api",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+        "target": "nuget",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "ff0dbff5f188822e55d7869e6e0aeae7b9f19f3dcc5849f17176d632b6df736c",
+        "id": "native-library-v1",
+        "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "8ea6c520500314b2ff426ebe3edacd5afa42ba2d097d45972fa02bf3ba00cb92"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "resourceChecks": [
+    {
+      "maxLoad": 12,
+      "observations": [
+        {
+          "availableBytes": 13918707712,
+          "freeBytes": 4274372608,
+          "load": 3.87
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "maxLoad": 12,
+      "observations": [
+        {
+          "availableBytes": 13989351424,
+          "freeBytes": 4274352128,
+          "load": 3.87
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "maxLoad": 12,
+      "observations": [
+        {
+          "availableBytes": 13661904896,
+          "freeBytes": 4170825728,
+          "load": 3.99
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "maxLoad": 12,
+      "observations": [
+        {
+          "availableBytes": 13760073728,
+          "freeBytes": 4170158080,
+          "load": 3.83
+        }
+      ],
+      "waits": 0
+    }
+  ],
+  "route": "ordinary",
+  "schemaVersion": 1,
+  "sourceFreeDeployment": true,
+  "sourceRemovedBeforeInstallation": true,
+  "tools": {
+    "command": "/app/.toolchains/dotnet/dotnet",
+    "interpreter": {
+      "bytes": 68424,
+      "sha256": "c61ff7f8665688b95ad0f34e780daaa67b978d26115b82797c07ea6044c566ed"
+    },
+    "measurements": [
+      {
+        "args": [
+          "--list-sdks"
+        ],
+        "command": "/app/.toolchains/dotnet/dotnet",
+        "cwd": "/tmp/lean-bridge-mutual-checked-record-dotnet-hiWlWd/toolchain",
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "8.0.424 [/app/.toolchains/dotnet/sdk]\n"
+        }
+      },
+      {
+        "args": [
+          "--version"
+        ],
+        "command": "/app/.toolchains/dotnet/dotnet",
+        "cwd": "/tmp/lean-bridge-mutual-checked-record-dotnet-hiWlWd/toolchain",
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "8.0.424\n"
+        }
+      },
+      {
+        "args": [
+          "--list-runtimes"
+        ],
+        "command": "/app/.toolchains/dotnet/dotnet",
+        "cwd": "/tmp/lean-bridge-mutual-checked-record-dotnet-hiWlWd/toolchain",
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "Microsoft.AspNetCore.App 8.0.30 [/app/.toolchains/dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.NETCore.App 8.0.30 [/app/.toolchains/dotnet/shared/Microsoft.NETCore.App]\n"
+        }
+      }
+    ],
+    "sdk": {
+      "directory": "/app/.toolchains/dotnet/sdk",
+      "version": "8.0.424"
+    }
+  },
+  "trustedToolchains": "Explicit .NET SDK and shared framework; their complete contents are not authenticated",
+  "typedRecursiveCarriers": true
+}
