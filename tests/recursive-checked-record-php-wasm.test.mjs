@@ -6,3 +6,4 @@
 import "./helpers/recursive-checked-record-php-wasm-fixture-tests.mjs";
 import "./helpers/recursive-checked-record-php-wasm-installed-tests.mjs";
 import "./helpers/recursive-checked-record-php-wasm-verifier-tests.mjs";
+import "./helpers/recursive-checked-record-php-wasm-cli-tests.mjs";
