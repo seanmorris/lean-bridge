@@ -18,8 +18,9 @@ import {
 	, checkRecursiveCheckedRecordPhpWasmModel
 	, recursiveCheckedRecordPhpWasmCallerSource
 	, recursiveCheckedRecordPhpWasmConfiguration
-	, recursiveCheckedRecordPhpWasmPackage
+	, recursiveCheckedRecordPhpWasmConsumerFixture
 	, recursiveCheckedRecordPhpWasmRequest
+	, recursiveCheckedRecordPhpWasmPackage
 	, recursiveCheckedRecordPhpWasmReview
 	, recursiveCheckedRecordPhpWasmSelection
 } from "./recursive-checked-record-php-wasm-fixture.mjs";
@@ -31,17 +32,17 @@ import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
 
 const { enabled, routes, fixtures, maxLoad: resourceMaxLoad } = recursiveCheckedRecordPhpWasmSelection(process.env);
 
-for(const route of routes) for(const fixture of fixtures) test(`installed recursive checked-record PHP-Wasm packages reproduce and relocate ${route} ${fixture}`, {
+for(const route of routes) for(const fixtureName of fixtures) test(`installed recursive checked-record PHP-Wasm packages reproduce and relocate ${route} ${fixtureName}`, {
 	skip: !enabled, timeout: 3_600_000
 }, async t => {
 	const producerCommit = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
 	for(const path of ["fixture.mjs", "fixture-tests.mjs", "installed-tests.mjs"])
 		execFileSync("git", ["ls-files", "--error-unmatch", `tests/helpers/recursive-checked-record-php-wasm-${path}`]);
 	execFileSync("git", ["ls-files", "--error-unmatch", "tests/fixtures/recursive-checked-record-consumers/php-native.php"]);
-	const { settings, root: fixtureRoot, leanModule } = recursiveCheckedRecordPhpWasmPackage(fixture);
+	const { root: fixtureRoot, leanModule } = recursiveCheckedRecordPhpWasmPackage(fixtureName);
 	execFileSync("git", ["diff", "--quiet", "HEAD", "--", "src", "tests", "scripts"]);
 	const output = resolve(process.env.LEAN_BRIDGE_RECURSIVE_CHECKED_RECORD_PHP_WASM_OUTPUT
-		?? "build/recursive-checked-record-php-wasm", route, fixture);
+		?? "build/recursive-checked-record-php-wasm", route, fixtureName);
 	await assert.rejects(access(output), { code: "ENOENT" }); await mkdir(output, { recursive: true });
 	const resourceChecks = [];
 	const resources = async () => {
@@ -58,8 +59,8 @@ for(const route of routes) for(const fixture of fixtures) test(`installed recurs
 		if(complete) await rm(root, { recursive: true });
 		else t.diagnostic(`Retained failed recursive checked-record PHP-Wasm inputs: ${root}`);
 	});
-	const expected = recursiveCheckedRecordPhpWasmReview(fixture);
-	const configuration = recursiveCheckedRecordPhpWasmConfiguration(route, fixture);
+	const expected = recursiveCheckedRecordPhpWasmReview(fixtureName);
+	const configuration = recursiveCheckedRecordPhpWasmConfiguration(route, fixtureName);
 	const environment = {
 		...nativeFixtureEnvironment(["php-wasm"])
 		, LEAN_NUM_THREADS: "1", OMP_NUM_THREADS: "1", MAKEFLAGS: "-j1"
@@ -69,7 +70,7 @@ for(const route of routes) for(const fixture of fixtures) test(`installed recurs
 	if(environment.LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME)
 		environment.LEAN_BRIDGE_PHP_COPIED_RUNTIME = environment.LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME;
 	const consumer = join(root, "consumer"), handoff = join(consumer, "handoff");
-	await saveLakeFile(output, "context.json", canonicalJson({ producerCommit, route, fixture, root, consumer, handoff }));
+	await saveLakeFile(output, "context.json", canonicalJson({ producerCommit, route, fixture: fixtureName, root, consumer, handoff }));
 	await saveLakeFile(output, "expected.binding-ir.json", canonicalJson(expected));
 	await saveLakeFile(output, "configuration.json", canonicalJson(configuration));
 	const sources = {};
@@ -79,7 +80,7 @@ for(const route of routes) for(const fixture of fixtures) test(`installed recurs
 		await saveLakeFile(output, strictness + ".php", sources[strictness]);
 	}
 	for(const arrangement of ["embedded", "composer"])
-		await saveLakeFile(output, `request-${arrangement}.json`, recursiveCheckedRecordPhpWasmRequest(fixture, arrangement));
+		await saveLakeFile(output, `request-${arrangement}.json`, recursiveCheckedRecordPhpWasmRequest(fixtureName, arrangement));
 	const builds = []; let packageSet;
 	for(const attempt of [0, 1])
 	{
@@ -89,12 +90,12 @@ for(const route of routes) for(const fixture of fixtures) test(`installed recurs
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson(configuration));
 		if(route === "reviewed") await saveLakeFile(projectRoot, "api.binding-ir.json", canonicalJson(expected));
 		const sourceBefore = await lakeInputState(projectRoot);
-		t.diagnostic(`PHP-Wasm ${route} ${fixture}: author ${attempt}`);
+		t.diagnostic(`PHP-Wasm ${route} ${fixtureName}: author ${attempt}`);
 		const built = await buildCanonicalProject({ projectRoot, outputRoot, environment, targets: ["php-wasm"] })
 			.catch(error => { error.message += `: ${JSON.stringify(error.details)}`; throw error; });
 		assert.deepEqual(await lakeInputState(projectRoot), sourceBefore);
 		const modelBytes = await readFile(join(outputRoot, "php-wasm/component/model.json")), model = JSON.parse(modelBytes);
-		checkRecursiveCheckedRecordPhpWasmModel(model, route, fixture);
+		checkRecursiveCheckedRecordPhpWasmModel(model, route, fixtureName);
 		assert.equal(model.bindingIrSha256, built.bindingIrSha256);
 		assert.equal(model.bindingIrSha256, hashBindingIr(model.bindingIr));
 		if(route === "reviewed") assert.equal(model.sourceIdentity.reviewedBindingIr.source, canonicalJson(expected));
@@ -142,19 +143,15 @@ for(const route of routes) for(const fixture of fixtures) test(`installed recurs
 		, LEAN_BRIDGE_PHP_EMSDK: "/unavailable/compiler"
 		, LEAN_BRIDGE_PHP_COPIED_RUNTIME: "/unavailable/runtime"
 	};
-	const fixture = {
-		settings
-		, source: strictness => sources[strictness]
-		, request: arrangement => recursiveCheckedRecordPhpWasmRequest(fixture, arrangement)
-		, removeHandoff: true
-	};
+	const consumerFixture = recursiveCheckedRecordPhpWasmConsumerFixture(fixtureName, sources);
 	const installed = await installedPhpWasmCorpus({
-		t, library: { id: `recursive-checked-records-${route}-${fixture}` }
-		, consumer, handoff, receipt, packageSet, environment, clean, fixture
+		t, library: { id: `recursive-checked-records-${route}-${fixtureName}` }
+		, consumer, handoff, receipt, packageSet, environment, clean
+		, fixture: consumerFixture
 	}).catch(error => { error.message += `: ${JSON.stringify(error.details)}`; throw error; });
 	await assert.rejects(access(handoff), { code: "ENOENT" });
 	await assert.rejects(access(join(consumer, "project")), { code: "ENOENT" });
-	checkRecursiveCheckedRecordPhpWasmExecutions(installed.phpWasm, fixture);
+	checkRecursiveCheckedRecordPhpWasmExecutions(installed.phpWasm, fixtureName);
 	const deployment = join(consumer, "relocated");
 	for(const path of [
 		"package.json", "package-lock.json", "composer.json", "composer.lock"
@@ -165,7 +162,7 @@ for(const route of routes) for(const fixture of fixtures) test(`installed recurs
 		await saveLakeFile(output, `executions/${index}.json`, canonicalJson(execution));
 	await verifyPackageSetReceipt({ receiptPath: join(output, "handoff/package-set-receipt.json") });
 	await saveLakeFile(output, "report.json", canonicalJson({
-		schemaVersion: 1, route, fixture, producerCommit, configuration
+		schemaVersion: 1, route, fixture: fixtureName, producerCommit, configuration
 		, expectedBindingIrSha256: hashBindingIr(expected), builds, receipt
 		, ...installed
 		, reproducible: true, independentBuilds: 2, authorInputsUnchanged: true

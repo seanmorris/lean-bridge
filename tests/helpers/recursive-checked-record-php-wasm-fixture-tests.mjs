@@ -21,7 +21,8 @@ import { recursiveCheckedRecordConfiguration } from "./recursive-checked-record-
 import {
 	adaptRecursiveCheckedRecordPhpWasm, recursiveCheckedRecordPhpWasmCaller
 	, recursiveCheckedRecordPhpWasmCallerBlob, recursiveCheckedRecordPhpWasmCallerSource
-	, recursiveCheckedRecordPhpWasmConfiguration, recursiveCheckedRecordPhpWasmCounts
+	, recursiveCheckedRecordPhpWasmConfiguration, recursiveCheckedRecordPhpWasmConsumerFixture
+	, recursiveCheckedRecordPhpWasmCounts
 	, recursiveCheckedRecordPhpWasmExpected, recursiveCheckedRecordPhpWasmPackage
 	, recursiveCheckedRecordPhpWasmRequest, recursiveCheckedRecordPhpWasmReview
 	, recursiveCheckedRecordPhpWasmSelection
@@ -49,7 +50,11 @@ test("recursive checked-record PHP-Wasm reuses the native-PHP caller and oracle 
 		const wasm = generateCopiedPhpGraphZendAdapter(ir, { refinementDiagnostics: true }), native = generateCopiedPhpGraphPackage(ir);
 		// Host checks and public classes are shared; only the private transport differs.
 		for(const path of ["src/Internal/Values.php", "src/Internal/GraphTypes.php"]) assert.equal(wasm[path], native[path], path);
-		const surface = source => source.slice(0, source.indexOf("require_once __DIR__ . '/Internal/Native.php'"));
+		// A missing delimiter fails instead of comparing two truncated prefixes.
+		const surface = source => {
+			const end = source.indexOf("require_once __DIR__ . '/Internal/Native.php'");
+			assert.ok(end > 0, "PHP-Wasm public surface delimiter"); return source.slice(0, end);
+		};
 		assert.equal(surface(wasm["src/Api.php"]), surface(native["src/Api.php"]));
 		assert.match(wasm["src/Api.php"], new RegExp(`^namespace ${recursiveCheckedRecordPhpWasmPackage(fixture).namespace};$`, "mu"));
 		// Status 1 carries the adapter's exact text into LeanBridgeError code 1.
@@ -162,6 +167,31 @@ test("recursive checked-record PHP-Wasm keeps both author contracts, package coo
 	}
 	assert.throws(() => recursiveCheckedRecordPhpWasmRequest("recursive", "bundled"));
 	assert.throws(() => recursiveCheckedRecordPhpWasmPackage("unknown"));
+});
+
+test("recursive checked-record PHP-Wasm consumer fixture passes module names, never consumer objects", async () => {
+	const sources = { weak: await recursiveCheckedRecordPhpWasmCallerSource("weak"), strict: await recursiveCheckedRecordPhpWasmCallerSource("strict") };
+	for(const fixtureName of ["recursive", "mutual"])
+	{
+		const consumer = recursiveCheckedRecordPhpWasmConsumerFixture(fixtureName, sources);
+		assert.deepEqual(consumer.settings, recursiveCheckedRecordPhpWasmPackage(fixtureName).settings);
+		assert.equal(consumer.removeHandoff, true);
+		for(const arrangement of ["embedded", "composer"])
+			assert.equal(consumer.request(arrangement), recursiveCheckedRecordPhpWasmRequest(fixtureName, arrangement));
+		assert.equal(JSON.parse(consumer.request("composer")).module, recursiveCheckedRecordPhpWasmPackage(fixtureName).namespace);
+		for(const strictness of ["weak", "strict"]) assert.equal(consumer.source(strictness), sources[strictness]);
+		assert.throws(() => consumer.source("lax"));
+		assert.throws(() => consumer.request("bundled"));
+		// The installed-path shadowing bug passed the consumer object where a name belongs.
+		assert.throws(() => recursiveCheckedRecordPhpWasmConsumerFixture(consumer, sources), /by name/u);
+		assert.throws(() => recursiveCheckedRecordPhpWasmRequest(consumer, "composer"));
+	}
+	assert.throws(() => recursiveCheckedRecordPhpWasmConsumerFixture("recursive", { weak: sources.weak }));
+	// The gated harness names its module binding once and never rebinds it to the consumer.
+	const installed = await readFile("tests/helpers/recursive-checked-record-php-wasm-installed-tests.mjs", "utf8");
+	assert.doesNotMatch(installed, /\b(?:const|let|var)\s+fixture\b|\bfor\(const fixture of\b/u);
+	assert.match(installed, /for\(const fixtureName of fixtures\)/u);
+	assert.match(installed, /recursiveCheckedRecordPhpWasmConsumerFixture\(fixtureName, sources\)/u);
 });
 
 test("recursive checked-record PHP-Wasm gates reject disabled selections and unsupported modules", () => {

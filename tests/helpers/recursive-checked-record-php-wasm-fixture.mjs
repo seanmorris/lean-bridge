@@ -190,6 +190,28 @@ export const recursiveCheckedRecordPhpWasmRequest = (fixture, arrangement) => {
 };
 
 /**
+ * Build the installed-corpus consumer for one module. Exported so source-only tests
+ * execute the exact request and source closures the gated producer passes on.
+ *
+ * @param fixtureName - Recursive or mutual module name, never a consumer object.
+ * @param sources - Adapted weak and strict caller sources.
+ */
+export const recursiveCheckedRecordPhpWasmConsumerFixture = (fixtureName, sources) => {
+	assert.ok(recursiveCheckedRecordPhpWasmFixtures.includes(fixtureName), "Select a recursive checked-record module by name");
+	assert.deepEqual(Object.keys(sources).sort(), ["strict", "weak"]);
+	for(const source of Object.values(sources)) assert.equal(typeof source, "string");
+	const { settings } = recursiveCheckedRecordPhpWasmPackage(fixtureName);
+	return Object.freeze({
+		settings
+		, source: strictness => {
+			assert.ok(Object.hasOwn(sources, strictness)); return sources[strictness];
+		}
+		, request: arrangement => recursiveCheckedRecordPhpWasmRequest(fixtureName, arrangement)
+		, removeHandoff: true
+	});
+};
+
+/**
  * Require actual wasm32 compiler metadata and every per-use refinement tree.
  *
  * @param model - Fresh PHP-Wasm compiler model.
